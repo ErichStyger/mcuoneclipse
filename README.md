@@ -1,4 +1,4 @@
 mcuoneclipse
 ============
 
-McuOnEclipse Processor Expert components and example projects
+McuOnEclipse Processor Expert components and example projects.
