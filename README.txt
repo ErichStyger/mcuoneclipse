@@ -1,5 +1,9 @@
 mcuoneclipse
 ============
 
-McuOnEclipse Processor Expert components and example projects.
-C:\ProgramData\Processor Expert\CWMCU_PE5_00\beans
+Please see the readme files inside the folders.
+
+And don't forget to read the Wiki pages.
+
+
+Erich
