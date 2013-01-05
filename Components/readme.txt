@@ -1,0 +1,1 @@
+This folder contains CDE projects for all the components.
