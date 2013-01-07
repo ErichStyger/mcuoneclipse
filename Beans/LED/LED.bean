@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bean>
+  <Header>
+    <Name>LED</Name>
+    <Description>Driver for a LED</Description>
+    <Author>Erich Styger</Author>
+    <Version>01.048</Version>
+    <Icon>Led</Icon>
+    <TypesFiles>PE,LED\LED</TypesFiles>
+    <FileVersion>6</FileVersion>
+  </Header>
+  <Options>
+    <BW_HelpType>Basic</BW_HelpType>
+    <BW_HelpFiles>,Properties,Methods,Events</BW_HelpFiles>
+    <BW_AutoSaveHelp>yes</BW_AutoSaveHelp>
+    <BW_AutoSaveDriver>yes</BW_AutoSaveDriver>
+    <BW_DetailedHelp>yes</BW_DetailedHelp>
+    <BW_NeedTps>no</BW_NeedTps>
+    <BW_NeedUst>0</BW_NeedUst>
+    <BW_NeedCns>0</BW_NeedCns>
+    <BeanStatus>PROPOSAL</BeanStatus>
+    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2012, all rights reserved.\n\nThis an open source software implementing an LED driver using Processor Expert.\nThis is a free software and is opened for education, research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
+    <Category>CPU External Devices-Display</Category>
+    <DemoDriver>no</DemoDriver>
+    <Shortcut>LED</Shortcut>
+    <BeanLevel>Low</BeanLevel>
+  </Options>
+  <PropertyList>
+    <Property>
+      <TCompNameItem>
+        <Name>Component name</Name>
+        <Symbol>DeviceName</Symbol>
+        <Hint>Name of the component.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue/>
+      </TCompNameItem>
+    </Property>
+    <Property>
+      <TBoolItem>
+        <Name>Turned On with initialization</Name>
+        <Symbol>LEDonWithInitialization</Symbol>
+        <TypeSpec>typeYesNo</TypeSpec>
+        <Hint>If the LED shall be on or off after initialization.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>false</DefaultValue>
+        <Popup>false</Popup>
+      </TBoolItem>
+    </Property>
+    <Property>
+      <TGrupItem>
+        <Name>HW Interface</Name>
+        <Symbol>HWInterfaceGroup</Symbol>
+        <Hint>This group controls how the componet is using the hardware</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description/>
+        <Expanded>Yes</Expanded>
+        <Children>
+          <GrupItem>
+            <TBoolItem>
+              <Name>High pin value means ON</Name>
+              <Symbol>AnodeOnPortSide</Symbol>
+              <TypeSpec>typeYesNo</TypeSpec>
+              <Hint>If a high value means 'on'. If the anode side of the LED is connected to the port (otherwise it is the kathode). If the LED anode is on the port side, then a logical one on the port turns the LED on. If the cathode is on the port side, then a low level will turn it on.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>0</DefaultIndex>
+              <TextValueIndex>false</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <DefaultValue>true</DefaultValue>
+              <Popup>false</Popup>
+            </TBoolItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>On/Off</Name>
+              <Symbol>OnOffenabled</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>If enabled, implements a normal on and off pin</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Enabled</Description>
+              <Expanded>Yes</Expanded>
+              <DefaultValue>true</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TInhrItem>
+                    <Name>Pin</Name>
+                    <Symbol>LEDPin</Symbol>
+                    <TypeSpec>LED\LEDpin</TypeSpec>
+                    <Hint>Interface to the LED pin</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>-1</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <InhrBeanBaseName>LEDpin</InhrBeanBaseName>
+                    <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+                  </TInhrItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>PWM</Name>
+              <Symbol>PWMenabled</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>If enabled, a PWM signal is used to implement a dimmable LED.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Disabled</Description>
+              <Expanded>No</Expanded>
+              <DefaultValue>false</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>inverted</Name>
+                    <Symbol>PWMinverted</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>If PWM is inverted</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>1</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>false</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TInhrItem>
+                    <Name>PWM</Name>
+                    <Symbol>PWMpin</Symbol>
+                    <TypeSpec>LED\PWM</TypeSpec>
+                    <Hint/>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>-1</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <InhrBeanBaseName>Inhr</InhrBeanBaseName>
+                    <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+                  </TInhrItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
+        </Children>
+      </TGrupItem>
+    </Property>
+    <Property>
+      <TBoolGrupItem>
+        <Name>Shell</Name>
+        <Symbol>Symbol</Symbol>
+        <TypeSpec>typeEnaDis</TypeSpec>
+        <Hint>If shell support is enabled.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>Disabled</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <Children>
+          <GrupItem>
+            <TInhrLinkItem>
+              <Name>Shell</Name>
+              <Symbol>Shell</Symbol>
+              <TypeSpec>LED\SHELL</TypeSpec>
+              <Hint>Interface to shell</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <DefaultValue/>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <SortStyle/>
+            </TInhrLinkItem>
+          </GrupItem>
+          <GrupItem>
+            <TInhrLinkItem>
+              <Name>Utility</Name>
+              <Symbol>Utility</Symbol>
+              <TypeSpec>LED\UTIL</TypeSpec>
+              <Hint>Interface to Utility functions</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <DefaultValue/>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <SortStyle/>
+            </TInhrLinkItem>
+          </GrupItem>
+        </Children>
+      </TBoolGrupItem>
+    </Property>
+  </PropertyList>
+  <MethodList>
+    <Method>
+      <TMthdItem>
+        <Name>On</Name>
+        <Symbol>On</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This turns the LED on.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <ReadOnly>true</ReadOnly>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Off</Name>
+        <Symbol>Off</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This turns the LED off.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <ReadOnly>true</ReadOnly>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Neg</Name>
+        <Symbol>Neg</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This negates/toggles the LED</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Get</Name>
+        <Symbol>Get</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This returns logical 1 in case the LED is on, 0 otherwise.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Status of the LED (on or off)</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Put</Name>
+        <Symbol>Put</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Turns the LED on or off.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>void</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>val</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>value to define if the LED has to be on or off.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(byte val)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Init</Name>
+        <Symbol>Init</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Performs the LED driver initialization.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Deinit</Name>
+        <Symbol>Deinit</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Deinitializes the driver</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ParseCommand</Name>
+        <Symbol>ParseCommand</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Shell Command Line parser</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>cmd</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to command string</ParHint>
+          <ParUserDeclaration>const unsigned char *cmd</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>handled</ParName>
+          <ParType>Boolean</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to variable which tells if the command has been handled or not</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>io</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to I/O structure</ParHint>
+          <ParUserDeclaration>const %@Shell@'ModuleName'%.StdIOType *io</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>SetRatio16</Name>
+        <Symbol>SetRatio16</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Method to specify the duty cylce. If using a PWM pin, this means the duty cycle is set. For On/off pins, values smaller 0x7FFF means off, while values greater means on.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>ratio</ParName>
+          <ParType>16bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Ratio value, where 0 means 'off' and 0xffff means 'on'</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(word ratio)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+  </MethodList>
+  <Links>
+    <EmptySection_DummyValue/>
+  </Links>
+  <Revisions>
+    <RevisionVersion>2</RevisionVersion>
+  </Revisions>
+</Bean>
