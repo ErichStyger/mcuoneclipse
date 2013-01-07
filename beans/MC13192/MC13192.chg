@@ -1,0 +1,11 @@
+%if %TransceiverType='1' %- internal chip. Only external transceiver chip has GPIO
+  %set GPIOenabled Value Disabled
+  %set GPIOenabled ReadOnly yes
+  %set RFswitchMode ReadOnly yes
+  %set RFswitchMode Value no
+%else %- external transceiver
+  %set GPIOenabled ReadOnly no
+  %- for external transceiver, we need to have RF_switch_mode as single port
+  %set RFswitchMode ReadOnly yes
+  %set RFswitchMode Value yes
+%endif

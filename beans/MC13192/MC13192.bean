@@ -1,0 +1,1577 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bean>
+  <Header>
+    <Name>MC13192</Name>
+    <Description>Device Driver for the Freescale MC13192 Transceiver</Description>
+    <Author>Erich Styger</Author>
+    <Version>01.001</Version>
+    <Icon>MC13192</Icon>
+    <TypesFiles>PE,MC13192\MC13192</TypesFiles>
+    <FileVersion>6</FileVersion>
+  </Header>
+  <Options>
+    <Category>CPU External Devices-Communication</Category>
+    <BW_HelpType>Basic</BW_HelpType>
+    <BW_HelpFiles>,Properties,Methods,Events</BW_HelpFiles>
+    <BW_AutoSaveHelp>yes</BW_AutoSaveHelp>
+    <BW_AutoSaveDriver>yes</BW_AutoSaveDriver>
+    <BW_DetailedHelp>yes</BW_DetailedHelp>
+    <BW_NeedTps>yes</BW_NeedTps>
+    <BW_NeedUst>0</BW_NeedUst>
+    <BW_NeedCns>0</BW_NeedCns>
+    <BeanStatus>PROPOSAL</BeanStatus>
+    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2012, all rights reserved.\n\nThis an open source software implementing driver using Processor Expert.\nThis is a free software and is opened for education,  research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
+    <Shortcut>MC131x</Shortcut>
+    <DemoDriver>no</DemoDriver>
+    <BeanLevel>Low</BeanLevel>
+  </Options>
+  <PropertyList>
+    <Property>
+      <TCompNameItem>
+        <Name>Component name</Name>
+        <Symbol>DeviceName</Symbol>
+        <Hint>Name of the component.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue/>
+      </TCompNameItem>
+    </Property>
+    <Property>
+      <TBoolItem>
+        <Name>Initialize in Init</Name>
+        <Symbol>InitializeInInit</Symbol>
+        <TypeSpec>typeYesNo</TypeSpec>
+        <Hint>If the transceiver shall be initialized during PE_low_level_init()</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+      </TBoolItem>
+    </Property>
+    <Property>
+      <TInhrLinkItem>
+        <Name>Wait</Name>
+        <Symbol>Wait</Symbol>
+        <TypeSpec>Wait_I</TypeSpec>
+        <Hint>System wait routines</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <DefaultValue/>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <SortStyle/>
+      </TInhrLinkItem>
+    </Property>
+    <Property>
+      <TGrupItem>
+        <Name>HW Interface</Name>
+        <Symbol>HWInterfaceGroup</Symbol>
+        <Hint>Defines the hardware interface.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description/>
+        <Expanded>Yes</Expanded>
+        <Children>
+          <GrupItem>
+            <TGrupItem>
+              <Name>Transceiver</Name>
+              <Symbol>TransceiverGroup</Symbol>
+              <Hint>This defines various signal settings.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description/>
+              <Expanded>Yes</Expanded>
+              <Children>
+                <GrupItem>
+                  <TEnumItem>
+                    <Name>Tranceiver Type</Name>
+                    <Symbol>TransceiverType</Symbol>
+                    <TypeSpec>typeTransceiver</TypeSpec>
+                    <Hint>Specifies the transceiver type. Select MPC1320x in case you are using a separate transceiver chip. Using the MPC1320x (external) transceiver then typically Single Port Mode should be enabled.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>true</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                  </TEnumItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>Single Port Mode</Name>
+                    <Symbol>RFswitchMode</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>This corresponds to bit 12 (RF_switch_mode) of Control_B register (address 0x07). yes = Single Port Mode selected where RF switch is active and RFIN_M and RFIN_P and bidirectional signals. no = Dual Port Mode selected where RFIN_M and RFIN_P are inputs only and PAO_P and PAO_N are separate outputs. (This is default operation).</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>1</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>false</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>CT Bias Enable</Name>
+                    <Symbol>CTbiasEnable</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>If ct_bias_en flag in register 7 (Control_B) is enabled or not. This controls the output state.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+              </Children>
+            </TGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TInhrItem>
+              <Name>CE Pin</Name>
+              <Symbol>CE</Symbol>
+              <TypeSpec>MC13192\BitIO</TypeSpec>
+              <Hint>Pin to select the device</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>-1</DefaultIndex>
+              <TextValueIndex>false</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <InhrBeanBaseName>CE</InhrBeanBaseName>
+              <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+            </TInhrItem>
+          </GrupItem>
+          <GrupItem>
+            <TInhrItem>
+              <Name>RESET Pin</Name>
+              <Symbol>RESET</Symbol>
+              <TypeSpec>MC13192\BitIO</TypeSpec>
+              <Hint>Pin to select the device</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>-1</DefaultIndex>
+              <TextValueIndex>false</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <InhrBeanBaseName>RESET</InhrBeanBaseName>
+              <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+            </TInhrItem>
+          </GrupItem>
+          <GrupItem>
+            <TInhrItem>
+              <Name>RTXEN Pin</Name>
+              <Symbol>RTXEN</Symbol>
+              <TypeSpec>MC13192\BitIO</TypeSpec>
+              <Hint>Pin to select the device</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>-1</DefaultIndex>
+              <TextValueIndex>false</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <InhrBeanBaseName>RTXEN</InhrBeanBaseName>
+              <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+            </TInhrItem>
+          </GrupItem>
+          <GrupItem>
+            <TInhrItem>
+              <Name>ATTN Pin</Name>
+              <Symbol>ATTN</Symbol>
+              <TypeSpec>MC13192\BitIO</TypeSpec>
+              <Hint>Pin to select the device</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>-1</DefaultIndex>
+              <TextValueIndex>false</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <InhrBeanBaseName>ATTN</InhrBeanBaseName>
+              <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+            </TInhrItem>
+          </GrupItem>
+          <GrupItem>
+            <TGrupItem>
+              <Name>SPI</Name>
+              <Symbol>SPIgroup</Symbol>
+              <Hint>Interface to SPI</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description/>
+              <Expanded>Yes</Expanded>
+              <Children>
+                <GrupItem>
+                  <TBoolGrupItem>
+                    <Name>SW SPI</Name>
+                    <Symbol>SWSPI_Enabled</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>If enabled, a software SPI is used</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
+                    <EditLine>false</EditLine>
+                    <Description>Disabled</Description>
+                    <Expanded>No</Expanded>
+                    <DefaultValue>false</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TInhrLinkItem>
+                          <Name>SW SPI</Name>
+                          <Symbol>SWSPI</Symbol>
+                          <TypeSpec>MC13192\SWSPI</TypeSpec>
+                          <Hint>Interface to the software SPI</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>false</EditLine>
+                          <DefaultValue/>
+                          <CanDelete>false</CanDelete>
+                          <IconPopup>false</IconPopup>
+                          <SortStyle/>
+                        </TInhrLinkItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolGrupItem>
+                    <Name>HW SPI</Name>
+                    <Symbol>HWSPI_Enabled</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>If enabled, a hardware SPI is used</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
+                    <EditLine>false</EditLine>
+                    <Description>Enabled</Description>
+                    <Expanded>Yes</Expanded>
+                    <DefaultValue>true</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TIntgItem>
+                          <Name>Baud Rate Mode</Name>
+                          <Symbol>HWSPIBaudRateMode</Symbol>
+                          <Hint>Baud rate to be used for a shared SPI channel. Index 0 denotes the initial baud rate.</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>true</EditLine>
+                          <DefaultValue>0</DefaultValue>
+                          <MinValue>0</MinValue>
+                          <MaxValue>-1</MaxValue>
+                          <Bases>DEC</Bases>
+                          <DefaultBase>DEC</DefaultBase>
+                          <ExtraHintDisabled>false</ExtraHintDisabled>
+                          <ChangeValueIntoRange>false</ChangeValueIntoRange>
+                          <RuntimeProperty>false</RuntimeProperty>
+                        </TIntgItem>
+                      </GrupItem>
+                      <GrupItem>
+                        <TInhrLinkItem>
+                          <Name>HW SPI</Name>
+                          <Symbol>HWSPI</Symbol>
+                          <TypeSpec>MC13192\HWSPI</TypeSpec>
+                          <Hint>Interface to the software SPI</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>false</EditLine>
+                          <DefaultValue/>
+                          <CanDelete>false</CanDelete>
+                          <IconPopup>false</IconPopup>
+                          <SortStyle/>
+                        </TInhrLinkItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>MISO High Impedance</Name>
+                    <Symbol>MISOHighImpedance</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>This controls bit 11 (miso_hiz_en) of register 0x07 (Control_B). Enabled is the default. The MISO high impedance enable bit either tristates or drives the MISO pin to a logic low when CE is negated. It is recommended to disable this bit for low power modes. (set it to 'no' in this property).</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>MISO Drive Strength</Name>
+                    <Symbol>MISODriveStrength</Symbol>
+                    <Hint>This selects the output drive strength for the transceiver MISO signal. 0 is the lowest strength.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>0</DefaultValue>
+                    <MinValue>0</MinValue>
+                    <MaxValue>3</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+              </Children>
+            </TGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TGrupItem>
+              <Name>IRQ</Name>
+              <Symbol>IRQgroup</Symbol>
+              <Hint>This configures the interrupt request signal.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description/>
+              <Expanded>Yes</Expanded>
+              <Children>
+                <GrupItem>
+                  <TStrgListItem>
+                    <Name>Macros</Name>
+                    <Symbol>IRQMacrosList</Symbol>
+                    <Hint>Required macros to configure and access IRQ settings</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <DefaultValue>(string list)</DefaultValue>
+                    <DefineList>false</DefineList>
+                    <ExternEditorEnabled>false</ExternEditorEnabled>
+                    <AcceptNonPrintChars>false</AcceptNonPrintChars>
+                    <DefaultStrgList lines_count="30">
+                      <Line>/* setting up the IRQ line from the modem:</Line>
+                      <Line>* - pull up the signal</Line>
+                      <Line>* - trigger on low level and/or falling edge</Line>
+                      <Line>*/</Line>
+                      <Line>#ifdef __HCS08__</Line>
+                      <Line>/* Macros for the HCS08 core, using the IRQ pin */</Line>
+                      <Line>#define IRQFLAG()         IRQSC_IRQF                                                    /*!&lt; poll IRQ flag */</Line>
+                      <Line>#define IRQInit()       IRQSC = (IRQSC_IRQPE_MASK|IRQSC_IRQACK_MASK)                  /*!&lt; Configures IRQ: IRQ pin enable and acknowledge interrupt */</Line>
+                      <Line>#define IRQACK()        IRQSC |= IRQSC_IRQACK_MASK                                    /*!&lt; IRQ acknowledge */</Line>
+                      <Line>#define IRQPinEnable()  IRQSC = (IRQSC_IRQPE_MASK|IRQSC_IRQACK_MASK|IRQSC_IRQIE_MASK) /*!&lt; IRQ pin enable, acknowledge pending interrrupt and enable IRQ interrupt */</Line>
+                      <Line>#else /* ColdFire */</Line>
+                      <Line>#if 1</Line>
+                      <Line>/* Macros for the MCF52259 using the IRQ on IRQ5 */</Line>
+                      <Line>#define IRQFLAG()</Line>
+                      <Line>#define IRQInit()</Line>
+                      <Line>#define IRQACK()  (EPFR = IRQ1_PIN_MASK)</Line>
+                      <Line>#define IRQPinEnable()</Line>
+                      <Line>#else</Line>
+                      <Line>/* Macros for the MCF51CN128 using the IRQ on PTE4 */</Line>
+                      <Line>#define IRQFLAG()         KBI2SC_KBF       /*!&lt; poll IRQ flag */</Line>
+                      <Line>#define IRQInit()       IRQ1_Disable();  /* disable interrupts */ \</Line>
+                      <Line>KBI2ES_KBEDG4=0; /* falling edge, low level */ \</Line>
+                      <Line>KBI2SC_KBIMOD=0; /* edge only */ \</Line>
+                      <Line>PTEPE_PTEPE4=1;  /* pull up pin */ \</Line>
+                      <Line>KBI2PE_KBIPE4=1; /* pin enable */ \</Line>
+                      <Line>KBI2SC_KBACK=1   /* clear any false interrupts */</Line>
+                      <Line>#define IRQACK()        KBI2SC_KBACK=1                         /*!&lt; IRQ acknowledge */</Line>
+                      <Line>#define IRQPinEnable()  KBI2SC = (KBI2SC_KBACK_MASK|KBI2SC_KBIE) /*!&lt; Acknowledge any false interrupts and enable IRQ pin */</Line>
+                      <Line>#endif</Line>
+                      <Line>#endif</Line>
+                    </DefaultStrgList>
+                  </TStrgListItem>
+                </GrupItem>
+                <GrupItem>
+                  <TInhrItem>
+                    <Name>IRQ Pin</Name>
+                    <Symbol>IRQ</Symbol>
+                    <TypeSpec>MC13192\IRQ</TypeSpec>
+                    <Hint>Interrupt signal from Transceiver</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>-1</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <InhrBeanBaseName>IRQ</InhrBeanBaseName>
+                    <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+                  </TInhrItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>IRQ Pullup</Name>
+                    <Symbol>IRQpullUp</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>This enables the onboard pullup (nominal 40 Ohm) on the IRQ pin. Otherwise the pin is configured as open drain (external pullup required).</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>IRQ Drive Strength</Name>
+                    <Symbol>IRQDriveStrength</Symbol>
+                    <Hint>This selects the output drive strength for the transceiver IRQ signal. 0 is the lowest strength.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>0</DefaultValue>
+                    <MinValue>0</MinValue>
+                    <MaxValue>3</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+              </Children>
+            </TGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TGrupItem>
+              <Name>CLKO</Name>
+              <Symbol>CLKOgroup</Symbol>
+              <Hint>Configures the CLKO signal</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description/>
+              <Expanded>Yes</Expanded>
+              <Children>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>Enable</Name>
+                    <Symbol>CLKOenable</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>If the transceiver shall produce a clock signal on CLKO.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TEnumItem>
+                    <Name>Frequency</Name>
+                    <Symbol>CLKOfrequency</Symbol>
+                    <TypeSpec>typeCLKOfreq</TypeSpec>
+                    <Hint>The transciver provides the ability to trim the crystal oscillator frequency and an output clock with a programmable frequency that can be used to drive another device, such as a microcontroller. The field xtal_trim[7:0], CLKO_Ctl Register 0A, Bits 15-8, alter the capacitive loading to the crystal and affects the oscillator frequency.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>6</DefaultIndex>
+                    <TextValueIndex>true</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                  </TEnumItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>Trim bits</Name>
+                    <Symbol>xtal_trim</Symbol>
+                    <Hint>The crystal oscillator capacitor trim bits warps the crystal frequency by approximately -0.25 ppm per bit. 0x7E is the default setting and suggested start point for trimming.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>126</DefaultValue>
+                    <MinValue>0</MinValue>
+                    <MaxValue>-1</MaxValue>
+                    <Bases>DEC HEX</Bases>
+                    <DefaultBase>HEX</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>Toggle in Doze Mode</Name>
+                    <Symbol>CLKOoutOnDoze</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>If the CLKO shall continue to toggle at the selected rate during Doze mode if CLKO is enabled.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>1</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>false</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>Drive Strength</Name>
+                    <Symbol>CLKODriveStrength</Symbol>
+                    <Hint>This selects the output drive strength for the transceiver CLKO signal. 0 is the lowest strength.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>0</DefaultValue>
+                    <MinValue>0</MinValue>
+                    <MaxValue>3</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+              </Children>
+            </TGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>GPIOs</Name>
+              <Symbol>GPIOenabled</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>If the General Purpose Input and Output pins are enabled. yes = Single Port Mode selected where RF switch is active and RFIN_M and RFIN_P and bidirectional signals. no = Dual Port Mode selected where RFIN_M and RFIN_P are inputs only and PAO_P and PAO_N are separate outputs. (This is default operation).</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Disabled</Description>
+              <Expanded>No</Expanded>
+              <DefaultValue>false</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>GPIO1-4 High Drive Strength</Name>
+                    <Symbol>GPIO14DriveStrength</Symbol>
+                    <Hint>This selects the output drive strength for the transceiver GPIO1 to GPIO4. 0 is the lowest strength.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>0</DefaultValue>
+                    <MinValue>0</MinValue>
+                    <MaxValue>3</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>GPIO5-7 High Drive Strength</Name>
+                    <Symbol>GPIO567DriveStrength</Symbol>
+                    <Hint>This selects the output drive strength for the transceiver GPIO5 to GPIO7. 0 is the lowest strength.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>0</DefaultValue>
+                    <MinValue>0</MinValue>
+                    <MaxValue>3</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>Alternative MCU interface</Name>
+                    <Symbol>GPIOaltInterface</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>If enabled, GPIO1 and GPIO2 are used as status to the MCU. GPIO1 indicates when the transceiver is out of idle. GPIO2 indicates a valid CRC or CCA result. These signals are required for Freescale’s 802.15.4 MAC software.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>1</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>false</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>GPIO1 as input</Name>
+                    <Symbol>GPIO1input</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>If the IO pin serves as output pin (otherwise as input). If you do not use the pin, configure it as input.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>GPIO2 as input</Name>
+                    <Symbol>GPIO2input</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>If the IO pin serves as output pin (otherwise as input). If you do not use the pin, configure it as input.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>GPIO3 as input</Name>
+                    <Symbol>GPIO3input</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>If the IO pin serves as output pin (otherwise as input). If you do not use the pin, configure it as input.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>GPIO4 as input</Name>
+                    <Symbol>GPIO4input</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>If the IO pin serves as output pin (otherwise as input). If you do not use the pin, configure it as input.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>GPIO5 as input</Name>
+                    <Symbol>GPIO5input</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>If the IO pin serves as output pin (otherwise as input). If you do not use the pin, configure it as input.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>GPIO6 as input</Name>
+                    <Symbol>GPIO6input</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>If the IO pin serves as output pin (otherwise as input). If you do not use the pin, configure it as input.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>GPIO7 as input</Name>
+                    <Symbol>GPIO7input</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>If the IO pin serves as output pin (otherwise as input). If you do not use the pin, configure it as input.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
+        </Children>
+      </TGrupItem>
+    </Property>
+  </PropertyList>
+  <MethodList>
+    <Method>
+      <TMthdItem>
+        <Name>EnableInterrupts</Name>
+        <Symbol>EnableInterrupts</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Enables transceiver interrupts</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>DisableInterrupts</Name>
+        <Symbol>DisableInterrupts</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Disables Transceiver interrupts.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>RTXENDeAssert</Name>
+        <Symbol>RTXENDeAssert</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint/>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>RTXENAssert</Name>
+        <Symbol>RTXENAssert</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Asserts the RTXEN signal.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Wake</Name>
+        <Symbol>Wake</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Wake up the transceiver.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Write</Name>
+        <Symbol>Write</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Writes a command to the transceiver</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <ReadOnly>true</ReadOnly>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>None</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>addr</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Transceiver address</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>val</ParName>
+          <ParType>16bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Value to write to the register</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(byte addr, word val)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Write4</Name>
+        <Symbol>Write4</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Writes 32bit (dword) data to the transceiver. The data is in big endian format, and it writes it to the transceiver (which has little endian memory layout).</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <ReadOnly>true</ReadOnly>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>None</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>addr</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Transceiver start address where to write the data.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>val</ParName>
+          <ParType>32bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Value to write to the register, in big endian format.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(byte addr, dword val)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Read</Name>
+        <Symbol>Read</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Read a word from the transceiver</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <ReadOnly>true</ReadOnly>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>16bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>addr</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Address in the transceiver to read from.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>word #M#_#C#(byte addr)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Read2</Name>
+        <Symbol>Read2</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Read the second word from the transceiver.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>16bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>addr</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Address in the transceiver to read from.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>word #M#_#C#(byte addr)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>WriteTx</Name>
+        <Symbol>WriteTx</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Writes a block of data to the TX packet RAM of the transceiver.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>psTxPkt</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to </ParHint>
+          <ParUserDeclaration>tTxPacket *psTxPkt</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(tTxPacket *psTxPkt)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ReadRx</Name>
+        <Symbol>ReadRx</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Writes a block of data to the TX packet RAM of the transceiver.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>status</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>psRxPkt</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to </ParHint>
+          <ParUserDeclaration>tRxPacket *psRxPkt</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(tRxPacket *psRxPkt)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Restart</Name>
+        <Symbol>Restart</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Restarts the transceiver</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ContReset</Name>
+        <Symbol>ContReset</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Reset (continuous) the transceiver</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>SetClockRate</Name>
+        <Symbol>SetClockRate</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Set the CLKO frequency</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>u8Freq</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>frequency to be used. 0 = 16 MHz, 1 = 8 MHz, 2 = 4 MHz, 3 = 2 MHz, 4 = 1 MHz, 5 = 62.5 kHz, 6 = 32.768+ kHz, 7 = 16.393+ kHz</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte u8Freq)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>RadioInit</Name>
+        <Symbol>RadioInit</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint/>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>InitCommChannel</Name>
+        <Symbol>InitCommChannel</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Method to init or re-initialize the communication channel. This method is used if the SPI communication channel is shared among different peripherals.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Init</Name>
+        <Symbol>Init</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint/>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>false</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>GetRadioSPI</Name>
+        <Symbol>GetRadioSPI</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Method called in case of a shared bus used to the transceiver.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>LeaveRadioSPI</Name>
+        <Symbol>LeaveRadioSPI</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Method called in case of a shared bus used to the transceiver.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+  </MethodList>
+  <EventList>
+    <Event>
+      <TStrgItem>
+        <Name>Event module name</Name>
+        <Symbol>EventModule</Symbol>
+        <Hint>Name of the user module (without extension), where the events from this bean are placed.</Hint>
+        <ItemLevel>ADVANCED</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>Events</DefaultValue>
+        <StrDefine>nothing</StrDefine>
+        <MinLength>0</MinLength>
+        <MaxLength>-1</MaxLength>
+      </TStrgItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>DataIndication</Name>
+        <Symbol>DataIndication</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Event in case a data packet has been received.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>generate code</Description>
+        <Expanded>Yes</Expanded>
+        <DefaultValue>true</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(void)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>DataIndication procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>ResetIndication</Name>
+        <Symbol>ResetIndication</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Event in case of transceiver reset.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>generate code</Description>
+        <Expanded>Yes</Expanded>
+        <DefaultValue>true</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(void)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>ResetIndication procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OnCLKO</Name>
+        <Symbol>OnCLKO</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Event called when CLKO changes</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>freq</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Frequency value. 0 for 16 MHz, 1 for 8 MHz, 2 for 4 MHz, 3 for 2 MHz, 4 for 1 MHz, 5 for 62.5 kHz, 6 for 32.786 kHz, 7 for 16.393 kHz</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(byte freq)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OnCLKO procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OnGetRadioSPI</Name>
+        <Symbol>OnGetRadioSPI</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Event called in the event of GetRadioSPI() called.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(void)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OnGetRadioSPI procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OnLeaveRadioSPI</Name>
+        <Symbol>OnLeaveRadioSPI</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Event called in the event of LeaveRadioSPI() called.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(void)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OnLeaveRadioSPI procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+  </EventList>
+  <Links>
+    <EmptySection_DummyValue/>
+  </Links>
+  <Revisions>
+    <RevisionVersion>2</RevisionVersion>
+  </Revisions>
+</Bean>
