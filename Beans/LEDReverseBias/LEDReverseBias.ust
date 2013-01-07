@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--User types for component-->
+<UserTypes>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>SensorValType</Name>
+    <Hint>Type holding the sensor value.</Hint>
+    <Generate>yes</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>yes</GenerateHelp>
+    <PreparedHint>typedef bool %'ModuleName'%.SensorValType; /* Type holding the sensor value. */\n
+</PreparedHint>
+    <Type>typedef bool %'ModuleName'%.SensorValType;</Type>
+    <HWTestType>16bit signed</HWTestType>
+  </Type>
+</UserTypes>

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--User types for component-->
+<UserTypes>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>PixelColor</Name>
+    <Hint>type large enough to hold the color information</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>typedef %@Display@'ModuleName'%.Color %'ModuleName'%.PixelColor; /* type large enough to hold the color information */\n
+</PreparedHint>
+    <Type>typedef %@Display@'ModuleName'%.Color %'ModuleName'%.PixelColor;</Type>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>PixelDim</Name>
+    <Hint>type big enough to hold the x and y coordinates</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>typedef %@Display@'ModuleName'%.PixelDim %'ModuleName'%.PixelDim; /* type big enough to hold the x and y coordinates */\n
+</PreparedHint>
+    <Type>typedef %@Display@'ModuleName'%.PixelDim %'ModuleName'%.PixelDim;</Type>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>painterCallback</Name>
+    <Hint>callback to be called to paint the element</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>typedef byte (*%'ModuleName'%.painterCallback) (struct _UIWindow *window, struct _UIElement *element); /* callback to be called to paint the element */\n
+</PreparedHint>
+    <Type>typedef byte (*%'ModuleName'%.painterCallback) (struct _UIWindow *window, struct _UIElement *element);</Type>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>ElementType</Name>
+    <Hint>Alias to element type enumeration</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* Alias to element type enumeration */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>FontCallbacks</Name>
+    <Hint>Callback to retrieve font information.</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>typedef GFONT_Callbacks %'ModuleName'%.FontCallbacks; /* Callback to retrieve font information. */\n
+</PreparedHint>
+    <Type>typedef GFONT_Callbacks %'ModuleName'%.FontCallbacks;</Type>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>Header</Name>
+    <Hint>Alias for header element</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* Alias for header element */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>Text</Name>
+    <Hint>Alias for StaticText element</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* Alias for StaticText element */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>Window</Name>
+    <Hint>Alias to Window element.</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* Alias to Window element. */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>Element</Name>
+    <Hint>Alias to Element</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* Alias to Element */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>MsgKind</Name>
+    <Hint>different kinds of messages</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* different kinds of messages */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>Screen</Name>
+    <Hint>Alias to screen type</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* Alias to screen type */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TPointerType</UsrType>
+    <Name>PElement</Name>
+    <Hint>Pointer to element</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>  typedef %'ModuleName'_Element* %'ModuleName'_PElement ; /* Pointer to element */\n
+</PreparedHint>
+    <Type>Element</Type>
+  </Type>
+  <Type>
+    <UsrType>TPointerType</UsrType>
+    <Name>PScreen</Name>
+    <Hint>pointer to screen</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>  typedef %'ModuleName'_Screen* %'ModuleName'_PScreen ; /* pointer to screen */\n
+</PreparedHint>
+    <Type>Screen</Type>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>ScreenWidget</Name>
+    <Hint/>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>Pvoid</Name>
+    <Hint>Pointer to void</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* Pointer to void */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>ElementFindFct</Name>
+    <Hint/>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>DisplayOrientation</Name>
+    <Hint/>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>Coordinate</Name>
+    <Hint/>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>PCoordinate</Name>
+    <Hint/>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>MsgHandler</Name>
+    <Hint>Message handler</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* Message handler */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+</UserTypes>

@@ -1,0 +1,15 @@
+%if defined(RPMenabled) & defined(TicksEnabled)
+  %if RPMenabled='yes' & TicksEnabled='yes'
+    %set TicksEnabled Value Disabled
+  %elif RPMenabled='no' & TicksEnabled='no'
+    %set TicksEnabled Value Enabled
+  %endif
+%endif
+%if defined(TicksTimeMs)
+  %if %TicksTimeMs <. %SamplePeriodMs
+    %- TicksTimeMs must be at least the sample period
+    %set TicksTimeMs Value %SamplePeriodMs
+    debug
+  %endif
+%endif
+

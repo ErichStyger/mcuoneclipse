@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--User types for component-->
+<UserTypes>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>CHARP</Name>
+    <Hint>alias to a char pointer</Hint>
+    <Generate>yes</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>yes</GenerateHelp>
+    <PreparedHint>typedef char * %'ModuleName'%.CHARP; /* alias to a char pointer */\n
+</PreparedHint>
+    <Type>typedef char * %'ModuleName'%.CHARP;</Type>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>INT</Name>
+    <Hint>alias to int type.</Hint>
+    <Generate>yes</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>yes</GenerateHelp>
+    <PreparedHint>typedef int %'ModuleName'%.INT; /* alias to int type. */\n
+</PreparedHint>
+    <Type>typedef int %'ModuleName'%.INT;</Type>
+    <HWTestType/>
+  </Type>
+</UserTypes>

@@ -1,0 +1,514 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1250">
+<title>
+Component  documentation - Methods
+</title>
+<STYLE type="text/css">
+body{
+  background-color: white;
+  margin:0px;
+  font: 13px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+A:visited {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:link {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:active {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #2D8AA7; TEXT-DECORATION: underline
+}
+.VSP {
+	COLOR: #2D8AA7; FONT: bold italic 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.reflink {
+	FONT: 11px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+ 	COLOR: #2D8AA7;
+}
+.user_text {
+	FONT: 12px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+	COLOR: #000000;
+}
+.bluetext {
+  COLOR: #695F52;
+}
+.versionspec {
+  padding:5px; 
+  background-color: RGB(243, 242, 230);
+  margin-top:5px;
+  margin-bottom:5px;  
+}
+.versionspecdetail {
+  padding:5px; 
+  background-color: RGB(243, 242, 230);
+  margin-top:5px;
+  margin-bottom:5px;  
+}
+.versionspeclabel {
+  font-style: italic;
+}
+LI.DEF {
+  list-style-image: url(DefaultLI.gif) ;
+}
+LI.BAS {
+	list-style-image: url(BasicLI.gif) ;
+}
+LI.ADV {
+	list-style-image: url(AdvancedLI.gif) ;
+}
+LI.EXP {
+	list-style-image: url(ExpertLI.gif) ;
+}
+.titlebox {  
+  font: bold 18px Helvetica Neue, Helvetica, Arial, sans-serif;
+  color: #51626F;
+  margin-bottom: 10px;
+}
+.lefttitlebox {
+  background-color:#C3CFD1;  
+}
+.lefttitle {
+  color:#51626F;
+  font: bold 11px Helvetica Neue, Helvetica, Arial, sans-serif;   
+}
+.beanname {
+  font: bold 14px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+  padding-top:6px;
+  padding-bottom:5px;
+  margin-bottom: 5px;
+  border-bottom-style: dotted;
+  border-bottom-width: 1;  
+}
+.descrtext {
+  font-style: italic;
+  font: 14px/18px Helvetica Neue, Helvetica, Arial, sans-serif;  
+  padding-bottom:9px;
+}
+.footer {
+  color: #b0b0b0; 
+  font: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+  text-align: center;
+  border-top-style: solid;
+  border-top-color: #BOBOBO;
+  border-top-width: 1px;  
+  padding-top: 5px;
+  margin-top: 20px;
+}
+.info_name {
+  font: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+  padding: 0px;
+  color: black;
+}
+.info_text {
+  font: 11px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.text_title {
+  COLOR: #000000; 
+  FONT: bold 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.descr_line {
+  COLOR: gray; 
+  FONT: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+</STYLE>
+
+</head>
+
+<body>
+
+<table border="0"  cellspacing="0" cellpadding="0">
+  <tr>
+    <td valign="top" width="150" >
+      <table  width="150" height="160" cellpadding="3" cellspacing="0" border="0">
+        <tbody>
+        <tr class="lefttitlebox">
+          <td width="4"></td>
+          <td align="center" valign="middle" height="30" width="128">
+            <span class="lefttitle">
+<b>ChLCD</b>
+            </span>
+          </td>
+        </tr>
+        <tr height="700">
+          <td width="4"></td>
+          <td width="128" valign="top">
+            &nbsp;<br />
+            <div class="reflink">
+<!---HTMLLISTBEG_SHORT DON'T CHANGE THIS LINE-->
+<a href="ChLCD.html">General Info</a><br />
+<a href="ChLCDProperties.html">Properties</a><br />
+<i>Methods</i><br />
+<a href="ChLCDEvents.html">Events</a><br />
+<!---HTMLLISTEND DON'T CHANGE THIS LINE-->
+<br /><br /><br />
+<a href="../../DOCs/PredefSymbols.html">Types &amp; definitions</a><br/>
+<a href="../../DOCs/BEANindex.html">Component Index</a><br/>
+<a href="../../DOCs/CPUindex.html">CPU Component Index</a><br/>
+<a href="../../DOCs/EmbeddedBeans.html">Embedded Components</a><br/>
+<a href="../../DOCs/BeanCategories.html">Components Categories</a><br/>
+
+<br /><br /><br />
+<center>
+<img src="ChLCD_b.gif" alt="Component icon"/>
+
+
+</center>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </td>
+    <td width="1" class="lefttitlebox" valign="top">
+      <table class="lefttitlebox" width="1" cellpadding="0" cellspacing="0" height="100%" border="0">
+        <tr class="lefttitlebox"><td width="1"></td></tr>
+      </table>
+    </td>
+    <td style="padding-left:15px;padding-right:10px;" valign="top" align="left" width="100%" >
+
+         <div class="titlebox">
+            <div class="beanname">
+              Component
+              
+              
+              ChLCD
+            </div>
+            <div class="descrtext">Kent 240x160 ChLCD</div>
+            <div class="info_name">Component Level: <span class="info_text"><a href="../../DOCs/BeanCategoriesInfo.html#LevelAbstraction">Low</a></span></div>
+            <div class="info_name">Category: 
+              <span class="info_text">
+              <a href="../../DOCs/BeanCategoriesInfo.html">CPU External Devices-Display</a>
+              
+              </span>
+            </div>
+          </div>
+
+         <div class="text_title">
+              Methods:
+    		 </div>		 
+    		 <div class="descr_line">                  
+              (Methods are user-callable functions/subroutines intended for
+               the component functions control. Please see the <a href="../../DOCs/EmbeddedBeans.html#Methods">Embedded Components page</a> for more information.)                   
+         </div>
+                  
+         <div class="user_text">
+            <ul>
+<!---USERBEG DON'T CHANGE THIS LINE-->
+
+<!---USEREND DON'T CHANGE THIS LINE-->
+<li><a name="GetWidth">
+<b>GetWidth</b></a>
+ - Returns the width of the display
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PixelDim GetWidth(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:<i>ComponentName_</i>PixelDim</i> - width of the display
+</li>
+</ul><br />
+</li>
+<li><a name="GetHeight">
+<b>GetHeight</b></a>
+ - Returns the height of the display
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PixelDim GetHeight(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:<i>ComponentName_</i>PixelDim</i> - height of the display
+</li>
+</ul><br />
+</li>
+<li><a name="GetLongerSide">
+<b>GetLongerSide</b></a>
+ - Returns the longer side of the display
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PixelDim GetLongerSide(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:<i>ComponentName_</i>PixelDim</i> - longer side of the display
+</li>
+</ul><br />
+</li>
+<li><a name="GetShorterSide">
+<b>GetShorterSide</b></a>
+ - Returns the shorter side of the display
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PixelDim GetShorterSide(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:<i>ComponentName_</i>PixelDim</i> - shorter side of the display
+</li>
+</ul><br />
+</li>
+<li><a name="SetDisplayOrientation">
+<b>SetDisplayOrientation</b></a>
+ - Changes the current display orientation
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SetDisplayOrientation(<i>ComponentName_</i>DisplayOrientation newOrientation)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>newOrientation:<i>ComponentName_</i>DisplayOrientation</i> - new orientation of the display</li>
+</ul><br />
+</li>
+<li><a name="GetDisplayOrientation">
+<b>GetDisplayOrientation</b></a>
+ - Returns the current display orientation
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>DisplayOrientation GetDisplayOrientation(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:<i>ComponentName_</i>DisplayOrientation</i> - current display orientation
+</li>
+</ul><br />
+</li>
+<li><a name="UpdateFull">
+<b>UpdateFull</b></a>
+ - Updates the whole display
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void UpdateFull(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="UpdateRegion">
+<b>UpdateRegion</b></a>
+ - Refreshs a region of the display
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void UpdateRegion(<i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y, <i>ComponentName_</i>PixelDim w, <i>ComponentName_</i>PixelDim h)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x coordinate</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y coordinate</li>
+<li><i>w:<i>ComponentName_</i>PixelDim</i> - width of area</li>
+<li><i>h:<i>ComponentName_</i>PixelDim</i> - height of area</li>
+</ul><br />
+</li>
+<li><a name="ElectronicErase">
+<b>ElectronicErase</b></a>
+ - This function removes pressure points from the active area of the display. Extensive use of this function may reduce the lifetime of the display!
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void ElectronicErase(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="Clear">
+<b>Clear</b></a>
+ - Clears the display
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void Clear(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="FillMemory">
+<b>FillMemory</b></a>
+ - Fills the display memory with a pattern
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void FillMemory(<i>ComponentName_</i>PixelCount startAddr, <i>ComponentName_</i>PixelCount endAddr, byte pattern)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>startAddr:<i>ComponentName_</i>PixelCount</i> - start address</li>
+<li><i>endAddr:<i>ComponentName_</i>PixelCount</i> - end address</li>
+<li><i>pattern:byte</i> - fill pattern</li>
+</ul><br />
+</li>
+<li><a name="DrawFilledBox">
+<b>DrawFilledBox</b></a>
+ - Draws a filled box with the given color
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void DrawFilledBox(<i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y, <i>ComponentName_</i>PixelDim w, <i>ComponentName_</i>PixelDim h, <i>ComponentName_</i>PixelColor color)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x coordinate</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - no hint</li>
+<li><i>w:<i>ComponentName_</i>PixelDim</i> - width</li>
+<li><i>h:<i>ComponentName_</i>PixelDim</i> - height</li>
+<li><i>color:<i>ComponentName_</i>PixelColor</i> - color to be used</li>
+</ul><br />
+</li>
+<li><a name="SetBits">
+<b>SetBits</b></a>
+ - Sets bits on the display
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SetBits(<i>ComponentName_</i>PixelCount addr, byte mask)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>addr:<i>ComponentName_</i>PixelCount</i> - display memory address</li>
+<li><i>mask:byte</i> - mask of bits to set</li>
+</ul><br />
+</li>
+<li><a name="ReadMem">
+<b>ReadMem</b></a>
+ - Read from the display memory
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ReadMem(<i>ComponentName_</i>PixelCount addr)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>addr:<i>ComponentName_</i>PixelCount</i> - display memory address</li>
+<li><i>Return value:byte</i> - memory byte
+</li>
+</ul><br />
+</li>
+<li><a name="ClearBits">
+<b>ClearBits</b></a>
+ - Clears bits on the display
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void ClearBits(<i>ComponentName_</i>PixelCount addr, byte mask)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>addr:<i>ComponentName_</i>PixelCount</i> - display memory address</li>
+<li><i>mask:byte</i> - mask of bits to clear</li>
+</ul><br />
+</li>
+<li><a name="XorBits">
+<b>XorBits</b></a>
+ - XOR's bits on the display
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void XorBits(<i>ComponentName_</i>PixelCount addr, byte mask)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>addr:<i>ComponentName_</i>PixelCount</i> - display memory address</li>
+<li><i>mask:byte</i> - mask of bits to XOR</li>
+</ul><br />
+</li>
+<li><a name="SetPixel">
+<b>SetPixel</b></a>
+ - Sets a pixel
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SetPixel(<i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x coordinate</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y coordinate</li>
+</ul><br />
+</li>
+<li><a name="ClrPixel">
+<b>ClrPixel</b></a>
+ - Clears a pixel
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void ClrPixel(<i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x coordinate</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y coordinate</li>
+</ul><br />
+</li>
+<li><a name="NegPixel">
+<b>NegPixel</b></a>
+ - Negates a pixel
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void NegPixel(<i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x coordinate</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y coordinate</li>
+</ul><br />
+</li>
+<li><a name="GetPixel">
+<b>GetPixel</b></a>
+ - Gets a pixel
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PixelColor GetPixel(<i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x coordinate</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y coordinate</li>
+<li><i>Return value:<i>ComponentName_</i>PixelColor</i> - The pixel value
+</li>
+</ul><br />
+</li>
+<li><a name="ResetController">
+<b>ResetController</b></a>
+ - Resets the display controller
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void ResetController(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="SleepController">
+<b>SleepController</b></a>
+ - Puts the controller into sleep mode
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SleepController(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="BlankDisplay">
+<b>BlankDisplay</b></a>
+ - Blanks the display (this does NOT clear the display memory).
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void BlankDisplay(byte blankType)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>blankType:byte</i> - type of blanking<br />CLR_SECT_BRT: Clear Section Bright<br />CLR_SECT_BRT_IB: Clear Section Bright, inverted<br />CLR_SECT_DRK: Clear Section Dark<br />CLR_SECT_DRK_IB: Clear Section Dark, inverted</li>
+</ul><br />
+</li>
+<li><a name="BlankDisplayRows">
+<b>BlankDisplayRows</b></a>
+ - Blanks a display row range (this does NOT clear the display memory).
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void BlankDisplayRows(byte blankType, <i>ComponentName_</i>PixelDim firstRow, <i>ComponentName_</i>PixelDim lastRow)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>blankType:byte</i> - type of blanking.<br />CLR_SECT_BRT: Clear Section Bright<br />CLR_SECT_BRT_IB: Clear Section Bright, inverted<br />CLR_SECT_DRK: Clear Section Dark<br />CLR_SECT_DRK_IB: Clear Section Dark, inverted</li>
+<li><i>firstRow:<i>ComponentName_</i>PixelDim</i> - no hint</li>
+<li><i>lastRow:<i>ComponentName_</i>PixelDim</i> - no hint</li>
+</ul><br />
+</li>
+<li><a name="SetContrast">
+<b>SetContrast</b></a>
+ - Sets the display contrast<br />The contrast setting is a signed 2’s complement value. Thus, it can range from -128 to +127.  A setting of zero produces the default contrast.  This should generally be suitable as the display modules have integrated temperature compensation and are calibrated at the factory.  Positive contrast values brighten the display, while negative values darken the display.  The magnitude of the contrast value determines the amount of contrast adjustment, with higher magnitudes producing the larger effect.  The contrast setting is stored in RAM and resets to zero when power is cycled or the RESET command is issued.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SetContrast(signed char contrast)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>contrast:signed char</i> - contrast value.</li>
+</ul><br />
+</li>
+<li><a name="PowerDown">
+<b>PowerDown</b></a>
+ - Power down the display controller
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void PowerDown(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="PowerUp">
+<b>PowerUp</b></a>
+ - Powers the display controller
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void PowerUp(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+
+           </ul>
+<!---USERBEG DON'T CHANGE THIS LINE-->
+
+<!---USEREND DON'T CHANGE THIS LINE-->
+<p>
+<br />
+Note: Some methods can be implemented as macros.
+</p>
+          </div>
+          <p class="footer">
+            PROCESSOR EXPERT is trademark of Freescale Semiconductor, Inc.
+            <br />
+            
+          </p>
+    </td>
+  </tr>
+
+</table>
+
+</body>
+</html>

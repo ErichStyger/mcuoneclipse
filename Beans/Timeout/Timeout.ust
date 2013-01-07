@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--User types for component-->
+<UserTypes>
+  <Type>
+    <UsrType>TRetypeType</UsrType>
+    <Name>CounterType</Name>
+    <Hint>Base type of counter which holds the counting value</Hint>
+    <Generate>yes</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>yes</GenerateHelp>
+    <PreparedHint>  typedef int16_t %'ModuleName'_CounterType ;/* Base type of counter which holds the counting value */\n
+</PreparedHint>
+    <Type>16bit signed</Type>
+  </Type>
+  <Type>
+    <UsrType>TRetypeType</UsrType>
+    <Name>CounterHandle</Name>
+    <Hint>Type for the timeout counter handle.</Hint>
+    <Generate>yes</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>yes</GenerateHelp>
+    <PreparedHint>  typedef byte %'ModuleName'_CounterHandle ;/* Type for the timeout counter handle. */\n
+</PreparedHint>
+    <Type>8bit unsigned</Type>
+  </Type>
+</UserTypes>

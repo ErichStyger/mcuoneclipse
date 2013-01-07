@@ -1,0 +1,37 @@
+%set FatFsVersion Value R0.08a
+%- f_forward() only available in tiny mode
+%if Tiny='yes'
+  %set forward Selection enable
+%else
+  %set forward Selection never
+%endif
+%if %WriteEnabled='no'
+  %set write Selection never
+  %set sync Selection never
+  %set unlink Selection never
+  %set mkdir Selection never
+  %set chmod Selection never
+  %set rename Selection never
+  %set truncate Selection never
+  %set getfree Selection never
+%else
+  %set write Selection enable
+  %set sync Selection enable
+  %set unlink Selection enable
+  %set mkdir Selection enable
+  %set chmod Selection enable
+  %set rename Selection enable
+  %set truncate Selection enable
+  %set getfree Selection enable
+%endif
+%if %UseStringFunctions='0'
+  %set f_gets Selection never
+  %set f_puts Selection never
+  %set f_putc Selection never
+  %set f_printf Selection never
+%else
+  %set f_gets Selection enable
+  %set f_puts Selection enable
+  %set f_putc Selection enable
+  %set f_printf Selection enable
+%endif

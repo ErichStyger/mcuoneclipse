@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Interface>
+  <Name>FontDisplay_I</Name>
+  <Description>Description</Description>
+  <Author>Erich Styger</Author>
+  <Version>01.003</Version>
+  <FileVersion>2</FileVersion>
+  <MethodList>
+    <Method>
+      <TMthdItem>
+        <Name>GetFontHeight</Name>
+        <Symbol>GetFontHeight</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>returns the height (in pixels) of a font.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <Mode>meiAlwReq_!Exist</Mode>
+        <ReturnType>void</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>font</ParName>
+          <ParType>Font</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to font information</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>charHeight</ParName>
+          <ParType>PixelDim</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to height of the character in pixels.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>totalHeight</ParName>
+          <ParType>PixelDim</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the total height of the character, including to the space below the character.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(%'ModuleName'_Font *font, %'ModuleName'_PixelDim *charHeight, %'ModuleName'_PixelDim *totalHeight)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>GetStringHeight</Name>
+        <Symbol>GetStringHeight</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>returns the height (in pixels) of a font string. For multiple line strings (separated by \n
+) or for strings with \\r it returns the longest list.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <Mode>meiAlwReq_!Exist</Mode>
+        <ReturnType>PixelDim</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>str</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the string.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>font</ParName>
+          <ParType>Font</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to font information</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>lastLineSpace</ParName>
+          <ParType>PixelDim</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the height of the last line space, useful if you combine multiple strings. The pointer may be NULL.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>%'ModuleName'_PixelDim #M#_#C#(char *str, %'ModuleName'_Font *font, %'ModuleName'_PixelDim *lastLineSpace)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>GetCharWidth</Name>
+        <Symbol>GetCharWidth</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>returns the width (in pixels) of a font character.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <Mode>meiAlwReq_!Exist</Mode>
+        <ReturnType>void</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>4</ParamCount>
+        <Parameter>
+          <ParName>ch</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>character for which to calculate the width</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>charWidth</ParName>
+          <ParType>PixelDim</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to width of the character in pixels (this is only for the character, without the space after the character)</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>totalWidth</ParName>
+          <ParType>PixelDim</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the total width of the character, including to the space after the character.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>font</ParName>
+          <ParType>Font</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to font information</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(char ch, %'ModuleName'_PixelDim *charWidth, %'ModuleName'_PixelDim *totalWidth, %'ModuleName'_Font *font)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>GetStringWidth</Name>
+        <Symbol>GetStringWidth</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>returns the width (in pixels) of a font string. For multiple line strings (separated by \n
+) or for strings with \\r it returns the longest string length.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <Mode>meiAlwReq_!Exist</Mode>
+        <ReturnType>PixelDim</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>str</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the string.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>font</ParName>
+          <ParType>Font</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to font information</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>lastCharSpace</ParName>
+          <ParType>PixelDim</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the width of the last character space, useful if you combine multiple strings. The pointer may be NULL.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>%'ModuleName'_PixelDim #M#_#C#(char *str, %'ModuleName'_Font *font, %'ModuleName'_PixelDim *lastCharSpace)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>WriteChar</Name>
+        <Symbol>WriteChar</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Function to write a character at the startpoint. Set the startpoint with the function setCursor.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <Mode>meiAlwReq_!Exist</Mode>
+        <ReturnType>void</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>5</ParamCount>
+        <Parameter>
+          <ParName>ch</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>the character to print</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>color</ParName>
+          <ParType>PixelColor</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Foreground color to be used (for the character pixels)</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>xCursor</ParName>
+          <ParType>PixelDim</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to x position of character (upper left corner). On return this will contain the next x position.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>yCursor</ParName>
+          <ParType>PixelDim</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to y position of character (upper left corner). On return this will contain the next y position.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>font</ParName>
+          <ParType>Font</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to font information</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(char ch, %'ModuleName'_PixelColor color, %'ModuleName'_PixelDim *xCursor, %'ModuleName'_PixelDim *yCursor, %'ModuleName'_Font *font)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>WriteString</Name>
+        <Symbol>WriteString</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Function to write a string or character at the startpoint. Set the startpoint with the function setCursor.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <Mode>meiAlwReq_!Exist</Mode>
+        <ReturnType>void</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>5</ParamCount>
+        <Parameter>
+          <ParName>str</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the character array</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>color</ParName>
+          <ParType>PixelColor</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Foreground color to be used (for the character pixels)</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>xCursor</ParName>
+          <ParType>PixelDim</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to x position of first character (upper left corner). On return this will contain the next y position.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>yCursor</ParName>
+          <ParType>PixelDim</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to y position of character (upper left corner). On return this will contain the next y position.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>font</ParName>
+          <ParType>Font</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to font information</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(char *str, %'ModuleName'_PixelColor color, %'ModuleName'_PixelDim *xCursor, %'ModuleName'_PixelDim *yCursor, %'ModuleName'_Font *font)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+  </MethodList>
+  <EventList>
+    <EmptySection_DummyValue/>
+  </EventList>
+  <Registration>
+    <Template>FontDisplay</Template>
+  </Registration>
+  <UserTypes>
+    <Type>
+      <UsrType>TUserType</UsrType>
+      <Name>PixelDim</Name>
+      <Hint>type which can hold a integral type for the x/y pixel dimension. This is depending on the display used.</Hint>
+      <Generate>yes</Generate>
+      <Unique>yes</Unique>
+      <GenerateHelp>yes</GenerateHelp>
+      <PreparedHint>typedef %@GDisplay@'ModuleName'%.PixelDim %'ModuleName'%.PixelDim; /* type which can hold a integral type for the x/y pixel dimension. This is depending on the display used. */\n
+</PreparedHint>
+      <Type>typedef %@GDisplay@'ModuleName'%.PixelDim %'ModuleName'%.PixelDim;</Type>
+      <HWTestType>16bit signed</HWTestType>
+    </Type>
+    <Type>
+      <UsrType>TUserType</UsrType>
+      <Name>Color</Name>
+      <Hint>Type definining the color type (depens on display used).</Hint>
+      <Generate>yes</Generate>
+      <Unique>yes</Unique>
+      <GenerateHelp>yes</GenerateHelp>
+      <PreparedHint>typedef %@GDisplay@'ModuleName'%.Color %'ModuleName'%.Color; /* Type definining the color type (depens on display used). */\n
+</PreparedHint>
+      <Type>typedef %@GDisplay@'ModuleName'%.Color %'ModuleName'%.Color;</Type>
+      <HWTestType>16bit signed</HWTestType>
+    </Type>
+    <Type>
+      <UsrType>TUserType</UsrType>
+      <Name>Font</Name>
+      <Hint>Pointer to GFONT_Callbacks</Hint>
+      <Generate>yes</Generate>
+      <Unique>yes</Unique>
+      <GenerateHelp>yes</GenerateHelp>
+      <PreparedHint>typedef GFONT_Callbacks %'ModuleName'%.Font; /* Pointer to GFONT_Callbacks */\n
+</PreparedHint>
+      <Type>typedef GFONT_Callbacks %'ModuleName'%.Font;</Type>
+      <HWTestType/>
+    </Type>
+    <Type>
+      <UsrType>TUserType</UsrType>
+      <Name>PixelColor</Name>
+      <Hint>Type definining the color type (depens on display used).</Hint>
+      <Generate>yes</Generate>
+      <Unique>yes</Unique>
+      <GenerateHelp>no</GenerateHelp>
+      <PreparedHint>typedef %@GDisplay@'ModuleName'%.Color %'ModuleName'%.Color; /* Type definining the color type (depens on display used). */\n
+</PreparedHint>
+      <Type>typedef %@GDisplay@'ModuleName'%.Color %'ModuleName'%.Color;</Type>
+      <HWTestType>16bit signed</HWTestType>
+    </Type>
+  </UserTypes>
+</Interface>

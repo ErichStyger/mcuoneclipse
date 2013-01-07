@@ -1,0 +1,12 @@
+%if %SWSPIgroup='yes'
+  %set HWSPIgroup Value Disabled
+%else %- enable HW SPI group
+  %set HWSPIgroup Value Enabled
+%endif
+%if %Orientation='landscape' | %Orientation='landscape180'
+  %set Width Value 176
+  %set Height Value 132
+%else
+  %set Width Value 132
+  %set Height Value 176
+%endif

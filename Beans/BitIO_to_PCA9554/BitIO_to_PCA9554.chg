@@ -1,0 +1,9 @@
+%if BitDirection='output'
+  %set PutVal Selection always
+  %set NegVal Selection always
+%elif BitDirection='input'
+  %set PutVal Selection never
+  %set NegVal Selection never
+%else
+  %error undefined BitDirection %BitDirection
+%endif

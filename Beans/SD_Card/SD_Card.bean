@@ -1,0 +1,1529 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bean>
+  <Header>
+    <Name>SD_Card</Name>
+    <Description>SD Card</Description>
+    <Author>Erich Styger</Author>
+    <Version>01.157</Version>
+    <Icon>SD_Card</Icon>
+    <TypesFiles>PE,SD_Card\SD_Card</TypesFiles>
+    <FileVersion>6</FileVersion>
+  </Header>
+  <Options>
+    <Category>CPU External Devices-Memory</Category>
+    <BW_HelpType>Basic</BW_HelpType>
+    <BW_HelpFiles>,Properties,Methods,Events</BW_HelpFiles>
+    <BW_AutoSaveHelp>yes</BW_AutoSaveHelp>
+    <BW_AutoSaveDriver>yes</BW_AutoSaveDriver>
+    <BW_DetailedHelp>yes</BW_DetailedHelp>
+    <BW_NeedTps>yes</BW_NeedTps>
+    <BW_NeedUst>0</BW_NeedUst>
+    <BW_NeedCns>0</BW_NeedCns>
+    <BeanStatus>PROPOSAL</BeanStatus>
+    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2012, all rights reserved.\n\nThis an open source software implementing an SD card low level driver useful for the the ChaN FatFS, using Processor Expert.\nThis is a free software and is opened for education,  research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
+    <Shortcut>SD</Shortcut>
+    <DemoDriver>no</DemoDriver>
+    <BeanLevel>Low</BeanLevel>
+  </Options>
+  <PropertyList>
+    <Property>
+      <TCompNameItem>
+        <Name>Component name</Name>
+        <Symbol>DeviceName</Symbol>
+        <Hint>Name of the component.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue/>
+      </TCompNameItem>
+    </Property>
+    <Property>
+      <TEnumItem>
+        <Name>Block size</Name>
+        <Symbol>BlockSize</Symbol>
+        <TypeSpec>typeBlockSize</TypeSpec>
+        <Hint>Block size to be used to read/write from/to the device. Only a power of two is allowed. This defines the block size the driver can read in one chunk. If the SD card is used in raw/block mode, then this defines the block size on the device too.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+      </TEnumItem>
+    </Property>
+    <Property>
+      <TIntgItem>
+        <Name>Cmd wait counter</Name>
+        <Symbol>CmdWaitCounter</Symbol>
+        <Hint>When sending a command to the SD card, the driver is waiting for a specified time for the proper response. To poll the response, a counter is used which can be customized with this setting. Lowering this number improves performance, but may result in inproper operation.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>10</DefaultValue>
+        <MinValue>2</MinValue>
+        <MaxValue>65536</MaxValue>
+        <Bases>DEC HEX</Bases>
+        <DefaultBase>DEC</DefaultBase>
+        <ExtraHintDisabled>false</ExtraHintDisabled>
+        <ChangeValueIntoRange>true</ChangeValueIntoRange>
+        <RuntimeProperty>false</RuntimeProperty>
+      </TIntgItem>
+    </Property>
+    <Property>
+      <TIntgItem>
+        <Name>Wait Ready Timeout (ms)</Name>
+        <Symbol>WaitReadyMs</Symbol>
+        <Hint>Wait timeout in milliseconds to wait until the card is ready.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>500</DefaultValue>
+        <MinValue>0</MinValue>
+        <MaxValue>-1</MaxValue>
+        <Bases>DEC</Bases>
+        <DefaultBase>DEC</DefaultBase>
+        <ExtraHintDisabled>false</ExtraHintDisabled>
+        <ChangeValueIntoRange>false</ChangeValueIntoRange>
+        <RuntimeProperty>false</RuntimeProperty>
+      </TIntgItem>
+    </Property>
+    <Property>
+      <TIntgItem>
+        <Name>Wait Cmd Timeout (ms)</Name>
+        <Symbol>WaitCmdMs</Symbol>
+        <Hint>Wait timeout in milliseconds for commands sent to the SD card</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>100</DefaultValue>
+        <MinValue>0</MinValue>
+        <MaxValue>-1</MaxValue>
+        <Bases>DEC</Bases>
+        <DefaultBase>DEC</DefaultBase>
+        <ExtraHintDisabled>false</ExtraHintDisabled>
+        <ChangeValueIntoRange>false</ChangeValueIntoRange>
+        <RuntimeProperty>false</RuntimeProperty>
+      </TIntgItem>
+    </Property>
+    <Property>
+      <TIntgItem>
+        <Name>Receive Block Timeout (ms)</Name>
+        <Symbol>WaitReadBlockMs</Symbol>
+        <Hint>Wait timeout in milliseconds to wait while reading a data block</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>500</DefaultValue>
+        <MinValue>0</MinValue>
+        <MaxValue>-1</MaxValue>
+        <Bases>DEC</Bases>
+        <DefaultBase>DEC</DefaultBase>
+        <ExtraHintDisabled>false</ExtraHintDisabled>
+        <ChangeValueIntoRange>false</ChangeValueIntoRange>
+        <RuntimeProperty>false</RuntimeProperty>
+      </TIntgItem>
+    </Property>
+    <Property>
+      <TGrupItem>
+        <Name>Hardware</Name>
+        <Symbol>HardwareGroup</Symbol>
+        <Hint>Hardware options</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description/>
+        <Expanded>Yes</Expanded>
+        <Children>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>SW SPI</Name>
+              <Symbol>SWSPIenabled</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>If enabled, it is using a software SPI connection. Note that a software SPI implementation is slower compared to a hardware SPI</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Disabled</Description>
+              <Expanded>No</Expanded>
+              <DefaultValue>false</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TInhrLinkItem>
+                    <Name>SPI</Name>
+                    <Symbol>SPI</Symbol>
+                    <TypeSpec>SD_Card\SPI</TypeSpec>
+                    <Hint>SPI communication interface</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <DefaultValue/>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <SortStyle/>
+                  </TInhrLinkItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>HW SPI</Name>
+              <Symbol>HWSPIenabled</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>If enabled, it is using a hardware SPI connection. A hardware SPI implementation is faster compared to a sofware SPI implemenation</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Enabled</Description>
+              <Expanded>Yes</Expanded>
+              <DefaultValue>true</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>Slow Baud Rate Mode</Name>
+                    <Symbol>HWSlowBaudRateMode</Symbol>
+                    <Hint>Defines which SPI baud rate mode shall be used during Init. 0 denotes the initial baud rate specified in the SPI configuration component. (max 375 kHz)</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>0</DefaultValue>
+                    <MinValue>0</MinValue>
+                    <MaxValue>-1</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>false</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>Fast Baud Rate Mode</Name>
+                    <Symbol>HWFastBaudRateMode</Symbol>
+                    <Hint>Defines which SPI baud rate mode shall be used in InitCommChannelMethod(). 0 denotes the initial baud rate specified in the SPI configuration component. (max 12 MHz)</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>0</DefaultValue>
+                    <MinValue>0</MinValue>
+                    <MaxValue>-1</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>false</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolGrupItem>
+                    <Name>LDD HW SPI</Name>
+                    <Symbol>LDD_HW_SPI_Enabled</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>If enabled, a LDD (Logical Device Driver) HW SPI interface is used</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
+                    <EditLine>false</EditLine>
+                    <Description>Enabled</Description>
+                    <Expanded>Yes</Expanded>
+                    <DefaultValue>true</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TInhrLinkItem>
+                          <Name>LDD HW SPI</Name>
+                          <Symbol>LDDHWSPI</Symbol>
+                          <TypeSpec>SD_Card\LDD_HW_SPI</TypeSpec>
+                          <Hint>Interface to the Logical Device Driver SPI</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>false</EditLine>
+                          <DefaultValue/>
+                          <CanDelete>false</CanDelete>
+                          <IconPopup>false</IconPopup>
+                          <SortStyle/>
+                        </TInhrLinkItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolGrupItem>
+                    <Name>non-LDD HW SPI</Name>
+                    <Symbol>nonLDD_HW_SPI_Enabled</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>If enabled, a non-LDD (traditional) HW SPI interface is used</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
+                    <EditLine>false</EditLine>
+                    <Description>Enabled</Description>
+                    <Expanded>Yes</Expanded>
+                    <DefaultValue>true</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TInhrLinkItem>
+                          <Name>HW SPI</Name>
+                          <Symbol>HWSPI</Symbol>
+                          <TypeSpec>SD_Card\HWSPI</TypeSpec>
+                          <Hint>SPI communication interface</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>false</EditLine>
+                          <DefaultValue/>
+                          <CanDelete>false</CanDelete>
+                          <IconPopup>false</IconPopup>
+                          <SortStyle/>
+                        </TInhrLinkItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>SPI Read/Write Macros</Name>
+              <Symbol>SPI_Read_Write_Macros</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>If enabled, mcros for optimization purpuse to read and write/read from the SPI bus can be provided. With this access to the SPI bus can be optimized.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Disabled</Description>
+              <Expanded>No</Expanded>
+              <DefaultValue>false</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TStrgListItem>
+                    <Name>SPI Macros</Name>
+                    <Symbol>SPIMacrosList</Symbol>
+                    <Hint>Macros</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <DefaultValue>(string list)</DefaultValue>
+                    <DefineList>false</DefineList>
+                    <ExternEditorEnabled>false</ExternEditorEnabled>
+                    <AcceptNonPrintChars>false</AcceptNonPrintChars>
+                    <DefaultStrgList lines_count="33">
+                      <Line>#if 0 /* example for TWR-MCF51CN128 */</Line>
+                      <Line>#define SPI_WRITE(write) \</Line>
+                      <Line>{ \</Line>
+                      <Line>while(SPI2S_SPTEF==0) {} /* wait until transmitter is not full */ \</Line>
+                      <Line>SPI2D = write; /* send character */ \</Line>
+                      <Line>while(SPI2S_SPTEF==0) {} /* wait until character is sent */ \</Line>
+                      <Line>}</Line>
+                      <Line/>
+                      <Line>#define SPI_WRITE_READ(write, readP) \</Line>
+                      <Line>{ \</Line>
+                      <Line>SPI_WRITE(write); \</Line>
+                      <Line>while(SPI2S_SPRF==0) {} /* wait until rx is complete */ \</Line>
+                      <Line>*readP = SPI2D; /* store rx character */ \</Line>
+                      <Line>}</Line>
+                      <Line>#endif</Line>
+                      <Line>#if 0 /* example for TWR-MCF52259 */</Line>
+                      <Line>#define SPI_WRITE(write) \</Line>
+                      <Line>{ \</Line>
+                      <Line>while((QDLYR&amp;QDLYR_SPE_BITMASK)!=0) {} /* wait until previous transmit is over (SPE goes to zero) */ \</Line>
+                      <Line>QAR = 0;                     /* Set transmit RAM */ \</Line>
+                      <Line>QDR = write;                   /* Store char to transmitter */ \</Line>
+                      <Line>QDLYR |= QDLYR_SPE_BITMASK;            /* Launch transfer (set SPE bit) */ \</Line>
+                      <Line>while((QDLYR&amp;QDLYR_SPE_BITMASK)!=0) {} /* wait until character is sent (SPE will be cleared by hardware) */ \</Line>
+                      <Line>}</Line>
+                      <Line/>
+                      <Line>#define SPI_WRITE_READ(write, readP) \</Line>
+                      <Line>{ \</Line>
+                      <Line>SPI_WRITE(write); \</Line>
+                      <Line>while(!(QIR&amp;QIR_SPIF_BITMASK)) {} /* wait until rx is complete */ \</Line>
+                      <Line>QAR = 16;                    /* Set receive RAM */ \</Line>
+                      <Line>*readP = (SM1_TComData)getReg16(QDR);  /* Read data from receiver */ \</Line>
+                      <Line>}</Line>
+                      <Line>#endif</Line>
+                    </DefaultStrgList>
+                  </TStrgListItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolItem>
+              <Name>Activate SPI bus</Name>
+              <Symbol>ActivateSPIBus</Symbol>
+              <TypeSpec>typeYesNo</TypeSpec>
+              <Hint>If multiple devices are using the same SPI bus, and if the SPI bus protocol is not the same, then this option needs to by set to 'yes'. This ensures that the bus protocol is changed properly.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>1</DefaultIndex>
+              <TextValueIndex>false</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <DefaultValue>false</DefaultValue>
+              <Popup>false</Popup>
+            </TBoolItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>Slave Select</Name>
+              <Symbol>SlaveSelectEnabled</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>Pin to select slave</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Enabled</Description>
+              <Expanded>Yes</Expanded>
+              <DefaultValue>true</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TBoolGrupItem>
+                    <Name>LDD SS</Name>
+                    <Symbol>LDD_SS_Group</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>Logical Device Driver Slave/Chip Select Signal</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
+                    <EditLine>false</EditLine>
+                    <Description>Enabled</Description>
+                    <Expanded>Yes</Expanded>
+                    <DefaultValue>true</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TInhrItem>
+                          <Name>Slave Select Pin</Name>
+                          <Symbol>LDDSS</Symbol>
+                          <TypeSpec>SD_Card\LDDSS</TypeSpec>
+                          <Hint>Logical Device Driver for Slave/Chip select pin</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>false</EditLine>
+                          <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                          <DefaultIndex>-1</DefaultIndex>
+                          <TextValueIndex>false</TextValueIndex>
+                          <RuntimeProperty>false</RuntimeProperty>
+                          <CanDelete>false</CanDelete>
+                          <IconPopup>false</IconPopup>
+                          <InhrBeanBaseName>SS</InhrBeanBaseName>
+                          <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+                        </TInhrItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolGrupItem>
+                    <Name>non-LDD SS</Name>
+                    <Symbol>nonLDD_SS_Group</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>Non-Logical Device Driver Slave/Chip Select Signal</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
+                    <EditLine>false</EditLine>
+                    <Description>Enabled</Description>
+                    <Expanded>Yes</Expanded>
+                    <DefaultValue>true</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TInhrItem>
+                          <Name>Slave Select pin</Name>
+                          <Symbol>SS</Symbol>
+                          <TypeSpec>SD_Card\SS</TypeSpec>
+                          <Hint>Device (Slave) select pin</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>false</EditLine>
+                          <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                          <DefaultIndex>-1</DefaultIndex>
+                          <TextValueIndex>false</TextValueIndex>
+                          <RuntimeProperty>false</RuntimeProperty>
+                          <CanDelete>false</CanDelete>
+                          <IconPopup>false</IconPopup>
+                          <InhrBeanBaseName>SDSS</InhrBeanBaseName>
+                          <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+                        </TInhrItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>Activate</Name>
+              <Symbol>ActivateGroup</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>Pin used to activate memory card bus driver. This is required if you are using the device on the same bus with other devices.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Disabled</Description>
+              <Expanded>No</Expanded>
+              <DefaultValue>false</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TBoolGrupItem>
+                    <Name>LDD Activate</Name>
+                    <Symbol>LDD_Activate_Group</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>Logical Device Driver Activate interface</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
+                    <EditLine>false</EditLine>
+                    <Description>Enabled</Description>
+                    <Expanded>Yes</Expanded>
+                    <DefaultValue>true</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TInhrItem>
+                          <Name>Activate pin</Name>
+                          <Symbol>LDDACT</Symbol>
+                          <TypeSpec>SD_Card\LDDActivate</TypeSpec>
+                          <Hint>If using the memory card with a tristate bus driver, then this needs to be activated. A high level on this pin activates the bus for the memory card.</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>false</EditLine>
+                          <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                          <DefaultIndex>-1</DefaultIndex>
+                          <TextValueIndex>false</TextValueIndex>
+                          <RuntimeProperty>false</RuntimeProperty>
+                          <CanDelete>false</CanDelete>
+                          <IconPopup>false</IconPopup>
+                          <InhrBeanBaseName>ACT</InhrBeanBaseName>
+                          <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+                        </TInhrItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolGrupItem>
+                    <Name>non-LDD Activate</Name>
+                    <Symbol>nonLDD_Activate_Grp</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>classic (non Logical Device Driver) Activate interface</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
+                    <EditLine>false</EditLine>
+                    <Description>Enabled</Description>
+                    <Expanded>Yes</Expanded>
+                    <DefaultValue>true</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TInhrItem>
+                          <Name>Activate pin</Name>
+                          <Symbol>ACT</Symbol>
+                          <TypeSpec>SD_Card\Activate</TypeSpec>
+                          <Hint>If using the memory card with a tristate bus driver, then this needs to be activated. A high level on this pin activates the bus for the memory card.</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>false</EditLine>
+                          <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                          <DefaultIndex>-1</DefaultIndex>
+                          <TextValueIndex>false</TextValueIndex>
+                          <RuntimeProperty>false</RuntimeProperty>
+                          <CanDelete>false</CanDelete>
+                          <IconPopup>false</IconPopup>
+                          <InhrBeanBaseName>SDACT</InhrBeanBaseName>
+                          <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+                        </TInhrItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>Card detection</Name>
+              <Symbol>CardDetectionGroup</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>A pin can be used to detect if a card is inserted. If disabled, the driver will always report a card present.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Disabled</Description>
+              <Expanded>No</Expanded>
+              <DefaultValue>false</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>Card Detect is LOW active</Name>
+                    <Symbol>CardDetectIsLow</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>Normally the driver will detect a LOW signal on this pin as card detection of the card. As there are card holders which do have HIGH signal instead, this setting can be used.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolGrupItem>
+                    <Name>LDD CD</Name>
+                    <Symbol>LDD_CD_Group</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>LDD (Logical Device Driver) Card Detect Interface</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
+                    <EditLine>false</EditLine>
+                    <Description>Enabled</Description>
+                    <Expanded>Yes</Expanded>
+                    <DefaultValue>true</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TInhrItem>
+                          <Name>Card detection pin</Name>
+                          <Symbol>LDDCDI</Symbol>
+                          <TypeSpec>SD_Card\LDDCDI</TypeSpec>
+                          <Hint>LDD interface to Card Detect pin</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>false</EditLine>
+                          <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                          <DefaultIndex>-1</DefaultIndex>
+                          <TextValueIndex>false</TextValueIndex>
+                          <RuntimeProperty>false</RuntimeProperty>
+                          <CanDelete>false</CanDelete>
+                          <IconPopup>false</IconPopup>
+                          <InhrBeanBaseName>CD</InhrBeanBaseName>
+                          <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+                        </TInhrItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolGrupItem>
+                    <Name>non-LDD CD</Name>
+                    <Symbol>nonLDD_CD_Group</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>classic (non-LDD) Card Detect interface</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
+                    <EditLine>false</EditLine>
+                    <Description>Enabled</Description>
+                    <Expanded>Yes</Expanded>
+                    <DefaultValue>true</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TInhrItem>
+                          <Name>Card detection pin</Name>
+                          <Symbol>CDI</Symbol>
+                          <TypeSpec>SD_Card\CDI</TypeSpec>
+                          <Hint>Card detection pin is on low level in case a card is inserted.</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>false</EditLine>
+                          <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                          <DefaultIndex>-1</DefaultIndex>
+                          <TextValueIndex>false</TextValueIndex>
+                          <RuntimeProperty>false</RuntimeProperty>
+                          <CanDelete>false</CanDelete>
+                          <IconPopup>false</IconPopup>
+                          <InhrBeanBaseName>CD</InhrBeanBaseName>
+                          <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+                        </TInhrItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>Write protection</Name>
+              <Symbol>WriteProtectGroup</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>This enables or disables the write protection</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Disabled</Description>
+              <Expanded>No</Expanded>
+              <DefaultValue>false</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>Write Protect is LOW active</Name>
+                    <Symbol>WriteProtectIsLow</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>Normally the driver will detect a LOW signal on this pin as write protection of the card. As there are card holders which do have HIGH signal for the write protection, this setting can be used.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolGrupItem>
+                    <Name>LDD WP</Name>
+                    <Symbol>LDD_WP_Group</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>LDD (Logical Device Driver) interface for WP (Write Protect) pin</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
+                    <EditLine>false</EditLine>
+                    <Description>Enabled</Description>
+                    <Expanded>Yes</Expanded>
+                    <DefaultValue>true</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TInhrItem>
+                          <Name>Write Protect Pin</Name>
+                          <Symbol>LDDWP</Symbol>
+                          <TypeSpec>SD_Card\LDDWP</TypeSpec>
+                          <Hint>Interface to Write Protect (WP) pin</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>false</EditLine>
+                          <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                          <DefaultIndex>-1</DefaultIndex>
+                          <TextValueIndex>false</TextValueIndex>
+                          <RuntimeProperty>false</RuntimeProperty>
+                          <CanDelete>false</CanDelete>
+                          <IconPopup>false</IconPopup>
+                          <InhrBeanBaseName>WP</InhrBeanBaseName>
+                          <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+                        </TInhrItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolGrupItem>
+                    <Name>non-LDD WP</Name>
+                    <Symbol>nonLDD_WP_Group</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>classic (non-Logical Device Driver) Write Protect Interface</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
+                    <EditLine>false</EditLine>
+                    <Description>Enabled</Description>
+                    <Expanded>Yes</Expanded>
+                    <DefaultValue>true</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TInhrItem>
+                          <Name>WP pin</Name>
+                          <Symbol>WP</Symbol>
+                          <TypeSpec>SD_Card\WP</TypeSpec>
+                          <Hint>Write protect pin, low if write protection is detected. Note that this is NOT a hardware write protection: even if the write protection is set on the card, there is no hardware way to prevent writing to the card.</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>false</EditLine>
+                          <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                          <DefaultIndex>-1</DefaultIndex>
+                          <TextValueIndex>false</TextValueIndex>
+                          <RuntimeProperty>false</RuntimeProperty>
+                          <CanDelete>false</CanDelete>
+                          <IconPopup>false</IconPopup>
+                          <InhrBeanBaseName>SDWP</InhrBeanBaseName>
+                          <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+                        </TInhrItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
+        </Children>
+      </TGrupItem>
+    </Property>
+    <Property>
+      <TGrupItem>
+        <Name>System</Name>
+        <Symbol>SystemGroup</Symbol>
+        <Hint>System interfaces</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description/>
+        <Expanded>Yes</Expanded>
+        <Children>
+          <GrupItem>
+            <TInhrLinkItem>
+              <Name>Wait</Name>
+              <Symbol>Wait</Symbol>
+              <TypeSpec>Wait_I</TypeSpec>
+              <Hint>Interface to Wait component</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <DefaultValue/>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <SortStyle/>
+            </TInhrLinkItem>
+          </GrupItem>
+          <GrupItem>
+            <TInhrLinkItem>
+              <Name>Timeout</Name>
+              <Symbol>Timeout</Symbol>
+              <TypeSpec>SD_Card\Timeout</TypeSpec>
+              <Hint>Interface to timeout counters</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <DefaultValue/>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <SortStyle/>
+            </TInhrLinkItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>RTOS</Name>
+              <Symbol>RTOSEnabled</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>If using an RTOS, the driver will use RTOS wait in conjunction with timeouts to balance CPU cycles</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Disabled</Description>
+              <Expanded>No</Expanded>
+              <DefaultValue>false</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TInhrLinkItem>
+                    <Name>RTOS</Name>
+                    <Symbol>RTOS</Symbol>
+                    <TypeSpec>SD_Card\RTOS</TypeSpec>
+                    <Hint>Operating system to use</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <DefaultValue/>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <SortStyle/>
+                  </TInhrLinkItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
+        </Children>
+      </TGrupItem>
+    </Property>
+  </PropertyList>
+  <MethodList>
+    <Method>
+      <TMthdItem>
+        <Name>SendCommand</Name>
+        <Symbol>SendCommand</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Sends a command to the SD card</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>false</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>false</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>cmd</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>command to send</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>arg</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to an array of 4 bytes</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>response</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Expected response</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte cmd, byte *arg, byte response)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Init</Name>
+        <Symbol>Init</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Initializes the driver</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>unused</ParName>
+          <ParType>pointer</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>unused parameter</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(void* unused)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Deinit</Name>
+        <Symbol>Deinit</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Driver deinitialization routine.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>unused</ParName>
+          <ParType>pointer</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint/>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void* unused)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Activate</Name>
+        <Symbol>Activate</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>If multiple devices are used on the same SPI bus, then the device needs to be activated. That way, the different SPI protocol is selected.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Deactivate</Name>
+        <Symbol>Deactivate</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Removes/deactivates the card from the bus</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>isWriteProtected</Name>
+        <Symbol>isWriteProtected</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Determines if the card is write protected. Note that this is an indicator only, as it is still possible to write to the card even if the write protection is set on the card!</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>Boolean</ReturnType>
+        <RetHint>True if the card has the write protection set, false otherwise</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>bool #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>CardPresent</Name>
+        <Symbol>CardPresent</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Returns true in case a card is present. If there is no card detection pin, then this routine will always return true.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>Boolean</ReturnType>
+        <RetHint>Returns true if card is present, false otherwise.</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>bool #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>WaitReady</Name>
+        <Symbol>WaitReady</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Wait until the card is ready</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code\n  ERR_OK: device is ready\n  ERR_BUSY: device is still busy</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ReceiveDataBlock</Name>
+        <Symbol>ReceiveDataBlock</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Retrieve a data block from the device</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>Boolean</ReturnType>
+        <RetHint>TRUE if reading was going fine, FALSE otherwise.</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>data</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to data buffer</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>nofBytes</ParName>
+          <ParType>16bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>number of bytes to retrieve, must be a multiple of 4</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>bool #M#_#C#(byte *data, word nofBytes)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>SendDataBlock</Name>
+        <Symbol>SendDataBlock</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Send a data block to the device</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>Boolean</ReturnType>
+        <RetHint>Returns TRUE for success, FALSE for failure.</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>data</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to data blocks with 512 bytes each</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>token</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>data/stop token</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>nofBytes</ParName>
+          <ParType>16bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Number of bytes to send</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>bool #M#_#C#(byte *data, byte token, word nofBytes)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ReceiveByte</Name>
+        <Symbol>ReceiveByte</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Receives a byte from the SPI bus</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>false</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>data byte</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>SendCmd</Name>
+        <Symbol>SendCmd</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Sends a command to the device and returns the response</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>device response</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>cmd</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Command to send</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>arg</ParName>
+          <ParType>32bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>command argument</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte cmd, dword arg)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>SetFastMode</Name>
+        <Symbol>SetFastMode</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Switches to fast mode SPI communication speed.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>InitCommChannel</Name>
+        <Symbol>InitCommChannel</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Method to initialize the communication channel. This is needed if the bus to the SD card is shared with other devices.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+  </MethodList>
+  <EventList>
+    <Event>
+      <TStrgItem>
+        <Name>Event module name</Name>
+        <Symbol>EventModule</Symbol>
+        <Hint>Name of the user module (without extension), where the events from this bean are placed.</Hint>
+        <ItemLevel>ADVANCED</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>Events</DefaultValue>
+        <StrDefine>nothing</StrDefine>
+        <MinLength>0</MinLength>
+        <MaxLength>-1</MaxLength>
+      </TStrgItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OnIdle</Name>
+        <Symbol>OnIdle</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Event called in case we are waiting on the device. Useful to make a task switch for an RTOS.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(void)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OnIdle procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OnError</Name>
+        <Symbol>OnError</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Event called in case of an low level error communicating with the device</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(void)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OnError procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OnActivate</Name>
+        <Symbol>OnActivate</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Event called when Activate() method is called. This gives an opportunity to the application to synchronize access to a shared bus.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(void)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OnActivate procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OnDeactivate</Name>
+        <Symbol>OnDeactivate</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Event called when Deactivate() method is called. This gives an opportunity to the application to synchronize access to a shared bus.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(void)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OnDeactivate procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OnBlockReceived</Name>
+        <Symbol>OnBlockReceived</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This event is called when the requested number of data is moved to the input buffer. This method is available only if the ReceiveBlock method is enabled.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <IsInSimulink>true</IsInSimulink>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>DEF_UNDEF</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>true</IsAssembler>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>UserDataPtr</ParName>
+          <ParType>LDD_TUserData</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the user or RTOS specific data. The pointer is passed as the parameter of Init method. </ParHint>
+        </Parameter>
+        <Scope>OVERRIDE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(LDD_TUserData *UserDataPtr)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OnBlockReceived procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+  </EventList>
+  <Links>
+    <EmptySection_DummyValue/>
+  </Links>
+  <Revisions>
+    <RevisionVersion>2</RevisionVersion>
+  </Revisions>
+</Bean>

@@ -1,0 +1,694 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1250">
+<title>
+Bean  documentation - Methods
+</title>
+<STYLE type="text/css">
+body{
+  background-color: white;
+  margin:0px;
+  font: 13px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+A:visited {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:link {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:active {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #2D8AA7; TEXT-DECORATION: underline
+}
+.VSP {
+	COLOR: #2D8AA7; FONT: bold italic 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.reflink {
+	FONT: 11px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+ 	COLOR: #2D8AA7;
+}
+.user_text {
+	FONT: 12px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+	COLOR: #000000;
+}
+.bluetext {
+  COLOR: #695F52;
+}
+.versionspec {
+  padding:5px; 
+  background-color: RGB(243, 242, 230);
+  margin-top:5px;
+  margin-bottom:5px;  
+}
+.versionspecdetail {
+  padding:5px; 
+  background-color: RGB(243, 242, 230);
+  margin-top:5px;
+  margin-bottom:5px;  
+}
+.versionspeclabel {
+  font-style: italic;
+}
+LI.DEF {
+  list-style-image: url(DefaultLI.gif) ;
+}
+LI.BAS {
+	list-style-image: url(BasicLI.gif) ;
+}
+LI.ADV {
+	list-style-image: url(AdvancedLI.gif) ;
+}
+LI.EXP {
+	list-style-image: url(ExpertLI.gif) ;
+}
+.titlebox {  
+  font: bold 18px Helvetica Neue, Helvetica, Arial, sans-serif;
+  color: #51626F;
+  margin-bottom: 10px;
+}
+.lefttitlebox {
+  background-color:#C3CFD1;  
+}
+.lefttitle {
+  color:#51626F;
+  font: bold 11px Helvetica Neue, Helvetica, Arial, sans-serif;   
+}
+.beanname {
+  font: bold 14px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+  padding-top:6px;
+  padding-bottom:5px;
+  margin-bottom: 5px;
+  border-bottom-style: dotted;
+  border-bottom-width: 1;  
+}
+.descrtext {
+  font-style: italic;
+  font: 14px/18px Helvetica Neue, Helvetica, Arial, sans-serif;  
+  padding-bottom:9px;
+}
+.footer {
+  color: #b0b0b0; 
+  font: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+  text-align: center;
+  border-top-style: solid;
+  border-top-color: #BOBOBO;
+  border-top-width: 1px;  
+  padding-top: 5px;
+  margin-top: 20px;
+}
+.info_name {
+  font: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+  padding: 0px;
+  color: black;
+}
+.info_text {
+  font: 11px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.text_title {
+  COLOR: #000000; 
+  FONT: bold 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.descr_line {
+  COLOR: gray; 
+  FONT: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.code {
+  background-color: RGB(243, 242, 230);
+  padding: 10px;
+  white-space: pre;
+  font-family: Courier New, Monospace;
+}
+</STYLE>
+
+</head>
+
+<body>
+
+<table border="0"  cellspacing="0" cellpadding="0">
+  <tr>
+    <td valign="top" width="150" >
+      <table  width="150" height="160" cellpadding="3" cellspacing="0" border="0">
+        <tbody>
+        <tr class="lefttitlebox">
+          <td width="4"></td>
+          <td align="center" valign="middle" height="30" width="128">
+            <span class="lefttitle">
+<b>FSShell</b>
+            </span>
+          </td>
+        </tr>
+        <tr height="700">
+          <td width="4"></td>
+          <td width="128" valign="top">
+            &nbsp;<br />
+            <div class="reflink">
+<!---HTMLLISTBEG_SHORT DON'T CHANGE THIS LINE-->
+<a href="FSShell.html">General Info</a><br />
+<a href="FSShellApplication Notes.html">Application Notes</a><br />
+<a href="FSShellEvents.html">Events</a><br />
+<i>Methods</i><br />
+<a href="FSShellProperties.html">Properties</a><br />
+<!---HTMLLISTEND DON'T CHANGE THIS LINE-->
+<br /><br /><br />
+
+<br /><br /><br />
+<center>
+<img src="FSShell_b.gif" alt="Bean icon"/>
+
+
+</center>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </td>
+    <td width="1" class="lefttitlebox" valign="top">
+      <table class="lefttitlebox" width="1" cellpadding="0" cellspacing="0" height="100%" border="0">
+        <tr class="lefttitlebox"><td width="1"></td></tr>
+      </table>
+    </td>
+    <td style="padding-left:15px;padding-right:10px;" valign="top" align="left" width="100%" >
+
+         <div class="titlebox">
+            <div class="beanname">
+              Bean
+              
+              
+              FSShell
+            </div>
+            <div class="descrtext">File System Shell</div>
+            <div class="info_name">Component Level: <span class="info_text"><a href="../../DOCs/BeanCategoriesInfo.html#LevelAbstraction">High</a></span></div>
+            <div class="info_name">Category: 
+              <span class="info_text">
+              <a href="../../DOCs/BeanCategoriesInfo.html">SW-User Components</a>
+              
+              </span>
+            </div>
+          </div>
+
+         <div class="text_title">
+              Methods:
+    		 </div>		 
+    		 <div class="descr_line">                  
+              (Methods are user-callable functions/subroutines intended for
+               the component functions control. Please see the <a href="../../DOCs/EmbeddedBeans.html#Methods">Embedded Components page</a> for more information.)                   
+         </div>
+                  
+         <div class="user_text">
+            <ul>
+<!---USERBEG DON'T CHANGE THIS LINE-->
+
+<!---USEREND DON'T CHANGE THIS LINE-->
+<li><a name="PrintPrompt">
+<b>PrintPrompt</b></a>
+ - Prints the prompt to the stdOut channel
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void PrintPrompt(<i>ComponentName_</i>ConstStdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to IO to be used</li>
+</ul><br />
+</li>
+<li><a name="SendNum8u">
+<b>SendNum8u</b></a>
+ - Sends an 8bit unsigned number to the given I/O
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SendNum8u(byte val, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>val:byte</i> - number to print</li>
+<li><i>io:<i>ComponentName_</i>StdIO_OutErr_FctType</i> - I/O callbacks to be used for printing.</li>
+</ul><br />
+</li>
+<li><a name="SendNum8s">
+<b>SendNum8s</b></a>
+ - Sends an 8bit signed number to the given I/O
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SendNum8s(signed char val, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>val:signed char</i> - number to print</li>
+<li><i>io:<i>ComponentName_</i>StdIO_OutErr_FctType</i> - I/O callbacks to be used for printing.</li>
+</ul><br />
+</li>
+<li><a name="SendNum16u">
+<b>SendNum16u</b></a>
+ - Sends a 16bit unsigned number to the given I/O
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SendNum16u(word val, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>val:word</i> - number to print</li>
+<li><i>io:<i>ComponentName_</i>StdIO_OutErr_FctType</i> - I/O callbacks to be used for printing.</li>
+</ul><br />
+</li>
+<li><a name="SendNum16s">
+<b>SendNum16s</b></a>
+ - Sends a 16bit signed number to the given I/O
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SendNum16s(int16_t val, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>val:int16_t</i> - number to print</li>
+<li><i>io:<i>ComponentName_</i>StdIO_OutErr_FctType</i> - I/O callbacks to be used for printing.</li>
+</ul><br />
+</li>
+<li><a name="SendNum32u">
+<b>SendNum32u</b></a>
+ - Sends a 32bit unsigned number to the given I/O
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SendNum32u(dword val, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>val:dword</i> - number to print</li>
+<li><i>io:<i>ComponentName_</i>StdIO_OutErr_FctType</i> - I/O callbacks to be used for printing.</li>
+</ul><br />
+</li>
+<li><a name="SendNum32s">
+<b>SendNum32s</b></a>
+ - Sends a 32bit signed number to the given I/O
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SendNum32s(long val, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>val:long</i> - number to print</li>
+<li><i>io:<i>ComponentName_</i>StdIO_OutErr_FctType</i> - I/O callbacks to be used for printing.</li>
+</ul><br />
+</li>
+<li><a name="SendStr">
+<b>SendStr</b></a>
+ - Prints a string using an I/O function
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SendStr(const byte *str, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>str:byte</i> - String (zero terminated) to be printed.</li>
+<li><i>io:<i>ComponentName_</i>StdIO_OutErr_FctType</i> - I/O callbacks to be used for printing.</li>
+</ul><br />
+</li>
+<li><a name="PrintDirectory">
+<b>PrintDirectory</b></a>
+ - Prints a directory
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte PrintDirectory(const byte *dirName, <i>ComponentName_</i>ConstStdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>dirName:byte</i> - Directory folder to be printed</li>
+<li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callbacks</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="CopyFile">
+<b>CopyFile</b></a>
+ - Copy a file
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte CopyFile(const byte *srcFileName, const byte *dstFileName, <i>ComponentName_</i>ConstStdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>srcFileName:byte</i> - Source file name</li>
+<li><i>dstFileName:byte</i> - Destination file name</li>
+<li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callbacks</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="DeleteFile">
+<b>DeleteFile</b></a>
+ - Deletes a file
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte DeleteFile(const byte *fileName, <i>ComponentName_</i>ConstStdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>fileName:byte</i> - Filename of file to be deleted</li>
+<li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callbacks</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="PrintFile">
+<b>PrintFile</b></a>
+ - Prints the content of a file
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte PrintFile(const byte *fileName, <i>ComponentName_</i>ConstStdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>fileName:byte</i> - Name of file to be printed</li>
+<li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callbacks</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="MakeDirectory">
+<b>MakeDirectory</b></a>
+ - Creates a directory
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte MakeDirectory(const byte *dirName, <i>ComponentName_</i>ConstStdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>dirName:byte</i> - Directory name</li>
+<li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callback routines</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="ChangeDirectory">
+<b>ChangeDirectory</b></a>
+ - Changes to a directory
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ChangeDirectory(const byte *dirName, <i>ComponentName_</i>ConstStdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>dirName:byte</i> - Directory name</li>
+<li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callback routines</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="RenameFile">
+<b>RenameFile</b></a>
+ - Renames a file
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte RenameFile(const byte *srcFileName, const byte *dstFileName, <i>ComponentName_</i>ConstStdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>srcFileName:byte</i> - Source file name</li>
+<li><i>dstFileName:byte</i> - Destination file name</li>
+<li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to </li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="UnMountFileSystem">
+<b>UnMountFileSystem</b></a>
+ - Unmounts the file system for a drive
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte UnMountFileSystem(byte logicalDrive, <i>ComponentName_</i>ConstStdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>logicalDrive:byte</i> - The drive number to be used</li>
+<li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callbacks</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="MountFileSystem">
+<b>MountFileSystem</b></a>
+ - Mounts a file system
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte MountFileSystem(<i>ComponentName_</i>FATFS *fileSystemObject, byte logicalDrive, <i>ComponentName_</i>ConstStdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>fileSystemObject: Pointer to <i>ComponentName_</i>FATFS</i> - Pointer to a file system object</li>
+<li><i>logicalDrive:byte</i> - The drive number to be used</li>
+<li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callbacks</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="CheckCardPresence">
+<b>CheckCardPresence</b></a>
+ - This method checks if card has been inserted or removed and mounts or unmounts the file system.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte CheckCardPresence(bool *cardMounted, byte drive, <i>ComponentName_</i>FATFS *fileSystemObject, <i>ComponentName_</i>ConstStdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>cardMounted: Pointer to bool</i> - Pointer to initialize this variable to FALSE on the caller side the first time.</li>
+<li><i>drive:byte</i> - drive number, pass 0 as default drive</li>
+<li><i>fileSystemObject: Pointer to <i>ComponentName_</i>FATFS</i> - Pointer to </li>
+<li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to io handler to be used. Can be NULL, then no messages are written.</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="PrintSector">
+<b>PrintSector</b></a>
+ - Prints information about the current disk
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte PrintSector(byte drive, dword sectorNo, <i>ComponentName_</i>ConstStdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>drive:byte</i> - drive number, starting with zero</li>
+<li><i>sectorNo:dword</i> - sector number</li>
+<li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callbacks</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="PrintDiskInfo">
+<b>PrintDiskInfo</b></a>
+ - Prints information about the current disk
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte PrintDiskInfo(byte drive, <i>ComponentName_</i>ConstStdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>drive:byte</i> - drive number, starting with zero</li>
+<li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callbacks</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="Date">
+<b>Date</b></a>
+ - Processes the date command
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte Date(const unsigned char *cmd, <i>ComponentName_</i>ConstStdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>cmd: Pointer to byte</i> - Pointer to command string</li>
+<li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callbacks</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="Time">
+<b>Time</b></a>
+ - Processes the time command
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte Time(const unsigned char *cmd, <i>ComponentName_</i>ConstStdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>cmd: Pointer to byte</i> - Pointer to command string</li>
+<li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callbacks</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="PrintStatus">
+<b>PrintStatus</b></a>
+ - Prints various available system status information
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte PrintStatus(<i>ComponentName_</i>ConstStdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callbacks</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="ShellCmd">
+<b>ShellCmd</b></a>
+ - Parses a shell command. Use 'help' to get a list of supported commands.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ShellCmd(const unsigned char *cmd, bool *handled, <i>ComponentName_</i>ConstStdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>cmd: Pointer to byte</i> - Pointer to command string</li>
+<li><i>handled: Pointer to bool</i> - Pointer to variable to indicate if the command has been handled. The caller passes this variable to the command scanner to find out if the passed command has been handled. The variable is initialized by the caller.</li>
+<li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callbacks</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="ReadLine">
+<b>ReadLine</b></a>
+ - Reads a line from stdIn and returns TRUE if we have a line, FALSE otherwise.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> bool ReadLine(byte *buf, size_t bufSize, <i>ComponentName_</i>ConstStdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>buf: Pointer to byte</i> - Pointer to buffer where to read in the information</li>
+<li><i>bufSize:word</i> - size of buffer</li>
+<li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callbacks</li>
+<li><i>Return value:bool</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="PrintCommandFailed">
+<b>PrintCommandFailed</b></a>
+ - Prints a standard message for failed or unknown commands
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void PrintCommandFailed(const unsigned char *cmd, <i>ComponentName_</i>ConstStdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>cmd: Pointer to byte</i> - Pointer to command which was failing</li>
+<li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callbacks</li>
+</ul><br />
+</li>
+<li><a name="ParseCommand">
+<b>ParseCommand</b></a>
+ - Parses a shell command. It handles first the internal commands and will call the provided callback.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ParseCommand(const unsigned char *cmd, <i>ComponentName_</i>ConstStdIOType *io, <i>ComponentName_</i>ParseCommandCallback parseCallback)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>cmd: Pointer to byte</i> - Pointer to command string</li>
+<li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callbacks</li>
+<li><i>parseCallback:<i>ComponentName_</i>ParseCommandCallback</i> - callback which will be called to parse commands in the user application, or NULL if not used.</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="GetStdio">
+<b>GetStdio</b></a>
+ - Returns the default stdio channel. This method is only available if a shell is enabled in the component properties.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>ConstStdIOTypePtr GetStdio(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:<i>ComponentName_</i>ConstStdIOTypePtr</i> - Pointer to the stdio descriptor
+</li>
+</ul><br />
+</li>
+<li><a name="ReadAndParseLine">
+<b>ReadAndParseLine</b></a>
+ - Reads characters from the default input channel and appends it to the buffer. Once a new line has been detected, the line will be parsed.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ReadAndParseLine(byte *cmdBuf, size_t cmdBufSize, <i>ComponentName_</i>ConstStdIOType *io, <i>ComponentName_</i>ParseCommandCallback parseCallback)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>cmdBuf: Pointer to byte</i> - Pointer to buffer provided by the caller where to store the command to read in. Characters will be appended, so make sure string buffer is initialized with a zero byte at the beginning.</li>
+<li><i>cmdBufSize:byte</i> - Size of buffer</li>
+<li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O channels to be used</li>
+<li><i>parseCallback:<i>ComponentName_</i>ParseCommandCallback</i> - callback provided by the user application to parse user commands. If not used, NULL can be passed.</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="RequestSerial">
+<b>RequestSerial</b></a>
+ - Used to get mutual access to the shell console. Only has an effect if using an RTOS with semaphore for the console access.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void RequestSerial(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="ReleaseSerial">
+<b>ReleaseSerial</b></a>
+ - Used to release mutual access to the shell console. Only has an effect if using an RTOS with semaphore for the console access.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void ReleaseSerial(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="GetSemaphore">
+<b>GetSemaphore</b></a>
+ - Return the semaphore of the shell.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void* GetSemaphore(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:void*</i> - semaphore, or NULL if not used or not allocated.
+</li>
+</ul><br />
+</li>
+<li><a name="SendStatusStr">
+<b>SendStatusStr</b></a>
+ - Prints a status string using an I/O function, formated for the 'status' command
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SendStatusStr(const byte *strItem, const byte *strStatus, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>strItem: Pointer to char</i> - Pointer to string of the command</li>
+<li><i>strStatus: Pointer to char</i> - Pointer to help text string</li>
+<li><i>io:<i>ComponentName_</i>StdIO_OutErr_FctType</i> - I/O callbacks to be used for printing.</li>
+</ul><br />
+</li>
+<li><a name="SendHelpStr">
+<b>SendHelpStr</b></a>
+ - Prints a string using an I/O function, formated for the 'help' command
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SendHelpStr(const byte *strCmd, const byte *strHelp, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>strCmd: Pointer to char</i> - Pointer to string of the command</li>
+<li><i>strHelp: Pointer to char</i> - Pointer to help text string</li>
+<li><i>io:<i>ComponentName_</i>StdIO_OutErr_FctType</i> - I/O callbacks to be used for printing.</li>
+</ul><br />
+</li>
+<li><a name="ReadChar">
+<b>ReadChar</b></a>
+ - Reads a character (blocking)
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void ReadChar(byte *c)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>c: Pointer to byte</i> - Pointer to character to be used to store the result</li>
+</ul><br />
+</li>
+<li><a name="SendChar">
+<b>SendChar</b></a>
+ - Sends a character (blocking)
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SendChar(byte ch)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>ch:byte</i> - character to be sent</li>
+</ul><br />
+</li>
+<li><a name="KeyPressed">
+<b>KeyPressed</b></a>
+ - Checks if a key has been pressed (a character is present in the input buffer)
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> bool KeyPressed(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:bool</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="Init">
+<b>Init</b></a>
+ - Initializes the module, especially creates the mutex semaphore if an RTOS is used.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void Init(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="Deinit">
+<b>Deinit</b></a>
+ - De-Initializes the module, especially frees the mutex semaphore if an RTOS is used.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void Deinit(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+
+           </ul>
+<!---USERBEG DON'T CHANGE THIS LINE-->
+
+<!---USEREND DON'T CHANGE THIS LINE-->
+<p>
+<br />
+Note: Some methods can be implemented as macros.
+</p>
+          </div>
+          <p class="footer">
+            PROCESSOR EXPERT is trademark of Freescale Semiconductor, Inc.
+            <br />
+            
+          </p>
+    </td>
+  </tr>
+
+</table>
+
+</body>
+</html>

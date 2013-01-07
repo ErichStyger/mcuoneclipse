@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--User types for component-->
+<UserTypes>
+  <Type>
+    <UsrType>TRetypeType</UsrType>
+    <Name>PixelDim</Name>
+    <Hint>One byte is enough to describe an x/y position.</Hint>
+    <Generate>yes</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>yes</GenerateHelp>
+    <PreparedHint>  typedef signed char %'ModuleName'_PixelDim ;/* One byte is enough to describe an x/y position. */\n
+</PreparedHint>
+    <Type>8bit signed</Type>
+  </Type>
+  <Type>
+    <UsrType>TRetypeType</UsrType>
+    <Name>PixelCount</Name>
+    <Hint>A word is enough to hold the number of pixels (84x48).</Hint>
+    <Generate>yes</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>yes</GenerateHelp>
+    <PreparedHint>  typedef word %'ModuleName'_PixelCount ;/* A word is enough to hold the number of pixels (84x48). */\n
+</PreparedHint>
+    <Type>16bit unsigned</Type>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>DisplayOrientation</Name>
+    <Hint/>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+</UserTypes>

@@ -1,0 +1,5 @@
+%if %RTOSGroup='no'
+  %set CounterTickPeriod ReadOnly no
+%else
+  %set CounterTickPeriod ReadOnly yes
+%endif

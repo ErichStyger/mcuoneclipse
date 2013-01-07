@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--User types for component-->
+<UserTypes>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>PixelColor</Name>
+    <Hint>Display specific color type.</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>typedef %@Display@'ModuleName'%.Color %'ModuleName'%.Color; /* Display specific color type. */\n
+</PreparedHint>
+    <Type>typedef %@Display@'ModuleName'%.Color %'ModuleName'%.Color;</Type>
+    <HWTestType>16bit signed</HWTestType>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>PixelDim</Name>
+    <Hint>type for the pixel dimension. E.g. one byte if a pixel coordinate can be expressed in one byte.</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>typedef %@Display@'ModuleName'%.PixelDim %'ModuleName'%.PixelDim; /* type for the pixel dimension. E.g. one byte if a pixel coordinate can be expressed in one byte. */\n
+</PreparedHint>
+    <Type>typedef %@Display@'ModuleName'%.PixelDim %'ModuleName'%.PixelDim;</Type>
+    <HWTestType>PixelDim</HWTestType>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>PixelCount</Name>
+    <Hint>Type able to hold the number of pixels for the display.</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>typedef %@Display@'ModuleName'%.PixelCount %'ModuleName'%.PixelCount; /* Type able to hold the number of pixels for the display. */\n
+</PreparedHint>
+    <Type>typedef %@Display@'ModuleName'%.PixelCount %'ModuleName'%.PixelCount;</Type>
+    <HWTestType>16bit signed</HWTestType>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>DisplayOrientation</Name>
+    <Hint>Specifies the orientation of the display</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* Specifies the orientation of the display */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+</UserTypes>

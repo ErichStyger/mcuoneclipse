@@ -1,0 +1,415 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1250">
+<title>
+Component  documentation - Methods
+</title>
+<STYLE type="text/css">
+body{
+  background-color: white;
+  margin:0px;
+  font: 13px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+A:visited {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:link {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:active {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #2D8AA7; TEXT-DECORATION: underline
+}
+.VSP {
+	COLOR: #2D8AA7; FONT: bold italic 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.reflink {
+	FONT: 11px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+ 	COLOR: #2D8AA7;
+}
+.user_text {
+	FONT: 12px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+	COLOR: #000000;
+}
+.bluetext {
+  COLOR: #695F52;
+}
+.versionspec {
+  padding:5px; 
+  background-color: RGB(243, 242, 230);
+  margin-top:5px;
+  margin-bottom:5px;  
+}
+.versionspecdetail {
+  padding:5px; 
+  background-color: RGB(243, 242, 230);
+  margin-top:5px;
+  margin-bottom:5px;  
+}
+.versionspeclabel {
+  font-style: italic;
+}
+LI.DEF {
+  list-style-image: url(DefaultLI.gif) ;
+}
+LI.BAS {
+	list-style-image: url(BasicLI.gif) ;
+}
+LI.ADV {
+	list-style-image: url(AdvancedLI.gif) ;
+}
+LI.EXP {
+	list-style-image: url(ExpertLI.gif) ;
+}
+.titlebox {  
+  font: bold 18px Helvetica Neue, Helvetica, Arial, sans-serif;
+  color: #51626F;
+  margin-bottom: 10px;
+}
+.lefttitlebox {
+  background-color:#C3CFD1;  
+}
+.lefttitle {
+  color:#51626F;
+  font: bold 11px Helvetica Neue, Helvetica, Arial, sans-serif;   
+}
+.beanname {
+  font: bold 14px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+  padding-top:6px;
+  padding-bottom:5px;
+  margin-bottom: 5px;
+  border-bottom-style: dotted;
+  border-bottom-width: 1;  
+}
+.descrtext {
+  font-style: italic;
+  font: 14px/18px Helvetica Neue, Helvetica, Arial, sans-serif;  
+  padding-bottom:9px;
+}
+.footer {
+  color: #b0b0b0; 
+  font: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+  text-align: center;
+  border-top-style: solid;
+  border-top-color: #BOBOBO;
+  border-top-width: 1px;  
+  padding-top: 5px;
+  margin-top: 20px;
+}
+.info_name {
+  font: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+  padding: 0px;
+  color: black;
+}
+.info_text {
+  font: 11px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.text_title {
+  COLOR: #000000; 
+  FONT: bold 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.descr_line {
+  COLOR: gray; 
+  FONT: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.code {
+  background-color: RGB(243, 242, 230);
+  padding: 10px;
+  white-space: pre;
+  font-family: Courier New, Monospace;
+}
+</STYLE>
+
+</head>
+
+<body>
+
+<table border="0"  cellspacing="0" cellpadding="0">
+  <tr>
+    <td valign="top" width="150" >
+      <table  width="150" height="160" cellpadding="3" cellspacing="0" border="0">
+        <tbody>
+        <tr class="lefttitlebox">
+          <td width="4"></td>
+          <td align="center" valign="middle" height="30" width="128">
+            <span class="lefttitle">
+<b>PercepioTrace</b>
+            </span>
+          </td>
+        </tr>
+        <tr height="700">
+          <td width="4"></td>
+          <td width="128" valign="top">
+            &nbsp;<br />
+            <div class="reflink">
+<!---HTMLLISTBEG_SHORT DON'T CHANGE THIS LINE-->
+<a href="PercepioTrace.html">General Info</a><br />
+<a href="PercepioTraceProperties.html">Properties</a><br />
+<i>Methods</i><br />
+<a href="PercepioTraceEvents.html">Events</a><br />
+<!---HTMLLISTEND DON'T CHANGE THIS LINE-->
+<br /><br /><br />
+<a href="../../DOCs/PredefSymbols.html">Types &amp; definitions</a><br/>
+<a href="../../DOCs/BEANindex.html">Component Index</a><br/>
+<a href="../../DOCs/CPUindex.html">CPU Component Index</a><br/>
+<a href="../../DOCs/EmbeddedBeans.html">Embedded Components</a><br/>
+<a href="../../DOCs/BeanCategories.html">Components Categories</a><br/>
+
+<br /><br /><br />
+<center>
+<img src="PercepioTrace_b.gif" alt="Component icon"/>
+
+
+</center>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </td>
+    <td width="1" class="lefttitlebox" valign="top">
+      <table class="lefttitlebox" width="1" cellpadding="0" cellspacing="0" height="100%" border="0">
+        <tr class="lefttitlebox"><td width="1"></td></tr>
+      </table>
+    </td>
+    <td style="padding-left:15px;padding-right:10px;" valign="top" align="left" width="100%" >
+
+         <div class="titlebox">
+            <div class="beanname">
+              Component
+              
+              
+              PercepioTrace
+            </div>
+            <div class="descrtext">Percepio FreeRTOS Trace</div>
+            <div class="info_name">Component Level: <span class="info_text"><a href="../../DOCs/BeanCategoriesInfo.html#LevelAbstraction">High</a></span></div>
+            <div class="info_name">Category: 
+              <span class="info_text">
+              <a href="../../DOCs/BeanCategoriesInfo.html">Operating Systems</a>
+              
+              </span>
+            </div>
+          </div>
+
+         <div class="text_title">
+              Methods:
+    		 </div>		 
+    		 <div class="descr_line">                  
+              (Methods are user-callable functions/subroutines intended for
+               the component functions control. Please see the <a href="../../DOCs/EmbeddedBeans.html#Methods">Embedded Components page</a> for more information.)                   
+         </div>
+                  
+         <div class="user_text">
+            <ul>
+<!---USERBEG DON'T CHANGE THIS LINE-->
+
+<!---USEREND DON'T CHANGE THIS LINE-->
+<li><a name="uiTraceStart">
+<b>uiTraceStart</b></a>
+ - Starts the trace.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> dword uiTraceStart(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:dword</i> - returns 1 if trace has been started, 0 otherwise.
+</li>
+</ul><br />
+</li>
+<li><a name="vTraceStop">
+<b>vTraceStop</b></a>
+ - Stops the trace.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void vTraceStop(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="vTraceClear">
+<b>vTraceClear</b></a>
+ - Clears the trace.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void vTraceClear(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="uiTraceGetTraceBufferSize">
+<b>uiTraceGetTraceBufferSize</b></a>
+ - Gets the size of the recorder data structure. For use together with vTraceGetTraceBuffer if you wish to implement an own store/upload solution, e.g., in case a debugger connection is not available for uploading the data.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> dword uiTraceGetTraceBufferSize(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:dword</i> - Size of the trace buffer
+</li>
+</ul><br />
+</li>
+<li><a name="vTraceGetTraceBuffer">
+<b>vTraceGetTraceBuffer</b></a>
+ - Return a pointer to the recorder data structure. Use this together with uiTraceGetTraceBufferSize if you wish to implement an own store/upload solution, e.g., in case a debugger connection is not available for uploading the data.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void* vTraceGetTraceBuffer(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:void*</i> - Pointer to the trace buffer
+</li>
+</ul><br />
+</li>
+<li><a name="vTraceSetTimerFrequency">
+<b>vTraceSetTimerFrequency</b></a>
+ - Use this to define the frequency of the timer/counter used for timestamping (in Hz)
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void vTraceSetTimerFrequency(dword frequency)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>frequency:dword</i> - frequency</li>
+</ul><br />
+</li>
+<li><a name="xTraceOpenLabel">
+<b>xTraceOpenLabel</b></a>
+ - Open/create symbol to use as user event handle for related user events (conceptually like a file handle)
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> traceLabel xTraceOpenLabel(char *label)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>label: Pointer to char</i> - Pointer to label</li>
+<li><i>Return value:traceLabel</i> - trace label
+</li>
+</ul><br />
+</li>
+<li><a name="vTraceUserEvent">
+<b>vTraceUserEvent</b></a>
+ - Simple user event - store a label, created using xTraceOpenLabel
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void vTraceUserEvent(traceLabel eventLabel)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>eventLabel:traceLabel</i> - trace label for the user event</li>
+</ul><br />
+</li>
+<li><a name="vTracePrintF">
+<b>vTracePrintF</b></a>
+ - Advanced user event - like printf (but limited formatting support - will improve)
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void vTracePrintF(traceLabel eventLabel, char *formatStr, ...)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>eventLabel:traceLabel</i> - trace label</li>
+<li><i>formatStr: Pointer to char</i> - Pointer to format string</li>
+<li><i>Variable_1:byte</i> - open parameter list</li>
+</ul><br />
+</li>
+<li><a name="vTraceStartStatusMonitor">
+<b>vTraceStartStatusMonitor</b></a>
+ - This starts a task to monitor the state of the recorder. This task periodically prints a line to the console window, which shows the number of events recorded and the latest timestamp. This task calls vTracePortEnd when the recorder has been stopped, where custom actions can be added, e.g., to store the trace to a file if a file system is available on the device.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void vTraceStartStatusMonitor(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="vTraceSetQueueName">
+<b>vTraceSetQueueName</b></a>
+ - Assigns a name to a FreeRTOS Queue, Semaphore or Mutex. This function should  be called right after creation of the queue/mutex/semaphore. If not using this function, the queues/mutexes/semaphores will be presented by their numeric handle only.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void vTraceSetQueueName(void *queue, char *name)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>queue: Pointer to byte</i> - Pointer to the queue</li>
+<li><i>name: Pointer to char</i> - Pointer to name</li>
+</ul><br />
+</li>
+<li><a name="vTraceSetISRProperties">
+<b>vTraceSetISRProperties</b></a>
+ - Registers an Interrupt Service Routine in the recorder library, This must be called before using vTraceStoreISRBegin to store ISR events. This is typically called in the startup of the system, before the scheduler is started. 
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void vTraceSetISRProperties(objectHandleType handle, char *name, char prioritiy)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>handle:byte</i> - handle to be used</li>
+<li><i>name: Pointer to char</i> - Pointer to name</li>
+<li><i>prioritiy:char</i> - priority</li>
+</ul><br />
+</li>
+<li><a name="vTraceStoreISRBegin">
+<b>vTraceStoreISRBegin</b></a>
+ - Registers the beginning of an Interrupt Service Routine. This must not be interrupted by another ISR containing recorder library calls, so if allowing nested ISRs this must be called with interrupts disabled.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void vTraceStoreISRBegin(objectHandleType id)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>id:byte</i> - ID of the ISR</li>
+</ul><br />
+</li>
+<li><a name="vTraceStoreISREnd">
+<b>vTraceStoreISREnd</b></a>
+ - Registers the end of an Interrupt Service Routine. This must not be interrupted by another ISR containing recorder library calls, so if allowing nested ISRs this must be called with interrupts disabled.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void vTraceStoreISREnd(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="vTraceTaskSkipDefaultInstanceFinishedEvents">
+<b>vTraceTaskSkipDefaultInstanceFinishedEvents</b></a>
+ - This is useful if there are implicit Instance Finish Events, such as vTaskDelayUntil or xQueueReceive, in a task where an explicit Instance Finish Event has been defined. This function tells the recorder that only the explicitly defined functions, using vTraceTaskInstanceIsFinished, should be treated as Instance Finish Events for this task. The implicit Instance Finish Events are thus disregarded for this task.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void vTraceTaskSkipDefaultInstanceFinishedEvents(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="vTraceTaskInstanceIsFinished">
+<b>vTraceTaskInstanceIsFinished</b></a>
+ - This defines an explicit Instance Finish Event for the current task. It tells the recorder that the current instance of this task is finished at the next kernel call of the task, e.g., a taskDelay or a queue receive. This function should be called right before the api function call considered to be the end of the task instance, i.e., the Instance Finish Event.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void vTraceTaskInstanceIsFinished(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="vTraceExcludeTaskFromSchedulingTrace">
+<b>vTraceExcludeTaskFromSchedulingTrace</b></a>
+ - Excludes a task from the recording using a flag in the Object Property Table. This can be useful if some irrelevant task is very frequent and is &quot;eating up the buffer&quot;. This should be called the task has been created, but  before starting the FreeRTOS scheduler.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void vTraceExcludeTaskFromSchedulingTrace(const char* name)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>name:byte</i> - name of the task</li>
+</ul><br />
+</li>
+<li><a name="xTraceInitTraceData">
+<b>xTraceInitTraceData</b></a>
+ - Needs to be called to initialize a dynamic buffer for the trace data.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void* xTraceInitTraceData(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:void*</i> - Pointer to trace data (RecorderDataType*)
+</li>
+</ul><br />
+</li>
+
+           </ul>
+<!---USERBEG DON'T CHANGE THIS LINE-->
+
+<!---USEREND DON'T CHANGE THIS LINE-->
+<p>
+<br />
+Note: Some methods can be implemented as macros.
+</p>
+          </div>
+          <p class="footer">
+            PROCESSOR EXPERT is trademark of Freescale Semiconductor, Inc.
+            <br />
+            
+          </p>
+    </td>
+  </tr>
+
+</table>
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+%if %MPRDeviceType='MPR083'
+  %set MPR083specific Value Enabled
+  %set MPR084specific Value Disabled
+%elif %MPRDeviceType='MPR084'
+  %set MPR083specific Value Disabled
+  %set MPR084specific Value Enabled
+%endif
+%if %RunMode='1'
+  %- run2 mode
+  %:a=%MasterTickPeriod
+  %:a\=8
+  %:a+=1
+  %:a*=8
+  %:a*=%InterruptRate
+  %:a*=4
+%else
+  %- non-run2 mode
+  %:a=%MasterTickPeriod
+  %:a*=%InterruptRate
+  %:a*=4
+%endif
+%set MinInterruptPeriod Value %a ms
+
+%if %RunMode='1'
+  %- run2 mode
+  %:a=%MasterTickPeriod
+  %:a\=8
+  %:a+=1
+  %:a*=%TouchAcquisitionSampleFactor
+  %:a*=8
+
+  %:b=%a
+  %:b*=4
+  %set MRT1 Value %b ms
+
+  %:b*=%SleepCycleDuration
+  %set MRT2 Value %b ms
+
+  %:b=%a
+  %:b*=6
+  %:b*=%IdleTimeoutPeriod
+  %set ITT Value %b ms
+%else
+  %set MRT1 Value Low Power configuration is only active in Run2 mode
+  %set MRT2 Value Low Power configuration is only active in Run2 mode
+  %set ITT Value Low Power configuration is only active in Run2 mode
+%endif

@@ -1,0 +1,873 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1250">
+<title>
+Bean  documentation - Methods
+</title>
+<STYLE type="text/css">
+body{
+  background-color: white;
+  margin:0px;
+  font: 13px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+A:visited {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:link {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:active {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #2D8AA7; TEXT-DECORATION: underline
+}
+.VSP {
+	COLOR: #2D8AA7; FONT: bold italic 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.reflink {
+	FONT: 11px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+ 	COLOR: #2D8AA7;
+}
+.user_text {
+	FONT: 12px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+	COLOR: #000000;
+}
+.bluetext {
+  COLOR: #695F52;
+}
+.versionspec {
+  padding:5px; 
+  background-color: RGB(243, 242, 230);
+  margin-top:5px;
+  margin-bottom:5px;  
+}
+.versionspecdetail {
+  padding:5px; 
+  background-color: RGB(243, 242, 230);
+  margin-top:5px;
+  margin-bottom:5px;  
+}
+.versionspeclabel {
+  font-style: italic;
+}
+LI.DEF {
+  list-style-image: url(DefaultLI.gif) ;
+}
+LI.BAS {
+	list-style-image: url(BasicLI.gif) ;
+}
+LI.ADV {
+	list-style-image: url(AdvancedLI.gif) ;
+}
+LI.EXP {
+	list-style-image: url(ExpertLI.gif) ;
+}
+.titlebox {  
+  font: bold 18px Helvetica Neue, Helvetica, Arial, sans-serif;
+  color: #51626F;
+  margin-bottom: 10px;
+}
+.lefttitlebox {
+  background-color:#C3CFD1;  
+}
+.lefttitle {
+  color:#51626F;
+  font: bold 11px Helvetica Neue, Helvetica, Arial, sans-serif;   
+}
+.beanname {
+  font: bold 14px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+  padding-top:6px;
+  padding-bottom:5px;
+  margin-bottom: 5px;
+  border-bottom-style: dotted;
+  border-bottom-width: 1;  
+}
+.descrtext {
+  font-style: italic;
+  font: 14px/18px Helvetica Neue, Helvetica, Arial, sans-serif;  
+  padding-bottom:9px;
+}
+.footer {
+  color: #b0b0b0; 
+  font: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+  text-align: center;
+  border-top-style: solid;
+  border-top-color: #BOBOBO;
+  border-top-width: 1px;  
+  padding-top: 5px;
+  margin-top: 20px;
+}
+.info_name {
+  font: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+  padding: 0px;
+  color: black;
+}
+.info_text {
+  font: 11px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.text_title {
+  COLOR: #000000; 
+  FONT: bold 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.descr_line {
+  COLOR: gray; 
+  FONT: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.code {
+  background-color: RGB(243, 242, 230);
+  padding: 10px;
+  white-space: pre;
+  font-family: Courier New, Monospace;
+}
+</STYLE>
+
+</head>
+
+<body>
+
+<table border="0"  cellspacing="0" cellpadding="0">
+  <tr>
+    <td valign="top" width="150" >
+      <table  width="150" height="160" cellpadding="3" cellspacing="0" border="0">
+        <tbody>
+        <tr class="lefttitlebox">
+          <td width="4"></td>
+          <td align="center" valign="middle" height="30" width="128">
+            <span class="lefttitle">
+<b>UI</b>
+            </span>
+          </td>
+        </tr>
+        <tr height="700">
+          <td width="4"></td>
+          <td width="128" valign="top">
+            &nbsp;<br />
+            <div class="reflink">
+<!---HTMLLISTBEG_SHORT DON'T CHANGE THIS LINE-->
+<a href="UI.html">General Info</a><br />
+<a href="UIApplication Notes.html">Application Notes</a><br />
+<a href="UIEvents.html">Events</a><br />
+<i>Methods</i><br />
+<a href="UIProperties.html">Properties</a><br />
+<!---HTMLLISTEND DON'T CHANGE THIS LINE-->
+<br /><br /><br />
+
+<br /><br /><br />
+<center>
+<img src="UI_b.gif" alt="Bean icon"/>
+
+
+</center>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </td>
+    <td width="1" class="lefttitlebox" valign="top">
+      <table class="lefttitlebox" width="1" cellpadding="0" cellspacing="0" height="100%" border="0">
+        <tr class="lefttitlebox"><td width="1"></td></tr>
+      </table>
+    </td>
+    <td style="padding-left:15px;padding-right:10px;" valign="top" align="left" width="100%" >
+
+         <div class="titlebox">
+            <div class="beanname">
+              Bean
+              
+              
+              UI
+            </div>
+            <div class="descrtext">User Interface for different displays</div>
+            <div class="info_name">Component Level: <span class="info_text"><a href="../../DOCs/BeanCategoriesInfo.html#LevelAbstraction">High</a></span></div>
+            <div class="info_name">Category: 
+              <span class="info_text">
+              <a href="../../DOCs/BeanCategoriesInfo.html">CPU External Devices-Display</a>
+              
+              </span>
+            </div>
+          </div>
+
+         <div class="text_title">
+              Methods:
+    		 </div>		 
+    		 <div class="descr_line">                  
+              (Methods are user-callable functions/subroutines intended for
+               the component functions control. Please see the <a href="../../DOCs/EmbeddedBeans.html#Methods">Embedded Components page</a> for more information.)                   
+         </div>
+                  
+         <div class="user_text">
+            <ul>
+<!---USERBEG DON'T CHANGE THIS LINE-->
+
+<!---USEREND DON'T CHANGE THIS LINE-->
+<li><a name="GetScreen">
+<b>GetScreen</b></a>
+ - returns the current active screen
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PScreen GetScreen(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:<i>ComponentName_</i>PScreen</i> - the current active screen
+</li>
+</ul><br />
+</li>
+<li><a name="CreateScreen">
+<b>CreateScreen</b></a>
+ - Initializes a screen with default values
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void CreateScreen(<i>ComponentName_</i>Screen *screen, <i>ComponentName_</i>PixelColor bgColor)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>screen: Pointer to <i>ComponentName_</i>Screen</i> - Pointer to screen structure</li>
+<li><i>bgColor:<i>ComponentName_</i>PixelColor</i> - background color</li>
+</ul><br />
+</li>
+<li><a name="UpdateScreen">
+<b>UpdateScreen</b></a>
+ - Draws all windows and elements of the screen
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void UpdateScreen(<i>ComponentName_</i>Screen *screen, bool updateAll)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>screen: Pointer to <i>ComponentName_</i>Screen</i> - Pointer to screen</li>
+<li><i>updateAll:bool</i> - if the whole screen needs to be updated.</li>
+</ul><br />
+</li>
+<li><a name="EnableElementSelection">
+<b>EnableElementSelection</b></a>
+ - Enables an element so it can be selected
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void EnableElementSelection(<i>ComponentName_</i>Element *elem)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>elem: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+</ul><br />
+</li>
+<li><a name="SelectElement">
+<b>SelectElement</b></a>
+ - Selects an element in the window
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SelectElement(<i>ComponentName_</i>Screen *screen, <i>ComponentName_</i>Element *window, <i>ComponentName_</i>Element *element)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>screen: Pointer to <i>ComponentName_</i>Screen</i> - Pointer to screen</li>
+<li><i>window: Pointer to <i>ComponentName_</i>Element</i> - Pointer to window</li>
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - pointer to the element to select</li>
+</ul><br />
+</li>
+<li><a name="SelectNextElement">
+<b>SelectNextElement</b></a>
+ - Selects the next (or previous) element in the window
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SelectNextElement(<i>ComponentName_</i>Screen *screen, bool forward)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>screen: Pointer to <i>ComponentName_</i>Screen</i> - Pointer to screen</li>
+<li><i>forward:bool</i> - if set to TRUE, selects the next element, otherwise selects the previous one.</li>
+</ul><br />
+</li>
+<li><a name="DeselectElement">
+<b>DeselectElement</b></a>
+ - Deselects an element
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void DeselectElement(<i>ComponentName_</i>Screen *screen, <i>ComponentName_</i>Element *window, <i>ComponentName_</i>Element *element)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>screen: Pointer to <i>ComponentName_</i>Screen</i> - Pointer to screen</li>
+<li><i>window: Pointer to <i>ComponentName_</i>Element</i> - Pointer to window</li>
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - pointer to the element to select</li>
+</ul><br />
+</li>
+<li><a name="GetSelectedElement">
+<b>GetSelectedElement</b></a>
+ - Returns the currently selected element, or NULL.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> bool GetSelectedElement(<i>ComponentName_</i>Screen *screen, <i>ComponentName_</i>PElement *pElement)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>screen: Pointer to <i>ComponentName_</i>Screen</i> - Pointer to current screen</li>
+<li><i>pElement: Pointer to <i>ComponentName_</i>PElement</i> - Pointer to element pointer used as output</li>
+<li><i>Return value:bool</i> - TRUE if there is a selected element. In this case the pointer to it is returned.
+</li>
+</ul><br />
+</li>
+<li><a name="DrawBox">
+<b>DrawBox</b></a>
+ - Draws a box into the element
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void DrawBox(<i>ComponentName_</i>Element *element, <i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y, <i>ComponentName_</i>PixelDim w, <i>ComponentName_</i>PixelDim h, <i>ComponentName_</i>PixelDim lineWidth, <i>ComponentName_</i>PixelColor color)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to widget</li>
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x position, relative to window</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y position, relative to window</li>
+<li><i>w:<i>ComponentName_</i>PixelDim</i> - width of line</li>
+<li><i>h:<i>ComponentName_</i>PixelDim</i> - height of box</li>
+<li><i>lineWidth:<i>ComponentName_</i>PixelDim</i> - width of line</li>
+<li><i>color:<i>ComponentName_</i>PixelColor</i> - color to be used</li>
+</ul><br />
+</li>
+<li><a name="DrawHLine">
+<b>DrawHLine</b></a>
+ - Paints a horizontal line in the element
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void DrawHLine(<i>ComponentName_</i>Element *element, <i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y, <i>ComponentName_</i>PixelDim w, <i>ComponentName_</i>PixelColor color)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to widget</li>
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x position, relative to window</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y position, relative to window</li>
+<li><i>w:<i>ComponentName_</i>PixelDim</i> - width of line</li>
+<li><i>color:<i>ComponentName_</i>PixelColor</i> - color to be used</li>
+</ul><br />
+</li>
+<li><a name="DrawVLine">
+<b>DrawVLine</b></a>
+ - Paints a horizontal line in the element
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void DrawVLine(<i>ComponentName_</i>Element *element, <i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y, <i>ComponentName_</i>PixelDim h, <i>ComponentName_</i>PixelColor color)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x position, relative to window</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y position, relative to window</li>
+<li><i>h:<i>ComponentName_</i>PixelDim</i> - height of line</li>
+<li><i>color:<i>ComponentName_</i>PixelColor</i> - color to be used</li>
+</ul><br />
+</li>
+<li><a name="DrawLine">
+<b>DrawLine</b></a>
+ - Paints a line into the element
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void DrawLine(<i>ComponentName_</i>Element *element, <i>ComponentName_</i>PixelDim x0, <i>ComponentName_</i>PixelDim y0, <i>ComponentName_</i>PixelDim x1, <i>ComponentName_</i>PixelDim y1, <i>ComponentName_</i>PixelColor color)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to widget</li>
+<li><i>x0:<i>ComponentName_</i>PixelDim</i> - x position, relative to window</li>
+<li><i>y0:<i>ComponentName_</i>PixelDim</i> - y position, relative to window</li>
+<li><i>x1:<i>ComponentName_</i>PixelDim</i> - lower right corner x coordinate</li>
+<li><i>y1:<i>ComponentName_</i>PixelDim</i> - lower right corner y coordinate</li>
+<li><i>color:<i>ComponentName_</i>PixelColor</i> - color to be used</li>
+</ul><br />
+</li>
+<li><a name="DrawFilledBox">
+<b>DrawFilledBox</b></a>
+ - Paints a horizontal line in the element
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void DrawFilledBox(<i>ComponentName_</i>Element *element, <i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y, <i>ComponentName_</i>PixelDim w, <i>ComponentName_</i>PixelDim h, <i>ComponentName_</i>PixelColor color)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to widget</li>
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x position, relative to window</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y position, relative to window</li>
+<li><i>w:<i>ComponentName_</i>PixelDim</i> - width of box</li>
+<li><i>h:<i>ComponentName_</i>PixelDim</i> - height of box</li>
+<li><i>color:<i>ComponentName_</i>PixelColor</i> - color to be used</li>
+</ul><br />
+</li>
+<li><a name="DrawCircle">
+<b>DrawCircle</b></a>
+ - Paints a circle in the element
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void DrawCircle(<i>ComponentName_</i>Element *element, <i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y, <i>ComponentName_</i>PixelDim radius, <i>ComponentName_</i>PixelColor color)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x position</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y postion</li>
+<li><i>radius:<i>ComponentName_</i>PixelDim</i> - radius of the circle</li>
+<li><i>color:<i>ComponentName_</i>PixelColor</i> - color of the circle</li>
+</ul><br />
+</li>
+<li><a name="DrawFilledCircle">
+<b>DrawFilledCircle</b></a>
+ - Paints a filled circle in the element
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void DrawFilledCircle(<i>ComponentName_</i>Element *element, <i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y, <i>ComponentName_</i>PixelDim radius, <i>ComponentName_</i>PixelColor color)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x position</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y postion</li>
+<li><i>radius:<i>ComponentName_</i>PixelDim</i> - radius of the circle</li>
+<li><i>color:<i>ComponentName_</i>PixelColor</i> - color of the circle</li>
+</ul><br />
+</li>
+<li><a name="GetDisplayOrientation">
+<b>GetDisplayOrientation</b></a>
+ - Returns the current display orientation
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>DisplayOrientation GetDisplayOrientation(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:<i>ComponentName_</i>DisplayOrientation</i> - current display orientation
+</li>
+</ul><br />
+</li>
+<li><a name="SetDisplayOrientation">
+<b>SetDisplayOrientation</b></a>
+ - Sets the display orienation. If you enable this method, then the orientation of the display can be changed at runtime. However, this requires additional ressources.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SetDisplayOrientation(<i>ComponentName_</i>DisplayOrientation newOrientation)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>newOrientation:<i>ComponentName_</i>DisplayOrientation</i> - new orientation to be used</li>
+</ul><br />
+</li>
+<li><a name="GetWidth">
+<b>GetWidth</b></a>
+ - returns the width of the display in pixels (x direction)
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PixelDim GetWidth(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:<i>ComponentName_</i>PixelDim</i> - Number of pixels (x dimension)
+</li>
+</ul><br />
+</li>
+<li><a name="GetHeight">
+<b>GetHeight</b></a>
+ - returns the height of the display in pixels (y direction)
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PixelDim GetHeight(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:<i>ComponentName_</i>PixelDim</i> - Number of x pixels (y dimension)
+</li>
+</ul><br />
+</li>
+<li><a name="CoordinateInsideElement">
+<b>CoordinateInsideElement</b></a>
+ - check if a coordinate is inside element
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> bool CoordinateInsideElement(<i>ComponentName_</i>Coordinate *coord, <i>ComponentName_</i>Element *element)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>coord: Pointer to <i>ComponentName_</i>Coordinate</i> - Pointer to global coordinate</li>
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>Return value:bool</i> - returns true if coordinate is inside the element
+</li>
+</ul><br />
+</li>
+<li><a name="ElementFullyVisible">
+<b>ElementFullyVisible</b></a>
+ - Returns TRUE if element is fully visible (and not overlapped by something else like another window)
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> bool ElementFullyVisible(<i>ComponentName_</i>Element *element)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>Return value:bool</i> - TRUE if element is fully visible, FALSE otherwise
+</li>
+</ul><br />
+</li>
+<li><a name="NextElement">
+<b>NextElement</b></a>
+ - Finds the next element of a sub tree
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void NextElement(<i>ComponentName_</i>PElement *ppElement, <i>ComponentName_</i>Element *stopElement)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>ppElement: Pointer to <i>ComponentName_</i>PElement</i> - Pointer to pointer element, used as input and output</li>
+<li><i>stopElement: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element, used as highest possible element</li>
+</ul><br />
+</li>
+<li><a name="PrevElement">
+<b>PrevElement</b></a>
+ - Finds the previous element of a sub tree
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void PrevElement(<i>ComponentName_</i>PElement *ppElement, <i>ComponentName_</i>Element *stopElement)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>ppElement: Pointer to <i>ComponentName_</i>PElement</i> - Pointer to pointer element, used as input and output</li>
+<li><i>stopElement: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element, used as highest possible element</li>
+</ul><br />
+</li>
+<li><a name="FindElement">
+<b>FindElement</b></a>
+ - Iterates through all elements of a screen with an element compare function to find a certain element.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> bool FindElement(<i>ComponentName_</i>Element *startElement, <i>ComponentName_</i>PElement *pElement, <i>ComponentName_</i>ElementFindFct compare, <i>ComponentName_</i>Pvoid data)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>startElement: Pointer to <i>ComponentName_</i>Element</i> - Pointer to start element</li>
+<li><i>pElement: Pointer to <i>ComponentName_</i>PElement</i> - Pointer to element pointer. Used to return a result.</li>
+<li><i>compare:<i>ComponentName_</i>ElementFindFct</i> - Comparator function/callback. Called for each element and returns TRUE if element matches search criteria.</li>
+<li><i>data:<i>ComponentName_</i>Pvoid</i> - optional data pointer for the compare function</li>
+<li><i>Return value:bool</i> - TRUE if an element has been found matching the find function
+</li>
+</ul><br />
+</li>
+<li><a name="ElementInitCommon">
+<b>ElementInitCommon</b></a>
+ - Initialize an element with the standard parameters.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void ElementInitCommon(<i>ComponentName_</i>Element *element, <i>ComponentName_</i>ElementType type, <i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y, <i>ComponentName_</i>PixelDim width, <i>ComponentName_</i>PixelDim height, <i>ComponentName_</i>PixelColor bgColor, <i>ComponentName_</i>MsgHandler handler)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>type:<i>ComponentName_</i>ElementType</i> - The element type we want to create</li>
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x position</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y position</li>
+<li><i>width:<i>ComponentName_</i>PixelDim</i> - width of element</li>
+<li><i>height:<i>ComponentName_</i>PixelDim</i> - height of element</li>
+<li><i>bgColor:<i>ComponentName_</i>PixelColor</i> - background color</li>
+<li><i>handler:<i>ComponentName_</i>MsgHandler</i> - message handler to be used</li>
+</ul><br />
+</li>
+<li><a name="SetElementColor">
+<b>SetElementColor</b></a>
+ - Sets the element properties color.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SetElementColor(<i>ComponentName_</i>Element *element, <i>ComponentName_</i>PixelColor color)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>color:<i>ComponentName_</i>PixelColor</i> - color to be used for the element</li>
+</ul><br />
+</li>
+<li><a name="UpdateElementNoRefresh">
+<b>UpdateElementNoRefresh</b></a>
+ - Paints an element to the window, with no explicit refresh
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void UpdateElementNoRefresh(<i>ComponentName_</i>Element *parent, <i>ComponentName_</i>Element *element, bool updateAll)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>parent: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>updateAll:bool</i> - if the element needs to be updated in any case.</li>
+</ul><br />
+</li>
+<li><a name="UpdateElement">
+<b>UpdateElement</b></a>
+ - Paints an element to the screen.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void UpdateElement(<i>ComponentName_</i>Element *parent, <i>ComponentName_</i>Element *element)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>parent: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+</ul><br />
+</li>
+<li><a name="GetScreenPosX">
+<b>GetScreenPosX</b></a>
+ - Returns the element x screen coordinate
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PixelDim GetScreenPosX(<i>ComponentName_</i>Element *element)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>Return value:<i>ComponentName_</i>PixelDim</i> - element width in pixels
+</li>
+</ul><br />
+</li>
+<li><a name="GetScreenPosY">
+<b>GetScreenPosY</b></a>
+ - Returns the element y screen coordinate
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PixelDim GetScreenPosY(<i>ComponentName_</i>Element *element)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>Return value:<i>ComponentName_</i>PixelDim</i> - element width in pixels
+</li>
+</ul><br />
+</li>
+<li><a name="GetElementPosX">
+<b>GetElementPosX</b></a>
+ - Returns the element x coordinate position
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PixelDim GetElementPosX(<i>ComponentName_</i>Element *element)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>Return value:<i>ComponentName_</i>PixelDim</i> - element width in pixels
+</li>
+</ul><br />
+</li>
+<li><a name="GetElementPosY">
+<b>GetElementPosY</b></a>
+ - Returns the element y coordinate position
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PixelDim GetElementPosY(<i>ComponentName_</i>Element *element)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>Return value:<i>ComponentName_</i>PixelDim</i> - element width in pixels
+</li>
+</ul><br />
+</li>
+<li><a name="GetElementWidth">
+<b>GetElementWidth</b></a>
+ - Returns the element width in pixels
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PixelDim GetElementWidth(<i>ComponentName_</i>Element *element)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>Return value:<i>ComponentName_</i>PixelDim</i> - element width in pixels
+</li>
+</ul><br />
+</li>
+<li><a name="GetElementHeight">
+<b>GetElementHeight</b></a>
+ - Returns the element height in pixels
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PixelDim GetElementHeight(<i>ComponentName_</i>Element *element)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>Return value:<i>ComponentName_</i>PixelDim</i> - element height in pixels
+</li>
+</ul><br />
+</li>
+<li><a name="GetElementPosLeft">
+<b>GetElementPosLeft</b></a>
+ - Returns the element left (x) coordinate position.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PixelDim GetElementPosLeft(<i>ComponentName_</i>Element *element)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>Return value:<i>ComponentName_</i>PixelDim</i> - element width in pixels
+</li>
+</ul><br />
+</li>
+<li><a name="GetElementPosRight">
+<b>GetElementPosRight</b></a>
+ - Returns the element right (x+width) coordinate position.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PixelDim GetElementPosRight(<i>ComponentName_</i>Element *element)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>Return value:<i>ComponentName_</i>PixelDim</i> - element width in pixels
+</li>
+</ul><br />
+</li>
+<li><a name="GetElementPosTop">
+<b>GetElementPosTop</b></a>
+ - Returns the element top (y) coordinate position.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PixelDim GetElementPosTop(<i>ComponentName_</i>Element *element)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>Return value:<i>ComponentName_</i>PixelDim</i> - element width in pixels
+</li>
+</ul><br />
+</li>
+<li><a name="GetElementPosBottom">
+<b>GetElementPosBottom</b></a>
+ - Returns the element bottom (y+height) coordinate position.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PixelDim GetElementPosBottom(<i>ComponentName_</i>Element *element)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>Return value:<i>ComponentName_</i>PixelDim</i> - element width in pixels
+</li>
+</ul><br />
+</li>
+<li><a name="EqualElement">
+<b>EqualElement</b></a>
+ - Macro to compare two element pointers
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> bool EqualElement(<i>ComponentName_</i>Element *elem1, <i>ComponentName_</i>Element *elem2)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>elem1: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>elem2: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element which is a derived element (Icon, Header, etc).</li>
+<li><i>Return value:bool</i> - if two elements are the same
+</li>
+</ul><br />
+</li>
+<li><a name="AlignElementRight">
+<b>AlignElementRight</b></a>
+ - Updates coordinates of an element to be right aligned
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte AlignElementRight(<i>ComponentName_</i>Element *element)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="GetElementAbsolutePos">
+<b>GetElementAbsolutePos</b></a>
+ - Returns in x and y the absolute screen position of the element.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte GetElementAbsolutePos(<i>ComponentName_</i>Element *elem, <i>ComponentName_</i>PixelDim *xp, <i>ComponentName_</i>PixelDim *yp)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>elem: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>xp: Pointer to <i>ComponentName_</i>PixelDim</i> - pointer to x position</li>
+<li><i>yp: Pointer to <i>ComponentName_</i>PixelDim</i> - Pointer to y position</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="SendMessage">
+<b>SendMessage</b></a>
+ - Sends a message to an element.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SendMessage(<i>ComponentName_</i>MsgKind kind, <i>ComponentName_</i>Element *element, <i>ComponentName_</i>Pvoid pData)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>kind:<i>ComponentName_</i>MsgKind</i> - no hint</li>
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>pData:<i>ComponentName_</i>Pvoid</i> - no hint</li>
+</ul><br />
+</li>
+<li><a name="ProcessTouch">
+<b>ProcessTouch</b></a>
+ - Processes a touch state change on a given position.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void ProcessTouch(bool touched, <i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>touched:bool</i> - If there is a touch at the given position</li>
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - X position</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - no hint</li>
+</ul><br />
+</li>
+<li><a name="MarkElementModal">
+<b>MarkElementModal</b></a>
+ - Marks the element as modal. Call UnMarkElementModal() at the end of the modal sequence.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte MarkElementModal(<i>ComponentName_</i>Element *element)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="UnMarkElementModal">
+<b>UnMarkElementModal</b></a>
+ - Marks the element as modal.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte UnMarkElementModal(<i>ComponentName_</i>Element *element)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="GetRoot">
+<b>GetRoot</b></a>
+ - Returns the UI root element. In case of a modal element, this one is returned.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PElement GetRoot(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:<i>ComponentName_</i>PElement</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="MsgSendListRecursiveTopDown">
+<b>MsgSendListRecursiveTopDown</b></a>
+ - Broadcasts recursively events to the elements. It traverses the tree list in a recursive way and sends the messages top-down.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void MsgSendListRecursiveTopDown(<i>ComponentName_</i>Element *element, <i>ComponentName_</i>MsgKind kind, <i>ComponentName_</i>Pvoid pData)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>kind:<i>ComponentName_</i>MsgKind</i> - no hint</li>
+<li><i>pData:<i>ComponentName_</i>Pvoid</i> - no hint</li>
+</ul><br />
+</li>
+<li><a name="MsgSendListRecursiveBottomUp">
+<b>MsgSendListRecursiveBottomUp</b></a>
+ - Broadcasts recursively events to the elements. It traverses the tree list in a recursive way and sends the messages bottom-up.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void MsgSendListRecursiveBottomUp(<i>ComponentName_</i>Element *element, <i>ComponentName_</i>MsgKind kind, <i>ComponentName_</i>Pvoid pData)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>kind:<i>ComponentName_</i>MsgKind</i> - no hint</li>
+<li><i>pData:<i>ComponentName_</i>Pvoid</i> - no hint</li>
+</ul><br />
+</li>
+<li><a name="MsgPaintAllElements">
+<b>MsgPaintAllElements</b></a>
+ - Sends a PAINT message to all elements in the tree and list.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void MsgPaintAllElements(<i>ComponentName_</i>Element *rootElement)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>rootElement: Pointer to <i>ComponentName_</i>Element</i> - Pointer to the root element</li>
+</ul><br />
+</li>
+<li><a name="MsgUpdateAllElements">
+<b>MsgUpdateAllElements</b></a>
+ - Sends an UPDATE message to all elements in the tree and list.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void MsgUpdateAllElements(<i>ComponentName_</i>Element *rootElement)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>rootElement: Pointer to <i>ComponentName_</i>Element</i> - Pointer to the root element</li>
+</ul><br />
+</li>
+<li><a name="GetUI">
+<b>GetUI</b></a>
+ - Method to get exclusive access to the UI using an operating system semaphore. Return it with GiveUI(). Make sure you call Init() first.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void GetUI(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="GiveUI">
+<b>GiveUI</b></a>
+ - To return a lock on the UI acquired previously with GetUI().
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void GiveUI(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="Init">
+<b>Init</b></a>
+ - Initialization routine.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void Init(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="Deinit">
+<b>Deinit</b></a>
+ - De-Initialization routine.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void Deinit(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+
+           </ul>
+<!---USERBEG DON'T CHANGE THIS LINE-->
+
+<!---USEREND DON'T CHANGE THIS LINE-->
+<p>
+<br />
+Note: Some methods can be implemented as macros.
+</p>
+          </div>
+          <p class="footer">
+            PROCESSOR EXPERT is trademark of Freescale Semiconductor, Inc.
+            <br />
+            
+          </p>
+    </td>
+  </tr>
+
+</table>
+
+</body>
+</html>

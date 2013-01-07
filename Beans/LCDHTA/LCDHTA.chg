@@ -1,0 +1,20 @@
+%if DB0toDB3='yes' && DB4toDB7='yes'
+  %set DataBusWidth Value 8bit
+%elif DB0toDB3='no' && DB4toDB7='yes'
+  %set DataBusWidth Value 4bit
+%elif DB0toDB3='yes' && DB4toDB7='no'
+  %error For 4bit databus, DB4..DB7 needs to be used
+%elif DB0toDB3='no' && DB4toDB7='no' & defined(DataBus)
+  %if %@DataBus@DeviceType='BitsIO'
+    %if %@DataBus@PinlistNumItems != '4'
+      %error Must have exactly 4 I/O pins for 4bit interface!
+    %endif
+    %set DataBusWidth Value 4bit
+  %elif %@DataBus@DeviceType='ByteIO'
+    %set DataBusWidth Value 8bit
+  %elif %@DataBus@DeviceType='74HC164'
+    %set DataBusWidth Value 8bit
+  %else
+    %error unknown Device Type for DataBus
+  %endif
+%endif

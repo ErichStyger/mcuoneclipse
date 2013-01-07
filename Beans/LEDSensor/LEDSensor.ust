@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--User types for component-->
+<UserTypes>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>PortStatus</Name>
+    <Hint>Structure used for backup and restore of port status.</Hint>
+    <Generate>yes</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>yes</GenerateHelp>
+    <PreparedHint>typedef %@RevBiasLED@'ModuleName'%.PortStatus %'ModuleName'%.PortStatus; /* Structure used for backup and restore of port status. */\n
+</PreparedHint>
+    <Type>typedef %@RevBiasLED@'ModuleName'%.PortStatus %'ModuleName'%.PortStatus;</Type>
+    <HWTestType>PortStatus</HWTestType>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>SensorValType</Name>
+    <Hint>The type the sensor can return it's value. It is a boolean for a single LED and a byte or even word if we have a more capable sensor available.</Hint>
+    <Generate>yes</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>yes</GenerateHelp>
+    <PreparedHint>typedef %@RevBiasLED@'ModuleName'%.SensorValType %'ModuleName'%.SensorValType; /* The type the sensor can return it's value. It is a boolean for a single LED and a byte or even word if we have a more capable sensor available. */\n
+</PreparedHint>
+    <Type>typedef %@RevBiasLED@'ModuleName'%.SensorValType %'ModuleName'%.SensorValType;</Type>
+    <HWTestType>16bit signed</HWTestType>
+  </Type>
+</UserTypes>

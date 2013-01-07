@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--User types for component-->
+<UserTypes>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>Screen</Name>
+    <Hint>Alias to screen type</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* Alias to screen type */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>Window</Name>
+    <Hint>Alias to Window element.</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* Alias to Window element. */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>Element</Name>
+    <Hint>Alias to Element</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* Alias to Element */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>EventCallbackKind</Name>
+    <Hint>different kinds of window event call back</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* different kinds of window event call back */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>CalendarDay</Name>
+    <Hint>Calendar day element type</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* Calendar day element type */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>PixelDim</Name>
+    <Hint/>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>CalendarDateTime</Name>
+    <Hint>Alias to CalendarDateTime type</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* Alias to CalendarDateTime type */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>CalendarAppointment</Name>
+    <Hint>Alias to calendar appointment</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* Alias to calendar appointment */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TPointerType</UsrType>
+    <Name>PCalendarAppointment</Name>
+    <Hint>Pointer to a calendar appointment</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>  typedef %'ModuleName'_CalendarAppointment* %'ModuleName'_PCalendarAppointment ; /* Pointer to a calendar appointment */\n
+</PreparedHint>
+    <Type>CalendarAppointment</Type>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>Pvoid</Name>
+    <Hint>Pointer to void</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* Pointer to void */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+</UserTypes>

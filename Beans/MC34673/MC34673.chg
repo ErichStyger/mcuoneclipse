@@ -1,0 +1,28 @@
+%if %EnablePinEnabled='no'
+   %- do not generate code for enable/disable methods
+  %set Enable Selection never
+  %set Disable Selection never
+%else
+  %set Enable Selection enable
+  %set Disable Selection enable
+%endif
+%if %FastChargePinEnabled='no'
+   %- do not generate code for methods
+  %set isFastCharging Selection never
+%else
+  %set isFastCharging Selection enable
+%endif
+%if %PowerPresentPinEnabled='no'
+   %- do not generate code for methods
+  %set isPowerPresent Selection never
+%else
+  %set isPowerPresent Selection enable
+%endif
+%if %ChargeIndicatorPinEnabled='no'
+   %- do not generate code for methods
+  %set isCharging Selection never
+%else
+  %set isCharging Selection enable
+%endif
+
+

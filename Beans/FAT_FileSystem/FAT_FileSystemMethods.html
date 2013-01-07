@@ -1,0 +1,696 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1250">
+<title>
+Component  documentation - Methods
+</title>
+<STYLE type="text/css">
+body{
+  background-color: white;
+  margin:0px;
+  font: 13px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+A:visited {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:link {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:active {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #2D8AA7; TEXT-DECORATION: underline
+}
+.VSP {
+	COLOR: #2D8AA7; FONT: bold italic 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.reflink {
+	FONT: 11px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+ 	COLOR: #2D8AA7;
+}
+.user_text {
+	FONT: 12px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+	COLOR: #000000;
+}
+.bluetext {
+  COLOR: #695F52;
+}
+.versionspec {
+  padding:5px; 
+  background-color: RGB(243, 242, 230);
+  margin-top:5px;
+  margin-bottom:5px;  
+}
+.versionspecdetail {
+  padding:5px; 
+  background-color: RGB(243, 242, 230);
+  margin-top:5px;
+  margin-bottom:5px;  
+}
+.versionspeclabel {
+  font-style: italic;
+}
+LI.DEF {
+  list-style-image: url(DefaultLI.gif) ;
+}
+LI.BAS {
+	list-style-image: url(BasicLI.gif) ;
+}
+LI.ADV {
+	list-style-image: url(AdvancedLI.gif) ;
+}
+LI.EXP {
+	list-style-image: url(ExpertLI.gif) ;
+}
+.titlebox {  
+  font: bold 18px Helvetica Neue, Helvetica, Arial, sans-serif;
+  color: #51626F;
+  margin-bottom: 10px;
+}
+.lefttitlebox {
+  background-color:#C3CFD1;  
+}
+.lefttitle {
+  color:#51626F;
+  font: bold 11px Helvetica Neue, Helvetica, Arial, sans-serif;   
+}
+.beanname {
+  font: bold 14px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+  padding-top:6px;
+  padding-bottom:5px;
+  margin-bottom: 5px;
+  border-bottom-style: dotted;
+  border-bottom-width: 1;  
+}
+.descrtext {
+  font-style: italic;
+  font: 14px/18px Helvetica Neue, Helvetica, Arial, sans-serif;  
+  padding-bottom:9px;
+}
+.footer {
+  color: #b0b0b0; 
+  font: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+  text-align: center;
+  border-top-style: solid;
+  border-top-color: #BOBOBO;
+  border-top-width: 1px;  
+  padding-top: 5px;
+  margin-top: 20px;
+}
+.info_name {
+  font: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+  padding: 0px;
+  color: black;
+}
+.info_text {
+  font: 11px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.text_title {
+  COLOR: #000000; 
+  FONT: bold 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.descr_line {
+  COLOR: gray; 
+  FONT: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.code {
+  background-color: RGB(243, 242, 230);
+  padding: 10px;
+  white-space: pre;
+  font-family: Courier New, Monospace;
+}
+</STYLE>
+
+</head>
+
+<body>
+
+<table border="0"  cellspacing="0" cellpadding="0">
+  <tr>
+    <td valign="top" width="150" >
+      <table  width="150" height="160" cellpadding="3" cellspacing="0" border="0">
+        <tbody>
+        <tr class="lefttitlebox">
+          <td width="4"></td>
+          <td align="center" valign="middle" height="30" width="128">
+            <span class="lefttitle">
+<b>FAT_FileSystem</b>
+            </span>
+          </td>
+        </tr>
+        <tr height="700">
+          <td width="4"></td>
+          <td width="128" valign="top">
+            &nbsp;<br />
+            <div class="reflink">
+<!---HTMLLISTBEG_SHORT DON'T CHANGE THIS LINE-->
+<a href="FAT_FileSystem.html">General Info</a><br />
+<a href="FAT_FileSystemProperties.html">Properties</a><br />
+<i>Methods</i><br />
+<a href="FAT_FileSystemEvents.html">Events</a><br />
+<!---HTMLLISTEND DON'T CHANGE THIS LINE-->
+<br /><br /><br />
+<a href="../../DOCs/PredefSymbols.html">Types &amp; definitions</a><br/>
+<a href="../../DOCs/BEANindex.html">Component Index</a><br/>
+<a href="../../DOCs/CPUindex.html">CPU Component Index</a><br/>
+<a href="../../DOCs/EmbeddedBeans.html">Embedded Components</a><br/>
+<a href="../../DOCs/BeanCategories.html">Components Categories</a><br/>
+
+<br /><br /><br />
+<center>
+<img src="FAT_FileSystem_b.gif" alt="Component icon"/>
+
+
+</center>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </td>
+    <td width="1" class="lefttitlebox" valign="top">
+      <table class="lefttitlebox" width="1" cellpadding="0" cellspacing="0" height="100%" border="0">
+        <tr class="lefttitlebox"><td width="1"></td></tr>
+      </table>
+    </td>
+    <td style="padding-left:15px;padding-right:10px;" valign="top" align="left" width="100%" >
+
+         <div class="titlebox">
+            <div class="beanname">
+              Component
+              
+              
+              FAT_FileSystem
+            </div>
+            <div class="descrtext">FAT file system module</div>
+            <div class="info_name">Component Level: <span class="info_text"><a href="../../DOCs/BeanCategoriesInfo.html#LevelAbstraction">High</a></span></div>
+            <div class="info_name">Category: 
+              <span class="info_text">
+              <a href="../../DOCs/BeanCategoriesInfo.html">SW-Memory Manager</a>
+              
+              </span>
+            </div>
+          </div>
+
+         <div class="text_title">
+              Methods:
+    		 </div>		 
+    		 <div class="descr_line">                  
+              (Methods are user-callable functions/subroutines intended for
+               the component functions control. Please see the <a href="../../DOCs/EmbeddedBeans.html#Methods">Embedded Components page</a> for more information.)                   
+         </div>
+                  
+         <div class="user_text">
+            <ul>
+<!---USERBEG DON'T CHANGE THIS LINE-->
+
+<!---USEREND DON'T CHANGE THIS LINE-->
+<li><a name="open">
+<b>open</b></a>
+ - Open/Create a file
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> FRESULT open(FIL *fp, const XCHAR *path, BYTE mode)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>fp:byte</i> - Pointer to the blank file object structure</li>
+<li><i>path:byte</i> - Pointer to a null-terminated string that specifies the file name to create or open.</li>
+<li><i>mode:byte</i> - Specifies the type of access and open method for the file. It is specified by a combination of following flags.<br />FA_READ: Specifies read access to the object. Data can be read from the file. Combine with FA_WRITE for read-write access.<br />FA_WRITE: Specifies write access to the object. Data can be written to the file. Combine with FA_READ for read-write access.<br />FA_OPEN_EXISTING: Opens the file. The function fails if the file is not existing. (Default)<br />FA_OPEN_ALWAYS: Opens the file if it is existing. If not, a new file is created. To append data to the file, use f_lseek function after file open in this method.<br />FA_CREATE_NEW: Creates a new file. The function fails if the file is already existing.<br />FA_CREATE_ALWAYS: Creates a new file. If the file is existing, it is truncated and overwritten.</li>
+<li><i>Return value:FRESULT</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="close">
+<b>close</b></a>
+ - Close a file
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> FRESULT close(FIL *fp)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>fp:byte</i> - Pointer to the open file object structure to be closed.</li>
+<li><i>Return value:FRESULT</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="read">
+<b>read</b></a>
+ - Read file
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> FRESULT read(FIL *fp, void *buff, UINT btr, UINT *br)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>fp:byte</i> - Pointer to the file object</li>
+<li><i>buff:byte</i> - Pointer to the data buffer</li>
+<li><i>btr:byte</i> - Number of bytes to read</li>
+<li><i>br:byte</i> - Pointer to the number of bytes read</li>
+<li><i>Return value:FRESULT</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="write">
+<b>write</b></a>
+ - Write to a file
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> FRESULT write(FIL *fp, const *void buff, UINT btw, UINT *bw)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>fp:byte</i> - Pointer to the file object structure </li>
+<li><i>buff:byte</i> - Pointer to the data to be written</li>
+<li><i>btw:byte</i> - Number of bytes to write</li>
+<li><i>bw:byte</i> - Pointer to the variable to return number of bytes written</li>
+<li><i>Return value:FRESULT</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="opendir">
+<b>opendir</b></a>
+ - Open a directory
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> FRESULT opendir(DIR *dj, const XCHAR *path)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>dj:byte</i> - Pointer to the blank directory object to be created.</li>
+<li><i>path:byte</i> - Pointer to the null-terminated string that specifies the directory name to be opened.</li>
+<li><i>Return value:FRESULT</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="readdir">
+<b>readdir</b></a>
+ - Read a directory item
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> FRESULT readdir(DIR *dj, FILINFO *fno)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>dir:byte</i> - Pointer to the open directory object</li>
+<li><i>fno:byte</i> - Pointer to the file information structure</li>
+<li><i>Return value:FRESULT</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="lseek">
+<b>lseek</b></a>
+ - The f_lseek function moves the file read/write pointer of an open file object. It can also be used to increase the file size (cluster pre-allocation).
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> FRESULT lseek(FIL *fp, DWORD ofs)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>fp:byte</i> - Pointer to the file object</li>
+<li><i>ofs:byte</i> - File pointer from top of file</li>
+<li><i>Return value:FRESULT</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="unlink">
+<b>unlink</b></a>
+ - Remove a file or directory
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> FRESULT unlink(const XCHAR *path)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>path:byte</i> - Pointer to the object name</li>
+<li><i>Return value:FRESULT</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="mount">
+<b>mount</b></a>
+ - Mount/unmount a logical drive
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> FRESULT mount(byte vol, FATFS *fs)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>vol:byte</i> - logical drive number to be mounted/unmounted</li>
+<li><i>fs:byte</i> - pointer to the new file system object (NULL for unmount)</li>
+<li><i>Return value:FRESULT</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="getfree">
+<b>getfree</b></a>
+ - Get Number of Free Clusters
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> FRESULT getfree(const XCHAR *path, dword *nclst, FATFS **fatfs)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>path:byte</i> - Pointer to the logical drive number (root dir)</li>
+<li><i>nclst: Pointer to dword</i> - Pointer to the variable to return number of free clusters</li>
+<li><i>fatfs:byte</i> - Pointer to pointer to file system object</li>
+<li><i>Return value:FRESULT</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="sync">
+<b>sync</b></a>
+ - Flush cached data of a writing file
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> FRESULT sync(FIL *fp)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>fp:byte</i> - Pointer to the file object</li>
+<li><i>Return value:FRESULT</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="rename">
+<b>rename</b></a>
+ - Delete a file or directory
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> FRESULT rename(const XCHAR *path_old, const XCHAR *path_new)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>path_old:byte</i> - Pointer to old object name</li>
+<li><i>path_new:byte</i> - Pointer to new object name</li>
+<li><i>Return value:FRESULT</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="isWriteProtected">
+<b>isWriteProtected</b></a>
+ - Determines if the file system is write protected.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> bool isWriteProtected(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:bool</i> - TRUE if file system is write protected
+</li>
+</ul><br />
+</li>
+<li><a name="isDiskPresent">
+<b>isDiskPresent</b></a>
+ - Determines if the disk is present or not (e.g. disk inserted).
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> bool isDiskPresent(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:bool</i> - TRUE if file system is write protected
+</li>
+</ul><br />
+</li>
+<li><a name="mkdir">
+<b>mkdir</b></a>
+ - Creates a directory
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> FRESULT mkdir(const XCHAR *path)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>path:byte</i> - Name of directory to be created</li>
+<li><i>Return value:FRESULT</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="chmod">
+<b>chmod</b></a>
+ - Changes the attribute of a file or directory<br />Following attribute flags to be set in one or more combination of the following flags. The specified flags are set and others are cleared.<br />AM_RDO	Read only<br />AM_ARC	Archive<br />AM_SYS	System<br />AM_HID	Hidden
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> FRESULT chmod(const TCHAR* FileName, byte Attribute, byte AttributeMask)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>FileName:byte</i> - Pointer to the file or directory</li>
+<li><i>Attribute:byte</i> - Attribute flags. Attribute flags to be set in one or more combination of the following flags. The specified flags are set and others are cleard.</li>
+<li><i>AttributeMask:byte</i> - Attribute mask. Attribute mask that specifies which attribute is changed. The specified aattributes are set or cleard.</li>
+<li><i>Return value:FRESULT</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="truncate">
+<b>truncate</b></a>
+ - Truncates the file size.<br />The truncate() function truncates the file size to the current file read/write point. This function has no effect if the file read/write pointer is already pointing end of the file.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> FRESULT truncate(FIL *FileObject)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>FileObject: Pointer to byte</i> - Pointer to the file object</li>
+<li><i>Return value:FRESULT</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="stat">
+<b>stat</b></a>
+ - The f_stat gets the information of a file or directory. For details of the infomation, refer to the FILINFO structure and f_readdir function. This function is not supported in minimization level of &gt;= 1.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> FRESULT stat(const TCHAR* FileName, FILINFO* FileInfo)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>FileName:byte</i> - Pointer to the file or directory path</li>
+<li><i>FileInfo: Pointer to byte</i> - Pointer to the FILINFO structure</li>
+<li><i>Return value:FRESULT</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="utime">
+<b>utime</b></a>
+ - The f_utime function changes the timestamp of a file or directory
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> FRESULT utime(const TCHAR* FileName, const FILINFO* TimeDate)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>FileName: Pointer to byte</i> - Pointer to the file or directory path</li>
+<li><i>TimeDate: Pointer to byte</i> - Pointer to time and data to be set</li>
+<li><i>Return value:FRESULT</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="mkfs">
+<b>mkfs</b></a>
+ - The f_mkfs fucntion creates a file system on the drive.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> FRESULT mkfs(byte drive, byte PartitioningRule, UINT  AllocSize)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>drive:byte</i> - Logical drive number</li>
+<li><i>PartitioningRule:byte</i> - When 0 is given, a partition table is created into the master boot record and a primary DOS partition is created and then an FAT volume is created on the partition. This is called FDISK format and used for harddisk and memory cards. When 1 is given, the FAT volume starts from the first sector on the drive without partition table. This is called SFD format and used for floppy disk and most optical disk</li>
+<li><i>AllocSize:byte</i> - Size of the allocation unit. Force the allocation unit (cluster) size in unit of byte. The value must be power of 2 and between the sector size and 128 times sector size. When invalid value is specified, the cluster size is determined depends on the volume size.</li>
+<li><i>Return value:FRESULT</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="forward">
+<b>forward</b></a>
+ - The f_forward function reads the data from the file and forward it to the outgoing stream without data buffer. This is suitable for small memory system because it does not require any data buffer at application module. The file pointer of the file object increases in number of bytes forwarded. In case of *ByteFwd &lt; ByteToFwd without error, it means the requested bytes could not be transferred due to end of file or stream goes busy during data transfer.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> FRESULT forward(FIL* FileObject, UINT (*Func)(const BYTE*,UINT), UINT ByteToFwd, UINT* ByteFwd )<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>FileObject:byte</i> - Pointer to the open file object.</li>
+<li><i>Func:byte</i> - Pointer to the user-defined data streaming function. For details, refer to the sample code.</li>
+<li><i>ByteToFwd:byte</i> - Number of bytes to forward in range of UINT.</li>
+<li><i>ByteFwd:byte</i> - Pointer to the UINT variable to return number of bytes forwarded.</li>
+<li><i>Return value:FRESULT</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="chdir">
+<b>chdir</b></a>
+ - The f_chdir function changes the current directory of the logical drive. The current directory of a drive is initialized to the root directory when the drive is auto-mounted. Note that the current directory is retained in the each file system object so that it also affects other tasks that using the drive.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> FRESULT chdir(const TCHAR* Path)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Path:byte</i> - Pointer to the path name</li>
+<li><i>Return value:FRESULT</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="chdrive">
+<b>chdrive</b></a>
+ - The f_chdrive function changes the current drive. The initial value of the current drive number is 0. Note that the current drive is retained in a static variable so that it also affects other tasks that using the file functions.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> FRESULT chdrive(byte Drive)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Drive:byte</i> - Logical drive number</li>
+<li><i>Return value:FRESULT</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="getcwd">
+<b>getcwd</b></a>
+ - The f_getcwd function retrieves the current directory of the current drive in full path string including drive number.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> FRESULT getcwd(TCHAR* Buffer, UINT BufferLen)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Buffer:byte</i> - Pointer to the buffer to receive the current directory string.</li>
+<li><i>BufferLen:byte</i> - Size of the buffer in unit of TCHAR.</li>
+<li><i>Return value:FRESULT</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="errFResultMsg">
+<b>errFResultMsg</b></a>
+ - Returns for a given FatFs FRESULT error code a string
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> char* errFResultMsg(int errNo)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>errNo:word</i> - FatFs error code</li>
+<li><i>Return value:char*</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="errDResultMsg">
+<b>errDResultMsg</b></a>
+ - Returns for a given FatFs DRESULT error code a string
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> char* errDResultMsg(int errNo)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>errNo:int16_t</i> - FatFs error code</li>
+<li><i>Return value:char*</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="f_gets">
+<b>f_gets</b></a>
+ - Get a string from the file
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>CHARP f_gets(TCHAR* buff, int len, FIL *fil)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>buff: Pointer to byte</i> - Pointer to the string buffer to read </li>
+<li><i>len:byte</i> - Size of string buffer (characters)</li>
+<li><i>fil:byte</i> - Pointer to the file object</li>
+<li><i>Return value:<i>ComponentName_</i>CHARP</i> - zero (NULL) if failed, otherwise a string to the buffer is returned.
+</li>
+</ul><br />
+</li>
+<li><a name="f_puts">
+<b>f_puts</b></a>
+ - Put a string to the file
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>INT f_puts(const TCHAR* str, FIL *fil)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>buff: Pointer to byte</i> - A character to be output</li>
+<li><i>fil:byte</i> - Pointer to the file object</li>
+<li><i>Return value:<i>ComponentName_</i>INT</i> - number of characters written.
+</li>
+</ul><br />
+</li>
+<li><a name="f_putc">
+<b>f_putc</b></a>
+ - Put a character to the file
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>INT f_putc(TCHAR c, FIL *fil)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>buff: Pointer to byte</i> - A character to be output</li>
+<li><i>fil:byte</i> - Pointer to the file object</li>
+<li><i>Return value:<i>ComponentName_</i>INT</i> - 1 if ok, EOF otherwise
+</li>
+</ul><br />
+</li>
+<li><a name="f_printf">
+<b>f_printf</b></a>
+ - Put a formatted string to the file
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>INT f_printf(FIL* fil, const TCHAR* str, ...)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Variable_1:byte</i> - Pointer to the file object</li>
+<li><i>str:byte</i> - Pointer to the format string</li>
+<li><i>Variable_2:byte</i> - Optional arguments...</li>
+<li><i>Return value:<i>ComponentName_</i>INT</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="f_eof">
+<b>f_eof</b></a>
+ - Wrapper to to the f_eof() macro. Returns 1 if at the end of the file, 0 otherwise.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte f_eof(FIL *fil)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>fp: Pointer to byte</i> - Pointer to file object</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="f_error">
+<b>f_error</b></a>
+ - Wrapper to to the f_eof() macro. Returns 1 if at the end of the file, 0 otherwise.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte f_error(FIL *fil)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>fp: Pointer to byte</i> - Pointer to file object</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="f_tell">
+<b>f_tell</b></a>
+ - Wrapper to to the f_tell() macro. Returns the file read/write pointer (0 on file open).
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> dword f_tell(FIL *fil)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>fp: Pointer to byte</i> - Pointer to file object</li>
+<li><i>Return value:dword</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="f_size">
+<b>f_size</b></a>
+ - Wrapper to to the f_size() macro. Returns the file size.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> dword f_size(FIL *fil)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>fp: Pointer to byte</i> - Pointer to file object</li>
+<li><i>Return value:dword</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="Init">
+<b>Init</b></a>
+ - Initializes the device driver.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void Init(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="Deinit">
+<b>Deinit</b></a>
+ - Deinitializes the driver.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void Deinit(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="get_fattime">
+<b>get_fattime</b></a>
+ - Returns the current time
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> dword get_fattime(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:dword</i> - Error code
+</li>
+</ul><br />
+</li>
+
+           </ul>
+<!---USERBEG DON'T CHANGE THIS LINE-->
+
+<!---USEREND DON'T CHANGE THIS LINE-->
+<p>
+<br />
+Note: Some methods can be implemented as macros.
+</p>
+          </div>
+          <p class="footer">
+            PROCESSOR EXPERT is trademark of Freescale Semiconductor, Inc.
+            <br />
+            
+          </p>
+    </td>
+  </tr>
+
+</table>
+
+</body>
+</html>

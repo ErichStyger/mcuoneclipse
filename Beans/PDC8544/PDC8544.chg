@@ -1,0 +1,10 @@
+%- Enable or disable LLD
+%if (CPUfamily = "Kinetis")
+  %set HardwareGroupLDD Value Enabled
+  %set HardwareGroup Value Disabled
+%else
+  %set HardwareGroupLDD Value Disabled
+  %set HardwareGroup Value Enabled
+%endif
+%set HardwareGroupLDD ReadOnly yes
+%set HardwareGroup ReadOnly yes

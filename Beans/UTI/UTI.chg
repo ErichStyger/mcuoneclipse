@@ -1,0 +1,47 @@
+ %if utiMode='0'|utiMode='1'|utiMode='2'|utiMode='4'|utiMode='6'|utiMode='8'|utiMode='9'|utiMode='10'|utiMode='11'|utiMode='12'|utiMode='13'|utiMode='14'|utiMode='15'
+   %error Sorry - this UTI Mode is not implemented yet.
+ %endif
+
+ %if utiMode='5'
+   %set sensor1 Value Enabled
+   %set sensor2 Value Disabled
+   %set sensor3 Value Disabled
+   %set sensor4 Value Disabled
+   %set sensor5 Value Disabled
+
+   %set utiReference MinValue 100
+   %set utiReference MaxValue 1000
+
+   %if ((sensTyp1!='2wire')&(sensTyp1!='3wire')&(sensTyp1!='4wire'))
+     %set sensTyp1 Value 2-wire
+   %endif
+
+ %endif
+
+ %if utiMode='7'
+   %set sensor1 Value Enabled
+   %set sensor2 Value Enabled
+   %set sensor3 Value Enabled
+   %set sensor4 Value Disabled
+   %set sensor5 Value Disabled
+
+   %if sensTyp1!='2wire'& sensTyp1!='0'
+     %set sensTyp1 Value 2-wire
+   %endif
+   %if sensTyp2!='2wire'& sensTyp2!='3wire'& sensTyp2!='4wire'& sensTyp2!='0'
+     %set sensTyp2 Value 2-wire
+   %endif
+   %if sensTyp2 = '3wire'
+     %set sensTyp3 Value not connected
+   %elif sensTyp3!='2wire'& sensTyp3!='0'
+     %set sensTyp3 Value 2-wire
+   %endif
+ %endif
+
+ %if powerDownFunction='no'
+  %set PowerOn Selection never
+  %set PowerDown Selection never
+ %else
+  %set PowerOn Selection always
+  %set PowerDown Selection always
+ %endif

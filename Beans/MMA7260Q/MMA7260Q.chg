@@ -1,0 +1,20 @@
+%if defined(GSelectPinsConnected)
+  %if  %GSelectPinsConnected = "no"
+     %- do not generate code for the G select function
+     %set Gselect Selection never
+  %else
+     %- generate code for the G select function
+     %set Gselect Selection always
+  %endif
+%endif
+%if defined(SleepPinConnected)
+  %if  %SleepPinConnected = "no"
+     %- do not generate code for the on/off function
+     %set SensorOn Selection never
+     %set SensorOff Selection never
+  %else
+     %- generate code for the on/off function
+     %set SensorOn Selection always
+     %set SensorOff Selection always
+  %endif
+%endif

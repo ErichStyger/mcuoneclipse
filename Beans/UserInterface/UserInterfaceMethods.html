@@ -1,0 +1,1014 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1250">
+<title>
+Component  documentation - Methods
+</title>
+<STYLE type="text/css">
+body{
+  background-color: white;
+  margin:0px;
+  font: 13px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+A:visited {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:link {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:active {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #2D8AA7; TEXT-DECORATION: underline
+}
+.VSP {
+	COLOR: #2D8AA7; FONT: bold italic 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.reflink {
+	FONT: 11px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+ 	COLOR: #2D8AA7;
+}
+.user_text {
+	FONT: 12px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+	COLOR: #000000;
+}
+.bluetext {
+  COLOR: #695F52;
+}
+.versionspec {
+  padding:5px; 
+  background-color: RGB(243, 242, 230);
+  margin-top:5px;
+  margin-bottom:5px;  
+}
+.versionspecdetail {
+  padding:5px; 
+  background-color: RGB(243, 242, 230);
+  margin-top:5px;
+  margin-bottom:5px;  
+}
+.versionspeclabel {
+  font-style: italic;
+}
+LI.DEF {
+  list-style-image: url(DefaultLI.gif) ;
+}
+LI.BAS {
+	list-style-image: url(BasicLI.gif) ;
+}
+LI.ADV {
+	list-style-image: url(AdvancedLI.gif) ;
+}
+LI.EXP {
+	list-style-image: url(ExpertLI.gif) ;
+}
+.titlebox {  
+  font: bold 18px Helvetica Neue, Helvetica, Arial, sans-serif;
+  color: #51626F;
+  margin-bottom: 10px;
+}
+.lefttitlebox {
+  background-color:#C3CFD1;  
+}
+.lefttitle {
+  color:#51626F;
+  font: bold 11px Helvetica Neue, Helvetica, Arial, sans-serif;   
+}
+.beanname {
+  font: bold 14px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+  padding-top:6px;
+  padding-bottom:5px;
+  margin-bottom: 5px;
+  border-bottom-style: dotted;
+  border-bottom-width: 1;  
+}
+.descrtext {
+  font-style: italic;
+  font: 14px/18px Helvetica Neue, Helvetica, Arial, sans-serif;  
+  padding-bottom:9px;
+}
+.footer {
+  color: #b0b0b0; 
+  font: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+  text-align: center;
+  border-top-style: solid;
+  border-top-color: #BOBOBO;
+  border-top-width: 1px;  
+  padding-top: 5px;
+  margin-top: 20px;
+}
+.info_name {
+  font: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+  padding: 0px;
+  color: black;
+}
+.info_text {
+  font: 11px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.text_title {
+  COLOR: #000000; 
+  FONT: bold 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.descr_line {
+  COLOR: gray; 
+  FONT: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.code {
+  background-color: RGB(243, 242, 230);
+  padding: 10px;
+  white-space: pre;
+  font-family: Courier New, Monospace;
+}
+</STYLE>
+
+</head>
+
+<body>
+
+<table border="0"  cellspacing="0" cellpadding="0">
+  <tr>
+    <td valign="top" width="150" >
+      <table  width="150" height="160" cellpadding="3" cellspacing="0" border="0">
+        <tbody>
+        <tr class="lefttitlebox">
+          <td width="4"></td>
+          <td align="center" valign="middle" height="30" width="128">
+            <span class="lefttitle">
+<b>UserInterface</b>
+            </span>
+          </td>
+        </tr>
+        <tr height="700">
+          <td width="4"></td>
+          <td width="128" valign="top">
+            &nbsp;<br />
+            <div class="reflink">
+<!---HTMLLISTBEG_SHORT DON'T CHANGE THIS LINE-->
+<a href="UserInterface.html">General Info</a><br />
+<a href="UserInterfaceProperties.html">Properties</a><br />
+<i>Methods</i><br />
+<a href="UserInterfaceEvents.html">Events</a><br />
+<!---HTMLLISTEND DON'T CHANGE THIS LINE-->
+<br /><br /><br />
+<a href="../../DOCs/PredefSymbols.html">Types &amp; definitions</a><br/>
+<a href="../../DOCs/BEANindex.html">Component Index</a><br/>
+<a href="../../DOCs/CPUindex.html">CPU Component Index</a><br/>
+<a href="../../DOCs/EmbeddedBeans.html">Embedded Components</a><br/>
+<a href="../../DOCs/BeanCategories.html">Components Categories</a><br/>
+
+<br /><br /><br />
+<center>
+<img src="UserInterface_b.gif" alt="Component icon"/>
+
+
+</center>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </td>
+    <td width="1" class="lefttitlebox" valign="top">
+      <table class="lefttitlebox" width="1" cellpadding="0" cellspacing="0" height="100%" border="0">
+        <tr class="lefttitlebox"><td width="1"></td></tr>
+      </table>
+    </td>
+    <td style="padding-left:15px;padding-right:10px;" valign="top" align="left" width="100%" >
+
+         <div class="titlebox">
+            <div class="beanname">
+              Component
+              
+              
+              UserInterface
+            </div>
+            <div class="descrtext">User Interface for LCD displays</div>
+            <div class="info_name">Component Level: <span class="info_text"><a href="../../DOCs/BeanCategoriesInfo.html#LevelAbstraction">High</a></span></div>
+            <div class="info_name">Category: 
+              <span class="info_text">
+              <a href="../../DOCs/BeanCategoriesInfo.html">CPU External Devices-Display</a>
+              
+              </span>
+            </div>
+          </div>
+
+         <div class="text_title">
+              Methods:
+    		 </div>		 
+    		 <div class="descr_line">                  
+              (Methods are user-callable functions/subroutines intended for
+               the component functions control. Please see the <a href="../../DOCs/EmbeddedBeans.html#Methods">Embedded Components page</a> for more information.)                   
+         </div>
+                  
+         <div class="user_text">
+            <ul>
+<!---USERBEG DON'T CHANGE THIS LINE-->
+
+<!---USEREND DON'T CHANGE THIS LINE-->
+<li><a name="GetScreen">
+<b>GetScreen</b></a>
+ - returns the current active screen
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PScreen GetScreen(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:<i>ComponentName_</i>PScreen</i> - the current active screen
+</li>
+</ul><br />
+</li>
+<li><a name="CreateScreen">
+<b>CreateScreen</b></a>
+ - Initializes a window with default values
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void CreateScreen(<i>ComponentName_</i>Screen *screen, <i>ComponentName_</i>PixelColor bgColor)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>screen: Pointer to <i>ComponentName_</i>Screen</i> - Pointer to screen structure</li>
+<li><i>bgColor:<i>ComponentName_</i>PixelColor</i> - background color</li>
+</ul><br />
+</li>
+<li><a name="UpdateScreen">
+<b>UpdateScreen</b></a>
+ - Draws all windows of the screen
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void UpdateScreen(<i>ComponentName_</i>Screen *screen)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>screen: Pointer to <i>ComponentName_</i>Screen</i> - Pointer to screen</li>
+</ul><br />
+</li>
+<li><a name="RefreshDialogWindow">
+<b>RefreshDialogWindow</b></a>
+ - Draws all elements of a dialog window
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void RefreshDialogWindow(<i>ComponentName_</i>Window *window)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window</li>
+</ul><br />
+</li>
+<li><a name="UpdateElement">
+<b>UpdateElement</b></a>
+ - Paints an element to the window.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void UpdateElement(<i>ComponentName_</i>Window *window, <i>ComponentName_</i>Element *element)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window</li>
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+</ul><br />
+</li>
+<li><a name="GetElementPosX">
+<b>GetElementPosX</b></a>
+ - Returns the element x coordinate position
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PixelDim GetElementPosX(<i>ComponentName_</i>Element *elem)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>elem: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>Return value:<i>ComponentName_</i>PixelDim</i> - element width in pixels
+</li>
+</ul><br />
+</li>
+<li><a name="GetElementPosY">
+<b>GetElementPosY</b></a>
+ - Returns the element y coordinate position
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PixelDim GetElementPosY(<i>ComponentName_</i>Element *elem)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>elem: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>Return value:<i>ComponentName_</i>PixelDim</i> - element width in pixels
+</li>
+</ul><br />
+</li>
+<li><a name="GetElementWidth">
+<b>GetElementWidth</b></a>
+ - Returns the element width in pixels
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PixelDim GetElementWidth(<i>ComponentName_</i>Element *elem)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>elem: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>Return value:<i>ComponentName_</i>PixelDim</i> - element width in pixels
+</li>
+</ul><br />
+</li>
+<li><a name="GetElementHeight">
+<b>GetElementHeight</b></a>
+ - Returns the element height in pixels
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PixelDim GetElementHeight(<i>ComponentName_</i>Element *elem)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>elem: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>Return value:<i>ComponentName_</i>PixelDim</i> - element height in pixels
+</li>
+</ul><br />
+</li>
+<li><a name="EqualElement">
+<b>EqualElement</b></a>
+ - Macro to compare two element pointers
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> bool EqualElement(<i>ComponentName_</i>Element *elem1, <i>ComponentName_</i>Element *elem2)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>elem1: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>elem2: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element which is a derived element (Icon, Header, etc).</li>
+<li><i>Return value:bool</i> - if two elements are the same
+</li>
+</ul><br />
+</li>
+<li><a name="ChangeElementColor">
+<b>ChangeElementColor</b></a>
+ - Changes the element properties color.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void ChangeElementColor(<i>ComponentName_</i>Element *elem, <i>ComponentName_</i>PixelColor color)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>elem: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>color:<i>ComponentName_</i>PixelColor</i> - color to be used for the element</li>
+</ul><br />
+</li>
+<li><a name="SetWindowEventCallback">
+<b>SetWindowEventCallback</b></a>
+ - Sets the callback for the window. To be used for events like clicking an element
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SetWindowEventCallback(<i>ComponentName_</i>Window *window, void (*eventCallback)(<i>ComponentName_</i>Window *window, <i>ComponentName_</i>Element *element, <i>ComponentName_</i>EventCallbackKind event))<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window</li>
+<li><i>callback:byte</i> - no hint</li>
+</ul><br />
+</li>
+<li><a name="UpdateWindow">
+<b>UpdateWindow</b></a>
+ - Draws all elements of the window
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void UpdateWindow(<i>ComponentName_</i>Window *window)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window</li>
+</ul><br />
+</li>
+<li><a name="WindowSetBorder">
+<b>WindowSetBorder</b></a>
+ - Configures the window to have a border around it.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void WindowSetBorder(<i>ComponentName_</i>Window *window)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window</li>
+</ul><br />
+</li>
+<li><a name="CreateWindow">
+<b>CreateWindow</b></a>
+ - Initializes a window with default values
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte CreateWindow(<i>ComponentName_</i>Screen *screen, <i>ComponentName_</i>Window *window, <i>ComponentName_</i>PixelColor bgColor, <i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y, <i>ComponentName_</i>PixelDim width, <i>ComponentName_</i>PixelDim height)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>screen: Pointer to <i>ComponentName_</i>Screen</i> - Pointer to screen</li>
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window structure</li>
+<li><i>bgColor:<i>ComponentName_</i>PixelColor</i> - background color to be used</li>
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x position of window</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y position of window</li>
+<li><i>width:<i>ComponentName_</i>PixelDim</i> - width of window</li>
+<li><i>height:<i>ComponentName_</i>PixelDim</i> - no hint</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="CreateSpace">
+<b>CreateSpace</b></a>
+ - Initializes a generic tranparent rectangle space
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte CreateSpace(<i>ComponentName_</i>Window *window, <i>ComponentName_</i>Space *space, <i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y, <i>ComponentName_</i>PixelDim width, <i>ComponentName_</i>PixelDim height)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window structure</li>
+<li><i>space: Pointer to <i>ComponentName_</i>Space</i> - Pointer to space element</li>
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x position of window</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y position of window</li>
+<li><i>width:<i>ComponentName_</i>PixelDim</i> - width of window</li>
+<li><i>height:<i>ComponentName_</i>PixelDim</i> - no hint</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="HeaderSetLine">
+<b>HeaderSetLine</b></a>
+ - Initializes the header for the window
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte HeaderSetLine(<i>ComponentName_</i>Header *header)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>header: Pointer to <i>ComponentName_</i>Header</i> - Pointer to header</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="CreateHeader">
+<b>CreateHeader</b></a>
+ - Initializes the header for the window
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte CreateHeader(<i>ComponentName_</i>Window *window, <i>ComponentName_</i>Header *header, byte *text, <i>ComponentName_</i>FontCallbacks *font, <i>ComponentName_</i>PixelColor bgColor)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window</li>
+<li><i>header: Pointer to <i>ComponentName_</i>Header</i> - Pointer to header</li>
+<li><i>text: Pointer to byte</i> - Pointer to text to display in header</li>
+<li><i>font: Pointer to <i>ComponentName_</i>FontCallbacks</i> - Pointer to font callbacks</li>
+<li><i>bgColor:<i>ComponentName_</i>PixelColor</i> - background color for header</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="ChangeText">
+<b>ChangeText</b></a>
+ - Changes the text of the element. The method will erase the existing text and replaces it with the new text, and copies the new text into the existing buffer (that's why you need to provide the size of the existing buffer as well).
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ChangeText(<i>ComponentName_</i>Window *window, <i>ComponentName_</i>Element *elem, size_t dstTextSize, byte *txt)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window</li>
+<li><i>elem: Pointer to <i>ComponentName_</i>Element</i> - Pointer to the element.</li>
+<li><i>dstTextSize:word</i> - Size in bytes of existing text.</li>
+<li><i>txt: Pointer to byte</i> - Pointer to new text. Note that this text has to be different from the element text shown, and this text will become the new element text.</li>
+<li><i>Return value:byte</i> - error code
+</li>
+</ul><br />
+</li>
+<li><a name="AssignText">
+<b>AssignText</b></a>
+ - Changes the text of the element. The method will use the pointer to the new text provided. The caller is responsible to deallocate the previous text if necessary.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte AssignText(<i>ComponentName_</i>Window *window, <i>ComponentName_</i>Element *elem, byte *txt)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window</li>
+<li><i>elem: Pointer to <i>ComponentName_</i>Element</i> - Pointer to the element.</li>
+<li><i>txt: Pointer to byte</i> - Pointer to new text. Note that this text has to be different from the element text shown, and this text will become the new element text.</li>
+<li><i>Return value:byte</i> - error code
+</li>
+</ul><br />
+</li>
+<li><a name="ChangeTextFgColor">
+<b>ChangeTextFgColor</b></a>
+ - Changes the text foreground color.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void ChangeTextFgColor(<i>ComponentName_</i>Element *elem, <i>ComponentName_</i>PixelColor fgColor)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>elem: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>fgColor:<i>ComponentName_</i>PixelColor</i> - text color</li>
+</ul><br />
+</li>
+<li><a name="CreateText">
+<b>CreateText</b></a>
+ - Creates a text element
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte CreateText(<i>ComponentName_</i>Window *window, <i>ComponentName_</i>Text *textElem, <i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y, <i>ComponentName_</i>PixelDim width, <i>ComponentName_</i>PixelDim height, byte *text, <i>ComponentName_</i>FontCallbacks *font)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window</li>
+<li><i>textElem: Pointer to <i>ComponentName_</i>Text</i> - Pointer to text element</li>
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x position</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y position</li>
+<li><i>width:<i>ComponentName_</i>PixelDim</i> - width of element</li>
+<li><i>height:<i>ComponentName_</i>PixelDim</i> - height of element</li>
+<li><i>text: Pointer to byte</i> - Pointer to text</li>
+<li><i>font: Pointer to <i>ComponentName_</i>FontCallbacks</i> - Pointer to font callbacks</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="PressButton">
+<b>PressButton</b></a>
+ - Changes a button into the pressed state
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void PressButton(<i>ComponentName_</i>Window *window, <i>ComponentName_</i>Button *button)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to </li>
+<li><i>button: Pointer to <i>ComponentName_</i>Button</i> - Pointer to button element</li>
+</ul><br />
+</li>
+<li><a name="ChangeTextBgColor">
+<b>ChangeTextBgColor</b></a>
+ - Changes the text background color.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void ChangeTextBgColor(<i>ComponentName_</i>Element *elem, <i>ComponentName_</i>PixelColor bgColor)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>elem: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>bgColor:<i>ComponentName_</i>PixelColor</i> - text background color</li>
+</ul><br />
+</li>
+<li><a name="ReleaseButton">
+<b>ReleaseButton</b></a>
+ - Changes a button into the unpressed/released state
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void ReleaseButton(<i>ComponentName_</i>Window *window, <i>ComponentName_</i>Button *button)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to </li>
+<li><i>button: Pointer to <i>ComponentName_</i>Button</i> - Pointer to button element</li>
+</ul><br />
+</li>
+<li><a name="CreateButton">
+<b>CreateButton</b></a>
+ - Creates a new button element
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte CreateButton(<i>ComponentName_</i>Window *window, <i>ComponentName_</i>Button *button, <i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y, <i>ComponentName_</i>PixelDim width, <i>ComponentName_</i>PixelDim height, byte *text, <i>ComponentName_</i>FontCallbacks *font, <i>ComponentName_</i>PixelColor btnColor)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to </li>
+<li><i>button: Pointer to <i>ComponentName_</i>Button</i> - Pointer to button element</li>
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x position</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y position</li>
+<li><i>width:<i>ComponentName_</i>PixelDim</i> - width of element</li>
+<li><i>height:<i>ComponentName_</i>PixelDim</i> - height of element</li>
+<li><i>text: Pointer to byte</i> - Pointer to text</li>
+<li><i>font: Pointer to <i>ComponentName_</i>FontCallbacks</i> - Pointer to font callbacks</li>
+<li><i>btnColor:<i>ComponentName_</i>PixelColor</i> - background color of button</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="CheckBoxSet">
+<b>CheckBoxSet</b></a>
+ - Sets the check status of a check box
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void CheckBoxSet(<i>ComponentName_</i>CheckBox *checkBox, bool checked)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>checkBox: Pointer to <i>ComponentName_</i>CheckBox</i> - Pointer to checkbox</li>
+<li><i>checked:bool</i> - The new value of the check box</li>
+</ul><br />
+</li>
+<li><a name="CheckBoxIsChecked">
+<b>CheckBoxIsChecked</b></a>
+ - Returns TRUE or FALSE, depending on the check box state
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> bool CheckBoxIsChecked(<i>ComponentName_</i>CheckBox *checkBox)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>checkBox: Pointer to <i>ComponentName_</i>CheckBox</i> - Pointer to check box</li>
+<li><i>Return value:bool</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="CreateCheckBox">
+<b>CreateCheckBox</b></a>
+ - Creates a check box element
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte CreateCheckBox(<i>ComponentName_</i>Window *window, <i>ComponentName_</i>CheckBox *checkBox, <i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y, <i>ComponentName_</i>PixelDim width, <i>ComponentName_</i>PixelDim height, <i>ComponentName_</i>PixelColor boxLineColor, <i>ComponentName_</i>PixelColor boxBgColor, byte *text, <i>ComponentName_</i>FontCallbacks *font, <i>ComponentName_</i>PixelColor txtBgColor)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window</li>
+<li><i>checkBox: Pointer to <i>ComponentName_</i>CheckBox</i> - Pointer to checkbox</li>
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x position of check box</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y position of check box</li>
+<li><i>width:<i>ComponentName_</i>PixelDim</i> - width of the element, including text</li>
+<li><i>height:<i>ComponentName_</i>PixelDim</i> - height of the element</li>
+<li><i>boxLineColor:<i>ComponentName_</i>PixelColor</i> - checkbox line color</li>
+<li><i>boxBgColor:<i>ComponentName_</i>PixelColor</i> - checkbox background color</li>
+<li><i>text: Pointer to byte</i> - Pointer to description text of checkbox</li>
+<li><i>font: Pointer to <i>ComponentName_</i>FontCallbacks</i> - Pointer to font information</li>
+<li><i>txtBgColor:<i>ComponentName_</i>PixelColor</i> - text background color</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="ChangeBarGraphData">
+<b>ChangeBarGraphData</b></a>
+ - Changes an existing bar and only repaints the needed area.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ChangeBarGraphData(<i>ComponentName_</i>Window *window, <i>ComponentName_</i>BarGraph *barGraph, byte index, byte newData)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window</li>
+<li><i>barGraph: Pointer to <i>ComponentName_</i>BarGraph</i> - Pointer to bargraph</li>
+<li><i>index:byte</i> - index of column to change</li>
+<li><i>newData:byte</i> - New data elements, in the range from 0 to 100</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="CreateBarGraph">
+<b>CreateBarGraph</b></a>
+ - Creates a bar graph
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte CreateBarGraph(<i>ComponentName_</i>Window *window, <i>ComponentName_</i>BarGraph *barGraph, <i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y, <i>ComponentName_</i>PixelDim width, <i>ComponentName_</i>PixelDim height, <i>ComponentName_</i>PixelColor bgColor, byte *data, byte nofData, <i>ComponentName_</i>PixelColor barColor, byte borderWidth, <i>ComponentName_</i>PixelColor borderColor, byte borderSpace)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to </li>
+<li><i>barGraph: Pointer to <i>ComponentName_</i>BarGraph</i> - Pointer to bargraph element</li>
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x position</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y position</li>
+<li><i>width:<i>ComponentName_</i>PixelDim</i> - width of element</li>
+<li><i>height:<i>ComponentName_</i>PixelDim</i> - height of element</li>
+<li><i>bgColor:<i>ComponentName_</i>PixelColor</i> - Graph background color</li>
+<li><i>data: Pointer to byte</i> - Pointer to the data (values 0..100)</li>
+<li><i>nofData:byte</i> - number of data</li>
+<li><i>barColor:<i>ComponentName_</i>PixelColor</i> - Color to be used for the bars</li>
+<li><i>borderWidth:byte</i> - Width of the border around the graph. Pass zero for no border.</li>
+<li><i>borderColor:<i>ComponentName_</i>PixelColor</i> - Color for the graph border</li>
+<li><i>borderSpace:byte</i> - Space to be used in pixels between border and bars.</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="ScrollMenuNofItems">
+<b>ScrollMenuNofItems</b></a>
+ - Returns the number of selectable items in the scroll menu
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ScrollMenuNofItems(<i>ComponentName_</i>ScrollMenu *scrollMenu)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>scrollMenu: Pointer to <i>ComponentName_</i>ScrollMenu</i> - Pointer to scrollMenu</li>
+<li><i>Return value:byte</i> - number of list items
+</li>
+</ul><br />
+</li>
+<li><a name="ScrollMenuGetSelection">
+<b>ScrollMenuGetSelection</b></a>
+ - Returns the index of the currently selected item in the scroll menu
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ScrollMenuGetSelection(<i>ComponentName_</i>ScrollMenu *scrollMenu)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>scrollMenu: Pointer to <i>ComponentName_</i>ScrollMenu</i> - Pointer to scrollMenu</li>
+<li><i>Return value:byte</i> - the currently selected item index
+</li>
+</ul><br />
+</li>
+<li><a name="ScrollMenuSetSelection">
+<b>ScrollMenuSetSelection</b></a>
+ - Sets the selected item in the scroll menu. The method does an overflow/underflow check.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void ScrollMenuSetSelection(<i>ComponentName_</i>ScrollMenu *scrollMenu, byte newSelection)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>scrollMenu: Pointer to <i>ComponentName_</i>ScrollMenu</i> - Pointer to scrollMenu</li>
+<li><i>newSelection:byte</i> - index (starting with zero) of the selection</li>
+</ul><br />
+</li>
+<li><a name="CreateScrollMenu">
+<b>CreateScrollMenu</b></a>
+ - Creates a new scroll menu item
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte CreateScrollMenu(<i>ComponentName_</i>Window *window, <i>ComponentName_</i>ScrollMenu *scrollMenu, <i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y, <i>ComponentName_</i>PixelDim width, <i>ComponentName_</i>PixelDim height, byte *text, <i>ComponentName_</i>FontCallbacks *font, <i>ComponentName_</i>PixelColor bgColor, <i>ComponentName_</i>PixelColor lineColor, <i>ComponentName_</i>PixelColor boxBgColor)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to </li>
+<li><i>scrollMenu: Pointer to <i>ComponentName_</i>ScrollMenu</i> - Pointer to scrollMenu element</li>
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x position</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y position</li>
+<li><i>width:<i>ComponentName_</i>PixelDim</i> - width of element</li>
+<li><i>height:<i>ComponentName_</i>PixelDim</i> - height of element</li>
+<li><i>text: Pointer to byte</i> - Pointer to text</li>
+<li><i>font: Pointer to <i>ComponentName_</i>FontCallbacks</i> - Pointer to font callbacks</li>
+<li><i>bgColor:<i>ComponentName_</i>PixelColor</i> - background color of menu</li>
+<li><i>lineColor:<i>ComponentName_</i>PixelColor</i> - Line color of menu</li>
+<li><i>boxBgColor:<i>ComponentName_</i>PixelColor</i> - Color to be used to fill the box background</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="DeselectElement">
+<b>DeselectElement</b></a>
+ - Deselects an element in the window
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void DeselectElement(<i>ComponentName_</i>Screen *screen, <i>ComponentName_</i>Window *window, <i>ComponentName_</i>Element *element)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>screen: Pointer to <i>ComponentName_</i>Screen</i> - Pointer to screen</li>
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window</li>
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - pointer to the element to select</li>
+</ul><br />
+</li>
+<li><a name="SelectElement">
+<b>SelectElement</b></a>
+ - Selects an element in the window
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SelectElement(<i>ComponentName_</i>Screen *screen, <i>ComponentName_</i>Window *window, <i>ComponentName_</i>Element *element)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>screen: Pointer to <i>ComponentName_</i>Screen</i> - Pointer to screen</li>
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window</li>
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - pointer to the element to select</li>
+</ul><br />
+</li>
+<li><a name="EnableElementSelection">
+<b>EnableElementSelection</b></a>
+ - Enables an element so it can be selected
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void EnableElementSelection(<i>ComponentName_</i>Element *elem)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>elem: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+</ul><br />
+</li>
+<li><a name="GetSelectedElement">
+<b>GetSelectedElement</b></a>
+ - Returns the currently selected element, or NULL.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> bool GetSelectedElement(<i>ComponentName_</i>Screen *screen, <i>ComponentName_</i>PWindow *pWindow, <i>ComponentName_</i>PElement *pElement)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>screen: Pointer to <i>ComponentName_</i>Screen</i> - Pointer to current screen</li>
+<li><i>pWindow: Pointer to <i>ComponentName_</i>PWindow</i> - Pointer to window pointer. Returns here a pointer to the window of the selected item, or NULL.</li>
+<li><i>pElement: Pointer to <i>ComponentName_</i>PElement</i> - Pointer to element pointer. Returns here a pointer to the element of the selected item, or NULL.</li>
+<li><i>Return value:bool</i> - TRUE if there is a selected element. In this case the pointer to it is returned.
+</li>
+</ul><br />
+</li>
+<li><a name="SelectNextElement">
+<b>SelectNextElement</b></a>
+ - Selects the next (or previous) element in the window
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SelectNextElement(<i>ComponentName_</i>Screen *screen, bool forward)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>screen: Pointer to <i>ComponentName_</i>Screen</i> - Pointer to screen</li>
+<li><i>forward:bool</i> - if set to TRUE, selects the next element, otherwise selects the previous one.</li>
+</ul><br />
+</li>
+<li><a name="ClickSelectedElement">
+<b>ClickSelectedElement</b></a>
+ - Method to be called on clicking on an element in the window
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void ClickSelectedElement(<i>ComponentName_</i>Screen *screen, <i>ComponentName_</i>EventCallbackKind kind, <i>ComponentName_</i>Pvoid data)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>screen: Pointer to <i>ComponentName_</i>Screen</i> - Pointer to screen</li>
+<li><i>kind:<i>ComponentName_</i>EventCallbackKind</i> - event kind to be generated</li>
+<li><i>data:<i>ComponentName_</i>Pvoid</i> - pointer to optional data, or NULL</li>
+</ul><br />
+</li>
+<li><a name="ClickElement">
+<b>ClickElement</b></a>
+ - Method for clicking on an element in the window
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void ClickElement(<i>ComponentName_</i>Screen *screen, <i>ComponentName_</i>Window *window, <i>ComponentName_</i>Element *element, <i>ComponentName_</i>EventCallbackKind kind, <i>ComponentName_</i>Pvoid data)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>screen: Pointer to <i>ComponentName_</i>Screen</i> - Pointer to screen</li>
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window</li>
+<li><i>element: Pointer to <i>ComponentName_</i>Element</i> - Pointer to element</li>
+<li><i>kind:<i>ComponentName_</i>EventCallbackKind</i> - Event to be handled</li>
+<li><i>data:<i>ComponentName_</i>Pvoid</i> - pointer to optional data, or NULL</li>
+</ul><br />
+</li>
+<li><a name="DrawBox">
+<b>DrawBox</b></a>
+ - Draws a box into the window
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void DrawBox(<i>ComponentName_</i>Window *window, <i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y, <i>ComponentName_</i>PixelDim w, <i>ComponentName_</i>PixelDim h, <i>ComponentName_</i>PixelDim lineWidth, <i>ComponentName_</i>PixelColor color)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window</li>
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x position, relative to window</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y position, relative to window</li>
+<li><i>w:<i>ComponentName_</i>PixelDim</i> - width of line</li>
+<li><i>h:<i>ComponentName_</i>PixelDim</i> - height of box</li>
+<li><i>lineWidth:<i>ComponentName_</i>PixelDim</i> - width of line</li>
+<li><i>color:<i>ComponentName_</i>PixelColor</i> - color to be used</li>
+</ul><br />
+</li>
+<li><a name="CreateIcon">
+<b>CreateIcon</b></a>
+ - Creates a new calendar day element
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte CreateIcon(<i>ComponentName_</i>Window *window, <i>ComponentName_</i>Icon *icon, <i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y, <i>ComponentName_</i>PixelDim width, <i>ComponentName_</i>PixelDim height, <i>ComponentName_</i>IconType type)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to </li>
+<li><i>icon: Pointer to <i>ComponentName_</i>Icon</i> - Pointer to icon element</li>
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x position</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y position</li>
+<li><i>width:<i>ComponentName_</i>PixelDim</i> - width of element</li>
+<li><i>height:<i>ComponentName_</i>PixelDim</i> - height of element</li>
+<li><i>type:<i>ComponentName_</i>IconType</i> - type of icon to be created</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="ChangeIconFgColor">
+<b>ChangeIconFgColor</b></a>
+ - Changes the icon foreground color.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void ChangeIconFgColor(<i>ComponentName_</i>Icon *icon, <i>ComponentName_</i>PixelColor fgColor)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>icon: Pointer to <i>ComponentName_</i>Icon</i> - Pointer to element</li>
+<li><i>fgColor:<i>ComponentName_</i>PixelColor</i> - new color</li>
+</ul><br />
+</li>
+<li><a name="DrawHLine">
+<b>DrawHLine</b></a>
+ - Paints a horizontal line in the window
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void DrawHLine(<i>ComponentName_</i>Window *window, <i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y, <i>ComponentName_</i>PixelDim w, <i>ComponentName_</i>PixelColor color)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window</li>
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x position, relative to window</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y position, relative to window</li>
+<li><i>w:<i>ComponentName_</i>PixelDim</i> - width of line</li>
+<li><i>color:<i>ComponentName_</i>PixelColor</i> - color to be used</li>
+</ul><br />
+</li>
+<li><a name="DrawVLine">
+<b>DrawVLine</b></a>
+ - Paints a horizontal line in the window
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void DrawVLine(<i>ComponentName_</i>Window *window, <i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y, <i>ComponentName_</i>PixelDim h, <i>ComponentName_</i>PixelColor color)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window</li>
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x position, relative to window</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y position, relative to window</li>
+<li><i>h:<i>ComponentName_</i>PixelDim</i> - height of line</li>
+<li><i>color:<i>ComponentName_</i>PixelColor</i> - color to be used</li>
+</ul><br />
+</li>
+<li><a name="DrawLine">
+<b>DrawLine</b></a>
+ - Draws a line into the window
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void DrawLine(<i>ComponentName_</i>Window *window, <i>ComponentName_</i>PixelDim x0, <i>ComponentName_</i>PixelDim y0, <i>ComponentName_</i>PixelDim x1, <i>ComponentName_</i>PixelDim y1, <i>ComponentName_</i>PixelColor color)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window</li>
+<li><i>x0:<i>ComponentName_</i>PixelDim</i> - x position, relative to window</li>
+<li><i>y0:<i>ComponentName_</i>PixelDim</i> - y position, relative to window</li>
+<li><i>x1:<i>ComponentName_</i>PixelDim</i> - lower right corner x coordinate</li>
+<li><i>y1:<i>ComponentName_</i>PixelDim</i> - lower right corner y coordinate</li>
+<li><i>color:<i>ComponentName_</i>PixelColor</i> - color to be used</li>
+</ul><br />
+</li>
+<li><a name="DrawFilledBox">
+<b>DrawFilledBox</b></a>
+ - Paints a horizontal line in the window
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void DrawFilledBox(<i>ComponentName_</i>Window *window, <i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y, <i>ComponentName_</i>PixelDim w, <i>ComponentName_</i>PixelDim h, <i>ComponentName_</i>PixelColor color)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window</li>
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x position, relative to window</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y position, relative to window</li>
+<li><i>w:<i>ComponentName_</i>PixelDim</i> - width of box</li>
+<li><i>h:<i>ComponentName_</i>PixelDim</i> - height of box</li>
+<li><i>color:<i>ComponentName_</i>PixelColor</i> - color to be used</li>
+</ul><br />
+</li>
+<li><a name="CreateDialogWindow">
+<b>CreateDialogWindow</b></a>
+ - Initializes a window with default values
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte CreateDialogWindow(<i>ComponentName_</i>Screen *screen, <i>ComponentName_</i>Window *window, <i>ComponentName_</i>PixelColor bgColor, <i>ComponentName_</i>PixelDim x, <i>ComponentName_</i>PixelDim y, <i>ComponentName_</i>PixelDim width, <i>ComponentName_</i>PixelDim height)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>screen: Pointer to <i>ComponentName_</i>Screen</i> - Pointer to screen</li>
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window structure</li>
+<li><i>bgColor:<i>ComponentName_</i>PixelColor</i> - background color to be used</li>
+<li><i>x:<i>ComponentName_</i>PixelDim</i> - x position of window</li>
+<li><i>y:<i>ComponentName_</i>PixelDim</i> - y position of window</li>
+<li><i>width:<i>ComponentName_</i>PixelDim</i> - width of window</li>
+<li><i>height:<i>ComponentName_</i>PixelDim</i> - no hint</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="CloseDialogWindow">
+<b>CloseDialogWindow</b></a>
+ - Initializes a window with default values
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte CloseDialogWindow(<i>ComponentName_</i>Screen *screen, <i>ComponentName_</i>Window *window)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>screen: Pointer to <i>ComponentName_</i>Screen</i> - Pointer to screen</li>
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window structure</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="RemoveWindow">
+<b>RemoveWindow</b></a>
+ - Removes a window from the screen.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte RemoveWindow(<i>ComponentName_</i>Screen *screen, <i>ComponentName_</i>Window *window)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>screen: Pointer to <i>ComponentName_</i>Screen</i> - Pointer to screen</li>
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window structure</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="RemoveWindowPaintBackground">
+<b>RemoveWindowPaintBackground</b></a>
+ - Removes a window from the screen and repaints the background of it.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void RemoveWindowPaintBackground(<i>ComponentName_</i>Screen *screen, <i>ComponentName_</i>Window *window)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>screen: Pointer to <i>ComponentName_</i>Screen</i> - Pointer to screen</li>
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window structure</li>
+</ul><br />
+</li>
+<li><a name="FindElement">
+<b>FindElement</b></a>
+ - Iterates through all elements of a screen with an element compare function to find a certain element.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> bool FindElement(<i>ComponentName_</i>Screen *screen, <i>ComponentName_</i>PWindow *pWindow, <i>ComponentName_</i>PElement *pElement, <i>ComponentName_</i>ElementFindFct compare, <i>ComponentName_</i>Pvoid data)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>screen: Pointer to <i>ComponentName_</i>Screen</i> - Pointer to screen</li>
+<li><i>pWindow: Pointer to <i>ComponentName_</i>PWindow</i> - Pointer to window pointer. Used to return a result.</li>
+<li><i>pElement: Pointer to <i>ComponentName_</i>PElement</i> - Pointer to element pointer. Used to return a result.</li>
+<li><i>compare:<i>ComponentName_</i>ElementFindFct</i> - Comparator function/callback. Called for each element and returns TRUE if element matches search criteria.</li>
+<li><i>data:<i>ComponentName_</i>Pvoid</i> - optional data pointer for the compare function</li>
+<li><i>Return value:bool</i> - TRUE if an element has been found matching the find function
+</li>
+</ul><br />
+</li>
+<li><a name="GetDisplayOrientation">
+<b>GetDisplayOrientation</b></a>
+ - Returns the current display orientation
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>DisplayOrientation GetDisplayOrientation(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:<i>ComponentName_</i>DisplayOrientation</i> - current display orientation
+</li>
+</ul><br />
+</li>
+<li><a name="SetDisplayOrientation">
+<b>SetDisplayOrientation</b></a>
+ - Sets the display orienation. If you enable this method, then the orientation of the display can be changed at runtime. However, this requires additional ressources.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SetDisplayOrientation(<i>ComponentName_</i>DisplayOrientation newOrientation)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>newOrientation:<i>ComponentName_</i>DisplayOrientation</i> - new orientation to be used</li>
+</ul><br />
+</li>
+<li><a name="GetWidth">
+<b>GetWidth</b></a>
+ - returns the width of the display in pixels (x direction)
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PixelDim GetWidth(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:<i>ComponentName_</i>PixelDim</i> - Number of pixels (x dimension)
+</li>
+</ul><br />
+</li>
+<li><a name="GetHeight">
+<b>GetHeight</b></a>
+ - returns the height of the display in pixels (y direction)
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>PixelDim GetHeight(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:<i>ComponentName_</i>PixelDim</i> - Number of x pixels (y dimension)
+</li>
+</ul><br />
+</li>
+<li><a name="OnWindowResize">
+<b>OnWindowResize</b></a>
+ - Called if a window size has been changed to update relative element position inside the window.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void OnWindowResize(<i>ComponentName_</i>Window *window)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>window: Pointer to <i>ComponentName_</i>Window</i> - Pointer to window</li>
+</ul><br />
+</li>
+
+           </ul>
+<!---USERBEG DON'T CHANGE THIS LINE-->
+
+<!---USEREND DON'T CHANGE THIS LINE-->
+<p>
+<br />
+Note: Some methods can be implemented as macros.
+</p>
+          </div>
+          <p class="footer">
+            PROCESSOR EXPERT is trademark of Freescale Semiconductor, Inc.
+            <br />
+            
+          </p>
+    </td>
+  </tr>
+
+</table>
+
+</body>
+</html>

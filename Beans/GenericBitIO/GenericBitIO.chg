@@ -1,0 +1,88 @@
+%if defined(DataRegDeclaration)
+  %if %DataRegDeclaration='bitname'
+    %set UseDataBit          Value Enabled
+    %set UseDataPort         Value Disabled
+    %set UseDataAddress      Value Disabled
+    %set UseSetClearDataPort Value Disabled
+    %set UseDataLDD          Value Disabled
+  %elif %DataRegDeclaration='portname'
+    %set UseDataBit          Value Disabled
+    %set UseDataPort         Value Enabled
+    %set UseDataAddress      Value Disabled
+    %set UseSetClearDataPort Value Disabled
+    %set UseDataLDD          Value Disabled
+  %elif %DataRegDeclaration='address'
+    %set UseDataBit          Value Disabled
+    %set UseDataPort         Value Disabled
+    %set UseDataAddress      Value Enabled
+    %set UseSetClearDataPort Value Disabled
+    %set UseDataLDD          Value Disabled
+  %elif %DataRegDeclaration='ldd'
+    %set UseDataBit          Value Disabled
+    %set UseDataPort         Value Disabled
+    %set UseDataAddress      Value Disabled
+    %set UseSetClearDataPort Value Disabled
+    %set UseDataLDD          Value Enabled
+  %elif %DataRegDeclaration='setClearPortName'
+    %set UseDataBit          Value Disabled
+    %set UseDataPort         Value Disabled
+    %set UseDataAddress      Value Disabled
+    %set UseSetClearDataPort Value Enabled
+    %set UseDataLDD          Value Disabled
+  %endif
+%endif
+%if defined(DirectionRegDeclaration)
+  %if %DirectionRegDeclaration='bitname'
+    %set UseDirectionBit     Value Enabled
+    %set UseDirectionPort    Value Disabled
+    %set UseDirectionAddress Value Disabled
+  %elif %DirectionRegDeclaration='portname'
+    %set UseDirectionBit     Value Disabled
+    %set UseDirectionPort    Value Enabled
+    %set UseDirectionAddress Value Disabled
+  %elif %DirectionRegDeclaration='address'
+    %set UseDirectionBit     Value Disabled
+    %set UseDirectionPort    Value Disabled
+    %set UseDirectionAddress Value Enabled
+  %elif %DataRegDeclaration='ldd'
+    %set UseDirectionBit     Value Disabled
+    %set UseDirectionPort    Value Disabled
+    %set UseDirectionAddress Value Disabled
+  %endif
+%endif
+%if defined(Direction)
+  %if %Direction='1' %- Output
+    %set InitValue     ReadOnly no
+    %set InitDirection ReadOnly yes
+    %set SetDir      Selection never
+    %set SetInput    Selection never
+    %set SetOutput   Selection never
+    %set GetVal      Selection enable
+    %set PutVal      Selection enable
+    %set ClrVal      Selection enable
+    %set SetVal      Selection enable
+    %set NegVal      Selection enable
+  %elif %Direction='0' %- Input
+    %set InitValue     ReadOnly yes
+    %set InitDirection ReadOnly yes
+    %set SetDir      Selection never
+    %set SetInput    Selection never
+    %set SetOutput   Selection never
+    %set GetVal      Selection always
+    %set PutVal      Selection never
+    %set ClrVal      Selection never
+    %set SetVal      Selection never
+    %set NegVal      Selection never
+  %elif %Direction='2' %- Input/Output
+    %set InitValue     ReadOnly no
+    %set InitDirection ReadOnly no
+    %set SetDir      Selection enable
+    %set SetInput    Selection enable
+    %set SetOutput   Selection enable
+    %set GetVal      Selection enable
+    %set PutVal      Selection enable
+    %set ClrVal      Selection enable
+    %set SetVal      Selection enable
+    %set NegVal      Selection enable
+  %endif
+%endif

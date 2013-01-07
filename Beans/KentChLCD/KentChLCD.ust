@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--User types for component-->
+<UserTypes>
+  <Type>
+    <UsrType>TRetypeType</UsrType>
+    <Name>PixelCount</Name>
+    <Hint>A word is enough to count all pixels of the display.</Hint>
+    <Generate>yes</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>yes</GenerateHelp>
+    <PreparedHint>  typedef word %'ModuleName'_PixelCount ;/* A word is enough to count all pixels of the display. */\n
+</PreparedHint>
+    <Type>16bit unsigned</Type>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>PixelDim</Name>
+    <Hint>Type to hold a pixel coordinate</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* Type to hold a pixel coordinate */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>DisplayOrientation</Name>
+    <Hint/>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+</UserTypes>

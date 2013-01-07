@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--User types for component-->
+<UserTypes>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>Element</Name>
+    <Hint>Alias to Element</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* Alias to Element */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>MsgKind</Name>
+    <Hint>different kinds of window event call back</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* different kinds of window event call back */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>PixelDim</Name>
+    <Hint>Size of a pixel</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* Size of a pixel */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>Pvoid</Name>
+    <Hint>Pointer to void</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* Pointer to void */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>IconWidget</Name>
+    <Hint>Alias to checkbox element type</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* Alias to checkbox element type */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>PixelColor</Name>
+    <Hint>type large enough to hold the color information</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>typedef %@Display@'ModuleName'%.Color %'ModuleName'%.PixelColor; /* type large enough to hold the color information */\n
+</PreparedHint>
+    <Type>typedef %@Display@'ModuleName'%.Color %'ModuleName'%.PixelColor;</Type>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>IconType</Name>
+    <Hint>Alias to icon type enumeration</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* Alias to icon type enumeration */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+</UserTypes>

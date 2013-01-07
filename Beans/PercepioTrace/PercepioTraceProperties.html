@@ -1,0 +1,476 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1250">
+<title>
+Component  documentation - Properties
+</title>
+<STYLE type="text/css">
+body{
+  background-color: white;
+  margin:0px;
+  font: 13px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+A:visited {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:link {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:active {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #2D8AA7; TEXT-DECORATION: underline
+}
+.VSP {
+	COLOR: #2D8AA7; FONT: bold italic 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.reflink {
+	FONT: 11px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+ 	COLOR: #2D8AA7;
+}
+.user_text {
+	FONT: 12px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+	COLOR: #000000;
+}
+.bluetext {
+  COLOR: #695F52;
+}
+.versionspec {
+  padding:5px; 
+  background-color: RGB(243, 242, 230);
+  margin-top:5px;
+  margin-bottom:5px;  
+}
+.versionspecdetail {
+  padding:5px; 
+  background-color: RGB(243, 242, 230);
+  margin-top:5px;
+  margin-bottom:5px;  
+}
+.versionspeclabel {
+  font-style: italic;
+}
+LI.DEF {
+  list-style-image: url(DefaultLI.gif) ;
+}
+LI.BAS {
+	list-style-image: url(BasicLI.gif) ;
+}
+LI.ADV {
+	list-style-image: url(AdvancedLI.gif) ;
+}
+LI.EXP {
+	list-style-image: url(ExpertLI.gif) ;
+}
+.titlebox {  
+  font: bold 18px Helvetica Neue, Helvetica, Arial, sans-serif;
+  color: #51626F;
+  margin-bottom: 10px;
+}
+.lefttitlebox {
+  background-color:#C3CFD1;  
+}
+.lefttitle {
+  color:#51626F;
+  font: bold 11px Helvetica Neue, Helvetica, Arial, sans-serif;   
+}
+.beanname {
+  font: bold 14px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+  padding-top:6px;
+  padding-bottom:5px;
+  margin-bottom: 5px;
+  border-bottom-style: dotted;
+  border-bottom-width: 1;  
+}
+.descrtext {
+  font-style: italic;
+  font: 14px/18px Helvetica Neue, Helvetica, Arial, sans-serif;  
+  padding-bottom:9px;
+}
+.footer {
+  color: #b0b0b0; 
+  font: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+  text-align: center;
+  border-top-style: solid;
+  border-top-color: #BOBOBO;
+  border-top-width: 1px;  
+  padding-top: 5px;
+  margin-top: 20px;
+}
+.info_name {
+  font: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+  padding: 0px;
+  color: black;
+}
+.info_text {
+  font: 11px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.text_title {
+  COLOR: #000000; 
+  FONT: bold 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.descr_line {
+  COLOR: gray; 
+  FONT: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.code {
+  background-color: RGB(243, 242, 230);
+  padding: 10px;
+  white-space: pre;
+  font-family: Courier New, Monospace;
+}
+</STYLE>
+
+</head>
+
+<body>
+
+<table border="0"  cellspacing="0" cellpadding="0">
+  <tr>
+    <td valign="top" width="150" >
+      <table  width="150" height="160" cellpadding="3" cellspacing="0" border="0">
+        <tbody>
+        <tr class="lefttitlebox">
+          <td width="4"></td>
+          <td align="center" valign="middle" height="30" width="128">
+            <span class="lefttitle">
+<b>PercepioTrace</b>
+            </span>
+          </td>
+        </tr>
+        <tr height="700">
+          <td width="4"></td>
+          <td width="128" valign="top">
+            &nbsp;<br />
+            <div class="reflink">
+<!---HTMLLISTBEG_SHORT DON'T CHANGE THIS LINE-->
+<a href="PercepioTrace.html">General Info</a><br />
+<i>Properties</i><br />
+<a href="PercepioTraceMethods.html">Methods</a><br />
+<a href="PercepioTraceEvents.html">Events</a><br />
+<!---HTMLLISTEND DON'T CHANGE THIS LINE-->
+<br /><br /><br />
+<a href="../../DOCs/PredefSymbols.html">Types &amp; definitions</a><br/>
+<a href="../../DOCs/BEANindex.html">Component Index</a><br/>
+<a href="../../DOCs/CPUindex.html">CPU Component Index</a><br/>
+<a href="../../DOCs/EmbeddedBeans.html">Embedded Components</a><br/>
+<a href="../../DOCs/BeanCategories.html">Components Categories</a><br/>
+
+<br /><br /><br />
+<center>
+<img src="PercepioTrace_b.gif" alt="Component icon"/>
+
+
+</center>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </td>
+    <td width="1" class="lefttitlebox" valign="top">
+      <table class="lefttitlebox" width="1" cellpadding="0" cellspacing="0" height="100%" border="0">
+        <tr class="lefttitlebox"><td width="1"></td></tr>
+      </table>
+    </td>
+    <td style="padding-left:15px;padding-right:10px;" valign="top" align="left" width="100%">
+
+<!--      <table border="0" cellPadding="0" cellSpacing="0" width="100%">
+        <tbody>
+        <tr>
+          <td class="titlebox">-->
+          
+           <div class="titlebox">
+              <div class="beanname">
+                Component
+                
+                
+                PercepioTrace
+              </div>
+              <div class="descrtext">Percepio FreeRTOS Trace</div>
+              <div class="info_name">Component Level: <span class="info_text"><a href="../../DOCs/BeanCategoriesInfo.html#LevelAbstraction">High</a></span></div>
+              <div class="info_name">Category: 
+                <span class="info_text">
+                <a href="../../DOCs/BeanCategoriesInfo.html">Operating Systems</a>
+                
+                </span>
+              </div>
+            </div>
+                      
+<!--
+            </td>
+        </tr>
+
+        <tr>        
+-->  
+            
+<!--            <td align="left"> -->
+<!--                   <br /> -->                  
+     <div class="text_title">
+          Properties:
+		 </div>		 
+		 <div class="descr_line">                  
+                  (Properties are parameters of the component. Please see the <a href="../../DOCs/EmbeddedBeans.html">Embedded Components page</a> for more information.)                   
+     </div>
+                  
+<div class="user_text">
+<ul>
+<li>
+<a name="DeviceName">
+<b>Component name</b></a> - Name of the component.
+</li>
+<li>
+<a name="RTOSplusTraceVersion">
+<b>RTOS+Trace Version</b></a> - Identifies the RTOS+Trace version used from Percepio AB
+</li>
+<li>
+<a name="TeamLicenseCode">
+<b>Team License Code</b></a> - Sets the macro TEAM_LICENSE_CODE.  Macro which defines a string - the team license code. If no team license is available, this should be an empty string &quot;&quot;. This should be maximum 32 chars, including zero-termination.
+</li>
+<li>
+<a name="Utility">
+<b>Utility</b></a> - Interface to utility functions
+</li>
+<li>
+<a name="TraceConsoleEnabled">
+<b>Console</b></a> - If the trace shall write messages to a console<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+<ul>
+</ul>
+</li>
+<li>
+<a name="TraceDescriptionString">
+<b>Description string</b></a> - This sets TRACE_DESCRIPTION in trcConfig.h<br />
+This string is stored in the trace and displayed in FreeRTOS+Trace. Can be used to store, e.g., system version or build date.
+</li>
+<li>
+<a name="TraceDescriptionMaxLength">
+<b>Description max length</b></a> - Sets the TRACE_DESCRIPTION_MAX_LENGTH macro. Generic system information string, presented in the tool. Note that this is also used for storing any internal error messages from the recorder, so do not make TRACE_DESCRIPTION_MAX_LENGTH too small. 80 is recommended.
+</li>
+<li>
+<a name="IncludeUserEvents">
+<b>Include user events</b></a> - This sets INCLUDE_USER_EVENTS in trcConfig.h<br />
+If this is zero (0) the code for creating User Events is excluded to reduce code size. User Events are application-generated events, like &quot;printf&quot; but for the trace log instead of console output. User Events are much faster than a printf and can therefore be used in timing critical code. See vTraceUserEvent() and vTracePrintF() in trcUser.h.
+</li>
+<li>
+<a name="IncludeISRTracing">
+<b>Include ISR tracing</b></a> - This sets INCLUDE_ISR_TRACING in trcConfig.h<br />
+If this is zero (0), the code for recording Interrupt Service Routines is excluded to reduce code size. Note, recording ISRs require that you insert calls to vTraceStoreISRBegin and vTraceStoreISREnd in your interrupt handlers. There is no automatic recording of ISRs like for task scheduling, since FreeRTOS does not have a central interrupt dispatcher.
+</li>
+<li>
+<a name="TraceMaxISRNesting">
+<b>Max ISR Nesting</b></a> - Defines the maxium level of ISR nesting
+</li>
+<li>
+<a name="IncludeObjectDelete">
+<b>Include object delete</b></a> - This sets INCLUDE_OBJECT_DELETE in trcConfig.h<br />
+This must be enabled (1) if tasks, queues or other traced kernel objects are deleted at runtime, e.g., using vTaskDelete or vQueueDelete. If no deletes are made, this can be set to 0 in order to exclude the delete-handling code. 
+</li>
+<li>
+<a name="TraceDataAllocation">
+<b>Trace Data Allocation</b></a> - This defines the macro TRACE_DATA_ALLOCATION. This defines how to allocate the recorder data structure, i.e., using a  static declaration or using a dynamic allocation in runtime (malloc). Should be one of these two options:<br /> - TRACE_DATA_ALLOCATION_STATIC (default)<br /> - TRACE_DATA_ALLOCATION_DYNAMIC<br />Using static allocation has the benefits of compile-time errors if the buffer is too large (too large constants in trcConfig.h) and no need to call the initialization routine (xTraceInitTraceData). Using dynamic allocation may give more flexibility in some cases.<br /><br />
+There are 2 options:<br />
+<ul>
+  <li><u>static</u>: Static trace data allocation</li>
+  <li><u>dynamic</u>: Dynamic trace data allocation</li>
+</ul><br />
+
+</li>
+<li>
+<a name="RecorderStoreMode">
+<b>Recorder store mode</b></a> - This sets RECORDER_STORE_MODE in trcConfig.h<br />With RECORDER_STORE_MODE set to STORE_MODE_RING_BUFFER, the events are stored in a ring buffer, i.e., where the oldest events are overwritten when the buffer becomes full. This allows you to get the last events leading up to an interesting state, e.g., an error, without having a large trace buffer for string the whole run since startup. In this mode, the recorder can run &quot;forever&quot; as the buffer never gets full, i.e., in the sense that it always has room for more events.<br /><br />To fetch the trace in mode STORE_MODE_RING_BUFFER, you need to first halt the system using your debugger and then do a RAM dump, or to explicitly stop the recorder using vTraceStop() and then store/upload the trace data using a FreeRTOS task that you need to provide yourself. The trace data is found in the struct RecorderData, initialized in trcBase.c.<br /><br />Note that, if you upload the trace using a RAM dump, i.e., when the system is halted on a breakpoint or by a debugger command, there is no need to stop the recorder first.<br /><br />When RECORDER_STORE_MODE is STORE_MODE_STOP_WHEN_FULL, the recording is stopped when the buffer becomes full. When the recorder stops itself this way vTracePortEnd() is called which allows for custom actions, such as triggering a task that stores the trace buffer, i.e., in case taking a RAM dump using an on-chip debugger is not possible. In the Windows port, vTracePortEnd saves the trace to file directly, but this is not recommended in a real-time system since the scheduler is blocked during the processing of vTracePortEnd.<br /><br />
+There are 2 options:<br />
+<ul>
+  <li><u>Ring Buffer</u>: Using ring buffer</li>
+  <li><u>Stop when full</u>: Stops recording when buffer is ful</li>
+</ul><br />
+
+</li>
+<li>
+<a name="StopAfterNevents">
+<b>Stop after N events</b></a> - This sets STOP_AFTER_N_EVENTS in trcConfig.h<br />
+<br />
+STOP_AFTER_N_EVENTS is intended for tests of the ring buffer mode (when RECORDER_STORE_MODE is STORE_MODE_RING_BUFFER). It stops the recording when the specified number of events has been observed. This value can be larger than the buffer size, to allow for test of the &quot;wrapping around&quot; that occurs in ring buffer mode . A negative value (or no definition of this macro) disables this feature.
+</li>
+<li>
+<a name="UseImplicitIFErules">
+<b>Use implicit IFE rules</b></a> - This sets USE_IMPLICIT_IFE_RULES in trcConfig.h<br />
+### Instance Finish Events (IFE) ###<br />
+<br />
+For tasks with &quot;infinite&quot; main loops (non-terminating tasks), the concept of a task instance has no clear definition, it is an application-specific thing. FreeRTOS+Trace allows you to define Instance Finish Events (IFEs), which marks the point when a task instance ends. The IFE is a blocking kernel call, typically in the main loop of a task which typically reads a message queue, waits for a semaphore or performs an explicit delay.<br />
+<br />
+If USE_IMPLICIT_IFE_RULES is one (1), the following FreeRTOS kernel calls are considered by default to be IFEs (Implicit IFEs):<br />
+ - vTaskDelay<br />
+ - vTaskDelayUntil<br />
+ - vTaskSuspend<br />
+ - xQueueReceive<br />
+ - xSemaphoreTake<br />
+<br />
+However, Implicit IFEs only applies to blocking kernel calls. If an xQueueReceive reads a message without blocking, it does not create a new instance since no blocking occurred.<br />
+<br />
+Moreover, the actual IFE might sometimes be another blocking call such as xQueueSend or xSemaphoreGive. We therefore allow for user-defined explicit IFEs by calling<br />
+       vTraceTaskInstanceIsFinished()<br />
+right before the kernel call considered as IFE. This does not create an additional event but instead stores the service code and object handle of the IFE call as properties of the task.<br />
+<br />
+If using Explicit IFEs and the task also calls an Implicit IFE like vTaskDelay, this may result in additional incorrect task instances. This is solved by disabling the Implicit IFEs for the task, by adding a call to<br />
+       vTraceTaskSkipDefaultInstanceFinishedEvents()<br />
+in the very beginning of that task. This allows you to combine Explicit IFEs for some tasks with Implicit IFEs for the rest of the tasks, if USE_IMPLICIT_IFE_RULES is 1.<br />
+<br />
+By setting USE_IMPLICIT_IFE_RULES to zero (0), the implicit IFEs are disabled for all tasks. Tasks will then be considered to have a single instance only, covering all execution fragments, unless you define an explicit IFE in the task.
+</li>
+<li>
+<a name="IncludeEventStats">
+<b>Include event stats</b></a> - This sets INCLUDE_EVENT_STATS in trcConfig.h<br />
+If enabled (1), the recorder will count each type of event, in order to give an immediate picture (in a console print), regarding what events that is using significant buffer space. In the Windows emulation port, vTracePortEnd() will print this info when the recorder is stopped. This is not recommended in a real-time system, as vTracePortEnd is called from the kernel and blocks it until vTracePortEnd returns.
+</li>
+<li>
+<a name="EventCountSize">
+<b>Event Count Size</b></a> - If 'Include event stats' is enabled, then this defines the size of the gloabal event count array. This setting defines the EVENT_COUNT_SIZE macro.
+</li>
+<li>
+<a name="sprintfBufferSize">
+<b>sprintf Buffer Size</b></a> - Size of global buffer used for writing to the Trace Console.
+</li>
+<li>
+<a name="IncludeSaveToFile">
+<b>Include save to file</b></a> - This sets INCLUDE_SAVE_TO_FILE in trcConfig.h<br />
+If enabled (1), the recorder will include code for saving the trace to a local file system.
+</li>
+<li>
+<a name="UseTraceProgressMonitorTask">
+<b>Use trace progress monitor task</b></a> - This sets USE_TRACE_PROGRESS_MONITOR_TASK in trcConfig.h<br />If enabled (1), the recorder creates a simple task which periodically prints the recorder status.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+<ul>
+  <li>
+  <a name="TaskNameString">
+  <b>Name</b></a> - Name to be used for the task.
+  </li>
+  <li>
+  <a name="TraceProgressMonitorTaskPriorityString">
+  <b>Priority</b></a> - This sets TRACE_PROGRESS_MONITOR_TASK_PRIORITY in trcConfig.h<br />
+Macro which sets the priority of the &quot;trace progress monitor task&quot; Default is tskIDLE_PRIORITY (if your system is on high load, this might not run).
+  </li>
+  <li>
+  <a name="TraceProgressMonitorTaskStackString">
+  <b>Stack</b></a> - Stack size to be used for the task, as string
+  </li>
+  <li>
+  <a name="TraceProgressMonitorPeriod">
+  <b>Period (ms)</b></a> - This sets TRACE_PROGRESS_MONITOR_TASK_PERIOD in trcConfig.h<br />
+Macro which sets the period of the trace progress monitor task. Default is 1000 ms. This task, vTraceMonitorTask in trcUser.c, periodically writes the recorder status using the vTraceConsoleMessage macro, which is to be mapped to your console &quot;printf&quot; routine.
+  </li>
+  <li>
+  <a name="vTraceMonitorTaskBufferSize">
+  <b>Local buffer size</b></a> - Use for a local buffer on the task stack for printing messages. This property sets the TRACE_PROGRESS_MONITOR_TASK_PRIORITY macro.
+  </li>
+</ul>
+</li>
+<li>
+<a name="floatingPointForvTracePrintF">
+<b>Float support</b></a> - If floating point is supported for vTracePrintF()
+</li>
+<li>
+<a name="EventBufferSize">
+<b>Event buffer size</b></a> - This sets EVENT_BUFFER_SIZE in trcConfig.h<br />
+Macro which should be defined as an integer value.<br />
+This defines the capacity of the event buffer, i.e., the number of records it may store. An event typically use one record (4 byte), but there are exceptions:<br />
+In some cases, an XTS event is added if the time since the last event is longer that allowed by the current event's timestamp field. Such events thus use two records. vTracePrintF use a variable number of data records following the event, holding the data arguments. <br />
+If RECORDER_STORE_MODE is STORE_MODE_RING_BUFFER, the recorder will wrap around to index 0 when reached EVENT_BUFFER_SIZE. If RECORDER_STORE_MODE is STORE_MODE_STOP_WHEN_FULL, the recorder is instead stopped (see RECORDER_STORE_MODE).
+</li>
+<li>
+<a name="SymbolTableSize">
+<b>Symbol table size</b></a> - This sets SYMBOL_TABLE_SIZE in trcConfig.h<br />
+Macro which should be defined as an integer value.<br />
+This defines the capacity of the symbol table, in bytes. This symbol table stores User Events labels and names of deleted tasks, queues, or other kernel objects. Note that the names of active objects not stored here but in the Object Table. Thus, if you don't use User Events or delete any kernel objects you set this to zero (0) to minimize RAM usage.
+</li>
+<li>
+<a name="NTask">
+<b>Number of tasks</b></a> - This sets NTask in trcConfig.h<br />
+A group of Macros which should be defined as an integer value of zero (0) or larger.<br />
+This defines the capacity of the Object Table, in number of objects, of each object class. The Object Table holds information about the currently active kernel objects (i.e., the ones that have been created but not terminated), such as name and Tracelayzer ID, for Tasks, Queues, Semaphores, Mutexes and user-registered ISRs.<br />
+This does not limit the total amount of objects created, if objects are deleted during runtime. The object table size however limits the number of objects active at any given time, since the slots in the Object Table are reused when objects are deleted.
+</li>
+<li>
+<a name="NISR">
+<b>Number of ISR</b></a> - This sets NISR in trcConfig.h<br />
+A group of Macros which should be defined as an integer value of zero (0) or larger.<br />
+This defines the capacity of the Object Table, in number of objects, of each object class. The Object Table holds information about the currently active kernel objects (i.e., the ones that have been created but not terminated), such as name and Tracelayzer ID, for Tasks, Queues, Semaphores, Mutexes and user-registered ISRs.<br />
+This does not limit the total amount of objects created, if objects are deleted during runtime. The object table size however limits the number of objects active at any given time, since the slots in the Object Table are reused when objects are deleted.
+</li>
+<li>
+<a name="NQueue">
+<b>Number of queue</b></a> - This sets NQueue in trcConfig.h<br />
+A group of Macros which should be defined as an integer value of zero (0) or larger.<br />
+This defines the capacity of the Object Table, in number of objects, of each object class. The Object Table holds information about the currently active kernel objects (i.e., the ones that have been created but not terminated), such as name and Tracelayzer ID, for Tasks, Queues, Semaphores, Mutexes and user-registered ISRs.<br />
+This does not limit the total amount of objects created, if objects are deleted during runtime. The object table size however limits the number of objects active at any given time, since the slots in the Object Table are reused when objects are deleted.
+</li>
+<li>
+<a name="NSemaphore">
+<b>Number of semaphore</b></a> - This sets NSemaphore in trcConfig.h<br />
+A group of Macros which should be defined as an integer value of zero (0) or larger.<br />
+This defines the capacity of the Object Table, in number of objects, of each object class. The Object Table holds information about the currently active kernel objects (i.e., the ones that have been created but not terminated), such as name and Tracelayzer ID, for Tasks, Queues, Semaphores, Mutexes and user-registered ISRs.<br />
+This does not limit the total amount of objects created, if objects are deleted during runtime. The object table size however limits the number of objects active at any given time, since the slots in the Object Table are reused when objects are deleted.
+</li>
+<li>
+<a name="NMutex">
+<b>Number of mutex</b></a> - This sets NMutex in trcConfig.h<br />
+A group of Macros which should be defined as an integer value of zero (0) or larger.<br />
+This defines the capacity of the Object Table, in number of objects, of each object class. The Object Table holds information about the currently active kernel objects (i.e., the ones that have been created but not terminated), such as name and Tracelayzer ID, for Tasks, Queues, Semaphores, Mutexes and user-registered ISRs.<br />
+This does not limit the total amount of objects created, if objects are deleted during runtime. The object table size however limits the number of objects active at any given time, since the slots in the Object Table are reused when objects are deleted.
+</li>
+<li>
+<a name="NameLenTaskStr">
+<b>Name length for task</b></a> - This sets NameLenTask in trcConfig.h<br />
+A group of Macros which should be defined as an integer value of zero (0) or larger.<br />
+This defines the capacity of the Object Table, in number of objects, of each object class. The Object Table holds information about the currently active kernel objects (i.e., the ones that have been created but not terminated), such as name and Tracelayzer ID, for Tasks, Queues, Semaphores, Mutexes and user-registered ISRs.<br />
+This does not limit the total amount of objects created, if objects are deleted during runtime. The object table size however limits the number of objects active at any given time, since the slots in the Object Table are reused when objects are deleted.
+</li>
+<li>
+<a name="NameLenISR">
+<b>Name length for ISR</b></a> - This sets NameLenISR in trcConfig.h<br />
+A group of Macros which should be defined as an integer value of zero (0) or larger.<br />
+This defines the capacity of the Object Table, in number of objects, of each object class. The Object Table holds information about the currently active kernel objects (i.e., the ones that have been created but not terminated), such as name and Tracelayzer ID, for Tasks, Queues, Semaphores, Mutexes and user-registered ISRs.<br />
+This does not limit the total amount of objects created, if objects are deleted during runtime. The object table size however limits the number of objects active at any given time, since the slots in the Object Table are reused when objects are deleted.
+</li>
+<li>
+<a name="NameLenQueue">
+<b>Name length for queue</b></a> - This sets NameLenQueue in trcConfig.h<br />
+A group of Macros which should be defined as an integer value of zero (0) or larger.<br />
+This defines the capacity of the Object Table, in number of objects, of each object class. The Object Table holds information about the currently active kernel objects (i.e., the ones that have been created but not terminated), such as name and Tracelayzer ID, for Tasks, Queues, Semaphores, Mutexes and user-registered ISRs.<br />
+This does not limit the total amount of objects created, if objects are deleted during runtime. The object table size however limits the number of objects active at any given time, since the slots in the Object Table are reused when objects are deleted.
+</li>
+<li>
+<a name="NameLenSemaphore">
+<b>Name length for semaphore</b></a> - This sets NameLenSemaphore in trcConfig.h<br />
+A group of Macros which should be defined as an integer value of zero (0) or larger.<br />
+This defines the capacity of the Object Table, in number of objects, of each object class. The Object Table holds information about the currently active kernel objects (i.e., the ones that have been created but not terminated), such as name and Tracelayzer ID, for Tasks, Queues, Semaphores, Mutexes and user-registered ISRs.<br />
+This does not limit the total amount of objects created, if objects are deleted during runtime. The object table size however limits the number of objects active at any given time, since the slots in the Object Table are reused when objects are deleted.
+</li>
+<li>
+<a name="NameLenMutex">
+<b>Name length for mutex</b></a> - This sets NameLenMutex in trcConfig.h<br />
+A group of Macros which should be defined as an integer value of zero (0) or larger.<br />
+This defines the capacity of the Object Table, in number of objects, of each object class. The Object Table holds information about the currently active kernel objects (i.e., the ones that have been created but not terminated), such as name and Tracelayzer ID, for Tasks, Queues, Semaphores, Mutexes and user-registered ISRs.<br />
+This does not limit the total amount of objects created, if objects are deleted during runtime. The object table size however limits the number of objects active at any given time, since the slots in the Object Table are reused when objects are deleted.
+</li>
+
+     </ul>
+<!---USERBEG DON'T CHANGE THIS LINE-->
+
+<!---USEREND DON'T CHANGE THIS LINE-->
+</div>
+           <p class="footer">
+            PROCESSOR EXPERT is trademark of Freescale Semiconductor, Inc.
+            <br />
+            
+           </p>
+    </td>
+  </tr>
+
+</table>
+
+</body>
+</html>

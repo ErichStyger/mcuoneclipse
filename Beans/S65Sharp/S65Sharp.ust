@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--User types for component-->
+<UserTypes>
+  <Type>
+    <UsrType>TRetypeType</UsrType>
+    <Name>PixelColor</Name>
+    <Hint>Type to hold color information</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>  typedef word %'ModuleName'_PixelColor ;/* Type to hold color information */\n
+</PreparedHint>
+    <Type>16bit unsigned</Type>
+  </Type>
+  <Type>
+    <UsrType>TRetypeType</UsrType>
+    <Name>PixelDim</Name>
+    <Hint>one byte is enough to describe an x/y position</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>  typedef byte %'ModuleName'_PixelDim ;/* one byte is enough to describe an x/y position */\n
+</PreparedHint>
+    <Type>8bit unsigned</Type>
+  </Type>
+  <Type>
+    <UsrType>TRetypeType</UsrType>
+    <Name>PixelCount</Name>
+    <Hint>A word is enough to hold the number of pixels on the display (132x176).</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>  typedef word %'ModuleName'_PixelCount ;/* A word is enough to hold the number of pixels on the display (132x176). */\n
+</PreparedHint>
+    <Type>16bit unsigned</Type>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>DisplayOrientation</Name>
+    <Hint>Type for display orientation</Hint>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint> /* Type for display orientation */\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+</UserTypes>
