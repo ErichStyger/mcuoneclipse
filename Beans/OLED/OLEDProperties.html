@@ -1,0 +1,345 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1250">
+<title>
+Component  documentation - Properties
+</title>
+<STYLE type="text/css">
+body{
+  background-color: white;
+  margin:0px;
+  font: 13px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+A:visited {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:link {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:active {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #2D8AA7; TEXT-DECORATION: underline
+}
+.VSP {
+	COLOR: #2D8AA7; FONT: bold italic 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.reflink {
+	FONT: 11px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+ 	COLOR: #2D8AA7;
+}
+.user_text {
+	FONT: 12px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+	COLOR: #000000;
+}
+.bluetext {
+  COLOR: #695F52;
+}
+.versionspec {
+  padding:5px; 
+  background-color: RGB(243, 242, 230);
+  margin-top:5px;
+  margin-bottom:5px;  
+}
+.versionspecdetail {
+  padding:5px; 
+  background-color: RGB(243, 242, 230);
+  margin-top:5px;
+  margin-bottom:5px;  
+}
+.versionspeclabel {
+  font-style: italic;
+}
+LI.DEF {
+  list-style-image: url(DefaultLI.gif) ;
+}
+LI.BAS {
+	list-style-image: url(BasicLI.gif) ;
+}
+LI.ADV {
+	list-style-image: url(AdvancedLI.gif) ;
+}
+LI.EXP {
+	list-style-image: url(ExpertLI.gif) ;
+}
+.titlebox {  
+  font: bold 18px Helvetica Neue, Helvetica, Arial, sans-serif;
+  color: #51626F;
+  margin-bottom: 10px;
+}
+.lefttitlebox {
+  background-color:#C3CFD1;  
+}
+.lefttitle {
+  color:#51626F;
+  font: bold 11px Helvetica Neue, Helvetica, Arial, sans-serif;   
+}
+.beanname {
+  font: bold 14px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+  padding-top:6px;
+  padding-bottom:5px;
+  margin-bottom: 5px;
+  border-bottom-style: dotted;
+  border-bottom-width: 1;  
+}
+.descrtext {
+  font-style: italic;
+  font: 14px/18px Helvetica Neue, Helvetica, Arial, sans-serif;  
+  padding-bottom:9px;
+}
+.footer {
+  color: #b0b0b0; 
+  font: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+  text-align: center;
+  border-top-style: solid;
+  border-top-color: #BOBOBO;
+  border-top-width: 1px;  
+  padding-top: 5px;
+  margin-top: 20px;
+}
+.info_name {
+  font: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+  padding: 0px;
+  color: black;
+}
+.info_text {
+  font: 11px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.text_title {
+  COLOR: #000000; 
+  FONT: bold 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.descr_line {
+  COLOR: gray; 
+  FONT: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.code {
+  background-color: RGB(243, 242, 230);
+  padding: 10px;
+  white-space: pre;
+  font-family: Courier New, Monospace;
+}
+</STYLE>
+
+</head>
+
+<body>
+
+<table border="0"  cellspacing="0" cellpadding="0">
+  <tr>
+    <td valign="top" width="150" >
+      <table  width="150" height="160" cellpadding="3" cellspacing="0" border="0">
+        <tbody>
+        <tr class="lefttitlebox">
+          <td width="4"></td>
+          <td align="center" valign="middle" height="30" width="128">
+            <span class="lefttitle">
+<b>OLED</b>
+            </span>
+          </td>
+        </tr>
+        <tr height="700">
+          <td width="4"></td>
+          <td width="128" valign="top">
+            &nbsp;<br />
+            <div class="reflink">
+<!---HTMLLISTBEG_SHORT DON'T CHANGE THIS LINE-->
+<a href="OLED.html">General Info</a><br />
+<i>Properties</i><br />
+<a href="OLEDMethods.html">Methods</a><br />
+<a href="OLEDEvents.html">Events</a><br />
+<!---HTMLLISTEND DON'T CHANGE THIS LINE-->
+<br /><br /><br />
+<a href="../../DOCs/PredefSymbols.html">Types &amp; definitions</a><br/>
+<a href="../../DOCs/BEANindex.html">Component Index</a><br/>
+<a href="../../DOCs/CPUindex.html">CPU Component Index</a><br/>
+<a href="../../DOCs/EmbeddedBeans.html">Embedded Components</a><br/>
+<a href="../../DOCs/BeanCategories.html">Components Categories</a><br/>
+
+<br /><br /><br />
+<center>
+<img src="OLED_b.gif" alt="Component icon"/>
+
+
+</center>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </td>
+    <td width="1" class="lefttitlebox" valign="top">
+      <table class="lefttitlebox" width="1" cellpadding="0" cellspacing="0" height="100%" border="0">
+        <tr class="lefttitlebox"><td width="1"></td></tr>
+      </table>
+    </td>
+    <td style="padding-left:15px;padding-right:10px;" valign="top" align="left" width="100%">
+
+<!--      <table border="0" cellPadding="0" cellSpacing="0" width="100%">
+        <tbody>
+        <tr>
+          <td class="titlebox">-->
+          
+           <div class="titlebox">
+              <div class="beanname">
+                Component
+                
+                
+                OLED
+              </div>
+              <div class="descrtext">Densitron OLED Display</div>
+              <div class="info_name">Component Level: <span class="info_text"><a href="../../DOCs/BeanCategoriesInfo.html#LevelAbstraction">Low</a></span></div>
+              <div class="info_name">Category: 
+                <span class="info_text">
+                <a href="../../DOCs/BeanCategoriesInfo.html">CPU External Devices-Display</a>
+                
+                </span>
+              </div>
+            </div>
+                      
+<!--
+            </td>
+        </tr>
+
+        <tr>        
+-->  
+            
+<!--            <td align="left"> -->
+<!--                   <br /> -->                  
+     <div class="text_title">
+          Properties:
+		 </div>		 
+		 <div class="descr_line">                  
+                  (Properties are parameters of the component. Please see the <a href="../../DOCs/EmbeddedBeans.html">Embedded Components page</a> for more information.)                   
+     </div>
+                  
+<div class="user_text">
+<ul>
+<li>
+<a name="DeviceName">
+<b>Component name</b></a> - Name of the component.
+</li>
+<li>
+<a name="NofColors">
+<b>Number of colors</b></a> - How much colors are required. The less the fewer resources will be used.<br /><br />
+There are 2 options:<br />
+<ul>
+  <li><u>256</u>: 256 colors</li>
+  <li><u>65k</u>: 65k colors</li>
+</ul><br />
+
+</li>
+<li>
+<a name="Width">
+<b>Width</b></a> - Width of the display in pixels. Our display is 64x96
+</li>
+<li>
+<a name="Height">
+<b>Height</b></a> - Height of the display in pixels
+</li>
+<li>
+<a name="BytesInRows">
+<b>Bytes in rows</b></a> - If bytes in display memory are organized in rows.
+</li>
+<li>
+<a name="MSBfirst">
+<b>MSB first</b></a> - If the Most Significant Bit comes first in a display byte.
+</li>
+<li>
+<a name="BitsPerPixel">
+<b>Bits per pixel</b></a> - <br /><br />
+There are 3 options:<br />
+<ul>
+  <li><u>1 (B/W)</u>: Black/White mode</li>
+  <li><u>8 (256 Colors)</u>: 256 Color mode</li>
+  <li><u>16 (65k Colors)</u>: 65k Color mode</li>
+</ul><br />
+
+</li>
+<li>
+<a name="HardwareGroup">
+<b>Hardware</b></a> - This group controls the hardware connection.
+<ul>
+  <li>
+  <a name="6800mode">
+  <b>6800 mode</b></a> - 
+  </li>
+  <li>
+  <a name="BS1enabled">
+  <b>BS1</b></a> - Configuration of the BS1 pin.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+  <ul>
+    <li>
+    <a name="BS1pin">
+    <b>BS1 pin</b></a> - 
+    </li>
+  </ul>
+  </li>
+  <li>
+  <a name="BS2enabled">
+  <b>BS2</b></a> - Configuration of the BS1 pin.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+  <ul>
+    <li>
+    <a name="BS2pin">
+    <b>BS2 pin</b></a> - 
+    </li>
+  </ul>
+  </li>
+  <li>
+  <a name="RESpin">
+  <b>RES pin</b></a> - Power reset pin for display controller and driver. When the pin is low, the display chip will be reset.
+  </li>
+  <li>
+  <a name="DCpin">
+  <b>DC pin</b></a> - Data/Command control pin. When the pin is pulled high, then the input at D7..D0 is treated as data. When the pin is pulled low, the input at D7..D0 will be used as command.
+  </li>
+  <li>
+  <a name="RWpin">
+  <b>RW pin</b></a> - This pin is used as Read/Write selection input. This pin will be set high for read mode and pulled low for write mode.
+  </li>
+  <li>
+  <a name="Epin">
+  <b>E pin</b></a> - This pin is used as Enable signal. Read/Write operation is initiated when this pin is pulled high and the CS pin is pulled low.
+  </li>
+  <li>
+  <a name="CSpin">
+  <b>CS pin</b></a> - Chip select. In order to communicate with the display this pin is pulled down.
+  </li>
+  <li>
+  <a name="DataPins">
+  <b>Data pins</b></a> - This pins are used for the data and commands.
+  </li>
+</ul>
+</li>
+<li>
+<a name="SystemGroup">
+<b>System</b></a> - This group defines the system interface.
+<ul>
+  <li>
+  <a name="Wait">
+  <b>Wait Interface</b></a> - Interface to waiting methods.
+  </li>
+</ul>
+</li>
+
+     </ul>
+<!---USERBEG DON'T CHANGE THIS LINE-->
+
+<!---USEREND DON'T CHANGE THIS LINE-->
+</div>
+           <p class="footer">
+            PROCESSOR EXPERT is trademark of Freescale Semiconductor, Inc.
+            <br />
+            
+           </p>
+    </td>
+  </tr>
+
+</table>
+
+</body>
+</html>
