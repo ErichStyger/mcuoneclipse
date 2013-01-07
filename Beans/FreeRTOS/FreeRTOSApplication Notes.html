@@ -1,0 +1,399 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1250">
+<title>
+Component documentation - Application Notes
+</title>
+<STYLE type="text/css">
+body{
+  background-color: white;
+  margin:0px;
+  font: 13px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+A:visited {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:link {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:active {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #2D8AA7; TEXT-DECORATION: underline
+}
+.VSP {
+	COLOR: #2D8AA7; FONT: bold italic 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.reflink {
+	FONT: 11px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+ 	COLOR: #2D8AA7;
+}
+.user_text {
+	FONT: 12px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+	COLOR: #000000;
+}
+.bluetext {
+  COLOR: #695F52;
+}
+.versionspec {
+  padding:5px; 
+  background-color: RGB(243, 242, 230);
+  margin-top:5px;
+  margin-bottom:5px;  
+}
+.versionspecdetail {
+  padding:5px; 
+  background-color: RGB(243, 242, 230);
+  margin-top:5px;
+  margin-bottom:5px;  
+}
+.versionspeclabel {
+  font-style: italic;
+}
+LI.DEF {
+  list-style-image: url(DefaultLI.gif) ;
+}
+LI.BAS {
+	list-style-image: url(BasicLI.gif) ;
+}
+LI.ADV {
+	list-style-image: url(AdvancedLI.gif) ;
+}
+LI.EXP {
+	list-style-image: url(ExpertLI.gif) ;
+}
+.titlebox {  
+  font: bold 18px Helvetica Neue, Helvetica, Arial, sans-serif;
+  color: #51626F;
+  margin-bottom: 10px;
+}
+.lefttitlebox {
+  background-color:#C3CFD1;  
+}
+.lefttitle {
+  color:#51626F;
+  font: bold 11px Helvetica Neue, Helvetica, Arial, sans-serif;   
+}
+.beanname {
+  font: bold 14px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+  padding-top:6px;
+  padding-bottom:5px;
+  margin-bottom: 5px;
+  border-bottom-style: dotted;
+  border-bottom-width: 1;  
+}
+.descrtext {
+  font-style: italic;
+  font: 14px/18px Helvetica Neue, Helvetica, Arial, sans-serif;  
+  padding-bottom:9px;
+}
+.footer {
+  color: #b0b0b0; 
+  font: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+  text-align: center;
+  border-top-style: solid;
+  border-top-color: #BOBOBO;
+  border-top-width: 1px;  
+  padding-top: 5px;
+  margin-top: 20px;
+}
+.info_name {
+  font: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+  padding: 0px;
+  color: black;
+}
+.info_text {
+  font: 11px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.text_title {
+  COLOR: #000000; 
+  FONT: bold 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.descr_line {
+  COLOR: gray; 
+  FONT: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.code {
+  background-color: RGB(243, 242, 230);
+  padding: 10px;
+  white-space: pre;
+  font-family: Courier New, Monospace;
+}
+</STYLE>
+
+</head>
+
+<body>
+
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td valign="top" width="150" >
+      <table  width="150" height="160" cellpadding="3" cellspacing="0" border="0">
+        <tbody>
+        <tr class="lefttitlebox">
+          <td width="4"></td>
+          <td align="center" valign="middle" height="30" width="128">
+            <span class="lefttitle">
+<b>FreeRTOS</b>
+            </span>
+          </td>
+        </tr>
+        <tr height="700">
+          <td width="4"></td>
+          <td width="128" valign="top">
+            &nbsp;<br />
+            <div class="reflink">
+<!---HTMLLISTBEG_SHORT DON'T CHANGE THIS LINE-->
+<a href="FreeRTOS.html">General Info</a><br />
+<a href="FreeRTOSProperties.html">Properties</a><br />
+<a href="FreeRTOSMethods.html">Methods</a><br />
+<a href="FreeRTOSEvents.html">Events</a><br />
+<a href="FreeRTOSTypical Usage.html">Typical Usage</a><br />
+<i>Application Notes</i><br />
+<!---HTMLLISTEND DON'T CHANGE THIS LINE-->
+<br /><br /><br />
+<a href="../../DOCs/PredefSymbols.html">Types &amp; definitions</a><br/>
+<a href="../../DOCs/BEANindex.html">Component Index</a><br/>
+<a href="../../DOCs/CPUindex.html">CPU Component Index</a><br/>
+<a href="../../DOCs/EmbeddedBeans.html">Embedded Components</a><br/>
+<a href="../../DOCs/BeanCategories.html">Component Categories</a><br/>
+
+<br /><br /><br />
+<center>
+<img src="FreeRTOS_b.gif" alt="Component icon"/>
+
+
+</center>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </td>
+    <td width="1" class="lefttitlebox" valign="top">
+      <table class="lefttitlebox" width="1" cellpadding="0" cellspacing="0" height="100%" border="0">
+        <tr class="lefttitlebox"><td width="1"></td></tr>
+      </table>
+    </td>
+    <td style="padding-left:15px;padding-right:10px;" valign="top" align="left" width="100%">
+
+           <div class="titlebox">
+              <div class="beanname">
+                Component
+                
+                
+                FreeRTOS
+              </div>
+              <div class="descrtext">FreeRTOS</div>
+              <div class="info_name">Component Level: <span class="info_text"><a href="../../DOCs/BeanCategoriesInfo.html#LevelAbstraction">High</a></span></div>
+              <div class="info_name">Category: 
+                <span class="info_text">
+                <a href="../../DOCs/BeanCategoriesInfo.html">Operating Systems</a>
+                
+                </span>
+              </div>
+            </div>
+            
+            <div class="text_title">
+                  Application Notes:
+       		  </div>		 
+      		  <div class="descr_line">                  
+                  (Examples, notes and hints for the component usage.)                   
+            </div>            
+<!---DESCBEG DON'T CHANGE THIS-->
+The embedded component comes with RTOS sources, so there is no need to install the sources indepenently.
+The component is wrapping the freeRTOS API using macros. E.g. the original xTaskCreate() can be used as
+FRTOS1_xTaskCreate() as well.<br />
+The RTOS provides several hooks (idle hook, tick hook, stack overflow hook) which have been implemented
+as component events: you can disable/enable them in the UI.
+<br /><br />
+<div class="text_title">
+Important Notes for S08
+</div>
+<ul>
+  <li>For CodeWarrrior classic (non-eclipse) users: set the 'Classic CodeWarrior' property to 'yes'.</li>
+  <li>Typically a 10 ms timer (TimerInt) is used. If you use another period, then you need to adopt the Ticks > Tick Rate (Hz) in the bean properties.</li>
+  <li>The RTOS timer needs to have 'same as interrupt' priority (Timer settings > Events Tab > On Interrupt).</li>
+  <li>Use 'Vswi' as interrupt source for the software interrupt.</li>
+  <li>Set mimimal Stack Size to 100.</li>
+  <li>Make sure you allocate some memory. In order to run the LED demo, the S08 needs about 1280 bytes.</li>
+</ul>
+
+<div class="text_title">
+Important Notes for S12(X)
+</div>
+<ul>
+  <li>For CodeWarrrior classic (non-eclipse) users: set the 'Classic CodeWarrior' property to 'yes'.</li>
+  <li>Typically a 10 ms timer (TimerInt) is used. If you use another period, then you need to adopt the Ticks > Tick Rate (Hz) in the bean properties.</li>
+  <li>Specify the software interrupt to Vswi</li>
+</ul>
+
+<div class="text_title">
+Important Notes for ColdFire V1
+</div>
+<ul>
+  <li>Typically a 10 ms timer (TimerInt) is used. If you use another period, then you need to adopt the Ticks > Tick Rate (Hz) in the bean properties.</li>
+  <li>The RTOS timer needs to have 'same as interrupt' priority (Timer settings > Events Tab > On Interrupt).</li>
+  <li>Disable 'A6 stack frames' in the compiler settings.</li>
+  <li>Select the correct CPU core family in the embedded component properties.</li>
+  <li>Use 'VL1swi' as interrupt source. If you change the interrupt, make sure you reflect this as well in the component properties.</li>
+  <li>Set minimal Stack Size to 125.</li>
+  <li>Make sure you allocate some memory. In order to run the LED demo, the ColdFire V1 needs about 3400 bytes.</li>
+</ul>
+
+<div class="text_title">
+Important Notes for ColdFire V2
+</div>
+<ul>
+  <li>Typically a 10 ms timer (TimerInt) is used. If you use another period, then you need to adopt the Ticks > Tick Rate (Hz) in the bean properties.</li>
+  <li>Make sure that no interrupt on the ColdFire V2 is sharing an interrupt priority (main priority and subpriority), otherwise the interrupt controller of the V2 will do strange things.</li>
+  <li>Set minimal Stack Size to about 200.</li>
+</ul>
+
+<div class="text_title">
+Important Notes for Kinetis
+</div>
+<ul>
+  <li>Add the FreeRTOS component to the project. This will automatically add the Utility component too (used for kernel statistics) if not alrady present.</li>
+  <li>Make sure you specify the same optimization level in the Scheduler > Kinetis settings as specified in the Kinetis compiler settings. Otherwise the stack frame will not match with the interrupt service routine code produced by Processor Expert.</li>
+  <li>If you are using a Kinetis derivative with floating point support and have enabled this in the compiler settings (to use hardware floating point),
+      make sure you enable this in the FreeRTOS properties too.</li>
+  <li>Inside the FreeRTOS component, configure a timer (e.g. to 10 ms tick period).</li>
+  <li>The port requires the assembler to include a FreeRTOS header file. With the final MCU10.2 release, 'new project' wizard created projects will be set up correctly.
+  If using MCU10.2beta or any earlier version, you need to do this manually: In the assembler build tools settings, make sure that the assembler finds header file in the Generated_Code folder.
+  (project 'Properties > C/C++ Build > Settings > ARM Assembler > Input' and add "${ProjDirPath}\Generated_Code" to the user path.</li>
+  <li>Enable the 'Supervisor Call' and 'Pendable Service' interrupts in the CPU component. You find them in the CPU component > Properties tab > CPU interrupts/resets group.</li>
+  <li>In Events.c, make sure both the supervisor call interrupt and pendable service interrupt call the corresponding RTOS methods:<br />
+   void Cpu_OnSupervisorCall(void)<br />
+    {<br />
+      vPortSVCHandler();<br />
+    }<br />
+    <br />
+    void Cpu_OnPendableService(void)<br />
+    {<br />
+      xPortPendSVHandler();<br />
+    }</li>
+  <li>Make sure you have enough heap set up in the FreeRTOS component. Kinetis has plenty of RAM, so a size of 16 KByte should be enough.</li>
+</ul>
+
+<div class="text_title">
+Example Code
+</div>
+
+<div class="user_text">
+Below is an example which sets up 4 tasks blinking an LED each.
+</div>
+<PRE>
+/* MODULE Application */
+
+#include "Application.h"
+#include "LED1.h"
+#include "LED2.h"
+#include "LED3.h"
+#include "LED4.h"
+#include "FRTOS1.h"
+
+static portTASK_FUNCTION(T4, pvParameters) {
+  (void)pvParameters; /* parameter not used */
+  for(;;) {
+    LED4_Neg();
+    FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
+  }
+}
+
+static portTASK_FUNCTION(T3, pvParameters) {
+  (void)pvParameters; /* parameter not used */
+  for(;;) {
+    LED3_Neg();
+    FRTOS1_vTaskDelay(500/portTICK_RATE_MS);
+  }
+}
+
+static portTASK_FUNCTION(T2, pvParameters) {
+  (void)pvParameters; /* parameter not used */
+  for(;;) {
+    LED2_Neg();
+    FRTOS1_vTaskDelay(200/portTICK_RATE_MS);
+  }
+}
+
+static portTASK_FUNCTION(MainTask, pvParameters) {
+  (void)pvParameters; /* parameter not used */
+  for(;;) {
+    LED1_Neg();
+    FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
+  }
+}
+
+void APP_Run(void) {
+  LED1_Neg();
+  LED2_Neg();
+  LED3_Neg();
+  LED4_Neg();
+  if (FRTOS1_xTaskCreate(
+        MainTask,  /* pointer to the task */
+        (signed portCHAR *)"Main", /* task name for kernel awareness debugging */
+        configMINIMAL_STACK_SIZE, /* task stack size */
+        (void*)NULL, /* optional task startup argument */
+        tskIDLE_PRIORITY,  /* initial priority */
+        (xTaskHandle*)NULL /* optional task handle to create */
+      ) != pdPASS) {
+    /*lint -e527 */
+    for(;;){}; /* error! probably out of memory */
+    /*lint +e527 */
+  }
+  if (FRTOS1_xTaskCreate(
+        T2,  /* pointer to the task */
+        (signed portCHAR *)"T2", /* task name for kernel awareness debugging */
+        configMINIMAL_STACK_SIZE, /* task stack size */
+        (void*)NULL, /* optional task startup argument */
+        tskIDLE_PRIORITY,  /* initial priority */
+        (xTaskHandle*)NULL /* optional task handle to create */
+      ) != pdPASS) {
+    /*lint -e527 */
+    for(;;){}; /* error! probably out of memory */
+    /*lint +e527 */
+  }
+  if (FRTOS1_xTaskCreate(
+        T3,  /* pointer to the task */
+        (signed portCHAR *)"T3", /* task name for kernel awareness debugging */
+        configMINIMAL_STACK_SIZE, /* task stack size */
+        (void*)NULL, /* optional task startup argument */
+        tskIDLE_PRIORITY,  /* initial priority */
+        (xTaskHandle*)NULL /* optional task handle to create */
+      ) != pdPASS) {
+    /*lint -e527 */
+    for(;;){}; /* error! probably out of memory */
+    /*lint +e527 */
+  }
+  if (FRTOS1_xTaskCreate(
+        T4,  /* pointer to the task */
+        (signed portCHAR *)"T4", /* task name for kernel awareness debugging */
+        configMINIMAL_STACK_SIZE, /* task stack size */
+        (void*)NULL, /* optional task startup argument */
+        tskIDLE_PRIORITY,  /* initial priority */
+        (xTaskHandle*)NULL /* optional task handle to create */
+      ) != pdPASS) {
+    /*lint -e527 */
+    for(;;){}; /* error! probably out of memory */
+    /*lint +e527 */
+  }
+  FRTOS1_vTaskStartScheduler();
+}
+
+/* END Application */
+</PRE>
+<!---DESCEND DON'T CHANGE THIS-->
+            <p class="footer">
+              PROCESSOR EXPERT is trademark of Freescale Semiconductor, Inc.
+              <br />
+              
+            </p>
+    </td>
+  </tr>
+
+</table>
+
+</body>
+</html>
