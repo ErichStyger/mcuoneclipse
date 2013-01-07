@@ -1,0 +1,13 @@
+%if (CPUfamily = "Kinetis")
+  %set LDD_I2C_Group Value Enabled
+  %set nonLDD_I2C_Group Value Disabled
+  %set OnMasterBlockReceived Selection never
+  %set OnMasterBlockSent Selection never
+%else
+  %set LDD_I2C_Group Value Disabled
+  %set nonLDD_I2C_Group Value Enabled
+  %set OnMasterBlockReceived Selection enable
+  %set OnMasterBlockSent Selection enable
+%endif
+%set LDD_I2C_Group ReadOnly yes
+%set nonLDD_I2C_Group ReadOnly yes

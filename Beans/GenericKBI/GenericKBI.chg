@@ -1,0 +1,5 @@
+%if (SingleKeyGroup='yes')
+  %set MultipleKeysGroup Value Disabled
+%else
+  %set MultipleKeysGroup Value Enabled
+%endif
