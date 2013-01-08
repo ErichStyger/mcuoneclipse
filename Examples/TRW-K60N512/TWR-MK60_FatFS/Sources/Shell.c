@@ -16,7 +16,7 @@
 #if PL_HAS_SD_CARD
 /*! \brief Simple benchmark function: first we are going to write a file, then we will copy it */
 static void benchmark(const FSSH1_StdIOType *io) {
-  static FIL fp, fpDest;
+  static FIL fp;
   uint16_t i;
   UINT bw;
   uint8_t read_buf[10];
