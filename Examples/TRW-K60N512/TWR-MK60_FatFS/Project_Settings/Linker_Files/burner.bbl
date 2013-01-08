@@ -1,0 +1,8 @@
+OPENFILE "%ABS_FILE%.bin"
+format=binary
+busWidth=1
+origin=0
+len=0x80000
+undefByte=0xff
+SENDBYTE 1 "%ABS_FILE%"
+CLOSE
