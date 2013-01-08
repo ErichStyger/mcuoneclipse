@@ -19,8 +19,8 @@ Components:
 - Wait
 - Timeout
 
-See
-- http://mcuoneclipse.com/2012/09/07/tutorial-enlighting-the-freedom-kl25z-board/
+See also:
+- http://mcuoneclipse.com/2012/07/30/fatfs-with-kinetis/
 
 Known issues
 - there are 5 warnings (expression has no side effect) produced by the compiler because of missing casts in the Processor Expert generated code
