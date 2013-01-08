@@ -49,6 +49,8 @@
 								</option>
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.optimization.functionsections.1004586241" name="Function sections (-ffunction-sections)" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.optimization.functionsections" value="true" valueType="boolean"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.optimization.datasections.2048619560" name="Data sections (-fdata-sections)" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.optimization.datasections" value="true" valueType="boolean"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.misc.lstfilename.715374320" name="Assembler Listing" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.misc.lstfilename" value="" valueType="string"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.misc.noinlinefunctions.363373860" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.misc.noinlinefunctions" value="false" valueType="boolean"/>
 								<inputType id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input.1675801226" name="ARM Ltd Windows GCC C Compiler" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input"/>
 								<inputType id="org.eclipse.cdt.cross.arm.gnu.c.compiler.input.asmSourcePreproc.815904984" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.input.asmSourcePreproc"/>
 							</tool>
@@ -107,6 +109,10 @@
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="TWR-MK60_FatFS_gcc.org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.552681990" name="ARM Cross Target Application" projectType="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf"/>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.pathentry"/>
+	<storageModule moduleId="refreshScope" versionNumber="1">
+		<resource resourceType="PROJECT" workspacePath="/TWR-MK60_FatFS_gcc"/>
+	</storageModule>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		<scannerConfigBuildInfo instanceId="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.2018967939;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.2018967939.;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.compiler.debug.3973262;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input.1675801226">
@@ -121,9 +127,5 @@
 		<scannerConfigBuildInfo instanceId="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.2018967939;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.2018967939.;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.assembler.debug.44215207;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.assembler.base.input.935736844">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.cross.arm.gnu.ARM_CS_GCCWinManagedMakePerProjectProfileC"/>
 		</scannerConfigBuildInfo>
-	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.core.pathentry"/>
-	<storageModule moduleId="refreshScope" versionNumber="1">
-		<resource resourceType="PROJECT" workspacePath="/TWR-MK60_FatFS_gcc"/>
 	</storageModule>
 </cproject>

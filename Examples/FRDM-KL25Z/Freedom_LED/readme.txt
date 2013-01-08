@@ -1,7 +1,12 @@
 readme.txt
 ----------
 Project demonstrating usage of LED component for the FRDM-KL25Z board.
-Toolchain: CodeWarrior for MCU10.3
+
+Toolchain: 
+- CodeWarrior for MCU10.3
+Components:
+- LED
+- Wait
 
 See
 - http://mcuoneclipse.com/2012/09/07/tutorial-enlighting-the-freedom-kl25z-board/
