@@ -4,7 +4,7 @@
     <Name>MC13192</Name>
     <Description>Device Driver for the Freescale MC13192 Transceiver</Description>
     <Author>Erich Styger</Author>
-    <Version>01.001</Version>
+    <Version>01.002</Version>
     <Icon>MC13192</Icon>
     <TypesFiles>PE,MC13192\MC13192</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -92,7 +92,7 @@
               <Children>
                 <GrupItem>
                   <TEnumItem>
-                    <Name>Tranceiver Type</Name>
+                    <Name>Transceiver Type</Name>
                     <Symbol>TransceiverType</Symbol>
                     <TypeSpec>typeTransceiver</TypeSpec>
                     <Hint>Specifies the transceiver type. Select MPC1320x in case you are using a separate transceiver chip. Using the MPC1320x (external) transceiver then typically Single Port Mode should be enabled.</Hint>
