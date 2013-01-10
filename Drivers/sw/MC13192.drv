@@ -530,9 +530,14 @@ void %OnLeaveRadioSPI(void);
 %-   Example:
 %-     static int counter1;
 %-     int %'ModuleName'%.counter2;
+%if (CPUfamily = "Kinetis")
+#define %'ModuleName'_CPU_IS_LITTLE_ENDIAN 1 /* Cpu is little endian */
+%else
+#define %'ModuleName'_CPU_IS_LITTLE_ENDIAN 0 /* Cpu is big endian */
+%endif
 
 /* macros to deal with the IRQ pin, as configured in the component properties */
-#if 0
+#if 1
 %for i from IRQMacrosList
 %i
 %endfor
@@ -546,7 +551,7 @@ void %OnLeaveRadioSPI(void);
   /* Macros for the HCS08 core, using the IRQ pin */
   #define IRQACK()        IRQSC |= IRQSC_IRQACK_MASK   /*!< IRQ acknowledge */
 #else /* not HCS08 */
-  #if 1 /* Kinetis */
+  #if defined(__GNUC__) /* Kinetis gcc? */
     #define IRQINIT()  /* pull up signal: not possible yet with pin sharing in MCU10.3 */ \
       /* PORTA_PCR17: ISF=0,IRQC=0x0A,MUX=1,PE=1,PS=1 */ \
       PORTA_PCR17 = (uint32_t)((PORTA_PCR17 & (uint32_t)~(uint32_t)( \
@@ -870,8 +875,13 @@ word %'ModuleName'%.%Read(byte addr)
 
   SPI_GET_DEVICE();   %>%CTAB /* prevent concurrent access to device */
   SPI_Write_ReadDummy((byte)((addr&0x3F)|0x80));  %>%CTAB /* Mask address, 6bit addr. Set read bit. */
+#if %'ModuleName'_CPU_IS_LITTLE_ENDIAN
+  ((byte*)&data)[1] = SPI_WriteDummy_Read();      %>%CTAB /* MSB */
+  ((byte*)&data)[0] = SPI_WriteDummy_Read();      %>%CTAB /* LSB */
+#else
   ((byte*)&data)[0] = SPI_WriteDummy_Read();      %>%CTAB /* MSB */
   ((byte*)&data)[1] = SPI_WriteDummy_Read();      %>%CTAB /* LSB */
+#endif
   SPI_LEAVE_DEVICE();   %>%CTAB /* release device */
   return data;
 }
@@ -897,8 +907,13 @@ word %'ModuleName'%.%Read2(byte addr)
   SPI_Write_ReadDummy((byte)((addr&0x3F)|0x80)); %>%CTAB /* Mask address, 6bit addr. Set read bit. */
   SPI_Write_ReadDummy(0);                        %>%CTAB /* Dummy write. Receive register of SPI will contain MSB */
   SPI_Write_ReadDummy(0);                        %>%CTAB /* Dummy write. Waiting until after reading received data insures no overrun */
+#if %'ModuleName'_CPU_IS_LITTLE_ENDIAN
+  ((byte*)&data)[1] = SPI_WriteDummy_Read();     %>%CTAB /* MSB */
+  ((byte*)&data)[0] = SPI_WriteDummy_Read();     %>%CTAB /* LSB */
+#else
   ((byte*)&data)[0] = SPI_WriteDummy_Read();     %>%CTAB /* MSB */
   ((byte*)&data)[1] = SPI_WriteDummy_Read();     %>%CTAB /* LSB */
+#endif
   SPI_LEAVE_DEVICE();   %>%CTAB /* release device */
   return data;
 }
