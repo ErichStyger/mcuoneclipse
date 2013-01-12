@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bean>
+  <Header>
+    <Name>FSL_USB_MSD_Host</Name>
+    <Description>Freescale USB Stack (HID Keyboard)</Description>
+    <Author>Erich Styger</Author>
+    <Version>01.007</Version>
+    <Icon>FSL_USB_MSD_Host</Icon>
+    <TypesFiles>PE,FSL_USB_MSD_Host\FSL_USB_MSD_Host</TypesFiles>
+    <FileVersion>6</FileVersion>
+  </Header>
+  <Options>
+    <BW_HelpType>&lt;none&gt;</BW_HelpType>
+    <BW_HelpFiles>,"Application Notes",Events,Methods,Properties</BW_HelpFiles>
+    <BW_AutoSaveHelp>yes</BW_AutoSaveHelp>
+    <BW_AutoSaveDriver>yes</BW_AutoSaveDriver>
+    <BW_DetailedHelp>yes</BW_DetailedHelp>
+    <BW_NeedTps>yes</BW_NeedTps>
+    <BW_NeedUst>1</BW_NeedUst>
+    <BW_NeedCns>0</BW_NeedCns>
+    <BeanStatus>PROPOSAL</BeanStatus>
+    <Copyright>(c) Copyright Freescale, all rights reserved, 2012\nPorted as Processor Expert component: Erich Styger\nhttp: www.freescale.com</Copyright>
+    <Category>SW-Communication</Category>
+    <DemoDriver>no</DemoDriver>
+    <Shortcut>HIDK</Shortcut>
+    <BeanLevel>High</BeanLevel>
+  </Options>
+  <PropertyList>
+    <Property>
+      <TCompNameItem>
+        <Name>Component name</Name>
+        <Symbol>DeviceName</Symbol>
+        <Hint>Name of the component.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue/>
+      </TCompNameItem>
+    </Property>
+    <Property>
+      <TEnumItem>
+        <Name>CPU</Name>
+        <Symbol>CPUDevice</Symbol>
+        <TypeSpec>typeDeviceSupported</TypeSpec>
+        <Hint>Device to be used.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>-1</DefaultIndex>
+        <TextValueIndex>true</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+      </TEnumItem>
+    </Property>
+    <Property>
+      <TBoolGrupItem>
+        <Name>MSD Settings</Name>
+        <Symbol>USBCDCenabled</Symbol>
+        <TypeSpec>typeEnaDis</TypeSpec>
+        <Hint>Settings for USB HID Keyboard class. The .inf file will be generated into the Documentation folder.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <ReadOnly>true</ReadOnly>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>Enabled</Description>
+        <Expanded>Yes</Expanded>
+        <DefaultValue>true</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <Children>
+          <GrupItem>
+            <TStrgItem>
+              <Name>.inf ClassGuid</Name>
+              <Symbol>CdcClassGuidString</Symbol>
+              <Hint>This defines the ClassGuid in the cdc.inf file. You can make your own using http://www.guidgenerator.com/</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>4D36E978-E325-11CE-BFC1-08002BE10318</DefaultValue>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+            </TStrgItem>
+          </GrupItem>
+          <GrupItem>
+            <TIntgItem>
+              <Name>.inf VID</Name>
+              <Symbol>CdcVidValue</Symbol>
+              <Hint>Value to be used in the cdc.inf for the VID (Vendor ID) entry. This value is used as well in usb_descriptor.c.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>9476</DefaultValue>
+              <MinValue>0</MinValue>
+              <MaxValue>65535</MaxValue>
+              <Bases>HEX</Bases>
+              <DefaultBase>HEX</DefaultBase>
+              <ExtraHintDisabled>false</ExtraHintDisabled>
+              <ChangeValueIntoRange>false</ChangeValueIntoRange>
+              <RuntimeProperty>false</RuntimeProperty>
+            </TIntgItem>
+          </GrupItem>
+          <GrupItem>
+            <TIntgItem>
+              <Name>.inf PID</Name>
+              <Symbol>CdcPidValue</Symbol>
+              <Hint>Name to be used in the cdc.inf for the PID (Product ID) entry. This value is used as well in usb_descriptor.c.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>768</DefaultValue>
+              <MinValue>0</MinValue>
+              <MaxValue>65535</MaxValue>
+              <Bases>HEX</Bases>
+              <DefaultBase>HEX</DefaultBase>
+              <ExtraHintDisabled>false</ExtraHintDisabled>
+              <ChangeValueIntoRange>false</ChangeValueIntoRange>
+              <RuntimeProperty>false</RuntimeProperty>
+            </TIntgItem>
+          </GrupItem>
+          <GrupItem>
+            <TStrgItem>
+              <Name>.inf PRVDR</Name>
+              <Symbol>CdcPrvdrString</Symbol>
+              <Hint>Name to be used in the cdc.inf for the PRVDR (Provider) entry.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>Freescale</DefaultValue>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+            </TStrgItem>
+          </GrupItem>
+          <GrupItem>
+            <TStrgItem>
+              <Name>.inf MFGNAME</Name>
+              <Symbol>CdcMfgNameString</Symbol>
+              <Hint>Name to be used in the cdc.inf for the MFGNAME entry.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>My Company</DefaultValue>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+            </TStrgItem>
+          </GrupItem>
+          <GrupItem>
+            <TStrgItem>
+              <Name>.inf DESCRIPTION</Name>
+              <Symbol>CdcDescriptionString</Symbol>
+              <Hint>Name to be used in the cdc.inf for the DESCRIPTION entry.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>Freescale MSD Device</DefaultValue>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+            </TStrgItem>
+          </GrupItem>
+          <GrupItem>
+            <TStrgItem>
+              <Name>.inf SERVICE</Name>
+              <Symbol>CdcServiceString</Symbol>
+              <Hint>Name to be used in the cdc.inf for the SERVICE entry.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>Virtual Com Driver</DefaultValue>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+            </TStrgItem>
+          </GrupItem>
+          <GrupItem>
+            <TStrgItem>
+              <Name>Bus reported device</Name>
+              <Symbol>CdcBusReportedDeviceDescriptionString</Symbol>
+              <Hint>This name shows up on the USB bus before drivers are installed. This string is used in usb_descriptor.c.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>FSL MSD DEVICE  </DefaultValue>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>16</MinLength>
+              <MaxLength>16</MaxLength>
+            </TStrgItem>
+          </GrupItem>
+          <GrupItem>
+            <TStrgItem>
+              <Name>Bus reported vendor</Name>
+              <Symbol>CdcBusReportedVendorString</Symbol>
+              <Hint>This name shows up on the USB bus before drivers are installed. This string is used in usb_descriptor.c.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>FREESCALE INC.              </DefaultValue>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>28</MinLength>
+              <MaxLength>28</MaxLength>
+            </TStrgItem>
+          </GrupItem>
+        </Children>
+      </TBoolGrupItem>
+    </Property>
+  </PropertyList>
+  <MethodList>
+    <Method>
+      <TMthdItem>
+        <Name>App_Callback</Name>
+        <Symbol>App_Callback</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Method to handle class callbacks from USB</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>controller_ID</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>controller ID</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>event_type</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>value of the event</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>val</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>gives the configuration value</ParHint>
+          <ParUserDeclaration>void *val</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(byte controller_ID, byte event_type, void *val)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Notify_Callback</Name>
+        <Symbol>Notify_Callback</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Method to handle PSTN Sub Class callbacks</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>controller_ID</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>controller ID</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>event_type</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>value of the event</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>val</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint/>
+          <ParUserDeclaration>void *val</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(byte controller_ID, byte event_type, void *val)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>App_Task</Name>
+        <Symbol>App_Task</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Application task to be called periodically from the main task.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code, returns ERR_OK if USB enumeration has been finished, error code otherwise.</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>txBuf</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to temporary buffer used to transmit data over USB. Should be equal or greater than the endpoint buffer size. Data will be sent in an asynchronous way, so make sure the buffer is *not* on the stack. This buffer must be available until the next transmission.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>txBufSize</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Size of the buffer in bytes</ParHint>
+          <ParUserDeclaration>size_t txBufSize</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte *txBuf, size_t txBufSize)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Init</Name>
+        <Symbol>Init</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Initializes the driver</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+  </MethodList>
+  <EventList>
+    <Event>
+      <TStrgItem>
+        <Name>Event module name</Name>
+        <Symbol>EventModule</Symbol>
+        <Hint>Name of the user module (without extension), where the events from this component are placed.</Hint>
+        <ItemLevel>ADVANCED</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>Events</DefaultValue>
+        <StrDefine>nothing</StrDefine>
+        <MinLength>0</MinLength>
+        <MaxLength>-1</MaxLength>
+      </TStrgItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OnError</Name>
+        <Symbol>OnError</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Hook called in case of an error</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>error</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Error code</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(byte error)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OnError procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+  </EventList>
+  <Links>
+    <EmptySection_DummyValue/>
+  </Links>
+  <Revisions>
+    <RevisionVersion>2</RevisionVersion>
+  </Revisions>
+</Bean>
