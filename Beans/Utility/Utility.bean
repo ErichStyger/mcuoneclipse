@@ -4,7 +4,7 @@
     <Name>Utility</Name>
     <Description>Utility Module</Description>
     <Author>Erich Styger</Author>
-    <Version>01.082</Version>
+    <Version>01.084</Version>
     <Icon>Utility</Icon>
     <TypesFiles>PE,Utility\Utility</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -2092,6 +2092,46 @@
     </Method>
     <Method>
       <TMthdItem>
+        <Name>strtailcmp</Name>
+        <Symbol>strtailcmp</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Compares the tail of a string and returns 0 if it matches, -1 otherwise</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>returns 0 if tail matches, -1 otherwise</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>str</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to string. This string is compared if it contains the tail.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>tail</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to tail string.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte *str, byte *tail)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
         <Name>strlen</Name>
         <Symbol>strlen</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
@@ -2122,6 +2162,46 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>word #M#_#C#(const char *)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>strCutTail</Name>
+        <Symbol>strCutTail</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Removes a tailing substring from a string. The string passed will be modified (the tail is cut by writing a zero byte to the string!)</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code, ERR_OK if no error, otherwise ERR_FAIL if tail is not found</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>str</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to string where to remove the tail</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>tail</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to substring to remove</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte *str, byte *tail)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

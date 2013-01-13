@@ -738,6 +738,19 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="strtailcmp">
+<b>strtailcmp</b></a>
+ - Compares the tail of a string and returns 0 if it matches, -1 otherwise
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte strtailcmp(byte *str, byte *tail)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>str: Pointer to byte</i> - Pointer to string. This string is compared if it contains the tail.</li>
+<li><i>tail: Pointer to byte</i> - Pointer to tail string.</li>
+<li><i>Return value:byte</i> - returns 0 if tail matches, -1 otherwise
+</li>
+</ul><br />
+</li>
 <li><a name="strlen">
 <b>strlen</b></a>
  - Wrapper to the standard strlen() function.
@@ -747,6 +760,19 @@ LI.EXP {
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>str:byte</i> - no hint</li>
 <li><i>Return value:word</i> - size of strinig
+</li>
+</ul><br />
+</li>
+<li><a name="strCutTail">
+<b>strCutTail</b></a>
+ - Removes a tailing substring from a string. The string passed will be modified (the tail is cut by writing a zero byte to the string!)
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte strCutTail(byte *str, byte *tail)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>str: Pointer to byte</i> - Pointer to string where to remove the tail</li>
+<li><i>tail: Pointer to byte</i> - Pointer to substring to remove</li>
+<li><i>Return value:byte</i> - Error code, ERR_OK if no error, otherwise ERR_FAIL if tail is not found
 </li>
 </ul><br />
 </li>

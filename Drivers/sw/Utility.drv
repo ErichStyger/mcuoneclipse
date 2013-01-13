@@ -602,6 +602,28 @@ byte %'ModuleName'%.%ScanHex8uNumber(const unsigned char **str, byte *val);
 
 %endif %- ScanHex8uNumber
 %-BW_METHOD_END ScanHex8uNumber
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN strtailcmp
+%ifdef strtailcmp
+byte %'ModuleName'%.%strtailcmp(byte *str, byte *tail);
+%define! Parstr
+%define! Partail
+%define! RetVal
+%include Common\Utilitystrtailcmp.Inc
+
+%endif %- strtailcmp
+%-BW_METHOD_END strtailcmp
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN strCutTail
+%ifdef strCutTail
+byte %'ModuleName'%.%strCutTail(byte *str, byte *tail);
+%define! Parstr
+%define! Partail
+%define! RetVal
+%include Common\UtilitystrCutTail.Inc
+
+%endif %- strCutTail
+%-BW_METHOD_END strCutTail
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -2086,6 +2108,59 @@ byte %'ModuleName'%.%ScanHex8uNumber(const unsigned char **str, byte *val)
 
 %endif %- ScanHex8uNumber
 %-BW_METHOD_END ScanHex8uNumber
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN strtailcmp
+%ifdef strtailcmp
+%define! Parstr
+%define! Partail
+%define! RetVal
+%include Common\Utilitystrtailcmp.Inc
+byte %'ModuleName'%.%strtailcmp(byte *str, byte *tail)
+{
+  int i, j;
+
+  i = %'ModuleName'%.%strlen((char*)str);
+  j = %'ModuleName'%.%strlen((char*)tail);
+  if (j>i) { /* str is smaller than tail */
+    return -1; /* cannot match */
+  }
+  /* compare strings */
+  while(str[i]==tail[j]) {
+    i--;
+    j--;
+    if (j<0) {
+      return 0; /* match */
+    }
+  }
+  return -1; /* !=0 means no match */
+}
+
+%endif %- strtailcmp
+%-BW_METHOD_END strtailcmp
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN strCutTail
+%ifdef strCutTail
+%define! Parstr
+%define! Partail
+%define! RetVal
+%include Common\UtilitystrCutTail.Inc
+byte %'ModuleName'%.%strCutTail(byte *str, byte *tail)
+{
+  /* cut the tail from the string */
+  size_t strLen, tailLen;
+
+  if (%'ModuleName'%.%strtailcmp(str, tail)!=0) { /* check if tail is present */
+    return ERR_FAILED; /* tail not found */
+  }
+  tailLen = %'ModuleName'%.%strlen((char*)tail);
+  strLen = %'ModuleName'%.%strlen((char*)str);
+  /* write \0 to cut the tail */
+  str[strLen-tailLen] = '\0';
+  return ERR_OK;
+}
+
+%endif %- strCutTail
+%-BW_METHOD_END strCutTail
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
