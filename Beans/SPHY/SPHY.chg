@@ -1,0 +1,10 @@
+%if defined(AllowPromiscuousMode) & AllowPromiscuousMode='yes'
+  %set PLMEEnablePromiscuousMode Selection enable
+  %set PLMEDisablePromiscuousMode Selection enable
+%else
+  %set PLMEEnablePromiscuousMode Selection never
+  %set PLMEDisablePromiscuousMode Selection never
+%endif
+%if defined(OTAPenabled) & OTAPenabled='yes' & defined(BOOTLOADERenabled) & BOOTLOADERenabled='yes'
+  %error OTAP and Embedded Bootloader can't be enabled at the same time. Please disable the OTAP or the Embedded Bootloader.
+%endif
