@@ -1,1 +1,1 @@
-%;**%>12
+%;**                                                             %>12 Implements busy waiting routines.
