@@ -423,6 +423,214 @@ byte %'ModuleName'%.%btSetUARTParameterStr(byte *param);
 
 %endif %- btSetUARTParameterStr
 %-BW_METHOD_END btSetUARTParameterStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btQueryConnectionMethod
+%ifdef btQueryConnectionMethod
+byte %'ModuleName'%.%btQueryConnectionMethod(byte *method);
+%define! Parmethod
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQueryConnectionMethod.Inc
+
+%endif %- btQueryConnectionMethod
+%-BW_METHOD_END btQueryConnectionMethod
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btSetConnectionMethod
+%ifdef btSetConnectionMethod
+byte %'ModuleName'%.%btSetConnectionMethod(byte method);
+%define! Parmethod
+%define! RetVal
+%include Common\Bluetooth_EGBTbtSetConnectionMethod.Inc
+
+%endif %- btSetConnectionMethod
+%-BW_METHOD_END btSetConnectionMethod
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btQueryBindingBluetoothAddress
+%ifdef btQueryBindingBluetoothAddress
+byte %'ModuleName'%.%btQueryBindingBluetoothAddress(byte *buf, size_t bufSize);
+%define! Parbuf
+%define! ParbufSize
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQueryBindingBluetoothAddress.Inc
+
+%endif %- btQueryBindingBluetoothAddress
+%-BW_METHOD_END btQueryBindingBluetoothAddress
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btSetBindingBluetoothStr
+%ifdef btSetBindingBluetoothStr
+byte %'ModuleName'%.%btSetBindingBluetoothStr(byte *addr);
+%define! Paraddr
+%define! RetVal
+%include Common\Bluetooth_EGBTbtSetBindingBluetoothStr.Inc
+
+%endif %- btSetBindingBluetoothStr
+%-BW_METHOD_END btSetBindingBluetoothStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btQueryLEDOutputPolarityStr
+%ifdef btQueryLEDOutputPolarityStr
+byte %'ModuleName'%.%btQueryLEDOutputPolarityStr(byte *buf, size_t bufSize);
+%define! Parbuf
+%define! ParbufSize
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQueryLEDOutputPolarityStr.Inc
+
+%endif %- btQueryLEDOutputPolarityStr
+%-BW_METHOD_END btQueryLEDOutputPolarityStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btSetLEDOutputPolarityStr
+%ifdef btSetLEDOutputPolarityStr
+byte %'ModuleName'%.%btSetLEDOutputPolarityStr(byte *ledPolarityStr);
+%define! ParledPolarityStr
+%define! RetVal
+%include Common\Bluetooth_EGBTbtSetLEDOutputPolarityStr.Inc
+
+%endif %- btSetLEDOutputPolarityStr
+%-BW_METHOD_END btSetLEDOutputPolarityStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btSetUserPinIO
+%ifdef btSetUserPinIO
+byte %'ModuleName'%.%btSetUserPinIO(byte portNumber, bool on);
+%define! ParportNumber
+%define! Paron
+%define! RetVal
+%include Common\Bluetooth_EGBTbtSetUserPinIO.Inc
+
+%endif %- btSetUserPinIO
+%-BW_METHOD_END btSetUserPinIO
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btSetMultipleUserIOPins
+%ifdef btSetMultipleUserIOPins
+byte %'ModuleName'%.%btSetMultipleUserIOPins(word mask);
+%define! Parmask
+%define! RetVal
+%include Common\Bluetooth_EGBTbtSetMultipleUserIOPins.Inc
+
+%endif %- btSetMultipleUserIOPins
+%-BW_METHOD_END btSetMultipleUserIOPins
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btQueryMultipleUserIOPins
+%ifdef btQueryMultipleUserIOPins
+byte %'ModuleName'%.%btQueryMultipleUserIOPins(word *mask);
+%define! Parmask
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQueryMultipleUserIOPins.Inc
+
+%endif %- btQueryMultipleUserIOPins
+%-BW_METHOD_END btQueryMultipleUserIOPins
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btQueryScanningParametersStr
+%ifdef btQueryScanningParametersStr
+byte %'ModuleName'%.%btQueryScanningParametersStr(byte *buf, size_t bufSize);
+%define! Parbuf
+%define! ParbufSize
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQueryScanningParametersStr.Inc
+
+%endif %- btQueryScanningParametersStr
+%-BW_METHOD_END btQueryScanningParametersStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btSetScanningParameterStr
+%ifdef btSetScanningParameterStr
+byte %'ModuleName'%.%btSetScanningParameterStr(byte *param);
+%define! Parparam
+%define! RetVal
+%include Common\Bluetooth_EGBTbtSetScanningParameterStr.Inc
+
+%endif %- btSetScanningParameterStr
+%-BW_METHOD_END btSetScanningParameterStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btQuerySNIFFParametersStr0
+%ifdef btQuerySNIFFParametersStr0
+byte %'ModuleName'%.%btQuerySNIFFParametersStr0(byte *buf, size_t bufSize);
+%define! Parbuf
+%define! ParbufSize
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQuerySNIFFParametersStr0.Inc
+
+%endif %- btQuerySNIFFParametersStr0
+%-BW_METHOD_END btQuerySNIFFParametersStr0
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btSetSNIFFParameterStr
+%ifdef btSetSNIFFParameterStr
+byte %'ModuleName'%.%btSetSNIFFParameterStr(byte *param);
+%define! Parparam
+%define! RetVal
+%include Common\Bluetooth_EGBTbtSetSNIFFParameterStr.Inc
+
+%endif %- btSetSNIFFParameterStr
+%-BW_METHOD_END btSetSNIFFParameterStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btQuerySecurityEncryptionModesStr
+%ifdef btQuerySecurityEncryptionModesStr
+byte %'ModuleName'%.%btQuerySecurityEncryptionModesStr(byte *buf, size_t bufSize);
+%define! Parbuf
+%define! ParbufSize
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQuerySecurityEncryptionModesStr.Inc
+
+%endif %- btQuerySecurityEncryptionModesStr
+%-BW_METHOD_END btQuerySecurityEncryptionModesStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btSetSecurityEncryptionModesStr
+%ifdef btSetSecurityEncryptionModesStr
+byte %'ModuleName'%.%btSetSecurityEncryptionModesStr(byte *modes);
+%define! Parmodes
+%define! RetVal
+%include Common\Bluetooth_EGBTbtSetSecurityEncryptionModesStr.Inc
+
+%endif %- btSetSecurityEncryptionModesStr
+%-BW_METHOD_END btSetSecurityEncryptionModesStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btDeleteAuthenticatedDeviceFromListStr
+%ifdef btDeleteAuthenticatedDeviceFromListStr
+byte %'ModuleName'%.%btDeleteAuthenticatedDeviceFromListStr(byte *addrString);
+%define! ParaddrString
+%define! RetVal
+%include Common\Bluetooth_EGBTbtDeleteAuthenticatedDeviceFromListStr.Inc
+
+%endif %- btDeleteAuthenticatedDeviceFromListStr
+%-BW_METHOD_END btDeleteAuthenticatedDeviceFromListStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btFindDeviceFromAuthenticatedDeviceListStr
+%ifdef btFindDeviceFromAuthenticatedDeviceListStr
+byte %'ModuleName'%.%btFindDeviceFromAuthenticatedDeviceListStr(byte *addr);
+%define! Paraddr
+%define! RetVal
+%include Common\Bluetooth_EGBTbtFindDeviceFromAuthenticatedDeviceListStr.Inc
+
+%endif %- btFindDeviceFromAuthenticatedDeviceListStr
+%-BW_METHOD_END btFindDeviceFromAuthenticatedDeviceListStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btQueryTotalNumberOfDeviceFromAuthenticationList
+%ifdef btQueryTotalNumberOfDeviceFromAuthenticationList
+byte %'ModuleName'%.%btQueryTotalNumberOfDeviceFromAuthenticationList(byte *nofDevices);
+%define! ParnofDevices
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQueryTotalNumberOfDeviceFromAuthenticationList.Inc
+
+%endif %- btQueryTotalNumberOfDeviceFromAuthenticationList
+%-BW_METHOD_END btQueryTotalNumberOfDeviceFromAuthenticationList
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btQueryMostRecentlyUsedAuthenticatedDevice
+%ifdef btQueryMostRecentlyUsedAuthenticatedDevice
+byte %'ModuleName'%.%btQueryMostRecentlyUsedAuthenticatedDevice(byte *buf, size_t bufSize);
+%define! Parbuf
+%define! ParbufSize
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQueryMostRecentlyUsedAuthenticatedDevice.Inc
+
+%endif %- btQueryMostRecentlyUsedAuthenticatedDevice
+%-BW_METHOD_END btQueryMostRecentlyUsedAuthenticatedDevice
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btQueryCurrentStateOfDeviceStr
+%ifdef btQueryCurrentStateOfDeviceStr
+byte %'ModuleName'%.%btQueryCurrentStateOfDeviceStr(byte *buf, size_t bufSize);
+%define! Parbuf
+%define! ParbufSize
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQueryCurrentStateOfDeviceStr.Inc
+
+%endif %- btQueryCurrentStateOfDeviceStr
+%-BW_METHOD_END btQueryCurrentStateOfDeviceStr
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -462,8 +670,36 @@ byte %'ModuleName'%.%btSetUARTParameterStr(byte *param);
 static %'ModuleName'%.TEnumErrors %'ModuleName'%.lastErr = %'ModuleName'%.NO_ERROR; /* holds the last error */
 
 static const unsigned char *%'ModuleName'%.ErrorStringTable[] = {
-  /* 0 */ (unsigned char*)"Command Error/Invalid Command",
-  /* 1 */ (unsigned char*)"Results in default value"
+  /*  0 */ (unsigned char*)"Command Error/Invalid Command",
+  /*  1 */ (unsigned char*)"Results in default value",
+  /*  2 */ (unsigned char*)"PSKEY write error",
+  /*  3 */ (unsigned char*)"Device name too long (>32 characters)",
+  /*  4 */ (unsigned char*)"No device name specified (0 length)",
+  /*  5 */ (unsigned char*)"Bluetooth address NAP is too long",
+  /*  6 */ (unsigned char*)"Bluetooth address UAP is too long",
+  /*  7 */ (unsigned char*)"Bluetooth address LAP is too long",
+  /*  8 */ (unsigned char*)"PIO map not specified (0 length)",
+  /*  9 */ (unsigned char*)"Invalid PIO port number entered",
+  /*  A */ (unsigned char*)"Device Class is not specified (0 length)",
+  /*  B */ (unsigned char*)"Device Class too long",
+  /*  C */ (unsigned char*)"Inquire Access Code not specified (0 length)",
+  /*  D */ (unsigned char*)"Inquire Access Code too long",
+  /*  E */ (unsigned char*)"Inavlid Inquire Access code entered",
+  /*  F */ (unsigned char*)"Pairing Password not specified (0 length)",
+  /* 10 */ (unsigned char*)"Pairing Password too long (>16 characters)",
+  /* 11 */ (unsigned char*)"Invalid Role entered",
+  /* 12 */ (unsigned char*)"Invalid Baud Rate entered",
+  /* 13 */ (unsigned char*)"Invalid Stop Bit entered",
+  /* 14 */ (unsigned char*)"Invalid Parity Bit entered",
+  /* 15 */ (unsigned char*)"No device in Pairing List",
+  /* 16 */ (unsigned char*)"SPP not initilized",
+  /* 17 */ (unsigned char*)"SPP already initialized",
+  /* 18 */ (unsigned char*)"Invalid Inquiry Mode",
+  /* 19 */ (unsigned char*)"Inquire Timeout occured",
+  /* 1A */ (unsigned char*)"Invalid/zero length address entered",
+  /* 1B */ (unsigned char*)"Invalid Security Mode entered",
+  /* 1C */ (unsigned char*)"Invalid Encryption Mode entered",
+  /* 1D */ (unsigned char*)"No Error",
   /*! \todo extend table */
 };
 
@@ -836,7 +1072,7 @@ byte %'ModuleName'%.%btQueryRole(byte *role)
 %include Common\Bluetooth_EGBTbtSetRole.Inc
 byte %'ModuleName'%.%btSetRole(byte role)
 {
-  /* 8: Set device role: "AT+ROLE=<role>\r\n" ==> "+ROLE:<role>\r\nOK\r\n" */
+  /* 8: Set device role: "AT+ROLE=<role>\r\n" ==> "OK\r\n" */
   /* role must be '0' (slave), '1' (master) or '2' (slave-loop) */
   unsigned char buf[sizeof("AT+ROLE=0\r\n")];
 
@@ -1027,6 +1263,314 @@ byte %'ModuleName'%.%btSetUARTParameterStr(byte *param)
 
 %endif %- btSetUARTParameterStr
 %-BW_METHOD_END btSetUARTParameterStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btQueryConnectionMethod
+%ifdef btQueryConnectionMethod
+%define! Parmethod
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQueryConnectionMethod.Inc
+byte %'ModuleName'%.%btQueryConnectionMethod(byte *method)
+{
+  /* 14: Query connection method: "AT+CMODE?\r\n" ==> "+CMODE:<mode>\r\nOK\r\n" */
+  unsigned char buf[2];
+
+  if (%'ModuleName'%.QueryString((unsigned char*)"AT+CMODE?", (unsigned char*)"+CMODE:", buf, sizeof(buf))!=ERR_OK) {
+    return ERR_FAILED;
+  }
+  if (buf[0]<'0' || buf[0]>'2') {
+    return ERR_FAILED;
+  }
+  *mode = buf[0];
+  return ERR_OK;
+}
+
+%endif %- btQueryConnectionMethod
+%-BW_METHOD_END btQueryConnectionMethod
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btSetConnectionMethod
+%ifdef btSetConnectionMethod
+%define! Parmethod
+%define! RetVal
+%include Common\Bluetooth_EGBTbtSetConnectionMethod.Inc
+byte %'ModuleName'%.%btSetConnectionMethod(byte method)
+{
+  /* 14: Set connection method: "AT+CMODE=<mode>\r\n" ==> "OK\r\n" */
+  /* role must be '0' (connect to specified device), '1' (connect to any device) or '2' (test mode) */
+  unsigned char buf[sizeof("AT+CMODE=0\r\n")];
+
+  if (role<'0' || role>'2') {
+    return ERR_FAILED; /* not a valid method */
+  }
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+CMODE=");
+  %@Utility@'ModuleName'%.chcat(buf, sizeof(buf), mode);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  return %'ModuleName'%.StdOKCmd(buf);
+}
+
+%endif %- btSetConnectionMethod
+%-BW_METHOD_END btSetConnectionMethod
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btQueryBindingBluetoothAddress
+%ifdef btQueryBindingBluetoothAddress
+%define! Parbuf
+%define! ParbufSize
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQueryBindingBluetoothAddress.Inc
+byte %'ModuleName'%.%btQueryBindingBluetoothAddress(byte *buf, size_t bufSize)
+{
+  /* 15: Query UART Parameters: "AT+BIND?\r\n" ==> "+BIND:<addr>\r\nOK\r\n"
+     where <addr> = 48 bit bluetooth address in NAP,UAP,LAP format
+     Example: Bind with Bluetooth device having address = 00:02:72:0A:3C:7F
+     Bluetooth address in NA,UAP,LAP format = 0002,72,0A3C7F
+  */
+  return %'ModuleName'%.QueryString((unsigned char*)"AT+BIND?", (unsigned char*)"+BIND:", buf, bufSize);
+}
+
+%endif %- btQueryBindingBluetoothAddress
+%-BW_METHOD_END btQueryBindingBluetoothAddress
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btSetBindingBluetoothStr
+%ifdef btSetBindingBluetoothStr
+%define! Paraddr
+%define! RetVal
+%include Common\Bluetooth_EGBTbtSetBindingBluetoothStr.Inc
+byte %'ModuleName'%.%btSetBindingBluetoothStr(byte *addr)
+{
+  /* 15: Set UART Parameters: "AT+BIND=<addr>\r\n" ==> "OK\r\n"
+     where <addr> = 48 bit bluetooth address in NAP,UAP,LAP format
+     Example: Bind with Bluetooth device having address = 00:02:72:0A:3C:7F
+     Bluetooth address in NA,UAP,LAP format = 0002,72,0A3C7F
+  */
+  unsigned char buf[sizeof("AT+BIND=0000,00,000000\r\n")];
+
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+BIND=");
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), addr);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  return %'ModuleName'%.StdOKCmd(buf);
+}
+
+%endif %- btSetBindingBluetoothStr
+%-BW_METHOD_END btSetBindingBluetoothStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btQueryLEDOutputPolarityStr
+%ifdef btQueryLEDOutputPolarityStr
+%define! Parbuf
+%define! ParbufSize
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQueryLEDOutputPolarityStr.Inc
+byte %'ModuleName'%.%btQueryLEDOutputPolarityStr(byte *buf, size_t bufSize)
+{
+  /* 15: Query LED: "AT+BIND?\r\n" ==> "+BIND:<addr>\r\nOK\r\n"
+     where <addr> = 48 bit bluetooth address in NAP,UAP,LAP format
+     Example: Bind with Bluetooth device having address = 00:02:72:0A:3C:7F
+     Bluetooth address in NA,UAP,LAP format = 0002,72,0A3C7F
+  */
+  return %'ModuleName'%.QueryString((unsigned char*)"AT+BIND?", (unsigned char*)"+BIND:", buf, bufSize);
+}
+
+%endif %- btQueryLEDOutputPolarityStr
+%-BW_METHOD_END btQueryLEDOutputPolarityStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btSetLEDOutputPolarityStr
+%ifdef btSetLEDOutputPolarityStr
+%define! ParledPolarityStr
+%define! RetVal
+%include Common\Bluetooth_EGBTbtSetLEDOutputPolarityStr.Inc
+byte %'ModuleName'%.%btSetLEDOutputPolarityStr(byte *ledPolarityStr)
+{
+  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+}
+
+%endif %- btSetLEDOutputPolarityStr
+%-BW_METHOD_END btSetLEDOutputPolarityStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btSetUserPinIO
+%ifdef btSetUserPinIO
+%define! ParportNumber
+%define! Paron
+%define! RetVal
+%include Common\Bluetooth_EGBTbtSetUserPinIO.Inc
+byte %'ModuleName'%.%btSetUserPinIO(byte portNumber, bool on)
+{
+  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+}
+
+%endif %- btSetUserPinIO
+%-BW_METHOD_END btSetUserPinIO
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btSetMultipleUserIOPins
+%ifdef btSetMultipleUserIOPins
+%define! Parmask
+%define! RetVal
+%include Common\Bluetooth_EGBTbtSetMultipleUserIOPins.Inc
+byte %'ModuleName'%.%btSetMultipleUserIOPins(word mask)
+{
+  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+}
+
+%endif %- btSetMultipleUserIOPins
+%-BW_METHOD_END btSetMultipleUserIOPins
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btQueryMultipleUserIOPins
+%ifdef btQueryMultipleUserIOPins
+%define! Parmask
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQueryMultipleUserIOPins.Inc
+byte %'ModuleName'%.%btQueryMultipleUserIOPins(word *mask)
+{
+  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+}
+
+%endif %- btQueryMultipleUserIOPins
+%-BW_METHOD_END btQueryMultipleUserIOPins
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btQueryScanningParametersStr
+%ifdef btQueryScanningParametersStr
+%define! Parbuf
+%define! ParbufSize
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQueryScanningParametersStr.Inc
+byte %'ModuleName'%.%btQueryScanningParametersStr(byte *buf, size_t bufSize)
+{
+  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+}
+
+%endif %- btQueryScanningParametersStr
+%-BW_METHOD_END btQueryScanningParametersStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btSetScanningParameterStr
+%ifdef btSetScanningParameterStr
+%define! Parparam
+%define! RetVal
+%include Common\Bluetooth_EGBTbtSetScanningParameterStr.Inc
+byte %'ModuleName'%.%btSetScanningParameterStr(byte *param)
+{
+  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+}
+
+%endif %- btSetScanningParameterStr
+%-BW_METHOD_END btSetScanningParameterStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btQuerySNIFFParametersStr0
+%ifdef btQuerySNIFFParametersStr0
+%define! Parbuf
+%define! ParbufSize
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQuerySNIFFParametersStr0.Inc
+byte %'ModuleName'%.%btQuerySNIFFParametersStr0(byte *buf, size_t bufSize)
+{
+  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+}
+
+%endif %- btQuerySNIFFParametersStr0
+%-BW_METHOD_END btQuerySNIFFParametersStr0
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btSetSNIFFParameterStr
+%ifdef btSetSNIFFParameterStr
+%define! Parparam
+%define! RetVal
+%include Common\Bluetooth_EGBTbtSetSNIFFParameterStr.Inc
+byte %'ModuleName'%.%btSetSNIFFParameterStr(byte *param)
+{
+  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+}
+
+%endif %- btSetSNIFFParameterStr
+%-BW_METHOD_END btSetSNIFFParameterStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btQuerySecurityEncryptionModesStr
+%ifdef btQuerySecurityEncryptionModesStr
+%define! Parbuf
+%define! ParbufSize
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQuerySecurityEncryptionModesStr.Inc
+byte %'ModuleName'%.%btQuerySecurityEncryptionModesStr(byte *buf, size_t bufSize)
+{
+  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+}
+
+%endif %- btQuerySecurityEncryptionModesStr
+%-BW_METHOD_END btQuerySecurityEncryptionModesStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btSetSecurityEncryptionModesStr
+%ifdef btSetSecurityEncryptionModesStr
+%define! Parmodes
+%define! RetVal
+%include Common\Bluetooth_EGBTbtSetSecurityEncryptionModesStr.Inc
+byte %'ModuleName'%.%btSetSecurityEncryptionModesStr(byte *modes)
+{
+  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+}
+
+%endif %- btSetSecurityEncryptionModesStr
+%-BW_METHOD_END btSetSecurityEncryptionModesStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btDeleteAuthenticatedDeviceFromListStr
+%ifdef btDeleteAuthenticatedDeviceFromListStr
+%define! ParaddrString
+%define! RetVal
+%include Common\Bluetooth_EGBTbtDeleteAuthenticatedDeviceFromListStr.Inc
+byte %'ModuleName'%.%btDeleteAuthenticatedDeviceFromListStr(byte *addrString)
+{
+  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+}
+
+%endif %- btDeleteAuthenticatedDeviceFromListStr
+%-BW_METHOD_END btDeleteAuthenticatedDeviceFromListStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btFindDeviceFromAuthenticatedDeviceListStr
+%ifdef btFindDeviceFromAuthenticatedDeviceListStr
+%define! Paraddr
+%define! RetVal
+%include Common\Bluetooth_EGBTbtFindDeviceFromAuthenticatedDeviceListStr.Inc
+byte %'ModuleName'%.%btFindDeviceFromAuthenticatedDeviceListStr(byte *addr)
+{
+  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+}
+
+%endif %- btFindDeviceFromAuthenticatedDeviceListStr
+%-BW_METHOD_END btFindDeviceFromAuthenticatedDeviceListStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btQueryTotalNumberOfDeviceFromAuthenticationList
+%ifdef btQueryTotalNumberOfDeviceFromAuthenticationList
+%define! ParnofDevices
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQueryTotalNumberOfDeviceFromAuthenticationList.Inc
+byte %'ModuleName'%.%btQueryTotalNumberOfDeviceFromAuthenticationList(byte *nofDevices)
+{
+  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+}
+
+%endif %- btQueryTotalNumberOfDeviceFromAuthenticationList
+%-BW_METHOD_END btQueryTotalNumberOfDeviceFromAuthenticationList
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btQueryMostRecentlyUsedAuthenticatedDevice
+%ifdef btQueryMostRecentlyUsedAuthenticatedDevice
+%define! Parbuf
+%define! ParbufSize
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQueryMostRecentlyUsedAuthenticatedDevice.Inc
+byte %'ModuleName'%.%btQueryMostRecentlyUsedAuthenticatedDevice(byte *buf, size_t bufSize)
+{
+  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+}
+
+%endif %- btQueryMostRecentlyUsedAuthenticatedDevice
+%-BW_METHOD_END btQueryMostRecentlyUsedAuthenticatedDevice
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btQueryCurrentStateOfDeviceStr
+%ifdef btQueryCurrentStateOfDeviceStr
+%define! Parbuf
+%define! ParbufSize
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQueryCurrentStateOfDeviceStr.Inc
+byte %'ModuleName'%.%btQueryCurrentStateOfDeviceStr(byte *buf, size_t bufSize)
+{
+  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+}
+
+%endif %- btQueryCurrentStateOfDeviceStr
+%-BW_METHOD_END btQueryCurrentStateOfDeviceStr
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

@@ -535,6 +535,254 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="btQueryConnectionMethod">
+<b>btQueryConnectionMethod</b></a>
+ - Returns the connection method
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte btQueryConnectionMethod(byte *method)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>method: Pointer to byte</i> - Pointer to character which will hold the mode: '0' (specified device only, default), '1' (can connect to any device), '2' (test mode)</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="btSetConnectionMethod">
+<b>btSetConnectionMethod</b></a>
+ - Sets the device connection method
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte btSetConnectionMethod(byte method)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>method:byte</i> - '0' (specified device only, default), '1' (can connect to any device), '2' (test mode)</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="btQueryBindingBluetoothAddress">
+<b>btQueryBindingBluetoothAddress</b></a>
+ - Queries the Binding Bluetooth Address
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte btQueryBindingBluetoothAddress(byte *buf, size_t bufSize)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>buf: Pointer to byte</i> - Pointer to buffer where to store the string</li>
+<li><i>bufSize:byte</i> - no hint</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="btSetBindingBluetoothStr">
+<b>btSetBindingBluetoothStr</b></a>
+ - Sets the Binding Bluetooth Address.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte btSetBindingBluetoothStr(byte *addr)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>addr: Pointer to byte</i> - Pointer to new bluetooth address sting in NAP,UAP,LAP format.</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="btQueryLEDOutputPolarityStr">
+<b>btQueryLEDOutputPolarityStr</b></a>
+ - Returns the LED output polarity
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte btQueryLEDOutputPolarityStr(byte *buf, size_t bufSize)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>buf: Pointer to byte</i> - Pointer to buffer where to store the LED output polarity. LED polarity in &lt;led1,&lt;led2&gt; format. 0 for LED output active low, 1 for LED output active high (default)</li>
+<li><i>bufSize:byte</i> - no hint</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="btSetLEDOutputPolarityStr">
+<b>btSetLEDOutputPolarityStr</b></a>
+ - Sets the LED output polarity
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte btSetLEDOutputPolarityStr(byte *ledPolarityStr)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>ledPolarityStr: Pointer to byte</i> - Pointer to string with the LED polarity in &lt;led1,&lt;led2&gt; format. 0 for LED output active low, 1 for LED output active high (default)</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="btSetUserPinIO">
+<b>btSetUserPinIO</b></a>
+ - Sets or clears a user I/O pin
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte btSetUserPinIO(byte portNumber, bool on)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>portNumber:byte</i> - Portnumer, available port numbers are 2, 3, 4, 5, 6, 7 and 10.</li>
+<li><i>on:bool</i> - If port is on (logic high) or off (logic low)</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="btSetMultipleUserIOPins">
+<b>btSetMultipleUserIOPins</b></a>
+ - Sets or clears multiple User I/O pins
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte btSetMultipleUserIOPins(word mask)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>mask:word</i> - 12 Bit mask (0 for clear/low level, 1 for set/high level). Mapping to pins: <br />(x)(10)(x)(x)(7)(6)(5)(4)(3)(2)(x)(x) with (x) as 'don not care'.</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="btQueryMultipleUserIOPins">
+<b>btQueryMultipleUserIOPins</b></a>
+ - Queries ultiple User I/O pins
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte btQueryMultipleUserIOPins(word *mask)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>mask: Pointer to word</i> - Pointer to 12 Bit mask (0 for clear/low level, 1 for set/high level). Mapping to pins: <br />(x)(10)(x)(x)(7)(6)(5)(4)(3)(2)(x)(x) with (x) as 'don not care'.</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="btQueryScanningParametersStr">
+<b>btQueryScanningParametersStr</b></a>
+ - Query scanning parameters
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte btQueryScanningParametersStr(byte *buf, size_t bufSize)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>buf: Pointer to byte</i> - Pointer to buffer where to store the parameters.</li>
+<li><i>bufSize:byte</i> - no hint</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="btSetScanningParameterStr">
+<b>btSetScanningParameterStr</b></a>
+ - Sets the scanning parameters
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte btSetScanningParameterStr(byte *param)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>param: Pointer to byte</i> - Pointer to string with the parameters.</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="btQuerySNIFFParametersStr0">
+<b>btQuerySNIFFParametersStr0</b></a>
+ - Query SNIFF Engergy Savings Parameters
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte btQuerySNIFFParametersStr0(byte *buf, size_t bufSize)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>buf: Pointer to byte</i> - Pointer to buffer where to store the parameters.</li>
+<li><i>bufSize:byte</i> - no hint</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="btSetSNIFFParameterStr">
+<b>btSetSNIFFParameterStr</b></a>
+ - Set SNIFF Energy Saving Parameters
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte btSetSNIFFParameterStr(byte *param)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>param: Pointer to byte</i> - Pointer to string with the parameters.</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="btQuerySecurityEncryptionModesStr">
+<b>btQuerySecurityEncryptionModesStr</b></a>
+ - Query Security &amp; Encryption Modes
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte btQuerySecurityEncryptionModesStr(byte *buf, size_t bufSize)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>buf: Pointer to byte</i> - Pointer to buffer where to store the security and encryption modes, in 'mode', 'encrypt' format.<br />'mode' = Security Mode<br />0 - sec_mode_off (default)<br />1 - sec_mode1_non-secure<br />2 - sec_mode2-service<br />3 - sec_mode3_link<br />4 - sec_mode_unknown<br />'encrypt' = encryption mode<br />0 - hci_enc_mode_off (default)<br />1 - hci_enc_mode_pt_to_pt<br />2 - hci_enc_mode_pt_to_pt_and_bcast</li>
+<li><i>bufSize:byte</i> - no hint</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="btSetSecurityEncryptionModesStr">
+<b>btSetSecurityEncryptionModesStr</b></a>
+ - Set Security &amp; Encryption Modes
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte btSetSecurityEncryptionModesStr(byte *modes)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>modes: Pointer to byte</i> - Pointer to string with the security and encryption modes, in 'mode', 'encrypt' format.<br />'mode' = Security Mode<br />0 - sec_mode_off (default)<br />1 - sec_mode1_non-secure<br />2 - sec_mode2-service<br />3 - sec_mode3_link<br />4 - sec_mode_unknown<br />'encrypt' = encryption mode<br />0 - hci_enc_mode_off (default)<br />1 - hci_enc_mode_pt_to_pt<br />2 - hci_enc_mode_pt_to_pt_and_bcast</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="btDeleteAuthenticatedDeviceFromListStr">
+<b>btDeleteAuthenticatedDeviceFromListStr</b></a>
+ - Deletes an authenticated device from the list
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte btDeleteAuthenticatedDeviceFromListStr(byte *addrString)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>addrString: Pointer to byte</i> - Pointer to address in NAP,UAP,LAP format.</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="btFindDeviceFromAuthenticatedDeviceListStr">
+<b>btFindDeviceFromAuthenticatedDeviceListStr</b></a>
+ - Find Device from Authenthicated Device List
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte btFindDeviceFromAuthenticatedDeviceListStr(byte *addr)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>addr: Pointer to byte</i> - Pointer to address in NAP,UAP,LAP format</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="btQueryTotalNumberOfDeviceFromAuthenticationList">
+<b>btQueryTotalNumberOfDeviceFromAuthenticationList</b></a>
+ - no hint
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte btQueryTotalNumberOfDeviceFromAuthenticationList(byte *nofDevices)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>nofDevices: Pointer to byte</i> - Pointer to where to return the number of authenticated devices in list.</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="btQueryMostRecentlyUsedAuthenticatedDevice">
+<b>btQueryMostRecentlyUsedAuthenticatedDevice</b></a>
+ - Query Most Recently Used Authenticated Device
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte btQueryMostRecentlyUsedAuthenticatedDevice(byte *buf, size_t bufSize)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>buf: Pointer to byte</i> - Pointer to buffer where to the 48bit address string in NAP:UAP:LAP format.</li>
+<li><i>bufSize:byte</i> - no hint</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="btQueryCurrentStateOfDeviceStr">
+<b>btQueryCurrentStateOfDeviceStr</b></a>
+ - Query Current Status of the Device
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte btQueryCurrentStateOfDeviceStr(byte *buf, size_t bufSize)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>buf: Pointer to byte</i> - Pointer to buffer where to the device status string, any one of the following:<br />INITIALIZED<br />READY<br />PAIRABLE<br />PAIRED<br />INQUIRING<br />CONNECTING<br />CONNECTED<br />DISCONNECTED<br />UNKNOWN</li>
+<li><i>bufSize:byte</i> - no hint</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
 
            </ul>
 <!---USERBEG DON'T CHANGE THIS LINE-->
