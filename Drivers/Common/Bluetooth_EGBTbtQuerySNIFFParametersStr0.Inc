@@ -5,7 +5,7 @@
 %;** ===================================================================
 %include Common\GeneralMethod.inc (btQuerySNIFFParametersStr0)
 %;**     Description :
-%;**         Query SNIFF Engergy Savings Parameters
+%;**         Query SNIFF Energy Savings Parameters
 %include Common\GeneralParameters.inc(27)
 %;**       * buf%Parbuf %>27 - Pointer to buffer where to store the
 %;** %>29 parameters.

@@ -4,7 +4,7 @@
     <Name>Bluetooth_EGBT</Name>
     <Description>Driver for the EGBT-045MS e-Gizmo Bluetooth Module</Description>
     <Author>Erich Styger</Author>
-    <Version>01.050</Version>
+    <Version>01.054</Version>
     <Icon>Bluetooth_EGBT</Icon>
     <TypesFiles>PE,Bluetooth_EGBT\Bluetooth_EGBT</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -1388,7 +1388,7 @@ OK\\r\n
         <Name>btQueryMultipleUserIOPins</Name>
         <Symbol>btQueryMultipleUserIOPins</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Queries ultiple User I/O pins</Hint>
+        <Hint>Queries multiple User I/O pins</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -1497,7 +1497,7 @@ OK\\r\n
         <Name>btQuerySNIFFParametersStr0</Name>
         <Symbol>btQuerySNIFFParametersStr0</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Query SNIFF Engergy Savings Parameters</Hint>
+        <Hint>Query SNIFF Energy Savings Parameters</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -1681,7 +1681,7 @@ OK\\r\n
         <Name>btFindDeviceFromAuthenticatedDeviceListStr</Name>
         <Symbol>btFindDeviceFromAuthenticatedDeviceListStr</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Find Device from Authenthicated Device List</Hint>
+        <Hint>Find Device from Authenticated Device List</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -1699,14 +1699,14 @@ OK\\r\n
         <RetHint>Error code</RetHint>
         <ParamCount>1</ParamCount>
         <Parameter>
-          <ParName>addr</ParName>
+          <ParName>addrString</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to address in NAP,UAP,LAP format</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(byte *addr)</ANSIC>
+          <ANSIC>byte #M#_#C#(byte *addrString)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

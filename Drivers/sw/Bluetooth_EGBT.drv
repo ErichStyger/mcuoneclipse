@@ -592,8 +592,8 @@ byte %'ModuleName'%.%btDeleteAuthenticatedDeviceFromListStr(byte *addrString);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN btFindDeviceFromAuthenticatedDeviceListStr
 %ifdef btFindDeviceFromAuthenticatedDeviceListStr
-byte %'ModuleName'%.%btFindDeviceFromAuthenticatedDeviceListStr(byte *addr);
-%define! Paraddr
+byte %'ModuleName'%.%btFindDeviceFromAuthenticatedDeviceListStr(byte *addrString);
+%define! ParaddrString
 %define! RetVal
 %include Common\Bluetooth_EGBTbtFindDeviceFromAuthenticatedDeviceListStr.Inc
 
@@ -1280,7 +1280,7 @@ byte %'ModuleName'%.%btQueryConnectionMethod(byte *method)
   if (buf[0]<'0' || buf[0]>'2') {
     return ERR_FAILED;
   }
-  *mode = buf[0];
+  *method = buf[0];
   return ERR_OK;
 }
 
@@ -1298,11 +1298,11 @@ byte %'ModuleName'%.%btSetConnectionMethod(byte method)
   /* role must be '0' (connect to specified device), '1' (connect to any device) or '2' (test mode) */
   unsigned char buf[sizeof("AT+CMODE=0\r\n")];
 
-  if (role<'0' || role>'2') {
+  if (method<'0' || method>'2') {
     return ERR_FAILED; /* not a valid method */
   }
   %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+CMODE=");
-  %@Utility@'ModuleName'%.chcat(buf, sizeof(buf), mode);
+  %@Utility@'ModuleName'%.chcat(buf, sizeof(buf), method);
   %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   return %'ModuleName'%.StdOKCmd(buf);
 }
@@ -1318,7 +1318,7 @@ byte %'ModuleName'%.%btSetConnectionMethod(byte method)
 %include Common\Bluetooth_EGBTbtQueryBindingBluetoothAddress.Inc
 byte %'ModuleName'%.%btQueryBindingBluetoothAddress(byte *buf, size_t bufSize)
 {
-  /* 15: Query UART Parameters: "AT+BIND?\r\n" ==> "+BIND:<addr>\r\nOK\r\n"
+  /* 15: Query Binding Bluetooth Address: "AT+BIND?\r\n" ==> "+BIND:<addr>\r\nOK\r\n"
      where <addr> = 48 bit bluetooth address in NAP,UAP,LAP format
      Example: Bind with Bluetooth device having address = 00:02:72:0A:3C:7F
      Bluetooth address in NA,UAP,LAP format = 0002,72,0A3C7F
@@ -1336,7 +1336,7 @@ byte %'ModuleName'%.%btQueryBindingBluetoothAddress(byte *buf, size_t bufSize)
 %include Common\Bluetooth_EGBTbtSetBindingBluetoothStr.Inc
 byte %'ModuleName'%.%btSetBindingBluetoothStr(byte *addr)
 {
-  /* 15: Set UART Parameters: "AT+BIND=<addr>\r\n" ==> "OK\r\n"
+  /* 15: Set Binding Bluetooth Address: "AT+BIND=<addr>\r\n" ==> "OK\r\n"
      where <addr> = 48 bit bluetooth address in NAP,UAP,LAP format
      Example: Bind with Bluetooth device having address = 00:02:72:0A:3C:7F
      Bluetooth address in NA,UAP,LAP format = 0002,72,0A3C7F
@@ -1360,12 +1360,15 @@ byte %'ModuleName'%.%btSetBindingBluetoothStr(byte *addr)
 %include Common\Bluetooth_EGBTbtQueryLEDOutputPolarityStr.Inc
 byte %'ModuleName'%.%btQueryLEDOutputPolarityStr(byte *buf, size_t bufSize)
 {
-  /* 15: Query LED: "AT+BIND?\r\n" ==> "+BIND:<addr>\r\nOK\r\n"
-     where <addr> = 48 bit bluetooth address in NAP,UAP,LAP format
-     Example: Bind with Bluetooth device having address = 00:02:72:0A:3C:7F
-     Bluetooth address in NA,UAP,LAP format = 0002,72,0A3C7F
+  /* 16: Query LED output polarity: "AT+POLAR?\r\n" ==> "+POLAR:<led1>,<led2>\r\nOK\r\n"
+     where <led1> = LED1 (pin 31) Polarity
+     0 - LED1 output active low
+     1 - LED1 output active high (default)
+     <led2> = LED2 (pin 32) Polarity
+     0 - LED2 output active low
+     1 - LED2 output active high (default)
   */
-  return %'ModuleName'%.QueryString((unsigned char*)"AT+BIND?", (unsigned char*)"+BIND:", buf, bufSize);
+  return %'ModuleName'%.QueryString((unsigned char*)"AT+POLAR?", (unsigned char*)"+POLAR:", buf, bufSize);
 }
 
 %endif %- btQueryLEDOutputPolarityStr
@@ -1378,7 +1381,20 @@ byte %'ModuleName'%.%btQueryLEDOutputPolarityStr(byte *buf, size_t bufSize)
 %include Common\Bluetooth_EGBTbtSetLEDOutputPolarityStr.Inc
 byte %'ModuleName'%.%btSetLEDOutputPolarityStr(byte *ledPolarityStr)
 {
-  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+  /* 16: Query LED output polarity: "AT+POLAR=<led1>,<led2>\r\n" ==> "OK\r\n"
+     where <led1> = LED1 (pin 31) Polarity
+     0 - LED1 output active low
+     1 - LED1 output active high (default)
+     <led2> = LED2 (pin 32) Polarity
+     0 - LED2 output active low
+     1 - LED2 output active high (default)
+  */
+  unsigned char buf[sizeof("AT+POLAR=0,0\r\n")];
+
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+POLAR=");
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), ledPolarityStr);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  return %'ModuleName'%.StdOKCmd(buf);
 }
 
 %endif %- btSetLEDOutputPolarityStr
@@ -1392,7 +1408,30 @@ byte %'ModuleName'%.%btSetLEDOutputPolarityStr(byte *ledPolarityStr)
 %include Common\Bluetooth_EGBTbtSetUserPinIO.Inc
 byte %'ModuleName'%.%btSetUserPinIO(byte portNumber, bool on)
 {
-  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+  /* 17: Set/Reset a User I/O pin: "AT+PIO=<pn>,<value>\r\n" ==> "OK\r\n"
+     where <pn> = port number. Available port are as follows
+     2 - PIO2
+     3 - PIO3
+     4 - PIO4
+     5 - PIO5
+     6 - PIO6
+     7 - PIO7
+     10 - PIO10
+     <value>
+     0 - Logic Low
+     1 - Logic High
+  */
+  unsigned char buf[sizeof("AT+PIO=0,0\r\n")];
+
+  if (portNumber<2 || portNumber==8 || portNumber==9 || portNumber>10) {
+    return ERR_FAILED; /* wrong port number */
+  }
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+PIO=");
+  %@Utility@'ModuleName'%.chcat(buf, sizeof(buf), (unsigned char)('0'+portNumber));
+  %@Utility@'ModuleName'%.chcat(buf, sizeof(buf), ',');
+  %@Utility@'ModuleName'%.chcat(buf, sizeof(buf), on?'1':'0');
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  return %'ModuleName'%.StdOKCmd(buf);
 }
 
 %endif %- btSetUserPinIO
@@ -1405,7 +1444,26 @@ byte %'ModuleName'%.%btSetUserPinIO(byte portNumber, bool on)
 %include Common\Bluetooth_EGBTbtSetMultipleUserIOPins.Inc
 byte %'ModuleName'%.%btSetMultipleUserIOPins(word mask)
 {
-  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+  /* 18: Set/Reset multiple User I/O pin: "AT+MPIO=<iomap>\r\n" ==> "OK\r\n"
+     where <iomap> is a 12bit number presented in hexadecimal
+     bit 2 - PIO2
+     bit 3 - PIO3
+     bit 4 - PIO4
+     bit 5 - PIO5
+     bit 6 - PIO6
+     bit 7 - PIO7
+     bit 10 - PIO10
+     <value>
+     0 - Logic Low
+     1 - Logic High
+  */
+  unsigned char buf[sizeof("AT+MPIO=000\r\n")];
+
+  mask &= 0x4FC; /* mask out the used bits */
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+MPIO=");
+  %@Utility@'ModuleName'%.strcatNum16Hex(buf, sizeof(buf), mask);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  return %'ModuleName'%.StdOKCmd(buf);
 }
 
 %endif %- btSetMultipleUserIOPins
@@ -1418,7 +1476,27 @@ byte %'ModuleName'%.%btSetMultipleUserIOPins(word mask)
 %include Common\Bluetooth_EGBTbtQueryMultipleUserIOPins.Inc
 byte %'ModuleName'%.%btQueryMultipleUserIOPins(word *mask)
 {
-  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+  /* 19: Query User Pin I/O: "AT+MPIO?\r\n" ==> "+MPIO:<iomap>\r\nOK\r\n"
+     where <iomap> is a 12bit number presented in hexadecimal
+     bit 2 - PIO2
+     bit 3 - PIO3
+     bit 4 - PIO4
+     bit 5 - PIO5
+     bit 6 - PIO6
+     bit 7 - PIO7
+     bit 10 - PIO10
+     <value>
+     0 - Logic Low
+     1 - Logic High
+  */
+  unsigned char buf[sizeof("AAA")];
+  const unsigned char *p;
+
+  if (%'ModuleName'%.QueryString((unsigned char*)"AT+MPIO?", (unsigned char*)"+MPIO:", buf, sizeof(buf))!=ERR_OK) {
+    return ERR_FAILED;
+  }
+  p = &buf[0];
+  return %@Utility@'ModuleName'%.ScanHex16uNumber(&p, mask);
 }
 
 %endif %- btQueryMultipleUserIOPins
@@ -1432,7 +1510,17 @@ byte %'ModuleName'%.%btQueryMultipleUserIOPins(word *mask)
 %include Common\Bluetooth_EGBTbtQueryScanningParametersStr.Inc
 byte %'ModuleName'%.%btQueryScanningParametersStr(byte *buf, size_t bufSize)
 {
-  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+  /* 20: Query Scanning Parameters: "AT+IPSCAN?\r\n" ==> "+IPSCAN:<int>,<dur>,<pint>,<pdur>\r\nOK\r\n"
+     where <int> = inquire scan time interval
+    1024 - default
+    <dur> = inquire scan time duration
+    512 - default
+    <pint> = page scan time interval
+    1024 - default
+    <pdur> = page scan time duration
+    512 - default
+  */
+  return %'ModuleName'%.QueryString((unsigned char*)"AT+IPSCAN?", (unsigned char*)"+IPSCAN:", buf, bufSize);
 }
 
 %endif %- btQueryScanningParametersStr
@@ -1445,7 +1533,22 @@ byte %'ModuleName'%.%btQueryScanningParametersStr(byte *buf, size_t bufSize)
 %include Common\Bluetooth_EGBTbtSetScanningParameterStr.Inc
 byte %'ModuleName'%.%btSetScanningParameterStr(byte *param)
 {
-  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+  /* 20: Set Scanning Parameters: "AT+IPSCAN=<int>,<dur>,<pint>,<pdur>\r\n" ==> "OK\r\n"
+     where <int> = inquire scan time interval
+    1024 - default
+    <dur> = inquire scan time duration
+    512 - default
+    <pint> = page scan time interval
+    1024 - default
+    <pdur> = page scan time duration
+    512 - default
+  */
+  unsigned char buf[sizeof("AT+IPSCAN=32000,32000,32000,32000,32000\r\n")];
+
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+IPSCAN=");
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), param);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  return %'ModuleName'%.StdOKCmd(buf);
 }
 
 %endif %- btSetScanningParameterStr
@@ -1459,7 +1562,18 @@ byte %'ModuleName'%.%btSetScanningParameterStr(byte *param)
 %include Common\Bluetooth_EGBTbtQuerySNIFFParametersStr0.Inc
 byte %'ModuleName'%.%btQuerySNIFFParametersStr0(byte *buf, size_t bufSize)
 {
-  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+  /* 21: Query SNIFF Energy Savings Parameters: "AT+SNIFF?\r\n" ==> "+SNIFF:<tmax>,<tmin>,<retry>,<timeout>\r\nOK\r\n"
+     where <tmax> = maximum time
+     0 - default
+     <tmin> = minimum time
+     0 - default
+     <retry> = retry time
+     0 - default
+     <timeout> = timeout
+     0 - default
+     All parameters must be represented with decimal integer value.
+   */
+  return %'ModuleName'%.QueryString((unsigned char*)"AT+SNIFF?", (unsigned char*)"+SNIFF:", buf, bufSize);
 }
 
 %endif %- btQuerySNIFFParametersStr0
@@ -1472,7 +1586,23 @@ byte %'ModuleName'%.%btQuerySNIFFParametersStr0(byte *buf, size_t bufSize)
 %include Common\Bluetooth_EGBTbtSetSNIFFParameterStr.Inc
 byte %'ModuleName'%.%btSetSNIFFParameterStr(byte *param)
 {
-  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+  /* 20: Set SNIFF Energy Savings Parameters: "AT+SNIFF=<tmax>,<tmin>,<retry>,<timeout>\r\n" ==> "OK\r\n"
+     where <tmax> = maximum time
+     0 - default
+     <tmin> = minimum time
+     0 - default
+     <retry> = retry time
+     0 - default
+     <timeout> = timeout
+     0 - default
+     All parameters must be represented with decimal integer value.
+  */
+  unsigned char buf[sizeof("AT+SNIFF=32000,32000,32000,32000,32000\r\n")];
+
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+SNIFF=");
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), param);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  return %'ModuleName'%.StdOKCmd(buf);
 }
 
 %endif %- btSetSNIFFParameterStr
@@ -1486,7 +1616,19 @@ byte %'ModuleName'%.%btSetSNIFFParameterStr(byte *param)
 %include Common\Bluetooth_EGBTbtQuerySecurityEncryptionModesStr.Inc
 byte %'ModuleName'%.%btQuerySecurityEncryptionModesStr(byte *buf, size_t bufSize)
 {
-  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+  /* 22: Query Security and Encryption Modes: "AT+SENM?\r\n" ==> "+SENM:<mode>,<encrypt>\r\nOK\r\n"
+     where <mode> = Security Mode
+     0 - sec_mode_off (default)
+     1 - sec_mode1_non-secure
+     2 - sec_mode2-service
+     3 - sec_mode3_link
+     4 - sec_mode_unknown
+     <encrypt> = encryption mode
+     0 - hci_enc_mode_off (default)
+     1 - hci_enc_mode_pt_to_pt
+     2 - hci_enc_mode_pt_to_pt_and_bcast
+  */
+  return %'ModuleName'%.QueryString((unsigned char*)"AT+SENM?", (unsigned char*)"+SENM:", buf, bufSize);
 }
 
 %endif %- btQuerySecurityEncryptionModesStr
@@ -1499,7 +1641,24 @@ byte %'ModuleName'%.%btQuerySecurityEncryptionModesStr(byte *buf, size_t bufSize
 %include Common\Bluetooth_EGBTbtSetSecurityEncryptionModesStr.Inc
 byte %'ModuleName'%.%btSetSecurityEncryptionModesStr(byte *modes)
 {
-  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+  /* 22: Set Security and Encryption Modes: "AT+SENM=<mode>,<encrypt>\r\n" ==> "OK\r\n"
+     where <mode> = Security Mode
+     0 - sec_mode_off (default)
+     1 - sec_mode1_non-secure
+     2 - sec_mode2-service
+     3 - sec_mode3_link
+     4 - sec_mode_unknown
+     <encrypt> = encryption mode
+     0 - hci_enc_mode_off (default)
+     1 - hci_enc_mode_pt_to_pt
+     2 - hci_enc_mode_pt_to_pt_and_bcast
+  */
+  unsigned char buf[sizeof("AT+SENM=0,0\r\n")];
+
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+SENM=");
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), modes);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  return %'ModuleName'%.StdOKCmd(buf);
 }
 
 %endif %- btSetSecurityEncryptionModesStr
@@ -1512,7 +1671,18 @@ byte %'ModuleName'%.%btSetSecurityEncryptionModesStr(byte *modes)
 %include Common\Bluetooth_EGBTbtDeleteAuthenticatedDeviceFromListStr.Inc
 byte %'ModuleName'%.%btDeleteAuthenticatedDeviceFromListStr(byte *addrString)
 {
-  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+  /* 23: Delete Authenticated Device from List: "AT+RMSAD=<addr>\r\n" ==> "OK\r\n"
+     where <addr> = 48 bit bluetooth address in NAP,UAP,LAP format
+     Example: Remove from Authenticated Device list a Bluetooth
+     device having address = 00:02:72:0A:3C:7F
+     Bluetooth address in NA,UAP,LAP format = 0002,72,0A3C7F
+  */
+  unsigned char buf[sizeof("AT+RMSAD=0002,72,0A3C7F\r\n")];
+
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+REMSAD=");
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), addrString);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  return %'ModuleName'%.StdOKCmd(buf);
 }
 
 %endif %- btDeleteAuthenticatedDeviceFromListStr
@@ -1520,12 +1690,22 @@ byte %'ModuleName'%.%btDeleteAuthenticatedDeviceFromListStr(byte *addrString)
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN btFindDeviceFromAuthenticatedDeviceListStr
 %ifdef btFindDeviceFromAuthenticatedDeviceListStr
-%define! Paraddr
+%define! ParaddrString
 %define! RetVal
 %include Common\Bluetooth_EGBTbtFindDeviceFromAuthenticatedDeviceListStr.Inc
-byte %'ModuleName'%.%btFindDeviceFromAuthenticatedDeviceListStr(byte *addr)
+byte %'ModuleName'%.%btFindDeviceFromAuthenticatedDeviceListStr(byte *addrString)
 {
-  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+  /* 24: Find Device from Authenticated Device List: "AT+FSAD=<addr>\r\n" ==> "OK\r\n"
+     where <addr> = 48 bit bluetooth address in NAP,UAP,LAP format
+     Note: AT+FSAD returns a FAIL response if device is not
+     in the authenticated list
+   */
+  unsigned char buf[sizeof("AT+FSAD=0002,72,0A3C7F\r\n")];
+
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+FSAD=");
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), addrString);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  return %'ModuleName'%.StdOKCmd(buf);
 }
 
 %endif %- btFindDeviceFromAuthenticatedDeviceListStr
@@ -1538,7 +1718,17 @@ byte %'ModuleName'%.%btFindDeviceFromAuthenticatedDeviceListStr(byte *addr)
 %include Common\Bluetooth_EGBTbtQueryTotalNumberOfDeviceFromAuthenticationList.Inc
 byte %'ModuleName'%.%btQueryTotalNumberOfDeviceFromAuthenticationList(byte *nofDevices)
 {
-  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+  /* 25: Query Total Number of Device from Authenticated Device List: "AT+ADCN?\r\n" ==> "+ADCN:<total>\r\nOK\r\n"
+     where <total> = total number of devices in the authenticated device list
+   */
+  unsigned char buf[sizeof("1024")];
+  const unsigned char *p;
+
+  if (%'ModuleName'%.QueryString((unsigned char*)"AT+ADCN?", (unsigned char*)"+ADCN:", buf, sizeof(buf))!=ERR_OK) {
+    return ERR_FAILED;
+  }
+  p = &buf[0];
+  return %@Utility@'ModuleName'%.ScanDecimal8uNumber(&p, nofDevices);
 }
 
 %endif %- btQueryTotalNumberOfDeviceFromAuthenticationList
@@ -1552,7 +1742,10 @@ byte %'ModuleName'%.%btQueryTotalNumberOfDeviceFromAuthenticationList(byte *nofD
 %include Common\Bluetooth_EGBTbtQueryMostRecentlyUsedAuthenticatedDevice.Inc
 byte %'ModuleName'%.%btQueryMostRecentlyUsedAuthenticatedDevice(byte *buf, size_t bufSize)
 {
-  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+  /* 26: Query Most Recently Used Authenticated Device: "AT+MRAD?\r\n" ==> "+MRAD:<tmax>,<tmin>,<retry>,<timeout>\r\nOK\r\n"
+     where <addr> = 48 bit bluetooth address in NAP:UAP:LAP format
+   */
+  return %'ModuleName'%.QueryString((unsigned char*)"AT+MRAD?", (unsigned char*)"+MRAD:", buf, bufSize);
 }
 
 %endif %- btQueryMostRecentlyUsedAuthenticatedDevice
@@ -1566,7 +1759,20 @@ byte %'ModuleName'%.%btQueryMostRecentlyUsedAuthenticatedDevice(byte *buf, size_
 %include Common\Bluetooth_EGBTbtQueryCurrentStateOfDeviceStr.Inc
 byte %'ModuleName'%.%btQueryCurrentStateOfDeviceStr(byte *buf, size_t bufSize)
 {
-  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+  /* 27: Query Current Status of the Device: "AT+STATE?\r\n" ==> "+STATE:<stat>\r\nOK\r\n"
+     where
+     <stat> = Current Status, any one of the following:
+     INITIALIZED
+     READY
+     PAIRABLE
+     PAIRED
+     INQUIRING
+     CONNECTING
+     CONNECTED
+     DISCONNECTED
+     UNKNOWN
+   */
+  return %'ModuleName'%.QueryString((unsigned char*)"AT+STATE?", (unsigned char*)"+STATE:", buf, bufSize);
 }
 
 %endif %- btQueryCurrentStateOfDeviceStr

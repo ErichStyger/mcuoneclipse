@@ -5,7 +5,7 @@
 %;** ===================================================================
 %include Common\GeneralMethod.inc (btQueryMultipleUserIOPins)
 %;**     Description :
-%;**         Queries ultiple User I/O pins
+%;**         Queries multiple User I/O pins
 %include Common\GeneralParameters.inc(27)
 %;**       * mask%Parmask %>27 - Pointer to 12 Bit mask (0 for clear/low
 %;** %>29 level, 1 for set/high level). Mapping to

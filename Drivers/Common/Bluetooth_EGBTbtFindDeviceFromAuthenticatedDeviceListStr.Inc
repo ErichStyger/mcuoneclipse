@@ -5,9 +5,10 @@
 %;** ===================================================================
 %include Common\GeneralMethod.inc (btFindDeviceFromAuthenticatedDeviceListStr)
 %;**     Description :
-%;**         Find Device from Authenthicated Device List
+%;**         Find Device from Authenticated Device List
 %include Common\GeneralParameters.inc(27)
-%;**       * addr%Paraddr %>27 - Pointer to address in NAP,UAP,LAP format
+%;**       * addrString%ParaddrString %>27 - Pointer to address in NAP,
+%;** %>29 UAP,LAP format
 %;**     Returns     :
 %;**         ---%RetVal %>27 - Error code
 %include Common\GeneralDamage.inc
