@@ -4,7 +4,7 @@
     <Name>Bluetooth_EGBT</Name>
     <Description>Driver for the EGBT-045MS e-Gizmo Bluetooth Module</Description>
     <Author>Erich Styger</Author>
-    <Version>01.054</Version>
+    <Version>01.058</Version>
     <Icon>Bluetooth_EGBT</Icon>
     <TypesFiles>PE,Bluetooth_EGBT\Bluetooth_EGBT</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -217,6 +217,58 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>%'ModuleName'_TConstStringPtr #M#_#C#(%'ModuleName'_TEnumErrors errorNo)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>SendATCommand</Name>
+        <Symbol>SendATCommand</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Sends an AT command string (with the AT in it) to the module.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>4</ParamCount>
+        <Parameter>
+          <ParName>cmd</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to AT command string with the AT in it</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>rxBuf</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to buffer for the response from the device</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>rxBufSize</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>size of the receiving buffer in bytes</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>expectedTailStr</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the function will read from the device until the expected tail string is read. Typically this is "OK\r\n"</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte *cmd, byte *rxBuf, byte rxBufSize, byte *expectedTailStr)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1494,8 +1546,8 @@ OK\\r\n
     </Method>
     <Method>
       <TMthdItem>
-        <Name>btQuerySNIFFParametersStr0</Name>
-        <Symbol>btQuerySNIFFParametersStr0</Symbol>
+        <Name>btQuerySNIFFParametersStr</Name>
+        <Symbol>btQuerySNIFFParametersStr</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
         <Hint>Query SNIFF Energy Savings Parameters</Hint>
         <ItemLevel>BASIC</ItemLevel>

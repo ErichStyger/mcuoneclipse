@@ -2,7 +2,7 @@
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=windows-1250">
 <title>
-Bean documentation - General info
+Bean documentation - Application Notes
 </title>
 <STYLE type="text/css">
 body{
@@ -126,10 +126,10 @@ LI.EXP {
 
 <body>
 
-<table border="0"  cellspacing="0" cellpadding="0">
+<table border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td valign="top" width="150" >
-      <table width="150" height="160" cellpadding="3" cellspacing="0" border="0">
+      <table  width="150" height="160" cellpadding="3" cellspacing="0" border="0">
         <tbody>
         <tr class="lefttitlebox">
           <td width="4"></td>
@@ -145,8 +145,8 @@ LI.EXP {
             &nbsp;<br />
             <div class="reflink">
 <!---HTMLLISTBEG_SHORT DON'T CHANGE THIS LINE-->
-<i>General Info</i><br />
-<a href="Bluetooth_EGBTApplication Notes.html">Application Notes</a><br />
+<a href="Bluetooth_EGBT.html">General Info</a><br />
+<i>Application Notes</i><br />
 <a href="Bluetooth_EGBTEvents.html">Events</a><br />
 <a href="Bluetooth_EGBTMethods.html">Methods</a><br />
 <a href="Bluetooth_EGBTProperties.html">Properties</a><br />
@@ -178,7 +178,7 @@ LI.EXP {
                 
                 
                 Bluetooth_EGBT
-              </div>              
+              </div>
               <div class="descrtext">Driver for the EGBT-045MS e-Gizmo Bluetooth Module</div>
               <div class="info_name">Component Level: <span class="info_text"><a href="../../DOCs/BeanCategoriesInfo.html#LevelAbstraction">High</a></span></div>
               <div class="info_name">Category: 
@@ -188,25 +188,43 @@ LI.EXP {
                 </span>
               </div>
             </div>
-            <div class="user_text">
-<!---DESCBEG DON'T CHANGE THIS-->
-Implements a driver for the HC-05 Bluetooth module.
-
-Vendors of this module:
-<ul>
-  <li><a href="http://www.wavesen.com/probig.asp?id=10">www.wavesen.com</a></li>
-  <li><a href="http://www.suntekstore.com/goods-14001625-wireless_bluetooth_transceiver_module_ttl.html">www.suntekstore.com</a></li>
-  <li><a href="http://www.e-gizmo.com/KIT/egbt-04.htm">www.e-gizmo.com</a></li>
-</ul>
-See the above links for additional information or data sheets.
-
-<!---DESCEND DON'T CHANGE THIS-->
-            </div>
-           <p class="footer">
-            PROCESSOR EXPERT is trademark of Freescale Semiconductor, Inc.
-            <br />
             
-           </p> 
+            <div class="text_title">
+                  Application Notes:
+       		  </div>		 
+      		  <div class="descr_line">                  
+                  (Examples, notes and hints for the component usage.)                   
+            </div>            
+<!---DESCBEG DON'T CHANGE THIS-->
+<div class="user_text">
+Default settings of HC-05 device as setup by the vendor:
+</div>
+<PRE>
+Firmware Version: 2.0-20100601
+Device Name: HC-05
+Bluetooth Address: 12:7:181962
+Role: 0 (slave)
+IAC: 9e8b33
+IAM: 1,1,48
+Pairing Passkey: 1234
+UART Parameter: 9600,0,0
+Connection method: 0 (specific address only)
+Binding Bluetooth Address: 0:0:0
+Output LED polarity: 1,1
+Multiple User I/O pins: 0800
+Scanning Parameters: 1024,512,1024,512
+SNIFF Parameters: 0,0,0,0
+Security and Encryption Modes: 0,0
+Total number of authenticated devices: 6
+Most recently authenticated Device: 1a:6b:e6ea3a
+Current State of Device: PAIRABLE
+</PRE>
+<!---DESCEND DON'T CHANGE THIS-->
+            <p class="footer">
+              PROCESSOR EXPERT is trademark of Freescale Semiconductor, Inc.
+              <br />
+              
+            </p>
     </td>
   </tr>
 

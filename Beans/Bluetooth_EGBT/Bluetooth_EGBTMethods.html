@@ -2,7 +2,7 @@
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=windows-1250">
 <title>
-Component  documentation - Methods
+Bean  documentation - Methods
 </title>
 <STYLE type="text/css">
 body{
@@ -146,20 +146,16 @@ LI.EXP {
             <div class="reflink">
 <!---HTMLLISTBEG_SHORT DON'T CHANGE THIS LINE-->
 <a href="Bluetooth_EGBT.html">General Info</a><br />
-<a href="Bluetooth_EGBTProperties.html">Properties</a><br />
-<i>Methods</i><br />
+<a href="Bluetooth_EGBTApplication Notes.html">Application Notes</a><br />
 <a href="Bluetooth_EGBTEvents.html">Events</a><br />
+<i>Methods</i><br />
+<a href="Bluetooth_EGBTProperties.html">Properties</a><br />
 <!---HTMLLISTEND DON'T CHANGE THIS LINE-->
 <br /><br /><br />
-<a href="../../DOCs/PredefSymbols.html">Types &amp; definitions</a><br/>
-<a href="../../DOCs/BEANindex.html">Component Index</a><br/>
-<a href="../../DOCs/CPUindex.html">CPU Component Index</a><br/>
-<a href="../../DOCs/EmbeddedBeans.html">Embedded Components</a><br/>
-<a href="../../DOCs/BeanCategories.html">Components Categories</a><br/>
 
 <br /><br /><br />
 <center>
-<img src="Bluetooth_EGBT_b.gif" alt="Component icon"/>
+<img src="Bluetooth_EGBT_b.gif" alt="Bean icon"/>
 
 
 </center>
@@ -178,7 +174,7 @@ LI.EXP {
 
          <div class="titlebox">
             <div class="beanname">
-              Component
+              Bean
               
               
               Bluetooth_EGBT
@@ -244,6 +240,21 @@ LI.EXP {
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>errorNo:<i>ComponentName_</i>TEnumErrors</i> - no hint</li>
 <li><i>Return value:<i>ComponentName_</i>TConstStringPtr</i> - Error string
+</li>
+</ul><br />
+</li>
+<li><a name="SendATCommand">
+<b>SendATCommand</b></a>
+ - Sends an AT command string (with the AT in it) to the module.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte SendATCommand(byte *cmd, byte *rxBuf, byte rxBufSize, byte *expectedTailStr)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>cmd: Pointer to byte</i> - Pointer to AT command string with the AT in it</li>
+<li><i>rxBuf: Pointer to byte</i> - Pointer to buffer for the response from the device</li>
+<li><i>rxBufSize:byte</i> - size of the receiving buffer in bytes</li>
+<li><i>expectedTailStr: Pointer to byte</i> - Pointer to the function will read from the device until the expected tail string is read. Typically this is &quot;OK\r<br />&quot;</li>
+<li><i>Return value:byte</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -671,12 +682,12 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
-<li><a name="btQuerySNIFFParametersStr0">
-<b>btQuerySNIFFParametersStr0</b></a>
+<li><a name="btQuerySNIFFParametersStr">
+<b>btQuerySNIFFParametersStr</b></a>
  - Query SNIFF Energy Savings Parameters
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte btQuerySNIFFParametersStr0(byte *buf, size_t bufSize)<br />
+<br /><i>ANSIC prototype:</i> byte btQuerySNIFFParametersStr(byte *buf, size_t bufSize)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>buf: Pointer to byte</i> - Pointer to buffer where to store the parameters.</li>
 <li><i>bufSize:byte</i> - no hint</li>

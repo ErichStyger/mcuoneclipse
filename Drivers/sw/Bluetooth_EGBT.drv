@@ -538,16 +538,16 @@ byte %'ModuleName'%.%btSetScanningParameterStr(byte *param);
 %endif %- btSetScanningParameterStr
 %-BW_METHOD_END btSetScanningParameterStr
 %-************************************************************************************************************
-%-BW_METHOD_BEGIN btQuerySNIFFParametersStr0
-%ifdef btQuerySNIFFParametersStr0
-byte %'ModuleName'%.%btQuerySNIFFParametersStr0(byte *buf, size_t bufSize);
+%-BW_METHOD_BEGIN btQuerySNIFFParametersStr
+%ifdef btQuerySNIFFParametersStr
+byte %'ModuleName'%.%btQuerySNIFFParametersStr(byte *buf, size_t bufSize);
 %define! Parbuf
 %define! ParbufSize
 %define! RetVal
-%include Common\Bluetooth_EGBTbtQuerySNIFFParametersStr0.Inc
+%include Common\Bluetooth_EGBTbtQuerySNIFFParametersStr.Inc
 
-%endif %- btQuerySNIFFParametersStr0
-%-BW_METHOD_END btQuerySNIFFParametersStr0
+%endif %- btQuerySNIFFParametersStr
+%-BW_METHOD_END btQuerySNIFFParametersStr
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN btSetSNIFFParameterStr
 %ifdef btSetSNIFFParameterStr
@@ -631,6 +631,19 @@ byte %'ModuleName'%.%btQueryCurrentStateOfDeviceStr(byte *buf, size_t bufSize);
 
 %endif %- btQueryCurrentStateOfDeviceStr
 %-BW_METHOD_END btQueryCurrentStateOfDeviceStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SendATCommand
+%ifdef SendATCommand
+byte %'ModuleName'%.%SendATCommand(byte *cmd, byte *rxBuf, byte rxBufSize, byte *expectedTailStr);
+%define! Parcmd
+%define! ParrxBuf
+%define! ParrxBufSize
+%define! ParexpectedTailStr
+%define! RetVal
+%include Common\Bluetooth_EGBTSendATCommand.Inc
+
+%endif %- SendATCommand
+%-BW_METHOD_END SendATCommand
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -703,6 +716,38 @@ static const unsigned char *%'ModuleName'%.ErrorStringTable[] = {
   /*! \todo extend table */
 };
 
+static bool isRxError(unsigned char *buf, uint8_t *errno) {
+  /* return true for "ERROR:(1D)\r\n" at the end of the buffer and returns the error */
+  size_t idx;
+  unsigned char ch_low, ch_high;
+  const unsigned char *p;
+  unsigned char hexBuf[sizeof("0x1F")];
+  #define _IS_ERR_NUMBER(ch) ((ch>='0' && ch<='9') || (ch>='A' && ch<='D')) /* 0..1D */
+
+  idx = %@Utility@'ModuleName'%.strlen((char*)buf);
+  if (idx>=sizeof("ERROR(0)\r\n")) {
+    if (%@Utility@'ModuleName'%.strtailcmp(buf, (unsigned char*)")\r\n")==0) {
+      if (%@Utility@'ModuleName'%.strncmp((char*)&buf[idx-sizeof("ERROR(0)\r\n")-1], (char*)"ERROR(", sizeof("ERROR("))==0) {
+        ch_high = '0';
+        ch_low = buf[idx-sizeof("0)\r\n")-1];
+      } else if (%@Utility@'ModuleName'%.strncmp((char*)&buf[idx-sizeof("ERROR(00)\r\n")-1], (char*)"ERROR(", sizeof("ERROR("))==0) {
+        ch_high = buf[idx-sizeof("00)\r\n")-1];
+        ch_low = buf[idx-sizeof("0)\r\n")-1];
+      }
+      if (_IS_ERR_NUMBER(ch_high) && _IS_ERR_NUMBER(ch_low)) {
+        %@Utility@'ModuleName'%.strcpy(hexBuf, sizeof(hexBuf), (unsigned char*)"0x");
+        %@Utility@'ModuleName'%.chcat(hexBuf, sizeof(hexBuf), ch_high);
+        %@Utility@'ModuleName'%.chcat(hexBuf, sizeof(hexBuf), ch_low);
+        p = &hexBuf[0];
+        if (%@Utility@'ModuleName'%.ScanHex8uNumber(&p, errno)==ERR_OK) {
+          return TRUE; /* bingo! */
+        }
+      }
+    }
+  }
+  return FALSE; /* not an error */
+}
+
 static uint8_t RxResponse(unsigned char *rxBuf, uint8_t rxBufLength, uint16_t msTimeout, unsigned char *expectedTail) {
   unsigned char ch;
   uint8_t res = ERR_OK;
@@ -730,6 +775,8 @@ static uint8_t RxResponse(unsigned char *rxBuf, uint8_t rxBufLength, uint16_t ms
       rxBufLength--;
     } else if (%@Utility@'ModuleName'%.strtailcmp(rxBuf, expectedTail)==0) {
       break; /* finished */
+    } else if (isRxError(rxBuf, &%'ModuleName'%.lastErr)) {
+      break; /* error */
     } else {
       %@Wait@'ModuleName'%.Waitms(1);
       msTimeout--;
@@ -737,21 +784,38 @@ static uint8_t RxResponse(unsigned char *rxBuf, uint8_t rxBufLength, uint16_t ms
   } /* for */
   return res;
 }
-
-static uint8_t TxCommand(unsigned char *cmd, unsigned char *rxBuf, uint8_t rxBufLength, unsigned char *expectedTail) {
-  uint16_t snt;
-
-  if (%@Serial@'ModuleName'%.SendBlock(cmd, %@Utility@'ModuleName'%.strlen((char*)cmd), &snt)!=ERR_OK) {
-    return ERR_FAILED;
-  }
-  return RxResponse(rxBuf, rxBufLength, %'ModuleName'%.TIMEOUT_MS, expectedTail);
-}
 %-
 %-BW_CUSTOM_VARIABLE_END
 %-BW_INTERN_METHOD_DECL_START
 %- List of internal methods headers
 %-BW_INTERN_METHOD_DECL_END
 %-BW_IMPLEMENT_START
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SendATCommand
+%ifdef SendATCommand
+%define! Parcmd
+%define! ParrxBuf
+%define! ParrxBufSize
+%define! ParexpectedTailStr
+%define! RetVal
+%include Common\Bluetooth_EGBTSendATCommand.Inc
+byte %'ModuleName'%.%SendATCommand(byte *cmd, byte *rxBuf, byte rxBufSize, byte *expectedTailStr)
+{
+  uint16_t snt;
+  byte res;
+
+  %'ModuleName'%.SET_CMD_MODE();
+  %'ModuleName'%.CLR_RX_BUF();
+  if (%@Serial@'ModuleName'%.SendBlock(cmd, %@Utility@'ModuleName'%.strlen((char*)cmd), &snt)!=ERR_OK) {
+    return ERR_FAILED;
+  }
+  res = RxResponse(rxBuf, rxBufSize, %'ModuleName'%.TIMEOUT_MS, expectedTailStr);
+  %'ModuleName'%.SET_DATA_MODE();
+  return res;
+}
+
+%endif %- SendATCommand
+%-BW_METHOD_END SendATCommand
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN StdCmd
 %ifdef StdCmd
@@ -769,10 +833,8 @@ byte %'ModuleName'%.%StdCmd(byte *cmd, byte *rxBuf, size_t rxBufSize, byte *expe
 
   %@Utility@'ModuleName'%.strcpy(cmdBuf, sizeof(cmdBuf), cmd);
   %@Utility@'ModuleName'%.strcat(cmdBuf, sizeof(cmdBuf), (unsigned char*)"\r\n");
-  %'ModuleName'%.SET_CMD_MODE();
-  %'ModuleName'%.CLR_RX_BUF();
   for(;;) { /* breaks */
-    if (TxCommand(cmdBuf, rxBuf, rxBufSize, expectedResponse)!=ERR_OK) {
+    if (%'ModuleName'%.SendATCommand(cmdBuf, rxBuf, rxBufSize, expectedResponse)!=ERR_OK) {
       res = ERR_FAILED;
       break;
     }
@@ -782,7 +844,6 @@ byte %'ModuleName'%.%StdCmd(byte *cmd, byte *rxBuf, size_t rxBufSize, byte *expe
     }
     break; /* exit for(;;) */
   } /* for */
-  %'ModuleName'%.SET_DATA_MODE();
   return res;
 }
 
@@ -824,12 +885,10 @@ byte %'ModuleName'%.%QueryString(byte *cmd, byte *expectedResponse, byte *string
 
   responseLen = %@Utility@'ModuleName'%.strlen((char*)expectedResponse);
   string[0] = '\0'; /* initialize buffer */
-  %'ModuleName'%.SET_CMD_MODE();
-  %'ModuleName'%.CLR_RX_BUF();
   %@Utility@'ModuleName'%.strcpy(cmdBuf, sizeof(cmdBuf), cmd);
   %@Utility@'ModuleName'%.strcat(cmdBuf, sizeof(cmdBuf), (unsigned char*)"\r\n");
   for(;;) { /* breaks */
-    if (TxCommand(cmdBuf, rxBuf, sizeof(rxBuf), (unsigned char*)"\r\nOK\r\n")!=ERR_OK) {
+    if (%'ModuleName'%.SendATCommand(cmdBuf, rxBuf, sizeof(rxBuf), (unsigned char*)"\r\nOK\r\n")!=ERR_OK) {
       res = ERR_FAILED;
       break;
     }
@@ -844,7 +903,6 @@ byte %'ModuleName'%.%QueryString(byte *cmd, byte *expectedResponse, byte *string
     %@Utility@'ModuleName'%.strcpy(string, stringSize, &rxBuf[responseLen]); /* store name */
     break; /* exit for(;;) */
   } /* for */
-  %'ModuleName'%.SET_DATA_MODE();
   return res;
 }
 
@@ -1271,10 +1329,17 @@ byte %'ModuleName'%.%btSetUARTParameterStr(byte *param)
 %include Common\Bluetooth_EGBTbtQueryConnectionMethod.Inc
 byte %'ModuleName'%.%btQueryConnectionMethod(byte *method)
 {
-  /* 14: Query connection method: "AT+CMODE?\r\n" ==> "+CMODE:<mode>\r\nOK\r\n" */
+  /* 14: Query connection method: "AT+CMODE?\r\n" ==> "+CMOD:<mode>\r\nOK\r\n" */
+  /* NOTE: the documentation says the device should respond with "+CMODE", but actually it responds with "+CMOD"! */
+  /* where <mode>
+     0 - Connect to a specified Bluetooth device only (default).
+     See related command Command 15.
+     1 - Can connect with any other Bluetooth device.
+     2 - Test mode
+  */
   unsigned char buf[2];
 
-  if (%'ModuleName'%.QueryString((unsigned char*)"AT+CMODE?", (unsigned char*)"+CMODE:", buf, sizeof(buf))!=ERR_OK) {
+  if (%'ModuleName'%.QueryString((unsigned char*)"AT+CMODE?", (unsigned char*)"+CMOD:", buf, sizeof(buf))!=ERR_OK) {
     return ERR_FAILED;
   }
   if (buf[0]<'0' || buf[0]>'2') {
@@ -1296,6 +1361,12 @@ byte %'ModuleName'%.%btSetConnectionMethod(byte method)
 {
   /* 14: Set connection method: "AT+CMODE=<mode>\r\n" ==> "OK\r\n" */
   /* role must be '0' (connect to specified device), '1' (connect to any device) or '2' (test mode) */
+  /* where <mode>
+     0 - Connect to a specified Bluetooth device only (default).
+     See related command Command 15.
+     1 - Can connect with any other Bluetooth device.
+     2 - Test mode
+  */
   unsigned char buf[sizeof("AT+CMODE=0\r\n")];
 
   if (method<'0' || method>'2') {
@@ -1489,10 +1560,11 @@ byte %'ModuleName'%.%btQueryMultipleUserIOPins(word *mask)
      0 - Logic Low
      1 - Logic High
   */
-  unsigned char buf[sizeof("AAA")];
+  unsigned char buf[sizeof("0xAAA")];
   const unsigned char *p;
 
-  if (%'ModuleName'%.QueryString((unsigned char*)"AT+MPIO?", (unsigned char*)"+MPIO:", buf, sizeof(buf))!=ERR_OK) {
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+  if (%'ModuleName'%.QueryString((unsigned char*)"AT+MPIO?", (unsigned char*)"+MPIO:", buf+2, sizeof(buf-2))!=ERR_OK) {
     return ERR_FAILED;
   }
   p = &buf[0];
@@ -1554,13 +1626,13 @@ byte %'ModuleName'%.%btSetScanningParameterStr(byte *param)
 %endif %- btSetScanningParameterStr
 %-BW_METHOD_END btSetScanningParameterStr
 %-************************************************************************************************************
-%-BW_METHOD_BEGIN btQuerySNIFFParametersStr0
-%ifdef btQuerySNIFFParametersStr0
+%-BW_METHOD_BEGIN btQuerySNIFFParametersStr
+%ifdef btQuerySNIFFParametersStr
 %define! Parbuf
 %define! ParbufSize
 %define! RetVal
-%include Common\Bluetooth_EGBTbtQuerySNIFFParametersStr0.Inc
-byte %'ModuleName'%.%btQuerySNIFFParametersStr0(byte *buf, size_t bufSize)
+%include Common\Bluetooth_EGBTbtQuerySNIFFParametersStr.Inc
+byte %'ModuleName'%.%btQuerySNIFFParametersStr(byte *buf, size_t bufSize)
 {
   /* 21: Query SNIFF Energy Savings Parameters: "AT+SNIFF?\r\n" ==> "+SNIFF:<tmax>,<tmin>,<retry>,<timeout>\r\nOK\r\n"
      where <tmax> = maximum time
@@ -1576,8 +1648,8 @@ byte %'ModuleName'%.%btQuerySNIFFParametersStr0(byte *buf, size_t bufSize)
   return %'ModuleName'%.QueryString((unsigned char*)"AT+SNIFF?", (unsigned char*)"+SNIFF:", buf, bufSize);
 }
 
-%endif %- btQuerySNIFFParametersStr0
-%-BW_METHOD_END btQuerySNIFFParametersStr0
+%endif %- btQuerySNIFFParametersStr
+%-BW_METHOD_END btQuerySNIFFParametersStr
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN btSetSNIFFParameterStr
 %ifdef btSetSNIFFParameterStr
