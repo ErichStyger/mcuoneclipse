@@ -11,7 +11,7 @@
 %;** %>29 output polarity. LED polarity in <led1,
 %;** %>29 <led2> format. 0 for LED output active low,
 %;** %>29 1 for LED output active high (default)
-%;**         bufSize%ParbufSize %>27 - 
+%;**         bufSize%ParbufSize %>27 - Size of the buffer in bytes.
 %;**     Returns     :
 %;**         ---%RetVal %>27 - Error code
 %include Common\GeneralDamage.inc

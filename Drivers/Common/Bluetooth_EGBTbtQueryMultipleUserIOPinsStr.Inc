@@ -3,11 +3,12 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (btQueryBindingBluetoothAddress)
+%include Common\GeneralMethod.inc (btQueryMultipleUserIOPinsStr)
 %;**     Description :
-%;**         Queries the Binding Bluetooth Address
+%;**         Queries multiple User I/O pins
 %include Common\GeneralParameters.inc(27)
-%;**       * buf%Parbuf %>27 - Pointer to buffer where to store the string
+%;**       * buf%Parbuf %>27 - Pointer to buffer where to store the
+%;** %>29 return string
 %;**         bufSize%ParbufSize %>27 - Size of the buffer in bytes.
 %;**     Returns     :
 %;**         ---%RetVal %>27 - Error code

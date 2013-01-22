@@ -70,59 +70,6 @@ static void Test(const FSSH1_StdIOType *io) {
   } 
 #endif
   
-  FSSH1_SendStr((unsigned char*)"Role: ", io->stdOut);
-  if (BT1_btQueryRole(&buf[0])!=ERR_OK) {
-    FSSH1_SendStr((unsigned char*)"failed\r\n", io->stdOut);
-  } else {
-    buf[1] = '\0';
-    FSSH1_SendStr(buf, io->stdOut);
-    if (buf[0]=='0') {
-      FSSH1_SendStr((unsigned char*)(" (slave)"), io->stdOut);
-    } else if (buf[1]=='1') {
-      FSSH1_SendStr((unsigned char*)(" (master)"), io->stdOut);
-    } else if (buf[1]=='2') {
-      FSSH1_SendStr((unsigned char*)(" (slave-loop)"), io->stdOut);
-    } else {
-      FSSH1_SendStr((unsigned char*)(" (UNKNOWN)"), io->stdOut);
-    }
-    FSSH1_SendStr((unsigned char*)"\r\n", io->stdOut);
-  } 
-
-  FSSH1_SendStr((unsigned char*)"Connection method: ", io->stdOut);
-  if (BT1_btQueryConnectionMethod(&buf[0])!=ERR_OK) {
-    FSSH1_SendStr((unsigned char*)"failed\r\n", io->stdOut);
-  } else {
-    buf[1] = '\0';
-    FSSH1_SendStr(buf, io->stdOut);
-    if (buf[0]=='0') {
-      FSSH1_SendStr((unsigned char*)" (specific address only)", io->stdOut);
-    } else if (buf[0]=='1') {
-      FSSH1_SendStr((unsigned char*)" (any address)", io->stdOut);
-    } else if (buf[0]=='2') {
-      FSSH1_SendStr((unsigned char*)" (test mode)", io->stdOut);
-    }
-    FSSH1_SendStr((unsigned char*)"\r\n", io->stdOut);
-  }
-  
-  FSSH1_SendStr((unsigned char*)"Multiple User I/O pins: ", io->stdOut);
-  if (BT1_btQueryMultipleUserIOPins(&mask)!=ERR_OK) {
-    FSSH1_SendStr((unsigned char*)"failed\r\n", io->stdOut);
-  } else {
-    buf[0] = '\0';
-    UTIL1_strcatNum16Hex(buf, sizeof(buf), mask);
-    FSSH1_SendStr(buf, io->stdOut);
-    FSSH1_SendStr((unsigned char*)"\r\n", io->stdOut);
-  }
-
-  FSSH1_SendStr((unsigned char*)"Total number of authenticated devices: ", io->stdOut);
-  if (BT1_btQueryTotalNumberOfDeviceFromAuthenticationList(&num8)!=ERR_OK) {
-    FSSH1_SendStr((unsigned char*)"failed\r\n", io->stdOut);
-  } else {
-    buf[0] = '\0';
-    UTIL1_Num8uToStr(buf, sizeof(buf), num8);
-    FSSH1_SendStr(buf, io->stdOut);
-    FSSH1_SendStr((unsigned char*)"\r\n", io->stdOut);
-  }
 }
 
 static void PrintHelp(const FSSH1_StdIOType *io) {

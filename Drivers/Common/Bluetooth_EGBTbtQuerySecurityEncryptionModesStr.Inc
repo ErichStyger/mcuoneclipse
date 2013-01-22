@@ -20,7 +20,7 @@
 %;** %>29 0 - hci_enc_mode_off (default)
 %;** %>29 1 - hci_enc_mode_pt_to_pt
 %;** %>29 2 - hci_enc_mode_pt_to_pt_and_bcast
-%;**         bufSize%ParbufSize %>27 - 
+%;**         bufSize%ParbufSize %>27 - Size of the buffer in bytes.
 %;**     Returns     :
 %;**         ---%RetVal %>27 - Error code
 %include Common\GeneralDamage.inc

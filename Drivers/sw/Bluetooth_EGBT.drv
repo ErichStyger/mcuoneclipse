@@ -606,15 +606,16 @@ byte %'ModuleName'%.%btFindDeviceFromAuthenticatedDeviceListStr(byte *addrString
 %endif %- btFindDeviceFromAuthenticatedDeviceListStr
 %-BW_METHOD_END btFindDeviceFromAuthenticatedDeviceListStr
 %-************************************************************************************************************
-%-BW_METHOD_BEGIN btQueryTotalNumberOfDeviceFromAuthenticationList
-%ifdef btQueryTotalNumberOfDeviceFromAuthenticationList
-byte %'ModuleName'%.%btQueryTotalNumberOfDeviceFromAuthenticationList(byte *nofDevices);
-%define! ParnofDevices
+%-BW_METHOD_BEGIN btQueryTotalNumberOfDeviceFromAuthenticationListStr
+%ifdef btQueryTotalNumberOfDeviceFromAuthenticationListStr
+byte %'ModuleName'%.%btQueryTotalNumberOfDeviceFromAuthenticationListStr(byte *buf, size_t bufSize);
+%define! Parbuf
+%define! ParbufSize
 %define! RetVal
-%include Common\Bluetooth_EGBTbtQueryTotalNumberOfDeviceFromAuthenticationList.Inc
+%include Common\Bluetooth_EGBTbtQueryTotalNumberOfDeviceFromAuthenticationListStr.Inc
 
-%endif %- btQueryTotalNumberOfDeviceFromAuthenticationList
-%-BW_METHOD_END btQueryTotalNumberOfDeviceFromAuthenticationList
+%endif %- btQueryTotalNumberOfDeviceFromAuthenticationListStr
+%-BW_METHOD_END btQueryTotalNumberOfDeviceFromAuthenticationListStr
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN btQueryMostRecentlyUsedAuthenticatedDevice
 %ifdef btQueryMostRecentlyUsedAuthenticatedDevice
@@ -662,6 +663,27 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char* cmd, bool *handled, const
 
 %endif %- ParseCommand
 %-BW_METHOD_END ParseCommand
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btQueryTotalNumberOfDeviceFromAuthenticationList
+%ifdef btQueryTotalNumberOfDeviceFromAuthenticationList
+byte %'ModuleName'%.%btQueryTotalNumberOfDeviceFromAuthenticationList(byte *nofDevices);
+%define! ParnofDevices
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQueryTotalNumberOfDeviceFromAuthenticationList.Inc
+
+%endif %- btQueryTotalNumberOfDeviceFromAuthenticationList
+%-BW_METHOD_END btQueryTotalNumberOfDeviceFromAuthenticationList
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btQueryMultipleUserIOPinsStr
+%ifdef btQueryMultipleUserIOPinsStr
+byte %'ModuleName'%.%btQueryMultipleUserIOPinsStr(byte *buf, size_t bufSize);
+%define! Parbuf
+%define! ParbufSize
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQueryMultipleUserIOPinsStr.Inc
+
+%endif %- btQueryMultipleUserIOPinsStr
+%-BW_METHOD_END btQueryMultipleUserIOPinsStr
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -803,12 +825,13 @@ static uint8_t RxResponse(unsigned char *rxBuf, uint8_t rxBufLength, uint16_t ms
   return res;
 }
 %if defined(Shell)
-static uint8_t ExecuteQueryString(uint8_t(*f)(unsigned char*,size_t), unsigned char *buf, size_t bufSize) {
+static uint8_t ExecuteQueryString(uint8_t(*f)(unsigned char*,size_t), unsigned char *buf, size_t bufSize, unsigned char *appendStr) {
   if (f(buf, bufSize)==ERR_OK) {
-    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)appendStr);
     return ERR_OK;
   } else {
-    %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
+    %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"ERROR");
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)appendStr);
     return ERR_FAILED;
   }
 }
@@ -818,47 +841,85 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
 
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"%'ModuleName'", (unsigned char*)"\r\n", io->stdOut);
 
-  (void)ExecuteQueryString(%'ModuleName'%.%btQueryFirmwareVersionStr, buf, sizeof(buf));
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryFirmwareVersionStr, buf, sizeof(buf), (unsigned char*)"\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  FW", buf, io->stdOut);
 
-  (void)ExecuteQueryString(%'ModuleName'%.%btQueryDeviceName, buf, sizeof(buf));
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryDeviceName, buf, sizeof(buf), (unsigned char*)"\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Name", buf, io->stdOut);
 
-  (void)ExecuteQueryString(%'ModuleName'%.%btQueryBluetoothAddressStr, buf, sizeof(buf));
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryBluetoothAddressStr, buf, sizeof(buf), (unsigned char*)"\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Address", buf, io->stdOut);
 
-  (void)ExecuteQueryString(%'ModuleName'%.%btQueryIACStr, buf, sizeof(buf));
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryIACStr, buf, sizeof(buf), (unsigned char*)"\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  IAC", buf, io->stdOut);
 
-  (void)ExecuteQueryString(%'ModuleName'%.%btQueryIAMStr, buf, sizeof(buf));
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryIAMStr, buf, sizeof(buf), (unsigned char*)"\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  IAM", buf, io->stdOut);
 
-  (void)ExecuteQueryString(%'ModuleName'%.%btQueryPairingPasskey, buf, sizeof(buf));
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryPairingPasskey, buf, sizeof(buf), (unsigned char*)"\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  key", buf, io->stdOut);
 
-  (void)ExecuteQueryString(%'ModuleName'%.%btQueryUARTParametersStr, buf, sizeof(buf));
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryUARTParametersStr, buf, sizeof(buf), (unsigned char*)"\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  UART", buf, io->stdOut);
 
-  (void)ExecuteQueryString(%'ModuleName'%.%btQueryBindingBluetoothAddress, buf, sizeof(buf));
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryBindingBluetoothAddress, buf, sizeof(buf), (unsigned char*)"\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Binding Addr", buf, io->stdOut);
 
-  (void)ExecuteQueryString(%'ModuleName'%.%btQueryLEDOutputPolarityStr, buf, sizeof(buf));
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryLEDOutputPolarityStr, buf, sizeof(buf), (unsigned char*)"\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  LED Polarity", buf, io->stdOut);
 
-  (void)ExecuteQueryString(%'ModuleName'%.%btQueryScanningParametersStr, buf, sizeof(buf));
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryScanningParametersStr, buf, sizeof(buf), (unsigned char*)"\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Scan Param", buf, io->stdOut);
 
-  (void)ExecuteQueryString(%'ModuleName'%.%btQuerySNIFFParametersStr, buf, sizeof(buf));
+  (void)ExecuteQueryString(%'ModuleName'%.%btQuerySNIFFParametersStr, buf, sizeof(buf), (unsigned char*)"\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  SNIFF Param", buf, io->stdOut);
 
-  (void)ExecuteQueryString(%'ModuleName'%.%btQuerySecurityEncryptionModesStr, buf, sizeof(buf));
+  (void)ExecuteQueryString(%'ModuleName'%.%btQuerySecurityEncryptionModesStr, buf, sizeof(buf), (unsigned char*)"\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Encryption", buf, io->stdOut);
 
-  (void)ExecuteQueryString(%'ModuleName'%.%btQueryMostRecentlyUsedAuthenticatedDevice, buf, sizeof(buf));
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryMostRecentlyUsedAuthenticatedDevice, buf, sizeof(buf), (unsigned char*)"\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Recent Auth.", buf, io->stdOut);
 
-  (void)ExecuteQueryString(%'ModuleName'%.%btQueryCurrentStateOfDeviceStr, buf, sizeof(buf));
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryCurrentStateOfDeviceStr, buf, sizeof(buf), (unsigned char*)"\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Device State", buf, io->stdOut);
+
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryTotalNumberOfDeviceFromAuthenticationListStr, buf, sizeof(buf), (unsigned char*)"\r\n");
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Authenticated", buf, io->stdOut);
+
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryMultipleUserIOPinsStr, buf, sizeof(buf), (unsigned char*)"\r\n");
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  I/O Pins", buf, io->stdOut);
+
+  if (%'ModuleName'%.%btQueryRole(&buf[0])!=ERR_OK) {
+    %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
+  } else {
+    buf[1] = '\0';
+    if (buf[0]=='0') {
+      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)(" (slave)\r\n"));
+    } else if (buf[1]=='1') {
+      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)(" (master)\r\n"), io->stdOut);
+    } else if (buf[1]=='2') {
+      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)(" (slave-loop)\r\n"), io->stdOut);
+    } else {
+      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)(" (UNKNOWN)\r\n"), io->stdOut);
+    }
+  }
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Role", buf, io->stdOut);
+
+  if (%'ModuleName'%.%btQueryConnectionMethod(&buf[0])!=ERR_OK) {
+    %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
+  } else {
+    buf[1] = '\0';
+    if (buf[0]=='0') {
+      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)(" (specific address only)\r\n"));
+    } else if (buf[1]=='1') {
+      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)(" (any address)\r\n"), io->stdOut);
+    } else if (buf[1]=='2') {
+      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)(" (test mode)\r\n"), io->stdOut);
+    } else {
+      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)(" (UNKNOWN)\r\n"), io->stdOut);
+    }
+  }
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Connection", buf, io->stdOut);
 
   return ERR_OK;
 }
@@ -1196,6 +1257,7 @@ byte %'ModuleName'%.%btQueryRemoteBluetoothDeviceName(byte *buf, size_t bufSize)
 byte %'ModuleName'%.%btQueryRole(byte *role)
 {
   /* 8: Query device role: "AT+ROLE?\r\n" ==> "+ROLE:<role>\r\nOK\r\n" */
+  /* <role>: '0': slave, '1': master, '2': slave-loop */
   unsigned char buf[2];
 
   if (%'ModuleName'%.QueryString((unsigned char*)"AT+ROLE?", (unsigned char*)"+ROLE:", buf, sizeof(buf))!=ERR_OK) {
@@ -1628,6 +1690,33 @@ byte %'ModuleName'%.%btSetMultipleUserIOPins(word mask)
 %endif %- btSetMultipleUserIOPins
 %-BW_METHOD_END btSetMultipleUserIOPins
 %-************************************************************************************************************
+%-BW_METHOD_BEGIN btQueryMultipleUserIOPinsStr
+%ifdef btQueryMultipleUserIOPinsStr
+%define! Parbuf
+%define! ParbufSize
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQueryMultipleUserIOPinsStr.Inc
+byte %'ModuleName'%.%btQueryMultipleUserIOPinsStr(byte *buf, size_t bufSize)
+{
+  /* 19: Query User Pin I/O: "AT+MPIO?\r\n" ==> "+MPIO:<iomap>\r\nOK\r\n"
+     where <iomap> is a 12bit number presented in hexadecimal
+     bit 2 - PIO2
+     bit 3 - PIO3
+     bit 4 - PIO4
+     bit 5 - PIO5
+     bit 6 - PIO6
+     bit 7 - PIO7
+     bit 10 - PIO10
+     <value>
+     0 - Logic Low
+     1 - Logic High
+  */
+  return %'ModuleName'%.QueryString((unsigned char*)"AT+MPIO?", (unsigned char*)"+MPIO:", buf, bufSize);
+}
+
+%endif %- btQueryMultipleUserIOPinsStr
+%-BW_METHOD_END btQueryMultipleUserIOPinsStr
+%-************************************************************************************************************
 %-BW_METHOD_BEGIN btQueryMultipleUserIOPins
 %ifdef btQueryMultipleUserIOPins
 %define! Parmask
@@ -1652,7 +1741,8 @@ byte %'ModuleName'%.%btQueryMultipleUserIOPins(word *mask)
   const unsigned char *p;
 
   %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"0x");
-  if (%'ModuleName'%.QueryString((unsigned char*)"AT+MPIO?", (unsigned char*)"+MPIO:", buf+2, sizeof(buf-2))!=ERR_OK) {
+  if (%'ModuleName'%.btQueryMultipleUserIOPinsStr((unsigned char*)"AT+MPIO?", (unsigned char*)"+MPIO:", buf+2, sizeof(buf-2))!=ERR_OK) {
+    *mask = 0;
     return ERR_FAILED;
   }
   p = &buf[0];
@@ -1871,6 +1961,23 @@ byte %'ModuleName'%.%btFindDeviceFromAuthenticatedDeviceListStr(byte *addrString
 %endif %- btFindDeviceFromAuthenticatedDeviceListStr
 %-BW_METHOD_END btFindDeviceFromAuthenticatedDeviceListStr
 %-************************************************************************************************************
+%-BW_METHOD_BEGIN btQueryTotalNumberOfDeviceFromAuthenticationListStr
+%ifdef btQueryTotalNumberOfDeviceFromAuthenticationListStr
+%define! Parbuf
+%define! ParbufSize
+%define! RetVal
+%include Common\Bluetooth_EGBTbtQueryTotalNumberOfDeviceFromAuthenticationListStr.Inc
+byte %'ModuleName'%.%btQueryTotalNumberOfDeviceFromAuthenticationListStr(byte *buf, size_t bufSize)
+{
+  /* 25: Query Total Number of Device from Authenticated Device List: "AT+ADCN?\r\n" ==> "+ADCN:<total>\r\nOK\r\n"
+     where <total> = total number of devices in the authenticated device list
+   */
+  return %'ModuleName'%.QueryString((unsigned char*)"AT+ADCN?", (unsigned char*)"+ADCN:", buf, sizeof(buf)):
+}
+
+%endif %- btQueryTotalNumberOfDeviceFromAuthenticationListStr
+%-BW_METHOD_END btQueryTotalNumberOfDeviceFromAuthenticationListStr
+%-************************************************************************************************************
 %-BW_METHOD_BEGIN btQueryTotalNumberOfDeviceFromAuthenticationList
 %ifdef btQueryTotalNumberOfDeviceFromAuthenticationList
 %define! ParnofDevices
@@ -1884,7 +1991,7 @@ byte %'ModuleName'%.%btQueryTotalNumberOfDeviceFromAuthenticationList(byte *nofD
   unsigned char buf[sizeof("1024")];
   const unsigned char *p;
 
-  if (%'ModuleName'%.QueryString((unsigned char*)"AT+ADCN?", (unsigned char*)"+ADCN:", buf, sizeof(buf))!=ERR_OK) {
+  if (%'ModuleName'%.%btQueryTotalNumberOfDeviceFromAuthenticationListStr(buf, sizeof(buf));
     return ERR_FAILED;
   }
   p = &buf[0];

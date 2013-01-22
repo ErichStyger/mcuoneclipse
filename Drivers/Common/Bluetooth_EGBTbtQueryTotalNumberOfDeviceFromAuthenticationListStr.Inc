@@ -3,11 +3,12 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (btQueryBindingBluetoothAddress)
+%include Common\GeneralMethod.inc (btQueryTotalNumberOfDeviceFromAuthenticationListStr)
 %;**     Description :
-%;**         Queries the Binding Bluetooth Address
+%;**         
 %include Common\GeneralParameters.inc(27)
-%;**       * buf%Parbuf %>27 - Pointer to buffer where to store the string
+%;**       * buf%Parbuf %>27 - Pointer to where buffer where to store the
+%;** %>29 result string
 %;**         bufSize%ParbufSize %>27 - Size of the buffer in bytes.
 %;**     Returns     :
 %;**         ---%RetVal %>27 - Error code

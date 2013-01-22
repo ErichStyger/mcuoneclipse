@@ -18,7 +18,7 @@
 %;** %>29 CONNECTED
 %;** %>29 DISCONNECTED
 %;** %>29 UNKNOWN
-%;**         bufSize%ParbufSize %>27 - 
+%;**         bufSize%ParbufSize %>27 - Size of the buffer in bytes.
 %;**     Returns     :
 %;**         ---%RetVal %>27 - Error code
 %include Common\GeneralDamage.inc

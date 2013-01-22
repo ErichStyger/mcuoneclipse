@@ -4,7 +4,7 @@
     <Name>Bluetooth_EGBT</Name>
     <Description>Driver for the EGBT-045MS e-Gizmo Bluetooth Module</Description>
     <Author>Erich Styger</Author>
-    <Version>01.006</Version>
+    <Version>01.009</Version>
     <Icon>Bluetooth_EGBT</Icon>
     <TypesFiles>PE,Bluetooth_EGBT\Bluetooth_EGBT</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -552,7 +552,7 @@ OK\\r\n
           <ParName>bufSize</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint/>
+          <ParHint>Size of the buffer in bytes.</ParHint>
           <ParUserDeclaration>size_t bufSize</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
@@ -621,7 +621,7 @@ OK\\r\n
           <ParName>bufSize</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint/>
+          <ParHint>Size of the buffer in bytes.</ParHint>
           <ParUserDeclaration>size_t bufSize</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
@@ -662,7 +662,7 @@ OK\\r\n
           <ParName>bufSize</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint/>
+          <ParHint>Size of the buffer in bytes.</ParHint>
           <ParUserDeclaration>size_t bufSize</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
@@ -737,7 +737,7 @@ OK\\r\n
           <ParName>bufSize</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint/>
+          <ParHint>Size of the buffer in bytes.</ParHint>
           <ParUserDeclaration>size_t bufSize</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
@@ -846,7 +846,7 @@ OK\\r\n
           <ParName>bufSize</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint/>
+          <ParHint>Size of the buffer in bytes.</ParHint>
           <ParUserDeclaration>size_t bufSize</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
@@ -921,7 +921,7 @@ OK\\r\n
           <ParName>bufSize</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint/>
+          <ParHint>Size of the buffer in bytes.</ParHint>
           <ParUserDeclaration>size_t bufSize</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
@@ -996,7 +996,7 @@ OK\\r\n
           <ParName>bufSize</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint/>
+          <ParHint>Size of the buffer in bytes.</ParHint>
           <ParUserDeclaration>size_t bufSize</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
@@ -1071,7 +1071,7 @@ OK\\r\n
           <ParName>bufSize</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint/>
+          <ParHint>Size of the buffer in bytes.</ParHint>
           <ParUserDeclaration>size_t bufSize</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
@@ -1146,7 +1146,7 @@ OK\\r\n
           <ParName>bufSize</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint/>
+          <ParHint>Size of the buffer in bytes.</ParHint>
           <ParUserDeclaration>size_t bufSize</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
@@ -1289,7 +1289,7 @@ OK\\r\n
           <ParName>bufSize</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint/>
+          <ParHint>Size of the buffer in bytes.</ParHint>
           <ParUserDeclaration>size_t bufSize</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
@@ -1364,7 +1364,7 @@ OK\\r\n
           <ParName>bufSize</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint/>
+          <ParHint>Size of the buffer in bytes.</ParHint>
           <ParUserDeclaration>size_t bufSize</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
@@ -1483,6 +1483,47 @@ OK\\r\n
     </Method>
     <Method>
       <TMthdItem>
+        <Name>btQueryMultipleUserIOPinsStr</Name>
+        <Symbol>btQueryMultipleUserIOPinsStr</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Queries multiple User I/O pins</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>buf</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to buffer where to store the return string</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>bufSize</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Size of the buffer in bytes.</ParHint>
+          <ParUserDeclaration>size_t bufSize</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte *buf, size_t bufSize)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
         <Name>btQueryMultipleUserIOPins</Name>
         <Symbol>btQueryMultipleUserIOPins</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
@@ -1547,7 +1588,7 @@ OK\\r\n
           <ParName>bufSize</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint/>
+          <ParHint>Size of the buffer in bytes.</ParHint>
           <ParUserDeclaration>size_t bufSize</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
@@ -1622,7 +1663,7 @@ OK\\r\n
           <ParName>bufSize</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint/>
+          <ParHint>Size of the buffer in bytes.</ParHint>
           <ParUserDeclaration>size_t bufSize</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
@@ -1697,7 +1738,7 @@ OK\\r\n
           <ParName>bufSize</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint/>
+          <ParHint>Size of the buffer in bytes.</ParHint>
           <ParUserDeclaration>size_t bufSize</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
@@ -1810,6 +1851,47 @@ OK\\r\n
     </Method>
     <Method>
       <TMthdItem>
+        <Name>btQueryTotalNumberOfDeviceFromAuthenticationListStr</Name>
+        <Symbol>btQueryTotalNumberOfDeviceFromAuthenticationListStr</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint/>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>buf</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to where buffer where to store the result string</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>bufSize</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Size of the buffer in bytes.</ParHint>
+          <ParUserDeclaration>size_t bufSize</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte *buf, size_t bufSize)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
         <Name>btQueryTotalNumberOfDeviceFromAuthenticationList</Name>
         <Symbol>btQueryTotalNumberOfDeviceFromAuthenticationList</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
@@ -1874,7 +1956,7 @@ OK\\r\n
           <ParName>bufSize</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint/>
+          <ParHint>Size of the buffer in bytes.</ParHint>
           <ParUserDeclaration>size_t bufSize</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
@@ -1915,7 +1997,7 @@ OK\\r\n
           <ParName>bufSize</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint/>
+          <ParHint>Size of the buffer in bytes.</ParHint>
           <ParUserDeclaration>size_t bufSize</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>

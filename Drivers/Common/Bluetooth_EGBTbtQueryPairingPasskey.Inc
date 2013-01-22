@@ -8,7 +8,7 @@
 %;**         Queries the Pairing Passkey
 %include Common\GeneralParameters.inc(27)
 %;**       * buf%Parbuf %>27 - Pointer to buffer where to store the string
-%;**         bufSize%ParbufSize %>27 - 
+%;**         bufSize%ParbufSize %>27 - Size of the buffer in bytes.
 %;**     Returns     :
 %;**         ---%RetVal %>27 - Error code
 %include Common\GeneralDamage.inc
