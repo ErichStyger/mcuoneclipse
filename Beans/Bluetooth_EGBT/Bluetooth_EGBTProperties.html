@@ -221,16 +221,34 @@ LI.EXP {
 <b>CMD pin</b></a> - Cmd pin to switch between data (low) and command (high) mode. This pin is pin 32 (KEY) on the Bluetooth module.
 </li>
 <li>
-<a name="Serial">
-<b>Serial</b></a> - Serial Interface to the module
+<a name="Interfaces">
+<b>Interfaces</b></a> - Group of interfaces
+<ul>
+  <li>
+  <a name="Utility">
+  <b>Utility</b></a> - Interface to utility functions
+  </li>
+  <li>
+  <a name="Wait">
+  <b>Wait</b></a> - Interface to waiting routines
+  </li>
+  <li>
+  <a name="Serial">
+  <b>Serial</b></a> - Serial Interface to the module
+  </li>
+</ul>
 </li>
 <li>
-<a name="Wait">
-<b>Wait</b></a> - Interface to waiting routines
-</li>
-<li>
-<a name="Utility">
-<b>Utility</b></a> - Interface to utility functions
+<a name="ShellEnabled">
+<b>Shell</b></a> - Optional Interface to command line shell<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+<ul>
+  <li>
+  <a name="Shell">
+  <b>Shell</b></a> - Interface to Shell
+  </li>
+</ul>
 </li>
 
      </ul>

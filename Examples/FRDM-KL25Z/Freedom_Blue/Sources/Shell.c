@@ -59,14 +59,6 @@ static uint8_t SHELL_ParseCommand(const unsigned char *cmd, bool *handled, const
   } else if (UTIL1_strcmp((char*)cmd, FSSH1_CMD_STATUS)==0 || UTIL1_strcmp((char*)cmd, "shell status")==0) {
     PrintStatus(io);
     *handled = TRUE;
-#if 0
-  } else if (UTIL1_strcmp((char*)cmd, "shell i2c cmd on")==0) {
-    SHELL_i2Commands = TRUE;
-    *handled = TRUE;
-  } else if (UTIL1_strcmp((char*)cmd, "shell i2c cmd off")==0) {
-    SHELL_i2Commands = FALSE;
-    *handled = TRUE;
-#endif
   }
   return ERR_OK;
 }
@@ -74,6 +66,9 @@ static uint8_t SHELL_ParseCommand(const unsigned char *cmd, bool *handled, const
 static FSSH1_ParseCommandCallback ShellParsers[] =
 {
   APP_ParseCommand,
+#if BT1_PARSE_COMMAND_ENABLED
+  BT1_ParseCommand,
+#endif
   SHELL_ParseCommand
 };
 

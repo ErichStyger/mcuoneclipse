@@ -50,9 +50,7 @@ static void Test(const FSSH1_StdIOType *io) {
   FSSH1_SendStr((unsigned char*)"Wait some time to reset device...\r\n", io->stdOut);
   WAIT1_Waitms(BT1_TIMEOUT_MS_AFTER_RESET);
 #endif
-  
-  ExecuteQueryString(BT1_btQueryFirmwareVersionStr, (unsigned char*)"Firmware Version: ", io);
-  
+
 #if 0
   FSSH1_SendStr((unsigned char*)"Reset to factory defaults: ", io->stdOut);
   if (BT1_btRestorFactoryDefault()!=ERR_OK) {
@@ -63,9 +61,6 @@ static void Test(const FSSH1_StdIOType *io) {
   WAIT1_Waitms(BT1_TIMEOUT_MS_AFTER_FACTORY_DEFAULT); /* give device time to boot up again. Did not find a value in the data sheet */
 #endif
   
-  ExecuteQueryString(BT1_btQueryDeviceName, (unsigned char*)"Device Name: ", io);
-  ExecuteQueryString(BT1_btQueryBluetoothAddressStr, (unsigned char*)"Bluetooth Address: ", io);
-
 #if 0
   FSSH1_SendStr((unsigned char*)"Setting device name: ", io->stdOut);
   if (BT1_btSetDeviceName((unsigned char*)"INTRO")!=ERR_OK) {
@@ -93,11 +88,6 @@ static void Test(const FSSH1_StdIOType *io) {
     FSSH1_SendStr((unsigned char*)"\r\n", io->stdOut);
   } 
 
-  ExecuteQueryString(BT1_btQueryIACStr, (unsigned char*)"IAC: ", io);
-  ExecuteQueryString(BT1_btQueryIAMStr, (unsigned char*)"IAM: ", io);
-  ExecuteQueryString(BT1_btQueryPairingPasskey, (unsigned char*)"Pairing Passkey: ", io);
-  ExecuteQueryString(BT1_btQueryUARTParametersStr, (unsigned char*)"UART Parameter: ", io);
-  
   FSSH1_SendStr((unsigned char*)"Connection method: ", io->stdOut);
   if (BT1_btQueryConnectionMethod(&buf[0])!=ERR_OK) {
     FSSH1_SendStr((unsigned char*)"failed\r\n", io->stdOut);
@@ -114,9 +104,6 @@ static void Test(const FSSH1_StdIOType *io) {
     FSSH1_SendStr((unsigned char*)"\r\n", io->stdOut);
   }
   
-  ExecuteQueryString(BT1_btQueryBindingBluetoothAddress, (unsigned char*)"Binding Bluetooth Address: ", io);
-  ExecuteQueryString(BT1_btQueryLEDOutputPolarityStr, (unsigned char*)"Output LED polarity: ", io);
-
   FSSH1_SendStr((unsigned char*)"Multiple User I/O pins: ", io->stdOut);
   if (BT1_btQueryMultipleUserIOPins(&mask)!=ERR_OK) {
     FSSH1_SendStr((unsigned char*)"failed\r\n", io->stdOut);
@@ -127,10 +114,6 @@ static void Test(const FSSH1_StdIOType *io) {
     FSSH1_SendStr((unsigned char*)"\r\n", io->stdOut);
   }
 
-  ExecuteQueryString(BT1_btQueryScanningParametersStr, (unsigned char*)"Scanning Parameters: ", io);
-  ExecuteQueryString(BT1_btQuerySNIFFParametersStr, (unsigned char*)"SNIFF Parameters: ", io);
-  ExecuteQueryString(BT1_btQuerySecurityEncryptionModesStr, (unsigned char*)"Security and Encryption Modes: ", io);
-
   FSSH1_SendStr((unsigned char*)"Total number of authenticated devices: ", io->stdOut);
   if (BT1_btQueryTotalNumberOfDeviceFromAuthenticationList(&num8)!=ERR_OK) {
     FSSH1_SendStr((unsigned char*)"failed\r\n", io->stdOut);
@@ -140,9 +123,6 @@ static void Test(const FSSH1_StdIOType *io) {
     FSSH1_SendStr(buf, io->stdOut);
     FSSH1_SendStr((unsigned char*)"\r\n", io->stdOut);
   }
-  
-  ExecuteQueryString(BT1_btQueryMostRecentlyUsedAuthenticatedDevice, (unsigned char*)"Most recently authenticated Device: ", io);
-  ExecuteQueryString(BT1_btQueryCurrentStateOfDeviceStr, (unsigned char*)"Current State of Device: ", io);
 }
 
 static void PrintHelp(const FSSH1_StdIOType *io) {

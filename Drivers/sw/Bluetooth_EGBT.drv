@@ -142,6 +142,12 @@ typedef const unsigned char *%'ModuleName'%.TConstStringPtr; /* type for constan
 #define %'ModuleName'%.TIMEOUT_MS                              450 /* timeout in ms to wait for response */
 #define %'ModuleName'%.TIMEOUT_MS_AFTER_RESET                  2000 /* timeout in ms after a reset command */
 #define %'ModuleName'%.TIMEOUT_MS_AFTER_FACTORY_DEFAULT        %'ModuleName'%.TIMEOUT_MS_AFTER_RESET /* timeout after a factory default command */
+
+%ifdef ParseCommand
+#define %'ModuleName'%.PARSE_COMMAND_ENABLED  1  /* set to 1 if method ParseCommand() is present, 0 otherwise */
+%else
+#define %'ModuleName'%.PARSE_COMMAND_ENABLED  0 /* set to 1 if method ParseCommand() is present, 0 otherwise */
+%endif %- ParseCommand
 %-
 %-BW_CUSTOM_USERTYPE_END
 
@@ -644,6 +650,18 @@ byte %'ModuleName'%.%SendATCommand(byte *cmd, byte *rxBuf, byte rxBufSize, byte 
 
 %endif %- SendATCommand
 %-BW_METHOD_END SendATCommand
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ParseCommand
+%ifdef ParseCommand
+byte %'ModuleName'%.%ParseCommand(const unsigned char* cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io);
+%define! Parcmd
+%define! Parhandled
+%define! Pario
+%define! RetVal
+%include Common\Bluetooth_EGBTParseCommand.Inc
+
+%endif %- ParseCommand
+%-BW_METHOD_END ParseCommand
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -784,6 +802,76 @@ static uint8_t RxResponse(unsigned char *rxBuf, uint8_t rxBufLength, uint16_t ms
   } /* for */
   return res;
 }
+%if defined(Shell)
+static uint8_t ExecuteQueryString(uint8_t(*f)(unsigned char*,size_t), unsigned char *buf, size_t bufSize) {
+  if (f(buf, bufSize)==ERR_OK) {
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+    return ERR_OK;
+  } else {
+    %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
+    return ERR_FAILED;
+  }
+}
+
+static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
+  uint8_t buf[32];
+
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"%'ModuleName'", (unsigned char*)"\r\n", io->stdOut);
+
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryFirmwareVersionStr, buf, sizeof(buf));
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  FW", buf, io->stdOut);
+
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryDeviceName, buf, sizeof(buf));
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Name", buf, io->stdOut);
+
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryBluetoothAddressStr, buf, sizeof(buf));
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Address", buf, io->stdOut);
+
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryIACStr, buf, sizeof(buf));
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  IAC", buf, io->stdOut);
+
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryIAMStr, buf, sizeof(buf));
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  IAM", buf, io->stdOut);
+
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryPairingPasskey, buf, sizeof(buf));
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  key", buf, io->stdOut);
+
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryUARTParametersStr, buf, sizeof(buf));
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  UART", buf, io->stdOut);
+
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryBindingBluetoothAddress, buf, sizeof(buf));
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Binding Addr", buf, io->stdOut);
+
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryLEDOutputPolarityStr, buf, sizeof(buf));
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  LED Polarity", buf, io->stdOut);
+
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryScanningParametersStr, buf, sizeof(buf));
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Scan Param", buf, io->stdOut);
+
+  (void)ExecuteQueryString(%'ModuleName'%.%btQuerySNIFFParametersStr, buf, sizeof(buf));
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  SNIFF Param", buf, io->stdOut);
+
+  (void)ExecuteQueryString(%'ModuleName'%.%btQuerySecurityEncryptionModesStr, buf, sizeof(buf));
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Encryption", buf, io->stdOut);
+
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryMostRecentlyUsedAuthenticatedDevice, buf, sizeof(buf));
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Recent Auth.", buf, io->stdOut);
+
+  (void)ExecuteQueryString(%'ModuleName'%.%btQueryCurrentStateOfDeviceStr, buf, sizeof(buf));
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Device State", buf, io->stdOut);
+
+  return ERR_OK;
+}
+
+static uint8_t PrintHelp(const %@Shell@'ModuleName'%.StdIOType *io) {
+  /* list your local help here */
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"%'ModuleName'", (unsigned char*)"Group of %'ModuleName' commands\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  cmd <AT command>", (unsigned char*)"Send an AT command, e.g AT+NAME?.\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+%endif
 %-
 %-BW_CUSTOM_VARIABLE_END
 %-BW_INTERN_METHOD_DECL_START
@@ -1849,6 +1937,28 @@ byte %'ModuleName'%.%btQueryCurrentStateOfDeviceStr(byte *buf, size_t bufSize)
 
 %endif %- btQueryCurrentStateOfDeviceStr
 %-BW_METHOD_END btQueryCurrentStateOfDeviceStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ParseCommand
+%ifdef ParseCommand
+%define! Parcmd
+%define! Parhandled
+%define! Pario
+%define! RetVal
+%include Common\Bluetooth_EGBTParseCommand.Inc
+byte %'ModuleName'%.%ParseCommand(const unsigned char* cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)
+{
+  if (%@Utility@'ModuleName'%.strcmp((char*)cmd, %@Shell@'ModuleName'%.CMD_HELP)==0 || %@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' help")==0) {
+    *handled = TRUE;
+    return PrintHelp(io);
+  } else if ((%@Utility@'ModuleName'%.strcmp((char*)cmd, %@Shell@'ModuleName'%.CMD_STATUS)==0) || (%@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' status")==0)) {
+    *handled = TRUE;
+    return PrintStatus(io);
+  }
+  return ERR_OK;
+}
+
+%endif %- ParseCommand
+%-BW_METHOD_END ParseCommand
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
