@@ -13,8 +13,8 @@
 %else %- PWMenabled
 %endif %- PWMenabled
 %;**%>14 High Value means ON %>60: %get(AnodeOnPortSide,Text)
-%;**%>12 Shell %>60: %get(Symbol,Text)
-%if %get(Symbol, Bool) = 'yes'
+%;**                                                             %>12 Shell %>60: %get(ShellEnabled,Text)
+%if %get(ShellEnabled, Bool) = 'yes'
 %;**%>14 Shell %>60: %get(Shell,Text)
 %;**%>14 Utility %>60: %get(Utility,Text)
 %else %- Symbol
