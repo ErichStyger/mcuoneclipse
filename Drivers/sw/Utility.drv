@@ -2117,12 +2117,12 @@ byte %'ModuleName'%.%ScanHex8uNumber(const unsigned char **str, byte *val)
 %include Common\Utilitystrtailcmp.Inc
 byte %'ModuleName'%.%strtailcmp(byte *str, byte *tail)
 {
-  int i, j;
+  size_t i, j;
 
   i = %'ModuleName'%.%strlen((char*)str);
   j = %'ModuleName'%.%strlen((char*)tail);
   if (j>i) { /* str is smaller than tail */
-    return -1; /* cannot match */
+    return 1; /* cannot match */
   }
   /* compare strings */
   while(str[i]==tail[j]) {
@@ -2132,7 +2132,7 @@ byte %'ModuleName'%.%strtailcmp(byte *str, byte *tail)
       return 0; /* match */
     }
   }
-  return -1; /* !=0 means no match */
+  return 1; /* !=0 means no match */
 }
 
 %endif %- strtailcmp

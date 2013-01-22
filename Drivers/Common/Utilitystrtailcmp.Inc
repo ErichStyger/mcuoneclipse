@@ -5,8 +5,8 @@
 %;** ===================================================================
 %include Common\GeneralMethod.inc (strtailcmp)
 %;**     Description :
-%;**         Compares the tail of a string and returns 0 if it matches,
-%;**         -1 otherwise
+%;**         Compares the tail of a string and returns 0 if it matches, 1
+%;**         otherwise
 %include Common\GeneralParameters.inc(27)
 %;**       * str%Parstr %>27 - Pointer to string. This string is compared
 %;** %>29 if it contains the tail.
