@@ -206,6 +206,24 @@ LI.EXP {
 <!---USERBEG DON'T CHANGE THIS LINE-->
 
 <!---USEREND DON'T CHANGE THIS LINE-->
+<li><a name="Init">
+<b>Init</b></a>
+ - Performs the LED driver initialization.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void Init(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="Deinit">
+<b>Deinit</b></a>
+ - Deinitializes the driver
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void Deinit(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
 <li><a name="On">
 <b>On</b></a>
  - This turns the LED on.
@@ -254,22 +272,14 @@ LI.EXP {
 <li><i>val:byte</i> - value to define if the LED has to be on or off.</li>
 </ul><br />
 </li>
-<li><a name="Init">
-<b>Init</b></a>
- - Performs the LED driver initialization.
+<li><a name="SetRatio16">
+<b>SetRatio16</b></a>
+ - Method to specify the duty cylce. If using a PWM pin, this means the duty cycle is set. For On/off pins, values smaller 0x7FFF means off, while values greater means on.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void Init(void)<br />
+<br /><i>ANSIC prototype:</i> void SetRatio16(word ratio)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-</ul><br />
-</li>
-<li><a name="Deinit">
-<b>Deinit</b></a>
- - Deinitializes the driver
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void Deinit(void)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>ratio:word</i> - Ratio value, where 0 means 'off' and 0xffff means 'on'</li>
 </ul><br />
 </li>
 <li><a name="ParseCommand">
@@ -284,16 +294,6 @@ LI.EXP {
 <li><i>io: Pointer to byte</i> - Pointer to I/O structure</li>
 <li><i>Return value:byte</i> - Error code
 </li>
-</ul><br />
-</li>
-<li><a name="SetRatio16">
-<b>SetRatio16</b></a>
- - Method to specify the duty cylce. If using a PWM pin, this means the duty cycle is set. For On/off pins, values smaller 0x7FFF means off, while values greater means on.
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void SetRatio16(word ratio)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>ratio:word</i> - Ratio value, where 0 means 'off' and 0xffff means 'on'</li>
 </ul><br />
 </li>
 

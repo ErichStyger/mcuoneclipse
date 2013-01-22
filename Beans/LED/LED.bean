@@ -4,7 +4,7 @@
     <Name>LED</Name>
     <Description>Driver for a LED</Description>
     <Author>Erich Styger</Author>
-    <Version>01.050</Version>
+    <Version>01.052</Version>
     <Icon>Led</Icon>
     <TypesFiles>PE,LED\LED</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -179,14 +179,14 @@
     <Property>
       <TBoolGrupItem>
         <Name>Shell</Name>
-        <Symbol>Symbol</Symbol>
+        <Symbol>ShellEnabled</Symbol>
         <TypeSpec>typeEnaDis</TypeSpec>
         <Hint>If shell support is enabled.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
         <Description>Disabled</Description>
-        <Expanded>No</Expanded>
+        <Expanded>Yes</Expanded>
         <DefaultValue>false</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
@@ -224,6 +224,62 @@
     </Property>
   </PropertyList>
   <MethodList>
+    <Method>
+      <TMthdItem>
+        <Name>Init</Name>
+        <Symbol>Init</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Performs the LED driver initialization.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Deinit</Name>
+        <Symbol>Deinit</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Deinitializes the driver</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
     <Method>
       <TMthdItem>
         <Name>On</Name>
@@ -374,10 +430,10 @@
     </Method>
     <Method>
       <TMthdItem>
-        <Name>Init</Name>
-        <Symbol>Init</Symbol>
+        <Name>SetRatio16</Name>
+        <Symbol>SetRatio16</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Performs the LED driver initialization.</Hint>
+        <Hint>Method to specify the duty cylce. If using a PWM pin, this means the duty cycle is set. For On/off pins, values smaller 0x7FFF means off, while values greater means on.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -392,39 +448,17 @@
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>void</ReturnType>
-        <RetHint>none</RetHint>
-        <ParamCount>0</ParamCount>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>ratio</ParName>
+          <ParType>16bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Ratio value, where 0 means 'off' and 0xffff means 'on'</ParHint>
+        </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(void)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>Deinit</Name>
-        <Symbol>Deinit</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Deinitializes the driver</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>void</ReturnType>
-        <RetHint>none</RetHint>
-        <ParamCount>0</ParamCount>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>void #M#_#C#(void)</ANSIC>
+          <ANSIC>void #M#_#C#(word ratio)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -473,40 +507,6 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>byte #M#_#C#(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>SetRatio16</Name>
-        <Symbol>SetRatio16</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Method to specify the duty cylce. If using a PWM pin, this means the duty cycle is set. For On/off pins, values smaller 0x7FFF means off, while values greater means on.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>void</ReturnType>
-        <RetHint>Error code</RetHint>
-        <ParamCount>1</ParamCount>
-        <Parameter>
-          <ParName>ratio</ParName>
-          <ParType>16bit unsigned</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>Ratio value, where 0 means 'off' and 0xffff means 'on'</ParHint>
-        </Parameter>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>void #M#_#C#(word ratio)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
