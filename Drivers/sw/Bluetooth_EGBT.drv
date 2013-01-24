@@ -753,7 +753,6 @@ static const unsigned char *%'ModuleName'%.ErrorStringTable[] = {
   /* 1B */ (unsigned char*)"Invalid Security Mode entered",
   /* 1C */ (unsigned char*)"Invalid Encryption Mode entered",
   /* 1D */ (unsigned char*)"No Error",
-  /*! \todo extend table */
 };
 
 static bool isRxError(unsigned char *buf, uint8_t *errno) {
@@ -773,6 +772,9 @@ static bool isRxError(unsigned char *buf, uint8_t *errno) {
       } else if (%@Utility@'ModuleName'%.strncmp((char*)&buf[idx-sizeof("ERROR(00)\r\n")-1], (char*)"ERROR(", sizeof("ERROR("))==0) {
         ch_high = buf[idx-sizeof("00)\r\n")-1];
         ch_low = buf[idx-sizeof("0)\r\n")-1];
+      } else { /* initialize in any case */
+        ch_high = '\0';
+        ch_low = '\0';
       }
       if (_IS_ERR_NUMBER(ch_high) && _IS_ERR_NUMBER(ch_low)) {
         %@Utility@'ModuleName'%.strcpy(hexBuf, sizeof(hexBuf), (unsigned char*)"0x");
@@ -894,13 +896,13 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   } else {
     buf[1] = '\0';
     if (buf[0]=='0') {
-      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)(" (slave)\r\n"));
+      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" (slave)\r\n");
     } else if (buf[1]=='1') {
-      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)(" (master)\r\n"), io->stdOut);
+      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" (master)\r\n");
     } else if (buf[1]=='2') {
-      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)(" (slave-loop)\r\n"), io->stdOut);
+      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" (slave-loop)\r\n");
     } else {
-      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)(" (UNKNOWN)\r\n"), io->stdOut);
+      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" (UNKNOWN)\r\n");
     }
   }
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Role", buf, io->stdOut);
@@ -910,13 +912,13 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   } else {
     buf[1] = '\0';
     if (buf[0]=='0') {
-      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)(" (specific address only)\r\n"));
+      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" (specific address only)\r\n");
     } else if (buf[1]=='1') {
-      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)(" (any address)\r\n"), io->stdOut);
+      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" (any address)\r\n");
     } else if (buf[1]=='2') {
-      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)(" (test mode)\r\n"), io->stdOut);
+      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" (test mode)\r\n");
     } else {
-      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)(" (UNKNOWN)\r\n"), io->stdOut);
+      %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" (UNKNOWN)\r\n");
     }
   }
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Connection", buf, io->stdOut);
@@ -1741,7 +1743,7 @@ byte %'ModuleName'%.%btQueryMultipleUserIOPins(word *mask)
   const unsigned char *p;
 
   %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"0x");
-  if (%'ModuleName'%.btQueryMultipleUserIOPinsStr((unsigned char*)"AT+MPIO?", (unsigned char*)"+MPIO:", buf+2, sizeof(buf-2))!=ERR_OK) {
+  if (%'ModuleName'%.btQueryMultipleUserIOPinsStr(buf+2, sizeof(buf-2))!=ERR_OK) {
     *mask = 0;
     return ERR_FAILED;
   }
@@ -1972,7 +1974,7 @@ byte %'ModuleName'%.%btQueryTotalNumberOfDeviceFromAuthenticationListStr(byte *b
   /* 25: Query Total Number of Device from Authenticated Device List: "AT+ADCN?\r\n" ==> "+ADCN:<total>\r\nOK\r\n"
      where <total> = total number of devices in the authenticated device list
    */
-  return %'ModuleName'%.QueryString((unsigned char*)"AT+ADCN?", (unsigned char*)"+ADCN:", buf, sizeof(buf)):
+  return %'ModuleName'%.QueryString((unsigned char*)"AT+ADCN?", (unsigned char*)"+ADCN:", buf, sizeof(buf));
 }
 
 %endif %- btQueryTotalNumberOfDeviceFromAuthenticationListStr
@@ -1991,7 +1993,7 @@ byte %'ModuleName'%.%btQueryTotalNumberOfDeviceFromAuthenticationList(byte *nofD
   unsigned char buf[sizeof("1024")];
   const unsigned char *p;
 
-  if (%'ModuleName'%.%btQueryTotalNumberOfDeviceFromAuthenticationListStr(buf, sizeof(buf));
+  if (%'ModuleName'%.%btQueryTotalNumberOfDeviceFromAuthenticationListStr(buf, sizeof(buf))!=ERR_OK) {
     return ERR_FAILED;
   }
   p = &buf[0];

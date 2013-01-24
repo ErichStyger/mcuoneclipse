@@ -11,25 +11,7 @@
 #include "FSSH1.h"
 #include "Shell.h"
 
-static uint8_t ExecuteQueryString(uint8_t(*f)(unsigned char*,size_t), unsigned char *text, const FSSH1_StdIOType *io) {
-  uint8_t buf[32];
-
-  FSSH1_SendStr(text, io->stdOut);
-  if (f(buf, sizeof(buf))!=ERR_OK) {
-    FSSH1_SendStr((unsigned char*)"failed\r\n", io->stdOut);
-    return ERR_FAILED;
-  } else {
-    FSSH1_SendStr(buf, io->stdOut);
-    FSSH1_SendStr((unsigned char*)"\r\n", io->stdOut);
-  }
-  return ERR_OK;
-}
-
 static void Test(const FSSH1_StdIOType *io) {
-  uint8_t buf[32];
-  uint8_t num8;
-  uint16_t mask;
-
   FSSH1_SendStr((unsigned char*)"\r\nBluetooth Module Test:\r\n----------------------\r\n", io->stdOut);
 
   FSSH1_SendStr((unsigned char*)"Test UART: ", io->stdOut);
