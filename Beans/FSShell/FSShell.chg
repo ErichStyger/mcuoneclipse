@@ -41,16 +41,19 @@
 %endif
 
 %- Enable or disable LLD
-%if (CPUfamily = "Kinetis")
-  %set ConsoleEnabled Value Disabled
-  %set LDDConsoleEnabled Value Enabled
-  %set ConsoleEnabled Expanded no
-  %set LDDConsoleEnabled Expanded yes
-%else
-  %set ConsoleEnabled Value Enabled
-  %set LDDConsoleEnabled Value Disabled
-  %set ConsoleEnabled Expanded yes
-  %set LDDConsoleEnabled Expanded no
+%- %if (CPUfamily = "Kinetis")
+%-   %set ConsoleEnabled Value Disabled
+%-   %set LDDConsoleEnabled Value Enabled
+%-   %set ConsoleEnabled Expanded no
+%-   %set LDDConsoleEnabled Expanded yes
+%- %else
+%-   %set ConsoleEnabled Value Enabled
+%-   %set LDDConsoleEnabled Value Disabled
+%-   %set ConsoleEnabled Expanded yes
+%-   %set LDDConsoleEnabled Expanded no
+%- %endif
+%- %set ConsoleEnabled ReadOnly yes
+%- %set LDDConsoleEnabled ReadOnly yes
+%if ConsoleEnabled='yes' & LDDConsoleEnabled='yes'
+  %error Only one Console (LDD or non-LDD) can be enabled
 %endif
-%set ConsoleEnabled ReadOnly yes
-%set LDDConsoleEnabled ReadOnly yes

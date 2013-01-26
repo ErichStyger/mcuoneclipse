@@ -4,7 +4,7 @@
     <Name>FSShell</Name>
     <Description>File System Shell</Description>
     <Author>Erich Styger</Author>
-    <Version>01.228</Version>
+    <Version>01.229</Version>
     <Icon>FSShell</Icon>
     <TypesFiles>PE,FSShell\FSShell</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -156,7 +156,7 @@
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
         <Description>Disabled</Description>
-        <Expanded>Yes</Expanded>
+        <Expanded>No</Expanded>
         <DefaultValue>false</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
@@ -226,7 +226,6 @@
               <TypeSpec>typeEnaDis</TypeSpec>
               <Hint>Using Logical Device Driver</Hint>
               <ItemLevel>BASIC</ItemLevel>
-              <ReadOnly>true</ReadOnly>
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
               <Description>Disabled</Description>
@@ -327,7 +326,6 @@
               <TypeSpec>typeEnaDis</TypeSpec>
               <Hint>Using traditional driver</Hint>
               <ItemLevel>BASIC</ItemLevel>
-              <ReadOnly>true</ReadOnly>
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
               <Description>Disabled</Description>
