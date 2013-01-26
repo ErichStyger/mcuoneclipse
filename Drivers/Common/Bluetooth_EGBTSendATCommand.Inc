@@ -16,8 +16,8 @@
 %;**       * expectedTailStr%ParexpectedTailStr %>27 - Pointer to the
 %;** %>29 function will read from the device until
 %;** %>29 the expected tail string is read. Typically
-%;** %>29 this is "OK\r
-%;** %>29 "
+%;** %>29 this is "OK" terminated by backslash r and
+%;** %>29 backslash n
 %;**     Returns     :
 %;**         ---%RetVal %>27 - Error code
 %include Common\GeneralDamage.inc

@@ -4,7 +4,7 @@
     <Name>Bluetooth_EGBT</Name>
     <Description>Driver for the EGBT-045MS e-Gizmo Bluetooth Module</Description>
     <Author>Erich Styger</Author>
-    <Version>01.009</Version>
+    <Version>01.016</Version>
     <Icon>Bluetooth_EGBT</Icon>
     <TypesFiles>PE,Bluetooth_EGBT\Bluetooth_EGBT</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -124,7 +124,7 @@
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
         <Description>Disabled</Description>
-        <Expanded>No</Expanded>
+        <Expanded>Yes</Expanded>
         <DefaultValue>false</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
@@ -305,16 +305,17 @@
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>size of the receiving buffer in bytes</ParHint>
+          <ParUserDeclaration>size_t rxBufSize</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>expectedTailStr</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Address</ParPassing>
-          <ParHint>Pointer to the function will read from the device until the expected tail string is read. Typically this is "OK\r\n"</ParHint>
+          <ParHint>Pointer to the function will read from the device until the expected tail string is read. Typically this is "OK" terminated by backslash r and backslash n</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(byte *cmd, byte *rxBuf, byte rxBufSize, byte *expectedTailStr)</ANSIC>
+          <ANSIC>byte #M#_#C#(byte *cmd, byte *rxBuf, size_t rxBufSize, byte *expectedTailStr)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2051,6 +2052,102 @@ OK\\r\n
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>byte #M#_#C#(const unsigned char* cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>RecvChar</Name>
+        <Symbol>RecvChar</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Receives a character from the Bluetooth serial bridge</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>ch</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to character buffer</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte *ch)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>SendChar</Name>
+        <Symbol>SendChar</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Sends a character to the Bluetooth serial bridge</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>ch</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Character to be sent</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte ch)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>GetCharsInRxBuf</Name>
+        <Symbol>GetCharsInRxBuf</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Returns the numbers of character in the receiver buffer.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>16bit unsigned</ReturnType>
+        <RetHint>Number of characters.</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>word #M#_#C#(void)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

@@ -135,7 +135,7 @@ typedef enum {
 
 typedef const unsigned char *%'ModuleName'%.TConstStringPtr; /* type for constant string pointer */
 
-#define %'ModuleName'%.MAX_CMD_SIZE                            16  /* maximum command size, e.g. "AT+ADDR?\r\n" */
+#define %'ModuleName'%.MAX_AT_CMD_SIZE                         (sizeof("AT+VERSION?\r\n"))  /* longest AT command */
 #define %'ModuleName'%.MAX_RESPONSE_SIZE                       42  /* maximum response size, e.g. "+NAME:abcdef\r\nOK\r\n" */
 #define %'ModuleName'%.MAX_ERR_RESPONSE_SIZE                   (sizeof("ERROR:(32)\r\n"))  /* max size of error response */
 #define %'ModuleName'%.MAX_DEVICE_NAME_SIZE                    31  /* device name can be up to 31 characters */
@@ -641,7 +641,7 @@ byte %'ModuleName'%.%btQueryCurrentStateOfDeviceStr(byte *buf, size_t bufSize);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SendATCommand
 %ifdef SendATCommand
-byte %'ModuleName'%.%SendATCommand(byte *cmd, byte *rxBuf, byte rxBufSize, byte *expectedTailStr);
+byte %'ModuleName'%.%SendATCommand(byte *cmd, byte *rxBuf, size_t rxBufSize, byte *expectedTailStr);
 %define! Parcmd
 %define! ParrxBuf
 %define! ParrxBufSize
@@ -684,6 +684,38 @@ byte %'ModuleName'%.%btQueryMultipleUserIOPinsStr(byte *buf, size_t bufSize);
 
 %endif %- btQueryMultipleUserIOPinsStr
 %-BW_METHOD_END btQueryMultipleUserIOPinsStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN RecvChar
+%ifdef RecvChar
+#define %'ModuleName'%.%RecvChar(chP) \
+  %@Serial@'ModuleName'%.RecvChar(chP)
+%define! Parch
+%define! RetVal
+%include Common\Bluetooth_EGBTRecvChar.Inc
+
+%endif %- RecvChar
+%-BW_METHOD_END RecvChar
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SendChar
+%ifdef SendChar
+#define %'ModuleName'%.%SendChar(ch) \
+  %@Serial@'ModuleName'%.SendChar(ch)
+%define! Parch
+%define! RetVal
+%include Common\Bluetooth_EGBTSendChar.Inc
+
+%endif %- SendChar
+%-BW_METHOD_END SendChar
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetCharsInRxBuf
+%ifdef GetCharsInRxBuf
+#define %'ModuleName'%.%GetCharsInRxBuf() \
+  %@Serial@'ModuleName'%.GetCharsInRxBuf()
+%define! RetVal
+%include Common\Bluetooth_EGBTGetCharsInRxBuf.Inc
+
+%endif %- GetCharsInRxBuf
+%-BW_METHOD_END GetCharsInRxBuf
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -755,11 +787,12 @@ static const unsigned char *%'ModuleName'%.ErrorStringTable[] = {
   /* 1D */ (unsigned char*)"No Error",
 };
 
-static bool isRxError(unsigned char *buf, uint8_t *errno) {
+static bool isRxError(unsigned char *buf, %'ModuleName'%.TEnumErrors *errno) {
   /* return true for "ERROR:(1D)\r\n" at the end of the buffer and returns the error */
   size_t idx;
   unsigned char ch_low, ch_high;
   const unsigned char *p;
+  uint8_t val;
   unsigned char hexBuf[sizeof("0x1F")];
   #define _IS_ERR_NUMBER(ch) ((ch>='0' && ch<='9') || (ch>='A' && ch<='D')) /* 0..1D */
 
@@ -781,7 +814,8 @@ static bool isRxError(unsigned char *buf, uint8_t *errno) {
         %@Utility@'ModuleName'%.chcat(hexBuf, sizeof(hexBuf), ch_high);
         %@Utility@'ModuleName'%.chcat(hexBuf, sizeof(hexBuf), ch_low);
         p = &hexBuf[0];
-        if (%@Utility@'ModuleName'%.ScanHex8uNumber(&p, errno)==ERR_OK) {
+        if (%@Utility@'ModuleName'%.ScanHex8uNumber(&p, &val)==ERR_OK) {
+          *errno = (%'ModuleName'%.TEnumErrors)val;
           return TRUE; /* bingo! */
         }
       }
@@ -790,7 +824,7 @@ static bool isRxError(unsigned char *buf, uint8_t *errno) {
   return FALSE; /* not an error */
 }
 
-static uint8_t RxResponse(unsigned char *rxBuf, uint8_t rxBufLength, uint16_t msTimeout, unsigned char *expectedTail) {
+static uint8_t RxResponse(unsigned char *rxBuf, size_t rxBufLength, uint16_t msTimeout, unsigned char *expectedTail) {
   unsigned char ch;
   uint8_t res = ERR_OK;
   unsigned char *p;
@@ -839,7 +873,7 @@ static uint8_t ExecuteQueryString(uint8_t(*f)(unsigned char*,size_t), unsigned c
 }
 
 static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
-  uint8_t buf[32];
+  uint8_t buf[%'ModuleName'%.MAX_RESPONSE_SIZE];
 
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"%'ModuleName'", (unsigned char*)"\r\n", io->stdOut);
 
@@ -927,11 +961,24 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
 }
 
 static uint8_t PrintHelp(const %@Shell@'ModuleName'%.StdIOType *io) {
-  /* list your local help here */
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"%'ModuleName'", (unsigned char*)"Group of %'ModuleName' commands\r\n", io->stdOut);
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
-  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  cmd <AT command>", (unsigned char*)"Send an AT command, e.g AT+NAME?.\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  cmd <AT command>", (unsigned char*)"Send an AT command, e.g AT+NAME?\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  send <string>", (unsigned char*)"Send a string to the Bluetooth UART bridge\r\n", io->stdOut);
   return ERR_OK;
+}
+
+static void SendCommand(const unsigned char *cmd, const %@Shell@'ModuleName'%.StdIOType *io) {
+  unsigned char buf[%'ModuleName'%.MAX_RESPONSE_SIZE];
+  unsigned char cmdBuf[%'ModuleName'%.MAX_AT_CMD_SIZE];
+
+  %@Utility@'ModuleName'%.strcpy(cmdBuf, sizeof(cmdBuf), cmd);
+  %@Utility@'ModuleName'%.strcat(cmdBuf, sizeof(cmdBuf), (unsigned char*)"\r\n");
+  buf[0] = '\0';
+  if (%'ModuleName'%.SendATCommand(cmdBuf, buf, sizeof(buf), (unsigned char*)"OK\r\n")!=ERR_OK) {
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"***Response not OK\r\n", io->stdOut);
+  }
+  %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
 }
 
 %endif
@@ -950,14 +997,14 @@ static uint8_t PrintHelp(const %@Shell@'ModuleName'%.StdIOType *io) {
 %define! ParexpectedTailStr
 %define! RetVal
 %include Common\Bluetooth_EGBTSendATCommand.Inc
-byte %'ModuleName'%.%SendATCommand(byte *cmd, byte *rxBuf, byte rxBufSize, byte *expectedTailStr)
+byte %'ModuleName'%.%SendATCommand(byte *cmd, byte *rxBuf, size_t rxBufSize, byte *expectedTailStr)
 {
-  uint16_t snt;
+  word snt;
   byte res;
 
   %'ModuleName'%.SET_CMD_MODE();
   %'ModuleName'%.CLR_RX_BUF();
-  if (%@Serial@'ModuleName'%.SendBlock(cmd, %@Utility@'ModuleName'%.strlen((char*)cmd), &snt)!=ERR_OK) {
+  if (%@Serial@'ModuleName'%.SendBlock(cmd, (word)%@Utility@'ModuleName'%.strlen((char*)cmd), &snt)!=ERR_OK) {
     return ERR_FAILED;
   }
   res = RxResponse(rxBuf, rxBufSize, %'ModuleName'%.TIMEOUT_MS, expectedTailStr);
@@ -980,7 +1027,7 @@ byte %'ModuleName'%.%StdCmd(byte *cmd, byte *rxBuf, size_t rxBufSize, byte *expe
 {
   /* Send standard command: "<cmd>\r\n" ==> "<expectedResponse>" */
   uint8_t res = ERR_OK;
-  unsigned char cmdBuf[%'ModuleName'%.MAX_CMD_SIZE];
+  unsigned char cmdBuf[%'ModuleName'%.MAX_AT_CMD_SIZE];
 
   %@Utility@'ModuleName'%.strcpy(cmdBuf, sizeof(cmdBuf), cmd);
   %@Utility@'ModuleName'%.strcat(cmdBuf, sizeof(cmdBuf), (unsigned char*)"\r\n");
@@ -1031,7 +1078,7 @@ byte %'ModuleName'%.%QueryString(byte *cmd, byte *expectedResponse, byte *string
   /* example get string: "AT+RNAME?\r\n" ==> "+NAME:<name>\r\nOK\r\n" */
   uint8_t res = ERR_OK;
   unsigned char rxBuf[%'ModuleName'%.MAX_RESPONSE_SIZE];
-  unsigned char cmdBuf[%'ModuleName'%.MAX_CMD_SIZE];
+  unsigned char cmdBuf[%'ModuleName'%.MAX_AT_CMD_SIZE];
   size_t responseLen;
 
   responseLen = %@Utility@'ModuleName'%.strlen((char*)expectedResponse);
@@ -1974,7 +2021,7 @@ byte %'ModuleName'%.%btQueryTotalNumberOfDeviceFromAuthenticationListStr(byte *b
   /* 25: Query Total Number of Device from Authenticated Device List: "AT+ADCN?\r\n" ==> "+ADCN:<total>\r\nOK\r\n"
      where <total> = total number of devices in the authenticated device list
    */
-  return %'ModuleName'%.QueryString((unsigned char*)"AT+ADCN?", (unsigned char*)"+ADCN:", buf, sizeof(buf));
+  return %'ModuleName'%.QueryString((unsigned char*)"AT+ADCN?", (unsigned char*)"+ADCN:", buf, bufSize);
 }
 
 %endif %- btQueryTotalNumberOfDeviceFromAuthenticationListStr
@@ -2062,12 +2109,59 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char* cmd, bool *handled, const
   } else if ((%@Utility@'ModuleName'%.strcmp((char*)cmd, %@Shell@'ModuleName'%.CMD_STATUS)==0) || (%@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' status")==0)) {
     *handled = TRUE;
     return PrintStatus(io);
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' cmd ", sizeof("%'ModuleName' cmd ")-1)==0) {
+    SendCommand(cmd+sizeof("%'ModuleName' cmd ")-1, io);
+    *handled = TRUE;
   }
   return ERR_OK;
 }
 
 %endif %- ParseCommand
 %-BW_METHOD_END ParseCommand
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN RecvChar
+%ifdef RecvChar
+%define! Parch
+%define! RetVal
+%include Common\Bluetooth_EGBTRecvChar.Inc
+/*
+byte %'ModuleName'%.%RecvChar(byte *ch)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- RecvChar
+%-BW_METHOD_END RecvChar
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SendChar
+%ifdef SendChar
+%define! Parch
+%define! RetVal
+%include Common\Bluetooth_EGBTSendChar.Inc
+/*
+byte %'ModuleName'%.%SendChar(byte ch)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- SendChar
+%-BW_METHOD_END SendChar
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetCharsInRxBuf
+%ifdef GetCharsInRxBuf
+%define! RetVal
+%include Common\Bluetooth_EGBTGetCharsInRxBuf.Inc
+/*
+word %'ModuleName'%.%GetCharsInRxBuf(void)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- GetCharsInRxBuf
+%-BW_METHOD_END GetCharsInRxBuf
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
