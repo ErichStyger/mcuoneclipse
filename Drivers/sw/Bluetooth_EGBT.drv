@@ -750,7 +750,7 @@ byte %'ModuleName'%.%btQueryMultipleUserIOPinsStr(byte *buf, size_t bufSize);
 %-     int %'ModuleName'%.counter2;
 #define %'ModuleName'%.SET_CMD_MODE()                          %@CMD@'ModuleName'%.SetVal() /* cmd pin high: command mode */
 #define %'ModuleName'%.SET_DATA_MODE()                         %@CMD@'ModuleName'%.ClrVal() /* cmd pin low: data mode */
-#define %'ModuleName'%.CLR_RX_BUF()                            %@Serial@'ModuleName'%.ClearRxBuf() /* clear input buffer */
+#define %'ModuleName'%.CLR_RX_BUF()                            (void)%@Serial@'ModuleName'%.ClearRxBuf() /* clear input buffer */
 
 static %'ModuleName'%.TEnumErrors %'ModuleName'%.lastErr = %'ModuleName'%.NO_ERROR; /* holds the last error */
 
@@ -1790,7 +1790,7 @@ byte %'ModuleName'%.%btQueryMultipleUserIOPins(word *mask)
   const unsigned char *p;
 
   %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"0x");
-  if (%'ModuleName'%.btQueryMultipleUserIOPinsStr(buf+2, sizeof(buf-2))!=ERR_OK) {
+  if (%'ModuleName'%.btQueryMultipleUserIOPinsStr(buf+2, sizeof(buf)-2)!=ERR_OK) {
     *mask = 0;
     return ERR_FAILED;
   }
