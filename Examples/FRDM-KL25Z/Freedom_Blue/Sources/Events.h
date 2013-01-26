@@ -26,13 +26,13 @@
 #include "UTIL1.h"
 #include "WAIT1.h"
 #include "FSSH1.h"
-#include "RxBuf1.h"
-#include "AS1.h"
 #include "BT1.h"
 #include "Cmd1.h"
 #include "BitIoLdd2.h"
 #include "Serial1.h"
 #include "ASerialLdd2.h"
+#include "AS2.h"
+#include "ASerialLdd1.h"
 #include "PE_LDD.h"
 
 void Cpu_OnNMIINT(void);

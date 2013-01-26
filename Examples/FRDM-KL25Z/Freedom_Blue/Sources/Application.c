@@ -58,7 +58,6 @@ static void PrintHelp(const FSSH1_StdIOType *io) {
   /* list your local help here */
   FSSH1_SendHelpStr((unsigned char*)"bt", (unsigned char*)"Group of bt commands\r\n", io->stdOut);
   FSSH1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows trace help or status\r\n", io->stdOut);
-  FSSH1_SendHelpStr((unsigned char*)"  cmd <AT command>", (unsigned char*)"Send AT command to Bluetooth modem\r\n", io->stdOut);
 }
 
 /*!
@@ -67,22 +66,7 @@ static void PrintHelp(const FSSH1_StdIOType *io) {
  */
 static void PrintStatus(const FSSH1_StdIOType *io) {
   /* list your local status here */
-  FSSH1_SendStatusStr((unsigned char*)"bt", (unsigned char*)"\r\n", io->stdOut);
-  FSSH1_SendStatusStr((unsigned char*)"  dummy", (unsigned char*)"yes\r\n", io->stdOut);
   Test(io);
-}
-
-static void SendATCommand(const unsigned char *cmd, const FSSH1_StdIOType *io) {
-  unsigned char buf[32];
-  unsigned char cmdBuf[32];
-  
-  UTIL1_strcpy(cmdBuf, sizeof(cmdBuf), cmd);
-  UTIL1_strcat(cmdBuf, sizeof(cmdBuf), (unsigned char*)"\r\n");
-  buf[0] = '\0';
-  if (BT1_SendATCommand(cmdBuf, buf, sizeof(buf), (unsigned char*)"OK\r\n")!=ERR_OK) {
-    FSSH1_SendStr((unsigned char*)"***AT does not match tail\r\n", io->stdOut);
-  }
-  FSSH1_SendStr(buf, io->stdOut);
 }
 
 uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const FSSH1_StdIOType *io) {
@@ -92,9 +76,6 @@ uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const FSSH1_St
     *handled = TRUE;
   } else if (UTIL1_strcmp((char*)cmd, FSSH1_CMD_STATUS)==0 || UTIL1_strcmp((char*)cmd, "bt status")==0) {
     PrintStatus(io);
-    *handled = TRUE;
-  } else if (UTIL1_strncmp((char*)cmd, "bt cmd ", sizeof("bt cmd ")-1)==0) {
-    SendATCommand(cmd+sizeof("bt cmd ")-1, io);
     *handled = TRUE;
   } else if (UTIL1_strcmp((char*)cmd, "bt test")==0) {
     Test(io);
