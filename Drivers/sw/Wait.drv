@@ -517,7 +517,7 @@ void %'ModuleName'%.%Waitms(word ms)
   }
 %else
   if (ms>0) {
-    %'ProcessorModule'%.%Delay100usFunction((word)(ms*10));
+    %'ProcessorModule'%.%Delay100usFunction((word)(ms*10)); /* Use function in CPU component. If you get a compiler error here, this typically means that the method is not enabled. Enable this method in the CPU component */
   }
 %endif
 }
