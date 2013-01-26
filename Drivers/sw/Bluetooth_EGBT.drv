@@ -863,11 +863,11 @@ static uint8_t RxResponse(unsigned char *rxBuf, size_t rxBufLength, uint16_t msT
 %if defined(Shell)
 static uint8_t ExecuteQueryString(uint8_t(*f)(unsigned char*,size_t), unsigned char *buf, size_t bufSize, unsigned char *appendStr) {
   if (f(buf, bufSize)==ERR_OK) {
-    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)appendStr);
+    %@Utility@'ModuleName'%.strcat(buf, bufSize, (unsigned char*)appendStr);
     return ERR_OK;
   } else {
-    %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"ERROR");
-    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)appendStr);
+    %@Utility@'ModuleName'%.strcpy(buf, bufSize, (unsigned char*)"ERROR");
+    %@Utility@'ModuleName'%.strcat(buf, bufSize, (unsigned char*)appendStr);
     return ERR_FAILED;
   }
 }
