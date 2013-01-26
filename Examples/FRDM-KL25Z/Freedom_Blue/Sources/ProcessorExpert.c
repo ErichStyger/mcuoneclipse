@@ -21,13 +21,22 @@
 #include "Events.h"
 #include "UTIL1.h"
 #include "WAIT1.h"
-#include "FSSH1.h"
 #include "BT1.h"
 #include "Cmd1.h"
-#include "BitIoLdd2.h"
+#include "BitIoLdd1.h"
 #include "Serial1.h"
 #include "ASerialLdd2.h"
-#include "AS2.h"
+#include "LEDR.h"
+#include "LEDpin1.h"
+#include "BitIoLdd2.h"
+#include "LEDG.h"
+#include "LEDpin2.h"
+#include "BitIoLdd3.h"
+#include "LEDB.h"
+#include "LEDpin3.h"
+#include "BitIoLdd4.h"
+#include "CLS1.h"
+#include "AS1.h"
 #include "ASerialLdd1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
@@ -36,7 +45,7 @@
 #include "IO_Map.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
-#include "Application.h"
+#include "Shell.h"
 
 int main(void)
 {
@@ -48,7 +57,7 @@ int main(void)
 
   /* Write your code here */
   /* For example: for(;;) { } */
-  APP_Run();
+  SHELL_Run();
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/

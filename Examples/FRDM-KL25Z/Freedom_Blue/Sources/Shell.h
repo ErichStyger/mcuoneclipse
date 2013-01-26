@@ -25,4 +25,7 @@ void SHELL_ReadAndParseLine(unsigned char *buf, size_t bufSize);
 /*! \brief Serial driver initialization */
 void SHELL_Init(void);
 
+/* \brief runs the shell */
+void SHELL_Run(void);
+
 #endif /*__SHELL_H_*/

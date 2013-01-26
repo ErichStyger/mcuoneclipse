@@ -716,6 +716,33 @@ byte %'ModuleName'%.%btQueryMultipleUserIOPinsStr(byte *buf, size_t bufSize);
 
 %endif %- GetCharsInRxBuf
 %-BW_METHOD_END GetCharsInRxBuf
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN StdIOKeyPressed
+%ifdef StdIOKeyPressed
+bool %'ModuleName'%.%StdIOKeyPressed(void);
+%define! RetVal
+%include Common\Bluetooth_EGBTStdIOKeyPressed.Inc
+
+%endif %- StdIOKeyPressed
+%-BW_METHOD_END StdIOKeyPressed
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN StdIOReadChar
+%ifdef StdIOReadChar
+void %'ModuleName'%.%StdIOReadChar(byte *c);
+%define! Parc
+%include Common\Bluetooth_EGBTStdIOReadChar.Inc
+
+%endif %- StdIOReadChar
+%-BW_METHOD_END StdIOReadChar
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN StdIOSendChar
+%ifdef StdIOSendChar
+void %'ModuleName'%.%StdIOSendChar(byte ch);
+%define! Parch
+%include Common\Bluetooth_EGBTStdIOSendChar.Inc
+
+%endif %- StdIOSendChar
+%-BW_METHOD_END StdIOSendChar
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -877,8 +904,15 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
 
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"%'ModuleName'", (unsigned char*)"\r\n", io->stdOut);
 
+  if (%'ModuleName'%.%btTestUART()!=ERR_OK) {
+    %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Test UART", (unsigned char*)"FAILED\r\n", io->stdOut);
+    return ERR_FAILED;
+  } else {
+    %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Test UART", (unsigned char*)"OK\r\n", io->stdOut);
+  }
+
   (void)ExecuteQueryString(%'ModuleName'%.%btQueryFirmwareVersionStr, buf, sizeof(buf), (unsigned char*)"\r\n");
-  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  FW", buf, io->stdOut);
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Firmware", buf, io->stdOut);
 
   (void)ExecuteQueryString(%'ModuleName'%.%btQueryDeviceName, buf, sizeof(buf), (unsigned char*)"\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Name", buf, io->stdOut);
@@ -893,16 +927,16 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  IAM", buf, io->stdOut);
 
   (void)ExecuteQueryString(%'ModuleName'%.%btQueryPairingPasskey, buf, sizeof(buf), (unsigned char*)"\r\n");
-  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  key", buf, io->stdOut);
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Pairing Key", buf, io->stdOut);
 
   (void)ExecuteQueryString(%'ModuleName'%.%btQueryUARTParametersStr, buf, sizeof(buf), (unsigned char*)"\r\n");
-  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  UART", buf, io->stdOut);
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  UART Param", buf, io->stdOut);
 
   (void)ExecuteQueryString(%'ModuleName'%.%btQueryBindingBluetoothAddress, buf, sizeof(buf), (unsigned char*)"\r\n");
-  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Binding Addr", buf, io->stdOut);
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  BindingAddr", buf, io->stdOut);
 
   (void)ExecuteQueryString(%'ModuleName'%.%btQueryLEDOutputPolarityStr, buf, sizeof(buf), (unsigned char*)"\r\n");
-  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  LED Polarity", buf, io->stdOut);
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  LEDPolarity", buf, io->stdOut);
 
   (void)ExecuteQueryString(%'ModuleName'%.%btQueryScanningParametersStr, buf, sizeof(buf), (unsigned char*)"\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Scan Param", buf, io->stdOut);
@@ -917,10 +951,10 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Recent Auth.", buf, io->stdOut);
 
   (void)ExecuteQueryString(%'ModuleName'%.%btQueryCurrentStateOfDeviceStr, buf, sizeof(buf), (unsigned char*)"\r\n");
-  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Device State", buf, io->stdOut);
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  State", buf, io->stdOut);
 
   (void)ExecuteQueryString(%'ModuleName'%.%btQueryTotalNumberOfDeviceFromAuthenticationListStr, buf, sizeof(buf), (unsigned char*)"\r\n");
-  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Authenticated", buf, io->stdOut);
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Nof Auth.", buf, io->stdOut);
 
   (void)ExecuteQueryString(%'ModuleName'%.%btQueryMultipleUserIOPinsStr, buf, sizeof(buf), (unsigned char*)"\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  I/O Pins", buf, io->stdOut);
@@ -2112,6 +2146,17 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char* cmd, bool *handled, const
   } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' cmd ", sizeof("%'ModuleName' cmd ")-1)==0) {
     SendCommand(cmd+sizeof("%'ModuleName' cmd ")-1, io);
     *handled = TRUE;
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' send ", sizeof("%'ModuleName' send ")-1)==0) {
+    word strSize, snt;
+    const unsigned char *p;
+
+    *handled = TRUE;
+    p = cmd+sizeof("%'ModuleName' send ")-1;
+    strSize = (word)%@Utility@'ModuleName'%.strlen((char*)p);
+    if (%@Serial@'ModuleName'%.SendBlock((unsigned char*)p, strSize, &snt)!=ERR_OK) {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"FAILED sending string\r\n", io->stdOut);
+      return ERR_FAILED;
+    }
   }
   return ERR_OK;
 }
@@ -2162,6 +2207,45 @@ word %'ModuleName'%.%GetCharsInRxBuf(void)
 
 %endif %- GetCharsInRxBuf
 %-BW_METHOD_END GetCharsInRxBuf
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN StdIOKeyPressed
+%ifdef StdIOKeyPressed
+%define! RetVal
+%include Common\Bluetooth_EGBTStdIOKeyPressed.Inc
+bool %'ModuleName'%.%StdIOKeyPressed(void)
+{
+  return (bool)((%'ModuleName'%.GetCharsInRxBuf()==0U) ? FALSE : TRUE); /* true if there are characters in receive buffer */
+}
+
+%endif %- StdIOKeyPressed
+%-BW_METHOD_END StdIOKeyPressed
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN StdIOReadChar
+%ifdef StdIOReadChar
+%define! Parc
+%include Common\Bluetooth_EGBTStdIOReadChar.Inc
+void %'ModuleName'%.%StdIOReadChar(byte *c)
+{
+  if (%'ModuleName'%.RecvChar((uint8_t *)c) != ERR_OK) {
+    /* failed to receive character: return a zero character */
+    *c = '\0';
+  }
+}
+
+%endif %- StdIOReadChar
+%-BW_METHOD_END StdIOReadChar
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN StdIOSendChar
+%ifdef StdIOSendChar
+%define! Parch
+%include Common\Bluetooth_EGBTStdIOSendChar.Inc
+void %'ModuleName'%.%StdIOSendChar(byte ch)
+{
+  while (%'ModuleName'%.SendChar((uint8_t)ch)==ERR_TXFULL){} /* Send char */
+}
+
+%endif %- StdIOSendChar
+%-BW_METHOD_END StdIOSendChar
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

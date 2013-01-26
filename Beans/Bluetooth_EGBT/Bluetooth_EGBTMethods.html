@@ -822,7 +822,7 @@ LI.EXP {
 </li>
 <li><a name="ParseCommand">
 <b>ParseCommand</b></a>
- - Shell Command Line parser
+ - Shell Command Line parser. Method is only availabe if Shell is enabled in the component properties.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
 <br /><i>ANSIC prototype:</i> byte ParseCommand(const unsigned char* cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)<br />
@@ -867,6 +867,37 @@ LI.EXP {
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>Return value:word</i> - Number of characters.
 </li>
+</ul><br />
+</li>
+<li><a name="StdIOKeyPressed">
+<b>StdIOKeyPressed</b></a>
+ - StdIO handler for Shell
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> bool StdIOKeyPressed(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:bool</i> - True if there are characters in the input/RX buffer
+</li>
+</ul><br />
+</li>
+<li><a name="StdIOReadChar">
+<b>StdIOReadChar</b></a>
+ - StdIO Handler for reading a character. It reads a zero byte if there is no character.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void StdIOReadChar(byte *c)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>c: Pointer to byte</i> - Pointer to result character</li>
+</ul><br />
+</li>
+<li><a name="StdIOSendChar">
+<b>StdIOSendChar</b></a>
+ - StdIO handler to sends a character 
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void StdIOSendChar(byte ch)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>ch:byte</i> - character to send</li>
 </ul><br />
 </li>
 

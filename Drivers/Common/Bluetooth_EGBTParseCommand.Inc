@@ -5,7 +5,8 @@
 %;** ===================================================================
 %include Common\GeneralMethod.inc (ParseCommand)
 %;**     Description :
-%;**         Shell Command Line parser
+%;**         Shell Command Line parser. Method is only availabe if Shell
+%;**         is enabled in the component properties.
 %include Common\GeneralParameters.inc(27)
 %;**       * cmd%Parcmd %>27 - Pointer to command string
 %;**       * handled%Parhandled %>27 - Pointer to variable which tells if

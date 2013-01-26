@@ -25,13 +25,22 @@
 #include "IO_Map.h"
 #include "UTIL1.h"
 #include "WAIT1.h"
-#include "FSSH1.h"
 #include "BT1.h"
 #include "Cmd1.h"
-#include "BitIoLdd2.h"
+#include "BitIoLdd1.h"
 #include "Serial1.h"
 #include "ASerialLdd2.h"
-#include "AS2.h"
+#include "LEDR.h"
+#include "LEDpin1.h"
+#include "BitIoLdd2.h"
+#include "LEDG.h"
+#include "LEDpin2.h"
+#include "BitIoLdd3.h"
+#include "LEDB.h"
+#include "LEDpin3.h"
+#include "BitIoLdd4.h"
+#include "CLS1.h"
+#include "AS1.h"
 #include "ASerialLdd1.h"
 #include "PE_LDD.h"
 
@@ -51,12 +60,12 @@ void Cpu_OnNMIINT(void);
 */
 
 
-void AS2_OnBlockReceived(LDD_TUserData *UserDataPtr);
+void AS1_OnBlockReceived(LDD_TUserData *UserDataPtr);
 /*
 ** ===================================================================
-**     Event       :  AS2_OnBlockReceived (module Events)
+**     Event       :  AS1_OnBlockReceived (module Events)
 **
-**     Component   :  AS2 [Serial_LDD]
+**     Component   :  AS1 [Serial_LDD]
 **     Description :
 **         This event is called when the requested number of data is
 **         moved to the input buffer.
@@ -69,12 +78,12 @@ void AS2_OnBlockReceived(LDD_TUserData *UserDataPtr);
 ** ===================================================================
 */
 
-void AS2_OnBlockSent(LDD_TUserData *UserDataPtr);
+void AS1_OnBlockSent(LDD_TUserData *UserDataPtr);
 /*
 ** ===================================================================
-**     Event       :  AS2_OnBlockSent (module Events)
+**     Event       :  AS1_OnBlockSent (module Events)
 **
-**     Component   :  AS2 [Serial_LDD]
+**     Component   :  AS1 [Serial_LDD]
 **     Description :
 **         This event is called after the last character from the
 **         output buffer is moved to the transmitter. 
