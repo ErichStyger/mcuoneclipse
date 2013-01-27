@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief This is the implementation module of the Serial console
+ * \brief This is the implementation module for the shell
  * \author Erich Styger, erich.styger@hslu.ch
  *
  * This interface file is used for a console and terminal.
@@ -11,6 +11,7 @@
 #include "LEDR.h"
 #include "LEDG.h"
 #include "LEDB.h"
+#include "BT1.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -30,7 +31,7 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
   NULL /* sentinel */
 };
 
-/* Bluetooth stdio struct */
+/* Bluetooth stdio */
 static CLS1_ConstStdIOType BT_stdio = {
   (CLS1_StdIO_In_FctType)BT1_StdIOReadChar, /* stdin */
   (CLS1_StdIO_OutErr_FctType)BT1_StdIOSendChar, /* stdout */
@@ -38,17 +39,22 @@ static CLS1_ConstStdIOType BT_stdio = {
   BT1_StdIOKeyPressed /* if input is not empty */
 };
 
+static int cnt = 0;
+
 void SHELL_Run(void) {
   unsigned char buf[32];
   unsigned char bTbuf[32];
   
-  CLS1_Init(); /* initialize shell */
   buf[0]='\0';
   bTbuf[0]='\0';
   CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, CLS1_GetStdio(), CmdParserTable);
   for(;;) {
     (void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), CLS1_GetStdio(), CmdParserTable);
     (void)CLS1_ReadAndParseWithCommandTable(bTbuf, sizeof(bTbuf), &BT_stdio, CmdParserTable);
+    WAIT1_Waitms(200);
+    LEDR_Neg();
+    cnt++;
+    WAIT1_Waitms(200);
   }
 }
 
