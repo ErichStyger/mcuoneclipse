@@ -341,7 +341,7 @@ static uint8_t Dump(unsigned long startAddr, unsigned long endAddr, const %@Shel
     /* write data in hex */
     str[0] = '\0';
     for (j=0; j<bufSize; j++) {
-      if ((j%8)==0) {
+      if ((j%%8)==0) {
         %@Utility@'ModuleName'%.chcat(str, sizeof(str), ' ');
       }
       %@Utility@'ModuleName'%.strcatNum8Hex(str, sizeof(str), buf[j]);
