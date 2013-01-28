@@ -4,7 +4,7 @@
     <Name>Shell</Name>
     <Description>Command Line Shell</Description>
     <Author>Erich Styger</Author>
-    <Version>01.008</Version>
+    <Version>01.011</Version>
     <Icon>Shell</Icon>
     <TypesFiles>PE,Shell\Shell</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -223,68 +223,36 @@
       </TInhrLinkItem>
     </Property>
     <Property>
-      <TGrupItem>
-        <Name>Shell</Name>
-        <Symbol>Symbol</Symbol>
-        <Hint>Group defining the console. If enabled, a console/terminal needs to be specified. This console then provides the default stdio (stdin, stdout, stderr) channels.</Hint>
+      <TBoolGrupItem>
+        <Name>USB CDC</Name>
+        <Symbol>USBCDDEnabled</Symbol>
+        <TypeSpec>typeEnaDis</TypeSpec>
+        <Hint>Enable for USB CDC communication</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <Description>Shell Interface</Description>
-        <Expanded>Yes</Expanded>
+        <Description>Disabled</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
         <Children>
           <GrupItem>
-            <TBoolGrupItem>
-              <Name>LDD</Name>
-              <Symbol>LDDConsoleEnabled</Symbol>
-              <TypeSpec>typeEnaDis</TypeSpec>
-              <Hint>Using Logical Device Driver</Hint>
+            <TInhrLinkItem>
+              <Name>USB CDC</Name>
+              <Symbol>USBCDC</Symbol>
+              <TypeSpec>Shell\USBCDC</TypeSpec>
+              <Hint>USB CDC Interface</Hint>
               <ItemLevel>BASIC</ItemLevel>
-              <BoldName>true</BoldName>
               <EditLine>false</EditLine>
-              <Description>Disabled</Description>
-              <Expanded>Yes</Expanded>
-              <DefaultValue>false</DefaultValue>
-              <DefineSymbol>YES_NO</DefineSymbol>
-              <IfDisabled>setNOTHING</IfDisabled>
-              <Children>
-                <GrupItem>
-                  <TBoolGrupItem>
-                    <Name>USB CDC</Name>
-                    <Symbol>USBCDDEnabled</Symbol>
-                    <TypeSpec>typeEnaDis</TypeSpec>
-                    <Hint>Enable for USB CDC communication</Hint>
-                    <ItemLevel>BASIC</ItemLevel>
-                    <BoldName>true</BoldName>
-                    <EditLine>false</EditLine>
-                    <Description>Disabled</Description>
-                    <Expanded>No</Expanded>
-                    <DefaultValue>false</DefaultValue>
-                    <DefineSymbol>YES_NO</DefineSymbol>
-                    <IfDisabled>setNOTHING</IfDisabled>
-                    <Children>
-                      <GrupItem>
-                        <TInhrLinkItem>
-                          <Name>USB CDC</Name>
-                          <Symbol>USBCDC</Symbol>
-                          <TypeSpec>Shell\USBCDC</TypeSpec>
-                          <Hint>USB CDC Interface</Hint>
-                          <ItemLevel>BASIC</ItemLevel>
-                          <EditLine>false</EditLine>
-                          <DefaultValue/>
-                          <CanDelete>false</CanDelete>
-                          <IconPopup>false</IconPopup>
-                          <SortStyle/>
-                        </TInhrLinkItem>
-                      </GrupItem>
-                    </Children>
-                  </TBoolGrupItem>
-                </GrupItem>
-              </Children>
-            </TBoolGrupItem>
+              <DefaultValue/>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <SortStyle/>
+            </TInhrLinkItem>
           </GrupItem>
         </Children>
-      </TGrupItem>
+      </TBoolGrupItem>
     </Property>
   </PropertyList>
   <MethodList>

@@ -593,6 +593,7 @@ void %'ModuleName'%.%SendNum8s(signed char val, %'ModuleName'_StdIO_OutErr_FctTy
 byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, %'ModuleName'_ConstStdIOType *io)
 {
   if (%@Utility@'ModuleName'%.strcmp((char*)cmd, %'ModuleName'%.CMD_HELP)==0 || %@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' help")==0) {
+    %'ModuleName'%.%SendStr((unsigned char*)"\r\n", io->stdOut);
     %'ModuleName'%.%SendStr((unsigned char*)%'ModuleName'%.DASH_LINE, io->stdOut);
     %'ModuleName'%.%SendStr((unsigned char*)"\r\n", io->stdOut);
     %'ModuleName'%.%SendStr((unsigned char*)"%ProjectNameStr", io->stdOut);
@@ -694,6 +695,7 @@ byte %'ModuleName'%.%PrintStatus(%'ModuleName'_ConstStdIOType *io)
 #endif
 %endif
 
+  %'ModuleName'%.%SendStr((unsigned char*)"\r\n", io->stdOut);
   %'ModuleName'%.%SendStr((unsigned char*)%'ModuleName'%.DASH_LINE, io->stdOut);
   %'ModuleName'%.%SendStr((unsigned char*)"\r\nSYSTEM STATUS\r\n", io->stdOut);
   %'ModuleName'%.%SendStr((unsigned char*)%'ModuleName'%.DASH_LINE, io->stdOut);
