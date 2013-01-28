@@ -39,8 +39,6 @@ static CLS1_ConstStdIOType BT_stdio = {
   BT1_StdIOKeyPressed /* if input is not empty */
 };
 
-static int cnt = 0;
-
 void SHELL_Run(void) {
   unsigned char buf[32];
   unsigned char bTbuf[32];
@@ -51,10 +49,6 @@ void SHELL_Run(void) {
   for(;;) {
     (void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), CLS1_GetStdio(), CmdParserTable);
     (void)CLS1_ReadAndParseWithCommandTable(bTbuf, sizeof(bTbuf), &BT_stdio, CmdParserTable);
-    WAIT1_Waitms(200);
-    LEDR_Neg();
-    cnt++;
-    WAIT1_Waitms(200);
   }
 }
 
