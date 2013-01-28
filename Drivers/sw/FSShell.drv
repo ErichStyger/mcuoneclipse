@@ -2420,6 +2420,7 @@ byte %'ModuleName'%.%PrintStatus(%'ModuleName'_ConstStdIOType *io)
 #endif
 %endif
 
+  %'ModuleName'%.%SendStr((unsigned char*)"\r\n", io->stdOut);
   %'ModuleName'%.%SendStr((unsigned char*)%'ModuleName'%.DASH_LINE, io->stdOut);
   %'ModuleName'%.%SendStr((unsigned char*)"\r\nSYSTEM STATUS\r\n", io->stdOut);
   %'ModuleName'%.%SendStr((unsigned char*)%'ModuleName'%.DASH_LINE, io->stdOut);
