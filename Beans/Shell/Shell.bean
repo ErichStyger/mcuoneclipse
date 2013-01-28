@@ -4,7 +4,7 @@
     <Name>Shell</Name>
     <Description>Command Line Shell</Description>
     <Author>Erich Styger</Author>
-    <Version>01.011</Version>
+    <Version>01.013</Version>
     <Icon>Shell</Icon>
     <TypesFiles>PE,Shell\Shell</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -210,7 +210,7 @@
     </Property>
     <Property>
       <TInhrLinkItem>
-        <Name>Serial</Name>
+        <Name>Console Interface</Name>
         <Symbol>Serial</Symbol>
         <TypeSpec>Shell\Serial</TypeSpec>
         <Hint>Interface to low level asynchroserial component</Hint>
@@ -221,38 +221,6 @@
         <IconPopup>false</IconPopup>
         <SortStyle/>
       </TInhrLinkItem>
-    </Property>
-    <Property>
-      <TBoolGrupItem>
-        <Name>USB CDC</Name>
-        <Symbol>USBCDDEnabled</Symbol>
-        <TypeSpec>typeEnaDis</TypeSpec>
-        <Hint>Enable for USB CDC communication</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <BoldName>true</BoldName>
-        <EditLine>false</EditLine>
-        <Description>Disabled</Description>
-        <Expanded>No</Expanded>
-        <DefaultValue>false</DefaultValue>
-        <DefineSymbol>YES_NO</DefineSymbol>
-        <IfDisabled>setNOTHING</IfDisabled>
-        <Children>
-          <GrupItem>
-            <TInhrLinkItem>
-              <Name>USB CDC</Name>
-              <Symbol>USBCDC</Symbol>
-              <TypeSpec>Shell\USBCDC</TypeSpec>
-              <Hint>USB CDC Interface</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>false</EditLine>
-              <DefaultValue/>
-              <CanDelete>false</CanDelete>
-              <IconPopup>false</IconPopup>
-              <SortStyle/>
-            </TInhrLinkItem>
-          </GrupItem>
-        </Children>
-      </TBoolGrupItem>
     </Property>
   </PropertyList>
   <MethodList>
