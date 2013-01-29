@@ -932,7 +932,7 @@ void %'ModuleName'%.%Deinit(void)
 byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)
 {
   if (%@Utility@'ModuleName'%.strcmp((char*)cmd, %@Shell@'ModuleName'%.CMD_HELP)==0 || %@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' help")==0) {
-    %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"%'ModuleName'", (const unsigned char*)"Group of RTC commands\r\n", io->stdOut);
+    %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"%'ModuleName'", (const unsigned char*)"Group of %'ModuleName' commands\r\n", io->stdOut);
     %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
     %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  time [hh:mm:ss[,z]]", (const unsigned char*)"Set the current time. Prints the current time if no argument\r\n", io->stdOut);
     %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  date [dd.mm.yyyy]", (const unsigned char*)"Set the current date. Prints the current date if no argument\r\n", io->stdOut);
