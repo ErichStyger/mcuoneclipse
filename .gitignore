@@ -2,11 +2,8 @@
 /DOCs
 /Config
 # Beans
-/Beans/BootLoaderDisk
-/Beans/BootLoaderUSB
 /Beans/GenericSWSPI
 /Beans/RTC_I2C_DS1307
-#/Beans/S19
 /Beans/SWSPI
 /Beans/USB_CMX
 /Beans/USB_HID_CMX
@@ -18,10 +15,8 @@
 /Beans/USB_Config_CMX*.int
 # Drivers
 /Drivers/FSL_USB_Stack
-/Drivers/Common/BootLoader*
 /Drivers/Common/GenericSWSPI*
 /Drivers/Common/RTC_I2C_*
-#/Drivers/Common/S19*
 /Drivers/Common/SWSPI*
 /Drivers/Common/USB_CMX*
 /Drivers/Common/USB_Config_CMX*
@@ -30,18 +25,14 @@
 /Drivers/Common/uCOS_II*
 /Drivers/GenericSWSPI.src
 /Drivers/RTC_I2C_DS1307.src
-#/Drivers/S19.src
 /Drivers/USB_CMX.src
 /Drivers/USB_Config_CMX.src
 /Drivers/USB_HID_CMX.src
 /Drivers/USB_Host_CMX.src
 /Drivers/sw/BL_FAT16_Disk.drv
-/Drivers/sw/BootLoaderDisk.drv
-/Drivers/sw/BootLoaderUSB.drv
 /Drivers/sw/GenericSWSPI.drv
 /Drivers/sw/RTC_I2C_DS1307.drv
 /Drivers/sw/RTC_I2C_DS1307.tst
-#/Drivers/sw/S19.drv
 /Drivers/sw/SWSPI.drv
 /Drivers/sw/USB_CMX.drv
 /Drivers/sw/USB_Config_CMX.drv
@@ -52,5 +43,3 @@
 /Drivers/sw/uCOS_II.drv
 /Drivers/sw/uCOS_II.tst
 /Drivers/uCOS_II.src
-/Drivers/BootLoaderDisk.src
-/Drivers/BootLoaderUSB.src
