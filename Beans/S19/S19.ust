@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--User types for component-->
+<UserTypes>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>GetCharIterator</Name>
+    <Hint>Iterator to read from input stream. Input is stored into the first argument. With the second argument a data pointer can be passed. Returns ERR_OK or error code.</Hint>
+    <Generate>yes</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>yes</GenerateHelp>
+    <PreparedHint>typedef uint8_t (*%'ModuleName'%.GetCharIterator)(uint8_t*, void*); /* Iterator to read from input stream. Input is stored into the first argument. With the second argument a data pointer can be passed. Returns ERR_OK or error code. */\n
+</PreparedHint>
+    <Type>typedef uint8_t (*%'ModuleName'%.GetCharIterator)(uint8_t*, void*);</Type>
+    <HWTestType/>
+  </Type>
+</UserTypes>

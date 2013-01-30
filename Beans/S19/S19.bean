@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bean>
+  <Header>
+    <Name>S19</Name>
+    <Description>Component to read and parse an S19 file</Description>
+    <Author>Erich Styger</Author>
+    <Version>01.025</Version>
+    <Icon>S19</Icon>
+    <TypesFiles>PE,S19\S19</TypesFiles>
+    <FileVersion>6</FileVersion>
+  </Header>
+  <Options>
+    <BW_HelpType>Basic</BW_HelpType>
+    <BW_HelpFiles>,Properties,Methods,Events</BW_HelpFiles>
+    <BW_AutoSaveHelp>yes</BW_AutoSaveHelp>
+    <BW_AutoSaveDriver>yes</BW_AutoSaveDriver>
+    <BW_DetailedHelp>yes</BW_DetailedHelp>
+    <BW_NeedTps>no</BW_NeedTps>
+    <BW_NeedUst>1</BW_NeedUst>
+    <BW_NeedCns>0</BW_NeedCns>
+    <BeanStatus>PROPOSAL</BeanStatus>
+    <Copyright>This component is based on the Freescale Application Note AN3748.\nThe copyright notice of the original file is provided below:\n\n******************************************************************************\n*                                                  \n*  (c) copyright Freescale Semiconductor 2008\n*  ALL RIGHTS RESERVED\n*\n*  File Name: ParseS19.c\n*                                                                          \n*  Purpose: This file is for a USB Mass-Storage Device bootloader.  This file \n*           has functions to read S19 file sent over USB, and parse s-records\n*           to program to flash.\n*                                                                          \n*  Assembler:  Codewarrior for Microcontrollers V6.2\n*                                            \n*  Version:  1.0\n*                                                                          \n*                                                                          \n*  Author: Derek Snell                             \n*                                                                                       \n*  Location: Indianapolis, IN. USA                                            \n*                                                                                  \n* UPDATED HISTORY:\n*\n* REV   YYYY.MM.DD  AUTHOR        DESCRIPTION OF CHANGE\n* ---   ----------  ------        --------------------- \n* 1.0   2008.06.10  Derek Snell   Initial version\n* \n*\n******************************************************************************\n* Freescale  is  not  obligated  to  provide  any  support, upgrades or new *\n* releases  of  the Software. Freescale may make changes to the Software at *\n* any time, without any obligation to notify or provide updated versions of *\n* the  Software  to you. Freescale expressly disclaims any warranty for the *\n* Software.  The  Software is provided as is, without warranty of any kind, *\n* either  express  or  implied,  including, without limitation, the implied *\n* warranties  of  merchantability,  fitness  for  a  particular purpose, or *\n* non-infringement.  You  assume  the entire risk arising out of the use or *\n* performance of the Software, or any systems you design using the software *\n* (if  any).  Nothing  may  be construed as a warranty or representation by *\n* Freescale  that  the  Software  or  any derivative work developed with or *\n* incorporating  the  Software  will  be  free  from  infringement  of  the *\n* intellectual property rights of third parties. In no event will Freescale *\n* be  liable,  whether in contract, tort, or otherwise, for any incidental, *\n* special,  indirect, consequential or punitive damages, including, but not *\n* limited  to,  damages  for  any loss of use, loss of time, inconvenience, *\n* commercial loss, or lost profits, savings, or revenues to the full extent *\n* such  may be disclaimed by law. The Software is not fault tolerant and is *\n* not  designed,  manufactured  or  intended by Freescale for incorporation *\n* into  products intended for use or resale in on-line control equipment in *\n* hazardous, dangerous to life or potentially life-threatening environments *\n* requiring  fail-safe  performance,  such  as  in the operation of nuclear *\n* facilities,  aircraft  navigation  or  communication systems, air traffic *\n* control,  direct  life  support machines or weapons systems, in which the *\n* failure  of  products  could  lead  directly to death, personal injury or *\n* severe  physical  or  environmental  damage  (High  Risk Activities). You *\n* specifically  represent and warrant that you will not use the Software or *\n* any  derivative  work of the Software for High Risk Activities.           *\n* Freescale  and the Freescale logos are registered trademarks of Freescale *\n* Semiconductor Inc.                                                        *\n*****************************************************************************</Copyright>
+    <Category>SW-Memory Manager</Category>
+    <DemoDriver>no</DemoDriver>
+    <Shortcut>S19</Shortcut>
+    <BeanLevel>High</BeanLevel>
+  </Options>
+  <PropertyList>
+    <Property>
+      <TCompNameItem>
+        <Name>Component name</Name>
+        <Symbol>DeviceName</Symbol>
+        <Hint>Name of the component.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue/>
+      </TCompNameItem>
+    </Property>
+    <Property>
+      <TBoolItem>
+        <Name>Align to 32bit</Name>
+        <Symbol>AlignTo32Bit</Symbol>
+        <TypeSpec>typeYesNo</TypeSpec>
+        <Hint>For 32bit cores, usually the data needs to be 32bit aligned. If this option is enabled, then the data in the S-Record will be aligned to 32bit.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+      </TBoolItem>
+    </Property>
+  </PropertyList>
+  <MethodList>
+    <Method>
+      <TMthdItem>
+        <Name>TextToHex</Name>
+        <Symbol>TextToHex</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Converts a text character to the corresponding hexadecimal value.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>false</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>false</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>The hexadecimal value</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>ch</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>text character to be converted</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte ch)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Get_S</Name>
+        <Symbol>Get_S</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Skip all characters until an 'S' is received. It returns the next character.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>false</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>false</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code or ERR_OK</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>getChar</ParName>
+          <ParType>GetCharIterator</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Iterator to read a character from the input stream</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>data</ParName>
+          <ParType>pointer</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to data for the iterator</ParHint>
+          <ParUserDeclaration>void *data</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>p</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to where to store the character read</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(%'ModuleName'_GetCharIterator getChar, void *data, byte *p)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Get_S_Pair</Name>
+        <Symbol>Get_S_Pair</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Gets a pair of characters and converts it to a hex value.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>false</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>false</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code or ERR_OK</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>getChar</ParName>
+          <ParType>GetCharIterator</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Iterator to read a character from the input stream</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>data</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Pointer to data for the iterator</ParHint>
+          <ParUserDeclaration>void *data</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>p</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to where to store the character read</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(%'ModuleName'_GetCharIterator getChar, void *data, byte *p)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Parse</Name>
+        <Symbol>Parse</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Parses an S19 file and calls the callbacks in order to process it.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>getChar</ParName>
+          <ParType>GetCharIterator</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Iterator to read a character from the input stream</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>data</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to data for the iterator</ParHint>
+          <ParUserDeclaration>void *data</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(%'ModuleName'_GetCharIterator getChar, void *data)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>GetCurrentAddress</Name>
+        <Symbol>GetCurrentAddress</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Returns the current/last address read from the S-Record. This can be used for error reporting.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>32bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>dword #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+  </MethodList>
+  <EventList>
+    <Event>
+      <TStrgItem>
+        <Name>Event module name</Name>
+        <Symbol>EventModule</Symbol>
+        <Hint>Name of the user module (without extension), where the events from this component are placed.</Hint>
+        <ItemLevel>ADVANCED</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>Events</DefaultValue>
+        <StrDefine>nothing</StrDefine>
+        <MinLength>0</MinLength>
+        <MaxLength>-1</MaxLength>
+      </TStrgItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OnSRecord</Name>
+        <Symbol>OnSRecord</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Event called for every S-Record</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>generate code</Description>
+        <Expanded>Yes</Expanded>
+        <DefaultValue>true</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>6</ParamCount>
+        <Parameter>
+          <ParName>returnCode</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to error code</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>type</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>type of S-Record (as character), e.g. '3'</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>addr</ParName>
+          <ParType>32bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Address of data</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>dataBuf</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to buffer of S-Record data (in binary form)</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>dataBufSize</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Size in bytes of the data buffer</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>data</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to private data</ParHint>
+          <ParUserDeclaration>void *data</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(byte *returnCode, byte type, dword addr, byte *dataBuf, byte dataBufSize, void *data)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OnSRecord procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+  </EventList>
+  <Links>
+    <EmptySection_DummyValue/>
+  </Links>
+  <Revisions>
+    <RevisionVersion>2</RevisionVersion>
+  </Revisions>
+</Bean>
