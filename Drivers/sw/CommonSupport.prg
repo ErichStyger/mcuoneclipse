@@ -10,6 +10,7 @@
 %elif %Compiler = "MetrowerksHCS08CC"
 %elif %Compiler = "MetrowerksHC12CC"
 %elif %Compiler = "MetrowerksHC12XCC"
+%elif %Compiler = "IARARM"
 %elif %Compiler = "GNUC"
 %else
   %warning "Unknown compiler %Compiler"

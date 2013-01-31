@@ -157,6 +157,31 @@ _vPortStartFirstTask:
 #define COPROCESSOR_ACCESS_REGISTER 0xE000ED88 /* Coprocessor Access Register (CPACR) */
 %endif
 
+%if (%Compiler = "IARARM") %- /* IAR ARM */
+  RSEG    CODE:CODE(2)
+  thumb
+
+  EXTERN vPortYieldFromISR
+  EXTERN pxCurrentTCB
+  EXTERN vTaskSwitchContext
+  EXTERN vTaskIncrementTick
+
+  PUBLIC vOnCounterRestart
+  PUBLIC vSetMSP
+  PUBLIC vPortPendSVHandler
+  PUBLIC vPortSetInterruptMask
+  PUBLIC vPortClearInterruptMask
+  PUBLIC vPortSVCHandler
+  PUBLIC vPortStartFirstTask
+
+/* macros to identify CPU: 0 for M0+ and 4 for M4 */
+%if %CPUDB_prph_has_feature(CPU,ARM_CORTEX_M0P) = 'yes' %- Note: for IAR this is defined in portasm.s too!
+#define FREERTOS_CPU_CORTEX_M                                    %>>0 /* Cortex M0+ core */
+%else
+#define FREERTOS_CPU_CORTEX_M                                    %>>4 /* Cortex M4 core */
+%endif
+
+%else %- /* Freescale ARM */
   .text, code
 
   .extern vPortYieldFromISR
@@ -165,7 +190,6 @@ _vPortStartFirstTask:
   .extern vOnCounterRestart
   .extern vTaskIncrementTick
 
-  .global vOnCounterRestart
   .global vSetMSP
   .global vPortPendSVHandler
   .global vPortSetInterruptMask
@@ -175,14 +199,24 @@ _vPortStartFirstTask:
 %if %M4FFloatingPointSupport='yes'
   .global vPortEnableVFP
 %endif
+%endif %- /* IAR or CW */
 /*-----------------------------------------------------------*/
 vOnCounterRestart:
-%if %CompilerOptimizationLevel='0'
+%if (%Compiler = "IARARM")
+  /* caller did this:
+     push {r7,LR}
+     bl vOnCounterRestart
+     pop {r0,pc} */
+  pop {r0, r7} /* restore r7 and lr into r0 and r7, which were pushed in caller */
+  push {r0, r7}
+%else
+  %if %CompilerOptimizationLevel='0'
   /* Compiler optimization level 0 */
   pop {lr,r3} /* remove stacked registers from the caller routine */
-%else
+  %else
   /* Compiler optimization level 1, 2, 3 or 4 */
   push {lr} /* need to save link register, it will be overwritten below */
+  %endif
 %endif
 %if %UsePreemption='yes'
   /* If using preemption, also force a context switch. */
@@ -191,31 +225,112 @@ vOnCounterRestart:
   bl vPortSetInterruptMask /* disable interrupts */
   bl vTaskIncrementTick    /* increment tick count, might schedule a task */
   bl vPortClearInterruptMask /* enable interrupts again */
-%if %CompilerOptimizationLevel='0'
+%if (%Compiler = "IARARM")
+  pop {r7,pc}  /* start exit sequence from interrupt: r7 and lr where pushed above */
+  nop
+%else
+  %if %CompilerOptimizationLevel='0'
   /* Compiler optimization level 0 */
   pop {lr,r4} /* start exit sequence from interrupt: r4 and lr where pushed in the ISR */
-%else
+  %else
   /* Compiler optimization level 1, 2, 3 or 4 */
   pop {lr}    /* restore pushed lr register */
-%endif
+  %endif
   bx lr
   nop
+%endif
 /*-----------------------------------------------------------*/
 vSetMSP:
   msr msp, r0
   bx lr
   nop
 /*-----------------------------------------------------------*/
+%if (%Compiler = "IARARM")
+vPortPendSVHandler:
+#if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
+    mrs r0, psp
+    ldr  r3, pxCurrentTCBConst  /* Get the location of the current TCB. */
+    ldr  r2, [r3]
+%if %M4FFloatingPointSupport='yes'
+    tst r14, #0x10              /* Is the task using the FPU context?  If so, push high vfp registers. */
+    it eq
+    vstmdbeq r0!, {s16-s31}
+
+    stmdb r0!, {r4-r11, r14}    /* save remaining core registers */
+%else
+    stmdb r0!, {r4-r11}         /* Save the core registers. */
+%endif
+    str r0, [r2]                /* Save the new top of stack into the first member of the TCB. */
+    stmdb sp!, {r3, r14}
+    mov r0, %%0
+    msr basepri, r0
+    bl vTaskSwitchContext
+    mov r0, #0
+    msr basepri, r0
+    ldmia sp!, {r3, r14}
+    ldr r1, [r3]                /* The first item in pxCurrentTCB is the task top of stack. */
+    ldr r0, [r1]
+%if %M4FFloatingPointSupport='yes'
+    ldmia r0!, {r4-r11, r14}   /* Pop the core registers */
+    tst r14, #0x10             /* Is the task using the FPU context?  If so, pop the high vfp registers too. */
+    it eq
+    vldmiaeq r0!, {s16-s31}
+%else
+    ldmia r0!, {r4-r11}        /* Pop the core registers. */
+%endif
+    msr psp, r0
+    bx r14
+    nop
+#else /* Cortex M0+ */
+    mrs r0, psp
+
+    ldr r3, =pxCurrentTCB
+    ldr r2, [r3]
+
+    subs r0, r0, #32           /* Make space for the remaining low registers. */
+    str r0, [r2]               /* Save the new top of stack. */
+    stmia r0!, {r4-r7}         /* Store the low registers that are not saved automatically. */
+    mov r4, r8                 /* Store the high registers. */
+    mov r5, r9
+    mov r6, r10
+    mov r7, r11
+    stmia r0!, {r4-r7}
+
+    push {r3, r14}
+    cpsid i
+    bl vTaskSwitchContext
+    cpsie i
+    pop {r2, r3}               /* lr goes in r3. r2 now holds tcb pointer. */
+
+    ldr r1, [r2]
+    ldr r0, [r1]               /* The first item in pxCurrentTCB is the task top of stack. */
+    adds r0, r0, #16           /* Move to the high registers. */
+    ldmia r0!, {r4-r7}         /* Pop the high registers. */
+    mov r8, r4
+    mov r9, r5
+    mov r10, r6
+    mov r11, r7
+
+    msr psp, r0                /* Remember the new top of stack for the task. */
+
+    subs r0, r0, #32           /* Go back for the low registers that are not automatically restored. */
+    ldmia r0!, {r4-r7}         /* Pop low registers.  */
+
+    bx r3
+    nop
+#endif
+
+%else %- FSL ARM Compiler */
 vPortPendSVHandler:
 %if (defined(PEversionDecimal) && (PEversionDecimal >=0 '1282')) %- this is only supported with MCU 10.3
 %else %- up to MCU10.2
-%if %CompilerOptimizationLevel='0'
+  %if %CompilerOptimizationLevel='0'
   /* Compiler optimization level 0 */
   pop {lr,r3}  /* remove stack frame for the call from Cpu.c to Events.c */
   pop {lr,r3}  /* remove stack frame for the call from Events.c to here */
-%else
+  %else
   /* Compiler optimization level 1, 2, 3 or 4: nothing special to do */
-%endif
+  %endif
 %endif %- MCU10.3
   mrs r0, psp
 
@@ -264,23 +379,95 @@ vPortPendSVHandler:
   msr psp, r0
   bx r14
   nop
+%endif %- FSL ARM Compiler */
 /*-----------------------------------------------------------*/
 vPortSetInterruptMask:
+%if (%Compiler = "IARARM")
+#if 0
+  push {r0}
+  movs r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
+/* \todo: !!! IAR does not allow msr BASEPRI, r0 in vPortSetInterruptMask()? */
+  msr BASEPRI, r0
+  pop {r0}
+#else
+  cpsid i  /* disable interrupts */
+#endif
+  bx r14
+  nop
+%else %- FSL ARM
   push {r0}
   mov r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
   msr BASEPRI, r0
   pop {r0}
   bx r14
   nop
+%endif
 /*-----------------------------------------------------------*/
 vPortClearInterruptMask:
+%if (%Compiler = "IARARM")
+#if 0
+  push {r0}
+  movs r0, #0
+/* \todo: !!! IAR does not allow msr BASEPRI, r0 in vPortSetInterruptMask()? */
+  msr BASEPRI, R0
+  pop {r0}
+#else
+  cpsie i   /* enable interrupts */
+#endif
+  bx r14
+  nop
+%else %- FSL ARM
   push {r0}
   mov r0, #0
   msr BASEPRI, R0
   pop {r0}
   bx r14
   nop
+%endif
 /*-----------------------------------------------------------*/
+%if (%Compiler = "IARARM")
+vPortSVCHandler:
+  /* \todo Check stack!!! */
+#if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
+    ldr r3, pxCurrentTCBConst2  /* Restore the context. */
+    ldr r1, [r3]                /* Use pxCurrentTCBConst to get the pxCurrentTCB address. */
+    ldr r0, [r1]                /* The first item in pxCurrentTCB is the task top of stack. */
+    /* pop the core registers */
+    %if %M4FFloatingPointSupport='yes'
+    ldmia r0!, {r4-r11, r14}
+    %else
+    ldmia r0!, {r4-r11}
+    %endif
+    msr psp, r0
+    mov r0, #0
+    msr basepri, r0
+    %if %M4FFloatingPointSupport='no'
+    orr r14, r14, #13
+    %endif
+    bx r14
+    nop
+#else /* Cortex M0+ */
+    ldr r3, =pxCurrentTCB       /* Restore the context. */
+    ldr r1, [r3]                /* Use pxCurrentTCBConst to get the pxCurrentTCB address. */
+    ldr r0, [r1]                /* The first item in pxCurrentTCB is the task top of stack. */
+    adds r0, r0, #16            /* Move to the high registers. */
+    ldmia r0!, {r4-r7}          /* Pop the high registers. */
+    mov r8, r4
+    mov r9, r5
+    mov r10, r6
+    mov r11, r7
+
+    msr psp, r0                 /* Remember the new top of stack for the task. */
+
+    subs r0, r0, #32            /* Go back for the low registers that are not automatically restored. */
+    ldmia r0!, {r4-r7}          /* Pop low registers.  */
+    mov r1, r14                 /* OR R14 with 0x0d. */
+    movs r0, #0x0d
+    orrs r1, r0
+    bx r1
+    nop
+#endif
+%else
 vPortSVCHandler:
 %if (defined(PEversionDecimal) && (PEversionDecimal >=0 '1282')) %- this is only supported with MCU 10.3
 %else %- up to MCU10.2
@@ -310,6 +497,7 @@ vPortSVCHandler:
 %endif
   bx r14
   nop
+%endif %- compiler
 /*-----------------------------------------------------------*/
 vPortStartFirstTask:
   /* Use the Vector Table Offset Register to locate the stack. */
@@ -335,6 +523,9 @@ vPortEnableVFP:
   bx  r14
   nop
 /*-----------------------------------------------------------*/
+%endif
+%if (%Compiler = "IARARM")
+  END
 %endif
 %else
 ; file is intentionally empty as not needed for this FreeRTOS port

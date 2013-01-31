@@ -926,7 +926,7 @@ __attribute__ ((naked)) void vPortPendSVHandler(void) {
     " sub r0, r0, #32            \n" /* Go back for the low registers that are not automatically restored. */
     " ldmia r0!, {r4-r7}         \n" /* Pop low registers.  */
     "                            \n"
-    " bx r3	                 \n"
+    " bx r3	                     \n"
     "                            \n"
     ".align 2                    \n"
     "pxCurrentTCBConst: .word pxCurrentTCB"

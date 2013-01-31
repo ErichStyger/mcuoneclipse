@@ -235,16 +235,16 @@ extern void vPortExitCritical(void);
     :"r0" /* clobber */     \
   )
 
-#define portSET_INTERRUPT_MASK_FROM_ISR()    0;portSET_INTERRUPT_MASK()
+#define portSET_INTERRUPT_MASK_FROM_ISR()     0;portSET_INTERRUPT_MASK()
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)  portCLEAR_INTERRUPT_MASK();(void)x
 
 extern void vPortEnterCritical( void );
 extern void vPortExitCritical( void );
 
-#define portDISABLE_INTERRUPTS()  portSET_INTERRUPT_MASK()
+#define portDISABLE_INTERRUPTS()   portSET_INTERRUPT_MASK()
 #define portENABLE_INTERRUPTS()    portCLEAR_INTERRUPT_MASK()
-#define portENTER_CRITICAL()    vPortEnterCritical()
-#define portEXIT_CRITICAL()      vPortExitCritical()
+#define portENTER_CRITICAL()       vPortEnterCritical()
+#define portEXIT_CRITICAL()        vPortExitCritical()
 
 /* There are an uneven number of items on the initial stack, so
 portALIGNMENT_ASSERT_pxCurrentTCB() will trigger false positive asserts. */
@@ -256,8 +256,14 @@ extern void vPortSetInterruptMask(void);
 extern void vPortClearInterruptMask(void);
 extern void vPortEnterCritical(void);
 extern void vPortExitCritical(void);
-#define portDISABLE_INTERRUPTS()       vPortSetInterruptMask()
-#define portENABLE_INTERRUPTS()         vPortClearInterruptMask()
+%if (%Compiler = "IARARM")
+/* \todo: !!! IAR does not allow msr BASEPRI, r0 in vPortSetInterruptMask()? */
+#define portDISABLE_INTERRUPTS()				__asm volatile( "cpsid i" )
+#define portENABLE_INTERRUPTS()					__asm volatile( "cpsie i" )
+%else
+#define portDISABLE_INTERRUPTS()             vPortSetInterruptMask()
+#define portENABLE_INTERRUPTS()              vPortClearInterruptMask()
+%endif
 #define portENTER_CRITICAL()                 vPortEnterCritical()
 #define portEXIT_CRITICAL()                  vPortExitCritical()
 #define portSET_INTERRUPT_MASK_FROM_ISR()    0;vPortSetInterruptMask()
