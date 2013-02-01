@@ -11,7 +11,7 @@
 
 /* MODULE Cube */
 
-#include "platform.h"
+#include "Platform.h"
 
 #if PL_HAS_CUBE_DEMO
 #include "Cube.h"

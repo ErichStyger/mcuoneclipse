@@ -4,7 +4,7 @@
  *  Created on: 10.03.2011
  *      Author: Erich Styger
  */
-#include "platform.h"
+#include "Platform.h"
 #include "Boot.h"
 #include "RTOS.h"
 #if PL_HAS_BOOTLOADER || PL_IS_BOOTLOADER

@@ -11,7 +11,7 @@
 
 /* MODULE Buzzer */
 
-#include "platform.h"
+#include "Platform.h"
 
 #if PL_HAS_HW_SOUNDER && !PL_IS_BOOTLOADER /* bootloader is doing it it's own way */
 

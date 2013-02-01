@@ -11,7 +11,7 @@
 
 /* MODULE AnalogDigital */
 
-#include "platform.h"
+#include "Platform.h"
 #include "AnalogDigital.h"
 #if PL_USE_RTOS
   #include "FRTOS1.h"

@@ -14,7 +14,7 @@
 
 /* MODULE Accelerometer */
 
-#include "platform.h"
+#include "Platform.h"
 
 #if PL_HAS_ACCEL_DEMO
 

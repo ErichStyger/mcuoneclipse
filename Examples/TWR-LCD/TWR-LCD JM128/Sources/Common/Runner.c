@@ -11,7 +11,7 @@
 
 /* MODULE Motor */
 
-#include "platform.h"
+#include "Platform.h"
 #if PL_HAS_RUNNER
 #include "Runner.h"
 #include "UTIL1.h"

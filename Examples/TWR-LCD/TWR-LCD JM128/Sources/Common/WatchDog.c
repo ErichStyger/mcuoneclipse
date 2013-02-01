@@ -4,7 +4,7 @@
  *  Created on: 12.10.2011
  *      Author: Erich Styger
  */
-#include "platform.h"
+#include "Platform.h"
 #if PL_HAS_WATCHDOG
 #include "WatchDog.h"
 #include "WDog1.h"

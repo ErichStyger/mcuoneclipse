@@ -19,7 +19,7 @@
 #include "Events.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
-#include "platform.h"
+#include "Platform.h"
 #include "RTOS.h"
 #include "App.h"
 #if PL_HAS_CALENDAR_DEMO

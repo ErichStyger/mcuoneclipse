@@ -11,7 +11,7 @@
 
 /* MODULE Accelerometer */
 
-#include "platform.h"
+#include "Platform.h"
 
 #include "Accelerometer.h"
 #include "AnalogDigital.h"

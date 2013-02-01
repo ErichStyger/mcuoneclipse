@@ -11,7 +11,7 @@
 
 /* MODULE I2C */
 
-#include "platform.h"
+#include "Platform.h"
 
 #if PL_HAS_I2C_COMM
 

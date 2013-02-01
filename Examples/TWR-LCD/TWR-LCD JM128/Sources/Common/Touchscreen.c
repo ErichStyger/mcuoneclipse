@@ -11,7 +11,7 @@
 
 /* MODULE Touchscreen */
 
-#include "platform.h"
+#include "Platform.h"
 
 #if PL_HAS_HW_TOUCHSCREEN
 #include "Touchscreen.h"

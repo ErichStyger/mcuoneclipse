@@ -11,7 +11,7 @@
 
 /* MODULE RTOS */
 
-#include "platform.h"
+#include "Platform.h"
 
 #include "RTOS.h"
 #if PL_HAS_WATCHDOG

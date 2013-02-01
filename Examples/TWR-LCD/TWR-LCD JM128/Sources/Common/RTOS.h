@@ -15,7 +15,7 @@
 /* MODULE RTOS */
 
 #include "PE_Types.h"
-#include "platform.h"
+#include "Platform.h"
 
 void RTOS_HandleEvent(byte event);
 

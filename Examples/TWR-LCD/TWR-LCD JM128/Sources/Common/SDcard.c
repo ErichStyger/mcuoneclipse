@@ -11,7 +11,7 @@
 
 /* MODULE SDcard */
 
-#include "platform.h"
+#include "Platform.h"
 
 #if PL_HAS_SD_DEMO
 #include "SDcard.h"

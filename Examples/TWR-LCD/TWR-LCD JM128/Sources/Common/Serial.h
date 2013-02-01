@@ -8,7 +8,7 @@
 #ifndef SERIAL_H_
 #define SERIAL_H_
 
-#include "platform.h"
+#include "Platform.h"
 
 #if PL_HAS_SHELL
 #include "FSSH1.h"

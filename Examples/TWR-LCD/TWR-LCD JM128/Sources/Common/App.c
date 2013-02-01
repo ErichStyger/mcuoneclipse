@@ -11,7 +11,7 @@
 
 /* MODULE App */
 
-#include "platform.h"
+#include "Platform.h"
 
 #if PL_HAS_UI
 #include "Cour08n.h"

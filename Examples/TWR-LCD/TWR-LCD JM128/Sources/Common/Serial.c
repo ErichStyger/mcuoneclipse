@@ -4,7 +4,7 @@
  *  Created on: 17.08.2010
  *      Author: Erich Styger
  */
-#include "platform.h"
+#include "Platform.h"
 #if PL_HAS_SHELL
 #include "Serial.h"
 #include "FRTOS1.h"

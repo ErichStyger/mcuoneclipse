@@ -11,7 +11,7 @@
 
 /* MODULE Calendar */
 
-#include "platform.h"
+#include "Platform.h"
 
 #if PL_HAS_CALENDAR_DEMO
 #include "Calendar.h"

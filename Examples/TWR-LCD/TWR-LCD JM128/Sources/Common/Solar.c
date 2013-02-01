@@ -29,7 +29,7 @@
 
 /* MODULE Solar */
 
-#include "platform.h"
+#include "Platform.h"
 #if PL_HAS_SOLAR
 #include <string.h> 
 #include "Solar.h"

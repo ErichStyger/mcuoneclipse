@@ -26,7 +26,7 @@
 #include "PE_Timer.h"
 #include "FRTOS1.h"
 #include "RTOSSWI1.h"
-#include "RTOSTMR1.h"
+#include "TickCntr1.h"
 #include "UTIL1.h"
 #include "WAIT1.h"
 #include "I2C1.h"

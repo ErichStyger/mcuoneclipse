@@ -11,7 +11,7 @@
 
 /* MODULE Tetris */
 
-#include "platform.h"
+#include "Platform.h"
 
 #if PL_HAS_TETRIS_DEMO
 
