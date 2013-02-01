@@ -187,7 +187,6 @@ _vPortStartFirstTask:
   .extern vPortYieldFromISR
   .extern pxCurrentTCB
   .extern vTaskSwitchContext
-  .extern vOnCounterRestart
   .extern vTaskIncrementTick
 
   .global vSetMSP
@@ -196,6 +195,7 @@ _vPortStartFirstTask:
   .global vPortClearInterruptMask
   .global vPortSVCHandler
   .global vPortStartFirstTask
+  .global vOnCounterRestart
 %if %M4FFloatingPointSupport='yes'
   .global vPortEnableVFP
 %endif
