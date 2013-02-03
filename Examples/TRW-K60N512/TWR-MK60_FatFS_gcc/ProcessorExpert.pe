@@ -4,7 +4,7 @@
     <Name>ProcessorExpert</Name>
     <SavedBy>Erich Styger</SavedBy>
     <ModificationStamp>13</ModificationStamp>
-    <Date>2013-01-08</Date>
+    <Date>2013-02-03</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion />
   </Header>
@@ -11603,7 +11603,7 @@
     <IconName>FreeRTOS</IconName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.202</BeanVersion>
+    <BeanVersion>01.203</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -15819,7 +15819,7 @@
     <IconName>Led</IconName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.048</BeanVersion>
+    <BeanVersion>01.049</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -16439,6 +16439,13 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>ShellEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -16539,7 +16546,7 @@
     <IconName>Led</IconName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.048</BeanVersion>
+    <BeanVersion>01.049</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -17159,6 +17166,13 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>ShellEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -17259,7 +17273,7 @@
     <IconName>Led</IconName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.048</BeanVersion>
+    <BeanVersion>01.049</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -17879,6 +17893,13 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>ShellEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -17979,7 +18000,7 @@
     <IconName>Led</IconName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.048</BeanVersion>
+    <BeanVersion>01.049</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -18599,6 +18620,13 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>ShellEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -18699,7 +18727,7 @@
     <IconName>Utility</IconName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.082</BeanVersion>
+    <BeanVersion>01.083</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -19130,6 +19158,26 @@
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>strlen</UsrMethodName>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>strtailcmp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>strtailcmp</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>strCutTail</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>strCutTail</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -19142,7 +19190,7 @@
     <IconName>FSShell</IconName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.228</BeanVersion>
+    <BeanVersion>01.230</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -19233,6 +19281,8 @@
         <ItemSymbol>LDDConsoleEnabled</ItemSymbol>
         <Value>true</Value>
         <Expanded>true</Expanded>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
       </ItemState>
       <ItemState>
         <ItemSymbol>USBCDDEnabled</ItemSymbol>
@@ -19387,6 +19437,8 @@
         <ItemSymbol>ConsoleEnabled</ItemSymbol>
         <Value>false</Value>
         <Expanded>false</Expanded>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
       </ItemState>
       <ItemState>
         <ItemSymbol>Serial</ItemSymbol>
