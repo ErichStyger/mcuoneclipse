@@ -29,7 +29,7 @@
 #define SUMP_GET_METADATA 0x04
 
 /* Buffer size */
-#define BUFFERSIZE 1*1024
+#define BUFFERSIZE 14*1024
 #define MAX_SAMPLERATE 10000000
 
 /* Sampling buffer */
