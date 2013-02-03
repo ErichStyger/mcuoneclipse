@@ -1,0 +1,23 @@
+// Memory Configuration File
+//
+// Description:
+//  A memory configuration file contains commands that define the legally accessible
+//  areas of memory for your specific board. Useful for example when the debugger
+//  tries to display the content of a "char *" variable, that has not yet been initialized.
+//  In this case the debugger may try to read from a bogus address, which could cause a
+//  bus error.
+//
+
+
+// All reserved ranges read back 0xBABA...
+reservedchar 0xBA
+
+usederivative "MKL25Z4"
+//         Memory Map:
+//         ----------------------------------------------------------------------
+range      0x00000000 0x000003FF 4 ReadWrite // 1 KBytes   Code Flash and Read-only Data
+range      0x00000400 0x0000040F 4 ReadWrite // 0 KBytes   Flash Configuration Field
+range      0x00000410 0x0001FFFF 4 ReadWrite // 126 KBytes   Code Flash and Read-only Data
+reserved   0x00020000 0x1FFFEFFF
+range      0x1FFFF000 0x1FFFFFFF 4 ReadWrite // 4 KBytes   Tightly Coupled Memory Lower (TCML) SRAM (ICODE/DCODE)
+range      0x20000000 0x20002FFF 4 ReadWrite // 12 KBytes   Tightly Coupled Memory Upper(TCML) SRAM (ICODE/DCODE)
