@@ -20,7 +20,7 @@
 #define DEVICE_NAME             "FRDM-KL25Z LogicLogger"
 #define DEVICE_FW_VERSION       "V1.0"
 #define DEVICE_ANCILLARY        "V2.0"
-#define DEVICE_NOF_PROBES       8  /* number of probes */
+#define DEVICE_NOF_PROBES       8 /* number of probes */
 #define DEVICE_PROTOCOL_VERSION 2 /* always 2! */
 
 #define SUMP_RESET 0x00     /* resets the device */
@@ -34,6 +34,9 @@
 
 /* Sampling buffer */
 static uint8_t buffer[BUFFERSIZE];
+static int bufferIdx;
+static volatile bool doSampling = FALSE;
+static volatile bool finishedSampling = FALSE;
 
 /* \brief Send single character over UART */
 static void PutChar(uint8_t ch) {
@@ -43,7 +46,7 @@ static void PutChar(uint8_t ch) {
 }
 
 /* \brief Send null terminated string over UART */
-void PutString(char *s) {
+static void PutString(char *s) {
   while (*s != 0) {
     PutChar(*s);
     s++;
@@ -51,7 +54,7 @@ void PutString(char *s) {
 }
 
 /* \brief Send 32bit unsigned integer as SUMP meta data */
-void SUMP_sendmeta_uint32(char type, unsigned int i) {
+static void SUMP_sendmeta_uint32(char type, unsigned int i) {
   PutChar(type);
   PutChar((i >> 24) & 0xff);
   PutChar((i >> 16) & 0xff);
@@ -60,26 +63,35 @@ void SUMP_sendmeta_uint32(char type, unsigned int i) {
 }
 
 /* \brief Send 8bit unsigned integer as SUMP meta data */
-void SUMP_sendmeta_uint8(char type, unsigned char i) {
+static void SUMP_sendmeta_uint8(char type, unsigned char i) {
   PutChar(type);
   PutChar(i);
 }
 
-/* \brief Do sampling */
-void Sample(void) {
+/* \brief Send it over UART */
+static void SendData(void) {
   int i;
   
-  LEDB_On();
-  /* Acquire data */
-  for (i = BUFFERSIZE; i != 0; i--) { 
-    buffer[i-1] = i/*Byte1_GetVal()*/; 
-  }
-
-  /* Send it over UART */
   for (i = 0; i < BUFFERSIZE; i++) {
     PutChar(buffer[i]);
   }
-  LEDB_Off();
+}
+
+/* \brief Do sampling */
+void LOGIC_Sample(void) {
+  if (doSampling) {   /* Acquire data */
+    if (bufferIdx!=0) {
+#if 1 /* use test data */
+      buffer[bufferIdx-1] = bufferIdx;
+#else
+      buffer[bufferIdx-1] = Byte1_GetVal();
+#endif
+      bufferIdx--;
+      if (bufferIdx==0) {
+        finishedSampling = TRUE;
+      }
+    }
+  }
 }
 
 uint8_t GetChar(void) {
@@ -99,13 +111,21 @@ void LOGIC_Run(void) {
       LEDR_Neg();
       i = 0;
     }
+    if (finishedSampling) {
+      SendData();
+      finishedSampling = FALSE;
+      LEDB_Off();
+    }
     if (AS1_GetCharsInRxBuf()!=0) {
       cmd = GetChar();
       switch (cmd) {
         case SUMP_RESET:
             break;
         case SUMP_RUN:
-            Sample();
+            LEDB_On();
+            bufferIdx = BUFFERSIZE;
+            finishedSampling = FALSE;
+            doSampling = TRUE;
             break;
         case SUMP_ID:
             PutString("1ALS");

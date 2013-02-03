@@ -8,6 +8,8 @@
 #ifndef LOGIC_H_
 #define LOGIC_H_
 
+void LOGIC_Sample(void);
+
 void LOGIC_Run(void);
 
 #endif /* LOGIC_H_ */
