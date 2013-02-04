@@ -694,7 +694,9 @@ xTimeOutType xTimeOut;
 			return errQUEUE_FULL;
 		}
 	}
+%if (%Compiler = "GNUC")
 	return errQUEUE_EMPTY; /* << EST: will not reach this return. Dummy return to make gcc happy */
+%endif
 }
 /*-----------------------------------------------------------*/
 
@@ -1109,7 +1111,9 @@ signed char *pcOriginalReadPosition;
 			return errQUEUE_EMPTY;
 		}
 	}
+%if (%Compiler = "GNUC")
 	return errQUEUE_EMPTY; /* << EST: will not reach this return. Dummy return to make gcc happy */
+%endif
 }
 /*-----------------------------------------------------------*/
 

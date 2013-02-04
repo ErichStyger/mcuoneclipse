@@ -80,6 +80,10 @@ static signed char prvGetNumberOfParameters( const signed char * pcCommandString
 
 /* The definition of the "help" command.  This command is always at the front
 of the list of registered commands. */
+%if (%Compiler = "IARARM")
+/* << EST: suppress warnings for IAR */
+#pragma diag_suppress=pe191 /* Warning[Pe191]: type qualifier is meaningless on cast type */
+%endif
 static const xCommandLineInput xHelpCommand = 
 {
 	( const signed char * const ) "help",

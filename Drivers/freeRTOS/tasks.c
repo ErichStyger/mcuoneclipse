@@ -87,6 +87,11 @@ task.h is included from an application file. */
 
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
+%if (%Compiler = "IARARM")
+/* << EST: suppress warnings for IAR */
+#pragma diag_suppress=pa082 /* Warning[Pa082]: undefined behavior: the order of volatile accesses is undefined in this statement */
+
+%endif
 /*
  * Macro to define the amount of stack available to the idle task.
  */
