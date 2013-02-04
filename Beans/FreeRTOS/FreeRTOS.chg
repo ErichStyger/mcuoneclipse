@@ -111,4 +111,9 @@
     %error "Max SysCall Interrupt Priority (%KinetisLibraryMaxInterruptPriority) is larger than Lowest Interrupt Priority (%KinetisLibraryLowestInterruptPriority). Priority shall be <= %KinetisLibraryLowestInterruptPriority."
   %endif
 %endif
+%ifndef Shell
+  %set ParseCommand Selection never
+%else
+  %set ParseCommand Selection enable
+%endif
 

@@ -1,8 +1,8 @@
 
 [USED_FACES]
-BeanVersion=01.203
+BeanVersion=01.210
 
-InterfacesCount=7
+InterfacesCount=8
 
 Symbol=Utility
 Link=Yes
@@ -38,3 +38,8 @@ Symbol=TickTimerLDD
 Link=No
 Interface=FreeRTOS\TickLDD
 Version=01.002
+
+Symbol=Shell
+Link=Yes
+Interface=FreeRTOS\Shell
+Version=01.000
