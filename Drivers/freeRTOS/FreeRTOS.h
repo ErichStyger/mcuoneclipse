@@ -82,6 +82,8 @@
 /* Definitions specific to the port being used. */
 #include "portable.h"
 
+#include "task.h" /* << EST: for taskENTER_CRITICAL() and taskEXIT_CRITICAL() */
+
 
 /* Defines the prototype to which the application task hook function must
 conform. */
