@@ -61,10 +61,6 @@
 %define! Abstract Common\ShellAbstract.Inc
 %include Common\Header.h
 
-%if (CPUfamily = "Kinetis")
-#include "PE_LDD.h" /* hack for Processor Expert (e.g. in MCU10.3) and LDD: PE_LDD.h includes at the end all shared modules, causing a recursive header file include conflict */
-%endif
-
 #ifndef __%'ModuleName'_H
 #define __%'ModuleName'_H
 
