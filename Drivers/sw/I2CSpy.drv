@@ -430,7 +430,6 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
 }
 
 static uint8_t PrintHelp(const %@Shell@'ModuleName'%.StdIOType *io) {
-  /* list your local help here */
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"%'ModuleName'", (unsigned char*)"Group of %'ModuleName' commands\r\n", io->stdOut);
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  bytesPerLine <number>", (unsigned char*)"Number of bytes per line for dump command (1..32)\r\n", io->stdOut);
