@@ -51,29 +51,6 @@
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Application.h"
 
-#if 0 /* code for PEX */
-  extern void hard_fault_handler(void);
-  __asm volatile("b hard_fault_hanlder   \n");
-#endif
-
-__attribute__((naked))
-//  PE_ISR(Cpu_ivINT_Hard_Fault)
-void hard_fault_handler(void) {
-  __asm volatile (
-    " movs r0,#4       \n"
-    " movs r1, lr      \n"
-    " tst r0, r1       \n"
-    " beq _MSP         \n"
-    " mrs r0, psp      \n"
-    " b _HALT          \n"
-  "_MSP:               \n"
-    " mrs r0, msp      \n"
-  "_HALT:              \n"
-    " ldr r1,[r0,#20]  \n"
-    " bkpt #0          \n"
-  );
-}
-
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */

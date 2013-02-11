@@ -4,7 +4,7 @@
     <Name>ProcessorExpert</Name>
     <SavedBy>Erich Styger</SavedBy>
     <ModificationStamp>31</ModificationStamp>
-    <Date>2012-12-22</Date>
+    <Date>2013-02-10</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion />
   </Header>
@@ -2847,6 +2847,41 @@
         <ItemSymbol>TPMClockSpeedMode0</ItemSymbol>
         <Value>20.97152</Value>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>I2SClockCondGrp0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>I2SClockGrp0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>I2S0_CLKINSpeedMode0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>I2S0_MclkPinSourceSpeedMode0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>Auto select</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>I2S0_TxClkModeSpeedMode0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>Auto select</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>I2S0_RxClkModeSpeedMode0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>Auto select</Value>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -2947,6 +2982,11 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>never</LastUserSel>
         <UsrMethodName>VLPModeDisable</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GetLLSWakeUpFlagsCondGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
       </ItemState>
     </Methods>
     <Events>
@@ -3139,6 +3179,11 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>Cpu_OnDDRINT</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnLLSWakeUpINTCondGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
       </ItemState>
     </Events>
     <Cpu_State>
@@ -3716,7 +3761,7 @@
     <IconName>LCDHTA</IconName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.002</BeanVersion>
+    <BeanVersion>01.001</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -7628,7 +7673,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>Deinit</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -7638,7 +7683,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>GetDir</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -7718,7 +7763,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>NegVal</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -7733,7 +7778,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>ConnectPin</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -7748,7 +7793,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>GetRawVal</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -8174,7 +8219,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>Deinit</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -8184,7 +8229,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>GetDir</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -8264,7 +8309,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>NegVal</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -8279,7 +8324,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>ConnectPin</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -8294,7 +8339,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>GetRawVal</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -8720,7 +8765,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>Deinit</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -8730,7 +8775,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>GetDir</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -8810,7 +8855,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>NegVal</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -8825,7 +8870,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>ConnectPin</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -8840,7 +8885,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>GetRawVal</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -9266,7 +9311,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>Deinit</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -9276,7 +9321,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>GetDir</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -9356,7 +9401,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>NegVal</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -9371,7 +9416,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>ConnectPin</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -9386,7 +9431,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>GetRawVal</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -11439,7 +11484,7 @@
     <IconName>Utility</IconName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.082</BeanVersion>
+    <BeanVersion>01.083</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -11869,6 +11914,26 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>strlen</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>strtailcmp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>strtailcmp</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>strCutTail</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>strCutTail</UsrMethodName>
       </ItemState>
     </Methods>
     <Events />

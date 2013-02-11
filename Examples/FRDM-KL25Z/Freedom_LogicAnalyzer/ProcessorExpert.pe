@@ -4,7 +4,7 @@
     <Name>ProcessorExpert</Name>
     <SavedBy>Erich Styger</SavedBy>
     <ModificationStamp>16</ModificationStamp>
-    <Date>2013-02-03</Date>
+    <Date>2013-02-05</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion />
   </Header>
@@ -3874,7 +3874,7 @@
               <ItemSymbol>BdRate</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>init:38400 baud;prec:1.5%;RTS:none</Value>
+              <Value>init:115200 baud;prec:1.5%;RTS:none</Value>
               <RuntimeSetting>0</RuntimeSetting>
               <ReqDevPrescHigh>-1</ReqDevPrescHigh>
               <ReqDevPrescLow>-1</ReqDevPrescLow>
@@ -7041,7 +7041,7 @@
     <IconName>Led</IconName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.049</BeanVersion>
+    <BeanVersion>01.050</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -7761,7 +7761,7 @@
     <IconName>Led</IconName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.049</BeanVersion>
+    <BeanVersion>01.050</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -8481,7 +8481,7 @@
     <IconName>Led</IconName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.049</BeanVersion>
+    <BeanVersion>01.050</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -9403,8 +9403,8 @@
               <ItemSymbol>_Cmp</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value />
               <SharedPrphMode>false</SharedPrphMode>
+              <Value />
             </ItemState>
             <ItemState>
               <ItemSymbol>Tmr</ItemSymbol>
@@ -9440,7 +9440,7 @@
               <ItemSymbol>IntPeriodTmg</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>init:;prec:5%;RTS:none</Value>
+              <Value>init:100 kHz;prec:5.0%;RTS:none</Value>
               <RuntimeSetting>0</RuntimeSetting>
               <ReqDevPrescHigh>-1</ReqDevPrescHigh>
               <ReqDevPrescLow>-1</ReqDevPrescLow>
@@ -10358,7 +10358,7 @@
         <ItemSymbol>Tmg_Period</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>init:;prec:5%;RTS:none</Value>
+        <Value>init:100 kHz;prec:5.0%;RTS:none</Value>
         <RuntimeSetting>0</RuntimeSetting>
         <ReqDevPrescHigh>-1</ReqDevPrescHigh>
         <ReqDevPrescLow>-1</ReqDevPrescLow>

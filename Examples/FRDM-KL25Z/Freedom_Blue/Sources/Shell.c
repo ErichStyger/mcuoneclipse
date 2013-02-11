@@ -4,7 +4,7 @@
  * \author Erich Styger, erich.styger@hslu.ch
  *
  * This interface file is used for a console and terminal.
- * That way we can interact with the target and change settings using a shell implementation
+ * That way we can interact with the target and change settings using a shell implementation.
  */
 #include "Shell.h"
 #include "CLS1.h"

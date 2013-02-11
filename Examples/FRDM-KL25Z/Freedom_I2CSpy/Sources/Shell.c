@@ -28,6 +28,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if LEDB_PARSE_COMMAND_ENABLED
   LEDB_ParseCommand,
 #endif
+#if FRTOS1_PARSE_COMMAND_ENABLED
+  FRTOS1_ParseCommand,
+#endif
 #if I2CSPY1_PARSE_COMMAND_ENABLED
   I2CSPY1_ParseCommand,
 #endif

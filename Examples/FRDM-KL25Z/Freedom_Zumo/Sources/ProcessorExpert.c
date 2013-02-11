@@ -34,11 +34,38 @@
 #include "BitIoLdd5.h"
 #include "DIRL.h"
 #include "BitIoLdd4.h"
-#include "Buzzer.h"
+#include "BUZ.h"
 #include "PwmLdd3.h"
 #include "SW3.h"
 #include "BitIoLdd6.h"
 #include "GPIO1.h"
+#include "I2C1.h"
+#include "I2C2.h"
+#include "I2CSPY1.h"
+#include "TMOUT1.h"
+#include "CLS1.h"
+#include "AS1.h"
+#include "ASerialLdd1.h"
+#include "FRTOS1.h"
+#include "RTOSCNTRLDD1.h"
+#include "RTOSTICKLDD1.h"
+#include "LED_IR.h"
+#include "LEDpin4.h"
+#include "BitIoLdd8.h"
+#include "IR_D5.h"
+#include "BitIoLdd7.h"
+#include "IR_A11.h"
+#include "BitIoLdd10.h"
+#include "IR_A0.h"
+#include "BitIoLdd11.h"
+#include "IR_A2.h"
+#include "BitIoLdd12.h"
+#include "IR_A3.h"
+#include "BitIoLdd13.h"
+#include "TRG1.h"
+#include "TU1.h"
+#include "IR_D4.h"
+#include "BitIoLdd9.h"
 #include "PWML.h"
 #include "PwmLdd1.h"
 #include "TU3.h"
@@ -51,38 +78,7 @@
 #include "IO_Map.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
-static uint8_t dirL, dirR; /* 0: forward */
-static uint16_t dutyL=0xffff, dutyR=0xffff; /* 0: full speed */
-static uint16_t dutyBuzzer=0; /* \todo: set frequency */
-
-static int cnt = 0;
-
-static void Test(void) {
-//  LEDR_Neg();
-//  LEDG_Neg();
-  if (cnt==2000) {
-    LEDBY_Neg();
-    cnt=0;
-  }
-  cnt++;
-  DIRL_PutVal(dirL);
-  DIRR_PutVal(dirR);
-  PWML_SetRatio16(dutyL);
-  PWMR_SetRatio16(dutyR);
-  Buzzer_SetRatio16(dutyBuzzer);
-  if (SW3_GetVal()==0) {
-    WAIT1_Waitms(50); /* simple debounce */
-    if (SW3_GetVal()==0) { /* still pressed */
-      dutyL += 0x2000;
-      dutyR += 0x2000;
-      LEDG_On();
-      while(SW3_GetVal()==0) {
-      } /* wait until released */
-      LEDG_Off();
-
-    }
-  }
-}
+#include "Application.h"
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -94,9 +90,7 @@ int main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
-  for(;;) {
-    Test();
-  }
+  APP_Run();
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
