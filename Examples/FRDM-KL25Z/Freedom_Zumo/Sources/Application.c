@@ -18,6 +18,7 @@
 #include "Motor.h"
 #include "Buzzer.h"
 #include "LSM303.h"
+#include "I2C2.h"
 
 typedef enum {
   STATE_INIT,
@@ -135,6 +136,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
 }
 
 void APP_Run(void) {
+  I2C2_Init();
   REF_Init();
   MOT_Init();
   SHELL_Init();
