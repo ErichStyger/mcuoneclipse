@@ -5,7 +5,7 @@
 %;** ===================================================================
 %include Common\GeneralMethod.inc (SetRatio16)
 %;**     Description :
-%;**         Method to specify the duty cylce. If using a PWM pin, this
+%;**         Method to specify the duty cycle. If using a PWM pin, this
 %;**         means the duty cycle is set. For On/off pins, values smaller
 %;**         0x7FFF means off, while values greater means on.
 %include Common\GeneralParameters.inc(27)

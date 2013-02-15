@@ -61,6 +61,14 @@
 %define! Abstract Common\ShellAbstract.Inc
 %include Common\Header.h
 
+%if (CPUfamily = "Kinetis")
+%if (defined(PEversionDecimal) && (PEversionDecimal <=0 '1283'))
+%- MCU10.3 is 1283
+#include "PE_LDD.h" /* hack for Processor Expert (e.g. in MCU10.3) and LDD: PE_LDD.h includes at the end all shared modules, causing a recursive header file include conflict */
+/* PE version is %PEversionDecimal */
+%endif
+%endif
+
 #ifndef __%'ModuleName'_H
 #define __%'ModuleName'_H
 

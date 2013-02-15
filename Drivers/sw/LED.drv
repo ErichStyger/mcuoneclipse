@@ -105,12 +105,12 @@
 #define %'ModuleName'%.ClrVal()    %@LEDPin@'ModuleName'%.ClrVal() /* put the pin on low level */
 #define %'ModuleName'%.SetVal()    %@LEDPin@'ModuleName'%.SetVal() /* put the pin on high level */
 #define %'ModuleName'%.SetInput()  %@LEDPin@'ModuleName'%.SetInput() /* use the pin as input pin */
-#define %'ModuleName'%.SetOutput() %@LEDPin@'ModuleName'%.SetOutput() /* use the pin as ouput pin */
+#define %'ModuleName'%.SetOutput() %@LEDPin@'ModuleName'%.SetOutput() /* use the pin as output pin */
 %elif defined(PWMpin)
 #define %'ModuleName'%.ClrVal()    %@PWMpin@'ModuleName'%.SetRatio16(0x0) /* put the pin on low level */
 #define %'ModuleName'%.SetVal()    %@PWMpin@'ModuleName'%.SetRatio16(0xffff) /* put the pin on high level */
 #define %'ModuleName'%.SetInput()  /* not possible! */ /* use the pin as input pin */
-#define %'ModuleName'%.SetOutput() /* not possible! */ /* use the pin as ouput pin */
+#define %'ModuleName'%.SetOutput() /* not possible! */ /* use the pin as output pin */
 extern uint16_t %'ModuleName'%.currPWM; /* current 16bit PWM value */
 %endif
 
