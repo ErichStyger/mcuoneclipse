@@ -226,7 +226,7 @@ LI.EXP {
 <ul>
   <li>
   <a name="AnodeOnPortSide">
-  <b>High pin value means ON</b></a> - If a high value means 'on'. If the anode side of the LED is connected to the port (otherwise it is the kathode). If the LED anode is on the port side, then a logical one on the port turns the LED on. If the cathode is on the port side, then a low level will turn it on.
+  <b>High pin value means ON</b></a> - If a high value means 'on'. If the anode side of the LED is connected to the port (otherwise it is the cathode). If the LED anode is on the port side, then a logical one on the port turns the LED on. If the cathode is on the port side, then a low level will turn it on.
   </li>
   <li>
   <a name="OnOffenabled">
@@ -248,7 +248,7 @@ The following items are available only if the group is enabled (the value is "En
   <ul>
     <li>
     <a name="PWMinverted">
-    <b>inverted</b></a> - If PWM is inverted
+    <b>inverted</b></a> - If PWM is inverted. This reverts the meaning of 100% duty cycle. So if duty 100% is turning off the LED, changing this setting will make sure the LED is on with 100%.
     </li>
     <li>
     <a name="PWMpin">
