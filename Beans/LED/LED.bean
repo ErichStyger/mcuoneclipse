@@ -4,7 +4,7 @@
     <Name>LED</Name>
     <Description>Driver for a LED</Description>
     <Author>Erich Styger</Author>
-    <Version>01.051</Version>
+    <Version>01.052</Version>
     <Icon>Led</Icon>
     <TypesFiles>PE,LED\LED</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -181,7 +181,7 @@
         <Name>Shell</Name>
         <Symbol>ShellEnabled</Symbol>
         <TypeSpec>typeEnaDis</TypeSpec>
-        <Hint>If shell support is enabled.</Hint>
+        <Hint>If shell support is enabled. This enables/disables the method ParseCommand().</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
@@ -467,7 +467,7 @@
         <Name>ParseCommand</Name>
         <Symbol>ParseCommand</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Shell Command Line parser</Hint>
+        <Hint>Shell Command Line parser. This method is enabled/disabled depening on if you have the Shell enabled/disabled in the properties.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>

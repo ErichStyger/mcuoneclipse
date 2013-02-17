@@ -4,7 +4,7 @@
     <Name>Bluetooth_EGBT</Name>
     <Description>Driver for the EGBT-045MS e-Gizmo Bluetooth Module</Description>
     <Author>Erich Styger</Author>
-    <Version>01.024</Version>
+    <Version>01.025</Version>
     <Icon>Bluetooth_EGBT</Icon>
     <TypesFiles>PE,Bluetooth_EGBT\Bluetooth_EGBT</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -119,7 +119,7 @@
         <Name>Shell</Name>
         <Symbol>ShellEnabled</Symbol>
         <TypeSpec>typeEnaDis</TypeSpec>
-        <Hint>Optional Interface to command line shell</Hint>
+        <Hint>Optional Interface to command line shell. If enabled, then this enables the ParseCommand() method.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
