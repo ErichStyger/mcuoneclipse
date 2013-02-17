@@ -27,8 +27,8 @@
 #include "Serial1.h"
 #include "ASerialLdd2.h"
 #include "LEDR.h"
-#include "LEDpin1.h"
-#include "BitIoLdd2.h"
+#include "Inhr1.h"
+#include "PwmLdd1.h"
 #include "LEDG.h"
 #include "LEDpin2.h"
 #include "BitIoLdd3.h"
@@ -36,6 +36,7 @@
 #include "LEDpin3.h"
 #include "BitIoLdd4.h"
 #include "CLS1.h"
+#include "TU1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
 /* Including shared modules, which are used for whole project */
