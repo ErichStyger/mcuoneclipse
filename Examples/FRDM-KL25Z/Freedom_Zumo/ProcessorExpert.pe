@@ -3,8 +3,8 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>Erich Styger</SavedBy>
-    <ModificationStamp>60</ModificationStamp>
-    <Date>2013-02-14</Date>
+    <ModificationStamp>63</ModificationStamp>
+    <Date>2013-02-19</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.5.0.RT4_b1306-1475</PEversion>
   </Header>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>118</ProjectCompNumb>
+    <ProjectCompNumb>122</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>false</AssignInitComponentNameToPrph>
@@ -4165,7 +4165,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.051</BeanVersion>
+    <BeanVersion>01.054</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -4950,7 +4950,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.051</BeanVersion>
+    <BeanVersion>01.054</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -5735,7 +5735,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.051</BeanVersion>
+    <BeanVersion>01.054</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -29103,7 +29103,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.051</BeanVersion>
+    <BeanVersion>01.054</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -29880,7 +29880,7 @@
   </Bean>
   <Bean>
     <BeanType>TimerUnit_LDD</BeanType>
-    <Name>TU1</Name>
+    <Name>RefCnt</Name>
     <CompNumb>89</CompNumb>
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
@@ -29895,7 +29895,7 @@
         <ItemSymbol>DeviceName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>TU1</Value>
+        <Value>RefCnt</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>MainModule</ItemSymbol>
@@ -30800,7 +30800,7 @@
         <ItemSymbol>OnCounterRestartName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>TU1_OnCounterRestart</Value>
+        <Value>RefCnt_OnCounterRestart</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnChannel0</ItemSymbol>
@@ -30816,7 +30816,7 @@
         <ItemSymbol>OnChannel0Name</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>TU1_OnChannel0</Value>
+        <Value>RefCnt_OnChannel0</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnChannel1</ItemSymbol>
@@ -30832,7 +30832,7 @@
         <ItemSymbol>OnChannel1Name</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>TU1_OnChannel1</Value>
+        <Value>RefCnt_OnChannel1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnChannel2</ItemSymbol>
@@ -30848,7 +30848,7 @@
         <ItemSymbol>OnChannel2Name</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>TU1_OnChannel2</Value>
+        <Value>RefCnt_OnChannel2</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnChannel3</ItemSymbol>
@@ -30864,7 +30864,7 @@
         <ItemSymbol>OnChannel3Name</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>TU1_OnChannel3</Value>
+        <Value>RefCnt_OnChannel3</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnChannel4</ItemSymbol>
@@ -30880,7 +30880,7 @@
         <ItemSymbol>OnChannel4Name</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>TU1_OnChannel4</Value>
+        <Value>RefCnt_OnChannel4</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnChannel5</ItemSymbol>
@@ -30896,7 +30896,7 @@
         <ItemSymbol>OnChannel5Name</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>TU1_OnChannel5</Value>
+        <Value>RefCnt_OnChannel5</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnChannel6</ItemSymbol>
@@ -30912,7 +30912,7 @@
         <ItemSymbol>OnChannel6Name</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>TU1_OnChannel6</Value>
+        <Value>RefCnt_OnChannel6</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnChannel7</ItemSymbol>
@@ -30928,7 +30928,7 @@
         <ItemSymbol>OnChannel7Name</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>TU1_OnChannel7</Value>
+        <Value>RefCnt_OnChannel7</Value>
       </ItemState>
     </Events>
   </Bean>

@@ -9,9 +9,76 @@
 #include "DIRL.h"
 #include "PWMR.h"
 #include "PWML.h"
+#if MOT_HAS_BRAKE
+#include "BrakeL.h"
+#include "BrakeR.h"
+#endif
+#if MOT_HAS_CURRENT_SENSE
+#include "SNS0.h"
+#endif
 
 MOT_MotorDevice motorL, motorR;
 static bool isMotorOn = TRUE;
+
+#if MOT_HAS_BRAKE
+void MOT_SetBrake(MOT_MotorDevice *motor, bool on) {
+  if (on && !motor->brake) {
+    motor->BrakePutVal(motor->BRAKEdeviceData, 1);
+    motor->brake = TRUE;
+  } else if (!on && motor->brake) {
+    motor->BrakePutVal(motor->BRAKEdeviceData, 0);
+    motor->brake = FALSE;
+  }
+}
+
+bool MOT_GetBrake(MOT_MotorDevice *motor) {
+  return motor->brake;
+}
+#endif
+
+#if MOT_HAS_CURRENT_SENSE
+void MOT_MeasureCurrent(MOT_MotorDevice *motorA, MOT_MotorDevice *motorB) {
+  #define SAMPLE_GROUP_SIZE 1U
+  SNS0_TResultData MeasuredValues[SAMPLE_GROUP_SIZE];
+  LDD_ADC_TSample SampleGroup[SAMPLE_GROUP_SIZE];
+
+  SampleGroup[0].ChannelIdx = 0U;  /* Create one-sample group */
+  (void)SNS0_CreateSampleGroup(motorA->SNSdeviceData, (LDD_ADC_TSample *)SampleGroup, SAMPLE_GROUP_SIZE);  /* Set created sample group */
+  (void)SNS0_StartSingleMeasurement(motorA->SNSdeviceData);           /* Start continuous measurement */
+  while (!SNS0_GetMeasurementCompleteStatus(motorA->SNSdeviceData)) {}; /* Wait for conversion completeness */
+  (void)SNS0_GetMeasuredValues(motorA->SNSdeviceData, (LDD_TData *)MeasuredValues);  /* Read measured values */
+  motorA->currentValue = MeasuredValues[0];
+
+  SampleGroup[0].ChannelIdx = 1U;  /* Create one-sample group */
+  (void)SNS0_CreateSampleGroup(motorB->SNSdeviceData, (LDD_ADC_TSample *)SampleGroup, SAMPLE_GROUP_SIZE);  /* Set created sample group */
+  (void)SNS0_StartSingleMeasurement(motorB->SNSdeviceData);           /* Start continuous measurement */
+  while (!SNS0_GetMeasurementCompleteStatus(motorB->SNSdeviceData)) {}; /* Wait for conversion completeness */
+  (void)SNS0_GetMeasuredValues(motorB->SNSdeviceData, (LDD_TData *)MeasuredValues);  /* Read measured values */
+  motorB->currentValue = MeasuredValues[0];
+}
+
+static void WriteCurrent(MOT_MotorDevice *motor, const CLS1_StdIOType *io) {
+  unsigned char buf[26];
+  uint16_t val;
+
+  buf[0] = '\0';
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)", current val 0x");
+  UTIL1_strcatNum16Hex(buf, sizeof(buf), motor->currentValue);
+  CLS1_SendStr(buf, io->stdOut);
+
+  val = motor->currentValue/(0xFFFF/3300); /* 3300 mV full scale */
+  buf[0] = '\0';
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)", mV ");
+  UTIL1_strcatNum16u(buf, sizeof(buf), val);
+  CLS1_SendStr(buf, io->stdOut);
+
+  val = motor->currentValue/(0xFFFF/2000); /* 2000 mA full scale */
+  buf[0] = '\0';
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)", mA ");
+  UTIL1_strcatNum16u(buf, sizeof(buf), val);
+  CLS1_SendStr(buf, io->stdOut);
+}
+#endif
 
 static uint8_t PWMLSetRatio16(uint16_t ratio) {
   return PWML_SetRatio16(ratio);
@@ -88,6 +155,9 @@ static void MOT_PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"  on|off", (unsigned char*)"Enables or disables motor\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  (L|R) forward|backward", (unsigned char*)"Change motor direction\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  (L|R) duty <number>", (unsigned char*)"Change motor PWM (-100..+100)%\r\n", io->stdOut);
+#if MOT_HAS_BRAKE
+  CLS1_SendHelpStr((unsigned char*)"  (L|R) brake (on|off)", (unsigned char*)"Enable/disable brake on motor\r\n", io->stdOut);
+#endif
 }
 
 static void MOT_PrintStatus(const CLS1_StdIOType *io) {
@@ -112,6 +182,15 @@ static void MOT_PrintStatus(const CLS1_StdIOType *io) {
   UTIL1_strcat(buf, sizeof(buf),(unsigned char*)(MOT_GetDirection(&motorR)==MOT_DIR_FORWARD?", fw":", bw"));
   CLS1_SendStr(buf, io->stdOut);
   CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
+#if MOT_HAS_BRAKE
+  UTIL1_strcat(buf, sizeof(buf),(unsigned char*)(MOT_GetBrake(&motorB)?", brake on":", brake off"));
+#endif
+#if MOT_HAS_CURRENT_SENSE
+  WriteCurrent(&motorA, io);
+  CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
+  WriteCurrent(&motorB, io);
+  CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
+#endif
 }
 
 uint8_t MOT_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
@@ -161,6 +240,22 @@ uint8_t MOT_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
   } else if (UTIL1_strncmp((char*)cmd, (char*)"motor off", sizeof("motor off")-1)==0) {
     isMotorOn = FALSE;
     *handled = TRUE;
+#if MOT_HAS_BRAKE
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"motor A brake on")==0) {
+    MOT_SetBrake(&motorA, TRUE);
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"motor A brake off")==0) {
+    MOT_SetBrake(&motorA, FALSE);
+    *handled = TRUE;
+#endif
+#if MOT_HAS_CURRENT_SENSE  
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"motor B brake on")==0) {
+    MOT_SetBrake(&motorB, TRUE);
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"motor B brake off")==0) {
+    MOT_SetBrake(&motorB, FALSE);
+    *handled = TRUE;
+#endif
   }
   return res;
 }

@@ -16,12 +16,22 @@ typedef enum {
 } MOT_Direction;
 
 typedef int8_t MOT_SpeedPercent; /* -100%...+100%, where negative is backward */
+#define MOT_HAS_BRAKE         0
+#define MOT_HAS_CURRENT_SENSE 0
 
 typedef struct MOT_MotorDevice_ {
   MOT_SpeedPercent currSpeedPercent; /* our current speed in %, negative percent means backward */
   uint16_t currPWMvalue; /* current PWM value used */
   uint8_t (*SetRatio16)(uint16_t);
   void (*DirPutVal)(bool); /* function to set direction bit */
+#if MOT_HAS_BRAKE
+  bool brake; /* if brake is enabled or not */
+  void (*BrakePutVal)(bool); /* function to set brake bit */
+#endif
+#if MOT_HAS_CURRENT_SENSE
+  uint16_t currentValue; /* current AD current sensor value */
+  uint16_t offset; /* current AD sensor offset value */
+#endif
 } MOT_MotorDevice;
 
 extern MOT_MotorDevice motorL, motorR;

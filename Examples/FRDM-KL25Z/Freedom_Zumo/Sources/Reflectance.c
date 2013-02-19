@@ -7,7 +7,7 @@
 #include "Reflectance.h"
 #include "LED_IR.h"
 #include "WAIT1.h"
-#include "TU1.h"
+#include "RefCnt.h" /* timer counter to measure reflectance */
 #include "IR_A0.h"
 #include "IR_A2.h"
 #include "IR_A3.h"
@@ -101,7 +101,7 @@ static void REF_MeasureRaw(SensorTimeType raw[NOF_SENSORS]) {
   timeout = TMOUT1_GetCounter(20/TMOUT1_TICK_PERIOD_MS); /* set up timeout counter */
   FRTOS1_vTaskSuspendAll();
   
-  (void)TU1_ResetCounter(timerHandle); /* reset timer counter */
+  (void)RefCnt_ResetCounter(timerHandle); /* reset timer counter */
   for(i=0;i<NOF_SENSORS;i++) {
     SensorFctArray[i].SetInput(); /* turn I/O line as input */
   }
@@ -113,7 +113,7 @@ static void REF_MeasureRaw(SensorTimeType raw[NOF_SENSORS]) {
     for(i=0;i<NOF_SENSORS;i++) {
       if (raw[i]==MAX_SENSOR_VALUE) { /* not measured yet? */
         if (SensorFctArray[i].GetVal()==0) {
-          raw[i] = TU1_GetCounterValue(timerHandle);
+          raw[i] = RefCnt_GetCounterValue(timerHandle);
         }
       } else { /* have value */
         cnt++;
@@ -270,7 +270,7 @@ void REF_Calibrate(bool on) {
 }
 
 static uint8_t PrintHelp(const CLS1_StdIOType *io) {
-  CLS1_SendHelpStr((unsigned char*)"Reflectance", (unsigned char*)"Group of Reflectance commands\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"reflectance", (unsigned char*)"Group of Reflectance commands\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  calibrate (white|black)", (unsigned char*)"Calibrate for all white or black values\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  calibrate line (on|off)", (unsigned char*)"Calibrate while moving sensor over line\r\n", io->stdOut);
@@ -282,7 +282,7 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   unsigned char buf[15];
   int i;
 
-  CLS1_SendStatusStr((unsigned char*)"Reflectance", (unsigned char*)"\r\n", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"reflectance", (unsigned char*)"\r\n", io->stdOut);
   CLS1_SendStatusStr((unsigned char*)"  led", ledON?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
   CLS1_SendStatusStr((unsigned char*)"  calibrated", isCalibrated?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
   CLS1_SendStatusStr((unsigned char*)"  raw", (unsigned char*)"", io->stdOut);
@@ -323,25 +323,25 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
 }
 
 byte REF_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
-  if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "Reflectance help")==0) {
+  if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "reflectance help")==0) {
     *handled = TRUE;
     return PrintHelp(io);
-  } else if ((UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0) || (UTIL1_strcmp((char*)cmd, "Reflectance status")==0)) {
+  } else if ((UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0) || (UTIL1_strcmp((char*)cmd, "reflectance status")==0)) {
     *handled = TRUE;
     return PrintStatus(io);
-  } else if (UTIL1_strcmp((char*)cmd, "Reflectance calibrate line on")==0) {
+  } else if (UTIL1_strcmp((char*)cmd, "reflectance calibrate line on")==0) {
     REF_Calibrate(TRUE);
     *handled = TRUE;
     return ERR_OK;  
-  } else if (UTIL1_strcmp((char*)cmd, "Reflectance calibrate line off")==0) {
+  } else if (UTIL1_strcmp((char*)cmd, "reflectance calibrate line off")==0) {
     REF_Calibrate(FALSE);
     *handled = TRUE;
     return ERR_OK;
-  } else if (UTIL1_strcmp((char*)cmd, "Reflectance led on")==0) {
+  } else if (UTIL1_strcmp((char*)cmd, "reflectance led on")==0) {
     ledON = TRUE;
     *handled = TRUE;
     return ERR_OK;
-  } else if (UTIL1_strcmp((char*)cmd, "Reflectance led off")==0) {
+  } else if (UTIL1_strcmp((char*)cmd, "reflectance led off")==0) {
     ledON = FALSE;
     *handled = TRUE;
     return ERR_OK;
@@ -372,7 +372,7 @@ void REF_Init(void) {
   if (mutexHandle==NULL) {
     for(;;);
   }
-  timerHandle = TU1_Init(NULL);
+  timerHandle = RefCnt_Init(NULL);
   InitSensorValues();
   if (FRTOS1_xTaskCreate(ReflTask, (signed portCHAR *)"Refl", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
