@@ -899,7 +899,19 @@ static uint8_t ExecuteQueryString(uint8_t(*f)(unsigned char*,size_t), unsigned c
   }
 }
 
-static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
+static uint8_t PrintShortStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"%'ModuleName'", (unsigned char*)"\r\n", io->stdOut);
+  if (%'ModuleName'%.%btTestUART()!=ERR_OK) {
+    %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Test UART", (unsigned char*)"FAILED", io->stdOut);
+    return ERR_FAILED;
+  } else {
+    %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Test UART", (unsigned char*)"OK", io->stdOut);
+  }
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"  ('%'ModuleName' status'use for full status)\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+static uint8_t PrintLongStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   uint8_t buf[%'ModuleName'%.MAX_RESPONSE_SIZE];
 
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"%'ModuleName'", (unsigned char*)"\r\n", io->stdOut);
@@ -2140,9 +2152,12 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char* cmd, bool *handled, const
   if (%@Utility@'ModuleName'%.strcmp((char*)cmd, %@Shell@'ModuleName'%.CMD_HELP)==0 || %@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' help")==0) {
     *handled = TRUE;
     return PrintHelp(io);
-  } else if ((%@Utility@'ModuleName'%.strcmp((char*)cmd, %@Shell@'ModuleName'%.CMD_STATUS)==0) || (%@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' status")==0)) {
+  } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, %@Shell@'ModuleName'%.CMD_STATUS)==0) {
     *handled = TRUE;
-    return PrintStatus(io);
+    return PrintShortStatus(io); /* only print short status, as full status will fail if module is connected */
+  } else if ((%@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' status")==0)) {
+    *handled = TRUE;
+    return PrintLongStatus(io);
   } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' cmd ", sizeof("%'ModuleName' cmd ")-1)==0) {
     SendCommand(cmd+sizeof("%'ModuleName' cmd ")-1, io);
     *handled = TRUE;
