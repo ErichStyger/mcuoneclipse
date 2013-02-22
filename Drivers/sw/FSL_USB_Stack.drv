@@ -290,17 +290,19 @@ void %'ModuleName'%.usb_int_en(void)
   }
 %elif (CPUDevice="Kinetis K40") | (CPUDevice="Kinetis K53") | (CPUDevice="Kinetis K60")
   /* %CPUDevice */
+  /* see https://community.freescale.com/message/313567#313567 */
 #if !HIGH_SPEED_DEVICE
-  NVICICER2 |= (1<<9);   /* Clear any pending interrupts on USB */
-  NVICISER2 |= (1<<9);   /* Enable interrupts from USB module */
+  NVICICER2 = (1<<9);   /* Clear any pending interrupts on USB */
+  NVICISER2 = (1<<9);   /* Enable interrupts from USB module */
 #else
-  NVICICER3 |= 1;        /* Clear any pending interrupts on USBHS */
-  NVICISER3 |= 1;        /* Enable interrupts on USBHS */
+  NVICICER3 = 1;        /* Clear any pending interrupts on USBHS */
+  NVICISER3 = 1;        /* Enable interrupts on USBHS */
 #endif
 %elif (CPUDevice="Kinetis L2K")
   /* %CPUDevice */
-  NVIC_ICER |= (1<<24);    /* Clear any pending interrupts on USB */
-  NVIC_ISER |= (1<<24);    /* Enable interrupts from USB module */
+  /* see https://community.freescale.com/message/313567#313567 */
+  NVIC_ICER = (1<<24);    /* Clear any pending interrupts on USB */
+  NVIC_ISER = (1<<24);    /* Enable interrupts from USB module */
 %else
   /* functionality not needed for %CPUDevice */
 %endif
