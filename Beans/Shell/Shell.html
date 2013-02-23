@@ -194,6 +194,12 @@ This component implements a simple shell: a command line driver which uses a con
 The shell provides interfaces and routines common to such an shell.
 Additionally it provides usual file I/O routines if the FatFS is used.
 If using the FreeRTOS, it provides status information about the RTOS.
+
+<br /><br />
+<div class="text_title">
+Important Notes
+</div>
+If using AsynchroSerial, make sure interrupts are enabled for Rx/Tx in the properties. And that you have configured an appropriate input/output buffer size.
 <!---DESCEND DON'T CHANGE THIS-->
             </div>
            <p class="footer">
