@@ -38,6 +38,30 @@
 
 %ifndef Shell
   %set ParseCommand Selection never
+  %set PrintDirectory Selection never
+  %set CopyFile Selection never
+  %set DeleteFile Selection never
+  %set PrintFile Selection never
+  %set MakeDirectory Selection never
+  %set ChangeDirectory Selection never
+  %set RenameFile Selection never
+  %set MountFileSystem Selection never
+  %set UnMountFileSystem Selection never
+  %set PrintDiskInfo Selection never
+  %set PrintSector Selection never
+  %set CheckCardPresence Selection never
 %else
   %set ParseCommand Selection enable
+  %set PrintDirectory Selection enable
+  %set CopyFile Selection enable
+  %set DeleteFile Selection enable
+  %set PrintFile Selection enable
+  %set MakeDirectory Selection enable
+  %set ChangeDirectory Selection enable
+  %set RenameFile Selection enable
+  %set MountFileSystem Selection enable
+  %set UnMountFileSystem Selection enable
+  %set PrintDiskInfo Selection enable
+  %set PrintSector Selection enable
+  %set CheckCardPresence Selection enable
 %endif
