@@ -4,18 +4,13 @@
  */
 #include "Application.h"
 #include "LEDR.h"
-#include "LEDG.h"
-#if !APP_HAS_SD_CARD
-#include "LEDB.h"  /* Blue LED used by SD card (SPI clock) */
-#endif
 #include "FRTOS1.h"
-#include "WAIT1.h"
 #include "Shell.h"
 
 static portTASK_FUNCTION(Task1, pvParameters) {
   (void)pvParameters; /* parameter not used */
   for(;;) {
-    //LEDR_Neg();
+    LEDR_Neg();
     FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
   }
 }

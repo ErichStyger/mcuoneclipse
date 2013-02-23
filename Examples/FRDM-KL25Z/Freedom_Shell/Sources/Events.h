@@ -36,13 +36,11 @@
 #include "RTOSTICKLDD1.h"
 #include "UTIL1.h"
 #include "WAIT1.h"
-#include "TmDt1.h"
-#include "FSSH1.h"
-#include "RxBuf3.h"
 #include "AS1.h"
+#include "ASerialLdd1.h"
+#include "CLS1.h"
 #include "TU1.h"
 #include "TU3.h"
-#include "TMOUT1.h"
 #include "PE_LDD.h"
 
 void Cpu_OnNMIINT(void);
@@ -74,34 +72,6 @@ void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *
 **         NAME            - DESCRIPTION
 **       * pxTask          - Pointer to task handle
 **       * pcTaskName      - Pointer to 
-**     Returns     : Nothing
-** ===================================================================
-*/
-
-void FRTOS1_vApplicationTickHook(void);
-/*
-** ===================================================================
-**     Event       :  FRTOS1_vApplicationTickHook (module Events)
-**
-**     Component   :  FRTOS1 [FreeRTOS]
-**     Description :
-**         If enabled, this hook will be called by the RTOS for every
-**         tick increment.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-
-void FRTOS1_vApplicationIdleHook(void);
-/*
-** ===================================================================
-**     Event       :  FRTOS1_vApplicationIdleHook (module Events)
-**
-**     Component   :  FRTOS1 [FreeRTOS]
-**     Description :
-**         If enabled, this hook will be called when the RTOS is idle.
-**         This might be a good place to go into low power mode.
-**     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================
 */
@@ -153,41 +123,81 @@ void SD1_OnBlockSent(LDD_TUserData *UserDataPtr);
 ** ===================================================================
 */
 
-void AS1_OnBlockReceived(LDD_TUserData *UserDataPtr);
 /*
 ** ===================================================================
-**     Event       :  AS1_OnBlockReceived (module Events)
+**     Event       :  AS1_OnError (module Events)
 **
-**     Component   :  AS1 [Serial_LDD]
+**     Component   :  AS1 [AsynchroSerial]
 **     Description :
-**         This event is called when the requested number of data is
-**         moved to the input buffer.
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**       * UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. This pointer is passed
-**                           as the parameter of Init method.
+**         This event is called when a channel error (not the error
+**         returned by a given method) occurs. The errors can be read
+**         using <GetError> method.
+**         The event is available only when the <Interrupt
+**         service/event> property is enabled.
+**     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================
 */
+void AS1_OnError(void);
 
-void AS1_OnBlockSent(LDD_TUserData *UserDataPtr);
 /*
 ** ===================================================================
-**     Event       :  AS1_OnBlockSent (module Events)
+**     Event       :  AS1_OnRxChar (module Events)
 **
-**     Component   :  AS1 [Serial_LDD]
+**     Component   :  AS1 [AsynchroSerial]
 **     Description :
-**         This event is called after the last character from the
-**         output buffer is moved to the transmitter. 
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**       * UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. This pointer is passed
-**                           as the parameter of Init method.
+**         This event is called after a correct character is received.
+**         The event is available only when the <Interrupt
+**         service/event> property is enabled and either the <Receiver>
+**         property is enabled or the <SCI output mode> property (if
+**         supported) is set to Single-wire mode.
+**     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================
 */
+void AS1_OnRxChar(void);
+
+/*
+** ===================================================================
+**     Event       :  AS1_OnTxChar (module Events)
+**
+**     Component   :  AS1 [AsynchroSerial]
+**     Description :
+**         This event is called after a character is transmitted.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void AS1_OnTxChar(void);
+
+/*
+** ===================================================================
+**     Event       :  AS1_OnFullRxBuf (module Events)
+**
+**     Component   :  AS1 [AsynchroSerial]
+**     Description :
+**         This event is called when the input buffer is full;
+**         i.e. after reception of the last character 
+**         that was successfully placed into input buffer.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void AS1_OnFullRxBuf(void);
+
+/*
+** ===================================================================
+**     Event       :  AS1_OnFreeTxBuf (module Events)
+**
+**     Component   :  AS1 [AsynchroSerial]
+**     Description :
+**         This event is called after the last character in output
+**         buffer is transmitted.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void AS1_OnFreeTxBuf(void);
 
 /* END Events */
 #endif /* __Events_H*/
