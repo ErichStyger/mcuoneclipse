@@ -72,6 +72,8 @@
 #if defined(__CWCC__)
 #pragma align_array_members on
 #endif
+/* << EST pushing current packing */
+#pragma pack(push)
 #pragma pack(1)
 typedef struct _MCU_CTL_BIT{
         uint_8 :1;
@@ -127,6 +129,9 @@ typedef struct _g_bdtmap {
 #pragma options align=reset
 #elif defined(__IAR_SYSTEMS_ICC__)
 #pragma pack()
+#else /* e.g. gcc */
+/* << EST restoring previous packing */
+#pragma pack(pop)
 #endif
 /******************************************************************************
  * Global Functions - None

@@ -314,7 +314,9 @@ typedef uint_8   T_EP_BITFIELD;
 #endif
 #else
 #ifndef __HIWARE__
-#pragma pack	(1)  		/* Enforce 1 byte struct alignment */
+/* << EST pushing current packing */
+#pragma pack(push)
+#pragma pack(1)  		/* Enforce 1 byte struct alignment */
 #endif
 #endif
 
@@ -356,6 +358,9 @@ typedef struct _USB_EP_STRUCT
 
 #if (defined(__CWCC__))/*||defined(__GNUC__))*/ /* << EST: that pragma does not exist for gcc */
 	#pragma options align = reset
+#elif defined(__GNUC__) /* << EST */
+/* << EST restoring previous packing */
+#pragma pack(pop)
 #elif defined(__IAR_SYSTEMS_ICC__) || defined(__CC_ARM)
 	#pragma pack()
 #endif

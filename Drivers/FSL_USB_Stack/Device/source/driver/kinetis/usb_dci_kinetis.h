@@ -195,6 +195,8 @@ typedef union {
   } Bits;
 } ENDPT0STR;
 
+/* << EST pushing current packing */
+#pragma pack(push)
 #pragma pack(1)
 /* This structure is used to hold endpoint paramaetes and the
    transaction parameters on the IO's happening on them */
@@ -216,6 +218,9 @@ typedef struct  _BDT_ELEM
 	#pragma options align = reset
 #elif defined(__IAR_SYSTEMS_ICC__)
 	#pragma pack()
+#else /* gcc */
+/* << EST restoring previous packing */
+#pragma pack(pop)
 #endif
 
 

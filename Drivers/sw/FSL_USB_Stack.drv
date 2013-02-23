@@ -329,7 +329,7 @@ byte %'ModuleName'%.%Init(void)
   err = %@CDCDevice@'ModuleName'%.Init();
 %elif USBDeviceClass="HID Keyboard Device"
   err = USB_Class_HID_Init(CONTROLLER_ID, USB_App_Callback, NULL, USB_App_Param_Callback);
-%elif USBDeviceClass="MSD Host Device"
+%elif USBDeviceClass="MSD Host"
   err = %@MSDHost@'ModuleName'%.Init();
 %else
   #error "unknown USBDeviceClass %USBDeviceClass"

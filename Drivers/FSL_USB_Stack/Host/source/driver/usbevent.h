@@ -54,6 +54,8 @@
 	#pragma pack(1)
 #endif
 #ifdef __GNUC__
+  /* << EST pushing options */
+  #pragma pack(push)
 	#pragma pack(1)
 #endif
 typedef struct usb_event 
@@ -66,7 +68,9 @@ typedef struct usb_event
 	#pragma pop
 #endif
 #ifdef __GNUC__
-	#pragma options align = reset
+  /* << EST restoring previous packing */
+  #pragma pack(pop)
+	//#pragma options align = reset
 #endif
 /*---------------------------------------------------------------------
 **

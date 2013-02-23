@@ -171,6 +171,7 @@ typedef struct _MASS_QUEUE_STRUCT
 
 
 /* Command Block Wrapper (see USB Mass Storage specs) */
+#pragma pack(push) /* << EST */
 #pragma pack(1)
 typedef struct _CBW
 {
@@ -234,6 +235,8 @@ typedef struct _Usb_Mass_Intf_Struct {
    uint_8                              INTERFACE_NUM;     /* interface number*/
    uint_8                              ALTERNATE_SETTING; /* Alternate setting*/
 } USB_MASS_CLASS_INTF_STRUCT, _PTR_ USB_MASS_CLASS_INTF_STRUCT_PTR;
+
+#pragma pack(pop)/* << EST */
 
 
 /* Prototypes */
