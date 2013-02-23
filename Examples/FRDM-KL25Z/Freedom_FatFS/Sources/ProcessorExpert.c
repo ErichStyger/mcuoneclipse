@@ -29,16 +29,23 @@
 #include "SS1.h"
 #include "CD1.h"
 #include "WP1.h"
-#include "TI1.h"
-#include "TU1.h"
 #include "GPIO_D.h"
 #include "GPIO_A.h"
 #include "SD_GreenLed.h"
+#include "LEDpin1.h"
+#include "BitIoLdd1.h"
 #include "SD_RedLed.h"
+#include "LEDpin2.h"
+#include "BitIoLdd2.h"
 #include "RTC1.h"
 #include "GI2C1.h"
 #include "I2C2.h"
 #include "UTIL1.h"
+#include "FRTOS1.h"
+#include "RTOSTICKLDD1.h"
+#include "AS1.h"
+#include "ASerialLdd1.h"
+#include "CLS1.h"
 #include "FAT1.h"
 #include "TmDt1.h"
 #include "WAIT1.h"
@@ -51,28 +58,7 @@
 #include "IO_Map.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
-static FATFS fs;
-static FIL fp;
-
-static void Test(void) {
-  UINT bw; /* number of bytes written */
-
-  if (FAT1_isDiskPresent()) { /* if no hardware CardDetect pin is assigned, it will always return TRUE */
-    LEDR_On(); /* turn red RGB LED on */
-    FAT1_mount(0, &fs); /* mount file system */
-    if (!FAT1_isWriteProtected()) { /* if no hardware WritePtotect pin is assigned, it will always return FALSE */
-      LEDG_On(); /* turn green RGB LED on */
-      if (FAT1_open(&fp, "./test.txt", FA_CREATE_ALWAYS|FA_WRITE)!=FR_OK) { /* open file, will always create it if not already on disk */
-        for(;;){} /* error! */
-      }
-      if (FAT1_write(&fp, "Hello World!", sizeof("Hello World!")-1, &bw)!=FR_OK) { /* write string to file */
-        for(;;){} /* error! */
-      }
-    }
-    (void)FAT1_close(&fp); /* close file */
-    FAT1_mount(0, NULL); /* unmount file system */
-  }
-}
+#include "Application.h"
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -84,14 +70,7 @@ int main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
-  /* Write your code here */
-  SD_GreenLed_ClrVal(NULL);
-  SD_RedLed_ClrVal(NULL);
-  for(;;) {
-    LEDR_Off();
-    LEDG_Off();
-    Test();
-  }
+  APP_Run();
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/

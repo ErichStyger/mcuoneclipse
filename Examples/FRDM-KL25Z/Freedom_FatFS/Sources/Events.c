@@ -41,25 +41,73 @@ void Cpu_OnNMIINT(void)
 
 /*
 ** ===================================================================
-**     Event       :  TI1_OnInterrupt (module Events)
+**     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
 **
-**     Component   :  TI1 [TimerInt_LDD]
+**     Component   :  FRTOS1 [FreeRTOS]
 **     Description :
-**         Called if periodic event occur. Component and OnInterrupt
-**         event must be enabled. See <SetEventMask> and <GetEventMask>
-**         methods. This event is available only if a <Interrupt
-**         service/event> is enabled.
+**         if enabled, this hook will be called in case of a stack
+**         overflow.
 **     Parameters  :
 **         NAME            - DESCRIPTION
-**       * UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. The pointer passed as
-**                           the parameter of Init method.
+**       * pxTask          - Pointer to task handle
+**       * pcTaskName      - Pointer to task name
 **     Returns     : Nothing
 ** ===================================================================
 */
-void TI1_OnInterrupt(LDD_TUserData *UserDataPtr)
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *pcTaskName)
 {
+  /* This will get called if a stack overflow is detected during the context
+     switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack
+     problems within nested interrupts, but only do this for debug purposes as
+     it will increase the context switch time. */
+  (void)pxTask;
+  (void)pcTaskName;
+  taskDISABLE_INTERRUPTS();
+  /* Write your code here ... */
+  for(;;) {}
+}
+
+/*
+** ===================================================================
+**     Event       :  FRTOS1_vApplicationMallocFailedHook (module Events)
+**
+**     Component   :  FRTOS1 [FreeRTOS]
+**     Description :
+**         If enabled, the RTOS will call this hook in case memory
+**         allocation failed.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void FRTOS1_vApplicationMallocFailedHook(void)
+{
+  /* Called if a call to pvPortMalloc() fails because there is insufficient
+     free memory available in the FreeRTOS heap.  pvPortMalloc() is called
+     internally by FreeRTOS API functions that create tasks, queues, software
+     timers, and semaphores.  The size of the FreeRTOS heap is set by the
+     configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
+  taskDISABLE_INTERRUPTS();
+  /* Write your code here ... */
+  for(;;) {}
+}
+
+/*
+** ===================================================================
+**     Event       :  FRTOS1_vApplicationTickHook (module Events)
+**
+**     Component   :  FRTOS1 [FreeRTOS]
+**     Description :
+**         If enabled, this hook will be called by the RTOS for every
+**         tick increment.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void FRTOS1_vApplicationTickHook(void)
+{
+  /* Called for every RTOS tick. */
   TMOUT1_AddTick();
+  TmDt1_AddTick();
 }
 
 /* END Events */
