@@ -6,7 +6,7 @@
 %include Common\GeneralMethod.inc (ParseCommand)
 %;**     Description :
 %;**         Shell Command Line parser. This method is enabled/disabled
-%;**         depening on if you have the Shell enabled/disabled in the
+%;**         depending on if you have the Shell enabled/disabled in the
 %;**         properties.
 %include Common\GeneralParameters.inc(27)
 %;**       * cmd%Parcmd %>27 - Pointer to command string
