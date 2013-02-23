@@ -398,6 +398,10 @@ The following items are available only if the group is enabled (the value is "En
     <a name="RTOS">
     <b>RTOS</b></a> - RTOS to be used
     </li>
+    <li>
+    <a name="UseRTOSDynamicMemory">
+    <b>Use dynamic heap</b></a> - If dynamic memory (malloc(), free()) of the RTOS shall be used. This will reduce the amount of stack and global memory used, but requires memory from the operating system.
+    </li>
   </ul>
   </li>
 </ul>
@@ -405,6 +409,30 @@ The following items are available only if the group is enabled (the value is "En
 <li>
 <a name="Memory">
 <b>Memory</b></a> - Interface for the underlying memory (e.g. SD Card)
+</li>
+<li>
+<a name="ShellEnabled">
+<b>Shell</b></a> - If enabled, the component offers a command line shell interface<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+<ul>
+  <li>
+  <a name="Shell">
+  <b>Shell</b></a> - Interface to command line shell
+  </li>
+  <li>
+  <a name="Utility">
+  <b>Utility</b></a> - Interface to utility functions
+  </li>
+  <li>
+  <a name="FilePrintBufferSize">
+  <b>File print buffer size</b></a> - Size of read buffer on stack for PrintFile() method: a higher number increases performance, but increases memory used on the stack.
+  </li>
+  <li>
+  <a name="FileCopyBufferSize">
+  <b>File copy buffer size</b></a> - Size of copy buffer on stack for CopyFile() method: a higher number increases performance, but increases memory used on the stack.
+  </li>
+</ul>
 </li>
 
      </ul>

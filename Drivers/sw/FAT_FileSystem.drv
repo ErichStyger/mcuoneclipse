@@ -126,6 +126,11 @@
 %- Write your own types here ...
 %-  Example:
 %-    typedef int TMyInteger;
+%ifdef ParseCommand
+#define %'ModuleName'%.PARSE_COMMAND_ENABLED  1  /* set to 1 if method ParseCommand() is present, 0 otherwise */
+%else
+#define %'ModuleName'%.PARSE_COMMAND_ENABLED  0 /* set to 1 if method ParseCommand() is present, 0 otherwise */
+%endif %- ParseCommand
 
 %-BW_CUSTOM_USERTYPE_END
 
@@ -588,6 +593,156 @@ dword %'ModuleName'%.%get_fattime(void);
 
 %endif %- get_fattime
 %-BW_METHOD_END get_fattime
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ParseCommand
+%ifdef ParseCommand
+byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io);
+%define! Parcmd
+%define! Parhandled
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemParseCommand.Inc
+
+%endif %- ParseCommand
+%-BW_METHOD_END ParseCommand
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN CheckCardPresence
+%ifdef CheckCardPresence
+byte %'ModuleName'%.%CheckCardPresence(bool *cardMounted, byte drive, FATFS *fileSystemObject, const %@Shell@'ModuleName'%.StdIOType *io);
+%define! ParcardMounted
+%define! Pardrive
+%define! ParfileSystemObject
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemCheckCardPresence.Inc
+
+%endif %- CheckCardPresence
+%-BW_METHOD_END CheckCardPresence
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN MountFileSystem
+%ifdef MountFileSystem
+byte %'ModuleName'%.%MountFileSystem(FATFS *fileSystemObject, byte logicalDrive, const %@Shell@'ModuleName'%.StdIOType *io);
+%define! ParfileSystemObject
+%define! ParlogicalDrive
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemMountFileSystem.Inc
+
+%endif %- MountFileSystem
+%-BW_METHOD_END MountFileSystem
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN UnMountFileSystem
+%ifdef UnMountFileSystem
+byte %'ModuleName'%.%UnMountFileSystem(byte logicalDrive, const %@Shell@'ModuleName'%.StdIOType *io);
+%define! ParlogicalDrive
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemUnMountFileSystem.Inc
+
+%endif %- UnMountFileSystem
+%-BW_METHOD_END UnMountFileSystem
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN PrintDirectory
+%ifdef PrintDirectory
+byte %'ModuleName'%.%PrintDirectory(const byte *dirName, const %@Shell@'ModuleName'%.StdIOType *io);
+%define! PardirName
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemPrintDirectory.Inc
+
+%endif %- PrintDirectory
+%-BW_METHOD_END PrintDirectory
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN CopyFile
+%ifdef CopyFile
+byte %'ModuleName'%.%CopyFile(const byte *srcFileName, const byte *dstFileName, const %@Shell@'ModuleName'%.StdIOType *io);
+%define! ParsrcFileName
+%define! PardstFileName
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemCopyFile.Inc
+
+%endif %- CopyFile
+%-BW_METHOD_END CopyFile
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN DeleteFile
+%ifdef DeleteFile
+byte %'ModuleName'%.%DeleteFile(const byte *fileName, const %@Shell@'ModuleName'%.StdIOType *io);
+%define! ParfileName
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemDeleteFile.Inc
+
+%endif %- DeleteFile
+%-BW_METHOD_END DeleteFile
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN PrintFile
+%ifdef PrintFile
+byte %'ModuleName'%.%PrintFile(const byte *fileName, const %@Shell@'ModuleName'%.StdIOType *io);
+%define! ParfileName
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemPrintFile.Inc
+
+%endif %- PrintFile
+%-BW_METHOD_END PrintFile
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN MakeDirectory
+%ifdef MakeDirectory
+byte %'ModuleName'%.%MakeDirectory(const byte *dirName, const %@Shell@'ModuleName'%.StdIOType *io);
+%define! PardirName
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemMakeDirectory.Inc
+
+%endif %- MakeDirectory
+%-BW_METHOD_END MakeDirectory
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ChangeDirectory
+%ifdef ChangeDirectory
+byte %'ModuleName'%.%ChangeDirectory(const byte *dirName, const %@Shell@'ModuleName'%.StdIOType *io);
+%define! PardirName
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemChangeDirectory.Inc
+
+%endif %- ChangeDirectory
+%-BW_METHOD_END ChangeDirectory
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN RenameFile
+%ifdef RenameFile
+byte %'ModuleName'%.%RenameFile(const byte *srcFileName, const byte *dstFileName, const %@Shell@'ModuleName'%.StdIOType *io);
+%define! ParsrcFileName
+%define! PardstFileName
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemRenameFile.Inc
+
+%endif %- RenameFile
+%-BW_METHOD_END RenameFile
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN PrintSector
+%ifdef PrintSector
+byte %'ModuleName'%.%PrintSector(byte drive, dword sectorNo, const %@Shell@'ModuleName'%.StdIOType *io);
+%define! Pardrive
+%define! ParsectorNo
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemPrintSector.Inc
+
+%endif %- PrintSector
+%-BW_METHOD_END PrintSector
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN PrintDiskInfo
+%ifdef PrintDiskInfo
+byte %'ModuleName'%.%PrintDiskInfo(byte drive, const %@Shell@'ModuleName'%.StdIOType *io);
+%define! Pardrive
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemPrintDiskInfo.Inc
+
+%endif %- PrintDiskInfo
+%-BW_METHOD_END PrintDiskInfo
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -637,7 +792,470 @@ void %OnSchedule(void);
 %-   Example:
 %-     static int counter1;
 %-     int %'ModuleName'%.counter2;
-%-
+%if defined(Shell)
+#define %'ModuleName'_8_3_SIZE       sizeof("12345678.txt") /* length of a 8.3 file name (13 including the zero byte) */
+
+#if %'ModuleName'%.USE_LFN == 0                                  %>40 /* No LFN */
+#define %'ModuleName'%.DEF_NAMEBUF(name)                         %>40 byte name[%'ModuleName'%.8_3_SIZE]
+#define %'ModuleName'%.PTR_NAMEBUF(name)                         %>40 &name[0]
+#define %'ModuleName'%.SIZE_NAMEBUF(name)                        %>40 sizeof(name)
+#define %'ModuleName'%.INIT_NAMEBUF(name)
+#define %'ModuleName'%.FREE_NAMEBUF(name)
+
+#elif %'ModuleName'%.USE_LFN == 1                                %>40 /* LFN with static LFN working buffer */
+static TCHAR %'ModuleName'%.FileName[%'ModuleName'%.MAX_LFN+1];
+static TCHAR %'ModuleName'%.FileName2[%'ModuleName'%.MAX_LFN+1];
+#define %'ModuleName'%.DEF_NAMEBUF(name)
+#define %'ModuleName'%.PTR_NAMEBUF(name)                         %>40 &%'ModuleName'%.name[0]
+#define %'ModuleName'%.SIZE_NAMEBUF(name)                        %>40 sizeof(%'ModuleName'%.name)
+#define %'ModuleName'%.INIT_NAMEBUF(name)
+#define %'ModuleName'%.FREE_NAMEBUF(name)
+
+#elif %'ModuleName'%.USE_LFN == 2                                %>40 /* LFN with dynamic LFN working buffer on the stack */
+#define %'ModuleName'%.DEF_NAMEBUF(name)                         %>40 byte name[%'ModuleName'%.MAX_LFN+1]
+#define %'ModuleName'%.PTR_NAMEBUF(name)                         %>40 &name[0]
+#define %'ModuleName'%.SIZE_NAMEBUF(name)                        %>40 sizeof(name)
+#define %'ModuleName'%.INIT_NAMEBUF(name)
+#define %'ModuleName'%.FREE_NAMEBUF(name)
+
+#elif %'ModuleName'%.USE_LFN == 3                                %>40 /* LFN with dynamic LFN working buffer on the heap */
+#define %'ModuleName'%.DEF_NAMEBUF(name)                         %>40 byte *name
+#define %'ModuleName'%.PTR_NAMEBUF(name)                         %>40 name
+#define %'ModuleName'%.SIZE_NAMEBUF(name)                        %>40 (%'ModuleName'%.MAX_LFN+1)
+#define %'ModuleName'%.INIT_NAMEBUF(name)                        %>40 { name = ff_memalloc(%'ModuleName'%.MAX_LFN+1); \
+                                                                 %>40   if (!name) { \
+                                                                 %>40     %@Shell@'ModuleName'%.SendStr((unsigned char*)"ff_memalloc failed!", io->stdErr); \
+                                                                 %>40     return ERR_FAILED; \
+                                                                 %>40   } \
+                                                                 %>40 }
+#define %'ModuleName'%.FREE_NAMEBUF(name)                        %>40 ff_memfree(name)
+
+#else
+  #error Wrong LFN configuration.
+#endif
+
+static void FatFsFResultMsg(byte *msg, %'ModuleName'_FRESULT errNo, const %@Shell@'ModuleName'%.StdIOType *io) {
+  unsigned char buf[sizeof("1234")];
+
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"ERROR: ", io->stdErr);
+  %@Shell@'ModuleName'%.SendStr(msg, io->stdErr);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)": (", io->stdErr);
+  %@Utility@'ModuleName'%.Num16sToStr(buf, sizeof(buf), errNo);
+  %@Shell@'ModuleName'%.SendStr(buf, io->stdErr);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)") ", io->stdErr);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)%'ModuleName'%.errFResultMsg(errNo), io->stdErr);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdErr);
+}
+
+static void FatFsDResultMsg(byte *msg, %'ModuleName'_DRESULT errNo, const %@Shell@'ModuleName'%.StdIOType *io) {
+  unsigned char buf[sizeof("1234")];
+
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"ERROR: ", io->stdErr);
+  %@Shell@'ModuleName'%.SendStr(msg, io->stdErr);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)": (", io->stdErr);
+  %@Utility@'ModuleName'%.Num16sToStr(buf, sizeof(buf), errNo);
+  %@Shell@'ModuleName'%.SendStr(buf, io->stdErr);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)") ", io->stdErr);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)%'ModuleName'%.errDResultMsg(errNo), io->stdErr);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdErr);
+}
+
+static void CmdUsageError(const unsigned char *cmd, byte *usage, const %@Shell@'ModuleName'%.StdIOType *io) {
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"*** error while reading command: ", io->stdErr);
+  %@Shell@'ModuleName'%.SendStr(cmd, io->stdErr);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n*** Usage: ", io->stdErr);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)usage, io->stdErr);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdErr);
+}
+
+/*!
+ * \brief Writes a directory listing of the given path
+ * \param[in] dirPathPtr Pointer to a directory path string. Pass "\\" for the root directory
+ * \param[in] io Callback to write directory output
+ * \return Error code, otherwise ERR_OK
+ */
+static byte PrintDir(const byte *dirPathPtr, const %@Shell@'ModuleName'%.StdIOType *io) {
+  %'ModuleName'%.FILINFO fInfo;
+  %'ModuleName'%.FRESULT fres;
+  uint32_t p1;
+  UINT s1, s2;
+  %'ModuleName'%.DIR dir;  /* Directory object */
+  byte buf[sizeof("yyyy-mm-dd hh:ss")+1];
+#if !%'ModuleName'%.FS_READONLY
+  %'ModuleName'%.FATFS *fs;
+#endif
+#if %'ModuleName'%.USE_LFN
+  %'ModuleName'%.DEF_NAMEBUF(fileName);
+#endif
+
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"Directory of ", io->stdOut);
+  %@Shell@'ModuleName'%.SendStr(dirPathPtr, io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
+  fres = %'ModuleName'%.opendir(&dir, (char*)dirPathPtr);
+  if (fres != FR_OK) {
+    FatFsFResultMsg((unsigned char*)"opendir failed", fres, io);
+    return ERR_FAULT;
+  }
+  p1 = s1 = s2 = 0;
+#if %'ModuleName'%.USE_LFN
+  %'ModuleName'%.INIT_NAMEBUF(fileName);
+  fInfo.lfname = (char*)fileName;
+  fInfo.lfsize = %'ModuleName'%.SIZE_NAMEBUF(fileName);
+#endif
+  for(;;) {
+    fres = %'ModuleName'%.readdir(&dir, &fInfo);
+    if (fres != FR_OK) {
+      FatFsFResultMsg((unsigned char*)"readdir failed", fres, io);
+      break;
+    }
+    if (!fInfo.fname[0]) { /* end of directory list */
+      break;
+    }
+    /* file attributes */
+    if (fInfo.fattrib & AM_DIR) { /* directory */
+      s2++;
+      io->stdOut('D');
+    } else {
+      s1++;
+      p1 += fInfo.fsize;
+      io->stdOut('-');
+    }
+    if (fInfo.fattrib & AM_RDO) { /* read only */
+      io->stdOut('R');
+    } else {
+      io->stdOut('-');
+    }
+    if (fInfo.fattrib & AM_HID) { /* hidden */
+      io->stdOut('H');
+    } else {
+      io->stdOut('-');
+    }
+    if (fInfo.fattrib & AM_SYS) { /* system */
+      io->stdOut('S');
+    } else {
+      io->stdOut('-');
+    }
+    if (fInfo.fattrib & AM_ARC) { /* archive */
+      io->stdOut('A');
+    } else {
+      io->stdOut('-');
+    }
+    io->stdOut(' ');
+    /* file date & time */
+    buf[0] = '\0';
+    %@Utility@'ModuleName'%.strcatNum16sFormatted(buf, sizeof(buf), (int16_t)((fInfo.fdate >> 9) + 1980), ' ', 4); /* year */
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"-");
+    %@Utility@'ModuleName'%.strcatNum16sFormatted(buf, sizeof(buf), (int16_t)((fInfo.fdate >> 5) & 15), '0', 2); /* month */
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"-");
+    %@Utility@'ModuleName'%.strcatNum16sFormatted(buf, sizeof(buf), (int16_t)(fInfo.fdate & 31), '0', 2); /* day */
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" ");
+    %@Utility@'ModuleName'%.strcatNum16sFormatted(buf, sizeof(buf), (int16_t)((fInfo.ftime >> 11)), '0', 2); /* hour */
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)":");
+    %@Utility@'ModuleName'%.strcatNum16sFormatted(buf, sizeof(buf), (int16_t)((fInfo.ftime >> 5) & 63), '0', 2); /* minute */
+    %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+    io->stdOut(' ');
+    buf[0] = '\0';
+    /* file size */
+    %@Utility@'ModuleName'%.strcatNum32uFormatted(buf, sizeof(buf), fInfo.fsize, ' ', 10); /* size */
+    %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+    /* file name */
+    io->stdOut(' ');
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)fInfo.fname, io->stdOut);
+#if %'ModuleName'%.USE_LFN
+    io->stdOut(' ');
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)fInfo.lfname, io->stdOut);
+#endif
+    io->stdOut('\r');
+    io->stdOut('\n');
+  }
+  /* number of files and bytes used */
+  buf[0] = '\0';
+  %@Utility@'ModuleName'%.strcatNum16u(buf, sizeof(buf), (uint16_t)s1);
+  %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)" File(s), ", io->stdOut);
+  buf[0] = '\0';
+  %@Utility@'ModuleName'%.strcatNum32u(buf, sizeof(buf), p1);
+  %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)" bytes total\r\n", io->stdOut);
+  /* number of directories and number of free bytes */
+  buf[0] = '\0';
+  %@Utility@'ModuleName'%.strcatNum16u(buf, sizeof(buf), (uint16_t)s2);
+  %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)" Dir(s)", io->stdOut);
+#if !%'ModuleName'%.FS_READONLY
+  /* number of free bytes */
+  fres = %'ModuleName'%.getfree((char*)dirPathPtr, &p1, &fs);
+  if (fres != FR_OK) {
+    FatFsFResultMsg((unsigned char*)"getfree failed", fres, io);
+  } else {
+    io->stdOut(',');
+    io->stdOut(' ');
+    buf[0] = '\0';
+    %@Utility@'ModuleName'%.strcatNum32s(buf, sizeof(buf), (long)(p1*fs->csize/2));
+    %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)" KBytes free", io->stdOut);
+  }
+#endif
+  io->stdOut('\r');
+  io->stdOut('\n');
+#if %'ModuleName'%.USE_LFN
+  %'ModuleName'%.FREE_NAMEBUF(fileName);
+#endif
+  return ERR_OK;
+}
+
+%ifdef PrintDirectory
+static byte DirCmd(const unsigned char *cmd, const %@Shell@'ModuleName'%.ConstStdIOType *io) {
+  /* precondition: cmd starts with "dir" */
+  byte res = ERR_OK;
+  %'ModuleName'%.DEF_NAMEBUF(fileName);
+
+  %'ModuleName'%.INIT_NAMEBUF(fileName);
+  if (*(cmd+sizeof("dir")-1)== ' ') { /* space after "dir": read name */
+    if (%@Utility@'ModuleName'%.ReadEscapedName(cmd+sizeof("dir"), %'ModuleName'%.PTR_NAMEBUF(fileName),
+          %'ModuleName'%.SIZE_NAMEBUF(fileName), NULL, NULL, NULL)==ERR_OK
+       )
+    {
+      /* ok, have now directory name */
+    } else {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"reading directory name failed!\r\n", io->stdErr);
+      res = ERR_FAILED;
+    }
+  } else { /* use current directory */
+#if %'ModuleName'%.FS_RPATH >= 2
+    %'ModuleName'%.FRESULT fres;
+    fres = %'ModuleName'%.getcwd((char*)%'ModuleName'%.PTR_NAMEBUF(fileName), %'ModuleName'%.SIZE_NAMEBUF(fileName));
+    if(fres!=FR_OK) {
+      FatFsFResultMsg((unsigned char*)"getcwd failed", fres, io);
+      res = ERR_FAILED;
+    } else {
+      /* ok, have now directory name */
+    }
+#else
+    %@Utility@'ModuleName'%.strcpy(%'ModuleName'%.PTR_NAMEBUF(fileName), %'ModuleName'%.SIZE_NAMEBUF(fileName), (unsigned char*)"\\"); /* use root */
+#endif
+  }
+  if (res == ERR_OK) {
+    res = %'ModuleName'%.PrintDirectory(%'ModuleName'%.PTR_NAMEBUF(fileName), io);
+  }
+  %'ModuleName'%.FREE_NAMEBUF(fileName);
+  return res;
+}
+
+%endif %-ifdef PrintDirectory
+%ifdef CopyFile
+static byte CopyCmd(const unsigned char *cmd, const %@Shell@'ModuleName'%.ConstStdIOType *io) {
+  /* precondition: cmd starts with "copy" */
+  byte res = ERR_OK;
+  size_t lenRead;
+  %'ModuleName'%.DEF_NAMEBUF(fileName);
+  %'ModuleName'%.DEF_NAMEBUF(fileName2);
+
+  %'ModuleName'%.INIT_NAMEBUF(fileName);
+  %'ModuleName'%.INIT_NAMEBUF(fileName2);
+  if (   (%@Utility@'ModuleName'%.ReadEscapedName(cmd+sizeof("copy"), %'ModuleName'%.PTR_NAMEBUF(fileName),
+          %'ModuleName'%.SIZE_NAMEBUF(fileName), &lenRead, NULL, NULL)==ERR_OK)
+      && *(cmd+sizeof("copy")+lenRead)==' '
+      && (%@Utility@'ModuleName'%.ReadEscapedName(cmd+sizeof("copy")+lenRead+1, %'ModuleName'%.PTR_NAMEBUF(fileName2),
+          %'ModuleName'%.SIZE_NAMEBUF(fileName2), NULL, NULL, NULL)==ERR_OK)
+     )
+  {
+    res = %'ModuleName'%.%CopyFile(%'ModuleName'%.PTR_NAMEBUF(fileName), %'ModuleName'%.PTR_NAMEBUF(fileName2), io);
+  } else {
+    CmdUsageError(cmd, (unsigned char*)"copy srcFileName dstFileName", io);
+    res = ERR_FAILED;
+  }
+  %'ModuleName'%.FREE_NAMEBUF(fileName);
+  %'ModuleName'%.FREE_NAMEBUF(fileName2);
+  return res;
+}
+%endif
+
+%ifdef DeleteFile
+static byte DeleteCmd(const unsigned char *cmd, const %@Shell@'ModuleName'%.ConstStdIOType *io) {
+  /* precondition: cmd starts with "delete" */
+  byte res = ERR_OK;
+  %'ModuleName'%.DEF_NAMEBUF(fileName);
+
+  %'ModuleName'%.INIT_NAMEBUF(fileName);
+  if (%@Utility@'ModuleName'%.ReadEscapedName(cmd+sizeof("delete"), %'ModuleName'%.PTR_NAMEBUF(fileName),
+        %'ModuleName'%.SIZE_NAMEBUF(fileName), NULL, NULL, NULL)==ERR_OK
+     )
+  {
+    res = %'ModuleName'%.%DeleteFile(%'ModuleName'%.PTR_NAMEBUF(fileName), io);
+  } else {
+    CmdUsageError(cmd, (unsigned char*)"delete fileName", io);
+    res = ERR_FAILED;
+  }
+  %'ModuleName'%.FREE_NAMEBUF(fileName);
+  return res;
+}
+
+%endif
+%ifdef MakeDirectory
+static byte MkdirCmd(const unsigned char *cmd, const %@Shell@'ModuleName'%.ConstStdIOType *io) {
+  /* precondition: cmd starts with "mkdir" */
+  byte res = ERR_OK;
+  %'ModuleName'%.DEF_NAMEBUF(fileName);
+
+  %'ModuleName'%.INIT_NAMEBUF(fileName);
+  if (%@Utility@'ModuleName'%.ReadEscapedName(cmd+sizeof("mkdir"), %'ModuleName'%.PTR_NAMEBUF(fileName),
+        %'ModuleName'%.SIZE_NAMEBUF(fileName), NULL, NULL, NULL)==ERR_OK
+     )
+  {
+    res = %'ModuleName'%.%MakeDirectory(%'ModuleName'%.PTR_NAMEBUF(fileName), io);
+  } else {
+    CmdUsageError(cmd, (unsigned char*)"mkdir directoryName", io);
+    res = ERR_FAILED;
+  }
+  %'ModuleName'%.FREE_NAMEBUF(fileName);
+  return res;
+}
+
+%endif
+static byte RenameCmd(const unsigned char *cmd, const %@Shell@'ModuleName'%.ConstStdIOType *io) {
+  /* precondition: cmd starts with "rename" */
+  byte res = ERR_OK;
+  size_t lenRead;
+  %'ModuleName'%.DEF_NAMEBUF(fileName);
+  %'ModuleName'%.DEF_NAMEBUF(fileName2);
+
+  %'ModuleName'%.INIT_NAMEBUF(fileName);
+  %'ModuleName'%.INIT_NAMEBUF(fileName2);
+  if (   (%@Utility@'ModuleName'%.ReadEscapedName(cmd+sizeof("rename"), %'ModuleName'%.PTR_NAMEBUF(fileName),
+          %'ModuleName'%.SIZE_NAMEBUF(fileName), &lenRead, NULL, NULL)==ERR_OK)
+      && *(cmd+sizeof("rename")+lenRead)==' '
+      && (%@Utility@'ModuleName'%.ReadEscapedName(cmd+sizeof("rename")+lenRead+1,
+          %'ModuleName'%.PTR_NAMEBUF(fileName2),
+          %'ModuleName'%.SIZE_NAMEBUF(fileName2), NULL, NULL, NULL)==ERR_OK)
+     )
+  {
+    res = %'ModuleName'%.%RenameFile((unsigned char*)%'ModuleName'%.PTR_NAMEBUF(fileName), (unsigned char*)%'ModuleName'%.PTR_NAMEBUF(fileName2), io);
+  } else {
+    CmdUsageError(cmd, (unsigned char*)"rename srcFileName dstFileName", io);
+    res = ERR_FAILED;
+  }
+  %'ModuleName'%.FREE_NAMEBUF(fileName);
+  %'ModuleName'%.FREE_NAMEBUF(fileName2);
+  return res;
+}
+%if defined(PrintSector)
+
+static byte SectorCmd(const unsigned char *cmd, const %@Shell@'ModuleName'%.ConstStdIOType *io) {
+  /* precondition: cmd starts with "sector" */
+  uint8_t res;
+  uint32_t sectorNo;
+  const unsigned char *p = cmd+sizeof("sector");
+
+  res = %@Utility@'ModuleName'%.ScanDecimal32uNumber(&p, &sectorNo);
+  if (res == ERR_OK) { /* format fine */
+    %'ModuleName'%.%PrintSector(0, sectorNo, io);
+  } else {
+    CmdUsageError(cmd, (unsigned char*)"sector <number>", io);
+    return ERR_FAILED;
+  }
+  return ERR_OK;
+}
+%endif %-defined(PrintSector)
+%if defined(PrintFile)
+
+static byte PrintCmd(const unsigned char *cmd, const %@Shell@'ModuleName'%.ConstStdIOType *io) {
+  /* precondition: cmd starts with "print" */
+  byte res = ERR_OK;
+  %'ModuleName'%.DEF_NAMEBUF(fileName);
+
+  %'ModuleName'%.INIT_NAMEBUF(fileName);
+  if (%@Utility@'ModuleName'%.ReadEscapedName(cmd+sizeof("print"), %'ModuleName'%.PTR_NAMEBUF(fileName),
+        %'ModuleName'%.SIZE_NAMEBUF(fileName), NULL, NULL, NULL)==ERR_OK
+     )
+  {
+    res = %'ModuleName'%.%PrintFile(%'ModuleName'%.PTR_NAMEBUF(fileName), io);
+  } else {
+    CmdUsageError(cmd, (unsigned char*)"print fileName", io);
+    res = ERR_FAILED;
+  }
+  %'ModuleName'%.FREE_NAMEBUF(fileName);
+  return res;
+}
+%endif %-defined(PrintFile)
+%if defined(ChangeDirectory)
+
+static byte CdCmd(const unsigned char *cmd, const %@Shell@'ModuleName'%.ConstStdIOType *io) {
+  /* precondition: cmd starts with "cd" */
+#if %'ModuleName'%.FS_RPATH > 0
+  byte res = ERR_OK;
+  %'ModuleName'%.DEF_NAMEBUF(fileName);
+
+  %'ModuleName'%.INIT_NAMEBUF(fileName);
+  if (*(cmd+sizeof("cd")-1)== ' ') { /* space after "cd": read name */
+    if (%@Utility@'ModuleName'%.ReadEscapedName(cmd+sizeof("cd"), %'ModuleName'%.PTR_NAMEBUF(fileName),
+          %'ModuleName'%.SIZE_NAMEBUF(fileName), NULL, NULL, NULL)==ERR_OK
+       )
+    {
+      res = %'ModuleName'%.%ChangeDirectory(%'ModuleName'%.PTR_NAMEBUF(fileName), io);
+    } else {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"reading directory name failed!\r\n", io->stdErr);
+      res = ERR_FAILED;
+    }
+  } else { /* print current directory */
+#if %'ModuleName'%.FS_RPATH >= 2
+    %'ModuleName'%.FRESULT fres;
+
+    fres = %'ModuleName'%.getcwd((char*)%'ModuleName'%.PTR_NAMEBUF(fileName), %'ModuleName'%.SIZE_NAMEBUF(fileName));
+    if(fres!=FR_OK) {
+      FatFsFResultMsg((unsigned char*)"getcwd failed", fres, io);
+      res = ERR_FAILED;
+    } else {
+      %@Shell@'ModuleName'%.SendStr(%'ModuleName'%.PTR_NAMEBUF(fileName), io->stdOut);
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
+    }
+#else
+    %@Utility@'ModuleName'%.strcpy(%'ModuleName'%.PTR_NAMEBUF(fileName), %'ModuleName'%.SIZE_NAMEBUF(fileName), (unsigned char*)"\\"); /* use root */
+#endif
+  }
+  %'ModuleName'%.FREE_NAMEBUF(fileName);
+  return res;
+#else
+  (void)cmd;
+  #warning "relative directories not enabled in FatFS!"
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"relative directories not available in file system\r\n", io->stdErr);
+  return ERR_FAILED;
+#endif
+}
+
+%endif %- defined(ChangeDirectory)
+
+static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"%'ModuleName'", (unsigned char*)"\r\n", io->stdOut);
+  if (%'ModuleName'%.isDiskPresent()) {
+    %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"SD present", (unsigned char*)"yes\r\n", io->stdOut);
+  } else {
+    %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"SD present", (unsigned char*)"no\r\n", io->stdOut);
+  }
+  if (%'ModuleName'%.isWriteProtected()) {
+    %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"SD protected", (unsigned char*)"yes\r\n", io->stdOut);
+  } else {
+    %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"SD protected", (unsigned char*)"no\r\n", io->stdOut);
+  }
+  return ERR_OK;
+}
+
+static uint8_t PrintHelp(const %@Shell@'ModuleName'%.StdIOType *io) {
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"%'ModuleName'", (unsigned char*)"Group of %'ModuleName' commands\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  cd [<directoryName>]", (const unsigned char*)"Change the current directory or display the name of the current directory\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  dir [<directoryName>]", (const unsigned char*)"Prints a directory\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  copy <src> <dst>", (const unsigned char*)"Copy a file\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  delete <filename>", (const unsigned char*)"Delete a file\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  mkdir <directory>", (const unsigned char*)"Create a directory\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  rename <src> <dst>", (const unsigned char*)"Rename a file\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  print <filename>", (const unsigned char*)"Print a file\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  sector <number>", (const unsigned char*)"Print disk sector\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  diskinfo", (const unsigned char*)"Print disk information\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+%endif
 %-BW_CUSTOM_VARIABLE_END
 %-BW_INTERN_METHOD_DECL_START
 %- List of internal methods headers
@@ -820,7 +1438,7 @@ void ff_rel_grant (_SYNC_t sobj) {
 %define! RetVal
 %include Common\FAT_FileSystemopen.Inc
 /*
-FRESULT %'ModuleName'%.%open(FIL *fp, const XCHAR *path, uint8_t mode)
+FRESULT %'ModuleName'%.%open(FIL *fp, const XCHAR *path, BYTE mode)
 {
   *** method is implemented as macro in the header file
 }
@@ -919,7 +1537,7 @@ FRESULT %'ModuleName'%.%readdir(DIR *dj, FILINFO *fno)
 %define! RetVal
 %include Common\FAT_FileSystemlseek.Inc
 /*
-FRESULT %'ModuleName'%.%lseek(FIL *fp, uint32_t ofs)
+FRESULT %'ModuleName'%.%lseek(FIL *fp, DWORD ofs)
 {
   *** method is implemented as macro in the header file
 }
@@ -1126,7 +1744,7 @@ FRESULT %'ModuleName'%.%mkfs(byte drive, byte PartitioningRule, UINT  AllocSize)
 %define! RetVal
 %include Common\FAT_FileSystemforward.Inc
 /*
-FRESULT %'ModuleName'%.%forward(FIL* FileObject, UINT (*Func)(const uint8_t*,UINT), UINT ByteToFwd, UINT* ByteFwd )
+FRESULT %'ModuleName'%.%forward(FIL* FileObject, UINT (*Func)(const BYTE*,UINT), UINT ByteToFwd, UINT* ByteFwd )
 {
   *** method is implemented as macro in the header file
 }
@@ -1439,6 +2057,730 @@ dword %'ModuleName'%.%get_fattime(void)
 
 %endif %- get_fattime
 %-BW_METHOD_END get_fattime
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ParseCommand
+%ifdef ParseCommand
+%define! Parcmd
+%define! Parhandled
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemParseCommand.Inc
+byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)
+{
+  if (%@Utility@'ModuleName'%.strcmp((char*)cmd, %@Shell@'ModuleName'%.CMD_HELP)==0 || %@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' help")==0) {
+    *handled = TRUE;
+    return PrintHelp(io);
+  } else if ((%@Utility@'ModuleName'%.strcmp((char*)cmd, %@Shell@'ModuleName'%.CMD_STATUS)==0) || (%@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' status")==0)) {
+    *handled = TRUE;
+    return PrintStatus(io);
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "cd", sizeof("cd")-1)==0) {
+    *handled = TRUE;
+    return CdCmd(cmd, io);
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "dir", sizeof("dir")-1)==0) {
+    *handled = TRUE;
+    return DirCmd(cmd, io);
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "copy", sizeof("copy")-1)==0) {
+    *handled = TRUE;
+    return CopyCmd(cmd, io);
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "delete", sizeof("delete")-1)==0) {
+    *handled = TRUE;
+    return DeleteCmd(cmd, io);
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "mkdir", sizeof("mkdir")-1)==0) {
+    *handled = TRUE;
+    return MkdirCmd(cmd, io);
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "rename", sizeof("rename")-1)==0) {
+    *handled = TRUE;
+    return RenameCmd(cmd, io);
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "print", sizeof("print")-1)==0) {
+    *handled = TRUE;
+    return PrintCmd(cmd, io);
+  } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, "diskinfo")==0) {
+    *handled = TRUE;
+    return %'ModuleName'%.%PrintDiskInfo(0, io);
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "sector", sizeof("sector")-1)==0) {
+    *handled = TRUE;
+    return SectorCmd(cmd, io);
+  }
+  return ERR_OK;
+}
+
+%endif %- ParseCommand
+%-BW_METHOD_END ParseCommand
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN CheckCardPresence
+%ifdef CheckCardPresence
+%define! ParcardMounted
+%define! Pardrive
+%define! ParfileSystemObject
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemCheckCardPresence.Inc
+byte %'ModuleName'%.%CheckCardPresence(bool *cardMounted, byte drive, FATFS *fileSystemObject, const %@Shell@'ModuleName'%.StdIOType *io)
+{
+  if (!(*cardMounted) && %'ModuleName'%.isDiskPresent()) {
+    /* card inserted */
+    if (%'ModuleName'%.MountFileSystem(fileSystemObject, drive, io)==ERR_OK) {
+      *cardMounted = TRUE;
+      if (io!=NULL) {
+        %@Shell@'ModuleName'%.SendStr((unsigned char*)"File System mounted\r\n", io->stdOut);
+      }
+    } else {
+      return ERR_FAILED;
+    }
+  } else if (*cardMounted && !%'ModuleName'%.isDiskPresent()) {
+    /* card removed */
+    if (%'ModuleName'%.UnMountFileSystem(drive, io)==ERR_OK) {
+      *cardMounted = FALSE;
+      if (io!=NULL) {
+        %@Shell@'ModuleName'%.SendStr((unsigned char*)"File System unmounted\r\n", io->stdOut);
+      }
+    } else {
+      return ERR_FAILED;
+    }
+  }
+  return ERR_OK;
+}
+
+%endif %- CheckCardPresence
+%-BW_METHOD_END CheckCardPresence
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN MountFileSystem
+%ifdef MountFileSystem
+%define! ParfileSystemObject
+%define! ParlogicalDrive
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemMountFileSystem.Inc
+/*!
+ * \brief Mounts the file system for a drive
+ * \param[in] fileSystemObject Pointer to the file system object
+ * \param[in] logicalDrive The drive number to be used
+ * \param[in] io IO handler for output
+ * \return Error code, ERR_OK for success.
+ */
+byte %'ModuleName'%.%MountFileSystem(FATFS *fileSystemObject, byte logicalDrive, const %@Shell@'ModuleName'%.StdIOType *io)
+{
+  %'ModuleName'%.FRESULT fres;
+
+  fres = %'ModuleName'%.mount(logicalDrive, fileSystemObject);
+  if (fres != FR_OK) {
+    FatFsFResultMsg((unsigned char*)"mount failed", fres, io);
+    return ERR_FAILED;
+  }
+  return ERR_OK;
+}
+
+%endif %- MountFileSystem
+%-BW_METHOD_END MountFileSystem
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN UnMountFileSystem
+%ifdef UnMountFileSystem
+%define! ParlogicalDrive
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemUnMountFileSystem.Inc
+/*!
+ * \brief Unmounts the file system for a drive
+ * \param[in] logicalDrive The drive number to be used
+ * \param[in] io IO handler for output
+ * \return Error code, ERR_OK for success.
+ */
+byte %'ModuleName'%.%UnMountFileSystem(byte logicalDrive, const %@Shell@'ModuleName'%.StdIOType *io)
+{
+  %'ModuleName'%.FRESULT fres;
+
+  fres = %'ModuleName'%.mount(logicalDrive, NULL);
+  if (fres != FR_OK) {
+    FatFsFResultMsg((unsigned char*)"unmount failed", fres, io);
+    return ERR_FAILED;
+  }
+  return ERR_OK;
+}
+
+%endif %- UnMountFileSystem
+%-BW_METHOD_END UnMountFileSystem
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN PrintDirectory
+%ifdef PrintDirectory
+%define! PardirName
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemPrintDirectory.Inc
+/*!
+ * \brief Prints a directory listing
+ * \param[in] dirName Directory to be used
+ * \param[in] io IO handler for output
+ * \return Error code, ERR_OK for success.
+ */
+byte %'ModuleName'%.%PrintDirectory(const byte *dirName, const %@Shell@'ModuleName'%.StdIOType *io)
+{
+  byte res;
+
+  res = PrintDir(dirName, io);
+  if (res != ERR_OK) {
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"PrintDir failed\r\n", io->stdErr);
+    return res;
+  }
+  return ERR_OK;
+}
+
+%endif %- PrintDirectory
+%-BW_METHOD_END PrintDirectory
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN CopyFile
+%ifdef CopyFile
+%define! ParsrcFileName
+%define! PardstFileName
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemCopyFile.Inc
+/*!
+ * \brief Copy the source file to a destination file
+ * \param[in] srcFileName Source file name
+ * \param[in] dstFileName Destination file name
+ * \param[in] io IO handler for output
+ * \return Error code, ERR_OK for success.
+ */
+byte %'ModuleName'%.%CopyFile(const byte *srcFileName, const byte *dstFileName, const %@Shell@'ModuleName'%.StdIOType *io)
+{
+#if !%'ModuleName'%.FS_READONLY
+  %'ModuleName'%.FIL fsrc, fdst;  /* file objects */
+  %'ModuleName'%.FRESULT fres;
+  uint8_t buffer[%FileCopyBufferSize];   /* copy buffer */
+  UINT br, bw;          /* file read/write counters */
+  byte res =  ERR_OK;
+
+  if (%'ModuleName'%.isWriteProtected()) {
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
+    return ERR_FAILED;
+  }
+  /* open source file */
+  fres = %'ModuleName'%.open(&fsrc, (char*)srcFileName, FA_OPEN_EXISTING | FA_READ);
+  if (fres != FR_OK) {
+    FatFsFResultMsg((unsigned char*)"open source file failed", fres, io);
+    return ERR_FAILED;
+  }
+  /* create destination file */
+  fres = %'ModuleName'%.open(&fdst, (char*)dstFileName, FA_CREATE_ALWAYS | FA_WRITE);
+  if (fres != FR_OK) {
+    FatFsFResultMsg((unsigned char*)"open destination file failed", fres, io);
+    return ERR_FAILED;
+  }
+  /* now copy source to destination */
+  for (;;) {
+    fres = %'ModuleName'%.read(&fsrc, buffer, sizeof(buffer), &br);
+    if (fres != FR_OK) {
+      FatFsFResultMsg((unsigned char*)"reading source file failed", fres, io);
+      res = ERR_FAILED;
+      break;
+    }
+    if (br == 0) { /* EOF */
+      break; /* get out of loop */
+    }
+    fres = %'ModuleName'%.write(&fdst, buffer, br, &bw);
+    if (fres != ERR_OK) {
+      FatFsFResultMsg((unsigned char*)"writing destination file failed", fres, io);
+      res = ERR_FAILED;
+      break;
+    }
+    if (bw < br) {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"failed writing destination file, or disk full\r\n", io->stdErr);
+      res = ERR_FAILED;
+      break;
+    }
+  } /* for */
+  /* close all files */
+  fres = %'ModuleName'%.close(&fsrc);
+  if (fres != FR_OK) {
+    FatFsFResultMsg((unsigned char*)"closing source file failed", fres, io);
+    res = ERR_FAILED;
+  }
+  fres = %'ModuleName'%.close(&fdst);
+  if (fres != FR_OK) {
+    FatFsFResultMsg((unsigned char*)"closing destination file failed", fres, io);
+    res = ERR_FAILED;
+  }
+  return res;
+#else
+  (void)srcFileName; /* unused argument */
+  (void)dstFileName; /* unused argument */
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"File System is in Read-Only mode\r\n", io->stdErr);
+  return ERR_FAILED;
+#endif
+}
+
+%endif %- CopyFile
+%-BW_METHOD_END CopyFile
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN DeleteFile
+%ifdef DeleteFile
+%define! ParfileName
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemDeleteFile.Inc
+/*!
+ * \brief Deletes a file
+ * \param[in] fileName Name of file to be deleted
+ * \param[in] io IO handler for output
+ * \return Error code, ERR_OK for success.
+ */
+byte %'ModuleName'%.%DeleteFile(const byte *fileName, const %@Shell@'ModuleName'%.StdIOType *io)
+{
+  %'ModuleName'%.FRESULT fres;
+
+  if (%'ModuleName'%.isWriteProtected()) {
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
+    return ERR_FAILED;
+  }
+  fres = %'ModuleName'%.unlink((char*)fileName);
+  if (fres != FR_OK) {
+    FatFsFResultMsg((unsigned char*)"unlink failed", fres, io);
+    return ERR_FAILED;
+  }
+  return ERR_OK;
+}
+
+%endif %- DeleteFile
+%-BW_METHOD_END DeleteFile
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN PrintFile
+%ifdef PrintFile
+%define! ParfileName
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemPrintFile.Inc
+/*!
+ * \brief Print the content of a file
+ * \param[in] fileName Name of file to be printed
+ * \param[in] io IO handler for output
+ * \return Error code, ERR_OK for success.
+ */
+byte %'ModuleName'%.%PrintFile(const byte *fileName, const %@Shell@'ModuleName'%.StdIOType *io)
+{
+  %'ModuleName'%.FIL file;
+  %'ModuleName'%.FRESULT fres;
+  UINT nofRead = 0;
+  byte buf[%FilePrintBufferSize];
+  byte res = ERR_OK;
+
+  fres = %'ModuleName'%.open(&file, (const TCHAR *)fileName, FA_READ);
+  if (fres == FR_OK) {
+    do {
+      nofRead = 0;
+      fres=%'ModuleName'%.read(&file, buf, sizeof(buf)-1, &nofRead); /* read one byte less for zero byte */
+      if (fres != FR_OK) {
+        %@Shell@'ModuleName'%.SendStr((unsigned char*)"fread failed\r\n", io->stdErr);
+        res = ERR_FAILED;
+      } else {
+        buf[nofRead] = '\0'; /* terminate buffer */
+        %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+      }
+    } while(nofRead>0 && fres==FR_OK);
+    fres=%'ModuleName'%.close(&file);
+    if (fres != FR_OK) {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"fclose failed\r\n", io->stdErr);
+      res = ERR_FAILED;
+    }
+  } else {
+    FatFsFResultMsg((unsigned char*)"open file failed", fres, io);
+    res = ERR_FAILED;
+  }
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
+  return res;
+}
+
+%endif %- PrintFile
+%-BW_METHOD_END PrintFile
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN MakeDirectory
+%ifdef MakeDirectory
+%define! PardirName
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemMakeDirectory.Inc
+/*!
+ * \brief Creates a new directory
+ * \param[in] dirName Name of the directory to be created
+ * \param[in] io IO handler for output
+ * \return Error code, ERR_OK for success.
+ */
+byte %'ModuleName'%.%MakeDirectory(const byte *dirName, const %@Shell@'ModuleName'%.StdIOType *io)
+{
+  %'ModuleName'%.FRESULT fres;
+
+  if (%'ModuleName'%.isWriteProtected()) {
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
+    return ERR_FAILED;
+  }
+  fres = %'ModuleName'%.mkdir((char*)dirName);
+  if(fres!=FR_OK) {
+    FatFsFResultMsg((unsigned char*)"mkdir failed", fres, io);
+    return ERR_FAILED;
+  }
+  return ERR_OK;
+}
+
+%endif %- MakeDirectory
+%-BW_METHOD_END MakeDirectory
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ChangeDirectory
+%ifdef ChangeDirectory
+%define! PardirName
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemChangeDirectory.Inc
+byte %'ModuleName'%.%ChangeDirectory(const byte *dirName, const %@Shell@'ModuleName'%.StdIOType *io)
+{
+#if %'ModuleName'%.FS_RPATH > 0
+  %'ModuleName'%.FRESULT fres;
+
+  if ((fres=%'ModuleName'%.chdir((char*)dirName)) != FR_OK) {
+    FatFsFResultMsg((unsigned char*)"chdir failed", fres, io);
+    return ERR_FAILED;
+  }
+  return ERR_OK;
+#else
+  (void)dirName;
+  #warning "relative directories not enabled in FatFS!"
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"cd command not available as relative directories not enable in file system\r\n", io->stdErr);
+  return ERR_FAILED;
+#endif
+}
+
+%endif %- ChangeDirectory
+%-BW_METHOD_END ChangeDirectory
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN RenameFile
+%ifdef RenameFile
+%define! ParsrcFileName
+%define! PardstFileName
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemRenameFile.Inc
+/*!
+ * \brief Renames a file
+ * \param[in] srcFileName Source/existing file name
+ * \param[in] dstFileName Destination/new file name
+ * \param[in] io IO handler for output
+ * \return Error code, ERR_OK for success.
+ */
+byte %'ModuleName'%.%RenameFile(const byte *srcFileName, const byte *dstFileName, const %@Shell@'ModuleName'%.StdIOType *io)
+{
+  %'ModuleName'%.FRESULT fres;
+
+  if (%'ModuleName'%.isWriteProtected()) {
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
+    return ERR_FAILED;
+  }
+  fres = %'ModuleName'%.rename((char*)srcFileName, (char*)dstFileName);
+  if(fres!=FR_OK) {
+    FatFsFResultMsg((unsigned char*)"rename failed", fres, io);
+    return ERR_FAILED;
+  }
+  return ERR_OK;
+}
+
+%endif %- RenameFile
+%-BW_METHOD_END RenameFile
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN PrintSector
+%ifdef PrintSector
+%define! Pardrive
+%define! ParsectorNo
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemPrintSector.Inc
+%if defined(UseRTOSDynamicMemory) & %UseRTOSDynamicMemory='yes'
+#define PRINT_BUF_SIZE   %'ModuleName'%.MAX_SS
+%else
+static byte print_buf[%'ModuleName'%.MAX_SS];
+#define PRINT_BUF_SIZE   sizeof(print_buf)
+%endif
+byte %'ModuleName'%.%PrintSector(byte drive, dword sectorNo, const %@Shell@'ModuleName'%.StdIOType *io)
+{
+  word i;
+  unsigned char buf[8];
+  %'ModuleName'%.DRESULT dres;
+%if defined(UseRTOSDynamicMemory) & %UseRTOSDynamicMemory='yes'
+#if FRTOS_MEMORY_SCHEME==1 /* this scheme does not allow deallocation of memory */
+  static unsigned char *print_buf=NULL; /* use global buffer pointer, allocated only once, and not deallocated! */
+#else
+  unsigned char *print_buf;
+#endif
+%endif
+
+  if ((disk_initialize(drive)&STA_NOINIT)!=RES_OK) {
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"disk initialize failed\r\n", io->stdErr);
+    return ERR_FAILED;
+  }
+%if defined(UseRTOSDynamicMemory) & %UseRTOSDynamicMemory='yes'
+#if FRTOS_MEMORY_SCHEME==1 /* this scheme does not allow deallocation of memory */
+  if (print_buf!=NULL) { /* only if not allocated yet */
+    print_buf = %@RTOS@'ModuleName'%.pvPortMalloc(PRINT_BUF_SIZE);
+  }
+#else
+  print_buf = %@RTOS@'ModuleName'%.pvPortMalloc(PRINT_BUF_SIZE);
+#endif
+  if (print_buf == NULL) {
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"allocating memory failed\r\n", io->stdErr);
+    return ERR_FAILED;
+  }
+%endif
+  dres = disk_read(drive, &print_buf[0], sectorNo, 1);
+  if (dres==RES_OK) { /* read one sector */
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"dumping disk sector: 0x", io->stdOut);
+    buf[0] = '\0';
+    %@Utility@'ModuleName'%.strcatNum32Hex(buf, PRINT_BUF_SIZE, sectorNo);
+    %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+    for(i=0; i<PRINT_BUF_SIZE; i++) {
+      if ((i%%16)==0) { /* new line to make things readable */
+        %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n0x", io->stdOut);
+        buf[0] = '\0';
+        %@Utility@'ModuleName'%.strcatNum16Hex(buf, PRINT_BUF_SIZE, i);
+        %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+        %@Shell@'ModuleName'%.SendStr((unsigned char*)": ", io->stdOut);
+      }
+      buf[0] = '\0';
+      %@Utility@'ModuleName'%.strcatNum8Hex(buf, PRINT_BUF_SIZE, (uint8_t)print_buf[i]);
+      %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
+    }
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
+  } else {
+    FatFsDResultMsg((unsigned char*)"disk_read failed", dres, io);
+  }
+%if defined(UseRTOSDynamicMemory) & %UseRTOSDynamicMemory='yes'
+#if FRTOS_MEMORY_SCHEME!=1 /* this scheme does not allow deallocation of memory */
+  %@RTOS@'ModuleName'%.vPortFree(print_buf);
+#endif
+%endif
+  if (dres==RES_OK) {
+    return ERR_OK;
+  } else {
+    return ERR_FAILED;
+  }
+}
+
+%endif %- PrintSector
+%-BW_METHOD_END PrintSector
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN PrintDiskInfo
+%ifdef PrintDiskInfo
+%define! Pardrive
+%define! Pario
+%define! RetVal
+%include Common\FAT_FileSystemPrintDiskInfo.Inc
+/*!
+ * \brief Prints information about the disk
+ * \param[in] drive Disk drive number, starting with zero
+ * \param[in] io IO handler for output
+ * \return Error code, ERR_OK for success.
+ */
+byte %'ModuleName'%.%PrintDiskInfo(byte drive, const %@Shell@'ModuleName'%.StdIOType *io)
+{
+  /* see for details:
+   * http://www.retroleum.co.uk/electronics-articles/basic-mmc-card-access/
+   */
+  uint8_t buf[8];
+  int32_t val32;
+  int16_t val16;
+  int8_t val8;
+  uint8_t buff[64];
+  uint8_t driverVersion; /* 0: SPI, 1: SDHC_LDD */
+
+  if ((disk_initialize(drive)&STA_NOINIT)!=0) {
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"disk initialize failed\r\n", io->stdErr);
+    return ERR_FAILED;
+  }
+  if (disk_ioctl(0, MMC_GET_DRIVER_VERSION, &driverVersion)!=RES_OK) {
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"failed identification of driver version\r\n", io->stdErr);
+    return ERR_FAILED;
+  }
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"Card type", (unsigned char*)"", io->stdOut);
+  if (disk_ioctl(0, MMC_GET_TYPE, &val8)==RES_OK) {
+    if (val8&CT_SD1) {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"SD1 ", io->stdOut);
+    }
+    if (val8&CT_SD2) {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"SD2 ", io->stdOut);
+    }
+    if (val8&CT_BLOCK) {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"BLOCK ", io->stdOut);
+    }
+    if (val8&CT_MMC) {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"MMC ", io->stdOut);
+    }
+    if (val8&CT_SDC) {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"SDC ", io->stdOut);
+    }
+    if (val8&CT_ATA) {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"ATA ", io->stdOut);
+    }
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
+  } else {
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"ERROR\r\n", io->stdOut);
+  }
+  if (driverVersion==0) { /* only SPI cards implement this */
+    %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"SDC version", (unsigned char*)"", io->stdOut);
+    if (disk_ioctl(0, MMC_GET_SDC_VERSION, &val8)==RES_OK) {
+      if (val8==1) {
+        %@Shell@'ModuleName'%.SendStr((unsigned char*)"SDC ver 1.XX or MMC\r\n", io->stdOut);
+      } else if (val8==2) {
+        %@Shell@'ModuleName'%.SendStr((unsigned char*)"SDC ver 2.00\r\n", io->stdOut);
+      } else {
+        %@Shell@'ModuleName'%.SendStr((unsigned char*)"unknown\r\n", io->stdOut);
+      }
+    } else {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"ERROR\r\n", io->stdOut);
+    }
+  }
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"Sector count", (unsigned char*)"", io->stdOut);
+  if (disk_ioctl(0, GET_SECTOR_COUNT, &val32)==RES_OK) {
+    %@Utility@'ModuleName'%.Num32sToStr(buf, sizeof(buf), val32);
+    %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
+  } else {
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"ERROR\r\n", io->stdOut);
+  }
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"Sector size", (unsigned char*)"", io->stdOut);
+  if (disk_ioctl(0, GET_SECTOR_SIZE, &val16)==RES_OK) {
+    %@Utility@'ModuleName'%.Num16sToStr(buf, sizeof(buf), val16);
+    %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
+  } else {
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"ERROR\r\n", io->stdOut);
+  }
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"READ_BL_LEN", (unsigned char*)"", io->stdOut);
+  if (disk_ioctl(0, MMC_GET_READ_BL_LEN, &val16)==RES_OK) {
+    %@Utility@'ModuleName'%.Num16sToStr(buf, sizeof(buf), val16);
+    %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
+  } else {
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"ERROR\r\n", io->stdOut);
+  }
+  if (driverVersion==0) { /* only SPI cards implement this */
+    %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"Block size", (unsigned char*)"", io->stdOut);
+    if (disk_ioctl(0, GET_BLOCK_SIZE, &val32)==RES_OK) {
+      %@Utility@'ModuleName'%.Num32sToStr(buf, sizeof(buf), val32);
+      %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
+    } else {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"ERROR\r\n", io->stdOut);
+    }
+    %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"CSD", (unsigned char*)"", io->stdOut);
+    if (disk_ioctl(0, MMC_GET_CSD, &buff[0])==RES_OK) {
+      for(val8=0; val8<16; val8++) {
+        buf[0] = '\0';
+        %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), (uint8_t)buff[val8]);
+        %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+        %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
+      }
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
+    } else {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"ERROR\r\n", io->stdOut);
+    }
+    %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"CID", (unsigned char*)"", io->stdOut);
+    if (disk_ioctl(0, MMC_GET_CID, &buff[0])==RES_OK) {
+      for(val8=0; val8<16; val8++) {
+        buf[0] = '\0';
+        %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), (uint8_t)buff[val8]);
+        %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+        %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
+      }
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n               Manufacturer ", io->stdOut);
+      for(val8=3; val8<=8; val8++) {
+        io->stdOut(buff[val8]);
+      }
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n               Serial Number ", io->stdOut);
+      buf[0] = '\0';
+      %@Utility@'ModuleName'%.strcatNum32Hex(buf, sizeof(buf), (uint32_t)((buff[0xa]<<24)|(buff[0xb]<<16)|(buff[0xc]<<8)|buff[0xd]));
+      %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
+    } else {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"ERROR\r\n", io->stdOut);
+    }
+    %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"OCR", (unsigned char*)"", io->stdOut);
+    if (disk_ioctl(0, MMC_GET_OCR, &buff[0])==RES_OK) {
+      for(val8=0; val8<4; val8++) {
+        buf[0] = '\0';
+        %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), (uint8_t)buff[val8]);
+        %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+        %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
+      }
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
+    } else {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"ERROR\r\n", io->stdOut);
+    }
+    %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"SD Status", (unsigned char*)"", io->stdOut);
+    if (disk_ioctl(0, MMC_GET_SDSTAT, &buff[0])==RES_OK) {
+      for(val8=0; val8<64; val8++) {
+        buf[0] = '\0';
+        if (val8!=0 && (val8%%16)==0) { /* new line to make things readable */
+          %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n               ", io->stdOut);
+        }
+        %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), (uint8_t)buff[val8]);
+       %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+       %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
+      }
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
+    } else {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"ERROR\r\n", io->stdOut);
+    }
+  }
+  if (driverVersion==1) { /* only LLD_SDHD cards implement this */
+    buff[1] = sizeof(buf)-2; /* size of buffer */
+    buff[0] = MMC_GET_LLD_CMD_HIGH_CAPACITY; /* cmd */
+    if (disk_ioctl(0, MMC_GET_LLD_INFO, &buff[0])==RES_OK) {
+      %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"High capacity", (unsigned char*)(buff[2]!=0?"yes\r\n":"no\r\n"), io->stdOut);
+    }
+    buff[0] = MMC_GET_LLD_CMD_HIGH_SPEED; /* cmd */
+    if (disk_ioctl(0, MMC_GET_LLD_INFO, &buff[0])==RES_OK) {
+      %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"High speed", (unsigned char*)(buff[2]!=0?"yes\r\n":"no\r\n"), io->stdOut);
+    }
+    buff[0] = MMC_GET_LLD_CMD_LOW_VOLTAGE; /* cmd */
+    if (disk_ioctl(0, MMC_GET_LLD_INFO, &buff[0])==RES_OK) {
+      %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"Low voltage", (unsigned char*)(buff[2]!=0?"yes\r\n":"no\r\n"), io->stdOut);
+    }
+    buff[0] = MMC_GET_LLD_CMD_DATA_WIDTHS; /* cmd */
+    if (disk_ioctl(0, MMC_GET_LLD_INFO, &buff[0])==RES_OK) {
+      %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"Data widths", (unsigned char*)"", io->stdOut);
+      if (buff[2]&0x1) {
+        %@Shell@'ModuleName'%.SendStr((unsigned char*)"1 ", io->stdOut);
+      }
+      if (buff[2]&0x2) {
+        %@Shell@'ModuleName'%.SendStr((unsigned char*)"4 ", io->stdOut);
+      }
+      if (buff[2]&0x4) {
+        %@Shell@'ModuleName'%.SendStr((unsigned char*)"8 ", io->stdOut);
+      }
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
+    }
+    buff[0] = MMC_GET_LLD_CMD_OPERATIONS; /* cmd */
+    if (disk_ioctl(0, MMC_GET_LLD_INFO, &buff[0])==RES_OK) {
+      %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"Operations", (unsigned char*)"", io->stdOut);
+      if (buff[2]&0x1) {
+        %@Shell@'ModuleName'%.SendStr((unsigned char*)"BlockRead ", io->stdOut);
+      }
+      if (buff[2]&0x2) {
+        %@Shell@'ModuleName'%.SendStr((unsigned char*)"BlockWrite ", io->stdOut);
+      }
+      if (buff[2]&0x4) {
+        %@Shell@'ModuleName'%.SendStr((unsigned char*)"BlockErase ", io->stdOut);
+      }
+      if (buff[2]&0x8) {
+        %@Shell@'ModuleName'%.SendStr((unsigned char*)"WriteProtect ", io->stdOut);
+      }
+      if (buff[2]&0x10) {
+        %@Shell@'ModuleName'%.SendStr((unsigned char*)"I/O ", io->stdOut);
+      }
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
+    }
+  }
+  return ERR_OK;
+}
+
+%endif %- PrintDiskInfo
+%-BW_METHOD_END PrintDiskInfo
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

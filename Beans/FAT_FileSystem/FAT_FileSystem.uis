@@ -1,8 +1,8 @@
 
 [USED_FACES]
-BeanVersion=01.122
+BeanVersion=01.142
 
-InterfacesCount=3
+InterfacesCount=5
 
 Symbol=RTC
 Link=Yes
@@ -18,3 +18,13 @@ Symbol=Memory
 Link=Yes
 Interface=FAT_FileSystem\Memory
 Version=01.006
+
+Symbol=Shell
+Link=Yes
+Interface=FAT_FileSystem\Shell
+Version=01.002
+
+Symbol=Utility
+Link=Yes
+Interface=FAT_FileSystem\Utility
+Version=01.001

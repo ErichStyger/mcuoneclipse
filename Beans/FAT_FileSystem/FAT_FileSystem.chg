@@ -35,3 +35,9 @@
   %set f_putc Selection enable
   %set f_printf Selection enable
 %endif
+
+%ifndef Shell
+  %set ParseCommand Selection never
+%else
+  %set ParseCommand Selection enable
+%endif

@@ -672,6 +672,182 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="ParseCommand">
+<b>ParseCommand</b></a>
+ - Shell Command Line parser. This method is enabled/disabled depending on if you have the Shell enabled/disabled in the properties.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>cmd: Pointer to byte</i> - Pointer to command string</li>
+<li><i>handled: Pointer to bool</i> - Pointer to variable which tells if the command has been handled or not</li>
+<li><i>io: Pointer to byte</i> - Pointer to I/O structure</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="CheckCardPresence">
+<b>CheckCardPresence</b></a>
+ - This method checks if card has been inserted or removed and mounts or unmounts the file system.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte CheckCardPresence(bool *cardMounted, byte drive, FATFS *fileSystemObject, const %@Shell@'ModuleName'%.StdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>cardMounted: Pointer to bool</i> - Pointer to initialize this variable to FALSE on the caller side the first time.</li>
+<li><i>drive:byte</i> - drive number, pass 0 as default drive</li>
+<li><i>fileSystemObject: Pointer to FATFS</i> - Pointer to file system object</li>
+<li><i>io:byte</i> - Pointer to io handler to be used. Can be NULL, then no messages are written.</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="MountFileSystem">
+<b>MountFileSystem</b></a>
+ - Mounts a file system
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte MountFileSystem(FATFS *fileSystemObject, byte logicalDrive, const %@Shell@'ModuleName'%.StdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>fileSystemObject: Pointer to FATFS</i> - Pointer to a file system object</li>
+<li><i>logicalDrive:byte</i> - The drive number to be used</li>
+<li><i>io: Pointer to byte</i> - Pointer to I/O handler</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="UnMountFileSystem">
+<b>UnMountFileSystem</b></a>
+ - Mounts a file system
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte UnMountFileSystem(byte logicalDrive, const %@Shell@'ModuleName'%.StdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>logicalDrive:byte</i> - The drive number to be used</li>
+<li><i>io: Pointer to byte</i> - Pointer to I/O handler</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="PrintDirectory">
+<b>PrintDirectory</b></a>
+ - Prints a directory
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte PrintDirectory(const byte *dirName, const %@Shell@'ModuleName'%.StdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>dirName:byte</i> - Directory folder to be printed</li>
+<li><i>io:byte</i> - Pointer to I/O handler</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="CopyFile">
+<b>CopyFile</b></a>
+ - Copy a file
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte CopyFile(const byte *srcFileName, const byte *dstFileName, const %@Shell@'ModuleName'%.StdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>srcFileName:byte</i> - Source file name</li>
+<li><i>dstFileName:byte</i> - Destination file name</li>
+<li><i>io:byte</i> - Pointer to I/O handler</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="DeleteFile">
+<b>DeleteFile</b></a>
+ - Deletes a file
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte DeleteFile(const byte *fileName, const %@Shell@'ModuleName'%.StdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>fileName:byte</i> - Filename of file to be deleted</li>
+<li><i>io:byte</i> - Pointer to I/O handler</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="PrintFile">
+<b>PrintFile</b></a>
+ - Prints the content of a file
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte PrintFile(const byte *fileName, const %@Shell@'ModuleName'%.StdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>fileName:byte</i> - Name of file to be printed</li>
+<li><i>io:byte</i> - Pointer to I/O handler</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="MakeDirectory">
+<b>MakeDirectory</b></a>
+ - Creates a directory
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte MakeDirectory(const byte *dirName, const %@Shell@'ModuleName'%.StdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>dirName:byte</i> - Directory name</li>
+<li><i>io:byte</i> - Pointer to I/O handler</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="ChangeDirectory">
+<b>ChangeDirectory</b></a>
+ - Changes to a directory
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ChangeDirectory(const byte *dirName, const %@Shell@'ModuleName'%.StdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>dirName:byte</i> - Directory name</li>
+<li><i>io:byte</i> - Pointer to I/O handler</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="RenameFile">
+<b>RenameFile</b></a>
+ - Renames a file
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte RenameFile(const byte *srcFileName, const byte *dstFileName, const %@Shell@'ModuleName'%.StdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>srcFileName:byte</i> - Source file name</li>
+<li><i>dstFileName:byte</i> - Destination file name</li>
+<li><i>io:byte</i> - Pointer to I/O handler</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="PrintSector">
+<b>PrintSector</b></a>
+ - Prints information about the current disk
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte PrintSector(byte drive, dword sectorNo, const %@Shell@'ModuleName'%.StdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>drive:byte</i> - drive number, starting with zero</li>
+<li><i>sectorNo:dword</i> - sector number</li>
+<li><i>io:byte</i> - Pointer to I/O handler</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="PrintDiskInfo">
+<b>PrintDiskInfo</b></a>
+ - Prints information about the current disk
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte PrintDiskInfo(byte drive, const %@Shell@'ModuleName'%.StdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>drive:byte</i> - drive number, starting with zero</li>
+<li><i>io:byte</i> - Pointer to I/O handler</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
 
            </ul>
 <!---USERBEG DON'T CHANGE THIS LINE-->
