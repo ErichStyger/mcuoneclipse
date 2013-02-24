@@ -33,6 +33,7 @@
 #include "LEDB.h"
 #include "LEDpin6.h"
 #include "BitIoLdd6.h"
+#include "UTIL1.h"
 #include "USB1.h"
 #include "USBInit2.h"
 #include "CDC1.h"
@@ -55,21 +56,6 @@ void Cpu_OnNMIINT(void);
 ** ===================================================================
 */
 
-
-void USB1_OnError(byte error);
-/*
-** ===================================================================
-**     Event       :  USB1_OnError (module Events)
-**
-**     Component   :  USB1 [FSL_USB_Stack]
-**     Description :
-**         Hook called in case of an error
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**         error           - Error code
-**     Returns     : Nothing
-** ===================================================================
-*/
 
 /* END Events */
 #endif /* __Events_H*/

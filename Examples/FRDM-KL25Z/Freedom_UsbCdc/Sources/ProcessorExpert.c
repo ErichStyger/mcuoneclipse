@@ -29,6 +29,7 @@
 #include "LEDB.h"
 #include "LEDpin6.h"
 #include "BitIoLdd6.h"
+#include "UTIL1.h"
 #include "USB1.h"
 #include "USBInit2.h"
 #include "CDC1.h"
@@ -46,6 +47,8 @@ static uint8_t in_buffer[USB1_DATA_BUFF_SIZE];
 
 static void CDC_Run(void) {
   int i;
+  uint32_t val = 0;
+  unsigned char buf[16];
 
   for(;;) {
     while(CDC1_App_Task(cdc_buffer, sizeof(cdc_buffer))==ERR_BUSOFF) {
@@ -65,7 +68,11 @@ static void CDC_Run(void) {
       in_buffer[i] = '\0';
       (void)CDC1_SendString((unsigned char*)"echo: ");
       (void)CDC1_SendString(in_buffer);
-      (void)CDC1_SendString((unsigned char*)"\r\n");
+      UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"val: ");
+      UTIL1_strcatNum32u(buf, sizeof(buf), val);
+      UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+      (void)CDC1_SendString(buf);
+      val++;
     } else {
       WAIT1_Waitms(10);
     }
