@@ -105,6 +105,26 @@
 
 
 %-BW_DEFINITION_START
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Init
+%ifdef Init
+byte %'ModuleName'%.%Init(void *data);
+%define! Pardata
+%define! RetVal
+%include Common\FatFsMem_USB_MSDInit.Inc
+
+%endif %- Init
+%-BW_METHOD_END Init
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Deinit
+%ifdef Deinit
+byte %'ModuleName'%.%Deinit(void *data);
+%define! Pardata
+%define! RetVal
+%include Common\FatFsMem_USB_MSDDeinit.Inc
+
+%endif %- Deinit
+%-BW_METHOD_END Deinit
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -301,7 +321,7 @@ DRESULT disk_write (
 
     /* Send Write_10 SCSI command */
     bCallBack = FALSE;
-    status = usb_mass_ufi_write_10(&pCmd, sector, buff, (uint_32)(512*count), count);
+    status = usb_mass_ufi_write_10(&pCmd, sector, (uchar_ptr)buff, (uint_32)(512*count), count);
     if ((status != USB_OK) && (status != USB_STATUS_TRANSFER_QUEUED))
     {
         res = RES_ERROR;
@@ -395,6 +415,32 @@ DRESULT disk_ioctl (
 %- List of internal methods headers
 %-BW_INTERN_METHOD_DECL_END
 %-BW_IMPLEMENT_START
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Init
+%ifdef Init
+%define! Pardata
+%define! RetVal
+%include Common\FatFsMem_USB_MSDInit.Inc
+byte %'ModuleName'%.%Init(void *data)
+{
+  return ERR_OK;
+}
+
+%endif %- Init
+%-BW_METHOD_END Init
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Deinit
+%ifdef Deinit
+%define! Pardata
+%define! RetVal
+%include Common\FatFsMem_USB_MSDDeinit.Inc
+byte %'ModuleName'%.%Deinit(void *data)
+{
+  return ERR_OK;
+}
+
+%endif %- Deinit
+%-BW_METHOD_END Deinit
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

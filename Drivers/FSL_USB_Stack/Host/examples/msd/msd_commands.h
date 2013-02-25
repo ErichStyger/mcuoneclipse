@@ -86,6 +86,7 @@ void    usb_host_mass_device_event
                   uint_32
                   );
 
+#if 0 /* << EST */
 static void    usb_host_mass_ctrl_callback
                   (
                   _usb_pipe_handle,
@@ -94,7 +95,7 @@ static void    usb_host_mass_ctrl_callback
                   uint_32,
                   uint_32
                   );
-
+#endif
 
 void callback_bulk_pipe (USB_STATUS status,
       pointer p1,
@@ -102,7 +103,9 @@ void callback_bulk_pipe (USB_STATUS status,
       uint_32 buffer_length
       );
 
+#if 0 /* << EST */
 static void usb_host_mass_test_storage();
+#endif
 
 #ifdef __cplusplus
 }

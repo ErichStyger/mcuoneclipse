@@ -89,7 +89,7 @@
 /* FIXME: actually, only endpoint_data[0] is used in atom transaction */
 static EP_STRUCT endpoint_data[16];
 
-static USB_HOST_STATE_STRUCT_PTR _usb_host_ptr;
+//<< EST //static USB_HOST_STATE_STRUCT_PTR _usb_host_ptr;
 static USB_EVENT_STRUCT khci_event;
 
 /* Transaction queue */
@@ -99,10 +99,10 @@ extern USB_HOST_STATE_STRUCT_PTR usb_host_state_struct_ptr;
 
 static TR_INT_QUE_ITM_STRUCT TR_INT_QUE[USBCFG_KHCI_MAX_INT_TR];
 
-static uint_32 HWTICKS_CONST_FS_ADD;
-static uint_32 HWTICKS_CONST_FS_MUL;
-static uint_32 HWTICKS_CONST_LS_ADD;
-static uint_32 HWTICKS_CONST_LS_MUL;
+//<< EST //static uint_32 HWTICKS_CONST_FS_ADD;
+//<< EST //static uint_32 HWTICKS_CONST_FS_MUL;
+//<< EST //static uint_32 HWTICKS_CONST_LS_ADD;
+//<< EST //static uint_32 HWTICKS_CONST_LS_MUL;
 
 uint_8 endpoint_stalled = FALSE;
 
@@ -223,13 +223,13 @@ static int_32 _usb_khci_atom_tr
 	EP_STRUCT_PTR ep_ptr;
 	uint_32 bd;
 	int_32 res;
-	int_32 retry, old_len;
+	int_32 retry; //<< EST //, old_len;
 	int_32 delay_const = 10;
 	uint_32 event_wait_ticks_count;
 
 	last_to_pipe = NULL; /* At the beginning, consider that there was not timeout */
 
-	old_len = len;
+	//<< EST //old_len = len;
     len = (uint_16)((len > pipe_desc_ptr->MAX_PACKET_SIZE) ? pipe_desc_ptr->MAX_PACKET_SIZE : len);
 
 	ep_ptr = &endpoint_data[0];
@@ -443,7 +443,7 @@ static void _usb_khci_process_tr_complete
 	int_32 err
 )
 {
-    USB_HOST_STATE_STRUCT_PTR usb_host_ptr = (USB_HOST_STATE_STRUCT_PTR)handle;
+  //<< EST //    USB_HOST_STATE_STRUCT_PTR usb_host_ptr = (USB_HOST_STATE_STRUCT_PTR)handle;
 
     uchar_ptr buffer_ptr = NULL;
     uint_32 total_req_bytes = 0;
@@ -522,8 +522,8 @@ static int _usb_khci_rm_int_tr
 	TR_MSG_STRUCT *msg
 )
 {
-    int_32 i = 0, res = -1;
-    static uint_32 countrm_int_tr = 0;
+    int_32 i = 0;//<< EST //, res = -1;
+    //<< EST //static uint_32 countrm_int_tr = 0;
     TR_INT_QUE_ITM_STRUCT_PTR tr = TR_INT_QUE;
 
     /* find record */
@@ -556,7 +556,7 @@ USB_STATUS _usb_khci_init
 )
 {
 	USB_STATUS status = USB_OK;
-	static const uint_32  msg_size_in_max_type = 1 + (sizeof(TR_MSG_STRUCT) - 1) / sizeof(uint_32);
+	//<< EST //	static const uint_32  msg_size_in_max_type = 1 + (sizeof(TR_MSG_STRUCT) - 1) / sizeof(uint_32);
 
 	UNUSED(handle)
 
@@ -762,12 +762,12 @@ uint_32 _usb_khci_get_frame_number
 void _usb_khci_task(void)
 {
     static uint_32 seq_ints = 10;
-    static uint_32 wait_on = 0;
+    //<< EST //static uint_32 wait_on = 0;
     static TR_MSG_STRUCT msg;
     static uint_32 remain = 0;
     static int_32 res;
     static uint_8 *buf;
-    int i;
+    //<< EST //int i;
 
     if (usb_host_state_struct_ptr->DEVICE_LIST_PTR)
 	{

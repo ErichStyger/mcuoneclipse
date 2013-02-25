@@ -711,9 +711,9 @@ USB_STATUS usb_class_mass_reset_recovery_on_usb
       USB_MASS_CLASS_INTF_STRUCT_PTR   intf_ptr
    )
 { /* Body */
-   PIPE_INIT_PARAM_STRUCT_PTR pPipe = NULL;
+  //<< EST //PIPE_INIT_PARAM_STRUCT_PTR pPipe = NULL;
    COMMAND_OBJECT_PTR         cmd_ptr = NULL;
-   DEV_INSTANCE_PTR           dev_ptr = (DEV_INSTANCE_PTR)intf_ptr->G.dev_handle;
+   //<< EST //DEV_INSTANCE_PTR           dev_ptr = (DEV_INSTANCE_PTR)intf_ptr->G.dev_handle;
    USB_STATUS                 status = USB_OK;
    USB_SETUP                  request;
 
