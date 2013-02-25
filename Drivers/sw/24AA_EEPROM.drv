@@ -388,7 +388,6 @@ byte %'ModuleName'%.%ReadBlock(%'ModuleName'_Address addr, byte *data, word data
 byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dataSize)
 {
   byte res, i, *p, block[%'ModuleName'%.BLOCK_BUF_SIZE+2];       %>40 /* additional 2 bytes for the address */
-  //byte tmp;
   word nof;
   word eepromPage = (word)(addr/%'ModuleName'%.PAGE_SIZE);
   byte offset = (byte)(addr%%%'ModuleName'%.PAGE_SIZE);
@@ -422,7 +421,7 @@ byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dat
     res = %'ModuleName'%.WriteBlock(addr, data,
       (word)(%'ModuleName'%.PAGE_SIZE-offset));                  %>40 /* first page write */
     if (res != ERR_OK) return res;
-    res = %'ModuleName'%.WriteBlock((ExternEEPROM_ADDRT)((eepromPage+1)*%'ModuleName'%.PAGE_SIZE),
+    res = %'ModuleName'%.WriteBlock(((eepromPage+1)*%'ModuleName'%.PAGE_SIZE),
        data+(%'ModuleName'%.PAGE_SIZE-offset),
        (word)(dataSize-(%'ModuleName'%.PAGE_SIZE-offset)));      %>40 /* first page write */
     if (res != ERR_OK) return res;
