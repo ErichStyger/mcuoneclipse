@@ -8,6 +8,6 @@
 #ifndef HOST_H_
 #define HOST_H_
 
-void host(void);
+void HOST_Init(void);
 
 #endif /* HOST_H_ */

@@ -6,7 +6,9 @@
 #include "LEDR.h"
 #include "FRTOS1.h"
 #include "Shell.h"
+#include "host.h"
 
+#if 0
 static portTASK_FUNCTION(Task1, pvParameters) {
   (void)pvParameters; /* parameter not used */
   for(;;) {
@@ -14,9 +16,12 @@ static portTASK_FUNCTION(Task1, pvParameters) {
     FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
   }
 }
+#endif
 
 void APP_Run(void) {
   SHELL_Init();
+  HOST_Init();
+#if 0
   if (FRTOS1_xTaskCreate(
         Task1,  /* pointer to the task */
         (signed portCHAR *)"Task1", /* task name for kernel awareness debugging */
@@ -29,6 +34,7 @@ void APP_Run(void) {
     for(;;){}; /* error! probably out of memory */
     /*lint +e527 */
   }
+#endif
   FRTOS1_vTaskStartScheduler();
 }
 

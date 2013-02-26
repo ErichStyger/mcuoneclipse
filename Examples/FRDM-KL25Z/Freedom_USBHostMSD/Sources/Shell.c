@@ -49,9 +49,6 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
   NULL /* sentinel */
 };
 
-
-#include "host.h"
-
 static portTASK_FUNCTION(ShellTask, pvParameters) {
   unsigned char buf[48];
 
@@ -66,7 +63,6 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
 }
 
 void SHELL_Init(void) {
-  host();
   if (FRTOS1_xTaskCreate(ShellTask, (signed portCHAR *)"Shell", configMINIMAL_STACK_SIZE+200, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }

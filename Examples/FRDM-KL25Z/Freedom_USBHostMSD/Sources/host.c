@@ -16,6 +16,7 @@
 #include "mem_util.h"
 #include "poll.h"
 #include "CLS1.h"
+#include "FRTOS1.h"
 
 /* the following is the mass storage class driver object structure. This is
 used to send commands down to  the class driver. See the Class API document
@@ -191,10 +192,7 @@ void usb_host_mass_device_event
    } /* EndSwitch */
 } /* Endbody */
 
-
-
-void host(void)
-{
+static void host_init(void) {
   USB_STATUS           status = USB_OK;
   _usb_host_handle     host_handle;
 
@@ -246,12 +244,6 @@ void host(void)
   memset(pCmd.CSW_PTR, 0, sizeof(CSW_STRUCT));
 
   print((unsigned char*)"\nUSB MSD Application.\nWaiting for USB mass storage to be attached...\n");
-
-  for(;;) {
-    Main_Task();
-    Poll();
-  } /* loop forever */
-  /* please make sure that you never leave main */
 }
 
 void time_delay(uint_32 delay) {
@@ -261,3 +253,25 @@ void time_delay(uint_32 delay) {
 int_32 _bsp_usb_host_init(pointer param) {
   return 0;
 }
+
+static portTASK_FUNCTION(HostTask, pvParameters) {
+  (void)pvParameters; /* not used */
+  host_init();
+  for(;;) {
+    Main_Task();
+    Poll();
+    FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
+  }
+}
+
+void HOST_Init(void) {
+  host_init();
+  for(;;) {
+    Main_Task();
+    Poll();
+  }
+  if (FRTOS1_xTaskCreate(HostTask, (signed portCHAR *)"Host", configMINIMAL_STACK_SIZE+200, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+    for(;;){} /* error */
+  }
+}
+
