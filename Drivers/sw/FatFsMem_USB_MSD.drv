@@ -81,6 +81,7 @@
 %- Write your own includes here ...
 %-   Example:
 %-     #include "header_name.h"
+#define %'ModuleName'%.CardPresent() %'ModuleName'%.isDiskPresent()
 %-
 %-BW_CUSTOM_INCLUDE_END_H
 %-
@@ -125,6 +126,24 @@ byte %'ModuleName'%.%Deinit(void *data);
 
 %endif %- Deinit
 %-BW_METHOD_END Deinit
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN isDiskPresent
+%ifdef isDiskPresent
+bool %'ModuleName'%.%isDiskPresent(void);
+%define! RetVal
+%include Common\FatFsMem_USB_MSDisDiskPresent.Inc
+
+%endif %- isDiskPresent
+%-BW_METHOD_END isDiskPresent
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN isWriteProtected
+%ifdef isWriteProtected
+bool %'ModuleName'%.%isWriteProtected(void);
+%define! RetVal
+%include Common\FatFsMem_USB_MSDisWriteProtected.Inc
+
+%endif %- isWriteProtected
+%-BW_METHOD_END isWriteProtected
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -253,7 +272,7 @@ DSTATUS disk_initialize (
 /*-----------------------------------------------------------------------*/
 /* Return Disk Status                                                    */
 DSTATUS disk_status (
-        uint8_t drv                                              %>40 /* Physical drive nmuber (0..) */
+        uint8_t drv                                              %>40 /* Physical drive number (0..) */
 )
 {
   if (drv!=0) return STA_NOINIT;                                 %>40 /* Supports only single drive */
@@ -442,6 +461,30 @@ byte %'ModuleName'%.%Deinit(void *data)
 
 %endif %- Deinit
 %-BW_METHOD_END Deinit
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN isDiskPresent
+%ifdef isDiskPresent
+%define! RetVal
+%include Common\FatFsMem_USB_MSDisDiskPresent.Inc
+bool %'ModuleName'%.%isDiskPresent(void)
+{
+  return TRUE; /* NYI */
+}
+
+%endif %- isDiskPresent
+%-BW_METHOD_END isDiskPresent
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN isWriteProtected
+%ifdef isWriteProtected
+%define! RetVal
+%include Common\FatFsMem_USB_MSDisWriteProtected.Inc
+bool %'ModuleName'%.%isWriteProtected(void)
+{
+  return FALSE; /* NYI */
+}
+
+%endif %- isWriteProtected
+%-BW_METHOD_END isWriteProtected
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

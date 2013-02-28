@@ -23,6 +23,8 @@ used to send commands down to  the class driver. See the Class API document
 for details */
 COMMAND_OBJECT_STRUCT pCmd;
 volatile DEVICE_STRUCT       mass_device = { 0 };   /* mass storage device struct */
+volatile USB_STATUS bStatus       = USB_OK;
+volatile boolean bCallBack = FALSE;
 
 const USB_HOST_DRIVER_INFO DriverInfoTable[] = {
    /* Floppy drive */
@@ -265,11 +267,13 @@ static portTASK_FUNCTION(HostTask, pvParameters) {
 }
 
 void HOST_Init(void) {
+#if 0
   host_init();
   for(;;) {
     Main_Task();
     Poll();
   }
+#endif
   if (FRTOS1_xTaskCreate(HostTask, (signed portCHAR *)"Host", configMINIMAL_STACK_SIZE+200, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }

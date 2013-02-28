@@ -11,6 +11,9 @@
 #include "CLS1.h"
 #include "LEDR.h"
 #include "LEDG.h"
+#include "FAT1.h"
+
+#define PL_HAS_SD_CARD 1
 
 /*!
  * \brief Parses a command
@@ -50,12 +53,20 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 };
 
 static portTASK_FUNCTION(ShellTask, pvParameters) {
+#if PL_HAS_SD_CARD
+  bool cardMounted = FALSE;
+  static FAT1_FATFS fileSystemObject;
+#endif
   unsigned char buf[48];
 
   (void)pvParameters; /* not used */
   buf[0] = '\0';
   (void)CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, CLS1_GetStdio(), CmdParserTable);
   for(;;) {
+#if PL_HAS_SD_CARD
+    (void)FAT1_CheckCardPresence(&cardMounted,
+        0 /* volume */, &fileSystemObject, CLS1_GetStdio());
+#endif
     (void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), CLS1_GetStdio(), CmdParserTable);
     FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
     LEDG_Neg();
