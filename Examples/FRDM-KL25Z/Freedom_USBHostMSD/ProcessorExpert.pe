@@ -3,8 +3,8 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>Erich Styger</SavedBy>
-    <ModificationStamp>30</ModificationStamp>
-    <Date>2013-02-28</Date>
+    <ModificationStamp>40</ModificationStamp>
+    <Date>2013-03-01</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.5.0.RT4_b1306-1475</PEversion>
   </Header>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>74</ProjectCompNumb>
+    <ProjectCompNumb>92</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -7878,34 +7878,34 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>xSemaphoreCreateMutex</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
-        <LastSelection>false</LastSelection>
+        <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>xSemaphoreCreateMutex</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>xSemaphoreTake</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
-        <LastSelection>false</LastSelection>
+        <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>xSemaphoreTake</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>xSemaphoreGive</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
-        <LastSelection>false</LastSelection>
+        <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>xSemaphoreGive</UsrMethodName>
       </ItemState>
@@ -14602,8 +14602,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>TimeoutTicks</ItemSymbol>
@@ -14639,7 +14639,7 @@
         <ItemSymbol>RTOS</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>FRTOS1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>UseRTOSDynamicMemory</ItemSymbol>
@@ -15421,7 +15421,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.009</BeanVersion>
+    <BeanVersion>01.019</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -15429,6 +15429,12 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>FsMSD1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Wait</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>WAIT1</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -15476,6 +15482,72 @@
         <UsrMethodName>isWriteProtected</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>Host_Init</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>Host_Init</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>AppTask</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>AppTask</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GetDeviceStatus</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>GetDeviceStatus</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>HostInit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>HostInit</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Deactivate</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>Deactivate</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Activate</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>Activate</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -15483,7 +15555,7 @@
     <BeanType>HardFault</BeanType>
     <Name>HF1</Name>
     <CompNumb>48</CompNumb>
-    <CompEnabled>true</CompEnabled>
+    <CompEnabled>false</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>CPU_CHIP2</IconName>
     <UserFolderName />
@@ -15524,7 +15596,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.011</BeanVersion>
+    <BeanVersion>01.012</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -17567,7 +17639,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.007</BeanVersion>
+          <BeanVersion>01.009</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
