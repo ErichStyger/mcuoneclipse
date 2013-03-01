@@ -97,7 +97,7 @@ USB_STATUS usb_dev_list_free_memory
    list_ptr = mem_ptr->next;
 
    do {
-      free(mem_ptr);
+      USB_mem_free(mem_ptr);
       mem_ptr = list_ptr;
       list_ptr = mem_ptr->next;
    } while (mem_ptr != NULL);
@@ -247,7 +247,7 @@ USB_STATUS usb_dev_list_attach_device
       usb_host_ptr->DEVICE_LIST_PTR = (pointer)\
          dev_instance_ptr->next; /* pop off list */
       USB_unlock();
-      free((pointer)dev_instance_ptr);
+      USB_mem_free((pointer)dev_instance_ptr);
       return USBERR_ADDRESS_ALLOC_FAILED;
    } /* EndIf */
       
@@ -269,7 +269,7 @@ USB_STATUS usb_dev_list_attach_device
       &ctrl_pipe_init_params, 
       &dev_instance_ptr->control_pipe))
    {
-      free((pointer)dev_instance_ptr);
+     USB_mem_free((pointer)dev_instance_ptr);
       return USBERR_PIPE_OPENED_FAILED;
    } /* Endif */
 
@@ -450,7 +450,7 @@ void  usb_dev_list_detach_device
    /* Remove the device */
    *device_root = dev_instance_ptr->next;
 
-   free(dev_instance_ptr);
+   USB_mem_free(dev_instance_ptr);
 
    USB_unlock();
 } /* EndBody */

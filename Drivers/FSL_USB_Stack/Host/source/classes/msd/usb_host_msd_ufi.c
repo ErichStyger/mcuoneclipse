@@ -56,7 +56,7 @@ USB_STATUS usb_mass_ufi_generic
       uint_32                    buf_len
    )
 { /* Body */
-   USB_STATUS                    status = USB_OK;
+   // << EST USB_STATUS                    status = USB_OK;
    UFI_CBWCB_EXTENDED_STRUCT_PTR ufi_ptr = NULL;
 
    ufi_ptr = (pointer) &(cmd_ptr->CBW_PTR->CMD_BLOCK);

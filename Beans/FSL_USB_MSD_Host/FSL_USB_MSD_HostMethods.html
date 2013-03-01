@@ -202,43 +202,6 @@ LI.EXP {
 <!---USERBEG DON'T CHANGE THIS LINE-->
 
 <!---USEREND DON'T CHANGE THIS LINE-->
-<li><a name="App_Callback">
-<b>App_Callback</b></a>
- - Method to handle class callbacks from USB
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void App_Callback(byte controller_ID, byte event_type, void *val)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>controller_ID:byte</i> - controller ID</li>
-<li><i>event_type:byte</i> - value of the event</li>
-<li><i>val:byte</i> - gives the configuration value</li>
-</ul><br />
-</li>
-<li><a name="Notify_Callback">
-<b>Notify_Callback</b></a>
- - Method to handle PSTN Sub Class callbacks
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void Notify_Callback(byte controller_ID, byte event_type, void *val)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>controller_ID:byte</i> - controller ID</li>
-<li><i>event_type:byte</i> - value of the event</li>
-<li><i>val:byte</i> - no hint</li>
-</ul><br />
-</li>
-<li><a name="App_Task">
-<b>App_Task</b></a>
- - Application task to be called periodically from the main task.
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte App_Task(byte *txBuf, size_t txBufSize)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>txBuf: Pointer to byte</i> - Pointer to temporary buffer used to transmit data over USB. Should be equal or greater than the endpoint buffer size. Data will be sent in an asynchronous way, so make sure the buffer is *not* on the stack. This buffer must be available until the next transmission.</li>
-<li><i>txBufSize:byte</i> - Size of the buffer in bytes</li>
-<li><i>Return value:byte</i> - Error code, returns ERR_OK if USB enumeration has been finished, error code otherwise.
-</li>
-</ul><br />
-</li>
 <li><a name="Init">
 <b>Init</b></a>
  - Initializes the driver

@@ -59,10 +59,10 @@ void _usb_host_shutdown
    status = _usb_host_shutdown_call_interface (hci_handle);
    
    /* Free all Pipe Descriptors */
-   free((pointer)usb_host_ptr->PIPE_DESCRIPTOR_BASE_PTR);
+   USB_mem_free((pointer)usb_host_ptr->PIPE_DESCRIPTOR_BASE_PTR);
 
    /* Free the USB state structure */
-   free(hci_handle);
+   USB_mem_free(hci_handle);
 } /* EndBody */
 
 /*FUNCTION*-------------------------------------------------------------

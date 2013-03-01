@@ -206,6 +206,37 @@ LI.EXP {
 <!---USERBEG DON'T CHANGE THIS LINE-->
 
 <!---USEREND DON'T CHANGE THIS LINE-->
+<li><a name="AppTask">
+<b>AppTask</b></a>
+ - Call this method periodiacally from the main application
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void AppTask(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="GetDeviceStatus">
+<b>GetDeviceStatus</b></a>
+ - Returns the current device status. Is one of the following: #define  USB_DEVICE_IDLE, USB_DEVICE_ATTACHED , USB_DEVICE_CONFIGURED, USB_DEVICE_SET_INTERFACE_STARTED, USB_DEVICE_INTERFACED, USB_DEVICE_DETACHED, USB_DEVICE_OTHER 
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> dword GetDeviceStatus(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:dword</i> - Device status
+</li>
+</ul><br />
+</li>
+<li><a name="HostInit">
+<b>HostInit</b></a>
+ - Performs the host device initialization.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte HostInit(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
 <li><a name="isDiskPresent">
 <b>isDiskPresent</b></a>
  - returns TRUE if a disk/device is present.
@@ -250,6 +281,24 @@ LI.EXP {
 <li><i>data:void*</i> - optional pointer to device data</li>
 <li><i>Return value:byte</i> - Error code
 </li>
+</ul><br />
+</li>
+<li><a name="Deactivate">
+<b>Deactivate</b></a>
+ - Deactivate access to the device
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void Deactivate(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="Activate">
+<b>Activate</b></a>
+ - Activates access to the device
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void Activate(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 </ul><br />
 </li>
 

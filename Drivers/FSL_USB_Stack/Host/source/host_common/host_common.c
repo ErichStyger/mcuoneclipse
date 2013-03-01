@@ -1241,7 +1241,11 @@ void  usb_hostdev_delete_interface
 
          /* Close pipes, free memory list item */
          usb_dev_list_close_pipe_bundle(pbs_ptr);
+#if 0
          free(mem1);
+#else /* << EST */
+         USB_mem_free(mem1);
+#endif
          dev->intf_descriptor[intf_no] = NULL;
          intf_no = dev->num_of_interfaces;
          break;
@@ -1292,7 +1296,11 @@ void  usb_hostdev_delete_interface
          } /* EndIf */
 
          /* Free memory list item */
+#if 0
          free(mem1);
+#else /* << EST */
+         USB_mem_free(mem1);
+#endif
          intf_no = dev->num_of_interfaces;
          break;
       } /* EndFor */
@@ -1573,7 +1581,11 @@ USB_STATUS  _usb_hostdev_select_interface
       /* If pipe not OK, unlink bundle from list and delete it */
       if (error != USB_OK) {
          mem1->next = NULL;  /* snip off list */
+#if 0
          free(mem2);
+#else /* << EST */
+         USB_mem_free(mem2);
+#endif
          goto BadExit;
       } /* EndIf */
       pbs_ptr->pipe_handle[ep_num-1] = pipe_handle;

@@ -144,6 +144,48 @@ bool %'ModuleName'%.%isWriteProtected(void);
 
 %endif %- isWriteProtected
 %-BW_METHOD_END isWriteProtected
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN HostInit
+%ifdef HostInit
+byte %'ModuleName'%.%HostInit(void);
+%define! RetVal
+%include Common\FatFsMem_USB_MSDHostInit.Inc
+
+%endif %- HostInit
+%-BW_METHOD_END HostInit
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetDeviceStatus
+%ifdef GetDeviceStatus
+dword %'ModuleName'%.%GetDeviceStatus(void);
+%define! RetVal
+%include Common\FatFsMem_USB_MSDGetDeviceStatus.Inc
+
+%endif %- GetDeviceStatus
+%-BW_METHOD_END GetDeviceStatus
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN AppTask
+%ifdef AppTask
+void %'ModuleName'%.%AppTask(void);
+%include Common\FatFsMem_USB_MSDAppTask.Inc
+
+%endif %- AppTask
+%-BW_METHOD_END AppTask
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Activate
+%ifdef Activate
+#define %'ModuleName'%.%Activate() /* nothing needed */
+%include Common\FatFsMem_USB_MSDActivate.Inc
+
+%endif %- Activate
+%-BW_METHOD_END Activate
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Deactivate
+%ifdef Deactivate
+#define %'ModuleName'%.%Deactivate() /* nothing needed */
+%include Common\FatFsMem_USB_MSDDeactivate.Inc
+
+%endif %- Deactivate
+%-BW_METHOD_END Deactivate
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -176,6 +218,9 @@ bool %'ModuleName'%.%isWriteProtected(void);
 #include "poll.h"
 #include "msd_commands.h"
 #include "freeRTOS.h" /* FreeRTOS malloc() */
+#include "usb_host_hub_sm.h"
+#include "mem_util.h"
+
 %-BW_CUSTOM_INCLUDE_END_M
 
 %-BW_CUSTOM_VARIABLE_START
@@ -184,11 +229,117 @@ bool %'ModuleName'%.%isWriteProtected(void);
 %-     static int counter1;
 %-     int %'ModuleName'%.counter2;
 %-
-extern volatile boolean       bCallBack;
-extern volatile USB_STATUS    bStatus;
 /* Command object used in SCSI commands */
-extern COMMAND_OBJECT_STRUCT  pCmd;
-extern volatile DEVICE_STRUCT mass_device;   /* mass storage device struct */
+static COMMAND_OBJECT_STRUCT pCmd;
+static volatile boolean bCallBack = FALSE;
+static volatile USB_STATUS bStatus       = USB_OK;
+
+/* the following is the mass storage class driver object structure. This is
+used to send commands down to  the class driver. See the Class API document
+for details */
+volatile DEVICE_STRUCT       mass_device = { 0 };   /* mass storage device struct */
+
+const USB_HOST_DRIVER_INFO DriverInfoTable[] = {
+   /* Floppy drive */
+   {
+      {0x00,0x00},                  /* Vendor ID per USB-IF             */
+      {0x00,0x00},                  /* Product ID per manufacturer      */
+      USB_CLASS_MASS_STORAGE,       /* Class code                       */
+      USB_SUBCLASS_MASS_UFI,        /* Sub-Class code                   */
+      USB_PROTOCOL_MASS_BULK,       /* Protocol                         */
+      0,                            /* Reserved                         */
+      usb_host_mass_device_event    /* Application call back function   */
+   },
+
+   /* USB 2.0 hard drive */
+   {
+
+      {0x49,0x0D},                  /* Vendor ID per USB-IF             */
+      {0x00,0x30},                  /* Product ID per manufacturer      */
+      USB_CLASS_MASS_STORAGE,       /* Class code                       */
+      USB_SUBCLASS_MASS_SCSI,       /* Sub-Class code                   */
+      USB_PROTOCOL_MASS_BULK,       /* Protocol                         */
+      0,                            /* Reserved                         */
+      usb_host_mass_device_event    /* Application call back function   */
+   },
+
+   /* USB 1.1 hub */
+   {
+
+      {0x00,0x00},                  /* Vendor ID per USB-IF             */
+      {0x00,0x00},                  /* Product ID per manufacturer      */
+      USB_CLASS_HUB,                /* Class code                       */
+      USB_SUBCLASS_HUB_NONE,        /* Sub-Class code                   */
+      USB_PROTOCOL_HUB_LS,          /* Protocol                         */
+      0,                            /* Reserved                         */
+      usb_host_hub_device_event     /* Application call back function   */
+   },
+
+   {
+      {0x00,0x00},                  /* All-zero entry terminates        */
+      {0x00,0x00},                  /*    driver info list.             */
+      0,
+      0,
+      0,
+      0,
+      NULL
+   }
+};
+
+void time_delay(uint_32 delay) {
+  %@Wait@'ModuleName'%.Waitms(delay);
+}
+
+int_32 _bsp_usb_host_init(pointer param) {
+  return 0;
+}
+
+void usb_host_mass_device_event
+   (
+      /* [IN] pointer to device instance */
+      _usb_device_instance_handle      dev_handle,
+
+      /* [IN] pointer to interface descriptor */
+      _usb_interface_descriptor_handle intf_handle,
+
+      /* [IN] code number for event causing callback */
+      uint_32           event_code
+   )
+{ /* Body */
+   switch (event_code) {
+      case USB_CONFIG_EVENT:
+         /* Drop through into attach, same processing */
+      case USB_ATTACH_EVENT:
+         if (mass_device.dev_state == USB_DEVICE_IDLE)
+         {
+            mass_device.dev_handle = dev_handle;
+            mass_device.intf_handle = intf_handle;
+            mass_device.dev_state = USB_DEVICE_ATTACHED;
+         } else {
+            //print((unsigned char*)"Mass Storage Device Is Already Attached\n");
+         } /* EndIf */
+         break;
+
+      case USB_INTF_EVENT:
+         mass_device.dev_state = USB_DEVICE_INTERFACED;
+         break;
+
+      case USB_DETACH_EVENT:
+         if (mass_device.dev_state != USB_DEVICE_IDLE)
+         {
+            mass_device.dev_handle = NULL;
+            mass_device.intf_handle = NULL;
+            mass_device.dev_state = USB_DEVICE_DETACHED;
+         } else {
+           //print((unsigned char*)"Mass Storage Device Is Not Attached\n");
+         } /* EndIf */
+         break;
+
+      default:
+         mass_device.dev_state = USB_DEVICE_IDLE;
+         break;
+   } /* EndSwitch */
+} /* Endbody */
 
 /*FUNCTION*----------------------------------------------------------------
 *
@@ -201,25 +352,20 @@ void callback_bulk_pipe
     (
         /* [IN] Status of this command */
         USB_STATUS status,
-
         /* [IN] pointer to USB_MASS_BULK_ONLY_REQUEST_STRUCT*/
         pointer p1,
-
         /* [IN] pointer to the command object*/
         pointer  p2,
-
         /* [IN] Length of data transmitted */
         uint_32 buffer_length
    )
 {
-    /* Body */
+  (void)p1;
+  (void)p2;
+  (void)buffer_length;
 
-    (void)p1;
-    (void)p2;
-    (void)buffer_length;
-
-    bCallBack = TRUE;
-    bStatus = status;
+  bCallBack = TRUE;
+  bStatus = status;
 } /* Endbody */
 /*-----------------------------------------------------------------------*/
 /* Initialize a Drive                                                    */
@@ -227,46 +373,37 @@ DSTATUS disk_initialize (
         uint8_t drv                                              %>40 /* Physical drive number (0..) */
 )
 {
-    CBW_STRUCT_PTR cbw_ptr;
-    CSW_STRUCT_PTR csw_ptr;
+  CBW_STRUCT_PTR cbw_ptr;
+  CSW_STRUCT_PTR csw_ptr;
 
-    static uint_8 first_time_flag = TRUE;
+  static uint_8 first_time_flag = TRUE;
+  /* Allocate memory for Command Block Wrapper and Comamnd Status Wrapper */
+  if (TRUE == first_time_flag) {
+    pCmd.CBW_PTR = (CBW_STRUCT_PTR) pvPortMalloc(sizeof(CBW_STRUCT)); /* << EST using FreeRTOS malloc() */
+    if (pCmd.CBW_PTR == NULL) {
+      return RES_NOT_ENOUGH_CORE;
+    }
+    pCmd.CSW_PTR = (CSW_STRUCT_PTR) pvPortMalloc(sizeof(CSW_STRUCT)); /* << EST using FreeRTOS malloc() */
+    if (pCmd.CSW_PTR == NULL) {
+      USB_mem_free(pCmd.CBW_PTR);
+      return RES_NOT_ENOUGH_CORE;
+    }
+    first_time_flag = FALSE;
+  } /* EndIf */
+  /* Store the address of CBW and CSW */
+  cbw_ptr = pCmd.CBW_PTR;
+  csw_ptr = pCmd.CSW_PTR;
+  memset(pCmd.CSW_PTR, 0, sizeof(CSW_STRUCT));
+  memset(pCmd.CBW_PTR, 0, sizeof(CBW_STRUCT));
+  memset(&pCmd, 0, sizeof(COMMAND_OBJECT_STRUCT));
 
-    /* Allocate memory for Command Block Wrapper and Comamnd Status Wrapper */
-    if (TRUE == first_time_flag)
-    {
-        pCmd.CBW_PTR = (CBW_STRUCT_PTR) pvPortMalloc(sizeof(CBW_STRUCT)); /* << EST using FreeRTOS malloc() */
-        if (pCmd.CBW_PTR == NULL)
-        {
-            return RES_NOT_ENOUGH_CORE;
-        }
-
-        pCmd.CSW_PTR = (CSW_STRUCT_PTR) pvPortMalloc(sizeof(CSW_STRUCT)); /* << EST using FreeRTOS malloc() */
-        if (pCmd.CSW_PTR == NULL)
-        {
-            USB_mem_free(pCmd.CBW_PTR);
-            return RES_NOT_ENOUGH_CORE;
-        }
-
-            first_time_flag = FALSE;
-    } /* EndIf */
-
-    /* Store the address of CBW and CSW */
-    cbw_ptr = pCmd.CBW_PTR;
-    csw_ptr = pCmd.CSW_PTR;
-
-    memset(pCmd.CSW_PTR, 0, sizeof(CSW_STRUCT));
-    memset(pCmd.CBW_PTR, 0, sizeof(CBW_STRUCT));
-    memset(&pCmd, 0, sizeof(COMMAND_OBJECT_STRUCT));
-
-    /* Init SCSI command object */
-    pCmd.CBW_PTR  = cbw_ptr;
-    pCmd.CSW_PTR  = csw_ptr;
-    pCmd.LUN      = drv;
-    pCmd.CALL_PTR = (pointer)&mass_device.class_intf;
-    pCmd.CALLBACK = callback_bulk_pipe;
-
-    return RES_OK;
+  /* Init SCSI command object */
+  pCmd.CBW_PTR  = cbw_ptr;
+  pCmd.CSW_PTR  = csw_ptr;
+  pCmd.LUN      = drv;
+  pCmd.CALL_PTR = (pointer)&mass_device.class_intf;
+  pCmd.CALLBACK = callback_bulk_pipe;
+  return RES_OK;
 }
 
 /*-----------------------------------------------------------------------*/
@@ -288,37 +425,28 @@ DRESULT disk_read (
         uint8_t count                                            %>40 /* Number of sectors to read (1..255) */
 )
 {
-    DRESULT     res = RES_OK;
-    USB_STATUS  status = USB_OK;
+  DRESULT     res = RES_OK;
+  USB_STATUS  status = USB_OK;
 
-    (void)drv;
-
-    /* Check sector count */
-    if (!count) return RES_PARERR;
-
-    /* Send read_10 SCSI command */
-    bCallBack = FALSE;
-    status = usb_mass_ufi_read_10(&pCmd, sector, buff, (uint_32)(512*count), count);
-    if ((status != USB_OK) && (status != USB_STATUS_TRANSFER_QUEUED))
-    {
-        res = RES_ERROR;
+  (void)drv;
+  /* Check sector count */
+  if (!count) return RES_PARERR;
+  /* Send read_10 SCSI command */
+  bCallBack = FALSE;
+  status = usb_mass_ufi_read_10(&pCmd, sector, buff, (uint_32)(512*count), count);
+  if ((status != USB_OK) && (status != USB_STATUS_TRANSFER_QUEUED)) {
+    res = RES_ERROR;
+  } else {
+    while(!bCallBack) {  /* Wait till command comes back */
+      Poll();
     }
-    else
-    {
-        while(!bCallBack)   /* Wait till command comes back */
-        {
-          Poll();
-        }
-        if (!bStatus)
-        {
-           res = RES_OK;
-        }
-        else
-        {
-         res = RES_NOTRDY;
-        }
-    } /* EndIf */
-    return res;
+    if (!bStatus) {
+      res = RES_OK;
+    } else {
+      res = RES_NOTRDY;
+    }
+  } /* EndIf */
+  return res;
 }
 
 /*-----------------------------------------------------------------------*/
@@ -331,37 +459,29 @@ DRESULT disk_write (
         uint8_t count                                            %>40 /* Number of sectors to write (1..255) */
 )
 {
-    DRESULT res = RES_OK;
-    USB_STATUS   status = USB_OK;
+  DRESULT res = RES_OK;
+  USB_STATUS   status = USB_OK;
 
-    (void)drv;
+  (void)drv;
+  /* Check sector count */
+  if (!count) return RES_PARERR;
 
-    /* Check sector count */
-    if (!count) return RES_PARERR;
-
-    /* Send Write_10 SCSI command */
-    bCallBack = FALSE;
-    status = usb_mass_ufi_write_10(&pCmd, sector, (uchar_ptr)buff, (uint_32)(512*count), count);
-    if ((status != USB_OK) && (status != USB_STATUS_TRANSFER_QUEUED))
-    {
-        res = RES_ERROR;
+  /* Send Write_10 SCSI command */
+  bCallBack = FALSE;
+  status = usb_mass_ufi_write_10(&pCmd, sector, (uchar_ptr)buff, (uint_32)(512*count), count);
+  if ((status != USB_OK) && (status != USB_STATUS_TRANSFER_QUEUED)) {
+    res = RES_ERROR;
+  } else {
+    while(!bCallBack) {  /* Wait till command comes back */
+      Poll();
     }
-    else
-    {
-        while(!bCallBack)   /* Wait till command comes back */
-        {
-            Poll();
-        }
-        if (!bStatus)
-        {
-             res = RES_OK;
-        }
-        else
-        {
-            res = RES_NOTRDY;
-        }
-    } /* EndIf */
-    return res;
+    if (!bStatus) {
+      res = RES_OK;
+    } else {
+      res = RES_NOTRDY;
+    }
+  } /* EndIf */
+  return res;
 }
 #endif /* _READONLY */
 
@@ -372,61 +492,45 @@ DRESULT disk_ioctl (
         void *buff                                               %>40 /* Buffer to send/receive control data */
 )
 {
-    DRESULT      res = RES_OK;
-    USB_STATUS   status = USB_OK;
-    MASS_STORAGE_READ_CAPACITY_CMD_STRUCT_INFO read_capacity;
+  DRESULT      res = RES_OK;
+  USB_STATUS   status = USB_OK;
+  MASS_STORAGE_READ_CAPACITY_CMD_STRUCT_INFO read_capacity;
 
-    (void)drv;
-
-    if ((GET_SECTOR_COUNT == ctrl)||(GET_SECTOR_SIZE == ctrl))
-    {
-        /* Send read_capacity SCSI command */
-        bCallBack = FALSE;
-        status = usb_mass_ufi_read_capacity(&pCmd, (uchar_ptr)&read_capacity,\
-            sizeof(MASS_STORAGE_READ_CAPACITY_CMD_STRUCT_INFO));
-        if ((status != USB_OK) && (status != USB_STATUS_TRANSFER_QUEUED))
-        {
-            res = RES_ERROR;
-         }
-        else
-        {
-            /* Wait till command comes back */
-            while(!bCallBack)
-            {
-                Poll();
-            }
-            if (!bStatus)
-            {
-                res = RES_OK;
-            }
-            else
-            {
-                res = RES_NOTRDY;
-            }
-        } /* EndIf */
-
-        /* Get number of sectors on the disk (DWORD) */
-        if (GET_SECTOR_COUNT == ctrl)
-        {
-            *(uint_32 *)buff = *(uint_32 *)read_capacity.BLLBA +1 ;
-        }
-        /* Get the sector size in byte */
-        else
-        {
-            *(uint_32 *)buff = *(uint_32 *)read_capacity.BLENGTH;
-        }
-    }
-    else if (GET_BLOCK_SIZE == ctrl)
-    {
-       *(uint_32*)buff = 1; /* unknown erase block size */
-       res = RES_OK;
-    }
-    else
-    {
-        res = RES_PARERR;
+  (void)drv;
+  if ((GET_SECTOR_COUNT == ctrl)||(GET_SECTOR_SIZE == ctrl)) {
+    /* Send read_capacity SCSI command */
+    bCallBack = FALSE;
+    status = usb_mass_ufi_read_capacity(&pCmd, (uchar_ptr)&read_capacity,
+         sizeof(MASS_STORAGE_READ_CAPACITY_CMD_STRUCT_INFO));
+    if ((status != USB_OK) && (status != USB_STATUS_TRANSFER_QUEUED)) {
+      res = RES_ERROR;
+    } else {
+      /* Wait till command comes back */
+      while(!bCallBack) {
+        Poll();
+      }
+      if (!bStatus) {
+        res = RES_OK;
+      } else {
+        res = RES_NOTRDY;
+      }
     } /* EndIf */
-
-    return res;
+    /* Get number of sectors on the disk (DWORD) */
+    if (GET_SECTOR_COUNT == ctrl) {
+      *(uint_32 *)buff = *(uint_32 *)read_capacity.BLLBA +1 ;
+    } else { /* Get the sector size in byte */
+      *(uint_32 *)buff = *(uint_32 *)read_capacity.BLENGTH;
+    }
+  } else if (GET_BLOCK_SIZE == ctrl) {
+    *(uint_32*)buff = 1; /* unknown erase block size */
+    res = RES_OK;
+  } else if (CTRL_SYNC == ctrl) {
+    /* sync/flush any cached blocks */
+    res = RES_OK;
+  } else{
+    res = RES_PARERR;
+  } /* EndIf */
+  return res;
 }
 
 %-BW_CUSTOM_VARIABLE_END
@@ -468,7 +572,7 @@ byte %'ModuleName'%.%Deinit(void *data)
 %include Common\FatFsMem_USB_MSDisDiskPresent.Inc
 bool %'ModuleName'%.%isDiskPresent(void)
 {
-  return TRUE; /* NYI */
+  return mass_device.dev_state == USB_DEVICE_INTERFACED;
 }
 
 %endif %- isDiskPresent
@@ -480,11 +584,141 @@ bool %'ModuleName'%.%isDiskPresent(void)
 %include Common\FatFsMem_USB_MSDisWriteProtected.Inc
 bool %'ModuleName'%.%isWriteProtected(void)
 {
-  return FALSE; /* NYI */
+  return FALSE; /* no support for write protection */
 }
 
 %endif %- isWriteProtected
 %-BW_METHOD_END isWriteProtected
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN HostInit
+%ifdef HostInit
+%define! RetVal
+%include Common\FatFsMem_USB_MSDHostInit.Inc
+byte %'ModuleName'%.%HostInit(void)
+{
+  USB_STATUS           status = USB_OK;
+  _usb_host_handle     host_handle;
+
+  /* Initialize the current platform. Call for the _bsp_platform_init which is specific to each processor family */
+  /* Init polling global variable */
+  POLL_init();
+
+  //DisableInterrupts;
+  #if (defined _MCF51MM256_H) || (defined _MCF51JE256_H)
+  usb_int_dis();
+  #endif
+  status = _usb_host_init
+    (HOST_CONTROLLER_NUMBER,    /* Use value in header file */
+     MAX_FRAME_SIZE,            /* Frame size per USB spec  */
+     &host_handle);             /* Returned pointer */
+
+  if (status != USB_OK) {
+    //print((unsigned char*)"\nUSB Host Initialization failed. STATUS: 0x%%x"/*, (unsigned int) status*/);
+    return ERR_FAILED;
+  } /* Endif */
+
+   /*
+   ** Since we are going to act as the host driver, register
+   ** the driver information for wanted class/subclass/protocols
+   */
+  status = _usb_host_driver_info_register(host_handle, (void *)DriverInfoTable);
+  if (status != USB_OK) {
+    //print((unsigned char*)"\nDriver Registration failed. STATUS: 0x%%x"/*, (unsigned int)status*/);
+    return ERR_FAILED;
+  }
+
+  //EnableInterrupts;
+  #if (defined _MCF51MM256_H) || (defined _MCF51JE256_H)
+  usb_int_en();
+  #endif
+
+  pCmd.CBW_PTR = (CBW_STRUCT_PTR)USB_mem_alloc_word_aligned(sizeof(CBW_STRUCT));
+  if (pCmd.CBW_PTR == NULL) {
+    //print ((unsigned char*)"\nUnable to allocate Command Block Wrapper!");
+    return ERR_FAILED;
+  }
+  memset(pCmd.CBW_PTR, 0, sizeof(CBW_STRUCT));
+  pCmd.CSW_PTR = (CSW_STRUCT_PTR)USB_mem_alloc_word_aligned(sizeof(CSW_STRUCT));
+  if (pCmd.CSW_PTR == NULL) {
+     //print ((unsigned char*)"\nUnable to allocate Command Status Wrapper!");
+     return ERR_FAILED;
+  }
+  memset(pCmd.CSW_PTR, 0, sizeof(CSW_STRUCT));
+  //print((unsigned char*)"\nUSB MSD Application.\nWaiting for USB mass storage to be attached...\n");
+  return ERR_OK;
+}
+
+%endif %- HostInit
+%-BW_METHOD_END HostInit
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetDeviceStatus
+%ifdef GetDeviceStatus
+%define! RetVal
+%include Common\FatFsMem_USB_MSDGetDeviceStatus.Inc
+dword %'ModuleName'%.%GetDeviceStatus(void)
+{
+  return mass_device.dev_state;
+}
+
+%endif %- GetDeviceStatus
+%-BW_METHOD_END GetDeviceStatus
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN AppTask
+%ifdef AppTask
+%include Common\FatFsMem_USB_MSDAppTask.Inc
+void %'ModuleName'%.%AppTask(void)
+{
+  switch (mass_device.dev_state) {
+     case USB_DEVICE_IDLE:
+       break;
+     case USB_DEVICE_ATTACHED:
+       mass_device.dev_state = USB_DEVICE_SET_INTERFACE_STARTED;
+       /*status = */_usb_hostdev_select_interface(mass_device.dev_handle,
+       mass_device.intf_handle, (pointer)&mass_device.class_intf);
+       break;
+     case USB_DEVICE_SET_INTERFACE_STARTED:
+       break;
+     case USB_DEVICE_INTERFACED:
+       break;
+     case USB_DEVICE_DETACHED:
+       mass_device.dev_state = USB_DEVICE_IDLE;
+       break;
+     case USB_DEVICE_OTHER:
+       break;
+     default:
+       break;
+  } /* switch */
+  Poll();
+}
+
+%endif %- AppTask
+%-BW_METHOD_END AppTask
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Activate
+%ifdef Activate
+%include Common\FatFsMem_USB_MSDActivate.Inc
+/**
+void %'ModuleName'%.%Activate(void)
+{
+  Implemented as macro on the header file.
+}
+*/
+
+%endif %- Activate
+%-BW_METHOD_END Activate
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Deactivate
+%ifdef Deactivate
+%include Common\FatFsMem_USB_MSDDeactivate.Inc
+/**
+void %'ModuleName'%.%Deactivate(void)
+{
+  Implemented as macro on the header file.
+}
+*/
+
+%endif %- Deactivate
+%-BW_METHOD_END Deactivate
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

@@ -121,16 +121,6 @@ byte %'ModuleName'%.%Init(void);
 %endif %- Init
 %-BW_METHOD_END Init
 %-************************************************************************************************************
-%-BW_METHOD_BEGIN App_Task
-%ifdef App_Task
-byte %'ModuleName'%.%App_Task(byte *txBuf, size_t txBufSize);
-%define! PartxBuf
-%define! PartxBufSize
-%define! RetVal
-%include Common\FSL_USB_MSD_HostApp_Task.Inc
-
-%endif %- App_Task
-%-BW_METHOD_END App_Task
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN USB_App_Callback
 %ifdef USB_App_Callback
@@ -214,49 +204,8 @@ void %OnError(byte error);
 %-BW_INTERN_METHOD_DECL_END
 %-BW_IMPLEMENT_START
 %-************************************************************************************************************
-%-BW_METHOD_BEGIN App_Callback
-%ifdef App_Callback
-%define! Parcontroller_ID
-%define! Parevent_type
-%define! Parval
-%include Common\FSL_USB_MSD_HostApp_Callback.Inc
-void %'ModuleName'%.%App_Callback(byte controller_ID, byte event_type, void *val)
-{
-  UNUSED (controller_ID);
-  UNUSED (val);
-}
-
-%endif %- App_Callback
-%-BW_METHOD_END App_Callback
 %-************************************************************************************************************
-%-BW_METHOD_BEGIN Notify_Callback
-%ifdef Notify_Callback
-%define! Parcontroller_ID
-%define! Parevent_type
-%define! Parval
-%include Common\FSL_USB_MSD_HostNotify_Callback.Inc
-void %'ModuleName'%.%Notify_Callback(byte controller_ID, byte event_type, void *val)
-{
-  UNUSED (controller_ID);
-  UNUSED (val);
-}
-
-%endif %- Notify_Callback
-%-BW_METHOD_END Notify_Callback
 %-************************************************************************************************************
-%-BW_METHOD_BEGIN App_Task
-%ifdef App_Task
-%define! PartxBuf
-%define! PartxBufSize
-%define! RetVal
-%include Common\FSL_USB_MSD_HostApp_Task.Inc
-byte %'ModuleName'%.%App_Task(byte *txBuf, size_t txBufSize)
-{
-  return ERR_BUSOFF; /* USB bus not available yet */
-}
-
-%endif %- App_Task
-%-BW_METHOD_END App_Task
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Init
 %ifdef Init

@@ -506,7 +506,7 @@ USB_STATUS _usb_host_iso_packet_desc_pool_create
 
 void _usb_host_iso_packet_desc_pool_destroy (void)
 {
-   free(usb_host_iso_packet_desc_pool.mem_ptr);
+  USB_mem_free(usb_host_iso_packet_desc_pool.mem_ptr);
 }
 
 /*FUNCTION*-------------------------------------------------------------
@@ -628,7 +628,7 @@ USB_STATUS _usb_host_init
    memset(usb_host_state_struct_ptr->PIPE_DESCRIPTOR_BASE_PTR, 0, ((sizeof(PIPE_DESCRIPTOR_STRUCT)) *  USBCFG_MAX_PIPES));
    
    if (usb_host_state_struct_ptr->PIPE_DESCRIPTOR_BASE_PTR == NULL) {
-      free(usb_host_state_struct_ptr);
+     USB_mem_free(usb_host_state_struct_ptr);
       return USBERR_ALLOC;
    } /* Endif */
 
@@ -642,8 +642,8 @@ USB_STATUS _usb_host_init
       
    if (!usb_host_state_struct_ptr->CALLBACK_STRUCT_PTR)
    {
-      free(usb_host_state_struct_ptr->PIPE_DESCRIPTOR_BASE_PTR);
-      free(usb_host_state_struct_ptr);
+      USB_mem_free(usb_host_state_struct_ptr->PIPE_DESCRIPTOR_BASE_PTR);
+      USB_mem_free(usb_host_state_struct_ptr);
       USB_unlock();
       return USBERR_DRIVER_NOT_INSTALLED;
    } /* Endif */
@@ -653,8 +653,8 @@ USB_STATUS _usb_host_init
    
    if (error != USB_OK)
    {
-      free(usb_host_state_struct_ptr->PIPE_DESCRIPTOR_BASE_PTR);
-      free(usb_host_state_struct_ptr);
+      USB_mem_free(usb_host_state_struct_ptr->PIPE_DESCRIPTOR_BASE_PTR);
+      USB_mem_free(usb_host_state_struct_ptr);
       USB_unlock();
       return USBERR_ALLOC;
    }
@@ -667,8 +667,8 @@ USB_STATUS _usb_host_init
 #if (USBCFG_HOST_NUM_ISO_PACKET_DESCRIPTORS != 0)
       _usb_host_iso_packet_desc_pool_destroy ();
 #endif
-      free(usb_host_state_struct_ptr->PIPE_DESCRIPTOR_BASE_PTR);
-      free(usb_host_state_struct_ptr);
+      USB_mem_free(usb_host_state_struct_ptr->PIPE_DESCRIPTOR_BASE_PTR);
+      USB_mem_free(usb_host_state_struct_ptr);
       USB_unlock();
       return USBERR_UNKNOWN_ERROR;
    }
@@ -680,8 +680,8 @@ USB_STATUS _usb_host_init
 #if (USBCFG_HOST_NUM_ISO_PACKET_DESCRIPTORS != 0)
       _usb_host_iso_packet_desc_pool_destroy ();
 #endif
-      free(usb_host_state_struct_ptr->PIPE_DESCRIPTOR_BASE_PTR);
-      free(usb_host_state_struct_ptr);
+      USB_mem_free(usb_host_state_struct_ptr->PIPE_DESCRIPTOR_BASE_PTR);
+      USB_mem_free(usb_host_state_struct_ptr);
       return error;
    } /* Endif */
    
@@ -888,7 +888,7 @@ uint_32 _usb_host_unregister_service
 
    USB_unlock();
    
-   free((pointer)service_ptr);
+   USB_mem_free((pointer)service_ptr);
    
    return USB_OK;
 
@@ -932,7 +932,7 @@ void _usb_host_open_pipe_cleanup(
    while  (pipe_descr_ptr->tr_list_ptr != NULL) {
       temp = pipe_descr_ptr->tr_list_ptr;
       pipe_descr_ptr->tr_list_ptr = pipe_descr_ptr->tr_list_ptr->next;
-      free((pointer)temp);
+      USB_mem_free((pointer)temp);
    }
    pipe_descr_ptr->OPEN = FALSE;
 

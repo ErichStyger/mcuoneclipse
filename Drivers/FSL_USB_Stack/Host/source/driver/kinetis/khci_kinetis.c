@@ -620,7 +620,7 @@ USB_STATUS _usb_khci_shutdown
 #if!(defined _BDT_RESERVED_SECTION_)
     if(bdt != NULL)
     {
-        free(bdt);
+      USB_mem_free(bdt);
     }
 #endif
     return USB_OK;
