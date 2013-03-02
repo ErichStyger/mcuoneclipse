@@ -6,16 +6,6 @@
  */
 
 #include "host.h"
-#if 0
-#include "WAIT1.h"
-#include "host_common.h"
-#include "usb.h"
-#include "host_main.h"
-#include "usb_host_hub_sm.h"
-#include "usb_host_msd_bo.h"
-#include "mem_util.h"
-#include "poll.h"
-#endif
 #include "msd_commands.h"
 #include "CLS1.h"
 #include "FRTOS1.h"
@@ -53,12 +43,13 @@ static portTASK_FUNCTION(HostTask, pvParameters) {
   for(;;) {
     FsMSD1_AppTask();
     CheckStatus();
+    //FRTOS1_taskYIELD();
     FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
   }
 }
 
 void HOST_Init(void) {
-  if (FRTOS1_xTaskCreate(HostTask, (signed portCHAR *)"Host", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (FRTOS1_xTaskCreate(HostTask, (signed portCHAR *)"Host", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 }

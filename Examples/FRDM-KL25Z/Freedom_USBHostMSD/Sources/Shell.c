@@ -12,6 +12,7 @@
 #include "LEDR.h"
 #include "LEDG.h"
 #include "FAT1.h"
+#include "Host.h"
 
 #define PL_HAS_SD_CARD 1
 
@@ -85,7 +86,6 @@ static void benchmark(const CLS1_StdIOType *io) {
   CLS1_SendStr((const unsigned char*)"done!\r\n", io->stdOut);
 }
 #endif /* PL_HAS_SD_CARD */
-
 
 /*!
  * \brief Parses a command
