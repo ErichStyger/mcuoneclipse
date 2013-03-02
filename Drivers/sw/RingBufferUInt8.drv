@@ -151,6 +151,14 @@ byte %'ModuleName'%.%NofFreeElements(void);
 
 %endif %- NofFreeElements
 %-BW_METHOD_END NofFreeElements
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Clear
+%ifdef Clear
+void %'ModuleName'%.%Clear(void);
+%include Common\RingBufferUInt8Clear.Inc
+
+%endif %- Clear
+%-BW_METHOD_END Clear
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -310,6 +318,19 @@ void %'ModuleName'%.%Init(void)
 
 %endif %- Init
 %-BW_METHOD_END Init
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Clear
+%ifdef Clear
+%include Common\RingBufferUInt8Clear.Inc
+void %'ModuleName'%.%Clear(void)
+{
+  EnterCritical();
+  %'ModuleName'%.%Init();
+  ExitCritical();
+}
+
+%endif %- Clear
+%-BW_METHOD_END Clear
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

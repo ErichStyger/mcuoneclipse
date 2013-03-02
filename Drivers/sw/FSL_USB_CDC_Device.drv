@@ -261,6 +261,24 @@ void %'ModuleName'%.%Notify_Callback(byte controller_ID, byte event_type, void *
 
 %endif %- Notify_Callback
 %-BW_METHOD_END Notify_Callback
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ClearRxBuffer
+%ifdef ClearRxBuffer
+#define %'ModuleName'%.%ClearRxBuffer() \
+    %@RxBuffer@'ModuleName'%.Clear()
+%include Common\FSL_USB_CDC_DeviceClearRxBuffer.Inc
+
+%endif %- ClearRxBuffer
+%-BW_METHOD_END ClearRxBuffer
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ClearTxBuffer
+%ifdef ClearTxBuffer
+#define %'ModuleName'%.%ClearTxBuffer() \
+    %@TxBuffer@'ModuleName'%.Clear()
+%include Common\FSL_USB_CDC_DeviceClearTxBuffer.Inc
+
+%endif %- ClearTxBuffer
+%-BW_METHOD_END ClearTxBuffer
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -644,6 +662,31 @@ byte %'ModuleName'%.%PutBufferChecked(byte *buf, size_t bufSize)
 %endif %- PutBufferChecked
 %-BW_METHOD_END PutBufferChecked
 %-************************************************************************************************************
+%-BW_METHOD_BEGIN ClearRxBuffer
+%ifdef ClearRxBuffer
+%include Common\FSL_USB_CDC_DeviceClearRxBuffer.Inc
+/**
+void %'ModuleName'%.%ClearRxBuffer(void)
+{
+  Implemented as macro in the header file
+}
+*/
+
+%endif %- ClearRxBuffer
+%-BW_METHOD_END ClearRxBuffer
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ClearTxBuffer
+%ifdef ClearTxBuffer
+%include Common\FSL_USB_CDC_DeviceClearTxBuffer.Inc
+/**
+void %'ModuleName'%.%ClearTxBuffer(void)
+{
+  Implemented as macro in the header file
+}
+*/
+
+%endif %- ClearTxBuffer
+%-BW_METHOD_END ClearTxBuffer
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
