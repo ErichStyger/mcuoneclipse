@@ -1,7 +1,5 @@
 /*
  * host.c
- *
- *  Created on: Feb 23, 2013
  *      Author: Erich Styger
  */
 
@@ -32,7 +30,7 @@ static void CheckStatus(void) {
      case USB_DEVICE_OTHER:
        break;
      default:
-       print ((unsigned char*)"Unknown Mass Storage Device State\n");
+       print((unsigned char*)"Unknown Mass Storage Device State\n");
        break;
   } /* switch */
 }
@@ -43,7 +41,6 @@ static portTASK_FUNCTION(HostTask, pvParameters) {
   for(;;) {
     FsMSD1_AppTask();
     CheckStatus();
-    //FRTOS1_taskYIELD();
     FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
   }
 }

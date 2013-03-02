@@ -1,7 +1,5 @@
 /*
  * Shell.c
- *
- *  Created on: 04.08.2011
  *      Author: Erich Styger
  */
 
@@ -14,9 +12,6 @@
 #include "FAT1.h"
 #include "Host.h"
 
-#define PL_HAS_SD_CARD 1
-
-#if 1 && PL_HAS_SD_CARD
 /*! \brief Simple benchmark function: first we are going to write a file, then we will copy it */
 static void benchmark(const CLS1_StdIOType *io) {
   static FIL fp;
@@ -85,7 +80,6 @@ static void benchmark(const CLS1_StdIOType *io) {
   CLS1_SendStr((const unsigned char*)" mseconds needed for command.\r\n", io->stdOut);
   CLS1_SendStr((const unsigned char*)"done!\r\n", io->stdOut);
 }
-#endif /* PL_HAS_SD_CARD */
 
 /*!
  * \brief Parses a command
@@ -96,7 +90,6 @@ static void benchmark(const CLS1_StdIOType *io) {
  */
 static uint8_t ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
   /* handling our own commands */
-#if PL_HAS_SD_CARD
   if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0) {
     CLS1_SendHelpStr((const unsigned char*)"run benchmark", (const unsigned char*)"Run FatFS benchmark\r\n", io->stdOut);
     *handled = TRUE;
@@ -104,7 +97,6 @@ static uint8_t ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_
     benchmark(io);
     *handled = TRUE;
   }
-#endif
   return ERR_OK;
 }
 
@@ -134,20 +126,16 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 };
 
 static portTASK_FUNCTION(ShellTask, pvParameters) {
-#if PL_HAS_SD_CARD
   bool cardMounted = FALSE;
   static FAT1_FATFS fileSystemObject;
-#endif
   unsigned char buf[48];
 
   (void)pvParameters; /* not used */
   buf[0] = '\0';
   (void)CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, CLS1_GetStdio(), CmdParserTable);
   for(;;) {
-#if PL_HAS_SD_CARD
     (void)FAT1_CheckCardPresence(&cardMounted,
         0 /* volume */, &fileSystemObject, CLS1_GetStdio());
-#endif
     (void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), CLS1_GetStdio(), CmdParserTable);
     FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
     LEDG_Neg();
