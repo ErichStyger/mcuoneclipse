@@ -4,7 +4,7 @@
 **     Processor   : MKL25Z128VLK4
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2012-10-07, 12:33, # CodeGen: 0
+**     Date/Time   : 2013-01-02, 18:58, # CodeGen: 0
 **     Abstract    :
 **         Main module.
 **         This module contains user's application code.
@@ -19,22 +19,63 @@
 /* Including needed modules to compile this module/procedure */
 #include "Cpu.h"
 #include "Events.h"
+#include "FRTOS1.h"
+#include "RTOSTICKLDD1.h"
+#include "UTIL1.h"
 #include "WAIT1.h"
-#include "LEDR.h"
+#include "DIRL.h"
+#include "BitIoLdd14.h"
+#include "DIRR.h"
+#include "BitIoLdd13.h"
+#include "BrakeL.h"
+#include "BitIoLdd15.h"
+#include "BrakeR.h"
+#include "BitIoLdd16.h"
+#include "AS1.h"
+#include "ASerialLdd1.h"
+#include "TRG1.h"
+#include "LED_IR.h"
 #include "LEDpin4.h"
 #include "BitIoLdd4.h"
-#include "LEDG.h"
-#include "LEDpin5.h"
-#include "BitIoLdd5.h"
-#include "LEDB.h"
-#include "LEDpin6.h"
+#include "IR1.h"
 #include "BitIoLdd6.h"
-#include "UTIL1.h"
-#include "USB1.h"
-#include "USBInit2.h"
-#include "CDC1.h"
-#include "Tx1.h"
-#include "Rx1.h"
+#include "IR2.h"
+#include "BitIoLdd10.h"
+#include "IR3.h"
+#include "BitIoLdd5.h"
+#include "IR4.h"
+#include "BitIoLdd7.h"
+#include "IR5.h"
+#include "BitIoLdd8.h"
+#include "IR6.h"
+#include "BitIoLdd9.h"
+#include "IR7.h"
+#include "BitIoLdd11.h"
+#include "IR8.h"
+#include "BitIoLdd12.h"
+#include "RefCnt.h"
+#include "SW3.h"
+#include "BitIoLdd17.h"
+#include "BT1.h"
+#include "Cmd1.h"
+#include "BitIoLdd18.h"
+#include "Serial1.h"
+#include "ASerialLdd2.h"
+#include "LEDR.h"
+#include "LEDpin1.h"
+#include "BitIoLdd1.h"
+#include "LEDG.h"
+#include "LEDpin2.h"
+#include "BitIoLdd2.h"
+#include "TU3.h"
+#include "PWML.h"
+#include "PwmLdd1.h"
+#include "TU4.h"
+#include "PWMR.h"
+#include "PwmLdd2.h"
+#include "TRIG.h"
+#include "TMOUT1.h"
+#include "CLS1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -42,78 +83,20 @@
 #include "IO_Map.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
-#if 0 /* alternative demo: discards input characters and writes a value back */
-static uint8_t cdc_buffer[USB1_DATA_BUFF_SIZE];
-static uint32_t Time_On_Hours=0;
-static void CDC_Run(void) {
-  unsigned char buf[32];
+#include "Application.h"
 
-  for(;;) {
-    while(CDC1_App_Task(cdc_buffer, sizeof(cdc_buffer))==ERR_BUSOFF) {
-      /* device not enumerated */
-      LEDR_Neg(); LEDG_Off();
-      WAIT1_Waitms(10);
-    }
-    LEDR_Off(); LEDG_Neg();
-    if (CDC1_GetCharsInRxBuf()!=0) {
-      CDC1_ClearRxBuffer(); /* discard incoming buffer */
-      UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"time on hours: ");
-      UTIL1_strcatNum32u(buf, sizeof(buf), Time_On_Hours);
-      UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-      (void)CDC1_SendString(buf);
-      Time_On_Hours++;
-    } else {
-      WAIT1_Waitms(10);
-    }
-  }
-}
-#else
-static uint8_t cdc_buffer[USB1_DATA_BUFF_SIZE];
-static uint8_t in_buffer[USB1_DATA_BUFF_SIZE];
-
-static void CDC_Run(void) {
-  int i;
-  uint32_t val = 0;
-  unsigned char buf[16];
-
-  for(;;) {
-    while(CDC1_App_Task(cdc_buffer, sizeof(cdc_buffer))==ERR_BUSOFF) {
-      /* device not enumerated */
-      LEDR_Neg(); LEDG_Off();
-      WAIT1_Waitms(10);
-    }
-    LEDR_Off(); LEDG_Neg();
-    if (CDC1_GetCharsInRxBuf()!=0) {
-      i = 0;
-      while(   i<sizeof(in_buffer)-1
-            && CDC1_GetChar(&in_buffer[i])==ERR_OK
-           )
-      {
-        i++;
-      }
-      in_buffer[i] = '\0';
-      (void)CDC1_SendString((unsigned char*)"echo: ");
-      (void)CDC1_SendString(in_buffer);
-      UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"val: ");
-      UTIL1_strcatNum32u(buf, sizeof(buf), val);
-      UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-      (void)CDC1_SendString(buf);
-      val++;
-    } else {
-      WAIT1_Waitms(10);
-    }
-  }
-}
-#endif
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
-/*lint -restore Enable MISRA rule (6.3) checking. */{
+/*lint -restore Enable MISRA rule (6.3) checking. */
+{
   /* Write your local variable definition here */
 
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
-  CDC_Run();
+
+  APP_Run();
+  
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
   #ifdef PEX_RTOS_START
