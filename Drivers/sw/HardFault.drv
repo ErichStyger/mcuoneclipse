@@ -114,6 +114,12 @@ void %'ModuleName'%.%HardFaultHandler(void);
 %endif %- HardFaultHandler
 %-BW_METHOD_END HardFaultHandler
 %-************************************************************************************************************
+%-INTERNAL_METHOD_BEG HandlerC
+void %'ModuleName'%.HandlerC(dword *hardfault_args);
+%define! Parhardfault_args
+%include Common\GeneralInternal.inc (HandlerC)
+
+%-INTERNAL_METHOD_END HandlerC
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -175,19 +181,12 @@ void %'ModuleName'%.%HardFaultHandler(void);
 %-BW_CUSTOM_VARIABLE_END
 %-BW_INTERN_METHOD_DECL_START
 %- List of internal methods headers
-%-UNLOCKED
-/* Internal method prototypes */
-%-INTERNAL_LOC_METHOD_BEG HandlerC
-static void HandlerC(dword *hardfault_args);
-%-INTERNAL_LOC_METHOD_END HandlerC
-%-
-
 %-BW_INTERN_METHOD_DECL_END
 %-BW_IMPLEMENT_START
 %-************************************************************************************************************
 %-INTERNAL_METHOD_BEG HandlerC
 %define! Parhardfault_args
-%include Common\GeneralInternalGlobal.inc (HandlerC)
+%include Common\GeneralInternal.inc (HandlerC)
 /**
  * This is called from the HardFaultHandler with a pointer the Fault stack
  * as the parameter. We can then read the values from the stack and place them
@@ -196,7 +195,8 @@ static void HandlerC(dword *hardfault_args);
  * cause of the fault.
  * The function ends with a BKPT instruction to force control back into the debugger
  */
-static void HandlerC(dword *hardfault_args)
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+void %'ModuleName'%.HandlerC(dword *hardfault_args)
 {
   volatile unsigned long stacked_r0;
   volatile unsigned long stacked_r1;
@@ -212,22 +212,6 @@ static void HandlerC(dword *hardfault_args)
   volatile unsigned long _AFSR;
   volatile unsigned long _BFAR;
   volatile unsigned long _MMAR;
-
-  /* suppress warnings about unused variables */
-  (void)stacked_r0;
-  (void)stacked_r1;
-  (void)stacked_r2;
-  (void)stacked_r3;
-  (void)stacked_r12;
-  (void)stacked_lr;
-  (void)stacked_pc;
-  (void)stacked_psr;
-  (void)_CFSR;
-  (void)_HFSR;
-  (void)_DFSR;
-  (void)_AFSR;
-  (void)_BFAR;
-  (void)_MMAR;
 
   stacked_r0 = ((unsigned long)hardfault_args[0]);
   stacked_r1 = ((unsigned long)hardfault_args[1]);
@@ -281,9 +265,8 @@ void %'ModuleName'%.%HardFaultHandler(void)
     " mrs r0, msp     \n"  /* load stack pointer into R0 */
     "_GetPC:          \n"  /* find out where the hard fault happened */
     " ldr r1,[r0,#20] \n"  /* load program counter into R1. R1 contains address of the next instruction where the hard fault happened */
-    " b HandlerC      \n"  /* decode more information. R0 contains pointer to stack frame */
+    " b %'ModuleName'%.HandlerC   \n"  /* decode more information. R0 contains pointer to stack frame */
   );
-  HandlerC(0); /* dummy call to suppress compiler warning */
 }
 
 %endif %- HardFaultHandler
