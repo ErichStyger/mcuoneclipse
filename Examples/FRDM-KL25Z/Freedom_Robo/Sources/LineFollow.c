@@ -13,7 +13,7 @@
 #include "LEDR.h"
 #include "LEDG.h"
 #include "WAIT1.h"
-#include "SW3.h"
+#include "SW1.h"
 
 typedef enum {
   STATE_INIT,
@@ -199,12 +199,12 @@ static portTASK_FUNCTION(LineTask, pvParameters) {
   (void)pvParameters; /* not used */
   for(;;) {
 #if 1 /* use button */
-    if (SW3_GetVal()==0) {
+    if (SW1_GetVal()==0) {
       WAIT1_Waitms(50); /* simple debounce */
-      if (SW3_GetVal()==0) { /* still pressed */
+      if (SW1_GetVal()==0) { /* still pressed */
         LEDG_On();
         cnt = 0;
-        while(SW3_GetVal()==0) {
+        while(SW1_GetVal()==0) {
           WAIT1_Waitms(1);
           cnt++;
         } /* wait until released */

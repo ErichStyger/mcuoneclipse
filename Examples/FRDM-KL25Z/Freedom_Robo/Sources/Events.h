@@ -58,7 +58,7 @@
 #include "IR8.h"
 #include "BitIoLdd12.h"
 #include "RefCnt.h"
-#include "SW3.h"
+#include "SW1.h"
 #include "BitIoLdd17.h"
 #include "BT1.h"
 #include "Cmd1.h"
