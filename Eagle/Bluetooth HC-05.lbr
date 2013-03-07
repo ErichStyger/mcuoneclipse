@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.05" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="yes"/>
@@ -91,88 +91,88 @@
 <packages>
 <package name="BLUETOOTH_SMD">
 <description>HC-05</description>
-<wire x1="0" y1="1" x2="0" y2="9.5" width="0.127" layer="21"/>
-<wire x1="0" y1="9.5" x2="13" y2="9.5" width="0.127" layer="21"/>
-<wire x1="13" y1="9.5" x2="13" y2="1" width="0.127" layer="21"/>
-<smd name="1" x="0" y="0" dx="2" dy="1" layer="1"/>
-<smd name="2" x="0" y="-1.5" dx="2" dy="1" layer="1"/>
-<smd name="3" x="0" y="-3" dx="2" dy="1" layer="1"/>
-<smd name="4" x="0" y="-4.5" dx="2" dy="1" layer="1"/>
-<smd name="5" x="0" y="-6" dx="2" dy="1" layer="1"/>
-<smd name="6" x="0" y="-7.5" dx="2" dy="1" layer="1"/>
-<smd name="7" x="0" y="-9" dx="2" dy="1" layer="1"/>
-<smd name="8" x="0" y="-10.5" dx="2" dy="1" layer="1"/>
-<smd name="9" x="0" y="-12" dx="2" dy="1" layer="1"/>
-<smd name="10" x="0" y="-13.5" dx="2" dy="1" layer="1"/>
-<smd name="11" x="0" y="-15" dx="2" dy="1" layer="1"/>
-<smd name="12" x="0" y="-16.5" dx="2" dy="1" layer="1"/>
-<smd name="13" x="0" y="-18" dx="2" dy="1" layer="1"/>
-<smd name="22" x="13" y="-18" dx="2" dy="1" layer="1"/>
-<smd name="23" x="13" y="-16.5" dx="2" dy="1" layer="1"/>
-<smd name="24" x="13" y="-15" dx="2" dy="1" layer="1"/>
-<smd name="25" x="13" y="-13.5" dx="2" dy="1" layer="1"/>
-<smd name="26" x="13" y="-12" dx="2" dy="1" layer="1"/>
-<smd name="27" x="13" y="-10.5" dx="2" dy="1" layer="1"/>
-<smd name="28" x="13" y="-9" dx="2" dy="1" layer="1"/>
-<smd name="29" x="13" y="-7.5" dx="2" dy="1" layer="1"/>
-<smd name="30" x="13" y="-6" dx="2" dy="1" layer="1"/>
-<smd name="31" x="13" y="-4.5" dx="2" dy="1" layer="1"/>
-<smd name="32" x="13" y="-3" dx="2" dy="1" layer="1"/>
-<smd name="33" x="13" y="-1.5" dx="2" dy="1" layer="1"/>
-<smd name="34" x="13" y="0" dx="2" dy="1" layer="1"/>
-<smd name="14" x="1.25" y="-19.75" dx="1.8" dy="1" layer="1" rot="R90"/>
-<smd name="15" x="2.75" y="-19.75" dx="1.8" dy="1" layer="1" rot="R90"/>
-<smd name="16" x="4.25" y="-19.75" dx="1.8" dy="1" layer="1" rot="R90"/>
-<smd name="17" x="5.75" y="-19.75" dx="1.8" dy="1" layer="1" rot="R90"/>
-<smd name="18" x="7.25" y="-19.75" dx="1.8" dy="1" layer="1" rot="R90"/>
-<smd name="19" x="8.75" y="-19.75" dx="1.8" dy="1" layer="1" rot="R90"/>
-<smd name="20" x="10.25" y="-19.75" dx="1.8" dy="1" layer="1" rot="R90"/>
-<smd name="21" x="11.75" y="-19.75" dx="1.8" dy="1" layer="1" rot="R90"/>
-<text x="1" y="7.5" size="1.27" layer="25">&gt;name</text>
+<wire x1="-6.35" y1="4.81" x2="-6.35" y2="13.31" width="0.127" layer="21"/>
+<wire x1="-6.35" y1="13.31" x2="6.65" y2="13.31" width="0.127" layer="21"/>
+<wire x1="6.65" y1="13.31" x2="6.65" y2="4.81" width="0.127" layer="21"/>
+<smd name="1" x="-6.35" y="3.81" dx="2" dy="1" layer="1"/>
+<smd name="2" x="-6.35" y="2.31" dx="2" dy="1" layer="1"/>
+<smd name="3" x="-6.35" y="0.81" dx="2" dy="1" layer="1"/>
+<smd name="4" x="-6.35" y="-0.69" dx="2" dy="1" layer="1"/>
+<smd name="5" x="-6.35" y="-2.19" dx="2" dy="1" layer="1"/>
+<smd name="6" x="-6.35" y="-3.69" dx="2" dy="1" layer="1"/>
+<smd name="7" x="-6.35" y="-5.19" dx="2" dy="1" layer="1"/>
+<smd name="8" x="-6.35" y="-6.69" dx="2" dy="1" layer="1"/>
+<smd name="9" x="-6.35" y="-8.19" dx="2" dy="1" layer="1"/>
+<smd name="10" x="-6.35" y="-9.69" dx="2" dy="1" layer="1"/>
+<smd name="11" x="-6.35" y="-11.19" dx="2" dy="1" layer="1"/>
+<smd name="12" x="-6.35" y="-12.69" dx="2" dy="1" layer="1"/>
+<smd name="13" x="-6.35" y="-14.19" dx="2" dy="1" layer="1"/>
+<smd name="22" x="6.65" y="-14.19" dx="2" dy="1" layer="1"/>
+<smd name="23" x="6.65" y="-12.69" dx="2" dy="1" layer="1"/>
+<smd name="24" x="6.65" y="-11.19" dx="2" dy="1" layer="1"/>
+<smd name="25" x="6.65" y="-9.69" dx="2" dy="1" layer="1"/>
+<smd name="26" x="6.65" y="-8.19" dx="2" dy="1" layer="1"/>
+<smd name="27" x="6.65" y="-6.69" dx="2" dy="1" layer="1"/>
+<smd name="28" x="6.65" y="-5.19" dx="2" dy="1" layer="1"/>
+<smd name="29" x="6.65" y="-3.69" dx="2" dy="1" layer="1"/>
+<smd name="30" x="6.65" y="-2.19" dx="2" dy="1" layer="1"/>
+<smd name="31" x="6.65" y="-0.69" dx="2" dy="1" layer="1"/>
+<smd name="32" x="6.65" y="0.81" dx="2" dy="1" layer="1"/>
+<smd name="33" x="6.65" y="2.31" dx="2" dy="1" layer="1"/>
+<smd name="34" x="6.65" y="3.81" dx="2" dy="1" layer="1"/>
+<smd name="14" x="-5.1" y="-15.94" dx="1.8" dy="1" layer="1" rot="R90"/>
+<smd name="15" x="-3.6" y="-15.94" dx="1.8" dy="1" layer="1" rot="R90"/>
+<smd name="16" x="-2.1" y="-15.94" dx="1.8" dy="1" layer="1" rot="R90"/>
+<smd name="17" x="-0.6" y="-15.94" dx="1.8" dy="1" layer="1" rot="R90"/>
+<smd name="18" x="0.9" y="-15.94" dx="1.8" dy="1" layer="1" rot="R90"/>
+<smd name="19" x="2.4" y="-15.94" dx="1.8" dy="1" layer="1" rot="R90"/>
+<smd name="20" x="3.9" y="-15.94" dx="1.8" dy="1" layer="1" rot="R90"/>
+<smd name="21" x="5.4" y="-15.94" dx="1.8" dy="1" layer="1" rot="R90"/>
+<text x="-5.35" y="11.31" size="1.27" layer="25">&gt;name</text>
 </package>
 </packages>
 <symbols>
 <symbol name="HC-05">
-<wire x1="0" y1="0" x2="0" y2="-35.56" width="0.254" layer="94"/>
-<wire x1="0" y1="-35.56" x2="38.1" y2="-35.56" width="0.254" layer="94"/>
-<wire x1="38.1" y1="-35.56" x2="38.1" y2="0" width="0.254" layer="94"/>
-<wire x1="38.1" y1="0" x2="0" y2="0" width="0.254" layer="94"/>
-<text x="0" y="5.08" size="1.778" layer="95">&gt;NAME</text>
-<text x="0" y="2.54" size="1.778" layer="96">&gt;VALUE</text>
-<pin name="TX" x="-5.08" y="-2.54" length="middle"/>
-<pin name="RX" x="-5.08" y="-5.08" length="middle"/>
-<pin name="CTS" x="-5.08" y="-7.62" length="middle"/>
-<pin name="RTS" x="-5.08" y="-10.16" length="middle"/>
-<pin name="PCM_CLK" x="-5.08" y="-12.7" length="middle"/>
-<pin name="PCM_OUT" x="-5.08" y="-15.24" length="middle"/>
-<pin name="PCM_IN" x="-5.08" y="-17.78" length="middle"/>
-<pin name="PCN_SYNC" x="-5.08" y="-20.32" length="middle"/>
-<pin name="AIO0" x="-5.08" y="-22.86" length="middle"/>
-<pin name="AIO1" x="-5.08" y="-25.4" length="middle"/>
-<pin name="RST" x="-5.08" y="-27.94" length="middle"/>
-<pin name="3V3" x="-5.08" y="-30.48" length="middle"/>
-<pin name="GND" x="-5.08" y="-33.02" length="middle"/>
-<pin name="NC" x="10.16" y="-40.64" length="middle" rot="R90"/>
-<pin name="VBUSD-" x="12.7" y="-40.64" length="middle" rot="R90"/>
-<pin name="CSB" x="15.24" y="-40.64" length="middle" rot="R90"/>
-<pin name="MOSI" x="17.78" y="-40.64" length="middle" rot="R90"/>
-<pin name="MISO" x="20.32" y="-40.64" length="middle" rot="R90"/>
-<pin name="CLK" x="22.86" y="-40.64" length="middle" rot="R90"/>
-<pin name="VBUSD+" x="25.4" y="-40.64" length="middle" rot="R90"/>
-<pin name="GND1" x="27.94" y="-40.64" length="middle" rot="R90"/>
-<pin name="GND2" x="43.18" y="-33.02" length="middle" rot="R180"/>
-<pin name="PIO0" x="43.18" y="-30.48" length="middle" rot="R180"/>
-<pin name="PIO1" x="43.18" y="-27.94" length="middle" rot="R180"/>
-<pin name="PIO2" x="43.18" y="-25.4" length="middle" rot="R180"/>
-<pin name="PIO3" x="43.18" y="-22.86" length="middle" rot="R180"/>
-<pin name="PIO4" x="43.18" y="-20.32" length="middle" rot="R180"/>
-<pin name="PIO5" x="43.18" y="-17.78" length="middle" rot="R180"/>
-<pin name="PIO6" x="43.18" y="-15.24" length="middle" rot="R180"/>
-<pin name="PIO7" x="43.18" y="-12.7" length="middle" rot="R180"/>
-<pin name="PIO8" x="43.18" y="-10.16" length="middle" rot="R180"/>
-<pin name="PIO9" x="43.18" y="-7.62" length="middle" rot="R180"/>
-<pin name="PIO10" x="43.18" y="-5.08" length="middle" rot="R180"/>
-<pin name="PIO11" x="43.18" y="-2.54" length="middle" rot="R180"/>
+<wire x1="-17.78" y1="17.78" x2="-17.78" y2="-17.78" width="0.254" layer="94"/>
+<wire x1="-17.78" y1="-17.78" x2="20.32" y2="-17.78" width="0.254" layer="94"/>
+<wire x1="20.32" y1="-17.78" x2="20.32" y2="17.78" width="0.254" layer="94"/>
+<wire x1="20.32" y1="17.78" x2="-17.78" y2="17.78" width="0.254" layer="94"/>
+<text x="-17.78" y="22.86" size="1.778" layer="95">&gt;NAME</text>
+<text x="-17.78" y="20.32" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="TX" x="-22.86" y="15.24" length="middle"/>
+<pin name="RX" x="-22.86" y="12.7" length="middle"/>
+<pin name="CTS" x="-22.86" y="10.16" length="middle"/>
+<pin name="RTS" x="-22.86" y="7.62" length="middle"/>
+<pin name="PCM_CLK" x="-22.86" y="5.08" length="middle"/>
+<pin name="PCM_OUT" x="-22.86" y="2.54" length="middle"/>
+<pin name="PCM_IN" x="-22.86" y="0" length="middle"/>
+<pin name="PCN_SYNC" x="-22.86" y="-2.54" length="middle"/>
+<pin name="AIO0" x="-22.86" y="-5.08" length="middle"/>
+<pin name="AIO1" x="-22.86" y="-7.62" length="middle"/>
+<pin name="RST" x="-22.86" y="-10.16" length="middle"/>
+<pin name="3V3" x="-22.86" y="-12.7" length="middle"/>
+<pin name="GND" x="-22.86" y="-15.24" length="middle"/>
+<pin name="NC" x="-7.62" y="-22.86" length="middle" rot="R90"/>
+<pin name="VBUSD-" x="-5.08" y="-22.86" length="middle" rot="R90"/>
+<pin name="CSB" x="-2.54" y="-22.86" length="middle" rot="R90"/>
+<pin name="MOSI" x="0" y="-22.86" length="middle" rot="R90"/>
+<pin name="MISO" x="2.54" y="-22.86" length="middle" rot="R90"/>
+<pin name="CLK" x="5.08" y="-22.86" length="middle" rot="R90"/>
+<pin name="VBUSD+" x="7.62" y="-22.86" length="middle" rot="R90"/>
+<pin name="GND1" x="10.16" y="-22.86" length="middle" rot="R90"/>
+<pin name="GND2" x="25.4" y="-15.24" length="middle" rot="R180"/>
+<pin name="PIO0" x="25.4" y="-12.7" length="middle" rot="R180"/>
+<pin name="PIO1" x="25.4" y="-10.16" length="middle" rot="R180"/>
+<pin name="PIO2" x="25.4" y="-7.62" length="middle" rot="R180"/>
+<pin name="PIO3" x="25.4" y="-5.08" length="middle" rot="R180"/>
+<pin name="PIO4" x="25.4" y="-2.54" length="middle" rot="R180"/>
+<pin name="PIO5" x="25.4" y="0" length="middle" rot="R180"/>
+<pin name="PIO6" x="25.4" y="2.54" length="middle" rot="R180"/>
+<pin name="PIO7" x="25.4" y="5.08" length="middle" rot="R180"/>
+<pin name="PIO8" x="25.4" y="7.62" length="middle" rot="R180"/>
+<pin name="PIO9" x="25.4" y="10.16" length="middle" rot="R180"/>
+<pin name="PIO10" x="25.4" y="12.7" length="middle" rot="R180"/>
+<pin name="PIO11" x="25.4" y="15.24" length="middle" rot="R180"/>
 </symbol>
 </symbols>
 <devicesets>
