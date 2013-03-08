@@ -811,7 +811,7 @@ byte %'ModuleName'%.%ParseWithCommandTable(const unsigned char *cmd, %'ModuleNam
       finished = TRUE;
     }
     if (parseBuffer) {
-      %'ModuleName'%.IterateTable(cmd, &handled, io, parseCallback); /* iterate through all parser functions in table */
+      %'ModuleName'%.IterateTable(buf, &handled, io, parseCallback); /* iterate through all parser functions in table */
       parseBuffer = FALSE;
       i = 0; /* restart */
     }
