@@ -812,6 +812,11 @@ byte %'ModuleName'%.%ParseWithCommandTable(const unsigned char *cmd, %'ModuleNam
     }
     if (parseBuffer) {
       %'ModuleName'%.IterateTable(buf, &handled, io, parseCallback); /* iterate through all parser functions in table */
+      if (!handled) { /* no handler has handled the command? */
+        %'ModuleName'%.PrintCommandFailed(buf, io);
+        res = ERR_FAILED;
+        break; /* get out of loop */
+      }
       parseBuffer = FALSE;
       i = 0; /* restart */
     }
