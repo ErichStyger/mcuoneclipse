@@ -856,6 +856,7 @@ static void FatFsFResultMsg(byte *msg, %'ModuleName'_FRESULT errNo, const %@Shel
   %@Shell@'ModuleName'%.SendStr((unsigned char*)%'ModuleName'%.errFResultMsg(errNo), io->stdErr);
   %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdErr);
 }
+%ifdef PrintSector
 
 static void FatFsDResultMsg(byte *msg, %'ModuleName'_DRESULT errNo, const %@Shell@'ModuleName'%.StdIOType *io) {
   unsigned char buf[sizeof("1234")];
@@ -869,6 +870,7 @@ static void FatFsDResultMsg(byte *msg, %'ModuleName'_DRESULT errNo, const %@Shel
   %@Shell@'ModuleName'%.SendStr((unsigned char*)%'ModuleName'%.errDResultMsg(errNo), io->stdErr);
   %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdErr);
 }
+%endif
 
 static void CmdUsageError(const unsigned char *cmd, byte *usage, const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Shell@'ModuleName'%.SendStr((unsigned char*)"*** error while reading command: ", io->stdErr);
