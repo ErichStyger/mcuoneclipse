@@ -811,7 +811,7 @@ byte %'ModuleName'%.%ParseWithCommandTable(const unsigned char *cmd, %'ModuleNam
       finished = TRUE;
     }
     if (parseBuffer) {
-      %'ModuleName'%.IterateTable(buf, &handled, io, parseCallback); /* iterate through all parser functions in table */
+      (void)%'ModuleName'%.IterateTable(buf, &handled, io, parseCallback); /* iterate through all parser functions in table */
       if (!handled) { /* no handler has handled the command? */
         %'ModuleName'%.PrintCommandFailed(buf, io);
         res = ERR_FAILED;
@@ -825,7 +825,7 @@ byte %'ModuleName'%.%ParseWithCommandTable(const unsigned char *cmd, %'ModuleNam
     }
   } /* for */
 %else
-  %'ModuleName'%.IterateTable(cmd, &handled, io, parseCallback); /* iterate through all parser functions in table */
+  (void)%'ModuleName'%.IterateTable(cmd, &handled, io, parseCallback); /* iterate through all parser functions in table */
   if (!handled) { /* no handler has handled the command? */
     %'ModuleName'%.PrintCommandFailed(cmd, io);
     res = ERR_FAILED;
