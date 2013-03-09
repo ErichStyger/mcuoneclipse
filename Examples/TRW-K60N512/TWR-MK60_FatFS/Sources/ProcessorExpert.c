@@ -36,8 +36,7 @@
 #include "Inhr1.h"
 #include "UTIL1.h"
 #include "AS1.h"
-#include "FSSH1.h"
-#include "RxBuf1.h"
+#include "ASerialLdd1.h"
 #include "WAIT1.h"
 #include "FAT1.h"
 #include "TMOUT1.h"
@@ -45,6 +44,7 @@
 #include "SDHC1.h"
 #include "GPIO2.h"
 #include "TmDt1.h"
+#include "CLS1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
