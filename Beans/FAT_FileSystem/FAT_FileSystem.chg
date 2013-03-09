@@ -50,6 +50,7 @@
   %set PrintDiskInfo Selection never
   %set PrintSector Selection never
   %set CheckCardPresence Selection never
+  %set Benchmark Selection never
 %else
   %set ParseCommand Selection enable
   %set PrintDirectory Selection enable
@@ -64,4 +65,5 @@
   %set PrintDiskInfo Selection enable
   %set PrintSector Selection enable
   %set CheckCardPresence Selection enable
+  %set Benchmark Selection enable
 %endif
