@@ -12,7 +12,6 @@
 #include "LED1.h"
 #include "LED2.h"
 #include "FAT1.h"
-#include "TmDt1.h"
 
 #define PL_HAS_SD_CARD  1 /* if we have SD card support */
 
