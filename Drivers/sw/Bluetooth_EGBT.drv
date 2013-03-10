@@ -907,7 +907,7 @@ static uint8_t PrintShortStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   } else {
     %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Test UART", (unsigned char*)"OK", io->stdOut);
   }
-    %@Shell@'ModuleName'%.SendStr((unsigned char*)"  ('%'ModuleName' status'use for full status)\r\n", io->stdOut);
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"  (use '%'ModuleName' status' for full status)\r\n", io->stdOut);
   return ERR_OK;
 }
 
