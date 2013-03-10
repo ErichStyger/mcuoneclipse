@@ -4,7 +4,7 @@
     <Name>LCDHTA</Name>
     <Description>Character LCD Display</Description>
     <Author>Erich Styger</Author>
-    <Version>01.001</Version>
+    <Version>01.002</Version>
     <Icon>LCDHTA</Icon>
     <TypesFiles>PE,LCDHTA\LCDHTA</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -77,6 +77,23 @@
               <DefaultBase>DEC</DefaultBase>
               <ExtraHintDisabled>false</ExtraHintDisabled>
               <ChangeValueIntoRange>true</ChangeValueIntoRange>
+              <RuntimeProperty>false</RuntimeProperty>
+            </TIntgItem>
+          </GrupItem>
+          <GrupItem>
+            <TIntgItem>
+              <Name>Characters per Line</Name>
+              <Symbol>CharsPerLine</Symbol>
+              <Hint>Number of characters per line</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>16</DefaultValue>
+              <MinValue>1</MinValue>
+              <MaxValue>-1</MaxValue>
+              <Bases>DEC</Bases>
+              <DefaultBase>DEC</DefaultBase>
+              <ExtraHintDisabled>false</ExtraHintDisabled>
+              <ChangeValueIntoRange>false</ChangeValueIntoRange>
               <RuntimeProperty>false</RuntimeProperty>
             </TIntgItem>
           </GrupItem>
