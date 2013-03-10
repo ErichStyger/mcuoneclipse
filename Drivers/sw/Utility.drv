@@ -1834,37 +1834,6 @@ byte %'ModuleName'%.%ScanTime(const unsigned char **str, byte *hour, byte *minut
 %endif %- ScanTime
 %-BW_METHOD_END ScanTime
 %-************************************************************************************************************
-%-BW_METHOD_BEGIN ScanDecimal16uNumber
-%ifdef ScanDecimal16uNumber
-%define! Parstr
-%define! Parval
-%define! RetVal
-%include Common\UtilityScanDecimal16uNumber.Inc
-byte %'ModuleName'%.%ScanDecimal16uNumber(const unsigned char **str, word *val)
-{
-  /* scans a decimal number, and stops at any non-number. Number can have any preceding zeros or spaces. */
-  uint8_t nofDigits = 5+1; /* maximum number of digits to avoid overflow */
-  const unsigned char *p = *str;
-
-  while(*p==' ') { /* skip leading spaces */
-    p++;
-  }
-  *val = 0;
-  while(*p>='0' && *p<='9' && nofDigits > 0) {
-    *val = (uint16_t)((*val)*10 + *p-'0');
-    nofDigits--;
-    p++;
-  } /* while */
-  if (nofDigits==0) {
-    return ERR_OVERFLOW;
-  }
-  *str = p;
-  return ERR_OK;
-}
-
-%endif %- ScanDecimal16uNumber
-%-BW_METHOD_END ScanDecimal16uNumber
-%-************************************************************************************************************
 %-BW_METHOD_BEGIN ScanDecimal8uNumber
 %ifdef ScanDecimal8uNumber
 %define! Parstr
@@ -1874,7 +1843,8 @@ byte %'ModuleName'%.%ScanDecimal16uNumber(const unsigned char **str, word *val)
 byte %'ModuleName'%.%ScanDecimal8uNumber(const unsigned char **str, byte *val)
 {
   /* scans a decimal number, and stops at any non-number. Number can have any preceding zeros or spaces. */
-  uint8_t nofDigits = 3+1; /* maximum number of digits to avoid overflow */
+  #define _8_NOF_DIGITS  (3+1)
+  uint8_t nofDigits = _8_NOF_DIGITS; /* maximum number of digits to avoid overflow */
   const unsigned char *p = *str;
 
   while(*p==' ') { /* skip leading spaces */
@@ -1889,12 +1859,50 @@ byte %'ModuleName'%.%ScanDecimal8uNumber(const unsigned char **str, byte *val)
   if (nofDigits==0) {
     return ERR_OVERFLOW;
   }
+  if (nofDigits==_8_NOF_DIGITS) { /* no digits at all? */
+    return ERR_FAILED;
+  }
   *str = p;
   return ERR_OK;
 }
 
 %endif %- ScanDecimal8uNumber
 %-BW_METHOD_END ScanDecimal8uNumber
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ScanDecimal16uNumber
+%ifdef ScanDecimal16uNumber
+%define! Parstr
+%define! Parval
+%define! RetVal
+%include Common\UtilityScanDecimal16uNumber.Inc
+byte %'ModuleName'%.%ScanDecimal16uNumber(const unsigned char **str, word *val)
+{
+  /* scans a decimal number, and stops at any non-number. Number can have any preceding zeros or spaces. */
+  #define _16_NOF_DIGITS  (5+1)
+  uint8_t nofDigits = _16_NOF_DIGITS; /* maximum number of digits to avoid overflow */
+  const unsigned char *p = *str;
+
+  while(*p==' ') { /* skip leading spaces */
+    p++;
+  }
+  *val = 0;
+  while(*p>='0' && *p<='9' && nofDigits > 0) {
+    *val = (uint16_t)((*val)*10 + *p-'0');
+    nofDigits--;
+    p++;
+  } /* while */
+  if (nofDigits==0) {
+    return ERR_OVERFLOW;
+  }
+  if (nofDigits==_16_NOF_DIGITS) { /* no digits at all? */
+    return ERR_FAILED;
+  }
+  *str = p;
+  return ERR_OK;
+}
+
+%endif %- ScanDecimal16uNumber
+%-BW_METHOD_END ScanDecimal16uNumber
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ScanDecimal32uNumber
 %ifdef ScanDecimal32uNumber
@@ -1905,7 +1913,8 @@ byte %'ModuleName'%.%ScanDecimal8uNumber(const unsigned char **str, byte *val)
 byte %'ModuleName'%.%ScanDecimal32uNumber(const unsigned char **str, dword *val)
 {
   /* scans a decimal number, and stops at any non-number. Number can have any preceding zeros or spaces. */
-  uint8_t nofDigits = 10+1; /* maximum number of digits to avoid overflow */
+  #define _32_NOF_DIGITS  (10+1)
+  uint8_t nofDigits = _32_NOF_DIGITS; /* maximum number of digits to avoid overflow */
   const unsigned char *p = *str;
 
   while(*p==' ') { /* skip leading spaces */
@@ -1919,6 +1928,9 @@ byte %'ModuleName'%.%ScanDecimal32uNumber(const unsigned char **str, dword *val)
   } /* while */
   if (nofDigits==0) {
     return ERR_OVERFLOW;
+  }
+  if (nofDigits==_32_NOF_DIGITS) { /* no digits at all? */
+    return ERR_FAILED;
   }
   *str = p;
   return ERR_OK;
