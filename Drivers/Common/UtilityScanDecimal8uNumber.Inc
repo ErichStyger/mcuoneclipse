@@ -5,10 +5,10 @@
 %;** ===================================================================
 %include Common\GeneralMethod.inc (ScanDecimal8uNumber)
 %;**     Description :
-%;**         Scans a decimal 16bit unsigned number
+%;**         Scans a decimal 8bit unsigned number
 %include Common\GeneralParameters.inc(27)
-%;**         str%Parstr %>27 - String to scan, starting with 0x. It
-%;** %>29 returns as well until where it has scanned
+%;**         str%Parstr %>27 - String to scan. It returns as well until
+%;** %>29 where it has scanned
 %;**       * val%Parval %>27 - Pointer to value
 %;**     Returns     :
 %;**         ---%RetVal %>27 - Error code
