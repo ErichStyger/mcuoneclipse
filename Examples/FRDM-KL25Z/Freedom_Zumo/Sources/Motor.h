@@ -7,7 +7,7 @@
 #ifndef MOTOR_H_
 #define MOTOR_H_
 
-#include "PE_Types.h"
+#include "Platform.h"
 #include "CLS1.h"
 
 typedef enum {
@@ -16,25 +16,33 @@ typedef enum {
 } MOT_Direction;
 
 typedef int8_t MOT_SpeedPercent; /* -100%...+100%, where negative is backward */
-#define MOT_HAS_BRAKE         0
-#define MOT_HAS_CURRENT_SENSE 0
 
 typedef struct MOT_MotorDevice_ {
   MOT_SpeedPercent currSpeedPercent; /* our current speed in %, negative percent means backward */
   uint16_t currPWMvalue; /* current PWM value used */
   uint8_t (*SetRatio16)(uint16_t);
   void (*DirPutVal)(bool); /* function to set direction bit */
-#if MOT_HAS_BRAKE
+#if PL_HAS_MOTOR_BRAKE
   bool brake; /* if brake is enabled or not */
   void (*BrakePutVal)(bool); /* function to set brake bit */
 #endif
-#if MOT_HAS_CURRENT_SENSE
+#if PL_HAS_MOTOR_CURRENT_SENSE
   uint16_t currentValue; /* current AD current sensor value */
   uint16_t offset; /* current AD sensor offset value */
 #endif
 } MOT_MotorDevice;
 
-extern MOT_MotorDevice motorL, motorR;
+typedef enum {
+  MOT_MOTOR_LEFT, /*!< left motor */
+  MOT_MOTOR_RIGHT /*!< right motor */
+} MOT_MotorSide;
+
+/*!
+ * \brief Function to get a pointer to a motor (motor handle)
+ * \param side Which motor
+ * \return Pointer/handle to the motor
+ */
+MOT_MotorDevice *MOT_GetMotorHandle(MOT_MotorSide side);
 
 void MOT_ChangeSpeedPercent(MOT_MotorDevice *motor, MOT_SpeedPercent relPercent);
 void MOT_SetSpeedPercent(MOT_MotorDevice *motor, MOT_SpeedPercent percent);

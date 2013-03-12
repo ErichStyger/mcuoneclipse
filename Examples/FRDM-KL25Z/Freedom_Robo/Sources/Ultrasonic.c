@@ -5,7 +5,7 @@
  *      Author: Erich Styger
  *      Driver for the HC-SR04 and FRDM-KL25Z board
  */
-#if 0
+#if 1
 #include "Ultrasonic.h"
 #include "TU_US.h"
 #include "WAIT1.h"

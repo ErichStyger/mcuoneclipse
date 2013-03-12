@@ -9,24 +9,32 @@
 #include "DIRL.h"
 #include "PWMR.h"
 #include "PWML.h"
-#if MOT_HAS_BRAKE
+#if PL_HAS_MOTOR_BRAKE
 #include "BrakeL.h"
 #include "BrakeR.h"
 #endif
-#if MOT_HAS_CURRENT_SENSE
+#if PL_HAS_MOTOR_CURRENT_SENSE
 #include "SNS0.h"
 #endif
 
-MOT_MotorDevice motorL, motorR;
+static MOT_MotorDevice motorL, motorR;
 static bool isMotorOn = TRUE;
 
-#if MOT_HAS_BRAKE
+MOT_MotorDevice *MOT_GetMotorHandle(MOT_MotorSide side) {
+  if (side==MOT_MOTOR_LEFT) {
+    return &motorL;
+  } else {
+    return &motorR;
+  }
+}
+
+#if PL_HAS_MOTOR_BRAKE
 void MOT_SetBrake(MOT_MotorDevice *motor, bool on) {
   if (on && !motor->brake) {
-    motor->BrakePutVal(motor->BRAKEdeviceData, 1);
+    motor->BrakePutVal(1);
     motor->brake = TRUE;
   } else if (!on && motor->brake) {
-    motor->BrakePutVal(motor->BRAKEdeviceData, 0);
+    motor->BrakePutVal(0);
     motor->brake = FALSE;
   }
 }
@@ -36,7 +44,7 @@ bool MOT_GetBrake(MOT_MotorDevice *motor) {
 }
 #endif
 
-#if MOT_HAS_CURRENT_SENSE
+#if PL_HAS_MOTOR_CURRENT_SENSE
 void MOT_MeasureCurrent(MOT_MotorDevice *motorA, MOT_MotorDevice *motorB) {
   #define SAMPLE_GROUP_SIZE 1U
   SNS0_TResultData MeasuredValues[SAMPLE_GROUP_SIZE];
@@ -96,10 +104,32 @@ static void DirRPutVal(bool val) {
   DIRR_PutVal(val);
 }
 
+#if PL_HAS_MOTOR_BRAKE
+static void BrakeLPutVal(bool val) {
+  BrakeL_PutVal(val);
+}
+
+static void BrakeRPutVal(bool val) {
+  BrakeR_PutVal(val);
+}
+#endif
+
 void MOT_SetVal(MOT_MotorDevice *motor, uint16_t val) {
   if (isMotorOn) {
+#if PL_HAS_MOTOR_BRAKE
+    if (val==0xffff) { /* stop */
+      motor->currPWMvalue = 0;
+      motor->SetRatio16(0); /* for max brake */
+      MOT_SetBrake(motor, TRUE);
+    } else {
+      motor->currPWMvalue = val;
+      MOT_SetBrake(motor, FALSE);
+      motor->SetRatio16(val);
+    }
+#else
     motor->currPWMvalue = val;
     motor->SetRatio16(val);
+#endif
   }
 }
 
@@ -134,10 +164,14 @@ void MOT_ChangeSpeedPercent(MOT_MotorDevice *motor, MOT_SpeedPercent relPercent)
 void MOT_SetDirection(MOT_MotorDevice *motor, MOT_Direction dir) {
   if (dir==MOT_DIR_BACKWARD) {
     motor->DirPutVal(1);
-    motor->currSpeedPercent = -motor->currSpeedPercent;
+    if (motor->currSpeedPercent>0) {
+      motor->currSpeedPercent = -motor->currSpeedPercent;
+    }
   } else if (dir==MOT_DIR_FORWARD) {
     motor->DirPutVal(0);
-    motor->currSpeedPercent = -motor->currSpeedPercent;
+    if (motor->currSpeedPercent<0) {
+      motor->currSpeedPercent = -motor->currSpeedPercent;
+    }
   }
 }
 
@@ -155,8 +189,8 @@ static void MOT_PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"  on|off", (unsigned char*)"Enables or disables motor\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  (L|R) forward|backward", (unsigned char*)"Change motor direction\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  (L|R) duty <number>", (unsigned char*)"Change motor PWM (-100..+100)%\r\n", io->stdOut);
-#if MOT_HAS_BRAKE
-  CLS1_SendHelpStr((unsigned char*)"  (L|R) brake (on|off)", (unsigned char*)"Enable/disable brake on motor\r\n", io->stdOut);
+#if PL_HAS_MOTOR_BRAKE
+  CLS1_SendHelpStr((unsigned char*)"  (L|R) brake (on|off)", (unsigned char*)"Enable/disable brake for motor\r\n", io->stdOut);
 #endif
 }
 
@@ -164,13 +198,18 @@ static void MOT_PrintStatus(const CLS1_StdIOType *io) {
   unsigned char buf[32];
 
   CLS1_SendStatusStr((unsigned char*)"Motor", (unsigned char*)"\r\n", io->stdOut);
-
+  
+  CLS1_SendStatusStr((unsigned char*)"  on/off", isMotorOn?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
+  
   CLS1_SendStatusStr((unsigned char*)"  motor L", (unsigned char*)"", io->stdOut);
   buf[0] = '\0';
   UTIL1_Num16sToStrFormatted(buf, sizeof(buf), (int16_t)motorL.currSpeedPercent, ' ', 4);
   UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"% 0x");
   UTIL1_strcatNum16Hex(buf, sizeof(buf), MOT_GetVal(&motorL));
   UTIL1_strcat(buf, sizeof(buf),(unsigned char*)(MOT_GetDirection(&motorL)==MOT_DIR_FORWARD?", fw":", bw"));
+#if PL_HAS_MOTOR_BRAKE
+  UTIL1_strcat(buf, sizeof(buf),(unsigned char*)(MOT_GetBrake(&motorL)?", brake on":", brake off"));
+#endif
   CLS1_SendStr(buf, io->stdOut);
   CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
 
@@ -180,12 +219,13 @@ static void MOT_PrintStatus(const CLS1_StdIOType *io) {
   UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"% 0x");
   UTIL1_strcatNum16Hex(buf, sizeof(buf), MOT_GetVal(&motorR));
   UTIL1_strcat(buf, sizeof(buf),(unsigned char*)(MOT_GetDirection(&motorR)==MOT_DIR_FORWARD?", fw":", bw"));
+#if PL_HAS_MOTOR_BRAKE
+  UTIL1_strcat(buf, sizeof(buf),(unsigned char*)(MOT_GetBrake(&motorR)?", brake on":", brake off"));
+#endif
   CLS1_SendStr(buf, io->stdOut);
   CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
-#if MOT_HAS_BRAKE
-  UTIL1_strcat(buf, sizeof(buf),(unsigned char*)(MOT_GetBrake(&motorB)?", brake on":", brake off"));
-#endif
-#if MOT_HAS_CURRENT_SENSE
+
+#if PL_HAS_MOTOR_CURRENT_SENSE
   WriteCurrent(&motorA, io);
   CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
   WriteCurrent(&motorB, io);
@@ -216,44 +256,54 @@ uint8_t MOT_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
   } else if (UTIL1_strcmp((char*)cmd, (char*)"motor R backward")==0) {
     MOT_SetDirection(&motorR, MOT_DIR_BACKWARD);
     *handled = TRUE;
-  } else if (UTIL1_strncmp((char*)cmd, (char*)"motor L duty", sizeof("motor duty")-1)==0) {
-    p = cmd+sizeof("motor L duty");
-    if (UTIL1_xatoi(&p, &val)==ERR_OK && val >=-100 && val<=100) {
-      MOT_SetSpeedPercent(&motorL, (MOT_SpeedPercent)val);
-      *handled = TRUE;
-    } else {
-      CLS1_SendStr((unsigned char*)"Wrong argument, must be in the range -100..100\r\n", io->stdErr);
+  } else if (UTIL1_strncmp((char*)cmd, (char*)"motor L duty ", sizeof("motor L duty ")-1)==0) {
+    if (!isMotorOn) {
+      CLS1_SendStr((unsigned char*)"Motor is OFF, cannot set duty.\r\n", io->stdErr);
       res = ERR_FAILED;
+    } else {
+      p = cmd+sizeof("motor L duty");
+      if (UTIL1_xatoi(&p, &val)==ERR_OK && val >=-100 && val<=100) {
+        MOT_SetSpeedPercent(&motorL, (MOT_SpeedPercent)val);
+        *handled = TRUE;
+      } else {
+        CLS1_SendStr((unsigned char*)"Wrong argument, must be in the range -100..100\r\n", io->stdErr);
+        res = ERR_FAILED;
+      }
     }
-  } else if (UTIL1_strncmp((char*)cmd, (char*)"motor R duty", sizeof("motor R duty")-1)==0) {
-    p = cmd+sizeof("motor R duty");
-    if (UTIL1_xatoi(&p, &val)==ERR_OK && val >=-100 && val<=100) {
-      MOT_SetSpeedPercent(&motorR, (MOT_SpeedPercent)val);
-      *handled = TRUE;
-    } else {
-      CLS1_SendStr((unsigned char*)"Wrong argument, must be in the range -100..100\r\n", io->stdErr);
+  } else if (UTIL1_strncmp((char*)cmd, (char*)"motor R duty ", sizeof("motor R duty ")-1)==0) {
+    if (!isMotorOn) {
+      CLS1_SendStr((unsigned char*)"Motor is OFF, cannot set duty.\r\n", io->stdErr);
       res = ERR_FAILED;
+    } else {
+      p = cmd+sizeof("motor R duty");
+      if (UTIL1_xatoi(&p, &val)==ERR_OK && val >=-100 && val<=100) {
+        MOT_SetSpeedPercent(&motorR, (MOT_SpeedPercent)val);
+        *handled = TRUE;
+      } else {
+        CLS1_SendStr((unsigned char*)"Wrong argument, must be in the range -100..100\r\n", io->stdErr);
+        res = ERR_FAILED;
+      }
     }
   } else if (UTIL1_strncmp((char*)cmd, (char*)"motor on", sizeof("motor on")-1)==0) {
     isMotorOn = TRUE;
     *handled = TRUE;
   } else if (UTIL1_strncmp((char*)cmd, (char*)"motor off", sizeof("motor off")-1)==0) {
+    MOT_SetSpeedPercent(&motorL, 0);
+    MOT_SetSpeedPercent(&motorR, 0);
     isMotorOn = FALSE;
     *handled = TRUE;
-#if MOT_HAS_BRAKE
-  } else if (UTIL1_strcmp((char*)cmd, (char*)"motor A brake on")==0) {
-    MOT_SetBrake(&motorA, TRUE);
+#if PL_HAS_MOTOR_BRAKE
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"motor L brake on")==0) {
+    MOT_SetBrake(&motorL, TRUE);
     *handled = TRUE;
-  } else if (UTIL1_strcmp((char*)cmd, (char*)"motor A brake off")==0) {
-    MOT_SetBrake(&motorA, FALSE);
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"motor L brake off")==0) {
+    MOT_SetBrake(&motorL, FALSE);
     *handled = TRUE;
-#endif
-#if MOT_HAS_CURRENT_SENSE  
-  } else if (UTIL1_strcmp((char*)cmd, (char*)"motor B brake on")==0) {
-    MOT_SetBrake(&motorB, TRUE);
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"motor R brake on")==0) {
+    MOT_SetBrake(&motorR, TRUE);
     *handled = TRUE;
-  } else if (UTIL1_strcmp((char*)cmd, (char*)"motor B brake off")==0) {
-    MOT_SetBrake(&motorB, FALSE);
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"motor R brake off")==0) {
+    MOT_SetBrake(&motorR, FALSE);
     *handled = TRUE;
 #endif
   }
@@ -261,6 +311,10 @@ uint8_t MOT_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
 }
 
 void MOT_Init(void) {
+#if PL_HAS_MOTOR_BRAKE
+  motorL.BrakePutVal = BrakeLPutVal;
+  motorR.BrakePutVal = BrakeRPutVal;
+#endif
   motorL.DirPutVal = DirLPutVal;
   motorR.DirPutVal = DirRPutVal;
   motorL.SetRatio16 = PWMLSetRatio16;

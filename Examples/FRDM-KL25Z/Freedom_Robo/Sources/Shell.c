@@ -5,6 +5,7 @@
  *      Author: Erich Styger
  */
 
+#include "Platform.h"
 #include "Application.h"
 #include "FRTOS1.h"
 #include "Shell.h"
@@ -12,12 +13,18 @@
 #include "LEDR.h"
 #include "LEDG.h"
 //#include "LEDB.h"
-//#include "I2CSPY1.h"
 #include "Reflectance.h"
 #include "Motor.h"
-//#include "LSM303.h"
+#if PL_HAS_MAGNETOMETER
+  #include "LSM303.h"
+  #include "I2CSPY1.h"
+#endif
 #include "LineFollow.h"
-#include "BT1.h"
+#if PL_HAS_BLUETOOTH
+  #include "BT1.h"
+#endif
+#include "Turn.h"
+#include "Pid.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -42,8 +49,12 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
   REF_ParseCommand,
   MOT_ParseCommand,
-  //LSM_ParseCommand,
+#if PL_HAS_MAGNETOMETER
+  LSM_ParseCommand,
+#endif
   LF_ParseCommand,
+  TURN_ParseCommand,
+  PID_ParseCommand,
   NULL /* sentinel */
 };
 
@@ -64,6 +75,9 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
   unsigned char buf[48];
 
   (void)pvParameters; /* not used */
+#if PL_HAS_MAGNETOMETER
+  LSM_Init(); /* need to do this while FreeRTOS tick is active, because of Timeout handling */
+#endif
   buf[0] = '\0';
 #if BT1_PARSE_COMMAND_ENABLED
   bTbuf[0]='\0';

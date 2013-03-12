@@ -32,7 +32,17 @@ typedef struct MOT_MotorDevice_ {
 #endif
 } MOT_MotorDevice;
 
-extern MOT_MotorDevice motorL, motorR;
+typedef enum {
+  MOT_MOTOR_LEFT, /*!< left motor */
+  MOT_MOTOR_RIGHT /*!< right motor */
+} MOT_MotorSide;
+
+/*!
+ * \brief Function to get a pointer to a motor (motor handle)
+ * \param side Which motor
+ * \return Pointer/handle to the motor
+ */
+MOT_MotorDevice *MOT_GetMotorHandle(MOT_MotorSide side);
 
 void MOT_ChangeSpeedPercent(MOT_MotorDevice *motor, MOT_SpeedPercent relPercent);
 void MOT_SetSpeedPercent(MOT_MotorDevice *motor, MOT_SpeedPercent percent);

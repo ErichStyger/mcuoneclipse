@@ -24,6 +24,7 @@
 #include "PE_Const.h"
 #include "IO_Map.h"
 #include "FRTOS1.h"
+#include "RTOSCNTRLDD1.h"
 #include "RTOSTICKLDD1.h"
 #include "UTIL1.h"
 #include "WAIT1.h"
@@ -60,11 +61,19 @@
 #include "RefCnt.h"
 #include "SW1.h"
 #include "BitIoLdd17.h"
+#include "C11.h"
+#include "BitIoLdd19.h"
+#include "C12.h"
+#include "BitIoLdd20.h"
+#include "C21.h"
+#include "BitIoLdd22.h"
+#include "C22.h"
+#include "BitIoLdd21.h"
 #include "BT1.h"
-#include "Cmd1.h"
-#include "BitIoLdd18.h"
-#include "Serial1.h"
-#include "ASerialLdd2.h"
+#include "Cmd2.h"
+#include "BitIoLdd23.h"
+#include "Serial2.h"
+#include "ASerialLdd3.h"
 #include "LEDR.h"
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"
@@ -77,6 +86,7 @@
 #include "TU4.h"
 #include "PWMR.h"
 #include "PwmLdd2.h"
+#include "TU_US.h"
 #include "TRIG.h"
 #include "TMOUT1.h"
 #include "CLS1.h"
@@ -214,8 +224,6 @@ void TU_US_OnChannel0(LDD_TUserData *UserDataPtr);
 **     Returns     : Nothing
 ** ===================================================================
 */
-void Serial1_OnError(void);
-
 /*
 ** ===================================================================
 **     Event       :  Serial1_OnRxChar (module Events)
@@ -231,8 +239,6 @@ void Serial1_OnError(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
-void Serial1_OnRxChar(void);
-
 /*
 ** ===================================================================
 **     Event       :  Serial1_OnTxChar (module Events)
@@ -244,8 +250,6 @@ void Serial1_OnRxChar(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
-void Serial1_OnTxChar(void);
-
 /*
 ** ===================================================================
 **     Event       :  Serial1_OnFullRxBuf (module Events)
@@ -259,8 +263,6 @@ void Serial1_OnTxChar(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
-void Serial1_OnFullRxBuf(void);
-
 /*
 ** ===================================================================
 **     Event       :  Serial1_OnFreeTxBuf (module Events)
@@ -273,8 +275,6 @@ void Serial1_OnFullRxBuf(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
-void Serial1_OnFreeTxBuf(void);
-
 /* END Events */
 #endif /* __Events_H*/
 

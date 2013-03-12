@@ -16,6 +16,7 @@
 #include "Turn.h"
 #include "WAIT1.h"
 #include "Pid.h"
+#include "Turn.h"
 
 #define LINE_DEBUG 0 /* careful: this will slow down the PID loop frequency! */
 
@@ -67,7 +68,8 @@ static void StateMachine(void);
 static void FollowLine(void) {
   uint16_t currLine;
   bool onLine;
-  REF_LineKind lineKind;
+  REF_LineKind lineKind, nextLineKind;
+  TURN_Kind turn;
 #if LINE_DEBUG
   static int cnt=0;
 #endif
@@ -75,6 +77,45 @@ static void FollowLine(void) {
   REF_Measure();
   currLine = REF_GetLineValue(&onLine);
   lineKind = REF_GetLineKind();
+  turn = TURN_STRAIGHT; /* default */
+  if (lineKind==REF_LINE_LEFT || lineKind==REF_LINE_RIGHT || lineKind==REF_LINE_FULL) {
+    TURN_StepForward();
+    REF_Measure();
+    currLine = REF_GetLineValue(&onLine);
+    nextLineKind = REF_GetLineKind();
+    if (lineKind==REF_LINE_LEFT && nextLineKind==REF_LINE_FORWARD) { /* is -| */
+      turn = TURN_SelectTurn(lineKind);
+    } else if (lineKind==REF_LINE_RIGHT && nextLineKind==REF_LINE_FORWARD) { /* is |- */
+      turn = TURN_SelectTurn(lineKind);
+    } else if (lineKind==REF_LINE_LEFT && nextLineKind==REF_LINE_NONE) { /* is left turn */
+      turn = TURN_LEFT90;
+    } else if (lineKind==REF_LINE_RIGHT && nextLineKind==REF_LINE_NONE) { /* is right turn */
+      turn = TURN_RIGHT90;
+    } else if (lineKind==REF_LINE_FULL && nextLineKind==REF_LINE_NONE) { /* is T */
+      turn = TURN_SelectTurn(REF_LINE_LEFT); /* follow left hand rule */
+    } else if (lineKind==REF_LINE_FULL && nextLineKind==REF_LINE_FORWARD) { /* is + */
+      turn = TURN_SelectTurn(REF_LINE_LEFT); /* follow left hand rule */
+    } else if (lineKind==REF_LINE_FULL && nextLineKind==REF_LINE_FULL) { /* finish reached */
+      turn = TURN_STOP;
+    } else {
+      turn = TURN_STOP; /* default value */
+    }
+  }
+  if (turn==TURN_STOP) {
+    currState = STATE_BRAKE;
+    StateMachine(); /* need to handle new state */
+    return;
+  }
+  if (turn!=TURN_STRAIGHT) { /* turn left, right or around */
+    currState = STATE_BRAKE;
+    StateMachine(); /* need to handle new state */
+    WAIT1_WaitOSms(100);
+    
+    TURN_Turn(turn);
+    WAIT1_WaitOSms(100);
+    currState = STATE_FOLLOW; /* back to following mode */
+    return;
+  }
 #if LINE_DEBUG
   cnt++;
   if (cnt>10) {
@@ -83,23 +124,13 @@ static void FollowLine(void) {
     CLS1_SendStr((unsigned char*)"\r\n", CLS1_GetStdio()->stdOut);
   }
 #endif
-  if (lineKind==REF_LINE_NONE) {
+#if 0
+  if (lineKind==REF_LINE_NONE || lineKind==REF_LINE_AIR) { /* not calibrated or no line => stop */
     currState = STATE_BRAKE;
-    StateMachine(); /* need to handle new state asap */
-    WAIT1_WaitOSms(100);
-    
-    TURN_Turn(TURN_SelectTurn(lineKind));
-    WAIT1_WaitOSms(100);
-    REF_Measure();
-    currLine = REF_GetLineValue(&onLine);
-    lineKind = REF_GetLineKind();
-    currState = STATE_FOLLOW; /* back to following mode */
-  }
-  if (/*!onLine ||*/ lineKind==REF_LINE_NONE || lineKind==REF_LINE_AIR) { /* not calibrated or no line => stop */
-    currState = STATE_BRAKE;
-    StateMachine(); /* need to handle new state asap */
+    StateMachine(); /* need to handle new state */
     return;
   }
+#endif
   PID_Process(currLine, REF_MAX_LINE_VALUE/2);
 }
 

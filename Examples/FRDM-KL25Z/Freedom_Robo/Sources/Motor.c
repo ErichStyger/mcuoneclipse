@@ -17,8 +17,16 @@
 #include "SNS0.h"
 #endif
 
-MOT_MotorDevice motorL, motorR;
+static MOT_MotorDevice motorL, motorR;
 static bool isMotorOn = TRUE;
+
+MOT_MotorDevice *MOT_GetMotorHandle(MOT_MotorSide side) {
+  if (side==MOT_MOTOR_LEFT) {
+    return &motorL;
+  } else {
+    return &motorR;
+  }
+}
 
 #if PL_HAS_MOTOR_BRAKE
 void MOT_SetBrake(MOT_MotorDevice *motor, bool on) {
@@ -248,28 +256,40 @@ uint8_t MOT_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
   } else if (UTIL1_strcmp((char*)cmd, (char*)"motor R backward")==0) {
     MOT_SetDirection(&motorR, MOT_DIR_BACKWARD);
     *handled = TRUE;
-  } else if (UTIL1_strncmp((char*)cmd, (char*)"motor L duty", sizeof("motor duty")-1)==0) {
-    p = cmd+sizeof("motor L duty");
-    if (UTIL1_xatoi(&p, &val)==ERR_OK && val >=-100 && val<=100) {
-      MOT_SetSpeedPercent(&motorL, (MOT_SpeedPercent)val);
-      *handled = TRUE;
-    } else {
-      CLS1_SendStr((unsigned char*)"Wrong argument, must be in the range -100..100\r\n", io->stdErr);
+  } else if (UTIL1_strncmp((char*)cmd, (char*)"motor L duty ", sizeof("motor L duty ")-1)==0) {
+    if (!isMotorOn) {
+      CLS1_SendStr((unsigned char*)"Motor is OFF, cannot set duty.\r\n", io->stdErr);
       res = ERR_FAILED;
+    } else {
+      p = cmd+sizeof("motor L duty");
+      if (UTIL1_xatoi(&p, &val)==ERR_OK && val >=-100 && val<=100) {
+        MOT_SetSpeedPercent(&motorL, (MOT_SpeedPercent)val);
+        *handled = TRUE;
+      } else {
+        CLS1_SendStr((unsigned char*)"Wrong argument, must be in the range -100..100\r\n", io->stdErr);
+        res = ERR_FAILED;
+      }
     }
-  } else if (UTIL1_strncmp((char*)cmd, (char*)"motor R duty", sizeof("motor R duty")-1)==0) {
-    p = cmd+sizeof("motor R duty");
-    if (UTIL1_xatoi(&p, &val)==ERR_OK && val >=-100 && val<=100) {
-      MOT_SetSpeedPercent(&motorR, (MOT_SpeedPercent)val);
-      *handled = TRUE;
-    } else {
-      CLS1_SendStr((unsigned char*)"Wrong argument, must be in the range -100..100\r\n", io->stdErr);
+  } else if (UTIL1_strncmp((char*)cmd, (char*)"motor R duty ", sizeof("motor R duty ")-1)==0) {
+    if (!isMotorOn) {
+      CLS1_SendStr((unsigned char*)"Motor is OFF, cannot set duty.\r\n", io->stdErr);
       res = ERR_FAILED;
+    } else {
+      p = cmd+sizeof("motor R duty");
+      if (UTIL1_xatoi(&p, &val)==ERR_OK && val >=-100 && val<=100) {
+        MOT_SetSpeedPercent(&motorR, (MOT_SpeedPercent)val);
+        *handled = TRUE;
+      } else {
+        CLS1_SendStr((unsigned char*)"Wrong argument, must be in the range -100..100\r\n", io->stdErr);
+        res = ERR_FAILED;
+      }
     }
   } else if (UTIL1_strncmp((char*)cmd, (char*)"motor on", sizeof("motor on")-1)==0) {
     isMotorOn = TRUE;
     *handled = TRUE;
   } else if (UTIL1_strncmp((char*)cmd, (char*)"motor off", sizeof("motor off")-1)==0) {
+    MOT_SetSpeedPercent(&motorL, 0);
+    MOT_SetSpeedPercent(&motorR, 0);
     isMotorOn = FALSE;
     *handled = TRUE;
 #if PL_HAS_MOTOR_BRAKE

@@ -84,8 +84,9 @@ void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *
 */
 void FRTOS1_vApplicationTickHook(void)
 {
-  TRG1_AddTick();
+  /* Called for every RTOS tick. */
   TMOUT1_AddTick();
+  TRG1_AddTick();
 }
 
 /*
@@ -179,96 +180,6 @@ void TU_US_OnChannel0(LDD_TUserData *UserDataPtr)
   US_EventEchoCapture(UserDataPtr);
 }
 
-/*
-** ===================================================================
-**     Event       :  Serial1_OnError (module Events)
-**
-**     Component   :  Serial1 [AsynchroSerial]
-**     Description :
-**         This event is called when a channel error (not the error
-**         returned by a given method) occurs. The errors can be read
-**         using <GetError> method.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void Serial1_OnError(void)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Event       :  Serial1_OnRxChar (module Events)
-**
-**     Component   :  Serial1 [AsynchroSerial]
-**     Description :
-**         This event is called after a correct character is received.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled and either the <Receiver>
-**         property is enabled or the <SCI output mode> property (if
-**         supported) is set to Single-wire mode.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void Serial1_OnRxChar(void)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Event       :  Serial1_OnTxChar (module Events)
-**
-**     Component   :  Serial1 [AsynchroSerial]
-**     Description :
-**         This event is called after a character is transmitted.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void Serial1_OnTxChar(void)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Event       :  Serial1_OnFullRxBuf (module Events)
-**
-**     Component   :  Serial1 [AsynchroSerial]
-**     Description :
-**         This event is called when the input buffer is full;
-**         i.e. after reception of the last character 
-**         that was successfully placed into input buffer.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void Serial1_OnFullRxBuf(void)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Event       :  Serial1_OnFreeTxBuf (module Events)
-**
-**     Component   :  Serial1 [AsynchroSerial]
-**     Description :
-**         This event is called after the last character in output
-**         buffer is transmitted.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void Serial1_OnFreeTxBuf(void)
-{
-  /* Write your code here ... */
-}
 
 /* END Events */
 

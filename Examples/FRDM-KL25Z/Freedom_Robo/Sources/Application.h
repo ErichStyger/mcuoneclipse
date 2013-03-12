@@ -1,7 +1,6 @@
 /*
  * Application.h
  *
- *  Created on: Jan 2, 2013
  *      Author: Erich Styger
  */
 
