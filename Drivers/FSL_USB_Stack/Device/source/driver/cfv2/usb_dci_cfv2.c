@@ -812,7 +812,7 @@ uint_8 USB_DCI_Deinit_EndPoint (
     {
         return USBERR_EP_DEINIT_FAILED;
     }
-    USB_DCI_Cancel_Transfer(&controller_ID, ep_num, direction); 
+    (void)/*<<EST*/USB_DCI_Cancel_Transfer(&controller_ID, ep_num, direction); 
     /* delete buffer space for both even and odd buffers */
     g_bdt_address -= (g_bdt_elem[bdtelem_index].len);
 
@@ -931,7 +931,7 @@ void USB_DCI_Unstall_EndPoint (
 	    if(direction == USB_RECV)
 	    {
 	        /* Initiate Next receive Transfer */
-	        USB_DCI_Recv_Data(handle, endpoint_number, NULL, 0);   
+	      (void)/*<<EST*/USB_DCI_Recv_Data(handle, endpoint_number, NULL, 0);   
 	    } 	    
     }   
     return;
@@ -1235,7 +1235,7 @@ void  USB_DCI_Set_Address (
     /* set the address */
     MCF_USB_OTG_ADDR = address;
 
-    _usb_device_set_status(&g_dci_controller_Id, USB_STATUS_DEVICE_STATE,
+    (void)/*<<EST*/_usb_device_set_status(&g_dci_controller_Id, USB_STATUS_DEVICE_STATE,
         USB_STATE_ADDRESS);
     return;
 }
@@ -1261,7 +1261,7 @@ void USB_DCI_Shutdown (
     /* Reset the Control Register */
     MCF_USB_OTG_CTL = 0;
 
-    _usb_device_set_status(&g_dci_controller_Id, USB_STATUS_DEVICE_STATE,
+    (void)/*<<EST*/_usb_device_set_status(&g_dci_controller_Id, USB_STATUS_DEVICE_STATE,
         USB_STATE_UNKNOWN);
     return;
 }
@@ -1374,12 +1374,12 @@ void USB_Bus_Token_Cpl_Handler (
                 /* make Transfer Direction UNKNOWN */
                 g_trf_direction = USB_TRF_UNKNOWN;
                 /* Cancel any pending Transfers on RECV Control Endpoint*/
-                USB_DCI_Cancel_Transfer(&(event->controller_ID), CONTROL_ENDPOINT,
+                (void)/*<<EST*/USB_DCI_Cancel_Transfer(&(event->controller_ID), CONTROL_ENDPOINT,
                   USB_RECV);
                 /* We Require DATA0 PID for Setup Token */
                 buffer_dsc_alt->Stat._byte = _DATA0;
                 /* Prepare for Next SETUP PACKET Receive */
-                USB_DCI_Recv_Data(&(event->controller_ID),
+                (void)/*<<EST*/USB_DCI_Recv_Data(&(event->controller_ID),
                     CONTROL_ENDPOINT,
                     NULL,0);
 
@@ -1437,12 +1437,12 @@ void USB_Bus_Token_Cpl_Handler (
                 /* make Transfer Direction UNKNOWN */
                 g_trf_direction = USB_TRF_UNKNOWN;
                 /* Cancel any pending Transfers on SEND Control Endpoint*/
-                USB_DCI_Cancel_Transfer(&(event->controller_ID), CONTROL_ENDPOINT,
+                (void)/*<<EST*/USB_DCI_Cancel_Transfer(&(event->controller_ID), CONTROL_ENDPOINT,
                   USB_SEND);
                 /* We Require DATA0 PID for Setup Token */
                 buffer_dsc_alt->Stat._byte = _DATA0;
                 /* Prepare for Next SETUP PACKET Receive */
-                USB_DCI_Recv_Data(&(event->controller_ID),
+                (void)/*<<EST*/USB_DCI_Recv_Data(&(event->controller_ID),
                     CONTROL_ENDPOINT,
                     NULL,0);
             }
