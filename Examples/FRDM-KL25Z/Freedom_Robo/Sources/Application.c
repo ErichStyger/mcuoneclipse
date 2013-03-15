@@ -1,5 +1,10 @@
 
-#include "Ultrasonic.h"
+
+#include "Platform.h"
+#if PL_HAS_ULTRASONIC
+  #include "Ultrasonic.h"
+#endif
+#include "FRTOS1.h"
 #include "LEDR.h"
 #include "LEDG.h"
 #include "WAIT1.h"
@@ -10,6 +15,10 @@
 #if PL_USE_TSS
   #include "TSS1.h"
 #endif
+#if PL_HAS_BUZZER
+  #include "Buzzer.h"
+#endif
+#include "Turn.h"
 
 #if 0
 static uint8_t MeasureCm(void) {
@@ -81,8 +90,12 @@ void APP_Run(void) {
   MOT_Init();
   SHELL_Init();
   LF_Init();
+  TURN_Init();
 #if 0
   US_Init();
+#endif
+#if PL_HAS_BUZZER
+  BUZ_Init();
 #endif
 #if PL_USE_TSS
   if (FRTOS1_xTaskCreate(TssTask, (signed portCHAR *)"Tss", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL) != pdPASS) {

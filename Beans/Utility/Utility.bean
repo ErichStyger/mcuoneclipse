@@ -4,7 +4,7 @@
     <Name>Utility</Name>
     <Description>Utility Module</Description>
     <Author>Erich Styger</Author>
-    <Version>01.083</Version>
+    <Version>01.084</Version>
     <Icon>Utility</Icon>
     <TypesFiles>PE,Utility\Utility</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -1758,7 +1758,7 @@
         <Name>ScanDecimal8uNumber</Name>
         <Symbol>ScanDecimal8uNumber</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Scans a decimal 16bit unsigned number</Hint>
+        <Hint>Scans a decimal 8bit unsigned number</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -1779,7 +1779,7 @@
           <ParName>str</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint>String to scan, starting with 0x. It returns as well until where it has scanned</ParHint>
+          <ParHint>String to scan. It returns as well until where it has scanned</ParHint>
           <ParUserDeclaration>const unsigned char **str</ParUserDeclaration>
         </Parameter>
         <Parameter>
@@ -1820,7 +1820,7 @@
           <ParName>str</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint>String to scan, starting with 0x. It returns as well until where it has scanned</ParHint>
+          <ParHint>String to scan. It returns as well until where it has scanned</ParHint>
           <ParUserDeclaration>const unsigned char **str</ParUserDeclaration>
         </Parameter>
         <Parameter>

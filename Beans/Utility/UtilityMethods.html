@@ -635,12 +635,12 @@ LI.EXP {
 </li>
 <li><a name="ScanDecimal8uNumber">
 <b>ScanDecimal8uNumber</b></a>
- - Scans a decimal 16bit unsigned number
+ - Scans a decimal 8bit unsigned number
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
 <br /><i>ANSIC prototype:</i> byte ScanDecimal8uNumber(const unsigned char **str, byte *val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>str:byte</i> - String to scan, starting with 0x. It returns as well until where it has scanned</li>
+<li><i>str:byte</i> - String to scan. It returns as well until where it has scanned</li>
 <li><i>val: Pointer to byte</i> - Pointer to value</li>
 <li><i>Return value:byte</i> - Error code
 </li>
@@ -653,7 +653,7 @@ LI.EXP {
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
 <br /><i>ANSIC prototype:</i> byte ScanDecimal16uNumber(const unsigned char **str, word *val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>str:byte</i> - String to scan, starting with 0x. It returns as well until where it has scanned</li>
+<li><i>str:byte</i> - String to scan. It returns as well until where it has scanned</li>
 <li><i>val: Pointer to word</i> - Pointer to value</li>
 <li><i>Return value:byte</i> - Error code
 </li>

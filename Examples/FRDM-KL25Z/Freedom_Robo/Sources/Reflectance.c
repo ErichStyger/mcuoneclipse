@@ -15,8 +15,12 @@
 #include "IR4.h"
 #include "IR5.h"
 #include "IR6.h"
-#include "IR7.h"
-#include "IR8.h"
+#if REF_NOF_SENSORS>=7
+  #include "IR7.h"
+#endif
+#if REF_NOF_SENSORS>=8
+  #include "IR8.h"
+#endif
 #include "UTIL1.h"
 #include "TMOUT1.h"
 #include "FRTOS1.h"
@@ -29,7 +33,7 @@ static xQueueHandle mutexHandle;
 static bool doMinMaxCalibration = FALSE;
 #if PL_IS_ZUMO_ROBOT
   #define REF_MIN_LINE_VAL   0x50  /* minimum value indicating a line */
-  #define REF_MIN_NOISE_VAL    50   /* values below this are not added to the weighted sum */
+  #define REF_MIN_NOISE_VAL  0x32  /* values below this are not added to the weighted sum */
 #else
   #define REF_MIN_LINE_VAL   0x60  /* minimum value indicating a line */
   #define REF_MIN_NOISE_VAL  0x32   /* values below this are not added to the weighted sum */
@@ -54,7 +58,7 @@ static bool ledON = TRUE;
 static int16_t refLineVal=0; /* 0 means no line, >0 means line is below sensor 0, 1000 below sensor 1 and so on */
 static REF_LineKind refLineKind = REF_LINE_NONE;
 
-/* functions as wrapper around macro. Number 0 is on the right side */
+/* Functions as wrapper around macro. Number S1 is on the right side */
 static void S1_SetOutput(void) { IR1_SetOutput(); }
 static void S1_SetInput(void) { IR1_SetInput(); }
 static void S1_SetVal(void) { IR1_SetVal(); }
@@ -85,15 +89,18 @@ static void S6_SetInput(void) { IR6_SetInput(); }
 static void S6_SetVal(void) { IR6_SetVal(); }
 static bool S6_GetVal(void) { return IR6_GetVal(); }
 
+#if REF_NOF_SENSORS>=7
 static void S7_SetOutput(void) { IR7_SetOutput(); }
 static void S7_SetInput(void) { IR7_SetInput(); }
 static void S7_SetVal(void) { IR7_SetVal(); }
 static bool S7_GetVal(void) { return IR7_GetVal(); }
-
+#endif
+#if REF_NOF_SENSORS>=8
 static void S8_SetOutput(void) { IR8_SetOutput(); }
 static void S8_SetInput(void) { IR8_SetInput(); }
 static void S8_SetVal(void) { IR8_SetVal(); }
 static bool S8_GetVal(void) { return IR8_GetVal(); }
+#endif
 
 static const SensorFctType SensorFctArray[REF_NOF_SENSORS] = {
   {S1_SetOutput, S1_SetInput, S1_SetVal, S1_GetVal},
@@ -102,8 +109,12 @@ static const SensorFctType SensorFctArray[REF_NOF_SENSORS] = {
   {S4_SetOutput, S4_SetInput, S4_SetVal, S4_GetVal},
   {S5_SetOutput, S5_SetInput, S5_SetVal, S5_GetVal},
   {S6_SetOutput, S6_SetInput, S6_SetVal, S6_GetVal},
+#if REF_NOF_SENSORS>=7
   {S7_SetOutput, S7_SetInput, S7_SetVal, S7_GetVal},
+#endif
+#if REF_NOF_SENSORS>=8
   {S8_SetOutput, S8_SetInput, S8_SetVal, S8_GetVal},
+#endif
 };
 
 static void IR_on(bool on) {
@@ -502,8 +513,6 @@ static portTASK_FUNCTION(ReflTask, pvParameters) {
 #if PL_HAS_BUZZER
       BUZ_Beep(300, 50);
 #endif
-    } else {
-      REF_Measure();
     }
     FRTOS1_vTaskDelay(20/portTICK_RATE_MS);
   }
@@ -518,7 +527,7 @@ void REF_Init(void) {
   }
   timerHandle = RefCnt_Init(NULL);
   InitSensorValues();
-  if (FRTOS1_xTaskCreate(ReflTask, (signed portCHAR *)"Refl", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+3, NULL) != pdPASS) {
+  if (FRTOS1_xTaskCreate(ReflTask, (signed portCHAR *)"Refl", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 }
