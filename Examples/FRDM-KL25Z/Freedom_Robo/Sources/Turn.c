@@ -20,6 +20,7 @@
   /*!< ms to wait for a 90 degree turn */
 #define TURN_TURN_PERCENT     20
   /*!< maximum motor duty for turn operation */
+#endif
 
 static uint8_t TURN_DutyPercent = TURN_TURN_PERCENT;
 static uint16_t TURN_TimeMs = TURN_90_WAIT_TIME_MS;
