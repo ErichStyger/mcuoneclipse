@@ -179,8 +179,7 @@ byte %'ModuleName'%.%SendChar(%'ModuleName'_TComData Chr);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN GetCharsInRxBuf
 %ifdef GetCharsInRxBuf
-#define %'ModuleName'%.%GetCharsInRxBuf() \
-  %@RxBuffer@'ModuleName'%.NofElements()
+word %'ModuleName'%.%GetCharsInRxBuf(void);
 %define! RetVal
 %include Common\FSL_USB_CDC_DeviceGetCharsInRxBuf.Inc
 
@@ -384,13 +383,17 @@ word %'ModuleName'%.%GetCharsInTxBuf(void)
 %ifdef GetCharsInRxBuf
 %define! RetVal
 %include Common\FSL_USB_CDC_DeviceGetCharsInRxBuf.Inc
-/*
 word %'ModuleName'%.%GetCharsInRxBuf(void)
 {
-  *** implemented as macro in the header file
+  static uint8_t txBuf[%'ModuleName'%.DATA_BUFF_SIZE];
+
+  if (%'ModuleName'%.%App_Task(txBuf, sizeof(txBuf))!=ERR_OK) { /* call USB handler: if active, then this will empty the buffer */
+%if defined(OnError)
+    %OnError(%'ModuleName'%.USB_ERR_TX_CHAR);
+%endif
+  }
   return (word)%@RxBuffer@'ModuleName'%.NofElements();
 }
-*/
 
 %endif %- GetCharsInRxBuf
 %-BW_METHOD_END GetCharsInRxBuf
@@ -400,13 +403,13 @@ word %'ModuleName'%.%GetCharsInRxBuf(void)
 %define! ParChr
 %define! RetVal
 %include Common\FSL_USB_CDC_DeviceGetChar.Inc
-#if 0
+/**
 byte %'ModuleName'%.%GetChar(%'ModuleName'_TComData *Chr)
 {
-  /* implemented as macro in the header file */
+  *** implemented as macro in the header file
   return %@RxBuffer@'ModuleName'%.Get(Chr);
 }
-#endif
+*/
 %endif %- GetChar
 %-BW_METHOD_END GetChar
 %-************************************************************************************************************
