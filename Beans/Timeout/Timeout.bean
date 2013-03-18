@@ -4,7 +4,7 @@
     <Name>Timeout</Name>
     <Description>Component to manage timeouts, e.g. to be used in loops.</Description>
     <Author>Erich Styger</Author>
-    <Version>01.021</Version>
+    <Version>01.023</Version>
     <Icon>Timeout</Icon>
     <TypesFiles>PE,Timeout\Timeout</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -109,7 +109,7 @@
         <Name>GetCounter</Name>
         <Symbol>GetCounter</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Initializes a new timeout counter and returns the handle to it. At the end, use LeaveCounter() to free up the ressource.</Hint>
+        <Hint>Initializes a new timeout counter and returns the handle to it. At the end, use LeaveCounter() to free up the resource.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -245,7 +245,7 @@
         <Name>AddTick</Name>
         <Symbol>AddTick</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Method to be called from a priodic timer or interrupt. It will decrement all current counters by one down to zero.</Hint>
+        <Hint>Method to be called from a periodic timer or interrupt. It will decrement all current counters by one down to zero.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>

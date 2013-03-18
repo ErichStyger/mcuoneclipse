@@ -6,7 +6,7 @@
 %include Common\GeneralMethod.inc (GetCounter)
 %;**     Description :
 %;**         Initializes a new timeout counter and returns the handle to
-%;**         it. At the end, use LeaveCounter() to free up the ressource.
+%;**         it. At the end, use LeaveCounter() to free up the resource.
 %include Common\GeneralParameters.inc(27)
 %;**         nofTicks%ParnofTicks %>27 - Number of ticks for the counter
 %;** %>29 until it expires.
