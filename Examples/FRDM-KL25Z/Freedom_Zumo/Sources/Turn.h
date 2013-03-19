@@ -12,37 +12,29 @@
 #include "Reflectance.h"
 
 typedef enum {
-  TURN_LEFT90,   /* turn 90 degree left */
-  TURN_RIGHT90, /* turn 90 degree right */
-  TURN_LEFT180, /* turn 180 degree counterclockwise */
-  TURN_RIGHT180, /* turn 180 degree clockwise */
+  TURN_LEFT90,   /* turn 90 degree left and stop */
+  TURN_RIGHT90, /* turn 90 degree right and stop */
+  TURN_LEFT180, /* turn 180 degree counterclockwise and stop */
+  TURN_RIGHT180, /* turn 180 degree clockwise and stop */
   TURN_STRAIGHT, /* don't turn */
-  TURN_STOP     /* stop it */
+  TURN_STEP_FW, /* make a step forward and stop */
+  TURN_STEP_BW, /* make a step backward and stop */
+  TURN_FINISHED, /* stepped into finish! */
+  TURN_STOP     /* stop */
 } TURN_Kind;
 
-
 /*!
- * \brief Selects a turning depending on the current line kind.
- * @param line Current line kind
- * @return New turn, e.g TURN_AROUND if we passed a dead end.
+ * \brief Translate a turn kind into a string
+ * \return String, like "STOP"
  */
-TURN_Kind TURN_SelectTurn(REF_LineKind line);
+const unsigned char *TURN_TurnKindStr(TURN_Kind kind);
 
 /*!
  * \brief Turns the robot.
  * \param kind How much the robot has to turn.
+ * \param toLine If set to true, it continues turning until on line.
  */
-void TURN_Turn(TURN_Kind kind);
-
-/*!
- * \brief Moves the robot about one inch backward
- */
-void TURN_StepBackward(void);
-
-/*!
- * \brief Moves the robot about one inch forward
- */
-void TURN_StepForward(void);
+void TURN_Turn(TURN_Kind kind, bool toLine);
 
 /*!
  * \brief Shell command line parser.

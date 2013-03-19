@@ -25,6 +25,7 @@
 #endif
 #include "Turn.h"
 #include "Pid.h"
+#include "Maze.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -55,6 +56,7 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
   LF_ParseCommand,
   TURN_ParseCommand,
   PID_ParseCommand,
+  MAZE_ParseCommand,
   NULL /* sentinel */
 };
 

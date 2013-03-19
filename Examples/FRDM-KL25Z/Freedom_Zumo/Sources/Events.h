@@ -51,7 +51,6 @@
 #include "AS1.h"
 #include "ASerialLdd1.h"
 #include "FRTOS1.h"
-#include "RTOSCNTRLDD1.h"
 #include "RTOSTICKLDD1.h"
 #include "LED_IR.h"
 #include "LEDpin4.h"
@@ -67,6 +66,7 @@
 #include "IR5.h"
 #include "BitIoLdd13.h"
 #include "TRG1.h"
+#include "EVNT1.h"
 #include "RefCnt.h"
 #include "IR6.h"
 #include "BitIoLdd9.h"
@@ -134,6 +134,21 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 **         If enabled, the RTOS will call this hook in case memory
 **         allocation failed.
 **     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void EVNT1_AppHandleEvent(byte event);
+/*
+** ===================================================================
+**     Event       :  EVNT1_AppHandleEvent (module Events)
+**
+**     Component   :  EVNT1 [SimpleEvents]
+**     Description :
+**         
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         event           - Event (event number) to be processed.
 **     Returns     : Nothing
 ** ===================================================================
 */
