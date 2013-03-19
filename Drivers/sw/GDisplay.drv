@@ -100,6 +100,24 @@
 %-  Example:
 %-    typedef int TMyInteger;
 %-
+%if (CPUfamily = "Kinetis")
+%else
+#if 0
+%endif
+/* this type is declared in PE_Types.h for non-LDD processors, need to declare it locally otherwise */
+typedef struct {                       /* Image */
+  word width;                          /* Image width  */
+  word height;                         /* Image height */
+  const byte * pixmap;                 /* Image pixel bitmap */
+  word size;                           /* Image size   */
+  const char_t * name;                 /* Image name   */
+} TIMAGE;
+typedef TIMAGE* PIMAGE ;               /* Pointer to image */
+%if (CPUfamily = "Kinetis")
+%else
+#endif
+%endif
+
 #define %'ModuleName'%.RGB565(R,G,B)     ((%'ModuleName'_PixelColor)((((R)&0x1f)<<11)+(((G)&0x3f)<<5)+((B)&0x1f)))%>40/* convert RGB into 565 color format */
 
 #define %'ModuleName'%.COLOR_PIXEL_SET          %@Display@'ModuleName'%.COLOR_PIXEL_SET       /* value for a pixel set */
@@ -1450,7 +1468,8 @@ void %'ModuleName'%.%DrawCircle(%'ModuleName'_PixelDim x0, %'ModuleName'_PixelDi
 %include Common\GDisplayDrawFilledCircle.Inc
 void %'ModuleName'%.%DrawFilledCircle(%'ModuleName'_PixelDim x0, %'ModuleName'_PixelDim y0, %'ModuleName'_PixelDim radius, %'ModuleName'_PixelColor color)
 {
-  /* draw a circle using the Bresenham method, see http://de.wikipedia.org/wiki/Bresenham-Algorithmus */
+  /* draw a circle using the Bresenham method, see http://de.wikipedia.org/wiki/Bresenham-Algorithmus and
+  http://forums.tigsource.com/index.php?topic=17068.0;wap2 */
   %'ModuleName'_PixelDim xoff=0;
   %'ModuleName'_PixelDim yoff=radius;
   int balance=-((int)radius);
@@ -1465,8 +1484,11 @@ void %'ModuleName'%.%DrawFilledCircle(%'ModuleName'_PixelDim x0, %'ModuleName'_P
     %'ModuleName'%.%DrawHLine(p0, (%'ModuleName'_PixelDim)(y0-yoff), w0, color);
     %'ModuleName'%.%DrawHLine(p1, (%'ModuleName'_PixelDim)(y0+xoff), w1, color);
     %'ModuleName'%.%DrawHLine(p1, (%'ModuleName'_PixelDim)(y0-xoff), w1, color);
-    if ((balance += xoff++ + xoff)>= 0) {
-      balance -= --yoff+yoff;
+    balance += xoff+xoff;
+    xoff++;
+    if (balance>=0) {
+      yoff--;
+      balance -= yoff+yoff;
     }
   } /* while */
 }

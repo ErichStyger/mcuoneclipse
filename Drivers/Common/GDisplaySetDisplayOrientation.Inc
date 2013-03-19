@@ -5,9 +5,9 @@
 %;** ===================================================================
 %include Common\GeneralMethod.inc (SetDisplayOrientation)
 %;**     Description :
-%;**         Sets the display orienation. If you enable this method, then
-%;**         the orientation of the display can be changed at runtime.
-%;**         However, this requires additional ressources.
+%;**         Sets the display orientation. If you enable this method,
+%;**         then the orientation of the display can be changed at
+%;**         runtime. However, this requires additional resources.
 %include Common\GeneralParameters.inc(27)
 %;**         newOrientation%ParnewOrientation %>27 - new orientation to
 %;** %>29 be used
