@@ -89,10 +89,6 @@
 
 #include "%ProcessorModule.h"
 
-%if %OverwriteBoundingBoxHeight='no'
-extern const byte %'ModuleName'%.FBBy; /* defines the size of the bounding box */
-%endif
-
 %-STARTUSERTYPES - Do not make changes between lines (included this lines) marked with %-STARTUSERTYPES and %-ENDUSRTYPES
 
 #ifndef __BWUserType_PConstByte
@@ -158,12 +154,7 @@ PGFONT_CharInfo %'ModuleName'%.%GetFontChar(byte ch);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN GetBoxHeight
 %ifdef GetBoxHeight
-#define %'ModuleName'%.%GetBoxHeight() \
-%if %OverwriteBoundingBoxHeight='yes'
-  %BoundingBox
-%else
-  %'ModuleName'_FBBy
-%endif
+byte %'ModuleName'%.%GetBoxHeight(void);
 %define! RetVal
 %include Common\GFontGetBoxHeight.Inc
 
@@ -429,7 +420,7 @@ is" without express or implied warranty.
 #endif
 
 %if %FontName="Helv" & %FontSize="8" & %FontStyle="bold"
-const byte %'ModuleName'%.FBBy = 12;
+#define %'ModuleName'%.FBBy  12
 
 static const byte helvB08L1_0x00_BMP[] = {
   0xA8,
@@ -2723,7 +2714,7 @@ static const GFONT_CharInfo FontBMP[] = {
   {6, 5, 10, 0, -2, helvB08L1_0xFF_BMP}
 };
 %elif %FontName="Helv" & %FontSize="10" & %FontStyle="bold"
-const byte %'ModuleName'%.FBBy = 16;
+#define %'ModuleName'%.FBBy 16
 
 static const byte helvB10L1_0x00_BMP[] = {
   0xAA,
@@ -5497,7 +5488,7 @@ static const GFONT_CharInfo FontBMP[] = {
   {8, 8, 14, 0, -3, helvB10L1_0xFF_BMP}
 };
 %elif %FontName="Helv" & %FontSize="12" & %FontStyle="bold"
-const byte %'ModuleName'%.FBBy = 18;
+#define %'ModuleName'%.FBBy 18
 
 static const byte helvB12L1_0x00_BMP[] = {
   0xAA, 0x80,
@@ -8510,7 +8501,7 @@ static const GFONT_CharInfo FontBMP[] = {
   {9, 8, 16, 0, -4, helvB12L1_0xFF_BMP}
 };
 %elif %FontName="Helv" & %FontSize="14" & %FontStyle="bold"
-const byte %'ModuleName'%.FBBy = 21;
+#define %'ModuleName'%.FBBy 21
 
 static const byte helvB14L1_0x00_BMP[] = {
   0xAA, 0xA0,
@@ -11824,7 +11815,7 @@ static const GFONT_CharInfo FontBMP[] = {
   {11, 9, 18, 1, -4, helvB14L1_0xFF_BMP}
 };
 %elif %FontName="Helv" & %FontSize="18" & %FontStyle="bold"
-const byte %'ModuleName'%.FBBy = 27;
+#define %'ModuleName'%.FBBy 27
 
 static const byte helvB18L1_0x00_BMP[] = {
   0xAA, 0xAA,
@@ -15980,7 +15971,7 @@ static const GFONT_CharInfo FontBMP[] = {
   {15, 13, 23, 1, -5, helvB18L1_0xFF_BMP}
 };
 %elif %FontName="Helv" & %FontSize="24" & %FontStyle="bold"
-const byte %'ModuleName'%.FBBy = 35;
+#define %'ModuleName'%.FBBy 35
 
 static const byte helvB24L1_0x00_BMP[] = {
   0xAA, 0xAA, 0xA0,
@@ -21211,7 +21202,7 @@ static const GFONT_CharInfo FontBMP[] = {
   {19, 16, 31, 1, -7, helvB24L1_0xFF_BMP}
 };
 %elif %FontName="Helv" & %FontSize="8" & %FontStyle="normal"
-const byte %'ModuleName'%.FBBy = 12;
+#define %'ModuleName'%.FBBy 12
 
 static const byte helvR08L1_0x00_BMP[] = {
   0xA8,
@@ -23508,7 +23499,7 @@ static const GFONT_CharInfo FontBMP[] = {
 };
 
 %elif %FontName="Helv" & %FontSize="10" & %FontStyle="normal"
-const byte %'ModuleName'%.FBBy = 16;
+#define %'ModuleName'%.FBBy 16
 
 static const byte helvR10L1_0x00_BMP[] = {
   0xAA,
@@ -26279,7 +26270,7 @@ static const GFONT_CharInfo FontBMP[] = {
 };
 
 %elif %FontName="Helv" & %FontSize="12" & %FontStyle="normal"
-const byte %'ModuleName'%.FBBy = 18;
+#define %'ModuleName'%.FBBy 18
 
 static const byte helvR12L1_0x00_BMP[] = {
   0xAA, 0x80,
@@ -29297,7 +29288,7 @@ static const GFONT_CharInfo FontBMP[] = {
   {8, 7, 15, 0, -3, helvR12L1_0xFF_BMP}
 };
 %elif %FontName="Helv" & %FontSize="14" & %FontStyle="normal"
-const byte %'ModuleName'%.FBBy = 21;
+#define %'ModuleName'%.FBBy 21
 
 static const byte helvR14L1_0x00_BMP[] = {
   0xAA, 0xA0,
@@ -32592,7 +32583,7 @@ static const GFONT_CharInfo FontBMP[] = {
   {10, 8, 18, 1, -4, helvR14L1_0xFF_BMP}
 };
 %elif %FontName="Helv" & %FontSize="18" & %FontStyle="normal"
-const byte %'ModuleName'%.FBBy = 27;
+#define %'ModuleName'%.FBBy 27
 
 static const byte helvR18L1_0x00_BMP[] = {
   0xAA, 0xA8,
@@ -36744,7 +36735,7 @@ static const GFONT_CharInfo FontBMP[] = {
   {13, 12, 23, 0, -5, helvR18L1_0xFF_BMP}
 };
 %elif %FontName="Helv" & %FontSize="24" & %FontStyle="normal"
-const byte %'ModuleName'%.FBBy = 35;
+#define %'ModuleName'%.FBBy 35
 
 static const byte helvR24L1_0x00_BMP[] = {
   0xAA, 0xAA, 0x80,
@@ -41929,7 +41920,7 @@ static const GFONT_CharInfo FontBMP[] = {
   {17, 14, 30, 1, -7, helvR24L1_0xFF_BMP}
 };
 %elif %FontName="Cour" & %FontSize="8" & %FontStyle="normal"
-const byte %'ModuleName'%.FBBy = 11;
+#define %'ModuleName'%.FBBy 11
 
 static const byte courR08L1_0x00_BMP[] = {
   0xA8,
@@ -44011,7 +44002,7 @@ static const GFONT_CharInfo FontBMP[] = {
 };
 
 %elif %FontName="Cour" & %FontSize="10" & %FontStyle="normal"
-const byte %'ModuleName'%.FBBy = 14;
+#define %'ModuleName'%.FBBy 14
 
 static const byte courR10L1_0x00_BMP[] = {
   0xAA,
@@ -46546,7 +46537,7 @@ static const GFONT_CharInfo FontBMP[] = {
 };
 
 %elif %FontName="Cour" & %FontSize="12" & %FontStyle="normal"
-const byte %'ModuleName'%.FBBy = 17;
+#define %'ModuleName'%.FBBy 17
 
 static const byte courR12L1_0x00_BMP[] = {
   0xAA,
@@ -49252,7 +49243,7 @@ static const GFONT_CharInfo FontBMP[] = {
   {10, 9, 13, 0, -3, courR12L1_0xFF_BMP}
 };
 %elif %FontName="Cour" & %FontSize="14" & %FontStyle="normal"
-const byte %'ModuleName'%.FBBy = 20;
+#define %'ModuleName'%.FBBy 20
 
 static const byte courR14L1_0x00_BMP[] = {
   0xAA, 0x80,
@@ -52162,7 +52153,7 @@ const CharInfo FontBMP[] = {
   {11, 9, 15, 1, -4, courR14L1_0xFF_BMP}
 };
 %elif %FontName="Cour" & %FontSize="18" & %FontStyle="normal"
-const byte %'ModuleName'%.FBBy = 25;
+#define %'ModuleName'%.FBBy 25
 
 static const byte courR18L1_0x00_BMP[] = {
   0xAA, 0xA8,
@@ -55676,7 +55667,7 @@ const CharInfo FontBMP[] = {
 };
 
 %elif %FontName="Cour" & %FontSize="24" & %FontStyle="normal"
-const byte %'ModuleName'%.FBBy = 34;
+#define %'ModuleName'%.FBBy 34
 
 static const byte courR24L1_0x00_BMP[] = {
   0xAA, 0xAA,
@@ -60103,7 +60094,7 @@ const CharInfo FontBMP[] = {
 };
 
 %elif %FontName="Cour" & %FontSize="8" & %FontStyle="bold"
-const byte %'ModuleName'%.FBBy = 11;
+#define %'ModuleName'%.FBBy 11
 
 static const byte courB08L1_0x00_BMP[] = {
   0xAA,
@@ -62177,7 +62168,7 @@ static const GFONT_CharInfo FontBMP[] = {
 };
 
 %elif %FontName="Cour" & %FontSize="10" & %FontStyle="bold"
-const byte %'ModuleName'%.FBBy = 14;
+#define %'ModuleName'%.FBBy 14
 
 static const byte courB10L1_0x00_BMP[] = {
   0xAA, 0x80,
@@ -64720,7 +64711,7 @@ static const GFONT_CharInfo FontBMP[] = {
 };
 
 %elif %FontName="Cour" & %FontSize="12" & %FontStyle="bold"
-const byte %'ModuleName'%.FBBy = 17;
+#define %'ModuleName'%.FBBy 17
 
 static const byte courB12L1_0x00_BMP[] = {
   0xAA, 0x80,
@@ -67446,7 +67437,7 @@ static const GFONT_CharInfo FontBMP[] = {
   {10, 10, 13, 0, -3, courB12L1_0xFF_BMP}
 };
 %elif %FontName="Cour" & %FontSize="14" & %FontStyle="bold"
-const byte %'ModuleName'%.FBBy = 20;
+#define %'ModuleName'%.FBBy 20
 
 static const byte courB14L1_0x00_BMP[] = {
   0xAA, 0x80,
@@ -70440,7 +70431,7 @@ const CharInfo FontBMP[] = {
 };
 
 %elif %FontName="Cour" & %FontSize="18" & %FontStyle="bold"
-const byte %'ModuleName'%.FBBy = 25;
+#define %'ModuleName'%.FBBy 25
 
 static const byte courB18L1_0x00_BMP[] = {
   0xAA, 0xA8,
@@ -74083,7 +74074,7 @@ const CharInfo FontBMP[] = {
 };
 
 %elif %FontName="Cour" & %FontSize="24" & %FontStyle="bold"
-const byte %'ModuleName'%.FBBy = 34;
+#define %'ModuleName'%.FBBy 34
 
 static const byte courB24L1_0x00_BMP[] = {
   0xAA, 0xAA, 0x80,
@@ -78706,12 +78697,15 @@ PGFONT_CharInfo %'ModuleName'%.%GetFontChar(byte ch)
 %ifdef GetBoxHeight
 %define! RetVal
 %include Common\GFontGetBoxHeight.Inc
-#if 0
 byte %'ModuleName'%.%GetBoxHeight(void)
 {
-  /* implemented as macro */
+  /* needs to be a function as this method is used as a callback (function pointer) */
+%if %OverwriteBoundingBoxHeight='yes'
+  return %BoundingBox;
+%else
+  return %'ModuleName'_FBBy;
+%endif
 }
-#endif
 
 %endif %- GetBoxHeight
 %-BW_METHOD_END GetBoxHeight
@@ -78724,7 +78718,11 @@ PGFONT_Callbacks %'ModuleName'%.%GetFont(void)
 {
   static const GFONT_Callbacks callbacks = {
     %'ModuleName'%.%GetFontChar,
-    %'ModuleName'%.GetBoxHeight(),
+%if %OverwriteBoundingBoxHeight='yes'
+    %BoundingBox,
+%else
+    %'ModuleName'_FBBy,
+%endif
     %'ModuleName'%.GetUnderlineBoxHeight(),
     %'ModuleName'%.GetLineSpaceHeight()
   };
@@ -78738,12 +78736,12 @@ PGFONT_Callbacks %'ModuleName'%.%GetFont(void)
 %ifdef GetUnderlineBoxHeight
 %define! RetVal
 %include Common\GFontGetUnderlineBoxHeight.Inc
-#if 0
+/**
 byte %'ModuleName'%.%GetUnderlineBoxHeight(void)
 {
-  /* function is implemented as a macro */
+  *** function is implemented as a macro
 }
-#endif
+*/
 
 %endif %- GetUnderlineBoxHeight
 %-BW_METHOD_END GetUnderlineBoxHeight
@@ -78752,12 +78750,12 @@ byte %'ModuleName'%.%GetUnderlineBoxHeight(void)
 %ifdef GetLineSpaceHeight
 %define! RetVal
 %include Common\GFontGetLineSpaceHeight.Inc
-#if 0
+/**
 byte %'ModuleName'%.%GetLineSpaceHeight(void)
 {
-  /* function implemented as a macro */
+  *** function is implemented as a macro
 }
-#endif
+*/
 
 %endif %- GetLineSpaceHeight
 %-BW_METHOD_END GetLineSpaceHeight
