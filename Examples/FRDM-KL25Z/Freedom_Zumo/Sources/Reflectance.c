@@ -146,8 +146,11 @@ static void REF_MeasureRaw(SensorTimeType raw[REF_NOF_SENSORS]) {
   }
   WAIT1_Waitus(50); /* give at least 10 us to charge the capacitor */
   timeout = TMOUT1_GetCounter(REF_SENSOR_TIMEOUT_MS/TMOUT1_TICK_PERIOD_MS); /* set up timeout counter */
+#if 0
   FRTOS1_vTaskSuspendAll();
-  
+#else
+  //FRTOS1_vTaskPrioritySet(NULL, FRTOS1_uxTaskPriorityGet(NULL)+2); /* prio above other tasks */
+#endif
   (void)RefCnt_ResetCounter(timerHandle); /* reset timer counter */
   for(i=0;i<REF_NOF_SENSORS;i++) {
     SensorFctArray[i].SetInput(); /* turn I/O line as input */
@@ -168,10 +171,14 @@ static void REF_MeasureRaw(SensorTimeType raw[REF_NOF_SENSORS]) {
     }
   } while(cnt!=REF_NOF_SENSORS);
   TMOUT1_LeaveCounter(timeout);
+#if 0
   FRTOS1_xTaskResumeAll();
+#else
+  //FRTOS1_vTaskPrioritySet(NULL, FRTOS1_uxTaskPriorityGet(NULL)-2); /* back to normal */
+#endif
   if (ledON) {
     IR_on(FALSE); /* IR LED's off */
-    WAIT1_Waitus(200);
+    //WAIT1_Waitus(200);
   }
   FRTOS1_xSemaphoreGive(mutexHandle);
 }
@@ -615,7 +622,7 @@ void REF_Init(void) {
   }
   timerHandle = RefCnt_Init(NULL);
   REF_InitSensorValues();
-  if (FRTOS1_xTaskCreate(ReflTask, (signed portCHAR *)"Refl", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (FRTOS1_xTaskCreate(ReflTask, (signed portCHAR *)"Refl", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1+2, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 }

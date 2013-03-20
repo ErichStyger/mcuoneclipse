@@ -118,7 +118,7 @@ static void MAZE_PrintStatus(const CLS1_StdIOType *io) {
   int i;
   
   CLS1_SendStatusStr((unsigned char*)"maze", (unsigned char*)"\r\n", io->stdOut);
-  CLS1_SendStatusStr((unsigned char*)"  solved", isSolved?(unsigned char*)"yes\r\n":(unsigned char*)"yes\r\n", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  solved", MAZE_IsSolved()?(unsigned char*)"yes\r\n":(unsigned char*)"yes\r\n", io->stdOut);
   CLS1_SendStatusStr((unsigned char*)"  path", (unsigned char*)"", io->stdOut);
   for(i=0;i<pathLength;i++) {
     CLS1_SendStr(TURN_TurnKindStr(path[i]), io->stdOut);
@@ -137,7 +137,7 @@ uint8_t MAZE_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
     MAZE_PrintStatus(io);
     *handled = TRUE;
   } else if (UTIL1_strcmp((char*)cmd, (char*)"maze unsolved")==0) {
-    isSolved = FALSE;
+    MAZE_ClearSolution();
     *handled = TRUE;
   }
   return res;

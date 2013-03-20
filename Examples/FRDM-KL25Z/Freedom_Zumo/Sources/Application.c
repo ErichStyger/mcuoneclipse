@@ -187,11 +187,11 @@ static void CheckButton(void) {
         /* perform automatic calibration */
         WAIT1_WaitOSms(1500); /* wait some time */
         TURN_Turn(TURN_LEFT90, FALSE);
-        WAIT1_WaitOSms(500); /* wait some time */
+        //WAIT1_WaitOSms(500); /* wait some time */
         TURN_Turn(TURN_RIGHT90, FALSE);
-        WAIT1_WaitOSms(100); /* wait some time */
+        //WAIT1_WaitOSms(100); /* wait some time */
         TURN_Turn(TURN_RIGHT90, FALSE);
-        WAIT1_WaitOSms(500); /* wait some time */
+        //WAIT1_WaitOSms(500); /* wait some time */
         TURN_Turn(TURN_LEFT90, FALSE);
         APP_StateStopCalibrate();
         CLS1_SendStr((unsigned char*)"auto-calibration finished.\r\n", CLS1_GetStdio()->stdOut);

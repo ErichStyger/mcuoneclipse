@@ -76,7 +76,6 @@ static bool FollowSegment(void) {
     PID_Process(currLine, REF_MIDDLE_LINE_VALUE); /* move forward on the line */
     return TRUE;
   } else {
-    TURN_Turn(TURN_STOP, FALSE); /* stop it */
     return FALSE; /* intersection/change of direction or not on line any more */
   }
 }
@@ -110,6 +109,8 @@ static uint8_t EvaluteTurn(bool *finished) {
     CLS1_SendStr((unsigned char*)"finished!\r\n", CLS1_GetStdio()->stdOut);
     return ERR_OK;
   } else if (turn==TURN_STRAIGHT) {
+    MAZE_AddPath(turn);
+    MAZE_SimplifyPath();
     CLS1_SendStr((unsigned char*)"going straight\r\n", CLS1_GetStdio()->stdOut);
     return ERR_OK; 
   } else if (turn==TURN_STOP) { /* should not happen here? */
