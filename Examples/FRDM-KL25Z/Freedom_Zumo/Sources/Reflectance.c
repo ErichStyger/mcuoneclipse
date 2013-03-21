@@ -206,6 +206,7 @@ static void ReadCalibrated(SensorTimeType calib[REF_NOF_SENSORS], SensorTimeType
     return;
   }
   for(i=0;i<REF_NOF_SENSORS;i++) {
+    x = 0;
     denominator = SensorMax[i]-SensorMin[i];
     if (denominator!=0) {
       x = (((int32_t)SensorRaw[i]-SensorMin[i])*1000)/denominator;
