@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.210</Version>
+    <Version>01.211</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -362,7 +362,7 @@ Mapping for number to vector for the MCF52259:\n
               <Name>Kinetis</Name>
               <Symbol>KinetisCPUSpecific</Symbol>
               <TypeSpec>typeEnaDis</TypeSpec>
-              <Hint>This group is used to configure the RTOS for the Kinetis cores</Hint>
+              <Hint>This group is used to configure the RTOS for the Kinetis/ARM cores</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
@@ -428,7 +428,7 @@ Mapping for number to vector for the MCF52259:\n
                   <TIntgItem>
                     <Name>Library Lowest Interrupt Priority</Name>
                     <Symbol>KinetisLibraryLowestInterruptPriority</Symbol>
-                    <Hint>Used for configLIBRARY_LOWEST_INTERRUPT_PRIORITY. The lowest interrupt priority that can be used in a call to a "set priority" function. This priority is used for the kernel port itself too. Note that 0 is the highest priority for Kinetis.</Hint>
+                    <Hint>Used for configLIBRARY_LOWEST_INTERRUPT_PRIORITY. The lowest interrupt priority that can be used in a call to a "set priority" function. This priority is used for the kernel port itself too. Note that 0 is the highest priority for ARM/Kinetis.</Hint>
                     <ItemLevel>BASIC</ItemLevel>
                     <EditLine>true</EditLine>
                     <DefaultValue>15</DefaultValue>
