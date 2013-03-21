@@ -281,7 +281,7 @@
 /* The highest interrupt priority that can be used by any interrupt service
    routine that makes calls to interrupt safe FreeRTOS API functions.  DO NOT CALL
    INTERRUPT SAFE FREERTOS API FUNCTIONS FROM ANY INTERRUPT THAT HAS A HIGHER
-   PRIORITY THAN THIS! (higher priorities are lower numeric values). */
+   PRIORITY THAN THIS! (higher priorities are lower numeric values on an ARM Cortex-M). */
 #define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY  %>50 %KinetisLibraryMaxInterruptPriority
 
 /* Interrupt priorities used by the kernel port layer itself.  These are generic
