@@ -3,9 +3,9 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (Init)
+%include Common\GeneralMethod.inc (Sample)
 %;**     Description :
-%;**         Module initialization method
+%;**         Call this method to periodically sample the signals.
 %include Common\GeneralParametersNone.inc
 %include Common\GeneralReturnNothing.inc
 %include Common\GeneralDamage.inc

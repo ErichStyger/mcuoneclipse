@@ -3,11 +3,12 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (Init)
+%include Common\GeneralMethod.inc (NofErrors)
 %;**     Description :
-%;**         Module initialization method
+%;**         Returns the number of decoding errors
 %include Common\GeneralParametersNone.inc
-%include Common\GeneralReturnNothing.inc
+%;**     Returns     :
+%;**         ---%RetVal %>27 - Error code
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

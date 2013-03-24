@@ -3,9 +3,9 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (Init)
+%include Common\GeneralMethod.inc (Deinit)
 %;**     Description :
-%;**         Module initialization method
+%;**         Module de-initialization method
 %include Common\GeneralParametersNone.inc
 %include Common\GeneralReturnNothing.inc
 %include Common\GeneralDamage.inc

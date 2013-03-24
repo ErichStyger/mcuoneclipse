@@ -4,7 +4,7 @@
     <Name>QuadCounter</Name>
     <Description>Counter/Decoder for a Digital Quadrature Encoder</Description>
     <Author>Erich Styger</Author>
-    <Version>01.001</Version>
+    <Version>01.011</Version>
     <Icon>QuadEncoder</Icon>
     <TypesFiles>PE,QuadCounter\QuadCounter</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -20,7 +20,7 @@
     <BW_NeedUst>0</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2012, all rights reserved.\n\nThis an open source software using Processor Expert.\nThis is a free software and is opened for education,  research  and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
+    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2013, all rights reserved.\n\nThis an open source software using Processor Expert.\nThis is a free software and is opened for education,  research  and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
     <Shortcut>Q4C</Shortcut>
     <DemoDriver>no</DemoDriver>
     <BeanLevel>Low</BeanLevel>
@@ -56,9 +56,9 @@
               <ItemLevel>BASIC</ItemLevel>
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
-              <Description>Disabled</Description>
-              <Expanded>No</Expanded>
-              <DefaultValue>false</DefaultValue>
+              <Description>Enabled</Description>
+              <Expanded>Yes</Expanded>
+              <DefaultValue>true</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
               <Children>
@@ -79,24 +79,6 @@
                     <DefaultValue>false</DefaultValue>
                     <Popup>false</Popup>
                   </TBoolItem>
-                </GrupItem>
-                <GrupItem>
-                  <TInhrItem>
-                    <Name>Timer</Name>
-                    <Symbol>Timer</Symbol>
-                    <TypeSpec>QuadCounter\SamplingTimer</TypeSpec>
-                    <Hint>Timer to be used</Hint>
-                    <ItemLevel>BASIC</ItemLevel>
-                    <EditLine>false</EditLine>
-                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-                    <DefaultIndex>-1</DefaultIndex>
-                    <TextValueIndex>false</TextValueIndex>
-                    <RuntimeProperty>false</RuntimeProperty>
-                    <CanDelete>false</CanDelete>
-                    <IconPopup>false</IconPopup>
-                    <InhrBeanBaseName>SamplingTimer</InhrBeanBaseName>
-                    <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
-                  </TInhrItem>
                 </GrupItem>
                 <GrupItem>
                   <TInhrItem>
@@ -147,9 +129,9 @@
               <ReadOnly>true</ReadOnly>
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
-              <Description>Enabled</Description>
-              <Expanded>Yes</Expanded>
-              <DefaultValue>true</DefaultValue>
+              <Description>Disabled</Description>
+              <Expanded>No</Expanded>
+              <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
               <Children>
@@ -276,6 +258,118 @@
         </Declarations>
       </TMthdItem>
     </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Sample</Name>
+        <Symbol>Sample</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Call this method to periodically sample the signals.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>NofErrors</Name>
+        <Symbol>NofErrors</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Returns the number of decoding errors</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>false</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>16bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>word #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Deinit</Name>
+        <Symbol>Deinit</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Module de-initialization method</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Init</Name>
+        <Symbol>Init</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Module initialization method</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
   </MethodList>
   <EventList>
     <Event>
@@ -300,9 +394,9 @@
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <Description>generate code</Description>
-        <Expanded>Yes</Expanded>
-        <DefaultValue>true</DefaultValue>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
         <IsAssembler>false</IsAssembler>
@@ -319,7 +413,7 @@
               <Hint>OnError procedure name</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
-              <DefaultValue>OnError</DefaultValue>
+              <DefaultValue/>
               <StrDefine>nothing</StrDefine>
               <MinLength>0</MinLength>
               <MaxLength>-1</MaxLength>

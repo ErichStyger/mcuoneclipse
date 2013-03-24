@@ -49,11 +49,6 @@
 %-
 %-BW_INTERN_COMMENTS_START
 %- List of descriptions of internal methods
-%ifdef Timer
-  %ifdef @Timer@OnInterrupt
-    %define! Description_%@Timer@OnInterrupt When a timer interrupt occurs this event is called (only when the bean is enabled - <a href="TimerIntMethods.html#Enable">Enable</a> and the events are enabled - <a href="TimerIntMethods.html#EnableEvent">EnableEvent</a>). This event is enabled only if a <a href="TimerIntProperties.html#IntService">interrupt service/event</a> is enabled. The event services the event of the inherited component and eventually invokes other events.
-  %endif %- @Timer@OnInterrupt
-%endif %- Timer
 %ifdef EventCounterC1
   %ifdef @EventCounterC1@OnEnd
     %define! Description_%@EventCounterC1@OnEnd This event is called when the specified number of iterations is generated. This event is available only if a <a href="UntitledProperties.html#IntService">interrupt service/event</a> enabled, the bean is in <a href="UntitledProperties.html#Mode">Repetitive mode</a> and is enabled - <a href="UntitledMethods.html#Enable">Enable</a> and the events are enabled - <a href="UntitledMethods.html#EnableEvent">EnableEvent</a>. The event services the event of the inherited component and eventually invokes other events.
@@ -115,7 +110,6 @@
 
 %-BW_DEFINITION_START
 %-************************************************************************************************************
-%-************************************************************************************************************
 %-BW_METHOD_BEGIN SetPos
 %ifdef SetPos
 void %'ModuleName'%.%SetPos(word pos);
@@ -125,9 +119,6 @@ void %'ModuleName'%.%SetPos(word pos);
 %endif %- SetPos
 %-BW_METHOD_END SetPos
 %-************************************************************************************************************
-%-************************************************************************************************************
-%-************************************************************************************************************
-%-************************************************************************************************************
 %-BW_METHOD_BEGIN GetPos
 %ifdef GetPos
 word %'ModuleName'%.%GetPos(void);
@@ -136,20 +127,45 @@ word %'ModuleName'%.%GetPos(void);
 
 %endif %- GetPos
 %-BW_METHOD_END GetPos
-%-INHERITED_EVENT_BEGIN Timer OnInterrupt
-%if %SamplingMethod = 'yes'
-%ifdef @Timer@OnInterrupt
-void %@Timer@OnInterrupt(void);
-%endif %- %SamplingMethod = 'yes'
-
-%-INHERITED_EVENT_END Timer OnInterrupt
-%endif %- @Timer@OnInterrupt
 %-INHERITED_EVENT_BEGIN EventCounterC1 OnEnd
 %ifdef @EventCounterC1@OnEnd
 void %@EventCounterC1@OnEnd(void);
 
 %endif %- @EventCounterC1@OnEnd
 %-INHERITED_EVENT_END EventCounterC1 OnEnd
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Sample
+%ifdef Sample
+void %'ModuleName'%.%Sample(void);
+%include Common\QuadCounterSample.Inc
+
+%endif %- Sample
+%-BW_METHOD_END Sample
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN NofErrors
+%ifdef NofErrors
+word %'ModuleName'%.%NofErrors(void);
+%define! RetVal
+%include Common\QuadCounterNofErrors.Inc
+
+%endif %- NofErrors
+%-BW_METHOD_END NofErrors
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Deinit
+%ifdef Deinit
+void %'ModuleName'%.%Deinit(void);
+%include Common\QuadCounterDeinit.Inc
+
+%endif %- Deinit
+%-BW_METHOD_END Deinit
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Init
+%ifdef Init
+void %'ModuleName'%.%Init(void);
+%include Common\QuadCounterInit.Inc
+
+%endif %- Init
+%-BW_METHOD_END Init
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -339,6 +355,11 @@ static byte %'ModuleName'%.last_quadrature_value; /*! Value of C1&C2 during last
 %endif %- %SamplingMethod = 'yes'
 
 static word %'ModuleName'%.currPos = 0; /*!< Current position */
+%ifdef NofErrors
+static word %'ModuleName'%.nofErrors = 0;
+%endif
+
+#define %'ModuleName'%.GET_C1_C2_PINS()  ((%@C1@'ModuleName'%.GetVal()!=0?2:0)|(%@C2@'ModuleName'%.GetVal()!=0?1:0))
 
 %-BW_CUSTOM_VARIABLE_END
 %-BW_INTERN_METHOD_DECL_START
@@ -370,39 +391,6 @@ word %'ModuleName'%.%GetPos(void)
 %endif %- GetPos
 %-BW_METHOD_END GetPos
 %-************************************************************************************************************
-%-INHERITED_EVENT_BEGIN Timer OnInterrupt
-%if %SamplingMethod = 'yes'
-%ifdef @Timer@OnInterrupt
-%include Common\GeneralInternal.inc (OnInterrupt)
-void %@Timer@OnInterrupt(void)
-{
-  signed char new_step;
-  byte c12; /* value of the two sensor input */
-
-  c12 = (%@C1@'ModuleName'%.GetVal()!=0?2:0)|(%@C2@'ModuleName'%.GetVal()!=0?1:0);
-%if %ErrorCorrection = 'yes'
-  new_step = %'ModuleName'%.Quad_Table[%'ModuleName'%.prevlast_quadrature_value][%'ModuleName'%.last_quadrature_value][c12];
-  %'ModuleName'%.prevlast_quadrature_value = %'ModuleName'%.last_quadrature_value;
-%else
-  new_step = %'ModuleName'%.Quad_Table[%'ModuleName'%.last_quadrature_value][c12];
-%endif %- ErrorCorrection
-  %'ModuleName'%.last_quadrature_value = c12;
-%ifdef OnError
-  if (new_step == QUAD_ERROR) {
-    %OnError(); /* call error handler */
-  } else if (new_step != 0) {
-    %'ModuleName'%.currPos += new_step;
-  }
-%else
-  if (new_step != 0) {
-    %'ModuleName'%.currPos += new_step;
-  }
-%endif %- OnError
-}
-
-%endif %- @Timer@OnInterrupt
-%endif %- %SamplingMethod = 'yes'
-%-INHERITED_EVENT_END Timer OnInterrupt
 %-INHERITED_EVENT_BEGIN EventCounterC1 OnEnd
 %ifdef @EventCounterC1@OnEnd
 %include Common\GeneralInternal.inc (OnEnd)
@@ -417,6 +405,78 @@ void %@EventCounterC1@OnEnd(void)
 
 %endif %- @EventCounterC1@OnEnd
 %-INHERITED_EVENT_END EventCounterC1 OnEnd
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Sample
+%ifdef Sample
+%include Common\QuadCounterSample.Inc
+void %'ModuleName'%.%Sample(void)
+{
+  signed char new_step;
+  byte c12; /* value of the two sensor input */
+
+  c12 = (%@C1@'ModuleName'%.GetVal()!=0?2:0)|(%@C2@'ModuleName'%.GetVal()!=0?1:0);
+%if %ErrorCorrection = 'yes'
+  new_step = %'ModuleName'%.Quad_Table[%'ModuleName'%.prevlast_quadrature_value][%'ModuleName'%.last_quadrature_value][c12];
+  %'ModuleName'%.prevlast_quadrature_value = %'ModuleName'%.last_quadrature_value;
+%else
+  new_step = %'ModuleName'%.Quad_Table[%'ModuleName'%.last_quadrature_value][c12];
+%endif %- ErrorCorrection
+  %'ModuleName'%.last_quadrature_value = c12;
+  if (new_step == QUAD_ERROR) {
+%ifdef NofErrors
+    %'ModuleName'%.nofErrors++;
+%endif
+%ifdef OnError
+    %OnError(); /* call error handler */
+%endif
+  } else if (new_step != 0) {
+    %'ModuleName'%.currPos += new_step;
+  }
+}
+
+%endif %- Sample
+%-BW_METHOD_END Sample
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN NofErrors
+%ifdef NofErrors
+%define! RetVal
+%include Common\QuadCounterNofErrors.Inc
+word %'ModuleName'%.%NofErrors(void)
+{
+  return %'ModuleName'%.nofErrors;
+}
+
+%endif %- NofErrors
+%-BW_METHOD_END NofErrors
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Deinit
+%ifdef Deinit
+%include Common\QuadCounterDeinit.Inc
+void %'ModuleName'%.%Deinit(void)
+{
+  /* nothing needed */
+}
+
+%endif %- Deinit
+%-BW_METHOD_END Deinit
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Init
+%ifdef Init
+%include Common\QuadCounterInit.Inc
+void %'ModuleName'%.%Init(void)
+{
+  %'ModuleName'%.currPos = 0;
+  %'ModuleName'%.last_quadrature_value = %'ModuleName'%.GET_C1_C2_PINS();
+%if %ErrorCorrection = 'yes'
+  %'ModuleName'%.prevlast_quadrature_value = %'ModuleName'%.last_quadrature_value;
+%endif
+%ifdef NofErrors
+  %'ModuleName'%.nofErrors = 0;
+%endif
+}
+
+%endif %- Init
+%-BW_METHOD_END Init
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
@@ -425,12 +485,23 @@ void %@EventCounterC1@OnEnd(void)
 %-
 %-BW_EVENT_IMPLEMENT_START
 %-************************************************************************************************************
+%-BW_METHOD_BEGIN OnError
+%ifdef OnError
+%IMPLEMENTATION OnError
+%include Common\QuadCounterOnError.Inc
+void %OnError(void)
+{
+  /* Write your code here ... */
+}
+
+%endif %- OnError
+%-BW_METHOD_END OnError
 %-BW_EVENT_IMPLEMENT_END
 %INITIALIZATION
   /* ### %DeviceType "%DeviceName" init code ... */
 %CODE_BEGIN
 %CODE_END
-%-
+%'ModuleName'%.%Init();
 %ENABLE
 %CODE_BEGIN
 %CODE_END

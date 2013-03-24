@@ -3,12 +3,11 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (Init)
+%include Common\GeneralEvent.inc (OnEvent)
 %;**     Description :
-%;**         Module initialization method
+%;**         Called in case of a failure during decoding.
 %include Common\GeneralParametersNone.inc
 %include Common\GeneralReturnNothing.inc
-%include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine
 %}
