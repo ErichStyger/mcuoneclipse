@@ -128,10 +128,12 @@ word %'ModuleName'%.%GetPos(void);
 %endif %- GetPos
 %-BW_METHOD_END GetPos
 %-INHERITED_EVENT_BEGIN EventCounterC1 OnEnd
+%if InputCaptureMethod='yes'
 %ifdef @EventCounterC1@OnEnd
 void %@EventCounterC1@OnEnd(void);
 
 %endif %- @EventCounterC1@OnEnd
+%endif
 %-INHERITED_EVENT_END EventCounterC1 OnEnd
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Sample
@@ -359,8 +361,10 @@ static word %'ModuleName'%.currPos = 0; /*!< Current position */
 static word %'ModuleName'%.nofErrors = 0;
 %endif
 
+%if %SamplingMethod='yes'
 #define %'ModuleName'%.GET_C1_C2_PINS()  ((%@C1@'ModuleName'%.GetVal()!=0?2:0)|(%@C2@'ModuleName'%.GetVal()!=0?1:0))
 
+%endif
 %-BW_CUSTOM_VARIABLE_END
 %-BW_INTERN_METHOD_DECL_START
 %- List of internal methods headers
@@ -392,6 +396,7 @@ word %'ModuleName'%.%GetPos(void)
 %-BW_METHOD_END GetPos
 %-************************************************************************************************************
 %-INHERITED_EVENT_BEGIN EventCounterC1 OnEnd
+%if InputCaptureMethod='yes'
 %ifdef @EventCounterC1@OnEnd
 %include Common\GeneralInternal.inc (OnEnd)
 void %@EventCounterC1@OnEnd(void)
@@ -404,6 +409,7 @@ void %@EventCounterC1@OnEnd(void)
 }
 
 %endif %- @EventCounterC1@OnEnd
+%endif
 %-INHERITED_EVENT_END EventCounterC1 OnEnd
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Sample
@@ -466,8 +472,10 @@ void %'ModuleName'%.%Deinit(void)
 void %'ModuleName'%.%Init(void)
 {
   %'ModuleName'%.currPos = 0;
+%if %SamplingMethod='yes'
   %'ModuleName'%.last_quadrature_value = %'ModuleName'%.GET_C1_C2_PINS();
-%if %ErrorCorrection = 'yes'
+%endif
+%if %SamplingMethod='yes' & %ErrorCorrection = 'yes'
   %'ModuleName'%.prevlast_quadrature_value = %'ModuleName'%.last_quadrature_value;
 %endif
 %ifdef NofErrors

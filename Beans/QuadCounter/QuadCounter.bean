@@ -4,7 +4,7 @@
     <Name>QuadCounter</Name>
     <Description>Counter/Decoder for a Digital Quadrature Encoder</Description>
     <Author>Erich Styger</Author>
-    <Version>01.011</Version>
+    <Version>01.013</Version>
     <Icon>QuadEncoder</Icon>
     <TypesFiles>PE,QuadCounter\QuadCounter</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -126,11 +126,10 @@
               <TypeSpec>typeEnaDis</TypeSpec>
               <Hint>This group controls the input capture</Hint>
               <ItemLevel>BASIC</ItemLevel>
-              <ReadOnly>true</ReadOnly>
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
               <Description>Disabled</Description>
-              <Expanded>No</Expanded>
+              <Expanded>Yes</Expanded>
               <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>

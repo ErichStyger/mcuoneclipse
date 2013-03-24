@@ -1,0 +1,5 @@
+%if SamplingMethod='yes'
+  %set Sample Selection always
+%else
+  %set Sample Selection never
+%endif
