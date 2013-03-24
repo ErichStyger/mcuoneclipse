@@ -42,40 +42,51 @@ void Cpu_OnNMIINT(void)
 
 /*
 ** ===================================================================
-**     Event       :  TI1_OnInterrupt (module Events)
+**     Event       :  DMAT1_OnComplete (module Events)
 **
-**     Component   :  TI1 [TimerInt]
+**     Component   :  DMAT1 [DMATransfer_LDD]
 **     Description :
-**         When a timer interrupt occurs this event is called (only
-**         when the component is enabled - <Enable> and the events are
-**         enabled - <EnableEvent>). This event is enabled only if a
-**         <interrupt service/event> is enabled.
-**     Parameters  : None
+**         Called at the end of a DMA transfer. If the Half complete
+**         property in initialization section is anabled, this event is
+**         also called when current major iteration count reaches the
+**         halfway point. See SetEventMask() and GetEventMask() methods.
+**         This event is enabled only if Interrupts property in Channel
+**         select section is enabled.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
 **     Returns     : Nothing
 ** ===================================================================
 */
-void TI1_OnInterrupt(void)
+void DMA1_OnComplete(void)
 {
-  LOGIC_Sample();
+  LOGIC_dmat1OnCompleted();
 }
 
 /*
 ** ===================================================================
-**     Event       :  TI2_OnInterrupt (module Events)
+**     Event       :  DMAT1_OnError (module Events)
 **
-**     Component   :  TI2 [TimerInt]
+**     Component   :  DMAT1 [DMATransfer_LDD]
 **     Description :
-**         When a timer interrupt occurs this event is called (only
-**         when the component is enabled - <Enable> and the events are
-**         enabled - <EnableEvent>). This event is enabled only if a
-**         <interrupt service/event> is enabled.
-**     Parameters  : None
+**         Called when error in channel settings is detected. See
+**         SetEventMask() and GetEventMask() methods. This event is
+**         enabled only if Interrupts property in Channel select
+**         section is enabled.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
 **     Returns     : Nothing
 ** ===================================================================
 */
-void TI2_OnInterrupt(void)
+void DMA1_OnError(void)
 {
-  LOGIC_Sample();
+  /* Write your code here ... */
+	LOGIC_dmat1OnError();
 }
 
 /* END Events */
