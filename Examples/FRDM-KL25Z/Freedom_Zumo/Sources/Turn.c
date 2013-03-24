@@ -28,6 +28,7 @@
 #endif
 
 #define TURN_WAIT_AFTER_STEP_MS  0 /*10*/  /* wait this time after a step to have the motor PWM effective */
+#define TURN_STOP_AFTER_TURN     0
 
 static uint8_t TURN_DutyPercent = TURN_TURN_PERCENT;
 static uint16_t TURN_TimeMs = TURN_90_WAIT_TIME_MS;
@@ -74,10 +75,12 @@ void TURN_Turn(TURN_Kind kind, bool toLine) {
 #else
       WAIT1_WaitOSms(TURN_TimeMs); /* only use waiting time */
 #endif
+#if TURN_STOP_AFTER_TURN
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 0);
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 0);
 #if TURN_WAIT_AFTER_STEP_MS > 0
       WAIT1_WaitOSms(TURN_WAIT_AFTER_STEP_MS);
+#endif
 #endif
       break;
     case TURN_RIGHT90:
@@ -95,50 +98,60 @@ void TURN_Turn(TURN_Kind kind, bool toLine) {
 #else
       WAIT1_WaitOSms(TURN_TimeMs); /* only use waiting time */
 #endif
+#if TURN_STOP_AFTER_TURN
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 0);
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 0);
 #if TURN_WAIT_AFTER_STEP_MS > 0
       WAIT1_WaitOSms(TURN_WAIT_AFTER_STEP_MS);
+#endif
 #endif
       break;
     case TURN_LEFT180:
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), -TURN_DutyPercent);
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), TURN_DutyPercent);
       WAIT1_WaitOSms(2*TURN_TimeMs);
+#if TURN_STOP_AFTER_TURN
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 0);
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 0);
 #if TURN_WAIT_AFTER_STEP_MS > 0
       WAIT1_WaitOSms(TURN_WAIT_AFTER_STEP_MS);
+#endif
 #endif
      break;
     case TURN_RIGHT180:
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), TURN_DutyPercent);
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), -TURN_DutyPercent);
       WAIT1_WaitOSms(2*TURN_TimeMs);
+#if TURN_STOP_AFTER_TURN
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 0);
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 0);
 #if TURN_WAIT_AFTER_STEP_MS > 0
       WAIT1_WaitOSms(TURN_WAIT_AFTER_STEP_MS);
+#endif
 #endif
      break;
     case TURN_STEP_FW:
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), TURN_DutyPercent);
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), TURN_DutyPercent);
       WAIT1_WaitOSms(TURN_StepMs);
+#if TURN_STOP_AFTER_TURN
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 0);
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 0);
 #if TURN_WAIT_AFTER_STEP_MS > 0
       WAIT1_WaitOSms(TURN_WAIT_AFTER_STEP_MS);
+#endif
 #endif
       break;
     case TURN_STEP_BW:
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), -TURN_DutyPercent);
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), -TURN_DutyPercent);
       WAIT1_WaitOSms(TURN_StepMs);
+#if TURN_STOP_AFTER_TURN
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 0);
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 0);
 #if TURN_WAIT_AFTER_STEP_MS > 0
       WAIT1_WaitOSms(TURN_WAIT_AFTER_STEP_MS);
+#endif
 #endif
       break;
     case TURN_STOP:
@@ -199,22 +212,27 @@ uint8_t TURN_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
     TURN_PrintStatus(io);
     *handled = TRUE;
   } else if (UTIL1_strcmp((char*)cmd, (char*)"turn left")==0) {
-    TURN_Turn(TURN_LEFT90, TRUE);
+    TURN_Turn(TURN_LEFT90, FALSE);
+    TURN_Turn(TURN_STOP, FALSE);
     *handled = TRUE;
   } else if (UTIL1_strcmp((char*)cmd, (char*)"turn right")==0) {
-    TURN_Turn(TURN_RIGHT90, TRUE);
+    TURN_Turn(TURN_RIGHT90, FALSE);
+    TURN_Turn(TURN_STOP, FALSE);
     *handled = TRUE;
   } else if (UTIL1_strcmp((char*)cmd, (char*)"turn around")==0) {
-    TURN_Turn(TURN_LEFT180, TRUE);
+    TURN_Turn(TURN_LEFT180, FALSE);
+    TURN_Turn(TURN_STOP, FALSE);
     *handled = TRUE;
   } else if (UTIL1_strcmp((char*)cmd, (char*)"turn forward")==0) {
     REF_ClearHistory(); /* clear values */
     TURN_Turn(TURN_STEP_FW, FALSE);
+    TURN_Turn(TURN_STOP, FALSE);
     CLS1_SendStr((unsigned char*)REF_LineKindStr(REF_HistoryLineKind()), CLS1_GetStdio()->stdOut);
     CLS1_SendStr((unsigned char*)"\r\n", CLS1_GetStdio()->stdOut);
     *handled = TRUE;
   } else if (UTIL1_strcmp((char*)cmd, (char*)"turn backward")==0) {
     TURN_Turn(TURN_STEP_BW, FALSE);
+    TURN_Turn(TURN_STOP, FALSE);
     *handled = TRUE;
   } else if (UTIL1_strncmp((char*)cmd, (char*)"turn duty ", sizeof("turn duty ")-1)==0) {
     p = cmd+sizeof("turn duty");

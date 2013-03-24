@@ -18,8 +18,12 @@ void MAZE_SimplifyPath(void);
 bool MAZE_IsSolved(void);
 void MAZE_SetSolved(void);
 
-void MAZE_StartSolved(void);
-TURN_Kind MAZE_GetSolvedTurn(void);
+/**
+ * \brief reverts the path 
+ */
+void MAZE_RevertPath(void);
+
+TURN_Kind MAZE_GetSolvedTurn(uint8_t *solvedIdx);
 void MAZE_ClearSolution(void);
 
 /*!

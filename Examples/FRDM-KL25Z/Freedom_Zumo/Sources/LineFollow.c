@@ -22,7 +22,7 @@
   #include "Buzzer.h"
 #endif
 
-#define LINE_DEBUG   1   /* careful: this will slow down the PID loop frequency! */
+#define LINE_DEBUG   0   /* careful: this will slow down the PID loop frequency! */
 
 typedef enum {
   STATE_IDLE,
@@ -34,12 +34,13 @@ typedef enum {
 
 static volatile StateType LF_currState = STATE_IDLE;
 static volatile bool LF_stopIt = FALSE;
+static uint8_t LF_solvedIdx = 0; /*  index to iterate through the solution */
 
 void LF_StartFollowing(void) {
   if (!MAZE_IsSolved()) {
     MAZE_Init();
   } else {
-    MAZE_StartSolved();
+    LF_solvedIdx = 0;
   }
   PID_Init();
   if (REF_CanUseSensor()) {
@@ -145,9 +146,9 @@ static void StateMachine(void) {
       if (MAZE_IsSolved()) {
         TURN_Kind turn;
         
-        turn = MAZE_GetSolvedTurn();
+        turn = MAZE_GetSolvedTurn(&LF_solvedIdx);
         if (turn==TURN_STOP) { /* last turn reached */
-          TURN_Turn(TURN_STEP_FW, FALSE); /* step into finish area */
+          TURN_Turn(turn, FALSE);
           LF_currState = STATE_FINISHED;
         } else { /* perform turning */
           TURN_Turn(TURN_STEP_FW, FALSE); /* need to do this in order to turn on the middle of the intersection */
@@ -159,6 +160,10 @@ static void StateMachine(void) {
           if (finished) {
             LF_currState = STATE_FINISHED;
             MAZE_SetSolved();
+            /* turn the robot */
+            TURN_Turn(TURN_LEFT180, FALSE);
+            TURN_Turn(TURN_STOP, FALSE);
+            /* now ready to do line following */
           } else {
             LF_currState = STATE_FOLLOW_SEGMENT;
           }

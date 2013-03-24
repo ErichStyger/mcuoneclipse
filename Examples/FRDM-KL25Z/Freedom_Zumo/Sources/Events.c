@@ -20,6 +20,9 @@
 #include "Events.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "Platform.h"
+#include "TRG1.h"
+#include "TMOUT1.h"
 
 /*
 ** ===================================================================
@@ -110,24 +113,6 @@ void FRTOS1_vApplicationMallocFailedHook(void)
   for(;;) {}
 }
 
-/*
-** ===================================================================
-**     Event       :  EVNT1_AppHandleEvent (module Events)
-**
-**     Component   :  EVNT1 [SimpleEvents]
-**     Description :
-**         
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**         event           - Event (event number) to be processed.
-**     Returns     : Nothing
-** ===================================================================
-*/
-void EVNT1_AppHandleEvent(byte event)
-{
-  (void)event; /* only to avoid compiler warning about unused variable */
-  /* Write your code here ... */
-}
 
 /* END Events */
 

@@ -13,8 +13,34 @@
 #define MAZE_LEFT_HAND_RULE  1  /* 1 for 'left-hand-on-the-wall, 0 otherwise */
 
 static TURN_Kind path[MAZE_MAX_PATH];
-static uint8_t pathLength, solvedIdx;
+static uint8_t pathLength;
 static bool isSolved = FALSE;
+
+static TURN_Kind RevertTurn(TURN_Kind turn) {
+  if (turn==TURN_LEFT90) {
+    turn = TURN_RIGHT90;
+  } else if (turn==TURN_RIGHT90) {
+    turn = TURN_LEFT90;
+  }
+  return turn;
+}
+
+void MAZE_RevertPath(void) {
+  int i, j;
+  TURN_Kind tmp;
+  
+  if (pathLength==0) {
+    return;
+  }
+  j = pathLength-1;
+  i = 0;
+  while(i<=j) {
+    tmp = path[i];
+    path[i] = RevertTurn(path[j]);
+    path[j] = RevertTurn(tmp);
+    i++; j--;
+  }
+}
 
 TURN_Kind MAZE_SelectTurn(REF_LineKind prev, REF_LineKind curr) {
   if (prev==REF_LINE_NONE && curr==REF_LINE_NONE) { /* dead end */
@@ -55,6 +81,8 @@ TURN_Kind MAZE_SelectTurn(REF_LineKind prev, REF_LineKind curr) {
 
 void MAZE_SetSolved(void) {
   isSolved = TRUE;
+  MAZE_RevertPath();
+  MAZE_AddPath(TURN_STOP); /* add an action to stop */
 }
 
 bool MAZE_IsSolved(void) {
@@ -143,23 +171,18 @@ uint8_t MAZE_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
   return res;
 }
 
-TURN_Kind MAZE_GetSolvedTurn(void) {
-  if (solvedIdx < pathLength) {
-    return path[solvedIdx++];
+TURN_Kind MAZE_GetSolvedTurn(uint8_t *solvedIdx) {
+  if (*solvedIdx < pathLength) {
+    return path[(*solvedIdx)++];
   } else {
     return TURN_STOP; 
   }
-}
-
-void MAZE_StartSolved(void) {
-  solvedIdx = 0;
 }
 
 void MAZE_ClearSolution(void) {
   isSolved = FALSE;
   pathLength = 0;
 }
-
 
 void MAZE_Init(void) {
   MAZE_ClearSolution();
