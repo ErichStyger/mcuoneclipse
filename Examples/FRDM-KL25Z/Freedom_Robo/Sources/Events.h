@@ -24,7 +24,6 @@
 #include "PE_Const.h"
 #include "IO_Map.h"
 #include "FRTOS1.h"
-#include "RTOSCNTRLDD1.h"
 #include "RTOSTICKLDD1.h"
 #include "UTIL1.h"
 #include "WAIT1.h"
@@ -61,19 +60,22 @@
 #include "RefCnt.h"
 #include "SW1.h"
 #include "BitIoLdd17.h"
-#include "C11.h"
-#include "BitIoLdd19.h"
-#include "C12.h"
-#include "BitIoLdd20.h"
-#include "C21.h"
-#include "BitIoLdd22.h"
-#include "C22.h"
-#include "BitIoLdd21.h"
 #include "BT1.h"
 #include "Cmd2.h"
 #include "BitIoLdd23.h"
 #include "Serial2.h"
 #include "ASerialLdd3.h"
+#include "HF1.h"
+#include "Q4CLeft.h"
+#include "C13.h"
+#include "BitIoLdd24.h"
+#include "C24.h"
+#include "BitIoLdd25.h"
+#include "Q4CRight.h"
+#include "C14.h"
+#include "BitIoLdd27.h"
+#include "C26.h"
+#include "BitIoLdd28.h"
 #include "LEDR.h"
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"
@@ -134,20 +136,6 @@ void FRTOS1_vApplicationTickHook(void);
 **     Description :
 **         If enabled, this hook will be called by the RTOS for every
 **         tick increment.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-
-void FRTOS1_vApplicationIdleHook(void);
-/*
-** ===================================================================
-**     Event       :  FRTOS1_vApplicationIdleHook (module Events)
-**
-**     Component   :  FRTOS1 [FreeRTOS]
-**     Description :
-**         If enabled, this hook will be called when the RTOS is idle.
-**         This might be a good place to go into low power mode.
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================
@@ -275,6 +263,19 @@ void TU_US_OnChannel0(LDD_TUserData *UserDataPtr);
 **     Returns     : Nothing
 ** ===================================================================
 */
+void Q4CLeft_OnError(void);
+/*
+** ===================================================================
+**     Event       :  Q4CLeft_OnError (module Events)
+**
+**     Component   :  Q4CLeft [QuadCounter]
+**     Description :
+**         Called in case of a failure during decoding.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
 /* END Events */
 #endif /* __Events_H*/
 

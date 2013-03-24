@@ -27,16 +27,18 @@
 #if PL_HAS_BUZZER
   #include "Buzzer.h"
 #endif
+#include "Application.h"
 
 static LDD_TDeviceData *timerHandle;
 static xQueueHandle mutexHandle;
 static bool doMinMaxCalibration = FALSE;
+#define REF_SENSOR_TIMEOUT_MS  3  /* after this time, consider no reflection (black) */
 #if PL_IS_ZUMO_ROBOT
-  #define REF_MIN_LINE_VAL   0x50  /* minimum value indicating a line */
-  #define REF_MIN_NOISE_VAL  0x32  /* values below this are not added to the weighted sum */
+  #define REF_MIN_LINE_VAL   0x100  /* minimum value indicating a line */
+  #define REF_MIN_NOISE_VAL  0x45   /* values below this are not added to the weighted sum */
 #else
-  #define REF_MIN_LINE_VAL   0x60  /* minimum value indicating a line */
-  #define REF_MIN_NOISE_VAL  0x32   /* values below this are not added to the weighted sum */
+  #define REF_MIN_LINE_VAL   0x20   /* minimum value indicating a line */
+  #define REF_MIN_NOISE_VAL  0x0F   /* values below this are not added to the weighted sum */
 #endif
 
 typedef struct {
@@ -47,15 +49,17 @@ typedef struct {
 } SensorFctType;
 
 typedef uint16_t SensorTimeType;
-#define MAX_SENSOR_VALUE ((SensorTimeType)-1)
+#define MAX_SENSOR_VALUE  ((SensorTimeType)-1)
+#define REF_NOF_HISTORY   1
 
 static SensorTimeType SensorRaw[REF_NOF_SENSORS]; 
 static SensorTimeType SensorMin[REF_NOF_SENSORS]; 
 static SensorTimeType SensorMax[REF_NOF_SENSORS]; 
 static SensorTimeType SensorCalibrated[REF_NOF_SENSORS]; /* 0 means white/min value, 1000 means black/max value */
+static SensorTimeType SensorHistory[REF_NOF_SENSORS];
 static bool isCalibrated = FALSE;
 static bool ledON = TRUE;
-static int16_t refLineVal=0; /* 0 means no line, >0 means line is below sensor 0, 1000 below sensor 1 and so on */
+static int16_t refCenterLineVal=0; /* 0 means no line, >0 means line is below sensor 0, 1000 below sensor 1 and so on */
 static REF_LineKind refLineKind = REF_LINE_NONE;
 
 /* Functions as wrapper around macro. Number S1 is on the right side */
@@ -141,9 +145,12 @@ static void REF_MeasureRaw(SensorTimeType raw[REF_NOF_SENSORS]) {
     raw[i] = MAX_SENSOR_VALUE;
   }
   WAIT1_Waitus(50); /* give at least 10 us to charge the capacitor */
-  timeout = TMOUT1_GetCounter(20/TMOUT1_TICK_PERIOD_MS); /* set up timeout counter */
+  timeout = TMOUT1_GetCounter(REF_SENSOR_TIMEOUT_MS/TMOUT1_TICK_PERIOD_MS); /* set up timeout counter */
+#if 0
   FRTOS1_vTaskSuspendAll();
-  
+#else
+  //FRTOS1_vTaskPrioritySet(NULL, FRTOS1_uxTaskPriorityGet(NULL)+2); /* prio above other tasks */
+#endif
   (void)RefCnt_ResetCounter(timerHandle); /* reset timer counter */
   for(i=0;i<REF_NOF_SENSORS;i++) {
     SensorFctArray[i].SetInput(); /* turn I/O line as input */
@@ -151,7 +158,7 @@ static void REF_MeasureRaw(SensorTimeType raw[REF_NOF_SENSORS]) {
   do {
     cnt = 0;
     if (TMOUT1_CounterExpired(timeout)) {
-      break; /* get out of wile loop */
+      break; /* get out of while loop */
     }
     for(i=0;i<REF_NOF_SENSORS;i++) {
       if (raw[i]==MAX_SENSOR_VALUE) { /* not measured yet? */
@@ -164,32 +171,16 @@ static void REF_MeasureRaw(SensorTimeType raw[REF_NOF_SENSORS]) {
     }
   } while(cnt!=REF_NOF_SENSORS);
   TMOUT1_LeaveCounter(timeout);
+#if 0
   FRTOS1_xTaskResumeAll();
+#else
+  //FRTOS1_vTaskPrioritySet(NULL, FRTOS1_uxTaskPriorityGet(NULL)-2); /* back to normal */
+#endif
   if (ledON) {
     IR_on(FALSE); /* IR LED's off */
-    WAIT1_Waitus(200);
+    //WAIT1_Waitus(200);
   }
   FRTOS1_xSemaphoreGive(mutexHandle);
-}
-
-void REF_CalibrateAverage(SensorTimeType values[REF_NOF_SENSORS], SensorTimeType raw[REF_NOF_SENSORS]) {
-  uint32_t sum[REF_NOF_SENSORS];
-  #define CALIB_NOF_MEASUREMENT 8
-  int i, j;
-  
-  for(i=0;i<REF_NOF_SENSORS;i++) {
-    sum[i] = 0; /* init */
-  }
-  for(j=0;j<CALIB_NOF_MEASUREMENT;j++) {
-    REF_MeasureRaw(raw);
-    for(i=0;i<REF_NOF_SENSORS;i++) {
-      sum[i]+=raw[i];
-    }
-  }
-  /* build average */
-  for(i=0;i<REF_NOF_SENSORS;i++) {
-    values[i] = sum[i]/CALIB_NOF_MEASUREMENT;
-  }
 }
 
 void REF_CalibrateMinMax(SensorTimeType min[REF_NOF_SENSORS], SensorTimeType max[REF_NOF_SENSORS], SensorTimeType raw[REF_NOF_SENSORS]) {
@@ -215,6 +206,7 @@ static void ReadCalibrated(SensorTimeType calib[REF_NOF_SENSORS], SensorTimeType
     return;
   }
   for(i=0;i<REF_NOF_SENSORS;i++) {
+    x = 0;
     denominator = SensorMax[i]-SensorMin[i];
     if (denominator!=0) {
       x = (((int32_t)SensorRaw[i]-SensorMin[i])*1000)/denominator;
@@ -232,14 +224,14 @@ static void ReadCalibrated(SensorTimeType calib[REF_NOF_SENSORS], SensorTimeType
  * Operates the same as read calibrated, but also returns an
  * estimated position of the robot with respect to a line. The
  * estimate is made using a weighted average of the sensor indices
- * multiplied by 1000, so that a return value of 0 indicates that
- * the line is directly below sensor 0, a return value of 1000
+ * multiplied by 1000, so that a return value of 1000 indicates that
+ * the line is directly below sensor 0, a return value of 2000
  * indicates that the line is directly below sensor 1, 2000
  * indicates that it's below sensor 2000, etc. Intermediate
  * values indicate that the line is between two sensors. The
  * formula is:
  *
- * 0*value0 + 1000*value1 + 2000*value2 + ...
+ * 1000*value0 + 2000*value1 + 3000*value2 + ...
  * --------------------------------------------
  * value0 + value1 + value2 + ...
  *
@@ -249,49 +241,59 @@ static void ReadCalibrated(SensorTimeType calib[REF_NOF_SENSORS], SensorTimeType
  * this case, each sensor value will be replaced by (1000-value)
  * before the averaging.
  */
-static int ReadLine(SensorTimeType calib[REF_NOF_SENSORS], SensorTimeType raw[REF_NOF_SENSORS], bool white_line) {
+#define RETURN_LAST_VALUE  0
+static int ReadLine(SensorTimeType calib[REF_NOF_SENSORS], SensorTimeType raw[REF_NOF_SENSORS], bool white_line, int startIdx, int endIdx) {
   unsigned char i;
-  bool on_line = FALSE;
   unsigned long avg; /* this is for the weighted total, which is long */
   /* before division */
   unsigned int sum; /* this is for the denominator which is <= 64000 */
+  unsigned int mul; /* multiplication factor, 0, 1000, 2000, 3000 ... */
+  int value;
+#if RETURN_LAST_VALUE  
+  bool on_line = FALSE;
   static int last_value=0; /* assume initially that the line is left. */
+#endif
   
-  ReadCalibrated(calib, raw);
   avg = 0;
   sum = 0;
-  for(i=0;i<REF_NOF_SENSORS;i++) {
-    int value = calib[i];
+  mul = (startIdx+1)*1000;
+  for(i=startIdx;i<=endIdx;i++) {
+    value = calib[i];
     if(white_line) {
       value = 1000-value;
     }
-    /* keep track of whether we see the line at all */
-    if(value > REF_MIN_LINE_VAL) {
-      on_line = TRUE;
-    }
     /* only average in values that are above a noise threshold */
     if(value > REF_MIN_NOISE_VAL) {
-      avg += (long)(value) * (i * 1000);
+      avg += ((long)value) * mul;
       sum += value;
     }
+    mul += 1000;
+  }
+#if RETURN_LAST_VALUE
+  /* keep track of whether we see the line at all */
+  if(value > REF_MIN_LINE_VAL) {
+    on_line = TRUE;
   }
   if(!on_line) { /* If it last read to the left of center, return 0. */
-    if(last_value < (REF_NOF_SENSORS-1)*1000/2) {
+    if(last_value < endIdx*1000/2) {
       return 0;
     } else { /* If it last read to the right of center, return the max. */
-      return (REF_NOF_SENSORS-1)*1000;
+      return endIdx*1000;
     }
   }
   last_value = avg/sum;
   return last_value;
+#else
+  return avg/sum;
+#endif
 }
 
-unsigned char *LF_LineKindStr(REF_LineKind line) {
+unsigned char *REF_LineKindStr(REF_LineKind line) {
   switch(line) {
   case REF_LINE_NONE:
     return (unsigned char *)"NONE";
-  case REF_LINE_FORWARD:
-    return (unsigned char *)"FORWARD";
+  case REF_LINE_STRAIGHT:
+    return (unsigned char *)"STRAIGHT";
   case REF_LINE_LEFT:
     return (unsigned char *)"LEFT";
   case REF_LINE_RIGHT:
@@ -309,59 +311,140 @@ REF_LineKind REF_GetLineKind(void) {
   return refLineKind;
 }
 
-static void ReadLineKind(SensorTimeType calib[REF_NOF_SENSORS], SensorTimeType raw[REF_NOF_SENSORS]) {
-  uint32_t sum, sumLeft, sumRight;
+static bool SensorsSaturated(void) {
+#if 0
   int i, cnt;
   
   /* check if robot is in the air or does see something */
   cnt = 0;
   for(i=0;i<REF_NOF_SENSORS;i++) {
-    if (raw[i]==MAX_SENSOR_VALUE) { /* count only values above noise */
+    if (SensorRaw[i]==MAX_SENSOR_VALUE) { /* sensor not seeing anything? */
       cnt++;
     }
   }
-  if (cnt==REF_NOF_SENSORS) { /* all sensors see raw max value: not on the ground? */
-    refLineKind = REF_LINE_AIR;
-    return;
+  return (cnt==REF_NOF_SENSORS); /* all sensors see raw max value: not on the ground? */
+#else
+  return FALSE;
+#endif
+}
+
+static REF_LineKind ReadLineKind(SensorTimeType val[REF_NOF_SENSORS]) {
+  uint32_t sum, sumLeft, sumRight;
+  int i;
+  
+  /* check if robot is in the air or does see something */
+  if (SensorsSaturated()) {
+    return REF_LINE_AIR;
   }
   /* check the line type */
   sum = 0; sumLeft = 0; sumRight = 0;
   for(i=0;i<REF_NOF_SENSORS;i++) {
-    if (calib[i]>REF_MIN_LINE_VAL) { /* count only values above noise */
-      sum += 1000;
+    if (val[i]>REF_MIN_LINE_VAL) { /* count only line values */
+      sum += val[i];
       if (i<REF_NOF_SENSORS/2) {
-        sumRight += 1000;
+        sumRight += val[i];
       } else {
-        sumLeft += 1000;
+        sumLeft += val[i];
       }
     }
   }
   
-  #define MIN_LEFT_RIGHT_SUM   ((REF_NOF_SENSORS*1000)/2) /* half of the sensors */
+  #define MIN_LEFT_RIGHT_SUM   ((REF_NOF_SENSORS*1000)/3) /* third of the sensors */
   
   if (sumLeft>=MIN_LEFT_RIGHT_SUM && sumRight<MIN_LEFT_RIGHT_SUM) {
-    refLineKind = REF_LINE_LEFT;
+    return REF_LINE_LEFT;
   } else if (sumRight>=MIN_LEFT_RIGHT_SUM && sumLeft<MIN_LEFT_RIGHT_SUM) {
-    refLineKind = REF_LINE_RIGHT;
+    return REF_LINE_RIGHT;
   } else if (sumRight>=MIN_LEFT_RIGHT_SUM && sumLeft>=MIN_LEFT_RIGHT_SUM) {
-    refLineKind = REF_LINE_FULL;
-  } else if (sum>=1000) {
-    refLineKind = REF_LINE_FORWARD;
-  } else { /* default */
-    refLineKind = REF_LINE_NONE;
+    return REF_LINE_FULL;
+  } else if (sumRight==0 && sumLeft==0 && sum == 0) {
+    return REF_LINE_NONE;
+  } else { 
+    return REF_LINE_STRAIGHT;
   }
+}
+
+static uint16_t REF_nofHistory = 0;
+
+static void StoreHistory(SensorTimeType val[REF_NOF_SENSORS]) {
+  uint8_t i;
+  
+  for(i=0; i<REF_NOF_SENSORS; i++) {
+    if (val[i]>=REF_MIN_LINE_VAL) { /* only count line values */
+      SensorHistory[i] += val[i];
+      if (SensorHistory[i] > 1000) { /* cap it */
+        SensorHistory[i] = 1000;
+      }
+    }
+  }
+  REF_nofHistory++;
+}
+
+void REF_DumpHistory(void) {
+  int i;
+  unsigned char buf[16];
+  
+  CLS1_SendStr((unsigned char*)"history: #", CLS1_GetStdio()->stdOut);
+  CLS1_SendNum16u(REF_nofHistory, CLS1_GetStdio()->stdOut);
+  for (i=0;i<REF_NOF_SENSORS;i++) {
+    CLS1_SendStr((unsigned char*)" 0x", CLS1_GetStdio()->stdOut);
+    buf[0] = '\0'; UTIL1_strcatNum16Hex(buf, sizeof(buf), SensorHistory[i]);
+    CLS1_SendStr(buf, CLS1_GetStdio()->stdOut);
+  }
+  CLS1_SendStr((unsigned char*)"\r\n", CLS1_GetStdio()->stdOut);
+}
+
+void REF_SampleHistory(void) {
+  StoreHistory(SensorCalibrated);
 }
 
 void REF_Measure(void) {
-  refLineVal = ReadLine(SensorCalibrated, SensorRaw, FALSE);
+  ReadCalibrated(SensorCalibrated, SensorRaw);
+  REF_SampleHistory();
+  refCenterLineVal = ReadLine(SensorCalibrated, SensorRaw, FALSE, 0, REF_NOF_SENSORS-1);
   if (isCalibrated) {
-    ReadLineKind(SensorCalibrated, SensorRaw);
+    refLineKind = ReadLineKind(SensorCalibrated);
   }
 }
 
-void InitSensorValues(void) {
+REF_LineKind REF_HistoryLineKind(void) {
+  int i, cnt, cntLeft, cntRight;
+  
+  cnt = cntLeft = cntRight = 0;
+  for(i=0;i<REF_NOF_SENSORS;i++) {
+    if (SensorHistory[i]>REF_MIN_LINE_VAL) { /* count only line values */
+      cnt++;
+      if (i<REF_NOF_SENSORS/2) {
+        cntRight++;
+      } else {
+        cntLeft++;
+      }
+    }
+  }
+  if (cnt==0) {
+    return REF_LINE_NONE;
+  } else if (cnt==REF_NOF_SENSORS) {
+    return REF_LINE_FULL;
+  } else if (cntLeft>cntRight) {
+    return REF_LINE_LEFT;
+  } else { /* must be cntRight>cntLeft */
+    return REF_LINE_RIGHT;
+  }
+}
+
+void REF_ClearHistory(void) {
   int i;
   
+  for(i=0;i<REF_NOF_SENSORS;i++) {
+    SensorHistory[i] = 0;
+  }
+  REF_nofHistory = 0;
+}
+
+void REF_InitSensorValues(void) {
+  int i;
+  
+  REF_ClearHistory();
   for(i=0;i<REF_NOF_SENSORS;i++) {
     SensorRaw[i] = 0;
     SensorMin[i] = MAX_SENSOR_VALUE;
@@ -374,11 +457,13 @@ void InitSensorValues(void) {
 void REF_Calibrate(bool start) {
   if (start) {
     isCalibrated = FALSE;
-    InitSensorValues();
+    REF_InitSensorValues();
     doMinMaxCalibration = TRUE;
+    CLS1_SendStr((unsigned char*)"start calibration...\r\n", CLS1_GetStdio()->stdOut);
   } else {
     doMinMaxCalibration = FALSE;
     isCalibrated = TRUE;
+    CLS1_SendStr((unsigned char*)"calibration stopped.\r\n", CLS1_GetStdio()->stdOut);
   }
 }
 
@@ -393,14 +478,13 @@ bool REF_CanUseSensor(void) {
 static uint8_t PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"reflectance", (unsigned char*)"Group of Reflectance commands\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  calibrate (white|black)", (unsigned char*)"Calibrate for all white or black values\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  calibrate line (on|off)", (unsigned char*)"Calibrate while moving sensor over line\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  calibrate (on|off)", (unsigned char*)"Calibrate while moving sensor over line\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  led (on|off)", (unsigned char*)"Uses LED or not\r\n", io->stdOut);
   return ERR_OK;
 }
 
 static uint8_t PrintStatus(const CLS1_StdIOType *io) {
-  unsigned char buf[15];
+  unsigned char buf[24];
   int i;
 
   CLS1_SendStatusStr((unsigned char*)"reflectance", (unsigned char*)"\r\n", io->stdOut);
@@ -464,11 +548,21 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
 
   CLS1_SendStatusStr((unsigned char*)"  line val", (unsigned char*)"", io->stdOut);
-  buf[0] = '\0'; UTIL1_strcatNum16s(buf, sizeof(buf), refLineVal);
+  buf[0] = '\0'; UTIL1_strcatNum16s(buf, sizeof(buf), refCenterLineVal);
   CLS1_SendStr(buf, io->stdOut);
   CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
 
-  CLS1_SendStatusStr((unsigned char*)"  line kind", LF_LineKindStr(refLineKind), io->stdOut);
+  for (i=0;i<REF_NOF_SENSORS;i++) {
+    if (i==0) {
+      CLS1_SendStatusStr((unsigned char*)"  history", (unsigned char*)"0x", io->stdOut);
+    } else {
+      CLS1_SendStr((unsigned char*)" 0x", io->stdOut);
+    }
+    buf[0] = '\0'; UTIL1_strcatNum16Hex(buf, sizeof(buf), SensorHistory[i]);
+    CLS1_SendStr(buf, io->stdOut);
+  }
+  CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  line kind", REF_LineKindStr(refLineKind), io->stdOut);
   CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
   return ERR_OK;
 }
@@ -480,12 +574,12 @@ byte REF_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOT
   } else if ((UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0) || (UTIL1_strcmp((char*)cmd, "reflectance status")==0)) {
     *handled = TRUE;
     return PrintStatus(io);
-  } else if (UTIL1_strcmp((char*)cmd, "reflectance calibrate line on")==0) {
-    REF_Calibrate(TRUE);
+  } else if (UTIL1_strcmp((char*)cmd, "reflectance calibrate on")==0) {
+    APP_StateStartCalibrate();
     *handled = TRUE;
     return ERR_OK;  
-  } else if (UTIL1_strcmp((char*)cmd, "reflectance calibrate line off")==0) {
-    REF_Calibrate(FALSE);
+  } else if (UTIL1_strcmp((char*)cmd, "reflectance calibrate off")==0) {
+    APP_StateStopCalibrate();
     *handled = TRUE;
     return ERR_OK;
   } else if (UTIL1_strcmp((char*)cmd, "reflectance led on")==0) {
@@ -501,8 +595,8 @@ byte REF_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOT
 }
 
 uint16_t REF_GetLineValue(bool *onLine) {
-  *onLine = refLineVal>0 && refLineVal<REF_MAX_LINE_VALUE;
-  return refLineVal;
+  *onLine = refCenterLineVal>0 && refCenterLineVal<REF_MAX_LINE_VALUE;
+  return refCenterLineVal;
 }
 
 static portTASK_FUNCTION(ReflTask, pvParameters) {
@@ -513,21 +607,23 @@ static portTASK_FUNCTION(ReflTask, pvParameters) {
 #if PL_HAS_BUZZER
       BUZ_Beep(300, 50);
 #endif
+    } else {
+      REF_Measure();
     }
-    FRTOS1_vTaskDelay(20/portTICK_RATE_MS);
+    FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
   }
 }
 
 void REF_Init(void) {
   refLineKind = REF_LINE_NONE;
-  refLineVal = 0;
+  refCenterLineVal = 0;
   mutexHandle = FRTOS1_xSemaphoreCreateMutex();
   if (mutexHandle==NULL) {
     for(;;);
   }
   timerHandle = RefCnt_Init(NULL);
-  InitSensorValues();
-  if (FRTOS1_xTaskCreate(ReflTask, (signed portCHAR *)"Refl", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  REF_InitSensorValues();
+  if (FRTOS1_xTaskCreate(ReflTask, (signed portCHAR *)"Refl", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1+2, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 }

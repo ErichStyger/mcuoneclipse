@@ -12,19 +12,22 @@
 #include "Reflectance.h"
 
 typedef enum {
-  TURN_LEFT,   /* turn 90 degree left */
-  TURN_RIGHT, /* turn 90 degree right */
-  TURN_AROUND, /* turn 180 degree */
+  TURN_LEFT90,   /* turn 90 degree left and stop */
+  TURN_RIGHT90, /* turn 90 degree right and stop */
+  TURN_LEFT180, /* turn 180 degree counterclockwise and stop */
+  TURN_RIGHT180, /* turn 180 degree clockwise and stop */
   TURN_STRAIGHT, /* don't turn */
+  TURN_STEP_FW, /* make a step forward and stop */
+  TURN_STEP_BW, /* make a step backward and stop */
+  TURN_FINISHED, /* stepped into finish! */
+  TURN_STOP     /* stop */
 } TURN_Kind;
 
-
 /*!
- * \brief Selects a turning depending on the current line kind.
- * @param line Current line kind
- * @return New turn, e.g TURN_AROUND if we passed a dead end.
+ * \brief Translate a turn kind into a string
+ * \return String, like "STOP"
  */
-TURN_Kind TURN_SelectTurn(REF_LineKind line);
+const unsigned char *TURN_TurnKindStr(TURN_Kind kind);
 
 /*!
  * \brief Turns the robot.
@@ -39,7 +42,6 @@ void TURN_Turn(TURN_Kind kind);
  * \param[in] io Std I/O handler of shell
  */
 uint8_t TURN_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
-
 
 /*!
  * \brief Initializes the module.

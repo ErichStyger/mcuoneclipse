@@ -10,9 +10,11 @@
 
 #include "CLS1.h"
 
-void LF_TouchPress(uint8_t position);
-
 uint8_t LF_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
+
+void LF_StartFollowing(void);
+void LF_StopFollowing(void);
+bool LF_IsFollowing(void);
 
 void LF_Init(void);
 

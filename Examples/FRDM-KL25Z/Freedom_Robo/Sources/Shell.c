@@ -19,12 +19,13 @@
   #include "LSM303.h"
   #include "I2CSPY1.h"
 #endif
-#include "LineFollow.h"
 #if PL_HAS_BLUETOOTH
   #include "BT1.h"
 #endif
+#include "LineFollow.h"
 #include "Turn.h"
 #include "Pid.h"
+#include "Maze.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -55,6 +56,7 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
   LF_ParseCommand,
   TURN_ParseCommand,
   PID_ParseCommand,
+  MAZE_ParseCommand,
   NULL /* sentinel */
 };
 

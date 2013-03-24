@@ -23,7 +23,7 @@
 #include "Platform.h"
 #include "Ultrasonic.h"
 #include "TRG1.h"
-#include "LineFollow.h"
+#include "TMOUT1.h"
 /*
 ** ===================================================================
 **     Event       :  Cpu_OnNMIINT (module Events)
@@ -87,25 +87,8 @@ void FRTOS1_vApplicationTickHook(void)
   /* Called for every RTOS tick. */
   TMOUT1_AddTick();
   TRG1_AddTick();
-}
-
-/*
-** ===================================================================
-**     Event       :  FRTOS1_vApplicationIdleHook (module Events)
-**
-**     Component   :  FRTOS1 [FreeRTOS]
-**     Description :
-**         If enabled, this hook will be called when the RTOS is idle.
-**         This might be a good place to go into low power mode.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void FRTOS1_vApplicationIdleHook(void)
-{
-  /* Called whenever the RTOS is idle (from the IDLE task).
-     Here would be a good place to put the CPU into low power mode. */
-  /* Write your code here ... */
+  Q4CLeft_Sample();
+  Q4CRight_Sample();
 }
 
 /*

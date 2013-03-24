@@ -321,4 +321,6 @@ void MOT_Init(void) {
   motorR.SetRatio16 = PWMRSetRatio16;
   MOT_SetSpeedPercent(&motorL, 0);
   MOT_SetSpeedPercent(&motorR, 0);
+  PWML_Enable();
+  PWMR_Enable();
 }
