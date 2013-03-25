@@ -1,0 +1,1 @@
+This folder contains projects for the TWR-LCD board.
