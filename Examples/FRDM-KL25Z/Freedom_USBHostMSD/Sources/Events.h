@@ -54,6 +54,7 @@
 #include "USB1.h"
 #include "USB0.h"
 #include "MSD1.h"
+#include "PE_LDD.h"
 #include "FAT1.h"
 #include "TmDt1.h"
 #include "FsMSD1.h"
