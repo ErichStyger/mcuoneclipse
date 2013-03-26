@@ -52,8 +52,6 @@
 %define! Description_ScreenMsgHandler Message handler for the screen
 %define! Description_PaintScreen Draws all elements to the screen
 %define! Description_SearchInsideElement search touched element in a sub tree
-%define! Description_FctElementTouched Iterator callback, returns TRUE if element has been touched.
-%define! Description_FctElementIsModal Iterator callback, returns TRUE if element if modal.
 %define! Description_FctInsideElement check if coordinates are inside element
 %define! Description_AddSubElement Adds a sub element 
 %define! Description_AddNextElement Adds an element on the same level
@@ -959,12 +957,6 @@ static void ScreenMsgHandler(%'ModuleName'_MsgKind kind, %'ModuleName'_Element *
 %-INTERNAL_LOC_METHOD_BEG PaintScreen
 static byte PaintScreen(%'ModuleName'_Element *element);
 %-INTERNAL_LOC_METHOD_END PaintScreen
-%-INTERNAL_LOC_METHOD_BEG FctElementTouched
-static bool FctElementTouched(%'ModuleName'_Element *element, %'ModuleName'_Pvoid data);
-%-INTERNAL_LOC_METHOD_END FctElementTouched
-%-INTERNAL_LOC_METHOD_BEG FctElementIsModal
-static bool FctElementIsModal(%'ModuleName'_Element *element, %'ModuleName'_Pvoid data);
-%-INTERNAL_LOC_METHOD_END FctElementIsModal
 %-INTERNAL_LOC_METHOD_BEG FctInsideElement
 static bool FctInsideElement(%'ModuleName'_Element *element, %'ModuleName'_Coordinate *coord);
 %-INTERNAL_LOC_METHOD_END FctInsideElement
@@ -1219,8 +1211,6 @@ void %'ModuleName'%.%DeselectElement(%'ModuleName'_Screen *screen, %'ModuleName'
 %include Common\GeneralInternalGlobal.inc (ScreenMsgHandler)
 static void ScreenMsgHandler(%'ModuleName'_MsgKind kind, %'ModuleName'_Element *element, %'ModuleName'_Pvoid pData)
 {
-  %'ModuleName'_Screen *widget = (%'ModuleName'_Screen*)element;
-
   (void)pData; /* unused argument */
   if (kind==%'ModuleName'_MSG_WIDGET_PAINT) {
     (void)PaintScreen(element);
@@ -1512,7 +1502,7 @@ void %'ModuleName'%.%SetDisplayOrientation(%'ModuleName'_DisplayOrientation newO
   %OnEvent(screen, NULL, NULL, %'ModuleName'_MSG_ORIENTATION_CHANGE);%>40/* call user event */
 %endif %- OnEvent
   element->prop.flags |= ~%'ModuleName'_FLAGS_NEEDS_REPAINT;     %>40/* update whole screen */
-  %'ModuleName'%.%UpdateScreen(screen);
+  %'ModuleName'%.%UpdateScreen(screen, TRUE);
 %ifdef OnEvent
   %OnEvent(screen, NULL, NULL, %'ModuleName'_MSG_POST_ORIENTATION_CHANGE);%>40/* call user event */
 %endif %- OnEvent
@@ -1540,24 +1530,6 @@ void %'ModuleName'%.%UpdateElementNoRefresh(%'ModuleName'_Element *parent, %'Mod
 %endif %- UpdateElementNoRefresh
 %-BW_METHOD_END UpdateElementNoRefresh
 %-************************************************************************************************************
-%-INTERNAL_METHOD_BEG FctElementTouched
-%define! Parelement
-%define! Pardata
-%define! RetVal
-%include Common\GeneralInternalGlobal.inc (FctElementTouched)
-static bool FctElementTouched(%'ModuleName'_Element *element, %'ModuleName'_Pvoid data)
-{
-  %'ModuleName'_Coordinate *coord = (%'ModuleName'_Coordinate*)data;
-
-  return (    (element->prop.flags&%'ModuleName'_FLAGS_CAN_SELECT)%>40/* can element be selected? */
-           && coord->x >= %'ModuleName'%.%GetElementPosX(element)
-           && coord->x <= %'ModuleName'%.%GetElementPosX(element) + %'ModuleName'%.%GetElementWidth(element) /* x inside element? */
-           && coord->y >= %'ModuleName'%.%GetElementPosY(element)
-           && coord->y <= %'ModuleName'%.%GetElementPosY(element) + %'ModuleName'%.%GetElementHeight(element) /* y inside element? */
-  );
-}
-
-%-INTERNAL_METHOD_END FctElementTouched
 %-************************************************************************************************************
 %-INTERNAL_METHOD_BEG AddSubElement
 %define! ParparentElement
@@ -1889,18 +1861,6 @@ static byte PaintScreen(%'ModuleName'_Element *element)
 
 %-INTERNAL_METHOD_END PaintScreen
 %-************************************************************************************************************
-%-INTERNAL_METHOD_BEG FctElementIsModal
-%define! Parelement
-%define! Pardata
-%define! RetVal
-%include Common\GeneralInternalGlobal.inc (FctElementIsModal)
-static bool FctElementIsModal(%'ModuleName'_Element *element, %'ModuleName'_Pvoid data)
-{
-  (void)data;                                                    %>40/* unused parameter */
-  return (element->prop.flags & %'ModuleName'_FLAGS_IS_MODAL);
-}
-
-%-INTERNAL_METHOD_END FctElementIsModal
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN AlignElementRight
 %ifdef AlignElementRight
@@ -1978,7 +1938,7 @@ void %'ModuleName'%.%ProcessTouch(bool touched, %'ModuleName'_PixelDim x, %'Modu
   static struct {
     bool touched;
     %'ModuleName'_Coordinate pos;
-  } prevState = {FALSE, 0, 0};         /* previous state */
+  } prevState = {FALSE, {0, 0}};         /* previous state */
   %'ModuleName'_Coordinate pos;
 
   pos.x = x;
@@ -2036,7 +1996,7 @@ byte %'ModuleName'%.%MarkElementModal(%'ModuleName'_Element *element)
     return ERR_FAILED;
   }
   screen->modalElement = element;
-  element->prop.flags |= UI1_FLAGS_IS_MODAL;
+  element->prop.flags |= %'ModuleName'_FLAGS_IS_MODAL;
   return ERR_OK;
 }
 
@@ -2060,7 +2020,7 @@ byte %'ModuleName'%.%UnMarkElementModal(%'ModuleName'_Element *element)
     return ERR_FAILED;
   }
   screen->modalElement = NULL;
-  element->prop.flags &= ~UI1_FLAGS_IS_MODAL;
+  element->prop.flags &= ~%'ModuleName'_FLAGS_IS_MODAL;
   return ERR_OK;
 }
 

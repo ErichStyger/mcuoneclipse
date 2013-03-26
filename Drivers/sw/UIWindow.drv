@@ -142,7 +142,6 @@ byte %'ModuleName'%.%Create(%'ModuleName'_Element *parent, %'ModuleName'_WindowW
 %endif %- Create
 %-BW_METHOD_END Create
 %-************************************************************************************************************
-%-************************************************************************************************************
 %-BW_METHOD_BEGIN WindowSetBorder
 %ifdef WindowSetBorder
 %-BW_PUBLISH_MACRO
@@ -247,8 +246,12 @@ static void MsgHandler(%'ModuleName'_MsgKind kind, %'ModuleName'_Element *elemen
 %include Common\GeneralInternalGlobal.inc (MsgHandler)
 static void MsgHandler(%'ModuleName'_MsgKind kind, %'ModuleName'_Element *element, %'ModuleName'_Pvoid pData)
 {
+%ifdef SetUserMsgHandler
   %'ModuleName'_WindowWidget *widget = (%'ModuleName'_WindowWidget*)element;
 
+%else
+  (void)pData; /* avoid warning about unused argument */
+%endif
   if (kind==%@UI@'ModuleName'%.MSG_WIDGET_PAINT) {
     (void)Paint(element);
 %-  } else if (kind==%@UI@'ModuleName'%.MSG_WIDGET_RESIZE) {
@@ -258,8 +261,6 @@ static void MsgHandler(%'ModuleName'_MsgKind kind, %'ModuleName'_Element *elemen
   if (widget->userMsgHandler != NULL){
     widget->userMsgHandler(kind, element, pData);                %>40/* call user event  */
   }
-%else
-  (void)pData; /* avoid warning about unused argument */
 %endif
 }
 %-INTERNAL_METHOD_END MsgHandler
@@ -393,9 +394,9 @@ void %'ModuleName'%.%MakeWindowMovable(%'ModuleName'_WindowWidget *window)
 %define! Parkind
 %define! ParpData
 %include Common\GeneralInternalGlobal.inc (EventCallbackMovableWindow)
-%if %movable='yes'
 static void EventCallbackMovableWindow(%'ModuleName'_Element *element, %'ModuleName'_MsgKind kind, %'ModuleName'_Pvoid pData)
 {
+%if %movable='yes'
   if (element->prop.type == %@UI@'ModuleName'%.WIDGET_HEADER){   %>40/* only do something if header is clicked */
     bool update = FALSE;                                         %>40/* default no update needed */
 
@@ -441,9 +442,13 @@ static void EventCallbackMovableWindow(%'ModuleName'_Element *element, %'ModuleN
       }
     } /* end if click_move event */
   } /* end if header clicked */
+%else
+  (void)element;
+  (void)kind;
+  (void)pData;
+%endif %- %movable='yes'
 }
 
-%endif %- %movable='yes'
 %-INTERNAL_METHOD_END EventCallbackMovableWindow
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SetUserMsgHandler

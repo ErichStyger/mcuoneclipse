@@ -420,11 +420,9 @@ static byte PaintCalendarDay(%'ModuleName'_Window *window, %'ModuleName'_Element
     word viewStartMinute, viewEndMinute;                         %>40/* start and end minutes of current view */
     word appStartMinute, appEndMinute;                           %>40/* start and end minutes of current appointment */
     bool drawAppointment;
-    %'ModuleName'_PixelDim w;
 
     x = (%@UI@'ModuleName'%.PixelDim)(wTime+%'ModuleName'%.CALENDAR_DAY_LINE_WIDTH);%>40/* x pointing to the beginning of the appointment area */
     y = (%@UI@'ModuleName'%.PixelDim)(hLine+%'ModuleName'%.CALENDAR_DAY_LINE_WIDTH);%>40/* y pointing to the beginning of the appointment area */
-    w = %'ModuleName'%.CALENDAR_DAY_BUSY_BAR_WIDTH;              %>40/* w is the width of busy bar */
     /* h is the height of the appointment area */
     viewStartMinute = (word)(calendarDay->start.hour*60 + calendarDay->start.minute);
     viewEndMinute = (word)(viewStartMinute + (h*%CalendarDayResolution)/hLine - 1);%>40/* -1 because we only show up to the next boundary */
@@ -490,7 +488,6 @@ static byte PaintCalendarDay(%'ModuleName'_Window *window, %'ModuleName'_Element
 static void CreateCalDayClicks(%'ModuleName'_Window *window, %'ModuleName'_CalendarDay *calendarDay, %'ModuleName'_PixelDim x, %'ModuleName'_PixelDim y, %'ModuleName'_PixelDim width, %'ModuleName'_PixelDim height)
 {
   %@UI@'ModuleName'%.PixelDim hLine, wTime, h;
-  byte nofLines;
   %@UI@'ModuleName'%.FontCallbacks *font;
   %'ModuleName'_CalendarAppointment *list = NULL;
   word viewStartMinute, viewEndMinute;                           %>40/* start and end minutes of current view */
@@ -510,7 +507,6 @@ static void CreateCalDayClicks(%'ModuleName'_Window *window, %'ModuleName'_Calen
      - hLine                                                     %>40/* height of header text */
      - %'ModuleName'%.CALENDAR_DAY_LINE_WIDTH                    %>40/* height of line between header and appointment area */
      );
-  nofLines = (byte)(h/hLine);
   /* paint appointments in appointment area */
   x = (%@UI@'ModuleName'%.PixelDim)(wTime+%'ModuleName'%.CALENDAR_DAY_LINE_WIDTH+%'ModuleName'%.CALENDAR_DAY_BUSY_BAR_WIDTH);%>40/* x pointing to the beginning of the appointement area */
   y = (%@UI@'ModuleName'%.PixelDim)(hLine+%'ModuleName'%.CALENDAR_DAY_LINE_WIDTH);%>40/* y pointing to the beginning of the appointement area */

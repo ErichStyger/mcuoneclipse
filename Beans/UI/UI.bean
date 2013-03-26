@@ -4,7 +4,7 @@
     <Name>UI</Name>
     <Description>User Interface for different displays</Description>
     <Author>Erich Styger</Author>
-    <Version>01.054</Version>
+    <Version>01.056</Version>
     <Icon>UI</Icon>
     <TypesFiles>PE,UI\UI</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -1123,86 +1123,6 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>bool #M#_#C#(%'ModuleName'_PElement *pElement, %'ModuleName'_Coordinate *coord)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>FctElementTouched</Name>
-        <Symbol>FctElementTouched</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Iterator callback, returns TRUE if element has been touched.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>false</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>false</InDefinition>
-        <ReturnType>Boolean</ReturnType>
-        <RetHint>Error code</RetHint>
-        <ParamCount>2</ParamCount>
-        <Parameter>
-          <ParName>element</ParName>
-          <ParType>Element</ParType>
-          <ParPassing>Address</ParPassing>
-          <ParHint>Pointer to element</ParHint>
-        </Parameter>
-        <Parameter>
-          <ParName>data</ParName>
-          <ParType>Pvoid</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>Pointer to void</ParHint>
-        </Parameter>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>bool #M#_#C#(%'ModuleName'_Element *element, %'ModuleName'_Pvoid data)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>FctElementIsModal</Name>
-        <Symbol>FctElementIsModal</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Iterator callback, returns TRUE if element if modal.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>false</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>false</InDefinition>
-        <ReturnType>Boolean</ReturnType>
-        <RetHint>Error code</RetHint>
-        <ParamCount>2</ParamCount>
-        <Parameter>
-          <ParName>element</ParName>
-          <ParType>Element</ParType>
-          <ParPassing>Address</ParPassing>
-          <ParHint>Pointer to element</ParHint>
-        </Parameter>
-        <Parameter>
-          <ParName>data</ParName>
-          <ParType>Pvoid</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>Pointer to void</ParHint>
-        </Parameter>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>bool #M#_#C#(%'ModuleName'_Element *element, %'ModuleName'_Pvoid data)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
