@@ -60,6 +60,13 @@
 %define! Abstract Common\LEDmatrixAbstract.Inc
 %include Common\Header.h
 
+%if (defined(PEversionDecimal) && (PEversionDecimal <=0 '1283')) %- this is only supported with MCU 10.3
+%if (CPUfamily = "Kinetis")
+/* PEversionDecimal version: %PEversionDecimal (1283 for MCU10.3) */
+#include "PE_LDD.h" /* hack for Processor Expert (e.g. in MCU10.3) and LDD: PE_LDD.h includes at the end all shared modules, causing a recursive header file include conflict */
+%endif
+%endif
+
 #ifndef __%'ModuleName'_H
 #define __%'ModuleName'_H
 

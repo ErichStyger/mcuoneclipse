@@ -100,6 +100,7 @@
 %-BW_METHOD_MACROS_END
 
 #include "%ProcessorModule.h"
+#include <stddef.h> /* for size_t */
 
 typedef enum {                                                   %>40/* this lists all the different element types supported */
   %'ModuleName'_WIDGET_SPACE,                                    %>40/* generic rectangle space (transparent) */
@@ -113,7 +114,7 @@ typedef enum {                                                   %>40/* this lis
   %'ModuleName'_BARGRAPH,                                        %>40/* widget a bar graph*/
   %'ModuleName'_WIDGET_BARGRAPH,                                 %>40/* widget a bar graph*/
   %'ModuleName'_WIDGET_ICON,                                     %>40/* widget for an icon/symbol */
-  %'ModuleName'_WIDGET_SLIDER,                                    %>40/* widget for a slider */
+  %'ModuleName'_WIDGET_SLIDER,                                   %>40/* widget for a slider */
 
   %'ModuleName'_SPACE,                                           %>40/* generic rectangle space (transparent) */
   %'ModuleName'_WINDOW,                                          %>40/* window element */
