@@ -369,7 +369,7 @@ byte %'ModuleName'%.%Create(%'ModuleName'_Element *parent, %'ModuleName'_HeaderW
   /* create icon widget with dummy values. The following resize will set them correctly. */
   if (%@Icon@'ModuleName'%.CreateIcon(&header->element, &header->iconWidget,
       5, %'ModuleName'_HEADER_BORDER_SIZE,
-      5, 5, UII1_ICON_CLOSE
+      5, 5, %@Icon@'ModuleName'%.ICON_CLOSE
     )!=ERR_OK)
   {
     return ERR_FAILED;

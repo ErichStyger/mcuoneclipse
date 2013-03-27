@@ -901,7 +901,7 @@ void %'ModuleName'%.%Init(void)
 %include Common\UIDialogWindowCreateDialogWindow.Inc
 byte %'ModuleName'%.%CreateDialogWindow(%'ModuleName'_Screen *screen, %'ModuleName'_WindowWidget *window, %'ModuleName'_PixelColor bgColor, %'ModuleName'_PixelDim x, %'ModuleName'_PixelDim y, %'ModuleName'_PixelDim width, %'ModuleName'_PixelDim height)
 {
-  if (%@Window@'ModuleName'%.CreateWindow(screen, window, bgColor, x, y, width, height)!= ERR_OK){
+  if (%@Window@'ModuleName'%.Create(screen, window, bgColor, x, y, width, height)!= ERR_OK){
     return ERR_FAILED;
   }
   window->element.eventCallback = EventCallback;                 %>40/* change event callback to dialog */
@@ -921,6 +921,7 @@ static byte PaintDialogWindow(%'ModuleName'_Element *element)
 {
   %'ModuleName'_WindowWidget *window= (%'ModuleName'_WindowWidget*)element;
   %@Window@'ModuleName'%.UpdateWindow(window);
+  return ERR_OK;
 }
 
 %-INTERNAL_METHOD_END PaintDialogWindow
