@@ -1,0 +1,652 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1250">
+<title>
+Component  documentation - Properties
+</title>
+<STYLE type="text/css">
+body{
+  background-color: white;
+  margin:0px;
+  font: 13px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+A:visited {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:link {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:active {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #2D8AA7; TEXT-DECORATION: underline
+}
+.VSP {
+	COLOR: #2D8AA7; FONT: bold italic 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.reflink {
+	FONT: 11px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+ 	COLOR: #2D8AA7;
+}
+.user_text {
+	FONT: 12px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+	COLOR: #000000;
+}
+.bluetext {
+  COLOR: #695F52;
+}
+.versionspec {
+  padding:5px; 
+  background-color: RGB(243, 242, 230);
+  margin-top:5px;
+  margin-bottom:5px;  
+}
+.versionspecdetail {
+  padding:5px; 
+  background-color: RGB(243, 242, 230);
+  margin-top:5px;
+  margin-bottom:5px;  
+}
+.versionspeclabel {
+  font-style: italic;
+}
+LI.DEF {
+  list-style-image: url(DefaultLI.gif) ;
+}
+LI.BAS {
+	list-style-image: url(BasicLI.gif) ;
+}
+LI.ADV {
+	list-style-image: url(AdvancedLI.gif) ;
+}
+LI.EXP {
+	list-style-image: url(ExpertLI.gif) ;
+}
+.titlebox {  
+  font: bold 18px Helvetica Neue, Helvetica, Arial, sans-serif;
+  color: #51626F;
+  margin-bottom: 10px;
+}
+.lefttitlebox {
+  background-color:#C3CFD1;  
+}
+.lefttitle {
+  color:#51626F;
+  font: bold 11px Helvetica Neue, Helvetica, Arial, sans-serif;   
+}
+.beanname {
+  font: bold 14px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+  padding-top:6px;
+  padding-bottom:5px;
+  margin-bottom: 5px;
+  border-bottom-style: dotted;
+  border-bottom-width: 1;  
+}
+.descrtext {
+  font-style: italic;
+  font: 14px/18px Helvetica Neue, Helvetica, Arial, sans-serif;  
+  padding-bottom:9px;
+}
+.footer {
+  color: #b0b0b0; 
+  font: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+  text-align: center;
+  border-top-style: solid;
+  border-top-color: #BOBOBO;
+  border-top-width: 1px;  
+  padding-top: 5px;
+  margin-top: 20px;
+}
+.info_name {
+  font: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+  padding: 0px;
+  color: black;
+}
+.info_text {
+  font: 11px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.text_title {
+  COLOR: #000000; 
+  FONT: bold 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.descr_line {
+  COLOR: gray; 
+  FONT: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+</STYLE>
+
+</head>
+
+<body>
+
+<table border="0"  cellspacing="0" cellpadding="0">
+  <tr>
+    <td valign="top" width="150" >
+      <table  width="150" height="160" cellpadding="3" cellspacing="0" border="0">
+        <tbody>
+        <tr class="lefttitlebox">
+          <td width="4"></td>
+          <td align="center" valign="middle" height="30" width="128">
+            <span class="lefttitle">
+<b>uCOS_II</b>
+            </span>
+          </td>
+        </tr>
+        <tr height="700">
+          <td width="4"></td>
+          <td width="128" valign="top">
+            &nbsp;<br />
+            <div class="reflink">
+<!---HTMLLISTBEG_SHORT DON'T CHANGE THIS LINE-->
+<a href="uCOS_II.html">General Info</a><br />
+<i>Properties</i><br />
+<a href="uCOS_IIMethods.html">Methods</a><br />
+<a href="uCOS_IIEvents.html">Events</a><br />
+<a href="uCOS_IITypical Usage.html">Typical Usage</a><br />
+<!---HTMLLISTEND DON'T CHANGE THIS LINE-->
+<br /><br /><br />
+<a href="../../DOCs/PredefSymbols.html">Types &amp; definitions</a><br/>
+<a href="../../DOCs/BEANindex.html">Component Index</a><br/>
+<a href="../../DOCs/CPUindex.html">CPU Component Index</a><br/>
+<a href="../../DOCs/EmbeddedBeans.html">Embedded Components</a><br/>
+<a href="../../DOCs/BeanCategories.html">Components Categories</a><br/>
+
+<br /><br /><br />
+<center>
+<img src="uCOS_II_b.gif" alt="Component icon"/>
+
+
+</center>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </td>
+    <td width="1" class="lefttitlebox" valign="top">
+      <table class="lefttitlebox" width="1" cellpadding="0" cellspacing="0" height="100%" border="0">
+        <tr class="lefttitlebox"><td width="1"></td></tr>
+      </table>
+    </td>
+    <td style="padding-left:15px;padding-right:10px;" valign="top" align="left" width="100%">
+
+<!--      <table border="0" cellPadding="0" cellSpacing="0" width="100%">
+        <tbody>
+        <tr>
+          <td class="titlebox">-->
+          
+           <div class="titlebox">
+              <div class="beanname">
+                Component
+                
+                
+                uCOS_II
+              </div>
+              <div class="descrtext">uCOS-II</div>
+              <div class="info_name">Component Level: <span class="info_text"><a href="../../DOCs/BeanCategoriesInfo.html#LevelAbstraction">High</a></span></div>
+              <div class="info_name">Category: 
+                <span class="info_text">
+                <a href="../../DOCs/BeanCategoriesInfo.html">Operating Systems</a>
+                
+                </span>
+              </div>
+            </div>
+                      
+<!--
+            </td>
+        </tr>
+
+        <tr>        
+-->  
+            
+<!--            <td align="left"> -->
+<!--                   <br /> -->                  
+     <div class="text_title">
+          Properties:
+		 </div>		 
+		 <div class="descr_line">                  
+                  (Properties are parameters of the component. Please see the <a href="../../DOCs/EmbeddedBeans.html">Embedded Components page</a> for more information.)                   
+     </div>
+                  
+<div class="user_text">
+<ul>
+<li>
+<a name="DeviceName">
+<b>Component name</b></a> - Name of the component.
+</li>
+<li>
+<a name="OSconfiguration">
+<b>OS Configuration (os_cfg.h)</b></a> - OS configuration settings you would have otherwise in os_cfg.h.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+<ul>
+  <li>
+  <a name="MiscellaneousGroup">
+  <b>Miscellaneous</b></a> - Miscellaneous settings.
+  <ul>
+    <li>
+    <a name="OS_APP_HOOKS_EN">
+    <b>OS_APP_HOOKS_EN</b></a> - If application-defined hooks are called from the uC/OS-II hooks.<br />
+When set to 1, this #define specifies that application defined hooks are called from uC/OS-II’s hooks. See also OS_CPU_HOOKS_EN. 
+    </li>
+    <li>
+    <a name="OS_ARG_CHK_EN">
+    <b>OS_ARG_CHK_EN</b></a> - If argument checking shall be done or not.<br />
+OS_ARG_CHK_EN indicates whether you want most of ěC/OS-II functions to perform argument checking. When set to 1, uC/OS-II will ensure that pointers passed to functions are non-NULL, that arguments passed are within allowable range and more. OS_ARG_CHK_EN was added to reduce the amount of code space and processing time required by ěC/OS-II. Set OS_ARG_CHK_EN to 0 if you must reduce code space to a minimum. In general, you should always enable argument checking and thus set OS_ARG_CHK_EN to 1.
+    </li>
+    <li>
+    <a name="OS_CPU_HOOKS_EN">
+    <b>OS_CPU_HOOKS_EN</b></a> - If CPU hooks shall be called, found in the processor port files<br />
+OS_CPU_HOOKS_EN indicates whether OS_CPU_C.C declares the hook function (when set to 1) or not (when set to 0). Recall that uC/OS-II expects the presence of nine functions that can be defined either in the port (i.e., in OS_CPU_C.C) or by the application code. These functions are:<br />
+OSInitHookBegin()<br />
+OSInitHookEnd() <br />
+OSTaskCreateHook() <br />
+OSTaskDelHook()<br />
+OSTaskIdleHook()<br />
+OSTaskStatHook()<br />
+OSTaskSwHook()<br />
+OSTCBInitHook()<br />
+OSTimeTickHook()
+    </li>
+    <li>
+    <a name="OS_DEBUG_EN">
+    <b>OS_DEBUG_EN</b></a> - Enables debug variables in the OS.<br />
+When set to 1, this #define adds ROM constants located in OS_DEBUG.C to help support kernel aware debuggers. Specifically, a number of named ROM variables can be queried by a debugger to find out about compiled-in options. For example, the debugger can find out the size of an OS_TCB, uC/OS-II’s version number, the size of an event flag group (OS_FLAG_GRP) and much more.
+    </li>
+    <li>
+    <a name="OS_EVENT_MULTI_EN">
+    <b>OS_EVENT_MULTI_EN</b></a> - Include code for OSEventPendMulti().<br />
+This constant determines whether the code to support pending on multiple events will be enabled (1) or not (0). This constant thus enables code for the function OSEventPendMulti(). This #define was added in V2.86.
+    </li>
+    <li>
+    <a name="OS_EVENT_NAME_SIZE">
+    <b>OS_EVENT_NAME_SIZE</b></a> - Determine the size of the name of a Sem, Mutex, Mbox or Q.<br />
+This constant determines the maximum number of characters that would be used to assign a name to either a semaphore, a mutex, a mailbox or a message queue. The name of these ‘objects’ would thus have to be smaller (in size) than this value. If OS_EVENT_NAME_SIZE is set to 0, this feature is disabled. OS_EVENT_NAME_SIZE needs to accommodate a NUL terminated ASCII string. You should note that need to use OSEventNameSet() to set the name of either a semaphores, a mutex, a mailbox or a message queue. You need to use OSEventNameGet() to obtain the name of either a semaphores, a mutex, a mailbox or a message queue.
+    </li>
+    <li>
+    <a name="OS_LOWEST_PRIO">
+    <b>OS_LOWEST_PRIO</b></a> - Defines the lowest priority that can be assigned.<br />
+OS_LOWEST_PRIO specifies the lowest task priority (i.e., highest number) that you intend to use in your application and is provided to reduce the amount of RAM needed by ěC/OS-II. As of V2.80 ěC/OS-II priorities can go from 0 (highest priority) to a maximum of 254 (lowest possible priority). Setting OS_LOWEST_PRIO to a value less than 254 means that your application cannot create tasks with a priority number higher than OS_LOWEST_PRIO. In fact, ěC/OS-II reserves priorities OS_LOWEST_PRIO and OS_LOWEST_PRIO–1 for itself; OS_LOWEST_PRIO is reserved for the idle task, OS_TaskIdle(), and OS_LOWEST_PRIO–1 is reserved for the statistic task, OS_TaskStat(). The priorities of your application tasks can thus take a value between 0 and OS_LOWEST_PRIO–2 (inclusive). The lowest task priority specified by OS_LOWEST_PRIO is independent of OS_MAX_TASKS. For example, you can set OS_MAX_TASKS to 10 and OS_LOWEST_PRIO to 32 and have up to 10 application tasks, each of which can have a task priority value between 0 and 30 (inclusive). Note that each task must still have a different priority value. You must always set OS_LOWEST_PRIO to a value greater than the number of application tasks in your system. For example, if you set OS_MAX_TASKS to 20 and OS_LOWEST_PRIO to 10, you can not create more than eight application tasks (0 to 7) since priority 8 is the statistics task and priority 9 is the idle task. You are simply wasting RAM.
+    </li>
+    <li>
+    <a name="OS_MAX_EVENTS">
+    <b>OS_MAX_EVENTS</b></a> - Max. number of event control blocks in your application.<br />
+OS_MAX_EVENTS specifies the maximum number of event control blocks that can be allocated. An event control block is needed for every message mailbox, message queue, mutual exclusion semaphore, or semaphore object. For example, if you have 10 mailboxes, five queues, four mutexes, and three semaphores, you must set OS_MAX_EVENTS to at least 22. OS_MAX_EVENTS must be greater than 0. See also OS_MBOX_EN, OS_Q_EN, OS_MUTEX_EN, and OS_SEM_EN.
+    </li>
+    <li>
+    <a name="OS_MAX_FLAGS">
+    <b>OS_MAX_FLAGS</b></a> - Max. number of Event Flag Groups in your application.<br />
+OS_MAX_FLAGS specifies the maximum number of event flags that you need in your application. OS_MAX_FLAGS must be greater than 0. To use event-flag services, you also need to set OS_FLAG_EN to 1.
+    </li>
+    <li>
+    <a name="OS_MAX_MEM_PART">
+    <b>OS_MAX_MEM_PART</b></a> - Max. number of memory partitions.<br />
+OS_MAX_MEM_PART specifies the maximum number of memory partitions that your application can create. To use memory partitions, also need to set OS_MEM_EN to 1. If you intend to use memory partitions, OS_MAX_MEM_PART must be set to at least the number of partitions you wish to create. For example, by setting OS_MAX_MEM_PART to 3, your are allowed to create and use up to three memory partitions. Setting OS_MAX_MEM_PART to a number greater than the number of memory partitions your application uses will not cause problems but is unnecessary and a waste of RAM.
+    </li>
+    <li>
+    <a name="OS_MAX_QS">
+    <b>OS_MAX_QS</b></a> - Max. number of queue control blocks in your application.<br />
+OS_MAX_QS specifies the maximum number of message queues that your application can create. To use message queues, you also must set OS_Q_EN to 1. If you intend to use message queues, OS_MAX_QS must be set to at least the number of queues you wish to create. For example, if you set OS_MAX_QS to 3, you are allowed to create and use up to three message queues. Setting OS_MAX_QS to greater than the number of message queues your application uses will not cause problems but is unnecessary and a waste of RAM.
+    </li>
+    <li>
+    <a name="OS_MAX_TASKS">
+    <b>OS_MAX_TASKS</b></a> - Max. number of tasks in your application.<br />
+OS_MAX_TASKS specifies the maximum number of application tasks that can exist in your application. Note that OS_MAX_TASKS cannot be greater than 253 (as of V2.80) because uC/OS-II currently reserves two tasks for itself (see OS_N_SYS_TASKS in uCOS_II.H). If you set OS_MAX_TASKS to the exact number of tasks in your system, you need to make sure that you revise this value when you add additional tasks. Conversely, if you make OS_MAX_TASKS much higher than your current task requirements (for future expansion), you are wasting valuable RAM.
+    </li>
+    <li>
+    <a name="OS_SCHED_LOCK_EN">
+    <b>OS_SCHED_LOCK_EN</b></a> - Include code for OSSchedLock() and OSSchedUnlock().<br />
+This constant enables (when set to 1) or disables (when set to 0) code generation for the two functions OSSchedLock() and OSSchedUnlock().
+    </li>
+    <li>
+    <a name="OS_TICK_STEP_EN">
+    <b>OS_TICK_STEP_EN</b></a> - Enable tick stepping feature for uC/OS-View<br />
+ěC/OS-View (a Micrium product that allows you to display run-time data about your tasks on a Windows-based PC) can now ‘halt’ ěC/OS-II’s tick processing and allow you to issue ‘step’ commands from ěC/OS-View. In other words, ěC/OS-View can prevent ěC/OS-II from calling OSTimeTick() so that timeouts and time delays are no longer processed. However, though a keystroke from ěC/OS-View, you can execute a single tick at a time. If OS_TIME_TICK_HOOK_EN (see below) is set to 1, OSTimeTickHook() is still executed at the regular tick rate in case you have time critical items to take care of in your application.
+    </li>
+    <li>
+    <a name="OS_TICKS_PER_SEC">
+    <b>OS_TICKS_PER_SEC</b></a> - Set the number of ticks in one second. If you change this value, you need to change as well the timer frequency.<br />
+OS_TICKS_PER_SEC specifies the rate at which you call OSTimeTick(). It is up to your initialization code to ensure that OSTimeTick() is invoked at this rate. This constant is used by OSStatInit(), OS_TaskStat(), and OSTimeDlyHMSM().
+    </li>
+  </ul>
+  </li>
+  <li>
+  <a name="TaskStackSizeGroup">
+  <b>Task Stack Size</b></a> - Spezifies the stack size for OS tasks.
+  <ul>
+    <li>
+    <a name="OS_TASK_TMR_STK_SIZE">
+    <b>OS_TASK_TMR_STK_SIZE</b></a> - OS_TASK_TMR_STK_SIZE specifies the size of the ěC/OS-II timer task stack. The size is specified not in bytes but in number of elements. This is because a stack is declared to be of type OS_STK. The size of the timer-task stack depends on the processor you are using, the ‘callback’ functions that will be executed when each of the timer times out and the deepest anticipated interrupt-nesting level.
+    </li>
+    <li>
+    <a name="OS_TASK_STAT_STK_SIZE">
+    <b>OS_TASK_STAT_STK_SIZE</b></a> - OS_TASK_STAT_STK_SIZE specifies the size of the ěC/OS-II statistic-task stack. The size is specified not in bytes but in number of elements. This is because a stack is declared as being of type OS_STK. The size of the statistic-task stack depends on the processor you are using and the maximum of the following actions:<br />
+- The stack growth associated with performing 32-bit arithmetic (subtraction and division)<br />
+- The stack growth associated with calling OSTimeDly()<br />
+- The stack growth associated with calling OSTaskStatHook()<br />
+- The deepest anticipated interrupt-nesting level<br />
+If you want to run stack checking on this task and determine its actual stack requirements, you must enable code generation for OSTaskCreateExt() by setting OS_TASK_CREATE_EXT_EN to 1. Again, the priority of OS_TaskStat() is always set to OS_LOWEST_PRIO-1.
+    </li>
+    <li>
+    <a name="OS_TASK_IDLE_STK_SIZE">
+    <b>OS_TASK_IDLE_STK_SIZE</b></a> - OS_TASK_IDLE_STK_SIZE specifies the size of the ěC/OS-II idle-task stack. The size is specified not in bytes but in number of elements. This is because a stack is declared to be of type OS_STK. The size of the idle-task stack depends on the processor you are using and the deepest anticipated interrupt-nesting level. Very little is being done in the idle task, but you should allow at least enough space to store all processor registers on the stack and enough storage to handle all nested interrupts.
+    </li>
+  </ul>
+  </li>
+  <li>
+  <a name="TaskManagementGroup">
+  <b>Task Management</b></a> - Settings for task managment.
+  <ul>
+    <li>
+    <a name="OS_TASK_CHANGE_PRIO_EN">
+    <b>OS_TASK_CHANGE_PRIO_EN</b></a> - OS_TASK_CHANGE_PRIO_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSTaskChangePrio(). If your application never changes task priorities after they are assigned, you can reduce the amount of code space used by ěC/OS-II by setting OS_TASK_CHANGE_PRIO_EN to 0.
+    </li>
+    <li>
+    <a name="OS_TASK_CREATE_EN">
+    <b>OS_TASK_CREATE_EN</b></a> - OS_TASK_CREATE_EN enables (when set to 1) or disables (when set to 0) the code generation of the OSTaskCreate() function. Enabling this function makes ěC/OS-II backward compatible with the ěC/OS task-creation function. If your application always uses OSTaskCreateExt() (recommended), you can reduce the amount of code space used by ěC/OS-II by setting OS_TASK_CREATE_EN to 0. Note that you must set at least OS_TASK_CREATE_EN or OS_TASK_CREATE_EXT_EN to 1. If you wish, you can use both.
+    </li>
+    <li>
+    <a name="OS_TASK_CREATE_EXT_EN">
+    <b>OS_TASK_CREATE_EXT_EN</b></a> - OS_TASK_CREATE_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSTaskCreateExt(), which is the extended, more powerful version of the two task-creation functions. If your application never uses OSTaskCreateExt(), you can reduce the amount of code space used by ěC/OS-II by setting OS_TASK_CREATE_EXT_EN to 0. Note that you need the extended task-create function to use the stack-checking function OSTaskStkChk().
+    </li>
+    <li>
+    <a name="OS_TASK_NAME_SIZE">
+    <b>OS_TASK_NAME_SIZE</b></a> - This constant determines the maximum number of characters that would be used to assign a name to a task. The name of tasks would thus have to be smaller (in size) than this value. If OS_TASK_NAME_SIZE is set to 0, this feature is disabled and no RAM is used in the OS_TCB for the task name. OS_TASK_NAME_SIZE needs to accommodate a NUL terminated ASCII string.
+    </li>
+    <li>
+    <a name="OS_TASK_PROFILE_EN">
+    <b>OS_TASK_PROFILE_EN</b></a> - This constant allows variables to be allocated in each task’s OS_TCB that hold performance data about each task. Specifically, if OS_TASK_PROFILE_EN is set to 1, each task will have a variable to keep track of the number of context switches, the task execution time, the number of bytes used by the task and more.
+    </li>
+    <li>
+    <a name="OS_TASK_QUERY_EN">
+    <b>OS_TASK_QUERY_EN</b></a> - OS_TASK_QUERY_EN enables (when set to 1) or disables (when set to 0) code generation of the function OSTaskQuery(). If your application never uses this function, you can reduce the amount of code space used by ěC/OS-II by setting OS_TASK_QUERY_EN to 0.
+    </li>
+    <li>
+    <a name="OS_TASK_STAT_EN">
+    <b>OS_TASK_STAT_EN</b></a> - OS_TASK_STAT_EN specifies whether or not you can enable the ěC/OS-II statistic task, as well as its initialization function. When set to 1, the statistic task OS_TaskStat() and the statistic-task-initialization function are enabled. OS_TaskStat() computes the CPU usage of your application. When enabled, it executes every second and computes the 8-bit variable OSCPUUsage, which provides the percentage of CPU use of your application. OS_TaskStat() calls OSTaskStatHook() every time it executes so that you can add your own statistics as needed. See OS_CORE.C for details on the statistic task. The priority of OS_TaskStat() is always set to OS_LOWEST_PRIO-1.
+    </li>
+    <li>
+    <a name="OS_TASK_STAT_STK_CHK_EN">
+    <b>OS_TASK_STAT_STK_CHK_EN</b></a> - This constant allows the statistic task to determine the actual stack usage of each active task. If OS_TASK_STAT_EN is set to 0 (the statistic task is not enabled) but, you can call OS_TaskStatStkChk() yourself from one of your tasks. If OS_TASK_STAT_EN is set to 1, stack sizes will be determined every second by the statistic task.
+    </li>
+    <li>
+    <a name="OS_TASK_SUSPEND_EN">
+    <b>OS_TASK_SUSPEND_EN</b></a> - OS_TASK_SUSPEND_EN enables (when set to 1) or disables (when set to 0) code generation of the functions OSTaskSuspend() and OSTaskResume(), which allows you to explicitly suspend and resume tasks, respectively. If your application never uses these functions, you can reduce the amount of code space used by ěC/OS-II by setting OS_TASK_SUSPEND_EN to 0.
+    </li>
+  </ul>
+  </li>
+  <li>
+  <a name="OS_FLAG_EN">
+  <b>Event Flags (OS_FLAG_EN)</b></a> - OS_FLAG_EN enables (when set to 1) or disables (when set to 0) code generation of all the event-flag services and data structures, which reduces the amount of code and data space needed when your application does not require the use of event flags. When OS_FLAG_EN is set to 0, you do not need to enable or disable any of the other #define constants in this section.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+  <ul>
+    <li>
+    <a name="OS_FLAG_ACCEPT_EN">
+    <b>OS_FLAG_ACCEPT_EN</b></a> - OS_FLAG_ACCEPT_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSFlagAccept().
+    </li>
+    <li>
+    <a name="OS_FLAG_DEL_EN">
+    <b>OS_FLAG_DEL_EN</b></a> - OS_FLAG_DEL_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSFlagDel().
+    </li>
+    <li>
+    <a name="OS_FLAG_NAME_SIZE">
+    <b>OS_FLAG_NAME_SIZE</b></a> - This constant determines the maximum number of characters that would be used to assign a name to an event flag group. The name of event flags would thus have to be smaller (in size) than this value. If OS_FLAG_NAME_SIZE is set to 0, this feature is disabled. OS_FLAG_NAME_SIZE needs to accommodate a NUL terminated ASCII string.
+    </li>
+    <li>
+    <a name="OS_FLAGS_NBITS">
+    <b>OS_FLAGS_NBITS</b></a> - OS_FLAGS_NBITS has been introduced in V2.80 and specifies the number of bits used in event flags and MUST be either 8, 16 or 32.
+    </li>
+    <li>
+    <a name="OS_FLAG_QUERY_EN">
+    <b>OS_FLAG_QUERY_EN</b></a> - OS_FLAG_QUERY_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSFlagQuery().
+    </li>
+    <li>
+    <a name="OS_FLAG_WAIT_CLR_EN">
+    <b>OS_FLAG_WAIT_CLR_EN</b></a> - OS_FLAG_WAIT_CLR_EN enables (when set to 1) or disables (when set to 0) the code generation used to wait for event flags to be 0 instead of 1. Generally, you want to wait for event flags to be set. However, you might also want to wait for event flags to be clear, and thus you need to enable this option.
+    </li>
+  </ul>
+  </li>
+  <li>
+  <a name="OS_MBOX_EN">
+  <b>Message Mailboxes (OS_MBOX_EN)</b></a> - This constant enables (when set to 1) or disables (when set to 0) the code generation of all message-mailbox services and data structures, which reduces the amount of code space needed when your application does not require the use of message mailboxes. When OS_MBOX_EN is set to 0, you do not need to enable or disable any of the other #define constants in this section.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+  <ul>
+    <li>
+    <a name="OS_MBOX_ACCEPT_EN">
+    <b>OS_MBOX_ACCEPT_EN</b></a> - This constant enables (when set to 1) or disables (when set to 0) the code generation of the function OSMboxAccept().
+    </li>
+    <li>
+    <a name="OS_MBOX_DEL_EN">
+    <b>OS_MBOX_DEL_EN</b></a> - This constant enables (when set to 1) or disables (when set to 0) the code generation of the function OSMboxDel().
+    </li>
+    <li>
+    <a name="OS_MBOX_PEND_ABORT_EN">
+    <b>OS_MBOX_PEND_ABORT_EN</b></a> - OS_MBOX_PEND_ABORT_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSMboxPendAbort().
+    </li>
+    <li>
+    <a name="OS_MBOX_POST_EN">
+    <b>OS_MBOX_POST_EN</b></a> - OS_MBOX_POST_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSMboxPost(). You can disable code generation for this function if you decide to use the more powerful function OSMboxPostOpt() instead.
+    </li>
+    <li>
+    <a name="OS_MBOX_POST_OPT_EN">
+    <b>OS_MBOX_POST_OPT_EN</b></a> - OS_MBOX_POST_OPT_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSMboxPostOpt(). You can disable code generation for this function if you do not need the additional functionality provided by OSMboxPostOpt(). OSMboxPost() generates less code.
+    </li>
+    <li>
+    <a name="OS_MBOX_QUERY_EN">
+    <b>OS_MBOX_QUERY_EN</b></a> - OS_MBOX_QUERY_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSMboxQuery().
+    </li>
+  </ul>
+  </li>
+  <li>
+  <a name="OS_MEM_EN">
+  <b>Memory Management (OS_MEM_EN)</b></a> - OS_MEM_EN enables (when set to 1) or disables (when set to 0) all code generation of the ěC/OS-II partition-memory manager and its associated data structures. This feature reduces the amount of code and data space needed when your application does not require the use of memory partitions.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+  <ul>
+    <li>
+    <a name="OS_MEM_NAME_SIZE">
+    <b>OS_MEM_NAME_SIZE</b></a> - This constant determines the maximum number of characters that would be used to assign a name to a memory partition. The name of memory partitions would thus have to be smaller (in size) than this value. If OS_MEM_NAME_SIZE is set to 0, this feature is disabled and no RAM is used in the OS_MEM for the memory partition. OS_MEM_NAME_SIZE needs to accommodate a NUL terminated ASCII string.
+    </li>
+    <li>
+    <a name="OS_MEM_QUERY_EN">
+    <b>OS_MEM_QUERY_EN</b></a> - OS_MEM_QUERY_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSMemQuery().
+    </li>
+  </ul>
+  </li>
+  <li>
+  <a name="OS_MUTEX_EN">
+  <b>Mutual Exclusion Semaphores (OS_MUTEX_EN)</b></a> - OS_MUTEX_EN enables (when set to 1) or disables (when set to 0) the code generation of all mutual-exclusion-semaphore services and data structures, which reduces the amount of code and data space needed when your application does not require the use of mutexes. When OS_MUTEX_EN is set to 0, you do not need to enable or disable any of the other #define constants in this section.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+  <ul>
+    <li>
+    <a name="OS_MUTEX_ACCEPT_EN">
+    <b>OS_MUTEX_ACCEPT_EN</b></a> - OS_MUTEX_ACCEPT_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSMutexAccept().
+    </li>
+    <li>
+    <a name="OS_MUTEX_DEL_EN">
+    <b>OS_MUTEX_DEL_EN</b></a> - OS_MUTEX_DEL_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSMutexDel().
+    </li>
+    <li>
+    <a name="OS_MUTEX_QUERY_EN">
+    <b>OS_MUTEX_QUERY_EN</b></a> - OS_MUTEX_QUERY_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSMutexQuery().
+    </li>
+  </ul>
+  </li>
+  <li>
+  <a name="OS_Q_EN">
+  <b>Message Queues (OS_Q_EN)</b></a> - OS_Q_EN enables (when set to 1) or disables (when set to 0) the code generation of all message-queue services and data structures, which reduces the amount of code space needed when your application does not require the use of message queues. When OS_Q_EN is set to 0, you do not need to enable or disable any of the other #define constants in this section. Note that if OS_Q_EN is set to 0, the #define constant OS_MAX_QS is irrelevant.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+  <ul>
+    <li>
+    <a name="OS_Q_ACCEPT_EN">
+    <b>OS_Q_ACCEPT_EN</b></a> - OS_Q_ACCEPT_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSQAccept().
+    </li>
+    <li>
+    <a name="OS_Q_DEL_EN">
+    <b>OS_Q_DEL_EN</b></a> - OS_Q_DEL_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSQDel().
+    </li>
+    <li>
+    <a name="OS_Q_FLUSH_EN">
+    <b>OS_Q_FLUSH_EN</b></a> - OS_Q_FLUSH_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSQFlush().
+    </li>
+    <li>
+    <a name="OS_Q_PEND_ABORT_EN">
+    <b>OS_Q_PEND_ABORT_EN</b></a> - OS_Q_PEND_ABORT_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSQPendAbort().
+    </li>
+    <li>
+    <a name="OS_Q_POST_EN">
+    <b>OS_Q_POST_EN</b></a> - OS_Q_POST_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSQPost(). You can disable code generation for this function if you decide to use the more powerful function OSQPostOpt() instead.
+    </li>
+    <li>
+    <a name="OS_Q_POST_FRONT_EN">
+    <b>OS_Q_POST_FRONT_EN</b></a> - OS_Q_POST_FRONT_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSQPostFront(). You can disable code generation for this function if you decide to use the more powerful function OSQPostOpt() instead.
+    </li>
+    <li>
+    <a name="OS_Q_POST_OPT_EN">
+    <b>OS_Q_POST_OPT_EN</b></a> - OS_Q_POST_OPT_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSQPostOpt(). You can disable code generation for this function if you do not need the additional functionality provided by OSQPostOpt(). OSQPost() generates less code.
+    </li>
+    <li>
+    <a name="OS_Q_QUERY_EN">
+    <b>OS_Q_QUERY_EN</b></a> - OS_Q_QUERY_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSQQuery().
+    </li>
+  </ul>
+  </li>
+  <li>
+  <a name="OS_SEM_EN">
+  <b>Semaphores (OS_SEM_EN)</b></a> - OS_SEM_EN enables (when set to 1) or disables (when set to 0) all code generation of the ěC/OS-II semaphore manager and its associated data structures, which reduces the amount of code and data space needed when your application does not require the use of semaphores. When OS_SEM_EN is set to 0, you do not need to enable or disable any of the other #define constants in this section.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+  <ul>
+    <li>
+    <a name="OS_SEM_ACCEPT_EN">
+    <b>OS_SEM_ACCEPT_EN</b></a> - OS_SEM_ACCEPT_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSSemAccept().
+    </li>
+    <li>
+    <a name="OS_SEM_DEL_EN">
+    <b>OS_SEM_DEL_EN</b></a> - OS_SEM_DEL_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSSemDel().
+    </li>
+    <li>
+    <a name="OS_SEM_PEND_ABORT_EN">
+    <b>OS_SEM_PEND_ABORT_EN</b></a> - OS_SEM_PEND_ABORT_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSSemPendAbort().
+    </li>
+    <li>
+    <a name="OS_SEM_QUERY_EN">
+    <b>OS_SEM_QUERY_EN</b></a> - OS_SEM_QUERY_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSSemQuery().
+    </li>
+    <li>
+    <a name="OS_SEM_SET_EN">
+    <b>OS_SEM_SET_EN</b></a> - OS_SEM_SET_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSSemSet().
+    </li>
+  </ul>
+  </li>
+  <li>
+  <a name="TimeManagementGroup">
+  <b>Time Management</b></a> - Settings for Time Management.
+  <ul>
+    <li>
+    <a name="OS_TIME_DLY_HMSM_EN">
+    <b>OS_TIME_DLY_HMSM_EN</b></a> - OS_TIME_DLY_HMSM_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSTimeDlyHMSM(), which is used to delay a task for a specified number of hours, minutes, seconds, and milliseconds.
+    </li>
+    <li>
+    <a name="OS_TIME_DLY_RESUME_EN">
+    <b>OS_TIME_DLY_RESUME_EN</b></a> - OS_TIME_DLY_RESUME_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSTimeDlyResume().
+    </li>
+    <li>
+    <a name="OS_TIME_GET_SET_EN">
+    <b>OS_TIME_GET_SET_EN</b></a> - OS_TIME_GET_SET_EN enables (when set to 1) or disables (when set to 0) the code and data generation of the functions OSTimeGet() and OSTimeSet(). If you don’t need to use the 32-bit tick counter OSTime, then you can save yourself 4 bytes of data space and code space by not having the code for these functions generated by the compiler.
+    </li>
+  </ul>
+  </li>
+  <li>
+  <a name="OS_TMR_EN">
+  <b>Timer Management</b></a> - Enables (when set to 1) or disables (when set to 0) the code generation of the timer management services.<br />Note that timer management requires semaphores and thus, you need to set OS_SEM_EN to 1.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+  <ul>
+    <li>
+    <a name="OS_TASK_TMR_PRIO">
+    <b>OS_TASK_TMR_PRIO</b></a> - The priority of the Timer management task.
+    </li>
+    <li>
+    <a name="OS_TMR_CFG_MAX">
+    <b>OS_TMR_CFG_MAX</b></a> - Determines the maximum number of timers you can have in your application. Depending on the amount of RAM available in your product, you can have hundreds or even thousands of timers (max. is 65500). 36 entries are reserved.
+    </li>
+    <li>
+    <a name="OS_TMR_CFG_NAME_SIZE">
+    <b>OS_TMR_CFG_NAME_SIZE</b></a> - This constant determines the maximum number of characters that would be used to assign a name to a timer. The name of timers would thus have to be smaller (in size) than this value. If OS_TMR_CFG_NAME_SIZE is set to 0, this feature is disabled and no RAM is used in the OS_TMR for the timer name. OS_TMR_CFG_NAME_SIZE needs to accommodate a NUL terminated ASCII string.
+    </li>
+    <li>
+    <a name="OS_TMR_CFG_WHEEL_SIZE">
+    <b>OS_TMR_CFG_WHEEL_SIZE</b></a> - Timers are updated using a rotating wheel. This ‘wheel’ allows to reduce the number of timers that need to be updated by the timer manager task. The size of the wheel should be a fraction of the number of timers you have in your application. In other words:
+OS_TMR_CFG_WHEEL_SIZE &lt;= OS_TMR_CFG_MAX.
+This value should be a number between 2 and 1024. Timer management overhead is somewhat determined by the size of the wheel. A large number of entries might reduce the overhead for timer management but would require more RAM. Each entry requires a pointer and a count (16-bit value). We recommend a number that is NOT a multiple of the tick rate. If your application has many timers then it’s recommended that you have a high value. As a starting value, you could use OS_TMR_CFG_MAX / 4.
+    </li>
+    <li>
+    <a name="OS_TMR_CFG_TICKS_PER_SEC">
+    <b>OS_TMR_CFG_TICKS_PER_SEC</b></a> - This configuration constant determines the rate at which timers are updated (in Hz). Timer updates should be done at a fraction of the tick rate (i.e. OS_TICKS_PER_SEC). We recommend that you update timers at 10 Hz.
+    </li>
+  </ul>
+  </li>
+</ul>
+</li>
+<li>
+<a name="HWInterface">
+<b>HW Interface</b></a> - Defines the interface to the underlying hardware.
+<ul>
+  <li>
+  <a name="SWI">
+  <b>SWI Interface</b></a> - Interface to a software interrupt source (SWI). A software interrupt is raised by the OS scheduler to switch to a new task.
+  </li>
+  <li>
+  <a name="Timer">
+  <b>Timer Interface</b></a> - This timer creates events for the OS, between 10 and 100 times per second. As default use a 20 ms timer. Make sure that the timer does NOT start in the initialization of the bean.
+  </li>
+</ul>
+</li>
+<li>
+<a name="CPUconfiguration">
+<b>CPUConfiguration (os_cpu.h)</b></a> - OS configuration settings you would have otherwise in os_cpu.h.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+<ul>
+  <li>
+  <a name="OS_CRITICAL_METHOD">
+  <b>OS_CRITICAL_METHOD</b></a> - Method to be used to enter a critical section. Note that not all methods may be implemented.
+  </li>
+  <li>
+  <a name="ColdFireCPUSpecific">
+  <b>ColdFire</b></a> - ColdFire specific settings<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+  <ul>
+    <li>
+    <a name="CFTrapNumber">
+    <b>Trap Number</b></a> - Trap number to be used for context switch. Make sure you have the corresponding interrupt vecotr set to catch the exception.
+    </li>
+  </ul>
+  </li>
+</ul>
+</li>
+
+     </ul>
+<!---USERBEG DON'T CHANGE THIS LINE-->
+
+<!---USEREND DON'T CHANGE THIS LINE-->
+</div>
+           <p class="footer">
+            PROCESSOR EXPERT is trademark of Freescale Semiconductor, Inc.
+            <br />
+            
+           </p>
+    </td>
+  </tr>
+
+</table>
+
+</body>
+</html>

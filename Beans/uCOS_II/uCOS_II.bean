@@ -1,0 +1,2857 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bean>
+  <Header>
+    <Name>uCOS_II</Name>
+    <Description>uCOS-II</Description>
+    <Author>Erich Styger</Author>
+    <Version>01.189</Version>
+    <Icon>uCOS_II</Icon>
+    <TypesFiles>PE,uCOS_II\uCOS_II</TypesFiles>
+    <FileVersion>6</FileVersion>
+  </Header>
+  <Options>
+    <Category>Operating Systems</Category>
+    <BW_HelpType>BasicPlusUsage</BW_HelpType>
+    <BW_HelpFiles>,Properties,Methods,Events,"Typical Usage"</BW_HelpFiles>
+    <BW_AutoSaveHelp>yes</BW_AutoSaveHelp>
+    <BW_AutoSaveDriver>yes</BW_AutoSaveDriver>
+    <BW_DetailedHelp>yes</BW_DetailedHelp>
+    <BW_NeedTps>no</BW_NeedTps>
+    <BW_NeedUst>8</BW_NeedUst>
+    <BW_NeedCns>0</BW_NeedCns>
+    <BeanStatus>PROPOSAL</BeanStatus>
+    <Copyright>(c) Copyright Jean J. Labrosse, Plantation, FL, 2008\nhttp      : www.micrium.com\nmail      : Ported to Processor Expert for S08, S12 and ColdFire V1: Erich Styger</Copyright>
+    <DemoDriver>no</DemoDriver>
+    <BeanLevel>High</BeanLevel>
+    <OneBeanInstance>There can be only one instance of the OS.</OneBeanInstance>
+    <Shortcut>uCOS</Shortcut>
+  </Options>
+  <PropertyList>
+    <Property>
+      <TCompNameItem>
+        <Name>Component name</Name>
+        <Symbol>DeviceName</Symbol>
+        <Hint>Name of the component.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue/>
+      </TCompNameItem>
+    </Property>
+    <Property>
+      <TBoolGrupItem>
+        <Name>OS Configuration (os_cfg.h)</Name>
+        <Symbol>OSconfiguration</Symbol>
+        <TypeSpec>typeEnaDis</TypeSpec>
+        <Hint>OS configuration settings you would have otherwise in os_cfg.h.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>Enabled</Description>
+        <Expanded>Yes</Expanded>
+        <DefaultValue>true</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <Children>
+          <GrupItem>
+            <TGrupItem>
+              <Name>Miscellaneous</Name>
+              <Symbol>MiscellaneousGroup</Symbol>
+              <Hint>Miscellaneous settings.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description/>
+              <Expanded>Yes</Expanded>
+              <Children>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_APP_HOOKS_EN</Name>
+                    <Symbol>OS_APP_HOOKS_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>If application-defined hooks are called from the uC/OS-II hooks.\n
+When set to 1, this #define specifies that application defined hooks are called from uC/OS-II’s hooks. See also OS_CPU_HOOKS_EN. </Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_ARG_CHK_EN</Name>
+                    <Symbol>OS_ARG_CHK_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>If argument checking shall be done or not.\n
+OS_ARG_CHK_EN indicates whether you want most of ìC/OS-II functions to perform argument checking. When set to 1, uC/OS-II will ensure that pointers passed to functions are non-NULL, that arguments passed are within allowable range and more. OS_ARG_CHK_EN was added to reduce the amount of code space and processing time required by ìC/OS-II. Set OS_ARG_CHK_EN to 0 if you must reduce code space to a minimum. In general, you should always enable argument checking and thus set OS_ARG_CHK_EN to 1.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>1</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>false</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_CPU_HOOKS_EN</Name>
+                    <Symbol>OS_CPU_HOOKS_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>If CPU hooks shall be called, found in the processor port files\n
+OS_CPU_HOOKS_EN indicates whether OS_CPU_C.C declares the hook function (when set to 1) or not (when set to 0). Recall that uC/OS-II expects the presence of nine functions that can be defined either in the port (i.e., in OS_CPU_C.C) or by the application code. These functions are:\n
+OSInitHookBegin()\n
+OSInitHookEnd() \n
+OSTaskCreateHook() \n
+OSTaskDelHook()\n
+OSTaskIdleHook()\n
+OSTaskStatHook()\n
+OSTaskSwHook()\n
+OSTCBInitHook()\n
+OSTimeTickHook()</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>1</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>false</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_DEBUG_EN</Name>
+                    <Symbol>OS_DEBUG_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>Enables debug variables in the OS.\n
+When set to 1, this #define adds ROM constants located in OS_DEBUG.C to help support kernel aware debuggers. Specifically, a number of named ROM variables can be queried by a debugger to find out about compiled-in options. For example, the debugger can find out the size of an OS_TCB, uC/OS-II’s version number, the size of an event flag group (OS_FLAG_GRP) and much more.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>1</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>false</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_EVENT_MULTI_EN</Name>
+                    <Symbol>OS_EVENT_MULTI_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>Include code for OSEventPendMulti().\n
+This constant determines whether the code to support pending on multiple events will be enabled (1) or not (0). This constant thus enables code for the function OSEventPendMulti(). This #define was added in V2.86.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>1</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>false</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>OS_EVENT_NAME_SIZE</Name>
+                    <Symbol>OS_EVENT_NAME_SIZE</Symbol>
+                    <Hint>Determine the size of the name of a Sem, Mutex, Mbox or Q.\n
+This constant determines the maximum number of characters that would be used to assign a name to either a semaphore, a mutex, a mailbox or a message queue. The name of these ‘objects’ would thus have to be smaller (in size) than this value. If OS_EVENT_NAME_SIZE is set to 0, this feature is disabled. OS_EVENT_NAME_SIZE needs to accommodate a NUL terminated ASCII string. You should note that need to use OSEventNameSet() to set the name of either a semaphores, a mutex, a mailbox or a message queue. You need to use OSEventNameGet() to obtain the name of either a semaphores, a mutex, a mailbox or a message queue.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>16</DefaultValue>
+                    <MinValue>0</MinValue>
+                    <MaxValue>256</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>OS_LOWEST_PRIO</Name>
+                    <Symbol>OS_LOWEST_PRIO</Symbol>
+                    <Hint>Defines the lowest priority that can be assigned.\n
+OS_LOWEST_PRIO specifies the lowest task priority (i.e., highest number) that you intend to use in your application and is provided to reduce the amount of RAM needed by ìC/OS-II. As of V2.80 ìC/OS-II priorities can go from 0 (highest priority) to a maximum of 254 (lowest possible priority). Setting OS_LOWEST_PRIO to a value less than 254 means that your application cannot create tasks with a priority number higher than OS_LOWEST_PRIO. In fact, ìC/OS-II reserves priorities OS_LOWEST_PRIO and OS_LOWEST_PRIO–1 for itself; OS_LOWEST_PRIO is reserved for the idle task, OS_TaskIdle(), and OS_LOWEST_PRIO–1 is reserved for the statistic task, OS_TaskStat(). The priorities of your application tasks can thus take a value between 0 and OS_LOWEST_PRIO–2 (inclusive). The lowest task priority specified by OS_LOWEST_PRIO is independent of OS_MAX_TASKS. For example, you can set OS_MAX_TASKS to 10 and OS_LOWEST_PRIO to 32 and have up to 10 application tasks, each of which can have a task priority value between 0 and 30 (inclusive). Note that each task must still have a different priority value. You must always set OS_LOWEST_PRIO to a value greater than the number of application tasks in your system. For example, if you set OS_MAX_TASKS to 20 and OS_LOWEST_PRIO to 10, you can not create more than eight application tasks (0 to 7) since priority 8 is the statistics task and priority 9 is the idle task. You are simply wasting RAM.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>63</DefaultValue>
+                    <MinValue>1</MinValue>
+                    <MaxValue>254</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>OS_MAX_EVENTS</Name>
+                    <Symbol>OS_MAX_EVENTS</Symbol>
+                    <Hint>Max. number of event control blocks in your application.\n
+OS_MAX_EVENTS specifies the maximum number of event control blocks that can be allocated. An event control block is needed for every message mailbox, message queue, mutual exclusion semaphore, or semaphore object. For example, if you have 10 mailboxes, five queues, four mutexes, and three semaphores, you must set OS_MAX_EVENTS to at least 22. OS_MAX_EVENTS must be greater than 0. See also OS_MBOX_EN, OS_Q_EN, OS_MUTEX_EN, and OS_SEM_EN.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>10</DefaultValue>
+                    <MinValue>1</MinValue>
+                    <MaxValue>-1</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>OS_MAX_FLAGS</Name>
+                    <Symbol>OS_MAX_FLAGS</Symbol>
+                    <Hint>Max. number of Event Flag Groups in your application.\n
+OS_MAX_FLAGS specifies the maximum number of event flags that you need in your application. OS_MAX_FLAGS must be greater than 0. To use event-flag services, you also need to set OS_FLAG_EN to 1.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>5</DefaultValue>
+                    <MinValue>1</MinValue>
+                    <MaxValue>-1</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>OS_MAX_MEM_PART</Name>
+                    <Symbol>OS_MAX_MEM_PART</Symbol>
+                    <Hint>Max. number of memory partitions.\n
+OS_MAX_MEM_PART specifies the maximum number of memory partitions that your application can create. To use memory partitions, also need to set OS_MEM_EN to 1. If you intend to use memory partitions, OS_MAX_MEM_PART must be set to at least the number of partitions you wish to create. For example, by setting OS_MAX_MEM_PART to 3, your are allowed to create and use up to three memory partitions. Setting OS_MAX_MEM_PART to a number greater than the number of memory partitions your application uses will not cause problems but is unnecessary and a waste of RAM.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>5</DefaultValue>
+                    <MinValue>1</MinValue>
+                    <MaxValue>-1</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>OS_MAX_QS</Name>
+                    <Symbol>OS_MAX_QS</Symbol>
+                    <Hint>Max. number of queue control blocks in your application.\n
+OS_MAX_QS specifies the maximum number of message queues that your application can create. To use message queues, you also must set OS_Q_EN to 1. If you intend to use message queues, OS_MAX_QS must be set to at least the number of queues you wish to create. For example, if you set OS_MAX_QS to 3, you are allowed to create and use up to three message queues. Setting OS_MAX_QS to greater than the number of message queues your application uses will not cause problems but is unnecessary and a waste of RAM.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>4</DefaultValue>
+                    <MinValue>1</MinValue>
+                    <MaxValue>-1</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>OS_MAX_TASKS</Name>
+                    <Symbol>OS_MAX_TASKS</Symbol>
+                    <Hint>Max. number of tasks in your application.\n
+OS_MAX_TASKS specifies the maximum number of application tasks that can exist in your application. Note that OS_MAX_TASKS cannot be greater than 253 (as of V2.80) because uC/OS-II currently reserves two tasks for itself (see OS_N_SYS_TASKS in uCOS_II.H). If you set OS_MAX_TASKS to the exact number of tasks in your system, you need to make sure that you revise this value when you add additional tasks. Conversely, if you make OS_MAX_TASKS much higher than your current task requirements (for future expansion), you are wasting valuable RAM.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>10</DefaultValue>
+                    <MinValue>2</MinValue>
+                    <MaxValue>253</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_SCHED_LOCK_EN</Name>
+                    <Symbol>OS_SCHED_LOCK_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>Include code for OSSchedLock() and OSSchedUnlock().\n
+This constant enables (when set to 1) or disables (when set to 0) code generation for the two functions OSSchedLock() and OSSchedUnlock().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>1</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>false</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_TICK_STEP_EN</Name>
+                    <Symbol>OS_TICK_STEP_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>Enable tick stepping feature for uC/OS-View\n
+ìC/OS-View (a Micrium product that allows you to display run-time data about your tasks on a Windows-based PC) can now ‘halt’ ìC/OS-II’s tick processing and allow you to issue ‘step’ commands from ìC/OS-View. In other words, ìC/OS-View can prevent ìC/OS-II from calling OSTimeTick() so that timeouts and time delays are no longer processed. However, though a keystroke from ìC/OS-View, you can execute a single tick at a time. If OS_TIME_TICK_HOOK_EN (see below) is set to 1, OSTimeTickHook() is still executed at the regular tick rate in case you have time critical items to take care of in your application.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>1</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>false</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>OS_TICKS_PER_SEC</Name>
+                    <Symbol>OS_TICKS_PER_SEC</Symbol>
+                    <Hint>Set the number of ticks in one second. If you change this value, you need to change as well the timer frequency.\n
+OS_TICKS_PER_SEC specifies the rate at which you call OSTimeTick(). It is up to your initialization code to ensure that OSTimeTick() is invoked at this rate. This constant is used by OSStatInit(), OS_TaskStat(), and OSTimeDlyHMSM().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>50</DefaultValue>
+                    <MinValue>1</MinValue>
+                    <MaxValue>-1</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+              </Children>
+            </TGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TGrupItem>
+              <Name>Task Stack Size</Name>
+              <Symbol>TaskStackSizeGroup</Symbol>
+              <Hint>Spezifies the stack size for OS tasks.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description/>
+              <Expanded>Yes</Expanded>
+              <Children>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>OS_TASK_TMR_STK_SIZE</Name>
+                    <Symbol>OS_TASK_TMR_STK_SIZE</Symbol>
+                    <Hint>OS_TASK_TMR_STK_SIZE specifies the size of the ìC/OS-II timer task stack. The size is specified not in bytes but in number of elements. This is because a stack is declared to be of type OS_STK. The size of the timer-task stack depends on the processor you are using, the ‘callback’ functions that will be executed when each of the timer times out and the deepest anticipated interrupt-nesting level.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>128</DefaultValue>
+                    <MinValue>1</MinValue>
+                    <MaxValue>-1</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>OS_TASK_STAT_STK_SIZE</Name>
+                    <Symbol>OS_TASK_STAT_STK_SIZE</Symbol>
+                    <Hint>OS_TASK_STAT_STK_SIZE specifies the size of the ìC/OS-II statistic-task stack. The size is specified not in bytes but in number of elements. This is because a stack is declared as being of type OS_STK. The size of the statistic-task stack depends on the processor you are using and the maximum of the following actions:\n
+- The stack growth associated with performing 32-bit arithmetic (subtraction and division)\n
+- The stack growth associated with calling OSTimeDly()\n
+- The stack growth associated with calling OSTaskStatHook()\n
+- The deepest anticipated interrupt-nesting level\n
+If you want to run stack checking on this task and determine its actual stack requirements, you must enable code generation for OSTaskCreateExt() by setting OS_TASK_CREATE_EXT_EN to 1. Again, the priority of OS_TaskStat() is always set to OS_LOWEST_PRIO-1.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>128</DefaultValue>
+                    <MinValue>1</MinValue>
+                    <MaxValue>-1</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>OS_TASK_IDLE_STK_SIZE</Name>
+                    <Symbol>OS_TASK_IDLE_STK_SIZE</Symbol>
+                    <Hint>OS_TASK_IDLE_STK_SIZE specifies the size of the ìC/OS-II idle-task stack. The size is specified not in bytes but in number of elements. This is because a stack is declared to be of type OS_STK. The size of the idle-task stack depends on the processor you are using and the deepest anticipated interrupt-nesting level. Very little is being done in the idle task, but you should allow at least enough space to store all processor registers on the stack and enough storage to handle all nested interrupts.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>128</DefaultValue>
+                    <MinValue>1</MinValue>
+                    <MaxValue>-1</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+              </Children>
+            </TGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TGrupItem>
+              <Name>Task Management</Name>
+              <Symbol>TaskManagementGroup</Symbol>
+              <Hint>Settings for task managment.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description/>
+              <Expanded>Yes</Expanded>
+              <Children>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_TASK_CHANGE_PRIO_EN</Name>
+                    <Symbol>OS_TASK_CHANGE_PRIO_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_TASK_CHANGE_PRIO_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSTaskChangePrio(). If your application never changes task priorities after they are assigned, you can reduce the amount of code space used by ìC/OS-II by setting OS_TASK_CHANGE_PRIO_EN to 0.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>1</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>false</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_TASK_CREATE_EN</Name>
+                    <Symbol>OS_TASK_CREATE_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_TASK_CREATE_EN enables (when set to 1) or disables (when set to 0) the code generation of the OSTaskCreate() function. Enabling this function makes ìC/OS-II backward compatible with the ìC/OS task-creation function. If your application always uses OSTaskCreateExt() (recommended), you can reduce the amount of code space used by ìC/OS-II by setting OS_TASK_CREATE_EN to 0. Note that you must set at least OS_TASK_CREATE_EN or OS_TASK_CREATE_EXT_EN to 1. If you wish, you can use both.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_TASK_CREATE_EXT_EN</Name>
+                    <Symbol>OS_TASK_CREATE_EXT_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_TASK_CREATE_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSTaskCreateExt(), which is the extended, more powerful version of the two task-creation functions. If your application never uses OSTaskCreateExt(), you can reduce the amount of code space used by ìC/OS-II by setting OS_TASK_CREATE_EXT_EN to 0. Note that you need the extended task-create function to use the stack-checking function OSTaskStkChk().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>OS_TASK_NAME_SIZE</Name>
+                    <Symbol>OS_TASK_NAME_SIZE</Symbol>
+                    <Hint>This constant determines the maximum number of characters that would be used to assign a name to a task. The name of tasks would thus have to be smaller (in size) than this value. If OS_TASK_NAME_SIZE is set to 0, this feature is disabled and no RAM is used in the OS_TCB for the task name. OS_TASK_NAME_SIZE needs to accommodate a NUL terminated ASCII string.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>16</DefaultValue>
+                    <MinValue>0</MinValue>
+                    <MaxValue>256</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_TASK_PROFILE_EN</Name>
+                    <Symbol>OS_TASK_PROFILE_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>This constant allows variables to be allocated in each task’s OS_TCB that hold performance data about each task. Specifically, if OS_TASK_PROFILE_EN is set to 1, each task will have a variable to keep track of the number of context switches, the task execution time, the number of bytes used by the task and more.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>1</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>false</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_TASK_QUERY_EN</Name>
+                    <Symbol>OS_TASK_QUERY_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_TASK_QUERY_EN enables (when set to 1) or disables (when set to 0) code generation of the function OSTaskQuery(). If your application never uses this function, you can reduce the amount of code space used by ìC/OS-II by setting OS_TASK_QUERY_EN to 0.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>1</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>false</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_TASK_STAT_EN</Name>
+                    <Symbol>OS_TASK_STAT_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_TASK_STAT_EN specifies whether or not you can enable the ìC/OS-II statistic task, as well as its initialization function. When set to 1, the statistic task OS_TaskStat() and the statistic-task-initialization function are enabled. OS_TaskStat() computes the CPU usage of your application. When enabled, it executes every second and computes the 8-bit variable OSCPUUsage, which provides the percentage of CPU use of your application. OS_TaskStat() calls OSTaskStatHook() every time it executes so that you can add your own statistics as needed. See OS_CORE.C for details on the statistic task. The priority of OS_TaskStat() is always set to OS_LOWEST_PRIO-1.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>1</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>false</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_TASK_STAT_STK_CHK_EN</Name>
+                    <Symbol>OS_TASK_STAT_STK_CHK_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>This constant allows the statistic task to determine the actual stack usage of each active task. If OS_TASK_STAT_EN is set to 0 (the statistic task is not enabled) but, you can call OS_TaskStatStkChk() yourself from one of your tasks. If OS_TASK_STAT_EN is set to 1, stack sizes will be determined every second by the statistic task.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>1</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>false</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_TASK_SUSPEND_EN</Name>
+                    <Symbol>OS_TASK_SUSPEND_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_TASK_SUSPEND_EN enables (when set to 1) or disables (when set to 0) code generation of the functions OSTaskSuspend() and OSTaskResume(), which allows you to explicitly suspend and resume tasks, respectively. If your application never uses these functions, you can reduce the amount of code space used by ìC/OS-II by setting OS_TASK_SUSPEND_EN to 0.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+              </Children>
+            </TGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>Event Flags (OS_FLAG_EN)</Name>
+              <Symbol>OS_FLAG_EN</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>OS_FLAG_EN enables (when set to 1) or disables (when set to 0) code generation of all the event-flag services and data structures, which reduces the amount of code and data space needed when your application does not require the use of event flags. When OS_FLAG_EN is set to 0, you do not need to enable or disable any of the other #define constants in this section.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Disabled</Description>
+              <Expanded>No</Expanded>
+              <DefaultValue>false</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_FLAG_ACCEPT_EN</Name>
+                    <Symbol>OS_FLAG_ACCEPT_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_FLAG_ACCEPT_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSFlagAccept().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_FLAG_DEL_EN</Name>
+                    <Symbol>OS_FLAG_DEL_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_FLAG_DEL_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSFlagDel().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>OS_FLAG_NAME_SIZE</Name>
+                    <Symbol>OS_FLAG_NAME_SIZE</Symbol>
+                    <Hint>This constant determines the maximum number of characters that would be used to assign a name to an event flag group. The name of event flags would thus have to be smaller (in size) than this value. If OS_FLAG_NAME_SIZE is set to 0, this feature is disabled. OS_FLAG_NAME_SIZE needs to accommodate a NUL terminated ASCII string.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>8</DefaultValue>
+                    <MinValue>0</MinValue>
+                    <MaxValue>256</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>OS_FLAGS_NBITS</Name>
+                    <Symbol>OS_FLAGS_NBITS</Symbol>
+                    <Hint>OS_FLAGS_NBITS has been introduced in V2.80 and specifies the number of bits used in event flags and MUST be either 8, 16 or 32.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>16</DefaultValue>
+                    <MinValue>0</MinValue>
+                    <MaxValue>256</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_FLAG_QUERY_EN</Name>
+                    <Symbol>OS_FLAG_QUERY_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_FLAG_QUERY_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSFlagQuery().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_FLAG_WAIT_CLR_EN</Name>
+                    <Symbol>OS_FLAG_WAIT_CLR_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_FLAG_WAIT_CLR_EN enables (when set to 1) or disables (when set to 0) the code generation used to wait for event flags to be 0 instead of 1. Generally, you want to wait for event flags to be set. However, you might also want to wait for event flags to be clear, and thus you need to enable this option.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>Message Mailboxes (OS_MBOX_EN)</Name>
+              <Symbol>OS_MBOX_EN</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>This constant enables (when set to 1) or disables (when set to 0) the code generation of all message-mailbox services and data structures, which reduces the amount of code space needed when your application does not require the use of message mailboxes. When OS_MBOX_EN is set to 0, you do not need to enable or disable any of the other #define constants in this section.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Disabled</Description>
+              <Expanded>No</Expanded>
+              <DefaultValue>false</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_MBOX_ACCEPT_EN</Name>
+                    <Symbol>OS_MBOX_ACCEPT_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>This constant enables (when set to 1) or disables (when set to 0) the code generation of the function OSMboxAccept().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_MBOX_DEL_EN</Name>
+                    <Symbol>OS_MBOX_DEL_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>This constant enables (when set to 1) or disables (when set to 0) the code generation of the function OSMboxDel().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_MBOX_PEND_ABORT_EN</Name>
+                    <Symbol>OS_MBOX_PEND_ABORT_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_MBOX_PEND_ABORT_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSMboxPendAbort().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_MBOX_POST_EN</Name>
+                    <Symbol>OS_MBOX_POST_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_MBOX_POST_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSMboxPost(). You can disable code generation for this function if you decide to use the more powerful function OSMboxPostOpt() instead.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_MBOX_POST_OPT_EN</Name>
+                    <Symbol>OS_MBOX_POST_OPT_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_MBOX_POST_OPT_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSMboxPostOpt(). You can disable code generation for this function if you do not need the additional functionality provided by OSMboxPostOpt(). OSMboxPost() generates less code.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_MBOX_QUERY_EN</Name>
+                    <Symbol>OS_MBOX_QUERY_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_MBOX_QUERY_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSMboxQuery().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>Memory Management (OS_MEM_EN)</Name>
+              <Symbol>OS_MEM_EN</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>OS_MEM_EN enables (when set to 1) or disables (when set to 0) all code generation of the ìC/OS-II partition-memory manager and its associated data structures. This feature reduces the amount of code and data space needed when your application does not require the use of memory partitions.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Disabled</Description>
+              <Expanded>No</Expanded>
+              <DefaultValue>false</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>OS_MEM_NAME_SIZE</Name>
+                    <Symbol>OS_MEM_NAME_SIZE</Symbol>
+                    <Hint>This constant determines the maximum number of characters that would be used to assign a name to a memory partition. The name of memory partitions would thus have to be smaller (in size) than this value. If OS_MEM_NAME_SIZE is set to 0, this feature is disabled and no RAM is used in the OS_MEM for the memory partition. OS_MEM_NAME_SIZE needs to accommodate a NUL terminated ASCII string.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>16</DefaultValue>
+                    <MinValue>0</MinValue>
+                    <MaxValue>256</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_MEM_QUERY_EN</Name>
+                    <Symbol>OS_MEM_QUERY_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_MEM_QUERY_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSMemQuery().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>Mutual Exclusion Semaphores (OS_MUTEX_EN)</Name>
+              <Symbol>OS_MUTEX_EN</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>OS_MUTEX_EN enables (when set to 1) or disables (when set to 0) the code generation of all mutual-exclusion-semaphore services and data structures, which reduces the amount of code and data space needed when your application does not require the use of mutexes. When OS_MUTEX_EN is set to 0, you do not need to enable or disable any of the other #define constants in this section.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Disabled</Description>
+              <Expanded>No</Expanded>
+              <DefaultValue>false</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_MUTEX_ACCEPT_EN</Name>
+                    <Symbol>OS_MUTEX_ACCEPT_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_MUTEX_ACCEPT_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSMutexAccept().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_MUTEX_DEL_EN</Name>
+                    <Symbol>OS_MUTEX_DEL_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_MUTEX_DEL_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSMutexDel().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_MUTEX_QUERY_EN</Name>
+                    <Symbol>OS_MUTEX_QUERY_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_MUTEX_QUERY_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSMutexQuery().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>Message Queues (OS_Q_EN)</Name>
+              <Symbol>OS_Q_EN</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>OS_Q_EN enables (when set to 1) or disables (when set to 0) the code generation of all message-queue services and data structures, which reduces the amount of code space needed when your application does not require the use of message queues. When OS_Q_EN is set to 0, you do not need to enable or disable any of the other #define constants in this section. Note that if OS_Q_EN is set to 0, the #define constant OS_MAX_QS is irrelevant.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Disabled</Description>
+              <Expanded>No</Expanded>
+              <DefaultValue>false</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_Q_ACCEPT_EN</Name>
+                    <Symbol>OS_Q_ACCEPT_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_Q_ACCEPT_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSQAccept().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_Q_DEL_EN</Name>
+                    <Symbol>OS_Q_DEL_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_Q_DEL_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSQDel().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_Q_FLUSH_EN</Name>
+                    <Symbol>OS_Q_FLUSH_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_Q_FLUSH_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSQFlush().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_Q_PEND_ABORT_EN</Name>
+                    <Symbol>OS_Q_PEND_ABORT_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_Q_PEND_ABORT_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSQPendAbort().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_Q_POST_EN</Name>
+                    <Symbol>OS_Q_POST_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_Q_POST_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSQPost(). You can disable code generation for this function if you decide to use the more powerful function OSQPostOpt() instead.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_Q_POST_FRONT_EN</Name>
+                    <Symbol>OS_Q_POST_FRONT_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_Q_POST_FRONT_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSQPostFront(). You can disable code generation for this function if you decide to use the more powerful function OSQPostOpt() instead.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_Q_POST_OPT_EN</Name>
+                    <Symbol>OS_Q_POST_OPT_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_Q_POST_OPT_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSQPostOpt(). You can disable code generation for this function if you do not need the additional functionality provided by OSQPostOpt(). OSQPost() generates less code.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_Q_QUERY_EN</Name>
+                    <Symbol>OS_Q_QUERY_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_Q_QUERY_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSQQuery().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>Semaphores (OS_SEM_EN)</Name>
+              <Symbol>OS_SEM_EN</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>OS_SEM_EN enables (when set to 1) or disables (when set to 0) all code generation of the ìC/OS-II semaphore manager and its associated data structures, which reduces the amount of code and data space needed when your application does not require the use of semaphores. When OS_SEM_EN is set to 0, you do not need to enable or disable any of the other #define constants in this section.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Disabled</Description>
+              <Expanded>No</Expanded>
+              <DefaultValue>false</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_SEM_ACCEPT_EN</Name>
+                    <Symbol>OS_SEM_ACCEPT_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_SEM_ACCEPT_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSSemAccept().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_SEM_DEL_EN</Name>
+                    <Symbol>OS_SEM_DEL_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_SEM_DEL_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSSemDel().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_SEM_PEND_ABORT_EN</Name>
+                    <Symbol>OS_SEM_PEND_ABORT_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_SEM_PEND_ABORT_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSSemPendAbort().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_SEM_QUERY_EN</Name>
+                    <Symbol>OS_SEM_QUERY_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_SEM_QUERY_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSSemQuery().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_SEM_SET_EN</Name>
+                    <Symbol>OS_SEM_SET_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_SEM_SET_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSSemSet().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TGrupItem>
+              <Name>Time Management</Name>
+              <Symbol>TimeManagementGroup</Symbol>
+              <Hint>Settings for Time Management.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description/>
+              <Expanded>Yes</Expanded>
+              <Children>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_TIME_DLY_HMSM_EN</Name>
+                    <Symbol>OS_TIME_DLY_HMSM_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_TIME_DLY_HMSM_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSTimeDlyHMSM(), which is used to delay a task for a specified number of hours, minutes, seconds, and milliseconds.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_TIME_DLY_RESUME_EN</Name>
+                    <Symbol>OS_TIME_DLY_RESUME_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_TIME_DLY_RESUME_EN enables (when set to 1) or disables (when set to 0) the code generation of the function OSTimeDlyResume().</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>OS_TIME_GET_SET_EN</Name>
+                    <Symbol>OS_TIME_GET_SET_EN</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>OS_TIME_GET_SET_EN enables (when set to 1) or disables (when set to 0) the code and data generation of the functions OSTimeGet() and OSTimeSet(). If you don’t need to use the 32-bit tick counter OSTime, then you can save yourself 4 bytes of data space and code space by not having the code for these functions generated by the compiler.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
+              </Children>
+            </TGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>Timer Management</Name>
+              <Symbol>OS_TMR_EN</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>Enables (when set to 1) or disables (when set to 0) the code generation of the timer management services.\n
+Note that timer management requires semaphores and thus, you need to set OS_SEM_EN to 1.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Disabled</Description>
+              <Expanded>No</Expanded>
+              <DefaultValue>false</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>OS_TASK_TMR_PRIO</Name>
+                    <Symbol>OS_TASK_TMR_PRIO</Symbol>
+                    <Hint>The priority of the Timer management task.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>10</DefaultValue>
+                    <MinValue>1</MinValue>
+                    <MaxValue>-1</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>OS_TMR_CFG_MAX</Name>
+                    <Symbol>OS_TMR_CFG_MAX</Symbol>
+                    <Hint>Determines the maximum number of timers you can have in your application. Depending on the amount of RAM available in your product, you can have hundreds or even thousands of timers (max. is 65500). 36 entries are reserved.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>16</DefaultValue>
+                    <MinValue>1</MinValue>
+                    <MaxValue>-1</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>OS_TMR_CFG_NAME_SIZE</Name>
+                    <Symbol>OS_TMR_CFG_NAME_SIZE</Symbol>
+                    <Hint>This constant determines the maximum number of characters that would be used to assign a name to a timer. The name of timers would thus have to be smaller (in size) than this value. If OS_TMR_CFG_NAME_SIZE is set to 0, this feature is disabled and no RAM is used in the OS_TMR for the timer name. OS_TMR_CFG_NAME_SIZE needs to accommodate a NUL terminated ASCII string.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>16</DefaultValue>
+                    <MinValue>0</MinValue>
+                    <MaxValue>-1</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>OS_TMR_CFG_WHEEL_SIZE</Name>
+                    <Symbol>OS_TMR_CFG_WHEEL_SIZE</Symbol>
+                    <Hint>Timers are updated using a rotating wheel. This ‘wheel’ allows to reduce the number of timers that need to be updated by the timer manager task. The size of the wheel should be a fraction of the number of timers you have in your application. In other words:\n
+OS_TMR_CFG_WHEEL_SIZE &amp;lt;= OS_TMR_CFG_MAX.\n
+This value should be a number between 2 and 1024. Timer management overhead is somewhat determined by the size of the wheel. A large number of entries might reduce the overhead for timer management but would require more RAM. Each entry requires a pointer and a count (16-bit value). We recommend a number that is NOT a multiple of the tick rate. If your application has many timers then it’s recommended that you have a high value. As a starting value, you could use OS_TMR_CFG_MAX / 4.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>8</DefaultValue>
+                    <MinValue>1</MinValue>
+                    <MaxValue>-1</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>OS_TMR_CFG_TICKS_PER_SEC</Name>
+                    <Symbol>OS_TMR_CFG_TICKS_PER_SEC</Symbol>
+                    <Hint>This configuration constant determines the rate at which timers are updated (in Hz). Timer updates should be done at a fraction of the tick rate (i.e. OS_TICKS_PER_SEC). We recommend that you update timers at 10 Hz.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>10</DefaultValue>
+                    <MinValue>0</MinValue>
+                    <MaxValue>-1</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
+        </Children>
+      </TBoolGrupItem>
+    </Property>
+    <Property>
+      <TGrupItem>
+        <Name>HW Interface</Name>
+        <Symbol>HWInterface</Symbol>
+        <Hint>Defines the interface to the underlying hardware.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description/>
+        <Expanded>Yes</Expanded>
+        <Children>
+          <GrupItem>
+            <TInhrItem>
+              <Name>SWI Interface</Name>
+              <Symbol>SWI</Symbol>
+              <TypeSpec>uCOS_II\SWI</TypeSpec>
+              <Hint>Interface to a software interrupt source (SWI). A software interrupt is raised by the OS scheduler to switch to a new task.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>-1</DefaultIndex>
+              <TextValueIndex>false</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <InhrBeanBaseName>SWI</InhrBeanBaseName>
+              <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+            </TInhrItem>
+          </GrupItem>
+          <GrupItem>
+            <TInhrLinkItem>
+              <Name>Timer Interface</Name>
+              <Symbol>Timer</Symbol>
+              <TypeSpec>uCOS_II\TimerInt</TypeSpec>
+              <Hint>This timer creates events for the OS, between 10 and 100 times per second. As default use a 20 ms timer. Make sure that the timer does NOT start in the initialization of the bean.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <DefaultValue/>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <SortStyle/>
+            </TInhrLinkItem>
+          </GrupItem>
+        </Children>
+      </TGrupItem>
+    </Property>
+    <Property>
+      <TBoolGrupItem>
+        <Name>CPUConfiguration (os_cpu.h)</Name>
+        <Symbol>CPUconfiguration</Symbol>
+        <TypeSpec>typeEnaDis</TypeSpec>
+        <Hint>OS configuration settings you would have otherwise in os_cpu.h.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>Enabled</Description>
+        <Expanded>Yes</Expanded>
+        <DefaultValue>true</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <Children>
+          <GrupItem>
+            <TIntgItem>
+              <Name>OS_CRITICAL_METHOD</Name>
+              <Symbol>OS_CRITICAL_METHOD</Symbol>
+              <Hint>Method to be used to enter a critical section. Note that not all methods may be implemented.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>1</DefaultValue>
+              <MinValue>1</MinValue>
+              <MaxValue>3</MaxValue>
+              <Bases>DEC</Bases>
+              <DefaultBase>DEC</DefaultBase>
+              <ExtraHintDisabled>false</ExtraHintDisabled>
+              <ChangeValueIntoRange>true</ChangeValueIntoRange>
+              <RuntimeProperty>false</RuntimeProperty>
+            </TIntgItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>ColdFire</Name>
+              <Symbol>ColdFireCPUSpecific</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>ColdFire specific settings</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Enabled</Description>
+              <Expanded>Yes</Expanded>
+              <DefaultValue>true</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>Trap Number</Name>
+                    <Symbol>CFTrapNumber</Symbol>
+                    <Hint>Trap number to be used for context switch. Make sure you have the corresponding interrupt vecotr set to catch the exception.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>14</DefaultValue>
+                    <MinValue>1</MinValue>
+                    <MaxValue>-1</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
+        </Children>
+      </TBoolGrupItem>
+    </Property>
+  </PropertyList>
+  <MethodList>
+    <Method>
+      <TMthdItem>
+        <Name>OSTaskStkInit</Name>
+        <Symbol>OSTaskStkInit</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Called by the OS to initialize the stack for a task.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>false</PublicMethod>
+        <IsAssembler>true</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>OS_STKP</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>4</ParamCount>
+        <Parameter>
+          <ParName>task</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint/>
+          <ParUserDeclaration>void (*task)(void *pd)</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>pd</ParName>
+          <ParType>pointer</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to </ParHint>
+          <ParUserDeclaration>void *pdata</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>ptos</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint/>
+          <ParUserDeclaration>OS_STK *ptos</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>opt</ParName>
+          <ParType>INT16U</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint/>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>OS_STKP #M#_#C#(void (*task)(void *pd), void *pdata, OS_STK *ptos, INT16U opt)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>OSStartHighRdy</Name>
+        <Symbol>OSStartHighRdy</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function is called by OSStart() to start the highest priority task that was created by your application before calling OSStart().</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>false</PublicMethod>
+        <IsAssembler>true</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>OSCtxSw</Name>
+        <Symbol>OSCtxSw</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function is called when a task makes a higher priority task ready-to-run.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>false</PublicMethod>
+        <IsAssembler>true</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>OSIntCtxSw</Name>
+        <Symbol>OSIntCtxSw</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function is called by OSIntExit() to perform a context switch to a task that has been made ready-to-run by an ISR.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>false</PublicMethod>
+        <IsAssembler>true</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>OS_CPU_SR_Save</Name>
+        <Symbol>OS_CPU_SR_Save</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>These function implements OS_CRITICAL_METHOD #3.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>false</PublicMethod>
+        <IsAssembler>true</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>OS_CPU_SR_Restore</Name>
+        <Symbol>OS_CPU_SR_Restore</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>These function implements OS_CRITICAL_METHOD #3.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>false</PublicMethod>
+        <IsAssembler>true</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>OSInit</Name>
+        <Symbol>OSInit</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint/>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>OSTimerInit</Name>
+        <Symbol>OSTimerInit</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Starts the ticks/timer for the OS. Start this in your first task.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <ReadOnly>true</ReadOnly>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>OSTaskCreate</Name>
+        <Symbol>OSTaskCreate</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function is used to have uC/OS-II manage the execution of a task.  Tasks can either be created prior to the start of multitasking or by a running task.  A task cannot be created by an ISR.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>INT8U</ReturnType>
+        <RetHint>OS_ERR_NONE             if the function was successful.\n    OS_PRIO_EXIT            if the task priority already exist (each task MUST have a unique priority).\n    OS_ERR_PRIO_INVALID     if the priority you specify is higher that the maximum allowed (i.e. &gt;= OS_LOWEST_PRIO)\n    OS_ERR_TASK_CREATE_ISR  if you tried to create a task from an ISR.</RetHint>
+        <ParamCount>4</ParamCount>
+        <Parameter>
+          <ParName>task</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>is a pointer to the task's code</ParHint>
+          <ParUserDeclaration>void (*task)(void *p_arg)</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>p_arg</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to is a pointer to an optional data area which can be used to pass parameters to the task when the task first executes.</ParHint>
+          <ParUserDeclaration>void *p_arg</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>ptos</ParName>
+          <ParType>OS_STK</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to is a pointer to the task's top of stack.  If the configuration constant OS_STK_GROWTH is set to 1, the stack is assumed to grow downward (i.e. from high memory to low memory).  'pstk' will thus point to the highest (valid) memory location of the stack.  If OS_STK_GROWTH is set to 0, 'pstk' will point to the lowest memory location of the stack and the stack will grow with increasing memory locations.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>prio</ParName>
+          <ParType>INT8U</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>is the task's priority.  A unique priority MUST be assigned to each task and the lower the number, the higher the priority.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>INT8U #M#_#C#(void (*task)(void *p_arg), void *p_arg, OS_STK *ptos, INT8U prio)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>OSTaskDel</Name>
+        <Symbol>OSTaskDel</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function allows you to delete a task.  The calling task can delete itself by its own priority number.  The deleted task is returned to the dormant state and can be re-activated by creating the deleted task again.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>false</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>INT8U</ReturnType>
+        <RetHint>OS_ERR_NONE             if the call is successful\nOS_ERR_TASK_DEL_IDLE    if you attempted to delete uC/OS-II's idle task\nOS_ERR_PRIO_INVALID     if the priority you specify is higher that the maximum allowed (i.e. &gt;= OS_LOWEST_PRIO) or, you have not specified OS_PRIO_SELF.\nOS_ERR_TASK_DEL         if the task is assigned to a Mutex PIP.\nOS_ERR_TASK_NOT_EXIST   if the task you want to delete does not exist.\nOS_ERR_TASK_DEL_ISR     if you tried to delete a task from an ISR\nNotes:\n1) To reduce interrupt latency, OSTaskDel() 'disables' the task:\n    a) by making it not ready\n    b) by removing it from any wait lists\n    c) by preventing OSTimeTick() from making the task ready to run.\n   The task can then be 'unlinked' from the miscellaneous structures in uC/OS-II.\n2) The function OS_Dummy() is called after OS_EXIT_CRITICAL() because, on most processors, the next instruction following the enable interrupt instruction is ignored.\n3) An ISR cannot delete a task.\n4) The lock nesting counter is incremented because, for a brief instant, if the current task is being deleted, the current task would not be able to be rescheduled because it is removed from the ready list.  Incrementing the nesting counter prevents another task from being schedule.  This means that an ISR would return to the current task which is being deleted.  The rest of the deletion would thus be able to be completed.</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>prio</ParName>
+          <ParType>INT8U</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>is the priority of the task to delete.  Note that you can explicitely delete the current task without knowing its priority level by setting 'prio' to OS_PRIO_SELF.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>INT8U #M#_#C#(INT8U prio)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>OSStart</Name>
+        <Symbol>OSStart</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function is used to start the multitasking process which lets uC/OS-II manages the task that you have created. Before you can call OSStart(), you MUST have called OSInit() and you MUST have created at least one task.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>OSTaskSuspend</Name>
+        <Symbol>OSTaskSuspend</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function is called to suspend a task.  The task can be the calling task if the priority passed to OSTaskSuspend() is the priority of the calling task or OS_PRIO_SELF.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>INT8U</ReturnType>
+        <RetHint>OS_ERR_NONE               if the requested task is suspended\nOS_ERR_TASK_SUSPEND_IDLE  if you attempted to suspend the idle task which is not allowed.\nOS_ERR_PRIO_INVALID       if the priority you specify is higher that the maximum allowed (i.e. &gt;= OS_LOWEST_PRIO) or, you have not specified OS_PRIO_SELF.\nOS_ERR_TASK_SUSPEND_PRIO  if the task to suspend does not exist\nOS_ERR_TASK_NOT_EXITS     if the task is assigned to a Mutex PIP\nNote: You should use this function with great care.  If you suspend a task that is waiting for an event (i.e. a message, a semaphore, a queue ...) you will prevent this task from running when the event arrives.</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>prio</ParName>
+          <ParType>INT8U</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>is the priority of the task to suspend.  If you specify OS_PRIO_SELF, the calling task will suspend itself and rescheduling will occur.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>INT8U #M#_#C#(INT8U prio)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>OSTaskResume</Name>
+        <Symbol>OSTaskResume</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function is called to resume a previously suspended task.  This is the only call that will remove an explicit task suspension.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>INT8U</ReturnType>
+        <RetHint>OS_ERR_NONE                if the requested task is resumed\nOS_ERR_PRIO_INVALID        if the priority you specify is higher that the maximum allowed (i.e. &gt;= OS_LOWEST_PRIO)\nOS_ERR_TASK_RESUME_PRIO    if the task to resume does not exist\nOS_ERR_TASK_NOT_EXIST      if the task is assigned to a Mutex PIP\nOS_ERR_TASK_NOT_SUSPENDED  if the task to resume has not been suspended</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>prio</ParName>
+          <ParType>INT8U</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>is the priority of the task to resume.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>INT8U #M#_#C#(INT8U prio)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>OSTimeDlyHMSM</Name>
+        <Symbol>OSTimeDlyHMSM</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function is called to delay execution of the currently running task until some time expires.  This call allows you to specify the delay time in HOURS, MINUTES, SECONDS and MILLISECONDS instead of ticks.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>OS_ERR_NONE\nOS_ERR_TIME_INVALID_MINUTES\nOS_ERR_TIME_INVALID_SECONDS\nOS_ERR_TIME_INVALID_MS\nOS_ERR_TIME_ZERO_DLY\nOS_ERR_TIME_DLY_ISR\nNote(s)    : The resolution on the milliseconds depends on the tick rate.  For example, you can't do a 10 mS delay if the ticker interrupts every 100 mS.  In this case, the delay would be set to 0.  The actual delay is rounded to the nearest tick.</RetHint>
+        <ParamCount>4</ParamCount>
+        <Parameter>
+          <ParName>hours</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>specifies the number of hours that the task will be delayed (max. is 255)</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>minutes</ParName>
+          <ParType>INT8U</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint/>
+        </Parameter>
+        <Parameter>
+          <ParName>seconds</ParName>
+          <ParType>INT8U</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>specifies the number of seconds (max. 59)</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>milli</ParName>
+          <ParType>INT16U</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>specifies the number of milliseconds (max. 999)</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte hours, INT8U minutes, INT8U seconds, INT16U milli)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>OSFlagCreate</Name>
+        <Symbol>OSFlagCreate</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function is called to create an event flag group.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>OS_FLAG_GRP</ReturnType>
+        <RetHint>A pointer to an event flag group or a NULL pointer if no more groups are available.</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>flags</ParName>
+          <ParType>OS_FLAGS</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Contains the initial value to store in the event flag group.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>perror</ParName>
+          <ParType>INT8U</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>is a pointer to an error code which will be returned to your application.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>OS_FLAG_GRP #M#_#C#(OS_FLAGS flags, INT8U *perror)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>OSFlagQuery</Name>
+        <Symbol>OSFlagQuery</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function is used to check the value of the event flag group.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>OS_FLAGS</ReturnType>
+        <RetHint>The current value of the event flag group.</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>pgrp</ParName>
+          <ParType>OS_FLAG_GRP</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>is a pointer to the desired event flag group.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>perr</ParName>
+          <ParType>INT8U</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>is a pointer to an error code returned to the called:</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>OS_FLAGS #M#_#C#(OS_FLAG_GRP *pgrp, INT8U perr)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>OSFlagPost</Name>
+        <Symbol>OSFlagPost</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function is called to set or clear some bits in an event flag group.  The bits to set or clear are specified by a 'bit mask'.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>OS_FLAGS</ReturnType>
+        <RetHint>the new value of the event flags bits that are still set.</RetHint>
+        <ParamCount>4</ParamCount>
+        <Parameter>
+          <ParName>pgrp</ParName>
+          <ParType>OS_FLAG_GRP</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the desired event flag group.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>flags</ParName>
+          <ParType>OS_FLAGS</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>If 'opt' (see below) is OS_FLAG_SET, each bit that is set in 'flags' will  set the corresponding bit in the event flag group.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>opt</ParName>
+          <ParType>INT8U</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>indicates whether the flags will be: set (OS_FLAG_SET) or cleared (OS_FLAG_CLR)</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>perr</ParName>
+          <ParType>INT8U</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to an error code</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>OS_FLAGS #M#_#C#(OS_FLAG_GRP *pgrp, OS_FLAGS flags, INT8U opt, INT8U *perr)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>OSMemCreate</Name>
+        <Symbol>OSMemCreate</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Create a fixed-sized memory partition that will be managed by uC/OS-II.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>OS_MEM</ReturnType>
+        <RetHint>Returns:\n!= (OS_MEM *)0  is the partition was created\n== (OS_MEM *)0  if the partition was not created because of invalid arguments or, no free partition is available.</RetHint>
+        <ParamCount>4</ParamCount>
+        <Parameter>
+          <ParName>addr</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>is the starting address of the memory partition</ParHint>
+          <ParUserDeclaration>void *addr</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>nblks</ParName>
+          <ParType>INT32U</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>is the number of memory blocks to create from the partition.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>blksize</ParName>
+          <ParType>INT32U</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>is the size (in bytes) of each block in the memory partition.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>perr</ParName>
+          <ParType>INT8U</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to to a variable containing an error message which will be set by this function to either:\nOS_ERR_NONE              if the memory partition has been created correctly.\nOS_ERR_MEM_INVALID_ADDR  if you are specifying an invalid address for the memory storage of the partition or, the block does not align on a pointer boundary\nOS_ERR_MEM_INVALID_PART  no free partitions available\nOS_ERR_MEM_INVALID_BLKS  user specified an invalid number of blocks (must be &gt;= 2)\nOS_ERR_MEM_INVALID_SIZE  user specified an invalid block size\n- must be greater than the size of a pointer\n- must be able to hold an integral number of pointers</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>OS_MEM #M#_#C#(void *addr, INT32U nblks, INT32U blksize, INT8U *perr)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>OSMemGet</Name>
+        <Symbol>OSMemGet</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Get a memory block from a partition</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>INT8U</ReturnType>
+        <RetHint>A pointer to a memory block if no error is detected, a pointer to NULL if an error is detected</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>pmem</ParName>
+          <ParType>OS_MEM</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the memory partition control block</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>perr</ParName>
+          <ParType>INT8U</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to to a variable containing an error message which will be set by this function to either:\n                      OS_ERR_NONE             if the memory partition has been created correctly.\n                      OS_ERR_MEM_NO_FREE_BLKS if there are no more free memory blocks to allocate to caller\n                      OS_ERR_MEM_INVALID_PMEM if you passed a NULL pointer for 'pmem'</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>INT8U #M#_#C#(OS_MEM *pmem, INT8U *perr)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>OSMemPut</Name>
+        <Symbol>OSMemPut</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Returns a memory block to a partition</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>INT8U</ReturnType>
+        <RetHint>OS_ERR_NONE: if the memory block was inserted into the partition\nOS_ERR_MEM_FULL: if you are returning a memory block to an already FULL memory partition (You freed more blocks than you allocated!)\nOS_ERR_MEM_INVALID_PMEM: if you passed a NULL pointer for 'pmem'\nOS_ERR_MEM_INVALID_PBLK: if you passed a NULL pointer for the block to release.</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>pmem</ParName>
+          <ParType>OS_MEM</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to to the memory partition control block</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>pblk</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the memory block being released.</ParHint>
+          <ParUserDeclaration>void *pblk</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>INT8U #M#_#C#(OS_MEM *pmem, void *pblk)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>OSQCreate</Name>
+        <Symbol>OSQCreate</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function creates a message queue if free event control blocks are available.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>OS_EVENT</ReturnType>
+        <RetHint>Returns:\n!= (OS_EVENT *)0  is a pointer to the event control clock (OS_EVENT) associated with the created queue\n== (OS_EVENT *)0  if no event control blocks were available or an error was detected</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>start</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>start is a pointer to the base address of the message queue storage area.  The storage area MUST be declared as an array of pointers to 'void' as follows\nvoid *MessageStorage[size]</ParHint>
+          <ParUserDeclaration>void **start</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>size</ParName>
+          <ParType>INT16U</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>is the number of elements in the storage area</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>OS_EVENT #M#_#C#(void **start, INT16U size)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>OSQPost</Name>
+        <Symbol>OSQPost</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function sends a message to a queue</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>INT8U</ReturnType>
+        <RetHint>OS_ERR_NONE: The call was successful and the message was sent\nOS_ERR_Q_FULL: If the queue cannot accept any more messages because it is full.\nOS_ERR_EVENT_TYPE: If you didn't pass a pointer to a queue.\nOS_ERR_PEVENT_NULL: If 'pevent' is a NULL pointer</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>pevent</ParName>
+          <ParType>OS_EVENT</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to is a pointer to the event control block associated with the desired queue</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>pmsg</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the message to send.</ParHint>
+          <ParUserDeclaration>void *pmsg</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>INT8U #M#_#C#(OS_EVENT *pevent, void *pmsg)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>OSQPostFront</Name>
+        <Symbol>OSQPostFront</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function sends a message to a queue but unlike OSQPost(), the message is posted at the front instead of the end of the queue.  Using OSQPostFront() allows you to send 'priority' messages.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>INT8U</ReturnType>
+        <RetHint>OS_ERR_NONE: The call was successful and the message was sent\nOS_ERR_Q_FULL: If the queue cannot accept any more messages because it is full.\nOS_ERR_EVENT_TYPE: If you didn't pass a pointer to a queue.\nOS_ERR_PEVENT_NULL: If 'pevent' is a NULL pointer</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>pevent</ParName>
+          <ParType>OS_EVENT</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to is a pointer to the event control block associated with the desired queue</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>pmsg</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the message to send.</ParHint>
+          <ParUserDeclaration>void *pmsg</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>INT8U #M#_#C#(OS_EVENT *pevent, void *pmsg)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>OSQPend</Name>
+        <Symbol>OSQPend</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function waits for a message to be sent to a queue</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>Returns: != (void *)0  is a pointer to the message received\n== (void *)0  if you received a NULL pointer message or,\nif no message was received or,\nif 'pevent' is a NULL pointer or,\nif you didn't pass a pointer to a queue.</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>pevent</ParName>
+          <ParType>OS_EVENT</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the event control block associated with the desired queue</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>timeout</ParName>
+          <ParType>INT16U</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>is an optional timeout period (in clock ticks).  If non-zero, your task will wait for a message to arrive at the queue up to the amount of time specified by this argument.  If you specify 0, however, your task will wait forever at the specified queue or, until a message arrives.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>perr</ParName>
+          <ParType>INT8U</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to where an error message will be deposited.  Possible error messages are:\nOS_ERR_NONE         The call was successful and your task received a message.\nOS_ERR_TIMEOUT      A message was not received within the specified 'timeout'.\nOS_ERR_PEND_ABORT   The wait on the queue was aborted.\nOS_ERR_EVENT_TYPE   You didn't pass a pointer to a queue\nOS_ERR_PEVENT_NULL  If 'pevent' is a NULL pointer\nOS_ERR_PEND_ISR     If you called this function from an ISR and the result would lead to a suspension.\nOS_ERR_PEND_LOCKED  If you called this function with the scheduler is locked</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(OS_EVENT *pevent, INT16U timeout, INT8U *perr)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+  </MethodList>
+  <EventList>
+    <Event>
+      <TStrgItem>
+        <Name>Event module name</Name>
+        <Symbol>EventModule</Symbol>
+        <Hint>Name of the user module (without extension), where the events from this bean are placed.</Hint>
+        <ItemLevel>ADVANCED</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>Events</DefaultValue>
+        <StrDefine>nothing</StrDefine>
+        <MinLength>0</MinLength>
+        <MaxLength>-1</MaxLength>
+      </TStrgItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OSTimeTickHook</Name>
+        <Symbol>OSTimeTickHook</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function is called when a time tick event occurs. This allows you to perform other operations during a time tick.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(void)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OSTimeTickHook procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OSTaskSwHook</Name>
+        <Symbol>OSTaskSwHook</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function is called when a task switch is performed.  This allows you to perform other operations during a context switch. Notes: 1) Interrupts are disabled during this call. 2) It is assumed that the global pointer 'OSTCBHighRdy' points to the TCB of the task that will be 'switched in' (i.e. the highest priority task) and, 'OSTCBCur' points to the  task being switched out (i.e. the preempted task).</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(void)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OSTaskSwHook procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OSTaskStatHook</Name>
+        <Symbol>OSTaskStatHook</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function is called every second by uC/OS-II's statistics task.  This allows your application to add functionality to the statistics task.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(void)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OSTaskStatHook procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OSTaskIdleHook</Name>
+        <Symbol>OSTaskIdleHook</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function is called by the idle task.  This hook has been added to allow you to do such things as STOP the CPU to conserve power.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(void)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OSTaskIdleHook procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OSTCBInitHook</Name>
+        <Symbol>OSTCBInitHook</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function is called on initialization of a task control block.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>ptcb</ParName>
+          <ParType>pointer</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>ptcp is a pointer to the task control block of the task being initialized.</ParHint>
+          <ParUserDeclaration>OS_TCB *ptcb</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(OS_TCB *ptcb)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OSTCBInitHook procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OSTaskDelHook</Name>
+        <Symbol>OSTaskDelHook</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function is called when a task is deleted. Note(s) : 1) Interrupts are enabled during this call.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>ptcb</ParName>
+          <ParType>pointer</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>ptcp is a pointer to the task control block of the task being deleted.</ParHint>
+          <ParUserDeclaration>OS_TCB *ptcb</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(OS_TCB *ptcb)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OSTaskDelHook procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OSTaskCreateHook</Name>
+        <Symbol>OSTaskCreateHook</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function is called when a task is created. Note(s) : 1) Interrupts are enabled during this call.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>ptcb</ParName>
+          <ParType>pointer</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>ptcp is a pointer to the task control block of the task being deleted.</ParHint>
+          <ParUserDeclaration>OS_TCB *ptcb</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(OS_TCB *ptcb)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OSTaskCreateHook procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OSInitHookBegin</Name>
+        <Symbol>OSInitHookBegin</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function is called by OSInit() at the beginning of OSInit(). Note(s) : 1) Interrupts are enabled during this call.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(void)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OSInitHookBegin procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OSInitHookEnd</Name>
+        <Symbol>OSInitHookEnd</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This function is called by OSInit() at the end of OSInit(). Note(s) : 1) Interrupts are enabled during this call.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(void)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OSInitHookEnd procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+  </EventList>
+  <Links>
+    <EmptySection_DummyValue/>
+  </Links>
+  <Revisions>
+    <RevisionVersion>2</RevisionVersion>
+  </Revisions>
+</Bean>
