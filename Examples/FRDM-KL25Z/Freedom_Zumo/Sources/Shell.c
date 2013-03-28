@@ -19,10 +19,10 @@
   #include "LSM303.h"
   #include "I2CSPY1.h"
 #endif
-#include "LineFollow.h"
 #if PL_HAS_BLUETOOTH
   #include "BT1.h"
 #endif
+#include "LineFollow.h"
 #include "Turn.h"
 #include "Pid.h"
 #include "Maze.h"

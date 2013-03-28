@@ -25,7 +25,10 @@ static TURN_Kind RevertTurn(TURN_Kind turn) {
   return turn;
 }
 
-void MAZE_RevertPath(void) {
+/**
+ * \brief reverts the path 
+ */
+static void MAZE_RevertPath(void) {
   int i, j;
   TURN_Kind tmp;
   

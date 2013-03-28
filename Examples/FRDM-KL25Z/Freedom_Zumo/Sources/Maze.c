@@ -25,7 +25,10 @@ static TURN_Kind RevertTurn(TURN_Kind turn) {
   return turn;
 }
 
-void MAZE_RevertPath(void) {
+/**
+ * \brief Reverts the path 
+ */
+static void MAZE_RevertPath(void) {
   int i, j;
   TURN_Kind tmp;
   
@@ -78,6 +81,40 @@ TURN_Kind MAZE_SelectTurn(REF_LineKind prev, REF_LineKind curr) {
   }
   return TURN_STOP; /* error case */
 }
+
+TURN_Kind MAZE_SelectTurnBw(REF_LineKind prev, REF_LineKind curr) {
+  if (prev==REF_LINE_LEFT && curr==REF_LINE_NONE) { /* was turn to left */
+    return TURN_LEFT90;
+  } else if (prev==REF_LINE_RIGHT && curr==REF_LINE_NONE) { /* was turn to right */
+    return TURN_RIGHT90;
+  } else if (prev==REF_LINE_RIGHT && curr==REF_LINE_STRAIGHT) { /* |- */
+#if MAZE_LEFT_HAND_RULE
+    return TURN_RIGHT90;
+#else
+    return TURN_LEFT180;
+#endif
+  } else if (prev==REF_LINE_LEFT && curr==REF_LINE_STRAIGHT) { /* -| */
+#if MAZE_LEFT_HAND_RULE
+    return TURN_RIGHT180;
+#else
+    return TURN_LEFT90;
+#endif
+  } else if (prev==REF_LINE_FULL && curr==REF_LINE_NONE) { /* T upside-down */
+#if MAZE_LEFT_HAND_RULE
+    return TURN_RIGHT90;
+#else
+    return TURN_LEFT90;
+#endif
+  } else if (prev==REF_LINE_FULL && curr==REF_LINE_STRAIGHT) { /* '+' intersection  */
+#if MAZE_LEFT_HAND_RULE
+    return TURN_RIGHT90;
+#else
+    return TURN_LEFT90;
+#endif
+  }
+  return TURN_STOP; /* error case */
+}
+
 
 void MAZE_SetSolved(void) {
   isSolved = TRUE;

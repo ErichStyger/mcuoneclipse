@@ -21,6 +21,9 @@
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Platform.h"
+#if PL_HAS_ULTRASONIC
+#include "Ultrasonic.h"
+#endif
 #include "TRG1.h"
 #include "TMOUT1.h"
 
@@ -87,6 +90,10 @@ void FRTOS1_vApplicationTickHook(void)
   /* Called for every RTOS tick. */
   TMOUT1_AddTick();
   TRG1_AddTick();
+#if PL_HAS_QUADRATURE
+  Q4CLeft_Sample();
+  Q4CRight_Sample();
+#endif
 }
 
 /*

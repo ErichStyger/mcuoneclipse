@@ -8,6 +8,7 @@
 #ifndef PID_H_
 #define PID_H_
 
+#include "Platform.h"
 #include "CLS1.h"
 
 /*!
@@ -19,11 +20,26 @@
 uint8_t PID_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
 
 /*!
- * \brief Performs PID closed loop calculation
+ * \brief Performs PID closed loop calculation for the line position
  * \param currLine Current line of sensor
  * \param setLine Middle or desired line position
+ * \param forward If moving forward (or backward)
  */
-void PID_Process(uint16_t currLine, uint16_t setLine);
+void PID_Line(uint16_t currLine, uint16_t setLine, bool forward);
+
+/*!
+ * \brief Performs PID closed loop calculation for the line position
+ * \param currPos Current position of wheel
+ * \param setPos Desired wheel position
+ * \param isLeft TRUE if is for the left wheel, otherwise for the right wheel
+ */
+void PID_Pos(int16_t currPos, int16_t setPos, bool isLeft);
+
+#if PL_HAS_QUADRATURE
+void PID_Pos(int16_t currPos, int16_t setPos, bool isLeft);
+#endif
+
+void PID_Start(void);
 
 void PID_Init(void);
 

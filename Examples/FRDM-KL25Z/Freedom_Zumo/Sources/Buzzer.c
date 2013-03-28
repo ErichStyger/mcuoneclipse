@@ -13,10 +13,11 @@ static void Off(void) {
 }
 
 void BUZ_Beep(uint16_t freqHz, uint16_t durationMs) {
-  (void)BUZ_SetRatio16(0xC000);  
+  (void)BUZ_SetRatio16(0xb000);  
   (void)TRG1_AddTrigger(TRG1_BUZ_BEEP, durationMs/TRG1_TICK_PERIOD_MS, Off);
 }
 
 void BUZ_Init(void) {
+  BUZ_Enable();
   BUZ_SetRatio16(0); /* off */ 
 }

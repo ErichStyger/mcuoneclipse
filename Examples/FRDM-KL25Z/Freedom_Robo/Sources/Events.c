@@ -21,9 +21,12 @@
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Platform.h"
+#if PL_HAS_ULTRASONIC
 #include "Ultrasonic.h"
+#endif
 #include "TRG1.h"
 #include "TMOUT1.h"
+
 /*
 ** ===================================================================
 **     Event       :  Cpu_OnNMIINT (module Events)
@@ -87,8 +90,10 @@ void FRTOS1_vApplicationTickHook(void)
   /* Called for every RTOS tick. */
   TMOUT1_AddTick();
   TRG1_AddTick();
+#if PL_HAS_QUADRATURE
   Q4CLeft_Sample();
   Q4CRight_Sample();
+#endif
 }
 
 /*
@@ -136,7 +141,9 @@ void FRTOS1_vApplicationMallocFailedHook(void)
 */
 void TU_US_OnCounterRestart(LDD_TUserData *UserDataPtr)
 {
+#if PL_HAS_ULTRASONIC
   US_EventEchoOverflow(UserDataPtr);
+#endif
 }
 
 /*
@@ -160,7 +167,9 @@ void TU_US_OnCounterRestart(LDD_TUserData *UserDataPtr)
 */
 void TU_US_OnChannel0(LDD_TUserData *UserDataPtr)
 {
+#if PL_HAS_ULTRASONIC
   US_EventEchoCapture(UserDataPtr);
+#endif
 }
 
 

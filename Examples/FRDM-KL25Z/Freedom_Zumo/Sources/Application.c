@@ -8,7 +8,9 @@
 #include "FRTOS1.h"
 #include "LEDR.h"
 #include "LEDG.h"
-#include "LEDB.h"
+#if PL_HAS_LED_BLUE
+  #include "LEDB.h"
+#endif
 #include "WAIT1.h"
 #include "Shell.h"
 #include "Motor.h"
@@ -160,7 +162,9 @@ static void CheckButton(void) {
       while(SW1_GetVal()==0 && timeTicks<=6000/BUTTON_CNT_MS) { 
         FRTOS1_vTaskDelay(BUTTON_CNT_MS/portTICK_RATE_MS);
         if ((timeTicks%(1000/BUTTON_CNT_MS))==0) {
-          BUZ_Beep(300, 200);
+#if PL_HAS_BUZZER
+          BUZ_Beep(300, 100);
+#endif
         }
         timeTicks++;
       } /* wait until released */
@@ -186,11 +190,11 @@ static void CheckButton(void) {
         CLS1_SendStr((unsigned char*)"start auto-calibration...\r\n", CLS1_GetStdio()->stdOut);
         /* perform automatic calibration */
         WAIT1_WaitOSms(1500); /* wait some time */
-        TURN_Turn(TURN_LEFT90, FALSE);
-        TURN_Turn(TURN_RIGHT90, FALSE);
-        TURN_Turn(TURN_RIGHT90, FALSE);
-        TURN_Turn(TURN_LEFT90, FALSE);
-        TURN_Turn(TURN_STOP, FALSE);
+        TURN_Turn(TURN_LEFT90);
+        TURN_Turn(TURN_RIGHT90);
+        TURN_Turn(TURN_RIGHT90);
+        TURN_Turn(TURN_LEFT90);
+        TURN_Turn(TURN_STOP);
         APP_StateStopCalibrate();
         CLS1_SendStr((unsigned char*)"auto-calibration finished.\r\n", CLS1_GetStdio()->stdOut);
       }
@@ -209,7 +213,9 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
 #else
     CheckButton();
 #endif
+#if PL_HAS_LED_BLUE
     LEDB_Neg();
+#endif
     StateMachine(FALSE);
     FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
   }

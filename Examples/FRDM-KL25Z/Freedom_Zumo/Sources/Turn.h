@@ -19,6 +19,7 @@ typedef enum {
   TURN_STRAIGHT, /* don't turn */
   TURN_STEP_FW, /* make a step forward and stop */
   TURN_STEP_BW, /* make a step backward and stop */
+  TURN_STEP_BW_SMALL, /* make a small step backward and stop */
   TURN_FINISHED, /* stepped into finish! */
   TURN_STOP     /* stop */
 } TURN_Kind;
@@ -32,9 +33,8 @@ const unsigned char *TURN_TurnKindStr(TURN_Kind kind);
 /*!
  * \brief Turns the robot.
  * \param kind How much the robot has to turn.
- * \param toLine If set to true, it continues turning until on line.
  */
-void TURN_Turn(TURN_Kind kind, bool toLine);
+void TURN_Turn(TURN_Kind kind);
 
 /*!
  * \brief Shell command line parser.

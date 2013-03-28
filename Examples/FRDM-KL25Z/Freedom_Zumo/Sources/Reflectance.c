@@ -35,10 +35,10 @@ static bool doMinMaxCalibration = FALSE;
 #define REF_SENSOR_TIMEOUT_MS  3  /* after this time, consider no reflection (black) */
 #if PL_IS_ZUMO_ROBOT
   #define REF_MIN_LINE_VAL   0x100  /* minimum value indicating a line */
-  #define REF_MIN_NOISE_VAL  0x45  /* values below this are not added to the weighted sum */
+  #define REF_MIN_NOISE_VAL  0x45   /* values below this are not added to the weighted sum */
 #else
-  #define REF_MIN_LINE_VAL   0x60  /* minimum value indicating a line */
-  #define REF_MIN_NOISE_VAL  0x32   /* values below this are not added to the weighted sum */
+  #define REF_MIN_LINE_VAL   0x20   /* minimum value indicating a line */
+  #define REF_MIN_NOISE_VAL  0x0F   /* values below this are not added to the weighted sum */
 #endif
 
 typedef struct {
@@ -605,7 +605,7 @@ static portTASK_FUNCTION(ReflTask, pvParameters) {
     if (doMinMaxCalibration) {
       REF_CalibrateMinMax(SensorMin, SensorMax, SensorRaw);
 #if PL_HAS_BUZZER
-      BUZ_Beep(300, 50);
+      BUZ_Beep(300, 10);
 #endif
     } else {
       REF_Measure();
