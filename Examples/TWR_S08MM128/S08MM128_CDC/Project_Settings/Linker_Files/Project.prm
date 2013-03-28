@@ -1,0 +1,71 @@
+/* This is a linker parameter file for the mc9s08mm128 */
+
+NAMES END /* CodeWarrior will pass all the needed files to the linker by command line. But here you may add your own files too. */
+
+SEGMENTS /* Here all RAM/ROM areas of the device are listed. Used in PLACEMENT below. */
+    Z_RAM                    =  READ_WRITE   0x00B0 TO 0x00FF;
+    RAM                      =  READ_WRITE   0x0100 TO 0x17FF;
+    RAM1                     =  READ_WRITE   0x1920 TO 0x1A1F;
+    RAM2                     =  READ_WRITE   0x1A20 TO 0x30AF;
+    /* unbanked FLASH ROM */
+    ROM                      =  READ_ONLY    0xC000 TO 0xFF9D;
+    ROM1                     =  READ_ONLY    0x40B2 TO 0x7FFF;
+ /* INTVECTS                 =  READ_ONLY    0xFF9E TO 0xFFFF; Reserved for Interrupt Vectors */
+    /* banked FLASH ROM */
+    PPAGE_0                  =  READ_ONLY    0x008000 TO 0x008FFF; 
+    PPAGE_0_1                =  READ_ONLY    0x009000 TO 0x00BFFF; 
+    PPAGE_1                  =  READ_ONLY    0x018000 TO 0x0180B1; 
+    PPAGE_2                  =  READ_ONLY    0x028000 TO 0x02BFFF; 
+    PPAGE_4                  =  READ_ONLY    0x048000 TO 0x04BFFF; 
+    PPAGE_5                  =  READ_ONLY    0x058000 TO 0x05BFFF; 
+    PPAGE_6                  =  READ_ONLY    0x068000 TO 0x06BFFF; 
+    PPAGE_7                  =  READ_ONLY    0x078000 TO 0x07BFFF; 
+ /* PPAGE_1_0                =  READ_ONLY    0x0180B2 TO 0x01BFFF; PAGE already contained in segment at 0x40B2-0x7FFF */
+ /* PPAGE_3                  =  READ_ONLY    0x038000 TO 0x03BFFF; PAGE already contained in segment at 0xC000-0xFFFF */
+END
+
+PLACEMENT /* Here all predefined and user segments are placed into the SEGMENTS defined above. */
+    DEFAULT_RAM,                        /* non-zero page variables */
+                                        INTO  RAM,RAM1,RAM2;
+
+    _PRESTART,                          /* startup code */
+    STARTUP,                            /* startup data structures */
+    ROM_VAR,                            /* constant variables */
+    STRINGS,                            /* string literals */
+    VIRTUAL_TABLE_SEGMENT,              /* C++ virtual table segment */
+    NON_BANKED,                         /* runtime routines which must not be banked */
+    DEFAULT_ROM,
+    COPY                                /* copy down information: how to initialize variables */
+                                        INTO  ROM; /* ,ROM1: To use "ROM1" as well, pass the option -OnB=b to the compiler */
+
+    PAGED_ROM                           /* routines which can be banked */
+                                        INTO  PPAGE_0_1,PPAGE_1,PPAGE_2,PPAGE_4,PPAGE_5,PPAGE_6,PPAGE_7,ROM1,PPAGE_0;
+
+    _DATA_ZEROPAGE,                     /* zero page variables */
+    MY_ZEROPAGE                         INTO  Z_RAM;
+END
+
+STACKSIZE 0x200
+
+VECTOR 0 _Startup /* Reset vector: this is the default entry point for an application. */
+
+CHECKSUM
+    CHECKSUM_ENTRY
+        METHOD_CRC_CCITT
+        INIT    0x8D9D
+        OF      READ_ONLY   0x009000 TO 0x00BFFF
+        OF      READ_ONLY   0x018000 TO 0x0180B1
+        OF      READ_ONLY   0x040B2 TO 0x07FFF
+        OF      READ_ONLY   0x028000 TO 0x02BFFF
+        OF      READ_ONLY   0x0C000 TO 0x0FF73
+        OF      READ_ONLY   0x0FF80 TO 0x0FF9F
+        OF      READ_ONLY   0x0FFC0 TO 0x0FFFF
+        OF      READ_ONLY   0x048000 TO 0x04BFFF
+        OF      READ_ONLY   0x058000 TO 0x05BFFF
+        OF      READ_ONLY   0x068000 TO 0x06BFFF
+        OF      READ_ONLY   0x078000 TO 0x07BFFF
+        INTO    READ_ONLY   0xFFB8 SIZE 2
+        UNDEFINED 0xff
+    END
+END
+
