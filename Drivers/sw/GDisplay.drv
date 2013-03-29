@@ -1491,11 +1491,11 @@ void %'ModuleName'%.%DrawFilledCircle(%'ModuleName'_PixelDim x0, %'ModuleName'_P
     %'ModuleName'%.%DrawHLine(p0, (%'ModuleName'_PixelDim)(y0-yoff), w0, color);
     %'ModuleName'%.%DrawHLine(p1, (%'ModuleName'_PixelDim)(y0+xoff), w1, color);
     %'ModuleName'%.%DrawHLine(p1, (%'ModuleName'_PixelDim)(y0-xoff), w1, color);
-    balance += xoff+xoff;
+    balance += 2*xoff;
     xoff++;
     if (balance>=0) {
       yoff--;
-      balance -= yoff+yoff;
+      balance -= 2*yoff;
     }
   } /* while */
 }
