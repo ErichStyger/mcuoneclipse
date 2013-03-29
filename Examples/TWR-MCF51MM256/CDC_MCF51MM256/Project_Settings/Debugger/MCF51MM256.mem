@@ -1,0 +1,41 @@
+// Memory Configuration File
+//
+// Description:
+//  A memory configuration file contains commands that define the legally accessible
+//  areas of memory for your specific board. Useful for example when the debugger
+//  tries to display the content of a "char *" variable, that has not yet been initialized.
+//  In this case the debugger may try to read from a bogus address, which could cause a
+//  bus error.
+//
+//
+// Reference:
+//  MCF51MM256_Reference_manual.pdf
+
+
+// All reserved ranges read back 0xBABA...
+reservedchar 0xBA
+
+usederivative "MCF51MM256"
+
+//         Memory Map:
+//         ----------------------------------------------------------------------
+
+range 		0x00000000	0x000003FF	4 ReadWrite	// First Section of the 128KBytes of Flash Memory 1
+//		0x00000400	0x0000040F			// Flash Module 1 Reserved Memory Locations
+range 		0x00000410	0x0001FFFF	4 ReadWrite	// Second Section of the 128KBytes of Flash Memory 1
+
+range 		0x00020000	0x000203FF	4 ReadWrite	// First Section of the 128KBytes of Flash Memory 2
+//		0x00020400	0x0002040F			// Flash Module 1 Reserved Memory Locations
+range 		0x00020410	0x0003FFFF	4 ReadWrite	// Second Section of the 128KBytes of Flash Memory 2
+
+reserved 	0x00040000	0x002FFFFF
+reserved 	0x00300000	0x00301FFF 			// USB Boot ROM
+reserved 	0x00302000	0x003FFFFF
+reserved 	0x00400000	0x007FFFFF			// Available for off-chip expansion
+range 		0x00800000	0x00807FFF	4 ReadWrite	// 32K	Internal Ram 
+reserved 	0x00808000	0x00BFFFFF
+reserved 	0x00C00010	0xFFFF7FFF
+
+ 
+
+	
