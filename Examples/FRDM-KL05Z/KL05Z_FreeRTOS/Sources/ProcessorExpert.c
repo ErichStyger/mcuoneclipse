@@ -31,6 +31,9 @@
 #include "FRTOS1.h"
 #include "RTOSTICKLDD1.h"
 #include "UTIL1.h"
+#include "CLS1.h"
+#include "AS1.h"
+#include "ASerialLdd1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -38,10 +41,14 @@
 #include "IO_Map.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "Shell.h"
+
 static portTASK_FUNCTION(LedTask, pvParameters) {
   (void)pvParameters; /* parameter not used */
+  SHELL_Init();
   for(;;) {
     LEDR_Neg();
+    SHELL_Parse();
     FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
   }
 }

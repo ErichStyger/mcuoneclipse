@@ -35,6 +35,9 @@
 #include "FRTOS1.h"
 #include "RTOSTICKLDD1.h"
 #include "UTIL1.h"
+#include "CLS1.h"
+#include "AS1.h"
+#include "ASerialLdd1.h"
 #include "PE_LDD.h"
 
 void Cpu_OnNMIINT(void);
