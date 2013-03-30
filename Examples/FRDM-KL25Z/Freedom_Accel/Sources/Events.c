@@ -20,7 +20,6 @@
 #include "Events.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
-#include "MMA8451.h"
 
 /*
 ** ===================================================================
@@ -36,77 +35,6 @@
 ** ===================================================================
 */
 void Cpu_OnNMIINT(void)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Event       :  I2C2_OnMasterBlockSent (module Events)
-**
-**     Component   :  I2C2 [I2C_LDD]
-**     Description :
-**         This event is called when I2C in master mode finishes the
-**         transmission of the data successfully. This event is not
-**         available for the SLAVE mode and if MasterSendBlock is
-**         disabled. 
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**       * UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. This pointer is passed
-**                           as the parameter of Init method.
-**     Returns     : Nothing
-** ===================================================================
-*/
-void I2C2_OnMasterBlockSent(LDD_TUserData *UserDataPtr)
-{
-	  MMA8451_TDataState *ptr = (MMA8451_TDataState*)UserDataPtr;
-		
-	  ptr->dataTransmittedFlg = TRUE;
-}
-
-/*
-** ===================================================================
-**     Event       :  I2C2_OnMasterBlockReceived (module Events)
-**
-**     Component   :  I2C2 [I2C_LDD]
-**     Description :
-**         This event is called when I2C is in master mode and finishes
-**         the reception of the data successfully. This event is not
-**         available for the SLAVE mode and if MasterReceiveBlock is
-**         disabled.
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**       * UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. This pointer is passed
-**                           as the parameter of Init method.
-**     Returns     : Nothing
-** ===================================================================
-*/
-void I2C2_OnMasterBlockReceived(LDD_TUserData *UserDataPtr)
-{
-	  MMA8451_TDataState *ptr = (MMA8451_TDataState*)UserDataPtr;
-			
-	  ptr->dataReceivedFlg = TRUE;
-}
-
-/*
-** ===================================================================
-**     Event       :  I2C2_OnError (module Events)
-**
-**     Component   :  I2C2 [I2C_LDD]
-**     Description :
-**         This event is called when an error (e.g. Arbitration lost)
-**         occurs. The errors can be read with GetError method.
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**       * UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. This pointer is passed
-**                           as the parameter of Init method.
-**     Returns     : Nothing
-** ===================================================================
-*/
-void I2C2_OnError(LDD_TUserData *UserDataPtr)
 {
   /* Write your code here ... */
 }

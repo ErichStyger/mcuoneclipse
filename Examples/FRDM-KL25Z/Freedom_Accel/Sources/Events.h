@@ -32,6 +32,7 @@
 #include "LED3.h"
 #include "LEDpin6.h"
 #include "BitIoLdd6.h"
+#include "GI2C1.h"
 #include "I2C2.h"
 #include "PE_LDD.h"
 
@@ -82,24 +83,6 @@ void I2C2_OnMasterBlockReceived(LDD_TUserData *UserDataPtr);
 **         the reception of the data successfully. This event is not
 **         available for the SLAVE mode and if MasterReceiveBlock is
 **         disabled.
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**       * UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. This pointer is passed
-**                           as the parameter of Init method.
-**     Returns     : Nothing
-** ===================================================================
-*/
-
-void I2C2_OnError(LDD_TUserData *UserDataPtr);
-/*
-** ===================================================================
-**     Event       :  I2C2_OnError (module Events)
-**
-**     Component   :  I2C2 [I2C_LDD]
-**     Description :
-**         This event is called when an error (e.g. Arbitration lost)
-**         occurs. The errors can be read with GetError method.
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **       * UserDataPtr     - Pointer to the user or

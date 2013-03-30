@@ -28,6 +28,7 @@
 #include "LED3.h"
 #include "LEDpin6.h"
 #include "BitIoLdd6.h"
+#include "GI2C1.h"
 #include "I2C2.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
@@ -36,7 +37,7 @@
 #include "IO_Map.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
-#include "MMA8451.h"
+#include "Application.h"
 
 int main(void)
 {
@@ -46,9 +47,7 @@ int main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
-  /* Write your code here */
-  /* For example: for(;;) { } */
-  MMA8451_Run();
+  APP_Run();
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/

@@ -1,7 +1,7 @@
 /*
  * MMA8451.h
  *
- *  Created on: Aug 17, 2012
+ *  Created on: Mar 30, 2013
  *      Author: Erich Styger
  */
 
@@ -9,15 +9,11 @@
 #define MMA8451_H_
 
 #include "PE_Types.h"
-#include "PE_LDD.h"
 
-typedef struct {
-  volatile bool dataReceivedFlg; /* set to TRUE by the interrupt if we have received data */
-  volatile bool dataTransmittedFlg; /* set to TRUE by the interrupt if we have set data */
-  LDD_TDeviceData *handle; /* pointer to the device handle */
-} MMA8451_TDataState;
+uint8_t MMA8451_GetRawXYZ(uint8_t xyz[3]);
 
-/* \brief Run the demo application */
-void MMA8451_Run(void);
+uint8_t MMA8451_Deinit(void);
+
+uint8_t MMA8451_Init(void);
 
 #endif /* MMA8451_H_ */
