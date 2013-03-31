@@ -36,6 +36,23 @@
         <DefaultValue />
       </TCompNameItem>
     </Property>
+    <Property>
+      <TEnumItem>
+        <Name>Slave Address</Name>
+        <Symbol>I2CSlaveAddress</Symbol>
+        <TypeSpec>typePropertyI2CSlaveAddress</TypeSpec>
+        <Hint>Specifies the I2C slave address of the accelerometer.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <TypeAssignment>BEAN_FILE</TypeAssignment>
+      </TEnumItem>
+    </Property>
   </PropertyList>
   <Links>
     <EmptySection_DummyValue />
