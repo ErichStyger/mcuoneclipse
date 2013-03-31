@@ -103,6 +103,24 @@
 %-BW_CUSTOM_USERTYPE_END
 
 %-BW_DEFINITION_START
+%-*****************************************************************************************************
+%-BW_METHOD_BEGIN Deinit
+%ifdef Deinit
+uint8_t %'ModuleName'%.%Deinit();
+%define!  RetVal
+%include Common\MMA8451QDeinit.inc
+%endif  %-Deinit
+%-BW_METHOD_END Deinit
+
+%-*****************************************************************************************************
+%-BW_METHOD_BEGIN Init
+%ifdef Init
+uint8_t %'ModuleName'%.%Init();
+%define!  RetVal
+%include Common\MMA8451QInit.inc
+%endif  %-Init
+%-BW_METHOD_END Init
+
 %-************************************************************************************************************
 %-BW_DEFINITION_END
 /* END %ModuleName. */
@@ -136,12 +154,60 @@
 %-   Example:
 %-     static int counter1;
 %-     int %'ModuleName'%.counter2;
+/* External 3-axis accelerometer control register addresses */
+#define MMA8451_CTRL_REG_1 0x2A
+/* MMA8451 3-axis accelerometer control register bit masks */
+#define MMA8451_ACTIVE_BIT_MASK 0x01
+#define MMA8451_F_READ_BIT_MASK 0x02
+
+/* External 3-axis accelerometer data register addresses */
+#define MMA8451_OUT_X_MSB 0x01
+#define MMA8451_OUT_X_LSB 0x02
+#define MMA8451_OUT_Y_MSB 0x03
+#define MMA8451_OUT_Y_LSB 0x04
+#define MMA8451_OUT_Z_MSB 0x05
+#define MMA8451_OUT_Z_LSB 0x06
+
+#define MMA8451_I2C_ADDR   (%I2CSlaveAddress) /* I2C slave device address as set in the properties */
 %-
 %-BW_CUSTOM_VARIABLE_END
 %-BW_INTERN_METHOD_DECL_START
 %- List of internal methods headers
 %-BW_INTERN_METHOD_DECL_END
 %-BW_IMPLEMENT_START
+%-*****************************************************************************************************
+%-BW_METHOD_BEGIN Deinit
+%ifdef Deinit
+%define! RetVal
+%include Common\MMA8451QDeinit.inc
+uint8_t %'ModuleName'%.%Deinit()
+{
+%CODE_BEGIN
+  return ERR_OK; /* nothing to do */
+%CODE_END
+}
+%endif %-Deinit
+%-BW_METHOD_END Deinit
+
+%-*****************************************************************************************************
+%-BW_METHOD_BEGIN Init
+%ifdef Init
+%define! RetVal
+%include Common\MMA8451QInit.inc
+uint8_t %'ModuleName'%.%Init()
+{
+%CODE_BEGIN
+  static const uint8_t addr = MMA8451_CTRL_REG_1;
+  static const uint8_t data = MMA8451_F_READ_BIT_MASK|MMA8451_ACTIVE_BIT_MASK;
+  /* F_READ: Fast read mode, data format limited to single byte (auto increment counter will skip LSB)
+   * ACTIVE: Full scale selection
+   */
+  return %@I2C@'ModuleName'%.WriteAddress(MMA8451_I2C_ADDR, (uint8_t*)&addr, sizeof(addr), (uint8_t*)&data, sizeof(data));
+%CODE_END
+}
+%endif %-Init
+%-BW_METHOD_END Init
+
 %-************************************************************************************************************
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
