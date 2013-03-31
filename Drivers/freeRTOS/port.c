@@ -419,6 +419,33 @@ static portBASE_TYPE xBankedStartScheduler(void) {
 %endif
 %endif
 /*-----------------------------------------------------------*/
+void vPortInitTickTimer(void) {
+%ifdef TickTimerLDD
+  RTOS_TickDevice = %@TickTimerLDD@'ModuleName'%.Init(NULL);     %>40/* initialize the tick timer */
+%else
+  /* nothing special to do */
+%endif
+}
+/*-----------------------------------------------------------*/
+void vPortStartTickTimer(void) {
+%ifdef TickCntr
+  (void)%@TickCntr@'ModuleName'%.Reset();   %>40/* reset the tick counter */
+  (void)%@TickCntr@'ModuleName'%.Enable();  %>40/* start the tick timer */
+%endif
+%ifdef TickTimerLDD
+  (void)%@TickTimerLDD@'ModuleName'%.Enable(RTOS_TickDevice);   %>40/* start the tick timer */
+%endif
+}
+/*-----------------------------------------------------------*/
+void vPortStopTickTimer(void) {
+%ifdef TickCntr
+  (void)%@TickCntr@'ModuleName'%.Disable();                     %>40/* stop the tick timer */
+%endif
+%ifdef TickTimerLDD
+  (void)%@TickTimerLDD@'ModuleName'%.Disable(RTOS_TickDevice);   %>40/* stop the tick timer */
+%endif
+}
+/*-----------------------------------------------------------*/
 %if (CPUfamily = "Kinetis") & %Compiler == "GNUC" & %M4FFloatingPointSupport='yes'
 void vPortEnableVFP(void) {
   /* The FPU enable bits are in the CPACR. */
@@ -436,8 +463,7 @@ void vPortEnableVFP(void) {
 portBASE_TYPE xPortStartScheduler(void) {
 %if (CPUfamily = "ColdFireV1") | (CPUfamily = "MCF")
   uxCriticalNesting = 0;
-  (void)%@TickCntr@'ModuleName'%.Reset();   %>40/* reset the tick counter */
-  (void)%@TickCntr@'ModuleName'%.Enable();  %>40/* start the tick timer */
+  vPortStartTickTimer();
 %ifdef vTaskEndScheduler
   if(setjmp(xJumpBuf) != 0 ) {
     /* here we will get in case of call to vTaskEndScheduler() */
@@ -453,8 +479,7 @@ portBASE_TYPE xPortStartScheduler(void) {
      of the common kernel code, and therefore cannot use the CODE_SEG pragma.
      Instead it simply calls the locally defined xBankedStartScheduler() -
      which does use the CODE_SEG pragma. */
-  (void)%@TickCntr@'ModuleName'%.Reset();                      %>40/* reset the tick counter */
-  (void)%@TickCntr@'ModuleName'%.Enable();                      %>40/* start the tick timer */
+  vPortStartTickTimer();
 %ifdef vTaskEndScheduler
   if(setjmp(xJumpBuf) != 0 ) {
     /* here we will get in case of call to vTaskEndScheduler() */
@@ -467,11 +492,9 @@ portBASE_TYPE xPortStartScheduler(void) {
   /* Overwrite PendSV priority as set inside the CPU component: it needs to have the lowest priority! */
   *(portNVIC_SYSPRI3) |= portNVIC_PENDSV_PRI; /* set priority of PendSV interrupt */
   uxCriticalNesting = 0; /* Initialize the critical nesting count ready for the first task. */
-  RTOS_TickDevice = %@TickTimerLDD@'ModuleName'%.Init(NULL);     %>40/* initialize the tick timer */
   /* overwrite SysTick priority is set inside the FreeRTOS component */
   *(portNVIC_SYSPRI3) |= portNVIC_SYSTICK_PRI; /* set priority of SysTick interrupt */
-  /* Start the timer that generates the tick ISR. Interrupts are disabled here already. */
-  (void)%@TickTimerLDD@'ModuleName'%.Enable(RTOS_TickDevice);   %>40/* start the tick timer */
+  vPortStartTickTimer();
 %if %M4FFloatingPointSupport='yes'
   /* Ensure the VFP is enabled - it should be anyway. */
   vPortEnableVFP();
@@ -483,8 +506,7 @@ portBASE_TYPE xPortStartScheduler(void) {
   return pdFALSE;
 %elif (CPUfamily = "56800")
   uxCriticalNesting = 0;
-  (void)%@TickCntr@'ModuleName'%.Reset();   %>40/* reset the tick counter */
-  (void)%@TickCntr@'ModuleName'%.Enable();  %>40/* start the tick timer */
+  vPortStartTickTimer();
 %ifdef vTaskEndScheduler
   if(setjmp(xJumpBuf) != 0 ) {
     /* here we will get in case of call to vTaskEndScheduler() */
@@ -502,12 +524,7 @@ portBASE_TYPE xPortStartScheduler(void) {
 %ifdef vTaskEndScheduler
 /*-----------------------------------------------------------*/
 void vPortEndScheduler(void) {
-%ifdef TickCntr
-  (void)%@TickCntr@'ModuleName'%.Disable();                     %>40/* stop the tick timer */
-%endif
-%ifdef TickTimerLDD
-  (void)%@TickTimerLDD@'ModuleName'%.Disable(RTOS_TickDevice);   %>40/* stop the tick timer */
-%endif
+  vPortStopTickTimer();
   /* Jump back to the processor state prior to starting the
      scheduler.  This means we are not going to be using a
      task stack frame so the task can be deleted. */

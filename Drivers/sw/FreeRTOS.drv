@@ -849,6 +849,14 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
 
 %endif %- ParseCommand
 %-BW_METHOD_END ParseCommand
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Init
+%ifdef Init
+void %'ModuleName'%.%Init(void);
+%include Common\FreeRTOSInit.Inc
+
+%endif %- Init
+%-BW_METHOD_END Init
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -2000,6 +2008,18 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
 
 %endif %- ParseCommand
 %-BW_METHOD_END ParseCommand
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Init
+%ifdef Init
+%include Common\FreeRTOSInit.Inc
+void %'ModuleName'%.%Init(void)
+{
+  vPortInitTickTimer();
+  vPortStopTickTimer();
+}
+
+%endif %- Init
+%-BW_METHOD_END Init
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
@@ -2094,6 +2114,7 @@ void %vApplicationMallocFailedHook(void)
 %-BW_EVENT_IMPLEMENT_END
 %INITIALIZATION
   /* ### %DeviceType "%DeviceName" init code ... */
+  %'ModuleName'%.%Init();
 %CODE_BEGIN
 %CODE_END
 %-
