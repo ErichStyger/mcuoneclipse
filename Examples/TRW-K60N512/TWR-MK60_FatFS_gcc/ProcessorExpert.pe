@@ -2,9 +2,9 @@
 <PEproject>
   <Header>
     <Name>ProcessorExpert</Name>
-    <SavedBy>Erich Styger</SavedBy>
+    <SavedBy>tastyger</SavedBy>
     <ModificationStamp>18</ModificationStamp>
-    <Date>2013-03-09</Date>
+    <Date>2013-03-31</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.5.0.RT4_b1306-1475</PEversion>
   </Header>
@@ -12777,7 +12777,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.210</BeanVersion>
+    <BeanVersion>01.211</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -20575,7 +20575,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.083</BeanVersion>
+    <BeanVersion>01.084</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -22106,7 +22106,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template>Timeout</Template>
-    <BeanVersion>01.021</BeanVersion>
+    <BeanVersion>01.023</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -24177,7 +24177,7 @@
               <ItemSymbol>BdRate</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>init:;prec:1.5%;RTS:none</Value>
+              <Value>init:38400 baud;prec:1.5%;RTS:none</Value>
               <RuntimeSetting>0</RuntimeSetting>
               <ReqDevPrescHigh>-1</ReqDevPrescHigh>
               <ReqDevPrescLow>-1</ReqDevPrescLow>
@@ -25144,7 +25144,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>SpecInt</ItemSymbol>
-        <Value />
+        <Value>INT_UART5_ERR</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>InpInt</ItemSymbol>
@@ -25839,7 +25839,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Clk</ItemSymbol>
-        <Value />
+        <Value>PTD8/I2C0_SCL/UART5_RX/FB_A16</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
