@@ -1,3 +1,4 @@
+#if 0
 /*
  * MMA8451.c
  *
@@ -43,4 +44,4 @@ uint8_t MMA8451_Init(void) {
    */
   return GI2C1_WriteAddress(MMA8451_I2C_ADDR, (uint8_t*)&addr, sizeof(addr), (uint8_t*)&data, sizeof(data));
 }
-
+#endif

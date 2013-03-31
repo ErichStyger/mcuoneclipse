@@ -3,7 +3,7 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>26</ModificationStamp>
+    <ModificationStamp>27</ModificationStamp>
     <Date>2013-03-31</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion />
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>80</ProjectCompNumb>
+    <ProjectCompNumb>84</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>false</AssignInitComponentNameToPrph>
@@ -4080,7 +4080,7 @@
       <Value4>true</Value4>
       <ItemId5>39</ItemId5>
       <Value5>true</Value5>
-      <ItemId6>75</ItemId6>
+      <ItemId6>80</ItemId6>
       <Value6>true</Value6>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
@@ -8081,7 +8081,7 @@
   <Bean>
     <BeanType>MMA8451Q</BeanType>
     <Name>MMA1</Name>
-    <CompNumb>75</CompNumb>
+    <CompNumb>80</CompNumb>
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>CHECK_n_WRITE</GenCodeMode>
     <IconName>MMA8451Q</IconName>
@@ -8120,6 +8120,26 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>Init</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GetRaw8XYZ</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>GetRaw8XYZ</UsrMethodName>
       </ItemState>
     </Methods>
     <Events />

@@ -1,3 +1,4 @@
+#if 0
 /*
  * MMA8451.h
  *
@@ -17,3 +18,4 @@ uint8_t MMA8451_Deinit(void);
 uint8_t MMA8451_Init(void);
 
 #endif /* MMA8451_H_ */
+#endif
