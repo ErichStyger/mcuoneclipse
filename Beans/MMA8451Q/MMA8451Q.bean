@@ -4,7 +4,7 @@
     <Name>MMA8451Q</Name>
     <Description>Driver for the Freescale MMA8451Q digital I2C accelerometer.</Description>
     <Author>Erich Styger</Author>
-    <Version>01.002</Version>
+    <Version>01.003</Version>
     <Icon>MMA8451Q</Icon>
     <TypesFiles>PE,MMA8451Q\MMA8451Q</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -52,6 +52,20 @@
         <IconPopup>false</IconPopup>
         <TypeAssignment>BEAN_FILE</TypeAssignment>
       </TEnumItem>
+    </Property>
+    <Property>
+      <TInhrLinkItem>
+        <Name>I2C</Name>
+        <Symbol>I2C</Symbol>
+        <TypeSpec>MMA8451Q\I2C</TypeSpec>
+        <Hint>Link component  (for details about settings see &amp;lt;a href="../../DOCs/InheritanceAndSharing.html"&amp;gt;Component Inheritance &amp;amp;amp; Component Sharing&amp;lt;/a&amp;gt;).</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <DefaultValue />
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <SortStyle />
+      </TInhrLinkItem>
     </Property>
   </PropertyList>
   <Links>
