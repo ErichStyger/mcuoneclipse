@@ -24,7 +24,7 @@
 #define MMA8451_I2C_ADDR   (0x1D) /* SA0=1 */
 //#define MMA8451_I2C_ADDR   (0x1C) /* SA0=0 */
 
-uint8_t MMA8451_GetRawXYZ(uint8_t xyz[3]) {
+uint8_t MMA8451_GetRaw8XYZ(uint8_t xyz[3]) {
   static const uint8_t addr = MMA8451_OUT_X_MSB;
 
   return GI2C1_ReadAddress(MMA8451_I2C_ADDR, (uint8_t*)&addr, sizeof(addr), &xyz[0], sizeof(xyz));

@@ -10,7 +10,7 @@
 
 #include "PE_Types.h"
 
-uint8_t MMA8451_GetRawXYZ(uint8_t xyz[3]);
+uint8_t MMA8451_GetRaw8XYZ(uint8_t xyz[3]);
 
 uint8_t MMA8451_Deinit(void);
 

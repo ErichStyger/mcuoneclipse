@@ -20,7 +20,7 @@ void APP_Run(void) {
   LED3_On();
   res = MMA8451_Init();
   while (res==ERR_OK) {
-    res = MMA8451_GetRawXYZ(&xyz[0]);
+    res = MMA8451_GetRaw8XYZ(&xyz[0]);
     LED1_Put(xyz[0]>50);
     LED2_Put(xyz[1]>50);
     LED3_Put(xyz[2]>50);

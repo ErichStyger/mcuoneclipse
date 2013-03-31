@@ -30,6 +30,7 @@
 #include "BitIoLdd6.h"
 #include "GI2C1.h"
 #include "I2C2.h"
+#include "MMA1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
