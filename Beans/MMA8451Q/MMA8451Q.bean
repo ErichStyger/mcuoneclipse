@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bean>
+  <Header>
+    <Name>MMA8451Q</Name>
+    <Description>Driver for the Freescale MMA8451Q digital I2C accelerometer.</Description>
+    <Author>Erich Styger</Author>
+    <Version>01.000</Version>
+    <Icon>DEFAULT</Icon>
+    <TypesFiles>PE,MMA8451Q\MMA8451Q</TypesFiles>
+    <FileVersion>6</FileVersion>
+  </Header>
+  <Options>
+    <BW_HelpType>Default</BW_HelpType>
+    <BW_AutoSaveHelp>yes</BW_AutoSaveHelp>
+    <BW_AutoSaveDriver>yes</BW_AutoSaveDriver>
+    <BW_DetailedHelp>yes</BW_DetailedHelp>
+    <BW_HelpFiles>,Properties,Methods,Events,"User Types"</BW_HelpFiles>
+    <BW_NeedTps>no</BW_NeedTps>
+    <BW_NeedUst>0</BW_NeedUst>
+    <BW_NeedCns>0</BW_NeedCns>
+    <Shortcut>MMA</Shortcut>
+    <BeanStatus>RELEASE</BeanStatus>
+    <Category>CPU External Devices-Sensor</Category>
+    <Copyright>License : Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2013, all rights reserved.\nhttp://www.mcuoneclipse.com\n\nThis an open source software in the form of a Processor Expert Embedded Component.\nThis is a free software and is opened for education, research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
+    <BeanLevel>High</BeanLevel>
+    <DemoDriver>no</DemoDriver>
+  </Options>
+  <PropertyList>
+    <Property>
+      <TCompNameItem>
+        <Name>Component Name</Name>
+        <Symbol>DeviceName</Symbol>
+        <Hint>Name of the component.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue />
+      </TCompNameItem>
+    </Property>
+  </PropertyList>
+  <Links>
+    <EmptySection_DummyValue />
+  </Links>
+</Bean>
+
