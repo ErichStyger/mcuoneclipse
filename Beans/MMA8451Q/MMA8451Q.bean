@@ -119,6 +119,37 @@
         <Scope>PRIVATE</Scope>
       </TMthdItem>
     </Method>
+    <Method>
+      <TMthdItem>
+        <Name>GetRaw8XYZ</Name>
+        <Symbol>GetRaw8XYZ</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Returns in an array the x, y and z accelerometer as 8bit values.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>-1</DefaultIndex>
+        <TextValueIndex>true</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>uint8_t</ReturnType>
+        <RetHint>Error code, ERR_OK for no error.</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>xyz</ParName>
+          <ParType>uint8_t</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to an array of three unsigned 8bit values which are used to return the accelerometer values.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+      </TMthdItem>
+    </Method>
   </MethodList>
   <Links>
     <EmptySection_DummyValue />

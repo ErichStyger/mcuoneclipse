@@ -104,6 +104,16 @@
 
 %-BW_DEFINITION_START
 %-*****************************************************************************************************
+%-BW_METHOD_BEGIN GetRaw8XYZ
+%ifdef GetRaw8XYZ
+uint8_t %'ModuleName'%.%GetRaw8XYZ(uint8_t *xyz);
+%define! Parxyz
+%define!  RetVal
+%include Common\MMA8451QGetRaw8XYZ.inc
+%endif  %-GetRaw8XYZ
+%-BW_METHOD_END GetRaw8XYZ
+
+%-*****************************************************************************************************
 %-BW_METHOD_BEGIN Deinit
 %ifdef Deinit
 uint8_t %'ModuleName'%.%Deinit(void);
@@ -175,6 +185,23 @@ uint8_t %'ModuleName'%.%Init(void);
 %- List of internal methods headers
 %-BW_INTERN_METHOD_DECL_END
 %-BW_IMPLEMENT_START
+%-*****************************************************************************************************
+%-BW_METHOD_BEGIN GetRaw8XYZ
+%ifdef GetRaw8XYZ
+%define! Parxyz
+%define! RetVal
+%include Common\MMA8451QGetRaw8XYZ.inc
+uint8_t %'ModuleName'%.%GetRaw8XYZ(uint8_t *xyz)
+{
+%CODE_BEGIN
+  static const uint8_t addr = MMA8451_OUT_X_MSB;
+
+  return %@I2C@'ModuleName'%.ReadAddress(MMA8451_I2C_ADDR, (uint8_t*)&addr, sizeof(addr), &xyz[0], sizeof(xyz));
+%CODE_END
+}
+%endif %-GetRaw8XYZ
+%-BW_METHOD_END GetRaw8XYZ
+
 %-*****************************************************************************************************
 %-BW_METHOD_BEGIN Deinit
 %ifdef Deinit
