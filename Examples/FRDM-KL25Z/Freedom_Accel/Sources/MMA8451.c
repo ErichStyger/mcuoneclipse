@@ -31,7 +31,7 @@ uint8_t MMA8451_GetRaw8XYZ(uint8_t xyz[3]) {
 }
 
 uint8_t MMA8451_Deinit(void) {
-  /* noting to do */
+  /* nothing to do */
   return ERR_OK;
 }
 

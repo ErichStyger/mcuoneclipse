@@ -3,7 +3,7 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>19</ModificationStamp>
+    <ModificationStamp>26</ModificationStamp>
     <Date>2013-03-31</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion />
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>61</ProjectCompNumb>
+    <ProjectCompNumb>80</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>false</AssignInitComponentNameToPrph>
@@ -4080,7 +4080,7 @@
       <Value4>true</Value4>
       <ItemId5>39</ItemId5>
       <Value5>true</Value5>
-      <ItemId6>60</ItemId6>
+      <ItemId6>75</ItemId6>
       <Value6>true</Value6>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
@@ -8081,7 +8081,7 @@
   <Bean>
     <BeanType>MMA8451Q</BeanType>
     <Name>MMA1</Name>
-    <CompNumb>60</CompNumb>
+    <CompNumb>75</CompNumb>
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>CHECK_n_WRITE</GenCodeMode>
     <IconName>MMA8451Q</IconName>
@@ -8097,20 +8097,31 @@
         <Value>MMA1</Value>
       </ItemState>
       <ItemState>
-        <ItemSymbol>GenericI2C</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>GI2C1</Value>
-      </ItemState>
-      <ItemState>
         <ItemSymbol>I2CSlaveAddress</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <EnumSymbVal>0x1D</EnumSymbVal>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>I2C</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>GI2C1</Value>
+      </ItemState>
     </Properties>
-    <Methods />
+    <Methods>
+      <ItemState>
+        <ItemSymbol>Init</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Init</UsrMethodName>
+      </ItemState>
+    </Methods>
     <Events />
   </Bean>
 </PEproject>
