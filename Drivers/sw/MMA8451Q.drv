@@ -106,7 +106,7 @@
 %-*****************************************************************************************************
 %-BW_METHOD_BEGIN Deinit
 %ifdef Deinit
-uint8_t %'ModuleName'%.%Deinit();
+uint8_t %'ModuleName'%.%Deinit(void);
 %define!  RetVal
 %include Common\MMA8451QDeinit.inc
 %endif  %-Deinit
@@ -115,7 +115,7 @@ uint8_t %'ModuleName'%.%Deinit();
 %-*****************************************************************************************************
 %-BW_METHOD_BEGIN Init
 %ifdef Init
-uint8_t %'ModuleName'%.%Init();
+uint8_t %'ModuleName'%.%Init(void);
 %define!  RetVal
 %include Common\MMA8451QInit.inc
 %endif  %-Init
@@ -180,7 +180,7 @@ uint8_t %'ModuleName'%.%Init();
 %ifdef Deinit
 %define! RetVal
 %include Common\MMA8451QDeinit.inc
-uint8_t %'ModuleName'%.%Deinit()
+uint8_t %'ModuleName'%.%Deinit(void)
 {
 %CODE_BEGIN
   return ERR_OK; /* nothing to do */
@@ -194,7 +194,7 @@ uint8_t %'ModuleName'%.%Deinit()
 %ifdef Init
 %define! RetVal
 %include Common\MMA8451QInit.inc
-uint8_t %'ModuleName'%.%Init()
+uint8_t %'ModuleName'%.%Init(void)
 {
 %CODE_BEGIN
   static const uint8_t addr = MMA8451_CTRL_REG_1;
