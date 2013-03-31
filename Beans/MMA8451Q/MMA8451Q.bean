@@ -4,8 +4,8 @@
     <Name>MMA8451Q</Name>
     <Description>Driver for the Freescale MMA8451Q digital I2C accelerometer.</Description>
     <Author>Erich Styger</Author>
-    <Version>01.000</Version>
-    <Icon>MMA8451Q_b</Icon>
+    <Version>01.001</Version>
+    <Icon>MMA8451Q</Icon>
     <TypesFiles>PE,MMA8451Q\MMA8451Q</TypesFiles>
     <FileVersion>6</FileVersion>
   </Header>
@@ -33,12 +33,14 @@
         <Hint>Name of the component.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>true</EditLine>
-        <DefaultValue />
+        <DefaultValue/>
       </TCompNameItem>
     </Property>
   </PropertyList>
   <Links>
-    <EmptySection_DummyValue />
+    <EmptySection_DummyValue/>
   </Links>
+  <Revisions>
+    <RevisionVersion>2</RevisionVersion>
+  </Revisions>
 </Bean>
-
