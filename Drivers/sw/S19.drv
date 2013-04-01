@@ -188,6 +188,7 @@ void %OnSRecord(byte *returnCode, byte type, dword addr, byte *dataBuf, byte dat
 %-     static int counter1;
 %-     int %'ModuleName'%.counter2;
 static dword S19_currAddress; /* current or last address read from the file */
+#define S19_BUF_NOF_BYTES  %S19BufNofBytes /* size in code bytes for the longest S19 line we expect */
 %-
 %-BW_CUSTOM_VARIABLE_END
 %-BW_INTERN_METHOD_DECL_START
@@ -322,7 +323,7 @@ static byte Get_S_Pair(%'ModuleName'_GetCharIterator getChar, void *data, byte *
 %include Common\S19Parse.Inc
 byte %'ModuleName'%.%Parse(%'ModuleName'_GetCharIterator getChar, void *data)
 {
-  static unsigned char srec_buffer[252]; /* here we store the data which will be flashed */
+  static unsigned char srec_buffer[S19_BUF_NOF_BYTES]; /* here we store the data which will be flashed */
   unsigned char length, checksum, val, i, offset, type;
 %if defined(OnSRecord)
   byte res;
