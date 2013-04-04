@@ -112,10 +112,8 @@
   %endif
 %endif
 %ifndef Shell
-%warning no
   %set ParseCommand Selection never
 %else
-%warning yes
   %set ParseCommand Selection always
 %endif
 
