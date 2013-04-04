@@ -789,6 +789,7 @@ void %@TickTimerLDD@OnCounterRestart(LDD_TUserData *UserDataPtr);
 %ifdef RuntimeCntrLDD
 %ifdef @RuntimeCntrLDD@OnCounterRestart
 extern dword %'ModuleName'%.RunTimeCounter; /* runtime counter, used for configGENERATE_RUNTIME_STATS */
+extern LDD_TDeviceData *%'ModuleName'%.RunTimeCounterHandle; /* runtime counter handle, used for configGENERATE_RUNTIME_STATS */
 void %@RuntimeCntrLDD@OnCounterRestart(LDD_TUserData *UserDataPtr);
 
 %endif %- @RuntimeCntrLDD@OnCounterRestart
@@ -952,6 +953,7 @@ void %vApplicationMallocFailedHook(void);
 dword %'ModuleName'%.RunTimeCounter; /* runtime counter, used for configGENERATE_RUNTIME_STATS */
 %elif defined(RuntimeCntrLDD) & defined(@RuntimeCntrLDD@OnCounterRestart)
 dword %'ModuleName'%.RunTimeCounter; /* runtime counter, used for configGENERATE_RUNTIME_STATS */
+LDD_TDeviceData *%'ModuleName'%.RunTimeCounterHandle; /* runtime counter handle, used for configGENERATE_RUNTIME_STATS */
 %endif
 
 %if defined(Shell)
@@ -1009,6 +1011,8 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
 #if FRTOS_MEMORY_SCHEME!=1 /* this scheme does not allow deallocation of memory */
     %'ModuleName'%.vPortFree(taskListBufferP);
 #endif
+  } else {
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n*** out of heap! ***\r\n", io->stdErr);
   }
 #endif
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"RTOS ticks", (const unsigned char*)"", io->stdOut);

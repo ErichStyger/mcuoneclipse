@@ -87,7 +87,7 @@
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()                 %>40 {%'ModuleName'%.RunTimeCounter = 0; (void)%@RuntimeCntr@'ModuleName'%.Enable();}
 #define portGET_RUN_TIME_COUNTER_VALUE()                         %>40 %'ModuleName'%.RunTimeCounter
 %elif defined(RuntimeCntrLDD)
-#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()                 %>40 {%'ModuleName'%.RunTimeCounter = 0; (void)%@RuntimeCntrLDD@'ModuleName'%.Init(NULL); (void)%@RuntimeCntrLDD@'ModuleName'%.Enable(NULL);}
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()                 %>40 {%'ModuleName'%.RunTimeCounter = 0; %'ModuleName'%.RunTimeCounterHandle = %@RuntimeCntrLDD@'ModuleName'%.Init(NULL); (void)%@RuntimeCntrLDD@'ModuleName'%.Enable(%'ModuleName'%.RunTimeCounterHandle);}
 #define portGET_RUN_TIME_COUNTER_VALUE()                         %>40 %'ModuleName'%.RunTimeCounter
 %endif
 %else
