@@ -195,8 +195,8 @@ extern void vPortClearInterruptMaskFromISR(unsigned portBASE_TYPE);
 %if (CPUfamily = "ColdFireV1") | (CPUfamily = "MCF")
 extern void vPortEnterCritical(void);
 extern void vPortExitCritical(void);
-#define portDISABLE_INTERRUPTS()             ulPortSetIPL(configMAX_SYSCALL_INTERRUPT_PRIORITY)
-#define portENABLE_INTERRUPTS()              ulPortSetIPL(0)
+#define portDISABLE_INTERRUPTS()             (void)ulPortSetIPL(configMAX_SYSCALL_INTERRUPT_PRIORITY)
+#define portENABLE_INTERRUPTS()              (void)ulPortSetIPL(0)
 #define portENTER_CRITICAL()                 vPortEnterCritical()
 #define portEXIT_CRITICAL()                  vPortExitCritical()
 %elif (CPUfamily = "HCS08") | (CPUfamily = "HC08") | (CPUfamily = "HCS12") | (CPUfamily = "HCS12X")

@@ -1834,7 +1834,7 @@ void %@TickCntr@OnInterrupt(void)
   asm {
     MOVE.L D0, D7 ; /* save ulSavedInterruptMask for later */
   }
-  %@TickCntr@'ModuleName'%.Reset(); /* reset tick counter: need this for trace */
+  (void)%@TickCntr@'ModuleName'%.Reset(); /* reset tick counter: need this for trace */
   vTaskIncrementTick();
   asm {
     MOVE.L D7,D0
