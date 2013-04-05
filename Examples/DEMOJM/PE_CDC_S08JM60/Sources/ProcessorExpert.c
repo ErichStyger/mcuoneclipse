@@ -53,7 +53,7 @@ void CDC_Run(void) {
       LED1_Neg(); LED2_Off();
       WAIT1_Waitms(1); /* just give back some CPU time. S08JM60 does not allow much spare time here! */
     }
-    LED1_Off(); LED2_Neg();
+    LED1_Off(); LED2_On();
     if (CDC1_GetCharsInRxBuf()!=0) {
       i = 0;
       while(i<sizeof(in_buffer)-1 && CDC1_GetChar(&in_buffer[i])==ERR_OK){

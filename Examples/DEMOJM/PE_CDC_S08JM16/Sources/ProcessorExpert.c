@@ -25,6 +25,7 @@
 #include "LEDpin2.h"
 #include "USB1.h"
 #include "USBInit1.h"
+#include "CDC1.h"
 #include "Tx1.h"
 #include "Rx1.h"
 #include "WAIT1.h"
@@ -50,7 +51,6 @@ void CDC_Run(void) {
     while(CDC1_App_Task(cdc_buffer, sizeof(cdc_buffer))==ERR_BUSOFF) {
       /* device not enumerated */
       LED1_Neg(); LED2_Off();
-     // WAIT1_Waitms(1);
     }
     LED1_Off(); LED2_Neg();
     if (CDC1_GetCharsInRxBuf()!=0) {
@@ -65,8 +65,6 @@ void CDC_Run(void) {
       (void)CDC1_SendString((unsigned char*)"echo: ");
       (void)CDC1_SendString(in_buffer);
       (void)CDC1_SendString((unsigned char*)"\r\n");
-    } else {
-      //WAIT1_Waitms(5);
     }
   }
 }
