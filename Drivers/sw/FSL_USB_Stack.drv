@@ -260,9 +260,11 @@ volatile uint8_t %'ModuleName'%.usb_int_en_copy = 0;
 %include Common\GeneralInternal.inc (usb_int_dis)
 void %'ModuleName'%.usb_int_dis(void)
 {
-%-
+  /* %CPUDevice */
 %if (CPUDevice="MCF51MM256") | (CPUDevice="MCF51JE256")
   %'ModuleName'%.usb_int_disable++;
+%elif (CPUDevice="MC9S08JM16") | (CPUDevice="MC9S08JM60")
+  CTL_USBEN = 0; /* disable USB module */
 %else
   /* functionality not needed for %CPUDevice */
 %endif
@@ -274,8 +276,8 @@ void %'ModuleName'%.usb_int_dis(void)
 %include Common\GeneralInternal.inc (usb_int_en)
 void %'ModuleName'%.usb_int_en(void)
 {
-%if (CPUDevice="MCF51MM256") | (CPUDevice="MCF51JE256")
   /* %CPUDevice */
+%if (CPUDevice="MCF51MM256") | (CPUDevice="MCF51JE256")
   volatile uint_8 dummy;
 
   if (%'ModuleName'%.usb_int_disable) {
@@ -289,7 +291,6 @@ void %'ModuleName'%.usb_int_en(void)
     }
   }
 %elif (CPUDevice="Kinetis K40") | (CPUDevice="Kinetis K53") | (CPUDevice="Kinetis K60")
-  /* %CPUDevice */
   /* see https://community.freescale.com/message/313567#313567 */
 #if !HIGH_SPEED_DEVICE
   NVICICER2 = (1<<9);   /* Clear any pending interrupts on USB */
@@ -299,10 +300,11 @@ void %'ModuleName'%.usb_int_en(void)
   NVICISER3 = 1;        /* Enable interrupts on USBHS */
 #endif
 %elif (CPUDevice="Kinetis L2K")
-  /* %CPUDevice */
   /* see https://community.freescale.com/message/313567#313567 */
   NVIC_ICER = (1<<24);    /* Clear any pending interrupts on USB */
   NVIC_ISER = (1<<24);    /* Enable interrupts from USB module */
+%elif (CPUDevice="MC9S08JM16") | (CPUDevice="MC9S08JM60")
+  CTL_USBEN = 1; /* enable USB module */
 %else
   /* functionality not needed for %CPUDevice */
 %endif
@@ -341,19 +343,7 @@ byte %'ModuleName'%.%Init(void)
 %endif
     return ERR_FAILED;
   }
-%if (CPUDevice="Kinetis K40") | (CPUDevice="Kinetis K53") | (CPUDevice="Kinetis K60")
-  /* for Kinetis only */
-  #if !HIGH_SPEED_DEVICE
-    NVICICER2 |= (1<<9);        /* Clear any pending interrupts on USB */
-    NVICISER2 |= (1<<9);        /* Enable interrupts from USB module */
-  #else // HIGH_SPEED_DEVICE
-    NVICICER3 |= 1;        /* Clear any pending interrupts on USBHS */
-    NVICISER3 |= 1;        /* Enable interrupts on USBHS */
-  #endif
-%endif
-%if (CPUDevice="MCF51MM256") | (CPUDevice="Kinetis K40") | (CPUDevice="Kinetis K53") | (CPUDevice="Kinetis K60") | (CPUDevice="MCF51JE256") | (CPUDevice="Kinetis L2K")
   %'ModuleName'%.usb_int_en();
-%endif
   return ERR_OK;
 }
 
