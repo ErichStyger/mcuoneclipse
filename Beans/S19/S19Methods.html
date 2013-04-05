@@ -219,6 +219,18 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="ParseLine">
+<b>ParseLine</b></a>
+ - Parses an S19 input stream line by line and calls the callbacks in order to process it.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ParseLine(<i>ComponentName_</i>ParserStruct *iteratorInfo)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>iteratorInfo: Pointer to <i>ComponentName_</i>ParserStruct</i> - Pointer to iterator information struct</li>
+<li><i>Return value:byte</i> - Error code, ERR_OK for no error
+</li>
+</ul><br />
+</li>
 <li><a name="GetCurrentAddress">
 <b>GetCurrentAddress</b></a>
  - Returns the current/last address read from the S-Record. This can be used for error reporting.

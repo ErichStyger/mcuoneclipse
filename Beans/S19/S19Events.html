@@ -226,6 +226,19 @@ LI.EXP {
 <li><i>data:byte</i> - Pointer to private data</li>
 </ul><br />
 </li>
+<li>
+<a name="OnError">
+<b>OnError</b>
+</a>
+ - Event called in case of an error
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void OnError(%'ModuleName'_ErrorCode errorCode, %'ModuleName'_ParserStruct *iteratorInfo)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>errorCode:<i>ComponentName_</i>ErrorCode</i> - no hint</li>
+<li><i>iteratorInfo:<i>ComponentName_</i>ParserStruct</i> - Pointer to parser info struct</li>
+</ul><br />
+</li>
 </ul>
 <hr />
 <font style="font: 12px Verdana, Geneva, Arial, Helvetica, sans-serif;COLOR: #005ba2;">

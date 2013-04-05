@@ -4,7 +4,7 @@
     <Name>S19</Name>
     <Description>Component to read and parse an S19 file</Description>
     <Author>Erich Styger</Author>
-    <Version>01.026</Version>
+    <Version>01.034</Version>
     <Icon>S19</Icon>
     <TypesFiles>PE,S19\S19</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -16,10 +16,10 @@
     <BW_AutoSaveDriver>yes</BW_AutoSaveDriver>
     <BW_DetailedHelp>yes</BW_DetailedHelp>
     <BW_NeedTps>no</BW_NeedTps>
-    <BW_NeedUst>1</BW_NeedUst>
+    <BW_NeedUst>3</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>This component is based on the Freescale Application Note AN3748.\nThe copyright notice of the original file is provided below:\n\n******************************************************************************\n*                                                  \n*  (c) copyright Freescale Semiconductor 2008\n*  ALL RIGHTS RESERVED\n*\n*  File Name: ParseS19.c\n*                                                                          \n*  Purpose: This file is for a USB Mass-Storage Device bootloader.  This file \n*           has functions to read S19 file sent over USB, and parse s-records\n*           to program to flash.\n*                                                                          \n*  Assembler:  Codewarrior for Microcontrollers V6.2\n*                                            \n*  Version:  1.0\n*                                                                          \n*                                                                          \n*  Author: Derek Snell                             \n*                                                                                       \n*  Location: Indianapolis, IN. USA                                            \n*                                                                                  \n* UPDATED HISTORY:\n*\n* REV   YYYY.MM.DD  AUTHOR        DESCRIPTION OF CHANGE\n* ---   ----------  ------        --------------------- \n* 1.0   2008.06.10  Derek Snell   Initial version\n* \n*\n******************************************************************************\n* Freescale  is  not  obligated  to  provide  any  support, upgrades or new *\n* releases  of  the Software. Freescale may make changes to the Software at *\n* any time, without any obligation to notify or provide updated versions of *\n* the  Software  to you. Freescale expressly disclaims any warranty for the *\n* Software.  The  Software is provided as is, without warranty of any kind, *\n* either  express  or  implied,  including, without limitation, the implied *\n* warranties  of  merchantability,  fitness  for  a  particular purpose, or *\n* non-infringement.  You  assume  the entire risk arising out of the use or *\n* performance of the Software, or any systems you design using the software *\n* (if  any).  Nothing  may  be construed as a warranty or representation by *\n* Freescale  that  the  Software  or  any derivative work developed with or *\n* incorporating  the  Software  will  be  free  from  infringement  of  the *\n* intellectual property rights of third parties. In no event will Freescale *\n* be  liable,  whether in contract, tort, or otherwise, for any incidental, *\n* special,  indirect, consequential or punitive damages, including, but not *\n* limited  to,  damages  for  any loss of use, loss of time, inconvenience, *\n* commercial loss, or lost profits, savings, or revenues to the full extent *\n* such  may be disclaimed by law. The Software is not fault tolerant and is *\n* not  designed,  manufactured  or  intended by Freescale for incorporation *\n* into  products intended for use or resale in on-line control equipment in *\n* hazardous, dangerous to life or potentially life-threatening environments *\n* requiring  fail-safe  performance,  such  as  in the operation of nuclear *\n* facilities,  aircraft  navigation  or  communication systems, air traffic *\n* control,  direct  life  support machines or weapons systems, in which the *\n* failure  of  products  could  lead  directly to death, personal injury or *\n* severe  physical  or  environmental  damage  (High  Risk Activities). You *\n* specifically  represent and warrant that you will not use the Software or *\n* any  derivative  work of the Software for High Risk Activities.           *\n* Freescale  and the Freescale logos are registered trademarks of Freescale *\n* Semiconductor Inc.                                                        *\n*****************************************************************************</Copyright>
+    <Copyright>Note: This component is based on the Freescale Application Note AN3748 created by Derek Snell.\nCopyright : (c) Copyright Freescale, adopted by Erich Styger, 2013, all rights reserved.\nhttp://www.mcuoneclipse.com\n\nThis an open source software in the form of a Processor Expert Embedded Component.\nThis is a free software and is opened for education, research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
     <Category>SW-Memory Manager</Category>
     <DemoDriver>no</DemoDriver>
     <Shortcut>S19</Shortcut>
@@ -244,6 +244,40 @@
     </Method>
     <Method>
       <TMthdItem>
+        <Name>ParseLine</Name>
+        <Symbol>ParseLine</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Parses an S19 input stream line by line and calls the callbacks in order to process it.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code, ERR_OK for no error</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>iteratorInfo</ParName>
+          <ParType>ParserStruct</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to iterator information struct</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(%'ModuleName'_ParserStruct *iteratorInfo)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
         <Name>GetCurrentAddress</Name>
         <Symbol>GetCurrentAddress</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
@@ -348,6 +382,57 @@
               <Name>Event procedure name</Name>
               <Symbol>Name</Symbol>
               <Hint>OnSRecord procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OnError</Name>
+        <Symbol>OnError</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Event called in case of an error</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>generate code</Description>
+        <Expanded>Yes</Expanded>
+        <DefaultValue>true</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>errorCode</ParName>
+          <ParType>ErrorCode</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint/>
+        </Parameter>
+        <Parameter>
+          <ParName>iteratorInfo</ParName>
+          <ParType>ParserStruct</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to parser info struct</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(%'ModuleName'_ErrorCode errorCode, %'ModuleName'_ParserStruct *iteratorInfo)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OnError procedure name</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
               <DefaultValue/>

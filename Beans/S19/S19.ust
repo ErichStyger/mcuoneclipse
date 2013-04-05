@@ -13,4 +13,26 @@
     <Type>typedef uint8_t (*%'ModuleName'%.GetCharIterator)(uint8_t*, void*);</Type>
     <HWTestType/>
   </Type>
+  <Type>
+    <UsrType>TRetypeType</UsrType>
+    <Name>ParserStruct</Name>
+    <Hint/>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>  typedef int16_t %'ModuleName'_ParserStruct ;\n
+</PreparedHint>
+    <Type>16bit signed</Type>
+  </Type>
+  <Type>
+    <UsrType>TRetypeType</UsrType>
+    <Name>ErrorCode</Name>
+    <Hint/>
+    <Generate>no</Generate>
+    <Unique>yes</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>  typedef int16_t %'ModuleName'_ErrorCode ;\n
+</PreparedHint>
+    <Type>16bit signed</Type>
+  </Type>
 </UserTypes>

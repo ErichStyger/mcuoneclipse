@@ -93,6 +93,26 @@ typedef enum {
   %'ModuleName'_FILE_FLASH_FAILED,       /* failed to program flash memory */
   %'ModuleName'_FILE_STATUS_FINISHED     /* finished reading file and everything ok */
 } %'ModuleName'_FileStatus;
+
+typedef enum {
+  %'ModuleName'_INVALID_FILE, /* invalid S19 file */
+  %'ModuleName'_CHECKSUM_ERROR, /* error in checksum */
+  %'ModuleName'_BUF_TOO_SMALL, /* code buffer is too small */
+  %'ModuleName'_FLASHING_FAILED /* Flashing failed */
+} %'ModuleName'_ErrorCode;
+
+typedef struct %'ModuleName'_ParserStruct {
+  uint8_t (*GetCharIterator)(uint8_t*, void*); /* character stream iterator */
+  void *voidP; /* void pointer passed to iterator function */
+  uint8_t (*S19Flash)(struct %'ModuleName'_ParserStruct*); /* called for each S19 line to be flashed */
+  /* the following fields will be used by the iterator */
+  %'ModuleName'_FileStatus status; /* current status of the parser */
+  uint8_t currType; /* current S19 record, e.g. 1 for S1 */
+  uint32_t currAddress; /* current code address of S19 record */
+  uint16_t codeSize; /* size of code in bytes in code buffer */
+  uint8_t *codeBuf; /* code bufffer */
+  uint16_t codeBufSize; /* total size of code buffer, in bytes */
+} %'ModuleName'_ParserStruct;
 %-
 %-BW_CUSTOM_INCLUDE_END_H
 %-
@@ -141,6 +161,16 @@ dword %'ModuleName'%.%GetCurrentAddress(void);
 
 %endif %- GetCurrentAddress
 %-BW_METHOD_END GetCurrentAddress
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ParseLine
+%ifdef ParseLine
+byte %'ModuleName'%.%ParseLine(%'ModuleName'_ParserStruct *iteratorInfo);
+%define! PariteratorInfo
+%define! RetVal
+%include Common\S19ParseLine.Inc
+
+%endif %- ParseLine
+%-BW_METHOD_END ParseLine
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -163,6 +193,16 @@ void %OnSRecord(byte *returnCode, byte type, dword addr, byte *dataBuf, byte dat
 
 %endif %- OnSRecord
 %-BW_METHOD_END OnSRecord
+%-BW_METHOD_BEGIN OnError
+%ifdef OnError
+%INTERFACE OnError
+void %OnError(%'ModuleName'_ErrorCode errorCode, %'ModuleName'_ParserStruct *iteratorInfo);
+%define! ParerrorCode
+%define! PariteratorInfo
+%include Common\S19OnError.Inc
+
+%endif %- OnError
+%-BW_METHOD_END OnError
 %-BW_EVENT_DEFINITION_END
 %IMPLEMENTATION
 %define! Settings Common\S19Settings.Inc
@@ -465,6 +505,173 @@ dword %'ModuleName'%.%GetCurrentAddress(void)
 
 %endif %- GetCurrentAddress
 %-BW_METHOD_END GetCurrentAddress
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ParseLine
+%ifdef ParseLine
+%define! PariteratorInfo
+%define! RetVal
+%include Common\S19ParseLine.Inc
+byte %'ModuleName'%.%ParseLine(%'ModuleName'_ParserStruct *iteratorInfo)
+{
+  unsigned char length, checksum, val, i, offset, type;
+
+  iteratorInfo->currAddress = 0;
+  /* Get start of S-record */
+  if (Get_S(iteratorInfo->GetCharIterator, iteratorInfo->voidP, &type)!=ERR_OK) { /* not a valid S19 file */
+  %if defined(OnError)
+    %OnError(%'ModuleName'_INVALID_FILE, iteratorInfo);
+  %endif
+    return ERR_FAILED;
+  }
+  iteratorInfo->currType = type;
+  /* Get record length */
+  if (Get_S_Pair(iteratorInfo->GetCharIterator, iteratorInfo->voidP, &length)!=ERR_OK) { /* not a valid S19 file */
+  %if defined(OnError)
+    %OnError(%'ModuleName'_INVALID_FILE, iteratorInfo);
+  %endif
+    return ERR_FAILED;
+  }
+  checksum = length;
+  /* Take appropriate action  */
+  switch (type) {
+    case '1':
+    case '2':
+    case '3':
+      type -= '0';
+      for (i = 0; i <= type ; i++) {
+        /* Formulate address */
+        /* Address needs to be word aligned for successful flash program  */
+        if (Get_S_Pair(iteratorInfo->GetCharIterator, iteratorInfo->voidP, &val)!=ERR_OK) { /* not a valid S19 file */
+          %if defined(OnError)
+          %OnError(%'ModuleName'_INVALID_FILE, iteratorInfo);
+          %endif
+          return ERR_FAILED;
+        }
+        iteratorInfo->currAddress = (iteratorInfo->currAddress<<8)|val;
+        /* Maintain 8-bit checksum  */
+        checksum = (unsigned char)((val+checksum)&0x00FF);
+        length--;
+      }
+    %if %AlignTo32Bit='yes'
+      /* 32-bit cores program flash in 32-bit words */
+      /* Therefore S19 address needs to be adjusted to be word aligned */
+      /* Pad beginning of buffer if address not word aligned */
+      offset = (byte) (iteratorInfo->currAddress & 0x0003);
+      iteratorInfo->currAddress = (dword)(iteratorInfo->currAddress&0xFFFFFFFC);
+      length += offset;
+      for (i=0; i<offset && i<iteratorInfo->codeBufSize; i++) {
+        iteratorInfo->codeBuf[i] = 0xFF;
+      }
+    %else
+      /* 8-bit cores program flash in 8-bit bytes */
+      /* S19 address does not need to be adjusted */
+      offset = 0;
+    %endif
+      /* Get data and put into buffer */
+      for (i=offset; i<(length-1) && i<iteratorInfo->codeBufSize; i++) {
+        if (Get_S_Pair(iteratorInfo->GetCharIterator, iteratorInfo->voidP, &iteratorInfo->codeBuf[i])!=ERR_OK) { /* not a valid S19 file */
+          %if defined(OnError)
+          %OnError(%'ModuleName'_INVALID_FILE, iteratorInfo);
+          %endif
+          return ERR_FAILED;
+        }
+      }
+      /* Calculate checksum  */
+      for (i=offset; i<(length-1) && i<iteratorInfo->codeBufSize; i++) {
+        checksum = (unsigned char)((iteratorInfo->codeBuf[i] + checksum) & 0x00FF);
+      }
+      /* Get checksum byte */
+      if (Get_S_Pair(iteratorInfo->GetCharIterator, iteratorInfo->voidP, &val)!=ERR_OK) { /* not a valid S19 file */
+        %if defined(OnError)
+        %OnError(%'ModuleName'_INVALID_FILE, iteratorInfo);
+        %endif
+        return ERR_FAILED;
+      }
+      if (((val - ~checksum)&0x00FF) != 0) {
+        %if defined(OnError)
+        %OnError(%'ModuleName'_CHECKSUM_ERROR, iteratorInfo);
+        %endif
+        return ERR_FAILED;
+      }
+    %if %AlignTo32Bit='yes'
+      /* For 32-bit cores we write 32-bit words, not bytes. */
+      /* if last 32-bit word in s-record is not complete, finish word */
+      if ((i&0x0003)!=0x0000 && i<iteratorInfo->codeBufSize-3) {  /* 32-bit word not complete */
+        iteratorInfo->codeBuf[i++] = 0xFF;    /* pad end of word  */
+        iteratorInfo->codeBuf[i++] = 0xFF;    /* pad end of word  */
+        iteratorInfo->codeBuf[i++] = 0xFF;    /* pad end of word  */
+      }
+    %endif
+      if (i>=iteratorInfo->codeBufSize) { /* code buffer overflow */
+       %if defined(OnError)
+       %OnError(%'ModuleName'_BUF_TOO_SMALL, iteratorInfo);
+       %endif
+       return ERR_FAILED;
+      }
+      /* NOTE: 8-bit core does not need to pad the end */
+      iteratorInfo->codeSize = i; /* number of code bytes in code buffer */
+      if (iteratorInfo->S19Flash(iteratorInfo)!=ERR_OK) {
+        %if defined(OnError)
+        %OnError(%'ModuleName'_FLASHING_FAILED, iteratorInfo);
+        %endif
+        return ERR_FAILED;
+      }
+      break;
+    case '7':
+    case '8':
+    case '9': /* S7, S8 or S9 mark the end of the block/s-record file */
+      type = (unsigned char)(type - '0');
+      type = (unsigned char)(10 - type);
+      /* Get Address */
+      for (i = 0; i <= type ; i++) {
+        if (Get_S_Pair(iteratorInfo->GetCharIterator, iteratorInfo->voidP, &val)!=ERR_OK) { /* not a valid S19 file */
+          %if defined(OnError)
+          %OnError(%'ModuleName'_INVALID_FILE, iteratorInfo);
+          %endif
+          return ERR_FAILED;
+        }
+        checksum = (unsigned char)((val + checksum) & 0x00FF);
+        iteratorInfo->currAddress = (iteratorInfo->currAddress << 8) | val;
+        length--;
+      }
+      /* Get Data */
+      while (length-- > 1) {
+        if (Get_S_Pair(iteratorInfo->GetCharIterator, iteratorInfo->voidP, &val)!=ERR_OK) { /* not a valid S19 file */
+          %if defined(OnError)
+          %OnError(%'ModuleName'_INVALID_FILE, iteratorInfo);
+          %endif
+          return ERR_FAILED;
+        }
+        checksum = (unsigned char)((val + checksum) & 0x00FF);
+      }
+      /* Read checksum value */
+      if (Get_S_Pair(iteratorInfo->GetCharIterator, iteratorInfo->voidP, &val)!=ERR_OK) { /* not a valid S19 file */
+        %if defined(OnError)
+        %OnError(%'ModuleName'_INVALID_FILE, iteratorInfo);
+        %endif
+        return ERR_FAILED;
+      }
+      if (((val - ~checksum)&0x00FF)!=0) {
+        %if defined(OnError)
+        %OnError(%'ModuleName'_CHECKSUM_ERROR, iteratorInfo);
+        %endif
+        return ERR_FAILED;
+      } else { /* File completely read successfully */
+        return ERR_OK;
+      }
+      break;
+    case '0':
+    case '4':
+    case '5':
+    case '6':
+    default:
+      break;
+  } /* switch */
+  return ERR_OK; /* we should exit this method through an S7, S8 or S9 record. */
+}
+
+%endif %- ParseLine
+%-BW_METHOD_END ParseLine
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
@@ -489,6 +696,19 @@ void %OnSRecord(byte *returnCode, byte type, dword addr, byte *dataBuf, byte dat
 
 %endif %- OnSRecord
 %-BW_METHOD_END OnSRecord
+%-BW_METHOD_BEGIN OnError
+%ifdef OnError
+%IMPLEMENTATION OnError
+%define! ParerrorCode
+%define! PariteratorInfo
+%include Common\S19OnError.Inc
+void %OnError(%'ModuleName'_ErrorCode errorCode, %'ModuleName'_ParserStruct *iteratorInfo)
+{
+  /* Write your code here ... */
+}
+
+%endif %- OnError
+%-BW_METHOD_END OnError
 %-BW_EVENT_IMPLEMENT_END
 %INITIALIZATION
   /* ### %DeviceType "%DeviceName" init code ... */
