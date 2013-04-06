@@ -1,5 +1,5 @@
-#ifndef __usbprv_host_h__
-#define __usbprv_host_h__ 1
+#ifndef __ehci_usbprv_host_h__
+#define __ehci_usbprv_host_h__ 1
 /**HEADER********************************************************************
 * 
 * Copyright (c) 2008 Freescale Semiconductor;
@@ -331,5 +331,5 @@ extern pointer _bsp_get_usb_capability_register_base(uint_8);
 }
 #endif
 
-#endif
+#endif /* __ehci_usbprv_host_h__ */
 /* EOF */

@@ -35,7 +35,9 @@
 *END************************************************************************/
 #include "types.h"
 #include "host_common.h"
+#if HIGH_SPEED_DEVICE
 #include "ehci_usbprv_host.h"
+#endif
 #include "ehci.h"
 
 #ifdef __cplusplus

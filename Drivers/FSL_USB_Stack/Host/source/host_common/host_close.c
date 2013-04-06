@@ -60,6 +60,7 @@ USB_STATUS _usb_host_close_pipe
    PIPE_DESCRIPTOR_STRUCT_PTR pipe_descr_ptr;
 
    usb_host_ptr = (USB_HOST_STATE_STRUCT_PTR)hci_handle;
+   UNUSED(usb_host_ptr);
    pipe_descr_ptr = (PIPE_DESCRIPTOR_STRUCT_PTR)pipe_handle;
 
    if (pipe_descr_ptr->PIPE_ID > USBCFG_MAX_PIPES) {
@@ -76,6 +77,20 @@ USB_STATUS _usb_host_close_pipe
       USB_unlock();
 
       return error;
+   }
+   
+   /* before cleaning pipe_ptr struct we need to deallocate structures */
+   if(pipe_descr_ptr->tr_list_ptr != NULL)
+   {
+      PIPE_TR_STRUCT_PTR tr_ptr, tr_ptr_next;
+      tr_ptr = pipe_descr_ptr->tr_list_ptr;
+      do
+      {
+         tr_ptr_next = tr_ptr->next;      
+         USB_mem_free(tr_ptr);
+         tr_ptr = tr_ptr_next;         
+       }
+      while(tr_ptr != pipe_descr_ptr->tr_list_ptr);         
    }
 
    /* de-initialise the pipe descriptor */

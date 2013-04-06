@@ -604,6 +604,14 @@ USB_STATUS _usb_host_init
    USB_HOST_CALLBACK_FUNCTIONS_STRUCT_PTR call_back_table_ptr;
    int_32 mqx_status;
 
+#ifdef MCU_MKL25Z4
+   /* Trigger Enable pin for MIC2026 switch  */
+   SIM_SCGC5 |= SIM_SCGC5_PORTB_MASK;   /* enable clock gating */
+   PORTB_PCR11 = PORT_PCR_MUX(1);       /* GPIO mux */
+   GPIOB_PDDR |= 1<<11;                 /* output pin */
+   GPIOB_PSOR |= 1<<11;                 /* set pin value to 1 */
+#endif /* MCU_MKL25Z4 */
+   
    /* Initialize the USB interface. */   
    usb_host_state_struct_ptr = (USB_HOST_STATE_STRUCT_PTR)USB_mem_alloc_word_aligned(sizeof(USB_HOST_STATE_STRUCT));
    
@@ -625,7 +633,6 @@ USB_STATUS _usb_host_init
    /* Allocate the USB Host Pipe Descriptors */   
    usb_host_state_struct_ptr->PIPE_DESCRIPTOR_BASE_PTR = 
       (PIPE_DESCRIPTOR_STRUCT_PTR)USB_mem_alloc_word_aligned(((sizeof(PIPE_DESCRIPTOR_STRUCT)) *  USBCFG_MAX_PIPES));
-   memset(usb_host_state_struct_ptr->PIPE_DESCRIPTOR_BASE_PTR, 0, ((sizeof(PIPE_DESCRIPTOR_STRUCT)) *  USBCFG_MAX_PIPES));
    
    if (usb_host_state_struct_ptr->PIPE_DESCRIPTOR_BASE_PTR == NULL) {
      USB_mem_free(usb_host_state_struct_ptr);

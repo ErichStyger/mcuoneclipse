@@ -223,6 +223,7 @@ uint_8 USB_Class_CDC_PSTN_Set_Ctrl_Line_State (
     /* Indicates to DCE if DTE is present or not */
     g_dte_present = (boolean)((g_dte_status & DTE_PRESENCE_CHECK) ?
         TRUE : FALSE);
+    UNUSED(g_dte_present);
 #if CIC_NOTIF_ELEM_SUPPORT
     /* Send Notification to Host - Parameter on Device side has changed */
     USB_Class_CDC_PSTN_Send_Serial_State(controller_ID);
@@ -271,6 +272,7 @@ uint_8 USB_Class_CDC_PSTN_Send_Break (
     *size = 0;
 
     g_break_duration = setup_packet->value;
+    UNUSED(g_break_duration);
 
     return USB_OK;
 }

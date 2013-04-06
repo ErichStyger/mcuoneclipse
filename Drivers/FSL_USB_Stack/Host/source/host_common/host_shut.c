@@ -57,7 +57,7 @@ void _usb_host_shutdown
    usb_host_ptr = (USB_HOST_STATE_STRUCT_PTR)hci_handle;
    /* De-initialize and disconnect the host hardware from the bus */
    status = _usb_host_shutdown_call_interface (hci_handle);
-   
+   UNUSED(status);
    /* Free all Pipe Descriptors */
    USB_mem_free((pointer)usb_host_ptr->PIPE_DESCRIPTOR_BASE_PTR);
 
@@ -90,9 +90,9 @@ void _usb_host_bus_control
    USB_HOST_STATE_STRUCT_PTR         usb_host_ptr;
    
    usb_host_ptr = (USB_HOST_STATE_STRUCT_PTR)hci_handle;
-
+    UNUSED(usb_host_ptr);
    status = _usb_host_bus_control_data_call_interface (hci_handle, bus_control);
-    
+    UNUSED(status);
 } /* Endbody */
 
 /* EOF */

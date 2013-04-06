@@ -115,6 +115,12 @@ extern uint_8 USB_DCI_Get_Transfer_Status(
     uint_8    direction      
 );
 
+extern void USB_DCI_Clear_DATA0_Endpoint(
+	uint_8		controller_ID,
+	uint_8		ep_num,
+	uint_8		direction
+);
+
 extern uint_8 USB_DCI_Recv_Data(
     uint_8           controller_ID, 
     uint_8           ep_num,        
@@ -157,6 +163,8 @@ extern void Clear_Mem(uint_8* start_addr,uint_32 count, uint_8 val);
 #define USB_DCI_Unstall_EndPoint _usb_device_unstall_endpoint  
 
 #define USB_DCI_Get_Transfer_Status _usb_device_get_transfer_status
+
+#define USB_DCI_Clear_DATA0_Endpoint _usb_device_clear_data0_endpoint
 
 #define USB_DCI_Get_Setup_Data _usb_device_read_setup_data 
 

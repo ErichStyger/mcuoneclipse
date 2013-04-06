@@ -120,6 +120,9 @@ void USB_Suspend_Service (
     (void)_usb_device_set_status(&(event->controller_ID), USB_STATUS_DEVICE_STATE,
         USB_STATE_SUSPEND);
 
+    /* let the application know that bus suspend has taken place */
+    g_class_callback(event->controller_ID, USB_APP_BUS_SUSPEND, NULL);
+    
     return;
 }
 
@@ -151,6 +154,10 @@ void USB_Resume_Service (
         (void)_usb_device_set_status(&(event->controller_ID),
             USB_STATUS_DEVICE_STATE, g_device_state_before_suspend);
     }
+    
+    /* let the application know that bus resume has taken place */
+    g_class_callback(event->controller_ID, USB_APP_BUS_RESUME, NULL);
+    
     return;
 }
 

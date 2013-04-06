@@ -30,7 +30,6 @@
 *END************************************************************************/
 #include "types.h"
 #include "host_common.h"
-
 #include "usb_host_msd_bo.h"
 
 /* Linked list of instances of mass storage interfaces */
@@ -156,7 +155,6 @@ USB_STATUS usb_class_mass_storage_device_command
          
          /* The tag for the command packet is its queue number. */
          htou32(pCbw->DCBWTAG, temp);
-
          /*
          ** If queue was empty send CBW to USB immediately, otherwise it will be
          ** taken from queue later by a callback function
@@ -273,6 +271,7 @@ void usb_class_mass_call_back_cbw
       } else {
          /* Everything is normal, go to next phase of pending request */
          cmd_ptr->STATUS = STATUS_FINISHED_CBW_ON_USB;
+         cmd_ptr->RETRY_COUNT = 0;
          status = usb_class_mass_pass_on_usb(plocal_intf);
       } /* Endif */
    } /* Endif */
@@ -289,8 +288,6 @@ void usb_class_mass_call_back_cbw
       usb_class_mass_deleteq(plocal_intf);
       status = usb_class_mass_pass_on_usb(plocal_intf);
    } /* Endif */
-
-   
 } /* Endbody */
 
 
@@ -326,10 +323,10 @@ void usb_class_mass_call_back_dphase
    )
 { /* Body */
    USB_MASS_CLASS_INTF_STRUCT_PTR   plocal_intf;
-   COMMAND_OBJECT_PTR               cmd_ptr = NULL;
+   COMMAND_OBJECT_PTR               cmd_ptr = NULL;   
    USB_STATUS                       return_code;
-
-	UNUSED(pipe_handle)
+      
+   UNUSED(pipe_handle)         
 	
    if (user_parm) {
       /* Get the pointer to the pending request */
@@ -348,35 +345,45 @@ void usb_class_mass_call_back_dphase
    /* Test if full or partial data received */
    if (status == USB_OK || status == USB_STATUS_TRANSFER_QUEUED ||
       ((status == USBERR_TR_FAILED) && (buffer != NULL)))
-   {
-      /* Everything is OK, update status and go to next phase */
-      cmd_ptr->STATUS = STATUS_FINISHED_DPHASE_ON_USB;
-      status = usb_class_mass_pass_on_usb(plocal_intf);
-
-   } else if (status == USBERR_ENDPOINT_STALLED) {
-
-      if (cmd_ptr->RETRY_COUNT < MAX_RETRIAL_ATTEMPTS) {
-         cmd_ptr->RETRY_COUNT++;
-         cmd_ptr->STATUS = STATUS_QUEUED_IN_DRIVER;
-         cmd_ptr->PREV_STATUS =  cmd_ptr->STATUS; /* preserve the status */
-
-         return_code = usb_class_mass_clear_bulk_pipe_on_usb(plocal_intf);
-         
-         if (return_code != USB_OK && return_code != USB_STATUS_TRANSFER_QUEUED)
-         {
-            status = STATUS_CANCELLED;
-         }
-
-      } else {
+   {        
+        /* Everything is OK, update status and go to next phase */          
+        cmd_ptr->STATUS = STATUS_FINISHED_DPHASE_ON_USB;
+        cmd_ptr->RETRY_COUNT = 0;
+        status = usb_class_mass_pass_on_usb(plocal_intf);
+   } 
+   else if (status == USBERR_ENDPOINT_STALLED) 
+   {           
+      if (cmd_ptr->RETRY_COUNT < MAX_RETRIAL_ATTEMPTS) 
+      {                                  
+         /*
+         /* If endpoint stalled then set finished data phase status 
+         /* to issue a status request command 
+         */
+         cmd_ptr->RETRY_COUNT++;  
          cmd_ptr->STATUS = STATUS_FINISHED_DPHASE_ON_USB;
-         cmd_ptr->PREV_STATUS =  cmd_ptr->STATUS; /* preserve the status */
-
+         cmd_ptr->PREV_STATUS =  cmd_ptr->STATUS; /* preserve the status */         
+        
+         return_code = usb_class_mass_clear_bulk_pipe_on_usb(plocal_intf);       
+         
+         if (return_code != USB_OK && return_code != USB_STATUS_TRANSFER_QUEUED)
+         {            
+              status = STATUS_CANCELLED;
+         }
+      } 
+      else 
+      {
+         /*
+         /* If endpoint stalled then set finished data phase status 
+         /* to issue a status request command 
+         */
+         cmd_ptr->STATUS = STATUS_FINISHED_DPHASE_ON_USB;
+         cmd_ptr->PREV_STATUS =  cmd_ptr->STATUS; /* preserve the status */  
          return_code = usb_class_mass_clear_bulk_pipe_on_usb(plocal_intf);
          
          if (return_code != USB_OK && return_code != USB_STATUS_TRANSFER_QUEUED)
          {
             status = STATUS_CANCELLED;
-         }
+         }                       
       } /* Endif */
    } /* Endif */
 
@@ -384,15 +391,13 @@ void usb_class_mass_call_back_dphase
       (status != USBERR_TRANSFER_IN_PROGRESS) && (status != USB_STATUS_TRANSFER_QUEUED))
    {
       /* Command didn't succeed. Notify application and cleanup */
-      cmd_ptr->STATUS =STATUS_CANCELLED;
+      cmd_ptr->STATUS = STATUS_CANCELLED;      
       cmd_ptr->CALLBACK((USB_STATUS)USB_MASS_FAILED_IN_DATA, plocal_intf, cmd_ptr,
          cmd_ptr->TR_BUF_LEN);
       usb_class_mass_deleteq(plocal_intf);
-
       /* Go to the next command, if any */
       status = usb_class_mass_pass_on_usb(plocal_intf);
-   } /* Endif */
-   
+    } /* Endif */  
 } /* Endbody */
 
 
@@ -430,12 +435,13 @@ void usb_class_mass_call_back_csw
    CSW_STRUCT_PTR                   pCsw = NULL;
    uint_32                          tmp1, tmp2, tmp3;
    boolean                          proc_next = FALSE;
-   USB_STATUS                       return_code;
-
-    UNUSED(pipe_handle)
-    UNUSED(buffer)
+   USB_STATUS                       return_code;      
     
-   if (user_parm) {
+   UNUSED(pipe_handle)
+   UNUSED(buffer)
+    
+   if (user_parm) 
+   {
       /* Get the pointer to the pending request */
       plocal_intf =  (USB_MASS_CLASS_INTF_STRUCT_PTR) user_parm;
       usb_class_mass_get_pending_request(plocal_intf, &cmd_ptr);
@@ -447,23 +453,27 @@ void usb_class_mass_call_back_csw
    } /* Endif */
 
    /* Finish transaction and queue next command */
-   if (status == USB_OK) {
+   if (status == USB_OK)
+   {
       pCsw = (CSW_STRUCT_PTR) cmd_ptr->CSW_PTR;
       tmp1 = utoh32(pCsw->DCSWTAG);
       tmp2 = utoh32(cmd_ptr->CBW_PTR->DCBWTAG);
       tmp3 = utoh32(pCsw->DCSWSIGNATURE);
 
-      /* Size must be verified, as well as the signature and the tags */
+      /* Size must be verified, as well as the signature and the tags */            
       if ((length_data_transfered != sizeof(CSW_STRUCT)) ||
          (tmp3 != CSW_SIGNATURE) || (tmp1 != tmp2))
       {
-         if (cmd_ptr->RETRY_COUNT < MAX_RETRIAL_ATTEMPTS) {
+         if (cmd_ptr->RETRY_COUNT < MAX_RETRIAL_ATTEMPTS) 
+         {
             cmd_ptr->RETRY_COUNT++;
             cmd_ptr->STATUS = STATUS_FINISHED_DPHASE_ON_USB;
             cmd_ptr->PREV_STATUS =  cmd_ptr->STATUS; /* preserve the status */
 
             status = usb_class_mass_reset_recovery_on_usb(plocal_intf);
-         } else {
+         } 
+         else 
+         {
             status = STATUS_CANCELLED; /* cannot keep repeating */
          } /* Endif */
 
@@ -472,18 +482,23 @@ void usb_class_mass_call_back_csw
          {
             proc_next = TRUE;
          } /* Endif */
-      } else {
-         /* Check value of status field in CSW */
-         switch (pCsw->BCSWSTATUS) {
+      } 
+      else 
+      {
+         /* Check value of status field in CSW */                          
+         switch (pCsw->BCSWSTATUS) 
+         {
             case CSW_STATUS_GOOD:
                /* Command succeed. Notify application and cleanup */
-               cmd_ptr->STATUS = STATUS_COMPLETED;
+               cmd_ptr->STATUS = STATUS_COMPLETED; 
+               cmd_ptr->RETRY_COUNT = 0;              
                proc_next = TRUE;
                break;
 
             case CSW_STATUS_FAILED:
                /* Command failed. Notify application and cleanup */
                cmd_ptr->STATUS = STATUS_FAILED_IN_CSW;
+               cmd_ptr->RETRY_COUNT = 0;               
                proc_next = TRUE;
                break;
 
@@ -491,40 +506,50 @@ void usb_class_mass_call_back_csw
                break;
          } /* Endswitch */
       } /* Endif */
-   } else if (status == USBERR_ENDPOINT_STALLED) {
-      if (cmd_ptr->RETRY_COUNT < MAX_RETRIAL_ATTEMPTS) {
-         cmd_ptr->RETRY_COUNT++;
+   } 
+   else if (status == USBERR_ENDPOINT_STALLED) 
+   {       
+      if (cmd_ptr->RETRY_COUNT < MAX_RETRIAL_ATTEMPTS) 
+      {
+         cmd_ptr->RETRY_COUNT++;         
          cmd_ptr->STATUS = STATUS_FINISHED_DPHASE_ON_USB;
          cmd_ptr->PREV_STATUS =  cmd_ptr->STATUS; /* preserve the status */
 
-         return_code = usb_class_mass_clear_bulk_pipe_on_usb(plocal_intf);
-         
+         return_code = usb_class_mass_clear_bulk_pipe_on_usb(plocal_intf);          
+    
          if ((return_code != USB_OK) && (return_code != USB_STATUS_TRANSFER_QUEUED))
          {
             status = USBERR_TRANSFER_IN_PROGRESS;
-         }
-      } else {
+         }                                   
+      } 
+      else 
+      {
          status = STATUS_CANCELLED; /* cannot keep repeating */         
       } /* Endif */
 
-      if ((status != USB_OK) && (status != USBERR_TRANSFER_IN_PROGRESS)) {
+      if ((status != USB_OK) && (status != USBERR_TRANSFER_IN_PROGRESS) && (status != USBERR_ENDPOINT_STALLED)) 
+      {
          /* Command didn't succeed. Notify application and cleanup */
          cmd_ptr->STATUS = STATUS_CANCELLED;
          proc_next = TRUE;
       } /* Endbody */
-   } else {
+   } 
+   else
+   {
       /* Command didn't succeed. Notify application and cleanup */
       cmd_ptr->STATUS = STATUS_CANCELLED;
       proc_next = TRUE;
    } /* Endif */
 
    /* Should we cleanup and process the next command? */
-   if (proc_next) {
+   if (proc_next) 
+   {
       cmd_ptr->CALLBACK(status, plocal_intf, cmd_ptr, cmd_ptr->TR_BUF_LEN);
       usb_class_mass_deleteq(plocal_intf);
 
       /* Send next command, if any */
-      if (!USB_CLASS_MASS_IS_Q_EMPTY(plocal_intf)) {
+      if (!USB_CLASS_MASS_IS_Q_EMPTY(plocal_intf)) 
+      {
          status = usb_class_mass_pass_on_usb( plocal_intf);
       } /* Endbody */
    } /* Endif */
@@ -558,13 +583,15 @@ USB_STATUS usb_class_mass_pass_on_usb
    
    /* Nothing can be done if there is nothing pending */
    usb_class_mass_get_pending_request(intf_ptr, &cmd_ptr);
-   if (cmd_ptr == NULL) {
+   if (cmd_ptr == NULL) 
+   {
       USB_unlock();
       return (USB_STATUS)USB_MASS_NO_MATCHING_REQUEST;
    } /* Endif */
 
    /* Determine the appropriate action based on the phase */
-   switch (cmd_ptr->STATUS) {
+   switch (cmd_ptr->STATUS) 
+   {
       case STATUS_QUEUED_IN_DRIVER:
          /* means that CBW needs to be sent.*/
          usb_hostdev_tr_init(&tr_init, usb_class_mass_call_back_cbw,
@@ -578,14 +605,16 @@ USB_STATUS usb_class_mass_pass_on_usb
 
       case STATUS_FINISHED_CBW_ON_USB:
          /* Determine next phase (DATA or STATUS), length and direction */
-         if (utoh32(cmd_ptr->CBW_PTR->DCBWDATATRANSFERLENGTH) > 0) {
+         if (utoh32(cmd_ptr->CBW_PTR->DCBWDATATRANSFERLENGTH) > 0) 
+         {
 
             /* Commence TR setup for IN or OUT direction */
             usb_hostdev_tr_init(&tr_init,usb_class_mass_call_back_dphase,
                (pointer)intf_ptr);
 
             tmp = (uint_8)((cmd_ptr->CBW_PTR->BMCBWFLAGS) & MASK_NON_DIRECTION_BITS);
-            switch(tmp) {
+            switch(tmp) 
+            {
                case DIRECTION_OUT:
                   /* Make a TR with DATA Phase call back.*/
                   tr_init.TX_BUFFER = (uchar_ptr)cmd_ptr->DATA_BUFFER;
@@ -629,7 +658,9 @@ USB_STATUS usb_class_mass_pass_on_usb
          break;
 
       case STATUS_FINISHED_CSW_ON_USB: /* No action */
-      case STATUS_FAILED_IN_CSW:       /* Should never happen */
+      case STATUS_FAILED_IN_CSW:       
+          printf("Device not ready");
+        break;
       default:
          break;
    } /* Endswitch */
@@ -668,10 +699,10 @@ USB_STATUS usb_class_mass_clear_bulk_pipe_on_usb
    } /* Endif */
 
    /* Determine pipe (Bulk IN or Bulk OUT) to clear */
-   if ((cmd_ptr->CBW_PTR->BMCBWFLAGS & MASK_NON_DIRECTION_BITS) == DIRECTION_IN) {
+  if ((cmd_ptr->CBW_PTR->BMCBWFLAGS & MASK_NON_DIRECTION_BITS) == DIRECTION_IN) {
       pBulk_pipe = (PIPE_INIT_PARAM_STRUCT_PTR)intf_ptr->BULK_IN_PIPE;
       direction = REQ_TYPE_IN;
-   } else {
+  } else {
       pBulk_pipe = (PIPE_INIT_PARAM_STRUCT_PTR)intf_ptr->BULK_OUT_PIPE;
       direction = REQ_TYPE_OUT;
    } /* Endif */
@@ -711,10 +742,10 @@ USB_STATUS usb_class_mass_reset_recovery_on_usb
       USB_MASS_CLASS_INTF_STRUCT_PTR   intf_ptr
    )
 { /* Body */
-  //<< EST //PIPE_INIT_PARAM_STRUCT_PTR pPipe = NULL;
+   //<< EST //PIPE_INIT_PARAM_STRUCT_PTR pPipe = NULL;
    COMMAND_OBJECT_PTR         cmd_ptr = NULL;
-   //<< EST //DEV_INSTANCE_PTR           dev_ptr = (DEV_INSTANCE_PTR)intf_ptr->G.dev_handle;
-   USB_STATUS                 status = USB_OK;
+   DEV_INSTANCE_PTR           dev_ptr = (DEV_INSTANCE_PTR)intf_ptr->G.dev_handle;
+   //<< EST //USB_STATUS                 status = USB_OK;
    USB_SETUP                  request;
 
    /* Nothing can be done if there is nothing pending*/
@@ -889,4 +920,3 @@ static void usb_class_mass_reset_callback
 } /* Endbody */
 
 /* EOF */
-

@@ -675,11 +675,11 @@ static uint_8 USB_Strd_Req_Get_Status (
 		
 		 if((pu8ConfigDesc[7] & SELF_POWERED) != 0)
 		 {
-			g_std_framework_data |= 0x0100;
+			g_std_framework_data |= BYTE_SWAP16(0x0001);
 		 }
 		 else
 		 {
-			g_std_framework_data &= ~0x0100;
+			g_std_framework_data &= BYTE_SWAP16(~0x0001);
 		 }
          *size = DEVICE_STATUS_SIZE;
         }
@@ -715,11 +715,10 @@ static uint_8 USB_Strd_Req_Get_Status (
 				endpoint,
 				&device_state2);
 			g_std_framework_data = (uint_16)device_state2;
+			/* All other fields except HALT must be zero */
+			g_std_framework_data &= 0x0001;  /* LSB is for the HALT feature */
 			g_std_framework_data = BYTE_SWAP16(g_std_framework_data);
 			*size = ENDP_STATUS_SIZE;
-			
-			/* All other fields except HALT must be zero */
-			g_std_framework_data &= 0x0100;
     	}
     }
 

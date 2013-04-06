@@ -253,7 +253,7 @@ void USB_Service_Hid (
 
             /* set the EndPoint Status as Idle in the device layer */
             (void)_usb_device_set_status(&controller_ID,
-                (uint_8)(USB_STATUS_ENDPOINT | HID_ENDPOINT |
+                (uint_8)(USB_STATUS_ENDPOINT | ep_struct->ep_num |
                 (ep_struct->direction << USB_COMPONENT_DIRECTION_SHIFT)),
                 USB_STATUS_IDLE);
         }
@@ -547,12 +547,14 @@ uint_8 USB_Class_HID_Send_Data (
 )
 {
     uint_8 index;
-    volatile uint_8 producer, consumer;
+    //volatile uint_8 producer, consumer;
+    uint_8 producer, consumer;
     uint_8 status = USB_OK;
 
     USB_ENDPOINTS *ep_desc_data = (USB_ENDPOINTS *)
         USB_Desc_Get_Endpoints(controller_ID);
 
+    DisableInterrupts;
      /* map the endpoint num to the index of the endpoint structure */
     index = USB_Map_Ep_To_Struct_Index(controller_ID, ep_num);
 
@@ -588,5 +590,6 @@ uint_8 USB_Class_HID_Send_Data (
     {
         status = USBERR_DEVICE_BUSY;
     }
+    EnableInterrupts;
     return status;
 }

@@ -95,7 +95,7 @@ extern void USB_NULL_CALLBACK (PTR_USB_DEV_EVENT_STRUCT event);
 #define  USB_EP15_CALLBACK                   USB_NULL_CALLBACK
 
 #define  USB_BUS_RESET_CALLBACK              USB_Reset_Service
-#define  USB_SUSPEND_CALLBACK                USB_NULL_CALLBACK
+#define  USB_SUSPEND_CALLBACK			           USB_Suspend_Service
 #define  USB_SOF_CALLBACK                    USB_Sof_Service
 #define  USB_RESUME_CALLBACK                 USB_Resume_Service
 #define  USB_SLEEP_CALLBACK                  USB_Suspend_Service

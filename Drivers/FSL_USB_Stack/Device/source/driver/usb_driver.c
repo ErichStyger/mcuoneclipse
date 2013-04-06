@@ -485,6 +485,11 @@ uint_8 _usb_device_set_status(
                 _usb_device_unstall_endpoint(handle, ep_num, direction);
             }
         }
+        else if (setting == USB_STATUS_IDLE)	// asking for a clear endpoint without it being stalled
+        {
+        	// just reset DATA0/1 bit
+        	_usb_device_clear_data0_endpoint(handle, ep_num, direction);
+        }
         /* Set the corresponding endpoint setting */
         g_usb_ep_status[ep_num] = setting;
     }
@@ -541,7 +546,7 @@ uint_8 _usb_device_register_service(
         return USBERR_ALLOC_SERVICE;
     }
 #else
-    UNUSED (type) /* << EST */
+    UNUSED(type);
     return USB_OK;
 #endif
     

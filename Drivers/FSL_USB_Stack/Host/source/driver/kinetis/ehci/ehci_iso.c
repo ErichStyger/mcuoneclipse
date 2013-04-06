@@ -33,7 +33,11 @@
  *
  *END************************************************************************/
 #include "hostapi.h"
+#if HIGH_SPEED_DEVICE
 #include "ehci_usbprv_host.h"
+#else
+#include "usbprv_host.h"
+#endif
 #include "ehci_iso.h"
 #include "user_config.h"
 #include "ehci_host.h"

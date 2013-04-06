@@ -117,6 +117,7 @@ uint_32 _usb_host_send_data
    } /* Endif */
       
    usb_host_ptr = (USB_HOST_STATE_STRUCT_PTR)hci_handle;
+   UNUSED(usb_host_ptr);
    pipe_descr_ptr = (PIPE_DESCRIPTOR_STRUCT_PTR)pipe_handle;
 
    /*Must Flush and Invalidate the buffer before sending

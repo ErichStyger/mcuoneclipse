@@ -49,6 +49,7 @@
 %-
 %-BW_INTERN_COMMENTS_START
 %- List of descriptions of internal methods
+%define! Description_RunUsbEngine Runs the USB polling engine
 %-BW_INTERN_COMMENTS_END
 %-
 %-BW_SECTIONS_INSERT
@@ -278,6 +279,12 @@ void %'ModuleName'%.%Notify_Callback(byte controller_ID, byte event_type, void *
 
 %endif %- ClearTxBuffer
 %-BW_METHOD_END ClearTxBuffer
+%-************************************************************************************************************
+%-INTERNAL_METHOD_BEG RunUsbEngine
+void %'ModuleName'%.RunUsbEngine(void);
+%include Common\GeneralInternal.inc (RunUsbEngine)
+
+%-INTERNAL_METHOD_END RunUsbEngine
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -553,6 +560,21 @@ void %'ModuleName'%.%Notify_Callback(byte controller_ID, byte event_type, void *
 %endif %- Notify_Callback
 %-BW_METHOD_END Notify_Callback
 %-************************************************************************************************************
+%-INTERNAL_METHOD_BEG RunUsbEngine
+%include Common\GeneralInternal.inc (RunUsbEngine)
+void %'ModuleName'%.RunUsbEngine(void)
+{
+%if (CPUDevice="MC9S08JE128") | (CPUDevice="MC9S08JM16") | (CPUDevice="MC9S08JM60") | (CPUDevice="MC9S08JS16") | (CPUDevice="MC9S08MM128")
+  if(USB_PROCESS_PENDING()) { /* doing this only for MC9S08JE128, MC9S08JM16, MC9S08JM60, MC9S08JS16 and MC9S08MM128 */
+    USB_Engine();
+  }
+%else
+  /* not needed */
+%endif
+}
+
+%-INTERNAL_METHOD_END RunUsbEngine
+%-************************************************************************************************************
 %-BW_METHOD_BEGIN App_Task
 %ifdef App_Task
 %define! PartxBuf
@@ -564,11 +586,7 @@ byte %'ModuleName'%.%App_Task(byte *txBuf, size_t txBufSize)
   uint8_t i;
 
   /* device is %CPUDevice */
-%if (CPUDevice="MC9S08JE128") | (CPUDevice="MC9S08JM16") | (CPUDevice="MC9S08JM60") | (CPUDevice="MC9S08JS16") | (CPUDevice="MC9S08MM128")
-  if(USB_PROCESS_PENDING()) { /* doing this only for MC9S08JE128, MC9S08JM16, MC9S08JM60, MC9S08JS16 and MC9S08MM128 */
-    USB_Engine();
-  }
-%endif
+  %'ModuleName'%.RunUsbEngine();
   /* call the periodic task function */
   USB_Class_CDC_Periodic_Task();
   /* check whether enumeration is complete or not */
@@ -586,7 +604,9 @@ byte %'ModuleName'%.%App_Task(byte *txBuf, size_t txBufSize)
 %endif
         return ERR_FAULT;
       }
-      while(transactionOngoing){} /* wait until transaction is finished */
+      while(transactionOngoing) { /* wait until transaction is finished */
+        %'ModuleName'%.RunUsbEngine();
+      }
 #if 1 /* workaround for problem in USB stack v3.1.1: if last block is 8, 16, 32, 40, 48, ... bytes, it does not get out until the next transfer? */
       if ((i%%8)==0) {
         /* workaround: sending a dummy block of zero bytes */
@@ -598,7 +618,9 @@ byte %'ModuleName'%.%App_Task(byte *txBuf, size_t txBufSize)
 %endif
           return ERR_FAULT;
         }
-        while(transactionOngoing){} /* wait until transaction is finished */
+        while(transactionOngoing) { /* wait until transaction is finished */
+          %'ModuleName'%.RunUsbEngine();
+        }
       }
 #endif
     } /* if */
@@ -690,6 +712,7 @@ void %'ModuleName'%.%ClearTxBuffer(void)
 
 %endif %- ClearTxBuffer
 %-BW_METHOD_END ClearTxBuffer
+%-************************************************************************************************************
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

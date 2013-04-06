@@ -313,7 +313,7 @@ static void  usb_dev_list_close_pipe
    }
 
    usb_host_ptr = (USB_HOST_STATE_STRUCT_PTR)handle;
-      
+   UNUSED(usb_host_ptr);
    USB_lock();
 
    /* Cancel all active TR's in the pipe */
@@ -337,9 +337,7 @@ static void  usb_dev_list_close_pipe
    } /* Endif */
 
    /* zero the pipe descriptor, except keep TR list */
-   tr_ptr = pipe_ptr->tr_list_ptr;
    _usb_host_close_pipe(handle, (pointer)pipe_ptr);
-   pipe_ptr->tr_list_ptr = tr_ptr;   
 
    USB_unlock();
 

@@ -98,7 +98,6 @@ static void  usb_host_cntrl_transaction_done
    DEV_INSTANCE_PTR           dev_inst_ptr =
       (DEV_INSTANCE_PTR)pipe_ptr->DEV_INSTANCE;
    DESCRIPTOR_UNION           desc;
-   //<< EST pointer                    temp = NULL;
    uint_32                    config_size;
    
    usb_host_ptr = (USB_HOST_STATE_STRUCT_PTR)dev_inst_ptr->host;

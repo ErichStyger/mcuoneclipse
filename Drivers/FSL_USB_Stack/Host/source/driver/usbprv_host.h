@@ -34,7 +34,9 @@
 
 #include "host_cnfg.h"
 #include "hostapi.h"    /* needed for USB_SERVICE_STRUCT_PTR */
+#include "user_config.h"
 
+#if !HIGH_SPEED_DEVICE
 
 enum {
     TR_CTRL,
@@ -111,6 +113,8 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* HIGH_SPEED_DEVICE */
 
 #endif
 

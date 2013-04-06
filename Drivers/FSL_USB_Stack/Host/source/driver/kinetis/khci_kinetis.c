@@ -89,7 +89,7 @@
 /* FIXME: actually, only endpoint_data[0] is used in atom transaction */
 static EP_STRUCT endpoint_data[16];
 
-//<< EST //static USB_HOST_STATE_STRUCT_PTR _usb_host_ptr;
+//      static USB_HOST_STATE_STRUCT_PTR _usb_host_ptr;
 static USB_EVENT_STRUCT khci_event;
 
 /* Transaction queue */
@@ -99,13 +99,13 @@ extern USB_HOST_STATE_STRUCT_PTR usb_host_state_struct_ptr;
 
 static TR_INT_QUE_ITM_STRUCT TR_INT_QUE[USBCFG_KHCI_MAX_INT_TR];
 
-//<< EST //static uint_32 HWTICKS_CONST_FS_ADD;
-//<< EST //static uint_32 HWTICKS_CONST_FS_MUL;
-//<< EST //static uint_32 HWTICKS_CONST_LS_ADD;
-//<< EST //static uint_32 HWTICKS_CONST_LS_MUL;
+//      static uint_32 HWTICKS_CONST_FS_ADD;
+//      static uint_32 HWTICKS_CONST_FS_MUL;
+//      static uint_32 HWTICKS_CONST_LS_ADD;
+//      static uint_32 HWTICKS_CONST_LS_MUL;
 
 uint_8 endpoint_stalled = FALSE;
-
+uint_8 sense_error = FALSE;
 /* Function prototypes */
 static void   _usb_khci_process_tr_complete(_usb_host_handle handle, PIPE_DESCRIPTOR_STRUCT_PTR pipe_desc_ptr, PIPE_TR_STRUCT_PTR pipe_tr_ptr, uint_32 remain, int_32 err);
 static int_32 _usb_khci_get_hot_int_tr(TR_MSG_STRUCT *msg);
@@ -235,13 +235,29 @@ static int_32 _usb_khci_atom_tr
 	ep_ptr = &endpoint_data[0];
 
 	/* ADDR must be written before ENDPT0 (undocumented behavior) for to generate PRE packet */
-	USB0_ADDR = (uint_8)((pipe_desc_ptr->SPEED == USB_SPEED_FULL) ? MKxxx_USBOTG_ADDR_ADDR(pipe_desc_ptr->DEVICE_ADDRESS) : 0x80 | MKxxx_USBOTG_ADDR_ADDR(pipe_desc_ptr->DEVICE_ADDRESS));
+	USB0_ADDR = (uint_8)((pipe_desc_ptr->SPEED == USB_SPEED_FULL) ? MKxxx_USBOTG_ADDR_ADDR(pipe_desc_ptr->DEVICE_ADDRESS) : USB_ADDR_LSEN_MASK | MKxxx_USBOTG_ADDR_ADDR(pipe_desc_ptr->DEVICE_ADDRESS));
 
-	USB0_ENDPT0 =
-		(host_speed == USB_SPEED_LOW ? (USB_ENDPT_HOSTWOHUB_MASK) : 0) | (USB_ENDPT_RETRYDIS_MASK) |
+    if (pipe_desc_ptr->PIPETYPE != USB_ISOCHRONOUS_PIPE)
+    {    
+        USB0_ENDPT0 = (host_speed == USB_SPEED_LOW ? USB_ENDPT_HOSTWOHUB_MASK : 0) | USB_ENDPT_RETRYDIS_MASK |
 		USB_ENDPT_EPTXEN_MASK | USB_ENDPT_EPRXEN_MASK | USB_ENDPT_EPHSHK_MASK;
+    }
+    else
+    {
+        USB0_ENDPT0 = (host_speed == USB_SPEED_LOW ? USB_ENDPT_HOSTWOHUB_MASK : 0) | USB_ENDPT_RETRYDIS_MASK |
+                       USB_ENDPT_EPTXEN_MASK | USB_ENDPT_EPRXEN_MASK;        
+    }
 
-	retry = (pipe_desc_ptr->PIPETYPE == USB_INTERRUPT_PIPE) ? 0 : pipe_desc_ptr->NAK_COUNT; /* set retry count - do not retry interrupt transaction */
+	switch (pipe_desc_ptr->PIPETYPE)
+    {
+    case USB_INTERRUPT_PIPE:
+    case USB_ISOCHRONOUS_PIPE:
+      retry = 0;
+      break;
+    default:
+      retry = pipe_desc_ptr->NAK_COUNT;
+      break;
+    }
 
 	do {
 		res = 0;
@@ -255,8 +271,8 @@ static int_32 _usb_khci_atom_tr
 			if (USB_EVENT_SET == _usb_event_wait_ticks(&khci_event, KHCI_EVENT_MASK, FALSE, 1) == USB_OK)
 			{
 				break;
-			} else
-				if(50 == event_wait_ticks_count)
+        } 
+        else if(50 == event_wait_ticks_count)
 				{
 					res = KHCI_ATOM_TR_RESET;
 					break;
@@ -266,12 +282,18 @@ static int_32 _usb_khci_atom_tr
 		if (!res)
 		{
 			/* All is ok, do transaction */
-#ifndef USBCLASS_INC_AUDIO
+#if defined(KHCICFG_BASIC_SCHEDULING)
 			USB0_ISTAT |= USB_ISTAT_SOFTOK_MASK; /* Clear SOF */
-			while (!(USB0_ISTAT & USB_ISTAT_SOFTOK_MASK));
+        while (!(USB0_ISTAT & USB_ISTAT_SOFTOK_MASK))
+          /* wait for next SOF */
+        USB0_SOFTHLD = 0;
+#else           
+        if (pipe_desc_ptr->SPEED == USB_SPEED_FULL)
+            USB0_SOFTHLD = len * 7 / 6 + KHCICFG_THSLD_DELAY;
+        else
+            USB0_SOFTHLD = len * 12 * 7 / 6 + KHCICFG_THSLD_DELAY;        
 #endif
 
-			USB0_SOFTHLD = 0; /* this is needed as without this you can get errors */
 			USB0_ISTAT |= USB_ISTAT_SOFTOK_MASK; /* clear SOF */
 			USB0_ERRSTAT = 0xFF;	/* clear error status */
 
@@ -282,8 +304,7 @@ static int_32 _usb_khci_atom_tr
 					pipe_desc_ptr->bd_ptr = (uint_32*)BD_PTR(0, 1, ep_ptr->tx_bd);
 
 					*((uint_32*)BD_PTR(0, 1, ep_ptr->tx_bd) + 1) = ((uint_32)buf);
-					*((uint_32*)BD_PTR(0, 1, ep_ptr->tx_bd)) = (MKxxx_USBOTG_BD_BC(len) |
-							(0x80));
+          *((uint_32*)BD_PTR(0, 1, ep_ptr->tx_bd)) = (MKxxx_USBOTG_BD_BC(len) | (0x80));           
 					USB0_TOKEN = (uint_8)(MKxxx_USBOTG_TOKEN_TOKEN_ENDPT((uint_8)pipe_desc_ptr->ENDPOINT_NUMBER) | (0xD0));
 					ep_ptr->tx_bd ^= 1;
 					break;
@@ -291,21 +312,19 @@ static int_32 _usb_khci_atom_tr
 					pipe_desc_ptr->bd_ptr = (uint_32*)BD_PTR(0, 0, ep_ptr->rx_bd);
 					*((uint_32*)BD_PTR(0, 0, ep_ptr->rx_bd) + 1) =((uint_32)buf);
 
-					*((uint_32*)BD_PTR(0, 0, ep_ptr->rx_bd)) = (MKxxx_USBOTG_BD_BC (len) |
-																0x80 					 |
-																MKxxx_USBOTG_BD_DATA01(pipe_desc_ptr->NEXTDATA01));
+          *((uint_32*)BD_PTR(0, 0, ep_ptr->rx_bd)) = (MKxxx_USBOTG_BD_BC (len) | 0x80 | MKxxx_USBOTG_BD_DATA01(pipe_desc_ptr->NEXTDATA01));          
 					USB0_TOKEN = (uint_8)(MKxxx_USBOTG_TOKEN_TOKEN_ENDPT(pipe_desc_ptr->ENDPOINT_NUMBER) | (0x90));
 					ep_ptr->rx_bd ^= 1;
 					break;
 				case TR_OUT:
 					pipe_desc_ptr->bd_ptr = (uint_32*)BD_PTR(0, 1, ep_ptr->tx_bd);
 					*((uint_32*)BD_PTR(0, 1, ep_ptr->tx_bd) + 1) = ((uint_32)buf);
-					*((uint_32*)BD_PTR(0, 1, ep_ptr->tx_bd)) = ( MKxxx_USBOTG_BD_BC(len) |
-							0x80 |
-							MKxxx_USBOTG_BD_DATA01(pipe_desc_ptr->NEXTDATA01));
+          *((uint_32*)BD_PTR(0, 1, ep_ptr->tx_bd)) = ( MKxxx_USBOTG_BD_BC(len) | 0x80 | MKxxx_USBOTG_BD_DATA01(pipe_desc_ptr->NEXTDATA01));          
 					USB0_TOKEN = (uint_8)(MKxxx_USBOTG_TOKEN_TOKEN_ENDPT(pipe_desc_ptr->ENDPOINT_NUMBER) | (0x10));
 					ep_ptr->tx_bd ^= 1;
 					break;
+        default:
+          pipe_desc_ptr->bd_ptr = NULL;
 			}
 
 			event_wait_ticks_count = 0;
@@ -331,7 +350,7 @@ static int_32 _usb_khci_atom_tr
 			break;
 		}
 
-		if (khci_event.VALUE & KHCI_EVENT_TOK_DONE)
+      if (pipe_desc_ptr->bd_ptr != NULL && (khci_event.VALUE & KHCI_EVENT_TOK_DONE))
 		{
 			/* transaction finished */
 			_usb_event_clear(&khci_event,KHCI_EVENT_TOK_DONE);
@@ -345,11 +364,18 @@ static int_32 _usb_khci_atom_tr
 			if (USB0_ERRSTAT & (
 					USB_ERRSTAT_PIDERR_MASK  |
 					USB_ERRSTAT_CRC16_MASK    |
+#if defined (KHCICFG_BASIC_SCHEDULING)
+                   USB_ERRSTAT_CRC5EOF_MASK |
+#endif
 					USB_ERRSTAT_DFN8_MASK     |
 					//USB_ERRSTAT_DMAERR_MASK  |
+                 //USB_ERRSTAT_BTOERR_MASK  |    // timeout tested elsewhere
 					USB_ERRSTAT_BTSERR_MASK))
 			{
-
+#if defined(KHCICFG_BASIC_SCHEDULING)
+            if (USB0_ERRSTAT & USB_ERRSTAT_CRC5EOF_MASK)
+                retry = 0;
+#endif           
 				res = -USB0_ERRSTAT;
 				break;
 			}
@@ -359,6 +385,14 @@ static int_32 _usb_khci_atom_tr
 				{
 					case 0x03:  /* DATA0 */
 					case 0x0b:  /* DATA1 */
+            /* Transfer status sense data to the host check for errors */  
+            if (((buf[0] & 0x7F) == 0x70)                   /* A value of 0x70 indicate current errors */\
+              && (buf[2] != 0x00 || buf[2] != 0x01))        /* Sense key 0 - no error, 1 - error recovered */                                                    
+            {  
+              /* Future use to identify and resolve sense errors */
+              sense_error = TRUE;
+            }
+            /* Fall through */
 					case 0x02:  /* ACK */
 						retry = 0;
 						res = (int_32)((bd >> 16) & 0x3ff);
@@ -443,7 +477,7 @@ static void _usb_khci_process_tr_complete
 	int_32 err
 )
 {
-  //<< EST //    USB_HOST_STATE_STRUCT_PTR usb_host_ptr = (USB_HOST_STATE_STRUCT_PTR)handle;
+    //  USB_HOST_STATE_STRUCT_PTR usb_host_ptr = (USB_HOST_STATE_STRUCT_PTR)handle;
 
     uchar_ptr buffer_ptr = NULL;
     uint_32 total_req_bytes = 0;
@@ -522,8 +556,8 @@ static int _usb_khci_rm_int_tr
 	TR_MSG_STRUCT *msg
 )
 {
-    int_32 i = 0;//<< EST //, res = -1;
-    //<< EST //static uint_32 countrm_int_tr = 0;
+    int_32 i = 0;       //      , res = -1;
+    //  static uint_32 countrm_int_tr = 0;
     TR_INT_QUE_ITM_STRUCT_PTR tr = TR_INT_QUE;
 
     /* find record */
@@ -556,7 +590,7 @@ USB_STATUS _usb_khci_init
 )
 {
 	USB_STATUS status = USB_OK;
-	//<< EST //	static const uint_32  msg_size_in_max_type = 1 + (sizeof(TR_MSG_STRUCT) - 1) / sizeof(uint_32);
+	//      static const uint_32  msg_size_in_max_type = 1 + (sizeof(TR_MSG_STRUCT) - 1) / sizeof(uint_32);
 
 	UNUSED(handle)
 
@@ -572,6 +606,11 @@ USB_STATUS _usb_khci_init
 
 	_usb_event_init(&khci_event);
 	USB0_ISTAT = 0xff;
+    /* Enable weak pull-downs, usefull for detecting detach */
+    USB0_USBCTRL = USB_USBCTRL_PDE_MASK;
+    /* Renove suspend state */
+    USB0_USBCTRL &= ~USB_USBCTRL_SUSP_MASK;
+    
 	USB0_CTL |= USB_CTL_ODDRST_MASK;
 
 	memset(&endpoint_data, 0, sizeof(endpoint_data));
@@ -580,14 +619,15 @@ USB_STATUS _usb_khci_init
     USB0_BDTPAGE2 = (uint_8)((uint_32)BDT_BASE >> 16);
     USB0_BDTPAGE3 = (uint_8)((uint_32)BDT_BASE >> 24);
 
-    /* Set SOF threshold */
-    USB0_USBCTRL = USB_USBCTRL_PDE_MASK;
-    USB0_SOFTHLD = USB_SOFTHLD_CNT_MASK;
+    USB0_SOFTHLD = 1;      
 
-	/* 1. Enable Host Mode */
+	/* Enable Host Mode */
 	USB0_CTL = USB_CTL_HOSTMODEEN_MASK;
 
-	/* 2. Enable the ATTACH interrupt */
+    /* Following is for OTG control instead of internal bus control */
+//    USB0_OTGCTL = USB_OTGCTL_DMLOW_MASK | USB_OTGCTL_DPLOW_MASK | USB_OTGCTL_OTGEN_MASK;    
+    
+	/* Enable the ATTACH interrupt */
 	USB0_INTEN= USB_INTEN_ATTACHEN_MASK;
 
 	_usb_khci_init_int_tr();
@@ -754,6 +794,102 @@ uint_32 _usb_khci_get_frame_number
 
 /*FUNCTION*-------------------------------------------------------------
 *
+*  Function Name  : _usb_khci_attach
+*  Returned Value : none
+*  Comments       :
+*        KHCI attach event
+*END*-----------------------------------------------------------------*/
+static void _usb_khci_attach(void)
+{
+    USB0_ADDR = 0;
+#ifdef OTG_BUILD
+    time_delay(1);
+#else
+    time_delay(100);
+#endif        	
+        	
+    /* Speed check, set */
+    usb_host_state_struct_ptr->speed = (uint_8)((USB0_CTL & USB_CTL_JSTATE_MASK) ? USB_SPEED_FULL : USB_SPEED_LOW);
+        	
+    if (usb_host_state_struct_ptr->speed == USB_SPEED_FULL) 
+    {        		
+        USB0_ADDR &= ~USB_ADDR_LSEN_MASK;
+    }
+
+    USB0_ISTAT = 0xff;   /* clean each interrupt flags */
+    USB0_INTEN = USB_INTEN_TOKDNEEN_MASK | USB_INTEN_USBRSTEN_MASK;
+        	        	
+    /* BUS reset*/
+    USB0_CTL |= USB_CTL_RESET_MASK;   
+    time_delay(30);     // wait for minimum 10ms        	        	
+    USB0_CTL &= ~USB_CTL_RESET_MASK;
+
+    /* Enable SOF sending */
+    USB0_CTL |= USB_CTL_USBENSOFEN_MASK;
+        	
+    time_delay(100);
+            
+    USB0_INTEN = USB_INTEN_TOKDNEEN_MASK | USB_INTEN_USBRSTEN_MASK;
+
+    usb_dev_list_attach_device((pointer)usb_host_state_struct_ptr, (uint_8)(usb_host_state_struct_ptr->speed), 0, 0);
+    _usb_event_clear(&khci_event, KHCI_EVENT_ATTACH);   
+}
+
+/*FUNCTION*-------------------------------------------------------------
+*
+*  Function Name  : _usb_khci_reset
+*  Returned Value : none
+*  Comments       :
+*        KHCI reset event
+*END*-----------------------------------------------------------------*/
+static void _usb_khci_reset(void)
+{
+    /* Clear attach flag */
+    USB0_ISTAT |= USB_ISTAT_ATTACH_MASK;
+
+    if (USB0_ISTAT & USB_ISTAT_ATTACH_MASK) 
+    {
+        /* device attached, normal reset was performed */
+        USB0_ADDR  = 0;
+        USB0_ENDPT0 |= USB_ENDPT_HOSTWOHUB_MASK;              
+    }
+    else 
+    {
+        /* Device detached, notify detach */
+        _usb_event_set(&khci_event, KHCI_EVENT_DETACH);
+    }        	
+    
+    _usb_event_clear(&khci_event, KHCI_EVENT_RESET | KHCI_EVENT_TOK_DONE);   
+}
+
+/*FUNCTION*-------------------------------------------------------------
+*
+*  Function Name  : _usb_khci_detach
+*  Returned Value : none
+*  Comments       :
+*        KHCI detach event
+*END*-----------------------------------------------------------------*/
+static void _usb_khci_detach(void)
+{
+    usb_dev_list_detach_device((pointer)usb_host_state_struct_ptr, 0, 0);
+    /* Cleaning interrupt transaction queue from device is done
+    ** by calling _usb_khci_host_close_pipe from upper layer
+    */
+                
+    /* Disable bus control for any events, disable SOFs, 
+    ** prepare for attach in host mode.
+    */
+    USB0_CTL = USB_CTL_HOSTMODEEN_MASK;
+    /* Clear all pending interrupts. */
+    USB0_ISTAT = 0xFF;
+    /* Enable interrupt for usb attach */
+    USB0_INTEN = USB_INTEN_ATTACHEN_MASK;
+    
+    _usb_event_clear(&khci_event, KHCI_EVENT_DETACH);
+}
+
+/*FUNCTION*-------------------------------------------------------------
+*
 *  Function Name  : _usb_khci_task
 *  Returned Value : none
 *  Comments       :
@@ -762,12 +898,12 @@ uint_32 _usb_khci_get_frame_number
 void _usb_khci_task(void)
 {
     static uint_32 seq_ints = 10;
-    //<< EST //static uint_32 wait_on = 0;
+    //  static uint_32 wait_on = 0;
     static TR_MSG_STRUCT msg;
     static uint_32 remain = 0;
     static int_32 res;
     static uint_8 *buf;
-    //<< EST //int i;
+    //  int i;
 
     if (usb_host_state_struct_ptr->DEVICE_LIST_PTR)
 	{
@@ -884,107 +1020,32 @@ void _usb_khci_task(void)
 				   break;
 			}
 
-			if (res < 0)
+            if (msg.pipe_desc->PIPETYPE == USB_INTERRUPT_PIPE)
+            {
+                if ((res >= 0) || (res != KHCI_ATOM_TR_NAK))
 			{
-				if (msg.pipe_desc->PIPETYPE != USB_INTERRUPT_PIPE)
-				{    /* TODO enhance condition for error (not NAK) in interrupt transaction */
 					_usb_khci_process_tr_complete((pointer)usb_host_state_struct_ptr, msg.pipe_desc, msg.pipe_tr, remain, res);
+                    _usb_khci_rm_int_tr(&msg);
 				}
 			}
 			else
 			{
 				_usb_khci_process_tr_complete((pointer)usb_host_state_struct_ptr, msg.pipe_desc, msg.pipe_tr, remain, res);
-
-				if (msg.pipe_desc->PIPETYPE == USB_INTERRUPT_PIPE)
-				{
-					_usb_khci_rm_int_tr(&msg);
-				}
 			}
 		}
 	}
 
-    if ((khci_event.VALUE & KHCI_EVENT_MASK))
-    {
-        /* some events occurred */
+    if (khci_event.VALUE & KHCI_EVENT_MASK){
         if (khci_event.VALUE & KHCI_EVENT_ATTACH)
-        {   /* device attached */
-        	USB0_ADDR = 0;
-#ifdef OTG_BUILD
-          time_delay(1);
-#else
-        	time_delay(100);
-#endif
-
-        	/* 4. Check JSTATE */
-        	/* speed check, set */
-        	usb_host_state_struct_ptr->speed =
-        			(uint_8)((USB0_CTL & USB_CTL_JSTATE_MASK) ?
-        					USB_SPEED_FULL : USB_SPEED_LOW);
-
-        	/* todo AI: changed to LOW_SPEED*/
-        	if (usb_host_state_struct_ptr->speed == USB_SPEED_LOW)
-        	{
-        		/* Low Speed Enable bit */
-        		USB0_ADDR |= USB_ADDR_LSEN_MASK;
-
-        		/* Set the host without hub bit in endpoint 0 register control */
-        		//USB0_ADDR |= USB_ENDPT_HOSTWOHUB_MASK;
-        		USB0_ENDPT0 |= USB_ENDPT_HOSTWOHUB_MASK;
-        	}
-
-        	USB0_ISTAT = 0xff;   /* clean each interrupt flags */
-        	USB0_INTEN = USB_INTEN_TOKDNEEN_MASK | USB_INTEN_USBRSTEN_MASK;
-
-        	/* todo AI: not needed for LOW_SPEED */
-        	//USB0_ENDPT0 |= USB_ENDPT_HOSTWOHUB_MASK;
-
-        	/* 5. bus reset */
-        	/* start reset*/
-        	USB0_CTL |= USB_CTL_RESET_MASK;
-
-        	/* todo AI: standard say to wait 10ms, but due to some usb pens
-        	 * which don't have enough time to initialize themselves increase
-        	 * waiting time */
-        	time_delay(500);
-
-        	/* end reset */
-        	USB0_CTL &= ~USB_CTL_RESET_MASK;
-
-        	/* 6. enable SOF sending */
-        	USB0_CTL |= USB_CTL_USBENSOFEN_MASK;
-
-        	time_delay(100);
-
-        	usb_dev_list_attach_device((pointer)usb_host_state_struct_ptr, (uint_8)(usb_host_state_struct_ptr->speed), 0, 0);
-        	_usb_event_clear(&khci_event, KHCI_EVENT_ATTACH);
-        }
+           _usb_khci_attach();
 
         if (khci_event.VALUE & KHCI_EVENT_RESET)
-        {   /* usb reset */
-        	/* test for device attach flag */
-        	USB0_ISTAT |= USB_ISTAT_ATTACH_MASK;
+          _usb_khci_reset();
 
-        	if (USB0_ISTAT & USB_ISTAT_ATTACH_MASK)
-        	{
-        	    /* device attached */
-        	}
-        	else
-        	{
-        		/* device detached */
-        		usb_dev_list_detach_device((pointer)usb_host_state_struct_ptr, 0, 0);
-        		/* TODO: some deinitialization and clearing in KHCI
-        		 **
-        		 ** cleaning interrupt transaction queue from device is done
-        		 ** by calling _usb_khci_host_close_pipe from upper layer
-        		 */
-				/* enable interrupt for usb attach */
-        		USB0_ISTAT |= USB_ISTAT_ATTACH_MASK;
-        		USB0_INTEN = USB_INTEN_ATTACHEN_MASK;
+        if (khci_event.VALUE & KHCI_EVENT_DETACH)
+          _usb_khci_detach();
         	}
 
-            _usb_event_clear(&khci_event, KHCI_EVENT_RESET | KHCI_EVENT_TOK_DONE);
-        }
-    }
 return;
 }
 

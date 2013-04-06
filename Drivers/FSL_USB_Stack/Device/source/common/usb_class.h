@@ -73,6 +73,8 @@
 #define USB_APP_EP_STALLED                  (7)
 #define USB_APP_EP_UNSTALLED                (8) 
 #define USB_APP_GET_TRANSFER_SIZE           (9)
+#define USB_APP_BUS_SUSPEND                 (0x0A)
+#define USB_APP_BUS_RESUME                  (0x0B)
 
 /* max packet size for the control endpoint */
 

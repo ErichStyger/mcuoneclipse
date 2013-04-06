@@ -475,23 +475,23 @@ uint_8 const g_string_desc_size[USB_MAX_STRING_DESCRIPTORS+1] =
 
 uint_8_ptr const g_string_descriptors[USB_MAX_STRING_DESCRIPTORS+1] =
                             {
-                                (uint_8_ptr const)USB_STR_0,
-                                (uint_8_ptr const)USB_STR_1,
-                                (uint_8_ptr const)USB_STR_2,
-                                (uint_8_ptr const)USB_STR_n
+                                (uint_8_ptr)USB_STR_0,
+                                (uint_8_ptr)USB_STR_1,
+                                (uint_8_ptr)USB_STR_2,
+                                (uint_8_ptr)USB_STR_n
                             };
 
 #ifdef __HC08__ /* << EST */
 #pragma MESSAGE DISABLE C4800 /* implicit cast in assignment */
 #endif
 USB_ALL_LANGUAGES g_languages = { USB_STR_0, sizeof(USB_STR_0),
-		                          { /* << EST: missing braces */
+		                          {
 		                            {
-                                        (uint_16 const)0x0409,
+                                            (uint_16)0x0409,
                                         (const uint_8 **)g_string_descriptors,
                                         g_string_desc_size
                                     }
-		                          } /* << EST: missing braces */
+		                          }
                                 };
 #ifdef __HC08__ /* << EST */
 #pragma MESSAGE DEFAULT C4800

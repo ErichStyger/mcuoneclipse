@@ -37,11 +37,12 @@
 #if !HIGH_SPEED_DEVICE
 #include "usbprv_host.h"
 /* KHCI event bits */
-#define KHCI_EVENT_ATTACH       1
-#define KHCI_EVENT_RESET        2
-#define KHCI_EVENT_TOK_DONE     4
-#define KHCI_EVENT_SOF_TOK      8
-#define KHCI_EVENT_MASK         0x0f
+#define KHCI_EVENT_ATTACH       0x01
+#define KHCI_EVENT_RESET        0x02
+#define KHCI_EVENT_TOK_DONE     0x04
+#define KHCI_EVENT_SOF_TOK      0x08
+#define KHCI_EVENT_DETACH       0x10
+#define KHCI_EVENT_MASK         0x1f
 
 /* atom transaction error results */
 #define KHCI_ATOM_TR_PID_ERROR  (-1)
@@ -54,10 +55,20 @@
 #define KHCI_ATOM_TR_DATA_ERROR (-512)
 #define KHCI_ATOM_TR_STALL      (-1024)
 #define KHCI_ATOM_TR_RESET      (-2048)
+#define KHCI_ATOM_TR_SENSE_ERR  (-4096)
 
 #define USBCFG_KHCI_TR_QUE_MSG_CNT              (10)
 #define USBCFG_KHCI_MAX_INT_TR                  (10)
 
+/* Basic scheduling packets algorithm, schedules next packet to the beginning of next frame
+*/
+//#define KHCICFG_BASIC_SCHEDULING
+
+/* Scheduling based on internal "deadtime" register THSLD; you can choose additional value passed to the register
+** Note that the register value depends on delay on line from host to device and is experimentally set to 0x65,
+** which should be enough for the absolute majority of cases.
+*/
+#define KHCICFG_THSLD_DELAY 0x65
 
 typedef enum 
 {

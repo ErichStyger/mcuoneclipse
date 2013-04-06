@@ -78,11 +78,14 @@
 #endif
 /* stores Controller ID */
 static uint_8 g_dci_controller_Id = 0;
-#if HIGH_SPEED_DEVICE /* << EST for high speed only */
+#if HIGH_SPEED_DEVICE
 static uint_8 g_dci_address_state = 0;
-#endif
+#endif /* HIGH_SPEED_DEVICE */
+
+#if !HIGH_SPEED_DEVICE
 /* Start BDT buffer Address */
 static uint_32 g_bdt_address;
+#endif /* HIGH_SPEED_DEVICE */
 /* Transfer direction */
 static uint_8 g_trf_direction = USB_TRF_UNKNOWN;
 
@@ -130,6 +133,7 @@ static uint_8 g_trf_direction = USB_TRF_UNKNOWN;
  * Local Functions Prototypes
  *****************************************************************************/
 static void USB_Bus_Reset_Handler(void);
+#if !HIGH_SPEED_DEVICE
 static uint_8 USB_DCI_Get_BDT_Index(uint_8 ep_num,
                                     uint_8 direction,
                                     boolean odd);
@@ -139,11 +143,10 @@ static uint_8 USB_DCI_Validate_Param(uint_8 ep_num,
 #ifdef LONG_SEND_TRANSACTION
 static void USB_DCI_Prepare_Send_Data(P_BUFF_DSC buffer_dsc,
                                     P_BDT_ELEM bdt_elem);
-#endif
-#if !HIGH_SPEED_DEVICE
+#endif /* LONG_SEND_TRANSACTION */
 static void USB_Bus_Token_Cpl_Handler(uint_8 stat,
                                     USB_DEV_EVENT_STRUCT* event);
-#endif
+#endif /* HIGH_SPEED_DEVICE */
 
 // HIGH_SPEED_DEVICE
 #if HIGH_SPEED_DEVICE
@@ -253,9 +256,6 @@ static void USB_Bus_Reset_Handler (void)
 
 	// 4. If reset bit is not cleared at this point force reset device
 	if(!(USBHS_PORTSC1 & USBHS_PORTSC1_PR_MASK)){
-#ifdef SERIAL_DEBUG
-		printf("Reset took longer than expected -> forced reset\n");
-#endif
 		USBHS_USBCMD |= USBHS_USBCMD_RST_MASK;
 	}
 
@@ -267,9 +267,11 @@ static void USB_Bus_Reset_Handler (void)
 			);
 
 	g_trf_direction = USB_TRF_UNKNOWN;
+    UNUSED(g_trf_direction);
 #endif
 }
 
+#if !HIGH_SPEED_DEVICE
 /**************************************************************************//*!
  *
  * @name  USB_DCI_Get_BDT_Index
@@ -293,7 +295,6 @@ static uint_8 USB_DCI_Get_BDT_Index (
     boolean odd        /* [IN] Odd or even buffer */
 )
 {
-#if !HIGH_SPEED_DEVICE
     uint_8 bdt_index = INVALID_BDT_INDEX;
 
     if(ep_num < MAX_SUPPORTED_ENDPOINTS)
@@ -307,7 +308,6 @@ static uint_8 USB_DCI_Get_BDT_Index (
         }
     }
     return bdt_index;
-#endif
 }
 
 /**************************************************************************//*!
@@ -333,7 +333,6 @@ static uint_8 USB_DCI_Validate_Param (
     boolean odd        /* [IN] Odd or even buffer */
 )
 {
-#if !HIGH_SPEED_DEVICE
     /* Get bdt index mapped to endpoint number-direction and odd/even buffer */
     uint_8 bdt_index = USB_DCI_Get_BDT_Index(ep_num, direction, odd);
 
@@ -345,10 +344,11 @@ static uint_8 USB_DCI_Validate_Param (
         bdt_index = INVALID_BDT_INDEX;
     }
     return bdt_index;
-#endif
 }
+#endif /* HIGH_SPEED_DEVICE */
 
 #ifdef LONG_SEND_TRANSACTION
+#if !HIGH_SPEED_DEVICE
 /**************************************************************************//*!
  *
  * @name  USB_DCI_Prepare_Send_Data
@@ -370,7 +370,6 @@ static void USB_DCI_Prepare_Send_Data (
                                 structure */
 )
 {
-#if !HIGH_SPEED_DEVICE
     uint_8_ptr buff_ptr = bdt_elem->app_buffer + bdt_elem->curr_offset;
     uint_16 current_count = 0;
 
@@ -389,9 +388,9 @@ static void USB_DCI_Prepare_Send_Data (
     buffer_dsc->cnt = SWAP16(current_count);
 
     buffer_dsc->addr = SWAP32((uint_32)buff_ptr);
-#endif
 }
-#endif
+#endif /* HIGH_SPEED_DEVICE */
+#endif /* LONG_SEND_TRANSACTION */
 
 /*****************************************************************************
  * Global Functions
@@ -432,6 +431,7 @@ uint_8 USB_DCI_Init (
     Clear_Mem((uint_8_ptr)g_bdtmap,(uint_32) BYTES_1024, (uint_8)0);
 
     #ifndef OTG_BUILD
+#if 1   /* hardware bug workaround */ /* << EST: need to keep this workaround for FRDM-KL25Z */
     /* Hard Reset to the USB Module */
     USB0_USBTRC0 |= USB_USBTRC0_USBRESET_MASK;
 
@@ -440,6 +440,7 @@ uint_8 USB_DCI_Init (
     {
     };
 
+    #endif
     #endif
 
     g_trf_direction = USB_TRF_UNKNOWN;
@@ -484,9 +485,6 @@ uint_8 USB_DCI_Init (
 
     USB0_OTGCTL = USB_OTGCTL_DPHIGH_MASK | USB_OTGCTL_OTGEN_MASK;
 #else	// HIGH_SPEED_DEVICE
-    uint_32 reg;
-    uint_32 count = 10000;
-
     /* save the controller_ID for future use */
     g_dci_controller_Id = controller_ID;
     memset(g_usbd_qh_buf, 0, TOTAL_QHD_SIZE);
@@ -535,11 +533,14 @@ uint_8 USB_DCI_DeInit(void)
 #if !HIGH_SPEED_DEVICE
 
 #ifdef MCU_MK70F12
+#if 0 /* hardware bug workaround */
 	// Reset module
 	USB0_USBTRC0 |= USB_USBTRC0_USBRESET_MASK;
 
 	// Wait for reset to complete
 	while((USB0_USBTRC0 & USB_USBTRC0_USBRESET_MASK));
+#endif
+	
 #else
 	/* Detach CFv1 core to USB bus*/
 	USB0_USBTRC0 &= ~0x40;
@@ -618,7 +619,6 @@ uint_8 USB_DCI_Init_EndPoint (
     */
     if((bdtmap_index  == INVALID_BDT_INDEX) ||
        (g_bdt_elem[bdtelem_index].len != (uint_16)UNINITIALISED_VAL) ||
-      // (g_bdt_address >= ((uint_32)g_Mem + BYTES_1024)) ||
        (ep_ptr->type > USB_INTERRUPT_PIPE) ||
        (ep_ptr->direction > USB_SEND))
     {
@@ -674,12 +674,10 @@ uint_8 USB_DCI_Init_EndPoint (
         HSHK_EN:0x00);
     /* set the EndPoint Control MCU Register*/
     *((&USB0_ENDPT0) + (4 * ep_num)) |= ep_ctrl[direction];
-#else	// HIGH_SPEED_DEVICE
-    //printf_info("%%s, ep_num is %%d, dir is %%d, type is %%d\n", __func__, ep_ptr->ep_num, ep_ptr->direction, ep_ptr->type);
-
+#else	/* HIGH_SPEED_DEVICE */
     unsigned char mult;
 
-    // No need to initialize EP0
+    /* No need to initialize EP0 */
     if (ep_ptr->ep_num == CONTROL_ENDPOINT)
     	return USB_OK;
 
@@ -701,14 +699,12 @@ uint_8 USB_DCI_Init_EndPoint (
 #endif
     }
 
-    // setup dQH
+    /* setup dQH */
     usbd_ep_qh_init(controller_ID, ep_ptr->ep_num, ep_ptr->direction, ep_ptr->size, flag, mult, 0xDEAD0001);
 
-    // enable endpoint
+    /* enable endpoint */
     usbd_ep_setup(controller_ID, ep_ptr->ep_num, ep_ptr->direction, ep_ptr->type);
-
-    return USB_OK;
-#endif
+#endif /* HIGH_SPEED_DEVICE */
     return USB_OK;
 }
 
@@ -760,7 +756,7 @@ uint_8 USB_DCI_Cancel_Transfer (
     return USBERR_NOT_SUPPORTED;
 #endif
 #else	// HIGH_SPEED_DEVICE
-#ifdef SERIAL_DEBUG
+#ifdef USART_DEBUG
     printf("%%s\n", __func__);
 #endif
     return USBERR_NOT_SUPPORTED;
@@ -814,6 +810,7 @@ uint_8 USB_DCI_Deinit_EndPoint (
     g_bdt_elem[bdtelem_index].len = (uint_16)UNINITIALISED_VAL;
     g_bdt_elem[bdtelem_index].addr = (uint_32)UNINITIALISED_VAL;
 #else	// HIGH SPEED
+    uint_32 reg;
 
     if(ep_num<1)
     	return USB_INVALID;
@@ -823,7 +820,8 @@ uint_8 USB_DCI_Deinit_EndPoint (
     memset((void *)dqh_word, 0, SIZE_OF_QHD);
 
     // clear endpoint register
-    USBHS_EPCR(ep_num-1) &= ~(USBHS_EPCR(ep_num-1));
+    reg = USBHS_EPCR(ep_num-1);
+    USBHS_EPCR(ep_num-1) &= ~reg;
 
     // flush endpoint Tx(IN) buffer
     if(direction)
@@ -961,7 +959,7 @@ void USB_DCI_Unstall_EndPoint (
 		}else{
 			USBHS_EPCR(endpoint_number-1) &= ~(direction?USBHS_EPCR_TXS_MASK:USBHS_EPCR_RXS_MASK);
 		}
-#ifdef SERIAL_DEBUG
+#ifdef USART_DEBUG
 	printf("%%s\n", __func__);
 #endif
 #endif
@@ -1006,7 +1004,9 @@ void USB_DCI_Get_Setup_Data (
     (void)memcpy(buffer_ptr, addr, USB_SETUP_PKT_SIZE);
     return;
 #else	// HIGH SPEED
+#if USART_DEBUG
     printf("%%s\n", __func__);
+#endif /* USART_DEBUG */
 #endif
 }
 
@@ -1038,9 +1038,9 @@ uint_8 USB_DCI_Get_Transfer_Status (
     uint_8                direction           /* [IN] Endpoint direction */
 )
 {
-#if !HIGH_SPEED_DEVICE
     uint_8 status = USB_STATUS_DISABLED;
 
+#if !HIGH_SPEED_DEVICE
     /* validate params and get the bdt index */
     uint_8 bdt_index = USB_DCI_Validate_Param (endpoint_number, direction,
         USB_RAM_EVEN_BUFFER);
@@ -1069,9 +1069,58 @@ uint_8 USB_DCI_Get_Transfer_Status (
             status = USB_STATUS_TRANSFER_IN_PROGRESS;
         }
     }
-    return status;
 #else
+#if USART_DEBUG
     printf("%%s, ep_num is %%d\n", __func__, endpoint_number);
+#endif /* USART_DEBUG */
+    status = USB_OK;
+#endif /* HIGH_SPEED_DEVICE */
+    return status;
+}
+
+/**************************************************************************//*!
+ *
+ * @name  USB_DCI_Clear_DATA0_Endpoint
+ *
+ * @brief The function clear the DATA0/1 bit 
+ *
+ * @param handle          : USB Device handle
+ * @param endpoint_number : Endpoint number
+ * @param direction       : Endpoint direction
+ *
+ * @return None
+ *
+ ******************************************************************************
+ * This function clear the DATA0/1 bit 
+ *****************************************************************************/
+void  USB_DCI_Clear_DATA0_Endpoint (
+    _usb_device_handle    handle,    /* [IN] USB Device handle */
+    uint_8                endpoint_number,    /* [IN] Endpoint number */
+    uint_8                direction           /* [IN] Endpoint direction */
+)
+{
+	
+#if !HIGH_SPEED_DEVICE
+	
+	uint_8 bdt_index = USB_DCI_Validate_Param(endpoint_number, direction, USB_RAM_EVEN_BUFFER);	
+	P_BDT_ELEM bdt_elem = &g_bdt_elem[TRANSFER_INDEX(bdt_index)];
+		
+		UNUSED(handle);
+	
+	bdt_index = bdt_elem->bdtmap_index;
+	
+	/*Check for a valid bdt index */
+	if (bdt_index != INVALID_BDT_INDEX)
+	{
+		ENDPT0STR *endpoint = (ENDPT0STR*)(&USB0_ENDPT0 + (4 * endpoint_number));
+                UNUSED(endpoint); /* << EST */
+		g_bdtmap->ep_dsc[bdt_index].Stat._byte = _DATA0;
+	}
+    return;
+#else	// HIGH SPEED
+#ifdef USART_DEBUG
+    printf("%%s\n", __func__);
+#endif
 #endif
 }
 
@@ -1100,8 +1149,8 @@ uint_8 USB_DCI_Recv_Data (
     uint_32               size                /* [IN] Number of bytes to receive */
 )
 {
-#if !HIGH_SPEED_DEVICE
     uint_8 status = USBERR_RX_FAILED;
+#if !HIGH_SPEED_DEVICE
 
     /* validate params and get the bdt index */
     uint_8 bdt_index = USB_DCI_Validate_Param (endpoint_number, USB_RECV, USB_RAM_EVEN_BUFFER);
@@ -1165,9 +1214,6 @@ uint_8 USB_DCI_Recv_Data (
     }
     return status;
 #else
-    usb_status_t status;
-    // printf("%%s, ep_num is %%d\n", __func__, ep_num);
-
     if (endpoint_number != 0)
     {
     	status = usbd_receive_data_epxout(0, (unsigned int)buffer_ptr, endpoint_number, size);
@@ -1353,7 +1399,9 @@ void USB_DCI_Shutdown (
         USB_STATE_UNKNOWN);
     return;
 #else
+#if USART_DEBUG
     printf("%%s\n", __func__);
+#endif /* USART_DEBUG */
 #endif
 }
 
@@ -1404,9 +1452,9 @@ void USB_DCI_Assert_Resume (
 
     return;
 #else
-#ifdef SERIAL_DEBUG
-    printf_info("%%s\n", __func__);
-#endif
+#ifdef USART_DEBUG
+    printf("%%s\n", __func__);
+#endif /* USART_DEBUG */
 #endif
 }
 
@@ -1501,8 +1549,8 @@ void USB_Bus_Token_Cpl_Handler (
                3. Zero Termination Flag is TRUE
             */
             if((bdt_elem->app_len > bdt_elem->curr_offset) ||
-                    (((uint_8)event->len == bdt_elem->len) && /* << EST: added parentheses */
-                    (bdt_elem->flag == TRUE)))
+                 (((uint_8)event->len == bdt_elem->len) && (bdt_elem->flag == TRUE))
+               )
             {
                 /* send next Req */
                 USB_DCI_Prepare_Send_Data(buffer_dsc_alt, bdt_elem);
@@ -1587,8 +1635,7 @@ void USB_Bus_Token_Cpl_Handler (
 				}
 				else
 				{
-                    buffer_dsc_alt->addr = SWAP32(
-                        (uint_32)&bdt_elem->app_buffer[bdt_elem->curr_offset]);
+                    buffer_dsc_alt->addr = SWAP32((uint_32)(bdt_elem->app_buffer + bdt_elem->curr_offset));
 				    buffer_dsc_alt->cnt = SWAP16(count);
 				}
 
@@ -1623,10 +1670,12 @@ uint_32 sof_counter = 0;
 static uint_32 micro_sof_counter = 0;
 void USBHS_ISR(void){
 	uint_32 usbsts;
+    uint_32 reg;
 	USB_DEV_EVENT_STRUCT event;
 
 	// get interrupt status
-	usbsts = USBHS_USBSTS & USBHS_USBINTR;
+    reg = USBHS_USBINTR;
+	usbsts = USBHS_USBSTS & reg;
 
 	// clear interrupt status
 	USBHS_USBSTS |= usbsts;
@@ -1672,9 +1721,9 @@ void USBHS_ISR(void){
 	// handle Transaction Complete
 	if (usbsts & USBHS_USBSTS_UI_MASK){
 		if (!USBHS_EPSETUPSR && !USBHS_EPCOMPLETE){
-#ifdef SERIAL_DEBUG
+#ifdef USART_DEBUG
 			printf("Warning: unexpected UI interrupt\n");
-#endif
+#endif /* USART_DEBUG */
 		}
 
 		// Handle dTD complete interrupt.
@@ -1691,7 +1740,9 @@ void USBHS_ISR(void){
 		if( (USBHS_EPSETUPSR & USBHS_EPSETUPSR_EPSETUPSTAT(2))||
 				(USBHS_EPSETUPSR & USBHS_EPSETUPSR_EPSETUPSTAT(4))||
 				(USBHS_EPSETUPSR & USBHS_EPSETUPSR_EPSETUPSTAT(8))){
+#if USART_DEBUG
 			printf("");
+#endif /* USART_DEBUG */
 		}
 	}
 
@@ -1702,7 +1753,7 @@ void USBHS_ISR(void){
 
 	// handle USB Error
 	if (usbsts & USBHS_USBSTS_UEI_MASK){
-#ifdef SERIAL_DEBUG
+#ifdef USART_DEBUG
 		printf("USBHS: Error\n");
 #endif
 		// Notify Device Layer of ERROR Event to error service
@@ -1711,7 +1762,7 @@ void USBHS_ISR(void){
 
 	// handle USB System Error
 	if (usbsts & USBHS_USBSTS_SEI_MASK){
-#ifdef SERIAL_DEBUG
+#ifdef USART_DEBUG
 		printf("USBHS: System Error\n");
 #endif
 		// Notify Device Layer of ERROR Event to error service
@@ -1987,9 +2038,8 @@ static void Enter_StopMode(STOP_MODE stop_mode)
 #endif
 
 
-// HIGH_SPEED_DEVICE
+/* HIGH_SPEED_DEVICE */
 #if HIGH_SPEED_DEVICE
-//#include "bsp_K70.h"
 
 extern void delay(int delayloop);
 
@@ -2228,7 +2278,7 @@ static unsigned int usbd_get_dtd(uint_8 controller_ID, unsigned char endpt_numbe
 								(SIZE_OF_DTD0) *(td_index) * MAX_DTDS_PER_EP +
 								i * (SIZE_OF_DTD0));
 			g_usbd_td_flag[td_index][i].total_bytes = sz;
-
+#if USART_DEBUG
 			if(endpt_number == 1){
 			   	printf("usbd_get_dtd ep1\n");
 			}
@@ -2238,11 +2288,12 @@ static unsigned int usbd_get_dtd(uint_8 controller_ID, unsigned char endpt_numbe
 			if(endpt_number == 3){
 				printf("usbd_get_dtd ep3\n");
 			}
+#endif /* USART_DEBUG */
 			return (unsigned int)g_usbd_td_flag[td_index][i].phys_td ;
 		}
 	}
 	// todo: clear dtd and g_usbd_td_flag and point to first item
-#ifdef SERIAL_DEBUG
+#ifdef USART_DEBUG
 	printf("Cannot get dTD!\n");
 #endif
 	return 0;
@@ -2293,7 +2344,6 @@ static void usbd_setup_packet_handler(
 )
 {
     unsigned char setup_packet[8];
-    unsigned int setup_complete;
 
     // Clear setup complete register
     USBHS_EPSETUPSR = USBHS_EPSETUPSR;
@@ -2357,9 +2407,9 @@ static void usbd_read_setup_packet(uint_8 controller_ID, unsigned char *setup_pa
     } while (!(USBHS_USBCMD & USBHS_USBCMD_SUTW_MASK) && (--count));
 
     if (!count){
-#ifdef SERIAL_DEBUG
+#ifdef USART_DEBUG
         printf("error getting setup buffer\n");
-#endif
+#endif /* USART_DEBUG */
     }
 
     // e. Clear USBCMD[SUTW] bit
@@ -2398,13 +2448,14 @@ static void usbd_ep_complete_handler(
     unsigned int ep_complete;
 
     // todo: check
+#if USART_DEBUG
 	if(USBHS_EPCOMPLETE&USBHS_EPCOMPLETE_ERCE(2)){
 		printf("ep1: RECV\n");
 	}
 	if(USBHS_EPCOMPLETE&USBHS_EPCOMPLETE_ERCE(4)){
 		printf("ep2: RECV\n");
 	}
-	if(USBHS_EPCOMPLETE&USBHS_EPCOMPLETE_ERCE(6)){
+	if(USBHS_EPCOMPLETE&USBHS_EPCOMPLETE_ERCE(8)){
 		printf("ep3: RECV\n");
 	}
 	if(USBHS_EPCOMPLETE&USBHS_EPCOMPLETE_ETCE(2)){
@@ -2413,10 +2464,10 @@ static void usbd_ep_complete_handler(
 	if(USBHS_EPCOMPLETE&USBHS_EPCOMPLETE_ETCE(4)){
 		printf("ep2: SEND\n");
 	}
-	if(USBHS_EPCOMPLETE&USBHS_EPCOMPLETE_ETCE(6)){
+	if(USBHS_EPCOMPLETE&USBHS_EPCOMPLETE_ETCE(8)){
 		printf("ep3: SEND\n");
 	}
-
+#endif /* USART_DEBUG */
     // Get and clear endpoint complete register
     ep_complete = USBHS_EPCOMPLETE;
     USBHS_EPCOMPLETE = ep_complete;
@@ -2465,8 +2516,6 @@ static void usbd_ep0_complete(USB_DEV_EVENT_STRUCT* event)
     unsigned int endpt_number = event->ep_num;
     unsigned int direction = event->direction;
 
-    unsigned int td_index = (endpt_number * 2) + direction;
-
     // Walk the TD status array to find the next completed TD
     for (i = 0; i < MAX_DTDS_PER_EP; i++)
     {
@@ -2503,6 +2552,7 @@ static void usbd_dtd_complete(USB_DEV_EVENT_STRUCT* event)
     unsigned int direction = event->direction;
 
     // todo: check
+#if USART_DEBUG
     if(event->ep_num == 1){
     	printf("usbd_dtd_complete ep1\n");
     }
@@ -2512,9 +2562,7 @@ static void usbd_dtd_complete(USB_DEV_EVENT_STRUCT* event)
     if(event->ep_num == 3){
     	printf("usbd_dtd_complete ep3\n");
     }
-
-    unsigned int td_index = (endpt_number * 2) + direction;
-
+#endif /*USART_DEBUG */
     // Walk the TD status array to find the next completed TD
     for (i = 0; i < MAX_DTDS_PER_EP; i++)
     {
@@ -2561,8 +2609,6 @@ static usb_status_t usbd_receive_data_epxout(uint_8 controller_ID, unsigned int 
     unsigned int dtd_address;
     unsigned int direction = OUT;
 
-    //printf_info("%%s, size is %%d\n", __func__, sz);
-
     /* Get Device Transfer Descriptor of the requested endpoint */
 	dtd_address = usbd_get_dtd(controller_ID, ep_num, direction, sz);
     if (!dtd_address)
@@ -2570,15 +2616,13 @@ static usb_status_t usbd_receive_data_epxout(uint_8 controller_ID, unsigned int 
         return USB_FAILURE;
     }
 
-    if(dtd_address == 0x1fff0360){
-    	printf("debug");
-    }
-
     /* Get the total bytes to be received   */
     total_bytes = sz;
 
+#if USART_DEBUG
 	if (total_bytes > 20 * 1024)
 	    printf("Error!!! %%s, size is %%d\n", __func__, sz);
+#endif /* USART_DEBUG */
 
     td.dtd_base = dtd_address;
    	td.next_link_ptr = 0;
@@ -2845,9 +2889,6 @@ static usb_status_t usbd_send_data_ep0in(uint_8 controller_ID,
     struct dtd_t td;
     unsigned int total_bytes;
     unsigned int dtd_address, dqh_address;
-    unsigned int temp;
-
-	//printf_info("%%s, size is %%d\n", __func__, sz);
 
     /* varify Endpoint Number and address */
     /* Get Device Transfer Descriptor of the requested endpoint */
@@ -2896,4 +2937,4 @@ static usb_status_t usbd_send_data_ep0in(uint_8 controller_ID,
 
     return USB_SUCCESS;
 }
-#endif	// HIGH_SPEED_DEVICE
+#endif	/* HIGH_SPEED_DEVICE */

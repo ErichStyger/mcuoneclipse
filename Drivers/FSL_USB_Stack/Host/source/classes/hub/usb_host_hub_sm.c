@@ -473,7 +473,9 @@ static void usb_host_hub_int_callback
         ** Note, that if there are more ports, which changed its status, these will
         ** be invoked later (in next interrupt)
         */
- 
+        /* Some hubs reported port 0  status changed and the result was hard fault error */
+        if (port > 0)
+        { 
         hub_com.CLASS_PTR = (CLASS_CALL_STRUCT_PTR) &hub_instance->CLASS_INTF;
         hub_com.CALLBACK_FN = (tr_callback) usb_host_hub_device_sm;
         hub_com.CALLBACK_PARAM = (pointer) hub_instance;
@@ -482,6 +484,7 @@ static void usb_host_hub_int_callback
         hub_instance->port_iterator = (uint_16)(port - 1);
         usb_class_hub_get_port_status(&hub_com, (uint_8)port, hub_instance->control_buffer, 4);
    
+    }
     }
     else
         USB_unlock();

@@ -325,6 +325,8 @@ typedef uint_8   T_EP_BITFIELD;
     	#define ALIGN  __attribute__ ((packed))
 	#elif((defined  __IAR_SYSTEMS_ICC__) || (defined __CC_ARM))
 		#define ALIGN
+    #else
+        #define ALIGN
 	#endif
 #else
 	#define ALIGN
@@ -455,6 +457,12 @@ extern uint_8 _usb_device_set_status (
 		_usb_device_handle      handle,
 		uint_8                  component,
 		uint_8                  setting
+);
+
+extern void _usb_device_clear_data0_endpoint(
+		_usb_device_handle      handle,
+		uint_8                  endpoint_number,
+		uint_8                  direction		
 );
 
 extern void _usb_device_assert_resume (

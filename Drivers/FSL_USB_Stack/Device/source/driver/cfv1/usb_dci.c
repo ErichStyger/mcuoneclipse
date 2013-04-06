@@ -790,6 +790,44 @@ uint_8 USB_DCI_Get_Transfer_Status (
 
 /**************************************************************************//*!
  *
+ * @name  USB_DCI_Clear_DATA0_Endpoint
+ *
+ * @brief The function clear the DATA0/1 bit 
+ *
+ * @param handle          : USB Device handle
+ * @param endpoint_number : Endpoint number
+ * @param direction       : Endpoint direction
+ *
+ * @return None
+ *
+ ******************************************************************************
+ * This function clear the DATA0/1 bit 
+ *****************************************************************************/
+void  USB_DCI_Clear_DATA0_Endpoint (
+    _usb_device_handle    handle,    /* [IN] USB Device handle */
+    uint_8                endpoint_number,    /* [IN] Endpoint number */
+    uint_8                direction           /* [IN] Endpoint direction */
+)
+{
+	
+	uint_8 bdt_index = USB_DCI_Validate_Param(endpoint_number, direction, USB_RAM_EVEN_BUFFER);	
+	P_BDT_ELEM bdt_elem = &g_bdt_elem[TRANSFER_INDEX(bdt_index)];
+		
+		UNUSED(handle);
+	
+	bdt_index = bdt_elem->bdtmap_index;
+	
+	/*Check for a valid bdt index */
+	if (bdt_index != INVALID_BDT_INDEX)
+	{
+		ENDPT0STR *endpoint = (ENDPT0STR*)(&_ENDPT0 + (4 * endpoint_number));
+		g_bdtmap->ep_dsc[bdt_index].Stat._byte = _DATA0;
+	}
+    return;
+}
+
+/**************************************************************************//*!
+ *
  * @name  USB_DCI_Recv_Data
  *
  * @brief The function retrieves data received on an RECV endpoint
