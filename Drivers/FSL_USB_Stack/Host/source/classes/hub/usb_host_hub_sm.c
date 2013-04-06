@@ -184,6 +184,8 @@ static void usb_host_hub_device_sm
     hub_com.CALLBACK_PARAM = (pointer) hub_instance;
 
     switch (hub_instance->STATE) {
+      case HUB_NONE: break; /* << EST was not handled */
+      case HUB_IDLE: break; /* << EST was not handled */
         case HUB_GET_DESCRIPTOR_TINY_PROCESS: 
     	{
     	    /* here we get number of ports from USB data */
@@ -435,7 +437,7 @@ static void usb_host_hub_int_callback
 { /* Body */
     HUB_DEVICE_STRUCT_PTR          hub_instance = (HUB_DEVICE_STRUCT_PTR) param;
     USB_HUB_CLASS_INTF_STRUCT_PTR  if_ptr;
-    uint_16                       i, j, port;
+    uint_16                       i, j, port=0; /* << EST need to initialize port! */
     uint_8 _PTR_                   port_pattern= (uint_8 _PTR_) buffer;
     HUB_COMMAND                    hub_com;
    
