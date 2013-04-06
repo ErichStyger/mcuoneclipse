@@ -8,9 +8,6 @@
 // Freescale MC9S08JM60
 //
 
-//only 64K
-reserved   0x10000 0xFFFFFFFF
-
 // Parallel Input/Output Ports (PIO)
 range      0x00000000 0x00000000 1 ReadWrite    // PTAD
 range      0x00000001 0x00000001 1 ReadWrite    // PTADD
