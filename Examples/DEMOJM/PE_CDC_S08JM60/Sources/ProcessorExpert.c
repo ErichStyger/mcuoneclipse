@@ -50,8 +50,7 @@ void CDC_Run(void) {
   for(;;) {
     while(CDC1_App_Task(cdc_buffer, sizeof(cdc_buffer))==ERR_BUSOFF) {
       /* device not enumerated */
-      LED1_Neg(); LED2_Off();
-      WAIT1_Waitms(1); /* just give back some CPU time. S08JM60 does not allow much spare time here! */
+      LED1_On(); LED2_Off();
     }
     LED1_Off(); LED2_On();
     if (CDC1_GetCharsInRxBuf()!=0) {
@@ -63,8 +62,6 @@ void CDC_Run(void) {
       (void)CDC1_SendString((unsigned char*)"echo: ");
       (void)CDC1_SendString(in_buffer);
       (void)CDC1_SendString((unsigned char*)"\r\n");
-    } else {
-      WAIT1_Waitms(5);
     }
   }
 }

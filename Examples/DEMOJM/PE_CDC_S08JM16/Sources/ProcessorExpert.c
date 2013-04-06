@@ -50,9 +50,9 @@ void CDC_Run(void) {
   for(;;) {
     while(CDC1_App_Task(cdc_buffer, sizeof(cdc_buffer))==ERR_BUSOFF) {
       /* device not enumerated */
-      LED1_Neg(); LED2_Off();
+      LED1_On(); LED2_Off();
     }
-    LED1_Off(); LED2_Neg();
+    LED1_Off(); LED2_On();
     if (CDC1_GetCharsInRxBuf()!=0) {
       i = 0;
       while(   i<sizeof(in_buffer)-1
