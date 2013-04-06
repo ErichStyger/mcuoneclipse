@@ -355,9 +355,8 @@ void usb_class_mass_call_back_dphase
    {           
       if (cmd_ptr->RETRY_COUNT < MAX_RETRIAL_ATTEMPTS) 
       {                                  
-         /*
          /* If endpoint stalled then set finished data phase status 
-         /* to issue a status request command 
+         *  to issue a status request command 
          */
          cmd_ptr->RETRY_COUNT++;  
          cmd_ptr->STATUS = STATUS_FINISHED_DPHASE_ON_USB;
@@ -373,8 +372,8 @@ void usb_class_mass_call_back_dphase
       else 
       {
          /*
-         /* If endpoint stalled then set finished data phase status 
-         /* to issue a status request command 
+          * If endpoint stalled then set finished data phase status 
+          * to issue a status request command 
          */
          cmd_ptr->STATUS = STATUS_FINISHED_DPHASE_ON_USB;
          cmd_ptr->PREV_STATUS =  cmd_ptr->STATUS; /* preserve the status */  
@@ -658,8 +657,10 @@ USB_STATUS usb_class_mass_pass_on_usb
          break;
 
       case STATUS_FINISHED_CSW_ON_USB: /* No action */
-      case STATUS_FAILED_IN_CSW:       
+      case STATUS_FAILED_IN_CSW:  
+#if 0
           printf("Device not ready");
+#endif
         break;
       default:
          break;
@@ -744,8 +745,8 @@ USB_STATUS usb_class_mass_reset_recovery_on_usb
 { /* Body */
    //<< EST //PIPE_INIT_PARAM_STRUCT_PTR pPipe = NULL;
    COMMAND_OBJECT_PTR         cmd_ptr = NULL;
-   DEV_INSTANCE_PTR           dev_ptr = (DEV_INSTANCE_PTR)intf_ptr->G.dev_handle;
-   //<< EST //USB_STATUS                 status = USB_OK;
+   //<< EST //DEV_INSTANCE_PTR           dev_ptr = (DEV_INSTANCE_PTR)intf_ptr->G.dev_handle;
+   USB_STATUS                 status = USB_OK;
    USB_SETUP                  request;
 
    /* Nothing can be done if there is nothing pending*/
