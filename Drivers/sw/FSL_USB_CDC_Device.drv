@@ -127,6 +127,7 @@
 #define %'ModuleName'%.USB_ERR_TX_STRING       5  /* Error sending string */
 #define %'ModuleName'%.USB_ERR_CHECKED_TXFULL  6  /* Error during sending a checked block */
 #define %'ModuleName'%.USB_ERR_RECEIVE         7  /* Error while starting an receive transaction */
+#define %'ModuleName'%.USB_ERR_RX_PUT          8  /* Error while putting RX byte into buffer */
 
 %if (CPUDevice="MCF51MM256") | (CPUDevice="MCF51JE256")
 /* special USB interrupt handling for %CPUDevice */
@@ -515,8 +516,15 @@ void %'ModuleName'%.%App_Callback(byte controller_ID, byte event_type, void *val
 
     BytesToBeCopied = (USB_PACKET_SIZE)((dp_rcv->data_size > %'ModuleName'%.DATA_BUFF_SIZE) ? %'ModuleName'%.DATA_BUFF_SIZE:dp_rcv->data_size);
     for(index = 0; index<BytesToBeCopied ; index++) {
-      while(%@RxBuffer@'ModuleName'%.Put(dp_rcv->data_ptr[index])!=ERR_OK) {
-        /* retry until we can place things in buffer */
+      if (%@RxBuffer@'ModuleName'%.Put(dp_rcv->data_ptr[index])!=ERR_OK) {
+        /* Failed to put byte into buffer. Is the buffer to small? Then increase the Rx buffer.
+           Otherwise not much we could do here, so we are loosing byte here.
+         */
+        %if defined(OnError)
+        %OnError(%'ModuleName'%.USB_ERR_RX_PUT);
+        %else
+        /* Enable OnError() event so this event will be called here */
+        %endif
       }
     }
     (void)USB_Class_CDC_Interface_DIC_Recv_Data(CONTROLLER_ID, NULL, 0); /* see http://eprints.utar.edu.my/143/1/BI-2011-0708672-1.pdf, page 131 */
