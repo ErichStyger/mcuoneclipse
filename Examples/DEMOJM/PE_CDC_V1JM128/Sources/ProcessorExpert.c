@@ -30,11 +30,11 @@
 #include "Tx1.h"
 #include "Rx1.h"
 #include "WAIT1.h"
+#include "CLS1.h"
 #include "FRTOS1.h"
 #include "RTOSCNTR1.h"
 #include "RTOSSWI1.h"
 #include "TickCntr1.h"
-#include "FSSH1.h"
 /* Include shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
