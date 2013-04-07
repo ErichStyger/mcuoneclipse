@@ -84,7 +84,7 @@
 #else
 #define BDT_BASE                   ((uint_32*)(bdt))
 #endif
-#define BD_PTR(ep, rxtx, odd)      (((uint_32)BDT_BASE) & 0xfffffe00 | (((ep) & 0x0f) << 5) | (((rxtx) & 1) << 4) | (((odd) & 1) << 3))
+#define BD_PTR(ep, rxtx, odd)      ((((uint_32)BDT_BASE) & 0xfffffe00) | (((ep) & 0x0f) << 5) | (((rxtx) & 1) << 4) | (((odd) & 1) << 3)) /* << EST added missing parenthesis */
 
 /* FIXME: actually, only endpoint_data[0] is used in atom transaction */
 static EP_STRUCT endpoint_data[16];
@@ -268,7 +268,7 @@ static int_32 _usb_khci_atom_tr
 		{
 			time_delay(1);
 			event_wait_ticks_count++;
-			if (USB_EVENT_SET == _usb_event_wait_ticks(&khci_event, KHCI_EVENT_MASK, FALSE, 1) == USB_OK)
+			if ((USB_EVENT_SET == _usb_event_wait_ticks(&khci_event, KHCI_EVENT_MASK, FALSE, 1)) == USB_OK) /* << EST missing parenthesis added */
 			{
 				break;
         } 
