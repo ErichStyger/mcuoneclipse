@@ -72,6 +72,7 @@
 %endif
 
 /* Kernel includes. */
+#include "%'ModuleName'.h" /* for FREERTOS_CPU_CORTEX_M */
 #include "FreeRTOS.h"
 #include "task.h"
 
