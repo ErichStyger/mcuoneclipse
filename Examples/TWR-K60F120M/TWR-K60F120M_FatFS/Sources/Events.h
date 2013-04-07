@@ -60,6 +60,7 @@
 #include "CLS1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
+#include "HF1.h"
 #include "PE_LDD.h"
 
 /*

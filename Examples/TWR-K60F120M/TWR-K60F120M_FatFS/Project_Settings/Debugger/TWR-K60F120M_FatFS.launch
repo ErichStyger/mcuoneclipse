@@ -125,7 +125,85 @@
 <listEntry value="Symbolics"/>
 <listEntry value="osawareness"/>
 </listAttribute>
-<booleanAttribute key="com.freescale.sa.mcu.launch.ENABLE_ANALYSIS" value="false"/>
+<intAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_MASK_0" value="0"/>
+<intAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_MASK_1" value="0"/>
+<intAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_MASK_2" value="0"/>
+<intAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_MASK_3" value="0"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_MATCH_DATA_SIZE_0" value="Word"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_MATCH_DATA_SIZE_1" value="Word"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_MATCH_DATA_SIZE_2" value="Word"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_MATCH_DATA_SIZE_3" value="Word"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_MATCH_EV_0" value="Disabled"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_MATCH_EV_1" value="Disabled"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_MATCH_EV_2" value="Disabled"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_MATCH_EV_3" value="Disabled"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_VALUE_0" value="0"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_VALUE_1" value="0"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_VALUE_2" value="0"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_VALUE_3" value="0"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.DWT_COUNTER_VALUE" value="4294967290"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.DWT_CYCLE_COUNTER_TAP" value="Tap at cycle count bit 6"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.DWT_ENABLE_EXCEPTION_OVERHEAD" value="false"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.DWT_ENABLE_FOLDED_INSTRUCTIONS" value="false"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.DWT_ENABLE_SLEEP_COUNT" value="false"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.DWT_EN_CPI_COUNT" value="false"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.DWT_EN_CYCLE_COUNT" value="false"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.DWT_EN_EXCEPTION_TRACE" value="false"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.DWT_EN_LSU_COUNT" value="false"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.DWT_EXT_COUNTER_RELOAD_VALUE" value="0"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.DWT_SYNC_PACKET_RATE" value="false"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.ENABLE_DWT_CYCLE_COUNTER" value="true"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.ENABLE_ETB_ALMOST_FULL_MODE" value="false"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.ENABLE_ETM_TRACING" value="true"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.ENABLE_ITM_TRACING" value="false"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.ETB_CONTINUOUS_FORMATTING" value="true"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.ETB_COUNTER_RELOAD_VALUE" value="800"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.ETB_ENABLE_FORMATTING" value="false"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.ETB_FLUSH_MANUALLY" value="false"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.ETB_FLUSH_USING_FLUSHIN" value="false"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.ETB_FLUSH_USING_TRIGEV" value="false"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.ETB_STOP_ON_FLUSH_COMPLETION" value="false"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.ETB_STOP_ON_TRIGGER_EVENT" value="false"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.ETB_TRIGGER_COUNTER" value="0"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.ETB_TRIGGER_FLUSH_COMPLETION" value="false"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.ETB_TRIGGER_ON_TRIGEV" value="true"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.ETB_TRIGGER_ON_TRIGIN" value="false"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.ETM_BRANCH_OUTPUT" value="true"/>
+<intAttribute key="com.freescale.sa.arm.targetconfig.ETM_COUNTER_RELOAD_VALUE" value="0"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.ETM_ENABLE_TIMESTAMPS" value="true"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.ETM_ICE_START_MASK" value="0"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.ETM_ICE_STOP_MASK" value="0"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.ETM_STALL_PROC" value="true"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.ETM_TRACE_START_STOP_ENABLE" value="false"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.ETM_TRIGGER_FUNCTION" value="A"/>
+<intAttribute key="com.freescale.sa.arm.targetconfig.ETM_TRIGGER_INDEX_A" value="0"/>
+<intAttribute key="com.freescale.sa.arm.targetconfig.ETM_TRIGGER_INDEX_B" value="0"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.ETM_TRIGGER_RES_A" value="Always true"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.ETM_TRIGGER_RES_B" value="DWT comparator"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.ETM_TR_START_STOP_FUNCTION" value="A"/>
+<intAttribute key="com.freescale.sa.arm.targetconfig.ETM_TR_START_STOP_INDEX_A" value="0"/>
+<intAttribute key="com.freescale.sa.arm.targetconfig.ETM_TR_START_STOP_INDEX_B" value="0"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.ETM_TR_START_STOP_RES_A" value="Always true"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.ETM_TR_START_STOP_RES_B" value="DWT comparator"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.ETM_TSTAMP_FUNCTION" value="A"/>
+<intAttribute key="com.freescale.sa.arm.targetconfig.ETM_TSTAMP_INDEX_A" value="0"/>
+<intAttribute key="com.freescale.sa.arm.targetconfig.ETM_TSTAMP_INDEX_B" value="0"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.ETM_TSTAMP_RES_A" value="Always true"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.ETM_TSTAMP_RES_B" value="DWT comparator"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.GLOBAL_ITM_TIMESTAMPS" value="false"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.ITM_GLOBAL_TS_FREQ" value="Disabled"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.ITM_SYNC_PACKAGES" value="true"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.ITM_TRACE_ENABLE_MASK" value="1"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.ITM_TS_PRESCALER" value="1 tick"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.LOCAL_ITM_TIMESTAMPS" value="true"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.LOW_POWER_MODE_ENABLE" value="false"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.NO_ITM_TIMESTAMPS" value="false"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.TRACE_DESTINATION" value="TD_TRACELINK"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.TRACE_DESTINATION_CLOCK" value="25"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.TRACE_DESTINATION_KEEP_BUFFERS" value="false"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.TRACE_DESTINATION_SWO" value="false"/>
+<booleanAttribute key="com.freescale.sa.mcu.launch.ENABLE_ANALYSIS" value="true"/>
+<booleanAttribute key="com.freescale.sa.mcu.launch.ENABLE_LOGGING" value="true"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.CommandLineArgs" value="arm_icd "/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.ConfigFile" value=""/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.Library" value="arm_pne_gdi"/>
@@ -133,8 +211,20 @@
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.PEDEBUG_ALTERNATIVE_ALGORITHM_PATH" value=""/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.PEDEBUG_AUTO_SYNC" value="1"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.PEDEBUG_CURRENT_ALGORITHM_INDEX" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.PEDEBUG_CUSTOM_TRIM" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.PEDEBUG_DOTRIM" value="0"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.PEDEBUG_ENABLE_FLASH_PROGRAMMING_DIALOG" value="0"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.PEDEBUG_ERASE_PROGRAM_WITHOUT_ASKING" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.PEDEBUG_NGS_TRIM_OVERRIDE_REFERENCE_FREQUENCY" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.PEDEBUG_PRESERVE1_ACTIVE" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.PEDEBUG_PRESERVE1_END" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.PEDEBUG_PRESERVE1_START" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.PEDEBUG_PRESERVE2_ACTIVE" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.PEDEBUG_PRESERVE2_END" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.PEDEBUG_PRESERVE2_START" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.PEDEBUG_PRESERVE3_ACTIVE" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.PEDEBUG_PRESERVE3_END" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.PEDEBUG_PRESERVE3_START" value="0"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_CyclonePro_PowerDownDelay" value="250"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_CyclonePro_PowerUpDelay" value="250"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_CyclonePro_currentvoltage" value="128"/>
@@ -148,17 +238,23 @@
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_FREQ_TRACELINK" value="3"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_Multilink_PowerDownDelay" value="250"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_Multilink_PowerUpDelay" value="1000"/>
-<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_PORT" value="21"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_PCI_DELAY" value="3"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_PORT" value="101"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_RESET_DELAY" value="0"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_SPECIFY_IP" value="127.0.0.1"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_SPECIFY_IP_ENABLED" value="0"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_SPECIFY_NETWORKCARD" value="127.0.0.1"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_SPECIFY_NETWORKCARD_ENABLED" value="0"/>
-<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_TraceLink_MaxBufferSize" value="1"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_TraceLink_MaxBufferSize" value="3"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_TraceLink_PowerDownDelay" value="250"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_TraceLink_PowerUpDelay" value="250"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_TraceLink_currentvoltage" value="255"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_TraceLink_poweroffonexit" value="1"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_USE_CYCLONEPRO_RELAYS" value="0"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_USE_SWD" value="0"/>
-<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_interface_selection" value="1"/>
-<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.UUID" value="ef6c89aa-285f-41ab-8887-c751cb77cb17"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_USE_TRACELINK_RELAYS" value="1"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_interface_selection" value="5"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.UUID" value="8e688281-ecf7-46eb-b77e-6a41ff78d3ae"/>
 <booleanAttribute key="forceShellDownload" value="false"/>
 <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_ID" value="com.freescale.cdt.debug.cw.arm.ArmDebugger"/>
