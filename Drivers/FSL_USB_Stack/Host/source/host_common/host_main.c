@@ -604,6 +604,7 @@ USB_STATUS _usb_host_init
    USB_HOST_CALLBACK_FUNCTIONS_STRUCT_PTR call_back_table_ptr;
    int_32 mqx_status;
 
+#if 0 /* << EST This does *not* work with the KL25Z FRDM board! */
 #ifdef MCU_MKL25Z4
    /* Trigger Enable pin for MIC2026 switch  */
    SIM_SCGC5 |= SIM_SCGC5_PORTB_MASK;   /* enable clock gating */
@@ -611,7 +612,7 @@ USB_STATUS _usb_host_init
    GPIOB_PDDR |= 1<<11;                 /* output pin */
    GPIOB_PSOR |= 1<<11;                 /* set pin value to 1 */
 #endif /* MCU_MKL25Z4 */
-   
+#endif   
    /* Initialize the USB interface. */   
    usb_host_state_struct_ptr = (USB_HOST_STATE_STRUCT_PTR)USB_mem_alloc_word_aligned(sizeof(USB_HOST_STATE_STRUCT));
    
