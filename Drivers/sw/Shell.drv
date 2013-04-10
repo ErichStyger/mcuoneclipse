@@ -451,10 +451,15 @@ byte %'ModuleName'%.%IterateTable(const unsigned char *cmd, bool *handled, %'Mod
 %-   Example:
 %-     static int counter1;
 %-     int %'ModuleName'%.counter2;
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
+#include "FreeRTOS.h"
+#include "semphr.h"
+
+%endif
 #ifdef __HC08__
   #pragma MESSAGE DISABLE C3303 /* implicit concatenation of strings */
 #endif
-%if defined(ConsoleSempahore) & %ConsoleSempahore='yes'
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
 static xSemaphoreHandle ShellSem = NULL; /* Semaphore to protect shell SCI access */
 %endif
 %-
@@ -684,21 +689,6 @@ bool %'ModuleName'%.%ReadLine(byte *buf, size_t bufSize, %'ModuleName'_ConstStdI
 %include Common\ShellPrintStatus.Inc
 byte %'ModuleName'%.%PrintStatus(%'ModuleName'_ConstStdIOType *io)
 {
-  byte res = ERR_OK;
-%if defined(SWRTC) | defined(HWRTC) | defined(RTOS)
-  byte buf[16];
-%endif
-%if defined(RTOS)
-#if configUSE_TRACE_FACILITY || configGENERATE_RUN_TIME_STATS /* FreeRTOS trace feature enabled */
-#if FRTOS_MEMORY_SCHEME==1 /* this scheme does not allow deallocation of memory */
-  static unsigned char *taskListBufferP=NULL; /* allocated only once, never deallocated! */
-#else
-  unsigned char *taskListBufferP;
-#endif
-  size_t bufSize;
-#endif
-%endif
-
   %'ModuleName'%.%SendStr((unsigned char*)"\r\n", io->stdOut);
   %'ModuleName'%.%SendStr((unsigned char*)%'ModuleName'%.DASH_LINE, io->stdOut);
   %'ModuleName'%.%SendStr((unsigned char*)"\r\nSYSTEM STATUS\r\n", io->stdOut);
@@ -708,7 +698,7 @@ byte %'ModuleName'%.%PrintStatus(%'ModuleName'_ConstStdIOType *io)
   %'ModuleName'%.%SendStr((unsigned char*)" ", io->stdOut);
   %'ModuleName'%.%SendStr((unsigned char*)__TIME__, io->stdOut);
   %'ModuleName'%.%SendStr((unsigned char*)"\r\n", io->stdOut);
-  return res;
+  return ERR_OK;
 }
 
 %endif %- PrintStatus
@@ -909,8 +899,8 @@ byte %'ModuleName'%.%ReadAndParseWithCommandTable(byte *cmdBuf, size_t cmdBufSiz
 %include Common\ShellRequestSerial.Inc
 void %'ModuleName'%.%RequestSerial(void)
 {
-%if defined(ConsoleSempahore) & %ConsoleSempahore='yes'
-  (void)%@RTOS@'ModuleName'%.xSemaphoreTakeRecursive(ShellSem, portMAX_DELAY);
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
+  (void)xSemaphoreTakeRecursive(ShellSem, portMAX_DELAY);
 %endif
 }
 
@@ -922,8 +912,8 @@ void %'ModuleName'%.%RequestSerial(void)
 %include Common\ShellReleaseSerial.Inc
 void %'ModuleName'%.%ReleaseSerial(void)
 {
-%if defined(ConsoleSempahore) & %ConsoleSempahore='yes'
-  (void)%@RTOS@'ModuleName'%.xSemaphoreGiveRecursive(ShellSem);
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
+  (void)xSemaphoreGiveRecursive(ShellSem);
 %endif
 }
 
@@ -936,7 +926,7 @@ void %'ModuleName'%.%ReleaseSerial(void)
 %include Common\ShellGetSemaphore.Inc
 void* %'ModuleName'%.%GetSemaphore(void)
 {
-%if defined(ConsoleSempahore) & %ConsoleSempahore='yes'
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
   return ShellSem;
 %else
   return NULL;
@@ -1010,30 +1000,18 @@ void %'ModuleName'%.%SendStatusStr(const byte *strItem, const byte *strStatus, %
 %include Common\ShellReadChar.Inc
 void %'ModuleName'%.%ReadChar(byte *c)
 {
-%if defined(Serial) | defined(SerialLDD) | defined(USBCDC)
-%if defined(ConsoleSempahore) & %ConsoleSempahore='yes'
-  (void)%@RTOS@'ModuleName'%.xSemaphoreTakeRecursive(ShellSem, portMAX_DELAY);
+%if defined(Serial)
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
+  (void)xSemaphoreTakeRecursive(ShellSem, portMAX_DELAY);
 %endif
 %if defined(Serial)
   if (%@Serial@'ModuleName'%.RecvChar((uint8_t *)c) != ERR_OK) {
     /* failed to receive character: return a zero character */
     *c = '\0';
   }
-%elif defined(USBCDC)
-  if (%@USBCDC@'ModuleName'%.RecvChar((uint8_t *)c) != ERR_OK) {
-    /* failed to receive character: return a zero character */
-    *c = '\0';
-  }
-%elif defined(SerialLDD)
-  %- %inclSUB RTOSAdap_genCriticalSectionBegin(no)
-  if (%@RxBuffer@'ModuleName'%.Get(c)!=ERR_OK) {
-    /* failed to receive character: return a zero character */
-    *c = '\0';
-  }
-  %- %inclSUB RTOSAdap_genCriticalSectionEnd(no)
 %endif
-%if defined(ConsoleSempahore) & %ConsoleSempahore='yes'
-  (void)%@RTOS@'ModuleName'%.xSemaphoreGiveRecursive(ShellSem);
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
+  (void)xSemaphoreGiveRecursive(ShellSem);
 %endif
 %else
   *c = '\0';
@@ -1050,9 +1028,9 @@ void %'ModuleName'%.%ReadChar(byte *c)
 %include Common\ShellSendChar.Inc
 void %'ModuleName'%.%SendChar(byte ch)
 {
-%if defined(Serial) | defined(USBCDC)
-%if defined(ConsoleSempahore) & %ConsoleSempahore='yes'
-  (void)%@RTOS@'ModuleName'%.xSemaphoreTakeRecursive(ShellSem, portMAX_DELAY);
+%if defined(Serial)
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
+  (void)xSemaphoreTakeRecursive(ShellSem, portMAX_DELAY);
 %endif
  %if defined(Serial)
   %if BlockingSend='yes'
@@ -1060,15 +1038,9 @@ void %'ModuleName'%.%SendChar(byte ch)
   %else
   (void)%@Serial@'ModuleName'%.SendChar((uint8_t)ch);            %>40/* non blocking send */
   %endif
- %elif defined(USBCDC)
-  %if BlockingSend='yes'
-  while (%@USBCDC@'ModuleName'%.SendChar((uint8_t)ch)==ERR_TXFULL){}%>40/* Send char */
-  %else
-  (void)%@USBCDC@'ModuleName'%.SendChar((uint8_t)ch);            %>40/* non blocking send */
-  %endif
  %endif
-%if defined(ConsoleSempahore) & %ConsoleSempahore='yes'
-  (void)%@RTOS@'ModuleName'%.xSemaphoreGiveRecursive(ShellSem);
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
+  (void)xSemaphoreGiveRecursive(ShellSem);
 %endif
 %else
   (void)ch;                                                      %>40/* avoid compiler warning about unused argument */
@@ -1085,19 +1057,17 @@ void %'ModuleName'%.%SendChar(byte ch)
 %include Common\ShellKeyPressed.Inc
 bool %'ModuleName'%.%KeyPressed(void)
 {
-%if defined(Serial) | defined(USBCDC)
+%if defined(Serial)
   bool res;
 
-%if defined(ConsoleSempahore) & %ConsoleSempahore='yes'
-  (void)%@RTOS@'ModuleName'%.xSemaphoreTakeRecursive(ShellSem, portMAX_DELAY);
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
+  (void)xSemaphoreTakeRecursive(ShellSem, portMAX_DELAY);
 %endif
 %if defined(Serial)
   res = (bool)((%@Serial@'ModuleName'%.GetCharsInRxBuf()==0U) ? FALSE : TRUE); /* true if there are characters in receive buffer */
-%elif defined(USBCDC)
-  res = (bool)((%@USBCDC@'ModuleName'%.GetCharsInRxBuf()==0U) ? FALSE : TRUE); /* true if there are characters in receive buffer */
 %endif
-%if defined(ConsoleSempahore) & %ConsoleSempahore='yes'
-  (void)%@RTOS@'ModuleName'%.xSemaphoreGiveRecursive(ShellSem);
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
+  (void)xSemaphoreGiveRecursive(ShellSem);
 %endif
   return res;
 %else
@@ -1113,8 +1083,8 @@ bool %'ModuleName'%.%KeyPressed(void)
 %include Common\ShellInit.Inc
 void %'ModuleName'%.%Init(void)
 {
-%if defined(ConsoleSempahore) & %ConsoleSempahore='yes'
-  ShellSem = %@RTOS@'ModuleName'%.xSemaphoreCreateRecursiveMutex();
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
+  ShellSem = xSemaphoreCreateRecursiveMutex();
   if (ShellSem==NULL) { /* semaphore creation failed */
     for(;;) {} /* error, not enough memory? */
   }
@@ -1129,8 +1099,9 @@ void %'ModuleName'%.%Init(void)
 %include Common\ShellDeinit.Inc
 void %'ModuleName'%.%Deinit(void)
 {
-%if defined(ConsoleSempahore) & %ConsoleSempahore='yes'
-  %@RTOS@'ModuleName'%.vSemaphoreDelete(ShellSem);
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
+  vSemaphoreDelete(ShellSem);
+  ShellSem = NULL;
 %endif
 }
 
