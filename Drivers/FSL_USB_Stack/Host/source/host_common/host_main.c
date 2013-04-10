@@ -668,7 +668,7 @@ USB_STATUS _usb_host_init
    }
 #endif
 
-   mqx_status = _bsp_usb_host_init ((pointer)devnum);
+   mqx_status = _bsp_usb_host_init ((pointer)(int)devnum); /* << EST casting first to int, to avoid gcc warning */
 
    if (mqx_status != 0)
    {
