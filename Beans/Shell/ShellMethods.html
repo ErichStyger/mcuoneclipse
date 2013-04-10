@@ -366,6 +366,24 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="RequestSerial">
+<b>RequestSerial</b></a>
+ - Used to get mutual access to the shell console. Only has an effect if using an RTOS with semaphore for the console access.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void RequestSerial(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="ReleaseSerial">
+<b>ReleaseSerial</b></a>
+ - Used to release mutual access to the shell console. Only has an effect if using an RTOS with semaphore for the console access.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void ReleaseSerial(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
 <li><a name="ReadAndParseWithCommandTable">
 <b>ReadAndParseWithCommandTable</b></a>
  - Reads characters from the default input channel and appends it to the buffer. Once a new line has been detected, the line will be parsed using the handlers in the table.
@@ -381,15 +399,6 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
-<li><a name="RequestSerial">
-<b>RequestSerial</b></a>
- - Used to get mutual access to the shell console. Only has an effect if using an RTOS with semaphore for the console access.
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void RequestSerial(void)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-</ul><br />
-</li>
 <li><a name="ParseWithCommandTable">
 <b>ParseWithCommandTable</b></a>
  - Parses a shell command. It handles first the internal commands and will call the provided callback.
@@ -402,15 +411,6 @@ LI.EXP {
 <li><i>parseCallback: Pointer to <i>ComponentName_</i>ConstParseCommandCallback</i> - Pointer to callback which will be called to parse commands in the user application, or NULL if not used.</li>
 <li><i>Return value:byte</i> - Error code
 </li>
-</ul><br />
-</li>
-<li><a name="ReleaseSerial">
-<b>ReleaseSerial</b></a>
- - Used to release mutual access to the shell console. Only has an effect if using an RTOS with semaphore for the console access.
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void ReleaseSerial(void)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 </ul><br />
 </li>
 <li><a name="GetSemaphore">
