@@ -34,8 +34,8 @@
 #include "psptypes.h"
 #include "khci.h"
 
-USB_MSGQ_ELEMENT element_array[10];
-uint_32 index;
+static USB_MSGQ_ELEMENT element_array[10]; /* << EST made it static */
+static uint_32 index; /* << EST made it static */
 
 extern USBMSGQ_STRUCT tr_que;
 
