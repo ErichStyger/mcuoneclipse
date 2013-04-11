@@ -8,7 +8,7 @@
 %;**         Returns the offset applied to the Z value.
 %include Common\GeneralParametersNone.inc
 %;**     Returns     :
-%;**         ---%RetVal %>27 - Z sensor value
+%;**         ---%RetVal %>27 - Z offset value
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

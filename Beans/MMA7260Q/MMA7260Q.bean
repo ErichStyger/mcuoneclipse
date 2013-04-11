@@ -4,7 +4,7 @@
     <Name>MMA7260Q</Name>
     <Description>Driver for the Freescale 3-Axis Accelerometer MMA7260Q</Description>
     <Author>Erich Styger</Author>
-    <Version>01.101</Version>
+    <Version>01.105</Version>
     <Icon>MMA7260Q</Icon>
     <TypesFiles>PE,MMA7260Q\MMA7260Q</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -259,7 +259,7 @@
       <TGrupItem>
         <Name>Calibration</Name>
         <Symbol>CalibrationGroup</Symbol>
-        <Hint/>
+        <Hint>Contains initialization calibration values.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
@@ -421,7 +421,7 @@
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>16bit signed</ReturnType>
-        <RetHint>Measured X Value</RetHint>
+        <RetHint>Measured X value</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
         <Declarations>
@@ -449,7 +449,7 @@
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>16bit signed</ReturnType>
-        <RetHint>Measured Y Value</RetHint>
+        <RetHint>Measured Y value</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
         <Declarations>
@@ -477,7 +477,7 @@
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>16bit signed</ReturnType>
-        <RetHint>Measured Z Value</RetHint>
+        <RetHint>Measured Z value</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
         <Declarations>
@@ -847,7 +847,7 @@
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>16bit signed</ReturnType>
-        <RetHint>Z sensor value</RetHint>
+        <RetHint>Z offset value</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
         <Declarations>
@@ -875,7 +875,7 @@
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>16bit signed</ReturnType>
-        <RetHint>Z sensor value</RetHint>
+        <RetHint>Z offset value</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
         <Declarations>
@@ -903,7 +903,7 @@
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>16bit signed</ReturnType>
-        <RetHint>Z sensor value</RetHint>
+        <RetHint>Z offset value</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
         <Declarations>
@@ -931,7 +931,7 @@
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>16bit signed</ReturnType>
-        <RetHint>Z sensor value</RetHint>
+        <RetHint>1g value for X</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
         <Declarations>
@@ -959,7 +959,7 @@
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>16bit signed</ReturnType>
-        <RetHint>Z sensor value</RetHint>
+        <RetHint>1g value for Y</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
         <Declarations>
@@ -987,7 +987,7 @@
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>16bit signed</ReturnType>
-        <RetHint>Z sensor value</RetHint>
+        <RetHint>1g value for Y</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
         <Declarations>

@@ -10,7 +10,7 @@
 %;**         negative acceleration and positive for positive acceleration).
 %include Common\GeneralParametersNone.inc
 %;**     Returns     :
-%;**         ---%RetVal %>27 - Measured X Value
+%;**         ---%RetVal %>27 - Measured X value
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

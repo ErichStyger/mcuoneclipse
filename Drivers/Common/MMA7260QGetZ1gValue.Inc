@@ -8,7 +8,7 @@
 %;**         Returns the value for 1g for channel  X.
 %include Common\GeneralParametersNone.inc
 %;**     Returns     :
-%;**         ---%RetVal %>27 - Z sensor value
+%;**         ---%RetVal %>27 - 1g value for Y
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine
