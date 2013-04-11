@@ -109,8 +109,13 @@
 #define %'ModuleName'%.G_Select2_0 0x01  /* 2 g sensitivity */
 #define %'ModuleName'%.G_Select4_0 0x02  /* 4 g sensitivity */
 #define %'ModuleName'%.G_Select6_0 0x03  /* 6 g sensitivity */
-%endif
 
+%endif
+%ifdef ParseCommand
+#define %'ModuleName'%.PARSE_COMMAND_ENABLED  1  /* set to 1 if method ParseCommand() is present, 0 otherwise */
+%else
+#define %'ModuleName'%.PARSE_COMMAND_ENABLED  0 /* set to 1 if method ParseCommand() is present, 0 otherwise */
+%endif %- ParseCommand
 %-BW_CUSTOM_USERTYPE_END
 
 
@@ -294,6 +299,26 @@ void %'ModuleName'%.%CalibrateZ1g(void);
 
 %endif %- CalibrateZ1g
 %-BW_METHOD_END CalibrateZ1g
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Deinit
+%ifdef Deinit
+void %'ModuleName'%.%Deinit(void);
+%include Common\MMA7260QDeinit.Inc
+
+%endif %- Deinit
+%-BW_METHOD_END Deinit
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ParseCommand
+%ifdef ParseCommand
+byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io);
+%define! Parcmd
+%define! Parhandled
+%define! Pario
+%define! RetVal
+%include Common\MMA7260QParseCommand.Inc
+
+%endif %- ParseCommand
+%-BW_METHOD_END ParseCommand
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -383,7 +408,82 @@ static tAccelCal sCalValues; /* calibration values in RAM */
 #define ZeroGmilliVoltoffset  1650 /* Vdd/2, for 3.3V this is 1.65V */
 #define milliVoltPerG         800 /* 800mV/g */
 #define zeroGValue           (0xffff/2)   /* this is the value for zero g: midpoint */
+%if defined(Shell)
 
+static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
+  unsigned char buf[8];
+  uint16_t val;
+
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"%'ModuleName'", (unsigned char*)"\r\n", io->stdOut);
+
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  raw", (unsigned char*)"0x", io->stdOut);
+  val = %'ModuleName'%.MeasureGetRawX();
+  buf[0] = '\0';
+  %@Utility@'ModuleName'%.strcatNum16Hex(buf, sizeof(buf), (uint16_t)val);
+  %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)" (", io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16u(val, io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"), 0x", io->stdOut);
+
+  val = %'ModuleName'%.MeasureGetRawY();
+  buf[0] = '\0';
+  %@Utility@'ModuleName'%.strcatNum16Hex(buf, sizeof(buf), (uint16_t)val);
+  %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)" (", io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16u(val, io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"), 0x", io->stdOut);
+
+  val = %'ModuleName'%.MeasureGetRawZ();
+  buf[0] = '\0';
+  %@Utility@'ModuleName'%.strcatNum16Hex(buf, sizeof(buf), (uint16_t)val);
+  %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)" (", io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16u(val, io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)")\r\n", io->stdOut);
+
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  milli-g", (unsigned char*)"", io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetXmg(), io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetYmg(), io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetZmg(), io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
+
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  raw+offset", (unsigned char*)"", io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetX(), io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetY(), io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetZ(), io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
+
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  calibOffset", (unsigned char*)"", io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetXOffset(), io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetYOffset(), io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetZOffset(), io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
+
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  calib 1g", (unsigned char*)"", io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetX1gValue(), io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetY1gValue(), io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetZ1gValue(), io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
+
+  return ERR_OK;
+}
+
+static uint8_t PrintHelp(const %@Shell@'ModuleName'%.StdIOType *io) {
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"%'ModuleName'", (unsigned char*)"Group of %'ModuleName' commands\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  calibrate x|y|z", (unsigned char*)"Performs accelerometer calibration\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+%endif
 %-BW_CUSTOM_VARIABLE_END
 %-BW_INTERN_METHOD_DECL_START
 %- List of internal methods headers
@@ -789,6 +889,47 @@ void %'ModuleName'%.Init(void)
 
 %-INTERNAL_METHOD_END Init
 %-************************************************************************************************************
+%-BW_METHOD_BEGIN Deinit
+%ifdef Deinit
+%include Common\MMA7260QDeinit.Inc
+void %'ModuleName'%.%Deinit(void)
+{
+  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+}
+
+%endif %- Deinit
+%-BW_METHOD_END Deinit
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ParseCommand
+%ifdef ParseCommand
+%define! Parcmd
+%define! Parhandled
+%define! Pario
+%define! RetVal
+%include Common\MMA7260QParseCommand.Inc
+byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)
+{
+  if (%@Utility@'ModuleName'%.strcmp((char*)cmd, %@Shell@'ModuleName'%.CMD_HELP)==0 || %@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' help")==0) {
+    *handled = TRUE;
+    return PrintHelp(io);
+  } else if ((%@Utility@'ModuleName'%.strcmp((char*)cmd, %@Shell@'ModuleName'%.CMD_STATUS)==0) || (%@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' status")==0)) {
+    *handled = TRUE;
+    return PrintStatus(io);
+  } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, (char*)"%'ModuleName' calibrate x")==0) {
+    %'ModuleName'%.CalibrateX1g();
+    *handled = TRUE;
+  } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, (char*)"%'ModuleName' calibrate y")==0) {
+    %'ModuleName'%.CalibrateY1g();
+    *handled = TRUE;
+  } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, (char*)"%'ModuleName' calibrate z")==0) {
+    %'ModuleName'%.CalibrateZ1g();
+    *handled = TRUE;
+  }
+  return ERR_OK;
+}
+
+%endif %- ParseCommand
+%-BW_METHOD_END ParseCommand
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

@@ -5,13 +5,14 @@
 %;** ===================================================================
 %include Common\GeneralMethod.inc (GetRaw8XYZ)
 %;**     Description :
-%;**         Returns in an array the x, y and z accelerometer as 8bit values. 
+%;**         Returns in an array the x, y and z accelerometer as 8bit
+%;**         values.
 %include Common\GeneralParameters.inc(27)
-%;**         uint8_t xyz%>27 - Pointer to an array of three unsigned 8bit 
-%;**         %>29 values which are used to return the accelerometer 
-%;**         %>29 values. 
+%;**       * xyz%Parxyz %>27 - Pointer to an array of three unsigned 8bit
+%;** %>29 values which are used to return the
+%;** %>29 accelerometer values.
 %;**     Returns     :
-%;**         uint8_t %>27 - 
+%;**         ---%RetVal %>27 - Error code, ERR_OK for no error.
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

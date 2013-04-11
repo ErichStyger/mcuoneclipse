@@ -3,12 +3,12 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (Init)
+%include Common\GeneralMethod.inc (GetZ1gValue)
 %;**     Description :
-%;**         Initializes the device driver
+%;**         Returns the value for 1g for channel  Z.
 %include Common\GeneralParametersNone.inc
 %;**     Returns     :
-%;**         ---%RetVal %>27 - Error code, ERR_OK if everything is ok.
+%;**         ---%RetVal %>27 - 1g value for Z
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

@@ -5,10 +5,10 @@
 %;** ===================================================================
 %include Common\GeneralMethod.inc (Deinit)
 %;**     Description :
-%;**         Counterpart to Init() method. 
-%include Common\GeneralParameters.inc(27)
+%;**         Counterpart to Init() method.
+%include Common\GeneralParametersNone.inc
 %;**     Returns     :
-%;**         uint8_t %>27 - 
+%;**         ---%RetVal %>27 - Error code, ERR_OK if everything is ok.
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

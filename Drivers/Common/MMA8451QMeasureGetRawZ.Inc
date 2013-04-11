@@ -3,12 +3,13 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (Init)
+%include Common\GeneralMethod.inc (MeasureGetRawZ)
 %;**     Description :
-%;**         Initializes the device driver
+%;**         Performs a measurement on Z channel and returns the raw
+%;**         value.
 %include Common\GeneralParametersNone.inc
 %;**     Returns     :
-%;**         ---%RetVal %>27 - Error code, ERR_OK if everything is ok.
+%;**         ---%RetVal %>27 - Z sensor value
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

@@ -3,12 +3,12 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (Init)
+%include Common\GeneralMethod.inc (CalibrateY1g)
 %;**     Description :
-%;**         Initializes the device driver
+%;**         Performs a calibration of the sensor. It is assumed that the
+%;**         Y and Z sensors have 0 g, and the X sensor has 1 g.
 %include Common\GeneralParametersNone.inc
-%;**     Returns     :
-%;**         ---%RetVal %>27 - Error code, ERR_OK if everything is ok.
+%include Common\GeneralReturnNothing.inc
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

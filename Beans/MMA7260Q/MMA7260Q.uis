@@ -1,8 +1,8 @@
 
 [USED_FACES]
-BeanVersion=01.105
+BeanVersion=01.110
 
-InterfacesCount=5
+InterfacesCount=7
 
 Symbol=Gselect1pin
 Link=No
@@ -28,3 +28,13 @@ Symbol=Wait
 Link=Yes
 Interface=Wait_I
 Version=01.006
+
+Symbol=Utility
+Link=Yes
+Interface=MMA7260Q\Utility
+Version=01.000
+
+Symbol=Shell
+Link=Yes
+Interface=MMA7260Q\Shell
+Version=01.000

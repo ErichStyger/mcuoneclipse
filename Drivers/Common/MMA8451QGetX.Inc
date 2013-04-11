@@ -3,12 +3,14 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (Init)
+%include Common\GeneralMethod.inc (GetX)
 %;**     Description :
-%;**         Initializes the device driver
+%;**         Retrieves the value for the X axis. The value is adjusted
+%;**         with the zero calibration value (0 for 0 g, negative for
+%;**         negative acceleration and positive for positive acceleration).
 %include Common\GeneralParametersNone.inc
 %;**     Returns     :
-%;**         ---%RetVal %>27 - Error code, ERR_OK if everything is ok.
+%;**         ---%RetVal %>27 - Measured X value
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

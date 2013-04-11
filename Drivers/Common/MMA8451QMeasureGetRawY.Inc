@@ -3,12 +3,13 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (Init)
+%include Common\GeneralMethod.inc (MeasureGetRawY)
 %;**     Description :
-%;**         Initializes the device driver
+%;**         Performs a measurement on Y channel and returns the raw
+%;**         value.
 %include Common\GeneralParametersNone.inc
 %;**     Returns     :
-%;**         ---%RetVal %>27 - Error code, ERR_OK if everything is ok.
+%;**         ---%RetVal %>27 - Y sensor value
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

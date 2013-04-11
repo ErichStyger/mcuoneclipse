@@ -3,12 +3,12 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (Init)
+%include Common\GeneralMethod.inc (GetXmg)
 %;**     Description :
-%;**         Initializes the device driver
+%;**         Returns the X value in mg
 %include Common\GeneralParametersNone.inc
 %;**     Returns     :
-%;**         ---%RetVal %>27 - Error code, ERR_OK if everything is ok.
+%;**         ---%RetVal %>27 - The g value in 1/1000g units
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

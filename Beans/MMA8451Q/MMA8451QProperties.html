@@ -2,7 +2,7 @@
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=windows-1250">
 <title>
-MMA8451Q documentation - Properties
+Component  documentation - Properties
 </title>
 <STYLE type="text/css">
 body{
@@ -135,7 +135,7 @@ LI.EXP {
           <td width="4"></td>
           <td align="center" valign="middle" height="30" width="128">
             <span class="lefttitle">
-			<b>MMA8451Q</b>
+<b>MMA8451Q</b>
             </span>
           </td>
         </tr>
@@ -152,15 +152,16 @@ LI.EXP {
 <a href="MMA8451QUser Types.html">Types and constants</a><br />
 <!---HTMLLISTEND DON'T CHANGE THIS LINE-->
 <br /><br /><br />
-<a href="../../DOCs/PredefSymbols.html">Types &amp; definitions</a><br />
-<a href="../../DOCs/BEANindex.html">Component Index</a><br />
-<a href="../../DOCs/CPUindex.html">CPU Component Index</a><br />
-<a href="../../DOCs/EmbeddedBeans.html">Embedded Components</a><br />
-<a href="../../DOCs/BeanCategories.html">Component Categories</a><br />
+<a href="../../DOCs/PredefSymbols.html">Types &amp; definitions</a><br/>
+<a href="../../DOCs/BEANindex.html">Component Index</a><br/>
+<a href="../../DOCs/CPUindex.html">CPU Component Index</a><br/>
+<a href="../../DOCs/EmbeddedBeans.html">Embedded Components</a><br/>
+<a href="../../DOCs/BeanCategories.html">Components Categories</a><br/>
 
 <br /><br /><br />
 <center>
-<img src="MMA8451Q_b.gif" alt="MMA8451Q icon"/>
+<img src="MMA8451Q_b.gif" alt="Component icon"/>
+
 
 </center>
             </div>
@@ -183,7 +184,9 @@ LI.EXP {
           
            <div class="titlebox">
               <div class="beanname">
-                Component              
+                Component
+                
+                
                 MMA8451Q
               </div>
               <div class="descrtext">Driver for the Freescale MMA8451Q digital I2C accelerometer.</div>
@@ -191,10 +194,20 @@ LI.EXP {
               <div class="info_name">Category: 
                 <span class="info_text">
                 <a href="../../DOCs/BeanCategoriesInfo.html">CPU External Devices-Sensor</a>
+                
                 </span>
               </div>
             </div>
-                                      
+                      
+<!--
+            </td>
+        </tr>
+
+        <tr>        
+-->  
+            
+<!--            <td align="left"> -->
+<!--                   <br /> -->                  
      <div class="text_title">
           Properties:
 		 </div>		 
@@ -204,21 +217,71 @@ LI.EXP {
                   
 <div class="user_text">
 <ul>
-<!--BEG_CDE_PROPERTIES-->
 <li>
 <a name="DeviceName">
 <b>Component Name</b></a> - Name of the component.
 </li>
 <li>
 <a name="I2CSlaveAddress">
-<b>Slave Address</b></a> - Specifies the I2C slave address of the accelerometer.<br><br>There are 2 options:<br />
-<ul><li><u>1D</u>: I2C Device Slave Address, with SA0 (pin7) set to logical HIGH level.</li><li><u>1C</u>: I2C Device Slave Address, with SA0 (pin7) set to logical LOW level.</li></ul><br>
+<b>Slave Address</b></a> - Specifies the I2C slave address of the accelerometer.<br /><br />
+There are 2 options:<br />
+<ul>
+  <li><u>1D</u>: I2C Device Slave Address, with SA0 (pin7) set to logical HIGH level.</li>
+  <li><u>1C</u>: I2C Device Slave Address, with SA0 (pin7) set to logical LOW level.</li>
+</ul><br />
+
 </li>
 <li>
 <a name="I2C">
 <b>I2C Bus</b></a> - Interface to I2C bus connected to the accelerometer.
 </li>
-<!--END_CDE_PROPERTIES-->
+<li>
+<a name="CalibrationGroup">
+<b>Calibration</b></a> - Contains initialization calibration values.
+<ul>
+  <li>
+  <a name="xCalibrationOffset">
+  <b>X offset</b></a> - Offset to be added to X acceleration sensor value
+  </li>
+  <li>
+  <a name="x1gValue">
+  <b>X 1g value</b></a> - Value of the X axis for +1g
+  </li>
+  <li>
+  <a name="yCalibrationOffset">
+  <b>Y offset</b></a> - Offset to be added to Y acceleration sensor value
+  </li>
+  <li>
+  <a name="y1gValue">
+  <b>Y 1g value</b></a> - Value of the Y axis for +1g
+  </li>
+  <li>
+  <a name="zCalibrationOffset">
+  <b>Z offset</b></a> - Offset to be added to Z acceleration sensor value
+  </li>
+  <li>
+  <a name="z1gValue">
+  <b>Z 1g value</b></a> - Value of the Z axis for +1g
+  </li>
+</ul>
+</li>
+<li>
+<a name="ShellEnabled">
+<b>Shell</b></a> - If shell support is enabled. This enables/disables the method ParseCommand().<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+<ul>
+  <li>
+  <a name="Shell">
+  <b>Shell</b></a> - Interface to shell
+  </li>
+  <li>
+  <a name="Utility">
+  <b>Utility</b></a> - Interface to Utility functions
+  </li>
+</ul>
+</li>
+
      </ul>
 <!---USERBEG DON'T CHANGE THIS LINE-->
 
@@ -227,7 +290,7 @@ LI.EXP {
            <p class="footer">
             PROCESSOR EXPERT is trademark of Freescale Semiconductor, Inc.
             <br />
-            Copyright 1997 - 2013 Freescale Semiconductor, Inc.
+            
            </p>
     </td>
   </tr>
