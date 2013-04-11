@@ -41,7 +41,7 @@ static portTASK_FUNCTION(HostTask, pvParameters) {
   for(;;) {
     FsMSD1_AppTask();
     CheckStatus();
-    FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
+    FRTOS1_vTaskDelay(30/portTICK_RATE_MS);
   }
 }
 
