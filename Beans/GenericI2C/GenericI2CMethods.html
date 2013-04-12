@@ -289,6 +289,34 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="ReadByteAddress8">
+<b>ReadByteAddress8</b></a>
+ - Read a byte from the device using an 8bit memory address. This writes (S+i2cAddr+0), (memAddr), (Sr+i2cAddr+1), (data)...(data+P)
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ReadByteAddress8(byte i2cAddr, byte memAddr, byte *data)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>i2cAddr:byte</i> - I2C Address of device</li>
+<li><i>memAddr:byte</i> - Device memory address</li>
+<li><i>data: Pointer to byte</i> - Pointer to read buffer (single byte)</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="WriteByteAddress8">
+<b>WriteByteAddress8</b></a>
+ - Write a byte to the device using an 8bit memory address: (S+i2cAddr+0), (memAddr), (data)...(data+P)
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte WriteByteAddress8(byte i2cAddr, byte memAddr, byte data)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>i2cAddr:byte</i> - I2C address of device</li>
+<li><i>memAddr:byte</i> - Device memory address</li>
+<li><i>data:byte</i> - Data value</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
 <li><a name="RequestBus">
 <b>RequestBus</b></a>
  - Starts a critical section for accessing the bus.

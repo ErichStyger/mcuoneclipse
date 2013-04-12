@@ -261,6 +261,30 @@ byte %'ModuleName'%.%UnselectSlave(void);
 
 %endif %- UnselectSlave
 %-BW_METHOD_END UnselectSlave
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ReadByteAddress8
+%ifdef ReadByteAddress8
+byte %'ModuleName'%.%ReadByteAddress8(byte i2cAddr, byte memAddr, byte *data);
+%define! Pari2cAddr
+%define! ParmemAddr
+%define! Pardata
+%define! RetVal
+%include Common\GenericI2CReadByteAddress8.Inc
+
+%endif %- ReadByteAddress8
+%-BW_METHOD_END ReadByteAddress8
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN WriteByteAddress8
+%ifdef WriteByteAddress8
+byte %'ModuleName'%.%WriteByteAddress8(byte i2cAddr, byte memAddr, byte data);
+%define! Pari2cAddr
+%define! ParmemAddr
+%define! Pardata
+%define! RetVal
+%include Common\GenericI2CWriteByteAddress8.Inc
+
+%endif %- WriteByteAddress8
+%-BW_METHOD_END WriteByteAddress8
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -864,6 +888,36 @@ void* %'ModuleName'%.%GetSemaphore(void)
 
 %endif %- GetSemaphore
 %-BW_METHOD_END GetSemaphore
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ReadByteAddress8
+%ifdef ReadByteAddress8
+%define! Pari2cAddr
+%define! ParmemAddr
+%define! Pardata
+%define! RetVal
+%include Common\GenericI2CReadByteAddress8.Inc
+byte %'ModuleName'%.%ReadByteAddress8(byte i2cAddr, byte memAddr, byte *data)
+{
+  return %'ModuleName'%.ReadAddress(i2cAddr, &memAddr, sizeof(memAddr), data, 1);
+}
+
+%endif %- ReadByteAddress8
+%-BW_METHOD_END ReadByteAddress8
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN WriteByteAddress8
+%ifdef WriteByteAddress8
+%define! Pari2cAddr
+%define! ParmemAddr
+%define! Pardata
+%define! RetVal
+%include Common\GenericI2CWriteByteAddress8.Inc
+byte %'ModuleName'%.%WriteByteAddress8(byte i2cAddr, byte memAddr, byte data)
+{
+  return %'ModuleName'%.WriteAddress(i2cAddr, &memAddr, sizeof(memAddr), &data, 1);
+}
+
+%endif %- WriteByteAddress8
+%-BW_METHOD_END WriteByteAddress8
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
