@@ -307,6 +307,16 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
 
 %endif %- ParseCommand
 %-BW_METHOD_END ParseCommand
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SetFastMode
+%ifdef SetFastMode
+byte %'ModuleName'%.%SetFastMode(bool on);
+%define! Paron
+%define! RetVal
+%include Common\MMA8451QSetFastMode.Inc
+
+%endif %- SetFastMode
+%-BW_METHOD_END SetFastMode
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -339,6 +349,12 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
 %-   Example:
 %-     static int counter1;
 %-     int %'ModuleName'%.counter2;
+%if (CPUfamily = "Kinetis")
+#define %'ModuleName'_CPU_IS_LITTLE_ENDIAN 1 /* Cpu is little endian */
+%else
+#define %'ModuleName'_CPU_IS_LITTLE_ENDIAN 0 /* Cpu is big endian */
+%endif
+
 /* External 3-axis accelerometer control register addresses */
 #define MMA8451_CTRL_REG_1 0x2A
 /* MMA8451 3-axis accelerometer control register bit masks */
@@ -360,9 +376,6 @@ typedef struct {
   int16_t NxOff; /* offset for X axis */
   int16_t NyOff; /* offset for Y axis */
   int16_t NzOff; /* offset for Z axis */
-  int16_t Nx1g;  /* value for 1g for X axis */
-  int16_t Ny1g;  /* value for 1g for Y axis */
-  int16_t Nz1g;  /* value for 1g for Z axis */
 } tAccelCal;
 
 /* default calibration values from component properties */
@@ -370,28 +383,18 @@ const tAccelCal InitialCalibration = { /* Initial default calibration values */
   %xCalibrationOffset, /* X offset */
   %yCalibrationOffset, /* Y offset */
   %zCalibrationOffset, /* Z offset */
-  %x1gValue, /* X 1g */
-  %y1gValue, /* Y 1g */
-  %z1gValue  /* Z 1g */
 };
 static tAccelCal sCalValues; /* calibration values in RAM */
 
 #define CalNxOff   sCalValues.NxOff
 #define CalNyOff   sCalValues.NyOff
 #define CalNzOff   sCalValues.NzOff
-#define CalNx1g    sCalValues.Nx1g /* value for 1g */
-#define CalNy1g    sCalValues.Ny1g /* value for 1g */
-#define CalNz1g    sCalValues.Nz1g /* value for 1g */
 %else
 #define CalNxOff %xCalibrationOffset
 #define CalNyOff %yCalibrationOffset
 #define CalNzOff %zCalibrationOffset
-#define CalNx1g  %x1gValue /* value for 1g */
-#define CalNy1g  %y1gValue /* value for 1g */
-#define CalNz1g  %z1gValue /* value for 1g */
 %endif %- CalibrateY1g
 
-#define zeroGValue           (0xffff/2)   /* this is the value for zero g: midpoint */
 %if defined(Shell)
 
 static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
@@ -406,7 +409,7 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Utility@'ModuleName'%.strcatNum16Hex(buf, sizeof(buf), (uint16_t)val);
   %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
   %@Shell@'ModuleName'%.SendStr((unsigned char*)" (", io->stdOut);
-  %@Shell@'ModuleName'%.SendNum16u(val, io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16s((int16_t)val, io->stdOut);
   %@Shell@'ModuleName'%.SendStr((unsigned char*)"), 0x", io->stdOut);
 
   val = %'ModuleName'%.MeasureGetRawY();
@@ -414,7 +417,7 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Utility@'ModuleName'%.strcatNum16Hex(buf, sizeof(buf), (uint16_t)val);
   %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
   %@Shell@'ModuleName'%.SendStr((unsigned char*)" (", io->stdOut);
-  %@Shell@'ModuleName'%.SendNum16u(val, io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16s((int16_t)val, io->stdOut);
   %@Shell@'ModuleName'%.SendStr((unsigned char*)"), 0x", io->stdOut);
 
   val = %'ModuleName'%.MeasureGetRawZ();
@@ -422,24 +425,8 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Utility@'ModuleName'%.strcatNum16Hex(buf, sizeof(buf), (uint16_t)val);
   %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
   %@Shell@'ModuleName'%.SendStr((unsigned char*)" (", io->stdOut);
-  %@Shell@'ModuleName'%.SendNum16u(val, io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16s((int16_t)val, io->stdOut);
   %@Shell@'ModuleName'%.SendStr((unsigned char*)")\r\n", io->stdOut);
-
-  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  milli-g", (unsigned char*)"", io->stdOut);
-  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetXmg(), io->stdOut);
-  %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
-  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetYmg(), io->stdOut);
-  %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
-  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetZmg(), io->stdOut);
-  %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
-
-  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  raw+offset", (unsigned char*)"", io->stdOut);
-  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetX(), io->stdOut);
-  %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
-  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetY(), io->stdOut);
-  %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
-  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetZ(), io->stdOut);
-  %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
 
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  calibOffset", (unsigned char*)"", io->stdOut);
   %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetXOffset(), io->stdOut);
@@ -457,6 +444,21 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetZ1gValue(), io->stdOut);
   %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
 
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  GetX,Y,Z", (unsigned char*)"", io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetX(), io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetY(), io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetZ(), io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)" (raw+offset)\r\n", io->stdOut);
+
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  mg X,Y,Z", (unsigned char*)"", io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetXmg(), io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetYmg(), io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
+  %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetZmg(), io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)" (milli-g)\r\n", io->stdOut);
   return ERR_OK;
 }
 
@@ -485,7 +487,7 @@ uint8_t %'ModuleName'%.%GetRaw8XYZ(uint8_t *xyz)
 %CODE_BEGIN
   static const uint8_t addr = MMA8451_OUT_X_MSB;
 
-  return %@I2C@'ModuleName'%.ReadAddress(MMA8451_I2C_ADDR, (uint8_t*)&addr, sizeof(addr), &xyz[0], sizeof(xyz));
+  return %@I2C@'ModuleName'%.ReadAddress(MMA8451_I2C_ADDR, (uint8_t*)&addr, sizeof(addr), &xyz[0], 3);
 %CODE_END
 }
 %endif %-GetRaw8XYZ
@@ -514,17 +516,14 @@ uint8_t %'ModuleName'%.%Init(void)
 {
 %CODE_BEGIN
   static const uint8_t addr = MMA8451_CTRL_REG_1;
-  static const uint8_t data = MMA8451_F_READ_BIT_MASK|MMA8451_ACTIVE_BIT_MASK;
+  static const uint8_t data = /*MMA8451_F_READ_BIT_MASK|*/MMA8451_ACTIVE_BIT_MASK;
   /* F_READ: Fast read mode, data format limited to single byte (auto increment counter will skip LSB)
    * ACTIVE: Full scale selection
    */
 %if defined(CalibrateX1g) | defined(CalibrateY1g) | defined(CalibrateZ1g)
   sCalValues.NxOff = InitialCalibration.NxOff;
-  sCalValues.Nx1g  = InitialCalibration.Nx1g;
   sCalValues.NyOff = InitialCalibration.NyOff;
-  sCalValues.Ny1g  = InitialCalibration.Ny1g;
   sCalValues.NzOff = InitialCalibration.NzOff;
-  sCalValues.Nz1g  = InitialCalibration.Nz1g;
 %endif %- CalibrateY1g
   return %@I2C@'ModuleName'%.WriteAddress(MMA8451_I2C_ADDR, (uint8_t*)&addr, sizeof(addr), (uint8_t*)&data, sizeof(data));
 %CODE_END
@@ -553,10 +552,9 @@ void %'ModuleName'%.%CalibrateX1g(void)
   Y >>= 3;
   Z >>= 3;
   /* store the calibration values */
-  sCalValues.Nx1g  = (int16_t)(X-zeroGValue); /* we have 1g on X */
-  /* offset: both Y and Z shall have zero g (midpoint) */
-  sCalValues.NyOff = (int16_t)(Y-zeroGValue);
-  sCalValues.NzOff = (int16_t)(Z-zeroGValue);
+  /* offset: both Y and Z shall have zero g */
+  sCalValues.NyOff = (int16_t)Y;
+  sCalValues.NzOff = (int16_t)Z;
 }
 
 %endif %- CalibrateX1g
@@ -582,10 +580,9 @@ void %'ModuleName'%.%CalibrateY1g(void)
   Y >>= 3;
   Z >>= 3;
   /* store the calibration values */
-  sCalValues.Ny1g  = (int16_t)(Y-zeroGValue); /* we have 1g on Y */
-  /* offset: both X and Z shall have zero g (midpoint) */
-  sCalValues.NxOff = (int16_t)(X-zeroGValue);
-  sCalValues.NzOff = (int16_t)(Z-zeroGValue);
+  /* offset: both X and Z shall have zero g */
+  sCalValues.NxOff = (int16_t)X;
+  sCalValues.NzOff = (int16_t)Z;
 }
 
 %endif %- CalibrateY1g
@@ -611,10 +608,9 @@ void %'ModuleName'%.%CalibrateZ1g(void)
   Y >>= 3;
   Z >>= 3;
   /* store the calibration values */
-  sCalValues.Nz1g  = (int16_t)(Z-zeroGValue); /* we have 1g on Z */
   /* offset: both X and Y shall have zero g (midpoint) */
-  sCalValues.NxOff = (int16_t)(X-zeroGValue);
-  sCalValues.NyOff = (int16_t)(Y-zeroGValue);
+  sCalValues.NxOff = (int16_t)X;
+  sCalValues.NyOff = (int16_t)Y;
 }
 
 %endif %- CalibrateZ1g
@@ -626,14 +622,11 @@ void %'ModuleName'%.%CalibrateZ1g(void)
 %include Common\MMA8451QGetXmg.Inc
 int16_t %'ModuleName'%.%GetXmg(void)
 {
-  int32_t L;
+  int16_t val;
 
-  L = %'ModuleName'%.%MeasureGetRawX();
-  L -= CalNxOff; /* apply offset */
-  L -= zeroGValue; /* get based to zero g */
-  L *= 1000; /* scale to milli g */
-  L /= (CalNx1g-CalNxOff); /* apply 1g calibrated value */
-  return (int16_t)L;
+  val = %'ModuleName'%.%GetX();
+  /* with 14bits and 2g mode, each count corresponds to 0.25 mg */
+  return (int16_t)((val>>2)/4); /* remove 2 bits (16bit to 14bit) and scale */
 }
 
 %endif %- GetXmg
@@ -645,14 +638,11 @@ int16_t %'ModuleName'%.%GetXmg(void)
 %include Common\MMA8451QGetYmg.Inc
 int16_t %'ModuleName'%.%GetYmg(void)
 {
-  int32_t L;
+  int16_t val;
 
-  L = %'ModuleName'%.%MeasureGetRawY();
-  L -= CalNyOff; /* apply offset */
-  L -= zeroGValue; /* get based to zero g */
-  L *= 1000; /* scale to milli g */
-  L /= (CalNy1g-CalNyOff); /* apply 1g calibrated value */
-  return (int16_t)L;
+  val = %'ModuleName'%.%GetY();
+  /* with 14bits and 2g mode, each count corresponds to 0.25 mg */
+  return (int16_t)((val>>2)/4); /* remove 2 bits (16bit to 14bit) and scale */
 }
 
 %endif %- GetYmg
@@ -664,14 +654,11 @@ int16_t %'ModuleName'%.%GetYmg(void)
 %include Common\MMA8451QGetZmg.Inc
 int16_t %'ModuleName'%.%GetZmg(void)
 {
-  int32_t L;
+  int16_t val;
 
-  L = %'ModuleName'%.%MeasureGetRawZ();
-  L -= CalNzOff; /* apply offset */
-  L -= zeroGValue; /* get based to zero g */
-  L *= 1000; /* scale to milli g */
-  L /= (CalNz1g-CalNzOff); /* apply 1g calibrated value */
-  return (int16_t)L;
+  val = %'ModuleName'%.%GetZ();
+  /* with 14bits and 2g mode, each count corresponds to 0.25 mg */
+  return (int16_t)((val>>2)/4); /* remove 2 bits (16bit to 14bit) and scale */
 }
 
 %endif %- GetZmg
@@ -683,12 +670,20 @@ int16_t %'ModuleName'%.%GetZmg(void)
 %include Common\MMA8451QMeasureGetRawX.Inc
 word %'ModuleName'%.%MeasureGetRawX(void)
 {
-  uint16_t val;
-  uint8_t xyz[3];
+  union {
+    uint8_t buf[2]; /* value from device is in big endian */
+    uint16_t be;
+  } val;
+  static const uint8_t addr = MMA8451_OUT_X_MSB;
 
-  %'ModuleName'%.%GetRaw8XYZ(&xyz[0]);
-  val = xyz[0]; /*! \todo NYI */
-  return val;
+  if(%@I2C@'ModuleName'%.ReadAddress(MMA8451_I2C_ADDR, (uint8_t*)&addr, sizeof(addr), &val.buf[0], sizeof(val.buf))!=ERR_OK) {
+    return 0; /* failure */
+  }
+#if %'ModuleName'_CPU_IS_LITTLE_ENDIAN
+  return (uint16_t)((val.buf[0]<<8)|val.buf[1]); /* transform into LE value */
+#else
+  return val.be; /* already in BE */
+#endif
 }
 
 %endif %- MeasureGetRawX
@@ -700,12 +695,20 @@ word %'ModuleName'%.%MeasureGetRawX(void)
 %include Common\MMA8451QMeasureGetRawY.Inc
 word %'ModuleName'%.%MeasureGetRawY(void)
 {
-  uint16_t val;
-  uint8_t xyz[3];
+  union {
+    uint8_t buf[2]; /* value from device is in big endian */
+    uint16_t be;
+  } val;
+  static const uint8_t addr = MMA8451_OUT_Y_MSB;
 
-  %'ModuleName'%.%GetRaw8XYZ(&xyz[0]);
-  val = xyz[1]; /*! \todo NYI */
-  return val;
+  if(%@I2C@'ModuleName'%.ReadAddress(MMA8451_I2C_ADDR, (uint8_t*)&addr, sizeof(addr), &val.buf[0], sizeof(val.buf))!=ERR_OK) {
+    return 0; /* failure */
+  }
+#if %'ModuleName'_CPU_IS_LITTLE_ENDIAN
+  return (uint16_t)((val.buf[0]<<8)|val.buf[1]); /* transform into LE value */
+#else
+  return val.be; /* already in BE */
+#endif
 }
 
 %endif %- MeasureGetRawY
@@ -717,12 +720,20 @@ word %'ModuleName'%.%MeasureGetRawY(void)
 %include Common\MMA8451QMeasureGetRawZ.Inc
 word %'ModuleName'%.%MeasureGetRawZ(void)
 {
-  uint16_t val;
-  uint8_t xyz[3];
+  union {
+    uint8_t buf[2]; /* value from device is in big endian */
+    uint16_t be;
+  } val;
+  static const uint8_t addr = MMA8451_OUT_Z_MSB;
 
-  %'ModuleName'%.%GetRaw8XYZ(&xyz[0]);
-  val = xyz[2]; /*! \todo NYI */
-  return val;
+  if(%@I2C@'ModuleName'%.ReadAddress(MMA8451_I2C_ADDR, (uint8_t*)&addr, sizeof(addr), &val.buf[0], sizeof(val.buf))!=ERR_OK) {
+    return 0; /* failure */
+  }
+#if %'ModuleName'_CPU_IS_LITTLE_ENDIAN
+  return (uint16_t)((val.buf[0]<<8)|val.buf[1]); /* transform into LE value */
+#else
+  return val.be; /* already in BE */
+#endif
 }
 
 %endif %- MeasureGetRawZ
@@ -770,7 +781,7 @@ int16_t %'ModuleName'%.%GetZOffset(void)
 %include Common\MMA8451QGetX1gValue.Inc
 int16_t %'ModuleName'%.%GetX1gValue(void)
 {
-  return CalNx1g;
+  return 4096;
 }
 
 %endif %- GetX1gValue
@@ -782,7 +793,7 @@ int16_t %'ModuleName'%.%GetX1gValue(void)
 %include Common\MMA8451QGetY1gValue.Inc
 int16_t %'ModuleName'%.%GetY1gValue(void)
 {
-  return CalNy1g;
+  return 4096;
 }
 
 %endif %- GetY1gValue
@@ -794,7 +805,7 @@ int16_t %'ModuleName'%.%GetY1gValue(void)
 %include Common\MMA8451QGetZ1gValue.Inc
 int16_t %'ModuleName'%.%GetZ1gValue(void)
 {
-  return CalNz1g;
+  return 4096;
 }
 
 %endif %- GetZ1gValue
@@ -806,12 +817,11 @@ int16_t %'ModuleName'%.%GetZ1gValue(void)
 %include Common\MMA8451QGetX.Inc
 int16_t %'ModuleName'%.%GetX(void)
 {
-  uint16_t value;
+  int16_t value;
 
-  value = %'ModuleName'%.%MeasureGetRawX();
-  value -= CalNxOff; /* adjust with calibration offset */
-  value -= zeroGValue; /* adjust with midpoint zero g value */
-  return (int16_t)value;
+  value = (int16_t)%'ModuleName'%.%MeasureGetRawX();
+  value += CalNxOff; /* adjust with calibration offset */
+  return value;
 }
 
 %endif %- GetX
@@ -823,12 +833,11 @@ int16_t %'ModuleName'%.%GetX(void)
 %include Common\MMA8451QGetY.Inc
 int16_t %'ModuleName'%.%GetY(void)
 {
-  uint16_t value;
+  int16_t value;
 
-  value = %'ModuleName'%.%MeasureGetRawY();
-  value -= CalNyOff; /* adjust with calibration offset */
-  value -= zeroGValue; /* adjust with midpoint zero g value */
-  return (int16_t)value;
+  value = (int16_t)%'ModuleName'%.%MeasureGetRawY();
+  value += CalNyOff; /* adjust with calibration offset */
+  return value;
 }
 
 %endif %- GetY
@@ -840,12 +849,11 @@ int16_t %'ModuleName'%.%GetY(void)
 %include Common\MMA8451QGetZ.Inc
 int16_t %'ModuleName'%.%GetZ(void)
 {
-  uint16_t value;
+  int16_t value;
 
-  value = %'ModuleName'%.%MeasureGetRawZ();
-  value -= CalNzOff; /* adjust with calibration offset */
-  value -= zeroGValue; /* adjust with midpoint zero g value */
-  return (int16_t)value;
+  value = (int16_t)%'ModuleName'%.%MeasureGetRawZ();
+  value += CalNzOff; /* adjust with calibration offset */
+  return value;
 }
 
 %endif %- GetZ
@@ -881,6 +889,30 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
 
 %endif %- ParseCommand
 %-BW_METHOD_END ParseCommand
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SetFastMode
+%ifdef SetFastMode
+%define! Paron
+%define! RetVal
+%include Common\MMA8451QSetFastMode.Inc
+byte %'ModuleName'%.%SetFastMode(bool on)
+{
+  uint8_t val, res;
+
+  res = %@I2C@'ModuleName'%.ReadByteAddress8(MMA8451_I2C_ADDR, MMA8451_CTRL_REG_1, &val);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  if (on) {
+    val |= MMA8451_F_READ_BIT_MASK; /* enable F_READ: Fast read mode, data format limited to single byte (auto increment counter will skip LSB) */
+  } else {
+    val &= ~MMA8451_F_READ_BIT_MASK; /* disable F_READ: Fast read mode, data format limited to single byte (auto increment counter will skip LSB) */
+  }
+  return %@I2C@'ModuleName'%.WriteByteAddress8(MMA8451_I2C_ADDR, MMA8451_CTRL_REG_1, val);
+}
+
+%endif %- SetFastMode
+%-BW_METHOD_END SetFastMode
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

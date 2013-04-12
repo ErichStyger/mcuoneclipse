@@ -4,7 +4,7 @@
     <Name>MMA8451Q</Name>
     <Description>Driver for the Freescale MMA8451Q digital I2C accelerometer.</Description>
     <Author>Erich Styger</Author>
-    <Version>01.020</Version>
+    <Version>01.023</Version>
     <Icon>MMA8451Q</Icon>
     <TypesFiles>PE,MMA8451Q\MMA8451Q</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -96,23 +96,6 @@
           </GrupItem>
           <GrupItem>
             <TIntgItem>
-              <Name>X 1g value</Name>
-              <Symbol>x1gValue</Symbol>
-              <Hint>Value of the X axis for +1g</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>6000</DefaultValue>
-              <MinValue>-32768</MinValue>
-              <MaxValue>32767</MaxValue>
-              <Bases>DEC</Bases>
-              <DefaultBase>DEC</DefaultBase>
-              <ExtraHintDisabled>false</ExtraHintDisabled>
-              <ChangeValueIntoRange>false</ChangeValueIntoRange>
-              <RuntimeProperty>false</RuntimeProperty>
-            </TIntgItem>
-          </GrupItem>
-          <GrupItem>
-            <TIntgItem>
               <Name>Y offset</Name>
               <Symbol>yCalibrationOffset</Symbol>
               <Hint>Offset to be added to Y acceleration sensor value</Hint>
@@ -130,23 +113,6 @@
           </GrupItem>
           <GrupItem>
             <TIntgItem>
-              <Name>Y 1g value</Name>
-              <Symbol>y1gValue</Symbol>
-              <Hint>Value of the Y axis for +1g</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>6000</DefaultValue>
-              <MinValue>-32768</MinValue>
-              <MaxValue>32767</MaxValue>
-              <Bases>DEC</Bases>
-              <DefaultBase>DEC</DefaultBase>
-              <ExtraHintDisabled>false</ExtraHintDisabled>
-              <ChangeValueIntoRange>false</ChangeValueIntoRange>
-              <RuntimeProperty>false</RuntimeProperty>
-            </TIntgItem>
-          </GrupItem>
-          <GrupItem>
-            <TIntgItem>
               <Name>Z offset</Name>
               <Symbol>zCalibrationOffset</Symbol>
               <Hint>Offset to be added to Z acceleration sensor value</Hint>
@@ -154,23 +120,6 @@
               <EditLine>true</EditLine>
               <DefaultValue>0</DefaultValue>
               <MinValue>-32658</MinValue>
-              <MaxValue>32767</MaxValue>
-              <Bases>DEC</Bases>
-              <DefaultBase>DEC</DefaultBase>
-              <ExtraHintDisabled>false</ExtraHintDisabled>
-              <ChangeValueIntoRange>false</ChangeValueIntoRange>
-              <RuntimeProperty>false</RuntimeProperty>
-            </TIntgItem>
-          </GrupItem>
-          <GrupItem>
-            <TIntgItem>
-              <Name>Z 1g value</Name>
-              <Symbol>z1gValue</Symbol>
-              <Hint>Value of the Z axis for +1g</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>6000</DefaultValue>
-              <MinValue>-32768</MinValue>
               <MaxValue>32767</MaxValue>
               <Bases>DEC</Bases>
               <DefaultBase>DEC</DefaultBase>
@@ -765,6 +714,40 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>int16_t #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>SetFastMode</Name>
+        <Symbol>SetFastMode</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Turns the F_READ (Fast Read Mode) on or off</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>on</ParName>
+          <ParType>Boolean</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>if to turn the F_READ mode on or off</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(bool on)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
