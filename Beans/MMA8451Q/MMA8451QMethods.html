@@ -207,6 +207,28 @@ LI.EXP {
 <!---USERBEG DON'T CHANGE THIS LINE-->
 
 <!---USEREND DON'T CHANGE THIS LINE-->
+<li><a name="Enable">
+<b>Enable</b></a>
+ - Enables the device with setting the ACTIVE bit in the CTRL register 1
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte Enable(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="Disable">
+<b>Disable</b></a>
+ - Disables the device with clearing the ACTIVE bit in the CTRL register 1
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte Disable(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
 <li><a name="GetX">
 <b>GetX</b></a>
  - Retrieves the value for the X axis. The value is adjusted with the zero calibration value (0 for 0 g, negative for negative acceleration and positive for positive acceleration).

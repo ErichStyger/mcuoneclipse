@@ -4,7 +4,7 @@
     <Name>MMA8451Q</Name>
     <Description>Driver for the Freescale MMA8451Q digital I2C accelerometer.</Description>
     <Author>Erich Styger</Author>
-    <Version>01.023</Version>
+    <Version>01.024</Version>
     <Icon>MMA8451Q</Icon>
     <TypesFiles>PE,MMA8451Q\MMA8451Q</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -179,6 +179,62 @@
     </Property>
   </PropertyList>
   <MethodList>
+    <Method>
+      <TMthdItem>
+        <Name>Enable</Name>
+        <Symbol>Enable</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Enables the device with setting the ACTIVE bit in the CTRL register 1</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Disable</Name>
+        <Symbol>Disable</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Disables the device with clearing the ACTIVE bit in the CTRL register 1</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
     <Method>
       <TMthdItem>
         <Name>GetX</Name>

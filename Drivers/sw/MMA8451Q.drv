@@ -317,6 +317,24 @@ byte %'ModuleName'%.%SetFastMode(bool on);
 
 %endif %- SetFastMode
 %-BW_METHOD_END SetFastMode
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Enable
+%ifdef Enable
+byte %'ModuleName'%.%Enable(void);
+%define! RetVal
+%include Common\MMA8451QEnable.Inc
+
+%endif %- Enable
+%-BW_METHOD_END Enable
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Disable
+%ifdef Disable
+byte %'ModuleName'%.%Disable(void);
+%define! RetVal
+%include Common\MMA8451QDisable.Inc
+
+%endif %- Disable
+%-BW_METHOD_END Disable
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -515,17 +533,12 @@ uint8_t %'ModuleName'%.%Deinit(void)
 uint8_t %'ModuleName'%.%Init(void)
 {
 %CODE_BEGIN
-  static const uint8_t addr = MMA8451_CTRL_REG_1;
-  static const uint8_t data = /*MMA8451_F_READ_BIT_MASK|*/MMA8451_ACTIVE_BIT_MASK;
-  /* F_READ: Fast read mode, data format limited to single byte (auto increment counter will skip LSB)
-   * ACTIVE: Full scale selection
-   */
 %if defined(CalibrateX1g) | defined(CalibrateY1g) | defined(CalibrateZ1g)
   sCalValues.NxOff = InitialCalibration.NxOff;
   sCalValues.NyOff = InitialCalibration.NyOff;
   sCalValues.NzOff = InitialCalibration.NzOff;
 %endif %- CalibrateY1g
-  return %@I2C@'ModuleName'%.WriteAddress(MMA8451_I2C_ADDR, (uint8_t*)&addr, sizeof(addr), (uint8_t*)&data, sizeof(data));
+  return %@I2C@'ModuleName'%.WriteByteAddress8(MMA8451_I2C_ADDR, MMA8451_CTRL_REG_1, MMA8451_ACTIVE_BIT_MASK); /* enable device */
 %CODE_END
 }
 %endif %-Init
@@ -913,6 +926,44 @@ byte %'ModuleName'%.%SetFastMode(bool on)
 
 %endif %- SetFastMode
 %-BW_METHOD_END SetFastMode
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Enable
+%ifdef Enable
+%define! RetVal
+%include Common\MMA8451QEnable.Inc
+byte %'ModuleName'%.%Enable(void)
+{
+  uint8_t val, res;
+
+  res = %@I2C@'ModuleName'%.ReadByteAddress8(MMA8451_I2C_ADDR, MMA8451_CTRL_REG_1, &val);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  val |= MMA8451_ACTIVE_BIT_MASK; /* enable device */
+  return %@I2C@'ModuleName'%.WriteByteAddress8(MMA8451_I2C_ADDR, MMA8451_CTRL_REG_1, val);
+}
+
+%endif %- Enable
+%-BW_METHOD_END Enable
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Disable
+%ifdef Disable
+%define! RetVal
+%include Common\MMA8451QDisable.Inc
+byte %'ModuleName'%.%Disable(void)
+{
+  uint8_t val, res;
+
+  res = %@I2C@'ModuleName'%.ReadByteAddress8(MMA8451_I2C_ADDR, MMA8451_CTRL_REG_1, &val);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  val &= ~MMA8451_ACTIVE_BIT_MASK; /* disable device */
+  return %@I2C@'ModuleName'%.WriteByteAddress8(MMA8451_I2C_ADDR, MMA8451_CTRL_REG_1, val);
+}
+
+%endif %- Disable
+%-BW_METHOD_END Disable
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
