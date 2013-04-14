@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bean>
+  <Header>
+    <Name>PID_Float</Name>
+    <Description>PID implementation using floating variable.</Description>
+    <Author>Carlos Alvarez</Author>
+    <Version>01.005</Version>
+    <Icon>PID_Float</Icon>
+    <TypesFiles>PE,PID_Float\PID_Float</TypesFiles>
+    <FileVersion>6</FileVersion>
+  </Header>
+  <Options>
+    <BW_HelpType>Default</BW_HelpType>
+    <BW_AutoSaveHelp>yes</BW_AutoSaveHelp>
+    <BW_AutoSaveDriver>yes</BW_AutoSaveDriver>
+    <BW_DetailedHelp>yes</BW_DetailedHelp>
+    <BW_HelpFiles>,Properties,Methods,Events,"User Types"</BW_HelpFiles>
+    <BW_NeedTps>yes</BW_NeedTps>
+    <BW_NeedUst>0</BW_NeedUst>
+    <BW_NeedCns>0</BW_NeedCns>
+    <Shortcut>PIDF</Shortcut>
+    <BeanStatus>RELEASE</BeanStatus>
+    <Category>SW-Control</Category>
+    <Copyright>For non-commercial use only.\n(c) Copyright Carlos Alvarez, 2013</Copyright>
+    <BeanLevel>High</BeanLevel>
+    <DemoDriver>no</DemoDriver>
+  </Options>
+  <PropertyList>
+    <Property>
+      <TCompNameItem>
+        <Name>Component Name</Name>
+        <Symbol>DeviceName</Symbol>
+        <Hint>Name of the component.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue/>
+      </TCompNameItem>
+    </Property>
+    <Property>
+      <TRealItem>
+        <Name>K</Name>
+        <Symbol>Kp</Symbol>
+        <Hint>Gain constant of PID.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>0.100000000000</DefaultValue>
+        <MinValue>0</MinValue>
+        <MaxValue>-1</MaxValue>
+        <ShowHighPrec>false</ShowHighPrec>
+        <RuntimeProperty>false</RuntimeProperty>
+      </TRealItem>
+    </Property>
+    <Property>
+      <TRealItem>
+        <Name>Ti</Name>
+        <Symbol>TI</Symbol>
+        <Hint>Integrative time. Stabilization time of PID in seconds. Must be Ti &gt; 0.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>100</DefaultValue>
+        <MinValue>0.000010000000</MinValue>
+        <MaxValue>-1</MaxValue>
+        <ShowHighPrec>false</ShowHighPrec>
+        <RuntimeProperty>false</RuntimeProperty>
+      </TRealItem>
+    </Property>
+    <Property>
+      <TRealItem>
+        <Name>Td</Name>
+        <Symbol>TD</Symbol>
+        <Hint>Derivatie time of PID in seconds.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>0</DefaultValue>
+        <MinValue>0</MinValue>
+        <MaxValue>-1</MaxValue>
+        <ShowHighPrec>false</ShowHighPrec>
+        <RuntimeProperty>false</RuntimeProperty>
+      </TRealItem>
+    </Property>
+    <Property>
+      <TRealItem>
+        <Name>T</Name>
+        <Symbol>TAO</Symbol>
+        <Hint>Sampling period in seconds.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>0.010000000000</DefaultValue>
+        <MinValue>0.000001000000</MinValue>
+        <MaxValue>-1</MaxValue>
+        <ShowHighPrec>false</ShowHighPrec>
+        <RuntimeProperty>false</RuntimeProperty>
+      </TRealItem>
+    </Property>
+    <Property>
+      <TGrupItem>
+        <Name>Control Variable</Name>
+        <Symbol>U_GROUP</Symbol>
+        <Hint>Control variable configurations.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description/>
+        <Expanded>Yes</Expanded>
+        <Children>
+          <GrupItem>
+            <TEnumItem>
+              <Name>Type of U</Name>
+              <Symbol>U_TYPE</Symbol>
+              <TypeSpec>typeVariableType</TypeSpec>
+              <Hint>Type of control variable.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>2</DefaultIndex>
+              <TextValueIndex>false</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+            </TEnumItem>
+          </GrupItem>
+          <GrupItem>
+            <TRealItem>
+              <Name>Min U value</Name>
+              <Symbol>U_MIN</Symbol>
+              <Hint>Min value of control variable.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>0</DefaultValue>
+              <MinValue>-3.4E+0038</MinValue>
+              <MaxValue> 3.4E+0038</MaxValue>
+              <ShowHighPrec>false</ShowHighPrec>
+              <RuntimeProperty>false</RuntimeProperty>
+            </TRealItem>
+          </GrupItem>
+          <GrupItem>
+            <TRealItem>
+              <Name>Max U value</Name>
+              <Symbol>U_MAX</Symbol>
+              <Hint>Max value of control variable.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>65000</DefaultValue>
+              <MinValue>-3.4E+0038</MinValue>
+              <MaxValue> 3.4E+0038</MaxValue>
+              <ShowHighPrec>false</ShowHighPrec>
+              <RuntimeProperty>false</RuntimeProperty>
+            </TRealItem>
+          </GrupItem>
+          <GrupItem>
+            <TRealItem>
+              <Name>Max rate of change</Name>
+              <Symbol>U_CHG_MAX</Symbol>
+              <Hint>Maximal change of U in each call to Control() method. A 0 value means disabled.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>0</DefaultValue>
+              <MinValue>0</MinValue>
+              <MaxValue>-1</MaxValue>
+              <ShowHighPrec>false</ShowHighPrec>
+              <RuntimeProperty>false</RuntimeProperty>
+            </TRealItem>
+          </GrupItem>
+        </Children>
+      </TGrupItem>
+    </Property>
+  </PropertyList>
+  <MethodList>
+    <Method>
+      <TMthdItem>
+        <Name>Control</Name>
+        <Symbol>Control</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Control function. Must be called every T time.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <ReadOnly>true</ReadOnly>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>true</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint/>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>error</ParName>
+          <ParType>float</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Error signal. (Reference - SystemOutput).</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>u</ParName>
+          <ParType>pointer</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the control variable.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(float error, void* *u)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Reset</Name>
+        <Symbol>Reset</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Reset the PID.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>true</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint/>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Set_K</Name>
+        <Symbol>Set_K</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Change the K parameter.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>true</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint/>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>k</ParName>
+          <ParType>float</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>New K value.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(float k)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Set_Ti</Name>
+        <Symbol>Set_Ti</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Change the Ti parameter.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>true</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint/>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>t</ParName>
+          <ParType>float</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>New Ti value.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(float t)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Set_Td</Name>
+        <Symbol>Set_Td</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Change the Td parameter.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>true</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint/>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>t</ParName>
+          <ParType>float</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>New Td value.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(float t)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Set_T</Name>
+        <Symbol>Set_T</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Change the T parameter.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>1</DefaultIndex>
+        <TextValueIndex>true</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>false</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint/>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>t</ParName>
+          <ParType>float</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>New T value.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(float t)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+  </MethodList>
+  <Links>
+    <EmptySection_DummyValue/>
+  </Links>
+  <Revisions>
+    <RevisionVersion>2</RevisionVersion>
+    <Revision>
+      <Date>2013-04-14</Date>
+      <Version>01.005</Version>
+      <Level>0</Level>
+      <Author>Auto Generated field</Author>
+      <Verified/>
+      <Comment>Auto Generated field</Comment>
+    </Revision>
+  </Revisions>
+</Bean>
