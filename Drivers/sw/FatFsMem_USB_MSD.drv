@@ -287,7 +287,16 @@ const USB_HOST_DRIVER_INFO DriverInfoTable[] = {
 };
 
 void time_delay(uint_32 delay) {
+#if 0 /* too inaccurate? */
   %@Wait@'ModuleName'%.Waitms(delay);
+#else
+  extern volatile long delay_count; /* needs to be incremented in Events.c by a 1 ms timer */
+
+  delay_count = 0;
+  while(delay_count<delay_count) {
+    /* wait */
+  }
+#endif
 }
 
 int_32 _bsp_usb_host_init(pointer param) {
