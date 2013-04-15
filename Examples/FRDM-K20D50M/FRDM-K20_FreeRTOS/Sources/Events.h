@@ -23,6 +23,15 @@
 #include "PE_Error.h"
 #include "PE_Const.h"
 #include "IO_Map.h"
+#include "LEDR.h"
+#include "LEDpin1.h"
+#include "BitIoLdd1.h"
+#include "LEDG.h"
+#include "LEDpin2.h"
+#include "BitIoLdd2.h"
+#include "LEDB.h"
+#include "LEDpin3.h"
+#include "BitIoLdd3.h"
 #include "PE_LDD.h"
 
 void Cpu_OnNMIINT0(void);
