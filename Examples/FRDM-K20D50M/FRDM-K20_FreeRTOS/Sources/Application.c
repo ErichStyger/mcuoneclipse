@@ -6,9 +6,14 @@
 #include "LEDR.h"
 #include "FRTOS1.h"
 #include "Shell.h"
+#include "Trace.h"
+#include "ACCEL1.h"
 
-static portTASK_FUNCTION(Task1, pvParameters) {
+static portTASK_FUNCTION(MainTask, pvParameters) {
   (void)pvParameters; /* parameter not used */
+  ACCEL1_Init(); /* enable accelerometer, if not already enabled */
+  TRACE_Init();
+  SHELL_Init();
   for(;;) {
     LEDR_Neg();
     FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
@@ -16,10 +21,9 @@ static portTASK_FUNCTION(Task1, pvParameters) {
 }
 
 void APP_Run(void) {
-  SHELL_Init();
   if (FRTOS1_xTaskCreate(
-        Task1,  /* pointer to the task */
-        (signed portCHAR *)"Task1", /* task name for kernel awareness debugging */
+        MainTask,  /* pointer to the task */
+        (signed portCHAR *)"Main", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */

@@ -12,6 +12,9 @@
 #include "LEDR.h"
 #include "LEDG.h"
 #include "LEDB.h"
+#include "I2CSPY1.h"
+#include "ACCEL1.h"
+#include "Trace.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -28,6 +31,13 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if FRTOS1_PARSE_COMMAND_ENABLED
   FRTOS1_ParseCommand,
 #endif
+#if defined(ACCEL1_PARSE_COMMAND_ENABLED) && ACCEL1_PARSE_COMMAND_ENABLED==1
+  ACCEL1_ParseCommand,
+#endif
+#if defined(I2CSPY1_PARSE_COMMAND_ENABLED) && I2CSPY1_PARSE_COMMAND_ENABLED==1
+  I2CSPY1_ParseCommand,
+#endif
+  TRACE_ParseCommand,
   NULL /* sentinel */
 };
 

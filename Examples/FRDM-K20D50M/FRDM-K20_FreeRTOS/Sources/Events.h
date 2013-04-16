@@ -38,6 +38,10 @@
 #include "CLS1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
+#include "I2CSPY1.h"
+#include "ACCEL1.h"
+#include "GI2C1.h"
+#include "I2C1.h"
 #include "PE_LDD.h"
 
 void Cpu_OnNMIINT0(void);

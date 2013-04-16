@@ -34,6 +34,10 @@
 #include "CLS1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
+#include "I2CSPY1.h"
+#include "ACCEL1.h"
+#include "GI2C1.h"
+#include "I2C1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
