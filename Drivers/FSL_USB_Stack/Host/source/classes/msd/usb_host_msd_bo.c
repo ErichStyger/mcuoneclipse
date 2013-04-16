@@ -238,7 +238,7 @@ void usb_class_mass_call_back_cbw
       uint_32          status
    )
 { /* Body */
-   USB_MASS_CLASS_INTF_STRUCT_PTR   plocal_intf;
+   USB_MASS_CLASS_INTF_STRUCT_PTR   plocal_intf=NULL; /* << EST always initialize it */
    COMMAND_OBJECT_PTR               cmd_ptr = NULL;
 
     UNUSED(pipe_handle)
