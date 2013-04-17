@@ -76,7 +76,11 @@ USB_STATUS usb_dev_list_free_memory
    )
 { /* Body */
    DEV_INSTANCE_PTR  dev;
+#if 0
    DEV_MEMORY_PTR    mem_ptr, list_ptr;
+#else
+   volatile DEV_MEMORY_PTR    mem_ptr, list_ptr; /* << EST: gcc 4.7.3 crashes with -Os or -O2. Workaround is to use volatile */
+#endif
    USB_STATUS        error;
    uint_8            intf_no;
 
