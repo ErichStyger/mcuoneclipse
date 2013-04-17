@@ -210,7 +210,7 @@ void ConsoleIO_Init()
 				)) | (uint32_t)(
 				 PORT_PCR_MUX(0x03)
 				));           
-#else /* FRDM-KL25Z */
+#else /* FRDM-KL25Z: PTA1/PTA2 */
 	  /* PORTA_PCR1: ISF=0,MUX=2 */
 	  PORTA_PCR1 = (uint32_t)((PORTA_PCR1 & (uint32_t)~0x01000500UL) | (uint32_t)0x0200UL);
 	  /* PORTA_PCR2: ISF=0,MUX=2 */
