@@ -23,197 +23,335 @@
   #include "Runner.h"
 #endif
 
-typedef enum { /* these enumeration values are used as message kinds and sent over I2C */
-  I2C_MSG_KEY, /* keyboard or navigation message, followed by uint8_t for the keyboard code */
-  I2C_MSG_MOTOR_SPEED, /* motor speed, followed by int32_t (Big Endian) for speed */
-  I2C_ACCEL_XYZ, /* accelerometer X, Y and Z, followed by 3 int16_t (Big Endian) accelerometer values */
-  I2C_MSG_PID_SPEED, /* PID desired speed, followed by int32_t (Big Endian) for speed */
-  I2C_MSG_GET_CMD,    /* request for command line string */
-  I2C_MSG_RUNNER
-} I2C_MessageKind;
+#define I2C_LCD_ADDR_MOTOR_ACTUAL_SPEED   0x00 /* 4 bytes, actual motor speed */
+#define I2C_LCD_ADDR_MOTOR_DESIRED_SPEED  0x04 /* 4 bytes, desired motor speed */
+#define I2C_LCD_ADDR_PID_P                0x08 /* 4 bytes, PID P value */
+#define I2C_LCD_ADDR_PID_I                0x0C /* 4 bytes, PID I value */
+#define I2C_LCD_ADDR_PID_D                0x10 /* 4 bytes, PID D value */
+#define I2C_LCD_ADDR_ACCEL_X              0x14 /* 2 bytes, accelerometer X value */
+#define I2C_LCD_ADDR_ACCEL_Y              0x16 /* 2 bytes, accelerometer Y value */
+#define I2C_LCD_ADDR_ACCEL_Z              0x18 /* 2 bytes, accelerometer Z value */
+#define I2C_LCD_ADDR_NAV_KEY              0x1A /* 1 byte, navigation key  */
+#define I2C_LCD_ADDR_MOTOR_PWM            0x1B /* 1 byte, PWM (-100..+100%) value */
+#define I2C_LCD_ADDR_CMD_LENGTH           0x1C /* 1 bytes, size (in bytes) of the command string, including the zero byte */
+#define I2C_LCD_ADDR_CMD_STR              0x1D /* 32 bytes, zero terminated command string */
+#define I2C_LCD_ADDR_EKG_HEART_RATE       0x3D /* 1 byte, EKG heart rate (unsigned) */
+#define I2C_LCD_ADDR_EKG_RAW              0x3E /* 32x2 bytes, EKG raw value (signed)  */
+#define I2C_LCD_ADDR_EKG_NEW_DATA_READY   0xA1 /* 1 byte, EKG raw value (signed)  */
 
-#define I2C_PRE_BYTE0 0x27
-#define I2C_PRE_BYTE1 0xFF
+typedef struct {
+  int32_t motorActualSpeed;   /* 0x00 I2C_LCD_ADDR_MOTOR_ACTUAL_SPEED, 4 bytes */
+  int32_t motorDesiredSpeed;  /* 0x04 I2C_LCD_ADDR_MOTOR_DESIRED_SPEED, 4 bytes */
+  int32_t motorPID_P;         /* 0x08 I2C_LCD_ADDR_PID_P, 2 bytes */
+  int32_t motorPID_I;         /* 0x0C I2C_LCD_ADDR_PID_I, 2 bytes */
+  int32_t motorPID_D;         /* 0x10 I2C_LCD_ADDR_PID_D, 2 bytes */
+  int16_t accelX;             /* 0x14 I2C_LCD_ADDR_ACCEL_X, 2 bytes */
+  int16_t accelY;             /* 0x16 I2C_LCD_ADDR_ACCEL_Y, 2 bytes */
+  int16_t accelZ;             /* 0x18 I2C_LCD_ADDR_ACCEL_Z, 2 bytes */
+  int8_t navKey;              /* 0x1A I2C_LCD_ADDR_NAV_KEY, 1 byte */
+  int8_t motorPWM;            /* 0x1B I2C_LCD_ADDR_MOTOR_PWM, 1 byte */
+  uint8_t cmdLength;          /* 0x1C I2C_LCD_ADDR_CMD_LENGTH, 1 byte */
+  int8_t cmd[32];             /* 0x1D I2C_LCD_ADDR_CMD_STR, 32 bytes, zero terminated */
+  uint8_t ekgHeartRate;       /* 0x3D I2C_LCD_ADDR_EKG_HEART_RATE, 1 byte */
+  int8_t ekgRaw[64];          /* 0x3E I2C_LCD_ADDR_EKG_RAW, 64 bytes (32 int values, little endian) */
+  int8_t ekgNewReady;         /* 0xA1 I2C_LCD_ADDR_EKG_NEW_DATA_READY, 1 byte, 0x1 indicating that new data is ready */
+} Data;
 
-#define I2C_MSG_HEADER_LEN    3 /* prebyte0, prebyte1, zero end byte */
+typedef struct I2C_Device_ {
+  bool nextRXisMemAddress; /* next received character is the address */
+  uint8_t addr; /* memory memDevice address */
+  union {
+    uint8_t mem[4+4+2+2+2+1+1+32+1+64+1]; /* memory memDevice itself */
+    Data data;
+  } u; /* memory union */
+} I2C_Device;
 
-#define I2C_ACCEL_MSG_LEN     7 /* id, plus 3x2 bytes */
-#define I2C_ACCEL_MSG_MAX_IDX (I2C_ACCEL_MSG_LEN+I2C_MSG_HEADER_LEN)
+static I2C_Device memDevice;
 
-#define I2C_MOTOR_MSG_LEN     5 /* id plus 4 bytes */
-#define I2C_MOTOR_MSG_MAX_IDX (I2C_MOTOR_MSG_LEN+I2C_MSG_HEADER_LEN)
+#define I2C_DEBUG_LOG  0  /* if we create debugging diagnostic */
 
-#define I2C_PID_MSG_LEN       5 /* id plus 4 bytes */
-#define I2C_PID_MSG_MAX_IDX   (I2C_PID_MSG_LEN+I2C_MSG_HEADER_LEN)
+typedef enum I2C_DEBUG_EVENTS_ {
+  I2C_DEBUG_WriteReq=1, /* start with one, as array is initialized with zeros */
+  I2C_DEBUG_ReadReq=2,
+  I2C_DEBUG_RxChar=3,
+  I2C_DEBUG_TxChar=4
+} I2C_DEBUG_EVENTS;
 
-#define I2C_GET_CMD_MSG_LEN       1 /* id only */
-#define I2C_GET_CMD_MSG_MAX_IDX   (I2C_GET_CMD_MSG_LEN+I2C_MSG_HEADER_LEN)
+/* typical sequences (the first argument is the memory address, followed by data bytes):
+ * "read 0xa"            ==> OnWriteReq(1), OnRxChar(3)[0xa], OnReadReq(2), OnTxChar(4)[0xa]
+ * "write 0xa 0xbb"      ==> OnWriteReq(1), OnRxChar(3)[0xa], OnRxChar(3)[0xbb]
+ * "write 0xa 0xbb 0xcc" ==> OnWriteReq(1), OnRxChar(3)[0xa], OnRxChar(3)[0xbb], OnRxChar(3)[0xcc]
+ */
 
-static int16_t AccelX, AccelY, AccelZ;
-static int32_t motorSpeed, PIDSpeed;
-static bool sendCmd = FALSE;
-static char buf[32];
-static uint8_t bufIdx=0;
+#if I2C_DEBUG_LOG
+static I2C_DEBUG_EVENTS dbg[32]; /* array of debug events */
+static uint8_t dbgIdx = 0; /* index into dbg[] array */
+
+static void dbgF(I2C_DEBUG_EVENTS event) {
+  dbg[dbgIdx++]=event;
+  if (dbgIdx==sizeof(dbg)) { /* wrap over buffer */
+    dbgIdx=0;
+  }
+}
+#else
+  #define dbgF(n) /* nothing */
+#endif
+
+void I2C_OnWriteReq(void) {
+  /* Called by a master 'write' request on the bus. It is always followed by the device memory address.
+   * At this time we have the device address on the bus, but not the address yet. */
+  dbgF(I2C_DEBUG_WriteReq);
+  I2C_ClearBuffers();
+  memDevice.nextRXisMemAddress = TRUE; /* next byte on bus will be memory address */
+}
+
+void I2C_OnReadReq(void) {
+  /* called by a master 'read' request on the bus */
+  /* Write[@]+ACK
+   * addr+ACK
+   * Read[@]+ACK  <<= we are here!
+   * data at mem[addr]  << Send this data
+   */
+  word nof;
+  uint8_t data;
+
+  dbgF(I2C_DEBUG_ReadReq);
+  if (memDevice.addr<sizeof(memDevice.u)) {
+    data = memDevice.u.mem[memDevice.addr];
+    memDevice.addr++; /* increment address counter */
+  } else {
+    data = 0xFF; /* undefined byte */
+  }
+  (void)I2C1_SendBlock(&data, 1, &nof);
+}
+
+void I2C_OnTxChar(void) {
+  /* request to send a character, this is a read from the memory */
+  word nof;
+  uint8_t data;
+
+  dbgF(I2C_DEBUG_TxChar);
+  if (memDevice.addr<sizeof(memDevice.u)) {
+    data = memDevice.u.mem[memDevice.addr];
+    memDevice.addr++; /* increment address counter */
+  } else {
+    data = 0xFF; /* undefined data */
+  }
+  (void)I2C1_SendBlock(&data, 1, &nof);
+}
+
+void I2C_OnRxChar(void) {
+  uint8_t data;
+  uint16_t nofBytesReceived;
+  uint8_t res;
+
+  dbgF(I2C_DEBUG_RxChar);
+  res = I2C1_RecvBlock(&data, 1, &nofBytesReceived);
+  if (res == ERR_OK) { /* ok, no error */
+    if (memDevice.nextRXisMemAddress) { /* it is the memory address received from the master */
+      memDevice.nextRXisMemAddress = FALSE;
+      memDevice.addr = data;
+    } else { /* data byte received from the master to write to the memory */
+      if (memDevice.addr<sizeof(memDevice.u)) {
+        memDevice.u.mem[memDevice.addr] = data;
+        memDevice.addr++;
+      }
+    }
+  }
+}
 
 int16_t I2C_GetAccelX(void) {
-  return AccelX;
+  int16_t val;
+
+  EnterCritical();
+  val = memDevice.u.data.accelX;
+  ExitCritical();
+  return val;
 }
 
 int16_t I2C_GetAccelY(void) {
-  return AccelY;
+  int16_t val;
+
+  EnterCritical();
+  val = memDevice.u.data.accelY;
+  ExitCritical();
+  return val;
 }
 
 int16_t I2C_GetAccelZ(void) {
-  return AccelZ;
+  int16_t val;
+
+  EnterCritical();
+  val = memDevice.u.data.accelZ;
+  ExitCritical();
+  return val;
 }
 
-int32_t I2C_GetMotorSpeed(void) {
-  return motorSpeed;
+uint8_t I2C_GetEKGHeartRate(void) {
+  uint8_t val;
+
+  EnterCritical();
+  val = memDevice.u.data.ekgHeartRate;
+  ExitCritical();
+  return val;
 }
 
-int32_t I2C_GetPIDSpeed(void) {
-  return PIDSpeed;
+bool I2C_GetEKGIsDataReady(void) {
+  bool val;
+
+  EnterCritical();
+  val = (bool)(memDevice.u.data.ekgNewReady!=0);
+  ExitCritical();
+  return val;
 }
 
-void I2C_SendCmd(void) {
-  if (sendCmd) {
+void I2C_ResetEKGIsDataReady(void) {
+  EnterCritical();
+  memDevice.u.data.ekgNewReady = 0;
+  ExitCritical();
+}
+
+
+int16_t I2C_GetEKGRaw(uint8_t index) {
+  int8_t valH, valL;
+  int16_t val;
+
+  index *= 2; /* transform word index into byte index */
+  if (index>=sizeof(memDevice.u.data.ekgRaw)) {
+    return 0; /* out of range! */
+  }
+  EnterCritical();
+  valH = memDevice.u.data.ekgRaw[index];
+  valL = memDevice.u.data.ekgRaw[index+1];
+  ExitCritical();
+  val = (int16_t)(valH+(valL<<8));
+  return val;
+}
+
+int8_t I2C_GetMotorPWMPercent(void) {
+  int8_t val;
+
+  EnterCritical();
+  val = memDevice.u.data.motorPWM;
+  ExitCritical();
+  return val;
+}
+
+void I2C_SetMotorPWMPercent(int8_t percent) {
+  EnterCritical();
+  memDevice.u.data.motorPWM = percent;
+  ExitCritical();
+}
+
+
+int32_t I2C_GetMotorActualSpeed(void) {
+  int32_t val;
+
+  EnterCritical();
+  val = memDevice.u.data.motorActualSpeed;
+  ExitCritical();
+  return val;
+}
+
+int32_t I2C_GetMotorDesiredSpeed(void) {
+  int32_t val;
+
+  EnterCritical();
+  val = memDevice.u.data.motorDesiredSpeed;
+  ExitCritical();
+  return val;
+}
+
+void I2C_SetMotorDesiredSpeed(int32_t speed) {
+  EnterCritical();
+  memDevice.u.data.motorDesiredSpeed = speed;
+  ExitCritical();
+}
+
+int32_t I2C_GetMotorPID_P(void) {
+  int32_t val;
+
+  EnterCritical();
+  val = memDevice.u.data.motorPID_P;
+  ExitCritical();
+  return val;
+}
+
+void I2C_SetMotorPID_P(int32_t p) {
+  EnterCritical();
+  memDevice.u.data.motorPID_P = p;
+  ExitCritical();
+}
+
+int32_t I2C_GetMotorPID_I(void) {
+  int32_t val;
+
+  EnterCritical();
+  val = memDevice.u.data.motorPID_I;
+  ExitCritical();
+  return val;
+}
+
+void I2C_SetMotorPID_I(int32_t i) {
+  EnterCritical();
+  memDevice.u.data.motorPID_I = i;
+  ExitCritical();
+}
+
+int32_t I2C_GetMotorPID_D(void) {
+  int32_t val;
+
+  EnterCritical();
+  val = memDevice.u.data.motorPID_D;
+  ExitCritical();
+  return val;
+}
+
+void I2C_SetMotorPID_D(int32_t d) {
+  EnterCritical();
+  memDevice.u.data.motorPID_D = d;
+  ExitCritical();
+}
+
+
+void I2C_StoreCmd(void) {
 #if PL_HAS_UI
-    word snt;
-    char buf[32];
+    unsigned char buf[32];
+    uint8_t strSize;
 
 #if PL_HAS_RUNNER
     buf[0] = '@';
     buf[1] = '\0';
     RUNNER_GetCmdString(buf, sizeof(buf));
-#else
+#elif PL_HAS_SLIDER
     SLIDER_GetCmdString(buf, sizeof(buf));
-#endif
-    (void)I2C1_SendBlock(buf, sizeof(buf), &snt);
-#endif /* PL_HAS_UI */
-    sendCmd = FALSE;
-  }
-}
-
-#if PL_HAS_RUNNER
-  static char RunnerBuf[I2C_RUNNER_I2C_MSG_SIZE];
-  /* using a queue */
-  static xQueueHandle I2C_RunnerQueue; /* message queue for runners received through I2C */
-  #define I2C_RUNNER_MSG_QUEUE_LENGTH       24 /* number of queue items */
-  #define I2C_Runner_MSG_QUEUE_ITEM_SIZE    I2C_RUNNER_I2C_MSG_SIZE /* size of each queue item */
-#endif
-
-#if PL_HAS_RUNNER
-uint8_t I2C_GetRunnerMessage(char *buf, size_t bufSize) {
-  if (I2C_RunnerQueue==NULL || bufSize<I2C_RUNNER_I2C_MSG_SIZE) {
-    return ERR_FAILED;
-  }
-  if (FRTOS1_xQueueReceive(I2C_RunnerQueue, buf, 0)==pdPASS) { /* non blocking queue receive */
-    return ERR_OK;
-  }
-  return ERR_RXEMPTY;
-}
-#endif
-
-
-void I2C_OnReceiveData(void) {
-#if PL_IS_I2C_SLAVE
-  uint8_t data, res;
-  uint16_t nofBytesReceived;
-
-  res = I2C1_RecvBlock(&data, 1, &nofBytesReceived);
-  if (res == ERR_OK && nofBytesReceived==1) { /* ok, no error */
-    if (bufIdx==0 && data==I2C_PRE_BYTE0) {
-      buf[0] = data;
-      bufIdx++;
-      return;
-    } else if (bufIdx==1 && data==I2C_PRE_BYTE1 && buf[0]==I2C_PRE_BYTE0) {
-      buf[1] = data;
-      bufIdx++;
-      return;
-    } else if (bufIdx==2) {
-      buf[2] = data; /* size */
-      bufIdx++;
-      return;
-    /*------------------------------------------------*/
-    } else if (bufIdx==3 && data==I2C_MSG_MOTOR_SPEED && buf[2]==I2C_MOTOR_MSG_LEN) { /* start of motor speed message */
-      buf[3] = data; /* I2C_MSG_MOTOR_SPEED */
-      bufIdx++;
-      return;
-    } else if (bufIdx>=4 && buf[3]==I2C_MSG_MOTOR_SPEED && bufIdx <= I2C_MOTOR_MSG_MAX_IDX) { /* motor speed message */
-      buf[bufIdx++] = data;
-    /*------------------------------------------------*/
-    } else if (bufIdx==3 && data==I2C_MSG_PID_SPEED && buf[2]==I2C_PID_MSG_LEN) { /* start of motor speed message */
-      buf[3] = data; /* I2C_MSG_PID_SPEED */
-      bufIdx++;
-      return;
-    } else if (bufIdx>=4 && buf[3]==I2C_MSG_PID_SPEED && bufIdx <= I2C_PID_MSG_MAX_IDX) { /* motor speed message */
-      buf[bufIdx++] = data;
-    /*------------------------------------------------*/
-    } else if (bufIdx==3 && data==I2C_ACCEL_XYZ && buf[2]==I2C_ACCEL_MSG_LEN) { /* start of Accel message */
-      buf[3] = data; /* I2C_ACCEL_XYZ */
-      bufIdx++;
-      return;
-    } else if (bufIdx>=4 && buf[3]==I2C_ACCEL_XYZ && bufIdx <= I2C_ACCEL_MSG_MAX_IDX) { /* Accel message */
-      buf[bufIdx++] = data;
-    /*------------------------------------------------*/
-    } else if (bufIdx==3 && data==I2C_MSG_GET_CMD && buf[2]==I2C_GET_CMD_MSG_LEN) { /* start of GetCMD message */
-      buf[3] = data; /* I2C_GET_CMD */
-      bufIdx++;
-      return;
-    } else if (bufIdx>=4 && buf[3]==I2C_MSG_GET_CMD && bufIdx <= I2C_GET_CMD_MSG_MAX_IDX) { /* GetCmd message */
-      buf[bufIdx++] = data;
-    /*------------------------------------------------*/
-#if PL_HAS_RUNNER
-    } else if (bufIdx==3 && data==I2C_MSG_RUNNER ) { /* start of runner message */
-      buf[3] = data; /* I2C_MSG_RUNNER */
-      bufIdx++;
-      return;
-    } else if (bufIdx>=4 && buf[3]==I2C_MSG_RUNNER && bufIdx < sizeof(buf)) { /* runner message */
-      buf[bufIdx++] = data;
-      if (data != '\0') {
-        return; /* get next byte */
-      }
-#endif
-    } else {
-      bufIdx = 0;
-      return;
-    }
-  } else { /* error */
-    bufIdx = 0;
-    return;
-  }
-  if (data==0) { /* message finished? */
-    if (buf[3]==I2C_ACCEL_XYZ && buf[2]==I2C_ACCEL_MSG_LEN && bufIdx>I2C_ACCEL_MSG_MAX_IDX) { /* message finished */
-      AccelX = (int16_t)((buf[4]<<8)|buf[5]);
-      AccelY = (int16_t)((buf[6]<<8)|buf[7]);
-      AccelZ = (int16_t)((buf[8]<<8)|buf[9]);
-      bufIdx = 0; /* message completed */
-    } else if (buf[3]==I2C_MSG_MOTOR_SPEED && buf[2]==I2C_MOTOR_MSG_LEN && bufIdx>I2C_MOTOR_MSG_MAX_IDX) { /* message finished */
-      motorSpeed = (int32_t)((buf[4]<<24)|(buf[5]<<16)|(buf[6]<<8)|buf[7]);
-      bufIdx = 0; /* message completed */
-    } else if (buf[3]==I2C_MSG_PID_SPEED && buf[2]==I2C_PID_MSG_LEN && bufIdx>I2C_PID_MSG_MAX_IDX) { /* message finished */
-      PIDSpeed = (int32_t)((buf[4]<<24)|(buf[5]<<16)|(buf[6]<<8)|buf[7]);
-      bufIdx = 0; /* message completed */
-    } else if (buf[3]==I2C_MSG_GET_CMD && buf[2]==I2C_GET_CMD_MSG_LEN && bufIdx>I2C_GET_CMD_MSG_MAX_IDX) { /* message finished */
-      sendCmd = TRUE;
-      bufIdx = 0; /* message completed */
-#if PL_HAS_RUNNER
-    } else if (buf[3]==I2C_MSG_RUNNER) { /* message finished */
-      UTIL1_strcpy(RunnerBuf, sizeof(RunnerBuf), &buf[4]);
-      bufIdx = 0; /* message completed */
-      if (I2C_RunnerQueue!=NULL) {
-        signed portBASE_TYPE higherTaskWoken;
-
-        FRTOS1_xQueueSendToBackFromISR(I2C_RunnerQueue, RunnerBuf, &higherTaskWoken);
-      }
-#endif
-    }
-  }
-  if (bufIdx>sizeof(buf)) {
-    bufIdx = 0;
-  }
 #else
-#if PL_APP_MODE_I2C_TWR
+    buf[0] = '\0';
+#endif
+    if (buf[0]!='\0') {
+      uint8_t cnt=3;
+
+      while(cnt>0 && memDevice.u.data.cmdLength!=0) { /* poll cmdLength: this will be set to zero by the master if it is ok to place the string */
+        FRTOS1_vTaskDelay(50/portTICK_RATE_MS); /* give master some time to clear the flasg */
+        cnt--;
+      }
+      if (cnt==0) { /* timeout. Will loose that command. Not ideal, but simple :-) */
+        return; /* get out here */
+      }
+      strSize = (uint8_t)(UTIL1_strlen(buf)+1); /* size of string including zero byte */
+      if (strSize>sizeof(memDevice.u.data.cmd)) {
+        strSize = sizeof(memDevice.u.data.cmd);
+      }
+      EnterCritical();
+      memDevice.u.data.cmdLength = strSize;
+      UTIL1_strcpy(memDevice.u.data.cmd, sizeof(memDevice.u.data.cmd), buf);
+      ExitCritical();
+    }
+#endif /* PL_HAS_UI */
+}
+
+
+#if 0 &&  PL_APP_MODE_I2C_TWR
   byte res;
   byte buf[1];
   word nofBytesReceived;
@@ -231,11 +369,6 @@ void I2C_OnReceiveData(void) {
     } /* switch */
   }
 #endif
-#endif
-}
-
-void I2C_OnSendData(void) {
-}
 
 void I2C_HandleEvent(byte event) {
 #if PL_APP_MODE_I2C_LCD
@@ -270,6 +403,7 @@ void I2C_Init(void) {
     for(;;) {} /* out of memory? */
   }
 #endif
+  I2C1_Enable();
 }
 
 #endif /* PL_HAS_I2C_COMM */

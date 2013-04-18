@@ -192,86 +192,6 @@ void UICalendar1_OnCalendarGetAppointments(UICalendar1_CalendarDateTime *startHi
 }
 #endif
 
-/*
-** ===================================================================
-**     Event       :  I2C1_OnReceiveData (module Events)
-**
-**     Component   :  I2C1 [InternalI2C]
-**     Description :
-**         This event is invoked when I2C finishes the reception of the
-**         data successfully. This event is not available for the SLAVE
-**         mode and if both RecvChar and RecvBlock are disabled. This
-**         event is enabled only if interrupts/events are enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-#if PL_HAS_I2C_COMM
-void I2C1_OnReceiveData(void)
-{
-  I2C_OnReceiveData();
-}
-#endif
-
-/*
-** ===================================================================
-**     Event       :  I2C1_OnTransmitData (module Events)
-**
-**     Component   :  I2C1 [InternalI2C]
-**     Description :
-**         This event is invoked when I2C finishes the transmission of
-**         the data successfully. This event is not available for the
-**         SLAVE mode and if both SendChar and SendBlock are disabled.
-**         This event is enabled only if interrupts/events are enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-#if PL_HAS_I2C_COMM
-void I2C1_OnTransmitData(void)
-{
-  I2C_OnSendData();
-}
-#endif
-
-/*
-** ===================================================================
-**     Event       :  I2C1_OnRxChar (module Events)
-**
-**     Component   :  I2C1 [InternalI2C]
-**     Description :
-**         Called when a correct character is received. This event is
-**         not available for the MASTER mode.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-#if PL_HAS_I2C_COMM
-void I2C1_OnRxChar(void)
-{
-  I2C_OnReceiveData();
-}
-#endif
-
-/*
-** ===================================================================
-**     Event       :  I2C1_OnTxChar (module Events)
-**
-**     Component   :  I2C1 [InternalI2C]
-**     Description :
-**         Called when a correct character is sent (placed to the
-**         transmitter). This event is not available for the MASTER
-**         mode.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-#if PL_HAS_I2C_COMM
-void I2C1_OnTxChar(void)
-{
-  I2C_OnSendData();
-}
-#endif
 
 /*
 ** ===================================================================
@@ -691,6 +611,93 @@ void FAT1_OnIdle(void)
 void FAT1_OnSchedule(void)
 {
   /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  I2C1_OnReadReq (module Events)
+**
+**     Component   :  I2C1 [InternalI2C]
+**     Description :
+**         This event is invoked when its own specific address is
+**         matched with the calling address and the value of the R/W
+**         command bit of the calling address equal to 1, ie., the
+**         Master requests reading from slave (the slave will be
+**         sending). After the return from the event call the first
+**         data byte sending will start. This event is not available
+**         for the MASTER mode.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void I2C1_OnReadReq(void)
+{
+#if PL_HAS_I2C_COMM
+  I2C_OnReadReq();
+#endif
+}
+
+/*
+** ===================================================================
+**     Event       :  I2C1_OnWriteReq (module Events)
+**
+**     Component   :  I2C1 [InternalI2C]
+**     Description :
+**         This event is invoked when its own specific address is
+**         matched with the calling address and the value of the R/W
+**         command bit of the calling address is set to 0, ie., the
+**         Master requests writing to the slave (the slave will be
+**         receiving). After the return from the event call the first
+**         data byte receiving starts. This event is not available for
+**         the MASTER mode.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void I2C1_OnWriteReq(void)
+{
+#if PL_HAS_I2C_COMM
+  I2C_OnWriteReq();
+#endif
+}
+
+/*
+** ===================================================================
+**     Event       :  I2C1_OnRxChar (module Events)
+**
+**     Component   :  I2C1 [InternalI2C]
+**     Description :
+**         Called when a correct character is received. This event is
+**         not available for the MASTER mode.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void I2C1_OnRxChar(void)
+{
+#if PL_HAS_I2C_COMM
+  I2C_OnRxChar();
+#endif
+}
+
+/*
+** ===================================================================
+**     Event       :  I2C1_OnTxChar (module Events)
+**
+**     Component   :  I2C1 [InternalI2C]
+**     Description :
+**         Called when a correct character is sent (placed to the
+**         transmitter). This event is not available for the MASTER
+**         mode.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void I2C1_OnTxChar(void)
+{
+#if PL_HAS_I2C_COMM
+  I2C_OnTxChar();
+#endif
 }
 
 /* END Events */

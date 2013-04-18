@@ -62,6 +62,9 @@
 #if PL_HAS_SOLAR
   #include "Solar.h"
 #endif
+#if PL_HAS_EKG
+  #include "EKG.h"
+#endif
 
 #if PL_USE_SINGLE_FONT /* use only one font */
   #define FONT                PL_FONT()
@@ -124,6 +127,9 @@ static struct {
 #if PL_HAS_MOTOR_GRAPH
       UI1_Button btnMotorGraph;
 #endif
+#if PL_HAS_EKG
+      UI1_Button btnEKGGraph;
+#endif
 #if PL_HAS_SOLAR
       UI1_Button btnSolar;
 #endif
@@ -171,6 +177,9 @@ static struct {
 #endif
 #if PL_HAS_MOTOR_GRAPH
     MOTOR_WindowDesc motorW;
+#endif
+#if PL_HAS_EKG
+    EKG_WindowDesc ekgW;
 #endif
 #if PL_HAS_SOLAR
     SOLAR_WindowDesc solarW;
@@ -282,16 +291,16 @@ static bool ButtonClick_Config_Ok(UI1_Window *window, UI1_Element* element) {
   /* update state variables: */
 #if PL_HAS_SOLAR
   if (UI1_CheckBoxIsChecked(&App.u.mainW.config.regler1)) {
-	  /* Enable Regler 1 */
-	  R_Enable(1);
+    /* Enable Regler 1 */
+    R_Enable(1);
   }
   else if(UI1_CheckBoxIsChecked(&App.u.mainW.config.regler2)){
-	  /* Enable Regler 2 */
-	  R_Enable(2);
+    /* Enable Regler 2 */
+    R_Enable(2);
   }
   else if(UI1_CheckBoxIsChecked(&App.u.mainW.config.regler3)){
-	  /* Enable Regler 3 */
-	  R_Enable(3);
+    /* Enable Regler 3 */
+    R_Enable(3);
   }
 #endif
 #if PL_HAS_HW_SOUNDER
@@ -398,6 +407,10 @@ static void APP_WindowCallback_MainMenu(UI1_Window *window, UI1_Element *element
 #if PL_HAS_MOTOR_GRAPH
     } else if (UI1_EqualElement(element, &App.u.mainW.btnMotorGraph)) {
       APP_SetApplicationMode(APP_MODE_MOTOR_GRAPH);
+#endif
+#if PL_HAS_EKG
+    } else if (UI1_EqualElement(element, &App.u.mainW.btnEKGGraph)) {
+      APP_SetApplicationMode(APP_MODE_EKG_GRAPH);
 #endif
 #if PL_HAS_SOLAR
     } else if (UI1_EqualElement(element, &App.u.mainW.btnSolar)) {
@@ -510,6 +523,12 @@ void APP_SetApplicationMode(APP_ApplicationMode mode) {
     yPos += (UI1_PixelDim)(UI1_GetElementHeight(&App.u.mainW.btnMotorGraph)+5);
 #endif
 
+#if PL_HAS_EKG
+    (void)UI1_CreateButton(&App.u.mainW.window, &App.u.mainW.btnEKGGraph, 5, yPos, 0, 0, (unsigned char*)"EKG Graph", FONT_10, UI1_COLOR_BRIGHT_BLUE);
+    UI1_EnableElementSelection(&App.u.mainW.btnEKGGraph);
+    yPos += (UI1_PixelDim)(UI1_GetElementHeight(&App.u.mainW.btnEKGGraph)+5);
+#endif
+
 #if PL_HAS_SOLAR
     (void)UI1_CreateButton(&App.u.mainW.window, &App.u.mainW.btnSolar, 5, yPos, 0, 0, (unsigned char*)"Solar Control", FONT_10, UI1_COLOR_BRIGHT_BLUE);
     UI1_EnableElementSelection(&App.u.mainW.btnSolar);
@@ -552,18 +571,18 @@ void APP_SetApplicationMode(APP_ApplicationMode mode) {
     (void)UI1_CreateText(&App.u.mainW.config.window, &App.u.mainW.config.selection, 5, yPos, 0, 0, (unsigned char*)"Wählen Sie einen Regler:", FONT_10);
     yPos += (UI1_PixelDim)(UI1_GetElementHeight(&App.u.mainW.config.selection)+5);
     /* checkbox: Regler enable */
-	  (void)UI1_CreateCheckBox(&App.u.mainW.config.window, &App.u.mainW.config.regler1, 5, yPos, 0, 0, UI1_COLOR_BLACK, UI1_COLOR_WHITE, (unsigned char*)"Regler1", FONT, UI1_COLOR_YELLOW);
-	  UI1_EnableElementSelection(&App.u.mainW.config.regler1);
-	  UI1_CheckBoxSet(&App.u.mainW.config.regler1, R_IsEnabled(1));
-	  yPos += (UI1_PixelDim)(UI1_GetElementHeight(&App.u.mainW.config.regler1)+5);
-	  (void)UI1_CreateCheckBox(&App.u.mainW.config.window, &App.u.mainW.config.regler2, 5, yPos, 0, 0, UI1_COLOR_BLACK, UI1_COLOR_WHITE, (unsigned char*)"Regler2", FONT, UI1_COLOR_YELLOW);
-	  UI1_EnableElementSelection(&App.u.mainW.config.regler2);
-	  UI1_CheckBoxSet(&App.u.mainW.config.regler2, R_IsEnabled(2));
-	  yPos += (UI1_PixelDim)(UI1_GetElementHeight(&App.u.mainW.config.regler2)+5);
-	  (void)UI1_CreateCheckBox(&App.u.mainW.config.window, &App.u.mainW.config.regler3, 5, yPos, 0, 0, UI1_COLOR_BLACK, UI1_COLOR_WHITE, (unsigned char*)"Regler3", FONT, UI1_COLOR_YELLOW);
-	  UI1_EnableElementSelection(&App.u.mainW.config.regler3);
-	  UI1_CheckBoxSet(&App.u.mainW.config.regler3, R_IsEnabled(3));
-	  yPos += (UI1_PixelDim)(UI1_GetElementHeight(&App.u.mainW.config.regler3)+5);
+    (void)UI1_CreateCheckBox(&App.u.mainW.config.window, &App.u.mainW.config.regler1, 5, yPos, 0, 0, UI1_COLOR_BLACK, UI1_COLOR_WHITE, (unsigned char*)"Regler1", FONT, UI1_COLOR_YELLOW);
+    UI1_EnableElementSelection(&App.u.mainW.config.regler1);
+    UI1_CheckBoxSet(&App.u.mainW.config.regler1, R_IsEnabled(1));
+    yPos += (UI1_PixelDim)(UI1_GetElementHeight(&App.u.mainW.config.regler1)+5);
+    (void)UI1_CreateCheckBox(&App.u.mainW.config.window, &App.u.mainW.config.regler2, 5, yPos, 0, 0, UI1_COLOR_BLACK, UI1_COLOR_WHITE, (unsigned char*)"Regler2", FONT, UI1_COLOR_YELLOW);
+    UI1_EnableElementSelection(&App.u.mainW.config.regler2);
+    UI1_CheckBoxSet(&App.u.mainW.config.regler2, R_IsEnabled(2));
+    yPos += (UI1_PixelDim)(UI1_GetElementHeight(&App.u.mainW.config.regler2)+5);
+    (void)UI1_CreateCheckBox(&App.u.mainW.config.window, &App.u.mainW.config.regler3, 5, yPos, 0, 0, UI1_COLOR_BLACK, UI1_COLOR_WHITE, (unsigned char*)"Regler3", FONT, UI1_COLOR_YELLOW);
+    UI1_EnableElementSelection(&App.u.mainW.config.regler3);
+    UI1_CheckBoxSet(&App.u.mainW.config.regler3, R_IsEnabled(3));
+    yPos += (UI1_PixelDim)(UI1_GetElementHeight(&App.u.mainW.config.regler3)+5);
 #endif
 
 #if PL_HAS_HW_SOUNDER
@@ -680,6 +699,10 @@ void APP_SetApplicationMode(APP_ApplicationMode mode) {
 #if PL_HAS_MOTOR_GRAPH
   } else if (App.mode == APP_MODE_MOTOR_GRAPH) {
     MOTOR_StartTask(&App.u.motorW);
+#endif
+#if PL_HAS_EKG
+  } else if (App.mode == APP_MODE_EKG_GRAPH) {
+    EKG_StartTask(&App.u.ekgW);
 #endif
 #if PL_HAS_SOLAR
   } else if (App.mode == APP_MODE_SOLAR) {

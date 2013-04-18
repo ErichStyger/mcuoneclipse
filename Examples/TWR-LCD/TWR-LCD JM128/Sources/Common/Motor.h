@@ -31,7 +31,7 @@ typedef struct {
 
 void MOTOR_StartTask(MOTOR_WindowDesc *desc);
 
-#endif /* PL_HAS_MOTOR_GRAPh */
+#endif /* PL_HAS_MOTOR_GRAPH */
 
 
 #endif /* __Motor_H */

@@ -14,7 +14,7 @@ extern "C" {
 
 #include "Platform.h"
 
-#if PL_HAS_UI
+#if PL_HAS_SLIDER
 
 #include "UI1.h"
 
@@ -27,7 +27,7 @@ void SLIDER_SliderW_WindowCallback(UI1_Window *window, UI1_Element *element, UI1
 /*! \brief Returns status of control as string */
 void SLIDER_GetCmdString(unsigned char *buf, size_t bufSize);
 
-#endif PL_HAS_UI
+#endif /* PL_HAS_SLIDER */
 
 #ifdef __cplusplus
 }

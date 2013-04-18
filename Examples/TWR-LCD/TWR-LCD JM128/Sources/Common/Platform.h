@@ -136,14 +136,14 @@
 #define PL_USE_SINGLE_FONT        (0 && PL_HAS_UI) /* if we use just one single font (Helv10n) to reduce ROM size */
 #define PL_HAS_TOUCHSCREEN_DEMO   (0 && PL_HAS_UI && PL_HAS_HW_TOUCHSCREEN)  /* if we include touch screen demo */
 #define PL_HAS_CALIBRATION_DEMO   (1 && PL_HAS_UI && PL_HAS_HW_TOUCHSCREEN)  /* if we include a calibration demo */
-#define PL_HAS_CUBE_DEMO          (0 && PL_HAS_UI)  /* if we include the 3D rotating cube demo */
-#define PL_HAS_SHIP_DEMO          (0 && PL_HAS_UI && PL_HAS_CUBE_DEMO)  /* if include the ship demo in addition to the cube demo */
-#define PL_HAS_TETRIS_DEMO        (0 && PL_HAS_UI)  /* if we include the Tetris game demo */
-#define PL_HAS_FONT_DEMO          (0 && PL_HAS_UI && !PL_USE_SINGLE_FONT )  /* if we show the font demo */
+#define PL_HAS_CUBE_DEMO          (1 && PL_HAS_UI)  /* if we include the 3D rotating cube demo */
+#define PL_HAS_SHIP_DEMO          (1 && PL_HAS_UI && PL_HAS_CUBE_DEMO)  /* if include the ship demo in addition to the cube demo */
+#define PL_HAS_TETRIS_DEMO        (1 && PL_HAS_UI)  /* if we include the Tetris game demo */
+#define PL_HAS_FONT_DEMO          (1 && PL_HAS_UI && !PL_USE_SINGLE_FONT )  /* if we show the font demo */
 #define PL_HAS_LARGE_FONT_DEMO    (0 && PL_HAS_UI && PL_HAS_FONT_DEMO)/* this will show large fonts, but needs more ROM */
 #define PL_HAS_CALENDAR_DEMO      (0 && PL_HAS_UI)  /* if we show the calendar demo */
 #define PL_HAS_TASKLIST           (1 && PL_HAS_UI && PL_USE_RTOS) /* if we show a list of RTOS tasks */
-#define PL_HAS_ACCEL_DEMO         (0 && PL_HAS_UI && (PL_HAS_HW_ACCELEROMETER || PL_APP_MODE_I2C_LCD)) /* if we demo the accelerator sensor (either through hardware or through I2C messages */
+#define PL_HAS_ACCEL_DEMO         (1 && PL_HAS_UI && (PL_HAS_HW_ACCELEROMETER || PL_APP_MODE_I2C_LCD)) /* if we demo the accelerator sensor (either through hardware or through I2C messages */
 #define PL_HAS_ACCEL_ORIENT       (0 && PL_HAS_UI && PL_HAS_HW_ACCELEROMETER) /* if we change the display through accelerometer orientation */
 #define PL_HAS_SD_DEMO            (0 && PL_HAS_UI && PL_HAS_HW_SD_CARD) /* if we demo the microSD card */
 #define PL_HAS_SD_WRITE           (0 && PL_HAS_UI && PL_HAS_SD_DEMO)
@@ -152,6 +152,7 @@
 #define PL_HAS_AUTO_DEMO          (0) /* if we iterate automatically through demos */
 #define PL_HAS_SOLAR               0
 #define PL_HAS_RUNNER             (0 && PL_HAS_UI) /* if we run a runner system through I2C */
+#define PL_HAS_EKG                (0 && PL_HAS_UI) /* support for EKG */
 
 #if PL_USE_SINGLE_FONT || UI1_FIXED_FONT
   #define PL_FONT()  UI1_FIXED_FONT() /* the font we use as single font */

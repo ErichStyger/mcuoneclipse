@@ -285,38 +285,6 @@ void Sensor2_OnADGive(void);
 ** ===================================================================
 */
 
-void I2C1_OnReceiveData(void);
-/*
-** ===================================================================
-**     Event       :  I2C1_OnReceiveData (module Events)
-**
-**     Component   :  I2C1 [InternalI2C]
-**     Description :
-**         This event is invoked when I2C finishes the reception of the
-**         data successfully. This event is not available for the SLAVE
-**         mode and if both RecvChar and RecvBlock are disabled. This
-**         event is enabled only if interrupts/events are enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-
-void I2C1_OnTransmitData(void);
-/*
-** ===================================================================
-**     Event       :  I2C1_OnTransmitData (module Events)
-**
-**     Component   :  I2C1 [InternalI2C]
-**     Description :
-**         This event is invoked when I2C finishes the transmission of
-**         the data successfully. This event is not available for the
-**         SLAVE mode and if both SendChar and SendBlock are disabled.
-**         This event is enabled only if interrupts/events are enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-
 void I2C1_OnRxChar(void);
 /*
 ** ===================================================================
@@ -396,6 +364,44 @@ void FAT1_OnSchedule(void);
 **     Component   :  FAT1 [FAT_FileSystem]
 **     Description :
 **         Event called to give an RTOS scheduler a chance.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void I2C1_OnReadReq(void);
+/*
+** ===================================================================
+**     Event       :  I2C1_OnReadReq (module Events)
+**
+**     Component   :  I2C1 [InternalI2C]
+**     Description :
+**         This event is invoked when its own specific address is
+**         matched with the calling address and the value of the R/W
+**         command bit of the calling address equal to 1, ie., the
+**         Master requests reading from slave (the slave will be
+**         sending). After the return from the event call the first
+**         data byte sending will start. This event is not available
+**         for the MASTER mode.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void I2C1_OnWriteReq(void);
+/*
+** ===================================================================
+**     Event       :  I2C1_OnWriteReq (module Events)
+**
+**     Component   :  I2C1 [InternalI2C]
+**     Description :
+**         This event is invoked when its own specific address is
+**         matched with the calling address and the value of the R/W
+**         command bit of the calling address is set to 0, ie., the
+**         Master requests writing to the slave (the slave will be
+**         receiving). After the return from the event call the first
+**         data byte receiving starts. This event is not available for
+**         the MASTER mode.
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================

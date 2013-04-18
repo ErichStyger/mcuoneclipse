@@ -34,10 +34,14 @@ static xTaskHandle xHandleTaskMotorDemo;         /* acceleration demo window tas
 static MOTOR_WindowDesc *appWp;
 
 static void motorGraphW_WindowCallback(UI1_Window *window, UI1_Element *element, UI1_EventCallbackKind kind, UI1_Pvoid data) {
+#if PL_HAS_SLIDER
   if (UI1_EqualElement(element, &appWp->sliderSpace)) {
     SLIDER_SliderW_WindowCallback(window, element, kind, data);
     return;
   }
+#else
+  (void)data; (void)window;
+#endif
   if (kind==UI1_EVENT_CLICK) {
     if (UI1_EqualElement(element, &appWp->iconClose)) {
       EVNT1_SetEvent(EVNT1_APP_MODE_CHANGE); /* request to close application */
@@ -67,7 +71,7 @@ static uint8_t RangeSpeed(int32_t speed) {
 static portTASK_FUNCTION(TaskMotorDemo, pvParameters) {
   MOTOR_WindowDesc *ui = (MOTOR_WindowDesc*)pvParameters;
   UIG1_DataPoint data[2], prevData[2];
-  
+
   appWp = ui;
 #if PL_APP_MODE_I2C_LCD
   I2C_ClearBuffers();
@@ -83,12 +87,12 @@ static portTASK_FUNCTION(TaskMotorDemo, pvParameters) {
   prevData[0].data = 0;
   prevData[1].color = UI1_COLOR_RED;
   prevData[1].data = 0;
-  
+
   for (;;) {
 #if PL_HAS_I2C_COMM
-    I2C_SendCmd();
-    data[0].data = RangeSpeed(I2C_GetPIDSpeed());
-    data[1].data = RangeSpeed(I2C_GetMotorSpeed());
+    I2C_StoreCmd();
+    data[0].data = RangeSpeed(I2C_GetMotorDesiredSpeed());
+    data[1].data = RangeSpeed(I2C_GetMotorActualSpeed());
 #else
     data[0].data = 50;
     data[1].data = 60;
@@ -101,7 +105,7 @@ static portTASK_FUNCTION(TaskMotorDemo, pvParameters) {
     if (EVNT1_GetEvent(EVNT1_APP_MODE_CHANGE)) { /* request to close application */
       EVNT1_ClearEvent(EVNT1_APP_MODE_CHANGE); /* reset event flag */
       xHandleTaskMotorDemo = NULL;
-      FRTOS1_vTaskDelete(NULL); /* kill ourself */ 
+      FRTOS1_vTaskDelete(NULL); /* kill ourself */
     }
     FRTOS1_vTaskDelay(20/portTICK_RATE_MS);
   } /* for */
@@ -109,7 +113,7 @@ static portTASK_FUNCTION(TaskMotorDemo, pvParameters) {
 
 void MOTOR_StartTask(MOTOR_WindowDesc *desc) {
   UI1_PixelDim yPos, h;
-  
+
   UI1_CreateScreen(&desc->screen, UI1_COLOR_WHITE);
   (void)UI1_CreateWindow(&desc->screen, &desc->window, UI1_COLOR_BRIGHT_GREEN, 0, 0, UI1_GetWidth(), UI1_GetHeight());
   (void)UI1_CreateHeader(&desc->window, &desc->header, (unsigned char*)"Motor", FONT, UI1_COLOR_BLUE);
@@ -126,12 +130,12 @@ void MOTOR_StartTask(MOTOR_WindowDesc *desc) {
   yPos = (UI1_PixelDim)(UI1_GetElementPosY(&desc->window)+UI1_GetElementHeight(&desc->header));
 #if  PL_HAS_SLIDER
   /* graph */
-  UIG1_CreateGraph(&desc->window, &desc->graph, 0, yPos,      
-      (UI1_PixelDim)(UI1_GetElementWidth(&desc->header)-100), 
+  UIG1_CreateGraph(&desc->window, &desc->graph, 0, yPos,
+      (UI1_PixelDim)(UI1_GetElementWidth(&desc->header)-100),
       (UI1_PixelDim)(UI1_GetElementHeight(&desc->window)-UI1_GetElementHeight(&desc->header)));
   /* slider window */
   /* create a space so we can catch the events */
-  (void)UI1_CreateSpace(&desc->window, &desc->sliderSpace, 
+  (void)UI1_CreateSpace(&desc->window, &desc->sliderSpace,
       (UI1_PixelDim)(UI1_GetElementWidth(&desc->graph)), yPos,
       (UI1_PixelDim)(UI1_GetElementWidth(&desc->header)-UI1_GetElementWidth(&desc->graph)),
       (UI1_PixelDim)(UI1_GetElementHeight(&desc->graph)));
@@ -143,10 +147,10 @@ void MOTOR_StartTask(MOTOR_WindowDesc *desc) {
       (UI1_PixelDim)(UI1_GetElementHeight(&desc->sliderSpace)-6));
 #else
   /* graph */
-  UIG1_CreateGraph(&desc->window, &desc->graph, 0, yPos,      
-      (UI1_PixelDim)(UI1_GetElementWidth(&desc->header)), 
+  UIG1_CreateGraph(&desc->window, &desc->graph, 0, yPos,
+      (UI1_PixelDim)(UI1_GetElementWidth(&desc->header)),
       (UI1_PixelDim)(UI1_GetElementHeight(&desc->window)-UI1_GetElementHeight(&desc->header)));
-#endif  
+#endif
   appWp = desc; /* need to set it, as the update below will call the callback, and we need it there! */
   /* update the screen */
   UI1_UpdateScreen(&desc->screen);

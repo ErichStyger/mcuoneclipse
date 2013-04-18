@@ -49,6 +49,9 @@ typedef enum {
 #if PL_HAS_MOTOR_GRAPH    /* motor graph window */
   APP_MODE_MOTOR_GRAPH,
 #endif
+#if PL_HAS_EKG    /* EKG graph window */
+  APP_MODE_EKG_GRAPH,
+#endif
 #if PL_HAS_CALIBRATION_DEMO
   APP_MODE_CALIBRATION,  /* calibration screen */
 #endif
