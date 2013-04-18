@@ -45,21 +45,6 @@
 #include "BLUSB1.h"
 
 
-void S191_OnError(byte lineNo);
-/*
-** ===================================================================
-**     Event       :  S191_OnError (module Events)
-**
-**     Component   :  S191 [S19]
-**     Description :
-**         Event called in case of an error
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**         lineNo          - line number
-**     Returns     : Nothing
-** ===================================================================
-*/
-
 void S191_OnSRecord(byte *returnCode, byte type, dword addr, byte *dataBuf, byte dataBufSize, void *data);
 /*
 ** ===================================================================
