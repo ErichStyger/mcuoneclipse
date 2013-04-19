@@ -239,7 +239,7 @@
 #define INCLUDE_xTaskGetSchedulerState                           %>50 0
 %endif
 %- --------------------------------------------------------------------
-#define INCLUDE_xQueueGetMutexHolder 1
+#define INCLUDE_xQueueGetMutexHolder                             %>50 1
 %- --------------------------------------------------------------------
 
 /* Memory Scheme Identification */
