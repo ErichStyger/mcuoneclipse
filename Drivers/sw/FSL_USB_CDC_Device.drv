@@ -128,6 +128,7 @@
 #define %'ModuleName'%.USB_ERR_CHECKED_TXFULL  6  /* Error during sending a checked block */
 #define %'ModuleName'%.USB_ERR_RECEIVE         7  /* Error while starting an receive transaction */
 #define %'ModuleName'%.USB_ERR_RX_PUT          8  /* Error while putting RX byte into buffer */
+#define %'ModuleName'%.USB_ERR_TX_BLOCK        9  /* Error sending data block */
 
 %if (CPUDevice="MCF51MM256") | (CPUDevice="MCF51JE256")
 /* special USB interrupt handling for %CPUDevice */
@@ -286,6 +287,17 @@ void %'ModuleName'%.RunUsbEngine(void);
 %include Common\GeneralInternal.inc (RunUsbEngine)
 
 %-INTERNAL_METHOD_END RunUsbEngine
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SendBlock
+%ifdef SendBlock
+byte %'ModuleName'%.%SendBlock(byte *data, word dataSize);
+%define! Pardata
+%define! PardataSize
+%define! RetVal
+%include Common\FSL_USB_CDC_DeviceSendBlock.Inc
+
+%endif %- SendBlock
+%-BW_METHOD_END SendBlock
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -461,6 +473,33 @@ byte %'ModuleName'%.%SendChar(%'ModuleName'_TComData Chr)
 
 %endif %- SendChar
 %-BW_METHOD_END SendChar
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SendBlock
+%ifdef SendBlock
+%define! Pardata
+%define! PardataSize
+%define! RetVal
+%include Common\FSL_USB_CDC_DeviceSendBlock.Inc
+byte %'ModuleName'%.%SendBlock(byte *data, word dataSize)
+{
+  byte res = ERR_OK;
+
+  while(dataSize > 0) {
+    if (%'ModuleName'%.%SendChar(*data)!=ERR_OK) {
+      res = ERR_TXFULL;
+    }
+    dataSize--; data++;
+  }
+%if defined(OnError)
+  if (res!=ERR_OK) {
+    %OnError(%'ModuleName'%.USB_ERR_TX_BLOCK);
+  }
+%endif
+  return res;
+}
+
+%endif %- SendBlock
+%-BW_METHOD_END SendBlock
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SendString
 %ifdef SendString
@@ -720,7 +759,6 @@ void %'ModuleName'%.%ClearTxBuffer(void)
 
 %endif %- ClearTxBuffer
 %-BW_METHOD_END ClearTxBuffer
-%-************************************************************************************************************
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

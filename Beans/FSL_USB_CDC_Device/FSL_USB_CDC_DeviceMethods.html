@@ -301,6 +301,19 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="SendBlock">
+<b>SendBlock</b></a>
+ - Method to send a data block to the USB interface. Method is non-blocking: if data cannot be sent, it will be lost. If OnError() event is enabled, the error event will be called in case of error.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte SendBlock(byte *data, word dataSize)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>data: Pointer to byte</i> - Pointer to data to send.</li>
+<li><i>dataSize:word</i> - Size of data in bytes</li>
+<li><i>Return value:byte</i> - Error code. ERR_OK for success and ERR_FAILED otherwise.
+</li>
+</ul><br />
+</li>
 <li><a name="PutBufferChecked">
 <b>PutBufferChecked</b></a>
  - Puts a data block into the output buffer, but does not send it. If there is not enough size available, then ERR_TXFULL is returned, otherwise ERR_OK. The application then needs to call USB_App_Callback() to actually send the buffer.
