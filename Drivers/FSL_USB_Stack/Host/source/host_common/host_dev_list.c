@@ -76,11 +76,7 @@ USB_STATUS usb_dev_list_free_memory
    )
 { /* Body */
    DEV_INSTANCE_PTR  dev;
-#if 0
    DEV_MEMORY_PTR    mem_ptr, list_ptr;
-#else
-   volatile DEV_MEMORY_PTR    mem_ptr, list_ptr; /* << EST: gcc 4.7.3 crashes with -Os or -O2. Workaround is to use volatile */
-#endif
    USB_STATUS        error;
    uint_8            intf_no;
 
@@ -98,6 +94,7 @@ USB_STATUS usb_dev_list_free_memory
    /* Free memory blocks on this device's list */
    USB_lock();
    mem_ptr = dev->memlist;
+#if 0
    list_ptr = mem_ptr->next;
 
    do {
@@ -105,7 +102,13 @@ USB_STATUS usb_dev_list_free_memory
       mem_ptr = list_ptr;
       list_ptr = mem_ptr->next;
    } while (mem_ptr != NULL);
-
+#else /* << EST: above code will crash if list has more than one entry */
+   while(mem_ptr!=NULL) {
+     list_ptr = mem_ptr->next;
+     USB_mem_free(mem_ptr);
+     mem_ptr = list_ptr;
+   }
+#endif
    dev->memlist = NULL;
    USB_unlock();
 
