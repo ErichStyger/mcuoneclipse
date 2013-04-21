@@ -322,7 +322,7 @@ void usb_class_mass_call_back_dphase
       uint_32          status
    )
 { /* Body */
-   USB_MASS_CLASS_INTF_STRUCT_PTR   plocal_intf;
+   USB_MASS_CLASS_INTF_STRUCT_PTR   plocal_intf = NULL; /* << EST always initialize it */
    COMMAND_OBJECT_PTR               cmd_ptr = NULL;   
    USB_STATUS                       return_code;
       
@@ -851,7 +851,7 @@ static void usb_class_mass_reset_callback
       uint_32           status
    )
 { /* Body */
-   USB_MASS_CLASS_INTF_STRUCT_PTR   plocal_intf;
+   USB_MASS_CLASS_INTF_STRUCT_PTR   plocal_intf = NULL; /* << EST Always initialize it */
    PIPE_INIT_PARAM_STRUCT_PTR       pPipe;
    COMMAND_OBJECT_PTR               cmd_ptr = NULL;
 
