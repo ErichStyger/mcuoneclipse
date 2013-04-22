@@ -34,6 +34,10 @@
 #include "LEDpin6.h"
 #include "BitIoLdd6.h"
 #include "UTIL1.h"
+#include "TMOUT1.h"
+#include "TI1.h"
+#include "TimerIntLdd1.h"
+#include "TU1.h"
 #include "USB1.h"
 #include "USBInit2.h"
 #include "CDC1.h"
@@ -56,6 +60,22 @@ void Cpu_OnNMIINT(void);
 ** ===================================================================
 */
 
+
+/*
+** ===================================================================
+**     Event       :  TI1_OnInterrupt (module Events)
+**
+**     Component   :  TI1 [TimerInt]
+**     Description :
+**         When a timer interrupt occurs this event is called (only
+**         when the component is enabled - <Enable> and the events are
+**         enabled - <EnableEvent>). This event is enabled only if a
+**         <interrupt service/event> is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void TI1_OnInterrupt(void);
 
 /* END Events */
 #endif /* __Events_H*/

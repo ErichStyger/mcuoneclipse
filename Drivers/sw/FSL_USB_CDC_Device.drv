@@ -49,6 +49,7 @@
 %-
 %-BW_INTERN_COMMENTS_START
 %- List of descriptions of internal methods
+%define! Description_SendDataBlock Sends a USB data block
 %define! Description_RunUsbEngine Runs the USB polling engine
 %-BW_INTERN_COMMENTS_END
 %-
@@ -129,6 +130,7 @@
 #define %'ModuleName'%.USB_ERR_RECEIVE         7  /* Error while starting an receive transaction */
 #define %'ModuleName'%.USB_ERR_RX_PUT          8  /* Error while putting RX byte into buffer */
 #define %'ModuleName'%.USB_ERR_TX_BLOCK        9  /* Error sending data block */
+#define %'ModuleName'%.USB_TIMEOUT_SEND       10  /* Timeout while sending */
 
 %if (CPUDevice="MCF51MM256") | (CPUDevice="MCF51JE256")
 /* special USB interrupt handling for %CPUDevice */
@@ -298,6 +300,15 @@ byte %'ModuleName'%.%SendBlock(byte *data, word dataSize);
 
 %endif %- SendBlock
 %-BW_METHOD_END SendBlock
+%-************************************************************************************************************
+%-INTERNAL_METHOD_BEG SendDataBlock
+byte %'ModuleName'%.SendDataBlock(byte *data, word dataSize);
+%define! Pardata
+%define! PardataSize
+%define! RetVal
+%include Common\GeneralInternal.inc (SendDataBlock)
+
+%-INTERNAL_METHOD_END SendDataBlock
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -622,6 +633,50 @@ void %'ModuleName'%.RunUsbEngine(void)
 
 %-INTERNAL_METHOD_END RunUsbEngine
 %-************************************************************************************************************
+%-INTERNAL_METHOD_BEG SendDataBlock
+%define! Pardata
+%define! PardataSize
+%define! RetVal
+%include Common\GeneralInternal.inc (SendDataBlock)
+byte %'ModuleName'%.SendDataBlock(byte *data, word dataSize)
+{
+%if defined(Timeout) & %AppTaskTimeout >. "0"
+  %@Timeout@'ModuleName'%.CounterHandle timeout;
+%endif
+  uint8_t res = ERR_OK;
+
+  transactionOngoing = TRUE;
+  if (USB_Class_CDC_Interface_DIC_Send_Data(CONTROLLER_ID, data, dataSize)!=USB_OK) {
+    transactionOngoing = FALSE;
+%if defined(OnError)
+    %OnError(%'ModuleName'%.USB_ERR_SEND);
+%endif
+    return ERR_FAULT;
+  }
+  /* wait for transaction finish */
+%if defined(Timeout) & %AppTaskTimeout >. "0"
+  timeout = %@Timeout@'ModuleName'%.GetCounter(%AppTaskTimeout/%@Timeout@'ModuleName'%.TICK_PERIOD_MS); /* set up timeout counter */
+%endif
+  while(transactionOngoing) { /* wait until transaction is finished */
+    %'ModuleName'%.RunUsbEngine();
+%if defined(Timeout) & %AppTaskTimeout >. "0"
+    if (%@Timeout@'ModuleName'%.CounterExpired(timeout)) {
+%if defined(OnError)
+      %OnError(%'ModuleName'%.USB_TIMEOUT_SEND);
+%endif
+      res = ERR_FAILED;
+      break;
+    }
+%endif
+  }
+%if defined(Timeout) & %AppTaskTimeout >. "0"
+  %@Timeout@'ModuleName'%.LeaveCounter(timeout); /* return timeout counter */
+%endif
+  return res;
+}
+
+%-INTERNAL_METHOD_END SendDataBlock
+%-************************************************************************************************************
 %-BW_METHOD_BEGIN App_Task
 %ifdef App_Task
 %define! PartxBuf
@@ -630,7 +685,7 @@ void %'ModuleName'%.RunUsbEngine(void)
 %include Common\FSL_USB_CDC_DeviceApp_Task.Inc
 byte %'ModuleName'%.%App_Task(byte *txBuf, size_t txBufSize)
 {
-  uint8_t i;
+  uint8_t i, res;
 
   /* device is %CPUDevice */
   %'ModuleName'%.RunUsbEngine();
@@ -643,30 +698,16 @@ byte %'ModuleName'%.%App_Task(byte *txBuf, size_t txBufSize)
       while(i<txBufSize && %@TxBuffer@'ModuleName'%.Get(&txBuf[i])==ERR_OK) {
         i++;
       }
-      transactionOngoing = TRUE;
-      if (USB_Class_CDC_Interface_DIC_Send_Data(CONTROLLER_ID, txBuf, i)!=USB_OK) {
-        transactionOngoing = FALSE;
-%if defined(OnError)
-        %OnError(%'ModuleName'%.USB_ERR_SEND);
-%endif
-        return ERR_FAULT;
-      }
-      while(transactionOngoing) { /* wait until transaction is finished */
-        %'ModuleName'%.RunUsbEngine();
+      res = %'ModuleName'%.SendDataBlock(txBuf, i);
+      if (res!=ERR_OK) {
+        return res;
       }
 #if 1 /* workaround for problem in USB stack v3.1.1: if last block is 8, 16, 32, 40, 48, ... bytes, it does not get out until the next transfer? */
       if ((i%%8)==0) {
         /* workaround: sending a dummy block of zero bytes */
-        transactionOngoing = TRUE;
-        if (USB_Class_CDC_Interface_DIC_Send_Data(CONTROLLER_ID, txBuf, 0)!=USB_OK) {
-          transactionOngoing = FALSE;
-%if defined(OnError)
-          %OnError(%'ModuleName'%.USB_ERR_SEND);
-%endif
-          return ERR_FAULT;
-        }
-        while(transactionOngoing) { /* wait until transaction is finished */
-          %'ModuleName'%.RunUsbEngine();
+        res = %'ModuleName'%.SendDataBlock(txBuf, 0);
+        if (res!=ERR_OK) {
+          return res;
         }
       }
 #endif
@@ -759,6 +800,7 @@ void %'ModuleName'%.%ClearTxBuffer(void)
 
 %endif %- ClearTxBuffer
 %-BW_METHOD_END ClearTxBuffer
+%-************************************************************************************************************
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

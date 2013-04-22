@@ -287,6 +287,22 @@ The following items are available only if the group is enabled (the value is "En
 <a name="RxBuffer">
 <b>Receive Buffer</b></a> - Interface to ring for sending data.
 </li>
+<li>
+<a name="TimeoutEnabled">
+<b>Use Timeout</b></a> - If enabled, the application task implements a timeout so it does not block.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+<ul>
+  <li>
+  <a name="Timeout">
+  <b>Timeout</b></a> - Interface to timeout module. See the timeout documentation how to use it.
+  </li>
+  <li>
+  <a name="AppTaskTimeout">
+  <b>App Task Timeout (ms)</b></a> - The App_Task() is sending data to the CDC. However, if there is no terminal open on the host, then the App_Task() function could be stalled.  A timeout can be specified here. Using a zero value disables the timeout.
+  </li>
+</ul>
+</li>
 
      </ul>
 <!---USERBEG DON'T CHANGE THIS LINE-->

@@ -30,6 +30,10 @@
 #include "LEDpin6.h"
 #include "BitIoLdd6.h"
 #include "UTIL1.h"
+#include "TMOUT1.h"
+#include "TI1.h"
+#include "TimerIntLdd1.h"
+#include "TU1.h"
 #include "USB1.h"
 #include "USBInit2.h"
 #include "CDC1.h"
@@ -77,6 +81,8 @@ static void CDC_Run(void) {
   unsigned char buf[16];
 
   for(;;) {
+    (void)CDC1_SendString((unsigned char*)"hello world\r\n");
+
     while(CDC1_App_Task(cdc_buffer, sizeof(cdc_buffer))==ERR_BUSOFF) {
       /* device not enumerated */
       LEDR_Neg(); LEDG_Off();
