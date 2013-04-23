@@ -338,6 +338,10 @@ There is 1 option:<br />
 
     </li>
     <li>
+    <a name="ColdFireV2LibraryLowestInterruptPriority">
+    <b>Library Lowest Interrupt Priority</b></a> - Used for configLIBRARY_LOWEST_INTERRUPT_PRIORITY. The RTOS will disable interrupts equal or lower than this priority. So for example if you set it to 5, then interrupts with level 6 can happen while the RTOS is running. This means as well that you shall *not* call any RTOS functions with an interrupt priority higher than this value! Keep in mind that for the ColdFire V2, the interrupts of level 7 can *not* be masked.
+    </li>
+    <li>
     <a name="ColdFireV2SWInumber">
     <b>SWI Number</b></a> - Software Interrupt Vector number.<br />
 Mapping for number to vector for the MCF52259:<br />

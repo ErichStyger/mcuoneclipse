@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.212</Version>
+    <Version>01.213</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -318,6 +318,23 @@
                     <CanDelete>false</CanDelete>
                     <IconPopup>false</IconPopup>
                   </TEnumItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>Library Lowest Interrupt Priority</Name>
+                    <Symbol>ColdFireV2LibraryLowestInterruptPriority</Symbol>
+                    <Hint>Used for configLIBRARY_LOWEST_INTERRUPT_PRIORITY. The RTOS will disable interrupts equal or lower than this priority. So for example if you set it to 5, then interrupts with level 6 can happen while the RTOS is running. This means as well that you shall *not* call any RTOS functions with an interrupt priority higher than this value! Keep in mind that for the ColdFire V2, the interrupts of level 7 can *not* be masked.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>7</DefaultValue>
+                    <MinValue>0</MinValue>
+                    <MaxValue>15</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>false</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
                 </GrupItem>
                 <GrupItem>
                   <TIntgItem>
