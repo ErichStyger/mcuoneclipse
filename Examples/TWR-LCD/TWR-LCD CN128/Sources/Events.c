@@ -20,7 +20,7 @@
 #include "Events.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
-#include "platform.h"
+#include "Platform.h"
 #include "RTOS.h"
 #include "App.h"
 #if PL_HAS_CALENDAR_DEMO
@@ -166,12 +166,12 @@ void UI1_OnEvent(UI1_Screen *screen, UI1_Window *window, UI1_Element *element, U
 **     Returns     : Nothing
 ** ===================================================================
 */
-#if PL_HAS_I2C_COMM
 void I2C1_OnReceiveData(void)
 {
-  I2C_OnReceiveData();
-}
+#if PL_HAS_I2C_COMM
+  I2C_OnRxChar();
 #endif
+}
 
 /*
 ** ===================================================================
@@ -187,12 +187,12 @@ void I2C1_OnReceiveData(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-#if PL_HAS_I2C_COMM
 void I2C1_OnTransmitData(void)
 {
-  I2C_OnSendData();
-}
+#if PL_HAS_I2C_COMM
+  I2C_OnTxChar();
 #endif
+}
 
 /*
 ** ===================================================================
@@ -206,12 +206,12 @@ void I2C1_OnTransmitData(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-#if PL_HAS_I2C_COMM
 void I2C1_OnRxChar(void)
 {
-  I2C_OnReceiveData();
-}
+#if PL_HAS_I2C_COMM
+  I2C_OnRxChar();
 #endif
+}
 
 /*
 ** ===================================================================
@@ -226,12 +226,12 @@ void I2C1_OnRxChar(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-#if PL_HAS_I2C_COMM
 void I2C1_OnTxChar(void)
 {
-  I2C_OnSendData();
-}
+#if PL_HAS_I2C_COMM
+  I2C_OnTxChar();
 #endif
+}
 
 /*
 ** ===================================================================
