@@ -19,6 +19,7 @@
 #include "I2C1.h"
 #include "EVNT1.h"
 #include "Slider.h"
+#include "FRTOS1.h"
 #if PL_HAS_RUNNER
   #include "Runner.h"
 #endif
