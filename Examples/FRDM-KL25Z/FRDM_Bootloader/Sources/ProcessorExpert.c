@@ -42,7 +42,6 @@
 #include "LEDR.h"
 #include "LEDpin1.h"
 #include "BitIoLdd2.h"
-#include "HF1.h"
 #include "BL_SW.h"
 #include "BitIoLdd3.h"
 /* Including shared modules, which are used for whole project */

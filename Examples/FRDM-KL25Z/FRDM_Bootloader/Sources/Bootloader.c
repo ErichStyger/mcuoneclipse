@@ -1,3 +1,11 @@
+/**
+ * \file
+ * \brief Bootloader implementation.
+ * \author Erich Styger
+ *
+ * This module implements a bootloader over SCI/UART with shell interface for the FRDM-KL25Z.
+ */
+
 #include "Bootloader.h"
 #include "IFsh1.h"
 #include "S19.h"
@@ -7,12 +15,13 @@
 
 #define FLASH_PAGE_SIZE             (IntFlashLdd1_ERASABLE_UNIT_SIZE) /* flash page size */
 #define BL_FLASH_VECTOR_TABLE       0x0000 /* bootloader vector table in flash */
+
 /* application flash area */
 #define MIN_APP_FLASH_ADDRESS        0x4000  /* start of application flash */
 #define MAX_APP_FLASH_ADDRESS       0x1FFFF  /* end of application flash */
 
-#define APP_FLASH_VECTOR_START       0x4000  /* application vector table in flash */
-#define APP_FLASH_VECTOR_SIZE       0xc0 /* size of vector table */
+#define APP_FLASH_VECTOR_START      0x4000  /* application vector table in flash */
+#define APP_FLASH_VECTOR_SIZE       0xc0    /* size of vector table */
 
 #define USE_XON_XOFF  0
 
@@ -22,10 +31,16 @@
  * \return TRUE if an application memory address, FALSE otherwise
  */
 static bool BL_ValidAppAddress(dword addr) {
-  return ((addr>=MIN_APP_FLASH_ADDRESS) && (addr<=MAX_APP_FLASH_ADDRESS));
+  return ((addr>=MIN_APP_FLASH_ADDRESS) && (addr<=MAX_APP_FLASH_ADDRESS)); /* must be in application space */
 }
 
-/* dword(32bit) programming */
+/*!
+ * \brief Performs flash programming
+ * \param flash_addr Destination address for programming.
+ * \param data_addr Pointer to data.
+ * \param nofDataBytes Number of data bytes.
+ * \return ERR_OK if everyhing was ok, ERR_FAILED otherwise.
+ */
 static byte BL_Flash_Prog(dword flash_addr, uint8_t *data_addr, uint16_t nofDataBytes) {
   /* only flash into application space. Everything else will be ignored */
   if(BL_ValidAppAddress(flash_addr)) {
