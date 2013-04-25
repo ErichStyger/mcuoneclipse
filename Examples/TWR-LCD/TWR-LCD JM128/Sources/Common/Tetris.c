@@ -24,7 +24,7 @@
 #include "GDisp1.h"
 #include "UTIL1.h"
 #include "UTIL1.h"
-#include "platform.h"
+#include "Platform.h"
 #include "FRTOS1.h"
 #include "EVNT1.h"
 #include "Helv12n.h"

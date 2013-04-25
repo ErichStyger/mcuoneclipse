@@ -11,7 +11,7 @@
 
 /* MODULE Motor */
 
-#include "platform.h"
+#include "Platform.h"
 #if PL_HAS_EKG
 #include "EKG.h"
 #include "UTIL1.h"

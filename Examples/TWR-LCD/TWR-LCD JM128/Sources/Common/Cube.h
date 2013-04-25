@@ -16,7 +16,7 @@
 
 #include "UI1.h"
 #include "FRTOS1.h"
-#include "platform.h"
+#include "Platform.h"
 
 typedef struct {
   UI1_Screen screen;

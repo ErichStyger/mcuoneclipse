@@ -6,7 +6,7 @@
  */
 
 extern "C" {
-  #include "platform.h"
+  #include "Platform.h"
   #include "Slider.h"
   #include "UI1.h"
   #include "Cour08n.h"
