@@ -4,7 +4,7 @@
     <Name>SSD1289</Name>
     <Description>Display driver for the Solomon Systech SSD1289 display</Description>
     <Author>Erich Styger</Author>
-    <Version>01.154</Version>
+    <Version>01.158</Version>
     <Icon>SSD1289</Icon>
     <TypesFiles>PE,SSD1289\SSD1289</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -333,7 +333,7 @@
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
               <Description>Disabled</Description>
-              <Expanded>No</Expanded>
+              <Expanded>Yes</Expanded>
               <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
@@ -372,23 +372,21 @@
                         </TInhrItem>
                       </GrupItem>
                       <GrupItem>
-                        <TAddrItem>
+                        <TIntgItem>
                           <Name>Base Address</Name>
                           <Symbol>FlexBaseAddress</Symbol>
                           <Hint>Specifies the base address to be used. Make sure this corresponds to the Mini-FlexBus settings in the CPU component.</Hint>
                           <ItemLevel>BASIC</ItemLevel>
                           <EditLine>true</EditLine>
                           <DefaultValue>4194304</DefaultValue>
-                          <MinValue>32768</MinValue>
+                          <MinValue>0</MinValue>
                           <MaxValue>-1</MaxValue>
-                          <Bases>DEC HEX</Bases>
+                          <Bases>BIN DEC HEX</Bases>
                           <DefaultBase>HEX</DefaultBase>
                           <ExtraHintDisabled>false</ExtraHintDisabled>
-                          <ChangeValueIntoRange>true</ChangeValueIntoRange>
+                          <ChangeValueIntoRange>false</ChangeValueIntoRange>
                           <RuntimeProperty>false</RuntimeProperty>
-                          <Size>0</Size>
-                          <AddrType>external</AddrType>
-                        </TAddrItem>
+                        </TIntgItem>
                       </GrupItem>
                       <GrupItem>
                         <TIntgItem>
