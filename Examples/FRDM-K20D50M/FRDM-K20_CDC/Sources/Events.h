@@ -35,6 +35,7 @@
 #include "PE_Error.h"
 #include "PE_Const.h"
 #include "IO_Map.h"
+#include "UTIL1.h"
 #include "LEDR.h"
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"
@@ -45,6 +46,11 @@
 #include "LEDpin3.h"
 #include "BitIoLdd3.h"
 #include "WAIT1.h"
+#include "USB1.h"
+#include "USB0.h"
+#include "CDC1.h"
+#include "Tx1.h"
+#include "Rx1.h"
 
 /*
 ** ===================================================================
