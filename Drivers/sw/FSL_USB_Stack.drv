@@ -265,6 +265,16 @@ void %'ModuleName'%.usb_int_dis(void)
   %'ModuleName'%.usb_int_disable++;
 %elif (CPUDevice="MC9S08JM16") | (CPUDevice="MC9S08JM60")
   CTL_USBEN = 0; /* disable USB module */
+%elif (CPUDevice="Kinetis K20D50")
+  NVICISER1 = (1<<3);   /* Enable interrupts from USB module (Interrupt Set-Enable Register) */
+%elif (CPUDevice="Kinetis K40") | (CPUDevice="Kinetis K53") | (CPUDevice="Kinetis K60")
+#if !HIGH_SPEED_DEVICE
+  NVICICER2 = (1<<9);   /* Disable interrupts from USB module (Interrupt Clear-Enable Register) */
+#else
+  NVICICER3 = 1;        /* Disable interrupts on USBHS (Interrupt Clear-Enable Register) */
+#endif
+%elif (CPUDevice="Kinetis L2K")
+  NVIC_ICER = (1<<24);    /* Disable interrupts from USB module (Interrupt Clear-Enable Register) */
 %else
   /* functionality not needed for %CPUDevice */
 %endif
@@ -291,21 +301,19 @@ void %'ModuleName'%.usb_int_en(void)
     }
   }
 %elif (CPUDevice="Kinetis K20D50")
-  NVICICPR1 = (1<<3);   /* Clear any pending interrupts on USB */
-  NVICISER1 = (1<<3);   /* Enable interrupts from USB module */
+  NVICICPR1 = (1<<3);   /* Clear any pending interrupts on USB (Interrupt Clear-Pending Register) */
+  NVICISER1 = (1<<3);   /* Enable interrupts from USB module (Interrupt Set-Enable Register) */
 %elif (CPUDevice="Kinetis K40") | (CPUDevice="Kinetis K53") | (CPUDevice="Kinetis K60")
-  /* see https://community.freescale.com/message/313567#313567 */
 #if !HIGH_SPEED_DEVICE
-  NVICICER2 = (1<<9);   /* Clear any pending interrupts on USB */
-  NVICISER2 = (1<<9);   /* Enable interrupts from USB module */
+  NVICICPR2 = (1<<9);   /* Clear any pending interrupts on USB (Interrupt Clear-Pending Register) */
+  NVICISER2 = (1<<9);   /* Enable interrupts from USB module (Interrupt Set-Enable Register) */
 #else
-  NVICICER3 = 1;        /* Clear any pending interrupts on USBHS */
-  NVICISER3 = 1;        /* Enable interrupts on USBHS */
+  NVICICPR3 = 1;        /* Clear any pending interrupts on USBHS (Interrupt Clear-Pending Register) */
+  NVICISER3 = 1;        /* Enable interrupts on USBHS (Interrupt Set-Enable Register) */
 #endif
 %elif (CPUDevice="Kinetis L2K")
-  /* see https://community.freescale.com/message/313567#313567 */
-  NVIC_ICER = (1<<24);    /* Clear any pending interrupts on USB */
-  NVIC_ISER = (1<<24);    /* Enable interrupts from USB module */
+  NVIC_ICPR = (1<<24);    /* Clear any pending interrupts on USB (Interrupt Clear-Pending Register) */
+  NVIC_ISER = (1<<24);    /* Enable interrupts from USB module (Interrupt Set-Enable Register) */
 %elif (CPUDevice="MC9S08JM16") | (CPUDevice="MC9S08JM60")
   CTL_USBEN = 1; /* enable USB module */
 %else
