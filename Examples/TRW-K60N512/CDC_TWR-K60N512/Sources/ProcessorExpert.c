@@ -25,10 +25,18 @@
 #include "Tx1.h"
 #include "Rx1.h"
 #include "LED1.h"
+#include "LEDpin1.h"
+#include "BitIoLdd1.h"
 #include "LED2.h"
+#include "LEDpin2.h"
+#include "BitIoLdd2.h"
 #include "LED3.h"
+#include "LEDpin3.h"
+#include "BitIoLdd3.h"
 #include "LED4.h"
-#include "GPIO1.h"
+#include "LEDpin4.h"
+#include "BitIoLdd4.h"
+#include "WAIT2.h"
 #include "AS1.h"
 #include "WAIT1.h"
 /* Including shared modules, which are used for whole project */
@@ -38,6 +46,8 @@
 #include "IO_Map.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#define USE_TWR_SER_UART  0 /* if set to one, it will use the UART on the TWR-SER board. */
+
 static uint8_t cdc_buffer[USB1_DATA_BUFF_SIZE];
 static uint8_t in_buffer[USB1_DATA_BUFF_SIZE];
 static LDD_TDeviceData *serialHandle = NULL; /* handle to device data */
@@ -50,9 +60,13 @@ static void SendChar(unsigned char ch) {
 }
 
 static void SendStr(const unsigned char *str) {
+#if USE_TWR_SER_UART
   while(*str!='\0') {
     SendChar(*str++);
   }
+#else
+  (void)str; /* unused */
+#endif
 }
 
 static void CDC_Run(void) {
@@ -65,7 +79,7 @@ static void CDC_Run(void) {
       LED1_Neg(); LED2_Off();
      // WAIT1_Waitms(1); /* just give back some CPU time. */
       SendStr((unsigned char*)"waiting to enumerate...\r\n");
-   }
+    }
     LED1_Off(); LED2_Neg();
     if (CDC1_GetCharsInRxBuf()!=0) {
       i = 0;
