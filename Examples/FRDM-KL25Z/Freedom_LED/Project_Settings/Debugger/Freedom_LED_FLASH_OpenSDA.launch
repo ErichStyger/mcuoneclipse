@@ -70,11 +70,11 @@
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.TerminateConnectionOn" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.promptUserActionOn" value="true"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.core.settings.DebuggerCommonData.Connection Protocol Plugin Name" value="ARM GDI"/>
-<stringAttribute key="com.freescale.cdt.debug.cw.core.settings.DebuggerCommonData.Connection Type" value="com.pemicro.mcu.debug.connections.pne.arm"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.core.settings.DebuggerCommonData.Connection Type" value="net.sourceforge.usbdm.connections.usbdm.arm"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.core.settings.DebuggerCommonData.Processor Attr Name" value="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.ARM Debugger.processor"/>
-<stringAttribute key="com.freescale.cdt.debug.cw.core.settings.GdiConnection.Common.PhysicalConnectionAttributeBase" value="com.pemicro.mcu.debug.connections.pne.arm."/>
+<stringAttribute key="com.freescale.cdt.debug.cw.core.settings.GdiConnection.Common.PhysicalConnectionAttributeBase" value="net.sourceforge.usbdm.connections.usbdm."/>
 <stringAttribute key="com.freescale.cdt.debug.cw.core.settings.GdiConnection.Common.SimulatorConnectionAttributeBase" value=""/>
-<booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.GdiConnection.Common.logData" value="false"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.GdiConnection.Common.logData" value="true"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.core.settings.rseSystemId" value="com.freescale.cdt.debug.cw.core.ui.rse.systemtype.bareboard.hardware.120823075340+0200"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.core.settings.wizardSystemNameHint" value="OpenSDA"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.debuggerAddress" value="127.0.0.1"/>
@@ -188,6 +188,23 @@
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_interface_selection" value="7"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.UUID" value="2145ab98-ccd4-4cbe-9282-615ba5a15a6b"/>
 <booleanAttribute key="forceShellDownload" value="false"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.CommandLineArgs" value=""/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.ConfigFile" value=""/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.Library" value="usbdm-arm-gdi"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.automaticReconnect" value="1"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.connectionSpeed" value="12000000"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.cycleTargetVddOnConnect" value="0"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.cycleTargetVddOnReset" value="0"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.defaultBdmSerialNumber" value="USBDM-OPENSDA-0001"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.eraseMethod" value="2"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.leaveTargetPowered" value="0"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.powerOffDuration" value="1000"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.powerOnRecoveryInterval" value="1000"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.resetDuration" value="500"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.resetRecoveryInterval" value="500"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.resetReleaseInterval" value="500"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.setTargetVdd" value="0"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.useDebugBuild" value="0"/>
 <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_ID" value="com.freescale.cdt.debug.cw.arm.ArmDebugger"/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_REGISTER_GROUPS" value=""/>
