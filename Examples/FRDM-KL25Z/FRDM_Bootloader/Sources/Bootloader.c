@@ -17,7 +17,7 @@
 #define BL_FLASH_VECTOR_TABLE       0x0000 /* bootloader vector table in flash */
 
 /* application flash area */
-#define MIN_APP_FLASH_ADDRESS        0x4000  /* start of application flash */
+#define MIN_APP_FLASH_ADDRESS        0x4000  /* start of application flash area */
 #define MAX_APP_FLASH_ADDRESS       0x1FFFF  /* end of application flash */
 
 #define APP_FLASH_VECTOR_START      0x4000  /* application vector table in flash */
@@ -39,7 +39,7 @@ static bool BL_ValidAppAddress(dword addr) {
  * \param flash_addr Destination address for programming.
  * \param data_addr Pointer to data.
  * \param nofDataBytes Number of data bytes.
- * \return ERR_OK if everyhing was ok, ERR_FAILED otherwise.
+ * \return ERR_OK if everything was ok, ERR_FAILED otherwise.
  */
 static byte BL_Flash_Prog(dword flash_addr, uint8_t *data_addr, uint16_t nofDataBytes) {
   /* only flash into application space. Everything else will be ignored */
@@ -53,6 +53,7 @@ static byte BL_Flash_Prog(dword flash_addr, uint8_t *data_addr, uint16_t nofData
 
 /*!
  * \brief Erases all unprotected pages of flash
+ * \return ERR_OK if everything is ok; ERR_FAILED otherwise
  */
 static byte BL_EraseApplicationFlash(void) {
   dword addr;
@@ -135,7 +136,7 @@ static bool BL_CheckBootloaderMode(void) {
   /* PORTB_PCR8: ISF=0,MUX=1 */
   PORTB_PCR8 = (uint32_t)((PORTB_PCR8 & (uint32_t)~0x01000600UL) | (uint32_t)0x0100UL);
 #else
-  (void)BitIoLdd3_Init(NULL);
+  (void)BitIoLdd3_Init(NULL); /* initialize the port pin */
 #endif
   if (!BL_SW_GetVal()) { /* button pressed (has pull-up!) */
     WAIT1_Waitms(50); /* wait to debounce */
@@ -147,13 +148,15 @@ static bool BL_CheckBootloaderMode(void) {
   return FALSE; /* do not enter bootloader mode */
 }
 
-/* this method is called during startup! */
+/*!
+ * \brief This method is called during startup! It decides if we enter bootloader mode or if we run the application.
+ */
 void BL_CheckForUserApp(void) {
   uint32_t startup; /* assuming 32bit function pointers */
   
   startup = ((uint32_t*)APP_FLASH_VECTOR_START)[1]; /* this is the reset vector (__startup function) */
   if (startup!=-1 && !BL_CheckBootloaderMode()) { /* we do have a valid application vector? -1/0xfffffff would mean flash erased */
-    ((void(*)(void))startup)(); /* Jump to user code */
+    ((void(*)(void))startup)(); /* Jump to application startup code */
   }
 }
 
