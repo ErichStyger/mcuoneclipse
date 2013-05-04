@@ -624,6 +624,17 @@ byte %'ModuleName'%.%strCutTail(byte *str, byte *tail);
 
 %endif %- strCutTail
 %-BW_METHOD_END strCutTail
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ScanHex8uNumberNoPrefix
+%ifdef ScanHex8uNumberNoPrefix
+byte %'ModuleName'%.%ScanHex8uNumberNoPrefix(const unsigned char **str, byte *val);
+%define! Parstr
+%define! Parval
+%define! RetVal
+%include Common\UtilityScanHex8uNumberNoPrefix.Inc
+
+%endif %- ScanHex8uNumberNoPrefix
+%-BW_METHOD_END ScanHex8uNumberNoPrefix
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -2098,7 +2109,7 @@ byte %'ModuleName'%.%ScanHex16uNumber(const unsigned char **str, word *val)
 %include Common\UtilityScanHex8uNumber.Inc
 byte %'ModuleName'%.%ScanHex8uNumber(const unsigned char **str, byte *val)
 {
-  /* scans a decimal number, and stops at any non-number. Number can have any preceding zeros or spaces. */
+  /* scans a hex number with 0x, and stops at any non-number. Number can have any preceding zeros or spaces. */
   uint8_t nofDigits = 2+1; /* maximum number of digits to avoid overflow */
   const unsigned char *p = *str;
   byte v;
@@ -2120,6 +2131,37 @@ byte %'ModuleName'%.%ScanHex8uNumber(const unsigned char **str, byte *val)
 
 %endif %- ScanHex8uNumber
 %-BW_METHOD_END ScanHex8uNumber
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ScanHex8uNumberNoPrefix
+%ifdef ScanHex8uNumberNoPrefix
+%define! Parstr
+%define! Parval
+%define! RetVal
+%include Common\UtilityScanHex8uNumberNoPrefix.Inc
+byte %'ModuleName'%.%ScanHex8uNumberNoPrefix(const unsigned char **str, byte *val)
+{
+  /* scans a hex number without 0x, and stops at any non-number. Number can have any preceding zeros or spaces. */
+  uint8_t nofDigits = 2+1; /* maximum number of digits to avoid overflow */
+  const unsigned char *p = *str;
+  byte v;
+
+  while(*p==' ') { /* skip leading spaces */
+    p++; /* skip space */
+  }
+  *val = 0;
+  while (HexToDec(&p, &v)==ERR_OK && nofDigits > 0) {
+    *val = (uint8_t)((*val)*16 + v);
+    nofDigits--;
+  } /* while */
+  if (nofDigits==0) {
+    return ERR_OVERFLOW;
+  }
+  *str = p;
+  return ERR_OK;
+}
+
+%endif %- ScanHex8uNumberNoPrefix
+%-BW_METHOD_END ScanHex8uNumberNoPrefix
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strtailcmp
 %ifdef strtailcmp
