@@ -538,7 +538,15 @@ void %'ModuleName'%.%Deactivate(void)
 %include Common\FatFsMemSDHCisWriteProtected.Inc
 bool %'ModuleName'%.%isWriteProtected(void)
 {
-  return FALSE; /* \todo NYI */
+%if defined(WP)
+  %if %WPLowActive='yes'
+  return %@WP@'ModuleName'%.GetVal()==0;
+  %else
+  return %@WP@'ModuleName'%.GetVal()!=0;
+  %endif
+%else
+  return FALSE; /* no card write protection pin available */
+%endif
 }
 
 %endif %- isWriteProtected

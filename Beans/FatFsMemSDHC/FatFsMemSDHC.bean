@@ -4,7 +4,7 @@
     <Name>FatFsMemSDHC</Name>
     <Description>Memory Implementation for FatFS using SDHC_LDD</Description>
     <Author>Erich Styger</Author>
-    <Version>01.002</Version>
+    <Version>01.006</Version>
     <Icon>FatFsMemSDHC</Icon>
     <TypesFiles>PE,FatFsMemSDHC\FatFsMemSDHC</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -35,6 +35,24 @@
         <EditLine>true</EditLine>
         <DefaultValue/>
       </TCompNameItem>
+    </Property>
+    <Property>
+      <TInhrItem>
+        <Name>SDHC</Name>
+        <Symbol>SDHC</Symbol>
+        <TypeSpec>FatFsMemSDHC\SDHC</TypeSpec>
+        <Hint>Interface to SHDC</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>-1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <InhrBeanBaseName>SDHC</InhrBeanBaseName>
+        <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+      </TInhrItem>
     </Property>
     <Property>
       <TGrupItem>
@@ -173,22 +191,58 @@
       </TBoolGrupItem>
     </Property>
     <Property>
-      <TInhrItem>
-        <Name>SDHC</Name>
-        <Symbol>SDHC</Symbol>
-        <TypeSpec>FatFsMemSDHC\SDHC</TypeSpec>
-        <Hint>Interface to SHDC</Hint>
+      <TBoolGrupItem>
+        <Name>Write Protect Pin</Name>
+        <Symbol>WriteProtectPinEnabled</Symbol>
+        <TypeSpec>typeEnaDis</TypeSpec>
+        <Hint>Optional pin to detect if the card is write protected.</Hint>
         <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>-1</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <InhrBeanBaseName>SDHC</InhrBeanBaseName>
-        <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
-      </TInhrItem>
+        <Description>Disabled</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <Children>
+          <GrupItem>
+            <TInhrItem>
+              <Name>WP pin</Name>
+              <Symbol>WP</Symbol>
+              <TypeSpec>FatFsMemSDHC\WP</TypeSpec>
+              <Hint>Interface to write protect pin</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>-1</DefaultIndex>
+              <TextValueIndex>false</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <InhrBeanBaseName>WP</InhrBeanBaseName>
+              <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+            </TInhrItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolItem>
+              <Name>Low Active</Name>
+              <Symbol>WPLowActive</Symbol>
+              <TypeSpec>typeYesNo</TypeSpec>
+              <Hint>If pin is low active (logical low level means write protection is on)</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>0</DefaultIndex>
+              <TextValueIndex>false</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <DefaultValue>true</DefaultValue>
+              <Popup>false</Popup>
+            </TBoolItem>
+          </GrupItem>
+        </Children>
+      </TBoolGrupItem>
     </Property>
     <Property>
       <TInhrLinkItem>

@@ -1,17 +1,22 @@
 
 [USED_FACES]
-BeanVersion=01.002
+BeanVersion=01.006
 
-InterfacesCount=3
+InterfacesCount=4
+
+Symbol=SDHC
+Link=No
+Interface=FatFsMemSDHC\SDHC
+Version=01.001
 
 Symbol=GPIO_LDD
 Link=Yes
 Interface=FatFsMemSDHC\CD_GPIO_LDD
 Version=01.004
 
-Symbol=SDHC
+Symbol=WP
 Link=No
-Interface=FatFsMemSDHC\SDHC
+Interface=FatFsMemSDHC\WP
 Version=01.001
 
 Symbol=Timeout

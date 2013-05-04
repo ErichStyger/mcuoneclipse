@@ -221,6 +221,10 @@ LI.EXP {
 <b>Component name</b></a> - Name of the component.
 </li>
 <li>
+<a name="SDHC">
+<b>SDHC</b></a> - Interface to SHDC
+</li>
+<li>
 <a name="SpeedModeGroup">
 <b>Speed Mode</b></a> - Defines the bus speed modes (SPI clock). For compatibility to older cards, the card needs to be initialized with bus clock less than 400 kHz, which then can be increased up to 12 MHz. Certain high speed cards support an even higher speed. The values in the group indicate indicies to the speed values as set up in the SDHC component (list of values).
 <ul>
@@ -263,8 +267,20 @@ The following items are available only if the group is enabled (the value is "En
 </ul>
 </li>
 <li>
-<a name="SDHC">
-<b>SDHC</b></a> - Interface to SHDC
+<a name="WriteProtectPinEnabled">
+<b>Write Protect Pin</b></a> - Optional pin to detect if the card is write protected.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+<ul>
+  <li>
+  <a name="WP">
+  <b>WP pin</b></a> - Interface to write protect pin
+  </li>
+  <li>
+  <a name="WPLowActive">
+  <b>Low Active</b></a> - If pin is low active (logical low level means write protection is on)
+  </li>
+</ul>
 </li>
 <li>
 <a name="Timeout">
