@@ -160,7 +160,7 @@ if (%'arg_destPtrBuffer' == NULL) {
 %------------------------------------------------------------------------------
 %- Bareboard arg_isrParameterType limitation: No. Parameter can be of any type.
 %-
-%if (%"%'arg_intVectorProperty'Shared" = 'no')
+%if ((%'arg_intVectorProperty' = '$SHARED') | (%"%'arg_intVectorProperty'Shared" = 'no'))
   %- Not shared interrupt vector
 %include Common\DefineISR.prg(%'arg_isrFunctionName')
 %else
@@ -187,8 +187,13 @@ void %'arg_isrFunctionName'(void)
 %- Bareboard arg_isrParameterType limitation: No. Parameter can be of any type.
 %-
 %{ {%'OperatingSystemId' RTOS Adapter} ISR function prototype %}
-%if (%"%'arg_intVectorProperty'Shared" = 'no')
+%if ((%'arg_intVectorProperty' = '$SHARED') | (%"%'arg_intVectorProperty'Shared" = 'no'))
   %- Not shared interrupt vector
+  %if (%'arg_intVectorProperty' != '$SHARED')
+    %define! RTOSAdap_intVectorPropertySymbol_%"%'arg_intVectorProperty'_Name" %arg_intVectorProperty
+    %define! RTOSAdap_intVectorName_%'arg_isrFunctionName' %"%'arg_intVectorProperty'_Name"
+    %define! RTOSAdap_isrFunctionName_%"%'arg_intVectorProperty'_Name" %arg_isrFunctionName
+  %endif
 %include Common\CreateIntSection.prg
 %include Common\DeclareISR.prg(%'arg_isrFunctionName')
 %include Common\CreateCodeSection.prg
