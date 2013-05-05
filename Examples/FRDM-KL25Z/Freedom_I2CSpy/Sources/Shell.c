@@ -15,6 +15,7 @@
 #include "LEDB.h"
 #include "I2CSPY1.h"
 #include "RTC1.h"
+#include "Card.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -37,11 +38,12 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if RTC1_PARSE_COMMAND_ENABLED
   RTC1_ParseCommand,
 #endif
+  CARD_ParseCommand,
   NULL /* sentinel */
 };
 
 static portTASK_FUNCTION(ShellTask, pvParameters) {
-  unsigned char buf[32];
+  static unsigned char buf[128];
 
   (void)pvParameters; /* not used */
   buf[0] = '\0';

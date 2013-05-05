@@ -138,10 +138,10 @@
 <booleanAttribute key="com.freescale.sa.arm.targetconfig.ETM_TRACE_START_STOP_ENABLE" value="false"/>
 <booleanAttribute key="com.freescale.sa.mcu.launch.BACKUP_ELD" value="true"/>
 <booleanAttribute key="com.freescale.sa.mcu.launch.CONTINUOUS_TRACE" value="false"/>
-<booleanAttribute key="com.freescale.sa.mcu.launch.ENABLE_ANALYSIS" value="true"/>
+<booleanAttribute key="com.freescale.sa.mcu.launch.ENABLE_ANALYSIS" value="false"/>
 <booleanAttribute key="com.freescale.sa.mcu.launch.ENABLE_LOGGING" value="false"/>
 <intAttribute key="com.freescale.sa.mcu.launch.MTB_SIZE_IDX" value="5"/>
-<booleanAttribute key="com.freescale.sa.mcu.launch.SET_TGT_SETTING_ON_RUN" value="true"/>
+<booleanAttribute key="com.freescale.sa.mcu.launch.SET_TGT_SETTING_ON_RUN" value="false"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.CommandLineArgs" value="arm_icd "/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.ConfigFile" value=""/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.Library" value="arm_pne_gdi"/>
@@ -196,8 +196,8 @@
 <booleanAttribute key="org.eclipse.cdt.launch.ENABLE_REGISTER_BOOKKEEPING" value="false"/>
 <booleanAttribute key="org.eclipse.cdt.launch.ENABLE_RESTORE_WATCHPOINTS" value="true"/>
 <booleanAttribute key="org.eclipse.cdt.launch.ENABLE_VARIABLE_BOOKKEEPING" value="false"/>
-<stringAttribute key="org.eclipse.cdt.launch.FORMAT" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&lt;contentList&gt;&lt;content id=&quot;*p-p-SKIM_ParseCommand-(format)&quot; val=&quot;0&quot;/&gt;&lt;content id=&quot;*p-p-SKIM_ParseCommand-(cast)&quot; val=&quot;char&quot;/&gt;&lt;content id=&quot;p-SKIM_ParseCommand-(cast_to_array)&quot; val=&quot;0:10&quot;/&gt;&lt;/contentList&gt;"/>
-<stringAttribute key="org.eclipse.cdt.launch.GLOBAL_VARIABLES" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;globalVariableList/&gt;&#13;&#10;"/>
+<stringAttribute key="org.eclipse.cdt.launch.FORMAT" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&lt;contentList&gt;&lt;content id=&quot;buf-CARD_Encode-(cast_to_array)&quot; val=&quot;0:15&quot;/&gt;&lt;content id=&quot;*p-p-SKIM_ParseCommand-(format)&quot; val=&quot;0&quot;/&gt;&lt;content id=&quot;*p-p-SKIM_ParseCommand-(cast)&quot; val=&quot;char&quot;/&gt;&lt;content id=&quot;p-SKIM_ParseCommand-(cast_to_array)&quot; val=&quot;0:10&quot;/&gt;&lt;content id=&quot;bitArray-CARD_InsertBits-(cast_to_array)&quot; val=&quot;0:5&quot;/&gt;&lt;content id=&quot;p-PreScanHexNumber-(cast_to_array)&quot; val=&quot;0:10&quot;/&gt;&lt;content id=&quot;p-CARD_ParseCommand-(cast_to_array)&quot; val=&quot;0:10&quot;/&gt;&lt;/contentList&gt;"/>
+<stringAttribute key="org.eclipse.cdt.launch.GLOBAL_VARIABLES" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;globalVariableList&gt;&#13;&#10;&lt;globalVariable name=&quot;charMap5bit&quot; path=&quot;&quot;/&gt;&#13;&#10;&lt;/globalVariableList&gt;&#13;&#10;"/>
 <stringAttribute key="org.eclipse.cdt.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList/&gt;&#13;&#10;"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="FLASH/Freedom_I2CSpy.elf"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="Freedom_I2CSpy"/>
