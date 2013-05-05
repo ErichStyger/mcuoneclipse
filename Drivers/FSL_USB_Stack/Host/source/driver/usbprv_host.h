@@ -34,7 +34,7 @@
 
 #include "host_cnfg.h"
 #include "hostapi.h"    /* needed for USB_SERVICE_STRUCT_PTR */
-#include "user_config.h"
+#include "usb_user_config.h" /* << EST 'user_config.h' conflicts with MQX Lite */
 
 #if !HIGH_SPEED_DEVICE
 

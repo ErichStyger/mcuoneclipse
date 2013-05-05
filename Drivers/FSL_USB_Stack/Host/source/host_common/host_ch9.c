@@ -33,7 +33,7 @@
 #include "host_dev_list.h"
 #include "host_common.h"
 #include "host_ch9.h"
-#include "user_config.h"
+#include "usb_user_config.h" /* << EST 'user_config.h' conflicts with MQX Lite */
 #if HIGH_SPEED_DEVICE
 #include "ehci_usbprv_host.h"
 #else

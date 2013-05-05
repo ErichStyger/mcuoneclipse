@@ -35,7 +35,7 @@
 *END************************************************************************/
 #include "types.h"
 #include "host_common.h"
-#include "user_config.h"
+#include "usb_user_config.h" /* << EST 'user_config.h' conflicts with MQX Lite */
 
 #if HIGH_SPEED_DEVICE
 #ifdef __cplusplus

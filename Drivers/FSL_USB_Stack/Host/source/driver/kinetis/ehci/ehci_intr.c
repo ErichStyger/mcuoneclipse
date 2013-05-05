@@ -42,7 +42,7 @@
 #include "ehci_main.h"
 #include "ehci_intr.h"
 #include "ehci_host.h"
-#include "user_config.h"
+#include "usb_user_config.h" /* << EST 'user_config.h' conflicts with MQX Lite */
 
 #if HIGH_SPEED_DEVICE
 

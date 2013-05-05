@@ -5,7 +5,7 @@
 %- Host\examples\msd -------------------------------------------
 %FILE? %'DirRel_Code'usb_classes.h
 %include FSL_USB_Stack\Host\examples\msd\usb_classes.h
-%FILE? %'DirRel_Code'user_config.h
+%FILE? %'DirRel_Code'usb_user_config.h
 %include FSL_USB_Stack\Host\examples\msd\user_config.h
 %FILE? %'DirRel_Code'msd_commands.h
 %include FSL_USB_Stack\Host\examples\msd\msd_commands.h

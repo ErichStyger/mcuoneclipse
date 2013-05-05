@@ -32,7 +32,7 @@
 
 #include "usb.h"
 #include "hostapi.h"
-#include "user_config.h"
+#include "usb_user_config.h" /* << EST 'user_config.h' conflicts with MQX Lite */
 #if HIGH_SPEED_DEVICE
 #include "ehci_host.h"
 #include "ehci_usbprv_host.h"

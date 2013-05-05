@@ -6,7 +6,7 @@
  *
  **************************************************************************//*!
  *
- * @file user_config.h
+ * @file usb_user_config.h << EST 'user_config.h' conflicts with MQX Lite
  *
  * @author 
  *

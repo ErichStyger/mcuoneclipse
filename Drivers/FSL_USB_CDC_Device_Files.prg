@@ -13,7 +13,7 @@
 %include FSL_USB_Stack\Device\source\class\usb_cdc_pstn.h
 
 %- \Device\app\cdc -------------------------------------------
-%FILE %'DirRel_Code'user_config.h
+%FILE %'DirRel_Code'usb_user_config.h
 %include FSL_USB_Stack\Device\app\cdc\user_config.h
 %FILE %'DirRel_Code'USB_Config.h
 %include FSL_USB_Stack\Device\app\cdc\USB_Config.h

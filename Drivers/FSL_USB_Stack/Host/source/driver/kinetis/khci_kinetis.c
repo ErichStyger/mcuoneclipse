@@ -35,7 +35,7 @@
 #include "usbevent.h"
 #include "usb_host_hub.h"
 #include "rtc.h"
-#include "user_config.h"
+#include "usb_user_config.h" /* << EST 'user_config.h' conflicts with MQX Lite */
 #include "psptypes.h"
 #include "mem_util.h"
 

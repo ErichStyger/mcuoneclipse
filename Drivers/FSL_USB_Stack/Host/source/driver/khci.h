@@ -32,7 +32,7 @@
 #ifndef __khci_h__
 #define __khci_h__
 
-#include "user_config.h"
+#include "usb_user_config.h" /* << EST 'user_config.h' conflicts with MQX Lite */
 
 #if !HIGH_SPEED_DEVICE
 #include "usbprv_host.h"
