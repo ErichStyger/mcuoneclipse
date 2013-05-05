@@ -30,7 +30,6 @@
 #include "Cpu.h"
 #include "Events.h"
 #include "mqx_tasks.h"
-#include "LEDR.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,7 +37,12 @@ extern "C" {
 
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "LEDR.h"
+#include "LEDG.h"
+#include "CDC1.h"
 
+static uint8_t cdc_buffer[USB1_DATA_BUFF_SIZE];
+static uint8_t in_buffer[USB1_DATA_BUFF_SIZE];
 /*
 ** ===================================================================
 **     Event       :  Task1_task (module mqx_tasks)
@@ -55,13 +59,38 @@ extern "C" {
 */
 void Task1_task(uint32_t task_init_data)
 {
-  int counter = 0;
+  int i;
+  uint32_t val = 0;
+  unsigned char buf[16];
 
   while(1) {
-    counter++;
+    while(CDC1_App_Task(cdc_buffer, sizeof(cdc_buffer))==ERR_BUSOFF) {
+      /* device not enumerated */
+      LEDR_Neg(); LEDG_Off();
+      _time_delay_ticks(1);
+    }
+    LEDR_Off(); LEDG_Neg();
+    if (CDC1_GetCharsInRxBuf()!=0) {
+      i = 0;
+      while(   i<sizeof(in_buffer)-1
+            && CDC1_GetChar(&in_buffer[i])==ERR_OK
+           )
+      {
+        i++;
+      }
+      in_buffer[i] = '\0';
+      (void)CDC1_SendString((unsigned char*)"echo: ");
+      (void)CDC1_SendString(in_buffer);
+      UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"val: ");
+      UTIL1_strcatNum32u(buf, sizeof(buf), val);
+      UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+      (void)CDC1_SendString(buf);
+      val++;
+    } else {
+      _time_delay_ticks(2);
+    }
 
     LEDR_Neg();
-    _time_delay_ticks(100);
   }
 }
 
