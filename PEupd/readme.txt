@@ -2,6 +2,8 @@ This directory contains the Processor Expert components of this repository as Pr
 
 You can import them into CodeWarrior using the menu Processor Expert > Import Package/Component(s).
 
+See: http://mcuoneclipse.com/2013/05/09/processor-expert-component-peupd-files-on-github/
+
 Note: The latest and greates version of the components are always available on GitHub:
 https://github.com/ErichStyger/mcuoneclipse/Beans
 https://github.com/ErichStyger/mcuoneclipse/Drivers
