@@ -540,6 +540,11 @@ byte %'ModuleName'%.%PLMEPhyReset(void)
  */
 byte %'ModuleName'%.%PDDataRequest(tTxPacket *psPacket)
 {
+%if defined(Timeout) & %TransmitTimeoutMs >. "0"
+  %@Timeout@'ModuleName'%.CounterHandle timeout;
+%endif
+  byte res = %'ModuleName'%.SUCCESS;
+
   if (%@MC13192@'ModuleName'%.gu8RTxMode == %@MC13192@'ModuleName'%.IDLE_MODE) {
     %if %SecurityEnabled='yes'
     if (%@SecurityInterface@'ModuleName'%.AdjustPacketSize(psPacket->pu8Data, %'ModuleName'%.RADIO_BUF_SIZE, &psPacket->u8DataLength) != ERR_OK) {
@@ -550,14 +555,28 @@ byte %'ModuleName'%.%PDDataRequest(tTxPacket *psPacket)
     }
     %endif
     %@MC13192@'ModuleName'%.WriteTx(psPacket);    %>%CTAB /* Load the data into packet RAM */
-    (void)%'ModuleName'%.PLMESetTrxStateRequest(%@MC13192@'ModuleName'%.TX_MODE);  %>%CTAB /* transmit it */
+    if (%'ModuleName'%.PLMESetTrxStateRequest(%@MC13192@'ModuleName'%.TX_MODE)!=%'ModuleName'%.SUCCESS) {  %>%CTAB /* transmit it */
+      return %'ModuleName'%.ERROR;
+    }
     /* Wait for the state to return to idle. (finish transmitting) */
+%if defined(Timeout) & %TransmitTimeoutMs >. "0"
+    timeout = %@Timeout@'ModuleName'%.GetCounter(%TransmitTimeoutMs/%@Timeout@'ModuleName'%.TICK_PERIOD_MS); /* set up timeout counter */
+%endif
     while (%@MC13192@'ModuleName'%.gu8RTxMode != %@MC13192@'ModuleName'%.IDLE_MODE) {
 %if %LowPowerWait='yes'
       MCU_LOW_POWER_WHILE(); /* if you get a compiler warning here: Enable 'SetWaitMode()' method in the CPU component */
 %endif
-    }
-    return %'ModuleName'%.SUCCESS;
+%if defined(Timeout) & %TransmitTimeoutMs >. "0"
+      if (%@Timeout@'ModuleName'%.CounterExpired(timeout)) {
+        res = %'ModuleName'%.TIMEOUT;
+        break;
+      }
+%endif
+    } /* while */
+%if defined(Timeout) & %AppTaskTimeout >. "0"
+    %@Timeout@'ModuleName'%.LeaveCounter(timeout); /* return timeout counter */
+%endif
+    return res;
   } else {
     return %'ModuleName'%.RX_ON;
   }

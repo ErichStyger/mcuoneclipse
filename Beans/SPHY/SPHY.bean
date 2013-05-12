@@ -4,7 +4,7 @@
     <Name>SPHY</Name>
     <Description>Simple PHY implementation for SMAC</Description>
     <Author>Erich Styger</Author>
-    <Version>01.004</Version>
+    <Version>01.010</Version>
     <Icon>SPHY</Icon>
     <TypesFiles>PE,SPHY\SPHY</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -124,6 +124,55 @@
         <DefaultValue>false</DefaultValue>
         <Popup>false</Popup>
       </TBoolItem>
+    </Property>
+    <Property>
+      <TBoolGrupItem>
+        <Name>Timeout</Name>
+        <Symbol>TimeoutEnabled</Symbol>
+        <TypeSpec>typeEnaDis</TypeSpec>
+        <Hint>Optional timeout to avoid blocking waiting.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>Disabled</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <Children>
+          <GrupItem>
+            <TIntgItem>
+              <Name>Transmit (ms)</Name>
+              <Symbol>TransmitTimeoutMs</Symbol>
+              <Hint>Transmit timeout in milli-seconds. A value of zero disables the timeout checking.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>100</DefaultValue>
+              <MinValue>0</MinValue>
+              <MaxValue>-1</MaxValue>
+              <Bases>DEC</Bases>
+              <DefaultBase>DEC</DefaultBase>
+              <ExtraHintDisabled>false</ExtraHintDisabled>
+              <ChangeValueIntoRange>false</ChangeValueIntoRange>
+              <RuntimeProperty>false</RuntimeProperty>
+            </TIntgItem>
+          </GrupItem>
+          <GrupItem>
+            <TInhrLinkItem>
+              <Name>Timeout</Name>
+              <Symbol>Timeout</Symbol>
+              <TypeSpec>SPHY\Timeout</TypeSpec>
+              <Hint>Timeout value in case of transceiver is not able to send data.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <DefaultValue/>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <SortStyle/>
+            </TInhrLinkItem>
+          </GrupItem>
+        </Children>
+      </TBoolGrupItem>
     </Property>
     <Property>
       <TBoolGrupItem>

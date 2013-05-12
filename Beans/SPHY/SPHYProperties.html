@@ -241,6 +241,22 @@ LI.EXP {
 <b>Low Power Wait</b></a> - If during PDataRequest the CPU should be put into low power wait mode or not.
 </li>
 <li>
+<a name="TimeoutEnabled">
+<b>Timeout</b></a> - Optional timeout to avoid blocking waiting.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+<ul>
+  <li>
+  <a name="TransmitTimeoutMs">
+  <b>Transmit (ms)</b></a> - Transmit timeout in milli-seconds. A value of zero disables the timeout checking.
+  </li>
+  <li>
+  <a name="Timeout">
+  <b>Timeout</b></a> - Timeout value in case of transceiver is not able to send data.
+  </li>
+</ul>
+</li>
+<li>
 <a name="SecurityEnabled">
 <b>Security</b></a> - <br />
 The following items are available only if the group is enabled (the value is "Enabled"):<br />
