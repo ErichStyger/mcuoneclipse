@@ -197,14 +197,7 @@ LI.EXP {
 <div class="text_title">
 Settings
 </div>
-The transceiver is using the SPI protocol. Make sure you select the proper SPI channel in the SPIInit bean,
-plus specify the correct </br>
-<ul>
- <li>Data Register</li>
- <li>Status Register</li>
- <li>Read Buffer Full Flag Bit</li>
-</ul>
-on the SPIHCS08 bean level. Additionally make sure that the SPI communication speed is slower than 2kHz </br>
+The transceiver is using the SPI protocol with up to 8 MHz clock.
 </br>
 Make sure you have enough stack reserved (around 0x100 in bytes).</br>
 </br>
@@ -213,27 +206,6 @@ On the MC13192/Transceiver bean level, make sure you select the correct transcei
 <div class="text_title">
 Board Settings
 </div>
-<h3>Infotronik Trainer Board</h3>
-  <ul>
-    <li>MC13192 bean</li>
-    <ul>
-      <li>Transceiver: MPC1320x</li>
-      <li>CLKO Enable: no</li>
-      <li>IRQ: IRQ</li>
-      <li>RESET: PTD3</li>
-      <li>RTXEN: PTD1</li>
-      <li>ATTN: PTD0</li>
-      <li>SPI</li>
-        <ul>
-          <li>Status register: SPI1S</li>
-          <li>Data Register: SPI1D</li>
-          <li>Read Buffer Full Flag: SP1S_SPRF</li>
-          <li>Write Buffer Empty Flag Bit: SP1S_SPTEF</li>
-          <li>Max 2kHz SPI frequency</li>
-        </ul>
-    </ul>
-  </ul>
-
 <h3>MC13212 SRB Board</h3>
   <ul>
     <li>MC13192 bean</li>
@@ -243,14 +215,6 @@ Board Settings
       <li>RESET: PTD3_M_RSTB</li>
       <li>RTXEN: PTD1_RTXEN</li>
       <li>ATTN: PTD0_ATNB</li>
-      <li>SPI</li>
-        <ul>
-          <li>Status register: SPI1S</li>
-          <li>Data Register: SPI1D</li>
-          <li>Read Buffer Full Flag: SP1S_SPRF</li>
-          <li>Write Buffer Empty Flag Bit: SP1S_SPTEF</li>
-          <li>Max 2kHz SPI frequency</li>
-        </ul>
     </ul>
   </ul>
 </ul>
