@@ -15,6 +15,7 @@
 #if PL_HAS_LED
   #include "LED.h"
 #endif
+#include "LEDG.h"
 #include "CLS1.h"
 #include "FRTOS1.h"
 #include "UTIL1.h"
@@ -422,6 +423,7 @@ static void RADIO_HandleMessage(uint8_t *msg) {
 /*! \brief Radio application state machine */
 void RADIO_Handle(void) {
   uint8_t buf[RADIO_QUEUE_ITEM_SIZE];
+  static uint8_t cnt = 0;
 
   if (RADIO_isOn) {
     RADIO_HandleState(); /* advance state machine */
@@ -430,6 +432,19 @@ void RADIO_Handle(void) {
   if (FRTOS1_xQueueReceive(RADIO_MsgQueue, buf, 0)==pdPASS) {
     /* received message from queue */
     RADIO_HandleMessage(buf);
+    LEDG_Neg();
+    LEDR_Off();
+    cnt = 0; /* reset counter */
+  } else {
+    cnt++; /* incremented every 10 ms */
+  }
+  if (cnt>100) { /* no message for more than 1 s? */
+    cnt = 0;
+    LEDG_Off();
+    LEDR_Off();
+    REMOTE_ParseMsg((const unsigned char *)"xyz 0 0 0", sizeof("xyz 0 0 0")-1);
+  } else if (cnt==50) {
+    LEDR_Neg();
   }
 }
 

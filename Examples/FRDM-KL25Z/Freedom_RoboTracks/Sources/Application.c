@@ -240,7 +240,9 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
 #if PL_HAS_EVENTS
     EVNT_HandleEvent(RADIO_AppHandleEvent);
 #endif
+#if PL_HAS_LINE_SENSOR
     StateMachine(FALSE);
+#endif
     FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
   }
 }

@@ -75,6 +75,7 @@
 #include "ExtIntLdd1.h"
 #include "SM1.h"
 #include "SMasterLdd1.h"
+#include "TMOUT1.h"
 
 #ifdef __cplusplus
 extern "C" {

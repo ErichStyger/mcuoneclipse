@@ -3,8 +3,8 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>29</ModificationStamp>
-    <Date>2013-05-11</Date>
+    <ModificationStamp>30</ModificationStamp>
+    <Date>2013-05-12</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.6.0.RT4_b1316-1577</PEversion>
   </Header>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>76</ProjectCompNumb>
+    <ProjectCompNumb>78</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>false</AssignInitComponentNameToPrph>
@@ -4389,7 +4389,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.002</BeanVersion>
+    <BeanVersion>01.003</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -4414,7 +4414,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template>SMAC\SPHY</Template>
-          <BeanVersion>01.004</BeanVersion>
+          <BeanVersion>01.009</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -8135,6 +8135,28 @@
               </InheritedComponentState>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
             </ItemState>
+            <ItemState>
+              <ItemSymbol>TimeoutEnabled</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>false</Value>
+              <Expanded>false</Expanded>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>TransmitTimeoutMs</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>100</Value>
+              <Base>DEC</Base>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>Timeout</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>TMOUT1</Value>
+            </ItemState>
           </Properties>
           <Methods>
             <ItemState>
@@ -9911,7 +9933,7 @@
               <ReqSrcClkPrescSpeedMode5>-1</ReqSrcClkPrescSpeedMode5>
               <ReqSrcClkPrescSpeedMode6>-1</ReqSrcClkPrescSpeedMode6>
               <ReqSrcClkPrescSpeedMode7>-1</ReqSrcClkPrescSpeedMode7>
-              <InitValue>524.288 kHz</InitValue>
+              <InitValue>5.24288 MHz</InitValue>
               <Precision>5.0</Precision>
               <PrecInProc>true</PrecInProc>
               <LowLimit />
@@ -9919,7 +9941,7 @@
               <List lines_count="1">
                 <Line>655.36 kHz</Line>
               </List>
-              <UnitText>kHz</UnitText>
+              <UnitText>MHz</UnitText>
               <MinCounterTicks>0</MinCounterTicks>
             </ItemState>
             <ItemState>
@@ -11633,7 +11655,7 @@
         <ItemSymbol>InpPinSignal</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>MISO_PTC6_J1_9</Value>
+        <Value>MISO_PTC6_J1_11</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OutGrp</ItemSymbol>
@@ -11782,7 +11804,7 @@
         <ItemSymbol>_Tmg</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>524.288 kHz</Value>
+        <Value>5.24288 MHz</Value>
         <RuntimeSetting>2</RuntimeSetting>
         <ReqDevPrescHigh>-1</ReqDevPrescHigh>
         <ReqDevPrescLow>-1</ReqDevPrescLow>
@@ -11808,7 +11830,7 @@
         <ReqSrcClkPrescSpeedMode5>-1</ReqSrcClkPrescSpeedMode5>
         <ReqSrcClkPrescSpeedMode6>-1</ReqSrcClkPrescSpeedMode6>
         <ReqSrcClkPrescSpeedMode7>-1</ReqSrcClkPrescSpeedMode7>
-        <InitValue>524.288 kHz</InitValue>
+        <InitValue>5.24288 MHz</InitValue>
         <Precision>5.0</Precision>
         <PrecInProc>true</PrecInProc>
         <LowLimit />
@@ -11816,7 +11838,7 @@
         <List lines_count="1">
           <Line>655.36 kHz</Line>
         </List>
-        <UnitText>kHz</UnitText>
+        <UnitText>MHz</UnitText>
         <MinCounterTicks>0</MinCounterTicks>
         <ControlledTimingCfgFromPropertySymbol>BaudRate</ControlledTimingCfgFromPropertySymbol>
         <ControlledTimingCfgFromComponentRef>SPIMaster_LDD</ControlledTimingCfgFromComponentRef>

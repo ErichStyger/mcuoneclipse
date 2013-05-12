@@ -100,8 +100,7 @@ void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *
 */
 void FRTOS1_vApplicationTickHook(void)
 {
-  /* Called for every RTOS tick. */
-  /* Write your code here ... */
+  TMOUT1_AddTick();/* Called for every RTOS tick. */
 }
 
 /*

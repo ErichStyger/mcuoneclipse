@@ -235,22 +235,6 @@ void RADIO_SendString(const char *data) {
 }
 #endif
 
-#if 0
-void RADIO_SendStringRaw(const char *data) {
-  if (!RADIO_isOn) {
-    return;
-  }
-  while (RADIO_AppStatus != RADIO_READY_FOR_TX_RX_DATA) { /* we are not ready yet! */
-    RADIO_HandleState(); /* advance state machine */
-  }
-  UTIL1_strcpy((char*)RADIO_TxDataBuffer, sizeof(RADIO_TxDataBuffer), data);
-  RADIO_TxPacket.pu8Data = &RADIO_TxDataBuffer[0];            /* Load the address of our txbuffer into tx structure.*/
-  RADIO_TxPacket.u8DataLength = (byte)(UTIL1_strlen((char*)RADIO_TxDataBuffer)+1); /* Set the data length of the packet */
-  RADIO_AppStatus = RADIO_TRANSMIT_DATA;
-  RADIO_HandleState(); /* advance state machine */
-}
-#endif
-
 /*!
  * \brief Sets the channel number to be used
  * \param ch The channel to be used, in the range 0..15
