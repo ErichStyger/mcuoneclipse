@@ -489,7 +489,7 @@ void %'ModuleName'%.%SetRatio16(word ratio)
 %INITIALIZATION
   /* ### %DeviceType "%DeviceName" init code ... */
 %CODE_BEGIN
-  %'ModuleName'%.Init(); /* initializes the driver */
+  %'ModuleName'%.Init(); /* initialize LED driver */
 %CODE_END
 %-
 %ENABLE

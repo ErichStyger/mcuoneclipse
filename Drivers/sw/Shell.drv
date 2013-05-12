@@ -1117,7 +1117,9 @@ void %'ModuleName'%.%Deinit(void)
 %-BW_EVENT_IMPLEMENT_START
 %-BW_EVENT_IMPLEMENT_END
 %INITIALIZATION
+  /* ### %DeviceType "%DeviceName" init code ... */
 %CODE_BEGIN
+  %'ModuleName'%.Init(); /* initialize shell */
 %CODE_END
 %-
 %ENABLE
