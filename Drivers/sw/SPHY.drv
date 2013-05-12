@@ -573,7 +573,7 @@ byte %'ModuleName'%.%PDDataRequest(tTxPacket *psPacket)
       }
 %endif
     } /* while */
-%if defined(Timeout) & %AppTaskTimeout >. "0"
+%if defined(Timeout) & %TransmitTimeoutMs >. "0"
     %@Timeout@'ModuleName'%.LeaveCounter(timeout); /* return timeout counter */
 %endif
     return res;
