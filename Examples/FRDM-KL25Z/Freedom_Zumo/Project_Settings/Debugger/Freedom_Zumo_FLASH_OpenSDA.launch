@@ -70,9 +70,10 @@
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.TerminateConnectionOn" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.promptUserActionOn" value="true"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.core.settings.DebuggerCommonData.Connection Protocol Plugin Name" value="ARM GDI"/>
-<stringAttribute key="com.freescale.cdt.debug.cw.core.settings.DebuggerCommonData.Connection Type" value="com.pemicro.mcu.debug.connections.pne.arm"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.core.settings.DebuggerCommonData.Connection Type" value="net.sourceforge.usbdm.connections.usbdm.arm"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.core.settings.DebuggerCommonData.Processor Attr Name" value="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.ARM Debugger.processor"/>
-<stringAttribute key="com.freescale.cdt.debug.cw.core.settings.GdiConnection.Common.PhysicalConnectionAttributeBase" value="com.pemicro.mcu.debug.connections.pne.arm."/>
+<stringAttribute key="com.freescale.cdt.debug.cw.core.settings.GdiConnection.Common.PhysicalConnectionAttributeBase" value="net.sourceforge.usbdm.connections.usbdm."/>
+<stringAttribute key="com.freescale.cdt.debug.cw.core.settings.GdiConnection.Common.SimulatorConnectionAttributeBase" value=""/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.GdiConnection.Common.logData" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.core.settings.rseSystemId" value="com.freescale.cdt.debug.cw.core.ui.rse.systemtype.bareboard.hardware.130129204258+0100"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.core.settings.wizardSystemNameHint" value="OpenSDA"/>
@@ -148,6 +149,23 @@
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_USE_SWD" value="1"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_interface_selection" value="7"/>
 <booleanAttribute key="forceShellDownload" value="false"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.CommandLineArgs" value=""/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.ConfigFile" value=""/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.Library" value="usbdm-arm-gdi"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.automaticReconnect" value="1"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.connectionSpeed" value="1500000"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.cycleTargetVddOnConnect" value="0"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.cycleTargetVddOnReset" value="0"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.defaultBdmSerialNumber" value="USBDM-OPENSDA-0001"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.eraseMethod" value="2"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.leaveTargetPowered" value="0"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.powerOffDuration" value="1000"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.powerOnRecoveryInterval" value="1000"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.resetDuration" value="500"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.resetRecoveryInterval" value="500"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.resetReleaseInterval" value="500"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.setTargetVdd" value="0"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.useDebugBuild" value="0"/>
 <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_ID" value="com.freescale.cdt.debug.cw.arm.ArmDebugger"/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_REGISTER_GROUPS" value=""/>
@@ -157,7 +175,7 @@
 <booleanAttribute key="org.eclipse.cdt.launch.ENABLE_REGISTER_BOOKKEEPING" value="false"/>
 <booleanAttribute key="org.eclipse.cdt.launch.ENABLE_RESTORE_WATCHPOINTS" value="true"/>
 <booleanAttribute key="org.eclipse.cdt.launch.ENABLE_VARIABLE_BOOKKEEPING" value="false"/>
-<stringAttribute key="org.eclipse.cdt.launch.FORMAT" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&lt;contentList&gt;&lt;content id=&quot;pathLength--(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;*cmd-cmd-ParsePidParameter-(format)&quot; val=&quot;0&quot;/&gt;&lt;content id=&quot;uxMissedTicks-vTaskIncrementTick-(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;autoCalibrate-CheckButton-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;isCalibrated-REF_CanUseSensor-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;*cmd-cmd-CLS1_ParseWithCommandTable-(format)&quot; val=&quot;0&quot;/&gt;&lt;content id=&quot;isCalibrated-REF_GetLineKind-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;i-MAZE_RevertPath-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;j-MAZE_RevertPath-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;stacked_lr-HF1_HandlerC-(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;errorPercent-PID_Line-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;isCalibrated-REF_MeasureRaw-(format)&quot; val=&quot;1&quot;/&gt;&lt;/contentList&gt;"/>
+<stringAttribute key="org.eclipse.cdt.launch.FORMAT" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&lt;contentList&gt;&lt;content id=&quot;isCalibrated-REF_MeasureRaw-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;errorPercent-PID_Line-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;stacked_lr-HF1_HandlerC-(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;j-MAZE_RevertPath-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;i-MAZE_RevertPath-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;isCalibrated-REF_GetLineKind-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;*cmd-cmd-CLS1_ParseWithCommandTable-(format)&quot; val=&quot;0&quot;/&gt;&lt;content id=&quot;isCalibrated-REF_CanUseSensor-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;autoCalibrate-CheckButton-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;uxMissedTicks-vTaskIncrementTick-(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;*cmd-cmd-ParsePidParameter-(format)&quot; val=&quot;0&quot;/&gt;&lt;content id=&quot;pathLength--(format)&quot; val=&quot;1&quot;/&gt;&lt;/contentList&gt;"/>
 <stringAttribute key="org.eclipse.cdt.launch.GLOBAL_VARIABLES" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;globalVariableList&gt;&#13;&#10;&lt;globalVariable name=&quot;REF_nofHistory&quot; path=&quot;C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\FRDM-KL25Z\Freedom_Zumo\Sources\Reflectance.c&quot;/&gt;&#13;&#10;&lt;globalVariable name=&quot;pathLength&quot; path=&quot;C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\FRDM-KL25Z\Freedom_Zumo\Sources\Maze.c&quot;/&gt;&#13;&#10;&lt;globalVariable name=&quot;path&quot; path=&quot;C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\FRDM-KL25Z\Freedom_Zumo\Sources\Maze.c&quot;/&gt;&#13;&#10;&lt;globalVariable name=&quot;motorR&quot; path=&quot;C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\FRDM-KL25Z\Freedom_Zumo\Sources\Motor.c&quot;/&gt;&#13;&#10;&lt;globalVariable name=&quot;motorL&quot; path=&quot;C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\FRDM-KL25Z\Freedom_Zumo\Sources\Motor.c&quot;/&gt;&#13;&#10;&lt;/globalVariableList&gt;&#13;&#10;"/>
 <stringAttribute key="org.eclipse.cdt.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList/&gt;&#13;&#10;"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="FLASH/Freedom_Zumo.elf"/>
