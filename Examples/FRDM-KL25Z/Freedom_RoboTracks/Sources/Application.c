@@ -43,6 +43,7 @@ typedef enum {
 
 static AppStateType appState = APP_STATE_INIT;
 
+#if PL_HAS_LINE_SENSOR
 static void StateMachine(bool buttonPress) {
   static uint8_t cnt;
   
@@ -89,6 +90,7 @@ static void StateMachine(bool buttonPress) {
       break;
   } /* switch */
 }
+#endif /* PL_HAS_LINE_SENSOR */
 
 
 void APP_StateStartCalibrate(void) {

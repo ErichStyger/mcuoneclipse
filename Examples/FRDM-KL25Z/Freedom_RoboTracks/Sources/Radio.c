@@ -443,6 +443,7 @@ void RADIO_Handle(void) {
     LEDG_Off();
     LEDR_Off();
     REMOTE_ParseMsg((const unsigned char *)"xyz 0 0 0", sizeof("xyz 0 0 0")-1);
+    EVNT_SetEvent(EVNT_RADIO_RESET); /* reset Transceiver */
   } else if (cnt==50) {
     LEDR_Neg();
   }
