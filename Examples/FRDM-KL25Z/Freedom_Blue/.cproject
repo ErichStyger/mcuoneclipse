@@ -37,6 +37,7 @@
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.optimization.level.131706541" name="Optimization level" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.optimization.level" value="org.eclipse.cdt.cross.arm.gnu.base.option.optimization.level.optimize" valueType="enumerated"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.include.paths.1771349752" name="Include paths (-I)" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Project_Headers&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Project_Settings/Startup_Code&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${MCUToolsBaseDir}/ARM_GCC_Support/ewl/EWL_C/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${MCUToolsBaseDir}/ARM_GCC_Support/ewl/EWL_Runtime/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Generated_Code&quot;"/>
@@ -58,25 +59,18 @@
 								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.level.107976271" name="Optimization level" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.level" value="org.eclipse.cdt.cross.arm.gnu.base.option.optimization.level.none" valueType="enumerated"/>
 							</tool>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.linker.debug.484664157" name="ARM Ltd Windows GCC C Linker" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.linker.debug">
-								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.ldflags.12293312" name="Linker flags (-Xlinker [option])" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.ldflags" valueType="stringList">
-									<listOptionValue builtIn="false" value="--undefined=__pformatter_"/>
-									<listOptionValue builtIn="false" value="--defsym=__pformatter=__pformatter_"/>
-									<listOptionValue builtIn="false" value="--start-group"/>
-									<listOptionValue builtIn="false" value="-lc -lm -lgcc -lhosted -luart -lrt"/>
-									<listOptionValue builtIn="false" value="--end-group"/>
-								</option>
+								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.ldflags.12293312" name="Linker flags (-Xlinker [option])" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.ldflags" valueType="stringList"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.otherflags.871117657" name="Other flags" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.otherflags" value="-n" valueType="string"/>
-								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.nodeflibs.607929584" name="Do not use default libraries (-nodefaultlibs)" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.nodeflibs" value="true" valueType="boolean"/>
-								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.nostdlibs.335731575" name="No startup or default libs (-nostdlib)" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.nostdlibs" value="true" valueType="boolean"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.nodeflibs.607929584" name="Do not use default libraries (-nodefaultlibs)" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.nodeflibs" value="false" valueType="boolean"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.nostdlibs.335731575" name="No startup or default libs (-nostdlib)" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.nostdlibs" value="false" valueType="boolean"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.gcsections.674547936" name="Remove unused sections (-Xlinker --gc-sections)" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.gcsections" value="true" valueType="boolean"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.paths.1169356400" name="Library search path (-L)" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${MCUToolsBaseDir}/ARM_GCC_Support/ewl/lib/armv6-m&quot;"/>
 								</option>
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.scriptfile.1786518590" name="Script file (-T)" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.scriptfile" value="${ProjDirPath}/Project_Settings/Linker_Files/ProcessorExpert.ld" valueType="string"/>
-								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.otherobjs.211176419" name="Other objects" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.otherobjs" valueType="userObjs">
-									<listOptionValue builtIn="false" value="&quot;${MCU_TOOLS_HOME}\ARM_GCC_Support\ewl\lib\armv7e-m\__arm_end.o&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${MCU_TOOLS_HOME}\ARM_GCC_Support\ewl\lib\armv7e-m\__arm_start.o&quot;"/>
-								</option>
+								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.otherobjs.211176419" name="Other objects" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.otherobjs" valueType="userObjs"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.other.printmap.206601942" name="Print link map (-Xlinker --print-map)" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.other.printmap" value="false" valueType="boolean"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.nostart.1984317543" name="Do not use standard start files (-nostartfiles)" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.nostart" value="false" valueType="boolean"/>
 								<inputType id="org.eclipse.cdt.cross.arm.gnu.c.linker.input.308651090" superClass="org.eclipse.cdt.cross.arm.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>

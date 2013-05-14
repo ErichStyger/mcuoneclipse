@@ -6,6 +6,15 @@ Features:
 - Shell for AT commands
 - Bluetooth module status output
 
+The project settings has been set up to use the http://dx.com/p/jy-mcu-arduino-bluetooth-wireless-serial-port-module-104299
+Connections:
+- VCC: 3.3V (pin8 on J9)
+- GND: GND (pin14 on J9)
+- RXD: C4 (pin7 on J1)
+- TXD: C3 (pin5 on J1)
+Default pairing code is "1234"
+Connection to the Bluetooth module is 9600 baud by default.
+
 In addition, the red LED has been configured to use PWM so it is dimmable. 
 The shell interface automatically has added a command to dimm it with the 'duty' command.
 
