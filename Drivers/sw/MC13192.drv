@@ -1019,20 +1019,7 @@ byte %'ModuleName'%.%ReadRx(tRxPacket *psRxPkt)
 %-BW_METHOD_END ReadRx
 %-************************************************************************************************************
 %-INTERNAL_METHOD_BEG Init
-%include Common\GeneralInternal.inc (Init)
-void %'ModuleName'%.Init(void)
-{
-  word u16IrqReg = 0;
-  byte u8AttnIrq = FALSE;
-
-%- %if SWSPI_Enabled='yes'
-%-   /* initialize SPI */
-%-   %@SWSPI@'ModuleName'%.Init(); /* idle clock polarity low, shift on falling edge */
-%- %elif HWSPI_Enabled='yes'
-%-   /* initialize SPI */
-%-   %@HWSPI@'ModuleName'%.Init(); /* idle clock polarity low, shift on falling edge */
-%- %endif
-%-  %'ModuleName'%.gu8RTxMode = %'ModuleName'%.SYSTEM_RESET_MODE;
+static void ResetTransceiver(void) {
   IRQINIT();                                                     %>%CTAB /* IRQ must be configured to trigger on low level or falling edge, with pull up enabled */
   %@IRQ@'ModuleName'%.Disable();   %>%CTAB /* Disable Transceiver interrupt for the sequence below. */
   %@CE@'ModuleName'%.SetVal();    %>%CTAB /* Disables Transceiver SPI */
@@ -1056,6 +1043,25 @@ void %'ModuleName'%.Init(void)
   %'ModuleName'%.%InitCommChannel();
   %'ModuleName'%.gu8RTxMode = %'ModuleName'%.MC13192_RESET_MODE;
   %@RESET@'ModuleName'%.SetVal(); %>%CTAB /* Take Transceiver out of reset */
+}
+
+%include Common\GeneralInternal.inc (Init)
+void %'ModuleName'%.Init(void)
+{
+  word u16IrqReg = 0;
+  byte u8AttnIrq = FALSE;
+  byte cntr;
+
+%- %if SWSPI_Enabled='yes'
+%-   /* initialize SPI */
+%-   %@SWSPI@'ModuleName'%.Init(); /* idle clock polarity low, shift on falling edge */
+%- %elif HWSPI_Enabled='yes'
+%-   /* initialize SPI */
+%-   %@HWSPI@'ModuleName'%.Init(); /* idle clock polarity low, shift on falling edge */
+%- %endif
+%-  %'ModuleName'%.gu8RTxMode = %'ModuleName'%.SYSTEM_RESET_MODE;
+  cntr = 0;
+  ResetTransceiver();
   while (u8AttnIrq == FALSE) {
     if (%@IRQ@'ModuleName'%.GetVal()==0) {           %>%CTAB /* Check to see if IRQ is asserted */
       u16IrqReg = %'ModuleName'%.%Read(%'ModuleName'%.STATUS_ADDR);  %>%CTAB /* Clear Transceiver interrupts and check for ATTN IRQ from 13192 */
@@ -1065,6 +1071,12 @@ void %'ModuleName'%.Init(void)
       } else {
         u8AttnIrq = TRUE;
       }
+    }
+    %@Wait@'ModuleName'%.Waitms(1);
+    cntr++;
+    if (cntr==50) { /* did take too long: restart reset sequence */
+      ResetTransceiver();
+      cntr = 0;
     }
   }
   IRQACK();                       %>%CTAB /* ACK the pending IRQ interrupt */
