@@ -49,7 +49,7 @@ static portTASK_FUNCTION(RemoteTask, pvParameters) {
     }
   } /* for */
 }
-#elif defined(PL_BOARD_IS_TOWER)
+#elif defined(PL_BOARD_IS_TWR) || defined(PL_BOARD_IS_FRDM)
 void REMOTE_ParseMsg(const unsigned char *msg, size_t size) {
   /* message format is RACCEL_ACCEL_PREFIX followed by 3 numbers */
   int32_t x, y, z;
@@ -92,20 +92,31 @@ void REMOTE_ParseMsg(const unsigned char *msg, size_t size) {
     if (y>950 || y<-950) { /* have a way to stop motor: turn SRB USB port side up or down */
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 0);
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 0);
-#if 1
     } else if ((y>150 || y<-150) && (x>150 || x<-150)) { /* x: speed, y: direction */
       int16_t speed, speedL, speedR;
       
-      speed = y/SCALE_DOWN;
-      speedL = speed-(x/SCALE_DOWN);
-      speedR = speed+(x/SCALE_DOWN);
+      speed = x/SCALE_DOWN;
+      if (y<0) {
+        if (speed<0) {
+          speedR = speed+(y/SCALE_DOWN);
+        } else {
+          speedR = speed-(y/SCALE_DOWN);
+        }
+        speedL = speed;
+      } else {
+        speedR = speed;
+        if (speed<0) {
+          speedL = speed-(y/SCALE_DOWN);
+        } else {
+          speedL = speed+(y/SCALE_DOWN);
+        }
+      }
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), speedL);
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), speedR);
-#endif
-    } else if (x>150 || x<-150) { /* speed */
+    } else if (x>100 || x<-100) { /* speed */
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), x/SCALE_DOWN);
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), x/SCALE_DOWN);
-    } else if (y>150 || y<-150) { /* direction */
+    } else if (y>100 || y<-100) { /* direction */
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), -y/SCALE_DOWN);
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), (y/SCALE_DOWN));
     } else { /* device flat on the table? */

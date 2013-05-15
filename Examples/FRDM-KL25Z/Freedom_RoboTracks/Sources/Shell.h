@@ -9,6 +9,12 @@
 #define SHELL_H_
 
 /*!
+ * \brief Puts a command received from the Radio channel into a buffer.
+ * \param cmd Zero terminated command string
+ */
+void SHELL_RadioCmdString(unsigned char *cmd);
+
+/*!
  * \brief Sends a string to the shell/console
  * \param msg Zero terminated string to write
  */

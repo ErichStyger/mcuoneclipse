@@ -43,7 +43,6 @@ typedef enum {
 
 static AppStateType appState = APP_STATE_INIT;
 
-#if PL_HAS_LINE_SENSOR
 static void StateMachine(bool buttonPress) {
   static uint8_t cnt;
   
@@ -82,15 +81,16 @@ static void StateMachine(bool buttonPress) {
       if (!LF_IsFollowing()) {
         appState = APP_STATE_IDLE;
       }
+#endif
       if (buttonPress) {
+#if PL_HAS_LINE_SENSOR
         LF_StopFollowing(); 
+#endif
         appState = APP_STATE_IDLE;
       }
-#endif
       break;
   } /* switch */
 }
-#endif /* PL_HAS_LINE_SENSOR */
 
 
 void APP_StateStartCalibrate(void) {
@@ -166,8 +166,10 @@ static void CheckButton(void) {
 #if PL_HAS_USER_BUTTON
   uint32_t timeTicks; /* time in ticks */
   #define BUTTON_CNT_MS  100  /* iteration count for button */
+#if PL_HAS_LINE_SENSOR
   bool autoCalibrate = FALSE;
-
+#endif
+  
   if (SW1_GetVal()==0) { /* button pressed */
     /* short press (1 beep): start or stop line following if calibrated 
      * 1 s press   (2 beep): calibrate manually
@@ -187,6 +189,7 @@ static void CheckButton(void) {
         }
         timeTicks++;
       } /* wait until released */
+#if PL_HAS_LINE_SENSOR
       autoCalibrate = FALSE;
       if (timeTicks<1000/BUTTON_CNT_MS) { /* less than 1 second */
         CLS1_SendStr((unsigned char*)"button press.\r\n", CLS1_GetStdio()->stdOut);
@@ -202,9 +205,11 @@ static void CheckButton(void) {
         CLS1_SendStr((unsigned char*)"delete solution.\r\n", CLS1_GetStdio()->stdOut);
         MAZE_ClearSolution();
       } 
+#endif
       while (SW1_GetVal()==0) { /* wait until button is released */
         FRTOS1_vTaskDelay(BUTTON_CNT_MS/portTICK_RATE_MS);
       }
+#if PL_HAS_LINE_SENSOR
       if (autoCalibrate) {
         CLS1_SendStr((unsigned char*)"start auto-calibration...\r\n", CLS1_GetStdio()->stdOut);
         /* perform automatic calibration */
@@ -217,6 +222,7 @@ static void CheckButton(void) {
         APP_StateStopCalibrate();
         CLS1_SendStr((unsigned char*)"auto-calibration finished.\r\n", CLS1_GetStdio()->stdOut);
       }
+#endif
     }
   } /* if */
 #endif
@@ -258,7 +264,7 @@ void APP_Run(void) {
   LF_Init();
   TURN_Init();
 #endif
-#if 0
+#if PL_HAS_ULTRASONIC
   US_Init();
 #endif
 #if PL_HAS_BUZZER

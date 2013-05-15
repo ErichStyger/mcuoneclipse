@@ -15,7 +15,9 @@
 #if PL_HAS_LED
   #include "LED.h"
 #endif
-#include "LEDG.h"
+#if PL_IS_ROBOT
+  #include "LEDG.h"
+#endif
 #include "CLS1.h"
 #include "FRTOS1.h"
 #include "UTIL1.h"
@@ -44,12 +46,14 @@ static xQueueHandle RADIO_MsgQueue; /* queue for messages,  format is: kind(8bit
 
 typedef enum RADIO_QueueMsgKind {
   RADIO_QUEUE_MSG_SNIFF, /* sniffing message */
+  RADIO_QUEUE_MSG_CMD,   /* command message */
   RADIO_QUEUE_MSG_ACCEL  /* acceleration message */
 } RADIO_QueueMsgKind;
 
 /*! \todo RADIO: Define here your PAN ID and acknowledge message you want to use */
 #define RADIO_PREFIX_STR "EST"   /* prefix used for every message */
 #define RADIO_ACK_STR    "ack"   /* acknowledge string */
+#define RADIO_CMD_STR    "cmd "   /* command string */
 
 #define RADIO_TIMEOUT_COUNT    0xB000 /*!< how long the timeout value will be while transmitting a message */
 
@@ -211,6 +215,9 @@ void RADIO_DataIndicationPacket(tRxPacket *sRxPacket) {
         QueueMessage(RADIO_QUEUE_MSG_ACCEL, (const char*)sRxPacket->pu8Data, sRxPacket->u8DataLength);
       }
 #endif
+      if (UTIL1_strncmp((char*)sRxPacket->pu8Data, RADIO_PREFIX_STR RADIO_CMD_STR, sizeof(RADIO_PREFIX_STR RADIO_CMD_STR)-1)==0) {
+        QueueMessage(RADIO_QUEUE_MSG_CMD, (const char*)sRxPacket->pu8Data+(sizeof(RADIO_PREFIX_STR RADIO_CMD_STR)-1), sRxPacket->u8DataLength-sizeof(RADIO_PREFIX_STR RADIO_CMD_STR)+1);
+      }
       EVNT_SetEvent(EVNT_RADIO_DATA);
     } else { /* unknown packet? */
       EVNT_SetEvent(EVNT_RADIO_UNKNOWN);
@@ -239,7 +246,7 @@ void RADIO_AppHandleEvent(EVNT_Handle event) {
       RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON;
       break;
     case EVNT_RADIO_ACK: /* acknowledge received */
-      SHELL_SendString((unsigned char*)"RADIO rx ack\r\n");
+     // SHELL_SendString((unsigned char*)"RADIO rx ack\r\n");
       RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON;
       break;
     case EVNT_RADIO_OVERFLOW: /* packet received was too long */
@@ -247,7 +254,7 @@ void RADIO_AppHandleEvent(EVNT_Handle event) {
       RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON;
       break;
     case EVNT_RADIO_DATA: /* data received */
-      //SHELL_SendString((unsigned char*)"RADIO rx data, going to tx ACK\r\n");
+     // SHELL_SendString((unsigned char*)"RADIO rx data, going to tx ACK\r\n");
       RADIO_AppStatus = RADIO_TRANSMIT_ACK;
       break;
     case EVNT_RADIO_UNKNOWN: /* unknown package received */
@@ -410,10 +417,14 @@ static void RADIO_HandleMessage(uint8_t *msg) {
     }
     SHELL_SendString(buf);
     SHELL_SendString((unsigned char*)"\r\n");
+  } else if (*msg==RADIO_QUEUE_MSG_CMD) {
+    msg++; /* skip message kind */
+    size = *msg++;
+    SHELL_RadioCmdString(msg);
 #if PL_HAS_REMOTE && PL_HAS_MOTOR
   /*! \todo Implement handling for your remote control */
   } else if (*msg==RADIO_QUEUE_MSG_ACCEL) {
-    msg++;
+    msg++; /* skip message kind */
     size = *msg++;
     REMOTE_ParseMsg((const unsigned char*)msg+sizeof(RADIO_PREFIX_STR)-1, size-sizeof(RADIO_PREFIX_STR)-1);
 #endif
@@ -423,8 +434,8 @@ static void RADIO_HandleMessage(uint8_t *msg) {
 /*! \brief Radio application state machine */
 void RADIO_Handle(void) {
   uint8_t buf[RADIO_QUEUE_ITEM_SIZE];
-  static uint8_t cnt = 0;
-
+  static byte cnt;
+  
   if (RADIO_isOn) {
     RADIO_HandleState(); /* advance state machine */
   }
@@ -432,17 +443,21 @@ void RADIO_Handle(void) {
   if (FRTOS1_xQueueReceive(RADIO_MsgQueue, buf, 0)==pdPASS) {
     /* received message from queue */
     RADIO_HandleMessage(buf);
+#if PL_IS_ROBOT
     LEDG_Neg();
     LEDR_Off();
+#endif
     cnt = 0; /* reset counter */
   } else {
     cnt++; /* incremented every 10 ms */
   }
   if (cnt>100) { /* no message for more than 1 s? */
     cnt = 0;
+#if PL_IS_ROBOT
     LEDG_Off();
     LEDR_Off();
     REMOTE_ParseMsg((const unsigned char *)"xyz 0 0 0", sizeof("xyz 0 0 0")-1);
+#endif
     EVNT_SetEvent(EVNT_RADIO_RESET); /* reset Transceiver */
   } else if (cnt==50) {
     LEDR_Neg();

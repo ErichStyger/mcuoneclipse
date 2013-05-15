@@ -31,6 +31,52 @@
 #if PL_HAS_REMOTE
   #include "Remote.h"
 #endif
+#if PL_HAS_RADIO
+  #include "Radio.h"
+  #include "RadioRx.h"
+#endif
+
+#if PL_HAS_RADIO
+
+void SHELL_RadioCmdString(unsigned char *cmd) {
+  if (*cmd!='\0') {
+    do {
+      while(RadioRx_Put(*cmd)!=ERR_OK) {
+        /* wait until there is free room in buffer */
+      }
+      cmd++;
+    } while(*cmd!='\0');
+    while(RadioRx_Put('\n')!=ERR_OK) { /* terminate command */
+      /* wait until there is free room in buffer */
+    }
+  } /* if */
+}
+
+static void Radio_StdIOReadChar(byte *c) {
+  if (RadioRx_Get((uint8_t *)c) != ERR_OK) {
+    /* failed to receive character: return a zero character */
+    *c = '\0';
+  }
+}
+
+static void Radio_StdIOSendChar(byte ch) {
+  // NYI
+  //while (BT1_SendChar((uint8_t)ch)==ERR_TXFULL){} /* Send char */
+}
+
+static bool Radio_StdIOKeyPressed(void) {
+  return (bool)((RadioRx_NofElements()==0U) ? FALSE : TRUE); /* true if there are characters in receive buffer */
+}
+
+/* Bluetooth stdio */
+static CLS1_ConstStdIOType Radio_stdio = {
+  (CLS1_StdIO_In_FctType)Radio_StdIOReadChar, /* stdin */
+  (CLS1_StdIO_OutErr_FctType)Radio_StdIOSendChar, /* stdout */
+  (CLS1_StdIO_OutErr_FctType)Radio_StdIOSendChar, /* stderr */
+  Radio_StdIOKeyPressed /* if input is not empty */
+};
+#endif
+
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
