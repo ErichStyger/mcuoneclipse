@@ -10,6 +10,9 @@
 #include "integer.h"
 
 /* << EST added */
+#ifndef NULL
+  #define NULL ((void*)0)
+#endif /* NULL */
 #define CT_SD1   (1<<0) /* LDD_SDHC_SD, Secure Digital memory card */
 #define CT_SD2   (1<<1) /* LDD_SDHC_SDIO, Secure Digital IO card */
 #define CT_BLOCK (1<<2)
