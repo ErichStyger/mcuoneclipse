@@ -40,6 +40,9 @@ extern "C" {
 #if PL_HAS_RADIO
   #include "Radio.h"
 #endif
+#if PL_HAS_ULTRASONIC
+  #include "Ultrasonic.h"
+#endif
 /*
 ** ===================================================================
 **     Event       :  Cpu_OnNMIINT (module Events)
@@ -158,12 +161,12 @@ void SMAC1_ResetIndication(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
+#if PL_HAS_RADIO
 void SMAC1_DataIndicationPacket(tRxPacket *sRxPacket)
 {
-#if PL_HAS_RADIO
   RADIO_DataIndicationPacket(sRxPacket);
-#endif
 }
+#endif
 
 /*
 ** ===================================================================
@@ -186,7 +189,9 @@ void SMAC1_DataIndicationPacket(tRxPacket *sRxPacket)
 /* ===================================================================*/
 void TU_US_OnCounterRestart(LDD_TUserData *UserDataPtr)
 {
-  /* Write your code here ... */
+#if PL_HAS_ULTRASONIC
+  US_EventEchoOverflow(UserDataPtr);
+#endif
 }
 
 /*
@@ -210,7 +215,9 @@ void TU_US_OnCounterRestart(LDD_TUserData *UserDataPtr)
 /* ===================================================================*/
 void TU_US_OnChannel0(LDD_TUserData *UserDataPtr)
 {
-  /* Write your code here ... */
+#if PL_HAS_ULTRASONIC
+  US_EventEchoCapture(UserDataPtr);
+#endif
 }
 
 /* END Events */

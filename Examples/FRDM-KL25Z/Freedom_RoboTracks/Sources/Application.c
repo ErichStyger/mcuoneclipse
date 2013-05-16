@@ -108,7 +108,7 @@ void APP_StateStopCalibrate(void) {
 }
 
 
-#if 0
+#if PL_HAS_ULTRASONIC
 static uint8_t MeasureCm(void) {
   uint16_t us, cm;
   uint8_t buf[8];
@@ -131,13 +131,12 @@ static uint8_t MeasureCm(void) {
 
 static bool runIt = TRUE;
 
-static portTASK_FUNCTION(RoboTask, pvParameters) {
+static void Ultrasonic(void) {
   uint16_t cm;
   
-  (void)pvParameters; /* not used */
-  for(;;) {
     cm = MeasureCm();
     LEDR_Neg();
+#if 0
     if (runIt && cm != 0) {
       if (cm<10) { /* back up! */
         MOT_SetSpeedPercent(MOT_GetMotorA(), -40);
@@ -157,8 +156,7 @@ static portTASK_FUNCTION(RoboTask, pvParameters) {
         MOT_SetSpeedPercent(MOT_GetMotorB(), 0);
       }
     }
-    FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
-  }
+#endif
 }
 #endif
 
@@ -238,6 +236,9 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
     TSS_Task(); /* call TSS library to process touches */
 #else
     CheckButton();
+#endif
+#if PL_HAS_ULTRASONIC
+    Ultrasonic();
 #endif
 #if PL_HAS_LED_BLUE
     LEDB_Neg();

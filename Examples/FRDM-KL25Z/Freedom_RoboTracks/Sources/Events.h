@@ -60,27 +60,13 @@
 #include "PWMR.h"
 #include "PwmLdd2.h"
 #include "WAIT1.h"
-#include "SMAC1.h"
-#include "PHY1.h"
-#include "TRSVR1.h"
-#include "CE1.h"
-#include "BitIoLdd8.h"
-#include "RESET1.h"
-#include "BitIoLdd9.h"
-#include "RTXEN1.h"
-#include "BitIoLdd10.h"
-#include "ATTN1.h"
-#include "BitIoLdd11.h"
-#include "IRQ1.h"
-#include "ExtIntLdd1.h"
-#include "SM1.h"
-#include "SMasterLdd1.h"
 #include "TMOUT1.h"
 #include "RadioRx.h"
 #include "TU_US.h"
 #include "TRIG.h"
 #include "SW1.h"
 #include "BitIoLdd12.h"
+#include "Platform.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -159,8 +145,9 @@ void SMAC1_ResetIndication(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
-
+#if PL_HAS_RADIO
 void SMAC1_DataIndicationPacket(tRxPacket *sRxPacket);
+#endif
 /*
 ** ===================================================================
 **     Event       :  SMAC1_DataIndicationPacket (module Events)
