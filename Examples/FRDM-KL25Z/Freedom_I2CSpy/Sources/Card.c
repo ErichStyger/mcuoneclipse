@@ -168,12 +168,27 @@ uint8_t CARD_Encode(uint8_t *bitArray, uint16_t nofArrayBits, const unsigned cha
   return ERR_OK;
 }
 
-uint8_t CARD_Decode(uint8_t *bitArray, uint16_t nofArrayBits, unsigned char *buf, size_t bufSize) {
+/* \brief writes the bitstream into a string buffer */
+static uint8_t DecodeBits(uint8_t *bitArray, uint16_t nofArrayBits, unsigned char *buf, size_t bufSize) {
   int bitPos;
+  uint8_t bit;
+
+  *buf = '\0';
+  for(bitPos=0;bitPos<nofArrayBits;bitPos++) {
+    if (CARD_GetBit(bitArray, nofArrayBits, bitPos, &bit)!=ERR_OK) {
+      return ERR_FAILED;
+    }
+    UTIL1_chcat(buf, bufSize, bit?'1':'0');
+  } /* for */
+  return ERR_OK;
+}
+
+static uint8_t CARD_Decode(uint8_t *bitArray, uint16_t nofArrayBits, uint16_t startBitPos, uint16_t *parsePos, unsigned char *buf, size_t bufSize) {
+  uint16_t bitPos;
   uint8_t code, res=ERR_OK;
   
   *buf = '\0';
-  for(bitPos=0;bitPos<nofArrayBits && bufSize>1;bitPos+=5) {
+  for(bitPos=startBitPos;bitPos<nofArrayBits && bufSize>1;bitPos+=5) {
     if (CARD_ReadBits(bitArray, nofArrayBits, bitPos, 5, &code)!=ERR_OK) {
       res = ERR_FAILED;
       break;
@@ -184,11 +199,12 @@ uint8_t CARD_Decode(uint8_t *bitArray, uint16_t nofArrayBits, unsigned char *buf
     }
     bufSize--;
     buf++;
-  }
+  } /* for */
   *buf = '\0'; /* terminate buffer in any case */
   if(bufSize==1) { /* enough buffer? */
     res = ERR_FAILED;
   }
+  *parsePos = bitPos;
   return res;
 }
 
@@ -217,14 +233,38 @@ static uint8_t EncodeString(uint8_t *bitArray, uint16_t nofArrayBits, const unsi
 
 static uint8_t DecodeData(uint8_t *bitArray, uint16_t nofArrayBits, const CLS1_StdIOType *io) {
   uint8_t buf[48];
-
-  CLS1_SendStr((unsigned char*)"Decoded:\r\n", io->stdOut);
-  if (CARD_Decode(bitArray, nofArrayBits, buf, sizeof(buf))!=ERR_OK) {
-    CLS1_SendStr((unsigned char*)"Decoding failed!\r\n", io->stdErr);
+  int i;
+  uint16_t bitPos;
+  
+  CLS1_SendNum16u(nofArrayBits, io->stdErr);
+  CLS1_SendStr((unsigned char*)" bits:\r\n", io->stdOut);
+  for(i=0;i<nofArrayBits/8;i++) {
+    if (DecodeBits(&bitArray[i], 8, buf, sizeof(buf))!=ERR_OK) {
+      CLS1_SendStr((unsigned char*)"Writing Bits failed!\r\n", io->stdErr);
+      return ERR_FAILED;
+    }
+    CLS1_SendStr(buf, io->stdOut);
+    CLS1_SendStr((unsigned char*)" ", io->stdOut);
   }
-  CLS1_SendStr(buf, io->stdOut);
   CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
 
+  CLS1_SendStr((unsigned char*)"Decoding:\r\n", io->stdOut);
+  for(i=0;i<7;i++) {
+    CLS1_SendStr((unsigned char*)"shift ", io->stdOut);
+    CLS1_SendNum16u(i, io->stdErr);
+    CLS1_SendStr((unsigned char*)": ", io->stdOut);
+    if (CARD_Decode(bitArray, nofArrayBits, i, &bitPos, buf, sizeof(buf))!=ERR_OK) {
+      CLS1_SendStr(buf, io->stdOut);
+      CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
+      CLS1_SendStr((unsigned char*)"Decoding failed at bitPos ", io->stdErr);
+      CLS1_SendNum16u(bitPos, io->stdErr);
+      CLS1_SendStr((unsigned char*)"\r\n", io->stdErr);
+    } else {
+      CLS1_SendStr(buf, io->stdOut);
+      CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
+      CLS1_SendStr((unsigned char*)"OK!\r\n", io->stdOut);
+    }
+  }
   return ERR_OK;
 }
 
