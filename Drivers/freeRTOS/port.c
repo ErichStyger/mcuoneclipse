@@ -796,26 +796,15 @@ PE_ISR(RTOSTICKLDD1_Interrupt)
 }
 /*-----------------------------------------------------------*/
 void vPortStartFirstTask(void) {
-#if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
   __asm volatile (
     " ldr r0, =0xE000ED08 \n" /* Use the NVIC offset register to locate the stack. */
-    " ldr r0, [r0]        \n"
-    " ldr r0, [r0]        \n"
+    " ldr r0, [r0]        \n" /* load address of vector table */
+    " ldr r0, [r0]        \n" /* load first entry of vector table which is the reset stackpointer */
     " msr msp, r0         \n" /* Set the msp back to the start of the stack. */
     " cpsie i             \n" /* Globally enable interrupts. */
     " svc 0               \n" /* System call to start first task. */
     " nop                 \n"
   );
-#else /* Cortex M0+ */
-  __asm volatile(
-    " movs r0, #0x00      \n" /* Locate the top of stack. */
-    " ldr r0, [r0]        \n"
-    " msr msp, r0         \n" /* Set the msp back to the start of the stack. */
-    " cpsie i             \n" /* Globally enable interrupts. */
-    " svc 0               \n" /* System call to start first task. */
-    " nop                 \n"
-  );
-#endif
 }
 /*-----------------------------------------------------------*/
 __attribute__ ((naked)) void vPortSVCHandler(void) {
