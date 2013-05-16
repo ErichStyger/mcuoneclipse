@@ -126,10 +126,10 @@
 %endif %- ParseCommand
 
 /* Macros used by Processor Expert */
-#define PEX_RTOS_INIT()                                          %>>/* not needed for FreeRTOS */
+#define PEX_RTOS_INIT()                                          %>>portDISABLE_INTERRUPTS() /* disable all interrupts, they get enabled in vStartScheduler() */
 #define PEX_RTOS_START()                                         %>>%'ModuleName'%.%vTaskStartScheduler()
 
-/* macros to identify CPU: 0 for M0+ and 4 for M4 */
+/* macro to identify CPU: 0 for M0+ and 4 for M4 */
 %if %CPUDB_prph_has_feature(CPU,ARM_CORTEX_M0P) = 'yes' %- Note: for IAR this is defined in portasm.s too!
 #define FREERTOS_CPU_CORTEX_M                                    %>>0 /* Cortex M0+ core */
 %else

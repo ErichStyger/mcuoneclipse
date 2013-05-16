@@ -207,6 +207,14 @@ extern void vPortExitCritical(void);
 #define portENTER_CRITICAL()                 vPortEnterCritical()
 #define portEXIT_CRITICAL()                  vPortExitCritical()
 %elif (CPUfamily = "Kinetis") & (%Compiler == "GNUC")
+/* macro to identify CPU: 0 for M0+ and 4 for M4 */
+%if %CPUDB_prph_has_feature(CPU,ARM_CORTEX_M0P) = 'yes' %- Note: for IAR this is defined in portasm.s too!
+#define FREERTOS_CPU_CORTEX_M                                    %>>0 /* Cortex M0+ core */
+%else
+#define FREERTOS_CPU_CORTEX_M                                    %>>4 /* Cortex M4 core */
+%endif
+
+#if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
 /*
  * Set basepri to portMAX_SYSCALL_INTERRUPT_PRIORITY without effecting other
  * registers.  r0 is clobbered.
@@ -220,7 +228,6 @@ extern void vPortExitCritical(void);
     :"i"(configMAX_SYSCALL_INTERRUPT_PRIORITY) /* input */\
     :"r0" /* clobber */    \
   )
-
 /*
  * Set basepri back to 0 without effective other registers.
  * r0 is clobbered.
@@ -234,12 +241,16 @@ extern void vPortExitCritical(void);
     : /* no input */        \
     :"r0" /* clobber */     \
   )
+#else
+#define portSET_INTERRUPT_MASK()              __asm volatile("cpsid i")
+#define portCLEAR_INTERRUPT_MASK()            __asm volatile("cpsie i")
+#endif
 
 #define portSET_INTERRUPT_MASK_FROM_ISR()     0;portSET_INTERRUPT_MASK()
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)  portCLEAR_INTERRUPT_MASK();(void)x
 
-extern void vPortEnterCritical( void );
-extern void vPortExitCritical( void );
+extern void vPortEnterCritical(void);
+extern void vPortExitCritical(void);
 
 #define portDISABLE_INTERRUPTS()   portSET_INTERRUPT_MASK()
 #define portENABLE_INTERRUPTS()    portCLEAR_INTERRUPT_MASK()
@@ -248,7 +259,7 @@ extern void vPortExitCritical( void );
 
 /* There are an uneven number of items on the initial stack, so
 portALIGNMENT_ASSERT_pxCurrentTCB() will trigger false positive asserts. */
-#define portALIGNMENT_ASSERT_pxCurrentTCB ( void )
+#define portALIGNMENT_ASSERT_pxCurrentTCB (void)
 
 
 %elif (CPUfamily = "Kinetis")
@@ -258,8 +269,8 @@ extern void vPortEnterCritical(void);
 extern void vPortExitCritical(void);
 %if (%Compiler = "IARARM")
 /* \todo: !!! IAR does not allow msr BASEPRI, r0 in vPortSetInterruptMask()? */
-#define portDISABLE_INTERRUPTS()				__asm volatile( "cpsid i" )
-#define portENABLE_INTERRUPTS()					__asm volatile( "cpsie i" )
+#define portDISABLE_INTERRUPTS()             __asm volatile( "cpsid i" )
+#define portENABLE_INTERRUPTS()              __asm volatile( "cpsie i" )
 %else
 #define portDISABLE_INTERRUPTS()             vPortSetInterruptMask()
 #define portENABLE_INTERRUPTS()              vPortClearInterruptMask()
