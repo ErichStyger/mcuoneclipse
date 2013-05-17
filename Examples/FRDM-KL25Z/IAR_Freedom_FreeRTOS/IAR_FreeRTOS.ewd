@@ -85,11 +85,11 @@
         </option>
         <option>
           <name>OCDynDriverList</name>
-          <state>PEMICRO_ID</state>
+          <state>CMSISDAP_ID</state>
         </option>
         <option>
           <name>OCLastSavedByProductVersion</name>
-          <state>6.50.2.4581</state>
+          <state>6.50.5.4846</state>
         </option>
         <option>
           <name>OCDownloadAttachToProgram</name>
@@ -250,6 +250,153 @@
         <option>
           <name>OCDriverInfo</name>
           <state>1</state>
+        </option>
+      </data>
+    </settings>
+    <settings>
+      <name>CMSISDAP_ID</name>
+      <archiveVersion>2</archiveVersion>
+      <data>
+        <version>0</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>OCDriverInfo</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CMSISDAPAttachSlave</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>OCIarProbeScriptFile</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CMSISDAPResetList</name>
+          <version>1</version>
+          <state>4</state>
+        </option>
+        <option>
+          <name>CMSISDAPHWResetDuration</name>
+          <state>300</state>
+        </option>
+        <option>
+          <name>CMSISDAPHWResetDelay</name>
+          <state>200</state>
+        </option>
+        <option>
+          <name>CMSISDAPDoLogfile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CMSISDAPLogFile</name>
+          <state>$PROJ_DIR$\cspycomm.log</state>
+        </option>
+        <option>
+          <name>CMSISDAPInterfaceRadio</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CMSISDAPInterfaceCmdLine</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CMSISDAPMultiTargetEnable</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CMSISDAPMultiTarget</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CMSISDAPJtagSpeedList</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CMSISDAPBreakpointRadio</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CMSISDAPRestoreBreakpointsCheck</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CMSISDAPUpdateBreakpointsEdit</name>
+          <state>_call_main</state>
+        </option>
+        <option>
+          <name>RDICatchReset</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>RDICatchUndef</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>RDICatchSWI</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>RDICatchData</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>RDICatchPrefetch</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>RDICatchIRQ</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>RDICatchFIQ</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CatchCORERESET</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CatchMMERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CatchNOCPERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CatchCHKERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CatchSTATERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CatchBUSERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CatchINTERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CatchHARDERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CatchDummy</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CMSISDAPMultiCPUEnable</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CMSISDAPMultiCPUNumber</name>
+          <state>0</state>
         </option>
       </data>
     </settings>
@@ -1060,7 +1207,7 @@
         </option>
         <option>
           <name>CCXds100InterfaceList</name>
-          <version>0</version>
+          <version>1</version>
           <state>0</state>
         </option>
         <option>
@@ -1104,7 +1251,7 @@
       </plugin>
       <plugin>
         <file>$TOOLKIT_DIR$\plugins\rtos\OpenRTOS\OpenRTOSPlugin.ewplugin</file>
-        <loadFlag>0</loadFlag>
+        <loadFlag>1</loadFlag>
       </plugin>
       <plugin>
         <file>$TOOLKIT_DIR$\plugins\rtos\PowerPac\PowerPacRTOS.ewplugin</file>
@@ -1400,6 +1547,153 @@
         <option>
           <name>OCDriverInfo</name>
           <state>1</state>
+        </option>
+      </data>
+    </settings>
+    <settings>
+      <name>CMSISDAP_ID</name>
+      <archiveVersion>2</archiveVersion>
+      <data>
+        <version>0</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>0</debug>
+        <option>
+          <name>OCDriverInfo</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CMSISDAPAttachSlave</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>OCIarProbeScriptFile</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CMSISDAPResetList</name>
+          <version>1</version>
+          <state>10</state>
+        </option>
+        <option>
+          <name>CMSISDAPHWResetDuration</name>
+          <state>300</state>
+        </option>
+        <option>
+          <name>CMSISDAPHWResetDelay</name>
+          <state>200</state>
+        </option>
+        <option>
+          <name>CMSISDAPDoLogfile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CMSISDAPLogFile</name>
+          <state>$PROJ_DIR$\cspycomm.log</state>
+        </option>
+        <option>
+          <name>CMSISDAPInterfaceRadio</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CMSISDAPInterfaceCmdLine</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CMSISDAPMultiTargetEnable</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CMSISDAPMultiTarget</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CMSISDAPJtagSpeedList</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CMSISDAPBreakpointRadio</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CMSISDAPRestoreBreakpointsCheck</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CMSISDAPUpdateBreakpointsEdit</name>
+          <state>_call_main</state>
+        </option>
+        <option>
+          <name>RDICatchReset</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>RDICatchUndef</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>RDICatchSWI</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>RDICatchData</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>RDICatchPrefetch</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>RDICatchIRQ</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>RDICatchFIQ</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CatchCORERESET</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CatchMMERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CatchNOCPERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CatchCHKERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CatchSTATERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CatchBUSERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CatchINTERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CatchHARDERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CatchDummy</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CMSISDAPMultiCPUEnable</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CMSISDAPMultiCPUNumber</name>
+          <state>0</state>
         </option>
       </data>
     </settings>
@@ -2210,7 +2504,7 @@
         </option>
         <option>
           <name>CCXds100InterfaceList</name>
-          <version>0</version>
+          <version>1</version>
           <state>0</state>
         </option>
         <option>

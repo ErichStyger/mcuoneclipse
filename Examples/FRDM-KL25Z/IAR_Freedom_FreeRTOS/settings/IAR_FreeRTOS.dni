@@ -30,8 +30,6 @@ SumEnabled=0
 GraphEnabled=0
 ShowTimeLog=1
 ShowTimeSum=1
-[Breakpoints2]
-Count=0
 [Interrupts]
 Enabled=1
 [MemoryMap]
@@ -41,13 +39,66 @@ UseAuto=0
 TypeViolation=1
 UnspecRange=1
 ActionState=1
+[Breakpoints]
+Count=0
+[Jet]
+JetConnSerialNo=1
+JetConnFoundProbes=
+DisableInterrupts=0
+[PlDriver]
+FirstRun=0
+MemConfigValue=C:\Freescale\Embedded Workbench 6.5\arm\CONFIG\debugger\Freescale\MKL25Z128xxx4.ddf
+[SWOManager]
+SamplingDivider=8192
+OverrideClock=0
+CpuClock=3997797
+SwoClock=7864368
+DataLogMode=0
+ItmPortsEnabled=63
+ItmTermIOPorts=1
+ItmLogPorts=0
+ItmLogFile=$PROJ_DIR$\ITM.log
+PowerForcePC=1
+PowerConnectPC=1
+[ArmDriver]
+EnableCache=1
+[Disassemble mode]
+mode=0
+[Breakpoints2]
+Count=0
 [Trace1]
 Enabled=0
 ShowSource=1
-[Disassemble mode]
-mode=0
-[Breakpoints]
-Count=0
+[ETMTraceWindow]
+PortWidth=4
+PortMode=0
+PreferETB=0
+CaptureDataValues=0
+CaptureDataAddresses=0
+CaptureDataRange=0
+DataFirst=0
+DataLast=-1
+StopWhen=0
+StallCPU=0
+NoPCCapture=0
+[Trace2]
+Enabled=0
+ShowSource=0
+[SWOTraceWindow]
+ForcedPcSampling=0
+ForcedInterruptLogs=0
+ForcedItmLogs=0
+EventCPI=0
+EventEXC=0
+EventFOLD=0
+EventLSU=0
+EventSLEEP=0
+[DriverProfiling]
+Enabled=0
+Mode=2
+Graph=0
+Symbiont=0
+Exclusions=
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -58,3 +109,5 @@ LogFile=_ ""
 [Aliases]
 Count=0
 SuppressDialog=0
+[CallStackLog]
+Enabled=0
