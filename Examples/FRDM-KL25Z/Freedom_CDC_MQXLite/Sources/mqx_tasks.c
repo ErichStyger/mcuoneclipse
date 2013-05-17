@@ -43,6 +43,14 @@ extern "C" {
 
 static uint8_t cdc_buffer[USB1_DATA_BUFF_SIZE];
 static uint8_t in_buffer[USB1_DATA_BUFF_SIZE];
+
+void InitUSB(void) {
+  /* Install usb interrupt */
+  (void)_int_install_isr(INT_USB0, usb_isr,  (pointer)&usb_data);
+  /* USB low level init */
+  USB0_Init();
+}
+
 /*
 ** ===================================================================
 **     Event       :  Task1_task (module mqx_tasks)

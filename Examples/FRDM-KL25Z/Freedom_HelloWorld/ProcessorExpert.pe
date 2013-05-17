@@ -2,11 +2,11 @@
 <PEproject>
   <Header>
     <Name>ProcessorExpert</Name>
-    <SavedBy>Erich Styger</SavedBy>
+    <SavedBy>tastyger</SavedBy>
     <ModificationStamp>77</ModificationStamp>
-    <Date>2013-01-08</Date>
+    <Date>2013-05-17</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion />
+    <PEversion>1.6.0.RT4_b1316-1577</PEversion>
   </Header>
   <Options>
     <EventsDirectory>Sources</EventsDirectory>
@@ -14,6 +14,7 @@
     <DocumentationDir>Documentation</DocumentationDir>
     <CompiledFilesSubDir />
     <ProjectSettingsDirectory>Project_Settings</ProjectSettingsDirectory>
+    <StaticCodeDirectory>Generated_Code</StaticCodeDirectory>
     <TemporaryDir />
     <OverwriteEvents>3</OverwriteEvents>
     <MainModuleUpdate>3</MainModuleUpdate>
@@ -36,6 +37,7 @@
     <SaveProjectBeforeGeneration>true</SaveProjectBeforeGeneration>
     <GenerateCodeGenLog>false</GenerateCodeGenLog>
     <DontWriteGeneratedModules lines_count="0" />
+    <ProjectStaticFilesGenerationMode>LINKED</ProjectStaticFilesGenerationMode>
   </Options>
   <CPU>
     <BeanType>MKL25Z128LK4</BeanType>
@@ -44,6 +46,7 @@
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>CPU_CHIP2</IconName>
+    <UserFolderName />
     <Comment lines_count="0" />
     <Template />
     <BeanVersion>01.025</BeanVersion>
@@ -106,6 +109,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>32.768</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>InitializeSlowTRIM</ItemSymbol>
@@ -113,6 +117,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>false</Value>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SlowTRIMvalueAddress</ItemSymbol>
@@ -121,6 +126,7 @@
         <Value>1023</Value>
         <Base>HEX</Base>
         <Area />
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SlowFTRIMvalueAddress</ItemSymbol>
@@ -129,12 +135,14 @@
         <Value>1022</Value>
         <Base>HEX</Base>
         <Area />
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>IntOscFast</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>4</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>InitializeFastTRIM</ItemSymbol>
@@ -142,6 +150,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>false</Value>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>FastTRIMvalueAddress</ItemSymbol>
@@ -150,6 +159,7 @@
         <Value>1022</Value>
         <Base>HEX</Base>
         <Area />
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>RTC_CLKINGrp</ItemSymbol>
@@ -157,12 +167,14 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>false</Value>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>RTC_CLKIN</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>0.032768</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>RTC_CLKINPin</ItemSymbol>
@@ -181,6 +193,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>true</Value>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SystemOSCSrc</ItemSymbol>
@@ -188,6 +201,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SystemOSCExtal_Grp</ItemSymbol>
@@ -228,6 +242,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>8</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SystemOSC_CapacitorLoad</ItemSymbol>
@@ -235,6 +250,8 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ExtOscOperatingMode</ItemSymbol>
@@ -242,6 +259,8 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <EnumSymbVal>0</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>CLKModeList</ItemSymbol>
@@ -268,6 +287,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>IREFSTENCLKMode0</ItemSymbol>
@@ -275,6 +295,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>IRCLKSelectCLKMode0</ItemSymbol>
@@ -283,10 +304,12 @@
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>IRCLKClkCLKMode0</ItemSymbol>
         <Value>0.032768</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ERCLKGrp0</ItemSymbol>
@@ -300,6 +323,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SystemOSCEREFSTENCLKMode0</ItemSymbol>
@@ -307,10 +331,12 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ERCLKClkCLKMode0</ItemSymbol>
         <Value>8</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ERCLK32KSelectCLKMode0</ItemSymbol>
@@ -318,10 +344,13 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <EnumSymbVal>0</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ERCLK32KClkCLKMode0</ItemSymbol>
         <Value>0</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCGGrp0</ItemSymbol>
@@ -334,11 +363,14 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Index>4</Index>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCGOUTSelectCLKMode0</ItemSymbol>
         <Index>1</Index>
         <EnumSymbVal>PLLOUT</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>MCGModeCLKMode0</ItemSymbol>
@@ -349,10 +381,12 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>20.97152</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCG_ERCLKClkCLKMode0</ItemSymbol>
         <Value>8</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCGCMECLKMode0</ItemSymbol>
@@ -360,6 +394,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>FLLGrp0</ItemSymbol>
@@ -373,16 +408,19 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>FLLOutputCLKMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>20.97152</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>FLLFixedClkCLKMode0</ItemSymbol>
         <Value>15.625</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>FLL_RefClkSrcCLKMode0</ItemSymbol>
@@ -390,6 +428,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCG_FRDIV_CLKMode0</ItemSymbol>
@@ -397,10 +436,13 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <EnumSymbVal>Auto select</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FLLRefClkCLKMode0</ItemSymbol>
         <Value>31.25</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCG_FLL_MFactor_CLKMode0</ItemSymbol>
@@ -408,6 +450,8 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <EnumSymbVal>Auto select</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PLLGrp0</ItemSymbol>
@@ -421,6 +465,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>PLLSTENCLKMode0</ItemSymbol>
@@ -428,12 +473,14 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>PLLOutputCLKMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>100</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCG_PRDIV_CLKMode0</ItemSymbol>
@@ -441,10 +488,13 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <EnumSymbVal>Auto select</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PLLRefClkCLKMode0</ItemSymbol>
         <Value>4</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCG_VDIV_CLKMode0</ItemSymbol>
@@ -452,6 +502,8 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <EnumSymbVal>Auto select</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PLL_LOLIECLKMode0</ItemSymbol>
@@ -459,6 +511,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>InitPriority</ItemSymbol>
@@ -472,6 +525,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>Intperiphgrp</ItemSymbol>
@@ -499,6 +553,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>Auto select</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ADC0CondGrp</ItemSymbol>
@@ -510,6 +565,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>Auto select</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ADC1CondGrp</ItemSymbol>
@@ -521,6 +577,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>Auto select</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ADC2CondGrp</ItemSymbol>
@@ -532,6 +589,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>Auto select</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ADC3CondGrp</ItemSymbol>
@@ -543,6 +601,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>Auto select</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ADC4CondGrp</ItemSymbol>
@@ -554,6 +613,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>Auto select</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SharedNMI</ItemSymbol>
@@ -565,6 +625,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>true</Value>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>NMINMIPin</ItemSymbol>
@@ -589,6 +650,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>true</Value>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>PeriphDeviceRCM</ItemSymbol>
@@ -617,6 +679,8 @@
         <TypeSpecNameState>typeKinetisRCMFilterInStop</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RCMFilterInRunWait</ItemSymbol>
@@ -625,6 +689,8 @@
         <TypeSpecNameState>typeKinetisRCMFilterInRunWait</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RCMFilterWidth</ItemSymbol>
@@ -632,6 +698,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>1</Value>
         <Base>DEC</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>RCMInternalUsageGrp</ItemSymbol>
@@ -643,6 +710,7 @@
         <ItemSymbol>RCMIsInitialized</ItemSymbol>
         <Index>0</Index>
         <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SharedFlashOrganization</ItemSymbol>
@@ -679,6 +747,8 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>Dpart_</ItemSymbol>
@@ -686,6 +756,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>DataFlashAvailable</ItemSymbol>
@@ -693,16 +764,19 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>DataFlashStart</ItemSymbol>
         <Value>268435456</Value>
         <Base>HEX</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>DataFlashSize</ItemSymbol>
         <Value>0</Value>
         <Base>HEX</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>Symbol</ItemSymbol>
@@ -716,16 +790,19 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>EEPROMPartitionStart</ItemSymbol>
         <Value>268435456</Value>
         <Base>HEX</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>EEPROMPartitionSize</ItemSymbol>
         <Value>0</Value>
         <Base>DEC</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>EEEpart</ItemSymbol>
@@ -733,6 +810,8 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>EEEpart_</ItemSymbol>
@@ -740,16 +819,19 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>EEPROMStart</ItemSymbol>
         <Value>335544320</Value>
         <Base>HEX</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>EEPROMSize</ItemSymbol>
         <Value>0</Value>
         <Base>DEC</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>FlexRAM</ItemSymbol>
@@ -757,21 +839,25 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>false</Value>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>FlexRAMStart</ItemSymbol>
         <Value>335544320</Value>
         <Base>HEX</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>FlexRAMSize</ItemSymbol>
         <Value>0</Value>
         <Base>DEC</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>EEEFeatureIsInitialized</ItemSymbol>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>FlashOrgDscrBlockList</ItemSymbol>
@@ -788,26 +874,31 @@
         <ItemSymbol>FlashOrgDscrBlockAddress0</ItemSymbol>
         <Value>0</Value>
         <Base>HEX</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>FlashOrgDscrBlockSize0</ItemSymbol>
         <Value>131072</Value>
         <Base>DEC</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>FlashOrgDscrBlockWUnitSize0</ItemSymbol>
         <Value>4</Value>
         <Base>DEC</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>FlashOrgDscrBlockEUnitSize0</ItemSymbol>
         <Value>1024</Value>
         <Base>DEC</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>FlashOrgDscrBlockPUnitSize0</ItemSymbol>
         <Value>4096</Value>
         <Base>DEC</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ShrdFLASHCfgGrp</ItemSymbol>
@@ -819,6 +910,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>false</Value>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>PeriphDeviceFTFL_FlashConfig</ItemSymbol>
@@ -840,6 +932,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigSecurity</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unsecure</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigFslAccess</ItemSymbol>
@@ -848,6 +942,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigFslAccess</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>granted</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigMassEraseEnable</ItemSymbol>
@@ -856,6 +952,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigMassEraseEnable</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigBackdoorkeyEnable</ItemSymbol>
@@ -864,6 +962,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigBackdoorkeyEnable</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigBackdoorKey0</ItemSymbol>
@@ -871,6 +971,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>255</Value>
         <Base>DEC</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigBackdoorKey1</ItemSymbol>
@@ -878,6 +979,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>255</Value>
         <Base>DEC</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigBackdoorKey2</ItemSymbol>
@@ -885,6 +987,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>255</Value>
         <Base>DEC</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigBackdoorKey3</ItemSymbol>
@@ -892,6 +995,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>255</Value>
         <Base>DEC</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigBackdoorKey4</ItemSymbol>
@@ -899,6 +1003,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>255</Value>
         <Base>DEC</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigBackdoorKey5</ItemSymbol>
@@ -906,6 +1011,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>255</Value>
         <Base>DEC</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigBackdoorKey6</ItemSymbol>
@@ -913,6 +1019,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>255</Value>
         <Base>DEC</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigBackdoorKey7</ItemSymbol>
@@ -920,6 +1027,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>255</Value>
         <Base>DEC</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProtectionSettingsGrp</ItemSymbol>
@@ -943,6 +1051,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>4294967295</Value>
         <Base>HEX</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegionsGrp</ItemSymbol>
@@ -957,6 +1066,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion1</ItemSymbol>
@@ -965,6 +1076,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion2</ItemSymbol>
@@ -973,6 +1086,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion3</ItemSymbol>
@@ -981,6 +1096,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion4</ItemSymbol>
@@ -989,6 +1106,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion5</ItemSymbol>
@@ -997,6 +1116,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion6</ItemSymbol>
@@ -1005,6 +1126,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion7</ItemSymbol>
@@ -1013,6 +1136,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion8</ItemSymbol>
@@ -1021,6 +1146,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion9</ItemSymbol>
@@ -1029,6 +1156,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion10</ItemSymbol>
@@ -1037,6 +1166,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion11</ItemSymbol>
@@ -1045,6 +1176,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion12</ItemSymbol>
@@ -1053,6 +1186,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion13</ItemSymbol>
@@ -1061,6 +1196,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion14</ItemSymbol>
@@ -1069,6 +1206,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion15</ItemSymbol>
@@ -1077,6 +1216,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion16</ItemSymbol>
@@ -1085,6 +1226,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion17</ItemSymbol>
@@ -1093,6 +1236,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion18</ItemSymbol>
@@ -1101,6 +1246,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion19</ItemSymbol>
@@ -1109,6 +1256,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion20</ItemSymbol>
@@ -1117,6 +1266,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion21</ItemSymbol>
@@ -1125,6 +1276,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion22</ItemSymbol>
@@ -1133,6 +1286,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion23</ItemSymbol>
@@ -1141,6 +1296,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion24</ItemSymbol>
@@ -1149,6 +1306,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion25</ItemSymbol>
@@ -1157,6 +1316,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion26</ItemSymbol>
@@ -1165,6 +1326,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion27</ItemSymbol>
@@ -1173,6 +1336,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion28</ItemSymbol>
@@ -1181,6 +1346,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion29</ItemSymbol>
@@ -1189,6 +1356,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion30</ItemSymbol>
@@ -1197,6 +1366,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion31</ItemSymbol>
@@ -1205,6 +1376,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigBootSettingsGrp</ItemSymbol>
@@ -1219,6 +1392,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigResetPinFunction</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigNmiFunction</ItemSymbol>
@@ -1227,6 +1402,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigNmiFunction</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigFlashInitSpeed</ItemSymbol>
@@ -1235,6 +1412,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigFlashInitSpeed</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>fast</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigEzPortDis</ItemSymbol>
@@ -1251,6 +1430,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigLowPowerBoot</TypeSpecNameState>
         <Index>3</Index>
         <EnumSymbVal>FastClockBoot</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigInternalUsageGrp</ItemSymbol>
@@ -1262,6 +1443,7 @@
         <ItemSymbol>FTFL_FlashConfigIsInitialized</ItemSymbol>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ShrdPMCGrp</ItemSymbol>
@@ -1287,6 +1469,8 @@
         <TypeSpecNameState>typeKinetisPMCLVDreset</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PMCLVDvoltageSelect</ItemSymbol>
@@ -1295,6 +1479,8 @@
         <TypeSpecNameState>typeKinetisPMCLVDvoltageSelect</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>low</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PMCLVWvoltageSelect</ItemSymbol>
@@ -1303,6 +1489,8 @@
         <TypeSpecNameState>typeKinetisPMCLVWvoltageSelect</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>low</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PMCBangapBuffer</ItemSymbol>
@@ -1311,6 +1499,8 @@
         <TypeSpecNameState>typeKinetisPMCBangapBuffer</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PMCBangapVLPBuffer</ItemSymbol>
@@ -1319,6 +1509,8 @@
         <TypeSpecNameState>typeKinetisPMCBangapVLPBuffer</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PMCPMCIntGrp</ItemSymbol>
@@ -1342,6 +1534,8 @@
         <TypeSpecNameState>typeKinetisPMCLVDIntNameRequest</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PMCLVDIntNamePriorityFeatureGroup</ItemSymbol>
@@ -1355,6 +1549,8 @@
         <TypeSpecNameState>typeKinetisPMCLVDIntNamePriority</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>DevInit_PMCISRnameLVDGrp</ItemSymbol>
@@ -1374,6 +1570,8 @@
         <TypeSpecNameState>typeKinetisPMCLVDinterrupt</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PMCLVWinterrupt</ItemSymbol>
@@ -1382,6 +1580,8 @@
         <TypeSpecNameState>typeKinetisPMCLVWinterrupt</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PMCInternalUsageGrp</ItemSymbol>
@@ -1393,6 +1593,7 @@
         <ItemSymbol>PMCIsInitialized</ItemSymbol>
         <Index>0</Index>
         <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ShrdSCBGrp1</ItemSymbol>
@@ -1417,12 +1618,14 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>false</Value>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMCLKOUTPin</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMCLKOUTPinSignal</ItemSymbol>
@@ -1437,6 +1640,8 @@
         <TypeSpecNameState>typeKinetisSIMCLKOUT</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>busClk</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMSCGCGrp</ItemSymbol>
@@ -1444,6 +1649,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>false</Value>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateI2C0</ItemSymbol>
@@ -1452,6 +1658,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateI2C1</ItemSymbol>
@@ -1460,6 +1668,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateUART0</ItemSymbol>
@@ -1468,6 +1678,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateUART1</ItemSymbol>
@@ -1476,6 +1688,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateUART2</ItemSymbol>
@@ -1484,6 +1698,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateUSB0</ItemSymbol>
@@ -1492,6 +1708,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateCMP</ItemSymbol>
@@ -1500,6 +1718,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateSPI0</ItemSymbol>
@@ -1508,6 +1728,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateSPI1</ItemSymbol>
@@ -1516,6 +1738,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateLPTMR0</ItemSymbol>
@@ -1524,6 +1748,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateTSI0</ItemSymbol>
@@ -1532,6 +1758,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGatePORTA</ItemSymbol>
@@ -1540,6 +1768,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGatePORTB</ItemSymbol>
@@ -1548,6 +1778,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGatePORTC</ItemSymbol>
@@ -1556,6 +1788,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGatePORTD</ItemSymbol>
@@ -1564,6 +1798,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGatePORTE</ItemSymbol>
@@ -1572,6 +1808,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateFTFA</ItemSymbol>
@@ -1580,6 +1818,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateDMA_MULTIPLEXOR0</ItemSymbol>
@@ -1588,6 +1828,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGatePIT</ItemSymbol>
@@ -1596,6 +1838,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateTPM0</ItemSymbol>
@@ -1604,6 +1848,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateTPM1</ItemSymbol>
@@ -1612,6 +1858,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateTPM2</ItemSymbol>
@@ -1620,6 +1868,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateADC0</ItemSymbol>
@@ -1628,6 +1878,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateRTC</ItemSymbol>
@@ -1636,6 +1888,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateDAC0</ItemSymbol>
@@ -1644,6 +1898,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMInternalUsageGrp</ItemSymbol>
@@ -1655,6 +1911,7 @@
         <ItemSymbol>SIMIsInitialized</ItemSymbol>
         <Index>0</Index>
         <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>Shared_CPUInterrupts</ItemSymbol>
@@ -1672,6 +1929,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>true</Value>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>IntNMI</ItemSymbol>
@@ -1701,6 +1959,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>IntEmpty</ItemSymbol>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>ISRDefaultName</ItemSymbol>
@@ -1735,6 +1994,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>false</Value>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>IntHardFault</ItemSymbol>
@@ -1755,6 +2015,7 @@
         <ItemSymbol>IntMPUGrp</ItemSymbol>
         <Value>false</Value>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>IntMPU</ItemSymbol>
@@ -1777,6 +2038,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>false</Value>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>IntBusFault</ItemSymbol>
@@ -1787,6 +2049,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>maximal priority</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>DevInit_IntBusFaultGrp</ItemSymbol>
@@ -1805,6 +2068,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>false</Value>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>IntUsageFault</ItemSymbol>
@@ -1815,6 +2079,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>maximal priority</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>DevInit_IntUsageFaultGrp</ItemSymbol>
@@ -1833,6 +2098,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>false</Value>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>IntSVCall</ItemSymbol>
@@ -1843,6 +2109,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>maximal priority</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>DevInit_IntSVCallGrp</ItemSymbol>
@@ -1861,6 +2128,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>false</Value>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>IntPendSV</ItemSymbol>
@@ -1871,6 +2139,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>maximal priority</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>DevInit_IntPendSVGrp</ItemSymbol>
@@ -1892,6 +2161,7 @@
         <ItemSymbol>IntLossOfLockGrp</ItemSymbol>
         <Value>false</Value>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>IntLossOfLock</ItemSymbol>
@@ -1902,6 +2172,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>medium priority</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCU_Reset_Vector_Grp2</ItemSymbol>
@@ -1936,6 +2207,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SMC_ALLS</ItemSymbol>
@@ -1943,6 +2215,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SMC_AVLLS</ItemSymbol>
@@ -1950,6 +2223,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ShrdLLWUGrp</ItemSymbol>
@@ -1961,6 +2235,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>false</Value>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>PeriphDeviceLLWU</ItemSymbol>
@@ -1981,12 +2256,14 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUExtPinChan5</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUExtPinChan5Signal</ItemSymbol>
@@ -2000,12 +2277,14 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUExtPinChan6</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUExtPinChan6Signal</ItemSymbol>
@@ -2019,12 +2298,14 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUExtPinChan7</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUExtPinChan7Signal</ItemSymbol>
@@ -2038,12 +2319,14 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUExtPinChan8</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUExtPinChan8Signal</ItemSymbol>
@@ -2057,12 +2340,14 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUExtPinChan9</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUExtPinChan9Signal</ItemSymbol>
@@ -2076,12 +2361,14 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUExtPinChan10</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUExtPinChan10Signal</ItemSymbol>
@@ -2095,12 +2382,14 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUExtPinChan14</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUExtPinChan14Signal</ItemSymbol>
@@ -2114,12 +2403,14 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUExtPinChan15</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUExtPinChan15Signal</ItemSymbol>
@@ -2134,6 +2425,8 @@
         <TypeSpecNameState>typeKinetisLLWUIntModule</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUIntModule1</ItemSymbol>
@@ -2142,6 +2435,8 @@
         <TypeSpecNameState>typeKinetisLLWUIntModule</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUIntModule4</ItemSymbol>
@@ -2150,6 +2445,8 @@
         <TypeSpecNameState>typeKinetisLLWUIntModule</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUIntModule5</ItemSymbol>
@@ -2158,6 +2455,8 @@
         <TypeSpecNameState>typeKinetisLLWUIntModule</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUIntModule7</ItemSymbol>
@@ -2166,6 +2465,8 @@
         <TypeSpecNameState>typeKinetisLLWUIntModule</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUFiltr1</ItemSymbol>
@@ -2173,6 +2474,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUFilt1In</ItemSymbol>
@@ -2180,12 +2482,14 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUFilt1ExtPin5</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUFilt1ExtPin5Signal</ItemSymbol>
@@ -2198,6 +2502,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUFilt1ExtPin6Signal</ItemSymbol>
@@ -2210,6 +2515,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUFilt1ExtPin7Signal</ItemSymbol>
@@ -2222,6 +2528,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUFilt1ExtPin8Signal</ItemSymbol>
@@ -2234,6 +2541,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUFilt1ExtPin9Signal</ItemSymbol>
@@ -2246,6 +2554,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUFilt1ExtPin10Signal</ItemSymbol>
@@ -2258,6 +2567,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUFilt1ExtPin14Signal</ItemSymbol>
@@ -2270,6 +2580,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUFilt1ExtPin15Signal</ItemSymbol>
@@ -2283,6 +2594,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUFilt2In</ItemSymbol>
@@ -2290,12 +2602,14 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUFilt2ExtPin5</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUFilt2ExtPin5Signal</ItemSymbol>
@@ -2308,6 +2622,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUFilt2ExtPin6Signal</ItemSymbol>
@@ -2320,6 +2635,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUFilt2ExtPin7Signal</ItemSymbol>
@@ -2332,6 +2648,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUFilt2ExtPin8Signal</ItemSymbol>
@@ -2344,6 +2661,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUFilt2ExtPin9Signal</ItemSymbol>
@@ -2356,6 +2674,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUFilt2ExtPin10Signal</ItemSymbol>
@@ -2368,6 +2687,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUFilt2ExtPin14Signal</ItemSymbol>
@@ -2380,6 +2700,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUFilt2ExtPin15Signal</ItemSymbol>
@@ -2409,6 +2730,8 @@
         <TypeSpecNameState>typeKinetisLLWUIntCommonRequest</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUIntCommonPriorityFeatureGroup</ItemSymbol>
@@ -2422,6 +2745,8 @@
         <TypeSpecNameState>typeKinetisLLWUIntCommonPriority</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>DevInit_LLWUISRHandleCommonGrp</ItemSymbol>
@@ -2444,6 +2769,7 @@
         <ItemSymbol>LLWUIsInitialized</ItemSymbol>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>Shared_CPULowPowerGrp0</ItemSymbol>
@@ -2472,6 +2798,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SetOperationMode_SLEEP</ItemSymbol>
@@ -2485,6 +2812,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SetOperationMode_STOP</ItemSymbol>
@@ -2492,6 +2820,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>false</Value>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SetOperationMode_STOP_Sel</ItemSymbol>
@@ -2500,6 +2829,7 @@
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SpeedModeList</ItemSymbol>
@@ -2525,22 +2855,26 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>0.032768</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>IRC_4MHzSpeedMode0</ItemSymbol>
-        <Value>4</Value>
+        <Value>2</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SYSTEM_OSCSpeedMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>8</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>RTC_CLKINSpeedMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>0.032768</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>_SYSTEM_PRESCALER0</ItemSymbol>
@@ -2553,48 +2887,56 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>IRC_32kHz</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ERCLK32KSelSpeedMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>SYSTEM_OSC</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCG_FLL_RCLKSelSpeedMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>MCG_FRDIV</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCG_FRDIVSpeedMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>256</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCG_FLL_MFactorSpeedMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>640</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCG_PRDIVSpeedMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>2</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCG_VDIVSpeedMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>25</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCGOUTSelSpeedMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>MCGPLLCLK</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>VLPRSpeedMode0</ItemSymbol>
@@ -2602,6 +2944,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>false</Value>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>VLPREntrySpeedMode0</ItemSymbol>
@@ -2609,6 +2952,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>VLPExitOnIntSpeedMode0</ItemSymbol>
@@ -2616,6 +2960,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>CLKModeSpeedMode0</ItemSymbol>
@@ -2623,15 +2968,19 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCGModeSelSpeedMode0</ItemSymbol>
         <Index>4</Index>
         <EnumSymbVal>4</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>MCGOutputSpeedMode0</ItemSymbol>
         <Value>100</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>IRCLKClkSpeedMode0</ItemSymbol>
@@ -2660,42 +3009,49 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>5</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OUTDIV1Presc_SpeedMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>Auto select</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>CoreClockSpeedMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>20</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OUTDIV4PrescSpeedMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>1</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OUTDIV4Presc_SpeedMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>Auto select</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>BusClockSpeedMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>20</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>USB0_CLKINSpeedMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>0</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>PLLFLLCLkSelSpeedMode0</ItemSymbol>
@@ -2703,16 +3059,19 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>PLLFLLSelSpeedMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>MCGPLLCLKDIV2</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>PLLFLLClockSpeedMode0</ItemSymbol>
         <Value>50</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>TPMClkSelSpeedMode0</ItemSymbol>
@@ -2720,16 +3079,19 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>TPMClkSpeedMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>PLLFLLSelDistr</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>TPMClockSpeedMode0</ItemSymbol>
         <Value>50</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigPeripheralSettingsGrp</ItemSymbol>
@@ -2747,6 +3109,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>false</Value>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>PeriphDeviceMCM</ItemSymbol>
@@ -2768,6 +3131,8 @@
         <TypeSpecNameState>typeKinetisMCMFMC_StallingFlashController</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>MCMFMC_FlashControllerSpeculation</ItemSymbol>
@@ -2776,6 +3141,8 @@
         <TypeSpecNameState>typeKinetisMCMFMC_FlashControllerSpeculation</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>MCMFMC_FlashDataSpeculation</ItemSymbol>
@@ -2784,6 +3151,8 @@
         <TypeSpecNameState>typeKinetisMCMFMC_FlashDataSpeculation</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>MCMFMC_FlashControllerCache</ItemSymbol>
@@ -2792,6 +3161,8 @@
         <TypeSpecNameState>typeKinetisMCMFMC_FlashControllerCache</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>MCMFMC_FlashControllerInstructionCaching</ItemSymbol>
@@ -2800,6 +3171,8 @@
         <TypeSpecNameState>typeKinetisMCMFMC_FlashControllerInstructionCaching</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>MCMFMC_FlashControllerDataCaching</ItemSymbol>
@@ -2808,6 +3181,8 @@
         <TypeSpecNameState>typeKinetisMCMFMC_FlashControllerDataCaching</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>MCMAXBSGrp</ItemSymbol>
@@ -2822,6 +3197,8 @@
         <TypeSpecNameState>typeKinetisMCMAXBS_ArbitrationType</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>FIXED_PRIORITY</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>MCMInternalUsageGrp</ItemSymbol>
@@ -2833,6 +3210,7 @@
         <ItemSymbol>MCMIsInitialized</ItemSymbol>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateDMA</ItemSymbol>
@@ -2841,6 +3219,8 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FCRDIVCLKMode0</ItemSymbol>
@@ -2848,6 +3228,8 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <EnumSymbVal>1</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SetOperationMode_SLEEP_Sel</ItemSymbol>
@@ -2855,6 +3237,8 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SetOperationMode_STOP_PORPO</ItemSymbol>
@@ -2862,6 +3246,46 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>I2SClockCondGrp0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>I2SClockGrp0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>I2S0_CLKINSpeedMode0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>I2S0_MclkPinSourceSpeedMode0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>Auto select</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>I2S0_TxClkModeSpeedMode0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>Auto select</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>I2S0_RxClkModeSpeedMode0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>Auto select</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -2883,6 +3307,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>SetClockConfiguration</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>GetClockConfiguration</ItemSymbol>
@@ -2893,6 +3318,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>GetClockConfiguration</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SetOperationMode</ItemSymbol>
@@ -2903,6 +3329,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>SetOperationMode</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>EnableInt</ItemSymbol>
@@ -2913,6 +3340,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>EnableInt</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>DisableInt</ItemSymbol>
@@ -2923,6 +3351,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>DisableInt</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>GetLLSWakeUpFlags</ItemSymbol>
@@ -2933,6 +3362,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>GetLLSWakeUpFlags</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCGAutoTrim</ItemSymbol>
@@ -2943,6 +3373,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>never</LastUserSel>
         <UsrMethodName>MCGAutoTrim</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>VLPModeEnable</ItemSymbol>
@@ -2953,6 +3384,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>never</LastUserSel>
         <UsrMethodName>VLPModeEnable</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>VLPModeDisable</ItemSymbol>
@@ -2963,6 +3395,12 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>never</LastUserSel>
         <UsrMethodName>VLPModeDisable</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GetLLSWakeUpFlagsCondGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
       </ItemState>
     </Methods>
     <Events>
@@ -2989,6 +3427,7 @@
         <Expanded>false</Expanded>
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnResetName</ItemSymbol>
@@ -3004,6 +3443,7 @@
         <Expanded>true</Expanded>
         <LastSelection>true</LastSelection>
         <LastUserSel>always</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnNMIINTName</ItemSymbol>
@@ -3019,6 +3459,7 @@
         <Expanded>false</Expanded>
         <LastSelection>false</LastSelection>
         <LastUserSel>never</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnHardFaultName</ItemSymbol>
@@ -3034,6 +3475,7 @@
         <Expanded>false</Expanded>
         <LastSelection>false</LastSelection>
         <LastUserSel>never</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnBusFaultName</ItemSymbol>
@@ -3049,6 +3491,7 @@
         <Expanded>false</Expanded>
         <LastSelection>false</LastSelection>
         <LastUserSel>never</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnUsageFaultName</ItemSymbol>
@@ -3064,6 +3507,7 @@
         <Expanded>false</Expanded>
         <LastSelection>false</LastSelection>
         <LastUserSel>never</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnSupervisorCallName</ItemSymbol>
@@ -3079,6 +3523,7 @@
         <Expanded>false</Expanded>
         <LastSelection>false</LastSelection>
         <LastUserSel>never</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnPendableServiceName</ItemSymbol>
@@ -3099,6 +3544,7 @@
         <Expanded>false</Expanded>
         <LastSelection>false</LastSelection>
         <LastUserSel>never</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnLossOfLockINTName</ItemSymbol>
@@ -3114,6 +3560,7 @@
         <Expanded>false</Expanded>
         <LastSelection>false</LastSelection>
         <LastUserSel>never</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnLowVoltageINTName</ItemSymbol>
@@ -3129,6 +3576,7 @@
         <Expanded>false</Expanded>
         <LastSelection>false</LastSelection>
         <LastUserSel>never</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnLLSWakeUpINTName</ItemSymbol>
@@ -3149,12 +3597,18 @@
         <Expanded>true</Expanded>
         <LastSelection>false</LastSelection>
         <LastUserSel>yes</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnDDRINTName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>Cpu_OnDDRINT</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnLLSWakeUpINTCondGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
       </ItemState>
     </Events>
     <Cpu_State>
@@ -3174,18 +3628,21 @@
           <ReadOnly>false</ReadOnly>
           <Index>1</Index>
           <Value>false</Value>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>OSEKsupport</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Index>1</Index>
           <Value>false</Value>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>UnhandledVectorsBehavior</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Index>1</Index>
           <Expanded>true</Expanded>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>UnhandledIntCode</ItemSymbol>
@@ -3224,24 +3681,28 @@
           <ReadOnly>false</ReadOnly>
           <Value>true</Value>
           <Expanded>true</Expanded>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>Cmplr_GenerateCfgFile</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Index>0</Index>
           <Value>true</Value>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>Cmplr_GenerateMemFile</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Index>0</Index>
           <Value>true</Value>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>Cmplr_GenerateXmlFile</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Index>0</Index>
           <Value>true</Value>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>Cmplr_AddStartupCond</ItemSymbol>
@@ -3257,12 +3718,14 @@
           <ReadOnly>false</ReadOnly>
           <Index>1</Index>
           <Value>false</Value>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_GenerateLINKFILE</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Value>true</Value>
           <Expanded>true</Expanded>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>InitializationState</ItemSymbol>
@@ -3274,18 +3737,21 @@
           <ReadOnly>false</ReadOnly>
           <Value>0</Value>
           <Base>DEC</Base>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_StackSize</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Value>1024</Value>
           <Base>HEX</Base>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_HeapSize</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Value>0</Value>
           <Base>HEX</Base>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>DefaultMemAreas</ItemSymbol>
@@ -3297,18 +3763,24 @@
           <ReadOnly>false</ReadOnly>
           <Index>2</Index>
           <EnumSymbVal>INTERNAL_FLASH</EnumSymbVal>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>DefaultMemCode</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Index>2</Index>
           <EnumSymbVal>INTERNAL_FLASH</EnumSymbVal>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>DefaultMemData</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Index>0</Index>
           <EnumSymbVal>INTERNAL_RAM</EnumSymbVal>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamList</ItemSymbol>
@@ -3326,10 +3798,11 @@
           <ReadOnly>false</ReadOnly>
           <Value>true</Value>
           <Expanded>true</Expanded>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamName0</ItemSymbol>
-          <ReadOnly>true</ReadOnly>
+          <ReadOnly>false</ReadOnly>
           <Value>m_interrupts</Value>
         </ItemState>
         <ItemState>
@@ -3337,6 +3810,8 @@
           <ReadOnly>false</ReadOnly>
           <Index>1</Index>
           <EnumSymbVal>RX</EnumSymbVal>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamPhysicalType0</ItemSymbol>
@@ -3349,12 +3824,14 @@
           <Value>0</Value>
           <Base>HEX</Base>
           <Area />
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamSize0</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Value>192</Value>
           <Base>HEX</Base>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamGroupContent0</ItemSymbol>
@@ -3372,6 +3849,7 @@
           <ReadOnly>false</ReadOnly>
           <Value>false</Value>
           <Expanded>true</Expanded>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamName1</ItemSymbol>
@@ -3383,6 +3861,8 @@
           <ReadOnly>false</ReadOnly>
           <Index>1</Index>
           <EnumSymbVal>RX</EnumSymbVal>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamPhysicalType1</ItemSymbol>
@@ -3395,12 +3875,14 @@
           <Value>192</Value>
           <Base>HEX</Base>
           <Area />
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamSize1</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Value>832</Value>
           <Base>HEX</Base>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamGroupContent1</ItemSymbol>
@@ -3418,10 +3900,11 @@
           <ReadOnly>false</ReadOnly>
           <Value>true</Value>
           <Expanded>true</Expanded>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamName2</ItemSymbol>
-          <ReadOnly>true</ReadOnly>
+          <ReadOnly>false</ReadOnly>
           <Value>m_text</Value>
         </ItemState>
         <ItemState>
@@ -3429,6 +3912,8 @@
           <ReadOnly>false</ReadOnly>
           <Index>1</Index>
           <EnumSymbVal>RX</EnumSymbVal>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamPhysicalType2</ItemSymbol>
@@ -3441,12 +3926,14 @@
           <Value>1040</Value>
           <Base>HEX</Base>
           <Area />
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamSize2</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Value>130032</Value>
           <Base>HEX</Base>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamGroupContent2</ItemSymbol>
@@ -3464,6 +3951,7 @@
           <ReadOnly>false</ReadOnly>
           <Value>true</Value>
           <Expanded>false</Expanded>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamName3</ItemSymbol>
@@ -3475,6 +3963,8 @@
           <ReadOnly>false</ReadOnly>
           <Index>2</Index>
           <EnumSymbVal>RW</EnumSymbVal>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamPhysicalType3</ItemSymbol>
@@ -3487,12 +3977,14 @@
           <Value>536866816</Value>
           <Base>HEX</Base>
           <Area />
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamSize3</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Value>16384</Value>
           <Base>HEX</Base>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamGroupContent3</ItemSymbol>
@@ -3565,6 +4057,7 @@
           <ReadOnly>false</ReadOnly>
           <Index>0</Index>
           <Value>true</Value>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>asmgrp</ItemSymbol>
@@ -3576,6 +4069,7 @@
           <ReadOnly>false</ReadOnly>
           <Index>0</Index>
           <Value>true</Value>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_CCPars</ItemSymbol>
@@ -3592,48 +4086,57 @@
           <ReadOnly>false</ReadOnly>
           <Value>true</Value>
           <Expanded>true</Expanded>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_GenerateMapFile_ListClosure</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Index>1</Index>
           <Value>false</Value>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_GenerateMapFile_ListUnusedObjects</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Index>1</Index>
           <Value>false</Value>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_GenerateMapFile_ListDWARFObjects</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Index>1</Index>
           <Value>false</Value>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_GenerateSFile</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Value>true</Value>
           <Expanded>true</Expanded>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_GenerateSFile_Sort</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Index>1</Index>
           <Value>false</Value>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_GenerateSFile_MaxLength</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Value>26</Value>
           <Base>DEC</Base>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_GenerateSFile_EOL</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Index>1</Index>
           <EnumSymbVal>DOS</EnumSymbVal>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>C_LINKPars</ItemSymbol>
@@ -3681,6 +4184,7 @@
           <ReadOnly>false</ReadOnly>
           <Index>1</Index>
           <Value>false</Value>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         </ItemState>
       </CompilerProperties>
       <DestLanguage>Ansi-C</DestLanguage>
@@ -3737,24 +4241,28 @@
       <ReadOnly>false</ReadOnly>
       <Index>1</Index>
       <Value>false</Value>
+      <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
     </ItemState>
     <ItemState>
       <ItemSymbol>O_NoEnableTest</ItemSymbol>
       <ReadOnly>false</ReadOnly>
       <Index>1</Index>
       <Value>false</Value>
+      <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
     </ItemState>
     <ItemState>
       <ItemSymbol>O_NoSpeedTest</ItemSymbol>
       <ReadOnly>false</ReadOnly>
       <Index>1</Index>
       <Value>false</Value>
+      <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
     </ItemState>
     <ItemState>
       <ItemSymbol>O_NoInitRegReset</ItemSymbol>
       <ReadOnly>false</ReadOnly>
       <Index>1</Index>
       <Value>false</Value>
+      <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
     </ItemState>
     <ItemState>
       <ItemSymbol>Not_for_MPC5500_MCF</ItemSymbol>
@@ -3765,6 +4273,7 @@
       <ReadOnly>false</ReadOnly>
       <Index>1</Index>
       <Value>false</Value>
+      <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
     </ItemState>
   </Configuration>
   <Bean>
@@ -3774,9 +4283,10 @@
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>PHONE_LDD</IconName>
+    <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.165</BeanVersion>
+    <BeanVersion>01.168</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -3798,6 +4308,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>IntService</ItemSymbol>
@@ -3805,6 +4316,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>true</Value>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>InpInt</ItemSymbol>
@@ -3815,6 +4327,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>maximal priority</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OutInt</ItemSymbol>
@@ -3825,6 +4338,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>maximal priority</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ErrInt</ItemSymbol>
@@ -3835,6 +4349,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>maximal priority</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>IdleIntGrp</ItemSymbol>
@@ -3843,12 +4358,14 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>IdleInt</ItemSymbol>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>IntIdlePriority</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>medium priority</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>_SettingsGrp</ItemSymbol>
@@ -3862,6 +4379,8 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>3</Index>
         <EnumSymbVal>8</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>Parity</ItemSymbol>
@@ -3869,6 +4388,8 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <EnumSymbVal>None</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>StopBits</ItemSymbol>
@@ -3876,6 +4397,8 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <EnumSymbVal>1</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>LoopMode</ItemSymbol>
@@ -3883,6 +4406,8 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <EnumSymbVal>Normal</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>BdRate</ItemSymbol>
@@ -3934,6 +4459,8 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <EnumSymbVal>IdleLine</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>StopInWait</ItemSymbol>
@@ -3941,6 +4468,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>IdleMode</ItemSymbol>
@@ -3948,6 +4476,8 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <EnumSymbVal>AfterStartBit</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCIOutMode</ItemSymbol>
@@ -3955,6 +4485,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>TxDPinDirection</ItemSymbol>
@@ -3962,6 +4493,8 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>TxPolarity</ItemSymbol>
@@ -3969,6 +4502,8 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <EnumSymbVal>NotInverted</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RxPolarity</ItemSymbol>
@@ -3976,6 +4511,8 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <EnumSymbVal>NotInverted</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>BreakLength</ItemSymbol>
@@ -3983,6 +4520,8 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <EnumSymbVal>10_11</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>Receiver</ItemSymbol>
@@ -3990,6 +4529,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>true</Value>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>Inp</ItemSymbol>
@@ -4010,6 +4550,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>true</Value>
         <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>Out</ItemSymbol>
@@ -4030,6 +4571,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>CTSsupport</ItemSymbol>
@@ -4037,12 +4579,14 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>false</Value>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>Cts</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>CtsSignal</ItemSymbol>
@@ -4052,12 +4596,14 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>CtsInt</ItemSymbol>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>IntCtsPriority</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>medium priority</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>RTSsupport</ItemSymbol>
@@ -4065,12 +4611,14 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>false</Value>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>Rts</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <SharedPrphMode>false</SharedPrphMode>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>RTSpinSignal</ItemSymbol>
@@ -4084,6 +4632,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>1</Value>
         <Base>DEC</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>IRSCIGrp</ItemSymbol>
@@ -4096,6 +4645,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>false</Value>
         <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SCINarrowPulse</ItemSymbol>
@@ -4104,6 +4654,8 @@
         <TypeSpecNameState>typeNarrowPulse</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>_InitializationGrp</ItemSymbol>
@@ -4117,6 +4669,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>AutoInitializationGrp</ItemSymbol>
@@ -4128,6 +4681,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>EventMaskGrp</ItemSymbol>
@@ -4141,6 +4695,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnBlockReceivedInitState</ItemSymbol>
@@ -4148,6 +4703,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnTxCompleteInitState</ItemSymbol>
@@ -4155,6 +4711,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnErrorInitState</ItemSymbol>
@@ -4162,6 +4719,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnBreakInitState</ItemSymbol>
@@ -4169,6 +4727,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>_SpeedGrp</ItemSymbol>
@@ -4182,6 +4741,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SpeedMode1</ItemSymbol>
@@ -4189,6 +4749,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SpeedMode2</ItemSymbol>
@@ -4196,6 +4757,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SpeedMode3</ItemSymbol>
@@ -4203,6 +4765,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SpeedMode4</ItemSymbol>
@@ -4210,6 +4773,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SpeedMode5</ItemSymbol>
@@ -4217,6 +4781,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SpeedMode6</ItemSymbol>
@@ -4224,6 +4789,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SpeedMode7</ItemSymbol>
@@ -4231,6 +4797,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SpeedMode8</ItemSymbol>
@@ -4243,6 +4810,94 @@
         <ItemSymbol>ClockConfigGrp</ItemSymbol>
         <ListItemCount>1</ListItemCount>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>HasInterruptServiceRoutineGrp0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InpIntISRHandle</ItemSymbol>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>HasIntPreserveRegistersGrp0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModeInpInt</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>HasInterruptServiceRoutineGrp1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OutIntISRHandle</ItemSymbol>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>HasIntPreserveRegistersGrp1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModeOutInt</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>HasInterruptServiceRoutineGrp2</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ErrIntISRHandle</ItemSymbol>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>HasIntPreserveRegistersGrp2</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModeErrInt</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>HasInterruptServiceRoutineGrp3</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>IdleIntISRHandle</ItemSymbol>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>HasIntPreserveRegistersGrp3</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModeIdleInt</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -4254,6 +4909,7 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>Init</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>Deinit</ItemSymbol>
@@ -4264,6 +4920,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>Deinit</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>Enable</ItemSymbol>
@@ -4274,6 +4931,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>Enable</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>Disable</ItemSymbol>
@@ -4284,6 +4942,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>Disable</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SendBlock</ItemSymbol>
@@ -4294,6 +4953,7 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>SendBlock</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ReceiveBlock</ItemSymbol>
@@ -4304,6 +4964,7 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>ReceiveBlock</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>CancelBlockTransmission</ItemSymbol>
@@ -4314,6 +4975,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>CancelBlockTransmission</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>CancelBlockReception</ItemSymbol>
@@ -4324,6 +4986,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>CancelBlockReception</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>GetError</ItemSymbol>
@@ -4334,6 +4997,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>GetError</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>GetSentDataNum</ItemSymbol>
@@ -4344,6 +5008,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>GetSentDataNum</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>GetReceivedDataNum</ItemSymbol>
@@ -4354,6 +5019,7 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>GetReceivedDataNum</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>GetTxCompleteStatus</ItemSymbol>
@@ -4364,6 +5030,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>GetTxCompleteStatus</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SetEventMask</ItemSymbol>
@@ -4374,6 +5041,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>SetEventMask</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>GetEventMask</ItemSymbol>
@@ -4384,6 +5052,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>GetEventMask</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SelectBaudRate</ItemSymbol>
@@ -4394,6 +5063,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>never</LastUserSel>
         <UsrMethodName>SelectBaudRate</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>GetSelectedBaudRate</ItemSymbol>
@@ -4404,6 +5074,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>never</LastUserSel>
         <UsrMethodName>GetSelectedBaudRate</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SetParity</ItemSymbol>
@@ -4414,6 +5085,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>SetParity</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>GetParity</ItemSymbol>
@@ -4424,6 +5096,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>GetParity</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SetDataWidth</ItemSymbol>
@@ -4434,6 +5107,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>SetDataWidth</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>GetDataWidth</ItemSymbol>
@@ -4444,6 +5118,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>GetDataWidth</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SetStopBitLength</ItemSymbol>
@@ -4454,6 +5129,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>SetStopBitLength</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>GetStopBitLength</ItemSymbol>
@@ -4464,6 +5140,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>GetStopBitLength</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SetLoopMode</ItemSymbol>
@@ -4474,6 +5151,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>SetLoopMode</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>GetLoopMode</ItemSymbol>
@@ -4484,6 +5162,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>GetLoopMode</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>GetStats</ItemSymbol>
@@ -4494,6 +5173,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>GetStats</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ClearStats</ItemSymbol>
@@ -4504,6 +5184,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>never</LastUserSel>
         <UsrMethodName>ClearStats</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>CPUCond</ItemSymbol>
@@ -4519,6 +5200,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>SetRTS</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ClearRTS</ItemSymbol>
@@ -4529,6 +5211,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>ClearRTS</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>GetCTS</ItemSymbol>
@@ -4539,6 +5222,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>GetCTS</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SendBreak</ItemSymbol>
@@ -4549,6 +5233,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>SendBreak</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>GetBreak</ItemSymbol>
@@ -4559,6 +5244,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>GetBreak</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>TurnTxOn</ItemSymbol>
@@ -4569,6 +5255,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>TurnTxOn</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>TurnTxOff</ItemSymbol>
@@ -4579,6 +5266,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>TurnTxOff</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>TurnRxOn</ItemSymbol>
@@ -4589,6 +5277,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>TurnRxOn</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>TurnRxOff</ItemSymbol>
@@ -4599,6 +5288,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>TurnRxOff</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ConnectPin</ItemSymbol>
@@ -4609,6 +5299,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>ConnectPin</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>Main</ItemSymbol>
@@ -4619,6 +5310,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>never</LastUserSel>
         <UsrMethodName>Main</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SetOperationMode</ItemSymbol>
@@ -4629,6 +5321,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>SetOperationMode</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>GetDriverState</ItemSymbol>
@@ -4639,6 +5332,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>GetDriverState</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Methods>
     <Events>
@@ -4656,6 +5350,7 @@
         <Expanded>true</Expanded>
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnBlockReceivedName</ItemSymbol>
@@ -4671,6 +5366,7 @@
         <Expanded>true</Expanded>
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnBlockSentName</ItemSymbol>
@@ -4686,6 +5382,7 @@
         <Expanded>false</Expanded>
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnBreakName</ItemSymbol>
@@ -4701,6 +5398,7 @@
         <Expanded>false</Expanded>
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnErrorName</ItemSymbol>
@@ -4716,6 +5414,7 @@
         <Expanded>false</Expanded>
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnTxCompleteName</ItemSymbol>
@@ -4741,6 +5440,7 @@
         <Expanded>false</Expanded>
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnIdleName</ItemSymbol>
@@ -4761,6 +5461,7 @@
         <Expanded>false</Expanded>
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnRxActiveEdgeName</ItemSymbol>
@@ -4775,11 +5476,12 @@
     <Name>RxBuf</Name>
     <CompNumb>114</CompNumb>
     <CompEnabled>true</CompEnabled>
-    <GenCodeMode>CHECK_n_WRITE</GenCodeMode>
+    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>RingBufferUInt8</IconName>
+    <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.003</BeanVersion>
+    <BeanVersion>01.004</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -4794,6 +5496,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>64</Value>
         <Base>DEC</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Properties>
     <Methods>
@@ -4806,6 +5509,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>Put</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>Get</ItemSymbol>
@@ -4816,6 +5520,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>Get</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>NofElements</ItemSymbol>
@@ -4826,6 +5531,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>NofElements</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>NofFreeElements</ItemSymbol>
@@ -4836,6 +5542,7 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>NofFreeElements</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>Init</ItemSymbol>
@@ -4846,6 +5553,18 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>Init</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Clear</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>Clear</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Methods>
     <Events>
@@ -4863,6 +5582,7 @@
         <Expanded>false</Expanded>
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnBufferFullName</ItemSymbol>
@@ -4878,6 +5598,7 @@
         <Expanded>false</Expanded>
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnBufferEmptyName</ItemSymbol>

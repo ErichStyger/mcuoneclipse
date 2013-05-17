@@ -3,8 +3,8 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>13</ModificationStamp>
-    <Date>2013-05-05</Date>
+    <ModificationStamp>15</ModificationStamp>
+    <Date>2013-05-16</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.6.0.RT4_b1316-1577</PEversion>
   </Header>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>33</ProjectCompNumb>
+    <ProjectCompNumb>36</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -39,13 +39,6 @@
     <DontWriteGeneratedModules lines_count="0" />
     <ProjectStaticFilesGenerationMode>LINKED</ProjectStaticFilesGenerationMode>
   </Options>
-  <UserFolder>
-    <UserFolderName />
-    <NodeName>Referenced_Components</NodeName>
-    <CompNumb>32</CompNumb>
-    <FolderType>Beans</FolderType>
-    <ExpandedAll>true</ExpandedAll>
-  </UserFolder>
   <CPU>
     <BeanType>MKL25Z128LK4</BeanType>
     <Name>Cpu</Name>
@@ -9686,7 +9679,7 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>ModuleClockFreq</ItemSymbol>
-              <Value>unknown</Value>
+              <Value>48 MHz</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>PullUpDownGrp</ItemSymbol>
@@ -10828,7 +10821,7 @@
               <ItemSymbol>InterruptIsrName_OTG_ID_CHG</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>USB_ISR</Value>
+              <Value />
             </ItemState>
             <ItemState>
               <ItemSymbol>InterruptState_STALL</ItemSymbol>
@@ -10836,8 +10829,8 @@
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <TypeSpecNameState>typeInterruptState_STALL</TypeSpecNameState>
-              <Index>0</Index>
-              <EnumSymbVal>enabled</EnumSymbVal>
+              <Index>1</Index>
+              <EnumSymbVal>disabled</EnumSymbVal>
               <CustomValue />
             </ItemState>
             <ItemState>
@@ -10846,8 +10839,8 @@
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <TypeSpecNameState>typeInterruptState_ATTACH</TypeSpecNameState>
-              <Index>0</Index>
-              <EnumSymbVal>enabled</EnumSymbVal>
+              <Index>1</Index>
+              <EnumSymbVal>disabled</EnumSymbVal>
               <CustomValue />
             </ItemState>
             <ItemState>
@@ -10856,8 +10849,8 @@
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <TypeSpecNameState>typeInterruptState_RESUME</TypeSpecNameState>
-              <Index>0</Index>
-              <EnumSymbVal>enabled</EnumSymbVal>
+              <Index>1</Index>
+              <EnumSymbVal>disabled</EnumSymbVal>
               <CustomValue />
             </ItemState>
             <ItemState>
@@ -10866,8 +10859,8 @@
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <TypeSpecNameState>typeInterruptState_SLEEP</TypeSpecNameState>
-              <Index>0</Index>
-              <EnumSymbVal>enabled</EnumSymbVal>
+              <Index>1</Index>
+              <EnumSymbVal>disabled</EnumSymbVal>
               <CustomValue />
             </ItemState>
             <ItemState>
@@ -10876,8 +10869,8 @@
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <TypeSpecNameState>typeInterruptState_TOK_DNE</TypeSpecNameState>
-              <Index>0</Index>
-              <EnumSymbVal>enabled</EnumSymbVal>
+              <Index>1</Index>
+              <EnumSymbVal>disabled</EnumSymbVal>
               <CustomValue />
             </ItemState>
             <ItemState>
@@ -10886,8 +10879,8 @@
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <TypeSpecNameState>typeInterruptState_SOF_TOK</TypeSpecNameState>
-              <Index>0</Index>
-              <EnumSymbVal>enabled</EnumSymbVal>
+              <Index>1</Index>
+              <EnumSymbVal>disabled</EnumSymbVal>
               <CustomValue />
             </ItemState>
             <ItemState>
@@ -10896,8 +10889,8 @@
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <TypeSpecNameState>typeInterruptState_ERROR</TypeSpecNameState>
-              <Index>0</Index>
-              <EnumSymbVal>enabled</EnumSymbVal>
+              <Index>1</Index>
+              <EnumSymbVal>disabled</EnumSymbVal>
               <CustomValue />
             </ItemState>
             <ItemState>
@@ -10906,8 +10899,8 @@
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <TypeSpecNameState>typeInterruptState_USB_RST</TypeSpecNameState>
-              <Index>0</Index>
-              <EnumSymbVal>enabled</EnumSymbVal>
+              <Index>1</Index>
+              <EnumSymbVal>disabled</EnumSymbVal>
               <CustomValue />
             </ItemState>
             <ItemState>
@@ -10916,8 +10909,8 @@
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <TypeSpecNameState>typeInterrupt_USBRESMEN</TypeSpecNameState>
-              <Index>0</Index>
-              <EnumSymbVal>enabled</EnumSymbVal>
+              <Index>1</Index>
+              <EnumSymbVal>disabled</EnumSymbVal>
               <CustomValue />
             </ItemState>
             <ItemState>
@@ -11106,8 +11099,8 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
+              <Index>1</Index>
+              <Value>false</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>UtilizeResetValuesCondGroup</ItemSymbol>
@@ -13318,7 +13311,7 @@
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>CLOCKS_LDD</IconName>
-    <UserFolderName>Referenced_Components</UserFolderName>
+    <UserFolderName />
     <Comment lines_count="0" />
     <Template />
     <BeanVersion>01.156</BeanVersion>
