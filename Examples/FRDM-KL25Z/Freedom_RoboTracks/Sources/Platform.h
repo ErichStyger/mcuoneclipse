@@ -23,17 +23,19 @@
 #define PL_HAS_BLUETOOTH              PL_IS_ROUND_ROBOT  /* if we have a Bluetooth module */
 #define PL_HAS_ULTRASONIC             PL_IS_TRACK_ROBOT  /* if we have a Ultrasonic ranging module */
 #define PL_HAS_LED_BLUE               PL_IS_ZUMO_ROBOT   /* if we can use the blue RGB LED */
-#define PL_TURN_ON_FINISH             PL_IS_ZUMO_ROBOT   /* if we turn around on the finish area */
 #define PL_HAS_QUADRATURE             PL_IS_ROUND_ROBOT  /* if we have quadrature encoders */
-#define PL_HAS_LINE_SENSOR            (PL_IS_ZUMO_ROBOT || PL_IS_ROUND_ROBOT) /* if we have line sensors */
+#define PL_HAS_LINE_SENSOR            (PL_IS_TRACK_ROBOT || PL_IS_ZUMO_ROBOT || PL_IS_ROUND_ROBOT) /* if we have line sensors */
+#define PL_TURN_ON_FINISH             (PL_IS_ZUMO_ROBOT && PL_HAS_LINE_SENSOR)  /* if we turn around on the finish area */
 #define PL_HAS_USER_BUTTON            (PL_IS_ZUMO_ROBOT || PL_IS_ROUND_ROBOT || PL_IS_TRACK_ROBOT) /* if we have a user push button */
+
+#define PL_APP_FOLLOW_OBSTACLE       (1 && PL_HAS_ULTRASONIC) /* obstacle following mode */
 
 #define PL_HAS_EVENTS                 (1 && PL_HAS_RADIO)
 #define PL_HAS_RADIO                  (0 && PL_IS_TRACK_ROBOT)
-#define PL_HAS_LED                    0
-#define PL_HAS_REMOTE                 1
-#define PL_HAS_ACCEL                  0
-#define PL_HAS_MOTOR                  1
-#define PL_IS_ROBOT                   1
+#define PL_HAS_LED                    0 /* if we use the INTRO LED driver */
+#define PL_HAS_REMOTE                 1 /* if we have remote (IEEE802.15.4) support */
+#define PL_HAS_ACCEL                  0 /* if we support the accelerometer */
+#define PL_HAS_MOTOR                  1 /* if we have a motor */
+#define PL_IS_ROBOT                   1 /* if we are a robot */
 
 #endif /* PLATFORM_H_ */

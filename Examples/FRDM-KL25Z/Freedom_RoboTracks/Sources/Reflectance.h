@@ -47,8 +47,16 @@ void REF_Measure(void);
 #define REF_MAX_LINE_VALUE  ((REF_NOF_SENSORS-1)*1000) /* maximum value for REF_GetLine() */
 uint16_t REF_GetLineValue(bool *onLine);
 
-void REF_Calibrate(bool on);
+/*!
+ * \brief starts or stops a reflectance sensor calibration.
+ * \param start TRUE means starting the calibration, FALSE stops it.
+ */
+void REF_Calibrate(bool start);
 
+/*!
+ * \brief Function to find out if we can use the sensor (means: it is calibrated and not currently calibrating)
+ * \return TRUE if the sensor is ready.
+ */
 bool REF_CanUseSensor(void);
 
 bool REF_IsCalibrating(void);
