@@ -126,7 +126,11 @@
 %endif %- ParseCommand
 
 /* Macros used by Processor Expert */
+%if %DisabledInterruptsInStartup='yes'
 #define PEX_RTOS_INIT()                                          %>>portDISABLE_INTERRUPTS() /* disable all interrupts, they get enabled in vStartScheduler() */
+%else
+#define PEX_RTOS_INIT()                                          %>>/* RTOS adapter is configured not to disable interrupts */
+%endif
 #define PEX_RTOS_START()                                         %>>%'ModuleName'%.%vTaskStartScheduler()
 
 /* macro to identify CPU: 0 for M0+ and 4 for M4 */
