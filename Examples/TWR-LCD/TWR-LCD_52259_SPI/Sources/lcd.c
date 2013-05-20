@@ -311,6 +311,8 @@ void LCD_Run(void) {
   unsigned char line;
 
   D4DLCDHW_Init_Flexbus_16b();
+  
+ 
   LCD1_Init();
   
   GDisp1_DrawFilledBox(0, 0, GDisp1_GetWidth(), GDisp1_GetHeight(), GDisp1_COLOR_WHITE);
