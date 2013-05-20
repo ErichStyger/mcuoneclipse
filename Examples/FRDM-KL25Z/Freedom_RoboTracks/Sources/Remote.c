@@ -42,7 +42,7 @@ static portTASK_FUNCTION(RemoteTask, pvParameters) {
       UTIL1_strcatNum16s(buf, sizeof(buf), y);
       UTIL1_chcat(buf, sizeof(buf), ' '); /* separate number */
       UTIL1_strcatNum16s(buf, sizeof(buf), z);
-      RADIO_SendString(buf);
+      (void)RADIO_SendString(buf);
       FRTOS1_vTaskDelay(200/portTICK_RATE_MS);
     } else {
       FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);

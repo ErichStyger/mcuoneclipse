@@ -25,10 +25,17 @@
     /*!< ms to do one step forward */
   #define TURN_MOTOR_DUTY_PERCENT      40
     /*!< maximum motor duty for turn operation */
-#else
+#elif PL_IS_ROUND_ROBOT
   #define TURN_90_WAIT_TIME_MS        250 
     /*!< ms to wait for a 90 degree turn */
   #define TURN_STEP_MS                100 
+    /*!< ms to do one step forward */
+  #define TURN_MOTOR_DUTY_PERCENT      20
+    /*!< maximum motor duty for turn operation */
+#elif PL_IS_TRACK_ROBOT
+  #define TURN_90_WAIT_TIME_MS        1350 
+    /*!< ms to wait for a 90 degree turn */
+  #define TURN_STEP_MS                350 
     /*!< ms to do one step forward */
   #define TURN_MOTOR_DUTY_PERCENT      20
     /*!< maximum motor duty for turn operation */
@@ -43,7 +50,10 @@
 #if PL_IS_ZUMO_ROBOT
   #define TURN_WAIT_AFTER_STEP_MS  0  /* wait this time after a step to have the motor PWM effective */
   #define TURN_STOP_AFTER_TURN     0   /* 1 to stop after a turn */
-#else
+#elif PL_IS_ROUND_ROBOT
+  #define TURN_WAIT_AFTER_STEP_MS  50  /* wait this time after a step to have the motor PWM effective */
+  #define TURN_STOP_AFTER_TURN     1   /* 1 to stop after a turn */
+#elif PL_IS_TRACK_ROBOT
   #define TURN_WAIT_AFTER_STEP_MS  50  /* wait this time after a step to have the motor PWM effective */
   #define TURN_STOP_AFTER_TURN     1   /* 1 to stop after a turn */
 #endif

@@ -14,12 +14,18 @@
   static int32_t dLineFactor100 = 100;
   static int32_t iLineAntiWindup = 100000;
   static uint8_t maxLineSpeedPercent = 30; /* max speed if 100% on the line, 0xffff would be full speed */
-#else
+#elif PL_IS_ROUND_ROBOT
   static int32_t pLineFactor100 = 200;
   static int32_t iLineFactor100 = 1;
   static int32_t dLineFactor100 = 50000;
   static int32_t iLineAntiWindup = 20000;
   static uint8_t maxLineSpeedPercent = 15; /* max speed if 100% on the line, 0xffff would be full speed */
+#elif PL_IS_TRACK_ROBOT
+  static int32_t pLineFactor100 = 200;
+  static int32_t iLineFactor100 = 1;
+  static int32_t dLineFactor100 = 50000;
+  static int32_t iLineAntiWindup = 20000;
+  static uint8_t maxLineSpeedPercent = 20; /* max speed if 100% on the line, 0xffff would be full speed */
 #endif
 #if PL_HAS_LINE_SENSOR
 static int32_t lastLineError=0, integralLine=0;

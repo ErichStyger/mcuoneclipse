@@ -1,15 +1,16 @@
-/*
- * Shell.c
+/**
+ * \file
+ * \brief Shell and console interface implementation.
+ * \author Erich Styger
  *
- *  Created on: 04.08.2011
- *      Author: Erich Styger
+ * This module implements the front to the console/shell functionality.
  */
 
 #include "Platform.h"
-#include "Application.h"
-#include "FRTOS1.h"
 #include "Shell.h"
 #include "CLS1.h"
+#include "Application.h"
+#include "FRTOS1.h"
 #include "LEDR.h"
 #include "LEDG.h"
 #include "Reflectance.h"
@@ -25,27 +26,27 @@
 #include "Turn.h"
 #include "Pid.h"
 #include "Maze.h"
-#if PL_HAS_RADIO
-  #include "Radio.h"
-#endif
 #if PL_HAS_REMOTE
   #include "Remote.h"
 #endif
 #if PL_HAS_RADIO
   #include "Radio.h"
   #include "RadioRx.h"
+  #include "RadioTx.h"
 #endif
 
 #if PL_HAS_RADIO
-
-void SHELL_RadioCmdString(unsigned char *cmd) {
-  if (*cmd!='\0') {
+void SHELL_RadioRxString(unsigned char *str) {
+  SHELL_SendString((unsigned char*)"\r\nRX: ");
+  SHELL_SendString(str);
+  SHELL_SendString((unsigned char*)"\r\n");
+  if (*str!='\0') {
     do {
-      while(RadioRx_Put(*cmd)!=ERR_OK) {
+      while(RadioRx_Put(*str)!=ERR_OK) {
         /* wait until there is free room in buffer */
       }
-      cmd++;
-    } while(*cmd!='\0');
+      str++;
+    } while(*str!='\0');
     while(RadioRx_Put('\n')!=ERR_OK) { /* terminate command */
       /* wait until there is free room in buffer */
     }
@@ -60,8 +61,12 @@ static void Radio_StdIOReadChar(byte *c) {
 }
 
 static void Radio_StdIOSendChar(byte ch) {
-  // NYI
-  //while (BT1_SendChar((uint8_t)ch)==ERR_TXFULL){} /* Send char */
+  CLS1_GetStdio()->stdOut(ch); /* copy on local shell */
+  RadioTx_Put(ch);
+  if (ch=='\n') { /* send string over radio */
+    RADIO_SendString((unsigned char*)"stdio hello");
+    RadioTx_Clear();
+  }
 }
 
 static bool Radio_StdIOKeyPressed(void) {
@@ -77,10 +82,20 @@ static CLS1_ConstStdIOType Radio_stdio = {
 };
 #endif
 
+void SHELL_SendString(unsigned char *msg) {
+#if PL_HAS_QUEUE
+  QUEUE_SendMessage(msg);
+#else
+  CLS1_SendStr(msg, CLS1_GetStdio()->stdOut);
+#endif
+}
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
   CLS1_ParseCommand,
+#if FRTOS1_PARSE_COMMAND_ENABLED
+  FRTOS1_ParseCommand,
+#endif
 #if LEDR_PARSE_COMMAND_ENABLED
   LEDR_ParseCommand,
 #endif
@@ -89,9 +104,6 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if LEDB_PARSE_COMMAND_ENABLED
   LEDB_ParseCommand,
-#endif
-#if FRTOS1_PARSE_COMMAND_ENABLED
-  FRTOS1_ParseCommand,
 #endif
 #if I2CSPY1_PARSE_COMMAND_ENABLED
   I2CSPY1_ParseCommand,
@@ -110,13 +122,13 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
   TURN_ParseCommand,
   MAZE_ParseCommand,
 #endif
-#if PL_HAS_RADIO
-  RADIO_ParseCommand,
-#endif
 #if PL_HAS_REMOTE
   REMOTE_ParseCommand,
 #endif
-  NULL /* sentinel */
+#if PL_HAS_RADIO
+  RADIO_ParseCommand,
+#endif
+  NULL /* Sentinel */
 };
 
 #if BT1_PARSE_COMMAND_ENABLED
@@ -129,40 +141,44 @@ static CLS1_ConstStdIOType BT_stdio = {
 };
 #endif
 
-void SHELL_SendString(unsigned char *msg) {
-//#if PL_HAS_QUEUE
-//  QUEUE_SendMessage(msg);
-//#else
-  CLS1_SendStr(msg, CLS1_GetStdio()->stdOut);
-//#endif
-}
-
-
 static portTASK_FUNCTION(ShellTask, pvParameters) {
 #if BT1_PARSE_COMMAND_ENABLED
-  unsigned char bTbuf[48];
+  static unsigned char bTbuf[48];
 #endif
-  unsigned char buf[48];
+  CLS1_ConstStdIOTypePtr io = CLS1_GetStdio();
+  static unsigned char cmd_buf[48];
+#if PL_HAS_RADIO
+  static unsigned char radio_cmd_buf[48];
+#endif
 
   (void)pvParameters; /* not used */
 #if PL_HAS_MAGNETOMETER
   LSM_Init(); /* need to do this while FreeRTOS tick is active, because of Timeout handling */
 #endif
-  buf[0] = '\0';
 #if BT1_PARSE_COMMAND_ENABLED
   bTbuf[0]='\0';
 #endif
+  cmd_buf[0] = '\0';
+#if PL_HAS_RADIO
+  radio_cmd_buf[0] = '\0';
+#endif
   (void)CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, CLS1_GetStdio(), CmdParserTable);
   for(;;) {
-    (void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), CLS1_GetStdio(), CmdParserTable);
+    (void)CLS1_ReadAndParseWithCommandTable(cmd_buf, sizeof(cmd_buf), io, CmdParserTable);
+#if PL_HAS_RADIO
+    (void)CLS1_ReadAndParseWithCommandTable(radio_cmd_buf, sizeof(radio_cmd_buf), &Radio_stdio, CmdParserTable);
+#endif
 #if BT1_PARSE_COMMAND_ENABLED
     (void)CLS1_ReadAndParseWithCommandTable(bTbuf, sizeof(bTbuf), &BT_stdio, CmdParserTable);
 #endif
     FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
-  }
+  } /* for */
 }
 
 void SHELL_Init(void) {
+#if PL_HAS_RADIO
+  RadioRx_Init();
+#endif
   if (FRTOS1_xTaskCreate(ShellTask, (signed portCHAR *)"Shell", configMINIMAL_STACK_SIZE+200, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }

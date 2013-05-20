@@ -44,11 +44,12 @@ void RADIO_AppHandleEvent(EVNT_Handle event);
 /*! \brief Handler to deal with the Radio state machine. Needs to be called periodically to advance the state machine */
 void RADIO_Handle(void);
 
-/*! 
+/*!
  * \brief Sends a data packet trough the Radio
  * \param[in] data Data to be sent (binary), zero terminated
+ * \return ERR_OK if everything is ok, ERR_DISABLED if radio is disbled, ERR_BUSY if we cannot send data.
 */
-void RADIO_SendString(const unsigned char *data);
+uint8_t RADIO_SendString(const unsigned char *data);
 
 /*! 
  * \brief Sends a data packet trough the Radio

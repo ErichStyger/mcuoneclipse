@@ -45,15 +45,19 @@ typedef enum RADIO_AppStatusKind {
 static xQueueHandle RADIO_MsgQueue; /* queue for messages,  format is: kind(8bit) dataSize(8bit) data */
 
 typedef enum RADIO_QueueMsgKind {
-  RADIO_QUEUE_MSG_SNIFF, /* sniffing message */
-  RADIO_QUEUE_MSG_CMD,   /* command message */
-  RADIO_QUEUE_MSG_ACCEL  /* acceleration message */
+  RADIO_QUEUE_MSG_SNIFF,  /* sniffing message */
+  RADIO_QUEUE_MSG_STDIN,  /* stdin message */
+  RADIO_QUEUE_MSG_STDOUT, /* stdout message */
+  RADIO_QUEUE_MSG_STDERR, /* stderr message */
+  RADIO_QUEUE_MSG_ACCEL   /* acceleration message */
 } RADIO_QueueMsgKind;
 
 /*! \todo RADIO: Define here your PAN ID and acknowledge message you want to use */
-#define RADIO_PREFIX_STR "EST"   /* prefix used for every message */
-#define RADIO_ACK_STR    "ack"   /* acknowledge string */
-#define RADIO_CMD_STR    "cmd "   /* command string */
+#define RADIO_PREFIX_STR  "EST"      /* prefix used for every message */
+#define RADIO_ACK_STR     "ack"      /* acknowledge string */
+#define RADIO_STDIN_STR   "stdin "   /* stdio stdin string */
+#define RADIO_STDOUT_STR  "stdout "  /* stdio stdout string */
+#define RADIO_STDERR_STR  "stderr "  /* stdio stderr string */
 
 #define RADIO_TIMEOUT_COUNT    0xB000 /*!< how long the timeout value will be while transmitting a message */
 
@@ -102,6 +106,20 @@ static void RADIO_InitTransceiver(void) {
   RADIO_RxPacket.u8Status = TRSVR1_INITIAL_VALUE;  /* initialize the status packet to 0 */
 
   RADIO_AppStatus = RADIO_INITIAL_STATE;        /* Set the initial status of the application state variable */
+}
+
+static const unsigned char *RadioStateStr(RADIO_AppStatusKind state) {
+  switch(state) {
+    case RADIO_INITIAL_STATE:         return (const unsigned char*)"INITIAL";
+    case RADIO_RESET_STATE:           return (const unsigned char*)"RESET";
+    case RADIO_RECEIVER_ALWAYS_ON:    return (const unsigned char*)"ALWAYS_ON";
+    case RADIO_TRANSMIT_DATA:         return (const unsigned char*)"TRANSMIT_DATA";
+    case RADIO_WAITING_FOR_ACK:       return (const unsigned char*)"WAITING_FOR_ACK";
+    case RADIO_TRANSMIT_ACK:          return (const unsigned char*)"TRANSMIT_ACK";
+    case RADIO_READY_FOR_TX_RX_DATA:  return (const unsigned char*)"READY_TX_RX"; 
+    default:                          return (const unsigned char*)"UNKNOWN";
+  }
+  return (const unsigned char*)"UNKNOWN";
 }
 
 /*!
@@ -215,8 +233,12 @@ void RADIO_DataIndicationPacket(tRxPacket *sRxPacket) {
         QueueMessage(RADIO_QUEUE_MSG_ACCEL, (const char*)sRxPacket->pu8Data, sRxPacket->u8DataLength);
       }
 #endif
-      if (UTIL1_strncmp((char*)sRxPacket->pu8Data, RADIO_PREFIX_STR RADIO_CMD_STR, sizeof(RADIO_PREFIX_STR RADIO_CMD_STR)-1)==0) {
-        QueueMessage(RADIO_QUEUE_MSG_CMD, (const char*)sRxPacket->pu8Data+(sizeof(RADIO_PREFIX_STR RADIO_CMD_STR)-1), sRxPacket->u8DataLength-sizeof(RADIO_PREFIX_STR RADIO_CMD_STR)+1);
+      if (UTIL1_strncmp((char*)sRxPacket->pu8Data, RADIO_PREFIX_STR RADIO_STDIN_STR, sizeof(RADIO_PREFIX_STR RADIO_STDIN_STR)-1)==0) {
+        QueueMessage(RADIO_QUEUE_MSG_STDIN, (const char*)sRxPacket->pu8Data+(sizeof(RADIO_PREFIX_STR RADIO_STDIN_STR)-1), sRxPacket->u8DataLength-sizeof(RADIO_PREFIX_STR RADIO_STDIN_STR)+1);
+      } else if (UTIL1_strncmp((char*)sRxPacket->pu8Data, RADIO_PREFIX_STR RADIO_STDOUT_STR, sizeof(RADIO_PREFIX_STR RADIO_STDOUT_STR)-1)==0) {
+        QueueMessage(RADIO_QUEUE_MSG_STDOUT, (const char*)sRxPacket->pu8Data+(sizeof(RADIO_PREFIX_STR RADIO_STDOUT_STR)-1), sRxPacket->u8DataLength-sizeof(RADIO_PREFIX_STR RADIO_STDOUT_STR)+1);
+      } else if (UTIL1_strncmp((char*)sRxPacket->pu8Data, RADIO_PREFIX_STR RADIO_STDERR_STR, sizeof(RADIO_PREFIX_STR RADIO_STDERR_STR)-1)==0) {
+        QueueMessage(RADIO_QUEUE_MSG_STDERR, (const char*)sRxPacket->pu8Data+(sizeof(RADIO_PREFIX_STR RADIO_STDERR_STR)-1), sRxPacket->u8DataLength-sizeof(RADIO_PREFIX_STR RADIO_STDERR_STR)+1);
       }
       EVNT_SetEvent(EVNT_RADIO_DATA);
     } else { /* unknown packet? */
@@ -286,13 +308,22 @@ void RADIO_SendData(const uint8_t *data, uint8_t dataSize) {
 /*!
  * \brief Sends a data packet trough the Radio
  * \param[in] data Data to be sent (binary), zero terminated
+ * \return ERR_OK if everything is ok, ERR_DISABLED if radio is disbled, ERR_BUSY if we cannot send data.
 */
-void RADIO_SendString(const unsigned char *data) {
+uint8_t RADIO_SendString(const unsigned char *data) {
+  uint8_t cnt;
+  
   if (!RADIO_isOn) {
-    return;
+    return ERR_DISABLED;
   }
+  cnt = 0;
   while (RADIO_AppStatus != RADIO_READY_FOR_TX_RX_DATA) { /* we are not ready yet! */
     RADIO_HandleState(); /* advance state machine */
+    WAIT1_WaitOSms(10);
+    if (cnt>20) {
+      /* timeout */
+      return ERR_BUSY;
+    }
   }
   UTIL1_strcpy(RADIO_TxDataBuffer, sizeof(RADIO_TxDataBuffer), (unsigned char*)RADIO_PREFIX_STR);
   UTIL1_strcat(RADIO_TxDataBuffer, sizeof(RADIO_TxDataBuffer), data);
@@ -300,6 +331,7 @@ void RADIO_SendString(const unsigned char *data) {
   RADIO_TxPacket.u8DataLength = (byte)(UTIL1_strlen((char*)RADIO_TxDataBuffer)+1); /* Set the data length of the packet */
   RADIO_AppStatus = RADIO_TRANSMIT_DATA;
   RADIO_HandleState(); /* advance state machine */
+  return ERR_OK;
 }
 
 static void RADIO_PrintHelp(const CLS1_StdIOType *io) {
@@ -310,6 +342,8 @@ static void RADIO_PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"  channel <number>", (unsigned char*)"Switches to the given channel. Channel must be in the range 0..15\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  power <number>", (unsigned char*)"Changes the output power. Power must be in the range 0..15\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  send <string>", (unsigned char*)"Send a string using the wireless transceiver\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  send (stdin|stdout|stderr) <string>", (unsigned char*)"Send a stdio using the wireless transceiver\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  reset", (unsigned char*)"Reset transceiver\r\n", io->stdOut);
 }
 
 static void RADIO_PrintStatus(const CLS1_StdIOType *io) {
@@ -334,6 +368,8 @@ static void RADIO_PrintStatus(const CLS1_StdIOType *io) {
   CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
   CLS1_SendStatusStr((unsigned char*)"  ACK", (unsigned char*)RADIO_ACK_STR, io->stdOut); 
   CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  state", RadioStateStr(RADIO_AppStatus), io->stdOut);
+  CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
 }
 
 uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
@@ -346,6 +382,9 @@ uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_S
     *handled = TRUE;
   } else if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_STATUS)==0 || UTIL1_strcmp((char*)cmd, (char*)"radio status")==0) {
     RADIO_PrintStatus(io);
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"radio reset")==0) {
+    RADIO_AppStatus = RADIO_RESET_STATE;
     *handled = TRUE;
   } else if (UTIL1_strcmp((char*)cmd, (char*)"radio on")==0) {
     RADIO_isOn = TRUE;
@@ -379,7 +418,9 @@ uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_S
     }
   } else if (UTIL1_strncmp((char*)cmd, (char*)"radio send", sizeof("radio send")-1)==0) {
     p = cmd+sizeof("radio send");
-    RADIO_SendString(p);
+    if (RADIO_SendString(p)!=ERR_OK) {
+      CLS1_SendStr((unsigned char*)"failed!\r\n", io->stdErr);
+    }
     *handled = TRUE;
   }
   return res;
@@ -417,10 +458,14 @@ static void RADIO_HandleMessage(uint8_t *msg) {
     }
     SHELL_SendString(buf);
     SHELL_SendString((unsigned char*)"\r\n");
-  } else if (*msg==RADIO_QUEUE_MSG_CMD) {
+  } else if (*msg==RADIO_QUEUE_MSG_STDIN) {
     msg++; /* skip message kind */
     size = *msg++;
-    SHELL_RadioCmdString(msg);
+    SHELL_RadioRxString(msg);
+  } else if (*msg==RADIO_QUEUE_MSG_STDOUT || *msg==RADIO_QUEUE_MSG_STDERR) {
+    msg++; /* skip message kind */
+    size = *msg++;
+    SHELL_SendString(msg);
 #if PL_HAS_REMOTE && PL_HAS_MOTOR
   /*! \todo Implement handling for your remote control */
   } else if (*msg==RADIO_QUEUE_MSG_ACCEL) {
@@ -434,8 +479,8 @@ static void RADIO_HandleMessage(uint8_t *msg) {
 /*! \brief Radio application state machine */
 void RADIO_Handle(void) {
   uint8_t buf[RADIO_QUEUE_ITEM_SIZE];
-  static byte cnt;
-  
+  static byte cnt = 0;
+
   if (RADIO_isOn) {
     RADIO_HandleState(); /* advance state machine */
   }
@@ -451,6 +496,7 @@ void RADIO_Handle(void) {
   } else {
     cnt++; /* incremented every 10 ms */
   }
+#if PL_APP_ACCEL_CONTROL
   if (cnt>100) { /* no message for more than 1 s? */
     cnt = 0;
 #if PL_IS_ROBOT
@@ -460,8 +506,11 @@ void RADIO_Handle(void) {
 #endif
     EVNT_SetEvent(EVNT_RADIO_RESET); /* reset Transceiver */
   } else if (cnt==50) {
+#if PL_IS_ROBOT
     LEDR_Neg();
+#endif
   }
+#endif
 }
 
 void RADIO_Deinit(void) {
