@@ -252,7 +252,7 @@ static byte %'ModuleName'%.I2CAddress = (%DeviceAddress&%'ModuleName'%.MAX_I2C_A
 #define %'ModuleName'%.PAGE_SIZE      128                        %>40 /* maximum page size (for page/block operation) */
 
 /* macros for the control byte: */
-#define %'ModuleName'%.CTRL_NBL       (0b1010<<3)                %>40 /* control byte high nibble. Typically this is 1010 (shifted by one to the right) */
+#define %'ModuleName'%.CTRL_NBL       (0x0A<<3)                  %>40 /* control byte high nibble. Typically this is 1010 (shifted by one to the right) */
 #define %'ModuleName'%.CTRL_ADDR      %'ModuleName'%.I2CAddress  %>40 /* address inside control byte */
 %if %Device = '512'
 /* define control byte as 1010|A2|A1|A0 */
