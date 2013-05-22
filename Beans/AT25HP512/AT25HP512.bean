@@ -4,7 +4,7 @@
     <Name>AT25HP512</Name>
     <Description>Driver for EEPROM AT25HP512</Description>
     <Author>Erich Styger</Author>
-    <Version>01.032</Version>
+    <Version>01.033</Version>
     <Icon>AT25HP512</Icon>
     <TypesFiles>PE,AT25HP512\AT25HP512</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -20,7 +20,7 @@
     <BW_NeedUst>1</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>(c) Copyright Erich Styger, 2008\nhttp      : www.hslu.ch\nmail      : erich.styger@hslu.ch</Copyright>
+    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2013, all rights reserved.\nWeb: http://mcuoneclipse.com\n\nThis an open source software implementing a driver using Processor Expert.\nThis is a free software and is opened for education, research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
     <Shortcut>EE</Shortcut>
     <DemoDriver>no</DemoDriver>
     <BeanLevel>Low</BeanLevel>
@@ -79,6 +79,7 @@
               <CanDelete>false</CanDelete>
               <IconPopup>false</IconPopup>
               <InhrBeanBaseName>CS</InhrBeanBaseName>
+              <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
             </TInhrItem>
           </GrupItem>
           <GrupItem>
