@@ -4,7 +4,7 @@
     <Name>GenericI2C</Name>
     <Description>Generic high level I2C Driver on top of the I2C hardware driver</Description>
     <Author>Erich Styger</Author>
-    <Version>01.005</Version>
+    <Version>01.006</Version>
     <Icon>Generic2C</Icon>
     <TypesFiles>PE,GenericI2C\GenericI2C</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -389,6 +389,40 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>byte #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ScanDevice</Name>
+        <Symbol>ScanDevice</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Checks if a device responds on the bus with an ACK.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>i2cAddr</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>7bit I2C device address</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte i2cAddr)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

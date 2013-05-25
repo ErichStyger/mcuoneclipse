@@ -223,6 +223,7 @@ byte %'ModuleName'%.%GetDeviceAddress(void);
 
 %endif %- GetDeviceAddress
 %-BW_METHOD_END GetDeviceAddress
+%-************************************************************************************************************
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -389,12 +390,11 @@ static uint8_t Read(uint32_t addr, const %@Shell@'ModuleName'%.StdIOType *io) {
 
 static void ScanDevices(const %@Shell@'ModuleName'%.StdIOType *io) {
   uint8_t addr, oldAddr;
-  uint8_t buf[3];
-  uint8_t val;
+  uint8_t buf[3], res;
 
   oldAddr = %'ModuleName'%.GetDeviceAddress();
   for (addr=0; addr<0x7f; addr++) {
-    %@Shell@'ModuleName'%.SendStr((unsigned char*)"probing I2C device addr 0x", io->stdOut);
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"scan of I2C device addr 0x", io->stdOut);
     buf[0] = '\0';
     %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), addr);
     %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
@@ -402,10 +402,13 @@ static void ScanDevices(const %@Shell@'ModuleName'%.StdIOType *io) {
       %@Shell@'ModuleName'%.SendStr((unsigned char*)": failed selecting device\r\n", io->stdErr);
       break; /* get out of for loop */
     }
-    if (%'ModuleName'%.ReadRegData(addr, &val, 1)!=ERR_OK) {
-      %@Shell@'ModuleName'%.SendStr((unsigned char*)": timeout\r\n", io->stdErr);
-    } else {
+    res = %@I2C@'ModuleName'%.ScanDevice(addr);
+    if (res==ERR_NOTAVAIL) {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)": no ACK\r\n", io->stdErr);
+    } else if (res==ERR_OK) {
       %@Shell@'ModuleName'%.SendStr((unsigned char*)": Device responded!\r\n", io->stdErr);
+    } else {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)": *** failed! ***\r\n", io->stdErr);
     }
   } /* for */
   (void)%'ModuleName'%.SetDeviceAddress(oldAddr); /* restore old device address */
@@ -474,7 +477,7 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
   } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' bytesPerLine ", sizeof("%'ModuleName' bytesPerLine ")-1)==0) {
     p = cmd+sizeof("%'ModuleName' bytesPerLine ")-1;
     if (%@Utility@'ModuleName'%.ScanDecimal8uNumber(&p, &value8)==ERR_OK && value8>=1 && value8<=MAX_NOF_BYTES_PER_LINE) {
-      %'ModuleName'%.%SetBytesPerLine(value8);
+      (void)%'ModuleName'%.%SetBytesPerLine(value8);
     } else {
       %@Shell@'ModuleName'%.SendStr((unsigned char*)"**** wrong bytes per line, must be 1..32\r\n", io->stdErr);
     }
@@ -498,7 +501,7 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
   } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' addrSize ", sizeof("%'ModuleName' addrSize ")-1)==0) {
     p = cmd+sizeof("%'ModuleName' addrSize ")-1;
     if (%@Utility@'ModuleName'%.ScanDecimal8uNumber(&p, &value8)==ERR_OK && value8>=1 && value8<=4) {
-      %'ModuleName'%.%SetAddressSize(value8);
+      (void)%'ModuleName'%.%SetAddressSize(value8);
     } else {
       %@Shell@'ModuleName'%.SendStr((unsigned char*)"**** addrSize of range (1-4)\r\n", io->stdErr);
     }
@@ -695,6 +698,7 @@ byte %'ModuleName'%.%WriteRegData(dword addr, byte *data, word dataSize)
 
 %endif %- WriteRegData
 %-BW_METHOD_END WriteRegData
+%-************************************************************************************************************
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

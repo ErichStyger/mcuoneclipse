@@ -257,6 +257,18 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="ScanDevice">
+<b>ScanDevice</b></a>
+ - Checks if a device responds on the bus with an ACK.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ScanDevice(byte i2cAddr)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>i2cAddr:byte</i> - 7bit I2C device address</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
 <li><a name="ReadAddress">
 <b>ReadAddress</b></a>
  - Read from the device. This writes (S+i2cAddr+0), (memAddr), (Sr+i2cAddr+1), (data)...(data+P)

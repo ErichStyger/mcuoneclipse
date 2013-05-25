@@ -285,6 +285,16 @@ byte %'ModuleName'%.%WriteByteAddress8(byte i2cAddr, byte memAddr, byte data);
 
 %endif %- WriteByteAddress8
 %-BW_METHOD_END WriteByteAddress8
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ScanDevice
+%ifdef ScanDevice
+byte %'ModuleName'%.%ScanDevice(byte i2cAddr);
+%define! Pari2cAddr
+%define! RetVal
+%include Common\GenericI2CScanDevice.Inc
+
+%endif %- ScanDevice
+%-BW_METHOD_END ScanDevice
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -918,6 +928,84 @@ byte %'ModuleName'%.%WriteByteAddress8(byte i2cAddr, byte memAddr, byte data)
 
 %endif %- WriteByteAddress8
 %-BW_METHOD_END WriteByteAddress8
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ScanDevice
+%ifdef ScanDevice
+%define! Pari2cAddr
+%define! RetVal
+%include Common\GenericI2CScanDevice.Inc
+byte %'ModuleName'%.%ScanDevice(byte i2cAddr)
+{
+  byte res = ERR_OK;
+%if defined(LDD_I2C)
+%if defined(Timeout)
+  %@Timeout@'ModuleName'%.CounterHandle timeout;
+  bool isTimeout;
+%endif
+  LDD_I2C_TErrorMask errMask;
+%else
+  word nof;
+%endif
+  byte dummy;
+
+  if (%'ModuleName'%.%SelectSlave(i2cAddr)!=ERR_OK) {
+    return ERR_FAILED;
+  }
+%if defined(LDD_I2C)
+  for(;;) { /* breaks */
+    /* send device address */
+    %'ModuleName'%.deviceData.dataTransmittedFlg = FALSE;
+    res = %@LDD_I2C@'ModuleName'%.MasterReceiveBlock(%'ModuleName'%.deviceData.handle, &dummy, 1, LDD_I2C_SEND_STOP);
+    if (res!=ERR_OK) {
+      break; /* break for(;;) */
+    }
+%if defined(Timeout)
+    timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_MS/%@Timeout@'ModuleName'%.TICK_PERIOD_MS); /* set up timeout counter */
+    if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
+      res = ERR_FAILED;
+      break; /* break for(;;) */
+    }
+%endif
+    do { /* Wait until data is sent */
+%if defined(Timeout)
+      isTimeout = %@Timeout@'ModuleName'%.CounterExpired(timeout);
+      if (isTimeout) {
+        break; /* break while() */
+      }
+%endif
+    } while (!%'ModuleName'%.deviceData.dataTransmittedFlg);
+    errMask = 0;
+    (void)I2C1_GetError(%'ModuleName'%.deviceData.handle, &errMask);
+%if defined(Timeout)
+    %@Timeout@'ModuleName'%.LeaveCounter(timeout);
+%endif
+    if (errMask&LDD_I2C_MASTER_NACK) { /* master did not receive ACK from slave */
+      res = ERR_NOTAVAIL; /* device did not respond with ACK */
+    }
+    break; /* break for(;;) */
+  } /* for(;;) */
+%else
+  for(;;) { /* breaks */
+    res = %@I2C@'ModuleName'%.RecvBlock((void*)&dummy, 1, &nof);
+    if (res!=ERR_OK) {
+      (void)%@I2C@'ModuleName'%.SendStop();
+      break; /* break for(;;) */
+    }
+    res = %@I2C@'ModuleName'%.SendStop();
+    if (res!=ERR_OK) {
+      break; /* break for(;;) */
+    }
+    break; /* break for(;;) */
+  } /* for(;;) */
+%endif
+  if (%'ModuleName'%.%UnselectSlave()!=ERR_OK) {
+    return ERR_FAILED;
+  }
+  return res;
+}
+
+%endif %- ScanDevice
+%-BW_METHOD_END ScanDevice
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

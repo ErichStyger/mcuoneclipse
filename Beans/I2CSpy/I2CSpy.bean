@@ -4,7 +4,7 @@
     <Name>I2CSpy</Name>
     <Description>I2C Bus Spy</Description>
     <Author>Erich Styger</Author>
-    <Version>01.005</Version>
+    <Version>01.009</Version>
     <Icon>I2CSpy</Icon>
     <TypesFiles>PE,I2CSpy\I2CSpy</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -19,7 +19,7 @@
     <BW_NeedUst>0</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2012, all rights reserved.\nWeb/Blog: www.mcuoneclipse.com\n\nThis an open source software implementing software using Processor Expert.\nThis is a free software and is opened for education,  research  and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
+    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2013, all rights reserved.\nWeb/Blog: www.mcuoneclipse.com\n\nThis an open source software implementing software using Processor Expert.\nThis is a free software and is opened for education,  research  and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
     <Category>SW-User Components</Category>
     <DemoDriver>no</DemoDriver>
     <BeanLevel>High</BeanLevel>
@@ -54,7 +54,7 @@
       <TIntgItem>
         <Name>Default Address</Name>
         <Symbol>DefaultI2CAddr</Symbol>
-        <Hint>Default I2C Address to be used</Hint>
+        <Hint>Default I2C Address to be used. This is the 7bit device address used to address the device on the bus.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>true</EditLine>
         <DefaultValue>0</DefaultValue>
