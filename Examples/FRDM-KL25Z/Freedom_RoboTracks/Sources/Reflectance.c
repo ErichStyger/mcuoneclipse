@@ -65,7 +65,7 @@ static SensorTimeType SensorRaw[REF_NOF_SENSORS];
 static SensorTimeType SensorMin[REF_NOF_SENSORS]; 
 static SensorTimeType SensorMax[REF_NOF_SENSORS]; 
 static SensorTimeType SensorCalibrated[REF_NOF_SENSORS]; /* 0 means white/min value, 1000 means black/max value */
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
 static SensorTimeType SensorHistory[REF_NOF_SENSORS];
 #endif
 static bool isCalibrated = FALSE;

@@ -180,7 +180,7 @@ static void CheckButton(void) {
         CLS1_SendStr((unsigned char*)"auto calibrate.\r\n", CLS1_GetStdio()->stdOut);
         APP_StateStartCalibrate(); /* 2-3 s: start auto calibration */
         autoCalibrate = TRUE;
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
       } else if (timeTicks>=(3000/BUTTON_CNT_MS)) {
         CLS1_SendStr((unsigned char*)"delete solution.\r\n", CLS1_GetStdio()->stdOut);
         MAZE_ClearSolution();

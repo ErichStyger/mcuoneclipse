@@ -5,7 +5,7 @@
  *      Author: Erich Styger
  */
 #include "Platform.h"
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
 #include "Maze.h"
 #include "Turn.h"
 #include "CLS1.h"

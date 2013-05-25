@@ -410,11 +410,11 @@ void PID_Start(void) {
 
 void PID_Init(void) {
 #if PL_IS_ZUMO_ROBOT
-  lineFwConfig.pFactor100 = 5000;
-  lineFwConfig.iFactor100 = 10;
+  lineFwConfig.pFactor100 = 5500;
+  lineFwConfig.iFactor100 = 15;
   lineFwConfig.dFactor100 = 100;
   lineFwConfig.iAntiWindup = 100000;
-  lineFwConfig.maxSpeedPercent = 50;
+  lineFwConfig.maxSpeedPercent = 20;
   lineFwConfig.lastError = 0;
   lineFwConfig.integral = 0;
 #elif PL_IS_ROUND_ROBOT
@@ -441,7 +441,7 @@ void PID_Init(void) {
   lineBwConfig.iFactor100 = 0;
   lineBwConfig.dFactor100 = 0;
   lineBwConfig.iAntiWindup = 100000;
-  lineBwConfig.maxSpeedPercent = 60;
+  lineBwConfig.maxSpeedPercent = 20;
   lineBwConfig.lastError = 0;
   lineBwConfig.integral = 0;
 #endif

@@ -28,7 +28,7 @@
 typedef enum {
   STATE_IDLE,              /* idle, not doing anything */
   STATE_FOLLOW_SEGMENT,    /* line following segment, going forward */
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
   STATE_FOLLOW_SEGMENT_BW, /* line following segment, going backward */
   STATE_TURN,              /* reached an intersection, turning around */
   STATE_FINISHED,          /* reached finish area */
