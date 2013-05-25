@@ -34,7 +34,9 @@
 #if PL_HAS_REMOTE
   #include "Remote.h"
 #endif
-#include "MyQueue.h"
+#if PL_HAS_QUEUE
+  #include "MyQueue.h"
+#endif
 
 typedef enum {
   APP_STATE_INIT,
@@ -261,7 +263,9 @@ void APP_Run(void) {
 #if PL_HAS_REMOTE
   REMOTE_Init();
 #endif
+#if PL_HAS_QUEUE
   QUEUE_Init();
+#endif
   if (FRTOS1_xTaskCreate(MainTask, (signed portCHAR *)"Main", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }

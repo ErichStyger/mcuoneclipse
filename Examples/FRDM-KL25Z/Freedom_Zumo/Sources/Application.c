@@ -16,6 +16,7 @@
 #include "Motor.h"
 #include "Reflectance.h"
 #include "LineFollow.h"
+#include "Motor.h"
 #if PL_USE_TSS
   #include "TSS1.h"
 #endif
@@ -23,8 +24,19 @@
   #include "Buzzer.h"
 #endif
 #include "Turn.h"
+#if PL_HAS_USER_BUTTON
 #include "SW1.h"
+#endif
 #include "Maze.h"
+#if PL_HAS_RADIO
+  #include "Radio.h"
+#endif
+#if PL_HAS_REMOTE
+  #include "Remote.h"
+#endif
+#if PL_HAS_QUEUE
+  #include "MyQueue.h"
+#endif
 
 typedef enum {
   APP_STATE_INIT,
@@ -59,96 +71,84 @@ static void StateMachine(bool buttonPress) {
     case APP_STATE_IDLE:
       LEDR_Off();
       LEDG_On();
+#if PL_HAS_LINE_SENSOR
       if (buttonPress) {
         LF_StartFollowing();
         appState = APP_STATE_FOLLOW;
       }
+#endif
       break;
     case APP_STATE_FOLLOW:
       LEDR_Off();
       LEDG_Off();
+#if PL_HAS_LINE_SENSOR
       if (!LF_IsFollowing()) {
         appState = APP_STATE_IDLE;
       }
+#endif
       if (buttonPress) {
+#if PL_HAS_LINE_SENSOR
         LF_StopFollowing(); 
+#endif
         appState = APP_STATE_IDLE;
       }
       break;
   } /* switch */
 }
 
-
 void APP_StateStartCalibrate(void) {
+#if PL_HAS_LINE_SENSOR
   REF_Calibrate(TRUE);
   appState = APP_STATE_CALIBRATE;
+#endif
 }
 
 void APP_StateStopCalibrate(void) {
   appState = APP_STATE_IDLE;
+#if PL_HAS_LINE_SENSOR
   REF_Calibrate(FALSE);
+#endif
 }
 
 
-#if 0
-static uint8_t MeasureCm(void) {
-  uint16_t us, cm;
-  uint8_t buf[8];
-
-  us = US_Measure_us();
-  UTIL1_Num16uToStrFormatted(buf, sizeof(buf), us, ' ', 5);
-  //LCD1_GotoXY(1,5);
-  //LCD1_WriteString((char*)buf);
-
-  cm = US_usToCentimeters(us, 22);
-  UTIL1_Num16uToStrFormatted(buf, sizeof(buf), cm, ' ', 5);
-  //LCD1_GotoXY(2,5);
-  //LCD1_WriteString((char*)buf);
-  
-  LEDR_Put(cm>0 && cm<10); /* red LED if object closer than 10 cm */
-//  LEDB_Put(cm>=10&&cm<=100); /* blue LED if object is in 10..100 cm range */
-  LEDG_Put(cm>=10); /* blue LED if object is in 10..100 cm range */
-  return cm;
-}
-
+#if PL_APP_FOLLOW_OBSTACLE
 static bool runIt = TRUE;
 
-static portTASK_FUNCTION(RoboTask, pvParameters) {
-  uint16_t cm;
+static void FollowObstacle(void) {
+  uint16_t cm, us;
   
-  (void)pvParameters; /* not used */
-  for(;;) {
-    cm = MeasureCm();
-    LEDR_Neg();
-    if (runIt && cm != 0) {
-      if (cm<10) { /* back up! */
-        MOT_SetSpeedPercent(MOT_GetMotorA(), -40);
-        MOT_SetSpeedPercent(MOT_GetMotorB(), -40);
-      } else if (cm>=10 && cm<=15) {
-        /* stand still */
-        MOT_SetSpeedPercent(MOT_GetMotorA(), 0);
-        MOT_SetSpeedPercent(MOT_GetMotorB(), 0);
-      } else if (cm>15 && cm<=40) {
-        MOT_SetSpeedPercent(MOT_GetMotorA(), 50);
-        MOT_SetSpeedPercent(MOT_GetMotorB(), 50);
-      } else if (cm>40 && cm<80) {
-        MOT_SetSpeedPercent(MOT_GetMotorA(), 80);
-        MOT_SetSpeedPercent(MOT_GetMotorB(), 80);
-      } else { /* nothing in range */
-        MOT_SetSpeedPercent(MOT_GetMotorA(), 0);
-        MOT_SetSpeedPercent(MOT_GetMotorB(), 0);
-      }
+  LEDR_Neg();
+  us = US_Measure_us();
+  cm = US_usToCentimeters(us, 22);
+  if (runIt && cm != 0) {
+    if (cm<10) { /* back up! */
+      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), -20);
+      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), -20);
+    } else if (cm>=10 && cm<=15) { /* stand still */
+      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 0);
+      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 0);
+    } else if (cm>15 && cm<=40) { /* forward slowly */
+      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 30);
+      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 30);
+    } else if (cm>40 && cm<80) { /* forward fast */
+      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 50);
+      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 50);
+    } else { /* nothing in range */
+      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 0);
+      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 0);
     }
-    FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
   }
 }
 #endif
 
 static void CheckButton(void) {
+#if PL_HAS_USER_BUTTON
   uint32_t timeTicks; /* time in ticks */
   #define BUTTON_CNT_MS  100  /* iteration count for button */
+#if PL_HAS_LINE_SENSOR
   bool autoCalibrate = FALSE;
-
+#endif
+  
   if (SW1_GetVal()==0) { /* button pressed */
     /* short press (1 beep): start or stop line following if calibrated 
      * 1 s press   (2 beep): calibrate manually
@@ -163,11 +163,12 @@ static void CheckButton(void) {
         FRTOS1_vTaskDelay(BUTTON_CNT_MS/portTICK_RATE_MS);
         if ((timeTicks%(1000/BUTTON_CNT_MS))==0) {
 #if PL_HAS_BUZZER
-          BUZ_Beep(300, 100);
+          BUZ_Beep(300, 200);
 #endif
         }
         timeTicks++;
       } /* wait until released */
+#if PL_HAS_LINE_SENSOR
       autoCalibrate = FALSE;
       if (timeTicks<1000/BUTTON_CNT_MS) { /* less than 1 second */
         CLS1_SendStr((unsigned char*)"button press.\r\n", CLS1_GetStdio()->stdOut);
@@ -179,13 +180,17 @@ static void CheckButton(void) {
         CLS1_SendStr((unsigned char*)"auto calibrate.\r\n", CLS1_GetStdio()->stdOut);
         APP_StateStartCalibrate(); /* 2-3 s: start auto calibration */
         autoCalibrate = TRUE;
+#if PL_APP_MAZE_LINE_SOLVING
       } else if (timeTicks>=(3000/BUTTON_CNT_MS)) {
         CLS1_SendStr((unsigned char*)"delete solution.\r\n", CLS1_GetStdio()->stdOut);
         MAZE_ClearSolution();
+#endif
       } 
+#endif
       while (SW1_GetVal()==0) { /* wait until button is released */
         FRTOS1_vTaskDelay(BUTTON_CNT_MS/portTICK_RATE_MS);
       }
+#if PL_HAS_LINE_SENSOR
       if (autoCalibrate) {
         CLS1_SendStr((unsigned char*)"start auto-calibration...\r\n", CLS1_GetStdio()->stdOut);
         /* perform automatic calibration */
@@ -198,8 +203,10 @@ static void CheckButton(void) {
         APP_StateStopCalibrate();
         CLS1_SendStr((unsigned char*)"auto-calibration finished.\r\n", CLS1_GetStdio()->stdOut);
       }
+#endif
     }
   } /* if */
+#endif
 }
 
 static portTASK_FUNCTION(MainTask, pvParameters) {
@@ -213,26 +220,51 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
 #else
     CheckButton();
 #endif
+#if PL_APP_FOLLOW_OBSTACLE
+    FollowObstacle();
+#endif
 #if PL_HAS_LED_BLUE
     LEDB_Neg();
 #endif
+#if PL_HAS_RADIO
+    (void)RADIO_Handle();
+#endif
+#if PL_HAS_EVENTS
+    EVNT_HandleEvent(RADIO_AppHandleEvent);
+#endif
+#if PL_HAS_LINE_SENSOR
     StateMachine(FALSE);
+#endif
     FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
   }
 }
 
 void APP_Run(void) {
   appState = APP_STATE_INIT;
-  REF_Init();
   MOT_Init();
   SHELL_Init();
+#if PL_HAS_LINE_SENSOR
+  REF_Init();
   LF_Init();
   TURN_Init();
-#if 0
+#endif
+#if PL_HAS_ULTRASONIC
   US_Init();
 #endif
 #if PL_HAS_BUZZER
   BUZ_Init();
+#endif
+#if PL_HAS_EVENTS
+  EVNT_Init();
+#endif
+#if PL_HAS_RADIO
+  RADIO_Init();
+#endif
+#if PL_HAS_REMOTE
+  REMOTE_Init();
+#endif
+#if PL_HAS_QUEUE
+  QUEUE_Init();
 #endif
   if (FRTOS1_xTaskCreate(MainTask, (signed portCHAR *)"Main", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */

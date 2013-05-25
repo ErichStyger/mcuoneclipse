@@ -8,38 +8,22 @@
 
 #define PID_DEBUG 0 /* careful: this will slow down the PID loop frequency! */
 
-#if PL_IS_ZUMO_ROBOT
-  static int32_t pLineFactor100 = 5000;
-  static int32_t iLineFactor100 = 10;
-  static int32_t dLineFactor100 = 100;
-  static int32_t iLineAntiWindup = 100000;
-  static uint8_t maxLineSpeedPercent = 30; /* max speed if 100% on the line, 0xffff would be full speed */
-#elif PL_IS_ROUND_ROBOT
-  static int32_t pLineFactor100 = 200;
-  static int32_t iLineFactor100 = 1;
-  static int32_t dLineFactor100 = 50000;
-  static int32_t iLineAntiWindup = 20000;
-  static uint8_t maxLineSpeedPercent = 15; /* max speed if 100% on the line, 0xffff would be full speed */
-#elif PL_IS_TRACK_ROBOT
-  static int32_t pLineFactor100 = 400;
-  static int32_t iLineFactor100 = 1;
-  static int32_t dLineFactor100 = 50000;
-  static int32_t iLineAntiWindup = 20000;
-  static uint8_t maxLineSpeedPercent = 17; /* max speed if 100% on the line, 0xffff would be full speed */
-#else
-  #error "unknown configuration!"
-#endif
-#if PL_HAS_LINE_SENSOR
-static int32_t lastLineError=0, integralLine=0;
-#endif
+typedef struct {
+  int32_t pFactor100;
+  int32_t iFactor100;
+  int32_t dFactor100;
+  int32_t iAntiWindup;
+  uint8_t maxSpeedPercent; /* max speed if 100% on the line, 0xffff would be full speed */
+  int32_t lastError;
+  int32_t integral;
+} PID_Config;
 
+static PID_Config lineFwConfig;
+#if PL_GO_DEADEND_BW
+static PID_Config lineBwConfig;
+#endif
 #if PL_HAS_QUADRATURE
-  static int32_t pPosFactor100 = 3000;
-  static int32_t iPosFactor100 = 1;
-  static int32_t dPosFactor100 = 20000;
-  static int32_t iPosAntiWindup = 50;
-  static uint8_t maxPosSpeedPercent = 15; /* max speed if 100% on the line, 0xffff would be full speed */
-  static int32_t lastPosError=0, integralPos=0;
+static PID_Config posConfig;
 #endif
 
 #if PL_HAS_LINE_SENSOR
@@ -71,9 +55,27 @@ static uint8_t errorWithinPercent(int32_t error) {
   }
   return error/(REF_MAX_LINE_VALUE/2/100);
 }
-  
-void PID_Line(uint16_t currLine, uint16_t setLine) {
+
+static int32_t PID(uint16_t currVal, uint16_t setVal, PID_Config *config) {
   int32_t error;
+  int32_t pid;
+  
+  /* perform PID closed control loop calculation */
+  error = setVal-currVal; /* calculate error */
+  pid = (error*config->pFactor100)/100; /* P part */
+  config->integral += error; /* integrate error */
+  if (config->integral>config->iAntiWindup) {
+    config->integral = config->iAntiWindup;
+  } else if (config->integral<-config->iAntiWindup) {
+    config->integral = -config->iAntiWindup;
+  }
+  pid += (config->integral*config->iFactor100)/100; /* add I part */
+  pid += ((error-config->lastError)*config->dFactor100)/100; /* add D part */
+  config->lastError = error; /* remember for next iteration of D part */
+  return pid;
+}
+
+void PID_LineCfg(uint16_t currLine, uint16_t setLine, bool forward, PID_Config *config) {
   int32_t pid, speed, speedL, speedR;
 #if PID_DEBUG
   unsigned char buf[16];
@@ -82,23 +84,23 @@ void PID_Line(uint16_t currLine, uint16_t setLine) {
   uint8_t errorPercent;
   MOT_Direction directionL=MOT_DIR_FORWARD, directionR=MOT_DIR_FORWARD;
   
-  /* perform PID closed control loop calculation */
-  error = setLine-currLine; /* calculate error */
-  errorPercent = errorWithinPercent(error);
-  pid = (error*pLineFactor100)/100; /* P part */
-  integralLine += error; /* integrate error */
-  if (integralLine>iLineAntiWindup) {
-    integralLine = iLineAntiWindup;
-  } else if (integralLine<-iLineAntiWindup) {
-    integralLine = -iLineAntiWindup;
-  }
-  pid += (integralLine*iLineFactor100)/100; /* add I part */
-  pid += ((error-lastLineError)*dLineFactor100)/100; /* add D part */
-  lastLineError = error; /* remember for next iteration of D part */
+  pid = PID(currLine, setLine, config);
+  errorPercent = errorWithinPercent(currLine-setLine);
   
   /* transform into different speed for motors. The PID is used as difference value to the motor PWM */
-  if (errorPercent <= 20) { /* pretty on center: move forward both motors with base speed */
-    speed = ((int32_t)maxLineSpeedPercent)*(0xffff/100); /* 100% */
+  if (!forward) { /* going backward */
+    /* need to do it slow as sensor is on the 'back', and we cannot usual turns to get the sensor back 'on line' */
+    speed = ((int32_t)config->maxSpeedPercent)*(0xffff/100)*6/10; /* %60 */
+    pid = Limit(pid, -speed, speed);
+    if (pid<0) { /* turn right */
+      speedR = speed;
+      speedL = speed-pid;
+    } else { /* turn left */
+      speedR = speed+pid;
+      speedL = speed;
+    }
+  } else if (errorPercent <= 20) { /* pretty on center: move forward both motors with base speed */
+    speed = ((int32_t)config->maxSpeedPercent)*(0xffff/100); /* 100% */
     pid = Limit(pid, -speed, speed);
     if (pid<0) { /* turn right */
       speedR = speed;
@@ -109,7 +111,7 @@ void PID_Line(uint16_t currLine, uint16_t setLine) {
     }
   } else if (errorPercent <= 40) { 
     /* outside left/right halve position from center, slow down one motor and speed up the other */
-    speed = ((int32_t)maxLineSpeedPercent)*(0xffff/100)*8/10; /* 80% */
+    speed = ((int32_t)config->maxSpeedPercent)*(0xffff/100)*8/10; /* 80% */
     pid = Limit(pid, -speed, speed);
     if (pid<0) { /* turn right */
       speedR = speed+pid; /* decrease speed */
@@ -119,7 +121,7 @@ void PID_Line(uint16_t currLine, uint16_t setLine) {
       speedL = speed-pid; /* decrease speed */
     }
   } else if (errorPercent <= 70) { 
-    speed = ((int32_t)maxLineSpeedPercent)*(0xffff/100)*6/10; /* %60 */
+    speed = ((int32_t)config->maxSpeedPercent)*(0xffff/100)*6/10; /* %60 */
     pid = Limit(pid, -speed, speed);
     if (pid<0) { /* turn right */
       speedR = 0 /*maxSpeed+pid*/; /* decrease speed */
@@ -130,7 +132,7 @@ void PID_Line(uint16_t currLine, uint16_t setLine) {
     }
   } else  {
     /* line is far to the left or right: use backward motor motion */
-    speed = ((int32_t)maxLineSpeedPercent)*(0xffff/100)*10/10; /* %80 */
+    speed = ((int32_t)config->maxSpeedPercent)*(0xffff/100)*10/10; /* %80 */
     if (pid<0) { /* turn right */
       speedR = -speed+pid; /* decrease speed */
       speedL = speed-pid; /* increase speed */
@@ -153,6 +155,18 @@ void PID_Line(uint16_t currLine, uint16_t setLine) {
     speedR = 0xFFFF;
   } else if (speedR<0) {
     speedR = 0;
+  }
+  if (!forward) { /* swap direction/speed */
+    if (directionL==MOT_DIR_FORWARD) {
+      directionL=MOT_DIR_BACKWARD;
+    } else {
+      directionL=MOT_DIR_FORWARD;
+    }
+    if (directionR==MOT_DIR_FORWARD) {
+      directionR=MOT_DIR_BACKWARD;
+    } else {
+      directionR=MOT_DIR_FORWARD;
+    }
   }
   /* send new speed values to motor */
   MOT_SetVal(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 0xFFFF-speedL); /* PWM is low active */
@@ -195,27 +209,28 @@ void PID_Line(uint16_t currLine, uint16_t setLine) {
 }
 #endif /* PL_HAS_LINE_SENSOR */
 
+void PID_Line(uint16_t currLine, uint16_t setLine, bool forward) {
+#if PL_GO_DEADEND_BW
+  if (forward) {
+    PID_LineCfg(currLine, setLine, forward, &lineFwConfig);
+  } else {
+    PID_LineCfg(currLine, setLine, forward, &lineBwConfig);
+  }
+#else
+  (void)forward; /* not used */
+  PID_LineCfg(currLine, setLine, forward, &lineFwConfig);
+#endif
+}
+
 #if PL_HAS_QUADRATURE
-void PID_Pos(int16_t currPos, int16_t setPos, bool isLeft) {
-  int32_t error;
+void PID_PosCfg(int16_t currPos, int16_t setPos, bool isLeft, PID_Config *config) {
   int32_t pid, speed;
   MOT_Direction direction=MOT_DIR_FORWARD;
   
-  /* perform PID closed control loop calculation */
-  error = currPos-setPos; /* calculate error */
-  pid = (error*pPosFactor100)/100; /* P part */
-  integralPos += error; /* integrate error */
-  if (integralPos>iPosAntiWindup) {
-    integralPos = iPosAntiWindup;
-  } else if (integralPos<-iPosAntiWindup) {
-    integralPos = -iPosAntiWindup;
-  }
-  pid += (integralPos*iPosFactor100)/100; /* add I part */
-  pid += ((error-lastPosError)*dPosFactor100)/100; /* add D part */
-  lastPosError = error; /* remember for next iteration of D part */
-  
+  pid = PID(currPos, setPos, config);
+
   /* transform into motor speed */
-  speed = ((int32_t)maxPosSpeedPercent)*(0xffff/100); /* limit the speed */
+  speed = ((int32_t)config->maxSpeedPercent)*(0xffff/100); /* limit the speed */
   pid = Limit(pid, -speed, speed);
   if (pid<0) { /* move forward */
     speed -= pid;
@@ -239,66 +254,126 @@ void PID_Pos(int16_t currPos, int16_t setPos, bool isLeft) {
     MOT_SetDirection(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), direction);
   }
 }
+
+void PID_Pos(int16_t currPos, int16_t setPos, bool isLeft) {
+}
 #endif
 
 static void PID_PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"pid", (unsigned char*)"Group of PID commands\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows PID help or status\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  line (p|d|i|w) <value>", (unsigned char*)"Sets P, D, I or anti-windup line value\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  line speed <value>", (unsigned char*)"Maximum speed value\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  fw (p|d|i|w) <value>", (unsigned char*)"Sets P, D, I or anti-windup line value\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  fw speed <value>", (unsigned char*)"Maximum speed % value\r\n", io->stdOut);
+#if PL_GO_DEADEND_BW
+  CLS1_SendHelpStr((unsigned char*)"  bw (p|d|i|w) <value>", (unsigned char*)"Sets P, D, I or anti-windup backward value\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  bw speed <value>", (unsigned char*)"Maximum backward speed % value\r\n", io->stdOut);
+#endif
 #if PL_HAS_QUADRATURE
   CLS1_SendHelpStr((unsigned char*)"  pos (p|d|i|w) <value>", (unsigned char*)"Sets P, D, I or anti-windup position value\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  pos speed <value>", (unsigned char*)"Maximum speed value\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  pos speed <value>", (unsigned char*)"Maximum speed % value\r\n", io->stdOut);
 #endif
 }
 
-static void PID_PrintStatus(const CLS1_StdIOType *io) {
+static void PrintPIDstatus(PID_Config *config, const unsigned char *kindStr, const CLS1_StdIOType *io) {
   unsigned char buf[48];
+  unsigned char kindBuf[16];
 
+  UTIL1_strcpy(kindBuf, sizeof(buf), (unsigned char*)"  ");
+  UTIL1_strcat(kindBuf, sizeof(buf), kindStr);
+  UTIL1_strcat(kindBuf, sizeof(buf), (unsigned char*)" PID");
+  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"p: ");
+  UTIL1_strcatNum32s(buf, sizeof(buf), config->pFactor100);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" i: ");
+  UTIL1_strcatNum32s(buf, sizeof(buf), config->iFactor100);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" d: ");
+  UTIL1_strcatNum32s(buf, sizeof(buf), config->dFactor100);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  CLS1_SendStatusStr(kindBuf, buf, io->stdOut);
+
+  UTIL1_strcpy(kindBuf, sizeof(buf), (unsigned char*)"  ");
+  UTIL1_strcat(kindBuf, sizeof(buf), kindStr);
+  UTIL1_strcat(kindBuf, sizeof(buf), (unsigned char*)" windup");
+  UTIL1_Num32sToStr(buf, sizeof(buf), config->iAntiWindup);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  CLS1_SendStatusStr(kindBuf, buf, io->stdOut);
+
+  UTIL1_strcpy(kindBuf, sizeof(buf), (unsigned char*)"  ");
+  UTIL1_strcat(kindBuf, sizeof(buf), kindStr);
+  UTIL1_strcat(kindBuf, sizeof(buf), (unsigned char*)" speed");
+  UTIL1_Num8uToStr(buf, sizeof(buf), config->maxSpeedPercent);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"%\r\n");
+  CLS1_SendStatusStr(kindBuf, buf, io->stdOut);
+ 
+}
+
+static void PID_PrintStatus(const CLS1_StdIOType *io) {
   CLS1_SendStatusStr((unsigned char*)"pid", (unsigned char*)"\r\n", io->stdOut);
-
-  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"p: ");
-  UTIL1_strcatNum32s(buf, sizeof(buf), pLineFactor100);
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" i: ");
-  UTIL1_strcatNum32s(buf, sizeof(buf), iLineFactor100);
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" d: ");
-  UTIL1_strcatNum32s(buf, sizeof(buf), dLineFactor100);
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-  CLS1_SendStatusStr((unsigned char*)"  line PID", buf, io->stdOut);
-
-  UTIL1_Num32sToStr(buf, sizeof(buf), iLineAntiWindup);
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-  CLS1_SendStatusStr((unsigned char*)"  line windup", buf, io->stdOut);
-
-  UTIL1_Num8uToStr(buf, sizeof(buf), maxLineSpeedPercent);
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"%\r\n");
-  CLS1_SendStatusStr((unsigned char*)"  line speed", buf, io->stdOut);
-
+  PrintPIDstatus(&lineFwConfig, (unsigned char*)"fw", io);
+#if PL_GO_DEADEND_BW
+  PrintPIDstatus(&lineBwConfig, (unsigned char*)"bw", io);
+#endif
 #if PL_HAS_QUADRATURE
-  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"p: ");
-  UTIL1_strcatNum32s(buf, sizeof(buf), pPosFactor100);
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" i: ");
-  UTIL1_strcatNum32s(buf, sizeof(buf), iPosFactor100);
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" d: ");
-  UTIL1_strcatNum32s(buf, sizeof(buf), dPosFactor100);
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-  CLS1_SendStatusStr((unsigned char*)"  pos PID", buf, io->stdOut);
-  
-  UTIL1_Num32sToStr(buf, sizeof(buf), iPosAntiWindup);
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-  CLS1_SendStatusStr((unsigned char*)"  pos windup", buf, io->stdOut);
-
-  UTIL1_Num8uToStr(buf, sizeof(buf), maxPosSpeedPercent);
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"%\r\n");
-  CLS1_SendStatusStr((unsigned char*)"  pos speed", buf, io->stdOut);
+  PrintPIDstatus(&posConfig, (unsigned char*)"pos", io);
 #endif  
+}
+
+static uint8_t ParsePidParameter(PID_Config *config, const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
+  const unsigned char *p;
+  uint32_t val32u;
+  uint8_t val8u;
+  uint8_t res = ERR_OK;
+
+  if (UTIL1_strncmp((char*)cmd, (char*)"p ", sizeof("p ")-1)==0) {
+    p = cmd+sizeof("p");
+    if (UTIL1_ScanDecimal32uNumber(&p, &val32u)==ERR_OK) {
+      config->pFactor100 = val32u;
+      *handled = TRUE;
+    } else {
+      CLS1_SendStr((unsigned char*)"Wrong argument\r\n", io->stdErr);
+      res = ERR_FAILED;
+    }
+  } else if (UTIL1_strncmp((char*)cmd, (char*)"i ", sizeof("i ")-1)==0) {
+    p = cmd+sizeof("i");
+    if (UTIL1_ScanDecimal32uNumber(&p, &val32u)==ERR_OK) {
+      config->iFactor100 = val32u;
+      *handled = TRUE;
+    } else {
+      CLS1_SendStr((unsigned char*)"Wrong argument\r\n", io->stdErr);
+      res = ERR_FAILED;
+    }
+  } else if (UTIL1_strncmp((char*)cmd, (char*)"d ", sizeof("d ")-1)==0) {
+    p = cmd+sizeof("d");
+    if (UTIL1_ScanDecimal32uNumber(&p, &val32u)==ERR_OK) {
+      config->dFactor100 = val32u;
+      *handled = TRUE;
+    } else {
+      CLS1_SendStr((unsigned char*)"Wrong argument\r\n", io->stdErr);
+      res = ERR_FAILED;
+    }
+  } else if (UTIL1_strncmp((char*)cmd, (char*)"w ", sizeof("w ")-1)==0) {
+    p = cmd+sizeof("w");
+    if (UTIL1_ScanDecimal32uNumber(&p, &val32u)==ERR_OK) {
+      config->iAntiWindup = val32u;
+      *handled = TRUE;
+    } else {
+      CLS1_SendStr((unsigned char*)"Wrong argument\r\n", io->stdErr);
+      res = ERR_FAILED;
+    }
+  } else if (UTIL1_strncmp((char*)cmd, (char*)"speed ", sizeof("speed ")-1)==0) {
+    p = cmd+sizeof("speed");
+    if (UTIL1_ScanDecimal8uNumber(&p, &val8u)==ERR_OK && val8u<=100) {
+      config->maxSpeedPercent = val8u;
+      *handled = TRUE;
+    } else {
+      CLS1_SendStr((unsigned char*)"Wrong argument\r\n", io->stdErr);
+      res = ERR_FAILED;
+    }
+  }
+  return res;
 }
 
 uint8_t PID_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
   uint8_t res = ERR_OK;
-  const unsigned char *p;
-  uint32_t val32u;
-  uint8_t val8u;
 
   if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, (char*)"pid help")==0) {
     PID_PrintHelp(io);
@@ -306,107 +381,77 @@ uint8_t PID_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
   } else if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_STATUS)==0 || UTIL1_strcmp((char*)cmd, (char*)"pid status")==0) {
     PID_PrintStatus(io);
     *handled = TRUE;
-  } else if (UTIL1_strncmp((char*)cmd, (char*)"pid line p ", sizeof("pid line p ")-1)==0) {
-    p = cmd+sizeof("pid line p");
-    if (UTIL1_ScanDecimal32uNumber(&p, &val32u)==ERR_OK) {
-      pLineFactor100 = val32u;
-      *handled = TRUE;
-    } else {
-      CLS1_SendStr((unsigned char*)"Wrong argument\r\n", io->stdErr);
-      res = ERR_FAILED;
-    }
-  } else if (UTIL1_strncmp((char*)cmd, (char*)"pid line i ", sizeof("pid line i ")-1)==0) {
-    p = cmd+sizeof("pid line i");
-    if (UTIL1_ScanDecimal32uNumber(&p, &val32u)==ERR_OK) {
-      iLineFactor100 = val32u;
-      *handled = TRUE;
-    } else {
-      CLS1_SendStr((unsigned char*)"Wrong argument\r\n", io->stdErr);
-      res = ERR_FAILED;
-    }
-  } else if (UTIL1_strncmp((char*)cmd, (char*)"pid line d ", sizeof("pid line d ")-1)==0) {
-    p = cmd+sizeof("pid line d");
-    if (UTIL1_ScanDecimal32uNumber(&p, &val32u)==ERR_OK) {
-      dLineFactor100 = val32u;
-      *handled = TRUE;
-    } else {
-      CLS1_SendStr((unsigned char*)"Wrong argument\r\n", io->stdErr);
-      res = ERR_FAILED;
-    }
-  } else if (UTIL1_strncmp((char*)cmd, (char*)"pid line w ", sizeof("pid line w ")-1)==0) {
-    p = cmd+sizeof("pid line w");
-    if (UTIL1_ScanDecimal32uNumber(&p, &val32u)==ERR_OK) {
-      iLineAntiWindup = val32u;
-      *handled = TRUE;
-    } else {
-      CLS1_SendStr((unsigned char*)"Wrong argument\r\n", io->stdErr);
-      res = ERR_FAILED;
-    }
-  } else if (UTIL1_strncmp((char*)cmd, (char*)"pid line speed ", sizeof("pid line speed ")-1)==0) {
-    p = cmd+sizeof("pid line speed");
-    if (UTIL1_ScanDecimal8uNumber(&p, &val8u)==ERR_OK && val8u<=100) {
-      maxLineSpeedPercent = val8u;
-      *handled = TRUE;
-    } else {
-      CLS1_SendStr((unsigned char*)"Wrong argument\r\n", io->stdErr);
-      res = ERR_FAILED;
-    }
+  } else if (UTIL1_strncmp((char*)cmd, (char*)"pid fw ", sizeof("pid fw ")-1)==0) {
+    res = ParsePidParameter(&lineFwConfig, cmd+sizeof("pid fw ")-1, handled, io);
+#if PL_GO_DEADEND_BW
+  } else if (UTIL1_strncmp((char*)cmd, (char*)"pid bw ", sizeof("pid bw ")-1)==0) {
+    res = ParsePidParameter(&lineBwConfig, cmd+sizeof("pid bw ")-1, handled, io);
+#endif
 #if PL_HAS_QUADRATURE
-  } else if (UTIL1_strncmp((char*)cmd, (char*)"pid pos p ", sizeof("pid pos p ")-1)==0) {
-    p = cmd+sizeof("pid pos p");
-    if (UTIL1_ScanDecimal32uNumber(&p, &val32u)==ERR_OK) {
-      pPosFactor100 = val32u;
-      *handled = TRUE;
-    } else {
-      CLS1_SendStr((unsigned char*)"Wrong argument\r\n", io->stdErr);
-      res = ERR_FAILED;
-    }
-  } else if (UTIL1_strncmp((char*)cmd, (char*)"pid pos i ", sizeof("pid pos i ")-1)==0) {
-    p = cmd+sizeof("pid pos i");
-    if (UTIL1_ScanDecimal32uNumber(&p, &val32u)==ERR_OK) {
-      iPosFactor100 = val32u;
-      *handled = TRUE;
-    } else {
-      CLS1_SendStr((unsigned char*)"Wrong argument\r\n", io->stdErr);
-      res = ERR_FAILED;
-    }
-  } else if (UTIL1_strncmp((char*)cmd, (char*)"pid pos d ", sizeof("pid pos d ")-1)==0) {
-    p = cmd+sizeof("pid pos d");
-    if (UTIL1_ScanDecimal32uNumber(&p, &val32u)==ERR_OK) {
-      dPosFactor100 = val32u;
-      *handled = TRUE;
-    } else {
-      CLS1_SendStr((unsigned char*)"Wrong argument\r\n", io->stdErr);
-      res = ERR_FAILED;
-    }
-  } else if (UTIL1_strncmp((char*)cmd, (char*)"pid pos w ", sizeof("pid pos w ")-1)==0) {
-    p = cmd+sizeof("pid pos w");
-    if (UTIL1_ScanDecimal32uNumber(&p, &val32u)==ERR_OK) {
-      iPosAntiWindup = val32u;
-      *handled = TRUE;
-    } else {
-      CLS1_SendStr((unsigned char*)"Wrong argument\r\n", io->stdErr);
-      res = ERR_FAILED;
-    }
-  } else if (UTIL1_strncmp((char*)cmd, (char*)"pid pos speed ", sizeof("pid pos speed ")-1)==0) {
-    p = cmd+sizeof("pid pos speed");
-    if (UTIL1_ScanDecimal8uNumber(&p, &val8u)==ERR_OK && val8u<=100) {
-      maxPosSpeedPercent = val8u;
-      *handled = TRUE;
-    } else {
-      CLS1_SendStr((unsigned char*)"Wrong argument\r\n", io->stdErr);
-      res = ERR_FAILED;
-    }
+  } else if (UTIL1_strncmp((char*)cmd, (char*)"pid pos ", sizeof("pid pos ")-1)==0) {
+    res = ParsePidParameter(&posConfig, cmd+sizeof("pid pos ")-1, handled, io);
 #endif
   }
   return res;
 }
 
-void PID_Init(void) {
-#if PL_HAS_LINE_SENSOR
-  integralLine = 0;
+void PID_Start(void) {
+  lineFwConfig.lastError = 0;
+  lineFwConfig.integral = 0;
+#if PL_GO_DEADEND_BW
+  lineBwConfig.lastError = 0;
+  lineBwConfig.integral = 0;
 #endif
 #if PL_HAS_QUADRATURE
-  integralPos = 0;
+  posConfig.lastError = 0;
+  posConfig.integral = 0;
+#endif
+}
+
+void PID_Init(void) {
+#if PL_IS_ZUMO_ROBOT
+  lineFwConfig.pFactor100 = 5000;
+  lineFwConfig.iFactor100 = 10;
+  lineFwConfig.dFactor100 = 100;
+  lineFwConfig.iAntiWindup = 100000;
+  lineFwConfig.maxSpeedPercent = 50;
+  lineFwConfig.lastError = 0;
+  lineFwConfig.integral = 0;
+#elif PL_IS_ROUND_ROBOT
+  lineFwConfig.pFactor100 = 200;
+  lineFwConfig.iFactor100 = 1;
+  lineFwConfig.dFactor100 = 50000;
+  lineFwConfig.iAntiWindup = 20000;
+  lineFwConfig.maxSpeedPercent = 15;
+  lineFwConfig.lastError = 0;
+  lineFwConfig.integral = 0;
+#elif PL_IS_TRACK_ROBOT
+  lineFwConfig.pFactor100 = 400;
+  lineFwConfig.iFactor100 = 1;
+  lineFwConfig.dFactor100 = 50000;
+  lineFwConfig.iAntiWindup = 20000;
+  lineFwConfig.maxSpeedPercent = 17;
+  lineFwConfig.lastError = 0;
+  lineFwConfig.integral = 0;
+#else
+  #error "unknown configuration!"
+#endif
+#if PL_GO_DEADEND_BW
+  lineBwConfig.pFactor100 = 1000;
+  lineBwConfig.iFactor100 = 0;
+  lineBwConfig.dFactor100 = 0;
+  lineBwConfig.iAntiWindup = 100000;
+  lineBwConfig.maxSpeedPercent = 60;
+  lineBwConfig.lastError = 0;
+  lineBwConfig.integral = 0;
+#endif
+#if PL_HAS_QUADRATURE
+  posConfig.pFactor100 = 3000;
+  posConfig.iFactor100 = 1;
+  posConfig.dFactor100 = 20000;
+  posConfig.iAntiWindup = 50;
+  posConfig.maxSpeedPercent = 15;
+  posConfig.lastError = 0;
+  posConfig.integral = 0;
 #endif
 }

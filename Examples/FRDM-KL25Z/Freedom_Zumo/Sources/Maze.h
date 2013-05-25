@@ -8,6 +8,8 @@
 #ifndef MAZE_H_
 #define MAZE_H_
 
+#include "Platform.h"
+#if PL_HAS_LINE_SENSOR
 #include "Turn.h"
 #include "CLS1.h"
 
@@ -74,5 +76,7 @@ uint8_t MAZE_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
  * \brief Module initialization.
  */
 void MAZE_Init(void);
+
+#endif /* PL_HAS_LINE_SENSOR */
 
 #endif /* MAZE_H_ */

@@ -22,16 +22,18 @@
   #include "Buzzer.h"
 #endif
 
-#define LINE_DEBUG   1   /* careful: this will slow down the PID loop frequency! */
+#define LINE_DEBUG      1   /* careful: this will slow down the PID loop frequency! */
+#define LINE_FOLLOW_FW  1   /* test setting to do forward line following */
 
 typedef enum {
-  STATE_IDLE,
-  STATE_FOLLOW_SEGMENT,
+  STATE_IDLE,              /* idle, not doing anything */
+  STATE_FOLLOW_SEGMENT,    /* line following segment, going forward */
 #if PL_APP_MAZE_LINE_SOLVING
-  STATE_TURN,
-  STATE_FINISHED,
+  STATE_FOLLOW_SEGMENT_BW, /* line following segment, going backward */
+  STATE_TURN,              /* reached an intersection, turning around */
+  STATE_FINISHED,          /* reached finish area */
 #endif
-  STATE_STOP
+  STATE_STOP               /* stop the engines */
 } StateType;
 
 static volatile StateType LF_currState = STATE_IDLE;
@@ -48,7 +50,7 @@ void LF_StartFollowing(void) {
     LF_solvedIdx = 0;
   }
 #endif
-  PID_Init();
+  PID_Start();
   if (REF_CanUseSensor()) {
     LF_currState = STATE_FOLLOW_SEGMENT;
   } else {
@@ -72,7 +74,7 @@ static void ChangeState(StateType newState) {
  * \brief follows a line segment.
  * \return Returns TRUE if still on line segment
  */
-static bool FollowSegment(void) {
+static bool FollowSegment(bool forward) {
   uint16_t currLine;
   bool onLine;
   REF_LineKind currLineKind;
@@ -80,7 +82,7 @@ static bool FollowSegment(void) {
   currLine = REF_GetLineValue(&onLine);
   currLineKind = REF_GetLineKind();
   if (currLineKind==REF_LINE_STRAIGHT) {
-    PID_Line(currLine, REF_MIDDLE_LINE_VALUE); /* move forward on the line */
+    PID_Line(currLine, REF_MIDDLE_LINE_VALUE, forward); /* move along the line */
     return TRUE;
   } else {
     return FALSE; /* intersection/change of direction or not on line any more */
@@ -92,30 +94,47 @@ static bool FollowSegment(void) {
  * \brief Performs a turn.
  * \return Returns TRUE while turn is still in progress.
  */
-static uint8_t EvaluteTurn(bool *finished) {
+static uint8_t EvaluteTurn(bool *finished, bool *deadEndGoBw) {
   REF_LineKind historyLineKind, currLineKind;
   TURN_Kind turn;
   
   *finished = FALSE; /* defaults */
-  REF_ClearHistory(); /* clear values */
-  REF_SampleHistory(); /* store current values */
-  TURN_Turn(TURN_STEP_FW); /* make forward step */
-  historyLineKind = REF_HistoryLineKind(); /* new read new values */
+  *deadEndGoBw = FALSE; /* default */
   currLineKind = REF_GetLineKind();
-#if LINE_DEBUG
-  REF_DumpHistory();
-  CLS1_SendStr((unsigned char*)" history: ", CLS1_GetStdio()->stdOut);
-  CLS1_SendStr((unsigned char*)REF_LineKindStr(historyLineKind), CLS1_GetStdio()->stdOut);
-  CLS1_SendStr((unsigned char*)" curr: ", CLS1_GetStdio()->stdOut);
-  CLS1_SendStr((unsigned char*)REF_LineKindStr(currLineKind), CLS1_GetStdio()->stdOut);
-  CLS1_SendStr((unsigned char*)"\r\n", CLS1_GetStdio()->stdOut);
+  if (currLineKind==REF_LINE_NONE) { /* nothing, must be dead end */
+#if PL_GO_DEADEND_BW
+    TURN_Turn(TURN_STEP_BW); /* step back so we are again on the line for line following */
+    turn = TURN_STRAIGHT;
+    *deadEndGoBw = TRUE;
+#else
+    turn = TURN_LEFT180;
 #endif
-  turn = MAZE_SelectTurn(historyLineKind, currLineKind);
+  } else {
+    REF_ClearHistory(); /* clear values */
+    REF_SampleHistory(); /* store current values */
+    TURN_Turn(TURN_STEP_FW); /* make forward step */
+    historyLineKind = REF_HistoryLineKind(); /* new read new values */
+    currLineKind = REF_GetLineKind();
+  #if LINE_DEBUG
+    REF_DumpHistory();
+    CLS1_SendStr((unsigned char*)" history: ", CLS1_GetStdio()->stdOut);
+    CLS1_SendStr((unsigned char*)REF_LineKindStr(historyLineKind), CLS1_GetStdio()->stdOut);
+    CLS1_SendStr((unsigned char*)" curr: ", CLS1_GetStdio()->stdOut);
+    CLS1_SendStr((unsigned char*)REF_LineKindStr(currLineKind), CLS1_GetStdio()->stdOut);
+    CLS1_SendStr((unsigned char*)"\r\n", CLS1_GetStdio()->stdOut);
+  #endif
+    turn = MAZE_SelectTurn(historyLineKind, currLineKind);
+  }
   if (turn==TURN_FINISHED) {
     *finished = TRUE;
     ChangeState(STATE_STOP);
     CLS1_SendStr((unsigned char*)"finished!\r\n", CLS1_GetStdio()->stdOut);
     return ERR_OK;
+  } else if (turn==TURN_STRAIGHT && *deadEndGoBw) {
+    MAZE_AddPath(TURN_LEFT180); /* would have been a turn around */
+    MAZE_SimplifyPath();
+    CLS1_SendStr((unsigned char*)"going backward\r\n", CLS1_GetStdio()->stdOut);
+    return ERR_OK; 
   } else if (turn==TURN_STRAIGHT) {
     MAZE_AddPath(turn);
     MAZE_SimplifyPath();
@@ -137,14 +156,74 @@ static uint8_t EvaluteTurn(bool *finished) {
     return ERR_OK; /* turn finished */
   }
 }
+
+TURN_Kind MirrorTurn(TURN_Kind turn) {
+  switch(turn) {
+    case TURN_LEFT90: return TURN_RIGHT90;
+    case TURN_RIGHT90: return TURN_LEFT90;
+    case TURN_LEFT180: return TURN_STRAIGHT;
+    case TURN_RIGHT180: return TURN_STRAIGHT;
+    case TURN_STRAIGHT: return TURN_STRAIGHT;
+    case TURN_STEP_FW: return TURN_STEP_BW;
+    case TURN_STEP_BW: return TURN_STEP_FW;
+    
+    case TURN_STOP:
+    case TURN_FINISHED:
+    default:
+      return TURN_STOP;
+  }
+}
+#endif /* PL_APP_MAZE_LINE_SOLVING */
+
+#if PL_APP_MAZE_LINE_SOLVING
+/*!
+ * \brief Performs a turn while doing backward line following.
+ * \return Returns TRUE while turn is still in progress.
+ */
+static uint8_t EvaluateTurnBw(void) {
+  REF_LineKind historyLineKind, currLineKind;
+  TURN_Kind turn;
+  
+  REF_ClearHistory(); /* clear values */
+  REF_SampleHistory(); /* store current values */
+  TURN_Turn(TURN_STEP_BW_SMALL); /* make a small over intersection: reason is that sensor already is half over line */
+  historyLineKind = REF_HistoryLineKind(); /* new read new values */
+  currLineKind = REF_GetLineKind();
+#if LINE_DEBUG
+  REF_DumpHistory();
+  CLS1_SendStr((unsigned char*)" history: ", CLS1_GetStdio()->stdOut);
+  CLS1_SendStr((unsigned char*)REF_LineKindStr(historyLineKind), CLS1_GetStdio()->stdOut);
+  CLS1_SendStr((unsigned char*)" curr: ", CLS1_GetStdio()->stdOut);
+  CLS1_SendStr((unsigned char*)REF_LineKindStr(currLineKind), CLS1_GetStdio()->stdOut);
+  CLS1_SendStr((unsigned char*)"\r\n", CLS1_GetStdio()->stdOut);
 #endif
+  turn = MAZE_SelectTurnBw(historyLineKind, currLineKind);
+  if (turn==TURN_STOP) { /* should not happen here? */
+    ChangeState(STATE_STOP);
+    CLS1_SendStr((unsigned char*)"stopped\r\n", CLS1_GetStdio()->stdOut);
+    return ERR_FAILED; /* error case */
+  } else { /* turn or do something */
+#if LINE_DEBUG
+    CLS1_SendStr((unsigned char*)"bw turning ", CLS1_GetStdio()->stdOut);
+    CLS1_SendStr((unsigned char*)TURN_TurnKindStr(turn), CLS1_GetStdio()->stdOut);
+    CLS1_SendStr((unsigned char*)"\r\n", CLS1_GetStdio()->stdOut);
+#endif
+    TURN_Turn(TURN_STEP_FW); /* step over intersection */
+    TURN_Turn(TURN_STEP_FW); /* step past intersection */
+    TURN_Turn(turn); /* make turn */
+    MAZE_AddPath(MirrorTurn(turn));
+    MAZE_SimplifyPath();
+    return ERR_OK; /* turn finished */
+  }
+}
+#endif /* PL_APP_MAZE_LINE_SOLVING */
 
 static void StateMachine(void) {
   switch (LF_currState) {
     case STATE_IDLE:
       break;
     case STATE_FOLLOW_SEGMENT:
-      if (!FollowSegment()) {
+      if (!FollowSegment(LINE_FOLLOW_FW)) {
 #if PL_APP_MAZE_LINE_SOLVING
         LF_currState = STATE_TURN; /* make turn */
 #else
@@ -152,6 +231,18 @@ static void StateMachine(void) {
 #endif
       }
       break;
+#if PL_APP_MAZE_LINE_SOLVING
+    case STATE_FOLLOW_SEGMENT_BW:
+      if (!FollowSegment(FALSE)) {
+        TURN_Turn(TURN_STOP);
+        if (EvaluateTurnBw()==ERR_OK) {
+          LF_currState = STATE_FOLLOW_SEGMENT;
+        } else {
+          LF_currState = STATE_STOP;
+        }
+      }
+      break;
+#endif
 #if PL_APP_MAZE_LINE_SOLVING
     case STATE_TURN:
       if (MAZE_IsSolved()) {
@@ -167,9 +258,9 @@ static void StateMachine(void) {
           LF_currState = STATE_FOLLOW_SEGMENT;
         }
       } else { /* still evaluating maze */
-        bool finished=FALSE;
+        bool deadEndGoBw = FALSE;
         
-        if (EvaluteTurn(&finished)==ERR_OK) { /* finished turning */
+        if (EvaluteTurn(&finished, &deadEndGoBw)==ERR_OK) { /* finished turning */
           if (finished) {
             LF_currState = STATE_FINISHED;
             MAZE_SetSolved();
@@ -179,6 +270,8 @@ static void StateMachine(void) {
 #endif
             TURN_Turn(TURN_STOP);
             /* now ready to do line following */
+          } else if (deadEndGoBw) {
+            LF_currState = STATE_FOLLOW_SEGMENT_BW;
           } else {
             LF_currState = STATE_FOLLOW_SEGMENT;
           }
@@ -204,8 +297,7 @@ static void StateMachine(void) {
       break;
 #endif
     case STATE_STOP:
-      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 0);
-      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 0);
+      TURN_Turn(TURN_STOP);
       LF_currState = STATE_IDLE;
       break;
   } /* switch */
@@ -222,9 +314,9 @@ static portTASK_FUNCTION(LineTask, pvParameters) {
       ChangeState(STATE_STOP);
       LF_stopIt = FALSE;
     }
+    StateMachine();
     if (LF_IsFollowing()) {
-      StateMachine();
-      FRTOS1_vTaskDelay(20/portTICK_RATE_MS);
+      FRTOS1_vTaskDelay(5/portTICK_RATE_MS);
     } else {
       FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
     }
@@ -283,6 +375,7 @@ uint8_t LF_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdI
 }
 
 void LF_Init(void) {
+  PID_Init();
   LF_currState = STATE_IDLE;
   if (FRTOS1_xTaskCreate(LineTask, (signed portCHAR *)"Line", configMINIMAL_STACK_SIZE+100, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
     for(;;){} /* error */

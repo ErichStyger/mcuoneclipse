@@ -19,9 +19,9 @@
 #endif
 
 #if PL_IS_ZUMO_ROBOT
-  #define TURN_90_WAIT_TIME_MS       550 
+  #define TURN_90_WAIT_TIME_MS        550 
     /*!< ms to wait for a 90 degree turn */
-  #define TURN_STEP_MS                150
+  #define TURN_STEP_MS                170
     /*!< ms to do one step forward */
   #define TURN_MOTOR_DUTY_PERCENT      40
     /*!< maximum motor duty for turn operation */
@@ -48,7 +48,7 @@
 #endif
 
 #if PL_IS_ZUMO_ROBOT
-  #define TURN_WAIT_AFTER_STEP_MS  0  /* wait this time after a step to have the motor PWM effective */
+  #define TURN_WAIT_AFTER_STEP_MS  0   /* wait this time after a step to have the motor PWM effective */
   #define TURN_STOP_AFTER_TURN     0   /* 1 to stop after a turn */
 #elif PL_IS_ROUND_ROBOT
   #define TURN_WAIT_AFTER_STEP_MS  50  /* wait this time after a step to have the motor PWM effective */
@@ -214,6 +214,22 @@ void TURN_Turn(TURN_Kind kind) {
 #endif
 #endif
       break;
+    case TURN_STEP_BW_SMALL:
+#if PL_HAS_QUADRATURE
+      TURN_TurnSteps(-TURN_StepsFwBw/2, -TURN_StepsFwBw/2);
+#else
+      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), -TURN_DutyPercent);
+      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), -TURN_DutyPercent);
+      WAIT1_WaitOSms(TURN_StepFwBwMs/2);
+#endif
+#if TURN_STOP_AFTER_TURN
+      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 0);
+      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 0);
+#if TURN_WAIT_AFTER_STEP_MS > 0
+      WAIT1_WaitOSms(TURN_WAIT_AFTER_STEP_MS);
+#endif
+#endif
+      break;
     case TURN_STOP:
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 0);
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 0);
@@ -274,11 +290,11 @@ static void TURN_PrintStatus(const CLS1_StdIOType *io) {
 
   UTIL1_Num16uToStr(buf, sizeof(buf), TURN_Time90ms);
   UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" ms\r\n");
-  CLS1_SendStatusStr((unsigned char*)"  steps90", buf, io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  time90", buf, io->stdOut);
 
   UTIL1_Num16uToStr(buf, sizeof(buf), TURN_StepFwBwMs);
   UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" ms\r\n");
-  CLS1_SendStatusStr((unsigned char*)"  stepsfw", buf, io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  timefw", buf, io->stdOut);
 #endif
 }
 

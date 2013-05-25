@@ -20,4 +20,5 @@ bool LF_IsFollowing(void);
 
 void LF_Init(void);
 #endif /* PL_HAS_LINE_SENSOR */
+
 #endif /* LINEFOLLOW_H_ */

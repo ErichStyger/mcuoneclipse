@@ -26,6 +26,7 @@ static PID_Config lineBwConfig;
 static PID_Config posConfig;
 #endif
 
+#if PL_HAS_LINE_SENSOR
 static int32_t Limit(int32_t val, int32_t minVal, int32_t maxVal) {
   if (val<minVal) {
     return minVal;
@@ -34,7 +35,9 @@ static int32_t Limit(int32_t val, int32_t minVal, int32_t maxVal) {
   }
   return val;
 }
+#endif
 
+#if PL_HAS_LINE_SENSOR
 static MOT_Direction AbsSpeed(int32_t *speedP) {
   if (*speedP<0) {
     *speedP = -(*speedP);
@@ -42,7 +45,9 @@ static MOT_Direction AbsSpeed(int32_t *speedP) {
   }
   return MOT_DIR_FORWARD;
 }
+#endif 
 
+#if PL_HAS_LINE_SENSOR
 /*! \brief returns error (always positive) percent */
 static uint8_t errorWithinPercent(int32_t error) {
   if (error<0) {
@@ -56,7 +61,7 @@ static int32_t PID(uint16_t currVal, uint16_t setVal, PID_Config *config) {
   int32_t pid;
   
   /* perform PID closed control loop calculation */
-  error = currVal-setVal; /* calculate error */
+  error = setVal-currVal; /* calculate error */
   pid = (error*config->pFactor100)/100; /* P part */
   config->integral += error; /* integrate error */
   if (config->integral>config->iAntiWindup) {
@@ -202,13 +207,19 @@ void PID_LineCfg(uint16_t currLine, uint16_t setLine, bool forward, PID_Config *
   }
 #endif
 }
+#endif /* PL_HAS_LINE_SENSOR */
 
 void PID_Line(uint16_t currLine, uint16_t setLine, bool forward) {
+#if PL_GO_DEADEND_BW
   if (forward) {
     PID_LineCfg(currLine, setLine, forward, &lineFwConfig);
   } else {
     PID_LineCfg(currLine, setLine, forward, &lineBwConfig);
   }
+#else
+  (void)forward; /* not used */
+  PID_LineCfg(currLine, setLine, forward, &lineFwConfig);
+#endif
 }
 
 #if PL_HAS_QUADRATURE
@@ -406,7 +417,7 @@ void PID_Init(void) {
   lineFwConfig.maxSpeedPercent = 50;
   lineFwConfig.lastError = 0;
   lineFwConfig.integral = 0;
-#else
+#elif PL_IS_ROUND_ROBOT
   lineFwConfig.pFactor100 = 200;
   lineFwConfig.iFactor100 = 1;
   lineFwConfig.dFactor100 = 50000;
@@ -414,6 +425,16 @@ void PID_Init(void) {
   lineFwConfig.maxSpeedPercent = 15;
   lineFwConfig.lastError = 0;
   lineFwConfig.integral = 0;
+#elif PL_IS_TRACK_ROBOT
+  lineFwConfig.pFactor100 = 400;
+  lineFwConfig.iFactor100 = 1;
+  lineFwConfig.dFactor100 = 50000;
+  lineFwConfig.iAntiWindup = 20000;
+  lineFwConfig.maxSpeedPercent = 17;
+  lineFwConfig.lastError = 0;
+  lineFwConfig.integral = 0;
+#else
+  #error "unknown configuration!"
 #endif
 #if PL_GO_DEADEND_BW
   lineBwConfig.pFactor100 = 1000;

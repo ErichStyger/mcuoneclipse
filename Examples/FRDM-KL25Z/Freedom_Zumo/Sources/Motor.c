@@ -10,11 +10,15 @@
 #include "PWMR.h"
 #include "PWML.h"
 #if PL_HAS_MOTOR_BRAKE
-#include "BrakeL.h"
-#include "BrakeR.h"
+  #include "BrakeL.h"
+  #include "BrakeR.h"
 #endif
 #if PL_HAS_MOTOR_CURRENT_SENSE
-#include "SNS0.h"
+  #include "SNS0.h"
+#endif
+#if PL_HAS_MOTOR_INAB
+  #include "DIRRB.h"
+  #include "DIRLB.h"
 #endif
 
 static MOT_MotorDevice motorL, motorR;
@@ -98,10 +102,16 @@ static uint8_t PWMRSetRatio16(uint16_t ratio) {
 
 static void DirLPutVal(bool val) {
   DIRL_PutVal(val);
+#if PL_HAS_MOTOR_INAB
+  DIRLB_PutVal(!val);
+#endif
 }
 
 static void DirRPutVal(bool val) {
   DIRR_PutVal(val);
+#if PL_HAS_MOTOR_INAB
+  DIRRB_PutVal(!val);
+#endif
 }
 
 #if PL_HAS_MOTOR_BRAKE
@@ -146,6 +156,9 @@ void MOT_SetSpeedPercent(MOT_MotorDevice *motor, MOT_SpeedPercent percent) {
     percent = -percent;
   } else {
     MOT_SetDirection(motor, MOT_DIR_FORWARD);
+  }
+  if (percent>100) { /* make sure we are within 0..100 */
+    percent = 100;
   }
   val = ((100-percent)*0xffff)/100;
   MOT_SetVal(motor, (uint16_t)val);

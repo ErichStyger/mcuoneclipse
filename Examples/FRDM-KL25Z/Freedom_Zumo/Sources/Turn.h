@@ -8,6 +8,9 @@
 #ifndef TURN_H_
 #define TURN_H_
 
+#include "Platform.h"
+#if PL_HAS_LINE_SENSOR
+
 #include "CLS1.h"
 #include "Reflectance.h"
 
@@ -48,5 +51,6 @@ uint8_t TURN_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
  * \brief Initializes the module.
  */
 void TURN_Init(void);
+#endif /* PL_HAS_LINE_SENSOR */
 
 #endif /* TURN_H_ */

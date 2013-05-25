@@ -5,6 +5,7 @@
  *      Author: Erich Styger
  */
 #include "Platform.h"
+#if PL_HAS_LINE_SENSOR
 #include "Turn.h"
 #include "WAIT1.h"
 #include "Motor.h"
@@ -18,16 +19,23 @@
 #endif
 
 #if PL_IS_ZUMO_ROBOT
-  #define TURN_90_WAIT_TIME_MS       550 
+  #define TURN_90_WAIT_TIME_MS        550 
     /*!< ms to wait for a 90 degree turn */
   #define TURN_STEP_MS                170
     /*!< ms to do one step forward */
   #define TURN_MOTOR_DUTY_PERCENT      40
     /*!< maximum motor duty for turn operation */
-#else
+#elif PL_IS_ROUND_ROBOT
   #define TURN_90_WAIT_TIME_MS        250 
     /*!< ms to wait for a 90 degree turn */
   #define TURN_STEP_MS                100 
+    /*!< ms to do one step forward */
+  #define TURN_MOTOR_DUTY_PERCENT      20
+    /*!< maximum motor duty for turn operation */
+#elif PL_IS_TRACK_ROBOT
+  #define TURN_90_WAIT_TIME_MS        1050 
+    /*!< ms to wait for a 90 degree turn */
+  #define TURN_STEP_MS                330 
     /*!< ms to do one step forward */
   #define TURN_MOTOR_DUTY_PERCENT      20
     /*!< maximum motor duty for turn operation */
@@ -40,9 +48,12 @@
 #endif
 
 #if PL_IS_ZUMO_ROBOT
-  #define TURN_WAIT_AFTER_STEP_MS  0   /* wait this time after a step to have the motor PWM effective, 0 for now wait */
+  #define TURN_WAIT_AFTER_STEP_MS  0   /* wait this time after a step to have the motor PWM effective */
   #define TURN_STOP_AFTER_TURN     0   /* 1 to stop after a turn */
-#else
+#elif PL_IS_ROUND_ROBOT
+  #define TURN_WAIT_AFTER_STEP_MS  50  /* wait this time after a step to have the motor PWM effective */
+  #define TURN_STOP_AFTER_TURN     1   /* 1 to stop after a turn */
+#elif PL_IS_TRACK_ROBOT
   #define TURN_WAIT_AFTER_STEP_MS  50  /* wait this time after a step to have the motor PWM effective */
   #define TURN_STOP_AFTER_TURN     1   /* 1 to stop after a turn */
 #endif
@@ -314,11 +325,15 @@ uint8_t TURN_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
     TURN_Turn(TURN_STOP);
     *handled = TRUE;
   } else if (UTIL1_strcmp((char*)cmd, (char*)"turn forward")==0) {
+#if PL_APP_MAZE_LINE_SOLVING
     REF_ClearHistory(); /* clear values */
+#endif
     TURN_Turn(TURN_STEP_FW);
     TURN_Turn(TURN_STOP);
+#if PL_APP_MAZE_LINE_SOLVING
     CLS1_SendStr((unsigned char*)REF_LineKindStr(REF_HistoryLineKind()), CLS1_GetStdio()->stdOut);
     CLS1_SendStr((unsigned char*)"\r\n", CLS1_GetStdio()->stdOut);
+#endif
     *handled = TRUE;
   } else if (UTIL1_strcmp((char*)cmd, (char*)"turn backward")==0) {
     TURN_Turn(TURN_STEP_BW);
@@ -386,3 +401,4 @@ void TURN_Init(void) {
   TURN_StepFwBwMs = TURN_STEP_MS;
 #endif
 }
+#endif /* PL_HAS_LINE_SENSOR */

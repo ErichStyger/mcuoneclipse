@@ -22,6 +22,7 @@ typedef enum {
   TURN_STRAIGHT, /* don't turn */
   TURN_STEP_FW, /* make a step forward and stop */
   TURN_STEP_BW, /* make a step backward and stop */
+  TURN_STEP_BW_SMALL, /* make a small step backward and stop */
   TURN_FINISHED, /* stepped into finish! */
   TURN_STOP     /* stop */
 } TURN_Kind;

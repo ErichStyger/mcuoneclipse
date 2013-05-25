@@ -19,6 +19,7 @@
 #define PL_HAS_MOTOR_CURRENT_SENSE    0  /* if we have motor current sensing functionality */
 #define PL_HAS_MOTOR_INAB             PL_IS_TRACK_ROBOT  /* if we have INa and INb (VNH5019) */
 #define PL_HAS_BUZZER                 PL_IS_ZUMO_ROBOT   /* if we have a buzzer */
+#define PL_HAS_TRIGGER                PL_HAS_BUZZER      /* trigger needed for buzzer */
 #define PL_HAS_MAGNETOMETER           PL_IS_ZUMO_ROBOT   /* if we have a magnetometer */
 #define PL_HAS_BLUETOOTH              PL_IS_ROUND_ROBOT  /* if we have a Bluetooth module */
 #define PL_HAS_ULTRASONIC             PL_IS_TRACK_ROBOT  /* if we have a Ultrasonic ranging module */
@@ -27,6 +28,7 @@
 #define PL_HAS_LINE_SENSOR            (PL_IS_TRACK_ROBOT || PL_IS_ZUMO_ROBOT || PL_IS_ROUND_ROBOT) /* if we have line sensors */
 #define PL_TURN_ON_FINISH             (PL_IS_ZUMO_ROBOT && PL_HAS_LINE_SENSOR)  /* if we turn around on the finish area */
 #define PL_HAS_USER_BUTTON            (PL_IS_ZUMO_ROBOT || PL_IS_ROUND_ROBOT || PL_IS_TRACK_ROBOT) /* if we have a user push button */
+#define PL_GO_DEADEND_BW              (1 && PL_IS_ZUMO_ROBOT)
 
 #define PL_APP_ACCEL_CONTROL         (1 && PL_HAS_RADIO)      /* if we use a remote accelerometer as remote controller */
 #define PL_APP_LINE_FOLLOWING        (0 && PL_HAS_LINE_SENSOR)/* simple line following */
@@ -36,11 +38,11 @@
 #define PL_HAS_EVENTS                 (1 && PL_HAS_RADIO)
 #define PL_HAS_RADIO                  (1 && PL_IS_TRACK_ROBOT)
 #define PL_HAS_LED                    0 /* if we use the INTRO LED driver */
-#define PL_HAS_REMOTE                 1 /* if we have remote (IEEE802.15.4) support */
+#define PL_HAS_REMOTE                 (1 && PL_HAS_RADIO) /* if we have remote (IEEE802.15.4) support */
 #define PL_HAS_ACCEL                  0 /* if we support the accelerometer */
 #define PL_HAS_MOTOR                  1 /* if we have a motor */
 #define PL_IS_ROBOT                   1 /* if we are a robot */
-#define PL_HAS_QUEUE                  1 /* if we use a queue for shell messages from other tasks */
+#define PL_HAS_QUEUE                  (1 && PL_HAS_RADIO) /* if we use a queue for shell messages from other tasks */
 #define PL_HAS_RTOS_TRACE             0
 #define PL_HAS_RTOS                   1
 

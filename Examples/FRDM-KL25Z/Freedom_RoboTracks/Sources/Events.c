@@ -43,6 +43,10 @@ extern "C" {
 #if PL_HAS_ULTRASONIC
   #include "Ultrasonic.h"
 #endif
+#if PL_HAS_TRIGGER
+  #include "TRG1.h"
+#endif
+
 /*
 ** ===================================================================
 **     Event       :  Cpu_OnNMIINT (module Events)
@@ -103,7 +107,15 @@ void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *
 */
 void FRTOS1_vApplicationTickHook(void)
 {
-  TMOUT1_AddTick();/* Called for every RTOS tick. */
+  /* Called for every RTOS tick. */
+  TMOUT1_AddTick();
+#if PL_HAS_TRIGGER
+  TRG1_AddTick();
+#endif
+#if PL_HAS_QUADRATURE
+  Q4CLeft_Sample();
+  Q4CRight_Sample();
+#endif
 }
 
 /*

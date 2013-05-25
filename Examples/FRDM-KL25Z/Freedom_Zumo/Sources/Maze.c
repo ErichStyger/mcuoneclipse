@@ -5,6 +5,7 @@
  *      Author: Erich Styger
  */
 #include "Platform.h"
+#if PL_APP_MAZE_LINE_SOLVING
 #include "Maze.h"
 #include "Turn.h"
 #include "CLS1.h"
@@ -224,3 +225,4 @@ void MAZE_ClearSolution(void) {
 void MAZE_Init(void) {
   MAZE_ClearSolution();
 }
+#endif /* PL_HAS_LINE_SENSOR */
