@@ -31,8 +31,8 @@
 #define PL_GO_DEADEND_BW              (0 && PL_IS_ZUMO_ROBOT)
 
 #define PL_APP_ACCEL_CONTROL         (1 && PL_HAS_RADIO)      /* if we use a remote accelerometer as remote controller */
-#define PL_APP_LINE_FOLLOWING        (0 && PL_HAS_LINE_SENSOR)/* simple line following */
-#define PL_APP_LINE_MAZE             (1 && PL_HAS_LINE_SENSOR) /* maze line solving */
+#define PL_APP_LINE_FOLLOWING        (1 && PL_HAS_LINE_SENSOR)/* simple line following */
+#define PL_APP_LINE_MAZE             (0 && PL_HAS_LINE_SENSOR) /* maze line solving */
 #define PL_APP_FOLLOW_OBSTACLE       (0 && PL_HAS_ULTRASONIC) /* obstacle following mode */
 
 #define PL_HAS_EVENTS                 (1 && PL_HAS_RADIO)
