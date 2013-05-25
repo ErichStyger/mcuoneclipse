@@ -575,7 +575,7 @@ void %OnLeaveRadioSPI(void);
 #endif
 
 #ifndef IRQINIT
-  #define IRQINIT()       /* assumint it is configured in the IRQ properties or by user macro for falling edge */
+  #define IRQINIT()       %>%CTAB /* assume it is configured in the IRQ properties or by user macro for falling edge */
 #endif
 
 #define SPI_GET_DEVICE() \
@@ -1019,13 +1019,14 @@ byte %'ModuleName'%.%ReadRx(tRxPacket *psRxPkt)
 %-BW_METHOD_END ReadRx
 %-************************************************************************************************************
 %-INTERNAL_METHOD_BEG Init
+
 static void ResetTransceiver(void) {
   IRQINIT();                                                     %>%CTAB /* IRQ must be configured to trigger on low level or falling edge, with pull up enabled */
   %@IRQ@'ModuleName'%.Disable();   %>%CTAB /* Disable Transceiver interrupt for the sequence below. */
-  %@CE@'ModuleName'%.SetVal();    %>%CTAB /* Disables Transceiver SPI */
+  %@CE@'ModuleName'%.SetVal();     %>%CTAB /* Disables Transceiver SPI */
   %@ATTN@'ModuleName'%.SetVal();
   %@RTXEN@'ModuleName'%.ClrVal();
-  %@RESET@'ModuleName'%.ClrVal(); %>%CTAB /* Do not initially reset Transceiver */
+  %@RESET@'ModuleName'%.ClrVal();  %>%CTAB /* Do not initially reset Transceiver */
 %-  #if defined (ANTENNA_SWITCH)
 %-    MC13192_ANT_CTRL2_PORT = 1;   %>%CTAB /* Output for antenna port RX */
 %-    MC13192_ANT_CTRL_PORT = 1;    %>%CTAB /* Output for antenna port TX */
@@ -1062,7 +1063,7 @@ void %'ModuleName'%.Init(void)
 %-  %'ModuleName'%.gu8RTxMode = %'ModuleName'%.SYSTEM_RESET_MODE;
   cntr = 0;
   ResetTransceiver();
-  while (u8AttnIrq == FALSE) {
+  for(;;) { /* will break */
     if (%@IRQ@'ModuleName'%.GetVal()==0) {           %>%CTAB /* Check to see if IRQ is asserted */
       u16IrqReg = %'ModuleName'%.%Read(%'ModuleName'%.STATUS_ADDR);  %>%CTAB /* Clear Transceiver interrupts and check for ATTN IRQ from 13192 */
       u16IrqReg &= 0x400;
@@ -1072,13 +1073,16 @@ void %'ModuleName'%.Init(void)
         u8AttnIrq = TRUE;
       }
     }
+    if (u8AttnIrq==TRUE) {
+      break; /* break for loop */
+    }
     %@Wait@'ModuleName'%.Waitms(1);
     cntr++;
     if (cntr==50) { /* did take too long: restart reset sequence */
       ResetTransceiver();
       cntr = 0;
     }
-  }
+  } /* for */
   IRQACK();                       %>%CTAB /* ACK the pending IRQ interrupt */
   %@IRQ@'ModuleName'%.Enable();   %>%CTAB /* Pin Enable, IE, IRQ CLR, negative edge. */
 %if defined(OnCLKO)
