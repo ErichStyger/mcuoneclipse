@@ -23,7 +23,7 @@
 typedef enum {
   REF_LINE_NONE=0,     /* no line, sensors do not see a line */
   REF_LINE_STRAIGHT=1, /* forward line |, sensors see a line underneath */
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
   REF_LINE_LEFT=2,     /* left half of sensors see line */
   REF_LINE_RIGHT=3,    /* right half of sensors see line */
 #endif

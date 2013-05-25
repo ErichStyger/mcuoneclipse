@@ -28,7 +28,7 @@
 typedef enum {
   STATE_IDLE,              /* idle, not doing anything */
   STATE_FOLLOW_SEGMENT,    /* line following segment, going forward */
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
   STATE_FOLLOW_SEGMENT_BW, /* line following segment, going backward */
   STATE_TURN,              /* reached an intersection, turning around */
   STATE_FINISHED,          /* reached finish area */
@@ -38,12 +38,12 @@ typedef enum {
 
 static volatile StateType LF_currState = STATE_IDLE;
 static volatile bool LF_stopIt = FALSE;
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
 static uint8_t LF_solvedIdx = 0; /*  index to iterate through the solution */
 #endif
 
 void LF_StartFollowing(void) {
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
   if (!MAZE_IsSolved()) {
     MAZE_Init();
   } else {
@@ -89,7 +89,7 @@ static bool FollowSegment(bool forward) {
   }
 }
 
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
 /*!
  * \brief Performs a turn.
  * \return Returns TRUE while turn is still in progress.
@@ -173,9 +173,9 @@ TURN_Kind MirrorTurn(TURN_Kind turn) {
       return TURN_STOP;
   }
 }
-#endif /* PL_APP_MAZE_LINE_SOLVING */
+#endif /* PL_APP_LINE_MAZE */
 
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
 /*!
  * \brief Performs a turn while doing backward line following.
  * \return Returns TRUE while turn is still in progress.
@@ -216,7 +216,7 @@ static uint8_t EvaluateTurnBw(void) {
     return ERR_OK; /* turn finished */
   }
 }
-#endif /* PL_APP_MAZE_LINE_SOLVING */
+#endif /* PL_APP_LINE_MAZE */
 
 static void StateMachine(void) {
   switch (LF_currState) {
@@ -224,14 +224,14 @@ static void StateMachine(void) {
       break;
     case STATE_FOLLOW_SEGMENT:
       if (!FollowSegment(LINE_FOLLOW_FW)) {
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
         LF_currState = STATE_TURN; /* make turn */
 #else
         LF_currState = STATE_STOP; /* stop if we do not have a line any more */
 #endif
       }
       break;
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
     case STATE_FOLLOW_SEGMENT_BW:
       if (!FollowSegment(FALSE)) {
         TURN_Turn(TURN_STOP);
@@ -243,7 +243,7 @@ static void StateMachine(void) {
       }
       break;
 #endif
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
     case STATE_TURN:
       if (MAZE_IsSolved()) {
         TURN_Kind turn;
@@ -259,6 +259,7 @@ static void StateMachine(void) {
         }
       } else { /* still evaluating maze */
         bool deadEndGoBw = FALSE;
+        bool finished = FALSE;
         
         if (EvaluteTurn(&finished, &deadEndGoBw)==ERR_OK) { /* finished turning */
           if (finished) {
@@ -281,7 +282,7 @@ static void StateMachine(void) {
       }
       break;
 #endif
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
     case STATE_FINISHED:
 #if PL_HAS_BUZZER
       {
@@ -341,7 +342,7 @@ static void LF_PrintStatus(const CLS1_StdIOType *io) {
     case STATE_STOP: 
       CLS1_SendStatusStr((unsigned char*)"  state", (unsigned char*)"STOP\r\n", io->stdOut);
       break;
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
     case STATE_TURN: 
       CLS1_SendStatusStr((unsigned char*)"  state", (unsigned char*)"TURN\r\n", io->stdOut);
       break;

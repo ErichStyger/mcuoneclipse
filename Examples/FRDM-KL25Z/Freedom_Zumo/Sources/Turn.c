@@ -325,12 +325,12 @@ uint8_t TURN_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
     TURN_Turn(TURN_STOP);
     *handled = TRUE;
   } else if (UTIL1_strcmp((char*)cmd, (char*)"turn forward")==0) {
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
     REF_ClearHistory(); /* clear values */
 #endif
     TURN_Turn(TURN_STEP_FW);
     TURN_Turn(TURN_STOP);
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
     CLS1_SendStr((unsigned char*)REF_LineKindStr(REF_HistoryLineKind()), CLS1_GetStdio()->stdOut);
     CLS1_SendStr((unsigned char*)"\r\n", CLS1_GetStdio()->stdOut);
 #endif

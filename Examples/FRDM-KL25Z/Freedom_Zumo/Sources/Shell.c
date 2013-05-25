@@ -130,7 +130,7 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
   LF_ParseCommand,
   TURN_ParseCommand,
 #endif
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
   MAZE_ParseCommand,
 #endif
 #if PL_HAS_REMOTE

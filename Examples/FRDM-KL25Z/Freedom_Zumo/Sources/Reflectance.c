@@ -65,7 +65,7 @@ static SensorTimeType SensorRaw[REF_NOF_SENSORS];
 static SensorTimeType SensorMin[REF_NOF_SENSORS]; 
 static SensorTimeType SensorMax[REF_NOF_SENSORS]; 
 static SensorTimeType SensorCalibrated[REF_NOF_SENSORS]; /* 0 means white/min value, 1000 means black/max value */
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
 static SensorTimeType SensorHistory[REF_NOF_SENSORS];
 #endif
 static bool isCalibrated = FALSE;
@@ -298,7 +298,7 @@ unsigned char *REF_LineKindStr(REF_LineKind line) {
     return (unsigned char *)"NONE";
   case REF_LINE_STRAIGHT:
     return (unsigned char *)"STRAIGHT";
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
   case REF_LINE_LEFT:
     return (unsigned char *)"LEFT";
   case REF_LINE_RIGHT:
@@ -366,13 +366,13 @@ static REF_LineKind ReadLineKind(SensorTimeType val[REF_NOF_SENSORS]) {
   #define MIN_LEFT_RIGHT_SUM   ((REF_NOF_SENSORS*1000)/3) /* third of the sensors */
   
   if (sumLeft>=MIN_LEFT_RIGHT_SUM && sumRight<MIN_LEFT_RIGHT_SUM) {
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
     return REF_LINE_LEFT;
 #else
     return REF_LINE_STRAIGHT;
 #endif
   } else if (sumRight>=MIN_LEFT_RIGHT_SUM && sumLeft<MIN_LEFT_RIGHT_SUM) {
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
     return REF_LINE_RIGHT;
 #else
     return REF_LINE_STRAIGHT;
@@ -386,7 +386,7 @@ static REF_LineKind ReadLineKind(SensorTimeType val[REF_NOF_SENSORS]) {
   }
 }
 
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
 static uint16_t REF_nofHistory = 0;
 
 static void StoreHistory(SensorTimeType val[REF_NOF_SENSORS]) {
@@ -458,7 +458,7 @@ void REF_ClearHistory(void) {
 
 void REF_Measure(void) {
   ReadCalibrated(SensorCalibrated, SensorRaw);
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
   REF_SampleHistory();
 #endif
   refCenterLineVal = ReadLine(SensorCalibrated, SensorRaw, FALSE);
@@ -470,7 +470,7 @@ void REF_Measure(void) {
 void REF_InitSensorValues(void) {
   int i;
   
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
   REF_ClearHistory();
 #endif
   for(i=0;i<REF_NOF_SENSORS;i++) {
@@ -600,7 +600,7 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   CLS1_SendStr(buf, io->stdOut);
   CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
 
-#if PL_APP_MAZE_LINE_SOLVING
+#if PL_APP_LINE_MAZE
 #if REF_SENSOR1_IS_LEFT
   for (i=0;i<REF_NOF_SENSORS;i++) {
     if (i==0) {
