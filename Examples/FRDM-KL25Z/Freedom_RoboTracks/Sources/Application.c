@@ -34,6 +34,7 @@
 #if PL_HAS_REMOTE
   #include "Remote.h"
 #endif
+#include "MyQueue.h"
 
 typedef enum {
   APP_STATE_INIT,
@@ -177,9 +178,11 @@ static void CheckButton(void) {
         CLS1_SendStr((unsigned char*)"auto calibrate.\r\n", CLS1_GetStdio()->stdOut);
         APP_StateStartCalibrate(); /* 2-3 s: start auto calibration */
         autoCalibrate = TRUE;
+#if PL_APP_MAZE_LINE_SOLVING
       } else if (timeTicks>=(3000/BUTTON_CNT_MS)) {
         CLS1_SendStr((unsigned char*)"delete solution.\r\n", CLS1_GetStdio()->stdOut);
         MAZE_ClearSolution();
+#endif
       } 
 #endif
       while (SW1_GetVal()==0) { /* wait until button is released */
@@ -222,7 +225,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
     LEDB_Neg();
 #endif
 #if PL_HAS_RADIO
-    RADIO_Handle();
+    (void)RADIO_Handle();
 #endif
 #if PL_HAS_EVENTS
     EVNT_HandleEvent(RADIO_AppHandleEvent);
@@ -258,6 +261,7 @@ void APP_Run(void) {
 #if PL_HAS_REMOTE
   REMOTE_Init();
 #endif
+  QUEUE_Init();
   if (FRTOS1_xTaskCreate(MainTask, (signed portCHAR *)"Main", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }

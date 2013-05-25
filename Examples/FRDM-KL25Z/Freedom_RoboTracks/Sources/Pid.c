@@ -21,11 +21,13 @@
   static int32_t iLineAntiWindup = 20000;
   static uint8_t maxLineSpeedPercent = 15; /* max speed if 100% on the line, 0xffff would be full speed */
 #elif PL_IS_TRACK_ROBOT
-  static int32_t pLineFactor100 = 200;
+  static int32_t pLineFactor100 = 400;
   static int32_t iLineFactor100 = 1;
   static int32_t dLineFactor100 = 50000;
   static int32_t iLineAntiWindup = 20000;
-  static uint8_t maxLineSpeedPercent = 20; /* max speed if 100% on the line, 0xffff would be full speed */
+  static uint8_t maxLineSpeedPercent = 17; /* max speed if 100% on the line, 0xffff would be full speed */
+#else
+  #error "unknown configuration!"
 #endif
 #if PL_HAS_LINE_SENSOR
 static int32_t lastLineError=0, integralLine=0;
@@ -81,7 +83,7 @@ void PID_Line(uint16_t currLine, uint16_t setLine) {
   MOT_Direction directionL=MOT_DIR_FORWARD, directionR=MOT_DIR_FORWARD;
   
   /* perform PID closed control loop calculation */
-  error = currLine-setLine; /* calculate error */
+  error = setLine-currLine; /* calculate error */
   errorPercent = errorWithinPercent(error);
   pid = (error*pLineFactor100)/100; /* P part */
   integralLine += error; /* integrate error */

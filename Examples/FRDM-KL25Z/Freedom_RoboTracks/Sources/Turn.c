@@ -33,9 +33,9 @@
   #define TURN_MOTOR_DUTY_PERCENT      20
     /*!< maximum motor duty for turn operation */
 #elif PL_IS_TRACK_ROBOT
-  #define TURN_90_WAIT_TIME_MS        1350 
+  #define TURN_90_WAIT_TIME_MS        1050 
     /*!< ms to wait for a 90 degree turn */
-  #define TURN_STEP_MS                350 
+  #define TURN_STEP_MS                330 
     /*!< ms to do one step forward */
   #define TURN_MOTOR_DUTY_PERCENT      20
     /*!< maximum motor duty for turn operation */
@@ -309,11 +309,15 @@ uint8_t TURN_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
     TURN_Turn(TURN_STOP);
     *handled = TRUE;
   } else if (UTIL1_strcmp((char*)cmd, (char*)"turn forward")==0) {
+#if PL_APP_MAZE_LINE_SOLVING
     REF_ClearHistory(); /* clear values */
+#endif
     TURN_Turn(TURN_STEP_FW);
     TURN_Turn(TURN_STOP);
+#if PL_APP_MAZE_LINE_SOLVING
     CLS1_SendStr((unsigned char*)REF_LineKindStr(REF_HistoryLineKind()), CLS1_GetStdio()->stdOut);
     CLS1_SendStr((unsigned char*)"\r\n", CLS1_GetStdio()->stdOut);
+#endif
     *handled = TRUE;
   } else if (UTIL1_strcmp((char*)cmd, (char*)"turn backward")==0) {
     TURN_Turn(TURN_STEP_BW);

@@ -42,20 +42,17 @@ uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_S
 void RADIO_AppHandleEvent(EVNT_Handle event);
 
 /*! \brief Handler to deal with the Radio state machine. Needs to be called periodically to advance the state machine */
-void RADIO_Handle(void);
+uint8_t RADIO_Handle(void);
 
-/*!
- * \brief Sends a data packet trough the Radio
- * \param[in] data Data to be sent (binary), zero terminated
- * \return ERR_OK if everything is ok, ERR_DISABLED if radio is disbled, ERR_BUSY if we cannot send data.
-*/
-uint8_t RADIO_SendString(const unsigned char *data);
 
+#define RADIO_PREFIX_STR  "EST"      /* prefix used for every message */
+#define RADIO_MAX_TX_DATA_SIZE   (SMAC1_RADIO_BUF_SIZE-sizeof(RADIO_PREFIX_STR)+1)
 /*! 
  * \brief Sends a data packet trough the Radio
  * \param[in] data Data to be sent (binary)
+ * \return ERR_OK or error code.
 */
-void RADIO_SendData(const uint8_t *data, uint8_t dataSize);
+uint8_t RADIO_SendData(const uint8_t *data, uint8_t dataSize);
 
 /*! \brief Radio driver de-initialization */
 void RADIO_Deinit(void);

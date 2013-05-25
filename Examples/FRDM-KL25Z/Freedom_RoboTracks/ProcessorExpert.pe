@@ -3,8 +3,8 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>48</ModificationStamp>
-    <Date>2013-05-19</Date>
+    <ModificationStamp>50</ModificationStamp>
+    <Date>2013-05-24</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.6.0.RT4_b1316-1577</PEversion>
   </Header>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>129</ProjectCompNumb>
+    <ProjectCompNumb>132</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -4151,7 +4151,7 @@
       <Count>0</Count>
     </BoolList_FpgaConfig>
     <BoolList_BeanConfig>
-      <Count>34</Count>
+      <Count>33</Count>
       <ItemId0>6</ItemId0>
       <Value0>true</Value0>
       <ItemId1>12</ItemId1>
@@ -4190,36 +4190,34 @@
       <Value17>true</Value17>
       <ItemId18>81</ItemId18>
       <Value18>true</Value18>
-      <ItemId19>97</ItemId19>
+      <ItemId19>98</ItemId19>
       <Value19>true</Value19>
-      <ItemId20>98</ItemId20>
+      <ItemId20>99</ItemId20>
       <Value20>true</Value20>
-      <ItemId21>99</ItemId21>
+      <ItemId21>100</ItemId21>
       <Value21>true</Value21>
-      <ItemId22>100</ItemId22>
+      <ItemId22>102</ItemId22>
       <Value22>true</Value22>
-      <ItemId23>102</ItemId23>
+      <ItemId23>105</ItemId23>
       <Value23>true</Value23>
-      <ItemId24>105</ItemId24>
+      <ItemId24>107</ItemId24>
       <Value24>true</Value24>
-      <ItemId25>107</ItemId25>
+      <ItemId25>109</ItemId25>
       <Value25>true</Value25>
-      <ItemId26>109</ItemId26>
+      <ItemId26>111</ItemId26>
       <Value26>true</Value26>
-      <ItemId27>111</ItemId27>
+      <ItemId27>113</ItemId27>
       <Value27>true</Value27>
-      <ItemId28>113</ItemId28>
+      <ItemId28>115</ItemId28>
       <Value28>true</Value28>
-      <ItemId29>115</ItemId29>
+      <ItemId29>117</ItemId29>
       <Value29>true</Value29>
-      <ItemId30>117</ItemId30>
+      <ItemId30>119</ItemId30>
       <Value30>true</Value30>
-      <ItemId31>119</ItemId31>
+      <ItemId31>124</ItemId31>
       <Value31>true</Value31>
-      <ItemId32>124</ItemId32>
+      <ItemId32>128</ItemId32>
       <Value32>true</Value32>
-      <ItemId33>128</ItemId33>
-      <Value33>true</Value33>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
       <Count>0</Count>
@@ -4286,7 +4284,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.216</BeanVersion>
+    <BeanVersion>01.217</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -7759,7 +7757,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>10000</Value>
+        <Value>12000</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -7863,6 +7861,14 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>CLS1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DisabledInterruptsInStartup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Properties>
     <Methods>
@@ -28188,7 +28194,7 @@
               <ReqSrcClkPrescSpeedMode5>-1</ReqSrcClkPrescSpeedMode5>
               <ReqSrcClkPrescSpeedMode6>-1</ReqSrcClkPrescSpeedMode6>
               <ReqSrcClkPrescSpeedMode7>-1</ReqSrcClkPrescSpeedMode7>
-              <InitValue>4 MHz</InitValue>
+              <InitValue>6 MHz</InitValue>
               <Precision>5.0</Precision>
               <PrecInProc>true</PrecInProc>
               <LowLimit />
@@ -30142,7 +30148,7 @@
         <ItemSymbol>_Tmg</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>4 MHz</Value>
+        <Value>6 MHz</Value>
         <RuntimeSetting>2</RuntimeSetting>
         <ReqDevPrescHigh>-1</ReqDevPrescHigh>
         <ReqDevPrescLow>-1</ReqDevPrescLow>
@@ -30168,7 +30174,7 @@
         <ReqSrcClkPrescSpeedMode5>-1</ReqSrcClkPrescSpeedMode5>
         <ReqSrcClkPrescSpeedMode6>-1</ReqSrcClkPrescSpeedMode6>
         <ReqSrcClkPrescSpeedMode7>-1</ReqSrcClkPrescSpeedMode7>
-        <InitValue>4 MHz</InitValue>
+        <InitValue>6 MHz</InitValue>
         <Precision>5.0</Precision>
         <PrecInProc>true</PrecInProc>
         <LowLimit />
@@ -31130,143 +31136,6 @@
   </Bean>
   <Bean>
     <BeanType>RingBufferUInt8</BeanType>
-    <Name>RadioRx</Name>
-    <CompNumb>97</CompNumb>
-    <CompEnabled>true</CompEnabled>
-    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
-    <IconName>RingBufferUInt8</IconName>
-    <UserFolderName />
-    <Comment lines_count="0" />
-    <Template />
-    <BeanVersion>01.004</BeanVersion>
-    <LightErrorsIgnored>false</LightErrorsIgnored>
-    <Properties>
-      <ItemState>
-        <ItemSymbol>DeviceName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>RadioRx</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>BufferSize</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>32</Value>
-        <Base>DEC</Base>
-      </ItemState>
-    </Properties>
-    <Methods>
-      <ItemState>
-        <ItemSymbol>Clear</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Clear</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Put</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Put</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Get</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Get</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>NofElements</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>NofElements</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>NofFreeElements</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>NofFreeElements</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Init</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Init</UsrMethodName>
-      </ItemState>
-    </Methods>
-    <Events>
-      <ItemState>
-        <ItemSymbol>EventModule</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>Events</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>OnBufferFull</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>no</LastUserSel>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>OnBufferFullName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>RadioRx_OnBufferFull</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>OnBufferEmpty</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>no</LastUserSel>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>OnBufferEmptyName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>RadioRx_OnBufferEmpty</Value>
-      </ItemState>
-    </Events>
-  </Bean>
-  <Bean>
-    <BeanType>RingBufferUInt8</BeanType>
     <Name>RadioTx</Name>
     <CompNumb>128</CompNumb>
     <CompEnabled>true</CompEnabled>
@@ -31289,7 +31158,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>64</Value>
+        <Value>32</Value>
         <Base>DEC</Base>
       </ItemState>
     </Properties>

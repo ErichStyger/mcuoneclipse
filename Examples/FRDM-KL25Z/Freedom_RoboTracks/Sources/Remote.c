@@ -26,30 +26,42 @@
 
 static bool REMOTE_isOn = TRUE;
 
-#if defined(PL_BOARD_IS_SRB)
+#if PL_APP_ACCEL_CONTROL_SENDER
 static portTASK_FUNCTION(RemoteTask, pvParameters) {
-  unsigned char buf[32];
-  int16_t x, y, z;
 
   (void)pvParameters;
+#if PL_HAS_ACCEL
+  ACCEL1_Init();
+#endif
   for(;;) {
     if (REMOTE_isOn) {
+#if PL_HAS_ACCEL
+      unsigned char buf[32];
+      int16_t x, y, z;
+
       /* send periodically accelerometer messages */
       ACCEL_GetValues(&x, &y, &z);
-      UTIL1_strcpy(buf, sizeof(buf), REMOTE_ACCEL_PREFIX); /* mark acceleration message */
+      UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)REMOTE_ACCEL_PREFIX); /* mark acceleration message */
       UTIL1_strcatNum16s(buf, sizeof(buf), x);
       UTIL1_chcat(buf, sizeof(buf), ' '); /* separate number */
       UTIL1_strcatNum16s(buf, sizeof(buf), y);
       UTIL1_chcat(buf, sizeof(buf), ' '); /* separate number */
       UTIL1_strcatNum16s(buf, sizeof(buf), z);
-      (void)RADIO_SendString(buf);
+      (void)RADIO_SendData(buf, (uint8_t)(UTIL1_strlen((char*)buf)+1));
+#endif
+#if PL_HAS_WATCHDOG
+      WDT_IncTaskCntr(WDT_TASK_ID_TRACE, 200);
+#endif
       FRTOS1_vTaskDelay(200/portTICK_RATE_MS);
     } else {
+#if PL_HAS_WATCHDOG
+      WDT_IncTaskCntr(WDT_TASK_ID_TRACE, 1000);
+#endif
       FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
     }
   } /* for */
 }
-#elif defined(PL_BOARD_IS_TWR) || defined(PL_BOARD_IS_FRDM)
+#elif PL_HAS_MOTOR_PID
 void REMOTE_ParseMsg(const unsigned char *msg, size_t size) {
   /* message format is RACCEL_ACCEL_PREFIX followed by 3 numbers */
   int32_t x, y, z;
@@ -157,6 +169,14 @@ uint8_t REMOTE_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_
   return res;
 }
 
+bool REMOTE_GetOnOff(void) {
+  return REMOTE_isOn;
+}
+
+void REMOTE_SetOnOff(bool on) {
+  REMOTE_isOn = on;
+}
+
 void REMOTE_Deinit(void) {
   /* nothing to do */
 }
@@ -164,7 +184,7 @@ void REMOTE_Deinit(void) {
 /*! \brief Initializes module */
 void REMOTE_Init(void) {
   REMOTE_isOn = TRUE;
-#if defined(PL_BOARD_IS_SRB)
+#if PL_APP_ACCEL_CONTROL_SENDER
   if (FRTOS1_xTaskCreate(RemoteTask, (signed portCHAR *)"Remote", configMINIMAL_STACK_SIZE+150, NULL, tskIDLE_PRIORITY, NULL) != pdPASS) {
     for(;;){} /* error */
   }

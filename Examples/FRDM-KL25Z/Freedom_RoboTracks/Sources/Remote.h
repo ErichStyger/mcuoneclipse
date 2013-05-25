@@ -15,6 +15,18 @@
 #define REMOTE_ACCEL_PREFIX "xyz" /* prefix to mark acceleration message. Followed by 3 signed numbers (separated by a space) */
 
 /*!
+ * \brief Function to find out if the remote controller is enabled or not.
+ * \return TRUE if it is on, FALSE otherwise.
+ */
+bool REMOTE_GetOnOff(void);
+
+/*!
+ * \brief Function to turn on or off the remote controller.
+ * \param[in] on TRUE for turning it on, FALSE otherwise.
+ */
+void REMOTE_SetOnOff(bool on);
+
+/*!
  * \brief Parses a command
  * \param cmd Command string to be parsed
  * \param handled Sets this variable to TRUE if command was handled

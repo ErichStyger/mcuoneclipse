@@ -27,21 +27,27 @@
 typedef enum {
   STATE_IDLE,
   STATE_FOLLOW_SEGMENT,
+#if PL_APP_MAZE_LINE_SOLVING
   STATE_TURN,
   STATE_FINISHED,
+#endif
   STATE_STOP
 } StateType;
 
 static volatile StateType LF_currState = STATE_IDLE;
 static volatile bool LF_stopIt = FALSE;
+#if PL_APP_MAZE_LINE_SOLVING
 static uint8_t LF_solvedIdx = 0; /*  index to iterate through the solution */
+#endif
 
 void LF_StartFollowing(void) {
+#if PL_APP_MAZE_LINE_SOLVING
   if (!MAZE_IsSolved()) {
     MAZE_Init();
   } else {
     LF_solvedIdx = 0;
   }
+#endif
   PID_Init();
   if (REF_CanUseSensor()) {
     LF_currState = STATE_FOLLOW_SEGMENT;
@@ -81,6 +87,7 @@ static bool FollowSegment(void) {
   }
 }
 
+#if PL_APP_MAZE_LINE_SOLVING
 /*!
  * \brief Performs a turn.
  * \return Returns TRUE while turn is still in progress.
@@ -130,18 +137,22 @@ static uint8_t EvaluteTurn(bool *finished) {
     return ERR_OK; /* turn finished */
   }
 }
+#endif
 
 static void StateMachine(void) {
-  bool finished=FALSE;
-  
   switch (LF_currState) {
     case STATE_IDLE:
       break;
     case STATE_FOLLOW_SEGMENT:
       if (!FollowSegment()) {
-        LF_currState = STATE_TURN;
+#if PL_APP_MAZE_LINE_SOLVING
+        LF_currState = STATE_TURN; /* make turn */
+#else
+        LF_currState = STATE_STOP; /* stop if we do not have a line any more */
+#endif
       }
       break;
+#if PL_APP_MAZE_LINE_SOLVING
     case STATE_TURN:
       if (MAZE_IsSolved()) {
         TURN_Kind turn;
@@ -156,6 +167,8 @@ static void StateMachine(void) {
           LF_currState = STATE_FOLLOW_SEGMENT;
         }
       } else { /* still evaluating maze */
+        bool finished=FALSE;
+        
         if (EvaluteTurn(&finished)==ERR_OK) { /* finished turning */
           if (finished) {
             LF_currState = STATE_FINISHED;
@@ -174,6 +187,8 @@ static void StateMachine(void) {
         }
       }
       break;
+#endif
+#if PL_APP_MAZE_LINE_SOLVING
     case STATE_FINISHED:
 #if PL_HAS_BUZZER
       {
@@ -187,6 +202,7 @@ static void StateMachine(void) {
 #endif
       LF_currState = STATE_STOP;
       break;
+#endif
     case STATE_STOP:
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 0);
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 0);
@@ -196,7 +212,7 @@ static void StateMachine(void) {
 }
 
 bool LF_IsFollowing(void) {
-  return LF_currState==STATE_FOLLOW_SEGMENT || LF_currState==STATE_TURN || LF_currState==STATE_FINISHED;
+  return LF_currState!=STATE_IDLE;
 }
 
 static portTASK_FUNCTION(LineTask, pvParameters) {
@@ -230,15 +246,17 @@ static void LF_PrintStatus(const CLS1_StdIOType *io) {
     case STATE_FOLLOW_SEGMENT: 
       CLS1_SendStatusStr((unsigned char*)"  state", (unsigned char*)"FOLLOW_SEGMENT\r\n", io->stdOut);
       break;
-    case STATE_TURN: 
-      CLS1_SendStatusStr((unsigned char*)"  state", (unsigned char*)"TURN\r\n", io->stdOut);
-      break;
     case STATE_STOP: 
       CLS1_SendStatusStr((unsigned char*)"  state", (unsigned char*)"STOP\r\n", io->stdOut);
+      break;
+#if PL_APP_MAZE_LINE_SOLVING
+    case STATE_TURN: 
+      CLS1_SendStatusStr((unsigned char*)"  state", (unsigned char*)"TURN\r\n", io->stdOut);
       break;
     case STATE_FINISHED: 
       CLS1_SendStatusStr((unsigned char*)"  state", (unsigned char*)"FINISHED\r\n", io->stdOut);
       break;
+#endif
     default: 
       CLS1_SendStatusStr((unsigned char*)"  state", (unsigned char*)"UNKNOWN\r\n", io->stdOut);
       break;

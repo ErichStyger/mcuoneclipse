@@ -76,7 +76,6 @@
 #include "SM1.h"
 #include "SMasterLdd1.h"
 #include "TMOUT1.h"
-#include "RadioRx.h"
 #include "RadioTx.h"
 #include "TU_US.h"
 #include "TRIG.h"
