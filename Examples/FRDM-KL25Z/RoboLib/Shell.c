@@ -34,6 +34,9 @@
 #if PL_HAS_BLUETOOTH
   #include "BT1.h"
 #endif
+#if PL_HAS_ULTRASONIC
+  #include "Ultrasonic.h"
+#endif
 #include "LineFollow.h"
 #include "Turn.h"
 #include "Pid.h"
@@ -138,6 +141,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_HAS_RADIO
   RADIO_ParseCommand,
+#endif
+#if PL_HAS_ULTRASONIC
+  US_ParseCommand,
 #endif
   NULL /* Sentinel */
 };

@@ -9,7 +9,8 @@
 #ifndef ULTRASONIC_H_
 #define ULTRASONIC_H_
 
-#include "PE_LDD.h"
+#include "Platform.h"
+#include "CLS1.h"
 
 /* 
  * \brief Called in case of an overflow during input capture. This function is called from an interrupt!
@@ -31,6 +32,16 @@ uint16_t US_usToCentimeters(uint16_t microseconds, uint8_t temperatureCelsius);
 
 
 uint16_t US_Measure_us(void);
+
+/*!
+ * \brief Parses a command
+ * \param cmd Command string to be parsed
+ * \param handled Sets this variable to TRUE if command was handled
+ * \param io I/O stream to be used for input/output
+ * \return Error code, ERR_OK if everything was fine
+ */
+uint8_t US_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
+
 
 /*
  * \brief Driver initialization routine.

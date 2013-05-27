@@ -10,6 +10,7 @@
 #include "Ultrasonic.h"
 #include "TU_US.h"
 #include "WAIT1.h"
+#include "TRIG.h"
 
 typedef enum {
   ECHO_IDLE, /* device not used */
@@ -78,6 +79,41 @@ uint16_t US_Measure_us(void) {
   us = (usDevice.capture*1000UL)/(TU_US_CNT_INP_FREQ_U_0/1000);
   return us;
 }
+
+
+static void US_PrintHelp(const CLS1_StdIOType *io) {
+  CLS1_SendHelpStr((unsigned char*)"ultrasonic", (unsigned char*)"Group of ultrasonic commands\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows radio help or status\r\n", io->stdOut);
+}
+
+static void US_PrintStatus(const CLS1_StdIOType *io) {
+  uint8_t buf[16];
+  uint16_t cm, us;
+  
+  us = US_Measure_us();
+  cm = US_usToCentimeters(us, 22);
+  CLS1_SendStatusStr((unsigned char*)"ultrasonic", (unsigned char*)"\r\n", io->stdOut);
+  UTIL1_Num16uToStr(buf, sizeof(buf), us);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  CLS1_SendStatusStr((unsigned char*)"  us", buf, io->stdOut);
+  UTIL1_Num16uToStr(buf, sizeof(buf), cm);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  CLS1_SendStatusStr((unsigned char*)"  cm", buf, io->stdOut);
+}
+
+uint8_t US_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
+  uint8_t res = ERR_OK;
+
+  if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, (char*)"ultrasonic help")==0) {
+    US_PrintHelp(io);
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_STATUS)==0 || UTIL1_strcmp((char*)cmd, (char*)"ultrasonic status")==0) {
+    US_PrintStatus(io);
+    *handled = TRUE;
+  }
+  return res;
+}
+
 
 void US_Init(void) {
   usDevice.state = ECHO_IDLE;

@@ -117,10 +117,14 @@ static bool runIt = TRUE;
 static void FollowObstacle(void) {
   uint16_t cm, us;
   
-  LEDR_Neg();
-  us = US_Measure_us();
-  cm = US_usToCentimeters(us, 22);
-  if (runIt && cm != 0) {
+  if (runIt) {
+    us = US_Measure_us();
+    cm = US_usToCentimeters(us, 22);
+    if (cm<10) {
+      LEDG_Off();
+    } else {
+      LEDG_On();
+    }
     if (cm<10) { /* back up! */
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), -20);
       MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), -20);
