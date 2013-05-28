@@ -9,13 +9,15 @@
 #define TURN_H_
 
 #include "Platform.h"
-#if PL_HAS_LINE_SENSOR
+#if PL_HAS_MOTOR
 
 #include "CLS1.h"
 #include "Reflectance.h"
 
 typedef enum {
+  TURN_LEFT45,   /* turn 45 degree left and stop */
   TURN_LEFT90,   /* turn 90 degree left and stop */
+  TURN_RIGHT45, /* turn 90 degree right and stop */
   TURN_RIGHT90, /* turn 90 degree right and stop */
   TURN_LEFT180, /* turn 180 degree counterclockwise and stop */
   TURN_RIGHT180, /* turn 180 degree clockwise and stop */

@@ -210,6 +210,7 @@ void PID_LineCfg(uint16_t currLine, uint16_t setLine, bool forward, PID_Config *
 #endif /* PL_HAS_LINE_SENSOR */
 
 void PID_Line(uint16_t currLine, uint16_t setLine, bool forward) {
+#if PL_HAS_LINE_SENSOR
 #if PL_GO_DEADEND_BW
   if (forward) {
     PID_LineCfg(currLine, setLine, forward, &lineFwConfig);
@@ -219,6 +220,7 @@ void PID_Line(uint16_t currLine, uint16_t setLine, bool forward) {
 #else
   (void)forward; /* not used */
   PID_LineCfg(currLine, setLine, forward, &lineFwConfig);
+#endif
 #endif
 }
 

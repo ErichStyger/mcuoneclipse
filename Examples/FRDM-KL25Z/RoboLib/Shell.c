@@ -131,6 +131,8 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if PL_HAS_LINE_SENSOR
   REF_ParseCommand,
   LF_ParseCommand,
+#endif
+#if PL_HAS_MOTOR
   TURN_ParseCommand,
 #endif
 #if PL_APP_LINE_MAZE
@@ -145,6 +147,7 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if PL_HAS_ULTRASONIC
   US_ParseCommand,
 #endif
+  APP_ParseCommand,
   NULL /* Sentinel */
 };
 

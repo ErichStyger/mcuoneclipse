@@ -40,12 +40,20 @@
 
 typedef enum {
   APP_STATE_INIT,
+#if PL_APP_LINE_FOLLOWING
   APP_STATE_CALIBRATE,
-  APP_STATE_IDLE,
-  APP_STATE_FOLLOW
+  APP_STATE_FOLLOW_LINE,
+#endif
+#if PL_APP_FOLLOW_OBSTACLE
+  APP_STATE_FOLLOW_OBSTACLE, /* follow obstacle */
+#endif
+  APP_STATE_IDLE
 } AppStateType;
 
 static AppStateType appState = APP_STATE_INIT;
+#if PL_APP_FOLLOW_OBSTACLE
+static bool followObstacle = FALSE;
+#endif
 
 static void StateMachine(bool buttonPress) {
   static uint8_t cnt;
@@ -54,10 +62,28 @@ static void StateMachine(bool buttonPress) {
     case APP_STATE_INIT:
       LEDG_Off();
       LEDR_On();
+#if PL_APP_LINE_FOLLOWING
       if (buttonPress) {
         APP_StateStartCalibrate(); 
       }
+#elif PL_APP_FOLLOW_OBSTACLE
+      appState = APP_STATE_IDLE;
+#endif
       break;
+#if PL_APP_FOLLOW_OBSTACLE
+    case APP_STATE_FOLLOW_OBSTACLE:
+      cnt++;
+      if (cnt>50) {
+        cnt = 0;
+        LEDR_Neg();
+      }
+      if (buttonPress) {
+        followObstacle = FALSE;
+        appState = APP_STATE_IDLE;
+      }
+      break;
+#endif
+#if PL_APP_LINE_FOLLOWING
     case APP_STATE_CALIBRATE:
       cnt++;
       if (cnt>50) {
@@ -68,36 +94,38 @@ static void StateMachine(bool buttonPress) {
         APP_StateStopCalibrate(); 
       }
       break;
+#endif
     case APP_STATE_IDLE:
       LEDR_Off();
       LEDG_On();
-#if PL_HAS_LINE_SENSOR
       if (buttonPress) {
+#if PL_APP_LINE_FOLLOWING
         LF_StartFollowing();
-        appState = APP_STATE_FOLLOW;
-      }
+        appState = APP_STATE_FOLLOW_LINE;
+#elif PL_APP_FOLLOW_OBSTACLE
+        followObstacle = TRUE;
+        appState = APP_STATE_FOLLOW_OBSTACLE;
 #endif
+      }
       break;
-    case APP_STATE_FOLLOW:
+#if PL_APP_LINE_FOLLOWING
+    case APP_STATE_FOLLOW_LINE:
       LEDR_Off();
       LEDG_Off();
-#if PL_HAS_LINE_SENSOR
       if (!LF_IsFollowing()) {
         appState = APP_STATE_IDLE;
       }
-#endif
       if (buttonPress) {
-#if PL_HAS_LINE_SENSOR
         LF_StopFollowing(); 
-#endif
         appState = APP_STATE_IDLE;
       }
       break;
+#endif
   } /* switch */
 }
 
 void APP_StateStartCalibrate(void) {
-#if PL_HAS_LINE_SENSOR
+#if PL_APP_LINE_FOLLOWING
   REF_Calibrate(TRUE);
   appState = APP_STATE_CALIBRATE;
 #endif
@@ -105,41 +133,43 @@ void APP_StateStartCalibrate(void) {
 
 void APP_StateStopCalibrate(void) {
   appState = APP_STATE_IDLE;
-#if PL_HAS_LINE_SENSOR
+#if PL_APP_LINE_FOLLOWING
   REF_Calibrate(FALSE);
 #endif
 }
 
 
 #if PL_APP_FOLLOW_OBSTACLE
-static bool runIt = TRUE;
-
 static void FollowObstacle(void) {
+  #define DUTY_SLOW   16
+  #define DUTY_MEDIUM 20
+  #define DUTY_FAST   23
+  static uint8_t cnt;
   uint16_t cm, us;
   
-  if (runIt) {
+  cnt++; /* get called with 100 Hz, reduce to 10 Hz */
+  if (cnt==10) {
     us = US_Measure_us();
-    cm = US_usToCentimeters(us, 22);
-    if (cm<10) {
-      LEDG_Off();
-    } else {
-      LEDG_On();
-    }
-    if (cm<10) { /* back up! */
-      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), -20);
-      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), -20);
-    } else if (cm>=10 && cm<=15) { /* stand still */
-      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 0);
-      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 0);
-    } else if (cm>15 && cm<=40) { /* forward slowly */
-      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 30);
-      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 30);
-    } else if (cm>40 && cm<80) { /* forward fast */
-      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 50);
-      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 50);
-    } else { /* nothing in range */
-      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 0);
-      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 0);
+    cnt = 0;
+    if (followObstacle) {
+      cm = US_usToCentimeters(us, 22);
+      if (cm<10) { /* back up! */
+        MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), -DUTY_SLOW);
+        MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), -DUTY_SLOW);
+      } else if (cm>=10 && cm<=20) { /* stand still */
+        MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 0);
+        MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 0);
+        TURN_Turn(TURN_RIGHT45); /* try to avoid obstacle */
+      } else if (cm>20 && cm<=40) { /* forward slowly */
+        MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), DUTY_MEDIUM);
+        MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), DUTY_MEDIUM);
+      } else if (cm>40 && cm<100) { /* forward fast */
+        MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), DUTY_FAST);
+        MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), DUTY_FAST);
+      } else { /* nothing in range */
+        MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 0);
+        MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 0);
+      }
     }
   }
 }
@@ -149,7 +179,7 @@ static void CheckButton(void) {
 #if PL_HAS_USER_BUTTON
   uint32_t timeTicks; /* time in ticks */
   #define BUTTON_CNT_MS  100  /* iteration count for button */
-#if PL_HAS_LINE_SENSOR
+#if PL_APP_LINE_FOLLOWING
   bool autoCalibrate = FALSE;
 #endif
   
@@ -172,11 +202,13 @@ static void CheckButton(void) {
         }
         timeTicks++;
       } /* wait until released */
-#if PL_HAS_LINE_SENSOR
+#if PL_APP_LINE_FOLLOWING
       autoCalibrate = FALSE;
+#endif
       if (timeTicks<1000/BUTTON_CNT_MS) { /* less than 1 second */
         CLS1_SendStr((unsigned char*)"button press.\r\n", CLS1_GetStdio()->stdOut);
         StateMachine(TRUE); /* <1 s, short button press, according to state machine */
+#if PL_APP_LINE_FOLLOWING
       } else if (timeTicks>=(1000/BUTTON_CNT_MS) && timeTicks<(2000/BUTTON_CNT_MS)) {
         CLS1_SendStr((unsigned char*)"calibrate.\r\n", CLS1_GetStdio()->stdOut);
         APP_StateStartCalibrate(); /* 1-2 s: start calibration by hand */
@@ -184,17 +216,17 @@ static void CheckButton(void) {
         CLS1_SendStr((unsigned char*)"auto calibrate.\r\n", CLS1_GetStdio()->stdOut);
         APP_StateStartCalibrate(); /* 2-3 s: start auto calibration */
         autoCalibrate = TRUE;
+#endif
 #if PL_APP_LINE_MAZE
       } else if (timeTicks>=(3000/BUTTON_CNT_MS)) {
         CLS1_SendStr((unsigned char*)"delete solution.\r\n", CLS1_GetStdio()->stdOut);
         MAZE_ClearSolution();
 #endif
-      } 
-#endif
+      }
       while (SW1_GetVal()==0) { /* wait until button is released */
         FRTOS1_vTaskDelay(BUTTON_CNT_MS/portTICK_RATE_MS);
       }
-#if PL_HAS_LINE_SENSOR
+#if PL_APP_LINE_FOLLOWING
       if (autoCalibrate) {
         CLS1_SendStr((unsigned char*)"start auto-calibration...\r\n", CLS1_GetStdio()->stdOut);
         /* perform automatic calibration */
@@ -236,11 +268,43 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
 #if PL_HAS_EVENTS
     EVNT_HandleEvent(RADIO_AppHandleEvent);
 #endif
-#if PL_HAS_LINE_SENSOR
     StateMachine(FALSE);
-#endif
     FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
   }
+}
+
+static void APP_PrintHelp(const CLS1_StdIOType *io) {
+  CLS1_SendHelpStr((unsigned char*)"app", (unsigned char*)"Group of app commands\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows radio help or status\r\n", io->stdOut);
+#if PL_APP_FOLLOW_OBSTACLE
+  CLS1_SendHelpStr((unsigned char*)"  follow (on|off)", (unsigned char*)"Obstacle following on or off\r\n", io->stdOut);
+#endif
+}
+
+static void APP_PrintStatus(const CLS1_StdIOType *io) {
+  CLS1_SendStatusStr((unsigned char*)"app", (unsigned char*)"\r\n", io->stdOut);
+#if PL_APP_FOLLOW_OBSTACLE
+  CLS1_SendStatusStr((unsigned char*)"  follow", followObstacle?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
+#endif
+}
+
+uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
+  uint8_t res = ERR_OK;
+
+  if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, (char*)"app help")==0) {
+    APP_PrintHelp(io);
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_STATUS)==0 || UTIL1_strcmp((char*)cmd, (char*)"app status")==0) {
+    APP_PrintStatus(io);
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"app follow on")==0) {
+    followObstacle = TRUE;
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"app follow off")==0) {
+    followObstacle = FALSE;
+    *handled = TRUE;
+  }
+  return res;
 }
 
 void APP_Run(void) {

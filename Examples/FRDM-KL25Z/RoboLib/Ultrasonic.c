@@ -25,6 +25,7 @@ typedef struct {
   LDD_TDeviceData *echoDevice; /* input capture device handle (echo pin) */
   volatile US_EchoState state; /* state */
   TU_US_TValueType capture; /* input capture value */
+  uint16_t lastValue_us; /* last captured echo, in us */
 } US_DeviceType;
 
 static US_DeviceType usDevice; /* device handle for the ultrasonic device */
@@ -62,8 +63,6 @@ uint16_t US_usToCentimeters(uint16_t microseconds, uint8_t temperatureCelsius) {
 
 /* measure and return the microseconds */
 uint16_t US_Measure_us(void) {
-  uint16_t us;
-  
   /* send 10us pulse on TRIG line. */
   TRIG_SetVal(usDevice.trigDevice);
   WAIT1_Waitus(10);
@@ -76,10 +75,9 @@ uint16_t US_Measure_us(void) {
       return 0; /* no echo, error case */
     }
   }
-  us = (usDevice.capture*1000UL)/(TU_US_CNT_INP_FREQ_U_0/1000);
-  return us;
+  usDevice.lastValue_us = (usDevice.capture*1000UL)/(TU_US_CNT_INP_FREQ_U_0/1000);
+  return usDevice.lastValue_us;
 }
-
 
 static void US_PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"ultrasonic", (unsigned char*)"Group of ultrasonic commands\r\n", io->stdOut);
@@ -88,12 +86,11 @@ static void US_PrintHelp(const CLS1_StdIOType *io) {
 
 static void US_PrintStatus(const CLS1_StdIOType *io) {
   uint8_t buf[16];
-  uint16_t cm, us;
+  uint16_t cm;
   
-  us = US_Measure_us();
-  cm = US_usToCentimeters(us, 22);
+  cm = US_usToCentimeters(usDevice.lastValue_us, 22);
   CLS1_SendStatusStr((unsigned char*)"ultrasonic", (unsigned char*)"\r\n", io->stdOut);
-  UTIL1_Num16uToStr(buf, sizeof(buf), us);
+  UTIL1_Num16uToStr(buf, sizeof(buf), usDevice.lastValue_us);
   UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   CLS1_SendStatusStr((unsigned char*)"  us", buf, io->stdOut);
   UTIL1_Num16uToStr(buf, sizeof(buf), cm);
@@ -113,7 +110,6 @@ uint8_t US_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdI
   }
   return res;
 }
-
 
 void US_Init(void) {
   usDevice.state = ECHO_IDLE;

@@ -5,7 +5,7 @@
  *      Author: Erich Styger
  */
 #include "Platform.h"
-#if PL_HAS_LINE_SENSOR
+#if PL_HAS_MOTOR
 #include "Turn.h"
 #include "WAIT1.h"
 #include "Motor.h"
@@ -37,7 +37,7 @@
     /*!< ms to wait for a 90 degree turn */
   #define TURN_STEP_MS                330 
     /*!< ms to do one step forward */
-  #define TURN_MOTOR_DUTY_PERCENT      20
+  #define TURN_MOTOR_DUTY_PERCENT      25
     /*!< maximum motor duty for turn operation */
 #endif
 #if PL_HAS_QUADRATURE
@@ -73,7 +73,9 @@ static uint16_t TURN_StepFwBwMs = TURN_STEP_MS;
  */
 const unsigned char *TURN_TurnKindStr(TURN_Kind kind) {
   switch(kind) {
+    case TURN_LEFT45:     return (const unsigned char*)"LEFT45";
     case TURN_LEFT90:     return (const unsigned char*)"LEFT90";
+    case TURN_RIGHT45:    return (const unsigned char*)"RIGHT45";
     case TURN_RIGHT90:    return (const unsigned char*)"RIGHT90";
     case TURN_LEFT180:    return (const unsigned char*)"LEFT180";
     case TURN_RIGHT180:   return (const unsigned char*)"RIGHT180";
@@ -116,8 +118,48 @@ void TURN_TurnSteps(int16_t stepsL, int16_t stepsR) {
 }
 #endif
 
+static void Turn(bool isLeft, uint8_t duty, uint16_t val) {
+#if PL_HAS_QUADRATURE
+  if (isLeft) {
+    TURN_TurnSteps(-val, val);
+  } else {
+    TURN_TurnSteps(val, -val);
+  }
+#else
+  if (isLeft) {
+    MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), -duty);
+    MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), duty);
+  } else {
+    MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT),   duty);
+    MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), -duty);
+  }
+  WAIT1_WaitOSms(val); /* only use waiting time */
+#endif
+#if TURN_STOP_AFTER_TURN
+  MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 0);
+  MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 0);
+#if TURN_WAIT_AFTER_STEP_MS > 0
+  WAIT1_WaitOSms(TURN_WAIT_AFTER_STEP_MS);
+#endif
+#endif
+}
+
 void TURN_Turn(TURN_Kind kind) {
   switch(kind) {
+    case TURN_LEFT45:
+#if PL_HAS_QUADRATURE
+      Turn(TRUE, TURN_DutyPercent, TURN_Steps90/2);
+#else
+      Turn(TRUE, TURN_DutyPercent, TURN_Time90ms/2);
+#endif
+      break;
+    case TURN_RIGHT45:
+#if PL_HAS_QUADRATURE
+      Turn(FALSE, TURN_DutyPercent, TURN_Steps90/2);
+#else
+      Turn(FALSE, TURN_DutyPercent, TURN_Time90ms/2);
+#endif
+      break;
     case TURN_LEFT90:
 #if PL_HAS_QUADRATURE
       TURN_TurnSteps(-TURN_Steps90, TURN_Steps90);
@@ -245,7 +287,8 @@ void TURN_Turn(TURN_Kind kind) {
 static void TURN_PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"turn", (unsigned char*)"Group of turning commands\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows turn help or status\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  left|right|around", (unsigned char*)"Turn the robot\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  (left|right) (45|90)", (unsigned char*)"Turn the robot by angle\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  around", (unsigned char*)"Turn the robot around\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  forward", (unsigned char*)"Move one step forward\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  backward", (unsigned char*)"Move one step backward\r\n", io->stdOut);
 #if PL_HAS_QUADRATURE
@@ -312,11 +355,19 @@ uint8_t TURN_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
   } else if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_STATUS)==0 || UTIL1_strcmp((char*)cmd, (char*)"turn status")==0) {
     TURN_PrintStatus(io);
     *handled = TRUE;
-  } else if (UTIL1_strcmp((char*)cmd, (char*)"turn left")==0) {
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"turn left 45")==0) {
+    TURN_Turn(TURN_LEFT45);
+    TURN_Turn(TURN_STOP);
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"turn left 90")==0) {
     TURN_Turn(TURN_LEFT90);
     TURN_Turn(TURN_STOP);
     *handled = TRUE;
-  } else if (UTIL1_strcmp((char*)cmd, (char*)"turn right")==0) {
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"turn right 45")==0) {
+    TURN_Turn(TURN_RIGHT45);
+    TURN_Turn(TURN_STOP);
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"turn right 90")==0) {
     TURN_Turn(TURN_RIGHT90);
     TURN_Turn(TURN_STOP);
     *handled = TRUE;
