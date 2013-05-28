@@ -308,7 +308,9 @@ void %'ModuleName'%.%SetEntryMode(bool increment, bool shiftLeft);
 %-
 
 /* DEFINES for display commands.
-   See as well www.freescale.com/files/microcontrollers/doc/app_note/AN1745.pdf
+   See
+   - www.freescale.com/files/microcontrollers/doc/app_note/AN1745.pdf
+   - http://www.mikrocontroller.net/articles/HD44780
    for additional details.
 */
 #define ClearDisplayCmd                 0x01 /* clears the display */
@@ -327,17 +329,22 @@ void %'ModuleName'%.%SetEntryMode(bool increment, bool shiftLeft);
 #define FunctionSetCmd                  0x20
   #define FunctionSet_8bit              0x10 /* DL flag: DL=1: 8bit, DL=0: 4bit */
   #define FunctionSet_4bit                 0 /* DL flag: DL=1: 8bit, DL=0: 4bit */
-  #define FunctionSet_2Lines            0x08 /* N flag: number of display lines: N=1 2 lines, N=0 1 line */
-  #define FunctionSet_1Line                0 /* N flag: number of display lines: N=1 2 lines, N=0 1 line */
+  #define FunctionSet_2Lines            0x08 /* N flag: number of display lines: N=1 2 or 4 lines, N=0 1 line */
+  #define FunctionSet_1Line                0 /* N flag: number of display lines: N=1 2 or 4 lines, N=0 1 line */
   #define FunctionSet_Font5x10          0x04 /* F flag: character font, F=1 5x10 dots, F=0 5x8 dots */
   #define FunctionSet_Font5x8              0 /* F flag: character font, F=1 5x10 dots, F=0 5x8 dots */
 
 #define CursorOnCmd    (DisplayOnOffControlCmd|DisplayOnOffControl_DisplayOn|DisplayOnOffControl_CursorOn)
 #define CursorOffCmd   (DisplayOnOffControlCmd|DisplayOnOffControl_DisplayOn)
-#define GotoXYCmd      0x80
-#define Line2Offset    0x40
-#define FirstLineCmd   (GotoXYCmd)
-#define SecondLineCmd  (GotoXYCmd + Line2Offset)
+#define GotoXYCmd      0x80  /* 0x80 | Display RAM address */
+#define Line1Offset    0x00  /* Display RAM address of first line */
+#define Line2Offset    0x40  /* Display RAM address of second line */
+#define Line3Offset    0x10  /* Display RAM address of third line */
+#define Line4Offset    0x50  /* Display RAM address of fourth line */
+#define FirstLineCmd   (GotoXYCmd|Line1Offset)
+#define SecondLineCmd  (GotoXYCmd|Line2Offset)
+#define ThirdLineCmd   (GotoXYCmd|Line3Offset)
+#define FourthLineCmd  (GotoXYCmd|Line4Offset)
 
 #define RightShiftCmd   0x1C
 #define LeftShiftCmd    0x18
@@ -667,8 +674,32 @@ void %'ModuleName'%.%GotoXY(byte line, byte column)
   WriteLCDCommand((byte)(GotoXYCmd + (column-1)));
 %elif %LCD_Nof_Lines = "2"
   WriteLCDCommand((byte)(GotoXYCmd + (column-1) + (line==1 ? 0x00:Line2Offset)));
+%elif %LCD_Nof_Lines = "3"
+  byte offset;
+
+  if (line==1) {
+    offset = 0x00;
+  } else if (line==2) {
+    offset = Line2Offset;
+  } else { /* line 3 */
+    offset = Line3Offset;
+  }
+  WriteLCDCommand((byte)(GotoXYCmd + (column-1) + offset));
+%elif %LCD_Nof_Lines = "4"
+  byte offset;
+
+  if (line==1) {
+    offset = 0x00;
+  } else if (line==2) {
+    offset = Line2Offset;
+  } else if (line==2) {
+    offset = Line3Offset;
+  } else { /* line 4 */
+    offset = Line4Offset;
+  }
+  WriteLCDCommand((byte)(GotoXYCmd + (column-1) + offset));
 %else
-  %error "only 2 LCD lines are supported!"
+  %error "only up to 4 LCD lines are supported!"
 %endif
 }
 
@@ -702,7 +733,7 @@ void %'ModuleName'%.%WriteLn(void)
 %elif %LCD_Nof_Lines = "2"
   WriteLCDCommand(SecondLineCmd);
 %else
-  %error "only up to 2 LCD lines are supported!"
+  /* more than 2 lines, cannot use WriteLn() */
 %endif
 }
 
@@ -755,8 +786,26 @@ void %'ModuleName'%.%Line(byte line)
   WriteLCDCommand(FirstLineCmd);
 %elif %LCD_Nof_Lines = "2"
   WriteLCDCommand((byte)(line==1?FirstLineCmd:SecondLineCmd));
+%elif %LCD_Nof_Lines = "3"
+  if (line==1) {
+    WriteLCDCommand((byte)(FirstLineCmd));
+  } else if (line==2) {
+    WriteLCDCommand((byte)(SecondLineCmd));
+  } else { /* line == 3 */
+    WriteLCDCommand((byte)(ThirdLineCmd));
+  }
+%elif %LCD_Nof_Lines = "4"
+  if (line==1) {
+    WriteLCDCommand((byte)(FirstLineCmd));
+  } else if (line==2) {
+    WriteLCDCommand((byte)(SecondLineCmd));
+  } else if (line==3) {
+    WriteLCDCommand((byte)(ThirdLineCmd));
+  } else { /* line == 4 */
+    WriteLCDCommand((byte)(FourthLineCmd));
+  }
 %else
-  %error "only up to 2 LCD lines are supported!"
+  %error "only up to 4 LCD lines are supported!"
 %endif
 }
 
@@ -816,7 +865,7 @@ void %'ModuleName'%.Init(void)
 %if %LCD_Nof_Lines = "1"
                  |FunctionSet_1Lines                             %>40 /* we are using only one line */
 %else
-                 |FunctionSet_2Lines                             %>40 /* we are using two lines */
+                 |FunctionSet_2Lines                             %>40 /* we are using two or more lines */
 %endif
                  );
 %ifdef NeedDisplayStatusVariable
