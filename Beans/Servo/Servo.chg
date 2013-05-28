@@ -1,0 +1,5 @@
+%ifndef Shell
+  %set ParseCommand Selection never
+%else
+  %set ParseCommand Selection always
+%endif

@@ -2,9 +2,9 @@
 <Bean>
   <Header>
     <Name>Servo</Name>
-    <Description>Driver for a Hitec Servo</Description>
+    <Description>Driver for a Servo</Description>
     <Author>Erich Styger, Andreas Schöpfer</Author>
-    <Version>01.038</Version>
+    <Version>01.043</Version>
     <Icon>Servo</Icon>
     <TypesFiles>PE,Servo\Servo</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -19,7 +19,7 @@
     <BW_NeedUst>0</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2011, all right reserved.\n\nThis an open source software implementing a driver for the \nHitec Servo Motors (as in the Tower FSLBOT Robot Kit) using Processor Expert.\nThis is a free software and is opened for education,  research \nand commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for\n  personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
+    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2013, all right reserved.\n\nThis an open source software implementing a driver for the \nServo Motors (as in the Tower FSLBOT Robot Kit) using Processor Expert.\nThis is a free software and is opened for education,  research \nand commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for\n  personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
     <Category>SW-Motor Control</Category>
     <DemoDriver>no</DemoDriver>
     <Shortcut>SERVO</Shortcut>
@@ -35,6 +35,24 @@
         <EditLine>true</EditLine>
         <DefaultValue/>
       </TCompNameItem>
+    </Property>
+    <Property>
+      <TBoolItem>
+        <Name>Inverted PWM</Name>
+        <Symbol>invertedPWM</Symbol>
+        <TypeSpec>typeYesNo</TypeSpec>
+        <Hint>If the PWM signal shall be inverted.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>false</DefaultValue>
+        <Popup>false</Popup>
+      </TBoolItem>
     </Property>
     <Property>
       <TIntgItem>
@@ -69,19 +87,6 @@
         <ChangeValueIntoRange>false</ChangeValueIntoRange>
         <RuntimeProperty>false</RuntimeProperty>
       </TIntgItem>
-    </Property>
-    <Property>
-      <TStrgItem>
-        <Name>Name</Name>
-        <Symbol>ServoName</Symbol>
-        <Hint>Name of the servo to be used in shell commands. If you have multiple servos, make sure you use different names.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>true</EditLine>
-        <DefaultValue>"servo1"</DefaultValue>
-        <StrDefine>nothing</StrDefine>
-        <MinLength>0</MinLength>
-        <MaxLength>-1</MaxLength>
-      </TStrgItem>
     </Property>
     <Property>
       <TIntgItem>
@@ -143,18 +148,36 @@
             </TInhrLinkItem>
           </GrupItem>
           <GrupItem>
-            <TInhrLinkItem>
+            <TBoolGrupItem>
               <Name>Shell</Name>
-              <Symbol>Shell</Symbol>
-              <TypeSpec>Servo\Shell</TypeSpec>
-              <Hint>Interface to shell</Hint>
+              <Symbol>ShellEnabled</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>If enabled, the component has a command line shell interface implemented.</Hint>
               <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
               <EditLine>false</EditLine>
-              <DefaultValue/>
-              <CanDelete>false</CanDelete>
-              <IconPopup>false</IconPopup>
-              <SortStyle/>
-            </TInhrLinkItem>
+              <Description>Enabled</Description>
+              <Expanded>Yes</Expanded>
+              <DefaultValue>true</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TInhrLinkItem>
+                    <Name>Shell</Name>
+                    <Symbol>Shell</Symbol>
+                    <TypeSpec>Servo\Shell</TypeSpec>
+                    <Hint>Interface to shell</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <DefaultValue/>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <SortStyle/>
+                  </TInhrLinkItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
           </GrupItem>
           <GrupItem>
             <TInhrLinkItem>

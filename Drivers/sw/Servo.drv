@@ -49,7 +49,7 @@
 %-
 %-BW_INTERN_COMMENTS_START
 %- List of descriptions of internal methods
-%define! Description_DoSteps Is called by MovePos and Trigger to move PWM 
+%define! Description_DoSteps Method is called by MovePos() and Trigger to move the servo.
 %-BW_INTERN_COMMENTS_END
 %-
 %-BW_SECTIONS_INSERT
@@ -101,6 +101,11 @@
 %-  Example:
 %-    typedef int TMyInteger;
 %-
+%ifdef ParseCommand
+#define %'ModuleName'%.PARSE_COMMAND_ENABLED  1  /* set to 1 if method ParseCommand() is present, 0 otherwise */
+%else
+#define %'ModuleName'%.PARSE_COMMAND_ENABLED  0 /* set to 1 if method ParseCommand() is present, 0 otherwise */
+%endif %- ParseCommand
 %-BW_CUSTOM_USERTYPE_END
 
 
@@ -180,15 +185,23 @@ void %'ModuleName'%.%Init(void);
 #include <string.h> /* for strcmp() and strncmp() */
 
 /* Hitec HS-422: 0.9ms is left, 1.5ms is midpoint, 2.1ms is right */
-#define %'ModuleName'%.MIN_PWM_US       %MinPWMvalue /*!< minimal duty cycle for Hitec servo */
-#define %'ModuleName'%.MAX_PWM_US       %MaxPWMvalue /*!< maximal duty cycle for Hitec servo */
+#define %'ModuleName'%.MIN_PWM_US       %MinPWMvalue /*!< minimal duty cycle for servo */
+#define %'ModuleName'%.MAX_PWM_US       %MaxPWMvalue /*!< maximal duty cycle for servo */
 #define %'ModuleName'%.PWM_STEP_RES_1K  ((%'ModuleName'%.MAX_PWM_US-%'ModuleName'%.MIN_PWM_US)*1024L/256) /*!< PWM resolution per step, scaled by 1k */
 #define %'ModuleName'%.POS_TO_PWM(pos)  (uint16_t)(%'ModuleName'%.MIN_PWM_US+(((pos)*%'ModuleName'%.PWM_STEP_RES_1K)/1024)) /*!< Position to PWM transformation */
 #define %'ModuleName'%.PWM_TO_POS(pwm)  (uint8_t)(((((pwm)-%'ModuleName'%.MIN_PWM_US)*1024L)/%'ModuleName'%.PWM_STEP_RES_1K)) /*!< PWM to position transformation */
-#define %'ModuleName'%.SHELL_NAME_STR   %ServoName /*!< Name used for servo in shell */
+#define %'ModuleName'%.SHELL_NAME_STR   "%'ModuleName'" /*!< Name used for servo in shell */
 
 #define %'ModuleName'%.MOVE_TRIGGER_MS     20 /* we move the servo with a speed of 20 ms/50 Hz*/
 #define %'ModuleName'%.MOVE_TRIGGER_TICKS  (%'ModuleName'%.MOVE_TRIGGER_MS/%@Trigger@'ModuleName'%.TICK_PERIOD_MS)
+
+/* inverted PWM: if set to 1, then a duty value of 0xffff means signal is all time low, where 0x0000 means signal is high all time */
+%if %invertedPWM='yes'
+#define %'ModuleName'%.INVERTED_PWM   1
+%else
+#define %'ModuleName'%.INVERTED_PWM   0
+%endif
+#define %'ModuleName'%.PWM_PERIOD_US  20000 /* PWM period in micro seconds */
 
 typedef struct %'ModuleName'%.ServoDescTag {
   uint16_t currPWM; /* current duty in microseconds */
@@ -199,7 +212,6 @@ typedef struct %'ModuleName'%.ServoDescTag {
 
 /* \brief Descriptor about the status of the servo */
 static %'ModuleName'%.ServoDesc Servo;
-
 %-
 %-BW_CUSTOM_INCLUDE_END_M
 
@@ -228,15 +240,19 @@ static void DoSteps(void);
 %include Common\ServoSetPWMDuty.Inc
 void %'ModuleName'%.%SetPWMDuty(word dutyUs)
 {
-  /* avoid out of range pwm-dutycycles*/
+  /* avoid out of range pwm-duty cycles */
   if (dutyUs>%'ModuleName'%.MAX_PWM_US) {
     dutyUs = %'ModuleName'%.MAX_PWM_US;
   } else if (dutyUs<%'ModuleName'%.MIN_PWM_US) {
     dutyUs = %'ModuleName'%.MIN_PWM_US;
   }
-  /* write new dutycycle*/
+  /* write new duty cycle */
+#if %'ModuleName'%.INVERTED_PWM
+  %@PWM@'ModuleName'%.SetDutyUS(%'ModuleName'%.PWM_PERIOD_US-dutyUs); /* 20 ms is nominal period */
+#else
   %@PWM@'ModuleName'%.SetDutyUS(dutyUs);
-  /* update current dutycycle value*/
+#endif
+  /* update current duty cycle value */
   Servo.currPWM = (uint16_t)dutyUs;
 }
 
@@ -255,17 +271,20 @@ void %'ModuleName'%.%SetPos(byte pos)
 %endif %- SetPos
 %-BW_METHOD_END SetPos
 %-************************************************************************************************************
-%-************************************************************************************************************
 %-INTERNAL_METHOD_BEG DoSteps
 %include Common\GeneralInternalGlobal.inc (DoSteps)
 static void DoSteps(void)
 {
-  /* Write new dutycycle*/
+  /* Write new duty cycle */
+#if %'ModuleName'%.INVERTED_PWM
+  %@PWM@'ModuleName'%.SetDutyUS((uint16_t)(%'ModuleName'%.PWM_PERIOD_US-(Servo.currPWM+Servo.pwmDeltaPerStep)));
+#else
   %@PWM@'ModuleName'%.SetDutyUS((uint16_t)(Servo.currPWM+Servo.pwmDeltaPerStep));
-  /* update current dutycycle value*/
+#endif
+  /* update current duty cycle value */
   Servo.currPWM += Servo.pwmDeltaPerStep;
   Servo.cnt--;
-  /* if necessary, call next step by trigger*/
+  /* if necessary, call next step by trigger */
   if(Servo.cnt>0) {
     %@Trigger@'ModuleName'%.AddTrigger(%@Trigger@'ModuleName'%.%'ModuleName', %'ModuleName'%.MOVE_TRIGGER_TICKS, DoSteps);
   }
@@ -288,10 +307,10 @@ void %'ModuleName'%.%MovePos(byte pos, int16_t timeMs)
   /* calculate required steps*/
   Servo.cnt = timeMs/%'ModuleName'%.MOVE_TRIGGER_MS;
   if(Servo.cnt < 1) {
-    Servo.cnt = 1;      /* avoid division by zero*/
+    Servo.cnt = 1; /* avoid division by zero */
   }
   Servo.targetPWM = %'ModuleName'%.POS_TO_PWM(pos);
-  /* calculate increment / decrement per step*/
+  /* calculate increment / decrement per step */
   Servo.pwmDeltaPerStep=(int16_t)((Servo.targetPWM-Servo.currPWM)/Servo.cnt);
   DoSteps();
 }
@@ -324,7 +343,8 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
     %@Shell@'ModuleName'%.SendHelpStr((const unsigned char*)%'ModuleName'%.SHELL_NAME_STR, (const unsigned char*)"Servo command group\r\n", io->stdOut);
     %@Shell@'ModuleName'%.SendHelpStr((const unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
     %@Shell@'ModuleName'%.SendHelpStr((const unsigned char*)"  init", (const unsigned char*)"Moves the servo to the initialisation position\r\n", io->stdOut);
-    %@Shell@'ModuleName'%.SendHelpStr((const unsigned char*)"  pos <pos> <ms>", (const unsigned char*)"Move servo to a position (0..255) using a moving time in milli seconds\r\n", io->stdOut);
+    %@Shell@'ModuleName'%.SendHelpStr((const unsigned char*)"  pos <pos>", (const unsigned char*)"Move servo to a position (0 (%'ModuleName'%.MIN_PWM_US us)..255 (%'ModuleName'%.MAX_PWM_US))\r\n", io->stdOut);
+    %@Shell@'ModuleName'%.SendHelpStr((const unsigned char*)"  move <pos> <ms>", (const unsigned char*)"Move servo to a position (0..255) using a moving time in milli seconds\r\n", io->stdOut);
     %@Shell@'ModuleName'%.SendHelpStr((const unsigned char*)"  pwm <pwm>", (const unsigned char*)"Set servo pwm duty value in microseconds\r\n", io->stdOut);
     *handled = TRUE;
   } else if (%@Util@'ModuleName'%.strcmp((const char*)cmd, %@Shell@'ModuleName'%.CMD_STATUS)==0 || %@Util@'ModuleName'%.strcmp((const char*)cmd, %'ModuleName'%.SHELL_NAME_STR " status")==0) {
@@ -349,6 +369,15 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
   } else if (strncmp((const char*)cmd, (const char*)%'ModuleName'%.SHELL_NAME_STR " pos", sizeof(%'ModuleName'%.SHELL_NAME_STR " pos")-1)==0) {
     p = cmd+sizeof(%'ModuleName'%.SHELL_NAME_STR " pos");
     if (%@Util@'ModuleName'%.xatoi(&p, &val)==ERR_OK && val>=0 && val<=255) {
+      %'ModuleName'%.%MovePos((uint8_t)val, (int16_t)0);
+      *handled = TRUE;
+    } else {
+      %@Shell@'ModuleName'%.SendStr((const unsigned char*)"Wrong pos argument, must be in the range 0..255\r\n", io->stdErr);
+      res = ERR_FAILED;
+    }
+  } else if (strncmp((const char*)cmd, (const char*)%'ModuleName'%.SHELL_NAME_STR " move", sizeof(%'ModuleName'%.SHELL_NAME_STR " move")-1)==0) {
+    p = cmd+sizeof(%'ModuleName'%.SHELL_NAME_STR " move");
+    if (%@Util@'ModuleName'%.xatoi(&p, &val)==ERR_OK && val>=0 && val<=255) {
       int32_t time;
 
       if (%@Util@'ModuleName'%.xatoi(&p, &time)==ERR_OK) {
@@ -358,20 +387,17 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
       }
       *handled = TRUE;
     } else {
-      %@Shell@'ModuleName'%.SendStr((const unsigned char*)"Wrong argument, must be in the range 0..255\r\n", io->stdErr);
+      %@Shell@'ModuleName'%.SendStr((const unsigned char*)"Wrong pos argument, must be in the range 0..255\r\n", io->stdErr);
       res = ERR_FAILED;
     }
   } else if (strncmp((const char*)cmd, %'ModuleName'%.SHELL_NAME_STR " pwm", sizeof(%'ModuleName'%.SHELL_NAME_STR " pwm")-1)==0) {
     p = cmd+sizeof(%'ModuleName'%.SHELL_NAME_STR " pwm");
-    if (  %@Util@'ModuleName'%.xatoi(&p, &val)==ERR_OK
-        && val>=%'ModuleName'%.MIN_PWM_US
-        && val<=%'ModuleName'%.MAX_PWM_US
-       )
+    if (%@Util@'ModuleName'%.xatoi(&p, &val)==ERR_OK)
     {
       %'ModuleName'%.%SetPWMDuty((uint16_t)val);
       *handled = TRUE;
     } else {
-      %@Shell@'ModuleName'%.SendStr((const unsigned char*)"Wrong argument, must be in the range ", io->stdErr);
+      %@Shell@'ModuleName'%.SendStr((const unsigned char*)"Failed to read pwm value\r\n", io->stdErr);
       %@Shell@'ModuleName'%.SendNum16u(%'ModuleName'%.MIN_PWM_US, io->stdOut);
       %@Shell@'ModuleName'%.SendStr((const unsigned char*)"..", io->stdErr);
       %@Shell@'ModuleName'%.SendNum16u(%'ModuleName'%.MAX_PWM_US, io->stdOut);

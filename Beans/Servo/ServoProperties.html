@@ -188,7 +188,7 @@ LI.EXP {
                 
                 Servo
               </div>
-              <div class="descrtext">Driver for a Hitec Servo</div>
+              <div class="descrtext">Driver for a Servo</div>
               <div class="info_name">Component Level: <span class="info_text"><a href="../../DOCs/BeanCategoriesInfo.html#LevelAbstraction">High</a></span></div>
               <div class="info_name">Category: 
                 <span class="info_text">
@@ -221,16 +221,16 @@ LI.EXP {
 <b>Component name</b></a> - Name of the component.
 </li>
 <li>
+<a name="invertedPWM">
+<b>Inverted PWM</b></a> - If the PWM signal shall be inverted.
+</li>
+<li>
 <a name="DefaultPos">
 <b>Init Position</b></a> - Initialization position of the servo, from 0 to 255.
 </li>
 <li>
 <a name="InitPWM">
 <b>Init PWM</b></a> - Initialization duty cycle for PWM
-</li>
-<li>
-<a name="ServoName">
-<b>Name</b></a> - Name of the servo to be used in shell commands. If you have multiple servos, make sure you use different names.
 </li>
 <li>
 <a name="MinPWMvalue">
@@ -249,8 +249,16 @@ LI.EXP {
   <b>Utility</b></a> - Interface to utility module
   </li>
   <li>
-  <a name="Shell">
-  <b>Shell</b></a> - Interface to shell
+  <a name="ShellEnabled">
+  <b>Shell</b></a> - If enabled, the component has a command line shell interface implemented.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+  <ul>
+    <li>
+    <a name="Shell">
+    <b>Shell</b></a> - Interface to shell
+    </li>
+  </ul>
   </li>
   <li>
   <a name="Trigger">
