@@ -205,9 +205,11 @@ void %'ModuleName'%.%Init(void);
 
 typedef struct %'ModuleName'%.ServoDescTag {
   uint16_t currPWM; /* current duty in microseconds */
+%if defined(Trigger)
   uint16_t targetPWM; /* target duty in microseconds */
   int16_t cnt; /* tick counter, >0 means ticks are still going on */
   int16_t pwmDeltaPerStep; /* pwm difference per move step */
+%endif
 } %'ModuleName'%.ServoDesc;
 
 /* \brief Descriptor about the status of the servo */
@@ -227,7 +229,9 @@ static %'ModuleName'%.ServoDesc Servo;
 %-UNLOCKED
 /* Internal method prototypes */
 %-INTERNAL_LOC_METHOD_BEG DoSteps
+%if defined(Trigger)
 static void DoSteps(void);
+%endif
 %-INTERNAL_LOC_METHOD_END DoSteps
 %-
 
@@ -272,6 +276,7 @@ void %'ModuleName'%.%SetPos(byte pos)
 %-BW_METHOD_END SetPos
 %-************************************************************************************************************
 %-INTERNAL_METHOD_BEG DoSteps
+%if defined(Trigger)
 %include Common\GeneralInternalGlobal.inc (DoSteps)
 static void DoSteps(void)
 {
@@ -291,6 +296,7 @@ static void DoSteps(void)
 }
 
 %-INTERNAL_METHOD_END DoSteps
+%endif
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN MovePos
 %ifdef MovePos
@@ -344,7 +350,9 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
     %@Shell@'ModuleName'%.SendHelpStr((const unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
     %@Shell@'ModuleName'%.SendHelpStr((const unsigned char*)"  init", (const unsigned char*)"Moves the servo to the initialisation position\r\n", io->stdOut);
     %@Shell@'ModuleName'%.SendHelpStr((const unsigned char*)"  pos <pos>", (const unsigned char*)"Move servo to a position (0 (%'ModuleName'%.MIN_PWM_US us)..255 (%'ModuleName'%.MAX_PWM_US))\r\n", io->stdOut);
+%if defined(Trigger)
     %@Shell@'ModuleName'%.SendHelpStr((const unsigned char*)"  move <pos> <ms>", (const unsigned char*)"Move servo to a position (0..255) using a moving time in milli seconds\r\n", io->stdOut);
+%endif
     %@Shell@'ModuleName'%.SendHelpStr((const unsigned char*)"  pwm <pwm>", (const unsigned char*)"Set servo pwm duty value in microseconds\r\n", io->stdOut);
     *handled = TRUE;
   } else if (%@Util@'ModuleName'%.strcmp((const char*)cmd, %@Shell@'ModuleName'%.CMD_STATUS)==0 || %@Util@'ModuleName'%.strcmp((const char*)cmd, %'ModuleName'%.SHELL_NAME_STR " status")==0) {
@@ -369,12 +377,13 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
   } else if (strncmp((const char*)cmd, (const char*)%'ModuleName'%.SHELL_NAME_STR " pos", sizeof(%'ModuleName'%.SHELL_NAME_STR " pos")-1)==0) {
     p = cmd+sizeof(%'ModuleName'%.SHELL_NAME_STR " pos");
     if (%@Util@'ModuleName'%.xatoi(&p, &val)==ERR_OK && val>=0 && val<=255) {
-      %'ModuleName'%.%MovePos((uint8_t)val, (int16_t)0);
+      %'ModuleName'%.%SetPos((uint8_t)val);
       *handled = TRUE;
     } else {
       %@Shell@'ModuleName'%.SendStr((const unsigned char*)"Wrong pos argument, must be in the range 0..255\r\n", io->stdErr);
       res = ERR_FAILED;
     }
+%if defined(Trigger)
   } else if (strncmp((const char*)cmd, (const char*)%'ModuleName'%.SHELL_NAME_STR " move", sizeof(%'ModuleName'%.SHELL_NAME_STR " move")-1)==0) {
     p = cmd+sizeof(%'ModuleName'%.SHELL_NAME_STR " move");
     if (%@Util@'ModuleName'%.xatoi(&p, &val)==ERR_OK && val>=0 && val<=255) {
@@ -390,6 +399,7 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
       %@Shell@'ModuleName'%.SendStr((const unsigned char*)"Wrong pos argument, must be in the range 0..255\r\n", io->stdErr);
       res = ERR_FAILED;
     }
+%endif
   } else if (strncmp((const char*)cmd, %'ModuleName'%.SHELL_NAME_STR " pwm", sizeof(%'ModuleName'%.SHELL_NAME_STR " pwm")-1)==0) {
     p = cmd+sizeof(%'ModuleName'%.SHELL_NAME_STR " pwm");
     if (%@Util@'ModuleName'%.xatoi(&p, &val)==ERR_OK)
@@ -398,10 +408,6 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
       *handled = TRUE;
     } else {
       %@Shell@'ModuleName'%.SendStr((const unsigned char*)"Failed to read pwm value\r\n", io->stdErr);
-      %@Shell@'ModuleName'%.SendNum16u(%'ModuleName'%.MIN_PWM_US, io->stdOut);
-      %@Shell@'ModuleName'%.SendStr((const unsigned char*)"..", io->stdErr);
-      %@Shell@'ModuleName'%.SendNum16u(%'ModuleName'%.MAX_PWM_US, io->stdOut);
-      %@Shell@'ModuleName'%.SendStr((const unsigned char*)"\r\n", io->stdErr);
       res = ERR_FAILED;
     }
   }

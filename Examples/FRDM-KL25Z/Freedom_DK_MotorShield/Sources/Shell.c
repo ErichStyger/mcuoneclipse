@@ -8,12 +8,16 @@
 #include "Platform.h"
 #include "Shell.h"
 #include "SERVO1.h"
+#include "SERVO2.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
   CLS1_ParseCommand,
 #if SERVO1_PARSE_COMMAND_ENABLED
   SERVO1_ParseCommand,
+#endif
+#if SERVO2_PARSE_COMMAND_ENABLED
+  SERVO2_ParseCommand,
 #endif
   NULL /* Sentinel */
 };

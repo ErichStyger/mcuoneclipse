@@ -3,3 +3,8 @@
 %else
   %set ParseCommand Selection always
 %endif
+%ifndef Trigger
+  %set MovePos Selection never
+%else
+  %set MovePos Selection always
+%endif
