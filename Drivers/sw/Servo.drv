@@ -158,6 +158,16 @@ void %'ModuleName'%.%Init(void);
 
 %endif %- Init
 %-BW_METHOD_END Init
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN PWMusToPos8
+%ifdef PWMusToPos8
+byte %'ModuleName'%.%PWMusToPos8(word us);
+%define! Parus
+%define! RetVal
+%include Common\ServoPWMusToPos8.Inc
+
+%endif %- PWMusToPos8
+%-BW_METHOD_END PWMusToPos8
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -182,15 +192,14 @@ void %'ModuleName'%.%Init(void);
 %- Write your own includes here ...
 %-   Example:
 %-     #include "header_name.h"
-#define %'ModuleName'%.MIN_PWM_US       %MinPWMvalueUs           %>40/*!< minimal duty cycle for servo */
-#define %'ModuleName'%.MAX_PWM_US       %MaxPWMvalueUs           %>40/*!< maximal duty cycle for servo */
-#define %'ModuleName'%.INIT_PWM_US      %InitPWM                 %>40/*!< initial PWM duty */
-#define %'ModuleName'%.PWM_PERIOD_US    %PWMPeriodUs             %>40/*!< PWM period in micro seconds, typically 20'000 us (50 Hz) */
-#define %'ModuleName'%.PWM_RANGE_US     (%'ModuleName'%.MAX_PWM_US-%'ModuleName'%.MIN_PWM_US) /*!< PWM range in micro seconds */
-#define %'ModuleName'%.PWM_STEP_RES_1K  ((%'ModuleName'%.PWM_RANGE_US)*1024L/256) /*!< PWM resolution per step, scaled by 1k */
-#define %'ModuleName'%.POS8_TO_PWM(pos)  (uint16_t)(%'ModuleName'%.MIN_PWM_US+(((pos)*(uint32_t)%'ModuleName'%.PWM_RANGE_US)/256)) /*!< Position to PWM transformation */
-#define %'ModuleName'%.PWM_TO_POS8(pwm)  (uint8_t)((((uint32_t)(pwm)-%'ModuleName'%.MIN_PWM_US)*256/%'ModuleName'%.PWM_RANGE_US)) /*!< PWM to position transformation */
-#define %'ModuleName'%.SHELL_NAME_STR   "%'ModuleName'" /*!< Name used for servo in shell */
+#define %'ModuleName'%.MIN_PWM_US          %MinPWMvalueUs        %>40/*!< minimal duty cycle for servo */
+#define %'ModuleName'%.MAX_PWM_US          %MaxPWMvalueUs        %>40/*!< maximal duty cycle for servo */
+#define %'ModuleName'%.INIT_PWM_US         %InitPWM              %>40/*!< initial PWM duty */
+#define %'ModuleName'%.PWM_PERIOD_US       %PWMPeriodUs          %>40/*!< PWM period in micro seconds, typically 20'000 us (50 Hz) */
+#define %'ModuleName'%.PWM_RANGE_US        (%'ModuleName'%.MAX_PWM_US-%'ModuleName'%.MIN_PWM_US) /*!< PWM range in micro seconds */
+#define %'ModuleName'%.POS8_TO_PWM(pos)    (uint16_t)(%'ModuleName'%.MIN_PWM_US+(((pos)*(uint32_t)%'ModuleName'%.PWM_RANGE_US)/255)) /*!< Position to PWM transformation */
+#define %'ModuleName'%.PWM_TO_POS8(pwm)    (uint16_t)((((uint32_t)(pwm)-%'ModuleName'%.MIN_PWM_US)*255/%'ModuleName'%.PWM_RANGE_US)) /*!< PWM to position transformation */
+#define %'ModuleName'%.SHELL_NAME_STR      "%'ModuleName'" /*!< Name used for servo in shell */
 %if defined(Trigger)
 #define %'ModuleName'%.MOVE_TRIGGER_MS     20 /* we move the servo with a speed of 20 ms/50 Hz*/
 #define %'ModuleName'%.MOVE_TRIGGER_TICKS  (%'ModuleName'%.MOVE_TRIGGER_MS/%@Trigger@'ModuleName'%.TICK_PERIOD_MS)
@@ -204,9 +213,9 @@ void %'ModuleName'%.%Init(void);
 %endif
 
 typedef struct %'ModuleName'%.ServoDescTag {
-  uint16_t currPWM; /* current duty in microseconds */
+  uint16_t currPWMus; /* current duty in microseconds */
 %if defined(Trigger)
-  uint16_t targetPWM; /* target duty in microseconds */
+  uint16_t targetPWMus; /* target duty in microseconds */
   int16_t cnt; /* tick counter, >0 means ticks are still going on */
   int16_t pwmDeltaPerStep; /* pwm difference per move step */
 %endif
@@ -228,11 +237,9 @@ static %'ModuleName'%.ServoDesc Servo;
 %- List of internal methods headers
 %-UNLOCKED
 /* Internal method prototypes */
-%if defined(Trigger)
 %-INTERNAL_LOC_METHOD_BEG DoSteps
 static void DoSteps(void);
 %-INTERNAL_LOC_METHOD_END DoSteps
-%endif
 %-
 
 %-BW_INTERN_METHOD_DECL_END
@@ -250,7 +257,7 @@ void %'ModuleName'%.%SetPWMDutyUs(word dutyUs)
 #else
   %@PWM@'ModuleName'%.SetDutyUS(dutyUs);
 #endif
-  Servo.currPWM = (uint16_t)dutyUs; /* update current duty cycle value */
+  Servo.currPWMus = (uint16_t)dutyUs; /* update current duty cycle value */
 }
 
 %endif %- SetPWMDutyUs
@@ -275,12 +282,12 @@ static void DoSteps(void)
 {
   /* Write new duty cycle */
 #if %'ModuleName'%.INVERTED_PWM
-  %@PWM@'ModuleName'%.SetDutyUS((uint16_t)(%'ModuleName'%.PWM_PERIOD_US-(Servo.currPWM+Servo.pwmDeltaPerStep)));
+  %@PWM@'ModuleName'%.SetDutyUS((uint16_t)(%'ModuleName'%.PWM_PERIOD_US-(Servo.currPWMus+Servo.pwmDeltaPerStep)));
 #else
-  %@PWM@'ModuleName'%.SetDutyUS((uint16_t)(Servo.currPWM+Servo.pwmDeltaPerStep));
+  %@PWM@'ModuleName'%.SetDutyUS((uint16_t)(Servo.currPWMus+Servo.pwmDeltaPerStep));
 #endif
   /* update current duty cycle value */
-  Servo.currPWM += Servo.pwmDeltaPerStep;
+  Servo.currPWMus += Servo.pwmDeltaPerStep;
   Servo.cnt--;
   /* if necessary, call next step by trigger */
   if(Servo.cnt>0) {
@@ -308,9 +315,9 @@ void %'ModuleName'%.%MovePos(byte pos, int16_t timeMs)
   if(Servo.cnt < 1) {
     Servo.cnt = 1; /* avoid division by zero */
   }
-  Servo.targetPWM = %'ModuleName'%.POS8_TO_PWM(pos);
+  Servo.targetPWMus = %'ModuleName'%.POS8_TO_PWM(pos);
   /* calculate increment / decrement per step */
-  Servo.pwmDeltaPerStep=(int16_t)((Servo.targetPWM-Servo.currPWM)/Servo.cnt);
+  Servo.pwmDeltaPerStep=(int16_t)((Servo.targetPWMus-Servo.currPWMus)/Servo.cnt);
   DoSteps();
 }
 
@@ -351,11 +358,11 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
   } else if (%@Util@'ModuleName'%.strcmp((const char*)cmd, %@Shell@'ModuleName'%.CMD_STATUS)==0 || %@Util@'ModuleName'%.strcmp((const char*)cmd, %'ModuleName'%.SHELL_NAME_STR " status")==0) {
     %@Shell@'ModuleName'%.SendStr((const unsigned char*)%'ModuleName'%.SHELL_NAME_STR ":\r\n", io->stdOut);
     %@Shell@'ModuleName'%.SendStatusStr((const unsigned char*)"  pos", (const unsigned char*)"", io->stdOut);
-    %@Shell@'ModuleName'%.SendNum8u(%'ModuleName'%.PWM_TO_POS8(Servo.currPWM), io->stdOut);
+    %@Shell@'ModuleName'%.SendNum8u(%'ModuleName'%.PWMusToPos8(Servo.currPWMus), io->stdOut);
     %@Shell@'ModuleName'%.SendStr((const unsigned char*)"\r\n", io->stdOut);
 
     %@Shell@'ModuleName'%.SendStatusStr((const unsigned char*)"  pwm", (const unsigned char*)"", io->stdOut);
-    %@Shell@'ModuleName'%.SendNum16u(Servo.currPWM, io->stdOut);
+    %@Shell@'ModuleName'%.SendNum16u(Servo.currPWMus, io->stdOut);
     %@Shell@'ModuleName'%.SendStr((const unsigned char*)" microseconds duty\r\n", io->stdOut);
 
     %@Shell@'ModuleName'%.SendStatusStr((const unsigned char*)"  pwm range", (const unsigned char*)"", io->stdOut);
@@ -421,6 +428,26 @@ void %'ModuleName'%.%Init(void)
 %endif %- Init
 %-BW_METHOD_END Init
 %-************************************************************************************************************
+%-BW_METHOD_BEGIN PWMusToPos8
+%ifdef PWMusToPos8
+%define! Parus
+%define! RetVal
+%include Common\ServoPWMusToPos8.Inc
+byte %'ModuleName'%.%PWMusToPos8(word us)
+{
+  uint16_t pos, time;
+
+  pos = %'ModuleName'%.PWM_TO_POS8(us);
+  time = %'ModuleName'%.POS8_TO_PWM(pos);
+  if (time<us) {
+    return (byte)(pos+1); /* add rounding */
+  } else {
+    return pos;
+  }
+}
+
+%endif %- PWMusToPos8
+%-BW_METHOD_END PWMusToPos8
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

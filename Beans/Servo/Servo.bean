@@ -4,7 +4,7 @@
     <Name>Servo</Name>
     <Description>Driver for a Servo</Description>
     <Author>Erich Styger, Andreas Schöpfer</Author>
-    <Version>01.055</Version>
+    <Version>01.056</Version>
     <Icon>Servo</Icon>
     <TypesFiles>PE,Servo\Servo</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -415,6 +415,40 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>byte #M#_#C#(const char_t *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>PWMusToPos8</Name>
+        <Symbol>PWMusToPos8</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Transforms a micro-second PWM time into 8bit position</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>us</ParName>
+          <ParType>16bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>us PWM time</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(word us)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

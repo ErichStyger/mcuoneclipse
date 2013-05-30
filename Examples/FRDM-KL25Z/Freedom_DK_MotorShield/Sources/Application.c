@@ -14,12 +14,12 @@
 #include "74HCT595N.h"
 
 static void APP_TestServos(void) {
-  uint8_t pos;
+  uint16_t pos;
   
-  for(pos=0;pos<256;pos++) {
+  for(pos=0;pos<=255;pos++) {
     SERVO1_SetPos(pos);
     SERVO2_SetPos(pos);
-    WAIT1_Waitms(50);
+    WAIT1_Waitms(20);
   }
 }
 
