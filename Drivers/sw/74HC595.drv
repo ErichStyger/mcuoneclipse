@@ -185,45 +185,14 @@ void %'ModuleName'%.%Disable(void);
 %-   Example:
 %-     static int counter1;
 %-     int %'ModuleName'%.counter2;
-#define 'ModuleName'%.STCP_LATCH_DELAY_NS  %ClockLatchDelayNs /* delay in nano seconds */
-#define 'ModuleName'%.SHCP_CLOCK_DELAY_NS  %ClockLatchDelayNs /* delay in nano seconds */
+#define %'ModuleName'%.STCP_LATCH_DELAY_NS  %ClockLatchDelayNs /* delay in nano seconds */
+#define %'ModuleName'%.SHCP_CLOCK_DELAY_NS  %ClockLatchDelayNs /* delay in nano seconds */
 %-
 %-BW_CUSTOM_VARIABLE_END
 %-BW_INTERN_METHOD_DECL_START
 %- List of internal methods headers
 %-BW_INTERN_METHOD_DECL_END
 %-BW_IMPLEMENT_START
-%-************************************************************************************************************
-%-BW_METHOD_BEGIN Deinit
-%ifdef Deinit
-%include Common\74HC595Deinit.Inc
-void %'ModuleName'%.%Deinit(void)
-{
-  /* If you see this comment in generated code, it means that method is not implemented yet ... */
-}
-
-%endif %- Deinit
-%-BW_METHOD_END Deinit
-%-************************************************************************************************************
-%-BW_METHOD_BEGIN Init
-%ifdef Init
-%include Common\74HC595Init.Inc
-void %'ModuleName'%.%Init(void)
-{
-  %@STCP@'ModuleName'%.ClrVal(); /* latch */
-  %@DS@'ModuleName'%.ClrVal(); /* data */
-  %@SHCP@'ModuleName'%.ClrVal(); /* clock */
-%if defined(OE)
-  %if %EnableOEinInit='yes'
-  %'ModuleName'%.Enable(); /* enable device */
-  %else
-  %'ModuleName'%.Disable(); /* disable device */
-  %endif
-%endif
-}
-
-%endif %- Init
-%-BW_METHOD_END Init
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Latch
 %ifdef Latch
@@ -232,12 +201,12 @@ void %'ModuleName'%.%Latch(void)
 {
   /* send a latch pulse to show the data on the output pins */
   %@STCP@'ModuleName'%.SetVal(); /* set latch to high */
-#if 'ModuleName'%.STCP_LATCH_DELAY_NS != 0
-  %@Wait@'ModuleName'%.Waitns('ModuleName'%.STCP_LATCH_DELAY_NS); /* wait according to data sheet */
+#if %'ModuleName'%.STCP_LATCH_DELAY_NS != 0
+  %@Wait@'ModuleName'%.Waitns(%'ModuleName'%.STCP_LATCH_DELAY_NS); /* wait according to data sheet */
 #endif
   %@STCP@'ModuleName'%.ClrVal(); /* set latch to low */
-#if 'ModuleName'%.STCP_LATCH_DELAY_NS != 0
-  %@Wait@'ModuleName'%.Waitns('ModuleName'%.STCP_LATCH_DELAY_NS); /* wait according to data sheet */
+#if %'ModuleName'%.STCP_LATCH_DELAY_NS != 0
+  %@Wait@'ModuleName'%.Waitns(%'ModuleName'%.STCP_LATCH_DELAY_NS); /* wait according to data sheet */
 #endif
 }
 
@@ -261,16 +230,16 @@ void %'ModuleName'%.%ShiftByte(byte val)
     } else {
       %@DS@'ModuleName'%.ClrVal();
     }
-#if 'ModuleName'%.SHCP_CLOCK_DELAY_NS != 0
-    %@Wait@'ModuleName'%.Waitns(SHCP_CLOCK_DELAY_NS); /* wait according to data sheet */
+#if %'ModuleName'%.SHCP_CLOCK_DELAY_NS != 0
+    %@Wait@'ModuleName'%.Waitns(%'ModuleName'%.SHCP_CLOCK_DELAY_NS); /* wait according to data sheet */
 #endif
     %@SHCP@'ModuleName'%.SetVal(); /* CLK high: data gets transfered into memory */
-#if 'ModuleName'%.SHCP_CLOCK_DELAY_NS != 0
-    %@Wait@'ModuleName'%.Waitns(SHCP_CLOCK_DELAY_NS); /* wait according to data sheet */
+#if %'ModuleName'%.SHCP_CLOCK_DELAY_NS != 0
+    %@Wait@'ModuleName'%.Waitns(%'ModuleName'%.SHCP_CLOCK_DELAY_NS); /* wait according to data sheet */
 #endif
     %@DS@'ModuleName'%.ClrVal(); /* data line low */
-#if 'ModuleName'%.SHCP_CLOCK_DELAY_NS != 0
-    %@Wait@'ModuleName'%.Waitns(SHCP_CLOCK_DELAY_NS); /* wait according to data sheet */
+#if %'ModuleName'%.SHCP_CLOCK_DELAY_NS != 0
+    %@Wait@'ModuleName'%.Waitns(%'ModuleName'%.SHCP_CLOCK_DELAY_NS); /* wait according to data sheet */
 #endif
     %@SHCP@'ModuleName'%.ClrVal(); /* CLK high: data gets transfered into memory */
     val >>= 1; /* next bit */
@@ -309,6 +278,37 @@ void %'ModuleName'%.%Disable(void)
 
 %endif %- Disable
 %-BW_METHOD_END Disable
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Deinit
+%ifdef Deinit
+%include Common\74HC595Deinit.Inc
+void %'ModuleName'%.%Deinit(void)
+{
+  /* nothing needed here */
+}
+
+%endif %- Deinit
+%-BW_METHOD_END Deinit
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Init
+%ifdef Init
+%include Common\74HC595Init.Inc
+void %'ModuleName'%.%Init(void)
+{
+  %@STCP@'ModuleName'%.ClrVal(); /* latch */
+  %@DS@'ModuleName'%.ClrVal(); /* data */
+  %@SHCP@'ModuleName'%.ClrVal(); /* clock */
+%if defined(OE)
+  %if %EnableOEinInit='yes'
+  %'ModuleName'%.Enable(); /* enable device */
+  %else
+  %'ModuleName'%.Disable(); /* disable device */
+  %endif
+%endif
+}
+
+%endif %- Init
+%-BW_METHOD_END Init
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

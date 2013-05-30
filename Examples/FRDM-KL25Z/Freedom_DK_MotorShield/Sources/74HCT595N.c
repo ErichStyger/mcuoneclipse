@@ -1,3 +1,4 @@
+#if 0
 /*
  * 74HCT595N.c
  *
@@ -97,6 +98,6 @@ void HCT_Init(void) {
   DIR_EN_ClrVal(); /* device enabled by default */
 }
 
-
+#endif
 
 

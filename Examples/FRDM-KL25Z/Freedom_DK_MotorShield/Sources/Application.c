@@ -11,12 +11,12 @@
 #include "SERVO1.h"
 #include "SERVO2.h"
 #include "Shell.h"
-#include "74HCT595N.h"
+#include "HC595.h"
 
 static void APP_TestServos(void) {
   uint16_t pos;
   
-  for(pos=0;pos<=255;pos++) {
+  for(pos=0;pos<=255;pos+=5) {
     SERVO1_SetPos(pos);
     SERVO2_SetPos(pos);
     WAIT1_Waitms(20);
@@ -28,11 +28,10 @@ void APP_Run(void) {
   
   APP_TestServos();
   SHELL_Init();
-  (void)HCT_Init();
   for(;;) {
     SHELL_Parse();
-    HCT_ShiftByte(i);
-    HCT_Latch();
+    HC595_ShiftByte(i);
+    HC595_Latch();
     i++;
   }
 }
