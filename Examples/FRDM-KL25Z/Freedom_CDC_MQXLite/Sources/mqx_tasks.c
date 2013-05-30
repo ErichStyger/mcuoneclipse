@@ -44,9 +44,26 @@ extern "C" {
 static uint8_t cdc_buffer[USB1_DATA_BUFF_SIZE];
 static uint8_t in_buffer[USB1_DATA_BUFF_SIZE];
 
+
+/* USB event bits */
+#define USB_EVENT_ATTACH       0x1u
+#define USB_EVENT_RESET        0x2u
+#define USB_EVENT_TOK_DONE     0x4u
+#define USB_EVENT_SOF_TOK      0x8u
+#define USB_EVENT_DETACH       0x10u
+#define USB_EVENT_MASK         0x1Fu
+
+void usb_isr(pointer data_ptr);
+void USB_ISR(void);
+
+
+void usb_isr(pointer data_ptr) {
+  USB_ISR();  
+}
+
 void InitUSB(void) {
   /* Install usb interrupt */
-  (void)_int_install_isr(INT_USB0, usb_isr,  (pointer)&usb_data);
+  (void)_int_install_isr(INT_USB0, usb_isr,  (pointer)0);
   /* USB low level init */
   USB0_Init();
 }
