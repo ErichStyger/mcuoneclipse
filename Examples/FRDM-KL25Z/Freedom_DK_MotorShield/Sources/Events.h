@@ -58,6 +58,7 @@
 #include "TI1.h"
 #include "TimerIntLdd1.h"
 #include "TU3.h"
+#include "WAIT1.h"
 
 #ifdef __cplusplus
 extern "C" {
