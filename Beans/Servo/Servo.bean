@@ -4,7 +4,7 @@
     <Name>Servo</Name>
     <Description>Driver for a Servo</Description>
     <Author>Erich Styger, Andreas Schöpfer</Author>
-    <Version>01.046</Version>
+    <Version>01.055</Version>
     <Icon>Servo</Icon>
     <TypesFiles>PE,Servo\Servo</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -19,7 +19,7 @@
     <BW_NeedUst>0</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2013, all right reserved.\n\nThis an open source software implementing a driver for the \nServo Motors (as in the Tower FSLBOT Robot Kit) using Processor Expert.\nThis is a free software and is opened for education,  research \nand commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for\n  personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
+    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2013, all right reserved.\n\nThis an open source software implementing a driver for the \nServo Motors using Processor Expert.\nThis is a free software and is opened for education,  research \nand commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for\n  personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
     <Category>SW-Motor Control</Category>
     <DemoDriver>no</DemoDriver>
     <Shortcut>SERVO</Shortcut>
@@ -56,26 +56,9 @@
     </Property>
     <Property>
       <TIntgItem>
-        <Name>Init Position</Name>
-        <Symbol>DefaultPos</Symbol>
-        <Hint>Initialization position of the servo, from 0 to 255.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>true</EditLine>
-        <DefaultValue>127</DefaultValue>
-        <MinValue>0</MinValue>
-        <MaxValue>255</MaxValue>
-        <Bases>DEC</Bases>
-        <DefaultBase>DEC</DefaultBase>
-        <ExtraHintDisabled>false</ExtraHintDisabled>
-        <ChangeValueIntoRange>false</ChangeValueIntoRange>
-        <RuntimeProperty>false</RuntimeProperty>
-      </TIntgItem>
-    </Property>
-    <Property>
-      <TIntgItem>
-        <Name>Init PWM</Name>
+        <Name>Init PWM (us)</Name>
         <Symbol>InitPWM</Symbol>
-        <Hint>Initialization duty cycle for PWM</Hint>
+        <Hint>Initialization duty cycle for PWM in microseconds.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>true</EditLine>
         <DefaultValue>1500</DefaultValue>
@@ -90,9 +73,9 @@
     </Property>
     <Property>
       <TIntgItem>
-        <Name>Min PWM (us)</Name>
-        <Symbol>MinPWMvalue</Symbol>
-        <Hint>Minimal Servo PWM value, in microseconds</Hint>
+        <Name>Min Pos PWM (us)</Name>
+        <Symbol>MinPWMvalueUs</Symbol>
+        <Hint>Minimal Servo PWM value, in microseconds. This is used for the position calculation and corresponds to position 0.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>true</EditLine>
         <DefaultValue>900</DefaultValue>
@@ -107,14 +90,31 @@
     </Property>
     <Property>
       <TIntgItem>
-        <Name>Max PWM (us)</Name>
-        <Symbol>MaxPWMvalue</Symbol>
-        <Hint>Maximal Servo PWM value, in microseconds</Hint>
+        <Name>Max Pos PWM (us)</Name>
+        <Symbol>MaxPWMvalueUs</Symbol>
+        <Hint>Maximal Servo PWM value, in microseconds. This is used for the position calculation and corresponds to position 255.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>true</EditLine>
         <DefaultValue>2100</DefaultValue>
         <MinValue>0</MinValue>
         <MaxValue>3200</MaxValue>
+        <Bases>DEC</Bases>
+        <DefaultBase>DEC</DefaultBase>
+        <ExtraHintDisabled>false</ExtraHintDisabled>
+        <ChangeValueIntoRange>false</ChangeValueIntoRange>
+        <RuntimeProperty>false</RuntimeProperty>
+      </TIntgItem>
+    </Property>
+    <Property>
+      <TIntgItem>
+        <Name>PWM Period (us)</Name>
+        <Symbol>PWMPeriodUs</Symbol>
+        <Hint>PWM Period in us. Typically 20'000 us (50 Hz) are used. This needs to match the PWM settings used.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>20000</DefaultValue>
+        <MinValue>0</MinValue>
+        <MaxValue>-1</MaxValue>
         <Bases>DEC</Bases>
         <DefaultBase>DEC</DefaultBase>
         <ExtraHintDisabled>false</ExtraHintDisabled>
@@ -143,7 +143,7 @@
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
               <Description>Disabled</Description>
-              <Expanded>Yes</Expanded>
+              <Expanded>No</Expanded>
               <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
@@ -182,6 +182,20 @@
               <Children>
                 <GrupItem>
                   <TInhrLinkItem>
+                    <Name>Utility</Name>
+                    <Symbol>Util</Symbol>
+                    <TypeSpec>Servo\Util</TypeSpec>
+                    <Hint>Interface to utility module</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <DefaultValue/>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <SortStyle/>
+                  </TInhrLinkItem>
+                </GrupItem>
+                <GrupItem>
+                  <TInhrLinkItem>
                     <Name>Shell</Name>
                     <Symbol>Shell</Symbol>
                     <TypeSpec>Servo\Shell</TypeSpec>
@@ -196,20 +210,6 @@
                 </GrupItem>
               </Children>
             </TBoolGrupItem>
-          </GrupItem>
-          <GrupItem>
-            <TInhrLinkItem>
-              <Name>Utility</Name>
-              <Symbol>Util</Symbol>
-              <TypeSpec>Servo\Util</TypeSpec>
-              <Hint>Interface to utility module</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>false</EditLine>
-              <DefaultValue/>
-              <CanDelete>false</CanDelete>
-              <IconPopup>false</IconPopup>
-              <SortStyle/>
-            </TInhrLinkItem>
           </GrupItem>
           <GrupItem>
             <TInhrItem>
@@ -236,58 +236,10 @@
   <MethodList>
     <Method>
       <TMthdItem>
-        <Name>ParseCommand</Name>
-        <Symbol>ParseCommand</Symbol>
+        <Name>SetPWMDutyUs</Name>
+        <Symbol>SetPWMDutyUs</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Handler to process shell commands</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
-        <RetHint>Error code</RetHint>
-        <ParamCount>3</ParamCount>
-        <Parameter>
-          <ParName>cmd</ParName>
-          <ParType>8bit unsigned</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>Command string to be parsed</ParHint>
-          <ParUserDeclaration>const char_t *cmd</ParUserDeclaration>
-        </Parameter>
-        <Parameter>
-          <ParName>handled</ParName>
-          <ParType>Boolean</ParType>
-          <ParPassing>Address</ParPassing>
-          <ParHint>Pointer to boolean. The handler sets this variable to TRUE if command was handled, otherwise let it untouched.</ParHint>
-        </Parameter>
-        <Parameter>
-          <ParName>io</ParName>
-          <ParType>8bit unsigned</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint/>
-          <ParUserDeclaration>const %@Shell@'ModuleName'%.StdIOType *io</ParUserDeclaration>
-        </Parameter>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>byte #M#_#C#(const char_t *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>SetPWMDuty</Name>
-        <Symbol>SetPWMDuty</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Sets the servo PWM duty cycle</Hint>
+        <Hint>Sets the servo PWM duty cycle in micro seconds (us)</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -415,6 +367,54 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ParseCommand</Name>
+        <Symbol>ParseCommand</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Handler to process shell commands</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>cmd</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Command string to be parsed</ParHint>
+          <ParUserDeclaration>const char_t *cmd</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>handled</ParName>
+          <ParType>Boolean</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to boolean. The handler sets this variable to TRUE if command was handled, otherwise let it untouched.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>io</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint/>
+          <ParUserDeclaration>const %@Shell@'ModuleName'%.StdIOType *io</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(const char_t *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

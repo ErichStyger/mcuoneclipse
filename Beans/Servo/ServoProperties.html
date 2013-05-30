@@ -225,20 +225,20 @@ LI.EXP {
 <b>Inverted PWM</b></a> - If the PWM signal shall be inverted.
 </li>
 <li>
-<a name="DefaultPos">
-<b>Init Position</b></a> - Initialization position of the servo, from 0 to 255.
-</li>
-<li>
 <a name="InitPWM">
-<b>Init PWM</b></a> - Initialization duty cycle for PWM
+<b>Init PWM (us)</b></a> - Initialization duty cycle for PWM in microseconds.
 </li>
 <li>
-<a name="MinPWMvalue">
-<b>Min PWM (us)</b></a> - Minimal Servo PWM value, in microseconds
+<a name="MinPWMvalueUs">
+<b>Min Pos PWM (us)</b></a> - Minimal Servo PWM value, in microseconds. This is used for the position calculation and corresponds to position 0.
 </li>
 <li>
-<a name="MaxPWMvalue">
-<b>Max PWM (us)</b></a> - Maximal Servo PWM value, in microseconds
+<a name="MaxPWMvalueUs">
+<b>Max Pos PWM (us)</b></a> - Maximal Servo PWM value, in microseconds. This is used for the position calculation and corresponds to position 255.
+</li>
+<li>
+<a name="PWMPeriodUs">
+<b>PWM Period (us)</b></a> - PWM Period in us. Typically 20'000 us (50 Hz) are used. This needs to match the PWM settings used.
 </li>
 <li>
 <a name="SystemGroup">
@@ -263,14 +263,14 @@ The following items are available only if the group is enabled (the value is "En
 
   <ul>
     <li>
+    <a name="Util">
+    <b>Utility</b></a> - Interface to utility module
+    </li>
+    <li>
     <a name="Shell">
     <b>Shell</b></a> - Interface to shell
     </li>
   </ul>
-  </li>
-  <li>
-  <a name="Util">
-  <b>Utility</b></a> - Interface to utility module
   </li>
   <li>
   <a name="PWM">

@@ -20,12 +20,13 @@
  * D03, PWM2B, IC1 PWM
  */
 
-#include "DIR_LATCH.h" /* STCP, Storage register clock input */
-#include "DIR_SER.h" /*  DS, Serial Data Input */
-#include "DIR_CLK.h" /* SHCP, Shift register clock input */
-#include "DIR_EN.h" /* OE, Output Enable, low Active */
+#include "DIR_LATCH.h" /* STCP, Storage register clock input. A pulse on this pin latches the data to the output pins */
+#include "DIR_SER.h" /*  DS, Serial Data Input. This pin provides the serial data */
+#include "DIR_CLK.h" /* SHCP, Shift register clock input. This is the clock pin to the device. */
+#include "DIR_EN.h" /* OE, Output Enable, low active. If high, the device output pins are in Z-state (OFF) */
 #include "WAIT1.h"
 
+/* configures which device is used, as their timing is little bit different */
 #define DEVICE_74HC595    1
 #define DEVICE_74HCT595   0
 
@@ -51,9 +52,8 @@ void HCT_Latch(void) {
 /*!
  * \brief Shift a byte to the shift register. The most significant bit will be on output pin 0. Use Latch() to show the data on the output pins.
  * \param val 8bit value to be shifted
- * \return Error code, ERR_OK for everything was ok
  */
-uint8_t HCT_ShiftByte(uint8_t val) {
+void HCT_ShiftByte(uint8_t val) {
   /* see http://www.protostack.com/blog/2010/05/introduction-to-74hc595-shift-register-controlling-16-leds/ */
   int i;
 
@@ -79,7 +79,6 @@ uint8_t HCT_ShiftByte(uint8_t val) {
     DIR_CLK_ClrVal(); /* CLK high: data gets transfered into memory */
     val >>= 1; /* next bit */
   }
-  return ERR_OK;
 }
 
 void HCT_Enable(void) {
@@ -90,13 +89,12 @@ void HCT_Disable(void) {
   DIR_EN_SetVal(); /* disable device */
 }
 
-
 void HCT_Init(void) {
   /* all pins low */
   DIR_LATCH_ClrVal();
   DIR_SER_ClrVal();
   DIR_CLK_ClrVal();
-  DIR_EN_ClrVal();
+  DIR_EN_ClrVal(); /* device enabled by default */
 }
 
 
