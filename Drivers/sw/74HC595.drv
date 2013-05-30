@@ -215,9 +215,9 @@ void %'ModuleName'%.%Init(void)
   %@SHCP@'ModuleName'%.ClrVal(); /* clock */
 %if defined(OE)
   %if %EnableOEinInit='yes'
-  %@OE@'ModuleName'%.ClrVal(); /* device enabled */
+  %'ModuleName'%.Enable(); /* enable device */
   %else
-  %@OE@'ModuleName'%.SetVal(); /* device disabled */
+  %'ModuleName'%.Disable(); /* disable device */
   %endif
 %endif
 }
