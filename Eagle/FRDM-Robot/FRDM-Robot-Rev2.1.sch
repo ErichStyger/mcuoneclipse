@@ -12044,9 +12044,9 @@ Knitter-Switch MFP 106 D (SPDT)</description>
 <wire x1="-1.27" y1="1.524" x2="-0.762" y2="1.524" width="0.1524" layer="21"/>
 <wire x1="-0.762" y1="1.524" x2="-0.762" y2="1.27" width="0.1524" layer="21"/>
 <wire x1="-0.762" y1="1.524" x2="3.81" y2="1.524" width="0.1524" layer="21"/>
-<pad name="1" x="-4.61" y="0" drill="1.2192" shape="long" rot="R90"/>
-<pad name="2" x="0" y="0" drill="1.2192" shape="long" rot="R90"/>
-<pad name="3" x="4.61" y="0" drill="1.2192" shape="long" rot="R90"/>
+<pad name="1" x="-4.61" y="0" drill="1.524" diameter="2.54" shape="octagon" rot="R90"/>
+<pad name="2" x="0" y="0" drill="1.524" diameter="2.54" shape="octagon" rot="R90"/>
+<pad name="3" x="4.61" y="0" drill="1.524" diameter="2.54" shape="octagon" rot="R90"/>
 <text x="-5.207" y="-2.794" size="1.27" layer="21" ratio="10">1</text>
 <text x="-5.588" y="3.556" size="0.8128" layer="25" ratio="10">&gt;NAME</text>
 <text x="0" y="3.556" size="0.8128" layer="27" ratio="10">&gt;VALUE</text>
@@ -12107,7 +12107,7 @@ Knitter-Switch MFP 106 D
 </variantdefs>
 <classes>
 <class number="0" name="default" width="0" drill="0">
-<clearance class="0" value="0.355"/>
+<clearance class="0" value="0.0254"/>
 </class>
 </classes>
 <parts>
@@ -12154,16 +12154,15 @@ Knitter-Switch MFP 106 D
 <part name="VDD3" library="supply1" deviceset="VDD" device=""/>
 <part name="L5" library="led" deviceset="LED" device="CHIP-LED0603"/>
 <part name="L33" library="led" deviceset="LED" device="CHIP-LED0603"/>
-<part name="R3" library="resistor" deviceset="R-EU_" device="M0805" value="220"/>
+<part name="R3" library="resistor" deviceset="R-EU_" device="M0805" value="470"/>
 <part name="GND12" library="supply1" deviceset="GND" device=""/>
 <part name="P+3" library="supply1" deviceset="+5V" device=""/>
 <part name="+3V4" library="supply1" deviceset="+3V3" device=""/>
 <part name="GND13" library="supply1" deviceset="GND" device=""/>
-<part name="R4" library="resistor" deviceset="R-EU_" device="M0805" value="150"/>
+<part name="R4" library="resistor" deviceset="R-EU_" device="M0805" value="330"/>
 <part name="+3V5" library="supply1" deviceset="+3V3" device=""/>
 <part name="P+4" library="supply1" deviceset="+5V" device=""/>
 <part name="BT" library="con-lsta-FRDM" deviceset="FE06-1" device=""/>
-<part name="R7" library="resistor" deviceset="R-EU_" device="M0805" value="10k"/>
 <part name="R5" library="resistor" deviceset="R-EU_" device="M0805" value="470"/>
 <part name="FRAME1" library="frames" deviceset="A3L-LOC" device=""/>
 <part name="SW" library="switch-FRDM" deviceset="KNITTER-MFP106D" device=""/>
@@ -12175,7 +12174,7 @@ Knitter-Switch MFP 106 D
 <part name="C16" library="rcl" deviceset="C-EU" device="C0805" value="47uF"/>
 <part name="GND8" library="supply1" deviceset="GND" device=""/>
 <part name="LBAT" library="led" deviceset="LED" device="CHIP-LED0603"/>
-<part name="R6" library="resistor" deviceset="R-EU_" device="M0805" value="470"/>
+<part name="R6" library="resistor" deviceset="R-EU_" device="M0805" value="2k2"/>
 <part name="GND15" library="supply1" deviceset="GND" device=""/>
 <part name="VDD4" library="supply1" deviceset="VDD" device=""/>
 <part name="D1" library="diode" deviceset="DIODE-" device="SOD123"/>
@@ -12334,7 +12333,6 @@ MinIMU-9 v2</text>
 <instance part="+3V5" gate="G$1" x="347.98" y="190.5"/>
 <instance part="P+4" gate="1" x="363.22" y="190.5" rot="MR0"/>
 <instance part="BT" gate="G$1" x="335.28" y="170.18"/>
-<instance part="R7" gate="G$1" x="375.92" y="170.18" rot="R90"/>
 <instance part="R5" gate="G$1" x="195.58" y="27.94" rot="MR90"/>
 <instance part="FRAME1" gate="G$1" x="0" y="0"/>
 <instance part="SW" gate="1" x="172.72" y="48.26" rot="R270"/>
@@ -13208,42 +13206,34 @@ MinIMU-9 v2</text>
 <label x="345.44" y="175.26" size="1.778" layer="95"/>
 <pinref part="BT" gate="G$1" pin="5"/>
 <pinref part="SJ1" gate="G$1" pin="2"/>
-<pinref part="R7" gate="G$1" pin="2"/>
-<wire x1="375.92" y1="175.26" x2="355.6" y2="175.26" width="0.1524" layer="91"/>
-<junction x="355.6" y="175.26"/>
 </segment>
 </net>
 <net name="STATE" class="0">
-<segment>
-<pinref part="BT" gate="G$1" pin="6"/>
-<wire x1="342.9" y1="177.8" x2="360.68" y2="177.8" width="0.1524" layer="91"/>
-<label x="345.44" y="177.8" size="1.778" layer="95"/>
-<label x="360.68" y="177.8" size="1.778" layer="95" xref="yes"/>
-</segment>
 <segment>
 <pinref part="FRDM1" gate="G$1" pin="PTE29"/>
 <wire x1="172.72" y1="99.06" x2="177.8" y2="99.06" width="0.1524" layer="91"/>
 <label x="177.8" y="99.06" size="1.778" layer="95" xref="yes"/>
 </segment>
-</net>
-<net name="KEY" class="0">
 <segment>
 <pinref part="BT" gate="G$1" pin="1"/>
 <wire x1="342.9" y1="165.1" x2="355.6" y2="165.1" width="0.1524" layer="91"/>
 <label x="345.44" y="165.1" size="1.778" layer="95"/>
 <label x="360.68" y="160.02" size="1.778" layer="95" xref="yes"/>
-<wire x1="355.6" y1="165.1" x2="355.6" y2="162.56" width="0.1524" layer="91"/>
-<wire x1="355.6" y1="162.56" x2="355.6" y2="160.02" width="0.1524" layer="91"/>
+<wire x1="355.6" y1="165.1" x2="355.6" y2="160.02" width="0.1524" layer="91"/>
 <wire x1="355.6" y1="160.02" x2="360.68" y2="160.02" width="0.1524" layer="91"/>
-<pinref part="R7" gate="G$1" pin="1"/>
-<wire x1="375.92" y1="165.1" x2="375.92" y2="162.56" width="0.1524" layer="91"/>
-<wire x1="375.92" y1="162.56" x2="355.6" y2="162.56" width="0.1524" layer="91"/>
-<junction x="355.6" y="162.56"/>
 </segment>
+</net>
+<net name="KEY" class="0">
 <segment>
 <pinref part="FRDM1" gate="G$1" pin="PTC0"/>
 <wire x1="208.28" y1="99.06" x2="205.74" y2="99.06" width="0.1524" layer="91"/>
 <label x="205.74" y="99.06" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<pinref part="BT" gate="G$1" pin="6"/>
+<wire x1="342.9" y1="177.8" x2="360.68" y2="177.8" width="0.1524" layer="91"/>
+<label x="345.44" y="177.8" size="1.778" layer="95"/>
+<label x="360.68" y="177.8" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="BTRX" class="0">
