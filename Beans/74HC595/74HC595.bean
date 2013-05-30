@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bean>
+  <Header>
+    <Name>74HC595</Name>
+    <Description>Driver for the 74HC595 Shift Register Device</Description>
+    <Author>Erich Styger</Author>
+    <Version>01.016</Version>
+    <Icon>74HC595</Icon>
+    <TypesFiles>PE,74HC595\74HC595</TypesFiles>
+    <FileVersion>6</FileVersion>
+  </Header>
+  <Options>
+    <BW_HelpType>Basic</BW_HelpType>
+    <BW_HelpFiles>,Properties,Methods,Events</BW_HelpFiles>
+    <BW_AutoSaveHelp>yes</BW_AutoSaveHelp>
+    <BW_AutoSaveDriver>yes</BW_AutoSaveDriver>
+    <BW_DetailedHelp>yes</BW_DetailedHelp>
+    <BW_NeedTps>no</BW_NeedTps>
+    <BW_NeedUst>0</BW_NeedUst>
+    <BW_NeedCns>0</BW_NeedCns>
+    <BeanStatus>PROPOSAL</BeanStatus>
+    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2013, all rights reserved.\nWeb: http://mcuoneclipse.com\n\nThis an open source software implementing a driver using Processor Expert.\nThis is a free software and is opened for education, research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
+    <Category>SW-User Components</Category>
+    <DemoDriver>no</DemoDriver>
+    <BeanLevel>High</BeanLevel>
+    <Shortcut>HC595</Shortcut>
+  </Options>
+  <PropertyList>
+    <Property>
+      <TCompNameItem>
+        <Name>Component name</Name>
+        <Symbol>DeviceName</Symbol>
+        <Hint>Name of the component.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue/>
+      </TCompNameItem>
+    </Property>
+    <Property>
+      <TInhrItem>
+        <Name>Latch (STCP)</Name>
+        <Symbol>STCP</Symbol>
+        <TypeSpec>74HC595\STCP</TypeSpec>
+        <Hint>STCP, Storage register clock input. A pulse on this pin latches the data to the output pins</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>-1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <InhrBeanBaseName>STCP</InhrBeanBaseName>
+        <ShowInheritedMethodsEventsInPrjTree>false</ShowInheritedMethodsEventsInPrjTree>
+      </TInhrItem>
+    </Property>
+    <Property>
+      <TInhrItem>
+        <Name>Data (DS)</Name>
+        <Symbol>DS</Symbol>
+        <TypeSpec>74HC595\DS</TypeSpec>
+        <Hint>DS, Serial Data Input. This pin provides the serial data.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>-1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <InhrBeanBaseName>DS</InhrBeanBaseName>
+        <ShowInheritedMethodsEventsInPrjTree>false</ShowInheritedMethodsEventsInPrjTree>
+      </TInhrItem>
+    </Property>
+    <Property>
+      <TInhrItem>
+        <Name>Clock (SHCP)</Name>
+        <Symbol>SHCP</Symbol>
+        <TypeSpec>74HC595\SHCP</TypeSpec>
+        <Hint>SHCP, Shift register clock input. This is the clock pin to the device.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>-1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <InhrBeanBaseName>SHCP</InhrBeanBaseName>
+        <ShowInheritedMethodsEventsInPrjTree>false</ShowInheritedMethodsEventsInPrjTree>
+      </TInhrItem>
+    </Property>
+    <Property>
+      <TIntgItem>
+        <Name>Clock/Latch delay (ns)</Name>
+        <Symbol>ClockLatchDelayNs</Symbol>
+        <Hint>Latch/Clock delay in nano-seconds, zero for no delay. The clock and latch signal might need some additional delays. The datasheet specifies 16-19 ns.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>19</DefaultValue>
+        <MinValue>0</MinValue>
+        <MaxValue>-1</MaxValue>
+        <Bases>DEC</Bases>
+        <DefaultBase>DEC</DefaultBase>
+        <ExtraHintDisabled>false</ExtraHintDisabled>
+        <ChangeValueIntoRange>false</ChangeValueIntoRange>
+        <RuntimeProperty>false</RuntimeProperty>
+      </TIntgItem>
+    </Property>
+    <Property>
+      <TInhrLinkItem>
+        <Name>Wait</Name>
+        <Symbol>Wait</Symbol>
+        <TypeSpec>74HC595\WAIT</TypeSpec>
+        <Hint>Interface to waiting routines</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <DefaultValue/>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <SortStyle/>
+      </TInhrLinkItem>
+    </Property>
+    <Property>
+      <TBoolGrupItem>
+        <Name>Enable Pin (OE)</Name>
+        <Symbol>HasEnablePin</Symbol>
+        <TypeSpec>typeEnaDis</TypeSpec>
+        <Hint>If enabled, the driver is using the OE (Enable pin). Otherwise, the pin needs to be to a high level  to have the device enabled)</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>Enabled</Description>
+        <Expanded>Yes</Expanded>
+        <DefaultValue>true</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <Children>
+          <GrupItem>
+            <TBoolItem>
+              <Name>Enable in Init</Name>
+              <Symbol>EnableOEinInit</Symbol>
+              <TypeSpec>typeYesNo</TypeSpec>
+              <Hint>If device is enabled (OE low) during startup and Init() call.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>0</DefaultIndex>
+              <TextValueIndex>false</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <DefaultValue>true</DefaultValue>
+              <Popup>false</Popup>
+            </TBoolItem>
+          </GrupItem>
+          <GrupItem>
+            <TInhrItem>
+              <Name>Enable (OE)</Name>
+              <Symbol>OE</Symbol>
+              <TypeSpec>74HC595\OE</TypeSpec>
+              <Hint>OE, Output Enable, low active. If high, the device output pins are in Z-state (OFF)</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>-1</DefaultIndex>
+              <TextValueIndex>false</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <InhrBeanBaseName>OE</InhrBeanBaseName>
+              <ShowInheritedMethodsEventsInPrjTree>false</ShowInheritedMethodsEventsInPrjTree>
+            </TInhrItem>
+          </GrupItem>
+        </Children>
+      </TBoolGrupItem>
+    </Property>
+  </PropertyList>
+  <MethodList>
+    <Method>
+      <TMthdItem>
+        <Name>Enable</Name>
+        <Symbol>Enable</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Enables the device</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Disable</Name>
+        <Symbol>Disable</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Disables the device</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ShiftByte</Name>
+        <Symbol>ShiftByte</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Shift a byte to the shift register. The most significant bit will be on output pin 0. Use Latch() to show the data on the output pins.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>val</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>8bit value to be shifted</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(byte val)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Latch</Name>
+        <Symbol>Latch</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Sends a latch pulse to move the bits from the internal memory to the output pins.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Deinit</Name>
+        <Symbol>Deinit</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Deinitializes the driver</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Init</Name>
+        <Symbol>Init</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Initializes the driver</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+  </MethodList>
+  <Links>
+    <EmptySection_DummyValue/>
+  </Links>
+  <Revisions>
+    <RevisionVersion>2</RevisionVersion>
+  </Revisions>
+</Bean>
