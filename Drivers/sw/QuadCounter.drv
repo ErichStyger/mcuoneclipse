@@ -509,7 +509,7 @@ void %OnError(void)
   /* ### %DeviceType "%DeviceName" init code ... */
 %CODE_BEGIN
 %CODE_END
-%'ModuleName'%.%Init();
+  %'ModuleName'%.%Init();
 %ENABLE
 %CODE_BEGIN
 %CODE_END
