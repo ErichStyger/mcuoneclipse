@@ -243,6 +243,27 @@ LI.EXP {
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 </ul><br />
 </li>
+<li><a name="ReadByte">
+<b>ReadByte</b></a>
+ - Returns the current value of the shift register. The current value of the shift register is cached in the driver.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ReadByte(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:byte</i> - current shift register value (cached)
+</li>
+</ul><br />
+</li>
+<li><a name="WriteByte">
+<b>WriteByte</b></a>
+ - Shifts the given byte and latches it.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void WriteByte(byte val)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>val:byte</i> - value to be shifted into the shift register. The value will be latched and will appear on the output pins.</li>
+</ul><br />
+</li>
 <li><a name="Deinit">
 <b>Deinit</b></a>
  - Deinitializes the driver

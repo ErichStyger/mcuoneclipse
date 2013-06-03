@@ -153,6 +153,24 @@ void %'ModuleName'%.%Disable(void);
 
 %endif %- Disable
 %-BW_METHOD_END Disable
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN WriteByte
+%ifdef WriteByte
+void %'ModuleName'%.%WriteByte(byte val);
+%define! Parval
+%include Common\74HC595WriteByte.Inc
+
+%endif %- WriteByte
+%-BW_METHOD_END WriteByte
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ReadByte
+%ifdef ReadByte
+byte %'ModuleName'%.%ReadByte(void);
+%define! RetVal
+%include Common\74HC595ReadByte.Inc
+
+%endif %- ReadByte
+%-BW_METHOD_END ReadByte
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -187,6 +205,8 @@ void %'ModuleName'%.%Disable(void);
 %-     int %'ModuleName'%.counter2;
 #define %'ModuleName'%.STCP_LATCH_DELAY_NS  %ClockLatchDelayNs /* delay in nano seconds */
 #define %'ModuleName'%.SHCP_CLOCK_DELAY_NS  %ClockLatchDelayNs /* delay in nano seconds */
+
+static uint8_t %'ModuleName'%.regVal8; /* cached value of the shift register */
 %-
 %-BW_CUSTOM_VARIABLE_END
 %-BW_INTERN_METHOD_DECL_START
@@ -223,6 +243,7 @@ void %'ModuleName'%.%ShiftByte(byte val)
   int i;
 
   /* precondition: latch pin, data pin and clock pin are all low */
+  %'ModuleName'%.regVal8 = val;
   for(i=0;i<8;i++) {
     /* put data bit */
     if (val&1) { /* LSB bit first */
@@ -295,6 +316,7 @@ void %'ModuleName'%.%Deinit(void)
 %include Common\74HC595Init.Inc
 void %'ModuleName'%.%Init(void)
 {
+  %'ModuleName'%.regVal8 = 0;
   %@STCP@'ModuleName'%.ClrVal(); /* latch */
   %@DS@'ModuleName'%.ClrVal(); /* data */
   %@SHCP@'ModuleName'%.ClrVal(); /* clock */
@@ -309,6 +331,31 @@ void %'ModuleName'%.%Init(void)
 
 %endif %- Init
 %-BW_METHOD_END Init
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN WriteByte
+%ifdef WriteByte
+%define! Parval
+%include Common\74HC595WriteByte.Inc
+void %'ModuleName'%.%WriteByte(byte val)
+{
+  %'ModuleName'%.ShiftByte(val); /* shift byte to the shift register */
+  %'ModuleName'%.Latch(); /* latch it and show it on the output pins */
+}
+
+%endif %- WriteByte
+%-BW_METHOD_END WriteByte
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ReadByte
+%ifdef ReadByte
+%define! RetVal
+%include Common\74HC595ReadByte.Inc
+byte %'ModuleName'%.%ReadByte(void)
+{
+  return %'ModuleName'%.regVal8;
+}
+
+%endif %- ReadByte
+%-BW_METHOD_END ReadByte
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
