@@ -168,6 +168,15 @@ byte %'ModuleName'%.%PWMusToPos8(word us);
 
 %endif %- PWMusToPos8
 %-BW_METHOD_END PWMusToPos8
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN IsMoving
+%ifdef IsMoving
+bool %'ModuleName'%.%IsMoving(void);
+%define! RetVal
+%include Common\ServoIsMoving.Inc
+
+%endif %- IsMoving
+%-BW_METHOD_END IsMoving
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -448,6 +457,18 @@ byte %'ModuleName'%.%PWMusToPos8(word us)
 
 %endif %- PWMusToPos8
 %-BW_METHOD_END PWMusToPos8
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN IsMoving
+%ifdef IsMoving
+%define! RetVal
+%include Common\ServoIsMoving.Inc
+bool %'ModuleName'%.%IsMoving(void)
+{
+  return Servo.cnt!=0; /* a count greater zero means we are still moving */
+}
+
+%endif %- IsMoving
+%-BW_METHOD_END IsMoving
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

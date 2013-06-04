@@ -210,7 +210,7 @@ bool %'ModuleName'%.%TriggerPending(byte trigger);
   \brief Descriptor defining a trigger. Triggers are used set as 'reminders' for the future.
 */
 typedef struct TriggerDesc {
-  word triggerTime;       %>%CTAB /*!< trigger 'time' when the there shall be a trigger */
+  word triggerTime;       %>%CTAB /*!< trigger 'time' in ticks */
   void (*callback)(void); %>%CTAB /*!< callback function */
 } TriggerDesc;
 
@@ -278,17 +278,19 @@ static bool CheckCallbacks(void)
 %include Common\TriggerAddTick.Inc
 void %'ModuleName'%.%AddTick(void)
 {
-  /* This method is usually called from a timer interrupt! */
+  /* This method is usually called from a periodic timer interrupt! */
   uint8_t i;
 
   for(i=0;i<sizeof(TriggerList)/sizeof(TriggerDesc);i++) {
     EnterCritical();
-    if (TriggerList[i].triggerTime!=0) {   /* prevent underflow */
+    if (TriggerList[i].triggerTime!=0) { /* prevent underflow */
       TriggerList[i].triggerTime--;
     }
     ExitCritical();
   } /* for */
-  while(CheckCallbacks()) {} %>%CTAB /* while we have callbacks, re-iterate the list as this may have added new triggers at the current time */
+  while(CheckCallbacks()) {
+    /* while we have callbacks, re-iterate the list as this may have added new triggers at the current time */
+  }
 }
 
 %endif %- AddTick
