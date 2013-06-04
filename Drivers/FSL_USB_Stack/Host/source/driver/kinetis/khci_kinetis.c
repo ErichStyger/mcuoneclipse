@@ -46,7 +46,9 @@
 #if !HIGH_SPEED_DEVICE
 
 /* Global variables */
-#define _BDT_RESERVED_SECTION_ /* << EST */
+#ifndef __CWCC__ /* Freescale (non-gcc) Kinetis compiler. If the macro below is enabled, the bdt buffer needs to be defined in the linker file */
+  #define _BDT_RESERVED_SECTION_ /* if defined, we use a static buffer (instead of malloc()), on a 512 byte boundary */
+#endif
 #if(defined _BDT_RESERVED_SECTION_)
 	#ifdef __CWCC__
 	  #pragma define_section usb_bdt ".usb_bdt" RW
