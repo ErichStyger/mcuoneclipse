@@ -4,7 +4,7 @@
     <Name>Servo</Name>
     <Description>Driver for a Servo</Description>
     <Author>Erich Styger, Andreas Schöpfer</Author>
-    <Version>01.056</Version>
+    <Version>01.058</Version>
     <Icon>Servo</Icon>
     <TypesFiles>PE,Servo\Servo</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -175,7 +175,7 @@
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
               <Description>Disabled</Description>
-              <Expanded>Yes</Expanded>
+              <Expanded>No</Expanded>
               <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
@@ -339,6 +339,34 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>void #M#_#C#(byte pos, int16_t timeMs)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>IsMoving</Name>
+        <Symbol>IsMoving</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Returns TRUE as long the servo is moving (e.g. after using MovePos())</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>Boolean</ReturnType>
+        <RetHint>TRUE if the servo is still moving.</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>bool #M#_#C#(void)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

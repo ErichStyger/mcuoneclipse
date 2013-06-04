@@ -5,6 +5,8 @@
 %endif
 %ifndef Trigger
   %set MovePos Selection never
+  %set IsMoving Selection never
 %else
   %set MovePos Selection always
+  %set IsMoving Selection always
 %endif
