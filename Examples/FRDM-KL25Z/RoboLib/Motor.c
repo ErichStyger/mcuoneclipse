@@ -3,7 +3,8 @@
  *
  *      Author: Erich Styger
  */
-
+#include "Platform.h"
+#if PL_HAS_MOTOR
 #include "Motor.h"
 #include "DIRR.h"
 #include "DIRL.h"
@@ -337,3 +338,4 @@ void MOT_Init(void) {
   PWML_Enable();
   PWMR_Enable();
 }
+#endif /* PL_HAS_MOTOR */

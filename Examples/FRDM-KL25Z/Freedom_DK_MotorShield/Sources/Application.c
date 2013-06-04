@@ -12,6 +12,7 @@
 #include "SERVO2.h"
 #include "Shell.h"
 #include "Relay.h"
+#include "TRG1.h"
 //#include "MOTL.h"
 
 static void APP_TestServos(void) {
@@ -22,6 +23,7 @@ static void APP_TestServos(void) {
     SERVO2_SetPos(pos);
     WAIT1_Waitms(20);
   }
+  SERVO1_MovePos(200, 5000);
 }
 
 static void APP_TestRelais(void) {
