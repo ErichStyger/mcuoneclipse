@@ -4,7 +4,7 @@
     <Name>74HC595</Name>
     <Description>Driver for the 74HC595 Shift Register Device</Description>
     <Author>Erich Styger</Author>
-    <Version>01.021</Version>
+    <Version>01.022</Version>
     <Icon>74HC595</Icon>
     <TypesFiles>PE,74HC595\74HC595</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -120,6 +120,24 @@
         <IconPopup>false</IconPopup>
         <SortStyle/>
       </TInhrLinkItem>
+    </Property>
+    <Property>
+      <TBoolItem>
+        <Name>MSB first</Name>
+        <Symbol>MSBfirst</Symbol>
+        <TypeSpec>typeYesNo</TypeSpec>
+        <Hint>If the Most Significant Bit of a byte shall be shifted first. Otherwise shifting starts with the LSB (Least Significant Bit).</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>false</DefaultValue>
+        <Popup>false</Popup>
+      </TBoolItem>
     </Property>
     <Property>
       <TBoolGrupItem>

@@ -207,6 +207,12 @@ byte %'ModuleName'%.%ReadByte(void);
 #define %'ModuleName'%.SHCP_CLOCK_DELAY_NS  %ClockLatchDelayNs /* delay in nano seconds */
 
 static uint8_t %'ModuleName'%.regVal8; /* cached value of the shift register */
+
+%if %MSBfirst='yes'
+#define %'ModuleName'%.SHIFT_MSB_FIRST  1  /* MSB is shifted first */
+%else
+#define %'ModuleName'%.SHIFT_MSB_FIRST  0  /* LSB is shifted first */
+%endif
 %-
 %-BW_CUSTOM_VARIABLE_END
 %-BW_INTERN_METHOD_DECL_START
@@ -239,14 +245,17 @@ void %'ModuleName'%.%Latch(void)
 %include Common\74HC595ShiftByte.Inc
 void %'ModuleName'%.%ShiftByte(byte val)
 {
-  /* see http://www.protostack.com/blog/2010/05/introduction-to-74hc595-shift-register-controlling-16-leds/ */
-  int i;
+  uint8_t i;
 
   /* precondition: latch pin, data pin and clock pin are all low */
   %'ModuleName'%.regVal8 = val;
-  for(i=0;i<8;i++) {
+  for(i=0;i<8;i++) { /* shift all the 8 bits */
     /* put data bit */
+#if %'ModuleName'%.SHIFT_MSB_FIRST
+    if (val&0x80) { /* LSB bit first */
+#else /* LSB first */
     if (val&1) { /* LSB bit first */
+#endif
       %@DS@'ModuleName'%.SetVal();
     } else {
       %@DS@'ModuleName'%.ClrVal();
@@ -263,7 +272,11 @@ void %'ModuleName'%.%ShiftByte(byte val)
     %@Wait@'ModuleName'%.Waitns(%'ModuleName'%.SHCP_CLOCK_DELAY_NS); /* wait according to data sheet */
 #endif
     %@SHCP@'ModuleName'%.ClrVal(); /* CLK high: data gets transfered into memory */
+#if %'ModuleName'%.SHIFT_MSB_FIRST
+    val <<= 1; /* next bit */
+#else
     val >>= 1; /* next bit */
+#endif
   }
 }
 
