@@ -23,7 +23,6 @@
 #include "PE_Const.h"
 #include "IO_Map.h"
 #include "PE_Timer.h"
-#include "FSSH1.h"
 #include "UTIL1.h"
 #include "FRTOS1.h"
 #include "Inhr3.h"
@@ -50,6 +49,7 @@
 #include "FLASH_CS.h"
 #include "FLASH_WP.h"
 #include "AS1.h"
+#include "CLS1.h"
 #include "ACCEL.h"
 
 void Cpu_OnCoreWatchdogINT(void);

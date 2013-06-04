@@ -19,7 +19,6 @@
 /* Including needed modules to compile this module/procedure */
 #include "Cpu.h"
 #include "Events.h"
-#include "FSSH1.h"
 #include "UTIL1.h"
 #include "FRTOS1.h"
 #include "Inhr3.h"
@@ -46,6 +45,7 @@
 #include "FLASH_CS.h"
 #include "FLASH_WP.h"
 #include "AS1.h"
+#include "CLS1.h"
 #include "ACCEL.h"
 
 /* Including shared modules, which are used for whole project */
