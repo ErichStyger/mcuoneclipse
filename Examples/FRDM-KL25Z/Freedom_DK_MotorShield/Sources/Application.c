@@ -11,7 +11,8 @@
 #include "SERVO1.h"
 #include "SERVO2.h"
 #include "Shell.h"
-#include "HC595.h"
+#include "Relay.h"
+//#include "MOTL.h"
 
 static void APP_TestServos(void) {
   uint16_t pos;
@@ -23,16 +24,32 @@ static void APP_TestServos(void) {
   }
 }
 
-void APP_Run(void) {
-  uint8_t i=0;
+static void APP_TestRelais(void) {
+  int8_t i;
   
-  APP_TestServos();
+  for(i=0;i<REL_NOF_RELAYS;i++) {
+    REL_On(i);
+  }
+  for(i=REL_NOF_RELAYS-1;i>=0;i--) {
+    REL_Off(i);
+  }
+}
+
+//static uint16_t oldDuty, duty = 0xffff;
+
+void APP_Run(void) {
   SHELL_Init();
+  APP_TestServos();
+  REL_Init();
+  APP_TestRelais();
   for(;;) {
     SHELL_Parse();
-    HC595_ShiftByte(i);
-    HC595_Latch();
-    i++;
+#if 0
+    if (duty!=oldDuty) {
+      MOTL_SetRatio16(duty);
+      oldDuty = duty;
+    }
+#endif
   }
 }
 

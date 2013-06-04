@@ -10,5 +10,6 @@
 
 #include "PE_Types.h"
 
+#define PL_HAS_MOTOR   0
 
 #endif /* PLATFORM_H_ */

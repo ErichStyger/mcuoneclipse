@@ -36,7 +36,7 @@
 #include "IO_Map.h"
 #include "UTIL1.h"
 #include "Servo1.h"
-#include "TU1.h"
+#include "TPM0_Servo.h"
 #include "TRG1.h"
 #include "SERVO1.h"
 #include "Pwm1.h"
@@ -60,6 +60,14 @@
 #include "BitIoLdd7.h"
 #include "OE1.h"
 #include "BitIoLdd8.h"
+#include "PWM2A.h"
+#include "BitIoLdd10.h"
+#include "PWM2B.h"
+#include "BitIoLdd9.h"
+#include "PWM0A.h"
+#include "BitIoLdd11.h"
+#include "PWM0B.h"
+#include "BitIoLdd12.h"
 
 #ifdef __cplusplus
 extern "C" {
