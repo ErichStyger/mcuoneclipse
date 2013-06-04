@@ -692,7 +692,7 @@ void %'ModuleName'%.%GotoXY(byte line, byte column)
     offset = 0x00;
   } else if (line==2) {
     offset = Line2Offset;
-  } else if (line==2) {
+  } else if (line==3) {
     offset = Line3Offset;
   } else { /* line 4 */
     offset = Line4Offset;
