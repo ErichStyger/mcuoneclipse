@@ -451,7 +451,7 @@ byte %'ModuleName'%.%PWMusToPos8(word us)
   if (time<us) {
     return (byte)(pos+1); /* add rounding */
   } else {
-    return pos;
+    return (byte)pos;
   }
 }
 
@@ -464,7 +464,7 @@ byte %'ModuleName'%.%PWMusToPos8(word us)
 %include Common\ServoIsMoving.Inc
 bool %'ModuleName'%.%IsMoving(void)
 {
-  return Servo.cnt!=0; /* a count greater zero means we are still moving */
+  return (bool)(Servo.cnt!=0); /* a count greater zero means we are still moving */
 }
 
 %endif %- IsMoving
