@@ -1,8 +1,8 @@
 
 [USED_FACES]
-BeanVersion=01.013
+BeanVersion=01.018
 
-InterfacesCount=4
+InterfacesCount=6
 
 Symbol=C1
 Link=No
@@ -23,3 +23,13 @@ Symbol=EventCounterC2
 Link=No
 Interface=QuadCounter\Cx
 Version=01.003
+
+Symbol=Shell
+Link=Yes
+Interface=QuadCounter\Shell
+Version=01.002
+
+Symbol=Utility
+Link=Yes
+Interface=QuadCounter\Utility
+Version=01.001

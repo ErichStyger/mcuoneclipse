@@ -105,6 +105,11 @@
 %-  Example:
 %-    typedef int TMyInteger;
 %-
+%ifdef ParseCommand
+#define %'ModuleName'%.PARSE_COMMAND_ENABLED  1  /* set to 1 if method ParseCommand() is present, 0 otherwise */
+%else
+#define %'ModuleName'%.PARSE_COMMAND_ENABLED  0 /* set to 1 if method ParseCommand() is present, 0 otherwise */
+%endif %- ParseCommand
 %-BW_CUSTOM_USERTYPE_END
 
 
@@ -168,6 +173,18 @@ void %'ModuleName'%.%Init(void);
 
 %endif %- Init
 %-BW_METHOD_END Init
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ParseCommand
+%ifdef ParseCommand
+byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io);
+%define! Parcmd
+%define! Parhandled
+%define! Pario
+%define! RetVal
+%include Common\QuadCounterParseCommand.Inc
+
+%endif %- ParseCommand
+%-BW_METHOD_END ParseCommand
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -485,6 +502,45 @@ void %'ModuleName'%.%Init(void)
 
 %endif %- Init
 %-BW_METHOD_END Init
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ParseCommand
+%ifdef ParseCommand
+%define! Parcmd
+%define! Parhandled
+%define! Pario
+%define! RetVal
+%include Common\QuadCounterParseCommand.Inc
+/*!
+ * \brief Parses a command
+ * \param cmd Command string to be parsed
+ * \param handled Sets this variable to TRUE if command was handled
+ * \param io I/O stream to be used for input/output
+ * \return Error code, ERR_OK if everything was fine
+ */
+byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)
+{
+  uint8_t res=ERR_OK;
+
+  if (%@Utility@'ModuleName'%.strcmp((const char*)cmd, %@Shell@'ModuleName'%.CMD_HELP)==0 || %@Utility@'ModuleName'%.strcmp((const char *)cmd, "%'ModuleName' help")==0) {
+    %@Shell@'ModuleName'%.SendHelpStr((const unsigned char*)"%'ModuleName'", (const unsigned char*)"%'ModuleName' command group\r\n", io->stdOut);
+    %@Shell@'ModuleName'%.SendHelpStr((const unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
+    %@Shell@'ModuleName'%.SendHelpStr((const unsigned char*)"  reset", (const unsigned char*)"Reset the current position counter\r\n", io->stdOut);
+    *handled = TRUE;
+  } else if (%@Utility@'ModuleName'%.strcmp((const char*)cmd, %@Shell@'ModuleName'%.CMD_STATUS)==0 || %@Utility@'ModuleName'%.strcmp((const char*)cmd, "%'ModuleName' status")==0) {
+    %@Shell@'ModuleName'%.SendStr((const unsigned char*)"%'ModuleName':\r\n", io->stdOut);
+    %@Shell@'ModuleName'%.SendStatusStr((const unsigned char*)"  pos", (const unsigned char*)"", io->stdOut);
+    %@Shell@'ModuleName'%.SendNum16u(%'ModuleName'%.currPos, io->stdOut);
+    %@Shell@'ModuleName'%.SendStr((const unsigned char*)"\r\n", io->stdOut);
+    *handled = TRUE;
+  } else if (%@Utility@'ModuleName'%.strcmp((const char*)cmd, "%'ModuleName' reset")==0) {
+    %'ModuleName'%.SetPos(0);
+    *handled = TRUE;
+  }
+  return res;
+}
+
+%endif %- ParseCommand
+%-BW_METHOD_END ParseCommand
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
