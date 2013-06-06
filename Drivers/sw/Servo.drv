@@ -349,7 +349,6 @@ void %'ModuleName'%.%MovePos(byte pos, int16_t timeMs)
  */
 byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)
 {
-  /* handling our own commands */
   int32_t val;
   const unsigned char *p;
   uint8_t res=ERR_OK;

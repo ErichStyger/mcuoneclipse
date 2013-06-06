@@ -4,7 +4,7 @@
     <Name>Servo</Name>
     <Description>Driver for a Servo</Description>
     <Author>Erich Styger, Andreas Schöpfer</Author>
-    <Version>01.058</Version>
+    <Version>01.061</Version>
     <Icon>Servo</Icon>
     <TypesFiles>PE,Servo\Servo</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -175,17 +175,17 @@
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
               <Description>Disabled</Description>
-              <Expanded>No</Expanded>
+              <Expanded>Yes</Expanded>
               <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
               <Children>
                 <GrupItem>
                   <TInhrLinkItem>
-                    <Name>Utility</Name>
-                    <Symbol>Util</Symbol>
-                    <TypeSpec>Servo\Util</TypeSpec>
-                    <Hint>Interface to utility module</Hint>
+                    <Name>Shell</Name>
+                    <Symbol>Shell</Symbol>
+                    <TypeSpec>Servo\Shell</TypeSpec>
+                    <Hint>Interface to shell</Hint>
                     <ItemLevel>BASIC</ItemLevel>
                     <EditLine>false</EditLine>
                     <DefaultValue/>
@@ -196,10 +196,10 @@
                 </GrupItem>
                 <GrupItem>
                   <TInhrLinkItem>
-                    <Name>Shell</Name>
-                    <Symbol>Shell</Symbol>
-                    <TypeSpec>Servo\Shell</TypeSpec>
-                    <Hint>Interface to shell</Hint>
+                    <Name>Utility</Name>
+                    <Symbol>Util</Symbol>
+                    <TypeSpec>Servo\Util</TypeSpec>
+                    <Hint>Interface to utility module</Hint>
                     <ItemLevel>BASIC</ItemLevel>
                     <EditLine>false</EditLine>
                     <DefaultValue/>
@@ -425,7 +425,7 @@
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Command string to be parsed</ParHint>
-          <ParUserDeclaration>const char_t *cmd</ParUserDeclaration>
+          <ParUserDeclaration>const unsigned char *cmd</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>handled</ParName>
@@ -437,12 +437,12 @@
           <ParName>io</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint/>
+          <ParHint>Pointer to I/O structure</ParHint>
           <ParUserDeclaration>const %@Shell@'ModuleName'%.StdIOType *io</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const char_t *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)</ANSIC>
+          <ANSIC>byte #M#_#C#(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

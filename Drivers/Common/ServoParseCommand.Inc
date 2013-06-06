@@ -11,7 +11,7 @@
 %;**       * handled%Parhandled %>27 - Pointer to boolean. The handler
 %;** %>29 sets this variable to TRUE if command was
 %;** %>29 handled, otherwise let it untouched.
-%;**         io%Pario %>27 - 
+%;**         io%Pario %>27 - Pointer to I/O structure
 %;**     Returns     :
 %;**         ---%RetVal %>27 - Error code
 %include Common\GeneralDamage.inc

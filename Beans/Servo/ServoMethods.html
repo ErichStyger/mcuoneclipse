@@ -253,11 +253,11 @@ LI.EXP {
  - Handler to process shell commands
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte ParseCommand(const char_t *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)<br />
+<br /><i>ANSIC prototype:</i> byte ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>cmd:byte</i> - Command string to be parsed</li>
 <li><i>handled: Pointer to bool</i> - Pointer to boolean. The handler sets this variable to TRUE if command was handled, otherwise let it untouched.</li>
-<li><i>io:byte</i> - no hint</li>
+<li><i>io:byte</i> - Pointer to I/O structure</li>
 <li><i>Return value:byte</i> - Error code
 </li>
 </ul><br />
