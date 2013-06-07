@@ -33,11 +33,11 @@
 static LDD_TDeviceData *timerHandle;
 static xQueueHandle mutexHandle;
 static bool doMinMaxCalibration = FALSE;
-#define REF_SENSOR_TIMEOUT_MS  3  /* after this time, consider no reflection (black) */
+#define REF_SENSOR_TIMEOUT_MS  10  /* after this time, consider no reflection (black) */
 #if PL_IS_ZUMO_ROBOT
   #define REF_SENSOR1_IS_LEFT    0  /* if sensor 1 is on the left side */
-  #define REF_MIN_LINE_VAL   0x100  /* minimum value indicating a line */
-  #define REF_MIN_NOISE_VAL   0x45   /* values below this are not added to the weighted sum */
+  #define REF_MIN_LINE_VAL    0x20  /* minimum value indicating a line */
+  #define REF_MIN_NOISE_VAL   0x10   /* values below this are not added to the weighted sum */
 #elif PL_IS_ROUND_ROBOT
   #define REF_SENSOR1_IS_LEFT    0  /* if sensor 1 is on the left side */
   #define REF_MIN_LINE_VAL    0x20   /* minimum value indicating a line */

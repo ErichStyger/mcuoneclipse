@@ -13,7 +13,7 @@
 static UART_Desc deviceData;
 
 static void SendChar(unsigned char ch, UART_Desc *desc) {
-  desc->isSent = FALSE;  /* this will be set to 1 once the block has been sent */
+  desc->isSent = FALSE;  /* this will be set to TRUE once the block has been sent */
   while(AS1_SendBlock(desc->handle, (LDD_TData*)&ch, 1)!=ERR_OK) {} /* Send char */
   while(!desc->isSent) {} /* wait until we get the green flag from the TX interrupt */
 }

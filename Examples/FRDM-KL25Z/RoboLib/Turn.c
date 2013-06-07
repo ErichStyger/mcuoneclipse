@@ -5,7 +5,7 @@
  *      Author: Erich Styger
  */
 #include "Platform.h"
-#if PL_HAS_MOTOR
+#if PL_HAS_TURN
 #include "Turn.h"
 #include "WAIT1.h"
 #include "Motor.h"
@@ -39,6 +39,15 @@
     /*!< ms to do one step forward */
   #define TURN_MOTOR_DUTY_PERCENT      25
     /*!< maximum motor duty for turn operation */
+#elif PL_IS_INTRO_ZUMO_ROBOT
+  #define TURN_90_WAIT_TIME_MS        550 
+    /*!< ms to wait for a 90 degree turn */
+  #define TURN_STEP_MS                170
+    /*!< ms to do one step forward */
+  #define TURN_MOTOR_DUTY_PERCENT      40
+    /*!< maximum motor duty for turn operation */
+#else
+  #error "unknown configuration!"
 #endif
 #if PL_HAS_QUADRATURE
   #define TURN_STEPS_90      20
@@ -56,6 +65,11 @@
 #elif PL_IS_TRACK_ROBOT
   #define TURN_WAIT_AFTER_STEP_MS  50  /* wait this time after a step to have the motor PWM effective */
   #define TURN_STOP_AFTER_TURN     1   /* 1 to stop after a turn */
+#elif PL_IS_INTRO_ZUMO_ROBOT
+  #define TURN_WAIT_AFTER_STEP_MS  0   /* wait this time after a step to have the motor PWM effective */
+  #define TURN_STOP_AFTER_TURN     0   /* 1 to stop after a turn */
+#else
+  #error "unknown configuration!"
 #endif
 
 #if PL_HAS_QUADRATURE
@@ -120,6 +134,7 @@ void TURN_TurnSteps(int16_t stepsL, int16_t stepsR) {
 
 static void Turn(bool isLeft, uint8_t duty, uint16_t val) {
 #if PL_HAS_QUADRATURE
+  (void)duty;
   if (isLeft) {
     TURN_TurnSteps(-val, val);
   } else {
@@ -148,14 +163,14 @@ void TURN_Turn(TURN_Kind kind) {
   switch(kind) {
     case TURN_LEFT45:
 #if PL_HAS_QUADRATURE
-      Turn(TRUE, TURN_DutyPercent, TURN_Steps90/2);
+      Turn(TRUE, 0, TURN_Steps90/2);
 #else
       Turn(TRUE, TURN_DutyPercent, TURN_Time90ms/2);
 #endif
       break;
     case TURN_RIGHT45:
 #if PL_HAS_QUADRATURE
-      Turn(FALSE, TURN_DutyPercent, TURN_Steps90/2);
+      Turn(FALSE, 0, TURN_Steps90/2);
 #else
       Turn(FALSE, TURN_DutyPercent, TURN_Time90ms/2);
 #endif
@@ -452,4 +467,4 @@ void TURN_Init(void) {
   TURN_StepFwBwMs = TURN_STEP_MS;
 #endif
 }
-#endif /* PL_HAS_LINE_SENSOR */
+#endif /* PL_HAS_TURN */

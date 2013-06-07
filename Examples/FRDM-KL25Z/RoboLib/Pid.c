@@ -1,5 +1,6 @@
 
 #include "Platform.h"
+#if PL_HAS_PID
 #include "Pid.h"
 #include "Motor.h"
 #include "UTIL1.h"
@@ -26,36 +27,6 @@ static PID_Config lineBwConfig;
 static PID_Config posConfig;
 #endif
 
-#if PL_HAS_LINE_SENSOR
-static int32_t Limit(int32_t val, int32_t minVal, int32_t maxVal) {
-  if (val<minVal) {
-    return minVal;
-  } else if (val>maxVal) {
-    return maxVal;
-  }
-  return val;
-}
-#endif
-
-#if PL_HAS_LINE_SENSOR
-static MOT_Direction AbsSpeed(int32_t *speedP) {
-  if (*speedP<0) {
-    *speedP = -(*speedP);
-    return MOT_DIR_BACKWARD;
-  }
-  return MOT_DIR_FORWARD;
-}
-#endif 
-
-#if PL_HAS_LINE_SENSOR
-/*! \brief returns error (always positive) percent */
-static uint8_t errorWithinPercent(int32_t error) {
-  if (error<0) {
-    error = -error;
-  }
-  return error/(REF_MAX_LINE_VALUE/2/100);
-}
-
 static int32_t PID(uint16_t currVal, uint16_t setVal, PID_Config *config) {
   int32_t error;
   int32_t pid;
@@ -73,6 +44,32 @@ static int32_t PID(uint16_t currVal, uint16_t setVal, PID_Config *config) {
   pid += ((error-config->lastError)*config->dFactor100)/100; /* add D part */
   config->lastError = error; /* remember for next iteration of D part */
   return pid;
+}
+
+static int32_t Limit(int32_t val, int32_t minVal, int32_t maxVal) {
+  if (val<minVal) {
+    return minVal;
+  } else if (val>maxVal) {
+    return maxVal;
+  }
+  return val;
+}
+
+#if PL_HAS_LINE_PID
+static MOT_Direction AbsSpeed(int32_t *speedP) {
+  if (*speedP<0) {
+    *speedP = -(*speedP);
+    return MOT_DIR_BACKWARD;
+  }
+  return MOT_DIR_FORWARD;
+}
+
+/*! \brief returns error (always positive) percent */
+static uint8_t errorWithinPercent(int32_t error) {
+  if (error<0) {
+    error = -error;
+  }
+  return error/(REF_MAX_LINE_VALUE/2/100);
 }
 
 void PID_LineCfg(uint16_t currLine, uint16_t setLine, bool forward, PID_Config *config) {
@@ -210,7 +207,7 @@ void PID_LineCfg(uint16_t currLine, uint16_t setLine, bool forward, PID_Config *
 #endif /* PL_HAS_LINE_SENSOR */
 
 void PID_Line(uint16_t currLine, uint16_t setLine, bool forward) {
-#if PL_HAS_LINE_SENSOR
+#if PL_HAS_LINE_PID
 #if PL_GO_DEADEND_BW
   if (forward) {
     PID_LineCfg(currLine, setLine, forward, &lineFwConfig);
@@ -224,7 +221,7 @@ void PID_Line(uint16_t currLine, uint16_t setLine, bool forward) {
 #endif
 }
 
-#if PL_HAS_QUADRATURE
+#if PL_HAS_POS_PID
 void PID_PosCfg(int16_t currPos, int16_t setPos, bool isLeft, PID_Config *config) {
   int32_t pid, speed;
   MOT_Direction direction=MOT_DIR_FORWARD;
@@ -259,7 +256,7 @@ void PID_PosCfg(int16_t currPos, int16_t setPos, bool isLeft, PID_Config *config
 
 void PID_Pos(int16_t currPos, int16_t setPos, bool isLeft) {
 }
-#endif
+#endif /* PL_HAS_POS_PID */
 
 static void PID_PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"pid", (unsigned char*)"Group of PID commands\r\n", io->stdOut);
@@ -435,6 +432,14 @@ void PID_Init(void) {
   lineFwConfig.maxSpeedPercent = 17;
   lineFwConfig.lastError = 0;
   lineFwConfig.integral = 0;
+#elif PL_IS_INTRO_ZUMO_ROBOT
+  lineFwConfig.pFactor100 = 5500;
+  lineFwConfig.iFactor100 = 15;
+  lineFwConfig.dFactor100 = 100;
+  lineFwConfig.iAntiWindup = 100000;
+  lineFwConfig.maxSpeedPercent = 20;
+  lineFwConfig.lastError = 0;
+  lineFwConfig.integral = 0;
 #else
   #error "unknown configuration!"
 #endif
@@ -457,3 +462,4 @@ void PID_Init(void) {
   posConfig.integral = 0;
 #endif
 }
+#endif

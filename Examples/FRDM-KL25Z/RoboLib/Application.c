@@ -17,7 +17,7 @@
 #include "Reflectance.h"
 #include "LineFollow.h"
 #include "Motor.h"
-#if PL_USE_TSS
+#if PL_HAS_TSS
   #include "TSS1.h"
 #endif
 #if PL_HAS_BUZZER
@@ -40,7 +40,7 @@
 
 typedef enum {
   APP_STATE_INIT,
-#if PL_APP_LINE_FOLLOWING
+#if PL_APP_LINE_FOLLOWING || PL_APP_LINE_MAZE
   APP_STATE_CALIBRATE,
   APP_STATE_FOLLOW_LINE,
 #endif
@@ -56,13 +56,15 @@ static bool followObstacle = FALSE;
 #endif
 
 static void StateMachine(bool buttonPress) {
+#if PL_APP_FOLLOW_OBSTACLE || PL_APP_LINE_FOLLOWING || PL_APP_LINE_MAZE
   static uint8_t cnt;
+#endif
   
   switch (appState) {
     case APP_STATE_INIT:
       LEDG_Off();
       LEDR_On();
-#if PL_APP_LINE_FOLLOWING
+#if PL_APP_LINE_FOLLOWING || PL_APP_LINE_MAZE
       if (buttonPress) {
         APP_StateStartCalibrate(); 
       }
@@ -83,7 +85,7 @@ static void StateMachine(bool buttonPress) {
       }
       break;
 #endif
-#if PL_APP_LINE_FOLLOWING
+#if PL_APP_LINE_FOLLOWING || PL_APP_LINE_MAZE
     case APP_STATE_CALIBRATE:
       cnt++;
       if (cnt>50) {
@@ -99,7 +101,7 @@ static void StateMachine(bool buttonPress) {
       LEDR_Off();
       LEDG_On();
       if (buttonPress) {
-#if PL_APP_LINE_FOLLOWING
+#if PL_APP_LINE_FOLLOWING || PL_APP_LINE_MAZE
         LF_StartFollowing();
         appState = APP_STATE_FOLLOW_LINE;
 #elif PL_APP_FOLLOW_OBSTACLE
@@ -108,7 +110,7 @@ static void StateMachine(bool buttonPress) {
 #endif
       }
       break;
-#if PL_APP_LINE_FOLLOWING
+#if PL_APP_LINE_FOLLOWING || PL_APP_LINE_MAZE
     case APP_STATE_FOLLOW_LINE:
       LEDR_Off();
       LEDG_Off();
@@ -125,7 +127,7 @@ static void StateMachine(bool buttonPress) {
 }
 
 void APP_StateStartCalibrate(void) {
-#if PL_APP_LINE_FOLLOWING
+#if PL_APP_LINE_FOLLOWING || PL_APP_LINE_MAZE
   REF_Calibrate(TRUE);
   appState = APP_STATE_CALIBRATE;
 #endif
@@ -133,7 +135,7 @@ void APP_StateStartCalibrate(void) {
 
 void APP_StateStopCalibrate(void) {
   appState = APP_STATE_IDLE;
-#if PL_APP_LINE_FOLLOWING
+#if PL_APP_LINE_FOLLOWING || PL_APP_LINE_MAZE
   REF_Calibrate(FALSE);
 #endif
 }
@@ -179,7 +181,7 @@ static void CheckButton(void) {
 #if PL_HAS_USER_BUTTON
   uint32_t timeTicks; /* time in ticks */
   #define BUTTON_CNT_MS  100  /* iteration count for button */
-#if PL_APP_LINE_FOLLOWING
+#if PL_APP_LINE_FOLLOWING || PL_APP_LINE_MAZE
   bool autoCalibrate = FALSE;
 #endif
   
@@ -202,13 +204,13 @@ static void CheckButton(void) {
         }
         timeTicks++;
       } /* wait until released */
-#if PL_APP_LINE_FOLLOWING
+#if PL_APP_LINE_FOLLOWING || PL_APP_LINE_MAZE
       autoCalibrate = FALSE;
 #endif
       if (timeTicks<1000/BUTTON_CNT_MS) { /* less than 1 second */
         CLS1_SendStr((unsigned char*)"button press.\r\n", CLS1_GetStdio()->stdOut);
         StateMachine(TRUE); /* <1 s, short button press, according to state machine */
-#if PL_APP_LINE_FOLLOWING
+#if PL_APP_LINE_FOLLOWING || PL_APP_LINE_MAZE
       } else if (timeTicks>=(1000/BUTTON_CNT_MS) && timeTicks<(2000/BUTTON_CNT_MS)) {
         CLS1_SendStr((unsigned char*)"calibrate.\r\n", CLS1_GetStdio()->stdOut);
         APP_StateStartCalibrate(); /* 1-2 s: start calibration by hand */
@@ -226,7 +228,7 @@ static void CheckButton(void) {
       while (SW1_GetVal()==0) { /* wait until button is released */
         FRTOS1_vTaskDelay(BUTTON_CNT_MS/portTICK_RATE_MS);
       }
-#if PL_APP_LINE_FOLLOWING
+#if PL_APP_LINE_FOLLOWING || PL_APP_LINE_MAZE
       if (autoCalibrate) {
         CLS1_SendStr((unsigned char*)"start auto-calibration...\r\n", CLS1_GetStdio()->stdOut);
         /* perform automatic calibration */
@@ -247,11 +249,11 @@ static void CheckButton(void) {
 
 static portTASK_FUNCTION(MainTask, pvParameters) {
   (void)pvParameters; /* not used */
-#if PL_USE_TSS
+#if PL_HAS_TSS
   Configure(); /* initialize TSS library */
 #endif
   for(;;) {
-#if PL_USE_TSS
+#if PL_HAS_TSS
     TSS_Task(); /* call TSS library to process touches */
 #else
     CheckButton();
@@ -297,12 +299,14 @@ uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
   } else if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_STATUS)==0 || UTIL1_strcmp((char*)cmd, (char*)"app status")==0) {
     APP_PrintStatus(io);
     *handled = TRUE;
+#if PL_APP_FOLLOW_OBSTACLE
   } else if (UTIL1_strcmp((char*)cmd, (char*)"app follow on")==0) {
     followObstacle = TRUE;
     *handled = TRUE;
   } else if (UTIL1_strcmp((char*)cmd, (char*)"app follow off")==0) {
     followObstacle = FALSE;
     *handled = TRUE;
+#endif
   }
   return res;
 }

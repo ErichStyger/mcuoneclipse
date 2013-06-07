@@ -13,4 +13,6 @@ Components:
 - LED
 - Wait
 
-More information: http://mcuoneclipse.wordpress.com/
+More information: http://mcuoneclipse.wordpress.com/:
+- http://mcuoneclipse.com/2012/10/14/tutorial-printf-and-hello-world-with-the-freedom-kl25z-board/
+- http://mcuoneclipse.com/2013/04/17/printf-with-the-frdm-kl25z-board-and-without-processor-expert/

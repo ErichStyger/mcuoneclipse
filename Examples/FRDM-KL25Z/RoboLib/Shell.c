@@ -8,11 +8,11 @@
 
 #include "Platform.h"
 #include "Shell.h"
+#include "CLS1.h"
 #if PL_HAS_RADIO
   #include "Radio.h"
   #include "RadioTx.h"
 #endif
-#include "CLS1.h"
 #if PL_HAS_RTOS
   #include "FRTOS1.h"
 #endif
@@ -20,11 +20,16 @@
   #include "MyQueue.h"
 #endif
 #include "Application.h"
-#include "FRTOS1.h"
 #include "LEDR.h"
 #include "LEDG.h"
 #include "Reflectance.h"
-#include "Motor.h"
+#if PL_HAS_MOTOR
+  #include "Motor.h"
+#endif
+#if PL_HAS_QUADRATURE
+  #include "Q4CLeft.h"
+  #include "Q4CRight.h"
+#endif
 #if PL_HAS_MAGNETOMETER
   #include "LSM303.h"
 #endif
@@ -38,9 +43,15 @@
   #include "Ultrasonic.h"
 #endif
 #include "LineFollow.h"
-#include "Turn.h"
-#include "Pid.h"
-#include "Maze.h"
+#if PL_HAS_TURN
+  #include "Turn.h"
+#endif
+#if PL_HAS_PID
+  #include "Pid.h"
+#endif
+#if PL_APP_LINE_MAZE
+  #include "Maze.h"
+#endif
 #if PL_HAS_REMOTE
   #include "Remote.h"
 #endif
@@ -123,16 +134,28 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if BT1_PARSE_COMMAND_ENABLED
   BT1_ParseCommand,
 #endif
+#if PL_HAS_MOTOR
   MOT_ParseCommand,
+#endif
+#if PL_HAS_QUADRATURE
+  #if Q4CLeft_PARSE_COMMAND_ENABLED
+  Q4CLeft_ParseCommand,
+  #endif
+  #if Q4CRight_PARSE_COMMAND_ENABLED
+  Q4CRight_ParseCommand,
+  #endif
+#endif
 #if PL_HAS_MAGNETOMETER
   LSM_ParseCommand,
 #endif
+#if PL_HAS_PID
   PID_ParseCommand,
+#endif
 #if PL_HAS_LINE_SENSOR
   REF_ParseCommand,
   LF_ParseCommand,
 #endif
-#if PL_HAS_MOTOR
+#if PL_HAS_TURN
   TURN_ParseCommand,
 #endif
 #if PL_APP_LINE_MAZE
