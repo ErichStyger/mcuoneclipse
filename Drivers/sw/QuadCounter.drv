@@ -531,6 +531,11 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
     %@Shell@'ModuleName'%.SendStatusStr((const unsigned char*)"  pos", (const unsigned char*)"", io->stdOut);
     %@Shell@'ModuleName'%.SendNum16u(%'ModuleName'%.currPos, io->stdOut);
     %@Shell@'ModuleName'%.SendStr((const unsigned char*)"\r\n", io->stdOut);
+%ifdef NofErrors
+    %@Shell@'ModuleName'%.SendStatusStr((const unsigned char*)"  errors", (const unsigned char*)"", io->stdOut);
+    %@Shell@'ModuleName'%.SendNum16u(%'ModuleName'%.nofErrors, io->stdOut);
+    %@Shell@'ModuleName'%.SendStr((const unsigned char*)"\r\n", io->stdOut);
+%endif
     *handled = TRUE;
   } else if (%@Utility@'ModuleName'%.strcmp((const char*)cmd, "%'ModuleName' reset")==0) {
     %'ModuleName'%.SetPos(0);

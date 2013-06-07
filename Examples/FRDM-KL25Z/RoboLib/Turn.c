@@ -21,9 +21,9 @@
 #if PL_IS_ZUMO_ROBOT
   #define TURN_90_WAIT_TIME_MS        550 
     /*!< ms to wait for a 90 degree turn */
-  #define TURN_STEP_MS                170
+  #define TURN_STEP_MS                160
     /*!< ms to do one step forward */
-  #define TURN_MOTOR_DUTY_PERCENT      40
+  #define TURN_MOTOR_DUTY_PERCENT      50
     /*!< maximum motor duty for turn operation */
 #elif PL_IS_ROUND_ROBOT
   #define TURN_90_WAIT_TIME_MS        250 

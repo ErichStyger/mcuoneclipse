@@ -9,7 +9,7 @@
 
 #include "PE_Types.h"
 
-/* Platforms, set as compiler define in the compiler options: */
+/* platforms, set as compiler define in the compiler options: */
 #define PL_IS_ZUMO_ROBOT        (defined(__ZUMO_ROBOT__)) /* if we use the Pololu Zumo chassis */
 #define PL_IS_ROUND_ROBOT       (defined(__ROUND_ROBOT__)) /* if we use the round Pololu chassis */
 #define PL_IS_TRACK_ROBOT       (defined(__TRACK_ROBOT__)) /* if we use the the Pololu track chassis */
@@ -44,7 +44,7 @@
 #define PL_APP_FOLLOW_OBSTACLE        (0 && PL_HAS_ULTRASONIC) /* obstacle following mode */
 
 /* PL_APP_LINE_MAZE options */
-#define PL_TURN_ON_FINISH             (0 && PL_APP_LINE_MAZE)  /* if we turn the robot on the finish area */
+#define PL_TURN_ON_FINISH             (1 && PL_APP_LINE_MAZE)  /* if we turn the robot on the finish area */
 #define PL_GO_DEADEND_BW              (0 && PL_APP_LINE_MAZE)
 
 /* compatibility with INTRO drivers, do NOT change them */
