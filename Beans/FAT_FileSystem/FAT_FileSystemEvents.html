@@ -231,6 +231,18 @@ LI.EXP {
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 </ul><br />
 </li>
+<li>
+<a name="OnCreateSyncObject">
+<b>OnCreateSyncObject</b>
+</a>
+ - If the file system is set to be reentrant, then this event is called after the sync object (semaphore) creation. That would allow e.g. for Percepio trace to name the object so it can be tracked.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void OnCreateSyncObject(void *sobj)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>sobj:void*</i> - Pointer to the sync object</li>
+</ul><br />
+</li>
 </ul>
 <hr />
 <font style="font: 12px Verdana, Geneva, Arial, Helvetica, sans-serif;COLOR: #005ba2;">

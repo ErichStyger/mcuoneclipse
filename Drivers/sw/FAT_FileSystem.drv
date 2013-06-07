@@ -777,6 +777,15 @@ void %OnSchedule(void);
 
 %endif %- OnSchedule
 %-BW_METHOD_END OnSchedule
+%-BW_METHOD_BEGIN OnCreateSyncObject
+%ifdef OnCreateSyncObject
+%INTERFACE OnCreateSyncObject
+void %OnCreateSyncObject(void *sobj);
+%define! Parsobj
+%include Common\FAT_FileSystemOnCreateSyncObject.Inc
+
+%endif %- OnCreateSyncObject
+%-BW_METHOD_END OnCreateSyncObject
 %-BW_EVENT_DEFINITION_END
 %IMPLEMENTATION
 %define! Settings Common\FAT_FileSystemSettings.Inc
@@ -1344,6 +1353,9 @@ int ff_cre_syncobj(uint8_t vol, _SYNC_t *sobj) {
   (void)vol; /* argument not used */
 %if defined(RTOS)
   *sobj = %@RTOS@'ModuleName'%.xSemaphoreCreateMutex(); /* create semaphore */
+  %if defined(OnCreateSyncObject)
+  %OnCreateSyncObject(*sobj);
+  %endif
   return (*sobj != NULL) ? TRUE : FALSE;
 %- *sobj = OSMutexCreate(0, &err);                         /* uC/OS-II */
 %- ret = (err == OS_NO_ERR) ? TRUE : FALSE;
@@ -2944,6 +2956,18 @@ void %OnSchedule(void)
 
 %endif %- OnSchedule
 %-BW_METHOD_END OnSchedule
+%-BW_METHOD_BEGIN OnCreateSyncObject
+%ifdef OnCreateSyncObject
+%IMPLEMENTATION OnCreateSyncObject
+%define! Parsobj
+%include Common\FAT_FileSystemOnCreateSyncObject.Inc
+void %OnCreateSyncObject(void *sobj)
+{
+  /* Write your code here ... */
+}
+
+%endif %- OnCreateSyncObject
+%-BW_METHOD_END OnCreateSyncObject
 %-BW_EVENT_IMPLEMENT_END
 %INITIALIZATION
   /* ### %DeviceType "%DeviceName" init code ... */
