@@ -10,6 +10,7 @@
 #include "integer.h"
 
 /* << EST added */
+#include "ffconf.h"
 #ifndef NULL
   #define NULL ((void*)0)
 #endif /* NULL */
