@@ -338,8 +338,8 @@ void %'ModuleName'%.%Wait10Cycles(void)
                        %>%CTAB /* [5] for RTS, return from subroutine */
   }
 %elif (CPU_FAMILY = "Kinetis")
-%if %Compiler = "GNUC"
   /* NOTE: this is not really accurate, as not sure yet about the cycle counts. Assuming 1 cycle for a NOP */
+%if %Compiler = "GNUC"
   asm(
    "nop \n\t"
    "nop \n\t"
@@ -352,9 +352,19 @@ void %'ModuleName'%.%Wait10Cycles(void)
    "nop \n\t"
    "nop \n\t"
   );
+%elif (%Compiler = "IARARM")
+  asm("nop");
+  asm("nop");
+  asm("nop");
+  asm("nop");
+  asm("nop");
+  asm("nop");
+  asm("nop");
+  asm("nop");
+  asm("nop");
+  asm("nop");
 %else
   asm {
-                       %>%CTAB /* NOTE: this is not really accurate, as not sure yet about the cycle counts */
     nop                %>%CTAB /* assuming one cycle for nop */
     nop                %>%CTAB /* assuming one cycle for nop */
     nop                %>%CTAB /* assuming one cycle for nop */
@@ -425,11 +435,13 @@ void %'ModuleName'%.%Wait100Cycles(void)
 %elif (CPU_FAMILY = "Kinetis")
   volatile byte i;
   for(i=0; i<133; i++) {
-%if %Compiler = "GNUC"
     /* NOTE: this is not really accurate, as not sure yet about the cycle counts. Assuming 0.75 cycle for a NOP */
+%if %Compiler = "GNUC"
     asm(
      "nop \n\t"
     );
+%elif (%Compiler = "IARARM")
+  asm("nop");
 %else
     asm {
       NOP
