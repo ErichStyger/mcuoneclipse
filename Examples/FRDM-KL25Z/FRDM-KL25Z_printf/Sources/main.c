@@ -7,8 +7,8 @@
 #include <stdio.h>
 #include "ConsoleIO.h"
 
-#define RED          (18)
-#define RED_SHIFT   (1 << 18)
+#define RED         (18)
+#define RED_SHIFT   (1<<RED)
 
 #define RED_OFF     (GPIOB_PSOR = RED_SHIFT)
 #define RED_ON      (GPIOB_PCOR = RED_SHIFT)
@@ -32,15 +32,20 @@ static void NegLED(void) {
   RED_TOGGLE;
 }
 
-int main(void)
-{
+static char buffer[64];
+
+int main(void) {
 	int counter = 0;
 	
 	ConsoleIO_Init();
 	InitLED();
+  printf("Hello world!\r\n");
 	for(;;) {	   
 	  counter++;
-	  printf("Hello world!\r\n");
+	  printf("Enter a string:\r\n");
+    if (gets(buffer)!=NULL) {
+      printf("you entered: %s\r\n", buffer);
+    }
 	  if ((counter%32)==0) {
       NegLED();
 	  }
