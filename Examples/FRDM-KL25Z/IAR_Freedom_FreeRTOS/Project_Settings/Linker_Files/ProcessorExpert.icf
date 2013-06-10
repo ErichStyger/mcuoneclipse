@@ -10,7 +10,7 @@
 /*##                                   */
 /*##     Compiler  : IAR ARM C Compiler */
 /*##                                   */
-/*##     Date/Time : 2013-01-31, 18:34, # CodeGen: 0 */
+/*##     Date/Time : 2013-06-07, 18:13, # CodeGen: 15 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */
@@ -53,6 +53,8 @@ define block CSTACK    with alignment = 8, size = __size_cstack__   { };
 define block HEAP      with alignment = 8, size = __size_heap__     { };
 
 define exported symbol __VECTOR_TABLE_START = m_interrupts_start;
+
+define exported symbol __vect_table = m_interrupts_start;
 
 define region FlashConfig_region = mem:[from FlashConfig_start__ to FlashConfig_end__];
 

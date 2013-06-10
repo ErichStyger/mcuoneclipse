@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-750704049
+Checksum=-1396171260
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -39,8 +39,6 @@ UseAuto=0
 TypeViolation=1
 UnspecRange=1
 ActionState=1
-[Breakpoints]
-Count=0
 [Jet]
 JetConnSerialNo=1
 JetConnFoundProbes=
@@ -62,10 +60,6 @@ PowerForcePC=1
 PowerConnectPC=1
 [ArmDriver]
 EnableCache=1
-[Disassemble mode]
-mode=0
-[Breakpoints2]
-Count=0
 [Trace1]
 Enabled=0
 ShowSource=1
@@ -99,6 +93,10 @@ Mode=2
 Graph=0
 Symbiont=0
 Exclusions=
+[CallStackLog]
+Enabled=0
+[Breakpoints2]
+Count=0
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -106,8 +104,11 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
+[Disassemble mode]
+mode=0
+[Breakpoints]
+Bp0=_ "STD_CODE" "{$PROJ_DIR$\Generated_Code\HF1.c}.76.3" 1 0 0 0 "" 0 "" 0
+Count=1
 [Aliases]
 Count=0
 SuppressDialog=0
-[CallStackLog]
-Enabled=0

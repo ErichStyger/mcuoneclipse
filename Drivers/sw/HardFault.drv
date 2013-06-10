@@ -10,7 +10,7 @@
 %-  /* END %ModuleName. */
 %-  /* MODULE %ModuleName. */
 %-  %-INTERNAL_METHOD_BEG
-%-  %-INTERNAL_METHOD_END 
+%-  %-INTERNAL_METHOD_END
 %-  %-INHERITED_EVENT_BEGIN
 %-  %-INHERITED_EVENT_END
 %-  %-BW_METHOD_BEGIN
@@ -195,9 +195,12 @@ void %'ModuleName'%.HandlerC(dword *hardfault_args);
  * cause of the fault.
  * The function ends with a BKPT instruction to force control back into the debugger
  */
+%if %Compiler = "GNUC"
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+%endif
 void %'ModuleName'%.HandlerC(dword *hardfault_args)
 {
+%if (%Compiler = "IARARM")
   volatile unsigned long stacked_r0;
   volatile unsigned long stacked_r1;
   volatile unsigned long stacked_r2;
@@ -212,7 +215,22 @@ void %'ModuleName'%.HandlerC(dword *hardfault_args)
   volatile unsigned long _AFSR;
   volatile unsigned long _BFAR;
   volatile unsigned long _MMAR;
-
+%else
+  static volatile unsigned long stacked_r0;
+  static volatile unsigned long stacked_r1;
+  static volatile unsigned long stacked_r2;
+  static volatile unsigned long stacked_r3;
+  static volatile unsigned long stacked_r12;
+  static volatile unsigned long stacked_lr;
+  static volatile unsigned long stacked_pc;
+  static volatile unsigned long stacked_psr;
+  static volatile unsigned long _CFSR;
+  static volatile unsigned long _HFSR;
+  static volatile unsigned long _DFSR;
+  static volatile unsigned long _AFSR;
+  static volatile unsigned long _BFAR;
+  static volatile unsigned long _MMAR;
+%endif
   stacked_r0 = ((unsigned long)hardfault_args[0]);
   stacked_r1 = ((unsigned long)hardfault_args[1]);
   stacked_r2 = ((unsigned long)hardfault_args[2]);
@@ -251,12 +269,14 @@ void %'ModuleName'%.HandlerC(dword *hardfault_args)
 %-BW_METHOD_BEGIN HardFaultHandler
 %ifdef HardFaultHandler
 %include Common\HardFaultHardFaultHandler.Inc
+%if %Compiler = "GNUC"
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 __attribute__((naked))
 void %'ModuleName'%.%HardFaultHandler(void)
 {
   __asm volatile (
     " movs r0,#4      \n"  /* load bit mask into R0 */
-    " movs r1, lr     \n"  /* load link register into R1 */
+    " mov r1, lr      \n"  /* load link register into R1 */
     " tst r0, r1      \n"  /* compare with bitmask */
     " beq _MSP        \n"  /* if bitmask is set: stack pointer is in PSP. Otherwise in MSP */
     " mrs r0, psp     \n"  /* otherwise: stack pointer is in PSP */
@@ -268,6 +288,11 @@ void %'ModuleName'%.%HardFaultHandler(void)
     " b %'ModuleName'%.HandlerC   \n"  /* decode more information. R0 contains pointer to stack frame */
   );
 }
+%elif (%Compiler = "IARARM")
+  /* %'ModuleName'%.HardFaultHandler() is implemented in assembly in %'ModuleName'%.HardFaultHandler.s */
+%else
+  #error "unsupported compiler."
+%endif
 
 %endif %- HardFaultHandler
 %-BW_METHOD_END HardFaultHandler
@@ -289,6 +314,35 @@ void %'ModuleName'%.%HardFaultHandler(void)
 %CODE_BEGIN
 %CODE_END
 %-
+%if (%Compiler = "IARARM")
+%- need to implement the handler in assembly, as IAR does not support inline assembly with labels?
+%FILE %'DirRel_Code'%'ModuleName'%.HardFaultHandler.s
+  /* use code segment, and we are generating ARM thumb code: */
+  RSEG    CODE:CODE(2)
+  thumb
+
+  /* external interface declaration; */
+  PUBLIC %'ModuleName'%.%HardFaultHandler
+
+  /* list of external functions we are going to use: */
+  EXTERN %'ModuleName'%.HandlerC
+
+/*-----------------------------------------------------------*/
+%'ModuleName'%.%HardFaultHandler:
+  movs r0,#4        /* load bit mask into R0 */
+  mov r1, lr      /* load link register into R1 */
+  tst r0, r1       /* compare with bitmask */
+  beq _MSP         /* if bitmask is set: stack pointer is in PSP. Otherwise in MSP */
+  mrs r0, psp      /* otherwise: stack pointer is in PSP */
+  b _GetPC         /* go to part which loads the PC */
+  _MSP:             /* stack pointer is in MSP register */
+  mrs r0, msp      /* load stack pointer into R0 */
+  _GetPC:           /* find out where the hard fault happened */
+  ldr r1,[r0,#20]  /* load program counter into R1. R1 contains address of the next instruction where the hard fault happened */
+  b %'ModuleName'%.HandlerC  /* decode more information. R0 contains pointer to stack frame */
+/*-----------------------------------------------------------*/
+  END
+%endif %- (%Compiler = "IARARM")
 %else %- Language (& Compiler)
   %error^ This component is not implemented in selected language & compiler !
 %endif %- Language (& Compiler)

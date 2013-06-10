@@ -22,6 +22,7 @@
 #include "FRTOS1.h"
 #include "RTOSTICKLDD1.h"
 #include "UTIL1.h"
+#include "HF1.h"
 #include "LED1.h"
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"
@@ -41,6 +42,7 @@ static portTASK_FUNCTION(MyTask, pvParameters) {
 }
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
+void (*f)(void);
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
@@ -51,6 +53,7 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
+  f();
   /* For example: for(;;) { } */
   if (FRTOS1_xTaskCreate(MyTask, (signed portCHAR *)"Task",
 		  configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL) != pdPASS) {
