@@ -139,7 +139,7 @@ typedef const unsigned char *%'ModuleName'%.TConstStringPtr; /* type for constan
 #define %'ModuleName'%.MAX_RESPONSE_SIZE                       42  /* maximum response size, e.g. "+NAME:abcdef\r\nOK\r\n" */
 #define %'ModuleName'%.MAX_ERR_RESPONSE_SIZE                   (sizeof("ERROR:(32)\r\n"))  /* max size of error response */
 #define %'ModuleName'%.MAX_DEVICE_NAME_SIZE                    31  /* device name can be up to 31 characters */
-#define %'ModuleName'%.TIMEOUT_MS                              450 /* timeout in ms to wait for response */
+#define %'ModuleName'%.TIMEOUT_MS                              %ResponseTimeoutMs /* timeout in ms to wait for response */
 #define %'ModuleName'%.TIMEOUT_MS_AFTER_RESET                  2000 /* timeout in ms after a reset command */
 #define %'ModuleName'%.TIMEOUT_MS_AFTER_FACTORY_DEFAULT        %'ModuleName'%.TIMEOUT_MS_AFTER_RESET /* timeout after a factory default command */
 
@@ -148,6 +148,13 @@ typedef const unsigned char *%'ModuleName'%.TConstStringPtr; /* type for constan
 %else
 #define %'ModuleName'%.PARSE_COMMAND_ENABLED  0 /* set to 1 if method ParseCommand() is present, 0 otherwise */
 %endif %- ParseCommand
+
+/* Either %'ModuleName'%.FIRMWARE_HC05 or %'ModuleName'%.FIRMWARE_HC06 is defined here */
+%if %Firmware='HC05'
+#define %'ModuleName'%.FIRMWARE_HC05 /* firmware which allows master and slave mode */
+%else
+#define %'ModuleName'%.FIRMWARE_HC06 /* limited Linvor/HC06 firmware, no \r\n, only slave mode, limited set of commands */
+%endif
 %-
 %-BW_CUSTOM_USERTYPE_END
 
@@ -253,14 +260,14 @@ byte %'ModuleName'%.%btQueryFirmwareVersionStr(byte *buf, size_t bufSize);
 %endif %- btQueryFirmwareVersionStr
 %-BW_METHOD_END btQueryFirmwareVersionStr
 %-************************************************************************************************************
-%-BW_METHOD_BEGIN btRestorFactoryDefault
-%ifdef btRestorFactoryDefault
-byte %'ModuleName'%.%btRestorFactoryDefault(void);
+%-BW_METHOD_BEGIN btRestoreFactoryDefault
+%ifdef btRestoreFactoryDefault
+byte %'ModuleName'%.%btRestoreFactoryDefault(void);
 %define! RetVal
-%include Common\Bluetooth_EGBTbtRestorFactoryDefault.Inc
+%include Common\Bluetooth_EGBTbtRestoreFactoryDefault.Inc
 
-%endif %- btRestorFactoryDefault
-%-BW_METHOD_END btRestorFactoryDefault
+%endif %- btRestoreFactoryDefault
+%-BW_METHOD_END btRestoreFactoryDefault
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN btQueryBluetoothAddressStr
 %ifdef btQueryBluetoothAddressStr
@@ -775,8 +782,15 @@ void %'ModuleName'%.%StdIOSendChar(byte ch);
 %-   Example:
 %-     static int counter1;
 %-     int %'ModuleName'%.counter2;
+%if defined(CMD)
+/* HIGH on cmd pin to enter AT mode, LOW for data mode */
 #define %'ModuleName'%.SET_CMD_MODE()                          %@CMD@'ModuleName'%.SetVal() /* cmd pin high: command mode */
 #define %'ModuleName'%.SET_DATA_MODE()                         %@CMD@'ModuleName'%.ClrVal() /* cmd pin low: data mode */
+%else
+/* No cmd pin configured */
+#define %'ModuleName'%.SET_CMD_MODE()                          /* do nothing */
+#define %'ModuleName'%.SET_DATA_MODE()                         /* do nothing */
+%endif
 #define %'ModuleName'%.CLR_RX_BUF()                            (void)%@Serial@'ModuleName'%.ClearRxBuf() /* clear input buffer */
 
 static %'ModuleName'%.TEnumErrors %'ModuleName'%.lastErr = %'ModuleName'%.NO_ERROR; /* holds the last error */
@@ -796,7 +810,7 @@ static const unsigned char *%'ModuleName'%.ErrorStringTable[] = {
   /*  B */ (unsigned char*)"Device Class too long",
   /*  C */ (unsigned char*)"Inquire Access Code not specified (0 length)",
   /*  D */ (unsigned char*)"Inquire Access Code too long",
-  /*  E */ (unsigned char*)"Inavlid Inquire Access code entered",
+  /*  E */ (unsigned char*)"Invalid Inquire Access code entered",
   /*  F */ (unsigned char*)"Pairing Password not specified (0 length)",
   /* 10 */ (unsigned char*)"Pairing Password too long (>16 characters)",
   /* 11 */ (unsigned char*)"Invalid Role entered",
@@ -804,10 +818,10 @@ static const unsigned char *%'ModuleName'%.ErrorStringTable[] = {
   /* 13 */ (unsigned char*)"Invalid Stop Bit entered",
   /* 14 */ (unsigned char*)"Invalid Parity Bit entered",
   /* 15 */ (unsigned char*)"No device in Pairing List",
-  /* 16 */ (unsigned char*)"SPP not initilized",
+  /* 16 */ (unsigned char*)"SPP not initialized",
   /* 17 */ (unsigned char*)"SPP already initialized",
   /* 18 */ (unsigned char*)"Invalid Inquiry Mode",
-  /* 19 */ (unsigned char*)"Inquire Timeout occured",
+  /* 19 */ (unsigned char*)"Inquire Timeout occurred",
   /* 1A */ (unsigned char*)"Invalid/zero length address entered",
   /* 1B */ (unsigned char*)"Invalid Security Mode entered",
   /* 1C */ (unsigned char*)"Invalid Encryption Mode entered",
@@ -863,8 +877,7 @@ static uint8_t RxResponse(unsigned char *rxBuf, size_t rxBufLength, uint16_t msT
   p[0] = '\0';
   for(;;) { /* breaks */
     if (msTimeout==0) {
-      res = ERR_FAULT;
-      break;
+      break; /* will decide outside of loop if it is a timeout. */
     } else if (rxBufLength==0) {
       res = ERR_OVERFLOW; /* not enough space in buffer */
       break;
@@ -876,7 +889,7 @@ static uint8_t RxResponse(unsigned char *rxBuf, size_t rxBufLength, uint16_t msT
       *p++ = ch;
       *p = '\0'; /* always terminate */
       rxBufLength--;
-    } else if (%@Utility@'ModuleName'%.strtailcmp(rxBuf, expectedTail)==0) {
+    } else if (expectedTail[0]!='\0' && %@Utility@'ModuleName'%.strtailcmp(rxBuf, expectedTail)==0) {
       break; /* finished */
     } else if (isRxError(rxBuf, &%'ModuleName'%.lastErr)) {
       break; /* error */
@@ -885,9 +898,13 @@ static uint8_t RxResponse(unsigned char *rxBuf, size_t rxBufLength, uint16_t msT
       msTimeout--;
     }
   } /* for */
+  if (expectedTail[0]!='\0' && msTimeout==0) { /* only timeout if we have not expected tail. For example for HC06 we do not know what is the end. */
+    res = ERR_FAULT;
+  }
   return res;
 }
 %if defined(Shell)
+
 static uint8_t ExecuteQueryString(uint8_t(*f)(unsigned char*,size_t), unsigned char *buf, size_t bufSize, unsigned char *appendStr) {
   if (f(buf, bufSize)==ERR_OK) {
     %@Utility@'ModuleName'%.strcat(buf, bufSize, (unsigned char*)appendStr);
@@ -900,15 +917,17 @@ static uint8_t ExecuteQueryString(uint8_t(*f)(unsigned char*,size_t), unsigned c
 }
 
 static uint8_t PrintShortStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
+  uint8_t res = ERR_OK;
+
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"%'ModuleName'", (unsigned char*)"\r\n", io->stdOut);
   if (%'ModuleName'%.%btTestUART()!=ERR_OK) {
     %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Test UART", (unsigned char*)"FAILED", io->stdOut);
-    return ERR_FAILED;
+    res = ERR_FAILED;
   } else {
     %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Test UART", (unsigned char*)"OK", io->stdOut);
   }
-    %@Shell@'ModuleName'%.SendStr((unsigned char*)"  (use '%'ModuleName' status' for full status)\r\n", io->stdOut);
-  return ERR_OK;
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"  (use '%'ModuleName' status' for full status)\r\n", io->stdOut);
+  return res;
 }
 
 static uint8_t PrintLongStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
@@ -926,6 +945,7 @@ static uint8_t PrintLongStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   (void)ExecuteQueryString(%'ModuleName'%.%btQueryFirmwareVersionStr, buf, sizeof(buf), (unsigned char*)"\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Firmware", buf, io->stdOut);
 
+%if %Firmware='HC05'
   (void)ExecuteQueryString(%'ModuleName'%.%btQueryDeviceName, buf, sizeof(buf), (unsigned char*)"\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Name", buf, io->stdOut);
 
@@ -1002,14 +1022,18 @@ static uint8_t PrintLongStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
     }
   }
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Connection", buf, io->stdOut);
-
+%endif %- /* HC05 */
   return ERR_OK;
 }
 
 static uint8_t PrintHelp(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"%'ModuleName'", (unsigned char*)"Group of %'ModuleName' commands\r\n", io->stdOut);
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+#ifdef %'ModuleName'%.FIRMWARE_HC05 /* HC06 does not need \r\n */
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  cmd <AT command>", (unsigned char*)"Send an AT command, e.g AT+NAME?\r\n", io->stdOut);
+#else
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  cmd <AT command>", (unsigned char*)"Send an AT command, e.g AT+VERSION\r\n", io->stdOut);
+#endif
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  send <string>", (unsigned char*)"Send a string to the Bluetooth UART bridge\r\n", io->stdOut);
   return ERR_OK;
 }
@@ -1019,12 +1043,21 @@ static void SendCommand(const unsigned char *cmd, const %@Shell@'ModuleName'%.St
   unsigned char cmdBuf[%'ModuleName'%.MAX_AT_CMD_SIZE];
 
   %@Utility@'ModuleName'%.strcpy(cmdBuf, sizeof(cmdBuf), cmd);
+#ifdef %'ModuleName'%.FIRMWARE_HC05 /* HC06 does not need \r\n */
   %@Utility@'ModuleName'%.strcat(cmdBuf, sizeof(cmdBuf), (unsigned char*)"\r\n");
+#endif
   buf[0] = '\0';
+#ifdef %'ModuleName'%.FIRMWARE_HC05 /* HC05 responds with OK\r\n at the end */
   if (%'ModuleName'%.SendATCommand(cmdBuf, buf, sizeof(buf), (unsigned char*)"OK\r\n")!=ERR_OK) {
+#else /* HC06 responds e.g. with "OKlinvorV1.8", but with no specific tail */
+  if (%'ModuleName'%.SendATCommand(cmdBuf, buf, sizeof(buf), (unsigned char*)"")!=ERR_OK) {
+#endif
     %@Shell@'ModuleName'%.SendStr((unsigned char*)"***Response not OK\r\n", io->stdOut);
   }
   %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+#ifdef %'ModuleName'%.FIRMWARE_HC06 /* HC06 does not responds with OK\r\n at the end */
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
+#endif
 }
 
 %endif
@@ -1076,7 +1109,9 @@ byte %'ModuleName'%.%StdCmd(byte *cmd, byte *rxBuf, size_t rxBufSize, byte *expe
   unsigned char cmdBuf[%'ModuleName'%.MAX_AT_CMD_SIZE];
 
   %@Utility@'ModuleName'%.strcpy(cmdBuf, sizeof(cmdBuf), cmd);
+#ifdef %'ModuleName'%.FIRMWARE_HC05 /* HC05 firmware has \r\n line ending */
   %@Utility@'ModuleName'%.strcat(cmdBuf, sizeof(cmdBuf), (unsigned char*)"\r\n");
+#endif
   for(;;) { /* breaks */
     if (%'ModuleName'%.SendATCommand(cmdBuf, rxBuf, rxBufSize, expectedResponse)!=ERR_OK) {
       res = ERR_FAILED;
@@ -1104,7 +1139,11 @@ byte %'ModuleName'%.%StdOKCmd(byte *cmd)
   /* Send standard command: "<cmd>\r\n" ==> "OK\r\n" */
   unsigned char rxBuf[sizeof("FAIL\r\n")+1]; /* could be FAIL or OK */
 
+#ifdef %'ModuleName'%.FIRMWARE_HC05 /* HC05 firmware has \r\n line ending */
   return %'ModuleName'%.StdCmd(cmd, rxBuf, sizeof(rxBuf), (unsigned char*)"OK\r\n");
+#else /* HC06 */
+  return %'ModuleName'%.StdCmd(cmd, rxBuf, sizeof(rxBuf), (unsigned char*)"");
+#endif
 }
 
 %endif %- StdOKCmd
@@ -1121,7 +1160,10 @@ byte %'ModuleName'%.%StdOKCmd(byte *cmd)
 byte %'ModuleName'%.%QueryString(byte *cmd, byte *expectedResponse, byte *string, size_t stringSize)
 {
   /* get string: "<cmd>\r\n" ==> "<expectedResponse><string>\r\nOK\r\n" */
-  /* example get string: "AT+RNAME?\r\n" ==> "+NAME:<name>\r\nOK\r\n" */
+  /* example get string: "AT+RNAME?\r\n" ==> "+NAME:<name>\r\nOK\r\n"
+    cmd: "AT+RNAME?\r\n"
+    expected response: "+NAME:"
+  */
   uint8_t res = ERR_OK;
   unsigned char rxBuf[%'ModuleName'%.MAX_RESPONSE_SIZE];
   unsigned char cmdBuf[%'ModuleName'%.MAX_AT_CMD_SIZE];
@@ -1130,9 +1172,15 @@ byte %'ModuleName'%.%QueryString(byte *cmd, byte *expectedResponse, byte *string
   responseLen = %@Utility@'ModuleName'%.strlen((char*)expectedResponse);
   string[0] = '\0'; /* initialize buffer */
   %@Utility@'ModuleName'%.strcpy(cmdBuf, sizeof(cmdBuf), cmd);
+#ifdef %'ModuleName'%.FIRMWARE_HC05 /* HC05 firmware has \r\n line ending */
   %@Utility@'ModuleName'%.strcat(cmdBuf, sizeof(cmdBuf), (unsigned char*)"\r\n");
+#endif
   for(;;) { /* breaks */
+#ifdef %'ModuleName'%.FIRMWARE_HC05 /* HC05 firmware has \r\n line ending */
     if (%'ModuleName'%.SendATCommand(cmdBuf, rxBuf, sizeof(rxBuf), (unsigned char*)"\r\nOK\r\n")!=ERR_OK) {
+#else
+    if (%'ModuleName'%.SendATCommand(cmdBuf, rxBuf, sizeof(rxBuf), (unsigned char*)"")!=ERR_OK) {
+#endif
       res = ERR_FAILED;
       break;
     }
@@ -1140,10 +1188,12 @@ byte %'ModuleName'%.%QueryString(byte *cmd, byte *expectedResponse, byte *string
       res = ERR_FAILED;
       break;
     }
+#ifdef %'ModuleName'%.FIRMWARE_HC05 /* HC05 firmware has \r\n line ending */
     if (%@Utility@'ModuleName'%.strCutTail(rxBuf, (unsigned char*)"\r\nOK\r\n")!=ERR_OK) {
       res = ERR_FAILED;
       break;
     }
+#endif
     %@Utility@'ModuleName'%.strcpy(string, stringSize, &rxBuf[responseLen]); /* store name */
     break; /* exit for(;;) */
   } /* for */
@@ -1212,7 +1262,11 @@ void %'ModuleName'%.%Deinit(void)
 %include Common\Bluetooth_EGBTbtTestUART.Inc
 byte %'ModuleName'%.%btTestUART(void)
 {
+#ifdef %'ModuleName'%.FIRMWARE_HC05
   /* 1: Test UART connection: "AT\r\n" ==> "OK\r\n" */
+#else /* HC06 */
+  /* 1: Test UART connection: "AT" ==> "OK" */
+#endif
   return %'ModuleName'%.StdOKCmd((unsigned char*)"AT");
 }
 
@@ -1240,18 +1294,23 @@ byte %'ModuleName'%.%btResetDevice(void)
 %include Common\Bluetooth_EGBTbtQueryFirmwareVersionStr.Inc
 byte %'ModuleName'%.%btQueryFirmwareVersionStr(byte *buf, size_t bufSize)
 {
+#ifdef %'ModuleName'%.FIRMWARE_HC05
   /* 3: Query firmware version: "AT+VERSION?\r\n" ==> "+VERSION:<VER>\r\nOK\r\n" */
   return %'ModuleName'%.QueryString((unsigned char*)"AT+VERSION?", (unsigned char*)"+VERSION:", buf, bufSize);
+#else /* HC06 */
+  /* 3: Query firmware version: "AT+VERSION" ==> "OKlinvor1.6" */
+  return %'ModuleName'%.QueryString((unsigned char*)"AT+VERSION", (unsigned char*)"OK", buf, bufSize);
+#endif
 }
 
 %endif %- btQueryFirmwareVersionStr
 %-BW_METHOD_END btQueryFirmwareVersionStr
 %-************************************************************************************************************
-%-BW_METHOD_BEGIN btRestorFactoryDefault
-%ifdef btRestorFactoryDefault
+%-BW_METHOD_BEGIN btRestoreFactoryDefault
+%ifdef btRestoreFactoryDefault
 %define! RetVal
-%include Common\Bluetooth_EGBTbtRestorFactoryDefault.Inc
-byte %'ModuleName'%.%btRestorFactoryDefault(void)
+%include Common\Bluetooth_EGBTbtRestoreFactoryDefault.Inc
+byte %'ModuleName'%.%btRestoreFactoryDefault(void)
 {
   /* 4: Restore settings to factory default: "AT+ORGL\r\n" ==> "OK\r\n" */
   /*
@@ -1267,8 +1326,8 @@ byte %'ModuleName'%.%btRestorFactoryDefault(void)
   return %'ModuleName'%.StdOKCmd((unsigned char*)"AT+ORGL");
 }
 
-%endif %- btRestorFactoryDefault
-%-BW_METHOD_END btRestorFactoryDefault
+%endif %- btRestoreFactoryDefault
+%-BW_METHOD_END btRestoreFactoryDefault
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN btQueryBluetoothAddressStr
 %ifdef btQueryBluetoothAddressStr
@@ -1307,16 +1366,25 @@ byte %'ModuleName'%.%btQueryDeviceName(byte *buf, size_t bufSize)
 %include Common\Bluetooth_EGBTbtSetDeviceName.Inc
 byte %'ModuleName'%.%btSetDeviceName(byte *name)
 {
+#ifdef %'ModuleName'%.FIRMWARE_HC05
   /* 6: Set name: "AT+NAME=<name>\r\n" ==> "OK\r\n" */
+#else /* HC06 */
+  /* 6: Set name: "AT+NAME<name>" ==> "OKsetname" */
+  unsigned char rxBuf[sizeof("OKsetname")+1];
+#endif
   unsigned char buf[sizeof("AT+NAME=\r\n")+%'ModuleName'%.MAX_DEVICE_NAME_SIZE];
 
   if (%@Utility@'ModuleName'%.strlen((char*)name)>%'ModuleName'%.MAX_DEVICE_NAME_SIZE) {
     return ERR_FAILED; /* name too long */
   }
-  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+NAME=");
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+NAME");
   %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), name);
+#ifdef %'ModuleName'%.FIRMWARE_HC05
   %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   return %'ModuleName'%.StdOKCmd(buf);
+#else
+  return %'ModuleName'%.StdCmd(buf, rxBuf, sizeof(rxBuf), (unsigned char*)"OKsetname");
+#endif
 }
 
 %endif %- btSetDeviceName

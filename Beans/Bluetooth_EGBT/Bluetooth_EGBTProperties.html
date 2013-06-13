@@ -217,8 +217,30 @@ LI.EXP {
 <b>Component name</b></a> - Name of the component.
 </li>
 <li>
-<a name="CMD">
-<b>CMD pin</b></a> - Cmd pin to switch between data (low) and command (high) mode. This pin is pin 32 (KEY) on the Bluetooth module.
+<a name="Firmware">
+<b>Firmware</b></a> - Firmware present on the module<br /><br />
+There are 2 options:<br />
+<ul>
+  <li><u>HC05</u>: HC05</li>
+  <li><u>HC06</u>: HC06/Linvor 1.5 firmware</li>
+</ul><br />
+
+</li>
+<li>
+<a name="ResponseTimeoutMs">
+<b>Response timeout (ms)</b></a> - Timeout value in milli-seconds to wait for a response from the device after an AT command.
+</li>
+<li>
+<a name="CMDEnabled">
+<b>CMD Pin</b></a> - If we have a CMD pin to put the module into AT mode. If this pin exists, it is setting this pin to a HIGH logical level for AT mode, and LOW logical level for data mode.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+<ul>
+  <li>
+  <a name="CMD">
+  <b>CMD pin</b></a> - Cmd pin to switch between data (low) and command (high) mode. This pin is pin 32 (KEY) on the Bluetooth module.
+  </li>
+</ul>
 </li>
 <li>
 <a name="Interfaces">

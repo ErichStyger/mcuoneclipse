@@ -3,8 +3,8 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>147</ModificationStamp>
-    <Date>2013-05-14</Date>
+    <ModificationStamp>155</ModificationStamp>
+    <Date>2013-06-12</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.6.0.RT4_b1316-1577</PEversion>
   </Header>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>241</ProjectCompNumb>
+    <ProjectCompNumb>253</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>false</AssignInitComponentNameToPrph>
@@ -4826,7 +4826,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.057</BeanVersion>
+    <BeanVersion>01.059</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -7840,7 +7840,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.025</BeanVersion>
+    <BeanVersion>01.031</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -7885,7 +7885,7 @@
               <ItemSymbol>PinSignal</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>BT_CMD</Value>
+              <Value>BT_CMD_J1_3</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>FeatureCondGrpLDD</ItemSymbol>
@@ -8069,7 +8069,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>Deinit</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -8080,7 +8080,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>GetDir</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -8168,7 +8168,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>NegVal</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -8184,7 +8184,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>ConnectPin</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -8200,7 +8200,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>GetRawVal</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>1</Index>
                     <Value>false</Value>
@@ -8639,7 +8639,7 @@
                     <ItemSymbol>BdRate</ItemSymbol>
                     <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
-                    <Value>init:38400 baud;prec:1.5%;RTS:none</Value>
+                    <Value>init:9600 baud;prec:1.5%;RTS:none</Value>
                     <RuntimeSetting>0</RuntimeSetting>
                     <ReqDevPrescHigh>-1</ReqDevPrescHigh>
                     <ReqDevPrescLow>-1</ReqDevPrescLow>
@@ -10057,7 +10057,7 @@
               <ItemSymbol>RxDpinSignal</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>BT_RX</Value>
+              <Value>BT_RX_J1_5</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>DSPgrp1000</ItemSymbol>
@@ -10100,7 +10100,7 @@
               <ItemSymbol>TxDpinSignal</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>BT_TX</Value>
+              <Value>BT_TX_J1_7</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>DSPgrp100</ItemSymbol>
@@ -11339,6 +11339,31 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>CLS1</Value>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>Firmware</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>1</Index>
+        <EnumSymbVal>HC06</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ResponseTimeoutMs</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>650</Value>
+        <Base>DEC</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>CMDEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -11442,12 +11467,12 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>btResetDevice</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btResetDevice</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
@@ -11475,23 +11500,23 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>btQueryBluetoothAddressStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btQueryBluetoothAddressStr</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btQueryDeviceName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btQueryDeviceName</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
@@ -11508,386 +11533,386 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>btQueryRemoteBluetoothDeviceName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btQueryRemoteBluetoothDeviceName</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btQueryRole</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btQueryRole</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btSetRole</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btSetRole</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btQueryCoDStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btQueryCoDStr</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btSetCoDStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btSetCoDStr</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btQueryIACStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btQueryIACStr</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btSetIACStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btSetIACStr</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btQueryIAMStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btQueryIAMStr</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btSetIAMStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btSetIAMStr</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btQueryPairingPasskey</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btQueryPairingPasskey</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btSetPairingPasskey</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btSetPairingPasskey</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btQueryUARTParametersStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btQueryUARTParametersStr</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btSetUARTParameterStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btSetUARTParameterStr</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btQueryConnectionMethod</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btQueryConnectionMethod</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btSetConnectionMethod</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btSetConnectionMethod</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btQueryBindingBluetoothAddress</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btQueryBindingBluetoothAddress</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btSetBindingBluetoothStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btSetBindingBluetoothStr</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btQueryLEDOutputPolarityStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btQueryLEDOutputPolarityStr</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btSetLEDOutputPolarityStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btSetLEDOutputPolarityStr</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btSetUserPinIO</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btSetUserPinIO</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btSetMultipleUserIOPins</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btSetMultipleUserIOPins</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btQueryMultipleUserIOPinsStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btQueryMultipleUserIOPinsStr</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btQueryMultipleUserIOPins</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btQueryMultipleUserIOPins</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btQueryScanningParametersStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btQueryScanningParametersStr</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btSetScanningParameterStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btSetScanningParameterStr</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btQuerySNIFFParametersStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btQuerySNIFFParametersStr</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btSetSNIFFParameterStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btSetSNIFFParameterStr</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btQuerySecurityEncryptionModesStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btQuerySecurityEncryptionModesStr</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btSetSecurityEncryptionModesStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btSetSecurityEncryptionModesStr</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btDeleteAuthenticatedDeviceFromListStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btDeleteAuthenticatedDeviceFromListStr</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btFindDeviceFromAuthenticatedDeviceListStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btFindDeviceFromAuthenticatedDeviceListStr</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btQueryTotalNumberOfDeviceFromAuthenticationListStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btQueryTotalNumberOfDeviceFromAuthenticationListStr</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btQueryTotalNumberOfDeviceFromAuthenticationList</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btQueryTotalNumberOfDeviceFromAuthenticationList</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btQueryMostRecentlyUsedAuthenticatedDevice</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btQueryMostRecentlyUsedAuthenticatedDevice</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>btQueryCurrentStateOfDeviceStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>btQueryCurrentStateOfDeviceStr</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
@@ -11968,6 +11993,17 @@
         <UsrMethodName>StdIOSendChar</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>btRestoreFactoryDefault</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
+        <UsrMethodName>btRestoreFactoryDefault</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -11981,7 +12017,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.057</BeanVersion>
+    <BeanVersion>01.061</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -14141,7 +14177,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.057</BeanVersion>
+    <BeanVersion>01.061</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -14927,7 +14963,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.057</BeanVersion>
+    <BeanVersion>01.061</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>

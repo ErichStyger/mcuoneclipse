@@ -4,7 +4,7 @@
     <Name>Bluetooth_EGBT</Name>
     <Description>Driver for the EGBT-045MS e-Gizmo Bluetooth Module</Description>
     <Author>Erich Styger</Author>
-    <Version>01.025</Version>
+    <Version>01.031</Version>
     <Icon>Bluetooth_EGBT</Icon>
     <TypesFiles>PE,Bluetooth_EGBT\Bluetooth_EGBT</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -15,7 +15,7 @@
     <BW_AutoSaveHelp>yes</BW_AutoSaveHelp>
     <BW_AutoSaveDriver>yes</BW_AutoSaveDriver>
     <BW_DetailedHelp>yes</BW_DetailedHelp>
-    <BW_NeedTps>no</BW_NeedTps>
+    <BW_NeedTps>yes</BW_NeedTps>
     <BW_NeedUst>2</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
@@ -37,22 +37,73 @@
       </TCompNameItem>
     </Property>
     <Property>
-      <TInhrItem>
-        <Name>CMD pin</Name>
-        <Symbol>CMD</Symbol>
-        <TypeSpec>Bluetooth_EGBT\CMDpin</TypeSpec>
-        <Hint>Cmd pin to switch between data (low) and command (high) mode. This pin is pin 32 (KEY) on the Bluetooth module.</Hint>
+      <TEnumItem>
+        <Name>Firmware</Name>
+        <Symbol>Firmware</Symbol>
+        <TypeSpec>typeFirmware</TypeSpec>
+        <Hint>Firmware present on the module</Hint>
         <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
+        <EditLine>true</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>-1</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
+        <DefaultIndex>1</DefaultIndex>
+        <TextValueIndex>true</TextValueIndex>
         <RuntimeProperty>false</RuntimeProperty>
         <CanDelete>false</CanDelete>
         <IconPopup>false</IconPopup>
-        <InhrBeanBaseName>Cmd</InhrBeanBaseName>
-        <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
-      </TInhrItem>
+      </TEnumItem>
+    </Property>
+    <Property>
+      <TIntgItem>
+        <Name>Response timeout (ms)</Name>
+        <Symbol>ResponseTimeoutMs</Symbol>
+        <Hint>Timeout value in milli-seconds to wait for a response from the device after an AT command.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>650</DefaultValue>
+        <MinValue>0</MinValue>
+        <MaxValue>-1</MaxValue>
+        <Bases>DEC</Bases>
+        <DefaultBase>DEC</DefaultBase>
+        <ExtraHintDisabled>false</ExtraHintDisabled>
+        <ChangeValueIntoRange>false</ChangeValueIntoRange>
+        <RuntimeProperty>false</RuntimeProperty>
+      </TIntgItem>
+    </Property>
+    <Property>
+      <TBoolGrupItem>
+        <Name>CMD Pin</Name>
+        <Symbol>CMDEnabled</Symbol>
+        <TypeSpec>typeEnaDis</TypeSpec>
+        <Hint>If we have a CMD pin to put the module into AT mode. If this pin exists, it is setting this pin to a HIGH logical level for AT mode, and LOW logical level for data mode.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>Enabled</Description>
+        <Expanded>Yes</Expanded>
+        <DefaultValue>true</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <Children>
+          <GrupItem>
+            <TInhrItem>
+              <Name>CMD pin</Name>
+              <Symbol>CMD</Symbol>
+              <TypeSpec>Bluetooth_EGBT\CMDpin</TypeSpec>
+              <Hint>Cmd pin to switch between data (low) and command (high) mode. This pin is pin 32 (KEY) on the Bluetooth module.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>-1</DefaultIndex>
+              <TextValueIndex>false</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <InhrBeanBaseName>Cmd</InhrBeanBaseName>
+              <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+            </TInhrItem>
+          </GrupItem>
+        </Children>
+      </TBoolGrupItem>
     </Property>
     <Property>
       <TGrupItem>
@@ -564,8 +615,8 @@ OK\\r\n
     </Method>
     <Method>
       <TMthdItem>
-        <Name>btRestorFactoryDefault</Name>
-        <Symbol>btRestorFactoryDefault</Symbol>
+        <Name>btRestoreFactoryDefault</Name>
+        <Symbol>btRestoreFactoryDefault</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
         <Hint>Restores the factory defaults on the device</Hint>
         <ItemLevel>BASIC</ItemLevel>

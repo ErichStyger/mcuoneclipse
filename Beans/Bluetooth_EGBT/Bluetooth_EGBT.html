@@ -207,10 +207,58 @@ Data sheets (or google for "HC-05 Bluetooth"):
   <li><a href="Bluetooth HC-05_3.pdf">HC Serial Bluetooth Products User Instructional Manual</a></li>
   <li><a href="Bluetooth HC-05_4.pdf">HC-03/05 Embedded Bluetooth Serial Communication Module AT command set</a></li>
   <li><a href="Bluetooth HC-05_2.pdf">EGBT Hardware Manual & AT Commands Reference Manual Rev. 1r0</a></li>
-  <li><a href="HC-0305 serial module AT commamd set 201104 revised.pdf">HC-0305 serial module AT commamd set 201104 revised</a></li>
+  <li><a href="HC-0305 serial module AT command set 201104 revised.pdf">HC-0305 serial module AT commamd set 201104 revised</a></li>
+  <li><a href="HC-Serial-Bluetooth-Products-201104.pdf">HC-Serial-Bluetooth-Products-201104</a></li>
 </ul>
 
+<div class="text_title">
+HC06 specific information.
+</div>
+The HC06 has a very limited firmware compared to the HC05. Unlike the HC05, the HC06 is *not* having \r\n at the end of the commands.
 
+Default settings of the HC-06:<br/>
+Slave<br/>
+9600, N, 8, 1<br/>
+Name: linvor<br/>
+Pincode: 1234<br/>
+<br/>
+Sent: AT<br/>
+Receive: OK<br/>
+<br/>
+<br/>
+Sent: AT+VERSION<br/>
+Receive: Linvor1.6<br/>
+<br/>
+Setting name to 'blue':<br/>
+AT+NAMEblue<br/>
+response:OKsetname<br/>
+<br/>
+Change baud rate<br/>
+<br/>
+Sent: AT+BAUD#<br/>
+Receive: OKbaud<br/>
+<br/>
+1: 1200<br/>
+2: 2400<br/>
+3: 4800<br/>
+4: 9600<br/>
+5: 19200<br/>
+6: 38400<br/>
+7: 57600<br/>
+8: 115200<br/>
+<br/>
+Example<br/>
+Sent: AT+BAUD1<br/>
+Receive: OK1200<br/>
+<br/>
+Change pin code<br/>
+<br/>
+Sent: AT+PINxxxx<br/>
+Receive: OKsetpin<br/>
+<br/>
+Example<br/>
+Sent: AT+PIN9999<br/>
+Receive: OKsetpin<br/>
 <!---DESCEND DON'T CHANGE THIS-->
             </div>
            <p class="footer">

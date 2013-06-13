@@ -3,7 +3,7 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (btRestorFactoryDefault)
+%include Common\GeneralMethod.inc (btRestoreFactoryDefault)
 %;**     Description :
 %;**         Restores the factory defaults on the device
 %include Common\GeneralParametersNone.inc

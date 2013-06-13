@@ -22,8 +22,6 @@
 #include "UTIL1.h"
 #include "WAIT1.h"
 #include "BT1.h"
-#include "Cmd1.h"
-#include "BitIoLdd1.h"
 #include "Serial1.h"
 #include "ASerialLdd2.h"
 #include "LEDR.h"
