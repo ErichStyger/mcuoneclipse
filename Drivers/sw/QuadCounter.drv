@@ -379,7 +379,13 @@ static word %'ModuleName'%.nofErrors = 0;
 %endif
 
 %if %SamplingMethod='yes'
-#define %'ModuleName'%.GET_C1_C2_PINS()  ((%@C1@'ModuleName'%.GetVal()!=0?2:0)|(%@C2@'ModuleName'%.GetVal()!=0?1:0))
+#define %'ModuleName'%.GET_C1_PIN()      (%@C1@'ModuleName'%.GetVal())
+#define %'ModuleName'%.GET_C2_PIN()      (%@C2@'ModuleName'%.GetVal())
+%if %C1C2swapped='yes'
+#define %'ModuleName'%.GET_C1_C2_PINS()  ((%'ModuleName'%.GET_C2_PIN()!=0?2:0)|(%'ModuleName'%.GET_C1_PIN()!=0?1:0))
+%else
+#define %'ModuleName'%.GET_C1_C2_PINS()  ((%'ModuleName'%.GET_C1_PIN()!=0?2:0)|(%'ModuleName'%.GET_C2_PIN()!=0?1:0))
+%endif
 
 %endif
 %-BW_CUSTOM_VARIABLE_END
@@ -531,6 +537,17 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
     %@Shell@'ModuleName'%.SendStatusStr((const unsigned char*)"  pos", (const unsigned char*)"", io->stdOut);
     %@Shell@'ModuleName'%.SendNum16u(%'ModuleName'%.currPos, io->stdOut);
     %@Shell@'ModuleName'%.SendStr((const unsigned char*)"\r\n", io->stdOut);
+    %@Shell@'ModuleName'%.SendStatusStr((const unsigned char*)"  C1 C2", (const unsigned char*)"", io->stdOut);
+    if (%'ModuleName'%.GET_C1_PIN()!=0) {
+      %@Shell@'ModuleName'%.SendStr((const unsigned char*)"1 ", io->stdOut);
+    } else {
+      %@Shell@'ModuleName'%.SendStr((const unsigned char*)"0 ", io->stdOut);
+    }
+    if (%'ModuleName'%.GET_C2_PIN()!=0) {
+      %@Shell@'ModuleName'%.SendStr((const unsigned char*)"1\r\n", io->stdOut);
+    } else {
+      %@Shell@'ModuleName'%.SendStr((const unsigned char*)"0\r\n", io->stdOut);
+    }
 %ifdef NofErrors
     %@Shell@'ModuleName'%.SendStatusStr((const unsigned char*)"  errors", (const unsigned char*)"", io->stdOut);
     %@Shell@'ModuleName'%.SendNum16u(%'ModuleName'%.nofErrors, io->stdOut);
