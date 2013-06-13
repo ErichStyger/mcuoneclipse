@@ -1063,7 +1063,7 @@ static uint8_t PrintHelp(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  name <name>", (unsigned char*)"Set device name e.g. '%'ModuleName' name Blue'\r\n", io->stdOut);
 %endif
 %ifdef btSetBaud
-  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  baud <baud>", (unsigned char*)"Set baud (1200, 2400, 4800, ... 115200). '%'ModuleName' baud 9600'\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  baud <baud>", (unsigned char*)"Set baud (1200, 2400, 4800, ... 115200), e.g. '%'ModuleName' baud 9600'\r\n", io->stdOut);
 %endif
 #ifdef %'ModuleName'%.FIRMWARE_HC05 /* HC06 does not need \r\n */
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  cmd <AT command>", (unsigned char*)"Send an AT command, e.g AT+NAME?\r\n", io->stdOut);
