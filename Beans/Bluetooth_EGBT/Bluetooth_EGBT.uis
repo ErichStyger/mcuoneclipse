@@ -1,13 +1,23 @@
 
 [USED_FACES]
-BeanVersion=01.031
+BeanVersion=01.037
 
-InterfacesCount=5
+InterfacesCount=6
 
 Symbol=CMD
 Link=No
 Interface=Bluetooth_EGBT\CMDpin
 Version=01.001
+
+Symbol=StatePin
+Link=No
+Interface=Bluetooth_EGBT\StatePin
+Version=01.001
+
+Symbol=Shell
+Link=Yes
+Interface=Bluetooth_EGBT\Shell
+Version=01.003
 
 Symbol=Utility
 Link=Yes
@@ -22,9 +32,4 @@ Version=01.002
 Symbol=Serial
 Link=No
 Interface=Bluetooth_EGBT\Serial
-Version=01.003
-
-Symbol=Shell
-Link=Yes
-Interface=Bluetooth_EGBT\Shell
 Version=01.003

@@ -898,8 +898,13 @@ static uint8_t RxResponse(unsigned char *rxBuf, size_t rxBufLength, uint16_t msT
       msTimeout--;
     }
   } /* for */
-  if (expectedTail[0]!='\0' && msTimeout==0) { /* only timeout if we have not expected tail. For example for HC06 we do not know what is the end. */
-    res = ERR_FAULT;
+  if (msTimeout==0) { /* timeout! */
+    if (   expectedTail[0]!='\0' /* timeout, and we expected something: an error for sure */
+        || rxBuf[0]=='\0' /* timeout, did not know what to expect, but received nothing? There has to be a response. */
+       )
+    {
+      res = ERR_FAULT;
+    }
   }
   return res;
 }
@@ -1029,6 +1034,12 @@ static uint8_t PrintLongStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
 static uint8_t PrintHelp(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"%'ModuleName'", (unsigned char*)"Group of %'ModuleName' commands\r\n", io->stdOut);
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+%ifdef btSetPairingPasskey
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  pin <pin>", (unsigned char*)"Set pairing pin, e.g. '%'ModuleName' pin 1234'\r\n", io->stdOut);
+%endif
+%ifdef btSetDeviceName
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  name <name>", (unsigned char*)"Set device name e.g. '%'ModuleName' name Blue'\r\n", io->stdOut);
+%endif
 #ifdef %'ModuleName'%.FIRMWARE_HC05 /* HC06 does not need \r\n */
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  cmd <AT command>", (unsigned char*)"Send an AT command, e.g AT+NAME?\r\n", io->stdOut);
 #else
@@ -1038,9 +1049,10 @@ static uint8_t PrintHelp(const %@Shell@'ModuleName'%.StdIOType *io) {
   return ERR_OK;
 }
 
-static void SendCommand(const unsigned char *cmd, const %@Shell@'ModuleName'%.StdIOType *io) {
+static uint8_t SendCommand(const unsigned char *cmd, const %@Shell@'ModuleName'%.StdIOType *io) {
   unsigned char buf[%'ModuleName'%.MAX_RESPONSE_SIZE];
   unsigned char cmdBuf[%'ModuleName'%.MAX_AT_CMD_SIZE];
+  uint8_t res = ERR_OK;
 
   %@Utility@'ModuleName'%.strcpy(cmdBuf, sizeof(cmdBuf), cmd);
 #ifdef %'ModuleName'%.FIRMWARE_HC05 /* HC06 does not need \r\n */
@@ -1053,11 +1065,13 @@ static void SendCommand(const unsigned char *cmd, const %@Shell@'ModuleName'%.St
   if (%'ModuleName'%.SendATCommand(cmdBuf, buf, sizeof(buf), (unsigned char*)"")!=ERR_OK) {
 #endif
     %@Shell@'ModuleName'%.SendStr((unsigned char*)"***Response not OK\r\n", io->stdOut);
+    res = ERR_FAILED;
   }
   %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
-#ifdef %'ModuleName'%.FIRMWARE_HC06 /* HC06 does not responds with OK\r\n at the end */
+#ifdef %'ModuleName'%.FIRMWARE_HC06 /* HC06 does not respond with OK\r\n at the end */
   %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
 #endif
+  return res;
 }
 
 %endif
@@ -1142,7 +1156,7 @@ byte %'ModuleName'%.%StdOKCmd(byte *cmd)
 #ifdef %'ModuleName'%.FIRMWARE_HC05 /* HC05 firmware has \r\n line ending */
   return %'ModuleName'%.StdCmd(cmd, rxBuf, sizeof(rxBuf), (unsigned char*)"OK\r\n");
 #else /* HC06 */
-  return %'ModuleName'%.StdCmd(cmd, rxBuf, sizeof(rxBuf), (unsigned char*)"");
+  return %'ModuleName'%.StdCmd(cmd, rxBuf, sizeof(rxBuf), (unsigned char*)"OK");
 #endif
 }
 
@@ -1368,10 +1382,6 @@ byte %'ModuleName'%.%btSetDeviceName(byte *name)
 {
 #ifdef %'ModuleName'%.FIRMWARE_HC05
   /* 6: Set name: "AT+NAME=<name>\r\n" ==> "OK\r\n" */
-#else /* HC06 */
-  /* 6: Set name: "AT+NAME<name>" ==> "OKsetname" */
-  unsigned char rxBuf[sizeof("OKsetname")+1];
-#endif
   unsigned char buf[sizeof("AT+NAME=\r\n")+%'ModuleName'%.MAX_DEVICE_NAME_SIZE];
 
   if (%@Utility@'ModuleName'%.strlen((char*)name)>%'ModuleName'%.MAX_DEVICE_NAME_SIZE) {
@@ -1379,10 +1389,18 @@ byte %'ModuleName'%.%btSetDeviceName(byte *name)
   }
   %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+NAME");
   %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), name);
-#ifdef %'ModuleName'%.FIRMWARE_HC05
   %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   return %'ModuleName'%.StdOKCmd(buf);
-#else
+#else /* HC06 */
+  /* 6: Set name: "AT+NAME<name>" ==> "OKsetname" */
+  unsigned char buf[sizeof("AT+NAME")+%'ModuleName'%.MAX_DEVICE_NAME_SIZE];
+  unsigned char rxBuf[sizeof("OKsetname")+1];
+
+  if (%@Utility@'ModuleName'%.strlen((char*)name)>%'ModuleName'%.MAX_DEVICE_NAME_SIZE) {
+    return ERR_FAILED; /* name too long */
+  }
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+NAME");
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), name);
   return %'ModuleName'%.StdCmd(buf, rxBuf, sizeof(rxBuf), (unsigned char*)"OKsetname");
 #endif
 }
@@ -1583,6 +1601,7 @@ byte %'ModuleName'%.%btQueryPairingPasskey(byte *buf, size_t bufSize)
 %include Common\Bluetooth_EGBTbtSetPairingPasskey.Inc
 byte %'ModuleName'%.%btSetPairingPasskey(byte *pwd)
 {
+#ifdef %'ModuleName'%.FIRMWARE_HC05
   /* 12: Set paring pass key: "AT+PSWD=<pwd>\r\n" ==> "OK\r\n" */
   unsigned char buf[sizeof("AT+PSWD=1234567890123456\r\n")];
 
@@ -1593,6 +1612,18 @@ byte %'ModuleName'%.%btSetPairingPasskey(byte *pwd)
   %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), pwd);
   %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   return %'ModuleName'%.StdOKCmd(buf);
+#else /* HC06 */
+  /* 12: Set paring pass key: "AT+PIN<pwd>" ==> "OKsetPIN" */
+  unsigned char buf[sizeof("AT+PIN1234")];
+  unsigned char rxBuf[sizeof("OKsetPIN")];
+
+  if (%@Utility@'ModuleName'%.strlen((char*)pwd)>4) { /* check for password size */
+    return ERR_FAILED;
+  }
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+PIN");
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), pwd);
+  return %'ModuleName'%.StdCmd(buf, rxBuf, sizeof(rxBuf), (unsigned char*)"OKsetPIN");
+#endif
 }
 
 %endif %- btSetPairingPasskey
@@ -2217,18 +2248,30 @@ byte %'ModuleName'%.%btQueryCurrentStateOfDeviceStr(byte *buf, size_t bufSize)
 %include Common\Bluetooth_EGBTParseCommand.Inc
 byte %'ModuleName'%.%ParseCommand(const unsigned char* cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)
 {
+  byte res = ERR_OK;
+
   if (%@Utility@'ModuleName'%.strcmp((char*)cmd, %@Shell@'ModuleName'%.CMD_HELP)==0 || %@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' help")==0) {
     *handled = TRUE;
     return PrintHelp(io);
   } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, %@Shell@'ModuleName'%.CMD_STATUS)==0) {
     *handled = TRUE;
-    return PrintShortStatus(io); /* only print short status, as full status will fail if module is connected */
+    res = PrintShortStatus(io); /* only print short status, as full status will fail if module is connected */
   } else if ((%@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' status")==0)) {
     *handled = TRUE;
-    return PrintLongStatus(io);
-  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' cmd ", sizeof("%'ModuleName' cmd ")-1)==0) {
-    SendCommand(cmd+sizeof("%'ModuleName' cmd ")-1, io);
+    res = PrintLongStatus(io);
+%ifdef btSetPairingPasskey
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' pin ", sizeof("%'ModuleName' pin ")-1)==0) {
     *handled = TRUE;
+    res = %'ModuleName'%.btSetPairingPasskey((unsigned char*)cmd+sizeof("%'ModuleName' pin ")-1);
+%endif
+%ifdef btSetDeviceName
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' name ", sizeof("%'ModuleName' name ")-1)==0) {
+    *handled = TRUE;
+    res = %'ModuleName'%.btSetDeviceName((unsigned char*)cmd+sizeof("%'ModuleName' name ")-1);
+%endif
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' cmd ", sizeof("%'ModuleName' cmd ")-1)==0) {
+    *handled = TRUE;
+    res = SendCommand(cmd+sizeof("%'ModuleName' cmd ")-1, io);
   } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' send ", sizeof("%'ModuleName' send ")-1)==0) {
     word strSize, snt;
     const unsigned char *p;
@@ -2238,10 +2281,10 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char* cmd, bool *handled, const
     strSize = (word)%@Utility@'ModuleName'%.strlen((char*)p);
     if (%@Serial@'ModuleName'%.SendBlock((unsigned char*)p, strSize, &snt)!=ERR_OK) {
       %@Shell@'ModuleName'%.SendStr((unsigned char*)"FAILED sending string\r\n", io->stdOut);
-      return ERR_FAILED;
+      res = ERR_FAILED;
     }
   }
-  return ERR_OK;
+  return res;
 }
 
 %endif %- ParseCommand

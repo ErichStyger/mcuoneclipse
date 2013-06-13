@@ -222,7 +222,7 @@ LI.EXP {
 There are 2 options:<br />
 <ul>
   <li><u>HC05</u>: HC05</li>
-  <li><u>HC06</u>: HC06/Linvor 1.5 firmware</li>
+  <li><u>HC06</u>: HC06/Linvor 1.x firmware</li>
 </ul><br />
 
 </li>
@@ -243,6 +243,30 @@ The following items are available only if the group is enabled (the value is "En
 </ul>
 </li>
 <li>
+<a name="StatePinEnabled">
+<b>State Pin</b></a> - <br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+<ul>
+  <li>
+  <a name="StatePin">
+  <b>State Pin</b></a> - Optional state pin telling the status of the module. This is an input pin
+  </li>
+</ul>
+</li>
+<li>
+<a name="ShellEnabled">
+<b>Shell</b></a> - Optional Interface to command line shell. If enabled, then this enables the ParseCommand() method.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+<ul>
+  <li>
+  <a name="Shell">
+  <b>Shell</b></a> - Interface to Shell
+  </li>
+</ul>
+</li>
+<li>
 <a name="Interfaces">
 <b>Interfaces</b></a> - Group of interfaces
 <ul>
@@ -257,18 +281,6 @@ The following items are available only if the group is enabled (the value is "En
   <li>
   <a name="Serial">
   <b>Serial</b></a> - Serial Interface to the module
-  </li>
-</ul>
-</li>
-<li>
-<a name="ShellEnabled">
-<b>Shell</b></a> - Optional Interface to command line shell. If enabled, then this enables the ParseCommand() method.<br />
-The following items are available only if the group is enabled (the value is "Enabled"):<br />
-
-<ul>
-  <li>
-  <a name="Shell">
-  <b>Shell</b></a> - Interface to Shell
   </li>
 </ul>
 </li>

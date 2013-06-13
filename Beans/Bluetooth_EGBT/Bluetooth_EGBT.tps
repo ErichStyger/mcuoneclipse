@@ -10,7 +10,7 @@
       </Items>
       <Hints lines_count="2">
         <Line>HC05</Line>
-        <Line>HC06/Linvor 1.5 firmware</Line>
+        <Line>HC06/Linvor 1.x firmware</Line>
       </Hints>
       <Defines lines_count="2">
         <Line>HC05</Line>
