@@ -4,7 +4,7 @@
     <Name>Bluetooth_EGBT</Name>
     <Description>Driver for the EGBT-045MS e-Gizmo Bluetooth Module</Description>
     <Author>Erich Styger</Author>
-    <Version>01.037</Version>
+    <Version>01.039</Version>
     <Icon>Bluetooth_EGBT</Icon>
     <TypesFiles>PE,Bluetooth_EGBT\Bluetooth_EGBT</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -1274,6 +1274,40 @@ OK\\r\n
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>byte #M#_#C#(byte *param)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>btSetBaud</Name>
+        <Symbol>btSetBaud</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Sets the baud rate of the device.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>baud</ParName>
+          <ParType>32bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(dword baud)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

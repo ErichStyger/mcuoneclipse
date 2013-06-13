@@ -133,6 +133,18 @@ typedef enum {
            %'ModuleName'%.NO_ERROR /* must be last in list!!! */
 } %'ModuleName'%.TEnumErrors;
 
+typedef enum {
+  %'ModuleName'%.BAUD_1200 = 1200,
+  %'ModuleName'%.BAUD_2400 = 2400,
+  %'ModuleName'%.BAUD_4800 = 4800,
+  %'ModuleName'%.BAUD_9600 = 9600,
+  %'ModuleName'%.BAUD_19200 = 19200,
+  %'ModuleName'%.BAUD_38400 = 38400,
+  %'ModuleName'%.BAUD_57600 = 57600,
+  %'ModuleName'%.BAUD_115200 = 115200
+  /* higher baud is intentionally not supported here, as it might be impossible to connect to the module */
+} %'ModuleName'%.BaudMode;
+
 typedef const unsigned char *%'ModuleName'%.TConstStringPtr; /* type for constant string pointer */
 
 #define %'ModuleName'%.MAX_AT_CMD_SIZE                         (sizeof("AT+VERSION?\r\n"))  /* longest AT command */
@@ -750,6 +762,16 @@ void %'ModuleName'%.%StdIOSendChar(byte ch);
 
 %endif %- StdIOSendChar
 %-BW_METHOD_END StdIOSendChar
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN btSetBaud
+%ifdef btSetBaud
+byte %'ModuleName'%.%btSetBaud(dword baud);
+%define! Parbaud
+%define! RetVal
+%include Common\Bluetooth_EGBTbtSetBaud.Inc
+
+%endif %- btSetBaud
+%-BW_METHOD_END btSetBaud
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -1039,6 +1061,9 @@ static uint8_t PrintHelp(const %@Shell@'ModuleName'%.StdIOType *io) {
 %endif
 %ifdef btSetDeviceName
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  name <name>", (unsigned char*)"Set device name e.g. '%'ModuleName' name Blue'\r\n", io->stdOut);
+%endif
+%ifdef btSetUARTParameterStr
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  baud <baud>", (unsigned char*)"Set baud (1200, 2400, 4800, ... 115200). '%'ModuleName' baud 9600'\r\n", io->stdOut);
 %endif
 #ifdef %'ModuleName'%.FIRMWARE_HC05 /* HC06 does not need \r\n */
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  cmd <AT command>", (unsigned char*)"Send an AT command, e.g AT+NAME?\r\n", io->stdOut);
@@ -1666,6 +1691,86 @@ byte %'ModuleName'%.%btSetUARTParameterStr(byte *param)
 %endif %- btSetUARTParameterStr
 %-BW_METHOD_END btSetUARTParameterStr
 %-************************************************************************************************************
+%-BW_METHOD_BEGIN btSetBaud
+%ifdef btSetBaud
+%define! Parbaud
+%define! RetVal
+%include Common\Bluetooth_EGBTbtSetBaud.Inc
+byte %'ModuleName'%.%btSetBaud(dword baud)
+{
+#ifdef %'ModuleName'%.FIRMWARE_HC05
+  unsigned char buf[sizeof("AT+UART=1382400,1,0\r\n")];
+
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+UART=");
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), baud); /* append baud number */
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)",1,0\r\n");
+  return %'ModuleName'%.StdOKCmd(buf);
+#else /* HC06 */
+  unsigned char buf[sizeof("AT+BAUDx")];
+  unsigned char rxBuf[sizeof("OK115200")];
+  unsigned char *response;
+
+  switch(baud) {
+    case 1200:
+      %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+BAUD1");
+      response = (unsigned char*)"OK1200";
+      break;
+    case 2400:
+      %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+BAUD2");
+      response = (unsigned char*)"OK2400";
+      break;
+    case 4800:
+      %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+BAUD3");
+      response = (unsigned char*)"OK4800";
+      break;
+    case 9600:
+      %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+BAUD4");
+      response = (unsigned char*)"OK9600";
+      break;
+    case 19200:
+      %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+BAUD5");
+      response = (unsigned char*)"OK19200";
+      break;
+    case 38400:
+      %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+BAUD6");
+      response = (unsigned char*)"OK38400";
+      break;
+    case 57600:
+      %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+BAUD7");
+      response = (unsigned char*)"OK57600";
+      break;
+    case 115200:
+      %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+BAUD8");
+      response = (unsigned char*)"OK115200";
+      break;
+#if 0 /* intentionally disabled, as using these baud might prevent you to connect with an normal PC */
+    case 230400:
+      %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+BAUD9");
+      response = (unsigned char*)"OK230400";
+      break;
+    case 460800:
+      %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+BAUDA");
+      response = (unsigned char*)"OK460800";
+      break;
+    case 921600:
+      %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+BAUDB");
+      response = (unsigned char*)"OK921600";
+      break;
+    case 1382400:
+      %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+BAUDC");
+      response = (unsigned char*)"OK1382400";
+      break;
+#endif
+    default:
+      return ERR_FAILED;
+  } /* switch */
+  return %'ModuleName'%.StdCmd(buf, rxBuf, sizeof(rxBuf), response);
+#endif
+}
+
+%endif %- btSetBaud
+%-BW_METHOD_END btSetBaud
+%-************************************************************************************************************
 %-BW_METHOD_BEGIN btQueryConnectionMethod
 %ifdef btQueryConnectionMethod
 %define! Parmethod
@@ -2269,6 +2374,21 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char* cmd, bool *handled, const
     *handled = TRUE;
     res = %'ModuleName'%.btSetDeviceName((unsigned char*)cmd+sizeof("%'ModuleName' name ")-1);
 %endif
+%ifdef btSetBaud
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' baud ", sizeof("%'ModuleName' baud ")-1)==0) {
+    const unsigned char *p;
+    uint32_t value;
+
+    *handled = TRUE;
+    p = cmd+sizeof("%'ModuleName' baud ")-1;
+    res = %@Utility@'ModuleName'%.ScanDecimal32uNumber(&p, &value);
+    if (res!=ERR_OK) {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"*** invalid number!\r\n", io->stdErr);
+      res = ERR_FAILED;
+    } else {
+      res = %'ModuleName'%.btSetBaud(value);
+    }
+%endif
   } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' cmd ", sizeof("%'ModuleName' cmd ")-1)==0) {
     *handled = TRUE;
     res = SendCommand(cmd+sizeof("%'ModuleName' cmd ")-1, io);
@@ -2280,7 +2400,7 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char* cmd, bool *handled, const
     p = cmd+sizeof("%'ModuleName' send ")-1;
     strSize = (word)%@Utility@'ModuleName'%.strlen((char*)p);
     if (%@Serial@'ModuleName'%.SendBlock((unsigned char*)p, strSize, &snt)!=ERR_OK) {
-      %@Shell@'ModuleName'%.SendStr((unsigned char*)"FAILED sending string\r\n", io->stdOut);
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"FAILED sending string\r\n", io->stdErr);
       res = ERR_FAILED;
     }
   }
