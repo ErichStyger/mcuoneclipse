@@ -1062,7 +1062,7 @@ static uint8_t PrintHelp(const %@Shell@'ModuleName'%.StdIOType *io) {
 %ifdef btSetDeviceName
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  name <name>", (unsigned char*)"Set device name e.g. '%'ModuleName' name Blue'\r\n", io->stdOut);
 %endif
-%ifdef btSetUARTParameterStr
+%ifdef btSetBaud
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  baud <baud>", (unsigned char*)"Set baud (1200, 2400, 4800, ... 115200). '%'ModuleName' baud 9600'\r\n", io->stdOut);
 %endif
 #ifdef %'ModuleName'%.FIRMWARE_HC05 /* HC06 does not need \r\n */
