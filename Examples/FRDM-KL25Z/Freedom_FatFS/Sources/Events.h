@@ -73,7 +73,6 @@ void Cpu_OnNMIINT(void);
 */
 
 
-void SM1_OnBlockReceived(LDD_TUserData *UserDataPtr);
 /*
 ** ===================================================================
 **     Event       :  SM1_OnBlockReceived (module Events)
