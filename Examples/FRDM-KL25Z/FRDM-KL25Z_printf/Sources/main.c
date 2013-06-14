@@ -32,7 +32,11 @@ static void NegLED(void) {
   RED_TOGGLE;
 }
 
+#define DEMO_GETS  0 /* 1 or 0 */
+
+#if DEMO_GETS
 static char buffer[64];
+#endif
 
 int main(void) {
 	int counter = 0;
@@ -42,13 +46,18 @@ int main(void) {
   printf("Hello world!\r\n");
 	for(;;) {	   
 	  counter++;
+#if DEMO_GETS /* enable this to use gets() too */
 	  printf("Enter a string:\r\n");
     if (gets(buffer)!=NULL) {
       printf("you entered: %s\r\n", buffer);
     }
-	  if ((counter%32)==0) {
+    NegLED();
+#else
+	  printf("counter: %d\r\n", counter);
+    if ((counter%32)==0) { /* blink LED slowly so it is better visible */
       NegLED();
-	  }
+    }
+#endif
 	}
 	
 	return 0;
