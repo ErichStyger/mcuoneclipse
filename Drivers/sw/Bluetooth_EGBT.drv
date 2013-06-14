@@ -1702,7 +1702,7 @@ byte %'ModuleName'%.%btSetBaud(dword baud)
   unsigned char buf[sizeof("AT+UART=1382400,1,0\r\n")];
 
   %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"AT+UART=");
-  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), baud); /* append baud number */
+  %@Utility@'ModuleName'%.strcatNum32u(buf, sizeof(buf), baud); /* append baud number */
   %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)",1,0\r\n");
   return %'ModuleName'%.StdOKCmd(buf);
 #else /* HC06 */
