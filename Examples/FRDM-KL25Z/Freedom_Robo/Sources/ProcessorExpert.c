@@ -57,8 +57,6 @@
 #include "SW1.h"
 #include "BitIoLdd17.h"
 #include "BT1.h"
-#include "Cmd2.h"
-#include "BitIoLdd23.h"
 #include "Serial2.h"
 #include "ASerialLdd3.h"
 #include "HF1.h"
