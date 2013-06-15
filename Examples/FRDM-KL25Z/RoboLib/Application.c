@@ -285,6 +285,15 @@ static void APP_PrintHelp(const CLS1_StdIOType *io) {
 
 static void APP_PrintStatus(const CLS1_StdIOType *io) {
   CLS1_SendStatusStr((unsigned char*)"app", (unsigned char*)"\r\n", io->stdOut);
+#if PL_APP_ACCEL_CONTROL
+  CLS1_SendStatusStr((unsigned char*)"  mode", (unsigned char*)"ACCEL_CONTROL", io->stdOut);
+#endif
+#if  PL_APP_LINE_FOLLOWING
+  CLS1_SendStatusStr((unsigned char*)"  mode", (unsigned char*)"LINE_FOLLOWING", io->stdOut);
+#endif
+#if PL_APP_LINE_MAZE
+  CLS1_SendStatusStr((unsigned char*)"  mode", (unsigned char*)"LINE_MAZE", io->stdOut);
+#endif
 #if PL_APP_FOLLOW_OBSTACLE
   CLS1_SendStatusStr((unsigned char*)"  follow", followObstacle?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
 #endif
