@@ -9,23 +9,23 @@ https://github.com/ErichStyger/mcuoneclipse/Beans
 https://github.com/ErichStyger/mcuoneclipse/Drivers
 
 
-Part1_Beans_30.05.2013.PEupd Content:
+Part1_Beans_16.06.2013.PEupd Content:
 -------------------------------------
 Package from component(s):
 - 24AA_EEPROM version 01.002
 - 74HC164 version 01.031
-- 74HC595 version 01.016
+- 74HC595 version 01.022
 - App_SMAC_Hello version 01.085
 - AT25HP512 version 01.033
 - BitIO_to_PCA9554 version 01.018
-- Bluetooth_EGBT version 01.025
+- Bluetooth_EGBT version 01.039
 - BootLoaderDisk version 01.018
 - BootLoaderUSB version 01.020
 - ChLCD version 01.160
 - CTouchScanner version 01.021
 - CTouchSensor version 01.032
 - DCF77 version 01.060
-- FAT_FileSystem version 01.145
+- FAT_FileSystem version 01.148
 - FatFsMem_USB_MSD version 01.019
 - FatFsMemSDHC version 01.006
 - FontDisplay version 01.195
@@ -38,19 +38,19 @@ Package from component(s):
 - FSShell version 01.231
 - GDisplay version 01.190
 - GenericBitIO version 01.065
-- GenericI2C version 01.006
+- GenericI2C version 01.007
 - GenericKBI version 01.025
 - GenericSPI version 01.029
 - GenericSWI2C version 01.003
 - GenericSWSPI version 01.001
 - GenericTimeDate version 01.001
 - GFont version 01.123
-- HardFault version 01.004
+- HardFault version 01.008
 - I2CSpy version 01.009
 - KentChLCD version 01.110
 - Key version 01.102
-- LCDHTA version 01.004
-- LED version 01.059
+- LCDHTA version 01.005
+- LED version 01.061
 - LEDbit version 01.003
 - LEDbyte version 01.036
 - LEDmatrix version 01.095
@@ -67,10 +67,9 @@ Package from component(s):
 - MMA8451Q version 01.024
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 30.05.2013
+created 16.06.2013
 
-
-Part2_Beans_30.05.2013.PEupd Content:
+Part2_Beans_16.06.2013.PEupd Content:
 -------------------------------------
 Package from component(s):
 - OLED version 01.045
@@ -82,13 +81,13 @@ Package from component(s):
 - PID_Int version 01.001
 - PtConv version 01.005
 - PWMServo16bit version 01.011
-- QuadCounter version 01.013
+- QuadCounter version 01.019
 - RingBufferUInt8 version 01.004
 - RTC_Maxim version 01.003
 - S19 version 01.034
 - S65Sharp version 01.079
 - SD_Card version 01.157
-- Servo version 01.056
+- Servo version 01.066
 - Shell version 01.019
 - SimpleEvents version 01.045
 - SMAC version 01.003
@@ -101,6 +100,8 @@ Package from component(s):
 - TouchScreen version 01.077
 - TouchScreenSensor version 01.053
 - Trigger version 01.054
+- TwoKeys version 01.015
+- uCOS_II version 01.189
 - UI version 01.056
 - UIButton version 01.121
 - UICalendar version 01.030
@@ -118,5 +119,5 @@ Package from component(s):
 - UserInterface version 01.510
 - UTI version 01.125
 - Utility version 01.086
-- Wait version 01.057
-created 30.05.2013
+- Wait version 01.059
+created 16.06.2013
