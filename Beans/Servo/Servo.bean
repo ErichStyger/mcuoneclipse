@@ -4,7 +4,7 @@
     <Name>Servo</Name>
     <Description>Driver for a Servo</Description>
     <Author>Erich Styger, Andreas Schöpfer</Author>
-    <Version>01.061</Version>
+    <Version>01.066</Version>
     <Icon>Servo</Icon>
     <TypesFiles>PE,Servo\Servo</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -175,7 +175,7 @@
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
               <Description>Disabled</Description>
-              <Expanded>Yes</Expanded>
+              <Expanded>No</Expanded>
               <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
@@ -228,6 +228,74 @@
               <InhrBeanBaseName>Pwm</InhrBeanBaseName>
               <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
             </TInhrItem>
+          </GrupItem>
+        </Children>
+      </TGrupItem>
+    </Property>
+    <Property>
+      <TGrupItem>
+        <Name>CPU clock/speed selection</Name>
+        <Symbol>_SpeedModesGrp</Symbol>
+        <Hint>Settings for the CPU speed modes: if the component is supported or not.</Hint>
+        <ItemLevel>EXPERT</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description/>
+        <Expanded>Yes</Expanded>
+        <Children>
+          <GrupItem>
+            <TSpeedItem>
+              <Name>High speed mode</Name>
+              <Symbol>HighSpeed</Symbol>
+              <TypeSpec>typeSM_EnaDis</TypeSpec>
+              <Hint>The component is enabled/disabled in high speed mode.</Hint>
+              <ItemLevel>EXPERT</ItemLevel>
+              <EditLine>false</EditLine>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>0</DefaultIndex>
+              <TextValueIndex>true</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <DefaultValue>true</DefaultValue>
+              <Popup>false</Popup>
+            </TSpeedItem>
+          </GrupItem>
+          <GrupItem>
+            <TSpeedItem>
+              <Name>Low speed mode</Name>
+              <Symbol>LowSpeed</Symbol>
+              <TypeSpec>typeSM_EnaDis</TypeSpec>
+              <Hint>The component is enabled/disabled in low speed mode.</Hint>
+              <ItemLevel>EXPERT</ItemLevel>
+              <EditLine>false</EditLine>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>1</DefaultIndex>
+              <TextValueIndex>true</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <DefaultValue>false</DefaultValue>
+              <Popup>false</Popup>
+            </TSpeedItem>
+          </GrupItem>
+          <GrupItem>
+            <TSpeedItem>
+              <Name>Slow speed mode</Name>
+              <Symbol>SlowSpeed</Symbol>
+              <TypeSpec>typeSM_EnaDis</TypeSpec>
+              <Hint>The component is enabled/disabled in slow speed mode.</Hint>
+              <ItemLevel>EXPERT</ItemLevel>
+              <EditLine>false</EditLine>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>1</DefaultIndex>
+              <TextValueIndex>true</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <DefaultValue>false</DefaultValue>
+              <Popup>false</Popup>
+            </TSpeedItem>
           </GrupItem>
         </Children>
       </TGrupItem>
