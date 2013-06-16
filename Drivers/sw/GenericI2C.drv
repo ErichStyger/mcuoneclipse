@@ -975,7 +975,7 @@ byte %'ModuleName'%.%ScanDevice(byte i2cAddr)
 %endif
     } while (!%'ModuleName'%.deviceData.dataTransmittedFlg);
     errMask = 0;
-    (void)I2C1_GetError(%'ModuleName'%.deviceData.handle, &errMask);
+    (void)%@LDD_I2C@'ModuleName'%.GetError(%'ModuleName'%.deviceData.handle, &errMask);
 %if defined(Timeout)
     %@Timeout@'ModuleName'%.LeaveCounter(timeout);
 %endif
