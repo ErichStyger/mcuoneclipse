@@ -12,10 +12,12 @@
 #if PL_HAS_LINE_SENSOR
 #include "CLS1.h"
 
-#if PL_IS_ZUMO_ROBOT
+#if (PL_IS_ZUMO_ROBOT || PL_IS_INTRO_ZUMO_ROBOT)
   #define REF_NOF_SENSORS 6
-#else
+#elif (PL_IS_ROUND_ROBOT || PL_IS_TRACK_ROBOT)
   #define REF_NOF_SENSORS 8
+#else
+  #error "unknown configuration!"
 #endif
 
 #define REF_MIDDLE_LINE_VALUE  ((REF_NOF_SENSORS+1)*1000/2)

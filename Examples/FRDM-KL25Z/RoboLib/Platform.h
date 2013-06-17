@@ -27,9 +27,9 @@
 #define PL_HAS_BUZZER                 PL_IS_ZUMO_ROBOT   /* if we have a buzzer */
 #define PL_HAS_MAGNETOMETER           PL_IS_ZUMO_ROBOT   /* if we have a magnetometer */
 #define PL_HAS_BLUETOOTH              (1 && (PL_IS_ROUND_ROBOT || PL_IS_INTRO_ZUMO_ROBOT))  /* if we have a Bluetooth module */
-#define PL_HAS_ULTRASONIC             PL_IS_TRACK_ROBOT  /* if we have a Ultrasonic ranging module */
+#define PL_HAS_ULTRASONIC             (PL_IS_TRACK_ROBOT || PL_IS_INTRO_ZUMO_ROBOT)  /* if we have a Ultrasonic ranging module */
 #define PL_HAS_LED_BLUE               (PL_IS_ZUMO_ROBOT && PL_IS_INTRO_ZUMO_ROBOT)   /* if we can use the blue RGB LED */
-#define PL_HAS_LINE_SENSOR            (1 && PL_IS_TRACK_ROBOT || PL_IS_ZUMO_ROBOT || PL_IS_ROUND_ROBOT) /* if we have line sensors */
+#define PL_HAS_LINE_SENSOR            (1 && PL_IS_TRACK_ROBOT || PL_IS_ZUMO_ROBOT || PL_IS_ROUND_ROBOT || PL_IS_INTRO_ZUMO_ROBOT) /* if we have line sensors */
 
 #define PL_HAS_RADIO                  (1 && PL_IS_TRACK_ROBOT)
 #define PL_HAS_REMOTE                 (1 && PL_HAS_RADIO) /* if we have remote (IEEE802.15.4) support */
