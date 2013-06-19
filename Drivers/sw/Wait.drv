@@ -339,6 +339,7 @@ void %'ModuleName'%.%Wait10Cycles(void)
   }
 %elif (CPU_FAMILY = "Kinetis")
   /* NOTE: this is not really accurate, as not sure yet about the cycle counts. Assuming 1 cycle for a NOP */
+  /* Compiler is %Compiler */
 %if %Compiler = "GNUC"
   asm(
    "nop \n\t"
@@ -363,6 +364,19 @@ void %'ModuleName'%.%Wait10Cycles(void)
   asm("nop");
   asm("nop");
   asm("nop");
+%elif (%Compiler = "ARM_CC") %- Keil/ARM compiler
+  __asm {
+    nop                %>%CTAB /* assuming one cycle for nop */
+    nop                %>%CTAB /* assuming one cycle for nop */
+    nop                %>%CTAB /* assuming one cycle for nop */
+    nop                %>%CTAB /* assuming one cycle for nop */
+    nop                %>%CTAB /* assuming one cycle for nop */
+    nop                %>%CTAB /* assuming one cycle for nop */
+    nop                %>%CTAB /* assuming one cycle for nop */
+    nop                %>%CTAB /* assuming one cycle for nop */
+    nop                %>%CTAB /* assuming one cycle for nop */
+    nop                %>%CTAB /* assuming one cycle for nop */
+  }
 %else
   asm {
     nop                %>%CTAB /* assuming one cycle for nop */
@@ -434,6 +448,7 @@ void %'ModuleName'%.%Wait100Cycles(void)
   }
 %elif (CPU_FAMILY = "Kinetis")
   volatile byte i;
+
   for(i=0; i<133; i++) {
     /* NOTE: this is not really accurate, as not sure yet about the cycle counts. Assuming 0.75 cycle for a NOP */
 %if %Compiler = "GNUC"
@@ -442,6 +457,10 @@ void %'ModuleName'%.%Wait100Cycles(void)
     );
 %elif (%Compiler = "IARARM")
   asm("nop");
+%elif (%Compiler = "ARM_CC") %- Keil/ARM compiler
+    __asm {
+      NOP
+    }
 %else
     asm {
       NOP
