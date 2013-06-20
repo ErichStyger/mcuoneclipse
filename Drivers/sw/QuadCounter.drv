@@ -443,7 +443,7 @@ void %'ModuleName'%.%Sample(void)
   signed char new_step;
   byte c12; /* value of the two sensor input */
 
-  c12 = (%@C1@'ModuleName'%.GetVal()!=0?2:0)|(%@C2@'ModuleName'%.GetVal()!=0?1:0);
+  c12 = %'ModuleName'%.GET_C1_C2_PINS();
 %if %ErrorCorrection = 'yes'
   new_step = %'ModuleName'%.Quad_Table[%'ModuleName'%.prevlast_quadrature_value][%'ModuleName'%.last_quadrature_value][c12];
   %'ModuleName'%.prevlast_quadrature_value = %'ModuleName'%.last_quadrature_value;
