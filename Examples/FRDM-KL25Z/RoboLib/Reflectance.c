@@ -33,23 +33,26 @@
 static LDD_TDeviceData *timerHandle;
 static xQueueHandle mutexHandle;
 static bool doMinMaxCalibration = FALSE;
-#define REF_SENSOR_TIMEOUT_MS  10  /* after this time, consider no reflection (black) */
 #if PL_IS_ZUMO_ROBOT
   #define REF_SENSOR1_IS_LEFT    0   /* if sensor 1 is on the left side */
   #define REF_MIN_LINE_VAL    0x20   /* minimum value indicating a line */
   #define REF_MIN_NOISE_VAL   0x10   /* values below this are not added to the weighted sum */
+  #define REF_SENSOR_TIMEOUT_MS  10  /* after this time, consider no reflection (black) */
 #elif PL_IS_ROUND_ROBOT
   #define REF_SENSOR1_IS_LEFT    0   /* if sensor 1 is on the left side */
   #define REF_MIN_LINE_VAL    0x20   /* minimum value indicating a line */
   #define REF_MIN_NOISE_VAL   0x0F   /* values below this are not added to the weighted sum */
+  #define REF_SENSOR_TIMEOUT_MS  10  /* after this time, consider no reflection (black) */
 #elif PL_IS_TRACK_ROBOT
   #define REF_SENSOR1_IS_LEFT    1   /* if sensor 1 is on the left side */
   #define REF_MIN_LINE_VAL    0x20   /* minimum value indicating a line */
   #define REF_MIN_NOISE_VAL   0x0F   /* values below this are not added to the weighted sum */
+  #define REF_SENSOR_TIMEOUT_MS  10  /* after this time, consider no reflection (black) */
 #elif PL_IS_INTRO_ZUMO_ROBOT
-  #define REF_SENSOR1_IS_LEFT    0   /* if sensor 1 is on the left side */
+  #define REF_SENSOR1_IS_LEFT    1   /* if sensor 1 is on the left side */
   #define REF_MIN_LINE_VAL    0x20   /* minimum value indicating a line */
   #define REF_MIN_NOISE_VAL   0x10   /* values below this are not added to the weighted sum */
+  #define REF_SENSOR_TIMEOUT_MS  20  /* after this time, consider no reflection (black) */
 #else
   #error "unknown configuration!"
 #endif
@@ -486,7 +489,7 @@ void REF_InitSensorValues(void) {
   isCalibrated = FALSE;
 }
 
-void REF_Calibrate(bool start) {
+void REF_Calibrate(bool start, const CLS1_StdIOType *io) {
   if (start) {
     isCalibrated = FALSE;
     REF_InitSensorValues();
@@ -635,11 +638,11 @@ byte REF_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOT
     *handled = TRUE;
     return PrintStatus(io);
   } else if (UTIL1_strcmp((char*)cmd, "ref calib on")==0) {
-    APP_StateStartCalibrate();
+    APP_StateStartCalibrate(io);
     *handled = TRUE;
     return ERR_OK;  
   } else if (UTIL1_strcmp((char*)cmd, "ref calib off")==0) {
-    APP_StateStopCalibrate();
+    APP_StateStopCalibrate(io);
     *handled = TRUE;
     return ERR_OK;
   } else if (UTIL1_strcmp((char*)cmd, "ref led on")==0) {

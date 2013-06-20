@@ -21,12 +21,12 @@ uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
 /*!
  * \brief Starts the calibration sequence
  */
-void APP_StateStartCalibrate(void);
+void APP_StateStartCalibrate(const CLS1_StdIOType *io);
 
 /*!
  * \brief Stops the calibration sequence
  */
-void APP_StateStopCalibrate(void);
+void APP_StateStopCalibrate(const CLS1_StdIOType *io);
 
 /*!
  * \brief Run the application

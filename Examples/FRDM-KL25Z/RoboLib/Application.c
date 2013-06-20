@@ -40,8 +40,10 @@
 
 typedef enum {
   APP_STATE_INIT,
-#if PL_APP_LINE_FOLLOWING || PL_APP_LINE_MAZE
+#if PL_HAS_LINE_SENSOR
   APP_STATE_CALIBRATE,
+#endif
+#if PL_APP_LINE_FOLLOWING || PL_APP_LINE_MAZE
   APP_STATE_FOLLOW_LINE,
 #endif
 #if PL_APP_FOLLOW_OBSTACLE
@@ -66,7 +68,7 @@ static void StateMachine(bool buttonPress) {
       LEDR_On();
 #if PL_APP_LINE_FOLLOWING || PL_APP_LINE_MAZE
       if (buttonPress) {
-        APP_StateStartCalibrate(); 
+        APP_StateStartCalibrate(CLS1_GetStdio()); 
       }
 #elif PL_APP_FOLLOW_OBSTACLE
       appState = APP_STATE_IDLE;
@@ -85,7 +87,7 @@ static void StateMachine(bool buttonPress) {
       }
       break;
 #endif
-#if PL_APP_LINE_FOLLOWING || PL_APP_LINE_MAZE
+#if PL_HAS_LINE_SENSOR
     case APP_STATE_CALIBRATE:
       cnt++;
       if (cnt>50) {
@@ -93,7 +95,7 @@ static void StateMachine(bool buttonPress) {
         LEDR_Neg();
       }
       if (buttonPress) {
-        APP_StateStopCalibrate(); 
+        APP_StateStopCalibrate(CLS1_GetStdio()); 
       }
       break;
 #endif
@@ -126,17 +128,17 @@ static void StateMachine(bool buttonPress) {
   } /* switch */
 }
 
-void APP_StateStartCalibrate(void) {
-#if PL_APP_LINE_FOLLOWING || PL_APP_LINE_MAZE
-  REF_Calibrate(TRUE);
+void APP_StateStartCalibrate(const CLS1_StdIOType *io) {
+#if PL_HAS_LINE_SENSOR
+  REF_Calibrate(TRUE, io);
   appState = APP_STATE_CALIBRATE;
 #endif
 }
 
-void APP_StateStopCalibrate(void) {
+void APP_StateStopCalibrate(const CLS1_StdIOType *io) {
   appState = APP_STATE_IDLE;
-#if PL_APP_LINE_FOLLOWING || PL_APP_LINE_MAZE
-  REF_Calibrate(FALSE);
+#if PL_HAS_LINE_SENSOR
+  REF_Calibrate(FALSE, io);
 #endif
 }
 
@@ -174,6 +176,25 @@ static void FollowObstacle(void) {
       }
     }
   }
+}
+#endif
+
+#if PL_HAS_LINE_SENSOR
+static void AutoCalibrateReflectance(const CLS1_StdIOType *io) {
+  CLS1_SendStr((unsigned char*)"start auto-calibration...\r\n", io->stdOut);
+  /* perform automatic calibration */
+  APP_StateStartCalibrate(io);
+  TURN_Turn(TURN_LEFT90);
+  WAIT1_WaitOSms(500); /* wait some time */
+  TURN_Turn(TURN_RIGHT90);
+  WAIT1_WaitOSms(500); /* wait some time */
+  TURN_Turn(TURN_RIGHT90);
+  WAIT1_WaitOSms(500); /* wait some time */
+  TURN_Turn(TURN_LEFT90);
+  WAIT1_WaitOSms(500); /* wait some time */
+  TURN_Turn(TURN_STOP);
+  APP_StateStopCalibrate(io);
+  CLS1_SendStr((unsigned char*)"auto-calibration finished.\r\n", io->stdOut);
 }
 #endif
 
@@ -230,16 +251,9 @@ static void CheckButton(void) {
       }
 #if PL_APP_LINE_FOLLOWING || PL_APP_LINE_MAZE
       if (autoCalibrate) {
-        CLS1_SendStr((unsigned char*)"start auto-calibration...\r\n", CLS1_GetStdio()->stdOut);
         /* perform automatic calibration */
-        WAIT1_WaitOSms(1500); /* wait some time */
-        TURN_Turn(TURN_LEFT90);
-        TURN_Turn(TURN_RIGHT90);
-        TURN_Turn(TURN_RIGHT90);
-        TURN_Turn(TURN_LEFT90);
-        TURN_Turn(TURN_STOP);
-        APP_StateStopCalibrate();
-        CLS1_SendStr((unsigned char*)"auto-calibration finished.\r\n", CLS1_GetStdio()->stdOut);
+        WAIT1_WaitOSms(1500); /* wait some time so the user can remove the hand from the button */
+        AutoCalibrateReflectance(CLS1_GetStdio());
       }
 #endif
     }
@@ -281,18 +295,21 @@ static void APP_PrintHelp(const CLS1_StdIOType *io) {
 #if PL_APP_FOLLOW_OBSTACLE
   CLS1_SendHelpStr((unsigned char*)"  follow (on|off)", (unsigned char*)"Obstacle following on or off\r\n", io->stdOut);
 #endif
+#if PL_HAS_LINE_SENSOR
+  CLS1_SendHelpStr((unsigned char*)"  autocalib", (unsigned char*)"Automatically calibrate line sensor\r\n", io->stdOut);
+#endif
 }
 
 static void APP_PrintStatus(const CLS1_StdIOType *io) {
   CLS1_SendStatusStr((unsigned char*)"app", (unsigned char*)"\r\n", io->stdOut);
 #if PL_APP_ACCEL_CONTROL
-  CLS1_SendStatusStr((unsigned char*)"  mode", (unsigned char*)"ACCEL_CONTROL", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  mode", (unsigned char*)"ACCEL_CONTROL\r\n", io->stdOut);
 #endif
 #if  PL_APP_LINE_FOLLOWING
-  CLS1_SendStatusStr((unsigned char*)"  mode", (unsigned char*)"LINE_FOLLOWING", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  mode", (unsigned char*)"LINE_FOLLOWING\r\n", io->stdOut);
 #endif
 #if PL_APP_LINE_MAZE
-  CLS1_SendStatusStr((unsigned char*)"  mode", (unsigned char*)"LINE_MAZE", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  mode", (unsigned char*)"LINE_MAZE\r\n", io->stdOut);
 #endif
 #if PL_APP_FOLLOW_OBSTACLE
   CLS1_SendStatusStr((unsigned char*)"  follow", followObstacle?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
@@ -308,6 +325,11 @@ uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
   } else if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_STATUS)==0 || UTIL1_strcmp((char*)cmd, (char*)"app status")==0) {
     APP_PrintStatus(io);
     *handled = TRUE;
+#if PL_HAS_LINE_SENSOR
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"app autocalib")==0) {
+    AutoCalibrateReflectance(io);
+    *handled = TRUE;
+#endif
 #if PL_APP_FOLLOW_OBSTACLE
   } else if (UTIL1_strcmp((char*)cmd, (char*)"app follow on")==0) {
     followObstacle = TRUE;

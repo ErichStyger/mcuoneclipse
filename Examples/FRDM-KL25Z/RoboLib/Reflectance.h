@@ -55,7 +55,7 @@ uint16_t REF_GetLineValue(bool *onLine);
  * \brief starts or stops a reflectance sensor calibration.
  * \param start TRUE means starting the calibration, FALSE stops it.
  */
-void REF_Calibrate(bool start);
+void REF_Calibrate(bool start, const CLS1_StdIOType *io);
 
 /*!
  * \brief Function to find out if we can use the sensor (means: it is calibrated and not currently calibrating)

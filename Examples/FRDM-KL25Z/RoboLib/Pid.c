@@ -233,10 +233,10 @@ void PID_PosCfg(int16_t currPos, int16_t setPos, bool isLeft, PID_Config *config
   pid = Limit(pid, -speed, speed);
   if (pid<0) { /* move forward */
     speed -= pid;
-    direction = MOT_DIR_FORWARD;
+    direction = MOT_DIR_BACKWARD;
   } else { /* move backward */
     speed += pid;
-    direction = MOT_DIR_BACKWARD;
+    direction = MOT_DIR_FORWARD;
   }
   /* speed is now always positive, make sure it is within 16bit PWM boundary */
   if (speed>0xFFFF) {
@@ -255,6 +255,7 @@ void PID_PosCfg(int16_t currPos, int16_t setPos, bool isLeft, PID_Config *config
 }
 
 void PID_Pos(int16_t currPos, int16_t setPos, bool isLeft) {
+  PID_PosCfg(currPos, setPos, isLeft, &posConfig);
 }
 #endif /* PL_HAS_POS_PID */
 

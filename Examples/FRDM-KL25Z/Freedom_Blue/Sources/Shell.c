@@ -1,7 +1,7 @@
 /**
  * \file
  * \brief This is the implementation module for the shell
- * \author Erich Styger, erich.styger@hslu.ch
+ * \author Erich Styger
  *
  * This interface file is used for a console and terminal.
  * That way we can interact with the target and change settings using a shell implementation.
