@@ -274,6 +274,8 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
 #endif
 #if PL_APP_FOLLOW_OBSTACLE
     FollowObstacle();
+#elif PL_HAS_ULTRASONIC
+    (void)US_Measure_us(); /* only measure, so we have it for the status */
 #endif
 #if PL_HAS_LED_BLUE
     LEDB_Neg();

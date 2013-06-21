@@ -50,10 +50,19 @@
   #error "unknown configuration!"
 #endif
 #if PL_HAS_QUADRATURE
+#if PL_IS_ROUND_ROBOT
   #define TURN_STEPS_90      20
     /*!< number of steps for a 90 degree turn */
   #define TURN_STEPS_FW_BW   20
     /*!< number of steps for one inch forward/backward */
+#elif PL_IS_INTRO_ZUMO_ROBOT
+  #define TURN_STEPS_90      45
+    /*!< number of steps for a 90 degree turn */
+  #define TURN_STEPS_FW_BW   45
+    /*!< number of steps for one inch forward/backward */
+#else
+  #error "unknown configuration!"
+#endif
 #endif
 
 #if PL_IS_ZUMO_ROBOT
@@ -104,28 +113,44 @@ const unsigned char *TURN_TurnKindStr(TURN_Kind kind) {
 
 #if PL_HAS_QUADRATURE
 static bool match(int16_t pos, int16_t target) {
-  #define MATCH_MARGIN 1
+  #define MATCH_MARGIN 5
   return (pos>=target-MATCH_MARGIN && pos<=target+MATCH_MARGIN);
 }
 
 void TURN_TurnSteps(int16_t stepsL, int16_t stepsR) {
   int16_t currLPos, currRPos, targetLPos, targetRPos;
-  uint8_t matchCntr = 100;
+  uint8_t matchLCntr = 100, matchRCntr = 100;
+  int16_t timeout = 1000;
   
   currLPos = Q4CLeft_GetPos();
   targetLPos = currLPos+stepsL;
   currRPos = Q4CRight_GetPos();
   targetRPos = currRPos+stepsR;
   for(;;) { /* breaks */
-    if (match(currLPos,targetLPos) && match(currRPos,targetRPos)) {
-      matchCntr--;
-      if (matchCntr==0) {
-        break; /* get out of loop */
+    if (matchLCntr>0) {
+      if (match(currLPos,targetLPos)) {
+        matchLCntr--;
+        TURN_Turn(TURN_STOP_LEFT);
+      } else {
+        PID_Pos(Q4CLeft_GetPos(), targetLPos, TRUE);
       }
     }
-    PID_Pos(Q4CLeft_GetPos(), targetLPos, TRUE);
-    PID_Pos(Q4CRight_GetPos(), targetRPos, FALSE);
+    if (matchRCntr>0) {
+      if (match(currRPos,targetRPos)) {
+        matchRCntr--;
+        TURN_Turn(TURN_STOP_RIGHT);
+      } else {
+        PID_Pos(Q4CRight_GetPos(), targetRPos, FALSE);
+      }
+    }
+    if (matchLCntr==0 && matchRCntr==0) {
+      break; /* get out of loop */
+    }
     WAIT1_WaitOSms(2);
+    timeout--;
+    if (timeout==0) {
+      break;
+    }
     currLPos = Q4CLeft_GetPos();
     currRPos = Q4CRight_GetPos();
   } /* for */
@@ -285,6 +310,18 @@ void TURN_Turn(TURN_Kind kind) {
 #if TURN_WAIT_AFTER_STEP_MS > 0
       WAIT1_WaitOSms(TURN_WAIT_AFTER_STEP_MS);
 #endif
+#endif
+      break;
+    case TURN_STOP_LEFT:
+      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 0);
+#if TURN_WAIT_AFTER_STEP_MS > 0
+      WAIT1_WaitOSms(TURN_WAIT_AFTER_STEP_MS);
+#endif
+      break;
+    case TURN_STOP_RIGHT:
+      MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 0);
+#if TURN_WAIT_AFTER_STEP_MS > 0
+      WAIT1_WaitOSms(TURN_WAIT_AFTER_STEP_MS);
 #endif
       break;
     case TURN_STOP:

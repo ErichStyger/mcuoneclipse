@@ -71,7 +71,7 @@ uint16_t US_Measure_us(void) {
   while(usDevice.state!=ECHO_FINISHED) {
     /* measure echo pulse */
     if (usDevice.state==ECHO_OVERFLOW) { /* measurement took too long? */
-      usDevice.state = ECHO_IDLE;
+      usDevice.state = ECHO_IDLE; /* go back to idle */
       return 0; /* no echo, error case */
     }
   }

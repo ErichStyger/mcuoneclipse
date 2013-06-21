@@ -227,16 +227,15 @@ void PID_PosCfg(int16_t currPos, int16_t setPos, bool isLeft, PID_Config *config
   MOT_Direction direction=MOT_DIR_FORWARD;
   
   pid = PID(currPos, setPos, config);
-
   /* transform into motor speed */
   speed = ((int32_t)config->maxSpeedPercent)*(0xffff/100); /* limit the speed */
   pid = Limit(pid, -speed, speed);
-  if (pid<0) { /* move forward */
-    speed -= pid;
-    direction = MOT_DIR_BACKWARD;
-  } else { /* move backward */
+  if (setPos-currPos>0) {
     speed += pid;
     direction = MOT_DIR_FORWARD;
+  } else {
+    speed += pid;
+    direction = MOT_DIR_BACKWARD;
   }
   /* speed is now always positive, make sure it is within 16bit PWM boundary */
   if (speed>0xFFFF) {
@@ -303,7 +302,6 @@ static void PrintPIDstatus(PID_Config *config, const unsigned char *kindStr, con
   UTIL1_Num8uToStr(buf, sizeof(buf), config->maxSpeedPercent);
   UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"%\r\n");
   CLS1_SendStatusStr(kindBuf, buf, io->stdOut);
- 
 }
 
 static void PID_PrintStatus(const CLS1_StdIOType *io) {
@@ -454,9 +452,9 @@ void PID_Init(void) {
   lineBwConfig.integral = 0;
 #endif
 #if PL_HAS_QUADRATURE
-  posConfig.pFactor100 = 3000;
-  posConfig.iFactor100 = 1;
-  posConfig.dFactor100 = 20000;
+  posConfig.pFactor100 = 1;
+  posConfig.iFactor100 = 0;
+  posConfig.dFactor100 = 0;
   posConfig.iAntiWindup = 50;
   posConfig.maxSpeedPercent = 15;
   posConfig.lastError = 0;

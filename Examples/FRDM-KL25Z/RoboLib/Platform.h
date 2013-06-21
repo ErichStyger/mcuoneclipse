@@ -22,7 +22,7 @@
 #define PL_HAS_MOTOR_BRAKE            (1 && PL_IS_ROUND_ROBOT && PL_HAS_MOTOR) /* if we have motor brake functionality */
 #define PL_HAS_MOTOR_CURRENT_SENSE    (0 && PL_HAS_MOTOR)  /* if we have motor current sensing functionality */
 #define PL_HAS_MOTOR_INAB             (1 && PL_IS_TRACK_ROBOT && PL_HAS_MOTOR)  /* if we have INa and INb (VNH5019) */
-#define PL_HAS_QUADRATURE             (1 && (PL_IS_ROUND_ROBOT /*|| PL_IS_INTRO_ZUMO_ROBOT*/))  /* if we have quadrature encoders */
+#define PL_HAS_QUADRATURE             (1 && (PL_IS_ROUND_ROBOT || PL_IS_INTRO_ZUMO_ROBOT))  /* if we have quadrature encoders */
 #define PL_HAS_USER_BUTTON            (PL_IS_ZUMO_ROBOT || PL_IS_ROUND_ROBOT || PL_IS_TRACK_ROBOT) /* if we have a user push button */
 #define PL_HAS_BUZZER                 PL_IS_ZUMO_ROBOT   /* if we have a buzzer */
 #define PL_HAS_MAGNETOMETER           PL_IS_ZUMO_ROBOT   /* if we have a magnetometer */
