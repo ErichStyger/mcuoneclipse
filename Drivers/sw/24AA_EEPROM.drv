@@ -89,7 +89,11 @@
 
 #include "%ProcessorModule.h"
 
-%if %Device = '512'
+%if %Device = '256'
+#define %'ModuleName'%.MAX_I2C_ADDR_MASK 7                       %>40 /* A2|A1|A0 form the I2C device address => address cannot be more than 7 (8 devices) */
+#define %'ModuleName'%.MAX_ADDRESS       0x7FFF                  %>40 /* 256 kBit are 32KByte */
+#define %'ModuleName'%.ADDRT             word                    %>40 /* a word/16bit is engough to hold the address */
+%elif %Device = '512'
 #define %'ModuleName'%.MAX_I2C_ADDR_MASK 7                       %>40 /* A2|A1|A0 form the I2C device address => address cannot be more than 7 (8 devices) */
 #define %'ModuleName'%.MAX_ADDRESS       0xFFFF                  %>40 /* 512 kBit are 64KByte */
 #define %'ModuleName'%.ADDRT             word                    %>40 /* a word/16bit is engough to hold the address */
@@ -97,6 +101,8 @@
 #define %'ModuleName'%.MAX_I2C_ADDR_MASK 3                       %>40 /* A1|A0 form the I2C device address => address cannot be more than 3 (4 devices) */
 #define %'ModuleName'%.MAX_ADDRESS       0x1FFFF                 %>40 /* 1024 kBit are 128KByte */
 #define %'ModuleName'%.ADDRT             dword                   %>40 /* a longword/32bit is needed to hold the address */
+%else
+#error "unknown device?"
 %endif
 
 %-STARTUSERTYPES - Do not make changes between lines (included this lines) marked with %-STARTUSERTYPES and %-ENDUSRTYPES
@@ -116,8 +122,6 @@
 %-    typedef int TMyInteger;
 %-
 %-BW_CUSTOM_USERTYPE_END
-
-
 %-BW_DEFINITION_START
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN WriteByte
@@ -254,7 +258,7 @@ static byte %'ModuleName'%.I2CAddress = (%DeviceAddress&%'ModuleName'%.MAX_I2C_A
 /* macros for the control byte: */
 #define %'ModuleName'%.CTRL_NBL       (0x0A<<3)                  %>40 /* control byte high nibble. Typically this is 1010 (shifted by one to the right) */
 #define %'ModuleName'%.CTRL_ADDR      %'ModuleName'%.I2CAddress  %>40 /* address inside control byte */
-%if %Device = '512'
+%if (%Device = '256') | (%Device = '512')
 /* define control byte as 1010|A2|A1|A0 */
 #define %'ModuleName'%.CTRL_BYTE         (%'ModuleName'%.CTRL_NBL|%'ModuleName'%.CTRL_ADDR)%>40 /* 1010|A2|A1|A0 */
 #define %'ModuleName'%.DEVICE_ADDR(addr) %'ModuleName'%.CTRL_BYTE%>40 /* 7bit address of device used to select device */
@@ -284,7 +288,6 @@ static byte %'ModuleName'%.I2CAddress = (%DeviceAddress&%'ModuleName'%.MAX_I2C_A
 byte %'ModuleName'%.%WriteByte(%'ModuleName'_Address addr, byte data)
 {
   byte res, block[3];
-//  byte tmp;
   word snt;
 
   res = %@I2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_ADDR(addr));%>40 /* read/write bit is handled by the I2C bean */
@@ -295,11 +298,14 @@ byte %'ModuleName'%.%WriteByte(%'ModuleName'_Address addr, byte data)
   res = %@I2C@'ModuleName'%.SendBlock(block, sizeof(block), &snt);%>40 /* send address and data */
   if (res != ERR_OK) return res;
 #if 0 /* feedback BDA Markus Bättig: this does not work correctly? */
-  /* as the device may be busy, do now acknowledge polling */
-  do { /* the data sheet says "send control byte with R/W=0", but this would be a possible write. We better do just a read: */
-    res = %@I2C@'ModuleName'%.RecvChar(&tmp);                    %>40
-  } while (res != ERR_OK);
-#else
+  {
+    byte tmp;
+    /* as the device may be busy, do now acknowledge polling */
+    do { /* the data sheet says "send control byte with R/W=0", but this would be a possible write. We better do just a read: */
+      res = %@I2C@'ModuleName'%.RecvChar(&tmp);                  %>40
+    } while (res != ERR_OK);
+  }
+#else /* implementation by Markus Bättig */
   res = %@I2C@'ModuleName'%.SendStop();
 #endif
   return res;
@@ -324,10 +330,10 @@ byte %'ModuleName'%.%ReadByte(%'ModuleName'_Address addr, byte *data)
 
   res = %@I2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_ADDR(addr));%>40 /* read/write bit is handled by the I2C bean */
   if (res != ERR_OK) return res;
-%if %Device = '1025'
-  res = %@I2C@'ModuleName'%.SendBlock(&addr16, 2, &nof);         %>40 /* send 16bit address */
-%else
+%if (%Device = '256') | (%Device = '512')
   res = %@I2C@'ModuleName'%.SendBlock(&addr, 2, &nof);           %>40 /* send 16bit address */
+%elif %Device = '1025'
+  res = %@I2C@'ModuleName'%.SendBlock(&addr16, 2, &nof);         %>40 /* send 16bit address */
 %endif
   if (res != ERR_OK) return res;
   res = %@I2C@'ModuleName'%.RecvBlock(data, 1, &nof);            %>40 /* read data byte from bus */
@@ -358,10 +364,10 @@ byte %'ModuleName'%.%ReadBlock(%'ModuleName'_Address addr, byte *data, word data
 
   res = %@I2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_ADDR(addr));%>40 /* read/write bit is handled by the I2C bean */
   if (res != ERR_OK) return res;
-%if %Device = '1025'
-  res = %@I2C@'ModuleName'%.SendBlock(&addr16, 2, &nof);         %>40 /* send 16bit address */
-%else
+%if (%Device = '256') | (%Device = '512')
   res = %@I2C@'ModuleName'%.SendBlock(&addr, 2, &nof);           %>40 /* send address */
+%elif %Device = '1025'
+  res = %@I2C@'ModuleName'%.SendBlock(&addr16, 2, &nof);         %>40 /* send 16bit address */
 %endif
   if (res != ERR_OK) return res;
   res = %@I2C@'ModuleName'%.RecvBlock(data, dataSize, &nof);
@@ -411,7 +417,7 @@ byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dat
     }
     res = %@I2C@'ModuleName'%.SendBlock(block, dataSize+2, &nof);%>40 /* send address and data */
     if (res != ERR_OK) return res;
-#if 0 /* feedback by BDA Markus Bättig */
+#if 0 /* feedback by BDA Markus Bättig: feedback polling does not work */
     /* as the device may be busy, do now acknowledge polling */
     do { /* the data sheet says "send control byte with R/W=0", but this would be a possible write. We better do just a read: */
       res = %@I2C@'ModuleName'%.RecvChar(&tmp);                  %>40
