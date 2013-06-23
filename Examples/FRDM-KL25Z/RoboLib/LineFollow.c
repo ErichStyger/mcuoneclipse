@@ -112,7 +112,7 @@ static uint8_t EvaluteTurn(bool *finished, bool *deadEndGoBw) {
   } else {
     REF_ClearHistory(); /* clear values */
     REF_SampleHistory(); /* store current values */
-    TURN_Turn(TURN_STEP_FW); /* make forward step */
+    TURN_Turn(TURN_STEP_LINE_FW); /* make forward step over line */
     historyLineKind = REF_HistoryLineKind(); /* new read new values */
     currLineKind = REF_GetLineKind();
   #if LINE_DEBUG
@@ -150,6 +150,9 @@ static uint8_t EvaluteTurn(bool *finished, bool *deadEndGoBw) {
     CLS1_SendStr((unsigned char*)TURN_TurnKindStr(turn), CLS1_GetStdio()->stdOut);
     CLS1_SendStr((unsigned char*)"\r\n", CLS1_GetStdio()->stdOut);
 #endif
+    if (turn==TURN_LEFT90 || turn==TURN_RIGHT90) {
+      TURN_Turn(TURN_STEP_POST_LINE_FW); /* step before doing the turn so we turn on the middle of the intersection */
+    }
     TURN_Turn(turn); /* make turn */
     MAZE_AddPath(turn);
     MAZE_SimplifyPath();
@@ -157,16 +160,18 @@ static uint8_t EvaluteTurn(bool *finished, bool *deadEndGoBw) {
   }
 }
 
-TURN_Kind MirrorTurn(TURN_Kind turn) {
+/* used to convert path items while running backwards */
+static TURN_Kind MirrorTurn(TURN_Kind turn) {
   switch(turn) {
     case TURN_LEFT90: return TURN_RIGHT90;
     case TURN_RIGHT90: return TURN_LEFT90;
     case TURN_LEFT180: return TURN_STRAIGHT;
     case TURN_RIGHT180: return TURN_STRAIGHT;
     case TURN_STRAIGHT: return TURN_STRAIGHT;
-    case TURN_STEP_FW: return TURN_STEP_BW;
-    case TURN_STEP_BW: return TURN_STEP_FW;
-    
+    case TURN_STEP_LINE_FW: return TURN_STEP_LINE_BW;
+    case TURN_STEP_LINE_BW: return TURN_STEP_LINE_FW;
+    case TURN_STEP_POST_LINE_FW: return TURN_STEP_POST_LINE_BW;
+    case TURN_STEP_POST_LINE_BW: return TURN_STEP_POST_LINE_FW;
     case TURN_STOP:
     case TURN_FINISHED:
     default:
@@ -186,7 +191,7 @@ static uint8_t EvaluateTurnBw(void) {
   
   REF_ClearHistory(); /* clear values */
   REF_SampleHistory(); /* store current values */
-  TURN_Turn(TURN_STEP_BW_SMALL); /* make a small over intersection: reason is that sensor already is half over line */
+  TURN_Turn(TURN_STEP_LINE_BW); /* make step over line */
   historyLineKind = REF_HistoryLineKind(); /* new read new values */
   currLineKind = REF_GetLineKind();
 #if LINE_DEBUG
@@ -208,8 +213,8 @@ static uint8_t EvaluateTurnBw(void) {
     CLS1_SendStr((unsigned char*)TURN_TurnKindStr(turn), CLS1_GetStdio()->stdOut);
     CLS1_SendStr((unsigned char*)"\r\n", CLS1_GetStdio()->stdOut);
 #endif
-    TURN_Turn(TURN_STEP_FW); /* step over intersection */
-    TURN_Turn(TURN_STEP_FW); /* step past intersection */
+    TURN_Turn(TURN_STEP_LINE_FW); /* step over intersection */
+    TURN_Turn(TURN_STEP_POST_LINE_FW); /* step past intersection */
     TURN_Turn(turn); /* make turn */
     MAZE_AddPath(MirrorTurn(turn));
     MAZE_SimplifyPath();
@@ -253,7 +258,8 @@ static void StateMachine(void) {
           TURN_Turn(turn);
           LF_currState = STATE_FINISHED;
         } else { /* perform turning */
-          TURN_Turn(TURN_STEP_FW); /* need to do this in order to turn on the middle of the intersection */
+          TURN_Turn(TURN_STEP_LINE_FW); /* Step over line */
+          TURN_Turn(TURN_STEP_POST_LINE_FW); /* step before doing the turn */
           TURN_Turn(turn);
           LF_currState = STATE_FOLLOW_SEGMENT;
         }

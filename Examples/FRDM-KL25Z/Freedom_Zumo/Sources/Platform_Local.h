@@ -1,7 +1,7 @@
 /*
  * Platform_Local.h
  *
- *      Author: tastyger
+ *      Author: Erich Styger
  */
 
 #ifndef PLATFORM_LOCAL_H_

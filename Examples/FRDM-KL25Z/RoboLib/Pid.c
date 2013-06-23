@@ -452,11 +452,11 @@ void PID_Init(void) {
   lineBwConfig.integral = 0;
 #endif
 #if PL_HAS_QUADRATURE
-  posConfig.pFactor100 = 1;
-  posConfig.iFactor100 = 0;
-  posConfig.dFactor100 = 0;
+  posConfig.pFactor100 = 5;
+  posConfig.iFactor100 = 1;
+  posConfig.dFactor100 = 1;
   posConfig.iAntiWindup = 50;
-  posConfig.maxSpeedPercent = 15;
+  posConfig.maxSpeedPercent = 20;
   posConfig.lastError = 0;
   posConfig.integral = 0;
 #endif

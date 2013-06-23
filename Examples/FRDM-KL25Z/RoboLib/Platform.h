@@ -30,6 +30,7 @@
 #define PL_HAS_ULTRASONIC             (PL_IS_TRACK_ROBOT || PL_IS_INTRO_ZUMO_ROBOT)  /* if we have a Ultrasonic ranging module */
 #define PL_HAS_LED_BLUE               (PL_IS_ZUMO_ROBOT && PL_IS_INTRO_ZUMO_ROBOT)   /* if we can use the blue RGB LED */
 #define PL_HAS_LINE_SENSOR            (1 && PL_IS_TRACK_ROBOT || PL_IS_ZUMO_ROBOT || PL_IS_ROUND_ROBOT || PL_IS_INTRO_ZUMO_ROBOT) /* if we have line sensors */
+#define PL_HAS_DISTANCE_SENSOR        (1 && PL_IS_INTRO_ZUMO_ROBOT)
 
 #define PL_HAS_RADIO                  (1 && PL_IS_TRACK_ROBOT)
 #define PL_HAS_REMOTE                 (1 && PL_HAS_RADIO) /* if we have remote (IEEE802.15.4) support */
@@ -43,6 +44,7 @@
 #define PL_APP_LINE_FOLLOWING         (PL_DO_LINE_FOLLOWING && PL_HAS_LINE_SENSOR && PL_HAS_PID)/* simple line following */
 #define PL_APP_LINE_MAZE              (PL_DO_LINE_MAZE && PL_HAS_LINE_SENSOR && PL_HAS_TURN) /* maze line solving */
 #define PL_APP_FOLLOW_OBSTACLE        (PL_DO_FOLLOW_OBSTACLE && PL_HAS_ULTRASONIC) /* obstacle following mode */
+#define PL_APP_AVOID_OBSTACLE         (PL_DO_AVOID_OBSTACLE && PL_HAS_DISTANCE_SENSOR) /* obstacle following mode */
 
 /* PL_APP_LINE_MAZE options */
 #define PL_TURN_ON_FINISH             (1 && PL_APP_LINE_MAZE)  /* if we turn the robot on the finish area */

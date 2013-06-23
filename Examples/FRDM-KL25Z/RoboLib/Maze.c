@@ -116,7 +116,6 @@ TURN_Kind MAZE_SelectTurnBw(REF_LineKind prev, REF_LineKind curr) {
   return TURN_STOP; /* error case */
 }
 
-
 void MAZE_SetSolved(void) {
   isSolved = TRUE;
   MAZE_RevertPath();
@@ -171,13 +170,13 @@ void MAZE_SimplifyPath(void) {
     case 180: path[pathLength-3] = TURN_LEFT180; break;
     case 270: path[pathLength-3] = TURN_LEFT90; break;
   }
-  pathLength -= 2; /* have cut the path by 2 entries :-) */
+  pathLength -= 2; /* was able to cut the path by 2 entries :-) */
 }
 
 static void MAZE_PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"maze", (unsigned char*)"Group of maze following commands\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows maze help or status\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  unsolved", (unsigned char*)"Marks the maze as not solved\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  clear", (unsigned char*)"Clear the maze solution\r\n", io->stdOut);
 }
 
 static void MAZE_PrintStatus(const CLS1_StdIOType *io) {
@@ -185,7 +184,9 @@ static void MAZE_PrintStatus(const CLS1_StdIOType *io) {
   
   CLS1_SendStatusStr((unsigned char*)"maze", (unsigned char*)"\r\n", io->stdOut);
   CLS1_SendStatusStr((unsigned char*)"  solved", MAZE_IsSolved()?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
-  CLS1_SendStatusStr((unsigned char*)"  path", (unsigned char*)"", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  path", (unsigned char*)"(", io->stdOut);
+  CLS1_SendNum8u(pathLength, io->stdOut);
+  CLS1_SendStr((unsigned char*)") ", io->stdOut);
   for(i=0;i<pathLength;i++) {
     CLS1_SendStr(TURN_TurnKindStr(path[i]), io->stdOut);
     CLS1_SendStr((unsigned char*)" ", io->stdOut);
@@ -202,7 +203,7 @@ uint8_t MAZE_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
   } else if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_STATUS)==0 || UTIL1_strcmp((char*)cmd, (char*)"maze status")==0) {
     MAZE_PrintStatus(io);
     *handled = TRUE;
-  } else if (UTIL1_strcmp((char*)cmd, (char*)"maze unsolved")==0) {
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"maze clear")==0) {
     MAZE_ClearSolution();
     *handled = TRUE;
   }

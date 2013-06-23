@@ -141,6 +141,9 @@ void MOT_SetVal(MOT_MotorDevice *motor, uint16_t val) {
     motor->currPWMvalue = val;
     motor->SetRatio16(val);
 #endif
+  } else { /* have motor stopped */
+    motor->currPWMvalue = 0xFFFF;
+    motor->SetRatio16(0xFFFF);
   }
 }
 

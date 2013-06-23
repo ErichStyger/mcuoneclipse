@@ -37,6 +37,9 @@
 #if PL_HAS_QUEUE
   #include "MyQueue.h"
 #endif
+#if PL_HAS_DISTANCE_SENSOR
+  #include "Distance.h"
+#endif
 
 typedef enum {
   APP_STATE_INIT,
@@ -56,9 +59,12 @@ static AppStateType appState = APP_STATE_INIT;
 #if PL_APP_FOLLOW_OBSTACLE
 static bool followObstacle = FALSE;
 #endif
+#if PL_APP_AVOID_OBSTACLE
+static bool avoidObstacle = FALSE;
+#endif
 
 static void StateMachine(bool buttonPress) {
-#if PL_APP_FOLLOW_OBSTACLE || PL_APP_LINE_FOLLOWING || PL_APP_LINE_MAZE
+#if PL_HAS_LINE_SENSOR
   static uint8_t cnt;
 #endif
   
@@ -141,6 +147,18 @@ void APP_StateStopCalibrate(const CLS1_StdIOType *io) {
   REF_Calibrate(FALSE, io);
 #endif
 }
+
+#if PL_APP_AVOID_OBSTACLE
+static void AvoidObstacle(void) {
+  if (DIST_10cmLeftOn() && DIST_5cmLeftOn() && !DIST_10cmRightOn() && !DIST_5cmRightOn()) {
+    /* turn right */
+    TURN_TurnAngle(10);
+  } else if (!DIST_10cmLeftOn() && !DIST_5cmLeftOn() && DIST_10cmRightOn() && DIST_5cmRightOn()) {
+    /* turn left */
+    TURN_TurnAngle(-10);
+  }
+}
+#endif
 
 
 #if PL_APP_FOLLOW_OBSTACLE
@@ -234,10 +252,10 @@ static void CheckButton(void) {
 #if PL_APP_LINE_FOLLOWING || PL_APP_LINE_MAZE
       } else if (timeTicks>=(1000/BUTTON_CNT_MS) && timeTicks<(2000/BUTTON_CNT_MS)) {
         CLS1_SendStr((unsigned char*)"calibrate.\r\n", CLS1_GetStdio()->stdOut);
-        APP_StateStartCalibrate(); /* 1-2 s: start calibration by hand */
+        APP_StateStartCalibrate(CLS1_GetStdio()); /* 1-2 s: start calibration by hand */
       } else if (timeTicks>=(2000/BUTTON_CNT_MS) && timeTicks<(3000/BUTTON_CNT_MS)) {
         CLS1_SendStr((unsigned char*)"auto calibrate.\r\n", CLS1_GetStdio()->stdOut);
-        APP_StateStartCalibrate(); /* 2-3 s: start auto calibration */
+        APP_StateStartCalibrate(CLS1_GetStdio()); /* 2-3 s: start auto calibration */
         autoCalibrate = TRUE;
 #endif
 #if PL_APP_LINE_MAZE
@@ -272,6 +290,9 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
 #else
     CheckButton();
 #endif
+#if PL_APP_AVOID_OBSTACLE
+    AvoidObstacle();
+#endif
 #if PL_APP_FOLLOW_OBSTACLE
     FollowObstacle();
 #elif PL_HAS_ULTRASONIC
@@ -296,6 +317,9 @@ static void APP_PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows radio help or status\r\n", io->stdOut);
 #if PL_APP_FOLLOW_OBSTACLE
   CLS1_SendHelpStr((unsigned char*)"  follow (on|off)", (unsigned char*)"Obstacle following on or off\r\n", io->stdOut);
+#endif
+#if PL_APP_AVOID_OBSTACLE
+  CLS1_SendHelpStr((unsigned char*)"  avoid (on|off)", (unsigned char*)"Obstacle avoidance on or off\r\n", io->stdOut);
 #endif
 #if PL_HAS_LINE_SENSOR
   CLS1_SendHelpStr((unsigned char*)"  autocalib", (unsigned char*)"Automatically calibrate line sensor\r\n", io->stdOut);
@@ -330,6 +354,14 @@ uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
 #if PL_HAS_LINE_SENSOR
   } else if (UTIL1_strcmp((char*)cmd, (char*)"app autocalib")==0) {
     AutoCalibrateReflectance(io);
+    *handled = TRUE;
+#endif
+#if PL_APP_AVOID_OBSTACLE
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"app avoid on")==0) {
+    avoidObstacle = TRUE;
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"app avoi off")==0) {
+    avoidObstacle = FALSE;
     *handled = TRUE;
 #endif
 #if PL_APP_FOLLOW_OBSTACLE
@@ -370,6 +402,9 @@ void APP_Run(void) {
 #endif
 #if PL_HAS_QUEUE
   QUEUE_Init();
+#endif
+#if PL_HAS_DISTANCE_SENSOR
+  DIST_Init();
 #endif
   if (FRTOS1_xTaskCreate(MainTask, (signed portCHAR *)"Main", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */

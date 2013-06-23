@@ -435,11 +435,19 @@ REF_LineKind REF_HistoryLineKind(void) {
   for(i=0;i<REF_NOF_SENSORS;i++) {
     if (SensorHistory[i]>REF_MIN_LINE_VAL) { /* count only line values */
       cnt++;
+#if REF_SENSOR1_IS_LEFT
+      if (i<REF_NOF_SENSORS/2) {
+        cntLeft++;
+      } else {
+        cntRight++;
+      }
+#else
       if (i<REF_NOF_SENSORS/2) {
         cntRight++;
       } else {
         cntLeft++;
       }
+#endif
     }
   }
   if (cnt==0) {

@@ -22,9 +22,10 @@ typedef enum {
   TURN_LEFT180, /* turn 180 degree counterclockwise and stop */
   TURN_RIGHT180, /* turn 180 degree clockwise and stop */
   TURN_STRAIGHT, /* don't turn */
-  TURN_STEP_FW, /* make a step forward and stop */
-  TURN_STEP_BW, /* make a step backward and stop */
-  TURN_STEP_BW_SMALL, /* make a small step backward and stop */
+  TURN_STEP_LINE_FW, /* make a step forward over the line */
+  TURN_STEP_LINE_BW, /* make a step backward over the line */
+  TURN_STEP_POST_LINE_FW, /* step past to line, before a turn */
+  TURN_STEP_POST_LINE_BW, /* same as TURN_STEP_POST_LINE_FW, but backwards */
   TURN_FINISHED, /* stepped into finish! */
   TURN_STOP_LEFT,   /* stop left motor */
   TURN_STOP_RIGHT,  /* stop right motor */
@@ -42,6 +43,12 @@ const unsigned char *TURN_TurnKindStr(TURN_Kind kind);
  * \param kind How much the robot has to turn.
  */
 void TURN_Turn(TURN_Kind kind);
+
+/*!
+ * \brief Turn by angle
+ * \param angle Angle, negative angle means left turn, positive means right turn
+ */
+void TURN_TurnAngle(int16_t angle);
 
 /*!
  * \brief Shell command line parser.
