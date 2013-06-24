@@ -332,6 +332,10 @@
 #define  PRTSCRN_PRESS         (0x08) /* Print Screen Press */
 extern volatile byte kbi_stat; /* records the status of the buttons (PTG0-PTG3)
                            used to emulate Keyboard */
+
+/* error codes for events */
+#define %'ModuleName'%.USB_ERR_INIT            1  /* USB initialization error */
+
 %-STARTUSERTYPES - Do not make changes between lines (included this lines) marked with %-STARTUSERTYPES and %-ENDUSRTYPES
 
 #ifndef __BWUserType_%'ModuleName'_TComData
@@ -392,6 +396,20 @@ void %'ModuleName'%.%USB_Notify_Callback(byte controller_ID, byte event_type, vo
 
 %endif %- USB_Notify_Callback
 %-BW_METHOD_END USB_Notify_Callback
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Notify_Callback
+%ifdef Notify_Callback
+void %'ModuleName'%.%Notify_Callback(byte request, word value, word wIndex, byte** data, USB_PACKET_SIZE* size);
+%define! Parrequest
+%define! Parvalue
+%define! ParwIndex
+%define! Pardata
+%define! Parsize
+%include Common\FSL_USB_HID_Keyboard_DeviceNotify_Callback.Inc
+
+%endif %- Notify_Callback
+%-BW_METHOD_END Notify_Callback
+%-************************************************************************************************************
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -549,7 +567,7 @@ static void KeyBoard_Events_Process(void)
 static byte USB_App_Param_Callback (
       byte request,        /* [IN] request type */
       uint_16 value,         /* [IN] report type and ID */
-      byte_ptr* data,      /* [OUT] pointer to the data */
+      uint8_t** data,      /* [OUT] pointer to the data */
       USB_PACKET_SIZE* size  /* [OUT] size of the transfer */
 )
 {
@@ -663,35 +681,44 @@ static byte USB_App_Param_Callback (
 %include Common\FSL_USB_HID_Keyboard_DeviceApp_Callback.Inc
 void %'ModuleName'%.%App_Callback(byte controller_ID, byte event_type, void *val)
 {
-  UNUSED (controller_ID);
-  UNUSED (val);
+    UNUSED (controller_ID)
+    UNUSED (val)
+    if((event_type == USB_APP_BUS_RESET) || (event_type == USB_APP_CONFIG_CHANGED))
+    {
+        keyboard_init=FALSE;
+    }
+    else if(event_type == USB_APP_ENUM_COMPLETE)
+    {   /* if enumeration is complete set keyboard_init
+           so that application can start */
+        keyboard_init=TRUE;
+    }
+    else if(event_type == USB_APP_ERROR)
+    {
+        /* user may add code here for error handling */
+    }
+    /* Added for USB Suspend/Resume */
+    else if (event_type == USB_APP_BUS_SUSPEND)
+    {
+            // This is the app callback, so we shouldn't halt the ISR by doing anything here.
+            /*!!!!!!!!!!!!!! NYI: call event!
+            main_App_Should_Suspend = keyboard_init;
+            */
+    }
+    else if (event_type == USB_APP_BUS_RESUME)
+    {
+            /* For the keyboard application, it is best to let the main app
+             * handle all resume processing. Because of the software flow, we know
+             * that after initiating the STOP mode and waking up, the application
+             * will just continue, so we can resume there.
+             */
+    }
+         /* End addition */
+    return;
 }
 
 %endif %- App_Callback
 %-BW_METHOD_END App_Callback
 %-************************************************************************************************************
-%-BW_METHOD_BEGIN Notify_Callback
-%ifdef Notify_Callback
-%define! Parcontroller_ID
-%define! Parevent_type
-%define! Parval
-%include Common\FSL_USB_HID_Keyboard_DeviceNotify_Callback.Inc
-void %'ModuleName'%.%Notify_Callback(byte controller_ID, byte event_type, void *val)
-{
-  UNUSED (controller_ID);
-  UNUSED (val);
-  if (start_app == TRUE) {
-    if(event_type == USB_APP_CDC_CARRIER_ACTIVATED) {
-      start_transactions = TRUE;
-    } else if(event_type == USB_APP_CDC_CARRIER_DEACTIVATED) {
-      start_transactions = FALSE;
-    }
-  }
-  start_transactions = TRUE; /* ??? see http://forums.freescale.com/t5/Freescale-MQX-trade-USB-Host/Cant-get-CDC-virtual-com-demo-to-work-with-VB2005-on-xp-sp3/m-p/92713#M302 */
-}
-
-%endif %- Notify_Callback
-%-BW_METHOD_END Notify_Callback
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN App_Task
 %ifdef App_Task
@@ -701,6 +728,7 @@ void %'ModuleName'%.%Notify_Callback(byte controller_ID, byte event_type, void *
 %include Common\FSL_USB_HID_Keyboard_DeviceApp_Task.Inc
 byte %'ModuleName'%.%App_Task(byte *txBuf, size_t txBufSize)
 {
+#if 0
   uint8_t i;
 
   /* device is %CPUDevice */
@@ -743,6 +771,7 @@ byte %'ModuleName'%.%App_Task(byte *txBuf, size_t txBufSize)
 %endif
     return ERR_BUSOFF; /* USB bus not available yet */
   }
+#endif
   return ERR_BUSOFF; /* USB bus not available yet */
 }
 
@@ -757,7 +786,7 @@ byte %'ModuleName'%.%Init(void)
 {
   byte err;
 
-  err = USB_Class_CDC_Init(CONTROLLER_ID, %'ModuleName'%.%App_Callback, NULL, %'ModuleName'%.%Notify_Callback, TRUE);
+  err = USB_Class_HID_Init(CONTROLLER_ID, %'ModuleName'%.%App_Callback, NULL, USB_App_Param_Callback);
   if(err != USB_OK) {
     /* Error initializing USB-CDC Class */
 %if defined(OnError)

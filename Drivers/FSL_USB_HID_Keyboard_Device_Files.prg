@@ -13,5 +13,9 @@
 %include FSL_USB_Stack\Device\app\hid_keyboard\user_config.h
 %FILE %'DirRel_Code'usb_descriptor.h
 %include FSL_USB_Stack\Device\app\hid_keyboard\usb_descriptor.h
-
-
+%FILE %'DirRel_Code'usb_config.h
+%include FSL_USB_Stack\Device\app\hid_keyboard\usb_config.h
+%FILE %'DirRel_Code'usb_descriptor.h
+%include FSL_USB_Stack\Device\app\hid_keyboard\usb_descriptor.h
+%FILE %'DirRel_Code'usb_descriptor.c
+%include FSL_USB_Stack\Device\app\hid_keyboard\usb_descriptor.c

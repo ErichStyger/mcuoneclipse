@@ -3,13 +3,16 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (Notify_Callback)
+%include Common\GeneralMethod.inc (App_Param_Callback)
 %;**     Description :
-%;**         Method to handle PSTN Sub Class callbacks
+%;**         This function is called whenever a HID class request is
+%;**         received. This function handles these class requests.
 %include Common\GeneralParameters.inc(27)
-%;**         controller_ID%Parcontroller_ID %>27 - controller ID
-%;**         event_type%Parevent_type %>27 - value of the event
-%;**         val%Parval %>27 - 
+%;**         request%Parrequest %>27 - request type
+%;**         value%Parvalue %>27 - report type and ID
+%;**         wIndex%ParwIndex %>27 - 
+%;**       * data%Pardata %>27 - Pointer to the data
+%;**       * size%Parsize %>27 - size of the transfer
 %include Common\GeneralReturnNothing.inc
 %include Common\GeneralDamage.inc
 %;** ===================================================================

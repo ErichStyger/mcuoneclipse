@@ -4,7 +4,7 @@
     <Name>FSL_USB_HID_Keyboard_Device</Name>
     <Description>Freescale USB Stack (HID Keyboard)</Description>
     <Author>Erich Styger</Author>
-    <Version>01.004</Version>
+    <Version>01.010</Version>
     <Icon>FSL_USB_HID_Keyboard_Device</Icon>
     <TypesFiles>PE,FSL_USB_HID_Keyboard_Device\FSL_USB_HID_Keyboard_Device</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -19,7 +19,7 @@
     <BW_NeedUst>1</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>(c) Copyright Freescale, all rights reserved, 2012\nPorted as Processor Expert component: Erich Styger\nhttp: www.freescale.com</Copyright>
+    <Copyright>(c) Copyright Freescale, all rights reserved, 2013\nPorted as Processor Expert component: Erich Styger\nhttp: www.freescale.com</Copyright>
     <Category>SW-Communication</Category>
     <DemoDriver>no</DemoDriver>
     <Shortcut>HIDK</Shortcut>
@@ -273,53 +273,6 @@
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>gives the configuration value</ParHint>
-          <ParUserDeclaration>void *val</ParUserDeclaration>
-        </Parameter>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>void #M#_#C#(byte controller_ID, byte event_type, void *val)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>Notify_Callback</Name>
-        <Symbol>Notify_Callback</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Method to handle PSTN Sub Class callbacks</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>void</ReturnType>
-        <RetHint>none</RetHint>
-        <ParamCount>3</ParamCount>
-        <Parameter>
-          <ParName>controller_ID</ParName>
-          <ParType>8bit unsigned</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>controller ID</ParHint>
-        </Parameter>
-        <Parameter>
-          <ParName>event_type</ParName>
-          <ParType>8bit unsigned</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>value of the event</ParHint>
-        </Parameter>
-        <Parameter>
-          <ParName>val</ParName>
-          <ParType>8bit unsigned</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint/>
           <ParUserDeclaration>void *val</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>

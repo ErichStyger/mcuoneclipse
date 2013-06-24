@@ -51,11 +51,6 @@
 %- List of descriptions of internal methods
 %define! Description_usb_int_dis Disables USB interrupts (if supported)
 %define! Description_usb_int_en Enables USB interrupts (if supported).
-%ifdef HIDKDevice
-  %ifdef @HIDKDevice@OnError
-    %define! Description_%@HIDKDevice@OnError Hook called in case of an error The event services the event of the inherited component and eventually invokes other events.
-  %endif %- @HIDKDevice@OnError
-%endif %- HIDKDevice
 %ifdef MSDHost
   %ifdef @MSDHost@OnError
     %define! Description_%@MSDHost@OnError Hook called in case of an error The event services the event of the inherited component and eventually invokes other events.
@@ -188,12 +183,6 @@ void %'ModuleName'%.usb_int_en(void);
 
 %-INTERNAL_METHOD_END usb_int_en
 %-************************************************************************************************************
-%-INHERITED_EVENT_BEGIN HIDKDevice OnError
-%if defined(HID) & defined(@HIDKDevice@OnError)
-void %@HIDKDevice@OnError(byte error);
-
-%endif %- @HIDKDevice@OnError
-%-INHERITED_EVENT_END HIDKDevice OnError
 %-INHERITED_EVENT_BEGIN MSDHost OnError
 %if defined(MSD) & defined(@MSDHost@OnError)
 void %@MSDHost@OnError(byte error);
@@ -341,7 +330,7 @@ byte %'ModuleName'%.%Init(void)
 %if USBDeviceClass="CDC Device"
   err = %@CDCDevice@'ModuleName'%.Init();
 %elif USBDeviceClass="HID Keyboard Device"
-  err = USB_Class_HID_Init(CONTROLLER_ID, USB_App_Callback, NULL, USB_App_Param_Callback);
+  err = %@HIDKDevice@'ModuleName'%.Init();
 %elif USBDeviceClass="MSD Host"
   err = %@MSDHost@'ModuleName'%.Init();
 %else
@@ -361,16 +350,6 @@ byte %'ModuleName'%.%Init(void)
 %endif %- Init
 %-BW_METHOD_END Init
 %-************************************************************************************************************
-%-INHERITED_EVENT_BEGIN HIDKDevice OnError
-%if defined(HID) & defined(@HIDKDevice@OnError)
-%include Common\GeneralInternal.inc (OnError)
-void %@HIDKDevice@OnError(byte error)
-{
-  /* Write your code here ... */
-}
-
-%endif %- @HIDKDevice@OnError
-%-INHERITED_EVENT_END HIDKDevice OnError
 %-INHERITED_EVENT_BEGIN MSDHost OnError
 %if defined(MSD) & defined(@MSDHost@OnError)
 %include Common\GeneralInternal.inc (OnError)
