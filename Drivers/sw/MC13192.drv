@@ -1295,10 +1295,11 @@ void %'ModuleName'%.%RadioInit(void)
   (void)%'ModuleName'%.%Read(%'ModuleName'%.RESIND_ADDR);               %>%CTAB /* Sets the reset indicator bit */
   (void)%'ModuleName'%.%Read(%'ModuleName'%.STATUS_ADDR);               %>%CTAB /* Clear the status register, if set */
   /* CLKO_Ctl - Register 0A */
-  %'ModuleName'%.%Write(%'ModuleName'%.CLKS_ADDR,
-    (%xtal_trim<<8)                                                     %>%CTAB /* bit 15..8: xtal_trim [7:0] */
-  | 0x80                                                                %>%CTAB /* bit 7..3: reserved, reset value 0x80 */
-  | %CLKOfrequency                                                      %>%CTAB /* bit 2..0: clko_rate[2:0], CLKO frequency */
+  %'ModuleName'%.%Write(%'ModuleName'%.CLKS_ADDR, (word)
+   ( (%xtal_trim<<8)                                                     %>%CTAB /* bit 15..8: xtal_trim bits [7:0] */
+    | 0x80                                                                %>%CTAB /* bit 7..3: reserved, reset value 0x80 */
+    | %CLKOfrequency                                                     %>%CTAB /* bit 2..0: clko_rate[2:0], CLKO frequency */
+   )
   );
   %'ModuleName'%.%Write(%'ModuleName'%.MODE2_ADDR,
    %if %CLKOoutOnDoze='yes'
