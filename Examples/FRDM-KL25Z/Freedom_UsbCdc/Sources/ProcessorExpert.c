@@ -76,13 +76,12 @@ static uint8_t cdc_buffer[USB1_DATA_BUFF_SIZE];
 static uint8_t in_buffer[USB1_DATA_BUFF_SIZE];
 
 static void CDC_Run(void) {
-  int i;
+  int i, cnt = 0;
   uint32_t val = 0;
   unsigned char buf[16];
 
+  (void)CDC1_SendString((unsigned char*)"Hello world from the KL25Z with USB CDC\r\n");
   for(;;) {
-    (void)CDC1_SendString((unsigned char*)"hello world\r\n");
-
     while(CDC1_App_Task(cdc_buffer, sizeof(cdc_buffer))==ERR_BUSOFF) {
       /* device not enumerated */
       LEDR_Neg(); LEDG_Off();
@@ -107,6 +106,10 @@ static void CDC_Run(void) {
       val++;
     } else {
       WAIT1_Waitms(10);
+      cnt++;
+      if ((cnt%1024)==0) { /* from time to time, write some text */
+        (void)CDC1_SendString((unsigned char*)"Type some text and it will echo.\r\n");
+      }
     }
   }
 }
