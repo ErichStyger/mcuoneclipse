@@ -58,6 +58,9 @@
 #if PL_HAS_DISTANCE_SENSOR
   #include "Distance.h"
 #endif
+#if PL_HAS_ACCEL_SENSOR
+  #include "MMA1.h"
+#endif
 
 #if PL_HAS_RADIO
 static void Radio_StdIOReadChar(byte *ch) {
@@ -175,6 +178,11 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_HAS_DISTANCE_SENSOR
   DIST_ParseCommand,
+#endif
+#if PL_HAS_ACCEL_SENSOR
+#if MMA1_PARSE_COMMAND_ENABLED
+  MMA1_ParseCommand,
+#endif
 #endif
   APP_ParseCommand,
   NULL /* Sentinel */

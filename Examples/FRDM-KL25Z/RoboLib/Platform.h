@@ -31,8 +31,9 @@
 #define PL_HAS_LED_BLUE               (PL_IS_ZUMO_ROBOT && PL_IS_INTRO_ZUMO_ROBOT)   /* if we can use the blue RGB LED */
 #define PL_HAS_LINE_SENSOR            (1 && PL_IS_TRACK_ROBOT || PL_IS_ZUMO_ROBOT || PL_IS_ROUND_ROBOT || PL_IS_INTRO_ZUMO_ROBOT) /* if we have line sensors */
 #define PL_HAS_DISTANCE_SENSOR        (1 && PL_IS_INTRO_ZUMO_ROBOT)
+#define PL_HAS_ACCEL_SENSOR           (1 && PL_IS_INTRO_ZUMO_ROBOT)
 
-#define PL_HAS_RADIO                  (1 && PL_IS_TRACK_ROBOT)
+#define PL_HAS_RADIO                  (1 && (PL_IS_TRACK_ROBOT || PL_IS_INTRO_ZUMO_ROBOT))
 #define PL_HAS_REMOTE                 (1 && PL_HAS_RADIO) /* if we have remote (IEEE802.15.4) support */
 #define PL_HAS_PID                    (1) /* if PID is implemented */
 #define PL_HAS_LINE_PID               (1 && PL_HAS_PID && PL_HAS_LINE_SENSOR) /* if Line PID is implemented */

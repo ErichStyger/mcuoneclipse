@@ -30,22 +30,28 @@
 #elif PL_IS_ROUND_ROBOT
   #define TURN_90_WAIT_TIME_MS        250 
     /*!< ms to wait for a 90 degree turn */
-  #define TURN_STEP_MS                100 
-    /*!< ms to do one step forward */
+  #define TURN_STEP_LINE_MS            50
+    /*!< ms to do a step over the line */
+  #define TURN_STEP_POST_LINE_MS       50
+    /*!< ms to do a step over the line */
   #define TURN_MOTOR_DUTY_PERCENT      20
     /*!< maximum motor duty for turn operation */
 #elif PL_IS_TRACK_ROBOT
   #define TURN_90_WAIT_TIME_MS       1050 
     /*!< ms to wait for a 90 degree turn */
-  #define TURN_STEP_MS                330 
-    /*!< ms to do one step forward */
+  #define TURN_STEP_LINE_MS           160
+    /*!< ms to do a step over the line */
+  #define TURN_STEP_POST_LINE_MS      170
+    /*!< ms to do a step over the line */
   #define TURN_MOTOR_DUTY_PERCENT      25
     /*!< maximum motor duty for turn operation */
 #elif PL_IS_INTRO_ZUMO_ROBOT
   #define TURN_90_WAIT_TIME_MS        470 
     /*!< ms to wait for a 90 degree turn */
-  #define TURN_STEP_MS                170
-    /*!< ms to do one step forward */
+  #define TURN_STEP_LINE_MS            80
+    /*!< ms to do a step over the line */
+  #define TURN_STEP_POST_LINE_MS       90
+    /*!< ms to do a step over the line */
   #define TURN_MOTOR_DUTY_PERCENT      40
     /*!< maximum motor duty for turn operation */
 #else
@@ -62,7 +68,7 @@
     /*!< number of steps for a 90 degree turn */
   #define TURN_STEPS_LINE       12
     /*!< number of steps stepping over the line */
-  #define TURN_STEPS_POST_LINE  10
+  #define TURN_STEPS_POST_LINE  7
     /*!< number of steps after the line, before making a turn */
 #else
   #error "unknown configuration!"
