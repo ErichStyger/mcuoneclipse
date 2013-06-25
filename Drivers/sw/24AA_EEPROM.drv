@@ -253,7 +253,13 @@ static byte %'ModuleName'%.I2CAddress = (%DeviceAddress&%'ModuleName'%.MAX_I2C_A
 %endif %- SelectDevice
 
 #define %'ModuleName'%.BLOCK_BUF_SIZE %BlockBufSize              %>40 /* buffer used for block read/write. Max is 128. Keep it small to reduce stack consumption. */
+%if %Device = '256'
+#define %'ModuleName'%.PAGE_SIZE      64                         %>40 /* maximum page size (for page/block operation) */
+%elif (%Device = '512') | (%Device = '1025')
 #define %'ModuleName'%.PAGE_SIZE      128                        %>40 /* maximum page size (for page/block operation) */
+%else
+#error "unknown device?"
+%endif
 
 /* macros for the control byte: */
 #define %'ModuleName'%.CTRL_NBL       (0x0A<<3)                  %>40 /* control byte high nibble. Typically this is 1010 (shifted by one to the right) */
