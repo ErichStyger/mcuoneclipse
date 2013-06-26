@@ -2119,52 +2119,52 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
     *handled = TRUE;
     return PrintStatus(io);
 %ifdef ChangeDirectory
-  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "cd", sizeof("cd")-1)==0) {
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' cd", sizeof("%'ModuleName' cd")-1)==0) {
     *handled = TRUE;
     return CdCmd(cmd, io);
 %endif
 %ifdef PrintDirectory
-  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "dir", sizeof("dir")-1)==0) {
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' dir", sizeof("%'ModuleName' dir")-1)==0) {
     *handled = TRUE;
     return DirCmd(cmd, io);
 %endif
 %ifdef PrintFile
-  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "copy", sizeof("copy")-1)==0) {
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' copy", sizeof("%'ModuleName' copy")-1)==0) {
     *handled = TRUE;
     return CopyCmd(cmd, io);
 %endif
 %ifdef DeleteFile
-  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "delete", sizeof("delete")-1)==0) {
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' delete", sizeof("%'ModuleName' delete")-1)==0) {
     *handled = TRUE;
     return DeleteCmd(cmd, io);
 %endif
 %ifdef MakeDirectory
-  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "mkdir", sizeof("mkdir")-1)==0) {
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' mkdir", sizeof("%'ModuleName' mkdir")-1)==0) {
     *handled = TRUE;
     return MkdirCmd(cmd, io);
 %endif
 %ifdef RenameFile
-  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "rename", sizeof("rename")-1)==0) {
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' rename", sizeof("%'ModuleName' rename")-1)==0) {
     *handled = TRUE;
     return RenameCmd(cmd, io);
 %endif
 %ifdef PrintFile
-  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "print", sizeof("print")-1)==0) {
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' print", sizeof("%'ModuleName' print")-1)==0) {
     *handled = TRUE;
     return PrintCmd(cmd, io);
 %endif
 %ifdef PrintDiskInfo
-  } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, "diskinfo")==0) {
+  } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' diskinfo")==0) {
     *handled = TRUE;
     return %'ModuleName'%.%PrintDiskInfo(0, io);
 %endif
 %ifdef PrintSector
-  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "sector", sizeof("sector")-1)==0) {
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' sector", sizeof("%'ModuleName' sector")-1)==0) {
     *handled = TRUE;
     return SectorCmd(cmd, io);
 %endif
 %ifdef Benchmark
-  } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, "benchmark")==0) {
+  } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' benchmark")==0) {
     *handled = TRUE;
     return %'ModuleName'%.%Benchmark(io);
 %endif
@@ -2865,6 +2865,10 @@ byte %'ModuleName'%.%Benchmark(const %@Shell@'ModuleName'%.StdIOType *io)
   TIMEREC time, startTime;
   int32_t start_mseconds, mseconds;
 
+  if (%'ModuleName'%.isWriteProtected()) {
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
+    return ERR_FAILED;
+  }
   /* write benchmark */
   %@Shell@'ModuleName'%.SendStr((const unsigned char*)"Benchmark: open file, write 10k times 10 bytes (100'000 bytes), close file:\r\n", io->stdOut);
   %@Shell@'ModuleName'%.SendStr((const unsigned char*)"Deleting existing benchmark files...\r\n", io->stdOut);
@@ -2889,7 +2893,7 @@ byte %'ModuleName'%.%Benchmark(const %@Shell@'ModuleName'%.StdIOType *io)
   start_mseconds = startTime.Hour*60*60*1000 + startTime.Min*60*1000 + startTime.Sec*1000 + startTime.Sec100*10;
   mseconds = time.Hour*60*60*1000 + time.Min*60*1000 + time.Sec*1000 + time.Sec100*10 - start_mseconds;
   %@Shell@'ModuleName'%.SendNum32s(mseconds, io->stdOut);
-  %@Shell@'ModuleName'%.SendStr((const unsigned char*)" ms needed for creating file.\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((const unsigned char*)" ms needed for creating.\r\n", io->stdOut);
 
   /* read benchmark */
   %@Shell@'ModuleName'%.SendStr((const unsigned char*)"Reading benchmark file...\r\n", io->stdOut);
@@ -2910,7 +2914,7 @@ byte %'ModuleName'%.%Benchmark(const %@Shell@'ModuleName'%.StdIOType *io)
   start_mseconds = startTime.Hour*60*60*1000 + startTime.Min*60*1000 + startTime.Sec*1000 + startTime.Sec100*10;
   mseconds = time.Hour*60*60*1000 + time.Min*60*1000 + time.Sec*1000 + time.Sec100*10 - start_mseconds;
   %@Shell@'ModuleName'%.SendNum32s(mseconds, io->stdOut);
-  %@Shell@'ModuleName'%.SendStr((const unsigned char*)" ms needed reading.\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((const unsigned char*)" ms needed for reading.\r\n", io->stdOut);
 
   /* copy benchmark */
   %@Shell@'ModuleName'%.SendStr((const unsigned char*)"Copy file (100'000 bytes)...\r\n", io->stdOut);
@@ -2920,7 +2924,7 @@ byte %'ModuleName'%.%Benchmark(const %@Shell@'ModuleName'%.StdIOType *io)
   start_mseconds = startTime.Hour*60*60*1000 + startTime.Min*60*1000 + startTime.Sec*1000 + startTime.Sec100*10;
   mseconds = time.Hour*60*60*1000 + time.Min*60*1000 + time.Sec*1000 + time.Sec100*10 - start_mseconds;
   %@Shell@'ModuleName'%.SendNum32s(mseconds, io->stdOut);
-  %@Shell@'ModuleName'%.SendStr((const unsigned char*)" ms needed for copy file.\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((const unsigned char*)" ms needed for copy.\r\n", io->stdOut);
   %@Shell@'ModuleName'%.SendStr((const unsigned char*)"done!\r\n", io->stdOut);
   return ERR_OK;
 }

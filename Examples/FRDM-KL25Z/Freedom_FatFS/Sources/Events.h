@@ -50,11 +50,6 @@
 #include "AS1.h"
 #include "ASerialLdd1.h"
 #include "CLS1.h"
-#include "EE241.h"
-#include "WPpin1.h"
-#include "BitIoLdd6.h"
-#include "I2C3.h"
-#include "IntI2cLdd1.h"
 #include "FAT1.h"
 #include "TmDt1.h"
 #include "WAIT1.h"
@@ -206,38 +201,6 @@ void FRTOS1_vApplicationTickHook(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
-
-/*
-** ===================================================================
-**     Event       :  I2C3_OnReceiveData (module Events)
-**
-**     Component   :  I2C3 [InternalI2C]
-**     Description :
-**         This event is invoked when I2C finishes the reception of the
-**         data successfully. This event is not available for the SLAVE
-**         mode and if both RecvChar and RecvBlock are disabled. This
-**         event is enabled only if interrupts/events are enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void I2C3_OnReceiveData(void);
-
-/*
-** ===================================================================
-**     Event       :  I2C3_OnTransmitData (module Events)
-**
-**     Component   :  I2C3 [InternalI2C]
-**     Description :
-**         This event is invoked when I2C finishes the transmission of
-**         the data successfully. This event is not available for the
-**         SLAVE mode and if both SendChar and SendBlock are disabled.
-**         This event is enabled only if interrupts/events are enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void I2C3_OnTransmitData(void);
 
 /* END Events */
 #endif /* __Events_H*/
