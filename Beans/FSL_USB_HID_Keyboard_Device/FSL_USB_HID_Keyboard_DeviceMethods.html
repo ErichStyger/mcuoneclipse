@@ -202,6 +202,42 @@ LI.EXP {
 <!---USERBEG DON'T CHANGE THIS LINE-->
 
 <!---USEREND DON'T CHANGE THIS LINE-->
+<li><a name="HidCodeFromAscii">
+<b>HidCodeFromAscii</b></a>
+ - Translates an ASCII code into the HID code
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte HidCodeFromAscii(byte ch)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>ch:byte</i> - ASCII code</li>
+<li><i>Return value:byte</i> - USB HID Key Code
+</li>
+</ul><br />
+</li>
+<li><a name="SendStr">
+<b>SendStr</b></a>
+ - Sends a string to the HID host. This function will translate the string into the correct status messages
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte SendStr(byte *str)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>str: Pointer to byte</i> - Pointer to string to be sent</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="SendChar">
+<b>SendChar</b></a>
+ - Sends a single character to the HID host. This function will translate the string into the correct status messages
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte SendChar(byte ch)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>ch:byte</i> - character to be sent</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
 <li><a name="App_Callback">
 <b>App_Callback</b></a>
  - Method to handle class callbacks from USB
@@ -219,10 +255,8 @@ LI.EXP {
  - Application task to be called periodically from the main task.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte App_Task(byte *txBuf, size_t txBufSize)<br />
+<br /><i>ANSIC prototype:</i> byte App_Task(void)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>txBuf: Pointer to byte</i> - Pointer to temporary buffer used to transmit data over USB. Should be equal or greater than the endpoint buffer size. Data will be sent in an asynchronous way, so make sure the buffer is *not* on the stack. This buffer must be available until the next transmission.</li>
-<li><i>txBufSize:byte</i> - Size of the buffer in bytes</li>
 <li><i>Return value:byte</i> - Error code, returns ERR_OK if USB enumeration has been finished, error code otherwise.
 </li>
 </ul><br />

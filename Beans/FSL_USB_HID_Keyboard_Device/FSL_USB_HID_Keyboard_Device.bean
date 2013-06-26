@@ -4,7 +4,7 @@
     <Name>FSL_USB_HID_Keyboard_Device</Name>
     <Description>Freescale USB Stack (HID Keyboard)</Description>
     <Author>Erich Styger</Author>
-    <Version>01.010</Version>
+    <Version>01.020</Version>
     <Icon>FSL_USB_HID_Keyboard_Device</Icon>
     <TypesFiles>PE,FSL_USB_HID_Keyboard_Device\FSL_USB_HID_Keyboard_Device</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -16,7 +16,7 @@
     <BW_AutoSaveDriver>yes</BW_AutoSaveDriver>
     <BW_DetailedHelp>yes</BW_DetailedHelp>
     <BW_NeedTps>yes</BW_NeedTps>
-    <BW_NeedUst>1</BW_NeedUst>
+    <BW_NeedUst>0</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
     <Copyright>(c) Copyright Freescale, all rights reserved, 2013\nPorted as Processor Expert component: Erich Styger\nhttp: www.freescale.com</Copyright>
@@ -57,7 +57,7 @@
         <Name>HID Settings</Name>
         <Symbol>USBCDCenabled</Symbol>
         <TypeSpec>typeEnaDis</TypeSpec>
-        <Hint>Settings for USB HID Keyboard class. The .inf file will be generated into the Documentation folder.</Hint>
+        <Hint>Settings for USB HID Keyboard class.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <ReadOnly>true</ReadOnly>
         <BoldName>true</BoldName>
@@ -70,111 +70,12 @@
         <Children>
           <GrupItem>
             <TStrgItem>
-              <Name>.inf ClassGuid</Name>
-              <Symbol>CdcClassGuidString</Symbol>
-              <Hint>This defines the ClassGuid in the cdc.inf file. You can make your own using http://www.guidgenerator.com/</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>4D36E978-E325-11CE-BFC1-08002BE10318</DefaultValue>
-              <StrDefine>nothing</StrDefine>
-              <MinLength>0</MinLength>
-              <MaxLength>-1</MaxLength>
-            </TStrgItem>
-          </GrupItem>
-          <GrupItem>
-            <TIntgItem>
-              <Name>.inf VID</Name>
-              <Symbol>CdcVidValue</Symbol>
-              <Hint>Value to be used in the cdc.inf for the VID (Vendor ID) entry. This value is used as well in usb_descriptor.c.</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>9476</DefaultValue>
-              <MinValue>0</MinValue>
-              <MaxValue>65535</MaxValue>
-              <Bases>HEX</Bases>
-              <DefaultBase>HEX</DefaultBase>
-              <ExtraHintDisabled>false</ExtraHintDisabled>
-              <ChangeValueIntoRange>false</ChangeValueIntoRange>
-              <RuntimeProperty>false</RuntimeProperty>
-            </TIntgItem>
-          </GrupItem>
-          <GrupItem>
-            <TIntgItem>
-              <Name>.inf PID</Name>
-              <Symbol>CdcPidValue</Symbol>
-              <Hint>Name to be used in the cdc.inf for the PID (Product ID) entry. This value is used as well in usb_descriptor.c.</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>768</DefaultValue>
-              <MinValue>0</MinValue>
-              <MaxValue>65535</MaxValue>
-              <Bases>HEX</Bases>
-              <DefaultBase>HEX</DefaultBase>
-              <ExtraHintDisabled>false</ExtraHintDisabled>
-              <ChangeValueIntoRange>false</ChangeValueIntoRange>
-              <RuntimeProperty>false</RuntimeProperty>
-            </TIntgItem>
-          </GrupItem>
-          <GrupItem>
-            <TStrgItem>
-              <Name>.inf PRVDR</Name>
-              <Symbol>CdcPrvdrString</Symbol>
-              <Hint>Name to be used in the cdc.inf for the PRVDR (Provider) entry.</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>Freescale</DefaultValue>
-              <StrDefine>nothing</StrDefine>
-              <MinLength>0</MinLength>
-              <MaxLength>-1</MaxLength>
-            </TStrgItem>
-          </GrupItem>
-          <GrupItem>
-            <TStrgItem>
-              <Name>.inf MFGNAME</Name>
-              <Symbol>CdcMfgNameString</Symbol>
-              <Hint>Name to be used in the cdc.inf for the MFGNAME entry.</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>My Company</DefaultValue>
-              <StrDefine>nothing</StrDefine>
-              <MinLength>0</MinLength>
-              <MaxLength>-1</MaxLength>
-            </TStrgItem>
-          </GrupItem>
-          <GrupItem>
-            <TStrgItem>
-              <Name>.inf DESCRIPTION</Name>
-              <Symbol>CdcDescriptionString</Symbol>
-              <Hint>Name to be used in the cdc.inf for the DESCRIPTION entry.</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>Freescale CDC Device</DefaultValue>
-              <StrDefine>nothing</StrDefine>
-              <MinLength>0</MinLength>
-              <MaxLength>-1</MaxLength>
-            </TStrgItem>
-          </GrupItem>
-          <GrupItem>
-            <TStrgItem>
-              <Name>.inf SERVICE</Name>
-              <Symbol>CdcServiceString</Symbol>
-              <Hint>Name to be used in the cdc.inf for the SERVICE entry.</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>Virtual Com Driver</DefaultValue>
-              <StrDefine>nothing</StrDefine>
-              <MinLength>0</MinLength>
-              <MaxLength>-1</MaxLength>
-            </TStrgItem>
-          </GrupItem>
-          <GrupItem>
-            <TStrgItem>
               <Name>Bus reported device</Name>
-              <Symbol>CdcBusReportedDeviceDescriptionString</Symbol>
+              <Symbol>HidBusReportedDeviceDescriptionString</Symbol>
               <Hint>This name shows up on the USB bus before drivers are installed. This string is used in usb_descriptor.c.</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
-              <DefaultValue>FSL CDC DEVICE  </DefaultValue>
+              <DefaultValue>FSL HID Keyboard</DefaultValue>
               <StrDefine>nothing</StrDefine>
               <MinLength>16</MinLength>
               <MaxLength>16</MaxLength>
@@ -183,7 +84,7 @@
           <GrupItem>
             <TStrgItem>
               <Name>Bus reported vendor</Name>
-              <Symbol>CdcBusReportedVendorString</Symbol>
+              <Symbol>HidBusReportedVendorString</Symbol>
               <Hint>This name shows up on the USB bus before drivers are installed. This string is used in usb_descriptor.c.</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
@@ -214,26 +115,110 @@
         <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
       </TInhrItem>
     </Property>
-    <Property>
-      <TInhrItem>
-        <Name>Receive Buffer</Name>
-        <Symbol>RxBuffer</Symbol>
-        <TypeSpec>FSL_USB_HID_Keyboard_Device\Buffer</TypeSpec>
-        <Hint>Interface to ring for sending data.</Hint>
+  </PropertyList>
+  <MethodList>
+    <Method>
+      <TMthdItem>
+        <Name>HidCodeFromAscii</Name>
+        <Symbol>HidCodeFromAscii</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Translates an ASCII code into the HID code</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>-1</DefaultIndex>
+        <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>false</TextValueIndex>
         <RuntimeProperty>false</RuntimeProperty>
         <CanDelete>false</CanDelete>
         <IconPopup>false</IconPopup>
-        <InhrBeanBaseName>Rx</InhrBeanBaseName>
-        <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
-      </TInhrItem>
-    </Property>
-  </PropertyList>
-  <MethodList>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>USB HID Key Code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>ch</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>ASCII code</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte ch)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>SendStr</Name>
+        <Symbol>SendStr</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Sends a string to the HID host. This function will translate the string into the correct status messages</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>str</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to string to be sent</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte *str)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>SendChar</Name>
+        <Symbol>SendChar</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Sends a single character to the HID host. This function will translate the string into the correct status messages</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>ch</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>character to be sent</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte ch)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
     <Method>
       <TMthdItem>
         <Name>App_Callback</Name>
@@ -302,23 +287,10 @@
         <InDefinition>true</InDefinition>
         <ReturnType>8bit unsigned</ReturnType>
         <RetHint>Error code, returns ERR_OK if USB enumeration has been finished, error code otherwise.</RetHint>
-        <ParamCount>2</ParamCount>
-        <Parameter>
-          <ParName>txBuf</ParName>
-          <ParType>8bit unsigned</ParType>
-          <ParPassing>Address</ParPassing>
-          <ParHint>Pointer to temporary buffer used to transmit data over USB. Should be equal or greater than the endpoint buffer size. Data will be sent in an asynchronous way, so make sure the buffer is *not* on the stack. This buffer must be available until the next transmission.</ParHint>
-        </Parameter>
-        <Parameter>
-          <ParName>txBufSize</ParName>
-          <ParType>8bit unsigned</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>Size of the buffer in bytes</ParHint>
-          <ParUserDeclaration>size_t txBufSize</ParUserDeclaration>
-        </Parameter>
+        <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(byte *txBuf, size_t txBufSize)</ANSIC>
+          <ANSIC>byte #M#_#C#(void)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

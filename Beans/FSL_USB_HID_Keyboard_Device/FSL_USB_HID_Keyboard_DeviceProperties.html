@@ -237,44 +237,16 @@ There are 11 options:<br />
 </li>
 <li>
 <a name="USBCDCenabled">
-<b>HID Settings</b></a> - Settings for USB HID Keyboard class. The .inf file will be generated into the Documentation folder.<br />
+<b>HID Settings</b></a> - Settings for USB HID Keyboard class.<br />
 The following items are available only if the group is enabled (the value is "Enabled"):<br />
 
 <ul>
   <li>
-  <a name="CdcClassGuidString">
-  <b>.inf ClassGuid</b></a> - This defines the ClassGuid in the cdc.inf file. You can make your own using http://www.guidgenerator.com/
-  </li>
-  <li>
-  <a name="CdcVidValue">
-  <b>.inf VID</b></a> - Value to be used in the cdc.inf for the VID (Vendor ID) entry. This value is used as well in usb_descriptor.c.
-  </li>
-  <li>
-  <a name="CdcPidValue">
-  <b>.inf PID</b></a> - Name to be used in the cdc.inf for the PID (Product ID) entry. This value is used as well in usb_descriptor.c.
-  </li>
-  <li>
-  <a name="CdcPrvdrString">
-  <b>.inf PRVDR</b></a> - Name to be used in the cdc.inf for the PRVDR (Provider) entry.
-  </li>
-  <li>
-  <a name="CdcMfgNameString">
-  <b>.inf MFGNAME</b></a> - Name to be used in the cdc.inf for the MFGNAME entry.
-  </li>
-  <li>
-  <a name="CdcDescriptionString">
-  <b>.inf DESCRIPTION</b></a> - Name to be used in the cdc.inf for the DESCRIPTION entry.
-  </li>
-  <li>
-  <a name="CdcServiceString">
-  <b>.inf SERVICE</b></a> - Name to be used in the cdc.inf for the SERVICE entry.
-  </li>
-  <li>
-  <a name="CdcBusReportedDeviceDescriptionString">
+  <a name="HidBusReportedDeviceDescriptionString">
   <b>Bus reported device</b></a> - This name shows up on the USB bus before drivers are installed. This string is used in usb_descriptor.c.
   </li>
   <li>
-  <a name="CdcBusReportedVendorString">
+  <a name="HidBusReportedVendorString">
   <b>Bus reported vendor</b></a> - This name shows up on the USB bus before drivers are installed. This string is used in usb_descriptor.c.
   </li>
 </ul>
@@ -282,10 +254,6 @@ The following items are available only if the group is enabled (the value is "En
 <li>
 <a name="TxBuffer">
 <b>Send Buffer</b></a> - Interface to ring for sending data.
-</li>
-<li>
-<a name="RxBuffer">
-<b>Receive Buffer</b></a> - Interface to ring for sending data.
 </li>
 
      </ul>

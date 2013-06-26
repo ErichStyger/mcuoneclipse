@@ -158,6 +158,7 @@ uint_8 USB_DESC_CONST USB_STR_0[USB_STR_0_SIZE+USB_STR_DESC_SIZE] =
 uint_8 USB_DESC_CONST USB_STR_1[USB_STR_1_SIZE+USB_STR_DESC_SIZE]
                           = {  sizeof(USB_STR_1),
                                USB_STRING_DESCRIPTOR,
+#if 0 /* << EST */
                                'F',0,
                                'R',0,
                                'E',0,
@@ -186,12 +187,100 @@ uint_8 USB_DESC_CONST USB_STR_1[USB_STR_1_SIZE+USB_STR_DESC_SIZE]
                                'N',0,
                                'C',0,
                                '.',0
-                          };
+#else /* use properties */
+                               %define! Str1 %HidBusReportedVendorString
+                               %substring Str1,1,1
+                               %define! Str2 %HidBusReportedVendorString
+                               %substring Str2,2,1
+                               %define! Str3 %HidBusReportedVendorString
+                               %substring Str3,3,1
+                               %define! Str4 %HidBusReportedVendorString
+                               %substring Str4,4,1
+                               %define! Str5 %HidBusReportedVendorString
+                               %substring Str5,5,1
+                               %define! Str6 %HidBusReportedVendorString
+                               %substring Str6,6,1
+                               %define! Str7 %HidBusReportedVendorString
+                               %substring Str7,7,1
+                               %define! Str8 %HidBusReportedVendorString
+                               %substring Str8,8,1
+                               %define! Str9 %HidBusReportedVendorString
+                               %substring Str9,9,1
+                               %define! Str10 %HidBusReportedVendorString
+                               %substring Str10,10,1
+                               %define! Str11 %HidBusReportedVendorString
+                               %substring Str11,11,1
+                               %define! Str12 %HidBusReportedVendorString
+                               %substring Str12,12,1
+                               %define! Str13 %HidBusReportedVendorString
+                               %substring Str13,13,1
+                               %define! Str14 %HidBusReportedVendorString
+                               %substring Str14,14,1
+
+                               %define! Str15 %HidBusReportedVendorString
+                               %substring Str15,15,1
+                               %define! Str16 %HidBusReportedVendorString
+                               %substring Str16,16,1
+                               %define! Str17 %HidBusReportedVendorString
+                               %substring Str17,17,1
+                               %define! Str18 %HidBusReportedVendorString
+                               %substring Str18,18,1
+                               %define! Str19 %HidBusReportedVendorString
+                               %substring Str19,19,1
+                               %define! Str20 %HidBusReportedVendorString
+                               %substring Str20,20,1
+                               %define! Str21 %HidBusReportedVendorString
+                               %substring Str21,21,1
+                               %define! Str22 %HidBusReportedVendorString
+                               %substring Str22,22,1
+                               %define! Str23 %HidBusReportedVendorString
+                               %substring Str23,23,1
+                               %define! Str24 %HidBusReportedVendorString
+                               %substring Str24,24,1
+                               %define! Str25 %HidBusReportedVendorString
+                               %substring Str25,25,1
+                               %define! Str26 %HidBusReportedVendorString
+                               %substring Str26,26,1
+                               %define! Str27 %HidBusReportedVendorString
+                               %substring Str27,27,1
+                               %define! Str28 %HidBusReportedVendorString
+                               %substring Str28,28,1
+                              '%Str1',0,
+                              '%Str2',0,
+                              '%Str3',0,
+                              '%Str4',0,
+                              '%Str5',0,
+                              '%Str6',0,
+                              '%Str7',0,
+                              '%Str8',0,
+                              '%Str9',0,
+                              '%Str10',0,
+                              '%Str11',0,
+                              '%Str12',0,
+                              '%Str13',0,
+                              '%Str14',0,
+                              '%Str15',0,
+                              '%Str16',0,
+                              '%Str17',0,
+                              '%Str18',0,
+                              '%Str19',0,
+                              '%Str20',0,
+                              '%Str21',0,
+                              '%Str22',0,
+                              '%Str23',0,
+                              '%Str24',0,
+                              '%Str25',0,
+                              '%Str26',0,
+                              '%Str27',0,
+                              '%Str28',0
+#endif 
+};
 
 
 uint_8 USB_DESC_CONST USB_STR_2[USB_STR_2_SIZE+USB_STR_DESC_SIZE]
                           = {  sizeof(USB_STR_2),
                                USB_STRING_DESCRIPTOR,
+#if 0 /* << EST */
                                ' ',0,
                                ' ',0,
 							#ifdef __MK_xxx_H__
@@ -222,6 +311,51 @@ uint_8 USB_DESC_CONST USB_STR_2[USB_STR_2_SIZE+USB_STR_DESC_SIZE]
                                'M',0,
                                'O',0,
                                ' ',0
+#else
+                               %define! Str1 %HidBusReportedDeviceDescriptionString
+                               %substring Str1,1,1
+                               %define! Str2 %HidBusReportedDeviceDescriptionString
+                               %substring Str2,2,1
+                               %define! Str3 %HidBusReportedDeviceDescriptionString
+                               %substring Str3,3,1
+                               %define! Str4 %HidBusReportedDeviceDescriptionString
+                               %substring Str4,4,1
+                               %define! Str5 %HidBusReportedDeviceDescriptionString
+                               %substring Str5,5,1
+                               %define! Str6 %HidBusReportedDeviceDescriptionString
+                               %substring Str6,6,1
+                               %define! Str7 %HidBusReportedDeviceDescriptionString
+                               %substring Str7,7,1
+                               %define! Str8 %HidBusReportedDeviceDescriptionString
+                               %substring Str8,8,1
+                               %define! Str9 %HidBusReportedDeviceDescriptionString
+                               %substring Str9,9,1
+                               %define! Str10 %HidBusReportedDeviceDescriptionString
+                               %substring Str10,10,1
+                               %define! Str11 %HidBusReportedDeviceDescriptionString
+                               %substring Str11,11,1
+                               %define! Str12 %HidBusReportedDeviceDescriptionString
+                               %substring Str12,12,1
+                               %define! Str13 %HidBusReportedDeviceDescriptionString
+                               %substring Str13,13,1
+                               %define! Str14 %HidBusReportedDeviceDescriptionString
+                               %substring Str14,14,1
+
+                               '%Str1',0,
+                               '%Str2',0,
+                               '%Str3',0,
+                               '%Str4',0,
+                               '%Str5',0,
+                               '%Str6',0,
+                               '%Str7',0,
+                               '%Str8',0,
+                               '%Str9',0,
+                               '%Str10',0,
+                               '%Str11',0,
+                               '%Str12',0,
+                               '%Str13',0,
+                               '%Str14',0
+#endif
                           };
 
 uint_8 USB_DESC_CONST USB_STR_n[USB_STR_n_SIZE+USB_STR_DESC_SIZE]

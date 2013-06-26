@@ -3,15 +3,14 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (App_Task)
+%include Common\GeneralMethod.inc (SendChar)
 %;**     Description :
-%;**         Application task to be called periodically from the main
-%;**         task.
-%include Common\GeneralParametersNone.inc
+%;**         Sends a single character to the HID host. This function will
+%;**         translate the string into the correct status messages
+%include Common\GeneralParameters.inc(27)
+%;**         ch%Parch %>27 - character to be sent
 %;**     Returns     :
-%;**         ---%RetVal %>27 - Error code, returns ERR_OK if USB
-%;** %>29 enumeration has been finished, error code
-%;** %>29 otherwise.
+%;**         ---%RetVal %>27 - Error code
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

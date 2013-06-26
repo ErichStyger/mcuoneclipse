@@ -3,15 +3,13 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (App_Task)
+%include Common\GeneralMethod.inc (HidCodeFromAscii)
 %;**     Description :
-%;**         Application task to be called periodically from the main
-%;**         task.
-%include Common\GeneralParametersNone.inc
+%;**         Translates an ASCII code into the HID code
+%include Common\GeneralParameters.inc(27)
+%;**         ch%Parch %>27 - ASCII code
 %;**     Returns     :
-%;**         ---%RetVal %>27 - Error code, returns ERR_OK if USB
-%;** %>29 enumeration has been finished, error code
-%;** %>29 otherwise.
+%;**         ---%RetVal %>27 - USB HID Key Code
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine
