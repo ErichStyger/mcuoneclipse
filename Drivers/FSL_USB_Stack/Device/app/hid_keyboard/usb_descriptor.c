@@ -340,6 +340,16 @@ uint_8 USB_DESC_CONST USB_STR_2[USB_STR_2_SIZE+USB_STR_DESC_SIZE]
                                %substring Str13,13,1
                                %define! Str14 %HidBusReportedDeviceDescriptionString
                                %substring Str14,14,1
+                               %define! Str15 %HidBusReportedDeviceDescriptionString
+                               %substring Str15,15,1
+                               %define! Str16 %HidBusReportedDeviceDescriptionString
+                               %substring Str16,16,1
+                               %define! Str17 %HidBusReportedDeviceDescriptionString
+                               %substring Str17,17,1
+                               %define! Str18 %HidBusReportedDeviceDescriptionString
+                               %substring Str18,18,1
+                               %define! Str19 %HidBusReportedDeviceDescriptionString
+                               %substring Str19,19,1
 
                                '%Str1',0,
                                '%Str2',0,
@@ -354,7 +364,12 @@ uint_8 USB_DESC_CONST USB_STR_2[USB_STR_2_SIZE+USB_STR_DESC_SIZE]
                                '%Str11',0,
                                '%Str12',0,
                                '%Str13',0,
-                               '%Str14',0
+                               '%Str14',0,
+                               '%Str15',0,
+                               '%Str16',0,
+                               '%Str17',0,
+                               '%Str18',0,
+                               '%Str19',0
 #endif
                           };
 

@@ -4,7 +4,7 @@
     <Name>FSL_USB_HID_Keyboard_Device</Name>
     <Description>Freescale USB Stack (HID Keyboard)</Description>
     <Author>Erich Styger</Author>
-    <Version>01.020</Version>
+    <Version>01.032</Version>
     <Icon>FSL_USB_HID_Keyboard_Device</Icon>
     <TypesFiles>PE,FSL_USB_HID_Keyboard_Device\FSL_USB_HID_Keyboard_Device</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -75,10 +75,10 @@
               <Hint>This name shows up on the USB bus before drivers are installed. This string is used in usb_descriptor.c.</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
-              <DefaultValue>FSL HID Keyboard</DefaultValue>
+              <DefaultValue>FSL HID Keyboard   </DefaultValue>
               <StrDefine>nothing</StrDefine>
-              <MinLength>16</MinLength>
-              <MaxLength>16</MaxLength>
+              <MinLength>19</MinLength>
+              <MaxLength>19</MaxLength>
             </TStrgItem>
           </GrupItem>
           <GrupItem>
@@ -102,7 +102,7 @@
         <Name>Send Buffer</Name>
         <Symbol>TxBuffer</Symbol>
         <TypeSpec>FSL_USB_HID_Keyboard_Device\Buffer</TypeSpec>
-        <Hint>Interface to ring for sending data.</Hint>
+        <Hint>Interface to ring buffer for sending data. Elements in the bufer must be 16bits each.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -138,6 +138,40 @@
         <InDefinition>true</InDefinition>
         <ReturnType>8bit unsigned</ReturnType>
         <RetHint>USB HID Key Code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>ch</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>ASCII code</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte ch)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ModifierCodeFromAscii</Name>
+        <Symbol>ModifierCodeFromAscii</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Translates an ASCII code into the HID code and returns the modifier.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>USB HID Modifier Key Code</RetHint>
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>ch</ParName>

@@ -425,6 +425,16 @@ byte %'ModuleName'%.%SendChar(byte ch);
 
 %endif %- SendChar
 %-BW_METHOD_END SendChar
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ModifierCodeFromAscii
+%ifdef ModifierCodeFromAscii
+byte %'ModuleName'%.%ModifierCodeFromAscii(byte ch);
+%define! Parch
+%define! RetVal
+%include Common\FSL_USB_HID_Keyboard_DeviceModifierCodeFromAscii.Inc
+
+%endif %- ModifierCodeFromAscii
+%-BW_METHOD_END ModifierCodeFromAscii
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -699,7 +709,8 @@ byte %'ModuleName'%.%SendStr(byte *str)
 %define! RetVal
 %include Common\FSL_USB_HID_Keyboard_DeviceHidCodeFromAscii.Inc
 /* Look-up table to convert from ASCII to HID key codes */
-static const uint8_t hidKeyCode[128] =
+#define %'ModuleName'%.SHIFT (MODIFERKEYS_LEFT_SHIFT<<8) /* code for shift */
+static const uint16_t hidKeyCode[128] = /* upper 8bits are modifier bits */
 {
     0,                                                           %>40/* 0x00 Null */
     0,                                                           %>40/* 0x01 */
@@ -735,22 +746,22 @@ static const uint8_t hidKeyCode[128] =
     0,                                                           %>40/* 0x1F */
 
     KEY_SPACEBAR,                                                %>40/* 0x20 */
-    KEY_1_EXCLAMATION_MARK,                                      %>40/* 0x21 ! */
-    KEY_2_AT,                                                    %>40/* 0x22 " */
-    KEY_3_NUMBER_SIGN,                                           %>40/* 0x23 # */
-    KEY_4_DOLLAR,                                                %>40/* 0x24 $ */
-    KEY_5_PERCENT,                                               %>40/* 0x25 %% */
-    KEY_7_AMPERSAND,                                             %>40/* 0x26 & */
-    KEY_SINGLE_AND_DOUBLE_QUOTE,                                 %>40/* 0x27 ' */
-    KEY_9_OPARENTHESIS,                                          %>40/* 0x28 ( */
-    KEY_0_CPARENTHESIS,                                          %>40/* 0x29 ) */
-    KEY_8_ASTERISK,                                              %>40/* 0x2A * */
-    KEY_EQUAL_PLUS,                                              %>40/* 0x2B + */
+    %'ModuleName'%.SHIFT|KEY_1_EXCLAMATION_MARK,                 %>40/* 0x21 ! */
+    %'ModuleName'%.SHIFT|KEY_2_AT,                               %>40/* 0x22 " */
+    %'ModuleName'%.SHIFT|KEY_3_NUMBER_SIGN,                      %>40/* 0x23 # */
+    %'ModuleName'%.SHIFT|KEY_4_DOLLAR,                           %>40/* 0x24 $ */
+    %'ModuleName'%.SHIFT|KEY_5_PERCENT,                          %>40/* 0x25 %% */
+    %'ModuleName'%.SHIFT|KEY_7_AMPERSAND,                        %>40/* 0x26 & */
+    %'ModuleName'%.SHIFT|KEY_SINGLE_AND_DOUBLE_QUOTE,            %>40/* 0x27 ' */
+    %'ModuleName'%.SHIFT|KEY_9_OPARENTHESIS,                     %>40/* 0x28 ( */
+    %'ModuleName'%.SHIFT|KEY_0_CPARENTHESIS,                     %>40/* 0x29 ) */
+    %'ModuleName'%.SHIFT|KEY_8_ASTERISK,                         %>40/* 0x2A * */
+    %'ModuleName'%.SHIFT|KEY_EQUAL_PLUS,                         %>40/* 0x2B + */
     KEY_COMMA_AND_LESS,                                          %>40/* 0x2C , */
     KEY_MINUS_UNDERSCORE,                                        %>40/* 0x2D - */
     KEY_DOT_GREATER,                                             %>40/* 0x2E . */
     KEY_SLASH_QUESTION,                                          %>40/* 0x2F / */
-    KEY_0_CPARENTHESIS,                                          %>40/* 0x30 0 */
+    %'ModuleName'%.SHIFT|KEY_0_CPARENTHESIS,                     %>40/* 0x30 0 */
     KEY_1_EXCLAMATION_MARK,                                      %>40/* 0x31 1 */
     KEY_2_AT,                                                    %>40/* 0x32 2 */
     KEY_3_NUMBER_SIGN,                                           %>40/* 0x33 3 */
@@ -760,47 +771,47 @@ static const uint8_t hidKeyCode[128] =
     KEY_7_AMPERSAND,                                             %>40/* 0x37 7 */
     KEY_8_ASTERISK,                                              %>40/* 0x38 8 */
     KEY_9_OPARENTHESIS,                                          %>40/* 0x39 9 */
-    KEY_SEMICOLON_COLON,                                         %>40/* 0x3A : */
+    %'ModuleName'%.SHIFT|KEY_SEMICOLON_COLON,                    %>40/* 0x3A : */
     KEY_SEMICOLON_COLON,                                         %>40/* 0x3B ; */
-    KEY_COMMA_AND_LESS,                                          %>40/* 0x3C < */
+    %'ModuleName'%.SHIFT|KEY_COMMA_AND_LESS,                     %>40/* 0x3C < */
     KEY_EQUAL_PLUS,                                              %>40/* 0x3D = */
-    KEY_DOT_GREATER,                                             %>40/* 0x3E > */
+    %'ModuleName'%.SHIFT|KEY_DOT_GREATER,                        %>40/* 0x3E > */
     KEY_SLASH_QUESTION,                                          %>40/* 0x3F ? */
 
-    KEY_2_AT,                                                    %>40/* 0x40 @ */
-    KEY_A,                                                       %>40/* 0x41 A */
-    KEY_B,                                                       %>40/* 0x42 B */
-    KEY_C,                                                       %>40/* 0x43 C */
-    KEY_D,                                                       %>40/* 0x44 D */
-    KEY_E,                                                       %>40/* 0x45 E */
-    KEY_F,                                                       %>40/* 0x46 F */
-    KEY_G,                                                       %>40/* 0x47 G */
-    KEY_H,                                                       %>40/* 0x48 H */
-    KEY_I,                                                       %>40/* 0x49 I */
-    KEY_J,                                                       %>40/* 0x4A J */
-    KEY_K,                                                       %>40/* 0x4B K */
-    KEY_L,                                                       %>40/* 0x4C L */
-    KEY_M,                                                       %>40/* 0x4D M */
-    KEY_N,                                                       %>40/* 0x4E N */
-    KEY_O,                                                       %>40/* 0x4F O */
-    KEY_P,                                                       %>40/* 0x50 P */
-    KEY_Q,                                                       %>40/* 0x51 Q */
-    KEY_R,                                                       %>40/* 0x52 R */
-    KEY_S,                                                       %>40/* 0x53 S */
-    KEY_T,                                                       %>40/* 0x55 T */
-    KEY_U,                                                       %>40/* 0x55 U */
-    KEY_V,                                                       %>40/* 0x56 V */
-    KEY_W,                                                       %>40/* 0x57 W */
-    KEY_X,                                                       %>40/* 0x58 X */
-    KEY_Y,                                                       %>40/* 0x59 Y */
-    KEY_Z,                                                       %>40/* 0x5A Z */
+    %'ModuleName'%.SHIFT|KEY_2_AT,                               %>40/* 0x40 @ */
+    %'ModuleName'%.SHIFT|KEY_A,                                  %>40/* 0x41 A */
+    %'ModuleName'%.SHIFT|KEY_B,                                  %>40/* 0x42 B */
+    %'ModuleName'%.SHIFT|KEY_C,                                  %>40/* 0x43 C */
+    %'ModuleName'%.SHIFT|KEY_D,                                  %>40/* 0x44 D */
+    %'ModuleName'%.SHIFT|KEY_E,                                  %>40/* 0x45 E */
+    %'ModuleName'%.SHIFT|KEY_F,                                  %>40/* 0x46 F */
+    %'ModuleName'%.SHIFT|KEY_G,                                  %>40/* 0x47 G */
+    %'ModuleName'%.SHIFT|KEY_H,                                  %>40/* 0x48 H */
+    %'ModuleName'%.SHIFT|KEY_I,                                  %>40/* 0x49 I */
+    %'ModuleName'%.SHIFT|KEY_J,                                  %>40/* 0x4A J */
+    %'ModuleName'%.SHIFT|KEY_K,                                  %>40/* 0x4B K */
+    %'ModuleName'%.SHIFT|KEY_L,                                  %>40/* 0x4C L */
+    %'ModuleName'%.SHIFT|KEY_M,                                  %>40/* 0x4D M */
+    %'ModuleName'%.SHIFT|KEY_N,                                  %>40/* 0x4E N */
+    %'ModuleName'%.SHIFT|KEY_O,                                  %>40/* 0x4F O */
+    %'ModuleName'%.SHIFT|KEY_P,                                  %>40/* 0x50 P */
+    %'ModuleName'%.SHIFT|KEY_Q,                                  %>40/* 0x51 Q */
+    %'ModuleName'%.SHIFT|KEY_R,                                  %>40/* 0x52 R */
+    %'ModuleName'%.SHIFT|KEY_S,                                  %>40/* 0x53 S */
+    %'ModuleName'%.SHIFT|KEY_T,                                  %>40/* 0x55 T */
+    %'ModuleName'%.SHIFT|KEY_U,                                  %>40/* 0x55 U */
+    %'ModuleName'%.SHIFT|KEY_V,                                  %>40/* 0x56 V */
+    %'ModuleName'%.SHIFT|KEY_W,                                  %>40/* 0x57 W */
+    %'ModuleName'%.SHIFT|KEY_X,                                  %>40/* 0x58 X */
+    %'ModuleName'%.SHIFT|KEY_Y,                                  %>40/* 0x59 Y */
+    %'ModuleName'%.SHIFT|KEY_Z,                                  %>40/* 0x5A Z */
     KEY_OBRACKET_AND_OBRACE,                                     %>40/* 0x5B [ */
     KEY_BACKSLASH_VERTICAL_BAR,                                  %>40/* 0x5C '\' */
     KEY_CBRACKET_AND_CBRACE,                                     %>40/* 0x5D ] */
-    KEY_6_CARET,                                                 %>40/* 0x5E ^ */
-    KEY_MINUS_UNDERSCORE,                                        %>40/* 0x5F _ */
+    %'ModuleName'%.SHIFT|KEY_6_CARET,                            %>40/* 0x5E ^ */
+    %'ModuleName'%.SHIFT|KEY_MINUS_UNDERSCORE,                   %>40/* 0x5F _ */
 
-    KEY_GRAVE_ACCENT_AND_TILDE,                                  %>40/* 0x60 ` */
+    %'ModuleName'%.SHIFT|KEY_GRAVE_ACCENT_AND_TILDE,             %>40/* 0x60 ` */
     KEY_A,                                                       %>40/* 0x61 a */
     KEY_B,                                                       %>40/* 0x62 b */
     KEY_C,                                                       %>40/* 0x63 c */
@@ -827,9 +838,9 @@ static const uint8_t hidKeyCode[128] =
     KEY_X,                                                       %>40/* 0x78 x */
     KEY_Y,                                                       %>40/* 0x79 y */
     KEY_Z,                                                       %>40/* 0x7A z */
-    KEY_OBRACKET_AND_OBRACE,                                     %>40/* 0x7B { */
-    KEY_BACKSLASH_VERTICAL_BAR,                                  %>40/* 0x7C | */
-    KEY_CBRACKET_AND_CBRACE,                                     %>40/* 0x7D } */
+    %'ModuleName'%.SHIFT|KEY_OBRACKET_AND_OBRACE,                %>40/* 0x7B { */
+    %'ModuleName'%.SHIFT|KEY_BACKSLASH_VERTICAL_BAR,             %>40/* 0x7C | */
+    %'ModuleName'%.SHIFT|KEY_CBRACKET_AND_CBRACE,                %>40/* 0x7D } */
     KEY_NONUS_NUMBER_SIGN_TILDE,                                 %>40/* 0x7E ~ */
     KEY_DELETE                                                   %>40/* 0x7F Delete */
 };
@@ -839,11 +850,27 @@ byte %'ModuleName'%.%HidCodeFromAscii(byte ch)
   if (ch&0x80){ /* only handle 0x00..0x7F */
     return '\0';
   }
-  return hidKeyCode[ch];
+  return (byte)hidKeyCode[ch];
 }
 
 %endif %- HidCodeFromAscii
 %-BW_METHOD_END HidCodeFromAscii
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ModifierCodeFromAscii
+%ifdef ModifierCodeFromAscii
+%define! Parch
+%define! RetVal
+%include Common\FSL_USB_HID_Keyboard_DeviceModifierCodeFromAscii.Inc
+byte %'ModuleName'%.%ModifierCodeFromAscii(byte ch)
+{
+  if (ch&0x80){ /* only handle 0x00..0x7F */
+    return '\0';
+  }
+  return (byte)(hidKeyCode[ch]>>8);
+}
+
+%endif %- ModifierCodeFromAscii
+%-BW_METHOD_END ModifierCodeFromAscii
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SendChar
 %ifdef SendChar

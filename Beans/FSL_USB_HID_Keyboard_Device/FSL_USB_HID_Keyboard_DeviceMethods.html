@@ -214,6 +214,18 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="ModifierCodeFromAscii">
+<b>ModifierCodeFromAscii</b></a>
+ - Translates an ASCII code into the HID code and returns the modifier.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ModifierCodeFromAscii(byte ch)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>ch:byte</i> - ASCII code</li>
+<li><i>Return value:byte</i> - USB HID Modifier Key Code
+</li>
+</ul><br />
+</li>
 <li><a name="SendStr">
 <b>SendStr</b></a>
  - Sends a string to the HID host. This function will translate the string into the correct status messages
