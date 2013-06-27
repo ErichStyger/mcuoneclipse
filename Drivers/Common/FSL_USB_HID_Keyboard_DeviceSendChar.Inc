@@ -5,8 +5,9 @@
 %;** ===================================================================
 %include Common\GeneralMethod.inc (SendChar)
 %;**     Description :
-%;**         Sends a single character to the HID host. This function will
-%;**         translate the string into the correct status messages
+%;**         Puts a single ASCII character into the buffer to be sent to
+%;**         the HID host. This function will translate the string into
+%;**         the correct status messages
 %include Common\GeneralParameters.inc(27)
 %;**         ch%Parch %>27 - character to be sent
 %;**     Returns     :

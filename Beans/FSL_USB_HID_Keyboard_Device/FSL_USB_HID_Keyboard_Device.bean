@@ -4,7 +4,7 @@
     <Name>FSL_USB_HID_Keyboard_Device</Name>
     <Description>Freescale USB Stack (HID Keyboard)</Description>
     <Author>Erich Styger</Author>
-    <Version>01.032</Version>
+    <Version>01.036</Version>
     <Icon>FSL_USB_HID_Keyboard_Device</Icon>
     <TypesFiles>PE,FSL_USB_HID_Keyboard_Device\FSL_USB_HID_Keyboard_Device</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -190,7 +190,7 @@
         <Name>SendStr</Name>
         <Symbol>SendStr</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Sends a string to the HID host. This function will translate the string into the correct status messages</Hint>
+        <Hint>Puts an ASCII string into the buffer to be sent to the HID host. This function will translate the string into the correct status messages</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -224,7 +224,7 @@
         <Name>SendChar</Name>
         <Symbol>SendChar</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Sends a single character to the HID host. This function will translate the string into the correct status messages</Hint>
+        <Hint>Puts a single ASCII character into the buffer to be sent to the HID host. This function will translate the string into the correct status messages</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -250,6 +250,46 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>byte #M#_#C#(byte ch)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Send</Name>
+        <Symbol>Send</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Puts a message with modifier and key value into the buffer to be sent to the host.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>modifier</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>HID modifier value, e.g. MODIFERKEYS_LEFT_SHIFT</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>key</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>HID key value, e.g. KEY_H</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte modifier, byte key)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -373,16 +413,16 @@
     </Event>
     <Event>
       <TEvntItem>
-        <Name>OnError</Name>
-        <Symbol>OnError</Symbol>
+        <Name>OnEvent</Name>
+        <Symbol>OnEvent</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
         <Hint>Hook called in case of an error</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <Description>don't generate code</Description>
-        <Expanded>No</Expanded>
-        <DefaultValue>false</DefaultValue>
+        <Description>generate code</Description>
+        <Expanded>Yes</Expanded>
+        <DefaultValue>true</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
         <IsAssembler>false</IsAssembler>
@@ -391,7 +431,7 @@
           <ParName>error</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint>Error code</ParHint>
+          <ParHint>Error or event code</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
@@ -402,7 +442,7 @@
             <TEvntName>
               <Name>Event procedure name</Name>
               <Symbol>Name</Symbol>
-              <Hint>OnError procedure name</Hint>
+              <Hint>OnEvent procedure name</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
               <DefaultValue/>

@@ -228,7 +228,7 @@ LI.EXP {
 </li>
 <li><a name="SendStr">
 <b>SendStr</b></a>
- - Sends a string to the HID host. This function will translate the string into the correct status messages
+ - Puts an ASCII string into the buffer to be sent to the HID host. This function will translate the string into the correct status messages
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
 <br /><i>ANSIC prototype:</i> byte SendStr(byte *str)<br />
@@ -240,12 +240,25 @@ LI.EXP {
 </li>
 <li><a name="SendChar">
 <b>SendChar</b></a>
- - Sends a single character to the HID host. This function will translate the string into the correct status messages
+ - Puts a single ASCII character into the buffer to be sent to the HID host. This function will translate the string into the correct status messages
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
 <br /><i>ANSIC prototype:</i> byte SendChar(byte ch)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>ch:byte</i> - character to be sent</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="Send">
+<b>Send</b></a>
+ - Puts a message with modifier and key value into the buffer to be sent to the host.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte Send(byte modifier, byte key)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>modifier:byte</i> - HID modifier value, e.g. MODIFERKEYS_LEFT_SHIFT</li>
+<li><i>key:byte</i> - HID key value, e.g. KEY_H</li>
 <li><i>Return value:byte</i> - Error code
 </li>
 </ul><br />

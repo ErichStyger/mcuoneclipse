@@ -326,9 +326,16 @@
 #define  KEYBOARD_BUFF_SIZE    (8)   /* report buffer size */
 #define  REQ_DATA_SIZE         (1)
 
-/* error codes for events */
+/* error/event codes for events */
 #define %'ModuleName'%.USB_ERR_INIT            1  /* USB initialization error */
-
+#define %'ModuleName'%.USB_APP_BUS_RESET       2  /* bus has reset */
+#define %'ModuleName'%.USB_APP_ENUM_COMPLETE   3  /* device enumeration completed */
+#define %'ModuleName'%.USB_APP_ERROR           4  /* application error */
+#define %'ModuleName'%.USB_APP_BUS_SUSPEND     5  /* bus asks for suspend */
+#define %'ModuleName'%.USB_APP_BUS_RESUME      6  /* bus resumed */
+#define %'ModuleName'%.USB_APP_SEND_COMPLETE   7  /* sending message completed */
+#define %'ModuleName'%.USB_APP_NUMLOCK_ON      8  /* request from host to turn NumLock on */
+#define %'ModuleName'%.USB_APP_NUMLOCK_OFF     9  /* request from host to turn NumLock off */
 %-STARTUSERTYPES - Do not make changes between lines (included this lines) marked with %-STARTUSERTYPES and %-ENDUSRTYPES
 
 %-ENDUSRTYPES
@@ -435,6 +442,17 @@ byte %'ModuleName'%.%ModifierCodeFromAscii(byte ch);
 
 %endif %- ModifierCodeFromAscii
 %-BW_METHOD_END ModifierCodeFromAscii
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Send
+%ifdef Send
+byte %'ModuleName'%.%Send(byte modifier, byte key);
+%define! Parmodifier
+%define! Parkey
+%define! RetVal
+%include Common\FSL_USB_HID_Keyboard_DeviceSend.Inc
+
+%endif %- Send
+%-BW_METHOD_END Send
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -443,15 +461,15 @@ byte %'ModuleName'%.%ModifierCodeFromAscii(byte ch);
 %include Common\Header.End
 %-
 %-BW_EVENT_DEFINITION_START
-%-BW_METHOD_BEGIN OnError
-%ifdef OnError
-%INTERFACE OnError
-void %OnError(byte error);
+%-BW_METHOD_BEGIN OnEvent
+%ifdef OnEvent
+%INTERFACE OnEvent
+void %OnEvent(byte error);
 %define! Parerror
-%include Common\FSL_USB_HID_Keyboard_DeviceOnError.Inc
+%include Common\FSL_USB_HID_Keyboard_DeviceOnEvent.Inc
 
-%endif %- OnError
-%-BW_METHOD_END OnError
+%endif %- OnEvent
+%-BW_METHOD_END OnEvent
 %-BW_EVENT_DEFINITION_END
 %IMPLEMENTATION
 %define! Settings Common\FSL_USB_HID_Keyboard_DeviceSettings.Inc
@@ -515,19 +533,17 @@ static volatile boolean transactionOngoing = FALSE; /* flag to know if a transac
  * function handles these class requests.
  *****************************************************************************/
 static byte USB_App_Param_Callback (
-      byte request,        /* [IN] request type */
+      byte request,          /* [IN] request type */
       uint_16 value,         /* [IN] report type and ID */
-      uint8_t** data,      /* [OUT] pointer to the data */
+      uint8_t** data,        /* [OUT] pointer to the data */
       USB_PACKET_SIZE* size  /* [OUT] size of the transfer */
 )
 {
   byte status = USB_OK;
-  //byte direction =  (byte)((request & USB_HID_REQUEST_DIR_MASK) >>3);
   byte index = (byte)((request - 2) & USB_HID_REQUEST_TYPE_MASK);
                                        /* index == 0 for get/set idle,
-                                          index == 1 for get/set protocol
-                                       */
-  *size =0;
+                                          index == 1 for get/set protocol */
+  *size = 0;
   /* handle the class request */
   switch(request) {
     case USB_HID_GET_REPORT_REQUEST:
@@ -536,14 +552,14 @@ static byte USB_App_Param_Callback (
        break;
 
     case USB_HID_SET_REPORT_REQUEST:
-      //for(index = 0; index < KEYBOARD_BUFF_SIZE ; index++)
-      //{   /* copy the report sent by the host */
-      //    rpt_buf[index] = *(*data + index);
-      //}
       if(**data == 1)  {       /* turn NumLock led on request from HOST */
-        /* todo: create event */
+        %if defined(OnEvent)
+        %OnEvent(%'ModuleName'%.USB_APP_NUMLOCK_ON);
+        %endif
       } else if(**data == 0) {       /* turn NumLock led off request from HOST */
-        /* todo: create event */
+        %if defined(OnEvent)
+        %OnEvent(%'ModuleName'%.USB_APP_NUMLOCK_OFF);
+        %endif
       }
       break;
 
@@ -598,24 +614,37 @@ void %'ModuleName'%.%App_Callback(byte controller_ID, byte event_type, void *val
   UNUSED(val)
   if((event_type == USB_APP_BUS_RESET) || (event_type == USB_APP_CONFIG_CHANGED)) {
     keyboard_init=FALSE;
+    %if defined(OnEvent)
+    %OnEvent(%'ModuleName'%.USB_APP_BUS_RESET);
+    %endif
   } else if(event_type == USB_APP_ENUM_COMPLETE) {
     /* if enumeration is complete set keyboard_init so that application can start */
     keyboard_init=TRUE;
+    %if defined(OnEvent)
+    %OnEvent(%'ModuleName'%.USB_APP_ENUM_COMPLETE);
+    %endif
   } else if(event_type == USB_APP_ERROR) {
-    /* user may add code here for error handling */
-  } else if (event_type == USB_APP_BUS_SUSPEND) { /* Added for USB Suspend/Resume */
-   // This is the app callback, so we shouldn't halt the ISR by doing anything here.
-   /*!!!!!!!!!!!!!! NYI: call event!
-   main_App_Should_Suspend = keyboard_init;
-   */
+    %if defined(OnEvent)
+    %OnEvent(%'ModuleName'%.USB_APP_ERROR);
+    %endif
+  } else if (event_type == USB_APP_BUS_SUSPEND) {
+    %if defined(OnEvent)
+    %OnEvent(%'ModuleName'%.USB_APP_BUS_SUSPEND);
+    %endif
   } else if (event_type == USB_APP_BUS_RESUME) {
    /* For the keyboard application, it is best to let the main app
     * handle all resume processing. Because of the software flow, we know
     * that after initiating the STOP mode and waking up, the application
     * will just continue, so we can resume there.
     */
+    %if defined(OnEvent)
+    %OnEvent(%'ModuleName'%.USB_APP_BUS_RESUME);
+    %endif
   } else if (event_type==USB_APP_SEND_COMPLETE && keyboard_init) {
     transactionOngoing = FALSE;
+    %if defined(OnEvent)
+    %OnEvent(%'ModuleName'%.USB_APP_SEND_COMPLETE);
+    %endif
   }
 }
 
@@ -628,16 +657,16 @@ void %'ModuleName'%.%App_Callback(byte controller_ID, byte event_type, void *val
 %include Common\FSL_USB_HID_Keyboard_DeviceApp_Task.Inc
 byte %'ModuleName'%.%App_Task(void)
 {
-  uint8_t ch;
+  uint16_t hidCode; /* upper 8bits are modifier, lower 8bits are hid code value */
 
-  /* call the periodic task function */
-  USB_Class_HID_Periodic_Task();
+  USB_Class_HID_Periodic_Task(); /* call the periodic task function */
   if (!keyboard_init) {
     return ERR_BUSOFF; /* USB bus not available yet */
   }
-  if (%@TxBuffer@'ModuleName'%.Get(&ch)==ERR_OK) {
+  if (%@TxBuffer@'ModuleName'%.Get(&hidCode)==ERR_OK) {
     /* send character */
-    rpt_buf[2] = ch;
+    rpt_buf[0] = (hidCode>>8)&0xFF; /* high byte is modifier */
+    rpt_buf[2] = hidCode&0xFF; /* low byte is key code */
     transactionOngoing = TRUE;
     if (USB_Class_HID_Send_Data(CONTROLLER_ID, HID_ENDPOINT, rpt_buf, sizeof(rpt_buf))!=USB_OK) {
       transactionOngoing = FALSE;
@@ -664,8 +693,8 @@ byte %'ModuleName'%.%Init(void)
   err = USB_Class_HID_Init(CONTROLLER_ID, %'ModuleName'%.%App_Callback, NULL, USB_App_Param_Callback);
   if(err != USB_OK) {
     /* Error initializing USB-CDC Class */
-%if defined(OnError)
-    %OnError(%'ModuleName'%.USB_ERR_INIT);
+%if defined(OnEvent)
+    %OnEvent(%'ModuleName'%.USB_ERR_INIT);
 %endif
     return ERR_FAILED;
   }
@@ -674,34 +703,6 @@ byte %'ModuleName'%.%Init(void)
 
 %endif %- Init
 %-BW_METHOD_END Init
-%-************************************************************************************************************
-%-BW_METHOD_BEGIN SendStr
-%ifdef SendStr
-%define! Parstr
-%define! RetVal
-%include Common\FSL_USB_HID_Keyboard_DeviceSendStr.Inc
-byte %'ModuleName'%.%SendStr(byte *str)
-{
-  uint8_t hidCode, prev;
-
-  prev = '\0';
-  while (*str!='\0') {
-    if (*str==prev) { /* twice the same character: need to send release first */
-      %@TxBuffer@'ModuleName'%.Put('\0');
-    }
-    hidCode = %'ModuleName'%.%HidCodeFromAscii(*str);
-    if (hidCode!='\0') {
-      %@TxBuffer@'ModuleName'%.Put(hidCode);
-    }
-    prev = *str;
-    str++;
-  }
-  %@TxBuffer@'ModuleName'%.Put('\0'); /* send release message */
-  return ERR_OK;
-}
-
-%endif %- SendStr
-%-BW_METHOD_END SendStr
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN HidCodeFromAscii
 %ifdef HidCodeFromAscii
@@ -879,18 +880,56 @@ byte %'ModuleName'%.%ModifierCodeFromAscii(byte ch)
 %include Common\FSL_USB_HID_Keyboard_DeviceSendChar.Inc
 byte %'ModuleName'%.%SendChar(byte ch)
 {
-  uint8_t hidCode;
-
-  hidCode = %'ModuleName'%.%HidCodeFromAscii(ch);
-  if (hidCode!='\0') {
-    %@TxBuffer@'ModuleName'%.Put(hidCode);
+  if (ch&0x7F) { /* only handle 0x00..0x7F */
+    %@TxBuffer@'ModuleName'%.Put(hidKeyCode[ch]); /* put 16bit value (modifier|code) into buffer */
   }
-  %@TxBuffer@'ModuleName'%.Put('\0'); /* send release message */
+  %@TxBuffer@'ModuleName'%.Put(0); /* send release message */
   return ERR_OK;
 }
 
 %endif %- SendChar
 %-BW_METHOD_END SendChar
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SendStr
+%ifdef SendStr
+%define! Parstr
+%define! RetVal
+%include Common\FSL_USB_HID_Keyboard_DeviceSendStr.Inc
+byte %'ModuleName'%.%SendStr(byte *str)
+{
+  uint8_t prev;
+
+  prev = '\0';
+  while (*str!='\0') {
+    if (*str==prev) { /* twice the same character: need to send release first */
+      %@TxBuffer@'ModuleName'%.Put(0);
+    }
+    if ((*str)&0x7F) { /* only handle 0x00..0x7F */
+      %@TxBuffer@'ModuleName'%.Put(hidKeyCode[*str]); /* put 16bit value (modifier|code) into buffer */
+    }
+    prev = *str;
+    str++;
+  }
+  %@TxBuffer@'ModuleName'%.Put(0); /* send release message */
+  return ERR_OK;
+}
+
+%endif %- SendStr
+%-BW_METHOD_END SendStr
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Send
+%ifdef Send
+%define! Parmodifier
+%define! Parkey
+%define! RetVal
+%include Common\FSL_USB_HID_Keyboard_DeviceSend.Inc
+byte %'ModuleName'%.%Send(byte modifier, byte key)
+{
+  return %@TxBuffer@'ModuleName'%.Put((modifier<<8)|key); /* put 16bit value (modifier|code) into buffer */
+}
+
+%endif %- Send
+%-BW_METHOD_END Send
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
@@ -898,18 +937,18 @@ byte %'ModuleName'%.%SendChar(byte ch)
 %-
 %-
 %-BW_EVENT_IMPLEMENT_START
-%-BW_METHOD_BEGIN OnError
-%ifdef OnError
-%IMPLEMENTATION OnError
+%-BW_METHOD_BEGIN OnEvent
+%ifdef OnEvent
+%IMPLEMENTATION OnEvent
 %define! Parerror
-%include Common\FSL_USB_HID_Keyboard_DeviceOnError.Inc
-void %OnError(byte error)
+%include Common\FSL_USB_HID_Keyboard_DeviceOnEvent.Inc
+void %OnEvent(byte error)
 {
   /* Write your code here ... */
 }
 
-%endif %- OnError
-%-BW_METHOD_END OnError
+%endif %- OnEvent
+%-BW_METHOD_END OnEvent
 %-BW_EVENT_IMPLEMENT_END
 %INITIALIZATION
 %CODE_BEGIN

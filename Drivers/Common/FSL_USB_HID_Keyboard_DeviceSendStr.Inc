@@ -5,8 +5,9 @@
 %;** ===================================================================
 %include Common\GeneralMethod.inc (SendStr)
 %;**     Description :
-%;**         Sends a string to the HID host. This function will translate
-%;**         the string into the correct status messages
+%;**         Puts an ASCII string into the buffer to be sent to the HID
+%;**         host. This function will translate the string into the
+%;**         correct status messages
 %include Common\GeneralParameters.inc(27)
 %;**       * str%Parstr %>27 - Pointer to string to be sent
 %;**     Returns     :
