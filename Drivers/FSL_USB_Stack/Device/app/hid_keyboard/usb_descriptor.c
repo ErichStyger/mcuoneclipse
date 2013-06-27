@@ -39,12 +39,12 @@
 /* structure containing details of all the endpoints used by this device */
 const USB_ENDPOINTS usb_desc_ep = {
 				HID_DESC_ENDPOINT_COUNT,
-				{
+				{{ /* << EST: added { */
 						HID_ENDPOINT,
 						USB_INTERRUPT_PIPE,
 						USB_SEND,
 						HID_ENDPOINT_PACKET_SIZE,
-				}
+				}} /* << EST: added { */
 };
 
 
@@ -436,11 +436,11 @@ uint_8_ptr const g_string_descriptors[USB_MAX_STRING_DESCRIPTORS+1] =
                                     };
 
 USB_ALL_LANGUAGES g_languages = { USB_STR_0, sizeof(USB_STR_0),
-                                    { 
+                                    { { /* << EST: added { */
                                         (uint_16 const)0x0409,
                                         (const uint_8 **)g_string_descriptors,
                                         g_string_desc_size
-                                    }
+                                    } } /* << EST: added { */
                                 };
 
 uint_8 const g_valid_config_values[USB_MAX_CONFIG_SUPPORTED+1]={0,1};
