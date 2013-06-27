@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Bean>
   <Header>
-    <Name>RingBufferUInt8</Name>
-    <Description>Implements a byte ring buffer</Description>
+    <Name>RingBuffer</Name>
+    <Description>Implements a ring buffer for 16bit elements</Description>
     <Author>Erich Styger</Author>
-    <Version>01.005</Version>
-    <Icon>RingBufferUInt8</Icon>
-    <TypesFiles>PE,RingBufferUInt8\RingBufferUInt8</TypesFiles>
+    <Version>01.015</Version>
+    <Icon>RingBuffer</Icon>
+    <TypesFiles>PE,RingBuffer\RingBuffer</TypesFiles>
     <FileVersion>6</FileVersion>
   </Header>
   <Options>
@@ -15,8 +15,8 @@
     <BW_AutoSaveHelp>yes</BW_AutoSaveHelp>
     <BW_AutoSaveDriver>yes</BW_AutoSaveDriver>
     <BW_DetailedHelp>yes</BW_DetailedHelp>
-    <BW_NeedTps>no</BW_NeedTps>
-    <BW_NeedUst>0</BW_NeedUst>
+    <BW_NeedTps>yes</BW_NeedTps>
+    <BW_NeedUst>2</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
     <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2013, all rights reserved.\nWeb: http://www.mcuoneclipse.com\n\nThis an open source software of an embedded component for Processor Expert.\nThis is a free software and is opened for education,  research  and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
@@ -52,6 +52,22 @@
         <ChangeValueIntoRange>false</ChangeValueIntoRange>
         <RuntimeProperty>false</RuntimeProperty>
       </TIntgItem>
+    </Property>
+    <Property>
+      <TEnumItem>
+        <Name>Element Size</Name>
+        <Symbol>ElementSize</Symbol>
+        <TypeSpec>typeRingBufferElementSize</TypeSpec>
+        <Hint>Size of a single element in the ring buffer</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>true</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+      </TEnumItem>
     </Property>
   </PropertyList>
   <MethodList>
@@ -107,13 +123,13 @@
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>elem</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>ElementType</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>New element to be put into the buffer</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(byte elem)</ANSIC>
+          <ANSIC>byte #M#_#C#(%'ModuleName'_ElementType elem)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -141,13 +157,13 @@
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>elemP</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>ElementType</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to where to store the received element</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(byte *elemP)</ANSIC>
+          <ANSIC>byte #M#_#C#(%'ModuleName'_ElementType *elemP)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -170,12 +186,12 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>ElementSizeType</ReturnType>
         <RetHint>Number of elements in the buffer.</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(void)</ANSIC>
+          <ANSIC>%'ModuleName'_ElementSizeType #M#_#C#(void)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -198,12 +214,12 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>ElementSizeType</ReturnType>
         <RetHint>Number of elements in the buffer.</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(void)</ANSIC>
+          <ANSIC>%'ModuleName'_ElementSizeType #M#_#C#(void)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
