@@ -12,6 +12,7 @@
 %elif %Compiler = "MetrowerksHC12XCC"
 %elif %Compiler = "IARARM"
 %elif %Compiler = "GNUC"
+%elif %Compiler = "ARM_CC" %- ARM Keil compiler
 %else
   %warning "Unknown compiler %Compiler"
 %endif
