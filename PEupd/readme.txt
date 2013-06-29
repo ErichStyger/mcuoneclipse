@@ -9,10 +9,10 @@ https://github.com/ErichStyger/mcuoneclipse/Beans
 https://github.com/ErichStyger/mcuoneclipse/Drivers
 
 
-Part1_Beans_16.06.2013.PEupd Content:
+Part1_Beans_29.06.2013.PEupd Content:
 -------------------------------------
 Package from component(s):
-- 24AA_EEPROM version 01.002
+- 24AA_EEPROM version 01.004
 - 74HC164 version 01.031
 - 74HC595 version 01.022
 - App_SMAC_Hello version 01.085
@@ -32,9 +32,9 @@ Package from component(s):
 - FreeRTOS version 01.217
 - FreeRTOSTrace version 01.003
 - FSL_USB_CDC_Device version 01.015
-- FSL_USB_HID_Keyboard_Device version 01.004
+- FSL_USB_HID_Keyboard_Device version 01.037
 - FSL_USB_MSD_Host version 01.010
-- FSL_USB_Stack version 01.012
+- FSL_USB_Stack version 01.016
 - FSShell version 01.231
 - GDisplay version 01.190
 - GenericBitIO version 01.065
@@ -60,14 +60,15 @@ Package from component(s):
 - LM61B version 01.030
 - LowPower version 01.016
 - MaxonF2140 version 01.001
-- MC13192 version 01.002
+- MC13192 version 01.003
 - MC34673 version 01.019
 - MMA7260Q version 01.110
 - MMA7455L version 01.043
 - MMA8451Q version 01.024
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 16.06.2013
+created 29.06.2013
+
 
 Part2_Beans_16.06.2013.PEupd Content:
 -------------------------------------
@@ -82,7 +83,8 @@ Package from component(s):
 - PtConv version 01.005
 - PWMServo16bit version 01.011
 - QuadCounter version 01.019
-- RingBufferUInt8 version 01.004
+- RingBuffer version 01.015
+- RingBufferUInt8 version 01.005
 - RTC_Maxim version 01.003
 - S19 version 01.034
 - S65Sharp version 01.079
@@ -100,8 +102,6 @@ Package from component(s):
 - TouchScreen version 01.077
 - TouchScreenSensor version 01.053
 - Trigger version 01.054
-- TwoKeys version 01.015
-- uCOS_II version 01.189
 - UI version 01.056
 - UIButton version 01.121
 - UICalendar version 01.030
@@ -120,4 +120,4 @@ Package from component(s):
 - UTI version 01.125
 - Utility version 01.086
 - Wait version 01.059
-created 16.06.2013
+created 29.06.2013
