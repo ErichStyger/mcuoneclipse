@@ -44,6 +44,8 @@
 #include "USB0.h"
 #include "HIDK1.h"
 #include "Tx2.h"
+#include "SW1.h"
+#include "BitIoLdd4.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -51,41 +53,48 @@
 #include "IO_Map.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
-static bool send = TRUE;
+
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
   /* Write your local variable definition here */
-  int cnt=0;
+  int cnt=0; /* counter to slow down LED blinking */
 
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
-  /* Write your code here */
   for(;;) {
     WAIT1_Waitms(10);
     cnt++;
-    if ((cnt%50)==0) {
-      LEDR_Neg();
-    }
-    if (HIDK1_App_Task()==ERR_OK) {
-      if ((cnt%200)==0 && send) {
-        LEDG_On();
-#if 0
-        Tx2_Put(KEY_H);
-        Tx2_Put(KEY_E);
-        Tx2_Put(KEY_L);
-        Tx2_Put(KEY_L);
-        Tx2_Put(KEY_O);
-        Tx2_Put(KEY_SPACEBAR);
-#else
-        HIDK1_SendStr((unsigned char*)"Hallo Sara! ");
+    if (SW1_GetVal()==0) { /* button pressed */
+      WAIT1_Waitms(100); /* wait for debouncing */
+      if (SW1_GetVal()==0) { /* still pressed */
+#if 0 /* send a string */
+        //(void)HIDK1_SendStr((unsigned char*)"SW1 press "); /* send a string */
+#endif
+#if 0 /* send print screen */
+        //HIDK1_Send(MODIFERKEYS_NONE, KEY_PRINTSCREEN);
+        //HIDK1_Send(MODIFERKEYS_NONE, KEY_NONE); /* release key */
+#endif
+#if 1 /* send CTRL+ALT+DELETE */
+        HIDK1_Send(MODIFERKEYS_LEFT_CTRL|MODIFERKEYS_RIGHT_ALT, KEY_DELETE);
+        HIDK1_Send(MODIFERKEYS_NONE, KEY_NONE); /* release key */
 #endif
       }
+      while(SW1_GetVal()==0) {} /* wait until button is released */
+    }
+    if (HIDK1_App_Task()==ERR_OK) { /* run the USB application task: this will send the buffer */
+      if ((cnt%100)==0) {
+        LEDR_Off();
+        LEDG_Neg(); /* blink Green LED if connected */
+      }
     } else {
-      LEDG_Off();
+      if ((cnt%200)==0) {
+        LEDG_Off();
+        LEDR_Neg(); /* blink red LED if not connected */
+      }
     }
   }
 
