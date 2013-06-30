@@ -864,7 +864,7 @@ void %'ModuleName'%.Init(void)
                  |FunctionSet_8bit                               %>40 /* we are using 8bit data bus */ \
 %endif
 %if %LCD_Nof_Lines = "1"
-                 |FunctionSet_1Lines                             %>40 /* we are using only one line */
+                 |FunctionSet_1Line                              %>40 /* we are using only one line */
 %else
                  |FunctionSet_2Lines                             %>40 /* we are using two or more lines */
 %endif
