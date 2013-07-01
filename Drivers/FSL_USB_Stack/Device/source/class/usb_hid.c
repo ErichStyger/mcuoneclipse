@@ -136,8 +136,8 @@ void USB_Service_Hid (
 {
     uint_8 index;
     uint_8 producer, consumer;
-    USB_ENDPOINTS *ep_desc_data = (USB_ENDPOINTS *)
-        USB_Desc_Get_Endpoints(event->controller_ID);
+    //USB_ENDPOINTS *ep_desc_data = (USB_ENDPOINTS *) /* << EST: variable not used */
+    //    USB_Desc_Get_Endpoints(event->controller_ID);
 
      /* map the endpoint num to the index of the endpoint structure */
     index = USB_Map_Ep_To_Struct_Index(event->controller_ID, event->ep_num);
@@ -551,8 +551,8 @@ uint_8 USB_Class_HID_Send_Data (
     uint_8 producer, consumer;
     uint_8 status = USB_OK;
 
-    USB_ENDPOINTS *ep_desc_data = (USB_ENDPOINTS *)
-        USB_Desc_Get_Endpoints(controller_ID);
+    //USB_ENDPOINTS *ep_desc_data = (USB_ENDPOINTS *) /* << EST: variable not used */
+    //    USB_Desc_Get_Endpoints(controller_ID);
 
     DisableInterrupts;
      /* map the endpoint num to the index of the endpoint structure */
