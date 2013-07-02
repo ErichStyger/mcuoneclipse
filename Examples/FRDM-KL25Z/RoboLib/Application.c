@@ -160,7 +160,6 @@ static void AvoidObstacle(void) {
 }
 #endif
 
-
 #if PL_APP_FOLLOW_OBSTACLE
 static void FollowObstacle(void) {
   #define DUTY_SLOW   16
@@ -181,11 +180,11 @@ static void FollowObstacle(void) {
       } else if (cm>=10 && cm<=20) { /* stand still */
         MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), 0);
         MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), 0);
-        TURN_Turn(TURN_RIGHT45); /* try to avoid obstacle */
+        //TURN_Turn(TURN_RIGHT45); /* try to avoid obstacle */
       } else if (cm>20 && cm<=40) { /* forward slowly */
         MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), DUTY_MEDIUM);
         MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), DUTY_MEDIUM);
-      } else if (cm>40 && cm<100) { /* forward fast */
+      } else if (cm>40 && cm<60) { /* forward fast */
         MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_LEFT), DUTY_FAST);
         MOT_SetSpeedPercent(MOT_GetMotorHandle(MOT_MOTOR_RIGHT), DUTY_FAST);
       } else { /* nothing in range */

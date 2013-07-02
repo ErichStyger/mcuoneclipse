@@ -544,7 +544,7 @@ static volatile boolean transactionOngoing = FALSE; /* flag to know if a transac
  *****************************************************************************/
 static uint8_t USB_App_Param_Callback (
       uint8_t request,          /* [IN] request type */
-      uint16_t value,         /* [IN] report type and ID */
+      uint_16 value,         /* [IN] report type and ID */
       uint8_t** data,        /* [OUT] pointer to the data */
       USB_PACKET_SIZE* size  /* [OUT] size of the transfer */
 )
@@ -889,9 +889,13 @@ byte %'ModuleName'%.%ModifierCodeFromAscii(byte ch)
 byte %'ModuleName'%.%SendChar(byte ch)
 {
   if (ch&0x7F) { /* only handle 0x00..0x7F */
-    %@TxBuffer@'ModuleName'%.Put(hidKeyCode[ch]); /* put 16bit value (modifier|code) into buffer */
+    if (%@TxBuffer@'ModuleName'%.Put(hidKeyCode[ch])!=ERR_OK) { /* put 16bit value (modifier|code) into buffer */
+      return ERR_FAILED;
+    }
   }
-  %@TxBuffer@'ModuleName'%.Put((MODIFERKEYS_NONE<<8)|KEY_NONE); /* send release message */
+  if (%@TxBuffer@'ModuleName'%.Put((MODIFERKEYS_NONE<<8)|KEY_NONE)!=ERR_OK) { /* send release message */
+    return ERR_FAILED;
+  }
   return ERR_OK;
 }
 

@@ -1,10 +1,10 @@
 /* ###################################################################
 **     Filename    : ProcessorExpert.c
 **     Project     : ProcessorExpert
-**     Processor   : MKL25Z128VLK4
+**     Processor   : MK20DN128VLH5
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2013-06-24, 15:42, # CodeGen: 0
+**     Date/Time   : 2013-07-01, 10:06, # CodeGen: 0
 **     Abstract    :
 **         Main module.
 **         This module contains user's application code.
@@ -30,6 +30,7 @@
 /* Including needed modules to compile this module/procedure */
 #include "Cpu.h"
 #include "Events.h"
+#include "WAIT1.h"
 #include "LEDR.h"
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"
@@ -39,13 +40,10 @@
 #include "LEDB.h"
 #include "LEDpin3.h"
 #include "BitIoLdd3.h"
-#include "WAIT1.h"
 #include "USB1.h"
 #include "USB0.h"
 #include "HIDK1.h"
 #include "Tx2.h"
-#include "SW1.h"
-#include "BitIoLdd4.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -66,7 +64,7 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   APP_Run();
-
+  
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
   #ifdef PEX_RTOS_START
@@ -85,7 +83,7 @@ int main(void)
 /*
 ** ###################################################################
 **
-**     This file was created by Processor Expert 10.2 [05.06]
+**     This file was created by Processor Expert 10.2 [05.07]
 **     for the Freescale Kinetis series of microcontrollers.
 **
 ** ###################################################################
