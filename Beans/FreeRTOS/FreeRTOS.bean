@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.217</Version>
+    <Version>01.229</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -18,7 +18,7 @@
     <BW_AutoSaveDriver>yes</BW_AutoSaveDriver>
     <BW_DetailedHelp>yes</BW_DetailedHelp>
     <BW_NeedTps>yes</BW_NeedTps>
-    <BW_NeedUst>9</BW_NeedUst>
+    <BW_NeedUst>11</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
     <Copyright>License : Open Source (LGPL)\nFreeRTOS (c) Copyright 2003-2012 Richard Barry, http: www.FreeRTOS.org\nFreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013\nProcessor Expert and CodeWarrior (c) Copyright Freescale Semiconductor, 2013, all rights reserved\nThis is a free software and is opened for education, research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
@@ -63,7 +63,7 @@
         <Hint>Identifies the RTOS version</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>true</EditLine>
-        <DefaultValue>V7.2.0</DefaultValue>
+        <DefaultValue>V7.4.2</DefaultValue>
         <StrDefine>nothing</StrDefine>
         <MinLength>0</MinLength>
         <MaxLength>-1</MaxLength>
@@ -2005,6 +2005,34 @@ This function must not be called while the scheduler has been suspended by a cal
     </Method>
     <Method>
       <TMthdItem>
+        <Name>xTaskGetTickCountFromISR</Name>
+        <Symbol>xTaskGetTickCountFromISR</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>A version of xTaskGetTickCount() that can be called from an ISR. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>portTickType</ReturnType>
+        <RetHint>The count of ticks since vTaskStartScheduler was called. </RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>portTickType #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
         <Name>xSemaphoreCreateRecursiveMutex</Name>
         <Symbol>xSemaphoreCreateRecursiveMutex</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
@@ -2483,50 +2511,6 @@ This macro can be used from an ISR, however taking a semaphore from an ISR is no
     </Method>
     <Method>
       <TMthdItem>
-        <Name>vTaskList</Name>
-        <Symbol>vTaskList</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>configUSE_TRACE_FACILITY, INCLUDE_vTaskDelete and INCLUDE_vTaskSuspend must all be defined as 1 for this function to be available. See the configuration section for more information.\n
-NOTE: This function will disable interrupts for its duration.  It is not intended for normal application runtime use but as a debug aid. Lists all the current tasks, along with their current state and stack usage high water mark.\n
-Tasks are reported as blocked ('B'), ready ('R'), deleted ('D') or suspended ('S').</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>void</ReturnType>
-        <RetHint>none</RetHint>
-        <ParamCount>2</ParamCount>
-        <Parameter>
-          <ParName>pcWriteBuffer</ParName>
-          <ParType>8bit signed</ParType>
-          <ParPassing>Address</ParPassing>
-          <ParHint>Pointer to buffer. A buffer into which the above mentioned details will be written, in ascii form.  This buffer is assumed to be large enough to contain the generated report.  Approximately 40 bytes per task should be sufficient.</ParHint>
-          <ParUserDeclaration>signed portCHAR *pcWriteBuffer</ParUserDeclaration>
-        </Parameter>
-        <Parameter>
-          <ParName>bufSize</ParName>
-          <ParType>uint16_t</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>size of buffer</ParHint>
-          <ParUserDeclaration>size_t bufSize</ParUserDeclaration>
-        </Parameter>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>void #M#_#C#(signed portCHAR *pcWriteBuffer, size_t bufSize)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
         <Name>pvPortMalloc</Name>
         <Symbol>pvPortMalloc</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
@@ -2597,6 +2581,232 @@ Tasks are reported as blocked ('B'), ready ('R'), deleted ('D') or suspended ('S
     </Method>
     <Method>
       <TMthdItem>
+        <Name>xPortGetFreeHeapSize</Name>
+        <Symbol>xPortGetFreeHeapSize</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Returns the actual free size of the heap</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>Tsize_t</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>Tsize_t #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>vTaskSetApplicationTaskTag</Name>
+        <Symbol>vTaskSetApplicationTaskTag</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>A 'tag' value can be assigned to each task. This value is for the use of the application only - the RTOS kernel itself does not make use of it in any way.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>false</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>xTask</ParName>
+          <ParType>xTaskHandle</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The handle of the task to which a tag value is being assigned. Passing xTask as NULL causes the tag to be assigned to the calling task.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>pxTagValue</ParName>
+          <ParType>pdTASK_HOOK_CODE</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The value being assigned to the task tag. This is of type pdTASK_HOOK_CODE to permit a function pointer to be assigned as the tag, although any value can actually be assigned. See the example below.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(xTaskHandle xTask, pdTASK_HOOK_CODE pxTagValue)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xTaskGetApplicationTaskTag</Name>
+        <Symbol>xTaskGetApplicationTaskTag</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Returns the ‘tag’ value associated with a task. The meaning and use of the tag value is defined by the application writer. The RTOS kernel itself will not normally access the tag value. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>false</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>pdTASK_HOOK_CODE</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>xTask</ParName>
+          <ParType>xTaskHandle</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The handle of the task being queried. A task can query its own tag value by using NULL as the parameter value.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>pdTASK_HOOK_CODE #M#_#C#(xTaskHandle xTask)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xTaskGetCurrentTaskHandle</Name>
+        <Symbol>xTaskGetCurrentTaskHandle</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>The handle of the currently running (calling) task.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>false</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>xTaskHandle</ReturnType>
+        <RetHint>The handle of the currently running (calling) task.</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>xTaskHandle #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xTaskGetIdleTaskHandle</Name>
+        <Symbol>xTaskGetIdleTaskHandle</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>The task handle associated with the Idle task. The Idle task is created automatically when the RTOS scheduler is started.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>false</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>xTaskHandle</ReturnType>
+        <RetHint>The task handle associated with the Idle task. The Idle task is created automatically when the RTOS scheduler is started.</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>xTaskHandle #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>pcTaskGetTaskName</Name>
+        <Symbol>pcTaskGetTaskName</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Returns the name of the task.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>false</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit signed</ReturnType>
+        <RetHint>A pointer to the subject tasks name, which is a standard NULL terminated C string</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>xTaskToQuery</ParName>
+          <ParType>xTaskHandle</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The handle of the task being queried. xTaskToQuery can be set to NULL to query the name of the calling task.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>signed char #M#_#C#(xTaskHandle xTaskToQuery)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>eTaskGetState</Name>
+        <Symbol>eTaskGetState</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Returns as an enumerated type the state in which a task existed at the time eTaskGetState() was executed. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>false</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>eTaskState</ReturnType>
+        <RetHint>task state (eReady, eRunning, eBlocked, eSuspended, eDeleted)</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>xTask</ParName>
+          <ParType>xTaskHandle</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The handle of the subject task (the task being queried).</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>eTaskState #M#_#C#(xTaskHandle xTask)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
         <Name>xTaskGetSchedulerState</Name>
         <Symbol>xTaskGetSchedulerState</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
@@ -2620,6 +2830,50 @@ Tasks are reported as blocked ('B'), ready ('R'), deleted ('D') or suspended ('S
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>portBASE_TYPE #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>vTaskList</Name>
+        <Symbol>vTaskList</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>configUSE_TRACE_FACILITY, INCLUDE_vTaskDelete and INCLUDE_vTaskSuspend must all be defined as 1 for this function to be available. See the configuration section for more information.\n
+NOTE: This function will disable interrupts for its duration.  It is not intended for normal application runtime use but as a debug aid. Lists all the current tasks, along with their current state and stack usage high water mark.\n
+Tasks are reported as blocked ('B'), ready ('R'), deleted ('D') or suspended ('S').</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>pcWriteBuffer</ParName>
+          <ParType>8bit signed</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to buffer. A buffer into which the above mentioned details will be written, in ascii form.  This buffer is assumed to be large enough to contain the generated report.  Approximately 40 bytes per task should be sufficient.</ParHint>
+          <ParUserDeclaration>signed portCHAR *pcWriteBuffer</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>bufSize</ParName>
+          <ParType>uint16_t</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>size of buffer</ParHint>
+          <ParUserDeclaration>size_t bufSize</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(signed portCHAR *pcWriteBuffer, size_t bufSize)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2726,34 +2980,6 @@ Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total accumulated ex
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>void #M#_#C#(portCHAR *pcWriteBuffer, size_t bufSize)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>xPortGetFreeHeapSize</Name>
-        <Symbol>xPortGetFreeHeapSize</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Returns the actual free size of the heap</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>Tsize_t</ReturnType>
-        <RetHint>Error code</RetHint>
-        <ParamCount>0</ParamCount>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>Tsize_t #M#_#C#(void)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

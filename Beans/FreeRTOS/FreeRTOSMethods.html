@@ -405,6 +405,17 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="xTaskGetTickCountFromISR">
+<b>xTaskGetTickCountFromISR</b></a>
+ - A version of xTaskGetTickCount() that can be called from an ISR. 
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> portTickType xTaskGetTickCountFromISR(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:portTickType</i> - The count of ticks since vTaskStartScheduler was called. 
+</li>
+</ul><br />
+</li>
 <li><a name="xSemaphoreCreateRecursiveMutex">
 <b>xSemaphoreCreateRecursiveMutex</b></a>
  - Macro that implements a recursive mutex by using the existing queue mechanism.<br />Mutexes created using this macro can be accessed using the xSemaphoreTakeRecursive() and xSemaphoreGiveRecursive() macros.  The  xSemaphoreTake() and xSemaphoreGive() macros should not be used.<br />A mutex used recursively can be 'taken' repeatedly by the owner. The mutex doesn't become available again until the owner has called xSemaphoreGiveRecursive() for each successful 'take' request.  For example, if a task successfully 'takes' the same mutex 5 times then the mutex will not be available to any other task until it has also  'given' the mutex back exactly five times.<br />This type of semaphore uses a priority inheritance mechanism so a task 'taking' a semaphore MUST ALWAYS 'give' the semaphore back once the semaphore it is no longer required. Mutex type semaphores cannot be used from within interrupt service routines.<br />See vSemaphoreCreateBinary() for an alternative implementation that can be used for pure synchronisation (where one task or interrupt always 'gives' the semaphore and another always 'takes' the semaphore) and from within interrupt service routines.
@@ -548,17 +559,6 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
-<li><a name="vTaskList">
-<b>vTaskList</b></a>
- - configUSE_TRACE_FACILITY, INCLUDE_vTaskDelete and INCLUDE_vTaskSuspend must all be defined as 1 for this function to be available. See the configuration section for more information.<br />NOTE: This function will disable interrupts for its duration.  It is not intended for normal application runtime use but as a debug aid. Lists all the current tasks, along with their current state and stack usage high water mark.<br />Tasks are reported as blocked ('B'), ready ('R'), deleted ('D') or suspended ('S').
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void vTaskList(signed portCHAR *pcWriteBuffer, size_t bufSize)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>pcWriteBuffer: Pointer to signed char</i> - Pointer to buffer. A buffer into which the above mentioned details will be written, in ascii form.  This buffer is assumed to be large enough to contain the generated report.  Approximately 40 bytes per task should be sufficient.</li>
-<li><i>bufSize:uint16_t</i> - size of buffer</li>
-</ul><br />
-</li>
 <li><a name="pvPortMalloc">
 <b>pvPortMalloc</b></a>
  - Allocates a memory block using the port pvPortMalloc() function
@@ -581,6 +581,86 @@ LI.EXP {
 <li><i>pv: Pointer to bool</i> - Pointer to data</li>
 </ul><br />
 </li>
+<li><a name="xPortGetFreeHeapSize">
+<b>xPortGetFreeHeapSize</b></a>
+ - Returns the actual free size of the heap
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> Tsize_t xPortGetFreeHeapSize(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:Tsize_t</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="vTaskSetApplicationTaskTag">
+<b>vTaskSetApplicationTaskTag</b></a>
+ - A 'tag' value can be assigned to each task. This value is for the use of the application only - the RTOS kernel itself does not make use of it in any way.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void vTaskSetApplicationTaskTag(xTaskHandle xTask, pdTASK_HOOK_CODE pxTagValue)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xTask:xTaskHandle</i> - The handle of the task to which a tag value is being assigned. Passing xTask as NULL causes the tag to be assigned to the calling task.</li>
+<li><i>pxTagValue:pdTASK_HOOK_CODE</i> - The value being assigned to the task tag. This is of type pdTASK_HOOK_CODE to permit a function pointer to be assigned as the tag, although any value can actually be assigned. See the example below.</li>
+</ul><br />
+</li>
+<li><a name="xTaskGetApplicationTaskTag">
+<b>xTaskGetApplicationTaskTag</b></a>
+ - Returns the ‘tag’ value associated with a task. The meaning and use of the tag value is defined by the application writer. The RTOS kernel itself will not normally access the tag value. 
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> pdTASK_HOOK_CODE xTaskGetApplicationTaskTag(xTaskHandle xTask)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xTask:xTaskHandle</i> - The handle of the task being queried. A task can query its own tag value by using NULL as the parameter value.</li>
+<li><i>Return value:pdTASK_HOOK_CODE</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="xTaskGetCurrentTaskHandle">
+<b>xTaskGetCurrentTaskHandle</b></a>
+ - The handle of the currently running (calling) task.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> xTaskHandle xTaskGetCurrentTaskHandle(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:xTaskHandle</i> - The handle of the currently running (calling) task.
+</li>
+</ul><br />
+</li>
+<li><a name="xTaskGetIdleTaskHandle">
+<b>xTaskGetIdleTaskHandle</b></a>
+ - The task handle associated with the Idle task. The Idle task is created automatically when the RTOS scheduler is started.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> xTaskHandle xTaskGetIdleTaskHandle(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:xTaskHandle</i> - The task handle associated with the Idle task. The Idle task is created automatically when the RTOS scheduler is started.
+</li>
+</ul><br />
+</li>
+<li><a name="pcTaskGetTaskName">
+<b>pcTaskGetTaskName</b></a>
+ - Returns the name of the task.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> signed char pcTaskGetTaskName(xTaskHandle xTaskToQuery)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xTaskToQuery:xTaskHandle</i> - The handle of the task being queried. xTaskToQuery can be set to NULL to query the name of the calling task.</li>
+<li><i>Return value:signed char</i> - A pointer to the subject tasks name, which is a standard NULL terminated C string
+</li>
+</ul><br />
+</li>
+<li><a name="eTaskGetState">
+<b>eTaskGetState</b></a>
+ - Returns as an enumerated type the state in which a task existed at the time eTaskGetState() was executed. 
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> eTaskState eTaskGetState(xTaskHandle xTask)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xTask:xTaskHandle</i> - The handle of the subject task (the task being queried).</li>
+<li><i>Return value:eTaskState</i> - task state (eReady, eRunning, eBlocked, eSuspended, eDeleted)
+</li>
+</ul><br />
+</li>
 <li><a name="xTaskGetSchedulerState">
 <b>xTaskGetSchedulerState</b></a>
  - Returns the state of the scheduler
@@ -590,6 +670,17 @@ LI.EXP {
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>Return value:portBASE_TYPE</i> - One of the following constants (defined within task.h): taskSCHEDULER_NOT_STARTED, taskSCHEDULER_RUNNING, taskSCHEDULER_SUSPENDED.
 </li>
+</ul><br />
+</li>
+<li><a name="vTaskList">
+<b>vTaskList</b></a>
+ - configUSE_TRACE_FACILITY, INCLUDE_vTaskDelete and INCLUDE_vTaskSuspend must all be defined as 1 for this function to be available. See the configuration section for more information.<br />NOTE: This function will disable interrupts for its duration.  It is not intended for normal application runtime use but as a debug aid. Lists all the current tasks, along with their current state and stack usage high water mark.<br />Tasks are reported as blocked ('B'), ready ('R'), deleted ('D') or suspended ('S').
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void vTaskList(signed portCHAR *pcWriteBuffer, size_t bufSize)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>pcWriteBuffer: Pointer to signed char</i> - Pointer to buffer. A buffer into which the above mentioned details will be written, in ascii form.  This buffer is assumed to be large enough to contain the generated report.  Approximately 40 bytes per task should be sufficient.</li>
+<li><i>bufSize:uint16_t</i> - size of buffer</li>
 </ul><br />
 </li>
 <li><a name="uxTaskGetStackHighWaterMark">
@@ -624,17 +715,6 @@ LI.EXP {
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>pcWriteBuffer:byte</i> - A buffer into which the execution times will be written, in ascii form. This buffer is assumed to be large enough to contain the generated report. Approximately 40 bytes per task should be sufficient. </li>
 <li><i>bufSize:word</i> - size of buffer</li>
-</ul><br />
-</li>
-<li><a name="xPortGetFreeHeapSize">
-<b>xPortGetFreeHeapSize</b></a>
- - Returns the actual free size of the heap
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> Tsize_t xPortGetFreeHeapSize(void)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>Return value:Tsize_t</i> - Error code
-</li>
 </ul><br />
 </li>
 <li><a name="xQueueCreate">
