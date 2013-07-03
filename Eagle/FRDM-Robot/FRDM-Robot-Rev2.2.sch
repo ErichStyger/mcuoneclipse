@@ -12146,11 +12146,11 @@ Knitter-Switch MFP 106 D
 <part name="C9" library="rcl" deviceset="C-EU" device="C0805" value="100nF"/>
 <part name="C10" library="rcl" deviceset="C-EU" device="C0805" value="100nF"/>
 <part name="+3V2" library="supply1" deviceset="+3V3" device=""/>
-<part name="C11" library="rcl" deviceset="C-EU" device="C0805" value="47uF"/>
+<part name="C11" library="rcl" deviceset="C-EU" device="C0805" value="10uF"/>
 <part name="GND11" library="supply1" deviceset="GND" device=""/>
-<part name="C12" library="rcl" deviceset="C-EU" device="C0805" value="47uF"/>
-<part name="C13" library="rcl" deviceset="C-EU" device="C0805" value="47uF"/>
-<part name="C14" library="rcl" deviceset="C-EU" device="C0805" value="47uF"/>
+<part name="C12" library="rcl" deviceset="C-EU" device="C0805" value="10uF"/>
+<part name="C13" library="rcl" deviceset="C-EU" device="C0805" value="10uF"/>
+<part name="C14" library="rcl" deviceset="C-EU" device="C0805" value="10uF"/>
 <part name="VDD3" library="supply1" deviceset="VDD" device=""/>
 <part name="L5" library="led" deviceset="LED" device="CHIP-LED0603"/>
 <part name="L33" library="led" deviceset="LED" device="CHIP-LED0603"/>
@@ -12161,7 +12161,6 @@ Knitter-Switch MFP 106 D
 <part name="GND13" library="supply1" deviceset="GND" device=""/>
 <part name="R4" library="resistor" deviceset="R-EU_" device="M0805" value="330"/>
 <part name="+3V5" library="supply1" deviceset="+3V3" device=""/>
-<part name="P+4" library="supply1" deviceset="+5V" device=""/>
 <part name="BT" library="con-lsta-FRDM" deviceset="FE06-1" device=""/>
 <part name="R5" library="resistor" deviceset="R-EU_" device="M0805" value="470"/>
 <part name="FRAME1" library="frames" deviceset="A3L-LOC" device=""/>
@@ -12170,15 +12169,14 @@ Knitter-Switch MFP 106 D
 <part name="VDD" library="con-lsta-FRDM" deviceset="FE03-1" device=""/>
 <part name="P+6" library="supply1" deviceset="+5V" device=""/>
 <part name="VDD2" library="supply1" deviceset="VDD" device=""/>
-<part name="C15" library="rcl" deviceset="C-EU" device="C0805" value="47uF"/>
-<part name="C16" library="rcl" deviceset="C-EU" device="C0805" value="47uF"/>
+<part name="C15" library="rcl" deviceset="C-EU" device="C0805" value="10uF"/>
+<part name="C16" library="rcl" deviceset="C-EU" device="C0805" value="10uF"/>
 <part name="GND8" library="supply1" deviceset="GND" device=""/>
 <part name="LBAT" library="led" deviceset="LED" device="CHIP-LED0603"/>
 <part name="R6" library="resistor" deviceset="R-EU_" device="M0805" value="2k2"/>
 <part name="GND15" library="supply1" deviceset="GND" device=""/>
 <part name="VDD4" library="supply1" deviceset="VDD" device=""/>
 <part name="D1" library="diode" deviceset="DIODE-" device="SOD123"/>
-<part name="SJ1" library="jumper" deviceset="SJ2W" device=""/>
 <part name="SJ2" library="jumper" deviceset="SJ2W" device=""/>
 <part name="GND16" library="supply1" deviceset="GND" device=""/>
 <part name="SUPPLY1" library="supply2" deviceset="V+" device="" value="VBAT"/>
@@ -12191,6 +12189,7 @@ Knitter-Switch MFP 106 D
 <part name="MOTOR_LEFT" library="con-phoenix-254-FRDM" deviceset="MPT2" device=""/>
 <part name="SJ3" library="jumper" deviceset="SJ2W" device=""/>
 <part name="SUPPLY2" library="supply2" deviceset="V+" device="" value="VBAT"/>
+<part name="R7" library="resistor" deviceset="R-EU_" device="M0805" value="10M"/>
 </parts>
 <sheets>
 <sheet>
@@ -12207,7 +12206,7 @@ DRV8835</text>
 QTR-8RC</text>
 <text x="264.16" y="53.34" size="1.778" layer="97" rot="MR0">Voltage Regulator
 S7V7F5</text>
-<text x="327.66" y="157.48" size="1.778" layer="97" rot="R90">HC-05 Bluetooth Module</text>
+<text x="327.66" y="162.56" size="1.778" layer="97" rot="R90">HC-05 Bluetooth Module</text>
 <text x="182.88" y="22.86" size="1.778" layer="97" rot="MR90">Reverse
 Protection FET
 IRF9321PbF</text>
@@ -12242,7 +12241,7 @@ Pin BPHASE
 Function: direction i.e. 1 or 0</text>
 <text x="330.2" y="35.56" size="1.778" layer="97" rot="R90">Reverse Protection
 Diode</text>
-<text x="106.68" y="114.3" size="1.778" layer="95">VIN Pin
+<text x="83.82" y="101.6" size="1.778" layer="95">VIN Pin
 min. 5V!
 max. 9V!</text>
 <text x="243.84" y="60.96" size="1.778" layer="95" rot="MR0">VDD 8V
@@ -12276,9 +12275,8 @@ MinIMU-9 v2</text>
 <text x="281.94" y="33.02" size="1.778" layer="97" rot="R90">Yellow</text>
 <text x="294.64" y="33.02" size="1.778" layer="97" rot="R90">Green</text>
 <text x="307.34" y="33.02" size="1.778" layer="97" rot="R90">Blue</text>
-<text x="347.98" y="193.04" size="1.778" layer="97">Default: +3V3</text>
 <text x="182.88" y="213.36" size="1.778" layer="97">Default: +3V3</text>
-<text x="106.68" y="124.46" size="1.778" layer="97">Default: VDD</text>
+<text x="83.82" y="111.76" size="1.778" layer="97">Default: VDD</text>
 </plain>
 <instances>
 <instance part="FRDM1" gate="G$1" x="190.5" y="142.24"/>
@@ -12330,9 +12328,8 @@ MinIMU-9 v2</text>
 <instance part="+3V4" gate="G$1" x="287.02" y="63.5"/>
 <instance part="GND13" gate="1" x="287.02" y="33.02"/>
 <instance part="R4" gate="G$1" x="287.02" y="53.34" rot="R90"/>
-<instance part="+3V5" gate="G$1" x="347.98" y="190.5"/>
-<instance part="P+4" gate="1" x="363.22" y="190.5" rot="MR0"/>
-<instance part="BT" gate="G$1" x="335.28" y="170.18"/>
+<instance part="+3V5" gate="G$1" x="355.6" y="190.5"/>
+<instance part="BT" gate="G$1" x="335.28" y="175.26"/>
 <instance part="R5" gate="G$1" x="195.58" y="27.94" rot="MR90"/>
 <instance part="FRAME1" gate="G$1" x="0" y="0"/>
 <instance part="SW" gate="1" x="172.72" y="48.26" rot="R270"/>
@@ -12348,7 +12345,6 @@ MinIMU-9 v2</text>
 <instance part="GND15" gate="1" x="312.42" y="33.02"/>
 <instance part="VDD4" gate="G$1" x="312.42" y="68.58"/>
 <instance part="D1" gate="G$1" x="322.58" y="43.18" rot="R90"/>
-<instance part="SJ1" gate="G$1" x="355.6" y="185.42" rot="R90"/>
 <instance part="SJ2" gate="G$1" x="180.34" y="215.9" rot="R180"/>
 <instance part="GND16" gate="1" x="88.9" y="38.1"/>
 <instance part="SUPPLY1" gate="1" x="208.28" y="53.34" rot="MR0"/>
@@ -12357,13 +12353,14 @@ MinIMU-9 v2</text>
 <instance part="BAT" gate="-1" x="147.32" y="30.48" rot="MR0"/>
 <instance part="BAT" gate="-2" x="147.32" y="25.4" rot="MR0"/>
 <instance part="P+1" gate="1" x="124.46" y="152.4"/>
-<instance part="VDD5" gate="G$1" x="129.54" y="132.08"/>
+<instance part="VDD5" gate="G$1" x="106.68" y="132.08"/>
 <instance part="MOTOR_RIGHT" gate="-1" x="271.78" y="215.9"/>
 <instance part="MOTOR_RIGHT" gate="-2" x="271.78" y="223.52"/>
 <instance part="MOTOR_LEFT" gate="-1" x="271.78" y="228.6"/>
 <instance part="MOTOR_LEFT" gate="-2" x="271.78" y="236.22"/>
-<instance part="SJ3" gate="G$1" x="129.54" y="124.46" rot="R180"/>
-<instance part="SUPPLY2" gate="1" x="121.92" y="116.84"/>
+<instance part="SJ3" gate="G$1" x="106.68" y="111.76" rot="R180"/>
+<instance part="SUPPLY2" gate="1" x="99.06" y="104.14"/>
+<instance part="R7" gate="G$1" x="106.68" y="121.92" rot="R90"/>
 </instances>
 <busses>
 </busses>
@@ -12472,8 +12469,8 @@ MinIMU-9 v2</text>
 <pinref part="GND16" gate="1" pin="GND"/>
 </segment>
 <segment>
-<wire x1="342.9" y1="172.72" x2="355.6" y2="172.72" width="0.1524" layer="91"/>
-<label x="345.44" y="172.72" size="1.778" layer="95"/>
+<wire x1="342.9" y1="177.8" x2="355.6" y2="177.8" width="0.1524" layer="91"/>
+<label x="345.44" y="177.8" size="1.778" layer="95"/>
 <pinref part="BT" gate="G$1" pin="4"/>
 </segment>
 <segment>
@@ -12630,16 +12627,15 @@ MinIMU-9 v2</text>
 <wire x1="269.24" y1="40.64" x2="256.54" y2="40.64" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="P+4" gate="1" pin="+5V"/>
-<wire x1="363.22" y1="187.96" x2="363.22" y2="185.42" width="0.1524" layer="91"/>
-<pinref part="SJ1" gate="G$1" pin="3"/>
-<wire x1="363.22" y1="185.42" x2="360.68" y2="185.42" width="0.1524" layer="91"/>
-</segment>
-<segment>
 <pinref part="P+1" gate="1" pin="+5V"/>
 <wire x1="124.46" y1="149.86" x2="124.46" y2="147.32" width="0.1524" layer="91"/>
 <pinref part="FRDM1" gate="G$1" pin="5V"/>
 <wire x1="124.46" y1="147.32" x2="137.16" y2="147.32" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="SENS" gate="G$1" pin="1"/>
+<wire x1="25.4" y1="111.76" x2="33.02" y2="111.76" width="0.1524" layer="91"/>
+<label x="25.4" y="111.76" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="ECHO" class="0">
@@ -12828,11 +12824,6 @@ MinIMU-9 v2</text>
 <label x="30.48" y="142.24" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="SENS" gate="G$1" pin="1"/>
-<wire x1="25.4" y1="111.76" x2="33.02" y2="111.76" width="0.1524" layer="91"/>
-<label x="25.4" y="111.76" size="1.778" layer="95"/>
-</segment>
-<segment>
 <pinref part="+3V3" gate="G$1" pin="+3V3"/>
 <wire x1="180.34" y1="238.76" x2="180.34" y2="233.68" width="0.1524" layer="91"/>
 <pinref part="DRV" gate="G$1" pin="2"/>
@@ -12871,9 +12862,7 @@ MinIMU-9 v2</text>
 </segment>
 <segment>
 <pinref part="+3V5" gate="G$1" pin="+3V3"/>
-<wire x1="347.98" y1="187.96" x2="347.98" y2="185.42" width="0.1524" layer="91"/>
-<pinref part="SJ1" gate="G$1" pin="1"/>
-<wire x1="347.98" y1="185.42" x2="350.52" y2="185.42" width="0.1524" layer="91"/>
+<wire x1="355.6" y1="187.96" x2="355.6" y2="185.42" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="FRDM1" gate="G$1" pin="3V3"/>
@@ -13025,7 +13014,8 @@ MinIMU-9 v2</text>
 </segment>
 <segment>
 <pinref part="VDD5" gate="G$1" pin="VDD"/>
-<pinref part="SJ3" gate="G$1" pin="3"/>
+<pinref part="R7" gate="G$1" pin="2"/>
+<wire x1="106.68" y1="127" x2="106.68" y2="129.54" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="IR_LED_ON" class="0">
@@ -13158,15 +13148,17 @@ MinIMU-9 v2</text>
 </net>
 <net name="BTTX" class="0">
 <segment>
-<wire x1="342.9" y1="170.18" x2="360.68" y2="170.18" width="0.1524" layer="91"/>
-<label x="345.44" y="170.18" size="1.778" layer="95"/>
-<label x="360.68" y="170.18" size="1.778" layer="95" xref="yes"/>
-<pinref part="BT" gate="G$1" pin="3"/>
-</segment>
-<segment>
 <pinref part="FRDM1" gate="G$1" pin="PTC4"/>
 <wire x1="208.28" y1="109.22" x2="205.74" y2="109.22" width="0.1524" layer="91"/>
 <label x="205.74" y="109.22" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<pinref part="BT" gate="G$1" pin="2"/>
+<wire x1="342.9" y1="172.72" x2="358.14" y2="172.72" width="0.1524" layer="91"/>
+<wire x1="358.14" y1="172.72" x2="358.14" y2="170.18" width="0.1524" layer="91"/>
+<wire x1="358.14" y1="170.18" x2="360.68" y2="170.18" width="0.1524" layer="91"/>
+<label x="360.68" y="170.18" size="1.778" layer="95" xref="yes"/>
+<label x="345.44" y="172.72" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="MODE" class="0">
@@ -13201,11 +13193,10 @@ MinIMU-9 v2</text>
 </net>
 <net name="VCC" class="0">
 <segment>
-<wire x1="342.9" y1="175.26" x2="355.6" y2="175.26" width="0.1524" layer="91"/>
-<wire x1="355.6" y1="175.26" x2="355.6" y2="180.34" width="0.1524" layer="91"/>
-<label x="345.44" y="175.26" size="1.778" layer="95"/>
+<wire x1="342.9" y1="180.34" x2="355.6" y2="180.34" width="0.1524" layer="91"/>
+<wire x1="355.6" y1="180.34" x2="355.6" y2="185.42" width="0.1524" layer="91"/>
+<label x="345.44" y="180.34" size="1.778" layer="95"/>
 <pinref part="BT" gate="G$1" pin="5"/>
-<pinref part="SJ1" gate="G$1" pin="2"/>
 </segment>
 </net>
 <net name="STATE" class="0">
@@ -13216,11 +13207,11 @@ MinIMU-9 v2</text>
 </segment>
 <segment>
 <pinref part="BT" gate="G$1" pin="1"/>
-<wire x1="342.9" y1="165.1" x2="355.6" y2="165.1" width="0.1524" layer="91"/>
-<label x="345.44" y="165.1" size="1.778" layer="95"/>
-<label x="360.68" y="160.02" size="1.778" layer="95" xref="yes"/>
-<wire x1="355.6" y1="165.1" x2="355.6" y2="160.02" width="0.1524" layer="91"/>
-<wire x1="355.6" y1="160.02" x2="360.68" y2="160.02" width="0.1524" layer="91"/>
+<wire x1="342.9" y1="170.18" x2="355.6" y2="170.18" width="0.1524" layer="91"/>
+<label x="345.44" y="170.18" size="1.778" layer="95"/>
+<label x="360.68" y="165.1" size="1.778" layer="95" xref="yes"/>
+<wire x1="355.6" y1="170.18" x2="355.6" y2="165.1" width="0.1524" layer="91"/>
+<wire x1="355.6" y1="165.1" x2="360.68" y2="165.1" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="KEY" class="0">
@@ -13231,24 +13222,22 @@ MinIMU-9 v2</text>
 </segment>
 <segment>
 <pinref part="BT" gate="G$1" pin="6"/>
-<wire x1="342.9" y1="177.8" x2="360.68" y2="177.8" width="0.1524" layer="91"/>
-<label x="345.44" y="177.8" size="1.778" layer="95"/>
-<label x="360.68" y="177.8" size="1.778" layer="95" xref="yes"/>
+<wire x1="342.9" y1="182.88" x2="360.68" y2="182.88" width="0.1524" layer="91"/>
+<label x="345.44" y="182.88" size="1.778" layer="95"/>
+<label x="360.68" y="182.88" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="BTRX" class="0">
 <segment>
-<wire x1="342.9" y1="167.64" x2="358.14" y2="167.64" width="0.1524" layer="91"/>
-<label x="345.44" y="167.64" size="1.778" layer="95"/>
-<label x="360.68" y="165.1" size="1.778" layer="95" xref="yes"/>
-<wire x1="358.14" y1="167.64" x2="358.14" y2="165.1" width="0.1524" layer="91"/>
-<wire x1="358.14" y1="165.1" x2="360.68" y2="165.1" width="0.1524" layer="91"/>
-<pinref part="BT" gate="G$1" pin="2"/>
-</segment>
-<segment>
 <pinref part="FRDM1" gate="G$1" pin="PTC3"/>
 <wire x1="208.28" y1="104.14" x2="205.74" y2="104.14" width="0.1524" layer="91"/>
 <label x="205.74" y="104.14" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<pinref part="BT" gate="G$1" pin="3"/>
+<wire x1="342.9" y1="175.26" x2="360.68" y2="175.26" width="0.1524" layer="91"/>
+<label x="345.44" y="175.26" size="1.778" layer="95"/>
+<label x="360.68" y="175.26" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="BPWM" class="0">
@@ -13295,8 +13284,8 @@ MinIMU-9 v2</text>
 </segment>
 <segment>
 <pinref part="SJ3" gate="G$1" pin="1"/>
-<wire x1="129.54" y1="119.38" x2="129.54" y2="114.3" width="0.1524" layer="91"/>
-<wire x1="129.54" y1="114.3" x2="121.92" y2="114.3" width="0.1524" layer="91"/>
+<wire x1="106.68" y1="106.68" x2="106.68" y2="101.6" width="0.1524" layer="91"/>
+<wire x1="106.68" y1="101.6" x2="99.06" y2="101.6" width="0.1524" layer="91"/>
 <pinref part="SUPPLY2" gate="1" pin="V+"/>
 </segment>
 </net>
@@ -13345,9 +13334,16 @@ MinIMU-9 v2</text>
 <net name="VIN" class="0">
 <segment>
 <pinref part="FRDM1" gate="G$1" pin="VIN"/>
-<wire x1="137.16" y1="132.08" x2="134.62" y2="132.08" width="0.1524" layer="91"/>
+<wire x1="137.16" y1="132.08" x2="129.54" y2="132.08" width="0.1524" layer="91"/>
+<wire x1="129.54" y1="132.08" x2="129.54" y2="111.76" width="0.1524" layer="91"/>
 <pinref part="SJ3" gate="G$1" pin="2"/>
-<wire x1="134.62" y1="124.46" x2="134.62" y2="132.08" width="0.1524" layer="91"/>
+<wire x1="129.54" y1="111.76" x2="111.76" y2="111.76" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$2" class="0">
+<segment>
+<pinref part="R7" gate="G$1" pin="1"/>
+<pinref part="SJ3" gate="G$1" pin="3"/>
 </segment>
 </net>
 </nets>
