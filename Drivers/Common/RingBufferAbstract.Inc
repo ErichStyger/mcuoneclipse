@@ -1,1 +1,1 @@
-%;**                                                             %>12This component implements a ring buffer for 16bit data type.
+%;**                                                             %>12This component implements a ring buffer for different integer data type.

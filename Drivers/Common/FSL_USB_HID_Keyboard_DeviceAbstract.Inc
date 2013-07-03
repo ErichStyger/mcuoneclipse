@@ -1,2 +1,1 @@
-%;**%>12
-Implements the HID Keyboard USB device class.
+%;**                                                             %>12Implements the HID Keyboard USB device class.
