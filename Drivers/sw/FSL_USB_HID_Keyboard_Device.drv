@@ -667,6 +667,12 @@ byte %'ModuleName'%.%App_Task(void)
 {
   uint16_t hidCode; /* upper 8bits are modifier, lower 8bits are hid code value */
 
+  /* device is %CPUDevice */
+%if (CPUDevice="MC9S08JE128") | (CPUDevice="MC9S08JM16") | (CPUDevice="MC9S08JM60") | (CPUDevice="MC9S08JS16") | (CPUDevice="MC9S08MM128")
+  if (USB_PROCESS_PENDING()) { /* doing this only for MC9S08JE128, MC9S08JM16, MC9S08JM60, MC9S08JS16 and MC9S08MM128 */
+    USB_Engine();
+  }
+%endif
   USB_Class_HID_Periodic_Task(); /* call the periodic task function */
   if (!keyboard_init) {
     return ERR_BUSOFF; /* USB bus not available yet */
