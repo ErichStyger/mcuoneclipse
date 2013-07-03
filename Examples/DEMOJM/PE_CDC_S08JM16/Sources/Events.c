@@ -22,6 +22,24 @@
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
 
+/*
+** ===================================================================
+**     Event       :  HIDK1_OnEvent (module Events)
+**
+**     Component   :  HIDK1 [FSL_USB_HID_Keyboard_Device]
+**     Description :
+**         Hook called in case of an error
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         error           - Error or event code
+**     Returns     : Nothing
+** ===================================================================
+*/
+void HIDK1_OnEvent(byte error)
+{
+  /* Write your code here ... */
+}
+
 /* END Events */
 
 /*

@@ -35,6 +35,21 @@
 #include "WAIT1.h"
 
 
+void HIDK1_OnEvent(byte error);
+/*
+** ===================================================================
+**     Event       :  HIDK1_OnEvent (module Events)
+**
+**     Component   :  HIDK1 [FSL_USB_HID_Keyboard_Device]
+**     Description :
+**         Hook called in case of an error
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         error           - Error or event code
+**     Returns     : Nothing
+** ===================================================================
+*/
+
 /* END Events */
 #endif /* __Events_H*/
 
