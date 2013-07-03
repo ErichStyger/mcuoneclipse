@@ -862,6 +862,80 @@ void %'ModuleName'%.%Init(void);
 
 %endif %- Init
 %-BW_METHOD_END Init
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xTaskGetApplicationTaskTag
+%ifdef xTaskGetApplicationTaskTag
+#define %'ModuleName'%.%xTaskGetApplicationTaskTag(xTask) \
+  xTaskGetApplicationTaskTag(xTask)
+%define! ParxTask
+%define! RetVal
+%include Common\FreeRTOSxTaskGetApplicationTaskTag.Inc
+
+%endif %- xTaskGetApplicationTaskTag
+%-BW_METHOD_END xTaskGetApplicationTaskTag
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN vTaskSetApplicationTaskTag
+%ifdef vTaskSetApplicationTaskTag
+#define %'ModuleName'%.%vTaskSetApplicationTaskTag(xTask, pxTagValue) \
+  vTaskSetApplicationTaskTag(xTask, pxTagValue)
+%define! ParxTask
+%define! ParpxTagValue
+%include Common\FreeRTOSvTaskSetApplicationTaskTag.Inc
+
+%endif %- vTaskSetApplicationTaskTag
+%-BW_METHOD_END vTaskSetApplicationTaskTag
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xTaskGetCurrentTaskHandle
+%ifdef xTaskGetCurrentTaskHandle
+#define %'ModuleName'%.%xTaskGetCurrentTaskHandle() \
+  xTaskGetCurrentTaskHandle()
+%define! RetVal
+%include Common\FreeRTOSxTaskGetCurrentTaskHandle.Inc
+
+%endif %- xTaskGetCurrentTaskHandle
+%-BW_METHOD_END xTaskGetCurrentTaskHandle
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xTaskGetIdleTaskHandle
+%ifdef xTaskGetIdleTaskHandle
+#define %'ModuleName'%.%xTaskGetIdleTaskHandle() \
+  xTaskGetIdleTaskHandle()
+%define! RetVal
+%include Common\FreeRTOSxTaskGetIdleTaskHandle.Inc
+
+%endif %- xTaskGetIdleTaskHandle
+%-BW_METHOD_END xTaskGetIdleTaskHandle
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN eTaskGetState
+%ifdef eTaskGetState
+#define %'ModuleName'%.%eTaskGetState(xTask) \
+  eTaskGetState(xTask)
+%define! ParxTask
+%define! RetVal
+%include Common\FreeRTOSeTaskGetState.Inc
+
+%endif %- eTaskGetState
+%-BW_METHOD_END eTaskGetState
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN pcTaskGetTaskName
+%ifdef pcTaskGetTaskName
+#define %'ModuleName'%.%pcTaskGetTaskName(xTaskToQuery) \
+  pcTaskGetTaskName(xTaskToQuery)
+%define! ParxTaskToQuery
+%define! RetVal
+%include Common\FreeRTOSpcTaskGetTaskName.Inc
+
+%endif %- pcTaskGetTaskName
+%-BW_METHOD_END pcTaskGetTaskName
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xTaskGetTickCountFromISR
+%ifdef xTaskGetTickCountFromISR
+#define %'ModuleName'%.%xTaskGetTickCountFromISR() \
+  xTaskGetTickCountFromISR()
+%define! RetVal
+%include Common\FreeRTOSxTaskGetTickCountFromISR.Inc
+
+%endif %- xTaskGetTickCountFromISR
+%-BW_METHOD_END xTaskGetTickCountFromISR
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -2028,6 +2102,108 @@ void %'ModuleName'%.%Init(void)
 
 %endif %- Init
 %-BW_METHOD_END Init
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xTaskGetApplicationTaskTag
+%ifdef xTaskGetApplicationTaskTag
+%define! ParxTask
+%define! RetVal
+%include Common\FreeRTOSxTaskGetApplicationTaskTag.Inc
+/*
+pdTASK_HOOK_CODE %'ModuleName'%.%xTaskGetApplicationTaskTag(xTaskHandle xTask)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xTaskGetApplicationTaskTag
+%-BW_METHOD_END xTaskGetApplicationTaskTag
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN vTaskSetApplicationTaskTag
+%ifdef vTaskSetApplicationTaskTag
+%define! ParxTask
+%define! ParpxTagValue
+%include Common\FreeRTOSvTaskSetApplicationTaskTag.Inc
+/*
+void %'ModuleName'%.%vTaskSetApplicationTaskTag(xTaskHandle xTask, pdTASK_HOOK_CODE pxTagValue)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- vTaskSetApplicationTaskTag
+%-BW_METHOD_END vTaskSetApplicationTaskTag
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xTaskGetCurrentTaskHandle
+%ifdef xTaskGetCurrentTaskHandle
+%define! RetVal
+%include Common\FreeRTOSxTaskGetCurrentTaskHandle.Inc
+/*
+xTaskHandle %'ModuleName'%.%xTaskGetCurrentTaskHandle(void)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xTaskGetCurrentTaskHandle
+%-BW_METHOD_END xTaskGetCurrentTaskHandle
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xTaskGetIdleTaskHandle
+%ifdef xTaskGetIdleTaskHandle
+%define! RetVal
+%include Common\FreeRTOSxTaskGetIdleTaskHandle.Inc
+/*
+xTaskHandle %'ModuleName'%.%xTaskGetIdleTaskHandle(void)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xTaskGetIdleTaskHandle
+%-BW_METHOD_END xTaskGetIdleTaskHandle
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN eTaskGetState
+%ifdef eTaskGetState
+%define! ParxTask
+%define! RetVal
+%include Common\FreeRTOSeTaskGetState.Inc
+/*
+eTaskState %'ModuleName'%.%eTaskGetState(xTaskHandle xTask)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- eTaskGetState
+%-BW_METHOD_END eTaskGetState
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN pcTaskGetTaskName
+%ifdef pcTaskGetTaskName
+%define! ParxTaskToQuery
+%define! RetVal
+%include Common\FreeRTOSpcTaskGetTaskName.Inc
+/*
+signed char %'ModuleName'%.%pcTaskGetTaskName(xTaskHandle xTaskToQuery)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- pcTaskGetTaskName
+%-BW_METHOD_END pcTaskGetTaskName
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xTaskGetTickCountFromISR
+%ifdef xTaskGetTickCountFromISR
+%define! RetVal
+%include Common\FreeRTOSxTaskGetTickCountFromISR.Inc
+/*
+portTickType %'ModuleName'%.%xTaskGetTickCountFromISR(void)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xTaskGetTickCountFromISR
+%-BW_METHOD_END xTaskGetTickCountFromISR
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
