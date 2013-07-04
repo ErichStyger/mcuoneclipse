@@ -276,6 +276,10 @@ The following items are available only if the group is enabled (the value is "En
 </ul>
 </li>
 <li>
+<a name="DataBufSize">
+<b>DATA_BUFF_SIZE</b></a> - DATA_BUFF_SIZE should be greater than or equal to the endpoint buffer size, otherwise there will be data loss. For MC9S08JS16, maximum DATA_BUFF_SIZE supported is 16 Bytes.
+</li>
+<li>
 <a name="CallInitMethod">
 <b>Call Init Method</b></a> - If set to yes, then the Init() method will be called in PE_low_level_init().
 </li>
