@@ -45,6 +45,15 @@
   %set btQueryTotalNumberOfDeviceFromAuthenticationList Selection never
   %set btQueryMostRecentlyUsedAuthenticatedDevice Selection never
   %set btQueryCurrentStateOfDeviceStr Selection never
+%elif %Firmware='BC04'
+  %set btQueryLEDOutputPolarityStr Selection never
+  %set btSetLEDOutputPolarityStr Selection never
+  %set btSetUserPinIO Selection never
+  %set btSetUserPinIO Selection never
+  %set btSetMultipleUserIOPins Selection never
+  %set btQueryMultipleUserIOPinsStr Selection never
+  %set btQueryMultipleUserIOPins Selection never
+  %set btFindDeviceFromAuthenticatedDeviceListStr Selection never
 %else
   %set btResetDevice Selection enable
   %set btRestoreFactoryDefault Selection enable
