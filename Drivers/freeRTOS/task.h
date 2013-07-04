@@ -1162,6 +1162,7 @@ they are explicitly required by the configUSE_APPLICATION_TASK_TAG configuration
 constant. */
 #ifdef configUSE_APPLICATION_TASK_TAG
 	#if configUSE_APPLICATION_TASK_TAG == 1
+  typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * ); /* << EST: see comment above. copied from FreeRTOS.h */
 		/**
 		 * task.h
 		 * <pre>void vTaskSetApplicationTaskTag( xTaskHandle xTask, pdTASK_HOOK_CODE pxHookFunction );</pre>

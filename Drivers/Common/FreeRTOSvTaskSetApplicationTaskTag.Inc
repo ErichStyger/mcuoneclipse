@@ -13,12 +13,13 @@
 %;** %>29 value is being assigned. Passing xTask as
 %;** %>29 NULL causes the tag to be assigned to the
 %;** %>29 calling task.
-%;**         pxTagValue%ParpxTagValue %>27 - The value being assigned to
-%;** %>29 the task tag. This is of type
+%;**         pxHookFunction%ParpxHookFunction %>27 - The value being
+%;** %>29 assigned to the task tag. This is of type
 %;** %>29 pdTASK_HOOK_CODE to permit a function
 %;** %>29 pointer to be assigned as the tag, although
 %;** %>29 any value can actually be assigned. See the
 %;** %>29 example below.
+%;**         Variable_1%ParVariable_1 %>27 - 
 %include Common\GeneralReturnNothing.inc
 %include Common\GeneralDamage.inc
 %;** ===================================================================

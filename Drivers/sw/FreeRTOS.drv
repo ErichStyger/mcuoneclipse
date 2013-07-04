@@ -876,10 +876,11 @@ void %'ModuleName'%.%Init(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN vTaskSetApplicationTaskTag
 %ifdef vTaskSetApplicationTaskTag
-#define %'ModuleName'%.%vTaskSetApplicationTaskTag(xTask, pxTagValue) \
-  vTaskSetApplicationTaskTag(xTask, pxTagValue)
+#define %'ModuleName'%.%vTaskSetApplicationTaskTag(xTask, pxHookFunction) \
+  vTaskSetApplicationTaskTag(xTask, pxHookFunction)
 %define! ParxTask
-%define! ParpxTagValue
+%define! ParpxHookFunction
+%define! ParVariable_1
 %include Common\FreeRTOSvTaskSetApplicationTaskTag.Inc
 
 %endif %- vTaskSetApplicationTaskTag
@@ -936,6 +937,28 @@ void %'ModuleName'%.%Init(void);
 
 %endif %- xTaskGetTickCountFromISR
 %-BW_METHOD_END xTaskGetTickCountFromISR
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xTaskCallApplicationTaskHook
+%ifdef xTaskCallApplicationTaskHook
+#define %'ModuleName'%.%xTaskCallApplicationTaskHook(xTask, pvParameter) \
+  xTaskCallApplicationTaskHook(xTask, pvParameter)
+%define! ParxTask
+%define! ParpvParameter
+%define! RetVal
+%include Common\FreeRTOSxTaskCallApplicationTaskHook.Inc
+
+%endif %- xTaskCallApplicationTaskHook
+%-BW_METHOD_END xTaskCallApplicationTaskHook
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN vTaskStepTick
+%ifdef vTaskStepTick
+#define %'ModuleName'%.%vTaskStepTick(xTicksToJump) \
+  vTaskStepTick(xTicksToJump)
+%define! ParxTicksToJump
+%include Common\FreeRTOSvTaskStepTick.Inc
+
+%endif %- vTaskStepTick
+%-BW_METHOD_END vTaskStepTick
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -2121,10 +2144,11 @@ pdTASK_HOOK_CODE %'ModuleName'%.%xTaskGetApplicationTaskTag(xTaskHandle xTask)
 %-BW_METHOD_BEGIN vTaskSetApplicationTaskTag
 %ifdef vTaskSetApplicationTaskTag
 %define! ParxTask
-%define! ParpxTagValue
+%define! ParpxHookFunction
+%define! ParVariable_1
 %include Common\FreeRTOSvTaskSetApplicationTaskTag.Inc
 /*
-void %'ModuleName'%.%vTaskSetApplicationTaskTag(xTaskHandle xTask, pdTASK_HOOK_CODE pxTagValue)
+void %'ModuleName'%.%vTaskSetApplicationTaskTag(xTaskHandle xTask, pdTASK_HOOK_CODE pxHookFunction, byte Variable_1)
 {
   *** Implemented as macro in the header file %'ModuleName'.h
 }
@@ -2204,6 +2228,36 @@ portTickType %'ModuleName'%.%xTaskGetTickCountFromISR(void)
 
 %endif %- xTaskGetTickCountFromISR
 %-BW_METHOD_END xTaskGetTickCountFromISR
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xTaskCallApplicationTaskHook
+%ifdef xTaskCallApplicationTaskHook
+%define! ParxTask
+%define! ParpvParameter
+%define! RetVal
+%include Common\FreeRTOSxTaskCallApplicationTaskHook.Inc
+/*
+portBASE_TYPE %'ModuleName'%.%xTaskCallApplicationTaskHook(xTaskHandle xTask, void* pvParameter)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xTaskCallApplicationTaskHook
+%-BW_METHOD_END xTaskCallApplicationTaskHook
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN vTaskStepTick
+%ifdef vTaskStepTick
+%define! ParxTicksToJump
+%include Common\FreeRTOSvTaskStepTick.Inc
+/*
+void %'ModuleName'%.%vTaskStepTick(portTickType xTicksToJump)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- vTaskStepTick
+%-BW_METHOD_END vTaskStepTick
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

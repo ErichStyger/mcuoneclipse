@@ -142,7 +142,7 @@
 %if CPUDevice="MC9S08JS16"
 #define %'ModuleName'%.DATA_BUFF_SIZE    16
 %else
-#define %'ModuleName'%.DATA_BUFF_SIZE    64
+#define %'ModuleName'%.DATA_BUFF_SIZE    %DataBufSize /* data buffer size as specified in the properties */
 %endif
 
 #define %'ModuleName'%.USB_ERR_SEND            1  /* Error while sending */
@@ -151,7 +151,7 @@
 #define %'ModuleName'%.USB_ERR_TX_CHAR         4  /* Error sending character */
 #define %'ModuleName'%.USB_ERR_TX_STRING       5  /* Error sending string */
 #define %'ModuleName'%.USB_ERR_CHECKED_TXFULL  6  /* Error during sending a checked block */
-#define %'ModuleName'%.USB_ERR_RECEIVE         7  /* Error while starting an receive transaction */
+#define %'ModuleName'%.USB_ERR_RECEIVE         7  /* Error while starting a receive transaction */
 
 %if (CPUDevice="MCF51MM256") | (CPUDevice="MCF51JE256")
 /* special USB interrupt handling for %CPUDevice */

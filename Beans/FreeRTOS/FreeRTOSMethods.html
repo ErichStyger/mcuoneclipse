@@ -305,6 +305,16 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="vTaskStepTick">
+<b>vTaskStepTick</b></a>
+ -  If the RTOS is configured to use tickless idle functionality then the tick interrupt will be stopped, and the microcontroller placed into a low power state, whenever the Idle task is the only task able to execute. Upon exiting the low power state the tick count value must be corrected to account for the time that passed while it was stopped.<br /><br />If a FreeRTOS port includes a default portSUPPRESS_TICKS_AND_SLEEP() implementation, then vTaskStepTick() is used internally to ensure the correct tick count value is maintained. vTaskStepTick() is a public API function to allow the default portSUPPRESS_TICKS_AND_SLEEP() implementation to be overridden, and for a portSUPPRESS_TICKS_AND_SLEEP() to be provided if the port being used does not provide a default. 
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void vTaskStepTick(portTickType xTicksToJump)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xTicksToJump:portTickType</i> - The number of RTOS ticks that have passed since the tick interrupt was stopped. For correct operation the parameter must be less than or equal to the portSUPPRESS_TICKS_AND_SLEEP() parameter. </li>
+</ul><br />
+</li>
 <li><a name="taskYIELD">
 <b>taskYIELD</b></a>
  - Macro for forcing a context switch.
@@ -597,10 +607,11 @@ LI.EXP {
  - A 'tag' value can be assigned to each task. This value is for the use of the application only - the RTOS kernel itself does not make use of it in any way.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void vTaskSetApplicationTaskTag(xTaskHandle xTask, pdTASK_HOOK_CODE pxTagValue)<br />
+<br /><i>ANSIC prototype:</i> void vTaskSetApplicationTaskTag(xTaskHandle xTask, pdTASK_HOOK_CODE pxHookFunction, byte Variable_1)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>xTask:xTaskHandle</i> - The handle of the task to which a tag value is being assigned. Passing xTask as NULL causes the tag to be assigned to the calling task.</li>
-<li><i>pxTagValue:pdTASK_HOOK_CODE</i> - The value being assigned to the task tag. This is of type pdTASK_HOOK_CODE to permit a function pointer to be assigned as the tag, although any value can actually be assigned. See the example below.</li>
+<li><i>pxHookFunction:pdTASK_HOOK_CODE</i> - The value being assigned to the task tag. This is of type pdTASK_HOOK_CODE to permit a function pointer to be assigned as the tag, although any value can actually be assigned. See the example below.</li>
+<li><i>Variable_1:byte</i> - no hint</li>
 </ul><br />
 </li>
 <li><a name="xTaskGetApplicationTaskTag">
@@ -612,6 +623,19 @@ LI.EXP {
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>xTask:xTaskHandle</i> - The handle of the task being queried. A task can query its own tag value by using NULL as the parameter value.</li>
 <li><i>Return value:pdTASK_HOOK_CODE</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="xTaskCallApplicationTaskHook">
+<b>xTaskCallApplicationTaskHook</b></a>
+ -  A 'tag' value can be assigned to each task. Normally this value is for the use of the application only and the RTOS kernel does not access it. However, it is possible to use the tag to assign a hook (or callback) function to a task - the hook function being executed by calling xTaskCallApplicationTaskHook(). Each task can define its own callback, or simply not define a callback at all.<br /><br />Although it is possible to use the first function parameter to call the hook function of any task, the most common use of task hook function is with the trace hook macros, as per the example given below.<br /><br />Task hook functions must have type pdTASK_HOOK_CODE, that is take a void * parameter, and return a value of type portBASE_TYPE. The void * parameter can be used to pass any information into the hook function. 
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> portBASE_TYPE xTaskCallApplicationTaskHook(xTaskHandle xTask, void* pvParameter)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xTask:xTaskHandle</i> - The handle of the task whose hook function is being called. Passing NULL as xTask will call the hook function associated with the currently executing task.</li>
+<li><i>pvParameter:void*</i> - The value to pass to the hook function. This can be a pointer to a structure, or simply a numeric value.</li>
+<li><i>Return value:portBASE_TYPE</i> - return value
 </li>
 </ul><br />
 </li>

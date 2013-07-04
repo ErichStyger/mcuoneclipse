@@ -211,7 +211,7 @@ portTickType xTimeToWake;
 	/* We must remove ourselves from the ready list before adding
 	ourselves to the blocked list as the same list item is used for
 	both lists. */
-	uxListRemove( ( xListItem * ) &( pxCurrentCoRoutine->xGenericListItem ) );
+	(void)uxListRemove( ( xListItem * ) &( pxCurrentCoRoutine->xGenericListItem ) );
 
 	/* The list item will be inserted in wake time order. */
 	listSET_LIST_ITEM_VALUE( &( pxCurrentCoRoutine->xGenericListItem ), xTimeToWake );
@@ -251,11 +251,11 @@ static void prvCheckPendingReadyList( void )
 		portDISABLE_INTERRUPTS();
 		{
 			pxUnblockedCRCB = ( corCRCB * ) listGET_OWNER_OF_HEAD_ENTRY( (&xPendingReadyCoRoutineList) );
-			uxListRemove( &( pxUnblockedCRCB->xEventListItem ) );
+			(void)uxListRemove( &( pxUnblockedCRCB->xEventListItem ) );
 		}
 		portENABLE_INTERRUPTS();
 
-		uxListRemove( &( pxUnblockedCRCB->xGenericListItem ) );
+		(void)uxListRemove( &( pxUnblockedCRCB->xGenericListItem ) );
 		prvAddCoRoutineToReadyQueue( pxUnblockedCRCB );
 	}
 }
@@ -301,12 +301,12 @@ corCRCB *pxCRCB;
 				have been moved to the pending ready list and the following
 				line is still valid.  Also the pvContainer parameter will have
 				been set to NULL so the following lines are also valid. */
-				uxListRemove( &( pxCRCB->xGenericListItem ) );
+			  (void)uxListRemove( &( pxCRCB->xGenericListItem ) );
 
 				/* Is the co-routine waiting on an event also? */
 				if( pxCRCB->xEventListItem.pvContainer )
 				{
-					uxListRemove( &( pxCRCB->xEventListItem ) );
+				  (void)uxListRemove( &( pxCRCB->xEventListItem ) );
 				}
 			}
 			portENABLE_INTERRUPTS();
@@ -378,7 +378,7 @@ signed portBASE_TYPE xReturn;
 	event lists and the pending ready list.  This function assumes that a
 	check has already been made to ensure pxEventList is not empty. */
 	pxUnblockedCRCB = ( corCRCB * ) listGET_OWNER_OF_HEAD_ENTRY( pxEventList );
-	uxListRemove( &( pxUnblockedCRCB->xEventListItem ) );
+	(void)uxListRemove( &( pxUnblockedCRCB->xEventListItem ) );
 	vListInsertEnd( ( xList * ) &( xPendingReadyCoRoutineList ), &( pxUnblockedCRCB->xEventListItem ) );
 
 	if( pxUnblockedCRCB->uxPriority >= pxCurrentCoRoutine->uxPriority )

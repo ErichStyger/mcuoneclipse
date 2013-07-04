@@ -239,6 +239,10 @@ LI.EXP {
 <b>Utility</b></a> - Interface to utility functions
 </li>
 <li>
+<a name="UseApplicationTaskTags">
+<b>Application Task Tags</b></a> - This configures configUSE_APPLICATION_TASK_TAG. If enabled, the methodsxTaskGetApplicationTaskTag(), vTaskSetApplicationTaskTag() and xTaskCallApplicationTaskHook() are enabled.
+</li>
+<li>
 <a name="UseTraceFacility">
 <b>Use Trace Facility</b></a> - Set to 1 if you wish the trace visualisation functionality to be available, or 0 if the trace functionality is not going to be used. If you use the trace functionality a trace buffer must also be provided. If using Trace Hooks, this property is automatically enabled. This setting controls the configUSE_TRACE_FACILITY macro.
 </li>
@@ -456,6 +460,10 @@ Tasks that share the same priority will time slice. Assuming none of the tasks g
   <li>
   <a name="TaskNameLength">
   <b>Task Name Length</b></a> - The maximum permissible length of the descriptive name given to a task when the task is created. The length is specified in the number of characters including the NULL termination byte. (configMAX_TASK_NAME_LEN)
+  </li>
+  <li>
+  <a name="TicklessIdleModeEnabled">
+  <b>Tickless Idle Mode</b></a> - If supported, a tickless idle mode is used for power reduction. See http://www.freertos.org/low-power-tickless-rtos.html
   </li>
   <li>
   <a name="MinimalStackSize">

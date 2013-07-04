@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.229</Version>
+    <Version>01.246</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -100,6 +100,24 @@
         <IconPopup>false</IconPopup>
         <SortStyle/>
       </TInhrLinkItem>
+    </Property>
+    <Property>
+      <TBoolItem>
+        <Name>Application Task Tags</Name>
+        <Symbol>UseApplicationTaskTags</Symbol>
+        <TypeSpec>typeYesNo</TypeSpec>
+        <Hint>This configures configUSE_APPLICATION_TASK_TAG. If enabled, the methodsxTaskGetApplicationTaskTag(), vTaskSetApplicationTaskTag() and xTaskCallApplicationTaskHook() are enabled.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>false</DefaultValue>
+        <Popup>false</Popup>
+      </TBoolItem>
     </Property>
     <Property>
       <TBoolItem>
@@ -638,6 +656,24 @@ Tasks that share the same priority will time slice. Assuming none of the tasks g
               <ChangeValueIntoRange>true</ChangeValueIntoRange>
               <RuntimeProperty>false</RuntimeProperty>
             </TIntgItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolItem>
+              <Name>Tickless Idle Mode</Name>
+              <Symbol>TicklessIdleModeEnabled</Symbol>
+              <TypeSpec>typeYesNo</TypeSpec>
+              <Hint>If supported, a tickless idle mode is used for power reduction. See http://www.freertos.org/low-power-tickless-rtos.html</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>1</DefaultIndex>
+              <TextValueIndex>false</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <DefaultValue>false</DefaultValue>
+              <Popup>false</Popup>
+            </TBoolItem>
           </GrupItem>
           <GrupItem>
             <TIntgItem>
@@ -1667,6 +1703,42 @@ API functions that have the potential to cause a context switch (for example, vT
     </Method>
     <Method>
       <TMthdItem>
+        <Name>vTaskStepTick</Name>
+        <Symbol>vTaskStepTick</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint> If the RTOS is configured to use tickless idle functionality then the tick interrupt will be stopped, and the microcontroller placed into a low power state, whenever the Idle task is the only task able to execute. Upon exiting the low power state the tick count value must be corrected to account for the time that passed while it was stopped.\n
+\n
+If a FreeRTOS port includes a default portSUPPRESS_TICKS_AND_SLEEP() implementation, then vTaskStepTick() is used internally to ensure the correct tick count value is maintained. vTaskStepTick() is a public API function to allow the default portSUPPRESS_TICKS_AND_SLEEP() implementation to be overridden, and for a portSUPPRESS_TICKS_AND_SLEEP() to be provided if the port being used does not provide a default. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>false</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>xTicksToJump</ParName>
+          <ParType>portTickType</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The number of RTOS ticks that have passed since the tick interrupt was stopped. For correct operation the parameter must be less than or equal to the portSUPPRESS_TICKS_AND_SLEEP() parameter. </ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(portTickType xTicksToJump)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
         <Name>taskYIELD</Name>
         <Symbol>taskYIELD</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
@@ -2627,8 +2699,8 @@ This macro can be used from an ISR, however taking a semaphore from an ISR is no
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>void</ReturnType>
-        <RetHint>Error code</RetHint>
-        <ParamCount>2</ParamCount>
+        <RetHint>none</RetHint>
+        <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>xTask</ParName>
           <ParType>xTaskHandle</ParType>
@@ -2636,14 +2708,20 @@ This macro can be used from an ISR, however taking a semaphore from an ISR is no
           <ParHint>The handle of the task to which a tag value is being assigned. Passing xTask as NULL causes the tag to be assigned to the calling task.</ParHint>
         </Parameter>
         <Parameter>
-          <ParName>pxTagValue</ParName>
+          <ParName>pxHookFunction</ParName>
           <ParType>pdTASK_HOOK_CODE</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>The value being assigned to the task tag. This is of type pdTASK_HOOK_CODE to permit a function pointer to be assigned as the tag, although any value can actually be assigned. See the example below.</ParHint>
         </Parameter>
+        <Parameter>
+          <ParName>Variable_1</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint/>
+        </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(xTaskHandle xTask, pdTASK_HOOK_CODE pxTagValue)</ANSIC>
+          <ANSIC>void #M#_#C#(xTaskHandle xTask, pdTASK_HOOK_CODE pxHookFunction, byte Variable_1)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2678,6 +2756,50 @@ This macro can be used from an ISR, however taking a semaphore from an ISR is no
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>pdTASK_HOOK_CODE #M#_#C#(xTaskHandle xTask)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xTaskCallApplicationTaskHook</Name>
+        <Symbol>xTaskCallApplicationTaskHook</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint> A 'tag' value can be assigned to each task. Normally this value is for the use of the application only and the RTOS kernel does not access it. However, it is possible to use the tag to assign a hook (or callback) function to a task - the hook function being executed by calling xTaskCallApplicationTaskHook(). Each task can define its own callback, or simply not define a callback at all.\n
+\n
+Although it is possible to use the first function parameter to call the hook function of any task, the most common use of task hook function is with the trace hook macros, as per the example given below.\n
+\n
+Task hook functions must have type pdTASK_HOOK_CODE, that is take a void * parameter, and return a value of type portBASE_TYPE. The void * parameter can be used to pass any information into the hook function. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>false</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>portBASE_TYPE</ReturnType>
+        <RetHint>return value</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>xTask</ParName>
+          <ParType>xTaskHandle</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The handle of the task whose hook function is being called. Passing NULL as xTask will call the hook function associated with the currently executing task.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>pvParameter</ParName>
+          <ParType>pointer</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The value to pass to the hook function. This can be a pointer to a structure, or simply a numeric value.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>portBASE_TYPE #M#_#C#(xTaskHandle xTask, void* pvParameter)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

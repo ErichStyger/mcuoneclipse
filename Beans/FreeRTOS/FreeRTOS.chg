@@ -81,6 +81,15 @@
   %set xSemaphoreGiveRecursive Selection never
   %set xSemaphoreCreateRecursiveMutex Selection never
 %endif
+%if %UseApplicationTaskTags='yes'
+  %set vTaskSetApplicationTaskTag Selection always
+  %set xTaskGetApplicationTaskTag Selection always
+  %set xTaskCallApplicationTaskHook Selection always
+%else
+  %set vTaskSetApplicationTaskTag Selection never
+  %set xTaskGetApplicationTaskTag Selection never
+  %set xTaskCallApplicationTaskHook Selection never
+%endif
 %if %UseTraceHooksGroup='yes'
   %set UseTraceFacility Value yes
 %endif
