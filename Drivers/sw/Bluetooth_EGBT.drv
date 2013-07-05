@@ -148,7 +148,12 @@ typedef enum {
 typedef const unsigned char *%'ModuleName'%.TConstStringPtr; /* type for constant string pointer */
 
 #define %'ModuleName'%.MAX_AT_CMD_SIZE                         (sizeof("AT+VERSION?\r\n"))  /* longest AT command */
+%if %Firmware='BC04'
+/* note: BC04 firmware responds on AT+VERSION with "BOLUTEK Firmware V2.43, Bluetooth V2.0, HCI V2.1, HCI Rev37, LMPV4,LMP SubV327" */
 #define %'ModuleName'%.MAX_RESPONSE_SIZE                       96  /* maximum response size, e.g. "+NAME:abcdef\r\nOK\r\n" */
+%else
+#define %'ModuleName'%.MAX_RESPONSE_SIZE                       42  /* maximum response size, e.g. "+NAME:abcdef\r\nOK\r\n" */
+%endif
 #define %'ModuleName'%.MAX_ERR_RESPONSE_SIZE                   (sizeof("ERROR:(32)\r\n"))  /* max size of error response */
 #define %'ModuleName'%.MAX_DEVICE_NAME_SIZE                    31  /* device name can be up to 31 characters */
 #define %'ModuleName'%.TIMEOUT_MS                              %ResponseTimeoutMs /* timeout in ms to wait for response */
@@ -2781,7 +2786,7 @@ byte %'ModuleName'%.%btQueryTotalNumberOfDeviceFromAuthenticationList(byte *nofD
 %if %Firmware='BC04'
   /* we do not have a AT+ADCN command for BC04 firmware and as consequence,
      we need to parse manually the list of devices */
-  size_t bufSize = sizeof("LSP=\r\n") + BT1_MAX_RESPONSE_SIZE;
+  size_t bufSize = sizeof("LSP=\r\n") + %'ModuleName'%.MAX_RESPONSE_SIZE;
   unsigned char buf[bufSize];
   unsigned char *p;
   byte res;
