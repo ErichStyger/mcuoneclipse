@@ -268,7 +268,6 @@ extern void vPortExitCritical(void);
 portALIGNMENT_ASSERT_pxCurrentTCB() will trigger false positive asserts. */
 #define portALIGNMENT_ASSERT_pxCurrentTCB (void)
 
-
 %elif (CPUfamily = "Kinetis")
 extern void vPortSetInterruptMask(void);
 extern void vPortClearInterruptMask(void);
@@ -378,6 +377,35 @@ extern void vPortExitCritical(void);
 extern void vPortYieldFromISR(void);
 #define portYIELD()                             vPortYieldFromISR()
 #define portEND_SWITCHING_ISR(xSwitchRequired)  if(xSwitchRequired) vPortYieldFromISR()
+/*-----------------------------------------------------------*/
+
+/* Architecture specific optimizations. */
+#if configUSE_PORT_OPTIMISED_TASK_SELECTION == 1
+
+	/* Generic helper function. */
+	__attribute__( ( always_inline ) ) static inline unsigned char ucPortCountLeadingZeros( unsigned long ulBitmap )
+	{
+	unsigned char ucReturn;
+
+		__asm volatile ( "clz %%0, %%1" : "=r" ( ucReturn ) : "r" ( ulBitmap ) );
+		return ucReturn;
+	}
+
+	/* Check the configuration. */
+	#if( configMAX_PRIORITIES > 32 )
+		#error configUSE_PORT_OPTIMISED_TASK_SELECTION can only be set to 1 when configMAX_PRIORITIES is less than or equal to 32.  It is very rare that a system requires more than 10 to 15 difference priorities as tasks that share a priority will time slice.
+	#endif
+
+	/* Store/clear the ready priorities in a bit map. */
+	#define portRECORD_READY_PRIORITY( uxPriority, uxReadyPriorities ) ( uxReadyPriorities ) |= ( 1UL << ( uxPriority ) )
+	#define portRESET_READY_PRIORITY( uxPriority, uxReadyPriorities ) ( uxReadyPriorities ) &= ~( 1UL << ( uxPriority ) )
+
+	/*-----------------------------------------------------------*/
+
+	#define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) uxTopPriority = ( 31 - ucPortCountLeadingZeros( ( uxReadyPriorities ) ) )
+
+#endif /* configUSE_PORT_OPTIMISED_TASK_SELECTION */
+
 %elif (CPUfamily = "56800")
 /* force a context switch with the SWI instruction. */
 #define portYIELD()        __asm(swi); __asm(nop); __asm(nop); __asm(nop);
@@ -388,6 +416,12 @@ extern void vPortYieldFromISR(void);
 %else
   #error "unsupported target!" %CPUfamily
 %endif
+/*-----------------------------------------------------------*/
+/* Tickless idle/low power functionality. */
+#ifndef portSUPPRESS_TICKS_AND_SLEEP
+  extern void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime);
+  #define portSUPPRESS_TICKS_AND_SLEEP(xExpectedIdleTime) vPortSuppressTicksAndSleep(xExpectedIdleTime)
+#endif
 /*-----------------------------------------------------------*/
 /* Task function macros as described on the FreeRTOS.org WEB site. */
 %if (CPUfamily = "ColdFireV1") | (CPUfamily = "MCF")

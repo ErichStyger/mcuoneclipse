@@ -82,7 +82,7 @@ void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *
 void FRTOS1_vApplicationTickHook(void)
 {
   /* Called for every RTOS tick. */
-  /* Write your code here ... */
+  LED1_Neg();
 }
 
 /*
@@ -101,7 +101,7 @@ void FRTOS1_vApplicationIdleHook(void)
 {
   /* Called whenever the RTOS is idle (from the IDLE task).
      Here would be a good place to put the CPU into low power mode. */
-  Cpu_SetOperationMode(DOM_WAIT, NULL, NULL); /* next interrupt will wake us up */
+//  Cpu_SetOperationMode(DOM_WAIT, NULL, NULL); /* next interrupt will wake us up */
 //  Cpu_SetOperationMode(DOM_SLEEP, NULL, NULL); /* next interrupt will wake us up */
 //  Cpu_SetOperationMode(DOM_STOP, NULL, NULL); /* next interrupt will wake us up */
 }

@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.246</Version>
+    <Version>01.253</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -21,7 +21,7 @@
     <BW_NeedUst>11</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>License : Open Source (LGPL)\nFreeRTOS (c) Copyright 2003-2012 Richard Barry, http: www.FreeRTOS.org\nFreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013\nProcessor Expert and CodeWarrior (c) Copyright Freescale Semiconductor, 2013, all rights reserved\nThis is a free software and is opened for education, research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
+    <Copyright>License : Open Source (LGPL)\nFreeRTOS (c) Copyright 2003-2013 Richard Barry, http: www.FreeRTOS.org\nFreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013\nProcessor Expert and CodeWarrior (c) Copyright Freescale Semiconductor, 2013, all rights reserved\nThis is a free software and is opened for education, research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
     <Shortcut>FRTOS</Shortcut>
     <DemoDriver>no</DemoDriver>
     <BeanLevel>High</BeanLevel>
@@ -658,24 +658,6 @@ Tasks that share the same priority will time slice. Assuming none of the tasks g
             </TIntgItem>
           </GrupItem>
           <GrupItem>
-            <TBoolItem>
-              <Name>Tickless Idle Mode</Name>
-              <Symbol>TicklessIdleModeEnabled</Symbol>
-              <TypeSpec>typeYesNo</TypeSpec>
-              <Hint>If supported, a tickless idle mode is used for power reduction. See http://www.freertos.org/low-power-tickless-rtos.html</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>false</EditLine>
-              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-              <DefaultIndex>1</DefaultIndex>
-              <TextValueIndex>false</TextValueIndex>
-              <RuntimeProperty>false</RuntimeProperty>
-              <CanDelete>false</CanDelete>
-              <IconPopup>false</IconPopup>
-              <DefaultValue>false</DefaultValue>
-              <Popup>false</Popup>
-            </TBoolItem>
-          </GrupItem>
-          <GrupItem>
             <TIntgItem>
               <Name>Minimal Stack Size</Name>
               <Symbol>MinimalStackSize</Symbol>
@@ -766,6 +748,72 @@ To use this method in combination with method 1 set configCHECK_FOR_STACK_OVERFL
               <DefaultValue>true</DefaultValue>
               <Popup>false</Popup>
             </TBoolItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>Tickless Idle Mode</Name>
+              <Symbol>TicklessIdleModeEnabled</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>If supported, a tickless idle mode is used for power reduction. See http://www.freertos.org/low-power-tickless-rtos.html</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Disabled</Description>
+              <Expanded>Yes</Expanded>
+              <DefaultValue>false</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TStrgListItem>
+                    <Name>configPRE_SLEEP_PROCESSING</Name>
+                    <Symbol>configPRE_SLEEP_PROCESSINGMacro</Symbol>
+                    <Hint>Sleep until something happens.  configPRE_SLEEP_PROCESSING() can\n
+      set its parameter to 0 to indicate that its implementation contains\n
+      its own wait for interrupt or wait for event instruction, and so wfi\n
+      should not be executed again.  However, the original expected idle\n
+      time variable must remain unmodified, so a copy is taken. </Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <DefaultValue>(string list)</DefaultValue>
+                    <DefineList>false</DefineList>
+                    <ExternEditorEnabled>false</ExternEditorEnabled>
+                    <AcceptNonPrintChars>false</AcceptNonPrintChars>
+                    <DefaultStrgList lines_count="9">
+                      <Line>/* example for Kinetis (enable SetOperationMode() in CPU component: */ \</Line>
+                      <Line>/* Cpu_SetOperationMode(DOM_WAIT, NULL, NULL);*/ \</Line>
+                      <Line>\</Line>
+                      <Line>/* example for S08 (enable SetWaitMode() in CPU: */ \</Line>
+                      <Line>/* Cpu_SetWaitMode(); */ \</Line>
+                      <Line>\</Line>
+                      <Line>/* example for ColdFire V2: */ \</Line>
+                      <Line>/* __asm("stop #0x2000"); */ \</Line>
+                      <Line>x = 0; /* set macro parameter to zero, so callee knows we entered low power mode */</Line>
+                    </DefaultStrgList>
+                  </TStrgListItem>
+                </GrupItem>
+                <GrupItem>
+                  <TStrgListItem>
+                    <Name>configPOST_SLEEP_PROCESSING</Name>
+                    <Symbol>configPOST_SLEEP_PROCESSINGMacro</Symbol>
+                    <Hint>Sleep until something happens.  configPRE_SLEEP_PROCESSING() can\n
+      set its parameter to 0 to indicate that its implementation contains\n
+      its own wait for interrupt or wait for event instruction, and so wfi\n
+      should not be executed again.  However, the original expected idle\n
+      time variable must remain unmodified, so a copy is taken. </Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <DefaultValue>(string list)</DefaultValue>
+                    <DefineList>false</DefineList>
+                    <ExternEditorEnabled>false</ExternEditorEnabled>
+                    <AcceptNonPrintChars>false</AcceptNonPrintChars>
+                    <DefaultStrgList lines_count="1">
+                      <Line>/* nothing specified */</Line>
+                    </DefaultStrgList>
+                  </TStrgListItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
           </GrupItem>
         </Children>
       </TGrupItem>

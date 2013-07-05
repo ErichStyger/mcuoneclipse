@@ -462,10 +462,6 @@ Tasks that share the same priority will time slice. Assuming none of the tasks g
   <b>Task Name Length</b></a> - The maximum permissible length of the descriptive name given to a task when the task is created. The length is specified in the number of characters including the NULL termination byte. (configMAX_TASK_NAME_LEN)
   </li>
   <li>
-  <a name="TicklessIdleModeEnabled">
-  <b>Tickless Idle Mode</b></a> - If supported, a tickless idle mode is used for power reduction. See http://www.freertos.org/low-power-tickless-rtos.html
-  </li>
-  <li>
   <a name="MinimalStackSize">
   <b>Minimal Stack Size</b></a> - The size of the stack used by the idle task (configMINIMAL_STACK_SIZE flag). Generally this should not be reduced from the value set in the FreeRTOSConfig.h file provided with the demo application for the port you are using. Note that the size is in stack units (portSTACK_TYPE), which is 4 bytes for a 32bit core like ColdFire and ARM/Kinetis and 1 byte for HCS08. Keep in mind that there is the IDLE task too which needs stack plus the task descriptor block.
   </li>
@@ -490,6 +486,30 @@ There are 2 options:<br />
   <li>
   <a name="CleanupResources">
   <b>Cleanup Resources</b></a> - This setting controls the INCLUDE_vTaskCleanUpResources define.
+  </li>
+  <li>
+  <a name="TicklessIdleModeEnabled">
+  <b>Tickless Idle Mode</b></a> - If supported, a tickless idle mode is used for power reduction. See http://www.freertos.org/low-power-tickless-rtos.html<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+  <ul>
+    <li>
+    <a name="configPRE_SLEEP_PROCESSINGMacro">
+    <b>configPRE_SLEEP_PROCESSING</b></a> - Sleep until something happens.  configPRE_SLEEP_PROCESSING() can<br />
+      set its parameter to 0 to indicate that its implementation contains<br />
+      its own wait for interrupt or wait for event instruction, and so wfi<br />
+      should not be executed again.  However, the original expected idle<br />
+      time variable must remain unmodified, so a copy is taken. 
+    </li>
+    <li>
+    <a name="configPOST_SLEEP_PROCESSINGMacro">
+    <b>configPOST_SLEEP_PROCESSING</b></a> - Sleep until something happens.  configPRE_SLEEP_PROCESSING() can<br />
+      set its parameter to 0 to indicate that its implementation contains<br />
+      its own wait for interrupt or wait for event instruction, and so wfi<br />
+      should not be executed again.  However, the original expected idle<br />
+      time variable must remain unmodified, so a copy is taken. 
+    </li>
+  </ul>
   </li>
 </ul>
 </li>
