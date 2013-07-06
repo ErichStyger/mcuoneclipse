@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.253</Version>
+    <Version>01.259</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -763,56 +763,6 @@ To use this method in combination with method 1 set configCHECK_FOR_STACK_OVERFL
               <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
-              <Children>
-                <GrupItem>
-                  <TStrgListItem>
-                    <Name>configPRE_SLEEP_PROCESSING</Name>
-                    <Symbol>configPRE_SLEEP_PROCESSINGMacro</Symbol>
-                    <Hint>Sleep until something happens.  configPRE_SLEEP_PROCESSING() can\n
-      set its parameter to 0 to indicate that its implementation contains\n
-      its own wait for interrupt or wait for event instruction, and so wfi\n
-      should not be executed again.  However, the original expected idle\n
-      time variable must remain unmodified, so a copy is taken. </Hint>
-                    <ItemLevel>BASIC</ItemLevel>
-                    <EditLine>false</EditLine>
-                    <DefaultValue>(string list)</DefaultValue>
-                    <DefineList>false</DefineList>
-                    <ExternEditorEnabled>false</ExternEditorEnabled>
-                    <AcceptNonPrintChars>false</AcceptNonPrintChars>
-                    <DefaultStrgList lines_count="9">
-                      <Line>/* example for Kinetis (enable SetOperationMode() in CPU component: */ \</Line>
-                      <Line>/* Cpu_SetOperationMode(DOM_WAIT, NULL, NULL);*/ \</Line>
-                      <Line>\</Line>
-                      <Line>/* example for S08 (enable SetWaitMode() in CPU: */ \</Line>
-                      <Line>/* Cpu_SetWaitMode(); */ \</Line>
-                      <Line>\</Line>
-                      <Line>/* example for ColdFire V2: */ \</Line>
-                      <Line>/* __asm("stop #0x2000"); */ \</Line>
-                      <Line>x = 0; /* set macro parameter to zero, so callee knows we entered low power mode */</Line>
-                    </DefaultStrgList>
-                  </TStrgListItem>
-                </GrupItem>
-                <GrupItem>
-                  <TStrgListItem>
-                    <Name>configPOST_SLEEP_PROCESSING</Name>
-                    <Symbol>configPOST_SLEEP_PROCESSINGMacro</Symbol>
-                    <Hint>Sleep until something happens.  configPRE_SLEEP_PROCESSING() can\n
-      set its parameter to 0 to indicate that its implementation contains\n
-      its own wait for interrupt or wait for event instruction, and so wfi\n
-      should not be executed again.  However, the original expected idle\n
-      time variable must remain unmodified, so a copy is taken. </Hint>
-                    <ItemLevel>BASIC</ItemLevel>
-                    <EditLine>false</EditLine>
-                    <DefaultValue>(string list)</DefaultValue>
-                    <DefineList>false</DefineList>
-                    <ExternEditorEnabled>false</ExternEditorEnabled>
-                    <AcceptNonPrintChars>false</AcceptNonPrintChars>
-                    <DefaultStrgList lines_count="1">
-                      <Line>/* nothing specified */</Line>
-                    </DefaultStrgList>
-                  </TStrgListItem>
-                </GrupItem>
-              </Children>
             </TBoolGrupItem>
           </GrupItem>
         </Children>
@@ -3905,6 +3855,96 @@ Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total accumulated ex
               <Name>Event procedure name</Name>
               <Symbol>Name</Symbol>
               <Hint>vApplicationMallocFailedHook procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>vOnPreSleepProcessing</Name>
+        <Symbol>vOnPreSleepProcessing</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Used in tickless idle mode only, but required in this mode. Hook for the application to enter low power mode.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>generate code</Description>
+        <Expanded>Yes</Expanded>
+        <DefaultValue>true</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>expectedIdleTicks</ParName>
+          <ParType>portTickType</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>expected idle time, in ticks</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(portTickType expectedIdleTicks)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>vOnPreSleepProcessing procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>vOnPostSleepProcessing</Name>
+        <Symbol>vOnPostSleepProcessing</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Event called after the CPU woke up after low power mode. This event is optional.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>generate code</Description>
+        <Expanded>Yes</Expanded>
+        <DefaultValue>true</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>expectedIdleTicks</ParName>
+          <ParType>portTickType</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>expected idle time, in ticks</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(portTickType expectedIdleTicks)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>vOnPostSleepProcessing procedure name</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
               <DefaultValue/>

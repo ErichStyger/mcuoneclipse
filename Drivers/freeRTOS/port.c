@@ -100,15 +100,17 @@
 #if configUSE_TICKLESS_IDLE == 1
 %if (CPUfamily = "Kinetis")
 typedef unsigned long TickCounter_t; /* for 24 bits */
-#define COUNTS_UP                 0 /* SysTick is counting down to zero */
+#define TICK_NOF_BITS               24
+#define COUNTS_UP                   0 /* SysTick is counting down to zero */
 #define ENABLE_TICK_COUNTER()       portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT
 #define DISABLE_TICK_COUNTER()      portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT
 #define SET_TICK_DURATION(val)      portNVIC_SYSTICK_LOAD_REG = val
 #define GET_TICK_DURATION()         portNVIC_SYSTICK_LOAD_REG
-#define GET_TICK_CURRENT_VAL()      portNVIC_SYSTICK_CURRENT_VALUE_REG
+#define GET_TICK_CURRENT_VAL(addr)  *(addr)=portNVIC_SYSTICK_CURRENT_VALUE_REG
 #define RESET_TICK_COUNTER()        portNVIC_SYSTICK_CURRENT_VALUE_REG = portNVIC_SYSTICK_LOAD_REG
-#define WOKE_UP_BY_TICK_ISR()       (portNVIC_SYSTICK_CTRL_REG&portNVIC_SYSTICK_COUNT_FLAG_BIT)!=0)
+#define WOKE_UP_BY_TICK_ISR()       ((portNVIC_SYSTICK_CTRL_REG&portNVIC_SYSTICK_COUNT_FLAG_BIT)!=0)
 %elif defined(TickCntr)
+#define TICK_NOF_BITS               16
 #define COUNTS_UP                   %@TickCntr@'ModuleName'%.UP_COUNTER
 typedef %@TickCntr@'ModuleName'%.TTimerValue TickCounter_t; /* for holding counter */
 static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration as no API to get it from the FreeCntr component */
@@ -507,13 +509,20 @@ static portBASE_TYPE xBankedStartScheduler(void) {
 %endif
 /*-----------------------------------------------------------*/
 #if configUSE_TICKLESS_IDLE == 1
+/* prototypes */
+%if defined(vPrePostSleepProcessing)
+void %vOnPreSleepProcessing(portTickType expectedIdleTicks);
+%endif
+%if defined(vOnPostSleepProcessing)
+void %vOnPostSleepProcessing(portTickType expectedIdleTicks);
+%endif
+
 %if %Compiler == "GNUC"
   __attribute__((weak)) void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
 %else
 void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
 %endif
-  TickCounter_t ulReloadValue, ulCompleteTickPeriods, ulCompletedSysTickIncrements;
-  portTickType xModifiableIdleTime;
+  unsigned long ulReloadValue, ulCompleteTickPeriods, ulCompletedSysTickIncrements;
   TickCounter_t tmp; /* because of how we get the current tick counter */
 
   /* Make sure the SysTick reload value does not overflow the counter. */
@@ -570,19 +579,13 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
     its own wait for interrupt or wait for event instruction, and so wfi
     should not be executed again.  However, the original expected idle
     time variable must remain unmodified, so a copy is taken. */
-    xModifiableIdleTime = xExpectedIdleTime;
-    configPRE_SLEEP_PROCESSING(xModifiableIdleTime);
-    if (xModifiableIdleTime>0) {
-      %if (CPUfamily = "Kinetis")
-      __asm volatile( "wfi" );
-      __asm volatile( "dsb" );
-      __asm volatile( "isb" );
-      %else
-        /* NYI: wait for interrupt implementation */
-      %endif
-    }
-    configPOST_SLEEP_PROCESSING(xExpectedIdleTime);
-
+%if defined(vPrePostSleepProcessing)
+    %vOnPreSleepProcessing(xExpectedIdleTime);
+%endif
+    /* here CPU is in low power mode, waiting to wake up */
+%if defined(vOnPostSleepProcessing)
+    %vOnPostSleepProcessing(xExpectedIdleTime);
+%endif
     /* Stop SysTick.  Again, the time the SysTick is stopped for is
     accounted for as best it can be, but using the tickless mode will
     inevitably result in some tiny drift of the time maintained by the
@@ -644,7 +647,17 @@ void vPortInitTickTimer(void) {
 #if configUSE_TICKLESS_IDLE == 1
 {
   ulTimerReloadValueForOneTick = (configSYSTICK_CLOCK_HZ/configTICK_RATE_HZ)-1UL;
-  xMaximumPossibleSuppressedTicks = 0xffffffUL/((configSYSTICK_CLOCK_HZ/configTICK_RATE_HZ)-1UL); /* have only 24bits for SysTick */
+#if TICK_NOF_BITS==32
+  xMaximumPossibleSuppressedTicks = 0xffffffffUL/((configSYSTICK_CLOCK_HZ/configTICK_RATE_HZ)-1UL); /* 32bit timer register */
+#elif TICK_NOF_BITS==24
+  xMaximumPossibleSuppressedTicks = 0xffffffUL/((configSYSTICK_CLOCK_HZ/configTICK_RATE_HZ)-1UL); /* 24bit timer register */
+#elif TICK_NOF_BITS==16
+  xMaximumPossibleSuppressedTicks = 0xffffUL/((configSYSTICK_CLOCK_HZ/configTICK_RATE_HZ)-1UL); /* 16bit timer register */
+#elif TICK_NOF_BITS==8
+  xMaximumPossibleSuppressedTicks = 0xffUL/((configSYSTICK_CLOCK_HZ/configTICK_RATE_HZ)-1UL); /* 8bit timer register */
+#else
+  error "unknown configuration!"
+#endif
   ulStoppedTimerCompensation = configSTOPPED_TIMER_COMPENSATION/(configCPU_CLOCK_HZ/configSYSTICK_CLOCK_HZ);
 }
 #endif /* configUSE_TICKLESS_IDLE */

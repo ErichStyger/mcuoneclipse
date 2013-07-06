@@ -125,4 +125,10 @@
 %else
   %set ParseCommand Selection always
 %endif
-
+%if %TicklessIdleModeEnabled='yes'
+  %set vOnPreSleepProcessing Selection always
+  %set vOnPostSleepProcessing Selection enable
+%else
+  %set vOnPreSleepProcessing Selection never
+  %set vOnPostSleepProcessing Selection never
+%endif

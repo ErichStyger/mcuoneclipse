@@ -130,6 +130,35 @@ void FRTOS1_vApplicationMallocFailedHook(void)
   for(;;) {}
 }
 
+/*
+** ===================================================================
+**     Event       :  vOnPreSleepProcessing (module Events)
+**
+**     Component   :  FRTOS1 [FreeRTOS]
+**     Description :
+**         Used in tickless idle mode only, but required in this mode.
+**         Hook for the application to enter low power mode.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+void vOnPreSleepProcessing(portTickType expectedIdleTicks)
+{
+#if 1 /* example for Kinetis (enable SetOperationMode() in CPU component: */
+  Cpu_SetOperationMode(DOM_SLEEP, NULL, NULL);
+#endif
+#if 0 /* example for S08 (enable SetWaitMode() in CPU: */
+  Cpu_SetWaitMode();
+#endif
+#if 0 /* example for ColdFire V2: */
+   __asm("stop #0x2000"); */
+#endif
+  /* Write your code here ... */
+}
+
 /* END Events */
 
 /*

@@ -179,15 +179,6 @@
 %-
 %if %TicklessIdleModeEnabled='yes'
 #define configUSE_TICKLESS_IDLE                                  %>50 1
-#define configPRE_SLEEP_PROCESSING(x) \
-%for i from configPRE_SLEEP_PROCESSINGMacro
-%i
-%endfor
-#define configPOST_SLEEP_PROCESSING(x) \
-%for i from configPOST_SLEEP_PROCESSINGMacro
-%i
-%endfor
-
 %else
 #define configUSE_TICKLESS_IDLE                                  %>50 0
 %endif

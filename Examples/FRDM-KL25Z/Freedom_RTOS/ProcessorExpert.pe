@@ -3,8 +3,8 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>44</ModificationStamp>
-    <Date>2013-07-05</Date>
+    <ModificationStamp>50</ModificationStamp>
+    <Date>2013-07-06</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.7.3.RT4_b1324-1612</PEversion>
   </Header>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>58</ProjectCompNumb>
+    <ProjectCompNumb>64</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>false</AssignInitComponentNameToPrph>
@@ -3155,7 +3155,7 @@
         <ItemSymbol>OUTDIV1PrescSpeedMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>1</Value>
+        <Value>11</Value>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
@@ -3169,7 +3169,7 @@
         <ItemSymbol>CoreClockSpeedMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>20.97152</Value>
+        <Value>1.906501818182</Value>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
@@ -3190,7 +3190,7 @@
         <ItemSymbol>BusClockSpeedMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>20.97152</Value>
+        <Value>1.906501818182</Value>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
@@ -4282,7 +4282,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.253</BeanVersion>
+    <BeanVersion>01.259</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -5866,7 +5866,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>true</Value>
+        <Value>false</Value>
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
@@ -6641,6 +6641,38 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>FRTOS1_vApplicationMallocFailedHook</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vOnPreSleepProcessing</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>never</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vOnPreSleepProcessingName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>vOnPreSleepProcessing</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vOnPostSleepProcessing</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>never</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vOnPostSleepProcessingName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>vOnPostSleepProcessing</Value>
       </ItemState>
     </Events>
   </Bean>

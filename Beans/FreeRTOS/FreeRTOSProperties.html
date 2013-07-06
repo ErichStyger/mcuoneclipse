@@ -493,22 +493,6 @@ There are 2 options:<br />
 The following items are available only if the group is enabled (the value is "Enabled"):<br />
 
   <ul>
-    <li>
-    <a name="configPRE_SLEEP_PROCESSINGMacro">
-    <b>configPRE_SLEEP_PROCESSING</b></a> - Sleep until something happens.  configPRE_SLEEP_PROCESSING() can<br />
-      set its parameter to 0 to indicate that its implementation contains<br />
-      its own wait for interrupt or wait for event instruction, and so wfi<br />
-      should not be executed again.  However, the original expected idle<br />
-      time variable must remain unmodified, so a copy is taken. 
-    </li>
-    <li>
-    <a name="configPOST_SLEEP_PROCESSINGMacro">
-    <b>configPOST_SLEEP_PROCESSING</b></a> - Sleep until something happens.  configPRE_SLEEP_PROCESSING() can<br />
-      set its parameter to 0 to indicate that its implementation contains<br />
-      its own wait for interrupt or wait for event instruction, and so wfi<br />
-      should not be executed again.  However, the original expected idle<br />
-      time variable must remain unmodified, so a copy is taken. 
-    </li>
   </ul>
   </li>
 </ul>
