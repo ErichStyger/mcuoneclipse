@@ -149,7 +149,7 @@ typedef const unsigned char *%'ModuleName'%.TConstStringPtr; /* type for constan
 
 #define %'ModuleName'%.MAX_AT_CMD_SIZE                         (sizeof("AT+VERSION?\r\n"))  /* longest AT command */
 %if %Firmware='BC04'
-/* note: BC04 firmware responds on AT+VERSION with "BOLUTEK Firmware V2.43, Bluetooth V2.0, HCI V2.1, HCI Rev37, LMPV4,LMP SubV327" */
+/* Note: BC04 firmware responds on AT+VERSION with "BOLUTEK Firmware V2.43, Bluetooth V2.0, HCI V2.1, HCI Rev37, LMPV4,LMP SubV327" */
 #define %'ModuleName'%.MAX_RESPONSE_SIZE                       96  /* maximum response size, e.g. "+NAME:abcdef\r\nOK\r\n" */
 %else
 #define %'ModuleName'%.MAX_RESPONSE_SIZE                       42  /* maximum response size, e.g. "+NAME:abcdef\r\nOK\r\n" */
