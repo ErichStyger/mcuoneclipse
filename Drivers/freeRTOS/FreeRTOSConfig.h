@@ -179,6 +179,7 @@
 %-
 %if %TicklessIdleModeEnabled='yes'
 #define configUSE_TICKLESS_IDLE                                  %>50 1
+#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP                    %>50 %ExpectedIdleTimeBeforeSleep
 %else
 #define configUSE_TICKLESS_IDLE                                  %>50 0
 %endif

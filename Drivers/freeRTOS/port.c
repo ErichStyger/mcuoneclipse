@@ -98,6 +98,7 @@
 #endif
 /* macros dealing with tick counter */
 #if configUSE_TICKLESS_IDLE == 1
+volatile uint8_t portTickCntr; /* used to find out if we woke up by the tick interrupt */
 %if (CPUfamily = "Kinetis")
 typedef unsigned long TickCounter_t; /* for 24 bits */
 #define TICK_NOF_BITS               24
@@ -108,7 +109,6 @@ typedef unsigned long TickCounter_t; /* for 24 bits */
 #define GET_TICK_DURATION()         portNVIC_SYSTICK_LOAD_REG
 #define GET_TICK_CURRENT_VAL(addr)  *(addr)=portNVIC_SYSTICK_CURRENT_VALUE_REG
 #define RESET_TICK_COUNTER()        portNVIC_SYSTICK_CURRENT_VALUE_REG = portNVIC_SYSTICK_LOAD_REG
-#define WOKE_UP_BY_TICK_ISR()       ((portNVIC_SYSTICK_CTRL_REG&portNVIC_SYSTICK_COUNT_FLAG_BIT)!=0)
 %elif defined(TickCntr)
 #define TICK_NOF_BITS               16
 #define COUNTS_UP                   %@TickCntr@'ModuleName'%.UP_COUNTER
@@ -120,7 +120,6 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
 #define GET_TICK_DURATION()         currTickDuration
 #define RESET_TICK_COUNTER()        (void)%@TickCntr@'ModuleName'%.Reset()
 #define GET_TICK_CURRENT_VAL(addr)  (void)%@TickCntr@'ModuleName'%.GetCounterValue(addr)
-#define WOKE_UP_BY_TICK_ISR()       /* NYI */1
 %elif defined(TickTimerLDD)
 #define ENABLE_TICK_COUNTER()   (void)%@TickTimerLDD@'ModuleName'%.Enable(RTOS_TickDevice)
 %endif
@@ -130,7 +129,7 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
  * The number of timer tick increments that make up one tick period.
  */
 #if configUSE_TICKLESS_IDLE == 1
-  static TickCounter_t ulTimerReloadValueForOneTick = 0;
+  static TickCounter_t ulTimerCountsForOneTick  = 0;
 #endif
 
 /*
@@ -510,7 +509,7 @@ static portBASE_TYPE xBankedStartScheduler(void) {
 /*-----------------------------------------------------------*/
 #if configUSE_TICKLESS_IDLE == 1
 /* prototypes */
-%if defined(vPrePostSleepProcessing)
+%if defined(vOnPreSleepProcessing)
 void %vOnPreSleepProcessing(portTickType expectedIdleTicks);
 %endif
 %if defined(vOnPostSleepProcessing)
@@ -518,48 +517,43 @@ void %vOnPostSleepProcessing(portTickType expectedIdleTicks);
 %endif
 
 %if %Compiler == "GNUC"
-  __attribute__((weak)) void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
+__attribute__((weak)) void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
 %else
 void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
 %endif
   unsigned long ulReloadValue, ulCompleteTickPeriods, ulCompletedSysTickIncrements;
   TickCounter_t tmp; /* because of how we get the current tick counter */
 
-  /* Make sure the SysTick reload value does not overflow the counter. */
+  /* Make sure the tick timer reload value does not overflow the counter. */
   if(xExpectedIdleTime>xMaximumPossibleSuppressedTicks) {
     xExpectedIdleTime = xMaximumPossibleSuppressedTicks;
   }
 
+  /* Stop the tick timer momentarily. The time the counter is stopped for
+   * is accounted for as best it can be, but using the tickless mode will
+   * inevitably result in some tiny drift of the time maintained by the
+   * kernel with respect to calendar time. 
+   */
+  DISABLE_TICK_COUNTER();
+
   /* Calculate the reload value required to wait xExpectedIdleTime
-  tick periods.  -1 is used because this code will execute part way
-  through one of the tick periods, and the fraction of a tick period is
-  accounted for later. */
-  ulReloadValue = (ulTimerReloadValueForOneTick*(xExpectedIdleTime-1UL));
+   * tick periods. -1 is used because this code will execute part way
+   * through one of the tick periods. 
+   */
+  GET_TICK_CURRENT_VAL(&tmp);
+  ulReloadValue = tmp+(ulTimerCountsForOneTick*(xExpectedIdleTime-1UL));
   if (ulReloadValue>ulStoppedTimerCompensation) {
     ulReloadValue -= ulStoppedTimerCompensation;
   }
 
-  /* Stop the SysTick momentarily.  The time the SysTick is stopped for
-  is accounted for as best it can be, but using the tickless mode will
-  inevitably result in some tiny drift of the time maintained by the
-  kernel with respect to calendar time. */
-  DISABLE_TICK_COUNTER();
-
-  /* Adjust the reload value to take into account that the current time
-  slice is already partially complete. */
-  GET_TICK_CURRENT_VAL(&tmp);
-#if COUNTS_UP
-  ulReloadValue += (GET_TICK_DURATION()-tmp);
-#else
-  ulReloadValue += tmp;
-#endif
-  
   /* Enter a critical section but don't use the taskENTER_CRITICAL()
-  method as that will mask interrupts that should exit sleep mode. */
+   * method as that will mask interrupts that should exit sleep mode. 
+   */
   portDISABLE_INTERRUPTS();
 
   /* If a context switch is pending or a task is waiting for the scheduler
-  to be unsuspended then abandon the low power entry. */
+   * to be unsuspended then abandon the low power entry. 
+   */
   if (eTaskConfirmSleepModeStatus()==eAbortSleep) {
     /* Restart SysTick. */
     ENABLE_TICK_COUNTER();
@@ -568,73 +562,85 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
     /* Set the new reload value. */
     SET_TICK_DURATION(ulReloadValue);
 
-    /* Clear the SysTick count flag and set the count value back to zero. */
+    /* Reset the counter. */
     RESET_TICK_COUNTER();
 
-    /* Restart SysTick. */
+    /* Restart tick timer. */
     ENABLE_TICK_COUNTER();
+    
+    portTickCntr = 0; /* set tick counter to zero so we know if it has fired */
 
-    /* Sleep until something happens.  configPRE_SLEEP_PROCESSING() can
-    set its parameter to 0 to indicate that its implementation contains
-    its own wait for interrupt or wait for event instruction, and so wfi
-    should not be executed again.  However, the original expected idle
-    time variable must remain unmodified, so a copy is taken. */
-%if defined(vPrePostSleepProcessing)
-    %vOnPreSleepProcessing(xExpectedIdleTime);
+    /* Sleep until something happens. configPRE_SLEEP_PROCESSING() can
+     * set its parameter to 0 to indicate that its implementation contains
+     * its own wait for interrupt or wait for event instruction, and so wfi
+     * should not be executed again.  However, the original expected idle
+     * time variable must remain unmodified, so a copy is taken.
+     */
+    
+%if defined(vOnPreSleepProcessing)
+    %vOnPreSleepProcessing(xExpectedIdleTime); /* go into low power mode */
 %endif
-    /* here CPU is in low power mode, waiting to wake up */
+    /* Here CPU is in low power mode, waiting to wake up by an interrupt */
 %if defined(vOnPostSleepProcessing)
-    %vOnPostSleepProcessing(xExpectedIdleTime);
+    %vOnPostSleepProcessing(xExpectedIdleTime); /* process post-low power actions */
 %endif
-    /* Stop SysTick.  Again, the time the SysTick is stopped for is
-    accounted for as best it can be, but using the tickless mode will
-    inevitably result in some tiny drift of the time maintained by the
-    kernel with respect to calendar time. */
+
+    /* Stop tick counter. Again, the time the tick counter is stopped for is
+     * accounted for as best it can be, but using the tickless mode will
+     * inevitably result in some tiny drift of the time maintained by the
+     * kernel with respect to calendar time. 
+     */
     DISABLE_TICK_COUNTER();
 
     /* Re-enable interrupts */
     portENABLE_INTERRUPTS();
 
-    if (WOKE_UP_BY_TICK_ISR()) {
-      /* The tick interrupt has already executed, and the SysTick
-      count reloaded with the portNVIC_SYSTICK_LOAD_REG value.
-      Reset the portNVIC_SYSTICK_LOAD_REG with whatever remains of
-      this tick period. */
+    if (portTickCntr!=0) {
+      /* The tick interrupt has already executed, and the timer
+       * count reloaded with the modulo/match value.
+       * Reset the counter register with whatever remains of
+       * this tick period. 
+       */
       GET_TICK_CURRENT_VAL(&tmp);
 #if COUNTS_UP
-      SET_TICK_DURATION(ulTimerReloadValueForOneTick-tmp);
+      SET_TICK_DURATION(ulTimerCountsForOneTick-1UL-tmp);
 #else
-      SET_TICK_DURATION(ulTimerReloadValueForOneTick-(ulReloadValue-tmp));
+      SET_TICK_DURATION(ulTimerCountsForOneTick-1UL-(ulReloadValue-tmp));
 #endif
       
       /* The tick interrupt handler will already have pended the tick
-      processing in the kernel.  As the pending tick will be
-      processed as soon as this function exits, the tick value
-      maintained by the tick is stepped forward by one less than the
-      time spent waiting. */
-      ulCompleteTickPeriods = xExpectedIdleTime - 1UL;
+       * processing in the kernel.  As the pending tick will be
+       * processed as soon as this function exits, the tick value
+       * maintained by the tick is stepped forward by one less than the
+       * time spent waiting.
+       */
+      ulCompleteTickPeriods = xExpectedIdleTime-1UL;
     } else {
       /* Something other than the tick interrupt ended the sleep.
-      Work out how long the sleep lasted. */
+       * Work out how long the sleep lasted rounded to complete tick
+       * periods (not the ulReload value which accounted for part ticks). 
+       */
       GET_TICK_CURRENT_VAL(&tmp);
-      ulCompletedSysTickIncrements = (xExpectedIdleTime*ulTimerReloadValueForOneTick)-tmp;
+      ulCompletedSysTickIncrements = (xExpectedIdleTime*ulTimerCountsForOneTick )-tmp;
 
-      /* How many complete tick periods passed while the processor
-      was waiting? */
-      ulCompleteTickPeriods = ulCompletedSysTickIncrements/ulTimerReloadValueForOneTick;
+      /* How many complete tick periods passed while the processor was waiting? */
+      ulCompleteTickPeriods = ulCompletedSysTickIncrements/ulTimerCountsForOneTick ;
 
-      /* The reload value is set to whatever fraction of a single tick
-      period remains. */
-      SET_TICK_DURATION(((ulCompleteTickPeriods+1)*ulTimerReloadValueForOneTick)-ulCompletedSysTickIncrements);
+      /* The reload value is set to whatever fraction of a single tick period remains. */
+      SET_TICK_DURATION(((ulCompleteTickPeriods+1)*ulTimerCountsForOneTick )-ulCompletedSysTickIncrements);
     }
 
     /* Restart SysTick so it runs from portNVIC_SYSTICK_LOAD_REG
-    again, then set portNVIC_SYSTICK_LOAD_REG back to its standard
-    value. */
+     * again, then set portNVIC_SYSTICK_LOAD_REG back to its standard value. 
+     */
     RESET_TICK_COUNTER();
     ENABLE_TICK_COUNTER();
 
     vTaskStepTick(ulCompleteTickPeriods);
+    
+    /* The counter must start by the time the reload value is reset. */
+    /*configASSERT(portNVIC_SYSTICK_CURRENT_VALUE_REG);*/
+    SET_TICK_DURATION(ulTimerCountsForOneTick-1UL);
   }
 }
 #endif /* #if configUSE_TICKLESS_IDLE */
@@ -646,7 +652,7 @@ void vPortInitTickTimer(void) {
 %endif
 #if configUSE_TICKLESS_IDLE == 1
 {
-  ulTimerReloadValueForOneTick = (configSYSTICK_CLOCK_HZ/configTICK_RATE_HZ)-1UL;
+  ulTimerCountsForOneTick  = (configSYSTICK_CLOCK_HZ/configTICK_RATE_HZ)-1UL;
 #if TICK_NOF_BITS==32
   xMaximumPossibleSuppressedTicks = 0xffffffffUL/((configSYSTICK_CLOCK_HZ/configTICK_RATE_HZ)-1UL); /* 32bit timer register */
 #elif TICK_NOF_BITS==24
@@ -1003,6 +1009,9 @@ PE_ISR(RTOSTICKLDD1_Interrupt)
   );
   #endif
 #endif
+#if configUSE_TICKLESS_IDLE == 1
+  portTickCntr++;
+#endif
   /* If using preemption, also force a context switch. */
 #if configUSE_PREEMPTION == 1
   *(portNVIC_INT_CTRL) = portNVIC_PENDSVSET_BIT;
@@ -1011,9 +1020,6 @@ PE_ISR(RTOSTICKLDD1_Interrupt)
   1.  If it is set to 0 tickless idle is not being used.  If it is set to a
   value other than 0 or 1 then a timer other than the SysTick is being used
   to generate the tick interrupt. */
-#if configUSE_TICKLESS_IDLE == 1
-  portNVIC_SYSTICK_LOAD_REG = ulTimerReloadValueForOneTick;
-#endif
   portSET_INTERRUPT_MASK();   /* disable interrupts */
   vTaskIncrementTick(); /* increment tick count, might schedule a task */
   portCLEAR_INTERRUPT_MASK(); /* enable interrupts again */

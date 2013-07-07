@@ -1959,6 +1959,9 @@ void %@TickCntr@OnInterrupt(void)
     MOVE.L D7,D0
     JSR ulPortSetIPL
   }
+#if configUSE_TICKLESS_IDLE == 1
+  portTickCntr++;
+#endif
   /* If we are using the pre-emptive scheduler then also request a
      context switch as incrementing the tick could have unblocked a task. */
   #if configUSE_PREEMPTION == 1
@@ -1971,7 +1974,7 @@ void %@TickCntr@OnInterrupt(void)
     RTE                                                          %>40 /* Return to task or nested ISR */
   }
 %elif (CPUfamily = "Kinetis")
-  /* Kinetis is using LDD apprroach */
+  /* Kinetis is using LDD approach */
 %elif (CPUfamily = "HCS08") | (CPUfamily = "HC08")
   __asm {
     PULH  ; remove return address from stack (from JSR to this function)
@@ -1980,6 +1983,9 @@ void %@TickCntr@OnInterrupt(void)
     PULH  ; was a CALL instruction (not a JSR): there are 3 bytes on the stack.
 #endif
   }
+#if configUSE_TICKLESS_IDLE == 1
+  portTickCntr++;
+#endif
   #if configUSE_PREEMPTION == 1
     /* A context switch might happen so save the context. */
     portSAVE_CONTEXT();
@@ -2003,6 +2009,9 @@ void %@TickCntr@OnInterrupt(void)
     LEAS 2,SP
 #endif
   }
+#if configUSE_TICKLESS_IDLE == 1
+  portTickCntr++;
+#endif
   #if configUSE_PREEMPTION == 1
     /* A context switch might happen so save the context. */
     portSAVE_CONTEXT();
@@ -2045,6 +2054,9 @@ void %@TickCntr@OnInterrupt(void)
 
   /* If we are using the pre-emptive scheduler then also request a
      context switch as incrementing the tick could have unblocked a task. */
+#if configUSE_TICKLESS_IDLE == 1
+  portTickCntr++;
+#endif
   #if configUSE_PREEMPTION == 1
   {
     taskYIELD();

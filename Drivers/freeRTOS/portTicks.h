@@ -85,5 +85,8 @@ portLONG uxGetTickCounterValue(void);
 
 #define HWTC_COUNT (uxGetTickCounterValue())
 
+#if configUSE_TICKLESS_IDLE == 1
+extern volatile uint8_t portTickCntr; /* used to find out if we woke up by the tick interrupt */
+#endif
 
 #endif /* PORTTICKS_H_ */
