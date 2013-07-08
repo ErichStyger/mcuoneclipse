@@ -28,6 +28,19 @@
 #include "LED2.h"
 #include "LEDpin4.h"
 #include "BitIoLdd4.h"
+#include "LED3.h"
+#include "LEDpin1.h"
+#include "BitIoLdd1.h"
+#include "WAIT1.h"
+#include "B8.h"
+#include "BitIoLdd2.h"
+#include "B9.h"
+#include "BitIoLdd5.h"
+#include "B10.h"
+#include "BitIoLdd6.h"
+#include "TI1.h"
+#include "TimerIntLdd1.h"
+#include "TU1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -38,11 +51,15 @@
 static portTASK_FUNCTION(Task1, pvParameters) {
   (void)pvParameters; /* parameter not used */
   for(;;) {
-    //LED1_Neg();
-    FRTOS1_vTaskDelay(5000/portTICK_RATE_MS);
+    B8_SetVal();
+    LED1_On();
+    WAIT1_Waitms(1);
+    LED1_Off();
+    B8_ClrVal();
+    FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
   }
 }
-
+#if 0
 static portTASK_FUNCTION(Task2, pvParameters) {
   (void)pvParameters; /* parameter not used */
   for(;;) {
@@ -50,10 +67,11 @@ static portTASK_FUNCTION(Task2, pvParameters) {
     FRTOS1_vTaskDelay(10000/portTICK_RATE_MS);
   }
 }
-
+#endif
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
+
 {
   /* Write your local variable definition here */
 
@@ -71,6 +89,7 @@ int main(void)
       ) != pdPASS) {
     for(;;){}; /* Out of heap memory? */
   }
+#if 0
   if (FRTOS1_xTaskCreate(
         Task2,  /* pointer to the task */
         (signed portCHAR *)"Task2", /* task name for kernel awareness debugging */
@@ -81,7 +100,7 @@ int main(void)
       ) != pdPASS) {
     for(;;){}; /* Out of heap memory */
   }
-
+#endif
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
   #ifdef PEX_RTOS_START

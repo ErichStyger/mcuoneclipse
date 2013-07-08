@@ -32,6 +32,19 @@
 #include "LED2.h"
 #include "LEDpin4.h"
 #include "BitIoLdd4.h"
+#include "LED3.h"
+#include "LEDpin1.h"
+#include "BitIoLdd1.h"
+#include "WAIT1.h"
+#include "B8.h"
+#include "BitIoLdd2.h"
+#include "B9.h"
+#include "BitIoLdd5.h"
+#include "B10.h"
+#include "BitIoLdd6.h"
+#include "TI1.h"
+#include "TimerIntLdd1.h"
+#include "TU1.h"
 #include "PE_LDD.h"
 
 void Cpu_OnNMIINT(void);
@@ -125,6 +138,39 @@ void vOnPreSleepProcessing(portTickType expectedIdleTicks);
 **     Returns     : Nothing
 ** ===================================================================
 */
+
+void vOnPostSleepProcessing(portTickType expectedIdleTicks);
+/*
+** ===================================================================
+**     Event       :  vOnPostSleepProcessing (module Events)
+**
+**     Component   :  FRTOS1 [FreeRTOS]
+**     Description :
+**         Event called after the CPU woke up after low power mode.
+**         This event is optional.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+/*
+** ===================================================================
+**     Event       :  TI1_OnInterrupt (module Events)
+**
+**     Component   :  TI1 [TimerInt]
+**     Description :
+**         When a timer interrupt occurs this event is called (only
+**         when the component is enabled - <Enable> and the events are
+**         enabled - <EnableEvent>). This event is enabled only if a
+**         <interrupt service/event> is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void TI1_OnInterrupt(void);
 
 /* END Events */
 #endif /* __Events_H*/

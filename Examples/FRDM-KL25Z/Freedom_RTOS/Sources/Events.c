@@ -82,7 +82,7 @@ void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *
 void FRTOS1_vApplicationTickHook(void)
 {
   /* Called for every RTOS tick. */
-  LED1_Neg();
+  B9_NegVal();
 }
 
 /*
@@ -148,6 +148,7 @@ void FRTOS1_vApplicationMallocFailedHook(void)
 void vOnPreSleepProcessing(portTickType expectedIdleTicks)
 {
 #if 1 /* example for Kinetis (enable SetOperationMode() in CPU component: */
+  B10_SetVal();
   Cpu_SetOperationMode(DOM_SLEEP, NULL, NULL);
 #endif
 #if 0 /* example for S08 (enable SetWaitMode() in CPU: */
@@ -156,6 +157,45 @@ void vOnPreSleepProcessing(portTickType expectedIdleTicks)
 #if 0 /* example for ColdFire V2: */
    __asm("stop #0x2000"); */
 #endif
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  vOnPostSleepProcessing (module Events)
+**
+**     Component   :  FRTOS1 [FreeRTOS]
+**     Description :
+**         Event called after the CPU woke up after low power mode.
+**         This event is optional.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+void vOnPostSleepProcessing(portTickType expectedIdleTicks)
+{
+  B10_ClrVal();
+}
+
+/*
+** ===================================================================
+**     Event       :  TI1_OnInterrupt (module Events)
+**
+**     Component   :  TI1 [TimerInt]
+**     Description :
+**         When a timer interrupt occurs this event is called (only
+**         when the component is enabled - <Enable> and the events are
+**         enabled - <EnableEvent>). This event is enabled only if a
+**         <interrupt service/event> is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void TI1_OnInterrupt(void)
+{
   /* Write your code here ... */
 }
 
