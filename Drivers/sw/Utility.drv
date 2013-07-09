@@ -1810,31 +1810,36 @@ byte %'ModuleName'%.%ScanTime(const unsigned char **str, byte *hour, byte *minut
     p++; /* skip ':' */
     if (   %'ModuleName'%.ScanDecimal8uNumber(&p, minute)==ERR_OK
         && *minute <= 60
-        && *p==':'
        )
     {
-      p++; /* skip ':' */
-      if (   %'ModuleName'%.ScanDecimal8uNumber(&p, second)==ERR_OK
-          && *second <= 60
-         )
-      {
-        if (*p==',') { /* we do have either ",z" or ",hh" */
-          p++; /* skip ',' */
-          if (SCAN_IS_DIGIT(*p)) {
-            if (SCAN_IS_DIGIT(*(p+1))) { /* ,hh format */
-              *hSecond = (uint8_t)((*p-'0')*10 + *(p+1)-'0');
-              p++; p++;
-              return ERR_OK;
-            } else { /* ,z format */
-              *hSecond = (uint8_t)((*p-'0')*10);
-              p++;
-              *str = p; /* advance pointer for caller */
-              return ERR_OK;
+      if (*p==':') { /* there is more after the minute */
+        p++; /* skip ':' */
+        if (   %'ModuleName'%.ScanDecimal8uNumber(&p, second)==ERR_OK
+            && *second <= 60
+           )
+        {
+          if (*p==',') { /* we do have either ",z" or ",hh" */
+            p++; /* skip ',' */
+            if (SCAN_IS_DIGIT(*p)) {
+              if (SCAN_IS_DIGIT(*(p+1))) { /* ,hh format */
+                *hSecond = (uint8_t)((*p-'0')*10 + *(p+1)-'0');
+                p++; p++;
+                return ERR_OK;
+              } else { /* ,z format */
+                *hSecond = (uint8_t)((*p-'0')*10);
+                p++;
+                *str = p; /* advance pointer for caller */
+                return ERR_OK;
+              }
+            } else {
+              return ERR_FAILED; /* illegal format, not a number, e.g. ",x" */
             }
-          } else {
-            return ERR_FAILED; /* illegal format, not a number, e.g. ",x" */
           }
+          *str = p; /* advance pointer for caller */
+          return ERR_OK;
         }
+      } else if (*p==' ' || *p=='\0') { /* nothing more after the minute? Assume zero seconds */
+        *str = p; /* advance pointer for caller */
         return ERR_OK;
       }
     }
