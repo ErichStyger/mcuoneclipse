@@ -293,7 +293,7 @@ void time_delay(uint_32 delay) {
   extern volatile long delay_count; /* needs to be incremented in Events.c by a 1 ms timer */
 
   delay_count = 0;
-  while(delay_count<delay_count) {
+  while(delay_count<delay) {
     /* wait */
   }
 #endif
