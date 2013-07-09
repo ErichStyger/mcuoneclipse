@@ -2215,7 +2215,7 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 						portSUPPRESS_TICKS_AND_SLEEP( xExpectedIdleTime );
 					}
 				}
-				xTaskResumeAll();
+				(void)xTaskResumeAll();
 			}
 		}
 		#endif /* configUSE_TICKLESS_IDLE */

@@ -82,7 +82,7 @@ void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *
 void FRTOS1_vApplicationTickHook(void)
 {
   /* Called for every RTOS tick. */
-  /* Write your code here ... */
+  LED1_Neg();
 }
 
 /*
@@ -101,7 +101,7 @@ void FRTOS1_vApplicationIdleHook(void)
 {
   /* Called whenever the RTOS is idle (from the IDLE task).
      Here would be a good place to put the CPU into low power mode. */
-  Cpu_SetOperationMode(DOM_WAIT, NULL, NULL); /* next interrupt will wake us up */
+//  Cpu_SetOperationMode(DOM_WAIT, NULL, NULL); /* next interrupt will wake us up */
 //  Cpu_SetOperationMode(DOM_SLEEP, NULL, NULL); /* next interrupt will wake us up */
 //  Cpu_SetOperationMode(DOM_STOP, NULL, NULL); /* next interrupt will wake us up */
 }
@@ -128,6 +128,35 @@ void FRTOS1_vApplicationMallocFailedHook(void)
   taskDISABLE_INTERRUPTS();
   /* Write your code here ... */
   for(;;) {}
+}
+
+/*
+** ===================================================================
+**     Event       :  vOnPreSleepProcessing (module Events)
+**
+**     Component   :  FRTOS1 [FreeRTOS]
+**     Description :
+**         Used in tickless idle mode only, but required in this mode.
+**         Hook for the application to enter low power mode.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+void vOnPreSleepProcessing(portTickType expectedIdleTicks)
+{
+#if 1 /* example for Kinetis (enable SetOperationMode() in CPU component: */
+  Cpu_SetOperationMode(DOM_SLEEP, NULL, NULL);
+#endif
+#if 0 /* example for S08 (enable SetWaitMode() in CPU: */
+  Cpu_SetWaitMode();
+#endif
+#if 0 /* example for ColdFire V2: */
+   __asm("stop #0x2000"); */
+#endif
+  /* Write your code here ... */
 }
 
 /* END Events */

@@ -109,6 +109,23 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 ** ===================================================================
 */
 
+void vOnPreSleepProcessing(portTickType expectedIdleTicks);
+/*
+** ===================================================================
+**     Event       :  vOnPreSleepProcessing (module Events)
+**
+**     Component   :  FRTOS1 [FreeRTOS]
+**     Description :
+**         Used in tickless idle mode only, but required in this mode.
+**         Hook for the application to enter low power mode.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+
 /* END Events */
 #endif /* __Events_H*/
 

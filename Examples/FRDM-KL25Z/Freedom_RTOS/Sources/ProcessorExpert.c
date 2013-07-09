@@ -38,16 +38,16 @@
 static portTASK_FUNCTION(Task1, pvParameters) {
   (void)pvParameters; /* parameter not used */
   for(;;) {
-    LED1_Neg();
-    FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
+    //LED1_Neg();
+    FRTOS1_vTaskDelay(5000/portTICK_RATE_MS);
   }
 }
 
 static portTASK_FUNCTION(Task2, pvParameters) {
   (void)pvParameters; /* parameter not used */
   for(;;) {
-    LED2_Neg();
-    FRTOS1_vTaskDelay(1050/portTICK_RATE_MS);
+    //LED2_Neg();
+    FRTOS1_vTaskDelay(10000/portTICK_RATE_MS);
   }
 }
 

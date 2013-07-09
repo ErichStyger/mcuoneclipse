@@ -1001,6 +1001,24 @@ void %vApplicationMallocFailedHook(void);
 
 %endif %- vApplicationMallocFailedHook
 %-BW_METHOD_END vApplicationMallocFailedHook
+%-BW_METHOD_BEGIN vOnPostSleepProcessing
+%ifdef vOnPostSleepProcessing
+%INTERFACE vOnPostSleepProcessing
+void %vOnPostSleepProcessing(portTickType expectedIdleTicks);
+%define! ParexpectedIdleTicks
+%include Common\FreeRTOSvOnPostSleepProcessing.Inc
+
+%endif %- vOnPostSleepProcessing
+%-BW_METHOD_END vOnPostSleepProcessing
+%-BW_METHOD_BEGIN vOnPreSleepProcessing
+%ifdef vOnPreSleepProcessing
+%INTERFACE vOnPreSleepProcessing
+void %vOnPreSleepProcessing(portTickType expectedIdleTicks);
+%define! ParexpectedIdleTicks
+%include Common\FreeRTOSvOnPreSleepProcessing.Inc
+
+%endif %- vOnPreSleepProcessing
+%-BW_METHOD_END vOnPreSleepProcessing
 %-BW_EVENT_DEFINITION_END
 %IMPLEMENTATION
 %define! Settings Common\FreeRTOSSettings.Inc
@@ -1941,6 +1959,9 @@ void %@TickCntr@OnInterrupt(void)
     MOVE.L D7,D0
     JSR ulPortSetIPL
   }
+#if configUSE_TICKLESS_IDLE == 1
+  portTickCntr++;
+#endif
   /* If we are using the pre-emptive scheduler then also request a
      context switch as incrementing the tick could have unblocked a task. */
   #if configUSE_PREEMPTION == 1
@@ -1953,7 +1974,7 @@ void %@TickCntr@OnInterrupt(void)
     RTE                                                          %>40 /* Return to task or nested ISR */
   }
 %elif (CPUfamily = "Kinetis")
-  /* Kinetis is using LDD apprroach */
+  /* Kinetis is using LDD approach */
 %elif (CPUfamily = "HCS08") | (CPUfamily = "HC08")
   __asm {
     PULH  ; remove return address from stack (from JSR to this function)
@@ -1962,6 +1983,9 @@ void %@TickCntr@OnInterrupt(void)
     PULH  ; was a CALL instruction (not a JSR): there are 3 bytes on the stack.
 #endif
   }
+#if configUSE_TICKLESS_IDLE == 1
+  portTickCntr++;
+#endif
   #if configUSE_PREEMPTION == 1
     /* A context switch might happen so save the context. */
     portSAVE_CONTEXT();
@@ -1985,6 +2009,9 @@ void %@TickCntr@OnInterrupt(void)
     LEAS 2,SP
 #endif
   }
+#if configUSE_TICKLESS_IDLE == 1
+  portTickCntr++;
+#endif
   #if configUSE_PREEMPTION == 1
     /* A context switch might happen so save the context. */
     portSAVE_CONTEXT();
@@ -2027,6 +2054,9 @@ void %@TickCntr@OnInterrupt(void)
 
   /* If we are using the pre-emptive scheduler then also request a
      context switch as incrementing the tick could have unblocked a task. */
+#if configUSE_TICKLESS_IDLE == 1
+  portTickCntr++;
+#endif
   #if configUSE_PREEMPTION == 1
   {
     taskYIELD();
@@ -2349,6 +2379,39 @@ void %vApplicationMallocFailedHook(void)
 
 %endif %- vApplicationMallocFailedHook
 %-BW_METHOD_END vApplicationMallocFailedHook
+%-BW_METHOD_BEGIN vOnPostSleepProcessing
+%ifdef vOnPostSleepProcessing
+%IMPLEMENTATION vOnPostSleepProcessing
+%define! ParexpectedIdleTicks
+%include Common\FreeRTOSvOnPostSleepProcessing.Inc
+void %vOnPostSleepProcessing(portTickType expectedIdleTicks)
+{
+  /* Write your code here ... */
+}
+
+%endif %- vOnPostSleepProcessing
+%-BW_METHOD_END vOnPostSleepProcessing
+%-BW_METHOD_BEGIN vOnPreSleepProcessing
+%ifdef vOnPreSleepProcessing
+%IMPLEMENTATION vOnPreSleepProcessing
+%define! ParexpectedIdleTicks
+%include Common\FreeRTOSvOnPreSleepProcessing.Inc
+void %vOnPreSleepProcessing(portTickType expectedIdleTicks)
+{
+#if 0 /* example for Kinetis (enable SetOperationMode() in CPU component: */
+  Cpu_SetOperationMode(DOM_WAIT, NULL, NULL);
+#endif
+#if 0 /* example for S08 (enable SetWaitMode() in CPU: */
+  Cpu_SetWaitMode();
+#endif
+#if 0 /* example for ColdFire V2: */
+   __asm("stop #0x2000"); */
+#endif
+  /* Write your code here ... */
+}
+
+%endif %- vOnPreSleepProcessing
+%-BW_METHOD_END vOnPreSleepProcessing
 %-BW_EVENT_IMPLEMENT_END
 %INITIALIZATION
   /* ### %DeviceType "%DeviceName" init code ... */

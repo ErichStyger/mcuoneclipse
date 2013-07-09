@@ -54,7 +54,7 @@
   %set btQueryMultipleUserIOPinsStr Selection never
   %set btQueryMultipleUserIOPins Selection never
   %set btFindDeviceFromAuthenticatedDeviceListStr Selection never
-%else
+%else %- HC-05 firmware
   %set btResetDevice Selection enable
   %set btRestoreFactoryDefault Selection enable
   %set btQueryBluetoothAddressStr Selection enable
