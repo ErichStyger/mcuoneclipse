@@ -646,13 +646,13 @@ byte %'ModuleName'%.%HostInit(void)
     //print ((unsigned char*)"\nUnable to allocate Command Block Wrapper!");
     return ERR_FAILED;
   }
-  memset(pCmd.CBW_PTR, 0, sizeof(CBW_STRUCT));
+  USB_mem_zero(pCmd.CBW_PTR, sizeof(CBW_STRUCT));
   pCmd.CSW_PTR = (CSW_STRUCT_PTR)USB_mem_alloc_word_aligned(sizeof(CSW_STRUCT));
   if (pCmd.CSW_PTR == NULL) {
      //print ((unsigned char*)"\nUnable to allocate Command Status Wrapper!");
      return ERR_FAILED;
   }
-  memset(pCmd.CSW_PTR, 0, sizeof(CSW_STRUCT));
+  USB_mem_zero(pCmd.CSW_PTR, sizeof(CSW_STRUCT));
   //print((unsigned char*)"\nUSB MSD Application.\nWaiting for USB mass storage to be attached...\n");
   return ERR_OK;
 }

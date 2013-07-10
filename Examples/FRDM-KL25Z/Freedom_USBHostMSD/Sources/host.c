@@ -58,7 +58,6 @@ static void HOST_Run(void) {
 
 static portTASK_FUNCTION(HostTask, pvParameters) {
   (void)pvParameters; /* not used */
-  FsMSD1_HostInit();
   for(;;) {
     FsMSD1_AppTask();
     CheckStatus();
@@ -72,6 +71,7 @@ void HOST_Init(void) {
   FsMSD1_HostInit();
   HOST_Run();
 #else
+  FsMSD1_HostInit();
   if (FRTOS1_xTaskCreate(HostTask, (signed portCHAR *)"Host", configMINIMAL_STACK_SIZE+100, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }

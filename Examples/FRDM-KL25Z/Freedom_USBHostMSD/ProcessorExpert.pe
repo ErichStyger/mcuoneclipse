@@ -3,8 +3,8 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>72</ModificationStamp>
-    <Date>2013-07-09</Date>
+    <ModificationStamp>73</ModificationStamp>
+    <Date>2013-07-10</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.7.3.RT4_b1324-1612</PEversion>
   </Header>
@@ -4257,7 +4257,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.262</BeanVersion>
+    <BeanVersion>01.266</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -7874,6 +7874,20 @@
         <Value>2</Value>
         <Base>DEC</Base>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>UserHeapSectionEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>HeapSectionName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>.m_data_20000000</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -18409,7 +18423,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.010</BeanVersion>
+          <BeanVersion>01.014</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -18423,7 +18437,7 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>2</Index>
+              <Index>3</Index>
               <EnumSymbVal>Kinetis L2K</EnumSymbVal>
               <CustomValue />
             </ItemState>
