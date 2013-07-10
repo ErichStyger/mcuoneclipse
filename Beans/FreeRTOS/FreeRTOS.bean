@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.262</Version>
+    <Version>01.266</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -759,7 +759,7 @@ To use this method in combination with method 1 set configCHECK_FOR_STACK_OVERFL
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
               <Description>Disabled</Description>
-              <Expanded>Yes</Expanded>
+              <Expanded>No</Expanded>
               <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
@@ -1151,6 +1151,37 @@ This scheme:\n
               <CanDelete>false</CanDelete>
               <IconPopup>false</IconPopup>
             </TEnumItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>User Heap Section</Name>
+              <Symbol>UserHeapSectionEnabled</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>An optional user section attribute can be provided to place the heap into a user section. This is for example needed for the Kinetis K series where the RAM area is splitted. With this, e.g.  __attribute__((section (".m_data_20000000"))) can be specified for the heap object in heap.c</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Disabled</Description>
+              <Expanded>Yes</Expanded>
+              <DefaultValue>false</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TStrgItem>
+                    <Name>Heap Section Name</Name>
+                    <Symbol>HeapSectionName</Symbol>
+                    <Hint>The following will be added to the heap variable: __attribute__((section ("sectionName")))</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>.m_data_20000000</DefaultValue>
+                    <StrDefine>nothing</StrDefine>
+                    <MinLength>0</MinLength>
+                    <MaxLength>-1</MaxLength>
+                  </TStrgItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
           </GrupItem>
           <GrupItem>
             <TIntgItem>

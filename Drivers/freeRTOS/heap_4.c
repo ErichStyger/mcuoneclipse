@@ -104,7 +104,11 @@ task.h is included from an application file. */
 #define configADJUSTED_HEAP_SIZE	( configTOTAL_HEAP_SIZE - portBYTE_ALIGNMENT )
 
 /* Allocate the memory for the heap. */
-static unsigned char ucHeap[ configTOTAL_HEAP_SIZE ];
+%if defined(HeapSectionName)
+static unsigned char __attribute__((section ("%HeapSectionName"))) ucHeap[configTOTAL_HEAP_SIZE];
+%else
+static unsigned char ucHeap[configTOTAL_HEAP_SIZE];
+%endif
 
 /* Define the linked list structure.  This is used to link free blocks in order
 of their memory address. */

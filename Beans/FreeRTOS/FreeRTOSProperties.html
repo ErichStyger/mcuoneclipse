@@ -614,6 +614,18 @@ There are 4 options:<br />
 
   </li>
   <li>
+  <a name="UserHeapSectionEnabled">
+  <b>User Heap Section</b></a> - An optional user section attribute can be provided to place the heap into a user section. This is for example needed for the Kinetis K series where the RAM area is splitted. With this, e.g.  __attribute__((section (&quot;.m_data_20000000&quot;))) can be specified for the heap object in heap.c<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+  <ul>
+    <li>
+    <a name="HeapSectionName">
+    <b>Heap Section Name</b></a> - The following will be added to the heap variable: __attribute__((section (&quot;sectionName&quot;)))
+    </li>
+  </ul>
+  </li>
+  <li>
   <a name="TotalHeapSize">
   <b>Total Heap Size</b></a> - The total amount of RAM available to the kernel. This value is used by the memory allocation schemes.
   </li>

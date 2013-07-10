@@ -202,6 +202,7 @@ extern void vPortClearInterruptMaskFromISR(unsigned portBASE_TYPE);
 %if (CPUfamily = "ColdFireV1") | (CPUfamily = "MCF")
 extern void vPortEnterCritical(void);
 extern void vPortExitCritical(void);
+#define portDISABLE_ALL_INTERRUPTS()         (void)ulPortSetIPL(7)
 #define portDISABLE_INTERRUPTS()             (void)ulPortSetIPL(configMAX_SYSCALL_INTERRUPT_PRIORITY)
 #define portENABLE_INTERRUPTS()              (void)ulPortSetIPL(0)
 #define portENTER_CRITICAL()                 vPortEnterCritical()
@@ -209,12 +210,14 @@ extern void vPortExitCritical(void);
 %elif (CPUfamily = "HCS08") | (CPUfamily = "HC08") | (CPUfamily = "HCS12") | (CPUfamily = "HCS12X")
 extern void vPortEnterCritical(void);
 extern void vPortExitCritical(void);
+#define portDISABLE_ALL_INTERRUPTS()         __asm("cli")
 #define portENABLE_INTERRUPTS()              __asm("cli")
 #define portDISABLE_INTERRUPTS()             __asm("sei")
 #define portENTER_CRITICAL()                 vPortEnterCritical()
 #define portEXIT_CRITICAL()                  vPortExitCritical()
 %elif (CPUfamily = "Kinetis") & (%Compiler == "GNUC")
 /* macro to identify CPU: 0 for M0+ and 4 for M4 */
+#define portDISABLE_ALL_INTERRUPTS()         __asm volatile("cpsid i")
 %if %CPUDB_prph_has_feature(CPU,ARM_CORTEX_M0P) = 'yes' %- Note: for IAR this is defined in portasm.s too!
 #define FREERTOS_CPU_CORTEX_M                                    %>>0 /* Cortex M0+ core */
 %else
@@ -259,6 +262,7 @@ extern void vPortExitCritical(void);
 extern void vPortEnterCritical(void);
 extern void vPortExitCritical(void);
 
+#define portDISABLE_ALL_INTERRUPTS()   __asm volatile("cpsid i")
 #define portDISABLE_INTERRUPTS()   portSET_INTERRUPT_MASK()
 #define portENABLE_INTERRUPTS()    portCLEAR_INTERRUPT_MASK()
 #define portENTER_CRITICAL()       vPortEnterCritical()
@@ -275,9 +279,11 @@ extern void vPortEnterCritical(void);
 extern void vPortExitCritical(void);
 %if (%Compiler = "IARARM")
 /* \todo: !!! IAR does not allow msr BASEPRI, r0 in vPortSetInterruptMask()? */
+#define portDISABLE_ALL_INTERRUPTS()         __asm volatile( "cpsid i" )
 #define portDISABLE_INTERRUPTS()             __asm volatile( "cpsid i" )
 #define portENABLE_INTERRUPTS()              __asm volatile( "cpsie i" )
 %else
+#define portDISABLE_ALL_INTERRUPTS()         __asm volatile( "cpsid i" )
 #define portDISABLE_INTERRUPTS()             vPortSetInterruptMask()
 #define portENABLE_INTERRUPTS()              vPortClearInterruptMask()
 %endif
