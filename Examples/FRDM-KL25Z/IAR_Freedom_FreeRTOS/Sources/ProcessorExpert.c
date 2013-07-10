@@ -53,7 +53,7 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
-  f();
+  //f(); /* enforce a hard fault exception for test */
   /* For example: for(;;) { } */
   if (FRTOS1_xTaskCreate(MyTask, (signed portCHAR *)"Task",
 		  configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL) != pdPASS) {
