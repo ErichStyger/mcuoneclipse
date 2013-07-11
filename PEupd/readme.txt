@@ -9,7 +9,7 @@ https://github.com/ErichStyger/mcuoneclipse/Beans
 https://github.com/ErichStyger/mcuoneclipse/Drivers
 
 
-Part1_Beans_29.06.2013.PEupd Content:
+Part1_Beans_*.PEupd Content:
 -------------------------------------
 Package from component(s):
 - 24AA_EEPROM version 01.004
@@ -18,7 +18,7 @@ Package from component(s):
 - App_SMAC_Hello version 01.085
 - AT25HP512 version 01.033
 - BitIO_to_PCA9554 version 01.018
-- Bluetooth_EGBT version 01.039
+- Bluetooth_EGBT version 01.043
 - BootLoaderDisk version 01.018
 - BootLoaderUSB version 01.020
 - ChLCD version 01.160
@@ -29,12 +29,12 @@ Package from component(s):
 - FatFsMem_USB_MSD version 01.019
 - FatFsMemSDHC version 01.006
 - FontDisplay version 01.195
-- FreeRTOS version 01.217
+- FreeRTOS version 01.266
 - FreeRTOSTrace version 01.003
-- FSL_USB_CDC_Device version 01.015
-- FSL_USB_HID_Keyboard_Device version 01.037
-- FSL_USB_MSD_Host version 01.010
-- FSL_USB_Stack version 01.016
+- FSL_USB_CDC_Device version 01.016
+- FSL_USB_HID_Keyboard_Device version 01.039
+- FSL_USB_MSD_Host version 01.014
+- FSL_USB_Stack version 01.018
 - FSShell version 01.231
 - GDisplay version 01.190
 - GenericBitIO version 01.065
@@ -67,10 +67,9 @@ Package from component(s):
 - MMA8451Q version 01.024
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 29.06.2013
+created 11.07.2013
 
-
-Part2_Beans_16.06.2013.PEupd Content:
+Part2_Beans_*.PEupd Content:
 -------------------------------------
 Package from component(s):
 - OLED version 01.045
@@ -116,8 +115,12 @@ Package from component(s):
 - UISpace version 01.012
 - UIText version 01.059
 - UIWindow version 01.033
+- USB_CMX version 01.027
+- USB_Config_CMX version 01.022
+- USB_HID_CMX version 01.012
+- USB_Host_CMX version 01.058
 - UserInterface version 01.510
 - UTI version 01.125
 - Utility version 01.086
 - Wait version 01.059
-created 29.06.2013
+created 11.07.2013
