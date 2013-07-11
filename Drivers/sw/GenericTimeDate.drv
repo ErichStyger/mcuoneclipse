@@ -307,7 +307,7 @@ byte %'ModuleName'%.%GetTime(TIMEREC *Time)
   EnterCritical();                                               %>40/* Save the PS register */
   Var1 = TotalHthH;                                              %>40/* Loading actual number of tens of ms */
   ExitCritical();                                                %>40/* Restore the PS register */
-  Time->Sec100 = (byte)(Var1 %% 100U);                           %>40/* Modulo 100 gives appropriate number of hundreds of seconds */
+  Time->Sec100 = (byte)(Var1 %% 100U);                           %>40/* Modulo 100 gives appropriate number of hundredths of seconds */
   Var1 = (dword)(Var1 / 100UL);                                  %>40/* Quotient gives total number of seconds then */
   Time->Sec = (byte)(Var1 %% 60U);                               %>40/* Modulo 60 gives appropriate number of seconds */
   Var2 = (word)(Var1 / 60UL);                                    %>40/* Quotient gives total number of minutes then */
