@@ -1012,7 +1012,7 @@ static uint8_t PrintLongStatus(const %@Shell@'ModuleName'%.StdIOType *io)
   (void)ExecuteQueryString(%'ModuleName'%.%btQueryLEDOutputPolarityStr, buf, sizeof(buf), (unsigned char*)"\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  LEDPolarity", buf, io->stdOut);
 %else
-  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  LEDPolarity", (unsigned char*)"N/A\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  LEDPolarity", (unsigned char*)"N/A\r\n", io->stdOut);
 %endif
 
   (void)ExecuteQueryString(%'ModuleName'%.%btQueryScanningParametersStr, buf, sizeof(buf), (unsigned char*)"\r\n");
@@ -1037,7 +1037,7 @@ static uint8_t PrintLongStatus(const %@Shell@'ModuleName'%.StdIOType *io)
   (void)ExecuteQueryString(%'ModuleName'%.%btQueryMultipleUserIOPinsStr, buf, sizeof(buf), (unsigned char*)"\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  I/O Pins", buf, io->stdOut);
 %else
-  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  I/O Pins", (unsigned char*)"N/A\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  I/O Pins", (unsigned char*)"N/A\r\n", io->stdOut);
 %endif
 
   if (%'ModuleName'%.%btQueryRole(&buf[0])!=ERR_OK) {
