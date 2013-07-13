@@ -213,7 +213,7 @@ static void HovalManualButton(bool toManualMode, const CLS1_StdIOType *io) {
   }
 }
 
-static void TurnCoolingOn(bool on, const CLS1_StdIOType *io) {
+static void SetCooling(bool on, const CLS1_StdIOType *io) {
   if (on) {
     isPumpOn = TRUE;
     HovalManualButton(TRUE, io); /* enable 'manual' mode, Hoval running for 180 minutes */
@@ -250,10 +250,11 @@ static portTASK_FUNCTION(Button, pvParameters) {
           FRTOS1_vTaskDelay(10/portTICK_RATE_MS); /* debounce */
         }
         DisableScheduler(io);
-        if (isPumpOn) {
-          TurnCoolingOn(FALSE, io);
+        if (isPumpOn) { /* pump is on, toggle it */
+          SetCooling(FALSE, io); /* turn cooling off */
+          mySchedule.isSchedulerOn = TRUE; /* turn scheduler on again */
         } else {
-          TurnCoolingOn(TRUE, io);
+          SetCooling(TRUE, io); /* turn cooling on */
         }
       }
     }
@@ -269,7 +270,7 @@ static portTASK_FUNCTION(Hoval, pvParameters) {
    *      Off: no scheduler
    */
   CLS1_ConstStdIOType *io = CLS1_GetStdio();
-  bool isEnabled = FALSE; /* SW1 status */
+  bool isEnabled = SW1_GetVal()==0; /* initial SW1 status */
   uint16_t secondsOn; /* number of seconds turned on */
   
   (void)pvParameters; /* parameter not used */
@@ -280,17 +281,22 @@ static portTASK_FUNCTION(Hoval, pvParameters) {
   isPumpOn = FALSE;
   for(;;) {
     /* check mode switch: turns scheduler on/off */
+    if (!isEnabled && SW1_GetVal()==0) {
+      Log((unsigned char*)"Switch changed  to ON position", io);
+    } else if (isEnabled && SW1_GetVal()!=0) {
+      Log((unsigned char*)"Switch changed to OFF position", io);
+    }
     isEnabled = SW1_GetVal()==0; /* Switch in ON position */
 
     /* check schedule */
     if (isEnabled && mySchedule.isSchedulerOn) {
       if (!isPumpOn) { /* pump is off, check if we need to turn it on */
         if (isInRange(&mySchedule.on, &mySchedule.off)) {
-          TurnCoolingOn(TRUE, io);
+          SetCooling(TRUE, io);
         }
       } else { /* pump is on, check if we have to turn it off */
         if (!isInRange(&mySchedule.on, &mySchedule.off)) {
-          TurnCoolingOn(FALSE, io);
+          SetCooling(FALSE, io);
         }
       }
     }
@@ -298,9 +304,9 @@ static portTASK_FUNCTION(Hoval, pvParameters) {
       secondsOn++;
       if (secondsOn>HOVAL_CYCLE_TIME_SECONDS) {
         Log((unsigned char*)"Toggle manual button to avoid timeout...", io);
-        TurnCoolingOn(FALSE, io);
+        SetCooling(FALSE, io);
         FRTOS1_vTaskDelay(5000/portTICK_RATE_MS); /* wait some time until re-enable manual mode again */
-        TurnCoolingOn(TRUE, io);
+        SetCooling(TRUE, io);
         secondsOn = 0; /* restart counter */
       }
     }
@@ -309,7 +315,7 @@ static portTASK_FUNCTION(Hoval, pvParameters) {
     if (isPumpOn) { /* steady red LED if pump is on for cooling */
       SD_RedLed_On();
       LEDR_On();
-    } else if (isEnabled) { /* blinking red LED for enabled scheduler */
+    } else if (isEnabled && mySchedule.isSchedulerOn) { /* blinking red LED for enabled scheduler */
       SD_RedLed_Put(SD_GreenLed_Get()); /* blink red led in sync with green one */
       LEDR_Put(SD_GreenLed_Get());
     } else {
@@ -325,10 +331,11 @@ static byte PrintStatus(CLS1_ConstStdIOType *io) {
   
   CLS1_SendStatusStr((unsigned char*)"Hoval", (const unsigned char*)"\r\n", io->stdOut);
   CLS1_SendStatusStr((unsigned char*)"  Scheduler", mySchedule.isSchedulerOn ? (const unsigned char*)"on\r\n":(const unsigned char*)"off\r\n", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  Switch", SW1_GetVal()==0 ? (const unsigned char*)"ON\r\n":(const unsigned char*)"OFF\r\n", io->stdOut);
   CLS1_SendStatusStr((unsigned char*)"  Hoval", isHovalManualMode ? (const unsigned char*)"manual mode on\r\n":(const unsigned char*)"manual mode off\r\n", io->stdOut);
   CLS1_SendStatusStr((unsigned char*)"  Pump", isPumpOn ? (const unsigned char*)"on\r\n":(const unsigned char*)"off\r\n", io->stdOut);
   CLS1_SendStatusStr((unsigned char*)"  Relay 1", isRelay1on ? (const unsigned char*)"on (button)\r\n":(const unsigned char*)"off (pump)\r\n", io->stdOut);
-  CLS1_SendStatusStr((unsigned char*)"  Relay 2", isRelay2on ? (const unsigned char*)"on (pump)\r\n":(const unsigned char*)"off (manual switch)\r\n", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  Relay 2", isRelay2on ? (const unsigned char*)"on (pump)\r\n":(const unsigned char*)"off (manual mode)\r\n", io->stdOut);
 
   buf[0]='\0';
 #if PL_HAS_DATE_SUPPORT
@@ -457,12 +464,12 @@ byte HOVAL_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdI
 #endif
   } else if (UTIL1_strcmp((char*)cmd, "Hoval pump on")==0) {
     DisableScheduler(io);
-    TurnCoolingOn(TRUE, io);
+    SetCooling(TRUE, io);
     *handled = TRUE;
     return ERR_OK;
   } else if (UTIL1_strcmp((char*)cmd, "Hoval pump off")==0) {
     DisableScheduler(io);
-    TurnCoolingOn(FALSE, io);
+    SetCooling(FALSE, io);
     *handled = TRUE;
     return ERR_OK;
   } else if (UTIL1_strcmp((char*)cmd, "Hoval scheduler on")==0) {
@@ -483,11 +490,11 @@ byte HOVAL_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdI
     return ERR_OK;
   } else if (UTIL1_strcmp((char*)cmd, "Hoval cooling on")==0) {
     DisableScheduler(io);
-    TurnCoolingOn(TRUE, io);
+    SetCooling(TRUE, io);
     *handled = TRUE;
     return ERR_OK;
   } else if (UTIL1_strcmp((char*)cmd, "Hoval cooling off")==0) {
-    TurnCoolingOn(FALSE, io);
+    SetCooling(FALSE, io);
     DisableScheduler(io);
     *handled = TRUE;
     return ERR_OK;
