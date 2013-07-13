@@ -294,8 +294,8 @@ void %'ModuleName'%.%Waitns(word ns);
 %-   Example:
 %-     static int counter1;
 %-     int %'ModuleName'%.counter2;
-/* tell the compiler not to inline functions in this module, as they are timing critical */
 %if (CPU_FAMILY = "ColdFireV1")
+/* tell the compiler not to inline functions in this module, as they are timing critical */
 #pragma dont_inline on
 %endif
 
@@ -309,7 +309,11 @@ void %'ModuleName'%.%Waitns(word ns);
 %-BW_METHOD_BEGIN Wait10Cycles
 %ifdef Wait10Cycles
 %include Common\WaitWait10Cycles.Inc
+%if (CPU_FAMILY = "Kinetis") & %Compiler = "GNUC"
+__attribute__((naked)) void %'ModuleName'%.%Wait10Cycles(void)
+%else
 void %'ModuleName'%.%Wait10Cycles(void)
+%endif
 {
   /* This function will wait 10 CPU cycles (including call overhead). */
 %if (CPU_FAMILY = "HCS08") | (CPU_FAMILY = "HC08")
@@ -338,62 +342,41 @@ void %'ModuleName'%.%Wait10Cycles(void)
                        %>%CTAB /* [5] for RTS, return from subroutine */
   }
 %elif (CPU_FAMILY = "Kinetis")
-  /* NOTE: this is not really accurate, as not sure yet about the cycle counts. Assuming 1 cycle for a NOP */
+  /* NOTE: Cortex-M0 and M4 have 1 cycle for a NOP */
   /* Compiler is %Compiler */
 %if %Compiler = "GNUC"
-  asm(
-   "nop \n\t"
-   "nop \n\t"
-   "nop \n\t"
-   "nop \n\t"
-   "nop \n\t"
-   "nop \n\t"
-   "nop \n\t"
-   "nop \n\t"
-   "nop \n\t"
-   "nop \n\t"
+  asm (
+   /* bl Wai10Cycles() to here: [4] */
+   "nop   \n\t" /* [1] */
+   "nop   \n\t" /* [1] */
+   "nop   \n\t" /* [1] */
+   "bx lr \n\t" /* [3] */
   );
 %elif (%Compiler = "IARARM")
-  asm("nop");
-  asm("nop");
-  asm("nop");
-  asm("nop");
-  asm("nop");
-  asm("nop");
-  asm("nop");
-  asm("nop");
-  asm("nop");
-  asm("nop");
+  /* bl Wai10Cycles() to here: [4] */
+  asm("nop");   /* [1] */
+  asm("nop");   /* [1] */
+  asm("nop");   /* [1] */
+  asm("bx lr"); /* [3] */
 %elif (%Compiler = "ARM_CC") %- Keil/ARM compiler
   __asm {
-    nop                %>%CTAB /* assuming one cycle for nop */
-    nop                %>%CTAB /* assuming one cycle for nop */
-    nop                %>%CTAB /* assuming one cycle for nop */
-    nop                %>%CTAB /* assuming one cycle for nop */
-    nop                %>%CTAB /* assuming one cycle for nop */
-    nop                %>%CTAB /* assuming one cycle for nop */
-    nop                %>%CTAB /* assuming one cycle for nop */
-    nop                %>%CTAB /* assuming one cycle for nop */
-    nop                %>%CTAB /* assuming one cycle for nop */
-    nop                %>%CTAB /* assuming one cycle for nop */
+    nop                %>%CTAB /* [1] */
+    nop                %>%CTAB /* [1] */
+    nop                %>%CTAB /* [1] */
+    bx lr              %>%CTAB /* [3] */
   }
 %else
   asm {
-    nop                %>%CTAB /* assuming one cycle for nop */
-    nop                %>%CTAB /* assuming one cycle for nop */
-    nop                %>%CTAB /* assuming one cycle for nop */
-    nop                %>%CTAB /* assuming one cycle for nop */
-    nop                %>%CTAB /* assuming one cycle for nop */
-    nop                %>%CTAB /* assuming one cycle for nop */
-    nop                %>%CTAB /* assuming one cycle for nop */
-    nop                %>%CTAB /* assuming one cycle for nop */
-    nop                %>%CTAB /* assuming one cycle for nop */
-    nop                %>%CTAB /* assuming one cycle for nop */
+    nop                %>%CTAB /* [1] */
+    nop                %>%CTAB /* [1] */
+    nop                %>%CTAB /* [1] */
+    bx lr              %>%CTAB /* [3] */
   }
 %endif
 %elif (CPU_FAMILY = "56800")
   /* JSR to here is 4-5 cycles */
   /* RTS is 8 cycles */
+  #warning "unsupported CPU family %CPUfamily"
 %else
   #warning "unsupported CPU family %CPUfamily"
   volatile byte i = 0; /* just something to wait, NOT the requested 10 cycles */
@@ -405,7 +388,11 @@ void %'ModuleName'%.%Wait10Cycles(void)
 %-BW_METHOD_BEGIN Wait100Cycles
 %ifdef Wait100Cycles
 %include Common\WaitWait100Cycles.Inc
+%if (CPU_FAMILY = "Kinetis") & %Compiler = "GNUC"
+__attribute__((naked)) void %'ModuleName'%.%Wait100Cycles(void)
+%else
 void %'ModuleName'%.%Wait100Cycles(void)
+%endif
 {
   /* This function will spend 100 CPU cycles (including call overhead). */
 %if (CPU_FAMILY = "HCS08") | (CPU_FAMILY = "HC08")
@@ -447,26 +434,60 @@ void %'ModuleName'%.%Wait100Cycles(void)
                        %>%CTAB /* [5] return from subroutine */
   }
 %elif (CPU_FAMILY = "Kinetis")
-  volatile byte i;
-
-  for(i=0; i<133; i++) {
-    /* NOTE: this is not really accurate, as not sure yet about the cycle counts. Assuming 0.75 cycle for a NOP */
 %if %Compiler = "GNUC"
-    asm(
-     "nop \n\t"
-    );
+  asm (
+   /* bl Wai10Cycles() to here: [4] */
+   "movs r0, #0 \n\t"        /* [1] */
+   "loop:       \n\t"
+   "nop         \n\t"        /* [1] */
+   "nop         \n\t"        /* [1] */
+   "nop         \n\t"        /* [1] */
+   "nop         \n\t"        /* [1] */
+   "nop         \n\t"        /* [1] */
+   "add r0,#1   \n\t"        /* [1] */
+   "cmp r0, #10 \n\t"        /* [1] */
+   "bls loop    \n\t"        /* [3] taken, [1] not taken */
+   "nop         \n\t"        /* [1] */
+   "bx lr       \n\t"        /* [3] */
+  );
 %elif (%Compiler = "IARARM")
-  asm("nop");
+    asm("nop");
+    asm("nop");
+    asm("nop");
+    asm("nop");
+    asm("nop");
+    asm("nop");
+    asm("nop");
+    asm("nop");
+    asm("nop");
+    asm("nop");
 %elif (%Compiler = "ARM_CC") %- Keil/ARM compiler
     __asm {
-      NOP
-    }
+     NOP
+     NOP
+     NOP
+     NOP
+     NOP
+     NOP
+     NOP
+     NOP
+     NOP
+     NOP
+   }
 %else
     asm {
       NOP
+      NOP
+      NOP
+      NOP
+      NOP
+      NOP
+      NOP
+      NOP
+      NOP
+      NOP
     }
 %endif
-  } /* just something to wait, NOT the requested 100 cycles */
 %elif (CPU_FAMILY = "56800")
   /* JSR to here is 4-5 cycles */
   asm {
@@ -509,7 +530,7 @@ void %'ModuleName'%.%WaitCycles(word cycles)
 %endif
 void %'ModuleName'%.%Waitms(word ms)
 {
-%if (CPU_FAMILY = "HCS08") | (CPU_FAMILY = "HC08") | (CPU_FAMILY = "RS08")  | (CPU_FAMILY = "HCS12X") | (CPU_FAMILY = "HCS12")
+%if (CPU_FAMILY = "Kinetis") | (CPU_FAMILY = "HCS08") | (CPU_FAMILY = "HC08") | (CPU_FAMILY = "RS08")  | (CPU_FAMILY = "HCS12X") | (CPU_FAMILY = "HCS12")
   word msCycles; /* cycles for 1 ms */
 
 %if defined(LowClock_kHz) | defined(SlowClock_kHz)
@@ -540,12 +561,12 @@ void %'ModuleName'%.%Waitms(word ms)
   %endif
     ms--;
   }
-%elif (CPU_FAMILY = "Kinetis")
-  /* we do not have %'ProcessorModule'%.%Delay100usFunction() for Kinetis: using a different (not exact) method */
-  while (ms>0) {
-    %'ModuleName'%.WaitCycles(1000);
-    ms--;
-  }
+%- %elif (CPU_FAMILY = "Kinetis")
+%-  /* we do not have %'ProcessorModule'%.%Delay100usFunction() for Kinetis: using a different (not exact) method */
+%-  while (ms>0) {
+%-    %'ModuleName'%.WaitCycles(1000);
+%-    ms--;
+%-  }
 %else
   if (ms>0) {
     %'ProcessorModule'%.%Delay100usFunction((word)(ms*10)); /* Use function in CPU component. If you get a compiler error here, this typically means that the method is not enabled. Enable this method in the CPU component */
