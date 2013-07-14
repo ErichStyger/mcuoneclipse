@@ -1021,7 +1021,9 @@ PE_ISR(RTOSTICKLDD1_Interrupt)
   value other than 0 or 1 then a timer other than the SysTick is being used
   to generate the tick interrupt. */
   portSET_INTERRUPT_MASK();   /* disable interrupts */
-  vTaskIncrementTick(); /* increment tick count, might schedule a task */
+  if (xTaskIncrementTick()!=pdFALSE) { /* increment tick count */
+    taskYIELD();
+  }
   portCLEAR_INTERRUPT_MASK(); /* enable interrupts again */
 #if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
   #if __OPTIMIZE_SIZE__ || __OPTIMIZE__

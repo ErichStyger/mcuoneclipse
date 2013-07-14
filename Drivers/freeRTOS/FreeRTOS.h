@@ -230,10 +230,9 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 
 #ifndef configASSERT
 	#define configASSERT( x )
-#endif
-
-#ifndef portALIGNMENT_ASSERT_pxCurrentTCB
-	#define portALIGNMENT_ASSERT_pxCurrentTCB configASSERT
+	#define configASSERT_DEFINED 0
+#else
+	#define configASSERT_DEFINED 1
 #endif
 
 /* The timers module relies on xTaskGetSchedulerState(). */
@@ -421,6 +420,10 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define traceQUEUE_PEEK( pxQueue )
 #endif
 
+#ifndef traceQUEUE_PEEK_FROM_ISR
+	#define traceQUEUE_PEEK_FROM_ISR( pxQueue )
+#endif
+
 #ifndef traceQUEUE_RECEIVE_FAILED
 	#define traceQUEUE_RECEIVE_FAILED( pxQueue )
 #endif
@@ -439,6 +442,10 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 
 #ifndef traceQUEUE_RECEIVE_FROM_ISR_FAILED
 	#define traceQUEUE_RECEIVE_FROM_ISR_FAILED( pxQueue )
+#endif
+
+#ifndef traceQUEUE_PEEK_FROM_ISR_FAILED
+	#define traceQUEUE_PEEK_FROM_ISR_FAILED( pxQueue )
 #endif
 
 #ifndef traceQUEUE_DELETE
@@ -575,7 +582,31 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define configUSE_QUEUE_SETS 0
 #endif
 
-/* For backward compatibility. */
+#ifndef portTASK_USES_FLOATING_POINT
+	#define portTASK_USES_FLOATING_POINT()
+#endif
+
+#ifndef configUSE_TIME_SLICING
+	#define configUSE_TIME_SLICING 1
+#endif
+
+#ifndef configINCLUDE_APPLICATION_DEFINED_PRIVILEGED_FUNCTIONS
+	#define configINCLUDE_APPLICATION_DEFINED_PRIVILEGED_FUNCTIONS 0
+#endif
+
+#ifndef configUSE_NEWLIB_REENTRANT
+	#define configUSE_NEWLIB_REENTRANT 0
+#endif
+
+#ifndef configINCLUDE_STATS_FORMATTING_FUNCTIONS
+	#define configINCLUDE_STATS_FORMATTING_FUNCTIONS 0
+#endif
+
+#ifndef portASSERT_IF_INTERRUPT_PRIORITY_INVALID
+	#define portASSERT_IF_INTERRUPT_PRIORITY_INVALID()
+#endif
+
+/* For backward compatability. */
 #define eTaskStateGet eTaskGetState
 
 #endif /* INC_FREERTOS_H */

@@ -159,7 +159,6 @@ typedef void (*tmrTIMER_CALLBACK)( xTimerHandle xTimer );
  *
  * Example usage:
  * @verbatim
- *
  * #define NUM_TIMERS 5
  *
  * // An array to hold handles to the created timers.
@@ -284,7 +283,7 @@ void *pvTimerGetTimerID( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  * pdFALSE will be returned if the timer is active.
  *
  * Example usage:
- *
+ * @verbatim
  * // This function assumes xTimer has already been created.
  * void vAFunction( xTimerHandle xTimer )
  * {
@@ -297,6 +296,7 @@ void *pvTimerGetTimerID( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  *         // xTimer is not active, do something else.
  *     }
  * }
+ * @endverbatim
  */
 portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
 
@@ -449,7 +449,7 @@ xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
  * configTIMER_TASK_PRIORITY configuration constant.
  *
  * Example usage:
- *
+ * @verbatim
  * // This function assumes xTimer has already been created.  If the timer
  * // referenced by xTimer is already active when it is called, then the timer
  * // is deleted.  If the timer referenced by xTimer is not active when it is
@@ -479,6 +479,7 @@ xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
  *         }
  *     }
  * }
+ * @endverbatim
  */
  #define xTimerChangePeriod( xTimer, xNewPeriod, xBlockTime ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_CHANGE_PERIOD, ( xNewPeriod ), NULL, ( xBlockTime ) )
 
@@ -568,7 +569,7 @@ xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
  * configuration constant.
  *
  * Example usage:
- *
+ * @verbatim
  * // When a key is pressed, an LCD back-light is switched on.  If 5 seconds pass
  * // without a key being pressed, then the LCD back-light is switched off.  In
  * // this case, the timer is a one-shot timer.
@@ -640,6 +641,7 @@ xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
  *     // Should not reach here.
  *     for( ;; );
  * }
+ * @endverbatim
  */
 #define xTimerReset( xTimer, xBlockTime ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_START, ( xTaskGetTickCount() ), NULL, ( xBlockTime ) )
 
@@ -673,7 +675,7 @@ xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
  * task priority is set by the configTIMER_TASK_PRIORITY configuration constant.
  *
  * Example usage:
- *
+ * @verbatim
  * // This scenario assumes xBacklightTimer has already been created.  When a
  * // key is pressed, an LCD back-light is switched on.  If 5 seconds pass
  * // without a key being pressed, then the LCD back-light is switched off.  In
@@ -724,6 +726,7 @@ xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
  *         // depends on the FreeRTOS port being used.
  *     }
  * }
+ * @endverbatim
  */
 #define xTimerStartFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_START, ( xTaskGetTickCountFromISR() ), ( pxHigherPriorityTaskWoken ), 0U )
 
@@ -756,7 +759,7 @@ xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
  * priority is set by the configTIMER_TASK_PRIORITY configuration constant.
  *
  * Example usage:
- *
+ * @verbatim
  * // This scenario assumes xTimer has already been created and started.  When
  * // an interrupt occurs, the timer should be simply stopped.
  *
@@ -786,6 +789,7 @@ xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
  *         // depends on the FreeRTOS port being used.
  *     }
  * }
+ * @endverbatim
  */
 #define xTimerStopFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_STOP, 0, ( pxHigherPriorityTaskWoken ), 0U )
 
@@ -828,7 +832,7 @@ xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
  * priority is set by the configTIMER_TASK_PRIORITY configuration constant.
  *
  * Example usage:
- *
+ * @verbatim
  * // This scenario assumes xTimer has already been created and started.  When
  * // an interrupt occurs, the period of xTimer should be changed to 500ms.
  *
@@ -858,6 +862,7 @@ xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
  *         // depends on the FreeRTOS port being used.
  *     }
  * }
+ * @endverbatim
  */
 #define xTimerChangePeriodFromISR( xTimer, xNewPeriod, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_CHANGE_PERIOD, ( xNewPeriod ), ( pxHigherPriorityTaskWoken ), 0U )
 
@@ -892,7 +897,7 @@ xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
  * task priority is set by the configTIMER_TASK_PRIORITY configuration constant.
  *
  * Example usage:
- *
+ * @verbatim
  * // This scenario assumes xBacklightTimer has already been created.  When a
  * // key is pressed, an LCD back-light is switched on.  If 5 seconds pass
  * // without a key being pressed, then the LCD back-light is switched off.  In
@@ -943,6 +948,7 @@ xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
  *         // depends on the FreeRTOS port being used.
  *     }
  * }
+ * @endverbatim
  */
 #define xTimerResetFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_START, ( xTaskGetTickCountFromISR() ), ( pxHigherPriorityTaskWoken ), 0U )
 

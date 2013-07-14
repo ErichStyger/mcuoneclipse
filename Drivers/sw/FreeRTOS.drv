@@ -1092,6 +1092,7 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
 #if configUSE_TRACE_FACILITY /* FreeRTOS trace feature enabled */
   %@Shell@'ModuleName'%.SendStr((unsigned char*)"TASK LIST:\r\nName\t\tStatus\tPrio\tStack\tTCB#\r\n", io->stdOut);
   %@Shell@'ModuleName'%.SendStr((unsigned char*)%@Shell@'ModuleName'%.DASH_LINE, io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
   /* task list and status */
   bufSize = 40*uxTaskGetNumberOfTasks();  /* about 40 bytes for a task should be enough */
 #if FRTOS_MEMORY_SCHEME==1 /* this scheme does not allow deallocation of memory */
@@ -1954,7 +1955,9 @@ void %@TickCntr@OnInterrupt(void)
     MOVE.L D0, D7 ; /* save ulSavedInterruptMask for later */
   }
   (void)%@TickCntr@'ModuleName'%.Reset(); /* reset tick counter: need this for trace */
-  vTaskIncrementTick();
+  if (xTaskIncrementTick()!=pdFALSE) {
+    taskYIELD();
+  }
   asm {
     MOVE.L D7,D0
     JSR ulPortSetIPL
@@ -1990,14 +1993,18 @@ void %@TickCntr@OnInterrupt(void)
     /* A context switch might happen so save the context. */
     portSAVE_CONTEXT();
     %@TickCntr@'ModuleName'%.Reset(); /* reset tick counter: need this for trace */
-    vTaskIncrementTick();/* Increment the tick */
+    if (xTaskIncrementTick()!=pdFALSE) {
+      taskYIELD();
+    }
     /* ... then see if the new tick value has necessitated a context switch. */
     vTaskSwitchContext();
     /* Restore the context of a task - which may be a different task to that interrupted. */
     portRESTORE_CONTEXT(); /* includes PULH and RTI */
   #else
     %@TickCntr@'ModuleName'%.Reset(); /* reset tick counter: need this for trace */
-    vTaskIncrementTick();
+    if (xTaskIncrementTick()!=pdFALSE) {
+      taskYIELD();
+    }
     __asm("PULH");
     __asm("RTI");
   #endif
@@ -2016,14 +2023,18 @@ void %@TickCntr@OnInterrupt(void)
     /* A context switch might happen so save the context. */
     portSAVE_CONTEXT();
     %@TickCntr@'ModuleName'%.Reset(); /* reset tick counter: need this for trace */
-    vTaskIncrementTick(); /* Increment the tick */
+    if (xTaskIncrementTick()!=pdFALSE) {
+      taskYIELD();
+    }
     /* ... then see if the new tick value has necessitated a context switch. */
     vTaskSwitchContext();
     /* Restore the context of a task - which may be a different task to that interrupted. */
     portRESTORE_CONTEXT(); /* includes RTI */
   #else
     %@TickCntr@'ModuleName'%.Reset(); /* reset tick counter: need this for trace */
-    vTaskIncrementTick();
+    if (xTaskIncrementTick()!=pdFALSE) {
+      taskYIELD();
+    }
     __asm("RTI"); /* return from interrupt */
   #endif
 %elif (CPUfamily = "56800")
@@ -2045,7 +2056,9 @@ void %@TickCntr@OnInterrupt(void)
 //  }
   {
      %@TickCntr@'ModuleName'%.Reset(); /* reset tick counter: need this for trace */
-     vTaskIncrementTick();
+    if (xTaskIncrementTick()!=pdFALSE) {
+      taskYIELD();
+    }
   }
 //  asm {
 //    MOVE.L D7,D0
