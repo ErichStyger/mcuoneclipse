@@ -1,0 +1,1 @@
+This folder contains projects for the TWR-CN128 (MCF51CN128) board.
