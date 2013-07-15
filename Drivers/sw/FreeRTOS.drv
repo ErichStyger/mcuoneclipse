@@ -1965,11 +1965,6 @@ void %@TickCntr@OnInterrupt(void)
 #if configUSE_TICKLESS_IDLE == 1
   portTickCntr++;
 #endif
-  /* If we are using the pre-emptive scheduler then also request a
-     context switch as incrementing the tick could have unblocked a task. */
-  #if configUSE_PREEMPTION == 1
-  taskYIELD();
-  #endif
   /* now generate interrupt exit code */
   asm {
     MOVEM.L    (A7),D0-D2/D7/A0-A1                               %>40 /* Restore processor registers from stack */
@@ -2070,11 +2065,6 @@ void %@TickCntr@OnInterrupt(void)
 #if configUSE_TICKLESS_IDLE == 1
   portTickCntr++;
 #endif
-  #if configUSE_PREEMPTION == 1
-  {
-    taskYIELD();
-  }
-  #endif
   /* now generate interrupt exit code */
 //  asm {
 //    MOVEM.L    (A7),D0-D2/D7/A0-A1                             %>40 /* Restore processor registers from stack */
