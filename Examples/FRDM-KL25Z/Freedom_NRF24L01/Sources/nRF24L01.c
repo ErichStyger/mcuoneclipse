@@ -34,7 +34,7 @@
 
 static volatile bool PTX; /* flag to denote transmitting mode */
 
-static byte SPI_Write_Read(uint8_t val) {
+static uint8_t SPI_Write_Read(uint8_t val) {
   uint8_t ch;
 
   while (SM1_GetCharsInTxBuf()!=0) {} /* wait until tx is empty */
@@ -45,7 +45,7 @@ static byte SPI_Write_Read(uint8_t val) {
   return ch;
 }
 
-static byte SPI_WriteDummy_Read(void) {
+static uint8_t SPI_WriteDummy_Read(void) {
   uint8_t ch;
 
   while (SM1_GetCharsInTxBuf()!=0) {} /* wait until tx is empty */
@@ -99,12 +99,15 @@ uint8_t RF_ReadRegister(uint8_t reg) {
   return val;
 }
 
-void RF_ReadRegisterData(uint8_t reg, uint8_t *buf, uint8_t bufSize) {
+uint8_t RF_ReadRegisterData(uint8_t reg, uint8_t *buf, uint8_t bufSize) {
+  uint8_t status;
+  
   RF_CSN_LOW();
-  SPI_Write_ReadDummy(RF24_R_REGISTER|(RF24_REGISTER_MASK&reg));
+  status = SPI_Write_Read(RF24_R_REGISTER|reg);
   SPI_Write_Read_Data(buf, buf, bufSize);
   RF_CSN_HIGH();
   RF_WAIT_US(10);
+  return status;
 }
 
 void RF_WriteRegisterData(uint8_t reg, uint8_t *buf, uint8_t bufSize) {
@@ -147,11 +150,11 @@ uint8_t RF_GetStatus(void) {
 }
 
 /* reset status after every payload rx/tx */
-void RF_ResetStatusIRQ(void) {
+void RF_ResetStatusIRQ(uint8_t flags) {
   RF_WAIT_US(10);
   RF_CSN_LOW();
   RF_WAIT_US(10);
-  RF_WriteRegister(RF24_STATUS, 0x70); /* reset all IRQ in status register */
+  RF_WriteRegister(RF24_STATUS, flags); /* reset all IRQ in status register */
   RF_WAIT_US(10);
   RF_CSN_HIGH();
   RF_WAIT_US(10);
@@ -168,19 +171,38 @@ uint8_t RF_TxPayload(uint8_t *payload, uint8_t payloadSize) {
   RF_WriteRegisterData(RF24_W_TX_PAYLOAD, payload, payloadSize);
   //RF_WAIT_MS(10); /* need 10 ms to wait here? */
   
-  RF_CE_HIGH();
-  RF_WAIT_US(10);
+  RF_CE_HIGH(); /* start transmission */
+  RF_WAIT_US(15);
   RF_CE_LOW();
   
   //RF_WAIT_MS(10); /* need 10 ms to wait here? */
   return ERR_OK;
 }
 
-void RF_RxPayload(uint16_t listenMs) {
-  RF_CE_HIGH(); /* high to 'listen for data' */
-  RF_WAIT_MS(listenMs); /* listen for data for one second */
-  RF_CE_LOW(); /* stop listening */
+uint8_t RF_RxPayload(uint8_t *payload, uint8_t payloadSize) {
+  uint8_t status;
+  
+  RF_CE_LOW(); /* need to disable rx mode during reading RX data */
+  status = RF_ReadRegisterData(RF24_R_RX_PAYLOAD, payload, payloadSize); /* rx payload */
+//  RF_Write(RF24_FLUSH_RX); /* flush old data */
+  RF_CE_HIGH(); /* re-enable rx mode */
+  return status;
 }
+
+bool RF_DataIsReady(void) {
+  uint8_t status;
+  
+  status = RF_GetStatus();
+  return (status&RF24_STATUS_RX_DR);
+}
+
+bool RF_MaxRetryReached(void) {
+  uint8_t status;
+  
+  status = RF_GetStatus();
+  return (status&RF24_STATUS_MAX_RT);
+}
+
 
 void RF_Init(void) {
   RF_CE_LOW();

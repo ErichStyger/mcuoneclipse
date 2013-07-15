@@ -7,15 +7,16 @@
 #include "Application.h"
 #include "nRF24L01.h"
 #include "LEDR.h"
+#include "LEDG.h"
 #include "LEDB.h"
 #include "WAIT1.h"
 #include "CE.h"
 
-#define IS_SENDER  1
+#define IS_SENDER  0
 
 static uint8_t status;
-static uint8_t channel;
-static uint8_t buf[] = {0x12,0x12,0x12,0x12,0x12};
+//static uint8_t channel;
+//tatic uint8_t buf[] = {0x12,0x12,0x12,0x12,0x12};
 #define PAYLOAD_SIZE 2
 #define CHANNEL_NO   2
 static uint8_t payload[PAYLOAD_SIZE];
@@ -32,16 +33,6 @@ void APP_OnRxInterrupt(void) {
 static uint8_t rxCntr;
 #endif
 
-
-static void module_config(void) {
-  RF_SetChannel(CHANNEL_NO); /* 1: 2.401 GHz */
-  RF_WriteRegister(RF24_RF_SETUP, RF24_RF_SETUP_RF_PWR_0|RF24_RF_SETUP_RF_DR_250);
-  RF_SetPayloadSize(PAYLOAD_SIZE); /* number of payload bytes we want to send and receive */
-  
-  RX_POWERUP();     // Power up in receiving mode
-  CE_SetVal();     // Listening for packets
-}
-
 //sets the RX address in the RX_ADDR register that is offset by rxpipenum
 //unsigned char * address is the actual address to be used.  It should be sized
 //  according to the rx_addr length that is being filled.
@@ -52,7 +43,7 @@ static void module_config(void) {
 //  does nothing.
 void wl_module_set_rx_addr(uint8_t * address, uint8_t len, uint8_t rxpipenum)
 { 
-  if(rxpipenum > 5) {
+  if (rxpipenum > 5) {
     return;
   }
   RF_WriteRegisterData(RF24_RX_ADDR_P0 + rxpipenum, address, len);
@@ -132,44 +123,43 @@ void wl_module_tx_config(uint8_t tx_nr)
   RF_WriteRegister(RF24_SETUP_RETR,(RF24_SETUP_RETR_ARD_750 | RF24_SETUP_RETR_ARC_15));
   
   //set the TX address for the pipe with the same number as the iteration
-      switch(tx_nr)     
-      {
-        case 0: //setup TX address as default RX address for pipe 0 (E7:E7:E7:E7:E7)
-          tx_addr[0] = tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = RF24_RX_ADDR_P0_B0_DEFAULT_VAL;
-          wl_module_set_TADDR(tx_addr);
-          wl_module_set_RADDR(tx_addr);
-          break;
-        case 1: //setup TX address as default RX address for pipe 1 (C2:C2:C2:C2:C2)
-          tx_addr[0] = tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = RF24_RX_ADDR_P1_B0_DEFAULT_VAL;
-          wl_module_set_TADDR(tx_addr);
-          wl_module_set_RADDR(tx_addr);
-          break;
-        case 2: //setup TX address as default RX address for pipe 2 (C2:C2:C2:C2:C3)
-          tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = RF24_RX_ADDR_P1_B0_DEFAULT_VAL;
-          tx_addr[0] = RF24_RX_ADDR_P2_DEFAULT_VAL;
-          wl_module_set_TADDR(tx_addr);
-          wl_module_set_RADDR(tx_addr);
-          break;
-        case 3: //setup TX address as default RX address for pipe 3 (C2:C2:C2:C2:C4)
-          tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = RF24_RX_ADDR_P1_B0_DEFAULT_VAL;
-          tx_addr[0] = RF24_RX_ADDR_P3_DEFAULT_VAL;
-          wl_module_set_TADDR(tx_addr);
-          wl_module_set_RADDR(tx_addr);
-          break;
-        case 4: //setup TX address as default RX address for pipe 4 (C2:C2:C2:C2:C5)
-          tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = RF24_RX_ADDR_P1_B0_DEFAULT_VAL;
-          tx_addr[0] = RF24_RX_ADDR_P4_DEFAULT_VAL;
-          wl_module_set_TADDR(tx_addr);
-          wl_module_set_RADDR(tx_addr);
-          break;
-        case 5: //setup TX address as default RX address for pipe 5 (C2:C2:C2:C2:C6)
-          tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = RF24_RX_ADDR_P1_B0_DEFAULT_VAL;
-          tx_addr[0] = RF24_RX_ADDR_P5_DEFAULT_VAL;
-          wl_module_set_TADDR(tx_addr);
-          wl_module_set_RADDR(tx_addr);
-          break;
-      }
-  
+  switch(tx_nr)     
+  {
+    case 0: //setup TX address as default RX address for pipe 0 (E7:E7:E7:E7:E7)
+      tx_addr[0] = tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = RF24_RX_ADDR_P0_B0_DEFAULT_VAL;
+      wl_module_set_TADDR(tx_addr);
+      wl_module_set_RADDR(tx_addr);
+      break;
+    case 1: //setup TX address as default RX address for pipe 1 (C2:C2:C2:C2:C2)
+      tx_addr[0] = tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = RF24_RX_ADDR_P1_B0_DEFAULT_VAL;
+      wl_module_set_TADDR(tx_addr);
+      wl_module_set_RADDR(tx_addr);
+      break;
+    case 2: //setup TX address as default RX address for pipe 2 (C2:C2:C2:C2:C3)
+      tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = RF24_RX_ADDR_P1_B0_DEFAULT_VAL;
+      tx_addr[0] = RF24_RX_ADDR_P2_DEFAULT_VAL;
+      wl_module_set_TADDR(tx_addr);
+      wl_module_set_RADDR(tx_addr);
+      break;
+    case 3: //setup TX address as default RX address for pipe 3 (C2:C2:C2:C2:C4)
+      tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = RF24_RX_ADDR_P1_B0_DEFAULT_VAL;
+      tx_addr[0] = RF24_RX_ADDR_P3_DEFAULT_VAL;
+      wl_module_set_TADDR(tx_addr);
+      wl_module_set_RADDR(tx_addr);
+      break;
+    case 4: //setup TX address as default RX address for pipe 4 (C2:C2:C2:C2:C5)
+      tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = RF24_RX_ADDR_P1_B0_DEFAULT_VAL;
+      tx_addr[0] = RF24_RX_ADDR_P4_DEFAULT_VAL;
+      wl_module_set_TADDR(tx_addr);
+      wl_module_set_RADDR(tx_addr);
+      break;
+    case 5: //setup TX address as default RX address for pipe 5 (C2:C2:C2:C2:C6)
+      tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = RF24_RX_ADDR_P1_B0_DEFAULT_VAL;
+      tx_addr[0] = RF24_RX_ADDR_P5_DEFAULT_VAL;
+      wl_module_set_TADDR(tx_addr);
+      wl_module_set_RADDR(tx_addr);
+      break;
+  }
   TX_POWERUP();
   /*
     // Start receiver 
@@ -179,6 +169,8 @@ void wl_module_tx_config(uint8_t tx_nr)
   */
 }
 
+const uint8_t TADDR[5] = {0x11, 0x22, 0x33, 0x44, 0x55};
+
 void APP_Run(void) {
   int i, cntr;
   
@@ -186,8 +178,24 @@ void APP_Run(void) {
   RF_Init();
   WAIT1_Waitms(50); /* give device time to power up */
   
-  module_config();
+  RF_SetChannel(CHANNEL_NO); /* 1: 2.401 GHz */
+  RF_WriteRegister(RF24_RF_SETUP, RF24_RF_SETUP_RF_PWR_0|RF24_RF_SETUP_RF_DR_250);
+  RF_SetPayloadSize(PAYLOAD_SIZE); /* number of payload bytes we want to send and receive */
+  
+  /* Set RADDR and TADDR as the transmit address since we also enable auto acknowledgment */
+  RF_WriteRegisterData(RF24_RX_ADDR_P0, (uint8_t*)TADDR, sizeof(TADDR));
+  RF_WriteRegisterData(RF24_TX_ADDR, (uint8_t*)TADDR, sizeof(TADDR));
+
+  /* Enable RX_ADDR_P0 address matching */
+  RF_WriteRegister(RF24_EN_RXADDR, 0x01); /* enable data pipe 0 */
  
+#if IS_SENDER
+  TX_POWERUP();     // Power up in transmitting mode
+#else
+  RX_POWERUP();     // Power up in receiving mode
+  CE_SetVal();     // Listening for packets
+#endif
+  
 #if 0
   RF_WriteRegister(RF24_EN_AA, 0x01); /* enable auto acknowledge. RX_ADDR_P0 needs to be equal to TX_ADDR! */
   RF_WriteRegister(RF24_EN_RXADDR, 0x01); /* enable data pipe 0 */
@@ -209,19 +217,26 @@ void APP_Run(void) {
   }
   //RF_ResetStatusIRQ();
 #if IS_SENDER
-  wl_module_tx_config(wl_module_TX_NR_0);
+ // wl_module_tx_config(wl_module_TX_NR_0);
 #else
-  wl_module_rx_config();
+  //wl_module_rx_config();
 #endif
+  /* clear interrupt flags */
+  RF_ResetStatusIRQ(RF24_STATUS_RX_DR|RF24_STATUS_TX_DS|RF24_STATUS_MAX_RT);
   cntr = 0;
   for(;;) {
 #if IS_SENDER
-   // status = RF_GetStatus();
-   // if (status&(RF24_STATUS_RX_DR|RF24_STATUS_TX_DS|RF24_STATUS_MAX_RT)) { /* data in RX FIFO */
-   //   RF_ResetStatusIRQ();
-   // }
     if (isrFlag) {
-      RF_ResetStatusIRQ();
+      status = RF_GetStatus();
+      if (status&RF24_STATUS_RX_DR) { /* data received interrupt */
+        RF_ResetStatusIRQ(RF24_STATUS_RX_DR); /* clear bit */
+      }
+      if (status&RF24_STATUS_TX_DS) { /* data sent interrupt */
+        RF_ResetStatusIRQ(RF24_STATUS_TX_DS); /* clear bit */
+      }
+      if (status&RF24_STATUS_MAX_RT) { /* retry timeout interrupt */
+        RF_ResetStatusIRQ(RF24_STATUS_MAX_RT); /* clear bit */
+      }
       isrFlag = FALSE;
     }
     WAIT1_Waitms(1);
@@ -231,15 +246,32 @@ void APP_Run(void) {
       LEDR_Neg();
       (void)RF_TxPayload(payload, sizeof(payload));
     }
-#else
-    RF_ResetStatusIRQ();
-    RF_RxPayload(1000);
-    
+#else 
+    while (!RF_DataIsReady()) {
+      cntr++;
+      if (cntr>100) {
+        cntr = 0;
+        LEDB_Neg();
+      }
+      WAIT1_Waitms(5);
+    }
+    status = RF_RxPayload(payload, sizeof(payload)); /* will reset status bit */
+    RF_ResetStatusIRQ(RF24_STATUS_RX_DR|RF24_STATUS_TX_DS|RF24_STATUS_MAX_RT);
+    rxCntr++;
+#if 0
     status = RF_GetStatus();
-    if (status&RF24_STATUS_RX_DR) { /* data in RX FIFO */
+    if (status&RF24_STATUS_RX_DR) { /* data received interrupt */
+      status = RF_RxPayload(payload, sizeof(payload)); /* will reset status bit */
       rxCntr++;
     }
-    LEDB_Neg();
+    if (status&RF24_STATUS_TX_DS) { /* data sent interrupt */
+      RF_ResetStatusIRQ(RF24_STATUS_TX_DS); /* clear bit */
+    }
+    if (status&RF24_STATUS_MAX_RT) { /* retry timeout interrupt */
+      RF_ResetStatusIRQ(RF24_STATUS_MAX_RT); /* clear bit */
+    }
+#endif
+    LEDG_Neg();
 #endif
   }
 }

@@ -11,8 +11,9 @@
 #include "PE_Types.h"
 
 #define wl_module_TX_NR_0     0
-#define wl_module_RF_SETUP    (RF24_RF_SETUP_RF_PWR_0 | RF24_RF_SETUP_RF_DR_250)  
+#define wl_module_RF_SETUP  (RF24_RF_SETUP_RF_PWR_0 | RF24_RF_SETUP_RF_DR_250)  
 #define wl_module_CONFIG    (RF24_MASK_RX_DR|RF24_EN_CRC|RF24_CRCO) /* mask Rx interrupts, enable CRC 1 byte CRC */
+
 #define TX_POWERUP() RF_WriteRegister(RF24_CONFIG, wl_module_CONFIG|RF24_PWR_UP|RF24_PRIM_TX)
 #define RX_POWERUP() RF_WriteRegister(RF24_CONFIG, wl_module_CONFIG|RF24_PWR_UP|RF24_PRIM_RX)
 
@@ -301,7 +302,7 @@
 
 void RF_WriteRegister(uint8_t reg, uint8_t val);
 uint8_t RF_ReadRegister(uint8_t reg);
-void RF_ReadRegisterData(uint8_t reg, uint8_t *buf, uint8_t bufSize);
+uint8_t RF_ReadRegisterData(uint8_t reg, uint8_t *buf, uint8_t bufSize);
 void RF_WriteRegisterData(uint8_t reg, uint8_t *buf, uint8_t bufSize);
 
 uint8_t RF_GetStatus(void);
@@ -310,9 +311,11 @@ void RF_SetChannel(uint8_t channel);
 void RF_SetPayloadSize(uint8_t payloadSize);
 
 uint8_t RF_TxPayload(uint8_t *payload, uint8_t payloadSize);
-void RF_RxPayload(uint16_t listenMs);
+uint8_t RF_RxPayload(uint8_t *payload, uint8_t payloadSize);
+bool RF_DataIsReady(void);
+bool RF_MaxRetryReached(void);
 
-void RF_ResetStatusIRQ(void);
+void RF_ResetStatusIRQ(uint8_t flags);
 
 void RF_Init(void);
 
