@@ -2172,7 +2172,7 @@ FRESULT f_read (
 	FRESULT res;
 	uint32_t clst, sect, remain;
 	UINT rcnt, cc;
-	uint8_t csect, *rbuff = buff;
+	uint8_t csect, *rbuff = (uint8_t*)buff;
 
 
 	*br = 0;	/* Initialize byte counter */
@@ -2265,7 +2265,7 @@ FRESULT f_write (
 	FRESULT res;
 	uint32_t clst, sect;
 	UINT wcnt, cc;
-	const uint8_t *wbuff = buff;
+	const uint8_t *wbuff = (uint8_t*)buff;
 	uint8_t csect;
 
 	*bw = 0;	/* Initialize byte counter */

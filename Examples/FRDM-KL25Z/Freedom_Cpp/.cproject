@@ -18,7 +18,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="Freedom_Cpp" buildArtefactType="org.eclipse.cdt.cross.arm.gnu.buildArtefactType.application" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.cross.arm.gnu.buildArtefactType.application" description="" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.264994259" isPrebuildInvalidatingBuild="false" name="FLASH" parent="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug">
+				<configuration artifactName="Freedom_Cpp" buildArtefactType="org.eclipse.cdt.cross.arm.gnu.buildArtefactType.application" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.cross.arm.gnu.buildArtefactType.application" buildReferences="true" buildReferencingConfigurations="false" description="" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.264994259" isPrebuildInvalidatingBuild="false" name="FLASH" parent="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug" produceBuildErrorsWithMissingReferences="true">
 					<folderInfo id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.264994259." name="/" resourcePath="">
 						<toolChain id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.toolchain.debug.1766608917" name="ARM Ltd Windows GCC (G++ Lite)" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.toolchain.debug">
 							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.debugging.level.1225658109" name="Debug level" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.debugging.level" value="org.eclipse.cdt.cross.arm.gnu.base.option.debugging.level.max" valueType="enumerated"/>
@@ -52,9 +52,9 @@
 							</tool>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.compiler.debug.2138555655" name="ARM Ltd Windows GCC C++ Compiler" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.compiler.debug">
 								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.level.1763187376" name="Optimization level" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.level" value="org.eclipse.cdt.cross.arm.gnu.base.option.optimization.level.none" valueType="enumerated"/>
-								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.preprocessor.nostdinc.1187973419" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.preprocessor.nostdinc" value="true" valueType="boolean"/>
-								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.preprocessor.nostdincpp.666978451" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.preprocessor.nostdincpp" value="true" valueType="boolean"/>
-								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.include.paths.336740132" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.include.paths" valueType="includePath">
+								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.preprocessor.nostdinc.1187973419" name="Do not search system directories (-nostdinc)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.preprocessor.nostdinc" value="true" valueType="boolean"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.preprocessor.nostdincpp.666978451" name="Do not search system C++ directories (-nostdinc++)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.preprocessor.nostdincpp" value="true" valueType="boolean"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.include.paths.336740132" name="Include paths (-I)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Project_Headers&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Project_Settings/Startup_Code&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${MCUToolsBaseDir}/ARM_GCC_Support/ewl/EWL_C/include&quot;"/>
@@ -62,12 +62,14 @@
 									<listOptionValue builtIn="false" value="&quot;${MCUToolsBaseDir}/ARM_GCC_Support/ewl/EWL_Runtime/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Generated_Code&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Sources&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProcessorExpertPath}/lib/Kinetis/iofiles&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProcessorExpertPath}/lib/Kinetis/pdd/inc&quot;"/>
 								</option>
-								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.functionsections.1587508876" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.functionsections" value="true" valueType="boolean"/>
-								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.datasections.2116252959" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.datasections" value="true" valueType="boolean"/>
-								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.warnings.allwarn.205215898" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.warnings.allwarn" value="false" valueType="boolean"/>
-								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.misc.nortti.923906322" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.misc.nortti" value="false" valueType="boolean"/>
-								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.other.otherflags.681222333" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.other.otherflags" value="-c -fmessage-length=0 -Iinclude -include lib_ewl_c++.prefix" valueType="string"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.functionsections.1587508876" name="Function sections (-ffunction-sections)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.functionsections" value="true" valueType="boolean"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.datasections.2116252959" name="Data sections (-fdata-sections)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.datasections" value="true" valueType="boolean"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.warnings.allwarn.205215898" name="All warnings (-Wall)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.warnings.allwarn" value="false" valueType="boolean"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.misc.nortti.923906322" name="Do not use RTTI (-fno-rtti)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.misc.nortti" value="false" valueType="boolean"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.other.otherflags.681222333" name="Other flags" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.other.otherflags" value="-c -fmessage-length=0 -Iinclude -include lib_ewl_c++.prefix" valueType="string"/>
 								<inputType id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.cpp.compiler.base.input.1362300782" name="ARM Ltd Windows GCC C++ Compiler" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.cpp.compiler.base.input"/>
 								<inputType id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input.1746398689" name="ARM Ltd Windows GCC C Compiler" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input"/>
 								<inputType id="org.eclipse.cdt.cross.arm.cpp.compiler.input.asmSourcePreproc.2040028370" superClass="org.eclipse.cdt.cross.arm.cpp.compiler.input.asmSourcePreproc"/>
@@ -94,15 +96,15 @@
 								</inputType>
 							</tool>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.linker.debug.2018401646" name="ARM Ltd Windows GCC C++ Linker" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.linker.debug">
-								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.scriptfile.451779496" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.scriptfile" value="${ProjDirPath}/Project_Settings/Linker_Files/ProcessorExpert.ld" valueType="string"/>
-								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.nostart.505711235" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.nostart" value="true" valueType="boolean"/>
-								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.nodeflibs.1498507565" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.nodeflibs" value="true" valueType="boolean"/>
-								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.nostdlibs.448382941" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.nostdlibs" value="true" valueType="boolean"/>
-								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.gcsections.1412596201" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.gcsections" value="true" valueType="boolean"/>
-								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.paths.801160510" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.paths" valueType="libPaths">
+								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.scriptfile.451779496" name="Script file (-T)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.scriptfile" value="${ProjDirPath}/Project_Settings/Linker_Files/ProcessorExpert.ld" valueType="string"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.nostart.505711235" name="Do not use standard start files (-nostartfiles)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.nostart" value="true" valueType="boolean"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.nodeflibs.1498507565" name="Do not use default libraries (-nodefaultlibs)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.nodeflibs" value="true" valueType="boolean"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.nostdlibs.448382941" name="No startup or default libs (-nostdlib)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.nostdlibs" value="true" valueType="boolean"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.gcsections.1412596201" name="Remove unused sections (-Xlinker --gc-sections)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.gcsections" value="true" valueType="boolean"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.paths.801160510" name="Library search path (-L)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${MCUToolsBaseDir}/ARM_GCC_Support/ewl/lib/armv6-m&quot;"/>
 								</option>
-								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.ldflags.1014568791" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.ldflags" valueType="stringList">
+								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.ldflags.1014568791" name="Linker flags (-Xlinker [option])" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.ldflags" valueType="stringList">
 									<listOptionValue builtIn="false" value="--undefined=__pformatter_"/>
 									<listOptionValue builtIn="false" value="--defsym=__pformatter=__pformatter_"/>
 									<listOptionValue builtIn="false" value="--start-group"/>
@@ -134,7 +136,7 @@
 									<listOptionValue builtIn="false" value="&quot;${MCUToolsBaseDir}/ARM_GCC_Support/ewl/EWL_Runtime/include&quot;"/>
 								</option>
 								<option id="com.freescale.cdt.cross.arm.gnu.preprocessor.settings.nostdinc.442980067" name="Do not search system directories (-nostdinc)" superClass="com.freescale.cdt.cross.arm.gnu.preprocessor.settings.nostdinc" value="true" valueType="boolean"/>
-								<option id="com.freescale.cdt.cross.arm.gnu.preprocessor.settings.nostdincpp.984261036" superClass="com.freescale.cdt.cross.arm.gnu.preprocessor.settings.nostdincpp" value="true" valueType="boolean"/>
+								<option id="com.freescale.cdt.cross.arm.gnu.preprocessor.settings.nostdincpp.984261036" name="Do not search system C++ directories (-nostdinc++)" superClass="com.freescale.cdt.cross.arm.gnu.preprocessor.settings.nostdincpp" value="true" valueType="boolean"/>
 								<inputType id="com.freescale.cdt.cross.arm.gnu.preprocessor.source.682085555" name="Preprocessor Input" superClass="com.freescale.cdt.cross.arm.gnu.preprocessor.source"/>
 							</tool>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createflash.debug.1822258677" name="ARM Ltd Windows GNU Create Flash Image" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createflash.debug"/>
@@ -159,5 +161,7 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.cross.arm.gnu.ARM_CS_GCCWinManagedMakePerProjectProfileC"/>
 		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="1">
+		<resource resourceType="PROJECT" workspacePath="/Freedom_Cpp"/>
+	</storageModule>
 </cproject>

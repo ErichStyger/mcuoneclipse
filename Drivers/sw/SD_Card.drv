@@ -580,7 +580,7 @@ DRESULT disk_ioctl (
 )
 {
   DRESULT res = RES_OK;
-  uint8_t n, csd[16], *ptr = buff;
+  uint8_t n, csd[16], *ptr = (uint8_t*)buff;
   uint16_t csize;
 
   if (drv!=0) return RES_PARERR;
@@ -1245,7 +1245,7 @@ byte %'ModuleName'%.%Init(void* unused)
   } /* while */
   %@Timeout@'ModuleName'%.LeaveCounter(timeout);
   %'ModuleName'%.DISABLE_SS();                                   %>40 /* disable slave */
-  if (isTimeout) {                                               %>40/* timeout */
+  if (isTimeout) {                                               %>40 /* timeout */
 %ifdef OnError
     %OnError();
 %endif

@@ -34,6 +34,5 @@ void APP_Run(void)
 
 	for(;;) {
 			myccounter.increment();
-		}
-
+	}
 }

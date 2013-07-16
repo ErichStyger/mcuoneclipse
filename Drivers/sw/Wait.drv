@@ -96,6 +96,10 @@
 #include "task.h"
 %endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 %if defined(ManualClockValues) & ManualClockValues='yes'
 #undef CPU_BUS_CLK_HZ         %>%CTAB /* if already defined in "%ProcessorModule.h" */
 #define CPU_BUS_CLK_HZ          %'CpuBusClkHz'UL      %>%CTAB /*!< CPU clock frequency (normal operation) */
@@ -259,6 +263,10 @@ void %'ModuleName'%.%Waitns(word ns);
 %endif
 %endif
 %include Common\WaitWaitOSms.Inc
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 %endif %- WaitOSms
 %-BW_METHOD_END WaitOSms
