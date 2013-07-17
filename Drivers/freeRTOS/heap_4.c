@@ -228,7 +228,7 @@ void *pvReturn = NULL;
 			}
 		}
 	}
-	xTaskResumeAll();
+	(void)xTaskResumeAll();
 
 	#if( configUSE_MALLOC_FAILED_HOOK == 1 )
 	{

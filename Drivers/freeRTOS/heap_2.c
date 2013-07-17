@@ -122,7 +122,7 @@ typedef struct A_BLOCK_LINK
 } xBlockLink;
 
 
-static const unsigned short  heapSTRUCT_SIZE	= ( sizeof( xBlockLink ) + portBYTE_ALIGNMENT - ( sizeof( xBlockLink ) %% portBYTE_ALIGNMENT ) );
+static const unsigned short heapSTRUCT_SIZE	= ( ( sizeof ( xBlockLink ) + ( portBYTE_ALIGNMENT - 1 ) ) & ~portBYTE_ALIGNMENT_MASK );
 #define heapMINIMUM_BLOCK_SIZE	( ( size_t ) ( heapSTRUCT_SIZE * 2 ) )
 
 /* Create a couple of list links to mark the start and end of the list. */
@@ -183,7 +183,7 @@ void *pvReturn = NULL;
 			xWantedSize += heapSTRUCT_SIZE;
 
 			/* Ensure that blocks are always aligned to the required number of bytes. */
-			if( xWantedSize & portBYTE_ALIGNMENT_MASK )
+			if( ( xWantedSize & portBYTE_ALIGNMENT_MASK ) != 0 )
 			{
 				/* Byte alignment required. */
 				xWantedSize += ( portBYTE_ALIGNMENT - ( xWantedSize & portBYTE_ALIGNMENT_MASK ) );

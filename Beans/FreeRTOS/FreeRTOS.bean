@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.266</Version>
+    <Version>01.267</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -1101,30 +1101,15 @@ configQUEUE_REGISTRY_SIZE defines the maximum number of queues and semaphores th
               <Name>Memory Allocation Scheme</Name>
               <Symbol>MemoryScheme</Symbol>
               <TypeSpec>typeMemAllocScheme</TypeSpec>
-              <Hint>The RTOS kernel has to allocate RAM each time a task, queue or semaphore is created. The malloc() and free() functions can sometimes be used for this purpose, but ...\n
-   1. they are not always available on embedded systems,\n
-   2. take up valuable code space,\n
-   3. are not thread safe, and\n
-   4. are not deterministic (the amount of time taken to execute the function will differ from call to call)\n
-... so more often than not an alternative scheme is required.\n
-One embedded / real time system can have very different RAM and timing requirements to another - so a single RAM allocation algorithm will only ever be appropriate for a subset of applications.\n
-\n
-To get around this problem the memory allocation API is included in the RTOS portable layer - where an application specific implementation appropriate for the real time system being developed can be provided. When the real time kernel requires RAM, instead of calling malloc() it makes a call to pvPortMalloc(). When RAM is being freed, instead of calling free() the real time kernel makes a call to vPortFree().\n
-Schemes included in the source code download\n
-Three sample RAM allocation schemes are included in the FreeRTOS source code download (V2.5.0 onwards). These are used by the various demo applications as appropriate. The following subsections describe the available schemes, when they should be used, and highlight the demo applications that demonstrate their use.\n
-\n
-Each scheme is contained in a separate source file (heap_1.c, heap_2.c and heap_3.c respectively) which can be located in the Source/Portable/MemMang directory. Other schemes can be added if required.\n
-\n
-Scheme 1 - heap_1.c\n
+              <Hint>Scheme 1:\n
 This is the simplest scheme of all. It does not permit memory to be freed once it has been allocated, but despite this is suitable for a surprisingly large number of applications.\n
 The algorithm simply subdivides a single array into smaller blocks as requests for RAM are made. The total size of the array is set by the definition configTOTAL_HEAP_SIZE - which is defined in FreeRTOSConfig.h.\n
 This scheme:\n
     * Can be used if your application never deletes a task or queue (no calls to vTaskDelete() or vQueueDelete() are ever made).\n
     * Is always deterministic (always takes the same amount of time to return a block).\n
-    * Is used by the PIC, AVR and 8051 demo applications - as these do not dynamically create or delete tasks after vTaskStartScheduler() has been called.\n
 heap_1.c is suitable for a lot of small real time systems provided that all tasks and queues are created before the kernel is started.\n
 \n
-Scheme 2 - heap_2.c\n
+Scheme 2:\n
 This scheme uses a best fit algorithm and, unlike scheme 1, allows previously allocated blocks to be freed. It does not however combine adjacent free blocks into a single large block.\n
 Again the total amount of available RAM is set by the definition configTOTAL_HEAP_SIZE - which is defined in FreeRTOSConfig.h.\n
 This scheme:\n
@@ -1132,16 +1117,22 @@ This scheme:\n
     * Should not be used if the memory being allocated and freed is of a random size - this would only be the case if tasks being deleted each had a different stack depth, or queues being deleted were of different lengths.\n
     * Could possible result in memory fragmentation problems should your application create blocks of queues and tasks in an unpredictable order. This would be unlikely for nearly all applications but should be kept in mind.\n
     * Is not deterministic - but is also not particularly inefficient.\n
-    * Is used by the ARM7, and Flashlite demo applications - as these dynamically create and delete tasks.\n
 heap_2.c is suitable for most small real time systems that have to dynamically create tasks.\n
 \n
-Scheme 3 - heap_3.c\n
+Scheme 3:\n
 This is just a wrapper for the standard malloc() and free() functions. It makes them thread safe.\n
 This scheme:\n
     * Requires the linker to setup a heap, and the compiler library to provide malloc() and free() implementations.\n
     * Is not deterministic.\n
     * Will probably considerably increase the kernel code size.\n
-    * Is used by the PC (x86 single board computer) demo application.</Hint>
+\n
+Scheme 4:\n
+This scheme uses a first fit algorithm and, unlike scheme 2, does combine adjacent free memory blocks into a single large block (it does include a coalescence algorithm). The total amount of available heap space is set by configTOTAL_HEAP_SIZE - which is defined in FreeRTOSConfig.h. The xPortGetFreeHeapSize() API function returns the total amount of heap space that remains unallocated (allowing the configTOTAL_HEAP_SIZE setting to be optimised), but does not provided information on how the unallocated memory is fragmented into smaller blocks.\n
+This implementation:\n
+   * Can be used even when the application repeatedly deletes tasks, queues, semaphores, mutexes, etc..\n
+   * Is much less likely than the heap_2 implementation to result in a heap space that is badly fragmented into multiple small blocks - even when the memory being allocated and freed is of random size.\n
+   * Is not deterministic - but is much more efficient that most standard C library malloc implementations.\n
+heap_4.c is particularly useful for applications that want to use the portable layer memory allocation schemes directly in the application code (rather than just indirectly by calling API functions that themselves call pvPortMalloc() and vPortFree()). </Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
               <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -1162,7 +1153,7 @@ This scheme:\n
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
               <Description>Disabled</Description>
-              <Expanded>Yes</Expanded>
+              <Expanded>No</Expanded>
               <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>

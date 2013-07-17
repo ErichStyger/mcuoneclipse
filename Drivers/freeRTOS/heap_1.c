@@ -105,9 +105,8 @@ task.h is included from an application file. */
 %if defined(HeapSectionName)
 static unsigned char __attribute__((section ("%HeapSectionName"))) ucHeap[configTOTAL_HEAP_SIZE];
 %else
-static unsigned char ucHeap[configTOTAL_HEAP_SIZE];
+static unsigned char ucHeap[ configTOTAL_HEAP_SIZE ];
 %endif
-
 static size_t xNextFreeByte = ( size_t ) 0;
 
 /*-----------------------------------------------------------*/
