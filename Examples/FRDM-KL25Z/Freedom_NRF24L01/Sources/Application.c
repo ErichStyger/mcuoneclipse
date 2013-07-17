@@ -1,7 +1,6 @@
 /*
  * Application.c
  *
- *  Created on: Jul 13, 2013
  *      Author: Erich Styger
  */
 #include "Application.h"
@@ -12,27 +11,133 @@
 #include "WAIT1.h"
 #include "CE.h"
 
-#define IS_SENDER  0
+#define IS_SENDER    1  /* 1 if we are the sender, 0 if we are the receiver */
+#define PAYLOAD_SIZE 2  /* number of payload bytes */
+#define CHANNEL_NO   2  /* communication channel */
 
-static uint8_t status;
-//static uint8_t channel;
-//tatic uint8_t buf[] = {0x12,0x12,0x12,0x12,0x12};
-#define PAYLOAD_SIZE 2
-#define CHANNEL_NO   2
-static uint8_t payload[PAYLOAD_SIZE];
+/* macros to configure device either for RX or TX operation */
+#define TX_POWERUP()   RF_WriteRegister(RF24_CONFIG, RF24_EN_CRC|RF24_CRCO|RF24_PWR_UP|RF24_PRIM_TX) /* enable 1 byte CRC, power up and set as PTX */
+#define RX_POWERUP()   RF_WriteRegister(RF24_CONFIG, RF24_EN_CRC|RF24_CRCO|RF24_PWR_UP|RF24_PRIM_RX) /* enable 1 byte CRC, power up and set as PRX */
 
-static volatile bool isrFlag;
+static const uint8_t TADDR[5] = {0x11, 0x22, 0x33, 0x44, 0x55}; /* device address */
+static uint8_t payload[PAYLOAD_SIZE]; /* buffer for payload */
+static volatile bool isrFlag; /* flag set by ISR */
 
-void APP_OnRxInterrupt(void) {
+void APP_OnInterrupt(void) {
   CE_ClrVal(); /* stop sending/listening */
   /* read data here */
   isrFlag = TRUE;
 }
 
-#if !IS_SENDER
-static uint8_t rxCntr;
+void APP_Run(void) {
+#if IS_SENDER
+  int i;
+#endif
+  int cntr;
+  uint8_t status;
+  
+  WAIT1_Waitms(100); /* give device time to power up */
+  RF_Init(); /* set CE and CSN to initialization value */
+  
+  RF_WriteRegister(RF24_RF_SETUP, RF24_RF_SETUP_RF_PWR_0|RF24_RF_SETUP_RF_DR_250);
+  RF_WriteRegister(RF24_RX_PW_P0, PAYLOAD_SIZE); /* number of payload bytes we want to send and receive */
+  RF_WriteRegister(RF24_RF_CH, CHANNEL_NO); /* set channel: 1: 2.401 GHz */
+  
+  /* Set RADDR and TADDR as the transmit address since we also enable auto acknowledgment */
+  RF_WriteRegisterData(RF24_RX_ADDR_P0, (uint8_t*)TADDR, sizeof(TADDR));
+  RF_WriteRegisterData(RF24_TX_ADDR, (uint8_t*)TADDR, sizeof(TADDR));
+
+  /* Enable RX_ADDR_P0 address matching */
+  RF_WriteRegister(RF24_EN_RXADDR, 0x01); /* enable data pipe 0 */
+ 
+#if IS_SENDER
+  RF_WriteRegister(RF24_EN_AA, 0x01); /* enable auto acknowledge. RX_ADDR_P0 needs to be equal to TX_ADDR! */
+  RF_WriteRegister(RF24_SETUP_RETR, 0x2F); /* Important: need 750 us delay between every retry */
+  TX_POWERUP();  /* Power up in transmitting mode */
+  CE_ClrVal();   /* Will pulse this later to send data */
+#else
+  RX_POWERUP();  /* Power up in receiving mode */
+  CE_SetVal();   /* Listening for packets */
+#endif
+  
+  /* clear interrupt flags */
+  RF_ResetStatusIRQ(RF24_STATUS_RX_DR|RF24_STATUS_TX_DS|RF24_STATUS_MAX_RT);
+  cntr = 0;
+  for(;;) {
+#if IS_SENDER
+    cntr++;
+    if (cntr==200) { /* send data every 200 ms */
+      cntr = 0;
+      //TX_POWERUP();
+      for(i=0;i<PAYLOAD_SIZE;i++) {
+        payload[i] = i+1; /* just fill payload with some data */
+      }
+      RF_TxPayload(payload, sizeof(payload)); /* send data */
+    }
+
+    if (isrFlag) { /* check if we have received an interrupt */
+      isrFlag = FALSE; /* reset interrupt flag */
+      status = RF_GetStatus();
+      if (status&RF24_STATUS_RX_DR) { /* data received interrupt */
+        RF_ResetStatusIRQ(RF24_STATUS_RX_DR); /* clear bit */
+      }
+      if (status&RF24_STATUS_TX_DS) { /* data sent interrupt */
+        cntr = 0; /* reset timeout counter */
+        LEDR_Neg(); /* indicate data has been sent */
+        RF_ResetStatusIRQ(RF24_STATUS_TX_DS); /* clear bit */
+      }
+      if (status&RF24_STATUS_MAX_RT) { /* retry timeout interrupt */
+        RF_ResetStatusIRQ(RF24_STATUS_MAX_RT); /* clear bit */
+      }
+    }
+    WAIT1_Waitms(1);
+#else 
+    if (isrFlag) { /* interrupt? */
+      isrFlag = FALSE; /* reset interrupt flag */
+      cntr = 0; /* reset counter */
+      LEDB_Off();
+      LEDG_Neg(); /* blink green LED to indicate good communication */
+      status = RF_GetStatus();
+      if (status&RF24_STATUS_RX_DR) { /* data received interrupt */
+        RF_RxPayload(payload, sizeof(payload)); /* will reset RX_DR bit */
+        RF_ResetStatusIRQ(RF24_STATUS_RX_DR|RF24_STATUS_TX_DS|RF24_STATUS_MAX_RT); /* make sure we reset all flags. Need to have the pipe number too */
+      }
+      if (status&RF24_STATUS_TX_DS) { /* data sent interrupt */
+        RF_ResetStatusIRQ(RF24_STATUS_TX_DS); /* clear bit */
+      }
+      if (status&RF24_STATUS_MAX_RT) { /* retry timeout interrupt */
+        RF_ResetStatusIRQ(RF24_STATUS_MAX_RT); /* clear bit */
+      }
+    } else {
+      cntr++;
+      if (cntr>500) { /* blink every 500 ms if not receiving data */
+        cntr = 0; /* reset counter */
+        LEDG_Off();
+        LEDB_Neg(); /* blink blue to indicate no communication */
+      }
+      WAIT1_Waitms(1); /* burning some cycles here */
+    }
+#endif
+  }
+}
+
+#if 0
+  RF_WriteRegister(RF24_EN_AA, 0x01); /* enable auto acknowledge. RX_ADDR_P0 needs to be equal to TX_ADDR! */
+  RF_WriteRegister(RF24_EN_RXADDR, 0x01); /* enable data pipe 0 */
+  RF_WriteRegister(RF24_SETUP_AW, 0x03); /* RF_Adddress with, 0x3 means 5 bytes RF Address */
+  RF_WriteRegisterData(RF24_TX_ADDR, buf, sizeof(buf)); /* write RF address */
+#if IS_SENDER
+  /* mask retry interrupt, enable CRC, 2-byte CRC, power up, Tx (bit cleared) */  
+  RF_WriteRegister(RF24_CONFIG, RF24_MASK_MAX_RT|RF24_EN_CRC|RF24_CRCO|RF24_PWR_UP|RF24_PRIM_TX); /* 0b0001 1110: b0=0: transmitter, b1=1 power up, b4=1 mask MAX RT, IRQ is not triggered */
+#else
+  /* mask retry interrupt, enable CRC, 2-byte CRC, power up, Rx (bit set) */  
+  RF_WriteRegister(RF24_CONFIG, RF24_MASK_MAX_RT|RF24_EN_CRC|RF24_CRCO|RF24_PWR_UP|RF24_PRIM_RX);
+#endif
+  RF_WriteRegister(RF24_SETUP_RETR, 0x2F); /* 750 us delay between every retry */
 #endif
 
+
+#if 0
 //sets the RX address in the RX_ADDR register that is offset by rxpipenum
 //unsigned char * address is the actual address to be used.  It should be sized
 //  according to the rx_addr length that is being filled.
@@ -168,111 +273,4 @@ void wl_module_tx_config(uint8_t tx_nr)
     wl_module_CE_hi;     // Listening for pakets
   */
 }
-
-const uint8_t TADDR[5] = {0x11, 0x22, 0x33, 0x44, 0x55};
-
-void APP_Run(void) {
-  int i, cntr;
-  
-  WAIT1_Waitms(100); /* give device time to power up */
-  RF_Init();
-  WAIT1_Waitms(50); /* give device time to power up */
-  
-  RF_SetChannel(CHANNEL_NO); /* 1: 2.401 GHz */
-  RF_WriteRegister(RF24_RF_SETUP, RF24_RF_SETUP_RF_PWR_0|RF24_RF_SETUP_RF_DR_250);
-  RF_SetPayloadSize(PAYLOAD_SIZE); /* number of payload bytes we want to send and receive */
-  
-  /* Set RADDR and TADDR as the transmit address since we also enable auto acknowledgment */
-  RF_WriteRegisterData(RF24_RX_ADDR_P0, (uint8_t*)TADDR, sizeof(TADDR));
-  RF_WriteRegisterData(RF24_TX_ADDR, (uint8_t*)TADDR, sizeof(TADDR));
-
-  /* Enable RX_ADDR_P0 address matching */
-  RF_WriteRegister(RF24_EN_RXADDR, 0x01); /* enable data pipe 0 */
- 
-#if IS_SENDER
-  TX_POWERUP();     // Power up in transmitting mode
-#else
-  RX_POWERUP();     // Power up in receiving mode
-  CE_SetVal();     // Listening for packets
 #endif
-  
-#if 0
-  RF_WriteRegister(RF24_EN_AA, 0x01); /* enable auto acknowledge. RX_ADDR_P0 needs to be equal to TX_ADDR! */
-  RF_WriteRegister(RF24_EN_RXADDR, 0x01); /* enable data pipe 0 */
-  RF_WriteRegister(RF24_SETUP_AW, 0x03); /* RF_Adddress with, 0x3 means 5 bytes RF Address */
-  RF_WriteRegisterData(RF24_TX_ADDR, buf, sizeof(buf)); /* write RF address */
-#if IS_SENDER
-  /* mask retry interrupt, enable CRC, 2-byte CRC, power up, Tx (bit cleared) */  
-  RF_WriteRegister(RF24_CONFIG, RF24_MASK_MAX_RT|RF24_EN_CRC|RF24_CRCO|RF24_PWR_UP|RF24_PRIM_TX); /* 0b0001 1110: b0=0: transmitter, b1=1 power up, b4=1 mask MAX RT, IRQ is not triggered */
-#else
-  /* mask retry interrupt, enable CRC, 2-byte CRC, power up, Rx (bit set) */  
-  RF_WriteRegister(RF24_CONFIG, RF24_MASK_MAX_RT|RF24_EN_CRC|RF24_CRCO|RF24_PWR_UP|RF24_PRIM_RX);
-#endif
-  RF_WriteRegister(RF24_SETUP_RETR, 0x2F); /* 750 us delay between every retry */
-#endif
-  //status = RF_GetStatus();
-  //channel = RF_GetChannel();
-  for(i=0;i<PAYLOAD_SIZE;i++) {
-    payload[i] = i+1;
-  }
-  //RF_ResetStatusIRQ();
-#if IS_SENDER
- // wl_module_tx_config(wl_module_TX_NR_0);
-#else
-  //wl_module_rx_config();
-#endif
-  /* clear interrupt flags */
-  RF_ResetStatusIRQ(RF24_STATUS_RX_DR|RF24_STATUS_TX_DS|RF24_STATUS_MAX_RT);
-  cntr = 0;
-  for(;;) {
-#if IS_SENDER
-    if (isrFlag) {
-      status = RF_GetStatus();
-      if (status&RF24_STATUS_RX_DR) { /* data received interrupt */
-        RF_ResetStatusIRQ(RF24_STATUS_RX_DR); /* clear bit */
-      }
-      if (status&RF24_STATUS_TX_DS) { /* data sent interrupt */
-        RF_ResetStatusIRQ(RF24_STATUS_TX_DS); /* clear bit */
-      }
-      if (status&RF24_STATUS_MAX_RT) { /* retry timeout interrupt */
-        RF_ResetStatusIRQ(RF24_STATUS_MAX_RT); /* clear bit */
-      }
-      isrFlag = FALSE;
-    }
-    WAIT1_Waitms(1);
-    cntr++;
-    if (cntr>=150) {
-      cntr = 0;
-      LEDR_Neg();
-      (void)RF_TxPayload(payload, sizeof(payload));
-    }
-#else 
-    while (!RF_DataIsReady()) {
-      cntr++;
-      if (cntr>100) {
-        cntr = 0;
-        LEDB_Neg();
-      }
-      WAIT1_Waitms(5);
-    }
-    status = RF_RxPayload(payload, sizeof(payload)); /* will reset status bit */
-    RF_ResetStatusIRQ(RF24_STATUS_RX_DR|RF24_STATUS_TX_DS|RF24_STATUS_MAX_RT);
-    rxCntr++;
-#if 0
-    status = RF_GetStatus();
-    if (status&RF24_STATUS_RX_DR) { /* data received interrupt */
-      status = RF_RxPayload(payload, sizeof(payload)); /* will reset status bit */
-      rxCntr++;
-    }
-    if (status&RF24_STATUS_TX_DS) { /* data sent interrupt */
-      RF_ResetStatusIRQ(RF24_STATUS_TX_DS); /* clear bit */
-    }
-    if (status&RF24_STATUS_MAX_RT) { /* retry timeout interrupt */
-      RF_ResetStatusIRQ(RF24_STATUS_MAX_RT); /* clear bit */
-    }
-#endif
-    LEDG_Neg();
-#endif
-  }
-}
-

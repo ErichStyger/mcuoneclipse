@@ -1,15 +1,16 @@
 /*
  * Application.h
  *
- *  Created on: Jul 13, 2013
  *      Author: Erich Styger
  */
 
 #ifndef APPLICATION_H_
 #define APPLICATION_H_
 
-void APP_OnRxInterrupt(void);
+/* interrupt handler */
+void APP_OnInterrupt(void);
 
+/* application main routine */
 void APP_Run(void);
 
 #endif /* APPLICATION_H_ */
