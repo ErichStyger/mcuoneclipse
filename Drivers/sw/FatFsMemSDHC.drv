@@ -467,11 +467,11 @@ LDD_TDeviceData* %'ModuleName'%.%Init(LDD_TUserData *UserDataPtr)
     }
     if (!Error) {
       /* switching gears for higher speed */
-      Error = %@SDHC@'ModuleName'%.SelectBusClock(SD.SDHCPtr, %'ModuleName'%.SPEED_INDEX_NORMAL)!=ERR_OK;
+      Error = %@SDHC@'ModuleName'%.SelectBusClock(SD.SDHCPtr, (%@SDHC@'ModuleName'%.TBusClock)%'ModuleName'%.SPEED_INDEX_NORMAL)!=ERR_OK;
       SD_Wait(&SD, &Error);
     }
     if (!Error && SD.CardInfo.Caps.HighSpeed) {
-      Error = %@SDHC@'ModuleName'%.SelectBusClock(SD.SDHCPtr, %'ModuleName'%.SPEED_INDEX_FAST)!=ERR_OK;
+      Error = %@SDHC@'ModuleName'%.SelectBusClock(SD.SDHCPtr, (%@SDHC@'ModuleName'%.TBusClock)%'ModuleName'%.SPEED_INDEX_FAST)!=ERR_OK;
       SD_Wait(&SD, &Error);
       /* running at high speed (high slew rate on all the SDHC pins should be set) */
     }
@@ -697,8 +697,8 @@ DRESULT disk_ioctl (
 )
 {
   bool Error = FALSE;
-  DRESULT res = ERR_OK;
-  uint8_t *ptr = buff;
+  DRESULT res = RES_OK;
+  uint8_t *ptr = (uint8_t*)buff;
 
   if (drv!=0) return RES_PARERR;
 
