@@ -185,7 +185,7 @@ _vPortStartFirstTask:
   EXTERN vPortYieldFromISR
   EXTERN pxCurrentTCB
   EXTERN vTaskSwitchContext
-  EXTERN vTaskIncrementTick
+  EXTERN xTaskIncrementTick
 
   PUBLIC vOnCounterRestart
   PUBLIC vSetMSP
@@ -208,7 +208,7 @@ _vPortStartFirstTask:
   .extern vPortYieldFromISR
   .extern pxCurrentTCB
   .extern vTaskSwitchContext
-  .extern vTaskIncrementTick
+  .extern xTaskIncrementTick
 
   .global vSetMSP
   .global vPortPendSVHandler
@@ -244,7 +244,7 @@ vOnCounterRestart:
   bl vPortYieldFromISR
 %endif
   bl vPortSetInterruptMask /* disable interrupts */
-  bl vTaskIncrementTick    /* increment tick count, might schedule a task */
+  bl xTaskIncrementTick    /* increment tick count, might schedule a task */
   bl vPortClearInterruptMask /* enable interrupts again */
 %if (%Compiler = "IARARM")
   pop {r7,pc}  /* start exit sequence from interrupt: r7 and lr where pushed above */
