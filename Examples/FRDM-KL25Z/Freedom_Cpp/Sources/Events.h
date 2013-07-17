@@ -30,6 +30,9 @@
 #include "SD1.h"
 #include "SS1.h"
 #include "FRTOS1.h"
+#include "RTOSTRC1.h"
+#include "Ptrc1.h"
+#include "RTOSCNTRLDD1.h"
 #include "RTOSTICKLDD1.h"
 #include "SPI2.h"
 #include "Clock1.h"
@@ -203,7 +206,6 @@ void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *p
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationTickHook(void);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationTickHook (module Events)
@@ -217,7 +219,6 @@ void FRTOS1_vApplicationTickHook(void);
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationIdleHook(void);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationIdleHook (module Events)
@@ -240,6 +241,20 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 **     Description :
 **         If enabled, the RTOS will call this hook in case memory
 **         allocation failed.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void Ptrc1_OnTraceWrap(void);
+/*
+** ===================================================================
+**     Event       :  Ptrc1_OnTraceWrap (module Events)
+**
+**     Component   :  Ptrc1 [PercepioTrace]
+**     Description :
+**         Called for trace ring buffer wrap around. This gives the
+**         application a chance to dump the trace buffer.
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================

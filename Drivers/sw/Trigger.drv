@@ -92,6 +92,10 @@
 #include "%ProcessorModule.h"
 %include sw\CommonSupport.prg
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*! Definition of triggers */
 %for i from TriggerNameList
 #define %'ModuleName'%.%i                                        %>40 %for_index_0
@@ -162,6 +166,9 @@ bool %'ModuleName'%.%TriggerPending(byte trigger);
 
 %endif %- TriggerPending
 %-BW_METHOD_END TriggerPending
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 

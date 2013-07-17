@@ -256,7 +256,7 @@ RecorderDataType* xTraceInitTraceData(void)
 
     if (! tmp)
     {
-        vTraceError("Malloc failed in xTraceInitTraceData! Reduce size constants in trcConfig.h");
+        vTraceError((char*)"Malloc failed in xTraceInitTraceData! Reduce size constants in trcConfig.h");
         return NULL;
     }
 
@@ -408,7 +408,7 @@ void* xTraceNextFreeEventBufferSlot(void)
 {
     if (RecorderDataPtr->nextFreeIndex >= EVENT_BUFFER_SIZE)
     {
-        vTraceError("Attempt to index outside event buffer!");
+        vTraceError((char*)"Attempt to index outside event buffer!");
         return NULL;
     }
     return (void*)(&RecorderDataPtr->
@@ -427,7 +427,7 @@ uint32_t uiIndexOfObject(objectHandleType objecthandle, uint8_t objectclass)
             (objecthandle-1)));
     }
 
-    vTraceError("Object table lookup with invalid object handle or object class!");
+    vTraceError((char*)"Object table lookup with invalid object handle or object class!");
     return 0;
 }
 
@@ -479,19 +479,19 @@ objectHandleType xTraceGetObjectHandle(traceObjectClass objectclass)
         switch(objectclass)
         {
             case TRACE_CLASS_TASK:
-            vTraceError("Not enough TASK handles - increase NTask in trcConfig.h");
+            vTraceError((char*)"Not enough TASK handles - increase NTask in trcConfig.h");
             break;
             case TRACE_CLASS_ISR:
-            vTraceError("Not enough ISR handles - increase NISR in trcConfig.h");
+            vTraceError((char*)"Not enough ISR handles - increase NISR in trcConfig.h");
             break;
             case TRACE_CLASS_SEMAPHORE:
-            vTraceError("Not enough SEMAPHORE handles - increase NSemaphore in trcConfig.h");
+            vTraceError((char*)"Not enough SEMAPHORE handles - increase NSemaphore in trcConfig.h");
             break;
             case TRACE_CLASS_MUTEX:
-            vTraceError("Not enough MUTEX handles - increase NMutex in trcConfig.h");
+            vTraceError((char*)"Not enough MUTEX handles - increase NMutex in trcConfig.h");
             break;
             case TRACE_CLASS_QUEUE:
-            vTraceError("Not enough QUEUE handles - increase NQueue in trcConfig.h");
+            vTraceError((char*)"Not enough QUEUE handles - increase NQueue in trcConfig.h");
             break;
         }
 
@@ -525,7 +525,7 @@ void vTraceFreeObjectHandle(traceObjectClass objectclass, objectHandleType handl
         objectHandleStacks.lowestIndexOfClass[objectclass] )
     {
         /* Error */
-        vTraceError("Attempt to free more handles than allocated! (duplicate xTaskDelete or xQueueDelete?)");
+        vTraceError((char*)"Attempt to free more handles than allocated! (duplicate xTaskDelete or xQueueDelete?)");
     }
     else
     {
@@ -565,7 +565,7 @@ void vTraceSetObjectName(traceObjectClass objectclass,
 
     if (handle == 0)
     {
-        vTraceError("Illegal handle (0) in vTraceSetObjectName.");
+        vTraceError((char*)"Illegal handle (0) in vTraceSetObjectName.");
         return;
     }
 
@@ -578,7 +578,7 @@ void vTraceSetObjectName(traceObjectClass objectclass,
         case TRACE_CLASS_QUEUE:
         break;
     default:
-        vTraceError("Illegal object class in vTraceSetObjectName");
+        vTraceError((char*)"Illegal object class in vTraceSetObjectName");
         break;
     }
 
@@ -588,19 +588,19 @@ void vTraceSetObjectName(traceObjectClass objectclass,
         switch(objectclass)
         {
             case TRACE_CLASS_TASK:
-            vTraceError("Not enough TASK handles - increase NTask in trcConfig.h");
+            vTraceError((char*)"Not enough TASK handles - increase NTask in trcConfig.h");
             break;
             case TRACE_CLASS_ISR:
-            vTraceError("Not enough ISR handles - increase NISR in trcConfig.h");
+            vTraceError((char*)"Not enough ISR handles - increase NISR in trcConfig.h");
             break;
             case TRACE_CLASS_SEMAPHORE:
-            vTraceError("Not enough SEMAPHORE handles - increase NSemaphore in trcConfig.h");
+            vTraceError((char*)"Not enough SEMAPHORE handles - increase NSemaphore in trcConfig.h");
             break;
             case TRACE_CLASS_MUTEX:
-            vTraceError("Not enough MUTEX handles - increase NMutex in trcConfig.h");
+            vTraceError((char*)"Not enough MUTEX handles - increase NMutex in trcConfig.h");
             break;
             case TRACE_CLASS_QUEUE:
-            vTraceError("Not enough QUEUE handles - increase NQueue in trcConfig.h");
+            vTraceError((char*)"Not enough QUEUE handles - increase NQueue in trcConfig.h");
             break;
         }
     }
@@ -827,7 +827,7 @@ uint32_t prvTraceGetDTS(uint32_t param_maxDTS)
             This is an error. The values returned by uiTracePortGetTimeStamp should be
             monotonically incresing (since it is a timestamp). */
 
-            vTraceError("Timestamping error, see comment in prvTraceGetDTS (trcBase.c)");
+            vTraceError((char*)"Timestamping error, see comment in prvTraceGetDTS (trcBase.c)");
             return 0;
         }
         dts = (int32_t)(RecorderDataPtr->frequency - old_ts + RecorderDataPtr->absTimeLastEvent);
@@ -858,7 +858,7 @@ uint32_t prvTraceGetDTS(uint32_t param_maxDTS)
         }
         else
         {
-            vTraceError("Bad param_maxDTS in prvTraceGetDTS");
+            vTraceError((char*)"Bad param_maxDTS in prvTraceGetDTS");
         }
         prvTraceUpdateCounters();
     }
@@ -929,7 +929,7 @@ uint16_t prvTraceCreateSymbolTableEntry(const char* name,
     uint16_t ret = 0;
     if (RecorderDataPtr->SymbolTable.nextFreeSymbolIndex + len + 4 >= SYMBOL_TABLE_SIZE)
     {
-        vTraceError("Symbol table full. Increase SYMBOL_TABLE_SIZE in trcConfig.h");
+        vTraceError((char*)"Symbol table full. Increase SYMBOL_TABLE_SIZE in trcConfig.h");
         ret = 0;
     }
     else

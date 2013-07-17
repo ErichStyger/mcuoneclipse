@@ -90,6 +90,10 @@
 
 #include "%ProcessorModule.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*! List of events */
 %for i from EventNameList
 #define %'ModuleName'%.%i                                        %>40 %for_index_0
@@ -161,6 +165,9 @@ bool %'ModuleName'%.%EventsPending(void);
 
 %endif %- EventsPending
 %-BW_METHOD_END EventsPending
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 

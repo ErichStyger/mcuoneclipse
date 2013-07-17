@@ -2813,7 +2813,7 @@ tskTCB *pxNewTCB;
 		uxArraySize = uxCurrentNumberOfTasks;
 
 		/* Allocate an array index for each task. */
-		pxTaskStatusArray = pvPortMalloc( uxCurrentNumberOfTasks * sizeof( xTaskStatusType ) );
+		pxTaskStatusArray = (xTaskStatusType*)pvPortMalloc( uxCurrentNumberOfTasks * sizeof( xTaskStatusType ) );
 
 		if( pxTaskStatusArray != NULL )
 		{
@@ -2908,7 +2908,7 @@ tskTCB *pxNewTCB;
 		uxArraySize = uxCurrentNumberOfTasks;
 
 		/* Allocate an array index for each task. */
-		pxTaskStatusArray = pvPortMalloc( uxCurrentNumberOfTasks * sizeof( xTaskStatusType ) );
+		pxTaskStatusArray = (xTaskStatusType*)pvPortMalloc( uxCurrentNumberOfTasks * sizeof( xTaskStatusType ) );
 
 		if( pxTaskStatusArray != NULL )
 		{

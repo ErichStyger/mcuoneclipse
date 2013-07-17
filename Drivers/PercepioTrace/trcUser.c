@@ -332,7 +332,7 @@ void vTraceExcludeTaskFromSchedulingTrace(const char* name)
     }
     if (!found)
     {
-        vTraceError("Could not find task to exclude!");
+        vTraceError((char*)"Could not find task to exclude!");
     }
 }
 
@@ -487,7 +487,7 @@ void vTraceStoreISRBegin(objectHandleType handle)
             else
             {            
                 /* This should not occur unless something is very wrong */            
-                vTraceError("Too many nested interrupts!");
+                vTraceError((char*)"Too many nested interrupts!");
             }
         }
     }
@@ -812,7 +812,7 @@ void vTracePrintF(traceLabel eventLabel, const char* formatStr, ...)
 
                 if (argCounter > 15)
                 {
-                    vTraceError("vTracePrintF - Too many arguments, max 15 allowed!");
+                    vTraceError((char*)"vTracePrintF - Too many arguments, max 15 allowed!");
                     va_end(vl);
                     formatStr = "[vTracePrintF error] Too many arguments, max 15 allowed!";
                     index = 4;
@@ -935,7 +935,7 @@ to keep va_arg and index consistent. */
             if (index == 255)
             {
                 va_end(vl);
-                vTraceError("vTracePrintF - Too large arguments, max 32 byte allowed!");
+                vTraceError((char*)"vTracePrintF - Too large arguments, max 32 byte allowed!");
                 formatStr = "[vTracePrintF error] Too large arguments, max 32 byte allowed!";
                 index = 4;
                 break;
