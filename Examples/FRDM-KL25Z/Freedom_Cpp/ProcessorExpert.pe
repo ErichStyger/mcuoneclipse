@@ -3,7 +3,7 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>21</ModificationStamp>
+    <ModificationStamp>22</ModificationStamp>
     <Date>2013-07-17</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.6.0.RT4_b1316-1577</PEversion>
@@ -16354,7 +16354,7 @@
     <BeanType>Shell</BeanType>
     <Name>CLS1</Name>
     <CompNumb>47</CompNumb>
-    <CompEnabled>false</CompEnabled>
+    <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>Shell</IconName>
     <UserFolderName />
@@ -16756,8 +16756,8 @@
     <BeanType>AsynchroSerial</BeanType>
     <Name>AS1</Name>
     <CompNumb>48</CompNumb>
-    <CompEnabled>false</CompEnabled>
-    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
+    <CompEnabled>true</CompEnabled>
+    <GenCodeMode>DONT_WRITE</GenCodeMode>
     <IconName>PHONE</IconName>
     <UserFolderName>Referenced_Components</UserFolderName>
     <Comment lines_count="0" />
@@ -16775,7 +16775,7 @@
         <ItemSymbol>Ser</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>UART0</Value>
+        <Value>UART1</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
@@ -16813,7 +16813,7 @@
               <ItemSymbol>Device</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>UART0</Value>
+              <Value>UART1</Value>
               <SharedPrphMode>false</SharedPrphMode>
             </ItemState>
             <ItemState>
@@ -16834,7 +16834,7 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>InpInt</ItemSymbol>
-              <Value>INT_UART0</Value>
+              <Value>INT_UART1</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>InitPriority</ItemSymbol>
@@ -16867,7 +16867,7 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>OutInt</ItemSymbol>
-              <Value>INT_UART0</Value>
+              <Value>INT_UART1</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>IntTxDPriority</ItemSymbol>
@@ -16900,7 +16900,7 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>ErrInt</ItemSymbol>
-              <Value>INT_UART0</Value>
+              <Value>INT_UART1</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>IntErrorPriority</ItemSymbol>
@@ -16980,7 +16980,7 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
+              <Index>3</Index>
               <EnumSymbVal>5</EnumSymbVal>
               <CustomValue />
             </ItemState>
@@ -17015,7 +17015,7 @@
               <ItemSymbol>BdRate</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value />
+              <Value>init:;prec:1.5%;RTS:none</Value>
               <RuntimeSetting>0</RuntimeSetting>
               <ReqDevPrescHigh>-1</ReqDevPrescHigh>
               <ReqDevPrescLow>-1</ReqDevPrescLow>
@@ -17041,13 +17041,13 @@
               <ReqSrcClkPrescSpeedMode5>-1</ReqSrcClkPrescSpeedMode5>
               <ReqSrcClkPrescSpeedMode6>-1</ReqSrcClkPrescSpeedMode6>
               <ReqSrcClkPrescSpeedMode7>-1</ReqSrcClkPrescSpeedMode7>
-              <InitValue />
+              <InitValue>38400 baud</InitValue>
               <Precision>1.5</Precision>
               <PrecInProc>true</PrecInProc>
               <LowLimit />
               <HighLimit />
               <List lines_count="0" />
-              <UnitText />
+              <UnitText>baud</UnitText>
               <MinCounterTicks>0</MinCounterTicks>
             </ItemState>
             <ItemState>
@@ -17055,7 +17055,7 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
+              <Index>1</Index>
               <EnumSymbVal>AddressMark</EnumSymbVal>
               <CustomValue />
             </ItemState>
@@ -17098,7 +17098,7 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
+              <Index>1</Index>
               <EnumSymbVal>Inverted</EnumSymbVal>
               <CustomValue />
             </ItemState>
@@ -17107,7 +17107,7 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
+              <Index>1</Index>
               <EnumSymbVal>Inverted</EnumSymbVal>
               <CustomValue />
             </ItemState>
@@ -17132,7 +17132,7 @@
               <ItemSymbol>Inp</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>ADC0_DM0/ADC0_SE4a/PTE21/TPM1_CH1/UART0_RX</Value>
+              <Value>PTC3/LLWU_P7/UART1_RX/TPM0_CH2/CLKOUTa</Value>
               <SharedPrphMode>false</SharedPrphMode>
             </ItemState>
             <ItemState>
@@ -17153,7 +17153,7 @@
               <ItemSymbol>Out</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>ADC0_DP0/ADC0_SE0/PTE20/TPM1_CH0/UART0_TX</Value>
+              <Value>XTAL0/PTA19/UART1_TX/TPM_CLKIN1/LPTMR0_ALT1</Value>
               <SharedPrphMode>false</SharedPrphMode>
             </ItemState>
             <ItemState>
@@ -17980,7 +17980,7 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>notFreescale</ItemSymbol>
@@ -17993,7 +17993,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>InpInt</ItemSymbol>
-        <Value>INT_UART0</Value>
+        <Value>INT_UART1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>InitPriority</ItemSymbol>
@@ -18017,7 +18017,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>OutInt</ItemSymbol>
-        <Value>INT_UART0</Value>
+        <Value>INT_UART1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>IntTxDPriority</ItemSymbol>
@@ -18046,7 +18046,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ErrInt</ItemSymbol>
-        <Value>INT_UART0</Value>
+        <Value>INT_UART1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>IntErrorPriority</ItemSymbol>
@@ -18337,7 +18337,7 @@
         <ItemSymbol>Inp</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>ADC0_DM0/ADC0_SE4a/PTE21/TPM1_CH1/UART0_RX</Value>
+        <Value>PTC3/LLWU_P7/UART1_RX/TPM0_CH2/CLKOUTa</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
@@ -18380,7 +18380,7 @@
         <ItemSymbol>Out</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>ADC0_DP0/ADC0_SE0/PTE20/TPM1_CH0/UART0_TX</Value>
+        <Value>XTAL0/PTA19/UART1_TX/TPM_CLKIN1/LPTMR0_ALT1</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
@@ -18454,6 +18454,8 @@
         <List lines_count="0" />
         <UnitText>baud</UnitText>
         <MinCounterTicks>0</MinCounterTicks>
+        <ControlledTimingCfgFromPropertySymbol>BdRate</ControlledTimingCfgFromPropertySymbol>
+        <ControlledTimingCfgFromComponentRef>Serial_LDD</ControlledTimingCfgFromComponentRef>
       </ItemState>
       <ItemState>
         <ItemSymbol>SerBreak</ItemSymbol>
@@ -20033,8 +20035,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>Gselect1pin</ItemSymbol>
@@ -21225,8 +21227,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>SleepPin</ItemSymbol>
@@ -21998,10 +22000,10 @@
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
+        <Index>1</Index>
+        <Value>false</Value>
         <LastSelection>false</LastSelection>
-        <LastUserSel>always</LastUserSel>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>Gselect</UsrMethodName>
       </ItemState>
       <ItemState>
@@ -22009,10 +22011,10 @@
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
+        <Index>1</Index>
+        <Value>false</Value>
         <LastSelection>false</LastSelection>
-        <LastUserSel>always</LastUserSel>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>SensorOn</UsrMethodName>
       </ItemState>
       <ItemState>
@@ -22020,10 +22022,10 @@
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
+        <Index>1</Index>
+        <Value>false</Value>
         <LastSelection>false</LastSelection>
-        <LastUserSel>always</LastUserSel>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>SensorOff</UsrMethodName>
       </ItemState>
       <ItemState>
