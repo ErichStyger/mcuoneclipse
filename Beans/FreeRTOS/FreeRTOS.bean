@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.267</Version>
+    <Version>01.268</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -3776,8 +3776,8 @@ Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total accumulated ex
         <Parameter>
           <ParName>pxTask</ParName>
           <ParType>xTaskHandle</ParType>
-          <ParPassing>Address</ParPassing>
-          <ParHint>Pointer to task handle</ParHint>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Task handle</ParHint>
         </Parameter>
         <Parameter>
           <ParName>pcTaskName</ParName>
@@ -3788,7 +3788,7 @@ Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total accumulated ex
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #C#(xTaskHandle *pxTask, signed portCHAR *pcTaskName)</ANSIC>
+          <ANSIC>void #C#(xTaskHandle pxTask, signed portCHAR *pcTaskName)</ANSIC>
         </Declarations>
         <Children>
           <GrupItem>

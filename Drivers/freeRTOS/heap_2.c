@@ -219,7 +219,7 @@ void *pvReturn = NULL;
 					/* This block is to be split into two.  Create a new block
 					following the number of bytes requested. The void cast is
 					used to prevent byte alignment warnings from the compiler. */
-					pxNewBlockLink = ( void * ) ( ( ( unsigned char * ) pxBlock ) + xWantedSize );
+					pxNewBlockLink = ( xBlockLink * ) ( ( ( unsigned char * ) pxBlock ) + xWantedSize );
 
 					/* Calculate the sizes of two blocks split from the single
 					block. */
@@ -268,7 +268,7 @@ xBlockLink *pxLink;
 
 		/* This unexpected casting is to keep some compilers from issuing 
 		byte alignment warnings. */
-		pxLink = ( void * ) puc;
+		pxLink = ( xBlockLink * ) puc;
 
 		vTaskSuspendAll();
 		{
@@ -303,7 +303,7 @@ unsigned char *pucAlignedHeap;
 
 	/* xStart is used to hold a pointer to the first item in the list of free
 	blocks.  The void cast is used to prevent compiler warnings. */
-	xStart.pxNextFreeBlock = ( void * ) pucAlignedHeap;
+	xStart.pxNextFreeBlock = ( struct A_BLOCK_LINK * ) pucAlignedHeap;
 	xStart.xBlockSize = ( size_t ) 0;
 
 	/* xEnd is used to mark the end of the list of free blocks. */
@@ -312,7 +312,7 @@ unsigned char *pucAlignedHeap;
 
 	/* To start with there is a single free block that is sized to take up the
 	entire heap space. */
-	pxFirstFreeBlock = ( void * ) pucAlignedHeap;
+	pxFirstFreeBlock = ( xBlockLink * ) pucAlignedHeap;
 	pxFirstFreeBlock->xBlockSize = configADJUSTED_HEAP_SIZE;
 	pxFirstFreeBlock->pxNextFreeBlock = &xEnd;
 }

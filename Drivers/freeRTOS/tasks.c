@@ -274,7 +274,7 @@ PRIVILEGED_DATA static volatile portTickType xNextTaskUnblockTime				= ( portTic
 																														\
 		/* listGET_OWNER_OF_NEXT_ENTRY indexes through the list, so the tasks of										\
 		the	same priority get an equal share of the processor time. */													\
-		listGET_OWNER_OF_NEXT_ENTRY( pxCurrentTCB, &( pxReadyTasksLists[ uxTopReadyPriority ] ) );						\
+		listGET_OWNER_OF_NEXT_ENTRY( pxCurrentTCB, tskTCB, &( pxReadyTasksLists[ uxTopReadyPriority ] ) );						\
 	} /* taskSELECT_HIGHEST_PRIORITY_TASK */
 
 	/*-----------------------------------------------------------*/
@@ -303,7 +303,7 @@ PRIVILEGED_DATA static volatile portTickType xNextTaskUnblockTime				= ( portTic
 		/* Find the highest priority queue that contains ready tasks. */							\
 		portGET_HIGHEST_PRIORITY( uxTopPriority, uxTopReadyPriority );								\
 		configASSERT( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ uxTopPriority ] ) ) > 0 );		\
-		listGET_OWNER_OF_NEXT_ENTRY( pxCurrentTCB, &( pxReadyTasksLists[ uxTopPriority ] ) );		\
+		listGET_OWNER_OF_NEXT_ENTRY( pxCurrentTCB, tskTCB, &( pxReadyTasksLists[ uxTopPriority ] ) );		\
 	} /* taskSELECT_HIGHEST_PRIORITY_TASK() */
 
 	/*-----------------------------------------------------------*/
@@ -2496,7 +2496,7 @@ tskTCB *pxNewTCB;
 
 		if( listCURRENT_LIST_LENGTH( pxList ) > 0 )
 		{
-			listGET_OWNER_OF_NEXT_ENTRY( pxFirstTCB, pxList );
+			listGET_OWNER_OF_NEXT_ENTRY( pxFirstTCB, tskTCB, pxList );
 
 			/* Populate an xTaskStatusType structure within the
 			pxTaskStatusArray array for each task that is referenced from
@@ -2504,7 +2504,7 @@ tskTCB *pxNewTCB;
 			meaning of each xTaskStatusType structure member. */
 			do
 			{
-				listGET_OWNER_OF_NEXT_ENTRY( pxNextTCB, pxList );
+				listGET_OWNER_OF_NEXT_ENTRY( pxNextTCB, tskTCB, pxList );
 
 				pxTaskStatusArray[ uxTask ].xHandle = ( xTaskHandle ) pxNextTCB;
 				pxTaskStatusArray[ uxTask ].pcTaskName = ( const signed char * ) &( pxNextTCB->pcTaskName [ 0 ] );

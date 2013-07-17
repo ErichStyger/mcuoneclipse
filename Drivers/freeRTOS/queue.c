@@ -505,7 +505,7 @@ xQueueHandle xReturn = NULL;
 
 		traceTAKE_MUTEX_RECURSIVE( pxMutex );
 
-		if( pxMutex->pxMutexHolder == ( void * )  xTaskGetCurrentTaskHandle() )
+		if( pxMutex->pxMutexHolder == ( signed char * )  xTaskGetCurrentTaskHandle() )
 		{
 			( pxMutex->u.uxRecursiveCallCount )++;
 			xReturn = pdPASS;
@@ -831,7 +831,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 							{
 								/* Record the information required to implement
 								priority inheritance should it become necessary. */
-								pxQueue->pxMutexHolder = ( void * ) xTaskGetCurrentTaskHandle();
+								pxQueue->pxMutexHolder = ( signed char* ) xTaskGetCurrentTaskHandle();
 							}
 						}
 						#endif
@@ -901,7 +901,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 							{
 								portENTER_CRITICAL();
 								{
-									vTaskPriorityInherit( ( void * ) pxQueue->pxMutexHolder );
+									vTaskPriorityInherit( ( xTaskHandle * ) pxQueue->pxMutexHolder );
 								}
 								portEXIT_CRITICAL();
 							}
@@ -1080,7 +1080,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 						{
 							/* Record the information required to implement
 							priority inheritance should it become necessary. */
-							pxQueue->pxMutexHolder = ( void * ) xTaskGetCurrentTaskHandle();
+							pxQueue->pxMutexHolder = ( signed char* ) xTaskGetCurrentTaskHandle();
 						}
 					}
 					#endif
@@ -1158,7 +1158,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 					{
 						portENTER_CRITICAL();
 						{
-							vTaskPriorityInherit( ( void * ) pxQueue->pxMutexHolder );
+							vTaskPriorityInherit( ( xTaskHandle * ) pxQueue->pxMutexHolder );
 						}
 						portEXIT_CRITICAL();
 					}
@@ -1403,7 +1403,7 @@ static void prvCopyDataToQueue( xQUEUE *pxQueue, const void *pvItemToQueue, port
 			if( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX )
 			{
 				/* The mutex is no longer being held. */
-				vTaskPriorityDisinherit( ( void * ) pxQueue->pxMutexHolder );
+				vTaskPriorityDisinherit( ( xTaskHandle * ) pxQueue->pxMutexHolder );
 				pxQueue->pxMutexHolder = NULL;
 			}
 		}

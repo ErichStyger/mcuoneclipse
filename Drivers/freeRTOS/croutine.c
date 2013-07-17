@@ -340,7 +340,7 @@ void vCoRoutineSchedule( void )
 
 	/* listGET_OWNER_OF_NEXT_ENTRY walks through the list, so the co-routines
 	 of the	same priority get an equal share of the processor time. */
-	listGET_OWNER_OF_NEXT_ENTRY( pxCurrentCoRoutine, &( pxReadyCoRoutineLists[ uxTopCoRoutineReadyPriority ] ) );
+	listGET_OWNER_OF_NEXT_ENTRY( pxCurrentCoRoutine, corCRCB, &( pxReadyCoRoutineLists[ uxTopCoRoutineReadyPriority ] ) );
 
 	/* Call the co-routine. */
 	( pxCurrentCoRoutine->pxCoRoutineFunction )( pxCurrentCoRoutine, pxCurrentCoRoutine->uxIndex );

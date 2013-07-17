@@ -8,7 +8,7 @@
 %;**         if enabled, this hook will be called in case of a stack
 %;**         overflow.
 %include Common\GeneralParameters.inc(27)
-%;**       * pxTask%ParpxTask %>27 - Pointer to task handle
+%;**         pxTask%ParpxTask %>27 - Task handle
 %;**       * pcTaskName%ParpcTaskName %>27 - Pointer to task name
 %include Common\GeneralReturnNothing.inc
 %;** ===================================================================

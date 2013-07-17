@@ -25,6 +25,8 @@
 #include "TmDt1.h"
 #include "SD1.h"
 #include "SS1.h"
+#include "FRTOS1.h"
+#include "RTOSTICKLDD1.h"
 #include "SPI2.h"
 #include "Clock1.h"
 #include "BitIoLdd1.h"

@@ -970,7 +970,7 @@ void %'ModuleName'%.%Init(void);
 %-BW_METHOD_BEGIN vApplicationStackOverflowHook
 %ifdef vApplicationStackOverflowHook
 %INTERFACE vApplicationStackOverflowHook
-void %vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *pcTaskName);
+void %vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName);
 %define! ParpxTask
 %define! ParpcTaskName
 %include Common\FreeRTOSvApplicationStackOverflowHook.Inc
@@ -2304,7 +2304,7 @@ void %'ModuleName'%.%vTaskStepTick(portTickType xTicksToJump)
 %define! ParpxTask
 %define! ParpcTaskName
 %include Common\FreeRTOSvApplicationStackOverflowHook.Inc
-void %vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *pcTaskName)
+void %vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName)
 {
   /* This will get called if a stack overflow is detected during the context
      switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack

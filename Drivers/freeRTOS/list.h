@@ -249,7 +249,7 @@ typedef struct xLIST
  * \page listGET_OWNER_OF_NEXT_ENTRY listGET_OWNER_OF_NEXT_ENTRY
  * \ingroup LinkedList
  */
-#define listGET_OWNER_OF_NEXT_ENTRY( pxTCB, pxList )									\
+#define listGET_OWNER_OF_NEXT_ENTRY( pxTCB, cast, pxList )									\
 {																						\
 xList * const pxConstList = ( pxList );													\
 	/* Increment the index to the next item and return the item, ensuring */			\
@@ -259,7 +259,7 @@ xList * const pxConstList = ( pxList );													\
 	{																					\
 		( pxConstList )->pxIndex = ( pxConstList )->pxIndex->pxNext;					\
 	}																					\
-	( pxTCB ) = ( pxConstList )->pxIndex->pvOwner;										\
+	( pxTCB ) = (cast*)(( pxConstList )->pxIndex->pvOwner);										\
 }
 
 
