@@ -195,7 +195,7 @@ static const byte FAT16_BootSector[FATBootSize]=
   0x1E,     //34 - BPB_TotSec32 = 1,983,495
   0x00,     //35 - BPB_TotSec32 = 1,983,495
   0,        //36 - BS_DrvNum = 1
-  1,        //37 - BS_Reserved1 = 1
+  0,        //37 - BS_Reserved1 = 0, dirty bit =0, see https://community.freescale.com/message/340271#340271
   0x29,     //38 - BS_BootSig = 0x29
   0xBd,     //39 - BS_VolID = 0x02DDA5BD
   0xA5,     //40 - BS_VolID = 0x02DDA5BD
