@@ -168,39 +168,39 @@
 
 /* SETUP_RETR register bitwise definitions */
 #define RF24_SETUP_RETR_ARD        0xF0
-#define RF24_SETUP_RETR_ARD_4000   0xF0
-#define RF24_SETUP_RETR_ARD_3750   0xE0
-#define RF24_SETUP_RETR_ARD_3500   0xD0
-#define RF24_SETUP_RETR_ARD_3250   0xC0
-#define RF24_SETUP_RETR_ARD_3000   0xB0
-#define RF24_SETUP_RETR_ARD_2750   0xA0
-#define RF24_SETUP_RETR_ARD_2500   0x90
-#define RF24_SETUP_RETR_ARD_2250   0x80
-#define RF24_SETUP_RETR_ARD_2000   0x70
-#define RF24_SETUP_RETR_ARD_1750   0x60
-#define RF24_SETUP_RETR_ARD_1500   0x50
-#define RF24_SETUP_RETR_ARD_1250   0x40
-#define RF24_SETUP_RETR_ARD_1000   0x30
-#define RF24_SETUP_RETR_ARD_750    0x20
-#define RF24_SETUP_RETR_ARD_500    0x10
-#define RF24_SETUP_RETR_ARD_250    0x00
+#define RF24_SETUP_RETR_ARD_4000   0xF0 /* 4400 us retry delay */
+#define RF24_SETUP_RETR_ARD_3750   0xE0 /* 3750 us retry delay */
+#define RF24_SETUP_RETR_ARD_3500   0xD0 /* 3500 us retry delay */
+#define RF24_SETUP_RETR_ARD_3250   0xC0 /* 3250 us retry delay */
+#define RF24_SETUP_RETR_ARD_3000   0xB0 /* 3000 us retry delay */
+#define RF24_SETUP_RETR_ARD_2750   0xA0 /* 2750 us retry delay */
+#define RF24_SETUP_RETR_ARD_2500   0x90 /* 2500 us retry delay */
+#define RF24_SETUP_RETR_ARD_2250   0x80 /* 2250 us retry delay */
+#define RF24_SETUP_RETR_ARD_2000   0x70 /* 2000 us retry delay */
+#define RF24_SETUP_RETR_ARD_1750   0x60 /* 1750 us retry delay */
+#define RF24_SETUP_RETR_ARD_1500   0x50 /* 1500 us retry delay */
+#define RF24_SETUP_RETR_ARD_1250   0x40 /* 1250 us retry delay */
+#define RF24_SETUP_RETR_ARD_1000   0x30 /* 1000 us retry delay */
+#define RF24_SETUP_RETR_ARD_750    0x20 /* 750 us retry delay */
+#define RF24_SETUP_RETR_ARD_500    0x10 /* 500 us retry delay */
+#define RF24_SETUP_RETR_ARD_250    0x00 /* 250 us retry delay */
 #define RF24_SETUP_RETR_ARC        0x0F
-#define RF24_SETUP_RETR_ARC_15     0x0F
-#define RF24_SETUP_RETR_ARC_14     0x0E
-#define RF24_SETUP_RETR_ARC_13     0x0D
-#define RF24_SETUP_RETR_ARC_12     0x0C
-#define RF24_SETUP_RETR_ARC_11     0x0B
-#define RF24_SETUP_RETR_ARC_10     0x0A
-#define RF24_SETUP_RETR_ARC_9      0x09
-#define RF24_SETUP_RETR_ARC_8      0x08
-#define RF24_SETUP_RETR_ARC_7      0x07
-#define RF24_SETUP_RETR_ARC_6      0x06
-#define RF24_SETUP_RETR_ARC_5      0x05
-#define RF24_SETUP_RETR_ARC_4      0x04
-#define RF24_SETUP_RETR_ARC_3      0x03
-#define RF24_SETUP_RETR_ARC_2      0x02
-#define RF24_SETUP_RETR_ARC_1      0x01
-#define RF24_SETUP_RETR_ARC_0      0x00
+#define RF24_SETUP_RETR_ARC_15     0x0F /* 15 retry count */
+#define RF24_SETUP_RETR_ARC_14     0x0E /* 14 retry count */
+#define RF24_SETUP_RETR_ARC_13     0x0D /* 13 retry count */
+#define RF24_SETUP_RETR_ARC_12     0x0C /* 12 retry count */
+#define RF24_SETUP_RETR_ARC_11     0x0B /* 11 retry count */
+#define RF24_SETUP_RETR_ARC_10     0x0A /* 10 retry count */
+#define RF24_SETUP_RETR_ARC_9      0x09 /* 9 retry count */
+#define RF24_SETUP_RETR_ARC_8      0x08 /* 8 retry count */
+#define RF24_SETUP_RETR_ARC_7      0x07 /* 7 retry count */
+#define RF24_SETUP_RETR_ARC_6      0x06 /* 6 retry count */
+#define RF24_SETUP_RETR_ARC_5      0x05 /* 5 retry count */
+#define RF24_SETUP_RETR_ARC_4      0x04 /* 4 retry count */
+#define RF24_SETUP_RETR_ARC_3      0x03 /* 3 retry count */
+#define RF24_SETUP_RETR_ARC_2      0x02 /* 2 retry count */
+#define RF24_SETUP_RETR_ARC_1      0x01 /* 1 retry count */
+#define RF24_SETUP_RETR_ARC_0      0x00 /* 0 retry count, retry disabled */
 
 /* RF_CH register bitwise definitions */
 #define RF24_RF_CH_RESERVED    0x80

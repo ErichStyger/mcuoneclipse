@@ -135,7 +135,10 @@ uint8_t RF_GetStatus(void) {
   return RF_WriteRead(RF24_NOP);
 }
 
-/* Reset status after every payload rx/tx */
+/*!
+ * \brief Reset the given mask of status bits
+ * \param flags Flags, one or more of of RF24_STATUS_RX_DR, RF24_STATUS_TX_DS, RF24_STATUS_MAX_RT
+ */
 void RF_ResetStatusIRQ(uint8_t flags) {
   RF_WAIT_US(10);
   RF_CSN_LOW();

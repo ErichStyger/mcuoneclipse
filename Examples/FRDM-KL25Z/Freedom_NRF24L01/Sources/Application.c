@@ -25,7 +25,6 @@ static volatile bool isrFlag; /* flag set by ISR */
 
 void APP_OnInterrupt(void) {
   CE_ClrVal(); /* stop sending/listening */
-  /* read data here */
   isrFlag = TRUE;
 }
 
@@ -48,11 +47,14 @@ void APP_Run(void) {
   RF_WriteRegisterData(RF24_TX_ADDR, (uint8_t*)TADDR, sizeof(TADDR));
 
   /* Enable RX_ADDR_P0 address matching */
-  RF_WriteRegister(RF24_EN_RXADDR, 0x01); /* enable data pipe 0 */
- 
+  RF_WriteRegister(RF24_EN_RXADDR, RF24_EN_RXADDR_ERX_P0); /* enable data pipe 0 */
+  
+  /* clear interrupt flags */
+  RF_ResetStatusIRQ(RF24_STATUS_RX_DR|RF24_STATUS_TX_DS|RF24_STATUS_MAX_RT);
+
 #if IS_SENDER
-  RF_WriteRegister(RF24_EN_AA, 0x01); /* enable auto acknowledge. RX_ADDR_P0 needs to be equal to TX_ADDR! */
-  RF_WriteRegister(RF24_SETUP_RETR, 0x2F); /* Important: need 750 us delay between every retry */
+  RF_WriteRegister(RF24_EN_AA, RF24_EN_AA_ENAA_P0); /* enable auto acknowledge. RX_ADDR_P0 needs to be equal to TX_ADDR! */
+  RF_WriteRegister(RF24_SETUP_RETR, RF24_SETUP_RETR_ARD_750|RF24_SETUP_RETR_ARC_15); /* Important: need 750 us delay between every retry */
   TX_POWERUP();  /* Power up in transmitting mode */
   CE_ClrVal();   /* Will pulse this later to send data */
 #else
@@ -60,15 +62,12 @@ void APP_Run(void) {
   CE_SetVal();   /* Listening for packets */
 #endif
   
-  /* clear interrupt flags */
-  RF_ResetStatusIRQ(RF24_STATUS_RX_DR|RF24_STATUS_TX_DS|RF24_STATUS_MAX_RT);
   cntr = 0;
   for(;;) {
 #if IS_SENDER
     cntr++;
     if (cntr==200) { /* send data every 200 ms */
       cntr = 0;
-      //TX_POWERUP();
       for(i=0;i<PAYLOAD_SIZE;i++) {
         payload[i] = i+1; /* just fill payload with some data */
       }
