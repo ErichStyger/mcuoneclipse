@@ -10,8 +10,8 @@
 #include "TI1.h"
 #include "TI2.h"
 
-#define USE_PRINTF    0
-#define REPORT_STACK  (0 && USE_PRINTF)
+#define USE_PRINTF    0 /* if using printf(), then change librarian to 'ewl_hosted', otherwise 'ewl_noio' */
+#define REPORT_STACK  (0 && USE_PRINTF) /* need to enable 'Trace Facility' in FreeRTOS for this */
 
 /* stack sizes for reference. These are stack units (so 4 bytes each) */
 #define STACK_SIZE_IDLE   (configMINIMAL_STACK_SIZE)    /* 30 */
