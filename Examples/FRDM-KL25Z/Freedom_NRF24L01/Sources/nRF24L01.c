@@ -20,8 +20,8 @@
 
 /*!
  * \brief Writes a byte and reads the value
- * @param val Value to write
- * @return The value shifted in
+ * \param val Value to write. This value will be shifted out
+ * \return The value shifted in
  */
 static uint8_t SPI_WriteRead(uint8_t val) {
   uint8_t ch;
@@ -32,22 +32,6 @@ static uint8_t SPI_WriteRead(uint8_t val) {
   while (SM1_GetCharsInRxBuf()==0) {} /* wait until we receive data */
   while (SM1_RecvChar(&ch)!=ERR_OK) {} /* get data */
   return ch;
-}
-
-/*!
- * \brief Read a value from SPI bus
- * \return Value read
- */
-static uint8_t SPI_Read(void) {
-  return SPI_WriteRead(0); /* zero is dummy value */
-}
-
-/*!
- * \brief Writes a value to the SPI bus
- * \param val Value to write
- */
-static void SPI_Write(uint8_t val) {
-  (void)SPI_WriteRead(val);
 }
 
 /*!
@@ -64,11 +48,16 @@ static void SPI_WriteReadBuffer(uint8_t *bufOut, uint8_t *bufIn, uint8_t bufSize
   }
 }
 
+/*!
+ * \brief Writes multiple bytes to the SPI bus
+ * \param bufOut Buffer to write
+ * \param bufSize Size of buffer
+ */
 static void SPI_WriteBuffer(uint8_t *bufOut, uint8_t bufSize) {
   uint8_t i;
   
   for(i=0;i<bufSize;i++) {
-    SPI_Write(bufOut[i]);
+    (void)SPI_WriteRead(bufOut[i]);
   }
 }
 
@@ -79,39 +68,61 @@ static void SPI_WriteBuffer(uint8_t *bufOut, uint8_t bufSize) {
  */
 void RF_WriteRegister(uint8_t reg, uint8_t val) {
   RF_CSN_LOW(); /* initiate command sequence */
-  SPI_Write(RF24_W_REGISTER|reg); /* write register command */
-  SPI_Write(val); /* write value */
+  (void)SPI_WriteRead(RF24_W_REGISTER|reg); /* write register command */
+  (void)SPI_WriteRead(val); /* write value */
   RF_CSN_HIGH(); /* end command sequence */
   RF_WAIT_US(10); /* insert a delay until next command */
 }
 
+/*!
+ * \brief Reads a byte value from a register
+ * \param reg Register to read
+ * \return Register value read
+ */
 uint8_t RF_ReadRegister(uint8_t reg) {
   uint8_t val;
   
   RF_CSN_LOW();
-  SPI_Write(reg);
-  val = SPI_Read();
+  (void)SPI_WriteRead(reg);
+  val = SPI_WriteRead(0); /* write dummy */
   RF_CSN_HIGH();
   RF_WAIT_US(10);
   return val;
 }
 
+/*!
+ * \brief Read multiple bytes from the bus.
+ * \param reg Register address
+ * \param buf Buffer where to write the data
+ * \param bufSize Buffer size in bytes
+ */
 void RF_ReadRegisterData(uint8_t reg, uint8_t *buf, uint8_t bufSize) {
   RF_CSN_LOW();
-  SPI_Write(RF24_R_REGISTER|reg);
+  (void)SPI_WriteRead(RF24_R_REGISTER|reg);
   SPI_WriteReadBuffer(buf, buf, bufSize);
   RF_CSN_HIGH();
   RF_WAIT_US(10);
 }
 
+/*!
+ * \brief Write multiple bytes to the bus.
+ * \param reg Register address
+ * \param buf Buffer of what to write
+ * \param bufSize Buffer size in bytes
+ */
 void RF_WriteRegisterData(uint8_t reg, uint8_t *buf, uint8_t bufSize) {
   RF_CSN_LOW();
-  SPI_Write(RF24_W_REGISTER|reg); /* not masking registers as it would conflict with RF24_W_TX_PAYLOAD */
+  (void)SPI_WriteRead(RF24_W_REGISTER|reg); /* not masking registers as it would conflict with RF24_W_TX_PAYLOAD */
   SPI_WriteBuffer(buf, bufSize);
   RF_CSN_HIGH();
   RF_WAIT_US(10);
 }
 
+/*!
+ * \brief Writes a byte and reads back one byte
+ * \param val Byte to write to the SPI shift register
+ * \return Byte read from the SPI shift register
+ */
 uint8_t RF_WriteRead(uint8_t val) {
   RF_CSN_LOW();
   val = SPI_WriteRead(val);
@@ -120,9 +131,14 @@ uint8_t RF_WriteRead(uint8_t val) {
   return val;
 }
 
+/*!
+ * \brief Writes a byte to the bus, without returning the byte read.
+ * \param val Byte to write.
+ */
+
 void RF_Write(uint8_t val) {
   RF_CSN_LOW();
-  SPI_Write(val);
+  (void)SPI_WriteRead(val);
   RF_CSN_HIGH();
   RF_WAIT_US(10);
 }
@@ -137,7 +153,7 @@ uint8_t RF_GetStatus(void) {
 
 /*!
  * \brief Reset the given mask of status bits
- * \param flags Flags, one or more of of RF24_STATUS_RX_DR, RF24_STATUS_TX_DS, RF24_STATUS_MAX_RT
+ * \param flags Flags, one or more of RF24_STATUS_RX_DR, RF24_STATUS_TX_DS, RF24_STATUS_MAX_RT
  */
 void RF_ResetStatusIRQ(uint8_t flags) {
   RF_WAIT_US(10);
@@ -180,26 +196,3 @@ void RF_Init(void) {
   RF_CE_LOW();   /* CE high: do not send or receive data */
   RF_CSN_HIGH(); /* CSN low: not sending commands to the device */
 }
-
-#if 0 /* not used yet */
-uint8_t RF_GetChannel(void) {
-  return RF_ReadRegister(RF24_RF_CH);
-}
-
-void RF_SetChannel(uint8_t channel) {
-  RF_WriteRegister(RF24_RF_CH, channel);
-}
-
-void RF_SetPayloadSize(uint8_t payloadSize) {
-  RF_WriteRegister(RF24_RX_PW_P0, payloadSize);
-}
-
-bool RF_DataIsReady(void) {
-  return (RF_GetStatus()&RF24_STATUS_RX_DR);
-}
-
-bool RF_MaxRetryReached(void) {
-  return (RF_GetStatus()&RF24_STATUS_MAX_RT);
-}
-
-#endif

@@ -4,7 +4,7 @@
     <Name>nRF24L01</Name>
     <Description>Driver for the Nordic nRF241L01+ Wireless Transceiver</Description>
     <Author>Erich Styger</Author>
-    <Version>01.004</Version>
+    <Version>01.018</Version>
     <Icon>nRF24L01</Icon>
     <TypesFiles>PE,nRF24L01\nRF24L01</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -36,7 +36,171 @@
         <DefaultValue/>
       </TCompNameItem>
     </Property>
+    <Property>
+      <TInhrLinkItem>
+        <Name>Wait</Name>
+        <Symbol>Wait</Symbol>
+        <TypeSpec>nRF24L01\Wait</TypeSpec>
+        <Hint>Interface to Waiting routines</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <DefaultValue/>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <SortStyle/>
+      </TInhrLinkItem>
+    </Property>
+    <Property>
+      <TInhrItem>
+        <Name>CE</Name>
+        <Symbol>CE</Symbol>
+        <TypeSpec>nRF24L01\CE</TypeSpec>
+        <Hint>CE Pin</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>-1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <InhrBeanBaseName>CE</InhrBeanBaseName>
+        <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+      </TInhrItem>
+    </Property>
+    <Property>
+      <TInhrLinkItem>
+        <Name>SPI</Name>
+        <Symbol>SPI</Symbol>
+        <TypeSpec>nRF24L01\SPI</TypeSpec>
+        <Hint>SPI interface</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <DefaultValue/>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <SortStyle/>
+      </TInhrLinkItem>
+    </Property>
+    <Property>
+      <TInhrItem>
+        <Name>CSN</Name>
+        <Symbol>CSN</Symbol>
+        <TypeSpec>nRF24L01\CSN</TypeSpec>
+        <Hint>CSN pin</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>-1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <InhrBeanBaseName>CSN</InhrBeanBaseName>
+        <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+      </TInhrItem>
+    </Property>
+    <Property>
+      <TBoolGrupItem>
+        <Name>IRQ Pin</Name>
+        <Symbol>IRQPinEnabled</Symbol>
+        <TypeSpec>typeEnaDis</TypeSpec>
+        <Hint>IRQ pin</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>Enabled</Description>
+        <Expanded>Yes</Expanded>
+        <DefaultValue>true</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <Children>
+          <GrupItem>
+            <TInhrItem>
+              <Name>IRQ</Name>
+              <Symbol>IRQ</Symbol>
+              <TypeSpec>nRF24L01\IRQ</TypeSpec>
+              <Hint>Optional IRQ pin</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>-1</DefaultIndex>
+              <TextValueIndex>false</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <InhrBeanBaseName>IRQ</InhrBeanBaseName>
+              <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+            </TInhrItem>
+          </GrupItem>
+        </Children>
+      </TBoolGrupItem>
+    </Property>
   </PropertyList>
+  <MethodList>
+    <Method>
+      <TMthdItem>
+        <Name>Init</Name>
+        <Symbol>Init</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Initialization method</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>SpiWriteRead</Name>
+        <Symbol>SpiWriteRead</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Write a byte to the SPI and reads the shifted value</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>false</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>false</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>val</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>value to be shifted out</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte val)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+  </MethodList>
   <Links>
     <EmptySection_DummyValue/>
   </Links>

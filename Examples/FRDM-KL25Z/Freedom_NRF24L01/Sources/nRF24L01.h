@@ -292,11 +292,5 @@ void RF_ResetStatusIRQ(uint8_t flags);
 
 void RF_Init(void);
 
-#if 0
-bool RF_MaxRetryReached(void);
-uint8_t RF_GetChannel(void);
-void RF_SetChannel(uint8_t channel);
-void RF_SetPayloadSize(uint8_t payloadSize);
-#endif
 
 #endif /* NRF24L01_H_ */
