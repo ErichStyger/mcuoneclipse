@@ -1,48 +1,37 @@
 /*
-    FreeRTOS V7.4.2 - Copyright (C) 2013 Real Time Engineers Ltd.
+    FreeRTOS V7.5.0 - Copyright (C) 2013 Real Time Engineers Ltd.
 
-    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
-    http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
+    VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
      *                                                                       *
-     *    FreeRTOS tutorial books are available in pdf and paperback.        *
-     *    Complete, revised, and edited pdf reference manuals are also       *
-     *    available.                                                         *
+     *    FreeRTOS provides completely free yet professionally developed,    *
+     *    robust, strictly quality controlled, supported, and cross          *
+     *    platform software that has become a de facto standard.             *
      *                                                                       *
-     *    Purchasing FreeRTOS documentation will not only help you, by       *
-     *    ensuring you get running as quickly as possible and with an        *
-     *    in-depth knowledge of how to use FreeRTOS, it will also help       *
-     *    the FreeRTOS project to continue with its mission of providing     *
-     *    professional grade, cross platform, de facto standard solutions    *
-     *    for microcontrollers - completely free of charge!                  *
+     *    Help yourself get started quickly and support the FreeRTOS         *
+     *    project by purchasing a FreeRTOS tutorial book, reference          *
+     *    manual, or both from: http://www.FreeRTOS.org/Documentation        *
      *                                                                       *
-     *    >>> See http://www.FreeRTOS.org/Documentation for details. <<<     *
-     *                                                                       *
-     *    Thank you for using FreeRTOS, and thank you for your support!      *
+     *    Thank you!                                                         *
      *                                                                       *
     ***************************************************************************
-
 
     This file is part of the FreeRTOS distribution.
 
     FreeRTOS is free software; you can redistribute it and/or modify it under
     the terms of the GNU General Public License (version 2) as published by the
-    Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
+    Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
 
-    >>>>>>NOTE<<<<<< The modification to the GPL is included to allow you to
-    distribute a combined work that includes FreeRTOS without being obliged to
-    provide the source code for proprietary components outside of the FreeRTOS
-    kernel.
+    >>! NOTE: The modification to the GPL is included to allow you to distribute
+    >>! a combined work that includes FreeRTOS without being obliged to provide
+    >>! the source code for proprietary components outside of the FreeRTOS
+    >>! kernel.
 
     FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
     WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-    FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-    details. You should have received a copy of the GNU General Public License
-    and the FreeRTOS license exception along with FreeRTOS; if not it can be
-    viewed here: http://www.freertos.org/a00114.html and also obtained by
-    writing to Real Time Engineers Ltd., contact details for whom are available
-    on the FreeRTOS WEB site.
+    FOR A PARTICULAR PURPOSE.  Full license text is available from the following
+    link: http://www.freertos.org/a00114.html
 
     1 tab == 4 spaces!
 
@@ -55,21 +44,22 @@
      *                                                                       *
     ***************************************************************************
 
-
     http://www.FreeRTOS.org - Documentation, books, training, latest versions,
     license and Real Time Engineers Ltd. contact details.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
-    including FreeRTOS+Trace - an indispensable productivity tool, and our new
-    fully thread aware and reentrant UDP/IP stack.
+    including FreeRTOS+Trace - an indispensable productivity tool, a DOS
+    compatible FAT file system, and our tiny thread aware UDP/IP stack.
 
     http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
-    Integrity Systems, who sell the code with commercial support,
-    indemnification and middleware, under the OpenRTOS brand.
+    Integrity Systems to sell under the OpenRTOS brand.  Low cost OpenRTOS
+    licenses offer ticketed support, indemnification and middleware.
 
     http://www.SafeRTOS.com - High Integrity Systems also provide a safety
     engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
+
+    1 tab == 4 spaces!
 */
 
 
@@ -84,8 +74,6 @@
 extern "C" {
 #endif
 
-
-#include "mpu_wrappers.h"
 
 /**
  * Type by which queues are referenced.  For example, a call to xQueueCreate()
@@ -109,17 +97,17 @@ typedef void * xQueueSetHandle;
 typedef void * xQueueSetMemberHandle;
 
 /* For internal use only. */
-#define	queueSEND_TO_BACK		( 0 )
-#define	queueSEND_TO_FRONT		( 1 )
-#define queueOVERWRITE			( 2 )
+#define	queueSEND_TO_BACK		( ( portBASE_TYPE ) 0 )
+#define	queueSEND_TO_FRONT		( ( portBASE_TYPE ) 1 )
+#define queueOVERWRITE			( ( portBASE_TYPE ) 2 )
 
 /* For internal use only.  These definitions *must* match those in queue.c. */
-#define queueQUEUE_TYPE_BASE				( 0U )
-#define queueQUEUE_TYPE_SET					( 0U )
-#define queueQUEUE_TYPE_MUTEX 				( 1U )
-#define queueQUEUE_TYPE_COUNTING_SEMAPHORE	( 2U )
-#define queueQUEUE_TYPE_BINARY_SEMAPHORE	( 3U )
-#define queueQUEUE_TYPE_RECURSIVE_MUTEX		( 4U )
+#define queueQUEUE_TYPE_BASE				( ( unsigned char ) 0U )
+#define queueQUEUE_TYPE_SET					( ( unsigned char ) 0U )
+#define queueQUEUE_TYPE_MUTEX 				( ( unsigned char ) 1U )
+#define queueQUEUE_TYPE_COUNTING_SEMAPHORE	( ( unsigned char ) 2U )
+#define queueQUEUE_TYPE_BINARY_SEMAPHORE	( ( unsigned char ) 3U )
+#define queueQUEUE_TYPE_RECURSIVE_MUTEX		( ( unsigned char ) 4U )
 
 /**
  * queue. h
@@ -432,19 +420,20 @@ typedef void * xQueueSetMemberHandle;
  * <pre>
  portBASE_TYPE xQueueOverwrite(
 							  xQueueHandle xQueue,
-							  const void * pvItemToQueue,
+							  const void * pvItemToQueue
 						 );
  * </pre>
  *
- * Only for use with queues that can hold a single item - so the queue is either
+ * Only for use with queues that have a length of one - so the queue is either
  * empty or full.
  *
  * Post an item on a queue.  If the queue is already full then overwrite the
  * value held in the queue.  The item is queued by copy, not by reference.
+ *
  * This function must not be called from an interrupt service routine.
  * See xQueueOverwriteFromISR () for an alternative which may be used in an ISR.
  *
- * @param xQueue The handle to the queue on which the item is to be posted.
+ * @param xQueue The handle of the queue to which the data is being sent.
  *
  * @param pvItemToQueue A pointer to the item that is to be placed on the
  * queue.  The size of the items the queue will hold was defined when the
@@ -452,9 +441,9 @@ typedef void * xQueueSetMemberHandle;
  * into the queue storage area.
  *
  * @return xQueueOverwrite() is a macro that calls xQueueGenericSend(), and
- * therefore has the same return values as xQueueSendToFront().  However, as
- * xQueueOverwrite() will write to the queue even when the queue is full pdPASS
- * will be returned in all cases (errQUEUE_FULL will never be returned).
+ * therefore has the same return values as xQueueSendToFront().  However, pdPASS
+ * is the only value that can be returned because xQueueOverwrite() will write
+ * to the queue even when the queue is already full.
  *
  * Example usage:
    <pre>
@@ -482,7 +471,7 @@ typedef void * xQueueSetMemberHandle;
 
 	if( ulValReceived != 10 )
 	{
-		// Error!
+		// Error unless the item was removed by a different task.
 	}
 
 	// The queue is still full.  Use xQueueOverwrite() to overwrite the
@@ -724,7 +713,7 @@ signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const 
  * \defgroup xQueuePeekFromISR xQueuePeekFromISR
  * \ingroup QueueManagement
  */
-signed portBASE_TYPE xQueuePeekFromISR( xQueueHandle xQueue, void * const pvBuffer ) PRIVILEGED_FUNCTION;
+signed portBASE_TYPE xQueuePeekFromISR( xQueueHandle xQueue, const void * const pvBuffer ) PRIVILEGED_FUNCTION;
 
 /**
  * queue. h
@@ -916,7 +905,7 @@ signed portBASE_TYPE xQueuePeekFromISR( xQueueHandle xQueue, void * const pvBuff
  * \defgroup xQueueReceive xQueueReceive
  * \ingroup QueueManagement
  */
-signed portBASE_TYPE xQueueGenericReceive( xQueueHandle xQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeek ) PRIVILEGED_FUNCTION;
+signed portBASE_TYPE xQueueGenericReceive( xQueueHandle xQueue, const void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeek ) PRIVILEGED_FUNCTION;
 
 /**
  * queue. h
@@ -1098,7 +1087,7 @@ void vQueueDelete( xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
 						 );
  * </pre>
  *
- * A version of xQueueOverwrite() that can be used from an interrupt service
+ * A version of xQueueOverwrite() that can be used in an interrupt service
  * routine (ISR).
  *
  * Only for use with queues that can hold a single item - so the queue is either
@@ -1117,14 +1106,14 @@ void vQueueDelete( xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
  * @param pxHigherPriorityTaskWoken xQueueOverwriteFromISR() will set
  * *pxHigherPriorityTaskWoken to pdTRUE if sending to the queue caused a task
  * to unblock, and the unblocked task has a priority higher than the currently
- * running task.  If xQueueSendFromISR() sets this value to pdTRUE then
+ * running task.  If xQueueOverwriteFromISR() sets this value to pdTRUE then
  * a context switch should be requested before the interrupt is exited.
  *
- * @return xQueueOverwriteFromISR() is a macro that calls 
- * xQueueGenericSendFromISR(), and therefore has the same return values as 
- * xQueueSendToFrontFromISR().  However, as xQueueOverwriteFromISR() will write 
- * to the queue even when the queue is full pdPASS will be returned in all cases 
- * (errQUEUE_FULL will never be returned).
+ * @return xQueueOverwriteFromISR() is a macro that calls
+ * xQueueGenericSendFromISR(), and therefore has the same return values as
+ * xQueueSendToFrontFromISR().  However, pdPASS is the only value that can be
+ * returned because xQueueOverwriteFromISR() will write to the queue even when
+ * the queue is already full.
  *
  * Example usage:
    <pre>
@@ -1134,7 +1123,7 @@ void vQueueDelete( xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
  void vFunction( void *pvParameters )
  {
  	// Create a queue to hold one unsigned long value.  It is strongly
-	// recommended *not* to use xQueueOverwrite() on queues that can
+	// recommended *not* to use xQueueOverwriteFromISR() on queues that can
 	// contain more than one value, and doing so will trigger an assertion
 	// if configASSERT() is defined.
 	xQueue = xQueueCreate( 1, sizeof( unsigned long ) );
@@ -1154,11 +1143,20 @@ unsigned long ulVarToSend, ulValReceived;
 	// pass because the value held in the queue will be overwritten with the
 	// new value.
 	ulVarToSend = 100;
-	xQueueOverwrite( xQueue, &ulVarToSend, &xHigherPriorityTaskWoken );
+	xQueueOverwriteFromISR( xQueue, &ulVarToSend, &xHigherPriorityTaskWoken );
 
 	// Reading from the queue will now return 100.
 
 	// ...
+	
+	if( xHigherPrioritytaskWoken == pdTRUE )
+	{
+		// Writing to the queue caused a task to unblock and the unblocked task
+		// has a priority higher than or equal to the priority of the currently
+		// executing task (the task this interrupt interrupted).  Perform a context
+		// switch so this interrupt returns directly to the unblocked task.
+		portYIELD_FROM_ISR(); // or portEND_SWITCHING_ISR() depending on the port.
+	}
 }
  </pre>
  * \defgroup xQueueOverwriteFromISR xQueueOverwriteFromISR
@@ -1405,7 +1403,7 @@ signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle xQueue, const void *
  * \defgroup xQueueReceiveFromISR xQueueReceiveFromISR
  * \ingroup QueueManagement
  */
-signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle xQueue, void * const pvBuffer, signed portBASE_TYPE *pxHigherPriorityTaskWoken ) PRIVILEGED_FUNCTION;
+signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle xQueue, const void * const pvBuffer, signed portBASE_TYPE *pxHigherPriorityTaskWoken ) PRIVILEGED_FUNCTION;
 
 /*
  * Utilities to query queues that are safe to use from an ISR.  These utilities
@@ -1495,7 +1493,7 @@ portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle pxMutex ) PRIVILEGED_FUNCTI
  * @param pcName The name to be associated with the handle.  This is the
  * name that the kernel aware debugger will display.
  */
-#if configQUEUE_REGISTRY_SIZE > 0U
+#if configQUEUE_REGISTRY_SIZE > 0
 	void vQueueAddToRegistry( xQueueHandle xQueue, signed char *pcName ) PRIVILEGED_FUNCTION;
 #endif
 
@@ -1509,7 +1507,7 @@ portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle pxMutex ) PRIVILEGED_FUNCTI
  *
  * @param xQueue The handle of the queue being removed from the registry.
  */
-#if configQUEUE_REGISTRY_SIZE > 0U
+#if configQUEUE_REGISTRY_SIZE > 0
 	void vQueueUnregisterQueue( xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
 #endif
 

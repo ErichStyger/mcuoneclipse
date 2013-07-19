@@ -48,14 +48,6 @@
 #include "I2CSPY1.h"
 #include "TMOUT1.h"
 #include "HF1.h"
-#include "D5Left.h"
-#include "BitIoLdd14.h"
-#include "D5Right.h"
-#include "BitIoLdd15.h"
-#include "D10Left.h"
-#include "BitIoLdd16.h"
-#include "D10Right.h"
-#include "BitIoLdd17.h"
 #include "CLS1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
@@ -101,7 +93,7 @@ void Cpu_OnNMIINT(void);
 */
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

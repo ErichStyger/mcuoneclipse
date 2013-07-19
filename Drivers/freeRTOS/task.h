@@ -1,48 +1,37 @@
 /*
-    FreeRTOS V7.4.2 - Copyright (C) 2013 Real Time Engineers Ltd.
+    FreeRTOS V7.5.0 - Copyright (C) 2013 Real Time Engineers Ltd.
 
-    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
-    http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
+    VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
      *                                                                       *
-     *    FreeRTOS tutorial books are available in pdf and paperback.        *
-     *    Complete, revised, and edited pdf reference manuals are also       *
-     *    available.                                                         *
+     *    FreeRTOS provides completely free yet professionally developed,    *
+     *    robust, strictly quality controlled, supported, and cross          *
+     *    platform software that has become a de facto standard.             *
      *                                                                       *
-     *    Purchasing FreeRTOS documentation will not only help you, by       *
-     *    ensuring you get running as quickly as possible and with an        *
-     *    in-depth knowledge of how to use FreeRTOS, it will also help       *
-     *    the FreeRTOS project to continue with its mission of providing     *
-     *    professional grade, cross platform, de facto standard solutions    *
-     *    for microcontrollers - completely free of charge!                  *
+     *    Help yourself get started quickly and support the FreeRTOS         *
+     *    project by purchasing a FreeRTOS tutorial book, reference          *
+     *    manual, or both from: http://www.FreeRTOS.org/Documentation        *
      *                                                                       *
-     *    >>> See http://www.FreeRTOS.org/Documentation for details. <<<     *
-     *                                                                       *
-     *    Thank you for using FreeRTOS, and thank you for your support!      *
+     *    Thank you!                                                         *
      *                                                                       *
     ***************************************************************************
-
 
     This file is part of the FreeRTOS distribution.
 
     FreeRTOS is free software; you can redistribute it and/or modify it under
     the terms of the GNU General Public License (version 2) as published by the
-    Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
+    Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
 
-    >>>>>>NOTE<<<<<< The modification to the GPL is included to allow you to
-    distribute a combined work that includes FreeRTOS without being obliged to
-    provide the source code for proprietary components outside of the FreeRTOS
-    kernel.
+    >>! NOTE: The modification to the GPL is included to allow you to distribute
+    >>! a combined work that includes FreeRTOS without being obliged to provide
+    >>! the source code for proprietary components outside of the FreeRTOS
+    >>! kernel.
 
     FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
     WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-    FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-    details. You should have received a copy of the GNU General Public License
-    and the FreeRTOS license exception along with FreeRTOS; if not it can be
-    viewed here: http://www.freertos.org/a00114.html and also obtained by
-    writing to Real Time Engineers Ltd., contact details for whom are available
-    on the FreeRTOS WEB site.
+    FOR A PARTICULAR PURPOSE.  Full license text is available from the following
+    link: http://www.freertos.org/a00114.html
 
     1 tab == 4 spaces!
 
@@ -55,32 +44,32 @@
      *                                                                       *
     ***************************************************************************
 
-
     http://www.FreeRTOS.org - Documentation, books, training, latest versions,
     license and Real Time Engineers Ltd. contact details.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
-    including FreeRTOS+Trace - an indispensable productivity tool, and our new
-    fully thread aware and reentrant UDP/IP stack.
+    including FreeRTOS+Trace - an indispensable productivity tool, a DOS
+    compatible FAT file system, and our tiny thread aware UDP/IP stack.
 
     http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
-    Integrity Systems, who sell the code with commercial support,
-    indemnification and middleware, under the OpenRTOS brand.
+    Integrity Systems to sell under the OpenRTOS brand.  Low cost OpenRTOS
+    licenses offer ticketed support, indemnification and middleware.
 
     http://www.SafeRTOS.com - High Integrity Systems also provide a safety
     engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
+
+    1 tab == 4 spaces!
 */
 
 
-#ifndef TASK_H
-#define TASK_H
+#ifndef INC_TASK_H
+#define INC_TASK_H
 
 #ifndef INC_FREERTOS_H
 	#error "include FreeRTOS.h must appear in source files before include task.h"
 #endif
 
-#include "portable.h"
 #include "list.h"
 
 #ifdef __cplusplus
@@ -91,7 +80,7 @@ extern "C" {
  * MACROS AND DEFINITIONS
  *----------------------------------------------------------*/
 
-#define tskKERNEL_VERSION_NUMBER "V7.4.2"
+#define tskKERNEL_VERSION_NUMBER "V7.5.0"
 
 /**
  * task. h
@@ -148,16 +137,16 @@ typedef struct xTASK_PARAMTERS
 	xMemoryRegion xRegions[ portNUM_CONFIGURABLE_REGIONS ];
 } xTaskParameters;
 
-/* Used with the xTaskGetSystemState() function to return the state of each task
+/* Used with the uxTaskGetSystemState() function to return the state of each task
 in the system. */
 typedef struct xTASK_STATUS
 {
 	xTaskHandle xHandle;						/* The handle of the task to which the rest of the information in the structure relates. */
-	const signed char *pcTaskName;				/* A pointer to the task's name.  This valid will be invalid if the task was deleted since the structure was populated! */
+	const signed char *pcTaskName;				/* A pointer to the task's name.  This value will be invalid if the task was deleted since the structure was populated! */
 	unsigned portBASE_TYPE xTaskNumber;			/* A number unique to the task. */
 	eTaskState eCurrentState;					/* The state in which the task existed when the structure was populated. */
 	unsigned portBASE_TYPE uxCurrentPriority;	/* The priority at which the task was running (may be inherited) when the structure was populated. */
-	unsigned portBASE_TYPE uxBasePriority;		/* The priority to which the task will return if the task's current priority has been inherited to avoid unbounded priority inversion when obtaining a mutex.  Only valid is configUSE_MUTEXES is defined as 1 in FreeRTOSConfig.h. */
+	unsigned portBASE_TYPE uxBasePriority;		/* The priority to which the task will return if the task's current priority has been inherited to avoid unbounded priority inversion when obtaining a mutex.  Only valid if configUSE_MUTEXES is defined as 1 in FreeRTOSConfig.h. */
 	unsigned long ulRunTimeCounter;				/* The total run time allocated to the task so far, as defined by the run time stats clock.  See http://www.freertos.org/rtos-run-time-stats.html.  Only valid when configGENERATE_RUN_TIME_STATS is defined as 1 in FreeRTOSConfig.h. */
 	unsigned short usStackHighWaterMark;		/* The minimum amount of stack space that has remained for the task since the task was created.  The closer this value is to zero the closer the task has come to overflowing its stack. */
 } xTaskStatusType;
@@ -237,9 +226,9 @@ typedef enum
 #define taskENABLE_INTERRUPTS()		portENABLE_INTERRUPTS()
 
 /* Definitions returned by xTaskGetSchedulerState(). */
-#define taskSCHEDULER_NOT_STARTED	0
-#define taskSCHEDULER_RUNNING		1
-#define taskSCHEDULER_SUSPENDED		2
+#define taskSCHEDULER_NOT_STARTED	( ( portBASE_TYPE ) 0 )
+#define taskSCHEDULER_RUNNING		( ( portBASE_TYPE ) 1 )
+#define taskSCHEDULER_SUSPENDED		( ( portBASE_TYPE ) 2 )
 
 /*-----------------------------------------------------------
  * TASK CREATION API
@@ -1017,7 +1006,7 @@ signed portBASE_TYPE xTaskResumeAll( void ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
- * <pre>signed portBASE_TYPE xTaskIsTaskSuspended( xTaskHandle xTask );</pre>
+ * <pre>signed portBASE_TYPE xTaskIsTaskSuspended( const xTaskHandle xTask );</pre>
  *
  * Utility task that simply returns pdTRUE if the task referenced by xTask is
  * currently in the Suspended state, or pdFALSE if the task referenced by xTask
@@ -1157,9 +1146,9 @@ xTaskHandle xTaskGetIdleTaskHandle( void );
 
 /**
  * configUSE_TRACE_FACILITY must bet defined as 1 in FreeRTOSConfig.h for
- * xTaskGetSystemState() to be available.
+ * uxTaskGetSystemState() to be available.
  *
- * xTaskGetSystemState() populates an xTaskStatusType structure for each task in
+ * uxTaskGetSystemState() populates an xTaskStatusType structure for each task in
  * the system.  xTaskStatusType structures contain, among other things, members
  * for the task handle, task name, task priority, task state, and total amount
  * of run time consumed by the task.  See the xTaskStatusType structure
@@ -1169,31 +1158,32 @@ xTaskHandle xTaskGetIdleTaskHandle( void );
  * the scheduler remaining suspended for an extended period.
  *
  * @param pxTaskStatusArray A pointer to an array of xTaskStatusType structures.
- * The array contain at least one xTaskStatusType structure for each task that
- * is under the control of the RTOS.  The number of tasks under the control of
- * the RTOS can be determined using the uxTaskGetNumberOfTasks() API function.
+ * The array must contain at least one xTaskStatusType structure for each task 
+ * that is under the control of the RTOS.  The number of tasks under the control 
+ * of the RTOS can be determined using the uxTaskGetNumberOfTasks() API function.
  *
  * @param uxArraySize The size of the array pointed to by the pxTaskStatusArray
  * parameter.  The size is specified as the number of indexes in the array, or
  * the number of xTaskStatusType structures contained in the array, not by the
  * number of bytes in the array.
  *
- * @param pultotalRunTime If configGENERATE_RUN_TIME_STATS is set to 1 in
- * FreeRTOSConfig.h then *pulTotalRunTime is set by xTaskGetSystemState() to the
+ * @param pulTotalRunTime If configGENERATE_RUN_TIME_STATS is set to 1 in
+ * FreeRTOSConfig.h then *pulTotalRunTime is set by uxTaskGetSystemState() to the
  * total run time (as defined by the run time stats clock, see
  * http://www.freertos.org/rtos-run-time-stats.html) since the target booted.
+ * pulTotalRunTime can be set to NULL to omit the total run time information.
  *
  * @return The number of xTaskStatusType structures that were populated by
- * xTaskGetSystemState().  This should equal the number returned by the
+ * uxTaskGetSystemState().  This should equal the number returned by the
  * uxTaskGetNumberOfTasks() API function, but will be zero if the value passed
  * in the uxArraySize parameter was too small.
  *
  * Example usage:
    <pre>
     // This example demonstrates how a human readable table of run time stats
-	// information is generated from raw data provided by xTaskGetSystemState().
+	// information is generated from raw data provided by uxTaskGetSystemState().
 	// The human readable table is written to pcWriteBuffer
-	void vTaskGetRunTimeStats( unsigned char *pcWriteBuffer, size_t bufSize )
+	void vTaskGetRunTimeStats( unsigned char *pcWriteBuffer )
 	{
 	xTaskStatusType *pxTaskStatusArray;
 	volatile unsigned portBASE_TYPE uxArraySize, x;
@@ -1204,7 +1194,7 @@ xTaskHandle xTaskGetIdleTaskHandle( void );
 
 		// Take a snapshot of the number of tasks in case it changes while this
 		// function is executing.
-		uxArraySize = uxCurrentNumberOfTasks;
+		uxArraySize = uxCurrentNumberOfTasks();
 
 		// Allocate a xTaskStatusType structure for each task.  An array could be
 		// allocated statically at compile time.
@@ -1213,7 +1203,7 @@ xTaskHandle xTaskGetIdleTaskHandle( void );
 		if( pxTaskStatusArray != NULL )
 		{
 			// Generate raw status information about each task.
-			uxArraySize = xTaskGetSystemState( pxTaskStatusArray, uxArraySize, &ulTotalRunTime );
+			uxArraySize = uxTaskGetSystemState( pxTaskStatusArray, uxArraySize, &ulTotalRunTime );
 
 			// For percentage calculations.
 			ulTotalRunTime /= 100UL;
@@ -1251,13 +1241,13 @@ xTaskHandle xTaskGetIdleTaskHandle( void );
 	}
 	</pre>
  */
-unsigned portBASE_TYPE xTaskGetSystemState( xTaskStatusType *pxTaskStatusArray, unsigned portBASE_TYPE uxArraySize, unsigned long *pulTotalRunTime );
+unsigned portBASE_TYPE uxTaskGetSystemState( xTaskStatusType *pxTaskStatusArray, unsigned portBASE_TYPE uxArraySize, unsigned long *pulTotalRunTime );
 
 /**
  * task. h
- * <PRE>void vTaskList( char *pcWriteBuffer, size_t bufSize );</PRE>
+ * <PRE>void vTaskList( char *pcWriteBuffer );</PRE>
  *
- * configUSE_TRACE_FACILITY and configINCLUDE_STATS_FORMATTING_FUNCTIONS must
+ * configUSE_TRACE_FACILITY and configUSE_STATS_FORMATTING_FUNCTIONS must
  * both be defined as 1 for this function to be available.  See the
  * configuration section of the FreeRTOS.org website for more information.
  *
@@ -1275,8 +1265,8 @@ unsigned portBASE_TYPE xTaskGetSystemState( xTaskStatusType *pxTaskStatusArray, 
  * This function is provided for convenience only, and is used by many of the
  * demo applications.  Do not consider it to be part of the scheduler.
  *
- * vTaskList() calls xTaskGetSystemState(), then formats part of the
- * xTaskGetSystemState() output into a human readable table that displays task
+ * vTaskList() calls uxTaskGetSystemState(), then formats part of the
+ * uxTaskGetSystemState() output into a human readable table that displays task
  * names, states and stack usage.
  *
  * vTaskList() has a dependency on the sprintf() C library function that might
@@ -1286,7 +1276,7 @@ unsigned portBASE_TYPE xTaskGetSystemState( xTaskStatusType *pxTaskStatusArray, 
  * FreeRTOS/Demo sub-directories in a file called printf-stdarg.c (note
  * printf-stdarg.c does not provide a full snprintf() implementation!).
  *
- * It is recommended that production systems call xTaskGetSystemState()
+ * It is recommended that production systems call uxTaskGetSystemState()
  * directly to get access to raw stats data, rather than indirectly through a
  * call to vTaskList().
  *
@@ -1294,19 +1284,17 @@ unsigned portBASE_TYPE xTaskGetSystemState( xTaskStatusType *pxTaskStatusArray, 
  * will be written, in ascii form.  This buffer is assumed to be large
  * enough to contain the generated report.  Approximately 40 bytes per
  * task should be sufficient.
- * 
- * @param bufSize Size of write buffer.
  *
  * \defgroup vTaskList vTaskList
  * \ingroup TaskUtils
  */
-void vTaskList( unsigned char *pcWriteBuffer, size_t bufSize) PRIVILEGED_FUNCTION;
+void vTaskList( unsigned char *pcWriteBuffer, size_t bufSize ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
- * <PRE>void vTaskGetRunTimeStats( unsigned char *pcWriteBuffer, size_t bufSize );</PRE>
+ * <PRE>void vTaskGetRunTimeStats( char *pcWriteBuffer );</PRE>
  *
- * configGENERATE_RUN_TIME_STATS and configINCLUDE_STATS_FORMATTING_FUNCTIONS
+ * configGENERATE_RUN_TIME_STATS and configUSE_STATS_FORMATTING_FUNCTIONS
  * must both be defined as 1 for this function to be available.  The application
  * must also then provide definitions for
  * portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() and portGET_RUN_TIME_COUNTER_VALUE
@@ -1330,8 +1318,8 @@ void vTaskList( unsigned char *pcWriteBuffer, size_t bufSize) PRIVILEGED_FUNCTIO
  * This function is provided for convenience only, and is used by many of the
  * demo applications.  Do not consider it to be part of the scheduler.
  *
- * vTaskGetRunTimeStats() calls xTaskGetSystemState(), then formats part of the
- * xTaskGetSystemState() output into a human readable table that displays the
+ * vTaskGetRunTimeStats() calls uxTaskGetSystemState(), then formats part of the
+ * uxTaskGetSystemState() output into a human readable table that displays the
  * amount of time each task has spent in the Running state in both absolute and
  * percentage terms.
  *
@@ -1342,7 +1330,7 @@ void vTaskList( unsigned char *pcWriteBuffer, size_t bufSize) PRIVILEGED_FUNCTIO
  * FreeRTOS/Demo sub-directories in a file called printf-stdarg.c (note
  * printf-stdarg.c does not provide a full snprintf() implementation!).
  *
- * It is recommended that production systems call xTaskGetSystemState() directly
+ * It is recommended that production systems call uxTaskGetSystemState() directly
  * to get access to raw stats data, rather than indirectly through a call to
  * vTaskGetRunTimeStats().
  *
@@ -1350,13 +1338,11 @@ void vTaskList( unsigned char *pcWriteBuffer, size_t bufSize) PRIVILEGED_FUNCTIO
  * written, in ascii form.  This buffer is assumed to be large enough to
  * contain the generated report.  Approximately 40 bytes per task should
  * be sufficient.
- * 
- * @param bufSize Size of write buffer.
  *
  * \defgroup vTaskGetRunTimeStats vTaskGetRunTimeStats
  * \ingroup TaskUtils
  */
-void vTaskGetRunTimeStats( unsigned char *pcWriteBuffer, size_t bufSize) PRIVILEGED_FUNCTION;
+void vTaskGetRunTimeStats( unsigned char *pcWriteBuffer, size_t bufSize ) PRIVILEGED_FUNCTION;
 
 /*-----------------------------------------------------------
  * SCHEDULER INTERNALS AVAILABLE FOR PORTING PURPOSES
@@ -1400,7 +1386,7 @@ portBASE_TYPE xTaskIncrementTick( void ) PRIVILEGED_FUNCTION;
  * portTICK_RATE_MS can be used to convert kernel ticks into a real time
  * period.
  */
-void vTaskPlaceOnEventList( const xList * const pxEventList, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
+void vTaskPlaceOnEventList( xList * const pxEventList, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
 
 /*
  * THIS FUNCTION MUST NOT BE USED FROM APPLICATION CODE.  IT IS AN
@@ -1415,7 +1401,7 @@ void vTaskPlaceOnEventList( const xList * const pxEventList, portTickType xTicks
  * @return pdTRUE if the task being removed has a higher priority than the task
  * making the call, otherwise pdFALSE.
  */
-void vTaskPlaceOnEventListRestricted( const xList * const pxEventList, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
+void vTaskPlaceOnEventListRestricted( xList * const pxEventList, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
 
 /*
  * THIS FUNCTION MUST NOT BE USED FROM APPLICATION CODE.  IT IS AN
@@ -1476,13 +1462,13 @@ portBASE_TYPE xTaskGetSchedulerState( void ) PRIVILEGED_FUNCTION;
  * Raises the priority of the mutex holder to that of the calling task should
  * the mutex holder have a priority less than the calling task.
  */
-void vTaskPriorityInherit( xTaskHandle * const pxMutexHolder ) PRIVILEGED_FUNCTION;
+void vTaskPriorityInherit( xTaskHandle const pxMutexHolder ) PRIVILEGED_FUNCTION;
 
 /*
  * Set the priority of a task back to its proper priority in the case that it
  * inherited a higher priority while it was holding a semaphore.
  */
-void vTaskPriorityDisinherit( xTaskHandle * const pxMutexHolder ) PRIVILEGED_FUNCTION;
+void vTaskPriorityDisinherit( xTaskHandle const pxMutexHolder ) PRIVILEGED_FUNCTION;
 
 /*
  * Generic version of the task creation function which is in turn called by the
@@ -1528,7 +1514,7 @@ eSleepModeStatus eTaskConfirmSleepModeStatus( void );
 #ifdef __cplusplus
 }
 #endif
-#endif /* TASK_H */
+#endif /* INC_TASK_H */
 
 
 
