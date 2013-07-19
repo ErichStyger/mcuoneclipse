@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.268</Version>
+    <Version>01.269</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -1195,15 +1195,19 @@ heap_4.c is particularly useful for applications that want to use the portable l
       </TGrupItem>
     </Property>
     <Property>
-      <TGrupItem>
+      <TBoolGrupItem>
         <Name>Command Interpreter</Name>
-        <Symbol>CommandInterpreterGroup</Symbol>
-        <Hint>Settings for the Command Interpreter</Hint>
+        <Symbol>CommandInterpreterEnabled</Symbol>
+        <TypeSpec>typeEnaDis</TypeSpec>
+        <Hint>Settings for the Command Interpreter. Earlier FreeRTOS included an open source command interpreter, now this has moved to a non-free-of-charge FreeRTOS+ version. This port includes for compatibility the original and free version of it.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <Description>Settings for the command interpreter built in the RTOS sources</Description>
+        <Description>Disabled</Description>
         <Expanded>Yes</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
         <Children>
           <GrupItem>
             <TIntgItem>
@@ -1223,7 +1227,7 @@ heap_4.c is particularly useful for applications that want to use the portable l
             </TIntgItem>
           </GrupItem>
         </Children>
-      </TGrupItem>
+      </TBoolGrupItem>
     </Property>
     <Property>
       <TGrupItem>

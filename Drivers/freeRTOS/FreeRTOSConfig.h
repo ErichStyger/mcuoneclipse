@@ -300,12 +300,12 @@
 %elif MemoryScheme = "Scheme4"
 #define FRTOS_MEMORY_SCHEME                 %>50 4 /* memory scheme 4 */
 %endif
-
+%if CommandInterpreterEnabled='yes'
 %- --------------------------------------------------------------------
 /* CommandInterpreter configuration. */
 #define configCOMMAND_INT_MAX_OUTPUT_SIZE                        %>50 %CommandIntMaxOutputSize
+%endif
 %- --------------------------------------------------------------------
-
 %if (CPUfamily = "ColdFireV1")
 /* It is not advisable to change these values on a ColdFire V1 core. */
 %endif

@@ -79,8 +79,10 @@
 %FILE %'DirRel_Code'timers.c
 %include freeRTOS\timers.c
 
-%FILE %'DirRel_Code'CommandInterpreter.h
-%include freeRTOS\CommandInterpreter.h
+%if %CommandInterpreterEnabled='yes'
+  %FILE? %'DirRel_Code'CommandInterpreter.h
+  %include freeRTOS\CommandInterpreter.h
 
-%FILE %'DirRel_Code'CommandInterpreter.c
-%include freeRTOS\CommandInterpreter.c
+  %FILE? %'DirRel_Code'CommandInterpreter.c
+  %include freeRTOS\CommandInterpreter.c
+%endif
