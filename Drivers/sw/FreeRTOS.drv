@@ -157,6 +157,22 @@
 %-    %define_prj! PE_G_4PEx_ToolChain_Asm_OtherParams -define __CODEWARRIOR__=1 -define __CWARM__=1 -define MQX_MQXLITE=1
   %-endif
 %endif
+%- Hints from Petr Uhlir:
+%-1)        You can automatically detect core type by
+%-  %if %CPUDB_prph_has_feature(CPU,ARM_CORTEX_M0P) = 'no'
+%-    %define! mqx_core M4
+%-  %elif %CPUDB_prph_has_feature(CPU,ARM_CORTEX_M0P) = 'yes'
+%-    %define! mqx_core M0
+%-  %else
+%-    %error! Unsupported core platform!
+%-  %endif
+%-
+%-2)        Detect FPU
+%-%if %CPUDB_prph_has_feature(CPU, FPU) = 'yes'
+%-#define MCU_HAS_FPU                                            %>>1
+%-%else
+%-#define MCU_HAS_FPU                                            %>>0
+%-%endif
 %-
 %-
 %if (CPUfamily = "Kinetis")

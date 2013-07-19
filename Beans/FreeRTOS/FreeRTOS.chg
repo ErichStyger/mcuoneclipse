@@ -1,5 +1,5 @@
-%set FreeRTOSVersion Value V7.4.2
-%set FreeRTOSVersion ExtraText V7.4.2
+%set FreeRTOSVersion Value V7.4.2+
+%set FreeRTOSVersion ExtraText V7.4.2+
 %if (CPUfamily = "ColdFireV1")
   %set ColdFireV1CPUSpecific ReadOnly no
   %set ColdFireV1CPUSpecific Value Enabled
@@ -95,6 +95,20 @@
 %endif
 
 %if (CPUfamily = "Kinetis")
+  %if %CPUDB_prph_has_feature(CPU,ARM_CORTEX_M0P) = 'yes'
+    %set ARMFamilyType Value "M0+"
+  %else %- M4 or M4F core
+  %- somehow the code below does NOT work???
+  %-  %if %CPUDB_prph_has_feature(CPU, FPU) = 'no'
+  %-    %set ARMFamilyType Value "M4"
+  %-    %warning M4
+  %-  %else
+  %-    %set ARMFamilyType Value "M4F"
+  %-    %warning M4F
+  %-  %endif
+  %endif
+  %- %set ARMFamilyType ReadOnly no
+  %- %set ARMFamilyType Value Enabled
   %if ARMFamilyType="M0+"
     %- M0+ does not have floating point unit
     %set M4FFloatingPointSupport Value no
