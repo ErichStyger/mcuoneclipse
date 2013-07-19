@@ -4,7 +4,7 @@
     <Name>Utility</Name>
     <Description>Utility Module</Description>
     <Author>Erich Styger</Author>
-    <Version>01.086</Version>
+    <Version>01.089</Version>
     <Icon>Utility</Icon>
     <TypesFiles>PE,Utility\Utility</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -1634,10 +1634,11 @@
           <ParType>32bit signed</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to where to store the result</ParHint>
+          <ParUserDeclaration>int32_t *res</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char **str, long *res)</ANSIC>
+          <ANSIC>byte #M#_#C#(const unsigned char **str, int32_t *res)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1869,10 +1870,11 @@
           <ParType>32bit unsigned</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to value</ParHint>
+          <ParUserDeclaration>uint32_t *val</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char **str, dword *val)</ANSIC>
+          <ANSIC>byte #M#_#C#(const unsigned char **str, uint32_t *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2033,10 +2035,11 @@
           <ParType>32bit unsigned</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to value</ParHint>
+          <ParUserDeclaration>uint32_t *val</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char **str, dword *val)</ANSIC>
+          <ANSIC>byte #M#_#C#(const unsigned char **str, uint32_t *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

@@ -125,7 +125,6 @@ static const unsigned char *RadioStateStr(RADIO_AppStatusKind state) {
     case RADIO_READY_FOR_TX_RX_DATA:  return (const unsigned char*)"READY_TX_RX"; 
     default:                          return (const unsigned char*)"UNKNOWN";
   }
-  return (const unsigned char*)"UNKNOWN";
 }
 
 /*!
@@ -373,7 +372,7 @@ static void RADIO_PrintStatus(const CLS1_StdIOType *io) {
 
 uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
   uint8_t res = ERR_OK;
-  long val;
+  int32_t val;
   const unsigned char *p;
 
   if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, (char*)"radio help")==0) {

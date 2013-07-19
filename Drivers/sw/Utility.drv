@@ -345,7 +345,7 @@ byte %'ModuleName'%.%ReadEscapedName(const unsigned char *filename, byte *destna
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN xatoi
 %ifdef xatoi
-byte %'ModuleName'%.%xatoi(const unsigned char **str, long *res);
+byte %'ModuleName'%.%xatoi(const unsigned char **str, int32_t *res);
 %define! Parstr
 %define! Parres
 %define! RetVal
@@ -501,7 +501,7 @@ void %'ModuleName'%.%strcatNum32sFormatted(byte *dst, size_t dstSize, long val, 
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ScanDecimal32uNumber
 %ifdef ScanDecimal32uNumber
-byte %'ModuleName'%.%ScanDecimal32uNumber(const unsigned char **str, dword *val);
+byte %'ModuleName'%.%ScanDecimal32uNumber(const unsigned char **str, uint32_t *val);
 %define! Parstr
 %define! Parval
 %define! RetVal
@@ -573,7 +573,7 @@ void %'ModuleName'%.%strcatNum8s(byte *dst, size_t dstSize, signed char val);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ScanHex32uNumber
 %ifdef ScanHex32uNumber
-byte %'ModuleName'%.%ScanHex32uNumber(const unsigned char **str, dword *val);
+byte %'ModuleName'%.%ScanHex32uNumber(const unsigned char **str, uint32_t *val);
 %define! Parstr
 %define! Parval
 %define! RetVal
@@ -1658,7 +1658,7 @@ byte %'ModuleName'%.%ReadEscapedName(const unsigned char *filename, byte *destna
 #ifdef __HC12__
   #pragma MESSAGE DISABLE C12056  /* message about SP debug info */
 #endif
-byte %'ModuleName'%.%xatoi(const unsigned char **str, long *res)
+byte %'ModuleName'%.%xatoi(const unsigned char **str, int32_t *res)
 {
 /* 123 -5   0x3ff 0b1111 0377 3.25  w "
       ^                               1st call returns 123 and next ptr
@@ -1670,8 +1670,8 @@ byte %'ModuleName'%.%xatoi(const unsigned char **str, long *res)
                                  ^    7th call returns 25 and next ptr
                                     ^ 8th call fails and returns ERR_FAILED
 */
-  unsigned long val;
-  unsigned char c, r, s = 0;
+  uint32_t val;
+  uint8_t c, r, s = 0;
 
   *res = 0;
   while (**str==' ') {
@@ -1927,7 +1927,7 @@ byte %'ModuleName'%.%ScanDecimal16uNumber(const unsigned char **str, word *val)
 %define! Parval
 %define! RetVal
 %include Common\UtilityScanDecimal32uNumber.Inc
-byte %'ModuleName'%.%ScanDecimal32uNumber(const unsigned char **str, dword *val)
+byte %'ModuleName'%.%ScanDecimal32uNumber(const unsigned char **str, uint32_t *val)
 {
   /* scans a decimal number, and stops at any non-number. Number can have any preceding zeros or spaces. */
   #define _32_NOF_DIGITS  (10+1)
@@ -2051,7 +2051,7 @@ static byte HexToDec(const unsigned char **p, unsigned char *val) {
 %define! Parval
 %define! RetVal
 %include Common\UtilityScanHex32uNumber.Inc
-byte %'ModuleName'%.%ScanHex32uNumber(const unsigned char **str, dword *val)
+byte %'ModuleName'%.%ScanHex32uNumber(const unsigned char **str, uint32_t *val)
 {
   /* scans a decimal number, and stops at any non-number. Number can have any preceding zeros or spaces. */
   uint8_t nofDigits = 8+1; /* maximum number of digits to avoid overflow */

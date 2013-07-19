@@ -531,9 +531,9 @@ void %OnLeaveRadioSPI(void);
 %-     static int counter1;
 %-     int %'ModuleName'%.counter2;
 %if (CPUfamily = "Kinetis")
-#define %'ModuleName'_CPU_IS_LITTLE_ENDIAN 1 /* Cpu is little endian */
+#define %'ModuleName'_CPU_IS_LITTLE_ENDIAN 1 /* Cpu %CPUfamily is little endian */
 %else
-#define %'ModuleName'_CPU_IS_LITTLE_ENDIAN 0 /* Cpu is big endian */
+#define %'ModuleName'_CPU_IS_LITTLE_ENDIAN 0 /* Cpu %CPUfamily is big endian */
 %endif
 
 /* macros to deal with the IRQ pin, as configured in the component properties */
@@ -551,7 +551,8 @@ void %OnLeaveRadioSPI(void);
   /* Macros for the HCS08 core, using the IRQ pin */
   #define IRQACK()        IRQSC |= IRQSC_IRQACK_MASK   /*!< IRQ acknowledge */
 #else /* not HCS08 */
-  #if defined(__GNUC__) /* Kinetis gcc? */
+/* %CPUfamily family */
+  #if defined(__GNUC__) ||  /* Kinetis?*/
     #define IRQINIT()  /* pull up signal: not possible yet with pin sharing in MCU10.3 */ \
       /* PORTA_PCR17: ISF=0,IRQC=0x0A,MUX=1,PE=1,PS=1 */ \
       PORTA_PCR17 = (uint32_t)((PORTA_PCR17 & (uint32_t)~(uint32_t)( \

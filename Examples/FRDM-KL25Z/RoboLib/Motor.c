@@ -252,7 +252,7 @@ static void MOT_PrintStatus(const CLS1_StdIOType *io) {
 
 uint8_t MOT_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
   uint8_t res = ERR_OK;
-  long val;
+  int32_t val;
   const unsigned char *p;
 
   if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, (char*)"motor help")==0) {
