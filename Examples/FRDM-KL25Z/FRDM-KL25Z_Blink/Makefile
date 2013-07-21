@@ -69,7 +69,7 @@ SRC += ./Sources/sa_mtb.c
 SRC += ./Project_Settings/Startup_Code/kinetis_sysinit.c
 
 # List ASM source files here
-ASRC = ./Project_Settings/Startup_Code/startup.s
+ASRC = ./Project_Settings/Startup_Code/startup.S
  
 # List all user directories here
 UINCDIR = \
@@ -99,11 +99,11 @@ LIBDIR  = $(patsubst %,-L%,$(DLIBDIR) $(ULIBDIR))
 DEFS    = $(DDEFS) $(UDEFS)
 
 ADEFS   = $(DADEFS) $(UADEFS)
-OBJS    = $(ASRC:.s=.o) $(SRC:.c=.o)
+OBJS    = $(ASRC:.S=.o) $(SRC:.c=.o)
 LIBS    = $(DLIBS) $(ULIBS)
 MCFLAGS = -mcpu=$(MCU)
 
-ASFLAGS = $(MCFLAGS) -g -gdwarf-2 -mthumb -Wa,-amhls=$(<:.s=.lst) $(ADEFS)
+ASFLAGS = $(MCFLAGS) -g -gdwarf-2 -mthumb -Wa,-amhls=$(<:.S=.lst) $(ADEFS)
 CPFLAGS = $(MCFLAGS) $(OPT) -gdwarf-2 -mthumb -fomit-frame-pointer -Wall -Wstrict-prototypes -fverbose-asm -Wa,-ahlms=$(<:.c=.lst) $(DEFS)
 LDFLAGS = $(MCFLAGS) -mthumb -nostartfiles -T$(LDSCRIPT) -Wl,-Map=$(FULL_PRJ).map,-cref,-no-warn-mismatch $(LIBDIR)
 
@@ -120,7 +120,7 @@ all: $(OBJS) $(FULL_PRJ).elf $(FULL_PRJ).hex $(FULL_PRJ).bin
 %o: %c
 	$(CC) -c $(CPFLAGS) -I . $(INCDIR) $< -o $@
 
-%o: %s
+%o: %S
 	$(AS) -c $(ASFLAGS) $< -o $@
 
 %elf: $(OBJS)
@@ -139,7 +139,7 @@ clean:
 	$(RM) $(FULL_PRJ).hex
 	$(RM) $(FULL_PRJ).bin
 	$(RM) $(subst /,\,$(SRC:.c=.lst))
-	$(RM) $(subst /,\,$(ASRC:.s=.lst))
+	$(RM) $(subst /,\,$(ASRC:.S=.lst))
 	$(RMDIR) .dep /S /Q
 
 # 
