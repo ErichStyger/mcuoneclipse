@@ -34,7 +34,6 @@
  * \param  None
  * \retval : None
 */
- 
   .section .text.__thumb_startup
   .weak __thumb_startup
   .type __thumb_startup, %function
