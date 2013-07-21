@@ -827,7 +827,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 							{
 								/* Record the information required to implement
 								priority inheritance should it become necessary. */
-								pxQueue->pxMutexHolder = ( void * ) xTaskGetCurrentTaskHandle();
+								pxQueue->pxMutexHolder = ( signed char * ) xTaskGetCurrentTaskHandle();
 							}
 						}
 						#endif
@@ -1076,7 +1076,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 						{
 							/* Record the information required to implement
 							priority inheritance should it become necessary. */
-							pxQueue->pxMutexHolder = ( void * ) xTaskGetCurrentTaskHandle(); /*lint !e961 Cast is not redundant as xTaskHandle is a typedef. */
+							pxQueue->pxMutexHolder = ( signed char * ) xTaskGetCurrentTaskHandle(); /*lint !e961 Cast is not redundant as xTaskHandle is a typedef. */
 						}
 					}
 					#endif
