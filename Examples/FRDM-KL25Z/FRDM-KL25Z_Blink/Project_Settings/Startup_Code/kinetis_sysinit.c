@@ -84,7 +84,7 @@ void PORTA_IRQHandler(void) __attribute__ ((weak, alias("Default_Handler")));
 void PORTD_IRQHandler(void) __attribute__ ((weak, alias("Default_Handler")));
 
 /* The Interrupt Vector Table */
-void (* const InterruptVector[])() __attribute__ ((section(".vectortable"))) = {
+void (* const InterruptVector[])(void) __attribute__ ((section(".vectortable"))) = {
     /* Processor exceptions */
     (void(*)(void)) &_estack,
     __thumb_startup,
