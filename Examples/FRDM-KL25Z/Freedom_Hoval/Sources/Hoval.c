@@ -24,7 +24,7 @@
  */
 static bool isRelay1on = FALSE, isRelay2on = FALSE; /* status of the two relays */
 static bool isPumpOn = FALSE; /* if the pump (floor/storage) is on */
-static bool isHovalManualMode = FALSE; /* Button on the Hoval, if it is in manual mode or not */
+static bool isHovalManualMode = FALSE; /* status Button on the Hoval heat pump, if it is in manual mode or not */
 
 typedef struct {
   struct {
@@ -40,7 +40,7 @@ typedef struct {
 
 typedef struct {
   ScheduleTimeDate on, off; /* switch on and off time */
-  bool isSchedulerOn; /* if the scheduler is running */
+  bool isSchedulerOn; /* If the scheduler is enabled/running */
 } Schedule_t;
 
 static Schedule_t mySchedule;
@@ -147,7 +147,7 @@ static void Pump_On(bool on, const CLS1_StdIOType *io) {
   isRelay2on = on;
 }
 
-static uint16_t TimeToSeconds(uint8_t hours, uint8_t minutes, uint8_t seconds) {
+static uint32_t TimeToSeconds(uint8_t hours, uint8_t minutes, uint8_t seconds) {
   return hours*3600+minutes*60+seconds;
 }
 
@@ -282,7 +282,7 @@ static portTASK_FUNCTION(Hoval, pvParameters) {
   for(;;) {
     /* check mode switch: turns scheduler on/off */
     if (!isEnabled && SW1_GetVal()==0) {
-      Log((unsigned char*)"Switch changed  to ON position", io);
+      Log((unsigned char*)"Switch changed to ON position", io);
     } else if (isEnabled && SW1_GetVal()!=0) {
       Log((unsigned char*)"Switch changed to OFF position", io);
     }
@@ -300,7 +300,7 @@ static portTASK_FUNCTION(Hoval, pvParameters) {
         }
       }
     }
-    if (isPumpOn) {
+    if (isPumpOn) { /* check if we need to toggle the button on the Hoval to avoid timeout */
       secondsOn++;
       if (secondsOn>HOVAL_CYCLE_TIME_SECONDS) {
         Log((unsigned char*)"Toggle manual button to avoid timeout...", io);
