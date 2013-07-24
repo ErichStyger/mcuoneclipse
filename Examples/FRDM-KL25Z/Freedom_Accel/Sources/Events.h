@@ -53,7 +53,6 @@ void Cpu_OnNMIINT(void);
 */
 
 
-void I2C2_OnMasterBlockSent(LDD_TUserData *UserDataPtr);
 /*
 ** ===================================================================
 **     Event       :  I2C2_OnMasterBlockSent (module Events)
@@ -73,7 +72,6 @@ void I2C2_OnMasterBlockSent(LDD_TUserData *UserDataPtr);
 ** ===================================================================
 */
 
-void I2C2_OnMasterBlockReceived(LDD_TUserData *UserDataPtr);
 /*
 ** ===================================================================
 **     Event       :  I2C2_OnMasterBlockReceived (module Events)

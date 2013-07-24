@@ -29,7 +29,7 @@
 						<toolChain id="com.freescale.coldfire.toolchain.toolchain.project.1776567292" name="ColdFire Toolchain" superClass="com.freescale.coldfire.toolchain.toolchain.project">
 							<option id="com.freescale.coldfire.toolchain.sharedoption.processor.1078754609" superClass="com.freescale.coldfire.toolchain.sharedoption.processor" value="com.freescale.coldfire.toolchain.sharedoption.processor.52259" valueType="enumerated"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="com.freescale.coldfire.toolchain.platform.1281631169" name="ColdFire Target Platform" superClass="com.freescale.coldfire.toolchain.platform"/>
-							<builder buildPath="${ProjDirPath}/FLASH" id="com.freescale.coldfire.toolchain.builder.1159294801" name="GNU Make Builder.FLASH" parallelizationNumber="-1" superClass="com.freescale.coldfire.toolchain.builder"/>
+							<builder buildPath="${ProjDirPath}/FLASH" id="com.freescale.coldfire.toolchain.builder.1159294801" name="GNU Make Builder.FLASH" parallelBuildWorkspaceOn="true" parallelizationNumber="-1" superClass="com.freescale.coldfire.toolchain.builder"/>
 							<tool id="coldfire.toolchain.burner.1892939348" name="Burner" superClass="coldfire.toolchain.burner"/>
 							<tool id="com.freescale.coldfire.toolchain.linker.debug.2093776754" name="ColdFire Linker" superClass="com.freescale.coldfire.toolchain.linker.debug">
 								<option id="com.freescale.coldfire.toolchain.linker.base.generateLinkMap.258316696" superClass="com.freescale.coldfire.toolchain.linker.base.generateLinkMap" value="true" valueType="boolean"/>
