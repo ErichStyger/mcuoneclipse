@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.4.2 - Copyright (C) 2013 Real Time Engineers Ltd.
+    FreeRTOS V7.5.0 - Copyright (C) 2013 Real Time Engineers Ltd.
 
     FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
     http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -516,7 +516,7 @@ void %vOnPreSleepProcessing(portTickType expectedIdleTicks);
 void %vOnPostSleepProcessing(portTickType expectedIdleTicks);
 %endif
 
-%if %Compiler == "GNUC"
+%if ((%Compiler == "GNUC")|(%Compiler = "ARM_CC"))
 __attribute__((weak)) void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
 %else
 void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
@@ -688,7 +688,7 @@ void vPortStopTickTimer(void) {
 %endif
 }
 /*-----------------------------------------------------------*/
-%if (CPUfamily = "Kinetis") & %Compiler == "GNUC" & %M4FFloatingPointSupport='yes'
+%if (CPUfamily = "Kinetis") & ((%Compiler == "GNUC")|(%Compiler = "ARM_CC")) & %M4FFloatingPointSupport='yes'
 void vPortEnableVFP(void) {
   /* The FPU enable bits are in the CPACR. */
   __asm volatile (
@@ -807,8 +807,8 @@ void vPortEnterCritical(void) {
   portDISABLE_INTERRUPTS();
   uxCriticalNesting++;
   %if (CPUfamily = "Kinetis")
-  __asm volatile( "dsb" );
-  __asm volatile( "isb" );
+  __asm volatile("dsb");
+  __asm volatile("isb");
   %endif
 %else
   %warning "unsupported target %CPUfamily!"
@@ -874,8 +874,8 @@ void vPortYieldFromISR(void) {
   *(portNVIC_INT_CTRL) = portNVIC_PENDSVSET_BIT;
   /* Barriers are normally not required but do ensure the code is completely
   within the specified behaviour for the architecture. */
-  __asm volatile( "dsb" );
-  __asm volatile( "isb" );
+  __asm volatile("dsb");
+  __asm volatile("isb");
 }
 /*-----------------------------------------------------------*/
 %endif
@@ -891,7 +891,7 @@ void vPortYieldFromISR(void) {
 #endif
 void vPortYieldISR(void)
 {
-  // Your interrupt code
+  /* Your interrupt code */
 }
 #if defined(vPortYieldISR_VECT_TABLE_ISR_FAST_INT)
 #pragma section interrupt_fast end
@@ -910,14 +910,35 @@ portLONG uxGetTickCounterValue(void) {
 /*-----------------------------------------------------------*/
 %endif
 %ifdef TickTimerLDD
-
+/*-----------------------------------------------------------*/
 /* return the tick raw counter value. It is assumed that the counter register has been reset at the last tick time */
 portLONG uxGetTickCounterValue(void) {
   return (portLONG)%@TickTimerLDD@'ModuleName'%.GetCounterValue(RTOS_TickDevice);
 }
-/*-----------------------------------------------------------*/
 %endif
-%if (CPUfamily = "Kinetis") & (%Compiler = "GNUC")
+%if (CPUfamily = "Kinetis") & (%Compiler = "ARM_CC") %- Keil compiler for ARM
+/*-----------------------------------------------------------*/
+void vOnCounterRestart(void) {
+  /* this is how we get here:
+    RTOSTICKLDD1_Interrupt:
+    push {r4, lr}
+    ...                                       RTOSTICKLDD1_OnCounterRestart
+    bl RTOSTICKLDD1_OnCounterRestart     ->   push {r4,lr}
+    pop {r4, lr}                              mov r4,r0
+                                              bl vOnCounterRestart
+                                              pop {r4,pc}
+  */
+#if configUSE_TICKLESS_IDLE == 1
+  portTickCntr++;
+#endif
+  portSET_INTERRUPT_MASK();   /* disable interrupts */
+  if (xTaskIncrementTick()!=pdFALSE) { /* increment tick count */
+    taskYIELD();
+  }
+  portCLEAR_INTERRUPT_MASK(); /* enable interrupts again */
+}
+%elif (CPUfamily = "Kinetis") & (%Compiler = "GNUC") %- GNU gcc for ARM
+/*-----------------------------------------------------------*/
 __attribute__ ((naked)) void vOnCounterRestart(void) {
 #if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
   #if __OPTIMIZE_SIZE__ || __OPTIMIZE__
@@ -1012,14 +1033,6 @@ PE_ISR(RTOSTICKLDD1_Interrupt)
 #if configUSE_TICKLESS_IDLE == 1
   portTickCntr++;
 #endif
-  /* If using preemption, also force a context switch. */
-#if configUSE_PREEMPTION == 1
-  *(portNVIC_INT_CTRL) = portNVIC_PENDSVSET_BIT;
-#endif
-  /* Only reset the systick load register if configUSE_TICKLESS_IDLE is set to
-  1.  If it is set to 0 tickless idle is not being used.  If it is set to a
-  value other than 0 or 1 then a timer other than the SysTick is being used
-  to generate the tick interrupt. */
   portSET_INTERRUPT_MASK();   /* disable interrupts */
   if (xTaskIncrementTick()!=pdFALSE) { /* increment tick count */
     taskYIELD();
@@ -1052,6 +1065,25 @@ PE_ISR(RTOSTICKLDD1_Interrupt)
 #endif
 #endif
 }
+%endif
+%if (CPUfamily = "Kinetis") & (%Compiler = "ARM_CC") %- Keil compiler for ARM
+/*-----------------------------------------------------------*/
+__asm void vPortStartFirstTask(void) {
+  /* Use the NVIC offset register to locate the stack. */
+  ldr r0, =0xE000ED08
+  ldr r0, [r0]
+  ldr r0, [r0]
+  /* Set the msp back to the start of the stack. */
+  msr msp, r0
+  /* Globally enable interrupts. */
+  cpsie i
+  /* Call SVC to start the first task. */
+  svc 0
+  nop
+  nop
+  nop
+}
+%elif (CPUfamily = "Kinetis") & (%Compiler = "GNUC") %- GNU gcc for ARM
 /*-----------------------------------------------------------*/
 void vPortStartFirstTask(void) {
   __asm volatile (
@@ -1064,7 +1096,60 @@ void vPortStartFirstTask(void) {
     " nop                 \n"
   );
 }
+%endif
+%if (CPUfamily = "Kinetis") & (%Compiler = "ARM_CC") %- Keil compiler for ARM
 /*-----------------------------------------------------------*/
+#if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
+__asm void vPortSVCHandler(void) {
+  EXTERN pxCurrentTCB
+
+  /* Get the location of the current TCB. */
+  ldr r3, =pxCurrentTCB
+  ldr r1, [r3]
+  ldr r0, [r1]
+  /* Pop the core registers. */
+%if %M4FFloatingPointSupport='yes'
+  ldmia r0!, {r4-r11, r14}
+%else
+  ldmia r0!, {r4-r11}
+%endif
+  msr psp, r0
+  mov r0, #0
+  msr basepri, r0
+  %if %M4FFloatingPointSupport='no'
+  orr r14, r14, #13
+  %endif
+  bx r14
+  nop
+}
+#else /* Cortex M0+ */
+__asm void vPortSVCHandler(void) {
+  EXTERN pxCurrentTCB
+
+  /* Get the location of the current TCB. */
+  ldr r3, =pxCurrentTCB  /* Restore the context. */
+  ldr r1, [r3]          /* Use pxCurrentTCBConst to get the pxCurrentTCB address. */
+  ldr r0, [r1]          /* The first item in pxCurrentTCB is the task top of stack. */
+  adds r0, #16          /* Move to the high registers. */
+  ldmia r0!, {r4-r7}    /* Pop the high registers. */
+  mov r8, r4 
+  mov r9, r5 
+  mov r10, r6
+  mov r11, r7
+
+  msr psp, r0           /* Remember the new top of stack for the task. */
+
+  subs r0, #32          /* Go back for the low registers that are not automatically restored. */
+  ldmia r0!, {r4-r7}    /* Pop low registers.  */
+  mov r1, r14           /* OR R14 with 0x0d. */
+  movs r0, #0x0d
+  orrs r1, r0
+  bx r1
+  nop
+}
+#endif
+%elif (CPUfamily = "Kinetis") & (%Compiler = "GNUC") %- GNU gcc for ARM
+    /*-----------------------------------------------------------*/
 __attribute__ ((naked)) void vPortSVCHandler(void) {
 #if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
 __asm volatile (
@@ -1114,6 +1199,91 @@ __asm volatile (
   );
 #endif
 }
+%endif
+%if (CPUfamily = "Kinetis") & (%Compiler = "ARM_CC") %- Keil compiler for ARM
+/*-----------------------------------------------------------*/
+#if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
+__asm void vPortPendSVHandler(void) {
+  EXTERN pxCurrentTCB
+
+  mrs r0, psp
+  ldr  r3, =pxCurrentTCB     /* Get the location of the current TCB. */
+  ldr  r2, [r3]
+%if %M4FFloatingPointSupport='yes'
+  tst r14, #0x10             /* Is the task using the FPU context?  If so, push high vfp registers. */
+  it eq
+  vstmdbeq r0!, {s16-s31}
+
+  stmdb r0!, {r4-r11, r14}   /* save remaining core registers */
+%else
+  stmdb r0!, {r4-r11}        /* Save the core registers. */
+%endif
+  str r0, [r2]               /* Save the new top of stack into the first member of the TCB. */
+  stmdb sp!, {r3, r14}
+  mov r0, %%0
+  msr basepri, r0
+  bl vTaskSwitchContext
+  mov r0, #0
+  msr basepri, r0
+  ldmia sp!, {r3, r14}
+  ldr r1, [r3]               /* The first item in pxCurrentTCB is the task top of stack. */
+  ldr r0, [r1]
+%if %M4FFloatingPointSupport='yes'
+  ldmia r0!, {r4-r11, r14}   /* Pop the core registers */
+  tst r14, #0x10             /* Is the task using the FPU context?  If so, pop the high vfp registers too. */
+  it eq
+  vldmiaeq r0!, {s16-s31}
+%else
+  ldmia r0!, {r4-r11}        /* Pop the core registers. */
+%endif
+  msr psp, r0
+  bx r14
+  nop
+}
+#else /* Cortex M0+ */
+__asm void vPortPendSVHandler(void) {
+  EXTERN pxCurrentTCB
+  EXTERN vTaskSwitchContext
+	
+  mrs r0, psp
+	
+  ldr r3, =pxCurrentTCB       /* Get the location of the current TCB. */
+  ldr r2, [r3]
+
+  subs r0, #32               /* Make space for the remaining low registers. */
+  str r0, [r2]               /* Save the new top of stack. */
+  stmia r0!, {r4-r7}         /* Store the low registers that are not saved automatically. */
+  mov r4, r8                 /* Store the high registers. */
+  mov r5, r9
+  mov r6, r10
+  mov r7, r11
+  stmia r0!, {r4-r7}
+
+  push {r3, r14}
+  cpsid i
+  bl vTaskSwitchContext
+  cpsie i
+  pop {r2, r3}               /* lr goes in r3. r2 now holds tcb pointer. */
+
+  ldr r1, [r2]
+  ldr r0, [r1]               /* The first item in pxCurrentTCB is the task top of stack. */
+  adds r0, #16               /* Move to the high registers. */
+  ldmia r0!, {r4-r7}         /* Pop the high registers. */
+  mov r8, r4
+  mov r9, r5
+  mov r10, r6
+  mov r11, r7
+
+  msr psp, r0                /* Remember the new top of stack for the task. */
+
+  subs r0, #32               /* Go back for the low registers that are not automatically restored. */
+  ldmia r0!, {r4-r7}         /* Pop low registers.  */
+
+  bx r3
+  nop
+}
+#endif
+%elif (CPUfamily = "Kinetis") & (%Compiler = "GNUC") %- GNU gcc for ARM
 /*-----------------------------------------------------------*/
 __attribute__ ((naked)) void vPortPendSVHandler(void) {
 #if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
@@ -1191,7 +1361,7 @@ __attribute__ ((naked)) void vPortPendSVHandler(void) {
     " sub r0, r0, #32            \n" /* Go back for the low registers that are not automatically restored. */
     " ldmia r0!, {r4-r7}         \n" /* Pop low registers.  */
     "                            \n"
-    " bx r3	                     \n"
+    " bx r3                      \n"
     "                            \n"
     ".align 2                    \n"
     "pxCurrentTCBConst: .word pxCurrentTCB"

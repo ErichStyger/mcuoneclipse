@@ -1,5 +1,10 @@
-%if %Compiler == "GNUC"
-/* file is intentionally empty as not needed for this FreeRTOS port*/
+%if %Compiler == "GNUC"  %- GNU gcc
+/* file is intentionally empty as not needed with %Compiler for this FreeRTOS port*/
+%elif %Compiler=="ARM_CC" %- Keil ARM
+	AREA ARMEex, CODE, READONLY
+dummy    ; dummy label, will not be used
+	nop  ; just doing a nop
+	END  ; mark end of file
 %else
 %if (CPUfamily = "ColdFireV1") | (CPUfamily = "MCF") | (CPUfamily = "Kinetis")
 /*

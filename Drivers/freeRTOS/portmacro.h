@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.4.2 - Copyright (C) 2013 Real Time Engineers Ltd.
+    FreeRTOS V7.5.0 - Copyright (C) 2013 Real Time Engineers Ltd.
 
     FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
     http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -215,7 +215,7 @@ extern void vPortExitCritical(void);
 #define portDISABLE_INTERRUPTS()             __asm("sei")
 #define portENTER_CRITICAL()                 vPortEnterCritical()
 #define portEXIT_CRITICAL()                  vPortExitCritical()
-%elif (CPUfamily = "Kinetis") & (%Compiler == "GNUC")
+%elif (CPUfamily = "Kinetis") & ((%Compiler == "GNUC")|(%Compiler = "ARM_CC"))
 /* macro to identify CPU: 0 for M0+ and 4 for M4 */
 #define portDISABLE_ALL_INTERRUPTS()         __asm volatile("cpsid i")
 %if %CPUDB_prph_has_feature(CPU,ARM_CORTEX_M0P) = 'yes' %- Note: for IAR this is defined in portasm.s too!

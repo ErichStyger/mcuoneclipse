@@ -50,7 +50,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
   (void)pvParameters; /* not used */
   for(;;) {
     LED1_Neg();
-    FRTOS1_vTaskDelay(20/portTICK_RATE_MS);
+    FRTOS1_vTaskDelay(500/portTICK_RATE_MS);
   }
 }
 
