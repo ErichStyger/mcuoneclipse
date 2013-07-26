@@ -741,127 +741,6 @@ LI.EXP {
 <li><i>bufSize:word</i> - size of buffer</li>
 </ul><br />
 </li>
-<li><a name="xQueueCreate">
-<b>xQueueCreate</b></a>
- - Creates a queue.
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> xQueueHandle xQueueCreate(unsigned_portBASE_TYPE uxQueueLength, unsigned_portBASE_TYPE uxItemSize)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>uxQueueLength:unsigned_portBASE_TYPE</i> - The maximum number of items the queue can hold at any time.</li>
-<li><i>uxItemSize:unsigned_portBASE_TYPE</i> - The size in bytes of each item the queue will hold.</li>
-<li><i>Return value:xQueueHandle</i> - A handle to the created queue is returned provided the queue was created successfully. NULL is returned if the queue cannot be created because there is too little heap RAM available.
-</li>
-</ul><br />
-</li>
-<li><a name="vQueueDelete">
-<b>vQueueDelete</b></a>
- - Deletes a queue that was previously created using a call to xQueueCreate(). vQueueDelete() can also be used to delete a semaphore.
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void vQueueDelete(xQueueHandle pxQueueToDelete)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>pxQueueToDelete:xQueueHandle</i> - The handle of the queue being deleted. Semaphore handles can also be used. Queues are used to pass data between tasks and between tasks and interrupts. A queue/semaphore must not be deleted if there are any tasks that are blocked on the queue/semaphore waiting for events (sends or receives).</li>
-</ul><br />
-</li>
-<li><a name="xQueueSendToFront">
-<b>xQueueSendToFront</b></a>
- - Sends an item to the front of a queue.
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueueSendToFront(xQueueHandle xQueue, const void *pvItemToQueue, portTickType xTicksToWait)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>xQueue:xQueueHandle</i> - The handle of the queue to which the data is to be sent.</li>
-<li><i>pvItemToQueue:byte</i> - A pointer to the data to be sent to the queue. The size of the data that can be sent to a queue was defined when the queue was created.</li>
-<li><i>xTicksToWait:portTickType</i> - The number of ticks for which the calling task should be held in the Blocked state to wait for space to become available on the queue should the queue already be full.<br />A value of zero will prevent the calling task from entering the Blocked state.<br />If INCLUDE_vTaskSuspend is set to 1 then a value of portMAX_DELAY will hold the task in the Blocked state indefinitely to wait for space to become available on the queue.</li>
-<li><i>Return value:portBASE_TYPE</i> - pdPASS: Data was successfully sent to the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for space to become available and space did become available before the block time expired.<br />errQUEUE_FULL: The queue is already full so no data could be sent to the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for space to become available, but no space became available before the block time expired.
-</li>
-</ul><br />
-</li>
-<li><a name="xQueueSendToFrontFromISR">
-<b>xQueueSendToFrontFromISR</b></a>
- - Versions of xQueueSendToFront() API functions that can be called from an ISR. Unlike xQueueSendToFront() these functions do not permit a block time to be specified.
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueueSendToFrontFromISR(xQueueHandle xQueue, const void *pvItemToQueue, portBASE_TYPE *pxHigherPriorityTaskWoken)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>xQueue:xQueueHandle</i> - The handle of the queue to which the data is to be sent.</li>
-<li><i>pvItemToQueue:byte</i> - A pointer to the data to be sent to the queue. The size of the data that can be sent to a queue was defined when the queue was created.</li>
-<li><i>pxHigherPriorityTaskWoken: Pointer to portBASE_TYPE</i> - xQueueSendFromISR() will set *pxHigherPriorityTaskWoken to pdTRUE if sending to the queue caused a task to unblock, and the unblocked task has a priority higher than the currently running task. If xQueueSendFromISR() sets this value to pdTRUE then a context switch should be performed before the interrupt is exited.</li>
-<li><i>Return value:portBASE_TYPE</i> - pdTRUE Data was successfully sent to the queue.<br />errQUEUE_FULL Data could not be sent to the queue because the queue was already full.
-</li>
-</ul><br />
-</li>
-<li><a name="xQueueSendToBack">
-<b>xQueueSendToBack</b></a>
- - Sends an item to the back of a queue.
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueueSendToBack(xQueueHandle xQueue, const void *pvItemToQueue, portTickType xTicksToWait)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>xQueue:xQueueHandle</i> - The handle of the queue to which the data is to be sent.</li>
-<li><i>pvItemToQueue:byte</i> - A pointer to the data to be sent to the queue. The size of the data that can be sent to a queue was defined when the queue was created.</li>
-<li><i>xTicksToWait:portTickType</i> - The number of ticks for which the calling task should be held in the Blocked state to wait for space to become available on the queue should the queue already be full.<br />A value of zero will prevent the calling task from entering the Blocked state.<br />If INCLUDE_vTaskSuspend is set to 1 then a value of portMAX_DELAY will hold the task in the Blocked state indefinitely to wait for space to become available on the queue.</li>
-<li><i>Return value:portBASE_TYPE</i> - pdPASS: Data was successfully sent to the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for space to become available and space did become available before the block time expired.<br />errQUEUE_FULL: The queue is already full so no data could be sent to the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for space to become available, but no space became available before the block time expired.
-</li>
-</ul><br />
-</li>
-<li><a name="xQueueSendToBackFromISR">
-<b>xQueueSendToBackFromISR</b></a>
- - Versions of xQueueSendToBack() API functions that can be called from an ISR. Unlike xQueueSendToBack() these functions do not permit a block time to be specified.
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueueSendToBackFromISR(xQueueHandle xQueue, const void *pvItemToQueue, portBASE_TYPE *pxHigherPriorityTaskWoken)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>xQueue:xQueueHandle</i> - The handle of the queue to which the data is to be sent.</li>
-<li><i>pvItemToQueue:byte</i> - A pointer to the data to be sent to the queue. The size of the data that can be sent to a queue was defined when the queue was created.</li>
-<li><i>pxHigherPriorityTaskWoken: Pointer to portBASE_TYPE</i> - xQueueSendFromISR() will set *pxHigherPriorityTaskWoken to pdTRUE if sending to the queue caused a task to unblock, and the unblocked task has a priority higher than the currently running task. If xQueueSendFromISR() sets this value to pdTRUE then a context switch should be performed before the interrupt is exited.</li>
-<li><i>Return value:portBASE_TYPE</i> - pdTRUE Data was successfully sent to the queue.<br />errQUEUE_FULL Data could not be sent to the queue because the queue was already full.
-</li>
-</ul><br />
-</li>
-<li><a name="xQueueReceive">
-<b>xQueueReceive</b></a>
- - Receives an item from a queue.
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueueReceive(xQueueHandle xQueue, void *pvBuffer, portTickType xTicksToWait)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>xQueue:xQueueHandle</i> - The handle of the queue from which the data is to be received.</li>
-<li><i>pvBuffer:byte</i> - A pointer to the memory into which the data received from the queue will be copied.<br />The length of the buffer must be at least equal to the queue item size (set when the queue was created).</li>
-<li><i>xTicksToWait:portTickType</i> - The number of ticks for which the calling task should be held in the Blocked state to wait for data to become available from the queue should the queue already be empty.<br />A value of zero will prevent the calling task from entering the Blocked state.<br />If INCLUDE_vTaskSuspend is set to 1 then a value of portMAX_DELAY will hold the task in the Blocked state indefinitely to wait for data.</li>
-<li><i>Return value:portBASE_TYPE</i> - pdPASS: Data was successfully read from the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for data to become available and data did become available before the block time expired.<br />errQUEUE_EMPTY: The queue was empty so no date could be read form the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for data to become available, but no data became available before the block time expired.
-</li>
-</ul><br />
-</li>
-<li><a name="xQueueReceivefromISR">
-<b>xQueueReceivefromISR</b></a>
- - A version of xQueueReceive() that can be called from an ISR. Unlike xQueueReceive(), xQueueReceiveFromISR() does not permit a block time to be specified.
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueueReceivefromISR(xQueueHandle xQueue, void *pvBuffer, portBASE_TYPE *pxHigherPriorityTaskWoken)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>xQueue:xQueueHandle</i> - The handle of the queue from which the data is to be received.</li>
-<li><i>pvBuffer:byte</i> - A pointer to the memory into which the data received from the queue will be copied.The length of the buffer must be at least equal to the queue item size (set when the queue was created).</li>
-<li><i>pxHigherPriorityTaskWoken: Pointer to portBASE_TYPE</i> - Pointer to A task may be blocked waiting for space to become available on the queue. If xQueueReceiveFromISR() causes such a task to unblock then *pxHigherPriorityTaskWoken will get set to pdTRUE, otherwise *pxHigherPriorityTaskWoken will remain unchanged.</li>
-<li><i>Return value:portBASE_TYPE</i> - pdPASS: Data was successfully read from the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for data to become available and data did become available before the block time expired.<br />errQUEUE_EMPTY: The queue was empty so no date could be read form the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for data to become available, but no data became available before the block time expired.
-</li>
-</ul><br />
-</li>
-<li><a name="xQueuePeek">
-<b>xQueuePeek</b></a>
- - Reads an item from a queue, but does not remove the item from the queue. Therefore the same item would be returned the next time xQueueReceive() or xQueuePeek() was called on the same queue.
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueuePeek(xQueueHandle xQueue, void *pvBuffer, portTickType xTicksToWait)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>xQueue:xQueueHandle</i> - The handle of the queue from which the data is to be read.</li>
-<li><i>pvBuffer:byte</i> - A pointer to the memory into which the data read from the queue will be copied. The length of the buffer must be at least equal to the queue item size (set when the queue was created).</li>
-<li><i>xTicksToWait:portTickType</i> - The number of ticks for which the calling task should be held in the Blocked state to wait for data to become available from the queue should the queue already be empty.<br />A value of zero will prevent the calling task from entering the Blocked state.<br />If INCLUDE_vTaskSuspend is set to 1 then a value of portMAX_DELAY will hold the task in the Blocked state indefinitely to wait for data.</li>
-<li><i>Return value:portBASE_TYPE</i> - pdPASS: Data was successfully read from the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for data to become available and data did become available before the block time expired.<br />errQUEUE_EMPTY: The queue was empty so no date could be read form the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for data to become available, but no data became available before the block time expired.
-</li>
-</ul><br />
-</li>
 <li><a name="uxQueueMessagesWaiting">
 <b>uxQueueMessagesWaiting</b></a>
  - Queries the number of items that are currently held within a queue.
@@ -886,6 +765,29 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="xQueueCreate">
+<b>xQueueCreate</b></a>
+ - Creates a queue.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> xQueueHandle xQueueCreate(unsigned_portBASE_TYPE uxQueueLength, unsigned_portBASE_TYPE uxItemSize)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>uxQueueLength:unsigned_portBASE_TYPE</i> - The maximum number of items the queue can hold at any time.</li>
+<li><i>uxItemSize:unsigned_portBASE_TYPE</i> - The size in bytes of each item the queue will hold.</li>
+<li><i>Return value:xQueueHandle</i> - A handle to the created queue is returned provided the queue was created successfully. NULL is returned if the queue cannot be created because there is too little heap RAM available.
+</li>
+</ul><br />
+</li>
+<li><a name="vQueueDelete">
+<b>vQueueDelete</b></a>
+ - Deletes a queue that was previously created using a call to xQueueCreate(). vQueueDelete() can also be used to delete a semaphore.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void vQueueDelete(xQueueHandle pxQueueToDelete)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>pxQueueToDelete:xQueueHandle</i> - The handle of the queue being deleted. Semaphore handles can also be used. Queues are used to pass data between tasks and between tasks and interrupts. A queue/semaphore must not be deleted if there are any tasks that are blocked on the queue/semaphore waiting for events (sends or receives).</li>
+</ul><br />
+</li>
 <li><a name="xQueueReset">
 <b>xQueueReset</b></a>
  - Reset a queue back to its original empty state.  pdPASS is returned if the queue is successfully reset.  pdFAIL is returned if the queue could not be reset because there are tasks blocked on the queue waiting to either receive from the queue or send to the queue.
@@ -895,6 +797,254 @@ LI.EXP {
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>xQueue:xQueueHandle</i> - The handle of the queue to reset.</li>
 <li><i>Return value:portBASE_TYPE</i> - pdPASS is returned if the queue is successfully reset. pdFAIL is returned if the queue could not be reset because there are tasks blocked on the queue waiting to either receive from the queue or send to the queue.
+</li>
+</ul><br />
+</li>
+<li><a name="xQueueSendToBack">
+<b>xQueueSendToBack</b></a>
+ - Sends an item to the back of a queue.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueueSendToBack(xQueueHandle xQueue, const void *pvItemToQueue, portTickType xTicksToWait)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xQueue:xQueueHandle</i> - The handle of the queue to which the data is to be sent.</li>
+<li><i>pvItemToQueue:byte</i> - A pointer to the data to be sent to the queue. The size of the data that can be sent to a queue was defined when the queue was created.</li>
+<li><i>xTicksToWait:portTickType</i> - The number of ticks for which the calling task should be held in the Blocked state to wait for space to become available on the queue should the queue already be full.<br />A value of zero will prevent the calling task from entering the Blocked state.<br />If INCLUDE_vTaskSuspend is set to 1 then a value of portMAX_DELAY will hold the task in the Blocked state indefinitely to wait for space to become available on the queue.</li>
+<li><i>Return value:portBASE_TYPE</i> - pdPASS: Data was successfully sent to the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for space to become available and space did become available before the block time expired.<br />errQUEUE_FULL: The queue is already full so no data could be sent to the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for space to become available, but no space became available before the block time expired.
+</li>
+</ul><br />
+</li>
+<li><a name="xQueueSendToFront">
+<b>xQueueSendToFront</b></a>
+ - Sends an item to the front of a queue.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueueSendToFront(xQueueHandle xQueue, const void *pvItemToQueue, portTickType xTicksToWait)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xQueue:xQueueHandle</i> - The handle of the queue to which the data is to be sent.</li>
+<li><i>pvItemToQueue:byte</i> - A pointer to the data to be sent to the queue. The size of the data that can be sent to a queue was defined when the queue was created.</li>
+<li><i>xTicksToWait:portTickType</i> - The number of ticks for which the calling task should be held in the Blocked state to wait for space to become available on the queue should the queue already be full.<br />A value of zero will prevent the calling task from entering the Blocked state.<br />If INCLUDE_vTaskSuspend is set to 1 then a value of portMAX_DELAY will hold the task in the Blocked state indefinitely to wait for space to become available on the queue.</li>
+<li><i>Return value:portBASE_TYPE</i> - pdPASS: Data was successfully sent to the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for space to become available and space did become available before the block time expired.<br />errQUEUE_FULL: The queue is already full so no data could be sent to the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for space to become available, but no space became available before the block time expired.
+</li>
+</ul><br />
+</li>
+<li><a name="xQueueReceive">
+<b>xQueueReceive</b></a>
+ - Receives an item from a queue.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueueReceive(xQueueHandle xQueue, void *pvBuffer, portTickType xTicksToWait)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xQueue:xQueueHandle</i> - The handle of the queue from which the data is to be received.</li>
+<li><i>pvBuffer:byte</i> - A pointer to the memory into which the data received from the queue will be copied.<br />The length of the buffer must be at least equal to the queue item size (set when the queue was created).</li>
+<li><i>xTicksToWait:portTickType</i> - The number of ticks for which the calling task should be held in the Blocked state to wait for data to become available from the queue should the queue already be empty.<br />A value of zero will prevent the calling task from entering the Blocked state.<br />If INCLUDE_vTaskSuspend is set to 1 then a value of portMAX_DELAY will hold the task in the Blocked state indefinitely to wait for data.</li>
+<li><i>Return value:portBASE_TYPE</i> - pdPASS: Data was successfully read from the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for data to become available and data did become available before the block time expired.<br />errQUEUE_EMPTY: The queue was empty so no date could be read form the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for data to become available, but no data became available before the block time expired.
+</li>
+</ul><br />
+</li>
+<li><a name="xQueueOverwrite">
+<b>xQueueOverwrite</b></a>
+ - This is a macro that calls the xQueueGenericSend() function. A version of xQueueSendToBack() that will write to the queue even if the queue is full, overwriting data that is already held in the queue. xQueueOverwrite() is intended for use with queues that have a length of one, meaning the queue is either empty or full. This function must not be called from an interrupt service routine (ISR). See xQueueOverwriteFromISR() for an alternative which may be used in an ISR. 
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueueOverwrite(xQueueHandle xQueue, const void *pvItemToQueue, portTickType xTicksToWait)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xQueue:xQueueHandle</i> - The handle of the queue to which the data is to be sent.</li>
+<li><i>pvItemToQueue:byte</i> - A pointer to the data to be sent to the queue. The size of the data that can be sent to a queue was defined when the queue was created.</li>
+<li><i>xTicksToWait:portTickType</i> - The number of ticks for which the calling task should be held in the Blocked state to wait for space to become available on the queue should the queue already be full.<br />A value of zero will prevent the calling task from entering the Blocked state.<br />If INCLUDE_vTaskSuspend is set to 1 then a value of portMAX_DELAY will hold the task in the Blocked state indefinitely to wait for space to become available on the queue.</li>
+<li><i>Return value:portBASE_TYPE</i> - pdPASS: Data was successfully sent to the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for space to become available and space did become available before the block time expired.<br />errQUEUE_FULL: The queue is already full so no data could be sent to the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for space to become available, but no space became available before the block time expired.
+</li>
+</ul><br />
+</li>
+<li><a name="xQueueOverwriteFromISR">
+<b>xQueueOverwriteFromISR</b></a>
+ - This is a macro that calls the xQueueGenericSendFromISR() function. A version of xQueueOverwrite() that can be used in an ISR. xQueueOverwriteFromISR() is similar to xQueueSendToBackFromISR(), but will write to the queue even if the queue is full, overwriting data that is already held in the queue. xQueueOverwriteFromISR() is intended for use with queues that have a length of one, meaning the queue is either empty or full. 
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueueOverwriteFromISR(xQueueHandle xQueue, const void *pvItemToQueue, portBASE_TYPE *pxHigherPriorityTaskWoken)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xQueue:xQueueHandle</i> - The handle of the queue to which the data is to be sent.</li>
+<li><i>pvItemToQueue:byte</i> - A pointer to the data to be sent to the queue. The size of the data that can be sent to a queue was defined when the queue was created.</li>
+<li><i>pxHigherPriorityTaskWoken: Pointer to portBASE_TYPE</i> - xQueueSendFromISR() will set *pxHigherPriorityTaskWoken to pdTRUE if sending to the queue caused a task to unblock, and the unblocked task has a priority higher than the currently running task. If xQueueSendFromISR() sets this value to pdTRUE then a context switch should be performed before the interrupt is exited.</li>
+<li><i>Return value:portBASE_TYPE</i> - pdTRUE Data was successfully sent to the queue.<br />errQUEUE_FULL Data could not be sent to the queue because the queue was already full.
+</li>
+</ul><br />
+</li>
+<li><a name="xQueuePeek">
+<b>xQueuePeek</b></a>
+ - Reads an item from a queue, but does not remove the item from the queue. Therefore the same item would be returned the next time xQueueReceive() or xQueuePeek() was called on the same queue.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueuePeek(xQueueHandle xQueue, void *pvBuffer, portTickType xTicksToWait)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xQueue:xQueueHandle</i> - The handle of the queue from which the data is to be read.</li>
+<li><i>pvBuffer:byte</i> - A pointer to the memory into which the data read from the queue will be copied. The length of the buffer must be at least equal to the queue item size (set when the queue was created).</li>
+<li><i>xTicksToWait:portTickType</i> - The number of ticks for which the calling task should be held in the Blocked state to wait for data to become available from the queue should the queue already be empty.<br />A value of zero will prevent the calling task from entering the Blocked state.<br />If INCLUDE_vTaskSuspend is set to 1 then a value of portMAX_DELAY will hold the task in the Blocked state indefinitely to wait for data.</li>
+<li><i>Return value:portBASE_TYPE</i> - pdPASS: Data was successfully read from the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for data to become available and data did become available before the block time expired.<br />errQUEUE_EMPTY: The queue was empty so no date could be read form the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for data to become available, but no data became available before the block time expired.
+</li>
+</ul><br />
+</li>
+<li><a name="xQueuePeekFromISR">
+<b>xQueuePeekFromISR</b></a>
+ - A version of xQueuePeek() that can be used from an interrupt service routine (ISR). Reads an item from a queue, but does not remove the item from the queue. Therefore the same item would be returned the next time xQueueReceive() or xQueuePeek() was called on the same queue.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueuePeekFromISR(xQueueHandle xQueue, void *pvBuffer, portTickType xTicksToWait)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xQueue:xQueueHandle</i> - The handle of the queue from which the data is to be read.</li>
+<li><i>pvBuffer:byte</i> - A pointer to the memory into which the data read from the queue will be copied. The length of the buffer must be at least equal to the queue item size (set when the queue was created).</li>
+<li><i>xTicksToWait:portTickType</i> - The number of ticks for which the calling task should be held in the Blocked state to wait for data to become available from the queue should the queue already be empty.<br />A value of zero will prevent the calling task from entering the Blocked state.<br />If INCLUDE_vTaskSuspend is set to 1 then a value of portMAX_DELAY will hold the task in the Blocked state indefinitely to wait for data.</li>
+<li><i>Return value:portBASE_TYPE</i> - pdPASS: Data was successfully read from the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for data to become available and data did become available before the block time expired.<br />errQUEUE_EMPTY: The queue was empty so no date could be read form the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for data to become available, but no data became available before the block time expired.
+</li>
+</ul><br />
+</li>
+<li><a name="xQueueSendToBackFromISR">
+<b>xQueueSendToBackFromISR</b></a>
+ - Versions of xQueueSendToBack() API functions that can be called from an ISR. Unlike xQueueSendToBack() these functions do not permit a block time to be specified.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueueSendToBackFromISR(xQueueHandle xQueue, const void *pvItemToQueue, portBASE_TYPE *pxHigherPriorityTaskWoken)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xQueue:xQueueHandle</i> - The handle of the queue to which the data is to be sent.</li>
+<li><i>pvItemToQueue:byte</i> - A pointer to the data to be sent to the queue. The size of the data that can be sent to a queue was defined when the queue was created.</li>
+<li><i>pxHigherPriorityTaskWoken: Pointer to portBASE_TYPE</i> - xQueueSendFromISR() will set *pxHigherPriorityTaskWoken to pdTRUE if sending to the queue caused a task to unblock, and the unblocked task has a priority higher than the currently running task. If xQueueSendFromISR() sets this value to pdTRUE then a context switch should be performed before the interrupt is exited.</li>
+<li><i>Return value:portBASE_TYPE</i> - pdTRUE Data was successfully sent to the queue.<br />errQUEUE_FULL Data could not be sent to the queue because the queue was already full.
+</li>
+</ul><br />
+</li>
+<li><a name="xQueueSendToFrontFromISR">
+<b>xQueueSendToFrontFromISR</b></a>
+ - Versions of xQueueSendToFront() API functions that can be called from an ISR. Unlike xQueueSendToFront() these functions do not permit a block time to be specified.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueueSendToFrontFromISR(xQueueHandle xQueue, const void *pvItemToQueue, portBASE_TYPE *pxHigherPriorityTaskWoken)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xQueue:xQueueHandle</i> - The handle of the queue to which the data is to be sent.</li>
+<li><i>pvItemToQueue:byte</i> - A pointer to the data to be sent to the queue. The size of the data that can be sent to a queue was defined when the queue was created.</li>
+<li><i>pxHigherPriorityTaskWoken: Pointer to portBASE_TYPE</i> - xQueueSendFromISR() will set *pxHigherPriorityTaskWoken to pdTRUE if sending to the queue caused a task to unblock, and the unblocked task has a priority higher than the currently running task. If xQueueSendFromISR() sets this value to pdTRUE then a context switch should be performed before the interrupt is exited.</li>
+<li><i>Return value:portBASE_TYPE</i> - pdTRUE Data was successfully sent to the queue.<br />errQUEUE_FULL Data could not be sent to the queue because the queue was already full.
+</li>
+</ul><br />
+</li>
+<li><a name="xQueueReceivefromISR">
+<b>xQueueReceivefromISR</b></a>
+ - A version of xQueueReceive() that can be called from an ISR. Unlike xQueueReceive(), xQueueReceiveFromISR() does not permit a block time to be specified.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueueReceivefromISR(xQueueHandle xQueue, void *pvBuffer, portBASE_TYPE *pxHigherPriorityTaskWoken)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xQueue:xQueueHandle</i> - The handle of the queue from which the data is to be received.</li>
+<li><i>pvBuffer:byte</i> - A pointer to the memory into which the data received from the queue will be copied.The length of the buffer must be at least equal to the queue item size (set when the queue was created).</li>
+<li><i>pxHigherPriorityTaskWoken: Pointer to portBASE_TYPE</i> - Pointer to A task may be blocked waiting for space to become available on the queue. If xQueueReceiveFromISR() causes such a task to unblock then *pxHigherPriorityTaskWoken will get set to pdTRUE, otherwise *pxHigherPriorityTaskWoken will remain unchanged.</li>
+<li><i>Return value:portBASE_TYPE</i> - pdPASS: Data was successfully read from the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for data to become available and data did become available before the block time expired.<br />errQUEUE_EMPTY: The queue was empty so no date could be read form the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for data to become available, but no data became available before the block time expired.
+</li>
+</ul><br />
+</li>
+<li><a name="vQueueAddToRegistry">
+<b>vQueueAddToRegistry</b></a>
+ - Assigns a name to a queue and adds the queue to the registry. 
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void vQueueAddToRegistry(xQueueHandle xQueue, char *pcQueueName)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xQueue:xQueueHandle</i> - The handle of the queue being added to the registry.</li>
+<li><i>pcQueueName: Pointer to char</i> - Pointer to the name to be assigned to the queue. This is just a text string used to facilitate debugging.</li>
+</ul><br />
+</li>
+<li><a name="vQueueUnregisterQueue">
+<b>vQueueUnregisterQueue</b></a>
+ - Removes a queue from the queue registry. 
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void vQueueUnregisterQueue(xQueueHandle xQueue)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xQueue:xQueueHandle</i> - The handle of the queue being removed from the registry.</li>
+</ul><br />
+</li>
+<li><a name="xQueueIsQueueFullFromISR">
+<b>xQueueIsQueueFullFromISR</b></a>
+ - Queries a queue to determine if the queue is full. This function should only be used in an ISR. 
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueueIsQueueFullFromISR(xQueueHandle xQueue)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xQueue:xQueueHandle</i> - The handle of the queue being queried.</li>
+<li><i>Return value:portBASE_TYPE</i> - pdFALSE if the queue is not full, or any other value if the queue is full. 
+</li>
+</ul><br />
+</li>
+<li><a name="xQueueIsQueueEmptyFromISR">
+<b>xQueueIsQueueEmptyFromISR</b></a>
+ - Queries a queue to determine if the queue is empty. This function should only be used in an ISR. 
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueueIsQueueEmptyFromISR(xQueueHandle xQueue)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xQueue:xQueueHandle</i> - The handle of the queue being queried.</li>
+<li><i>Return value:portBASE_TYPE</i> - pdFALSE if the queue is not empty, or any other value if the queue is empty. 
+</li>
+</ul><br />
+</li>
+<li><a name="xQueueCreateSet">
+<b>xQueueCreateSet</b></a>
+ - Queue sets provide a mechanism to allow an RTOS task to block (pend) on a read operation from multiple RTOS queues or semaphores simultaneously. Note that there are simpler alternatives to using queue sets. See the Blocking on Multiple Objects page for more information.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> xQueueSetHandle xQueueCreateSet(unsigned portBASE_TYPE uxEventQueueLength)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>uxEventQueueLength:byte</i> - no hint</li>
+<li><i>Return value:xQueueSetHandle</i> - If the queue set is created successfully then a handle to the created queue set is returned. Otherwise NULL is returned. 
+</li>
+</ul><br />
+</li>
+<li><a name="xQueueAddToSet">
+<b>xQueueAddToSet</b></a>
+ -  Adds an RTOS queue or semaphore to a queue set that was previously created by a call to xQueueCreateSet().
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueueAddToSet(xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xQueueOrSemaphore:xQueueSetMemberHandle</i> - The handle of the queue or semaphore being added to the queue set (cast to an xQueueSetMemberHandle type). </li>
+<li><i>xQueueSet:xQueueSetHandle</i> - The handle of the queue set to which the queue or semaphore is being added. </li>
+<li><i>Return value:portBASE_TYPE</i> - If the queue or semaphore was successfully added to the queue set then pdPASS is returned. If the queue could not be successfully added to the queue set because it is already a member of a different queue set then pdFAIL is returned. 
+</li>
+</ul><br />
+</li>
+<li><a name="xQueueRemoveFromSet">
+<b>xQueueRemoveFromSet</b></a>
+ - Remove an RTOS queue or semaphore from a queue set. An RTOS queue or semaphore can only be removed from a queue set if the queue or semaphore is empty. 
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueueRemoveFromSet(xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xQueueOrSemaphore:xQueueSetMemberHandle</i> - The handle of the queue or semaphore being removed from the queue set (cast to an xQueueSetMemberHandle type). </li>
+<li><i>xQueueSet:xQueueSetHandle</i> - The handle of the queue set in which the queue or semaphore is included.</li>
+<li><i>Return value:portBASE_TYPE</i> - If the queue or semaphore was successfully added to the queue set then pdPASS is returned. If the queue could not be successfully added to the queue set because it is already a member of a different queue set then pdFAIL is returned. 
+</li>
+</ul><br />
+</li>
+<li><a name="xQueueSelectFromSet">
+<b>xQueueSelectFromSet</b></a>
+ - xQueueSelectFromSet() selects from the members of a queue set a queue or semaphore that either contains data (in the case of a queue) or is available to take (in the case of a semaphore). xQueueSelectFromSet() effectively allows a task to block (pend) on a read operation on all the queues and semaphores in a queue set simultaneously. 
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> xQueueSetMemberHandle xQueueSelectFromSet(xQueueSetHandle xQueueSet, portTickType xBlockTimeTicks)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xQueueSet:xQueueSetHandle</i> - The queue set on which the task will (potentially) block. </li>
+<li><i>xBlockTimeTicks:portTickType</i> - The maximum time, in ticks, that the calling task will remain in the Blocked state (with other tasks executing) to wait for a member of the queue set to be ready for a successful queue read or semaphore take operation. </li>
+<li><i>Return value:xQueueSetMemberHandle</i> - xQueueSelectFromSet() will return the handle of a queue (cast to a xQueueSetMemberHandle type) contained in the queue set that contains data, or the handle of a semaphore (cast to a xQueueSetMemberHandle type) contained in the queue set that is available, or NULL if no such queue or semaphore exists before before the specified block time expires. 
+</li>
+</ul><br />
+</li>
+<li><a name="xQueueSelectFromSetFromISR">
+<b>xQueueSelectFromSetFromISR</b></a>
+ - A version of xQueueSelectFromSet() that can be used from an interrupt service routine (ISR). 
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> xQueueSetMemberHandle xQueueSelectFromSetFromISR(xQueueSetHandle xQueueSet)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>xQueueSet:xQueueSetHandle</i> - The queue set being queried. It is not possible to block on a read as this function is designed to be used from an interrupt. </li>
+<li><i>Return value:xQueueSetMemberHandle</i> - xQueueSelectFromSet() will return the handle of a queue (cast to a xQueueSetMemberHandle type) contained in the queue set that contains data, or the handle of a semaphore (cast to a xQueueSetMemberHandle type) contained in the queue set that is available, or NULL if no such queue or semaphore exists before before the specified block time expires. 
 </li>
 </ul><br />
 </li>

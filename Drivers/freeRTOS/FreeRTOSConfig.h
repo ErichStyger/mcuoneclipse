@@ -168,6 +168,11 @@
 %-
 #define configQUEUE_REGISTRY_SIZE                                %>50 %QueueRegistrySize
 %-
+%if %useQueueSets='yes'
+#define configUSE_QUEUE_SETS                                     %>50 1
+%else
+#define configUSE_QUEUE_SETS                                     %>50 0
+%endif
 %if defined(xSemaphoreCreateCounting)
 #define configUSE_COUNTING_SEMAPHORES                            %>50 1
 %else

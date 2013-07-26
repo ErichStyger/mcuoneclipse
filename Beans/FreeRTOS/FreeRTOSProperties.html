@@ -223,16 +223,16 @@ LI.EXP {
 <b>Component name</b></a> - Name of the component.
 </li>
 <li>
-<a name="DisabledInterruptsInStartup">
-<b>Disabled Interrupts in Startup</b></a> - If set to 'yes', then interrupts will be disabled in PE_low_level_init() using the PEX_RTOS_INIT() macro.
-</li>
-<li>
 <a name="FreeRTOSVersion">
 <b>RTOS Version</b></a> - Identifies the RTOS version
 </li>
 <li>
 <a name="IsClassicCW">
 <b>Classic CodeWarrior</b></a> - If you are using this component in classic (non-eclipse based) CodeWarrior, then this setting has to be set to 'yes'. If you want to know why: The reason is that classic CodeWarrior does not come with the common_RTOSAdaptor.prg file. As such a test has to be present  in FreeRTOS.ts2.
+</li>
+<li>
+<a name="DisabledInterruptsInStartup">
+<b>Disabled Interrupts in Startup</b></a> - If set to 'yes', then interrupts will be disabled in PE_low_level_init() using the PEX_RTOS_INIT() macro.
 </li>
 <li>
 <a name="Utility">
@@ -560,6 +560,10 @@ The following items are available only if the group is enabled (the value is "En
    2. It contains the information required by a debugger to locate each registered queue and semaphore.<br />
 The queue registry has no purpose unless you are using a kernel aware debugger.<br />
 configQUEUE_REGISTRY_SIZE defines the maximum number of queues and semaphores that can be registered. Only those queues and semaphores that you want to view using a kernel aware debugger need be registered. See the API reference documentation for vQueueAddToRegistry() and vQueueUnregisterQueue() for more information.
+  </li>
+  <li>
+  <a name="useQueueSets">
+  <b>Queue Sets</b></a> - If queue sets are supported. This sets configUSE_QUEUE_SETS in FreeRTOSConfig.h
   </li>
 </ul>
 </li>

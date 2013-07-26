@@ -975,6 +975,146 @@ void %'ModuleName'%.%Init(void);
 
 %endif %- vTaskStepTick
 %-BW_METHOD_END vTaskStepTick
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xQueuePeekFromISR
+%ifdef xQueuePeekFromISR
+#define %'ModuleName'%.%xQueuePeekFromISR(xQueue, pvBuffer, xTicksToWait) \
+  xQueuePeekFromISR(xQueue, pvBuffer, xTicksToWait)
+%define! ParxQueue
+%define! ParpvBuffer
+%define! ParxTicksToWait
+%define! RetVal
+%include Common\FreeRTOSxQueuePeekFromISR.Inc
+
+%endif %- xQueuePeekFromISR
+%-BW_METHOD_END xQueuePeekFromISR
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xQueueOverwrite
+%ifdef xQueueOverwrite
+#define %'ModuleName'%.%xQueueOverwrite(xQueue, pvItemToQueue, xTicksToWait) \
+  xQueueOverwrite(xQueue, pvItemToQueue, xTicksToWait)
+%define! ParxQueue
+%define! ParpvItemToQueue
+%define! ParxTicksToWait
+%define! RetVal
+%include Common\FreeRTOSxQueueOverwrite.Inc
+
+%endif %- xQueueOverwrite
+%-BW_METHOD_END xQueueOverwrite
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xQueueOverwriteFromISR
+%ifdef xQueueOverwriteFromISR
+#define %'ModuleName'%.%xQueueOverwriteFromISR(xQueue, pvItemToQueue, pxHigherPriorityTaskWoken) \
+  xQueueOverwriteFromISR(xQueue, pvItemToQueue, pxHigherPriorityTaskWoken)
+%define! ParxQueue
+%define! ParpvItemToQueue
+%define! ParpxHigherPriorityTaskWoken
+%define! RetVal
+%include Common\FreeRTOSxQueueOverwriteFromISR.Inc
+
+%endif %- xQueueOverwriteFromISR
+%-BW_METHOD_END xQueueOverwriteFromISR
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN vQueueAddToRegistry
+%ifdef vQueueAddToRegistry
+#define %'ModuleName'%.%vQueueAddToRegistry(xQueue, pcQueueName) \
+  vQueueAddToRegistry(xQueue, pcQueueName)
+%define! ParxQueue
+%define! ParpcQueueName
+%include Common\FreeRTOSvQueueAddToRegistry.Inc
+
+%endif %- vQueueAddToRegistry
+%-BW_METHOD_END vQueueAddToRegistry
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN vQueueUnregisterQueue
+%ifdef vQueueUnregisterQueue
+#define %'ModuleName'%.%vQueueUnregisterQueue(xQueue) \
+  vQueueUnregisterQueue(xQueue)
+%define! ParxQueue
+%include Common\FreeRTOSvQueueUnregisterQueue.Inc
+
+%endif %- vQueueUnregisterQueue
+%-BW_METHOD_END vQueueUnregisterQueue
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xQueueIsQueueFullFromISR
+%ifdef xQueueIsQueueFullFromISR
+#define %'ModuleName'%.%xQueueIsQueueFullFromISR(xQueue) \
+  xQueueIsQueueFullFromISR(xQueue)
+%define! ParxQueue
+%define! RetVal
+%include Common\FreeRTOSxQueueIsQueueFullFromISR.Inc
+
+%endif %- xQueueIsQueueFullFromISR
+%-BW_METHOD_END xQueueIsQueueFullFromISR
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xQueueIsQueueEmptyFromISR
+%ifdef xQueueIsQueueEmptyFromISR
+#define %'ModuleName'%.%xQueueIsQueueEmptyFromISR(xQueue) \
+  xQueueIsQueueEmptyFromISR(xQueue)
+%define! ParxQueue
+%define! RetVal
+%include Common\FreeRTOSxQueueIsQueueEmptyFromISR.Inc
+
+%endif %- xQueueIsQueueEmptyFromISR
+%-BW_METHOD_END xQueueIsQueueEmptyFromISR
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xQueueAddToSet
+%ifdef xQueueAddToSet
+#define %'ModuleName'%.%xQueueAddToSet(xQueueOrSemaphore, xQueueSet) \
+  xQueueAddToSet(xQueueOrSemaphore, xQueueSet)
+%define! ParxQueueOrSemaphore
+%define! ParxQueueSet
+%define! RetVal
+%include Common\FreeRTOSxQueueAddToSet.Inc
+
+%endif %- xQueueAddToSet
+%-BW_METHOD_END xQueueAddToSet
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xQueueCreateSet
+%ifdef xQueueCreateSet
+#define %'ModuleName'%.%xQueueCreateSet(uxEventQueueLength) \
+  xQueueCreateSet(uxEventQueueLength)
+%define! ParuxEventQueueLength
+%define! RetVal
+%include Common\FreeRTOSxQueueCreateSet.Inc
+
+%endif %- xQueueCreateSet
+%-BW_METHOD_END xQueueCreateSet
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xQueueRemoveFromSet
+%ifdef xQueueRemoveFromSet
+#define %'ModuleName'%.%xQueueRemoveFromSet(xQueueOrSemaphore, xQueueSet) \
+  xQueueRemoveFromSet(xQueueOrSemaphore, xQueueSet)
+%define! ParxQueueOrSemaphore
+%define! ParxQueueSet
+%define! RetVal
+%include Common\FreeRTOSxQueueRemoveFromSet.Inc
+
+%endif %- xQueueRemoveFromSet
+%-BW_METHOD_END xQueueRemoveFromSet
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xQueueSelectFromSet
+%ifdef xQueueSelectFromSet
+#define %'ModuleName'%.%xQueueSelectFromSet(xQueueSet, xBlockTimeTicks) \
+  xQueueSelectFromSet(xQueueSet, xBlockTimeTicks)
+%define! ParxQueueSet
+%define! ParxBlockTimeTicks
+%define! RetVal
+%include Common\FreeRTOSxQueueSelectFromSet.Inc
+
+%endif %- xQueueSelectFromSet
+%-BW_METHOD_END xQueueSelectFromSet
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xQueueSelectFromSetFromISR
+%ifdef xQueueSelectFromSetFromISR
+#define %'ModuleName'%.%xQueueSelectFromSetFromISR(xQueueSet) \
+  xQueueSelectFromSetFromISR(xQueueSet)
+%define! ParxQueueSet
+%define! RetVal
+%include Common\FreeRTOSxQueueSelectFromSetFromISR.Inc
+
+%endif %- xQueueSelectFromSetFromISR
+%-BW_METHOD_END xQueueSelectFromSetFromISR
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -2314,6 +2454,194 @@ void %'ModuleName'%.%vTaskStepTick(portTickType xTicksToJump)
 
 %endif %- vTaskStepTick
 %-BW_METHOD_END vTaskStepTick
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xQueuePeekFromISR
+%ifdef xQueuePeekFromISR
+%define! ParxQueue
+%define! ParpvBuffer
+%define! ParxTicksToWait
+%define! RetVal
+%include Common\FreeRTOSxQueuePeekFromISR.Inc
+/*
+portBASE_TYPE %'ModuleName'%.%xQueuePeekFromISR(xQueueHandle xQueue, void *pvBuffer, portTickType xTicksToWait)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xQueuePeekFromISR
+%-BW_METHOD_END xQueuePeekFromISR
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xQueueOverwrite
+%ifdef xQueueOverwrite
+%define! ParxQueue
+%define! ParpvItemToQueue
+%define! ParxTicksToWait
+%define! RetVal
+%include Common\FreeRTOSxQueueOverwrite.Inc
+/*
+portBASE_TYPE %'ModuleName'%.%xQueueOverwrite(xQueueHandle xQueue, const void *pvItemToQueue, portTickType xTicksToWait)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xQueueOverwrite
+%-BW_METHOD_END xQueueOverwrite
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xQueueOverwriteFromISR
+%ifdef xQueueOverwriteFromISR
+%define! ParxQueue
+%define! ParpvItemToQueue
+%define! ParpxHigherPriorityTaskWoken
+%define! RetVal
+%include Common\FreeRTOSxQueueOverwriteFromISR.Inc
+/*
+portBASE_TYPE %'ModuleName'%.%xQueueOverwriteFromISR(xQueueHandle xQueue, const void *pvItemToQueue, portBASE_TYPE *pxHigherPriorityTaskWoken)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xQueueOverwriteFromISR
+%-BW_METHOD_END xQueueOverwriteFromISR
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN vQueueAddToRegistry
+%ifdef vQueueAddToRegistry
+%define! ParxQueue
+%define! ParpcQueueName
+%include Common\FreeRTOSvQueueAddToRegistry.Inc
+/*
+void %'ModuleName'%.%vQueueAddToRegistry(xQueueHandle xQueue, char *pcQueueName)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- vQueueAddToRegistry
+%-BW_METHOD_END vQueueAddToRegistry
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN vQueueUnregisterQueue
+%ifdef vQueueUnregisterQueue
+%define! ParxQueue
+%include Common\FreeRTOSvQueueUnregisterQueue.Inc
+/*
+void %'ModuleName'%.%vQueueUnregisterQueue(xQueueHandle xQueue)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- vQueueUnregisterQueue
+%-BW_METHOD_END vQueueUnregisterQueue
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xQueueIsQueueFullFromISR
+%ifdef xQueueIsQueueFullFromISR
+%define! ParxQueue
+%define! RetVal
+%include Common\FreeRTOSxQueueIsQueueFullFromISR.Inc
+/*
+portBASE_TYPE %'ModuleName'%.%xQueueIsQueueFullFromISR(xQueueHandle xQueue)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xQueueIsQueueFullFromISR
+%-BW_METHOD_END xQueueIsQueueFullFromISR
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xQueueIsQueueEmptyFromISR
+%ifdef xQueueIsQueueEmptyFromISR
+%define! ParxQueue
+%define! RetVal
+%include Common\FreeRTOSxQueueIsQueueEmptyFromISR.Inc
+/*
+portBASE_TYPE %'ModuleName'%.%xQueueIsQueueEmptyFromISR(xQueueHandle xQueue)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xQueueIsQueueEmptyFromISR
+%-BW_METHOD_END xQueueIsQueueEmptyFromISR
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xQueueAddToSet
+%ifdef xQueueAddToSet
+%define! ParxQueueOrSemaphore
+%define! ParxQueueSet
+%define! RetVal
+%include Common\FreeRTOSxQueueAddToSet.Inc
+/*
+portBASE_TYPE %'ModuleName'%.%xQueueAddToSet(xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xQueueAddToSet
+%-BW_METHOD_END xQueueAddToSet
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xQueueCreateSet
+%ifdef xQueueCreateSet
+%define! ParuxEventQueueLength
+%define! RetVal
+%include Common\FreeRTOSxQueueCreateSet.Inc
+/*
+xQueueSetHandle %'ModuleName'%.%xQueueCreateSet(unsigned portBASE_TYPE uxEventQueueLength)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xQueueCreateSet
+%-BW_METHOD_END xQueueCreateSet
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xQueueRemoveFromSet
+%ifdef xQueueRemoveFromSet
+%define! ParxQueueOrSemaphore
+%define! ParxQueueSet
+%define! RetVal
+%include Common\FreeRTOSxQueueRemoveFromSet.Inc
+/*
+portBASE_TYPE %'ModuleName'%.%xQueueRemoveFromSet(xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xQueueRemoveFromSet
+%-BW_METHOD_END xQueueRemoveFromSet
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xQueueSelectFromSet
+%ifdef xQueueSelectFromSet
+%define! ParxQueueSet
+%define! ParxBlockTimeTicks
+%define! RetVal
+%include Common\FreeRTOSxQueueSelectFromSet.Inc
+/*
+xQueueSetMemberHandle %'ModuleName'%.%xQueueSelectFromSet(xQueueSetHandle xQueueSet, portTickType xBlockTimeTicks)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xQueueSelectFromSet
+%-BW_METHOD_END xQueueSelectFromSet
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xQueueSelectFromSetFromISR
+%ifdef xQueueSelectFromSetFromISR
+%define! ParxQueueSet
+%define! RetVal
+%include Common\FreeRTOSxQueueSelectFromSetFromISR.Inc
+/*
+xQueueSetMemberHandle %'ModuleName'%.%xQueueSelectFromSetFromISR(xQueueSetHandle xQueueSet)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xQueueSelectFromSetFromISR
+%-BW_METHOD_END xQueueSelectFromSetFromISR
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

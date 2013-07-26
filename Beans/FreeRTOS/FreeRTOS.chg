@@ -146,3 +146,16 @@
   %set vOnPreSleepProcessing Selection never
   %set vOnPostSleepProcessing Selection never
 %endif
+%if %useQueueSets='yes'
+  %set xQueueCreateSet Selection always
+  %set xQueueAddToSet Selection always
+  %set xQueueRemoveFromSet Selection always
+  %set xQueueSelectFromSet Selection always
+  %set xQueueSelectFromSetFromISR Selection always
+%else
+  %set xQueueCreateSet Selection never
+  %set xQueueAddToSet Selection never
+  %set xQueueRemoveFromSet Selection never
+  %set xQueueSelectFromSet Selection never
+  %set xQueueSelectFromSetFromISR Selection never
+%endif

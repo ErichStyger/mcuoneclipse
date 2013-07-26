@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.271</Version>
+    <Version>01.287</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -18,7 +18,7 @@
     <BW_AutoSaveDriver>yes</BW_AutoSaveDriver>
     <BW_DetailedHelp>yes</BW_DetailedHelp>
     <BW_NeedTps>yes</BW_NeedTps>
-    <BW_NeedUst>11</BW_NeedUst>
+    <BW_NeedUst>13</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
     <Copyright>License : Open Source (LGPL)\nFreeRTOS (c) Copyright 2003-2013 Richard Barry, http: www.FreeRTOS.org\nFreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013\nProcessor Expert and CodeWarrior (c) Copyright Freescale Semiconductor, 2013, all rights reserved\nThis is a free software and is opened for education, research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
@@ -37,24 +37,6 @@
         <EditLine>true</EditLine>
         <DefaultValue/>
       </TCompNameItem>
-    </Property>
-    <Property>
-      <TBoolItem>
-        <Name>Disabled Interrupts in Startup</Name>
-        <Symbol>DisabledInterruptsInStartup</Symbol>
-        <TypeSpec>typeYesNo</TypeSpec>
-        <Hint>If set to 'yes', then interrupts will be disabled in PE_low_level_init() using the PEX_RTOS_INIT() macro.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-      </TBoolItem>
     </Property>
     <Property>
       <TStrgItem>
@@ -84,6 +66,24 @@
         <CanDelete>false</CanDelete>
         <IconPopup>false</IconPopup>
         <DefaultValue>false</DefaultValue>
+        <Popup>false</Popup>
+      </TBoolItem>
+    </Property>
+    <Property>
+      <TBoolItem>
+        <Name>Disabled Interrupts in Startup</Name>
+        <Symbol>DisabledInterruptsInStartup</Symbol>
+        <TypeSpec>typeYesNo</TypeSpec>
+        <Hint>If set to 'yes', then interrupts will be disabled in PE_low_level_init() using the PEX_RTOS_INIT() macro.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
         <Popup>false</Popup>
       </TBoolItem>
     </Property>
@@ -962,6 +962,24 @@ configQUEUE_REGISTRY_SIZE defines the maximum number of queues and semaphores th
               <ChangeValueIntoRange>true</ChangeValueIntoRange>
               <RuntimeProperty>false</RuntimeProperty>
             </TIntgItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolItem>
+              <Name>Queue Sets</Name>
+              <Symbol>useQueueSets</Symbol>
+              <TypeSpec>typeYesNo</TypeSpec>
+              <Hint>If queue sets are supported. This sets configUSE_QUEUE_SETS in FreeRTOSConfig.h</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>1</DefaultIndex>
+              <TextValueIndex>false</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <DefaultValue>false</DefaultValue>
+              <Popup>false</Popup>
+            </TBoolItem>
           </GrupItem>
         </Children>
       </TGrupItem>
@@ -3167,6 +3185,74 @@ Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total accumulated ex
     </Method>
     <Method>
       <TMthdItem>
+        <Name>uxQueueMessagesWaiting</Name>
+        <Symbol>uxQueueMessagesWaiting</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Queries the number of items that are currently held within a queue.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>unsigned_portBASE_TYPE</ReturnType>
+        <RetHint>The number of items that are held within the queue being queried.</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>xQueue</ParName>
+          <ParType>xQueueHandle</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The handle of the queue being queried.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>unsigned_portBASE_TYPE #M#_#C#(xQueueHandle xQueue)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>uxQueueMessagesWaitingfromISR</Name>
+        <Symbol>uxQueueMessagesWaitingfromISR</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>A version of uxQueueMessagesWaiting() that can be used from inside an interrupt service routine.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>unsigned_portBASE_TYPE</ReturnType>
+        <RetHint>The number of items that are held within the queue being queried.</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>xQueue</ParName>
+          <ParType>xQueueHandle</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The handle of the queue being queried.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>unsigned_portBASE_TYPE #M#_#C#(xQueueHandle xQueue)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
         <Name>xQueueCreate</Name>
         <Symbol>xQueueCreate</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
@@ -3241,10 +3327,10 @@ Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total accumulated ex
     </Method>
     <Method>
       <TMthdItem>
-        <Name>xQueueSendToFront</Name>
-        <Symbol>xQueueSendToFront</Symbol>
+        <Name>xQueueReset</Name>
+        <Symbol>xQueueReset</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Sends an item to the front of a queue.</Hint>
+        <Hint>Reset a queue back to its original empty state.  pdPASS is returned if the queue is successfully reset.  pdFAIL is returned if the queue could not be reset because there are tasks blocked on the queue waiting to either receive from the queue or send to the queue.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -3259,77 +3345,17 @@ Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total accumulated ex
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>portBASE_TYPE</ReturnType>
-        <RetHint>pdPASS: Data was successfully sent to the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for space to become available and space did become available before the block time expired.\nerrQUEUE_FULL: The queue is already full so no data could be sent to the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for space to become available, but no space became available before the block time expired.</RetHint>
-        <ParamCount>3</ParamCount>
+        <RetHint>pdPASS is returned if the queue is successfully reset. pdFAIL is returned if the queue could not be reset because there are tasks blocked on the queue waiting to either receive from the queue or send to the queue.</RetHint>
+        <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>xQueue</ParName>
           <ParType>xQueueHandle</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint>The handle of the queue to which the data is to be sent.</ParHint>
-        </Parameter>
-        <Parameter>
-          <ParName>pvItemToQueue</ParName>
-          <ParType>8bit unsigned</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>A pointer to the data to be sent to the queue. The size of the data that can be sent to a queue was defined when the queue was created.</ParHint>
-          <ParUserDeclaration>const void *pvItemToQueue</ParUserDeclaration>
-        </Parameter>
-        <Parameter>
-          <ParName>xTicksToWait</ParName>
-          <ParType>portTickType</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>The number of ticks for which the calling task should be held in the Blocked state to wait for space to become available on the queue should the queue already be full.\nA value of zero will prevent the calling task from entering the Blocked state.\nIf INCLUDE_vTaskSuspend is set to 1 then a value of portMAX_DELAY will hold the task in the Blocked state indefinitely to wait for space to become available on the queue.</ParHint>
+          <ParHint>The handle of the queue to reset.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>portBASE_TYPE #M#_#C#(xQueueHandle xQueue, const void *pvItemToQueue, portTickType xTicksToWait)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>xQueueSendToFrontFromISR</Name>
-        <Symbol>xQueueSendToFrontFromISR</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Versions of xQueueSendToFront() API functions that can be called from an ISR. Unlike xQueueSendToFront() these functions do not permit a block time to be specified.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>portBASE_TYPE</ReturnType>
-        <RetHint>pdTRUE Data was successfully sent to the queue.\nerrQUEUE_FULL Data could not be sent to the queue because the queue was already full.</RetHint>
-        <ParamCount>3</ParamCount>
-        <Parameter>
-          <ParName>xQueue</ParName>
-          <ParType>xQueueHandle</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>The handle of the queue to which the data is to be sent.</ParHint>
-        </Parameter>
-        <Parameter>
-          <ParName>pvItemToQueue</ParName>
-          <ParType>8bit unsigned</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>A pointer to the data to be sent to the queue. The size of the data that can be sent to a queue was defined when the queue was created.</ParHint>
-          <ParUserDeclaration>const void *pvItemToQueue</ParUserDeclaration>
-        </Parameter>
-        <Parameter>
-          <ParName>pxHigherPriorityTaskWoken</ParName>
-          <ParType>portBASE_TYPE</ParType>
-          <ParPassing>Address</ParPassing>
-          <ParHint>xQueueSendFromISR() will set *pxHigherPriorityTaskWoken to pdTRUE if sending to the queue caused a task to unblock, and the unblocked task has a priority higher than the currently running task. If xQueueSendFromISR() sets this value to pdTRUE then a context switch should be performed before the interrupt is exited.</ParHint>
-        </Parameter>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>portBASE_TYPE #M#_#C#(xQueueHandle xQueue, const void *pvItemToQueue, portBASE_TYPE *pxHigherPriorityTaskWoken)</ANSIC>
+          <ANSIC>portBASE_TYPE #M#_#C#(xQueueHandle xQueue)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -3382,10 +3408,10 @@ Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total accumulated ex
     </Method>
     <Method>
       <TMthdItem>
-        <Name>xQueueSendToBackFromISR</Name>
-        <Symbol>xQueueSendToBackFromISR</Symbol>
+        <Name>xQueueSendToFront</Name>
+        <Symbol>xQueueSendToFront</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Versions of xQueueSendToBack() API functions that can be called from an ISR. Unlike xQueueSendToBack() these functions do not permit a block time to be specified.</Hint>
+        <Hint>Sends an item to the front of a queue.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -3400,7 +3426,7 @@ Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total accumulated ex
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>portBASE_TYPE</ReturnType>
-        <RetHint>pdTRUE Data was successfully sent to the queue.\nerrQUEUE_FULL Data could not be sent to the queue because the queue was already full.</RetHint>
+        <RetHint>pdPASS: Data was successfully sent to the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for space to become available and space did become available before the block time expired.\nerrQUEUE_FULL: The queue is already full so no data could be sent to the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for space to become available, but no space became available before the block time expired.</RetHint>
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>xQueue</ParName>
@@ -3416,14 +3442,14 @@ Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total accumulated ex
           <ParUserDeclaration>const void *pvItemToQueue</ParUserDeclaration>
         </Parameter>
         <Parameter>
-          <ParName>pxHigherPriorityTaskWoken</ParName>
-          <ParType>portBASE_TYPE</ParType>
-          <ParPassing>Address</ParPassing>
-          <ParHint>xQueueSendFromISR() will set *pxHigherPriorityTaskWoken to pdTRUE if sending to the queue caused a task to unblock, and the unblocked task has a priority higher than the currently running task. If xQueueSendFromISR() sets this value to pdTRUE then a context switch should be performed before the interrupt is exited.</ParHint>
+          <ParName>xTicksToWait</ParName>
+          <ParType>portTickType</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The number of ticks for which the calling task should be held in the Blocked state to wait for space to become available on the queue should the queue already be full.\nA value of zero will prevent the calling task from entering the Blocked state.\nIf INCLUDE_vTaskSuspend is set to 1 then a value of portMAX_DELAY will hold the task in the Blocked state indefinitely to wait for space to become available on the queue.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>portBASE_TYPE #M#_#C#(xQueueHandle xQueue, const void *pvItemToQueue, portBASE_TYPE *pxHigherPriorityTaskWoken)</ANSIC>
+          <ANSIC>portBASE_TYPE #M#_#C#(xQueueHandle xQueue, const void *pvItemToQueue, portTickType xTicksToWait)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -3476,10 +3502,10 @@ Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total accumulated ex
     </Method>
     <Method>
       <TMthdItem>
-        <Name>xQueueReceivefromISR</Name>
-        <Symbol>xQueueReceivefromISR</Symbol>
+        <Name>xQueueOverwrite</Name>
+        <Symbol>xQueueOverwrite</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>A version of xQueueReceive() that can be called from an ISR. Unlike xQueueReceive(), xQueueReceiveFromISR() does not permit a block time to be specified.</Hint>
+        <Hint>This is a macro that calls the xQueueGenericSend() function. A version of xQueueSendToBack() that will write to the queue even if the queue is full, overwriting data that is already held in the queue. xQueueOverwrite() is intended for use with queues that have a length of one, meaning the queue is either empty or full. This function must not be called from an interrupt service routine (ISR). See xQueueOverwriteFromISR() for an alternative which may be used in an ISR. </Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -3494,30 +3520,77 @@ Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total accumulated ex
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>portBASE_TYPE</ReturnType>
-        <RetHint>pdPASS: Data was successfully read from the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for data to become available and data did become available before the block time expired.\nerrQUEUE_EMPTY: The queue was empty so no date could be read form the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for data to become available, but no data became available before the block time expired.</RetHint>
+        <RetHint>pdPASS: Data was successfully sent to the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for space to become available and space did become available before the block time expired.\nerrQUEUE_FULL: The queue is already full so no data could be sent to the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for space to become available, but no space became available before the block time expired.</RetHint>
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>xQueue</ParName>
           <ParType>xQueueHandle</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint>The handle of the queue from which the data is to be received.</ParHint>
+          <ParHint>The handle of the queue to which the data is to be sent.</ParHint>
         </Parameter>
         <Parameter>
-          <ParName>pvBuffer</ParName>
+          <ParName>pvItemToQueue</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint>A pointer to the memory into which the data received from the queue will be copied.The length of the buffer must be at least equal to the queue item size (set when the queue was created).</ParHint>
-          <ParUserDeclaration>void *pvBuffer</ParUserDeclaration>
+          <ParHint>A pointer to the data to be sent to the queue. The size of the data that can be sent to a queue was defined when the queue was created.</ParHint>
+          <ParUserDeclaration>const void *pvItemToQueue</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>xTicksToWait</ParName>
+          <ParType>portTickType</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The number of ticks for which the calling task should be held in the Blocked state to wait for space to become available on the queue should the queue already be full.\nA value of zero will prevent the calling task from entering the Blocked state.\nIf INCLUDE_vTaskSuspend is set to 1 then a value of portMAX_DELAY will hold the task in the Blocked state indefinitely to wait for space to become available on the queue.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>portBASE_TYPE #M#_#C#(xQueueHandle xQueue, const void *pvItemToQueue, portTickType xTicksToWait)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xQueueOverwriteFromISR</Name>
+        <Symbol>xQueueOverwriteFromISR</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This is a macro that calls the xQueueGenericSendFromISR() function. A version of xQueueOverwrite() that can be used in an ISR. xQueueOverwriteFromISR() is similar to xQueueSendToBackFromISR(), but will write to the queue even if the queue is full, overwriting data that is already held in the queue. xQueueOverwriteFromISR() is intended for use with queues that have a length of one, meaning the queue is either empty or full. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>portBASE_TYPE</ReturnType>
+        <RetHint>pdTRUE Data was successfully sent to the queue.\nerrQUEUE_FULL Data could not be sent to the queue because the queue was already full.</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>xQueue</ParName>
+          <ParType>xQueueHandle</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The handle of the queue to which the data is to be sent.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>pvItemToQueue</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>A pointer to the data to be sent to the queue. The size of the data that can be sent to a queue was defined when the queue was created.</ParHint>
+          <ParUserDeclaration>const void *pvItemToQueue</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>pxHigherPriorityTaskWoken</ParName>
           <ParType>portBASE_TYPE</ParType>
           <ParPassing>Address</ParPassing>
-          <ParHint>Pointer to A task may be blocked waiting for space to become available on the queue. If xQueueReceiveFromISR() causes such a task to unblock then *pxHigherPriorityTaskWoken will get set to pdTRUE, otherwise *pxHigherPriorityTaskWoken will remain unchanged.</ParHint>
+          <ParHint>xQueueSendFromISR() will set *pxHigherPriorityTaskWoken to pdTRUE if sending to the queue caused a task to unblock, and the unblocked task has a priority higher than the currently running task. If xQueueSendFromISR() sets this value to pdTRUE then a context switch should be performed before the interrupt is exited.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>portBASE_TYPE #M#_#C#(xQueueHandle xQueue, void *pvBuffer, portBASE_TYPE *pxHigherPriorityTaskWoken)</ANSIC>
+          <ANSIC>portBASE_TYPE #M#_#C#(xQueueHandle xQueue, const void *pvItemToQueue, portBASE_TYPE *pxHigherPriorityTaskWoken)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -3570,78 +3643,10 @@ Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total accumulated ex
     </Method>
     <Method>
       <TMthdItem>
-        <Name>uxQueueMessagesWaiting</Name>
-        <Symbol>uxQueueMessagesWaiting</Symbol>
+        <Name>xQueuePeekFromISR</Name>
+        <Symbol>xQueuePeekFromISR</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Queries the number of items that are currently held within a queue.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>unsigned_portBASE_TYPE</ReturnType>
-        <RetHint>The number of items that are held within the queue being queried.</RetHint>
-        <ParamCount>1</ParamCount>
-        <Parameter>
-          <ParName>xQueue</ParName>
-          <ParType>xQueueHandle</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>The handle of the queue being queried.</ParHint>
-        </Parameter>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>unsigned_portBASE_TYPE #M#_#C#(xQueueHandle xQueue)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>uxQueueMessagesWaitingfromISR</Name>
-        <Symbol>uxQueueMessagesWaitingfromISR</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>A version of uxQueueMessagesWaiting() that can be used from inside an interrupt service routine.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>unsigned_portBASE_TYPE</ReturnType>
-        <RetHint>The number of items that are held within the queue being queried.</RetHint>
-        <ParamCount>1</ParamCount>
-        <Parameter>
-          <ParName>xQueue</ParName>
-          <ParType>xQueueHandle</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>The handle of the queue being queried.</ParHint>
-        </Parameter>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>unsigned_portBASE_TYPE #M#_#C#(xQueueHandle xQueue)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>xQueueReset</Name>
-        <Symbol>xQueueReset</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Reset a queue back to its original empty state.  pdPASS is returned if the queue is successfully reset.  pdFAIL is returned if the queue could not be reset because there are tasks blocked on the queue waiting to either receive from the queue or send to the queue.</Hint>
+        <Hint>A version of xQueuePeek() that can be used from an interrupt service routine (ISR). Reads an item from a queue, but does not remove the item from the queue. Therefore the same item would be returned the next time xQueueReceive() or xQueuePeek() was called on the same queue.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -3656,17 +3661,502 @@ Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total accumulated ex
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>portBASE_TYPE</ReturnType>
-        <RetHint>pdPASS is returned if the queue is successfully reset. pdFAIL is returned if the queue could not be reset because there are tasks blocked on the queue waiting to either receive from the queue or send to the queue.</RetHint>
+        <RetHint>pdPASS: Data was successfully read from the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for data to become available and data did become available before the block time expired.\nerrQUEUE_EMPTY: The queue was empty so no date could be read form the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for data to become available, but no data became available before the block time expired.</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>xQueue</ParName>
+          <ParType>xQueueHandle</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The handle of the queue from which the data is to be read.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>pvBuffer</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>A pointer to the memory into which the data read from the queue will be copied. The length of the buffer must be at least equal to the queue item size (set when the queue was created).</ParHint>
+          <ParUserDeclaration>void *pvBuffer</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>xTicksToWait</ParName>
+          <ParType>portTickType</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The number of ticks for which the calling task should be held in the Blocked state to wait for data to become available from the queue should the queue already be empty.\nA value of zero will prevent the calling task from entering the Blocked state.\nIf INCLUDE_vTaskSuspend is set to 1 then a value of portMAX_DELAY will hold the task in the Blocked state indefinitely to wait for data.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>portBASE_TYPE #M#_#C#(xQueueHandle xQueue, void *pvBuffer, portTickType xTicksToWait)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xQueueSendToBackFromISR</Name>
+        <Symbol>xQueueSendToBackFromISR</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Versions of xQueueSendToBack() API functions that can be called from an ISR. Unlike xQueueSendToBack() these functions do not permit a block time to be specified.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>portBASE_TYPE</ReturnType>
+        <RetHint>pdTRUE Data was successfully sent to the queue.\nerrQUEUE_FULL Data could not be sent to the queue because the queue was already full.</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>xQueue</ParName>
+          <ParType>xQueueHandle</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The handle of the queue to which the data is to be sent.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>pvItemToQueue</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>A pointer to the data to be sent to the queue. The size of the data that can be sent to a queue was defined when the queue was created.</ParHint>
+          <ParUserDeclaration>const void *pvItemToQueue</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>pxHigherPriorityTaskWoken</ParName>
+          <ParType>portBASE_TYPE</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>xQueueSendFromISR() will set *pxHigherPriorityTaskWoken to pdTRUE if sending to the queue caused a task to unblock, and the unblocked task has a priority higher than the currently running task. If xQueueSendFromISR() sets this value to pdTRUE then a context switch should be performed before the interrupt is exited.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>portBASE_TYPE #M#_#C#(xQueueHandle xQueue, const void *pvItemToQueue, portBASE_TYPE *pxHigherPriorityTaskWoken)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xQueueSendToFrontFromISR</Name>
+        <Symbol>xQueueSendToFrontFromISR</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Versions of xQueueSendToFront() API functions that can be called from an ISR. Unlike xQueueSendToFront() these functions do not permit a block time to be specified.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>portBASE_TYPE</ReturnType>
+        <RetHint>pdTRUE Data was successfully sent to the queue.\nerrQUEUE_FULL Data could not be sent to the queue because the queue was already full.</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>xQueue</ParName>
+          <ParType>xQueueHandle</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The handle of the queue to which the data is to be sent.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>pvItemToQueue</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>A pointer to the data to be sent to the queue. The size of the data that can be sent to a queue was defined when the queue was created.</ParHint>
+          <ParUserDeclaration>const void *pvItemToQueue</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>pxHigherPriorityTaskWoken</ParName>
+          <ParType>portBASE_TYPE</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>xQueueSendFromISR() will set *pxHigherPriorityTaskWoken to pdTRUE if sending to the queue caused a task to unblock, and the unblocked task has a priority higher than the currently running task. If xQueueSendFromISR() sets this value to pdTRUE then a context switch should be performed before the interrupt is exited.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>portBASE_TYPE #M#_#C#(xQueueHandle xQueue, const void *pvItemToQueue, portBASE_TYPE *pxHigherPriorityTaskWoken)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xQueueReceivefromISR</Name>
+        <Symbol>xQueueReceivefromISR</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>A version of xQueueReceive() that can be called from an ISR. Unlike xQueueReceive(), xQueueReceiveFromISR() does not permit a block time to be specified.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>portBASE_TYPE</ReturnType>
+        <RetHint>pdPASS: Data was successfully read from the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for data to become available and data did become available before the block time expired.\nerrQUEUE_EMPTY: The queue was empty so no date could be read form the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for data to become available, but no data became available before the block time expired.</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>xQueue</ParName>
+          <ParType>xQueueHandle</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The handle of the queue from which the data is to be received.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>pvBuffer</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>A pointer to the memory into which the data received from the queue will be copied.The length of the buffer must be at least equal to the queue item size (set when the queue was created).</ParHint>
+          <ParUserDeclaration>void *pvBuffer</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>pxHigherPriorityTaskWoken</ParName>
+          <ParType>portBASE_TYPE</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to A task may be blocked waiting for space to become available on the queue. If xQueueReceiveFromISR() causes such a task to unblock then *pxHigherPriorityTaskWoken will get set to pdTRUE, otherwise *pxHigherPriorityTaskWoken will remain unchanged.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>portBASE_TYPE #M#_#C#(xQueueHandle xQueue, void *pvBuffer, portBASE_TYPE *pxHigherPriorityTaskWoken)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>vQueueAddToRegistry</Name>
+        <Symbol>vQueueAddToRegistry</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Assigns a name to a queue and adds the queue to the registry. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>xQueue</ParName>
+          <ParType>xQueueHandle</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The handle of the queue being added to the registry.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>pcQueueName</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the name to be assigned to the queue. This is just a text string used to facilitate debugging.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(xQueueHandle xQueue, char *pcQueueName)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>vQueueUnregisterQueue</Name>
+        <Symbol>vQueueUnregisterQueue</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Removes a queue from the queue registry. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>xQueue</ParName>
           <ParType>xQueueHandle</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint>The handle of the queue to reset.</ParHint>
+          <ParHint>The handle of the queue being removed from the registry.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(xQueueHandle xQueue)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xQueueIsQueueFullFromISR</Name>
+        <Symbol>xQueueIsQueueFullFromISR</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Queries a queue to determine if the queue is full. This function should only be used in an ISR. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>portBASE_TYPE</ReturnType>
+        <RetHint>pdFALSE if the queue is not full, or any other value if the queue is full. </RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>xQueue</ParName>
+          <ParType>xQueueHandle</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The handle of the queue being queried.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>portBASE_TYPE #M#_#C#(xQueueHandle xQueue)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xQueueIsQueueEmptyFromISR</Name>
+        <Symbol>xQueueIsQueueEmptyFromISR</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Queries a queue to determine if the queue is empty. This function should only be used in an ISR. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>portBASE_TYPE</ReturnType>
+        <RetHint>pdFALSE if the queue is not empty, or any other value if the queue is empty. </RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>xQueue</ParName>
+          <ParType>xQueueHandle</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The handle of the queue being queried.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>portBASE_TYPE #M#_#C#(xQueueHandle xQueue)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xQueueCreateSet</Name>
+        <Symbol>xQueueCreateSet</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Queue sets provide a mechanism to allow an RTOS task to block (pend) on a read operation from multiple RTOS queues or semaphores simultaneously. Note that there are simpler alternatives to using queue sets. See the Blocking on Multiple Objects page for more information.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>xQueueSetHandle</ReturnType>
+        <RetHint>If the queue set is created successfully then a handle to the created queue set is returned. Otherwise NULL is returned. </RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>uxEventQueueLength</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint/>
+          <ParUserDeclaration>unsigned portBASE_TYPE uxEventQueueLength</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>xQueueSetHandle #M#_#C#(unsigned portBASE_TYPE uxEventQueueLength)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xQueueAddToSet</Name>
+        <Symbol>xQueueAddToSet</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint> Adds an RTOS queue or semaphore to a queue set that was previously created by a call to xQueueCreateSet().</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>portBASE_TYPE</ReturnType>
+        <RetHint>If the queue or semaphore was successfully added to the queue set then pdPASS is returned. If the queue could not be successfully added to the queue set because it is already a member of a different queue set then pdFAIL is returned. </RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>xQueueOrSemaphore</ParName>
+          <ParType>xQueueSetMemberHandle</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The handle of the queue or semaphore being added to the queue set (cast to an xQueueSetMemberHandle type). </ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>xQueueSet</ParName>
+          <ParType>xQueueSetHandle</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The handle of the queue set to which the queue or semaphore is being added. </ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>portBASE_TYPE #M#_#C#(xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xQueueRemoveFromSet</Name>
+        <Symbol>xQueueRemoveFromSet</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Remove an RTOS queue or semaphore from a queue set. An RTOS queue or semaphore can only be removed from a queue set if the queue or semaphore is empty. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>portBASE_TYPE</ReturnType>
+        <RetHint>If the queue or semaphore was successfully added to the queue set then pdPASS is returned. If the queue could not be successfully added to the queue set because it is already a member of a different queue set then pdFAIL is returned. </RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>xQueueOrSemaphore</ParName>
+          <ParType>xQueueSetMemberHandle</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The handle of the queue or semaphore being removed from the queue set (cast to an xQueueSetMemberHandle type). </ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>xQueueSet</ParName>
+          <ParType>xQueueSetHandle</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The handle of the queue set in which the queue or semaphore is included.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>portBASE_TYPE #M#_#C#(xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xQueueSelectFromSet</Name>
+        <Symbol>xQueueSelectFromSet</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>xQueueSelectFromSet() selects from the members of a queue set a queue or semaphore that either contains data (in the case of a queue) or is available to take (in the case of a semaphore). xQueueSelectFromSet() effectively allows a task to block (pend) on a read operation on all the queues and semaphores in a queue set simultaneously. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>xQueueSetMemberHandle</ReturnType>
+        <RetHint>xQueueSelectFromSet() will return the handle of a queue (cast to a xQueueSetMemberHandle type) contained in the queue set that contains data, or the handle of a semaphore (cast to a xQueueSetMemberHandle type) contained in the queue set that is available, or NULL if no such queue or semaphore exists before before the specified block time expires. </RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>xQueueSet</ParName>
+          <ParType>xQueueSetHandle</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The queue set on which the task will (potentially) block. </ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>xBlockTimeTicks</ParName>
+          <ParType>portTickType</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The maximum time, in ticks, that the calling task will remain in the Blocked state (with other tasks executing) to wait for a member of the queue set to be ready for a successful queue read or semaphore take operation. </ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>xQueueSetMemberHandle #M#_#C#(xQueueSetHandle xQueueSet, portTickType xBlockTimeTicks)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xQueueSelectFromSetFromISR</Name>
+        <Symbol>xQueueSelectFromSetFromISR</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>A version of xQueueSelectFromSet() that can be used from an interrupt service routine (ISR). </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>xQueueSetMemberHandle</ReturnType>
+        <RetHint>xQueueSelectFromSet() will return the handle of a queue (cast to a xQueueSetMemberHandle type) contained in the queue set that contains data, or the handle of a semaphore (cast to a xQueueSetMemberHandle type) contained in the queue set that is available, or NULL if no such queue or semaphore exists before before the specified block time expires. </RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>xQueueSet</ParName>
+          <ParType>xQueueSetHandle</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The queue set being queried. It is not possible to block on a read as this function is designed to be used from an interrupt. </ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>xQueueSetMemberHandle #M#_#C#(xQueueSetHandle xQueueSet)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
