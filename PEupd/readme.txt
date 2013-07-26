@@ -27,9 +27,9 @@ Package from component(s):
 - DCF77 version 01.060
 - FAT_FileSystem version 01.148
 - FatFsMem_USB_MSD version 01.019
-- FatFsMemSDHC version 01.006
+- FatFsMemSDHC version 01.007
 - FontDisplay version 01.195
-- FreeRTOS version 01.266
+- FreeRTOS version 01.287
 - FreeRTOSTrace version 01.003
 - FSL_USB_CDC_Device version 01.016
 - FSL_USB_HID_Keyboard_Device version 01.039
@@ -43,7 +43,7 @@ Package from component(s):
 - GenericSPI version 01.029
 - GenericSWI2C version 01.003
 - GenericSWSPI version 01.001
-- GenericTimeDate version 01.001
+- GenericTimeDate version 01.002
 - GFont version 01.123
 - HardFault version 01.008
 - I2CSpy version 01.009
@@ -67,11 +67,12 @@ Package from component(s):
 - MMA8451Q version 01.024
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 11.07.2013
+created 26.07.2013
 
 Part2_Beans_*.PEupd Content:
 -------------------------------------
 Package from component(s):
+- nRF24L01 version 01.018
 - OLED version 01.045
 - PCA9554 version 01.024
 - PCA9554BitIO version 01.037
@@ -121,6 +122,6 @@ Package from component(s):
 - USB_Host_CMX version 01.058
 - UserInterface version 01.510
 - UTI version 01.125
-- Utility version 01.086
+- Utility version 01.089
 - Wait version 01.059
-created 11.07.2013
+created 26.07.2013
