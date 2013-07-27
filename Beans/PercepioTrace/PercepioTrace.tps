@@ -13,8 +13,8 @@
         <Line>Stops recording when buffer is ful</Line>
       </Hints>
       <Defines lines_count="2">
-        <Line>STORE_MODE_RING_BUFFER</Line>
-        <Line>STORE_MODE_STOP_WHEN_FULL</Line>
+        <Line>TRACE_STORE_MODE_RING_BUFFER</Line>
+        <Line>TRACE_STORE_MODE_STOP_WHEN_FULL</Line>
       </Defines>
     </Type>
     <Type>

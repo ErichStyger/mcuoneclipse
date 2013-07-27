@@ -4,7 +4,7 @@
     <Name>PercepioTrace</Name>
     <Description>Percepio FreeRTOS Trace</Description>
     <Author>Erich Styger</Author>
-    <Version>01.005</Version>
+    <Version>01.008</Version>
     <Icon>irc</Icon>
     <TypesFiles>PE,PercepioTrace\PercepioTrace</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -19,7 +19,7 @@
     <BW_NeedUst>1</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>(c) Copyright Percepio AB, 2012\nhttp      : www.percepio.se\nmail      : info@percepio.com\nProcessor Expert port: Erich Styger, 2012</Copyright>
+    <Copyright>(c) Copyright Percepio AB, 2013\nhttp      : www.percepio.se\nmail      : info@percepio.com\nProcessor Expert port: Erich Styger, 2013</Copyright>
     <Category>Operating Systems</Category>
     <DemoDriver>no</DemoDriver>
     <Shortcut>PTRC</Shortcut>
@@ -1281,10 +1281,10 @@ This does not limit the total amount of objects created, if objects are deleted 
     </Method>
     <Method>
       <TMthdItem>
-        <Name>xTraceInitTraceData</Name>
-        <Symbol>xTraceInitTraceData</Symbol>
+        <Name>vTraceInitTraceData</Name>
+        <Symbol>vTraceInitTraceData</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Needs to be called to initialize a dynamic buffer for the trace data.</Hint>
+        <Hint>Allocates, if necessary, and initializes the recorder data structure, based on the settings.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>

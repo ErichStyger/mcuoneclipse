@@ -1,11 +1,11 @@
-/*******************************************************************************
- * FreeRTOS+Trace v2.2.3 Recorder Library
- * Percepio AB, www.percepio.se
+/******************************************************************************* 
+ * Tracealyzer v2.5.0 Recorder Library
+ * Percepio AB, www.percepio.com
  *
- * trcPort.c
+ * trcHardwarePort.c
  *
- * Contains all portability issues of the trace recorder library. 
- * See also trcPort.h, where port-specific macros are defined.
+ * Contains together with trcHardwarePort.h all hardware portability issues of 
+ * the trace recorder library.
  *
  * Terms of Use
  * This software is copyright Percepio AB. The recorder library is free for
@@ -32,23 +32,11 @@
  * damages, or the exclusion of implied warranties or limitations on how long an 
  * implied warranty may last, so the above limitations may not apply to you.
  *
- * OFFER FROM PERCEPIO:
- * For silicon companies and non-corporate FreeRTOS users (researchers, students
- * , hobbyists or early-phase startups) we have an attractive offer: 
- * Provide a hardware timer port and get a FREE single-user licence for
- * FreeRTOS+Trace Professional Edition. Read more about this offer at 
- * www.percepio.se or contact us directly at support@percepio.se.
- *
- * FreeRTOS+Trace is available as Free Edition and in two premium editions.
- * You may use the premium features during 30 days for evaluation.
- * Download FreeRTOS+Trace at http://www.percepio.se/index.php?page=downloads
- *
- * Copyright Percepio AB, 2012.
- * www.percepio.se
+ * Copyright Percepio AB, 2013.
+ * www.percepio.com
  ******************************************************************************/
-#include "FreeRTOS.h"
-#include "trcPort.h"
-#include "trcUser.h"
+
+#include "trcHardwarePort.h"
 #if 1 /* << EST */
 #include "portTicks.h"
 #endif
@@ -63,36 +51,39 @@ static char* prvFileName = NULL;
 /*******************************************************************************
  * uiTraceTickCount
  *
- * This variable is updated by the traceTASK_INCREMENT_TICK macro in the 
- * FreeRTOS tick handler. This does not need to be modified when developing a 
- * new timer port. It is prefered to keep any timer port changes in the HWTC 
- * macro definitions, which typically give sufficient flexibility.
+ * This variable is should be updated by the Kernel tick interrupt. This does 
+ * not need to be modified when developing a new timer port. It is preferred to 
+ * keep any timer port changes in the HWTC macro definitions, which typically 
+ * give sufficient flexibility.
  ******************************************************************************/
 uint32_t uiTraceTickCount = 0;
 
 /******************************************************************************
- * uiTracePortGetTimeStamp
+ * vTracePortGetTimeStamp
  *
  * Returns the current time based on the HWTC macros which provide a hardware
  * isolation layer towards the hardware timer/counter.
  *
- * The HWTC macros and uiTracePortGetTimeStamp is the main porting issue
+ * The HWTC macros and vTracePortGetTimeStamp is the main porting issue
  * or the trace recorder library. Typically you should not need to change
- * the code of uiTracePortGetTimeStamp if using the HWTC macros.
+ * the code of vTracePortGetTimeStamp if using the HWTC macros.
  *
- * OFFER FROM PERCEPIO:
- * For silicon companies and non-corporate FreeRTOS users (researchers, students
- * , hobbyists or early-phase startups) we have an attractive offer: 
- * Provide a hardware timer port and get a FREE single-user licence for
- * FreeRTOS+Trace Professional Edition. Read more about this offer at 
- * www.percepio.se or contact us directly at support@percepio.se.
  ******************************************************************************/
-uint32_t uiTracePortGetTimeStamp()
+void vTracePortGetTimeStamp(uint32_t *pTimestamp)
 {
     /* Keep these static to avoid using more stack than necessary */
     static uint32_t last_timestamp = 0;
     static uint32_t timestamp;
 
+#if 0
+    if (trace_disable_timestamp == 1) {
+      if (pTimestamp != NULL) {
+        *pTimestamp = last_timestamp;
+      }
+      return;
+    }
+#endif
+    
 #if (HWTC_COUNT_DIRECTION == DIRECTION_INCREMENTING)
     timestamp = ((uiTraceTickCount * HWTC_PERIOD) + HWTC_COUNT) / HWTC_DIVISOR;
 #else
@@ -113,7 +104,9 @@ uint32_t uiTracePortGetTimeStamp()
 
     last_timestamp = timestamp;
 
-    return timestamp;
+    if (pTimestamp != NULL) {
+      *pTimestamp = timestamp;
+    }
 }
 
 /*******************************************************************************
@@ -123,7 +116,7 @@ uint32_t uiTracePortGetTimeStamp()
  * This is used by the Win32 port to store the trace to a file. The file path is
  * set using vTracePortSetOutFile.
  ******************************************************************************/
-void vTracePortEnd()
+void vTracePortEnd(void)
 {
     vTraceConsoleMessage("\n\r[FreeRTOS+Trace] Running vTracePortEnd.\n\r");
 
@@ -159,7 +152,7 @@ void vTracePortSetOutFile(char* path)
  * separate function, vTracePortSetOutFile, since the Win32 port calls 
  * vTracePortSave in vTracePortEnd if WIN32_PORT_SAVE_WHEN_STOPPED is set.
  ******************************************************************************/
-void vTracePortSave()
+void vTracePortSave(void)
 {
     char buf[180];
     FILE* f;

@@ -64,7 +64,7 @@
 %define! Abstract Common\PercepioTraceAbstract.Inc
 %include Common\Header.h
 
-#ifndef __%'ModuleName'_HxTraceInitTraceData
+#ifndef __%'ModuleName'_HvTraceInitTraceData
 #define __%'ModuleName'_H
 
 /* MODULE %ModuleName. */
@@ -297,17 +297,16 @@
 %endif %- vTraceExcludeTaskFromSchedulingTrace
 %-BW_METHOD_END vTraceExcludeTaskFromSchedulingTrace
 %-************************************************************************************************************
-%-************************************************************************************************************
-%-BW_METHOD_BEGIN xTraceInitTraceData
-%ifdef xTraceInitTraceData
-#define %'ModuleName'%.%xTraceInitTraceData(void) \
-  xTraceInitTraceData()
+%-BW_METHOD_BEGIN vTraceInitTraceData
+%ifdef vTraceInitTraceData
+#define %'ModuleName'%.%vTraceInitTraceData(void) \
+  vTraceInitTraceData()
 
 %define! RetVal
-%include Common\PercepioTracexTraceInitTraceData.Inc
+%include Common\PercepioTracevTraceInitTraceData.Inc
 
-%endif %- xTraceInitTraceData
-%-BW_METHOD_END xTraceInitTraceData
+%endif %- vTraceInitTraceData
+%-BW_METHOD_END vTraceInitTraceData
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -609,20 +608,19 @@ void %'ModuleName'%.%vTraceExcludeTaskFromSchedulingTrace(const char* name)
 %endif %- vTraceExcludeTaskFromSchedulingTrace
 %-BW_METHOD_END vTraceExcludeTaskFromSchedulingTrace
 %-************************************************************************************************************
-%-************************************************************************************************************
-%-BW_METHOD_BEGIN xTraceInitTraceData
-%ifdef xTraceInitTraceData
+%-BW_METHOD_BEGIN vTraceInitTraceData
+%ifdef vTraceInitTraceData
 %define! RetVal
-%include Common\PercepioTracexTraceInitTraceData.Inc
+%include Common\PercepioTracevTraceInitTraceData.Inc
 /*
-void* %'ModuleName'%.%xTraceInitTraceData(void)
+void* %'ModuleName'%.%vTraceInitTraceData(void)
 {
   *** Implemented as macro in the header file
 }
 */
 
-%endif %- xTraceInitTraceData
-%-BW_METHOD_END xTraceInitTraceData
+%endif %- vTraceInitTraceData
+%-BW_METHOD_END vTraceInitTraceData
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
@@ -667,6 +665,7 @@ void %OnTraceWrap(void)
 %INITIALIZATION
   /* ### %DeviceType "%DeviceName" init code ... */
 %CODE_BEGIN
+ %- %'ModuleName'%.vTraceInitTraceData(); /* this needs to be called in PEX_RTOS_INIT()! */
 %CODE_END
 %ENABLE
 %CODE_BEGIN

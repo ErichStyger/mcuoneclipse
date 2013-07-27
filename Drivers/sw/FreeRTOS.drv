@@ -126,11 +126,18 @@
 %endif %- ParseCommand
 
 /* Macros used by Processor Expert */
+#define PEX_RTOS_INIT() /* macro called from PE_low_level_init() */ \
 %if %DisabledInterruptsInStartup='yes'
-#define PEX_RTOS_INIT()                                          %>>portDISABLE_ALL_INTERRUPTS() /* disable all interrupts, they get enabled in vStartScheduler() */
+                                                                 %>>portDISABLE_ALL_INTERRUPTS(); /* disable all interrupts, they get enabled in vStartScheduler() */ \
 %else
-#define PEX_RTOS_INIT()                                          %>>/* RTOS adapter is configured not to disable interrupts */
+                                                                 %>>/* RTOS adapter is configured not to disable interrupts */ \
 %endif
+%if %UseTraceHooksGroup='yes'
+                                                                 %>>%@FRTrace@'ModuleName'%.vTraceInitTraceData();/* initialize trace first, as needed by RTOS functions */
+%else
+                                                                 %>>/* not Trace Hooks, nothing to do */
+%endif
+
 #define PEX_RTOS_START()                                         %>>%'ModuleName'%.%vTaskStartScheduler()
 
 /* macro to identify CPU: 0 for M0+ and 4 for M4 */

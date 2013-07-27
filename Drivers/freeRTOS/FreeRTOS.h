@@ -283,7 +283,7 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 %- << EST: Modification for Processor Expert port
 %if %UseTraceHooksGroup = 'yes'
 %- #include "%FRTrace.h"
-#include "FreeRTOSTraceMacros.h" /* include trace macro definition */
+#include "trcKernelPort.h" /* include trace macro definition */
 %endif
 
 /* Remove any unused trace macros. */

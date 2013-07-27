@@ -451,7 +451,7 @@ byte %'ModuleName'%.%IterateTable(const unsigned char *cmd, bool *handled, %'Mod
 %-   Example:
 %-     static int counter1;
 %-     int %'ModuleName'%.counter2;
-%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & defined(ConsoleSempahore) & %ConsoleSempahore='yes'
 #include "FreeRTOS.h"
 #include "semphr.h"
 
@@ -898,7 +898,7 @@ byte %'ModuleName'%.%ReadAndParseWithCommandTable(byte *cmdBuf, size_t cmdBufSiz
 %include Common\ShellRequestSerial.Inc
 void %'ModuleName'%.%RequestSerial(void)
 {
-%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & defined(ConsoleSempahore) & %ConsoleSempahore='yes'
   (void)xSemaphoreTakeRecursive(ShellSem, portMAX_DELAY);
 %endif
 }
@@ -911,7 +911,7 @@ void %'ModuleName'%.%RequestSerial(void)
 %include Common\ShellReleaseSerial.Inc
 void %'ModuleName'%.%ReleaseSerial(void)
 {
-%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & defined(ConsoleSempahore) & %ConsoleSempahore='yes'
   (void)xSemaphoreGiveRecursive(ShellSem);
 %endif
 }
@@ -925,7 +925,7 @@ void %'ModuleName'%.%ReleaseSerial(void)
 %include Common\ShellGetSemaphore.Inc
 void* %'ModuleName'%.%GetSemaphore(void)
 {
-%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & defined(ConsoleSempahore) & %ConsoleSempahore='yes'
   return ShellSem;
 %else
   return NULL;
@@ -1000,7 +1000,7 @@ void %'ModuleName'%.%SendStatusStr(const byte *strItem, const byte *strStatus, %
 void %'ModuleName'%.%ReadChar(byte *c)
 {
 %if defined(Serial)
-%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & defined(ConsoleSempahore) & %ConsoleSempahore='yes'
   (void)xSemaphoreTakeRecursive(ShellSem, portMAX_DELAY);
 %endif
 %if defined(Serial)
@@ -1009,7 +1009,7 @@ void %'ModuleName'%.%ReadChar(byte *c)
     *c = '\0';
   }
 %endif
-%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & defined(ConsoleSempahore) & %ConsoleSempahore='yes'
   (void)xSemaphoreGiveRecursive(ShellSem);
 %endif
 %else
@@ -1028,7 +1028,7 @@ void %'ModuleName'%.%ReadChar(byte *c)
 void %'ModuleName'%.%SendChar(byte ch)
 {
 %if defined(Serial)
-%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & defined(ConsoleSempahore) & %ConsoleSempahore='yes'
   (void)xSemaphoreTakeRecursive(ShellSem, portMAX_DELAY);
 %endif
  %if defined(Serial)
@@ -1038,7 +1038,7 @@ void %'ModuleName'%.%SendChar(byte ch)
   (void)%@Serial@'ModuleName'%.SendChar((uint8_t)ch);            %>40/* non blocking send */
   %endif
  %endif
-%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & defined(ConsoleSempahore) & %ConsoleSempahore='yes'
   (void)xSemaphoreGiveRecursive(ShellSem);
 %endif
 %else
@@ -1059,13 +1059,13 @@ bool %'ModuleName'%.%KeyPressed(void)
 %if defined(Serial)
   bool res;
 
-%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & defined(ConsoleSempahore) & %ConsoleSempahore='yes'
   (void)xSemaphoreTakeRecursive(ShellSem, portMAX_DELAY);
 %endif
 %if defined(Serial)
   res = (bool)((%@Serial@'ModuleName'%.GetCharsInRxBuf()==0U) ? FALSE : TRUE); /* true if there are characters in receive buffer */
 %endif
-%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & defined(ConsoleSempahore) & %ConsoleSempahore='yes'
   (void)xSemaphoreGiveRecursive(ShellSem);
 %endif
   return res;
@@ -1082,7 +1082,7 @@ bool %'ModuleName'%.%KeyPressed(void)
 %include Common\ShellInit.Inc
 void %'ModuleName'%.%Init(void)
 {
-%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & defined(ConsoleSempahore) & %ConsoleSempahore='yes'
   ShellSem = xSemaphoreCreateRecursiveMutex();
   if (ShellSem==NULL) { /* semaphore creation failed */
     for(;;) {} /* error, not enough memory? */
@@ -1098,7 +1098,7 @@ void %'ModuleName'%.%Init(void)
 %include Common\ShellDeinit.Inc
 void %'ModuleName'%.%Deinit(void)
 {
-%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & defined(ConsoleSempahore) & %ConsoleSempahore='yes'
   vSemaphoreDelete(ShellSem);
   ShellSem = NULL;
 %endif

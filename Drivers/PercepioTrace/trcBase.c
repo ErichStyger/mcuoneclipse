@@ -1,6 +1,6 @@
 /*******************************************************************************
- * FreeRTOS+Trace v2.2.3 Recorder Library
- * Percepio AB, www.percepio.se
+ * Tracealyzer v2.5.0 Recorder Library
+ * Percepio AB, www.percepio.com
  *
  * trcBase.c
  *
@@ -9,7 +9,7 @@
  * Terms of Use
  * This software is copyright Percepio AB. The recorder library is free for
  * use together with Percepio products. You may distribute the recorder library
- * in its original form, including modifications in trcPort.c and trcPort.h
+ * in its original form, including modifications in trcHardwarePort.c/.h
  * given that these modification are clearly marked as your own modifications
  * and documented in the initial comment section of these source files.
  * This software is the intellectual property of Percepio AB and may not be
@@ -31,44 +31,42 @@
  * damages, or the exclusion of implied warranties or limitations on how long an
  * implied warranty may last, so the above limitations may not apply to you.
  *
- * FreeRTOS+Trace is available as Free Edition and in two premium editions.
- * You may use the premium features during 30 days for evaluation.
- * Download FreeRTOS+Trace at http://www.percepio.se/index.php?page=downloads
- *
- * Copyright Percepio AB, 2012.
- * www.percepio.se
+ * Copyright Percepio AB, 2013.
+ * www.percepio.com
  ******************************************************************************/
 
-#include "FreeRTOS.h"
-#include "task.h"
 #include "trcBase.h"
-#include "trcKernel.h"
-#include "trcUser.h"
-#if 1 /* << EST: was missing */
-#include "trcPort.h"
-%for var from EventModules
-#include "%var.h"
-%endfor
-#include "portTicks.h"
-#endif
 
-#if (configUSE_TRACE_FACILITY == 1)
+#if (USE_TRACEALYZER_RECORDER == 1)
+
+#include <stdint.h>
 
 /*******************************************************************************
  * Static data initializations
  ******************************************************************************/
 
+/* Structure to handle the exclude flags for all objects and tasks. We add some extra objects since index 0 is not used for each object class. */
+uint8_t excludedObjects[(TRACE_KERNEL_OBJECT_COUNT + TRACE_NCLASSES) / 8 + 1] = { 0 };
+
+/* Structure to handle the exclude flags for all event codes */
+uint8_t excludedEventCodes[NEventCodes / 8 + 1] = { 0 };
+
+/* Keeps track of available handles */
+objectHandleStackType objectHandleStacks = { { 0 }, { 0 }, { 0 }, { 0 }, { 0 } };
+
+uint32_t init_hwtc_count;
 
 /*******************************************************************************
  * RecorderData
  *
- * The main data structure. This is the data read by FreeRTOS+Trace, typically
- * through a debugger RAM dump. This is accessed through RecorderDataPtr.
+ * The main data structure. This is the data read by Tracealyzer, typically
+ * through a debugger RAM dump. The recorder access this through the pointer
+ * RecorderDataPtr, to allow for dynamic memory allocation as well.
  *
- * On the NXP LPC176x you may use the upper RAM bank (AHB) for this purpose.
- * For instance, the LPC1766 has 32 KB AHB RAM which allows for allocating a
- * buffer size of 7900 events without affecting the main RAM.
- * To place RecorderData in this RAM bank, use the below declaration.
+ * On the NXP LPC17xx you may use the secondary RAM bank (AHB RAM) for this
+ * purpose. For instance, the LPC1766 has 32 KB AHB RAM which allows for
+ * allocating a buffer size of at least 7500 events without affecting the main
+ * RAM. To place RecorderData in this RAM bank, use the below declaration.
  *
  *     #pragma location="AHB_RAM_MEMORY"
  *     RecorderDataType RecorderData = ...
@@ -77,357 +75,158 @@
  * banks as well, just replace "AHB_RAM_MEMORY" with the name of the right
  * address section from the linker file.
  *
- * If using GCC, this is done by adding a "section" attribute:
+ * However, to keep trcBase.c portable and still have a preconfigured IAR demo
+ * using AHB RAM, we don't add the pragma directly in trcBase.c but in a header
+ * included where the pragma should go. This is used depending on the setting
+ * USE_LINKER_PRAGMA, defined in trcConfig.h.
+ *
+ * If using GCC, this is instead done by adding a "section" attribute:
  *
  *     RecorderDataType RecorderData __attribute__ ((section ("name"))) = ...
  *
  * Remember to replace "name" with the correct section name.
  ******************************************************************************/
 
+static void vInitStartMarkers(void);
+
 #if (TRACE_DATA_ALLOCATION == TRACE_DATA_ALLOCATION_STATIC)
-RecorderDataType RecorderData =
-{
-    /* start marker, 12 chars */
-    0x01, 0x02, 0x03, 0x04,
-    0x71, 0x72, 0x73, 0x74,
-    0xF1, 0xF2, 0xF3, 0xF4,
-
-    /* version code - also used to determine endianness */
-    VERSION,
-
-    /* minor file format version */
-    MINOR_VERSION,
-
-    /* irq priority order */
-    IRQ_PRIORITY_ORDER,
-
-    /* file size (for control) */
-    sizeof(RecorderDataType),
-
-    /* number of events stored so far */
-    0,
-
-    /* size of events buffer (in event records, each 4 bytes) */
-    EVENT_BUFFER_SIZE,
-
-    /* next free event index (event index, not byte address) */
-    0,
-
-    /* buffer is full */
-    0,
-
-    /* frequency of clock user for timestamps, in Hz - should be 0 here
-    as this is used to indicate "not yet initialized" - this is instead
-    initialized on the first taskswitch event. */
-    0,
-
-    /* the absolute timestamp of the last stored event, modulo frequency */
-    0,
-
-    /* the number of seconds so far */
-    0,
-
-    /* is recorder active (yes = 1) - note that "close" events are always
-        stored to keep the name-handle mapping updated!*/
-    0,
-
-    /* Generated by FreeRTOS+Trace in Team Admin mode. Otherwise this should be "". */
-    TEAM_LICENSE_CODE,
-
-    /* debug marker 0 */
-    0xF0F0F0F0,
-
-    /* The Object Property Table - holds info of all active objects */
-    {
-        /* Number of object classes, also those not used */
-        NCLASSES,
-
-        /* The size in bytes of the object table byte pool */
-        DynObjTableSize,
-
-        /* The number of slots/handles available for each class */
-        {
-            NQueue,
-            NSemaphore,
-            NMutex,
-            NTask,
-            NISR
-        },
-
-        /* The maximum name length for each object class */
-        {
-            NameLenQueue,
-            NameLenSemaphore,
-            NameLenMutex,
-            NameLenTask,
-            NameLenISR
-        },
-
-        /* The total length a property table entry of the class */
-        {
-            PropertyTableSizeQueue,
-            PropertyTableSizeSemaphore,
-            PropertyTableSizeMutex,
-            PropertyTableSizeTask,
-            PropertyTableSizeISR
-        },
-
-        /* The start index of each class in the object property table */
-        {
-            StartIndexQueue,
-            StartIndexSemaphore,
-            StartIndexMutex,
-            StartIndexTask,
-            StartIndexISR
-        },
-
-        /* the object property table - encoded in a byte array using above
-        definitions */
-        {0}
-    },
-
-    /* debug marker 1 */
-    0xF1F1F1F1,
-
-    /* The Symbol Table - holds all object names used since system
-       startup. Every string is unique, so objects with same name will share
-       an entry. Each name entry has four extra bytes: byte 0-1 is a link
-       reference in an internal linked list, used for fast lookups, byte 2-3
-       holds a reference to a channel label used for vTracePrintF format
-       strings, and byte 4.. holds the object name, followed by a
-       zero-termination.*/
-    {
-        SYMBOL_TABLE_SIZE,
-
-        /* next free index (0 is reserved to mean NULL) */
-        1,
-
-        /* the symbol table byte pool */
-        {0},
-
-        /* this is a 64 entry array holding 16-bit references (indexes)
-           to the most recent entry of each checksum - i.e., list heads.*/
-        {0},
-
-    },
-
-#if (INCLUDE_FLOAT_SUPPORT == 1)
-    /* example float, for float endian detection */
-    (float)1.0,
-#else
-    /* This code signals that no float support is included */
-    (uint32_t)0,
+#if (USE_LINKER_PRAGMA == 1)
+#include "recorderdata_linker_pragma.h"
 #endif
 
-    /* internalErrorOccured */
-    0,
+RecorderDataType RecorderData;
 
-    /* debug marker 2 */
-    0xF2F2F2F2,
-
-    /* The trace description string, can hold any information about the system,
-        e.g., version, configuration. Error messages from the recorder are
-        copied to this buffer. Also used for internal error messages.*/
-    TRACE_DESCRIPTION,
-
-    /* debug marker 3 */
-    0xF3F3F3F3,
-
-    /* the event data buffer, size EVENT_BUFFER_SIZE*4 */
-    {0},
-
-    /* end markers, used to extract the trace from a RAM dump image */
-    0x0A, 0x0B, 0x0C, 0x0D,
-    0x71, 0x72, 0x73, 0x74,
-    0xF1, 0xF2, 0xF3, 0xF4
-};
-
-RecorderDataType* RecorderDataPtr = &RecorderData;
 #endif
-
-
-#if (TRACE_DATA_ALLOCATION == TRACE_DATA_ALLOCATION_DYNAMIC)
 
 RecorderDataType* RecorderDataPtr = NULL;
 
-RecorderDataType* xTraceInitTraceData(void)
+/* This version of the function dynamically allocates the trace data */
+void prvTraceInitTraceData()
 {
-    RecorderDataType* tmp = (RecorderDataType*)pvPortMalloc(sizeof(RecorderDataType));
+	init_hwtc_count = HWTC_COUNT;
+	
+#if TRACE_DATA_ALLOCATION == TRACE_DATA_ALLOCATION_STATIC
+	RecorderDataPtr = &RecorderData;
+#elif TRACE_DATA_ALLOCATION == TRACE_DATA_ALLOCATION_DYNAMIC
+	RecorderDataPtr = (RecorderDataType*)TRACE_MALLOC(sizeof(RecorderDataType));
+#elif TRACE_DATA_ALLOCATION == TRACE_DATA_ALLOCATION_CUSTOM
+	/* DO NOTHING */
+#endif
 
-    if (! tmp)
+	TRACE_ASSERT(RecorderDataPtr != NULL, "prvTraceInitTraceData, RecorderDataPtr == NULL", );
+
+    if (! RecorderDataPtr)
     {
-        vTraceError((char*)"Malloc failed in xTraceInitTraceData! Reduce size constants in trcConfig.h");
-        return NULL;
+        vTraceError("No recorder data structure allocated!");
+        return;
     }
 
-    (void)memset(tmp, 0, sizeof(RecorderDataType));
+    (void)memset(RecorderDataPtr, 0, sizeof(RecorderDataType));
 
-    tmp->startmarker0 = 0x01;
-    tmp->startmarker1 = 0x02;
-    tmp->startmarker2 = 0x03;
-    tmp->startmarker3 = 0x04;
-    tmp->startmarker4 = 0x71;
-    tmp->startmarker5 = 0x72;
-    tmp->startmarker6 = 0x73;
-    tmp->startmarker7 = 0x74;
-    tmp->startmarker8 = 0xF1;
-    tmp->startmarker9 = 0xF2;
-    tmp->startmarker10 = 0xF3;
-    tmp->startmarker11 = 0xF4;
-    tmp->version = VERSION;
-    tmp->minor_version = MINOR_VERSION;
-    tmp->irq_priority_order = IRQ_PRIORITY_ORDER;
-    tmp->filesize = sizeof(RecorderDataType);
+    RecorderDataPtr->startmarker0 = 0x00;
+    RecorderDataPtr->startmarker1 = 0x01;
+    RecorderDataPtr->startmarker2 = 0x02;
+    RecorderDataPtr->startmarker3 = 0x03;
+    RecorderDataPtr->startmarker4 = 0x70;
+    RecorderDataPtr->startmarker5 = 0x71;
+    RecorderDataPtr->startmarker6 = 0x72;
+    RecorderDataPtr->startmarker7 = 0x73;
+    RecorderDataPtr->startmarker8 = 0xF0;
+    RecorderDataPtr->startmarker9 = 0xF1;
+    RecorderDataPtr->startmarker10 = 0xF2;
+    RecorderDataPtr->startmarker11 = 0xF3;
 
-    tmp->maxEvents = EVENT_BUFFER_SIZE;
+    RecorderDataPtr->version = TRACE_KERNEL_VERSION;
+    RecorderDataPtr->minor_version = TRACE_MINOR_VERSION;
+    RecorderDataPtr->irq_priority_order = IRQ_PRIORITY_ORDER;
+    RecorderDataPtr->filesize = sizeof(RecorderDataType);
 
-    tmp->debugMarker0 = 0xF0F0F0F0;
-    tmp->ObjectPropertyTable.NumberOfObjectClasses = NCLASSES;
-    tmp->ObjectPropertyTable.ObjectPropertyTableSizeInBytes = DynObjTableSize;
-    tmp->ObjectPropertyTable.NumberOfObjectsPerClass[0] = NQueue;
-    tmp->ObjectPropertyTable.NumberOfObjectsPerClass[1] = NSemaphore;
-    tmp->ObjectPropertyTable.NumberOfObjectsPerClass[2] = NMutex;
-    tmp->ObjectPropertyTable.NumberOfObjectsPerClass[3] = NTask;
-    tmp->ObjectPropertyTable.NumberOfObjectsPerClass[4] = NISR;
-    tmp->ObjectPropertyTable.NameLengthPerClass[0] = NameLenQueue;
-    tmp->ObjectPropertyTable.NameLengthPerClass[1] = NameLenSemaphore;
-    tmp->ObjectPropertyTable.NameLengthPerClass[2] = NameLenMutex;
-    tmp->ObjectPropertyTable.NameLengthPerClass[3] = NameLenTask;
-    tmp->ObjectPropertyTable.NameLengthPerClass[4] = NameLenISR;
-    tmp->ObjectPropertyTable.TotalPropertyBytesPerClass[0] = PropertyTableSizeQueue;
-    tmp->ObjectPropertyTable.TotalPropertyBytesPerClass[1] = PropertyTableSizeSemaphore;
-    tmp->ObjectPropertyTable.TotalPropertyBytesPerClass[2] = PropertyTableSizeMutex;
-    tmp->ObjectPropertyTable.TotalPropertyBytesPerClass[3] = PropertyTableSizeTask;
-    tmp->ObjectPropertyTable.TotalPropertyBytesPerClass[4] = PropertyTableSizeISR;
-    tmp->ObjectPropertyTable.StartIndexOfClass[0] = StartIndexQueue;
-    tmp->ObjectPropertyTable.StartIndexOfClass[1] = StartIndexSemaphore;
-    tmp->ObjectPropertyTable.StartIndexOfClass[2] = StartIndexMutex;
-    tmp->ObjectPropertyTable.StartIndexOfClass[3] = StartIndexTask;
-    tmp->ObjectPropertyTable.StartIndexOfClass[4] = StartIndexISR;
+    RecorderDataPtr->maxEvents = EVENT_BUFFER_SIZE;
 
-    tmp->debugMarker1 = 0xF1F1F1F1;
+    RecorderDataPtr->debugMarker0 = 0xF0F0F0F0;
 
-    tmp->SymbolTable.symTableSize = SYMBOL_TABLE_SIZE;
+	/* This function is kernel specific */
+	vTraceInitObjectPropertyTable();
 
-    tmp->SymbolTable.nextFreeSymbolIndex = 1;
+    RecorderDataPtr->debugMarker1 = 0xF1F1F1F1;
+    RecorderDataPtr->SymbolTable.symTableSize = SYMBOL_TABLE_SIZE;
+    RecorderDataPtr->SymbolTable.nextFreeSymbolIndex = 1;
 #if (INCLUDE_FLOAT_SUPPORT == 1)
-    tmp->exampleFloatEncoding = (float)1.0; /* otherwize already zero */
+    RecorderDataPtr->exampleFloatEncoding = (float)1.0; /* otherwise already zero */
 #endif
-    tmp->debugMarker2 = 0xF2F2F2F2;
-    (void)strncpy(tmp->systemInfo, TRACE_DESCRIPTION, TRACE_DESCRIPTION_MAX_LENGTH);
-    tmp->debugMarker3 = 0xF3F3F3F3;
+    RecorderDataPtr->debugMarker2 = 0xF2F2F2F2;
+    (void)strncpy(RecorderDataPtr->systemInfo, TRACE_DESCRIPTION, TRACE_DESCRIPTION_MAX_LENGTH);
+    RecorderDataPtr->debugMarker3 = 0xF3F3F3F3;
+    RecorderDataPtr->endmarker0 = 0x0A;
+    RecorderDataPtr->endmarker1 = 0x0B;
+    RecorderDataPtr->endmarker2 = 0x0C;
+    RecorderDataPtr->endmarker3 = 0x0D;
+    RecorderDataPtr->endmarker4 = 0x71;
+    RecorderDataPtr->endmarker5 = 0x72;
+    RecorderDataPtr->endmarker6 = 0x73;
+    RecorderDataPtr->endmarker7 = 0x74;
+    RecorderDataPtr->endmarker8 = 0xF1;
+    RecorderDataPtr->endmarker9 = 0xF2;
+    RecorderDataPtr->endmarker10 = 0xF3;
+    RecorderDataPtr->endmarker11 = 0xF4;
 
-    tmp->endmarker0 = 0x0A;
-    tmp->endmarker1 = 0x0B;
-    tmp->endmarker2 = 0x0C;
-    tmp->endmarker3 = 0x0D;
-    tmp->endmarker4 = 0x71;
-    tmp->endmarker5 = 0x72;
-    tmp->endmarker6 = 0x73;
-    tmp->endmarker7 = 0x74;
-    tmp->endmarker8 = 0xF1;
-    tmp->endmarker9 = 0xF2;
-    tmp->endmarker10 = 0xF3;
-    tmp->endmarker11 = 0xF4;
+#if USE_SEPARATE_USER_EVENT_BUFFER
+	RecorderDataPtr->userEventBuffer.bufferID = 1;
+	RecorderDataPtr->userEventBuffer.version = 0;
+	RecorderDataPtr->userEventBuffer.numberOfSlots = USER_EVENT_BUFFER_SIZE;
+	RecorderDataPtr->userEventBuffer.numberOfChannels = CHANNEL_FORMAT_PAIRS + 1;
+#endif
 
-    RecorderDataPtr = tmp;
+	/* Kernel specific initialization of the objectHandleStacks variable */
+	vTraceInitObjectHandleStack();
 
-    return (RecorderDataType*)RecorderDataPtr;
+	/* Fix the start markers of the trace data structure */
+	vInitStartMarkers();
 }
 
-#endif
-
-
-#if 1 /* << EST */
-char sprintfBuffer[EVENT_SPRINT_F_BUF_SIZE];
-#else
-char sprintfBuffer[150];
-#endif
-
-/* For debug printouts - the names of the object classes */
-char OBJECTCLASSNAME[NCLASSES][10] =
+static void vInitStartMarkers()
 {
-        "QUEUE",
-        "SEMAPHORE",
-        "MUTEX",
-        "TASK",
-        "ISR"
-};
+	uint32_t i;
+	uint8_t *ptr = (uint8_t*)&(RecorderDataPtr->startmarker0);
+	if ((*ptr) == 0)
+	{
+		for (i = 0; i < 12; i++)
+		{
+			ptr[i] += 1;
+		}
+	}
+	else
+	{
+		vTraceError("Trace start markers already initialized!");
+	}
+}
 
-/* Initialization of the handle mechanism, see e.g, xTraceGetObjectHandle */
-objectHandleStackType objectHandleStacks =
-{
-        /* indexOfNextAvailableHandle */
-        {
-                0,
-                NQueue,
-                NQueue + NSemaphore,
-                NQueue + NSemaphore + NMutex,
-                NQueue + NSemaphore + NMutex + NTask
-        },
-
-        /* lowestIndexOfClass */
-        {
-                0,
-                NQueue,
-                NQueue + NSemaphore,
-                NQueue + NSemaphore + NMutex,
-                NQueue + NSemaphore + NMutex + NTask
-        },
-
-        /* highestIndexOfClass */
-        {
-                NQueue - 1,
-                NQueue + NSemaphore - 1,
-                NQueue + NSemaphore + NMutex - 1,
-                NQueue + NSemaphore + NMutex + NTask - 1,
-                NQueue + NSemaphore + NMutex + NTask + NISR - 1
-        },
-        {0},
-        {0}
-};
-
-
-/* Used for internal state flags of tasks */
-uint8_t taskFlags[NTask];
+volatile int recorder_busy = 0;
 
 /* Gives the last error message of the recorder. NULL if no error message. */
 char* traceErrorMessage = NULL;
-
-#if (INCLUDE_EVENT_STATS == 1)
-/* Used for an internal reporting mechanism, which displays the count and ratio
-of each object type in a console printout generated in vTracePortEnd */
-#if 1 /* << EST */
-uint16_t eventCount[EVENT_COUNT_SIZE];
-#else
-uint16_t eventCount[256];
-#endif
-#endif
 
 void* xTraceNextFreeEventBufferSlot(void)
 {
     if (RecorderDataPtr->nextFreeIndex >= EVENT_BUFFER_SIZE)
     {
-        vTraceError((char*)"Attempt to index outside event buffer!");
+        vTraceError("Attempt to index outside event buffer!");
         return NULL;
     }
-    return (void*)(&RecorderDataPtr->
-                   eventData[RecorderDataPtr->nextFreeIndex*4]);
+    return (void*)(&RecorderDataPtr->eventData[RecorderDataPtr->nextFreeIndex*4]);
 }
 
-uint32_t uiIndexOfObject(objectHandleType objecthandle, uint8_t objectclass)
+uint16_t uiIndexOfObject(objectHandleType objecthandle, uint8_t objectclass)
 {
-    if ((objectclass < NCLASSES) && (objecthandle > 0) && (objecthandle <=
-    RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass]))
+	TRACE_ASSERT(objectclass < TRACE_NCLASSES, "uiIndexOfObject: Invalid value for objectclass", 0);
+	TRACE_ASSERT(objecthandle > 0 && objecthandle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass], "uiIndexOfObject: Invalid value for objecthandle", 0);
+
+    if ((objectclass < TRACE_NCLASSES) && (objecthandle > 0) && (objecthandle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass]))
     {
-        return (uint32_t)(RecorderDataPtr->
-            ObjectPropertyTable.StartIndexOfClass[objectclass] + 
-            (RecorderDataPtr->
-            ObjectPropertyTable.TotalPropertyBytesPerClass[objectclass] * 
-            (objecthandle-1)));
+        return (uint16_t)(RecorderDataPtr->ObjectPropertyTable.StartIndexOfClass[objectclass] + (RecorderDataPtr->ObjectPropertyTable.TotalPropertyBytesPerClass[objectclass] * (objecthandle-1)));
     }
 
-    vTraceError((char*)"Object table lookup with invalid object handle or object class!");
+    vTraceError("Object table lookup with invalid object handle or object class!");
     return 0;
 }
 
@@ -457,7 +256,9 @@ uint32_t uiIndexOfObject(objectHandleType objecthandle, uint8_t objectclass)
 objectHandleType xTraceGetObjectHandle(traceObjectClass objectclass)
 {
     static objectHandleType handle;
-    static uint32_t indexOfHandle;
+    static int indexOfHandle;
+
+	TRACE_ASSERT(objectclass < TRACE_NCLASSES, "xTraceGetObjectHandle: Invalid value for objectclass", (objectHandleType)0);
 
     indexOfHandle = objectHandleStacks.indexOfNextAvailableHandle[objectclass];
     if (objectHandleStacks.objectHandles[indexOfHandle] == 0)
@@ -472,34 +273,17 @@ objectHandleType xTraceGetObjectHandle(traceObjectClass objectclass)
 
     handle = objectHandleStacks.objectHandles[indexOfHandle];
 
-    if ( objectHandleStacks.indexOfNextAvailableHandle[objectclass]
-        > objectHandleStacks.highestIndexOfClass[objectclass] )
+    if (objectHandleStacks.indexOfNextAvailableHandle[objectclass]
+        > objectHandleStacks.highestIndexOfClass[objectclass])
     {
         /* ERROR */
-        switch(objectclass)
-        {
-            case TRACE_CLASS_TASK:
-            vTraceError((char*)"Not enough TASK handles - increase NTask in trcConfig.h");
-            break;
-            case TRACE_CLASS_ISR:
-            vTraceError((char*)"Not enough ISR handles - increase NISR in trcConfig.h");
-            break;
-            case TRACE_CLASS_SEMAPHORE:
-            vTraceError((char*)"Not enough SEMAPHORE handles - increase NSemaphore in trcConfig.h");
-            break;
-            case TRACE_CLASS_MUTEX:
-            vTraceError((char*)"Not enough MUTEX handles - increase NMutex in trcConfig.h");
-            break;
-            case TRACE_CLASS_QUEUE:
-            vTraceError((char*)"Not enough QUEUE handles - increase NQueue in trcConfig.h");
-            break;
-        }
+		vTraceError(pszTraceGetErrorNotEnoughHandles(objectclass));
 
         handle = 0; /* an invalid/anonymous handle - but the recorder is stopped now... */
     }
     else
     {
-        int32_t hndCount;
+        int hndCount;
         objectHandleStacks.indexOfNextAvailableHandle[objectclass]++;
 
         hndCount = objectHandleStacks.indexOfNextAvailableHandle[objectclass] -
@@ -511,6 +295,8 @@ objectHandleType xTraceGetObjectHandle(traceObjectClass objectclass)
             objectHandleStacks.handleCountWaterMarksOfClass[objectclass] =
                 (objectHandleType)hndCount;
         }
+
+		TRACE_CLEAR_OBJECT_FLAG_ISEXCLUDED(objectclass, handle);
     }
 
     return handle;
@@ -518,14 +304,17 @@ objectHandleType xTraceGetObjectHandle(traceObjectClass objectclass)
 
 void vTraceFreeObjectHandle(traceObjectClass objectclass, objectHandleType handle)
 {
-    uint32_t indexOfHandle;
+    int indexOfHandle;
+
+    TRACE_ASSERT(objectclass < TRACE_NCLASSES, "vTraceFreeObjectHandle: Invalid value for objectclass", );
+    TRACE_ASSERT(handle > 0 && handle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass], "vTraceFreeObjectHandle: Invalid value for handle", );
 
     /* Check that there is room to push the handle on the stack */
-    if ( (objectHandleStacks.indexOfNextAvailableHandle[objectclass] - 1) <
-        objectHandleStacks.lowestIndexOfClass[objectclass] )
+    if ((objectHandleStacks.indexOfNextAvailableHandle[objectclass] - 1) <
+        objectHandleStacks.lowestIndexOfClass[objectclass])
     {
         /* Error */
-        vTraceError((char*)"Attempt to free more handles than allocated! (duplicate xTaskDelete or xQueueDelete?)");
+        vTraceError("Attempt to free more handles than allocated! (duplicate xTaskDelete or xQueueDelete?)");
     }
     else
     {
@@ -561,48 +350,26 @@ void vTraceSetObjectName(traceObjectClass objectclass,
                          objectHandleType handle,
                          const char* name)
 {
-    static uint32_t idx;
+    static uint16_t idx;
 
-    if (handle == 0)
+	TRACE_ASSERT(name != NULL, "vTraceSetObjectName: name == NULL", );
+
+    if (objectclass >= TRACE_NCLASSES)
     {
-        vTraceError((char*)"Illegal handle (0) in vTraceSetObjectName.");
+        vTraceError("Illegal object class in vTraceSetObjectName");
         return;
     }
 
-    switch(objectclass)
+    if (handle == 0)
     {
-        case TRACE_CLASS_TASK:
-        case TRACE_CLASS_ISR:
-        case TRACE_CLASS_SEMAPHORE:
-        case TRACE_CLASS_MUTEX:
-        case TRACE_CLASS_QUEUE:
-        break;
-    default:
-        vTraceError((char*)"Illegal object class in vTraceSetObjectName");
-        break;
+        vTraceError("Illegal handle (0) in vTraceSetObjectName.");
+        return;
     }
 
-    if (handle >
-        RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass])
+    if (handle > RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass])
     {
-        switch(objectclass)
-        {
-            case TRACE_CLASS_TASK:
-            vTraceError((char*)"Not enough TASK handles - increase NTask in trcConfig.h");
-            break;
-            case TRACE_CLASS_ISR:
-            vTraceError((char*)"Not enough ISR handles - increase NISR in trcConfig.h");
-            break;
-            case TRACE_CLASS_SEMAPHORE:
-            vTraceError((char*)"Not enough SEMAPHORE handles - increase NSemaphore in trcConfig.h");
-            break;
-            case TRACE_CLASS_MUTEX:
-            vTraceError((char*)"Not enough MUTEX handles - increase NMutex in trcConfig.h");
-            break;
-            case TRACE_CLASS_QUEUE:
-            vTraceError((char*)"Not enough QUEUE handles - increase NQueue in trcConfig.h");
-            break;
-        }
+	    /* ERROR */
+	    vTraceError(pszTraceGetErrorNotEnoughHandles(objectclass));
     }
     else
     {
@@ -612,27 +379,30 @@ void vTraceSetObjectName(traceObjectClass objectclass,
         {
             (void)strncpy((char*)&(RecorderDataPtr->ObjectPropertyTable.objbytes[idx]),
                     name,
-                    RecorderDataPtr->ObjectPropertyTable.NameLengthPerClass[ objectclass ] );
+                    RecorderDataPtr->ObjectPropertyTable.NameLengthPerClass[ objectclass ]);
         }
     }
 }
 
 traceLabel prvTraceOpenSymbol(const char* name, traceLabel userEventChannel)
 {
-    static uint16_t result;
-    static uint8_t len;
-    static uint8_t crc;
+    uint16_t result;
+    uint8_t len;
+    uint8_t crc;
     len = 0;
     crc = 0;
+
+    TRACE_ASSERT(name != NULL, "prvTraceOpenSymbol: name == NULL", (traceLabel)0);
+
     prvTraceGetChecksum(name, &crc, &len);
 
-    taskENTER_CRITICAL();
+    trcCRITICAL_SECTION_BEGIN();
     result = prvTraceLookupSymbolTableEntry(name, crc, len, userEventChannel);
     if (!result)
     {
         result = prvTraceCreateSymbolTableEntry(name, crc, len, userEventChannel);
     }
-    taskEXIT_CRITICAL();
+    trcCRITICAL_SECTION_END();
 
     return result;
 }
@@ -640,6 +410,8 @@ traceLabel prvTraceOpenSymbol(const char* name, traceLabel userEventChannel)
 /*******************************************************************************
  * Supporting functions
  ******************************************************************************/
+
+extern volatile uint32_t rtest_error_flag;
 
 /*******************************************************************************
  * vTraceError
@@ -653,21 +425,27 @@ traceLabel prvTraceOpenSymbol(const char* name, traceLabel userEventChannel)
  * trace start will be aborted. This can occur if any of the Nxxxx constants
  * (e.g., NTask) in trcConfig.h is too small.
  ******************************************************************************/
-void vTraceError(char* msg)
+void vTraceError(const char* msg)
 {
-    vTraceStop();
+	TRACE_ASSERT(msg != NULL, "vTraceError: msg == NULL", );
+	TRACE_ASSERT(RecorderDataPtr != NULL, "vTraceError: RecorderDataPtr == NULL", );
+
+	// Stop the recorder. Note: We do not call vTraceStop, since that adds a weird
+	// and unnecessary dependency to trcUser.c.
+
+	RecorderDataPtr->recorderActive = 0;
+
     if (traceErrorMessage == NULL)
     {
-      traceErrorMessage = msg;
-      (void)strncpy(RecorderDataPtr->systemInfo,
-          traceErrorMessage,
-          TRACE_DESCRIPTION_MAX_LENGTH);
-      RecorderDataPtr->internalErrorOccured = 1;
+      traceErrorMessage = (char*)msg;
+      (void)strncpy(RecorderDataPtr->systemInfo, traceErrorMessage, TRACE_DESCRIPTION_MAX_LENGTH);
+      RecorderDataPtr->internalErrorOccured = 1;	  	 
     }
+	
 }
 
 /******************************************************************************
- * prvCheckDataToBeOverwrittenForMultiEntryUserEvents
+ * prvCheckDataToBeOverwrittenForMultiEntryEvents
  *
  * This checks if the next event to be overwritten is a multi-entry user event,
  * i.e., a USER_EVENT followed by data entries.
@@ -681,20 +459,38 @@ void vTraceError(char* msg)
  * This is assumed to execute within a critical section...
  *****************************************************************************/
 
-void prvCheckDataToBeOverwrittenForMultiEntryUserEvents(
-    uint32_t nofEntriesToCheck)
+void prvCheckDataToBeOverwrittenForMultiEntryEvents(uint8_t nofEntriesToCheck)
 {
-    uint32_t i = 0, e = 0;
+    /* Generic "int" type is desired - should be 16 bit variable on 16 bit HW */
+    unsigned int i = 0;
+    unsigned int e = 0;
+
+    TRACE_ASSERT(nofEntriesToCheck != 0, "prvCheckDataToBeOverwrittenForMultiEntryEvents: nofEntriesToCheck == 0", );
+
     while (i < nofEntriesToCheck)
     {
         e = RecorderDataPtr->nextFreeIndex + i;
         if ((RecorderDataPtr->eventData[e*4] > USER_EVENT) &&
             (RecorderDataPtr->eventData[e*4] < USER_EVENT + 16))
         {
-            uint32_t nDataEvents = (uint32_t)(RecorderDataPtr->eventData[e*4] - USER_EVENT);
-            if (e + nDataEvents < RecorderDataPtr->maxEvents)
+            uint8_t nDataEvents = (uint8_t)(RecorderDataPtr->eventData[e*4] - USER_EVENT);
+            if ((e + nDataEvents) < RecorderDataPtr->maxEvents)
             {
                 (void)memset(& RecorderDataPtr->eventData[e*4], 0, 4 + 4 * nDataEvents);
+            }
+        }
+		else if (RecorderDataPtr->eventData[e*4] == DIV_XPS)
+        {
+            if ((e + 1) < RecorderDataPtr->maxEvents)
+            {
+				/* Clear 8 bytes */
+                (void)memset(& RecorderDataPtr->eventData[e*4], 0, 4 + 4);
+            }
+            else
+            {
+	            /* Clear 8 bytes, 4 first and 4 last */
+	            (void)memset(& RecorderDataPtr->eventData[0], 0, 4);
+	            (void)memset(& RecorderDataPtr->eventData[e*4], 0, 4);
             }
         }
         i++;
@@ -713,20 +509,17 @@ void prvTraceUpdateCounters(void)
         return;
     }
 
-#if (INCLUDE_EVENT_STATS == 1)
-    eventCount[RecorderDataPtr->eventData[RecorderDataPtr->nextFreeIndex*4]]++;
-#endif
-
     RecorderDataPtr->numEvents++;
 
     RecorderDataPtr->nextFreeIndex++;
 
     if (RecorderDataPtr->nextFreeIndex >= EVENT_BUFFER_SIZE)
     {
-#if (RECORDER_STORE_MODE == STORE_MODE_RING_BUFFER)
+#if (TRACE_RECORDER_STORE_MODE == TRACE_STORE_MODE_RING_BUFFER)
         RecorderDataPtr->bufferIsFull = 1;
         RecorderDataPtr->nextFreeIndex = 0;
         %if defined(OnTraceWrap)  %- /* << EST: added event handling */
+          void %OnTraceWrap(void); /* prototype */
           %OnTraceWrap();
         %endif
 #else
@@ -734,8 +527,8 @@ void prvTraceUpdateCounters(void)
 #endif
     }
 
-#if (RECORDER_STORE_MODE == STORE_MODE_RING_BUFFER)
-    prvCheckDataToBeOverwrittenForMultiEntryUserEvents(1);
+#if (TRACE_RECORDER_STORE_MODE == TRACE_STORE_MODE_RING_BUFFER)
+    prvCheckDataToBeOverwrittenForMultiEntryEvents(1);
 #endif
 
 #ifdef STOP_AFTER_N_EVENTS
@@ -758,115 +551,107 @@ void prvTraceUpdateCounters(void)
  * The parameter param_maxDTS should be 0xFF for 8-bit dts or 0xFFFF for
  * events with 16-bit dts fields.
  *****************************************************************************/
-uint32_t prvTraceGetDTS(uint32_t param_maxDTS)
+uint16_t prvTraceGetDTS(uint16_t param_maxDTS)
 {
-    XTSEvent* xts;
-    int32_t dts = 0;
-    uint32_t old_ts = RecorderDataPtr->absTimeLastEvent;
+    static uint32_t old_timestamp = 0;
+    XTSEvent* xts = 0;
+    uint32_t dts = 0;
+    uint32_t timestamp = 0;
 
-    if (RecorderDataPtr->frequency == 0)
+    TRACE_ASSERT(param_maxDTS == 0xFF || param_maxDTS == 0xFFFF, "prvTraceGetDTS: Invalid value for param_maxDTS", 0);
+
+    if (RecorderDataPtr->frequency == 0 && init_hwtc_count != HWTC_COUNT)
     {
         /* If HWTC_PERIOD is mapped to the timer reload register,
-        such as in the Cortex M port, it is not initialized before
-        FreeRTOS has been started. We therefore store the frequency
-        of the timer at the first timestamped event after the
-        scheduler has started. (Note that this function is called
-        also by vTraceStart and uiTraceStart, which might be
-        called before the scheduler has been started.) */
+        such as in the Cortex M port, it might not be initialized
+		before the Kernel scheduler has been started has been
+		started. We therefore store the frequency of the timer
+		once the counter register has changed. */
 
 #if (SELECTED_PORT == PORT_Win32)
         RecorderDataPtr->frequency = 100000;
 #elif (SELECTED_PORT == PORT_HWIndependent)
-        RecorderDataPtr->frequency = configTICK_RATE_HZ;
+        RecorderDataPtr->frequency = TRACE_TICK_RATE_HZ;
 #else
-        if (xTaskGetSchedulerState() != 0) /* Has the scheduler started? */
-        {
-            RecorderDataPtr->frequency =
-                 HWTC_PERIOD * configTICK_RATE_HZ /* / HWTC_DIVISOR */; /* << EST: otherwise issue with Cortex-M4, reported to Percepio 6-Jul-2012 */
-        }
+		RecorderDataPtr->frequency = (HWTC_PERIOD * TRACE_TICK_RATE_HZ) / (uint32_t)HWTC_DIVISOR;
 #endif
     }
 
     /**************************************************************************
-    * The below statement reads the timestamp from the timer port module. Note
-    * the modulo operation on RecorderDataPtr->frequency, which makes the overflow
-    * case (if (dts < 0)) occur every 1 sec.
-    * This is to make it easier to test. The overflow will happen sooner
-    * or later anyway.
+    * The below statements read the timestamp from the timer port module.
+    * If necessary, whole seconds are extracted using division while the rest
+    * comes from the modulo operation.
     **************************************************************************/
+
+    vTracePortGetTimeStamp(&timestamp);
+
+    /***************************************************************************
+    * Since dts is unsigned the result will be correct even if timestamp has
+	* wrapped around.
+    ***************************************************************************/
+	dts = timestamp - old_timestamp;
+    old_timestamp = timestamp;
 
     if (RecorderDataPtr->frequency > 0)
     {
-    RecorderDataPtr->absTimeLastEvent =
-            uiTracePortGetTimeStamp() %% RecorderDataPtr->frequency;
+        /* Check if dts > 1 second */
+        if (dts > RecorderDataPtr->frequency)
+        {
+            /* More than 1 second has passed */
+            RecorderDataPtr->absTimeLastEventSecond += dts / RecorderDataPtr->frequency;
+            /* The part that is not an entire second is added to absTimeLastEvent */
+            RecorderDataPtr->absTimeLastEvent += dts %% RecorderDataPtr->frequency;
+        }
+        else
+		{
+            RecorderDataPtr->absTimeLastEvent += dts;
+		}
+
+        /* Check if absTimeLastEvent >= 1 second */
+        if (RecorderDataPtr->absTimeLastEvent >= RecorderDataPtr->frequency)
+        {
+            /* RecorderDataPtr->absTimeLastEvent is more than or equal to 1 second, but always less than 2 seconds */
+            RecorderDataPtr->absTimeLastEventSecond++;
+            RecorderDataPtr->absTimeLastEvent -= RecorderDataPtr->frequency;
+            /* RecorderDataPtr->absTimeLastEvent is now less than 1 second */
+        }
     }
     else
     {
-        /* Special case if the recorder has not yet started (frequency may be uninitialized, i.e., zero)
-        The modulo operation is not necessary on the first events, since it is surely much less than
-        one second since startup. */
-        RecorderDataPtr->absTimeLastEvent = uiTracePortGetTimeStamp();
-    }
-
-    dts = (int32_t)(RecorderDataPtr->absTimeLastEvent - old_ts);
-
-    if (dts < 0) /* when the modulo operation wraps around (after 1 second) */
-    {
-        if (RecorderDataPtr->frequency == 0)
-        {
-            /* Frequency should normally be initialized on the first logged event after
-            the FreeRTOS scheduler has started. In this case, it has not yet been
-            initialized (frequency is 0) and the dts (time since last event) was
-            negative. This is an illegal combination that indicates a problem in
-            uiTracePortGetTimeStamp, probably due to incorrect HWTC macros in trcPort.h.
-
-            The dts variable normally becomes negative when the modulo operation wraps
-            around, but since the modulo operation is not used in this case (only used
-            if frequency has been set), dts only becomes negative if
-            uiTracePortGetTimeStamp returned a smaller value than last time.
-            This is an error. The values returned by uiTracePortGetTimeStamp should be
-            monotonically incresing (since it is a timestamp). */
-
-            vTraceError((char*)"Timestamping error, see comment in prvTraceGetDTS (trcBase.c)");
-            return 0;
-        }
-        dts = (int32_t)(RecorderDataPtr->frequency - old_ts + RecorderDataPtr->absTimeLastEvent);
-
-        /* This is good for 136 years (incremented every 1 second) */
-        RecorderDataPtr->absTimeLastEventSecond++;
+        /* Special case if the recorder has not yet started (frequency may be uninitialized, i.e., zero) */
+        RecorderDataPtr->absTimeLastEvent = timestamp;
     }
 
     /* If the dts (time since last event) does not fit in event->dts (only 8 or 16 bits) */
-    if (dts > (int32_t)param_maxDTS)
+    if (dts > param_maxDTS)
     {
         /* Create an XTS event (eXtended TimeStamp) containing the higher dts bits*/
         xts = (XTSEvent*) xTraceNextFreeEventBufferSlot();
 
         if (xts != NULL)
         {
-        if (param_maxDTS == 0xFFFF)
-        {
-            xts->type = XTS16;
-            xts->xts_16 = (uint16_t)((dts / 0x10000) & 0xFFFF);
-            xts->xts_8 = 0;
+            if (param_maxDTS == 0xFFFF)
+            {
+                xts->type = XTS16;
+                xts->xts_16 = (uint16_t)((dts / 0x10000) & 0xFFFF);
+                xts->xts_8 = 0;
+            }
+            else if (param_maxDTS == 0xFF)
+            {
+                xts->type = XTS8;
+                xts->xts_16 = (uint16_t)((dts / 0x100) & 0xFFFF);
+                xts->xts_8 = (uint8_t)((dts / 0x1000000) & 0xFF);
+            }
+            else
+            {
+                vTraceError("Bad param_maxDTS in prvTraceGetDTS");
+            }
+            prvTraceUpdateCounters();
         }
-        else if (param_maxDTS == 0xFF)
-        {
-            xts->type = XTS8;
-            xts->xts_16 = (uint16_t)((dts / 0x100) & 0xFFFF);
-            xts->xts_8 = (uint8_t)((dts / 0x1000000) & 0xFF);
-        }
-        else
-        {
-            vTraceError((char*)"Bad param_maxDTS in prvTraceGetDTS");
-        }
-        prvTraceUpdateCounters();
-    }
     }
 
-    return dts %% (param_maxDTS + 1);
+    return (uint16_t)dts & param_maxDTS;
 }
-
 
 /*******************************************************************************
  * prvTraceLookupSymbolTableEntry
@@ -887,6 +672,9 @@ traceLabel prvTraceLookupSymbolTableEntry(const char* name,
                                           traceLabel chn)
 {
     uint16_t i = RecorderDataPtr->SymbolTable.latestEntryOfChecksum[ crc6 ];
+
+	TRACE_ASSERT(name != NULL, "prvTraceLookupSymbolTableEntry: name == NULL", (traceLabel)0);
+	TRACE_ASSERT(len != 0, "prvTraceLookupSymbolTableEntry: len == 0", (traceLabel)0);
 
     while (i != 0)
     {
@@ -927,9 +715,13 @@ uint16_t prvTraceCreateSymbolTableEntry(const char* name,
                                         traceLabel channel)
 {
     uint16_t ret = 0;
+
+	TRACE_ASSERT(name != NULL, "prvTraceCreateSymbolTableEntry: name == NULL", 0);
+	TRACE_ASSERT(len != 0, "prvTraceCreateSymbolTableEntry: len == 0", 0);
+
     if (RecorderDataPtr->SymbolTable.nextFreeSymbolIndex + len + 4 >= SYMBOL_TABLE_SIZE)
     {
-        vTraceError((char*)"Symbol table full. Increase SYMBOL_TABLE_SIZE in trcConfig.h");
+        vTraceError("Symbol table full. Increase SYMBOL_TABLE_SIZE in trcConfig.h");
         ret = 0;
     }
     else
@@ -952,10 +744,10 @@ uint16_t prvTraceCreateSymbolTableEntry(const char* name,
             (uint8_t)(channel / 0x100);
 
         /* set name (bytes 4...4+len-1) */
-        (void)strncpy((char*)&( RecorderDataPtr->SymbolTable.symbytes
-            [ RecorderDataPtr->SymbolTable.nextFreeSymbolIndex + 4] ), name, len);
+        (void)strncpy((char*)&(RecorderDataPtr->SymbolTable.symbytes
+            [ RecorderDataPtr->SymbolTable.nextFreeSymbolIndex + 4]), name, len);
 
-        /* Set zero termination (at offest 4+len) */
+        /* Set zero termination (at offset 4+len) */
         RecorderDataPtr->SymbolTable.symbytes
             [RecorderDataPtr->SymbolTable.nextFreeSymbolIndex + 4 + len] = '\0';
 
@@ -981,18 +773,23 @@ uint16_t prvTraceCreateSymbolTableEntry(const char* name,
  ******************************************************************************/
 void prvTraceGetChecksum(const char *pname, uint8_t* pcrc, uint8_t* plength)
 {
-   char c;
-   int32_t length = 0;
-   int32_t crc = 0;
-   if ( pname != (const char *) 0 )
+   unsigned char c;
+   int length = 0;
+   int crc = 0;
+
+   TRACE_ASSERT(pname != NULL, "prvTraceGetChecksum: pname == NULL", );
+   TRACE_ASSERT(pcrc != NULL, "prvTraceGetChecksum: pcrc == NULL", );
+   TRACE_ASSERT(plength != NULL, "prvTraceGetChecksum: plength == NULL", );
+
+   if (pname != (const char *) 0)
    {
-      for ( ; (c = *pname++) != '\0'; )
+      for (; (c = *pname++) != '\0';)
       {
-         crc += (int32_t)c;
+         crc += c;
          length++;
       }
    }
-   *pcrc = (uint8_t)(crc %% 64);
+   *pcrc = (uint8_t)(crc & 0x3F);
    *plength = (uint8_t)length;
 }
 

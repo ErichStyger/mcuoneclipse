@@ -380,12 +380,12 @@ LI.EXP {
 <li><i>name:byte</i> - name of the task</li>
 </ul><br />
 </li>
-<li><a name="xTraceInitTraceData">
-<b>xTraceInitTraceData</b></a>
- - Needs to be called to initialize a dynamic buffer for the trace data.
+<li><a name="vTraceInitTraceData">
+<b>vTraceInitTraceData</b></a>
+ - Allocates, if necessary, and initializes the recorder data structure, based on the settings.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void* xTraceInitTraceData(void)<br />
+<br /><i>ANSIC prototype:</i> void* vTraceInitTraceData(void)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>Return value:void*</i> - Pointer to trace data (RecorderDataType*)
 </li>

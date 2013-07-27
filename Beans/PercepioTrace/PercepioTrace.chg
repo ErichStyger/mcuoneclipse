@@ -1,5 +1,5 @@
-%set RTOSplusTraceVersion Value V2.2.3
-%set RTOSplusTraceVersion ExtraText V2.2.3
+%set RTOSplusTraceVersion Value V2.5.0
+%set RTOSplusTraceVersion ExtraText V2.5.0
 
 %if %IncludeISRTracing='yes'
   %set vTraceSetISRProperties Selection always
@@ -9,10 +9,4 @@
   %set vTraceSetISRProperties Selection never
   %set vTraceStoreISRBegin Selection never
   %set vTraceStoreISREnd Selection never
-%endif
-
-%if %TraceDataAllocation='TRACE_DATA_ALLOCATION_STATIC'
-  %set xTraceInitTraceData Selection never
-%else
-  %set xTraceInitTraceData Selection always
 %endif
