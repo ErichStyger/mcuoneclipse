@@ -23,7 +23,7 @@ TRGT = arm-none-eabi-
 CC   = $(TRGT)gcc
 CP   = $(TRGT)objcopy
 AS   = $(TRGT)gcc -x assembler-with-cpp
-HEX  = $(CP) -O ihex
+S19  = $(CP) -O srec
 BIN  = $(CP) -O binary -S
 MCU  = cortex-m0
 
@@ -114,7 +114,7 @@ CPFLAGS += -MD -MP -MF .dep/$(@F).d
 # makefile rules
 #
 
-all: $(OBJS) $(FULL_PRJ).elf $(FULL_PRJ).hex $(FULL_PRJ).bin
+all: $(OBJS) $(FULL_PRJ).elf $(FULL_PRJ).s19 $(FULL_PRJ).bin
 	$(TRGT)size $(PROJECT)_flash.elf
 
 %o: %c
@@ -126,8 +126,8 @@ all: $(OBJS) $(FULL_PRJ).elf $(FULL_PRJ).hex $(FULL_PRJ).bin
 %elf: $(OBJS)
 	$(CC) $(OBJS) $(LDFLAGS) $(LIBS) -o $@
 
-%hex: %elf
-	$(HEX) $< $@
+%s19: %elf
+	$(S19) $< $@
 	
 %bin: %elf
 	$(BIN)  $< $@
@@ -136,7 +136,7 @@ clean:
 	$(RM) $(subst /,\,$(OBJS))
 	$(RM) $(FULL_PRJ).elf
 	$(RM) $(FULL_PRJ).map
-	$(RM) $(FULL_PRJ).hex
+	$(RM) $(FULL_PRJ).s19
 	$(RM) $(FULL_PRJ).bin
 	$(RM) $(subst /,\,$(SRC:.c=.lst))
 	$(RM) $(subst /,\,$(ASRC:.S=.lst))
