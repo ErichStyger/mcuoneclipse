@@ -846,7 +846,7 @@ static void prvTraceClearChannelBuffer(uint32_t count)
 static void prvTraceCopyToDataBuffer(uint32_t* data, uint32_t count)
 {
 	TRACE_ASSERT(data != NULL, "prvTraceCopyToDataBuffer: data == NULL.", ;);
-	TRACE_ASSERT(count <= USER_EVENT_BUFFER_SIZE, "prvTraceCopyToDataBuffer: USER_EVENT_BUFFER_SIZE is too small to handle this event.", );
+	TRACE_ASSERT(count <= USER_EVENT_BUFFER_SIZE, "prvTraceCopyToDataBuffer: USER_EVENT_BUFFER_SIZE is too small to handle this event.", ;);
 
 	uint32_t slots;
 	/* Check if we're close to the end of the buffer */
@@ -896,7 +896,7 @@ static void prvTraceUserEventHelper2(UserEventChannel channel, uint32_t* data, u
 	static uint32_t old_timestamp = 0;
 	uint32_t old_nextSlotToWrite = 0;
 
-	TRACE_ASSERT(USER_EVENT_BUFFER_SIZE >= noOfSlots, "vTracePrintF: USER_EVENT_BUFFER_SIZE is too small to handle this event.", );
+	TRACE_ASSERT(USER_EVENT_BUFFER_SIZE >= noOfSlots, "vTracePrintF: USER_EVENT_BUFFER_SIZE is too small to handle this event.", ;);
 
 	trcCRITICAL_SECTION_BEGIN();
 	/* Store the timestamp */
@@ -983,8 +983,8 @@ void vTraceChannelPrintF_Helper(UserEventChannel channelPair, va_list vl)
 	traceLabel channel;
 	traceLabel formatStr;
 
-	TRACE_ASSERT(channelPair != 0, "vTraceChannelPrintF: channelPair == 0", );
-	TRACE_ASSERT(channelPair <= CHANNEL_FORMAT_PAIRS, "vTraceChannelPrintF: ", );
+	TRACE_ASSERT(channelPair != 0, "vTraceChannelPrintF: channelPair == 0", ;);
+	TRACE_ASSERT(channelPair <= CHANNEL_FORMAT_PAIRS, "vTraceChannelPrintF: ", ;);
 
 	channel = RecorderDataPtr->userEventBuffer.channels[channelPair].name;
 	formatStr = RecorderDataPtr->userEventBuffer.channels[channelPair].defaultFormat;
@@ -1001,8 +1001,8 @@ void vTraceChannelUserEvent(UserEventChannel channelPair)
 {
 	uint32_t data[(3 + MAX_ARG_SIZE) / 4];
 
-	TRACE_ASSERT(channelPair != 0, "vTraceChannelPrintF: channelPair == 0", );
-	TRACE_ASSERT(channelPair <= CHANNEL_FORMAT_PAIRS, "vTraceChannelPrintF: ", );
+	TRACE_ASSERT(channelPair != 0, "vTraceChannelPrintF: channelPair == 0", ;);
+	TRACE_ASSERT(channelPair <= CHANNEL_FORMAT_PAIRS, "vTraceChannelPrintF: ", ;);
 
 	prvTraceUserEventHelper2(channelPair, data, 1); /* Only need one slot for timestamp */
 }
@@ -1090,7 +1090,7 @@ void vTracePrintF_Helper(traceLabel eventLabel, const char* formatStr, va_list v
     * part of this function, otherwise enabled)
     ***************************************************************************/
 
-	TRACE_ASSERT(formatStr != NULL, "vTracePrintF: formatStr == NULL", );
+	TRACE_ASSERT(formatStr != NULL, "vTracePrintF: formatStr == NULL", ;);
 
     if (RecorderDataPtr->recorderActive && (! inExcludedTask || nISRactive) && handle_of_last_logged_task)
     {
@@ -1225,7 +1225,7 @@ void vTraceUserEvent(traceLabel eventLabel)
     UserEvent* ue;
     uint8_t dts1;
 
-	TRACE_ASSERT(eventLabel > 0, "vTraceUserEvent: Invalid value for eventLabel", );
+	TRACE_ASSERT(eventLabel > 0, "vTraceUserEvent: Invalid value for eventLabel", ;);
 
     if (RecorderDataPtr->recorderActive && (! inExcludedTask || nISRactive) && handle_of_last_logged_task)
     {
