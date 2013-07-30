@@ -39,7 +39,9 @@
 
 #if (USE_TRACEALYZER_RECORDER == 1)
 
+#ifndef __HIWARE__ /* << EST */
 #include <stdint.h>
+#endif
 
 /* Internal variables */
 uint8_t nISRactive = 0;
@@ -59,7 +61,7 @@ void vTraceStoreTaskReady(objectHandleType handle)
     uint16_t dts3;
     TREvent* tr;
 	
-	TRACE_ASSERT(handle > 0 && handle <= NTask, "vTraceStoreTaskReady: Invalid value for handle", );
+	TRACE_ASSERT(handle > 0 && handle <= NTask, "vTraceStoreTaskReady: Invalid value for handle", ; );
 
     if (recorder_busy)
     {
@@ -106,7 +108,7 @@ void vTraceStoreLowPower(uint32_t flag)
     uint16_t dts;
     LPEvent* lp;
 	
-	TRACE_ASSERT(flag <= 1, "vTraceStoreLowPower: Invalid flag value", );
+	TRACE_ASSERT(flag <= 1, "vTraceStoreLowPower: Invalid flag value", ; );
 
     if (recorder_busy)
     {
@@ -148,9 +150,9 @@ void vTraceStoreKernelCall(uint32_t ecode, traceObjectClass objectClass, uint32_
     KernelCall * kse;
     uint16_t dts1;
 	
-    TRACE_ASSERT(ecode < 0xFF, "vTraceStoreKernelCall: ecode >= 0xFF", );
-    TRACE_ASSERT(objectClass < TRACE_NCLASSES, "vTraceStoreKernelCall: objectClass >= TRACE_NCLASSES", );
-    TRACE_ASSERT(objectNumber <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectClass], "vTraceStoreKernelCall: Invalid value for objectNumber", );
+    TRACE_ASSERT(ecode < 0xFF, "vTraceStoreKernelCall: ecode >= 0xFF", ; );
+    TRACE_ASSERT(objectClass < TRACE_NCLASSES, "vTraceStoreKernelCall: objectClass >= TRACE_NCLASSES", ; );
+    TRACE_ASSERT(objectNumber <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectClass], "vTraceStoreKernelCall: Invalid value for objectNumber", ; );
 
     if (recorder_busy)
     {
@@ -213,9 +215,9 @@ void vTraceStoreKernelCallWithParam(uint32_t evtcode,
     KernelCallWithParamAndHandle * kse;
     uint8_t dts2;
 
-	TRACE_ASSERT(evtcode < 0xFF, "vTraceStoreKernelCall: evtcode >= 0xFF", );
-	TRACE_ASSERT(objectClass < TRACE_NCLASSES, "vTraceStoreKernelCallWithParam: objectClass >= TRACE_NCLASSES", );
-	TRACE_ASSERT(objectNumber <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectClass], "vTraceStoreKernelCallWithParam: Invalid value for objectNumber", );
+	TRACE_ASSERT(evtcode < 0xFF, "vTraceStoreKernelCall: evtcode >= 0xFF", ; );
+	TRACE_ASSERT(objectClass < TRACE_NCLASSES, "vTraceStoreKernelCallWithParam: objectClass >= TRACE_NCLASSES", ; );
+	TRACE_ASSERT(objectNumber <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectClass], "vTraceStoreKernelCallWithParam: Invalid value for objectNumber", ; );
 
     if (RecorderDataPtr->recorderActive && handle_of_last_logged_task &&
         (! inExcludedTask || nISRactive))
@@ -298,7 +300,7 @@ void vTraceStoreKernelCallWithNumericParamOnly(uint32_t evtcode, uint32_t param)
     uint8_t dts6;
 	uint16_t restParam = 0;
 
-	TRACE_ASSERT(evtcode < 0xFF, "vTraceStoreKernelCallWithNumericParamOnly: Invalid value for evtcode", );
+	TRACE_ASSERT(evtcode < 0xFF, "vTraceStoreKernelCallWithNumericParamOnly: Invalid value for evtcode", ; );
 	
     if (RecorderDataPtr->recorderActive && handle_of_last_logged_task
         && (! inExcludedTask || nISRactive))
@@ -354,7 +356,7 @@ void vTraceStoreTaskswitch(objectHandleType task_handle)
     TSEvent* ts;
     int8_t skipEvent = 0;
 
-	TRACE_ASSERT(task_handle <= NTask, "vTraceStoreTaskswitch: Invalid value for task_handle", );
+	TRACE_ASSERT(task_handle <= NTask, "vTraceStoreTaskswitch: Invalid value for task_handle", ; );
 	
     /***************************************************************************
     This is used to detect if a high-priority ISRs is illegally using the
@@ -449,8 +451,8 @@ void vTraceStoreObjectNameOnCloseEvent(objectHandleType handle,
     const char * name;
     traceLabel idx;
 
-	TRACE_ASSERT(objectclass < TRACE_NCLASSES, "vTraceStoreObjectNameOnCloseEvent: objectclass >= TRACE_NCLASSES", );
-	TRACE_ASSERT(handle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass], "vTraceStoreObjectNameOnCloseEvent: Invalid value for handle", );
+	TRACE_ASSERT(objectclass < TRACE_NCLASSES, "vTraceStoreObjectNameOnCloseEvent: objectclass >= TRACE_NCLASSES", ; );
+	TRACE_ASSERT(handle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass], "vTraceStoreObjectNameOnCloseEvent: Invalid value for handle", ; );
 
     if (RecorderDataPtr->recorderActive)
 	{
@@ -475,8 +477,8 @@ void vTraceStoreObjectPropertiesOnCloseEvent(objectHandleType handle,
 {
     ObjClosePropEvent * pe;
 	
-    TRACE_ASSERT(objectclass < TRACE_NCLASSES, "vTraceStoreObjectPropertiesOnCloseEvent: objectclass >= TRACE_NCLASSES", );
-    TRACE_ASSERT(handle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass], "vTraceStoreObjectPropertiesOnCloseEvent: Invalid value for handle", );
+    TRACE_ASSERT(objectclass < TRACE_NCLASSES, "vTraceStoreObjectPropertiesOnCloseEvent: objectclass >= TRACE_NCLASSES", ; );
+    TRACE_ASSERT(handle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass], "vTraceStoreObjectPropertiesOnCloseEvent: Invalid value for handle", ; );
 
     if (RecorderDataPtr->recorderActive)
 	{
@@ -501,8 +503,8 @@ void vTraceStoreObjectPropertiesOnCloseEvent(objectHandleType handle,
 
 void vTraceSetPriorityProperty(uint8_t objectclass, uint8_t id, uint8_t value)
 {
-	TRACE_ASSERT(objectclass < TRACE_NCLASSES, "vTraceSetPriorityProperty: objectclass >= TRACE_NCLASSES", );
-	TRACE_ASSERT(id <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass], "vTraceSetPriorityProperty: Invalid value for id", );
+	TRACE_ASSERT(objectclass < TRACE_NCLASSES, "vTraceSetPriorityProperty: objectclass >= TRACE_NCLASSES", ; );
+	TRACE_ASSERT(id <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass], "vTraceSetPriorityProperty: Invalid value for id", ; );
 
     TRACE_PROPERTY_ACTOR_PRIORITY(objectclass, id) = value;
 }
@@ -517,8 +519,8 @@ uint8_t uiTraceGetPriorityProperty(uint8_t objectclass, uint8_t id)
 
 void vTraceSetObjectState(uint8_t objectclass, uint8_t id, uint8_t value)
 {
-	TRACE_ASSERT(objectclass < TRACE_NCLASSES, "vTraceSetObjectState: objectclass >= TRACE_NCLASSES", );
-	TRACE_ASSERT(id <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass], "vTraceSetObjectState: Invalid value for id", );
+	TRACE_ASSERT(objectclass < TRACE_NCLASSES, "vTraceSetObjectState: objectclass >= TRACE_NCLASSES", ; );
+	TRACE_ASSERT(id <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass], "vTraceSetObjectState: Invalid value for id", ; );
 	
     TRACE_PROPERTY_OBJECT_STATE(objectclass, id) = value;
 }
@@ -533,7 +535,7 @@ uint8_t uiTraceGetObjectState(uint8_t objectclass, uint8_t id)
 
 void vTraceSetTaskInstanceFinished(objectHandleType handle)
 {
-	TRACE_ASSERT(handle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[TRACE_CLASS_TASK], "vTraceSetTaskInstanceFinished: Invalid value for handle", );
+	TRACE_ASSERT(handle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[TRACE_CLASS_TASK], "vTraceSetTaskInstanceFinished: Invalid value for handle", ; );
 	
 #if (USE_IMPLICIT_IFE_RULES == 1)
     TRACE_PROPERTY_OBJECT_STATE(TRACE_CLASS_TASK, handle) = 0;    

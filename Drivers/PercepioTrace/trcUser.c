@@ -47,7 +47,13 @@
 
 #include <string.h>
 #include <stdarg.h>
+#ifndef __HIWARE__ /* << EST */
 #include <stdint.h>
+#endif
+
+#ifdef __HIWARE__
+#pragma MESSAGE DISABLE C5919 /* conversion of floating to unsigned integral */
+#endif
 
 TRACE_STOP_HOOK vTraceStopHookPtr = (TRACE_STOP_HOOK)0;
 
@@ -96,7 +102,7 @@ void vTraceInitTraceData(void)
 #if TRACE_DATA_ALLOCATION == TRACE_DATA_ALLOCATION_CUSTOM
 void vTraceSetRecorderData(void* pRecorderData)
 {
-	TRACE_ASSERT(pRecorderData != NULL, "vTraceSetTraceData, pRecorderData == NULL", );
+	TRACE_ASSERT(pRecorderData != NULL, "vTraceSetTraceData, pRecorderData == NULL", ;);
 	RecorderDataPtr = pRecorderData;
 }
 #endif
@@ -311,9 +317,9 @@ static uint8_t isrstack[MAX_ISR_NESTING];
  ******************************************************************************/
 void vTraceSetISRProperties(objectHandleType handle, const char* name, char priority)
 {
-	TRACE_ASSERT(handle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[TRACE_CLASS_ISR], "vTraceSetISRProperties: Invalid value for handle", );
-	TRACE_ASSERT(name != NULL, "vTraceSetISRProperties: name == NULL", );
-	TRACE_ASSERT(priority >= 0, "vTraceSetISRProperties: Invalid value for priority", );
+	TRACE_ASSERT(handle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[TRACE_CLASS_ISR], "vTraceSetISRProperties: Invalid value for handle", ; );
+	TRACE_ASSERT(name != NULL, "vTraceSetISRProperties: name == NULL", ; );
+	TRACE_ASSERT(priority >= 0, "vTraceSetISRProperties: Invalid value for priority", ;);
 
     vTraceSetObjectName(TRACE_CLASS_ISR, handle, name);
     vTraceSetPriorityProperty(TRACE_CLASS_ISR, handle, priority);
@@ -348,7 +354,7 @@ void vTraceStoreISRBegin(objectHandleType handle)
     uint16_t dts4;
     TSEvent* ts = NULL;
 
-    TRACE_ASSERT(handle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[TRACE_CLASS_ISR], "vTraceStoreISRBegin: Invalid value for handle", );
+    TRACE_ASSERT(handle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[TRACE_CLASS_ISR], "vTraceStoreISRBegin: Invalid value for handle", ; );
 
     if (recorder_busy)
     {
@@ -819,7 +825,7 @@ static void prvTraceClearChannelBuffer(uint32_t count)
 {
 	uint32_t slots;
 
-	TRACE_ASSERT(USER_EVENT_BUFFER_SIZE >= count, "prvTraceClearChannelBuffer: USER_EVENT_BUFFER_SIZE is too small to handle this event.", );
+	TRACE_ASSERT(USER_EVENT_BUFFER_SIZE >= count, "prvTraceClearChannelBuffer: USER_EVENT_BUFFER_SIZE is too small to handle this event.", ;);
 
 	/* Check if we're close to the end of the buffer */
 	if (RecorderDataPtr->userEventBuffer.nextSlotToWrite + count > USER_EVENT_BUFFER_SIZE)
@@ -839,7 +845,7 @@ static void prvTraceClearChannelBuffer(uint32_t count)
  ******************************************************************************/
 static void prvTraceCopyToDataBuffer(uint32_t* data, uint32_t count)
 {
-	TRACE_ASSERT(data != NULL, "prvTraceCopyToDataBuffer: data == NULL.", );
+	TRACE_ASSERT(data != NULL, "prvTraceCopyToDataBuffer: data == NULL.", ;);
 	TRACE_ASSERT(count <= USER_EVENT_BUFFER_SIZE, "prvTraceCopyToDataBuffer: USER_EVENT_BUFFER_SIZE is too small to handle this event.", );
 
 	uint32_t slots;

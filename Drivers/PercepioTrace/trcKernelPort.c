@@ -39,7 +39,9 @@
 
 #if (USE_TRACEALYZER_RECORDER == 1)
 
+#ifndef __HIWARE__ /* << EST */
 #include <stdint.h>
+#endif
 
 #include "task.h"
 
