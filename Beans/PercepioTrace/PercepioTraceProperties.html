@@ -330,43 +330,9 @@ If enabled (1), the recorder will count each type of event, in order to give an 
 <b>Event Count Size</b></a> - If 'Include event stats' is enabled, then this defines the size of the gloabal event count array. This setting defines the EVENT_COUNT_SIZE macro.
 </li>
 <li>
-<a name="sprintfBufferSize">
-<b>sprintf Buffer Size</b></a> - Size of global buffer used for writing to the Trace Console.
-</li>
-<li>
 <a name="IncludeSaveToFile">
 <b>Include save to file</b></a> - This sets INCLUDE_SAVE_TO_FILE in trcConfig.h<br />
 If enabled (1), the recorder will include code for saving the trace to a local file system.
-</li>
-<li>
-<a name="UseTraceProgressMonitorTask">
-<b>Use trace progress monitor task</b></a> - This sets USE_TRACE_PROGRESS_MONITOR_TASK in trcConfig.h<br />If enabled (1), the recorder creates a simple task which periodically prints the recorder status.<br />
-The following items are available only if the group is enabled (the value is "Enabled"):<br />
-
-<ul>
-  <li>
-  <a name="TaskNameString">
-  <b>Name</b></a> - Name to be used for the task.
-  </li>
-  <li>
-  <a name="TraceProgressMonitorTaskPriorityString">
-  <b>Priority</b></a> - This sets TRACE_PROGRESS_MONITOR_TASK_PRIORITY in trcConfig.h<br />
-Macro which sets the priority of the &quot;trace progress monitor task&quot; Default is tskIDLE_PRIORITY (if your system is on high load, this might not run).
-  </li>
-  <li>
-  <a name="TraceProgressMonitorTaskStackString">
-  <b>Stack</b></a> - Stack size to be used for the task, as string
-  </li>
-  <li>
-  <a name="TraceProgressMonitorPeriod">
-  <b>Period (ms)</b></a> - This sets TRACE_PROGRESS_MONITOR_TASK_PERIOD in trcConfig.h<br />
-Macro which sets the period of the trace progress monitor task. Default is 1000 ms. This task, vTraceMonitorTask in trcUser.c, periodically writes the recorder status using the vTraceConsoleMessage macro, which is to be mapped to your console &quot;printf&quot; routine.
-  </li>
-  <li>
-  <a name="vTraceMonitorTaskBufferSize">
-  <b>Local buffer size</b></a> - Use for a local buffer on the task stack for printing messages. This property sets the TRACE_PROGRESS_MONITOR_TASK_PRIORITY macro.
-  </li>
-</ul>
 </li>
 <li>
 <a name="floatingPointForvTracePrintF">

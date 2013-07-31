@@ -4,7 +4,7 @@
     <Name>PercepioTrace</Name>
     <Description>Percepio FreeRTOS Trace</Description>
     <Author>Erich Styger</Author>
-    <Version>01.008</Version>
+    <Version>01.009</Version>
     <Icon>irc</Icon>
     <TypesFiles>PE,PercepioTrace\PercepioTrace</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -335,23 +335,6 @@ If enabled (1), the recorder will count each type of event, in order to give an 
       </TIntgItem>
     </Property>
     <Property>
-      <TIntgItem>
-        <Name>sprintf Buffer Size</Name>
-        <Symbol>sprintfBufferSize</Symbol>
-        <Hint>Size of global buffer used for writing to the Trace Console.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>true</EditLine>
-        <DefaultValue>64</DefaultValue>
-        <MinValue>16</MinValue>
-        <MaxValue>-1</MaxValue>
-        <Bases>DEC</Bases>
-        <DefaultBase>DEC</DefaultBase>
-        <ExtraHintDisabled>false</ExtraHintDisabled>
-        <ChangeValueIntoRange>false</ChangeValueIntoRange>
-        <RuntimeProperty>false</RuntimeProperty>
-      </TIntgItem>
-    </Property>
-    <Property>
       <TBoolItem>
         <Name>Include save to file</Name>
         <Symbol>IncludeSaveToFile</Symbol>
@@ -369,100 +352,6 @@ If enabled (1), the recorder will include code for saving the trace to a local f
         <DefaultValue>false</DefaultValue>
         <Popup>false</Popup>
       </TBoolItem>
-    </Property>
-    <Property>
-      <TBoolGrupItem>
-        <Name>Use trace progress monitor task</Name>
-        <Symbol>UseTraceProgressMonitorTask</Symbol>
-        <TypeSpec>typeEnaDis</TypeSpec>
-        <Hint>This sets USE_TRACE_PROGRESS_MONITOR_TASK in trcConfig.h\n
-If enabled (1), the recorder creates a simple task which periodically prints the recorder status.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <BoldName>true</BoldName>
-        <EditLine>false</EditLine>
-        <Description>Disabled</Description>
-        <Expanded>No</Expanded>
-        <DefaultValue>false</DefaultValue>
-        <DefineSymbol>YES_NO</DefineSymbol>
-        <IfDisabled>setNOTHING</IfDisabled>
-        <Children>
-          <GrupItem>
-            <TStrgItem>
-              <Name>Name</Name>
-              <Symbol>TaskNameString</Symbol>
-              <Hint>Name to be used for the task.</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>TraceMon</DefaultValue>
-              <StrDefine>nothing</StrDefine>
-              <MinLength>0</MinLength>
-              <MaxLength>-1</MaxLength>
-            </TStrgItem>
-          </GrupItem>
-          <GrupItem>
-            <TStrgItem>
-              <Name>Priority</Name>
-              <Symbol>TraceProgressMonitorTaskPriorityString</Symbol>
-              <Hint>This sets TRACE_PROGRESS_MONITOR_TASK_PRIORITY in trcConfig.h\n
-Macro which sets the priority of the "trace progress monitor task" Default is tskIDLE_PRIORITY (if your system is on high load, this might not run).</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>tskIDLE_PRIORITY + 1</DefaultValue>
-              <StrDefine>nothing</StrDefine>
-              <MinLength>0</MinLength>
-              <MaxLength>-1</MaxLength>
-            </TStrgItem>
-          </GrupItem>
-          <GrupItem>
-            <TStrgItem>
-              <Name>Stack</Name>
-              <Symbol>TraceProgressMonitorTaskStackString</Symbol>
-              <Hint>Stack size to be used for the task, as string</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>configMINIMAL_STACK_SIZE+100</DefaultValue>
-              <StrDefine>nothing</StrDefine>
-              <MinLength>0</MinLength>
-              <MaxLength>-1</MaxLength>
-            </TStrgItem>
-          </GrupItem>
-          <GrupItem>
-            <TIntgItem>
-              <Name>Period (ms)</Name>
-              <Symbol>TraceProgressMonitorPeriod</Symbol>
-              <Hint>This sets TRACE_PROGRESS_MONITOR_TASK_PERIOD in trcConfig.h\n
-Macro which sets the period of the trace progress monitor task. Default is 1000 ms. This task, vTraceMonitorTask in trcUser.c, periodically writes the recorder status using the vTraceConsoleMessage macro, which is to be mapped to your console "printf" routine.</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>1000</DefaultValue>
-              <MinValue>0</MinValue>
-              <MaxValue>-1</MaxValue>
-              <Bases>DEC</Bases>
-              <DefaultBase>DEC</DefaultBase>
-              <ExtraHintDisabled>false</ExtraHintDisabled>
-              <ChangeValueIntoRange>false</ChangeValueIntoRange>
-              <RuntimeProperty>false</RuntimeProperty>
-            </TIntgItem>
-          </GrupItem>
-          <GrupItem>
-            <TIntgItem>
-              <Name>Local buffer size</Name>
-              <Symbol>vTraceMonitorTaskBufferSize</Symbol>
-              <Hint>Use for a local buffer on the task stack for printing messages. This property sets the TRACE_PROGRESS_MONITOR_TASK_PRIORITY macro.</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>80</DefaultValue>
-              <MinValue>8</MinValue>
-              <MaxValue>-1</MaxValue>
-              <Bases>DEC</Bases>
-              <DefaultBase>DEC</DefaultBase>
-              <ExtraHintDisabled>false</ExtraHintDisabled>
-              <ChangeValueIntoRange>false</ChangeValueIntoRange>
-              <RuntimeProperty>false</RuntimeProperty>
-            </TIntgItem>
-          </GrupItem>
-        </Children>
-      </TBoolGrupItem>
     </Property>
     <Property>
       <TBoolItem>

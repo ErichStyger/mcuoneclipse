@@ -64,10 +64,12 @@ extern uint8_t inExcludedTask;
 extern uint8_t nISRactive;
 #endif
 extern uint8_t handle_of_last_logged_task;
-//extern uint32_t dts_min;
-//extern uint32_t hwtc_count_max_after_tick;
-//extern uint32_t hwtc_count_sum_after_tick;
-//extern uint32_t hwtc_count_sum_after_tick_counter;
+#if 0 /* << EST */
+extern uint32_t dts_min;
+extern uint32_t hwtc_count_max_after_tick;
+extern uint32_t hwtc_count_sum_after_tick;
+extern uint32_t hwtc_count_sum_after_tick_counter;
+#endif
 extern char* traceErrorMessage;
 
 /*** private functions *******************************************************/
