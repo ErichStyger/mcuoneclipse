@@ -807,8 +807,11 @@ void vPortEnterCritical(void) {
   portDISABLE_INTERRUPTS();
   uxCriticalNesting++;
   %if (CPUfamily = "Kinetis")
+  %if %Compiler="CodeWarriorARM" %- not supported by Freescale ARM compiler
+  %else
   __asm volatile("dsb");
   __asm volatile("isb");
+  %endif
   %endif
 %else
   %warning "unsupported target %CPUfamily!"
@@ -874,8 +877,11 @@ void vPortYieldFromISR(void) {
   *(portNVIC_INT_CTRL) = portNVIC_PENDSVSET_BIT;
   /* Barriers are normally not required but do ensure the code is completely
   within the specified behaviour for the architecture. */
+  %if %Compiler="CodeWarriorARM" %- not supported by Freescale ARM compiler
+  %else
   __asm volatile("dsb");
   __asm volatile("isb");
+  %endif
 }
 /*-----------------------------------------------------------*/
 %endif
