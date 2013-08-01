@@ -38,11 +38,12 @@
 
 /* structure containing details of all the endpoints used by this device */
 USB_DESC_CONST USB_ENDPOINTS usb_desc_ep = { HID_DESC_ENDPOINT_COUNT,
-                                      {HID_ENDPOINT,
+                                      {{ /* << EST: added { */
+                                       HID_ENDPOINT,
                                        USB_INTERRUPT_PIPE,
                                        USB_SEND,
                                        HID_ENDPOINT_PACKET_SIZE,
-                                      }
+                                      }} /* << EST: added } */
                                   };
 
 
@@ -333,17 +334,7 @@ uint_8 USB_DESC_CONST USB_STR_2[USB_STR_2_SIZE+USB_STR_DESC_SIZE]
                                %substring Str13,13,1
                                %define! Str14 %HidBusReportedDeviceDescriptionString
                                %substring Str14,14,1
-                               %define! Str15 %HidBusReportedDeviceDescriptionString
-                               %substring Str15,15,1
-                               %define! Str16 %HidBusReportedDeviceDescriptionString
-                               %substring Str16,16,1
-                               %define! Str17 %HidBusReportedDeviceDescriptionString
-                               %substring Str17,17,1
-                               %define! Str18 %HidBusReportedDeviceDescriptionString
-                               %substring Str18,18,1
-                               %define! Str19 %HidBusReportedDeviceDescriptionString
-                               %substring Str19,19,1
-
+                               
                                '%Str1',0,
                                '%Str2',0,
                                '%Str3',0,
@@ -358,11 +349,6 @@ uint_8 USB_DESC_CONST USB_STR_2[USB_STR_2_SIZE+USB_STR_DESC_SIZE]
                                '%Str12',0,
                                '%Str13',0,
                                '%Str14',0,
-                               '%Str15',0,
-                               '%Str16',0,
-                               '%Str17',0,
-                               '%Str18',0,
-                               '%Str19',0
 #endif
                           };
 
@@ -429,9 +415,11 @@ uint_8_ptr const g_string_descriptors[USB_MAX_STRING_DESCRIPTORS+1] =
 										  };
 
 USB_ALL_LANGUAGES g_languages = { USB_STR_0, sizeof(USB_STR_0),
-                                  { (uint_16)0x0409,
+                                  { { /* << EST: added { */
+                                   (uint_16)0x0409,
                                    (const uint_8 **)g_string_descriptors,
-                                      g_string_desc_size}
+                                      g_string_desc_size
+                                  } } /* << EST: added } */
                                 };
 
 uint_8 const g_valid_config_values[USB_MAX_CONFIG_SUPPORTED+1]={0,1};

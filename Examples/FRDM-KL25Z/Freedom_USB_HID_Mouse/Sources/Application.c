@@ -20,12 +20,12 @@ void APP_Run(void) {
     WAIT1_Waitms(10);
     cnt++;
     if (HIDK2_App_Task()==ERR_BUSOFF) {
-      if ((cnt%128)==0) {
+      if ((cnt%128)==0) { /* just slow down blinking */
         LEDG_Off();
         LEDR_Neg();
       }
     } else {
-      if ((cnt%128)==0) {
+      if ((cnt%128)==0) { /* just slow down blinking */
         LEDR_Off();
         LEDG_Neg();
       }
