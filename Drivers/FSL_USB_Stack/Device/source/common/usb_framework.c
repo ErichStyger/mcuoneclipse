@@ -229,24 +229,8 @@ static void USB_Control_Service_Callback(PTR_USB_DEV_EVENT_STRUCT event );
 /*****************************************************************************
  * Local Variables
  *****************************************************************************/
-#if 0 /* << EST */
-#ifndef _MC9S08JS16_H
-static uint_8 ext_req_to_host[32];/* used for extended OUT transactions on
-                                     CONTROL ENDPOINT*/
-#else
-static uint_8 ext_req_to_host[16];/* used for extended OUT transactions on
-                                     CONTROL ENDPOINT*/
-#endif
-#else
-/* device is %CPUDevice << EST */
-%if (CPUDevice="MC9S08JS16")
-  static uint_8 ext_req_to_host[32];/* used for extended OUT transactions on
+static uint_8 ext_req_to_host[USB_OUT_PKT_SIZE + USB_SETUP_PKT_SIZE];/* used for extended OUT transactions on
                                        CONTROL ENDPOINT*/
-%else
-  static uint_8 ext_req_to_host[16];/* used for extended OUT transactions on
-                                       CONTROL ENDPOINT*/
-%endif
-#endif
 /*****************************************************************************
  * Global Variables
  *****************************************************************************/
@@ -502,7 +486,7 @@ void USB_Control_Service (
         {
             /*get the length from the setup_request*/
             size = (USB_PACKET_SIZE)g_setup_pkt.length;
-
+            if (size <= USB_OUT_PKT_SIZE) {
             if( (size != 0) &&
                 ((g_setup_pkt.request_type & USB_DATA_DIREC_MASK) ==
                 USB_DATA_TO_DEVICE) )
@@ -519,6 +503,14 @@ void USB_Control_Service (
             {
                 status = g_other_req_callback(event->controller_ID,
                     &g_setup_pkt, &data, (USB_PACKET_SIZE*)&size);
+            }
+        }
+            else
+            {
+                /* incase of error Stall endpoint */
+                USB_Control_Service_Handler(event->controller_ID,
+                	USBERR_INVALID_REQ_TYPE, &g_setup_pkt, &data, (USB_PACKET_SIZE*)&size);            	
+            	return;
             }
         }
 
@@ -831,16 +823,15 @@ static uint_8 USB_Strd_Req_Feature (
         epinfo = (uint_8)(setup_packet->index & 0x00FF);
 	    status = _usb_device_set_status(&controller_ID, (uint_8)(epinfo|USB_STATUS_ENDPOINT), set_request);
 
-        if((set_request == 0) && (epinfo == 0x03))
-        {
-        	#if (defined(__CWCC__) || defined(__IAR_SYSTEMS_ICC__) || defined(__GNUC__))
-            	asm("nop");
-			#elif defined (__CC_ARM)
-            	__nop();
-			#endif
-        }
-
 	    event = (uint_8)(set_request ? USB_APP_EP_STALLED : USB_APP_EP_UNSTALLED);
+
+	    if(setup_packet->request == CLEAR_FEATURE)
+        {
+	         uint_8  epnum = epinfo & 0x0f;
+	         uint_8  dir = (epinfo & 0x80) >> 7;
+	         _usb_device_clear_data0_endpoint(epnum,dir);
+	         event = USB_APP_EP_UNSTALLED;  // as far as the application is concerned, this is an UNSTALL.  
+        }
 
 	    /* Inform the upper layers of stall/unstall */
         g_framework_callback(controller_ID,event,(void*)&epinfo);
@@ -1176,13 +1167,10 @@ static uint_8 USB_Strd_Req_Get_Descriptor (
     uint_8 str_num = (uint_8)UNINITIALISED_VAL;
     uint_8 status;
 
-	if (type == STRING_DESCRIPTOR_TYPE)
-	{
 		/* for string descriptor set the language and string number */
 		index = setup_packet->index;
 		/*g_setup_pkt.lValue*/
 		str_num = USB_uint_16_low(setup_packet->value);
-	}
 
 	/* Call descriptor class to get descriptor */
 	status = USB_Desc_Get_Descriptor(controller_ID, type, str_num, index, data, size);

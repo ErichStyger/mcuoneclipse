@@ -172,7 +172,7 @@ void USB_Service_Hid (
     }
 
     /* notify the app of the send complete */
-    g_hid_class_callback(event->controller_ID, USB_APP_SEND_COMPLETE, 0);
+    g_hid_class_callback( event->controller_ID, USB_APP_SEND_COMPLETE, (uint_8*)(&(event->ep_num))); /* Application needs to know which endpoint can free data */
 }
 
 /**************************************************************************//*!
@@ -385,6 +385,7 @@ uint_8 USB_HID_Other_Requests
                give control to the application */
             status = g_param_callback(setup_packet->request,/* request type */
                 setup_packet->value,
+                setup_packet->index, /* Application needs to know which Interface is being communicated with */
                 data,/* pointer to the data */
                 size);/* size of the transfer */
         }

@@ -117,6 +117,7 @@ typedef uint_8 (_CODE_PTR_ USB_REQ_FUNC)(uint_8, USB_SETUP_STRUCT *,
 typedef uint_8 (_CODE_PTR_ USB_CLASS_SPECIFIC_HANDLER_FUNC)(
                            uint_8,
                            uint_16,
+                           uint_16, // Application needs to know which Interface is being communicated with
                            uint_8_ptr*,
                            USB_PACKET_SIZE*);
 
@@ -132,6 +133,10 @@ extern uint_8 USB_Class_Init (
 extern uint_8 USB_Class_DeInit 
 (
     uint_8    controller_ID      
+);
+
+extern uint_8 USB_Class_Initiate_Resume(
+		uint_8           controller_ID
 );
 
 extern uint_8 USB_Class_Send_Data (

@@ -159,7 +159,7 @@ typedef enum _stopmode
 
 #define EP_START_BUFFER_ADDR            (0x08)/* First USB_RAM buffer offset*/
 
-#define ASSERT_RESUME_DELAY_COUNT       (40000)/* Delay for assert resume */
+#define ASSERT_RESUME_DELAY_COUNT       (20000)/* Delay for assert resume, 48MHz clock */
 
 #define NO_ERRORS                       (0)   /* Init value for error */
 

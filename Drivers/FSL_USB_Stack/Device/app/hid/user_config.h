@@ -6,7 +6,7 @@
  *
  **************************************************************************//*!
  *
- * @file usb_user_config.h << EST 'user_config.h' conflicts with MQX Lite
+ * @file user_config.h
  *
  * @author
  *
@@ -40,6 +40,11 @@
 /* Below two MACROS are required for Mouse Application to execute */
 #define LONG_SEND_TRANSACTION       /* support to send large data pkts */
 #define LONG_RECEIVE_TRANSACTION    /* support to receive large data pkts */
+#ifndef _MC9S08JS16_H
+#define USB_OUT_PKT_SIZE 32			/* Define the maximum data length received from the host */
+#else
+#define USB_OUT_PKT_SIZE 16			/* Define the maximum data length received from the host */
+#endif
 
 /* User Defined MACRO to set number of Timer Objects */
 #define MAX_TIMER_OBJECTS		    5

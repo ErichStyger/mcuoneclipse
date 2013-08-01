@@ -66,6 +66,8 @@
   %define CPUDevice %@CDCDevice@CPUDevice
 %elif defined(HIDKDevice)
   %define CPUDevice %@HIDKDevice@CPUDevice
+%elif defined(HIDMDevice)
+  %define CPUDevice %@HIDMDevice@CPUDevice
 %elif defined(MSDHost)
   %define CPUDevice %@MSDHost@CPUDevice
 %else
@@ -331,6 +333,8 @@ byte %'ModuleName'%.%Init(void)
   err = %@CDCDevice@'ModuleName'%.Init();
 %elif USBDeviceClass="HID Keyboard Device"
   err = %@HIDKDevice@'ModuleName'%.Init();
+%elif USBDeviceClass="HID Mouse Device"
+  err = %@HIDMDevice@'ModuleName'%.Init();
 %elif USBDeviceClass="MSD Host"
   err = %@MSDHost@'ModuleName'%.Init();
 %else

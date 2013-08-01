@@ -135,7 +135,7 @@ LI.EXP {
           <td width="4"></td>
           <td align="center" valign="middle" height="30" width="128">
             <span class="lefttitle">
-<b>FSL_USB_Stack</b>
+<b>FSL_USB_HID_-<br />Mouse_Device</b>
             </span>
           </td>
         </tr>
@@ -145,17 +145,17 @@ LI.EXP {
             &nbsp;<br />
             <div class="reflink">
 <!---HTMLLISTBEG_SHORT DON'T CHANGE THIS LINE-->
-<a href="FSL_USB_Stack.html">General Info</a><br />
-<a href="FSL_USB_StackApplication Notes.html">Application Notes</a><br />
-<a href="FSL_USB_StackEvents.html">Events</a><br />
-<a href="FSL_USB_StackMethods.html">Methods</a><br />
+<a href="FSL_USB_HID_Mouse_Device.html">General Info</a><br />
+<a href="FSL_USB_HID_Mouse_DeviceApplication Notes.html">Application Notes</a><br />
+<a href="FSL_USB_HID_Mouse_DeviceEvents.html">Events</a><br />
+<a href="FSL_USB_HID_Mouse_DeviceMethods.html">Methods</a><br />
 <i>Properties</i><br />
 <!---HTMLLISTEND DON'T CHANGE THIS LINE-->
 <br /><br /><br />
 
 <br /><br /><br />
 <center>
-<img src="FSL_USB_Stack_b.gif" alt="Bean icon"/>
+<img src="FSL_USB_HID_Mouse_Device_b.gif" alt="Bean icon"/>
 
 
 </center>
@@ -182,9 +182,9 @@ LI.EXP {
                 Bean
                 
                 
-                FSL_USB_Stack
+                FSL_USB_HID_Mouse_Device
               </div>
-              <div class="descrtext">Freescale USB Stack</div>
+              <div class="descrtext">Freescale USB Stack (HID Mouse)</div>
               <div class="info_name">Component Level: <span class="info_text"><a href="../../DOCs/BeanCategoriesInfo.html#LevelAbstraction">High</a></span></div>
               <div class="info_name">Category: 
                 <span class="info_text">
@@ -217,84 +217,43 @@ LI.EXP {
 <b>Component name</b></a> - Name of the component.
 </li>
 <li>
-<a name="FSLUSBStackVersion">
-<b>Freescale USB Stack Version</b></a> - Version of the Freescale USB Stack used
-</li>
-<li>
-<a name="USBInit">
-<b>USB</b></a> - USB peripheral to initialize. <br />
-For ColdFire V1, select 'Init_USB_OTG_COLDFIREV1'.<br />
-For ColdFire V2, select 'Init_USB_OTG_MCF'.<br />
-For HCS08, select 'Init_USB_HCS08'.<br />
-For Kinetis, select 'Init_USB_OTG_VAR0'.
-</li>
-<li>
-<a name="USBDeviceClass">
-<b>Device Class</b></a> - Device class to be used<br /><br />
-There are 4 options:<br />
+<a name="CPUDevice">
+<b>CPU</b></a> - Device to be used.<br /><br />
+There are 11 options:<br />
 <ul>
-  <li><u>CDC Device</u>: Communication Device Class</li>
-  <li><u>HID Keyboard Device</u>: Human Interface Device Class (Keyboard)</li>
-  <li><u>HID Mouse Device</u>: Human Interface Device Class (Mouse)</li>
-  <li><u>MSD Host</u>: Mass Storage Device</li>
+  <li><u>MC9S08JM16</u>: MC9S08JM16</li>
+  <li><u>MC9S08JM60</u>: MC9S08JM60</li>
+  <li><u>MC9S08MM128</u>: MC9S08MM128</li>
+  <li><u>MCF51JM64</u>: ColdFire V1 MCF51JM64</li>
+  <li><u>MCF51JM128</u>: ColdFire V1 MCF51JM128</li>
+  <li><u>MCF51MM256</u>: ColdFire V1 MCF51MM256</li>
+  <li><u>MCF52259</u>: ColdFire V2 MCF52259</li>
+  <li><u>Kinetis K20D50</u>: Kinetis K20D50 (e.g. FRDM-K20D50M)</li>
+  <li><u>Kinetis K40</u>: Kinetis K40</li>
+  <li><u>Kinetis K60</u>: Kinetis K60</li>
+  <li><u>Kinetis KL25</u>: Kinetis L2K family (e.g. KL25Z)</li>
 </ul><br />
 
 </li>
 <li>
-<a name="CDCDeviceGroup">
-<b>CDC Device</b></a> - CDC Device Class Interface<br />
+<a name="USBCDCenabled">
+<b>HID Settings</b></a> - Settings for USB HID Keyboard class.<br />
 The following items are available only if the group is enabled (the value is "Enabled"):<br />
 
 <ul>
   <li>
-  <a name="CDCDevice">
-  <b>CDCDevice</b></a> - Interface to CDC class
+  <a name="HidBusReportedDeviceDescriptionString">
+  <b>Bus reported device</b></a> - This name shows up on the USB bus before drivers are installed. This string is used in usb_descriptor.c.
   </li>
-</ul>
-</li>
-<li>
-<a name="HIDKDeviceGroup">
-<b>HID Keyboard Device</b></a> - HID Keyboard Device Class Interface<br />
-The following items are available only if the group is enabled (the value is "Enabled"):<br />
-
-<ul>
   <li>
-  <a name="HIDKDevice">
-  <b>HID Keyboard</b></a> - Interface to HID Keyboard class
+  <a name="HidBusReportedVendorString">
+  <b>Bus reported vendor</b></a> - This name shows up on the USB bus before drivers are installed. This string is used in usb_descriptor.c.
   </li>
 </ul>
 </li>
 <li>
-<a name="HIDMDeviceGroup">
-<b>HID Mouse Device</b></a> - HID Mouse Device Class Interface<br />
-The following items are available only if the group is enabled (the value is "Enabled"):<br />
-
-<ul>
-  <li>
-  <a name="HIDMDevice">
-  <b>HID Mouse</b></a> - Interface to HID Mouse class
-  </li>
-</ul>
-</li>
-<li>
-<a name="MSDHostGroup">
-<b>MSD Host</b></a> - MSD Device Class Interface<br />
-The following items are available only if the group is enabled (the value is "Enabled"):<br />
-
-<ul>
-  <li>
-  <a name="MSDHost">
-  <b>MSDHost</b></a> - Interface to MSD class
-  </li>
-</ul>
-</li>
-<li>
-<a name="DataBufSize">
-<b>DATA_BUFF_SIZE</b></a> - DATA_BUFF_SIZE should be greater than or equal to the endpoint buffer size, otherwise there will be data loss. For MC9S08JS16, maximum DATA_BUFF_SIZE supported is 16 Bytes.
-</li>
-<li>
-<a name="CallInitMethod">
-<b>Call Init Method</b></a> - If set to yes, then the Init() method will be called in PE_low_level_init().
+<a name="TxBuffer">
+<b>Send Buffer</b></a> - Buffer with 4 byte elements for storing the message data
 </li>
 
      </ul>

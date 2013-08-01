@@ -396,6 +396,55 @@ uint_8 USB_Class_DeInit
 
 /**************************************************************************//*!
  *
+ * @name  USB_Class_Initiate_Resume
+ *
+ * @brief The function initiates resume procedure
+ *
+ * @param controller_ID         : Controller ID
+ *
+ * @return device_state
+ ******************************************************************************/
+uint_8 USB_Class_Initiate_Resume(
+		uint_8           controller_ID /* [IN] Controller ID */
+)
+{
+  uint_8 device_state, state;
+	
+  (void)_usb_device_get_status(&controller_ID, USB_STATUS_DEVICE_STATE, 
+  		&device_state);
+  (void)_usb_device_get_status(&controller_ID, USB_STATUS_DEVICE, &state);
+  if((device_state == USB_STATE_SUSPEND) &&
+      (state & REMOTE_WAKEUP_STATUS_MASK ) &&
+      (USB_Frame_Remote_Wakeup(controller_ID) == TRUE))
+  {
+      DisableInterrupts;
+#if 0
+		#if (defined _MCF51MM256_H) || (defined _MCF51JE256_H)
+		usb_int_dis();
+		#endif
+#else /* << EST */
+		/* device is %CPUDevice << EST */
+%if (CPUDevice="MCF51MM256") | (CPUDevice="MCF51JE256")
+		%'ModuleName'%.usb_int_dis();
+%endif
+#endif
+  /* Resume the bus */
+	_usb_device_assert_resume(&controller_ID);
+
+	device_state = USB_STATE_CONFIG;
+      /* Set the device state in the Device Layer to DEFAULT */
+      (void)_usb_device_set_status(&controller_ID, USB_STATUS_DEVICE_STATE,
+          USB_STATE_CONFIG);
+      EnableInterrupts;
+	#if (defined _MCF51MM256_H) || (defined _MCF51JE256_H)
+	usb_int_en();
+	#endif		
+  }
+  return device_state;
+}
+
+/**************************************************************************//*!
+ *
  * @name  USB_Class_Send_Data
  *
  * @brief The function calls the device to send data upon receiving an IN token
@@ -420,46 +469,9 @@ uint_8 USB_Class_Send_Data (
 {
 
     uint_8 status = USB_OK;
-    uint_8 device_state, state;
+    uint_8 device_state;
     
-    (void)_usb_device_get_status(&controller_ID, USB_STATUS_DEVICE_STATE, 
-        &device_state);
-    (void)_usb_device_get_status(&controller_ID, USB_STATUS_DEVICE, &state);
-    if((device_state == USB_STATE_SUSPEND) &&
-        (state & REMOTE_WAKEUP_STATUS_MASK ) &&
-        (USB_Frame_Remote_Wakeup(controller_ID) == TRUE))
-    {
-        DisableInterrupts;
-#if 0
-		#if (defined _MCF51MM256_H) || (defined _MCF51JE256_H)
-		usb_int_dis();
-		#endif
-#else /* << EST */
-		/* device is %CPUDevice << EST */
-%if (CPUDevice="MCF51MM256") | (CPUDevice="MCF51JE256")
-		%'ModuleName'%.usb_int_dis();
-%endif
-#endif
-        /* Resume the bus */
-		_usb_device_assert_resume(&controller_ID);
-
-        device_state = USB_STATE_CONFIG;
-        /* Set the device state in the Device Layer to DEFAULT */
-        (void)_usb_device_set_status(&controller_ID, USB_STATUS_DEVICE_STATE,
-            USB_STATE_CONFIG);
-        EnableInterrupts;
-#if 0
-		#if (defined _MCF51MM256_H) || (defined _MCF51JE256_H)
-		usb_int_en();
-		#endif
-#else /* << EST */
-		/* device is %CPUDevice << EST */
-%if (CPUDevice="MCF51MM256") | (CPUDevice="MCF51JE256")
-		%'ModuleName'%.usb_int_en();
-%endif
-#endif
-
-    }
+    device_state = USB_Class_Initiate_Resume(controller_ID);
 
     if(device_state != USB_STATE_SUSPEND)
     {    /* if not suspended */

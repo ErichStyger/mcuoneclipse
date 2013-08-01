@@ -460,7 +460,6 @@ extern uint_8 _usb_device_set_status (
 );
 
 extern void _usb_device_clear_data0_endpoint(
-		_usb_device_handle      handle,
 		uint_8                  endpoint_number,
 		uint_8                  direction		
 );

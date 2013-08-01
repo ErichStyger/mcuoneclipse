@@ -65,7 +65,7 @@
 	#if defined __CC_ARM
 	  __align(512) uint_8 g_Mem[BYTES_1024];
 	#else
-#if 0 /* << EST */
+#if 0 
 		static uint_8 g_Mem[BYTES_1024];
 #else
 		uint_8 g_Mem[BYTES_1024];
@@ -601,6 +601,7 @@ uint_8 USB_DCI_Init_EndPoint (
     uint_32 ep_ctrl[2] = {EP_OUT, EP_IN};
     P_BUFF_DSC temp;
     P_BDT_ELEM bdt_elem;
+    UNUSED(controller_ID);
 
     /* if the max packet size is greater than the max buffer size */
     if(ep_ptr->size > MAX_EP_BUFFER_SIZE)
@@ -737,6 +738,7 @@ uint_8 USB_DCI_Cancel_Transfer (
     uint_8 bdt_index = USB_DCI_Validate_Param (endpoint_number, direction,
         USB_RAM_EVEN_BUFFER);
     uint_8 bdtelem_index = (uint_8)TRANSFER_INDEX(bdt_index);
+    UNUSED(handle);
 
     /* Check for valid bdt index */
     if(bdt_index != INVALID_BDT_INDEX)
@@ -995,6 +997,7 @@ void USB_DCI_Get_Setup_Data (
         USB_RAM_EVEN_BUFFER);
 
     P_BDT_ELEM bdt_elem = &g_bdt_elem[TRANSFER_INDEX(bdt_index)];
+    UNUSED(handle);
     bdt_index = bdt_elem->bdtmap_index;
 
     /* address correponding to the endpoint */
@@ -1044,6 +1047,7 @@ uint_8 USB_DCI_Get_Transfer_Status (
     /* validate params and get the bdt index */
     uint_8 bdt_index = USB_DCI_Validate_Param (endpoint_number, direction,
         USB_RAM_EVEN_BUFFER);
+    UNUSED(handle);
 
     /* Check for valid bdt index */
 	if(bdt_index != INVALID_BDT_INDEX)
@@ -1094,7 +1098,6 @@ uint_8 USB_DCI_Get_Transfer_Status (
  * This function clear the DATA0/1 bit 
  *****************************************************************************/
 void  USB_DCI_Clear_DATA0_Endpoint (
-    _usb_device_handle    handle,    /* [IN] USB Device handle */
     uint_8                endpoint_number,    /* [IN] Endpoint number */
     uint_8                direction           /* [IN] Endpoint direction */
 )
@@ -1105,15 +1108,12 @@ void  USB_DCI_Clear_DATA0_Endpoint (
 	uint_8 bdt_index = USB_DCI_Validate_Param(endpoint_number, direction, USB_RAM_EVEN_BUFFER);	
 	P_BDT_ELEM bdt_elem = &g_bdt_elem[TRANSFER_INDEX(bdt_index)];
 		
-		UNUSED(handle);
-	
 	bdt_index = bdt_elem->bdtmap_index;
 	
 	/*Check for a valid bdt index */
 	if (bdt_index != INVALID_BDT_INDEX)
 	{
-		ENDPT0STR *endpoint = (ENDPT0STR*)(&USB0_ENDPT0 + (4 * endpoint_number));
-                UNUSED(endpoint); /* << EST */
+		//ENDPT0STR *endpoint = (ENDPT0STR*)(&USB0_ENDPT0 + (4 * endpoint_number)); /* << EST not used */
 		g_bdtmap->ep_dsc[bdt_index].Stat._byte = _DATA0;
 	}
     return;
@@ -1386,6 +1386,7 @@ void USB_DCI_Shutdown (
     _usb_device_handle    handle    /* [IN] USB Device handle */
 )
 {
+	UNUSED(handle);
 #if !HIGH_SPEED_DEVICE
     /* Reset the Control Register */
 	USB0_CTL = 0;

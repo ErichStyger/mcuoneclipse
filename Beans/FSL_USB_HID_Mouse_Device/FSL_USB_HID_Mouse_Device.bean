@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Bean>
   <Header>
-    <Name>FSL_USB_HID_Keyboard_Device</Name>
-    <Description>Freescale USB Stack (HID Keyboard)</Description>
+    <Name>FSL_USB_HID_Mouse_Device</Name>
+    <Description>Freescale USB Stack (HID Mouse)</Description>
     <Author>Erich Styger</Author>
-    <Version>01.040</Version>
-    <Icon>FSL_USB_HID_Keyboard_Device</Icon>
-    <TypesFiles>PE,FSL_USB_HID_Keyboard_Device\FSL_USB_HID_Keyboard_Device</TypesFiles>
+    <Version>01.053</Version>
+    <Icon>FSL_USB_HID_Mouse_Device</Icon>
+    <TypesFiles>PE,FSL_USB_HID_Mouse_Device\FSL_USB_HID_Mouse_Device</TypesFiles>
     <FileVersion>6</FileVersion>
   </Header>
   <Options>
@@ -22,7 +22,7 @@
     <Copyright>(c) Copyright Freescale, all rights reserved, 2013\nPorted as Processor Expert component: Erich Styger\nhttp: www.freescale.com</Copyright>
     <Category>SW-Communication</Category>
     <DemoDriver>no</DemoDriver>
-    <Shortcut>HIDK</Shortcut>
+    <Shortcut>HIDM</Shortcut>
     <BeanLevel>High</BeanLevel>
   </Options>
   <PropertyList>
@@ -75,7 +75,7 @@
               <Hint>This name shows up on the USB bus before drivers are installed. This string is used in usb_descriptor.c.</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
-              <DefaultValue>FSL HID Keyboard   </DefaultValue>
+              <DefaultValue>FSL HID Mouse      </DefaultValue>
               <StrDefine>nothing</StrDefine>
               <MinLength>19</MinLength>
               <MaxLength>19</MaxLength>
@@ -101,8 +101,8 @@
       <TInhrItem>
         <Name>Send Buffer</Name>
         <Symbol>TxBuffer</Symbol>
-        <TypeSpec>FSL_USB_HID_Keyboard_Device\Buffer</TypeSpec>
-        <Hint>Interface to ring buffer for sending data. Elements in the bufer must be 16bits each.</Hint>
+        <TypeSpec>FSL_USB_HID_Mouse_Device\Buffer</TypeSpec>
+        <Hint>Buffer with 4 byte elements for storing the message data</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -111,188 +111,12 @@
         <RuntimeProperty>false</RuntimeProperty>
         <CanDelete>false</CanDelete>
         <IconPopup>false</IconPopup>
-        <InhrBeanBaseName>Tx</InhrBeanBaseName>
-        <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+        <InhrBeanBaseName>Inhr</InhrBeanBaseName>
+        <ShowInheritedMethodsEventsInPrjTree>false</ShowInheritedMethodsEventsInPrjTree>
       </TInhrItem>
     </Property>
   </PropertyList>
   <MethodList>
-    <Method>
-      <TMthdItem>
-        <Name>HidCodeFromAscii</Name>
-        <Symbol>HidCodeFromAscii</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Translates an ASCII code into the HID code</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
-        <RetHint>USB HID Key Code</RetHint>
-        <ParamCount>1</ParamCount>
-        <Parameter>
-          <ParName>ch</ParName>
-          <ParType>8bit unsigned</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>ASCII code</ParHint>
-        </Parameter>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>byte #M#_#C#(byte ch)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>ModifierCodeFromAscii</Name>
-        <Symbol>ModifierCodeFromAscii</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Translates an ASCII code into the HID code and returns the modifier.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
-        <RetHint>USB HID Modifier Key Code</RetHint>
-        <ParamCount>1</ParamCount>
-        <Parameter>
-          <ParName>ch</ParName>
-          <ParType>8bit unsigned</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>ASCII code</ParHint>
-        </Parameter>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>byte #M#_#C#(byte ch)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>SendStr</Name>
-        <Symbol>SendStr</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Puts an ASCII string into the buffer to be sent to the HID host. This function will translate the string into the correct status messages</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
-        <RetHint>Error code</RetHint>
-        <ParamCount>1</ParamCount>
-        <Parameter>
-          <ParName>str</ParName>
-          <ParType>8bit unsigned</ParType>
-          <ParPassing>Address</ParPassing>
-          <ParHint>Pointer to string to be sent</ParHint>
-        </Parameter>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>byte #M#_#C#(byte *str)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>SendChar</Name>
-        <Symbol>SendChar</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Puts a single ASCII character into the buffer to be sent to the HID host. This function will translate the string into the correct status messages</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
-        <RetHint>Error code</RetHint>
-        <ParamCount>1</ParamCount>
-        <Parameter>
-          <ParName>ch</ParName>
-          <ParType>8bit unsigned</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>character to be sent</ParHint>
-        </Parameter>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>byte #M#_#C#(byte ch)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>Send</Name>
-        <Symbol>Send</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Puts a message with modifier and key value into the buffer to be sent to the host.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
-        <RetHint>Error code</RetHint>
-        <ParamCount>2</ParamCount>
-        <Parameter>
-          <ParName>modifier</ParName>
-          <ParType>8bit unsigned</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>HID modifier value, e.g. MODIFERKEYS_LEFT_SHIFT</ParHint>
-        </Parameter>
-        <Parameter>
-          <ParName>key</ParName>
-          <ParType>8bit unsigned</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>HID key value, e.g. KEY_H</ParHint>
-        </Parameter>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>byte #M#_#C#(byte modifier, byte key)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
     <Method>
       <TMthdItem>
         <Name>App_Callback</Name>
@@ -365,6 +189,80 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>byte #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>isEnumerated</Name>
+        <Symbol>isEnumerated</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Returns true if the device is enumerated</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>Boolean</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>bool #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Message</Name>
+        <Symbol>Message</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint/>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>action</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Set of action bits, e.g. MOUSE_LEFT</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>x</ParName>
+          <ParType>8bit signed</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>x offset for move</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>y</ParName>
+          <ParType>8bit signed</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>y offset  for move</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte action, signed char x, signed char y)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

@@ -1,8 +1,8 @@
 
 [USED_FACES]
-BeanVersion=01.018
+BeanVersion=01.023
 
-InterfacesCount=4
+InterfacesCount=5
 
 Symbol=USBInit
 Link=No
@@ -18,6 +18,11 @@ Symbol=HIDKDevice
 Link=No
 Interface=FSL_USB_Stack\HIDKDevice
 Version=01.004
+
+Symbol=HIDMDevice
+Link=No
+Interface=FSL_USB_Stack\HIDMDevice
+Version=01.006
 
 Symbol=MSDHost
 Link=No

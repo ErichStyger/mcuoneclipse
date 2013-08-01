@@ -899,7 +899,6 @@ uint_8 USB_DCI_Get_Transfer_Status (
  * This function clear the DATA0/1 bit 
  *****************************************************************************/
 void  USB_DCI_Clear_DATA0_Endpoint (
-    _usb_device_handle    handle,    /* [IN] USB Device handle */
     uint_8                endpoint_number,    /* [IN] Endpoint number */
     uint_8                direction           /* [IN] Endpoint direction */
 )

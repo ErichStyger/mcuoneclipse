@@ -543,16 +543,19 @@ static volatile boolean transactionOngoing = FALSE; /* flag to know if a transac
  * function handles these class requests.
  *****************************************************************************/
 static uint8_t USB_App_Param_Callback (
-      uint8_t request,          /* [IN] request type */
+      uint8_t request,       /* [IN] request type */
       uint_16 value,         /* [IN] report type and ID */
+      uint_16 wIndex,        /* [IN] Interface */
       uint8_t** data,        /* [OUT] pointer to the data */
       USB_PACKET_SIZE* size  /* [OUT] size of the transfer */
 )
 {
   byte status = USB_OK;
+  //uint_8 direction =  (uint_8)((request & USB_HID_REQUEST_DIR_MASK) >>3);
   byte index = (byte)((request - 2) & USB_HID_REQUEST_TYPE_MASK);
                                        /* index == 0 for get/set idle,
                                           index == 1 for get/set protocol */
+  (void)wIndex;
   *size = 0;
   /* handle the class request */
   switch(request) {

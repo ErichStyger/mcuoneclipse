@@ -208,7 +208,6 @@ extern uint_8 USB_DCI_Get_Transfer_Status(
 );
 
 extern void USB_DCI_Clear_DATA0_Endpoint(
-	uint_8		controller_ID,
 	uint_8		ep_num,
 	uint_8		direction
 );

@@ -5,6 +5,8 @@
 %set CDCDeviceGroup Expanded no
 %set HIDKDeviceGroup Value Disabled
 %set HIDKDeviceGroup Expanded no
+%set HIDMDeviceGroup Value Disabled
+%set HIDMDeviceGroup Expanded no
 %set MSDHostGroup Value Disabled
 %set MSDHostGroup Expanded no
 
@@ -18,10 +20,14 @@
 %elif (%USBDeviceClass = "HID Keyboard Device")
   %set HIDKDeviceGroup Value Enabled
   %set HIDKDeviceGroup Expanded yes
+%elif (%USBDeviceClass = "HID Mouse Device")
+  %set HIDMDeviceGroup Value Enabled
+  %set HIDMDeviceGroup Expanded yes
 %elif (%USBDeviceClass = "MSD Host")
   %set MSDHostGroup Value Enabled
   %set MSDHostGroup Expanded yes
 %endif
 %set CDCDeviceGroup ReadOnly yes
 %set HIDKDeviceGroup ReadOnly yes
+%set HIDMDeviceGroup ReadOnly yes
 %set MSDHostGroup ReadOnly yes
