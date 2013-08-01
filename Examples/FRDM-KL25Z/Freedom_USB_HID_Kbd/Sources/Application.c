@@ -22,18 +22,18 @@ void APP_Run(void) {
     if (SW1_GetVal()==0) { /* button pressed */
       WAIT1_Waitms(100); /* wait for debouncing */
       if (SW1_GetVal()==0) { /* still pressed */
-#if 1 /* send a string */
-        //(void)HIDK1_SendStr((unsigned char*)"SW1 press "); /* send a string */
+#if 0 /* send a string */
+        (void)HIDK1_SendStr((unsigned char*)"SW1 press "); /* send a string */
 #endif
-#if 0 /* send print screen */
-        //HIDK1_Send(MODIFERKEYS_NONE, KEY_PRINTSCREEN);
-        //HIDK1_Send(MODIFERKEYS_NONE, KEY_NONE); /* release key */
+#if 1 /* send print screen */
+        HIDK1_Send(MODIFERKEYS_NONE, KEY_PRINTSCREEN);
+        HIDK1_Send(MODIFERKEYS_NONE, KEY_NONE); /* release key */
 #endif
 #if 0 /* send CTRL+ALT+DELETE */
         HIDK1_Send(MODIFERKEYS_LEFT_CTRL|MODIFERKEYS_RIGHT_ALT, KEY_DELETE);
         HIDK1_Send(MODIFERKEYS_NONE, KEY_NONE); /* release key */
 #endif
-     }
+      }
       while(SW1_GetVal()==0) {} /* wait until button is released */
     }
     if (HIDK1_App_Task()==ERR_OK) { /* run the USB application task: this will send the buffer */
