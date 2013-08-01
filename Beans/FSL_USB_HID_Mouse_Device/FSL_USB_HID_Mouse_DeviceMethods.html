@@ -224,16 +224,41 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
-<li><a name="Message">
-<b>Message</b></a>
- - no hint
+<li><a name="Send">
+<b>Send</b></a>
+ - Sends a message to the buffer. Call App_Task() periodically to send the buffer.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte Message(byte action, signed char x, signed char y)<br />
+<br /><i>ANSIC prototype:</i> byte Send(byte action, signed char x, signed char y)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>action:byte</i> - Set of action bits, e.g. MOUSE_LEFT</li>
 <li><i>x:signed char</i> - x offset for move</li>
 <li><i>y:signed char</i> - y offset  for move</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="Move">
+<b>Move</b></a>
+ - Sends a mouse move
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte Move(signed char x, signed char y)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>x:signed char</i> - x move offset</li>
+<li><i>y:signed char</i> - y move offset</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="Click">
+<b>Click</b></a>
+ - Sends a button press event followed by a release event.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte Click(byte buttonMask)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>buttonMask:byte</i> - mask of buttons</li>
 <li><i>Return value:byte</i> - Error code
 </li>
 </ul><br />

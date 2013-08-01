@@ -4,7 +4,7 @@
     <Name>FSL_USB_HID_Mouse_Device</Name>
     <Description>Freescale USB Stack (HID Mouse)</Description>
     <Author>Erich Styger</Author>
-    <Version>01.053</Version>
+    <Version>01.054</Version>
     <Icon>FSL_USB_HID_Mouse_Device</Icon>
     <TypesFiles>PE,FSL_USB_HID_Mouse_Device\FSL_USB_HID_Mouse_Device</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -111,8 +111,8 @@
         <RuntimeProperty>false</RuntimeProperty>
         <CanDelete>false</CanDelete>
         <IconPopup>false</IconPopup>
-        <InhrBeanBaseName>Inhr</InhrBeanBaseName>
-        <ShowInheritedMethodsEventsInPrjTree>false</ShowInheritedMethodsEventsInPrjTree>
+        <InhrBeanBaseName>Tx</InhrBeanBaseName>
+        <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
       </TInhrItem>
     </Property>
   </PropertyList>
@@ -222,10 +222,10 @@
     </Method>
     <Method>
       <TMthdItem>
-        <Name>Message</Name>
-        <Symbol>Message</Symbol>
+        <Name>Send</Name>
+        <Symbol>Send</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint/>
+        <Hint>Sends a message to the buffer. Call App_Task() periodically to send the buffer.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -263,6 +263,80 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>byte #M#_#C#(byte action, signed char x, signed char y)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Move</Name>
+        <Symbol>Move</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Sends a mouse move</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>x</ParName>
+          <ParType>8bit signed</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>x move offset</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>y</ParName>
+          <ParType>8bit signed</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>y move offset</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(signed char x, signed char y)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Click</Name>
+        <Symbol>Click</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Sends a button press event followed by a release event.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>buttonMask</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>mask of buttons</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte buttonMask)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

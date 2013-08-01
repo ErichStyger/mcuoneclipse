@@ -105,7 +105,7 @@ typedef uint8_t %'ModuleName'_ElementType; /* type of single element */
 %elif %ElementSize="2"
 typedef uint16_t %'ModuleName'_ElementType; /* type of single element */
 %elif %ElementSize="4"
-typedef uint16_t %'ModuleName'_ElementType; /* type of single element */
+typedef uint32_t %'ModuleName'_ElementType; /* type of single element */
 %else
 #error "illegal element type size in properties"
 %endif

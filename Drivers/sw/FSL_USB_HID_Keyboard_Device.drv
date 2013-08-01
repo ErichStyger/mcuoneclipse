@@ -902,10 +902,7 @@ byte %'ModuleName'%.%SendChar(byte ch)
       return ERR_FAILED;
     }
   }
-  if (%@TxBuffer@'ModuleName'%.Put((MODIFERKEYS_NONE<<8)|KEY_NONE)!=ERR_OK) { /* send release message */
-    return ERR_FAILED;
-  }
-  return ERR_OK;
+  return (%@TxBuffer@'ModuleName'%.Put((MODIFERKEYS_NONE<<8)|KEY_NONE)!=ERR_OK); /* send release message */
 }
 
 %endif %- SendChar
