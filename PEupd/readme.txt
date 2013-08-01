@@ -29,12 +29,13 @@ Package from component(s):
 - FatFsMem_USB_MSD version 01.019
 - FatFsMemSDHC version 01.007
 - FontDisplay version 01.195
-- FreeRTOS version 01.287
+- FreeRTOS version 01.288
 - FreeRTOSTrace version 01.003
 - FSL_USB_CDC_Device version 01.016
-- FSL_USB_HID_Keyboard_Device version 01.039
+- FSL_USB_HID_Keyboard_Device version 01.040
+- FSL_USB_HID_Mouse_Device version 01.055
 - FSL_USB_MSD_Host version 01.014
-- FSL_USB_Stack version 01.018
+- FSL_USB_Stack version 01.023
 - FSShell version 01.231
 - GDisplay version 01.190
 - GenericBitIO version 01.065
@@ -67,7 +68,8 @@ Package from component(s):
 - MMA8451Q version 01.024
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 26.07.2013
+created 01.08.2013
+
 
 Part2_Beans_*.PEupd Content:
 -------------------------------------
@@ -77,7 +79,7 @@ Package from component(s):
 - PCA9554 version 01.024
 - PCA9554BitIO version 01.037
 - PDC8544 version 01.001
-- PercepioTrace version 01.005
+- PercepioTrace version 01.009
 - PID_Float version 01.005
 - PID_Int version 01.001
 - PtConv version 01.005
@@ -124,4 +126,5 @@ Package from component(s):
 - UTI version 01.125
 - Utility version 01.089
 - Wait version 01.059
-created 26.07.2013
+created 01.08.2013
+
