@@ -27,10 +27,10 @@
 							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.toolchain.sharedoption.librarian.1442332263" name="Enable automatic library configurations" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.toolchain.sharedoption.librarian" value="true" valueType="boolean"/>
 							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.toolchain.sharedoption.model.1275612878" name="Model" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.toolchain.sharedoption.model" value="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.toolchain.sharedoption.model.ewl_c_noio" valueType="enumerated"/>
 							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.debugging.other.601789989" name="Other debugging flags" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.debugging.other" value="-gstrict-dwarf" valueType="string"/>
-							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.addtools.printsize.1100524758" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.addtools.printsize" value="true" valueType="boolean"/>
-							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.addtools.createflash.149322501" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.addtools.createflash" value="true" valueType="boolean"/>
+							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.addtools.printsize.1100524758" name="Print Size" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.addtools.printsize" value="true" valueType="boolean"/>
+							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.addtools.createflash.149322501" name="Create Flash Image" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.addtools.createflash" value="true" valueType="boolean"/>
 							<targetPlatform id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.platform.debug.1852174790" isAbstract="false" name="Windows Platform" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.platform.debug"/>
-							<builder buildPath="${ProjDirPath}/RAM" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.builder.debug.725673396" keepEnvironmentInBuildfile="false" name="ARM Ltd Windows GNU Make builder" parallelizationNumber="-1" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.builder.debug"/>
+							<builder buildPath="${ProjDirPath}/RAM" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.builder.debug.725673396" keepEnvironmentInBuildfile="false" name="ARM Ltd Windows GNU Make builder" parallelBuildWorkspaceOn="true" parallelizationNumber="-1" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.builder.debug"/>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.assembler.debug.1008144326" name="ARM Ltd Windows GCC Assembler" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.assembler.debug">
 								<option id="org.eclipse.cdt.cross.arm.gnu.assembler.option.misc.enable.lstfilename.452309002" name="Enable Assembler Listing" superClass="org.eclipse.cdt.cross.arm.gnu.assembler.option.misc.enable.lstfilename" value="false" valueType="boolean"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.assembler.option.include.paths.1804695782" name="Include paths (-I)" superClass="org.eclipse.cdt.cross.arm.gnu.assembler.option.include.paths" valueType="includePath">
@@ -54,7 +54,7 @@
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.optimization.functionsections.2016352411" name="Function sections (-ffunction-sections)" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.optimization.functionsections" value="true" valueType="boolean"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.optimization.datasections.221463880" name="Data sections (-fdata-sections)" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.optimization.datasections" value="true" valueType="boolean"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.other.otherflags.1295520170" name="Other flags" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.other.otherflags" value="-c -fmessage-length=0 -D__VFPV4__" valueType="string"/>
-								<inputType id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input.1356244077" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input"/>
+								<inputType id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input.1356244077" name="ARM Ltd Windows GCC C Compiler" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input"/>
 								<inputType id="org.eclipse.cdt.cross.arm.gnu.c.compiler.input.asmSourcePreproc.1616536147" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.input.asmSourcePreproc"/>
 							</tool>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.compiler.debug.1121614163" name="ARM Ltd Windows GCC C++ Compiler" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.compiler.debug">
@@ -96,7 +96,7 @@
 								</option>
 							</tool>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createflash.debug.78661847" name="ARM Ltd Windows GNU Create Flash Image" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createflash.debug">
-								<option id="org.eclipse.cdt.cross.arm.gnu.createflash.out.choice.358647023" superClass="org.eclipse.cdt.cross.arm.gnu.createflash.out.choice" value="org.eclipse.cdt.cross.arm.gnu.createflash.out.choice.srec" valueType="enumerated"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.createflash.out.choice.358647023" name="Output file format (-O)" superClass="org.eclipse.cdt.cross.arm.gnu.createflash.out.choice" value="org.eclipse.cdt.cross.arm.gnu.createflash.out.choice.srec" valueType="enumerated"/>
 							</tool>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createlisting.debug.1720210474" name="ARM Ltd Windows GNU Create Listing" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createlisting.debug"/>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.printsize.debug.1771186273" name="ARM Ltd Windows GNU Print Size" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.printsize.debug"/>
@@ -134,8 +134,10 @@
 							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.toolchain.sharedoption.librarian.1409488075" name="Enable automatic library configurations" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.toolchain.sharedoption.librarian" value="true" valueType="boolean"/>
 							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.toolchain.sharedoption.model.126403095" name="Model" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.toolchain.sharedoption.model" value="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.toolchain.sharedoption.model.ewl_c_noio" valueType="enumerated"/>
 							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.debugging.other.2016050346" name="Other debugging flags" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.debugging.other" value="-gstrict-dwarf" valueType="string"/>
+							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.addtools.printsize.1843304705" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.addtools.printsize" value="true" valueType="boolean"/>
+							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.addtools.createflash.928079296" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.addtools.createflash" value="true" valueType="boolean"/>
 							<targetPlatform id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.platform.debug.1427837267" isAbstract="false" name="Windows Platform" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.platform.debug"/>
-							<builder buildPath="${ProjDirPath}/FLASH" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.builder.debug.1438391785" keepEnvironmentInBuildfile="false" name="ARM Ltd Windows GNU Make builder" parallelizationNumber="-1" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.builder.debug"/>
+							<builder buildPath="${ProjDirPath}/FLASH" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.builder.debug.1438391785" keepEnvironmentInBuildfile="false" name="ARM Ltd Windows GNU Make builder" parallelBuildWorkspaceOn="true" parallelizationNumber="-1" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.builder.debug"/>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.assembler.debug.1542401600" name="ARM Ltd Windows GCC Assembler" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.assembler.debug">
 								<option id="org.eclipse.cdt.cross.arm.gnu.assembler.option.misc.enable.lstfilename.1622830850" name="Enable Assembler Listing" superClass="org.eclipse.cdt.cross.arm.gnu.assembler.option.misc.enable.lstfilename" value="false" valueType="boolean"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.assembler.option.include.paths.1964722617" name="Include paths (-I)" superClass="org.eclipse.cdt.cross.arm.gnu.assembler.option.include.paths" valueType="includePath">
@@ -159,7 +161,7 @@
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.optimization.functionsections.1433193685" name="Function sections (-ffunction-sections)" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.optimization.functionsections" value="true" valueType="boolean"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.optimization.datasections.1811262954" name="Data sections (-fdata-sections)" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.optimization.datasections" value="true" valueType="boolean"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.other.otherflags.1955214409" name="Other flags" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.other.otherflags" value="-c -fmessage-length=0 -D__VFPV4__" valueType="string"/>
-								<inputType id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input.988251886" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input"/>
+								<inputType id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input.988251886" name="ARM Ltd Windows GCC C Compiler" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input"/>
 								<inputType id="org.eclipse.cdt.cross.arm.gnu.c.compiler.input.asmSourcePreproc.872002310" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.input.asmSourcePreproc"/>
 							</tool>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.compiler.debug.2103997447" name="ARM Ltd Windows GCC C++ Compiler" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.compiler.debug">
@@ -200,7 +202,9 @@
 									<listOptionValue builtIn="false" value="&quot;${MCUToolsBaseDir}/ARM_GCC_Support/ewl/EWL_Runtime/include&quot;"/>
 								</option>
 							</tool>
-							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createflash.debug.336844130" name="ARM Ltd Windows GNU Create Flash Image" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createflash.debug"/>
+							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createflash.debug.336844130" name="ARM Ltd Windows GNU Create Flash Image" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createflash.debug">
+								<option id="org.eclipse.cdt.cross.arm.gnu.createflash.out.choice.1819987624" superClass="org.eclipse.cdt.cross.arm.gnu.createflash.out.choice" value="org.eclipse.cdt.cross.arm.gnu.createflash.out.choice.srec" valueType="enumerated"/>
+							</tool>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createlisting.debug.889710422" name="ARM Ltd Windows GNU Create Listing" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createlisting.debug"/>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.printsize.debug.225231805" name="ARM Ltd Windows GNU Print Size" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.printsize.debug"/>
 						</toolChain>
@@ -233,4 +237,5 @@
 		</scannerConfigBuildInfo>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.pathentry"/>
+	<storageModule moduleId="refreshScope"/>
 </cproject>

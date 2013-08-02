@@ -10,7 +10,7 @@
 #include "LED4.h"
 #include "FRTOS1.h"
 #include "WAIT1.h"
-//#include "Shell.h"
+#include "Shell.h"
 
 static float f1=1.0f, f2 = 2.0f;
 
@@ -58,7 +58,7 @@ void APP_Run(void) {
     LED4_Neg();
     WAIT1_Waitms(250);
   }  
- // SHELL_Init();
+  SHELL_Init();
   if (FRTOS1_xTaskCreate(
         Task1,  /* pointer to the task */
         (signed portCHAR *)"Task1", /* task name for kernel awareness debugging */
