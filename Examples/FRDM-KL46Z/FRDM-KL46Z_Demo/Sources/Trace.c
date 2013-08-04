@@ -13,12 +13,18 @@
 #include "UTIL1.h"
 #include "Shell.h"
 #include "MMA1.h"
+#include "MAG1.h"
 
-
-void ACCEL_GetValues(int16_t *x, int16_t *y, int16_t *z) {
+static void ACCEL_GetValues(int16_t *x, int16_t *y, int16_t *z) {
   *x = MMA1_GetXmg();
   *y = MMA1_GetYmg();
   *z = MMA1_GetZmg();
+}
+
+static void MAG_GetValues(int16_t *x, int16_t *y, int16_t *z) {
+  *x = MAG1_GetX();
+  *y = MAG1_GetY();
+  *z = MAG1_GetZ();
 }
 
 typedef enum {
@@ -29,6 +35,7 @@ typedef enum {
 static TRACE_ChannelKind traceChannel = TRACE_TO_NONE;
 
 static bool traceAccel = TRUE;
+static bool traceMagnetometer = TRUE;
 
 static void TRACE_PrintStatus(const CLS1_StdIOType *io) {
   CLS1_SendStatusStr((unsigned char*)"Trace", (unsigned char*)"\r\n", io->stdOut);
@@ -44,6 +51,11 @@ static void TRACE_PrintStatus(const CLS1_StdIOType *io) {
   } else {
     CLS1_SendStr((unsigned char*)"accel(off) ", io->stdOut);
   }
+  if (traceMagnetometer) {
+    CLS1_SendStr((unsigned char*)"magnetometer(on) ", io->stdOut);
+  } else {
+    CLS1_SendStr((unsigned char*)"magnetometer(off) ", io->stdOut);
+  }
   CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
 }
 
@@ -56,6 +68,7 @@ static void TRACE_PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows trace help or status\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  none|shell", (unsigned char*)"Sets the trace channel to be used\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  accel on|off", (unsigned char*)"Enables or disables accelerometer trace\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  magnetometer on|off", (unsigned char*)"Enables or disables magnetometer trace\r\n", io->stdOut);
 }
 
 /*!
@@ -84,6 +97,12 @@ uint8_t TRACE_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_S
   } else if (UTIL1_strcmp((char*)cmd, (char*)"trace accel off")==0) {
     traceAccel = FALSE;
     *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"magnetometer accel on")==0) {
+    traceMagnetometer = TRUE;
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"magnetometer accel off")==0) {
+    traceMagnetometer = FALSE;
+    *handled = TRUE;
   }
   return ERR_OK;
 }
@@ -108,11 +127,27 @@ static portTASK_FUNCTION(TraceTask, pvParameters) {
         UTIL1_strcatNum16sFormatted(buf, sizeof(buf), y, ' ', 6);
         UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"; Z:");
         UTIL1_strcatNum16sFormatted(buf, sizeof(buf), z, ' ', 6);
-        UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
         CLS1_SendStr(&buf[0], CLS1_GetStdio()->stdOut);
-        FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
       }
-      FRTOS1_vTaskDelay(25/portTICK_RATE_MS);
+      if (traceMagnetometer) {
+        int16_t x, y, z;
+
+        MAG_GetValues(&x, &y, &z);
+        buf[0] = '\0';
+        UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" MX:");
+        UTIL1_strcatNum16sFormatted(buf, sizeof(buf), x, ' ', 6);
+        UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"; MY:");
+        UTIL1_strcatNum16sFormatted(buf, sizeof(buf), y, ' ', 6);
+        UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"; MZ:");
+        UTIL1_strcatNum16sFormatted(buf, sizeof(buf), z, ' ', 6);
+        CLS1_SendStr(&buf[0], CLS1_GetStdio()->stdOut);
+      }
+      if (traceMagnetometer || traceAccel) {
+        CLS1_SendStr((unsigned char*)"\r\n", CLS1_GetStdio()->stdOut);
+        FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
+      } else {
+        FRTOS1_vTaskDelay(25/portTICK_RATE_MS);
+      }
     }
   }
 }

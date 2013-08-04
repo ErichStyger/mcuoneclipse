@@ -14,6 +14,7 @@
 #include "I2CSPY1.h"
 #include "MMA1.h"
 #include "Trace.h"
+#include "MAG1.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -29,6 +30,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if defined(MMA1_PARSE_COMMAND_ENABLED) && MMA1_PARSE_COMMAND_ENABLED==1
   MMA1_ParseCommand,
+#endif
+#if defined(MAG1_PARSE_COMMAND_ENABLED) && MAG1_PARSE_COMMAND_ENABLED==1
+  MAG1_ParseCommand,
 #endif
 #if defined(I2CSPY1_PARSE_COMMAND_ENABLED) && I2CSPY1_PARSE_COMMAND_ENABLED==1
   I2CSPY1_ParseCommand,
