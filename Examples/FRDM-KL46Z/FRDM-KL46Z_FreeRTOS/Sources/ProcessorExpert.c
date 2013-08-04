@@ -30,6 +30,15 @@
 /* Including needed modules to compile this module/procedure */
 #include "Cpu.h"
 #include "Events.h"
+#include "FRTOS1.h"
+#include "RTOSTICKLDD1.h"
+#include "UTIL1.h"
+#include "LED1.h"
+#include "LEDpin1.h"
+#include "BitIoLdd1.h"
+#include "LED2.h"
+#include "LEDpin2.h"
+#include "BitIoLdd2.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -37,6 +46,21 @@
 #include "IO_Map.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+static portTASK_FUNCTION(Task1, pvParameters) {
+  (void)pvParameters; /* parameter not used */
+  for(;;) {
+    LED1_Neg();
+    FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
+  }
+}
+
+static portTASK_FUNCTION(Task2, pvParameters) {
+  (void)pvParameters; /* parameter not used */
+  for(;;) {
+    LED2_Neg();
+    FRTOS1_vTaskDelay(500/portTICK_RATE_MS);
+  }
+}
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -48,8 +72,30 @@ int main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
-  /* Write your code here */
-  /* For example: for(;;) { } */
+  if (FRTOS1_xTaskCreate(
+        Task1,  /* pointer to the task */
+        (signed portCHAR *)"Task1", /* task name for kernel awareness debugging */
+        configMINIMAL_STACK_SIZE, /* task stack size */
+        (void*)NULL, /* optional task startup argument */
+        tskIDLE_PRIORITY,  /* initial priority */
+        (xTaskHandle*)NULL /* optional task handle to create */
+      ) != pdPASS) {
+    /*lint -e527 */
+    for(;;){}; /* error! probably out of memory */
+    /*lint +e527 */
+  }
+  if (FRTOS1_xTaskCreate(
+        Task2,  /* pointer to the task */
+        (signed portCHAR *)"Task2", /* task name for kernel awareness debugging */
+        configMINIMAL_STACK_SIZE, /* task stack size */
+        (void*)NULL, /* optional task startup argument */
+        tskIDLE_PRIORITY,  /* initial priority */
+        (xTaskHandle*)NULL /* optional task handle to create */
+      ) != pdPASS) {
+    /*lint -e527 */
+    for(;;){}; /* error! probably out of memory */
+    /*lint +e527 */
+  }
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
