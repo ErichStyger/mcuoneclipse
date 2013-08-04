@@ -397,7 +397,7 @@ typedef struct {
 } tAccelCal;
 
 /* default calibration values from component properties */
-const tAccelCal InitialCalibration = { /* Initial default calibration values */
+static const tAccelCal InitialCalibration = { /* Initial default calibration values */
   %xCalibrationOffset, /* X offset */
   %yCalibrationOffset, /* Y offset */
   %zCalibrationOffset, /* Z offset */
