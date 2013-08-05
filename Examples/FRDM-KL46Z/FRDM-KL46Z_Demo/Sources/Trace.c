@@ -97,10 +97,10 @@ uint8_t TRACE_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_S
   } else if (UTIL1_strcmp((char*)cmd, (char*)"trace accel off")==0) {
     traceAccel = FALSE;
     *handled = TRUE;
-  } else if (UTIL1_strcmp((char*)cmd, (char*)"magnetometer accel on")==0) {
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"magnetometer on")==0) {
     traceMagnetometer = TRUE;
     *handled = TRUE;
-  } else if (UTIL1_strcmp((char*)cmd, (char*)"magnetometer accel off")==0) {
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"magnetometer off")==0) {
     traceMagnetometer = FALSE;
     *handled = TRUE;
   }

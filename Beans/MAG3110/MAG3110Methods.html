@@ -264,7 +264,7 @@ LI.EXP {
 </li>
 <li><a name="GetRaw8XYZ">
 <b>GetRaw8XYZ</b></a>
- - Returns in an array the x, y and z accelerometer as 8bit values.
+ - Returns in an array the x, y and z sensor values as 8bit values.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
 <br /><i>ANSIC prototype:</i> uint8_t GetRaw8XYZ(void* *xyz)<br />
@@ -334,72 +334,6 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
-<li><a name="GetXOffset">
-<b>GetXOffset</b></a>
- - Returns the offset applied to the X value.
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> int16_t GetXOffset(void)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>Return value:int16_t</i> - Error code
-</li>
-</ul><br />
-</li>
-<li><a name="GetYOffset">
-<b>GetYOffset</b></a>
- - Returns the offset applied to the Y value.
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> int16_t GetYOffset(void)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>Return value:int16_t</i> - Error code
-</li>
-</ul><br />
-</li>
-<li><a name="GetZOffset">
-<b>GetZOffset</b></a>
- - Returns the offset applied to the Z value.
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> int16_t GetZOffset(void)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>Return value:int16_t</i> - Error code
-</li>
-</ul><br />
-</li>
-<li><a name="GetX1gValue">
-<b>GetX1gValue</b></a>
- - Returns the value for 1g for channel  X.
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> int16_t GetX1gValue(void)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>Return value:int16_t</i> - 1g value for X
-</li>
-</ul><br />
-</li>
-<li><a name="GetY1gValue">
-<b>GetY1gValue</b></a>
- - Returns the value for 1g for channel  Y.
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> int16_t GetY1gValue(void)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>Return value:int16_t</i> - 1g value for Y
-</li>
-</ul><br />
-</li>
-<li><a name="GetZ1gValue">
-<b>GetZ1gValue</b></a>
- - Returns the value for 1g for channel  Z.
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> int16_t GetZ1gValue(void)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>Return value:int16_t</i> - 1g value for Z
-</li>
-</ul><br />
-</li>
 <li><a name="SetFastMode">
 <b>SetFastMode</b></a>
  - Turns the F_READ (Fast Read Mode) on or off
@@ -431,6 +365,70 @@ LI.EXP {
 <br /><i>ANSIC prototype:</i> uint8_t Deinit(void)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>Return value:uint8_t</i> - Error code, ERR_OK if everything is ok.
+</li>
+</ul><br />
+</li>
+<li><a name="GetTemperature">
+<b>GetTemperature</b></a>
+ - Returns the temperature of the die as signed 8bit values in degree Celsius
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte GetTemperature(signed char *temperature)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>temperature: Pointer to signed char</i> - Pointer to variable where to store the temperature</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="WhoAmI">
+<b>WhoAmI</b></a>
+ - Returns the value of the WHO_AM_I (0x07) register
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte WhoAmI(byte *value)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>value: Pointer to byte</i> - Pointer to where to store the value</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="GetSysMode">
+<b>GetSysMode</b></a>
+ - Returns the SYSMOD (0x08) status
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte GetSysMode(byte *mode)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>mode: Pointer to byte</i> - Pointer to where to store the value. Returns 0x00 (STANDBY), 0x01 (ACTIVE, raw data) or 0x02 (ACTIVE, non-RAW data)</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="GetUserOffsetCorrection">
+<b>GetUserOffsetCorrection</b></a>
+ - Returns the user offset correction values from the device
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte GetUserOffsetCorrection(int16_t *x, int16_t *y, int16_t *z)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>x: Pointer to int16_t</i> - Pointer to where to store the x offset</li>
+<li><i>y: Pointer to int16_t</i> - Pointer to where to store the y offset</li>
+<li><i>z: Pointer to int16_t</i> - Pointer to where to store the z offset</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="SetUserOffsetCorrection">
+<b>SetUserOffsetCorrection</b></a>
+ - Sets the user offset correction values
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte SetUserOffsetCorrection(int16_t x, int16_t y, int16_t z)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>x:int16_t</i> - x offset</li>
+<li><i>y:int16_t</i> - y offset</li>
+<li><i>z:int16_t</i> - z offset</li>
+<li><i>Return value:byte</i> - Error code
 </li>
 </ul><br />
 </li>
