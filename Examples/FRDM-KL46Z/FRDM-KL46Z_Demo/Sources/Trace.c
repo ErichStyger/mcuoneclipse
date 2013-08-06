@@ -22,9 +22,9 @@ static void ACCEL_GetValues(int16_t *x, int16_t *y, int16_t *z) {
 }
 
 static void MAG_GetValues(int16_t *x, int16_t *y, int16_t *z) {
-  *x = MAG1_GetX();
-  *y = MAG1_GetY();
-  *z = MAG1_GetZ();
+  (void)MAG1_GetX(x);
+  (void)MAG1_GetY(y);
+  (void)MAG1_GetZ(z);
 }
 
 typedef enum {

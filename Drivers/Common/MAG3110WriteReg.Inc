@@ -3,12 +3,14 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (CalibrateZ1g)
+%include Common\GeneralMethod.inc (WriteReg)
 %;**     Description :
-%;**         Performs a calibration of the sensor. It is assumed that the
-%;**         X and Y sensors have 0 g, and the X sensor has 1 g.
-%include Common\GeneralParametersNone.inc
-%include Common\GeneralReturnNothing.inc
+%;**         Writes to a device register address
+%include Common\GeneralParameters.inc(27)
+%;**         reg%Parreg %>27 - register address
+%;**         val%Parval %>27 - Value to write
+%;**     Returns     :
+%;**         ---%RetVal %>27 - Error code
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

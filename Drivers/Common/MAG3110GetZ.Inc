@@ -5,12 +5,11 @@
 %;** ===================================================================
 %include Common\GeneralMethod.inc (GetZ)
 %;**     Description :
-%;**         Retrieves the value for the Z axis. The value is adjusted
-%;**         with the zero calibration value (0 for 0 g, negative for
-%;**         negative acceleration and positive for positive acceleration).
-%include Common\GeneralParametersNone.inc
+%;**         Returns the Z magnetometer value.
+%include Common\GeneralParameters.inc(27)
+%;**       * value%Parvalue %>27 - Pointer to where to store the value
 %;**     Returns     :
-%;**         ---%RetVal %>27 - Measured Z value
+%;**         ---%RetVal %>27 - Error code
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

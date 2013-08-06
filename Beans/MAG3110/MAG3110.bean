@@ -4,7 +4,7 @@
     <Name>MAG3110</Name>
     <Description>Driver for the Freescale MAG3110 digital magnetometer</Description>
     <Author>Erich Styger</Author>
-    <Version>01.051</Version>
+    <Version>01.066</Version>
     <Icon>MAG3110</Icon>
     <TypesFiles>PE,MAG3110\MAG3110</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -43,6 +43,7 @@
         <TypeSpec>typePropertyI2CSlaveAddress</TypeSpec>
         <Hint>Specifies the I2C slave address of the accelerometer.</Hint>
         <ItemLevel>BASIC</ItemLevel>
+        <ReadOnly>true</ReadOnly>
         <EditLine>true</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
@@ -51,6 +52,23 @@
         <CanDelete>false</CanDelete>
         <IconPopup>false</IconPopup>
       </TEnumItem>
+    </Property>
+    <Property>
+      <TIntgItem>
+        <Name>Temperature offset</Name>
+        <Symbol>DieTempOffset</Symbol>
+        <Hint>The DIE_TEMP register is not factory trimmed, so returns around 0°C for about 20°C. With this offset can be trimmed.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>24</DefaultValue>
+        <MinValue>-100</MinValue>
+        <MaxValue>100</MaxValue>
+        <Bases>DEC</Bases>
+        <DefaultBase>DEC</DefaultBase>
+        <ExtraHintDisabled>false</ExtraHintDisabled>
+        <ChangeValueIntoRange>false</ChangeValueIntoRange>
+        <RuntimeProperty>false</RuntimeProperty>
+      </TIntgItem>
     </Property>
     <Property>
       <TInhrLinkItem>
@@ -65,71 +83,6 @@
         <IconPopup>false</IconPopup>
         <SortStyle/>
       </TInhrLinkItem>
-    </Property>
-    <Property>
-      <TGrupItem>
-        <Name>Calibration</Name>
-        <Symbol>CalibrationGroup</Symbol>
-        <Hint>Contains initialization calibration values.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <BoldName>true</BoldName>
-        <EditLine>false</EditLine>
-        <Description/>
-        <Expanded>Yes</Expanded>
-        <Children>
-          <GrupItem>
-            <TIntgItem>
-              <Name>X offset</Name>
-              <Symbol>xCalibrationOffset</Symbol>
-              <Hint>Offset to be added to X magnetometer sensor value</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>0</DefaultValue>
-              <MinValue>-32768</MinValue>
-              <MaxValue>32767</MaxValue>
-              <Bases>DEC</Bases>
-              <DefaultBase>DEC</DefaultBase>
-              <ExtraHintDisabled>false</ExtraHintDisabled>
-              <ChangeValueIntoRange>false</ChangeValueIntoRange>
-              <RuntimeProperty>false</RuntimeProperty>
-            </TIntgItem>
-          </GrupItem>
-          <GrupItem>
-            <TIntgItem>
-              <Name>Y offset</Name>
-              <Symbol>yCalibrationOffset</Symbol>
-              <Hint>Offset to be added to Y magnetometer sensor value</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>0</DefaultValue>
-              <MinValue>-32658</MinValue>
-              <MaxValue>32767</MaxValue>
-              <Bases>DEC</Bases>
-              <DefaultBase>DEC</DefaultBase>
-              <ExtraHintDisabled>false</ExtraHintDisabled>
-              <ChangeValueIntoRange>false</ChangeValueIntoRange>
-              <RuntimeProperty>false</RuntimeProperty>
-            </TIntgItem>
-          </GrupItem>
-          <GrupItem>
-            <TIntgItem>
-              <Name>Z offset</Name>
-              <Symbol>zCalibrationOffset</Symbol>
-              <Hint>Offset to be added to Z magnetometer sensor value</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>0</DefaultValue>
-              <MinValue>-32658</MinValue>
-              <MaxValue>32767</MaxValue>
-              <Bases>DEC</Bases>
-              <DefaultBase>DEC</DefaultBase>
-              <ExtraHintDisabled>false</ExtraHintDisabled>
-              <ChangeValueIntoRange>false</ChangeValueIntoRange>
-              <RuntimeProperty>false</RuntimeProperty>
-            </TIntgItem>
-          </GrupItem>
-        </Children>
-      </TGrupItem>
     </Property>
     <Property>
       <TBoolGrupItem>
@@ -237,94 +190,10 @@
     </Method>
     <Method>
       <TMthdItem>
-        <Name>GetX</Name>
-        <Symbol>GetX</Symbol>
+        <Name>GetXYZ8</Name>
+        <Symbol>GetXYZ8</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Retrieves the value for the X axis. The value is adjusted with the zero calibration value (0 for 0 g, negative for negative acceleration and positive for positive acceleration).</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>16bit signed</ReturnType>
-        <RetHint>Measured X value</RetHint>
-        <ParamCount>0</ParamCount>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>int16_t #M#_#C#(void)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>GetY</Name>
-        <Symbol>GetY</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Retrieves the value for the Y axis. The value is adjusted with the zero calibration value (0 for 0 g, negative for negative acceleration and positive for positive acceleration).</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>16bit signed</ReturnType>
-        <RetHint>Measured Y value</RetHint>
-        <ParamCount>0</ParamCount>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>int16_t #M#_#C#(void)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>GetZ</Name>
-        <Symbol>GetZ</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Retrieves the value for the Z axis. The value is adjusted with the zero calibration value (0 for 0 g, negative for negative acceleration and positive for positive acceleration).</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>16bit signed</ReturnType>
-        <RetHint>Measured Z value</RetHint>
-        <ParamCount>0</ParamCount>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>int16_t #M#_#C#(void)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>GetRaw8XYZ</Name>
-        <Symbol>GetRaw8XYZ</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Returns in an array the x, y and z sensor values as 8bit values.</Hint>
+        <Hint>Returns in an array the x, y and z sensor values as 8bit values. Note that for this method the FAST_READ flag *shall* be set.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -343,27 +212,27 @@
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>xyz</ParName>
-          <ParType>pointer</ParType>
+          <ParType>8bit signed</ParType>
           <ParPassing>Address</ParPassing>
-          <ParHint>Pointer to an array of three unsigned 8bit values which are used to return the accelerometer values.</ParHint>
+          <ParHint>Pointer to an array of three signed 8bit values which are used to return the accelerometer values.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>uint8_t #M#_#C#(void* *xyz)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(signed char *xyz)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
     <Method>
       <TMthdItem>
-        <Name>CalibrateX1g</Name>
-        <Symbol>CalibrateX1g</Symbol>
+        <Name>GetXYZ16</Name>
+        <Symbol>GetXYZ16</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Performs a calibration of the sensor. It is assumed that the Y and Z sensors have 0 g, and the X sensor has 1 g.</Hint>
+        <Hint>Returns in an array the x, y and z sensor values as 16bit values. Note that for this method the FAST_READ flag shall not be set.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
+        <TextValueIndex>true</TextValueIndex>
         <RuntimeProperty>false</RuntimeProperty>
         <CanDelete>false</CanDelete>
         <IconPopup>false</IconPopup>
@@ -372,77 +241,27 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>void</ReturnType>
-        <RetHint>none</RetHint>
-        <ParamCount>0</ParamCount>
+        <ReturnType>uint8_t</ReturnType>
+        <RetHint>Error code, ERR_OK for no error.</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>xyz</ParName>
+          <ParType>16bit signed</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to an array of three signed 16bit values which are used to return the accelerometer values.</ParHint>
+        </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(void)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(int16_t *xyz)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
     <Method>
       <TMthdItem>
-        <Name>CalibrateY1g</Name>
-        <Symbol>CalibrateY1g</Symbol>
+        <Name>GetX</Name>
+        <Symbol>GetX</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Performs a calibration of the sensor. It is assumed that the Y and Z sensors have 0 g, and the X sensor has 1 g.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>void</ReturnType>
-        <RetHint>none</RetHint>
-        <ParamCount>0</ParamCount>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>void #M#_#C#(void)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>CalibrateZ1g</Name>
-        <Symbol>CalibrateZ1g</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Performs a calibration of the sensor. It is assumed that the X and Y sensors have 0 g, and the X sensor has 1 g.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>void</ReturnType>
-        <RetHint>none</RetHint>
-        <ParamCount>0</ParamCount>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>void #M#_#C#(void)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>MeasureGetRawX</Name>
-        <Symbol>MeasureGetRawX</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Performs a measurement on X channel and returns the raw value.</Hint>
+        <Hint>Returns the X magnetometer value.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -457,20 +276,26 @@
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>16bit unsigned</ReturnType>
-        <RetHint>X sensor value</RetHint>
-        <ParamCount>0</ParamCount>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>value</ParName>
+          <ParType>16bit signed</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to where to store the value</ParHint>
+        </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>word #M#_#C#(void)</ANSIC>
+          <ANSIC>word #M#_#C#(int16_t *value)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
     <Method>
       <TMthdItem>
-        <Name>MeasureGetRawY</Name>
-        <Symbol>MeasureGetRawY</Symbol>
+        <Name>GetY</Name>
+        <Symbol>GetY</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Performs a measurement on Y channel and returns the raw value.</Hint>
+        <Hint>Returns the Y magnetometer value.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -485,20 +310,26 @@
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>16bit unsigned</ReturnType>
-        <RetHint>Y sensor value</RetHint>
-        <ParamCount>0</ParamCount>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>value</ParName>
+          <ParType>16bit signed</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to where to store the value</ParHint>
+        </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>word #M#_#C#(void)</ANSIC>
+          <ANSIC>word #M#_#C#(int16_t *value)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
     <Method>
       <TMthdItem>
-        <Name>MeasureGetRawZ</Name>
-        <Symbol>MeasureGetRawZ</Symbol>
+        <Name>GetZ</Name>
+        <Symbol>GetZ</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Performs a measurement on Z channel and returns the raw value.</Hint>
+        <Hint>Returns the Z magnetometer value.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -513,11 +344,17 @@
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>16bit unsigned</ReturnType>
-        <RetHint>Z sensor value</RetHint>
-        <ParamCount>0</ParamCount>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>value</ParName>
+          <ParType>16bit signed</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to where to store the value</ParHint>
+        </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>word #M#_#C#(void)</ANSIC>
+          <ANSIC>word #M#_#C#(int16_t *value)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -552,62 +389,6 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>byte #M#_#C#(bool on)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>Init</Name>
-        <Symbol>Init</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Initializes the device driver</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>true</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>uint8_t</ReturnType>
-        <RetHint>Error code, ERR_OK if everything is ok.</RetHint>
-        <ParamCount>0</ParamCount>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>uint8_t #M#_#C#(void)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>Deinit</Name>
-        <Symbol>Deinit</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Counterpart to Init() method.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>true</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>uint8_t</ReturnType>
-        <RetHint>Error code, ERR_OK if everything is ok.</RetHint>
-        <ParamCount>0</ParamCount>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>uint8_t #M#_#C#(void)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -710,6 +491,40 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>byte #M#_#C#(byte *mode)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>SetSysMode</Name>
+        <Symbol>SetSysMode</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Sets the SYSMOD (0x08) status register</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>mode</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Set the system mode. 0x00 (SYSMOD_STANDBY_BIT_MASK), 0x01 (SYSMOD_ACTIVE_RAW_BIT_MASK) or 0x02 (SYSMOD_ACTIVE_BIT_MASK)</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte mode)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -882,6 +697,142 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>byte #M#_#C#(int16_t x, int16_t y, int16_t z)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>WriteReg</Name>
+        <Symbol>WriteReg</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Writes to a device register address</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>reg</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>register address</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>val</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Value to write</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte reg, byte val)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ReadReg</Name>
+        <Symbol>ReadReg</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Reads from a device register address</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>addr</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Device register address</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>val</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to where to store the value</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte addr, byte *val)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Init</Name>
+        <Symbol>Init</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Initializes the device driver</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>true</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>uint8_t</ReturnType>
+        <RetHint>Error code, ERR_OK if everything is ok.</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>uint8_t #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>Deinit</Name>
+        <Symbol>Deinit</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Counterpart to Init() method.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>true</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>uint8_t</ReturnType>
+        <RetHint>Error code, ERR_OK if everything is ok.</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>uint8_t #M#_#C#(void)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
