@@ -1,13 +1,18 @@
 
 [USED_FACES]
-BeanVersion=01.001
+BeanVersion=01.004
 
-InterfacesCount=3
+InterfacesCount=4
 
 Symbol=I2C
 Link=Yes
 Interface=MAG3110\I2C
 Version=01.000
+
+Symbol=INT1
+Link=No
+Interface=MAG3110\Interrupt
+Version=01.002
 
 Symbol=Shell
 Link=Yes

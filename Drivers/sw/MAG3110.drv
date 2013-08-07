@@ -50,6 +50,11 @@
 %- List of descriptions of internal methods
 %define! Description_Read16bitBEValue Reads a 16bit value to the device. Value is read in Big Endian and returned in the proper format depending of LE/BE of microcontroller.
 %define! Description_Write16bitBEValue Writes a 16bit value to the device. Value is written in Big Endian.
+%ifdef INT1
+  %ifdef @INT1@OnInterrupt
+    %define! Description_%@INT1@OnInterrupt This event is called when an active signal edge/level has occurred. The event services the event of the inherited component and eventually invokes other events.
+  %endif %- @INT1@OnInterrupt
+%endif %- INT1
 %-BW_INTERN_COMMENTS_END
 %-
 %define CDEversion Standard
@@ -495,6 +500,32 @@ byte %'ModuleName'%.%MagneticSensorReset(void);
 
 %endif %- MagneticSensorReset
 %-BW_METHOD_END MagneticSensorReset
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SetAutoMResetMode
+%ifdef SetAutoMResetMode
+byte %'ModuleName'%.%SetAutoMResetMode(bool on);
+%define! Paron
+%define! RetVal
+%include Common\MAG3110SetAutoMResetMode.Inc
+
+%endif %- SetAutoMResetMode
+%-BW_METHOD_END SetAutoMResetMode
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetAutoMResetMode
+%ifdef GetAutoMResetMode
+byte %'ModuleName'%.%GetAutoMResetMode(bool *isOn);
+%define! ParisOn
+%define! RetVal
+%include Common\MAG3110GetAutoMResetMode.Inc
+
+%endif %- GetAutoMResetMode
+%-BW_METHOD_END GetAutoMResetMode
+%-INHERITED_EVENT_BEGIN INT1 OnInterrupt
+%ifdef @INT1@OnInterrupt
+void %@INT1@OnInterrupt(void);
+
+%endif %- @INT1@OnInterrupt
+%-INHERITED_EVENT_END INT1 OnInterrupt
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -901,9 +932,9 @@ byte %'ModuleName'%.%SetTriggerImmediateMode(bool on)
     return ERR_FAILED;
   }
   if (on) {
-    val |= %'ModuleName'%.CTRL_REG_1_TM_BIT_MASK; /* enable F_READ: Fast read mode, data format limited to single byte (auto increment counter will skip LSB) */
+    val |= %'ModuleName'%.CTRL_REG_1_TM_BIT_MASK; /* enable trigger immediate bit */
   } else {
-    val &= ~%'ModuleName'%.CTRL_REG_1_TM_BIT_MASK; /* disable F_READ: Fast read mode, data format limited to single byte (auto increment counter will skip LSB) */
+    val &= ~%'ModuleName'%.CTRL_REG_1_TM_BIT_MASK; /* disable trigger immediate bit */
   }
   return %@I2C@'ModuleName'%.WriteByteAddress8(%'ModuleName'%.I2C_ADDR, %'ModuleName'%.CTRL_REG_1, val);
 }
@@ -971,6 +1002,48 @@ byte %'ModuleName'%.%GetRawMode(bool *isOn)
 
 %endif %- GetRawMode
 %-BW_METHOD_END GetRawMode
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SetAutoMResetMode
+%ifdef SetAutoMResetMode
+%define! Paron
+%define! RetVal
+%include Common\MAG3110SetAutoMResetMode.Inc
+byte %'ModuleName'%.%SetAutoMResetMode(bool on)
+{
+  uint8_t val;
+
+  if (%@I2C@'ModuleName'%.ReadByteAddress8(%'ModuleName'%.I2C_ADDR, %'ModuleName'%.CTRL_REG_2, &val)!=ERR_OK) {
+    return ERR_FAILED;
+  }
+  if (on) {
+    val |= %'ModuleName'%.CTRL_REG_2_AUTO_MRST_EN_MASK; /* enable auto reset mode */
+  } else {
+    val &= ~%'ModuleName'%.CTRL_REG_2_AUTO_MRST_EN_MASK; /* disable auto reset mode */
+  }
+  return %@I2C@'ModuleName'%.WriteByteAddress8(%'ModuleName'%.I2C_ADDR, %'ModuleName'%.CTRL_REG_2, val);
+}
+
+%endif %- SetAutoMResetMode
+%-BW_METHOD_END SetAutoMResetMode
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetAutoMResetMode
+%ifdef GetAutoMResetMode
+%define! ParisOn
+%define! RetVal
+%include Common\MAG3110GetAutoMResetMode.Inc
+byte %'ModuleName'%.%GetAutoMResetMode(bool *isOn)
+{
+  uint8_t val;
+
+  if(%@I2C@'ModuleName'%.ReadByteAddress8(%'ModuleName'%.I2C_ADDR, %'ModuleName'%.CTRL_REG_2, &val)!=ERR_OK) {
+    return ERR_FAILED;
+  }
+  *isOn = (bool)(val&%'ModuleName'%.CTRL_REG_2_AUTO_MRST_EN_MASK);
+  return ERR_OK;
+}
+
+%endif %- GetAutoMResetMode
+%-BW_METHOD_END GetAutoMResetMode
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SetOversamplingMode
 %ifdef SetOversamplingMode
@@ -1297,6 +1370,16 @@ byte %'ModuleName'%.%MagneticSensorReset(void)
 
 %endif %- MagneticSensorReset
 %-BW_METHOD_END MagneticSensorReset
+%-INHERITED_EVENT_BEGIN INT1 OnInterrupt
+%ifdef @INT1@OnInterrupt
+%include Common\GeneralInternal.inc (OnInterrupt)
+void %@INT1@OnInterrupt(void)
+{
+  /* Write your code here ... */
+}
+
+%endif %- @INT1@OnInterrupt
+%-INHERITED_EVENT_END INT1 OnInterrupt
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
