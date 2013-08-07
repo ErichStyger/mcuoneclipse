@@ -50,11 +50,6 @@
 %- List of descriptions of internal methods
 %define! Description_Read16bitBEValue Reads a 16bit value to the device. Value is read in Big Endian and returned in the proper format depending of LE/BE of microcontroller.
 %define! Description_Write16bitBEValue Writes a 16bit value to the device. Value is written in Big Endian.
-%ifdef INT1
-  %ifdef @INT1@OnInterrupt
-    %define! Description_%@INT1@OnInterrupt This event is called when an active signal edge/level has occurred. The event services the event of the inherited component and eventually invokes other events.
-  %endif %- @INT1@OnInterrupt
-%endif %- INT1
 %-BW_INTERN_COMMENTS_END
 %-
 %define CDEversion Standard
@@ -520,12 +515,6 @@ byte %'ModuleName'%.%GetAutoMResetMode(bool *isOn);
 
 %endif %- GetAutoMResetMode
 %-BW_METHOD_END GetAutoMResetMode
-%-INHERITED_EVENT_BEGIN INT1 OnInterrupt
-%ifdef @INT1@OnInterrupt
-void %@INT1@OnInterrupt(void);
-
-%endif %- @INT1@OnInterrupt
-%-INHERITED_EVENT_END INT1 OnInterrupt
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -1370,16 +1359,6 @@ byte %'ModuleName'%.%MagneticSensorReset(void)
 
 %endif %- MagneticSensorReset
 %-BW_METHOD_END MagneticSensorReset
-%-INHERITED_EVENT_BEGIN INT1 OnInterrupt
-%ifdef @INT1@OnInterrupt
-%include Common\GeneralInternal.inc (OnInterrupt)
-void %@INT1@OnInterrupt(void)
-{
-  /* Write your code here ... */
-}
-
-%endif %- @INT1@OnInterrupt
-%-INHERITED_EVENT_END INT1 OnInterrupt
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

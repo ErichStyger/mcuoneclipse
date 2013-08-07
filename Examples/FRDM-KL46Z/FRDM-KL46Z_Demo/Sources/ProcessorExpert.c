@@ -57,6 +57,8 @@
 #include "AdcLdd1.h"
 #include "TMOUT1.h"
 #include "MAG1.h"
+#include "MINT1.h"
+#include "ExtIntLdd1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

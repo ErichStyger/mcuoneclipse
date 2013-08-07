@@ -61,6 +61,8 @@
 #include "AdcLdd1.h"
 #include "TMOUT1.h"
 #include "MAG1.h"
+#include "MINT1.h"
+#include "ExtIntLdd1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -168,6 +170,20 @@ void AD1_OnCalibrationEnd(void);
 **         User should check if the calibration pass or fail by
 **         Calibration status method./nThis event is enabled only if
 **         the <Interrupt service/event> property is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void MINT1_OnInterrupt(void);
+/*
+** ===================================================================
+**     Event       :  MINT1_OnInterrupt (module Events)
+**
+**     Component   :  MINT1 [ExtInt]
+**     Description :
+**         This event is called when an active signal edge/level has
+**         occurred.
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================
