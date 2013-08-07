@@ -60,6 +60,7 @@ Package from component(s):
 - LightComm version 01.126
 - LM61B version 01.030
 - LowPower version 01.016
+- MAG3110 version 01.002
 - MaxonF2140 version 01.001
 - MC13192 version 01.003
 - MC34673 version 01.019
@@ -68,7 +69,7 @@ Package from component(s):
 - MMA8451Q version 01.024
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 01.08.2013
+created 07.08.2013
 
 
 Part2_Beans_*.PEupd Content:
@@ -120,11 +121,11 @@ Package from component(s):
 - UIWindow version 01.033
 - USB_CMX version 01.027
 - USB_Config_CMX version 01.022
+- USB_DEVICE_STACK version 01.027
 - USB_HID_CMX version 01.012
 - USB_Host_CMX version 01.058
 - UserInterface version 01.510
 - UTI version 01.125
 - Utility version 01.089
 - Wait version 01.059
-created 01.08.2013
-
+created 07.08.2013
