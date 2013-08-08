@@ -10,7 +10,7 @@
 %-  /* END %ModuleName. */
 %-  /* MODULE %ModuleName. */
 %-  %-INTERNAL_METHOD_BEG
-%-  %-INTERNAL_METHOD_END 
+%-  %-INTERNAL_METHOD_END
 %-  %-INHERITED_EVENT_BEGIN
 %-  %-INHERITED_EVENT_END
 %-  %-BW_METHOD_BEGIN
@@ -644,11 +644,15 @@ void %'ModuleName'%.%Init(void)
 %include Common\GeneralInternal.inc (OnInterrupt)
 void %@IRQ@OnInterrupt(void)
 {
+%if AppEventHandler <> "" %- not empty
   void %AppEventHandler(void); /* prototype */
 
+%endif
   %'ModuleName'%.CE_LOW(); /* pull CE Low to disable transceiver */
+%if AppEventHandler <> "" %- not empty
   %AppEventHandler();
-%if defined(%OnInterrupt)
+%endif
+%if defined(OnInterrupt)
   %OnInterrupt(); /* call user event (if enabled)... */
 %endif
 }
