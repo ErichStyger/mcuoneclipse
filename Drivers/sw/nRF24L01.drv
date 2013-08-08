@@ -49,7 +49,9 @@
 %-
 %-BW_INTERN_COMMENTS_START
 %- List of descriptions of internal methods
-%define! Description_SpiWriteRead Write a byte to the SPI and reads the shifted value
+%define! Description_SPIWriteRead Write a byte to the SPI and reads the shifted value
+%define! Description_SPIWriteReadBuffer Write a buffer to the SPI and the same time reads the shifted values
+%define! Description_SPIWriteBuffer Write a buffer to the SPI bus without returning the shifted in values
 %ifdef IRQ
   %ifdef @IRQ@OnInterrupt
     %define! Description_%@IRQ@OnInterrupt This event is called when an active signal edge/level has occurred. The event services the event of the inherited component and eventually invokes other events.
@@ -105,6 +107,275 @@
 %- Write your own types here ...
 %-  Example:
 %-    typedef int TMyInteger;
+/* Memory Map - register address defines */
+#define %'ModuleName'%.CONFIG      0x00 /* CONFIG register */
+#define %'ModuleName'%.EN_AA       0x01 /* EN_AA register */
+#define %'ModuleName'%.EN_RXADDR   0x02 /* EN_RXADDR register */
+#define %'ModuleName'%.SETUP_AW    0x03 /* SETUP_AW register */
+#define %'ModuleName'%.SETUP_RETR  0x04
+#define %'ModuleName'%.RF_CH       0x05
+#define %'ModuleName'%.RF_SETUP    0x06 /* SETUP register */
+#define %'ModuleName'%.STATUS      0x07
+#define %'ModuleName'%.OBSERVE_TX  0x08
+#define %'ModuleName'%.RPD     0x09    /* Mnemonic for nRF24L01+ */
+//#define %'ModuleName'%.CD          0x09   /* Mnemonic from nRF24L01, new is RPD */
+#define %'ModuleName'%.RX_ADDR_P0  0x0A
+#define %'ModuleName'%.RX_ADDR_P1  0x0B
+#define %'ModuleName'%.RX_ADDR_P2  0x0C
+#define %'ModuleName'%.RX_ADDR_P3  0x0D
+#define %'ModuleName'%.RX_ADDR_P4  0x0E
+#define %'ModuleName'%.RX_ADDR_P5  0x0F
+#define %'ModuleName'%.TX_ADDR     0x10
+#define %'ModuleName'%.RX_PW_P0    0x11
+#define %'ModuleName'%.RX_PW_P1    0x12
+#define %'ModuleName'%.RX_PW_P2    0x13
+#define %'ModuleName'%.RX_PW_P3    0x14
+#define %'ModuleName'%.RX_PW_P4    0x15
+#define %'ModuleName'%.RX_PW_P5    0x16
+#define %'ModuleName'%.FIFO_STATUS 0x17
+
+/* Bit Mnemonics */
+/* CONFIG Register Bits */
+#define %'ModuleName'%.MASK_RX_DR  (1<<6)  /* Mask interrupt caused by RX_DR: 1: interrupt masked. 0: interrupt enabled */
+#define %'ModuleName'%.MASK_TX_DS  (1<<5)  /* Mask interrupt caused by TX_DS: 1: interrupt masked. 0: interrupt enabled */
+#define %'ModuleName'%.MASK_MAX_RT (1<<4)  /* Mask interrupt caused by MAX_RT. 1: interrupt not reflected on IRQ pin. 0: reflect MAX_RT as active low interrupt on IRQ pin */
+#define %'ModuleName'%.EN_CRC      (1<<3)  /* Enable CRC. Forced high if on of the bits in EN_AA is high */
+#define %'ModuleName'%.CRCO        (1<<2)  /* CRC encoding scheme, 0: 1 byte, 1: 2 bytes */
+#define %'ModuleName'%.PWR_UP      (1<<1)  /* 1: Power up, 0: Power down */
+#define %'ModuleName'%.PRIM_RX     (1<<0)  /* 1: PRX, 0: PTX */
+#define %'ModuleName'%.PRIM_TX     (0)     /* 0: PTX */
+
+#define %'ModuleName'%.ENAA_P5     5
+#define %'ModuleName'%.ENAA_P4     4
+#define %'ModuleName'%.ENAA_P3     3
+#define %'ModuleName'%.ENAA_P2     2
+#define %'ModuleName'%.ENAA_P1     1
+#define %'ModuleName'%.ENAA_P0     0
+#define %'ModuleName'%.ERX_P5      5
+#define %'ModuleName'%.ERX_P4      4
+#define %'ModuleName'%.ERX_P3      3
+#define %'ModuleName'%.ERX_P2      2
+#define %'ModuleName'%.ERX_P1      1
+#define %'ModuleName'%.ERX_P0      0
+#define %'ModuleName'%.AW          0
+#define %'ModuleName'%.ARD         4
+#define %'ModuleName'%.ARC         0
+#define %'ModuleName'%.PLL_LOCK    4
+#define %'ModuleName'%.RF_DR_HIGH  3
+#define %'ModuleName'%.RF_DR_LOW   5
+#define %'ModuleName'%.RF_PWR      1
+#define %'ModuleName'%.LNA_HCURR   0
+#define %'ModuleName'%.RX_DR       6
+#define %'ModuleName'%.TX_DS       5
+#define %'ModuleName'%.MAX_RT      4
+#define %'ModuleName'%.RX_P_NO     1
+#define %'ModuleName'%.TX_FULL     0
+#define %'ModuleName'%.PLOS_CNT    4
+#define %'ModuleName'%.ARC_CNT     0
+#define %'ModuleName'%.TX_REUSE    6
+#define %'ModuleName'%.FIFO_FULL   5
+#define %'ModuleName'%.TX_EMPTY    4
+#define %'ModuleName'%.RX_FULL     1
+#define %'ModuleName'%.RX_EMPTY    0
+
+/* Command Name Mnemonics (Instructions) */
+#define %'ModuleName'%.R_REGISTER     0x00
+#define %'ModuleName'%.W_REGISTER     0x20
+#define %'ModuleName'%.REGISTER_MASK  0x1F
+#define %'ModuleName'%.R_RX_PAYLOAD   0x61
+#define %'ModuleName'%.W_TX_PAYLOAD   0xA0
+#define %'ModuleName'%.FLUSH_TX       0xE1
+#define %'ModuleName'%.FLUSH_RX       0xE2
+#define %'ModuleName'%.REUSE_TX_PL    0xE3
+#define %'ModuleName'%.NOP            0xFF
+
+#define %'ModuleName'%.CONFIG_DEFAULT_VAL         0x08
+#define %'ModuleName'%.EN_AA_DEFAULT_VAL          0x3F
+#define %'ModuleName'%.EN_RXADDR_DEFAULT_VAL      0x03
+#define %'ModuleName'%.SETUP_AW_DEFAULT_VAL       0x03
+#define %'ModuleName'%.SETUP_RETR_DEFAULT_VAL     0x03
+#define %'ModuleName'%.RF_CH_DEFAULT_VAL          0x02
+#define %'ModuleName'%.RF_SETUP_DEFAULT_VAL       0x0F
+#define %'ModuleName'%.STATUS_DEFAULT_VAL         0x0E
+#define %'ModuleName'%.OBSERVE_TX_DEFAULT_VAL     0x00
+#define %'ModuleName'%.CD_DEFAULT_VAL             0x00
+#define %'ModuleName'%.RX_ADDR_P0_B0_DEFAULT_VAL  0xE7
+#define %'ModuleName'%.RX_ADDR_P0_B1_DEFAULT_VAL  0xE7
+#define %'ModuleName'%.RX_ADDR_P0_B2_DEFAULT_VAL  0xE7
+#define %'ModuleName'%.RX_ADDR_P0_B3_DEFAULT_VAL  0xE7
+#define %'ModuleName'%.RX_ADDR_P0_B4_DEFAULT_VAL  0xE7
+#define %'ModuleName'%.RX_ADDR_P1_B0_DEFAULT_VAL  0xC2
+#define %'ModuleName'%.RX_ADDR_P1_B1_DEFAULT_VAL  0xC2
+#define %'ModuleName'%.RX_ADDR_P1_B2_DEFAULT_VAL  0xC2
+#define %'ModuleName'%.RX_ADDR_P1_B3_DEFAULT_VAL  0xC2
+#define %'ModuleName'%.RX_ADDR_P1_B4_DEFAULT_VAL  0xC2
+#define %'ModuleName'%.RX_ADDR_P2_DEFAULT_VAL     0xC3
+#define %'ModuleName'%.RX_ADDR_P3_DEFAULT_VAL     0xC4
+#define %'ModuleName'%.RX_ADDR_P4_DEFAULT_VAL     0xC5
+#define %'ModuleName'%.RX_ADDR_P5_DEFAULT_VAL     0xC6
+#define %'ModuleName'%.TX_ADDR_B0_DEFAULT_VAL     0xE7
+#define %'ModuleName'%.TX_ADDR_B1_DEFAULT_VAL     0xE7
+#define %'ModuleName'%.TX_ADDR_B2_DEFAULT_VAL     0xE7
+#define %'ModuleName'%.TX_ADDR_B3_DEFAULT_VAL     0xE7
+#define %'ModuleName'%.TX_ADDR_B4_DEFAULT_VAL     0xE7
+#define %'ModuleName'%.RX_PW_P0_DEFAULT_VAL       0x00
+#define %'ModuleName'%.RX_PW_P1_DEFAULT_VAL       0x00
+#define %'ModuleName'%.RX_PW_P2_DEFAULT_VAL       0x00
+#define %'ModuleName'%.RX_PW_P3_DEFAULT_VAL       0x00
+#define %'ModuleName'%.RX_PW_P4_DEFAULT_VAL       0x00
+#define %'ModuleName'%.RX_PW_P5_DEFAULT_VAL       0x00
+#define %'ModuleName'%.FIFO_STATUS_DEFAULT_VAL    0x11
+
+/* CONFIG register bitwise definitions */
+#define %'ModuleName'%.CONFIG_RESERVED     0x80
+#define %'ModuleName'%.CONFIG_MASK_RX_DR   0x40
+#define %'ModuleName'%.CONFIG_MASK_TX_DS   0x20
+#define %'ModuleName'%.CONFIG_MASK_MAX_RT  0x10
+#define %'ModuleName'%.CONFIG_EN_CRC       0x08
+#define %'ModuleName'%.CONFIG_CRCO         0x04
+#define %'ModuleName'%.CONFIG_PWR_UP       0x02
+#define %'ModuleName'%.CONFIG_PRIM_RX      0x01
+
+/* EN_AA register bitwise definitions */
+#define %'ModuleName'%.EN_AA_RESERVED      0xC0
+#define %'ModuleName'%.EN_AA_ENAA_ALL      0x3F
+#define %'ModuleName'%.EN_AA_ENAA_P5       0x20
+#define %'ModuleName'%.EN_AA_ENAA_P4       0x10
+#define %'ModuleName'%.EN_AA_ENAA_P3       0x08
+#define %'ModuleName'%.EN_AA_ENAA_P2       0x04
+#define %'ModuleName'%.EN_AA_ENAA_P1       0x02
+#define %'ModuleName'%.EN_AA_ENAA_P0       0x01
+#define %'ModuleName'%.EN_AA_ENAA_NONE     0x00
+
+/* EN_RXADDR register bitwise definitions */
+#define %'ModuleName'%.EN_RXADDR_RESERVED  0xC0
+#define %'ModuleName'%.EN_RXADDR_ERX_ALL   0x3F
+#define %'ModuleName'%.EN_RXADDR_ERX_P5    0x20
+#define %'ModuleName'%.EN_RXADDR_ERX_P4    0x10
+#define %'ModuleName'%.EN_RXADDR_ERX_P3    0x08
+#define %'ModuleName'%.EN_RXADDR_ERX_P2    0x04
+#define %'ModuleName'%.EN_RXADDR_ERX_P1    0x02
+#define %'ModuleName'%.EN_RXADDR_ERX_P0    0x01
+#define %'ModuleName'%.EN_RXADDR_ERX_NONE  0x00
+
+/* SETUP_AW register bitwise definitions */
+#define %'ModuleName'%.SETUP_AW_RESERVED 0xFC
+#define %'ModuleName'%.SETUP_AW          0x03
+#define %'ModuleName'%.SETUP_AW_5BYTES   0x03
+#define %'ModuleName'%.SETUP_AW_4BYTES   0x02
+#define %'ModuleName'%.SETUP_AW_3BYTES   0x01
+#define %'ModuleName'%.SETUP_AW_ILLEGAL  0x00
+
+/* SETUP_RETR register bitwise definitions */
+#define %'ModuleName'%.SETUP_RETR_ARD        0xF0
+#define %'ModuleName'%.SETUP_RETR_ARD_4000   0xF0 /* 4400 us retry delay */
+#define %'ModuleName'%.SETUP_RETR_ARD_3750   0xE0 /* 3750 us retry delay */
+#define %'ModuleName'%.SETUP_RETR_ARD_3500   0xD0 /* 3500 us retry delay */
+#define %'ModuleName'%.SETUP_RETR_ARD_3250   0xC0 /* 3250 us retry delay */
+#define %'ModuleName'%.SETUP_RETR_ARD_3000   0xB0 /* 3000 us retry delay */
+#define %'ModuleName'%.SETUP_RETR_ARD_2750   0xA0 /* 2750 us retry delay */
+#define %'ModuleName'%.SETUP_RETR_ARD_2500   0x90 /* 2500 us retry delay */
+#define %'ModuleName'%.SETUP_RETR_ARD_2250   0x80 /* 2250 us retry delay */
+#define %'ModuleName'%.SETUP_RETR_ARD_2000   0x70 /* 2000 us retry delay */
+#define %'ModuleName'%.SETUP_RETR_ARD_1750   0x60 /* 1750 us retry delay */
+#define %'ModuleName'%.SETUP_RETR_ARD_1500   0x50 /* 1500 us retry delay */
+#define %'ModuleName'%.SETUP_RETR_ARD_1250   0x40 /* 1250 us retry delay */
+#define %'ModuleName'%.SETUP_RETR_ARD_1000   0x30 /* 1000 us retry delay */
+#define %'ModuleName'%.SETUP_RETR_ARD_750    0x20 /* 750 us retry delay */
+#define %'ModuleName'%.SETUP_RETR_ARD_500    0x10 /* 500 us retry delay */
+#define %'ModuleName'%.SETUP_RETR_ARD_250    0x00 /* 250 us retry delay */
+#define %'ModuleName'%.SETUP_RETR_ARC        0x0F
+#define %'ModuleName'%.SETUP_RETR_ARC_15     0x0F /* 15 retry count */
+#define %'ModuleName'%.SETUP_RETR_ARC_14     0x0E /* 14 retry count */
+#define %'ModuleName'%.SETUP_RETR_ARC_13     0x0D /* 13 retry count */
+#define %'ModuleName'%.SETUP_RETR_ARC_12     0x0C /* 12 retry count */
+#define %'ModuleName'%.SETUP_RETR_ARC_11     0x0B /* 11 retry count */
+#define %'ModuleName'%.SETUP_RETR_ARC_10     0x0A /* 10 retry count */
+#define %'ModuleName'%.SETUP_RETR_ARC_9      0x09 /* 9 retry count */
+#define %'ModuleName'%.SETUP_RETR_ARC_8      0x08 /* 8 retry count */
+#define %'ModuleName'%.SETUP_RETR_ARC_7      0x07 /* 7 retry count */
+#define %'ModuleName'%.SETUP_RETR_ARC_6      0x06 /* 6 retry count */
+#define %'ModuleName'%.SETUP_RETR_ARC_5      0x05 /* 5 retry count */
+#define %'ModuleName'%.SETUP_RETR_ARC_4      0x04 /* 4 retry count */
+#define %'ModuleName'%.SETUP_RETR_ARC_3      0x03 /* 3 retry count */
+#define %'ModuleName'%.SETUP_RETR_ARC_2      0x02 /* 2 retry count */
+#define %'ModuleName'%.SETUP_RETR_ARC_1      0x01 /* 1 retry count */
+#define %'ModuleName'%.SETUP_RETR_ARC_0      0x00 /* 0 retry count, retry disabled */
+
+/* RF_CH register bitwise definitions */
+#define %'ModuleName'%.RF_CH_RESERVED    0x80
+
+/* RF_SETUP register bitwise definitions */
+#define %'ModuleName'%.RF_SETUP_RESERVED    0xE0
+#define %'ModuleName'%.RF_SETUP_PLL_LOCK    0x10
+#define %'ModuleName'%.RF_SETUP_RF_DR       0x08
+#define %'ModuleName'%.RF_SETUP_RF_DR_250   0x20
+#define %'ModuleName'%.RF_SETUP_RF_DR_1000  0x00
+#define %'ModuleName'%.RF_SETUP_RF_DR_2000  0x08
+#define %'ModuleName'%.RF_SETUP_RF_PWR      0x06
+#define %'ModuleName'%.RF_SETUP_RF_PWR_0    0x06
+#define %'ModuleName'%.RF_SETUP_RF_PWR_6    0x04
+#define %'ModuleName'%.RF_SETUP_RF_PWR_12   0x02
+#define %'ModuleName'%.RF_SETUP_RF_PWR_18   0x00
+#define %'ModuleName'%.RF_SETUP_LNA_HCURR   0x01
+
+/* STATUS register bit definitions */
+#define %'ModuleName'%.STATUS_RESERVED                    0x80   /* bit 1xxx xxxx: This bit is reserved */
+#define %'ModuleName'%.STATUS_RX_DR                       0x40   /* bit x1xx xxxx: Data ready RX FIFO interrupt. Asserted when new data arrives RX FIFO */
+#define %'ModuleName'%.STATUS_TX_DS                       0x20   /* bit xx1x xxxx: Data sent TX FIFO interrupt. Asserted when packet transmitted on TX. */
+#define %'ModuleName'%.STATUS_MAX_RT                      0x10   /* bit xxx1 xxxx: maximum number of TX retransmit interrupts */
+#define %'ModuleName'%.STATUS_RX_P_NO                     0x0E
+#define %'ModuleName'%.STATUS_RX_P_NO_RX_FIFO_NOT_EMPTY   0x0E
+#define %'ModuleName'%.STATUS_RX_P_NO_UNUSED              0x0C
+#define %'ModuleName'%.STATUS_RX_P_NO_5                   0x0A
+#define %'ModuleName'%.STATUS_RX_P_NO_4                   0x08
+#define %'ModuleName'%.STATUS_RX_P_NO_3                   0x06
+#define %'ModuleName'%.STATUS_RX_P_NO_2                   0x04
+#define %'ModuleName'%.STATUS_RX_P_NO_1                   0x02
+#define %'ModuleName'%.STATUS_RX_P_NO_0                   0x00   /* bit xxxx 111x: pipe number for payload */
+#define %'ModuleName'%.STATUS_TX_FULL                     0x01   /* bit xxxx xxx1: if bit set, then TX FIFO is full */
+
+/* OBSERVE_TX register bitwise definitions */
+#define %'ModuleName'%.OBSERVE_TX_PLOS_CNT   0xF0
+#define %'ModuleName'%.OBSERVE_TX_ARC_CNT    0x0F
+
+/* CD register bitwise definitions for nRF24L01 */
+//#define %'ModuleName'%.CD_RESERVED   0xFE
+//#define %'ModuleName'%.CD_CD         0x01
+
+/* RPD register bitwise definitions for nRF24L01+ */
+#define %'ModuleName'%.RPD_RESERVED    0xFE
+#define %'ModuleName'%.RPD_RPD         0x01
+
+/* RX_PW_P0 register bitwise definitions */
+#define %'ModuleName'%.RX_PW_P0_RESERVED 0xC0
+
+/* RX_PW_P0 register bitwise definitions */
+#define %'ModuleName'%.RX_PW_P0_RESERVED 0xC0
+
+/* RX_PW_P1 register bitwise definitions */
+#define %'ModuleName'%.RX_PW_P1_RESERVED 0xC0
+
+/* RX_PW_P2 register bitwise definitions */
+#define %'ModuleName'%.RX_PW_P2_RESERVED 0xC0
+
+/* RX_PW_P3 register bitwise definitions */
+#define %'ModuleName'%.RX_PW_P3_RESERVED 0xC0
+
+/* RX_PW_P4 register bitwise definitions */
+#define %'ModuleName'%.RX_PW_P4_RESERVED 0xC0
+
+/* RX_PW_P5 register bitwise definitions */
+#define %'ModuleName'%.RX_PW_P5_RESERVED 0xC0
+
+/* FIFO_STATUS register bitwise definitions */
+#define %'ModuleName'%.FIFO_STATUS_RESERVED  0x8C
+#define %'ModuleName'%.FIFO_STATUS_TX_REUSE  0x40
+#define %'ModuleName'%.FIFO_STATUS_TX_FULL   0x20
+#define %'ModuleName'%.FIFO_STATUS_TX_EMPTY  0x10
+#define %'ModuleName'%.FIFO_STATUS_RX_FULL   0x02
+#define %'ModuleName'%.FIFO_STATUS_RX_EMPTY  0x01
+
 %-
 %-BW_CUSTOM_USERTYPE_END
 
@@ -125,6 +396,120 @@ void %@IRQ@OnInterrupt(void);
 %endif %- @IRQ@OnInterrupt
 %-INHERITED_EVENT_END IRQ OnInterrupt
 %-************************************************************************************************************
+%-BW_METHOD_BEGIN WriteRegister
+%ifdef WriteRegister
+void %'ModuleName'%.%WriteRegister(byte reg, byte val);
+%define! Parreg
+%define! Parval
+%include Common\nRF24L01WriteRegister.Inc
+
+%endif %- WriteRegister
+%-BW_METHOD_END WriteRegister
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ReadRegister
+%ifdef ReadRegister
+byte %'ModuleName'%.%ReadRegister(byte reg);
+%define! Parreg
+%define! RetVal
+%include Common\nRF24L01ReadRegister.Inc
+
+%endif %- ReadRegister
+%-BW_METHOD_END ReadRegister
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ReadRegisterData
+%ifdef ReadRegisterData
+void %'ModuleName'%.%ReadRegisterData(byte reg, byte *buf, byte bufSize);
+%define! Parreg
+%define! Parbuf
+%define! ParbufSize
+%include Common\nRF24L01ReadRegisterData.Inc
+
+%endif %- ReadRegisterData
+%-BW_METHOD_END ReadRegisterData
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN WriteRegisterData
+%ifdef WriteRegisterData
+void %'ModuleName'%.%WriteRegisterData(byte reg, byte *buf, byte bufSize);
+%define! Parreg
+%define! Parbuf
+%define! ParbufSize
+%include Common\nRF24L01WriteRegisterData.Inc
+
+%endif %- WriteRegisterData
+%-BW_METHOD_END WriteRegisterData
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN WriteRead
+%ifdef WriteRead
+byte %'ModuleName'%.%WriteRead(byte val);
+%define! Parval
+%define! RetVal
+%include Common\nRF24L01WriteRead.Inc
+
+%endif %- WriteRead
+%-BW_METHOD_END WriteRead
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Write
+%ifdef Write
+void %'ModuleName'%.%Write(byte val);
+%define! Parval
+%include Common\nRF24L01Write.Inc
+
+%endif %- Write
+%-BW_METHOD_END Write
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetStatus
+%ifdef GetStatus
+byte %'ModuleName'%.%GetStatus(void);
+%define! RetVal
+%include Common\nRF24L01GetStatus.Inc
+
+%endif %- GetStatus
+%-BW_METHOD_END GetStatus
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ResetStatusIRQ
+%ifdef ResetStatusIRQ
+void %'ModuleName'%.%ResetStatusIRQ(byte flags);
+%define! Parflags
+%include Common\nRF24L01ResetStatusIRQ.Inc
+
+%endif %- ResetStatusIRQ
+%-BW_METHOD_END ResetStatusIRQ
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN TxPayload
+%ifdef TxPayload
+void %'ModuleName'%.%TxPayload(byte *payload, byte payloadSize);
+%define! Parpayload
+%define! ParpayloadSize
+%include Common\nRF24L01TxPayload.Inc
+
+%endif %- TxPayload
+%-BW_METHOD_END TxPayload
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN RxPayload
+%ifdef RxPayload
+void %'ModuleName'%.%RxPayload(byte *payload, byte payloadSize);
+%define! Parpayload
+%define! ParpayloadSize
+%include Common\nRF24L01RxPayload.Inc
+
+%endif %- RxPayload
+%-BW_METHOD_END RxPayload
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN StopRxTx
+%ifdef StopRxTx
+void %'ModuleName'%.%StopRxTx(void);
+%include Common\nRF24L01StopRxTx.Inc
+
+%endif %- StopRxTx
+%-BW_METHOD_END StopRxTx
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN StartRxTx
+%ifdef StartRxTx
+void %'ModuleName'%.%StartRxTx(void);
+%include Common\nRF24L01StartRxTx.Inc
+
+%endif %- StartRxTx
+%-BW_METHOD_END StartRxTx
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -133,6 +518,14 @@ void %@IRQ@OnInterrupt(void);
 %include Common\Header.End
 %-
 %-BW_EVENT_DEFINITION_START
+%-BW_METHOD_BEGIN OnInterrupt
+%ifdef OnInterrupt
+%INTERFACE OnInterrupt
+void %OnInterrupt(void);
+%include Common\nRF24L01OnInterrupt.Inc
+
+%endif %- OnInterrupt
+%-BW_METHOD_END OnInterrupt
 %-BW_EVENT_DEFINITION_END
 %IMPLEMENTATION
 %define! Settings Common\nRF24L01Settings.Inc
@@ -164,19 +557,75 @@ void %@IRQ@OnInterrupt(void);
 #define %'ModuleName'%.CE_HIGH()   %@CE@'ModuleName'%.SetVal()   %>50/* put CE HIGH */
 #define %'ModuleName'%.CSN_LOW()   %@CSN@'ModuleName'%.ClrVal()  %>50/* put CSN LOW */
 #define %'ModuleName'%.CSN_HIGH()  %@CSN@'ModuleName'%.SetVal()  %>50/* put CSN HIGH */
+
 %-
 %-BW_CUSTOM_VARIABLE_END
 %-BW_INTERN_METHOD_DECL_START
 %- List of internal methods headers
 %-UNLOCKED
 /* Internal method prototypes */
-%-INTERNAL_LOC_METHOD_BEG SpiWriteRead
-static byte SpiWriteRead(byte val);
-%-INTERNAL_LOC_METHOD_END SpiWriteRead
+%-INTERNAL_LOC_METHOD_BEG SPIWriteRead
+static byte SPIWriteRead(byte val);
+%-INTERNAL_LOC_METHOD_END SPIWriteRead
+%-INTERNAL_LOC_METHOD_BEG SPIWriteReadBuffer
+static void SPIWriteReadBuffer(byte *bufOut, byte *bufIn, byte bufSize);
+%-INTERNAL_LOC_METHOD_END SPIWriteReadBuffer
+%-INTERNAL_LOC_METHOD_BEG SPIWriteBuffer
+static void SPIWriteBuffer(byte *bufOut, byte bufSize);
+%-INTERNAL_LOC_METHOD_END SPIWriteBuffer
 %-
 
 %-BW_INTERN_METHOD_DECL_END
 %-BW_IMPLEMENT_START
+%-************************************************************************************************************
+%-INTERNAL_METHOD_BEG SPIWriteRead
+%define! Parval
+%define! RetVal
+%include Common\GeneralInternalGlobal.inc (SPIWriteRead)
+static byte SPIWriteRead(byte val)
+{
+  uint8_t ch;
+
+  while (%@SPI@'ModuleName'%.GetCharsInTxBuf()!=0) {} /* wait until tx is empty */
+  while (%@SPI@'ModuleName'%.SendChar(val)!=ERR_OK) {} /* send character */
+  while (%@SPI@'ModuleName'%.GetCharsInTxBuf()!=0) {} /* wait until data has been sent */
+  while (%@SPI@'ModuleName'%.GetCharsInRxBuf()==0) {} /* wait until we receive data */
+  while (%@SPI@'ModuleName'%.RecvChar(&ch)!=ERR_OK) {} /* get data */
+  return ch;
+}
+
+%-INTERNAL_METHOD_END SPIWriteRead
+%-************************************************************************************************************
+%-INTERNAL_METHOD_BEG SPIWriteReadBuffer
+%define! ParbufOut
+%define! ParbufIn
+%define! ParbufSize
+%include Common\GeneralInternalGlobal.inc (SPIWriteReadBuffer)
+static void SPIWriteReadBuffer(byte *bufOut, byte *bufIn, byte bufSize)
+{
+  uint8_t i;
+
+  for(i=0;i<bufSize;i++) {
+    bufIn[i] = SPIWriteRead(bufOut[i]);
+  }
+}
+
+%-INTERNAL_METHOD_END SPIWriteReadBuffer
+%-************************************************************************************************************
+%-INTERNAL_METHOD_BEG SPIWriteBuffer
+%define! ParbufOut
+%define! ParbufSize
+%include Common\GeneralInternalGlobal.inc (SPIWriteBuffer)
+static void SPIWriteBuffer(byte *bufOut, byte bufSize)
+{
+  uint8_t i;
+
+  for(i=0;i<bufSize;i++) {
+    (void)SPIWriteRead(bufOut[i]);
+  }
+}
+
+%-INTERNAL_METHOD_END SPIWriteBuffer
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Init
 %ifdef Init
@@ -189,34 +638,212 @@ void %'ModuleName'%.%Init(void)
 
 %endif %- Init
 %-BW_METHOD_END Init
+%-************************************************************************************************************
 %-INHERITED_EVENT_BEGIN IRQ OnInterrupt
 %ifdef @IRQ@OnInterrupt
 %include Common\GeneralInternal.inc (OnInterrupt)
 void %@IRQ@OnInterrupt(void)
 {
-  /* Write your code here ... */
+  void %AppEventHandler(void); /* prototype */
+
+  %'ModuleName'%.CE_LOW(); /* pull CE Low to disable transceiver */
+  %AppEventHandler();
+%if defined(%OnInterrupt)
+  %OnInterrupt(); /* call user event (if enabled)... */
+%endif
 }
 
 %endif %- @IRQ@OnInterrupt
 %-INHERITED_EVENT_END IRQ OnInterrupt
 %-************************************************************************************************************
-%-INTERNAL_METHOD_BEG SpiWriteRead
+%-BW_METHOD_BEGIN WriteRegister
+%ifdef WriteRegister
+%define! Parreg
 %define! Parval
-%define! RetVal
-%include Common\GeneralInternalGlobal.inc (SpiWriteRead)
-static byte SpiWriteRead(byte val)
+%include Common\nRF24L01WriteRegister.Inc
+void %'ModuleName'%.%WriteRegister(byte reg, byte val)
 {
-  uint8_t ch;
-
-  while (%@SPI@'ModuleName'%.GetCharsInTxBuf()!=0) {} /* wait until tx is empty */
-  while (%@SPI@'ModuleName'%.SendChar(val)!=ERR_OK) {} /* send character */
-  while (%@SPI@'ModuleName'%.GetCharsInTxBuf()!=0) {} /* wait until data has been sent */
-  while (%@SPI@'ModuleName'%.GetCharsInRxBuf()==0) {} /* wait until we receive data */
-  while (%@SPI@'ModuleName'%.RecvChar(&ch)!=ERR_OK) {} /* get data */
-  return ch;
+  %'ModuleName'%.CSN_LOW(); /* initiate command sequence */
+  (void)SPIWriteRead(%'ModuleName'%.W_REGISTER|reg); /* write register command */
+  (void)SPIWriteRead(val); /* write value */
+  %'ModuleName'%.CSN_HIGH(); /* end command sequence */
+  %'ModuleName'%.WAIT_US(10); /* insert a delay until next command */
 }
 
-%-INTERNAL_METHOD_END SpiWriteRead
+%endif %- WriteRegister
+%-BW_METHOD_END WriteRegister
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ReadRegister
+%ifdef ReadRegister
+%define! Parreg
+%define! RetVal
+%include Common\nRF24L01ReadRegister.Inc
+byte %'ModuleName'%.%ReadRegister(byte reg)
+{
+  uint8_t val;
+
+  %'ModuleName'%.CSN_LOW();
+  (void)SPIWriteRead(reg);
+  val = SPIWriteRead(0); /* write dummy */
+  %'ModuleName'%.CSN_HIGH();
+  %'ModuleName'%.WAIT_US(10);
+  return val;
+}
+
+%endif %- ReadRegister
+%-BW_METHOD_END ReadRegister
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ReadRegisterData
+%ifdef ReadRegisterData
+%define! Parreg
+%define! Parbuf
+%define! ParbufSize
+%include Common\nRF24L01ReadRegisterData.Inc
+void %'ModuleName'%.%ReadRegisterData(byte reg, byte *buf, byte bufSize)
+{
+  %'ModuleName'%.CSN_LOW();
+  (void)SPIWriteRead(%'ModuleName'%.R_REGISTER|reg);
+  SPIWriteReadBuffer(buf, buf, bufSize);
+  %'ModuleName'%.CSN_HIGH();
+  %'ModuleName'%.WAIT_US(10);
+}
+
+%endif %- ReadRegisterData
+%-BW_METHOD_END ReadRegisterData
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN WriteRegisterData
+%ifdef WriteRegisterData
+%define! Parreg
+%define! Parbuf
+%define! ParbufSize
+%include Common\nRF24L01WriteRegisterData.Inc
+void %'ModuleName'%.%WriteRegisterData(byte reg, byte *buf, byte bufSize)
+{
+  %'ModuleName'%.CSN_LOW();
+  (void)SPIWriteRead(%'ModuleName'%.W_REGISTER|reg); /* not masking registers as it would conflict with %'ModuleName'%.W_TX_PAYLOAD */
+  SPIWriteBuffer(buf, bufSize);
+  %'ModuleName'%.CSN_HIGH();
+  %'ModuleName'%.WAIT_US(10);
+}
+
+%endif %- WriteRegisterData
+%-BW_METHOD_END WriteRegisterData
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN WriteRead
+%ifdef WriteRead
+%define! Parval
+%define! RetVal
+%include Common\nRF24L01WriteRead.Inc
+byte %'ModuleName'%.%WriteRead(byte val)
+{
+  %'ModuleName'%.CSN_LOW();
+  val = SPIWriteRead(val);
+  %'ModuleName'%.CSN_HIGH();
+  %'ModuleName'%.WAIT_US(10);
+  return val;
+}
+
+%endif %- WriteRead
+%-BW_METHOD_END WriteRead
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Write
+%ifdef Write
+%define! Parval
+%include Common\nRF24L01Write.Inc
+void %'ModuleName'%.%Write(byte val)
+{
+  %'ModuleName'%.CSN_LOW();
+  (void)SPIWriteRead(val);
+  %'ModuleName'%.CSN_HIGH();
+  %'ModuleName'%.WAIT_US(10);
+}
+
+%endif %- Write
+%-BW_METHOD_END Write
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetStatus
+%ifdef GetStatus
+%define! RetVal
+%include Common\nRF24L01GetStatus.Inc
+byte %'ModuleName'%.%GetStatus(void)
+{
+  return SPIWriteRead(%'ModuleName'%.NOP);
+}
+
+%endif %- GetStatus
+%-BW_METHOD_END GetStatus
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ResetStatusIRQ
+%ifdef ResetStatusIRQ
+%define! Parflags
+%include Common\nRF24L01ResetStatusIRQ.Inc
+void %'ModuleName'%.%ResetStatusIRQ(byte flags)
+{
+  %'ModuleName'%.WAIT_US(10);
+  %'ModuleName'%.CSN_LOW();
+  %'ModuleName'%.WAIT_US(10);
+  %'ModuleName'%.%WriteRegister(%'ModuleName'%.STATUS, flags); /* reset all IRQ in status register */
+  %'ModuleName'%.WAIT_US(10);
+  %'ModuleName'%.CSN_HIGH();
+  %'ModuleName'%.WAIT_US(10);
+}
+
+%endif %- ResetStatusIRQ
+%-BW_METHOD_END ResetStatusIRQ
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN TxPayload
+%ifdef TxPayload
+%define! Parpayload
+%define! ParpayloadSize
+%include Common\nRF24L01TxPayload.Inc
+void %'ModuleName'%.%TxPayload(byte *payload, byte payloadSize)
+{
+  %'ModuleName'%.Write(%'ModuleName'%.FLUSH_TX); /* flush old data */
+  %'ModuleName'%.%WriteRegisterData(%'ModuleName'%.W_TX_PAYLOAD, payload, payloadSize); /* write payload */
+  %'ModuleName'%.CE_HIGH(); /* start transmission */
+  %'ModuleName'%.WAIT_US(15); /* keep signal high for 15 micro-seconds */
+  %'ModuleName'%.CE_LOW();  /* back to normal */
+}
+
+%endif %- TxPayload
+%-BW_METHOD_END TxPayload
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN RxPayload
+%ifdef RxPayload
+%define! Parpayload
+%define! ParpayloadSize
+%include Common\nRF24L01RxPayload.Inc
+void %'ModuleName'%.%RxPayload(byte *payload, byte payloadSize)
+{
+  %'ModuleName'%.CE_LOW(); /* need to disable rx mode during reading RX data */
+  %'ModuleName'%.%ReadRegisterData(%'ModuleName'%.R_RX_PAYLOAD, payload, payloadSize); /* rx payload */
+  %'ModuleName'%.CE_HIGH(); /* re-enable rx mode */
+}
+
+%endif %- RxPayload
+%-BW_METHOD_END RxPayload
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN StopRxTx
+%ifdef StopRxTx
+%include Common\nRF24L01StopRxTx.Inc
+void %'ModuleName'%.%StopRxTx(void)
+{
+  %'ModuleName'%.CE_LOW(); /* disable RX or TX with pulling CE LOW */
+}
+
+%endif %- StopRxTx
+%-BW_METHOD_END StopRxTx
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN StartRxTx
+%ifdef StartRxTx
+%include Common\nRF24L01StartRxTx.Inc
+void %'ModuleName'%.%StartRxTx(void)
+{
+  %'ModuleName'%.CE_HIGH(); /* enabling RX or TX with pulling CE HIGH */
+}
+
+%endif %- StartRxTx
+%-BW_METHOD_END StartRxTx
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
@@ -224,6 +851,17 @@ static byte SpiWriteRead(byte val)
 %-
 %-
 %-BW_EVENT_IMPLEMENT_START
+%-BW_METHOD_BEGIN OnInterrupt
+%ifdef OnInterrupt
+%IMPLEMENTATION OnInterrupt
+%include Common\nRF24L01OnInterrupt.Inc
+void %OnInterrupt(void)
+{
+  /* write your code here */
+}
+
+%endif %- OnInterrupt
+%-BW_METHOD_END OnInterrupt
 %-BW_EVENT_IMPLEMENT_END
 %INITIALIZATION
   /* ### %DeviceType "%DeviceName" init code ... */
@@ -236,18 +874,18 @@ static byte SpiWriteRead(byte val)
 %CODE_END
 %-
 #if 0
-  RF_WriteRegister(RF24_EN_AA, 0x01); /* enable auto acknowledge. RX_ADDR_P0 needs to be equal to TX_ADDR! */
-  RF_WriteRegister(RF24_EN_RXADDR, 0x01); /* enable data pipe 0 */
-  RF_WriteRegister(RF24_SETUP_AW, 0x03); /* RF_Adddress with, 0x3 means 5 bytes RF Address */
-  RF_WriteRegisterData(RF24_TX_ADDR, buf, sizeof(buf)); /* write RF address */
+  RF_WriteRegister(%'ModuleName'%.EN_AA, 0x01); /* enable auto acknowledge. RX_ADDR_P0 needs to be equal to TX_ADDR! */
+  RF_WriteRegister(%'ModuleName'%.EN_RXADDR, 0x01); /* enable data pipe 0 */
+  RF_WriteRegister(%'ModuleName'%.SETUP_AW, 0x03); /* RF_Adddress with, 0x3 means 5 bytes RF Address */
+  RF_WriteRegisterData(%'ModuleName'%.TX_ADDR, buf, sizeof(buf)); /* write RF address */
 #if IS_SENDER
   /* mask retry interrupt, enable CRC, 2-byte CRC, power up, Tx (bit cleared) */
-  RF_WriteRegister(RF24_CONFIG, RF24_MASK_MAX_RT|RF24_EN_CRC|RF24_CRCO|RF24_PWR_UP|RF24_PRIM_TX); /* 0b0001 1110: b0=0: transmitter, b1=1 power up, b4=1 mask MAX RT, IRQ is not triggered */
+  RF_WriteRegister(%'ModuleName'%.CONFIG, %'ModuleName'%.MASK_MAX_RT|%'ModuleName'%.EN_CRC|%'ModuleName'%.CRCO|%'ModuleName'%.PWR_UP|%'ModuleName'%.PRIM_TX); /* 0b0001 1110: b0=0: transmitter, b1=1 power up, b4=1 mask MAX RT, IRQ is not triggered */
 #else
   /* mask retry interrupt, enable CRC, 2-byte CRC, power up, Rx (bit set) */
-  RF_WriteRegister(RF24_CONFIG, RF24_MASK_MAX_RT|RF24_EN_CRC|RF24_CRCO|RF24_PWR_UP|RF24_PRIM_RX);
+  RF_WriteRegister(%'ModuleName'%.CONFIG, %'ModuleName'%.MASK_MAX_RT|%'ModuleName'%.EN_CRC|%'ModuleName'%.CRCO|%'ModuleName'%.PWR_UP|%'ModuleName'%.PRIM_RX);
 #endif
-  RF_WriteRegister(RF24_SETUP_RETR, 0x2F); /* 750 us delay between every retry */
+  RF_WriteRegister(%'ModuleName'%.SETUP_RETR, 0x2F); /* 750 us delay between every retry */
 #endif
 
 
@@ -265,7 +903,7 @@ void wl_module_set_rx_addr(uint8_t * address, uint8_t len, uint8_t rxpipenum)
   if (rxpipenum > 5) {
     return;
   }
-  RF_WriteRegisterData(RF24_RX_ADDR_P0 + rxpipenum, address, len);
+  RF_WriteRegisterData(%'ModuleName'%.RX_ADDR_P0 + rxpipenum, address, len);
 }
 
 static void wl_module_rx_config(void)
@@ -274,33 +912,33 @@ static void wl_module_rx_config(void)
 {
   uint8_t data[5];
     // Set RF channel
-  RF_WriteRegister(RF24_RF_CH, CHANNEL_NO);
+  RF_WriteRegister(%'ModuleName'%.RF_CH, CHANNEL_NO);
   // Set data speed & Output Power configured in wl_module.h
-  RF_WriteRegister(RF24_RF_SETUP, wl_module_RF_SETUP);
+  RF_WriteRegister(%'ModuleName'%.RF_SETUP, wl_module_RF_SETUP);
   //Enable all RX Data-Pipes
-  RF_WriteRegister(RF24_EN_RXADDR, RF24_EN_RXADDR_ERX_ALL);
+  RF_WriteRegister(%'ModuleName'%.EN_RXADDR, %'ModuleName'%.EN_RXADDR_ERX_ALL);
   //Set RX_Address Pipe 0
-  data[0]= data[1]= data[2]= data[3]= data[4]= RF24_RX_ADDR_P0_B0_DEFAULT_VAL;
+  data[0]= data[1]= data[2]= data[3]= data[4]= %'ModuleName'%.RX_ADDR_P0_B0_DEFAULT_VAL;
   wl_module_set_rx_addr(data, 5, 0);
   //Set RX_Address Pipe 1
-  data[0]= data[1]= data[2]= data[3]= data[4]= RF24_RX_ADDR_P1_B0_DEFAULT_VAL;
+  data[0]= data[1]= data[2]= data[3]= data[4]= %'ModuleName'%.RX_ADDR_P1_B0_DEFAULT_VAL;
   wl_module_set_rx_addr(data, 5, 1);
   //Set RX_Address Pipe 2-5
-  data[0]=RF24_RX_ADDR_P2_DEFAULT_VAL;
+  data[0]=%'ModuleName'%.RX_ADDR_P2_DEFAULT_VAL;
   wl_module_set_rx_addr(data, 1, 2);
-  data[0]=RF24_RX_ADDR_P3_DEFAULT_VAL;
+  data[0]=%'ModuleName'%.RX_ADDR_P3_DEFAULT_VAL;
   wl_module_set_rx_addr(data, 1, 3);
-  data[0]=RF24_RX_ADDR_P4_DEFAULT_VAL;
+  data[0]=%'ModuleName'%.RX_ADDR_P4_DEFAULT_VAL;
   wl_module_set_rx_addr(data, 1, 4);
-  data[0]=RF24_RX_ADDR_P5_DEFAULT_VAL;
+  data[0]=%'ModuleName'%.RX_ADDR_P5_DEFAULT_VAL;
   wl_module_set_rx_addr(data, 1, 5);
     // Set length of incoming payload
-  RF_WriteRegister(RF24_RX_PW_P0, PAYLOAD_SIZE);
-  RF_WriteRegister(RF24_RX_PW_P1, PAYLOAD_SIZE);
-  RF_WriteRegister(RF24_RX_PW_P2, PAYLOAD_SIZE);
-  RF_WriteRegister(RF24_RX_PW_P3, PAYLOAD_SIZE);
-  RF_WriteRegister(RF24_RX_PW_P4, PAYLOAD_SIZE);
-  RF_WriteRegister(RF24_RX_PW_P5, PAYLOAD_SIZE);
+  RF_WriteRegister(%'ModuleName'%.RX_PW_P0, PAYLOAD_SIZE);
+  RF_WriteRegister(%'ModuleName'%.RX_PW_P1, PAYLOAD_SIZE);
+  RF_WriteRegister(%'ModuleName'%.RX_PW_P2, PAYLOAD_SIZE);
+  RF_WriteRegister(%'ModuleName'%.RX_PW_P3, PAYLOAD_SIZE);
+  RF_WriteRegister(%'ModuleName'%.RX_PW_P4, PAYLOAD_SIZE);
+  RF_WriteRegister(%'ModuleName'%.RX_PW_P5, PAYLOAD_SIZE);
 
   // Start receiver
   RX_POWERUP();     // Power up in receiving mode
@@ -311,14 +949,14 @@ void wl_module_set_RADDR(uint8_t * adr)
 // Sets the receiving address
 {
     CE_ClrVal();
-    RF_WriteRegisterData(RF24_RX_ADDR_P0,adr,5);
+    RF_WriteRegisterData(%'ModuleName'%.RX_ADDR_P0,adr,5);
     CE_SetVal();
 }
 
 void wl_module_set_TADDR(uint8_t * adr)
 // Sets the transmitting address
 {
-  RF_WriteRegisterData(RF24_TX_ADDR, adr,5);
+  RF_WriteRegisterData(%'ModuleName'%.TX_ADDR, adr,5);
 }
 
 
@@ -331,50 +969,50 @@ void wl_module_tx_config(uint8_t tx_nr)
   uint8_t tx_addr[5];
 
     // Set RF channel
-  RF_WriteRegister(RF24_RF_CH, CHANNEL_NO);
+  RF_WriteRegister(%'ModuleName'%.RF_CH, CHANNEL_NO);
   // Set data speed & Output Power configured in wl_module.h
-  RF_WriteRegister(RF24_RF_SETUP, wl_module_RF_SETUP);
+  RF_WriteRegister(%'ModuleName'%.RF_SETUP, wl_module_RF_SETUP);
   //Config the CONFIG Register (Mask IRQ, CRC, etc)
-  RF_WriteRegister(RF24_CONFIG, wl_module_CONFIG);
+  RF_WriteRegister(%'ModuleName'%.CONFIG, wl_module_CONFIG);
     // Set length of incoming payload
     //wl_module_config_register(RX_PW_P0, wl_module_PAYLOAD);
 
-  RF_WriteRegister(RF24_SETUP_RETR,(RF24_SETUP_RETR_ARD_750 | RF24_SETUP_RETR_ARC_15));
+  RF_WriteRegister(%'ModuleName'%.SETUP_RETR,(%'ModuleName'%.SETUP_RETR_ARD_750 | %'ModuleName'%.SETUP_RETR_ARC_15));
 
   //set the TX address for the pipe with the same number as the iteration
   switch(tx_nr)
   {
     case 0: //setup TX address as default RX address for pipe 0 (E7:E7:E7:E7:E7)
-      tx_addr[0] = tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = RF24_RX_ADDR_P0_B0_DEFAULT_VAL;
+      tx_addr[0] = tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = %'ModuleName'%.RX_ADDR_P0_B0_DEFAULT_VAL;
       wl_module_set_TADDR(tx_addr);
       wl_module_set_RADDR(tx_addr);
       break;
     case 1: //setup TX address as default RX address for pipe 1 (C2:C2:C2:C2:C2)
-      tx_addr[0] = tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = RF24_RX_ADDR_P1_B0_DEFAULT_VAL;
+      tx_addr[0] = tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = %'ModuleName'%.RX_ADDR_P1_B0_DEFAULT_VAL;
       wl_module_set_TADDR(tx_addr);
       wl_module_set_RADDR(tx_addr);
       break;
     case 2: //setup TX address as default RX address for pipe 2 (C2:C2:C2:C2:C3)
-      tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = RF24_RX_ADDR_P1_B0_DEFAULT_VAL;
-      tx_addr[0] = RF24_RX_ADDR_P2_DEFAULT_VAL;
+      tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = %'ModuleName'%.RX_ADDR_P1_B0_DEFAULT_VAL;
+      tx_addr[0] = %'ModuleName'%.RX_ADDR_P2_DEFAULT_VAL;
       wl_module_set_TADDR(tx_addr);
       wl_module_set_RADDR(tx_addr);
       break;
     case 3: //setup TX address as default RX address for pipe 3 (C2:C2:C2:C2:C4)
-      tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = RF24_RX_ADDR_P1_B0_DEFAULT_VAL;
-      tx_addr[0] = RF24_RX_ADDR_P3_DEFAULT_VAL;
+      tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = %'ModuleName'%.RX_ADDR_P1_B0_DEFAULT_VAL;
+      tx_addr[0] = %'ModuleName'%.RX_ADDR_P3_DEFAULT_VAL;
       wl_module_set_TADDR(tx_addr);
       wl_module_set_RADDR(tx_addr);
       break;
     case 4: //setup TX address as default RX address for pipe 4 (C2:C2:C2:C2:C5)
-      tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = RF24_RX_ADDR_P1_B0_DEFAULT_VAL;
-      tx_addr[0] = RF24_RX_ADDR_P4_DEFAULT_VAL;
+      tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = %'ModuleName'%.RX_ADDR_P1_B0_DEFAULT_VAL;
+      tx_addr[0] = %'ModuleName'%.RX_ADDR_P4_DEFAULT_VAL;
       wl_module_set_TADDR(tx_addr);
       wl_module_set_RADDR(tx_addr);
       break;
     case 5: //setup TX address as default RX address for pipe 5 (C2:C2:C2:C2:C6)
-      tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = RF24_RX_ADDR_P1_B0_DEFAULT_VAL;
-      tx_addr[0] = RF24_RX_ADDR_P5_DEFAULT_VAL;
+      tx_addr[1] = tx_addr[2] = tx_addr[3] = tx_addr[4] = %'ModuleName'%.RX_ADDR_P1_B0_DEFAULT_VAL;
+      tx_addr[0] = %'ModuleName'%.RX_ADDR_P5_DEFAULT_VAL;
       wl_module_set_TADDR(tx_addr);
       wl_module_set_RADDR(tx_addr);
       break;

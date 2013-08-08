@@ -71,7 +71,7 @@
 #include "%'var'.h"
   %endfor
 %endif
-/* Include inherited beans */
+/* Include inherited components */
 %ifdef InhrSymbolList
   %for var from InhrSymbolList
 #include "%@%var@ModuleName.h"
@@ -89,21 +89,50 @@
 
 #include "%ProcessorModule.h"
 
-%if %Device = '256'
-#define %'ModuleName'%.MAX_I2C_ADDR_MASK 7                       %>40 /* A2|A1|A0 form the I2C device address => address cannot be more than 7 (8 devices) */
-#define %'ModuleName'%.MAX_ADDRESS       0x7FFF                  %>40 /* 256 kBit are 32KByte */
-#define %'ModuleName'%.ADDRT             word                    %>40 /* a word/16bit is engough to hold the address */
-%elif %Device = '512'
-#define %'ModuleName'%.MAX_I2C_ADDR_MASK 7                       %>40 /* A2|A1|A0 form the I2C device address => address cannot be more than 7 (8 devices) */
-#define %'ModuleName'%.MAX_ADDRESS       0xFFFF                  %>40 /* 512 kBit are 64KByte */
-#define %'ModuleName'%.ADDRT             word                    %>40 /* a word/16bit is engough to hold the address */
-%elif %Device = '1025'
-#define %'ModuleName'%.MAX_I2C_ADDR_MASK 3                       %>40 /* A1|A0 form the I2C device address => address cannot be more than 3 (4 devices) */
-#define %'ModuleName'%.MAX_ADDRESS       0x1FFFF                 %>40 /* 1024 kBit are 128KByte */
-#define %'ModuleName'%.ADDRT             dword                   %>40 /* a longword/32bit is needed to hold the address */
+/* supported device ID's */
+#define %'ModuleName'%.DEVICE_ID_8       8 /* 24AA08, 24LC08 */
+#define %'ModuleName'%.DEVICE_ID_32     32 /* 24AA08, 24LC32 */
+#define %'ModuleName'%.DEVICE_ID_256   256 /* 24AA256, 24LC256, 24FC256 */
+#define %'ModuleName'%.DEVICE_ID_512   512 /* 24AA512, 24LC512, 24FC256 */
+#define %'ModuleName'%.DEVICE_ID_1025 1025 /* 24AA1025, 24LC1025, 24FC1025 */
+/* actual device */
+%if %Device = '8'
+  #define %'ModuleName'%.DEVICE_ID      %'ModuleName'%.DEVICE_ID_8
+%elif %Device = '32'
+  #define %'ModuleName'%.DEVICE_ID      %'ModuleName'%.DEVICE_ID_32
+%elif %Device = '256'
+  #define %'ModuleName'%.DEVICE_ID      %'ModuleName'%.DEVICE_ID_256
+%elif (%Device = '512')
+  #define %'ModuleName'%.DEVICE_ID      %'ModuleName'%.DEVICE_ID_512
+%elif (%Device = '1025')
+  #define %'ModuleName'%.DEVICE_ID      %'ModuleName'%.DEVICE_ID_1025
 %else
-#error "unknown device?"
+  #error "unknown Device ID %Device?"
 %endif
+
+#if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8
+  #define %'ModuleName'%.MAX_I2C_ADDR_MASK 0                     %>40 /* A2|A1|A0 are not used */
+  #define %'ModuleName'%.MAX_ADDRESS       0x03FF                %>40 /* 8 kBit is 1KByte */
+  #define %'ModuleName'%.ADDRT             word                  %>40 /* a word/16bit is engough to hold the address */
+#elif %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_32
+  #define %'ModuleName'%.MAX_I2C_ADDR_MASK 7                     %>40 /* A2|A1|A0 form the I2C device address => address cannot be more than 7 (8 devices) */
+  #define %'ModuleName'%.MAX_ADDRESS       0x0FFF                %>40 /* 32 kBit are 4KByte */
+  #define %'ModuleName'%.ADDRT             word                  %>40 /* a word/16bit is engough to hold the address */
+#elif %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_256
+  #define %'ModuleName'%.MAX_I2C_ADDR_MASK 7                     %>40 /* A2|A1|A0 form the I2C device address => address cannot be more than 7 (8 devices) */
+  #define %'ModuleName'%.MAX_ADDRESS       0x7FFF                %>40 /* 256 kBit are 32KByte */
+  #define %'ModuleName'%.ADDRT             word                  %>40 /* a word/16bit is engough to hold the address */
+#elif %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_512
+  #define %'ModuleName'%.MAX_I2C_ADDR_MASK 7                     %>40 /* A2|A1|A0 form the I2C device address => address cannot be more than 7 (8 devices) */
+  #define %'ModuleName'%.MAX_ADDRESS       0xFFFF                %>40 /* 512 kBit are 64KByte */
+  #define %'ModuleName'%.ADDRT             word                  %>40 /* a word/16bit is engough to hold the address */
+#elif %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_1025
+  #define %'ModuleName'%.MAX_I2C_ADDR_MASK 3                     %>40 /* A1|A0 form the I2C device address => address cannot be more than 3 (4 devices) */
+  #define %'ModuleName'%.MAX_ADDRESS       0x1FFFF               %>40 /* 1024 kBit are 128KByte */
+  #define %'ModuleName'%.ADDRT             dword                 %>40 /* a longword/32bit is needed to hold the address */
+#else
+  #error "unknown device?"
+#endif
 
 %-STARTUSERTYPES - Do not make changes between lines (included this lines) marked with %-STARTUSERTYPES and %-ENDUSRTYPES
 
@@ -252,32 +281,44 @@ static byte %'ModuleName'%.I2CAddress = (%DeviceAddress&%'ModuleName'%.MAX_I2C_A
 #define %'ModuleName'%.I2CAddress (%DeviceAddress&%'ModuleName'%.MAX_I2C_ADDR_MASK)%>40 /* address defined by the A2|A1|A0 pins */
 %endif %- SelectDevice
 
+
 #define %'ModuleName'%.BLOCK_BUF_SIZE %BlockBufSize              %>40 /* buffer used for block read/write. Max is 128. Keep it small to reduce stack consumption. */
-%if %Device = '256'
-#define %'ModuleName'%.PAGE_SIZE      64                         %>40 /* maximum page size (for page/block operation) */
-%elif (%Device = '512') | (%Device = '1025')
-#define %'ModuleName'%.PAGE_SIZE      128                        %>40 /* maximum page size (for page/block operation) */
-%else
-#error "unknown device?"
-%endif
+#if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_256
+  #define %'ModuleName'%.PAGE_SIZE      64                       %>40 /* maximum page size (for page/block operation) */
+#elif (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_512) || (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_1025)
+  #define %'ModuleName'%.PAGE_SIZE      128                      %>40 /* maximum page size (for page/block operation) */
+#else
+  #error "unknown device?"
+#endif
 
 /* macros for the control byte: */
 #define %'ModuleName'%.CTRL_NBL       (0x0A<<3)                  %>40 /* control byte high nibble. Typically this is 1010 (shifted by one to the right) */
-#define %'ModuleName'%.CTRL_ADDR      %'ModuleName'%.I2CAddress  %>40 /* address inside control byte */
-%if (%Device = '256') | (%Device = '512')
-/* define control byte as 1010|A2|A1|A0 */
-#define %'ModuleName'%.CTRL_BYTE         (%'ModuleName'%.CTRL_NBL|%'ModuleName'%.CTRL_ADDR)%>40 /* 1010|A2|A1|A0 */
-#define %'ModuleName'%.DEVICE_ADDR(addr) %'ModuleName'%.CTRL_BYTE%>40 /* 7bit address of device used to select device */
-%elif %Device = '1025'
-/* define control byte as 1010|Bx|A1|A0 */
-#define %'ModuleName'%.BANK_0         (0<<2)                     %>40 /* B0 bit (0) inside the CTRL_BYTE: 1010|B0|A1|A0 */
-#define %'ModuleName'%.BANK_1         (1<<2)                     %>40 /* B0 bit (1) inside the CTRL_BYTE: 1010|B0|A1|A0 */
-#define %'ModuleName'%.CTRL_BYTE      (%'ModuleName'%.CTRL_NBL|%'ModuleName'%.CTRL_ADDR)%>40 /* 1010|B0|A1|A0 */
-#define %'ModuleName'%.DEVICE_ADDR(addr) \
-  (((addr)&0x10000)? \
-      (%'ModuleName'%.CTRL_BYTE|%'ModuleName'%.BANK_1) \
-    : (%'ModuleName'%.CTRL_BYTE|%'ModuleName'%.BANK_0) )         %>40 /* 7bit address of device used to select device */
-%endif
+#if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8
+  #define %'ModuleName'%.CTRL_ADDR      0                        %>40 /* no additional address bits */
+  /* define control byte as 1010|Bx|B1|B0 */
+  #define %'ModuleName'%.BANK_0         (0<<2)                   %>40 /* B0 bit (0) inside the CTRL_BYTE: 1010|B0|A1|A0 */
+  #define %'ModuleName'%.BANK_1         (1<<2)                   %>40 /* B0 bit (1) inside the CTRL_BYTE: 1010|B0|A1|A0 */
+  #define %'ModuleName'%.CTRL_BYTE      (%'ModuleName'%.CTRL_NBL|%'ModuleName'%.CTRL_ADDR)%>40 /* 1010|B0|A1|A0 */
+  #define %'ModuleName'%.DEVICE_ADDR(addr) \
+    (((addr)&0x100)? \
+        (%'ModuleName'%.CTRL_BYTE|%'ModuleName'%.BANK_1) \
+      : (%'ModuleName'%.CTRL_BYTE|%'ModuleName'%.BANK_0) )       %>40 /* 7bit address of device used to select device */
+#elif (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_32) || (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_256) || (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_512)
+  #define %'ModuleName'%.CTRL_ADDR      %'ModuleName'%.I2CAddress%>40 /* address inside control byte */
+  /* define control byte as 1010|A2|A1|A0 */
+  #define %'ModuleName'%.CTRL_BYTE         (%'ModuleName'%.CTRL_NBL|%'ModuleName'%.CTRL_ADDR)%>40 /* 1010|A2|A1|A0 */
+  #define %'ModuleName'%.DEVICE_ADDR(addr) %'ModuleName'%.CTRL_BYTE%>40 /* 7bit address of device used to select device */
+#elif %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_1025
+  #define %'ModuleName'%.CTRL_ADDR      %'ModuleName'%.I2CAddress%>40 /* address inside control byte */
+  /* define control byte as 1010|Bx|A1|A0 */
+  #define %'ModuleName'%.BANK_0         (0<<2)                   %>40 /* B0 bit (0) inside the CTRL_BYTE: 1010|B0|A1|A0 */
+  #define %'ModuleName'%.BANK_1         (1<<2)                   %>40 /* B0 bit (1) inside the CTRL_BYTE: 1010|B0|A1|A0 */
+  #define %'ModuleName'%.CTRL_BYTE      (%'ModuleName'%.CTRL_NBL|%'ModuleName'%.CTRL_ADDR)%>40 /* 1010|B0|A1|A0 */
+  #define %'ModuleName'%.DEVICE_ADDR(addr) \
+    (((addr)&0x10000)? \
+        (%'ModuleName'%.CTRL_BYTE|%'ModuleName'%.BANK_1) \
+      : (%'ModuleName'%.CTRL_BYTE|%'ModuleName'%.BANK_0) )       %>40 /* 7bit address of device used to select device */
+#endif
 
 %-BW_CUSTOM_VARIABLE_END
 %-BW_INTERN_METHOD_DECL_START
@@ -294,26 +335,18 @@ static byte %'ModuleName'%.I2CAddress = (%DeviceAddress&%'ModuleName'%.MAX_I2C_A
 byte %'ModuleName'%.%WriteByte(%'ModuleName'_Address addr, byte data)
 {
   byte res, block[3];
-  word snt;
 
-  res = %@I2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_ADDR(addr));%>40 /* read/write bit is handled by the I2C bean */
-  if (res != ERR_OK) return res;
+  res = %@I2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_ADDR(addr));
+  if (res != ERR_OK) {
+    return res;
+  }
   block[0] = (byte)(addr>>8);                                    %>40 /* high byte of address */
   block[1] = (byte)(addr&0xff);                                  %>40 /* low byte of address */
   block[2] = data; /* switch to read mode */
-  res = %@I2C@'ModuleName'%.SendBlock(block, sizeof(block), &snt);%>40 /* send address and data */
-  if (res != ERR_OK) return res;
-#if 0 /* feedback BDA Markus Bättig: this does not work correctly? */
-  {
-    byte tmp;
-    /* as the device may be busy, do now acknowledge polling */
-    do { /* the data sheet says "send control byte with R/W=0", but this would be a possible write. We better do just a read: */
-      res = %@I2C@'ModuleName'%.RecvChar(&tmp);                  %>40
-    } while (res != ERR_OK);
+  res = %@I2C@'ModuleName'%.WriteBlock(block, sizeof(block), %@I2C@'ModuleName'%.SEND_STOP);%>40 /* send address and data */
+  if (res != ERR_OK) {
+    return res;
   }
-#else /* implementation by Markus Bättig */
-  res = %@I2C@'ModuleName'%.SendStop();
-#endif
   return res;
 }
 
@@ -329,24 +362,23 @@ byte %'ModuleName'%.%WriteByte(%'ModuleName'_Address addr, byte data)
 byte %'ModuleName'%.%ReadByte(%'ModuleName'_Address addr, byte *data)
 {
   byte res;
-  word nof;
-%if %Device = '1025'
+#if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_1025
   word addr16 = (word)(addr&0xffff);                             %>40 /* address on I2C bus needs to be 16bit */
-%endif
-
-  res = %@I2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_ADDR(addr));%>40 /* read/write bit is handled by the I2C bean */
-  if (res != ERR_OK) return res;
-%if (%Device = '256') | (%Device = '512')
-  res = %@I2C@'ModuleName'%.SendBlock(&addr, 2, &nof);           %>40 /* send 16bit address */
-%elif %Device = '1025'
-  res = %@I2C@'ModuleName'%.SendBlock(&addr16, 2, &nof);         %>40 /* send 16bit address */
-%endif
-  if (res != ERR_OK) return res;
-  res = %@I2C@'ModuleName'%.RecvBlock(data, 1, &nof);            %>40 /* read data byte from bus */
-#if 1 /* added by BDA Markus Bättig */
-  if (res != ERR_OK) return res;
-  res = %@I2C@'ModuleName'%.SendStop();
 #endif
+
+  res = %@I2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_ADDR(addr));
+  if (res != ERR_OK) {
+    return res;
+  }
+#if (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8) || (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_32) || (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_256) || (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_512)
+  res = %@I2C@'ModuleName'%.WriteBlock(&addr, 2, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send 16bit address */
+#elif %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_1025
+  res = %@I2C@'ModuleName'%.WriteBlock(&addr16, 2, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send 16bit address */
+#endif
+  if (res != ERR_OK) {
+    return res;
+  }
+  res = %@I2C@'ModuleName'%.ReadBlock(data, 1, %@I2C@'ModuleName'%.SEND_STOP);%>40 /* read data byte from bus */
   return res;
 }
 
@@ -363,25 +395,23 @@ byte %'ModuleName'%.%ReadByte(%'ModuleName'_Address addr, byte *data)
 byte %'ModuleName'%.%ReadBlock(%'ModuleName'_Address addr, byte *data, word dataSize)
 {
   byte res;
-  word nof;
-%if %Device = '1025'
+#if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_1025
   word addr16 = (word)(addr&0xffff);                             %>40 /* address on I2C bus needs to be 16bit */
-%endif
-
-  res = %@I2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_ADDR(addr));%>40 /* read/write bit is handled by the I2C bean */
-  if (res != ERR_OK) return res;
-%if (%Device = '256') | (%Device = '512')
-  res = %@I2C@'ModuleName'%.SendBlock(&addr, 2, &nof);           %>40 /* send address */
-%elif %Device = '1025'
-  res = %@I2C@'ModuleName'%.SendBlock(&addr16, 2, &nof);         %>40 /* send 16bit address */
-%endif
-  if (res != ERR_OK) return res;
-  res = %@I2C@'ModuleName'%.RecvBlock(data, dataSize, &nof);
-#if 1 /* added by BDA Markus Bättig */
-  if (res != ERR_OK) return res;
-  res = %@I2C@'ModuleName'%.SendStop();
 #endif
-  return res;
+
+  res = %@I2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_ADDR(addr));
+  if (res != ERR_OK) {
+    return res;
+  }
+#if (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8) || (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_32) || (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_256) || (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_512)
+  res = %@I2C@'ModuleName'%.WriteBlock(&addr, 2, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send address */
+#elif %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_1025
+  res = %@I2C@'ModuleName'%.WriteBlock(&addr16, 2, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send 16bit address */
+#endif
+  if (res != ERR_OK) {
+    return res;
+  }
+  return %@I2C@'ModuleName'%.ReadBlock(data, dataSize, %@I2C@'ModuleName'%.SEND_STOP);
 }
 
 %endif %- ReadBlock
@@ -400,7 +430,6 @@ byte %'ModuleName'%.%ReadBlock(%'ModuleName'_Address addr, byte *data, word data
 byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dataSize)
 {
   byte res, i, *p, block[%'ModuleName'%.BLOCK_BUF_SIZE+2];       %>40 /* additional 2 bytes for the address */
-  word nof;
   word eepromPage = (word)(addr/%'ModuleName'%.PAGE_SIZE);
   byte offset = (byte)(addr%%%'ModuleName'%.PAGE_SIZE);
 
@@ -408,10 +437,10 @@ byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dat
     return ERR_OVERFLOW;                                         %>40 /* writing such a block is not implemented yet */
   }
   if (dataSize==0 || dataSize>%'ModuleName'%.BLOCK_BUF_SIZE) {
-    return ERR_OVERFLOW;                                         %>40 /* you may increase the buffer size in the bean properties? */
+    return ERR_OVERFLOW;                                         %>40 /* you may increase the buffer size in the properties? */
   }
   if (offset+dataSize <= %'ModuleName'%.PAGE_SIZE) {             %>40 /* no page boundary crossing */
-    res = %@I2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_ADDR(addr));%>40 /* read/write bit is handled by the I2C bean */
+    res = %@I2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_ADDR(addr));
     if (res != ERR_OK) return res;
     block[0] = (byte)(addr>>8);                                  %>40 /* high byte of address */
     block[1] = (byte)(addr&0xff);                                %>40 /* low byte of address */
@@ -421,14 +450,10 @@ byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dat
       *p++ = *data++;
       i--;
     }
-    res = %@I2C@'ModuleName'%.SendBlock(block, dataSize+2, &nof);%>40 /* send address and data */
-    if (res != ERR_OK) return res;
-#if 0 /* feedback by BDA Markus Bättig: feedback polling does not work */
-    /* as the device may be busy, do now acknowledge polling */
-    do { /* the data sheet says "send control byte with R/W=0", but this would be a possible write. We better do just a read: */
-      res = %@I2C@'ModuleName'%.RecvChar(&tmp);                  %>40
-    } while (res != ERR_OK);
-#endif
+    res = %@I2C@'ModuleName'%.WriteBlock(block, dataSize+2, %@I2C@'ModuleName'%.SEND_STOP);%>40 /* send address and data */
+    if (res != ERR_OK) {
+      return res;
+    }
   } else { /* crossing page boundaries: make two page writes */
     res = %'ModuleName'%.WriteBlock(addr, data,
       (word)(%'ModuleName'%.PAGE_SIZE-offset));                  %>40 /* first page write */
@@ -436,12 +461,10 @@ byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dat
     res = %'ModuleName'%.WriteBlock(((eepromPage+1)*%'ModuleName'%.PAGE_SIZE),
        data+(%'ModuleName'%.PAGE_SIZE-offset),
        (word)(dataSize-(%'ModuleName'%.PAGE_SIZE-offset)));      %>40 /* first page write */
-    if (res != ERR_OK) return res;
+    if (res != ERR_OK) {
+      return res;
+    }
   }
-#if 1 /* added by BDA Markus Bättig */
-  if (res != ERR_OK) return res;
-  res = %@I2C@'ModuleName'%.SendStop();
-#endif
   return res;
 }
 #ifdef __HIWARE__
@@ -504,15 +527,14 @@ byte %'ModuleName'%.%Test(void)
   res = %'ModuleName'%.ReadBlock(%'ModuleName'%.PAGE_SIZE-5, data, sizeof(data));
   if (res != ERR_OK) return res;
   if (strcmp("Hello World!", data) != 0) return ERR_FAULT;
-%if %Device = '1025'
+#if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_1025
   /* testing writing to second bank */
   res = %'ModuleName'%.WriteBlock(0x10005, "Hello bank 1!", sizeof("Hello bank 1!"));
   if (res != ERR_OK) return res;
   res = %'ModuleName'%.ReadBlock(0x10005, data, sizeof(data));
   if (res != ERR_OK) return res;
   if (strcmp("Hello bank 1!", data) != 0) return ERR_FAULT;
-%endif
-
+#endif
   return ERR_OK;
 }
 

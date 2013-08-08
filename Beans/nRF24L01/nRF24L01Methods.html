@@ -206,6 +206,136 @@ LI.EXP {
 <!---USERBEG DON'T CHANGE THIS LINE-->
 
 <!---USEREND DON'T CHANGE THIS LINE-->
+<li><a name="WriteRegister">
+<b>WriteRegister</b></a>
+ - Write a register value to the transceiver
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void WriteRegister(byte reg, byte val)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>reg:byte</i> - Register address to write</li>
+<li><i>val:byte</i> - Value to write</li>
+</ul><br />
+</li>
+<li><a name="ReadRegister">
+<b>ReadRegister</b></a>
+ - Reads a register from the transceiver
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ReadRegister(byte reg)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>reg:byte</i> - Register address</li>
+<li><i>Return value:byte</i> - value read
+</li>
+</ul><br />
+</li>
+<li><a name="ReadRegisterData">
+<b>ReadRegisterData</b></a>
+ - Read multiple bytes from the bus.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void ReadRegisterData(byte reg, byte *buf, byte bufSize)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>reg:byte</i> - Register address</li>
+<li><i>buf: Pointer to byte</i> - Pointer to buffer where to store the values</li>
+<li><i>bufSize:byte</i> - Size of the destination buffer</li>
+</ul><br />
+</li>
+<li><a name="WriteRegisterData">
+<b>WriteRegisterData</b></a>
+ - Write multiple bytes to the bus.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void WriteRegisterData(byte reg, byte *buf, byte bufSize)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>reg:byte</i> - Register address</li>
+<li><i>buf: Pointer to byte</i> - Pointer to data buffer to write</li>
+<li><i>bufSize:byte</i> - Size of buffer in bytes</li>
+</ul><br />
+</li>
+<li><a name="WriteRead">
+<b>WriteRead</b></a>
+ - Writes a byte and reads back one byte
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte WriteRead(byte val)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>val:byte</i> - Value to write to the bus</li>
+<li><i>Return value:byte</i> - Value read from the bus
+</li>
+</ul><br />
+</li>
+<li><a name="Write">
+<b>Write</b></a>
+ - Writes a byte to the bus, without returning the byte read.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void Write(byte val)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>val:byte</i> - Value to write</li>
+</ul><br />
+</li>
+<li><a name="GetStatus">
+<b>GetStatus</b></a>
+ - Returns the device status byte
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte GetStatus(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:byte</i> - status byte
+</li>
+</ul><br />
+</li>
+<li><a name="ResetStatusIRQ">
+<b>ResetStatusIRQ</b></a>
+ - Reset the given flags mask of status bits
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void ResetStatusIRQ(byte flags)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>flags:byte</i> - Flags, one or more of RF24_STATUS_RX_DR, RF24_STATUS_TX_DS, RF24_STATUS_MAX_RT</li>
+</ul><br />
+</li>
+<li><a name="TxPayload">
+<b>TxPayload</b></a>
+ - Send the payload to the Tx FIFO and send it
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void TxPayload(byte *payload, byte payloadSize)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>payload: Pointer to byte</i> - Pointer to buffer with payload to send</li>
+<li><i>payloadSize:byte</i> - Size of payload buffer</li>
+</ul><br />
+</li>
+<li><a name="RxPayload">
+<b>RxPayload</b></a>
+ - Receive the Rx payload from the FIFO and stores it in a buffer.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void RxPayload(byte *payload, byte payloadSize)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>payload: Pointer to byte</i> - Pointer to the payload buffer</li>
+<li><i>payloadSize:byte</i> - Size of the payload buffer</li>
+</ul><br />
+</li>
+<li><a name="StopRxTx">
+<b>StopRxTx</b></a>
+ - Stops sending or receiving (sets CE pin to LOW).
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void StopRxTx(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="StartRxTx">
+<b>StartRxTx</b></a>
+ - Starts sending or receiving (sets CE pin to HIGH).
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void StartRxTx(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
 <li><a name="Init">
 <b>Init</b></a>
  - Initialization method

@@ -226,15 +226,15 @@ LI.EXP {
 </li>
 <li>
 <a name="CE">
-<b>CE</b></a> - CE Pin
-</li>
-<li>
-<a name="SPI">
-<b>SPI</b></a> - SPI interface
+<b>CE Pin</b></a> - CE Pin
 </li>
 <li>
 <a name="CSN">
-<b>CSN</b></a> - CSN pin
+<b>CSN Pin</b></a> - CSN pin
+</li>
+<li>
+<a name="SPI">
+<b>SPI Bus</b></a> - SPI interface
 </li>
 <li>
 <a name="IRQPinEnabled">
@@ -242,6 +242,10 @@ LI.EXP {
 The following items are available only if the group is enabled (the value is "Enabled"):<br />
 
 <ul>
+  <li>
+  <a name="AppEventHandler">
+  <b>Event Handler</b></a> - If not empty, it will call an event handler of the form 'void AppEventHandler(void)' which can be used instead the Processor Expert Events.c module. 
+  </li>
   <li>
   <a name="IRQ">
   <b>IRQ</b></a> - Optional IRQ pin
