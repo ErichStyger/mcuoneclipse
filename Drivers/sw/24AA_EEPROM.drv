@@ -281,9 +281,10 @@ static byte %'ModuleName'%.I2CAddress = (%DeviceAddress&%'ModuleName'%.MAX_I2C_A
 #define %'ModuleName'%.I2CAddress (%DeviceAddress&%'ModuleName'%.MAX_I2C_ADDR_MASK)%>40 /* address defined by the A2|A1|A0 pins */
 %endif %- SelectDevice
 
-
 #define %'ModuleName'%.BLOCK_BUF_SIZE %BlockBufSize              %>40 /* buffer used for block read/write. Max is 128. Keep it small to reduce stack consumption. */
-#if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_256
+#if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8
+  #define %'ModuleName'%.PAGE_SIZE      16                       %>40 /* maximum page size (for page/block operation) */
+#elif %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_256
   #define %'ModuleName'%.PAGE_SIZE      64                       %>40 /* maximum page size (for page/block operation) */
 #elif (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_512) || (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_1025)
   #define %'ModuleName'%.PAGE_SIZE      128                      %>40 /* maximum page size (for page/block operation) */
@@ -334,19 +335,24 @@ static byte %'ModuleName'%.I2CAddress = (%DeviceAddress&%'ModuleName'%.MAX_I2C_A
 %include Common\24AA_EEPROMWriteByte.Inc
 byte %'ModuleName'%.%WriteByte(%'ModuleName'_Address addr, byte data)
 {
-  byte res, block[3];
+  uint8_t res, block[3];
 
   res = %@I2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_ADDR(addr));
   if (res != ERR_OK) {
     return res;
   }
-  block[0] = (byte)(addr>>8);                                    %>40 /* high byte of address */
-  block[1] = (byte)(addr&0xff);                                  %>40 /* low byte of address */
+  block[0] = (uint8_t)(addr>>8);                                 %>40 /* high byte of address */
+  block[1] = (uint8_t)(addr&0xff);                               %>40 /* low byte of address */
   block[2] = data; /* switch to read mode */
   res = %@I2C@'ModuleName'%.WriteBlock(block, sizeof(block), %@I2C@'ModuleName'%.SEND_STOP);%>40 /* send address and data */
   if (res != ERR_OK) {
     return res;
   }
+  /* do acknowledge polling */
+  block[0] = 0xff; /* dummy value */
+  do {
+    res = %@I2C@'ModuleName'%.WriteBlock(block, 1, %@I2C@'ModuleName'%.SEND_STOP);%>40 /* send address and data */
+  } while(res!=ERR_OK); /* wait until we get an ACK */
   return res;
 }
 
@@ -361,18 +367,20 @@ byte %'ModuleName'%.%WriteByte(%'ModuleName'_Address addr, byte data)
 %include Common\24AA_EEPROMReadByte.Inc
 byte %'ModuleName'%.%ReadByte(%'ModuleName'_Address addr, byte *data)
 {
-  byte res;
-#if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_1025
-  word addr16 = (word)(addr&0xffff);                             %>40 /* address on I2C bus needs to be 16bit */
-#endif
+  uint8_t res;
+#if %'ModuleName'%.DEVICE_ID!=%'ModuleName'%.DEVICE_ID_8
+  uint8_t addr16[2];                                             %>40 /* big endian address on I2C bus needs to be 16bit */
 
+  addr16[0] = (uint8_t)(addr>>8); /* 16 bit address must be in big endian format */
+  addr16[1] = (uint8_t)(addr&0xff);
+#endif
   res = %@I2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_ADDR(addr));
   if (res != ERR_OK) {
     return res;
   }
-#if (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8) || (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_32) || (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_256) || (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_512)
-  res = %@I2C@'ModuleName'%.WriteBlock(&addr, 2, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send 16bit address */
-#elif %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_1025
+#if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8
+  res = %@I2C@'ModuleName'%.WriteBlock(&addr, 1, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send 16bit address */
+#else /* use 16bit address */
   res = %@I2C@'ModuleName'%.WriteBlock(&addr16, 2, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send 16bit address */
 #endif
   if (res != ERR_OK) {
@@ -394,18 +402,20 @@ byte %'ModuleName'%.%ReadByte(%'ModuleName'_Address addr, byte *data)
 %include Common\24AA_EEPROMReadBlock.Inc
 byte %'ModuleName'%.%ReadBlock(%'ModuleName'_Address addr, byte *data, word dataSize)
 {
-  byte res;
-#if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_1025
-  word addr16 = (word)(addr&0xffff);                             %>40 /* address on I2C bus needs to be 16bit */
-#endif
+  uint8_t res;
+#if %'ModuleName'%.DEVICE_ID!=%'ModuleName'%.DEVICE_ID_8
+  uint8_t addr16[2];                                             %>40 /* big endian address on I2C bus needs to be 16bit */
 
+  addr16[0] = (uint8_t)(addr>>8); /* 16 bit address must be in big endian format */
+  addr16[1] = (uint8_t)(addr&0xff);
+#endif
   res = %@I2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_ADDR(addr));
   if (res != ERR_OK) {
     return res;
   }
-#if (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8) || (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_32) || (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_256) || (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_512)
-  res = %@I2C@'ModuleName'%.WriteBlock(&addr, 2, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send address */
-#elif %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_1025
+#if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8
+  res = %@I2C@'ModuleName'%.WriteBlock(&addr, 1, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send address */
+#else
   res = %@I2C@'ModuleName'%.WriteBlock(&addr16, 2, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send 16bit address */
 #endif
   if (res != ERR_OK) {
@@ -429,9 +439,9 @@ byte %'ModuleName'%.%ReadBlock(%'ModuleName'_Address addr, byte *data, word data
 #endif
 byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dataSize)
 {
-  byte res, i, *p, block[%'ModuleName'%.BLOCK_BUF_SIZE+2];       %>40 /* additional 2 bytes for the address */
-  word eepromPage = (word)(addr/%'ModuleName'%.PAGE_SIZE);
-  byte offset = (byte)(addr%%%'ModuleName'%.PAGE_SIZE);
+  uint8_t res, i, *p, block[%'ModuleName'%.BLOCK_BUF_SIZE+2];    %>40 /* additional 2 bytes for the address */
+  uint16_t eepromPage = (uint16_t)(addr/%'ModuleName'%.PAGE_SIZE);
+  uint8_t offset = (uint8_t)(addr%%%'ModuleName'%.PAGE_SIZE);
 
   if (dataSize>%'ModuleName'%.PAGE_SIZE) {
     return ERR_OVERFLOW;                                         %>40 /* writing such a block is not implemented yet */
@@ -441,11 +451,13 @@ byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dat
   }
   if (offset+dataSize <= %'ModuleName'%.PAGE_SIZE) {             %>40 /* no page boundary crossing */
     res = %@I2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_ADDR(addr));
-    if (res != ERR_OK) return res;
-    block[0] = (byte)(addr>>8);                                  %>40 /* high byte of address */
-    block[1] = (byte)(addr&0xff);                                %>40 /* low byte of address */
+    if (res != ERR_OK) {
+      return res;
+    }
+    block[0] = (uint8_t)(addr>>8);                               %>40 /* high byte of address */
+    block[1] = (uint8_t)(addr&0xff);                             %>40 /* low byte of address */
     /* copy block */
-    p = &block[2]; i = (byte)dataSize;
+    p = &block[2]; i = (uint8_t)dataSize;
     while(i>0) {
       *p++ = *data++;
       i--;
@@ -454,13 +466,19 @@ byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dat
     if (res != ERR_OK) {
       return res;
     }
+    /* do acknowledge polling */
+    block[0] = 0xff; /* dummy value */
+    do {
+      res = %@I2C@'ModuleName'%.WriteBlock(block, 1, %@I2C@'ModuleName'%.SEND_STOP);%>40 /* send address and data */
+    } while(res!=ERR_OK); /* wait until we get an ACK */
   } else { /* crossing page boundaries: make two page writes */
-    res = %'ModuleName'%.WriteBlock(addr, data,
-      (word)(%'ModuleName'%.PAGE_SIZE-offset));                  %>40 /* first page write */
-    if (res != ERR_OK) return res;
+    res = %'ModuleName'%.WriteBlock(addr, data, (uint16_t)(%'ModuleName'%.PAGE_SIZE-offset));%>40 /* first page write */
+    if (res != ERR_OK) {
+      return res;
+    }
     res = %'ModuleName'%.WriteBlock(((eepromPage+1)*%'ModuleName'%.PAGE_SIZE),
        data+(%'ModuleName'%.PAGE_SIZE-offset),
-       (word)(dataSize-(%'ModuleName'%.PAGE_SIZE-offset)));      %>40 /* first page write */
+       (uint16_t)(dataSize-(%'ModuleName'%.PAGE_SIZE-offset)));  %>40 /* first page write */
     if (res != ERR_OK) {
       return res;
     }
@@ -478,62 +496,112 @@ byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dat
 %ifdef Test
 %define! RetVal
 %include Common\24AA_EEPROMTest.Inc
-#include <stdio.h> /* for strcmp() */
+#include <string.h> /* for strcmp() */
 byte %'ModuleName'%.%Test(void)
 {
-  byte res, val, data[16];
+  uint8_t res, val, data[16];
 
   res = %'ModuleName'%.WriteByte(0x0000, 0);
-  if (res != ERR_OK) return res;
+  if (res != ERR_OK) {
+    return res;
+  }
   res = %'ModuleName'%.WriteByte(0x0001, 1);
-  if (res != ERR_OK) return res;
+  if (res != ERR_OK) {
+    return res;
+  }
   res = %'ModuleName'%.WriteByte(0x0002, 2);
-  if (res != ERR_OK) return res;
+  if (res != ERR_OK) {
+    return res;
+  }
   res = %'ModuleName'%.WriteByte(0x0003, 3);
-  if (res != ERR_OK) return res;
+  if (res != ERR_OK) {
+    return res;
+  }
   res = %'ModuleName'%.WriteByte(0x0004, 4);
-  if (res != ERR_OK) return res;
+  if (res != ERR_OK) {
+    return res;
+  }
   res = %'ModuleName'%.WriteByte(0x0010, 5);
-  if (res != ERR_OK) return res;
+  if (res != ERR_OK) {
+    return res;
+  }
 
   res = %'ModuleName'%.ReadByte(0x0000, &val);
-  if (res != ERR_OK) return res;
-  if (val != 0) return ERR_FAULT;
+  if (res != ERR_OK) {
+    return res;
+  }
+  if (val != 0) {
+    return ERR_FAULT;
+  }
   res = %'ModuleName'%.ReadByte(0x0001, &val);
-  if (res != ERR_OK) return res;
-  if (val != 1) return ERR_FAULT;
+  if (res != ERR_OK) {
+    return res;
+  }
+  if (val != 1) {
+    return ERR_FAULT;
+  }
   res = %'ModuleName'%.ReadByte(0x0002, &val);
-  if (res != ERR_OK) return res;
-  if (val != 2) return ERR_FAULT;
+  if (res != ERR_OK) {
+    return res;
+  }
+  if (val != 2) {
+    return ERR_FAULT;
+  }
   res = %'ModuleName'%.ReadByte(0x0003, &val);
-  if (res != ERR_OK) return res;
-  if (val != 3) return ERR_FAULT;
+  if (res != ERR_OK) {
+    return res;
+  }
+  if (val != 3) {
+    return ERR_FAULT;
+  }
   res = %'ModuleName'%.ReadByte(0x0004, &val);
-  if (res != ERR_OK) return res;
-  if (val != 4) return ERR_FAULT;
+  if (res != ERR_OK) {
+    return res;
+  }
+  if (val != 4) {
+    return ERR_FAULT;
+  }
   res = %'ModuleName'%.ReadByte(0x0010, &val);
-  if (res != ERR_OK) return res;
-  if (val != 5) return ERR_FAULT;
-
-  res = %'ModuleName'%.WriteBlock(0x10, "Hello", sizeof("Hello"));
-  if (res != ERR_OK) return res;
+  if (res != ERR_OK) {
+    return res;
+  }
+  if (val != 5) {
+    return ERR_FAULT;
+  }
+  res = %'ModuleName'%.WriteBlock(0x10, (uint8_t*)"Hello", sizeof("Hello"));
+  if (res != ERR_OK) {
+    return res;
+  }
   res = %'ModuleName'%.ReadBlock(0x10, data, sizeof(data));
-  if (res != ERR_OK) return res;
-  if (strcmp("Hello", data) != 0) return ERR_FAULT;
-
+  if (res != ERR_OK) {
+    return res;
+  }
+  if (strcmp((char*)"Hello", (char*)data) != 0) {
+    return ERR_FAULT;
+  }
   /* testing crossing page boundary */
-  res = %'ModuleName'%.WriteBlock(%'ModuleName'%.PAGE_SIZE-5, "Hello World!", sizeof("Hello World!"));
-  if (res != ERR_OK) return res;
+  res = %'ModuleName'%.WriteBlock(%'ModuleName'%.PAGE_SIZE-5, (uint8_t*)"Hello World!", sizeof("Hello World!"));
+  if (res != ERR_OK) {
+    return res;
+  }
   res = %'ModuleName'%.ReadBlock(%'ModuleName'%.PAGE_SIZE-5, data, sizeof(data));
-  if (res != ERR_OK) return res;
-  if (strcmp("Hello World!", data) != 0) return ERR_FAULT;
+  if (res != ERR_OK) {
+    return res;
+  }
+  if (strcmp((char*)"Hello World!", (char*)data) != 0) return ERR_FAULT;
 #if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_1025
   /* testing writing to second bank */
-  res = %'ModuleName'%.WriteBlock(0x10005, "Hello bank 1!", sizeof("Hello bank 1!"));
-  if (res != ERR_OK) return res;
-  res = %'ModuleName'%.ReadBlock(0x10005, data, sizeof(data));
-  if (res != ERR_OK) return res;
-  if (strcmp("Hello bank 1!", data) != 0) return ERR_FAULT;
+  res = %'ModuleName'%.WriteBlock(0x10005, (uint8_t*)"Hello bank 1!", sizeof("Hello bank 1!"));
+  if (res != ERR_OK) {
+    return res;
+  }
+  res = %'ModuleName'%.ReadBlock(0x10005, data,(uint8_t*) sizeof(data));
+  if (res != ERR_OK) {
+    return res;
+  }
+  if (strcmp((char*)"Hello bank 1!", (char*)data) != 0) {
+    return ERR_FAULT;
+  }
 #endif
   return ERR_OK;
 }

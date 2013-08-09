@@ -229,6 +229,9 @@ static bool %'ModuleName'%.FreeCounters[%'ModuleName'%.NOF_COUNTERS];%>40/* arra
   %'ModuleName'%.CounterHandle handle;
 
   handle = 0;
+  if (nofTicks==0) {
+    nofTicks = 1; /* wait at least for one tick, otherwise will timeout immediately */
+  }
   EnterCritical();
   while (!%'ModuleName'%.FreeCounters[handle] && handle<%'ModuleName'%.NOF_COUNTERS) {
     handle++;

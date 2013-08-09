@@ -377,7 +377,7 @@ typedef struct {
 static %'ModuleName'%.TDataState %'ModuleName'%.deviceData;
 
 %if defined(Timeout)
-#define %'ModuleName'%.TIMEOUT_MS  %TimeoutMs  /* number of milliseconds as specified in properties */
+#define %'ModuleName'%.TIMEOUT_US  %TimeoutUs  /* number of microseconds as specified in properties */
 %endif
 %endif
 %if defined(RTOS) & %UseSemaphore='yes'
@@ -489,7 +489,7 @@ byte %'ModuleName'%.%ReadBlock(void* data, word dataSize, %'ModuleName'_EnumSend
       break; /* break for(;;) */
     }
 %if defined(Timeout)
-    timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_MS/%@Timeout@'ModuleName'%.TICK_PERIOD_MS); /* set up timeout counter */
+    timeout = %@Timeout@'ModuleName'%.GetCounter((%'ModuleName'%.TIMEOUT_US*dataSize)/1000/%@Timeout@'ModuleName'%.TICK_PERIOD_MS); /* set up timeout counter */
     if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
       res = ERR_FAILED;
       break; /* break for(;;) */
@@ -554,11 +554,12 @@ byte %'ModuleName'%.%WriteBlock(void* data, word dataSize, %'ModuleName'_EnumSen
 %if defined(LDD_I2C)
   for(;;) { /* breaks */
     %'ModuleName'%.deviceData.dataTransmittedFlg = FALSE;
-    if (%@LDD_I2C@'ModuleName'%.MasterSendBlock(%'ModuleName'%.deviceData.handle, data, dataSize, flags==%'ModuleName'_SEND_STOP?LDD_I2C_SEND_STOP:LDD_I2C_NO_SEND_STOP)!=ERR_OK) {
+    res = %@LDD_I2C@'ModuleName'%.MasterSendBlock(%'ModuleName'%.deviceData.handle, data, dataSize, flags==%'ModuleName'_SEND_STOP?LDD_I2C_SEND_STOP:LDD_I2C_NO_SEND_STOP);
+    if (res!=ERR_OK) {
       break; /* break for(;;) */
     }
 %if defined(Timeout)
-    timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_MS/%@Timeout@'ModuleName'%.TICK_PERIOD_MS); /* set up timeout counter */
+    timeout = %@Timeout@'ModuleName'%.GetCounter((%'ModuleName'%.TIMEOUT_US*dataSize)/1000/%@Timeout@'ModuleName'%.TICK_PERIOD_MS); /* set up timeout counter */
     if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
       res = ERR_FAILED;
       break; /* break for(;;) */
@@ -636,7 +637,7 @@ byte %'ModuleName'%.%ReadAddress(byte i2cAddr, byte *memAddr, byte memAddrSize, 
       break; /* break for(;;) */
     }
 %if defined(Timeout)
-    timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_MS/%@Timeout@'ModuleName'%.TICK_PERIOD_MS); /* set up timeout counter */
+    timeout = %@Timeout@'ModuleName'%.GetCounter((%'ModuleName'%.TIMEOUT_US*dataSize)/1000/%@Timeout@'ModuleName'%.TICK_PERIOD_MS); /* set up timeout counter */
     if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
       res = ERR_FAILED;
       break; /* break for(;;) */
@@ -664,7 +665,7 @@ byte %'ModuleName'%.%ReadAddress(byte i2cAddr, byte *memAddr, byte memAddrSize, 
       break; /* break for(;;) */
     }
 %if defined(Timeout)
-    timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_MS/%@Timeout@'ModuleName'%.TICK_PERIOD_MS); /* set up timeout counter */
+    timeout = %@Timeout@'ModuleName'%.GetCounter((%'ModuleName'%.TIMEOUT_US*dataSize)/1000/%@Timeout@'ModuleName'%.TICK_PERIOD_MS); /* set up timeout counter */
     if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
       res = ERR_FAILED;
       break; /* break for(;;) */
@@ -762,7 +763,7 @@ byte %'ModuleName'%.%WriteAddress(byte i2cAddr, byte *memAddr, byte memAddrSize,
       break; /* break for(;;) */
     }
 %if defined(Timeout)
-    timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_MS/%@Timeout@'ModuleName'%.TICK_PERIOD_MS); /* set up timeout counter */
+    timeout = %@Timeout@'ModuleName'%.GetCounter((%'ModuleName'%.TIMEOUT_US*dataSize)/1000/%@Timeout@'ModuleName'%.TICK_PERIOD_MS); /* set up timeout counter */
     if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
       res = ERR_FAILED;
       break; /* break for(;;) */
@@ -960,7 +961,7 @@ byte %'ModuleName'%.%ScanDevice(byte i2cAddr)
       break; /* break for(;;) */
     }
 %if defined(Timeout)
-    timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_MS/%@Timeout@'ModuleName'%.TICK_PERIOD_MS); /* set up timeout counter */
+    timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_US/1000/%@Timeout@'ModuleName'%.TICK_PERIOD_MS); /* set up timeout counter */
     if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
       res = ERR_FAILED;
       break; /* break for(;;) */

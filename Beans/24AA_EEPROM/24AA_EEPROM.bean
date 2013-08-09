@@ -4,7 +4,7 @@
     <Name>24AA_EEPROM</Name>
     <Description>Microchip 24AA Serial EEPROM</Description>
     <Author>Erich Styger</Author>
-    <Version>01.004</Version>
+    <Version>01.010</Version>
     <Icon>24AA_EEPROM</Icon>
     <TypesFiles>PE,24AA_EEPROM\24AA_EEPROM</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -113,16 +113,16 @@
           </GrupItem>
           <GrupItem>
             <TBoolGrupItem>
-              <Name>Write Protection</Name>
+              <Name>Write Protection Pin</Name>
               <Symbol>WriteProtectionGroup</Symbol>
               <TypeSpec>typeEnaDis</TypeSpec>
               <Hint>If not hardwired, the WP (Write Protection) pin allows to prevent writing to the memory.</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
-              <Description>Enabled</Description>
+              <Description>Disabled</Description>
               <Expanded>Yes</Expanded>
-              <DefaultValue>true</DefaultValue>
+              <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
               <Children>
