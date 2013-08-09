@@ -31,11 +31,11 @@
 #include "Cpu.h"
 #include "Events.h"
 #include "EE241.h"
-#include "I2CSPY1.h"
 #include "I2C1.h"
 #include "T1ms.h"
 #include "TimerIntLdd1.h"
 #include "TU1.h"
+#include "WAIT1.h"
 #include "GI2C1.h"
 #include "TMOUT1.h"
 /* Including shared modules, which are used for whole project */

@@ -242,6 +242,25 @@ There are 5 options:<br />
 <b>Block buffer size</b></a> - Buffer size for block writing. The smaller the value, the less stack is used. This limits as well the maximum of block size which can be written.
 </li>
 <li>
+<a name="DoAcknowledgePolling">
+<b>Acknowledge Polling</b></a> - If enabled, the driver will perform Acknowledge Polling as outlined in the data sheet of the device. Otherwise it is in the responsibility of the application to perform this.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+<ul>
+  <li>
+  <a name="PageWriteTimeMs">
+  <b>Page Write Time (ms)</b></a> - Specifies the typical page write time, as per data sheet. This is the time needed for the device to write a page. This time will be used for the acknowledge polling as initial waiting time. <br />
+Typical values:<br />
+24xx8: 3 ms<br />
+24xx512: 5 ms
+  </li>
+  <li>
+  <a name="Wait">
+  <b>Wait</b></a> - Interface to waiting routines. Driver will use RTOS waiting routine if RTOS is present.
+  </li>
+</ul>
+</li>
+<li>
 <a name="ConnectionGroup">
 <b>Connection</b></a> - Connection settings.
 <ul>

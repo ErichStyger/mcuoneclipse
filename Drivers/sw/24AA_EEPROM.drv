@@ -134,6 +134,12 @@
   #error "unknown device?"
 #endif
 
+%if %DoAcknowledgePolling = 'yes'
+#define %'ModuleName'%.DO_ACKNOWLEDGE_POLLING    1               %>40 /* Perform acknowledge polling in the driver */
+#define %'ModuleName'%.PAGE_WRITE_TIME_MS        %PageWriteTimeMs%>40 /* Page Write Time as per data sheet */
+%else
+#define %'ModuleName'%.DO_ACKNOWLEDGE_POLLING    0               %>40 /* No acknowledge polling in the driver */
+%endif
 %-STARTUSERTYPES - Do not make changes between lines (included this lines) marked with %-STARTUSERTYPES and %-ENDUSRTYPES
 
 #ifndef __BWUserType_%'ModuleName'_Address
@@ -348,11 +354,14 @@ byte %'ModuleName'%.%WriteByte(%'ModuleName'_Address addr, byte data)
   if (res != ERR_OK) {
     return res;
   }
+#if %'ModuleName'%.DO_ACKNOWLEDGE_POLLING
   /* do acknowledge polling */
+  //%@Wait@'ModuleName'%.WaitOSms(%'ModuleName'%.PAGE_WRITE_TIME_MS);
   block[0] = 0xff; /* dummy value */
   do {
     res = %@I2C@'ModuleName'%.WriteBlock(block, 1, %@I2C@'ModuleName'%.SEND_STOP);%>40 /* send address and data */
   } while(res!=ERR_OK); /* wait until we get an ACK */
+#endif
   return res;
 }
 
@@ -466,11 +475,14 @@ byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dat
     if (res != ERR_OK) {
       return res;
     }
+#if %'ModuleName'%.DO_ACKNOWLEDGE_POLLING
     /* do acknowledge polling */
+    //%@Wait@'ModuleName'%.WaitOSms(%'ModuleName'%.PAGE_WRITE_TIME_MS);
     block[0] = 0xff; /* dummy value */
     do {
       res = %@I2C@'ModuleName'%.WriteBlock(block, 1, %@I2C@'ModuleName'%.SEND_STOP);%>40 /* send address and data */
     } while(res!=ERR_OK); /* wait until we get an ACK */
+#endif
   } else { /* crossing page boundaries: make two page writes */
     res = %'ModuleName'%.WriteBlock(addr, data, (uint16_t)(%'ModuleName'%.PAGE_SIZE-offset));%>40 /* first page write */
     if (res != ERR_OK) {
@@ -497,95 +509,124 @@ byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dat
 %define! RetVal
 %include Common\24AA_EEPROMTest.Inc
 #include <string.h> /* for strcmp() */
+static void Err(void) {
+  static uint8_t errCnt = 0;
+
+  errCnt++;
+}
+
 byte %'ModuleName'%.%Test(void)
 {
   uint8_t res, val, data[16];
 
   res = %'ModuleName'%.WriteByte(0x0000, 0);
   if (res != ERR_OK) {
+    Err();
     return res;
   }
   res = %'ModuleName'%.WriteByte(0x0001, 1);
   if (res != ERR_OK) {
+    Err();
     return res;
   }
   res = %'ModuleName'%.WriteByte(0x0002, 2);
   if (res != ERR_OK) {
+    Err();
     return res;
   }
   res = %'ModuleName'%.WriteByte(0x0003, 3);
   if (res != ERR_OK) {
+    Err();
     return res;
   }
   res = %'ModuleName'%.WriteByte(0x0004, 4);
   if (res != ERR_OK) {
+    Err();
     return res;
   }
   res = %'ModuleName'%.WriteByte(0x0010, 5);
   if (res != ERR_OK) {
+    Err();
     return res;
   }
 
   res = %'ModuleName'%.ReadByte(0x0000, &val);
   if (res != ERR_OK) {
+    Err();
     return res;
   }
   if (val != 0) {
+    Err();
     return ERR_FAULT;
   }
   res = %'ModuleName'%.ReadByte(0x0001, &val);
   if (res != ERR_OK) {
+    Err();
     return res;
   }
   if (val != 1) {
+    Err();
     return ERR_FAULT;
   }
   res = %'ModuleName'%.ReadByte(0x0002, &val);
   if (res != ERR_OK) {
+    Err();
     return res;
   }
   if (val != 2) {
+    Err();
     return ERR_FAULT;
   }
   res = %'ModuleName'%.ReadByte(0x0003, &val);
   if (res != ERR_OK) {
+    Err();
     return res;
   }
   if (val != 3) {
+    Err();
     return ERR_FAULT;
   }
   res = %'ModuleName'%.ReadByte(0x0004, &val);
   if (res != ERR_OK) {
+    Err();
     return res;
   }
   if (val != 4) {
+    Err();
     return ERR_FAULT;
   }
   res = %'ModuleName'%.ReadByte(0x0010, &val);
   if (res != ERR_OK) {
+    Err();
     return res;
   }
   if (val != 5) {
+    Err();
     return ERR_FAULT;
   }
   res = %'ModuleName'%.WriteBlock(0x10, (uint8_t*)"Hello", sizeof("Hello"));
   if (res != ERR_OK) {
+    Err();
     return res;
   }
   res = %'ModuleName'%.ReadBlock(0x10, data, sizeof(data));
   if (res != ERR_OK) {
+    Err();
     return res;
   }
   if (strcmp((char*)"Hello", (char*)data) != 0) {
+    Err();
     return ERR_FAULT;
   }
   /* testing crossing page boundary */
   res = %'ModuleName'%.WriteBlock(%'ModuleName'%.PAGE_SIZE-5, (uint8_t*)"Hello World!", sizeof("Hello World!"));
   if (res != ERR_OK) {
+    Err();
     return res;
   }
   res = %'ModuleName'%.ReadBlock(%'ModuleName'%.PAGE_SIZE-5, data, sizeof(data));
   if (res != ERR_OK) {
+    Err();
     return res;
   }
   if (strcmp((char*)"Hello World!", (char*)data) != 0) return ERR_FAULT;
@@ -593,13 +634,16 @@ byte %'ModuleName'%.%Test(void)
   /* testing writing to second bank */
   res = %'ModuleName'%.WriteBlock(0x10005, (uint8_t*)"Hello bank 1!", sizeof("Hello bank 1!"));
   if (res != ERR_OK) {
+    Err();
     return res;
   }
   res = %'ModuleName'%.ReadBlock(0x10005, data,(uint8_t*) sizeof(data));
   if (res != ERR_OK) {
+    Err();
     return res;
   }
   if (strcmp((char*)"Hello bank 1!", (char*)data) != 0) {
+    Err();
     return ERR_FAULT;
   }
 #endif

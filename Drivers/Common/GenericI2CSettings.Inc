@@ -12,7 +12,7 @@
 %;**%>14 Timeout %>60: %get(TimeoutGroupEnabled,Text)
 %if %get(TimeoutGroupEnabled, Bool) = 'yes'
 %;**%>16 Timeout %>60: %get(Timeout,Text)
-%;**%>16 ms %>60: %get(TimeoutMs,Text)
+%;**%>16 us %>60: %get(TimeoutUs,Text)
 %else %- TimeoutGroupEnabled
 %endif %- TimeoutGroupEnabled
 %else %- LDD_I2C_Group
