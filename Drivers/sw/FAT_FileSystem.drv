@@ -2121,37 +2121,37 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
 %ifdef ChangeDirectory
   } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' cd", sizeof("%'ModuleName' cd")-1)==0) {
     *handled = TRUE;
-    return CdCmd(cmd, io);
+    return CdCmd(cmd+sizeof("%'ModuleName'"), io);
 %endif
 %ifdef PrintDirectory
   } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' dir", sizeof("%'ModuleName' dir")-1)==0) {
     *handled = TRUE;
-    return DirCmd(cmd, io);
+    return DirCmd(cmd+sizeof("%'ModuleName'"), io);
 %endif
 %ifdef PrintFile
   } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' copy", sizeof("%'ModuleName' copy")-1)==0) {
     *handled = TRUE;
-    return CopyCmd(cmd, io);
+    return CopyCmd(cmd+sizeof("%'ModuleName'"), io);
 %endif
 %ifdef DeleteFile
   } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' delete", sizeof("%'ModuleName' delete")-1)==0) {
     *handled = TRUE;
-    return DeleteCmd(cmd, io);
+    return DeleteCmd(cmd+sizeof("%'ModuleName'"), io);
 %endif
 %ifdef MakeDirectory
   } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' mkdir", sizeof("%'ModuleName' mkdir")-1)==0) {
     *handled = TRUE;
-    return MkdirCmd(cmd, io);
+    return MkdirCmd(cmd+sizeof("%'ModuleName'"), io);
 %endif
 %ifdef RenameFile
   } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' rename", sizeof("%'ModuleName' rename")-1)==0) {
     *handled = TRUE;
-    return RenameCmd(cmd, io);
+    return RenameCmd(cmd+sizeof("%'ModuleName'"), io);
 %endif
 %ifdef PrintFile
   } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' print", sizeof("%'ModuleName' print")-1)==0) {
     *handled = TRUE;
-    return PrintCmd(cmd, io);
+    return PrintCmd(cmd+sizeof("%'ModuleName'"), io);
 %endif
 %ifdef PrintDiskInfo
   } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' diskinfo")==0) {
@@ -2161,7 +2161,7 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
 %ifdef PrintSector
   } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, "%'ModuleName' sector", sizeof("%'ModuleName' sector")-1)==0) {
     *handled = TRUE;
-    return SectorCmd(cmd, io);
+    return SectorCmd(cmd+sizeof("%'ModuleName'"), io);
 %endif
 %ifdef Benchmark
   } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' benchmark")==0) {
