@@ -146,7 +146,11 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
  */
 #if configUSE_TICKLESS_IDLE == 1
   static TickCounter_t ulStoppedTimerCompensation = 0;
-  #define configSTOPPED_TIMER_COMPENSATION    45UL  /* \todo Needs to be configurable! */
+%if defined(StoppedTimerCompensation)
+  #define configSTOPPED_TIMER_COMPENSATION    %'StoppedTimerCompensation'UL  /* number of ticks to compensate, as defined in properties */
+%else
+  #define configSTOPPED_TIMER_COMPENSATION    45UL  /* number of ticks to compensate */
+%endif
 #endif /* configUSE_TICKLESS_IDLE */
 %--------------------------------------------------------------
 %if (CPUfamily = "ColdFireV1") | (CPUfamily = "MCF")
@@ -876,7 +880,7 @@ void vPortYieldFromISR(void) {
   /* Set a PendSV to request a context switch. */
   *(portNVIC_INT_CTRL) = portNVIC_PENDSVSET_BIT;
   /* Barriers are normally not required but do ensure the code is completely
-  within the specified behaviour for the architecture. */
+  within the specified behavior for the architecture. */
   %if %Compiler="CodeWarriorARM" %- not supported by Freescale ARM compiler
   %else
   __asm volatile("dsb");
@@ -916,14 +920,13 @@ portLONG uxGetTickCounterValue(void) {
 /*-----------------------------------------------------------*/
 %endif
 %ifdef TickTimerLDD
-/*-----------------------------------------------------------*/
 /* return the tick raw counter value. It is assumed that the counter register has been reset at the last tick time */
 portLONG uxGetTickCounterValue(void) {
   return (portLONG)%@TickTimerLDD@'ModuleName'%.GetCounterValue(RTOS_TickDevice);
 }
+/*-----------------------------------------------------------*/
 %endif
 %if (CPUfamily = "Kinetis") & (%Compiler = "ARM_CC") %- Keil compiler for ARM
-/*-----------------------------------------------------------*/
 void vOnCounterRestart(void) {
   /* this is how we get here:
     RTOSTICKLDD1_Interrupt:
@@ -943,8 +946,8 @@ void vOnCounterRestart(void) {
   }
   portCLEAR_INTERRUPT_MASK(); /* enable interrupts again */
 }
-%elif (CPUfamily = "Kinetis") & (%Compiler = "GNUC") %- GNU gcc for ARM
 /*-----------------------------------------------------------*/
+%elif (CPUfamily = "Kinetis") & (%Compiler = "GNUC") %- GNU gcc for ARM
 __attribute__ ((naked)) void vOnCounterRestart(void) {
 #if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
   #if __OPTIMIZE_SIZE__ || __OPTIMIZE__
@@ -1071,9 +1074,9 @@ PE_ISR(RTOSTICKLDD1_Interrupt)
 #endif
 #endif
 }
+/*-----------------------------------------------------------*/
 %endif
 %if (CPUfamily = "Kinetis") & (%Compiler = "ARM_CC") %- Keil compiler for ARM
-/*-----------------------------------------------------------*/
 __asm void vPortStartFirstTask(void) {
   /* Use the NVIC offset register to locate the stack. */
   ldr r0, =0xE000ED08
@@ -1089,6 +1092,7 @@ __asm void vPortStartFirstTask(void) {
   nop
   nop
 }
+/*-----------------------------------------------------------*/
 %elif (CPUfamily = "Kinetis") & (%Compiler = "GNUC") %- GNU gcc for ARM
 /*-----------------------------------------------------------*/
 void vPortStartFirstTask(void) {
@@ -1102,9 +1106,9 @@ void vPortStartFirstTask(void) {
     " nop                 \n"
   );
 }
+/*-----------------------------------------------------------*/
 %endif
 %if (CPUfamily = "Kinetis") & (%Compiler = "ARM_CC") %- Keil compiler for ARM
-/*-----------------------------------------------------------*/
 #if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
 __asm void vPortSVCHandler(void) {
   EXTERN pxCurrentTCB
@@ -1128,6 +1132,7 @@ __asm void vPortSVCHandler(void) {
   bx r14
   nop
 }
+/*-----------------------------------------------------------*/
 #else /* Cortex M0+ */
 __asm void vPortSVCHandler(void) {
   EXTERN pxCurrentTCB
@@ -1154,8 +1159,8 @@ __asm void vPortSVCHandler(void) {
   nop
 }
 #endif
+/*-----------------------------------------------------------*/
 %elif (CPUfamily = "Kinetis") & (%Compiler = "GNUC") %- GNU gcc for ARM
-    /*-----------------------------------------------------------*/
 __attribute__ ((naked)) void vPortSVCHandler(void) {
 #if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
 __asm volatile (
@@ -1206,8 +1211,8 @@ __asm volatile (
 #endif
 }
 %endif
-%if (CPUfamily = "Kinetis") & (%Compiler = "ARM_CC") %- Keil compiler for ARM
 /*-----------------------------------------------------------*/
+%if (CPUfamily = "Kinetis") & (%Compiler = "ARM_CC") %- Keil compiler for ARM
 #if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
 __asm void vPortPendSVHandler(void) {
   EXTERN pxCurrentTCB
@@ -1289,8 +1294,8 @@ __asm void vPortPendSVHandler(void) {
   nop
 }
 #endif
-%elif (CPUfamily = "Kinetis") & (%Compiler = "GNUC") %- GNU gcc for ARM
 /*-----------------------------------------------------------*/
+%elif (CPUfamily = "Kinetis") & (%Compiler = "GNUC") %- GNU gcc for ARM
 __attribute__ ((naked)) void vPortPendSVHandler(void) {
 #if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
   __asm volatile (
@@ -1374,4 +1379,5 @@ __attribute__ ((naked)) void vPortPendSVHandler(void) {
   );
 #endif
 }
+/*-----------------------------------------------------------*/
 %endif

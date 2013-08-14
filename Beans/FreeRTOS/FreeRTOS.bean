@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.288</Version>
+    <Version>01.289</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -759,7 +759,7 @@ To use this method in combination with method 1 set configCHECK_FOR_STACK_OVERFL
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
               <Description>Disabled</Description>
-              <Expanded>No</Expanded>
+              <Expanded>Yes</Expanded>
               <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
@@ -771,7 +771,7 @@ To use this method in combination with method 1 set configCHECK_FOR_STACK_OVERFL
                     <Hint>vPortSuppressTicksAndSleep() needs to stop the tick timer for a short time. This value compensates for the time delay. This value is assigned to configSTOPPED_TIMER_COMPENSATION in port.c</Hint>
                     <ItemLevel>BASIC</ItemLevel>
                     <EditLine>true</EditLine>
-                    <DefaultValue>42</DefaultValue>
+                    <DefaultValue>45</DefaultValue>
                     <MinValue>0</MinValue>
                     <MaxValue>-1</MaxValue>
                     <Bases>DEC</Bases>
