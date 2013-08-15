@@ -488,7 +488,7 @@ byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dat
     if (res != ERR_OK) {
       return res;
     }
-    res = %'ModuleName'%.WriteBlock(((eepromPage+1)*%'ModuleName'%.PAGE_SIZE),
+    res = %'ModuleName'%.WriteBlock((%'ModuleName'_Address)((eepromPage+1)*%'ModuleName'%.PAGE_SIZE),
        data+(%'ModuleName'%.PAGE_SIZE-offset),
        (uint16_t)(dataSize-(%'ModuleName'%.PAGE_SIZE-offset)));  %>40 /* first page write */
     if (res != ERR_OK) {
