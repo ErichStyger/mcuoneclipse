@@ -345,6 +345,7 @@ byte %'ModuleName'%.%WriteByte(%'ModuleName'_Address addr, byte data)
 
   res = %@I2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_ADDR(addr));
   if (res != ERR_OK) {
+    (void)%@I2C@'ModuleName'%.UnselectSlave();
     return res;
   }
   block[0] = (uint8_t)(addr>>8);                                 %>40 /* high byte of address */
@@ -352,6 +353,7 @@ byte %'ModuleName'%.%WriteByte(%'ModuleName'_Address addr, byte data)
   block[2] = data; /* switch to read mode */
   res = %@I2C@'ModuleName'%.WriteBlock(block, sizeof(block), %@I2C@'ModuleName'%.SEND_STOP);%>40 /* send address and data */
   if (res != ERR_OK) {
+    (void)%@I2C@'ModuleName'%.UnselectSlave();
     return res;
   }
 #if %'ModuleName'%.DO_ACKNOWLEDGE_POLLING
@@ -362,7 +364,11 @@ byte %'ModuleName'%.%WriteByte(%'ModuleName'_Address addr, byte data)
     res = %@I2C@'ModuleName'%.WriteBlock(block, 1, %@I2C@'ModuleName'%.SEND_STOP);%>40 /* send address and data */
   } while(res!=ERR_OK); /* wait until we get an ACK */
 #endif
-  return res;
+  if (res != ERR_OK) {
+    (void)%@I2C@'ModuleName'%.UnselectSlave();
+    return res;
+  }
+  return %@I2C@'ModuleName'%.UnselectSlave();
 }
 
 %endif %- WriteByte
@@ -385,6 +391,7 @@ byte %'ModuleName'%.%ReadByte(%'ModuleName'_Address addr, byte *data)
 #endif
   res = %@I2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_ADDR(addr));
   if (res != ERR_OK) {
+    (void)%@I2C@'ModuleName'%.UnselectSlave();
     return res;
   }
 #if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8
@@ -393,10 +400,15 @@ byte %'ModuleName'%.%ReadByte(%'ModuleName'_Address addr, byte *data)
   res = %@I2C@'ModuleName'%.WriteBlock(&addr16, 2, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send 16bit address */
 #endif
   if (res != ERR_OK) {
+    (void)%@I2C@'ModuleName'%.UnselectSlave();
     return res;
   }
   res = %@I2C@'ModuleName'%.ReadBlock(data, 1, %@I2C@'ModuleName'%.SEND_STOP);%>40 /* read data byte from bus */
-  return res;
+  if (res != ERR_OK) {
+    (void)%@I2C@'ModuleName'%.UnselectSlave();
+    return res;
+  }
+  return %@I2C@'ModuleName'%.UnselectSlave();
 }
 
 %endif %- ReadByte
@@ -420,6 +432,7 @@ byte %'ModuleName'%.%ReadBlock(%'ModuleName'_Address addr, byte *data, word data
 #endif
   res = %@I2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_ADDR(addr));
   if (res != ERR_OK) {
+    (void)%@I2C@'ModuleName'%.UnselectSlave();
     return res;
   }
 #if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8
@@ -428,9 +441,15 @@ byte %'ModuleName'%.%ReadBlock(%'ModuleName'_Address addr, byte *data, word data
   res = %@I2C@'ModuleName'%.WriteBlock(&addr16, 2, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send 16bit address */
 #endif
   if (res != ERR_OK) {
+    (void)%@I2C@'ModuleName'%.UnselectSlave();
     return res;
   }
-  return %@I2C@'ModuleName'%.ReadBlock(data, dataSize, %@I2C@'ModuleName'%.SEND_STOP);
+  res = %@I2C@'ModuleName'%.ReadBlock(data, dataSize, %@I2C@'ModuleName'%.SEND_STOP);
+  if (res != ERR_OK) {
+    (void)%@I2C@'ModuleName'%.UnselectSlave();
+    return res;
+  }
+  return %@I2C@'ModuleName'%.UnselectSlave();
 }
 
 %endif %- ReadBlock
@@ -461,6 +480,7 @@ byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dat
   if (offset+dataSize <= %'ModuleName'%.PAGE_SIZE) {             %>40 /* no page boundary crossing */
     res = %@I2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_ADDR(addr));
     if (res != ERR_OK) {
+      (void)%@I2C@'ModuleName'%.UnselectSlave();
       return res;
     }
     block[0] = (uint8_t)(addr>>8);                               %>40 /* high byte of address */
@@ -473,6 +493,7 @@ byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dat
     }
     res = %@I2C@'ModuleName'%.WriteBlock(block, dataSize+2, %@I2C@'ModuleName'%.SEND_STOP);%>40 /* send address and data */
     if (res != ERR_OK) {
+      (void)%@I2C@'ModuleName'%.UnselectSlave();
       return res;
     }
 #if %'ModuleName'%.DO_ACKNOWLEDGE_POLLING
@@ -482,6 +503,11 @@ byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dat
     do {
       res = %@I2C@'ModuleName'%.WriteBlock(block, 1, %@I2C@'ModuleName'%.SEND_STOP);%>40 /* send address and data */
     } while(res!=ERR_OK); /* wait until we get an ACK */
+    if (res != ERR_OK) {
+      (void)%@I2C@'ModuleName'%.UnselectSlave();
+      return res;
+    }
+    return %@I2C@'ModuleName'%.UnselectSlave();
 #endif
   } else { /* crossing page boundaries: make two page writes */
     res = %'ModuleName'%.WriteBlock(addr, data, (uint16_t)(%'ModuleName'%.PAGE_SIZE-offset));%>40 /* first page write */
