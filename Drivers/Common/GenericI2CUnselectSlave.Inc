@@ -5,7 +5,7 @@
 %;** ===================================================================
 %include Common\GeneralMethod.inc (UnselectSlave)
 %;**     Description :
-%;**         Unselects the device.
+%;**         Unselects the device. Method will release a used a semaphore.
 %include Common\GeneralParametersNone.inc
 %;**     Returns     :
 %;**         ---%RetVal %>27 - Error code

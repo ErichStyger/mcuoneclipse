@@ -5,7 +5,8 @@
 %;** ===================================================================
 %include Common\GeneralMethod.inc (SelectSlave)
 %;**     Description :
-%;**         Selects the slave device on the bus.
+%;**         Selects the slave device on the bus. Method might use a
+%;**         semaphore to protect bus access.
 %include Common\GeneralParameters.inc(27)
 %;**         i2cAddr%Pari2cAddr %>27 - I2C Address of device
 %;**     Returns     :
