@@ -434,11 +434,17 @@ byte %'ModuleName'%.%SelectSlave(byte i2cAddr)
 %endif
 %if defined(LDD_I2C)
   if (%@LDD_I2C@'ModuleName'%.SelectSlaveDevice(%'ModuleName'%.deviceData.handle, LDD_I2C_ADDRTYPE_7BITS, i2cAddr)!=ERR_OK) {
+  %if (defined(OnReleaseBus)) | (defined(RTOS) & %UseSemaphore='yes')
+    %'ModuleName'%.%ReleaseBus();
+  %endif
     return ERR_FAILED;
   }
 %endif
 %if defined(I2C)
   if (%@I2C@'ModuleName'%.SelectSlave(i2cAddr)!=ERR_OK) {
+  %if (defined(OnReleaseBus)) | (defined(RTOS) & %UseSemaphore='yes')
+    %'ModuleName'%.%ReleaseBus();
+  %endif
     return ERR_FAILED;
   }
 %endif
