@@ -611,6 +611,26 @@ DSTATUS disk_initialize (
       }
       SD_Wait(&SD, &Error);
     }
+    if (!Error) {
+      /* switching gears for higher speed */
+      Error = %@SDHC@'ModuleName'%.SelectBusClock(SD.SDHCPtr, FATMEM_SPEED_INDEX_NORMAL)!=ERR_OK;
+      SD_Wait(&SD, &Error);
+    }
+    if (!Error && SD.CardInfo.Caps.HighSpeed) {
+      Error = %@SDHC@'ModuleName'%.SelectBusClock(SD.SDHCPtr, FATMEM_SPEED_INDEX_FAST)!=ERR_OK;
+      SD_Wait(&SD, &Error);
+      /* running at high speed (high slew rate on all the SDHC pins should be set) */
+    }
+    if (!Error) {
+      if (SD.CardInfo.Caps.DataWidths&LDD_SDHC_CARD_DATA_WIDTH_8_BIT) {
+        Error = %@SDHC@'ModuleName'%.SetDataWidth(SD.SDHCPtr, LDD_SDHC_CARD_DATA_WIDTH_8_BIT)!=ERR_OK;
+      } else if (SD.CardInfo.Caps.DataWidths&LDD_SDHC_CARD_DATA_WIDTH_4_BIT) {
+        Error = %@SDHC@'ModuleName'%.SetDataWidth(SD.SDHCPtr, LDD_SDHC_CARD_DATA_WIDTH_4_BIT)!=ERR_OK;
+      } else if (SD.CardInfo.Caps.DataWidths&LDD_SDHC_CARD_DATA_WIDTH_1_BIT) {
+        Error = %@SDHC@'ModuleName'%.SetDataWidth(SD.SDHCPtr, LDD_SDHC_CARD_DATA_WIDTH_1_BIT)!=ERR_OK;
+      }
+      SD_Wait(&SD, &Error);
+    }
   }
 
   Stat &= ~STA_NOINIT;                                           %>40 /* Clear STA_NOINIT */
