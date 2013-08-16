@@ -643,7 +643,9 @@ DSTATUS disk_status (
         uint8_t drv                                              %>40 /* Physical drive number (0..) */
 )
 {
-  if (drv!=0) return STA_NOINIT;                                 %>40 /* Supports only single drive */
+  if (drv!=0) {
+    return STA_NOINIT;                                           %>40 /* Supports only single drive */
+  }
   return Stat;
 }
 /*-----------------------------------------------------------------------*/
@@ -655,9 +657,12 @@ DRESULT disk_read (
         uint8_t count                                            %>40 /* Number of sectors to read (1..255) */
 )
 {
-  if (drv!=0 || !count) return RES_PARERR;
-  if (Stat & STA_NOINIT) return RES_NOTRDY;
-
+  if (drv!=0 || !count) {
+    return RES_PARERR;
+  }
+  if (Stat & STA_NOINIT) {
+    return RES_NOTRDY;
+  }
   if (count == 1) {                                              %>40 /* Single block read */
     if (SD_TransferBlock(&SD, TRUE, sector*%'ModuleName'%.BLOCK_SIZE, buff)) {
       return RES_ERROR;
@@ -684,10 +689,15 @@ DRESULT disk_write (
         uint8_t count                                            %>40 /* Number of sectors to write (1..255) */
 )
 {
-  if (drv!=0 || !count) return RES_PARERR;
-  if (Stat & STA_NOINIT) return RES_NOTRDY;
-  if (Stat & STA_PROTECT) return RES_WRPRT;
-
+  if (drv!=0 || !count) {
+    return RES_PARERR;
+  }
+  if (Stat & STA_NOINIT) {
+    return RES_NOTRDY;
+  }
+  if (Stat & STA_PROTECT) {
+    return RES_WRPRT;
+  }
   if (count==1) {                                                %>40 /* Single block read */
     if (SD_TransferBlock(&SD, FALSE, sector*%'ModuleName'%.BLOCK_SIZE, (uint8_t*)buff)) {
       return RES_ERROR;
@@ -721,8 +731,9 @@ DRESULT disk_ioctl (
   DRESULT res = RES_OK;
   uint8_t *ptr = (uint8_t*)buff;
 
-  if (drv!=0) return RES_PARERR;
-
+  if (drv!=0) {
+    return RES_PARERR;
+  }
   if (ctrl == CTRL_POWER) {
     switch (*ptr) {
       case 0:                                                    %>40 /* Sub control code == 0 (POWER_OFF) */
@@ -840,7 +851,6 @@ DRESULT disk_ioctl (
   }
   return res;
 }
-
 
 %-BW_METHOD_BEGIN OnCardInserted
 %ifdef OnCardInserted
