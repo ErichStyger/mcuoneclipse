@@ -436,7 +436,6 @@ LDD_TDeviceData* %'ModuleName'%.%Init(LDD_TUserData *UserDataPtr)
   SD.Finished = FALSE;
   SD.Inserted = FALSE;
   SD.CardId = %@SDHC@'ModuleName'%.NO_CARD;
-
 %ifdef GPIO_LDD
   /* Enable pull-up on GPIO pin used for SD card detection */
   %CDPinSelectPullupCode
@@ -584,9 +583,12 @@ DSTATUS disk_initialize (
 {
   bool Error = FALSE;
 
-  if (drv!=0) return STA_NOINIT;                                 %>40 /* Supports only single drive */
-  if (Stat & STA_NODISK) return Stat;                            %>40 /* No card in the socket */
-
+  if (drv!=0) {
+    return STA_NOINIT;                                           %>40 /* Supports only single drive */
+  }
+  if (Stat & STA_NODISK) {
+    return Stat;                                                 %>40 /* No card in the socket */
+  }
   if (!Error && SD.Inserted) {
     if (SD.SDHCPtr!=NULL) {
       %@SDHC@'ModuleName'%.Deinit(SD.SDHCPtr);
@@ -612,7 +614,6 @@ DSTATUS disk_initialize (
       SD_Wait(&SD, &Error);
     }
   }
-
   Stat &= ~STA_NOINIT;                                           %>40 /* Clear STA_NOINIT */
   return Stat;
 }
