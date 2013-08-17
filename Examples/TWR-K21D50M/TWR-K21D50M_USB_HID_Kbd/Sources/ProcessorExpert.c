@@ -30,6 +30,24 @@
 /* Including needed modules to compile this module/procedure */
 #include "Cpu.h"
 #include "Events.h"
+#include "LED1.h"
+#include "LEDpin1.h"
+#include "BitIoLdd1.h"
+#include "LED2.h"
+#include "LEDpin2.h"
+#include "BitIoLdd2.h"
+#include "LED3.h"
+#include "LEDpin3.h"
+#include "BitIoLdd3.h"
+#include "LED4.h"
+#include "LEDpin4.h"
+#include "BitIoLdd4.h"
+#include "WAIT1.h"
+#include "SW2.h"
+#include "BitIoLdd5.h"
+#include "SW3.h"
+#include "BitIoLdd6.h"
+#include "PTC.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -49,6 +67,16 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
+  for(;;) {
+    LED1_Neg();
+    WAIT1_Waitms(100);
+    LED2_Neg();
+    WAIT1_Waitms(100);
+    LED3_Neg();
+    WAIT1_Waitms(100);
+    LED4_Neg();
+    WAIT1_Waitms(100);
+  }
   /* For example: for(;;) { } */
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
