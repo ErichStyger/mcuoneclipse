@@ -51,7 +51,7 @@
   %include FSL_USB_Stack\Device\source\driver\s08\usb_dci.c
   %FILE? %'DirRel_Code'usb_dciapi.h
   %include FSL_USB_Stack\Device\source\driver\s08\usb_dciapi.h
-%elif (CPUDevice="Kinetis K20D50") |(CPUDevice="Kinetis K40") | (CPUDevice="Kinetis K53") | (CPUDevice="Kinetis K60") | (CPUDevice="Kinetis L2K")
+%elif (CPUDevice="Kinetis K20D50") | (CPUDevice="Kinetis K21D50") | (CPUDevice="Kinetis K40") | (CPUDevice="Kinetis K53") | (CPUDevice="Kinetis K60") | (CPUDevice="Kinetis L2K")
 %- \Device\source\driver\kinetis -------------------------------------------
   %FILE? %'DirRel_Code'usb_bdt_kinetis.h
   %include FSL_USB_Stack\Device\source\driver\kinetis\usb_bdt_kinetis.h
@@ -91,6 +91,10 @@
 %- \Device\app\cdc\cw10\kinetis_k20 -------------------------------------------
   %FILE? %'DirRel_Code'derivative.h
   %include FSL_USB_Stack\Device\app\cdc\cw10\kinetis_k20\derivative.h
+%elif CPUDevice="Kinetis K21D50"
+%- \Device\app\cdc\cw10\kinetis_k21 -------------------------------------------
+  %FILE? %'DirRel_Code'derivative.h
+  %include FSL_USB_Stack\Device\app\cdc\cw10\kinetis_k21\derivative.h
 %elif CPUDevice="Kinetis K40"
 %- \Device\app\cdc\cw10\kinetis_k40 -------------------------------------------
   %FILE? %'DirRel_Code'derivative.h
@@ -129,7 +133,7 @@
 %elif (CPUDevice="MC9S08JM60") | (CPUDevice="MC9S08JM16")
   %- \Device\app\common\S08 -------------------------------------------
   %- nothing needed from here
-%elif ((CPUDevice="Kinetis K20D50") | (CPUDevice="Kinetis K40") | (CPUDevice="Kinetis K53") | (CPUDevice="Kinetis K60") | (CPUDevice="Kinetis L2K"))
+%elif ((CPUDevice="Kinetis K20D50") | (CPUDevice="Kinetis K21D50") | (CPUDevice="Kinetis K40") | (CPUDevice="Kinetis K53") | (CPUDevice="Kinetis K60") | (CPUDevice="Kinetis L2K"))
   %- \Device\app\common\kinetis -------------------------------------------
   %FILE? %'DirRel_Code'hidef.h
   %include FSL_USB_Stack\Device\app\common\kinetis\hidef.h

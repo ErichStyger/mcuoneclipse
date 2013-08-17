@@ -34,16 +34,16 @@
 #include "PE_Error.h"
 #include "PE_Const.h"
 #include "IO_Map.h"
-#include "LED1.h"
+#include "LEDG.h"
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"
-#include "LED2.h"
+#include "LEDY.h"
 #include "LEDpin2.h"
 #include "BitIoLdd2.h"
-#include "LED3.h"
+#include "LEDR.h"
 #include "LEDpin3.h"
 #include "BitIoLdd3.h"
-#include "LED4.h"
+#include "LEDB.h"
 #include "LEDpin4.h"
 #include "BitIoLdd4.h"
 #include "WAIT1.h"
@@ -52,6 +52,10 @@
 #include "SW3.h"
 #include "BitIoLdd6.h"
 #include "PTC.h"
+#include "USB1.h"
+#include "USB0.h"
+#include "HIDK1.h"
+#include "Tx2.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -87,6 +91,21 @@ void Cpu_OnNMIINT(void);
 ** ===================================================================
 */
 void Cpu_OnNMIINT0(void);
+
+void HIDK1_OnEvent(byte error);
+/*
+** ===================================================================
+**     Event       :  HIDK1_OnEvent (module Events)
+**
+**     Component   :  HIDK1 [FSL_USB_HID_Keyboard_Device]
+**     Description :
+**         Hook called in case of an error
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         error           - Error or event code
+**     Returns     : Nothing
+** ===================================================================
+*/
 
 /* END Events */
 
