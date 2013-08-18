@@ -12,7 +12,7 @@ https://github.com/ErichStyger/mcuoneclipse/Drivers
 Part1_Beans_*.PEupd Content:
 -------------------------------------
 Package from component(s):
-- 24AA_EEPROM version 01.004
+- 24AA_EEPROM version 01.021
 - 74HC164 version 01.031
 - 74HC595 version 01.022
 - App_SMAC_Hello version 01.085
@@ -29,17 +29,17 @@ Package from component(s):
 - FatFsMem_USB_MSD version 01.019
 - FatFsMemSDHC version 01.007
 - FontDisplay version 01.195
-- FreeRTOS version 01.288
+- FreeRTOS version 01.290
 - FreeRTOSTrace version 01.003
-- FSL_USB_CDC_Device version 01.016
-- FSL_USB_HID_Keyboard_Device version 01.040
-- FSL_USB_HID_Mouse_Device version 01.055
-- FSL_USB_MSD_Host version 01.014
+- FSL_USB_CDC_Device version 01.017
+- FSL_USB_HID_Keyboard_Device version 01.042
+- FSL_USB_HID_Mouse_Device version 01.056
+- FSL_USB_MSD_Host version 01.015
 - FSL_USB_Stack version 01.023
 - FSShell version 01.231
 - GDisplay version 01.190
 - GenericBitIO version 01.065
-- GenericI2C version 01.007
+- GenericI2C version 01.013
 - GenericKBI version 01.025
 - GenericSPI version 01.029
 - GenericSWI2C version 01.003
@@ -60,7 +60,7 @@ Package from component(s):
 - LightComm version 01.126
 - LM61B version 01.030
 - LowPower version 01.016
-- MAG3110 version 01.002
+- MAG3110 version 01.004
 - MaxonF2140 version 01.001
 - MC13192 version 01.003
 - MC34673 version 01.019
@@ -69,13 +69,13 @@ Package from component(s):
 - MMA8451Q version 01.024
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 07.08.2013
+created 18.08.2013
 
 
 Part2_Beans_*.PEupd Content:
 -------------------------------------
 Package from component(s):
-- nRF24L01 version 01.018
+- nRF24L01 version 01.041
 - OLED version 01.045
 - PCA9554 version 01.024
 - PCA9554BitIO version 01.037
@@ -105,6 +105,7 @@ Package from component(s):
 - TouchScreen version 01.077
 - TouchScreenSensor version 01.053
 - Trigger version 01.054
+- TwoKeys version 01.015
 - UI version 01.056
 - UIButton version 01.121
 - UICalendar version 01.030
@@ -121,11 +122,10 @@ Package from component(s):
 - UIWindow version 01.033
 - USB_CMX version 01.027
 - USB_Config_CMX version 01.022
-- USB_DEVICE_STACK version 01.027
 - USB_HID_CMX version 01.012
 - USB_Host_CMX version 01.058
 - UserInterface version 01.510
 - UTI version 01.125
 - Utility version 01.089
 - Wait version 01.059
-created 07.08.2013
+created 18.08.2013

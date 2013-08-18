@@ -13,3 +13,6 @@ Pin connections of 24LC to FRDM-KL25Z:
 8: (VCC) 3.3V
 
 Note: SDA and SCL require a pull-up resistor (e.g. 10k) to Vcc
+
+See:
+http://mcuoneclipse.com/2013/08/18/driver-for-microchip-24xx-serial-eeprom

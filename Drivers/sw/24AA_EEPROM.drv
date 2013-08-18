@@ -439,7 +439,7 @@ byte %'ModuleName'%.%ReadByte(%'ModuleName'_Address addr, byte *data)
     return res;
   }
 #if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8
-  res = %@I2C@'ModuleName'%.WriteBlock(&addr, 1, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send 16bit address */
+  res = %@I2C@'ModuleName'%.WriteBlock(&addr, 1, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send 8bit address */
 #else /* use 16bit address */
   res = %@I2C@'ModuleName'%.WriteBlock(&addr16, 2, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send 16bit address */
 #endif
@@ -480,7 +480,7 @@ byte %'ModuleName'%.%ReadBlock(%'ModuleName'_Address addr, byte *data, word data
     return res;
   }
 #if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8
-  res = %@I2C@'ModuleName'%.WriteBlock(&addr, 1, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send address */
+  res = %@I2C@'ModuleName'%.WriteBlock(&addr, 1, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send 8bit address */
 #else
   res = %@I2C@'ModuleName'%.WriteBlock(&addr16, 2, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send 16bit address */
 #endif
