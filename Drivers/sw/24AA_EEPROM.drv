@@ -155,6 +155,12 @@
 %- Write your own types here ...
 %-  Example:
 %-    typedef int TMyInteger;
+%ifdef ParseCommand
+#define %'ModuleName'%.PARSE_COMMAND_ENABLED  1  /* set to 1 if method ParseCommand() is present, 0 otherwise */
+%else
+#define %'ModuleName'%.PARSE_COMMAND_ENABLED  0 /* set to 1 if method ParseCommand() is present, 0 otherwise */
+%endif %- ParseCommand
+
 %-
 %-BW_CUSTOM_USERTYPE_END
 %-BW_DEFINITION_START
@@ -239,6 +245,18 @@ byte %'ModuleName'%.%SelectDevice(byte addrI2C);
 
 %endif %- SelectDevice
 %-BW_METHOD_END SelectDevice
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ParseCommand
+%ifdef ParseCommand
+byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io);
+%define! Parcmd
+%define! Parhandled
+%define! Pario
+%define! RetVal
+%include Common\MAG3110ParseCommand.Inc
+
+%endif %- ParseCommand
+%-BW_METHOD_END ParseCommand
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN GetSelectedDevice
 %ifdef GetSelectedDevice
@@ -327,6 +345,32 @@ static byte %'ModuleName'%.I2CAddress = (%DeviceAddress&%'ModuleName'%.MAX_I2C_A
       : (%'ModuleName'%.CTRL_BYTE|%'ModuleName'%.BANK_0) )       %>40 /* 7bit address of device used to select device */
 #endif
 
+%if defined(Shell)
+static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
+  unsigned char buf[8];
+
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"%'ModuleName'", (unsigned char*)"\r\n", io->stdOut);
+  %@Utility@'ModuleName'%.Num16uToStr(buf, sizeof(buf), (uint16_t)%'ModuleName'%.DEVICE_ID);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Type", buf, io->stdOut);
+
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+  %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), (uint8_t)%'ModuleName'%.I2CAddress);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  I2C Addr", buf, io->stdOut);
+
+  return ERR_OK;
+}
+
+static uint8_t PrintHelp(const %@Shell@'ModuleName'%.StdIOType *io) {
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"%'ModuleName'", (unsigned char*)"Group of %'ModuleName' commands\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  read 0x<addr>", (unsigned char*)"Read a byte from an address\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  write 0x<addr> 0x<value>", (unsigned char*)"Write a byte to an address\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+%endif
 %-BW_CUSTOM_VARIABLE_END
 %-BW_INTERN_METHOD_DECL_START
 %- List of internal methods headers
@@ -737,6 +781,61 @@ byte %'ModuleName'%.%GetSelectedDevice(void)
 
 %endif %- GetSelectedDevice
 %-BW_METHOD_END GetSelectedDevice
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ParseCommand
+%ifdef ParseCommand
+%define! Parcmd
+%define! Parhandled
+%define! Pario
+%define! RetVal
+%include Common\24AA_EEPROMParseCommand.Inc
+byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)
+{
+  const unsigned char *p;
+  uint16_t addr16;
+  uint8_t val8, buf[8];
+
+  if (%@Utility@'ModuleName'%.strcmp((char*)cmd, %@Shell@'ModuleName'%.CMD_HELP)==0 || %@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' help")==0) {
+    *handled = TRUE;
+    return PrintHelp(io);
+  } else if ((%@Utility@'ModuleName'%.strcmp((char*)cmd, %@Shell@'ModuleName'%.CMD_STATUS)==0) || (%@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' status")==0)) {
+    *handled = TRUE;
+    return PrintStatus(io);
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, (char*)"%'ModuleName' read ", sizeof("%'ModuleName' read ")-1)==0) {
+    p = cmd+sizeof("%'ModuleName' read ")-1;
+    if (%@Utility@'ModuleName'%.ScanHex16uNumber(&p, &addr16)==ERR_OK) {
+      if (%'ModuleName'%.%ReadByte(addr16, &val8)==ERR_OK) {
+        %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+        %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), val8);
+        %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+        %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+      } else {
+        %@Shell@'ModuleName'%.SendStr((unsigned char*)"**** read failed!\r\n", io->stdErr);
+      }
+    } else {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"**** wrong address\r\n", io->stdErr);
+    }
+    *handled = TRUE;
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, (char*)"%'ModuleName' write ", sizeof("%'ModuleName' write ")-1)==0) {
+    p = cmd+sizeof("%'ModuleName' write ")-1;
+    if (%@Utility@'ModuleName'%.ScanHex16uNumber(&p, &addr16)==ERR_OK) {
+      if (%@Utility@'ModuleName'%.ScanHex8uNumber(&p, &val8)==ERR_OK) {
+        if (%'ModuleName'%.%WriteByte(addr16, val8)!=ERR_OK) {
+          %@Shell@'ModuleName'%.SendStr((unsigned char*)"**** write failed!\r\n", io->stdErr);
+        }
+      } else {
+        %@Shell@'ModuleName'%.SendStr((unsigned char*)"**** wrong value\r\n", io->stdErr);
+      }
+    } else {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"**** wrong address\r\n", io->stdErr);
+    }
+    *handled = TRUE;
+  }
+  return ERR_OK;
+}
+
+%endif %- ParseCommand
+%-BW_METHOD_END ParseCommand
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

@@ -31,7 +31,7 @@
 #include "Cpu.h"
 #include "Events.h"
 #include "EE241.h"
-#include "I2C1.h"
+#include "I2C0.h"
 #include "T1ms.h"
 #include "TimerIntLdd1.h"
 #include "TU1.h"
