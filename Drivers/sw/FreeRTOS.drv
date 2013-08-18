@@ -1279,7 +1279,7 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Shell@'ModuleName'%.SendStr((unsigned char*)%@Shell@'ModuleName'%.DASH_LINE, io->stdOut);
   %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\nRTOS RUN-TIME STATISTICS:\r\nName\tTime (ms)\t%%Time\r\n", io->stdOut);
   %@Shell@'ModuleName'%.SendStr((unsigned char*)%@Shell@'ModuleName'%.DASH_LINE, io->stdOut);
-  %@Shell@'ModuleName'%.SendStr((unsigned char*)"r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
   /* task list and status */
   bufSize = 40*uxTaskGetNumberOfTasks();  /* about 40 bytes for a task should be enough */
 #if FRTOS_MEMORY_SCHEME==1 /* this scheme does not allow deallocation of memory */
