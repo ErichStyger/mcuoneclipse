@@ -771,7 +771,7 @@ void %'ModuleName'%.%Write(byte val)
 %include Common\nRF24L01GetStatus.Inc
 byte %'ModuleName'%.%GetStatus(void)
 {
-  return SPIWriteRead(%'ModuleName'%.NOP);
+  return %'ModuleName'%.%WriteRead(%'ModuleName'%.NOP);
 }
 
 %endif %- GetStatus
