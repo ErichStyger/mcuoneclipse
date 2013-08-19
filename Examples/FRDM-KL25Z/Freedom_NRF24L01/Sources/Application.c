@@ -11,8 +11,8 @@
 #include "WAIT1.h"
 #include "CE.h"
 
-#define IS_SENDER    1  /* 1 if we are the sender, 0 if we are the receiver */
-#define PAYLOAD_SIZE 2  /* number of payload bytes */
+#define IS_SENDER    0  /* 1 if we are the sender, 0 if we are the receiver */
+#define PAYLOAD_SIZE 5  /* number of payload bytes */
 #define CHANNEL_NO   2  /* communication channel */
 
 /* macros to configure device either for RX or TX operation */
