@@ -12,7 +12,7 @@
 #include "CE.h"
 
 #define IS_SENDER    0  /* 1 if we are the sender, 0 if we are the receiver */
-#define PAYLOAD_SIZE 5  /* number of payload bytes */
+#define PAYLOAD_SIZE 16  /* number of payload bytes, 0 to 32 bytes */
 #define CHANNEL_NO   2  /* communication channel */
 
 /* macros to configure device either for RX or TX operation */

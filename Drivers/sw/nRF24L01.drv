@@ -126,12 +126,12 @@
 #define %'ModuleName'%.RX_ADDR_P4  0x0E
 #define %'ModuleName'%.RX_ADDR_P5  0x0F
 #define %'ModuleName'%.TX_ADDR     0x10
-#define %'ModuleName'%.RX_PW_P0    0x11
-#define %'ModuleName'%.RX_PW_P1    0x12
-#define %'ModuleName'%.RX_PW_P2    0x13
-#define %'ModuleName'%.RX_PW_P3    0x14
-#define %'ModuleName'%.RX_PW_P4    0x15
-#define %'ModuleName'%.RX_PW_P5    0x16
+#define %'ModuleName'%.RX_PW_P0    0x11 /* register for RX payload on pipe 0, 0 to 32 bytes */
+#define %'ModuleName'%.RX_PW_P1    0x12 /* register for RX payload on pipe 1, 0 to 32 bytes */
+#define %'ModuleName'%.RX_PW_P2    0x13 /* register for RX payload on pipe 2, 0 to 32 bytes */
+#define %'ModuleName'%.RX_PW_P3    0x14 /* register for RX payload on pipe 3, 0 to 32 bytes */
+#define %'ModuleName'%.RX_PW_P4    0x15 /* register for RX payload on pipe 4, 0 to 32 bytes */
+#define %'ModuleName'%.RX_PW_P5    0x16 /* register for RX payload on pipe 5, 0 to 32 bytes */
 #define %'ModuleName'%.FIFO_STATUS 0x17
 
 /* Bit Mnemonics */
