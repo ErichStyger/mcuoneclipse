@@ -9,7 +9,8 @@
 %;**         library, This must be called before using
 %;**         vTraceStoreISRBegin to store ISR events. This is typically
 %;**         called in the startup of the system, before the scheduler is
-%;**         started. 
+%;**         started. Method is always enabled if 'Include ISR tracing'
+%;**         is set to 'yes' in the properties.
 %include Common\GeneralParameters.inc(27)
 %;**         handle%Parhandle %>27 - handle to be used
 %;**       * name%Parname %>27 - Pointer to name

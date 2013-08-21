@@ -323,7 +323,7 @@ LI.EXP {
 </li>
 <li><a name="vTraceSetISRProperties">
 <b>vTraceSetISRProperties</b></a>
- - Registers an Interrupt Service Routine in the recorder library, This must be called before using vTraceStoreISRBegin to store ISR events. This is typically called in the startup of the system, before the scheduler is started. 
+ - Registers an Interrupt Service Routine in the recorder library, This must be called before using vTraceStoreISRBegin to store ISR events. This is typically called in the startup of the system, before the scheduler is started. Method is always enabled if 'Include ISR tracing' is set to 'yes' in the properties.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
 <br /><i>ANSIC prototype:</i> void vTraceSetISRProperties(objectHandleType handle, char *name, char prioritiy)<br />
@@ -335,7 +335,7 @@ LI.EXP {
 </li>
 <li><a name="vTraceStoreISRBegin">
 <b>vTraceStoreISRBegin</b></a>
- - Registers the beginning of an Interrupt Service Routine. This must not be interrupted by another ISR containing recorder library calls, so if allowing nested ISRs this must be called with interrupts disabled.
+ - Registers the beginning of an Interrupt Service Routine. This must not be interrupted by another ISR containing recorder library calls, so if allowing nested ISRs this must be called with interrupts disabled.  Method is always enabled if 'Include ISR tracing' is set to 'yes' in the properties.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
 <br /><i>ANSIC prototype:</i> void vTraceStoreISRBegin(objectHandleType id)<br />
@@ -345,7 +345,7 @@ LI.EXP {
 </li>
 <li><a name="vTraceStoreISREnd">
 <b>vTraceStoreISREnd</b></a>
- - Registers the end of an Interrupt Service Routine. This must not be interrupted by another ISR containing recorder library calls, so if allowing nested ISRs this must be called with interrupts disabled.
+ - Registers the end of an Interrupt Service Routine. This must not be interrupted by another ISR containing recorder library calls, so if allowing nested ISRs this must be called with interrupts disabled.  Method is always enabled if 'Include ISR tracing' is set to 'yes' in the properties.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
 <br /><i>ANSIC prototype:</i> void vTraceStoreISREnd(void)<br />

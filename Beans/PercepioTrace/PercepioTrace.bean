@@ -4,7 +4,7 @@
     <Name>PercepioTrace</Name>
     <Description>Percepio FreeRTOS Trace</Description>
     <Author>Erich Styger</Author>
-    <Version>01.009</Version>
+    <Version>01.011</Version>
     <Icon>irc</Icon>
     <TypesFiles>PE,PercepioTrace\PercepioTrace</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -75,22 +75,6 @@
         <IconPopup>false</IconPopup>
         <SortStyle/>
       </TInhrLinkItem>
-    </Property>
-    <Property>
-      <TBoolGrupItem>
-        <Name>Console</Name>
-        <Symbol>TraceConsoleEnabled</Symbol>
-        <TypeSpec>typeEnaDis</TypeSpec>
-        <Hint>If the trace shall write messages to a console</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <BoldName>true</BoldName>
-        <EditLine>false</EditLine>
-        <Description>Disabled</Description>
-        <Expanded>No</Expanded>
-        <DefaultValue>false</DefaultValue>
-        <DefineSymbol>YES_NO</DefineSymbol>
-        <IfDisabled>setNOTHING</IfDisabled>
-      </TBoolGrupItem>
     </Property>
     <Property>
       <TStrgItem>
@@ -972,7 +956,7 @@ This does not limit the total amount of objects created, if objects are deleted 
         <Name>vTraceSetISRProperties</Name>
         <Symbol>vTraceSetISRProperties</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Registers an Interrupt Service Routine in the recorder library, This must be called before using vTraceStoreISRBegin to store ISR events. This is typically called in the startup of the system, before the scheduler is started. </Hint>
+        <Hint>Registers an Interrupt Service Routine in the recorder library, This must be called before using vTraceStoreISRBegin to store ISR events. This is typically called in the startup of the system, before the scheduler is started. Method is always enabled if 'Include ISR tracing' is set to 'yes' in the properties.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -1019,7 +1003,7 @@ This does not limit the total amount of objects created, if objects are deleted 
         <Name>vTraceStoreISRBegin</Name>
         <Symbol>vTraceStoreISRBegin</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Registers the beginning of an Interrupt Service Routine. This must not be interrupted by another ISR containing recorder library calls, so if allowing nested ISRs this must be called with interrupts disabled.</Hint>
+        <Hint>Registers the beginning of an Interrupt Service Routine. This must not be interrupted by another ISR containing recorder library calls, so if allowing nested ISRs this must be called with interrupts disabled.  Method is always enabled if 'Include ISR tracing' is set to 'yes' in the properties.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -1054,7 +1038,7 @@ This does not limit the total amount of objects created, if objects are deleted 
         <Name>vTraceStoreISREnd</Name>
         <Symbol>vTraceStoreISREnd</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Registers the end of an Interrupt Service Routine. This must not be interrupted by another ISR containing recorder library calls, so if allowing nested ISRs this must be called with interrupts disabled.</Hint>
+        <Hint>Registers the end of an Interrupt Service Routine. This must not be interrupted by another ISR containing recorder library calls, so if allowing nested ISRs this must be called with interrupts disabled.  Method is always enabled if 'Include ISR tracing' is set to 'yes' in the properties.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
