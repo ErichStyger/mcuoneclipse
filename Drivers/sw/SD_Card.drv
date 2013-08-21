@@ -198,13 +198,13 @@ void %'ModuleName'%.%Deactivate(void);
 #define %'ModuleName'%.%isWriteProtected() \
 %if defined(WP) | defined(LDDWP)
   %if WriteProtectIsLow='yes'
-  %ifdef LDDCDI
+  %ifdef LDDWP
   (bool)(%@LDDWP@'ModuleName'%.GetVal(%@LDDWP@'ModuleName'%.DeviceData)==0)%>40 /* low level means write protected */
   %else
   (bool)(%@WP@'ModuleName'%.GetVal()==0)                         %>40 /* low level means write protected */
   %endif
   %else
-  %ifdef LDDCDI
+  %ifdef LDDWP
   (bool)(%@LDDWP@'ModuleName'%.GetVal(%@LDDWP@'ModuleName'%.DeviceData)!=0)%>40 /* high level means write protected */
   %else
   (bool)(%@WP@'ModuleName'%.GetVal()!=0)                         %>40 /* high level means write protected */
@@ -276,7 +276,11 @@ byte %'ModuleName'%.ReceiveByte(void);
   %endif
   %endif
 %else
-  TRUE                                                           %>40 /* no hardware to detect card, thus assuming there is one */
+  %if %CardPresentIfNoCardDetectionPin='yes'
+  TRUE                                                           %>40 /* no card detection pin, but user wants to report TRUE */
+  %else
+  FALSE                                                          %>40 /* no card detection pin, but user wants to report FALSE */
+  %endif
 %endif
 
 %define! RetVal

@@ -27,7 +27,6 @@
 #include "BitIoLdd4.h"
 #include "SD1.h"
 #include "SS1.h"
-#include "CD1.h"
 #include "WP1.h"
 #include "GPIO_D.h"
 #include "GPIO_A.h"

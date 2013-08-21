@@ -4,7 +4,7 @@
     <Name>SD_Card</Name>
     <Description>SD Card</Description>
     <Author>Erich Styger</Author>
-    <Version>01.157</Version>
+    <Version>01.158</Version>
     <Icon>SD_Card</Icon>
     <TypesFiles>PE,SD_Card\SD_Card</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -650,6 +650,24 @@
                 </GrupItem>
               </Children>
             </TBoolGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolItem>
+              <Name>Report 'Card present' if no Card detection pin</Name>
+              <Symbol>CardPresentIfNoCardDetectionPin</Symbol>
+              <TypeSpec>typeYesNo</TypeSpec>
+              <Hint>Sets the return value of CardPresent() in case there is no card detection pin.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>0</DefaultIndex>
+              <TextValueIndex>false</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <DefaultValue>true</DefaultValue>
+              <Popup>false</Popup>
+            </TBoolItem>
           </GrupItem>
           <GrupItem>
             <TBoolGrupItem>

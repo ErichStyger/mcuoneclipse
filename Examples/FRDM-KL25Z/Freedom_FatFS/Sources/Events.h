@@ -31,7 +31,6 @@
 #include "BitIoLdd4.h"
 #include "SD1.h"
 #include "SS1.h"
-#include "CD1.h"
 #include "WP1.h"
 #include "GPIO_D.h"
 #include "GPIO_A.h"
@@ -157,7 +156,7 @@ void Cpu_OnNMIINT(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
