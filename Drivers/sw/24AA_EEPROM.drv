@@ -110,26 +110,33 @@
   #error "unknown Device ID %Device?"
 %endif
 
+#define %'ModuleName'%.BLOCK_BUF_SIZE %BlockBufSize              %>40 /* buffer used for block read/write. Max is 128. Keep it small to reduce stack consumption. */
+
 #if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8
   #define %'ModuleName'%.MAX_I2C_ADDR_MASK 0                     %>40 /* A2|A1|A0 are not used */
   #define %'ModuleName'%.MAX_ADDRESS       0x03FF                %>40 /* 8 kBit is 1KByte */
   #define %'ModuleName'%.ADDRT             word                  %>40 /* a word/16bit is engough to hold the address */
+  #define %'ModuleName'%.PAGE_SIZE         16                    %>40 /* maximum page size (for page/block operation) */
 #elif %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_32
   #define %'ModuleName'%.MAX_I2C_ADDR_MASK 7                     %>40 /* A2|A1|A0 form the I2C device address => address cannot be more than 7 (8 devices) */
   #define %'ModuleName'%.MAX_ADDRESS       0x0FFF                %>40 /* 32 kBit are 4KByte */
   #define %'ModuleName'%.ADDRT             word                  %>40 /* a word/16bit is engough to hold the address */
+  #define %'ModuleName'%.PAGE_SIZE         8                     %>40 /* maximum page size (for page/block operation) */
 #elif %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_256
   #define %'ModuleName'%.MAX_I2C_ADDR_MASK 7                     %>40 /* A2|A1|A0 form the I2C device address => address cannot be more than 7 (8 devices) */
   #define %'ModuleName'%.MAX_ADDRESS       0x7FFF                %>40 /* 256 kBit are 32KByte */
   #define %'ModuleName'%.ADDRT             word                  %>40 /* a word/16bit is engough to hold the address */
+  #define %'ModuleName'%.PAGE_SIZE         64                    %>40 /* maximum page size (for page/block operation) */
 #elif %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_512
   #define %'ModuleName'%.MAX_I2C_ADDR_MASK 7                     %>40 /* A2|A1|A0 form the I2C device address => address cannot be more than 7 (8 devices) */
   #define %'ModuleName'%.MAX_ADDRESS       0xFFFF                %>40 /* 512 kBit are 64KByte */
   #define %'ModuleName'%.ADDRT             word                  %>40 /* a word/16bit is engough to hold the address */
+  #define %'ModuleName'%.PAGE_SIZE         128                   %>40 /* maximum page size (for page/block operation) */
 #elif %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_1025
   #define %'ModuleName'%.MAX_I2C_ADDR_MASK 3                     %>40 /* A1|A0 form the I2C device address => address cannot be more than 3 (4 devices) */
   #define %'ModuleName'%.MAX_ADDRESS       0x1FFFF               %>40 /* 1024 kBit are 128KByte */
   #define %'ModuleName'%.ADDRT             dword                 %>40 /* a longword/32bit is needed to hold the address */
+  #define %'ModuleName'%.PAGE_SIZE         128                   %>40 /* maximum page size (for page/block operation) */
 #else
   #error "unknown device?"
 #endif
@@ -305,17 +312,6 @@ static byte %'ModuleName'%.I2CAddress = (%DeviceAddress&%'ModuleName'%.MAX_I2C_A
 #define %'ModuleName'%.I2CAddress (%DeviceAddress&%'ModuleName'%.MAX_I2C_ADDR_MASK)%>40 /* address defined by the A2|A1|A0 pins */
 %endif %- SelectDevice
 
-#define %'ModuleName'%.BLOCK_BUF_SIZE %BlockBufSize              %>40 /* buffer used for block read/write. Max is 128. Keep it small to reduce stack consumption. */
-#if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8
-  #define %'ModuleName'%.PAGE_SIZE      16                       %>40 /* maximum page size (for page/block operation) */
-#elif %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_256
-  #define %'ModuleName'%.PAGE_SIZE      64                       %>40 /* maximum page size (for page/block operation) */
-#elif (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_512) || (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_1025)
-  #define %'ModuleName'%.PAGE_SIZE      128                      %>40 /* maximum page size (for page/block operation) */
-#else
-  #error "unknown device?"
-#endif
-
 /* macros for the control byte: */
 #define %'ModuleName'%.CTRL_NBL       (0x0A<<3)                  %>40 /* control byte high nibble. Typically this is 1010 (shifted by one to the right) */
 #if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8
@@ -347,17 +343,18 @@ static byte %'ModuleName'%.I2CAddress = (%DeviceAddress&%'ModuleName'%.MAX_I2C_A
 
 %if defined(Shell)
 static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
-  unsigned char buf[8];
+  unsigned char buf[32];
 
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"%'ModuleName'", (unsigned char*)"\r\n", io->stdOut);
+
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+  %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), (uint8_t)%'ModuleName'%.DEVICE_ADDR(0));
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" (for memory @0x00)\r\n");
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  I2C Addr", buf, io->stdOut);
+
   %@Utility@'ModuleName'%.Num16uToStr(buf, sizeof(buf), (uint16_t)%'ModuleName'%.DEVICE_ID);
   %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Type", buf, io->stdOut);
-
-  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"0x");
-  %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), (uint8_t)%'ModuleName'%.I2CAddress);
-  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  I2C Addr", buf, io->stdOut);
 
   return ERR_OK;
 }
