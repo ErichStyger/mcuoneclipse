@@ -2243,8 +2243,8 @@ void %'ModuleName'%.%strcatNum32sDotValue100(byte *dst, size_t dstSize, long num
 {
   %'ModuleName'%.%strcatNum32s(dst, dstSize, num/100);
   %'ModuleName'%.%chcat(dst, dstSize, '.');
-  if (val32<0) {
-    val32 = -val32;
+  if (num<0) {
+    num = -num;
   }
   %'ModuleName'%.%strcatNum16uFormatted(dst, dstSize, (uint16_t)(num%%100), '0', 2);
 }
