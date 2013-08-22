@@ -636,6 +636,17 @@ byte %'ModuleName'%.%ScanHex8uNumberNoPrefix(const unsigned char **str, byte *va
 
 %endif %- ScanHex8uNumberNoPrefix
 %-BW_METHOD_END ScanHex8uNumberNoPrefix
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN strcatNum32sDotValue100
+%ifdef strcatNum32sDotValue100
+void %'ModuleName'%.%strcatNum32sDotValue100(byte *dst, size_t dstSize, long num);
+%define! Pardst
+%define! PardstSize
+%define! Parnum
+%include Common\UtilitystrcatNum32sDotValue100.Inc
+
+%endif %- strcatNum32sDotValue100
+%-BW_METHOD_END strcatNum32sDotValue100
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -2221,6 +2232,25 @@ byte %'ModuleName'%.%strCutTail(byte *str, byte *tail)
 
 %endif %- strCutTail
 %-BW_METHOD_END strCutTail
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN strcatNum32sDotValue100
+%ifdef strcatNum32sDotValue100
+%define! Pardst
+%define! PardstSize
+%define! Parnum
+%include Common\UtilitystrcatNum32sDotValue100.Inc
+void %'ModuleName'%.%strcatNum32sDotValue100(byte *dst, size_t dstSize, long num)
+{
+  %'ModuleName'%.%strcatNum32s(dst, dstSize, val32/100);
+  %'ModuleName'%.%chcat(dst, dstSize, '.');
+  if (val32<0) {
+    val32 = -val32;
+  }
+  %'ModuleName'%.%strcatNum16uFormatted(dst, dstSize, (uint16_t)(val32%%100), '0', 2);
+}
+
+%endif %- strcatNum32sDotValue100
+%-BW_METHOD_END strcatNum32sDotValue100
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

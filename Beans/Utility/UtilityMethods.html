@@ -546,6 +546,18 @@ LI.EXP {
 <li><i>num:dword</i> - Value to convert.</li>
 </ul><br />
 </li>
+<li><a name="strcatNum32sDotValue100">
+<b>strcatNum32sDotValue100</b></a>
+ - Appends a 32bit signed value to a buffer. The value is in 1/100 units.  For example for the value -13456 it will append the string &quot;-134.56&quot;
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void strcatNum32sDotValue100(byte *dst, size_t dstSize, long num)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
+<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
+<li><i>num:long</i> - Value to convert.</li>
+</ul><br />
+</li>
 <li><a name="IsLeapYear">
 <b>IsLeapYear</b></a>
  - Returns true if a given year is a leap year

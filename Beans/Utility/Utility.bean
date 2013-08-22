@@ -4,7 +4,7 @@
     <Name>Utility</Name>
     <Description>Utility Module</Description>
     <Author>Erich Styger</Author>
-    <Version>01.089</Version>
+    <Version>01.091</Version>
     <Icon>Utility</Icon>
     <TypesFiles>PE,Utility\Utility</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -1448,6 +1448,53 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, dword num)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>strcatNum32sDotValue100</Name>
+        <Symbol>strcatNum32sDotValue100</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Appends a 32bit signed value to a buffer. The value is in 1/100 units.  For example for the value -13456 it will append the string "-134.56"</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>dst</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to destination string</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>dstSize</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Size of the destination buffer (in bytes).</ParHint>
+          <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>num</ParName>
+          <ParType>32bit signed</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Value to convert.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, long num)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
