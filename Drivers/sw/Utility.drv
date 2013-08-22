@@ -2241,12 +2241,12 @@ byte %'ModuleName'%.%strCutTail(byte *str, byte *tail)
 %include Common\UtilitystrcatNum32sDotValue100.Inc
 void %'ModuleName'%.%strcatNum32sDotValue100(byte *dst, size_t dstSize, long num)
 {
-  %'ModuleName'%.%strcatNum32s(dst, dstSize, val32/100);
+  %'ModuleName'%.%strcatNum32s(dst, dstSize, num/100);
   %'ModuleName'%.%chcat(dst, dstSize, '.');
   if (val32<0) {
     val32 = -val32;
   }
-  %'ModuleName'%.%strcatNum16uFormatted(dst, dstSize, (uint16_t)(val32%%100), '0', 2);
+  %'ModuleName'%.%strcatNum16uFormatted(dst, dstSize, (uint16_t)(num%%100), '0', 2);
 }
 
 %endif %- strcatNum32sDotValue100
