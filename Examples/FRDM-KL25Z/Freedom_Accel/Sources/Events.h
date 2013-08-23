@@ -35,6 +35,8 @@
 #include "GI2C1.h"
 #include "I2C2.h"
 #include "MMA1.h"
+#include "FMSTR1.h"
+#include "FMSTR_UART1.h"
 #include "PE_LDD.h"
 
 void Cpu_OnNMIINT(void);
