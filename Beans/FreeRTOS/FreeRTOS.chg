@@ -31,10 +31,12 @@
 %endif
 %- only Kinetis has Low Level Drivers
 %if (CPUfamily = "Kinetis")
-  %set LDDTickGroup Value Enabled
+  %if useARMSysTickTimer='yes'
+    %set LDDTickGroup Value Disabled
+  %else
+    %set LDDTickGroup Value Enabled
+  %endif
   %set LDDTickGroup ReadOnly yes
-  %set LDDSWIGroup Value Enabled
-  %set LDDSWIGroup ReadOnly yes
   %set LDDRuntimeCounterGroup Value Enabled
   %set LDDRuntimeCounterGroup ReadOnly yes
   %set NonLDDTickGroup Value Disabled
@@ -46,8 +48,6 @@
 %else
   %set LDDTickGroup Value Disabled
   %set LDDTickGroup ReadOnly yes
-  %set LDDSWIGroup Value Disabled
-  %set LDDSWIGroup ReadOnly yes
   %set LDDRuntimeCounterGroup Value Disabled
   %set LDDRuntimeCounterGroup ReadOnly yes
   %set NonLDDTickGroup Value Enabled

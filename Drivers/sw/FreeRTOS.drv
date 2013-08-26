@@ -190,6 +190,7 @@
 /* Prototypes for interrupt service handlers */
 void vPortSVCHandler(void);
 void vPortPendSVHandler(void);
+void vOnCounterRestart(void);
 %-
 %if (defined(PEversionDecimal) && (PEversionDecimal >=0 '1282')) %- this is only supported with MCU 10.3
 %- Get interrupts info from CPU database
@@ -202,6 +203,8 @@ void vPortPendSVHandler(void);
        %define_prj %'vect' vPortSVCHandler
      %elif vect = 'ivINT_PendableSrvReq'
        %define_prj %'vect' vPortPendSVHandler
+     %elif useARMSysTickTimer='yes' & vect = 'ivINT_SysTick'
+       %define_prj %'vect' vOnCounterRestart
      %else
        %- keep PEx default
      %endif
@@ -2761,6 +2764,11 @@ void %vOnPreSleepProcessing(portTickType expectedIdleTicks)
 {
 #if 0 /* example for Kinetis (enable SetOperationMode() in CPU component: */
   Cpu_SetOperationMode(DOM_WAIT, NULL, NULL);
+/* or to wait for interrupt:
+    __asm volatile("dsb");
+    __asm volatile("wfi");
+    __asm volatile("isb");
+*/
 #endif
 #if 0 /* example for S08 (enable SetWaitMode() in CPU: */
   Cpu_SetWaitMode();

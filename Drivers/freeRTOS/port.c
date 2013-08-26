@@ -97,31 +97,37 @@
   #define configSYSTICK_CLOCK_HZ configCPU_CLOCK_HZ
 #endif
 /* macros dealing with tick counter */
-#if configUSE_TICKLESS_IDLE == 1
-volatile uint8_t portTickCntr; /* used to find out if we woke up by the tick interrupt */
 %if (CPUfamily = "Kinetis")
-typedef unsigned long TickCounter_t; /* for 24 bits */
-#define TICK_NOF_BITS               24
-#define COUNTS_UP                   0 /* SysTick is counting down to zero */
 #define ENABLE_TICK_COUNTER()       portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT
 #define DISABLE_TICK_COUNTER()      portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT
-#define SET_TICK_DURATION(val)      portNVIC_SYSTICK_LOAD_REG = val
-#define GET_TICK_DURATION()         portNVIC_SYSTICK_LOAD_REG
-#define GET_TICK_CURRENT_VAL(addr)  *(addr)=portNVIC_SYSTICK_CURRENT_VALUE_REG
-#define RESET_TICK_COUNTER()        portNVIC_SYSTICK_CURRENT_VALUE_REG = portNVIC_SYSTICK_LOAD_REG
 %elif defined(TickCntr)
-#define TICK_NOF_BITS               16
-#define COUNTS_UP                   %@TickCntr@'ModuleName'%.UP_COUNTER
-typedef %@TickCntr@'ModuleName'%.TTimerValue TickCounter_t; /* for holding counter */
-static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration as no API to get it from the FreeCntr component */
 #define ENABLE_TICK_COUNTER()       (void)%@TickCntr@'ModuleName'%.Enable()
 #define DISABLE_TICK_COUNTER()      (void)%@TickCntr@'ModuleName'%.Disable()
-#define SET_TICK_DURATION(val)      (void)%@TickCntr@'ModuleName'%.SetCompare(val); currTickDuration=val
-#define GET_TICK_DURATION()         currTickDuration
-#define RESET_TICK_COUNTER()        (void)%@TickCntr@'ModuleName'%.Reset()
-#define GET_TICK_CURRENT_VAL(addr)  (void)%@TickCntr@'ModuleName'%.GetCounterValue(addr)
 %elif defined(TickTimerLDD)
-#define ENABLE_TICK_COUNTER()   (void)%@TickTimerLDD@'ModuleName'%.Enable(RTOS_TickDevice)
+#define ENABLE_TICK_COUNTER()       (void)%@TickTimerLDD@'ModuleName'%.Enable(RTOS_TickDevice)
+#define DISABLE_TICK_COUNTER()      (void)%@TickTimerLDD@'ModuleName'%.Disable(RTOS_TickDevice)
+%endif
+
+#if configUSE_TICKLESS_IDLE == 1
+  volatile uint8_t portTickCntr; /* used to find out if we woke up by the tick interrupt */
+%if (CPUfamily = "Kinetis")
+  typedef unsigned long TickCounter_t; /* for 24 bits */
+  #define TICK_NOF_BITS               24
+  #define COUNTS_UP                   0 /* SysTick is counting down to zero */
+  #define SET_TICK_DURATION(val)      portNVIC_SYSTICK_LOAD_REG = val
+  #define GET_TICK_DURATION()         portNVIC_SYSTICK_LOAD_REG
+  #define GET_TICK_CURRENT_VAL(addr)  *(addr)=portNVIC_SYSTICK_CURRENT_VALUE_REG
+  #define RESET_TICK_COUNTER()        portNVIC_SYSTICK_CURRENT_VALUE_REG = portNVIC_SYSTICK_LOAD_REG
+%elif defined(TickCntr)
+  #define TICK_NOF_BITS               16
+  #define COUNTS_UP                   %@TickCntr@'ModuleName'%.UP_COUNTER
+  typedef %@TickCntr@'ModuleName'%.TTimerValue TickCounter_t; /* for holding counter */
+  static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration as no API to get it from the FreeCntr component */
+  #define SET_TICK_DURATION(val)      (void)%@TickCntr@'ModuleName'%.SetCompare(val); currTickDuration=val
+  #define GET_TICK_DURATION()         currTickDuration
+  #define RESET_TICK_COUNTER()        (void)%@TickCntr@'ModuleName'%.Reset()
+  #define GET_TICK_CURRENT_VAL(addr)  (void)%@TickCntr@'ModuleName'%.GetCounterValue(addr)
+%elif defined(TickTimerLDD)
 %endif
 #endif /* configUSE_TICKLESS_IDLE == 1 */
 
@@ -191,7 +197,10 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
 #define portFPCCR                ((volatile unsigned long *)0xe000ef34) /* Floating point context control register. */
 #define portASPEN_AND_LSPEN_BITS (0x3UL<<30UL)
 %endif
+%-
+%if defined(TickTimerLDD)
 static LDD_TDeviceData *RTOS_TickDevice;
+%endif
 %endif
 
 %--------------------------------------------------------------
@@ -512,14 +521,14 @@ static portBASE_TYPE xBankedStartScheduler(void) {
 %endif
 /*-----------------------------------------------------------*/
 #if configUSE_TICKLESS_IDLE == 1
-/* prototypes */
 %if defined(vOnPreSleepProcessing)
-void %vOnPreSleepProcessing(portTickType expectedIdleTicks);
+void %vOnPreSleepProcessing(portTickType expectedIdleTicks); /* prototype */
+
 %endif
 %if defined(vOnPostSleepProcessing)
-void %vOnPostSleepProcessing(portTickType expectedIdleTicks);
-%endif
+void %vOnPostSleepProcessing(portTickType expectedIdleTicks); /* prototype */
 
+%endif
 %if ((%Compiler == "GNUC")|(%Compiler = "ARM_CC"))
 __attribute__((weak)) void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
 %else
@@ -581,10 +590,22 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
      * time variable must remain unmodified, so a copy is taken.
      */
     
+     /* CPU *HAS TO WAIT* in the sequence below for an interrupt. If vOnPreSleepProcessing() is not used, a default implementation is provided */
 %if defined(vOnPreSleepProcessing)
     %vOnPreSleepProcessing(xExpectedIdleTime); /* go into low power mode */
+%else
+    /* default wait/sleep code */
+  %if (CPUfamily = "Kinetis")
+    __asm volatile("dsb");
+    __asm volatile("wfi");
+    __asm volatile("isb");
+  %elif (CPUfamily = "HCS08") | (CPUfamily = "HC08") | (CPUfamily = "HCS12") | (CPUfamily = "HCS12X")
+    __asm("wait");
+  %else
+    #error "unsupported CPU family! vOnPreSleepProcessing() event and go into sleep mode there!"
+  %endif    
 %endif
-    /* Here CPU is in low power mode, waiting to wake up by an interrupt */
+    /* Here the CPU *HAS TO BE* low power mode, waiting to wake up by an interrupt */
 %if defined(vOnPostSleepProcessing)
     %vOnPostSleepProcessing(xExpectedIdleTime); /* process post-low power actions */
 %endif
@@ -634,8 +655,8 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
       SET_TICK_DURATION(((ulCompleteTickPeriods+1)*ulTimerCountsForOneTick )-ulCompletedSysTickIncrements);
     }
 
-    /* Restart SysTick so it runs from portNVIC_SYSTICK_LOAD_REG
-     * again, then set portNVIC_SYSTICK_LOAD_REG back to its standard value. 
+    /* Restart SysTick so it runs from portNVIC_SYSTICK_LOAD_REG, 
+     * again, then set portNVIC_SYSTICK_LOAD_REG back to its standard value.
      */
     RESET_TICK_COUNTER();
     ENABLE_TICK_COUNTER();
@@ -653,6 +674,13 @@ void vPortInitTickTimer(void) {
 %ifdef TickTimerLDD
   RTOS_TickDevice = %@TickTimerLDD@'ModuleName'%.Init(NULL);     %>40/* initialize the tick timer */
   /* Calculate the constants required to configure the tick interrupt. */
+  /* overwrite SysTick priority is set inside the FreeRTOS component */
+  *(portNVIC_SYSPRI3) |= portNVIC_SYSTICK_PRI; /* set priority of SysTick interrupt */
+%elif defined(useARMSysTickTimer) & useARMSysTickTimer='yes'
+  /* Configure SysTick to interrupt at the requested rate. */
+  portNVIC_SYSTICK_LOAD_REG = (configSYSTICK_CLOCK_HZ/configTICK_RATE_HZ)-1UL;;
+  portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT|portNVIC_SYSTICK_INT_BIT|portNVIC_SYSTICK_ENABLE_BIT;
+  *(portNVIC_SYSPRI3) |= portNVIC_SYSTICK_PRI; /* set priority of SysTick interrupt */
 %endif
 #if configUSE_TICKLESS_IDLE == 1
 {
@@ -680,6 +708,8 @@ void vPortStartTickTimer(void) {
 %endif
 %ifdef TickTimerLDD
   (void)%@TickTimerLDD@'ModuleName'%.Enable(RTOS_TickDevice);   %>40/* start the tick timer */
+%elif defined(useARMSysTickTimer) & useARMSysTickTimer='yes'
+  ENABLE_TICK_COUNTER();
 %endif
 }
 /*-----------------------------------------------------------*/
@@ -689,6 +719,8 @@ void vPortStopTickTimer(void) {
 %endif
 %ifdef TickTimerLDD
   (void)%@TickTimerLDD@'ModuleName'%.Disable(RTOS_TickDevice);   %>40/* stop the tick timer */
+%elif defined(useARMSysTickTimer) & useARMSysTickTimer='yes'
+  DISABLE_TICK_COUNTER();
 %endif
 }
 /*-----------------------------------------------------------*/
@@ -737,13 +769,11 @@ portBASE_TYPE xPortStartScheduler(void) {
 %endif
   return xBankedStartScheduler();
 %elif (CPUfamily = "Kinetis")
-  vPortInitTickTimer();
   /* Make PendSV and SysTick the lowest priority interrupts. */
   /* Overwrite PendSV priority as set inside the CPU component: it needs to have the lowest priority! */
   *(portNVIC_SYSPRI3) |= portNVIC_PENDSV_PRI; /* set priority of PendSV interrupt */
   uxCriticalNesting = 0; /* Initialize the critical nesting count ready for the first task. */
-  /* overwrite SysTick priority is set inside the FreeRTOS component */
-  *(portNVIC_SYSPRI3) |= portNVIC_SYSTICK_PRI; /* set priority of SysTick interrupt */
+  vPortInitTickTimer();
   vPortStartTickTimer();
 %if %M4FFloatingPointSupport='yes'
   /* Ensure the VFP is enabled - it should be anyway. */
@@ -953,7 +983,12 @@ void vOnCounterRestart(void) {
 }
 /*-----------------------------------------------------------*/
 %elif (CPUfamily = "Kinetis") & (%Compiler = "GNUC") %- GNU gcc for ARM
+%if useARMSysTickTimer='yes'
+void vOnCounterRestart(void) {
+%else
 __attribute__ ((naked)) void vOnCounterRestart(void) {
+%endif
+%if useARMSysTickTimer='no'
 #if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
   #if __OPTIMIZE_SIZE__ || __OPTIMIZE__
     /*
@@ -1044,6 +1079,7 @@ PE_ISR(RTOSTICKLDD1_Interrupt)
   );
   #endif
 #endif
+%endif -% useARMSysTickTimer='no'
 #if configUSE_TICKLESS_IDLE == 1
   portTickCntr++;
 #endif
@@ -1052,6 +1088,7 @@ PE_ISR(RTOSTICKLDD1_Interrupt)
     taskYIELD();
   }
   portCLEAR_INTERRUPT_MASK(); /* enable interrupts again */
+%if useARMSysTickTimer='no'
 #if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
   #if __OPTIMIZE_SIZE__ || __OPTIMIZE__
   __asm volatile (
@@ -1078,6 +1115,7 @@ PE_ISR(RTOSTICKLDD1_Interrupt)
   );
 #endif
 #endif
+%endif %- useARMSysTickTimer='no'
 }
 /*-----------------------------------------------------------*/
 %endif
@@ -1099,7 +1137,6 @@ __asm void vPortStartFirstTask(void) {
 }
 /*-----------------------------------------------------------*/
 %elif (CPUfamily = "Kinetis") & (%Compiler = "GNUC") %- GNU gcc for ARM
-/*-----------------------------------------------------------*/
 void vPortStartFirstTask(void) {
   __asm volatile (
     " ldr r0, =0xE000ED08 \n" /* Use the NVIC offset register to locate the stack. */

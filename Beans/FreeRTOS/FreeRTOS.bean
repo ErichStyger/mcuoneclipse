@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.290</Version>
+    <Version>01.294</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -528,23 +528,25 @@ The highest interrupt priority that can be used by any interrupt service routine
                     <IconPopup>false</IconPopup>
                   </TEnumItem>
                 </GrupItem>
+                <GrupItem>
+                  <TBoolItem>
+                    <Name>SysTick</Name>
+                    <Symbol>useARMSysTickTimer</Symbol>
+                    <TypeSpec>typeYesNo</TypeSpec>
+                    <Hint>If enabled, the port will use the ARM SysTick timer directly and no Processor Expert Timer is used.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>0</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <DefaultValue>true</DefaultValue>
+                    <Popup>false</Popup>
+                  </TBoolItem>
+                </GrupItem>
               </Children>
-            </TBoolGrupItem>
-          </GrupItem>
-          <GrupItem>
-            <TBoolGrupItem>
-              <Name>LDD SWI</Name>
-              <Symbol>LDDSWIGroup</Symbol>
-              <TypeSpec>typeEnaDis</TypeSpec>
-              <Hint>Group configuring the software interrupt using Low Level Driver component</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <BoldName>true</BoldName>
-              <EditLine>false</EditLine>
-              <Description>Enabled</Description>
-              <Expanded>Yes</Expanded>
-              <DefaultValue>true</DefaultValue>
-              <DefineSymbol>YES_NO</DefineSymbol>
-              <IfDisabled>setNOTHING</IfDisabled>
             </TBoolGrupItem>
           </GrupItem>
           <GrupItem>
@@ -4474,9 +4476,9 @@ Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total accumulated ex
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <Description>generate code</Description>
-        <Expanded>Yes</Expanded>
-        <DefaultValue>true</DefaultValue>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
         <IsAssembler>false</IsAssembler>
