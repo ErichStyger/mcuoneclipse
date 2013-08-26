@@ -2,6 +2,7 @@ readme.txt
 ==========
 
 This project demonstrates USB Device HID Keyboard with a TWR-K21D50M.
+Pressing SW2 will send a 'PrintScreen' request.
 
 Important clock settings (to be confirmed):
 CPU component:

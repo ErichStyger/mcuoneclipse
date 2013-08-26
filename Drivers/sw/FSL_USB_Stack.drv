@@ -266,6 +266,8 @@ void %'ModuleName'%.usb_int_dis(void)
 #endif
 %elif (CPUDevice="Kinetis L2K")
   NVIC_ICER = (1<<24);    /* Disable interrupts from USB module (Interrupt Clear-Enable Register) */
+%elif (CPUDevice="Kinetis K21D50")
+  NVICISER1 = (1<<21);    /* Disable interrupts from USB module (Interrupt Clear-Enable Register) */
 %else
   /* functionality not needed for %CPUDevice */
 %endif
@@ -305,6 +307,9 @@ void %'ModuleName'%.usb_int_en(void)
 %elif (CPUDevice="Kinetis L2K")
   NVIC_ICPR = (1<<24);    /* Clear any pending interrupts on USB (Interrupt Clear-Pending Register) */
   NVIC_ISER = (1<<24);    /* Enable interrupts from USB module (Interrupt Set-Enable Register) */
+%elif (CPUDevice="Kinetis K21D50")
+  NVICICPR1 = (1<<21);    /* Clear any pending interrupts on USB (Interrupt Clear-Pending Register) */
+  NVICISER1 = (1<<21);    /* Enable interrupts from USB module (Interrupt Set-Enable Register) */
 %elif (CPUDevice="MC9S08JM16") | (CPUDevice="MC9S08JM60")
   CTL_USBEN = 1; /* enable USB module */
 %else
