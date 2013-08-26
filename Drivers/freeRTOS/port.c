@@ -705,10 +705,12 @@ void vPortEnableVFP(void) {
     : "r0","r1" /* clobber */
   );
 }
+/*-----------------------------------------------------------*/
 %endif
 portBASE_TYPE xPortStartScheduler(void) {
 %if (CPUfamily = "ColdFireV1") | (CPUfamily = "MCF")
   uxCriticalNesting = 0;
+  vPortInitTickTimer();
   vPortStartTickTimer();
 %ifdef vTaskEndScheduler
   if(setjmp(xJumpBuf) != 0 ) {
@@ -725,6 +727,7 @@ portBASE_TYPE xPortStartScheduler(void) {
      of the common kernel code, and therefore cannot use the CODE_SEG pragma.
      Instead it simply calls the locally defined xBankedStartScheduler() -
      which does use the CODE_SEG pragma. */
+  vPortInitTickTimer();
   vPortStartTickTimer();
 %ifdef vTaskEndScheduler
   if(setjmp(xJumpBuf) != 0 ) {
@@ -734,6 +737,7 @@ portBASE_TYPE xPortStartScheduler(void) {
 %endif
   return xBankedStartScheduler();
 %elif (CPUfamily = "Kinetis")
+  vPortInitTickTimer();
   /* Make PendSV and SysTick the lowest priority interrupts. */
   /* Overwrite PendSV priority as set inside the CPU component: it needs to have the lowest priority! */
   *(portNVIC_SYSPRI3) |= portNVIC_PENDSV_PRI; /* set priority of PendSV interrupt */
@@ -752,6 +756,7 @@ portBASE_TYPE xPortStartScheduler(void) {
   return pdFALSE;
 %elif (CPUfamily = "56800")
   uxCriticalNesting = 0;
+  vPortInitTickTimer();
   vPortStartTickTimer();
 %ifdef vTaskEndScheduler
   if(setjmp(xJumpBuf) != 0 ) {
