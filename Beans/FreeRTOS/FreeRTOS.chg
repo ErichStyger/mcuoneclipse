@@ -124,7 +124,7 @@
     %set M4FFloatingPointSupport ReadOnly yes
     %set ARMLowestInterrutpPriority Value 15
   %endif
-  %if %@TickTimerLDD@MainModule != "SysTick"
+  %if defined(TickTimerLDD) & %@TickTimerLDD@MainModule != "SysTick"
     %error FreeRTOS Tick Timer: Only SysTick/SYST_CVR is supported, but %@TickTimerLDD@MainModule is used! Please use SysTick/SYST_CVR for ARM/Kinetis.
   %endif
   %if KinetisLibraryLowestInterruptPriority >. ARMLowestInterrutpPriority
