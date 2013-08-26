@@ -1,3 +1,7 @@
+/* << EST */
+#include "FreeRTOSConfig.h"
+#if configHEAP_IMPLEMENTATION==3
+
 /*
     FreeRTOS V7.5.0 - Copyright (C) 2013 Real Time Engineers Ltd.
 
@@ -135,4 +139,5 @@ void vPortFree( void *pv )
 }
 
 
+#endif /* configHEAP_IMPLEMENTATION==3 */ /* << EST */
 

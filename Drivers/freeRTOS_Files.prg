@@ -14,16 +14,17 @@
 %FILE %'DirRel_Code'FreeRTOSConfig.h
 %include freeRTOS\FreeRTOSConfig.h
 
-%FILE %'DirRel_Code'heap.c
-%if MemoryScheme = "Scheme1"
-  %include freeRTOS\heap_1.c
-%elif MemoryScheme = "Scheme2"
-  %include freeRTOS\heap_2.c
-%elif MemoryScheme = "Scheme3"
-  %include freeRTOS\heap_3.c
-%elif MemoryScheme = "Scheme4"
-  %include freeRTOS\heap_4.c
-%endif
+%FILE %'DirRel_Code'heap_1.c
+%include freeRTOS\heap_1.c
+
+%FILE %'DirRel_Code'heap_2.c
+%include freeRTOS\heap_2.c
+
+%FILE %'DirRel_Code'heap_3.c
+%include freeRTOS\heap_3.c
+
+%FILE %'DirRel_Code'heap_4.c
+%include freeRTOS\heap_4.c
 
 %FILE %'DirRel_Code'license.txt
 %include freeRTOS\license.txt

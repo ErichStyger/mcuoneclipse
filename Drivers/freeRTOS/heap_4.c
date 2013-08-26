@@ -1,3 +1,7 @@
+/* << EST */
+#include "FreeRTOSConfig.h"
+#if configHEAP_IMPLEMENTATION==4
+
 /*
     FreeRTOS V7.5.0 - Copyright (C) 2013 Real Time Engineers Ltd.
 
@@ -399,3 +403,4 @@ unsigned char *puc;
 	}
 }
 
+#endif /* configHEAP_IMPLEMENTATION==4 */ /* << EST */

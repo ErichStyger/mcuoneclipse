@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.4.2 - Copyright (C) 2013 Real Time Engineers Ltd.
+    FreeRTOS V7.5.0 - Copyright (C) 2013 Real Time Engineers Ltd.
 
     FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
     http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -124,6 +124,16 @@
 #define configCPU_CLOCK_HZ                                       %>50 CPU_BUS_CLK_HZ
 #define configTICK_RATE_HZ                                       %>50 ((portTickType)%TickRateHz)
 #define configMINIMAL_STACK_SIZE                                 %>50 ((unsigned portSHORT)%MinimalStackSize)
+%if MemoryScheme = "Scheme1"
+#define configHEAP_IMPLEMENTATION                                %>50 1 /* either 1, 2, 3 or 4 */
+%elif MemoryScheme = "Scheme2"
+#define configHEAP_IMPLEMENTATION                                %>50 2 /* either 1, 2, 3 or 4 */
+%elif MemoryScheme = "Scheme3"
+#define configHEAP_IMPLEMENTATION                                %>50 3 /* either 1, 2, 3 or 4 */
+%elif MemoryScheme = "Scheme4"
+#define configHEAP_IMPLEMENTATION                                %>50 4 /* either 1, 2, 3 or 4 */
+%endif
+
 #define configTOTAL_HEAP_SIZE                                    %>50 ((size_t)(%TotalHeapSize))
 #define configMAX_TASK_NAME_LEN                                  %>50 %TaskNameLength
 %if %UseTraceFacility='yes'

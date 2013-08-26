@@ -1,3 +1,7 @@
+/* << EST */
+#include "FreeRTOSConfig.h"
+#if configHEAP_IMPLEMENTATION==2
+
 /*
     FreeRTOS V7.5.0 - Copyright (C) 2013 Real Time Engineers Ltd.
 
@@ -307,3 +311,4 @@ unsigned char *pucAlignedHeap;
 	pxFirstFreeBlock->pxNextFreeBlock = &xEnd;
 }
 /*-----------------------------------------------------------*/
+#endif /* configHEAP_IMPLEMENTATION==2 */ /* << EST */
