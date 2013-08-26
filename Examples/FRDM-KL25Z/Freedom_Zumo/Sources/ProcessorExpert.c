@@ -48,7 +48,6 @@
 #include "AS1.h"
 #include "ASerialLdd1.h"
 #include "FRTOS1.h"
-#include "RTOSTICKLDD1.h"
 #include "LED_IR.h"
 #include "LEDpin4.h"
 #include "BitIoLdd8.h"
