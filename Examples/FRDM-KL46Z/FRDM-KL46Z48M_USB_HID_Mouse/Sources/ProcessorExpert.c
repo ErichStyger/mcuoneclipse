@@ -1,10 +1,10 @@
 /* ###################################################################
 **     Filename    : ProcessorExpert.c
 **     Project     : ProcessorExpert
-**     Processor   : MK21DX256VMC5
+**     Processor   : MKL46Z256VMC4
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2013-08-26, 21:04, # CodeGen: 0
+**     Date/Time   : 2013-08-26, 18:37, # CodeGen: 0
 **     Abstract    :
 **         Main module.
 **         This module contains user's application code.
@@ -30,25 +30,22 @@
 /* Including needed modules to compile this module/procedure */
 #include "Cpu.h"
 #include "Events.h"
-#include "LEDG.h"
-#include "LEDpin1.h"
-#include "BitIoLdd1.h"
-#include "LEDY.h"
-#include "LEDpin2.h"
-#include "BitIoLdd2.h"
-#include "LEDR.h"
-#include "LEDpin3.h"
-#include "BitIoLdd3.h"
-#include "LEDB.h"
-#include "LEDpin4.h"
-#include "BitIoLdd4.h"
 #include "USB1.h"
 #include "USB0.h"
-#include "CDC1.h"
-#include "Tx1.h"
-#include "Rx1.h"
+#include "HIDM1.h"
+#include "Tx3.h"
+#include "LED1.h"
+#include "LEDpin1.h"
+#include "BitIoLdd1.h"
+#include "LED2.h"
+#include "LEDpin2.h"
+#include "BitIoLdd2.h"
 #include "WAIT1.h"
-#include "UTIL1.h"
+#include "SW1.h"
+#include "BitIoLdd4.h"
+#include "SW3.h"
+#include "BitIoLdd5.h"
+#include "PTC.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -56,42 +53,7 @@
 #include "IO_Map.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
-static uint8_t cdc_buffer[USB1_DATA_BUFF_SIZE];
-static uint8_t in_buffer[USB1_DATA_BUFF_SIZE];
-
-static void CDC_Run(void) {
-  int i;
-  uint32_t val = 0;
-  unsigned char buf[16];
-
-  for(;;) {
-    while(CDC1_App_Task(cdc_buffer, sizeof(cdc_buffer))==ERR_BUSOFF) {
-      /* device not enumerated */
-      LEDR_Neg(); LEDG_Off();
-      WAIT1_Waitms(10);
-    }
-    LEDR_Off(); LEDG_Neg();
-    if (CDC1_GetCharsInRxBuf()!=0) {
-      i = 0;
-      while(   i<sizeof(in_buffer)-1
-            && CDC1_GetChar(&in_buffer[i])==ERR_OK
-           )
-      {
-        i++;
-      }
-      in_buffer[i] = '\0';
-      (void)CDC1_SendString((unsigned char*)"echo: ");
-      (void)CDC1_SendString(in_buffer);
-      UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"val: ");
-      UTIL1_strcatNum32u(buf, sizeof(buf), val);
-      UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-      (void)CDC1_SendString(buf);
-      val++;
-    } else {
-      WAIT1_Waitms(10);
-    }
-  }
-}
+#include "Application.h"
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -103,7 +65,7 @@ int main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
-  CDC_Run();
+  APP_Run();
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/

@@ -1,10 +1,10 @@
 /* ###################################################################
 **     Filename    : ProcessorExpert.c
 **     Project     : ProcessorExpert
-**     Processor   : MK21DX256VMC5
+**     Processor   : MKL46Z256VMC4
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2013-08-26, 21:04, # CodeGen: 0
+**     Date/Time   : 2013-08-27, 08:24, # CodeGen: 0
 **     Abstract    :
 **         Main module.
 **         This module contains user's application code.
@@ -30,25 +30,19 @@
 /* Including needed modules to compile this module/procedure */
 #include "Cpu.h"
 #include "Events.h"
-#include "LEDG.h"
+#include "LED1.h"
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"
-#include "LEDY.h"
+#include "LED2.h"
 #include "LEDpin2.h"
 #include "BitIoLdd2.h"
-#include "LEDR.h"
-#include "LEDpin3.h"
-#include "BitIoLdd3.h"
-#include "LEDB.h"
-#include "LEDpin4.h"
-#include "BitIoLdd4.h"
 #include "USB1.h"
 #include "USB0.h"
 #include "CDC1.h"
 #include "Tx1.h"
 #include "Rx1.h"
-#include "WAIT1.h"
 #include "UTIL1.h"
+#include "WAIT1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -67,10 +61,10 @@ static void CDC_Run(void) {
   for(;;) {
     while(CDC1_App_Task(cdc_buffer, sizeof(cdc_buffer))==ERR_BUSOFF) {
       /* device not enumerated */
-      LEDR_Neg(); LEDG_Off();
+      LED1_Neg(); LED2_Off();
       WAIT1_Waitms(10);
     }
-    LEDR_Off(); LEDG_Neg();
+    LED1_Off(); LED2_Neg();
     if (CDC1_GetCharsInRxBuf()!=0) {
       i = 0;
       while(   i<sizeof(in_buffer)-1
