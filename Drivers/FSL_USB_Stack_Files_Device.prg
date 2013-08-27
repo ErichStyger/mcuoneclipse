@@ -115,7 +115,7 @@
   %FILE? %'DirRel_Code'derivative.h
   %include FSL_USB_Stack\Device\app\cdc\cw10\kinetis_l2k\derivative.h
 %elif CPUDevice="Kinetis KL46Z48"
-%- \Device\app\cdc\cw10\kinetis_l2k -------------------------------------------
+%- \Device\app\cdc\cw10\kinetis_kl46z48 -------------------------------------------
   %FILE? %'DirRel_Code'derivative.h
   %include FSL_USB_Stack\Device\app\cdc\cw10\kinetis_kl46z48\derivative.h
 %endif

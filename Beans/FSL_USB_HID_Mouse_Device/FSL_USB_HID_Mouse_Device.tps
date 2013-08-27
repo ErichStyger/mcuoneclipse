@@ -45,7 +45,7 @@
         <Line>MCF51MM256</Line>
         <Line>MCF52259</Line>
         <Line>Kinetis L2K</Line>
-        <Line>Kinetis K46Z48</Line>
+        <Line>Kinetis KL46Z48</Line>
         <Line>Kinetis K20D50</Line>
         <Line>Kinetis K21D50</Line>
         <Line>Kinetis K40</Line>
