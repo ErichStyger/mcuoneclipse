@@ -59,7 +59,7 @@ portLONG uxGetTickCounterValue(void);
   #define FREERTOS_HWTC_PERIOD           %@TickTimerLDD@'ModuleName'%.PERIOD_TICKS /* counter is incrementing from zero to this value */
 #endif
 
-%else %- use SysTick
+%elif defined(useARMSysTickTimer) & useARMSysTickTimer='yes'
 /* include CPU module because of dependency to CPU clock rate */
 #include "%ProcessorModule.h"
 #include "FreeRTOSConfig.h"
