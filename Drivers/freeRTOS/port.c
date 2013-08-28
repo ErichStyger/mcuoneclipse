@@ -92,12 +92,15 @@
 %if (CPUfamily = "Kinetis")
 #define ENABLE_TICK_COUNTER()       portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT
 #define DISABLE_TICK_COUNTER()      portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT
+#define RESET_TICK_COUNTER()        portNVIC_SYSTICK_CURRENT_VALUE_REG = portNVIC_SYSTICK_LOAD_REG
 %elif defined(TickCntr)
 #define ENABLE_TICK_COUNTER()       (void)%@TickCntr@'ModuleName'%.Enable()
 #define DISABLE_TICK_COUNTER()      (void)%@TickCntr@'ModuleName'%.Disable()
+#define RESET_TICK_COUNTER()        (void)%@TickCntr@'ModuleName'%.Reset()
 %elif defined(TickTimerLDD)
 #define ENABLE_TICK_COUNTER()       (void)%@TickTimerLDD@'ModuleName'%.Enable(RTOS_TickDevice)
 #define DISABLE_TICK_COUNTER()      (void)%@TickTimerLDD@'ModuleName'%.Disable(RTOS_TickDevice)
+#define RESET_TICK_COUNTER()        portNVIC_SYSTICK_CURRENT_VALUE_REG = portNVIC_SYSTICK_LOAD_REG
 %endif
 
 %if (CPUfamily = "Kinetis")
@@ -107,15 +110,15 @@ typedef unsigned long TickCounter_t; /* for 24 bits */
 #define SET_TICK_DURATION(val)      portNVIC_SYSTICK_LOAD_REG = val
 #define GET_TICK_DURATION()         portNVIC_SYSTICK_LOAD_REG
 #define GET_TICK_CURRENT_VAL(addr)  *(addr)=portNVIC_SYSTICK_CURRENT_VALUE_REG
-#define RESET_TICK_COUNTER()        portNVIC_SYSTICK_CURRENT_VALUE_REG = portNVIC_SYSTICK_LOAD_REG
 %elif defined(TickCntr)
 #define TICK_NOF_BITS               16
 #define COUNTS_UP                   %@TickCntr@'ModuleName'%.UP_COUNTER
 typedef %@TickCntr@'ModuleName'%.TTimerValue TickCounter_t; /* for holding counter */
+#if configUSE_TICKLESS_IDLE == 1
 static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration as no API to get it from the FreeCntr component */
+#endif
 #define SET_TICK_DURATION(val)      (void)%@TickCntr@'ModuleName'%.SetCompare(val); currTickDuration=val
 #define GET_TICK_DURATION()         currTickDuration
-#define RESET_TICK_COUNTER()        (void)%@TickCntr@'ModuleName'%.Reset()
 #define GET_TICK_CURRENT_VAL(addr)  (void)%@TickCntr@'ModuleName'%.GetCounterValue(addr)
 %endif
 
@@ -1253,8 +1256,8 @@ __asm volatile (
   );
 #endif
 }
-%endif
 /*-----------------------------------------------------------*/
+%endif
 %if (CPUfamily = "Kinetis") & (%Compiler = "ARM_CC") %- Keil compiler for ARM
 #if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
 __asm void vPortPendSVHandler(void) {
