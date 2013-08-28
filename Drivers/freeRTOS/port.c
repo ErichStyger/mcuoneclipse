@@ -83,14 +83,6 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-%--------------------------------------------------------------
-%ifdef TickTimerLDD
-#define configSYSTICK_CLOCK_HZ   %@TickTimerLDD@'ModuleName'%.CNT_INP_FREQ_U_0
-%endif
-%ifdef TickCntr
-#define configSYSTICK_CLOCK_HZ   %@TickCntr@'ModuleName'%.COUNTER_INPUT_CLOCK_HZ
-%endif
-
 /* --------------------------------------------------- */
 /* Tickless IDLE support */
 #ifndef configSYSTICK_CLOCK_HZ
@@ -108,27 +100,27 @@
 #define DISABLE_TICK_COUNTER()      (void)%@TickTimerLDD@'ModuleName'%.Disable(RTOS_TickDevice)
 %endif
 
+%if (CPUfamily = "Kinetis")
+typedef unsigned long TickCounter_t; /* for 24 bits */
+#define TICK_NOF_BITS               24
+#define COUNTS_UP                   0 /* SysTick is counting down to zero */
+#define SET_TICK_DURATION(val)      portNVIC_SYSTICK_LOAD_REG = val
+#define GET_TICK_DURATION()         portNVIC_SYSTICK_LOAD_REG
+#define GET_TICK_CURRENT_VAL(addr)  *(addr)=portNVIC_SYSTICK_CURRENT_VALUE_REG
+#define RESET_TICK_COUNTER()        portNVIC_SYSTICK_CURRENT_VALUE_REG = portNVIC_SYSTICK_LOAD_REG
+%elif defined(TickCntr)
+#define TICK_NOF_BITS               16
+#define COUNTS_UP                   %@TickCntr@'ModuleName'%.UP_COUNTER
+typedef %@TickCntr@'ModuleName'%.TTimerValue TickCounter_t; /* for holding counter */
+static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration as no API to get it from the FreeCntr component */
+#define SET_TICK_DURATION(val)      (void)%@TickCntr@'ModuleName'%.SetCompare(val); currTickDuration=val
+#define GET_TICK_DURATION()         currTickDuration
+#define RESET_TICK_COUNTER()        (void)%@TickCntr@'ModuleName'%.Reset()
+#define GET_TICK_CURRENT_VAL(addr)  (void)%@TickCntr@'ModuleName'%.GetCounterValue(addr)
+%endif
+
 #if configUSE_TICKLESS_IDLE == 1
   volatile uint8_t portTickCntr; /* used to find out if we woke up by the tick interrupt */
-%if (CPUfamily = "Kinetis")
-  typedef unsigned long TickCounter_t; /* for 24 bits */
-  #define TICK_NOF_BITS               24
-  #define COUNTS_UP                   0 /* SysTick is counting down to zero */
-  #define SET_TICK_DURATION(val)      portNVIC_SYSTICK_LOAD_REG = val
-  #define GET_TICK_DURATION()         portNVIC_SYSTICK_LOAD_REG
-  #define GET_TICK_CURRENT_VAL(addr)  *(addr)=portNVIC_SYSTICK_CURRENT_VALUE_REG
-  #define RESET_TICK_COUNTER()        portNVIC_SYSTICK_CURRENT_VALUE_REG = portNVIC_SYSTICK_LOAD_REG
-%elif defined(TickCntr)
-  #define TICK_NOF_BITS               16
-  #define COUNTS_UP                   %@TickCntr@'ModuleName'%.UP_COUNTER
-  typedef %@TickCntr@'ModuleName'%.TTimerValue TickCounter_t; /* for holding counter */
-  static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration as no API to get it from the FreeCntr component */
-  #define SET_TICK_DURATION(val)      (void)%@TickCntr@'ModuleName'%.SetCompare(val); currTickDuration=val
-  #define GET_TICK_DURATION()         currTickDuration
-  #define RESET_TICK_COUNTER()        (void)%@TickCntr@'ModuleName'%.Reset()
-  #define GET_TICK_CURRENT_VAL(addr)  (void)%@TickCntr@'ModuleName'%.GetCounterValue(addr)
-%elif defined(TickTimerLDD)
-%endif
 #endif /* configUSE_TICKLESS_IDLE == 1 */
 
 /*
@@ -678,7 +670,7 @@ void vPortInitTickTimer(void) {
   *(portNVIC_SYSPRI3) |= portNVIC_SYSTICK_PRI; /* set priority of SysTick interrupt */
 %elif defined(useARMSysTickTimer) & useARMSysTickTimer='yes'
   /* Configure SysTick to interrupt at the requested rate. */
-  portNVIC_SYSTICK_LOAD_REG = (configSYSTICK_CLOCK_HZ/configTICK_RATE_HZ)-1UL;;
+  portNVIC_SYSTICK_LOAD_REG = (configSYSTICK_CLOCK_HZ/configTICK_RATE_HZ)-1UL;
   portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT|portNVIC_SYSTICK_INT_BIT|portNVIC_SYSTICK_ENABLE_BIT;
   *(portNVIC_SYSPRI3) |= portNVIC_SYSTICK_PRI; /* set priority of SysTick interrupt */
 %endif
@@ -958,6 +950,15 @@ portLONG uxGetTickCounterValue(void) {
 /* return the tick raw counter value. It is assumed that the counter register has been reset at the last tick time */
 portLONG uxGetTickCounterValue(void) {
   return (portLONG)%@TickTimerLDD@'ModuleName'%.GetCounterValue(RTOS_TickDevice);
+}
+/*-----------------------------------------------------------*/
+%elif defined(useARMSysTickTimer) & useARMSysTickTimer='yes'
+/* return the tick raw counter value. It is assumed that the counter register has been reset at the last tick time */
+portLONG uxGetTickCounterValue(void) {
+  portLONG val;
+  
+  GET_TICK_CURRENT_VAL(&val);
+  return val;
 }
 /*-----------------------------------------------------------*/
 %endif

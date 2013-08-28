@@ -15,9 +15,8 @@
 #define PORTTICKS_H_
 
 %if (CPUfamily = "Kinetis")
-
 void vOnCounterRestart(void);
-  /* RTOS tick handler */
+  /* RTOS tick handler interrupt service routine */
 %endif
 
 %ifdef TickCntr %- non-LDD version
@@ -60,6 +59,20 @@ portLONG uxGetTickCounterValue(void);
   #define FREERTOS_HWTC_PERIOD           %@TickTimerLDD@'ModuleName'%.PERIOD_TICKS /* counter is incrementing from zero to this value */
 #endif
 
+%else %- use SysTick
+/* include CPU module because of dependency to CPU clock rate */
+#include "%ProcessorModule.h"
+#include "FreeRTOSConfig.h"
+
+/*!
+ * \brief Return the tick raw counter value. It is assumed that the counter register has been reset at the last tick time
+ * \return Tick counter value. The value is reset at tick interrupt time.
+ * */
+portLONG uxGetTickCounterValue(void);
+
+/* SysTick is counting down */
+#define FREERTOS_HWTC_DOWN_COUNTER     1
+#define FREERTOS_HWTC_PERIOD           (configCPU_CLOCK_HZ/configTICK_RATE_HZ)-1UL /* counter is decrementing from this value to zero */
 %endif %-TickTimerLDD
 
 /* tick information for Percepio Trace */

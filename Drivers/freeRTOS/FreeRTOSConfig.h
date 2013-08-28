@@ -121,8 +121,15 @@
 %else
 #define configUSE_MALLOC_FAILED_HOOK                             %>50 0
 %endif
-#define configCPU_CLOCK_HZ                                       %>50 CPU_BUS_CLK_HZ
-#define configTICK_RATE_HZ                                       %>50 ((portTickType)%TickRateHz)
+#define configCPU_CLOCK_HZ                                       %>50 CPU_BUS_CLK_HZ /* CPU bus clock */
+#define configTICK_RATE_HZ                                       %>50 ((portTickType)%TickRateHz) /* frequency of tick interrupt */
+%if defined(TickTimerLDD)
+#define configSYSTICK_CLOCK_HZ                                   %>50 %@TickTimerLDD@'ModuleName'%.CNT_INP_FREQ_U_0 /* frequency of system tick counter */
+%elif defined(useARMSysTickTimer) & useARMSysTickTimer='yes'
+#define configSYSTICK_CLOCK_HZ                                   %>50 configCPU_CLOCK_HZ /* frequency of system tick counter */
+%elif defined(TickCntr)
+#define configSYSTICK_CLOCK_HZ                                   %>50 %@TickCntr@'ModuleName'%.COUNTER_INPUT_CLOCK_HZ /* frequency of system tick counter */
+%endif
 #define configMINIMAL_STACK_SIZE                                 %>50 ((unsigned portSHORT)%MinimalStackSize)
 %if MemoryScheme = "Scheme1"
 #define configHEAP_IMPLEMENTATION                                %>50 1 /* either 1, 2, 3 or 4 */
