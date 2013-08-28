@@ -3,8 +3,8 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>6</ModificationStamp>
-    <Date>2013-08-26</Date>
+    <ModificationStamp>9</ModificationStamp>
+    <Date>2013-08-28</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.6.0.RT4_b1316-1577</PEversion>
   </Header>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>31</ProjectCompNumb>
+    <ProjectCompNumb>35</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -42,7 +42,7 @@
   <CPU>
     <BeanType>MK21DN512MC5</BeanType>
     <Name>Cpu</Name>
-    <CompNumb>4</CompNumb>
+    <CompNumb>34</CompNumb>
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>CPU_CHIP2</IconName>
@@ -62,7 +62,7 @@
         <ItemSymbol>CPU</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>MK21DX256VMC5</Value>
+        <Value>MK21DN512VMC5</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>SharedInternalProperties</ItemSymbol>
@@ -85,7 +85,7 @@
         <ItemSymbol>MemModelDev</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>MemModel_FlexMem</Value>
+        <Value>MemModel_NoFlexMem</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
@@ -205,7 +205,7 @@
         <ItemSymbol>SystemOSCExtal_Grp</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>SystemOSCExtalPin</ItemSymbol>
@@ -222,7 +222,7 @@
         <ItemSymbol>SystemOSCXtal_Grp</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>SystemOSCXtalPin</ItemSymbol>
@@ -877,15 +877,15 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>FlexNVMSize</ItemSymbol>
-        <Value>64 KB</Value>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>Dpart</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>3</Index>
-        <EnumSymbVal>64</EnumSymbVal>
+        <Index>0</Index>
+        <EnumSymbVal>0</EnumSymbVal>
         <CustomValue />
       </ItemState>
       <ItemState>
@@ -913,7 +913,7 @@
       <ItemState>
         <ItemSymbol>DataFlashSize</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>65536</Value>
+        <Value>0</Value>
         <Base>HEX</Base>
       </ItemState>
       <ItemState>
@@ -933,7 +933,7 @@
       <ItemState>
         <ItemSymbol>EEPROMPartitionStart</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>268500992</Value>
+        <Value>268435456</Value>
         <Base>HEX</Base>
       </ItemState>
       <ItemState>
@@ -994,8 +994,8 @@
       <ItemState>
         <ItemSymbol>EEEFeatureIsInitialized</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
+        <Index>1</Index>
+        <Value>false</Value>
       </ItemState>
       <ItemState>
         <ListItemCount>2</ListItemCount>
@@ -1035,7 +1035,7 @@
       <ItemState>
         <ItemSymbol>FlashOrgDscrBlockPUnitSize0</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>8192</Value>
+        <Value>16384</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -1047,13 +1047,13 @@
       <ItemState>
         <ItemSymbol>FlashOrgDscrBlockAddress1</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>268435456</Value>
+        <Value>262144</Value>
         <Base>HEX</Base>
       </ItemState>
       <ItemState>
         <ItemSymbol>FlashOrgDscrBlockSize1</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>65536</Value>
+        <Value>262144</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -1071,7 +1071,7 @@
       <ItemState>
         <ItemSymbol>FlashOrgDscrBlockPUnitSize1</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>8192</Value>
+        <Value>16384</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -5471,7 +5471,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>1</Value>
+        <Value>2</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OUTDIV2Presc_SpeedMode0</ItemSymbol>
@@ -5485,14 +5485,14 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>48</Value>
+        <Value>24</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OUTDIV3PrescSpeedMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>1</Value>
+        <Value>2</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OUTDIV3Presc_SpeedMode0</ItemSymbol>
@@ -5506,7 +5506,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>48</Value>
+        <Value>24</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OUTDIV4PrescSpeedMode0</ItemSymbol>
@@ -6259,7 +6259,7 @@
           <ItemSymbol>C_RomRamSize2</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-          <Value>261104</Value>
+          <Value>523248</Value>
           <Base>HEX</Base>
         </ItemState>
         <ItemState>
@@ -6302,7 +6302,7 @@
           <ItemSymbol>C_RomRamAddr3</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-          <Value>536854528</Value>
+          <Value>536838144</Value>
           <Base>HEX</Base>
           <Area />
         </ItemState>
@@ -6310,7 +6310,7 @@
           <ItemSymbol>C_RomRamSize3</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-          <Value>16384</Value>
+          <Value>32768</Value>
           <Base>HEX</Base>
         </ItemState>
         <ItemState>
@@ -6361,7 +6361,7 @@
           <ItemSymbol>C_RomRamSize4</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-          <Value>16384</Value>
+          <Value>32768</Value>
           <Base>HEX</Base>
         </ItemState>
         <ItemState>
@@ -6515,7 +6515,7 @@
       <AsmDataFormat>HEX</AsmDataFormat>
       <AsmBitsFormat>HEX</AsmBitsFormat>
       <CPUDB_Settings>
-        <CpuType>MK21DX256VMC5</CpuType>
+        <CpuType>MK21DN512VMC5</CpuType>
         <ActualClock>4</ActualClock>
         <ActualClockLow>32.768000000000</ActualClockLow>
         <DeviceNamesDefines>
@@ -6528,7 +6528,7 @@
     <CompNumb>3</CompNumb>
     <NodeName>FLASH</NodeName>
     <CnfgEnabled>true</CnfgEnabled>
-    <TargetCPU>4</TargetCPU>
+    <TargetCPU>34</TargetCPU>
     <ConfigurationComment lines_count="0" />
     <BoolList_FpgaConfig>
       <Count>0</Count>
@@ -6545,11 +6545,11 @@
       <Value3>true</Value3>
       <ItemId4>20</ItemId4>
       <Value4>true</Value4>
-      <ItemId5>4</ItemId5>
+      <ItemId5>29</ItemId5>
       <Value5>true</Value5>
-      <ItemId6>29</ItemId6>
+      <ItemId6>30</ItemId6>
       <Value6>true</Value6>
-      <ItemId7>30</ItemId7>
+      <ItemId7>34</ItemId7>
       <Value7>true</Value7>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
@@ -11011,7 +11011,7 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Value />
+              <Value>default</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>InterruptVector_OTG_ID_CHGPriorityFeatureGroup</ItemSymbol>

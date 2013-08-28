@@ -6,11 +6,11 @@
 /*##                                   */
 /*##     Project   : ProcessorExpert   */
 /*##                                   */
-/*##     Processor : MK21DX256VMC5     */
+/*##     Processor : MK21DN512VMC5     */
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2013-08-26, 21:11, # CodeGen: 1 */
+/*##     Date/Time : 2013-08-28, 09:11, # CodeGen: 7 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */
@@ -38,9 +38,9 @@ __stack_size = 0x0400;                 /* required amount of stack */
 
 MEMORY {
   m_interrupts (RX) : ORIGIN = 0x00000000, LENGTH = 0x00000144
-  m_text      (RX) : ORIGIN = 0x00000410, LENGTH = 0x0003FBF0
-  m_data      (RW) : ORIGIN = 0x1FFFC000, LENGTH = 0x00004000
-  m_data_20000000 (RW) : ORIGIN = 0x20000000, LENGTH = 0x00004000
+  m_text      (RX) : ORIGIN = 0x00000410, LENGTH = 0x0007FBF0
+  m_data      (RW) : ORIGIN = 0x1FFF8000, LENGTH = 0x00008000
+  m_data_20000000 (RW) : ORIGIN = 0x20000000, LENGTH = 0x00008000
   m_cfmprotrom  (RX) : ORIGIN = 0x00000400, LENGTH = 0x00000010
 }
 

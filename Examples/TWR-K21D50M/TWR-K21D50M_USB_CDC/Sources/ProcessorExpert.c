@@ -1,7 +1,7 @@
 /* ###################################################################
 **     Filename    : ProcessorExpert.c
 **     Project     : ProcessorExpert
-**     Processor   : MK21DX256VMC5
+**     Processor   : MK21DN512VMC5
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
 **     Date/Time   : 2013-08-26, 21:04, # CodeGen: 0
