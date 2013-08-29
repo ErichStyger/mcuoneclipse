@@ -12,7 +12,8 @@ https://github.com/ErichStyger/mcuoneclipse/Drivers
 Part1_Beans_*.PEupd Content:
 -------------------------------------
 Package from component(s):
-- 24AA_EEPROM version 01.021
+Package from component(s):
+- 24AA_EEPROM version 01.023
 - 74HC164 version 01.031
 - 74HC595 version 01.022
 - App_SMAC_Hello version 01.085
@@ -29,11 +30,11 @@ Package from component(s):
 - FatFsMem_USB_MSD version 01.019
 - FatFsMemSDHC version 01.007
 - FontDisplay version 01.195
-- FreeRTOS version 01.290
+- FreeRTOS version 01.296
 - FreeRTOSTrace version 01.003
-- FSL_USB_CDC_Device version 01.017
-- FSL_USB_HID_Keyboard_Device version 01.042
-- FSL_USB_HID_Mouse_Device version 01.056
+- FSL_USB_CDC_Device version 01.018
+- FSL_USB_HID_Keyboard_Device version 01.047
+- FSL_USB_HID_Mouse_Device version 01.059
 - FSL_USB_MSD_Host version 01.015
 - FSL_USB_Stack version 01.023
 - FSShell version 01.231
@@ -69,18 +70,20 @@ Package from component(s):
 - MMA8451Q version 01.024
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 18.08.2013
+created 29.08.2013
+
 
 
 Part2_Beans_*.PEupd Content:
 -------------------------------------
+Package from component(s):
 Package from component(s):
 - nRF24L01 version 01.041
 - OLED version 01.045
 - PCA9554 version 01.024
 - PCA9554BitIO version 01.037
 - PDC8544 version 01.001
-- PercepioTrace version 01.009
+- PercepioTrace version 01.011
 - PID_Float version 01.005
 - PID_Int version 01.001
 - PtConv version 01.005
@@ -91,7 +94,7 @@ Package from component(s):
 - RTC_Maxim version 01.003
 - S19 version 01.034
 - S65Sharp version 01.079
-- SD_Card version 01.157
+- SD_Card version 01.158
 - Servo version 01.066
 - Shell version 01.019
 - SimpleEvents version 01.045
@@ -105,7 +108,6 @@ Package from component(s):
 - TouchScreen version 01.077
 - TouchScreenSensor version 01.053
 - Trigger version 01.054
-- TwoKeys version 01.015
 - UI version 01.056
 - UIButton version 01.121
 - UICalendar version 01.030
@@ -120,12 +122,13 @@ Package from component(s):
 - UISpace version 01.012
 - UIText version 01.059
 - UIWindow version 01.033
+- USB_AUDIO_CLASS version 01.000
 - USB_CMX version 01.027
 - USB_Config_CMX version 01.022
 - USB_HID_CMX version 01.012
 - USB_Host_CMX version 01.058
 - UserInterface version 01.510
 - UTI version 01.125
-- Utility version 01.089
-- Wait version 01.059
-created 18.08.2013
+- Utility version 01.091
+- Wait version 01.063
+created 29.08.2013
