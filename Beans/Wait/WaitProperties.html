@@ -267,8 +267,28 @@ The following items are available only if the group is enabled (the value is "En
 
 <ul>
   <li>
-  <a name="Watchdog">
-  <b>Watchdog</b></a> - If a watchdog shall be kicked during waiting
+  <a name="nonLDDWatchDogEnabled">
+  <b>non-LDD</b></a> - Used for non-LDD (Logical Device Driver) components, e.g. for S08 or ColdFire.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+  <ul>
+    <li>
+    <a name="Watchdog">
+    <b>Watchdog</b></a> - If a watchdog shall be kicked during waiting
+    </li>
+  </ul>
+  </li>
+  <li>
+  <a name="LDDWatchDogEnabled">
+  <b>LDD</b></a> - Enabled for architectures with LDD (Logical Device Drivers), e.g. Kinetis.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+  <ul>
+    <li>
+    <a name="WatchdogLDD">
+    <b>Watchdog</b></a> - Interface to Watchdog driver
+    </li>
+  </ul>
   </li>
 </ul>
 </li>

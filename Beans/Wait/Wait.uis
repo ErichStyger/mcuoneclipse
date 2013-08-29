@@ -1,8 +1,8 @@
 
 [USED_FACES]
-BeanVersion=01.059
+BeanVersion=01.063
 
-InterfacesCount=2
+InterfacesCount=3
 
 Symbol=RTOS
 Link=Yes
@@ -11,5 +11,10 @@ Version=01.005
 
 Symbol=Watchdog
 Link=Yes
-Interface=Watchdog_I
-Version=01.002
+Interface=Wait\Watchdog
+Version=01.001
+
+Symbol=WatchdogLDD
+Link=Yes
+Interface=Wait\WatchDogLDD
+Version=01.001

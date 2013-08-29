@@ -16,6 +16,15 @@
 %endif %- RTOSgroup
 %;**%>12 Watchdog %>60: %get(WatchdogEnabled,Text)
 %if %get(WatchdogEnabled, Bool) = 'yes'
-%;**%>14 Watchdog %>60: %get(Watchdog,Text)
+%;**%>14 non-LDD %>60: %get(nonLDDWatchDogEnabled,Text)
+%if %get(nonLDDWatchDogEnabled, Bool) = 'yes'
+%;**%>16 Watchdog %>60: %get(Watchdog,Text)
+%else %- nonLDDWatchDogEnabled
+%endif %- nonLDDWatchDogEnabled
+%;**%>14 LDD %>60: %get(LDDWatchDogEnabled,Text)
+%if %get(LDDWatchDogEnabled, Bool) = 'yes'
+%;**%>16 Watchdog %>60: %get(WatchdogLDD,Text)
+%else %- LDDWatchDogEnabled
+%endif %- LDDWatchDogEnabled
 %else %- WatchdogEnabled
 %endif %- WatchdogEnabled

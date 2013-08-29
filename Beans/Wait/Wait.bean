@@ -4,7 +4,7 @@
     <Name>Wait</Name>
     <Description>Wait</Description>
     <Author>Erich Styger</Author>
-    <Version>01.059</Version>
+    <Version>01.063</Version>
     <Icon>wait</Icon>
     <TypesFiles>PE,Wait\Wait</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -167,18 +167,68 @@
         <IfDisabled>setNOTHING</IfDisabled>
         <Children>
           <GrupItem>
-            <TInhrLinkItem>
-              <Name>Watchdog</Name>
-              <Symbol>Watchdog</Symbol>
-              <TypeSpec>Watchdog_I</TypeSpec>
-              <Hint>If a watchdog shall be kicked during waiting</Hint>
+            <TBoolGrupItem>
+              <Name>non-LDD</Name>
+              <Symbol>nonLDDWatchDogEnabled</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>Used for non-LDD (Logical Device Driver) components, e.g. for S08 or ColdFire.</Hint>
               <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
               <EditLine>false</EditLine>
-              <DefaultValue/>
-              <CanDelete>false</CanDelete>
-              <IconPopup>false</IconPopup>
-              <SortStyle/>
-            </TInhrLinkItem>
+              <Description>Enabled</Description>
+              <Expanded>Yes</Expanded>
+              <DefaultValue>true</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TInhrLinkItem>
+                    <Name>Watchdog</Name>
+                    <Symbol>Watchdog</Symbol>
+                    <TypeSpec>Wait\Watchdog</TypeSpec>
+                    <Hint>If a watchdog shall be kicked during waiting</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <DefaultValue/>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <SortStyle/>
+                  </TInhrLinkItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>LDD</Name>
+              <Symbol>LDDWatchDogEnabled</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>Enabled for architectures with LDD (Logical Device Drivers), e.g. Kinetis.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Enabled</Description>
+              <Expanded>Yes</Expanded>
+              <DefaultValue>true</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TInhrLinkItem>
+                    <Name>Watchdog</Name>
+                    <Symbol>WatchdogLDD</Symbol>
+                    <TypeSpec>Wait\WatchDogLDD</TypeSpec>
+                    <Hint>Interface to Watchdog driver</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <DefaultValue/>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <SortStyle/>
+                  </TInhrLinkItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
           </GrupItem>
         </Children>
       </TBoolGrupItem>

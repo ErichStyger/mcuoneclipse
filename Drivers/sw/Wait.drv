@@ -575,7 +575,11 @@ void %'ModuleName'%.%Waitms(word ms)
   while(ms>0) {
     %'ModuleName'%.WaitCycles(msCycles);
   %if WatchdogEnabled='yes'
+    %if defined(Watchdog)
     %@Watchdog@'ModuleName'%.Clear();                            %>40/* kick the dog in order not to timeout */
+    %elif defined(WatchdogLDD)
+    (void)%@WatchdogLDD@'ModuleName'%.Clear(%@WatchdogLDD@'ModuleName'%.DeviceData);%>40/* kick the dog in order not to timeout */
+    %endif
   %endif
     ms--;
   }
