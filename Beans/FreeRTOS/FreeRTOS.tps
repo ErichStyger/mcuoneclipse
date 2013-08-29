@@ -82,17 +82,20 @@
     <Type>
       <Type>TEnumSpec</Type>
       <Name>typeStackOverflowMethod</Name>
-      <Items lines_count="2">
+      <Items lines_count="3">
         <Line>Method 1</Line>
         <Line>Method 2</Line>
+        <Line>none</Line>
       </Items>
-      <Hints lines_count="2">
+      <Hints lines_count="3">
         <Line>It is likely that the stack will reach its greatest (deepest) value after the kernel has swapped the task out of the Running state because this is when the stack will contain the task context. At this point the kernel can check that the processor stack pointer remains within the valid stack space. The stack overflow hook function is called if the stack pointer contain a value that is outside of the valid stack range.  This method is quick but not guaranteed to catch all stack overflows.</Line>
         <Line>When a task is first created its stack is filled with a known value. When swapping a task out of the Running state the kernel can check the last 16 bytes within the valid stack range to ensure that these known values have not been overwritten by the task or interrupt activity. The stack overflow hook function is called should any of these 16 bytes not remain at their initial value.  This method is less efficient than method one, but still fairly fast. It is very likely to catch stack overflows but is still not guaranteed to catch all overflows.</Line>
+        <Line>No Stack Overflow checking</Line>
       </Hints>
-      <Defines lines_count="2">
+      <Defines lines_count="3">
         <Line>1</Line>
         <Line>2</Line>
+        <Line>0</Line>
       </Defines>
     </Type>
     <Type>

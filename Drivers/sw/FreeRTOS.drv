@@ -2158,21 +2158,16 @@ void %@TickCntr@OnInterrupt(void)
   portTickCntr++;
 #endif
   #if configUSE_PREEMPTION == 1
-    /* A context switch might happen so save the context. */
-    portSAVE_CONTEXT();
+    portSAVE_CONTEXT(); /* A context switch might happen so save the context. */
     %@TickCntr@'ModuleName'%.Reset(); /* reset tick counter: need this for trace */
     if (xTaskIncrementTick()!=pdFALSE) {
-      taskYIELD();
+      vTaskSwitchContext(); /* a context switch is necessary */
     }
-    /* ... then see if the new tick value has necessitated a context switch. */
-    vTaskSwitchContext();
     /* Restore the context of a task - which may be a different task to that interrupted. */
     portRESTORE_CONTEXT(); /* includes PULH and RTI */
   #else
     %@TickCntr@'ModuleName'%.Reset(); /* reset tick counter: need this for trace */
-    if (xTaskIncrementTick()!=pdFALSE) {
-      taskYIELD();
-    }
+    (void)xTaskIncrementTick(); /* non-preemptive mode, no context switch */
     __asm("PULH");
     __asm("RTI");
   #endif
@@ -2188,21 +2183,16 @@ void %@TickCntr@OnInterrupt(void)
   portTickCntr++;
 #endif
   #if configUSE_PREEMPTION == 1
-    /* A context switch might happen so save the context. */
-    portSAVE_CONTEXT();
+    portSAVE_CONTEXT(); /* A context switch might happen so save the context. */
     %@TickCntr@'ModuleName'%.Reset(); /* reset tick counter: need this for trace */
     if (xTaskIncrementTick()!=pdFALSE) {
-      taskYIELD();
+      vTaskSwitchContext(); /* a context switch is necessary */
     }
-    /* ... then see if the new tick value has necessitated a context switch. */
-    vTaskSwitchContext();
     /* Restore the context of a task - which may be a different task to that interrupted. */
     portRESTORE_CONTEXT(); /* includes RTI */
   #else
     %@TickCntr@'ModuleName'%.Reset(); /* reset tick counter: need this for trace */
-    if (xTaskIncrementTick()!=pdFALSE) {
-      taskYIELD();
-    }
+    (void)xTaskIncrementTick(); /* non-preemptive mode, no context switch */
     __asm("RTI"); /* return from interrupt */
   #endif
 %elif (CPUfamily = "56800")
