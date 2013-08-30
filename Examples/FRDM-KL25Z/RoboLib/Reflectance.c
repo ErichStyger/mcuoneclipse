@@ -676,7 +676,7 @@ static portTASK_FUNCTION(ReflTask, pvParameters) {
     if (doMinMaxCalibration) {
       REF_CalibrateMinMax(SensorMin, SensorMax, SensorRaw);
 #if PL_HAS_BUZZER
-      BUZ_Beep(300, 50);
+      (void)BUZ_Beep(300, 50);
 #endif
     } else {
       REF_Measure();

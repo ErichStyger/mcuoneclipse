@@ -197,7 +197,7 @@ static void FollowObstacle(void) {
 #endif
 
 #if PL_HAS_LINE_SENSOR
-static void AutoCalibrateReflectance(const CLS1_StdIOType *io) {
+static uint8_t AutoCalibrateReflectance(const CLS1_StdIOType *io) {
   CLS1_SendStr((unsigned char*)"start auto-calibration...\r\n", io->stdOut);
   /* perform automatic calibration */
   APP_StateStartCalibrate(io);
@@ -212,6 +212,7 @@ static void AutoCalibrateReflectance(const CLS1_StdIOType *io) {
   TURN_Turn(TURN_STOP);
   APP_StateStopCalibrate(io);
   CLS1_SendStr((unsigned char*)"auto-calibration finished.\r\n", io->stdOut);
+  return ERR_OK;
 }
 #endif
 
@@ -237,7 +238,7 @@ static void CheckButton(void) {
         FRTOS1_vTaskDelay(BUTTON_CNT_MS/portTICK_RATE_MS);
         if ((timeTicks%(1000/BUTTON_CNT_MS))==0) {
 #if PL_HAS_BUZZER
-          BUZ_Beep(300, 200);
+          (void)BUZ_Beep(300, 200);
 #endif
         }
         timeTicks++;
@@ -311,7 +312,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
   }
 }
 
-static void APP_PrintHelp(const CLS1_StdIOType *io) {
+static uint8_t APP_PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"app", (unsigned char*)"Group of app commands\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows radio help or status\r\n", io->stdOut);
 #if PL_APP_FOLLOW_OBSTACLE
@@ -323,9 +324,10 @@ static void APP_PrintHelp(const CLS1_StdIOType *io) {
 #if PL_HAS_LINE_SENSOR
   CLS1_SendHelpStr((unsigned char*)"  autocalib", (unsigned char*)"Automatically calibrate line sensor\r\n", io->stdOut);
 #endif
+  return ERR_OK;
 }
 
-static void APP_PrintStatus(const CLS1_StdIOType *io) {
+static uint8_t APP_PrintStatus(const CLS1_StdIOType *io) {
   CLS1_SendStatusStr((unsigned char*)"app", (unsigned char*)"\r\n", io->stdOut);
 #if PL_APP_ACCEL_CONTROL
   CLS1_SendStatusStr((unsigned char*)"  mode", (unsigned char*)"ACCEL_CONTROL\r\n", io->stdOut);
@@ -339,21 +341,25 @@ static void APP_PrintStatus(const CLS1_StdIOType *io) {
 #if PL_APP_FOLLOW_OBSTACLE
   CLS1_SendStatusStr((unsigned char*)"  follow", followObstacle?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
 #endif
+#if PL_HAS_USER_BUTTON
+  CLS1_SendStatusStr((unsigned char*)"  button", SW1_GetVal()!=0?(unsigned char*)"pressed\r\n":(unsigned char*)"released\r\n", io->stdOut);
+#endif
+  return ERR_OK;
 }
 
 uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
   uint8_t res = ERR_OK;
 
   if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, (char*)"app help")==0) {
-    APP_PrintHelp(io);
     *handled = TRUE;
+    return APP_PrintHelp(io);
   } else if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_STATUS)==0 || UTIL1_strcmp((char*)cmd, (char*)"app status")==0) {
-    APP_PrintStatus(io);
     *handled = TRUE;
+    return APP_PrintStatus(io);
 #if PL_HAS_LINE_SENSOR
   } else if (UTIL1_strcmp((char*)cmd, (char*)"app autocalib")==0) {
-    AutoCalibrateReflectance(io);
     *handled = TRUE;
+    return AutoCalibrateReflectance(io);
 #endif
 #if PL_APP_AVOID_OBSTACLE
   } else if (UTIL1_strcmp((char*)cmd, (char*)"app avoid on")==0) {

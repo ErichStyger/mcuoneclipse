@@ -102,6 +102,9 @@ static uint8_t PWMRSetRatio16(uint16_t ratio) {
 }
 
 static void DirLPutVal(bool val) {
+#ifdef PL_INVERT_LEFT_MOTOR_DIRECTION
+  val = !val;
+#endif
   DIRL_PutVal(val);
 #if PL_HAS_MOTOR_INAB
   DIRLB_PutVal(!val);
@@ -109,6 +112,9 @@ static void DirLPutVal(bool val) {
 }
 
 static void DirRPutVal(bool val) {
+#ifdef PL_INVERT_RIGHT_MOTOR_DIRECTION
+  val = !val;
+#endif
   DIRR_PutVal(val);
 #if PL_HAS_MOTOR_INAB
   DIRRB_PutVal(!val);

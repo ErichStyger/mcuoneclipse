@@ -295,7 +295,7 @@ static void StateMachine(void) {
         uint8_t i;
         
         for(i=0;i<4;i++) {
-          BUZ_Beep(300, 100);
+          (void)BUZ_Beep(300, 100);
           WAIT1_WaitOSms(500);
         }
       }

@@ -15,6 +15,7 @@
 #define PL_IS_ROUND_ROBOT       (defined(__ROUND_ROBOT__)) /* if we use the round Pololu chassis */
 #define PL_IS_TRACK_ROBOT       (defined(__TRACK_ROBOT__)) /* if we use the the Pololu track chassis */
 #define PL_IS_INTRO_ZUMO_ROBOT  (defined(__INTRO_ZUMO_ROBOT__)) /* if we use INTRO ZumoBot chassis */
+#define PL_IS_INTRO_ZUMO_ROBOT2 (defined(__INTRO_ZUMO_ROBOT2__)) /* if we use INTRO ZumoBot chassis */
 
 /* hardware capabilities */
 #define PL_HAS_TSS                    0  /* if using TSS (Touch) library */
@@ -23,8 +24,9 @@
 #define PL_HAS_MOTOR_CURRENT_SENSE    (0 && PL_HAS_MOTOR)  /* if we have motor current sensing functionality */
 #define PL_HAS_MOTOR_INAB             (1 && PL_IS_TRACK_ROBOT && PL_HAS_MOTOR)  /* if we have INa and INb (VNH5019) */
 #define PL_HAS_QUADRATURE             (1 && (PL_IS_ROUND_ROBOT || PL_IS_INTRO_ZUMO_ROBOT))  /* if we have quadrature encoders */
-#define PL_HAS_USER_BUTTON            (PL_IS_INTRO_ZUMO_ROBOT || PL_IS_ZUMO_ROBOT || PL_IS_ROUND_ROBOT || PL_IS_TRACK_ROBOT) /* if we have a user push button */
-#define PL_HAS_BUZZER                 PL_IS_ZUMO_ROBOT   /* if we have a buzzer */
+#define PL_HAS_USER_BUTTON            (PL_IS_INTRO_ZUMO_ROBOT2 || PL_IS_INTRO_ZUMO_ROBOT || PL_IS_ZUMO_ROBOT || PL_IS_ROUND_ROBOT || PL_IS_TRACK_ROBOT) /* if we have a user push button */
+#define PL_HAS_USER_LED               (PL_IS_INTRO_ZUMO_ROBOT2)
+#define PL_HAS_BUZZER                 (PL_IS_ZUMO_ROBOT || PL_IS_INTRO_ZUMO_ROBOT2)  /* if we have a buzzer */
 #define PL_HAS_MAGNETOMETER           PL_IS_ZUMO_ROBOT   /* if we have a magnetometer */
 #define PL_HAS_BLUETOOTH              (1 && (PL_IS_ROUND_ROBOT || PL_IS_INTRO_ZUMO_ROBOT))  /* if we have a Bluetooth module */
 #define PL_HAS_ULTRASONIC             (PL_IS_TRACK_ROBOT || PL_IS_INTRO_ZUMO_ROBOT)  /* if we have a Ultrasonic ranging module */
@@ -33,7 +35,7 @@
 #define PL_HAS_DISTANCE_SENSOR        (1 && PL_IS_INTRO_ZUMO_ROBOT)
 #define PL_HAS_ACCEL_SENSOR           (1 && PL_IS_INTRO_ZUMO_ROBOT)
 
-#define PL_HAS_RADIO                  (1 && (PL_IS_TRACK_ROBOT || PL_IS_INTRO_ZUMO_ROBOT))
+#define PL_HAS_RADIO                  (0 && (PL_IS_TRACK_ROBOT || PL_IS_INTRO_ZUMO_ROBOT))
 #define PL_HAS_REMOTE                 (1 && PL_HAS_RADIO) /* if we have remote (IEEE802.15.4) support */
 #define PL_HAS_PID                    (1) /* if PID is implemented */
 #define PL_HAS_LINE_PID               (1 && PL_HAS_PID && PL_HAS_LINE_SENSOR) /* if Line PID is implemented */

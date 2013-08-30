@@ -61,6 +61,12 @@
 #if PL_HAS_ACCEL_SENSOR
   #include "MMA1.h"
 #endif
+#if PL_HAS_USER_LED
+  #include "USER_LED.h"
+#endif
+#if PL_HAS_BUZZER
+  #include "Buzzer.h"
+#endif
 
 #if PL_HAS_RADIO
 static void Radio_StdIOReadChar(byte *ch) {
@@ -185,6 +191,14 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #endif
   APP_ParseCommand,
+#if PL_HAS_USER_LED
+#if USER_LED_PARSE_COMMAND_ENABLED
+  USER_LED_ParseCommand,
+#endif
+#endif
+#if PL_HAS_BUZZER
+  BUZ_ParseCommand,
+#endif
   NULL /* Sentinel */
 };
 
