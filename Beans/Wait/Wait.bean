@@ -4,7 +4,7 @@
     <Name>Wait</Name>
     <Description>Wait</Description>
     <Author>Erich Styger</Author>
-    <Version>01.063</Version>
+    <Version>01.064</Version>
     <Icon>wait</Icon>
     <TypesFiles>PE,Wait\Wait</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -240,7 +240,7 @@
         <Name>Wait10Cycles</Name>
         <Symbol>Wait10Cycles</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Wait for approximately 10 CPU cycles.</Hint>
+        <Hint>Wait for 10 CPU cycles.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <ReadOnly>true</ReadOnly>
         <EditLine>false</EditLine>
@@ -298,7 +298,7 @@
         <Name>WaitCycles</Name>
         <Symbol>WaitCycles</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Wait for 100 CPU cycles.</Hint>
+        <Hint>Wait for a specified number of CPU cycles (16bit data type).</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <ReadOnly>true</ReadOnly>
         <EditLine>false</EditLine>
@@ -325,6 +325,41 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>void #M#_#C#(word cycles)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>WaitLongCycles</Name>
+        <Symbol>WaitLongCycles</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Wait for a specified number of CPU cycles (32bit data type).</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <ReadOnly>true</ReadOnly>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>true</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>cycles</ParName>
+          <ParType>32bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The number of cycles to wait.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(dword cycles)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

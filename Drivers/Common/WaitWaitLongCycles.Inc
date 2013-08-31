@@ -3,10 +3,11 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (Wait10Cycles)
+%include Common\GeneralMethod.inc (WaitLongCycles)
 %;**     Description :
-%;**         Wait for 10 CPU cycles.
-%include Common\GeneralParametersNone.inc
+%;**         Wait for a specified number of CPU cycles (32bit data type).
+%include Common\GeneralParameters.inc(27)
+%;**         cycles%Parcycles %>27 - The number of cycles to wait.
 %include Common\GeneralReturnNothing.inc
 %include Common\GeneralDamage.inc
 %;** ===================================================================

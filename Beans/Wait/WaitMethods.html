@@ -208,7 +208,7 @@ LI.EXP {
 <!---USEREND DON'T CHANGE THIS LINE-->
 <li><a name="Wait10Cycles">
 <b>Wait10Cycles</b></a>
- - Wait for approximately 10 CPU cycles.
+ - Wait for 10 CPU cycles.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
 <br /><i>ANSIC prototype:</i> void Wait10Cycles(void)<br />
@@ -226,12 +226,22 @@ LI.EXP {
 </li>
 <li><a name="WaitCycles">
 <b>WaitCycles</b></a>
- - Wait for 100 CPU cycles.
+ - Wait for a specified number of CPU cycles (16bit data type).
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
 <br /><i>ANSIC prototype:</i> void WaitCycles(word cycles)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>cycles:word</i> - The number of cycles to wait.</li>
+</ul><br />
+</li>
+<li><a name="WaitLongCycles">
+<b>WaitLongCycles</b></a>
+ - Wait for a specified number of CPU cycles (32bit data type).
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void WaitLongCycles(dword cycles)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>cycles:dword</i> - The number of cycles to wait.</li>
 </ul><br />
 </li>
 <li><a name="Waitms">
