@@ -38,7 +38,7 @@
 #include "BitIoLdd5.h"
 #include "DIRL.h"
 #include "BitIoLdd4.h"
-#include "BUZ.h"
+#include "BUZ1.h"
 #include "PwmLdd3.h"
 #include "SW1.h"
 #include "BitIoLdd6.h"
@@ -148,6 +148,23 @@ void EVNT1_AppHandleEvent(byte event);
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **         event           - Event (event number) to be processed.
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void FRTOS1_vOnPreSleepProcessing(portTickType expectedIdleTicks);
+/*
+** ===================================================================
+**     Event       :  FRTOS1_vOnPreSleepProcessing (module Events)
+**
+**     Component   :  FRTOS1 [FreeRTOS]
+**     Description :
+**         Used in tickless idle mode only, but required in this mode.
+**         Hook for the application to enter low power mode.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
 **     Returns     : Nothing
 ** ===================================================================
 */

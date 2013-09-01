@@ -34,7 +34,7 @@
 #include "BitIoLdd5.h"
 #include "DIRL.h"
 #include "BitIoLdd4.h"
-#include "BUZ.h"
+#include "BUZ1.h"
 #include "PwmLdd3.h"
 #include "SW1.h"
 #include "BitIoLdd6.h"
