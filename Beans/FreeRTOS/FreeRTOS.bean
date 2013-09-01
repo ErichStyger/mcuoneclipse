@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.300</Version>
+    <Version>01.302</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -461,15 +461,15 @@ Mapping for number to vector for the MCF52259:\n
                 </GrupItem>
                 <GrupItem>
                   <TIntgItem>
-                    <Name>Lowest Interrupt Priority</Name>
-                    <Symbol>ARMLowestInterrutpPriority</Symbol>
-                    <Hint>Lowest possible interrupt priority as defined by the CPU, with zero the *highest* priority. This property is informal only.</Hint>
+                    <Name>Max SysCall Interrupt Priority</Name>
+                    <Symbol>KinetisLibraryMaxInterruptPriority</Symbol>
+                    <Hint>Used for configMAX_SYSCALL_INTERRUPT_PRIORITY. \n
+The highest interrupt priority that can be used by any interrupt service routine that makes calls to interrupt safe FreeRTOS API functions.  DO NOT CALL INTERRUPT SAFE FREERTOS API FUNCTIONS FROM ANY INTERRUPT THAT HAS A HIGHER PRIORITY THAN THIS! (higher priorities are lower numeric values). configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero! See  http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. Note that 0 is the highest priority for Kinetis.</Hint>
                     <ItemLevel>BASIC</ItemLevel>
-                    <ReadOnly>true</ReadOnly>
                     <EditLine>true</EditLine>
-                    <DefaultValue>0</DefaultValue>
-                    <MinValue>0</MinValue>
-                    <MaxValue>-1</MaxValue>
+                    <DefaultValue>5</DefaultValue>
+                    <MinValue>1</MinValue>
+                    <MaxValue>15</MaxValue>
                     <Bases>DEC</Bases>
                     <DefaultBase>DEC</DefaultBase>
                     <ExtraHintDisabled>false</ExtraHintDisabled>
@@ -479,7 +479,7 @@ Mapping for number to vector for the MCF52259:\n
                 </GrupItem>
                 <GrupItem>
                   <TIntgItem>
-                    <Name>Library Lowest Interrupt Priority</Name>
+                    <Name>RTOS Interrupt Priority</Name>
                     <Symbol>KinetisLibraryLowestInterruptPriority</Symbol>
                     <Hint>Used for configLIBRARY_LOWEST_INTERRUPT_PRIORITY. The lowest interrupt priority that can be used in a call to a "set priority" function. This priority is used for the kernel port itself too. Note that 0 is the highest priority for ARM/Kinetis.</Hint>
                     <ItemLevel>BASIC</ItemLevel>
@@ -496,15 +496,15 @@ Mapping for number to vector for the MCF52259:\n
                 </GrupItem>
                 <GrupItem>
                   <TIntgItem>
-                    <Name>Max SysCall Interrupt Priority</Name>
-                    <Symbol>KinetisLibraryMaxInterruptPriority</Symbol>
-                    <Hint>Used for configMAX_SYSCALL_INTERRUPT_PRIORITY. \n
-The highest interrupt priority that can be used by any interrupt service routine that makes calls to interrupt safe FreeRTOS API functions.  DO NOT CALL INTERRUPT SAFE FREERTOS API FUNCTIONS FROM ANY INTERRUPT THAT HAS A HIGHER PRIORITY THAN THIS! (higher priorities are lower numeric values). configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero! See  http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. Note that 0 is the highest priority for Kinetis.</Hint>
+                    <Name>Lowest Interrupt Priority</Name>
+                    <Symbol>ARMLowestInterrutpPriority</Symbol>
+                    <Hint>Lowest possible interrupt priority as defined by the CPU, with zero the *highest* priority. This property is informal only.</Hint>
                     <ItemLevel>BASIC</ItemLevel>
+                    <ReadOnly>true</ReadOnly>
                     <EditLine>true</EditLine>
-                    <DefaultValue>5</DefaultValue>
-                    <MinValue>1</MinValue>
-                    <MaxValue>15</MaxValue>
+                    <DefaultValue>0</DefaultValue>
+                    <MinValue>0</MinValue>
+                    <MaxValue>-1</MaxValue>
                     <Bases>DEC</Bases>
                     <DefaultBase>DEC</DefaultBase>
                     <ExtraHintDisabled>false</ExtraHintDisabled>

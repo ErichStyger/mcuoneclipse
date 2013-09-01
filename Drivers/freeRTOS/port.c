@@ -84,7 +84,6 @@
 #include "task.h"
 
 /* --------------------------------------------------- */
-/* Tickless IDLE support */
 /* macros dealing with tick counter */
 %if (CPUfamily = "Kinetis")
 #define ENABLE_TICK_COUNTER()       portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT
@@ -120,7 +119,22 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
 %endif
 
 #if configUSE_TICKLESS_IDLE == 1
-  volatile uint8_t portTickCntr; /* used to find out if we woke up by the tick interrupt */
+%if defined(useARMSysTickTimer) & useARMSysTickTimer='yes'
+  #if 1
+%else
+  #if 0
+%endif
+    /* using directly SysTick Timer */
+    #define TICK_INTERRUPT_HAS_FIRED()   ((portNVIC_SYSTICK_CTRL_REG&portNVIC_SYSTICK_COUNT_FLAG_BIT)!=0)  /* returns TRUE if tick interrupt had fired */
+    #define TICK_INTERRUPT_FLAG_RESET()  /* not needed */
+    #define TICK_INTERRUPT_FLAG_SET()    /* not needed */
+  #else 
+    /* using global variable to find out if interrupt has fired */
+    volatile uint8_t portTickCntr; /* used to find out if we woke up by the tick interrupt */
+    #define TICK_INTERRUPT_HAS_FIRED()   (portTickCntr!=0)  /* returns TRUE if tick interrupt had fired */
+    #define TICK_INTERRUPT_FLAG_RESET()  portTickCntr=0
+    #define TICK_INTERRUPT_FLAG_SET()    portTickCntr=1
+  #endif
 #endif /* configUSE_TICKLESS_IDLE == 1 */
 
 /*
@@ -191,7 +205,6 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
 #define portNVIC_SYSPRI3                    ((volatile unsigned long*)0xe000ed20) /* system handler priority register 3 (SHPR3), used for SysTick and PendSV priority, http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0662b/CIAGECDD.html */
 #define portNVIC_SYSTICK_PRI                (((unsigned long)configKERNEL_INTERRUPT_PRIORITY)<<24) /* priority of SysTick interrupt (in portNVIC_SYSPRI3) */
 #define portNVIC_PENDSV_PRI                 (((unsigned long)configKERNEL_INTERRUPT_PRIORITY)<<16) /* priority of PendableService interrupt (in portNVIC_SYSPRI3) */
-
 
 /* Constants required to set up the initial stack. */
 #define portINITIAL_XPSR         (0x01000000)
@@ -586,7 +599,7 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
     /* Restart tick timer. */
     ENABLE_TICK_COUNTER();
     
-    portTickCntr = 0; /* set tick counter to zero so we know if it has fired */
+    TICK_INTERRUPT_FLAG_RESET(); /* reset flag so we know later if it has fired */
 
     /* Sleep until something happens. configPRE_SLEEP_PROCESSING() can
      * set its parameter to 0 to indicate that its implementation contains
@@ -625,7 +638,7 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
     /* Re-enable interrupts */
     portENABLE_INTERRUPTS();
 
-    if (portTickCntr!=0) {
+    if (TICK_INTERRUPT_HAS_FIRED()) {
       /* The tick interrupt has already executed, and the timer
        * count reloaded with the modulo/match value.
        * Reset the counter register with whatever remains of
@@ -633,9 +646,9 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
        */
       GET_TICK_CURRENT_VAL(&tmp);
 #if COUNTS_UP
-      SET_TICK_DURATION(ulTimerCountsForOneTick-1UL-tmp);
+      SET_TICK_DURATION((ulTimerCountsForOneTick-1UL)-tmp);
 #else
-      SET_TICK_DURATION(ulTimerCountsForOneTick-1UL-(ulReloadValue-tmp));
+      SET_TICK_DURATION((ulTimerCountsForOneTick-1UL)-(ulReloadValue-tmp));
 #endif
       
       /* The tick interrupt handler will already have pended the tick
@@ -657,7 +670,7 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
       ulCompleteTickPeriods = ulCompletedSysTickIncrements/ulTimerCountsForOneTick;
 
       /* The reload value is set to whatever fraction of a single tick period remains. */
-      SET_TICK_DURATION(((ulCompleteTickPeriods+1)*ulTimerCountsForOneTick )-ulCompletedSysTickIncrements);
+      SET_TICK_DURATION(((ulCompleteTickPeriods+1)*ulTimerCountsForOneTick)-ulCompletedSysTickIncrements);
     }
 
     /* Restart SysTick so it runs from portNVIC_SYSTICK_LOAD_REG, 
@@ -988,7 +1001,7 @@ void vOnCounterRestart(void) {
                                               pop {r4,pc}
   */
 #if configUSE_TICKLESS_IDLE == 1
-  portTickCntr++;
+  TICK_INTERRUPT_FLAG_SET();
 #endif
   portSET_INTERRUPT_MASK();   /* disable interrupts */
   if (xTaskIncrementTick()!=pdFALSE) { /* increment tick count */
@@ -1096,7 +1109,7 @@ PE_ISR(RTOSTICKLDD1_Interrupt)
 #endif
 %endif -% useARMSysTickTimer='no'
 #if configUSE_TICKLESS_IDLE == 1
-  portTickCntr++;
+  TICK_INTERRUPT_FLAG_SET();
 #endif
   portSET_INTERRUPT_MASK();   /* disable interrupts */
   if (xTaskIncrementTick()!=pdFALSE) { /* increment tick count */

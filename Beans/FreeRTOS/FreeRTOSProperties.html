@@ -395,17 +395,17 @@ There are 3 options:<br />
     <b>Floating Point Support</b></a> - If enabled, the port is supporting the different stack frame created by the Cortex M4F
     </li>
     <li>
-    <a name="ARMLowestInterrutpPriority">
-    <b>Lowest Interrupt Priority</b></a> - Lowest possible interrupt priority as defined by the CPU, with zero the *highest* priority. This property is informal only.
-    </li>
-    <li>
-    <a name="KinetisLibraryLowestInterruptPriority">
-    <b>Library Lowest Interrupt Priority</b></a> - Used for configLIBRARY_LOWEST_INTERRUPT_PRIORITY. The lowest interrupt priority that can be used in a call to a &quot;set priority&quot; function. This priority is used for the kernel port itself too. Note that 0 is the highest priority for ARM/Kinetis.
-    </li>
-    <li>
     <a name="KinetisLibraryMaxInterruptPriority">
     <b>Max SysCall Interrupt Priority</b></a> - Used for configMAX_SYSCALL_INTERRUPT_PRIORITY. <br />
 The highest interrupt priority that can be used by any interrupt service routine that makes calls to interrupt safe FreeRTOS API functions.  DO NOT CALL INTERRUPT SAFE FREERTOS API FUNCTIONS FROM ANY INTERRUPT THAT HAS A HIGHER PRIORITY THAN THIS! (higher priorities are lower numeric values). configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero! See  http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. Note that 0 is the highest priority for Kinetis.
+    </li>
+    <li>
+    <a name="KinetisLibraryLowestInterruptPriority">
+    <b>RTOS Interrupt Priority</b></a> - Used for configLIBRARY_LOWEST_INTERRUPT_PRIORITY. The lowest interrupt priority that can be used in a call to a &quot;set priority&quot; function. This priority is used for the kernel port itself too. Note that 0 is the highest priority for ARM/Kinetis.
+    </li>
+    <li>
+    <a name="ARMLowestInterrutpPriority">
+    <b>Lowest Interrupt Priority</b></a> - Lowest possible interrupt priority as defined by the CPU, with zero the *highest* priority. This property is informal only.
     </li>
     <li>
     <a name="CompilerOptimizationLevel">

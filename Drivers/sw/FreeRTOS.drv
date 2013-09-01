@@ -2136,7 +2136,7 @@ void %@TickCntr@OnInterrupt(void)
     JSR ulPortSetIPL
   }
 #if configUSE_TICKLESS_IDLE == 1
-  portTickCntr++;
+  portTickCntr=1; /* set flag so we know that interrupt has fired */
 #endif
   /* now generate interrupt exit code */
   asm {
@@ -2155,7 +2155,7 @@ void %@TickCntr@OnInterrupt(void)
 #endif
   }
 #if configUSE_TICKLESS_IDLE == 1
-  portTickCntr++;
+  portTickCntr=1; /* set flag so we know that interrupt has fired */
 #endif
   #if configUSE_PREEMPTION == 1
     portSAVE_CONTEXT(); /* A context switch might happen so save the context. */
@@ -2180,7 +2180,7 @@ void %@TickCntr@OnInterrupt(void)
 #endif
   }
 #if configUSE_TICKLESS_IDLE == 1
-  portTickCntr++;
+  portTickCntr=1; /* set flag so we know that interrupt has fired */
 #endif
   #if configUSE_PREEMPTION == 1
     portSAVE_CONTEXT(); /* A context switch might happen so save the context. */
@@ -2226,7 +2226,7 @@ void %@TickCntr@OnInterrupt(void)
   /* If we are using the pre-emptive scheduler then also request a
      context switch as incrementing the tick could have unblocked a task. */
 #if configUSE_TICKLESS_IDLE == 1
-  portTickCntr++;
+  portTickCntr=1; /* set flag so we know that interrupt has fired */
 #endif
   /* now generate interrupt exit code */
 //  asm {
