@@ -121,25 +121,29 @@
 %else
 #define configUSE_MALLOC_FAILED_HOOK                             %>50 0
 %endif
-#define configCPU_CLOCK_HZ                                       %>50 CPU_BUS_CLK_HZ /* CPU bus clock */
+#define configCPU_CLOCK_HZ                                       %>50 CPU_CORE_CLK_HZ /* CPU core clock */
+#define configBUS_CLOCK_HZ                                       %>50 CPU_BUS_CLK_HZ /* CPU bus clock */
 #define configTICK_RATE_HZ                                       %>50 ((portTickType)%TickRateHz) /* frequency of tick interrupt */
+%if defined(useARMSysTickUseCoreClock) & useARMSysTickUseCoreClock='no'
+#define configSYSTICK_USE_CORE_CLOCK                             %>50 0 /* System Tick is using external reference clock clock  */
+%else
+#define configSYSTICK_USE_CORE_CLOCK                             %>50 1 /* System Tick is using core clock  */
+%endif
+%if defined(useARMSysTickUseCoreClock) & useARMSysTickUseCoreClock='no'
+#define configSYSTICK_CLOCK_DIVIDER                              %>50 16 /* Kinetis L is using fixed divider by 16 */
+%else
+#define configSYSTICK_CLOCK_DIVIDER                              %>50 1 /* no divider */
+%endif
 %if defined(TickTimerLDD)
 #define configSYSTICK_CLOCK_HZ                                   %>50 %@TickTimerLDD@'ModuleName'%.CNT_INP_FREQ_U_0 /* frequency of system tick counter */
 %elif defined(useARMSysTickTimer) & useARMSysTickTimer='yes'
-#define configSYSTICK_CLOCK_HZ                                   %>50 configCPU_CLOCK_HZ /* frequency of system tick counter */
+#define configSYSTICK_CLOCK_HZ                                   %>50 ((CPU_CORE_CLK_HZ)/configSYSTICK_CLOCK_DIVIDER) /* frequency of system tick counter */
 %elif defined(TickCntr)
 #define configSYSTICK_CLOCK_HZ                                   %>50 %@TickCntr@'ModuleName'%.COUNTER_INPUT_CLOCK_HZ /* frequency of system tick counter */
+%else
+#define configSYSTICK_CLOCK_HZ                                   %>50 CPU_BUS_CLK_HZ /* frequency of system tick counter */
 %endif
 #define configMINIMAL_STACK_SIZE                                 %>50 ((unsigned portSHORT)%MinimalStackSize)
-%if MemoryScheme = "Scheme1"
-#define configHEAP_IMPLEMENTATION                                %>50 1 /* either 1, 2, 3 or 4 */
-%elif MemoryScheme = "Scheme2"
-#define configHEAP_IMPLEMENTATION                                %>50 2 /* either 1, 2, 3 or 4 */
-%elif MemoryScheme = "Scheme3"
-#define configHEAP_IMPLEMENTATION                                %>50 3 /* either 1, 2, 3 or 4 */
-%elif MemoryScheme = "Scheme4"
-#define configHEAP_IMPLEMENTATION                                %>50 4 /* either 1, 2, 3 or 4 */
-%endif
 
 #define configTOTAL_HEAP_SIZE                                    %>50 ((size_t)(%TotalHeapSize))
 #define configMAX_TASK_NAME_LEN                                  %>50 %TaskNameLength
@@ -314,13 +318,13 @@
 
 /* Memory Scheme Identification */
 %if MemoryScheme = "Scheme1"
-#define FRTOS_MEMORY_SCHEME                 %>50 1 /* memory scheme 1 */
+#define FRTOS_MEMORY_SCHEME                 %>50 1 /* either 1, 2, 3 or 4 */
 %elif MemoryScheme = "Scheme2"
-#define FRTOS_MEMORY_SCHEME                 %>50 2 /* memory scheme 2 */
+#define FRTOS_MEMORY_SCHEME                 %>50 2 /* either 1, 2, 3 or 4 */
 %elif MemoryScheme = "Scheme3"
-#define FRTOS_MEMORY_SCHEME                 %>50 3 /* memory scheme 3 */
+#define FRTOS_MEMORY_SCHEME                 %>50 3 /* either 1, 2, 3 or 4 */
 %elif MemoryScheme = "Scheme4"
-#define FRTOS_MEMORY_SCHEME                 %>50 4 /* memory scheme 4 */
+#define FRTOS_MEMORY_SCHEME                 %>50 4 /* either 1, 2, 3 or 4 */
 %endif
 %if CommandInterpreterEnabled='yes'
 %- --------------------------------------------------------------------

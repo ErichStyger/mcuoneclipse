@@ -85,22 +85,19 @@
 
 /* --------------------------------------------------- */
 /* Tickless IDLE support */
-#ifndef configSYSTICK_CLOCK_HZ
-  #define configSYSTICK_CLOCK_HZ configCPU_CLOCK_HZ
-#endif
 /* macros dealing with tick counter */
 %if (CPUfamily = "Kinetis")
 #define ENABLE_TICK_COUNTER()       portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT
 #define DISABLE_TICK_COUNTER()      portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT
-#define RESET_TICK_COUNTER()        portNVIC_SYSTICK_CURRENT_VALUE_REG = portNVIC_SYSTICK_LOAD_REG
+#define RESET_TICK_COUNTER_VAL()    portNVIC_SYSTICK_CURRENT_VALUE_REG = 0 /*portNVIC_SYSTICK_LOAD_REG*/
 %elif defined(TickCntr)
 #define ENABLE_TICK_COUNTER()       (void)%@TickCntr@'ModuleName'%.Enable()
 #define DISABLE_TICK_COUNTER()      (void)%@TickCntr@'ModuleName'%.Disable()
-#define RESET_TICK_COUNTER()        (void)%@TickCntr@'ModuleName'%.Reset()
+#define RESET_TICK_COUNTER_VAL()    (void)%@TickCntr@'ModuleName'%.Reset()
 %elif defined(TickTimerLDD)
 #define ENABLE_TICK_COUNTER()       (void)%@TickTimerLDD@'ModuleName'%.Enable(RTOS_TickDevice)
 #define DISABLE_TICK_COUNTER()      (void)%@TickTimerLDD@'ModuleName'%.Disable(RTOS_TickDevice)
-#define RESET_TICK_COUNTER()        portNVIC_SYSTICK_CURRENT_VALUE_REG = portNVIC_SYSTICK_LOAD_REG
+#define RESET_TICK_COUNTER_VAL()    portNVIC_SYSTICK_CURRENT_VALUE_REG = 0 /*portNVIC_SYSTICK_LOAD_REG*/
 %endif
 
 %if (CPUfamily = "Kinetis")
@@ -163,25 +160,38 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
 %--------------------------------------------------------------
 %if (CPUfamily = "Kinetis")
 
-/* Constants required to manipulate the core.  Registers first... */
-#define portNVIC_SYSTICK_CTRL_REG           (*((volatile unsigned long *)0xe000e010))
-#define portNVIC_SYSTICK_LOAD_REG           (*((volatile unsigned long *)0xe000e014))
-#define portNVIC_SYSTICK_CURRENT_VALUE_REG  (*((volatile unsigned long *)0xe000e018))
-#define portNVIC_SYSPRI2_REG                (*((volatile unsigned long *)0xe000ed20))
+/* Constants required to manipulate the core.
+ * SysTick register: http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0662b/CIAGECDD.html
+ * Registers first... 
+ */
+#define portNVIC_SYSTICK_CTRL_REG           (*((volatile unsigned long *)0xe000e010)) /* SYST_CSR, SysTick Control and Status Register */
+#define portNVIC_SYSTICK_LOAD_REG           (*((volatile unsigned long *)0xe000e014)) /* SYST_RVR, SysTick reload value register */
+#define portNVIC_SYSTICK_CURRENT_VALUE_REG  (*((volatile unsigned long *)0xe000e018)) /* SYST_CVR, SysTick current value register */
+#define portNVIC_SYSTICK_CALIB_VALUE_REG    (*((volatile unsigned long *)0xe000e01C)) /* SYST_CALIB, SysTick calibration value register */
 /* ...then bits in the registers. */
-#define portNVIC_SYSTICK_CLK_BIT            (1UL<<2UL)
-#define portNVIC_SYSTICK_INT_BIT            (1UL<<1UL)
-#define portNVIC_SYSTICK_ENABLE_BIT         (1UL<<0UL)
-#define portNVIC_SYSTICK_COUNT_FLAG_BIT     (1UL<<16UL)
+#define portNVIC_SYSTICK_COUNT_FLAG_BIT     (1UL<<16UL) /* returns 1 if timer counted to 0 since the last read of the register */
+#if configSYSTICK_USE_CORE_CLOCK
+  #define portNVIC_SYSTICK_CLK_BIT          (1UL<<2UL) /* clock source. 1: core clock, 0: external reference clock */
+#else
+  #define portNVIC_SYSTICK_CLK_BIT          (0UL<<2UL) /* clock source. 1: core clock, 0: external reference clock */
+#endif
+#define portNVIC_SYSTICK_INT_BIT            (1UL<<1UL)  /* SysTick interrupt enable bit */
+#define portNVIC_SYSTICK_ENABLE_BIT         (1UL<<0UL)  /* SysTick enable bit */
 
-/* Constants required to manipulate the NVIC. */
+/* Constants required to manipulate the NVIC: */
 #define portNVIC_INT_CTRL                   ((volatile unsigned long*)0xe000ed04) /* interrupt control and state register (ICSR) */
-#define portNVIC_SYSPRI3                    ((volatile unsigned long*)0xe000ed20) /* system handler priority register 3 (SHPR3), used for SysTick and PendSV priority */
 #define portNVIC_PENDSVSET_BIT              (1UL<<28UL) /* bit 28 in portNVIC_INT_CTRL (PENDSVSET), see http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0552a/Cihfaaha.html */
-#define portNVIC_PENDSVCLEAR_BIT            (1UL<<27UL)
-#define portNVIC_PEND_SYSTICK_CLEAR_BIT     (1UL<<25UL)
-#define portNVIC_PENDSV_PRI                 (((unsigned long)configKERNEL_INTERRUPT_PRIORITY)<<16) /* priority of PendableService interrupt */
-#define portNVIC_SYSTICK_PRI                (((unsigned long)configKERNEL_INTERRUPT_PRIORITY)<<24) /* priority of SysTick interrupt */
+#define portNVIC_PENDSVCLEAR_BIT            (1UL<<27UL) /* bit 27 in portNVIC_INT_CTRL (PENDSVCLR) */
+#define portNVIC_PEND_SYSTICK_SET_BIT       (1UL<<26UL) /* bit 26 in portNVIC_INT_CTRL (PENDSTSET) */
+#define portNVIC_PEND_SYSTICK_CLEAR_BIT     (1UL<<25UL) /* bit 25 in portNVIC_INT_CTRL (PENDSTCLR) */
+
+#define portNVIC_SYSPRI2                    ((volatile unsigned long*)0xe000ed1c) /* system handler priority register 2 (SHPR2), used for SVCall priority, http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0662b/CIAGECDD.html */
+#define portNVIC_SVCALL_PRI                 (((unsigned long)configKERNEL_INTERRUPT_PRIORITY)<<24) /* priority of SVCall interrupt (in portNVIC_SYSPRI2) */
+
+#define portNVIC_SYSPRI3                    ((volatile unsigned long*)0xe000ed20) /* system handler priority register 3 (SHPR3), used for SysTick and PendSV priority, http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0662b/CIAGECDD.html */
+#define portNVIC_SYSTICK_PRI                (((unsigned long)configKERNEL_INTERRUPT_PRIORITY)<<24) /* priority of SysTick interrupt (in portNVIC_SYSPRI3) */
+#define portNVIC_PENDSV_PRI                 (((unsigned long)configKERNEL_INTERRUPT_PRIORITY)<<16) /* priority of PendableService interrupt (in portNVIC_SYSPRI3) */
+
 
 /* Constants required to set up the initial stack. */
 #define portINITIAL_XPSR         (0x01000000)
@@ -222,17 +232,17 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_COD
   unsigned portLONG ulOriginalA5;
 
   __asm{ MOVE.L A5, ulOriginalA5 };
-  *pxTopOfStack = (portSTACK_TYPE) 0xDEADBEEF;
+  *pxTopOfStack = (portSTACK_TYPE)0xDEADBEEF;
   pxTopOfStack--;
 
   /* Exception stack frame starts with the return address. */
-  *pxTopOfStack = (portSTACK_TYPE) pxCode;
+  *pxTopOfStack = (portSTACK_TYPE)pxCode;
   pxTopOfStack--;
 
   *pxTopOfStack = (portINITIAL_FORMAT_VECTOR<<16UL) | ( portINITIAL_STATUS_REGISTER );
   pxTopOfStack--;
 
-  *pxTopOfStack = ( portSTACK_TYPE ) 0x0; /*FP*/
+  *pxTopOfStack = (portSTACK_TYPE)0x0; /*FP*/
   pxTopOfStack -= 14; /* A5 to D0. */
 
   /* Parameter in A0. */
@@ -571,7 +581,7 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
     SET_TICK_DURATION(ulReloadValue);
 
     /* Reset the counter. */
-    RESET_TICK_COUNTER();
+    RESET_TICK_COUNTER_VAL();
 
     /* Restart tick timer. */
     ENABLE_TICK_COUNTER();
@@ -644,7 +654,7 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
       ulCompletedSysTickIncrements = (xExpectedIdleTime*ulTimerCountsForOneTick )-tmp;
 
       /* How many complete tick periods passed while the processor was waiting? */
-      ulCompleteTickPeriods = ulCompletedSysTickIncrements/ulTimerCountsForOneTick ;
+      ulCompleteTickPeriods = ulCompletedSysTickIncrements/ulTimerCountsForOneTick;
 
       /* The reload value is set to whatever fraction of a single tick period remains. */
       SET_TICK_DURATION(((ulCompleteTickPeriods+1)*ulTimerCountsForOneTick )-ulCompletedSysTickIncrements);
@@ -653,7 +663,7 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
     /* Restart SysTick so it runs from portNVIC_SYSTICK_LOAD_REG, 
      * again, then set portNVIC_SYSTICK_LOAD_REG back to its standard value.
      */
-    RESET_TICK_COUNTER();
+    RESET_TICK_COUNTER_VAL();
     ENABLE_TICK_COUNTER();
 
     vTaskStepTick(ulCompleteTickPeriods);
@@ -668,14 +678,15 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
 void vPortInitTickTimer(void) {
 %ifdef TickTimerLDD
   RTOS_TickDevice = %@TickTimerLDD@'ModuleName'%.Init(NULL);     %>40/* initialize the tick timer */
-  /* Calculate the constants required to configure the tick interrupt. */
+  RESET_TICK_COUNTER_VAL();
   /* overwrite SysTick priority is set inside the FreeRTOS component */
   *(portNVIC_SYSPRI3) |= portNVIC_SYSTICK_PRI; /* set priority of SysTick interrupt */
 %elif defined(useARMSysTickTimer) & useARMSysTickTimer='yes'
-  /* Configure SysTick to interrupt at the requested rate. */
-  portNVIC_SYSTICK_LOAD_REG = (configSYSTICK_CLOCK_HZ/configTICK_RATE_HZ)-1UL;
-  portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT|portNVIC_SYSTICK_INT_BIT|portNVIC_SYSTICK_ENABLE_BIT;
   *(portNVIC_SYSPRI3) |= portNVIC_SYSTICK_PRI; /* set priority of SysTick interrupt */
+  /* Configure SysTick to interrupt at the requested rate. */
+  SET_TICK_DURATION((configSYSTICK_CLOCK_HZ/configTICK_RATE_HZ)-1UL);
+  RESET_TICK_COUNTER_VAL();
+  ENABLE_TICK_COUNTER();
 %endif
 #if configUSE_TICKLESS_IDLE == 1
 {
@@ -764,8 +775,8 @@ portBASE_TYPE xPortStartScheduler(void) {
 %endif
   return xBankedStartScheduler();
 %elif (CPUfamily = "Kinetis")
-  /* Make PendSV and SysTick the lowest priority interrupts. */
-  /* Overwrite PendSV priority as set inside the CPU component: it needs to have the lowest priority! */
+  /* Make PendSV, SVCall and SysTick the lowest priority interrupts. SysTick priority will be set in vPortInitTickTimer(). */
+  *(portNVIC_SYSPRI2) |= portNVIC_SVCALL_PRI; /* set priority of SVCall interrupt */
   *(portNVIC_SYSPRI3) |= portNVIC_PENDSV_PRI; /* set priority of PendSV interrupt */
   uxCriticalNesting = 0; /* Initialize the critical nesting count ready for the first task. */
   vPortInitTickTimer();

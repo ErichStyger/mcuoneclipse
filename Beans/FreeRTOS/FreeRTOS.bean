@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.296</Version>
+    <Version>01.300</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -529,22 +529,40 @@ The highest interrupt priority that can be used by any interrupt service routine
                   </TEnumItem>
                 </GrupItem>
                 <GrupItem>
-                  <TBoolItem>
+                  <TBoolGrupItem>
                     <Name>SysTick</Name>
                     <Symbol>useARMSysTickTimer</Symbol>
-                    <TypeSpec>typeYesNo</TypeSpec>
+                    <TypeSpec>typeEnaDis</TypeSpec>
                     <Hint>If enabled, the port will use the ARM SysTick timer directly and no Processor Expert Timer is used.</Hint>
                     <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
                     <EditLine>false</EditLine>
-                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-                    <DefaultIndex>0</DefaultIndex>
-                    <TextValueIndex>false</TextValueIndex>
-                    <RuntimeProperty>false</RuntimeProperty>
-                    <CanDelete>false</CanDelete>
-                    <IconPopup>false</IconPopup>
+                    <Description>Enabled</Description>
+                    <Expanded>Yes</Expanded>
                     <DefaultValue>true</DefaultValue>
-                    <Popup>false</Popup>
-                  </TBoolItem>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TBoolItem>
+                          <Name>Core Clock</Name>
+                          <Symbol>useARMSysTickUseCoreClock</Symbol>
+                          <TypeSpec>typeYesNo</TypeSpec>
+                          <Hint>If set to yes, the CLK bit in the SysTick configuration register will be set (using the core clock), otherwise the bit is cleared. If the bit is cleared,  the external reference clock will be used. The Kinetis K series does not implement this, so only the core clock can be used. For the Kinetis L series, a fixed prescaler of 16 is used.</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>false</EditLine>
+                          <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                          <DefaultIndex>0</DefaultIndex>
+                          <TextValueIndex>false</TextValueIndex>
+                          <RuntimeProperty>false</RuntimeProperty>
+                          <CanDelete>false</CanDelete>
+                          <IconPopup>false</IconPopup>
+                          <DefaultValue>true</DefaultValue>
+                          <Popup>false</Popup>
+                        </TBoolItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
                 </GrupItem>
               </Children>
             </TBoolGrupItem>
@@ -581,6 +599,58 @@ The highest interrupt priority that can be used by any interrupt service routine
                     <InhrBeanBaseName>RTOSSWI</InhrBeanBaseName>
                     <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
                   </TInhrItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>Tickless Idle Mode</Name>
+              <Symbol>TicklessIdleModeEnabled</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>If supported, a tickless idle mode is used for power reduction. See http://www.freertos.org/low-power-tickless-rtos.html</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Disabled</Description>
+              <Expanded>No</Expanded>
+              <DefaultValue>false</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>Stopped Timer Compensation</Name>
+                    <Symbol>StoppedTimerCompensation</Symbol>
+                    <Hint>vPortSuppressTicksAndSleep() needs to stop the tick timer for a short time. This value compensates for the time delay. This value is assigned to configSTOPPED_TIMER_COMPENSATION in port.c</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>45</DefaultValue>
+                    <MinValue>0</MinValue>
+                    <MaxValue>-1</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>false</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>Expected Idle Time (Ticks) before Sleep</Name>
+                    <Symbol>ExpectedIdleTimeBeforeSleep</Symbol>
+                    <Hint>Tickless mode will only be entered if the idle ticks are larger than this value. This defines the value for configEXPECTED_IDLE_TIME_BEFORE_SLEEP.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>2</DefaultValue>
+                    <MinValue>2</MinValue>
+                    <MaxValue>-1</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>false</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
                 </GrupItem>
               </Children>
             </TBoolGrupItem>
@@ -750,58 +820,6 @@ To use this method in combination with method 1 set configCHECK_FOR_STACK_OVERFL
               <DefaultValue>true</DefaultValue>
               <Popup>false</Popup>
             </TBoolItem>
-          </GrupItem>
-          <GrupItem>
-            <TBoolGrupItem>
-              <Name>Tickless Idle Mode</Name>
-              <Symbol>TicklessIdleModeEnabled</Symbol>
-              <TypeSpec>typeEnaDis</TypeSpec>
-              <Hint>If supported, a tickless idle mode is used for power reduction. See http://www.freertos.org/low-power-tickless-rtos.html</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <BoldName>true</BoldName>
-              <EditLine>false</EditLine>
-              <Description>Disabled</Description>
-              <Expanded>No</Expanded>
-              <DefaultValue>false</DefaultValue>
-              <DefineSymbol>YES_NO</DefineSymbol>
-              <IfDisabled>setNOTHING</IfDisabled>
-              <Children>
-                <GrupItem>
-                  <TIntgItem>
-                    <Name>Stopped Timer Compensation</Name>
-                    <Symbol>StoppedTimerCompensation</Symbol>
-                    <Hint>vPortSuppressTicksAndSleep() needs to stop the tick timer for a short time. This value compensates for the time delay. This value is assigned to configSTOPPED_TIMER_COMPENSATION in port.c</Hint>
-                    <ItemLevel>BASIC</ItemLevel>
-                    <EditLine>true</EditLine>
-                    <DefaultValue>45</DefaultValue>
-                    <MinValue>0</MinValue>
-                    <MaxValue>-1</MaxValue>
-                    <Bases>DEC</Bases>
-                    <DefaultBase>DEC</DefaultBase>
-                    <ExtraHintDisabled>false</ExtraHintDisabled>
-                    <ChangeValueIntoRange>false</ChangeValueIntoRange>
-                    <RuntimeProperty>false</RuntimeProperty>
-                  </TIntgItem>
-                </GrupItem>
-                <GrupItem>
-                  <TIntgItem>
-                    <Name>Expected Idle Time (Ticks) before Sleep</Name>
-                    <Symbol>ExpectedIdleTimeBeforeSleep</Symbol>
-                    <Hint>Tickless mode will only be entered if the idle ticks are larger than this value. This defines the value for configEXPECTED_IDLE_TIME_BEFORE_SLEEP.</Hint>
-                    <ItemLevel>BASIC</ItemLevel>
-                    <EditLine>true</EditLine>
-                    <DefaultValue>2</DefaultValue>
-                    <MinValue>2</MinValue>
-                    <MaxValue>-1</MaxValue>
-                    <Bases>DEC</Bases>
-                    <DefaultBase>DEC</DefaultBase>
-                    <ExtraHintDisabled>false</ExtraHintDisabled>
-                    <ChangeValueIntoRange>false</ChangeValueIntoRange>
-                    <RuntimeProperty>false</RuntimeProperty>
-                  </TIntgItem>
-                </GrupItem>
-              </Children>
-            </TBoolGrupItem>
           </GrupItem>
         </Children>
       </TGrupItem>

@@ -422,7 +422,15 @@ There are 5 options:<br />
     </li>
     <li>
     <a name="useARMSysTickTimer">
-    <b>SysTick</b></a> - If enabled, the port will use the ARM SysTick timer directly and no Processor Expert Timer is used.
+    <b>SysTick</b></a> - If enabled, the port will use the ARM SysTick timer directly and no Processor Expert Timer is used.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+    <ul>
+      <li>
+      <a name="useARMSysTickUseCoreClock">
+      <b>Core Clock</b></a> - If set to yes, the CLK bit in the SysTick configuration register will be set (using the core clock), otherwise the bit is cleared. If the bit is cleared,  the external reference clock will be used. The Kinetis K series does not implement this, so only the core clock can be used. For the Kinetis L series, a fixed prescaler of 16 is used.
+      </li>
+    </ul>
     </li>
   </ul>
   </li>
@@ -435,6 +443,22 @@ The following items are available only if the group is enabled (the value is "En
     <li>
     <a name="SWI">
     <b>SWI</b></a> - In order to make a context switch, the RTOS needs a SWI (software interrupt).
+    </li>
+  </ul>
+  </li>
+  <li>
+  <a name="TicklessIdleModeEnabled">
+  <b>Tickless Idle Mode</b></a> - If supported, a tickless idle mode is used for power reduction. See http://www.freertos.org/low-power-tickless-rtos.html<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+  <ul>
+    <li>
+    <a name="StoppedTimerCompensation">
+    <b>Stopped Timer Compensation</b></a> - vPortSuppressTicksAndSleep() needs to stop the tick timer for a short time. This value compensates for the time delay. This value is assigned to configSTOPPED_TIMER_COMPENSATION in port.c
+    </li>
+    <li>
+    <a name="ExpectedIdleTimeBeforeSleep">
+    <b>Expected Idle Time (Ticks) before Sleep</b></a> - Tickless mode will only be entered if the idle ticks are larger than this value. This defines the value for configEXPECTED_IDLE_TIME_BEFORE_SLEEP.
     </li>
   </ul>
   </li>
@@ -483,22 +507,6 @@ There are 3 options:<br />
   <li>
   <a name="CleanupResources">
   <b>Cleanup Resources</b></a> - This setting controls the INCLUDE_vTaskCleanUpResources define.
-  </li>
-  <li>
-  <a name="TicklessIdleModeEnabled">
-  <b>Tickless Idle Mode</b></a> - If supported, a tickless idle mode is used for power reduction. See http://www.freertos.org/low-power-tickless-rtos.html<br />
-The following items are available only if the group is enabled (the value is "Enabled"):<br />
-
-  <ul>
-    <li>
-    <a name="StoppedTimerCompensation">
-    <b>Stopped Timer Compensation</b></a> - vPortSuppressTicksAndSleep() needs to stop the tick timer for a short time. This value compensates for the time delay. This value is assigned to configSTOPPED_TIMER_COMPENSATION in port.c
-    </li>
-    <li>
-    <a name="ExpectedIdleTimeBeforeSleep">
-    <b>Expected Idle Time (Ticks) before Sleep</b></a> - Tickless mode will only be entered if the idle ticks are larger than this value. This defines the value for configEXPECTED_IDLE_TIME_BEFORE_SLEEP.
-    </li>
-  </ul>
   </li>
 </ul>
 </li>

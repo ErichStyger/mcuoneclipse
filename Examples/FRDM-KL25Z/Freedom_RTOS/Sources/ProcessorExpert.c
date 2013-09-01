@@ -20,7 +20,6 @@
 #include "Cpu.h"
 #include "Events.h"
 #include "FRTOS1.h"
-#include "RTOSTICKLDD1.h"
 #include "UTIL1.h"
 #include "LED1.h"
 #include "LEDpin3.h"
@@ -48,23 +47,28 @@
 #include "IO_Map.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#if 0
+/* Task to verify proper timing of WAIT1_Waitms(). 
+ * Additionally it allows to verify tickless idle mode. TI1 will interrupt the idle mode.
+ * */
 static portTASK_FUNCTION(Task1, pvParameters) {
   (void)pvParameters; /* parameter not used */
   for(;;) {
     B8_SetVal();
     LED1_On();
-    WAIT1_Waitms(1);
+    WAIT1_Waitms(1); /* LED1 must be on for 1 ms, B8/LE1 with logic analyzer */
     LED1_Off();
     B8_ClrVal();
     FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
   }
 }
-#if 0
-static portTASK_FUNCTION(Task2, pvParameters) {
+#else
+/* normal task toggling a LED every second */
+static portTASK_FUNCTION(Task1, pvParameters) {
   (void)pvParameters; /* parameter not used */
   for(;;) {
-    //LED2_Neg();
-    FRTOS1_vTaskDelay(10000/portTICK_RATE_MS);
+    LED2_Neg();
+    FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
   }
 }
 #endif
@@ -89,18 +93,6 @@ int main(void)
       ) != pdPASS) {
     for(;;){}; /* Out of heap memory? */
   }
-#if 0
-  if (FRTOS1_xTaskCreate(
-        Task2,  /* pointer to the task */
-        (signed portCHAR *)"Task2", /* task name for kernel awareness debugging */
-        configMINIMAL_STACK_SIZE, /* task stack size */
-        (void*)NULL, /* optional task startup argument */
-        tskIDLE_PRIORITY,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
-      ) != pdPASS) {
-    for(;;){}; /* Out of heap memory */
-  }
-#endif
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
   #ifdef PEX_RTOS_START

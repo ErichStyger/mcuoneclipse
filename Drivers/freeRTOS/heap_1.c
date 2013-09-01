@@ -1,6 +1,6 @@
 /* << EST */
 #include "FreeRTOSConfig.h"
-#if configHEAP_IMPLEMENTATION==1
+#if FRTOS_MEMORY_SCHEME==1
 
 /*
     FreeRTOS V7.5.0 - Copyright (C) 2013 Real Time Engineers Ltd.
@@ -181,7 +181,7 @@ size_t xPortGetFreeHeapSize( void )
 {
 	return ( configADJUSTED_HEAP_SIZE - xNextFreeByte );
 }
-#endif /* configHEAP_IMPLEMENTATION==1 */ /* << EST */
+#endif /* FRTOS_MEMORY_SCHEME==1 */ /* << EST */
 
 
 

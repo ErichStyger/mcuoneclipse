@@ -2752,19 +2752,34 @@ void %vOnPostSleepProcessing(portTickType expectedIdleTicks)
 %include Common\FreeRTOSvOnPreSleepProcessing.Inc
 void %vOnPreSleepProcessing(portTickType expectedIdleTicks)
 {
-#if 0 /* example for Kinetis (enable SetOperationMode() in CPU component: */
+%if (CPUfamily = "Kinetis")
+#if 1
+%else
+#if 0
+%endif
+  /* example for Kinetis (enable SetOperationMode() in CPU component): */
   Cpu_SetOperationMode(DOM_WAIT, NULL, NULL);
-/* or to wait for interrupt:
+  /* or to wait for interrupt:
     __asm volatile("dsb");
     __asm volatile("wfi");
     __asm volatile("isb");
-*/
-#endif
-#if 0 /* example for S08 (enable SetWaitMode() in CPU: */
+  */
+%if (CPUfamily = "HCS08") | (CPUfamily = "HC08") | (CPUfamily = "ColdFireV1")
+#elif 1
+%else
+#elif 0
+%endif
+  /* example for S08/S12/ColdFire V1 (enable SetWaitMode() in CPU): */
   Cpu_SetWaitMode();
-#endif
-#if 0 /* example for ColdFire V2: */
+%if (CPUfamily = "MCF")
+#elif 1
+%else
+#elif 0
+%endif
+  /* example for ColdFire V2: */
    __asm("stop #0x2000"); */
+#else
+  #error "you *must* enter low power mode (wait for interrupt) here!"
 #endif
   /* Write your code here ... */
 }

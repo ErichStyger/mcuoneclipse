@@ -31,8 +31,21 @@
 %endif
 %- only Kinetis has Low Level Drivers
 %if (CPUfamily = "Kinetis")
+  %- %set useARMSysTickTimer ExtraText xxx
   %if useARMSysTickTimer='yes'
     %set LDDTickGroup Value Disabled
+    %if ARMFamilyType="M0+"
+      %set useARMSysTickUseCoreClock ReadOnly no
+      %if %useARMSysTickUseCoreClock='yes'
+        %set useARMSysTickTimer ExtraText CoreClock
+      %else
+        %set useARMSysTickTimer ExtraText CoreClock/16
+      %endif
+    %else %- Kinetis K does not supporte external clock bit for SysTick
+      %set useARMSysTickTimer ExtraText CoreClock
+      %set useARMSysTickUseCoreClock Value Disabled
+      %set useARMSysTickUseCoreClock ReadOnly yes
+    %endif
   %else
     %set LDDTickGroup Value Enabled
   %endif
@@ -96,7 +109,7 @@
 
 %if (CPUfamily = "Kinetis")
   %if %CPUDB_prph_has_feature(CPU,ARM_CORTEX_M0P) = 'yes'
-    %set ARMFamilyType Value "M0+"
+    %- %set ARMFamilyType Value "M0+"
   %else %- M4 or M4F core
   %- somehow the code below does NOT work???
   %-  %if %CPUDB_prph_has_feature(CPU, FPU) = 'no'
