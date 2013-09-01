@@ -197,7 +197,7 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #endif
 #if PL_HAS_BUZZER
-  BUZ_ParseCommand,
+  //BUZ_ParseCommand,
 #endif
   NULL /* Sentinel */
 };

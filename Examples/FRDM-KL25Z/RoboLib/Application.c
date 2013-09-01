@@ -342,7 +342,7 @@ static uint8_t APP_PrintStatus(const CLS1_StdIOType *io) {
   CLS1_SendStatusStr((unsigned char*)"  follow", followObstacle?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
 #endif
 #if PL_HAS_USER_BUTTON
-  CLS1_SendStatusStr((unsigned char*)"  button", SW1_GetVal()!=0?(unsigned char*)"pressed\r\n":(unsigned char*)"released\r\n", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  button", SW1_GetVal()==0?(unsigned char*)"pressed\r\n":(unsigned char*)"released\r\n", io->stdOut);
 #endif
   return ERR_OK;
 }
