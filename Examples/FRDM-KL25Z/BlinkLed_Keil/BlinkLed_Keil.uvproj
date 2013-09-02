@@ -139,7 +139,7 @@
             <RestoreTracepoints>1</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>9</TargetSelection>
+          <TargetSelection>14</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -153,7 +153,7 @@
             <PeripheralDll></PeripheralDll>
             <PeripheralDllArguments></PeripheralDllArguments>
             <InitializationFile></InitializationFile>
-            <Driver>BIN\ULP2CM3.DLL</Driver>
+            <Driver>BIN\CMSIS_AGDI.dll</Driver>
           </TargetDlls>
         </DebugOption>
         <Utilities>
@@ -162,12 +162,12 @@
             <UseExternalTool>0</UseExternalTool>
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
-            <Capability>0</Capability>
-            <DriverSelection>-1</DriverSelection>
+            <Capability>1</Capability>
+            <DriverSelection>4104</DriverSelection>
           </Flash1>
           <bUseTDR>0</bUseTDR>
-          <Flash2>BIN\ULP2CM3.DLL</Flash2>
-          <Flash3></Flash3>
+          <Flash2>BIN\CMSIS_AGDI.dll</Flash2>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
         </Utilities>
         <TargetArmAds>
@@ -281,17 +281,17 @@
                 <Size>0x0</Size>
               </XRAM>
               <OCR_RVCT1>
-                <Type>0</Type>
+                <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
                 <Size>0x0</Size>
               </OCR_RVCT1>
               <OCR_RVCT2>
-                <Type>0</Type>
+                <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
                 <Size>0x0</Size>
               </OCR_RVCT2>
               <OCR_RVCT3>
-                <Type>0</Type>
+                <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
                 <Size>0x0</Size>
               </OCR_RVCT3>
@@ -301,7 +301,7 @@
                 <Size>0x20000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
-                <Type>0</Type>
+                <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
                 <Size>0x0</Size>
               </OCR_RVCT5>
@@ -448,11 +448,6 @@
               <FilePath>.\Sources\ProcessorExpert.c</FilePath>
             </File>
             <File>
-              <FileName>RTOSTICKLDD1.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Generated_Code\RTOSTICKLDD1.c</FilePath>
-            </File>
-            <File>
               <FileName>UTIL1.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Generated_Code\UTIL1.c</FilePath>
@@ -471,11 +466,6 @@
               <FileName>croutine.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Generated_Code\croutine.c</FilePath>
-            </File>
-            <File>
-              <FileName>heap.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Generated_Code\heap.c</FilePath>
             </File>
             <File>
               <FileName>list.c</FileName>
@@ -506,6 +496,26 @@
               <FileName>timers.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Generated_Code\timers.c</FilePath>
+            </File>
+            <File>
+              <FileName>heap_1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Generated_Code\heap_1.c</FilePath>
+            </File>
+            <File>
+              <FileName>heap_2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Generated_Code\heap_2.c</FilePath>
+            </File>
+            <File>
+              <FileName>heap_3.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Generated_Code\heap_3.c</FilePath>
+            </File>
+            <File>
+              <FileName>heap_4.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Generated_Code\heap_4.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -581,11 +591,6 @@
               <FileName>PE_Types.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Generated_Code\PE_Types.h</FilePath>
-            </File>
-            <File>
-              <FileName>RTOSTICKLDD1.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Generated_Code\RTOSTICKLDD1.h</FilePath>
             </File>
             <File>
               <FileName>StackMacros.h</FileName>

@@ -447,22 +447,6 @@ The following items are available only if the group is enabled (the value is "En
   </ul>
   </li>
   <li>
-  <a name="TicklessIdleModeEnabled">
-  <b>Tickless Idle Mode</b></a> - If supported, a tickless idle mode is used for power reduction. See http://www.freertos.org/low-power-tickless-rtos.html<br />
-The following items are available only if the group is enabled (the value is "Enabled"):<br />
-
-  <ul>
-    <li>
-    <a name="StoppedTimerCompensation">
-    <b>Stopped Timer Compensation</b></a> - vPortSuppressTicksAndSleep() needs to stop the tick timer for a short time. This value compensates for the time delay. This value is assigned to configSTOPPED_TIMER_COMPENSATION in port.c
-    </li>
-    <li>
-    <a name="ExpectedIdleTimeBeforeSleep">
-    <b>Expected Idle Time (Ticks) before Sleep</b></a> - Tickless mode will only be entered if the idle ticks are larger than this value. This defines the value for configEXPECTED_IDLE_TIME_BEFORE_SLEEP.
-    </li>
-  </ul>
-  </li>
-  <li>
   <a name="UsePreemption">
   <b>Preemptive</b></a> - Set to 1 to use the preemptive kernel, or 0 to use the cooperative kernel. (configUSE_PREEMPTION flag)
   </li>
@@ -514,6 +498,22 @@ There are 3 options:<br />
 <a name="TicksGroup">
 <b>Ticks</b></a> - Group controlling how ticks are handled
 <ul>
+  <li>
+  <a name="TicklessIdleModeEnabled">
+  <b>Tickless Idle Mode</b></a> - If supported, a tickless idle mode is used for power reduction. See http://www.freertos.org/low-power-tickless-rtos.html<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+  <ul>
+    <li>
+    <a name="StoppedTimerCompensation">
+    <b>Stopped Timer Compensation</b></a> - vPortSuppressTicksAndSleep() needs to stop the tick timer for a short time. This value compensates for the time delay. This value is assigned to configSTOPPED_TIMER_COMPENSATION in port.c
+    </li>
+    <li>
+    <a name="ExpectedIdleTimeBeforeSleep">
+    <b>Expected Idle Time (Ticks) before Sleep</b></a> - Tickless mode will only be entered if the idle ticks are larger than this value. This defines the value for configEXPECTED_IDLE_TIME_BEFORE_SLEEP.
+    </li>
+  </ul>
+  </li>
   <li>
   <a name="TickRateHz">
   <b>Tick Rate (Hz)</b></a> - The frequency of the RTOS tick interrupt.<br />

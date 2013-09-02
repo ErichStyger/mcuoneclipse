@@ -789,7 +789,11 @@ portBASE_TYPE xPortStartScheduler(void) {
   return xBankedStartScheduler();
 %elif (CPUfamily = "Kinetis")
   /* Make PendSV, SVCall and SysTick the lowest priority interrupts. SysTick priority will be set in vPortInitTickTimer(). */
+#if 0 /* do NOT set the SVCall priority */
+  /* why: execution of an SVC instruction at a priority equal or higher than SVCall can cause a hard fault (at least on Cortex-M4),
+  see https://community.freescale.com/thread/302511 */
   *(portNVIC_SYSPRI2) |= portNVIC_SVCALL_PRI; /* set priority of SVCall interrupt */
+#endif
   *(portNVIC_SYSPRI3) |= portNVIC_PENDSV_PRI; /* set priority of PendSV interrupt */
   uxCriticalNesting = 0; /* Initialize the critical nesting count ready for the first task. */
   vPortInitTickTimer();

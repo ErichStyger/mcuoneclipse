@@ -33,7 +33,6 @@
 #include "LEDpin3.h"
 #include "BitIoLdd3.h"
 #include "FRTOS1.h"
-#include "RTOSTICKLDD1.h"
 #include "UTIL1.h"
 #include "CLS1.h"
 #include "AS1.h"
@@ -42,6 +41,7 @@
 #include "ACCEL1.h"
 #include "GI2C1.h"
 #include "I2C1.h"
+#include "HF1.h"
 #include "PE_LDD.h"
 
 void Cpu_OnNMIINT0(void);
@@ -60,7 +60,7 @@ void Cpu_OnNMIINT0(void);
 */
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
@@ -191,6 +191,38 @@ void AS1_OnFreeTxBuf(void);
 **         This event is called after the last character in output
 **         buffer is transmitted.
 **     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+/*
+** ===================================================================
+**     Event       :  Cpu_OnSupervisorCall (module Events)
+**
+**     Component   :  Cpu [MK20DX128EX5]
+**     Description :
+**         This event is called when the Supervisor Call exception had
+**         occurred. This event is automatically enabled when the
+**         <Supervisor Call> property is set to 'Enabled'.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void Cpu_OnSupervisorCall(void);
+
+void FRTOS1_vOnPreSleepProcessing(portTickType expectedIdleTicks);
+/*
+** ===================================================================
+**     Event       :  FRTOS1_vOnPreSleepProcessing (module Events)
+**
+**     Component   :  FRTOS1 [FreeRTOS]
+**     Description :
+**         Used in tickless idle mode only, but required in this mode.
+**         Hook for the application to enter low power mode.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
 **     Returns     : Nothing
 ** ===================================================================
 */

@@ -12,7 +12,6 @@ https://github.com/ErichStyger/mcuoneclipse/Drivers
 Part1_Beans_*.PEupd Content:
 -------------------------------------
 Package from component(s):
-Package from component(s):
 - 24AA_EEPROM version 01.023
 - 74HC164 version 01.031
 - 74HC595 version 01.022
@@ -30,7 +29,7 @@ Package from component(s):
 - FatFsMem_USB_MSD version 01.019
 - FatFsMemSDHC version 01.007
 - FontDisplay version 01.195
-- FreeRTOS version 01.296
+- FreeRTOS version 01.303
 - FreeRTOSTrace version 01.003
 - FSL_USB_CDC_Device version 01.018
 - FSL_USB_HID_Keyboard_Device version 01.047
@@ -70,13 +69,10 @@ Package from component(s):
 - MMA8451Q version 01.024
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 29.08.2013
-
-
+created 02.09.2013
 
 Part2_Beans_*.PEupd Content:
 -------------------------------------
-Package from component(s):
 Package from component(s):
 - nRF24L01 version 01.041
 - OLED version 01.045
@@ -108,6 +104,7 @@ Package from component(s):
 - TouchScreen version 01.077
 - TouchScreenSensor version 01.053
 - Trigger version 01.054
+- TwoKeys version 01.015
 - UI version 01.056
 - UIButton version 01.121
 - UICalendar version 01.030
@@ -122,7 +119,6 @@ Package from component(s):
 - UISpace version 01.012
 - UIText version 01.059
 - UIWindow version 01.033
-- USB_AUDIO_CLASS version 01.000
 - USB_CMX version 01.027
 - USB_Config_CMX version 01.022
 - USB_HID_CMX version 01.012
@@ -130,5 +126,6 @@ Package from component(s):
 - UserInterface version 01.510
 - UTI version 01.125
 - Utility version 01.091
-- Wait version 01.063
-created 29.08.2013
+- Wait version 01.064
+created 02.09.2013
+
