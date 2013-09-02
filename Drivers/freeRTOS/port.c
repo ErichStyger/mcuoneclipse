@@ -119,6 +119,17 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
 %endif
 
 #if configUSE_TICKLESS_IDLE == 1
+%if (CPUfamily = "Kinetis")
+#define TICKLESS_DISABLE_INTERRUPTS()  __asm volatile("cpsid i") /* disable interrupts. Note that the wfi (wait for interrupt) instruction later will still be able to wait for interrupts! */
+#define TICKLESS_ENABLE_INTERRUPTS()   __asm volatile("cpsie i") /* re-enable interrupts. */
+%elif (CPUfamily = "HCS08") | (CPUfamily = "HC08") | (CPUfamily = "HCS12") | (CPUfamily = "HCS12X")
+#define TICKLESS_DISABLE_INTERRUPTS()  __asm("sei"); /* disable interrupts */
+#define TICKLESS_ENABLE_INTERRUPTS()   __asm("cli"); /* re-enable interrupts */
+%else
+#define TICKLESS_DISABLE_INTERRUPTS()  portDISABLE_INTERRUPTS() /* this disables interrupts! Make sure they are re-enabled in %vOnPreSleepProcessing()! */
+#define TICKLESS_ENABLE_INTERRUPTS()   portENABLE_INTERRUPTS()  /* re-enable interrupts */
+%endif
+
 %if defined(useARMSysTickTimer) & useARMSysTickTimer='yes'
   #if 1
 %else
@@ -580,25 +591,18 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
   /* Enter a critical section but don't use the taskENTER_CRITICAL()
    * method as that will mask interrupts that should exit sleep mode. 
    */
-  portDISABLE_INTERRUPTS();
-
+  TICKLESS_DISABLE_INTERRUPTS();
+  
   /* If a context switch is pending or a task is waiting for the scheduler
    * to be unsuspended then abandon the low power entry. 
    */
   if (eTaskConfirmSleepModeStatus()==eAbortSleep) {
-    /* Restart SysTick. */
-    ENABLE_TICK_COUNTER();
-    portENABLE_INTERRUPTS();
+    ENABLE_TICK_COUNTER(); /* Restart SysTick. */
+    TICKLESS_ENABLE_INTERRUPTS();
   } else {
-    /* Set the new reload value. */
-    SET_TICK_DURATION(ulReloadValue);
-
-    /* Reset the counter. */
-    RESET_TICK_COUNTER_VAL();
-
-    /* Restart tick timer. */
-    ENABLE_TICK_COUNTER();
-    
+    SET_TICK_DURATION(ulReloadValue); /* Set the new reload value. */
+    RESET_TICK_COUNTER_VAL(); /* Reset the counter. */
+    ENABLE_TICK_COUNTER(); /* Restart tick timer. */
     TICK_INTERRUPT_FLAG_RESET(); /* reset flag so we know later if it has fired */
 
     /* Sleep until something happens. configPRE_SLEEP_PROCESSING() can
@@ -610,7 +614,7 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
     
      /* CPU *HAS TO WAIT* in the sequence below for an interrupt. If vOnPreSleepProcessing() is not used, a default implementation is provided */
 %if defined(vOnPreSleepProcessing)
-    %vOnPreSleepProcessing(xExpectedIdleTime); /* go into low power mode */
+    %vOnPreSleepProcessing(xExpectedIdleTime); /* go into low power mode. Re-enable interrupts as needed! */
 %else
     /* default wait/sleep code */
   %if (CPUfamily = "Kinetis")
@@ -618,6 +622,7 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
     __asm volatile("wfi");
     __asm volatile("isb");
   %elif (CPUfamily = "HCS08") | (CPUfamily = "HC08") | (CPUfamily = "HCS12") | (CPUfamily = "HCS12X")
+    __asm("cli"); /* re-enable interrupts */
     __asm("wait");
   %else
     #error "unsupported CPU family! vOnPreSleepProcessing() event and go into sleep mode there!"
@@ -635,8 +640,7 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
      */
     DISABLE_TICK_COUNTER();
 
-    /* Re-enable interrupts */
-    portENABLE_INTERRUPTS();
+    TICKLESS_ENABLE_INTERRUPTS();/* Re-enable interrupts */
 
     if (TICK_INTERRUPT_HAS_FIRED()) {
       /* The tick interrupt has already executed, and the timer
