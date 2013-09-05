@@ -335,6 +335,16 @@ byte %'ModuleName'%.%Disable(void);
 
 %endif %- Disable
 %-BW_METHOD_END Disable
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN isEnabled
+%ifdef isEnabled
+byte %'ModuleName'%.%isEnabled(bool *isEnabled);
+%define! ParisEnabled
+%define! RetVal
+%include Common\MMA8451QisEnabled.Inc
+
+%endif %- isEnabled
+%-BW_METHOD_END isEnabled
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -407,19 +417,36 @@ static tAccelCal sCalValues; /* calibration values in RAM */
 #define CalNxOff   sCalValues.NxOff
 #define CalNyOff   sCalValues.NyOff
 #define CalNzOff   sCalValues.NzOff
-%else
+%elif %UseConstantOffsets='yes'
+/* constant offsets specified in properties */
 #define CalNxOff %xCalibrationOffset
 #define CalNyOff %yCalibrationOffset
 #define CalNzOff %zCalibrationOffset
+%elif %UseConstantOffsets='no'
+/* no constant offsets specified in properties */
+#define CalNxOff 0
+#define CalNyOff 0
+#define CalNzOff 0
 %endif %- CalibrateY1g
 
 %if defined(Shell)
-
 static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   unsigned char buf[8];
   uint16_t val;
+  bool isEnabled;
 
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"%'ModuleName'", (unsigned char*)"\r\n", io->stdOut);
+
+  if (%'ModuleName'%.isEnabled(&isEnabled)!=ERR_OK) {
+    %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"FAIL!\r\n");
+  } else {
+    if (isEnabled) {
+      %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"yes\r\n");
+    } else {
+      %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"no\r\n");
+    }
+  }
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  enabled", buf, io->stdOut);
 
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  raw", (unsigned char*)"0x", io->stdOut);
   val = %'ModuleName'%.MeasureGetRawX();
@@ -483,7 +510,9 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
 static uint8_t PrintHelp(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"%'ModuleName'", (unsigned char*)"Group of %'ModuleName' commands\r\n", io->stdOut);
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+%if defined(CalibrateX1g) | defined(CalibrateY1g) | defined(CalibrateZ1g)
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  calibrate x|y|z", (unsigned char*)"Performs accelerometer calibration\r\n", io->stdOut);
+%endif
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  enable|disable", (unsigned char*)"Enables or disables the sensor\r\n", io->stdOut);
   return ERR_OK;
 }
@@ -888,15 +917,21 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
   } else if ((%@Utility@'ModuleName'%.strcmp((char*)cmd, %@Shell@'ModuleName'%.CMD_STATUS)==0) || (%@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' status")==0)) {
     *handled = TRUE;
     return PrintStatus(io);
+%if defined(CalibrateX1g)
   } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, (char*)"%'ModuleName' calibrate x")==0) {
     %'ModuleName'%.CalibrateX1g();
     *handled = TRUE;
+%endif
+%if defined(CalibrateY1g)
   } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, (char*)"%'ModuleName' calibrate y")==0) {
     %'ModuleName'%.CalibrateY1g();
     *handled = TRUE;
+%endif
+%if defined(CalibrateZ1g)
   } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, (char*)"%'ModuleName' calibrate z")==0) {
     %'ModuleName'%.CalibrateZ1g();
     *handled = TRUE;
+%endif
   } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, (char*)"%'ModuleName' enable")==0) {
     %'ModuleName'%.Enable();
     *handled = TRUE;
@@ -971,6 +1006,26 @@ byte %'ModuleName'%.%Disable(void)
 
 %endif %- Disable
 %-BW_METHOD_END Disable
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN isEnabled
+%ifdef isEnabled
+%define! ParisEnabled
+%define! RetVal
+%include Common\MMA8451QisEnabled.Inc
+byte %'ModuleName'%.%isEnabled(bool *isEnabled)
+{
+  uint8_t val, res;
+
+  res = %@I2C@'ModuleName'%.ReadByteAddress8(MMA8451_I2C_ADDR, MMA8451_CTRL_REG_1, &val);
+  if (res!=ERR_OK) {
+    return ERR_FAILED;
+  }
+  *isEnabled = (val&MMA8451_ACTIVE_BIT_MASK)!=0; /* TRUE if bit is set, FALSE otherwise */
+  return ERR_OK;
+}
+
+%endif %- isEnabled
+%-BW_METHOD_END isEnabled
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

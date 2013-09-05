@@ -4,7 +4,7 @@
     <Name>MMA8451Q</Name>
     <Description>Driver for the Freescale MMA8451Q digital I2C accelerometer.</Description>
     <Author>Erich Styger</Author>
-    <Version>01.024</Version>
+    <Version>01.028</Version>
     <Icon>MMA8451Q</Icon>
     <TypesFiles>PE,MMA8451Q\MMA8451Q</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -67,15 +67,19 @@
       </TInhrLinkItem>
     </Property>
     <Property>
-      <TGrupItem>
-        <Name>Calibration</Name>
-        <Symbol>CalibrationGroup</Symbol>
-        <Hint>Contains initialization calibration values.</Hint>
+      <TBoolGrupItem>
+        <Name>Constant Offsets</Name>
+        <Symbol>UseConstantOffsets</Symbol>
+        <TypeSpec>typeEnaDis</TypeSpec>
+        <Hint>If enabled, constant offsets are added to the accelerometer values.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <Description/>
+        <Description>Enabled</Description>
         <Expanded>Yes</Expanded>
+        <DefaultValue>true</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
         <Children>
           <GrupItem>
             <TIntgItem>
@@ -129,7 +133,7 @@
             </TIntgItem>
           </GrupItem>
         </Children>
-      </TGrupItem>
+      </TBoolGrupItem>
     </Property>
     <Property>
       <TBoolGrupItem>
@@ -232,6 +236,40 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>byte #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>isEnabled</Name>
+        <Symbol>isEnabled</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Returns the status of the the ACTIVE bit in the CTRL register 1</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>isEnabled</ParName>
+          <ParType>Boolean</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to where to store the result, TRUE if ACTIVE bit is set, FALSE otherwise</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(bool *isEnabled)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

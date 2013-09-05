@@ -229,6 +229,18 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="isEnabled">
+<b>isEnabled</b></a>
+ - Returns the status of the the ACTIVE bit in the CTRL register 1
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte isEnabled(bool *isEnabled)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>isEnabled: Pointer to bool</i> - Pointer to where to store the result, TRUE if ACTIVE bit is set, FALSE otherwise</li>
+<li><i>Return value:byte</i> - error code
+</li>
+</ul><br />
+</li>
 <li><a name="GetX">
 <b>GetX</b></a>
  - Retrieves the value for the X axis. The value is adjusted with the zero calibration value (0 for 0 g, negative for negative acceleration and positive for positive acceleration).
