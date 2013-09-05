@@ -1,0 +1,20 @@
+readme for USB CDD driver installation (cdc.inf)
+================================================
+
+This cdc.inf is based on following forum thread:
+http://forums.freescale.com/t5/Freescale-MQX-trade-USB-Host/Questions-about-quot-virtual-com-quot-USB-CDC-driver-in-MQX-3-6/m-p/89395#M284
+
+For your windows system, you need to make sure drivers are correctly installed.
+For this go into your Windows Device manager. Your CDC device probably shows up as "JM CDC DEMO".
+
+Update the driver and point to the generated cdc.inf file in the project documentation folder.
+
+Important: follow the steps below to install/update the driver:
+- Go to the Device manager and identify the device. Perform an 'update driver'
+- IMPORTANT: Select 'Browse my computer for driver software'
+- IMPORTANT: select 'let me pick from a list of device drivers on my computer'
+- use 'show all devices', use 'have disk' and to browse to the cdc.inf file
+- this will show up as 'Freescale CDC device' :-)
+
+See as well following post:
+http://mcuoneclipse.wordpress.com/2012/03/10/usb-or-not-cdc-with-processor-expert/
