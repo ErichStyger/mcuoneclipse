@@ -1083,7 +1083,16 @@ bool %'ModuleName'%.%KeyPressed(void)
 void %'ModuleName'%.%Init(void)
 {
 %if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & defined(ConsoleSempahore) & %ConsoleSempahore='yes'
+  bool schedulerStarted;
+
+  schedulerStarted = xTaskGetSchedulerState()!=taskSCHEDULER_NOT_STARTED;
+  if (!schedulerStarted) { /* FreeRTOS not started yet. We are called in PE_low_level_init(), and interrupts are disabled */
+    EnterCritical();
+  }
   ShellSem = xSemaphoreCreateRecursiveMutex();
+  if (!schedulerStarted) { /* above RTOS call might have enabled interrupts! Make sure we restore the state */
+    ExitCritical();
+  }
   if (ShellSem==NULL) { /* semaphore creation failed */
     for(;;) {} /* error, not enough memory? */
   }
