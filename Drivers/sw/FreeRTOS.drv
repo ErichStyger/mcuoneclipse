@@ -2789,6 +2789,7 @@ void %vOnPreSleepProcessing(portTickType expectedIdleTicks)
 %-BW_EVENT_IMPLEMENT_END
 %INITIALIZATION
   /* ### %DeviceType "%DeviceName" init code ... */
+  vPortStopTickTimer(); /* tick timer shall not run until the RTOS scheduler is started */
 %CODE_BEGIN
 %CODE_END
 %-
