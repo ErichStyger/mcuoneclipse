@@ -552,27 +552,25 @@ void %OnLeaveRadioSPI(void);
   #define IRQACK()        IRQSC |= IRQSC_IRQACK_MASK   /*!< IRQ acknowledge */
 #else /* not HCS08 */
 /* %CPUfamily family */
-  #if defined(__GNUC__) ||  /* Kinetis?*/
-    #define IRQINIT()  /* pull up signal: not possible yet with pin sharing in MCU10.3 */ \
-      /* PORTA_PCR17: ISF=0,IRQC=0x0A,MUX=1,PE=1,PS=1 */ \
-      PORTA_PCR17 = (uint32_t)((PORTA_PCR17 & (uint32_t)~(uint32_t)( \
-                 PORT_PCR_ISF_MASK | \
-                 PORT_PCR_IRQC(0x05) | \
-                 PORT_PCR_MUX(0x06) \
-                )) | (uint32_t)( \
-                 PORT_PCR_IRQC(0x0A) | \
-                 PORT_PCR_MUX(0x01) | \
-                 PORT_PCR_PE_MASK | \
-                 PORT_PCR_PS_MASK \
-                ));
-    #define IRQACK()   PORT_PDD_ClearPinInterruptFlag(ExtIntLdd2_PORTCONTROL_BASE_ADDRESS, ExtIntLdd2_PIN_INDEX) /* ack the interrupt */
+  #if defined(__GNUC__)  /* Kinetis?*/
+    #define IRQINIT() \
+      PORT_PDD_SetPinPullSelect(%@IRQ@'ModuleName'%.PORTCONTROL_BASE_ADDRESS, %@IRQ@'ModuleName'%.PIN_INDEX, PORT_PDD_PULL_UP); \
+      PORT_PDD_SetPinPullEnable(%@IRQ@'ModuleName'%.PORTCONTROL_BASE_ADDRESS, %@IRQ@'ModuleName'%.PIN_INDEX, PORT_PDD_PULL_ENABLE);
+    #define IRQACK()   PORT_PDD_ClearPinInterruptFlag(%@IRQ@'ModuleName'%.PORTCONTROL_BASE_ADDRESS, %@IRQ@'ModuleName'%.PIN_INDEX) /* ack the interrupt */
   #elif 0 /* Macros for the MCF52259 using the IRQ on IRQ5 */
     #define IRQACK()  (EPFR = IRQ1_PIN_MASK)
   #else  /* Macros for the MCF51CN128 using the IRQ on PTE4 */
     #define IRQACK()        KBI2SC_KBACK=1     /*!< IRQ acknowledge */
   #endif
 #endif
+#endif
 
+#if defined(__GNUC__)  /* Kinetis?*/
+  #define IRQINIT() /* pull-up and enable */\
+    PORT_PDD_SetPinPullSelect(%@IRQ@'InheritedComponent'%.PORTCONTROL_BASE_ADDRESS, %@IRQ@'InheritedComponent'%.PIN_INDEX, PORT_PDD_PULL_UP); \
+    PORT_PDD_SetPinPullEnable(%@IRQ@'InheritedComponent'%.PORTCONTROL_BASE_ADDRESS, %@IRQ@'InheritedComponent'%.PIN_INDEX, PORT_PDD_PULL_ENABLE);
+  #define IRQACK() \
+    PORT_PDD_ClearPinInterruptFlag(%@IRQ@'InheritedComponent'%.PORTCONTROL_BASE_ADDRESS, %@IRQ@'InheritedComponent'%.PIN_INDEX) /* ack the interrupt */
 #endif
 
 #ifndef IRQINIT
