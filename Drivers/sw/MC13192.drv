@@ -67,7 +67,7 @@
 %include Common\Header.h
 
 %if (CPUfamily = "Kinetis")
-#include "PE_LDD.h" /* hack for Processor Expert (e.g. in MCU10.3) and LDD: PE_LDD.h includes at the end all shared modules, causing a recursive header file include conflict */
+%- #include "PE_LDD.h" /* hack for Processor Expert (e.g. in MCU10.3) and LDD: PE_LDD.h includes at the end all shared modules, causing a recursive header file include conflict */
 %endif
 
 #ifndef __%'ModuleName'_H
@@ -554,9 +554,9 @@ void %OnLeaveRadioSPI(void);
 /* %CPUfamily family */
   #if defined(__GNUC__)  /* Kinetis?*/
     #define IRQINIT() \
-      PORT_PDD_SetPinPullSelect(%@IRQ@'ModuleName'%.PORTCONTROL_BASE_ADDRESS, %@IRQ@'ModuleName'%.PIN_INDEX, PORT_PDD_PULL_UP); \
-      PORT_PDD_SetPinPullEnable(%@IRQ@'ModuleName'%.PORTCONTROL_BASE_ADDRESS, %@IRQ@'ModuleName'%.PIN_INDEX, PORT_PDD_PULL_ENABLE);
-    #define IRQACK()   PORT_PDD_ClearPinInterruptFlag(%@IRQ@'ModuleName'%.PORTCONTROL_BASE_ADDRESS, %@IRQ@'ModuleName'%.PIN_INDEX) /* ack the interrupt */
+      PORT_PDD_SetPinPullSelect(ExtIntLdd1_PORTCONTROL_BASE_ADDRESS, ExtIntLdd1_PIN_INDEX, PORT_PDD_PULL_UP); \
+      PORT_PDD_SetPinPullEnable(ExtIntLdd1_PORTCONTROL_BASE_ADDRESS, ExtIntLdd1_PIN_INDEX, PORT_PDD_PULL_ENABLE);
+    #define IRQACK()   PORT_PDD_ClearPinInterruptFlag(ExtIntLdd1_PORTCONTROL_BASE_ADDRESS, ExtIntLdd1_PIN_INDEX) /* ack the interrupt */
   #elif 0 /* Macros for the MCF52259 using the IRQ on IRQ5 */
     #define IRQACK()  (EPFR = IRQ1_PIN_MASK)
   #else  /* Macros for the MCF51CN128 using the IRQ on PTE4 */
@@ -566,11 +566,18 @@ void %OnLeaveRadioSPI(void);
 #endif
 
 #if defined(__GNUC__)  /* Kinetis?*/
-  #define IRQINIT() /* pull-up and enable */\
+  #define IRQINIT() /* pull-up and enable interrupt */\
+%if (CPUfamily = "Kinetis")
     PORT_PDD_SetPinPullSelect(%@IRQ@'InheritedComponent'%.PORTCONTROL_BASE_ADDRESS, %@IRQ@'InheritedComponent'%.PIN_INDEX, PORT_PDD_PULL_UP); \
     PORT_PDD_SetPinPullEnable(%@IRQ@'InheritedComponent'%.PORTCONTROL_BASE_ADDRESS, %@IRQ@'InheritedComponent'%.PIN_INDEX, PORT_PDD_PULL_ENABLE);
   #define IRQACK() \
     PORT_PDD_ClearPinInterruptFlag(%@IRQ@'InheritedComponent'%.PORTCONTROL_BASE_ADDRESS, %@IRQ@'InheritedComponent'%.PIN_INDEX) /* ack the interrupt */
+%else
+    #define IRQINIT() \
+      PORT_PDD_SetPinPullSelect(ExtIntLdd1_PORTCONTROL_BASE_ADDRESS, ExtIntLdd1_PIN_INDEX, PORT_PDD_PULL_UP); \
+      PORT_PDD_SetPinPullEnable(ExtIntLdd1_PORTCONTROL_BASE_ADDRESS, ExtIntLdd1_PIN_INDEX, PORT_PDD_PULL_ENABLE);
+    #define IRQACK()   PORT_PDD_ClearPinInterruptFlag(ExtIntLdd1_PORTCONTROL_BASE_ADDRESS, ExtIntLdd1_PIN_INDEX) /* ack the interrupt */
+%endif
 #endif
 
 #ifndef IRQINIT
