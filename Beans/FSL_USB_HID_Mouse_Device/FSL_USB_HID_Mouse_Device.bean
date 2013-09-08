@@ -4,7 +4,7 @@
     <Name>FSL_USB_HID_Mouse_Device</Name>
     <Description>Freescale USB Stack (HID Mouse)</Description>
     <Author>Erich Styger</Author>
-    <Version>01.061</Version>
+    <Version>01.062</Version>
     <Icon>FSL_USB_HID_Mouse_Device</Icon>
     <TypesFiles>PE,FSL_USB_HID_Mouse_Device\FSL_USB_HID_Mouse_Device</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -392,9 +392,9 @@
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <Description>generate code</Description>
-        <Expanded>Yes</Expanded>
-        <DefaultValue>true</DefaultValue>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
         <IsAssembler>false</IsAssembler>

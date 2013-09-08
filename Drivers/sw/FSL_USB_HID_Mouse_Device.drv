@@ -309,6 +309,7 @@ uint_8 USB_App_Param_Callback(
                                          /* index == 0 for get/set idle,
                                             index == 1 for get/set protocol */
 
+  (void)wIndex; /* unused parameter */
   *size = 0;
   /* handle the class request */
   switch(request) {
@@ -411,6 +412,11 @@ byte %'ModuleName'%.%App_Task(void)
     }
     while(transactionOngoing) {
       /* wait until we send the next transaction */
+%if (CPUDevice="MC9S08JE128") | (CPUDevice="MC9S08JM16") | (CPUDevice="MC9S08JM60") | (CPUDevice="MC9S08JS16") | (CPUDevice="MC9S08MM128")
+      if (USB_PROCESS_PENDING()) { /* doing this only for MC9S08JE128, MC9S08JM16, MC9S08JM60, MC9S08JS16 and MC9S08MM128 */
+        USB_Engine();
+      }
+%endif
     }
   } /* while */
   return ERR_OK;
@@ -510,7 +516,7 @@ byte %'ModuleName'%.%Move(signed char x, signed char y)
 %include Common\FSL_USB_HID_Mouse_DeviceClick.Inc
 byte %'ModuleName'%.%Click(byte buttonMask)
 {
-  if (%@TxBuffer@'ModuleName'%.Put(buttonMask<<24)!=ERR_OK) { /* put 32bit value into buffer */
+  if (%@TxBuffer@'ModuleName'%.Put(((%@TxBuffer@'ModuleName'%.ElementType)buttonMask)<<24)!=ERR_OK) { /* put 32bit value into buffer */
     return ERR_FAILED;
   }
   return (%@TxBuffer@'ModuleName'%.Put(0)!=ERR_OK); /* send release message */
