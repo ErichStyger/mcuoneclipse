@@ -907,7 +907,7 @@ void  USB_DCI_Clear_DATA0_Endpoint (
     uint_8 bdt_index = USB_DCI_Validate_Param (endpoint_number, direction);
     P_BDT_ELEM bdt_elem = &g_bdt_elem[bdt_index]; 
 		
-		UNUSED(handle);
+	/*	UNUSED(handle); << EST: removed */
 	
 	bdt_index = bdt_elem->bdtmap_index;
 	
