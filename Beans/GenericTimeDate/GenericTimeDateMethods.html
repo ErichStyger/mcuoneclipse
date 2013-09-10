@@ -185,7 +185,7 @@ LI.EXP {
               
               GenericTimeDate
             </div>
-            <div class="descrtext">Generic Time and Date component</div>
+            <div class="descrtext">Generic Software Time and Date component</div>
             <div class="info_name">Component Level: <span class="info_text"><a href="../../DOCs/BeanCategoriesInfo.html#LevelAbstraction">High</a></span></div>
             <div class="info_name">Category: 
               <span class="info_text">
@@ -270,12 +270,35 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="ParseCommand">
+<b>ParseCommand</b></a>
+ - Shell Command Line parser
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>cmd: Pointer to byte</i> - Pointer to command line</li>
+<li><i>handled: Pointer to bool</i> - Pointer to variable which tells if the command has been handled or not</li>
+<li><i>io: Pointer to byte</i> - Pointer to I/O structure</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
 <li><a name="Init">
 <b>Init</b></a>
  - Initialization method
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
 <br /><i>ANSIC prototype:</i> void Init(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
+<li><a name="DeInit">
+<b>DeInit</b></a>
+ - Deinitializes the driver.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void DeInit(void)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 </ul><br />
 </li>

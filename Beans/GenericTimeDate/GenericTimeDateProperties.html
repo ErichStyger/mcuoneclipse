@@ -190,7 +190,7 @@ LI.EXP {
                 
                 GenericTimeDate
               </div>
-              <div class="descrtext">Generic Time and Date component</div>
+              <div class="descrtext">Generic Software Time and Date component</div>
               <div class="info_name">Component Level: <span class="info_text"><a href="../../DOCs/BeanCategoriesInfo.html#LevelAbstraction">High</a></span></div>
               <div class="info_name">Category: 
                 <span class="info_text">
@@ -225,6 +225,34 @@ LI.EXP {
 <li>
 <a name="TickTimeMs">
 <b>Tick Time (ms)</b></a> - Tick timer time in milli seconds. This is the frequency at which AddTick() is called.
+</li>
+<li>
+<a name="RTOSGroup">
+<b>RTOS</b></a> - If enabled, it is using automatically the period of the RTOS tick counter. Still you need to call the AddTick() method from the RTOS tick counter event callback.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+<ul>
+  <li>
+  <a name="RTOS">
+  <b>RTOS</b></a> - Interface to RTOS. You need to call from the tick counter the AddTick() method of this component.
+  </li>
+</ul>
+</li>
+<li>
+<a name="ShellEnabledGroup">
+<b>Shell</b></a> - Optional shell command line interface<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+<ul>
+  <li>
+  <a name="Utility">
+  <b>Utility</b></a> - Interface to utility
+  </li>
+  <li>
+  <a name="Shell">
+  <b>Shell</b></a> - Interface to shell
+  </li>
+</ul>
 </li>
 <li>
 <a name="InitializationEnabled">
