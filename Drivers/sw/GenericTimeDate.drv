@@ -287,7 +287,6 @@ static byte AddDate(byte *buf, word bufSize) {
   if (%'ModuleName'%.%GetDate(&tdate)!=ERR_OK) {
     return ERR_FAILED;
   }
-  %@Utility@'ModuleName'%.chcat(buf, bufSize, ' ');
   %@Utility@'ModuleName'%.strcatNum16uFormatted(buf, bufSize, tdate.Day, '0', 2);
   %@Utility@'ModuleName'%.chcat(buf, bufSize, '.');
   %@Utility@'ModuleName'%.strcatNum16uFormatted(buf, bufSize, tdate.Month, '0', 2);
@@ -402,9 +401,8 @@ static byte PrintStatus(%@Shell@'ModuleName'%.ConstStdIOType *io) {
   if (AddDate(buf, sizeof(buf))!=ERR_OK) {
     %@Shell@'ModuleName'%.SendStr((unsigned char*)"***Failed to get date!\r\n", io->stdErr);
     return ERR_FAILED;
-  } else {
-    %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
   }
+  %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
   %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)", ");
   if (AddTime(buf, sizeof(buf))!=ERR_OK) {
     %@Shell@'ModuleName'%.SendStr((unsigned char*)"***Failed to get time!\r\n", io->stdErr);
