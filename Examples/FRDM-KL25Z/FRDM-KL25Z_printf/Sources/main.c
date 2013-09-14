@@ -32,7 +32,8 @@ static void NegLED(void) {
   RED_TOGGLE;
 }
 
-#define DEMO_GETS  0 /* 1 or 0 */
+#define DEMO_GETS       0 /* 1 or 0 */
+#define DEMO_USE_FLOAT  1 /* 1 or 0: in order to use floating point in printf/scanf, you need use a standard library with float enabled. See Librarian options. */
 
 #if DEMO_GETS
 static char buffer[64];
@@ -54,11 +55,13 @@ int main(void) {
     NegLED();
 #else
 	  printf("counter: %d\r\n", counter);
+#if DEMO_USE_FLOAT
+    printf("float value: %f\r\n", 3.75f);
+#endif
     if ((counter%32)==0) { /* blink LED slowly so it is better visible */
       NegLED();
     }
 #endif
 	}
-	
 	return 0;
 }
