@@ -126,7 +126,7 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
 #define TICKLESS_DISABLE_INTERRUPTS()  __asm("sei"); /* disable interrupts */
 #define TICKLESS_ENABLE_INTERRUPTS()   __asm("cli"); /* re-enable interrupts */
 %else
-#define TICKLESS_DISABLE_INTERRUPTS()  portDISABLE_INTERRUPTS() /* this disables interrupts! Make sure they are re-enabled in %vOnPreSleepProcessing()! */
+#define TICKLESS_DISABLE_INTERRUPTS()  portDISABLE_INTERRUPTS() /* this disables interrupts! Make sure they are re-enabled in vOnPreSleepProcessing()! */
 #define TICKLESS_ENABLE_INTERRUPTS()   portENABLE_INTERRUPTS()  /* re-enable interrupts */
 %endif
 
