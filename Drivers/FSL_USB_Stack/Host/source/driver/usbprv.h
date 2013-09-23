@@ -32,7 +32,9 @@
 #define __usbprv_h__ 1
 #include "derivative.h"
 #include "psptypes.h"
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS'
 #include "freeRTOS.h" /* << EST: FreeRTOS malloc()/free() */
+%endif
 
 #if (defined _MCF51MM256_H) || (defined _MCF51JE256_H)
 	#include "usb_lock.h"
@@ -78,11 +80,11 @@
 	/* todo AI: change this to USB_mem_alloc_zero */
 	#define USB_mem_alloc_zero(n)             USB_mem_alloc_word_aligned(n)
 #endif
-#if 0
-	#define USB_mem_free(ptr)                     free(ptr)
-#else
-  #define USB_mem_free(ptr)                     vPortFree(ptr)
-#endif
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS'
+#define USB_mem_free(ptr)                     vPortFree(ptr)
+%else
+#define USB_mem_free(ptr)                     free(ptr)
+%endif
 #define USB_mem_zero(ptr,n)                   memset((ptr),(0),(n))
 #define USB_mem_copy(src,dst,n)               memcpy((dst),(src),(n))
 
