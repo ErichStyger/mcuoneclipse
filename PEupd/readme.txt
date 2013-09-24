@@ -31,9 +31,9 @@ Package from component(s):
 - FontDisplay version 01.195
 - FreeRTOS version 01.303
 - FreeRTOSTrace version 01.003
-- FSL_USB_CDC_Device version 01.018
-- FSL_USB_HID_Keyboard_Device version 01.047
-- FSL_USB_HID_Mouse_Device version 01.059
+- FSL_USB_CDC_Device version 01.020
+- FSL_USB_HID_Keyboard_Device version 01.049
+- FSL_USB_HID_Mouse_Device version 01.062
 - FSL_USB_MSD_Host version 01.015
 - FSL_USB_Stack version 01.023
 - FSShell version 01.231
@@ -44,7 +44,7 @@ Package from component(s):
 - GenericSPI version 01.029
 - GenericSWI2C version 01.003
 - GenericSWSPI version 01.001
-- GenericTimeDate version 01.002
+- GenericTimeDate version 01.015
 - GFont version 01.123
 - HardFault version 01.008
 - I2CSpy version 01.009
@@ -62,14 +62,14 @@ Package from component(s):
 - LowPower version 01.016
 - MAG3110 version 01.004
 - MaxonF2140 version 01.001
-- MC13192 version 01.003
+- MC13192 version 01.004
 - MC34673 version 01.019
 - MMA7260Q version 01.110
 - MMA7455L version 01.043
-- MMA8451Q version 01.024
+- MMA8451Q version 01.028
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 02.09.2013
+created 24.09.2013
 
 Part2_Beans_*.PEupd Content:
 -------------------------------------
@@ -103,8 +103,7 @@ Package from component(s):
 - Timeout version 01.023
 - TouchScreen version 01.077
 - TouchScreenSensor version 01.053
-- Trigger version 01.054
-- TwoKeys version 01.015
+- Trigger version 01.055
 - UI version 01.056
 - UIButton version 01.121
 - UICalendar version 01.030
@@ -127,5 +126,6 @@ Package from component(s):
 - UTI version 01.125
 - Utility version 01.091
 - Wait version 01.064
-created 02.09.2013
+created 24.09.2013
+
 
