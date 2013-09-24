@@ -1,8 +1,8 @@
 
 [USED_FACES]
-BeanVersion=01.023
+BeanVersion=01.028
 
-InterfacesCount=5
+InterfacesCount=6
 
 Symbol=Wait
 Link=Yes
@@ -18,6 +18,11 @@ Symbol=WP
 Link=No
 Interface=24AA_EEPROM\WP
 Version=01.003
+
+Symbol=Timeout
+Link=Yes
+Interface=24AA_EEPROM\Timeout
+Version=01.000
 
 Symbol=Shell
 Link=Yes

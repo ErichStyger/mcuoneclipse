@@ -298,6 +298,12 @@ byte %'ModuleName'%.%GetSelectedDevice(void);
 %-   Example:
 %-     #include "header_name.h"
 %-
+%if defined(Timeout)
+#define %'ModuleName'%.TIMEOUT_BYTE_MS        %timeoutByteMs  /* number of milli seconds as specified in properties for byte write */
+#define %'ModuleName'%.TIMEOUT_BYTE_TICKS     (%'ModuleName'%.TIMEOUT_BYTE_MS/(%@Timeout@'ModuleName'%.TICK_PERIOD_MS))
+#define %'ModuleName'%.TIMEOUT_BLOCK_MS       %timeoutBlockMs  /* number of milli seconds as specified in properties for block write */
+#define %'ModuleName'%.TIMEOUT_BLOCK_TICKS    (%'ModuleName'%.TIMEOUT_BLOCK_MS/(%@Timeout@'ModuleName'%.TICK_PERIOD_MS))
+%endif
 %-BW_CUSTOM_INCLUDE_END_M
 
 %-BW_CUSTOM_VARIABLE_START
@@ -383,6 +389,12 @@ static uint8_t PrintHelp(const %@Shell@'ModuleName'%.StdIOType *io) {
 byte %'ModuleName'%.%WriteByte(%'ModuleName'_Address addr, byte data)
 {
   uint8_t res, block[3];
+%if defined(Timeout)
+#if %'ModuleName'%.DO_ACKNOWLEDGE_POLLING && %'ModuleName'%.TIMEOUT_BYTE_TICKS>0
+  %@Timeout@'ModuleName'%.CounterHandle timeout;
+  bool isTimeout;
+#endif
+%endif
 
   res = %@I2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_ADDR(addr));
   if (res != ERR_OK) {
@@ -401,9 +413,34 @@ byte %'ModuleName'%.%WriteByte(%'ModuleName'_Address addr, byte data)
   /* do acknowledge polling */
   //%@Wait@'ModuleName'%.WaitOSms(%'ModuleName'%.PAGE_WRITE_TIME_MS);
   block[0] = 0xff; /* dummy value */
+%if defined(Timeout)
+#if %'ModuleName'%.TIMEOUT_BYTE_TICKS>0
+    timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_BYTE_TICKS); /* set up timeout counter */
+    if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
+      (void)%@I2C@'ModuleName'%.UnselectSlave();
+      return ERR_FAILED;
+    }
+#endif
+%endif
   do {
+%if defined(Timeout)
+#if %'ModuleName'%.TIMEOUT_BYTE_TICKS>0
+    isTimeout = %@Timeout@'ModuleName'%.CounterExpired(timeout);
+    if (isTimeout) {
+      break; /* break while() */
+    }
+#endif
+%endif
     res = %@I2C@'ModuleName'%.WriteBlock(block, 1, %@I2C@'ModuleName'%.SEND_STOP);%>40 /* send address and data */
   } while(res!=ERR_OK); /* wait until we get an ACK */
+%if defined(Timeout)
+#if %'ModuleName'%.TIMEOUT_BYTE_TICKS>0
+    %@Timeout@'ModuleName'%.LeaveCounter(timeout);
+    if (isTimeout) {
+      res = ERR_FAILED;
+    }
+#endif
+%endif
 #endif
   if (res != ERR_OK) {
     (void)%@I2C@'ModuleName'%.UnselectSlave();
@@ -508,6 +545,12 @@ byte %'ModuleName'%.%ReadBlock(%'ModuleName'_Address addr, byte *data, word data
 #endif
 byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dataSize)
 {
+%if defined(Timeout)
+#if %'ModuleName'%.DO_ACKNOWLEDGE_POLLING && %'ModuleName'%.TIMEOUT_BLOCK_TICKS>0
+  %@Timeout@'ModuleName'%.CounterHandle timeout;
+  bool isTimeout;
+#endif
+%endif
   uint8_t res, i, *p, block[%'ModuleName'%.BLOCK_BUF_SIZE+2];    %>40 /* additional 2 bytes for the address */
   uint16_t eepromPage = (uint16_t)(addr/%'ModuleName'%.PAGE_SIZE);
   uint8_t offset = (uint8_t)(addr%%%'ModuleName'%.PAGE_SIZE);
@@ -540,10 +583,36 @@ byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dat
 #if %'ModuleName'%.DO_ACKNOWLEDGE_POLLING
     /* do acknowledge polling */
     //%@Wait@'ModuleName'%.WaitOSms(%'ModuleName'%.PAGE_WRITE_TIME_MS);
+%if defined(Timeout)
+#if %'ModuleName'%.TIMEOUT_BLOCK_TICKS>0
+    timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_BLOCK_TICKS); /* set up timeout counter */
+    if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
+      (void)%@I2C@'ModuleName'%.UnselectSlave();
+      return ERR_OVERFLOW;
+    }
+#endif
+%endif
     block[0] = 0xff; /* dummy value */
     do {
       res = %@I2C@'ModuleName'%.WriteBlock(block, 1, %@I2C@'ModuleName'%.SEND_STOP);%>40 /* send address and data */
+%if defined(Timeout)
+#if %'ModuleName'%.TIMEOUT_BLOCK_TICKS>0
+      isTimeout = %@Timeout@'ModuleName'%.CounterExpired(timeout);
+      if (isTimeout) {
+        res = ERR_FAULT;
+        break;
+      }
+#endif
+%endif
     } while(res!=ERR_OK); /* wait until we get an ACK */
+%if defined(Timeout)
+#if %'ModuleName'%.TIMEOUT_BLOCK_TICKS>0
+    %@Timeout@'ModuleName'%.LeaveCounter(timeout);
+    if (isTimeout) {
+      res = ERR_FAILED;
+    }
+#endif
+%endif
     if (res != ERR_OK) {
       (void)%@I2C@'ModuleName'%.UnselectSlave();
       return res;

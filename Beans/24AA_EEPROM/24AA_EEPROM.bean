@@ -4,7 +4,7 @@
     <Name>24AA_EEPROM</Name>
     <Description>Microchip 24AA Serial EEPROM</Description>
     <Author>Erich Styger</Author>
-    <Version>01.023</Version>
+    <Version>01.028</Version>
     <Icon>24AA_EEPROM</Icon>
     <TypesFiles>PE,24AA_EEPROM\24AA_EEPROM</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -201,6 +201,72 @@ Typical values:\n
           </GrupItem>
         </Children>
       </TGrupItem>
+    </Property>
+    <Property>
+      <TBoolGrupItem>
+        <Name>Timeout</Name>
+        <Symbol>TimeoutEnabled</Symbol>
+        <TypeSpec>typeEnaDis</TypeSpec>
+        <Hint>If enabled, the component is using a timer based timeout</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>Disabled</Description>
+        <Expanded>Yes</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <Children>
+          <GrupItem>
+            <TInhrLinkItem>
+              <Name>Timeout</Name>
+              <Symbol>Timeout</Symbol>
+              <TypeSpec>24AA_EEPROM\Timeout</TypeSpec>
+              <Hint>Interface to timeout module</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <DefaultValue/>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <SortStyle/>
+            </TInhrLinkItem>
+          </GrupItem>
+          <GrupItem>
+            <TIntgItem>
+              <Name>Timeout Byte (ms)</Name>
+              <Symbol>timeoutByteMs</Symbol>
+              <Hint>Timeout value in milli seconds for byte write. Note that values are always a multiple of timeout ticks.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>10</DefaultValue>
+              <MinValue>0</MinValue>
+              <MaxValue>-1</MaxValue>
+              <Bases>DEC</Bases>
+              <DefaultBase>DEC</DefaultBase>
+              <ExtraHintDisabled>false</ExtraHintDisabled>
+              <ChangeValueIntoRange>false</ChangeValueIntoRange>
+              <RuntimeProperty>false</RuntimeProperty>
+            </TIntgItem>
+          </GrupItem>
+          <GrupItem>
+            <TIntgItem>
+              <Name>Timeout Block (ms)</Name>
+              <Symbol>timeoutBlockMs</Symbol>
+              <Hint>Timeout value in milli seconds for block write. Note that values are always a multiple of timeout ticks.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>60</DefaultValue>
+              <MinValue>0</MinValue>
+              <MaxValue>-1</MaxValue>
+              <Bases>DEC</Bases>
+              <DefaultBase>DEC</DefaultBase>
+              <ExtraHintDisabled>false</ExtraHintDisabled>
+              <ChangeValueIntoRange>false</ChangeValueIntoRange>
+              <RuntimeProperty>false</RuntimeProperty>
+            </TIntgItem>
+          </GrupItem>
+        </Children>
+      </TBoolGrupItem>
     </Property>
     <Property>
       <TBoolGrupItem>

@@ -16,6 +16,13 @@
 %;**%>16 WP %>60: %get(WP,Text)
 %else %- WriteProtectionGroup
 %endif %- WriteProtectionGroup
+%;**%>12 Timeout %>60: %get(TimeoutEnabled,Text)
+%if %get(TimeoutEnabled, Bool) = 'yes'
+%;**%>14 Timeout %>60: %get(Timeout,Text)
+%;**%>14 Timeout Byte (ms) %>60: %get(timeoutByteMs,Text)
+%;**%>14 Timeout Block (ms) %>60: %get(timeoutBlockMs,Text)
+%else %- TimeoutEnabled
+%endif %- TimeoutEnabled
 %;**%>12 Shell %>60: %get(ShellEnabled,Text)
 %if %get(ShellEnabled, Bool) = 'yes'
 %;**%>14 Shell %>60: %get(Shell,Text)
