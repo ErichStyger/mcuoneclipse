@@ -38,7 +38,7 @@
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.1064370268" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker">
 								<option id="gnu.c.link.option.nostart.1979273255" name="Do not use standard start files (-nostartfiles)" superClass="gnu.c.link.option.nostart" value="true" valueType="boolean"/>
-								<option id="gnu.c.link.option.ldflags.693347364" name="Linker flags" superClass="gnu.c.link.option.ldflags" value="-mthumb -T&quot;${ProjDirPath}/Project_Settings/Linker_Files/MKL25Z128_flash.ld&quot;" valueType="string"/>
+								<option id="gnu.c.link.option.ldflags.693347364" name="Linker flags" superClass="gnu.c.link.option.ldflags" value="-mthumb -mcpu=cortex-m0 -T&quot;${ProjDirPath}/Project_Settings/Linker_Files/MKL25Z128_flash.ld&quot;" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.983496725" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
