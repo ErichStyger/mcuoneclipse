@@ -190,7 +190,7 @@
 /* Prototypes for interrupt service handlers */
 void vPortSVCHandler(void);
 void vPortPendSVHandler(void);
-void vOnCounterRestart(void);
+void vPortTickHandler(void);
 %-
 %if (defined(PEversionDecimal) && (PEversionDecimal >=0 '1282')) %- this is only supported with MCU 10.3
 %- Get interrupts info from CPU database
@@ -204,7 +204,7 @@ void vOnCounterRestart(void);
      %elif vect = 'ivINT_PendableSrvReq'
        %define_prj %'vect' vPortPendSVHandler
      %elif useARMSysTickTimer='yes' & vect = 'ivINT_SysTick'
-       %define_prj %'vect' vOnCounterRestart
+       %define_prj %'vect' vPortTickHandler
      %else
        %- keep PEx default
      %endif
@@ -2064,7 +2064,7 @@ void %@TickTimerLDD@OnCounterRestart(LDD_TUserData *UserDataPtr) {
 %else
 void %@TickTimerLDD@OnCounterRestart(LDD_TUserData *UserDataPtr __attribute__((unused))) {
 %endif
-  vOnCounterRestart();
+  vPortTickHandler();
 }
 
 %endif %- @TickTimerLDD@OnCounterRestart

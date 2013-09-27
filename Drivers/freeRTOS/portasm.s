@@ -1,5 +1,5 @@
 %if %Compiler == "GNUC"  %- GNU gcc
-/* file is intentionally empty as not needed with %Compiler for this FreeRTOS port*/
+/* file is intentionally empty as not needed with %Compiler for this FreeRTOS port */
 %elif %Compiler=="ARM_CC" %- Keil ARM
 	AREA ARMEex, CODE, READONLY
 dummy    ; dummy label, will not be used

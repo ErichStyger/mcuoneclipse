@@ -998,14 +998,14 @@ portLONG uxGetTickCounterValue(void) {
 /*-----------------------------------------------------------*/
 %endif
 %if (CPUfamily = "Kinetis") & (%Compiler = "ARM_CC") %- Keil compiler for ARM
-void vOnCounterRestart(void) {
+void vPortTickHandler(void) {
   /* this is how we get here:
     RTOSTICKLDD1_Interrupt:
     push {r4, lr}
     ...                                       RTOSTICKLDD1_OnCounterRestart
     bl RTOSTICKLDD1_OnCounterRestart     ->   push {r4,lr}
     pop {r4, lr}                              mov r4,r0
-                                              bl vOnCounterRestart
+                                              bl vPortTickHandler
                                               pop {r4,pc}
   */
 #if configUSE_TICKLESS_IDLE == 1
@@ -1020,9 +1020,9 @@ void vOnCounterRestart(void) {
 /*-----------------------------------------------------------*/
 %elif (CPUfamily = "Kinetis") & (%Compiler = "GNUC") %- GNU gcc for ARM
 %if useARMSysTickTimer='yes'
-void vOnCounterRestart(void) {
+void vPortTickHandler(void) {
 %else
-__attribute__ ((naked)) void vOnCounterRestart(void) {
+__attribute__ ((naked)) void vPortTickHandler(void) {
 %endif
 %if useARMSysTickTimer='no'
 #if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
