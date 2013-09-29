@@ -1052,7 +1052,6 @@ uint_8 USB_DCI_Get_Transfer_Status (
  * This function clear the DATA0/1 bit 
  *****************************************************************************/
 void  USB_DCI_Clear_DATA0_Endpoint (
-    _usb_device_handle    handle,    /* [IN] USB Device handle */
     uint_8                endpoint_number,    /* [IN] Endpoint number */
     uint_8                direction           /* [IN] Endpoint direction */
 )
@@ -1063,8 +1062,6 @@ void  USB_DCI_Clear_DATA0_Endpoint (
 	uint_8 bdt_index = USB_DCI_Validate_Param(endpoint_number, direction, USB_RAM_EVEN_BUFFER);	
 	P_BDT_ELEM bdt_elem = &g_bdt_elem[TRANSFER_INDEX(bdt_index)];
 		
-		UNUSED(handle);
-	
 	bdt_index = bdt_elem->bdtmap_index;
 	
 	/*Check for a valid bdt index */
