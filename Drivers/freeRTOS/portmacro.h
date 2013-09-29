@@ -277,16 +277,16 @@ extern void vPortSetInterruptMask(void);
 extern void vPortClearInterruptMask(void);
 extern void vPortEnterCritical(void);
 extern void vPortExitCritical(void);
-%if (%Compiler = "IARARM")
+#if configCOMPILER==configCOMPILER_IAR
 /* \todo: !!! IAR does not allow msr BASEPRI, r0 in vPortSetInterruptMask()? */
 #define portDISABLE_ALL_INTERRUPTS()         __asm volatile( "cpsid i" )
 #define portDISABLE_INTERRUPTS()             __asm volatile( "cpsid i" )
 #define portENABLE_INTERRUPTS()              __asm volatile( "cpsie i" )
-%else
+#else
 #define portDISABLE_ALL_INTERRUPTS()         __asm volatile( "cpsid i" )
 #define portDISABLE_INTERRUPTS()             vPortSetInterruptMask()
 #define portENABLE_INTERRUPTS()              vPortClearInterruptMask()
-%endif
+#endif
 #define portENTER_CRITICAL()                 vPortEnterCritical()
 #define portEXIT_CRITICAL()                  vPortExitCritical()
 #define portSET_INTERRUPT_MASK_FROM_ISR()    0;vPortSetInterruptMask()
@@ -665,6 +665,13 @@ void vPortYieldHandler(void);
 
 void vPortEnableVFP(void);
   /* enables floating point support in the CPU */
+%endif
+%if (CPUfamily = "Kinetis")
+
+/* Prototypes for interrupt service handlers */
+void vPortSVCHandler(void); /* SVC interrupt handler */
+void vPortPendSVHandler(void); /* PendSV interrupt handler */
+void vPortTickHandler(void); /* Systick interrupt handler */
 %endif
 
 #ifdef __cplusplus

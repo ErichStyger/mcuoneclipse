@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.303</Version>
+    <Version>01.308</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -50,6 +50,37 @@
         <MinLength>0</MinLength>
         <MaxLength>-1</MaxLength>
       </TStrgItem>
+    </Property>
+    <Property>
+      <TBoolGrupItem>
+        <Name>Sources</Name>
+        <Symbol>SourceGenerationOptions</Symbol>
+        <TypeSpec>typeEnaDis</TypeSpec>
+        <Hint>Source Code Generation Option for the RTOS</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>Disabled</Description>
+        <Expanded>Yes</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <Children>
+          <GrupItem>
+            <TStrgItem>
+              <Name>Folder Name</Name>
+              <Symbol>RTOSFolderName</Symbol>
+              <Hint>RTOS sources are generated into this sub folder name. The name can be empty.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>FreeRTOS</DefaultValue>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+            </TStrgItem>
+          </GrupItem>
+        </Children>
+      </TBoolGrupItem>
     </Property>
     <Property>
       <TBoolItem>

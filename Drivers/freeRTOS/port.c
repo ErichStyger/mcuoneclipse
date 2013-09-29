@@ -79,9 +79,10 @@
 %endif
 
 /* Kernel includes. */
-#include "%'ModuleName'.h" /* for FREERTOS_CPU_CORTEX_M */
+#include "portmacro.h" /* for FREERTOS_CPU_CORTEX_M */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "%ProcessorModule.h" /* for CPU_CORE_CLK_HZ used in configSYSTICK_CLOCK_HZ */
 
 /* --------------------------------------------------- */
 /* macros dealing with tick counter */

@@ -75,18 +75,16 @@ task.h is included from an application file. */
 %for var from EventModules
 #include "%var.h"
 %endfor
-#include "%'ModuleName'.h" /* interface to the runtime counter */
-%if (%Compiler = "IARARM")
-/* << EST: suppress warnings for IAR */
-#pragma diag_suppress=pa082 /* Warning[Pa082]: undefined behavior: the order of volatile accesses is undefined in this statement */
-
-%endif
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "timers.h"
 #include "StackMacros.h"
+
+#if (configCOMPILER == configCOMPILER_ARM_IAR) /* << EST: suppress warnings for IAR */
+#pragma diag_suppress=pa082 /* Warning[Pa082]: undefined behavior: the order of volatile accesses is undefined in this statement */
+#endif
 
 /* Lint e961 and e750 are suppressed as a MISRA exception justified because the
 MPU ports require MPU_WRAPPERS_INCLUDED_FROM_API_FILE to be defined for the

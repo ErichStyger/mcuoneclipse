@@ -707,9 +707,9 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 			return errQUEUE_FULL;
 		}
 	}
-%if (%Compiler = "GNUC")
+#if configCOMPILER==configCOMPILER_ARM_GCC
 	return errQUEUE_EMPTY; /* << EST: will not reach this return. Dummy return to make gcc happy */
-%endif
+#endif
 }
 /*-----------------------------------------------------------*/
 
@@ -1187,9 +1187,9 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 			return errQUEUE_EMPTY;
 		}
 	}
-%if (%Compiler = "GNUC")
+#if (configCOMPILER==configCOMPILER_ARM_GCC)
 	return errQUEUE_EMPTY; /* << EST: will not reach this return. Dummy return to make gcc happy */
-%endif
+#endif
 }
 /*-----------------------------------------------------------*/
 

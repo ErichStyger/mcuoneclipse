@@ -332,6 +332,69 @@
 #define configCOMMAND_INT_MAX_OUTPUT_SIZE                        %>50 %CommandIntMaxOutputSize
 %endif
 %- --------------------------------------------------------------------
+/* -------------------------------------------------------------------- */
+/* Macros to identify the compiler used: */
+#define configCOMPILER_ARM_GCC     1 /* GNU ARM gcc compiler */
+#define configCOMPILER_ARM_IAR     2 /* IAR ARM compiler */
+#define configCOMPILER_ARM_FSL     3 /* Legacy Freescale ARM compiler */
+#define configCOMPILER_ARM_KEIL    4 /* ARM/Keil compiler */
+#define configCOMPILER_S08_FSL     5 /* Freescale HCS08 compiler */
+#define configCOMPILER_RS08_FSL    6 /* Freescale RS08 compiler */
+#define configCOMPILER_S12_FSL     7 /* Freescale HCS12(X) compiler */
+#define configCOMPILER_CF1_FSL     8 /* Freescale ColdFire V1 compiler */
+#define configCOMPILER_CF2_FSL     9 /* Freescale ColdFire V2 compiler */
+#define configCOMPILER_DSC_FSL    10 /* Freescale DSC compiler */
+
+%if (%Compiler = "IARARM")
+#define configCOMPILER        configCOMPILER_ARM_IAR
+%elif (%Compiler = "GNUC")
+#define configCOMPILER        configCOMPILER_ARM_GCC
+%elif (%Compiler = "CodeWarriorARM")
+#define configCOMPILER        configCOMPILER_ARM_FSL
+%elif (%Compiler = "ARM_CC")
+#define configCOMPILER        configCOMPILER_ARM_KEIL
+%elif (%Compiler = "MetrowerksHC08CC") | (%Compiler = "MetrowerksHCS08CC")
+#define configCOMPILER        configCOMPILER_S08_FSL
+%elif (%Compiler = "CodeWarriorRS08CC")
+#define configCOMPILER        configCOMPILER_RS08_FSL
+%elif (%Compiler = "MetrowerksHC12CC") | (%Compiler = "MetrowerksHC12XCC")
+#define configCOMPILER        configCOMPILER_S12_FSL
+%elif (%Compiler = "CodeWarriorColdFireV1")
+#define configCOMPILER        configCOMPILER_CF1_FSL
+%elif (%Compiler = "CodeWarriorMCF")
+#define configCOMPILER        configCOMPILER_CF2_FSL
+%elif (%Compiler = "MetrowerksDSP")
+#define configCOMPILER        configCOMPILER_DSC_FSL
+%else
+#define configCOMPILER        0
+#error unknown compiler %Compiler?
+%endif
+/* -------------------------------------------------------------------- */
+/* CPU family identification */
+#define configCPU_FAMILY_S08  1  /* S08 core */
+#define configCPU_FAMILY_S12  2  /* S12(X) core */
+#define configCPU_FAMILY_CF1  3  /* ColdFire V1 core */
+#define configCPU_FAMILY_CF2  4  /* ColdFire V2 core */
+#define configCPU_FAMILY_DSC  5  /* 56800/DSC */
+#define configCPU_FAMILY_ARM  6  /* ARM Cortex-M */
+
+%if (CPUfamily = "HCS08") | (CPUfamily = "HC08")
+#define configCPU_FAMILY  configCPU_FAMILY_S08
+%elif (CPUfamily = "HCS12") | (CPUfamily = "HCS12X")
+#define configCPU_FAMILY  configCPU_FAMILY_S12
+%elif (CPUfamily = "ColdFireV1")
+#define configCPU_FAMILY  configCPU_FAMILY_V1
+%elif (CPUfamily = "MCF")
+#define configCPU_FAMILY  configCPU_FAMILY_V2
+%elif (CPUfamily = "56800")
+#define configCPU_FAMILY  configCPU_FAMILY_DSC  
+%elif (CPUfamily = "Kinetis")
+#define configCPU_FAMILY  configCPU_FAMILY_ARM
+%else
+#define configCPU_FAMILY  0
+#error Unknown CPU family %CPUfamily?
+%endif
+/* -------------------------------------------------------------------- */
 %if (CPUfamily = "ColdFireV1")
 /* It is not advisable to change these values on a ColdFire V1 core. */
 %endif
