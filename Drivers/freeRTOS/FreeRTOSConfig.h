@@ -121,8 +121,16 @@
 %else
 #define configUSE_MALLOC_FAILED_HOOK                             %>50 0
 %endif
-#define configCPU_CLOCK_HZ                                       %>50 CPU_CORE_CLK_HZ /* CPU core clock */
-#define configBUS_CLOCK_HZ                                       %>50 CPU_BUS_CLK_HZ /* CPU bus clock */
+%if defined(configCPU_CLOCK_HZ)
+#define configCPU_CLOCK_HZ                                       %>50 %configCPU_CLOCK_HZ
+%else
+#define configCPU_CLOCK_HZ                                       %>50 CPU_CORE_CLK_HZ /* CPU core clock defined in %ProcessorModule.h */
+%endif
+%if defined(configBUS_CLOCK_HZ)
+#define configBUS_CLOCK_HZ                                       %>50 %configBUS_CLOCK_HZ
+%else
+#define configBUS_CLOCK_HZ                                       %>50 CPU_BUS_CLK_HZ /* CPU bus clock defined in %ProcessorModule.h */
+%endif
 #define configTICK_RATE_HZ                                       %>50 ((portTickType)%TickRateHz) /* frequency of tick interrupt */
 %if defined(useARMSysTickUseCoreClock) & useARMSysTickUseCoreClock='no'
 #define configSYSTICK_USE_CORE_CLOCK                             %>50 0 /* System Tick is using external reference clock clock  */
@@ -137,11 +145,11 @@
 %if defined(TickTimerLDD)
 #define configSYSTICK_CLOCK_HZ                                   %>50 %@TickTimerLDD@'ModuleName'%.CNT_INP_FREQ_U_0 /* frequency of system tick counter */
 %elif defined(useARMSysTickTimer) & useARMSysTickTimer='yes'
-#define configSYSTICK_CLOCK_HZ                                   %>50 ((CPU_CORE_CLK_HZ)/configSYSTICK_CLOCK_DIVIDER) /* frequency of system tick counter */
+#define configSYSTICK_CLOCK_HZ                                   %>50 ((configCPU_CLOCK_HZ)/configSYSTICK_CLOCK_DIVIDER) /* frequency of system tick counter */
 %elif defined(TickCntr)
 #define configSYSTICK_CLOCK_HZ                                   %>50 %@TickCntr@'ModuleName'%.COUNTER_INPUT_CLOCK_HZ /* frequency of system tick counter */
 %else
-#define configSYSTICK_CLOCK_HZ                                   %>50 CPU_BUS_CLK_HZ /* frequency of system tick counter */
+#define configSYSTICK_CLOCK_HZ                                   %>50 configBUS_CLOCK_HZ /* frequency of system tick counter */
 %endif
 #define configMINIMAL_STACK_SIZE                                 %>50 ((unsigned portSHORT)%MinimalStackSize)
 

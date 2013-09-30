@@ -71,18 +71,12 @@
     engineered and independently SIL3 certified version for use in safety and 
     mission critical applications that require provable dependability.
 */
-/* include inherited beans */
-%ifdef InhrSymbolList
-  %for var from InhrSymbolList
-#include "%@%var@ModuleName.h"
-  %endfor
-%endif
 
 /* Kernel includes. */
 #include "portmacro.h" /* for FREERTOS_CPU_CORTEX_M */
 #include "FreeRTOS.h"
 #include "task.h"
-#include "%ProcessorModule.h" /* for CPU_CORE_CLK_HZ used in configSYSTICK_CLOCK_HZ */
+#include "portTicks.h" /* for CPU_CORE_CLK_HZ used in configSYSTICK_CLOCK_HZ */
 
 /* --------------------------------------------------- */
 /* macros dealing with tick counter */

@@ -60,8 +60,9 @@ portLONG uxGetTickCounterValue(void);
 #endif
 
 %elif defined(useARMSysTickTimer) & useARMSysTickTimer='yes'
-/* include CPU module because of dependency to CPU clock rate */
-#include "%ProcessorModule.h"
+%if defined(UseManualClockValues) & UseManualClockValues='no'
+#include "%ProcessorModule.h" /* include CPU module because of dependency to CPU clock rate */
+%endif
 #include "FreeRTOSConfig.h"
 
 /*!

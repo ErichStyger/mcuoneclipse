@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.308</Version>
+    <Version>01.311</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -78,6 +78,50 @@
               <MinLength>0</MinLength>
               <MaxLength>-1</MaxLength>
             </TStrgItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>Manual Clock Values</Name>
+              <Symbol>UseManualClockValues</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>If enabled, it is using predefined clock values instead of the values from the Processor Expert Cpu.h</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Enabled</Description>
+              <Expanded>Yes</Expanded>
+              <DefaultValue>true</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TStrgItem>
+                    <Name>configCPU_CLOCK_HZ</Name>
+                    <Symbol>configCPU_CLOCK_HZ</Symbol>
+                    <Hint>Clock speed of CPU, default is CPU_CORE_CLK_HZ with Processor Expert</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>CPU_CORE_CLK_HZ /* CPU core clock from Processor Expert Cpu.h */</DefaultValue>
+                    <StrDefine>nothing</StrDefine>
+                    <MinLength>0</MinLength>
+                    <MaxLength>-1</MaxLength>
+                  </TStrgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TStrgItem>
+                    <Name>configBUS_CLOCK_HZ</Name>
+                    <Symbol>configBUS_CLOCK_HZ</Symbol>
+                    <Hint>Bus clock speed, default is CPU_BUS_CLK_HZ with Processor Expert</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>CPU_BUS_CLK_HZ /* CPU bus clock from Processor Expert Cpu.h */</DefaultValue>
+                    <StrDefine>nothing</StrDefine>
+                    <MinLength>0</MinLength>
+                    <MaxLength>-1</MaxLength>
+                  </TStrgItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
           </GrupItem>
         </Children>
       </TBoolGrupItem>

@@ -236,6 +236,22 @@ The following items are available only if the group is enabled (the value is "En
   <a name="RTOSFolderName">
   <b>Folder Name</b></a> - RTOS sources are generated into this sub folder name. The name can be empty.
   </li>
+  <li>
+  <a name="UseManualClockValues">
+  <b>Manual Clock Values</b></a> - If enabled, it is using predefined clock values instead of the values from the Processor Expert Cpu.h<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+  <ul>
+    <li>
+    <a name="configCPU_CLOCK_HZ">
+    <b>configCPU_CLOCK_HZ</b></a> - Clock speed of CPU, default is CPU_CORE_CLK_HZ with Processor Expert
+    </li>
+    <li>
+    <a name="configBUS_CLOCK_HZ">
+    <b>configBUS_CLOCK_HZ</b></a> - Bus clock speed, default is CPU_BUS_CLK_HZ with Processor Expert
+    </li>
+  </ul>
+  </li>
 </ul>
 </li>
 <li>

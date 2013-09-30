@@ -75,6 +75,9 @@ task.h is included from an application file. */
 %for var from EventModules
 #include "%var.h"
 %endfor
+#if ( ( configUSE_TRACE_FACILITY == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS == 1 ) )
+#include "%'Utility'.h" /* interface to utility because used for safe string routines */ /* << EST */
+#endif
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
