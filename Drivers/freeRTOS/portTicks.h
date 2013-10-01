@@ -14,11 +14,6 @@
 #ifndef PORTTICKS_H_
 #define PORTTICKS_H_
 
-%if (CPUfamily = "Kinetis")
-void vOnCounterRestart(void);
-  /* RTOS tick handler interrupt service routine */
-%endif
-
 %ifdef TickCntr %- non-LDD version
 /* support for trace and access to tick counter */
 #include "%@TickCntr@'ModuleName'.h"
@@ -60,7 +55,8 @@ portLONG uxGetTickCounterValue(void);
 #endif
 
 %elif defined(useARMSysTickTimer) & useARMSysTickTimer='yes'
-%if defined(UseManualClockValues) & UseManualClockValues='no'
+%if defined(UseManualClockValues) & UseManualClockValues='yes'  %- have provided manual clock values: no need for Cpu.h
+%else
 #include "%ProcessorModule.h" /* include CPU module because of dependency to CPU clock rate */
 %endif
 #include "FreeRTOSConfig.h"
