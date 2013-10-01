@@ -102,9 +102,10 @@ _vPortStartFirstTask:
 #include "FreeRTOSConfig.h"
 
 #define VECTOR_TABLE_OFFSET_REG     0xE000ED08 /* Vector Table Offset Register (VTOR) */
-%if %M4FFloatingPointSupport='yes'
-#define COPROCESSOR_ACCESS_REGISTER 0xE000ED88 /* Coprocessor Access Register (CPACR) */
-%endif
+
+#if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
+  #define COPROCESSOR_ACCESS_REGISTER 0xE000ED88 /* Coprocessor Access Register (CPACR) */
+#endif
 
   RSEG    CODE:CODE(2)
   thumb
@@ -114,7 +115,7 @@ _vPortStartFirstTask:
   EXTERN vTaskSwitchContext
   EXTERN xTaskIncrementTick
 
-  PUBLIC vOnCounterRestart
+  PUBLIC vPortTickHandler
   PUBLIC vSetMSP
   PUBLIC vPortPendSVHandler
   PUBLIC vPortSetInterruptMask
@@ -122,29 +123,18 @@ _vPortStartFirstTask:
   PUBLIC vPortSVCHandler
   PUBLIC vPortStartFirstTask
 
-/* macros to identify CPU: 0 for M0+ and 4 for M4 */
-%if %CPUDB_prph_has_feature(CPU,ARM_CORTEX_M0P) = 'yes' %- Note: for IAR this is defined in portasm.s too!
-#define FREERTOS_CPU_CORTEX_M                                    %>>0 /* Cortex M0+ core */
-%else
-#define FREERTOS_CPU_CORTEX_M                                    %>>4 /* Cortex M4 core */
-%endif
 /*-----------------------------------------------------------*/
-vOnCounterRestart:
-  /* caller did this:
-     push {r7,LR}
-     bl vOnCounterRestart
-     pop {r0,pc} */
-  pop {r0, r7} /* restore r7 and lr into r0 and r7, which were pushed in caller */
-  push {r0, r7}
-%if %UsePreemption='yes'
+vPortTickHandler:
+  push {lr}
+  #if configUSE_PREEMPTION
   /* If using preemption, also force a context switch. */
   bl vPortYieldFromISR
-%endif
+  #endif
   bl vPortSetInterruptMask /* disable interrupts */
   bl xTaskIncrementTick    /* increment tick count, might schedule a task */
   bl vPortClearInterruptMask /* enable interrupts again */
 
-  pop {r7,pc}  /* start exit sequence from interrupt: r7 and lr where pushed above */
+  pop {pc} /* return from interrupt */
   nop
 /*-----------------------------------------------------------*/
 vSetMSP:
@@ -153,19 +143,19 @@ vSetMSP:
   nop
 /*-----------------------------------------------------------*/
 vPortPendSVHandler:
-#if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
+#if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 or M4F */
     mrs r0, psp
     ldr  r3, pxCurrentTCBConst  /* Get the location of the current TCB. */
     ldr  r2, [r3]
-%if %M4FFloatingPointSupport='yes'
+  #if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
     tst r14, #0x10              /* Is the task using the FPU context?  If so, push high vfp registers. */
     it eq
     vstmdbeq r0!, {s16-s31}
 
     stmdb r0!, {r4-r11, r14}    /* save remaining core registers */
-%else
+  #else
     stmdb r0!, {r4-r11}         /* Save the core registers. */
-%endif
+  #endif
     str r0, [r2]                /* Save the new top of stack into the first member of the TCB. */
     stmdb sp!, {r3, r14}
     mov r0, %%0
@@ -176,18 +166,18 @@ vPortPendSVHandler:
     ldmia sp!, {r3, r14}
     ldr r1, [r3]                /* The first item in pxCurrentTCB is the task top of stack. */
     ldr r0, [r1]
-%if %M4FFloatingPointSupport='yes'
+  #if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
     ldmia r0!, {r4-r11, r14}   /* Pop the core registers */
     tst r14, #0x10             /* Is the task using the FPU context?  If so, pop the high vfp registers too. */
     it eq
     vldmiaeq r0!, {s16-s31}
-%else
+  #else
     ldmia r0!, {r4-r11}        /* Pop the core registers. */
-%endif
+  #endif
     msr psp, r0
     bx r14
     nop
-#else /* Cortex M0+ */
+#elif configCPU_FAMILY==configCPU_FAMILY_ARM_M0P /* Cortex M0+ */
     mrs r0, psp
 
     ldr r3, =pxCurrentTCB
@@ -224,6 +214,8 @@ vPortPendSVHandler:
 
     bx r3
     nop
+#else
+  #error "CPU not supported!"
 #endif
 /*-----------------------------------------------------------*/
 vPortSetInterruptMask:
@@ -254,25 +246,25 @@ vPortClearInterruptMask:
 /*-----------------------------------------------------------*/
 vPortSVCHandler:
   /* \todo Check stack!!! */
-#if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
+#if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 or M4F */
     ldr r3, pxCurrentTCBConst2  /* Restore the context. */
     ldr r1, [r3]                /* Use pxCurrentTCBConst to get the pxCurrentTCB address. */
     ldr r0, [r1]                /* The first item in pxCurrentTCB is the task top of stack. */
     /* pop the core registers */
-    %if %M4FFloatingPointSupport='yes'
+  #if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
     ldmia r0!, {r4-r11, r14}
-    %else
+  #else
     ldmia r0!, {r4-r11}
-    %endif
+  #endif
     msr psp, r0
     mov r0, #0
     msr basepri, r0
-    %if %M4FFloatingPointSupport='no'
+  #if configCPU_FAMILY==configCPU_FAMILY_ARM_M4 /* *NO* floating point unit */
     orr r14, r14, #13
-    %endif
+  #endif
     bx r14
     nop
-#else /* Cortex M0+ */
+#elif configCPU_FAMILY==configCPU_FAMILY_ARM_M0P /* Cortex M0+ */
     ldr r3, =pxCurrentTCB       /* Restore the context. */
     ldr r1, [r3]                /* Use pxCurrentTCBConst to get the pxCurrentTCB address. */
     ldr r0, [r1]                /* The first item in pxCurrentTCB is the task top of stack. */
@@ -292,6 +284,8 @@ vPortSVCHandler:
     orrs r1, r0
     bx r1
     nop
+#else
+  #error "CPU not supported!"
 #endif
 /*-----------------------------------------------------------*/
 vPortStartFirstTask:
@@ -306,7 +300,7 @@ vPortStartFirstTask:
   svc 0
   nop
 /*-----------------------------------------------------------*/
-%if %M4FFloatingPointSupport='yes'
+#if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
 vPortEnableVFP:
   /* The FPU enable bits are in the CPACR. */
   ldr.w r0, =COPROCESSOR_ACCESS_REGISTER /* CAPCR, 0xE000ED88 */
@@ -318,8 +312,8 @@ vPortEnableVFP:
 
   bx  r14
   nop
+#endif
 /*-----------------------------------------------------------*/
-%endif
   END
 %endif %- IAR aRM
 %-*****************************************************************************************************
