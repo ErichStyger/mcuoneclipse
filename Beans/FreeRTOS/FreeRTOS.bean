@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.311</Version>
+    <Version>01.315</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -50,6 +50,22 @@
         <MinLength>0</MinLength>
         <MaxLength>-1</MaxLength>
       </TStrgItem>
+    </Property>
+    <Property>
+      <TEnumItem>
+        <Name>Compiler</Name>
+        <Symbol>configCOMPILER</Symbol>
+        <TypeSpec>type_configCOMPILER</TypeSpec>
+        <Hint>Compiler to be used for code generation</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>true</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+      </TEnumItem>
     </Property>
     <Property>
       <TBoolGrupItem>

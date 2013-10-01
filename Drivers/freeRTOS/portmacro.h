@@ -218,13 +218,8 @@ extern void vPortExitCritical(void);
 %elif (CPUfamily = "Kinetis") & ((%Compiler == "GNUC")|(%Compiler = "ARM_CC"))
 /* macro to identify CPU: 0 for M0+ and 4 for M4 */
 #define portDISABLE_ALL_INTERRUPTS()         __asm volatile("cpsid i")
-%if %CPUDB_prph_has_feature(CPU,ARM_CORTEX_M0P) = 'yes' %- Note: for IAR this is defined in portasm.s too!
-#define FREERTOS_CPU_CORTEX_M                                    %>>0 /* Cortex M0+ core */
-%else
-#define FREERTOS_CPU_CORTEX_M                                    %>>4 /* Cortex M4 core */
-%endif
 
-#if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
+#if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 */
 /*
  * Set basepri to portMAX_SYSCALL_INTERRUPT_PRIORITY without effecting other
  * registers.  r0 is clobbered.

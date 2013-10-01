@@ -73,7 +73,7 @@
 */
 
 /* Kernel includes. */
-#include "portmacro.h" /* for FREERTOS_CPU_CORTEX_M */
+#include "portmacro.h" /* for configCPU_FAMILY */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "portTicks.h" /* for CPU_CORE_CLK_HZ used in configSYSTICK_CLOCK_HZ */
@@ -115,7 +115,7 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
 
 #if configUSE_TICKLESS_IDLE == 1
 
-#if configCPU_FAMILY==configCPU_FAMILY_ARM
+#if configCPU_FAMILY_IS_ARM(configCPU_FAMILY)
   #define TICKLESS_DISABLE_INTERRUPTS()  __asm volatile("cpsid i") /* disable interrupts. Note that the wfi (wait for interrupt) instruction later will still be able to wait for interrupts! */
   #define TICKLESS_ENABLE_INTERRUPTS()   __asm volatile("cpsie i") /* re-enable interrupts. */
 #elif (configCPU_FAMILY==configCPU_FAMILY_S08) || (configCPU_FAMILY==configCPU_FAMILY_S12)
@@ -179,7 +179,7 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
   #define portINITIAL_STATUS_REGISTER         ((portSTACK_TYPE)0x2000)
 #endif
 
-#if configCPU_FAMILY==configCPU_FAMILY_ARM
+#if configCPU_FAMILY_IS_ARM(configCPU_FAMILY)
 /* Constants required to manipulate the core.
  * SysTick register: http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0662b/CIAGECDD.html
  * Registers first... 
@@ -1024,7 +1024,7 @@ void vPortTickHandler(void) {
 __attribute__ ((naked)) void vPortTickHandler(void) {
 %endif
 %if useARMSysTickTimer='no'
-#if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
+#if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 */
   #if __OPTIMIZE_SIZE__ || __OPTIMIZE__
     /*
               RTOSTICKLDD1_Interrupt:
@@ -1124,7 +1124,7 @@ PE_ISR(RTOSTICKLDD1_Interrupt)
   }
   portCLEAR_INTERRUPT_MASK(); /* enable interrupts again */
 %if useARMSysTickTimer='no'
-#if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
+#if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 */
   #if __OPTIMIZE_SIZE__ || __OPTIMIZE__
   __asm volatile (
     " pop {r0,lr}  \n" /* start exit sequence from interrupt: sp and lr where pushed */
@@ -1187,7 +1187,7 @@ void vPortStartFirstTask(void) {
 #endif
 /*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_ARM_KEIL)
-#if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
+#if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 */
 __asm void vPortSVCHandler(void) {
   EXTERN pxCurrentTCB
 
@@ -1241,7 +1241,7 @@ __asm void vPortSVCHandler(void) {
 /*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_ARM_GCC)
 __attribute__ ((naked)) void vPortSVCHandler(void) {
-#if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
+#if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 */
 __asm volatile (
     " ldr r3, pxCurrentTCBConst2 \n" /* Restore the context. */
     " ldr r1, [r3]               \n" /* Use pxCurrentTCBConst to get the pxCurrentTCB address. */
@@ -1292,7 +1292,7 @@ __asm volatile (
 /*-----------------------------------------------------------*/
 #endif
 #if (configCOMPILER==configCOMPILER_ARM_KEIL)
-#if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
+#if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 */
 __asm void vPortPendSVHandler(void) {
   EXTERN pxCurrentTCB
 
@@ -1377,7 +1377,7 @@ __asm void vPortPendSVHandler(void) {
 /*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_ARM_GCC)
 __attribute__ ((naked)) void vPortPendSVHandler(void) {
-#if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
+#if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 */
   __asm volatile (
     " mrs r0, psp                \n"
     " ldr  r3, pxCurrentTCBConst \n" /* Get the location of the current TCB. */

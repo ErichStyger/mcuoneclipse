@@ -155,5 +155,45 @@
         <Line>M4F</Line>
       </Defines>
     </Type>
+    <Type>
+      <Type>TEnumSpec</Type>
+      <Name>type_configCOMPILER</Name>
+      <Items lines_count="10">
+        <Line>automatic</Line>
+        <Line>ARM gcc</Line>
+        <Line>ARM IAR</Line>
+        <Line>ARM Keil</Line>
+        <Line>ARM FSL (legacy)</Line>
+        <Line>S08 FSL</Line>
+        <Line>S12 FSL</Line>
+        <Line>ColdFire V1 FSL</Line>
+        <Line>ColdFire V2 FSL</Line>
+        <Line>DSC FSL</Line>
+      </Items>
+      <Hints lines_count="10">
+        <Line>Automatic compiler selection, based on Processor Expert CPU settings</Line>
+        <Line>ARM GNU gcc compiler</Line>
+        <Line>IAR ARM compiler</Line>
+        <Line>Keil ARM compiler</Line>
+        <Line>depreciated, Freescale ARM compiler</Line>
+        <Line>Freescale S08 compiler</Line>
+        <Line>Freescale S12(X) compiler</Line>
+        <Line>Freescale ColdFire V1 compiler</Line>
+        <Line>Freescale ColdFire V2 compiler</Line>
+        <Line>Freescale DSC compiler</Line>
+      </Hints>
+      <Defines lines_count="10">
+        <Line>automatic</Line>
+        <Line>configCOMPILER_ARM_GCC</Line>
+        <Line>configCOMPILER_ARM_IAR</Line>
+        <Line>configCOMPILER_ARM_KEIL</Line>
+        <Line>configCOMPILER_ARM_FSL</Line>
+        <Line>configCOMPILER_S08_FSL</Line>
+        <Line>configCOMPILER_S12_FSL</Line>
+        <Line>configCOMPILER_CF1_FSL</Line>
+        <Line>configCOMPILER_CF2_FSL</Line>
+        <Line>configCOMPILER_DSC_FSL</Line>
+      </Defines>
+    </Type>
   </Types>
 </TypesAndGlobals>
