@@ -78,6 +78,8 @@
 extern "C" {
 #endif
 
+#include "FreeRTOSConfig.h"
+
 /*-----------------------------------------------------------
  * Port specific definitions.
  *
@@ -87,20 +89,20 @@ extern "C" {
  * These settings should not be altered.
  *-----------------------------------------------------------
  */
-%if (%Compiler = "MetrowerksHC08CC") | (%Compiler = "MetrowerksHCS08CC")  | (%Compiler = "MetrowerksHC12CC") | (%Compiler = "MetrowerksHC12XCC")
-/* disabling some warnings as the RTOS sources are not that clean... */
-#pragma MESSAGE DISABLE C5909 /* assignment in condition */
-#pragma MESSAGE DISABLE C2705 /* possible loss of data */
-#pragma MESSAGE DISABLE C5905 /* multiplication with one */
-#pragma MESSAGE DISABLE C5904 /* division by one */
-#pragma MESSAGE DISABLE C5660 /* removed dead code */
-#pragma MESSAGE DISABLE C5917 /* removed dead assignment */
-#pragma MESSAGE DISABLE C4001 /* condition always FALSE */
-%endif
-%if (%Compiler = "MetrowerksHC12CC") | (%Compiler = "MetrowerksHC12XCC")
-#pragma MESSAGE DISABLE C12053 /* SP change not in debug information */
-#pragma MESSAGE DISABLE C12056 /* SP debug infor incorrect */
-%endif
+#if (configCOMPILER==configCOMPILER_S12_FSL) || (configCOMPILER==configCOMPILER_S08_FSL)
+  /* disabling some warnings as the RTOS sources are not that clean... */
+  #pragma MESSAGE DISABLE C5909 /* assignment in condition */
+  #pragma MESSAGE DISABLE C2705 /* possible loss of data */
+  #pragma MESSAGE DISABLE C5905 /* multiplication with one */
+  #pragma MESSAGE DISABLE C5904 /* division by one */
+  #pragma MESSAGE DISABLE C5660 /* removed dead code */
+  #pragma MESSAGE DISABLE C5917 /* removed dead assignment */
+  #pragma MESSAGE DISABLE C4001 /* condition always FALSE */
+#endif
+#if configCOMPILER==configCOMPILER_S12_FSL
+  #pragma MESSAGE DISABLE C12053 /* SP change not in debug information */
+  #pragma MESSAGE DISABLE C12056 /* SP debug infor incorrect */
+#endif
 
 /* Type definitions. */
 %if (CPUfamily = "ColdFireV1") | (CPUfamily = "MCF") | (CPUfamily = "Kinetis")
@@ -130,8 +132,6 @@ extern "C" {
 %else
   #error "undefined target %CPUfamily!"
 %endif
-
-#include "FreeRTOSConfig.h"
 
 #if( configUSE_16_BIT_TICKS == 1 )
   typedef unsigned portSHORT portTickType;

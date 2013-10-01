@@ -114,16 +114,17 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
 %endif
 
 #if configUSE_TICKLESS_IDLE == 1
-%if (CPUfamily = "Kinetis")
-#define TICKLESS_DISABLE_INTERRUPTS()  __asm volatile("cpsid i") /* disable interrupts. Note that the wfi (wait for interrupt) instruction later will still be able to wait for interrupts! */
-#define TICKLESS_ENABLE_INTERRUPTS()   __asm volatile("cpsie i") /* re-enable interrupts. */
-%elif (CPUfamily = "HCS08") | (CPUfamily = "HC08") | (CPUfamily = "HCS12") | (CPUfamily = "HCS12X")
-#define TICKLESS_DISABLE_INTERRUPTS()  __asm("sei"); /* disable interrupts */
-#define TICKLESS_ENABLE_INTERRUPTS()   __asm("cli"); /* re-enable interrupts */
-%else
-#define TICKLESS_DISABLE_INTERRUPTS()  portDISABLE_INTERRUPTS() /* this disables interrupts! Make sure they are re-enabled in vOnPreSleepProcessing()! */
-#define TICKLESS_ENABLE_INTERRUPTS()   portENABLE_INTERRUPTS()  /* re-enable interrupts */
-%endif
+
+#if configCPU_FAMILY==configCPU_FAMILY_ARM
+  #define TICKLESS_DISABLE_INTERRUPTS()  __asm volatile("cpsid i") /* disable interrupts. Note that the wfi (wait for interrupt) instruction later will still be able to wait for interrupts! */
+  #define TICKLESS_ENABLE_INTERRUPTS()   __asm volatile("cpsie i") /* re-enable interrupts. */
+#elif (configCPU_FAMILY==configCPU_FAMILY_S08) || (configCPU_FAMILY==configCPU_FAMILY_S12)
+  #define TICKLESS_DISABLE_INTERRUPTS()  __asm("sei"); /* disable interrupts */
+  #define TICKLESS_ENABLE_INTERRUPTS()   __asm("cli"); /* re-enable interrupts */
+#else
+  #define TICKLESS_DISABLE_INTERRUPTS()  portDISABLE_INTERRUPTS() /* this disables interrupts! Make sure they are re-enabled in vOnPreSleepProcessing()! */
+  #define TICKLESS_ENABLE_INTERRUPTS()   portENABLE_INTERRUPTS()  /* re-enable interrupts */
+#endif
 
 %if defined(useARMSysTickTimer) & useARMSysTickTimer='yes'
   #if 1
@@ -170,16 +171,15 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
   #define configSTOPPED_TIMER_COMPENSATION    45UL  /* number of ticks to compensate */
 %endif
 #endif /* configUSE_TICKLESS_IDLE */
-%--------------------------------------------------------------
-%if (CPUfamily = "ColdFireV1") | (CPUfamily = "MCF")
-#define portINITIAL_FORMAT_VECTOR           ((portSTACK_TYPE)0x4000)
 
-/* Supervisor mode set. */
-#define portINITIAL_STATUS_REGISTER         ((portSTACK_TYPE)0x2000)
-%endif
-%--------------------------------------------------------------
-%if (CPUfamily = "Kinetis")
+#if (configCPU_FAMILY==configCPU_FAMILY_V1) || (configCPU_FAMILY==configCPU_FAMILY_V2)
+  #define portINITIAL_FORMAT_VECTOR           ((portSTACK_TYPE)0x4000)
+  
+  /* Supervisor mode set. */
+  #define portINITIAL_STATUS_REGISTER         ((portSTACK_TYPE)0x2000)
+#endif
 
+#if configCPU_FAMILY==configCPU_FAMILY_ARM
 /* Constants required to manipulate the core.
  * SysTick register: http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0662b/CIAGECDD.html
  * Registers first... 
@@ -225,7 +225,7 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
 %if defined(TickTimerLDD)
 static LDD_TDeviceData *RTOS_TickDevice;
 %endif
-%endif
+#endif
 
 %--------------------------------------------------------------
 /* Used to keep track of the number of nested calls to taskENTER_CRITICAL().
@@ -518,31 +518,34 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_COD
   #error "unsupported target %CPUfamily!"
 %endif
 }
-%if (CPUfamily = "HCS08") | (CPUfamily = "HC08") | (CPUfamily = "HCS12") | (CPUfamily = "HCS12X")
+
 /*-----------------------------------------------------------*/
-%if (%Compiler = "MetrowerksHC08CC") | (%Compiler = "MetrowerksHCS08CC")
-#pragma MESSAGE DISABLE C1404 /* return expected */
-#pragma MESSAGE DISABLE C20000 /* dead code detected */
-#pragma NO_RETURN
-#pragma CODE_SEG __NEAR_SEG NON_BANKED
-%elif (%Compiler = "MetrowerksHC12CC") | (%Compiler = "MetrowerksHC12XCC")
-#pragma MESSAGE DISABLE C1404 /* return expected */
-#pragma NO_RETURN
-%endif
+#if (configCOMPILER==configCOMPILER_S08_FSL) || (configCOMPILER==configCOMPILER_S12_FSL)
+#if (configCOMPILER==configCOMPILER_S08_FSL)
+  #pragma MESSAGE DISABLE C1404 /* return expected */
+  #pragma MESSAGE DISABLE C20000 /* dead code detected */
+  #pragma NO_RETURN
+  #pragma CODE_SEG __NEAR_SEG NON_BANKED
+#elif (configCOMPILER==configCOMPILER_S12_FSL)
+  #pragma MESSAGE DISABLE C1404 /* return expected */
+  #pragma NO_RETURN
+#endif
+
 static portBASE_TYPE xBankedStartScheduler(void) {
   /* Restore the context of the first task. */
   portRESTORE_CONTEXT(); /* Simulate the end of an interrupt to start the scheduler off. */
   /* Should not get here! */
   return pdFALSE;
 }
-%if (%Compiler = "MetrowerksHC08CC") | (%Compiler = "MetrowerksHCS08CC")
-#pragma CODE_SEG DEFAULT
-#pragma MESSAGE DEFAULT C1404 /* return expected */
-#pragma MESSAGE DEFAULT C20000 /* dead code detected */
-%elif (%Compiler = "MetrowerksHC12CC") | (%Compiler = "MetrowerksHC12XCC")
-#pragma MESSAGE DEFAULT C1404 /* return expected */
-%endif
-%endif
+
+#if (configCOMPILER==configCOMPILER_S08_FSL)
+  #pragma CODE_SEG DEFAULT
+  #pragma MESSAGE DEFAULT C1404 /* return expected */
+  #pragma MESSAGE DEFAULT C20000 /* dead code detected */
+#elif (configCOMPILER==configCOMPILER_S12_FSL)
+  #pragma MESSAGE DEFAULT C1404 /* return expected */
+#endif
+#endif
 /*-----------------------------------------------------------*/
 #if configUSE_TICKLESS_IDLE == 1
 %if defined(vOnPreSleepProcessing)
@@ -992,7 +995,7 @@ portLONG uxGetTickCounterValue(void) {
 }
 /*-----------------------------------------------------------*/
 %endif
-%if (CPUfamily = "Kinetis") & (%Compiler = "ARM_CC") %- Keil compiler for ARM
+#if (configCOMPILER==configCOMPILER_ARM_KEIL)
 void vPortTickHandler(void) {
   /* this is how we get here:
     RTOSTICKLDD1_Interrupt:
@@ -1012,8 +1015,9 @@ void vPortTickHandler(void) {
   }
   portCLEAR_INTERRUPT_MASK(); /* enable interrupts again */
 }
+#endif
 /*-----------------------------------------------------------*/
-%elif (CPUfamily = "Kinetis") & (%Compiler = "GNUC") %- GNU gcc for ARM
+#if (configCOMPILER==configCOMPILER_ARM_GCC)
 %if useARMSysTickTimer='yes'
 void vPortTickHandler(void) {
 %else
@@ -1148,9 +1152,9 @@ PE_ISR(RTOSTICKLDD1_Interrupt)
 #endif
 %endif %- useARMSysTickTimer='no'
 }
-/*-----------------------------------------------------------*/
-%endif
-%if (CPUfamily = "Kinetis") & (%Compiler = "ARM_CC") %- Keil compiler for ARM
+#endif
+
+#if (configCOMPILER==configCOMPILER_ARM_KEIL)
 __asm void vPortStartFirstTask(void) {
   /* Use the NVIC offset register to locate the stack. */
   ldr r0, =0xE000ED08
@@ -1166,22 +1170,23 @@ __asm void vPortStartFirstTask(void) {
   nop
   nop
 }
+#endif
 /*-----------------------------------------------------------*/
-%elif (CPUfamily = "Kinetis") & (%Compiler = "GNUC") %- GNU gcc for ARM
+#if (configCOMPILER==configCOMPILER_ARM_GCC)
 void vPortStartFirstTask(void) {
   __asm volatile (
     " ldr r0, =0xE000ED08 \n" /* Use the NVIC offset register to locate the stack. */
     " ldr r0, [r0]        \n" /* load address of vector table */
-    " ldr r0, [r0]        \n" /* load first entry of vector table which is the reset stackpointer */
+    " ldr r0, [r0]        \n" /* load first entry of vector table which is the reset stack pointer */
     " msr msp, r0         \n" /* Set the msp back to the start of the stack. */
     " cpsie i             \n" /* Globally enable interrupts. */
     " svc 0               \n" /* System call to start first task. */
     " nop                 \n"
   );
 }
+#endif
 /*-----------------------------------------------------------*/
-%endif
-%if (CPUfamily = "Kinetis") & (%Compiler = "ARM_CC") %- Keil compiler for ARM
+#if (configCOMPILER==configCOMPILER_ARM_KEIL)
 #if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
 __asm void vPortSVCHandler(void) {
   EXTERN pxCurrentTCB
@@ -1232,8 +1237,9 @@ __asm void vPortSVCHandler(void) {
   nop
 }
 #endif
+#endif
 /*-----------------------------------------------------------*/
-%elif (CPUfamily = "Kinetis") & (%Compiler = "GNUC") %- GNU gcc for ARM
+#if (configCOMPILER==configCOMPILER_ARM_GCC)
 __attribute__ ((naked)) void vPortSVCHandler(void) {
 #if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
 __asm volatile (
@@ -1284,8 +1290,8 @@ __asm volatile (
 #endif
 }
 /*-----------------------------------------------------------*/
-%endif
-%if (CPUfamily = "Kinetis") & (%Compiler = "ARM_CC") %- Keil compiler for ARM
+#endif
+#if (configCOMPILER==configCOMPILER_ARM_KEIL)
 #if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
 __asm void vPortPendSVHandler(void) {
   EXTERN pxCurrentTCB
@@ -1367,8 +1373,9 @@ __asm void vPortPendSVHandler(void) {
   nop
 }
 #endif
+#endif
 /*-----------------------------------------------------------*/
-%elif (CPUfamily = "Kinetis") & (%Compiler = "GNUC") %- GNU gcc for ARM
+#if (configCOMPILER==configCOMPILER_ARM_GCC)
 __attribute__ ((naked)) void vPortPendSVHandler(void) {
 #if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
   __asm volatile (
@@ -1452,5 +1459,5 @@ __attribute__ ((naked)) void vPortPendSVHandler(void) {
   );
 #endif
 }
+#endif
 /*-----------------------------------------------------------*/
-%endif
