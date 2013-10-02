@@ -215,12 +215,12 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
 /* Constants required to set up the initial stack. */
 #define portINITIAL_XPSR         (0x01000000)
 #define portINITIAL_EXEC_RETURN  (0xfffffffd)
-%if %M4FFloatingPointSupport='yes'
 
+#if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
 /* Constants required to manipulate the VFP. */
 #define portFPCCR                ((volatile unsigned long *)0xe000ef34) /* Floating point context control register. */
 #define portASPEN_AND_LSPEN_BITS (0x3UL<<30UL)
-%endif
+#endif
 %-
 %if defined(TickTimerLDD)
 static LDD_TDeviceData *RTOS_TickDevice;
@@ -1018,12 +1018,12 @@ void vPortTickHandler(void) {
 #endif
 /*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_ARM_GCC)
-%if useARMSysTickTimer='yes'
+%if defined(useARMSysTickTimer) && useARMSysTickTimer='yes'
 void vPortTickHandler(void) {
 %else
 __attribute__ ((naked)) void vPortTickHandler(void) {
 %endif
-%if useARMSysTickTimer='no'
+%if defined(useARMSysTickTimer) && useARMSysTickTimer='no'
 #if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 */
   #if __OPTIMIZE_SIZE__ || __OPTIMIZE__
     /*
@@ -1123,7 +1123,7 @@ PE_ISR(RTOSTICKLDD1_Interrupt)
     taskYIELD();
   }
   portCLEAR_INTERRUPT_MASK(); /* enable interrupts again */
-%if useARMSysTickTimer='no'
+%if defined(useARMSysTickTimer) && useARMSysTickTimer='no'
 #if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 */
   #if __OPTIMIZE_SIZE__ || __OPTIMIZE__
   __asm volatile (
@@ -1196,17 +1196,18 @@ __asm void vPortSVCHandler(void) {
   ldr r1, [r3]
   ldr r0, [r1]
   /* Pop the core registers. */
-%if %M4FFloatingPointSupport='yes'
+#if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
   ldmia r0!, {r4-r11, r14}
-%else
+#else
   ldmia r0!, {r4-r11}
-%endif
+#endif
   msr psp, r0
   mov r0, #0
   msr basepri, r0
-  %if %M4FFloatingPointSupport='no'
+#if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
+#else
   orr r14, r14, #13
-  %endif
+#endif
   bx r14
   nop
 }
@@ -1247,17 +1248,18 @@ __asm volatile (
     " ldr r1, [r3]               \n" /* Use pxCurrentTCBConst to get the pxCurrentTCB address. */
     " ldr r0, [r1]               \n" /* The first item in pxCurrentTCB is the task top of stack. */
     /* pop the core registers */
-    %if %M4FFloatingPointSupport='yes'
+#if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
     " ldmia r0!, {r4-r11, r14}   \n"
-    %else
+#else
     " ldmia r0!, {r4-r11}        \n"
-    %endif
+#endif
     " msr psp, r0                \n"
     " mov r0, #0                 \n"
     " msr basepri, r0            \n"
-    %if %M4FFloatingPointSupport='no'
+#if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
+#else
     " orr r14, r14, #13          \n"
-    %endif
+#endif
     " bx r14                     \n"
     "                            \n"
     " .align 2                   \n"
@@ -1299,15 +1301,15 @@ __asm void vPortPendSVHandler(void) {
   mrs r0, psp
   ldr  r3, =pxCurrentTCB     /* Get the location of the current TCB. */
   ldr  r2, [r3]
-%if %M4FFloatingPointSupport='yes'
+#if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
   tst r14, #0x10             /* Is the task using the FPU context?  If so, push high vfp registers. */
   it eq
   vstmdbeq r0!, {s16-s31}
 
   stmdb r0!, {r4-r11, r14}   /* save remaining core registers */
-%else
+#else
   stmdb r0!, {r4-r11}        /* Save the core registers. */
-%endif
+#endif
   str r0, [r2]               /* Save the new top of stack into the first member of the TCB. */
   stmdb sp!, {r3, r14}
   mov r0, %%0
@@ -1318,14 +1320,14 @@ __asm void vPortPendSVHandler(void) {
   ldmia sp!, {r3, r14}
   ldr r1, [r3]               /* The first item in pxCurrentTCB is the task top of stack. */
   ldr r0, [r1]
-%if %M4FFloatingPointSupport='yes'
+#if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
   ldmia r0!, {r4-r11, r14}   /* Pop the core registers */
   tst r14, #0x10             /* Is the task using the FPU context?  If so, pop the high vfp registers too. */
   it eq
   vldmiaeq r0!, {s16-s31}
-%else
+#else
   ldmia r0!, {r4-r11}        /* Pop the core registers. */
-%endif
+#endif
   msr psp, r0
   bx r14
   nop
@@ -1382,15 +1384,15 @@ __attribute__ ((naked)) void vPortPendSVHandler(void) {
     " mrs r0, psp                \n"
     " ldr  r3, pxCurrentTCBConst \n" /* Get the location of the current TCB. */
     " ldr  r2, [r3]              \n"
-%if %M4FFloatingPointSupport='yes'
+#if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
     " tst r14, #0x10             \n" /* Is the task using the FPU context?  If so, push high vfp registers. */
     " it eq                      \n"
     " vstmdbeq r0!, {s16-s31}    \n"
 
     " stmdb r0!, {r4-r11, r14}   \n" /* save remaining core registers */
-%else
+#else
     " stmdb r0!, {r4-r11}        \n" /* Save the core registers. */
-%endif
+#endif
     " str r0, [r2]               \n" /* Save the new top of stack into the first member of the TCB. */
     " stmdb sp!, {r3, r14}       \n"
     " mov r0, %%0                 \n"
@@ -1401,14 +1403,14 @@ __attribute__ ((naked)) void vPortPendSVHandler(void) {
     " ldmia sp!, {r3, r14}       \n"
     " ldr r1, [r3]               \n" /* The first item in pxCurrentTCB is the task top of stack. */
     " ldr r0, [r1]               \n"
-%if %M4FFloatingPointSupport='yes'
+#if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
     " ldmia r0!, {r4-r11, r14}   \n" /* Pop the core registers */
     " tst r14, #0x10             \n" /* Is the task using the FPU context?  If so, pop the high vfp registers too. */
     " it eq                      \n"
     " vldmiaeq r0!, {s16-s31}    \n"
-%else
+#else
     " ldmia r0!, {r4-r11}        \n" /* Pop the core registers. */
-%endif
+#endif
     " msr psp, r0                \n"
     " bx r14                     \n"
     "                            \n"
