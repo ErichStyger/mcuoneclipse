@@ -551,12 +551,12 @@ void %OnLeaveRadioSPI(void);
   /* Macros for the HCS08 core, using the IRQ pin */
   #define IRQACK()        IRQSC |= IRQSC_IRQACK_MASK   /*!< IRQ acknowledge */
 #else /* not HCS08 */
-/* %CPUfamily family */
-  #if defined(__GNUC__)  /* Kinetis?*/
+  /* %CPUfamily family */
+  #if defined(__GNUC__)  /* Kinetis? using PTD2 below */
     #define IRQINIT() \
-      PORT_PDD_SetPinPullSelect(ExtIntLdd1_PORTCONTROL_BASE_ADDRESS, ExtIntLdd1_PIN_INDEX, PORT_PDD_PULL_UP); \
-      PORT_PDD_SetPinPullEnable(ExtIntLdd1_PORTCONTROL_BASE_ADDRESS, ExtIntLdd1_PIN_INDEX, PORT_PDD_PULL_ENABLE);
-    #define IRQACK()   PORT_PDD_ClearPinInterruptFlag(ExtIntLdd1_PORTCONTROL_BASE_ADDRESS, ExtIntLdd1_PIN_INDEX) /* ack the interrupt */
+      PORT_PDD_SetPinPullSelect(PORTD_BASE_PTR, 2, PORT_PDD_PULL_UP); \
+      PORT_PDD_SetPinPullEnable(PORTD_BASE_PTR, 2, PORT_PDD_PULL_ENABLE);
+    #define IRQACK()   PORT_PDD_ClearPinInterruptFlag(PORTD_BASE_PTR, 2) /* ack the interrupt */
   #elif 0 /* Macros for the MCF52259 using the IRQ on IRQ5 */
     #define IRQACK()  (EPFR = IRQ1_PIN_MASK)
   #else  /* Macros for the MCF51CN128 using the IRQ on PTE4 */
@@ -564,21 +564,7 @@ void %OnLeaveRadioSPI(void);
   #endif
 #endif
 #endif
-
-#if defined(__GNUC__)  /* Kinetis?*/
-  #define IRQINIT() /* pull-up and enable interrupt */\
-%if (CPUfamily = "Kinetis")
-    PORT_PDD_SetPinPullSelect(%@IRQ@'InheritedComponent'%.PRPH_BASE_ADDRESS, %@IRQ@'InheritedComponent'%.PIN_INDEX, PORT_PDD_PULL_UP); \
-    PORT_PDD_SetPinPullEnable(%@IRQ@'InheritedComponent'%.PRPH_BASE_ADDRESS, %@IRQ@'InheritedComponent'%.PIN_INDEX, PORT_PDD_PULL_ENABLE);
-  #define IRQACK() \
-    PORT_PDD_ClearPinInterruptFlag(%@IRQ@'InheritedComponent'%.PRPH_BASE_ADDRESS, %@IRQ@'InheritedComponent'%.PIN_INDEX) /* ack the interrupt */
-%else
-    #define IRQINIT() \
-      PORT_PDD_SetPinPullSelect(ExtIntLdd1_PRPH_BASE_ADDRESS, ExtIntLdd1_PIN_INDEX, PORT_PDD_PULL_UP); \
-      PORT_PDD_SetPinPullEnable(ExtIntLdd1_PRPH_BASE_ADDRESS, ExtIntLdd1_PIN_INDEX, PORT_PDD_PULL_ENABLE);
-    #define IRQACK()   PORT_PDD_ClearPinInterruptFlag(ExtIntLdd1_PRPH_BASE_ADDRESS, ExtIntLdd1_PIN_INDEX) /* ack the interrupt */
-%endif
-#endif
+%- PORT_PDD_SetPinPullSelect(%@IRQ@'InheritedComponent'%.PRPH_BASE_ADDRESS, %@IRQ@'InheritedComponent'%.PIN_INDEX, PORT_PDD_PULL_UP); \
 
 #ifndef IRQINIT
   #define IRQINIT()       %>%CTAB /* assume it is configured in the IRQ properties or by user macro for falling edge */
