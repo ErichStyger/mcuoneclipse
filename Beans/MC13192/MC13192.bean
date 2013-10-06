@@ -4,7 +4,7 @@
     <Name>MC13192</Name>
     <Description>Device Driver for the Freescale MC13192 Transceiver</Description>
     <Author>Erich Styger</Author>
-    <Version>01.004</Version>
+    <Version>01.005</Version>
     <Icon>MC13192</Icon>
     <TypesFiles>PE,MC13192\MC13192</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -369,7 +369,7 @@
                     <DefineList>false</DefineList>
                     <ExternEditorEnabled>false</ExternEditorEnabled>
                     <AcceptNonPrintChars>false</AcceptNonPrintChars>
-                    <DefaultStrgList lines_count="39">
+                    <DefaultStrgList lines_count="37">
                       <Line>/* setting up the IRQ line from the modem:</Line>
                       <Line>* - pull up the signal</Line>
                       <Line>* - trigger on low level and/or falling edge</Line>
@@ -382,14 +382,12 @@
                       <Line>#define IRQPinEnable()  IRQSC = (IRQSC_IRQPE_MASK|IRQSC_IRQACK_MASK|IRQSC_IRQIE_MASK) /*!&lt; IRQ pin enable, acknowledge pending interrrupt and enable IRQ interrupt */</Line>
                       <Line>#else /* ColdFire */</Line>
                       <Line>#if defined(__GNUC__) /* Kinetis gcc? */</Line>
-                      <Line>#if 0 /* can directly generate macros in driver */</Line>
                       <Line>/* IRQ on PTD2 */</Line>
                       <Line>#define IRQINIT() \</Line>
                       <Line>  PORT_PDD_SetPinPullSelect(PORTD_BASE_PTR, 2, PORT_PDD_PULL_UP); \</Line>
                       <Line>  PORT_PDD_SetPinPullEnable(PORTD_BASE_PTR, 2, PORT_PDD_PULL_ENABLE);</Line>
                       <Line>#define IRQACK()  \</Line>
-                      <Line>  PORT_PDD_ClearPinInterruptFlag(ExtIntLdd1_PORTCONTROL_BASE_ADDRESS, ExtIntLdd1_PIN_INDEX) /* ack the interrupt */</Line>
-                      <Line>#endif</Line>
+                      <Line>  PORT_PDD_ClearPinInterruptFlag(PORTD_BASE_PTR, ExtIntLdd1_PIN_INDEX) /* ack the interrupt on PORTA */</Line>
                       <Line>#elif 1</Line>
                       <Line>/* Macros for the MCF52259 using the IRQ on IRQ5 */</Line>
                       <Line>#define IRQFLAG()</Line>
