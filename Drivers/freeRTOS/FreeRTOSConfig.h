@@ -341,79 +341,79 @@
 %endif
 /* -------------------------------------------------------------------- */
 /* Macros to identify the compiler used: */
-#define configCOMPILER_ARM_GCC     1 /* GNU ARM gcc compiler */
-#define configCOMPILER_ARM_IAR     2 /* IAR ARM compiler */
-#define configCOMPILER_ARM_FSL     3 /* Legacy Freescale ARM compiler */
-#define configCOMPILER_ARM_KEIL    4 /* ARM/Keil compiler */
-#define configCOMPILER_S08_FSL     5 /* Freescale HCS08 compiler */
-#define configCOMPILER_S12_FSL     6 /* Freescale HCS12(X) compiler */
-#define configCOMPILER_CF1_FSL     7 /* Freescale ColdFire V1 compiler */
-#define configCOMPILER_CF2_FSL     8 /* Freescale ColdFire V2 compiler */
-#define configCOMPILER_DSC_FSL     9 /* Freescale DSC compiler */
+#define configCOMPILER_ARM_GCC     %>45 1 /* GNU ARM gcc compiler */
+#define configCOMPILER_ARM_IAR     %>45 2 /* IAR ARM compiler */
+#define configCOMPILER_ARM_FSL     %>45 3 /* Legacy Freescale ARM compiler */
+#define configCOMPILER_ARM_KEIL    %>45 4 /* ARM/Keil compiler */
+#define configCOMPILER_S08_FSL     %>45 5 /* Freescale HCS08 compiler */
+#define configCOMPILER_S12_FSL     %>45 6 /* Freescale HCS12(X) compiler */
+#define configCOMPILER_CF1_FSL     %>45 7 /* Freescale ColdFire V1 compiler */
+#define configCOMPILER_CF2_FSL     %>45 8 /* Freescale ColdFire V2 compiler */
+#define configCOMPILER_DSC_FSL     %>45 9 /* Freescale DSC compiler */
 
 %if (%configCompiler='automatic')
 %if (%Compiler = "IARARM")
-#define configCOMPILER        configCOMPILER_ARM_IAR
+#define configCOMPILER        %>50 configCOMPILER_ARM_IAR
 %elif (%Compiler = "GNUC")
-#define configCOMPILER        configCOMPILER_ARM_GCC
+#define configCOMPILER        %>50 configCOMPILER_ARM_GCC
 %elif (%Compiler = "CodeWarriorARM")
-#define configCOMPILER        configCOMPILER_ARM_FSL
+#define configCOMPILER        %>50 configCOMPILER_ARM_FSL
 %elif (%Compiler = "ARM_CC")
-#define configCOMPILER        configCOMPILER_ARM_KEIL
+#define configCOMPILER        %>50 configCOMPILER_ARM_KEIL
 %elif (%Compiler = "MetrowerksHC08CC") | (%Compiler = "MetrowerksHCS08CC")
-#define configCOMPILER        configCOMPILER_S08_FSL
+#define configCOMPILER        %>50 configCOMPILER_S08_FSL
 %elif (%Compiler = "MetrowerksHC12CC") | (%Compiler = "MetrowerksHC12XCC")
-#define configCOMPILER        configCOMPILER_S12_FSL
+#define configCOMPILER        %>50 configCOMPILER_S12_FSL
 %elif (%Compiler = "CodeWarriorColdFireV1")
-#define configCOMPILER        configCOMPILER_CF1_FSL
+#define configCOMPILER        %>50 configCOMPILER_CF1_FSL
 %elif (%Compiler = "CodeWarriorMCF")
-#define configCOMPILER        configCOMPILER_CF2_FSL
+#define configCOMPILER        %>50 configCOMPILER_CF2_FSL
 %elif (%Compiler = "MetrowerksDSP")
-#define configCOMPILER        configCOMPILER_DSC_FSL
+#define configCOMPILER        %>50 configCOMPILER_DSC_FSL
 %else
-#define configCOMPILER        0
-#error unknown compiler %Compiler?
+#define configCOMPILER        %>50 0
+#error "unknown compiler %Compiler?"
 %endif
 %else %- non-automatic compiler selection
-#define configCOMPILER        %configCompiler
+#define configCOMPILER        %>50 %configCompiler
 %endif
 /* -------------------------------------------------------------------- */
 /* CPU family identification */
-#define configCPU_FAMILY_S08          1  /* S08 core */
-#define configCPU_FAMILY_S12          2  /* S12(X) core */
-#define configCPU_FAMILY_CF1          3  /* ColdFire V1 core */
-#define configCPU_FAMILY_CF2          4  /* ColdFire V2 core */
-#define configCPU_FAMILY_DSC          5  /* 56800/DSC */
-#define configCPU_FAMILY_ARM_M0P      6  /* ARM Cortex-M0+ */
-#define configCPU_FAMILY_ARM_M4       7  /* ARM Cortex-M4 */
-#define configCPU_FAMILY_ARM_M4F      8  /* ARM Cortex-M4F (with floating point unit) */
+#define configCPU_FAMILY_S08          %>45 1  /* S08 core */
+#define configCPU_FAMILY_S12          %>45 2  /* S12(X) core */
+#define configCPU_FAMILY_CF1          %>45 3  /* ColdFire V1 core */
+#define configCPU_FAMILY_CF2          %>45 4  /* ColdFire V2 core */
+#define configCPU_FAMILY_DSC          %>45 5  /* 56800/DSC */
+#define configCPU_FAMILY_ARM_M0P      %>45 6  /* ARM Cortex-M0+ */
+#define configCPU_FAMILY_ARM_M4       %>45 7  /* ARM Cortex-M4 */
+#define configCPU_FAMILY_ARM_M4F      %>45 8  /* ARM Cortex-M4F (with floating point unit) */
 /* Macros to identify set of core families */
-#define configCPU_FAMILY_IS_ARM_M4(fam)   ((fam==configCPU_FAMILY_ARM_M4)||(fam==configCPU_FAMILY_ARM_M4F))
-#define configCPU_FAMILY_IS_ARM(fam)      ((fam==configCPU_FAMILY_ARM_M0P)||configCPU_FAMILY_IS_ARM_M4(fam))
+#define configCPU_FAMILY_IS_ARM_M4(fam)   %>45 (((fam)==configCPU_FAMILY_ARM_M4)  || ((fam)==configCPU_FAMILY_ARM_M4F))
+#define configCPU_FAMILY_IS_ARM(fam)      %>45 (((fam)==configCPU_FAMILY_ARM_M0P) || configCPU_FAMILY_IS_ARM_M4(fam))
 
 %if (CPUfamily = "HCS08") | (CPUfamily = "HC08")
-#define configCPU_FAMILY  configCPU_FAMILY_S08
+#define configCPU_FAMILY  %>50 configCPU_FAMILY_S08
 %elif (CPUfamily = "HCS12") | (CPUfamily = "HCS12X")
-#define configCPU_FAMILY  configCPU_FAMILY_S12
+#define configCPU_FAMILY  %>50 configCPU_FAMILY_S12
 %elif (CPUfamily = "ColdFireV1")
-#define configCPU_FAMILY  configCPU_FAMILY_V1
+#define configCPU_FAMILY  %>50 configCPU_FAMILY_V1
 %elif (CPUfamily = "MCF")
-#define configCPU_FAMILY  configCPU_FAMILY_V2
+#define configCPU_FAMILY  %>50 configCPU_FAMILY_V2
 %elif (CPUfamily = "56800")
-#define configCPU_FAMILY  configCPU_FAMILY_DSC  
+#define configCPU_FAMILY  %>50 configCPU_FAMILY_DSC  
 %elif (CPUfamily = "Kinetis")
 %if %CPUDB_prph_has_feature(CPU,ARM_CORTEX_M0P) = 'yes' %- Note: for IAR this is defined in portasm.s too!
-#define configCPU_FAMILY  configCPU_FAMILY_ARM_M0P
+#define configCPU_FAMILY  %>50 configCPU_FAMILY_ARM_M0P
 %else %-M4 or M4F
  %if %CPUDB_prph_has_feature(CPU, FPU) = 'no'
-#define configCPU_FAMILY  configCPU_FAMILY_ARM_M4
+#define configCPU_FAMILY  %>50 configCPU_FAMILY_ARM_M4
  %else
-#define configCPU_FAMILY  configCPU_FAMILY_ARM_M4F
+#define configCPU_FAMILY  %>50 configCPU_FAMILY_ARM_M4F
  %endif
 %endif
 %else
-#define configCPU_FAMILY  0
-#error Unknown CPU family %CPUfamily?
+#define configCPU_FAMILY  %>50 0
+#error "Unknown CPU family %CPUfamily?"
 %endif
 /* -------------------------------------------------------------------- */
 %if (CPUfamily = "ColdFireV1")
