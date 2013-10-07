@@ -1486,7 +1486,6 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 /*-----------------------------------------------------------*/
 
 #if ( configUSE_TRACE_FACILITY == 1 )
-
 	unsigned portBASE_TYPE uxTaskGetSystemState( xTaskStatusType *pxTaskStatusArray, unsigned portBASE_TYPE uxArraySize, unsigned long *pulTotalRunTime )
 	{
 	unsigned portBASE_TYPE uxTask = 0, uxQueue = configMAX_PRIORITIES;

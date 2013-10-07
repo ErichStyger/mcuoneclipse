@@ -153,15 +153,14 @@
 %endif
 #define configMINIMAL_STACK_SIZE                                 %>50 ((unsigned portSHORT)%MinimalStackSize)
 
-#define configTOTAL_HEAP_SIZE                                    %>50 ((size_t)(%TotalHeapSize))
-#define configMAX_TASK_NAME_LEN                                  %>50 %TaskNameLength
+#define configTOTAL_HEAP_SIZE                                    %>50 ((size_t)(%TotalHeapSize)) /* size of heap in bytes */
+#define configMAX_TASK_NAME_LEN                                  %>50 %TaskNameLength /* task name length */
 %if %UseTraceFacility='yes'
 #define configUSE_TRACE_FACILITY                                 %>50 1
-#define configUSE_STATS_FORMATTING_FUNCTIONS                     %>50 1
 %else
 #define configUSE_TRACE_FACILITY                                 %>50 0
-#define configUSE_STATS_FORMATTING_FUNCTIONS                     %>50 0
 %endif
+#define configUSE_STATS_FORMATTING_FUNCTIONS                     %>50 (configUSE_TRACE_FACILITY || configGENERATE_RUN_TIME_STATS)
 %if %Use16bitTicks='yes'
 #define configUSE_16_BIT_TICKS                                   %>50 1
 %else
