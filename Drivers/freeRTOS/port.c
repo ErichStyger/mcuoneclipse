@@ -172,7 +172,7 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
 %endif
 #endif /* configUSE_TICKLESS_IDLE */
 
-#if (configCPU_FAMILY==configCPU_FAMILY_V1) || (configCPU_FAMILY==configCPU_FAMILY_V2)
+#if (configCPU_FAMILY==configCPU_FAMILY_CF1) || (configCPU_FAMILY==configCPU_FAMILY_CF2)
   #define portINITIAL_FORMAT_VECTOR           ((portSTACK_TYPE)0x4000)
   
   /* Supervisor mode set. */
