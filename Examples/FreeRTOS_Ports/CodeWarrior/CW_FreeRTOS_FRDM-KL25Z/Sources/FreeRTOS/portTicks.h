@@ -14,9 +14,6 @@
 #ifndef PORTTICKS_H_
 #define PORTTICKS_H_
 
-void vOnCounterRestart(void);
-  /* RTOS tick handler interrupt service routine */
-
 #include "FreeRTOSConfig.h"
 
 /*!

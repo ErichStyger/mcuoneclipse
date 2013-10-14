@@ -73,7 +73,7 @@
 */
 
 /* Kernel includes. */
-#include "portmacro.h" /* for FREERTOS_CPU_CORTEX_M */
+#include "portmacro.h" /* for configCPU_FAMILY */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "portTicks.h" /* for CPU_CORE_CLK_HZ used in configSYSTICK_CLOCK_HZ */
@@ -92,8 +92,17 @@ typedef unsigned long TickCounter_t; /* for 24 bits */
 #define GET_TICK_CURRENT_VAL(addr)  *(addr)=portNVIC_SYSTICK_CURRENT_VALUE_REG
 
 #if configUSE_TICKLESS_IDLE == 1
-#define TICKLESS_DISABLE_INTERRUPTS()  __asm volatile("cpsid i") /* disable interrupts. Note that the wfi (wait for interrupt) instruction later will still be able to wait for interrupts! */
-#define TICKLESS_ENABLE_INTERRUPTS()   __asm volatile("cpsie i") /* re-enable interrupts. */
+
+#if configCPU_FAMILY_IS_ARM(configCPU_FAMILY)
+  #define TICKLESS_DISABLE_INTERRUPTS()  __asm volatile("cpsid i") /* disable interrupts. Note that the wfi (wait for interrupt) instruction later will still be able to wait for interrupts! */
+  #define TICKLESS_ENABLE_INTERRUPTS()   __asm volatile("cpsie i") /* re-enable interrupts. */
+#elif (configCPU_FAMILY==configCPU_FAMILY_S08) || (configCPU_FAMILY==configCPU_FAMILY_S12)
+  #define TICKLESS_DISABLE_INTERRUPTS()  __asm("sei"); /* disable interrupts */
+  #define TICKLESS_ENABLE_INTERRUPTS()   __asm("cli"); /* re-enable interrupts */
+#else
+  #define TICKLESS_DISABLE_INTERRUPTS()  portDISABLE_INTERRUPTS() /* this disables interrupts! Make sure they are re-enabled in vOnPreSleepProcessing()! */
+  #define TICKLESS_ENABLE_INTERRUPTS()   portENABLE_INTERRUPTS()  /* re-enable interrupts */
+#endif
 
   #if 1
     /* using directly SysTick Timer */
@@ -133,6 +142,14 @@ typedef unsigned long TickCounter_t; /* for 24 bits */
   #define configSTOPPED_TIMER_COMPENSATION    45UL  /* number of ticks to compensate */
 #endif /* configUSE_TICKLESS_IDLE */
 
+#if (configCPU_FAMILY==configCPU_FAMILY_CF1) || (configCPU_FAMILY==configCPU_FAMILY_CF2)
+  #define portINITIAL_FORMAT_VECTOR           ((portSTACK_TYPE)0x4000)
+  
+  /* Supervisor mode set. */
+  #define portINITIAL_STATUS_REGISTER         ((portSTACK_TYPE)0x2000)
+#endif
+
+#if configCPU_FAMILY_IS_ARM(configCPU_FAMILY)
 /* Constants required to manipulate the core.
  * SysTick register: http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0662b/CIAGECDD.html
  * Registers first... 
@@ -169,6 +186,13 @@ typedef unsigned long TickCounter_t; /* for 24 bits */
 #define portINITIAL_XPSR         (0x01000000)
 #define portINITIAL_EXEC_RETURN  (0xfffffffd)
 
+#if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
+/* Constants required to manipulate the VFP. */
+#define portFPCCR                ((volatile unsigned long *)0xe000ef34) /* Floating point context control register. */
+#define portASPEN_AND_LSPEN_BITS (0x3UL<<30UL)
+#endif
+#endif
+
 /* Used to keep track of the number of nested calls to taskENTER_CRITICAL().
    This will be set to 0 prior to the first task being started. */
 /* Each task maintains its own interrupt status in the critical nesting variable. */
@@ -191,6 +215,34 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_COD
   pxTopOfStack -= 8;  /* R11, R10, R9, R8, R7, R6, R5 and R4. */
   return pxTopOfStack;
 }
+
+/*-----------------------------------------------------------*/
+#if (configCOMPILER==configCOMPILER_S08_FSL) || (configCOMPILER==configCOMPILER_S12_FSL)
+#if (configCOMPILER==configCOMPILER_S08_FSL)
+  #pragma MESSAGE DISABLE C1404 /* return expected */
+  #pragma MESSAGE DISABLE C20000 /* dead code detected */
+  #pragma NO_RETURN
+  #pragma CODE_SEG __NEAR_SEG NON_BANKED
+#elif (configCOMPILER==configCOMPILER_S12_FSL)
+  #pragma MESSAGE DISABLE C1404 /* return expected */
+  #pragma NO_RETURN
+#endif
+
+static portBASE_TYPE xBankedStartScheduler(void) {
+  /* Restore the context of the first task. */
+  portRESTORE_CONTEXT(); /* Simulate the end of an interrupt to start the scheduler off. */
+  /* Should not get here! */
+  return pdFALSE;
+}
+
+#if (configCOMPILER==configCOMPILER_S08_FSL)
+  #pragma CODE_SEG DEFAULT
+  #pragma MESSAGE DEFAULT C1404 /* return expected */
+  #pragma MESSAGE DEFAULT C20000 /* dead code detected */
+#elif (configCOMPILER==configCOMPILER_S12_FSL)
+  #pragma MESSAGE DEFAULT C1404 /* return expected */
+#endif
+#endif
 /*-----------------------------------------------------------*/
 #if configUSE_TICKLESS_IDLE == 1
 __attribute__((weak)) void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
@@ -399,6 +451,29 @@ portLONG uxGetTickCounterValue(void) {
   return val;
 }
 /*-----------------------------------------------------------*/
+#if (configCOMPILER==configCOMPILER_ARM_KEIL)
+void vPortTickHandler(void) {
+  /* this is how we get here:
+    RTOSTICKLDD1_Interrupt:
+    push {r4, lr}
+    ...                                       RTOSTICKLDD1_OnCounterRestart
+    bl RTOSTICKLDD1_OnCounterRestart     ->   push {r4,lr}
+    pop {r4, lr}                              mov r4,r0
+                                              bl vPortTickHandler
+                                              pop {r4,pc}
+  */
+#if configUSE_TICKLESS_IDLE == 1
+  TICK_INTERRUPT_FLAG_SET();
+#endif
+  portSET_INTERRUPT_MASK();   /* disable interrupts */
+  if (xTaskIncrementTick()!=pdFALSE) { /* increment tick count */
+    taskYIELD();
+  }
+  portCLEAR_INTERRUPT_MASK(); /* enable interrupts again */
+}
+#endif
+/*-----------------------------------------------------------*/
+#if (configCOMPILER==configCOMPILER_ARM_GCC)
 void vPortTickHandler(void) {
 #if configUSE_TICKLESS_IDLE == 1
   TICK_INTERRUPT_FLAG_SET();
@@ -409,31 +484,114 @@ void vPortTickHandler(void) {
   }
   portCLEAR_INTERRUPT_MASK(); /* enable interrupts again */
 }
+#endif
+
+#if (configCOMPILER==configCOMPILER_ARM_KEIL)
+__asm void vPortStartFirstTask(void) {
+  /* Use the NVIC offset register to locate the stack. */
+  ldr r0, =0xE000ED08
+  ldr r0, [r0]
+  ldr r0, [r0]
+  /* Set the msp back to the start of the stack. */
+  msr msp, r0
+  /* Globally enable interrupts. */
+  cpsie i
+  /* Call SVC to start the first task. */
+  svc 0
+  nop
+  nop
+  nop
+}
+#endif
 /*-----------------------------------------------------------*/
+#if (configCOMPILER==configCOMPILER_ARM_GCC)
 void vPortStartFirstTask(void) {
   __asm volatile (
     " ldr r0, =0xE000ED08 \n" /* Use the NVIC offset register to locate the stack. */
     " ldr r0, [r0]        \n" /* load address of vector table */
-    " ldr r0, [r0]        \n" /* load first entry of vector table which is the reset stackpointer */
+    " ldr r0, [r0]        \n" /* load first entry of vector table which is the reset stack pointer */
     " msr msp, r0         \n" /* Set the msp back to the start of the stack. */
     " cpsie i             \n" /* Globally enable interrupts. */
     " svc 0               \n" /* System call to start first task. */
     " nop                 \n"
   );
 }
+#endif
 /*-----------------------------------------------------------*/
+#if (configCOMPILER==configCOMPILER_ARM_KEIL)
+#if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 */
+__asm void vPortSVCHandler(void) {
+  EXTERN pxCurrentTCB
+
+  /* Get the location of the current TCB. */
+  ldr r3, =pxCurrentTCB
+  ldr r1, [r3]
+  ldr r0, [r1]
+  /* Pop the core registers. */
+#if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
+  ldmia r0!, {r4-r11, r14}
+#else
+  ldmia r0!, {r4-r11}
+#endif
+  msr psp, r0
+  mov r0, #0
+  msr basepri, r0
+#if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
+#else
+  orr r14, r14, #13
+#endif
+  bx r14
+  nop
+}
+/*-----------------------------------------------------------*/
+#else /* Cortex M0+ */
+__asm void vPortSVCHandler(void) {
+  EXTERN pxCurrentTCB
+
+  /* Get the location of the current TCB. */
+  ldr r3, =pxCurrentTCB  /* Restore the context. */
+  ldr r1, [r3]          /* Use pxCurrentTCBConst to get the pxCurrentTCB address. */
+  ldr r0, [r1]          /* The first item in pxCurrentTCB is the task top of stack. */
+  adds r0, #16          /* Move to the high registers. */
+  ldmia r0!, {r4-r7}    /* Pop the high registers. */
+  mov r8, r4 
+  mov r9, r5 
+  mov r10, r6
+  mov r11, r7
+
+  msr psp, r0           /* Remember the new top of stack for the task. */
+
+  subs r0, #32          /* Go back for the low registers that are not automatically restored. */
+  ldmia r0!, {r4-r7}    /* Pop low registers.  */
+  mov r1, r14           /* OR R14 with 0x0d. */
+  movs r0, #0x0d
+  orrs r1, r0
+  bx r1
+  nop
+}
+#endif
+#endif
+/*-----------------------------------------------------------*/
+#if (configCOMPILER==configCOMPILER_ARM_GCC)
 __attribute__ ((naked)) void vPortSVCHandler(void) {
-#if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
+#if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 */
 __asm volatile (
     " ldr r3, pxCurrentTCBConst2 \n" /* Restore the context. */
     " ldr r1, [r3]               \n" /* Use pxCurrentTCBConst to get the pxCurrentTCB address. */
     " ldr r0, [r1]               \n" /* The first item in pxCurrentTCB is the task top of stack. */
     /* pop the core registers */
+#if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
+    " ldmia r0!, {r4-r11, r14}   \n"
+#else
     " ldmia r0!, {r4-r11}        \n"
+#endif
     " msr psp, r0                \n"
     " mov r0, #0                 \n"
     " msr basepri, r0            \n"
+#if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
+#else
     " orr r14, r14, #13          \n"
+#endif
     " bx r14                     \n"
     "                            \n"
     " .align 2                   \n"
@@ -466,13 +624,107 @@ __asm volatile (
 #endif
 }
 /*-----------------------------------------------------------*/
+#endif
+#if (configCOMPILER==configCOMPILER_ARM_KEIL)
+#if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 */
+__asm void vPortPendSVHandler(void) {
+  EXTERN pxCurrentTCB
+
+  mrs r0, psp
+  ldr  r3, =pxCurrentTCB     /* Get the location of the current TCB. */
+  ldr  r2, [r3]
+#if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
+  tst r14, #0x10             /* Is the task using the FPU context?  If so, push high vfp registers. */
+  it eq
+  vstmdbeq r0!, {s16-s31}
+
+  stmdb r0!, {r4-r11, r14}   /* save remaining core registers */
+#else
+  stmdb r0!, {r4-r11}        /* Save the core registers. */
+#endif
+  str r0, [r2]               /* Save the new top of stack into the first member of the TCB. */
+  stmdb sp!, {r3, r14}
+  mov r0, %0
+  msr basepri, r0
+  bl vTaskSwitchContext
+  mov r0, #0
+  msr basepri, r0
+  ldmia sp!, {r3, r14}
+  ldr r1, [r3]               /* The first item in pxCurrentTCB is the task top of stack. */
+  ldr r0, [r1]
+#if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
+  ldmia r0!, {r4-r11, r14}   /* Pop the core registers */
+  tst r14, #0x10             /* Is the task using the FPU context?  If so, pop the high vfp registers too. */
+  it eq
+  vldmiaeq r0!, {s16-s31}
+#else
+  ldmia r0!, {r4-r11}        /* Pop the core registers. */
+#endif
+  msr psp, r0
+  bx r14
+  nop
+}
+#else /* Cortex M0+ */
+__asm void vPortPendSVHandler(void) {
+  EXTERN pxCurrentTCB
+  EXTERN vTaskSwitchContext
+	
+  mrs r0, psp
+	
+  ldr r3, =pxCurrentTCB       /* Get the location of the current TCB. */
+  ldr r2, [r3]
+
+  subs r0, #32               /* Make space for the remaining low registers. */
+  str r0, [r2]               /* Save the new top of stack. */
+  stmia r0!, {r4-r7}         /* Store the low registers that are not saved automatically. */
+  mov r4, r8                 /* Store the high registers. */
+  mov r5, r9
+  mov r6, r10
+  mov r7, r11
+  stmia r0!, {r4-r7}
+
+  push {r3, r14}
+  cpsid i
+  bl vTaskSwitchContext
+  cpsie i
+  pop {r2, r3}               /* lr goes in r3. r2 now holds tcb pointer. */
+
+  ldr r1, [r2]
+  ldr r0, [r1]               /* The first item in pxCurrentTCB is the task top of stack. */
+  adds r0, #16               /* Move to the high registers. */
+  ldmia r0!, {r4-r7}         /* Pop the high registers. */
+  mov r8, r4
+  mov r9, r5
+  mov r10, r6
+  mov r11, r7
+
+  msr psp, r0                /* Remember the new top of stack for the task. */
+
+  subs r0, #32               /* Go back for the low registers that are not automatically restored. */
+  ldmia r0!, {r4-r7}         /* Pop low registers.  */
+
+  bx r3
+  nop
+}
+#endif
+#endif
+/*-----------------------------------------------------------*/
+#if (configCOMPILER==configCOMPILER_ARM_GCC)
 __attribute__ ((naked)) void vPortPendSVHandler(void) {
-#if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
+#if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 */
   __asm volatile (
     " mrs r0, psp                \n"
     " ldr  r3, pxCurrentTCBConst \n" /* Get the location of the current TCB. */
     " ldr  r2, [r3]              \n"
+#if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
+    " tst r14, #0x10             \n" /* Is the task using the FPU context?  If so, push high vfp registers. */
+    " it eq                      \n"
+    " vstmdbeq r0!, {s16-s31}    \n"
+
+    " stmdb r0!, {r4-r11, r14}   \n" /* save remaining core registers */
+#else
     " stmdb r0!, {r4-r11}        \n" /* Save the core registers. */
+#endif
     " str r0, [r2]               \n" /* Save the new top of stack into the first member of the TCB. */
     " stmdb sp!, {r3, r14}       \n"
     " mov r0, %0                 \n"
@@ -483,7 +735,14 @@ __attribute__ ((naked)) void vPortPendSVHandler(void) {
     " ldmia sp!, {r3, r14}       \n"
     " ldr r1, [r3]               \n" /* The first item in pxCurrentTCB is the task top of stack. */
     " ldr r0, [r1]               \n"
+#if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
+    " ldmia r0!, {r4-r11, r14}   \n" /* Pop the core registers */
+    " tst r14, #0x10             \n" /* Is the task using the FPU context?  If so, pop the high vfp registers too. */
+    " it eq                      \n"
+    " vldmiaeq r0!, {s16-s31}    \n"
+#else
     " ldmia r0!, {r4-r11}        \n" /* Pop the core registers. */
+#endif
     " msr psp, r0                \n"
     " bx r14                     \n"
     "                            \n"
@@ -534,5 +793,6 @@ __attribute__ ((naked)) void vPortPendSVHandler(void) {
   );
 #endif
 }
+#endif
 /*-----------------------------------------------------------*/
 

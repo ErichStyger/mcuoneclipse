@@ -72,7 +72,7 @@ task.h is included from an application file. */
 #define MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
 #if ( ( configUSE_TRACE_FACILITY == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS == 1 ) )
-#include "Utility.h"
+#include "Utility.h" /* interface to utility because used for safe string routines */ /* << EST */
 #endif
 
 /* FreeRTOS includes. */
@@ -1470,7 +1470,6 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 /*-----------------------------------------------------------*/
 
 #if ( configUSE_TRACE_FACILITY == 1 )
-
         unsigned portBASE_TYPE uxTaskGetSystemState( xTaskStatusType *pxTaskStatusArray, unsigned portBASE_TYPE uxArraySize, unsigned long *pulTotalRunTime )
         {
         unsigned portBASE_TYPE uxTask = 0, uxQueue = configMAX_PRIORITIES;

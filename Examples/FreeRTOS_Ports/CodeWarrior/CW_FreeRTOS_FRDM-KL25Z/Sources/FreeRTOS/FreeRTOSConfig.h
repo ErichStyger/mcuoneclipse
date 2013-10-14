@@ -90,18 +90,18 @@
 #define configUSE_IDLE_HOOK                       0
 #define configUSE_TICK_HOOK                       0
 #define configUSE_MALLOC_FAILED_HOOK              0
-#define configCPU_CLOCK_HZ                        20971530U
-#define configBUS_CLOCK_HZ                        20971520U
+#define configCPU_CLOCK_HZ                        48000000u
+#define configBUS_CLOCK_HZ                        48000000u
 #define configTICK_RATE_HZ                        ((portTickType)100) /* frequency of tick interrupt */
 #define configSYSTICK_USE_CORE_CLOCK              1 /* System Tick is using core clock  */
 #define configSYSTICK_CLOCK_DIVIDER               1 /* no divider */
 #define configSYSTICK_CLOCK_HZ                    ((configCPU_CLOCK_HZ)/configSYSTICK_CLOCK_DIVIDER) /* frequency of system tick counter */
 #define configMINIMAL_STACK_SIZE                  ((unsigned portSHORT)200)
 
-#define configTOTAL_HEAP_SIZE                     ((size_t)(2048))
-#define configMAX_TASK_NAME_LEN                   12
+#define configTOTAL_HEAP_SIZE                     ((size_t)(12000)) /* size of heap in bytes */
+#define configMAX_TASK_NAME_LEN                   12 /* task name length */
 #define configUSE_TRACE_FACILITY                  0
-#define configUSE_STATS_FORMATTING_FUNCTIONS      0
+#define configUSE_STATS_FORMATTING_FUNCTIONS      (configUSE_TRACE_FACILITY || configGENERATE_RUN_TIME_STATS)
 #define configUSE_16_BIT_TICKS                    0
 #define configIDLE_SHOULD_YIELD                   1
 #define configUSE_CO_ROUTINES                     0
@@ -144,40 +144,44 @@
 #define FRTOS_MEMORY_SCHEME                       2 /* either 1, 2, 3 or 4 */
 /* -------------------------------------------------------------------- */
 /* Macros to identify the compiler used: */
-#define configCOMPILER_ARM_GCC     1 /* GNU ARM gcc compiler */
-#define configCOMPILER_ARM_IAR     2 /* IAR ARM compiler */
-#define configCOMPILER_ARM_FSL     3 /* Legacy Freescale ARM compiler */
-#define configCOMPILER_ARM_KEIL    4 /* ARM/Keil compiler */
-#define configCOMPILER_S08_FSL     5 /* Freescale HCS08 compiler */
-#define configCOMPILER_RS08_FSL    6 /* Freescale RS08 compiler */
-#define configCOMPILER_S12_FSL     7 /* Freescale HCS12(X) compiler */
-#define configCOMPILER_CF1_FSL     8 /* Freescale ColdFire V1 compiler */
-#define configCOMPILER_CF2_FSL     9 /* Freescale ColdFire V2 compiler */
-#define configCOMPILER_DSC_FSL    10 /* Freescale DSC compiler */
+#define configCOMPILER_ARM_GCC               1 /* GNU ARM gcc compiler */
+#define configCOMPILER_ARM_IAR               2 /* IAR ARM compiler */
+#define configCOMPILER_ARM_FSL               3 /* Legacy Freescale ARM compiler */
+#define configCOMPILER_ARM_KEIL              4 /* ARM/Keil compiler */
+#define configCOMPILER_S08_FSL               5 /* Freescale HCS08 compiler */
+#define configCOMPILER_S12_FSL               6 /* Freescale HCS12(X) compiler */
+#define configCOMPILER_CF1_FSL               7 /* Freescale ColdFire V1 compiler */
+#define configCOMPILER_CF2_FSL               8 /* Freescale ColdFire V2 compiler */
+#define configCOMPILER_DSC_FSL               9 /* Freescale DSC compiler */
 
-#define configCOMPILER        configCOMPILER_ARM_GCC
+#define configCOMPILER                            configCOMPILER_ARM_GCC
 /* -------------------------------------------------------------------- */
 /* CPU family identification */
-#define configCPU_FAMILY_S08  1  /* S08 core */
-#define configCPU_FAMILY_S12  2  /* S12(X) core */
-#define configCPU_FAMILY_CF1  3  /* ColdFire V1 core */
-#define configCPU_FAMILY_CF2  4  /* ColdFire V2 core */
-#define configCPU_FAMILY_DSC  5  /* 56800/DSC */
-#define configCPU_FAMILY_ARM  6  /* ARM Cortex-M */
+#define configCPU_FAMILY_S08                 1  /* S08 core */
+#define configCPU_FAMILY_S12                 2  /* S12(X) core */
+#define configCPU_FAMILY_CF1                 3  /* ColdFire V1 core */
+#define configCPU_FAMILY_CF2                 4  /* ColdFire V2 core */
+#define configCPU_FAMILY_DSC                 5  /* 56800/DSC */
+#define configCPU_FAMILY_ARM_M0P             6  /* ARM Cortex-M0+ */
+#define configCPU_FAMILY_ARM_M4              7  /* ARM Cortex-M4 */
+#define configCPU_FAMILY_ARM_M4F             8  /* ARM Cortex-M4F (with floating point unit) */
+/* Macros to identify set of core families */
+#define configCPU_FAMILY_IS_ARM_M4(fam)      (((fam)==configCPU_FAMILY_ARM_M4)  || ((fam)==configCPU_FAMILY_ARM_M4F))
+#define configCPU_FAMILY_IS_ARM(fam)         (((fam)==configCPU_FAMILY_ARM_M0P) || configCPU_FAMILY_IS_ARM_M4(fam))
 
-#define configCPU_FAMILY  configCPU_FAMILY_ARM
+#define configCPU_FAMILY                          configCPU_FAMILY_ARM_M0P
 /* -------------------------------------------------------------------- */
 /* Cortex-M specific definitions. */
-#define configPRIO_BITS                           4 /* 16 priority levels on ARM Cortex M4 (Kinetis K Family) */
+#define configPRIO_BITS                           2 /* 4 priority levels on ARM Cortex M0+ (Kinetis L Family) */
 
 /* The lowest interrupt priority that can be used in a call to a "set priority" function. */
-#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY   15
+#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY   3
 
 /* The highest interrupt priority that can be used by any interrupt service
    routine that makes calls to interrupt safe FreeRTOS API functions.  DO NOT CALL
    INTERRUPT SAFE FREERTOS API FUNCTIONS FROM ANY INTERRUPT THAT HAS A HIGHER
    PRIORITY THAN THIS! (higher priorities are lower numeric values on an ARM Cortex-M). */
-#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY 5
+#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY 1
 
 /* Interrupt priorities used by the kernel port layer itself.  These are generic
    to all Cortex-M ports, and do not rely on any particular library functions. */

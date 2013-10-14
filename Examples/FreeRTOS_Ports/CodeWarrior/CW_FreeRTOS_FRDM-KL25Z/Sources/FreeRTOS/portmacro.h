@@ -78,6 +78,8 @@
 extern "C" {
 #endif
 
+#include "FreeRTOSConfig.h"
+
 /*-----------------------------------------------------------
  * Port specific definitions.
  *
@@ -87,6 +89,20 @@ extern "C" {
  * These settings should not be altered.
  *-----------------------------------------------------------
  */
+#if (configCOMPILER==configCOMPILER_S12_FSL) || (configCOMPILER==configCOMPILER_S08_FSL)
+  /* disabling some warnings as the RTOS sources are not that clean... */
+  #pragma MESSAGE DISABLE C5909 /* assignment in condition */
+  #pragma MESSAGE DISABLE C2705 /* possible loss of data */
+  #pragma MESSAGE DISABLE C5905 /* multiplication with one */
+  #pragma MESSAGE DISABLE C5904 /* division by one */
+  #pragma MESSAGE DISABLE C5660 /* removed dead code */
+  #pragma MESSAGE DISABLE C5917 /* removed dead assignment */
+  #pragma MESSAGE DISABLE C4001 /* condition always FALSE */
+#endif
+#if configCOMPILER==configCOMPILER_S12_FSL
+  #pragma MESSAGE DISABLE C12053 /* SP change not in debug information */
+  #pragma MESSAGE DISABLE C12056 /* SP debug infor incorrect */
+#endif
 
 /* Type definitions. */
 #define portCHAR               char
@@ -96,8 +112,6 @@ extern "C" {
 #define portSHORT              short
 #define portSTACK_TYPE         unsigned portLONG
 #define portBASE_TYPE          long
-
-#include "FreeRTOSConfig.h"
 
 #if( configUSE_16_BIT_TICKS == 1 )
   typedef unsigned portSHORT portTickType;
@@ -126,9 +140,8 @@ extern void vPortClearInterruptMaskFromISR(unsigned portBASE_TYPE);
 
 /* macro to identify CPU: 0 for M0+ and 4 for M4 */
 #define portDISABLE_ALL_INTERRUPTS()         __asm volatile("cpsid i")
-#define FREERTOS_CPU_CORTEX_M          0 /* Cortex M0+ core */
 
-#if FREERTOS_CPU_CORTEX_M==4 /* Cortex M4 */
+#if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 */
 /*
  * Set basepri to portMAX_SYSCALL_INTERRUPT_PRIORITY without effecting other
  * registers.  r0 is clobbered.

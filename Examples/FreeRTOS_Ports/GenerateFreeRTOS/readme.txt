@@ -2,6 +2,7 @@ readme.txt
 ==========
 This project is used to generate differnt ports of FreeRTOS for different cores and toolchains.
 This is useful for anyone who (for whatever reason?) does not want to use Processor Expert.
+This project works 'as is' with the FRDM-KL25Z board.
 
 Settings for CodeWarrior, KL25Z board:
 --------------------------------------
