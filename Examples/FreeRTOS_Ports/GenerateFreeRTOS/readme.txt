@@ -14,6 +14,17 @@ Settings for CodeWarrior, KL25Z board:
   ARM Family: Cortex M0+
   Max SysCAll: 1 (or any value from 1-3)
   RTOS Interrupt Priority: 3 (lowest priority)
+
+Settings for CodeWarrior, KL25Z board:
+--------------------------------------
+- Compiler: ARM IAR
+- Manual Clock Values:
+  configCPU_CLOCK_HZ: 48000000u
+  configBUS_CLOCK_HZ: 48000000u
+- Scheduler > Kinetis
+  ARM Family: Cortex M0+
+  Max SysCAll: 1 (or any value from 1-3)
+  RTOS Interrupt Priority: 3 (lowest priority)
   
  
  How to use the generated files:
