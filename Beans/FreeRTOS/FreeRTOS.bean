@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.316</Version>
+    <Version>01.318</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -69,15 +69,15 @@
     </Property>
     <Property>
       <TBoolGrupItem>
-        <Name>Sources</Name>
+        <Name>Static Sources</Name>
         <Symbol>SourceGenerationOptions</Symbol>
         <TypeSpec>typeEnaDis</TypeSpec>
-        <Hint>Source Code Generation Option for the RTOS</Hint>
+        <Hint>Source Code Generation Option for the RTOS. With this, the source file generation can be configured so they can be easily used outside of Processor Expert.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
         <Description>Disabled</Description>
-        <Expanded>Yes</Expanded>
+        <Expanded>No</Expanded>
         <DefaultValue>false</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
@@ -230,7 +230,7 @@
     </Property>
     <Property>
       <TBoolGrupItem>
-        <Name>TraceHooks</Name>
+        <Name>Trace Hooks</Name>
         <Symbol>UseTraceHooksGroup</Symbol>
         <TypeSpec>typeEnaDis</TypeSpec>
         <Hint>If enabled, you can condfigure trace hooks to collect information about the RTOS behaviour.</Hint>
