@@ -97,7 +97,7 @@ _vPortStartFirstTask:
   .end
 %endif %- Coldfire V1 and V2
 %-*****************************************************************************************************
-%if ((%configCOMPILER='automatic') & (%Compiler="configCOMPILER_ARM_IAR")) | (%configCOMPILER='configCOMPILER_ARM_IAR')
+%if ((%configCOMPILER='automatic') & (%Compiler="IARARM")) | (%configCOMPILER='configCOMPILER_ARM_IAR')
 /* IAR ARM Compiler */
 #include "FreeRTOSConfig.h"
 
@@ -317,7 +317,7 @@ vPortEnableVFP:
   END
 %endif %- IAR aRM
 %-*****************************************************************************************************
-%if ((%configCOMPILER='automatic') & (%Compiler="configCOMPILER_ARM_FSL")) | (%configCOMPILER='configCOMPILER_ARM_FSL')
+%if ((%configCOMPILER='automatic') & (%Compiler="CodeWarriorARM")) | (%configCOMPILER='configCOMPILER_ARM_FSL')
 /* legacy Freescale ARM compiler */
 #include "FreeRTOSConfig.h"
 
