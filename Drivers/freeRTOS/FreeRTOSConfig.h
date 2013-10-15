@@ -152,8 +152,27 @@
 #define configSYSTICK_CLOCK_HZ                                   %>50 configBUS_CLOCK_HZ /* frequency of system tick counter */
 %endif
 #define configMINIMAL_STACK_SIZE                                 %>50 ((unsigned portSHORT)%MinimalStackSize)
-
+/*----------------------------------------------------------*/
+/* Heap Memory */
+%if MemoryScheme = "Scheme1"
+#define configFRTOS_MEMORY_SCHEME                 %>50 1 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc) or 4 (coalesc blocks) */
+%elif MemoryScheme = "Scheme2"
+#define configFRTOS_MEMORY_SCHEME                 %>50 2 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc) or 4 (coalesc blocks) */
+%elif MemoryScheme = "Scheme3"
+#define configFRTOS_MEMORY_SCHEME                 %>50 3 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc) or 4 (coalesc blocks) */
+%elif MemoryScheme = "Scheme4"
+#define configFRTOS_MEMORY_SCHEME                 %>50 4 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc) or 4 (coalesc blocks) */
+%endif
 #define configTOTAL_HEAP_SIZE                                    %>50 ((size_t)(%TotalHeapSize)) /* size of heap in bytes */
+%if defined(HeapSectionName)
+#define configUSE_HEAP_SECTION_NAME                              %>50 1 /* set to 1 if a custom section name (configHEAP_SECTION_NAME_STRING) shall be used, 0 otherwise */
+%else
+#define configUSE_HEAP_SECTION_NAME                              %>50 0 /* set to 1 if a custom section name (configHEAP_SECTION_NAME_STRING) shall be used, 0 otherwise */
+%endif
+#if configUSE_HEAP_SECTION_NAME
+  #define configHEAP_SECTION_NAME_STRING                         %>50 ".m_data_20000000" /* heap section name (supported by GCC). Check your linker file for the name used. */
+#endif
+/*----------------------------------------------------------*/
 #define configMAX_TASK_NAME_LEN                                  %>50 %TaskNameLength /* task name length */
 %if %UseTraceFacility='yes'
 #define configUSE_TRACE_FACILITY                                 %>50 1
@@ -320,18 +339,6 @@
 #define INCLUDE_pcTaskGetTaskName                                %>50 1
 %else
 #define INCLUDE_pcTaskGetTaskName                                %>50 0
-%endif
-%- --------------------------------------------------------------------
-
-/* Memory Scheme Identification */
-%if MemoryScheme = "Scheme1"
-#define FRTOS_MEMORY_SCHEME                 %>50 1 /* either 1, 2, 3 or 4 */
-%elif MemoryScheme = "Scheme2"
-#define FRTOS_MEMORY_SCHEME                 %>50 2 /* either 1, 2, 3 or 4 */
-%elif MemoryScheme = "Scheme3"
-#define FRTOS_MEMORY_SCHEME                 %>50 3 /* either 1, 2, 3 or 4 */
-%elif MemoryScheme = "Scheme4"
-#define FRTOS_MEMORY_SCHEME                 %>50 4 /* either 1, 2, 3 or 4 */
 %endif
 %if CommandInterpreterEnabled='yes'
 %- --------------------------------------------------------------------

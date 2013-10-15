@@ -1,6 +1,6 @@
 /* << EST */
 #include "FreeRTOSConfig.h"
-#if FRTOS_MEMORY_SCHEME==3
+#if configFRTOS_MEMORY_SCHEME==3
 
 /*
     FreeRTOS V7.5.0 - Copyright (C) 2013 Real Time Engineers Ltd.
@@ -139,5 +139,5 @@ void vPortFree( void *pv )
 }
 
 
-#endif /* FRTOS_MEMORY_SCHEME==3 */ /* << EST */
+#endif /* configFRTOS_MEMORY_SCHEME==3 */ /* << EST */
 
