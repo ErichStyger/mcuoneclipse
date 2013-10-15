@@ -90,8 +90,8 @@
 #define configUSE_IDLE_HOOK                       0
 #define configUSE_TICK_HOOK                       0
 #define configUSE_MALLOC_FAILED_HOOK              0
-#define configCPU_CLOCK_HZ                        48000000u
-#define configBUS_CLOCK_HZ                        48000000u
+#define configCPU_CLOCK_HZ                        20971520U
+#define configBUS_CLOCK_HZ                        20971520U
 #define configTICK_RATE_HZ                        ((portTickType)100) /* frequency of tick interrupt */
 #define configSYSTICK_USE_CORE_CLOCK              1 /* System Tick is using core clock  */
 #define configSYSTICK_CLOCK_DIVIDER               1 /* no divider */

@@ -3,8 +3,8 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>31</ModificationStamp>
-    <Date>2013-10-14</Date>
+    <ModificationStamp>32</ModificationStamp>
+    <Date>2013-10-15</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.8.0.RT5_b1337-1809</PEversion>
   </Header>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>51</ProjectCompNumb>
+    <ProjectCompNumb>54</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -4437,8 +4437,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <EnumSymbVal>M0+</EnumSymbVal>
+        <Index>1</Index>
+        <EnumSymbVal>M4</EnumSymbVal>
         <CustomValue />
       </ItemState>
       <ItemState>
@@ -4452,7 +4452,7 @@
       <ItemState>
         <ItemSymbol>ARMLowestInterrutpPriority</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>3</Value>
+        <Value>15</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -4460,7 +4460,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>3</Value>
+        <Value>15</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -5882,7 +5882,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>useARMSysTickUseCoreClock</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <Value>true</Value>
@@ -5932,8 +5932,8 @@
         <ItemSymbol>configCOMPILER</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>2</Index>
-        <EnumSymbVal>configCOMPILER_ARM_IAR</EnumSymbVal>
+        <Index>1</Index>
+        <EnumSymbVal>configCOMPILER_ARM_GCC</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <CustomValue />
       </ItemState>

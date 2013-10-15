@@ -57,7 +57,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
   (void)pvParameters; /* parameter not used */
   for(;;) {
     RED_TOGGLE();
-    vTaskDelay(250/portTICK_RATE_MS);
+    vTaskDelay(1000/portTICK_RATE_MS);
   }
 }
 
