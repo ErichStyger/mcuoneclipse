@@ -2,55 +2,52 @@
  * main implementation: use this 'C' sample to create your own application
  *
  */
+
 #include "derivative.h" /* include peripheral declarations */
 #include "FreeRTOS.h"
 
-/* Red RGB LED is on PTB18 */
-#define RED             (18)
+/* Red RGB LED is on PTC3 */
+#define RED             (3)
 #define RED_SHIFT       (1<<RED)
 
-#define RED_OFF()       (GPIOB_PSOR = RED_SHIFT)
-#define RED_ON()        (GPIOB_PCOR = RED_SHIFT)
-#define RED_TOGGLE()    (GPIOB_PTOR = RED_SHIFT)
+#define RED_OFF()       (GPIOC_PSOR = RED_SHIFT)
+#define RED_ON()        (GPIOC_PCOR = RED_SHIFT)
+#define RED_TOGGLE()    (GPIOC_PTOR = RED_SHIFT)
 
-/* Green RGB LED is on PTB19 */
-#define GREEN           (19)
+/* Green RGB LED is on PTD4 */
+#define GREEN           (4)
 #define GREEN_SHIFT     (1<<GREEN)
 
-#define GREEN_OFF()     (GPIOB_PSOR = GREEN_SHIFT)
-#define GREEN_ON()      (GPIOB_PCOR = GREEN_SHIFT)
-#define GREEN_TOGGLE()  (GPIOB_PTOR = GREEN_SHIFT)
+#define GREEN_OFF()     (GPIOD_PSOR = GREEN_SHIFT)
+#define GREEN_ON()      (GPIOD_PCOR = GREEN_SHIFT)
+#define GREEN_TOGGLE()  (GPIOD_PTOR = GREEN_SHIFT)
 
-/* Blue RGB LED is on PTD1 */
-#define BLUE            (1)
+/* Blue RGB LED is on PTA2 */
+#define BLUE            (2)
 #define BLUE_SHIFT      (1<<BLUE)
 
-#define BLUE_OFF()      (GPIOD_PSOR = BLUE_SHIFT)
-#define BLUE_ON()       (GPIOD_PCOR = BLUE_SHIFT)
-#define BLUE_TOGGLE()   (GPIOD_PTOR = BLUE_SHIFT)
+#define BLUE_OFF()      (GPIOA_PSOR = BLUE_SHIFT)
+#define BLUE_ON()       (GPIOA_PCOR = BLUE_SHIFT)
+#define BLUE_TOGGLE()   (GPIOA_PTOR = BLUE_SHIFT)
 
 static void InitLED(void) {
-  /* Turn on clock to PortB (red and green led) and PortD (blue led) module */
-  SIM_SCGC5 |= SIM_SCGC5_PORTB_MASK|SIM_SCGC5_PORTD_MASK;
+  /* Turn on clock to PortC (red led), PortD (green led) and PortA (blue led) module */
+  SIM_SCGC5 |= SIM_SCGC5_PORTC_MASK|SIM_SCGC5_PORTD_MASK|SIM_SCGC5_PORTA_MASK;
 
-  /* Set the PTB18 pin multiplexer to GPIO mode */
-  PORTB_PCR18 = PORT_PCR_MUX(1);
-
-  /* Set the PTB19 pin multiplexer to GPIO mode */
-  PORTB_PCR19 = PORT_PCR_MUX(1);
-
-  /* Set the PTD1 pin multiplexer to GPIO mode */
-  PORTD_PCR1 = PORT_PCR_MUX(1);
+  /* Set the PTC3 (red led), PTD4 (green led) and PTA2 (blue led) pin multiplexer to GPIO mode */
+  PORTC_PCR3 = PORT_PCR_MUX(1);
+  PORTD_PCR4 = PORT_PCR_MUX(1);
+  PORTA_PCR2 = PORT_PCR_MUX(1);
 
   /* Set the initial output state to high */
-  GPIOB_PSOR |= RED_SHIFT;
-  GPIOB_PSOR |= GREEN_SHIFT;
-  GPIOD_PSOR |= BLUE_SHIFT;
+  GPIOC_PSOR |= RED_SHIFT;
+  GPIOD_PSOR |= GREEN_SHIFT;
+  GPIOA_PSOR |= BLUE_SHIFT;
 
   /* Set the pins direction to output */
-  GPIOB_PDDR |= RED_SHIFT;
-  GPIOB_PDDR |= GREEN_SHIFT;
-  GPIOD_PDDR |= BLUE_SHIFT;
+  GPIOC_PDDR |= RED_SHIFT;
+  GPIOD_PDDR |= GREEN_SHIFT;
+  GPIOA_PDDR |= BLUE_SHIFT;
 }
 
 static portTASK_FUNCTION(MainTask, pvParameters) {
@@ -61,9 +58,10 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
   }
 }
 
-int main(void) {
-  InitLED();
-  
+int main(void)
+{
+	InitLED();
+
   RED_ON();
   RED_OFF();
   RED_TOGGLE();

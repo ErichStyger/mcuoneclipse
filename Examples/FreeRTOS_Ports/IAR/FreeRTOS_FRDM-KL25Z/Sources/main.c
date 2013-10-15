@@ -79,12 +79,17 @@ static void init_hardware(void)
 {
   InitLED();
 }
+/* Service constants */
+#define COP_PDD_KEY_1 0x55U                      /**< First key */
+#define COP_PDD_KEY_2 0xAAU                      /**< Second key */
 
 static portTASK_FUNCTION(redTask, pvParameters) {
   (void)pvParameters; /* parameter not used */
   for(;;) {
     RED_TOGGLE();
-    vTaskDelay(1000/portTICK_RATE_MS);
+    SIM_SRVCOP = COP_PDD_KEY_1;
+    SIM_SRVCOP = COP_PDD_KEY_2;
+    vTaskDelay(10/portTICK_RATE_MS);
   }
 }
 
@@ -130,6 +135,12 @@ void SystemInit(void) {
   /* Disable the WDOG module */
   /* SIM_COPC: COPT=0,COPCLKS=0,COPW=0 */
   //SIM_COPC = (uint32_t)0x00u;
+       SIM_SCGC5 |= (SIM_SCGC5_PORTA_MASK
+                      | SIM_SCGC5_PORTB_MASK
+                      | SIM_SCGC5_PORTC_MASK
+                      | SIM_SCGC5_PORTD_MASK
+                      | SIM_SCGC5_PORTE_MASK );
+
 }
 
 int main(void)

@@ -1,0 +1,37 @@
+// Memory Configuration File
+//
+// Description:
+//  A memory configuration file contains commands that define the legally accessible
+//  areas of memory for your specific board. Useful for example when the debugger
+//  tries to display the content of a "char *" variable, that has not yet been initialized.
+//  In this case the debugger may try to read from a bogus address, which could cause a
+//  bus error.
+//
+// Board:
+//  Kinetis K20DX128
+//
+// Reference:
+//  -
+
+
+// All reserved ranges read back 0xBABA...
+reservedchar 0xBA
+
+usederivative "MK20D5"
+
+//         Memory Map:
+//         ----------------------------------------------------------------------
+
+range      0x00000000 0x0001FFFF 4 ReadWrite    // 128KB Code Flash
+reserved   0x00020000 0x0FFFFFFF
+range      0x10000000 0x10007FFF 4 ReadWrite    // 32KB Data Flash
+reserved   0x10008000 0x13FFFFFF
+range      0x14000000 0x140007FF 4 ReadWrite    // 2KB EERAM
+reserved   0x14000800 0x1FFFDFFF
+range      0x1FFFE000 0x1FFFFFFF 4 ReadWrite    // 8KB On chip SRAM (TCML)
+range      0x20000000 0x20001FFF 4 ReadWrite    // 8KB On chip SRAM (TCMU)
+reserved   0x20002000 0x21FFFFFF
+range      0x22000000 0x2203FFFF 4 ReadWrite    // Aliased to TCMU SRAM bitband
+reserved   0x22040000 0x3FFFFFFF
+reserved   0x60000000 0xDFFFFFFF		        // Flexbus for external memory
+reserved   0xE0100000 0xFFFFFFFF
