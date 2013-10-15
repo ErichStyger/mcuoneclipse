@@ -32,9 +32,6 @@
 #include "Cpu.h"
 #include "Events.h"
 #include "WAIT1.h"
-#include "TI1.h"
-#include "TimerIntLdd1.h"
-#include "TU1.h"
 #include "LED1.h"
 #include "LEDpin2.h"
 #include "BitIoLdd2.h"
@@ -48,6 +45,7 @@
 #include "ASerialLdd1.h"
 #include "CLS1.h"
 #include "UTIL1.h"
+#include "FRTOS1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -67,7 +65,7 @@ int main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
-  SHELL_Run();
+  SHELL_Init();
 
   /* For example: for(;;) { } */
 
