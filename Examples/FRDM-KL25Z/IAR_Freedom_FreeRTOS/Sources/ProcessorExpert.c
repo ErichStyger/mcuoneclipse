@@ -42,7 +42,7 @@ static portTASK_FUNCTION(MyTask, pvParameters) {
 }
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
-void (*f)(void);
+
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {

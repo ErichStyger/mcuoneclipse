@@ -87,8 +87,8 @@ static portTASK_FUNCTION(redTask, pvParameters) {
   (void)pvParameters; /* parameter not used */
   for(;;) {
     RED_TOGGLE();
-    SIM_SRVCOP = COP_PDD_KEY_1;
-    SIM_SRVCOP = COP_PDD_KEY_2;
+    //SIM_SRVCOP = COP_PDD_KEY_1;
+    //SIM_SRVCOP = COP_PDD_KEY_2;
     vTaskDelay(10/portTICK_RATE_MS);
   }
 }
@@ -132,9 +132,15 @@ static void start(void) {
 }
 
 void SystemInit(void) {
+   SCB_VTOR = (uint32_t)(&__vector_table); /* Set the interrupt vector table position */
+  /* Disable the WDOG module */
+  /* SIM_COPC: ??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,COPT=0,COPCLKS=0,COPW=0 */
+  SIM_COPC = SIM_COPC_COPT(0x00);                                   
+
   /* Disable the WDOG module */
   /* SIM_COPC: COPT=0,COPCLKS=0,COPW=0 */
-  //SIM_COPC = (uint32_t)0x00u;
+  SIM_COPC = (uint32_t)0x00u;
+  
        SIM_SCGC5 |= (SIM_SCGC5_PORTA_MASK
                       | SIM_SCGC5_PORTB_MASK
                       | SIM_SCGC5_PORTC_MASK
