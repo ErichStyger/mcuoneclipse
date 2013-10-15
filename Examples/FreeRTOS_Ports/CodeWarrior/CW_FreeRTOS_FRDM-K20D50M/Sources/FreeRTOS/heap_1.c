@@ -1,6 +1,6 @@
 /* << EST */
 #include "FreeRTOSConfig.h"
-#if FRTOS_MEMORY_SCHEME==1
+#if configFRTOS_MEMORY_SCHEME==1
 
 /*
     FreeRTOS V7.5.0 - Copyright (C) 2013 Real Time Engineers Ltd.
@@ -91,8 +91,11 @@ task.h is included from an application file. */
 #define configADJUSTED_HEAP_SIZE        ( configTOTAL_HEAP_SIZE - portBYTE_ALIGNMENT )
 
 /* Allocate the memory for the heap. */
-
-static unsigned char ucHeap[ configTOTAL_HEAP_SIZE ];
+#if configUSE_HEAP_SECTION_NAME
+  static unsigned char __attribute__((section (configHEAP_SECTION_NAME_STRING))) ucHeap[configTOTAL_HEAP_SIZE];
+#else
+  static unsigned char ucHeap[ configTOTAL_HEAP_SIZE ];
+#endif
 static size_t xNextFreeByte = ( size_t ) 0;
 
 /*-----------------------------------------------------------*/
@@ -168,7 +171,7 @@ size_t xPortGetFreeHeapSize( void )
 {
         return ( configADJUSTED_HEAP_SIZE - xNextFreeByte );
 }
-#endif /* FRTOS_MEMORY_SCHEME==1 */ /* << EST */
+#endif /* configFRTOS_MEMORY_SCHEME==1 */ /* << EST */
 
 
 

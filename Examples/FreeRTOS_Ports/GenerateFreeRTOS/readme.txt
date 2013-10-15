@@ -25,6 +25,7 @@ Settings for CodeWarrior, FRDM-K20D50M board:
   ARM Family: Cortex M4
   Max SysCAll: 1 (or any value from 1-15)
   RTOS Interrupt Priority: 15 (lowest priority)
+- Note that the user data section name for heap is ".user_data2"
 
 Settings for IAR, KL25Z board:
 ------------------------------

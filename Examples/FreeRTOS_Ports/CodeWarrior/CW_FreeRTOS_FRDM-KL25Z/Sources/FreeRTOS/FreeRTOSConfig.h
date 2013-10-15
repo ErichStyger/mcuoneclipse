@@ -97,8 +97,15 @@
 #define configSYSTICK_CLOCK_DIVIDER               1 /* no divider */
 #define configSYSTICK_CLOCK_HZ                    ((configCPU_CLOCK_HZ)/configSYSTICK_CLOCK_DIVIDER) /* frequency of system tick counter */
 #define configMINIMAL_STACK_SIZE                  ((unsigned portSHORT)200)
-
-#define configTOTAL_HEAP_SIZE                     ((size_t)(12000)) /* size of heap in bytes */
+/*----------------------------------------------------------*/
+/* Heap Memory */
+#define configFRTOS_MEMORY_SCHEME                 2 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc) or 4 (coalesc blocks) */
+#define configTOTAL_HEAP_SIZE                     ((size_t)(5500)) /* size of heap in bytes */
+#define configUSE_HEAP_SECTION_NAME               0 /* set to 1 if a custom section name (configHEAP_SECTION_NAME_STRING) shall be used, 0 otherwise */
+#if configUSE_HEAP_SECTION_NAME
+  #define configHEAP_SECTION_NAME_STRING          ".m_data_20000000" /* heap section name (supported by GCC). Check your linker file for the name used. */
+#endif
+/*----------------------------------------------------------*/
 #define configMAX_TASK_NAME_LEN                   12 /* task name length */
 #define configUSE_TRACE_FACILITY                  0
 #define configUSE_STATS_FORMATTING_FUNCTIONS      (configUSE_TRACE_FACILITY || configGENERATE_RUN_TIME_STATS)
@@ -139,9 +146,6 @@
 #define INCLUDE_xTaskGetIdleTaskHandle            0
 #define INCLUDE_eTaskGetState                     0
 #define INCLUDE_pcTaskGetTaskName                 0
-
-/* Memory Scheme Identification */
-#define FRTOS_MEMORY_SCHEME                       2 /* either 1, 2, 3 or 4 */
 /* -------------------------------------------------------------------- */
 /* Macros to identify the compiler used: */
 #define configCOMPILER_ARM_GCC               1 /* GNU ARM gcc compiler */
