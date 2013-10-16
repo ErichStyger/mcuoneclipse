@@ -1,0 +1,241 @@
+// Memory Configuration File
+//
+// Description:
+//  A memory configuration file contains commands that define the legally accessible
+//  areas of memory for your specific part. 
+//
+// Derivative:
+// Freescale MC9S08LL16
+//
+
+//only 64K
+reserved   0x10000 0xFFFFFFFF
+
+// Parallel Input/Output Ports (PIO)
+range      0x00000000 0x00000000 1 ReadWrite    // PTAD
+range      0x00000001 0x00000001 1 ReadWrite    // PTADD
+range      0x00000002 0x00000002 1 ReadWrite    // PTBD
+range      0x00000003 0x00000003 1 ReadWrite    // PTBDD
+range      0x00000004 0x00000004 1 ReadWrite    // PTCD
+range      0x00000005 0x00000005 1 ReadWrite    // PTCDD
+range      0x00000006 0x00000006 1 ReadWrite    // PTDD
+range      0x00000007 0x00000007 1 ReadWrite    // PTDDD
+range      0x00000008 0x00000008 1 ReadWrite    // PTED
+range      0x00000009 0x00000009 1 ReadWrite    // PTEDD
+reserved   0x0000000A 0x0000000B
+
+// Keyboard Interrupt Module (S08KBI V2)
+range      0x0000000C 0x0000000C 1 ReadWrite    // KBISC
+range      0x0000000D 0x0000000D 1 ReadWrite    // KBIPE
+range      0x0000000E 0x0000000E 1 ReadWrite    // KBIES
+
+// System and Memory Control (SYS)
+range      0x0000000F 0x0000000F 1 ReadWrite    // IRQSC
+
+// Analog-to-Digital Converter (S08ADC12 V1)
+range      0x00000010 0x00000010 1 ReadWrite    // ADCSC1
+range      0x00000011 0x00000011 1 ReadWrite    // ADCSC2
+range      0x00000012 0x00000013 2 Read         // ADCCR
+range      0x00000014 0x00000015 2 ReadWrite    // ADCCV
+range      0x00000016 0x00000016 1 ReadWrite    // ADCCFG
+range      0x00000017 0x00000017 1 ReadWrite    // APCTL1
+
+// LCD Module(S08LCDLP V1)
+range      0x00000018 0x00000018 1 ReadWrite    // LCDC0
+range      0x00000019 0x00000019 1 ReadWrite    // LCDC1
+range      0x0000001A 0x0000001A 1 ReadWrite    // LCDSUPPLY
+range      0x0000001B 0x0000001B 1 ReadWrite    // LCDRVC
+range      0x0000001C 0x0000001C 1 ReadWrite    // LCDBCTL
+range      0x0000001D 0x0000001D 1 ReadWrite    // LCDS
+reserved   0x0000001E 0x0000001E
+
+// Analog Comparator(S08ACMPVLP V1)
+range      0x0000001F 0x0000001F 1 ReadWrite    // ACMPSC
+
+// Serial Communications Interface(S08SCI V4)
+range      0x00000020 0x00000021 2 ReadWrite    // SCIBD
+range      0x00000022 0x00000022 1 ReadWrite    // SCIC1
+range      0x00000023 0x00000023 1 ReadWrite    // SCIC2
+range      0x00000024 0x00000024 1 Read         // SCIS1
+range      0x00000025 0x00000025 1 ReadWrite    // SCIS2
+range      0x00000026 0x00000026 1 ReadWrite    // SCIC3
+range      0x00000027 0x00000027 1 ReadWrite    // SCID
+
+// Serial Peripheral Interface (S08SPI V3)
+range      0x00000028 0x00000028 1 ReadWrite    // SPIC1
+range      0x00000029 0x00000029 1 ReadWrite    // SPIC2
+range      0x0000002A 0x0000002A 1 ReadWrite    // SPIBR
+range      0x0000002B 0x0000002B 1 Read         // SPIS
+reserved   0x0000002C 0x0000002C
+range      0x0000002D 0x0000002D 1 ReadWrite    // SPID
+reserved   0x0000002E 0x0000002F
+
+// Inter Integrated Circuit Bus (S08IIC V2)
+range      0x00000030 0x00000030 1 ReadWrite    // IICA
+range      0x00000031 0x00000031 1 ReadWrite    // IICF
+range      0x00000032 0x00000032 1 ReadWrite    // IICC1
+range      0x00000033 0x00000033 1 ReadWrite    // IICS
+range      0x00000034 0x00000034 1 ReadWrite    // IICD
+range      0x00000035 0x00000035 1 ReadWrite    // IICC2
+reserved   0x00000036 0x00000037
+
+// Internal Clock Source (S08ICS V3)
+range      0x00000038 0x00000038 1 ReadWrite    // ICSC1
+range      0x00000039 0x00000039 1 ReadWrite    // ICSC2
+range      0x0000003A 0x0000003A 1 ReadWrite    // ICSTRM
+range      0x0000003B 0x0000003B 1 ReadWrite    // ICSSC
+reserved   0x0000003C 0x0000003F
+
+// Timer/Pulse-Width Modulator 1 (S08TPMV3_1)
+range      0x00000040 0x00000040 1 ReadWrite    // TPM1SC
+range      0x00000041 0x00000042 2 Read         // TPM1CNT
+range      0x00000043 0x00000044 2 ReadWrite    // TPM1MOD
+range      0x00000045 0x00000045 1 ReadWrite    // TPM1C0SC
+range      0x00000046 0x00000047 2 ReadWrite    // TPM1C0V
+range      0x00000048 0x00000048 1 ReadWrite    // TPM1C1SC
+range      0x00000049 0x0000004A 2 ReadWrite    // TPM1C1V
+reserved   0x0000004B 0x0000004F
+
+// Timer/Pulse-Width Modulator 2 (S08TPMV3_2)
+range      0x00000050 0x00000050 1 ReadWrite    // TPM2SC
+range      0x00000051 0x00000052 2 Read         // TPM2CNT
+range      0x00000053 0x00000054 2 ReadWrite    // TPM2MOD
+range      0x00000055 0x00000055 1 ReadWrite    // TPM2C0SC
+range      0x00000056 0x00000057 2 ReadWrite    // TPM2C0V
+range      0x00000058 0x00000058 1 ReadWrite    // TPM2C1SC
+range      0x00000059 0x0000005A 2 ReadWrite    // TPM2C1V
+reserved   0x0000005B 0x0000005F
+
+// RAM
+range      0x00000060 0x0000087F 1 ReadWrite
+
+// LCD Module(S08LCDLP V1)
+range      0x00000880 0x00000880 1 ReadWrite    // LCDPEN0
+range      0x00000881 0x00000881 1 ReadWrite    // LCDPEN1
+range      0x00000882 0x00000882 1 ReadWrite    // LCDPEN2
+range      0x00000883 0x00000883 1 ReadWrite    // LCDPEN3
+reserved   0x00000884 0x00000887
+range      0x00000888 0x00000888 1 ReadWrite    // LCDBPEN0
+range      0x00000889 0x00000889 1 ReadWrite    // LCDBPEN1
+range      0x0000088A 0x0000088A 1 ReadWrite    // LCDBPEN2
+range      0x0000088B 0x0000088B 1 ReadWrite    // LCDBPEN3
+reserved   0x0000088C 0x0000088F
+range      0x00000890 0x00000890 1 ReadWrite    // LCDWF0
+range      0x00000891 0x00000891 1 ReadWrite    // LCDWF1
+range      0x00000892 0x00000892 1 ReadWrite    // LCDWF2
+range      0x00000893 0x00000893 1 ReadWrite    // LCDWF3
+range      0x00000894 0x00000894 1 ReadWrite    // LCDWF4
+range      0x00000895 0x00000895 1 ReadWrite    // LCDWF5
+range      0x00000896 0x00000896 1 ReadWrite    // LCDWF6
+range      0x00000897 0x00000897 1 ReadWrite    // LCDWF7
+range      0x00000898 0x00000898 1 ReadWrite    // LCDWF8
+range      0x00000899 0x00000899 1 ReadWrite    // LCDWF9
+range      0x0000089A 0x0000089A 1 ReadWrite    // LCDWF10
+range      0x0000089B 0x0000089B 1 ReadWrite    // LCDWF11
+range      0x0000089C 0x0000089C 1 ReadWrite    // LCDWF12
+range      0x0000089D 0x0000089D 1 ReadWrite    // LCDWF13
+range      0x0000089E 0x0000089E 1 ReadWrite    // LCDWF14
+range      0x0000089F 0x0000089F 1 ReadWrite    // LCDWF15
+range      0x000008A0 0x000008A0 1 ReadWrite    // LCDWF16
+range      0x000008A1 0x000008A1 1 ReadWrite    // LCDWF17
+range      0x000008A2 0x000008A2 1 ReadWrite    // LCDWF18
+range      0x000008A3 0x000008A3 1 ReadWrite    // LCDWF19
+range      0x000008A4 0x000008A4 1 ReadWrite    // LCDWF20
+range      0x000008A5 0x000008A5 1 ReadWrite    // LCDWF21
+range      0x000008A6 0x000008A6 1 ReadWrite    // LCDWF22
+range      0x000008A7 0x000008A7 1 ReadWrite    // LCDWF23
+range      0x000008A8 0x000008A8 1 ReadWrite    // LCDWF24
+range      0x000008A9 0x000008A9 1 ReadWrite    // LCDWF25
+range      0x000008AA 0x000008AA 1 ReadWrite    // LCDWF26
+range      0x000008AB 0x000008AB 1 ReadWrite    // LCDWF27
+range      0x000008AC 0x000008AC 1 ReadWrite    // LCDWF28
+range      0x000008AD 0x000008AD 1 ReadWrite    // LCDWF29
+range      0x000008AE 0x000008AE 1 ReadWrite    // LCDWF30
+range      0x000008AF 0x000008AF 1 ReadWrite    // LCDWF31
+
+// UNIMPLEMENTED
+reserved   0x000008B0 0x000017FF
+
+// System and Memory Control (SYS)
+range      0x00001800 0x00001800 1 ReadWrite    // SRS
+range      0x00001801 0x00001801 1 ReadWrite    // SBDFR
+range      0x00001802 0x00001802 1 ReadWrite    // SOPT1
+range      0x00001803 0x00001803 1 ReadWrite    // SOPT2
+reserved   0x00001804 0x00001805
+range      0x00001806 0x00001807 2 Read         // SDID
+range      0x00001808 0x00001808 1 ReadWrite    // SPMSC1
+range      0x00001809 0x00001809 1 ReadWrite    // SPMSC2
+reserved   0x0000180A 0x0000180A
+range      0x0000180B 0x0000180B 1 ReadWrite    // SPMSC3
+reserved   0x0000180C 0x0000180D
+range      0x0000180E 0x0000180E 1 ReadWrite    // SCGC1
+range      0x0000180F 0x0000180F 1 ReadWrite    // SCGC2
+
+// Debug Module (DBGV3)
+range      0x00001810 0x00001811 2 ReadWrite    // DBGCA
+range      0x00001812 0x00001813 2 ReadWrite    // DBGCB
+range      0x00001814 0x00001815 2 ReadWrite    // DBGCC
+range      0x00001816 0x00001817 2 Read         // DBGF
+range      0x00001818 0x00001818 1 ReadWrite    // DBGCAX
+range      0x00001819 0x00001819 1 ReadWrite    // DBGCBX
+range      0x0000181A 0x0000181A 1 ReadWrite    // DBGCCX
+reserved   0x0000181B 0x0000181B
+range      0x0000181C 0x0000181C 1 ReadWrite    // DBGC
+range      0x0000181D 0x0000181D 1 ReadWrite    // DBGT
+range      0x0000181E 0x0000181E 1 Read         // DBGS
+range      0x0000181F 0x0000181F 1 Read         // DBGCNT
+
+// Flash Module (FLASH)
+range      0x00001820 0x00001820 1 ReadWrite    // FCDIV
+range      0x00001821 0x00001821 1 Read         // FOPT
+reserved   0x00001822 0x00001822
+range      0x00001823 0x00001823 1 ReadWrite    // FCNFG
+range      0x00001824 0x00001824 1 ReadWrite    // FPROT
+range      0x00001825 0x00001825 1 ReadWrite    // FSTAT
+range      0x00001826 0x00001826 1 Write        // FCMD
+reserved   0x00001827 0x0000182F
+
+// Time of Day Module(S08TOD V1)
+range      0x00001830 0x00001830 1 ReadWrite    // TODC
+range      0x00001831 0x00001831 1 ReadWrite    // TODSC
+range      0x00001832 0x00001832 1 ReadWrite    // TODM
+range      0x00001833 0x00001833 1 Read         // TODCNT
+reserved   0x00001834 0x0000183F
+
+// Parallel Input/Output Ports (PIO)
+range      0x00001840 0x00001840 1 ReadWrite    // PTAPE
+range      0x00001841 0x00001841 1 ReadWrite    // PTASE
+range      0x00001842 0x00001842 1 ReadWrite    // PTADS
+reserved   0x00001843 0x00001843
+range      0x00001844 0x00001844 1 ReadWrite    // PTBPE
+range      0x00001845 0x00001845 1 ReadWrite    // PTBSE
+range      0x00001846 0x00001846 1 ReadWrite    // PTBDS
+reserved   0x00001847 0x00001847
+range      0x00001848 0x00001848 1 ReadWrite    // PTCPE
+range      0x00001849 0x00001849 1 ReadWrite    // PTCSE
+range      0x0000184A 0x0000184A 1 ReadWrite    // PTCDS
+reserved   0x0000184B 0x0000184B
+range      0x0000184C 0x0000184C 1 ReadWrite    // PTDPE
+range      0x0000184D 0x0000184D 1 ReadWrite    // PTDSE
+range      0x0000184E 0x0000184E 1 ReadWrite    // PTDDS
+reserved   0x0000184F 0x0000184F
+range      0x00001850 0x00001850 1 ReadWrite    // PTEPE
+range      0x00001851 0x00001851 1 ReadWrite    // PTESE
+range      0x00001852 0x00001852 1 ReadWrite    // PTEDS
+
+// UNIMPLEMENTED
+reserved   0x00001853 0x0000BFFF
+
+// FLASH
+range      0x0000C000 0x0000FFAF 1 ReadWrite
+
+// Flash Module (FLASH)
+range      0x0000FFB0 0x0000FFB3 4 ReadWrite    // NVBACKKEYU
+range      0x0000FFB4 0x0000FFB7 4 ReadWrite    // NVBACKKEYL
+reserved   0x0000FFB8 0x0000FFBC
+range      0x0000FFBD 0x0000FFBD 1 ReadWrite    // NVPROT
+reserved   0x0000FFBE 0x0000FFBE
+range      0x0000FFBF 0x0000FFBF 1 ReadWrite         // NVOPT
+
+// All reserved ranges read back 0xBABA... 
+reservedchar 0xBA
