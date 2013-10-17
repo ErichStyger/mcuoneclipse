@@ -45,7 +45,7 @@ vSetMSP:
 vPortPendSVHandler:
 #if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 or M4F */
     mrs r0, psp
-    ldr  r3, pxCurrentTCBConst  /* Get the location of the current TCB. */
+    ldr  r3, =pxCurrentTCB       /* Get the location of the current TCB. */
     ldr  r2, [r3]
   #if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
     tst r14, #0x10              /* Is the task using the FPU context?  If so, push high vfp registers. */
@@ -58,7 +58,7 @@ vPortPendSVHandler:
   #endif
     str r0, [r2]                /* Save the new top of stack into the first member of the TCB. */
     stmdb sp!, {r3, r14}
-    mov r0, %0
+    mov r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
     msr basepri, r0
     bl vTaskSwitchContext
     mov r0, #0
@@ -145,9 +145,8 @@ vPortClearInterruptMask:
   nop
 /*-----------------------------------------------------------*/
 vPortSVCHandler:
-  /* \todo Check stack!!! */
 #if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 or M4F */
-    ldr r3, pxCurrentTCBConst2  /* Restore the context. */
+    ldr r3, =pxCurrentTCB  /* Restore the context. */
     ldr r1, [r3]                /* Use pxCurrentTCBConst to get the pxCurrentTCB address. */
     ldr r0, [r1]                /* The first item in pxCurrentTCB is the task top of stack. */
     /* pop the core registers */
