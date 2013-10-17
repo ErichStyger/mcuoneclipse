@@ -12,6 +12,7 @@
 #include "LEDR.h"
 #include "LEDG.h"
 #include "LEDB.h"
+#include "MMA1.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -27,6 +28,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if FRTOS1_PARSE_COMMAND_ENABLED
   FRTOS1_ParseCommand,
+#endif
+#if MMA1_PARSE_COMMAND_ENABLED
+  MMA1_ParseCommand,
 #endif
   NULL /* sentinel */
 };

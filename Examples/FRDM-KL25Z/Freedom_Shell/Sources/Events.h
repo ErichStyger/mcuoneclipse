@@ -33,12 +33,14 @@
 #include "Inhr4.h"
 #include "PwmLdd3.h"
 #include "FRTOS1.h"
-#include "RTOSTICKLDD1.h"
 #include "UTIL1.h"
 #include "WAIT1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
 #include "CLS1.h"
+#include "GI2C1.h"
+#include "MMA1.h"
+#include "I2C1.h"
 #include "TU1.h"
 #include "TU3.h"
 #include "PE_LDD.h"
@@ -59,7 +61,7 @@ void Cpu_OnNMIINT(void);
 */
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
@@ -198,6 +200,34 @@ void AS1_OnFullRxBuf(void);
 ** ===================================================================
 */
 void AS1_OnFreeTxBuf(void);
+
+void GI2C1_OnRequestBus(void);
+/*
+** ===================================================================
+**     Event       :  GI2C1_OnRequestBus (module Events)
+**
+**     Component   :  GI2C1 [GenericI2C]
+**     Description :
+**         User event which will be called before accessing the I2C bus.
+**         Useful for starting a critical section.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void GI2C1_OnReleaseBus(void);
+/*
+** ===================================================================
+**     Event       :  GI2C1_OnReleaseBus (module Events)
+**
+**     Component   :  GI2C1 [GenericI2C]
+**     Description :
+**         User event which will be called after accessing the I2C bus.
+**         Useful for ending a critical section.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
 
 /* END Events */
 #endif /* __Events_H*/
