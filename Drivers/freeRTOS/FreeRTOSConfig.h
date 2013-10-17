@@ -202,9 +202,9 @@
 %endif
 %-
 %ifdef vApplicationStackOverflowHook
-#define configCHECK_FOR_STACK_OVERFLOW                           %>50 %StackOverflowCheckingMethodNumber
+#define configCHECK_FOR_STACK_OVERFLOW                           %>50 %StackOverflowCheckingMethodNumber /* 0 is disabling stack overflow. Set it to 1 for Method1 or 2 for Method2 */
 %else
-#define configCHECK_FOR_STACK_OVERFLOW                           %>50 0
+#define configCHECK_FOR_STACK_OVERFLOW                           %>50 0 /* 0 is disabling stack overflow. Set it to 1 for Method1 or 2 for Method2 */  
 %endif
 %-
 %if %UseRecursiveMutexes='yes'
