@@ -109,16 +109,31 @@
 %-    typedef int TMyInteger;
 /* Memory Map - register address defines */
 #define %'ModuleName'%.CONFIG      0x00 /* CONFIG register */
-#define %'ModuleName'%.EN_AA       0x01 /* EN_AA register */
+
+#define %'ModuleName'%.EN_AA       0x01 /* EN_AA register: configures auto-acknowledge per pipe */
+ /* EN_AA register bitwise definitions */
+  /* masks for auto acknowledg per pipe */
+  #define %'ModuleName'%.EN_AA_RESERVED      0xC0
+  #define %'ModuleName'%.EN_AA_ENAA_ALL      0x3F
+  #define %'ModuleName'%.EN_AA_ENAA_P5       0x20
+  #define %'ModuleName'%.EN_AA_ENAA_P4       0x10
+  #define %'ModuleName'%.EN_AA_ENAA_P3       0x08
+  #define %'ModuleName'%.EN_AA_ENAA_P2       0x04
+  #define %'ModuleName'%.EN_AA_ENAA_P1       0x02
+  #define %'ModuleName'%.EN_AA_ENAA_P0       0x01
+  #define %'ModuleName'%.EN_AA_ENAA_NONE     0x00
+
 #define %'ModuleName'%.EN_RXADDR   0x02 /* EN_RXADDR register */
 #define %'ModuleName'%.SETUP_AW    0x03 /* SETUP_AW register */
 #define %'ModuleName'%.SETUP_RETR  0x04
-#define %'ModuleName'%.RF_CH       0x05
+
+#define %'ModuleName'%.RF_CH       0x05 /* Channel register, valid channels from 0x0 to 0x7F */
+
 #define %'ModuleName'%.RF_SETUP    0x06 /* SETUP register */
 #define %'ModuleName'%.STATUS      0x07
 #define %'ModuleName'%.OBSERVE_TX  0x08
 #define %'ModuleName'%.RPD     0x09    /* Mnemonic for nRF24L01+ */
-//#define %'ModuleName'%.CD          0x09   /* Mnemonic from nRF24L01, new is RPD */
+/*#define %'ModuleName'%.CD          0x09 */  /* Mnemonic from nRF24L01, new is RPD */
 #define %'ModuleName'%.RX_ADDR_P0  0x0A
 #define %'ModuleName'%.RX_ADDR_P1  0x0B
 #define %'ModuleName'%.RX_ADDR_P2  0x0C
@@ -145,12 +160,7 @@
 #define %'ModuleName'%.PRIM_RX     (1<<0)  /* 1: PRX, 0: PTX */
 #define %'ModuleName'%.PRIM_TX     (0)     /* 0: PTX */
 
-#define %'ModuleName'%.ENAA_P5     5
-#define %'ModuleName'%.ENAA_P4     4
-#define %'ModuleName'%.ENAA_P3     3
-#define %'ModuleName'%.ENAA_P2     2
-#define %'ModuleName'%.ENAA_P1     1
-#define %'ModuleName'%.ENAA_P0     0
+
 #define %'ModuleName'%.ERX_P5      5
 #define %'ModuleName'%.ERX_P4      4
 #define %'ModuleName'%.ERX_P3      3
@@ -235,17 +245,6 @@
 #define %'ModuleName'%.CONFIG_CRCO         0x04
 #define %'ModuleName'%.CONFIG_PWR_UP       0x02
 #define %'ModuleName'%.CONFIG_PRIM_RX      0x01
-
-/* EN_AA register bitwise definitions */
-#define %'ModuleName'%.EN_AA_RESERVED      0xC0
-#define %'ModuleName'%.EN_AA_ENAA_ALL      0x3F
-#define %'ModuleName'%.EN_AA_ENAA_P5       0x20
-#define %'ModuleName'%.EN_AA_ENAA_P4       0x10
-#define %'ModuleName'%.EN_AA_ENAA_P3       0x08
-#define %'ModuleName'%.EN_AA_ENAA_P2       0x04
-#define %'ModuleName'%.EN_AA_ENAA_P1       0x02
-#define %'ModuleName'%.EN_AA_ENAA_P0       0x01
-#define %'ModuleName'%.EN_AA_ENAA_NONE     0x00
 
 /* EN_RXADDR register bitwise definitions */
 #define %'ModuleName'%.EN_RXADDR_RESERVED  0xC0
@@ -510,6 +509,26 @@ void %'ModuleName'%.%StartRxTx(void);
 
 %endif %- StartRxTx
 %-BW_METHOD_END StartRxTx
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SetChannel
+%ifdef SetChannel
+byte %'ModuleName'%.%SetChannel(byte channel);
+%define! Parchannel
+%define! RetVal
+%include Common\nRF24L01SetChannel.Inc
+
+%endif %- SetChannel
+%-BW_METHOD_END SetChannel
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN EnableAutoAck
+%ifdef EnableAutoAck
+byte %'ModuleName'%.%EnableAutoAck(byte pipes);
+%define! Parpipes
+%define! RetVal
+%include Common\nRF24L01EnableAutoAck.Inc
+
+%endif %- EnableAutoAck
+%-BW_METHOD_END EnableAutoAck
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -848,6 +867,34 @@ void %'ModuleName'%.%StartRxTx(void)
 
 %endif %- StartRxTx
 %-BW_METHOD_END StartRxTx
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SetChannel
+%ifdef SetChannel
+%define! Parchannel
+%define! RetVal
+%include Common\nRF24L01SetChannel.Inc
+byte %'ModuleName'%.%SetChannel(byte channel)
+{
+  %'ModuleName'%.WriteRegister(%'ModuleName'%.RF_CH, channel&0x7F); /* set channel */
+  return ERR_OK;
+}
+
+%endif %- SetChannel
+%-BW_METHOD_END SetChannel
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN EnableAutoAck
+%ifdef EnableAutoAck
+%define! Parpipes
+%define! RetVal
+%include Common\nRF24L01EnableAutoAck.Inc
+byte %'ModuleName'%.%EnableAutoAck(byte pipes)
+{
+  %'ModuleName'%.WriteRegister(%'ModuleName'%.EN_AA, pipes&%'ModuleName'%.EN_AA_ENAA_ALL); /* enable auto acknowledge for the given pipes */
+  return ERR_OK;
+}
+
+%endif %- EnableAutoAck
+%-BW_METHOD_END EnableAutoAck
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
