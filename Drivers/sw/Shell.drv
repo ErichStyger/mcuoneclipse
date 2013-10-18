@@ -656,13 +656,13 @@ bool %'ModuleName'%.%ReadLine(byte *buf, size_t bufSize, %'ModuleName'_ConstStdI
     for(;;) {                                                    %>40/* while not '\r' or '\n' */
       c = '\0';                                                  %>40/* initialize character */
       io->stdIn(&c);                                             %>40/* read character */
-      *buf = (byte)c;                                            %>40/* append character to the string */
-      if (c=='\0') { /* nothing in rx buffer? */
+      if (c=='\0') { /* nothing in rx buffer? Something is wrong... */
         break; /* get out of loop */
       }
 %if %EchoEnabled='yes'
       io->stdOut(c);                                             %>40/* echo character */
 %endif
+      *buf = (byte)c;                                            %>40/* append character to the string */
       buf++;
       bufSize--;
       if ((c=='\r') || (c=='\n')) {
@@ -1004,8 +1004,8 @@ void %'ModuleName'%.%ReadChar(byte *c)
   (void)xSemaphoreTakeRecursive(ShellSem, portMAX_DELAY);
 %endif
 %if defined(Serial)
-  if (%@Serial@'ModuleName'%.RecvChar((uint8_t *)c) != ERR_OK) {
-    /* failed to receive character: return a zero character */
+  if (%@Serial@'ModuleName'%.RecvChar((uint8_t *)c) == ERR_RXEMPTY) {
+    /* no character in buffer */
     *c = '\0';
   }
 %endif
