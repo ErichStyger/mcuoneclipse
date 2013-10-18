@@ -66,6 +66,10 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   SHELL_Init();
+  PEX_RTOS_START();
+  for(;;) {
+    Cpu_SetOperationMode(DOM_WAIT, NULL, NULL);
+  }
 
   /* For example: for(;;) { } */
 
