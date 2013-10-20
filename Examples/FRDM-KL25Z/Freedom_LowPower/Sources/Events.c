@@ -96,7 +96,7 @@ void TI1_OnInterrupt(void)
 void Cpu_OnLLSWakeUpINT(void)
 {
   LED3_On();
-  WAIT1_Waitms(20);
+  WAIT1_Waitms(1);
   LED3_Off();
 }
 
@@ -146,7 +146,11 @@ void FRTOS1_vApplicationIdleHook(void)
 {
   /* Called whenever the RTOS is idle (from the IDLE task).
      Here would be a good place to put the CPU into low power mode. */
+#if PL_HAS_LOW_POWER
+#if !configUSE_TICKLESS_IDLE
   LP_EnterLowPower();
+#endif
+#endif
 }
 #endif
 
@@ -175,6 +179,63 @@ void FRTOS1_vApplicationMallocFailedHook(void)
   for(;;) {}
 }
 #endif
+
+/*
+** ===================================================================
+**     Event       :  FRTOS1_vApplicationTickHook (module Events)
+**
+**     Component   :  FRTOS1 [FreeRTOS]
+**     Description :
+**         If enabled, this hook will be called by the RTOS for every
+**         tick increment.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void FRTOS1_vApplicationTickHook(void)
+{
+  /* Called for every RTOS tick. */
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  FRTOS1_vOnPreSleepProcessing (module Events)
+**
+**     Component   :  FRTOS1 [FreeRTOS]
+**     Description :
+**         Used in tickless idle mode only, but required in this mode.
+**         Hook for the application to enter low power mode.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+void FRTOS1_vOnPreSleepProcessing(portTickType expectedIdleTicks)
+{
+#if PL_HAS_LOW_POWER
+  LP_EnterLowPower();
+#elif 0
+  /* example for Kinetis (enable SetOperationMode() in CPU component): */
+  Cpu_SetOperationMode(DOM_WAIT, NULL, NULL);
+  /* or to wait for interrupt:
+    __asm volatile("dsb");
+    __asm volatile("wfi");
+    __asm volatile("isb");
+  */
+#elif 0
+  /* example for S08/S12/ColdFire V1 (enable SetWaitMode() in CPU): */
+  Cpu_SetWaitMode();
+#elif 0
+  /* example for ColdFire V2: */
+   __asm("stop #0x2000"); */
+#else
+  #error "you *must* enter low power mode (wait for interrupt) here!"
+#endif
+  /* Write your code here ... */
+}
 
 /* END Events */
 

@@ -8,6 +8,7 @@
 #if PL_HAS_LOW_POWER
 #include "LowPower.h"
 #include "Cpu.h"
+#include "FreeRTOS.h"
 #if PL_HAS_SHELL
   #include "CLS1.h"
 #endif
@@ -158,7 +159,7 @@ void LP_Deinit(void) {
 }
 
 void LP_Init(void) {
-  LP_mode = LP_RUN;
+  LP_mode = LP_WAIT;
 #if LP_CAN_CHANGE_CLOCK
   LP_clock = LP_SPEED_FAST;
 #endif
