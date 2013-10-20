@@ -32,6 +32,9 @@
 #include "Cpu.h"
 #include "Events.h"
 #include "WAIT1.h"
+#include "TU1.h"
+#include "TI1.h"
+#include "TimerIntLdd1.h"
 #include "LED1.h"
 #include "LEDpin2.h"
 #include "BitIoLdd2.h"
@@ -41,11 +44,7 @@
 #include "LED3.h"
 #include "LEDpin4.h"
 #include "BitIoLdd4.h"
-#include "AS1.h"
-#include "ASerialLdd1.h"
-#include "CLS1.h"
 #include "UTIL1.h"
-#include "FRTOS1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -53,9 +52,11 @@
 #include "IO_Map.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "Platform.h"
 #include "Shell.h"
-/*lint -save  -e970 Disable MISRA rule (6.3) checking. */
+#include "LowPower.h"
 
+/*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
@@ -64,11 +65,20 @@ int main(void)
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
-
+#if PL_HAS_LOW_POWER
+  LP_Init();
+#endif
+#if PL_HAS_SHELL
   SHELL_Init();
+#endif
+#if PL_HAS_RTOS
   PEX_RTOS_START();
+#endif
   for(;;) {
-    Cpu_SetOperationMode(DOM_WAIT, NULL, NULL);
+    LP_EnterPowerMode(LP_WAIT);
+    LED1_On();
+    WAIT1_Waitms(20);
+    LED1_Off();
   }
 
   /* For example: for(;;) { } */

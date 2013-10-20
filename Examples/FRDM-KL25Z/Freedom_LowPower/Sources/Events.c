@@ -32,6 +32,7 @@
 #include "Events.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "Platform.h"
 #include "LED2.h"
 #include "LowPower.h"
 
@@ -114,6 +115,7 @@ void Cpu_OnLLSWakeUpINT(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
+#if PL_HAS_RTOS
 void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName)
 {
   /* This will get called if a stack overflow is detected during the context
@@ -126,25 +128,7 @@ void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *p
   /* Write your code here ... */
   for(;;) {}
 }
-
-/*
-** ===================================================================
-**     Event       :  FRTOS1_vApplicationTickHook (module Events)
-**
-**     Component   :  FRTOS1 [FreeRTOS]
-**     Description :
-**         If enabled, this hook will be called by the RTOS for every
-**         tick increment.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void FRTOS1_vApplicationTickHook(void)
-{
-  /* Called for every RTOS tick. */
-  /* Write your code here ... */
-}
-
+#endif
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationIdleHook (module Events)
@@ -157,12 +141,14 @@ void FRTOS1_vApplicationTickHook(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
+#if PL_HAS_RTOS
 void FRTOS1_vApplicationIdleHook(void)
 {
   /* Called whenever the RTOS is idle (from the IDLE task).
      Here would be a good place to put the CPU into low power mode. */
   LP_EnterLowPower();
 }
+#endif
 
 /*
 ** ===================================================================
@@ -176,6 +162,7 @@ void FRTOS1_vApplicationIdleHook(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
+#if PL_HAS_RTOS
 void FRTOS1_vApplicationMallocFailedHook(void)
 {
   /* Called if a call to pvPortMalloc() fails because there is insufficient
@@ -187,6 +174,7 @@ void FRTOS1_vApplicationMallocFailedHook(void)
   /* Write your code here ... */
   for(;;) {}
 }
+#endif
 
 /* END Events */
 

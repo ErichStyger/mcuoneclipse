@@ -36,6 +36,9 @@
 #include "PE_Const.h"
 #include "IO_Map.h"
 #include "WAIT1.h"
+#include "TU1.h"
+#include "TI1.h"
+#include "TimerIntLdd1.h"
 #include "LED1.h"
 #include "LEDpin2.h"
 #include "BitIoLdd2.h"
@@ -45,12 +48,9 @@
 #include "LED3.h"
 #include "LEDpin4.h"
 #include "BitIoLdd4.h"
-#include "AS1.h"
-#include "ASerialLdd1.h"
-#include "CLS1.h"
 #include "UTIL1.h"
-#include "FRTOS1.h"
 
+#include "Platform.h"
 /*
 ** ===================================================================
 **     Event       :  Cpu_OnNMIINT (module Events)
@@ -103,7 +103,9 @@ void TI1_OnInterrupt(void);
 */
 void Cpu_OnLLSWakeUpINT(void);
 
+#if PL_HAS_RTOS
 void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName);
+#endif
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
@@ -116,20 +118,6 @@ void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *p
 **         NAME            - DESCRIPTION
 **         pxTask          - Task handle
 **       * pcTaskName      - Pointer to task name
-**     Returns     : Nothing
-** ===================================================================
-*/
-
-void FRTOS1_vApplicationTickHook(void);
-/*
-** ===================================================================
-**     Event       :  FRTOS1_vApplicationTickHook (module Events)
-**
-**     Component   :  FRTOS1 [FreeRTOS]
-**     Description :
-**         If enabled, this hook will be called by the RTOS for every
-**         tick increment.
-**     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================
 */

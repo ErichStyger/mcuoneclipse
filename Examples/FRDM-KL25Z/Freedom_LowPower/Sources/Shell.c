@@ -5,6 +5,7 @@
  *      Author: Erich Styger
  */
 #include "Platform.h"
+#if PL_HAS_SHELL
 #if PL_HAS_RTOS
   #include "FRTOS1.h"
 #endif
@@ -85,4 +86,5 @@ void SHELL_Init(void) {
   SHELL_Run();
 #endif
 }
+#endif /* PL_HAS_SHELL */
 
