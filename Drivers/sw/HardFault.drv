@@ -281,9 +281,9 @@ void %'ModuleName'%.%HardFaultHandler(void)
     " beq _MSP        \n"  /* if bitmask is set: stack pointer is in PSP. Otherwise in MSP */
     " mrs r0, psp     \n"  /* otherwise: stack pointer is in PSP */
     " b _GetPC        \n"  /* go to part which loads the PC */
-    "_MSP:            \n"  /* stack pointer is in MSP register */
+  "_MSP:              \n"  /* stack pointer is in MSP register */
     " mrs r0, msp     \n"  /* load stack pointer into R0 */
-    "_GetPC:          \n"  /* find out where the hard fault happened */
+  "_GetPC:            \n"  /* find out where the hard fault happened */
     " ldr r1,[r0,#20] \n"  /* load program counter into R1. R1 contains address of the next instruction where the hard fault happened */
     " b %'ModuleName'%.HandlerC   \n"  /* decode more information. R0 contains pointer to stack frame */
   );
@@ -308,6 +308,23 @@ _GetPC              /* find out where the hard fault happened */
 }
 %elif (%Compiler = "IARARM")
   /* %'ModuleName'%.HardFaultHandler() is implemented in assembly in %'ModuleName'%.HardFaultHandler.s */
+%elif (%Compiler = "CodeWarriorARM")
+/* legacy Freescale ARM compiler */
+asm void %'ModuleName'%.%HardFaultHandler(void)
+{
+    movs r0,#4       /* load bit mask into R0 */
+    movs r1, lr      /* load link register into R1 */
+    tst r0, r1       /* compare with bitmask */
+    beq _MSP         /* if bitmask is set: stack pointer is in PSP. Otherwise in MSP */
+    mrs r0, psp      /* otherwise: stack pointer is in PSP */
+    b _GetPC         /* go to part which loads the PC */
+  _MSP:              /* stack pointer is in MSP register */
+    mrs r0, msp      /* load stack pointer into R0 */
+  _GetPC:            /* find out where the hard fault happened */
+    ldr r1,[r0,#20]  /* load stack pointer into R0 */
+    ldr r3, =%'ModuleName'%.HandlerC   /* decode more information. R0 contains pointer to stack frame */
+    bx r3            /* jump to handler */
+}
 %else
   #error "unsupported compiler."
 %endif
