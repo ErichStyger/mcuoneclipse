@@ -49,6 +49,7 @@
 %-
 %-BW_INTERN_COMMENTS_START
 %- List of descriptions of internal methods
+%define! Description_WriteBlockPage Writes a block with pages of data to the EEPROM
 %-BW_INTERN_COMMENTS_END
 %-
 %-BW_SECTIONS_INSERT
@@ -115,22 +116,22 @@
 #if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8
   #define %'ModuleName'%.MAX_I2C_ADDR_MASK 0                     %>40 /* A2|A1|A0 are not used */
   #define %'ModuleName'%.MAX_ADDRESS       0x03FF                %>40 /* 8 kBit is 1KByte */
-  #define %'ModuleName'%.ADDRT             word                  %>40 /* a word/16bit is engough to hold the address */
+  #define %'ModuleName'%.ADDRT             word                  %>40 /* a word/16bit is enough to hold the address */
   #define %'ModuleName'%.PAGE_SIZE         16                    %>40 /* maximum page size (for page/block operation) */
 #elif %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_32
   #define %'ModuleName'%.MAX_I2C_ADDR_MASK 7                     %>40 /* A2|A1|A0 form the I2C device address => address cannot be more than 7 (8 devices) */
   #define %'ModuleName'%.MAX_ADDRESS       0x0FFF                %>40 /* 32 kBit are 4KByte */
-  #define %'ModuleName'%.ADDRT             word                  %>40 /* a word/16bit is engough to hold the address */
+  #define %'ModuleName'%.ADDRT             word                  %>40 /* a word/16bit is enough to hold the address */
   #define %'ModuleName'%.PAGE_SIZE         8                     %>40 /* maximum page size (for page/block operation) */
 #elif %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_256
   #define %'ModuleName'%.MAX_I2C_ADDR_MASK 7                     %>40 /* A2|A1|A0 form the I2C device address => address cannot be more than 7 (8 devices) */
   #define %'ModuleName'%.MAX_ADDRESS       0x7FFF                %>40 /* 256 kBit are 32KByte */
-  #define %'ModuleName'%.ADDRT             word                  %>40 /* a word/16bit is engough to hold the address */
+  #define %'ModuleName'%.ADDRT             word                  %>40 /* a word/16bit is enough to hold the address */
   #define %'ModuleName'%.PAGE_SIZE         64                    %>40 /* maximum page size (for page/block operation) */
 #elif %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_512
   #define %'ModuleName'%.MAX_I2C_ADDR_MASK 7                     %>40 /* A2|A1|A0 form the I2C device address => address cannot be more than 7 (8 devices) */
   #define %'ModuleName'%.MAX_ADDRESS       0xFFFF                %>40 /* 512 kBit are 64KByte */
-  #define %'ModuleName'%.ADDRT             word                  %>40 /* a word/16bit is engough to hold the address */
+  #define %'ModuleName'%.ADDRT             word                  %>40 /* a word/16bit is enough to hold the address */
   #define %'ModuleName'%.PAGE_SIZE         128                   %>40 /* maximum page size (for page/block operation) */
 #elif %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_1025
   #define %'ModuleName'%.MAX_I2C_ADDR_MASK 3                     %>40 /* A1|A0 form the I2C device address => address cannot be more than 3 (4 devices) */
@@ -273,6 +274,16 @@ byte %'ModuleName'%.%GetSelectedDevice(void);
 
 %endif %- GetSelectedDevice
 %-BW_METHOD_END GetSelectedDevice
+%-************************************************************************************************************
+%-INTERNAL_METHOD_BEG WriteBlockPage
+byte %'ModuleName'%.WriteBlockPage(%'ModuleName'_Address addr, byte *data, word dataSize);
+%define! Paraddr
+%define! Pardata
+%define! PardataSize
+%define! RetVal
+%include Common\GeneralInternal.inc (WriteBlockPage)
+
+%-INTERNAL_METHOD_END WriteBlockPage
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -533,17 +544,16 @@ byte %'ModuleName'%.%ReadBlock(%'ModuleName'_Address addr, byte *data, word data
 %endif %- ReadBlock
 %-BW_METHOD_END ReadBlock
 %-************************************************************************************************************
-%-BW_METHOD_BEGIN WriteBlock
-%ifdef WriteBlock
+%-INTERNAL_METHOD_BEG WriteBlockPage
 %define! Paraddr
 %define! Pardata
 %define! PardataSize
 %define! RetVal
-%include Common\24AA_EEPROMWriteBlock.Inc
+%include Common\GeneralInternal.inc (WriteBlockPage)
 #ifdef __HIWARE__
 #pragma MESSAGE DISABLE C1855 /* recursive function call */
 #endif
-byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dataSize)
+byte %'ModuleName'%.WriteBlockPage(%'ModuleName'_Address addr, byte *data, word dataSize)
 {
 %if defined(Timeout)
 #if %'ModuleName'%.DO_ACKNOWLEDGE_POLLING && %'ModuleName'%.TIMEOUT_BLOCK_TICKS>0
@@ -555,11 +565,37 @@ byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dat
   uint16_t eepromPage = (uint16_t)(addr/%'ModuleName'%.PAGE_SIZE);
   uint8_t offset = (uint8_t)(addr%%%'ModuleName'%.PAGE_SIZE);
 
-  if (dataSize>%'ModuleName'%.PAGE_SIZE) {
-    return ERR_OVERFLOW;                                         %>40 /* writing such a block is not implemented yet */
-  }
   if (dataSize==0 || dataSize>%'ModuleName'%.BLOCK_BUF_SIZE) {
     return ERR_OVERFLOW;                                         %>40 /* you may increase the buffer size in the properties? */
+  }
+  if (dataSize>%'ModuleName'%.PAGE_SIZE) {
+    uint16_t size;
+
+    size = (uint16_t)(%'ModuleName'%.PAGE_SIZE-offset);
+    if (size!=0) {
+      res = %'ModuleName'%.WriteBlock(addr, data, size);         %>40 /* first page write */
+      if (res != ERR_OK) {
+        return res;
+      }
+      data += size; /* increment data pointer */
+      addr += size; /* increment address */
+      dataSize -= size; /* reduce size */
+    }
+    /* write multiple block of PAGE_SIZE */
+    while (dataSize>%'ModuleName'%.PAGE_SIZE) {
+      res = %'ModuleName'%.WriteBlock(addr, data, %'ModuleName'%.PAGE_SIZE);
+      if (res != ERR_OK) {
+        return res;
+      }
+      data += %'ModuleName'%.PAGE_SIZE; /* increment data pointer */
+      addr += %'ModuleName'%.PAGE_SIZE; /* increment address */
+      dataSize -= %'ModuleName'%.PAGE_SIZE; /* reduce size */
+    }
+    /* write remainder (if any) */
+    if (dataSize>0) {
+      return %'ModuleName'%.WriteBlock(addr, data, dataSize);
+    }
+    return ERR_OK;
   }
   if (offset+dataSize <= %'ModuleName'%.PAGE_SIZE) {             %>40 /* no page boundary crossing */
     res = %@I2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_ADDR(addr));
@@ -636,6 +672,39 @@ byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dat
 #ifdef __HIWARE__
   #pragma MESSAGE DEFAULT C1855 /* recursive function call */
 #endif
+
+%-INTERNAL_METHOD_END WriteBlockPage
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN WriteBlock
+%ifdef WriteBlock
+%define! Paraddr
+%define! Pardata
+%define! PardataSize
+%define! RetVal
+%include Common\24AA_EEPROMWriteBlock.Inc
+byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dataSize)
+{
+  int32_t size;
+
+  if (dataSize<=%'ModuleName'%.BLOCK_BUF_SIZE) { /* fits into internal buffer */
+    return %'ModuleName'%.WriteBlock(addr, data, dataSize);
+  }
+  size = dataSize;
+  while(size>=%'ModuleName'%.BLOCK_BUF_SIZE) { /* write in chunks %'ModuleName'%.BLOCK_BUF_SIZE */
+    if (%'ModuleName'%.WriteBlock(addr, data, %'ModuleName'%.BLOCK_BUF_SIZE)!=ERR_OK) {
+      return ERR_FAILED;
+    }
+    addr += %'ModuleName'%.BLOCK_BUF_SIZE;
+    data += %'ModuleName'%.BLOCK_BUF_SIZE;
+    size -= %'ModuleName'%.BLOCK_BUF_SIZE;
+  }
+  if (size>0) { /* write remainder which is < EE241_BLOCK_BUF_SIZE  */
+    if (%'ModuleName'%.WriteBlock(addr, data, size)!=ERR_OK) {
+      return ERR_FAILED;
+    }
+  }
+  return ERR_OK;
+}
 
 %endif %- WriteBlock
 %-BW_METHOD_END WriteBlock

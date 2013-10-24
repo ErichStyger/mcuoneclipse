@@ -4,7 +4,7 @@
     <Name>24AA_EEPROM</Name>
     <Description>Microchip 24AA Serial EEPROM</Description>
     <Author>Erich Styger</Author>
-    <Version>01.028</Version>
+    <Version>01.029</Version>
     <Icon>24AA_EEPROM</Icon>
     <TypesFiles>PE,24AA_EEPROM\24AA_EEPROM</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -212,7 +212,7 @@ Typical values:\n
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
         <Description>Disabled</Description>
-        <Expanded>Yes</Expanded>
+        <Expanded>No</Expanded>
         <DefaultValue>false</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
@@ -435,6 +435,52 @@ Typical values:\n
           <ParType>16bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of buffer the data pointer is pointing to</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(%'ModuleName'_Address addr, byte *data, word dataSize)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>WriteBlockPage</Name>
+        <Symbol>WriteBlockPage</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Writes a block with pages of data to the EEPROM</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>false</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code, possible values\nERR_OK - OK\nERR_OVERFLOW - data block passed has either size of zero or exceeds internal buffer size\notherwise it can return an error code of the underlying communication protocol.</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>addr</ParName>
+          <ParType>Address</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Address of memory</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>data</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the data</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>dataSize</ParName>
+          <ParType>16bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Size of data</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
