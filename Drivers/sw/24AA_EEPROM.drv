@@ -687,7 +687,7 @@ byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dat
   int32_t size;
 
   if (dataSize<=%'ModuleName'%.BLOCK_BUF_SIZE) { /* fits into internal buffer */
-    return %'ModuleName'%.WriteBlock(addr, data, dataSize);
+    return %'ModuleName'%.WriteBlockPage(addr, data, dataSize);
   }
   size = dataSize;
   while(size>=%'ModuleName'%.BLOCK_BUF_SIZE) { /* write in chunks %'ModuleName'%.BLOCK_BUF_SIZE */
@@ -699,7 +699,7 @@ byte %'ModuleName'%.%WriteBlock(%'ModuleName'_Address addr, byte *data, word dat
     size -= %'ModuleName'%.BLOCK_BUF_SIZE;
   }
   if (size>0) { /* write remainder which is < EE241_BLOCK_BUF_SIZE  */
-    if (%'ModuleName'%.WriteBlock(addr, data, size)!=ERR_OK) {
+    if (%'ModuleName'%.WriteBlockPage(addr, data, size)!=ERR_OK) {
       return ERR_FAILED;
     }
   }
