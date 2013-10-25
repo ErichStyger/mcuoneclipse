@@ -112,6 +112,7 @@
   %FILE? %'DirRel_Code'derivative.h
   %include FSL_USB_Stack\Device\app\cdc\cw10\kinetis_k60\derivative.h
 %- \Device\app\cdc\cw10\kinetis_k70 -------------------------------------------
+%elif CPUDevice="Kinetis K70"
   %FILE? %'DirRel_Code'derivative.h
   %include FSL_USB_Stack\Device\app\cdc\cw10\kinetis_k70\derivative.h
 %elif CPUDevice="Kinetis L2K"
@@ -122,6 +123,8 @@
 %- \Device\app\cdc\cw10\kinetis_kl46z48 -------------------------------------------
   %FILE? %'DirRel_Code'derivative.h
   %include FSL_USB_Stack\Device\app\cdc\cw10\kinetis_kl46z48\derivative.h
+%else
+  %error unknown CPU %CPUDevice
 %endif
 
 %- \Device\app\common -------------------------------------------
