@@ -176,7 +176,7 @@ void __thumb_startup(void)
 
 		// Setup registers
 
-		__init_registers();
+ 		__init_registers();
 
 
 

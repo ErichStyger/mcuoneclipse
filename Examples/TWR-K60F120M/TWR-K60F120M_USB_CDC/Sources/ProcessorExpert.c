@@ -42,6 +42,7 @@
 #include "LED4.h"
 #include "LEDpin4.h"
 #include "BitIoLdd4.h"
+#include "WAIT1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -62,9 +63,13 @@ int main(void)
 
   for(;;) {
     LED1_Neg();
+    WAIT1_Waitms(200);
     LED2_Neg();
+    WAIT1_Waitms(200);
     LED3_Neg();
+    WAIT1_Waitms(200);
     LED4_Neg();
+    WAIT1_Waitms(200);
   }
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
