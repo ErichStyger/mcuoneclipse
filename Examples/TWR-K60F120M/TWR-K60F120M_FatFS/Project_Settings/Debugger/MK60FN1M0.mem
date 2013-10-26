@@ -21,14 +21,4 @@ range      0x00000410 0x000FFFFF 4 ReadWrite // 1022 KBytes   Code Flash and Rea
 reserved   0x00100000 0x1FFEFFFF
 range      0x1FFF0000 0x1FFFFFFF 4 ReadWrite // 64 KBytes   Tightly Coupled Memory Lower (TCML) SRAM (ICODE/DCODE)
 range      0x20000000 0x2000FFFF 4 ReadWrite // 64 KBytes   Tightly Coupled Memory Upper(TCML) SRAM (ICODE/DCODE)
-reserved   0x20010000 0x21FFFFFF
-//         0x22000000 0x23FFFFFF             // Aliased to TCMU SRAM bitband
-reserved   0x24000000 0x3FFFFFFF
-//         0x40000000 0x4007FFFF             // Bitband region for AIPS0
-//         0x40080000 0x400FEFFF             // Bitband region for AIPS1
-//         0x400FF000 0x400FFFFF             // Bitband region for GPIOC
-reserved   0x40100000 0x41FFFFFF
-//         0x42000000 0x43FFFFFF             // Aliased to AIPS and GPIOC bitband
-reserved   0x44000000 0xDFFFFFFF
-//         0xE0000000 0xE00FFFFF             // Private Peripherals
 reserved   0xE0100000 0xFFFFFFFF
