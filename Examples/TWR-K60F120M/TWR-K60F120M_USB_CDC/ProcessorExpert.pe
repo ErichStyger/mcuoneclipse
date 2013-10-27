@@ -3,7 +3,7 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>21</ModificationStamp>
+    <ModificationStamp>22</ModificationStamp>
     <Date>2013-10-26</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.8.0.RT5_b1337-1809</PEversion>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>31</ProjectCompNumb>
+    <ProjectCompNumb>34</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -16667,7 +16667,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>3</Index>
+        <Index>2</Index>
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
@@ -16675,12 +16675,12 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>OUTDIV1Presc</Value>
+        <Value>MCGPLL1CLK</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>PLLFLLClockSpeedMode0</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>48</Value>
+        <Value>96</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>I2S0_CLKINCondGrp0</ItemSymbol>
@@ -21096,13 +21096,13 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <EnumSymbVal>pllfllClk</EnumSymbVal>
+              <Index>2</Index>
+              <EnumSymbVal>pll1Clk</EnumSymbVal>
               <CustomValue />
             </ItemState>
             <ItemState>
               <ItemSymbol>DividerInputFreq</ItemSymbol>
-              <Value>48 MHz</Value>
+              <Value>96 MHz</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>DividerClockFraction</ItemSymbol>
@@ -21120,8 +21120,8 @@
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <TypeSpecNameState>typeDividerClockDivisor</TypeSpecNameState>
-              <Index>0</Index>
-              <EnumSymbVal>0</EnumSymbVal>
+              <Index>1</Index>
+              <EnumSymbVal>1</EnumSymbVal>
               <CustomValue />
             </ItemState>
             <ItemState>
@@ -22612,7 +22612,7 @@
       <ItemState>
         <ItemSymbol>CDCDeviceGroup</ItemSymbol>
         <ReadOnly>true</ReadOnly>
-        <UserReadOnly>true</UserReadOnly>
+        <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>true</Value>
         <Expanded>true</Expanded>
@@ -23239,7 +23239,7 @@
       <ItemState>
         <ItemSymbol>HIDKDeviceGroup</ItemSymbol>
         <ReadOnly>true</ReadOnly>
-        <UserReadOnly>true</UserReadOnly>
+        <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>false</Value>
         <Expanded>false</Expanded>
@@ -23256,7 +23256,7 @@
       <ItemState>
         <ItemSymbol>HIDMDeviceGroup</ItemSymbol>
         <ReadOnly>true</ReadOnly>
-        <UserReadOnly>true</UserReadOnly>
+        <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>false</Value>
         <Expanded>false</Expanded>
@@ -23273,7 +23273,7 @@
       <ItemState>
         <ItemSymbol>MSDHostGroup</ItemSymbol>
         <ReadOnly>true</ReadOnly>
-        <UserReadOnly>true</UserReadOnly>
+        <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>false</Value>
         <Expanded>false</Expanded>
