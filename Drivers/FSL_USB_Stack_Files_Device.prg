@@ -51,7 +51,7 @@
   %include FSL_USB_Stack\Device\source\driver\s08\usb_dci.c
   %FILE? %'DirRel_Code'usb_dciapi.h
   %include FSL_USB_Stack\Device\source\driver\s08\usb_dciapi.h
-%elif (CPUDevice="Kinetis K20D50") | (CPUDevice="Kinetis K20D72") | (CPUDevice="Kinetis K21D50") | (CPUDevice="Kinetis K40") | (CPUDevice="Kinetis K53") | (CPUDevice="Kinetis K60") | (CPUDevice="Kinetis L2K") | (CPUDevice="Kinetis KL46Z48")
+%elif (CPUDevice="Kinetis K20D50") | (CPUDevice="Kinetis K20D72") | (CPUDevice="Kinetis K21D50") | (CPUDevice="Kinetis K40") | (CPUDevice="Kinetis K53") | (CPUDevice="Kinetis K60")  | (CPUDevice="Kinetis K70") | (CPUDevice="Kinetis L2K") | (CPUDevice="Kinetis KL46Z48")
 %- \Device\source\driver\kinetis -------------------------------------------
   %FILE? %'DirRel_Code'usb_bdt_kinetis.h
   %include FSL_USB_Stack\Device\source\driver\kinetis\usb_bdt_kinetis.h
@@ -111,8 +111,8 @@
 %- \Device\app\cdc\cw10\kinetis_k60 -------------------------------------------
   %FILE? %'DirRel_Code'derivative.h
   %include FSL_USB_Stack\Device\app\cdc\cw10\kinetis_k60\derivative.h
-%- \Device\app\cdc\cw10\kinetis_k70 -------------------------------------------
 %elif CPUDevice="Kinetis K70"
+%- \Device\app\cdc\cw10\kinetis_k70 -------------------------------------------
   %FILE? %'DirRel_Code'derivative.h
   %include FSL_USB_Stack\Device\app\cdc\cw10\kinetis_k70\derivative.h
 %elif CPUDevice="Kinetis L2K"
