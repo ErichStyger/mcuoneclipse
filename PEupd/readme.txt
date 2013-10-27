@@ -12,7 +12,7 @@ https://github.com/ErichStyger/mcuoneclipse/Drivers
 Part1_Beans_*.PEupd Content:
 -------------------------------------
 Package from component(s):
-- 24AA_EEPROM version 01.023
+- 24AA_EEPROM version 01.029
 - 74HC164 version 01.031
 - 74HC595 version 01.022
 - App_SMAC_Hello version 01.085
@@ -29,7 +29,7 @@ Package from component(s):
 - FatFsMem_USB_MSD version 01.019
 - FatFsMemSDHC version 01.007
 - FontDisplay version 01.195
-- FreeRTOS version 01.303
+- FreeRTOS version 01.318
 - FreeRTOSTrace version 01.003
 - FSL_USB_CDC_Device version 01.020
 - FSL_USB_HID_Keyboard_Device version 01.049
@@ -62,19 +62,20 @@ Package from component(s):
 - LowPower version 01.016
 - MAG3110 version 01.004
 - MaxonF2140 version 01.001
-- MC13192 version 01.004
+- MC13192 version 01.005
 - MC34673 version 01.019
 - MMA7260Q version 01.110
 - MMA7455L version 01.043
 - MMA8451Q version 01.028
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 24.09.2013
+created 27.10.2013
+
 
 Part2_Beans_*.PEupd Content:
 -------------------------------------
 Package from component(s):
-- nRF24L01 version 01.041
+- nRF24L01 version 01.045
 - OLED version 01.045
 - PCA9554 version 01.024
 - PCA9554BitIO version 01.037
@@ -126,6 +127,4 @@ Package from component(s):
 - UTI version 01.125
 - Utility version 01.091
 - Wait version 01.064
-created 24.09.2013
-
-
+created 27.10.2013
