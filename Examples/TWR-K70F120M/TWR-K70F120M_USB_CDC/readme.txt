@@ -1,0 +1,7 @@
+readme.txt
+----------
+This project demonstrate using USB CDC device class with the TWR-K60F120M board.
+
+See 
+http://mcuoneclipse.com/2013/10/27/usb-with-the-twr-k60f120m-and-twr-k70f120m/
+for more details.
