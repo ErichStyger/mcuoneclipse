@@ -10,7 +10,7 @@
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2013-10-27, 07:11, # CodeGen: 0 */
+/*##     Date/Time : 2013-10-27, 07:55, # CodeGen: 1 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */
@@ -37,16 +37,17 @@ __stack_size = 0x0400;                 /* required amount of stack */
 
 
 MEMORY {
-  m_interrupts (RX) : ORIGIN = 0x1FFF0000, LENGTH = 0x000001E8
-  m_text      (RX) : ORIGIN = 0x20000000, LENGTH = 0x00010000
-  m_data      (RW) : ORIGIN = 0x1FFF01E8, LENGTH = 0x0000FE18
+  m_interrupts (RX) : ORIGIN = 0x00000000, LENGTH = 0x000001E8
+  m_text      (RX) : ORIGIN = 0x00000410, LENGTH = 0x000FFBF0
+  m_data      (RW) : ORIGIN = 0x1FFF0000, LENGTH = 0x00010000
+  m_data_20000000 (RW) : ORIGIN = 0x20000000, LENGTH = 0x00010000
   m_cfmprotrom  (RX) : ORIGIN = 0x00000400, LENGTH = 0x00000010
 }
 
 /* Define output sections */
 SECTIONS
 {
-  /* The startup code goes first into INTERNAL_RAM */
+  /* The startup code goes first into INTERNAL_FLASH */
   .interrupts :
   {
     __vector_table = .;
@@ -62,7 +63,7 @@ SECTIONS
         . = ALIGN(4);
   } > m_cfmprotrom
 
-  /* The program code and other data goes into INTERNAL_RAM */
+  /* The program code and other data goes into INTERNAL_FLASH */
   .text :
   {
     . = ALIGN(4);
@@ -146,7 +147,7 @@ SECTIONS
   } > m_text
 
   /* Initialized data sections goes into RAM, load LMA copy after code */
-  .data :
+  .data : AT(___ROM_AT)
   {
     . = ALIGN(4);
     _sdata = .;        /* create a global symbol at data start */
@@ -159,6 +160,18 @@ SECTIONS
   } > m_data
 
   ___data_size = _edata - _sdata;
+
+  ___m_data_20000000_ROMStart = ___ROM_AT + SIZEOF(.data);
+  .m_data_20000000 : AT(___m_data_20000000_ROMStart)
+  {
+     . = ALIGN(4);
+     ___m_data_20000000_RAMStart = .;
+     *(.m_data_20000000) /* This is an User defined section */
+     ___m_data_20000000_RAMEnd = .;
+     . = ALIGN(4);
+  } > m_data_20000000
+  ___m_data_20000000_ROMSize = ___m_data_20000000_RAMEnd - ___m_data_20000000_RAMStart;
+
 
 
   /* Uninitialized data section */
@@ -178,7 +191,20 @@ SECTIONS
           PROVIDE ( __bss_end__ = __END_BSS );
   } > m_data
 
-  __S_romp = 0;
+  _romp_at = ___ROM_AT + SIZEOF(.data) +SIZEOF(.m_data_20000000);
+  .romp : AT(_romp_at)
+  {
+    __S_romp = _romp_at;
+    LONG(___ROM_AT);
+    LONG(_sdata);
+    LONG(___data_size);
+    LONG(___m_data_20000000_ROMStart);
+    LONG(___m_data_20000000_RAMStart);
+    LONG(___m_data_20000000_ROMSize);
+    LONG(0);
+    LONG(0);
+    LONG(0);
+  } > m_data
 
   /* User_heap_stack section, used to check that there is enough RAM left */
   ._user_heap_stack :
