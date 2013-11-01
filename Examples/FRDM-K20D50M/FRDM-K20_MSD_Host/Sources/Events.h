@@ -52,7 +52,6 @@
 #include "ASerialLdd1.h"
 #include "CLS1.h"
 #include "FRTOS1.h"
-#include "RTOSTICKLDD1.h"
 #include "TU1.h"
 #include "TI1.h"
 #include "TimerIntLdd1.h"
@@ -81,7 +80,7 @@ extern "C" {
 void Cpu_OnNMIINT0(void);
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

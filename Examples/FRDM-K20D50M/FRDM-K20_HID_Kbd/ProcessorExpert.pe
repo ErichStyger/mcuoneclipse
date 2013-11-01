@@ -3,10 +3,10 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>10</ModificationStamp>
-    <Date>2013-07-01</Date>
+    <ModificationStamp>12</ModificationStamp>
+    <Date>2013-11-01</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion>1.7.3.RT4_b1324-1612</PEversion>
+    <PEversion>1.8.0.RT5_b1337-1809</PEversion>
   </Header>
   <Options>
     <EventsDirectory>Sources</EventsDirectory>
@@ -265,7 +265,7 @@
         <ReadOnly>false</ReadOnly>
         <ListItemCount>1</ListItemCount>
         <UserReadOnly>false</UserReadOnly>
-        <Expanded>false</Expanded>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>CLKMode0</ItemSymbol>
@@ -3627,6 +3627,562 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>Auto select</Value>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigSecuritySettingsGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProtectionSettingsGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionSettingsGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegionSize</ItemSymbol>
+        <Value>4096</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegionsGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion2</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion3</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion4</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion5</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion6</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion7</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion8</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion9</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion10</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion11</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion12</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion13</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion14</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion15</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion16</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion17</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion18</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion19</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion20</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion21</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion22</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion23</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion24</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion25</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion26</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion27</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion28</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion29</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion30</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion31</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigDataFlashProtectionSettingsGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigDataFlashProtectionRegionSize</ItemSymbol>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigDataFlashProtectionRegionsGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigDataFlashProtectionRegion0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigDataFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigDataFlashProtectionRegion1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigDataFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigDataFlashProtectionRegion2</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigDataFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigDataFlashProtectionRegion3</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigDataFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigDataFlashProtectionRegion4</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigDataFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigDataFlashProtectionRegion5</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigDataFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigDataFlashProtectionRegion6</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigDataFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigDataFlashProtectionRegion7</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigDataFlashProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigEepromProtectionSettingsGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigEepromProtectionRegionSize</ItemSymbol>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigEepromProtectionRegionsGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigEepromProtectionRegion0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigEepromProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigEepromProtectionRegion1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigEepromProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigEepromProtectionRegion2</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigEepromProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigEepromProtectionRegion3</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigEepromProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigEepromProtectionRegion4</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigEepromProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigEepromProtectionRegion5</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigEepromProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigEepromProtectionRegion6</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigEepromProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigEepromProtectionRegion7</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigEepromProtectionRegion</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>unprotected</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigPeripheralSettingsGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigNmiFunction</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigNmiFunction</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>enabled</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -3741,6 +4297,17 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>never</LastUserSel>
         <UsrMethodName>VLPModeDisable</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SystemReset</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>never</LastUserSel>
+        <UsrMethodName>SystemReset</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Methods>
     <Events>
@@ -4639,7 +5206,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.059</BeanVersion>
+    <BeanVersion>01.064</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -4710,6 +5277,28 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Watchdog</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>nonLDDWatchDogEnabled</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LDDWatchDogEnabled</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>true</Value>
+        <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>WatchdogLDD</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value />
@@ -4786,6 +5375,15 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>WaitOSms</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>WaitLongCycles</ItemSymbol>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>WaitLongCycles</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Methods>
     <Events />
@@ -7158,7 +7756,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.016</BeanVersion>
+    <BeanVersion>01.023</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -8408,7 +9006,7 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Value />
+              <Value>default</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>InterruptVector_OTG_ID_CHGPriorityFeatureGroup</ItemSymbol>
@@ -8784,7 +9382,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.015</BeanVersion>
+          <BeanVersion>01.020</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -9397,7 +9995,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.039</BeanVersion>
+          <BeanVersion>01.049</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -9413,7 +10011,7 @@
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <EnumSymbVal>Kinetis K20D50</EnumSymbVal>
               <CustomValue />
-              <Index>7</Index>
+              <Index>9</Index>
             </ItemState>
             <ItemState>
               <ItemSymbol>USBCDCenabled</ItemSymbol>
@@ -9717,6 +10315,30 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>HIDMDeviceGroup</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>HIDMDevice</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+        <RegCompType />
+        <InheritedComponentState />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DataBufSize</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>64</Value>
+        <Base>DEC</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Properties>
     <Methods>
