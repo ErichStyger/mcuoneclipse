@@ -20,20 +20,20 @@
 #include "Cpu.h"
 #include "Events.h"
 #include "LEDR.h"
-#include "LEDpin1.h"
-#include "BitIoLdd1.h"
+#include "Inhr1.h"
+#include "PwmLdd1.h"
 #include "LEDG.h"
-#include "LEDpin2.h"
-#include "BitIoLdd2.h"
+#include "Inhr2.h"
+#include "PwmLdd2.h"
 #include "LEDB.h"
-#include "LEDpin3.h"
-#include "BitIoLdd3.h"
+#include "Inhr3.h"
+#include "PwmLdd3.h"
 #include "FRTOS1.h"
-#include "RTOSTICKLDD1.h"
 #include "UTIL1.h"
 #include "CLS1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
+#include "TU1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -43,13 +43,23 @@
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Shell.h"
 
+#define USE_LED_PWM  1
+#define LEDR_DUTY   (0xffff/2) /* duty */
+
 static portTASK_FUNCTION(LedTask, pvParameters) {
   (void)pvParameters; /* parameter not used */
   SHELL_Init();
   for(;;) {
-    LEDR_Neg();
     SHELL_Parse();
+#if USE_LED_PWM /* using on-off */
+    LEDR_SetRatio16(LEDR_DUTY);
+    FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
+    LEDR_SetRatio16(0);
+    FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
+#else
+    LEDR_Neg();
     FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
+#endif
   }
 }
 

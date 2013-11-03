@@ -24,20 +24,20 @@
 #include "PE_Const.h"
 #include "IO_Map.h"
 #include "LEDR.h"
-#include "LEDpin1.h"
-#include "BitIoLdd1.h"
+#include "Inhr1.h"
+#include "PwmLdd1.h"
 #include "LEDG.h"
-#include "LEDpin2.h"
-#include "BitIoLdd2.h"
+#include "Inhr2.h"
+#include "PwmLdd2.h"
 #include "LEDB.h"
-#include "LEDpin3.h"
-#include "BitIoLdd3.h"
+#include "Inhr3.h"
+#include "PwmLdd3.h"
 #include "FRTOS1.h"
-#include "RTOSTICKLDD1.h"
 #include "UTIL1.h"
 #include "CLS1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
+#include "TU1.h"
 #include "PE_LDD.h"
 
 void Cpu_OnNMIINT(void);
@@ -71,7 +71,7 @@ void Cpu_OnNMIINT0(void);
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
