@@ -1197,7 +1197,7 @@ __asm void vPortSVCHandler(void) {
   ldr r0, [r1]
   /* Pop the core registers. */
 #if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
-  ldmia r0!, {r4-r11, r14}
+  ldmia r0!, {r4-r11, r14} /* \todo: r14, check http://sourceforge.net/p/freertos/discussion/382005/thread/a9406af1/?limit=25#3bc7 */
 #else
   ldmia r0!, {r4-r11}
 #endif
