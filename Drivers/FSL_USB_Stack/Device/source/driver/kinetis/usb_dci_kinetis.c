@@ -409,15 +409,18 @@ static void USB_DCI_Prepare_Send_Data (
  ******************************************************************************
  * Initializes the USB controller
  *****************************************************************************/
+#define USB_DCI_OVERWRITE_INIT   1
 uint_8 USB_DCI_Init (
     uint_8    controller_ID,   /* [IN] Controller ID */
     uint_8    bVregEn         /* Enables or disables internal regulator */
 )
 {
 #if !HIGH_SPEED_DEVICE
+#if USB_USER_CONFIG_USE_STACK_INIT
 	/* Select System Clock and Disable Weak Pull Downs */
 	USB0_USBCTRL = 0x00;
-
+#endif
+	
 	/* save the controller_ID for future use */
     g_dci_controller_Id = controller_ID;
 
@@ -431,7 +434,7 @@ uint_8 USB_DCI_Init (
     Clear_Mem((uint_8_ptr)g_bdtmap,(uint_32) BYTES_1024, (uint_8)0);
 
     #ifndef OTG_BUILD
-#if 1   /* hardware bug workaround */ /* << EST: need to keep this workaround for FRDM-KL25Z */
+    #if 1   /* hardware bug workaround */ /* << EST: need to keep this workaround for FRDM-KL25Z */
     /* Hard Reset to the USB Module */
     USB0_USBTRC0 |= USB_USBTRC0_USBRESET_MASK;
 
@@ -439,15 +442,23 @@ uint_8 USB_DCI_Init (
     while((USB0_USBTRC0 & USB_USBTRC0_USBRESET_MASK))
     {
     };
+    #if !USB_USER_CONFIG_USE_STACK_INIT
+    {
+      /* need to re-init USB, as the hard reset above has reset the whole module! */
+      void USB0_Init(void); /* prototype */
+      USB0_Init(); /* call Processor Expert Init_USB_OTG Init() */
+    }
+    #endif
 
     #endif
     #endif
 
     g_trf_direction = USB_TRF_UNKNOWN;
 
+#if USB_USER_CONFIG_USE_STACK_INIT
     /* Asynchronous Resume Interrupt Enable */
-    USB0_USBTRC0 |= 0x40;
-
+    USB0_USBTRC0 |= 0x40; /* undocumented bit???? */
+#endif
     if(bVregEn)
     {
     	SIM_SOPT1 |= SIM_SOPT1_USBREGEN_MASK;	// enable usb voltage regulator
@@ -466,17 +477,19 @@ uint_8 USB_DCI_Init (
     /* Initialized BDT buffer address */
     g_bdt_address = ((uint_32)g_bdtmap + BYTES_512);
 
+#if USB_USER_CONFIG_USE_STACK_INIT
     #ifndef OTG_BUILD
      /* Pull Up configuration */
     USB0_CONTROL = USB_CONTROL_DPPULLUPNONOTG_MASK;
     #endif
-
+#endif
     USB0_CTL = USB_CTL_USBENSOFEN_MASK; 	/* Enable USB module */
     USB0_ISTAT = INT_STAT_CLEAR_ALL;      	/* Clear USB interrupts*/
 
     /* Remove suspend state */
     USB0_USBCTRL &= ~USB_USBCTRL_SUSP_MASK;
 
+#if USB_USER_CONFIG_USE_STACK_INIT
     /* Enable USB RESET Interrupt */
     USB0_INTEN |= USB_INTEN_USBRSTEN_MASK;
 
@@ -484,6 +497,7 @@ uint_8 USB_DCI_Init (
     USB0_INTEN |= USB_INTEN_SLEEPEN_MASK;
 
     USB0_OTGCTL = USB_OTGCTL_DPHIGH_MASK | USB_OTGCTL_OTGEN_MASK;
+#endif /* USB_DCI_OVERWRITE_INIT */
 #else	// HIGH_SPEED_DEVICE
     /* save the controller_ID for future use */
     g_dci_controller_Id = controller_ID;

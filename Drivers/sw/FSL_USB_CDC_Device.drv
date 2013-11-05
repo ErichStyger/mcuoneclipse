@@ -702,7 +702,7 @@ byte %'ModuleName'%.%App_Task(byte *txBuf, size_t txBufSize)
       if (res!=ERR_OK) {
         return res;
       }
-#if 1 /* workaround for problem in USB stack v3.1.1: if last block is 8, 16, 32, 40, 48, ... bytes, it does not get out until the next transfer? */
+#if 0 /* workaround for problem in USB stack v3.1.1: if last block is 8, 16, 32, 40, 48, ... bytes, it does not get out until the next transfer? */
       if ((i%%8)==0) {
         /* workaround: sending a dummy block of zero bytes */
         res = %'ModuleName'%.SendDataBlock(txBuf, 0);
