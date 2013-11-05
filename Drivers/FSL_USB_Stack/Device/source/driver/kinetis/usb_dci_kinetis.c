@@ -409,7 +409,6 @@ static void USB_DCI_Prepare_Send_Data (
  ******************************************************************************
  * Initializes the USB controller
  *****************************************************************************/
-#define USB_DCI_OVERWRITE_INIT   1
 uint_8 USB_DCI_Init (
     uint_8    controller_ID,   /* [IN] Controller ID */
     uint_8    bVregEn         /* Enables or disables internal regulator */
@@ -497,7 +496,7 @@ uint_8 USB_DCI_Init (
     USB0_INTEN |= USB_INTEN_SLEEPEN_MASK;
 
     USB0_OTGCTL = USB_OTGCTL_DPHIGH_MASK | USB_OTGCTL_OTGEN_MASK;
-#endif /* USB_DCI_OVERWRITE_INIT */
+#endif /* USB_USER_CONFIG_USE_STACK_INIT */
 #else	// HIGH_SPEED_DEVICE
     /* save the controller_ID for future use */
     g_dci_controller_Id = controller_ID;
