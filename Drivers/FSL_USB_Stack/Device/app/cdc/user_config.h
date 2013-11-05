@@ -52,9 +52,9 @@
  * Otherwise you have to setup the bits (e.g. Pull-up/pull-down resistors!
  * */ /* << EST */
 %if %UseUSBStackInitialization='yes'
-#define USB_USER_CONFIG_USE_STACK_INIT  1 /* value set by component property 'Use USB STack Initialization' */
+#define USB_USER_CONFIG_USE_STACK_INIT  1 /* value set by component property 'Use USB Stack Initialization' */
 %else
-#define USB_USER_CONFIG_USE_STACK_INIT  0 /* value set by component property 'Use USB STack Initialization' */
+#define USB_USER_CONFIG_USE_STACK_INIT  0 /* value set by component property 'Use USB Stack Initialization' */
 %endif
 
 %if (CPUDevice="Kintis K20D7") | (CPUDevice="Kinetis K40D7")
