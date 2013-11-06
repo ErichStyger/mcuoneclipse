@@ -91,6 +91,24 @@ void HIDM1_OnEvent(byte error)
   /* Write your code here ... */
 }
 
+/*
+** ===================================================================
+**     Event       :  USB1_OnError (module Events)
+**
+**     Component   :  USB1 [FSL_USB_Stack]
+**     Description :
+**         Hook called in case of an error
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         error           - Error code
+**     Returns     : Nothing
+** ===================================================================
+*/
+void USB1_OnError(byte error)
+{
+  /* Write your code here ... */
+}
+
 /* END Events */
 
 #ifdef __cplusplus

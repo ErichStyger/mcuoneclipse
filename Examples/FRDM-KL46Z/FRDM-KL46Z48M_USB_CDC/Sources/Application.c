@@ -29,7 +29,7 @@ void APP_Run(void) {
       LED1_Neg(); LED2_Off();
       WAIT1_Waitms(10);
     }
-    LED2_Off(); LED1_Neg();
+    LED1_Off(); LED2_Neg();
     if (CDC1_GetCharsInRxBuf()!=0) {
       i = 0;
       while(   i<sizeof(in_buffer)-1
