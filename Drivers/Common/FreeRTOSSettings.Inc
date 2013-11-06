@@ -4,7 +4,9 @@
 %;**%>12 Compiler %>60: %get(configCOMPILER,Text)
 %;**%>12 Static Sources %>60: %get(SourceGenerationOptions,Text)
 %if %get(SourceGenerationOptions, Bool) = 'yes'
-%;**%>14 Folder Name %>60: %get(RTOSFolderName,Text)
+%;**%>14 Source Folder %>60: %get(RTOSSrcFolderName,Text)
+%;**%>14 Header Folder %>60: %get(RTOSHeaderFolderName,Text)
+%;**%>14 Port Folder %>60: %get(RTOSPortFolderName,Text)
 %;**%>14 Manual Clock Values %>60: %get(UseManualClockValues,Text)
 %if %get(UseManualClockValues, Bool) = 'yes'
 %;**%>16 configCPU_CLOCK_HZ %>60: %get(configCPU_CLOCK_HZ,Text)

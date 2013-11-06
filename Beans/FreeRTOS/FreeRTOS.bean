@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.318</Version>
+    <Version>01.321</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -77,19 +77,45 @@
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
         <Description>Disabled</Description>
-        <Expanded>No</Expanded>
+        <Expanded>Yes</Expanded>
         <DefaultValue>false</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
         <Children>
           <GrupItem>
             <TStrgItem>
-              <Name>Folder Name</Name>
-              <Symbol>RTOSFolderName</Symbol>
-              <Hint>RTOS sources are generated into this sub folder name. The name can be empty.</Hint>
+              <Name>Source Folder</Name>
+              <Symbol>RTOSSrcFolderName</Symbol>
+              <Hint>RTOS source files are generated into this sub folder name. The name can be empty.</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
-              <DefaultValue>FreeRTOS</DefaultValue>
+              <DefaultValue>FreeRTOS\src</DefaultValue>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+            </TStrgItem>
+          </GrupItem>
+          <GrupItem>
+            <TStrgItem>
+              <Name>Header Folder</Name>
+              <Symbol>RTOSHeaderFolderName</Symbol>
+              <Hint>RTOS header files are generated into this sub folder name. The name can be empty.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>FreeRTOS\include</DefaultValue>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+            </TStrgItem>
+          </GrupItem>
+          <GrupItem>
+            <TStrgItem>
+              <Name>Port Folder</Name>
+              <Symbol>RTOSPortFolderName</Symbol>
+              <Hint>RTOS port depending sources files are generated into this sub folder name. The name can be empty.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>FreeRTOS\port</DefaultValue>
               <StrDefine>nothing</StrDefine>
               <MinLength>0</MinLength>
               <MaxLength>-1</MaxLength>
