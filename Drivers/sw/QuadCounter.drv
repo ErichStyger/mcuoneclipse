@@ -536,6 +536,8 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
     %@Shell@'ModuleName'%.SendStr((const unsigned char*)"%'ModuleName':\r\n", io->stdOut);
     %@Shell@'ModuleName'%.SendStatusStr((const unsigned char*)"  pos", (const unsigned char*)"", io->stdOut);
     %@Shell@'ModuleName'%.SendNum16u(%'ModuleName'%.currPos, io->stdOut);
+    %@Shell@'ModuleName'%.SendStr((const unsigned char*)", ", io->stdOut);
+    %@Shell@'ModuleName'%.SendNum16s((int16_t)%'ModuleName'%.currPos, io->stdOut);
     %@Shell@'ModuleName'%.SendStr((const unsigned char*)"\r\n", io->stdOut);
     %@Shell@'ModuleName'%.SendStatusStr((const unsigned char*)"  C1 C2", (const unsigned char*)"", io->stdOut);
     if (%'ModuleName'%.GET_C1_PIN()!=0) {
