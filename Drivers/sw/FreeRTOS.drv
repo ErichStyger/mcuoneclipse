@@ -1244,7 +1244,7 @@ LDD_TDeviceData *%'ModuleName'%.RunTimeCounterHandle; /* runtime counter handle,
 %if defined(Shell)
 static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
 #if configUSE_TRACE_FACILITY || configGENERATE_RUN_TIME_STATS /* FreeRTOS trace feature enabled */
-#if FRTOS_MEMORY_SCHEME==1 /* this scheme does not allow deallocation of memory */
+#if configFRTOS_MEMORY_SCHEME==1 /* this scheme does not allow deallocation of memory */
   static unsigned char *taskListBufferP=NULL; /* allocated only once, never deallocated! */
 #else
   unsigned char *taskListBufferP;
@@ -1261,7 +1261,7 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
   /* task list and status */
   bufSize = 40*uxTaskGetNumberOfTasks();  /* about 40 bytes for a task should be enough */
-#if FRTOS_MEMORY_SCHEME==1 /* this scheme does not allow deallocation of memory */
+#if configFRTOS_MEMORY_SCHEME==1 /* this scheme does not allow deallocation of memory */
   if (taskListBufferP==NULL) { /* only if not allocated yet */
     taskListBufferP = %'ModuleName'%.pvPortMalloc(bufSize); /* about 40 bytes for a task should be enough */
   }
@@ -1271,7 +1271,7 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   if (taskListBufferP != NULL) {
     %'ModuleName'%.vTaskList(taskListBufferP, bufSize);
     %@Shell@'ModuleName'%.SendStr(taskListBufferP, io->stdOut);
-#if FRTOS_MEMORY_SCHEME!=1 /* this scheme does not allow deallocation of memory */
+#if configFRTOS_MEMORY_SCHEME!=1 /* this scheme does not allow deallocation of memory */
     %'ModuleName'%.vPortFree(taskListBufferP);
 #endif
   } else {
@@ -1285,7 +1285,7 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
   /* task list and status */
   bufSize = 40*uxTaskGetNumberOfTasks();  /* about 40 bytes for a task should be enough */
-#if FRTOS_MEMORY_SCHEME==1 /* this scheme does not allow deallocation of memory */
+#if configFRTOS_MEMORY_SCHEME==1 /* this scheme does not allow deallocation of memory */
   if (taskListBufferP==NULL) { /* only if not allocated yet */
     taskListBufferP = %'ModuleName'%.pvPortMalloc(bufSize);
   }
@@ -1295,7 +1295,7 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   if (taskListBufferP != NULL) {
     %'ModuleName'%.vTaskGetRunTimeStats(taskListBufferP, bufSize);
     %@Shell@'ModuleName'%.SendStr(taskListBufferP, io->stdOut);
-#if FRTOS_MEMORY_SCHEME!=1 /* this scheme does not allow deallocation of memory */
+#if configFRTOS_MEMORY_SCHEME!=1 /* this scheme does not allow deallocation of memory */
     %'ModuleName'%.vPortFree(taskListBufferP);
 #endif
   } else {
