@@ -129,6 +129,8 @@
 %- Write your own types here ...
 %-  Example:
 %-    typedef int TMyInteger;
+#define %'ModuleName'%.WRITE_BUFFER_SIZE %WriteBufferSize /* size of internal buffer used, set in the component properties */
+
 typedef enum %'ModuleName'_EnumSendFlags_ {
   %'ModuleName'_SEND_STOP,        /* STOP is sent */
   %'ModuleName'_DO_NOT_SEND_STOP  /* STOP is not sent */
@@ -365,8 +367,6 @@ void %OnReleaseBus(void);
 %-     static int counter1;
 %-     int %'ModuleName'%.counter2;
 %-
-#define %'ModuleName'%.WRITE_BUFFER_SIZE %WriteBufferSize
-
 %if defined(LDD_I2C)
 typedef struct {
   volatile bool dataReceivedFlg; /* set to TRUE by the interrupt if we have received data */
