@@ -226,7 +226,6 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
 static LDD_TDeviceData *RTOS_TickDevice;
 %endif
 #endif
-
 %--------------------------------------------------------------
 /* Used to keep track of the number of nested calls to taskENTER_CRITICAL().
    This will be set to 0 prior to the first task being started. */
@@ -464,53 +463,80 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_COD
     PC of DispatchRestore
     OSTCBCur->OSTCBStkPtr --> SR of DispatchRestore (High memory)
   */
-  *pxTopOfStack = (portSTACK_TYPE)0x0; /* PC */
+  #define portINITIAL_SR	0x00UL
+  unsigned short usCode;
+  portBASE_TYPE i;
+
+  const portSTACK_TYPE xInitialStack[] = 
+  {
+	0x03030303UL,	/* R3 */
+	0x04040404UL, /* R4 */
+	0x05050505UL, /* R5 */
+	0x06060606UL, /* N */
+	0x07070707UL, /* N3 */
+	0x08080808UL, /* LC2 */
+	0x09090909UL, /* LA2 */
+	0x0A0A0A0AUL, /* LC */
+	0x0B0B0B0BUL, /* LA */
+	0x0E0E0E0EUL, /* A2 */
+	0x0F0F0F0FUL, /* A10 */
+	0x11111111UL, /* B2 */
+	0x22222222UL, /* B10 */
+	0x33333333UL, /* C2 */
+	0x44444444UL, /* C10 */
+	0x55555555UL, /* D2 */
+	0x66666666UL, /* D10 */
+	0x77777777UL, /* X0 */
+	0x88888888UL /* Y */
+  };
+
+  /* Setup the stack as if a yield had occurred. Save the program counter. */
+  *pxTopOfStack = ( portSTACK_TYPE ) pxCode;
   pxTopOfStack++;
-  *pxTopOfStack = (portSTACK_TYPE)0xDEAD; /* SR */
-  pxTopOfStack++;
-  *pxTopOfStack = (portSTACK_TYPE)0xDEAD; /* alignment word */
-  pxTopOfStack++;
-  *pxTopOfStack = (portSTACK_TYPE)0xDEAD; /* SP */
-  pxTopOfStack++;
-  *pxTopOfStack = (portSTACK_TYPE)0xDEAD; /* Y */
-  pxTopOfStack++;
-  *pxTopOfStack = (portSTACK_TYPE)0xDEAD; /* R0 */
-  pxTopOfStack++;
-  *pxTopOfStack = (portSTACK_TYPE)0xDEAD; /* A2 */
-  pxTopOfStack++;
-  *pxTopOfStack = (portSTACK_TYPE)0xDEAD; /* B2 */
-  pxTopOfStack++;
-  *pxTopOfStack = (portSTACK_TYPE)0xDEAD; /* X0 */
-  pxTopOfStack++;
-  *pxTopOfStack = (portSTACK_TYPE)0xDEAD; /* N3 */
-  pxTopOfStack++;
-  *pxTopOfStack = (portSTACK_TYPE)0xDEAD; /* M01 */
-  pxTopOfStack++;
-  *pxTopOfStack = (portSTACK_TYPE)0xDEAD; /* OMR */
-  pxTopOfStack++;
-  *pxTopOfStack = (portSTACK_TYPE)0xDEAD; /* C2 */
-  pxTopOfStack++;
-  *pxTopOfStack = (portSTACK_TYPE)0xDEAD; /* D2 */
-  pxTopOfStack++;
-  *pxTopOfStack = (portSTACK_TYPE)0xDEAD; /* A10 */
-  pxTopOfStack++;
-  *pxTopOfStack = (portSTACK_TYPE)0xDEAD; /* B10 */
-  pxTopOfStack++;
-  *pxTopOfStack = (portSTACK_TYPE)0xDEAD; /* N */
-  pxTopOfStack++;
-  *pxTopOfStack = (portSTACK_TYPE)0xDEAD; /* R1 */
-  pxTopOfStack++;
-  *pxTopOfStack = (portSTACK_TYPE)0xDEAD; /* R2 */
-  pxTopOfStack++;
-  *pxTopOfStack = (portSTACK_TYPE)0xDEAD; /* R3 */
-  pxTopOfStack++;
-  *pxTopOfStack = (portSTACK_TYPE)0xDEAD; /* LA2 */
-  pxTopOfStack++;
-  *pxTopOfStack = (portSTACK_TYPE)0xDEAD; /* LC2 */
+	
+  /* Status register with interrupts enabled. */
+  *pxTopOfStack = portINITIAL_SR;
   pxTopOfStack++;
 
-  /* Parameter in A0. */
-  //*(pxTopOfStack + 8) = (portSTACK_TYPE)pvParameters;
+  /* Address register R0 */
+  *pxTopOfStack = 0x0000000UL;
+  pxTopOfStack++;
+	
+  /* Address register R1 */
+  *pxTopOfStack = 0x01010101UL; 
+  pxTopOfStack++;
+
+  /* Parameters are passed in R2. */
+  *pxTopOfStack = ( portSTACK_TYPE ) pvParameters;
+  pxTopOfStack++;
+
+  for( i = 0; i < ( sizeof( xInitialStack ) / sizeof( portSTACK_TYPE ) ); i++ )
+  {
+    *pxTopOfStack = xInitialStack[ i ];
+    pxTopOfStack++;
+  }
+
+  /* Operation mode register */
+  asm(MOVE.W OMR,usCode);
+  *pxTopOfStack = ( portSTACK_TYPE ) usCode;
+  pxTopOfStack++;
+	
+  /* Modulo register */
+  asm(MOVE.W M01,usCode);
+  *pxTopOfStack = ( portSTACK_TYPE ) usCode;
+  pxTopOfStack++;
+	
+  /* Hardware stack register 1 */
+  *pxTopOfStack = 0x0C0C0C0CUL;
+  pxTopOfStack++;
+	
+  /* Hardware stack register 0 */
+  *pxTopOfStack = 0x0D0D0D0DUL;
+  pxTopOfStack++;
+
+  /* Finally the critical nesting depth. */
+  *pxTopOfStack = 0x00000000UL;
+  pxTopOfStack++;
 
   return pxTopOfStack;
 %else
@@ -869,6 +895,7 @@ void vPortEnterCritical(void) {
   uxCriticalNesting++;
 %elif (CPUfamily = "HCS08") | (CPUfamily = "HC08") | (CPUfamily = "HCS12") | (CPUfamily = "HCS12X") | (CPUfamily = "Kinetis") | (CPUfamily = "56800")
   portDISABLE_INTERRUPTS();
+  portPOST_ENABLE_DISABLE_INTERRUPTS();
   uxCriticalNesting++;
   %if (CPUfamily = "Kinetis")
   %if %Compiler="CodeWarriorARM" %- not supported by Freescale ARM compiler
@@ -891,6 +918,7 @@ void vPortExitCritical(void) {
   uxCriticalNesting--;
   if (uxCriticalNesting == 0)  {
     portENABLE_INTERRUPTS();
+    portPOST_ENABLE_DISABLE_INTERRUPTS();
   }
 }
 %if (CPUfamily = "ColdFireV1") | (CPUfamily = "MCF")
@@ -1153,7 +1181,14 @@ PE_ISR(RTOSTICKLDD1_Interrupt)
 %endif %- useARMSysTickTimer='no'
 }
 #endif
-
+/*-----------------------------------------------------------*/
+#if (configCOMPILER==configCOMPILER_DSC_FSL)
+void vPortStartFirstTask(void) {
+  /* Simulate the end of the yield function. */
+  __asm(rts);
+}
+#endif
+/*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_ARM_KEIL)
 __asm void vPortStartFirstTask(void) {
   /* Use the NVIC offset register to locate the stack. */
