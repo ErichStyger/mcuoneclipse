@@ -3,8 +3,8 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>18</ModificationStamp>
-    <Date>2013-10-27</Date>
+    <ModificationStamp>22</ModificationStamp>
+    <Date>2013-11-10</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.8.0.RT5_b1337-1809</PEversion>
   </Header>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>33</ProjectCompNumb>
+    <ProjectCompNumb>39</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -23206,7 +23206,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.318</BeanVersion>
+    <BeanVersion>01.321</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -24596,8 +24596,8 @@
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>TickTimerLDD</ItemSymbol>
@@ -25763,7 +25763,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
+        <Value>true</Value>
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
@@ -25816,6 +25816,24 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>CPU_BUS_CLK_HZ /* CPU bus clock from Processor Expert Cpu.h */</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RTOSSrcFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>FreeRTOS\src</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RTOSHeaderFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>FreeRTOS\include</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RTOSPortFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>FreeRTOS\port</Value>
       </ItemState>
     </Properties>
     <Methods>
