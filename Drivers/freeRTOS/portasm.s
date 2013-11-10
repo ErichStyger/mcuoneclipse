@@ -123,6 +123,9 @@ _vPortStartFirstTask:
   PUBLIC vPortSVCHandler
   PUBLIC vPortStartFirstTask
 
+#if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
+  PUBLIC vPortEnableVFP
+#endif
 /*-----------------------------------------------------------*/
 vPortTickHandler:
   push {lr}
@@ -258,7 +261,8 @@ vPortSVCHandler:
     msr psp, r0
     mov r0, #0
     msr basepri, r0
-  #if configCPU_FAMILY==configCPU_FAMILY_ARM_M4 /* *NO* floating point unit */
+  #if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
+  #else
     orr r14, r14, #13
   #endif
     bx r14
