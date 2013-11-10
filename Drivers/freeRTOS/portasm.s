@@ -16,7 +16,7 @@ dummy    ; dummy label, will not be used
  *
  * Notes:
  *
- * ulPortSetIPL() and mcf5xxx_wr_cacr() copied with permission from FreeScale
+ * ulPortSetIPL() and mcf5xxx_wr_cacr() copied with permission from Freescale
  * supplied source files.
  */
     .global ulPortSetIPL
@@ -145,7 +145,7 @@ vSetMSP:
 vPortPendSVHandler:
 #if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 or M4F */
     mrs r0, psp
-    ldr  r3, =pxCurrentTCB       /* Get the location of the current TCB. */
+    ldr  r3, =pxCurrentTCB      /* Get the location of the current TCB. */
     ldr  r2, [r3]
   #if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
     tst r14, #0x10              /* Is the task using the FPU context?  If so, push high vfp registers. */
@@ -164,7 +164,7 @@ vPortPendSVHandler:
     mov r0, #0
     msr basepri, r0
     ldmia sp!, {r3, r14}
-    ldr r1, [r3]                /* The first item in pxCurrentTCB is the task top of stack. */
+    ldr r1, [r3]               /* The first item in pxCurrentTCB is the task top of stack. */
     ldr r0, [r1]
   #if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
     ldmia r0!, {r4-r11, r14}   /* Pop the core registers */
@@ -247,8 +247,8 @@ vPortClearInterruptMask:
 vPortSVCHandler:
 #if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 or M4F */
     ldr r3, =pxCurrentTCB  /* Restore the context. */
-    ldr r1, [r3]                /* Use pxCurrentTCBConst to get the pxCurrentTCB address. */
-    ldr r0, [r1]                /* The first item in pxCurrentTCB is the task top of stack. */
+    ldr r1, [r3]           /* Use pxCurrentTCBConst to get the pxCurrentTCB address. */
+    ldr r0, [r1]           /* The first item in pxCurrentTCB is the task top of stack. */
     /* pop the core registers */
   #if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
     ldmia r0!, {r4-r11, r14}
@@ -321,9 +321,9 @@ vPortEnableVFP:
 #include "FreeRTOSConfig.h"
 
 #define VECTOR_TABLE_OFFSET_REG     0xE000ED08 /* Vector Table Offset Register (VTOR) */
-%if %M4FFloatingPointSupport='yes'
+#if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
 #define COPROCESSOR_ACCESS_REGISTER 0xE000ED88 /* Coprocessor Access Register (CPACR) */
-%endif
+#endif
 
   .text, code
 
@@ -339,9 +339,9 @@ vPortEnableVFP:
   .global vPortSVCHandler
   .global vPortStartFirstTask
   .global vOnCounterRestart
-%if %M4FFloatingPointSupport='yes'
+#if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
   .global vPortEnableVFP
-%endif
+#endif
 /*-----------------------------------------------------------*/
 vOnCounterRestart:
   %if %CompilerOptimizationLevel='0'
@@ -391,16 +391,16 @@ vPortPendSVHandler:
   ldr r2, [r3] /* r2 points now to top-of-stack of the current task */
 
   /* Save the core registers */
-%if %M4FFloatingPointSupport='yes'
+#if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
   /* Is the task using the FPU context?  If so, push high vfp registers. */
   tst r14, #0x10
   it eq
   vstmdbeq r0!, {s16-s31}
 
   stmdb r0!, {r4-r11, r14} /* save remaining core registers */
-%else
+#else
   stmdb r0!, {r4-r11} /* save remaining core registers */
-%endif
+#endif
 
   /* Save the new top of stack into the first member of the TCB */
   str r0, [r2]
@@ -418,15 +418,15 @@ vPortPendSVHandler:
   ldr r0, [r1] /* r0 points now to the top-of-stack of the new task */
 
   /* Pop the registers. */
-%if %M4FFloatingPointSupport='yes'
+#if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
   ldmia r0!, {r4-r11, r14} /* Pop the core registers */
   /* Is the task using the FPU context?  If so, pop the high vfp registers too. */
   tst r14, #0x10
   it eq
   vldmiaeq r0!, {s16-s31}
-%else
+#else
   ldmia r0!, {r4-r11} /* Pop the core registers */
-%endif
+#endif
 
   msr psp, r0
   bx r14
@@ -464,17 +464,18 @@ vPortSVCHandler:
   ldr r0, [r1] /* r0 points now to top-of-stack of the new task */
 
   /* pop the core registers */
-%if %M4FFloatingPointSupport='yes'
+#if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
   ldmia r0!, {r4-r11, r14}
-%else
+#else
   ldmia r0!, {r4-r11}
-%endif
+#endif
   msr psp, r0
   mov r0, #0
   msr basepri, r0
-%if %M4FFloatingPointSupport='no'
+#if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
+#else
   orr r14, r14, #13
-%endif
+#endif
   bx r14
   nop
 /*-----------------------------------------------------------*/
@@ -490,7 +491,7 @@ vPortStartFirstTask:
   svc 0
   nop
 /*-----------------------------------------------------------*/
-%if %M4FFloatingPointSupport='yes'
+#if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
 vPortEnableVFP:
   /* The FPU enable bits are in the CPACR. */
   ldr.w r0, =COPROCESSOR_ACCESS_REGISTER /* CAPCR, 0xE000ED88 */
@@ -503,7 +504,7 @@ vPortEnableVFP:
   bx  r14
   nop
 /*-----------------------------------------------------------*/
-%endif
+#endif
 
 %endif %- legacy FSL ARM Compiler
 
