@@ -8,9 +8,9 @@
 ##
 ##     Processor : MC56F8257
 ##
-##     Compiler  : Metrowerks DSP C Compiler
+##     Compiler  : CodeWarrior DSP C Compiler
 ##
-##     Date/Time : 2013-03-28, 10:07, # CodeGen: 19
+##     Date/Time : 2013-11-05, 19:52, # CodeGen: 21
 ##
 ##     Abstract  :
 ##
@@ -20,7 +20,8 @@
 ##     You can switch off generation by setting the property "Generate linker file = no"
 ##     in the "Build options" tab of the CPU bean and then modify this file as needed.
 ##
-##     Copyright : 1997 - 2012 Freescale, Inc. All Rights Reserved.
+##     Copyright : 1997 - 2013 Freescale Semiconductor, Inc. All Rights Reserved.
+##     SOURCE DISTRIBUTION PERMISSIBLE as directed in End User License Agreement.
 ##     
 ##     http      : www.freescale.com
 ##     mail      : support@freescale.com
@@ -164,8 +165,13 @@ SECTIONS {
               F_Ldata_RAM_addr = __xRAM_data_start;
               F_Ldata_ROM_addr = __pROM_data_start;
 
+              F_Livt_size     = 0x0000;
+              F_Livt_RAM_addr = 0x0000;
+              F_Livt_ROM_addr = 0x0000;
+
               F_xROM_to_xRAM   = 0x0000;
               F_pROM_to_xRAM   = 0x0001;
+              F_pROM_to_pRAM   = 0x0000;
 
               F_start_bss   = _START_BSS;
               F_end_bss     = _END_BSS;
