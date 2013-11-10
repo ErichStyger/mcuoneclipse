@@ -408,12 +408,12 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_COD
 
 %elif (CPUfamily = "Kinetis")
   /* Simulate the stack frame as it would be created by a context switch interrupt. */
-%if %M4FFloatingPointSupport='yes'
+#if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
   pxTopOfStack -= 2; /* Offset added to account for the way the MCU uses the stack on entry/exit of interrupts,
                         and to ensure alignment. */
-%else
+#else
   pxTopOfStack--;
-%endif
+#endif
   *pxTopOfStack = portINITIAL_XPSR;   /* xPSR */
   pxTopOfStack--;
   *pxTopOfStack = (portSTACK_TYPE)pxCode;  /* PC */
@@ -424,12 +424,12 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_COD
   pxTopOfStack -= 5;  /* R12, R3, R2 and R1. */
   *pxTopOfStack = (portSTACK_TYPE)pvParameters; /* R0 */
 
-%if %M4FFloatingPointSupport='yes'
+#if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
   /* A save method is being used that requires each task to maintain its
      own exec return value. */
   pxTopOfStack--;
   *pxTopOfStack = portINITIAL_EXEC_RETURN;
-%endif
+#endif
   pxTopOfStack -= 8;  /* R11, R10, R9, R8, R7, R6, R5 and R4. */
   return pxTopOfStack;
 %elif (CPUfamily = "56800")
@@ -771,7 +771,8 @@ void vPortStopTickTimer(void) {
 %endif
 }
 /*-----------------------------------------------------------*/
-%if (CPUfamily = "Kinetis") & ((%Compiler == "GNUC")|(%Compiler = "ARM_CC")) & %M4FFloatingPointSupport='yes'
+#if (configCOMPILER==configCOMPILER_ARM_KEIL) || (configCOMPILER==configCOMPILER_ARM_GCC)
+#if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
 void vPortEnableVFP(void) {
   /* The FPU enable bits are in the CPACR. */
   __asm volatile (
@@ -784,8 +785,9 @@ void vPortEnableVFP(void) {
     : "r0","r1" /* clobber */
   );
 }
+#endif /* configCPU_FAMILY_ARM_M4F */
+#endif /* GNU or Keil */
 /*-----------------------------------------------------------*/
-%endif
 portBASE_TYPE xPortStartScheduler(void) {
 %if (CPUfamily = "ColdFireV1") | (CPUfamily = "MCF")
   uxCriticalNesting = 0;
@@ -824,21 +826,19 @@ portBASE_TYPE xPortStartScheduler(void) {
 #endif
   *(portNVIC_SYSPRI3) |= portNVIC_PENDSV_PRI; /* set priority of PendSV interrupt */
   uxCriticalNesting = 0; /* Initialize the critical nesting count ready for the first task. */
-  vPortInitTickTimer();
-  vPortStartTickTimer();
-%if %M4FFloatingPointSupport='yes'
-  /* Ensure the VFP is enabled - it should be anyway. */
-  vPortEnableVFP();
-  /* Lazy register save always. */
-  *(portFPCCR) |= portASPEN_AND_LSPEN_BITS;
-%endif
+  vPortInitTickTimer(); /* initialize tick timer */
+  vPortStartTickTimer(); /* start tick timer */
+#if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
+  vPortEnableVFP(); /* Ensure the VFP is enabled - it should be anyway */
+  *(portFPCCR) |= portASPEN_AND_LSPEN_BITS; /* Lazy register save always */
+#endif
   vPortStartFirstTask(); /* Start the first task. */
   /* Should not get here, unless you call vTaskEndScheduler()! */
   return pdFALSE;
 %elif (CPUfamily = "56800")
-  uxCriticalNesting = 0;
-  vPortInitTickTimer();
-  vPortStartTickTimer();
+  uxCriticalNesting = 0; /* initialize critical nesting count */
+  vPortInitTickTimer(); /* init tick timer */
+  vPortStartTickTimer(); /* start tick timer */
 %ifdef vTaskEndScheduler
   if(setjmp(xJumpBuf) != 0 ) {
     /* here we will get in case of call to vTaskEndScheduler() */
