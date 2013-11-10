@@ -199,6 +199,14 @@ extern void vPortClearInterruptMaskFromISR(unsigned portBASE_TYPE);
   #error "undefined target %CPUfamily!"
 %endif
 
+#if configCOMPILER==configCOMPILER_DSC_FSL
+  /* for DSC, there is a possible skew after enable/disable Interrupts. */
+  #define portPOST_ENABLE_DISABLE_INTERRUPTS() \
+  	asm(nop); asm(nop); asm(nop); asm(nop); asm(nop); asm(nop);
+#else
+  #define portPOST_ENABLE_DISABLE_INTERRUPTS() /* nothing special needed */
+#endif
+
 %if (CPUfamily = "ColdFireV1") | (CPUfamily = "MCF")
 extern void vPortEnterCritical(void);
 extern void vPortExitCritical(void);
@@ -656,11 +664,12 @@ void vPortStartFirstTask(void);
 
 void vPortYieldHandler(void);
   /* handler for the SWI interrupt */
-%if (CPUfamily = "Kinetis") & %M4FFloatingPointSupport='yes'
 
-void vPortEnableVFP(void);
-  /* enables floating point support in the CPU */
-%endif
+#if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
+  void vPortEnableVFP(void);
+    /* enables floating point support in the CPU */
+#endif
+
 %if (CPUfamily = "Kinetis")
 
 /* Prototypes for interrupt service handlers */
