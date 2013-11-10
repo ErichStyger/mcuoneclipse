@@ -59,7 +59,7 @@
 %FILE %'DirRel_Code'%'RTOSHeaderDirFolder'portable.h
 %include freeRTOS\portable.h
 
-%FILE %'DirRel_Code'%'RTOSSrcDirFolder'portasm.s
+%FILE %'DirRel_Code'%'RTOSPortDirFolder'portasm.s
 %include freeRTOS\portasm.s
 
 %FILE %'DirRel_Code'%'RTOSPortDirFolder'portmacro.h
