@@ -558,6 +558,9 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
     *handled = TRUE;
   } else if (%@Utility@'ModuleName'%.strcmp((const char*)cmd, "%'ModuleName' reset")==0) {
     %'ModuleName'%.SetPos(0);
+  %ifdef NofErrors
+    %'ModuleName'%.nofErrors = 0;
+  %endif
     *handled = TRUE;
   }
   return res;
