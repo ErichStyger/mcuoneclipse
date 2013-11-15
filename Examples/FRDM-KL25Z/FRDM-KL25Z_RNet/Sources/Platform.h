@@ -8,7 +8,11 @@
 #ifndef PLATFORM_H_
 #define PLATFORM_H_
 
+#include "PE_Types.h" /* types like uint8_t */
+#include "PE_Error.h" /* PEx error codes */
+#include <stddef.h> /* for size_t */
 
-#define PL_HAS_RADIO   0
+#define PL_HAS_RADIO   1
+#define PL_HAS_SHELL   0
 
 #endif /* PLATFORM_H_ */
