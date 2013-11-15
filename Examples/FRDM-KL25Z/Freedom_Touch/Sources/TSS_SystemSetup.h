@@ -38,21 +38,13 @@
 
 /* Signal Control Options */
 
-#define TSS_USE_GPIO_STRENGTH                  0      /* Electrode GPIO Strength support */
-
-#define TSS_USE_GPIO_SLEW_RATE                 0      /* Electrode GPIO Slew Rate support */
-
 #define TSS_USE_IIR_FILTER                     1      /* IIR Filter support */
-
-#define TSS_USE_NOISE_AMPLITUDE_FILTER         0      /* Noise Amplitude Filter function support */
 
 #define TSS_USE_SIGNAL_SHIELDING               0      /* Signal Shielding support */
 
 #define TSS_USE_SIGNAL_DIVIDER                 0      /* Signal Divider support */
 
 #define TSS_USE_SIGNAL_MULTIPLIER              0      /* Signal Multiplier support */
-
-#define TSS_USE_DEFAULT_ELECTRODE_LEVEL_LOW    0      /* Default Electrode Level support */
 
 /* Feature Control Source Definition */
 
