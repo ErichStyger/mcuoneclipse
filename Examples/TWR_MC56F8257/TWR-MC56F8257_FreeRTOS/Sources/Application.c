@@ -22,8 +22,8 @@ void APP_Run(void) {
   if (FRTOS1_xTaskCreate(MainTask, (signed portCHAR *)"Main", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL) != pdPASS) {
     for(;;){} /* error */
   }
-  //(void)RTOSTICK1_Enable();
-  //FRTOS1_taskENABLE_INTERRUPTS();  
+  (void)TickCntr1_Enable();
+  FRTOS1_taskENABLE_INTERRUPTS();  
   for(;;) {
     LED1_Neg();
     WAIT1_Waitms(1000);
