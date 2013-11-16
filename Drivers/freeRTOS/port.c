@@ -72,6 +72,10 @@
     mission critical applications that require provable dependability.
 */
 
+/*-----------------------------------------------------------
+ * FreeRTOS for 56800EX port by Richy Ye in Jan. 2013.
+ *----------------------------------------------------------*/
+
 /* Kernel includes. */
 #include "portmacro.h" /* for configCPU_FAMILY */
 #include "FreeRTOS.h"
@@ -245,6 +249,95 @@ static unsigned portBASE_TYPE uxCriticalNesting = 0xaaaaaaaa;
 static jmp_buf xJumpBuf; /* Used to restore the original context when the scheduler is ended. */
 %endif
 /*-----------------------------------------------------------*/
+%if (CPUfamily = "56800")
+/* We require the address of the pxCurrentTCB variable, but don't want to know any details of its type. */
+typedef void tskTCB;
+extern tskTCB *volatile pxCurrentTCB;
+
+#define portSAVE_CONTEXT()  do {\
+    __asm(ADDA  #<2,SP);  /* SP is always long aligned */\
+    __asm(BFTSTL  #$0001,SP);\
+    __asm(BCC     NOADDASAVE);\
+    __asm(ADDA    #<1,SP);\
+    __asm(NOADDASAVE:);\
+    __asm(MOVE.L  SR, X:(SP)+);\
+    __asm(BFSET   #0x0300,SR);  /* Disable interrupt */\
+    __asm(MOVE.L  R0, X:(SP)+);\
+    __asm(MOVE.L  R1, X:(SP)+);\
+    __asm(MOVE.L  R2, X:(SP)+);\
+    __asm(MOVE.L  R3, X:(SP)+);\
+    __asm(MOVE.L  R4, X:(SP)+);\
+    __asm(MOVE.L  R5, X:(SP)+);\
+    __asm(MOVE.L  N, X:(SP)+);\
+    __asm(MOVE.L  N3, X:(SP)+);\
+    __asm(MOVE.L  LC2,X:(SP)+);\
+    __asm(MOVE.L  LA2,X:(SP)+);\
+    __asm(MOVE.L  LC,X:(SP)+);\
+    __asm(MOVE.L  LA,X:(SP)+);\
+    __asm(MOVE.L  A2,X:(SP)+);\
+    __asm(MOVE.L  A10,X:(SP)+);\
+    __asm(MOVE.L  B2,X:(SP)+);\
+    __asm(MOVE.L  B10,X:(SP)+);\
+    __asm(MOVE.L  C2,X:(SP)+);\
+    __asm(MOVE.L  C10,X:(SP)+);\
+    __asm(MOVE.L  D2,X:(SP)+);\
+    __asm(MOVE.L  D10,X:(SP)+);\
+    __asm(MOVE.L  X0,X:(SP)+);\
+    __asm(MOVE.L  Y,X:(SP)+);\
+    __asm(MOVE.L  OMR,X:(SP)+);\
+    __asm(BFCLR #0x01B0,OMR); /* Ensure CM = 0 */\
+    __asm(MOVE.L  M01,X:(SP)+);\
+    __asm(BFSET #0xFFFF,M01); /* Set M01 for linear addressing */\
+    __asm(MOVE.L  HWS,X:(SP)+);\
+    __asm(MOVE.L  HWS,X:(SP)+);\
+    __asm(MOVE.L  uxCriticalNesting,A);\
+    __asm(MOVE.L  A10,X:(SP)+); /* Save the critical nesting counter */\
+    __asm(MOVE.L  pxCurrentTCB,R0);\
+    __asm(TFRA  SP,R1); /* Save the new top of stack into the TCB */\
+    __asm(MOVE.L  R1,X:(R0));\
+    } while(0)
+
+#define portRESTORE_CONTEXT()  do {\
+    __asm(MOVE.L  pxCurrentTCB,R0); /* Restore the stack pointer for the task */\
+    __asm(MOVE.L  X:(R0),R1);\
+    __asm(BFTSTL  #$0001,R1);\
+    __asm(BCC     NOADDARESTORE);\
+    __asm(ADDA    #<1,R1);\
+    __asm(NOADDARESTORE:);\
+    __asm(TFRA  R1,SP);\
+    __asm(SUBA  #<2,SP);\
+    __asm(MOVE.L  X:(SP)-,A);\
+    __asm(MOVE.L  A10,uxCriticalNesting); /* Restore the critical nesting counter */\
+    __asm(MOVE.L  X:(SP)-,HWS);\
+    __asm(MOVE.L  X:(SP)-,HWS);\
+    __asm(MOVE.L  X:(SP)-,M01);\
+    __asm(MOVE.L  X:(SP)-,OMR);\
+    __asm(MOVE.L  X:(SP)-,Y);\
+    __asm(MOVE.L  X:(SP)-,X0);\
+    __asm(MOVE.L  X:(SP)-,D);\
+    __asm(MOVE.L  X:(SP)-,D2);\
+    __asm(MOVE.L  X:(SP)-,C);\
+    __asm(MOVE.L  X:(SP)-,C2);\
+    __asm(MOVE.L  X:(SP)-,B);\
+    __asm(MOVE.L  X:(SP)-,B2);\
+    __asm(MOVE.L  X:(SP)-,A);\
+    __asm(MOVE.L  X:(SP)-,A2);\
+    __asm(MOVE.L  X:(SP)-,LA);\
+    __asm(MOVE.L  X:(SP)-,LC);\
+    __asm(MOVE.L  X:(SP)-,LA2);\
+    __asm(MOVE.L  X:(SP)-,LC2);\
+    __asm(MOVE.L  X:(SP)-,N3);\
+    __asm(MOVE.L  X:(SP)-,N);\
+    __asm(MOVE.L  X:(SP)-,R5);\
+    __asm(MOVE.L  X:(SP)-,R4);\
+    __asm(MOVE.L  X:(SP)-,R3);\
+    __asm(MOVE.L  X:(SP)-,R2);\
+    __asm(MOVE.L  X:(SP)-,R1);\
+    __asm(MOVE.L  X:(SP)-,R0);\
+    __asm(MOVE.L  X:(SP)-,SR);\
+    } while(0)
+
+%endif %- (CPUfamily = "56800")
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters ) {
 %if (CPUfamily = "ColdFireV1") | (CPUfamily = "MCF")
   unsigned portLONG ulOriginalA5;
@@ -433,36 +526,6 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_COD
   pxTopOfStack -= 8;  /* R11, R10, R9, R8, R7, R6, R5 and R4. */
   return pxTopOfStack;
 %elif (CPUfamily = "56800")
-  /* stack layout is set up as below (same as for an interrupt):
-    PC  (Low memory)
-    SR
-    Optional alignment word
-    SP
-    Y
-    R0
-    A2
-    B2
-    X0
-    N3
-    M01
-    OMR
-    C2
-    D2
-    A10
-    B10
-    N
-    R1
-    R2
-    R3
-    LA
-    LA2
-    LC2
-    LC
-    HWS
-    HWS
-    PC of DispatchRestore
-    OSTCBCur->OSTCBStkPtr --> SR of DispatchRestore (High memory)
-  */
   #define portINITIAL_SR	0x00UL
   unsigned short usCode;
   portBASE_TYPE i;
@@ -517,12 +580,12 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_COD
   }
 
   /* Operation mode register */
-  asm(MOVE.W OMR,usCode);
+  __asm(MOVE.W OMR,usCode);
   *pxTopOfStack = ( portSTACK_TYPE ) usCode;
   pxTopOfStack++;
 	
   /* Modulo register */
-  asm(MOVE.W M01,usCode);
+  __asm(MOVE.W M01,usCode);
   *pxTopOfStack = ( portSTACK_TYPE ) usCode;
   pxTopOfStack++;
 	
@@ -837,7 +900,7 @@ portBASE_TYPE xPortStartScheduler(void) {
   return pdFALSE;
 %elif (CPUfamily = "56800")
   uxCriticalNesting = 0; /* initialize critical nesting count */
-  vPortInitTickTimer(); /* init tick timer */
+  vPortInitTickTimer(); /* initialize tick timer */
   vPortStartTickTimer(); /* start tick timer */
 %ifdef vTaskEndScheduler
   if(setjmp(xJumpBuf) != 0 ) {
@@ -994,6 +1057,12 @@ void vPortYieldISR(void)
 #if defined(vPortYieldISR_VECT_TABLE_ISR_FAST_INT)
 #pragma section interrupt_fast end
 #endif
+
+void vPortYield(void) {
+  portSAVE_CONTEXT();
+  vTaskSwitchContext();
+  portRESTORE_CONTEXT();
+}
 /*-----------------------------------------------------------*/
 %endif
 %ifdef TickCntr
@@ -1184,6 +1253,8 @@ PE_ISR(RTOSTICKLDD1_Interrupt)
 /*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_DSC_FSL)
 void vPortStartFirstTask(void) {
+  /* Restore the context of the first task to run. */
+  portRESTORE_CONTEXT();
   /* Simulate the end of the yield function. */
   __asm(rts);
 }

@@ -101,7 +101,7 @@ extern "C" {
 #endif
 #if configCOMPILER==configCOMPILER_S12_FSL
   #pragma MESSAGE DISABLE C12053 /* SP change not in debug information */
-  #pragma MESSAGE DISABLE C12056 /* SP debug infor incorrect */
+  #pragma MESSAGE DISABLE C12056 /* SP debug information incorrect */
 #endif
 
 /* Type definitions. */
@@ -119,8 +119,8 @@ extern "C" {
 #define portDOUBLE             double
 #define portLONG               long
 #define portSHORT              short
-#define portSTACK_TYPE         unsigned short
-#define portBASE_TYPE          char
+#define portSTACK_TYPE         unsigned long
+#define portBASE_TYPE          long
 %elif (CPUfamily = "HCS08") | (CPUfamily = "HC08") | (CPUfamily = "HCS12") | (CPUfamily = "HCS12X")
 #define portCHAR               char
 #define portFLOAT              float
@@ -157,7 +157,7 @@ extern "C" {
 #define portBYTE_ALIGNMENT     1
 #define portSTACK_GROWTH       -1 /* stack grows from HIGH to LOW */
 %elif (CPUfamily = "56800")
-#define portBYTE_ALIGNMENT     4
+#define portBYTE_ALIGNMENT     1
 #define portSTACK_GROWTH       1 /* stack grows from LOW to HIGH */
 %else
   #error "undefined target %CPUfamily!"
@@ -297,8 +297,8 @@ extern void vPortExitCritical(void);
 %elif (CPUfamily = "56800")
 extern void vPortEnterCritical(void);
 extern void vPortExitCritical(void);
-#define portENABLE_INTERRUPTS()              asm(bfclr #0x0300,SR) /* Enable interrupts of level 0,1,2,3 */
-#define portDISABLE_INTERRUPTS()             asm(bfset #0x0300,SR) /* Disable interrupts, only level 3 allowed */
+#define portENABLE_INTERRUPTS()              __asm(bfclr #0x0300,SR) /* Enable interrupts of level 0,1,2,3 */
+#define portDISABLE_INTERRUPTS()             __asm(bfset #0x0300,SR) /* Disable interrupts, only level 3 allowed */
 #define portENTER_CRITICAL()                 vPortEnterCritical()
 #define portEXIT_CRITICAL()                  vPortExitCritical()
 %else
@@ -416,8 +416,16 @@ extern void vPortYieldFromISR(void);
 #endif /* configUSE_PORT_OPTIMISED_TASK_SELECTION */
 
 %elif (CPUfamily = "56800")
-/* force a context switch with the SWI instruction. */
-#define portYIELD()        __asm(swi); __asm(nop); __asm(nop); __asm(nop);
+extern void vPortYield(void);
+#define portYIELD() do {\
+                        vPortYield();\
+                        asm(nop);\
+                        asm(nop);\
+                        asm(nop);\
+                        asm(nop);\
+                        asm(nop);\
+                        asm(nop);\
+                      } while (0)
 #define portEND_SWITCHING_ISR(xSwitchRequired) \
   if (xSwitchRequired != pdFALSE) { \
     portYIELD(); \
