@@ -1,0 +1,44 @@
+// Memory Configuration File
+//
+// Description:
+//  A memory configuration file contains commands that define the legally accessible
+//  areas of memory for your specific board. Useful for example when the debugger
+//  tries to display the content of a "char *" variable, that has not yet been initialized.
+//  In this case the debugger may try to read from a bogus address, which could cause a
+//  bus error.
+//
+// Board:
+//  56800 MC56F84789
+//
+// Reference:
+//  -
+
+
+// All reserved ranges read back 0xBABA...
+reservedchar 0xBA
+
+usederivative "MC56F84789"
+
+//         Memory Map:
+//         ----------------------------------------------------------------------
+//         <memory address rage>     <access size>     <permission>
+range      p:0x00000000 p:0x000001FF       2           ReadWrite      // FLASH
+range      p:0x00000200 p:0x00000207       2           ReadWrite      // FLASH_CONFIG
+range      p:0x00000208 p:0x0001FFFF       2           ReadWrite      // FLASH
+reserved   p:0x00020000 p:0x0005FFFF
+range      p:0x00060000 p:0x00063FFF       2           ReadWrite      // RAM
+reserved   p:0x00064000 p:0x00067FFF
+range      p:0x00068000 p:0x0006BFFF       2           ReadWrite      // FLASH
+reserved   p:0x0006C000 p:0x001FFFFF
+
+range      x:0x00000000 x:0x00003FFF       2           ReadWrite      // RAM
+reserved   x:0x00004000 x:0x00007FFF
+range      x:0x00008000 x:0x0000BFFF       2           ReadWrite      // FLASH
+//         x:0x0000C000 x:0x0000FFFF       2           ReadWrite      // Memory Mapped Registers
+reserved   x:0x00010000 x:0x0001DFFF
+range      x:0x0001E000 x:0x0001E3FF       2           ReadWrite      // RAM
+reserved   x:0x0001E400 x:0x0001FFFF
+range      x:0x00020000 x:0x000201FF       2           ReadWrite      // FLASH
+range      x:0x00020200 x:0x00020207       2           ReadWrite      // FLASH_CONFIG
+range      x:0x00020208 x:0x0003FFFF       2           ReadWrite      // FLASH
+reserved   x:0x00040000 x:0x00FFFFFF
