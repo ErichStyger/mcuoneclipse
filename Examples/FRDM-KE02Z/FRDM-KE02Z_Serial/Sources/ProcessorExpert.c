@@ -34,6 +34,7 @@
 #include "Inhr1.h"
 #include "ASerialLdd2.h"
 #include "WAIT1.h"
+#include "UTIL1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -78,13 +79,52 @@ static void ReadChar(void) {
 
 static void ReadString(void) {
   for(;;) {
-    char buf[32];
+    unsigned char buf[32];
     
     Term1_SendStr("\r\nPlease enter a string with return\r\n");
     Term1_ReadLine(buf);
     Term1_SendStr("You entered: ");
     Term1_SendStr(buf);
   }
+}
+
+static void PrintDataValues(uint16_t val1, uint16_t val2) {
+  unsigned char buf[24];
+  
+  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"Data: ");
+  UTIL1_strcatNum16u(buf, sizeof(buf), val1);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)", ");
+  UTIL1_strcatNum16u(buf, sizeof(buf), val2);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  Term1_SendStr(buf);
+}
+
+static void InputValues(void) {
+  unsigned char buf[32];
+  const unsigned char *p;
+  int32_t val1, val2;
+  
+  Term1_SendStr("Enter two numbers, separated by space, followed by a new-line:\r\n");
+  Term1_ReadLine(buf); /* will block */
+  p = buf; /* point to start of the buffer */
+  if (UTIL1_xatoi(&p, &val1) == ERR_OK) {
+    /* first number was ok */
+    if (UTIL1_strncmp((char*)p, (char*)" ", sizeof(" ")-1)==0) {
+      /* ok, number followed space */
+      if (UTIL1_xatoi(&p, &val2) == ERR_OK) {
+        /* Successfully read "<number>, <number>"! Write the values in hex */
+        UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"0x"); /* write hex prefix */
+        UTIL1_strcatNum32Hex(buf, sizeof(buf), val1);
+        Term1_SendStr(buf);
+        UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)", 0x"); /* write hex prefix */
+        UTIL1_strcatNum32Hex(buf, sizeof(buf), val2);
+        Term1_SendStr(buf);
+        Term1_SendStr("\r\nSuccess!\r\n");
+        return;
+      }
+    }
+  }
+  Term1_SendStr("failed!\r\n");
 }
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
@@ -100,7 +140,9 @@ int main(void)
   //Write();
   //TermEmulation();
   //ReadChar();
-  ReadString();
+  //ReadString();
+  //PrintDataValues(37, 48);
+  InputValues();
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
