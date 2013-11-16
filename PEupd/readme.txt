@@ -29,9 +29,9 @@ Package from component(s):
 - FatFsMem_USB_MSD version 01.019
 - FatFsMemSDHC version 01.007
 - FontDisplay version 01.195
-- FreeRTOS version 01.318
+- FreeRTOS version 01.322
 - FreeRTOSTrace version 01.003
-- FSL_USB_CDC_Device version 01.020
+- FSL_USB_CDC_Device version 01.021
 - FSL_USB_HID_Keyboard_Device version 01.049
 - FSL_USB_HID_Mouse_Device version 01.062
 - FSL_USB_MSD_Host version 01.015
@@ -69,7 +69,8 @@ Package from component(s):
 - MMA8451Q version 01.028
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 27.10.2013
+created 16.11.2013
+
 
 
 Part2_Beans_*.PEupd Content:
@@ -93,7 +94,7 @@ Package from component(s):
 - S65Sharp version 01.079
 - SD_Card version 01.158
 - Servo version 01.066
-- Shell version 01.019
+- Shell version 01.023
 - SimpleEvents version 01.045
 - SMAC version 01.003
 - SPHY version 01.010
@@ -127,4 +128,4 @@ Package from component(s):
 - UTI version 01.125
 - Utility version 01.091
 - Wait version 01.064
-created 27.10.2013
+created 16.11.2013
