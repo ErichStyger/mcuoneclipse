@@ -97,7 +97,7 @@
 
 %if %CommandInterpreterEnabled='yes'
   %FILE? %'DirRel_Code'%'RTOSSrcDirFolder'CommandInterpreter.h
-  %include freeRTOS\RTOSHeaderDirFolder.h
+  %include freeRTOS\CommandInterpreter.h
 
   %FILE? %'DirRel_Code'%'RTOSSrcDirFolder'CommandInterpreter.c
   %include freeRTOS\CommandInterpreter.c
