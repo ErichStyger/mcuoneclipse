@@ -355,6 +355,18 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="SetStdio">
+<b>SetStdio</b></a>
+ - Sets an StdIO structure which is returned by GetStdio()
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte SetStdio(<i>ComponentName_</i>ConstStdIOTypePtr stdio)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>stdio:<i>ComponentName_</i>ConstStdIOTypePtr</i> - New stdio structure to be used.</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
 <li><a name="GetStdio">
 <b>GetStdio</b></a>
  - Returns the default stdio channel. This method is only available if a shell is enabled in the component properties.

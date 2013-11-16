@@ -150,6 +150,12 @@
 %-  Example:
 %-    typedef int TMyInteger;
 %-
+%if defined(Serial)
+#define %'ModuleName'%.DEFAULT_SERIAL  1 /* If set to 1, then the shell implements its own StdIO which is returned by %'ModuleName'%.%GetStdio(); */
+%else
+#define %'ModuleName'%.DEFAULT_SERIAL  0 /* If set to 1, then the shell implements its own StdIO which is returned by %'ModuleName'%.%GetStdio(); */
+%endif
+
 #define %'ModuleName'%.DASH_LINE "--------------------------------------------------------------"
 /* predefined commands */
 #define %'ModuleName'%.CMD_HELP   "help"
@@ -419,6 +425,16 @@ byte %'ModuleName'%.%IterateTable(const unsigned char *cmd, bool *handled, %'Mod
 
 %endif %- IterateTable
 %-BW_METHOD_END IterateTable
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SetStdio
+%ifdef SetStdio
+byte %'ModuleName'%.%SetStdio(%'ModuleName'_ConstStdIOTypePtr stdio);
+%define! Parstdio
+%define! RetVal
+%include Common\ShellSetStdio.Inc
+
+%endif %- SetStdio
+%-BW_METHOD_END SetStdio
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -461,6 +477,19 @@ byte %'ModuleName'%.%IterateTable(const unsigned char *cmd, bool *handled, %'Mod
 #endif
 %if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & %ConsoleSempahore='yes'
 static xSemaphoreHandle ShellSem = NULL; /* Semaphore to protect shell SCI access */
+%endif
+
+%if defined(Serial)
+static %'ModuleName'_ConstStdIOType %'ModuleName'%.stdio =
+{
+  (%'ModuleName'_StdIO_In_FctType)%'ModuleName'_ReadChar, /* stdin */
+  (%'ModuleName'_StdIO_OutErr_FctType)%'ModuleName'_SendChar, /* stdout */
+  (%'ModuleName'_StdIO_OutErr_FctType)%'ModuleName'_SendChar, /* stderr */
+  %'ModuleName'_KeyPressed /* if input is not empty */
+};
+static %'ModuleName'_ConstStdIOType *%'ModuleName'%.currStdIO = &%'ModuleName'%.stdio;
+%else
+static %'ModuleName'_ConstStdIOType *%'ModuleName'%.currStdIO = NULL; /* needs to be set through %'ModuleName'%.%SetStdio(); */
 %endif
 %-
 %-BW_CUSTOM_VARIABLE_END
@@ -833,21 +862,27 @@ byte %'ModuleName'%.%ParseWithCommandTable(const unsigned char *cmd, %'ModuleNam
 %endif %- ParseWithCommandTable
 %-BW_METHOD_END ParseWithCommandTable
 %-************************************************************************************************************
+%-BW_METHOD_BEGIN SetStdio
+%ifdef SetStdio
+%define! Parstdio
+%define! RetVal
+%include Common\ShellSetStdio.Inc
+byte %'ModuleName'%.%SetStdio(%'ModuleName'_ConstStdIOTypePtr stdio)
+{
+  %'ModuleName'%.currStdIO = stdio;
+  return ERR_OK;
+}
+
+%endif %- SetStdio
+%-BW_METHOD_END SetStdio
+%-************************************************************************************************************
 %-BW_METHOD_BEGIN GetStdio
 %ifdef GetStdio
 %define! RetVal
 %include Common\ShellGetStdio.Inc
 %'ModuleName'_ConstStdIOTypePtr %'ModuleName'%.%GetStdio(void)
 {
-  static %'ModuleName'_ConstStdIOType %'ModuleName'%.stdio =
-  {
-    (%'ModuleName'_StdIO_In_FctType)%'ModuleName'_ReadChar, /* stdin */
-    (%'ModuleName'_StdIO_OutErr_FctType)%'ModuleName'_SendChar, /* stdout */
-    (%'ModuleName'_StdIO_OutErr_FctType)%'ModuleName'_SendChar, /* stderr */
-    %'ModuleName'_KeyPressed /* if input is not empty */
-  };
-
-  return &%'ModuleName'%.stdio;
+  return %'ModuleName'%.currStdIO;
 }
 
 %endif %- GetStdio
@@ -1115,7 +1150,6 @@ void %'ModuleName'%.%Deinit(void)
 
 %endif %- Deinit
 %-BW_METHOD_END Deinit
-%-************************************************************************************************************
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

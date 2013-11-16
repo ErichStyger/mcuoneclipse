@@ -4,7 +4,7 @@
     <Name>Shell</Name>
     <Description>Command Line Shell</Description>
     <Author>Erich Styger</Author>
-    <Version>01.019</Version>
+    <Version>01.023</Version>
     <Icon>Shell</Icon>
     <TypesFiles>PE,Shell\Shell</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -209,18 +209,36 @@
       </TInhrLinkItem>
     </Property>
     <Property>
-      <TInhrLinkItem>
-        <Name>Console Interface</Name>
-        <Symbol>Serial</Symbol>
-        <TypeSpec>Shell\Serial</TypeSpec>
-        <Hint>Interface to low level asynchroserial component</Hint>
+      <TBoolGrupItem>
+        <Name>Default Serial</Name>
+        <Symbol>DefaultSerialEnabled</Symbol>
+        <TypeSpec>typeEnaDis</TypeSpec>
+        <Hint>If enabled, the Shell implements a default internal serial interface. Otherwise the SetStdIO() function can be used to set one.</Hint>
         <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <DefaultValue/>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <SortStyle/>
-      </TInhrLinkItem>
+        <Description>Enabled</Description>
+        <Expanded>Yes</Expanded>
+        <DefaultValue>true</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <Children>
+          <GrupItem>
+            <TInhrLinkItem>
+              <Name>Console Interface</Name>
+              <Symbol>Serial</Symbol>
+              <TypeSpec>Shell\Serial</TypeSpec>
+              <Hint>Interface to low level asynchroserial component</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <DefaultValue/>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <SortStyle/>
+            </TInhrLinkItem>
+          </GrupItem>
+        </Children>
+      </TBoolGrupItem>
     </Property>
     <Property>
       <TBoolItem>
@@ -776,6 +794,40 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>byte #M#_#C#(const unsigned char *cmd, bool *handled, %'ModuleName'_ConstStdIOType *io, %'ModuleName'_ConstParseCommandCallback *parserTable)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>SetStdio</Name>
+        <Symbol>SetStdio</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Sets an StdIO structure which is returned by GetStdio()</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>stdio</ParName>
+          <ParType>ConstStdIOTypePtr</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>New stdio structure to be used.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(%'ModuleName'_ConstStdIOTypePtr stdio)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
