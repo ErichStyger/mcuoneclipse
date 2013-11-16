@@ -3,7 +3,7 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>11</ModificationStamp>
+    <ModificationStamp>14</ModificationStamp>
     <Date>2013-11-16</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.8.0.RT5_b1337-1809</PEversion>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>36</ProjectCompNumb>
+    <ProjectCompNumb>39</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -43,7 +43,7 @@
     <BeanType>MC56F84789VLL</BeanType>
     <Name>Cpu</Name>
     <CompNumb>2</CompNumb>
-    <CompEnabled>true</CompEnabled>
+    <CompEnabled>false</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>CPU_CHIP2</IconName>
     <UserFolderName />
@@ -562,6 +562,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Expanded>false</Expanded>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
       <ItemState>
         <ItemSymbol>EEPROMAvailable</ItemSymbol>
@@ -1148,6 +1149,7 @@
       <ItemState>
         <ItemSymbol>Symbol1</ItemSymbol>
         <ListItemCount>1</ListItemCount>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMGrp</ItemSymbol>
@@ -6741,7 +6743,7 @@
     <BeanType>MC56F84789VLL</BeanType>
     <Name>Cpu</Name>
     <CompNumb>4</CompNumb>
-    <CompEnabled>false</CompEnabled>
+    <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>CPU_CHIP2</IconName>
     <UserFolderName />
@@ -13439,7 +13441,7 @@
   <Configuration>
     <CompNumb>1</CompNumb>
     <NodeName>MC56F84789VLL_Internal_PFlash_SDM</NodeName>
-    <CnfgEnabled>true</CnfgEnabled>
+    <CnfgEnabled>false</CnfgEnabled>
     <TargetCPU>2</TargetCPU>
     <ConfigurationComment lines_count="0" />
     <BoolList_FpgaConfig>
@@ -13544,7 +13546,7 @@
   <Configuration>
     <CompNumb>3</CompNumb>
     <NodeName>MC56F84789VLL_Internal_PFlash_LDM</NodeName>
-    <CnfgEnabled>false</CnfgEnabled>
+    <CnfgEnabled>true</CnfgEnabled>
     <TargetCPU>4</TargetCPU>
     <ConfigurationComment lines_count="0" />
     <BoolList_FpgaConfig>
@@ -16202,8 +16204,8 @@
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>true</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>SWI</ItemSymbol>
@@ -16924,7 +16926,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>2048</Value>
+        <Value>4096</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>

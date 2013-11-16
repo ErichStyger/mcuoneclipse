@@ -40,7 +40,6 @@
 #include "LED2.h"
 #include "LEDpin2.h"
 #include "FRTOS1.h"
-#include "INT_SWI3.h"
 #include "TickCntr1.h"
 #include "UTIL1.h"
 #include "LED3.h"
