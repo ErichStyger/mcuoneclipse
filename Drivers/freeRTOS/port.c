@@ -1041,23 +1041,6 @@ void vPortYieldFromISR(void) {
 /*-----------------------------------------------------------*/
 %endif
 %if (CPUfamily = "56800")
-#if defined(vPortYieldISR_FAST_INT)
-#pragma interrupt fast
-#elif defined(vPortYieldISR_VECT_TABLE_ISR_FAST_INT)
-#pragma define_section interrupt_fast "interrupt_fast.text"  RX
-#pragma section interrupt_fast begin
-#pragma interrupt fast
-#else
-#pragma interrupt
-#endif
-void vPortYieldISR(void)
-{
-  /* Your interrupt code */
-}
-#if defined(vPortYieldISR_VECT_TABLE_ISR_FAST_INT)
-#pragma section interrupt_fast end
-#endif
-
 void vPortYield(void) {
   portSAVE_CONTEXT();
   vTaskSwitchContext();

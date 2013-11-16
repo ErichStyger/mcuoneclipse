@@ -58,6 +58,10 @@
   %set NonLDDSWIGroup ReadOnly yes
   %set NonLDDRuntimeCounterGroup Value Disabled
   %set NonLDDRuntimeCounterGroup ReadOnly yes
+%elif (CPUfamily = "56800")
+  %- no SWI needed, as context switch is done programmically
+  %set NonLDDSWIGroup Value Disabled
+  %set NonLDDSWIGroup ReadOnly yes
 %else
   %set LDDTickGroup Value Disabled
   %set LDDTickGroup ReadOnly yes
