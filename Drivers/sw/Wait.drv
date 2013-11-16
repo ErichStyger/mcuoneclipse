@@ -393,7 +393,7 @@ void %'ModuleName'%.%Wait10Cycles(void)
 %elif (CPU_FAMILY = "56800")
   /* JSR to here is 4-5 cycles */
   /* RTS is 8 cycles */
-  #warning "unsupported CPU family %CPUfamily"
+  /* so we already burned more than 10 cycles... */
 %else
   #warning "unsupported CPU family %CPUfamily"
   volatile byte i = 0; /* just something to wait, NOT the requested 10 cycles */
