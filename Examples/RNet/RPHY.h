@@ -49,6 +49,8 @@ uint8_t RPHY_GetPayload(uint8_t *buf, uint8_t bufSize);
 
 uint8_t RPHY_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize);
 
+uint8_t RPHY_ProcessRx(RPHY_PacketDesc *packet);
+
 /*! \brief Initializes the module */
 void RPHY_Init(void);
 

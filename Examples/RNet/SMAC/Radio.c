@@ -251,18 +251,6 @@ uint8_t RADIO_ProcessTx(RPHY_PacketDesc *packet) {
   return ERR_OK;
 }
 
-uint8_t RADIO_ProcessRx(RPHY_PacketDesc *packet) {
-  uint8_t res;
-  
-  res = RPHY_GetPayload(packet->data, packet->dataSize);
-  if (res!=ERR_OK) {
-    return res;
-  }
-  packet->flags = RPHY_PACKET_FLAGS_NONE;
-  /* pass packet up the stack */
-  return RPHY_OnPacketRx(packet);
-}
-
 static RPHY_PacketDesc radioRx, radioTx;
 static uint8_t radioRxBuf[RPHY_BUFFER_SIZE];
 static uint8_t radioTxBuf[RPHY_BUFFER_SIZE];
@@ -277,10 +265,10 @@ static portTASK_FUNCTION(RadioTask, pvParameters) {
   radioTx.dataSize = sizeof(radioTxBuf);
   for(;;) {
     if (RADIO_isOn) {
-      RADIO_HandleStateMachine(); /* state machine */
+      RADIO_HandleStateMachine(); /* process state machine */
       (void)RADIO_ProcessTx(&radioTx);
       /* process received packets */
-      if (RADIO_ProcessRx(&radioRx)==ERR_OK) {
+      if (RPHY_ProcessRx(&radioRx)==ERR_OK) {
         if (radioRx.flags&RPHY_PACKET_FLAGS_ACK) {
           EVNT_SetEvent(EVNT_RADIO_ACK);
         }

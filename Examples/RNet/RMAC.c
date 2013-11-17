@@ -8,7 +8,6 @@
 #include "Platform.h"
 #if PL_HAS_RADIO
 #include "RMAC.h"
-#include "Radio.h"
 #include "RPHY.h"
 #include "RNWK.h"
 

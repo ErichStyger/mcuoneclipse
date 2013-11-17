@@ -22,7 +22,7 @@ RNWK_ShortAddrType RNWK_GetOwnShortAddr(void) {
 
 uint8_t RNWK_SetOwnShortAddr(RNWK_ShortAddrType addr) {
   RNWK_OwnShortAddr = addr;
-  return ERR_OK
+  return ERR_OK;
 }
 
 uint8_t RNWK_SetAppOnPacketRxCallback(RNWK_AppOnRxCallbackType callback) {

@@ -16,12 +16,23 @@ uint8_t RPHY_GetPayload(uint8_t *buf, uint8_t bufSize) {
 }
 
 uint8_t RPHY_OnPacketRx(RPHY_PacketDesc *packet) {
-  /* pass message up the stack */
-  return RMAC_OnPacketRx(packet);
+  return RMAC_OnPacketRx(packet); /* pass message up the stack */
 }
 
 uint8_t RPHY_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize) {
   return RMSG_QueueTxMsg(buf, bufSize, payloadSize);
+}
+
+uint8_t RPHY_ProcessRx(RPHY_PacketDesc *packet) {
+  uint8_t res;
+  
+  res = RPHY_GetPayload(packet->data, packet->dataSize);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  packet->flags = RPHY_PACKET_FLAGS_NONE;
+  /* pass packet up the stack */
+  return RPHY_OnPacketRx(packet);
 }
 
 void RPHY_Deinit(void) {

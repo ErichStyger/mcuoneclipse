@@ -39,7 +39,7 @@ uint8_t RAPP_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RAPP_
 
 RNWK_ShortAddrType RAPP_GetOwnShortAddr(void);
 
-void RAPP_SetOwnShortAddr(RNWK_ShortAddrType addr);
+uint8_t RAPP_SetOwnShortAddr(RNWK_ShortAddrType addr);
 
 #if PL_HAS_SHELL
 #include "CLS1.h"

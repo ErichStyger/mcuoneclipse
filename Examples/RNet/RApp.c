@@ -8,10 +8,8 @@
 
 #include "Platform.h"
 #if PL_HAS_RADIO
-#include "Radio.h"
 #include "RApp.h"
 #include "RNWK.h"
-#include "RStdIO.h"
 
 static const RAPP_MsgHandler *RAPP_MsgHandlerTable;
 

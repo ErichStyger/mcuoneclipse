@@ -6,11 +6,13 @@
  */
 
 #include "Platform.h"
-#include "WAIT1.h"
 #include "RStack.h"
 #include "RApp.h"
+#include "LED1.h"
+#include "FRTOS1.h"
+#include "Radio.h"
 #if PL_HAS_RSTDIO
-#include "RStdIO.h"
+  #include "RStdIO.h"
 #endif
 
 static RNWK_ShortAddrType APP_srcAddr = RNWK_ADDR_BROADCAST; /* own node address */
@@ -42,31 +44,123 @@ static uint8_t HandleStdioMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *dat
 }
 #endif
 
+static uint8_t HandleRxMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *data, RNWK_ShortAddrType srcAddr, bool *handled) {
+#if PL_HAS_SHELL
+  uint8_t buf[16];
+  CLS1_ConstStdIOTypePtr io = CLS1_GetStdio();
+#endif
+  uint8_t val;
+  
+  switch(type) {
+    case RAPP_MSG_TYPE_DATA: /* <type><size><data */
+      *handled = TRUE;
+      val = *data; /* get data value */
+#if PL_HAS_SHELL
+      CLS1_SendStr((unsigned char*)"Data: ", io->stdOut);
+      CLS1_SendNum8u(val, io->stdOut);
+      CLS1_SendStr((unsigned char*)" from addr 0x", io->stdOut);
+      buf[0] = '\0';
+#if RNWK_SHORT_ADDR_SIZE==1
+      UTIL1_strcatNum8Hex(buf, sizeof(buf), srcAddr);
+#else
+      UTIL1_strcatNum16Hex(buf, sizeof(buf), srcAddr);
+#endif
+      UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+      CLS1_SendStr(buf, io->stdOut);
+#endif      
+      return ERR_OK;
+    default:
+      break;
+  } /* switch */
+  return ERR_OK;
+}
+
+static void Err(unsigned char *msg) {
+#if PL_HAS_SHELL
+  CLS1_ConstStdIOTypePtr io = CLS1_GetStdio();
+  
+  CLS1_SendStr(msg, io->stdErr); /* print error message */
+#else
+  (void)msg; /* not used */
+#endif
+}
+
+static const CLS1_ParseCommandCallback CmdParserTable[] =
+{
+  CLS1_ParseCommand,
+#if PL_HAS_RADIO
+  RADIO_ParseCommand,
+  RAPP_ParseCommand,
+  RNWK_ParseCommand,
+#endif
+  NULL /* Sentinel */
+};
+
 static const RAPP_MsgHandler handlerTable[] = 
 {
 #if PL_HAS_RSTDIO
   HandleStdioMessage,
 #endif
+  HandleRxMessage,
   NULL /* sentinel */
 };
 
-void APP_Run(void) {
-  uint8_t buf[RPHY_PAYLOAD_SIZE];
-#if PL_HAS_RSTDIO
-  CLS1_ConstStdIOTypePtr io = CLS1_GetStdio();
+static void SendDataByte(uint8_t val) {
+  uint8_t buf[RAPP_BUFFER_SIZE];
+  
+  RAPP_BUF_PAYLOAD_START(buf)[0] = val; /* sample 1 byte data */
+  if (RAPP_PutPayload(buf, sizeof(buf), 1, RAPP_MSG_TYPE_DATA, APP_dstAddr)) { /* send one byte of data */
+    Err((unsigned char*)"Failed sending message!\r\n");
+  }
+}
+
+static portTASK_FUNCTION(MainTask, pvParameters) {
+#if PL_HAS_SHELL
+  static unsigned char localConsole_buf[48];
+#endif
+#if PL_HAS_RSTDIO || PL_HAS_SHELL
+  CLS1_ConstStdIOTypePtr ioLocal = CLS1_GetStdio();
 #endif
   
-  RSTACK_Init(); /* initialize stack */
-  RAPP_SetMessageHandlerTable(handlerTable); /* assign application message handler */
-  (void)RAPP_SetOwnShortAddr(APP_srcAddr);
-  for(;;) {
-#if PL_HAS_RSTDIO
-    RSTDIO_Print(io); /* handle stdout/stderr messages coming in */
+#if PL_HAS_SHELL
+  CLS1_SendStr((unsigned char*)"nRF24L01+ Demo\r\n", ioLocal->stdOut);
 #endif
-    RAPP_BUF_PAYLOAD_START(buf)[0] = 32; /* sample 1 byte data */
-    RAPP_PutPayload(buf, sizeof(buf), 1, RAPP_MSG_TYPE_DATA, APP_dstAddr); /* send one byte of data */
-    WAIT1_Waitms(1000);
+  RSTACK_Init(); /* initialize stack */
+  if (RAPP_SetMessageHandlerTable(handlerTable)!=ERR_OK) { /* assign application message handler */
+    Err((unsigned char*)"Failed setting message handler!\r\n");
   }
+  if (RAPP_SetOwnShortAddr(APP_srcAddr)!=ERR_OK) {
+    Err((unsigned char*)"Failed setting source address!\r\n");
+  }
+#if PL_HAS_SHELL
+  (void)CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, ioLocal, CmdParserTable);
+#endif
+  for(;;) {
+#if PL_HAS_SHELL
+    (void)CLS1_ReadAndParseWithCommandTable(localConsole_buf, sizeof(localConsole_buf), ioLocal, CmdParserTable);
+#endif
+#if PL_HAS_RSTDIO
+    RSTDIO_Print(ioLocal); /* handle stdout/stderr messages coming in */
+#endif
+    LED1_Neg();
+    FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
+  }
+}
+
+void APP_Run(void) {
+  if (FRTOS1_xTaskCreate(
+        MainTask,  /* pointer to the task */
+        (signed char *)"Main", /* task name for kernel awareness debugging */
+        configMINIMAL_STACK_SIZE, /* task stack size */
+        (void*)NULL, /* optional task startup argument */
+        tskIDLE_PRIORITY+2,  /* initial priority */
+        (xTaskHandle*)NULL /* optional task handle to create */
+      ) != pdPASS) {
+    /*lint -e527 */
+    for(;;){}; /* error! probably out of memory */
+    /*lint +e527 */
+  }
+  FRTOS1_vTaskStartScheduler();
 }
 
 #if PL_HAS_SHELL
@@ -92,6 +186,8 @@ static void PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"app", (unsigned char*)"Group of application commands\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  help", (unsigned char*)"Shows radio help or status\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  saddr 0x<addr>", (unsigned char*)"Set node source address\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  daddr 0x<addr>", (unsigned char*)"Set node destination address\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  send <val>", (unsigned char*)"Set a value to the destination node\r\n", io->stdOut);
 #if PL_HAS_RSTDIO
   CLS1_SendHelpStr((unsigned char*)"  send (in/out/err)", (unsigned char*)"Send a string to stdio using the wireless transceiver\r\n", io->stdOut);
 #endif
@@ -101,6 +197,7 @@ uint8_t RAPP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
   uint8_t res = ERR_OK;
   const uint8_t *p;
   uint16_t val16;
+  uint8_t val8;
 
   if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, (char*)"app help")==0) {
     PrintHelp(io);
@@ -114,6 +211,24 @@ uint8_t RAPP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
     if (UTIL1_ScanHex16uNumber(&p, &val16)==ERR_OK) {
       APP_srcAddr = val16;
       RNWK_SetOwnShortAddr((RNWK_ShortAddrType)val16);
+    } else {
+      CLS1_SendStr((unsigned char*)"ERR: wrong address\r\n", io->stdErr);
+      return ERR_FAILED;
+    }
+  } else if (UTIL1_strncmp((char*)cmd, (char*)"app send", sizeof("app send")-1)==0) {
+    p = cmd + sizeof("app send")-1;
+    *handled = TRUE;
+    if (UTIL1_ScanDecimal8uNumber(&p, &val8)==ERR_OK) {
+      SendDataByte(val8); /* only send low byte */
+    } else {
+      CLS1_SendStr((unsigned char*)"ERR: wrong number format\r\n", io->stdErr);
+      return ERR_FAILED;
+    }
+  } else if (UTIL1_strncmp((char*)cmd, (char*)"app daddr", sizeof("app daddr")-1)==0) {
+    p = cmd + sizeof("app daddr")-1;
+    *handled = TRUE;
+    if (UTIL1_ScanHex16uNumber(&p, &val16)==ERR_OK) {
+      APP_dstAddr = val16;
     } else {
       CLS1_SendStr((unsigned char*)"ERR: wrong address\r\n", io->stdErr);
       return ERR_FAILED;

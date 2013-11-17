@@ -43,7 +43,7 @@ uint8_t RMSG_GetTxMsg(uint8_t *buf, size_t bufSize);
 /*!
  * \brief Add a message to the TX queue.
  * \param buf Pointer to the message data.
- * \param bufSize Size of the buffer in bytes.
+ * \param bufSize Size of the buffer in bytes, must be RPHY_BUFFER_SIZE.
  * \param payloadSize Size of payload in buffer.
  * \return ERR_OK, or error code.
  */

@@ -69,6 +69,13 @@ uint8_t RNWK_SetAppOnPacketRxCallback(RNWK_AppOnRxCallbackType callback);
 
 uint8_t RNWK_OnPacketRx(RPHY_PacketDesc *packet);
 
+/*!
+ * \brief Puts a payload into the buffer queue to be sent asynchronously.
+ * \param buf Message buffer with payload.
+ * \param bufSize Size of message buffer, must be of RNWK_BUFFER_SIZE.
+ * \param payloadSize Size of the payload in bytes.
+ * \param dstAddr Destination node address.
+ */
 uint8_t RNWK_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RNWK_ShortAddrType dstAddr);
 
 #if PL_HAS_SHELL
