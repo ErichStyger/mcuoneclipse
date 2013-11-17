@@ -86,7 +86,7 @@ RNWK_ShortAddrType RNWK_GetOwnShortAddr(void);
  * \brief Sets the node own short address
  * \param addr New address to use
  */
-void RNWK_SetOwnShortAddr(RNWK_ShortAddrType addr);
+uint8_t RNWK_SetOwnShortAddr(RNWK_ShortAddrType addr);
 
 /*! \brief Initializes the module */
 void RNWK_Init(void);

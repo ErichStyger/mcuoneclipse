@@ -7,7 +7,7 @@
  */
 
 #include "Platform.h"
-#if PL_HAS_RADIO && PL_HAS_SHELL
+#if PL_HAS_RSTDIO
 #include "RStdIO.h"
 #include "FRTOS1.h"
 #include "UTIL1.h"

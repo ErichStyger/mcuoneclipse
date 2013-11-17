@@ -11,7 +11,7 @@
 
 #include "Platform.h"
 
-#if PL_HAS_SHELL
+#if PL_HAS_RSTDIO
 #include "CLS1.h"
 
 typedef enum RSTDIO_QueueType {

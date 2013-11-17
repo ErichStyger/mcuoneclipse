@@ -13,7 +13,7 @@
 #include "RPHY.h"
 #include "RMAC.h"
 #include "RNWK.h"
-#if PL_HAS_SHELL
+#if PL_HAS_RSTDIO
 #include "RStdIO.h"
 #endif
 #include "RApp.h"
@@ -24,7 +24,7 @@ void RSTACK_Init(void) {
   RPHY_Init();
   RMAC_Init();
   RNWK_Init();
-#if PL_HAS_SHELL
+#if PL_HAS_RSTDIO
   RSTDIO_Init();
 #endif
   RAPP_Init();
@@ -32,7 +32,7 @@ void RSTACK_Init(void) {
 
 void RSTACK_Deinit(void) {
   RAPP_Deinit();
-#if PL_HAS_SHELL
+#if PL_HAS_RSTDIO
   RSTDIO_Deinit();
 #endif
   RNWK_Deinit();

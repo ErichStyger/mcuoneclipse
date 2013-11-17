@@ -12,7 +12,8 @@
 #include "PE_Error.h" /* PEx error codes */
 #include <stddef.h> /* for size_t */
 
-#define PL_HAS_RADIO   1
-#define PL_HAS_SHELL   0
+#define PL_HAS_RADIO   1 /* set to one to enable the RADIO */
+#define PL_HAS_SHELL   0 /* set to one if we have a shell */
+#define PL_HAS_RSTDIO  0
 
 #endif /* PLATFORM_H_ */

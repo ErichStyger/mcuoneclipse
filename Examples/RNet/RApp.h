@@ -37,6 +37,10 @@ uint8_t RAPP_SetMessageHandlerTable(const RAPP_MsgHandler *table);
 
 uint8_t RAPP_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RAPP_MSG_Type type, RNWK_ShortAddrType dstAddr);
 
+RNWK_ShortAddrType RAPP_GetOwnShortAddr(void);
+
+void RAPP_SetOwnShortAddr(RNWK_ShortAddrType addr);
+
 #if PL_HAS_SHELL
 #include "CLS1.h"
 uint8_t RAPP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
