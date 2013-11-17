@@ -26,13 +26,12 @@ uint8_t RPHY_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize) {
 uint8_t RPHY_ProcessRx(RPHY_PacketDesc *packet) {
   uint8_t res;
   
-  res = RPHY_GetPayload(packet->data, packet->dataSize);
-  if (res!=ERR_OK) {
-    return res;
+  res = RPHY_GetPayload(packet->data, packet->dataSize); /* get message */
+  if (res!=ERR_OK) { /* failed or no message available? */
+    return res; /* return error code */
   }
-  packet->flags = RPHY_PACKET_FLAGS_NONE;
-  /* pass packet up the stack */
-  return RPHY_OnPacketRx(packet);
+  packet->flags = RPHY_PACKET_FLAGS_NONE; /* initialize packet flags */
+  return RMAC_OnPacketRx(packet); /* pass packet up the stack */
 }
 
 void RPHY_Deinit(void) {

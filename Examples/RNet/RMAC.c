@@ -22,8 +22,7 @@ uint8_t RMAC_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize) {
 }
 
 uint8_t RMAC_OnPacketRx(RPHY_PacketDesc *packet) {
-  /* pass data packet up the stack */
-  return RNWK_OnPacketRx(packet);
+  return RNWK_OnPacketRx(packet); /* pass data packet up the stack */
 }
 
 uint8_t RMAC_SendACK(RPHY_PacketDesc *packet) {

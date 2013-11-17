@@ -14,7 +14,7 @@
 //  #define RNET_CONFIG_TRANSCEIVER_PAYLOAD_SIZE  SMAC1_RADIO_BUF_SIZE  /* max 128 bytes */
   #define RNET_CONFIG_TRANSCEIVER_PAYLOAD_SIZE  32  /* max 32 bytes */
 
-#define RNET_CONFIG_SHORT_ADDR_SIZE   2 
+#define RNET_CONFIG_SHORT_ADDR_SIZE   1 
   /*!< size of short address type. Either 1 or 2 */
 
 #endif /* PL_HAS_RADIO */

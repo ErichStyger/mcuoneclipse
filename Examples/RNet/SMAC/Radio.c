@@ -257,20 +257,18 @@ static uint8_t radioTxBuf[RPHY_BUFFER_SIZE];
 
 static portTASK_FUNCTION(RadioTask, pvParameters) {
   (void)pvParameters; /* not used */
-  
-  /* init Rx/Tx descriptor */
+  /* Initialize Rx/Tx descriptor */
   radioRx.data = &radioRxBuf[0];
   radioRx.dataSize = sizeof(radioRxBuf);
   radioTx.data = &radioTxBuf[0];
   radioTx.dataSize = sizeof(radioTxBuf);
   for(;;) {
-    if (RADIO_isOn) {
+    if (RADIO_isOn) { /* radio turned on? */
       RADIO_HandleStateMachine(); /* process state machine */
-      (void)RADIO_ProcessTx(&radioTx);
-      /* process received packets */
-      if (RPHY_ProcessRx(&radioRx)==ERR_OK) {
-        if (radioRx.flags&RPHY_PACKET_FLAGS_ACK) {
-          EVNT_SetEvent(EVNT_RADIO_ACK);
+      (void)RADIO_ProcessTx(&radioTx); /* send outgoing packets (if any) */
+      if (RPHY_ProcessRx(&radioRx)==ERR_OK) { /* process incoming packets */
+        if (radioRx.flags&RPHY_PACKET_FLAGS_ACK) { /* it was an ack! */
+          EVNT_SetEvent(EVNT_RADIO_ACK); /* set event */
         }
       }
     }

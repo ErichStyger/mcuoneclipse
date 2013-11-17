@@ -64,14 +64,13 @@ uint8_t RAPP_SetMessageHandlerTable(const RAPP_MsgHandler *table) {
   return ERR_OK;
 }
 
-RNWK_ShortAddrType RAPP_GetOwnShortAddr(void) {
-  return RNWK_GetOwnShortAddr();
+RNWK_ShortAddrType RAPP_GetThisNodeAddr(void) {
+  return RNWK_GetThisNodeAddr();
 }
 
-uint8_t RAPP_SetOwnShortAddr(RNWK_ShortAddrType addr) {
-  return RNWK_SetOwnShortAddr(addr);
+uint8_t RAPP_SetThisNodeAddr(RNWK_ShortAddrType addr) {
+  return RNWK_SetThisNodeAddr(addr);
 }
-
 
 void RAPP_Deinit(void) {
   /* nothing needed */

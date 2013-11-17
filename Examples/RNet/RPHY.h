@@ -1,9 +1,10 @@
-/*
- * RPHY.h
+/**
+ * \file
+ * \brief Radio PHY (Physical Interface)
+ * \author Erich Styger
  *
- *  Created on: Oct 12, 2013
- *      Author: tastyger
- */
+ * This interface is for the PHY (Physical) part of the stack.
+  */
 
 #ifndef RPHY_H_
 #define RPHY_H_

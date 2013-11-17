@@ -12,16 +12,15 @@
 #include "RNWK.h"
 #include "RMAC.h"
 
-static RNWK_ShortAddrType RNWK_OwnShortAddr = RNWK_ADDR_BROADCAST;
+static RNWK_ShortAddrType RNWK_ThisNodeAddr = RNWK_ADDR_BROADCAST; /* address of this network node */
+static RNWK_AppOnRxCallbackType RNWK_AppOnRxCallback; /* notification callback installed by upper layer */
 
-static RNWK_AppOnRxCallbackType RNWK_AppOnRxCallback;
-
-RNWK_ShortAddrType RNWK_GetOwnShortAddr(void) {
-  return RNWK_OwnShortAddr;
+RNWK_ShortAddrType RNWK_GetThisNodeAddr(void) {
+  return RNWK_ThisNodeAddr;
 }
 
-uint8_t RNWK_SetOwnShortAddr(RNWK_ShortAddrType addr) {
-  RNWK_OwnShortAddr = addr;
+uint8_t RNWK_SetThisNodeAddr(RNWK_ShortAddrType addr) {
+  RNWK_ThisNodeAddr = addr;
   return ERR_OK;
 }
 
@@ -33,7 +32,7 @@ uint8_t RNWK_SetAppOnPacketRxCallback(RNWK_AppOnRxCallbackType callback) {
 uint8_t RNWK_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RNWK_ShortAddrType dstAddr) {
   RNWK_ShortAddrType srcAddr;
   
-  srcAddr = RNWK_GetOwnShortAddr();
+  srcAddr = RNWK_GetThisNodeAddr();
   RNWK_BUF_SET_SRC_ADDR(buf, srcAddr);
   RNWK_BUF_SET_DST_ADDR(buf, dstAddr);
   return RMAC_PutPayload(buf, bufSize, payloadSize+RNWK_HEADER_SIZE);
@@ -45,18 +44,19 @@ uint8_t RNWK_OnPacketRx(RPHY_PacketDesc *packet) {
   uint8_t res;
 
   addr = RNWK_BUF_GET_DST_ADDR(packet->data);
-  if (addr==RNWK_ADDR_BROADCAST || addr==RNWK_GetOwnShortAddr()) { /* it is for me :-) */
-    type = RMAC_GetType(packet->data, packet->dataSize);
+  if (addr==RNWK_ADDR_BROADCAST || addr==RNWK_GetThisNodeAddr()) { /* it is for me :-) */
+    type = RMAC_GetType(packet->data, packet->dataSize); /* get the type of the message */
     if (type==RMAC_MSG_TYPE_ACK && RMAC_IsExpectedACK(packet->data, packet->dataSize)) {
+      /* it is an ACK, and the sequence number matches. Mark it with a flag and return, as no need for further processing */
       packet->flags |= RPHY_PACKET_FLAGS_ACK;
       return ERR_OK; /* no need to process the packet further */
-    } else if (type==RMAC_MSG_TYPE_DATA) {
-      if (RNWK_AppOnRxCallback!=NULL) {
-        res = RNWK_AppOnRxCallback(packet);
-        if (res==ERR_OK) { /* send acknowledge back */
-          addr = RNWK_BUF_GET_SRC_ADDR(packet->data);
+    } else if (type==RMAC_MSG_TYPE_DATA) { /* data packet received */
+      if (RNWK_AppOnRxCallback!=NULL) { /* do we have a callback? */
+        res = RNWK_AppOnRxCallback(packet); /* call upper layer */
+        if (res==ERR_OK) { /* all fine, now send acknowledge back */
+          addr = RNWK_BUF_GET_SRC_ADDR(packet->data); /* who should receive the ack? */
           RNWK_BUF_SET_DST_ADDR(packet->data, addr); /* destination address is from where we got the data */
-          return RMAC_SendACK(packet);
+          return RMAC_SendACK(packet); /* send ack message back */
         }
       }
     } else {
@@ -79,7 +79,11 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   CLS1_SendStatusStr((unsigned char*)"rnwk", (unsigned char*)"\r\n", io->stdOut);
   
   UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
-  UTIL1_strcatNum16Hex(buf, sizeof(buf), RNWK_OwnShortAddr);
+#if RNWK_SHORT_ADDR_SIZE==1
+  UTIL1_strcatNum8Hex(buf, sizeof(buf), RNWK_GetThisNodeAddr());
+#else
+  UTIL1_strcatNum16Hex(buf, sizeof(buf), RNWK_GetThisNodeAddr());
+#endif
   UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   CLS1_SendStatusStr((unsigned char*)"  addr", buf, io->stdOut);
 
@@ -103,7 +107,7 @@ void RNWK_Deinit(void) {
 }
 
 void RNWK_Init(void) {
-  RNWK_OwnShortAddr = RNWK_ADDR_BROADCAST;
+  RNWK_ThisNodeAddr = RNWK_ADDR_BROADCAST;
   RNWK_AppOnRxCallback = NULL;
 }
 

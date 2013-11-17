@@ -84,16 +84,16 @@ uint8_t RNWK_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
 #endif
 
 /*!
- * \brief Returns the node own short network address.
+ * \brief Returns the node network address.
  * \return Node short address.
  */
-RNWK_ShortAddrType RNWK_GetOwnShortAddr(void);
+RNWK_ShortAddrType RNWK_GetThisNodeAddr(void);
 
 /*!
- * \brief Sets the node own short address
+ * \brief Sets this node own address
  * \param addr New address to use
  */
-uint8_t RNWK_SetOwnShortAddr(RNWK_ShortAddrType addr);
+uint8_t RNWK_SetThisNodeAddr(RNWK_ShortAddrType addr);
 
 /*! \brief Initializes the module */
 void RNWK_Init(void);

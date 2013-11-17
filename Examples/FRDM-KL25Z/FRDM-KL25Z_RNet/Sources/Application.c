@@ -15,7 +15,6 @@
   #include "RStdIO.h"
 #endif
 
-static RNWK_ShortAddrType APP_srcAddr = RNWK_ADDR_BROADCAST; /* own node address */
 static RNWK_ShortAddrType APP_dstAddr = RNWK_ADDR_BROADCAST; /* destination node address */
 
 /* type ID's for application messages */
@@ -105,13 +104,16 @@ static const RAPP_MsgHandler handlerTable[] =
   NULL /* sentinel */
 };
 
-static void SendDataByte(uint8_t val) {
-  uint8_t buf[RAPP_BUFFER_SIZE];
+static uint8_t SendDataByte(uint8_t val) {
+  uint8_t buf[RAPP_BUFFER_SIZE]; /* payload data buffer */
+  uint8_t res;
   
-  RAPP_BUF_PAYLOAD_START(buf)[0] = val; /* sample 1 byte data */
-  if (RAPP_PutPayload(buf, sizeof(buf), 1, RAPP_MSG_TYPE_DATA, APP_dstAddr)) { /* send one byte of data */
+  RAPP_BUF_PAYLOAD_START(buf)[0] = val; /* store 1 byte of data */
+  res = RAPP_PutPayload(buf, sizeof(buf), sizeof(val), RAPP_MSG_TYPE_DATA, APP_dstAddr); /* send one byte of data */
+  if (res!=ERR_OK) {
     Err((unsigned char*)"Failed sending message!\r\n");
   }
+  return res;
 }
 
 static portTASK_FUNCTION(MainTask, pvParameters) {
@@ -129,7 +131,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
   if (RAPP_SetMessageHandlerTable(handlerTable)!=ERR_OK) { /* assign application message handler */
     Err((unsigned char*)"Failed setting message handler!\r\n");
   }
-  if (RAPP_SetOwnShortAddr(APP_srcAddr)!=ERR_OK) {
+  if (RAPP_SetThisNodeAddr(RNWK_ADDR_BROADCAST)!=ERR_OK) { /* set a default address */
     Err((unsigned char*)"Failed setting source address!\r\n");
   }
 #if PL_HAS_SHELL
@@ -170,12 +172,11 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   CLS1_SendStatusStr((unsigned char*)"app", (unsigned char*)"\r\n", io->stdOut);
   
   UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
-  UTIL1_strcatNum16Hex(buf, sizeof(buf), APP_srcAddr);
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-  CLS1_SendStatusStr((unsigned char*)"  source addr", buf, io->stdOut);
-
-  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+#if RNWK_SHORT_ADDR_SIZE==1
+  UTIL1_strcatNum8Hex(buf, sizeof(buf), APP_dstAddr);
+#else
   UTIL1_strcatNum16Hex(buf, sizeof(buf), APP_dstAddr);
+#endif
   UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   CLS1_SendStatusStr((unsigned char*)"  dest addr", buf, io->stdOut);
   
@@ -185,8 +186,8 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
 static void PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"app", (unsigned char*)"Group of application commands\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  help", (unsigned char*)"Shows radio help or status\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  saddr 0x<addr>", (unsigned char*)"Set node source address\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  daddr 0x<addr>", (unsigned char*)"Set node destination address\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  saddr 0x<addr>", (unsigned char*)"Set source node address\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  daddr 0x<addr>", (unsigned char*)"Set destination node address\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  send <val>", (unsigned char*)"Set a value to the destination node\r\n", io->stdOut);
 #if PL_HAS_RSTDIO
   CLS1_SendHelpStr((unsigned char*)"  send (in/out/err)", (unsigned char*)"Send a string to stdio using the wireless transceiver\r\n", io->stdOut);
@@ -209,8 +210,7 @@ uint8_t RAPP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
     p = cmd + sizeof("app saddr")-1;
     *handled = TRUE;
     if (UTIL1_ScanHex16uNumber(&p, &val16)==ERR_OK) {
-      APP_srcAddr = val16;
-      RNWK_SetOwnShortAddr((RNWK_ShortAddrType)val16);
+      RNWK_SetThisNodeAddr((RNWK_ShortAddrType)val16);
     } else {
       CLS1_SendStr((unsigned char*)"ERR: wrong address\r\n", io->stdErr);
       return ERR_FAILED;
