@@ -29,23 +29,13 @@
 
 #define RAPP_BUF_PAYLOAD_START(phy)       (RNWK_BUF_PAYLOAD_START(phy)+RAPP_HEADER_SIZE)
 
-/* type ID's for application messages */
-typedef enum RAPP_MSG_Type {
-#if PL_IS_INTRO
-  RAPP_MSG_TYPE_ACCEL = 0x00,
-#endif
-#if PL_IS_WILCO_SPS || PL_IS_WILCO_SENSOR
-  RAPP_PRESSURE_PART1 = 0x01,
-  RAPP_PRESSURE_PART2 = 0x02,
-#endif
-  RAPP_MSG_TYPE_STDIN = 0x03,
-  RAPP_MSG_TYPE_STDOUT = 0x04,
-  RAPP_MSG_TYPE_STDERR = 0x05
-} RAPP_MSG_Type;
+typedef uint8_t RAPP_MSG_Type; /* type for distinguishing different application message types */
 
-uint8_t RAPP_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RAPP_MSG_Type type);
+typedef uint8_t (*RAPP_MsgHandler) (RAPP_MSG_Type type, uint8_t size, uint8_t *data, RNWK_ShortAddrType srcAddr, bool *handled);
 
-uint8_t RAPP_Process(void);
+uint8_t RAPP_SetMessageHandlerTable(const RAPP_MsgHandler *table);
+
+uint8_t RAPP_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RAPP_MSG_Type type, RNWK_ShortAddrType dstAddr);
 
 #if PL_HAS_SHELL
 #include "CLS1.h"

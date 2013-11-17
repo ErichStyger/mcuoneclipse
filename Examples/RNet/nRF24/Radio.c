@@ -10,9 +10,6 @@
 #include "Radio.h"
 #include "RF1.h"
 #include "FRTOS1.h"
-#include "LED1.h"
-#include "LED2.h"
-#include "LED3.h"
 #include "RMSG.h"
 #include "RStdIO.h"
 #include "RPHY.h"
@@ -44,25 +41,14 @@ static RADIO_AppStatusKind RADIO_AppStatus = RADIO_INITIAL_STATE;
 static volatile bool RADIO_isrFlag; /* flag set by ISR */
 
 static void Err(unsigned char *msg) {
+#if PL_HAS_SHELL
   CLS1_SendStr(msg, CLS1_GetStdio()->stdErr);
+#endif
 }
 
 /* callback called from radio driver */
 void RADIO_OnInterrupt(void) {
   RADIO_isrFlag = TRUE;
-}
-
-static const unsigned char *RadioStateStr(RADIO_AppStatusKind state) {
-  switch(state) {
-    case RADIO_INITIAL_STATE:         return (const unsigned char*)"INITIAL";
-    case RADIO_RECEIVER_ALWAYS_ON:    return (const unsigned char*)"ALWAYS_ON";
-    case RADIO_TRANSMIT_DATA:         return (const unsigned char*)"TRANSMIT_DATA";
-    case RADIO_WAITING_FOR_ACK:       return (const unsigned char*)"WAITING_FOR_ACK";
-    case RADIO_TRANSMIT_ACK:          return (const unsigned char*)"TRANSMIT_ACK";
-    case RADIO_READY_FOR_TX_RX_DATA:  return (const unsigned char*)"READY_TX_RX"; 
-    default:                          return (const unsigned char*)"UNKNOWN";
-  }
-  return (const unsigned char*)"UNKNOWN";
 }
 
 static uint8_t CheckTx(void) {
@@ -120,7 +106,7 @@ static uint8_t CheckRx(void) {
   /* put message into Rx queue */
   res = RMSG_QueueRxMsg(RxDataBuffer, sizeof(RxDataBuffer), RPHY_PAYLOAD_SIZE);
   if (res!=ERR_OK) {
-    CLS1_SendStr((unsigned char*)"ERR: Rx Queue full?\r\n", CLS1_GetStdio()->stdErr);
+    Err((unsigned char*)"ERR: Rx Queue full?\r\n");
   }
   return res;
 }
@@ -166,7 +152,7 @@ static void Process(void) {
         ackTimeoutCntr++;
         if (ackTimeoutCntr>10) { /* 100 ms */
           ackTimeoutCntr = 0;
-          CLS1_SendStr((unsigned char*)"ERR: ACK timeout\r\n", CLS1_GetStdio()->stdErr);
+          Err((unsigned char*)"ERR: ACK timeout\r\n");
           RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON; /* turn receive on */
           break;
         }
@@ -237,6 +223,19 @@ static portTASK_FUNCTION(RadioTask, pvParameters) {
 }
 
 #if PL_HAS_SHELL
+static const unsigned char *RadioStateStr(RADIO_AppStatusKind state) {
+  switch(state) {
+    case RADIO_INITIAL_STATE:         return (const unsigned char*)"INITIAL";
+    case RADIO_RECEIVER_ALWAYS_ON:    return (const unsigned char*)"ALWAYS_ON";
+    case RADIO_TRANSMIT_DATA:         return (const unsigned char*)"TRANSMIT_DATA";
+    case RADIO_WAITING_FOR_ACK:       return (const unsigned char*)"WAITING_FOR_ACK";
+    case RADIO_TRANSMIT_ACK:          return (const unsigned char*)"TRANSMIT_ACK";
+    case RADIO_READY_FOR_TX_RX_DATA:  return (const unsigned char*)"READY_TX_RX"; 
+    default:                          return (const unsigned char*)"UNKNOWN";
+  }
+  return (const unsigned char*)"UNKNOWN";
+}
+
 static void RADIO_PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"radio", (unsigned char*)"Group of radio commands\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows radio help or status\r\n", io->stdOut);
