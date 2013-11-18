@@ -103,6 +103,7 @@
 #define %'ModuleName'%.SUCCESS   %@PHY@'ModuleName'%.SUCCESS    %>%CTAB /*!< everything ok */
 #define %'ModuleName'%.TIMEOUT   %@PHY@'ModuleName'%.TIMEOUT    %>%CTAB /*!< timeout while sending message (other side did not respond) */
 #define %'ModuleName'%.OVERFLOW  %@PHY@'ModuleName'%.OVERFLOW   %>%CTAB /*!< we received a message longer than expected */
+#define %'ModuleName'%.RESET     %@PHY@'ModuleName'%.RESET      %>%CTAB /*!< transceiver reports a reset condition */
 
 #define %'ModuleName'%.SCAN_MODE_ED   %@PHY@'ModuleName'%.SCAN_MODE_ED
 #define %'ModuleName'%.SCAN_MODE_CCA  %@PHY@'ModuleName'%.SCAN_MODE_CCA
@@ -324,6 +325,16 @@ void %'ModuleName'%.%MLMETestMode(tTxPacket *psPacket, byte u8mode);
 
 %endif %- RadioInit
 %-BW_METHOD_END RadioInit
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN CheckRx
+%ifdef CheckRx
+#define %'ModuleName'%.%CheckRx(sRxPacket)  %@PHY@'ModuleName'%.%CheckRx(sRxPacket)
+%define! ParsRxPacket
+%define! RetVal
+%include Common\SMACCheckRx.Inc
+
+%endif %- CheckRx
+%-BW_METHOD_END CheckRx
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -798,6 +809,20 @@ void %'ModuleName'%.%RadioInit(void)
 
 %endif %- RadioInit
 %-BW_METHOD_END RadioInit
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN CheckRx
+%ifdef CheckRx
+%define! ParsRxPacket
+%define! RetVal
+%include Common\SMACCheckRx.Inc
+/*
+byte %'ModuleName'%.%CheckRx(tRxPacket *sRxPacket)
+{
+  ** This method is implemented as macro
+}
+*/
+%endif %- CheckRx
+%-BW_METHOD_END CheckRx
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

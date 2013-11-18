@@ -101,13 +101,14 @@
 %define CTAB 45
 %-
 
-#define %'ModuleName'%.RADIO_BUF_SIZE %RadioBufSize                        %>%CTAB /*!< size of the radio tx/rx buffers */
+#define %'ModuleName'%.RADIO_BUF_SIZE %RadioBufSize                  %>%CTAB /*!< size of the radio tx/rx buffers */
 #define %'ModuleName'%.gu8RTxMode    %@MC13192@'ModuleName'%.gu8RTxMode    %>%CTAB /*!< application can read this variable */
 #define %'ModuleName'%.psDrvRxPacket %@MC13192@'ModuleName'%.psDrvRxPacket %>%CTAB /*!< pointer to the buffer for the rx data */
 
-#define %'ModuleName'%.SUCCESS    %@MC13192@'ModuleName'%.SUCCESS
-#define %'ModuleName'%.OVERFLOW   %@MC13192@'ModuleName'%.OVERFLOW
-#define %'ModuleName'%.TIMEOUT    %@MC13192@'ModuleName'%.TIMEOUT
+#define %'ModuleName'%.SUCCESS    %@MC13192@'ModuleName'%.SUCCESS_STATUS
+#define %'ModuleName'%.OVERFLOW   %@MC13192@'ModuleName'%.OVERFLOW_STATUS
+#define %'ModuleName'%.TIMEOUT    %@MC13192@'ModuleName'%.TIMEOUT_STATUS
+#define %'ModuleName'%.RESET      %@MC13192@'ModuleName'%.RESET_STATUS
 
 #define %'ModuleName'%.DOZE_MODE         %@MC13192@'ModuleName'%.DOZE_MODE
 #define %'ModuleName'%.HIBERNATE_MODE    %@MC13192@'ModuleName'%.HIBERNATE_MODE
@@ -450,6 +451,16 @@ void %'ModuleName'%.%PLMEPutGPIObyte(byte data);
 
 %endif %- PLMEPutGPIObyte
 %-BW_METHOD_END PLMEPutGPIObyte
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN CheckRx
+%ifdef CheckRx
+byte %'ModuleName'%.%CheckRx(tRxPacket *sRxPacket);
+%define! ParsRxPacket
+%define! RetVal
+%include Common\SPHYCheckRx.Inc
+
+%endif %- CheckRx
+%-BW_METHOD_END CheckRx
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -1146,7 +1157,7 @@ byte %'ModuleName'%.%PLMEMC13192PAOutputAdjust(byte u8RequestedPAValue)
       break;
     default:
       if (u8RequestedPAValue > 15) {
-        return %@MC13192@'ModuleName'%.OVERFLOW;
+        return %@MC13192@'ModuleName'%.OVERFLOW_STATUS;
       } else {
         u8PAValue = u8RequestedPAValue;
       }
@@ -1261,6 +1272,27 @@ byte %'ModuleName'%.%PLMEDisablePromiscuousMode(void)
 
 %endif %- PLMEDisablePromiscuousMode
 %-BW_METHOD_END PLMEDisablePromiscuousMode
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN CheckRx
+%ifdef CheckRx
+%define! ParsRxPacket
+%define! RetVal
+%include Common\SPHYCheckRx.Inc
+byte %'ModuleName'%.%CheckRx(tRxPacket *sRxPacket)
+{
+  byte res;
+
+  res = %@MC13192@'ModuleName'%.CheckRx(sRxPacket);
+  /* Read the Data only if it is a good packet. */
+  if (res==ERR_OK && %@MC13192@'ModuleName'%.psDrvRxPacket->u8Status==%@MC13192@'ModuleName'%.SUCCESS_STATUS) {
+    (void)%@MC13192@'ModuleName'%.ReadRx(sRxPacket); %>%CTAB /* Read data from MC13192, check status */
+  }
+  return res;
+}
+
+%endif %- CheckRx
+%-BW_METHOD_END CheckRx
+%-************************************************************************************************************
 %-INHERITED_EVENT_BEGIN MC13192 DataIndication
 %ifdef @MC13192@DataIndication
 %include Common\GeneralInternal.inc (DataIndication)
@@ -1270,7 +1302,7 @@ void %@MC13192@DataIndication(void)
   %DataIndication();    %>%CTAB /* call own handler (if enabled) */
   %endif DataIndication
   /* Read the Data only if it is a good packet. */
-  if (%@MC13192@'ModuleName'%.psDrvRxPacket->u8Status == %@MC13192@'ModuleName'%.SUCCESS) {
+  if (%@MC13192@'ModuleName'%.psDrvRxPacket->u8Status==%@MC13192@'ModuleName'%.SUCCESS_STATUS) {
     (void)%@MC13192@'ModuleName'%.ReadRx(%@MC13192@'ModuleName'%.psDrvRxPacket); %>%CTAB /* Read data from MC13192, check status */
   }
 %if %EnableInterruptsInDataIndication='yes'
@@ -1287,10 +1319,12 @@ void %@MC13192@DataIndication(void)
 %if OTAPenabled='yes'
   if (gu8OTAPStatusAPI == OTAP_ACTIVE){
     OTAPDataIndication(%@MC13192@'ModuleName'%.psDrvRxPacket);
+  %if defined(DataIndicationPacket)
   } else {
    %DataIndicationPacket(%@MC13192@'ModuleName'%.psDrvRxPacket);
+  %endif
   }
-%else
+%elif defined(DataIndicationPacket)
   %DataIndicationPacket(%@MC13192@'ModuleName'%.psDrvRxPacket);
 %endif
 }
