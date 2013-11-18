@@ -17,14 +17,12 @@
   #include "CLS1.h"
 #endif
 #include "FRTOS1.h"
-#include "UTIL1.h"
 #if PL_HAS_RTOS_TRACE
   #include "RTOSTRC1.h"
 #endif
 #include "RPHY.h"
 #include "RMAC.h"
 #include "RMSG.h"
-#include "RNWK.h"
 
 /* Radio state definitions */
 typedef enum RADIO_AppStatusKind {
@@ -49,6 +47,11 @@ static uint8_t RADIO_RxDataBuffer[RPHY_BUFFER_SIZE]; /*!< Data buffer to hold RX
 static tTxPacket RADIO_TxPacket;            /*!< SMAC structure for TX packets */
 static uint8_t RADIO_TxDataBuffer[RPHY_BUFFER_SIZE]; /*!< Data buffer to hold TX data */
 
+static volatile bool RADIO_interruptFlag = FALSE;
+
+void RADIO_OnInterrupt(void) {
+  RADIO_interruptFlag = TRUE;
+}
 /*!
  * \brief Sets the channel number to be used
  * \param ch The channel to be used, in the range 0..15
@@ -68,6 +71,7 @@ static void RADIO_SetOutputPower(uint8_t power) {
 }
 
 static void RADIO_InitRadio(void) {
+  RADIO_interruptFlag = FALSE;
   TRSVR1_Init(); /* init transceiver and get it out of reset */
   SMAC1_RadioInit();
   
@@ -158,21 +162,6 @@ static void RADIO_HandleStateMachine(void) {
   } /* for */
 }
 
-void RADIO_DataIndicationPacket(tRxPacket *sRxPacket) {
-  if (sRxPacket->u8Status==SMAC1_TIMEOUT) {      /* Put timeout condition code here */
-    EVNT_SetEvent(EVNT_RADIO_TIMEOUT);
-  } else if (sRxPacket->u8Status == SMAC1_SUCCESS) { /* good packet received: handle it. */
-    (void)RMSG_QueuePut(sRxPacket->pu8Data-RPHY_BUF_IDX_PAYLOAD, RPHY_BUFFER_SIZE, sRxPacket->u8DataLength, TRUE, FALSE);
-    EVNT_SetEvent(EVNT_RADIO_DATA);
-  } else if (sRxPacket->u8Status==SMAC1_OVERFLOW) { /* received packet, but it was longer than what we expect. */
-    EVNT_SetEvent(EVNT_RADIO_OVERFLOW);
-  }
-}
-
-void RADIO_ResetIndication(void) {
-  EVNT_SetEvent(EVNT_RADIO_RESET); /* MC13192 reset, re-initialize.*/
-}
-
 void RADIO_AppHandleEvent(EVNT_Handle event) {
   /*! \todo You might disable later some of the messages. */
   switch(event) {
@@ -217,7 +206,7 @@ void RADIO_AppHandleEvent(EVNT_Handle event) {
   } /* switch */
 }
 
-static uint8_t CheckTx(RPHY_PacketDesc *packet) {
+static uint8_t RADIO_CheckTx(RPHY_PacketDesc *packet) {
   uint8_t size, i, *p;
   
   if (RMSG_GetTxMsg(packet->data, packet->dataSize)==ERR_OK) {
@@ -235,7 +224,6 @@ static uint8_t CheckTx(RPHY_PacketDesc *packet) {
     RADIO_TxPacket.pu8Data = &RADIO_TxDataBuffer[RPHY_BUF_IDX_PAYLOAD];  /* Load the address of our txbuffer into tx structure.*/
     RADIO_TxPacket.u8DataLength = i-RPHY_BUF_IDX_PAYLOAD; /* Set the data length of the packet */
     RADIO_AppStatus = RADIO_TRANSMIT_DATA;
-    RADIO_HandleStateMachine(); /* advance state machine */
     return ERR_OK;
   } else {
     return ERR_FAILED; /* no data to send? */
@@ -244,10 +232,10 @@ static uint8_t CheckTx(RPHY_PacketDesc *packet) {
 }
 
 /*! \brief Radio application state machine */
-uint8_t RADIO_ProcessTx(RPHY_PacketDesc *packet) {
+static uint8_t RADIO_ProcessTx(RPHY_PacketDesc *packet) {
   /* check if we have to send out a message */
   if (RADIO_AppStatus == RADIO_READY_FOR_TX_RX_DATA) { /* we are ready to send data */
-    return CheckTx(packet); /* send any pending messages */
+    return RADIO_CheckTx(packet); /* send any pending messages */
   }
   return ERR_OK;
 }
@@ -267,6 +255,24 @@ static portTASK_FUNCTION(RadioTask, pvParameters) {
     if (RADIO_isOn) { /* radio turned on? */
       RADIO_HandleStateMachine(); /* process state machine */
       (void)RADIO_ProcessTx(&radioTx); /* send outgoing packets (if any) */
+      if (RADIO_interruptFlag) { /* transceiver raised an interrupt */
+        uint8_t res;
+        
+        RADIO_interruptFlag = FALSE;
+        res = SMAC1_CheckRx(&RADIO_RxPacket);
+        if (res==ERR_OK) {
+          if (RADIO_RxPacket.u8Status==SMAC1_TIMEOUT) {      /* Put timeout condition code here */
+            EVNT_SetEvent(EVNT_RADIO_TIMEOUT);
+          } else if (RADIO_RxPacket.u8Status == SMAC1_SUCCESS) { /* good packet received: handle it. */
+            (void)RMSG_QueuePut(RADIO_RxPacket.pu8Data-RPHY_BUF_IDX_PAYLOAD, RPHY_BUFFER_SIZE, RADIO_RxPacket.u8DataLength, TRUE, FALSE);
+            EVNT_SetEvent(EVNT_RADIO_DATA);
+          } else if (RADIO_RxPacket.u8Status==SMAC1_OVERFLOW) { /* received packet, but it was longer than what we expect. */
+            EVNT_SetEvent(EVNT_RADIO_OVERFLOW);
+          } else if (RADIO_RxPacket.u8Status==SMAC1_RESET) {
+            EVNT_SetEvent(EVNT_RADIO_RESET); /* MC13192 reset, re-initialize.*/
+          }
+        }
+      }
       if (RPHY_ProcessRx(&radioRx)==ERR_OK) { /* process incoming packets */
         if (radioRx.flags&RPHY_PACKET_FLAGS_ACK) { /* it was an ack! */
           EVNT_SetEvent(EVNT_RADIO_ACK); /* set event */
