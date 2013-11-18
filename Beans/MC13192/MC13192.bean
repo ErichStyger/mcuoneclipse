@@ -4,7 +4,7 @@
     <Name>MC13192</Name>
     <Description>Device Driver for the Freescale MC13192 Transceiver</Description>
     <Author>Erich Styger</Author>
-    <Version>01.005</Version>
+    <Version>01.013</Version>
     <Icon>MC13192</Icon>
     <TypesFiles>PE,MC13192\MC13192</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -51,6 +51,24 @@
         <CanDelete>false</CanDelete>
         <IconPopup>false</IconPopup>
         <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+      </TBoolItem>
+    </Property>
+    <Property>
+      <TBoolItem>
+        <Name>Check from Interrupt</Name>
+        <Symbol>callCheckInterruptFromISR</Symbol>
+        <TypeSpec>typeYesNo</TypeSpec>
+        <Hint>If enabled, the driver will call CheckInterrupt() from the interrupt code.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>false</DefaultValue>
         <Popup>false</Popup>
       </TBoolItem>
     </Property>
@@ -1358,6 +1376,41 @@
         </Declarations>
       </TMthdItem>
     </Method>
+    <Method>
+      <TMthdItem>
+        <Name>CheckRx</Name>
+        <Symbol>CheckRx</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Needs to be called after interrupt received from the transceiver to check the state and to create the events.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>dataIndicationCallback</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint/>
+          <ParUserDeclaration>tRxPacket *sRxPacket</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(tRxPacket *sRxPacket)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
   </MethodList>
   <EventList>
     <Event>
@@ -1382,9 +1435,9 @@
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <Description>generate code</Description>
-        <Expanded>Yes</Expanded>
-        <DefaultValue>true</DefaultValue>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
         <IsAssembler>false</IsAssembler>
@@ -1421,6 +1474,45 @@
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(void)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>ResetIndication procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OnInterrupt</Name>
+        <Symbol>OnInterrupt</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Event raised in case of transceiver interrupt.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
         <Description>generate code</Description>
         <Expanded>Yes</Expanded>
         <DefaultValue>true</DefaultValue>
@@ -1437,7 +1529,7 @@
             <TEvntName>
               <Name>Event procedure name</Name>
               <Symbol>Name</Symbol>
-              <Hint>ResetIndication procedure name</Hint>
+              <Hint>OnInterrupt procedure name</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
               <DefaultValue/>

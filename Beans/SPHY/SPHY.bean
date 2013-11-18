@@ -4,7 +4,7 @@
     <Name>SPHY</Name>
     <Description>Simple PHY implementation for SMAC</Description>
     <Author>Erich Styger</Author>
-    <Version>01.010</Version>
+    <Version>01.015</Version>
     <Icon>SPHY</Icon>
     <TypesFiles>PE,SPHY\SPHY</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -1183,6 +1183,41 @@
         </Declarations>
       </TMthdItem>
     </Method>
+    <Method>
+      <TMthdItem>
+        <Name>CheckRx</Name>
+        <Symbol>CheckRx</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Called after an interrupt to check if there is any data.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>sRxPacket</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to receiving data structure</ParHint>
+          <ParUserDeclaration>tRxPacket *sRxPacket</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(tRxPacket *sRxPacket)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
   </MethodList>
   <EventList>
     <Event>
@@ -1207,9 +1242,9 @@
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <Description>generate code</Description>
-        <Expanded>Yes</Expanded>
-        <DefaultValue>true</DefaultValue>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
         <IsAssembler>false</IsAssembler>
@@ -1246,9 +1281,9 @@
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <Description>generate code</Description>
-        <Expanded>Yes</Expanded>
-        <DefaultValue>true</DefaultValue>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
         <IsAssembler>false</IsAssembler>
@@ -1285,9 +1320,9 @@
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <Description>generate code</Description>
-        <Expanded>Yes</Expanded>
-        <DefaultValue>true</DefaultValue>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
         <IsAssembler>false</IsAssembler>
@@ -1309,6 +1344,45 @@
               <Name>Event procedure name</Name>
               <Symbol>Name</Symbol>
               <Hint>DataIndicationPacket procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OnInterrupt</Name>
+        <Symbol>OnInterrupt</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Event raised in case of transceiver interrupt.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>generate code</Description>
+        <Expanded>Yes</Expanded>
+        <DefaultValue>true</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>0</ParamCount>
+        <Scope>PUBLISHED</Scope>
+        <Declarations>
+          <ANSIC>void #C#(void)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OnInterrupt procedure name</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
               <DefaultValue/>

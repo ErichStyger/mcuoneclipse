@@ -385,6 +385,18 @@ LI.EXP {
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 </ul><br />
 </li>
+<li><a name="CheckRx">
+<b>CheckRx</b></a>
+ - Needs to be called after interrupt received from the transceiver to check the state and to create the events.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte CheckRx(tRxPacket *sRxPacket)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>dataIndicationCallback:byte</i> - no hint</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
 
            </ul>
 <!---USERBEG DON'T CHANGE THIS LINE-->
