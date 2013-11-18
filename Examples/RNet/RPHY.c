@@ -1,8 +1,10 @@
-/*
- * RPHY.c
+/**
+ * \file
+ * \brief This implements the PHY layer of the network stack.
+ * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html), see 'RNet_License.txt'
  *
- *  Created on: Oct 12, 2013
- *      Author: tastyger
+ * This module is used to process the raw payload packets.
  */
 
 #include "Platform.h"

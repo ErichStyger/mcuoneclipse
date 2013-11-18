@@ -1,8 +1,10 @@
-/*
- * Radio.c
+/**
+ * \file
+ * \brief This is the implementation of the Nordic Semiconductor nRF24L01+ low level driver.
+ * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html), see 'RNet_License.txt'
  *
- *  Created on: Aug 8, 2013
- *      Author: Erich Styger
+ * This module deals with the low level functions of the transceiver.
  */
 
 #include "Platform.h"

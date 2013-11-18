@@ -1,8 +1,10 @@
-/*
- * Application.c
+/**
+ * \file
+ * \brief This is main application file
+ * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html)
  *
- *  Created on: Nov 15, 2013
- *      Author: tastyger
+ * This module implements the application part of the program.
  */
 
 #include "Platform.h"
@@ -149,7 +151,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
   }
 }
 
-void APP_Run(void) {
+void RNETA_Run(void) {
   if (FRTOS1_xTaskCreate(
         MainTask,  /* pointer to the task */
         (signed char *)"Main", /* task name for kernel awareness debugging */

@@ -1,7 +1,8 @@
 /**
  * \file
  * \brief Radio PHY (Physical Interface)
- * \author Erich Styger
+ * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html), see 'RNet_License.txt'
  *
  * This interface is for the PHY (Physical) part of the stack.
   */

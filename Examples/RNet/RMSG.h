@@ -1,8 +1,10 @@
-/*
- * RadioMessage.h
+/**
+ * \file
+ * \brief Radio Network Message Layer
+ * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html), see 'RNet_License.txt'
  *
- *  Created on: Sep 5, 2013
- *      Author: Erich Styger
+ * This module implements radio message handling module of the radio network stack.
  */
 
 #ifndef RADIOMESSAGE_H_

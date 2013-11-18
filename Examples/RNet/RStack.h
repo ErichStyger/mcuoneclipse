@@ -1,10 +1,11 @@
 /**
  * \file
  * \brief Radio Network Stack Main file
- * \author Erich Styger
+ * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html), see 'RNet_License.txt'
  *
  * This interface is the common entry point for the stack.
-  */
+ */
 
 #ifndef RSTACK_H_
 #define RSTACK_H_

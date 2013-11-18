@@ -1,8 +1,10 @@
-/*
- * RMAC.c
+/**
+ * \file
+ * \brief This is the implementation of the Radio MAC part.
+ * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html), see 'RNet_License.txt'
  *
- *  Created on: Oct 10, 2013
- *      Author: tastyger
+ * This module encapsulates the Media Access of network stack.
  */
 
 #include "Platform.h"

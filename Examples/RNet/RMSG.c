@@ -1,8 +1,10 @@
-/*
- * RadioMessage.c
+/**
+ * \file
+ * \brief This implements a queue/buffer for radio messages
+ * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html), see 'RNet_License.txt'
  *
- *  Created on: Sep 5, 2013
- *      Author: Erich Styger
+ * This module uses queues to retrieve and store radio messages.
  */
 
 #include "Platform.h"

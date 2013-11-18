@@ -1,7 +1,8 @@
 /**
  * \file
- * \brief This is the interface remote/radio standard I/o module
- * \author Erich Styger, erich.styger@hslu.ch
+ * \brief This is the interface of the remote/radio standard I/O module
+ * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html), see 'RNet_License.txt'
  *
  * This module is used for radio/remote stdio.
  */

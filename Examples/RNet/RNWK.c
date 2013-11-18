@@ -1,8 +1,10 @@
-/*
- * RNWK.c
+/**
+ * \file
+ * \brief Radio Network NWK Layer Implementation
+ * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html), see 'RNet_License.txt'
  *
- *  Created on: Oct 10, 2013
- *      Author: tastyger
+ * This module implements the NWK (Network) of the radio network stack.
  */
 
 

@@ -1,8 +1,10 @@
-/*
- * RStack.c
+/**
+ * \file
+ * \brief This main init module for the stack.
+ * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html), see 'RNet_License.txt'
  *
- *  Created on: Nov 8, 2013
- *      Author: tastyger
+ * This module is used to simplify stack initialization.
  */
 
 #include "Platform.h"
