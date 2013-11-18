@@ -8,6 +8,7 @@
  */
 
 #include "Platform.h"
+#include "RNet_App.h"
 #include "RStack.h"
 #include "RApp.h"
 #include "LED1.h"
@@ -18,12 +19,6 @@
 #endif
 
 static RNWK_ShortAddrType APP_dstAddr = RNWK_ADDR_BROADCAST; /* destination node address */
-
-/* type ID's for application messages */
-#define RAPP_MSG_TYPE_DATA    0x00
-#define RAPP_MSG_TYPE_STDIN   0x01
-#define RAPP_MSG_TYPE_STDOUT  0x02
-#define RAPP_MSG_TYPE_STDERR  0x03
 
 #if PL_HAS_RSTDIO
 static uint8_t HandleStdioMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *data, RNWK_ShortAddrType srcAddr, bool *handled) {
@@ -52,6 +47,7 @@ static uint8_t HandleRxMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *data, 
 #endif
   uint8_t val;
   
+  (void)size;
   switch(type) {
     case RAPP_MSG_TYPE_DATA: /* <type><size><data */
       *handled = TRUE;
@@ -91,8 +87,8 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
   CLS1_ParseCommand,
 #if PL_HAS_RADIO
   RADIO_ParseCommand,
-  RAPP_ParseCommand,
   RNWK_ParseCommand,
+  RNETA_ParseCommand,
 #endif
   NULL /* Sentinel */
 };
@@ -196,7 +192,7 @@ static void PrintHelp(const CLS1_StdIOType *io) {
 #endif
 }
 
-uint8_t RAPP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
+uint8_t RNETA_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
   uint8_t res = ERR_OK;
   const uint8_t *p;
   uint16_t val16;
@@ -212,7 +208,7 @@ uint8_t RAPP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
     p = cmd + sizeof("app saddr")-1;
     *handled = TRUE;
     if (UTIL1_ScanHex16uNumber(&p, &val16)==ERR_OK) {
-      RNWK_SetThisNodeAddr((RNWK_ShortAddrType)val16);
+      (void)RNWK_SetThisNodeAddr((RNWK_ShortAddrType)val16);
     } else {
       CLS1_SendStr((unsigned char*)"ERR: wrong address\r\n", io->stdErr);
       return ERR_FAILED;
@@ -221,7 +217,7 @@ uint8_t RAPP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
     p = cmd + sizeof("app send")-1;
     *handled = TRUE;
     if (UTIL1_ScanDecimal8uNumber(&p, &val8)==ERR_OK) {
-      SendDataByte(val8); /* only send low byte */
+      (void)SendDataByte(val8); /* only send low byte */
     } else {
       CLS1_SendStr((unsigned char*)"ERR: wrong number format\r\n", io->stdErr);
       return ERR_FAILED;

@@ -36,6 +36,8 @@ static xQueueHandle RSTDIO_TxStdInQ, RSTDIO_TxStdOutQ, RSTDIO_TxStdErrQ;
 
 #define RSTDIO_QUEUE_TIMEOUT_MS   500 /* timout for stdio queues */
 
+static RNWK_ShortAddrType RSTDIO_dstAddr; /* destination address */
+
 xQueueHandle GetQueueForType(RSTDIO_QueueType queueType) {
   switch(queueType) {
     case RSTDIO_QUEUE_RX_IN:  return RSTDIO_RxStdInQ;
@@ -150,7 +152,7 @@ static uint8_t FlushAndTxQueue(RSTDIO_QueueType queueType, RAPP_MSG_Type msgType
     *p++ = ch;
     i++;
   }
-  res = RAPP_PutPayload(buf, sizeof(buf), i, msgType);
+  res = RAPP_PutPayload(buf, sizeof(buf), i, msgType, RSTDIO_dstAddr);
   if (res!=ERR_OK) {
     CLS1_ConstStdIOType *io = CLS1_GetStdio();
 
@@ -280,6 +282,7 @@ void RSTDIO_Deinit(void) {
 }
 
 void RSTDIO_Init(void) {
+  RSTDIO_dstAddr = RNWK_ADDR_BROADCAST;
   RSTDIO_RxStdInQ = FRTOS1_xQueueCreate(RSTDIO_QUEUE_LENGTH, RSTDIO_QUEUE_ITEM_SIZE);
   if (RSTDIO_RxStdInQ==NULL) {
     for(;;){} /* out of memory? */

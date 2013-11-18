@@ -42,11 +42,6 @@ RNWK_ShortAddrType RAPP_GetThisNodeAddr(void);
 
 uint8_t RAPP_SetThisNodeAddr(RNWK_ShortAddrType addr);
 
-#if PL_HAS_SHELL
-#include "CLS1.h"
-uint8_t RAPP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
-#endif
-
 /*! \brief Initializes the module */
 void RAPP_Init(void);
 

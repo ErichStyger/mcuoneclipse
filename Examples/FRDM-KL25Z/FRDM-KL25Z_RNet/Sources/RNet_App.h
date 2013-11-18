@@ -5,10 +5,16 @@
  * \note MIT License (http://opensource.org/licenses/mit-license.html)
  */
 
-#ifndef APPLICATION_H_
-#define APPLICATION_H_
+#ifndef RNETAPP_H_
+#define RNETAPP_H_
+
+#include "Platform.h"
+#if PL_HAS_SHELL
+#include "CLS1.h"
+uint8_t RNETA_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
+#endif
 
 /*! \brief Runs the demo application */
 void RNETA_Run(void);
 
-#endif /* APPLICATION_H_ */
+#endif /* RNETAPP_H_ */
