@@ -10,13 +10,12 @@
 #ifndef RNWK_H_
 #define RNWK_H_
 
-#include "Platform.h"
+#include "RNetConf.h"
 #if PL_HAS_RADIO
 #include "RMAC.h"
 #include "RPHY.h"
-#include "RNet_Config.h"
 
-/* message format is:
+/* payload format is:
  * PHY: <size><phy payload>
  * MAC:       <type><seq#><mac payload> 
  * NWK:                   <saddr><dstaddr><nwk payload>

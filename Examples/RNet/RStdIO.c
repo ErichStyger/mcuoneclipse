@@ -7,7 +7,7 @@
  * This module uses queues for remote/radio standard I/O handling.
  */
 
-#include "Platform.h"
+#include "RNetConf.h"
 #if PL_HAS_RSTDIO
 #include "RStdIO.h"
 #include "FRTOS1.h"

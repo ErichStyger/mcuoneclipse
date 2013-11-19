@@ -7,7 +7,7 @@
  * This module deals with the low level functions of the transceiver.
  */
 
-#include "Platform.h"
+#include "RNetConf.h"
 #if PL_HAS_RADIO
 #include "Radio.h"
 #include "RF1.h"

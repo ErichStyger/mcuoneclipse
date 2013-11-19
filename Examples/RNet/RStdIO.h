@@ -10,8 +10,7 @@
 #ifndef RSTDIO_C_
 #define RSTDIO_C_
 
-#include "Platform.h"
-
+#include "RNetConf.h"
 #if PL_HAS_RSTDIO
 #include "CLS1.h"
 

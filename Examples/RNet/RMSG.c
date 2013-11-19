@@ -7,7 +7,7 @@
  * This module uses queues to retrieve and store radio messages.
  */
 
-#include "Platform.h"
+#include "RNetConf.h"
 #if PL_HAS_RADIO
 #include "RMSG.h"
 #include "FRTOS1.h"

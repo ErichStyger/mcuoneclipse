@@ -10,15 +10,16 @@
 #ifndef RMAC_H_
 #define RMAC_H_
 
+#include "RNetConf.h"
 #include "RPHY.h"
 
 typedef enum RMAC_MsgType {
-  RMAC_MSG_TYPE_DATA, /* data message */
-  RMAC_MSG_TYPE_ACK,  /* acknowledge message */
-  RMAC_MSG_TYPE_CMD   /* command message */
+  RMAC_MSG_TYPE_DATA = 0x0, /* data message */
+  RMAC_MSG_TYPE_ACK = 0x1,  /* acknowledge message */
+  RMAC_MSG_TYPE_CMD = 0x2   /* command message */
 } RMAC_MsgType;
 
-/* message format is:
+/* payload format is:
  * PHY: <size><phy payload>
  * MAC:       <type><seq#><mac payload> 
  * NWK:                   <saddr><dstaddr><nwk payload>

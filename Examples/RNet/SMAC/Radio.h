@@ -10,14 +10,12 @@
 #ifndef RADIO_H_
 #define RADIO_H_
 
-#include "Platform.h"
+#include "RNetConf.h"
 #if PL_HAS_RADIO
 
 #include "SMAC1.h"
 #include "RPHY.h"
 #include "Event.h"
-
-#define RADIO_PAYLOAD_SIZE           SMAC1_RADIO_BUF_SIZE /* total number of payload bytes */
 
 /*!
  * \brief Event handler for Radio events. Needs to be called as part of the normal event handling

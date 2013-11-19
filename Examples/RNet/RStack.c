@@ -7,7 +7,7 @@
  * This module is used to simplify stack initialization.
  */
 
-#include "Platform.h"
+#include "RNetConf.h"
 #if PL_HAS_RADIO
 #include "RStack.h"
 #include "Radio.h"

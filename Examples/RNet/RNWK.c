@@ -8,7 +8,7 @@
  */
 
 
-#include "Platform.h"
+#include "RNetConf.h"
 #if PL_HAS_RADIO
 #include "RPHY.h"
 #include "RNWK.h"
@@ -55,11 +55,15 @@ uint8_t RNWK_OnPacketRx(RPHY_PacketDesc *packet) {
     } else if (type==RMAC_MSG_TYPE_DATA) { /* data packet received */
       if (RNWK_AppOnRxCallback!=NULL) { /* do we have a callback? */
         res = RNWK_AppOnRxCallback(packet); /* call upper layer */
+#if RNET_CONFIG_USE_ACK
         if (res==ERR_OK) { /* all fine, now send acknowledge back */
           addr = RNWK_BUF_GET_SRC_ADDR(packet->data); /* who should receive the ack? */
           RNWK_BUF_SET_DST_ADDR(packet->data, addr); /* destination address is from where we got the data */
           return RMAC_SendACK(packet); /* send ack message back */
         }
+#else
+        (void)res;
+#endif
       }
     } else {
       return ERR_FAULT; /* wrong message type? */

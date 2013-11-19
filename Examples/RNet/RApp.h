@@ -10,7 +10,7 @@
 #ifndef RAPP_H_
 #define RAPP_H_
 
-#include "Platform.h"
+#include "RNetConf.h"
 #include "RNWK.h"
 
 /* payload format is:

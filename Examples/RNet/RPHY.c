@@ -7,7 +7,7 @@
  * This module is used to process the raw payload packets.
  */
 
-#include "Platform.h"
+#include "RNetConf.h"
 #if PL_HAS_RADIO
 #include "RPHY.h"
 #include "RMAC.h"

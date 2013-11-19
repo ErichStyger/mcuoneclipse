@@ -7,7 +7,7 @@
  * This module encapsulates the Media Access of network stack.
  */
 
-#include "Platform.h"
+#include "RNetConf.h"
 #if PL_HAS_RADIO
 #include "RMAC.h"
 #include "RPHY.h"

@@ -7,7 +7,7 @@
  * This module provides application services of the network stack.
  */
 
-#include "Platform.h"
+#include "RNetConf.h"
 #if PL_HAS_RADIO
 #include "RApp.h"
 #include "RNWK.h"

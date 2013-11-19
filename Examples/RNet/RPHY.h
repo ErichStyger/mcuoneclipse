@@ -10,8 +10,8 @@
 #ifndef RPHY_H_
 #define RPHY_H_
 
-#include "RNet_Config.h"
-/* message format is:
+#include "RNetConf.h"
+/* payload format is:
  * PHY: <size><phy payload>
  * MAC:       <type><seq#><mac payload> 
  * NWK:                   <saddr><dstaddr><nwk payload>

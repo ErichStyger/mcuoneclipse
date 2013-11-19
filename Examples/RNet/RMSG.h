@@ -10,7 +10,7 @@
 #ifndef RADIOMESSAGE_H_
 #define RADIOMESSAGE_H_
 
-#include "Platform.h"
+#include "RNetConf.h"
 #if PL_HAS_RADIO
 
 /*!
