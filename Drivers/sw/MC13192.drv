@@ -738,7 +738,7 @@ byte %'ModuleName'%.%CheckRx(tRxPacket *sRxPacket)
       %'ModuleName'%.%Write(%'ModuleName'%.T1_HI_ADDR, 0x8000);  %>%CTAB /* Disables TC1 and clears IRQ */
       %'ModuleName'%.%Write(%'ModuleName'%.T1_LO_ADDR, 0x0000);
 #endif
-      sRxPacket->u8Status = %'ModuleName'%.TIMEOUT;
+      sRxPacket->u8Status = %'ModuleName'%.TIMEOUT_STATUS;
       %'ModuleName'%.RTXENDeAssert();             %>%CTAB /* Forces the Transceiver to idle. */
       %'ModuleName'%.gu8RTxMode = %'ModuleName'%.IDLE_MODE;
 %if defined(DataIndication)
