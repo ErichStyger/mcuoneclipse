@@ -156,7 +156,6 @@ typedef struct {
 #define %'ModuleName'%.RESET_STATUS      4             %>%CTAB /*!< Transceiver Reset */
 
 extern volatile byte %'ModuleName'%.gu8RTxMode;  %>%CTAB /*!< Application can read this variable. This variable reflects the current state of the transceiver. */
-extern tRxPacket *%'ModuleName'%.psDrvRxPacket;   %>%CTAB /*!< Where the packet received will be stored */
 
 /*! Transceiver soft reset */
 #define %'ModuleName'%.RESET                   0x00    %>%CTAB /*!< Reset */
@@ -463,7 +462,7 @@ void %'ModuleName'%.%LeaveRadioSPI(void);
 %-BW_METHOD_BEGIN CheckRx
 %ifdef CheckRx
 byte %'ModuleName'%.%CheckRx(tRxPacket *sRxPacket);
-%define! PardataIndicationCallback
+%define! ParsRxPacket
 %define! RetVal
 %include Common\MC13192CheckRx.Inc
 
@@ -477,22 +476,6 @@ byte %'ModuleName'%.%CheckRx(tRxPacket *sRxPacket);
 %include Common\Header.End
 %-
 %-BW_EVENT_DEFINITION_START
-%-BW_METHOD_BEGIN DataIndication
-%ifdef DataIndication
-%INTERFACE DataIndication
-void %DataIndication(void);
-%include Common\MC13192DataIndication.Inc
-
-%endif %- DataIndication
-%-BW_METHOD_END DataIndication
-%-BW_METHOD_BEGIN ResetIndication
-%ifdef ResetIndication
-%INTERFACE ResetIndication
-void %ResetIndication(void);
-%include Common\MC13192ResetIndication.Inc
-
-%endif %- ResetIndication
-%-BW_METHOD_END ResetIndication
 %-BW_METHOD_BEGIN OnCLKO
 %ifdef OnCLKO
 %INTERFACE OnCLKO
@@ -605,7 +588,6 @@ void %OnInterrupt(void);
     %'ModuleName'%.EnableInterrupts();   %>%CTAB /* Restore transceiver interrupt status */
 
 volatile byte %'ModuleName'%.gu8RTxMode;       %>%CTAB /*!< Needed for SMAC, application can read this variable */
-tRxPacket *%'ModuleName'%.psDrvRxPacket;       %>%CTAB /*!< Where the packet received will be stored */
 
 %ifdef COMPILER_HIX
 #pragma MESSAGE DISABLE C4000 /* condition always true */
@@ -667,7 +649,7 @@ static void SPI_Write_ReadDummy(byte val) {
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN CheckRx
 %ifdef CheckRx
-%define! PardataIndicationCallback
+%define! ParsRxPacket
 %define! RetVal
 %include Common\MC13192CheckRx.Inc
 byte %'ModuleName'%.%CheckRx(tRxPacket *sRxPacket)
@@ -741,9 +723,6 @@ byte %'ModuleName'%.%CheckRx(tRxPacket *sRxPacket)
       sRxPacket->u8Status = %'ModuleName'%.TIMEOUT_STATUS;
       %'ModuleName'%.RTXENDeAssert();             %>%CTAB /* Forces the Transceiver to idle. */
       %'ModuleName'%.gu8RTxMode = %'ModuleName'%.IDLE_MODE;
-%if defined(DataIndication)
-      %DataIndication();                          %>%CTAB /* TIMEOUT notification */
-%endif
       return ERR_OK;
     }
   }
@@ -828,7 +807,6 @@ byte %'ModuleName'%.%CheckRx(tRxPacket *sRxPacket)
 #endif
       sRxPacket->u8DataLength = u8DataLength;
       sRxPacket->u8Status = %'ModuleName'%.SUCCESS_STATUS;
-      %DataIndication();                          %>%CTAB /* Notify PHY that there is data available. */
       return ERR_OK;
     }
   }
@@ -847,11 +825,6 @@ void %@IRQ@OnInterrupt(void)
   %OnInterrupt(); /* call user event */
 %else
   /* no user event enabled in transceiver properties */
-%endif
-%if callCheckInterruptFromISR='yes'
-  (void)%'ModuleName'%.%CheckRx(%'ModuleName'%.psDrvRxPacket); /* talk to the transceiver */
-%else
-  /* you need to call %'ModuleName'%.%CheckRx() from your application code! */
 %endif
 }
 
@@ -1437,28 +1410,6 @@ void %'ModuleName'%.%LeaveRadioSPI(void)
 %-
 %-
 %-BW_EVENT_IMPLEMENT_START
-%-BW_METHOD_BEGIN DataIndication
-%ifdef DataIndication
-%IMPLEMENTATION DataIndication
-%include Common\MC13192DataIndication.Inc
-void %DataIndication(void)
-{
-  /* Write your code here ... */
-}
-
-%endif %- DataIndication
-%-BW_METHOD_END DataIndication
-%-BW_METHOD_BEGIN ResetIndication
-%ifdef ResetIndication
-%IMPLEMENTATION ResetIndication
-%include Common\MC13192ResetIndication.Inc
-void %ResetIndication(void)
-{
-  /* Write your code here ... */
-}
-
-%endif %- ResetIndication
-%-BW_METHOD_END ResetIndication
 %-BW_METHOD_BEGIN OnCLKO
 %ifdef OnCLKO
 %IMPLEMENTATION OnCLKO

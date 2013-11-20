@@ -4,7 +4,7 @@
     <Name>MC13192</Name>
     <Description>Device Driver for the Freescale MC13192 Transceiver</Description>
     <Author>Erich Styger</Author>
-    <Version>01.013</Version>
+    <Version>01.017</Version>
     <Icon>MC13192</Icon>
     <TypesFiles>PE,MC13192\MC13192</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -51,24 +51,6 @@
         <CanDelete>false</CanDelete>
         <IconPopup>false</IconPopup>
         <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-      </TBoolItem>
-    </Property>
-    <Property>
-      <TBoolItem>
-        <Name>Check from Interrupt</Name>
-        <Symbol>callCheckInterruptFromISR</Symbol>
-        <TypeSpec>typeYesNo</TypeSpec>
-        <Hint>If enabled, the driver will call CheckInterrupt() from the interrupt code.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>1</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>false</DefaultValue>
         <Popup>false</Popup>
       </TBoolItem>
     </Property>
@@ -1399,7 +1381,7 @@
         <RetHint>Error code</RetHint>
         <ParamCount>1</ParamCount>
         <Parameter>
-          <ParName>dataIndicationCallback</ParName>
+          <ParName>sRxPacket</ParName>
           <ParType>8bit unsigned</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint/>
@@ -1425,84 +1407,6 @@
         <MinLength>0</MinLength>
         <MaxLength>-1</MaxLength>
       </TStrgItem>
-    </Event>
-    <Event>
-      <TEvntItem>
-        <Name>DataIndication</Name>
-        <Symbol>DataIndication</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Event in case a data packet has been received.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <BoldName>true</BoldName>
-        <EditLine>false</EditLine>
-        <Description>don't generate code</Description>
-        <Expanded>No</Expanded>
-        <DefaultValue>false</DefaultValue>
-        <DefineSymbol>YES_NO</DefineSymbol>
-        <IfDisabled>setNOTHING</IfDisabled>
-        <IsAssembler>false</IsAssembler>
-        <ParamCount>0</ParamCount>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>void #C#(void)</ANSIC>
-        </Declarations>
-        <Children>
-          <GrupItem>
-            <TEvntName>
-              <Name>Event procedure name</Name>
-              <Symbol>Name</Symbol>
-              <Hint>DataIndication procedure name</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue/>
-              <StrDefine>nothing</StrDefine>
-              <MinLength>0</MinLength>
-              <MaxLength>-1</MaxLength>
-              <ErrorIfNotSet>true</ErrorIfNotSet>
-              <IdentType>EVNT</IdentType>
-            </TEvntName>
-          </GrupItem>
-        </Children>
-      </TEvntItem>
-    </Event>
-    <Event>
-      <TEvntItem>
-        <Name>ResetIndication</Name>
-        <Symbol>ResetIndication</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Event in case of transceiver reset.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <BoldName>true</BoldName>
-        <EditLine>false</EditLine>
-        <Description>don't generate code</Description>
-        <Expanded>No</Expanded>
-        <DefaultValue>false</DefaultValue>
-        <DefineSymbol>YES_NO</DefineSymbol>
-        <IfDisabled>setNOTHING</IfDisabled>
-        <IsAssembler>false</IsAssembler>
-        <ParamCount>0</ParamCount>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>void #C#(void)</ANSIC>
-        </Declarations>
-        <Children>
-          <GrupItem>
-            <TEvntName>
-              <Name>Event procedure name</Name>
-              <Symbol>Name</Symbol>
-              <Hint>ResetIndication procedure name</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue/>
-              <StrDefine>nothing</StrDefine>
-              <MinLength>0</MinLength>
-              <MaxLength>-1</MaxLength>
-              <ErrorIfNotSet>true</ErrorIfNotSet>
-              <IdentType>EVNT</IdentType>
-            </TEvntName>
-          </GrupItem>
-        </Children>
-      </TEvntItem>
     </Event>
     <Event>
       <TEvntItem>

@@ -98,7 +98,6 @@
 %-
 #define %'ModuleName'%.RADIO_BUF_SIZE %@PHY@'ModuleName'%.RADIO_BUF_SIZE  %>%CTAB /*!< size of the radio tx/rx buffers */
 #define %'ModuleName'%.gu8RTxMode     %@PHY@'ModuleName'%.gu8RTxMode      %>%CTAB /*!< application can read this variable */
-#define %'ModuleName'%.psDrvRxPacket  %@PHY@'ModuleName'%.psDrvRxPacket   %>%CTAB /*!< pointer to the rx data structure */
 
 #define %'ModuleName'%.SUCCESS   %@PHY@'ModuleName'%.SUCCESS    %>%CTAB /*!< everything ok */
 #define %'ModuleName'%.TIMEOUT   %@PHY@'ModuleName'%.TIMEOUT    %>%CTAB /*!< timeout while sending message (other side did not respond) */
@@ -184,9 +183,8 @@ byte %'ModuleName'%.%MLMESetChannelRequest(byte u8Channel);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN MLMERXEnableRequest
 %ifdef MLMERXEnableRequest
-byte %'ModuleName'%.%MLMERXEnableRequest(tRxPacket* psRxPacket, dword u32Timeout);
+byte %'ModuleName'%.%MLMERXEnableRequest(dword u32Timeout);
 %define! Paru32Timeout
-%define! ParpsRxPacket
 %define! RetVal
 %include Common\SMACMLMERXEnableRequest.Inc
 
@@ -492,7 +490,6 @@ byte %'ModuleName'%.%MLMESetChannelRequest(byte u8Channel)
 %-BW_METHOD_BEGIN MLMERXEnableRequest
 %ifdef MLMERXEnableRequest
 %define! Paru32Timeout
-%define! ParpsRxPacket
 %define! RetVal
 %include Common\SMACMLMERXEnableRequest.Inc
 /*!
@@ -504,11 +501,10 @@ byte %'ModuleName'%.%MLMESetChannelRequest(byte u8Channel)
  * from MLMESetMC13192TmrPrescale.
  * \return Status
  */
-byte %'ModuleName'%.%MLMERXEnableRequest(tRxPacket* psRxPacket, dword u32Timeout)
+byte %'ModuleName'%.%MLMERXEnableRequest(dword u32Timeout)
 {
   byte u8Status = 0;
 
-  %@PHY@'ModuleName'%.psDrvRxPacket = psRxPacket;     %>%CTAB /* Assign the rx_packet to SMAC global. */
   if (u32Timeout == 0) {          %>%CTAB /* Timeout disabled */
     /* Just enable the receiver */
     u8Status = %@PHY@'ModuleName'%.PLMESetTrxStateRequest(%@PHY@'ModuleName'%.RX_MODE);

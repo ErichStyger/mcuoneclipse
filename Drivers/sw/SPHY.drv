@@ -49,11 +49,6 @@
 %-
 %-BW_INTERN_COMMENTS_START
 %- List of descriptions of internal methods
-%ifdef MC13192
-  %ifdef @MC13192@DataIndication
-    %define! Description_%@MC13192@DataIndication Called after a data packet has been received by the transceiver. The event services the event of the inherited component and eventually invokes other events.
-  %endif %- @MC13192@DataIndication
-%endif %- MC13192
 %-BW_INTERN_COMMENTS_END
 %-
 %-BW_SECTIONS_INSERT
@@ -103,7 +98,6 @@
 
 #define %'ModuleName'%.RADIO_BUF_SIZE %RadioBufSize                  %>%CTAB /*!< size of the radio tx/rx buffers */
 #define %'ModuleName'%.gu8RTxMode    %@MC13192@'ModuleName'%.gu8RTxMode    %>%CTAB /*!< application can read this variable */
-#define %'ModuleName'%.psDrvRxPacket %@MC13192@'ModuleName'%.psDrvRxPacket %>%CTAB /*!< pointer to the buffer for the rx data */
 
 #define %'ModuleName'%.SUCCESS    %@MC13192@'ModuleName'%.SUCCESS_STATUS
 #define %'ModuleName'%.OVERFLOW   %@MC13192@'ModuleName'%.OVERFLOW_STATUS
@@ -385,12 +379,6 @@ byte %'ModuleName'%.%PLMEDisablePromiscuousMode(void);
 
 %endif %- PLMEDisablePromiscuousMode
 %-BW_METHOD_END PLMEDisablePromiscuousMode
-%-INHERITED_EVENT_BEGIN MC13192 DataIndication
-%ifdef @MC13192@DataIndication
-void %@MC13192@DataIndication(void);
-
-%endif %- @MC13192@DataIndication
-%-INHERITED_EVENT_END MC13192 DataIndication
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN PLMETestMode
 %ifdef PLMETestMode
@@ -478,14 +466,6 @@ void %DataIndicationPacket(tRxPacket *sRxPacket);
 
 %endif %- DataIndicationPacket
 %-BW_METHOD_END DataIndicationPacket
-%-BW_METHOD_BEGIN DataIndication
-%ifdef DataIndication
-%INTERFACE DataIndication
-void %DataIndication(void);
-%include Common\SPHYDataIndication.Inc
-
-%endif %- DataIndication
-%-BW_METHOD_END DataIndication
 %-BW_EVENT_DEFINITION_END
 %IMPLEMENTATION
 %define! Settings Common\SPHYSettings.Inc
@@ -1284,7 +1264,7 @@ byte %'ModuleName'%.%CheckRx(tRxPacket *sRxPacket)
 
   res = %@MC13192@'ModuleName'%.CheckRx(sRxPacket);
   /* Read the Data only if it is a good packet. */
-  if (res==ERR_OK && %@MC13192@'ModuleName'%.psDrvRxPacket->u8Status==%@MC13192@'ModuleName'%.SUCCESS_STATUS) {
+  if (res==ERR_OK && sRxPacket->u8Status==%@MC13192@'ModuleName'%.SUCCESS_STATUS) {
     (void)%@MC13192@'ModuleName'%.ReadRx(sRxPacket); %>%CTAB /* Read data from MC13192, check status */
   }
   return res;
@@ -1292,45 +1272,6 @@ byte %'ModuleName'%.%CheckRx(tRxPacket *sRxPacket)
 
 %endif %- CheckRx
 %-BW_METHOD_END CheckRx
-%-************************************************************************************************************
-%-INHERITED_EVENT_BEGIN MC13192 DataIndication
-%ifdef @MC13192@DataIndication
-%include Common\GeneralInternal.inc (DataIndication)
-void %@MC13192@DataIndication(void)
-{
-  %ifdef DataIndication
-  %DataIndication();    %>%CTAB /* call own handler (if enabled) */
-  %endif DataIndication
-  /* Read the Data only if it is a good packet. */
-  if (%@MC13192@'ModuleName'%.psDrvRxPacket->u8Status==%@MC13192@'ModuleName'%.SUCCESS_STATUS) {
-    (void)%@MC13192@'ModuleName'%.ReadRx(%@MC13192@'ModuleName'%.psDrvRxPacket); %>%CTAB /* Read data from MC13192, check status */
-  }
-%if %EnableInterruptsInDataIndication='yes'
-#if 1 /* Interrupts re-enabled in interrupt routine, as configured in the component properties */
-%else
-#if 0 /* Interrupts remain disabled in interrupt routine, as configured in the component properties */
-%endif
-  /* NOTE: re-enabling interrupts within an interrupt service is usually a very bad thing! */
-  %'ProcessorModule'%.EnableInt();       %>%CTAB /* Allow system interrupts within the IRQ handler */
-#endif
-   %if %SecurityEnabled='yes'
-  (void)%@SecurityInterface@'ModuleName'%.Decrypt(%@MC13192@'ModuleName'%.psDrvRxPacket->pu8Data, &%@MC13192@'ModuleName'%.psDrvRxPacket->u8DataLength);
-  %endif
-%if OTAPenabled='yes'
-  if (gu8OTAPStatusAPI == OTAP_ACTIVE){
-    OTAPDataIndication(%@MC13192@'ModuleName'%.psDrvRxPacket);
-  %if defined(DataIndicationPacket)
-  } else {
-   %DataIndicationPacket(%@MC13192@'ModuleName'%.psDrvRxPacket);
-  %endif
-  }
-%elif defined(DataIndicationPacket)
-  %DataIndicationPacket(%@MC13192@'ModuleName'%.psDrvRxPacket);
-%endif
-}
-
-%endif %- @MC13192@DataIndication
-%-INHERITED_EVENT_END MC13192 DataIndication
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN PLMETestMode
 %ifdef PLMETestMode
@@ -1520,17 +1461,6 @@ void %DataIndicationPacket(tRxPacket *sRxPacket)
 
 %endif %- DataIndicationPacket
 %-BW_METHOD_END DataIndicationPacket
-%-BW_METHOD_BEGIN DataIndication
-%ifdef DataIndication
-%IMPLEMENTATION DataIndication
-%include Common\SPHYDataIndication.Inc
-void %DataIndication(void)
-{
-  /* Write your code here ... */
-}
-
-%endif %- DataIndication
-%-BW_METHOD_END DataIndication
 %-BW_EVENT_IMPLEMENT_END
 %INITIALIZATION
   /* ### %DeviceType "%DeviceName" init code ... */

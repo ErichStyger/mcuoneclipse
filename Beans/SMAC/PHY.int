@@ -3,7 +3,7 @@
   <Name>PHY</Name>
   <Description>Interface from the SMAC to the PHY</Description>
   <Author>Erich Styger</Author>
-  <Version>01.031</Version>
+  <Version>01.032</Version>
   <FileVersion>2</FileVersion>
   <MethodList>
     <Method>
@@ -662,93 +662,6 @@
     </Method>
   </MethodList>
   <EventList>
-    <Event>
-      <TEvntItem>
-        <Name>ResetIndication</Name>
-        <Symbol>ResetIndication</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Event in case of Transceiver reset.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <BoldName>true</BoldName>
-        <EditLine>false</EditLine>
-        <Description>generate code</Description>
-        <Expanded>Yes</Expanded>
-        <DefaultValue>true</DefaultValue>
-        <DefineSymbol>YES_NO</DefineSymbol>
-        <IfDisabled>setNOTHING</IfDisabled>
-        <IsAssembler>false</IsAssembler>
-        <Mode>meiAlwReq_!Exist</Mode>
-        <ParamCount>0</ParamCount>
-        <Scope>PUBLISHED</Scope>
-        <Declarations>
-          <ANSIC>void #C#(void)</ANSIC>
-        </Declarations>
-        <Children>
-          <GrupItem>
-            <TEvntName>
-              <Name>Event procedure name</Name>
-              <Symbol>Name</Symbol>
-              <Hint>ResetIndication procedure name</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue/>
-              <StrDefine>nothing</StrDefine>
-              <MinLength>0</MinLength>
-              <MaxLength>-1</MaxLength>
-              <ErrorIfNotSet>true</ErrorIfNotSet>
-              <IdentType>EVNT</IdentType>
-            </TEvntName>
-          </GrupItem>
-        </Children>
-      </TEvntItem>
-    </Event>
-    <Event>
-      <TEvntItem>
-        <Name>DataIndicationPacket</Name>
-        <Symbol>DataIndicationPacket</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint/>
-        <ItemLevel>BASIC</ItemLevel>
-        <BoldName>true</BoldName>
-        <EditLine>false</EditLine>
-        <Description>generate code</Description>
-        <Expanded>Yes</Expanded>
-        <DefaultValue>true</DefaultValue>
-        <DefineSymbol>YES_NO</DefineSymbol>
-        <IfDisabled>setNOTHING</IfDisabled>
-        <IsAssembler>false</IsAssembler>
-        <Mode>meiAlwReq_!Exist</Mode>
-        <ParamCount>1</ParamCount>
-        <Parameter>
-          <ParName>sRxPacket</ParName>
-          <ParType>8bit unsigned</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint/>
-          <ParUserDeclaration>tRxPacket *sRxPacket</ParUserDeclaration>
-        </Parameter>
-        <Scope>PUBLISHED</Scope>
-        <Declarations>
-          <ANSIC>void #C#(tRxPacket *sRxPacket)</ANSIC>
-        </Declarations>
-        <Children>
-          <GrupItem>
-            <TEvntName>
-              <Name>Event procedure name</Name>
-              <Symbol>Name</Symbol>
-              <Hint>DataIndicationPacket procedure name</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue/>
-              <StrDefine>nothing</StrDefine>
-              <MinLength>0</MinLength>
-              <MaxLength>-1</MaxLength>
-              <ErrorIfNotSet>true</ErrorIfNotSet>
-              <IdentType>EVNT</IdentType>
-            </TEvntName>
-          </GrupItem>
-        </Children>
-      </TEvntItem>
-    </Event>
     <Event>
       <TEvntItem>
         <Name>OnInterrupt</Name>
