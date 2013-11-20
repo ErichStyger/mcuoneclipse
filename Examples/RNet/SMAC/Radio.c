@@ -137,7 +137,7 @@ static void RADIO_HandleStateMachine(void) {
   
       case RADIO_RECEIVER_ALWAYS_ON:
         RADIO_AppStatus = RADIO_READY_FOR_TX_RX_DATA;
-        (void)SMAC1_MLMERXEnableRequest(&RADIO_RxPacket, 0); /* Zero means wait forever with RX ON. */
+        (void)SMAC1_MLMERXEnableRequest(0); /* Zero means wait forever with RX ON. */
         return;
   
       case RADIO_READY_FOR_TX_RX_DATA: /* we are ready to receive/send data data */
@@ -157,7 +157,7 @@ static void RADIO_HandleStateMachine(void) {
             RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON;
           } else {
             RADIO_AppStatus = RADIO_WAIT_FOR_ACK;
-            (void)SMAC1_MLMERXEnableRequest(&RADIO_RxPacket, RADIO_TIMEOUT_COUNT); /* turn RX receiver on with timeout for ack */
+            (void)SMAC1_MLMERXEnableRequest(RADIO_TIMEOUT_COUNT); /* turn RX receiver on with timeout for ack */
           }
         } else {
           RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON; /* what could we otherwise do? */
