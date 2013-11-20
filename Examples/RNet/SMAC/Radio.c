@@ -40,6 +40,7 @@ static volatile RADIO_AppStatusKind RADIO_AppStatus = RADIO_INITIAL_STATE;
 static uint8_t RADIO_Channel = 5;
 static uint8_t RADIO_OutputPower = 15;
 static bool RADIO_isOn = TRUE;
+static bool RADIO_sniff = FALSE;
 
 static tRxPacket RADIO_RxPacket;            /*!< SMAC structure for RX packets */
 static uint8_t RADIO_RxDataBuffer[RPHY_BUFFER_SIZE]; /*!< Data buffer to hold RX data */
@@ -86,6 +87,8 @@ static void RADIO_SetOutputPower(uint8_t power) {
 }
 
 static void RADIO_InitRadio(void) {
+  RADIO_sniff = FALSE;
+  RADIO_isOn = TRUE;
   TRSVR1_Init(); /* init transceiver and get it out of reset */
   SMAC1_RadioInit();
   
@@ -263,6 +266,8 @@ static uint8_t radioRxBuf[RPHY_BUFFER_SIZE];
 static uint8_t radioTxBuf[RPHY_BUFFER_SIZE];
 
 static portTASK_FUNCTION(RadioTask, pvParameters) {
+  uint8_t flags;
+  
   (void)pvParameters; /* not used */
   /* Initialize Rx/Tx descriptor */
   radioRx.data = &radioRxBuf[0];
@@ -273,7 +278,12 @@ static portTASK_FUNCTION(RadioTask, pvParameters) {
     if (RADIO_isOn) { /* radio turned on? */
       RADIO_HandleStateMachine(); /* process state machine */
       (void)RADIO_ProcessTx(&radioTx); /* send outgoing packets (if any) */
-      if (RPHY_ProcessRx(&radioRx)==ERR_OK) { /* process incoming packets */
+      if (RADIO_sniff) {
+        flags = RPHY_PACKET_FLAGS_SNIFF;
+      } else {
+        flags = RPHY_PACKET_FLAGS_NONE;
+      }
+      if (RPHY_ProcessRx(&radioRx, flags)==ERR_OK) { /* process incoming packets */
         if (radioRx.flags&RPHY_PACKET_FLAGS_ACK) { /* it was an ack! */
           EVNT_SetEvent(EVNT_RADIO_ACK); /* set event */
         }
@@ -288,6 +298,7 @@ static void RADIO_PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"radio", (unsigned char*)"Group of radio commands\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows radio help or status\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  on|off", (unsigned char*)"Turns the radio on or off\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  sniff on|off", (unsigned char*)"Turns sniffing on or off\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  channel <number>", (unsigned char*)"Switches to the given channel. Channel must be in the range 0..15\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  power <number>", (unsigned char*)"Changes the output power. Power must be in the range 0..15\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  reset", (unsigned char*)"Reset transceiver\r\n", io->stdOut);
@@ -298,7 +309,8 @@ static void RADIO_PrintStatus(const CLS1_StdIOType *io) {
   unsigned char link_quality;  /* Holds the link quality of the last received Packet.*/
 
   CLS1_SendStatusStr((unsigned char*)"Radio", (unsigned char*)"\r\n", io->stdOut);
-  CLS1_SendStatusStr((unsigned char*)"  transceiver", RADIO_isOn?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  on", RADIO_isOn?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  sniff", RADIO_sniff?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
   link_quality = SMAC1_MLMELinkQuality();  /* Read the link quality of the last received packet.*/
   dBm = (short)(-(link_quality/2));
   CLS1_SendStatusStr((unsigned char*)"  LQ", (unsigned char*)"", io->stdOut); 
@@ -333,6 +345,12 @@ uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_S
     *handled = TRUE;
   } else if (UTIL1_strcmp((char*)cmd, (char*)"radio off")==0) {
     RADIO_isOn = FALSE;
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"radio sniff on")==0) {
+    RADIO_sniff = TRUE;
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"radio sniff off")==0) {
+    RADIO_sniff = FALSE;
     *handled = TRUE;
   } else if (UTIL1_strncmp((char*)cmd, (char*)"radio channel", sizeof("radio channel")-1)==0) {
     p = cmd+sizeof("radio channel");

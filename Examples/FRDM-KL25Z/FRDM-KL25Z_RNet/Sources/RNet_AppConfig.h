@@ -13,7 +13,7 @@
 #include "Platform.h"
 #if PL_HAS_RADIO
 
-/* type ID's for application messages */
+/* Type ID's for application messages */
 #define RAPP_MSG_TYPE_DATA    0x00
 #define RAPP_MSG_TYPE_STDIN   0x01
 #define RAPP_MSG_TYPE_STDOUT  0x02

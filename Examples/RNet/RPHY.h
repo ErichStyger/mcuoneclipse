@@ -28,10 +28,13 @@
 #define RPHY_BUF_SIZE(phy)                ((phy)[RPHY_BUF_IDX_SIZE])
 #define RPHY_BUF_PAYLOAD_START(phy)       ((phy)+RPHY_HEADER_SIZE)
 
+/* flag bits inside PacketDesc below */
 #define RPHY_PACKET_FLAGS_NONE  (0)
   /*!< initialization value */
 #define RPHY_PACKET_FLAGS_ACK   (1<<0)
   /*!< valid ACK received */
+#define RPHY_PACKET_FLAGS_SNIFF (1<<1)
+  /*!< sniff packet */
 
 typedef struct {
   uint8_t flags;    /*!< flags, see RPHY_PACKET_FLAGS_XXXX above */
@@ -51,7 +54,7 @@ uint8_t RPHY_GetPayload(uint8_t *buf, uint8_t bufSize);
 
 uint8_t RPHY_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize);
 
-uint8_t RPHY_ProcessRx(RPHY_PacketDesc *packet);
+uint8_t RPHY_ProcessRx(RPHY_PacketDesc *packet, uint8_t flags);
 
 /*! \brief Initializes the module */
 void RPHY_Init(void);

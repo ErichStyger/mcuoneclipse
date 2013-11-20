@@ -227,7 +227,7 @@ static portTASK_FUNCTION(RadioTask, pvParameters) {
   for(;;) {
     RADIO_HandleStateMachine(); /* process state machine */
     /* process received packets */
-    if (RPHY_ProcessRx(&radioRx)==ERR_OK) {
+    if (RPHY_ProcessRx(&radioRx, RPHY_PACKET_FLAGS_NONE)==ERR_OK) {
       if (radioRx.flags&RPHY_PACKET_FLAGS_ACK) {
         //EVNT_SetEvent(EVNT_RADIO_ACK);
       }
