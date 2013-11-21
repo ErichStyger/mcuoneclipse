@@ -196,6 +196,8 @@ static RPHY_PacketDesc radioRx;
 static uint8_t radioRxBuf[RPHY_BUFFER_SIZE];
 
 static portTASK_FUNCTION(RadioTask, pvParameters) {
+  uint8_t res;
+
   FRTOS1_vTaskDelay(100/portTICK_RATE_MS); /* the transceiver needs 100 ms power up time */
   RF1_Init(); /* set CE and CSN to initialization value */
   
@@ -227,13 +229,16 @@ static portTASK_FUNCTION(RadioTask, pvParameters) {
   for(;;) {
     RADIO_HandleStateMachine(); /* process state machine */
     /* process received packets */
-    if (RPHY_ProcessRx(&radioRx, RPHY_PACKET_FLAGS_NONE)==ERR_OK) {
-      if (radioRx.flags&RPHY_PACKET_FLAGS_ACK) {
-        //EVNT_SetEvent(EVNT_RADIO_ACK);
+    res = RPHY_GetPayload(&radioRx); /* get message */
+    if (res==ERR_OK) { /* packet received */
+      //RADIO_SniffPacket(&radioRx, FALSE); /* sniff incoming packet */
+      if (RPHY_OnPacketRx(&radioRx)==ERR_OK) { /* process incoming packets */
+        if (radioRx.flags&RPHY_PACKET_FLAGS_ACK) { /* it was an ack! */
+          //EVNT_SetEvent(EVNT_RADIO_ACK); /* set event */
+        }
       }
     }
-    RADIO_HandleStateMachine();
-    FRTOS1_vTaskDelay(20/portTICK_RATE_MS);
+    FRTOS1_vTaskDelay(5/portTICK_RATE_MS);
   }
 }
 

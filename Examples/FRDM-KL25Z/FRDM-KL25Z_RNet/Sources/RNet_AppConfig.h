@@ -25,7 +25,7 @@
 #define RNET_CONFIG_SHORT_ADDR_SIZE   1 
   /*!< size of short address type. Either 1 or 2 */
 
-#define RNET_CONFIG_USE_ACK           1
+#define RNET_CONFIG_USE_ACK           0
   /*!< If set to 1, the NWK layer will send an acknowledge message for every data packet received */
 
 #endif /* PL_HAS_RADIO */
