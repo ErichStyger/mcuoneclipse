@@ -15,7 +15,7 @@
 #include "RMAC.h"
 
 static RNWK_ShortAddrType RNWK_ThisNodeAddr = RNWK_ADDR_BROADCAST; /* address of this network node */
-static RNWK_AppOnRxCallbackType RNWK_AppOnRxCallback; /* notification callback installed by upper layer */
+static RNWK_AppOnRxCallbackType RNWK_AppOnRxCallback = NULL; /* notification callback installed by upper layer */
 
 RNWK_ShortAddrType RNWK_GetThisNodeAddr(void) {
   return RNWK_ThisNodeAddr;

@@ -33,8 +33,6 @@
   /*!< initialization value */
 #define RPHY_PACKET_FLAGS_ACK   (1<<0)
   /*!< valid ACK received */
-#define RPHY_PACKET_FLAGS_SNIFF (1<<1)
-  /*!< sniff packet */
 
 typedef struct {
   uint8_t flags;    /*!< flags, see RPHY_PACKET_FLAGS_XXXX above */
@@ -46,15 +44,19 @@ uint8_t RPHY_OnPacketRx(RPHY_PacketDesc *packet);
 
 /*!
  * \brief Returns the PHY payload data.
- * \param[out] buf Buffer where to store the data, must be of size PHY_BUFFER_SIZE.
- * \param[out] bufSize Buffer size.
+ * \param[out] packet Pointer to packet descriptor.
  * \return Error code, ERR_OK if everything is ok, ERR_OVERFLOW if buffer is too small, ERR_.
  */
-uint8_t RPHY_GetPayload(uint8_t *buf, uint8_t bufSize);
+uint8_t RPHY_GetPayload(RPHY_PacketDesc *packet);
 
+/*!
+ * \brief Puts a packet into the queue to be sent.
+ * \param buf Pointer to the packet buffer.
+ * \param bufSize Size of the payload buffer.
+ * \param payloadSize Size of payload data.
+ * \return Error code, ERR_OK for everything fine.
+ */
 uint8_t RPHY_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize);
-
-uint8_t RPHY_ProcessRx(RPHY_PacketDesc *packet, uint8_t flags);
 
 /*! \brief Initializes the module */
 void RPHY_Init(void);

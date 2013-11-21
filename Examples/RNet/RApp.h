@@ -12,6 +12,7 @@
 
 #include "RNetConf.h"
 #include "RNWK.h"
+#include "RPHY.h"
 
 /* payload format is:
  * <type><size><data>
@@ -32,7 +33,7 @@
 
 typedef uint8_t RAPP_MSG_Type; /* type for distinguishing different application message types */
 
-typedef uint8_t (*RAPP_MsgHandler) (RAPP_MSG_Type type, uint8_t size, uint8_t *data, RNWK_ShortAddrType srcAddr, bool *handled);
+typedef uint8_t (*RAPP_MsgHandler) (RAPP_MSG_Type type, uint8_t size, uint8_t *data, RNWK_ShortAddrType srcAddr, bool *handled, RPHY_PacketDesc *packet);
 
 uint8_t RAPP_SetMessageHandlerTable(const RAPP_MsgHandler *table);
 

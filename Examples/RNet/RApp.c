@@ -20,7 +20,7 @@ uint8_t RAPP_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RAPP_
   return RNWK_PutPayload(buf, bufSize, payloadSize+RAPP_HEADER_SIZE, dstAddr);
 }
 
-uint8_t IterateTable(RAPP_MSG_Type type, uint8_t size, uint8_t *data, RNWK_ShortAddrType srcAddr, bool *handled, const RAPP_MsgHandler *table) {
+uint8_t IterateTable(RAPP_MSG_Type type, uint8_t size, uint8_t *data, RNWK_ShortAddrType srcAddr, bool *handled, RPHY_PacketDesc *packet, const RAPP_MsgHandler *table) {
   uint8_t res = ERR_OK;
 
   if (table==NULL) { /* no table??? */
@@ -28,7 +28,7 @@ uint8_t IterateTable(RAPP_MSG_Type type, uint8_t size, uint8_t *data, RNWK_Short
   }
   /* iterate through all parser functions in table */
   while(*table!=NULL) {
-    if ((*table)(type, size, data, srcAddr, handled)!=ERR_OK) {
+    if ((*table)(type, size, data, srcAddr, handled, packet)!=ERR_OK) {
       res = ERR_FAILED;
     }
     table++;
@@ -36,11 +36,11 @@ uint8_t IterateTable(RAPP_MSG_Type type, uint8_t size, uint8_t *data, RNWK_Short
   return res;
 }
 
-static uint8_t ParseMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *data, RNWK_ShortAddrType srcAddr) {
+static uint8_t ParseMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *data, RNWK_ShortAddrType srcAddr, RPHY_PacketDesc *packet) {
   bool handled = FALSE;
   uint8_t res;
   
-  res = IterateTable(type, size, data, srcAddr, &handled, RAPP_MsgHandlerTable); /* iterate through all parser functions in table */
+  res = IterateTable(type, size, data, srcAddr, &handled, packet, RAPP_MsgHandlerTable); /* iterate through all parser functions in table */
   if (!handled || res!=ERR_OK) { /* no handler has handled the command? */
     res = ERR_FAILED;
   }
@@ -57,7 +57,7 @@ static uint8_t RAPP_OnPacketRx(RPHY_PacketDesc *packet) {
   size = RAPP_BUF_SIZE(packet->data);
   data = RAPP_BUF_PAYLOAD_START(packet->data);
   srcAddr = RNWK_BUF_GET_SRC_ADDR(packet->data);
-  return ParseMessage(type, size, data, srcAddr);
+  return ParseMessage(type, size, data, srcAddr, packet);
 }
 
 uint8_t RAPP_SetMessageHandlerTable(const RAPP_MsgHandler *table) {

@@ -13,8 +13,9 @@
 #include "RMAC.h"
 #include "RMSG.h"
 
-uint8_t RPHY_GetPayload(uint8_t *buf, uint8_t bufSize) {
-  return RMSG_GetRxMsg(buf, bufSize); /* ERR_OK, ERR_OVERFLOW or ERR_RXEMPTY */
+uint8_t RPHY_GetPayload(RPHY_PacketDesc *packet) {
+  packet->flags = RPHY_PACKET_FLAGS_NONE;
+  return RMSG_GetRxMsg(packet->data, packet->dataSize); /* ERR_OK, ERR_OVERFLOW or ERR_RXEMPTY */
 }
 
 uint8_t RPHY_OnPacketRx(RPHY_PacketDesc *packet) {
@@ -23,17 +24,6 @@ uint8_t RPHY_OnPacketRx(RPHY_PacketDesc *packet) {
 
 uint8_t RPHY_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize) {
   return RMSG_QueueTxMsg(buf, bufSize, payloadSize);
-}
-
-uint8_t RPHY_ProcessRx(RPHY_PacketDesc *packet, uint8_t flags) {
-  uint8_t res;
-  
-  res = RPHY_GetPayload(packet->data, packet->dataSize); /* get message */
-  if (res!=ERR_OK) { /* failed or no message available? */
-    return res; /* return error code */
-  }
-  packet->flags = flags; /* initialize packet flags */
-  return RMAC_OnPacketRx(packet); /* pass packet up the stack */
 }
 
 void RPHY_Deinit(void) {
