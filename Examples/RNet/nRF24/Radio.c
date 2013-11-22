@@ -28,11 +28,10 @@ static const uint8_t TADDR[5] = {0x11, 0x22, 0x33, 0x44, 0x55}; /* device addres
 
 /* Radio state definitions */
 typedef enum RADIO_AppStatusKind {
-  RADIO_INITIAL_STATE,
-  RADIO_RECEIVER_ALWAYS_ON,
-  RADIO_TRANSMIT_DATA,
-  RADIO_WAITING_FOR_ACK,
-  RADIO_TRANSMIT_ACK,
+  RADIO_INITIAL_STATE, /* initial state of the state machine */
+  RADIO_RECEIVER_ALWAYS_ON, /* receiver is in RX mode */
+  RADIO_TRANSMIT_DATA, /* send data */
+  RADIO_WAITING_DATA_SENT, /* wait until data is sent */
   RADIO_TIMEOUT,
   RADIO_READY_FOR_TX_RX_DATA
 } RADIO_AppStatusKind;
@@ -83,7 +82,7 @@ static uint8_t CheckTx(void) {
     RF1_TxPayload(TxDataBuffer, sizeof(TxDataBuffer)); /* send data */
     return ERR_OK;
   } else {
-    return ERR_FAILED; /* no data to send? */
+    return ERR_NOTAVAIL; /* no data to send? */
   }
   return res;
 }
@@ -115,7 +114,6 @@ static uint8_t CheckRx(void) {
 
 static void RADIO_HandleStateMachine(void) {
   uint8_t status;
-  static uint16_t ackTimeoutCntr = 0;
   
   for(;;) { /* will break/return */
     switch (RADIO_AppStatus) {
@@ -138,27 +136,13 @@ static void RADIO_HandleStateMachine(void) {
           break; /* process switch again */
         }
         if (CheckTx()==ERR_OK) { /* there was data and it has been sent */
-          RADIO_AppStatus = RADIO_TRANSMIT_ACK;
+          RADIO_AppStatus = RADIO_WAITING_DATA_SENT;
           break; /* process switch again */
-        } else {
-          
         }
         return;
   
-      case RADIO_TRANSMIT_ACK:
-        ackTimeoutCntr = 0;
-        RADIO_AppStatus = RADIO_WAITING_FOR_ACK; /* no high level ACK implemented yet, using transceiver auto-ack */
-        break; /* process switch again */
-  
-      case RADIO_WAITING_FOR_ACK:
-        ackTimeoutCntr++;
-        if (ackTimeoutCntr>10) { /* 100 ms */
-          ackTimeoutCntr = 0;
-          Err((unsigned char*)"ERR: ACK timeout\r\n");
-          RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON; /* turn receive on */
-          break;
-        }
-        if (RADIO_isrFlag) { /* check if we have received an interrupt: this is either timeout or ack */
+      case RADIO_WAITING_DATA_SENT:
+        if (RADIO_isrFlag) { /* check if we have received an interrupt: this is either timeout or low level ack */
           RADIO_isrFlag = FALSE; /* reset interrupt flag */
           status = RF1_GetStatus();
           if (status&RF1_STATUS_RX_DR) { /* data received interrupt */
@@ -169,7 +153,7 @@ static void RADIO_HandleStateMachine(void) {
           }
           if (status&RF1_STATUS_MAX_RT) { /* retry timeout interrupt */
             RF1_ResetStatusIRQ(RF1_STATUS_MAX_RT); /* clear bit */
-            RADIO_AppStatus = RADIO_TIMEOUT; /* timout */
+            RADIO_AppStatus = RADIO_TIMEOUT; /* timeout */
           } else {
             RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON; /* turn receive on */
           }
@@ -248,8 +232,7 @@ static const unsigned char *RadioStateStr(RADIO_AppStatusKind state) {
     case RADIO_INITIAL_STATE:         return (const unsigned char*)"INITIAL";
     case RADIO_RECEIVER_ALWAYS_ON:    return (const unsigned char*)"ALWAYS_ON";
     case RADIO_TRANSMIT_DATA:         return (const unsigned char*)"TRANSMIT_DATA";
-    case RADIO_WAITING_FOR_ACK:       return (const unsigned char*)"WAITING_FOR_ACK";
-    case RADIO_TRANSMIT_ACK:          return (const unsigned char*)"TRANSMIT_ACK";
+    case RADIO_WAITING_DATA_SENT:     return (const unsigned char*)"WAITING_DATA_SENT";
     case RADIO_READY_FOR_TX_RX_DATA:  return (const unsigned char*)"READY_TX_RX"; 
     default:                          return (const unsigned char*)"UNKNOWN";
   }

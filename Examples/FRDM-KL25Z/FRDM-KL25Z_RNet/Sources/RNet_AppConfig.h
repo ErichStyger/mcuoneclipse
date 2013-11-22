@@ -13,11 +13,13 @@
 #include "Platform.h"
 #if PL_HAS_RADIO
 
-/* Type ID's for application messages */
-#define RAPP_MSG_TYPE_DATA    0x00
-#define RAPP_MSG_TYPE_STDIN   0x01
-#define RAPP_MSG_TYPE_STDOUT  0x02
-#define RAPP_MSG_TYPE_STDERR  0x03
+/*! Type ID's for application messages */
+typedef enum {
+  RAPP_MSG_TYPE_STDIN = 0x00,
+  RAPP_MSG_TYPE_STDOUT = 0x01,
+  RAPP_MSG_TYPE_STDERR = 0x02,
+  RAPP_MSG_TYPE_DATA = 0x03
+} RAPP_MSG_Type;
 
 #define RNET_CONFIG_TRANSCEIVER_PAYLOAD_SIZE  32
   /*!< Size of the physical transceiver payload (bytes), max 32 bytes for nRF24L01+, max 128 bytes for MC1320x */

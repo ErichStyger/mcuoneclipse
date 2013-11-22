@@ -31,8 +31,6 @@
 
 #define RAPP_BUF_PAYLOAD_START(phy)       (RNWK_BUF_PAYLOAD_START(phy)+RAPP_HEADER_SIZE)
 
-typedef uint8_t RAPP_MSG_Type; /* type for distinguishing different application message types */
-
 typedef uint8_t (*RAPP_MsgHandler) (RAPP_MSG_Type type, uint8_t size, uint8_t *data, RNWK_ShortAddrType srcAddr, bool *handled, RPHY_PacketDesc *packet);
 
 uint8_t RAPP_SetMessageHandlerTable(const RAPP_MsgHandler *table);
@@ -42,6 +40,8 @@ uint8_t RAPP_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RAPP_
 RNWK_ShortAddrType RAPP_GetThisNodeAddr(void);
 
 uint8_t RAPP_SetThisNodeAddr(RNWK_ShortAddrType addr);
+
+uint8_t RAPP_SendDataBlock(uint8_t *block, uint8_t blockSize, uint8_t msgType, RNWK_ShortAddrType dstAddr);
 
 /*! \brief Initializes the module */
 void RAPP_Init(void);

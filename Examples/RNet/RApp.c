@@ -20,6 +20,21 @@ uint8_t RAPP_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RAPP_
   return RNWK_PutPayload(buf, bufSize, payloadSize+RAPP_HEADER_SIZE, dstAddr);
 }
 
+uint8_t RAPP_SendDataBlock(uint8_t *block, uint8_t blockSize, uint8_t msgType, RNWK_ShortAddrType dstAddr) {
+  uint8_t buf[RAPP_BUFFER_SIZE]; /* payload data buffer */
+  int i;
+  
+  if (blockSize>RAPP_PAYLOAD_SIZE) {
+    return ERR_OVERFLOW; /* block too large for payload */
+  }
+  i = 0;
+  while(i<blockSize) {
+    RAPP_BUF_PAYLOAD_START(buf)[i] = *block;
+    block++; i++;
+  }
+  return RAPP_PutPayload(buf, sizeof(buf), blockSize, msgType, dstAddr);
+}
+
 uint8_t IterateTable(RAPP_MSG_Type type, uint8_t size, uint8_t *data, RNWK_ShortAddrType srcAddr, bool *handled, RPHY_PacketDesc *packet, const RAPP_MsgHandler *table) {
   uint8_t res = ERR_OK;
 

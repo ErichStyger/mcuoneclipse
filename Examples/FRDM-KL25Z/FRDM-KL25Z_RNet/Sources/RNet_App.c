@@ -40,7 +40,7 @@ static uint8_t HandleStdioMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *dat
 }
 #endif
 
-static uint8_t HandleRxMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *data, RNWK_ShortAddrType srcAddr, bool *handled) {
+static uint8_t HandleRxMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *data, RNWK_ShortAddrType srcAddr, bool *handled, RPHY_PacketDesc *packet) {
 #if PL_HAS_SHELL
   uint8_t buf[16];
   CLS1_ConstStdIOTypePtr io = CLS1_GetStdio();
@@ -48,6 +48,7 @@ static uint8_t HandleRxMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *data, 
   uint8_t val;
   
   (void)size;
+  (void)packet;
   switch(type) {
     case RAPP_MSG_TYPE_DATA: /* <type><size><data */
       *handled = TRUE;
@@ -96,23 +97,11 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 static const RAPP_MsgHandler handlerTable[] = 
 {
 #if PL_HAS_RSTDIO
-  HandleStdioMessage,
+  HandleStdioRxMessage,
 #endif
   HandleRxMessage,
   NULL /* sentinel */
 };
-
-static uint8_t SendDataByte(uint8_t val) {
-  uint8_t buf[RAPP_BUFFER_SIZE]; /* payload data buffer */
-  uint8_t res;
-  
-  RAPP_BUF_PAYLOAD_START(buf)[0] = val; /* store 1 byte of data */
-  res = RAPP_PutPayload(buf, sizeof(buf), sizeof(val), RAPP_MSG_TYPE_DATA, APP_dstAddr); /* send one byte of data */
-  if (res!=ERR_OK) {
-    Err((unsigned char*)"Failed sending message!\r\n");
-  }
-  return res;
-}
 
 static portTASK_FUNCTION(MainTask, pvParameters) {
 #if PL_HAS_SHELL
@@ -183,10 +172,10 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
 
 static void PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"app", (unsigned char*)"Group of application commands\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  help", (unsigned char*)"Shows radio help or status\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows application help or status\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  saddr 0x<addr>", (unsigned char*)"Set source node address\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  daddr 0x<addr>", (unsigned char*)"Set destination node address\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  send <val>", (unsigned char*)"Set a value to the destination node\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  send val <val>", (unsigned char*)"Set a value to the destination node\r\n", io->stdOut);
 #if PL_HAS_RSTDIO
   CLS1_SendHelpStr((unsigned char*)"  send (in/out/err)", (unsigned char*)"Send a string to stdio using the wireless transceiver\r\n", io->stdOut);
 #endif
@@ -213,11 +202,14 @@ uint8_t RNETA_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_S
       CLS1_SendStr((unsigned char*)"ERR: wrong address\r\n", io->stdErr);
       return ERR_FAILED;
     }
-  } else if (UTIL1_strncmp((char*)cmd, (char*)"app send", sizeof("app send")-1)==0) {
-    p = cmd + sizeof("app send")-1;
+  } else if (UTIL1_strncmp((char*)cmd, (char*)"app send val", sizeof("app send val")-1)==0) {
+    p = cmd + sizeof("app send val")-1;
     *handled = TRUE;
     if (UTIL1_ScanDecimal8uNumber(&p, &val8)==ERR_OK) {
-      (void)SendDataByte(val8); /* only send low byte */
+      if (RAPP_SendDataBlock(&val8, sizeof(val8), RAPP_MSG_TYPE_DATA, APP_dstAddr) != ERR_OK) {
+        CLS1_SendStr((unsigned char*)"ERR: failed sending data\r\n", io->stdErr);
+        return ERR_FAILED;
+      }
     } else {
       CLS1_SendStr((unsigned char*)"ERR: wrong number format\r\n", io->stdErr);
       return ERR_FAILED;
