@@ -83,6 +83,15 @@ static const RAPP_MsgHandler handlerTable[] =
   NULL /* sentinel */
 };
 
+static portTASK_FUNCTION(RadioTask, pvParameters) {
+  (void)pvParameters; /* not used */
+  (void)RADIO_PowerUp();
+  for(;;) {
+    (void)RADIO_Process();
+    FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
+  }
+}
+
 static portTASK_FUNCTION(MainTask, pvParameters) {
 #if PL_HAS_SHELL
   static unsigned char localConsole_buf[48];
@@ -131,7 +140,19 @@ void RNETA_Run(void) {
         (signed char *)"Main", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
-        tskIDLE_PRIORITY+2,  /* initial priority */
+        tskIDLE_PRIORITY,  /* initial priority */
+        (xTaskHandle*)NULL /* optional task handle to create */
+      ) != pdPASS) {
+    /*lint -e527 */
+    for(;;){}; /* error! probably out of memory */
+    /*lint +e527 */
+  }
+  if (FRTOS1_xTaskCreate(
+        RadioTask,  /* pointer to the task */
+        (signed char *)"Radio", /* task name for kernel awareness debugging */
+        configMINIMAL_STACK_SIZE, /* task stack size */
+        (void*)NULL, /* optional task startup argument */
+        tskIDLE_PRIORITY+1,  /* initial priority */
         (xTaskHandle*)NULL /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */

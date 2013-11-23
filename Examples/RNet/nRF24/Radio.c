@@ -10,11 +10,12 @@
 #include "RNetConf.h"
 #if PL_HAS_RADIO
 #include "Radio.h"
+#include "RadioNRF24.h"
 #include "RF1.h"
-#include "FRTOS1.h"
 #include "RMSG.h"
 #include "RStdIO.h"
 #include "RPHY.h"
+#include "WAIT1.h"
 
 #define RADIO_CHANNEL_INIT   1  /* communication channel for init station */
 #define RADIO_CHANNEL_READ   2  /* communication channel for read station */
@@ -172,17 +173,15 @@ static void RADIO_HandleStateMachine(void) {
   } /* for */
 }
 
-uint8_t RADIO_Process(void) {
-  return ERR_OK;
-}
-
 static RPHY_PacketDesc radioRx;
 static uint8_t radioRxBuf[RPHY_BUFFER_SIZE];
 
-static portTASK_FUNCTION(RadioTask, pvParameters) {
-  uint8_t res;
-
-  FRTOS1_vTaskDelay(100/portTICK_RATE_MS); /* the transceiver needs 100 ms power up time */
+/*! 
+ * \brief Radio power-on initialization.
+ * \return Error code, ERR_OK if everything is ok.
+ */
+uint8_t RADIO_PowerUp(void) {
+  WAIT1_WaitOSms(100); /* the transceiver needs 100 ms power up time */
   RF1_Init(); /* set CE and CSN to initialization value */
   
   RF1_WriteRegister(RF1_RF_SETUP, RF1_RF_SETUP_RF_PWR_0|RF1_RF_SETUP_RF_DR_250);
@@ -210,20 +209,24 @@ static portTASK_FUNCTION(RadioTask, pvParameters) {
   /* init Rx descriptor */
   radioRx.data = &radioRxBuf[0];
   radioRx.dataSize = sizeof(radioRxBuf);
-  for(;;) {
-    RADIO_HandleStateMachine(); /* process state machine */
-    /* process received packets */
-    res = RPHY_GetPayload(&radioRx); /* get message */
-    if (res==ERR_OK) { /* packet received */
-      //RADIO_SniffPacket(&radioRx, FALSE); /* sniff incoming packet */
-      if (RPHY_OnPacketRx(&radioRx)==ERR_OK) { /* process incoming packets */
-        if (radioRx.flags&RPHY_PACKET_FLAGS_ACK) { /* it was an ack! */
-          //EVNT_SetEvent(EVNT_RADIO_ACK); /* set event */
-        }
+  return ERR_OK;
+}
+
+uint8_t RADIO_Process(void) {
+  uint8_t res;
+  
+  RADIO_HandleStateMachine(); /* process state machine */
+  /* process received packets */
+  res = RPHY_GetPayload(&radioRx); /* get message */
+  if (res==ERR_OK) { /* packet received */
+    //RADIO_SniffPacket(&radioRx, FALSE); /* sniff incoming packet */
+    if (RPHY_OnPacketRx(&radioRx)==ERR_OK) { /* process incoming packets */
+      if (radioRx.flags&RPHY_PACKET_FLAGS_ACK) { /* it was an ack! */
+        //EVNT_SetEvent(EVNT_RADIO_ACK); /* set event */
       }
     }
-    FRTOS1_vTaskDelay(5/portTICK_RATE_MS);
   }
+  return ERR_OK;
 }
 
 #if PL_HAS_SHELL
@@ -265,21 +268,10 @@ uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_S
 #endif
 
 void RADIO_Deinit(void) {
+  /* nothing to do */
 }
 
 void RADIO_Init(void) {
-  if (FRTOS1_xTaskCreate(
-        RadioTask,  /* pointer to the task */
-        (signed char *)"Radio", /* task name for kernel awareness debugging */
-        configMINIMAL_STACK_SIZE, /* task stack size */
-        (void*)NULL, /* optional task startup argument */
-        tskIDLE_PRIORITY+2,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
-      ) != pdPASS) {
-    /*lint -e527 */
-    for(;;){}; /* error! probably out of memory */
-    /*lint +e527 */
-  }
 }
 #else
 void RADIO_OnInterrupt(void) {

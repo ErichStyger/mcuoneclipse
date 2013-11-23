@@ -9,9 +9,10 @@
 
 #include "RNetConf.h"
 #if PL_HAS_RADIO
+#include "Radio.h"
+#include "RadioSMAC.h"
 #include "SMAC1.h"
 #include "UTIL1.h"
-#include "Radio.h"
 #include "Event.h"
 #if PL_HAS_SHELL
   #include "CLS1.h"
@@ -44,9 +45,12 @@ static bool RADIO_isSniffing = FALSE;
 
 static tRxPacket RADIO_RxPacket;            /*!< SMAC structure for RX packets */
 static uint8_t RADIO_RxDataBuffer[RPHY_BUFFER_SIZE]; /*!< Data buffer to hold RX data */
-
 static tTxPacket RADIO_TxPacket;            /*!< SMAC structure for TX packets */
 static uint8_t RADIO_TxDataBuffer[RPHY_BUFFER_SIZE]; /*!< Data buffer to hold TX data */
+
+static RPHY_PacketDesc radioRx, radioTx;
+static uint8_t radioRxBuf[RPHY_BUFFER_SIZE];
+static uint8_t radioTxBuf[RPHY_BUFFER_SIZE];
 
 void RADIO_OnInterrupt(void) {
   uint8_t res;
@@ -106,6 +110,12 @@ static void RADIO_InitRadio(void) {
   RADIO_RxPacket.u8Status = TRSVR1_INITIAL_VALUE;  /* initialize the status packet to 0 */
 
   RADIO_AppStatus = RADIO_INITIAL_STATE;        /* Set the initial status of the application state variable */
+
+  /* Initialize Rx/Tx descriptor */
+  radioRx.data = &radioRxBuf[0];
+  radioRx.dataSize = sizeof(radioRxBuf);
+  radioTx.data = &radioTxBuf[0];
+  radioTx.dataSize = sizeof(radioTxBuf);
 }
 
 static const unsigned char *RadioStateStr(RADIO_AppStatusKind state) {
@@ -299,35 +309,23 @@ static uint8_t RADIO_ProcessTx(RPHY_PacketDesc *packet) {
   return ERR_OK;
 }
 
-static RPHY_PacketDesc radioRx, radioTx;
-static uint8_t radioRxBuf[RPHY_BUFFER_SIZE];
-static uint8_t radioTxBuf[RPHY_BUFFER_SIZE];
-
-static portTASK_FUNCTION(RadioTask, pvParameters) {
+uint8_t RADIO_Process(void) {
   uint8_t res;
   
-  (void)pvParameters; /* not used */
-  /* Initialize Rx/Tx descriptor */
-  radioRx.data = &radioRxBuf[0];
-  radioRx.dataSize = sizeof(radioRxBuf);
-  radioTx.data = &radioTxBuf[0];
-  radioTx.dataSize = sizeof(radioTxBuf);
-  for(;;) {
-    if (RADIO_isOn) { /* radio turned on? */
-      RADIO_HandleStateMachine(); /* process state machine */
-      (void)RADIO_ProcessTx(&radioTx); /* send outgoing packets (if any) */
-      res = RPHY_GetPayload(&radioRx); /* get message */
-      if (res==ERR_OK) { /* packet received */
-        RADIO_SniffPacket(&radioRx, FALSE); /* sniff incoming packet */
-        if (RPHY_OnPacketRx(&radioRx)==ERR_OK) { /* process incoming packets */
-          if (radioRx.flags&RPHY_PACKET_FLAGS_ACK) { /* it was an ack! */
-            EVNT_SetEvent(EVNT_RADIO_ACK); /* set event */
-          }
+  if (RADIO_isOn) { /* radio turned on? */
+    RADIO_HandleStateMachine(); /* process state machine */
+    (void)RADIO_ProcessTx(&radioTx); /* send outgoing packets (if any) */
+    res = RPHY_GetPayload(&radioRx); /* get message */
+    if (res==ERR_OK) { /* packet received */
+      RADIO_SniffPacket(&radioRx, FALSE); /* sniff incoming packet */
+      if (RPHY_OnPacketRx(&radioRx)==ERR_OK) { /* process incoming packets */
+        if (radioRx.flags&RPHY_PACKET_FLAGS_ACK) { /* it was an ack! */
+          EVNT_SetEvent(EVNT_RADIO_ACK); /* set event */
         }
       }
     }
-    FRTOS1_vTaskDelay(5/portTICK_RATE_MS);
   }
+  return ERR_OK;
 }
 
 #if PL_HAS_SHELL
@@ -412,23 +410,16 @@ uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_S
 }
 #endif /* PL_HAS_SHELL */
 
+uint8_t RADIO_PowerUp(void){
+  /* nothing special to do */
+  return ERR_OK;
+}
+
 void RADIO_Deinit(void) {
   /* nothing needed */
 }
 
 void RADIO_Init(void) {
   RADIO_InitRadio();
-  if (FRTOS1_xTaskCreate(
-        RadioTask,  /* pointer to the task */
-        (signed char *)"Radio", /* task name for kernel awareness debugging */
-        configMINIMAL_STACK_SIZE, /* task stack size */
-        (void*)NULL, /* optional task startup argument */
-        tskIDLE_PRIORITY+2,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
-      ) != pdPASS) {
-    /*lint -e527 */
-    for(;;){}; /* error! probably out of memory */
-    /*lint +e527 */
-  }
 }
 #endif
