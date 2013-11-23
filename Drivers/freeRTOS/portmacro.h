@@ -157,7 +157,7 @@ extern "C" {
 #define portBYTE_ALIGNMENT     1
 #define portSTACK_GROWTH       -1 /* stack grows from HIGH to LOW */
 %elif (CPUfamily = "56800")
-#define portBYTE_ALIGNMENT     1
+#define portBYTE_ALIGNMENT     4
 #define portSTACK_GROWTH       1 /* stack grows from LOW to HIGH */
 %else
   #error "undefined target %CPUfamily!"
