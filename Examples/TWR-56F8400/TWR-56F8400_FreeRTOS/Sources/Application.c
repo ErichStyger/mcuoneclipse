@@ -18,10 +18,13 @@
 #include "WAIT1.h"
 #include "FRTOS1.h"
 
+static xSemaphoreHandle sem;
+
 static portTASK_FUNCTION(T1, pvParameters) {
   (void)pvParameters;
   for(;;) {
     LED2_Neg();
+    (void)FRTOS1_xSemaphoreGive(sem);
     FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
   }
 }
@@ -30,11 +33,16 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
   (void)pvParameters;
   for(;;) {
     LED1_Neg();
+    (void)FRTOS1_xSemaphoreTake(sem, portMAX_DELAY);
     FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
   }
 }
 
 void APP_Run(void) {
+  FRTOS1_vSemaphoreCreateBinary(sem);
+  if (sem==NULL) {
+    for(;;) {} /* failed creating semaphore */
+  }
   if (FRTOS1_xTaskCreate(MainTask, (signed portCHAR *)"Main", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL) != pdPASS) {
     for(;;){} /* error, not enough heap? */
   }
