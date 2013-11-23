@@ -132,6 +132,25 @@ uint8_t RSTDIO_ReceiveQueueChar(RSTDIO_QueueType queueType) {
   return '\0';
 }
 
+uint8_t RSTDIO_HandleStdioRxMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *data, RNWK_ShortAddrType srcAddr, bool *handled, RPHY_PacketDesc *packet) {
+  (void)srcAddr;
+  (void)packet;
+  switch(type) {
+    case RAPP_MSG_TYPE_STDIN: /* <type><size><data */
+      *handled = TRUE;
+      return RSTDIO_AddToQueue(RSTDIO_QUEUE_RX_IN, data, size);
+    case RAPP_MSG_TYPE_STDOUT: /* <type><size><data */
+      *handled = TRUE;
+      return RSTDIO_AddToQueue(RSTDIO_QUEUE_RX_OUT, data, size);
+    case RAPP_MSG_TYPE_STDERR: /* <type><size><data */
+      *handled = TRUE;
+      return RSTDIO_AddToQueue(RSTDIO_QUEUE_RX_ERR, data, size);
+    default:
+      break;
+  } /* switch */
+  return ERR_OK;
+}
+
 /*!
  * \brief Flushes the given buffer/queue. The buffer will be sent over the radio.
  * \return Error code, ERR_OK for no error.

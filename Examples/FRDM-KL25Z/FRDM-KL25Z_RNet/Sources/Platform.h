@@ -18,7 +18,7 @@
   /*!< set to one to include the radio stack */
 #define PL_HAS_SHELL   (1)
   /*!< set to one if we have a Shell */
-#define PL_HAS_RSTDIO  (0) 
+#define PL_HAS_RSTDIO  (1) 
   /*!< set to one if we use remote stdio */
 
 #endif /* PLATFORM_H_ */

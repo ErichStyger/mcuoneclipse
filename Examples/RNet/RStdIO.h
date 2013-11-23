@@ -12,7 +12,11 @@
 
 #include "RNetConf.h"
 #if PL_HAS_RSTDIO
-#include "CLS1.h"
+#include "RPHY.h"
+#include "RNWK.h"
+#if PL_HAS_SHELL
+  #include "CLS1.h"
+#endif
 
 typedef enum RSTDIO_QueueType {
   /* Rx stdio queues: */
@@ -41,6 +45,17 @@ uint8_t RSTDIO_AddToQueue(RSTDIO_QueueType queueType, const unsigned char *data,
  * \return Standard I/O handler with stdin, stdout and stderr
  */
 CLS1_ConstStdIOTypePtr RSTDIO_GetStdioRx(void);
+
+/*!
+ * \brief Message handler for StdIO messages sent over the radio
+ * \param type Message type
+ * \param Size of the payload data
+ * \param data Payload data
+ * \param srcAddr Address of node who has sent the message
+ * \param[out] handled Message handler sets this to TRUE if message was handled
+ * \param packet Message data packet data
+ */
+uint8_t RSTDIO_HandleStdioRxMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *data, RNWK_ShortAddrType srcAddr, bool *handled, RPHY_PacketDesc *packet);
 
 /*!
  * \brief Call this routines periodically. It will parse incoming remote messages and will dispatch them between stdin, stdout and stderr.

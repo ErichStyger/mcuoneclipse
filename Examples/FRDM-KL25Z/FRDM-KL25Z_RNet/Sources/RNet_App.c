@@ -20,26 +20,6 @@
 
 static RNWK_ShortAddrType APP_dstAddr = RNWK_ADDR_BROADCAST; /* destination node address */
 
-#if PL_HAS_RSTDIO
-static uint8_t HandleStdioMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *data, RNWK_ShortAddrType srcAddr, bool *handled) {
-  (void)srcAddr;
-  switch(type) {
-    case RAPP_MSG_TYPE_STDIN: /* <type><size><data */
-      *handled = TRUE;
-      return RSTDIO_AddToQueue(RSTDIO_QUEUE_RX_IN, data, size);
-    case RAPP_MSG_TYPE_STDOUT: /* <type><size><data */
-      *handled = TRUE;
-      return RSTDIO_AddToQueue(RSTDIO_QUEUE_RX_OUT, data, size);
-    case RAPP_MSG_TYPE_STDERR: /* <type><size><data */
-      *handled = TRUE;
-      return RSTDIO_AddToQueue(RSTDIO_QUEUE_RX_ERR, data, size);
-    default:
-      break;
-  } /* switch */
-  return ERR_OK;
-}
-#endif
-
 static uint8_t HandleRxMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *data, RNWK_ShortAddrType srcAddr, bool *handled, RPHY_PacketDesc *packet) {
 #if PL_HAS_SHELL
   uint8_t buf[16];
@@ -97,7 +77,7 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 static const RAPP_MsgHandler handlerTable[] = 
 {
 #if PL_HAS_RSTDIO
-  HandleStdioRxMessage,
+  RSTDIO_HandleStdioRxMessage,
 #endif
   HandleRxMessage,
   NULL /* sentinel */
@@ -107,11 +87,19 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
 #if PL_HAS_SHELL
   static unsigned char localConsole_buf[48];
 #endif
+#if PL_HAS_RSTDIO
+  static unsigned char radio_cmd_buf[48];
+  CLS1_ConstStdIOType *ioRemote = RSTDIO_GetStdioRx();
+#endif
 #if PL_HAS_RSTDIO || PL_HAS_SHELL
   CLS1_ConstStdIOTypePtr ioLocal = CLS1_GetStdio();
 #endif
   
+#if PL_HAS_RSTDIO
+  radio_cmd_buf[0] = '\0';
+#endif
 #if PL_HAS_SHELL
+  localConsole_buf[0] = '\0';
   CLS1_SendStr((unsigned char*)"nRF24L01+ Demo\r\n", ioLocal->stdOut);
 #endif
   RSTACK_Init(); /* initialize stack */
@@ -130,6 +118,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
 #endif
 #if PL_HAS_RSTDIO
     RSTDIO_Print(ioLocal); /* handle stdout/stderr messages coming in */
+    (void)CLS1_ReadAndParseWithCommandTable(radio_cmd_buf, sizeof(radio_cmd_buf), ioRemote, CmdParserTable);
 #endif
     LED1_Neg();
     FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
