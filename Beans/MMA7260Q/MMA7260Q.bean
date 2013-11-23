@@ -4,7 +4,7 @@
     <Name>MMA7260Q</Name>
     <Description>Driver for the Freescale 3-Axis Accelerometer MMA7260Q</Description>
     <Author>Erich Styger</Author>
-    <Version>01.110</Version>
+    <Version>01.111</Version>
     <Icon>MMA7260Q</Icon>
     <TypesFiles>PE,MMA7260Q\MMA7260Q</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -1060,12 +1060,12 @@
         <PublicMethod>false</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>void</ReturnType>
-        <RetHint>None</RetHint>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(void)</ANSIC>
+          <ANSIC>byte #M#_#C#(void)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1088,12 +1088,12 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>void</ReturnType>
-        <RetHint>none</RetHint>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(void)</ANSIC>
+          <ANSIC>byte #M#_#C#(void)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

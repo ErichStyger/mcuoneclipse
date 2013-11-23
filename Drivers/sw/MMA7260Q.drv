@@ -121,7 +121,8 @@
 
 %-BW_DEFINITION_START
 %-INTERNAL_METHOD_BEG Init
-void %'ModuleName'%.Init(void);
+byte %'ModuleName'%.Init(void);
+%define! RetVal
 %include Common\GeneralInternal.inc (Init)
 
 %-INTERNAL_METHOD_END Init
@@ -302,7 +303,8 @@ void %'ModuleName'%.%CalibrateZ1g(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Deinit
 %ifdef Deinit
-void %'ModuleName'%.%Deinit(void);
+byte %'ModuleName'%.%Deinit(void);
+%define! RetVal
 %include Common\MMA7260QDeinit.Inc
 
 %endif %- Deinit
@@ -867,8 +869,9 @@ int16_t %'ModuleName'%.%GetZ1gValue(void)
 %-BW_METHOD_END GetZ1gValue
 %-************************************************************************************************************
 %-INTERNAL_METHOD_BEG Init
+%define! RetVal
 %include Common\GeneralInternal.inc (Init)
-void %'ModuleName'%.Init(void)
+byte %'ModuleName'%.Init(void)
 {
 %if defined(CalibrateX1g) | defined(CalibrateY1g) | defined(CalibrateZ1g)
   sCalValues.NxOff = InitialCalibration.NxOff;
@@ -891,8 +894,9 @@ void %'ModuleName'%.Init(void)
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Deinit
 %ifdef Deinit
+%define! RetVal
 %include Common\MMA7260QDeinit.Inc
-void %'ModuleName'%.%Deinit(void)
+byte %'ModuleName'%.%Deinit(void)
 {
   /* If you see this comment in generated code, it means that method is not implemented yet ... */
 }
@@ -963,7 +967,7 @@ void %OnADGive(void)
 %INITIALIZATION
   /* ### %DeviceType "%DeviceName" init code ... */
 %CODE_BEGIN
-  %'ModuleName'%.Init();
+  (void)%'ModuleName'%.Init();
 %CODE_END
 %-
 %ENABLE
