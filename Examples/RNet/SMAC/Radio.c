@@ -48,10 +48,6 @@ static uint8_t RADIO_RxDataBuffer[RPHY_BUFFER_SIZE]; /*!< Data buffer to hold RX
 static tTxPacket RADIO_TxPacket;            /*!< SMAC structure for TX packets */
 static uint8_t RADIO_TxDataBuffer[RPHY_BUFFER_SIZE]; /*!< Data buffer to hold TX data */
 
-static RPHY_PacketDesc radioRx, radioTx;
-static uint8_t radioRxBuf[RPHY_BUFFER_SIZE];
-static uint8_t radioTxBuf[RPHY_BUFFER_SIZE];
-
 void RADIO_OnInterrupt(void) {
   uint8_t res;
   
@@ -110,12 +106,6 @@ static void RADIO_InitRadio(void) {
   RADIO_RxPacket.u8Status = TRSVR1_INITIAL_VALUE;  /* initialize the status packet to 0 */
 
   RADIO_AppStatus = RADIO_INITIAL_STATE;        /* Set the initial status of the application state variable */
-
-  /* Initialize Rx/Tx descriptor */
-  radioRx.data = &radioRxBuf[0];
-  radioRx.dataSize = sizeof(radioRxBuf);
-  radioTx.data = &radioTxBuf[0];
-  radioTx.dataSize = sizeof(radioTxBuf);
 }
 
 static const unsigned char *RadioStateStr(RADIO_AppStatusKind state) {
@@ -159,7 +149,7 @@ static void RADIO_SniffPacket(RPHY_PacketDesc *packet, bool isTx) {
   UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" hex: ");
   CLS1_SendStr(buf, io->stdOut);
   dataSize = packet->data[0]; /* first byte in data buffer is number of bytes */
-  for(i=0; i<dataSize;i++) {
+  for(i=0; i<=dataSize;i++) {
     buf[0] = '\0';
     UTIL1_strcatNum8Hex(buf, sizeof(buf), packet->data[i]);
     UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" ");
@@ -280,6 +270,7 @@ static uint8_t RADIO_CheckTx(RPHY_PacketDesc *packet) {
   uint8_t size, i, *p;
   
   if (RMSG_GetTxMsg(packet->data, packet->dataSize)==ERR_OK) {
+    packet->flags = RPHY_PACKET_FLAGS_NONE;
     size = packet->data[RPHY_BUF_IDX_SIZE]; /* first byte in msg queue is size of message itself */
     p = &packet->data[RPHY_BUF_IDX_PAYLOAD]; /* pointer to start of data to transmit: starting with type field */
     i = RPHY_BUF_IDX_PAYLOAD; /* start copy from here */
@@ -313,15 +304,20 @@ static uint8_t RADIO_ProcessTx(RPHY_PacketDesc *packet) {
 
 uint8_t RADIO_Process(void) {
   uint8_t res;
+  RPHY_PacketDesc packet;
+  uint8_t radioBuf[RPHY_BUFFER_SIZE];
   
   if (RADIO_isOn) { /* radio turned on? */
     RADIO_HandleStateMachine(); /* process state machine */
-    (void)RADIO_ProcessTx(&radioTx); /* send outgoing packets (if any) */
-    res = RPHY_GetPayload(&radioRx); /* get message */
+    /* Initialize Rx/Tx descriptor */
+    packet.data = &radioBuf[0];
+    packet.dataSize = sizeof(radioBuf);
+    (void)RADIO_ProcessTx(&packet); /* send outgoing packets (if any) */
+    res = RPHY_GetPayload(&packet); /* get message */
     if (res==ERR_OK) { /* packet received */
-      RADIO_SniffPacket(&radioRx, FALSE); /* sniff incoming packet */
-      if (RPHY_OnPacketRx(&radioRx)==ERR_OK) { /* process incoming packets */
-        if (radioRx.flags&RPHY_PACKET_FLAGS_ACK) { /* it was an ack! */
+      RADIO_SniffPacket(&packet, FALSE); /* sniff incoming packet */
+      if (RPHY_OnPacketRx(&packet)==ERR_OK) { /* process incoming packets */
+        if (packet.flags&RPHY_PACKET_FLAGS_ACK) { /* it was an ack! */
           EVNT_SetEvent(EVNT_RADIO_ACK); /* set event */
         }
       }
