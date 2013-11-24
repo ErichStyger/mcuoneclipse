@@ -12,6 +12,9 @@
 #include "RPHY.h"
 #include "RMAC.h"
 #include "RMSG.h"
+#if PL_HAS_SHELL
+  #include "CLS1.h"
+#endif
 
 uint8_t RPHY_GetPayload(RPHY_PacketDesc *packet) {
   packet->flags = RPHY_PACKET_FLAGS_NONE;
@@ -24,6 +27,44 @@ uint8_t RPHY_OnPacketRx(RPHY_PacketDesc *packet) {
 
 uint8_t RPHY_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize) {
   return RMSG_QueueTxMsg(buf, bufSize, payloadSize);
+}
+
+void RPHY_SniffPacket(RPHY_PacketDesc *packet, bool isTx) {
+#if PL_HAS_SHELL
+  uint8_t buf[32];
+  const CLS1_StdIOType *io;
+  int i;
+  uint8_t dataSize;
+  
+  io = CLS1_GetStdio();
+  if (isTx) {
+    UTIL1_strcpy(buf, sizeof(buf),(unsigned char*)"Radio Tx: ");
+  } else {
+    UTIL1_strcpy(buf, sizeof(buf),(unsigned char*)"Radio Rx: ");
+  }
+  CLS1_SendStr(buf, io->stdOut);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" flags: ");
+  UTIL1_strcatNum16s(buf, sizeof(buf), packet->flags);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" data size: ");
+  UTIL1_strcatNum16s(buf, sizeof(buf), packet->dataSize);
+  CLS1_SendStr(buf, io->stdOut);
+  /* write as hex */
+  buf[0] = '\0';
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" hex: ");
+  CLS1_SendStr(buf, io->stdOut);
+  dataSize = packet->data[0]; /* first byte in data buffer is number of bytes */
+  for(i=0; i<=dataSize;i++) {
+    buf[0] = '\0';
+    UTIL1_strcatNum8Hex(buf, sizeof(buf), packet->data[i]);
+    UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" ");
+    CLS1_SendStr(buf, io->stdOut);
+  }
+  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"\r\n");
+  CLS1_SendStr(buf, io->stdOut);
+#else
+  (void)packet;
+  (void)isTx;
+#endif
 }
 
 void RPHY_Deinit(void) {

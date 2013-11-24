@@ -25,6 +25,8 @@
 #define TX_POWERUP()         RF1_WriteRegister(RF1_CONFIG, RF1_CONFIG_SETTINGS|RF1_PWR_UP|RF1_PRIM_TX) /* enable 1 byte CRC, power up and set as PTX */
 #define RX_POWERUP()         RF1_WriteRegister(RF1_CONFIG, RF1_CONFIG_SETTINGS|RF1_PWR_UP|RF1_PRIM_RX) /* enable 1 byte CRC, power up and set as PRX */
 
+static bool RADIO_isSniffing = FALSE;
+
 static const uint8_t TADDR[5] = {0x11, 0x22, 0x33, 0x44, 0x55}; /* device address */
 
 /* Radio state definitions */
@@ -54,6 +56,7 @@ void RADIO_OnInterrupt(void) {
 }
 
 static uint8_t CheckTx(void) {
+  RPHY_PacketDesc packet;
   uint8_t buf[RPHY_BUFFER_SIZE];
   uint8_t size, i, *p;
   uint8_t res = ERR_OK;
@@ -62,6 +65,11 @@ static uint8_t CheckTx(void) {
   if (RMSG_GetTxMsg(buf, sizeof(buf))==ERR_OK) {
     RF1_StopRxTx();  /* CE low */
     TX_POWERUP();
+    /* set up packet structure */
+    packet.flags = RPHY_PACKET_FLAGS_NONE;
+    packet.data = &buf[0];
+    packet.dataSize = sizeof(buf);
+    /* get data */
     size = buf[0]; /* first byte in msg queue is size of message itself */
     p = &buf[1]; /* pointer to first data byte */
     i = 0; /* index pointing to payload */
@@ -79,6 +87,9 @@ static uint8_t CheckTx(void) {
       TxDataBuffer[i] = 0; /* fill it with zeros */
       size--; i++;
       p++;
+    }
+    if (RADIO_isSniffing) {
+      RPHY_SniffPacket(&packet, TRUE); /* sniff outgoing packet */
     }
     RF1_TxPayload(TxDataBuffer, sizeof(TxDataBuffer)); /* send data */
     return ERR_OK;
@@ -219,7 +230,9 @@ uint8_t RADIO_Process(void) {
   /* process received packets */
   res = RPHY_GetPayload(&radioRx); /* get message */
   if (res==ERR_OK) { /* packet received */
-    //RADIO_SniffPacket(&radioRx, FALSE); /* sniff incoming packet */
+    if (RADIO_isSniffing) {
+      RPHY_SniffPacket(&radioRx, FALSE); /* sniff incoming packet */
+    }
     if (RPHY_OnPacketRx(&radioRx)==ERR_OK) { /* process incoming packets */
       if (radioRx.flags&RPHY_PACKET_FLAGS_ACK) { /* it was an ack! */
         //EVNT_SetEvent(EVNT_RADIO_ACK); /* set event */
@@ -245,12 +258,14 @@ static const unsigned char *RadioStateStr(RADIO_AppStatusKind state) {
 static void RADIO_PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"radio", (unsigned char*)"Group of radio commands\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows radio help or status\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  sniff on|off", (unsigned char*)"Turns sniffing on or off\r\n", io->stdOut);
 }
 
 static void RADIO_PrintStatus(const CLS1_StdIOType *io) {
   CLS1_SendStatusStr((unsigned char*)"Radio", (unsigned char*)"\r\n", io->stdOut);
   CLS1_SendStatusStr((unsigned char*)"  state", RadioStateStr(RADIO_AppStatus), io->stdOut);
   CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  sniff", RADIO_isSniffing?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
 }
 
 uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
@@ -262,6 +277,12 @@ uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_S
   } else if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_STATUS)==0 || UTIL1_strcmp((char*)cmd, (char*)"radio status")==0) {
     RADIO_PrintStatus(io);
     *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"radio sniff on")==0) {
+    RADIO_isSniffing = TRUE;
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"radio sniff off")==0) {
+    RADIO_isSniffing = FALSE;
+    *handled = TRUE;
   }
   return res;
 }
@@ -272,6 +293,7 @@ void RADIO_Deinit(void) {
 }
 
 void RADIO_Init(void) {
+  RADIO_isSniffing = FALSE;
 }
 #else
 void RADIO_OnInterrupt(void) {

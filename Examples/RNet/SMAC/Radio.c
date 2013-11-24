@@ -120,46 +120,6 @@ static const unsigned char *RadioStateStr(RADIO_AppStatusKind state) {
   }
 }
 
-static void RADIO_SniffPacket(RPHY_PacketDesc *packet, bool isTx) {
-#if PL_HAS_SHELL
-  uint8_t buf[32];
-  const CLS1_StdIOType *io;
-  int i;
-  uint8_t dataSize;
-  
-  if (!RADIO_isSniffing) {
-    return;
-  }
-  io = CLS1_GetStdio();
-  if (isTx) {
-    UTIL1_strcpy(buf, sizeof(buf),(unsigned char*)"Radio Tx: ");
-  } else {
-    UTIL1_strcpy(buf, sizeof(buf),(unsigned char*)"Radio Rx: ");
-  }
-  CLS1_SendStr(buf, io->stdOut);
-  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"ch #:");
-  UTIL1_strcatNum16s(buf, sizeof(buf), RADIO_Channel);
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" flags: ");
-  UTIL1_strcatNum16s(buf, sizeof(buf), packet->flags);
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" data size: ");
-  UTIL1_strcatNum16s(buf, sizeof(buf), packet->dataSize);
-  CLS1_SendStr(buf, io->stdOut);
-  /* write as hex */
-  buf[0] = '\0';
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" hex: ");
-  CLS1_SendStr(buf, io->stdOut);
-  dataSize = packet->data[0]; /* first byte in data buffer is number of bytes */
-  for(i=0; i<=dataSize;i++) {
-    buf[0] = '\0';
-    UTIL1_strcatNum8Hex(buf, sizeof(buf), packet->data[i]);
-    UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" ");
-    CLS1_SendStr(buf, io->stdOut);
-  }
-  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"\r\n");
-  CLS1_SendStr(buf, io->stdOut);
-#endif
-}
-
 /*!
  \brief A simple state machine iterating through different transceiver states
  */
@@ -285,7 +245,9 @@ static uint8_t RADIO_CheckTx(RPHY_PacketDesc *packet) {
     RADIO_TxPacket.pu8Data = &RADIO_TxDataBuffer[RPHY_BUF_IDX_PAYLOAD];  /* Load the address of our txbuffer into tx structure.*/
     RADIO_TxPacket.u8DataLength = i-RPHY_BUF_IDX_PAYLOAD; /* Set the data length of the packet */
     RADIO_AppStatus = RADIO_TRANSMIT_DATA;
-    RADIO_SniffPacket(packet, TRUE); /* sniff outgoing packet */
+    if (RADIO_isSniffing) {
+      RPHY_SniffPacket(packet, TRUE); /* sniff outgoing packet */
+    }
     return ERR_OK;
   } else {
     return ERR_FAILED; /* no data to send? */
@@ -315,7 +277,9 @@ uint8_t RADIO_Process(void) {
     (void)RADIO_ProcessTx(&packet); /* send outgoing packets (if any) */
     res = RPHY_GetPayload(&packet); /* get message */
     if (res==ERR_OK) { /* packet received */
-      RADIO_SniffPacket(&packet, FALSE); /* sniff incoming packet */
+      if (RADIO_isSniffing) {
+        RPHY_SniffPacket(&packet, FALSE); /* sniff incoming packet */
+      }
       if (RPHY_OnPacketRx(&packet)==ERR_OK) { /* process incoming packets */
         if (packet.flags&RPHY_PACKET_FLAGS_ACK) { /* it was an ack! */
           EVNT_SetEvent(EVNT_RADIO_ACK); /* set event */
