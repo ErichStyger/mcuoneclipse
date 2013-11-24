@@ -41,7 +41,15 @@ RNWK_ShortAddrType RAPP_GetThisNodeAddr(void);
 
 uint8_t RAPP_SetThisNodeAddr(RNWK_ShortAddrType addr);
 
-uint8_t RAPP_SendDataBlock(uint8_t *block, uint8_t blockSize, uint8_t msgType, RNWK_ShortAddrType dstAddr);
+/*!
+ * \brief Send an application payload data block
+ * \param appPayload Size of application payload
+ * \param appPayloadSize Application payload size
+ * \param msgType Payload message type
+ * \param dstAddr destination address
+ * \return Error code, ERR_OK for no failure
+ */
+uint8_t RAPP_SendPayloadDataBlock(uint8_t *appPayload, uint8_t appPayloadSize, uint8_t msgType, RNWK_ShortAddrType dstAddr);
 
 /*! \brief Initializes the module */
 void RAPP_Init(void);
