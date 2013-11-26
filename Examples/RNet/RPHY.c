@@ -38,20 +38,17 @@ void RPHY_SniffPacket(RPHY_PacketDesc *packet, bool isTx) {
   
   io = CLS1_GetStdio();
   if (isTx) {
-    UTIL1_strcpy(buf, sizeof(buf),(unsigned char*)"Radio Tx: ");
+    CLS1_SendStr((unsigned char*)"Radio Tx: ", io->stdOut);
   } else {
-    UTIL1_strcpy(buf, sizeof(buf),(unsigned char*)"Radio Rx: ");
+    CLS1_SendStr((unsigned char*)"Radio Rx: ", io->stdOut);
   }
-  CLS1_SendStr(buf, io->stdOut);
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" flags: ");
+  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)" flags: ");
   UTIL1_strcatNum16s(buf, sizeof(buf), packet->flags);
   UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" data size: ");
   UTIL1_strcatNum16s(buf, sizeof(buf), packet->dataSize);
   CLS1_SendStr(buf, io->stdOut);
   /* write as hex */
-  buf[0] = '\0';
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" hex: ");
-  CLS1_SendStr(buf, io->stdOut);
+  CLS1_SendStr((unsigned char*)" hex: ", io->stdOut);
   dataSize = packet->data[0]; /* first byte in data buffer is number of bytes */
   for(i=0; i<=dataSize;i++) {
     buf[0] = '\0';
