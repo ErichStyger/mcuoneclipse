@@ -422,7 +422,7 @@ byte %'ModuleName'%.%WriteByte(%'ModuleName'_Address addr, byte data)
   }
 #if %'ModuleName'%.DO_ACKNOWLEDGE_POLLING
   /* do acknowledge polling */
-  //%@Wait@'ModuleName'%.WaitOSms(%'ModuleName'%.PAGE_WRITE_TIME_MS);
+  %@Wait@'ModuleName'%.WaitOSms(%'ModuleName'%.PAGE_WRITE_TIME_MS);
   block[0] = 0xff; /* dummy value */
 %if defined(Timeout)
 #if %'ModuleName'%.TIMEOUT_BYTE_TICKS>0
@@ -452,7 +452,7 @@ byte %'ModuleName'%.%WriteByte(%'ModuleName'_Address addr, byte data)
     }
 #endif
 %endif
-#endif
+#endif /* %'ModuleName'%.DO_ACKNOWLEDGE_POLLING */
   if (res != ERR_OK) {
     (void)%@I2C@'ModuleName'%.UnselectSlave();
     return res;
@@ -618,7 +618,7 @@ byte %'ModuleName'%.WriteBlockPage(%'ModuleName'_Address addr, byte *data, word 
     }
 #if %'ModuleName'%.DO_ACKNOWLEDGE_POLLING
     /* do acknowledge polling */
-    //%@Wait@'ModuleName'%.WaitOSms(%'ModuleName'%.PAGE_WRITE_TIME_MS);
+    %@Wait@'ModuleName'%.WaitOSms(%'ModuleName'%.PAGE_WRITE_TIME_MS);
 %if defined(Timeout)
 #if %'ModuleName'%.TIMEOUT_BLOCK_TICKS>0
     timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_BLOCK_TICKS); /* set up timeout counter */
@@ -653,8 +653,8 @@ byte %'ModuleName'%.WriteBlockPage(%'ModuleName'_Address addr, byte *data, word 
       (void)%@I2C@'ModuleName'%.UnselectSlave();
       return res;
     }
+#endif /* %'ModuleName'%.DO_ACKNOWLEDGE_POLLING */
     return %@I2C@'ModuleName'%.UnselectSlave();
-#endif
   } else { /* crossing page boundaries: make two page writes */
     res = %'ModuleName'%.WriteBlock(addr, data, (uint16_t)(%'ModuleName'%.PAGE_SIZE-offset));%>40 /* first page write */
     if (res != ERR_OK) {

@@ -4,7 +4,7 @@
     <Name>24AA_EEPROM</Name>
     <Description>Microchip 24AA Serial EEPROM</Description>
     <Author>Erich Styger</Author>
-    <Version>01.029</Version>
+    <Version>01.030</Version>
     <Icon>24AA_EEPROM</Icon>
     <TypesFiles>PE,24AA_EEPROM\24AA_EEPROM</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -108,6 +108,7 @@
               <Hint>Specifies the typical page write time, as per data sheet. This is the time needed for the device to write a page. This time will be used for the acknowledge polling as initial waiting time. \n
 Typical values:\n
 24xx8: 3 ms\n
+24xx32: 2 ms\n
 24xx512: 5 ms</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
