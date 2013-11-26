@@ -647,6 +647,39 @@ void %'ModuleName'%.%strcatNum32sDotValue100(byte *dst, size_t dstSize, long num
 
 %endif %- strcatNum32sDotValue100
 %-BW_METHOD_END strcatNum32sDotValue100
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ScanDecimal8sNumber
+%ifdef ScanDecimal8sNumber
+byte %'ModuleName'%.%ScanDecimal8sNumber(const unsigned char **str, signed char *val);
+%define! Parstr
+%define! Parval
+%define! RetVal
+%include Common\UtilityScanDecimal8sNumber.Inc
+
+%endif %- ScanDecimal8sNumber
+%-BW_METHOD_END ScanDecimal8sNumber
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ScanDecimal16sNumber
+%ifdef ScanDecimal16sNumber
+byte %'ModuleName'%.%ScanDecimal16sNumber(const unsigned char **str, int16_t *val);
+%define! Parstr
+%define! Parval
+%define! RetVal
+%include Common\UtilityScanDecimal16sNumber.Inc
+
+%endif %- ScanDecimal16sNumber
+%-BW_METHOD_END ScanDecimal16sNumber
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ScanDecimal32sNumber
+%ifdef ScanDecimal32sNumber
+byte %'ModuleName'%.%ScanDecimal32sNumber(const unsigned char **str, uint32_t *val);
+%define! Parstr
+%define! Parval
+%define! RetVal
+%include Common\UtilityScanDecimal32sNumber.Inc
+
+%endif %- ScanDecimal32sNumber
+%-BW_METHOD_END ScanDecimal32sNumber
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -1897,6 +1930,46 @@ byte %'ModuleName'%.%ScanDecimal8uNumber(const unsigned char **str, byte *val)
 %endif %- ScanDecimal8uNumber
 %-BW_METHOD_END ScanDecimal8uNumber
 %-************************************************************************************************************
+%-BW_METHOD_BEGIN ScanDecimal8sNumber
+%ifdef ScanDecimal8sNumber
+%define! Parstr
+%define! Parval
+%define! RetVal
+%include Common\UtilityScanDecimal8sNumber.Inc
+byte %'ModuleName'%.%ScanDecimal8sNumber(const unsigned char **str, signed char *val)
+{
+  /* Scans a decimal number, and stops at any non-number. Number can have any preceding spaces. */
+  const unsigned char *p = *str;
+  bool isNeg;
+  uint8_t val8u;
+  uint8_t res;
+
+  while(*p==' ') { /* skip leading spaces */
+    p++;
+  }
+  *val = 0;
+  if (*p=='-') {
+    isNeg = TRUE;
+    p++; /* skip minus */
+  } else {
+    isNeg = FALSE;
+  }
+  res = %'ModuleName'%.%ScanDecimal8uNumber(&p, &val8u);
+  if (res != ERR_OK) {
+    return res;
+  }
+  if (isNeg) {
+    *val = - (int8_t)val8u;
+  } else {
+    *val = (int8_t)val8u;
+  }
+  *str = p;
+  return ERR_OK;
+}
+
+%endif %- ScanDecimal8sNumber
+%-BW_METHOD_END ScanDecimal8sNumber
+%-************************************************************************************************************
 %-BW_METHOD_BEGIN ScanDecimal16uNumber
 %ifdef ScanDecimal16uNumber
 %define! Parstr
@@ -1932,6 +2005,46 @@ byte %'ModuleName'%.%ScanDecimal16uNumber(const unsigned char **str, word *val)
 %endif %- ScanDecimal16uNumber
 %-BW_METHOD_END ScanDecimal16uNumber
 %-************************************************************************************************************
+%-BW_METHOD_BEGIN ScanDecimal16sNumber
+%ifdef ScanDecimal16sNumber
+%define! Parstr
+%define! Parval
+%define! RetVal
+%include Common\UtilityScanDecimal16sNumber.Inc
+byte %'ModuleName'%.%ScanDecimal16sNumber(const unsigned char **str, int16_t *val)
+{
+  /* Scans a decimal number, and stops at any non-number. Number can have any preceding spaces. */
+  const unsigned char *p = *str;
+  bool isNeg;
+  uint16_t val16u;
+  uint8_t res;
+
+  while(*p==' ') { /* skip leading spaces */
+    p++;
+  }
+  *val = 0;
+  if (*p=='-') {
+    isNeg = TRUE;
+    p++; /* skip minus */
+  } else {
+    isNeg = FALSE;
+  }
+  res = %'ModuleName'%.%ScanDecimal16uNumber(&p, &val16u);
+  if (res != ERR_OK) {
+    return res;
+  }
+  if (isNeg) {
+    *val = - (int16_t)val16u;
+  } else {
+    *val = (int16_t)val16u;
+  }
+  *str = p;
+  return ERR_OK;
+}
+
+%endif %- ScanDecimal16sNumber
+%-BW_METHOD_END ScanDecimal16sNumber
+%-************************************************************************************************************
 %-BW_METHOD_BEGIN ScanDecimal32uNumber
 %ifdef ScanDecimal32uNumber
 %define! Parstr
@@ -1966,6 +2079,46 @@ byte %'ModuleName'%.%ScanDecimal32uNumber(const unsigned char **str, uint32_t *v
 
 %endif %- ScanDecimal32uNumber
 %-BW_METHOD_END ScanDecimal32uNumber
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ScanDecimal32sNumber
+%ifdef ScanDecimal32sNumber
+%define! Parstr
+%define! Parval
+%define! RetVal
+%include Common\UtilityScanDecimal32sNumber.Inc
+byte %'ModuleName'%.%ScanDecimal32sNumber(const unsigned char **str, uint32_t *val)
+{
+  /* Scans a decimal number, and stops at any non-number. Number can have any preceding spaces. */
+  const unsigned char *p = *str;
+  bool isNeg;
+  uint32_t val32u;
+  uint8_t res;
+
+  while(*p==' ') { /* skip leading spaces */
+    p++;
+  }
+  *val = 0;
+  if (*p=='-') {
+    isNeg = TRUE;
+    p++; /* skip minus */
+  } else {
+    isNeg = FALSE;
+  }
+  res = %'ModuleName'%.%ScanDecimal32uNumber(&p, &val32u);
+  if (res != ERR_OK) {
+    return res;
+  }
+  if (isNeg) {
+    *val = - (int32_t)val32u;
+  } else {
+    *val = (int32_t)val32u;
+  }
+  *str = p;
+  return ERR_OK;
+}
+
+%endif %- ScanDecimal32sNumber
+%-BW_METHOD_END ScanDecimal32sNumber
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strcmp
 %ifdef strcmp
