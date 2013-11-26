@@ -27,11 +27,11 @@ uint8_t RMAC_OnPacketRx(RPHY_PacketDesc *packet) {
   return RNWK_OnPacketRx(packet); /* pass data packet up the stack */
 }
 
-uint8_t RMAC_SendACK(RPHY_PacketDesc *packet) {
-  /* send an ack message back: this is is of type ack with src and dst address */
-  RMAC_BUF_TYPE(packet->data) = RMAC_MSG_TYPE_ACK; /* set type to ack */
+uint8_t RMAC_SendACK(RPHY_PacketDesc *rxPacket, RPHY_PacketDesc *ackPacket) {
+  RMAC_BUF_TYPE(ackPacket->data) = RMAC_MSG_TYPE_ACK; /* set type to ack */
+  RMAC_BUF_SEQN(ackPacket->data) = RMAC_BUF_SEQN(rxPacket->data);
   /* use same sequence number as in the received package, so no change */
-  return RPHY_PutPayload(packet->data, packet->dataSize, RMAC_HEADER_SIZE+RNWK_HEADER_SIZE);
+  return RPHY_PutPayload(ackPacket->data, ackPacket->dataSize, RMAC_HEADER_SIZE+RNWK_HEADER_SIZE);
 }
 
 RMAC_MsgType RMAC_GetType(uint8_t *buf, size_t bufSize) {

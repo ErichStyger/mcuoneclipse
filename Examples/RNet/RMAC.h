@@ -53,9 +53,10 @@ uint8_t RMAC_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize);
 /*!
  * \brief Sends an acknowledge message for the received MAC payload data.
  * \param[in] packet Packet data for which we need to send the ack.
+ * \param[in] saddr Source address of the packet (our own address).
  * \return Error code, ERR_OK if everything is ok, error code otherwise.
  */
-uint8_t RMAC_SendACK(RPHY_PacketDesc *packet);
+uint8_t RMAC_SendACK(RPHY_PacketDesc *rxPacket, RPHY_PacketDesc *ackPacket);
 
 /*!
  * \brief Check if the expected ACK message is expected. This is done with checking the sequence number.

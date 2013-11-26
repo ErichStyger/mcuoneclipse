@@ -40,6 +40,22 @@ uint8_t RNWK_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RNWK_
   return RMAC_PutPayload(buf, bufSize, payloadSize+RNWK_HEADER_SIZE);
 }
 
+uint8_t RNWK_SendACK(RPHY_PacketDesc *rxPacket, RNWK_ShortAddrType saddr) {
+  RNWK_ShortAddrType addr;
+  uint8_t buf[RMAC_BUFFER_SIZE];
+  RPHY_PacketDesc ackPacket;
+  
+  ackPacket.flags = RPHY_PACKET_FLAGS_NONE;
+  ackPacket.data = buf;
+  ackPacket.dataSize = sizeof(buf);
+  
+  /* send an ack message back: this is is of type ack with src and dst address */
+  addr = RNWK_BUF_GET_SRC_ADDR(rxPacket->data); /* who should receive the ack? */
+  RNWK_BUF_SET_SRC_ADDR(ackPacket.data, saddr); /* set source address */
+  RNWK_BUF_SET_DST_ADDR(ackPacket.data, addr); /* destination address is from where we got the data */
+  return RMAC_SendACK(rxPacket, &ackPacket);
+}
+
 uint8_t RNWK_OnPacketRx(RPHY_PacketDesc *packet) {
   RNWK_ShortAddrType addr;
   RMAC_MsgType type;
@@ -54,16 +70,10 @@ uint8_t RNWK_OnPacketRx(RPHY_PacketDesc *packet) {
       return ERR_OK; /* no need to process the packet further */
     } else if (type==RMAC_MSG_TYPE_DATA) { /* data packet received */
       if (RNWK_AppOnRxCallback!=NULL) { /* do we have a callback? */
-        res = RNWK_AppOnRxCallback(packet); /* call upper layer */
 #if RNET_CONFIG_USE_ACK
-        if (res==ERR_OK) { /* all fine, now send acknowledge back */
-          addr = RNWK_BUF_GET_SRC_ADDR(packet->data); /* who should receive the ack? */
-          RNWK_BUF_SET_DST_ADDR(packet->data, addr); /* destination address is from where we got the data */
-          return RMAC_SendACK(packet); /* send ack message back */
-        }
-#else
-        (void)res;
+        (void)RNWK_SendACK(packet, RNWK_GetThisNodeAddr()); /* send ack message back */
 #endif
+        return RNWK_AppOnRxCallback(packet); /* call upper layer */
       }
     } else {
       return ERR_FAULT; /* wrong message type? */
