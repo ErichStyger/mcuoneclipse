@@ -7,7 +7,6 @@
  * This module implements the NWK (Network) of the radio network stack.
  */
 
-
 #include "RNetConf.h"
 #if PL_HAS_RADIO
 #include "RPHY.h"
@@ -59,7 +58,6 @@ uint8_t RNWK_SendACK(RPHY_PacketDesc *rxPacket, RNWK_ShortAddrType saddr) {
 uint8_t RNWK_OnPacketRx(RPHY_PacketDesc *packet) {
   RNWK_ShortAddrType addr;
   RMAC_MsgType type;
-  uint8_t res;
 
   addr = RNWK_BUF_GET_DST_ADDR(packet->data);
   if (addr==RNWK_ADDR_BROADCAST || addr==RNWK_GetThisNodeAddr()) { /* it is for me :-) */

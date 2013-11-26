@@ -38,13 +38,13 @@ void RPHY_SniffPacket(RPHY_PacketDesc *packet, bool isTx) {
   
   io = CLS1_GetStdio();
   if (isTx) {
-    CLS1_SendStr((unsigned char*)"Radio Tx: ", io->stdOut);
+    CLS1_SendStr((unsigned char*)"Tx, ", io->stdOut);
   } else {
-    CLS1_SendStr((unsigned char*)"Radio Rx: ", io->stdOut);
+    CLS1_SendStr((unsigned char*)"Rx, ", io->stdOut);
   }
-  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)" flags: ");
+  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"flags: ");
   UTIL1_strcatNum16s(buf, sizeof(buf), packet->flags);
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" data size: ");
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" size: ");
   UTIL1_strcatNum16s(buf, sizeof(buf), packet->dataSize);
   CLS1_SendStr(buf, io->stdOut);
   /* write as hex */
