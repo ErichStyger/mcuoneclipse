@@ -4,7 +4,7 @@
     <Name>Utility</Name>
     <Description>Utility Module</Description>
     <Author>Erich Styger</Author>
-    <Version>01.091</Version>
+    <Version>01.092</Version>
     <Icon>Utility</Icon>
     <TypesFiles>PE,Utility\Utility</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -1844,6 +1844,47 @@
     </Method>
     <Method>
       <TMthdItem>
+        <Name>ScanDecimal8sNumber</Name>
+        <Symbol>ScanDecimal8sNumber</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Scans a decimal 8bit signed number</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>str</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>String to scan. It returns as well until where it has scanned</ParHint>
+          <ParUserDeclaration>const unsigned char **str</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>val</ParName>
+          <ParType>8bit signed</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to value</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(const unsigned char **str, signed char *val)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
         <Name>ScanDecimal16uNumber</Name>
         <Symbol>ScanDecimal16uNumber</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
@@ -1885,6 +1926,47 @@
     </Method>
     <Method>
       <TMthdItem>
+        <Name>ScanDecimal16sNumber</Name>
+        <Symbol>ScanDecimal16sNumber</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Scans a decimal 16bit signed number</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>str</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>String to scan. It returns as well until where it has scanned</ParHint>
+          <ParUserDeclaration>const unsigned char **str</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>val</ParName>
+          <ParType>16bit signed</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to value</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(const unsigned char **str, int16_t *val)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
         <Name>ScanDecimal32uNumber</Name>
         <Symbol>ScanDecimal32uNumber</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
@@ -1915,6 +1997,48 @@
         <Parameter>
           <ParName>val</ParName>
           <ParType>32bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to value</ParHint>
+          <ParUserDeclaration>uint32_t *val</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(const unsigned char **str, uint32_t *val)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ScanDecimal32sNumber</Name>
+        <Symbol>ScanDecimal32sNumber</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Scans a decimal 32bit signed number</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>str</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>string to scan. It returns as well until where it has scanned</ParHint>
+          <ParUserDeclaration>const unsigned char **str</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>val</ParName>
+          <ParType>32bit signed</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to value</ParHint>
           <ParUserDeclaration>uint32_t *val</ParUserDeclaration>
