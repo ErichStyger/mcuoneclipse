@@ -888,6 +888,7 @@ byte %'ModuleName'%.Init(void)
   %'ModuleName'%.%SensorOff(); /* sensor off to save energy */
   %endif
 %endif
+  return ERR_OK;
 }
 
 %-INTERNAL_METHOD_END Init
@@ -898,7 +899,7 @@ byte %'ModuleName'%.Init(void)
 %include Common\MMA7260QDeinit.Inc
 byte %'ModuleName'%.%Deinit(void)
 {
-  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+  return ERR_OK;
 }
 
 %endif %- Deinit
