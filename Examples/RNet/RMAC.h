@@ -14,10 +14,17 @@
 #include "RPHY.h"
 
 typedef enum RMAC_MsgType {
-  RMAC_MSG_TYPE_DATA = 0x0, /* data message */
-  RMAC_MSG_TYPE_ACK = 0x1,  /* acknowledge message */
-  RMAC_MSG_TYPE_CMD = 0x2   /* command message */
+  RMAC_MSG_TYPE_INIT = 0x0,  /* initialization value */
+  RMAC_MSG_TYPE_DATA = 0x1, /* flag: data message */
+  RMAC_MSG_TYPE_ACK = 0x2,  /* flag: acknowledge message */
+  RMAC_MSG_TYPE_CMD = 0x4,  /* flag: command message */
+  RMAC_MSG_TYPE_REQ_ACK = 0x80, /* flag: ack requested */
 } RMAC_MsgType;
+
+#define RMAC_MSG_TYPE_IS_DATA(type)  ((type)&RMAC_MSG_TYPE_DATA)
+#define RMAC_MSG_TYPE_IS_ACK(type)   ((type)&RMAC_MSG_TYPE_ACK)
+#define RMAC_MSG_TYPE_IS_CMD(type)   ((type)&RMAC_MSG_TYPE_CMD)
+#define RMAC_MSG_TYPE_REQ_ACK(type)  ((type)&RMAC_MSG_TYPE_REQ_ACK)
 
 /* payload format is:
  * PHY: <size><phy payload>

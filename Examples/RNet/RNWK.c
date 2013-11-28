@@ -62,14 +62,16 @@ uint8_t RNWK_OnPacketRx(RPHY_PacketDesc *packet) {
   addr = RNWK_BUF_GET_DST_ADDR(packet->data);
   if (addr==RNWK_ADDR_BROADCAST || addr==RNWK_GetThisNodeAddr()) { /* it is for me :-) */
     type = RMAC_GetType(packet->data, packet->dataSize); /* get the type of the message */
-    if (type==RMAC_MSG_TYPE_ACK && RMAC_IsExpectedACK(packet->data, packet->dataSize)) {
+    if (RMAC_MSG_TYPE_IS_ACK(type) && RMAC_IsExpectedACK(packet->data, packet->dataSize)) {
       /* it is an ACK, and the sequence number matches. Mark it with a flag and return, as no need for further processing */
       packet->flags |= RPHY_PACKET_FLAGS_ACK;
       return ERR_OK; /* no need to process the packet further */
-    } else if (type==RMAC_MSG_TYPE_DATA) { /* data packet received */
+    } else if (RMAC_MSG_TYPE_IS_DATA(type)) { /* data packet received */
       if (RNWK_AppOnRxCallback!=NULL) { /* do we have a callback? */
 #if RNET_CONFIG_USE_ACK
-        (void)RNWK_SendACK(packet, RNWK_GetThisNodeAddr()); /* send ack message back */
+        if (RMAC_MSG_TYPE_REQ_ACK(type)) {
+          (void)RNWK_SendACK(packet, RNWK_GetThisNodeAddr()); /* send ack message back */
+        }
 #endif
         return RNWK_AppOnRxCallback(packet); /* call upper layer */
       }

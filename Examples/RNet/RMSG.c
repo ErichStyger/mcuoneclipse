@@ -17,10 +17,10 @@
 #endif
 #include "RPHY.h"
 
-/* tx and rx queues */
-#define RMSG_QUEUE_RX_NOF_ITEMS   4 /* number of items in the queue */
-#define RMSG_QUEUE_TX_NOF_ITEMS   4 /* number of items in the queue */
-#define RMSG_QUEUE_PUT_WAIT       100/portTICK_RATE_MS /*portMAX_DELAY*/
+/* Configuration for tx and rx queues */
+#define RMSG_QUEUE_RX_NOF_ITEMS   (RNET_CONFIG_MSG_QUEUE_NOF_RX_ITEMS) /* number of items in the queue */
+#define RMSG_QUEUE_TX_NOF_ITEMS   (RNET_CONFIG_MSG_QUEUE_NOF_TX_ITEMS) /* number of items in the queue */
+#define RMSG_QUEUE_PUT_WAIT       (RNET_CONFIG_MSG_QUEUE_PUT_BLOCK_TIME_MS) /* blocking time for putting messages into queue */
 
 static xQueueHandle RMSG_MsgRxQueue, RMSG_MsgTxQueue; /* queue for messages,  format is: kind(8bit) dataSize(8bit) data */
 

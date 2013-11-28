@@ -155,7 +155,10 @@ static void RADIO_HandleStateMachine(void) {
         res = SMAC1_MCPSDataRequest(&RADIO_TxPacket); /* send data */
 #if RNET_CONFIG_USE_ACK
         if (res == SMAC1_SUCCESS) { /* transmitting data was ok */
-          if (RMAC_GetType(RADIO_TxPacket.pu8Data-RPHY_BUF_IDX_PAYLOAD, 0)==RMAC_MSG_TYPE_ACK) {
+          RMAC_MsgType type;
+          
+          type = RMAC_GetType(RADIO_TxPacket.pu8Data-RPHY_BUF_IDX_PAYLOAD, 0);
+          if (RMAC_MSG_TYPE_IS_ACK(type)) {
             RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON; /* we have sent ACK, go back to receiving mode */
           } else {
             RADIO_AppStatus = RADIO_WAIT_FOR_ACK;

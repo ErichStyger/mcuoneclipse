@@ -17,7 +17,7 @@ static uint8_t RMAC_SeqNr = 0;
 static uint8_t RMAC_ExpectedAckSeqNr;
 
 uint8_t RMAC_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize) {
-  RMAC_BUF_TYPE(buf) = RMAC_MSG_TYPE_DATA;
+  RMAC_BUF_TYPE(buf) = RMAC_MSG_TYPE_DATA|RMAC_MSG_TYPE_REQ_ACK;
   RMAC_ExpectedAckSeqNr = RMAC_SeqNr;
   RMAC_BUF_SEQN(buf) = RMAC_SeqNr++;
   return RPHY_PutPayload(buf, bufSize, payloadSize+RMAC_HEADER_SIZE);
