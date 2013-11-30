@@ -71,10 +71,10 @@ void SMAC1_ResetIndication(void);
 ** ===================================================================
 */
 
-void SMAC1_DataIndicationPacket(tRxPacket *sRxPacket);
+void PHY1_DataIndicationPacket(tRxPacket *sRxPacket);
 /*
 ** ===================================================================
-**     Event       :  SMAC1_DataIndicationPacket (module Events)
+**     Event       :  PHY1_DataIndicationPacket (module Events)
 **
 **     Component   :  PHY1 [SPHY]
 **     Description :
@@ -82,6 +82,19 @@ void SMAC1_DataIndicationPacket(tRxPacket *sRxPacket);
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **         sRxPacket       - 
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void SMAC1_OnInterrupt(void);
+/*
+** ===================================================================
+**     Event       :  SMAC1_OnInterrupt (module Events)
+**
+**     Component   :  TRSVR1 [MC13192]
+**     Description :
+**         Event raised in case of transceiver interrupt.
+**     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================
 */

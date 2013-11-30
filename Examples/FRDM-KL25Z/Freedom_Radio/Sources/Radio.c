@@ -77,7 +77,7 @@ static void RADIO_HandleState(void) {
 
     case RADIO_RECEIVER_ALWAYS_ON:
         RADIO_AppStatus = RADIO_READY_FOR_TX_RX_DATA;
-        (void)SMAC1_MLMERXEnableRequest(&RADIO_RxPacket, 0); /* Zero means wait forever with RX ON. */
+        (void)SMAC1_MLMERXEnableRequest(0); /* Zero means wait forever with RX ON. */
         break;
 
     case RADIO_READY_FOR_TX_RX_DATA: /* we are ready to receive/send data data */
@@ -91,7 +91,7 @@ static void RADIO_HandleState(void) {
         LED1_Neg();
         if ((SMAC1_MCPSDataRequest(&RADIO_TxPacket) == SMAC1_SUCCESS)) { /* transmit data */
           RADIO_AppStatus = RADIO_WAITING_FOR_ACK;
-          (void)SMAC1_MLMERXEnableRequest(&RADIO_RxPacket, RADIO_TIMEOUT_COUNT);
+          (void)SMAC1_MLMERXEnableRequest(RADIO_TIMEOUT_COUNT);
         } else {
           RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON; /* what should we otherwise do? */
         }

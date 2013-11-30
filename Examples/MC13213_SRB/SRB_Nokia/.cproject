@@ -13,26 +13,25 @@
 					<extension id="com.freescale.core.ide.cdt.errorParsers.AsmErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="com.freescale.core.ide.cdt.errorParsers.IcodeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="com.freescale.core.ide.cdt.errorParsers.CobjErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="com.freescale.build.parser.hc.cdt.CDT_FSL_ErrorParser_816bit" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="com.freescale.core.ide.cdt.errorParsers.LnkErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="com.freescale.core.ide.cdt.errorParsers.MwfeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="com.freescale.core.ide.cdt.errorParsers.S08ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="abs" artifactName="SRB_Nokia" buildProperties="" buildReferences="true" buildReferencingConfigurations="false" cleanCommand="rm -f" description="" errorParsers="org.eclipse.cdt.core.MakeErrorParser;com.freescale.build.parser.hc.cdt.CDT_FSL_ErrorParser_816bit;com.freescale.core.ide.cdt.errorParsers.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser;com.freescale.core.ide.cdt.errorParsers.MwfeErrorParser;com.freescale.core.ide.cdt.errorParsers.LnkErrorParser;com.freescale.core.ide.cdt.errorParsers.AsmErrorParser;com.freescale.core.ide.cdt.errorParsers.CobjErrorParser;com.freescale.core.ide.cdt.errorParsers.IcodeErrorParser;com.freescale.core.ide.cdt.errorParsers.LltErrorParser" id="toolchain.config.hcs08.release.1299769551" isPrebuildInvalidatingBuild="false" name="MC13213" parent="toolchain.config.hcs08.release" produceBuildErrorsWithMissingReferences="true">
+				<configuration artifactExtension="abs" artifactName="SRB_Nokia" buildProperties="" buildReferences="true" buildReferencingConfigurations="false" cleanCommand="rm -f" description="" errorParsers="com.freescale.core.ide.cdt.errorParsers.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser;com.freescale.core.ide.cdt.errorParsers.MwfeErrorParser;com.freescale.core.ide.cdt.errorParsers.LnkErrorParser;com.freescale.core.ide.cdt.errorParsers.AsmErrorParser;com.freescale.core.ide.cdt.errorParsers.CobjErrorParser;com.freescale.core.ide.cdt.errorParsers.IcodeErrorParser;com.freescale.core.ide.cdt.errorParsers.LltErrorParser;org.eclipse.cdt.core.GmakeErrorParser;com.freescale.core.ide.cdt.errorParsers.S08ErrorParser;" id="toolchain.config.hcs08.release.1299769551" isPrebuildInvalidatingBuild="false" name="MC13213" parent="toolchain.config.hcs08.release" produceBuildErrorsWithMissingReferences="true">
 					<folderInfo id="toolchain.config.hcs08.release.1299769551." name="/" resourcePath="">
-						<toolChain id="hcs08.project.toolchain.1771651908" name="HCS08 Toolchain" superClass="hcs08.project.toolchain">
+						<toolChain errorParsers="" id="hcs08.project.toolchain.1771651908" name="HCS08 Toolchain" superClass="hcs08.project.toolchain">
 							<option id="hc08.toolchain.sharedoption.generalotherflags.93442760" name="Other Flags:" superClass="hc08.toolchain.sharedoption.generalotherflags" value="" valueType="string"/>
 							<option id="hc08.toolchain.sharedoption.flags.2093644551" name="Other Flags: " superClass="hc08.toolchain.sharedoption.flags" value="-WmsgFob&quot;%f%e:%l:%k:%d %m\n&quot;" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="hc08.toolchain.platform.1562114602" name="HC08 Targetplatform" superClass="hc08.toolchain.platform"/>
-							<builder buildPath="${ProjDirPath}/MC13213" id="hc08.toolchain.builder.483329174" keepEnvironmentInBuildfile="false" name="GNU Make Builder" parallelBuildWorkspaceOn="true" parallelizationNumber="-1" superClass="hc08.toolchain.builder"/>
-							<tool id="s08.toolchain.decoder.155143747" name="Disassembler" superClass="s08.toolchain.decoder"/>
-							<tool id="hc08.toolchain.linker.1258044065" name="Linker" superClass="hc08.toolchain.linker">
+							<builder buildPath="${ProjDirPath}/MC13213" errorParsers="com.freescale.core.ide.cdt.errorParsers.GCCErrorParser;org.eclipse.cdt.core.GmakeErrorParser;com.freescale.core.ide.cdt.errorParsers.LltErrorParser;com.freescale.core.ide.cdt.errorParsers.AsmErrorParser;com.freescale.core.ide.cdt.errorParsers.IcodeErrorParser;com.freescale.core.ide.cdt.errorParsers.CobjErrorParser;com.freescale.core.ide.cdt.errorParsers.S08ErrorParser;com.freescale.core.ide.cdt.errorParsers.LnkErrorParser;com.freescale.core.ide.cdt.errorParsers.MwfeErrorParser" id="hc08.toolchain.builder.483329174" keepEnvironmentInBuildfile="false" name="GNU Make Builder" parallelBuildWorkspaceOn="true" parallelizationNumber="-1" superClass="hc08.toolchain.builder"/>
+							<tool errorParsers="" id="s08.toolchain.decoder.155143747" name="Disassembler" superClass="s08.toolchain.decoder"/>
+							<tool errorParsers="" id="hc08.toolchain.linker.1258044065" name="Linker" superClass="hc08.toolchain.linker">
 								<option id="hc08.toolchain.linker.base.general.paramFile.843868259" name="Parameter File" superClass="hc08.toolchain.linker.base.general.paramFile" value="${ProjDirPath}/Project_Settings/Linker_Files/ProcessorExpert.prm" valueType="string"/>
 								<option id="hc08.toolchain.linker.base.libraries.libs.1638266162" name="Libraries" superClass="hc08.toolchain.linker.base.libraries.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="&quot;${MCUToolsBaseDir}/lib/hc08c/lib/ansiis.lib&quot;"/>
@@ -43,10 +42,10 @@
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
 							</tool>
-							<tool id="hc08.toolchain.burner.324669824" name="Burner" superClass="hc08.toolchain.burner">
+							<tool errorParsers="" id="hc08.toolchain.burner.324669824" name="Burner" superClass="hc08.toolchain.burner">
 								<option id="hc08.toolchain.burner.base.general.otherflags.1264849937" name="Other flags" superClass="hc08.toolchain.burner.base.general.otherflags" value="-ViewHidden" valueType="string"/>
 							</tool>
-							<tool id="hcs08.toolchain.compiler.1474174978" name="HCS08 Compiler" superClass="hcs08.toolchain.compiler">
+							<tool errorParsers="" id="hcs08.toolchain.compiler.1474174978" name="HCS08 Compiler" superClass="hcs08.toolchain.compiler">
 								<option id="hc08.toolchain.compiler.base.preprocessor.defines.1014662191" name="Define preprocessor macros (-D)" superClass="hc08.toolchain.compiler.base.preprocessor.defines" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__NO_FLOAT__"/>
 								</option>
@@ -66,12 +65,12 @@
 								<inputType id="hcs08.toolchain.compiler.base.input.c.530489034" name="HCS08 Compiler C Input" superClass="hcs08.toolchain.compiler.base.input.c"/>
 								<inputType id="hcs08.toolchain.compiler.base.input.cpp.702182470" name="HCS08 Compiler CPP Input" superClass="hcs08.toolchain.compiler.base.input.cpp"/>
 							</tool>
-							<tool id="hc08.toolchain.assembler.1320992022" name="HCS08 Assembler" superClass="hc08.toolchain.assembler">
+							<tool errorParsers="" id="hc08.toolchain.assembler.1320992022" name="HCS08 Assembler" superClass="hc08.toolchain.assembler">
 								<option id="hc08.toolchain.assembler.base.general.otherflags.1811706355" name="Other flags" superClass="hc08.toolchain.assembler.base.general.otherflags" value="-ViewHidden" valueType="string"/>
 								<option id="hc08.toolchain.asm.base.output.objectFileFormat.881871627" name="Object File Format (-F)" superClass="hc08.toolchain.asm.base.output.objectFileFormat" value="hc08.toolchain.asm.base.output.objectFileFormat.ELF_DWARF_ObjectFileFormat" valueType="enumerated"/>
 								<inputType id="hc08.toolchain.assembler.base.input.2058760322" name="HC08 Assembler Input" superClass="hc08.toolchain.assembler.base.input"/>
 							</tool>
-							<tool id="hc08.toolchain.preprocessor.682717142" name="Preprocessor" superClass="hc08.toolchain.preprocessor"/>
+							<tool errorParsers="" id="hc08.toolchain.preprocessor.682717142" name="Preprocessor" superClass="hc08.toolchain.preprocessor"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
@@ -214,4 +213,5 @@
 	<storageModule moduleId="refreshScope" versionNumber="1">
 		<resource resourceType="PROJECT" workspacePath="/SRB_Nokia"/>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 </cproject>

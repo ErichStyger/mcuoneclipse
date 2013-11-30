@@ -3,10 +3,10 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>30</ModificationStamp>
-    <Date>2013-05-12</Date>
+    <ModificationStamp>32</ModificationStamp>
+    <Date>2013-11-29</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion>1.6.0.RT4_b1316-1577</PEversion>
+    <PEversion>1.8.0.RT5_b1337-1809</PEversion>
   </Header>
   <Options>
     <EventsDirectory>Sources</EventsDirectory>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>78</ProjectCompNumb>
+    <ProjectCompNumb>81</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>false</AssignInitComponentNameToPrph>
@@ -3271,6 +3271,16 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>Auto select</Value>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>I2S0_CLKINCondGrp0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>I2S0_MclkClkSrcCondGrp0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -3385,6 +3395,17 @@
         <ItemSymbol>GetLLSWakeUpFlagsCondGrp</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SystemReset</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>never</LastUserSel>
+        <UsrMethodName>SystemReset</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Methods>
     <Events>
@@ -4228,7 +4249,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.057</BeanVersion>
+    <BeanVersion>01.064</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -4299,6 +4320,28 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Watchdog</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>nonLDDWatchDogEnabled</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LDDWatchDogEnabled</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>true</Value>
+        <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>WatchdogLDD</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value />
@@ -4376,6 +4419,15 @@
         <UsrMethodName>WaitOSms</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>WaitLongCycles</ItemSymbol>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>WaitLongCycles</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -4389,7 +4441,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.003</BeanVersion>
+    <BeanVersion>01.009</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -4414,7 +4466,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template>SMAC\SPHY</Template>
-          <BeanVersion>01.009</BeanVersion>
+          <BeanVersion>01.016</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -4496,7 +4548,7 @@
                 <UserFolderName />
                 <Comment lines_count="0" />
                 <Template>SPHY\MC13192</Template>
-                <BeanVersion>01.002</BeanVersion>
+                <BeanVersion>01.017</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
                 <Properties>
                   <ItemState>
@@ -6993,29 +7045,42 @@
                     <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Value>(string list)</Value>
-                    <StrgList lines_count="24">
+                    <StrgList lines_count="37">
+                      <Line>/* setting up the IRQ line from the modem:</Line>
+                      <Line>* - pull up the signal</Line>
+                      <Line>* - trigger on low level and/or falling edge</Line>
+                      <Line>*/</Line>
                       <Line>#ifdef __HCS08__</Line>
                       <Line>/* Macros for the HCS08 core, using the IRQ pin */</Line>
-                      <Line>#define IRQACK()        IRQSC |= IRQSC_IRQACK_MASK   /*!&lt; IRQ acknowledge */</Line>
-                      <Line>#else /* not HCS08 */</Line>
+                      <Line>#define IRQFLAG()         IRQSC_IRQF                                                    /*!&lt; poll IRQ flag */</Line>
+                      <Line>#define IRQInit()       IRQSC = (IRQSC_IRQPE_MASK|IRQSC_IRQACK_MASK)                  /*!&lt; Configures IRQ: IRQ pin enable and acknowledge interrupt */</Line>
+                      <Line>#define IRQACK()        IRQSC |= IRQSC_IRQACK_MASK                                    /*!&lt; IRQ acknowledge */</Line>
+                      <Line>#define IRQPinEnable()  IRQSC = (IRQSC_IRQPE_MASK|IRQSC_IRQACK_MASK|IRQSC_IRQIE_MASK) /*!&lt; IRQ pin enable, acknowledge pending interrrupt and enable IRQ interrupt */</Line>
+                      <Line>#else /* ColdFire */</Line>
                       <Line>#if defined(__GNUC__) /* Kinetis gcc? */</Line>
-                      <Line>#define IRQINIT()  /* pull up signal: not possible yet with pin sharing in MCU10.3 */ \</Line>
-                      <Line>/* PORTA_PCR17: ISF=0,IRQC=0x0A,MUX=1,PE=1,PS=1 */ \</Line>
-                      <Line>PORTA_PCR17 = (uint32_t)((PORTA_PCR17 &amp; (uint32_t)~(uint32_t)( \</Line>
-                      <Line>PORT_PCR_ISF_MASK | \</Line>
-                      <Line>PORT_PCR_IRQC(0x05) | \</Line>
-                      <Line>PORT_PCR_MUX(0x06) \</Line>
-                      <Line>)) | (uint32_t)( \</Line>
-                      <Line>PORT_PCR_IRQC(0x0A) | \</Line>
-                      <Line>PORT_PCR_MUX(0x01) | \</Line>
-                      <Line>PORT_PCR_PE_MASK | \</Line>
-                      <Line>PORT_PCR_PS_MASK \</Line>
-                      <Line>));</Line>
-                      <Line>#define IRQACK()   PORT_PDD_ClearPinInterruptFlag(ExtIntLdd2_PORTCONTROL_BASE_ADDRESS, ExtIntLdd2_PIN_INDEX) /* ack the interrupt */</Line>
-                      <Line>#elif 0 /* Macros for the MCF52259 using the IRQ on IRQ5 */</Line>
+                      <Line>/* IRQ on PTD2 */</Line>
+                      <Line>#define IRQINIT() \</Line>
+                      <Line>PORT_PDD_SetPinPullSelect(PORTD_BASE_PTR, 2, PORT_PDD_PULL_UP); \</Line>
+                      <Line>PORT_PDD_SetPinPullEnable(PORTD_BASE_PTR, 2, PORT_PDD_PULL_ENABLE);</Line>
+                      <Line>#define IRQACK()  \</Line>
+                      <Line>PORT_PDD_ClearPinInterruptFlag(PORTD_BASE_PTR, 2) /* ack the interrupt */</Line>
+                      <Line>#elif 1</Line>
+                      <Line>/* Macros for the MCF52259 using the IRQ on IRQ5 */</Line>
+                      <Line>#define IRQFLAG()</Line>
+                      <Line>#define IRQInit()</Line>
                       <Line>#define IRQACK()  (EPFR = IRQ1_PIN_MASK)</Line>
-                      <Line>#else  /* Macros for the MCF51CN128 using the IRQ on PTE4 */</Line>
-                      <Line>#define IRQACK()        KBI2SC_KBACK=1     /*!&lt; IRQ acknowledge */</Line>
+                      <Line>#define IRQPinEnable()</Line>
+                      <Line>#else</Line>
+                      <Line>/* Macros for the MCF51CN128 using the IRQ on PTE4 */</Line>
+                      <Line>#define IRQFLAG()         KBI2SC_KBF       /*!&lt; poll IRQ flag */</Line>
+                      <Line>#define IRQInit()       IRQ1_Disable();  /* disable interrupts */ \</Line>
+                      <Line>KBI2ES_KBEDG4=0; /* falling edge, low level */ \</Line>
+                      <Line>KBI2SC_KBIMOD=0; /* edge only */ \</Line>
+                      <Line>PTEPE_PTEPE4=1;  /* pull up pin */ \</Line>
+                      <Line>KBI2PE_KBIPE4=1; /* pin enable */ \</Line>
+                      <Line>KBI2SC_KBACK=1   /* clear any false interrupts */</Line>
+                      <Line>#define IRQACK()        KBI2SC_KBACK=1                         /*!&lt; IRQ acknowledge */</Line>
+                      <Line>#define IRQPinEnable()  KBI2SC = (KBI2SC_KBACK_MASK|KBI2SC_KBIE) /*!&lt; Acknowledge any false interrupts and enable IRQ pin */</Line>
                       <Line>#endif</Line>
                       <Line>#endif</Line>
                     </StrgList>
@@ -7036,7 +7101,7 @@
                       <UserFolderName />
                       <Comment lines_count="0" />
                       <Template>MC13192\ExtInt</Template>
-                      <BeanVersion>02.104</BeanVersion>
+                      <BeanVersion>02.105</BeanVersion>
                       <LightErrorsIgnored>false</LightErrorsIgnored>
                       <Properties>
                         <ItemState>
@@ -7079,7 +7144,7 @@
                             <UserFolderName />
                             <Comment lines_count="0" />
                             <Template>ExtInt\ExtInt_LDD</Template>
-                            <BeanVersion>02.154</BeanVersion>
+                            <BeanVersion>02.156</BeanVersion>
                             <LightErrorsIgnored>false</LightErrorsIgnored>
                             <Properties>
                               <ItemState>
@@ -7265,6 +7330,23 @@
                                 <ReadOnly>false</ReadOnly>
                                 <UserReadOnly>false</UserReadOnly>
                                 <Value>0</Value>
+                                <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                              </ItemState>
+                              <ItemState>
+                                <ItemSymbol>IntISRHandleGrp</ItemSymbol>
+                                <ReadOnly>false</ReadOnly>
+                                <UserReadOnly>false</UserReadOnly>
+                              </ItemState>
+                              <ItemState>
+                                <ItemSymbol>IntISRHandle</ItemSymbol>
+                                <Value />
+                              </ItemState>
+                              <ItemState>
+                                <ItemSymbol>ModeInt</ItemSymbol>
+                                <ReadOnly>false</ReadOnly>
+                                <UserReadOnly>false</UserReadOnly>
+                                <Index>0</Index>
+                                <Value>true</Value>
                                 <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                               </ItemState>
                             </Properties>
@@ -8043,6 +8125,17 @@
                     <UsrMethodName>LeaveRadioSPI</UsrMethodName>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                   </ItemState>
+                  <ItemState>
+                    <ItemSymbol>CheckRx</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                    <LastSelection>false</LastSelection>
+                    <LastUserSel>always</LastUserSel>
+                    <UsrMethodName>CheckRx</UsrMethodName>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                  </ItemState>
                 </Methods>
                 <Events>
                   <ItemState>
@@ -8130,6 +8223,22 @@
                     <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Value>TRSVR1_OnLeaveRadioSPI</Value>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnInterrupt</ItemSymbol>
+                    <ReadOnly>true</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value>true</Value>
+                    <Expanded>false</Expanded>
+                    <LastSelection>true</LastSelection>
+                    <LastUserSel>never</LastUserSel>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnInterruptName</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value />
                   </ItemState>
                 </Events>
               </InheritedComponentState>
@@ -8485,6 +8594,17 @@
               <UsrMethodName>RadioInit</UsrMethodName>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
             </ItemState>
+            <ItemState>
+              <ItemSymbol>CheckRx</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>false</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>CheckRx</UsrMethodName>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
           </Methods>
           <Events>
             <ItemState>
@@ -8540,6 +8660,22 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <Value>PHY1_DataIndicationPacket</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>OnInterrupt</ItemSymbol>
+              <ReadOnly>true</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>true</Value>
+              <Expanded>false</Expanded>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>never</LastUserSel>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>OnInterruptName</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value />
             </ItemState>
           </Events>
         </InheritedComponentState>
@@ -8756,6 +8892,17 @@
         <UsrMethodName>RadioInit</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>CheckRx</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>CheckRx</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
     </Methods>
     <Events>
       <ItemState>
@@ -8795,6 +8942,22 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>SMAC1_DataIndicationPacket</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnInterrupt</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>never</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnInterruptName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>SMAC1_OnInterrupt</Value>
       </ItemState>
     </Events>
   </Bean>
@@ -8845,7 +9008,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.091</BeanVersion>
+          <BeanVersion>01.109</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -9907,7 +10070,7 @@
               <ItemSymbol>BaudRate</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>init:524.288 kHz;prec:5%;RTS:list0;mode1:655.36 kHz</Value>
+              <Value>init:5.24288 MHz;prec:5%;RTS:list0;mode1:655.36 kHz</Value>
               <RuntimeSetting>2</RuntimeSetting>
               <ReqDevPrescHigh>-1</ReqDevPrescHigh>
               <ReqDevPrescLow>-1</ReqDevPrescLow>
@@ -11135,6 +11298,61 @@
               <Value>true</Value>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
             </ItemState>
+            <ItemState>
+              <ItemSymbol>RxDMASupport</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>RxDMAEnable</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>false</Value>
+              <Expanded>false</Expanded>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>RxDMATransfer</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value />
+              <RegCompType />
+              <InheritedComponentState />
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>TxDMASupport</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>TxDMAEnable</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>false</Value>
+              <Expanded>false</Expanded>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>TxDMATransfer</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value />
+              <RegCompType />
+              <InheritedComponentState />
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>TxCmdDMASupport</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>TxCmdDMATransfer</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value />
+              <RegCompType />
+              <InheritedComponentState />
+            </ItemState>
           </Properties>
           <Methods>
             <ItemState>
@@ -11397,6 +11615,17 @@
               <LastSelection>false</LastSelection>
               <LastUserSel>never</LastUserSel>
               <UsrMethodName>ConnectPin</UsrMethodName>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>GetDMAError</ItemSymbol>
+              <ReadOnly>true</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Index>1</Index>
+              <Value>false</Value>
+              <LastSelection>false</LastSelection>
+              <LastUserSel>never</LastUserSel>
+              <UsrMethodName>GetDMAError</UsrMethodName>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
             </ItemState>
           </Methods>
@@ -12680,7 +12909,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.086</BeanVersion>
+    <BeanVersion>01.092</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -13184,6 +13413,50 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>always</LastUserSel>
         <UsrMethodName>ScanHex8uNumberNoPrefix</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>strcatNum32sDotValue100</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>strcatNum32sDotValue100</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanDecimal8sNumber</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ScanDecimal8sNumber</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanDecimal16sNumber</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ScanDecimal16sNumber</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanDecimal32sNumber</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ScanDecimal32sNumber</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Methods>
