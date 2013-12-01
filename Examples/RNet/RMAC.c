@@ -44,6 +44,51 @@ bool RMAC_IsExpectedACK(uint8_t *buf, size_t bufSize) {
   return RMAC_BUF_SEQN(buf)==RMAC_ExpectedAckSeqNr;
 }
 
+void RMAC_SniffPacket(RPHY_PacketDesc *packet, bool isTx) {
+  RNWK_SniffPacket(packet, isTx);
+}
+#if 0
+ * typedef enum RMAC_MsgType {
+  RMAC_MSG_TYPE_INIT = 0x0,  /* initialization value */
+  RMAC_MSG_TYPE_DATA = 0x1, /* flag: data message */
+  RMAC_MSG_TYPE_ACK = 0x2,  /* flag: acknowledge message */
+  RMAC_MSG_TYPE_CMD = 0x4,  /* flag: command message */
+  RMAC_MSG_TYPE_REQ_ACK = 0x80, /* flag: ack requested */
+} RMAC_MsgType;
+#endif
+
+void RMAC_DecodeType(uint8_t *buf, size_t bufSize, RPHY_PacketDesc *packet) {
+  RMAC_MsgType type;
+  bool first = TRUE;
+  
+  type = RMAC_BUF_TYPE(packet->data);
+  buf[0] = '\0';
+  UTIL1_chcat(buf, bufSize, '(');
+  if (type&RMAC_MSG_TYPE_REQ_ACK) {
+    UTIL1_strcat(buf, bufSize, (unsigned char*)"RACK");
+    first = FALSE;
+  }
+  if (type&RMAC_MSG_TYPE_DATA) {
+    if (!first) {
+      UTIL1_chcat(buf, bufSize, '|');
+    }
+    UTIL1_strcat(buf, bufSize, (unsigned char*)"DATA");
+    first = FALSE;
+  }
+  if (type&RMAC_MSG_TYPE_ACK) {
+    if (!first) {
+      UTIL1_chcat(buf, bufSize, '|');
+    }
+    UTIL1_strcat(buf, bufSize, (unsigned char*)"ACK");
+    first = FALSE;
+  }
+  if (type&RMAC_MSG_TYPE_CMD) {
+    UTIL1_strcat(buf, bufSize, (unsigned char*)"CMD");
+    first = FALSE;
+  }
+  UTIL1_chcat(buf, bufSize, ')');
+}
+
 void RMAC_Deinit(void) {
   /* nothing needed */
 }

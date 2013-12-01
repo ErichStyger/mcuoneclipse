@@ -51,6 +51,13 @@ uint8_t RAPP_SetThisNodeAddr(RNWK_ShortAddrType addr);
  */
 uint8_t RAPP_SendPayloadDataBlock(uint8_t *appPayload, uint8_t appPayloadSize, uint8_t msgType, RNWK_ShortAddrType dstAddr);
 
+/*!
+ * \brief Sniffs and dumps a packet.
+ * \param packet Data packet
+ * \param isTx If either Tx or Rx packet
+ */
+void RAPP_SniffPacket(RPHY_PacketDesc *packet, bool isTx);
+
 /*! \brief Initializes the module */
 void RAPP_Init(void);
 

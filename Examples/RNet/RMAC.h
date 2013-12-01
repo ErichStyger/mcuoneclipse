@@ -74,12 +74,27 @@ uint8_t RMAC_SendACK(RPHY_PacketDesc *rxPacket, RPHY_PacketDesc *ackPacket);
 bool RMAC_IsExpectedACK(uint8_t *buf, size_t bufSize);
 
 /*!
- * \brief Returns the type of the message
- * \param buf Pointer to the message buffer
- * \param bufSize Size of the buffer
- * \return Type of message
+ * \brief Returns the type of the message.
+ * \param buf Pointer to the message buffer.
+ * \param bufSize Size of the buffer.
+ * \return Type of message.
  */
 RMAC_MsgType RMAC_GetType(uint8_t *buf, size_t bufSize);
+
+/*!
+ * \brief Sniffs and dumps a packet to the Shell.
+ * \param packet Data packet.
+ * \param isTx If either Tx or Rx packet.
+ */
+void RMAC_SniffPacket(RPHY_PacketDesc *packet, bool isTx);
+
+/*!
+ * \brief Decodes the MAC type information as string.
+ * \param[out] buf Character buffer where to store the string.
+ * \param[in] bufSize Size of character buffer in bytes.
+ * \param[in] packet Packet information.
+ */
+void RMAC_DecodeType(uint8_t *buf, size_t bufSize, RPHY_PacketDesc *packet);
 
 /*! \brief Initializes the module */
 void RMAC_Init(void);

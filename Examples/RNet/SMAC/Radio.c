@@ -38,14 +38,14 @@ typedef enum RADIO_AppStatusKind {
 #define RADIO_TIMEOUT_COUNT    0xB000 /*!< how long the timeout value will be while transmitting a message */
 
 static volatile RADIO_AppStatusKind RADIO_AppStatus = RADIO_INITIAL_STATE;
-static uint8_t RADIO_Channel = 5;
-static uint8_t RADIO_OutputPower = 15;
-static bool RADIO_isOn = TRUE;
-static bool RADIO_isSniffing = FALSE;
+static uint8_t RADIO_Channel = 5; /* default channel */
+static uint8_t RADIO_OutputPower = 15; /* default Tx power */
+static bool RADIO_isOn = TRUE; /* if radio is on or off */
+static bool RADIO_isSniffing = FALSE; /* if we sniff messages */
 
-static tRxPacket RADIO_RxPacket;            /*!< SMAC structure for RX packets */
+static tRxPacket RADIO_RxPacket;                     /*!< SMAC structure for RX packets */
 static uint8_t RADIO_RxDataBuffer[RPHY_BUFFER_SIZE]; /*!< Data buffer to hold RX data */
-static tTxPacket RADIO_TxPacket;            /*!< SMAC structure for TX packets */
+static tTxPacket RADIO_TxPacket;                     /*!< SMAC structure for TX packets */
 static uint8_t RADIO_TxDataBuffer[RPHY_BUFFER_SIZE]; /*!< Data buffer to hold TX data */
 
 void RADIO_OnInterrupt(void) {
@@ -185,6 +185,23 @@ static void RADIO_HandleStateMachine(void) {
   } /* for */
 }
 
+static void RADIO_HandleEvents(void) {
+  if (EVNT_EventIsSetAutoClear(EVNT_RADIO_RESET)) {
+    RADIO_AppStatus = RADIO_RESET_STATE;
+  } else if (EVNT_EventIsSetAutoClear(EVNT_RADIO_TIMEOUT)) {
+    RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON;
+  } else if (EVNT_EventIsSetAutoClear(EVNT_RADIO_OVERFLOW)) {
+    RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON;
+  } else if (EVNT_EventIsSetAutoClear(EVNT_RADIO_DATA)) {
+    RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON;
+  } else if (EVNT_EventIsSetAutoClear(EVNT_RADIO_ACK)) {
+    RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON;
+  } else if (EVNT_EventIsSetAutoClear(EVNT_RADIO_UNKNOWN)) {
+    RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON;
+  }
+}
+
+#if 1
 void RADIO_AppHandleEvent(EVNT_Handle event) {
   /*! \todo You might disable later some of the messages. */
   switch(event) {
@@ -220,14 +237,15 @@ void RADIO_AppHandleEvent(EVNT_Handle event) {
       break;
     case EVNT_RADIO_UNKNOWN: /* unknown package received */
 #if PL_HAS_SHELL
-      CLS1_SendStr((unsigned char*)"RADIO unknown\r\n", CLS1_GetStdio()->stdOut);
+      //CLS1_SendStr((unsigned char*)"RADIO unknown\r\n", CLS1_GetStdio()->stdOut);
 #endif
       RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON;
-      break;
+      break; 
     default:
       break;
   } /* switch */
 }
+#endif
 
 static uint8_t RADIO_CheckTx(RPHY_PacketDesc *packet) {
   uint8_t size, i, *p;
@@ -273,6 +291,7 @@ uint8_t RADIO_Process(void) {
   uint8_t radioBuf[RPHY_BUFFER_SIZE];
   
   if (RADIO_isOn) { /* radio turned on? */
+    RADIO_HandleEvents();
     RADIO_HandleStateMachine(); /* process state machine */
     /* Initialize Rx/Tx descriptor */
     packet.data = &radioBuf[0];

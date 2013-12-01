@@ -10,8 +10,9 @@
 #include "RNetConf.h"
 #if PL_HAS_RADIO
 #include "RPHY.h"
-#include "RNWK.h"
 #include "RMAC.h"
+#include "RNWK.h"
+#include "RAPP.h"
 
 static RNWK_ShortAddrType RNWK_ThisNodeAddr = RNWK_ADDR_BROADCAST; /* address of this network node */
 static RNWK_AppOnRxCallbackType RNWK_AppOnRxCallback = NULL; /* notification callback installed by upper layer */
@@ -80,6 +81,10 @@ uint8_t RNWK_OnPacketRx(RPHY_PacketDesc *packet) {
     }
   }
   return ERR_FAILED;
+}
+
+void RNWK_SniffPacket(RPHY_PacketDesc *packet, bool isTx) {
+  RAPP_SniffPacket(packet, isTx);
 }
 
 #if PL_HAS_SHELL

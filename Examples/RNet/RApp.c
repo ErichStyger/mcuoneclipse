@@ -88,6 +88,74 @@ uint8_t RAPP_SetThisNodeAddr(RNWK_ShortAddrType addr) {
   return RNWK_SetThisNodeAddr(addr);
 }
 
+void RAPP_SniffPacket(RPHY_PacketDesc *packet, bool isTx) {
+#if PL_HAS_SHELL
+  uint8_t buf[32];
+  const CLS1_StdIOType *io;
+  int i;
+  uint8_t dataSize;
+  RNWK_ShortAddrType addr;
+  
+  io = CLS1_GetStdio();
+  if (isTx) {
+    CLS1_SendStr((unsigned char*)"Tx, ", io->stdOut);
+  } else {
+    CLS1_SendStr((unsigned char*)"Rx, ", io->stdOut);
+  }
+  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"flags: ");
+  UTIL1_strcatNum16s(buf, sizeof(buf), packet->flags);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" size: ");
+  UTIL1_strcatNum16s(buf, sizeof(buf), packet->dataSize);
+  CLS1_SendStr(buf, io->stdOut);
+  /* PHY */
+  CLS1_SendStr((unsigned char*)" hex: ", io->stdOut);
+  dataSize = packet->data[0]; /* first byte in data buffer is number of bytes */
+  for(i=0; i<=dataSize;i++) {
+    buf[0] = '\0';
+    UTIL1_strcatNum8Hex(buf, sizeof(buf), packet->data[i]);
+    UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" ");
+    CLS1_SendStr(buf, io->stdOut);
+  }
+  CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
+  /* MAC */
+  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"size:");
+  UTIL1_strcatNum8u(buf, sizeof(buf), dataSize);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" type:");
+  UTIL1_strcatNum8Hex(buf, sizeof(buf), RMAC_BUF_TYPE(packet->data));
+  CLS1_SendStr(buf, io->stdOut);
+  RMAC_DecodeType(buf, sizeof(buf), packet);
+  CLS1_SendStr(buf, io->stdOut);
+  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)" s#:");
+  UTIL1_strcatNum8Hex(buf, sizeof(buf), RMAC_BUF_SEQN(packet->data));
+  CLS1_SendStr(buf, io->stdOut);
+  /* NWK */
+  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)" src:");
+  addr = RNWK_BUF_GET_SRC_ADDR(packet->data);
+#if RNWK_SHORT_ADDR_SIZE==1
+  UTIL1_strcatNum8Hex(buf, sizeof(buf), addr);
+#else
+  UTIL1_strcatNum16Hex(buf, sizeof(buf), addr);
+#endif
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" dst:");
+  addr = RNWK_BUF_GET_DST_ADDR(packet->data);
+#if RNWK_SHORT_ADDR_SIZE==1
+  UTIL1_strcatNum8Hex(buf, sizeof(buf), addr);
+#else
+  UTIL1_strcatNum16Hex(buf, sizeof(buf), addr);
+#endif
+  CLS1_SendStr(buf, io->stdOut);
+  /* APP */
+  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)" type:");
+  UTIL1_strcatNum8Hex(buf, sizeof(buf), RAPP_BUF_TYPE(packet->data));
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" size:");
+  UTIL1_strcatNum8Hex(buf, sizeof(buf), RAPP_BUF_SIZE(packet->data));
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  CLS1_SendStr(buf, io->stdOut);
+#else
+  (void)packet;
+  (void)isTx;
+#endif
+}
 void RAPP_Deinit(void) {
   /* nothing needed */
 }

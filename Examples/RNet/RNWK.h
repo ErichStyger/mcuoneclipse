@@ -95,6 +95,13 @@ RNWK_ShortAddrType RNWK_GetThisNodeAddr(void);
  */
 uint8_t RNWK_SetThisNodeAddr(RNWK_ShortAddrType addr);
 
+/*!
+ * \brief Sniffs and dumps a packet.
+ * \param packet Data packet
+ * \param isTx If either Tx or Rx packet
+ */
+void RNWK_SniffPacket(RPHY_PacketDesc *packet, bool isTx);
+
 /*! \brief Initializes the module */
 void RNWK_Init(void);
 

@@ -59,7 +59,7 @@ uint8_t RPHY_GetPayload(RPHY_PacketDesc *packet);
 uint8_t RPHY_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize);
 
 /*!
- * \brief Sniffs and dumps a packet to the Shell (shell needs to be enabled.
+ * \brief Sniffs and dumps a packet.
  * \param packet Data packet
  * \param isTx If either Tx or Rx packet
  */
