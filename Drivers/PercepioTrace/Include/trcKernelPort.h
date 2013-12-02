@@ -387,7 +387,7 @@ void* prvTraceGetCurrentTaskHandle(void);
 	}
 
 /* A macro that will update the tick count when returning from tickless idle */
-#undef traceINCREASE_TICK_COUNT( xCount )
+#undef traceINCREASE_TICK_COUNT
 #define traceINCREASE_TICK_COUNT( xCount ) { extern uint32_t uiTraceTickCount; uiTraceTickCount += xTickCount; }
 
 #endif
