@@ -847,11 +847,10 @@ LI.EXP {
  - This is a macro that calls the xQueueGenericSend() function. A version of xQueueSendToBack() that will write to the queue even if the queue is full, overwriting data that is already held in the queue. xQueueOverwrite() is intended for use with queues that have a length of one, meaning the queue is either empty or full. This function must not be called from an interrupt service routine (ISR). See xQueueOverwriteFromISR() for an alternative which may be used in an ISR. 
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueueOverwrite(xQueueHandle xQueue, const void *pvItemToQueue, portTickType xTicksToWait)<br />
+<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueueOverwrite(xQueueHandle xQueue, const void *pvItemToQueue)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>xQueue:xQueueHandle</i> - The handle of the queue to which the data is to be sent.</li>
 <li><i>pvItemToQueue:byte</i> - A pointer to the data to be sent to the queue. The size of the data that can be sent to a queue was defined when the queue was created.</li>
-<li><i>xTicksToWait:portTickType</i> - The number of ticks for which the calling task should be held in the Blocked state to wait for space to become available on the queue should the queue already be full.<br />A value of zero will prevent the calling task from entering the Blocked state.<br />If INCLUDE_vTaskSuspend is set to 1 then a value of portMAX_DELAY will hold the task in the Blocked state indefinitely to wait for space to become available on the queue.</li>
 <li><i>Return value:portBASE_TYPE</i> - pdPASS: Data was successfully sent to the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for space to become available and space did become available before the block time expired.<br />errQUEUE_FULL: The queue is already full so no data could be sent to the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for space to become available, but no space became available before the block time expired.
 </li>
 </ul><br />

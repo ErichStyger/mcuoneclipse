@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.322</Version>
+    <Version>01.323</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -3658,7 +3658,7 @@ Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total accumulated ex
         <InDefinition>true</InDefinition>
         <ReturnType>portBASE_TYPE</ReturnType>
         <RetHint>pdPASS: Data was successfully sent to the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for space to become available and space did become available before the block time expired.\nerrQUEUE_FULL: The queue is already full so no data could be sent to the queue. If a block time was specified then the calling task may have been temporarily placed into the Blocked state to wait for space to become available, but no space became available before the block time expired.</RetHint>
-        <ParamCount>3</ParamCount>
+        <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>xQueue</ParName>
           <ParType>xQueueHandle</ParType>
@@ -3672,15 +3672,9 @@ Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total accumulated ex
           <ParHint>A pointer to the data to be sent to the queue. The size of the data that can be sent to a queue was defined when the queue was created.</ParHint>
           <ParUserDeclaration>const void *pvItemToQueue</ParUserDeclaration>
         </Parameter>
-        <Parameter>
-          <ParName>xTicksToWait</ParName>
-          <ParType>portTickType</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>The number of ticks for which the calling task should be held in the Blocked state to wait for space to become available on the queue should the queue already be full.\nA value of zero will prevent the calling task from entering the Blocked state.\nIf INCLUDE_vTaskSuspend is set to 1 then a value of portMAX_DELAY will hold the task in the Blocked state indefinitely to wait for space to become available on the queue.</ParHint>
-        </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>portBASE_TYPE #M#_#C#(xQueueHandle xQueue, const void *pvItemToQueue, portTickType xTicksToWait)</ANSIC>
+          <ANSIC>portBASE_TYPE #M#_#C#(xQueueHandle xQueue, const void *pvItemToQueue)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

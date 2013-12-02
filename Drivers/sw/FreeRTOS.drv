@@ -1001,11 +1001,10 @@ void %'ModuleName'%.%Init(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN xQueueOverwrite
 %ifdef xQueueOverwrite
-#define %'ModuleName'%.%xQueueOverwrite(xQueue, pvItemToQueue, xTicksToWait) \
-  xQueueOverwrite(xQueue, pvItemToQueue, xTicksToWait)
+#define %'ModuleName'%.%xQueueOverwrite(xQueue, pvItemToQueue) \
+  xQueueOverwrite(xQueue, pvItemToQueue)
 %define! ParxQueue
 %define! ParpvItemToQueue
-%define! ParxTicksToWait
 %define! RetVal
 %include Common\FreeRTOSxQueueOverwrite.Inc
 
@@ -2476,11 +2475,10 @@ portBASE_TYPE %'ModuleName'%.%xQueuePeekFromISR(xQueueHandle xQueue, void *pvBuf
 %ifdef xQueueOverwrite
 %define! ParxQueue
 %define! ParpvItemToQueue
-%define! ParxTicksToWait
 %define! RetVal
 %include Common\FreeRTOSxQueueOverwrite.Inc
 /*
-portBASE_TYPE %'ModuleName'%.%xQueueOverwrite(xQueueHandle xQueue, const void *pvItemToQueue, portTickType xTicksToWait)
+portBASE_TYPE %'ModuleName'%.%xQueueOverwrite(xQueueHandle xQueue, const void *pvItemToQueue)
 {
   *** Implemented as macro in the header file %'ModuleName'.h
 }
