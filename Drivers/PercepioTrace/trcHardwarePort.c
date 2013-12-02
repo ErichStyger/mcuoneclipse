@@ -47,6 +47,7 @@
 static char* prvFileName = NULL;
 #endif
 
+uint32_t trace_disable_timestamp;
 
 /*******************************************************************************
  * uiTraceTickCount
