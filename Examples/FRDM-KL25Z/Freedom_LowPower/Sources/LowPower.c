@@ -27,13 +27,11 @@ static LP_ClockMode LP_clock;
 #if LP_CAN_CHANGE_CLOCK
 static void LP_ChangeClock(LP_ClockMode mode) {
   LP_clock = mode;
-#if defined(PL_BOARD_IS_FRDM)
   if (LP_clock==LP_SPEED_FAST) {
     (void)Cpu_SetClockConfiguration(CPU_CLOCK_CONFIG_0);
   } else if (LP_clock==LP_SPEED_MEDIUM) {
     (void)Cpu_SetClockConfiguration(CPU_CLOCK_CONFIG_1);
   }
-#endif  
 }
 #endif
 
@@ -115,11 +113,10 @@ uint8_t LP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdI
 #endif
 
 void LP_EnterPowerMode(LP_PowerMode mode) {
-  LP_mode = mode;
 #if PL_HAS_LED
   //LED3_Neg();
 #endif
-#if defined(PL_BOARD_IS_SRB)
+#if PL_IS_SRB
   if (mode==LP_WAIT) {
     Cpu_SetWaitMode();
   }
@@ -139,11 +136,11 @@ void LP_EnterPowerMode(LP_PowerMode mode) {
     __asm volatile("isb");  
   } else 
 #endif
-  if (LP_mode==LP_WAIT) {
+  if (mode==LP_WAIT) {
     Cpu_SetOperationMode(DOM_WAIT, NULL, NULL); /* next interrupt will wake us up */
-  } else if (LP_mode==LP_SLEEP) {
+  } else if (mode==LP_SLEEP) {
     Cpu_SetOperationMode(DOM_SLEEP, NULL, NULL); /* next interrupt will wake us up */
-  } else if (LP_mode==LP_STOP) {
+  } else if (mode==LP_STOP) {
     Cpu_SetOperationMode(DOM_STOP, NULL, NULL); /* next interrupt will wake us up */
   }
   /* interrupt will wake us up, and we are back in RUN mode */
