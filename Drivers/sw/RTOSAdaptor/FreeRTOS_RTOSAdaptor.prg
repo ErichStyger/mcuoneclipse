@@ -43,6 +43,9 @@
 %------------------------------------------------------------------------------
 %SUBROUTINE RTOSAdap_genDriverMemoryAlloc(arg_destPtrBuffer,arg_objType,opt_arg_errCode,arg_globDefsThread,opt_arg_MemoryAllocParams)
 %------------------------------------------------------------------------------
+  %-
+  %inclSUB RTOSAdap_priv_getOptionalParameterEffectiveValue(componentInstanceName,,loc_componentInstanceName)
+  %-
   %- Check if RTOSAdap_driverMemoryAlloc() was called only once for this object
   %if defined(RTOSAdap_alloc_object_%'arg_destPtrBuffer')
     %error! There was called allocation for object "%'arg_destPtrBuffer'" for object type "%'arg_objType'" twice (which does not work for bareboard RTOS what only simulates the dynamic allocation)
@@ -50,42 +53,127 @@
     %- o.k., it is first call, mark that such object was allocated
     %define RTOSAdap_alloc_object_%'arg_destPtrBuffer'
   %endif
+ %-
+  %THREAD %'arg_globDefsThread' SELECT
+%>1%{ {%'OperatingSystemId' RTOS Adapter} Static object used for simulation of dynamic driver memory allocation %}
+  %THREAD %'arg_globDefsThread' UNSELECT
   %-
-  %- Dynamic allocation is supported (generate it)
-  %inclSUB RTOSAdap_getRTOSFunction(Malloc,loc_MallocFunction)
-%{ {%'OperatingSystemId' RTOS Adapter} Driver memory allocation: RTOS function call is defined by %'OperatingSystemId' RTOS Adapter property %}
-%-MEM_ALLOC_FUNCTION_START
-%'arg_destPtrBuffer' = (%'arg_objType' *)%'loc_MallocFunction'(sizeof(%'arg_objType'));
-%-MEM_ALLOC_FUNCTION_END
-%if opt_arg_errCode <> ''
-#if FreeRTOS_CHECK_MEMORY_ALLOCATION_ERRORS
-if (%'arg_destPtrBuffer' == NULL) {
-  %'opt_arg_errCode'
-}
-#endif
-%endif
   %-
-  %- Set memory block type (not supported now)
-%-_mem_set_type(%'arg_destPtrBuffer', MEM_TYPE_...);
+  %define! loc_ObjDefPrefix
+  %define! loc_ObjDefSuffix
   %-
-  %undef loc_MallocFunction
+  %------------------------------------------------------------------------------
+  %- Processing of optional parameters
+  %------------------------------------------------------------------------------
+  %inclSUB RTOSAdap_lib_getStructMember(%'opt_arg_MemoryAllocParams',ALIGN,loc_Param_Align,optional)
+  %inclSUB RTOSAdap_lib_getStructMember(%'opt_arg_MemoryAllocParams',ZERO,loc_Param_Zero,optional)
+  %------------------------------------------------------------------------------
+  %- Processing of ALIGN optional parameter
+  %------------------------------------------------------------------------------
+  %if loc_Param_Align != 'undef'
+    %if loc_Param_Align != ''
+      %- Add new data section to linker file
+      %if (Compiler = 'CodeWarriorARM') | (Compiler = 'CodeWarriorMCF')
+        %add PE_G_LCF_DATA_SECTION .%'loc_componentInstanceName'_memory_section
+        %add PE_G_LCF_DATA_ALIGN %loc_Param_Align
+        %define! loc_ObjDefPrefix __declspec(%'loc_componentInstanceName'_memory_section)%_space_
+      %elif (Compiler = 'IARARM')
+        %add PE_G_LCF_DATA_SECTION %'loc_componentInstanceName'_memory_section
+        %add PE_G_LCF_DATA_ALIGN %loc_Param_Align
+      %elif (Compiler = 'IARMCF')
+        %- No linker file modifications needed.
+      %elif (Compiler = 'GNUC')
+        %- No linker file modifications needed.
+      %elif (Compiler = 'ARM_CC')
+        %- No linker file modifications needed.
+      %else
+        %error! RTOS adapter: Unsupported compiler to allign allocated memory!
+      %endif
+      %THREAD %'arg_globDefsThread' SELECT
+      %if (Compiler = 'CodeWarriorARM') | (Compiler = 'CodeWarriorMCF')
+%>1%{ This pragma aligns an object to %loc_Param_Align bytes boundary. %}
+%>1#pragma define_section %'loc_componentInstanceName'_memory_section ".%'loc_componentInstanceName'_memory_section" far_abs RW
+      %elif (Compiler = 'IARARM')
+%>1%{ This pragma aligns an object to %loc_Param_Align bytes boundary. %}
+%>1#pragma location=".%'loc_componentInstanceName'_memory_section"
+      %elif (Compiler = 'IARMCF')
+%>1%{ This pragma aligns an object to %loc_Param_Align bytes boundary. %}
+%>1#pragma data_alignment=%loc_Param_Align
+      %elif (Compiler = 'GNUC')
+        %define! loc_ObjDefSuffix %'_space_'__attribute__ ((aligned (%'loc_Param_Align')))
+      %elif (Compiler = 'ARM_CC')
+        %define! loc_ObjDefSuffix %'_space_'__attribute__ ((aligned (%'loc_Param_Align')))
+      %endif
+      %THREAD %'arg_globDefsThread' UNSELECT
+    %else
+      %error! Parameter ALIGN has no value
+    %endif
+    %undef loc_Param_Align
+  %endif
+  %-
+  %- Generate definition of static object
+  %define loc_staticObjName %'arg_destPtrBuffer'__DEFAULT_RTOS_ALLOC
+  %THREAD %'arg_globDefsThread' SELECT
+%>1%'loc_ObjDefPrefix'static %'arg_objType' %'loc_staticObjName'%'loc_ObjDefSuffix';
+  %THREAD %'arg_globDefsThread' UNSELECT
+  %-
+%{ {%'OperatingSystemId' RTOS Adapter} Driver memory allocation: Dynamic allocation is simulated by a pointer to the static object %}
+%'arg_destPtrBuffer' = &%'loc_staticObjName';
+  %------------------------------------------------------------------------------
+  %- Processing of ZERO optional parameter
+  %------------------------------------------------------------------------------
+  %if loc_Param_Zero != 'undef'
+%{ {%'OperatingSystemId' RTOS Adapter} Driver memory allocation: Fill the allocated memory by zero value %}
+PE_FillMemory(%'arg_destPtrBuffer', 0U, sizeof(%'arg_objType'));
+    %undef loc_Param_Zero
+  %endif
+  %-
+  %undef loc_staticObjName
+  %undef loc_ObjDefPrefix
 %SUBROUTINE_END
+%- 
+%- <<< EST old code for dynamic memory allocation:
+%-  %- Dynamic allocation is supported (generate it)
+%-   %inclSUB RTOSAdap_getRTOSFunction(Malloc,loc_MallocFunction)
+%- %{ {%'OperatingSystemId' RTOS Adapter} Driver memory allocation: RTOS function call is defined by %'OperatingSystemId' RTOS Adapter property %}
+%- %-MEM_ALLOC_FUNCTION_START
+%- %'arg_destPtrBuffer' = (%'arg_objType' *)%'loc_MallocFunction'(sizeof(%'arg_objType'));
+%- %-MEM_ALLOC_FUNCTION_END
+%- %if opt_arg_errCode <> ''
+%- #if FreeRTOS_CHECK_MEMORY_ALLOCATION_ERRORS
+%- if (%'arg_destPtrBuffer' == NULL) {
+%-   %'opt_arg_errCode'
+%- }
+%- #endif
+%- %endif
+%-   %-
+%-   %- Set memory block type (not supported now)
+%- %-_mem_set_type(%'arg_destPtrBuffer', MEM_TYPE_...);
+%-   %-
+%-   %undef loc_MallocFunction
+%- %SUBROUTINE_END
 %-
 %-
 %------------------------------------------------------------------------------
 %SUBROUTINE RTOSAdap_genDriverMemoryDealloc(arg_ptrBuffer,arg_objType)
 %------------------------------------------------------------------------------
-  %- Dynamic allocation is supported, generate it
-  %inclSUB RTOSAdap_getRTOSFunction(Dealloc,loc_DeallocFunction)
-%{ {%'OperatingSystemId' RTOS Adapter} Driver memory deallocation: RTOS function call is defined by %'OperatingSystemId' RTOS Adapter property %}
-%-MEM_DEALLOC_FUNCTION_START
-#if FRTOS_MEMORY_SCHEME != 1 /* scheme 1 has no deallocate */
-%'loc_DeallocFunction'(%'arg_ptrBuffer');
-#endif
-%-MEM_DEALLOC_FUNCTION_END
-  %-
-  %undef loc_DeallocFunction
+  %- Bare-board RTOS is simulating dynamic allocation by static allocation.
+  %- Allocation is only simulated, so deallocation has no effect.
+%{ {%'OperatingSystemId' RTOS Adapter} Driver memory deallocation: Dynamic allocation is simulated, no deallocation code is generated %}
 %SUBROUTINE_END
+
+%- << EST code with dynamic memory allocation
+%-  %- Dynamic allocation is supported, generate it
+%-  %inclSUB RTOSAdap_getRTOSFunction(Dealloc,loc_DeallocFunction)
+%- %{ {%'OperatingSystemId' RTOS Adapter} Driver memory deallocation: RTOS function call is defined by %'OperatingSystemId' RTOS Adapter property %}
+%- %-MEM_DEALLOC_FUNCTION_START
+%- #if FRTOS_MEMORY_SCHEME != 1 /* scheme 1 has no deallocate */
+%- %'loc_DeallocFunction'(%'arg_ptrBuffer');
+%- #endif
+%- %-MEM_DEALLOC_FUNCTION_END
+%-   %-
+%-   %undef loc_DeallocFunction
+%- %SUBROUTINE_END
 %-
 %-
 %------------------------------------------------------------------------------
