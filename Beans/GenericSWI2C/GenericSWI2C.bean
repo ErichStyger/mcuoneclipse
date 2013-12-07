@@ -3,8 +3,8 @@
   <Header>
     <Name>GenericSWI2C</Name>
     <Description>Generic Software I2C</Description>
-    <Author>Erich Styger</Author>
-    <Version>01.003</Version>
+    <Author>Erich Styger, Marc Lindahl</Author>
+    <Version>01.005</Version>
     <Icon>GenericSWI2C</Icon>
     <TypesFiles>PE,GenericSWI2C\GenericSWI2C</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -19,7 +19,7 @@
     <BW_NeedUst>0</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>(c) Copyright Freescale Semiconductor, 2012\nhttp      : www.freescale.com</Copyright>
+    <Copyright>(c) Copyright Freescale Semiconductor, 2013\nhttp      : www.freescale.com</Copyright>
     <Category>CPU External Devices-Communication</Category>
     <DemoDriver>no</DemoDriver>
     <BeanLevel>Low</BeanLevel>
@@ -119,6 +119,24 @@
         <IconPopup>false</IconPopup>
         <SortStyle/>
       </TInhrLinkItem>
+    </Property>
+    <Property>
+      <TBoolItem>
+        <Name>Yield</Name>
+        <Symbol>Yield</Symbol>
+        <TypeSpec>typeYesNo</TypeSpec>
+        <Hint>Yield if an RTOS is present during waiting. This avoids that the task using the driver starves other tasks.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+      </TBoolItem>
     </Property>
   </PropertyList>
   <MethodList>
@@ -327,6 +345,34 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ResetBus</Name>
+        <Symbol>ResetBus</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Reset bus if needed.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>Boolean</ReturnType>
+        <RetHint>TRUE if bus is idle, FALSE if bus is busy/hung</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>bool #M#_#C#(void)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

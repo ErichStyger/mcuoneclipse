@@ -191,6 +191,15 @@ byte %'ModuleName'%.%GetSelected(byte *Slv);
 
 %endif %- GetSelected
 %-BW_METHOD_END GetSelected
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ResetBus
+%ifdef ResetBus
+bool %'ModuleName'%.%ResetBus(void);
+%define! RetVal
+%include Common\GenericSWI2CResetBus.Inc
+
+%endif %- ResetBus
+%-BW_METHOD_END ResetBus
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -248,13 +257,37 @@ void %OnRxChar(void);
 %-     static int counter1;
 %-     int %'ModuleName'%.counter2;
 %-
+%if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS'
+#define %'ModuleName'%.HAS_RTOS  1 /* FreeRTOS present */
+%else
+#define %'ModuleName'%.HAS_RTOS  0 /* No RTOS present */
+%endif
+%if %Yield='yes'
+#define %'ModuleName'%.YIELD     1 /* Yield is enabled in the component properties */
+%else
+#define %'ModuleName'%.YIELD     0 /* Yield is diabled in the component properties */
+%endif
+
+#if %'ModuleName'%.HAS_RTOS
+/* include RTOS header files */
+#include "FreeRTOS.h" /* for yielding */
+#endif
+
+#if %'ModuleName'%.HAS_RTOS && %'ModuleName'%.YIELD
+  #define %'ModuleName'%.OSYIELD() taskYIELD()
+#else
+  #define %'ModuleName'%.OSYIELD() /* do nothing */
+#endif
+
 #define ACK         0U
 #define NOACK       1U
 #define OUTPUT      1U
 #define INPUT       0U
 #define WRITE       0U
 #define READ        1U
-#define TRIALS      %NofTrials
+#define TRIALS      %NofTrials /* defined by component properties */
+
+#define %'ModuleName'%.DELAY_NS    %DelayNs   /* delay time in ns, as specified in the component properties */
 
 static byte SlaveAddr;             /* destination slave address      */
 
@@ -298,7 +331,8 @@ static void InternalStop(void);
 %include Common\GeneralInternalGlobal.inc (Delay)
 static void Delay(void)
 {
-  %@Wait@'ModuleName'%.Waitns(%DelayNs);
+  %'ModuleName'%.OSYIELD();
+  %@Wait@'ModuleName'%.Waitns(%'ModuleName'%.DELAY_NS);
 }
 
 %-INTERNAL_METHOD_END Delay
@@ -330,16 +364,17 @@ static void Write(byte Data)
     } else {
       SDA_SetDir((bool)OUTPUT);
       SDA_ClrVal();              /* SDA LOW */
-      Delay(); /* << EST */
     }
+    Delay();
     Shift = (byte)(Shift >> 1);
     SCL_SetDir((bool)INPUT);     /* CLOCK HIGH PULSE */
     Delay();
     timeout = 65535U;
     while((SCL_GetVal()==0U)&&(timeout!=0U)) { /* WAIT FOR CLOCK HIGH PULSE */
       timeout--;
+      %'ModuleName'%.OSYIELD();
     }
-    Delay(); /* << EST */
+    Delay();
     SCL_SetDir((bool)OUTPUT);
     SCL_ClrVal();                /* CLOCK LOW PULSE */
     Delay();
@@ -359,12 +394,14 @@ static byte Read(void)
 
   Shift = 0U;
   SDA_SetDir((bool)INPUT);       /* SDA INPUT MODE */
+  Delay(); /* give SDA setup time */
   for (I = 0x08U; I != 0U; I--) {
     SCL_SetDir((bool)INPUT);     /* CLOCK HIGH PULSE */
     Delay();
     timeout = 65535U;
     while((SCL_GetVal()==0U)&&(timeout!=0U)) { /* WAIT FOR CLOCK HIGH PULSE */
       timeout--;
+      %'ModuleName'%.OSYIELD();
     }
     Delay(); /* << EST */
     Shift = (byte)(Shift << 1);
@@ -387,13 +424,14 @@ static bool GetAck(void)
 {
   word timeout;
 
-  Delay(); /* << EST */
   SDA_SetDir((bool)INPUT);       /* SDA HIGH */
+  Delay();
   SCL_SetDir((bool)INPUT);       /* CLOCK HIGH PULSE */
   Delay();
   timeout = 65535U;
   while((SCL_GetVal()==0U)&&(timeout!=0U)) { /* WAIT FOR CLOCK HIGH PULSE */
     timeout--;
+    %'ModuleName'%.OSYIELD();
   }
   return((bool)SDA_GetVal());    /* ACKNOWLEDGE VALUE */
 }
@@ -407,21 +445,22 @@ static void SetAck(bool Ack)
 {
   word timeout;
 
-  Delay(); /* << EST */
+  Delay();
   if (Ack) {
     SDA_SetDir((bool)INPUT);     /* MASTER NOACKNOWLEDGE - SDA HIGH */
   } else {
     SDA_SetDir((bool)OUTPUT);
     SDA_ClrVal();                /* MASTER ACKNOWLEDGE - SDA LOW */
   }
-  Delay(); /* << EST */
+  Delay();
   SCL_SetDir((bool)INPUT);       /* HIGH CLOCK PULSE */
   Delay();
   timeout = 65535U;
   while((SCL_GetVal()==0U)&&(timeout!=0U)) { /* WAIT FOR CLOCK HIGH PULSE */
     timeout--;
+    %'ModuleName'%.OSYIELD();
   }
-  Delay(); /* << EST */
+  Delay();
   SCL_SetDir((bool)OUTPUT);
   SCL_ClrVal();                  /* LOW CLOCK PULSE */
   Delay();
@@ -435,15 +474,53 @@ static void SetAck(bool Ack)
 %include Common\GeneralInternalGlobal.inc (InternalStop)
 static void InternalStop(void)
 {
-  Delay(); /* << EST */
+  Delay();
   SDA_SetDir((bool)OUTPUT);
   SDA_ClrVal();                  /* STOP SETUP */
   SCL_SetDir((bool)INPUT);       /* CLOCK HIGH PULSE + STOP SETUP TIME */
   Delay();
   SDA_SetDir((bool)INPUT);       /* STOP CONDITION */
+  Delay();                       /* stop setup time to SCL low (which might follow) */
 }
 
 %-INTERNAL_METHOD_END InternalStop
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ResetBus
+%ifdef ResetBus
+%define! RetVal
+%include Common\GenericSWI2CResetBus.Inc
+bool %'ModuleName'%.%ResetBus(void)
+{
+  char i;
+
+  if(SDA_GetVal() && SCL_GetVal()) {
+    return TRUE;
+  }
+  SCL_SetDir((bool)INPUT);
+  SDA_SetDir((bool)INPUT);
+  Delay();
+  if(!SCL_GetVal()) {
+    return FALSE; /* SCL held low externally, nothing we can do */
+  }
+  for(i = 0; i<9; i++) { /* up to 9 clocks until SDA goes high */
+    SCL_SetDir((bool)OUTPUT);
+    SCL_ClrVal();
+    Delay();
+    SCL_SetDir((bool)INPUT);
+    Delay();
+    if( SDA_GetVal()) {
+      break; /* finally SDA high so we can generate a STOP */
+    }
+  } /* for */
+  if(!SDA_GetVal()) {
+    return FALSE; /* after 9 clocks still nothing */
+  }
+  InternalStop();
+  return(SDA_GetVal() && SCL_GetVal()); /* both high then we succeeded */
+}
+
+%endif %- ResetBus
+%-BW_METHOD_END ResetBus
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SendChar
 %ifdef SendChar
@@ -465,6 +542,7 @@ byte %'ModuleName'%.%SendChar(byte Chr)
     timeout = 65535U;
     while((SDA_GetVal()==0U)&&(timeout!=0U)) { /* WAIT FOR CLOCK HIGH PULSE */
       timeout--;
+      %'ModuleName'%.OSYIELD();
     }
     Delay(); /* << EST */
     if (timeout==0) {
@@ -537,6 +615,7 @@ byte %'ModuleName'%.%RecvChar(byte *Chr)
     timeout = 65535U;
     while((SDA_GetVal()==0U)&&(timeout!=0U)) { /* WAIT FOR CLOCK HIGH PULSE */
       timeout--;
+      %'ModuleName'%.OSYIELD();
     }
     Delay(); /* << EST */
     if (timeout==0) {
@@ -601,10 +680,11 @@ byte %'ModuleName'%.%SendBlock(void *Ptr, word Siz, word *Snt)
     timeout = 65535U;
     while((SDA_GetVal()==0U)&&(timeout!=0U)) { /* WAIT FOR CLOCK HIGH PULSE */
       timeout--;
+      %'ModuleName'%.OSYIELD();
     }
-    Delay(); /* << EST */
+    Delay();
     if (timeout==0) {
-      InternalStop();
+      /*InternalStop(); */ /* MSL: the next level up is responsible for the following.... this caused an empty start-stop which is technically illegal */
       return ERR_BUSY;
     }
     SDA_SetDir((bool)OUTPUT);
@@ -621,9 +701,10 @@ byte %'ModuleName'%.%SendBlock(void *Ptr, word Siz, word *Snt)
 %if defined(OnNACK)
     %OnNACK();
 %endif
-    SCL_SetDir((bool)OUTPUT);
-    SCL_ClrVal();                /* CLOCK LOW PULSE */
-    InternalStop();
+    /* MSL: the next level up is responsible for the following.... this caused an empty start-stop which is technically illegal */
+    /* SCL_SetDir((bool)OUTPUT); */
+    /* SCL_ClrVal(); */               /* CLOCK LOW PULSE */
+    /* InternalStop(); */
     return ERR_BUSY;
   } else {
     SCL_SetDir((bool)OUTPUT);
@@ -650,17 +731,16 @@ byte %'ModuleName'%.%SendBlock(void *Ptr, word Siz, word *Snt)
     }
     ++(*Snt);
   }
-#if 1 /* << EST */
   Delay();
   timeout = 65535U;
   while((SDA_GetVal()==0U)&&(timeout!=0U)) { /* WAIT FOR CLOCK HIGH PULSE */
     timeout--;
+    %'ModuleName'%.OSYIELD();
   }
   if (timeout==0) {
-    InternalStop();
+    /* InternalStop(); */ /* MSL: the next level up is responsible for the following.... this caused an empty start-stop which is technically illegal */
     return ERR_BUSY;
   }
-#endif
   return ERR_OK;
 }
 
@@ -691,10 +771,11 @@ byte %'ModuleName'%.%RecvBlock(void *Ptr, word Siz, word *Rcv)
     timeout = 65535U;
     while((SDA_GetVal()==0U)&&(timeout!=0U)) { /* WAIT FOR CLOCK HIGH PULSE */
       timeout--;
+      %'ModuleName'%.OSYIELD();
     }
-    Delay(); /* << EST */
+    Delay();
     if (timeout==0) {
-      InternalStop();
+      /* InternalStop(); */
       return ERR_BUSY;
     }
     SDA_SetDir((bool)OUTPUT);
@@ -711,9 +792,9 @@ byte %'ModuleName'%.%RecvBlock(void *Ptr, word Siz, word *Rcv)
 %if defined(OnNACK)
     %OnNACK();
 %endif
-    SCL_SetDir((bool)OUTPUT);
-    SCL_ClrVal();                /* CLOCK LOW PULSE */
-    InternalStop();
+    /* SCL_SetDir((bool)OUTPUT); */
+    /* SCL_ClrVal(); */               /* CLOCK LOW PULSE */
+    /* InternalStop(); */
     return ERR_BUSY;
   } else {
     SCL_SetDir((bool)OUTPUT);
@@ -725,16 +806,15 @@ byte %'ModuleName'%.%RecvBlock(void *Ptr, word Siz, word *Rcv)
 %if defined(OnRxChar)
     %OnRxChar();
 %endif
-#if 1 /* << EST */
     timeout = 65535U;
     while((SDA_GetVal()==0U)&&(timeout!=0U)) { /* WAIT FOR CLOCK HIGH PULSE */
       timeout--;
+      %'ModuleName'%.OSYIELD();
     }
     if (timeout==0) {
-      InternalStop();
+      /* InternalStop(); */
       return ERR_BUSY;
     }
-#endif
     if (I == (Siz - 1U)) {
       SetAck((bool)NOACK);
     } else {
@@ -761,6 +841,7 @@ byte %'ModuleName'%.%SendStop(void)
   SCL_SetDir((bool)INPUT);       /* HIGH CLOCK PULSE + STOP SETUP TIME */
   Delay();
   SDA_SetDir((bool)INPUT);       /* STOP CONDITION */
+  Delay(); /* add stop time */
   return ERR_OK;
 }
 
