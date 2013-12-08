@@ -12,7 +12,8 @@ https://github.com/ErichStyger/mcuoneclipse/Drivers
 Part1_Beans_*.PEupd Content:
 -------------------------------------
 Package from component(s):
-- 24AA_EEPROM version 01.029
+Package from component(s):
+- 24AA_EEPROM version 01.030
 - 74HC164 version 01.031
 - 74HC595 version 01.022
 - App_SMAC_Hello version 01.085
@@ -29,7 +30,7 @@ Package from component(s):
 - FatFsMem_USB_MSD version 01.019
 - FatFsMemSDHC version 01.007
 - FontDisplay version 01.195
-- FreeRTOS version 01.322
+- FreeRTOS version 01.323
 - FreeRTOSTrace version 01.003
 - FSL_USB_CDC_Device version 01.021
 - FSL_USB_HID_Keyboard_Device version 01.049
@@ -39,10 +40,10 @@ Package from component(s):
 - FSShell version 01.231
 - GDisplay version 01.190
 - GenericBitIO version 01.065
-- GenericI2C version 01.013
+- GenericI2C version 01.014
 - GenericKBI version 01.025
 - GenericSPI version 01.029
-- GenericSWI2C version 01.003
+- GenericSWI2C version 01.005
 - GenericSWSPI version 01.001
 - GenericTimeDate version 01.015
 - GFont version 01.123
@@ -62,19 +63,16 @@ Package from component(s):
 - LowPower version 01.016
 - MAG3110 version 01.004
 - MaxonF2140 version 01.001
-- MC13192 version 01.005
+- MC13192 version 01.017
 - MC34673 version 01.019
-- MMA7260Q version 01.110
+- MMA7260Q version 01.111
 - MMA7455L version 01.043
 - MMA8451Q version 01.028
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 16.11.2013
+created 08.12.2013
 
 
-
-Part2_Beans_*.PEupd Content:
--------------------------------------
 Package from component(s):
 - nRF24L01 version 01.045
 - OLED version 01.045
@@ -96,8 +94,8 @@ Package from component(s):
 - Servo version 01.066
 - Shell version 01.023
 - SimpleEvents version 01.045
-- SMAC version 01.003
-- SPHY version 01.010
+- SMAC version 01.009
+- SPHY version 01.016
 - SPIHCS08 version 01.025
 - SSD1289 version 01.158
 - SSEC version 01.001
@@ -126,6 +124,7 @@ Package from component(s):
 - USB_Host_CMX version 01.058
 - UserInterface version 01.510
 - UTI version 01.125
-- Utility version 01.091
+- Utility version 01.092
 - Wait version 01.064
-created 16.11.2013
+created 08.12.2013
+
