@@ -403,7 +403,7 @@ static byte Read(void)
       timeout--;
       %'ModuleName'%.OSYIELD();
     }
-    Delay(); /* << EST */
+    Delay();
     Shift = (byte)(Shift << 1);
     if (SDA_GetVal()) {
       Shift++;
@@ -544,7 +544,7 @@ byte %'ModuleName'%.%SendChar(byte Chr)
       timeout--;
       %'ModuleName'%.OSYIELD();
     }
-    Delay(); /* << EST */
+    Delay();
     if (timeout==0) {
       InternalStop();
       return ERR_BUSY;
@@ -617,7 +617,7 @@ byte %'ModuleName'%.%RecvChar(byte *Chr)
       timeout--;
       %'ModuleName'%.OSYIELD();
     }
-    Delay(); /* << EST */
+    Delay();
     if (timeout==0) {
       InternalStop();
       return ERR_BUSY;
@@ -834,10 +834,10 @@ byte %'ModuleName'%.%RecvBlock(void *Ptr, word Siz, word *Rcv)
 %include Common\GenericSWI2CSendStop.Inc
 byte %'ModuleName'%.%SendStop(void)
 {
-  Delay(); /* << EST */
+  Delay();
   SDA_SetDir((bool)OUTPUT);
   SDA_ClrVal();                  /* STOP SETUP */
-  Delay(); /* << EST */
+  Delay();
   SCL_SetDir((bool)INPUT);       /* HIGH CLOCK PULSE + STOP SETUP TIME */
   Delay();
   SDA_SetDir((bool)INPUT);       /* STOP CONDITION */
