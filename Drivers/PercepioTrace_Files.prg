@@ -1,7 +1,6 @@
 %-
 %- Percepio FreeRTOS Trace source files
 %- 
-
 %FILE %'DirRel_Code'trcBase.c
 %include PercepioTrace\trcBase.c
 

@@ -16,7 +16,7 @@
 %else
   %define  RTOSPortDirFolder 
 %endif
-
+%-
 %FILE %'DirRel_Code'%'RTOSHeaderDirFolder'croutine.h
 %include freeRTOS\croutine.h
 
@@ -102,3 +102,7 @@
   %FILE? %'DirRel_Code'%'RTOSSrcDirFolder'CommandInterpreter.c
   %include freeRTOS\CommandInterpreter.c
 %endif
+
+%undef RTOSSrcDirFolder
+%undef RTOSHeaderDirFolder
+%undef RTOSPortDirFolder

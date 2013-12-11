@@ -1,4 +1,4 @@
-%if %RTOSGroup='no'
+%if defined(RTOSGroup) & %RTOSGroup='no'
   %set TickPeriodMs ReadOnly no
 %else
   %set TickPeriodMs ReadOnly yes

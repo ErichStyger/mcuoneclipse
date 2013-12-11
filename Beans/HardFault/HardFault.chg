@@ -1,5 +1,5 @@
-%if (CPUfamily = "Kinetis")
-%- ok
+%if defined(CPUfamily) & CPUfamily = "Kinetis"
+  %- ok
 %else
   %error "This component is only usable for ARM/Kinetis projects!"
 %endif

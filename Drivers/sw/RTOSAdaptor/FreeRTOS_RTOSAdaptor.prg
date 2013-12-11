@@ -161,7 +161,7 @@ PE_FillMemory(%'arg_destPtrBuffer', 0U, sizeof(%'arg_objType'));
   %- Allocation is only simulated, so deallocation has no effect.
 %{ {%'OperatingSystemId' RTOS Adapter} Driver memory deallocation: Dynamic allocation is simulated, no deallocation code is generated %}
 %SUBROUTINE_END
-
+%- 
 %- << EST code with dynamic memory allocation
 %-  %- Dynamic allocation is supported, generate it
 %-  %inclSUB RTOSAdap_getRTOSFunction(Dealloc,loc_DeallocFunction)

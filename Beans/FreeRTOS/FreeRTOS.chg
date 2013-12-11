@@ -1,5 +1,6 @@
 %set FreeRTOSVersion Value V7.5.0
 %set FreeRTOSVersion ExtraText V7.5.0
+%ifdef CPUfamily
 %if (CPUfamily = "ColdFireV1")
   %set ColdFireV1CPUSpecific ReadOnly no
   %set ColdFireV1CPUSpecific Value Enabled
@@ -32,19 +33,23 @@
 %- only Kinetis has Low Level Drivers
 %if (CPUfamily = "Kinetis")
   %- %set useARMSysTickTimer ExtraText xxx
-  %if useARMSysTickTimer='yes'
+  %if defined(useARMSysTickTimer) & useARMSysTickTimer='yes'
     %set LDDTickGroup Value Disabled
-    %if ARMFamilyType="M0+"
-      %set useARMSysTickUseCoreClock ReadOnly no
-      %if %useARMSysTickUseCoreClock='yes'
-        %set useARMSysTickTimer ExtraText CoreClock
-      %else
-        %set useARMSysTickTimer ExtraText CoreClock/16
+    %if defined(ARMFamilyType) & ARMFamilyType="M0+"
+      %if defined(useARMSysTickTimer) & defined(useARMSysTickUseCoreClock) & useARMSysTickTimer='yes'
+        %set useARMSysTickUseCoreClock ReadOnly no
+        %if %useARMSysTickUseCoreClock='yes'
+          %set useARMSysTickTimer ExtraText CoreClock
+        %else
+          %set useARMSysTickTimer ExtraText CoreClock/16
+        %endif
       %endif
     %else %- Kinetis K does not supporte external clock bit for SysTick
       %set useARMSysTickTimer ExtraText CoreClock
-      %set useARMSysTickUseCoreClock Value Disabled
-      %set useARMSysTickUseCoreClock ReadOnly yes
+      %if defined(useARMSysTickUseCoreClock)
+        %set useARMSysTickUseCoreClock Value yes
+        %set useARMSysTickUseCoreClock ReadOnly yes
+      %endif
     %endif
   %else
     %set LDDTickGroup Value Enabled
@@ -74,22 +79,22 @@
   %set NonLDDRuntimeCounterGroup Value Enabled
   %set NonLDDRuntimeCounterGroup ReadOnly yes
 %endif
-%if Compiler = 'CodeWarriorARM'
+%if defined(Compiler) & Compiler = 'CodeWarriorARM'
   %set CompilerOptimizationLevel ReadOnly no
 %else %- not applicable for GCC
   %set CompilerOptimizationLevel ReadOnly yes
 %endif
-%if UseTraceFacility='yes'
+%if defined(UseTraceFacility) & UseTraceFacility='yes'
   %set vTaskList Selection always
 %else
   %set vTaskList Selection never
 %endif
-%if CollectRuntimeStatisticsGroup='yes'
+%if defined(CollectRuntimeStatisticsGroup) & CollectRuntimeStatisticsGroup='yes'
   %set vTaskGetRunTimeStats Selection always
 %else
   %set vTaskGetRunTimeStats Selection never
 %endif
-%if %UseRecursiveMutexes='yes'
+%if defined(UseRecursiveMutexes) & %UseRecursiveMutexes='yes'
   %set xSemaphoreTakeRecursive Selection always
   %set xSemaphoreGiveRecursive Selection always
   %set xSemaphoreCreateRecursiveMutex Selection always
@@ -98,7 +103,7 @@
   %set xSemaphoreGiveRecursive Selection never
   %set xSemaphoreCreateRecursiveMutex Selection never
 %endif
-%if %UseApplicationTaskTags='yes'
+%if defined(UseApplicationTaskTags) & %UseApplicationTaskTags='yes'
   %set vTaskSetApplicationTaskTag Selection always
   %set xTaskGetApplicationTaskTag Selection always
   %set xTaskCallApplicationTaskHook Selection always
@@ -107,11 +112,11 @@
   %set xTaskGetApplicationTaskTag Selection never
   %set xTaskCallApplicationTaskHook Selection never
 %endif
-%if %UseTraceHooksGroup='yes'
+%if defined(UseTraceHooksGroup) & %UseTraceHooksGroup='yes'
   %set UseTraceFacility Value yes
 %endif
 
-%if (CPUfamily = "Kinetis")
+%if defined(CPUfamily) & CPUfamily = "Kinetis"
   %if %CPUDB_prph_has_feature(CPU,ARM_CORTEX_M0P) = 'yes'
     %- %set ARMFamilyType Value "M0+"
   %else %- M4 or M4F core
@@ -126,12 +131,12 @@
   %endif
   %- %set ARMFamilyType ReadOnly no
   %- %set ARMFamilyType Value Enabled
-  %if ARMFamilyType="M0+"
+  %if defined(ARMFamilyType) & ARMFamilyType="M0+"
     %- M0+ does not have floating point unit
     %set M4FFloatingPointSupport Value no
     %set M4FFloatingPointSupport ReadOnly yes
     %set ARMLowestInterrutpPriority Value 3
-  %elif ARMFamilyType="M4F"
+  %elif defined(ARMFamilyType) & ARMFamilyType="M4F"
     %- M4F does have floating point unit
     %- %set M4FFloatingPointSupport Value yes
     %set M4FFloatingPointSupport ReadOnly no
@@ -144,26 +149,31 @@
   %if defined(TickTimerLDD) & %@TickTimerLDD@MainModule != "SysTick"
     %error FreeRTOS Tick Timer: Only SysTick/SYST_CVR is supported, but %@TickTimerLDD@MainModule is used! Please use SysTick/SYST_CVR for ARM/Kinetis.
   %endif
-  %if KinetisLibraryLowestInterruptPriority >. ARMLowestInterrutpPriority
-    %error "Library Lowest Interrupt Priority (%KinetisLibraryLowestInterruptPriority) is larger than Lowest Interrupt Priority (%ARMLowestInterrutpPriority). Priority shall be <= %ARMLowestInterrutpPriority."
-  %endif
-  %if KinetisLibraryMaxInterruptPriority >. KinetisLibraryLowestInterruptPriority
-    %error "Max SysCall Interrupt Priority (%KinetisLibraryMaxInterruptPriority) is larger than Lowest Interrupt Priority (%KinetisLibraryLowestInterruptPriority). Priority shall be <= %KinetisLibraryLowestInterruptPriority."
+  %if defined(KinetisLibraryLowestInterruptPriority) & defined(ARMLowestInterrutpPriority) & defined(KinetisLibraryMaxInterruptPriority)
+    %if KinetisLibraryLowestInterruptPriority >. ARMLowestInterrutpPriority
+      %error "Library Lowest Interrupt Priority (%KinetisLibraryLowestInterruptPriority) is larger than Lowest Interrupt Priority (%ARMLowestInterrutpPriority). Priority shall be <= %ARMLowestInterrutpPriority."
+    %endif
+    %if KinetisLibraryMaxInterruptPriority >. KinetisLibraryLowestInterruptPriority
+      %error "Max SysCall Interrupt Priority (%KinetisLibraryMaxInterruptPriority) is larger than Lowest Interrupt Priority (%KinetisLibraryLowestInterruptPriority). Priority shall be <= %KinetisLibraryLowestInterruptPriority."
+    %endif
   %endif
 %endif
+
 %ifndef Shell
   %set ParseCommand Selection never
 %else
   %set ParseCommand Selection always
 %endif
-%if %TicklessIdleModeEnabled='yes'
+
+%if defined(TicklessIdleModeEnabled) & %TicklessIdleModeEnabled='yes'
   %set vOnPreSleepProcessing Selection always
   %set vOnPostSleepProcessing Selection enable
 %else
   %set vOnPreSleepProcessing Selection never
   %set vOnPostSleepProcessing Selection never
 %endif
-%if %useQueueSets='yes'
+
+%if defined(useQueueSets) & %useQueueSets='yes'
   %set xQueueCreateSet Selection always
   %set xQueueAddToSet Selection always
   %set xQueueRemoveFromSet Selection always
@@ -176,3 +186,5 @@
   %set xQueueSelectFromSet Selection never
   %set xQueueSelectFromSetFromISR Selection never
 %endif
+
+%endif %- CPUfamily

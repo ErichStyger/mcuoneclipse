@@ -1,6 +1,13 @@
-%- **********************************************************************
-%- Macros for compiler support
-%- **********************************************************************
+%--------------------------------------------------------------------
+%- Common support file
+%-
+%- Parameters:     - none
+%- Defined symbols:
+%-      - CPU_FAMILY – Alias to CPUfamily macro
+%-      - COMPILER_MW - Defined for Metrowerks compilers
+%-      - COMPILER_HIX - Defined for HIWARE compilers
+%-      - CTAB - Setting of tab position in source code for comments
+%-
 %define CPU_FAMILY %CPUfamily
 %-
 %if (%Compiler = "CodeWarriorColdFireV1") | (%Compiler = "CodeWarriorMCF") | (%Compiler = "CodeWarriorARM") | (%Compiler = "MetrowerksDSP")

@@ -357,7 +357,7 @@
 #define configCOMPILER_CF2_FSL     %>45 8 /* Freescale ColdFire V2 compiler */
 #define configCOMPILER_DSC_FSL     %>45 9 /* Freescale DSC compiler */
 
-%if (%configCompiler='automatic')
+%if (%configCOMPILER='automatic')
 %if (%Compiler = "IARARM")
 #define configCOMPILER        %>50 configCOMPILER_ARM_IAR
 %elif (%Compiler = "GNUC")

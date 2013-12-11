@@ -140,7 +140,7 @@ void %'ModuleName'%.HandlerC(dword *hardfault_args);
 #include "%var.h"
 %endfor
 #include "%'ModuleName'.h"
-%if (CPUfamily = "Kinetis")
+%if defined(CPUfamily) & CPUfamily = "Kinetis"
 %- =============================================================================
 %- Allocation of interrupt vectors by component.
 %- =============================================================================

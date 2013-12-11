@@ -11,11 +11,14 @@
 %- %endif
 %- %set LDD_I2C_Group ReadOnly yes
 %- %set nonLDD_I2C_Group ReadOnly yes
-
-%set LDD_I2C_Group ReadOnly no
-%set nonLDD_I2C_Group ReadOnly no
-%if LDD_I2C_Group='no' & nonLDD_I2C_Group='no'
-  %error "Either LDD or nonLDD interface needs to be defined"
-%elif LDD_I2C_Group='yes' & nonLDD_I2C_Group='yes'
-  %error "Only one interface, either LDD or nonLDD, can to be defined"
+%ifdef LDD_I2C_Group
+%ifdef nonLDD_I2C_Group
+  %set LDD_I2C_Group ReadOnly no
+  %set nonLDD_I2C_Group ReadOnly no
+  %if LDD_I2C_Group='no' & nonLDD_I2C_Group='no'
+    %error "Either LDD or nonLDD interface needs to be defined"
+  %elif LDD_I2C_Group='yes' & nonLDD_I2C_Group='yes'
+    %error "Only one interface, either LDD or nonLDD, can to be defined"
+  %endif
+%endif
 %endif

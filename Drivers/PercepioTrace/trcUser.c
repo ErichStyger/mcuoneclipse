@@ -550,7 +550,7 @@ static uint8_t writeInt16(void * buffer, uint8_t i, uint16_t value)
 	TRACE_ASSERT(buffer != NULL, "writeInt16: buffer == NULL", 0);
 
     /* Align to multiple of 2 */
-    while ((i % 2) != 0)
+    while ((i %% 2) != 0)
     {
 		if (i >= MAX_ARG_SIZE)
 		{
@@ -577,7 +577,7 @@ static uint8_t writeInt32(void * buffer, uint8_t i, uint32_t value)
 	TRACE_ASSERT(buffer != NULL, "writeInt32: buffer == NULL", 0);
 
     /* A 32 bit value should begin at an even 4-byte address */
-    while ((i % 4) != 0)
+    while ((i %% 4) != 0)
     {
 		if (i >= MAX_ARG_SIZE)
 		{
@@ -606,7 +606,7 @@ static uint8_t writeFloat(void * buffer, uint8_t i, float value)
 	TRACE_ASSERT(buffer != NULL, "writeFloat: buffer == NULL", 0);
 
     /* A 32 bit value should begin at an even 4-byte address */
-    while ((i % 4) != 0)
+    while ((i %% 4) != 0)
     {
 		if (i >= MAX_ARG_SIZE)
 		{
@@ -636,7 +636,7 @@ static uint8_t writeDouble(void * buffer, uint8_t i, double value)
     uint32_t * src = (void*)&value;
     /* The double is written as two 32 bit values, and should begin at an even
     4-byte address (to avoid having to align with 8 byte) */
-    while (i % 4 != 0)
+    while (i %% 4 != 0)
     {
 		if (i >= MAX_ARG_SIZE)
 		{

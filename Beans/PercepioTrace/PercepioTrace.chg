@@ -1,7 +1,7 @@
 %set RTOSplusTraceVersion Value V2.5.0
 %set RTOSplusTraceVersion ExtraText V2.5.0
 
-%if %IncludeISRTracing='yes'
+%if defined(IncludeISRTracing) & %IncludeISRTracing='yes'
   %set vTraceSetISRProperties Selection always
   %set vTraceStoreISRBegin Selection always
   %set vTraceStoreISREnd Selection always

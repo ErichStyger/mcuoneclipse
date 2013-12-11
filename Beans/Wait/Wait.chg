@@ -1,9 +1,11 @@
-%if (CPUfamily = "Kinetis")
-  %set LDDWatchDogEnabled Value Enabled
-  %set nonLDDWatchDogEnabled Value Disabled
-%else
-  %set LDDWatchDogEnabled Value Disabled
-  %set nonLDDWatchDogEnabled Value Enabled
+%if defined(CPUfamily)
+  %if (CPUfamily = "Kinetis")
+    %set LDDWatchDogEnabled Value Enabled
+    %set nonLDDWatchDogEnabled Value Disabled
+  %else
+    %set LDDWatchDogEnabled Value Disabled
+    %set nonLDDWatchDogEnabled Value Enabled
+  %endif
 %endif
 %set LDDWatchDogEnabled ReadOnly yes
 %set nonLDDWatchDogEnabled ReadOnly yes
