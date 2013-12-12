@@ -1,4 +1,4 @@
-%if SamplingMethod='yes'
+%if defined(SamplingMethod) & SamplingMethod='yes'
   %set Sample Selection always
 %else
   %set Sample Selection never

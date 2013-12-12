@@ -3,7 +3,7 @@
 %else
   %set ParseCommand Selection enable
 %endif
-%if %Firmware='HC06'
+%if defined(Firmware) & %Firmware='HC06'
   %- HC06 firmware is very limited
   %set btResetDevice Selection never
   %set btRestoreFactoryDefault Selection never

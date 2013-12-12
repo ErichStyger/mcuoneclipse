@@ -1,4 +1,4 @@
-%if %TransceiverType='1' %- internal chip. Only external transceiver chip has GPIO
+%if defined(TransceiverType) & %TransceiverType='1' %- internal chip. Only external transceiver chip has GPIO
   %set GPIOenabled Value Disabled
   %set GPIOenabled ReadOnly yes
   %set RFswitchMode ReadOnly yes
