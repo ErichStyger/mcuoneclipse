@@ -135,16 +135,16 @@
     %- M0+ does not have floating point unit
     %set M4FFloatingPointSupport Value no
     %set M4FFloatingPointSupport ReadOnly yes
-    %set ARMLowestInterrutpPriority Value 3
+    %set ARMLowestInterrutpPriority Value d:3
   %elif defined(ARMFamilyType) & ARMFamilyType="M4F"
     %- M4F does have floating point unit
     %- %set M4FFloatingPointSupport Value yes
     %set M4FFloatingPointSupport ReadOnly no
-    %set ARMLowestInterrutpPriority Value 15
+    %set ARMLowestInterrutpPriority Value d:15
   %else %- M4
     %set M4FFloatingPointSupport Value no
     %set M4FFloatingPointSupport ReadOnly yes
-    %set ARMLowestInterrutpPriority Value 15
+    %set ARMLowestInterrutpPriority Value d:15
   %endif
   %if defined(TickTimerLDD) & %@TickTimerLDD@MainModule != "SysTick"
     %error FreeRTOS Tick Timer: Only SysTick/SYST_CVR is supported, but %@TickTimerLDD@MainModule is used! Please use SysTick/SYST_CVR for ARM/Kinetis.
