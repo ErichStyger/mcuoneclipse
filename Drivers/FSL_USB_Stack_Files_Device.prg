@@ -1,7 +1,7 @@
 %-
 %- Freescale USB Stack source files for CDC or HID Keyboard/Mouse Devices
 %-
-
+%-
 %- Device\source\common -------------------------------------------
 %FILE %'DirRel_Code'usb_class.c
 %include FSL_USB_Stack\Device\source\common\usb_class.c

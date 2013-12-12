@@ -14,16 +14,16 @@
   %define! USBDeviceClass "CDC Device"
 %endif
 
-%if (%USBDeviceClass = "CDC Device")
+%if defined(USBDeviceClass) & %USBDeviceClass = "CDC Device"
   %set CDCDeviceGroup Value Enabled
   %set CDCDeviceGroup Expanded yes
-%elif (%USBDeviceClass = "HID Keyboard Device")
+%elif defined(USBDeviceClass) & %USBDeviceClass = "HID Keyboard Device"
   %set HIDKDeviceGroup Value Enabled
   %set HIDKDeviceGroup Expanded yes
-%elif (%USBDeviceClass = "HID Mouse Device")
+%elif defined(USBDeviceClass) & %USBDeviceClass = "HID Mouse Device"
   %set HIDMDeviceGroup Value Enabled
   %set HIDMDeviceGroup Expanded yes
-%elif (%USBDeviceClass = "MSD Host")
+%elif defined(USBDeviceClass) & %USBDeviceClass = "MSD Host"
   %set MSDHostGroup Value Enabled
   %set MSDHostGroup Expanded yes
 %endif

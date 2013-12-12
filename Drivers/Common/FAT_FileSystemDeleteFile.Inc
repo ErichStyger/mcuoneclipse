@@ -7,7 +7,7 @@
 %;**     Description :
 %;**         Deletes a file
 %include Common\GeneralParameters.inc(27)
-%;**         fileName%ParfileName %>27 - Filename of file to be deleted
+%;**         fileName%ParFileName %>27 - Filename of file to be deleted
 %;**         io%Pario %>27 - Pointer to I/O handler
 %;**     Returns     :
 %;**         ---%RetVal %>27 - Error code

@@ -1,7 +1,7 @@
 %-
 %- Freescale USB Stack CDC source files
 %-
-
+%-
 %- \Device\source\class -------------------------------------------
 %FILE %'DirRel_Code'usb_cdc.c
 %include FSL_USB_Stack\Device\source\class\usb_cdc.c

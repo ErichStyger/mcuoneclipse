@@ -10,7 +10,7 @@
 %;**         the current drive is retained in a static variable so that
 %;**         it also affects other tasks that using the file functions.
 %include Common\GeneralParameters.inc(27)
-%;**         Drive%ParDrive %>27 - Logical drive number
+%;**         Drive%Pardrive %>27 - Logical drive number
 %;**     Returns     :
 %;**         ---%RetVal %>27 - Error code
 %include Common\GeneralDamage.inc

@@ -1,11 +1,11 @@
 %set FatFsVersion Value R0.08a
 %- f_forward() only available in tiny mode
-%if Tiny='yes'
+%if defined(Tiny) & Tiny='yes'
   %set forward Selection enable
 %else
   %set forward Selection never
 %endif
-%if %WriteEnabled='no'
+%if defined(WriteEnabled) & %WriteEnabled='no'
   %set write Selection never
   %set sync Selection never
   %set unlink Selection never
@@ -24,7 +24,7 @@
   %set truncate Selection enable
   %set getfree Selection enable
 %endif
-%if %UseStringFunctions='0'
+%if defined(UseStringFunctions) & %UseStringFunctions='0'
   %set f_gets Selection never
   %set f_puts Selection never
   %set f_putc Selection never

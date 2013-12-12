@@ -1,7 +1,7 @@
 %-
 %- Freescale USB Stack HID Mouse source files
 %-
-
+%-
 %- \Device\source\class -------------------------------------------
 %FILE %'DirRel_Code'usb_hid.c
 %include FSL_USB_Stack\Device\source\class\usb_hid.c

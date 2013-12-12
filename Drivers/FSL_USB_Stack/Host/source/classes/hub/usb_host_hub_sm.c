@@ -217,7 +217,7 @@ static void usb_host_hub_device_sm
                 {
            	        /* get REMOVABLE bit from the desriptor for appropriate installed port */
            	        (hub_instance->HUB_PORTS + i)->REMOVABLE = hub_desc->DEVICEREMOVABLE[(i + 1) / 8];
-           	        (hub_instance->HUB_PORTS + i)->REMOVABLE &= (0x01 << ((i + 1) % 8));
+           	        (hub_instance->HUB_PORTS + i)->REMOVABLE &= (0x01 << ((i + 1) %% 8));
            	        (hub_instance->HUB_PORTS + i)->APP_STATUS = 0x00;
                 } 
                 
