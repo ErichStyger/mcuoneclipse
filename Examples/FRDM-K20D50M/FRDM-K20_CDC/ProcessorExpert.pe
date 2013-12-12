@@ -3,8 +3,8 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>25</ModificationStamp>
-    <Date>2013-11-01</Date>
+    <ModificationStamp>27</ModificationStamp>
+    <Date>2013-12-11</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.8.0.RT5_b1337-1809</PEversion>
   </Header>
@@ -5207,7 +5207,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.091</BeanVersion>
+    <BeanVersion>01.092</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -5722,6 +5722,39 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>always</LastUserSel>
         <UsrMethodName>strcatNum32sDotValue100</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanDecimal8sNumber</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ScanDecimal8sNumber</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanDecimal16sNumber</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ScanDecimal16sNumber</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanDecimal32sNumber</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ScanDecimal32sNumber</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Methods>
@@ -9913,7 +9946,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.020</BeanVersion>
+          <BeanVersion>01.021</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -10306,6 +10339,20 @@
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <Value>0</Value>
               <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ConfigurationGroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Expanded>false</Expanded>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UseUSBStackInitialization</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Index>0</Index>
+              <Value>true</Value>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
             </ItemState>
           </Properties>
           <Methods>

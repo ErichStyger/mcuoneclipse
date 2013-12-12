@@ -11,30 +11,29 @@
 					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="com.freescale.core.ide.cdt.errorParsers.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="Freedom_Accel" buildArtefactType="org.eclipse.cdt.cross.arm.gnu.buildArtefactType.application" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.cross.arm.gnu.buildArtefactType.application" description="" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.437763967" isPrebuildInvalidatingBuild="false" name="FLASH" parent="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug">
+				<configuration artifactName="Freedom_Accel" buildArtefactType="org.eclipse.cdt.cross.arm.gnu.buildArtefactType.application" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.cross.arm.gnu.buildArtefactType.application" description="" errorParsers="org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser;com.freescale.core.ide.cdt.errorParsers.GCCErrorParser;org.eclipse.cdt.core.CWDLocator;" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.437763967" isPrebuildInvalidatingBuild="false" name="FLASH" parent="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug">
 					<folderInfo id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.437763967." name="/" resourcePath="">
-						<toolChain id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.toolchain.debug.104293304" name="ARM Ltd Windows GCC (G++ Lite)" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.toolchain.debug">
+						<toolChain errorParsers="" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.toolchain.debug.104293304" name="ARM Ltd Windows GCC (G++ Lite)" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.toolchain.debug">
 							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.debugging.level.1066152467" name="Debug level" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.debugging.level" value="org.eclipse.cdt.cross.arm.gnu.base.option.debugging.level.max" valueType="enumerated"/>
 							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.target.processor.610069756" name="Processor" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.target.processor" value="org.eclipse.cdt.cross.arm.gnu.base.option.mcpu.cortex-m0" valueType="enumerated"/>
 							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.debugging.other.796543337" name="Other debugging flags" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.debugging.other" value="-gstrict-dwarf" valueType="string"/>
 							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.addtools.createflash.809221456" name="Create Flash Image" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.addtools.createflash" value="true" valueType="boolean"/>
 							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.addtools.printsize.1318362196" name="Print Size" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.addtools.printsize" value="true" valueType="boolean"/>
 							<targetPlatform id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.platform.debug.1015237116" isAbstract="false" name="Windows Platform" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.platform.debug"/>
-							<builder buildPath="${ProjDirPath}/FLASH" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.builder.debug.84243766" keepEnvironmentInBuildfile="false" name="ARM Ltd Windows GNU Make builder" parallelBuildWorkspaceOn="true" parallelizationNumber="-1" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.builder.debug"/>
-							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.assembler.debug.570603259" name="ARM Ltd Windows GCC Assembler" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.assembler.debug">
+							<builder buildPath="${ProjDirPath}/FLASH" errorParsers="org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.CWDLocator" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.builder.debug.84243766" keepEnvironmentInBuildfile="false" name="ARM Ltd Windows GNU Make builder" parallelBuildWorkspaceOn="true" parallelizationNumber="-1" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.builder.debug"/>
+							<tool errorParsers="com.freescale.core.ide.cdt.errorParsers.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.assembler.debug.570603259" name="ARM Ltd Windows GCC Assembler" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.assembler.debug">
 								<option id="org.eclipse.cdt.cross.arm.gnu.assembler.option.include.paths.248181083" name="Include paths (-I)" superClass="org.eclipse.cdt.cross.arm.gnu.assembler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Generated_Code&quot;"/>
 								</option>
 								<inputType id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.assembler.base.input.894495754" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.assembler.base.input"/>
 							</tool>
-							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.compiler.debug.1844157210" name="ARM Ltd Windows GCC C Compiler" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.compiler.debug">
+							<tool errorParsers="com.freescale.core.ide.cdt.errorParsers.GCCErrorParser" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.compiler.debug.1844157210" name="ARM Ltd Windows GCC C Compiler" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.compiler.debug">
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.optimization.level.36256251" name="Optimization level" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.optimization.level" value="org.eclipse.cdt.cross.arm.gnu.base.option.optimization.level.none" valueType="enumerated"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.include.paths.1677914994" name="Include paths (-I)" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Project_Headers&quot;"/>
@@ -56,7 +55,7 @@
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.compiler.debug.1839994591" name="ARM Ltd Windows GCC C++ Compiler" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.compiler.debug">
 								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.level.251658970" name="Optimization level" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.level" value="org.eclipse.cdt.cross.arm.gnu.base.option.optimization.level.none" valueType="enumerated"/>
 							</tool>
-							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.linker.debug.647400494" name="ARM Ltd Windows GCC C Linker" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.linker.debug">
+							<tool errorParsers="org.eclipse.cdt.core.GLDErrorParser" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.linker.debug.647400494" name="ARM Ltd Windows GCC C Linker" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.linker.debug">
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.ldflags.1402296900" name="Linker flags (-Xlinker [option])" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.ldflags" valueType="stringList">
 									<listOptionValue builtIn="false" value="--undefined=__pformatter_"/>
 									<listOptionValue builtIn="false" value="--defsym=__pformatter=__pformatter_"/>
@@ -79,8 +78,8 @@
 							</tool>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.linker.debug.1989078655" name="ARM Ltd Windows GCC C++ Linker" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.linker.debug"/>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.archiver.base.2070033949" name="ARM Ltd Windows GCC Archiver" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.archiver.base"/>
-							<tool id="com.freescale.cdt.cross.arm.gnu.sourcery.windows.elf.disassembler.debug.1336179440" name="ARM Ltd Windows GCC Disassembler" superClass="com.freescale.cdt.cross.arm.gnu.sourcery.windows.elf.disassembler.debug"/>
-							<tool id="com.freescale.cdt.cross.arm.gnu.sourcery.windows.elf.preprocessor.debug.1203640375" name="ARM Ltd Windows GCC C Preprocessor" superClass="com.freescale.cdt.cross.arm.gnu.sourcery.windows.elf.preprocessor.debug">
+							<tool errorParsers="com.freescale.core.ide.cdt.errorParsers.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser" id="com.freescale.cdt.cross.arm.gnu.sourcery.windows.elf.disassembler.debug.1336179440" name="ARM Ltd Windows GCC Disassembler" superClass="com.freescale.cdt.cross.arm.gnu.sourcery.windows.elf.disassembler.debug"/>
+							<tool errorParsers="com.freescale.core.ide.cdt.errorParsers.GCCErrorParser" id="com.freescale.cdt.cross.arm.gnu.sourcery.windows.elf.preprocessor.debug.1203640375" name="ARM Ltd Windows GCC C Preprocessor" superClass="com.freescale.cdt.cross.arm.gnu.sourcery.windows.elf.preprocessor.debug">
 								<option id="com.freescale.cdt.cross.arm.gnu.preprocessor.dirs.include.paths.348334887" name="Include paths (-I)" superClass="com.freescale.cdt.cross.arm.gnu.preprocessor.dirs.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Project_Headers&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Project_Settings/Startup_Code&quot;"/>
@@ -99,11 +98,11 @@
 								</option>
 								<option id="com.freescale.cdt.cross.arm.gnu.preprocessor.settings.nostdinc.275084961" name="Do not search system directories (-nostdinc)" superClass="com.freescale.cdt.cross.arm.gnu.preprocessor.settings.nostdinc" value="true" valueType="boolean"/>
 							</tool>
-							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createflash.debug.411467221" name="ARM Ltd Windows GNU Create Flash Image" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createflash.debug">
+							<tool errorParsers="" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createflash.debug.411467221" name="ARM Ltd Windows GNU Create Flash Image" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createflash.debug">
 								<option id="org.eclipse.cdt.cross.arm.gnu.createflash.out.choice.1362553680" name="Output file format (-O)" superClass="org.eclipse.cdt.cross.arm.gnu.createflash.out.choice" value="org.eclipse.cdt.cross.arm.gnu.createflash.out.choice.srec" valueType="enumerated"/>
 							</tool>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createlisting.debug.1196936971" name="ARM Ltd Windows GNU Create Listing" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createlisting.debug"/>
-							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.printsize.debug.497199141" name="ARM Ltd Windows GNU Print Size" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.printsize.debug"/>
+							<tool errorParsers="" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.printsize.debug.497199141" name="ARM Ltd Windows GNU Print Size" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.printsize.debug"/>
 						</toolChain>
 					</folderInfo>
 				</configuration>
@@ -124,4 +123,5 @@
 		</scannerConfigBuildInfo>
 	</storageModule>
 	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 </cproject>

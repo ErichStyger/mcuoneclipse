@@ -4,9 +4,9 @@
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
     <ModificationStamp>31</ModificationStamp>
-    <Date>2013-08-26</Date>
+    <Date>2013-12-11</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion>1.6.0.RT4_b1316-1577</PEversion>
+    <PEversion>1.8.0.RT5_b1337-1809</PEversion>
   </Header>
   <Options>
     <EventsDirectory>Sources</EventsDirectory>
@@ -3281,6 +3281,16 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>Auto select</Value>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>I2S0_CLKINCondGrp0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>I2S0_MclkClkSrcCondGrp0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -3395,6 +3405,17 @@
         <ItemSymbol>GetLLSWakeUpFlagsCondGrp</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SystemReset</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>never</LastUserSel>
+        <UsrMethodName>SystemReset</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Methods>
     <Events>
@@ -6668,7 +6689,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.013</BeanVersion>
+    <BeanVersion>01.014</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -6687,7 +6708,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>nonLDD_I2C_Group</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
+        <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>false</Value>
@@ -6701,7 +6722,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>LDD_I2C_Group</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
+        <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>true</Value>
@@ -7013,7 +7034,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.014</BeanVersion>
+    <BeanVersion>01.016</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -7697,6 +7718,14 @@
         <Value>true</Value>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>ClockStretching</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>1</Index>
+        <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -8324,7 +8353,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.024</BeanVersion>
+    <BeanVersion>01.028</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -8397,6 +8426,14 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>UseConstantOffsets</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>true</Value>
+        <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Properties>
     <Methods>
@@ -8675,6 +8712,17 @@
         <UsrMethodName>ParseCommand</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>isEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>isEnabled</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -8688,7 +8736,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.101</BeanVersion>
+    <BeanVersion>01.107</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -8894,7 +8942,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template>FreeMaster\Init_UART_VAR0</Template>
-          <BeanVersion>01.004</BeanVersion>
+          <BeanVersion>01.005</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -8926,7 +8974,6 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <TypeSpecNameState>typePeriphClockGate</TypeSpecNameState>
               <Index>1</Index>
               <EnumSymbVal>enabled</EnumSymbVal>
               <CustomValue />
@@ -10322,6 +10369,256 @@
               <Index>0</Index>
               <Value>true</Value>
             </ItemState>
+            <ItemState>
+              <ItemSymbol>CPUCondGroup4</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CPUCondGroup5</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>WI8FeatureCondGroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>WI8</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>10</Value>
+              <Base>DEC</Base>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ADTIFeatureCondGroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ADTI</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>0</Value>
+              <Base>DEC</Base>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>WI16FeatureCondGroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>WI16</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>20</Value>
+              <Base>DEC</Base>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CWIFeatureCondGroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CWI1FeatureCondGroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CWI1</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>0</Value>
+              <Base>DEC</Base>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CWI2FeatureCondGroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CWI2</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>11</Value>
+              <Base>DEC</Base>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>WTXFeatureCondGroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>WTX</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>0</Value>
+              <Base>DEC</Base>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>BGIFeatureCondGroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>BGI</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>6</Value>
+              <Base>DEC</Base>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CPUCondGroup6</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CPUCondGroup7</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CE709_ReceiveBeta1Timer</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>0</Value>
+              <Base>DEC</Base>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CE709_TransmitBeta1Timer</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>0</Value>
+              <Base>DEC</Base>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CE709_LineCodeViolationLength</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>4</Value>
+              <Base>DEC</Base>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CE709_MinimumDmc_1s</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>3</Value>
+              <Base>DEC</Base>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CPUCondGroup8</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LBKDIE_RqType</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <TypeSpecNameState>typeLBKDIE_RqType</TypeSpecNameState>
+              <Index>1</Index>
+              <EnumSymbVal>IRQ</EnumSymbVal>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <CustomValue />
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>RXOFEFeatureCondGroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>RXOFE</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <TypeSpecNameState>typeRXOFE</TypeSpecNameState>
+              <Index>1</Index>
+              <EnumSymbVal>disabled</EnumSymbVal>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <CustomValue />
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CEA709_InterruptPExPriorityFeatureGroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CEA709_InterruptPExPriority</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value />
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>PreambleErrorIEFeatureCondGroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>PreambleErrorIE</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <TypeSpecNameState>typePreambleErrorIE</TypeSpecNameState>
+              <Index>1</Index>
+              <EnumSymbVal>disabled</EnumSymbVal>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <CustomValue />
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>RPLOFIEFeatureCondGroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>RPLOFIE</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <TypeSpecNameState>typeRPLOFIE</TypeSpecNameState>
+              <Index>1</Index>
+              <EnumSymbVal>disabled</EnumSymbVal>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <CustomValue />
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CTXDIEFeatureCondGroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CTXDIE</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <TypeSpecNameState>typeCTXDIE</TypeSpecNameState>
+              <Index>1</Index>
+              <EnumSymbVal>disabled</EnumSymbVal>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <CustomValue />
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CPTXIEFeatureCondGroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CPTXIE</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <TypeSpecNameState>typeCPTXIE</TypeSpecNameState>
+              <Index>1</Index>
+              <EnumSymbVal>disabled</EnumSymbVal>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <CustomValue />
+            </ItemState>
           </Properties>
           <Methods>
             <ItemState>
@@ -10650,6 +10947,19 @@
         <TypeSpecNameState>typeEnaDis</TypeSpecNameState>
         <Index>1</Index>
         <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DeviceCFplus</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Init_UART_VAR01</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+        <RegCompType />
+        <InheritedComponentState />
       </ItemState>
     </Properties>
     <Methods>
