@@ -49,6 +49,7 @@
 #include "Rx1.h"
 #include "WAIT1.h"
 #include "UTIL1.h"
+#include "FRTOS1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -56,9 +57,61 @@
 #include "IO_Map.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#ifdef PEcfg_RTOS /* defined in Cpu.h, based on configuration */
+  #define USE_FREERTOS  1
+#else
+  #define USE_FREERTOS  0
+#endif
+
 static uint8_t cdc_buffer[USB1_DATA_BUFF_SIZE];
 static uint8_t in_buffer[USB1_DATA_BUFF_SIZE];
 
+#if USE_FREERTOS
+static portTASK_FUNCTION(MainTask, pvParameters) {
+  int i, cnt = 0;
+  uint32_t val = 0;
+  unsigned char buf[16];
+  
+  (void)pvParameters; /* not used */
+  (void)CDC1_SendString((unsigned char*)"Hello world from the KL25Z with USB CDC\r\n");
+  for(;;) {
+    while(CDC1_App_Task(cdc_buffer, sizeof(cdc_buffer))==ERR_BUSOFF) {
+      /* device not enumerated */
+      LED1_Neg(); LED2_Off();
+      FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
+      cnt++;
+      if (cnt==100) {
+        LED3_Neg();
+        cnt = 0;
+      }
+    }
+    LED1_Off(); LED2_Neg(); LED3_Off();
+    if (CDC1_GetCharsInRxBuf()!=0) {
+      i = 0;
+      while(   i<sizeof(in_buffer)-1
+            && CDC1_GetChar(&in_buffer[i])==ERR_OK
+           )
+      {
+        i++;
+      }
+      in_buffer[i] = '\0';
+      (void)CDC1_SendString((unsigned char*)"echo: ");
+      (void)CDC1_SendString(in_buffer);
+      UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"val: ");
+      UTIL1_strcatNum32u(buf, sizeof(buf), val);
+      UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+      (void)CDC1_SendString(buf);
+      val++;
+    } else {
+      cnt++;
+      if ((cnt%1024)==0) { /* from time to time, write some text */
+        (void)CDC1_SendString((unsigned char*)"Type some text and it will echo.\r\n");
+      }
+    }
+    FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
+  } /* for */
+}
+#else
 static void CDC_Run(void) {
   int i, cnt = 0;
   uint32_t val = 0;
@@ -102,6 +155,7 @@ static void CDC_Run(void) {
     }
   }
 }
+#endif
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -122,8 +176,13 @@ int main(void)
   LED4_Neg();
   WAIT1_Waitms(200);
 
+#if USE_FREERTOS
+  if (FRTOS1_xTaskCreate(MainTask, (signed portCHAR *)"Main", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+    for(;;){} /* error */
+  }
+#else
   CDC_Run();
-  
+#endif
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
   #ifdef PEX_RTOS_START
