@@ -4,7 +4,7 @@
     <Name>SimpleEvents</Name>
     <Description>Simple Event Handling</Description>
     <Author>Erich Styger</Author>
-    <Version>01.045</Version>
+    <Version>01.046</Version>
     <Icon>SimpleEvents</Icon>
     <TypesFiles>PE,SimpleEvents\SimpleEvents</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -224,6 +224,40 @@
         <Symbol>GetEvent</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
         <Hint>Allows to check if an event is set or not.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>Boolean</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>event</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The event number to check. If the event is set, the function returns TRUE.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>bool #M#_#C#(byte event)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>GetClearEvent</Name>
+        <Symbol>GetClearEvent</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Allows to check if an event is set or not. If set, it will be automatically cleared.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>

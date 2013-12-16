@@ -250,6 +250,18 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="GetClearEvent">
+<b>GetClearEvent</b></a>
+ - Allows to check if an event is set or not. If set, it will be automatically cleared.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> bool GetClearEvent(byte event)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>event:byte</i> - The event number to check. If the event is set, the function returns TRUE.</li>
+<li><i>Return value:bool</i> - none
+</li>
+</ul><br />
+</li>
 <li><a name="HandleEvent">
 <b>HandleEvent</b></a>
  - Event handler, to be called periodically.

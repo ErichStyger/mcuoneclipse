@@ -168,6 +168,16 @@ bool %'ModuleName'%.%EventsPending(void);
 #ifdef __cplusplus
 }  /* extern "C" */
 #endif
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetClearEvent
+%ifdef GetClearEvent
+bool %'ModuleName'%.%GetClearEvent(byte event);
+%define! Parevent
+%define! RetVal
+%include Common\SimpleEventsGetClearEvent.Inc
+
+%endif %- GetClearEvent
+%-BW_METHOD_END GetClearEvent
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -262,6 +272,27 @@ bool %'ModuleName'%.%GetEvent(byte event)
 
 %endif %- GetEvent
 %-BW_METHOD_END GetEvent
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetClearEvent
+%ifdef GetClearEvent
+%define! Parevent
+%define! RetVal
+%include Common\SimpleEventsGetClearEvent.Inc
+bool %'ModuleName'%.%GetClearEvent(byte event)
+{
+  bool isSet = FALSE;
+
+  EnterCritical();
+  if (%'ModuleName'%.GetEvent(event)) { /* event present */
+    %'ModuleName'%.Events[event/8] &= ~(0x80>>(event%%8)); /* clear event */
+    isSet = TRUE;
+  }
+  ExitCritical();
+  return isSet;
+}
+
+%endif %- GetClearEvent
+%-BW_METHOD_END GetClearEvent
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN EventsPending
 %ifdef EventsPending
