@@ -24,11 +24,24 @@
 uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
 #endif
 
+/*!
+ * \brief Set the radio communication channel
+ * \param channel New channel number.
+ * \return Error code, ERR_OK if everything is fine.
+ */
+uint8_t RADIO_SetChannel(uint8_t channel);
+
 /*! 
  * \brief Radio power-on initialization.
  * \return Error code, ERR_OK if everything is ok.
  */
 uint8_t RADIO_PowerUp(void);
+
+/*! 
+ * \brief Power down the radio.
+ * \return Error code, ERR_OK if everything is ok.
+ */
+uint8_t RADIO_PowerDown(void);
 
 /*!
  * \brief Processes the radio state machine. Needs to be called frequently from the application (about every 10 ms).

@@ -17,8 +17,7 @@
 #include "RPHY.h"
 #include "WAIT1.h"
 
-#define RADIO_CHANNEL_INIT   1  /* communication channel for init station */
-#define RADIO_CHANNEL_READ   2  /* communication channel for read station */
+#define RADIO_CHANNEL_DEFAULT  0  /* default communication channel */
 
 /* macros to configure device either for RX or TX operation */
 #define RF1_CONFIG_SETTINGS  (RF1_EN_CRC|RF1_CRCO)
@@ -26,7 +25,7 @@
 #define RX_POWERUP()         RF1_WriteRegister(RF1_CONFIG, RF1_CONFIG_SETTINGS|RF1_PWR_UP|RF1_PRIM_RX) /* enable 1 byte CRC, power up and set as PRX */
 
 static bool RADIO_isSniffing = FALSE;
-
+static uint8_t RADIO_channel = RADIO_CHANNEL_DEFAULT;
 static const uint8_t TADDR[5] = {0x11, 0x22, 0x33, 0x44, 0x55}; /* device address */
 
 /* Radio state definitions */
@@ -184,6 +183,11 @@ static void RADIO_HandleStateMachine(void) {
   } /* for */
 }
 
+uint8_t RADIO_SetChannel(uint8_t channel) {
+  RADIO_channel = channel;
+  return RF1_SetChannel(channel);
+}
+
 static RPHY_PacketDesc radioRx;
 static uint8_t radioRxBuf[RPHY_BUFFER_SIZE];
 
@@ -197,7 +201,7 @@ uint8_t RADIO_PowerUp(void) {
   
   RF1_WriteRegister(RF1_RF_SETUP, RF1_RF_SETUP_RF_PWR_0|RF1_RF_SETUP_RF_DR_250);
   RF1_WriteRegister(RF1_RX_PW_P0, RPHY_PAYLOAD_SIZE); /* number of payload bytes we want to send and receive */
-  RF1_SetChannel(RADIO_CHANNEL_READ);
+  (void)RADIO_SetChannel(RADIO_CHANNEL_DEFAULT);
 
   /* Set RADDR and TADDR as the transmit address since we also enable auto acknowledgment */
   RF1_WriteRegisterData(RF1_RX_ADDR_P0, (uint8_t*)TADDR, sizeof(TADDR));
@@ -220,6 +224,11 @@ uint8_t RADIO_PowerUp(void) {
   /* init Rx descriptor */
   radioRx.data = &radioRxBuf[0];
   radioRx.dataSize = sizeof(radioRxBuf);
+  return ERR_OK;
+}
+
+uint8_t RADIO_PowerDown(void) {
+  /*! \todo NYI */
   return ERR_OK;
 }
 
@@ -262,10 +271,15 @@ static void RADIO_PrintHelp(const CLS1_StdIOType *io) {
 }
 
 static void RADIO_PrintStatus(const CLS1_StdIOType *io) {
+  uint8_t buf[8];
+  
   CLS1_SendStatusStr((unsigned char*)"Radio", (unsigned char*)"\r\n", io->stdOut);
   CLS1_SendStatusStr((unsigned char*)"  state", RadioStateStr(RADIO_AppStatus), io->stdOut);
   CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
   CLS1_SendStatusStr((unsigned char*)"  sniff", RADIO_isSniffing?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
+  UTIL1_Num8uToStr(buf, sizeof(buf), RADIO_channel);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  CLS1_SendStatusStr((unsigned char*)"  channel", buf, io->stdOut);
 }
 
 uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
@@ -294,6 +308,7 @@ void RADIO_Deinit(void) {
 
 void RADIO_Init(void) {
   RADIO_isSniffing = FALSE;
+  RADIO_channel = RADIO_CHANNEL_DEFAULT;
 }
 #else
 void RADIO_OnInterrupt(void) {
