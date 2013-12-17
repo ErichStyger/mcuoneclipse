@@ -164,6 +164,7 @@ static void RADIO_HandleStateMachine(void) {
           }
           if (status&RF1_STATUS_MAX_RT) { /* retry timeout interrupt */
             RF1_ResetStatusIRQ(RF1_STATUS_MAX_RT); /* clear bit */
+            RF1_Write(RF1_FLUSH_TX); /* flush old data */
             RADIO_AppStatus = RADIO_TIMEOUT; /* timeout */
           } else {
             RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON; /* turn receive on */
