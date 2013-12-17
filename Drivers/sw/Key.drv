@@ -271,7 +271,7 @@ static %'ModuleName'%.KeyStorage DBC_ScanValue;
   /*!< Time needed for debouncing */
 
 %if (LongKeyDetection='yes')
-static unsigned char DBC_LongKeyCount;
+static unsigned short DBC_LongKeyCount;
   /*!< counting how long we press a key */
 #define DBC_LONG_KEY_TIME_MS     %LongKeyTime  /*!< Long key pressing time, in ms units */
 #define DBC_LONG_KEY_ITERATIONS  (DBC_LONG_KEY_TIME_MS/DBC_TRIGGER_TICK_TIME)
