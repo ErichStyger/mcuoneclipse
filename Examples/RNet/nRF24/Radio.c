@@ -268,6 +268,7 @@ static const unsigned char *RadioStateStr(RADIO_AppStatusKind state) {
 static void RADIO_PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"radio", (unsigned char*)"Group of radio commands\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows radio help or status\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  channel <number>", (unsigned char*)"Switches to the given channel. Channel must be in the range 0..127\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  sniff on|off", (unsigned char*)"Turns sniffing on or off\r\n", io->stdOut);
 }
 
@@ -285,6 +286,8 @@ static void RADIO_PrintStatus(const CLS1_StdIOType *io) {
 
 uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
   uint8_t res = ERR_OK;
+  const unsigned char *p;
+  uint8_t val;
 
   if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, (char*)"radio help")==0) {
     RADIO_PrintHelp(io);
@@ -298,6 +301,15 @@ uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_S
   } else if (UTIL1_strcmp((char*)cmd, (char*)"radio sniff off")==0) {
     RADIO_isSniffing = FALSE;
     *handled = TRUE;
+  } else if (UTIL1_strncmp((char*)cmd, (char*)"radio channel", sizeof("radio channel")-1)==0) {
+    p = cmd+sizeof("radio channel");
+    if (UTIL1_ScanDecimal8uNumber(&p, &val)==ERR_OK && val>=0 && val<=0x7F) {
+      RADIO_SetChannel(val);
+      *handled = TRUE;
+    } else {
+      CLS1_SendStr((unsigned char*)"Wrong argument, must be in the range 0..128\r\n", io->stdErr);
+      res = ERR_FAILED;
+    }
   }
   return res;
 }

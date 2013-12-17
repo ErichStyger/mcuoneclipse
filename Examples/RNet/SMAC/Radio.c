@@ -347,7 +347,7 @@ static void RADIO_PrintStatus(const CLS1_StdIOType *io) {
 
 uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
   uint8_t res = ERR_OK;
-  int32_t val;
+  uint8_t val;
   const unsigned char *p;
 
   if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, (char*)"radio help")==0) {
@@ -373,8 +373,8 @@ uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_S
     *handled = TRUE;
   } else if (UTIL1_strncmp((char*)cmd, (char*)"radio channel", sizeof("radio channel")-1)==0) {
     p = cmd+sizeof("radio channel");
-    if (UTIL1_xatoi(&p, &val)==ERR_OK && val>=0 && val<=15) {
-      RADIO_SetChannel((uint8_t)val);
+    if (UTIL1_ScanDecimal8uNumber(&p, &val)==ERR_OK && val>=0 && val<=15) {
+      RADIO_SetChannel(val);
       *handled = TRUE;
     } else {
       CLS1_SendStr((unsigned char*)"Wrong argument, must be in the range 0..15\r\n", io->stdErr);
