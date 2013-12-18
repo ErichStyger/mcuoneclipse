@@ -4,7 +4,7 @@
     <Name>LCDHTA</Name>
     <Description>Character LCD Display</Description>
     <Author>Erich Styger</Author>
-    <Version>01.014</Version>
+    <Version>01.015</Version>
     <Icon>LCDHTA</Icon>
     <TypesFiles>PE,LCDHTA\LCDHTA</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -227,7 +227,7 @@
               <Name>E2</Name>
               <Symbol>E2Enabled</Symbol>
               <TypeSpec>typeEnaDis</TypeSpec>
-              <Hint>Only available for 4 line displays. With this it is possible to control upper and lower half of display.</Hint>
+              <Hint>Useful for special 4 line displays which have two display controllers with different enable signals. With this it is possible to control upper and lower half of display. Use the method UseDisplay() to switch the display controller.</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
