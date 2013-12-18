@@ -4,7 +4,7 @@
     <Name>LCDHTA</Name>
     <Description>Character LCD Display</Description>
     <Author>Erich Styger</Author>
-    <Version>01.005</Version>
+    <Version>01.009</Version>
     <Icon>LCDHTA</Icon>
     <TypesFiles>PE,LCDHTA\LCDHTA</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -19,7 +19,7 @@
     <BW_NeedUst>0</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2012, all rights reserved.\nhttp      : www.mcuoneclipse.com\n\nThis an open source software implementing software using Processor Expert.\nThis is a free software and is opened for education,  research  and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
+    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2013, all rights reserved.\nhttp      : www.mcuoneclipse.com\n\nThis an open source software implementing software using Processor Expert.\nThis is a free software and is opened for education,  research  and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
     <Category>CPU External Devices-Display</Category>
     <DemoDriver>no</DemoDriver>
     <BeanLevel>High</BeanLevel>
@@ -221,6 +221,22 @@
               <InhrBeanBaseName>EN</InhrBeanBaseName>
               <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
             </TInhrItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>E2</Name>
+              <Symbol>E2Enabled</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint/>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Enabled</Description>
+              <Expanded>Yes</Expanded>
+              <DefaultValue>true</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+            </TBoolGrupItem>
           </GrupItem>
           <GrupItem>
             <TInhrItem>
@@ -454,9 +470,9 @@
                     <ItemLevel>BASIC</ItemLevel>
                     <BoldName>true</BoldName>
                     <EditLine>false</EditLine>
-                    <Description>Enabled</Description>
-                    <Expanded>Yes</Expanded>
-                    <DefaultValue>true</DefaultValue>
+                    <Description>Disabled</Description>
+                    <Expanded>No</Expanded>
+                    <DefaultValue>false</DefaultValue>
                     <DefineSymbol>YES_NO</DefineSymbol>
                     <IfDisabled>setNOTHING</IfDisabled>
                     <Children>
