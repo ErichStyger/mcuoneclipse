@@ -20,9 +20,3 @@
     %endif
   %endif
 %endif
-%if defined(LCD_Nof_Lines) & LCD_Nof_Lines='4'
-  %set E2Enabled ReadOnly no
-%else
-  %set E2Enabled Value Disabled
-  %set E2Enabled ReadOnly yes
-%endif

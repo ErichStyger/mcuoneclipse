@@ -4,7 +4,7 @@
     <Name>LCDHTA</Name>
     <Description>Character LCD Display</Description>
     <Author>Erich Styger</Author>
-    <Version>01.013</Version>
+    <Version>01.014</Version>
     <Icon>LCDHTA</Icon>
     <TypesFiles>PE,LCDHTA\LCDHTA</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -1244,6 +1244,40 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>UseDisplay</Name>
+        <Symbol>UseDisplay</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint/>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>display</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Has to be either 1 (top display, using E1) or 2 (bottom display, using E2)</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte display)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

@@ -280,6 +280,16 @@ void %'ModuleName'%.WaitForLCDReady(void);
 %include Common\GeneralInternal.inc (WaitForLCDReady)
 
 %-INTERNAL_METHOD_END WaitForLCDReady
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN UseDisplay
+%ifdef UseDisplay
+byte %'ModuleName'%.%UseDisplay(byte display);
+%define! Pardisplay
+%define! RetVal
+%include Common\LCDHTAUseDisplay.Inc
+
+%endif %- UseDisplay
+%-BW_METHOD_END UseDisplay
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -420,6 +430,15 @@ const byte %'ModuleName'%.SoftCharOE[8] = { /* ö */
 #define SetEN() \
         %@EN@'ModuleName'%.SetVal()                              %>40 /* EN=1 */
 
+%if defined(E2)
+/* macros for the EN2 pin */
+#define ClrEN2() \
+        %@E2@'ModuleName'%.ClrVal()                              %>40 /* E2=0 */
+#define SetEN2() \
+        %@E2@'ModuleName'%.SetVal()                              %>40 /* E2=1 */
+static uint8_t %'ModuleName'%.currDisplay = 1; /* only for displays with E1 and E2: if set to 1, it will use E1, if set to 2 it will use E2 */
+
+%endif
 /* macros for the data bus */
 #define DataAsOutput() \
 %if defined(DataBus)
@@ -534,13 +553,29 @@ static void WriteLCDCommand(byte cmd);
 %include Common\GeneralInternalGlobal.inc (EnablePulse)
 static void EnablePulse(void)
 {
-  SetEN();                                                       %>40 /* set EN to 1 to create pulse */
+%if defined(E2)
+  if(%'ModuleName'%.currDisplay==1) {
+    SetEN();
+  } else {
+    SetEN2();
+  }
+%else
+  SetEN();
+%endif                                                           %>40 /* set EN to 1 to create pulse */
 %if %LCDType = "1" %- Diplaytech 162c: not clear why this is not according to the 500ns spec?
   Waitms(2);
 %else
   Waitns(Timing_PWeh_ns);
 %endif
+%if defined(E2)
+  if(%'ModuleName'%.currDisplay==1) {
+    ClrEN();                                                     %>40 /* set to 0 to finish pulse */
+  } else {
+    ClrEN2();                                                    %>40 /* set to 0 to finish pulse */
+  }
+%else
   ClrEN();                                                       %>40 /* set to 0 to finish pulse */
+%endif
 }
 
 %-INTERNAL_METHOD_END EnablePulse
@@ -557,22 +592,54 @@ void %'ModuleName'%.WaitForLCDReady(void)
   SetRW();                                                       %>40 /* RW = 1: read mode */
   Waitns(Timing_tAS_ns);
   for(;;) {                                                      %>40 /* loop breaks as soon the busy flag is cleared */
+%if defined(E2)
+    if(%'ModuleName'%.currDisplay==1) {
+      SetEN();                                                   %>40 /* EN = 1; EN to high for getting the busy flag  */
+    } else {
+      SetEN2();                                                  %>40 /* EN = 1; EN to high for getting the busy flag  */
+    }
+%else
     SetEN();                                                     %>40 /* EN = 1; EN to high for getting the busy flag  */
+%endif
     Waitns(Timing_tDDR_ns);                                      %>40 /* Read mode timing tDDR: time until we can read data */
   %if %DataBusWidth='4bit'
     /* for 4bit data bus: need to do read twice */
     ch = (byte)(DataGet()<<4);                                   %>40 /* read high byte */
     Waitns(Timing_PWeh_ns-Timing_tDDR_ns);                       %>40 /* for accurate lenght of EN pulse */
+%if defined(E2)
+    if(%'ModuleName'%.currDisplay==1) {
+      ClrEN();
+    } else {
+      ClrEN2();
+    }
+%else
     ClrEN();
+%endif
     Waitns(Timing_tCYCLE_ns-Timing_PWeh_ns);                     %>40 /* need to wait a cycle time until we can enable EN again */
-    SetEN();
+%if defined(E2)
+    if(%'ModuleName'%.currDisplay==1) {
+      SetEN();                                                   %>40 /* EN = 1; EN to high for getting the busy flag  */
+    } else {
+      SetEN2();                                                  %>40 /* EN = 1; EN to high for getting the busy flag  */
+    }
+%else
+    SetEN();                                                     %>40 /* EN = 1; EN to high for getting the busy flag  */
+%endif
     Waitns(Timing_tDDR_ns);                                      %>40 /* Read mode timing tDDR: time until we can read data */
     ch |= DataGet();                                             %>40 /* read low byte */
   %else
     ch = DataGet();                                              %>40 /* read status */
   %endif
     Waitns(Timing_PWeh_ns-Timing_tDDR_ns);                       %>40 /* for accurate length of EN pulse */
-    ClrEN();                                                     %>40 /* EN = 0 */
+%if defined(E2)
+    if(%'ModuleName'%.currDisplay==1) {
+      ClrEN();
+    } else {
+      ClrEN2();
+    }
+%else
+    ClrEN();
+%endif
     if (!(ch&BusyFlag)) {
       break;
     }
@@ -821,6 +888,9 @@ void %'ModuleName'%.Init(void)
      The low level init already shall have set our data port to input/output, currently set to output,
      plus all control pins are set as outputs with low values. To be sure, we do it here again. */
   ClrEN();                                                       %>40 /* EN Pin low */
+%if defined(E2)
+  ClrEN2();                                                      %>40 /* EN2 Pin low */
+%endif
 %if defined(RW)
   ClrRW();                                                       %>40 /* RW Pin low */
 %endif
@@ -834,30 +904,82 @@ void %'ModuleName'%.Init(void)
   Waitms(80);                                                    %>40 /* wait for more than 15ms after Vcc rises to 4.5V, wait for more than 40ms after Vcc rises to 2.7V. In case of POR (Power On Reset) we need some additional time. */
 %if %DataBusWidth='4bit'
   DataPut(0x3);                                                  %>40 /* BF cannot be checked before this function, function set (interface is 8bits long) */
+%if defined(E2)
+  %'ModuleName'%.UseDisplay(1);
   EnablePulse();                                                 %>40 /* transfer data */
+  %'ModuleName'%.UseDisplay(2);
+  EnablePulse();                                                 %>40 /* transfer data */
+%else
+  EnablePulse();                                                 %>40 /* transfer data */
+%endif
   Waitms(5);                                                     %>40 /* wait for more than 4.1 ms */
   /* 0x3 is already on the bus from previous DataPut(), do not need to put it again here */
+%if defined(E2)
+  %'ModuleName'%.UseDisplay(1);
   EnablePulse();                                                 %>40 /* transfer data */
+  %'ModuleName'%.UseDisplay(2);
+  EnablePulse();                                                 %>40 /* transfer data */
+%else
+  EnablePulse();                                                 %>40 /* transfer data */
+%endif
   Waitus(100);                                                   %>40 /* wait for more than 100us */
   /* 0x3 is already on the bus from previous DataPut(), do not need to put it again here */
+%if defined(E2)
+  %'ModuleName'%.UseDisplay(1);
   EnablePulse();                                                 %>40 /* transfer data */
+  %'ModuleName'%.UseDisplay(2);
+  EnablePulse();                                                 %>40 /* transfer data */
+%else
+  EnablePulse();                                                 %>40 /* transfer data */
+%endif
   Waitus(100);                                                   %>40 /* wait for more than 100us */
 
   DataPut(0x2);                                                  %>40 /* Function set */
+%if defined(E2)
+  %'ModuleName'%.UseDisplay(1);
   EnablePulse();                                                 %>40 /* transfer data */
+  %'ModuleName'%.UseDisplay(2);
+  EnablePulse();                                                 %>40 /* transfer data */
+%else
+  EnablePulse();                                                 %>40 /* transfer data */
+%endif
   Waitus(100);
 %else
   DataPut(FunctionSetCmd|FunctionSet_8bit);                      %>40 /* Function set (interface is 8bit) */
+%if defined(E2)
+  %'ModuleName'%.UseDisplay(1);
   EnablePulse();                                                 %>40 /* transfer data */
+  %'ModuleName'%.UseDisplay(2);
+  EnablePulse();                                                 %>40 /* transfer data */
+%else
+  EnablePulse();                                                 %>40 /* transfer data */
+%endif
   Waitms(5);                                                     %>40 /* wait at least 4.1ms */
   /* transmit again the same data (which is already on the bus */
-  EnablePulse();                                                 %>40 /* send pulse */
+%if defined(E2)
+  %'ModuleName'%.UseDisplay(1);
+  EnablePulse();                                                 %>40 /* transfer data */
+  %'ModuleName'%.UseDisplay(2);
+  EnablePulse();                                                 %>40 /* transfer data */
+%else
+  EnablePulse();                                                 %>40 /* transfer data */
+%endif
   Waitus(100);                                                   %>40 /* wait at least 100us */
   /* transmit again the same data (which is already on the bus */
-  EnablePulse();                                                 %>40 /* send pulse */
+%if defined(E2)
+  %'ModuleName'%.UseDisplay(1);
+  EnablePulse();                                                 %>40 /* transfer data */
+  %'ModuleName'%.UseDisplay(2);
+  EnablePulse();                                                 %>40 /* transfer data */
+%else
+  EnablePulse();                                                 %>40 /* transfer data */
+%endif
   Waitus(100);
 %endif
 
+%if defined(E2)
+  %'ModuleName'%.UseDisplay(1);
+%endif
   WriteLCDCommand(FunctionSetCmd|FunctionSet_Font5x8
 %if %DataBusWidth='4bit'
                  |FunctionSet_4bit                               %>40 /* we are using 4bit data bus */ \
@@ -870,14 +992,55 @@ void %'ModuleName'%.Init(void)
                  |FunctionSet_2Lines                             %>40 /* we are using two or more lines */
 %endif
                  );
+%if defined(E2)
+  %'ModuleName'%.UseDisplay(2);
+  WriteLCDCommand(FunctionSetCmd|FunctionSet_Font5x8
+%if %DataBusWidth='4bit'
+                 |FunctionSet_4bit                               %>40 /* we are using 4bit data bus */ \
+%else
+                 |FunctionSet_8bit                               %>40 /* we are using 8bit data bus */ \
+%endif
+%if %LCD_Nof_Lines = "1"
+                 |FunctionSet_1Line                              %>40 /* we are using only one line */
+%else
+                 |FunctionSet_2Lines                             %>40 /* we are using two or more lines */
+%endif
+                 );
+%endif
+
 %ifdef NeedDisplayStatusVariable
   DisplayOnOffControlStatus = DisplayOnOffControlCmd|DisplayOnOffControl_DisplayOn;%>40 /* Display on, cursor on, do not blink */
+%if defined(E2)
+  %'ModuleName'%.UseDisplay(1);
+%endif
   WriteLCDCommand(DisplayOnOffControlStatus);
+%if defined(E2)
+  %'ModuleName'%.UseDisplay(2);
+  WriteLCDCommand(DisplayOnOffControlStatus);
+%endif
 %else
+%if defined(E2)
+  %'ModuleName'%.UseDisplay(1);
+%endif
   WriteLCDCommand(DisplayOnOffControlCmd|DisplayOnOffControl_DisplayOn);
+%if defined(E2)
+  %'ModuleName'%.UseDisplay(2);
+  WriteLCDCommand(DisplayOnOffControlCmd|DisplayOnOffControl_DisplayOn);
+%endif
+%endif
+%if defined(E2)
+  %'ModuleName'%.UseDisplay(1);
 %endif
   WriteLCDCommand(ClearDisplayCmd); /* Clear display */
   WriteLCDCommand(EntryModeSetCmd|EntryModeSet_IncrementOn);     %>40 /* Entry mode set: Increment mode, display shift off */
+%if defined(E2)
+  %'ModuleName'%.UseDisplay(2);
+  WriteLCDCommand(ClearDisplayCmd); /* Clear display */
+  WriteLCDCommand(EntryModeSetCmd|EntryModeSet_IncrementOn);     %>40 /* Entry mode set: Increment mode, display shift off */
+%endif
+%if defined(E2)
+  %'ModuleName'%.UseDisplay(1);
+%endif
 }
 
 %-INTERNAL_METHOD_END Init
@@ -1001,6 +1164,26 @@ void %'ModuleName'%.%SetEntryMode(bool increment, bool shiftLeft)
 %endif %- SetEntryMode
 %-BW_METHOD_END SetEntryMode
 %-************************************************************************************************************
+%-BW_METHOD_BEGIN UseDisplay
+%ifdef UseDisplay
+%define! Pardisplay
+%define! RetVal
+%include Common\LCDHTAUseDisplay.Inc
+byte %'ModuleName'%.%UseDisplay(byte display)
+{
+%if defined(E2)
+  if (display!=1 || display!=2) {
+    return ERR_FAILED; /* wrong argument */
+  }
+  %'ModuleName'%.currDisplay = display;
+%else
+  (void)display; /* not used, as not using E2 (additional enable) signal */
+%endif
+  return ERR_OK;
+}
+
+%endif %- UseDisplay
+%-BW_METHOD_END UseDisplay
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
