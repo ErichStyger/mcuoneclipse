@@ -274,6 +274,12 @@ void %'ModuleName'%.%SetEntryMode(bool increment, bool shiftLeft);
 
 %endif %- SetEntryMode
 %-BW_METHOD_END SetEntryMode
+%-************************************************************************************************************
+%-INTERNAL_METHOD_BEG WaitForLCDReady
+void %'ModuleName'%.WaitForLCDReady(void);
+%include Common\GeneralInternal.inc (WaitForLCDReady)
+
+%-INTERNAL_METHOD_END WaitForLCDReady
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -517,11 +523,6 @@ static void DataPut(uint8_t val) {
 %-INTERNAL_LOC_METHOD_BEG EnablePulse
 static void EnablePulse(void);
 %-INTERNAL_LOC_METHOD_END EnablePulse
-%-INTERNAL_LOC_METHOD_BEG WaitForLCDReady
-%if %ReadFromDisplay='yes' & %CheckBusyFlag = "yes"
-static void WaitForLCDReady(void);
-%endif
-%-INTERNAL_LOC_METHOD_END WaitForLCDReady
 %-INTERNAL_LOC_METHOD_BEG WriteLCDCommand
 static void WriteLCDCommand(byte cmd);
 %-INTERNAL_LOC_METHOD_END WriteLCDCommand
@@ -545,8 +546,8 @@ static void EnablePulse(void)
 %-INTERNAL_METHOD_END EnablePulse
 %-INTERNAL_METHOD_BEG WaitForLCDReady
 %if %ReadFromDisplay='yes' & %CheckBusyFlag = "yes"
-%include Common\GeneralInternalGlobal.inc (WaitForLCDReady)
-static void WaitForLCDReady(void)
+%include Common\GeneralInternal.inc (WaitForLCDReady)
+void %'ModuleName'%.WaitForLCDReady(void)
 {
   byte ch;
 
