@@ -4,7 +4,7 @@
     <Name>LCDHTA</Name>
     <Description>Character LCD Display</Description>
     <Author>Erich Styger</Author>
-    <Version>01.010</Version>
+    <Version>01.013</Version>
     <Icon>LCDHTA</Icon>
     <TypesFiles>PE,LCDHTA\LCDHTA</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -227,7 +227,7 @@
               <Name>E2</Name>
               <Symbol>E2Enabled</Symbol>
               <TypeSpec>typeEnaDis</TypeSpec>
-              <Hint/>
+              <Hint>Only available for 4 line displays. With this it is possible to control upper and lower half of display.</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
@@ -236,6 +236,26 @@
               <DefaultValue>true</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TInhrItem>
+                    <Name>E2 signal</Name>
+                    <Symbol>E2</Symbol>
+                    <TypeSpec>LCDHTA\CtrlPin</TypeSpec>
+                    <Hint>E2 signal of displays which use this signal to control the upper and lower half of display.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>-1</DefaultIndex>
+                    <TextValueIndex>false</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <InhrBeanBaseName>Inhr</InhrBeanBaseName>
+                    <ShowInheritedMethodsEventsInPrjTree>false</ShowInheritedMethodsEventsInPrjTree>
+                  </TInhrItem>
+                </GrupItem>
+              </Children>
             </TBoolGrupItem>
           </GrupItem>
           <GrupItem>
