@@ -68,10 +68,10 @@ static uint8_t RAPP_OnPacketRx(RPHY_PacketDesc *packet) {
   RAPP_MSG_Type type;
   RNWK_ShortAddrType srcAddr;
   
-  type = RAPP_BUF_TYPE(packet->data);
-  size = RAPP_BUF_SIZE(packet->data);
-  data = RAPP_BUF_PAYLOAD_START(packet->data);
-  srcAddr = RNWK_BUF_GET_SRC_ADDR(packet->data);
+  type = RAPP_BUF_TYPE(packet->phyData);
+  size = RAPP_BUF_SIZE(packet->phyData);
+  data = RAPP_BUF_PAYLOAD_START(packet->phyData);
+  srcAddr = RNWK_BUF_GET_SRC_ADDR(packet->phyData);
   return ParseMessage(type, size, data, srcAddr, packet);
 }
 
@@ -98,9 +98,9 @@ void RAPP_SniffPacket(RPHY_PacketDesc *packet, bool isTx) {
   
   io = CLS1_GetStdio();
   if (isTx) {
-    CLS1_SendStr((unsigned char*)"Tx, ", io->stdOut);
+    CLS1_SendStr((unsigned char*)"Packet Tx ", io->stdOut);
   } else {
-    CLS1_SendStr((unsigned char*)"Rx, ", io->stdOut);
+    CLS1_SendStr((unsigned char*)"Packet Rx ", io->stdOut);
   }
   UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"flags: ");
   UTIL1_strcatNum16s(buf, sizeof(buf), packet->flags);
@@ -116,39 +116,38 @@ void RAPP_SniffPacket(RPHY_PacketDesc *packet, bool isTx) {
     CLS1_SendStr((unsigned char*)")", io->stdOut);
   }
   UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)" size: ");
-  UTIL1_strcatNum16s(buf, sizeof(buf), packet->dataSize);
+  UTIL1_strcatNum16s(buf, sizeof(buf), packet->phySize);
   CLS1_SendStr(buf, io->stdOut);
   /* PHY */
-  CLS1_SendStr((unsigned char*)" data: ", io->stdOut);
-  dataSize = RPHY_BUF_SIZE(packet->data);
+  CLS1_SendStr((unsigned char*)" PHY data: ", io->stdOut);
+  dataSize = RPHY_BUF_SIZE(packet->phyData);
   for(i=0; i<dataSize+RPHY_HEADER_SIZE;i++) {
     buf[0] = '\0';
-    UTIL1_strcatNum8Hex(buf, sizeof(buf), packet->data[i]);
+    UTIL1_strcatNum8Hex(buf, sizeof(buf), packet->phyData[i]);
     UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" ");
     CLS1_SendStr(buf, io->stdOut);
   }
-  CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
   /* MAC */
-  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"size:");
+  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)" MAC size:");
   UTIL1_strcatNum8u(buf, sizeof(buf), dataSize);
   UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" type:");
-  UTIL1_strcatNum8Hex(buf, sizeof(buf), RMAC_BUF_TYPE(packet->data));
+  UTIL1_strcatNum8Hex(buf, sizeof(buf), RMAC_BUF_TYPE(packet->phyData));
   CLS1_SendStr(buf, io->stdOut);
   RMAC_DecodeType(buf, sizeof(buf), packet);
   CLS1_SendStr(buf, io->stdOut);
   UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)" s#:");
-  UTIL1_strcatNum8Hex(buf, sizeof(buf), RMAC_BUF_SEQN(packet->data));
+  UTIL1_strcatNum8Hex(buf, sizeof(buf), RMAC_BUF_SEQN(packet->phyData));
   CLS1_SendStr(buf, io->stdOut);
   /* NWK */
-  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)" src:");
-  addr = RNWK_BUF_GET_SRC_ADDR(packet->data);
+  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)" NWK src:");
+  addr = RNWK_BUF_GET_SRC_ADDR(packet->phyData);
 #if RNWK_SHORT_ADDR_SIZE==1
   UTIL1_strcatNum8Hex(buf, sizeof(buf), addr);
 #else
   UTIL1_strcatNum16Hex(buf, sizeof(buf), addr);
 #endif
   UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" dst:");
-  addr = RNWK_BUF_GET_DST_ADDR(packet->data);
+  addr = RNWK_BUF_GET_DST_ADDR(packet->phyData);
 #if RNWK_SHORT_ADDR_SIZE==1
   UTIL1_strcatNum8Hex(buf, sizeof(buf), addr);
 #else
@@ -156,11 +155,11 @@ void RAPP_SniffPacket(RPHY_PacketDesc *packet, bool isTx) {
 #endif
   CLS1_SendStr(buf, io->stdOut);
   /* APP */
-  if (packet->dataSize>RMAC_HEADER_SIZE+RNWK_HEADER_SIZE) { /* there is application data */
-    UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)" type:");
-    UTIL1_strcatNum8Hex(buf, sizeof(buf), RAPP_BUF_TYPE(packet->data));
+  if (packet->phySize>RMAC_HEADER_SIZE+RNWK_HEADER_SIZE) { /* there is application data */
+    UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)" APP type:");
+    UTIL1_strcatNum8Hex(buf, sizeof(buf), RAPP_BUF_TYPE(packet->phyData));
     UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" size:");
-    UTIL1_strcatNum8Hex(buf, sizeof(buf), RAPP_BUF_SIZE(packet->data));
+    UTIL1_strcatNum8Hex(buf, sizeof(buf), RAPP_BUF_SIZE(packet->phyData));
     CLS1_SendStr(buf, io->stdOut);
   }
   CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);

@@ -18,7 +18,7 @@
 
 uint8_t RPHY_GetPayload(RPHY_PacketDesc *packet) {
   packet->flags = RPHY_PACKET_FLAGS_NONE;
-  return RMSG_GetRxMsg(packet->data, packet->dataSize); /* ERR_OK, ERR_OVERFLOW or ERR_RXEMPTY */
+  return RMSG_GetRxMsg(packet->phyData, packet->phySize); /* ERR_OK, ERR_OVERFLOW or ERR_RXEMPTY */
 }
 
 uint8_t RPHY_OnPacketRx(RPHY_PacketDesc *packet) {

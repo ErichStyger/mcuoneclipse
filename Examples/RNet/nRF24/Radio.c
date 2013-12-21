@@ -63,13 +63,14 @@ static uint8_t CheckTx(void) {
     RF1_StopRxTx();  /* CE low */
     TX_POWERUP();
     /* set up packet structure */
-    packet.flags = RPHY_BUF_FLAGS(TxDataBuffer);
-    packet.data = &TxDataBuffer[0];
-    packet.dataSize = RPHY_BUF_SIZE(TxDataBuffer);
+    packet.phyData = &TxDataBuffer[0];
+    packet.flags = RPHY_BUF_FLAGS(packet.phyData);
+    packet.phySize = sizeof(TxDataBuffer);
+    packet.rxtx = &RPHY_BUF_SIZE(packet.phyData); /* we transmit the data size too */
     if (RADIO_isSniffing) {
       RPHY_SniffPacket(&packet, TRUE); /* sniff outgoing packet */
     }
-    RF1_TxPayload(TxDataBuffer+sizeof(RPHY_FlagsType), RPHY_PAYLOAD_SIZE); /* send data */
+    RF1_TxPayload(packet.rxtx, RPHY_PAYLOAD_SIZE); /* send data, using fixed payload size */
     return ERR_OK;
   } else {
     return ERR_NOTAVAIL; /* no data to send? */
@@ -82,10 +83,15 @@ static uint8_t CheckRx(void) {
   uint8_t res = ERR_OK;
   uint8_t RxDataBuffer[RPHY_BUFFER_SIZE];
   uint8_t status;
+  RPHY_PacketDesc packet;
   
+  packet.flags = RPHY_PACKET_FLAGS_NONE;
+  packet.phyData = &RxDataBuffer[0];
+  packet.phySize = sizeof(RxDataBuffer);
+  packet.rxtx = &RPHY_BUF_SIZE(packet.phyData); /* we transmit the data size too */
   status = RF1_GetStatus();
   if (status&RF1_STATUS_RX_DR) { /* data received interrupt */
-    RF1_RxPayload(RPHY_BUF_PAYLOAD_START(RxDataBuffer)-1, RPHY_PAYLOAD_SIZE); /* get payload: note that we transmit <size> as payload! */
+    RF1_RxPayload(packet.rxtx, RPHY_PAYLOAD_SIZE); /* get payload: note that we transmit <size> as payload! */
     RF1_ResetStatusIRQ(RF1_STATUS_RX_DR|RF1_STATUS_TX_DS|RF1_STATUS_MAX_RT); /* make sure we reset all flags. Need to have the pipe number too */
   }
   if (status&RF1_STATUS_TX_DS) { /* data sent interrupt */
@@ -95,7 +101,7 @@ static uint8_t CheckRx(void) {
     RF1_ResetStatusIRQ(RF1_STATUS_MAX_RT); /* clear bit */
   }
   /* put message into Rx queue */
-  res = RMSG_QueueRxMsg(RxDataBuffer, sizeof(RxDataBuffer), RPHY_PAYLOAD_SIZE, RPHY_PACKET_FLAGS_NONE);
+  res = RMSG_QueueRxMsg(packet.phyData, packet.phySize, RPHY_BUF_SIZE(packet.phyData), packet.flags);
   if (res!=ERR_OK) {
     Err((unsigned char*)"ERR: Rx Queue full?\r\n");
   }
@@ -202,8 +208,9 @@ uint8_t RADIO_PowerUp(void) {
 
   RADIO_AppStatus = RADIO_INITIAL_STATE;
   /* init Rx descriptor */
-  radioRx.data = &radioRxBuf[0];
-  radioRx.dataSize = sizeof(radioRxBuf);
+  radioRx.phyData = &radioRxBuf[0];
+  radioRx.phySize = sizeof(radioRxBuf);
+  radioRx.rxtx = &RPHY_BUF_SIZE(radioRx.phyData); /* we transmit the size too */
   return ERR_OK;
 }
 

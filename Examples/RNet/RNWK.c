@@ -46,13 +46,13 @@ uint8_t RNWK_SendACK(RPHY_PacketDesc *rxPacket, RNWK_ShortAddrType saddr) {
   RPHY_PacketDesc ackPacket;
   
   ackPacket.flags = RPHY_PACKET_FLAGS_NONE;
-  ackPacket.data = buf;
-  ackPacket.dataSize = sizeof(buf);
+  ackPacket.phyData = buf;
+  ackPacket.phySize = sizeof(buf);
   
   /* send an ack message back: this is is of type ack with src and dst address */
-  addr = RNWK_BUF_GET_SRC_ADDR(rxPacket->data); /* who should receive the ack? */
-  RNWK_BUF_SET_SRC_ADDR(ackPacket.data, saddr); /* set source address */
-  RNWK_BUF_SET_DST_ADDR(ackPacket.data, addr); /* destination address is from where we got the data */
+  addr = RNWK_BUF_GET_SRC_ADDR(rxPacket->phyData); /* who should receive the ack? */
+  RNWK_BUF_SET_SRC_ADDR(ackPacket.phyData, saddr); /* set source address */
+  RNWK_BUF_SET_DST_ADDR(ackPacket.phyData, addr); /* destination address is from where we got the data */
   return RMAC_SendACK(rxPacket, &ackPacket);
 }
 
@@ -60,10 +60,10 @@ uint8_t RNWK_OnPacketRx(RPHY_PacketDesc *packet) {
   RNWK_ShortAddrType addr;
   RMAC_MsgType type;
 
-  addr = RNWK_BUF_GET_DST_ADDR(packet->data);
+  addr = RNWK_BUF_GET_DST_ADDR(packet->phyData);
   if (addr==RNWK_ADDR_BROADCAST || addr==RNWK_GetThisNodeAddr()) { /* it is for me :-) */
-    type = RMAC_GetType(packet->data, packet->dataSize); /* get the type of the message */
-    if (RMAC_MSG_TYPE_IS_ACK(type) && RMAC_IsExpectedACK(packet->data, packet->dataSize)) {
+    type = RMAC_GetType(packet->phyData, packet->phySize); /* get the type of the message */
+    if (RMAC_MSG_TYPE_IS_ACK(type) && RMAC_IsExpectedACK(packet->phyData, packet->phySize)) {
       /* it is an ACK, and the sequence number matches. Mark it with a flag and return, as no need for further processing */
       packet->flags |= RPHY_PACKET_FLAGS_IS_ACK;
       return ERR_OK; /* no need to process the packet further */

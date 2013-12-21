@@ -40,9 +40,10 @@ typedef uint8_t RPHY_FlagsType;
   /*!< request acknowledge */
 
 typedef struct {
-  RPHY_FlagsType flags;    /*!< flags, see RPHY_PACKET_FLAGS_XXXX above */
-  uint8_t dataSize; /*!< size of data buffer */
-  uint8_t *data;    /*!< pointer to the phy data packet */
+  RPHY_FlagsType flags;/*!< flags, see RPHY_PACKET_FLAGS_XXXX above */
+  uint8_t phySize;     /*!< size of PHY data buffer */
+  uint8_t *phyData;    /*!< pointer to the PHY data buffer */
+  uint8_t *rxtx;       /*!< pointer into phyData, start of TX/RX data */
 } RPHY_PacketDesc;
 
 /*!
