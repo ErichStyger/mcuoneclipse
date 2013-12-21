@@ -16,11 +16,15 @@
 static uint8_t RMAC_SeqNr = 0;
 static uint8_t RMAC_ExpectedAckSeqNr;
 
-uint8_t RMAC_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize) {
-  RMAC_BUF_TYPE(buf) = RMAC_MSG_TYPE_DATA|RMAC_MSG_TYPE_REQ_ACK;
+uint8_t RMAC_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RPHY_FlagsType flags) {
+  if (flags&RPHY_PACKET_FLAGS_REQ_ACK) {
+    RMAC_BUF_TYPE(buf) = RMAC_MSG_TYPE_DATA|RMAC_MSG_TYPE_REQ_ACK;
+  } else {
+    RMAC_BUF_TYPE(buf) = RMAC_MSG_TYPE_DATA;
+  }
   RMAC_ExpectedAckSeqNr = RMAC_SeqNr;
   RMAC_BUF_SEQN(buf) = RMAC_SeqNr++;
-  return RPHY_PutPayload(buf, bufSize, payloadSize+RMAC_HEADER_SIZE);
+  return RPHY_PutPayload(buf, bufSize, payloadSize+RMAC_HEADER_SIZE, flags);
 }
 
 uint8_t RMAC_OnPacketRx(RPHY_PacketDesc *packet) {
@@ -31,7 +35,7 @@ uint8_t RMAC_SendACK(RPHY_PacketDesc *rxPacket, RPHY_PacketDesc *ackPacket) {
   RMAC_BUF_TYPE(ackPacket->data) = RMAC_MSG_TYPE_ACK; /* set type to ack */
   RMAC_BUF_SEQN(ackPacket->data) = RMAC_BUF_SEQN(rxPacket->data);
   /* use same sequence number as in the received package, so no change */
-  return RPHY_PutPayload(ackPacket->data, ackPacket->dataSize, RMAC_HEADER_SIZE+RNWK_HEADER_SIZE);
+  return RPHY_PutPayload(ackPacket->data, ackPacket->dataSize, RMAC_HEADER_SIZE+RNWK_HEADER_SIZE, RPHY_PACKET_FLAGS_NONE);
 }
 
 RMAC_MsgType RMAC_GetType(uint8_t *buf, size_t bufSize) {
@@ -47,15 +51,6 @@ bool RMAC_IsExpectedACK(uint8_t *buf, size_t bufSize) {
 void RMAC_SniffPacket(RPHY_PacketDesc *packet, bool isTx) {
   RNWK_SniffPacket(packet, isTx);
 }
-#if 0
- * typedef enum RMAC_MsgType {
-  RMAC_MSG_TYPE_INIT = 0x0,  /* initialization value */
-  RMAC_MSG_TYPE_DATA = 0x1, /* flag: data message */
-  RMAC_MSG_TYPE_ACK = 0x2,  /* flag: acknowledge message */
-  RMAC_MSG_TYPE_CMD = 0x4,  /* flag: command message */
-  RMAC_MSG_TYPE_REQ_ACK = 0x80, /* flag: ack requested */
-} RMAC_MsgType;
-#endif
 
 void RMAC_DecodeType(uint8_t *buf, size_t bufSize, RPHY_PacketDesc *packet) {
   RMAC_MsgType type;

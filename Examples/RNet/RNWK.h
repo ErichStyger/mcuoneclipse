@@ -75,8 +75,9 @@ uint8_t RNWK_OnPacketRx(RPHY_PacketDesc *packet);
  * \param bufSize Size of message buffer, must be of RNWK_BUFFER_SIZE.
  * \param payloadSize Size of the payload in bytes.
  * \param dstAddr Destination node address.
+ * \param flags Packet flags.
  */
-uint8_t RNWK_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RNWK_ShortAddrType dstAddr);
+uint8_t RNWK_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RNWK_ShortAddrType dstAddr, RPHY_FlagsType flags);
 
 #if PL_HAS_SHELL
 #include "CLS1.h"
@@ -97,8 +98,8 @@ uint8_t RNWK_SetThisNodeAddr(RNWK_ShortAddrType addr);
 
 /*!
  * \brief Sniffs and dumps a packet.
- * \param packet Data packet
- * \param isTx If either Tx or Rx packet
+ * \param packet Data packet.
+ * \param isTx If either Tx or Rx packet.
  */
 void RNWK_SniffPacket(RPHY_PacketDesc *packet, bool isTx);
 

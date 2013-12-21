@@ -25,8 +25,8 @@ uint8_t RPHY_OnPacketRx(RPHY_PacketDesc *packet) {
   return RMAC_OnPacketRx(packet); /* pass message up the stack */
 }
 
-uint8_t RPHY_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize) {
-  return RMSG_QueueTxMsg(buf, bufSize, payloadSize);
+uint8_t RPHY_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RPHY_FlagsType flags) {
+  return RMSG_QueueTxMsg(buf, bufSize, payloadSize, flags);
 }
 
 void RPHY_SniffPacket(RPHY_PacketDesc *packet, bool isTx) {

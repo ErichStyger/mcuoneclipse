@@ -31,13 +31,13 @@ uint8_t RNWK_SetAppOnPacketRxCallback(RNWK_AppOnRxCallbackType callback) {
   return ERR_OK;
 }
 
-uint8_t RNWK_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RNWK_ShortAddrType dstAddr) {
+uint8_t RNWK_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RNWK_ShortAddrType dstAddr, RPHY_FlagsType flags) {
   RNWK_ShortAddrType srcAddr;
   
   srcAddr = RNWK_GetThisNodeAddr();
   RNWK_BUF_SET_SRC_ADDR(buf, srcAddr);
   RNWK_BUF_SET_DST_ADDR(buf, dstAddr);
-  return RMAC_PutPayload(buf, bufSize, payloadSize+RNWK_HEADER_SIZE);
+  return RMAC_PutPayload(buf, bufSize, payloadSize+RNWK_HEADER_SIZE, flags);
 }
 
 uint8_t RNWK_SendACK(RPHY_PacketDesc *rxPacket, RNWK_ShortAddrType saddr) {
@@ -65,7 +65,7 @@ uint8_t RNWK_OnPacketRx(RPHY_PacketDesc *packet) {
     type = RMAC_GetType(packet->data, packet->dataSize); /* get the type of the message */
     if (RMAC_MSG_TYPE_IS_ACK(type) && RMAC_IsExpectedACK(packet->data, packet->dataSize)) {
       /* it is an ACK, and the sequence number matches. Mark it with a flag and return, as no need for further processing */
-      packet->flags |= RPHY_PACKET_FLAGS_ACK;
+      packet->flags |= RPHY_PACKET_FLAGS_IS_ACK;
       return ERR_OK; /* no need to process the packet further */
     } else if (RMAC_MSG_TYPE_IS_DATA(type)) { /* data packet received */
       if (RNWK_AppOnRxCallback!=NULL) { /* do we have a callback? */

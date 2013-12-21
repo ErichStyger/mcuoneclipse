@@ -171,7 +171,7 @@ static uint8_t FlushAndTxQueue(RSTDIO_QueueType queueType, RAPP_MSG_Type msgType
     *p++ = ch;
     i++;
   }
-  res = RAPP_PutPayload(buf, sizeof(buf), i, msgType, RSTDIO_dstAddr);
+  res = RAPP_PutPayload(buf, sizeof(buf), i, msgType, RSTDIO_dstAddr, RPHY_PACKET_FLAGS_REQ_ACK);
   if (res!=ERR_OK) {
     CLS1_ConstStdIOType *io = CLS1_GetStdio();
 

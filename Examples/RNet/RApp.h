@@ -35,26 +35,27 @@ typedef uint8_t (*RAPP_MsgHandler) (RAPP_MSG_Type type, uint8_t size, uint8_t *d
 
 uint8_t RAPP_SetMessageHandlerTable(const RAPP_MsgHandler *table);
 
-uint8_t RAPP_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RAPP_MSG_Type type, RNWK_ShortAddrType dstAddr);
+uint8_t RAPP_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RAPP_MSG_Type type, RNWK_ShortAddrType dstAddr, RPHY_FlagsType flags);
 
 RNWK_ShortAddrType RAPP_GetThisNodeAddr(void);
 
 uint8_t RAPP_SetThisNodeAddr(RNWK_ShortAddrType addr);
 
 /*!
- * \brief Send an application payload data block
- * \param appPayload Size of application payload
- * \param appPayloadSize Application payload size
- * \param msgType Payload message type
- * \param dstAddr destination address
- * \return Error code, ERR_OK for no failure
+ * \brief Send an application payload data block.
+ * \param appPayload Size of application payload.
+ * \param appPayloadSize Application payload size.
+ * \param msgType Payload message type.
+ * \param dstAddr destination address.
+ * \param flags Packet flags.
+ * \return Error code, ERR_OK for no failure.
  */
-uint8_t RAPP_SendPayloadDataBlock(uint8_t *appPayload, uint8_t appPayloadSize, uint8_t msgType, RNWK_ShortAddrType dstAddr);
+uint8_t RAPP_SendPayloadDataBlock(uint8_t *appPayload, uint8_t appPayloadSize, uint8_t msgType, RNWK_ShortAddrType dstAddr, RPHY_FlagsType flags);
 
 /*!
  * \brief Sniffs and dumps a packet.
- * \param packet Data packet
- * \param isTx If either Tx or Rx packet
+ * \param packet Data packet.
+ * \param isTx If either Tx or Rx packet.
  */
 void RAPP_SniffPacket(RPHY_PacketDesc *packet, bool isTx);
 

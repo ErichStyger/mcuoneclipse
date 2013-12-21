@@ -303,7 +303,7 @@ uint8_t RADIO_Process(void) {
         RPHY_SniffPacket(&packet, FALSE); /* sniff incoming packet */
       }
       if (RPHY_OnPacketRx(&packet)==ERR_OK) { /* process incoming packets */
-        if (packet.flags&RPHY_PACKET_FLAGS_ACK) { /* it was an ack! */
+        if (packet.flags&RPHY_PACKET_FLAGS_IS_ACK) { /* it was an ack! */
           EVNT_SetEvent(EVNT_RADIO_ACK); /* set event */
         }
       }

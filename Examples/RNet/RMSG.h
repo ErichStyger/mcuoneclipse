@@ -12,6 +12,7 @@
 
 #include "RNetConf.h"
 #if PL_HAS_RADIO
+#include "RPHY.h"
 
 /*!
  * \brief Queues a message to be sent to the radio transceiver.
@@ -20,9 +21,10 @@
  * \param payloadSize Size of payload data.
  * \param fromISR If called from an ISR routine.
  * \param isTx If message is TX or RX.
+ * \param flags Packet flags.
  * \return Error code, ERR_OK if message has been queued.
  */
-uint8_t RMSG_QueuePut(uint8_t *buf, size_t bufSize, uint8_t payloadSize, bool fromISR, bool isTx);
+uint8_t RMSG_QueuePut(uint8_t *buf, size_t bufSize, uint8_t payloadSize, bool fromISR, bool isTx, RPHY_FlagsType flags);
 
 /*!
  * \brief Used to check if we have a message incoming from the RX queue.
@@ -47,18 +49,20 @@ uint8_t RMSG_GetTxMsg(uint8_t *buf, size_t bufSize);
  * \param buf Pointer to the message data.
  * \param bufSize Size of the buffer in bytes, must be RPHY_BUFFER_SIZE.
  * \param payloadSize Size of payload in buffer.
+ * \param flags Packet flags.
  * \return ERR_OK, or error code.
  */
-uint8_t RMSG_QueueTxMsg(uint8_t *buf, size_t bufSize, uint8_t payloadSize);
+uint8_t RMSG_QueueTxMsg(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RPHY_FlagsType flags);
 
 /*!
  * \brief Add a message to the RX queue.
  * \param buf Pointer to the message data.
  * \param bufSize Size of the buffer in bytes.
  * \param payloadSize Size of payload in buffer.
+ * \param flags Packet flags
  * \return ERR_OK, or error code.
  */
-uint8_t RMSG_QueueRxMsg(uint8_t *buf, size_t bufSize, uint8_t payloadSize);
+uint8_t RMSG_QueueRxMsg(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RPHY_FlagsType flags);
 
 /*! \brief Initializes the module */
 void RMSG_Init(void);

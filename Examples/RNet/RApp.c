@@ -14,13 +14,13 @@
 
 static const RAPP_MsgHandler *RAPP_MsgHandlerTable;
 
-uint8_t RAPP_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RAPP_MSG_Type type, RNWK_ShortAddrType dstAddr) {
+uint8_t RAPP_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RAPP_MSG_Type type, RNWK_ShortAddrType dstAddr, RPHY_FlagsType flags) {
   RAPP_BUF_TYPE(buf) = (uint8_t)type;
   RAPP_BUF_SIZE(buf) = payloadSize;
-  return RNWK_PutPayload(buf, bufSize, payloadSize+RAPP_HEADER_SIZE, dstAddr);
+  return RNWK_PutPayload(buf, bufSize, payloadSize+RAPP_HEADER_SIZE, dstAddr, flags);
 }
 
-uint8_t RAPP_SendPayloadDataBlock(uint8_t *appPayload, uint8_t appPayloadSize, uint8_t msgType, RNWK_ShortAddrType dstAddr) {
+uint8_t RAPP_SendPayloadDataBlock(uint8_t *appPayload, uint8_t appPayloadSize, uint8_t msgType, RNWK_ShortAddrType dstAddr, RPHY_FlagsType flags) {
   uint8_t buf[RAPP_BUFFER_SIZE]; /* payload data buffer */
   int i;
   
@@ -32,7 +32,7 @@ uint8_t RAPP_SendPayloadDataBlock(uint8_t *appPayload, uint8_t appPayloadSize, u
     RAPP_BUF_PAYLOAD_START(buf)[i] = *appPayload;
     appPayload++; i++;
   }
-  return RAPP_PutPayload(buf, sizeof(buf), appPayloadSize, msgType, dstAddr);
+  return RAPP_PutPayload(buf, sizeof(buf), appPayloadSize, msgType, dstAddr, flags);
 }
 
 uint8_t IterateTable(RAPP_MSG_Type type, uint8_t size, uint8_t *data, RNWK_ShortAddrType srcAddr, bool *handled, RPHY_PacketDesc *packet, const RAPP_MsgHandler *table) {
@@ -104,13 +104,24 @@ void RAPP_SniffPacket(RPHY_PacketDesc *packet, bool isTx) {
   }
   UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"flags: ");
   UTIL1_strcatNum16s(buf, sizeof(buf), packet->flags);
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" size: ");
+  CLS1_SendStr(buf, io->stdOut);
+  if (packet->flags!=RPHY_PACKET_FLAGS_NONE) {
+    CLS1_SendStr((unsigned char*)"(", io->stdOut);
+    if (packet->flags&RPHY_PACKET_FLAGS_IS_ACK) {
+      CLS1_SendStr((unsigned char*)"IS_ACK,", io->stdOut);
+    }
+    if (packet->flags&RPHY_PACKET_FLAGS_REQ_ACK) {
+      CLS1_SendStr((unsigned char*)"REQ_ACK", io->stdOut);
+    }
+    CLS1_SendStr((unsigned char*)")", io->stdOut);
+  }
+  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)" size: ");
   UTIL1_strcatNum16s(buf, sizeof(buf), packet->dataSize);
   CLS1_SendStr(buf, io->stdOut);
   /* PHY */
-  CLS1_SendStr((unsigned char*)" hex: ", io->stdOut);
-  dataSize = packet->data[0]; /* first byte in data buffer is number of bytes */
-  for(i=0; i<=dataSize;i++) {
+  CLS1_SendStr((unsigned char*)" data: ", io->stdOut);
+  dataSize = RPHY_BUF_SIZE(packet->data);
+  for(i=0; i<dataSize+RPHY_HEADER_SIZE;i++) {
     buf[0] = '\0';
     UTIL1_strcatNum8Hex(buf, sizeof(buf), packet->data[i]);
     UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" ");
@@ -145,12 +156,14 @@ void RAPP_SniffPacket(RPHY_PacketDesc *packet, bool isTx) {
 #endif
   CLS1_SendStr(buf, io->stdOut);
   /* APP */
-  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)" type:");
-  UTIL1_strcatNum8Hex(buf, sizeof(buf), RAPP_BUF_TYPE(packet->data));
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" size:");
-  UTIL1_strcatNum8Hex(buf, sizeof(buf), RAPP_BUF_SIZE(packet->data));
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-  CLS1_SendStr(buf, io->stdOut);
+  if (packet->dataSize>RMAC_HEADER_SIZE+RNWK_HEADER_SIZE) { /* there is application data */
+    UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)" type:");
+    UTIL1_strcatNum8Hex(buf, sizeof(buf), RAPP_BUF_TYPE(packet->data));
+    UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" size:");
+    UTIL1_strcatNum8Hex(buf, sizeof(buf), RAPP_BUF_SIZE(packet->data));
+    CLS1_SendStr(buf, io->stdOut);
+  }
+  CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
 #else
   (void)packet;
   (void)isTx;

@@ -12,34 +12,44 @@
 
 #include "RNetConf.h"
 /* payload format is:
- * PHY: <size><phy payload>
- * MAC:       <type><seq#><mac payload> 
- * NWK:                   <saddr><dstaddr><nwk payload>
- * APP:                                   <type><size><data>
+ * PHY: <flags><size><phy payload>
+ * MAC:              <type><seq#><mac payload> 
+ * NWK:                          <saddr><dstaddr><nwk payload>
+ * APP:                                          <type><size><data>
  */
-#define RPHY_HEADER_SIZE    (1) /* <size> */
+#define RPHY_HEADER_SIZE    (2) /* <flags><size> */
 #define RPHY_PAYLOAD_SIZE   (RNET_CONFIG_TRANSCEIVER_PAYLOAD_SIZE) /* total number of payload bytes */
 #define RPHY_BUFFER_SIZE    (RPHY_HEADER_SIZE+RPHY_PAYLOAD_SIZE) /* <size><phy payload> */
 
 /* PHY buffer access macros */
-#define RPHY_BUF_IDX_SIZE                 (0) /* <size> index */
-#define RPHY_BUF_IDX_PAYLOAD              (1) /* <phy payload> index */
+#define RPHY_BUF_IDX_FLAGS                (0) /* <flags> index */
+#define RPHY_BUF_IDX_SIZE                 (1) /* <size> index */
+#define RPHY_BUF_IDX_PAYLOAD              (2) /* <phy payload> index */
 /* access macros */
+#define RPHY_BUF_FLAGS(phy)               ((phy)[RPHY_BUF_IDX_FLAGS])
 #define RPHY_BUF_SIZE(phy)                ((phy)[RPHY_BUF_IDX_SIZE])
 #define RPHY_BUF_PAYLOAD_START(phy)       ((phy)+RPHY_HEADER_SIZE)
 
+typedef uint8_t RPHY_FlagsType;
 /* flag bits inside PacketDesc below */
-#define RPHY_PACKET_FLAGS_NONE  (0)
+#define RPHY_PACKET_FLAGS_NONE     (0)
   /*!< initialization value */
-#define RPHY_PACKET_FLAGS_ACK   (1<<0)
+#define RPHY_PACKET_FLAGS_IS_ACK   (1<<0)
   /*!< valid ACK received */
+#define RPHY_PACKET_FLAGS_REQ_ACK  (1<<1)
+  /*!< request acknowledge */
 
 typedef struct {
-  uint8_t flags;    /*!< flags, see RPHY_PACKET_FLAGS_XXXX above */
-  uint8_t *data;    /*!< pointer to the data packet */
+  RPHY_FlagsType flags;    /*!< flags, see RPHY_PACKET_FLAGS_XXXX above */
   uint8_t dataSize; /*!< size of data buffer */
+  uint8_t *data;    /*!< pointer to the phy data packet */
 } RPHY_PacketDesc;
 
+/*!
+ * \brief Function called on Rx of a packet.
+ * \param packet Pointer to packet
+ * \return ERR_OK, if everything is fine, error code otherwise.
+ */
 uint8_t RPHY_OnPacketRx(RPHY_PacketDesc *packet);
 
 /*!
@@ -54,14 +64,15 @@ uint8_t RPHY_GetPayload(RPHY_PacketDesc *packet);
  * \param buf Pointer to the packet buffer.
  * \param bufSize Size of the payload buffer.
  * \param payloadSize Size of payload data.
+ * \param flags Packet flags.
  * \return Error code, ERR_OK for everything fine.
  */
-uint8_t RPHY_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize);
+uint8_t RPHY_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RPHY_FlagsType flags);
 
 /*!
  * \brief Sniffs and dumps a packet.
- * \param packet Data packet
- * \param isTx If either Tx or Rx packet
+ * \param packet Data packet.
+ * \param isTx If either Tx or Rx packet.
  */
 void RPHY_SniffPacket(RPHY_PacketDesc *packet, bool isTx);
 

@@ -56,41 +56,20 @@ void RADIO_OnInterrupt(void) {
 
 static uint8_t CheckTx(void) {
   RPHY_PacketDesc packet;
-  uint8_t buf[RPHY_BUFFER_SIZE];
-  uint8_t size, i, *p;
   uint8_t res = ERR_OK;
-  uint8_t TxDataBuffer[RPHY_PAYLOAD_SIZE];
+  uint8_t TxDataBuffer[RPHY_BUFFER_SIZE];
   
-  if (RMSG_GetTxMsg(buf, sizeof(buf))==ERR_OK) {
+  if (RMSG_GetTxMsg(TxDataBuffer, sizeof(TxDataBuffer))==ERR_OK) {
     RF1_StopRxTx();  /* CE low */
     TX_POWERUP();
     /* set up packet structure */
-    packet.flags = RPHY_PACKET_FLAGS_NONE;
-    packet.data = &buf[0];
-    packet.dataSize = sizeof(buf);
-    /* get data */
-    size = buf[0]; /* first byte in msg queue is size of message itself */
-    p = &buf[1]; /* pointer to first data byte */
-    i = 0; /* index pointing to payload */
-    while(i<sizeof(TxDataBuffer) && size>0) {
-      TxDataBuffer[i] = *p;
-      size--; i++;
-      p++;
-    }
-    if (size!=0) {
-      /* not enough room in transmit buffer */
-      Err((unsigned char*)"***ERR: Radio Overflow!\r\n");
-      res = ERR_OVERFLOW;
-    }
-    while(i<sizeof(TxDataBuffer)) { /* fill/initialized unused bytes */
-      TxDataBuffer[i] = 0; /* fill it with zeros */
-      size--; i++;
-      p++;
-    }
+    packet.flags = RPHY_BUF_FLAGS(TxDataBuffer);
+    packet.data = &TxDataBuffer[0];
+    packet.dataSize = RPHY_BUF_SIZE(TxDataBuffer);
     if (RADIO_isSniffing) {
       RPHY_SniffPacket(&packet, TRUE); /* sniff outgoing packet */
     }
-    RF1_TxPayload(TxDataBuffer, sizeof(TxDataBuffer)); /* send data */
+    RF1_TxPayload(TxDataBuffer+sizeof(RPHY_FlagsType), RPHY_PAYLOAD_SIZE); /* send data */
     return ERR_OK;
   } else {
     return ERR_NOTAVAIL; /* no data to send? */
@@ -106,7 +85,7 @@ static uint8_t CheckRx(void) {
   
   status = RF1_GetStatus();
   if (status&RF1_STATUS_RX_DR) { /* data received interrupt */
-    RF1_RxPayload(RPHY_BUF_PAYLOAD_START(RxDataBuffer), RPHY_PAYLOAD_SIZE); /* get payload */
+    RF1_RxPayload(RPHY_BUF_PAYLOAD_START(RxDataBuffer)-1, RPHY_PAYLOAD_SIZE); /* get payload: note that we transmit <size> as payload! */
     RF1_ResetStatusIRQ(RF1_STATUS_RX_DR|RF1_STATUS_TX_DS|RF1_STATUS_MAX_RT); /* make sure we reset all flags. Need to have the pipe number too */
   }
   if (status&RF1_STATUS_TX_DS) { /* data sent interrupt */
@@ -116,7 +95,7 @@ static uint8_t CheckRx(void) {
     RF1_ResetStatusIRQ(RF1_STATUS_MAX_RT); /* clear bit */
   }
   /* put message into Rx queue */
-  res = RMSG_QueueRxMsg(RxDataBuffer, sizeof(RxDataBuffer), RPHY_PAYLOAD_SIZE);
+  res = RMSG_QueueRxMsg(RxDataBuffer, sizeof(RxDataBuffer), RPHY_PAYLOAD_SIZE, RPHY_PACKET_FLAGS_NONE);
   if (res!=ERR_OK) {
     Err((unsigned char*)"ERR: Rx Queue full?\r\n");
   }
@@ -244,7 +223,7 @@ uint8_t RADIO_Process(void) {
       RPHY_SniffPacket(&radioRx, FALSE); /* sniff incoming packet */
     }
     if (RPHY_OnPacketRx(&radioRx)==ERR_OK) { /* process incoming packets */
-      if (radioRx.flags&RPHY_PACKET_FLAGS_ACK) { /* it was an ack! */
+      if (radioRx.flags&RPHY_PACKET_FLAGS_IS_ACK) { /* it was an ack! */
         //EVNT_SetEvent(EVNT_RADIO_ACK); /* set event */
       }
     }

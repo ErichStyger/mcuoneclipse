@@ -24,7 +24,7 @@
 
 static xQueueHandle RMSG_MsgRxQueue, RMSG_MsgTxQueue; /* queue for messages,  format is: kind(8bit) dataSize(8bit) data */
 
-uint8_t RMSG_QueuePut(uint8_t *buf, size_t bufSize, uint8_t payloadSize, bool fromISR, bool isTx) {
+uint8_t RMSG_QueuePut(uint8_t *buf, size_t bufSize, uint8_t payloadSize, bool fromISR, bool isTx, RPHY_FlagsType flags) {
   /* data format is: dataSize(8bit) data */
   uint8_t res = ERR_OK;
   xQueueHandle queue;
@@ -40,6 +40,7 @@ uint8_t RMSG_QueuePut(uint8_t *buf, size_t bufSize, uint8_t payloadSize, bool fr
   } else {
     queue = RMSG_MsgRxQueue;
   }
+  RPHY_BUF_FLAGS(buf) = flags;
   RPHY_BUF_SIZE(buf) = payloadSize;
   if (fromISR) {
     signed portBASE_TYPE pxHigherPriorityTaskWoken;
@@ -79,12 +80,12 @@ uint8_t RMSG_GetRxMsg(uint8_t *buf, size_t bufSize) {
   return ERR_RXEMPTY;
 }
 
-uint8_t RMSG_QueueTxMsg(uint8_t *buf, size_t bufSize, uint8_t payloadSize) {
-  return RMSG_QueuePut(buf, bufSize, payloadSize, FALSE, TRUE);
+uint8_t RMSG_QueueTxMsg(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RPHY_FlagsType flags) {
+  return RMSG_QueuePut(buf, bufSize, payloadSize, FALSE, TRUE, flags);
 }
 
-uint8_t RMSG_QueueRxMsg(uint8_t *buf, size_t bufSize, uint8_t payloadSize) {
-  return RMSG_QueuePut(buf, bufSize, payloadSize, FALSE, FALSE);
+uint8_t RMSG_QueueRxMsg(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RPHY_FlagsType flags) {
+  return RMSG_QueuePut(buf, bufSize, payloadSize, FALSE, FALSE, flags);
 }
 
 void RMSG_Deinit(void) {

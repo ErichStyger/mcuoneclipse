@@ -53,9 +53,10 @@ uint8_t RMAC_OnPacketRx(RPHY_PacketDesc *packet);
  * \param[in] buf Buffer with the data, must be of RMAC_BUFFER_SIZE.
  * \param[in] bufSize Buffer size.
  * \param[in] payloadSize Size of MAC payload data.
+ * \param[in] flags Packet flags
  * \return Error code, ERR_OK if everything is ok, ERR_OVERFLOW if buffer is too small.
  */
-uint8_t RMAC_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize);
+uint8_t RMAC_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RPHY_FlagsType flags);
 
 /*!
  * \brief Sends an acknowledge message for the received MAC payload data.
