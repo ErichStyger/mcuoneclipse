@@ -3,7 +3,7 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (xQueueReceivefromISR)
+%include Common\GeneralMethod.inc (xQueueReceiveFromISR)
 %;**     Description :
 %;**         A version of xQueueReceive() that can be called from an ISR.
 %;**         Unlike xQueueReceive(), xQueueReceiveFromISR() does not

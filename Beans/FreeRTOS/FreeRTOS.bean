@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.324</Version>
+    <Version>01.325</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -3915,8 +3915,8 @@ Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total accumulated ex
     </Method>
     <Method>
       <TMthdItem>
-        <Name>xQueueReceivefromISR</Name>
-        <Symbol>xQueueReceivefromISR</Symbol>
+        <Name>xQueueReceiveFromISR</Name>
+        <Symbol>xQueueReceiveFromISR</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
         <Hint>A version of xQueueReceive() that can be called from an ISR. Unlike xQueueReceive(), xQueueReceiveFromISR() does not permit a block time to be specified.</Hint>
         <ItemLevel>BASIC</ItemLevel>

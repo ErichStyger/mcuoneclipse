@@ -756,18 +756,18 @@ void %@RuntimeCntr@OnInterrupt(void);
 %endif %- uxQueueMessagesWaitingfromISR
 %-BW_METHOD_END uxQueueMessagesWaitingfromISR
 %-************************************************************************************************************
-%-BW_METHOD_BEGIN xQueueReceivefromISR
-%ifdef xQueueReceivefromISR
+%-BW_METHOD_BEGIN xQueueReceiveFromISR
+%ifdef xQueueReceiveFromISR
 #define %'ModuleName'%.%xQueueReceivefromISR(xQueue, pvBuffer, pxHigherPriorityTaskWoken) \
-  xQueueReceivefromISR(xQueue, pvBuffer, pxHigherPriorityTaskWoken)
+  xQueueReceiveFromISR(xQueue, pvBuffer, pxHigherPriorityTaskWoken)
 %define! ParxQueue
 %define! ParpvBuffer
 %define! ParpxHigherPriorityTaskWoken
 %define! RetVal
-%include Common\FreeRTOSxQueueReceivefromISR.Inc
+%include Common\FreeRTOSxQueueReceiveFromISR.Inc
 
-%endif %- xQueueReceivefromISR
-%-BW_METHOD_END xQueueReceivefromISR
+%endif %- xQueueReceiveFromISR
+%-BW_METHOD_END xQueueReceiveFromISR
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN xQueueSendToFrontFromISR
 %ifdef xQueueSendToFrontFromISR
@@ -2003,22 +2003,22 @@ unsigned_portBASE_TYPE %'ModuleName'%.%uxQueueMessagesWaitingfromISR(xQueueHandl
 %endif %- uxQueueMessagesWaitingfromISR
 %-BW_METHOD_END uxQueueMessagesWaitingfromISR
 %-************************************************************************************************************
-%-BW_METHOD_BEGIN xQueueReceivefromISR
-%ifdef xQueueReceivefromISR
+%-BW_METHOD_BEGIN xQueueReceiveFromISR
+%ifdef xQueueReceiveFromISR
 %define! ParxQueue
 %define! ParpvBuffer
 %define! ParpxHigherPriorityTaskWoken
 %define! RetVal
-%include Common\FreeRTOSxQueueReceivefromISR.Inc
+%include Common\FreeRTOSxQueueReceiveFromISR.Inc
 /*
-portBASE_TYPE %'ModuleName'%.%xQueueReceivefromISR(xQueueHandle xQueue, void *pvBuffer, portBASE_TYPE *pxHigherPriorityTaskWoken)
+portBASE_TYPE %'ModuleName'%.%xQueueReceiveFromISR(xQueueHandle xQueue, void *pvBuffer, portBASE_TYPE *pxHigherPriorityTaskWoken)
 {
   *** Implemented as macro in the header file %'ModuleName'.h
 }
 */
 
-%endif %- xQueueReceivefromISR
-%-BW_METHOD_END xQueueReceivefromISR
+%endif %- xQueueReceiveFromISR
+%-BW_METHOD_END xQueueReceiveFromISR
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN xQueueSendToFrontFromISR
 %ifdef xQueueSendToFrontFromISR

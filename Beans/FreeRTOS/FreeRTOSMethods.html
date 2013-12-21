@@ -925,12 +925,12 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
-<li><a name="xQueueReceivefromISR">
-<b>xQueueReceivefromISR</b></a>
+<li><a name="xQueueReceiveFromISR">
+<b>xQueueReceiveFromISR</b></a>
  - A version of xQueueReceive() that can be called from an ISR. Unlike xQueueReceive(), xQueueReceiveFromISR() does not permit a block time to be specified.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueueReceivefromISR(xQueueHandle xQueue, void *pvBuffer, portBASE_TYPE *pxHigherPriorityTaskWoken)<br />
+<br /><i>ANSIC prototype:</i> portBASE_TYPE xQueueReceiveFromISR(xQueueHandle xQueue, void *pvBuffer, portBASE_TYPE *pxHigherPriorityTaskWoken)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>xQueue:xQueueHandle</i> - The handle of the queue from which the data is to be received.</li>
 <li><i>pvBuffer:byte</i> - A pointer to the memory into which the data received from the queue will be copied.The length of the buffer must be at least equal to the queue item size (set when the queue was created).</li>
