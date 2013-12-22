@@ -1,0 +1,1 @@
+This folder contains projects for the FRDM-KL26Z (Freedom) board.
