@@ -56,7 +56,7 @@ void RADIO_OnInterrupt(void) {
     if (RADIO_RxPacket.u8Status==SMAC1_TIMEOUT) { /* Put timeout condition code here */
       EVNT_SetEvent(EVNT_RADIO_TIMEOUT);
     } else if (RADIO_RxPacket.u8Status == SMAC1_SUCCESS) { /* good packet received: handle it. */
-      (void)RMSG_QueuePut(RADIO_RxPacket.pu8Data-RPHY_BUF_IDX_PAYLOAD, RPHY_BUFFER_SIZE, RADIO_RxPacket.u8DataLength, TRUE, FALSE);
+      (void)RMSG_QueuePut(RADIO_RxPacket.pu8Data-RPHY_BUF_IDX_PAYLOAD, RPHY_BUFFER_SIZE, RADIO_RxPacket.u8DataLength, TRUE, FALSE, RPHY_PACKET_FLAGS_NONE);
       EVNT_SetEvent(EVNT_RADIO_DATA);
     } else if (RADIO_RxPacket.u8Status==SMAC1_OVERFLOW) { /* received packet, but it was longer than what we expect. */
       EVNT_SetEvent(EVNT_RADIO_OVERFLOW);
@@ -72,9 +72,9 @@ void RADIO_OnInterrupt(void) {
  * \brief Sets the channel number to be used
  * \param ch The channel to be used, in the range 0..15
  */
-static void RADIO_SetChannel(uint8_t ch) {
-  RADIO_Channel = ch&0xF; /* make sure it remains in range 0..15 */
-  (void)SMAC1_MLMESetChannelRequest(RADIO_Channel);  /* Set channel */
+uint8_t RADIO_SetChannel(uint8_t channel) {
+  RADIO_Channel = channel&0xF; /* make sure it remains in range 0..15 */
+  return SMAC1_MLMESetChannelRequest(RADIO_Channel);  /* Set channel */
 }
 
 /*!
@@ -250,10 +250,11 @@ void RADIO_AppHandleEvent(EVNT_Handle event) {
 static uint8_t RADIO_CheckTx(RPHY_PacketDesc *packet) {
   uint8_t size, i, *p;
   
-  if (RMSG_GetTxMsg(packet->data, packet->dataSize)==ERR_OK) {
-    packet->flags = RPHY_PACKET_FLAGS_NONE;
-    size = packet->data[RPHY_BUF_IDX_SIZE]; /* first byte in msg queue is size of message itself */
-    p = &packet->data[RPHY_BUF_IDX_PAYLOAD]; /* pointer to start of data to transmit: starting with type field */
+  if (RMSG_GetTxMsg(packet->phyData, packet->phySize)==ERR_OK) {
+    packet->flags = RPHY_BUF_FLAGS(packet->phyData);
+    packet->rxtx = RPHY_BUF_PAYLOAD_START(packet->phyData);
+    size = RPHY_BUF_SIZE(packet->phyData);
+    p = packet->rxtx; /* pointer to start of data to transmit: starting with type field */
     i = RPHY_BUF_IDX_PAYLOAD; /* start copy from here */
     while(i<sizeof(RADIO_TxDataBuffer) && size>0) {
       RADIO_TxDataBuffer[i] = *p;
@@ -294,8 +295,9 @@ uint8_t RADIO_Process(void) {
     RADIO_HandleEvents();
     RADIO_HandleStateMachine(); /* process state machine */
     /* Initialize Rx/Tx descriptor */
-    packet.data = &radioBuf[0];
-    packet.dataSize = sizeof(radioBuf);
+    packet.phyData = &radioBuf[0];
+    packet.phySize = sizeof(radioBuf);
+    packet.rxtx = RPHY_BUF_PAYLOAD_START(packet.phyData);
     (void)RADIO_ProcessTx(&packet); /* send outgoing packets (if any) */
     res = RPHY_GetPayload(&packet); /* get message */
     if (res==ERR_OK) { /* packet received */
@@ -382,7 +384,7 @@ uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_S
     }
   } else if (UTIL1_strncmp((char*)cmd, "radio power", sizeof("radio power")-1)==0) {
     p = cmd+sizeof("radio power");
-    if (UTIL1_xatoi(&p, &val)==ERR_OK && val>=0 && val<=15) {
+    if (UTIL1_ScanDecimal8uNumber(&p, &val)==ERR_OK && val>=0 && val<=15) {
       RADIO_SetOutputPower((uint8_t)val);
       *handled = TRUE;
     } else {

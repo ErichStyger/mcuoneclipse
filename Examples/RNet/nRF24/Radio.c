@@ -40,6 +40,8 @@ typedef enum RADIO_AppStatusKind {
 } RADIO_AppStatusKind;
 
 static RADIO_AppStatusKind RADIO_AppStatus = RADIO_INITIAL_STATE;
+static RPHY_PacketDesc radioRx;
+static uint8_t radioRxBuf[RPHY_BUFFER_SIZE];
 
 /* need to have this in case RF device is still added to project */
 static volatile bool RADIO_isrFlag; /* flag set by ISR */
@@ -199,9 +201,6 @@ uint8_t RADIO_SetChannel(uint8_t channel) {
   RADIO_channel = channel;
   return RF1_SetChannel(channel);
 }
-
-static RPHY_PacketDesc radioRx;
-static uint8_t radioRxBuf[RPHY_BUFFER_SIZE];
 
 /*! 
  * \brief Radio power-on initialization.
