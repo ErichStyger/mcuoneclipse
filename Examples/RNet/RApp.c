@@ -155,7 +155,7 @@ void RAPP_SniffPacket(RPHY_PacketDesc *packet, bool isTx) {
 #endif
   CLS1_SendStr(buf, io->stdOut);
   /* APP */
-  if (packet->phySize>RMAC_HEADER_SIZE+RNWK_HEADER_SIZE) { /* there is application data */
+  if (dataSize>RMAC_HEADER_SIZE+RNWK_HEADER_SIZE) { /* there is application data */
     UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)" APP type:");
     UTIL1_strcatNum8Hex(buf, sizeof(buf), RAPP_BUF_TYPE(packet->phyData));
     UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" size:");
