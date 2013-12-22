@@ -12,7 +12,6 @@ https://github.com/ErichStyger/mcuoneclipse/Drivers
 Part1_Beans_*.PEupd Content:
 -------------------------------------
 Package from component(s):
-Package from component(s):
 - 24AA_EEPROM version 01.030
 - 74HC164 version 01.031
 - 74HC595 version 01.022
@@ -30,7 +29,7 @@ Package from component(s):
 - FatFsMem_USB_MSD version 01.019
 - FatFsMemSDHC version 01.007
 - FontDisplay version 01.195
-- FreeRTOS version 01.323
+- FreeRTOS version 01.325
 - FreeRTOSTrace version 01.003
 - FSL_USB_CDC_Device version 01.021
 - FSL_USB_HID_Keyboard_Device version 01.049
@@ -50,8 +49,8 @@ Package from component(s):
 - HardFault version 01.008
 - I2CSpy version 01.009
 - KentChLCD version 01.110
-- Key version 01.102
-- LCDHTA version 01.005
+- Key version 01.103
+- LCDHTA version 01.015
 - LED version 01.061
 - LEDbit version 01.003
 - LEDbyte version 01.036
@@ -63,18 +62,17 @@ Package from component(s):
 - LowPower version 01.016
 - MAG3110 version 01.004
 - MaxonF2140 version 01.001
-- MC13192 version 01.017
+- MC13192 version 01.168
 - MC34673 version 01.019
 - MMA7260Q version 01.111
 - MMA7455L version 01.043
 - MMA8451Q version 01.028
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 08.12.2013
-
+created 22.12.2013
 
 Package from component(s):
-- nRF24L01 version 01.045
+- nRF24L01 version 01.055
 - OLED version 01.045
 - PCA9554 version 01.024
 - PCA9554BitIO version 01.037
@@ -86,19 +84,19 @@ Package from component(s):
 - PWMServo16bit version 01.011
 - QuadCounter version 01.019
 - RingBuffer version 01.015
-- RingBufferUInt8 version 01.005
+- RingBufferUInt8 version 01.007
 - RTC_Maxim version 01.003
 - S19 version 01.034
 - S65Sharp version 01.079
 - SD_Card version 01.158
 - Servo version 01.066
 - Shell version 01.023
-- SimpleEvents version 01.045
+- SimpleEvents version 01.046
 - SMAC version 01.009
-- SPHY version 01.016
+- SPHY version 01.108
 - SPIHCS08 version 01.025
 - SSD1289 version 01.158
-- SSEC version 01.001
+- SSEC version 01.067
 - Tacho version 01.001
 - Timeout version 01.023
 - TouchScreen version 01.077
@@ -126,5 +124,5 @@ Package from component(s):
 - UTI version 01.125
 - Utility version 01.092
 - Wait version 01.064
-created 08.12.2013
+created 22.12.2013
 
