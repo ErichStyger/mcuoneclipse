@@ -4,7 +4,7 @@
     <Name>LED</Name>
     <Description>Driver for a LED</Description>
     <Author>Erich Styger</Author>
-    <Version>01.061</Version>
+    <Version>01.062</Version>
     <Icon>Led</Icon>
     <TypesFiles>PE,LED\LED</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -67,7 +67,7 @@
         <Children>
           <GrupItem>
             <TBoolItem>
-              <Name>High pin value means ON</Name>
+              <Name>Anode on port side, HIGH is ON</Name>
               <Symbol>AnodeOnPortSide</Symbol>
               <TypeSpec>typeYesNo</TypeSpec>
               <Hint>If a high value means 'on'. If the anode side of the LED is connected to the port (otherwise it is the cathode). If the LED anode is on the port side, then a logical one on the port turns the LED on. If the cathode is on the port side, then a low level will turn it on.</Hint>
