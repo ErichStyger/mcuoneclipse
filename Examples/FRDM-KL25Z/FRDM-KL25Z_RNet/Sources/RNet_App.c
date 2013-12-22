@@ -216,7 +216,7 @@ uint8_t RNETA_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_S
     p = cmd + sizeof("app send val")-1;
     *handled = TRUE;
     if (UTIL1_ScanDecimal8uNumber(&p, &val8)==ERR_OK) {
-      if (RAPP_SendPayloadDataBlock(&val8, sizeof(val8), RAPP_MSG_TYPE_DATA, APP_dstAddr) != ERR_OK) {
+      if (RAPP_SendPayloadDataBlock(&val8, sizeof(val8), RAPP_MSG_TYPE_DATA, APP_dstAddr, RPHY_PACKET_FLAGS_REQ_ACK) != ERR_OK) {
         CLS1_SendStr((unsigned char*)"ERR: failed sending data\r\n", io->stdErr);
         return ERR_FAILED;
       }
