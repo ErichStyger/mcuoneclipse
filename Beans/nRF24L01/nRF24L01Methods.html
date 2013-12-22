@@ -348,6 +348,92 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="SetStaticPipePayload">
+<b>SetStaticPipePayload</b></a>
+ - Specifies the static payload for a pipe.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte SetStaticPipePayload(byte pipe, byte payloadBytes)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>pipe:byte</i> - Pipe number, 0 to 5</li>
+<li><i>payloadBytes:byte</i> - Number of payload pipes</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="EnableDynanicPayloadLength">
+<b>EnableDynanicPayloadLength</b></a>
+ - Enables dynamic payload length for the give pipes
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte EnableDynanicPayloadLength(byte pipeMask)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>pipeMask:byte</i> - Mask of pipes, with 1 for pipe 0, 2 for pipe 1, 4 for pipe 2 and so on.</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="WriteFeature">
+<b>WriteFeature</b></a>
+ - Writes the FEATURE register
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte WriteFeature(byte featureMask)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>featureMask:byte</i> - Mask of FEATURE, e.g. FEATURE_EN_DPL</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="ReadFeature">
+<b>ReadFeature</b></a>
+ - Reads the FEATURE register
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ReadFeature(byte *featureMask)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>featureMask: Pointer to byte</i> - Pointer to value of FEATURE register</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="ReadNofRxPayload">
+<b>ReadNofRxPayload</b></a>
+ - Returns the number of received payload bytes for the top R_RX_PAYLOAD in the RX FIFO
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ReadNofRxPayload(byte *nof)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>nof: Pointer to byte</i> - Pointer to where to store the number of bytes. A return value of 0 means that the pipe is not used, and if the value is &gt;32 then the data is not valid.</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="ReadObserveTxRegister">
+<b>ReadObserveTxRegister</b></a>
+ - Reads the OBSERVE_TX register to return the count of loss packets and count of retransmitted packets.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ReadObserveTxRegister(byte *nofLoss, byte *nofRetransmitted)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>nofLoss: Pointer to byte</i> - Pointer to number of lost packets</li>
+<li><i>nofRetransmitted: Pointer to byte</i> - Pointer to number of retransmitted packets</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="ReadReceivedPowerDetector">
+<b>ReadReceivedPowerDetector</b></a>
+ - Reads the RPD (Received Power Detector) register. 
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ReadReceivedPowerDetector(byte *rpd)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>rpd: Pointer to byte</i> - Pointer to RPD bit. Bit is one for received power levels above -64 dBm, zero for less than -64 dBm.</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
 <li><a name="SetChannel">
 <b>SetChannel</b></a>
  - Sets the radio channel (RF_CH register).

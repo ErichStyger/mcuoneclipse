@@ -4,7 +4,7 @@
     <Name>nRF24L01</Name>
     <Description>Driver for the Nordic nRF241L01+ Wireless Transceiver</Description>
     <Author>Erich Styger</Author>
-    <Version>01.045</Version>
+    <Version>01.055</Version>
     <Icon>nRF24L01</Icon>
     <TypesFiles>PE,nRF24L01\nRF24L01</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -734,6 +734,256 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>byte #M#_#C#(byte pipes)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>SetStaticPipePayload</Name>
+        <Symbol>SetStaticPipePayload</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Specifies the static payload for a pipe.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>pipe</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Pipe number, 0 to 5</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>payloadBytes</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Number of payload pipes</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte pipe, byte payloadBytes)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>EnableDynanicPayloadLength</Name>
+        <Symbol>EnableDynanicPayloadLength</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Enables dynamic payload length for the give pipes</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>pipeMask</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Mask of pipes, with 1 for pipe 0, 2 for pipe 1, 4 for pipe 2 and so on.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte pipeMask)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>WriteFeature</Name>
+        <Symbol>WriteFeature</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Writes the FEATURE register</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>featureMask</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Mask of FEATURE, e.g. FEATURE_EN_DPL</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte featureMask)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ReadFeature</Name>
+        <Symbol>ReadFeature</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Reads the FEATURE register</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>featureMask</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to value of FEATURE register</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte *featureMask)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ReadNofRxPayload</Name>
+        <Symbol>ReadNofRxPayload</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Returns the number of received payload bytes for the top R_RX_PAYLOAD in the RX FIFO</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>nof</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to where to store the number of bytes. A return value of 0 means that the pipe is not used, and if the value is &gt;32 then the data is not valid.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte *nof)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ReadObserveTxRegister</Name>
+        <Symbol>ReadObserveTxRegister</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Reads the OBSERVE_TX register to return the count of loss packets and count of retransmitted packets.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>nofLoss</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to number of lost packets</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>nofRetransmitted</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to number of retransmitted packets</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte *nofLoss, byte *nofRetransmitted)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ReadReceivedPowerDetector</Name>
+        <Symbol>ReadReceivedPowerDetector</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Reads the RPD (Received Power Detector) register. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>rpd</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to RPD bit. Bit is one for received power levels above -64 dBm, zero for less than -64 dBm.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte *rpd)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

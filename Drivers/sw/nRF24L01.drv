@@ -111,8 +111,8 @@
 #define %'ModuleName'%.CONFIG      0x00 /* CONFIG register */
 
 #define %'ModuleName'%.EN_AA       0x01 /* EN_AA register: configures auto-acknowledge per pipe */
- /* EN_AA register bitwise definitions */
-  /* masks for auto acknowledg per pipe */
+  /* EN_AA register bitwise definitions */
+  /* masks for auto acknowledge per pipe */
   #define %'ModuleName'%.EN_AA_RESERVED      0xC0
   #define %'ModuleName'%.EN_AA_ENAA_ALL      0x3F
   #define %'ModuleName'%.EN_AA_ENAA_P5       0x20
@@ -132,8 +132,7 @@
 #define %'ModuleName'%.RF_SETUP    0x06 /* SETUP register */
 #define %'ModuleName'%.STATUS      0x07
 #define %'ModuleName'%.OBSERVE_TX  0x08
-#define %'ModuleName'%.RPD     0x09    /* Mnemonic for nRF24L01+ */
-/*#define %'ModuleName'%.CD          0x09 */  /* Mnemonic from nRF24L01, new is RPD */
+#define %'ModuleName'%.RPD         0x09 /* Received Power Detector */
 #define %'ModuleName'%.RX_ADDR_P0  0x0A
 #define %'ModuleName'%.RX_ADDR_P1  0x0B
 #define %'ModuleName'%.RX_ADDR_P2  0x0C
@@ -141,13 +140,26 @@
 #define %'ModuleName'%.RX_ADDR_P4  0x0E
 #define %'ModuleName'%.RX_ADDR_P5  0x0F
 #define %'ModuleName'%.TX_ADDR     0x10
-#define %'ModuleName'%.RX_PW_P0    0x11 /* register for RX payload on pipe 0, 0 to 32 bytes */
-#define %'ModuleName'%.RX_PW_P1    0x12 /* register for RX payload on pipe 1, 0 to 32 bytes */
-#define %'ModuleName'%.RX_PW_P2    0x13 /* register for RX payload on pipe 2, 0 to 32 bytes */
-#define %'ModuleName'%.RX_PW_P3    0x14 /* register for RX payload on pipe 3, 0 to 32 bytes */
-#define %'ModuleName'%.RX_PW_P4    0x15 /* register for RX payload on pipe 4, 0 to 32 bytes */
-#define %'ModuleName'%.RX_PW_P5    0x16 /* register for RX payload on pipe 5, 0 to 32 bytes */
-#define %'ModuleName'%.FIFO_STATUS 0x17
+#define %'ModuleName'%.RX_PW_P0    0x11 /* register to set static RX payload on pipe 0, 0 to 32 bytes */
+#define %'ModuleName'%.RX_PW_P1    0x12 /* register to set static RX payload on pipe 1, 0 to 32 bytes */
+#define %'ModuleName'%.RX_PW_P2    0x13 /* register to set static RX payload on pipe 2, 0 to 32 bytes */
+#define %'ModuleName'%.RX_PW_P3    0x14 /* register to set static RX payload on pipe 3, 0 to 32 bytes */
+#define %'ModuleName'%.RX_PW_P4    0x15 /* register to set static RX payload on pipe 4, 0 to 32 bytes */
+#define %'ModuleName'%.RX_PW_P5    0x16 /* register to set static RX payload on pipe 5, 0 to 32 bytes */
+#define %'ModuleName'%.FIFO_STATUS 0x17 /* FIFO status register */
+#define %'ModuleName'%.DYNPD       0x1C /* enable dynamic payload length */
+  /* DYNPD register bits: */
+  #define %'ModuleName'%.DYNPD_DPL_P0  (1<<0) /* enable DPL for pipe 0 */
+  #define %'ModuleName'%.DYNPD_DPL_P1  (1<<1) /* enable DPL for pipe 1 */
+  #define %'ModuleName'%.DYNPD_DPL_P2  (1<<2) /* enable DPL for pipe 2 */
+  #define %'ModuleName'%.DYNPD_DPL_P3  (1<<3) /* enable DPL for pipe 3 */
+  #define %'ModuleName'%.DYNPD_DPL_P4  (1<<4) /* enable DPL for pipe 4 */
+  #define %'ModuleName'%.DYNPD_DPL_P5  (1<<5) /* enable DPL for pipe 5 */
+#define %'ModuleName'%.FEATURE     0x1D /* feature register */
+  /* FEATURE register bits: */
+  #define %'ModuleName'%.FEATURE_EN_DPL       (1<<2) /* enables dynamic payload length */
+  #define %'ModuleName'%.FEATURE_EN_ACK_PAY   (1<<1) /* enables payload with ACK */
+  #define %'ModuleName'%.FEATURE_EN_DYN_PAY   (1<<0) /* enables the W_TX_PAYLOAD_NOACK command */
 
 /* Bit Mnemonics */
 /* CONFIG Register Bits */
@@ -159,7 +171,6 @@
 #define %'ModuleName'%.PWR_UP      (1<<1)  /* 1: Power up, 0: Power down */
 #define %'ModuleName'%.PRIM_RX     (1<<0)  /* 1: PRX, 0: PTX */
 #define %'ModuleName'%.PRIM_TX     (0)     /* 0: PTX */
-
 
 #define %'ModuleName'%.ERX_P5      5
 #define %'ModuleName'%.ERX_P4      4
@@ -189,15 +200,18 @@
 #define %'ModuleName'%.RX_EMPTY    0
 
 /* Command Name Mnemonics (Instructions) */
-#define %'ModuleName'%.R_REGISTER     0x00
-#define %'ModuleName'%.W_REGISTER     0x20
-#define %'ModuleName'%.REGISTER_MASK  0x1F
-#define %'ModuleName'%.R_RX_PAYLOAD   0x61
-#define %'ModuleName'%.W_TX_PAYLOAD   0xA0
-#define %'ModuleName'%.FLUSH_TX       0xE1
-#define %'ModuleName'%.FLUSH_RX       0xE2
-#define %'ModuleName'%.REUSE_TX_PL    0xE3
-#define %'ModuleName'%.NOP            0xFF
+#define %'ModuleName'%.R_REGISTER           0x00 /* read register command, the address is encoded into the command (000A AAAA) */
+#define %'ModuleName'%.W_REGISTER           0x20 /* write register command, the address is encoded into the command (001A AAAA) */
+#define %'ModuleName'%.REGISTER_MASK        0x1F /* mask used for R_REGISTER and W_REGISTER commands */
+#define %'ModuleName'%.R_RX_PAYLOAD         0x61 /* read RX payload command */
+#define %'ModuleName'%.W_TX_PAYLOAD         0xA0 /* write TX payload command */
+#define %'ModuleName'%.FLUSH_TX             0xE1 /* flush TX FIFO command */
+#define %'ModuleName'%.FLUSH_RX             0xE2 /* flush RX FIFO command */
+#define %'ModuleName'%.REUSE_TX_PL          0xE3 /* reuse last transmitted payload command */
+#define %'ModuleName'%.R_RX_PL_WID          0x60 /* read RX payload width for the top R_RX_PAYLOAD in the RX FIFO */
+#define %'ModuleName'%.W_ACK_PAYLOAD        0xA8 /* used in RX mode. Write payload to be transmitted with ACK packet to pipe (1010 1PPP) */
+#define %'ModuleName'%.W_TX_PAYLOAD_NO_ACK  0xB0 /* used in TX mode. Disable AUTOACK on this specific packet */
+#define %'ModuleName'%.NOP                  0xFF /* no operation command, used for reading STATUS register */
 
 #define %'ModuleName'%.CONFIG_DEFAULT_VAL         0x08
 #define %'ModuleName'%.EN_AA_DEFAULT_VAL          0x3F
@@ -529,6 +543,78 @@ byte %'ModuleName'%.%EnableAutoAck(byte pipes);
 
 %endif %- EnableAutoAck
 %-BW_METHOD_END EnableAutoAck
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ReadNofRxPayload
+%ifdef ReadNofRxPayload
+byte %'ModuleName'%.%ReadNofRxPayload(byte *nof);
+%define! Parnof
+%define! RetVal
+%include Common\nRF24L01ReadNofRxPayload.Inc
+
+%endif %- ReadNofRxPayload
+%-BW_METHOD_END ReadNofRxPayload
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SetStaticPipePayload
+%ifdef SetStaticPipePayload
+byte %'ModuleName'%.%SetStaticPipePayload(byte pipe, byte payloadBytes);
+%define! Parpipe
+%define! ParpayloadBytes
+%define! RetVal
+%include Common\nRF24L01SetStaticPipePayload.Inc
+
+%endif %- SetStaticPipePayload
+%-BW_METHOD_END SetStaticPipePayload
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN EnableDynanicPayloadLength
+%ifdef EnableDynanicPayloadLength
+byte %'ModuleName'%.%EnableDynanicPayloadLength(byte pipeMask);
+%define! ParpipeMask
+%define! RetVal
+%include Common\nRF24L01EnableDynanicPayloadLength.Inc
+
+%endif %- EnableDynanicPayloadLength
+%-BW_METHOD_END EnableDynanicPayloadLength
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN WriteFeature
+%ifdef WriteFeature
+byte %'ModuleName'%.%WriteFeature(byte featureMask);
+%define! ParfeatureMask
+%define! RetVal
+%include Common\nRF24L01WriteFeature.Inc
+
+%endif %- WriteFeature
+%-BW_METHOD_END WriteFeature
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ReadFeature
+%ifdef ReadFeature
+byte %'ModuleName'%.%ReadFeature(byte *featureMask);
+%define! ParfeatureMask
+%define! RetVal
+%include Common\nRF24L01ReadFeature.Inc
+
+%endif %- ReadFeature
+%-BW_METHOD_END ReadFeature
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ReadObserveTxRegister
+%ifdef ReadObserveTxRegister
+byte %'ModuleName'%.%ReadObserveTxRegister(byte *nofLoss, byte *nofRetransmitted);
+%define! ParnofRetransmitted
+%define! ParnofLoss
+%define! RetVal
+%include Common\nRF24L01ReadObserveTxRegister.Inc
+
+%endif %- ReadObserveTxRegister
+%-BW_METHOD_END ReadObserveTxRegister
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ReadReceivedPowerDetector
+%ifdef ReadReceivedPowerDetector
+byte %'ModuleName'%.%ReadReceivedPowerDetector(byte *rpd);
+%define! Parrpd
+%define! RetVal
+%include Common\nRF24L01ReadReceivedPowerDetector.Inc
+
+%endif %- ReadReceivedPowerDetector
+%-BW_METHOD_END ReadReceivedPowerDetector
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -895,6 +981,123 @@ byte %'ModuleName'%.%EnableAutoAck(byte pipes)
 
 %endif %- EnableAutoAck
 %-BW_METHOD_END EnableAutoAck
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ReadNofRxPayload
+%ifdef ReadNofRxPayload
+%define! Parnof
+%define! RetVal
+%include Common\nRF24L01ReadNofRxPayload.Inc
+byte %'ModuleName'%.%ReadNofRxPayload(byte *nof)
+{
+  *nof = %'ModuleName'%.ReadRegister(%'ModuleName'%.R_RX_PL_WID); /* read number of RX payload for pipe */
+  return ERR_OK;
+}
+
+%endif %- ReadNofRxPayload
+%-BW_METHOD_END ReadNofRxPayload
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SetStaticPipePayload
+%ifdef SetStaticPipePayload
+%define! Parpipe
+%define! ParpayloadBytes
+%define! RetVal
+%include Common\nRF24L01SetStaticPipePayload.Inc
+byte %'ModuleName'%.%SetStaticPipePayload(byte pipe, byte payloadBytes)
+{
+  if (pipe > 5) {
+    return ERR_FAULT; /* only pipe 0 to 5 allowed */
+  }
+  if (payloadBytes>32) {
+    return ERR_FAULT;
+  }
+  %'ModuleName'%.WriteRegister(%'ModuleName'%.RX_PW_P0+pipe, payloadBytes); /* write number of RX payload for pipe */
+  return ERR_OK;
+}
+
+%endif %- SetStaticPipePayload
+%-BW_METHOD_END SetStaticPipePayload
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN EnableDynanicPayloadLength
+%ifdef EnableDynanicPayloadLength
+%define! ParpipeMask
+%define! RetVal
+%include Common\nRF24L01EnableDynanicPayloadLength.Inc
+byte %'ModuleName'%.%EnableDynanicPayloadLength(byte pipeMask)
+{
+  /* note: dynamic payload requires EN_DPL and ENAA_Px set for the pipe */
+  if (pipeMask>0x3F) {
+    return ERR_FAULT; /* only pipe 0 to 5 allowed */
+  }
+  %'ModuleName'%.WriteRegister(%'ModuleName'%.DYNPD, pipeMask); /* write number of RX payload for pipe */
+  return ERR_OK;
+}
+
+%endif %- EnableDynanicPayloadLength
+%-BW_METHOD_END EnableDynanicPayloadLength
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN WriteFeature
+%ifdef WriteFeature
+%define! ParfeatureMask
+%define! RetVal
+%include Common\nRF24L01WriteFeature.Inc
+byte %'ModuleName'%.%WriteFeature(byte featureMask)
+{
+  if (featureMask>(%'ModuleName'%.FEATURE_EN_DPL|%'ModuleName'%.FEATURE_EN_ACK_PAY|%'ModuleName'%.FEATURE_EN_DYN_PAY)) {
+    return ERR_FAULT; /* mismatch of feature mask */
+  }
+  %'ModuleName'%.WriteRegister(%'ModuleName'%.FEATURE, featureMask); /* write number of RX payload for pipe */
+  return ERR_OK;
+}
+
+%endif %- WriteFeature
+%-BW_METHOD_END WriteFeature
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ReadFeature
+%ifdef ReadFeature
+%define! ParfeatureMask
+%define! RetVal
+%include Common\nRF24L01ReadFeature.Inc
+byte %'ModuleName'%.%ReadFeature(byte *featureMask)
+{
+  *featureMask = %'ModuleName'%.ReadRegister(%'ModuleName'%.FEATURE); /* read FEATURE register */
+  return ERR_OK;
+}
+
+%endif %- ReadFeature
+%-BW_METHOD_END ReadFeature
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ReadObserveTxRegister
+%ifdef ReadObserveTxRegister
+%define! ParnofRetransmitted
+%define! ParnofLoss
+%define! RetVal
+%include Common\nRF24L01ReadObserveTxRegister.Inc
+byte %'ModuleName'%.%ReadObserveTxRegister(byte *nofLoss, byte *nofRetransmitted)
+{
+  uint8_t val;
+
+  val = %'ModuleName'%.ReadRegister(%'ModuleName'%.OBSERVE_TX); /* read OBSERVE_TX register */
+  *nofLoss = (uint8_t)((val&0xF0)>>4); /* high nibble */
+  *nofRetransmitted = (uint8_t)(val&0x0F); /* high nibble */
+  return ERR_OK;
+}
+
+%endif %- ReadObserveTxRegister
+%-BW_METHOD_END ReadObserveTxRegister
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ReadReceivedPowerDetector
+%ifdef ReadReceivedPowerDetector
+%define! Parrpd
+%define! RetVal
+%include Common\nRF24L01ReadReceivedPowerDetector.Inc
+byte %'ModuleName'%.%ReadReceivedPowerDetector(byte *rpd)
+{
+  *rpd = %'ModuleName'%.ReadRegister(%'ModuleName'%.RPD); /* read RPD register */
+  return ERR_OK;
+}
+
+%endif %- ReadReceivedPowerDetector
+%-BW_METHOD_END ReadReceivedPowerDetector
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

@@ -17,6 +17,7 @@
 #include "RPHY.h"
 #include "WAIT1.h"
 
+#define NRF24_DYNAMIC_PAYLOAD  1 /* if set to one, use dynamic payload size */
 #define RADIO_CHANNEL_DEFAULT  0  /* default communication channel */
 
 /* macros to configure device either for RX or TX operation */
@@ -66,11 +67,19 @@ static uint8_t CheckTx(void) {
     packet.phyData = &TxDataBuffer[0];
     packet.flags = RPHY_BUF_FLAGS(packet.phyData);
     packet.phySize = sizeof(TxDataBuffer);
+#if NRF24_DYNAMIC_PAYLOAD
+    packet.rxtx = RPHY_BUF_PAYLOAD_START(packet.phyData);
+#else
     packet.rxtx = &RPHY_BUF_SIZE(packet.phyData); /* we transmit the data size too */
+#endif
     if (RADIO_isSniffing) {
       RPHY_SniffPacket(&packet, TRUE); /* sniff outgoing packet */
     }
+#if NRF24_DYNAMIC_PAYLOAD
+    RF1_TxPayload(packet.rxtx, RPHY_BUF_SIZE(packet.phyData)); /* send data, using dynamic payload size */
+#else
     RF1_TxPayload(packet.rxtx, RPHY_PAYLOAD_SIZE); /* send data, using fixed payload size */
+#endif
     return ERR_OK;
   } else {
     return ERR_NOTAVAIL; /* no data to send? */
@@ -88,10 +97,27 @@ static uint8_t CheckRx(void) {
   packet.flags = RPHY_PACKET_FLAGS_NONE;
   packet.phyData = &RxDataBuffer[0];
   packet.phySize = sizeof(RxDataBuffer);
+#if NRF24_DYNAMIC_PAYLOAD
+  packet.rxtx = RPHY_BUF_PAYLOAD_START(packet.phyData);
+#else
   packet.rxtx = &RPHY_BUF_SIZE(packet.phyData); /* we transmit the data size too */
+#endif
   status = RF1_GetStatus();
   if (status&RF1_STATUS_RX_DR) { /* data received interrupt */
+#if NRF24_DYNAMIC_PAYLOAD
+    uint8_t payloadSize;
+    
+    (void)RF1_ReadNofRxPayload(&payloadSize);
+    if (payloadSize>32) { /* packet with error? */
+      RF1_Write(RF1_FLUSH_RX); /* flush old data */
+      return ERR_FAILED;
+    } else {
+      RF1_RxPayload(packet.rxtx, payloadSize); /* get payload: note that we transmit <size> as payload! */
+      RPHY_BUF_SIZE(packet.phyData) = payloadSize;
+    }
+#else
     RF1_RxPayload(packet.rxtx, RPHY_PAYLOAD_SIZE); /* get payload: note that we transmit <size> as payload! */
+#endif
     RF1_ResetStatusIRQ(RF1_STATUS_RX_DR|RF1_STATUS_TX_DS|RF1_STATUS_MAX_RT); /* make sure we reset all flags. Need to have the pipe number too */
   }
   if (status&RF1_STATUS_TX_DS) { /* data sent interrupt */
@@ -186,7 +212,13 @@ uint8_t RADIO_PowerUp(void) {
   RF1_Init(); /* set CE and CSN to initialization value */
   
   RF1_WriteRegister(RF1_RF_SETUP, RF1_RF_SETUP_RF_PWR_0|RF1_RF_SETUP_RF_DR_250);
-  RF1_WriteRegister(RF1_RX_PW_P0, RPHY_PAYLOAD_SIZE); /* number of payload bytes we want to send and receive */
+#if NRF24_DYNAMIC_PAYLOAD
+  /* enable dynamic payload */
+  RF1_WriteFeature(RF1_FEATURE_EN_DPL|RF1_FEATURE_EN_ACK_PAY|RF1_FEATURE_EN_DYN_PAY); /* set EN_DPL for dynamic payload */
+  RF1_EnableDynanicPayloadLength(RF1_DYNPD_DPL_P0); /* set DYNPD register for dynamic payload for pipe0 */
+#else
+  RF1_SetStaticPipePayload(0, RPHY_PAYLOAD_SIZE); /* static number of payload bytes we want to send and receive */
+#endif
   (void)RADIO_SetChannel(RADIO_CHANNEL_DEFAULT);
 
   /* Set RADDR and TADDR as the transmit address since we also enable auto acknowledgment */
@@ -259,15 +291,35 @@ static void RADIO_PrintHelp(const CLS1_StdIOType *io) {
 }
 
 static void RADIO_PrintStatus(const CLS1_StdIOType *io) {
-  uint8_t buf[8];
+  uint8_t buf[24];
+  uint8_t val0, val1;
   
   CLS1_SendStatusStr((unsigned char*)"Radio", (unsigned char*)"\r\n", io->stdOut);
+  
   CLS1_SendStatusStr((unsigned char*)"  state", RadioStateStr(RADIO_AppStatus), io->stdOut);
   CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
+  
   CLS1_SendStatusStr((unsigned char*)"  sniff", RADIO_isSniffing?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
+  
   UTIL1_Num8uToStr(buf, sizeof(buf), RADIO_channel);
   UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   CLS1_SendStatusStr((unsigned char*)"  channel", buf, io->stdOut);
+  
+  (void)RF1_ReadObserveTxRegister(&val0, &val1);
+  UTIL1_Num8uToStr(buf, sizeof(buf), val0);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" lost, ");
+  UTIL1_strcatNum8u(buf, sizeof(buf), val1);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" retry\r\n");
+  CLS1_SendStatusStr((unsigned char*)"  OBSERVE_TX", buf, io->stdOut);
+#if 0  /* The RPD status will get reset very fast by another (e.g. WLAN) packet. So this is not really a useful feature :-( */
+  (void)RF1_ReadReceivedPowerDetector(&val0); /*! \todo only works in RX mode, but somehow this still does not work? */
+  if (val0&1) {
+    UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"1, > -64 dBm\r\n");
+  } else {
+    UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"0, < -64 dBm\r\n");
+  }
+  CLS1_SendStatusStr((unsigned char*)"  RPD", buf, io->stdOut);
+#endif
 }
 
 uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
