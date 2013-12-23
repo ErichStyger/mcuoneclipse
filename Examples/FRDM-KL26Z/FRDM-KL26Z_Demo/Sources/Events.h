@@ -50,10 +50,16 @@
 #include "WAIT1.h"
 #include "EVNT1.h"
 #include "TRG1.h"
+#include "PTC.h"
+#include "KEY1.h"
+#include "keyPin1.h"
+#include "KeyISRpin1.h"
+#include "ExtIntLdd1.h"
 #include "AD1.h"
 #include "AdcLdd1.h"
 #include "HF1.h"
 #include "FRTOS1.h"
+#include "RTOSCNTRLDD1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -177,6 +183,55 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 **         If enabled, the RTOS will call this hook in case memory
 **         allocation failed.
 **     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyPressed(byte keys);
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyPressed (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated at the time a key has been pressed.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyReleased(byte keys);
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyReleased (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated after a key has been released.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyReleasedLong(byte keys);
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyReleasedLong (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated after a key has been released (long key
+**         press).
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
 **     Returns     : Nothing
 ** ===================================================================
 */

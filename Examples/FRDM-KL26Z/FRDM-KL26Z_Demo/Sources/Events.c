@@ -36,6 +36,7 @@ extern "C" {
 
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "Application.h"
 
 /*
 ** ===================================================================
@@ -70,8 +71,7 @@ void Cpu_OnNMIINT(void)
 */
 void EVNT1_AppHandleEvent(byte event)
 {
-  (void)event; /* only to avoid compiler warning about unused variable */
-  /* Write your code here ... */
+  APP_HandleEvent(event);
 }
 
 /*
@@ -199,6 +199,70 @@ void FRTOS1_vApplicationMallocFailedHook(void)
   taskDISABLE_INTERRUPTS();
   /* Write your code here ... */
   for(;;) {}
+}
+
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyPressed (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated at the time a key has been pressed.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyPressed(byte keys)
+{
+  if (keys&1) {
+    EVNT1_SetEvent(EVNT1_KEY1_PRESSED);
+  }
+}
+
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyReleased (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated after a key has been released.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyReleased(byte keys)
+{
+  if (keys&1) {
+    EVNT1_SetEvent(EVNT1_KEY1_RELEASED);
+  }
+}
+
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyReleasedLong (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated after a key has been released (long key
+**         press).
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyReleasedLong(byte keys)
+{
+  if (keys&1) {
+    EVNT1_SetEvent(EVNT1_KEY1_LONG_RELEASED);
+  }
 }
 
 /* END Events */
