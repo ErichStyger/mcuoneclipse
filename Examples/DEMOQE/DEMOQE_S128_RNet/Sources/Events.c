@@ -32,6 +32,7 @@
 #include "Events.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "RadioSMAC.h"
 
 /*
 ** ===================================================================
@@ -128,6 +129,23 @@ void FRTOS1_vApplicationMallocFailedHook(void)
   /* Write your code here ... */
   for(;;) {}
 }
+
+/*
+** ===================================================================
+**     Event       :  SMAC1_OnInterrupt (module Events)
+**
+**     Component   :  TRSVR1 [MC13192]
+**     Description :
+**         Event raised in case of transceiver interrupt.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void SMAC1_OnInterrupt(void)
+{
+  RADIO_OnInterrupt();
+}
+
 
 /* END Events */
 

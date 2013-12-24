@@ -53,6 +53,15 @@
 #include "CLS1.h"
 #include "AS1.h"
 #include "WAIT1.h"
+#include "SM1.h"
+#include "SMAC1.h"
+#include "PHY1.h"
+#include "TRSVR1.h"
+#include "CE1.h"
+#include "RESET1.h"
+#include "RTXEN1.h"
+#include "ATTN1.h"
+#include "IRQ1.h"
 /* Include shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -60,7 +69,7 @@
 #include "IO_Map.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
-#include "RNet_App.c"
+#include "RNet_App.h"
 
 void main(void)
 {

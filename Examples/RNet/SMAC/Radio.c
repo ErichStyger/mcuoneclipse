@@ -7,6 +7,7 @@
  * Implementation of the Radio module to handle everything around the radio transceiver
  */
 
+#include "Platform.h"
 #include "RNetConf.h"
 #if PL_HAS_RADIO
 #include "Radio.h"
@@ -93,7 +94,7 @@ static void RADIO_InitRadio(void) {
   SMAC1_RadioInit();
   
   (void)SMAC1_MLMESetMC13192ClockRate(0);    /* Set initial Clock speed from transceiver (CLKO)*/
-  RADIO_SetChannel(RADIO_Channel);           /* Set channel */
+  (void)RADIO_SetChannel(RADIO_Channel);           /* Set channel */
   RADIO_SetOutputPower(RADIO_OutputPower);   /* Set output power */
 
   /* Initialize the packet */
@@ -376,7 +377,7 @@ uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_S
   } else if (UTIL1_strncmp((char*)cmd, (char*)"radio channel", sizeof("radio channel")-1)==0) {
     p = cmd+sizeof("radio channel");
     if (UTIL1_ScanDecimal8uNumber(&p, &val)==ERR_OK && val>=0 && val<=15) {
-      RADIO_SetChannel(val);
+      (void)RADIO_SetChannel(val);
       *handled = TRUE;
     } else {
       CLS1_SendStr((unsigned char*)"Wrong argument, must be in the range 0..15\r\n", io->stdErr);

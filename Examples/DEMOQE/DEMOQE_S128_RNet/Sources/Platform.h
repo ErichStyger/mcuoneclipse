@@ -14,7 +14,7 @@
 #include "PE_Error.h" /* PEx error codes */
 #include <stddef.h>   /* for size_t */
 
-#define PL_HAS_RADIO   (0) 
+#define PL_HAS_RADIO   (1) 
   /*!< set to one to include the radio stack */
 #define PL_HAS_SHELL   (1)
   /*!< set to one if we have a Shell */
@@ -22,5 +22,7 @@
   /*!< set to one if we use remote stdio */
 #define PL_HAS_RTOS_TRACE (0)
   /*!< set to one if we use Percepio trace */
+#define PL_HAS_EVENTS     (1)
+  /*!< set to one to use events */
 
 #endif /* PLATFORM_H_ */

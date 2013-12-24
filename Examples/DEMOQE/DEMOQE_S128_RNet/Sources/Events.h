@@ -57,6 +57,15 @@
 #include "CLS1.h"
 #include "AS1.h"
 #include "WAIT1.h"
+#include "SM1.h"
+#include "SMAC1.h"
+#include "PHY1.h"
+#include "TRSVR1.h"
+#include "CE1.h"
+#include "RESET1.h"
+#include "RTXEN1.h"
+#include "ATTN1.h"
+#include "IRQ1.h"
 
 
 void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName);
@@ -113,6 +122,19 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 **     Description :
 **         If enabled, the RTOS will call this hook in case memory
 **         allocation failed.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void SMAC1_OnInterrupt(void);
+/*
+** ===================================================================
+**     Event       :  SMAC1_OnInterrupt (module Events)
+**
+**     Component   :  TRSVR1 [MC13192]
+**     Description :
+**         Event raised in case of transceiver interrupt.
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================
