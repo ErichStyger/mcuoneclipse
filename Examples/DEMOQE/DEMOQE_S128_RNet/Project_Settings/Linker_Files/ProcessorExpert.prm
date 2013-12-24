@@ -5,7 +5,7 @@
 **     Project   : ProcessorExpert
 **     Processor : MC9S08QE128CLK
 **     Compiler  : CodeWarrior HCS08 C Compiler
-**     Date/Time : 2013-12-24, 18:50, # CodeGen: 20
+**     Date/Time : 2013-12-24, 20:22, # CodeGen: 25
 **     Abstract  :
 **        This file is used by the linker. It describes files to be linked,
 **        memory ranges, stack size, etc. For detailed description of the PRM file
@@ -35,7 +35,7 @@ SECTIONS
     ROM1                     =  READ_ONLY    0xC000 TO 0xFFAD;
     /* banked FLASH ROM */
     PPAGE_0                  =  READ_ONLY    0x008000 TO 0x00A07F; /* PAGE partially contained in ROM segment */
-    PPAGE_2                  =  READ_ONLY    0x028000 TO 0x02BFFF; 
+    PPAGE_2                  =  READ_ONLY    0x028000 TO 0x02AFFF; 
     PPAGE_4                  =  READ_ONLY    0x048000 TO 0x04BFFF; 
     PPAGE_5                  =  READ_ONLY    0x058000 TO 0x05BFFF; 
     PPAGE_6                  =  READ_ONLY    0x068000 TO 0x06BFFF; 

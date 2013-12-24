@@ -94,6 +94,7 @@ static portTASK_FUNCTION(RadioTask, pvParameters) {
 }
 
 static portTASK_FUNCTION(MainTask, pvParameters) {
+  int cnt = 0;
 #if PL_HAS_SHELL
   static unsigned char localConsole_buf[48];
 #endif
@@ -113,7 +114,6 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
   localConsole_buf[0] = '\0';
   CLS1_SendStr((unsigned char*)"nRF24L01+ Demo\r\n", ioLocal->stdOut);
 #endif
-  RSTACK_Init(); /* initialize stack */
   if (RAPP_SetMessageHandlerTable(handlerTable)!=ERR_OK) { /* assign application message handler */
     Err((unsigned char*)"Failed setting message handler!\r\n");
   }
@@ -131,16 +131,20 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
     RSTDIO_Print(ioLocal); /* handle stdout/stderr messages coming in */
     (void)CLS1_ReadAndParseWithCommandTable(radio_cmd_buf, sizeof(radio_cmd_buf), ioRemote, CmdParserTable);
 #endif
-    LED1_Neg();
+    cnt++;
+    if ((cnt%128)==0) {
+      LED1_Neg();
+    }
     FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
   }
 }
 
 void RNETA_Run(void) {
+  RSTACK_Init(); /* initialize stack */
   if (FRTOS1_xTaskCreate(
         MainTask,  /* pointer to the task */
         (signed char *)"Main", /* task name for kernel awareness debugging */
-        configMINIMAL_STACK_SIZE, /* task stack size */
+        configMINIMAL_STACK_SIZE+100, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
         (xTaskHandle*)NULL /* optional task handle to create */
@@ -152,7 +156,7 @@ void RNETA_Run(void) {
   if (FRTOS1_xTaskCreate(
         RadioTask,  /* pointer to the task */
         (signed char *)"Radio", /* task name for kernel awareness debugging */
-        configMINIMAL_STACK_SIZE, /* task stack size */
+        configMINIMAL_STACK_SIZE+100, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY+1,  /* initial priority */
         (xTaskHandle*)NULL /* optional task handle to create */
