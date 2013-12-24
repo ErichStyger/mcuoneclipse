@@ -5,7 +5,7 @@
 **     Project   : ProcessorExpert
 **     Processor : MC9S08QE128CLK
 **     Compiler  : CodeWarrior HCS08 C Compiler
-**     Date/Time : 2013-12-24, 14:27, # CodeGen: 0
+**     Date/Time : 2013-12-24, 18:50, # CodeGen: 20
 **     Abstract  :
 **        This file is used by the linker. It describes files to be linked,
 **        memory ranges, stack size, etc. For detailed description of the PRM file
@@ -46,9 +46,9 @@ PLACEMENT
     DEFAULT_RAM,                        /* non-zero page variables */
                                         INTO  RAM,RAM1;
 
-    _PRESTART, STARTUP, ROM_VAR, STRINGS, NON_BANKED, COPY INTO  ROM;
+    NON_BANKED, DEFAULT_ROM, ROM_VAR, STRINGS INTO  ROM;
 
-    DEFAULT_ROM, PAGED_ROM              /* routines which can be banked */
+    PAGED_ROM                           /* routines which can be banked */
                                         INTO  PPAGE_0,PPAGE_2,PPAGE_4,PPAGE_5,PPAGE_6,PPAGE_7,ROM1;
 
     _DATA_ZEROPAGE,                     /* zero page variables */

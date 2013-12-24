@@ -3,7 +3,7 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>18</ModificationStamp>
+    <ModificationStamp>23</ModificationStamp>
     <Date>2013-12-24</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.8.0.RT5_b1337-1809</PEversion>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>51</ProjectCompNumb>
+    <ProjectCompNumb>54</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -177,7 +177,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>OSC1Pin</ItemSymbol>
-        <Value />
+        <Value>PTB7_SCL1_EXTAL</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
@@ -197,7 +197,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>OSC2Pin</ItemSymbol>
-        <Value />
+        <Value>PTB6_SDA1_XTAL</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
@@ -2089,7 +2089,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>IntLVW</ItemSymbol>
-        <Value />
+        <Value>Vlvd</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
       <ItemState>
@@ -2408,7 +2408,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ResetPin</ItemSymbol>
-        <Value />
+        <Value>PTA5_IRQ_TPM1CLK_RESET</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
@@ -2433,7 +2433,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>RSTOPin</ItemSymbol>
-        <Value />
+        <Value>PTC4_TPM3CH4_RSTO</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
@@ -3598,8 +3598,8 @@
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-          <Index>2</Index>
-          <EnumSymbVal>Banked</EnumSymbVal>
+          <Index>0</Index>
+          <EnumSymbVal>Small</EnumSymbVal>
           <CustomValue />
         </ItemState>
         <ItemState>
@@ -4503,6 +4503,7 @@
               <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <RegCompType />
               <InheritedComponentState />
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
             </ItemState>
             <ItemState>
               <ItemSymbol>ElProp</ItemSymbol>
@@ -4729,6 +4730,7 @@
           </Methods>
           <Events />
         </InheritedComponentState>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>PWMenabled</ItemSymbol>
@@ -4755,6 +4757,7 @@
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <RegCompType />
         <InheritedComponentState />
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ShellEnabled</ItemSymbol>
@@ -4978,6 +4981,7 @@
               <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <RegCompType />
               <InheritedComponentState />
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
             </ItemState>
             <ItemState>
               <ItemSymbol>ElProp</ItemSymbol>
@@ -5204,6 +5208,7 @@
           </Methods>
           <Events />
         </InheritedComponentState>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>PWMenabled</ItemSymbol>
@@ -5230,6 +5235,7 @@
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <RegCompType />
         <InheritedComponentState />
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ShellEnabled</ItemSymbol>
@@ -5453,6 +5459,7 @@
               <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <RegCompType />
               <InheritedComponentState />
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
             </ItemState>
             <ItemState>
               <ItemSymbol>ElProp</ItemSymbol>
@@ -5679,6 +5686,7 @@
           </Methods>
           <Events />
         </InheritedComponentState>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>PWMenabled</ItemSymbol>
@@ -5705,6 +5713,7 @@
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <RegCompType />
         <InheritedComponentState />
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ShellEnabled</ItemSymbol>
@@ -5928,6 +5937,7 @@
               <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <RegCompType />
               <InheritedComponentState />
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
             </ItemState>
             <ItemState>
               <ItemSymbol>ElProp</ItemSymbol>
@@ -6154,6 +6164,7 @@
           </Methods>
           <Events />
         </InheritedComponentState>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>PWMenabled</ItemSymbol>
@@ -6180,6 +6191,7 @@
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <RegCompType />
         <InheritedComponentState />
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ShellEnabled</ItemSymbol>
@@ -6403,6 +6415,7 @@
               <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <RegCompType />
               <InheritedComponentState />
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
             </ItemState>
             <ItemState>
               <ItemSymbol>ElProp</ItemSymbol>
@@ -6629,6 +6642,7 @@
           </Methods>
           <Events />
         </InheritedComponentState>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>PWMenabled</ItemSymbol>
@@ -6655,6 +6669,7 @@
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <RegCompType />
         <InheritedComponentState />
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ShellEnabled</ItemSymbol>
@@ -6878,6 +6893,7 @@
               <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <RegCompType />
               <InheritedComponentState />
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
             </ItemState>
             <ItemState>
               <ItemSymbol>ElProp</ItemSymbol>
@@ -7104,6 +7120,7 @@
           </Methods>
           <Events />
         </InheritedComponentState>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>PWMenabled</ItemSymbol>
@@ -7130,6 +7147,7 @@
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <RegCompType />
         <InheritedComponentState />
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ShellEnabled</ItemSymbol>
@@ -7353,6 +7371,7 @@
               <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <RegCompType />
               <InheritedComponentState />
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
             </ItemState>
             <ItemState>
               <ItemSymbol>ElProp</ItemSymbol>
@@ -7579,6 +7598,7 @@
           </Methods>
           <Events />
         </InheritedComponentState>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>PWMenabled</ItemSymbol>
@@ -7605,6 +7625,7 @@
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <RegCompType />
         <InheritedComponentState />
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ShellEnabled</ItemSymbol>
@@ -7828,6 +7849,7 @@
               <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <RegCompType />
               <InheritedComponentState />
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
             </ItemState>
             <ItemState>
               <ItemSymbol>ElProp</ItemSymbol>
@@ -8054,6 +8076,7 @@
           </Methods>
           <Events />
         </InheritedComponentState>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>PWMenabled</ItemSymbol>
@@ -8080,6 +8103,7 @@
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <RegCompType />
         <InheritedComponentState />
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>ShellEnabled</ItemSymbol>
@@ -8343,6 +8367,7 @@
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <RegCompType />
         <InheritedComponentState />
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>CollectRuntimeStatisticsGroup</ItemSymbol>
@@ -8369,6 +8394,7 @@
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <RegCompType />
         <InheritedComponentState />
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>NonLDDRuntimeCounterGroup</ItemSymbol>
@@ -8387,6 +8413,7 @@
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <RegCompType />
         <InheritedComponentState />
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>SchedulerGroup</ItemSymbol>
@@ -8617,6 +8644,7 @@
           <Methods />
           <Events />
         </InheritedComponentState>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>UsePreemption</ItemSymbol>
@@ -8776,12 +8804,12 @@
               <ItemSymbol>_Cmp</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>RTCmod</Value>
+              <Value>TPM10</Value>
               <SharedPrphMode>false</SharedPrphMode>
             </ItemState>
             <ItemState>
               <ItemSymbol>Tmr</ItemSymbol>
-              <Value>RTC</Value>
+              <Value>TPM1</Value>
               <SharedPrphMode>false</SharedPrphMode>
             </ItemState>
             <ItemState>
@@ -8794,7 +8822,7 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>CmpInt</ItemSymbol>
-              <Value>Vrtc</Value>
+              <Value>Vtpm1ch0</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>CmpInitPriority</ItemSymbol>
@@ -8877,8 +8905,8 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
+              <Index>1</Index>
+              <Value>false</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>SameValuesInAllModes</ItemSymbol>
@@ -8947,16 +8975,16 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>1</Index>
-              <Value>false</Value>
+              <Index>0</Index>
+              <Value>true</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>SlowSpeed</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>1</Index>
-              <Value>false</Value>
+              <Index>0</Index>
+              <Value>true</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>FeatureCondGrpLDD</ItemSymbol>
@@ -9133,6 +9161,7 @@
             </ItemState>
           </Events>
         </InheritedComponentState>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>LDDTickGroup</ItemSymbol>
@@ -9150,6 +9179,7 @@
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <RegCompType />
         <InheritedComponentState />
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>QueuesGroup</ItemSymbol>
@@ -11377,6 +11407,7 @@
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <RegCompType />
         <InheritedComponentState />
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>IntService</ItemSymbol>
@@ -11770,6 +11801,7 @@
         <Value />
         <RegCompType />
         <InheritedComponentState />
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>Transmitter</ItemSymbol>
@@ -11812,6 +11844,7 @@
         <Value />
         <RegCompType />
         <InheritedComponentState />
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>_BdRate</ItemSymbol>
@@ -13250,14 +13283,15 @@
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <RegCompType />
         <InheritedComponentState />
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>IntService</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>SerInt</ItemSymbol>
@@ -13389,6 +13423,7 @@
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <RegCompType />
         <InheritedComponentState />
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>OutDMASupport</ItemSymbol>
@@ -13407,6 +13442,7 @@
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <RegCompType />
         <InheritedComponentState />
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>HCS12grp0</ItemSymbol>
@@ -13505,7 +13541,7 @@
         <ItemSymbol>SSpin</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>PTB5_TPM1CH1_SS1</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
@@ -13615,7 +13651,7 @@
         <ItemSymbol>_Tmg</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>3.320491 MHz</Value>
+        <Value>4.980736 MHz</Value>
         <RuntimeSetting>2</RuntimeSetting>
         <ReqDevPrescHigh>-1</ReqDevPrescHigh>
         <ReqDevPrescLow>-1</ReqDevPrescLow>
@@ -13641,13 +13677,13 @@
         <ReqSrcClkPrescSpeedMode5>-1</ReqSrcClkPrescSpeedMode5>
         <ReqSrcClkPrescSpeedMode6>-1</ReqSrcClkPrescSpeedMode6>
         <ReqSrcClkPrescSpeedMode7>-1</ReqSrcClkPrescSpeedMode7>
-        <InitValue>3.320491 MHz</InitValue>
+        <InitValue>4.980736 MHz</InitValue>
         <Precision>5.0</Precision>
         <PrecInProc>true</PrecInProc>
         <LowLimit />
         <HighLimit />
         <List lines_count="1">
-          <Line>4.980736 MHz</Line>
+          <Line>3.320491 MHz</Line>
         </List>
         <UnitText>MHz</UnitText>
         <MinCounterTicks>0</MinCounterTicks>
@@ -14093,46 +14129,46 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>RecvBlock</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
+        <Index>1</Index>
+        <Value>false</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>RecvBlock</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>SendBlock</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
+        <Index>1</Index>
+        <Value>false</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>SendBlock</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>ClearRxBuf</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
+        <Index>1</Index>
+        <Value>false</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>ClearRxBuf</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>ClearTxBuf</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
+        <Index>1</Index>
+        <Value>false</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>ClearTxBuf</UsrMethodName>
       </ItemState>
       <ItemState>
@@ -14219,13 +14255,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>GetError</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
+        <Index>1</Index>
+        <Value>false</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>GetError</UsrMethodName>
       </ItemState>
       <ItemState>
@@ -14334,13 +14370,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>OnRxChar</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>false</Value>
         <Expanded>true</Expanded>
         <LastSelection>false</LastSelection>
-        <LastUserSel>no</LastUserSel>
+        <LastUserSel>never</LastUserSel>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnRxCharName</ItemSymbol>
@@ -14356,13 +14392,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>OnRxCharExt</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>false</Value>
         <Expanded>false</Expanded>
         <LastSelection>false</LastSelection>
-        <LastUserSel>no</LastUserSel>
+        <LastUserSel>never</LastUserSel>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnRxCharExtName</ItemSymbol>
@@ -14380,13 +14416,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>OnTxChar</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>false</Value>
         <Expanded>true</Expanded>
         <LastSelection>false</LastSelection>
-        <LastUserSel>no</LastUserSel>
+        <LastUserSel>never</LastUserSel>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnTxCharName</ItemSymbol>
@@ -14402,13 +14438,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>OnFullRxBuf</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>false</Value>
         <Expanded>true</Expanded>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>no</LastUserSel>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>never</LastUserSel>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnFullRxBufName</ItemSymbol>
@@ -14424,13 +14460,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>OnFreeTxBuf</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>false</Value>
         <Expanded>true</Expanded>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>no</LastUserSel>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>never</LastUserSel>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnFreeTxBufName</ItemSymbol>
@@ -14446,13 +14482,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>OnError</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>false</Value>
         <Expanded>true</Expanded>
         <LastSelection>false</LastSelection>
-        <LastUserSel>no</LastUserSel>
+        <LastUserSel>never</LastUserSel>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnErrorName</ItemSymbol>
@@ -14622,6 +14658,7 @@
               <Value />
               <RegCompType />
               <InheritedComponentState />
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
             </ItemState>
             <ItemState>
               <ItemSymbol>MC13192</ItemSymbol>
@@ -14750,6 +14787,7 @@
                           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
                           <RegCompType />
                           <InheritedComponentState />
+                          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                         </ItemState>
                         <ItemState>
                           <ItemSymbol>ElProp</ItemSymbol>
@@ -14976,6 +15014,7 @@
                       </Methods>
                       <Events />
                     </InheritedComponentState>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>RESET</ItemSymbol>
@@ -15028,6 +15067,7 @@
                           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
                           <RegCompType />
                           <InheritedComponentState />
+                          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                         </ItemState>
                         <ItemState>
                           <ItemSymbol>ElProp</ItemSymbol>
@@ -15254,6 +15294,7 @@
                       </Methods>
                       <Events />
                     </InheritedComponentState>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>RTXEN</ItemSymbol>
@@ -15306,6 +15347,7 @@
                           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
                           <RegCompType />
                           <InheritedComponentState />
+                          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                         </ItemState>
                         <ItemState>
                           <ItemSymbol>ElProp</ItemSymbol>
@@ -15532,6 +15574,7 @@
                       </Methods>
                       <Events />
                     </InheritedComponentState>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>ATTN</ItemSymbol>
@@ -15584,6 +15627,7 @@
                           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
                           <RegCompType />
                           <InheritedComponentState />
+                          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                         </ItemState>
                         <ItemState>
                           <ItemSymbol>ElProp</ItemSymbol>
@@ -15810,6 +15854,7 @@
                       </Methods>
                       <Events />
                     </InheritedComponentState>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>SPIgroup</ItemSymbol>
@@ -15880,14 +15925,15 @@
                     <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Value>(string list)</Value>
-                    <StrgList lines_count="14">
+                    <StrgList lines_count="15">
                       <Line>/* setting up the IRQ line from the modem:</Line>
                       <Line>* - pull up the signal</Line>
                       <Line>* - trigger on low level and/or falling edge</Line>
                       <Line>*/</Line>
                       <Line>#ifdef __HCS08__</Line>
                       <Line>/* Macros for the HCS08 core, using the IRQ pin */</Line>
-                      <Line>#define IRQACK()        IRQSC |= IRQSC_IRQACK_MASK   /*!&lt; IRQ acknowledge */</Line>
+                      <Line>//#define IRQACK()        IRQSC |= IRQSC_IRQACK_MASK   /*!&lt; IRQ acknowledge */</Line>
+                      <Line>#define IRQACK()        KBI2SC_KBACK = 1U;</Line>
                       <Line>#else /* ColdFire */</Line>
                       <Line>#if 1 /* Macros for the MCF52259 using the IRQ on IRQ5 */</Line>
                       <Line>#define IRQACK()  (EPFR = IRQ1_PIN_MASK)</Line>
@@ -15926,7 +15972,7 @@
                           <ItemSymbol>_Pin</ItemSymbol>
                           <ReadOnly>false</ReadOnly>
                           <UserReadOnly>false</UserReadOnly>
-                          <Value>PTA5_IRQ_TPM1CLK_RESET</Value>
+                          <Value>PTD0_KBI2P0_SPSCK2</Value>
                           <SharedPrphMode>false</SharedPrphMode>
                         </ItemState>
                         <ItemState>
@@ -15948,6 +15994,7 @@
                           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
                           <RegCompType />
                           <InheritedComponentState />
+                          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                         </ItemState>
                         <ItemState>
                           <ItemSymbol>ElProp</ItemSymbol>
@@ -15984,7 +16031,7 @@
                         </ItemState>
                         <ItemState>
                           <ItemSymbol>Int</ItemSymbol>
-                          <Value>Virq</Value>
+                          <Value>Vkeyboard</Value>
                         </ItemState>
                         <ItemState>
                           <ItemSymbol>InitPriority</ItemSymbol>
@@ -16217,6 +16264,7 @@
                         </ItemState>
                       </Events>
                     </InheritedComponentState>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>IRQpullUp</ItemSymbol>
@@ -16648,6 +16696,7 @@
                   </ItemState>
                 </Events>
               </InheritedComponentState>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
             </ItemState>
           </Properties>
           <Methods>
@@ -17030,6 +17079,7 @@
             </ItemState>
           </Events>
         </InheritedComponentState>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Properties>
     <Methods>

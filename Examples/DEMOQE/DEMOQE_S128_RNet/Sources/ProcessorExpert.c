@@ -74,6 +74,9 @@
 void main(void)
 {
   /* Write your local variable definition here */
+#ifdef PEX_RTOS_INIT
+  PEX_RTOS_INIT();                   /* Initialization of the selected RTOS. Macro is defined by the RTOS component. */
+#endif
 
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();

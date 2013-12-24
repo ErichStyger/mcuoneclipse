@@ -105,6 +105,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
   CLS1_ConstStdIOTypePtr ioLocal = CLS1_GetStdio();
 #endif
   
+  (void)pvParameters;
 #if PL_HAS_RSTDIO
   radio_cmd_buf[0] = '\0';
 #endif
