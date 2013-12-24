@@ -19,7 +19,6 @@
 #include "Radio.h"
 #include "RMSG.h"
 #include "UTIL1.h"
-#include "WAIT1.h"
 #include "RNWK.h"
 #include "RApp.h"
 

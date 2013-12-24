@@ -18,7 +18,9 @@
   /*!< set to one to include the radio stack */
 #define PL_HAS_SHELL   (1)
   /*!< set to one if we have a Shell */
-#define PL_HAS_RSTDIO  (1) 
+#define PL_HAS_RSTDIO  (1 && PL_HAS_RADIO) 
   /*!< set to one if we use remote stdio */
+#define PL_HAS_RTOS_TRACE (0)
+  /*!< set to one if we use Percepio trace */
 
 #endif /* PLATFORM_H_ */
