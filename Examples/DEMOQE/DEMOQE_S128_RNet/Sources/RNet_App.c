@@ -15,6 +15,8 @@
 #include "LED1.h"
 #include "FRTOS1.h"
 #include "Radio.h"
+#include "RadioSMAC.h"
+#include "Event.h"
 #if PL_HAS_RSTDIO
   #include "RStdIO.h"
 #endif
@@ -135,6 +137,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
     if ((cnt%128)==0) {
       LED1_Neg();
     }
+    EVNT_HandleEvent(RADIO_AppHandleEvent);
     FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
   }
 }

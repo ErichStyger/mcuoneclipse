@@ -3,8 +3,8 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>26</ModificationStamp>
-    <Date>2013-12-24</Date>
+    <ModificationStamp>28</ModificationStamp>
+    <Date>2013-12-25</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.8.0.RT5_b1337-1809</PEversion>
   </Header>
@@ -15052,7 +15052,7 @@
                           <ItemSymbol>PinSignal</ItemSymbol>
                           <ReadOnly>false</ReadOnly>
                           <UserReadOnly>false</UserReadOnly>
-                          <Value />
+                          <Value>Radio_RESET</Value>
                         </ItemState>
                         <ItemState>
                           <ItemSymbol>FeatureCondGrpLDD</ItemSymbol>
@@ -15332,7 +15332,7 @@
                           <ItemSymbol>PinSignal</ItemSymbol>
                           <ReadOnly>false</ReadOnly>
                           <UserReadOnly>false</UserReadOnly>
-                          <Value />
+                          <Value>Radio_RTXEN</Value>
                         </ItemState>
                         <ItemState>
                           <ItemSymbol>FeatureCondGrpLDD</ItemSymbol>
@@ -15933,7 +15933,7 @@
                       <Line>#ifdef __HCS08__</Line>
                       <Line>/* Macros for the HCS08 core, using the IRQ pin */</Line>
                       <Line>//#define IRQACK()        IRQSC |= IRQSC_IRQACK_MASK   /*!&lt; IRQ acknowledge */</Line>
-                      <Line>#define IRQACK()        KBI2SC_KBACK = 1U;</Line>
+                      <Line>#define IRQACK()        KBI2SC_KBACK = 1U</Line>
                       <Line>#else /* ColdFire */</Line>
                       <Line>#if 1 /* Macros for the MCF52259 using the IRQ on IRQ5 */</Line>
                       <Line>#define IRQACK()  (EPFR = IRQ1_PIN_MASK)</Line>
@@ -16007,14 +16007,14 @@
                           <UserReadOnly>false</UserReadOnly>
                           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                           <TypeSpecNameState>typePULL</TypeSpecNameState>
-                          <Index>5</Index>
+                          <Index>1</Index>
                         </ItemState>
                         <ItemState>
                           <ItemSymbol>InitEdge</ItemSymbol>
                           <ReadOnly>false</ReadOnly>
                           <UserReadOnly>false</UserReadOnly>
                           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-                          <Index>0</Index>
+                          <Index>2</Index>
                         </ItemState>
                         <ItemState>
                           <ItemSymbol>HCS08grp</ItemSymbol>
