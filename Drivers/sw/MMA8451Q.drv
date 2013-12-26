@@ -384,20 +384,20 @@ byte %'ModuleName'%.%isEnabled(bool *isEnabled);
 %endif
 
 /* External 3-axis accelerometer control register addresses */
-#define MMA8451_CTRL_REG_1 0x2A
+#define %'ModuleName'_CTRL_REG_1 0x2A
 /* MMA8451 3-axis accelerometer control register bit masks */
-#define MMA8451_ACTIVE_BIT_MASK 0x01
-#define MMA8451_F_READ_BIT_MASK 0x02
+#define %'ModuleName'__ACTIVE_BIT_MASK 0x01
+#define %'ModuleName'_F_READ_BIT_MASK 0x02
 
 /* External 3-axis accelerometer data register addresses */
-#define MMA8451_OUT_X_MSB 0x01
-#define MMA8451_OUT_X_LSB 0x02
-#define MMA8451_OUT_Y_MSB 0x03
-#define MMA8451_OUT_Y_LSB 0x04
-#define MMA8451_OUT_Z_MSB 0x05
-#define MMA8451_OUT_Z_LSB 0x06
+#define %'ModuleName'_OUT_X_MSB 0x01
+#define %'ModuleName'_OUT_X_LSB 0x02
+#define %'ModuleName'_OUT_Y_MSB 0x03
+#define %'ModuleName'_OUT_Y_LSB 0x04
+#define %'ModuleName'_OUT_Z_MSB 0x05
+#define %'ModuleName'_OUT_Z_LSB 0x06
 
-#define MMA8451_I2C_ADDR   (%I2CSlaveAddress) /* I2C slave device address as set in the properties */
+#define %'ModuleName'_I2C_ADDR   (%I2CSlaveAddress) /* I2C slave device address as set in the properties */
 
 %if defined(CalibrateX1g) | defined(CalibrateY1g) | defined(CalibrateZ1g)
 typedef struct {
@@ -533,9 +533,9 @@ static uint8_t PrintHelp(const %@Shell@'ModuleName'%.StdIOType *io) {
 uint8_t %'ModuleName'%.%GetRaw8XYZ(uint8_t *xyz)
 {
 %CODE_BEGIN
-  static const uint8_t addr = MMA8451_OUT_X_MSB;
+  static const uint8_t addr = %'ModuleName'_OUT_X_MSB;
 
-  return %@I2C@'ModuleName'%.ReadAddress(MMA8451_I2C_ADDR, (uint8_t*)&addr, sizeof(addr), &xyz[0], 3);
+  return %@I2C@'ModuleName'%.ReadAddress(%'ModuleName'_I2C_ADDR, (uint8_t*)&addr, sizeof(addr), &xyz[0], 3);
 %CODE_END
 }
 %endif %-GetRaw8XYZ
@@ -568,7 +568,7 @@ uint8_t %'ModuleName'%.%Init(void)
   sCalValues.NyOff = InitialCalibration.NyOff;
   sCalValues.NzOff = InitialCalibration.NzOff;
 %endif %- CalibrateY1g
-  return %@I2C@'ModuleName'%.WriteByteAddress8(MMA8451_I2C_ADDR, MMA8451_CTRL_REG_1, MMA8451_ACTIVE_BIT_MASK); /* enable device */
+  return %@I2C@'ModuleName'%.WriteByteAddress8(%'ModuleName'_I2C_ADDR, %'ModuleName'_CTRL_REG_1, %'ModuleName'_ACTIVE_BIT_MASK); /* enable device */
 %CODE_END
 }
 %endif %-Init
@@ -717,9 +717,9 @@ word %'ModuleName'%.%MeasureGetRawX(void)
     uint8_t buf[2]; /* value from device is in big endian */
     uint16_t be;
   } val;
-  static const uint8_t addr = MMA8451_OUT_X_MSB;
+  static const uint8_t addr = %'ModuleName'_OUT_X_MSB;
 
-  if(%@I2C@'ModuleName'%.ReadAddress(MMA8451_I2C_ADDR, (uint8_t*)&addr, sizeof(addr), &val.buf[0], sizeof(val.buf))!=ERR_OK) {
+  if(%@I2C@'ModuleName'%.ReadAddress(%'ModuleName'_I2C_ADDR, (uint8_t*)&addr, sizeof(addr), &val.buf[0], sizeof(val.buf))!=ERR_OK) {
     return 0; /* failure */
   }
 #if %'ModuleName'_CPU_IS_LITTLE_ENDIAN
@@ -742,9 +742,9 @@ word %'ModuleName'%.%MeasureGetRawY(void)
     uint8_t buf[2]; /* value from device is in big endian */
     uint16_t be;
   } val;
-  static const uint8_t addr = MMA8451_OUT_Y_MSB;
+  static const uint8_t addr = %'ModuleName'_OUT_Y_MSB;
 
-  if(%@I2C@'ModuleName'%.ReadAddress(MMA8451_I2C_ADDR, (uint8_t*)&addr, sizeof(addr), &val.buf[0], sizeof(val.buf))!=ERR_OK) {
+  if(%@I2C@'ModuleName'%.ReadAddress(%'ModuleName'_I2C_ADDR, (uint8_t*)&addr, sizeof(addr), &val.buf[0], sizeof(val.buf))!=ERR_OK) {
     return 0; /* failure */
   }
 #if %'ModuleName'_CPU_IS_LITTLE_ENDIAN
@@ -767,9 +767,9 @@ word %'ModuleName'%.%MeasureGetRawZ(void)
     uint8_t buf[2]; /* value from device is in big endian */
     uint16_t be;
   } val;
-  static const uint8_t addr = MMA8451_OUT_Z_MSB;
+  static const uint8_t addr = %'ModuleName'_OUT_Z_MSB;
 
-  if(%@I2C@'ModuleName'%.ReadAddress(MMA8451_I2C_ADDR, (uint8_t*)&addr, sizeof(addr), &val.buf[0], sizeof(val.buf))!=ERR_OK) {
+  if(%@I2C@'ModuleName'%.ReadAddress(%'ModuleName'_I2C_ADDR, (uint8_t*)&addr, sizeof(addr), &val.buf[0], sizeof(val.buf))!=ERR_OK) {
     return 0; /* failure */
   }
 #if %'ModuleName'_CPU_IS_LITTLE_ENDIAN
@@ -954,16 +954,16 @@ byte %'ModuleName'%.%SetFastMode(bool on)
 {
   uint8_t val, res;
 
-  res = %@I2C@'ModuleName'%.ReadByteAddress8(MMA8451_I2C_ADDR, MMA8451_CTRL_REG_1, &val);
+  res = %@I2C@'ModuleName'%.ReadByteAddress8(%'ModuleName'_I2C_ADDR, %'ModuleName'_CTRL_REG_1, &val);
   if (res!=ERR_OK) {
     return res;
   }
   if (on) {
-    val |= MMA8451_F_READ_BIT_MASK; /* enable F_READ: Fast read mode, data format limited to single byte (auto increment counter will skip LSB) */
+    val |= %'ModuleName'_F_READ_BIT_MASK; /* enable F_READ: Fast read mode, data format limited to single byte (auto increment counter will skip LSB) */
   } else {
-    val &= ~MMA8451_F_READ_BIT_MASK; /* disable F_READ: Fast read mode, data format limited to single byte (auto increment counter will skip LSB) */
+    val &= ~%'ModuleName'_F_READ_BIT_MASK; /* disable F_READ: Fast read mode, data format limited to single byte (auto increment counter will skip LSB) */
   }
-  return %@I2C@'ModuleName'%.WriteByteAddress8(MMA8451_I2C_ADDR, MMA8451_CTRL_REG_1, val);
+  return %@I2C@'ModuleName'%.WriteByteAddress8(%'ModuleName'_I2C_ADDR, %'ModuleName'_CTRL_REG_1, val);
 }
 
 %endif %- SetFastMode
@@ -977,12 +977,12 @@ byte %'ModuleName'%.%Enable(void)
 {
   uint8_t val, res;
 
-  res = %@I2C@'ModuleName'%.ReadByteAddress8(MMA8451_I2C_ADDR, MMA8451_CTRL_REG_1, &val);
+  res = %@I2C@'ModuleName'%.ReadByteAddress8(%'ModuleName'_I2C_ADDR, %'ModuleName'_CTRL_REG_1, &val);
   if (res!=ERR_OK) {
     return res;
   }
-  val |= MMA8451_ACTIVE_BIT_MASK; /* enable device */
-  return %@I2C@'ModuleName'%.WriteByteAddress8(MMA8451_I2C_ADDR, MMA8451_CTRL_REG_1, val);
+  val |= %'ModuleName'_ACTIVE_BIT_MASK; /* enable device */
+  return %@I2C@'ModuleName'%.WriteByteAddress8(%'ModuleName'_I2C_ADDR, %'ModuleName'_CTRL_REG_1, val);
 }
 
 %endif %- Enable
@@ -996,12 +996,12 @@ byte %'ModuleName'%.%Disable(void)
 {
   uint8_t val, res;
 
-  res = %@I2C@'ModuleName'%.ReadByteAddress8(MMA8451_I2C_ADDR, MMA8451_CTRL_REG_1, &val);
+  res = %@I2C@'ModuleName'%.ReadByteAddress8(%'ModuleName'_I2C_ADDR, %'ModuleName'_CTRL_REG_1, &val);
   if (res!=ERR_OK) {
     return res;
   }
-  val &= ~MMA8451_ACTIVE_BIT_MASK; /* disable device */
-  return %@I2C@'ModuleName'%.WriteByteAddress8(MMA8451_I2C_ADDR, MMA8451_CTRL_REG_1, val);
+  val &= ~%'ModuleName'_ACTIVE_BIT_MASK; /* disable device */
+  return %@I2C@'ModuleName'%.WriteByteAddress8(%'ModuleName'_I2C_ADDR, %'ModuleName'_CTRL_REG_1, val);
 }
 
 %endif %- Disable
@@ -1016,11 +1016,11 @@ byte %'ModuleName'%.%isEnabled(bool *isEnabled)
 {
   uint8_t val, res;
 
-  res = %@I2C@'ModuleName'%.ReadByteAddress8(MMA8451_I2C_ADDR, MMA8451_CTRL_REG_1, &val);
+  res = %@I2C@'ModuleName'%.ReadByteAddress8(%'ModuleName'_I2C_ADDR, %'ModuleName'_CTRL_REG_1, &val);
   if (res!=ERR_OK) {
     return ERR_FAILED;
   }
-  *isEnabled = (val&MMA8451_ACTIVE_BIT_MASK)!=0; /* TRUE if bit is set, FALSE otherwise */
+  *isEnabled = (val&%'ModuleName'_ACTIVE_BIT_MASK)!=0; /* TRUE if bit is set, FALSE otherwise */
   return ERR_OK;
 }
 
