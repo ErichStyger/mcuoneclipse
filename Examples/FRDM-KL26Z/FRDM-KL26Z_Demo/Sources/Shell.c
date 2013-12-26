@@ -13,8 +13,9 @@
 #include "CLS1.h"
 #include "LED1.h"
 #include "LED2.h"
-//#include "I2CSPY1.h"
+#include "I2CSPY1.h"
 #include "EVNT1.h"
+#include "FX1.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -22,11 +23,12 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if FRTOS1_PARSE_COMMAND_ENABLED
   FRTOS1_ParseCommand,
 #endif
-//#if PL_HAS_I2C_SPY
-//#if defined(I2CSPY1_PARSE_COMMAND_ENABLED) && I2CSPY1_PARSE_COMMAND_ENABLED==1
-//  I2CSPY1_ParseCommand,
-//#endif
-//#endif
+#if defined(I2CSPY1_PARSE_COMMAND_ENABLED) && I2CSPY1_PARSE_COMMAND_ENABLED==1
+  I2CSPY1_ParseCommand,
+#endif
+#if defined(FX1_PARSE_COMMAND_ENABLED) && FX1_PARSE_COMMAND_ENABLED==1
+  FX1_ParseCommand,
+#endif
   NULL /* sentinel */
 };
 

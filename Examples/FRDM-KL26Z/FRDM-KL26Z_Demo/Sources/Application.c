@@ -15,6 +15,7 @@
 #include "FRTOS1.h"
 #include "EVNT1.h"
 #include "Shell.h"
+#include "FX1.h"
 
 void APP_HandleEvent(uint8_t event) {
   switch(event) {
@@ -33,6 +34,7 @@ void APP_HandleEvent(uint8_t event) {
 }
 
 static void AppTask(void *pvParameters) {
+  FX1_Init();
   for(;;) {
     EVNT1_HandleEvent();
     LED1_Neg();
