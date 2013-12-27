@@ -498,6 +498,19 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="ReadReg">
+<b>ReadReg</b></a>
+ - Reads from a device register address
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ReadReg(byte addr, byte *val)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>addr:byte</i> - Device register address</li>
+<li><i>val: Pointer to byte</i> - Pointer to where to store the value</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
 <li><a name="ParseCommand">
 <b>ParseCommand</b></a>
  - Shell Command Line parser. This method is enabled/disabled depending on if you have the Shell enabled/disabled in the properties.
@@ -512,15 +525,13 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
-<li><a name="ReadReg">
-<b>ReadReg</b></a>
- - Reads from a device register address
+<li><a name="MagneticSensorReset">
+<b>MagneticSensorReset</b></a>
+ - initiates a magnetic sensor reset cycle that will restore correct operation after exposure to an excessive magnetic field which exceeds the Full Scale Range but is less than the Maximum Applied Magnetic Field.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte ReadReg(byte addr, byte *val)<br />
+<br /><i>ANSIC prototype:</i> byte MagneticSensorReset(void)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>addr:byte</i> - Device register address</li>
-<li><i>val: Pointer to byte</i> - Pointer to where to store the value</li>
 <li><i>Return value:byte</i> - Error code
 </li>
 </ul><br />
@@ -544,17 +555,6 @@ LI.EXP {
 <br /><i>ANSIC prototype:</i> uint8_t Deinit(void)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>Return value:uint8_t</i> - Error code, ERR_OK if everything is ok.
-</li>
-</ul><br />
-</li>
-<li><a name="MagneticSensorReset">
-<b>MagneticSensorReset</b></a>
- - initiates a magnetic sensor reset cycle that will restore correct operation after exposure to an excessive magnetic field which exceeds the Full Scale Range but is less than the Maximum Applied Magnetic Field.
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte MagneticSensorReset(void)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>Return value:byte</i> - Error code
 </li>
 </ul><br />
 </li>
