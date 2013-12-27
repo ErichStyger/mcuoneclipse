@@ -7,9 +7,9 @@
  * This module implements a command line interface to the application.
  */
 
+#include "Shell.h"
 #include "Application.h"
 #include "FRTOS1.h"
-#include "Shell.h"
 #include "CLS1.h"
 #include "LED1.h"
 #include "LED2.h"
@@ -29,6 +29,7 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if defined(FX1_PARSE_COMMAND_ENABLED) && FX1_PARSE_COMMAND_ENABLED==1
   FX1_ParseCommand,
 #endif
+  APP_ParseCommand,
   NULL /* sentinel */
 };
 

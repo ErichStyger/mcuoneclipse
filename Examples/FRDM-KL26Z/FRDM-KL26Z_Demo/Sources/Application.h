@@ -11,6 +11,9 @@
 #define APPLICATION_H_
 
 #include "PE_Types.h"
+#include "CLS1.h"
+
+uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
 
 /*!
  * \brief Application event handler.
