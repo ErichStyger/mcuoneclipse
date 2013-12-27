@@ -44,13 +44,15 @@ static void AppTask(void *pvParameters) {
 
 void APP_Run(void) {
   /* some hardware test... */
+#if 0
   LED1_Neg();
   LED2_Neg();
   LED3_Neg();
-  CLS1_SendStr((unsigned char*)"Hello\r\n", CLS1_GetStdio()->stdOut);
+  CLS1_SendStr((unsigned char*)"Hello world!\r\n", CLS1_GetStdio()->stdOut);
   LED1_Neg();
   LED2_Neg();
   LED3_Neg();
+#endif
   
   /* now start the application */
   SHELL_Init();

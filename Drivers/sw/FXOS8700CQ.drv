@@ -358,7 +358,7 @@ byte %'ModuleName'%.%WhoAmI(byte *value);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN GetTemperature
 %ifdef GetTemperature
-byte %'ModuleName'%.%GetTemperature(byte *temperature);
+byte %'ModuleName'%.%GetTemperature(signed char *temperature);
 %define! Partemperature
 %define! RetVal
 %include Common\FXOS8700CQGetTemperature.Inc
@@ -458,7 +458,7 @@ static tAccelCal sCalValues; /* calibration values in RAM */
 
 %if defined(Shell)
 static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
-  unsigned char buf[8];
+  unsigned char buf[24];
   int8_t temperature;
   uint16_t val;
   uint8_t val8;
@@ -1094,7 +1094,7 @@ byte %'ModuleName'%.%WhoAmI(byte *value)
 %define! Partemperature
 %define! RetVal
 %include Common\FXOS8700CQGetTemperature.Inc
-byte %'ModuleName'%.%GetTemperature(byte *temperature)
+byte %'ModuleName'%.%GetTemperature(signed char *temperature)
 {
   int8_t temp;
 

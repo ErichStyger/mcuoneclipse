@@ -4,7 +4,7 @@
     <Name>FXOS8700CQ</Name>
     <Description>Driver for the Freescale FXOS8700CQ digital I2C accelerometer and magnetometer.</Description>
     <Author>Erich Styger</Author>
-    <Version>01.009</Version>
+    <Version>01.010</Version>
     <Icon>FXOS8700CQ</Icon>
     <TypesFiles>PE,FXOS8700CQ\FXOS8700CQ</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -920,13 +920,13 @@
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>temperature</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>8bit signed</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to variable where to store the temperature</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(byte *temperature)</ANSIC>
+          <ANSIC>byte #M#_#C#(signed char *temperature)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
