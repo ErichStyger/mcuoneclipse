@@ -215,7 +215,7 @@ uint8_t %'ModuleName'%.%Init(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN GetX
 %ifdef GetX
-word %'ModuleName'%.%GetX(int16_t *value);
+byte %'ModuleName'%.%GetX(int16_t *value);
 %define! Parvalue
 %define! RetVal
 %include Common\MAG3110GetX.Inc
@@ -225,7 +225,7 @@ word %'ModuleName'%.%GetX(int16_t *value);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN GetY
 %ifdef GetY
-word %'ModuleName'%.%GetY(int16_t *value);
+byte %'ModuleName'%.%GetY(int16_t *value);
 %define! Parvalue
 %define! RetVal
 %include Common\MAG3110GetY.Inc
@@ -235,7 +235,7 @@ word %'ModuleName'%.%GetY(int16_t *value);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN GetZ
 %ifdef GetZ
-word %'ModuleName'%.%GetZ(int16_t *value);
+byte %'ModuleName'%.%GetZ(int16_t *value);
 %define! Parvalue
 %define! RetVal
 %include Common\MAG3110GetZ.Inc
@@ -762,7 +762,7 @@ uint8_t %'ModuleName'%.%Init(void)
 %define! Parvalue
 %define! RetVal
 %include Common\MAG3110GetX.Inc
-word %'ModuleName'%.%GetX(int16_t *value)
+byte %'ModuleName'%.%GetX(int16_t *value)
 {
   union {
     uint8_t buf[2]; /* value from device is in big endian */
@@ -789,7 +789,7 @@ word %'ModuleName'%.%GetX(int16_t *value)
 %define! Parvalue
 %define! RetVal
 %include Common\MAG3110GetY.Inc
-word %'ModuleName'%.%GetY(int16_t *value)
+byte %'ModuleName'%.%GetY(int16_t *value)
 {
   union {
     uint8_t buf[2]; /* value from device is in big endian */
@@ -816,7 +816,7 @@ word %'ModuleName'%.%GetY(int16_t *value)
 %define! Parvalue
 %define! RetVal
 %include Common\MAG3110GetZ.Inc
-word %'ModuleName'%.%GetZ(int16_t *value)
+byte %'ModuleName'%.%GetZ(int16_t *value)
 {
   union {
     uint8_t buf[2]; /* value from device is in big endian */

@@ -4,7 +4,7 @@
     <Name>MAG3110</Name>
     <Description>Driver for the Freescale MAG3110 digital magnetometer</Description>
     <Author>Erich Styger</Author>
-    <Version>01.008</Version>
+    <Version>01.009</Version>
     <Icon>MAG3110</Icon>
     <TypesFiles>PE,MAG3110\MAG3110</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -311,7 +311,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>16bit unsigned</ReturnType>
+        <ReturnType>8bit unsigned</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>1</ParamCount>
         <Parameter>
@@ -322,7 +322,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>word #M#_#C#(int16_t *value)</ANSIC>
+          <ANSIC>byte #M#_#C#(int16_t *value)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -345,7 +345,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>16bit unsigned</ReturnType>
+        <ReturnType>8bit unsigned</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>1</ParamCount>
         <Parameter>
@@ -356,7 +356,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>word #M#_#C#(int16_t *value)</ANSIC>
+          <ANSIC>byte #M#_#C#(int16_t *value)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -379,7 +379,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>16bit unsigned</ReturnType>
+        <ReturnType>8bit unsigned</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>1</ParamCount>
         <Parameter>
@@ -390,7 +390,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>word #M#_#C#(int16_t *value)</ANSIC>
+          <ANSIC>byte #M#_#C#(int16_t *value)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
