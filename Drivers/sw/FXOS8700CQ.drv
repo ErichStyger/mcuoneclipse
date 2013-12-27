@@ -345,6 +345,26 @@ byte %'ModuleName'%.%isEnabled(bool *isEnabled);
 
 %endif %- isEnabled
 %-BW_METHOD_END isEnabled
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN WhoAmI
+%ifdef WhoAmI
+byte %'ModuleName'%.%WhoAmI(byte *value);
+%define! Parvalue
+%define! RetVal
+%include Common\FXOS8700CQWhoAmI.Inc
+
+%endif %- WhoAmI
+%-BW_METHOD_END WhoAmI
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetTemperature
+%ifdef GetTemperature
+byte %'ModuleName'%.%GetTemperature(byte *temperature);
+%define! Partemperature
+%define! RetVal
+%include Common\FXOS8700CQGetTemperature.Inc
+
+%endif %- GetTemperature
+%-BW_METHOD_END GetTemperature
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -397,6 +417,13 @@ byte %'ModuleName'%.%isEnabled(bool *isEnabled);
 #define %'ModuleName'_OUT_Z_MSB 0x05
 #define %'ModuleName'_OUT_Z_LSB 0x06
 
+#define %'ModuleName'_WHO_AM_I  0x0D  /* Who am I register, should return 0xC4 for preproduction devices and 0xC7 for production devices */
+
+/* die temperature (needs to add an offset as not factory trimmed) */
+#define %'ModuleName'%.DIE_TEMP  0x51 /* die temperature register, signed 8bit in C */
+#define %'ModuleName'_DIE_TEMP_OFFSET %DieTempOffset /* offset to temperature reading as value on device is not calibrated */
+
+
 #define %'ModuleName'_I2C_ADDR   (%I2CSlaveAddress) /* I2C slave device address as set in the properties */
 
 %if defined(CalibrateX1g) | defined(CalibrateY1g) | defined(CalibrateZ1g)
@@ -432,7 +459,9 @@ static tAccelCal sCalValues; /* calibration values in RAM */
 %if defined(Shell)
 static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   unsigned char buf[8];
+  int8_t temperature;
   uint16_t val;
+  uint8_t val8;
   bool isEnabled;
 
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"%'ModuleName'", (unsigned char*)"\r\n", io->stdOut);
@@ -504,6 +533,26 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
   %@Shell@'ModuleName'%.SendNum16s(%'ModuleName'%.GetZmg(), io->stdOut);
   %@Shell@'ModuleName'%.SendStr((unsigned char*)" (milli-g)\r\n", io->stdOut);
+
+  if (%'ModuleName'%.%GetTemperature(&temperature)==ERR_OK) {
+    %@Utility@'ModuleName'%.Num8sToStr(buf, sizeof(buf), temperature);
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"°C (offset ");
+    %@Utility@'ModuleName'%.strcatNum8s(buf, sizeof(buf), %'ModuleName'_DIE_TEMP_OFFSET);
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"°C)\r\n");
+  } else {
+    %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"FAILED\r\n");
+  }
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Temperature", buf, io->stdOut);
+
+  if (%'ModuleName'%.%WhoAmI(&val8)==ERR_OK) {
+    %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+    %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), val8);
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  } else {
+    %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"FAILED\r\n");
+  }
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Who am I", buf, io->stdOut);
+
   return ERR_OK;
 }
 
@@ -1026,6 +1075,38 @@ byte %'ModuleName'%.%isEnabled(bool *isEnabled)
 
 %endif %- isEnabled
 %-BW_METHOD_END isEnabled
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN WhoAmI
+%ifdef WhoAmI
+%define! Parvalue
+%define! RetVal
+%include Common\FXOS8700CQWhoAmI.Inc
+byte %'ModuleName'%.%WhoAmI(byte *value)
+{
+  return %@I2C@'ModuleName'%.ReadByteAddress8(%'ModuleName'%.I2C_ADDR, %'ModuleName'%.WHO_AM_I, value);
+}
+
+%endif %- WhoAmI
+%-BW_METHOD_END WhoAmI
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetTemperature
+%ifdef GetTemperature
+%define! Partemperature
+%define! RetVal
+%include Common\FXOS8700CQGetTemperature.Inc
+byte %'ModuleName'%.%GetTemperature(byte *temperature)
+{
+  int8_t temp;
+
+  if (%@I2C@'ModuleName'%.ReadByteAddress8(%'ModuleName'%.I2C_ADDR, %'ModuleName'%.DIE_TEMP, (uint8_t*)&temp) != ERR_OK) {
+    return ERR_FAILED;
+  }
+  *temperature = (int8_t)(temp+%'ModuleName'_DIE_TEMP_OFFSET);
+  return ERR_OK;
+}
+
+%endif %- GetTemperature
+%-BW_METHOD_END GetTemperature
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

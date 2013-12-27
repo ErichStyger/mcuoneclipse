@@ -4,7 +4,7 @@
     <Name>MAG3110</Name>
     <Description>Driver for the Freescale MAG3110 digital magnetometer</Description>
     <Author>Erich Styger</Author>
-    <Version>01.005</Version>
+    <Version>01.006</Version>
     <Icon>MAG3110</Icon>
     <TypesFiles>PE,MAG3110\MAG3110</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -736,40 +736,6 @@
     </Method>
     <Method>
       <TMthdItem>
-        <Name>GetTemperature</Name>
-        <Symbol>GetTemperature</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Returns the temperature of the die as signed 8bit values in degree Celsius</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
-        <RetHint>Error code</RetHint>
-        <ParamCount>1</ParamCount>
-        <Parameter>
-          <ParName>temperature</ParName>
-          <ParType>8bit signed</ParType>
-          <ParPassing>Address</ParPassing>
-          <ParHint>Pointer to variable where to store the temperature</ParHint>
-        </Parameter>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>byte #M#_#C#(signed char *temperature)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
         <Name>WhoAmI</Name>
         <Symbol>WhoAmI</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
@@ -799,6 +765,40 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>byte #M#_#C#(byte *value)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>GetTemperature</Name>
+        <Symbol>GetTemperature</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Returns the temperature of the die as signed 8bit values in degree Celsius</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>temperature</ParName>
+          <ParType>8bit signed</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to variable where to store the temperature</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(signed char *temperature)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

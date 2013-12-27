@@ -4,7 +4,7 @@
     <Name>FXOS8700CQ</Name>
     <Description>Driver for the Freescale FXOS8700CQ digital I2C accelerometer and magnetometer.</Description>
     <Author>Erich Styger</Author>
-    <Version>01.002</Version>
+    <Version>01.009</Version>
     <Icon>FXOS8700CQ</Icon>
     <TypesFiles>PE,FXOS8700CQ\FXOS8700CQ</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -65,6 +65,23 @@
         <IconPopup>false</IconPopup>
         <SortStyle/>
       </TInhrLinkItem>
+    </Property>
+    <Property>
+      <TIntgItem>
+        <Name>Temperature offset</Name>
+        <Symbol>DieTempOffset</Symbol>
+        <Hint>The DIE_TEMP register is not factory trimmed, so returns around 0°C for about 20°C. With this offset can be trimmed.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>24</DefaultValue>
+        <MinValue>-100</MinValue>
+        <MaxValue>100</MaxValue>
+        <Bases>DEC</Bases>
+        <DefaultBase>DEC</DefaultBase>
+        <ExtraHintDisabled>false</ExtraHintDisabled>
+        <ChangeValueIntoRange>false</ChangeValueIntoRange>
+        <RuntimeProperty>false</RuntimeProperty>
+      </TIntgItem>
     </Property>
     <Property>
       <TBoolGrupItem>
@@ -847,6 +864,122 @@
     </Method>
     <Method>
       <TMthdItem>
+        <Name>WhoAmI</Name>
+        <Symbol>WhoAmI</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Returns the value of the WHO_AM_I (0x0D) register</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>value</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to value to store</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte *value)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>GetTemperature</Name>
+        <Symbol>GetTemperature</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Returns the temperature of the die as signed 8bit values in degree Celsius</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>temperature</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to variable where to store the temperature</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(byte *temperature)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ParseCommand</Name>
+        <Symbol>ParseCommand</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Shell Command Line parser. This method is enabled/disabled depending on if you have the Shell enabled/disabled in the properties.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>cmd</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to command string</ParHint>
+          <ParUserDeclaration>const unsigned char *cmd</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>handled</ParName>
+          <ParType>Boolean</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to variable which tells if the command has been handled or not</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>io</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to I/O structure</ParHint>
+          <ParUserDeclaration>const %@Shell@'ModuleName'%.StdIOType *io</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
         <Name>Init</Name>
         <Symbol>Init</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
@@ -898,54 +1031,6 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>uint8_t #M#_#C#(void)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>ParseCommand</Name>
-        <Symbol>ParseCommand</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Shell Command Line parser. This method is enabled/disabled depending on if you have the Shell enabled/disabled in the properties.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
-        <RetHint>Error code</RetHint>
-        <ParamCount>3</ParamCount>
-        <Parameter>
-          <ParName>cmd</ParName>
-          <ParType>8bit unsigned</ParType>
-          <ParPassing>Address</ParPassing>
-          <ParHint>Pointer to command string</ParHint>
-          <ParUserDeclaration>const unsigned char *cmd</ParUserDeclaration>
-        </Parameter>
-        <Parameter>
-          <ParName>handled</ParName>
-          <ParType>Boolean</ParType>
-          <ParPassing>Address</ParPassing>
-          <ParHint>Pointer to variable which tells if the command has been handled or not</ParHint>
-        </Parameter>
-        <Parameter>
-          <ParName>io</ParName>
-          <ParType>8bit unsigned</ParType>
-          <ParPassing>Address</ParPassing>
-          <ParHint>Pointer to I/O structure</ParHint>
-          <ParUserDeclaration>const %@Shell@'ModuleName'%.StdIOType *io</ParUserDeclaration>
-        </Parameter>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

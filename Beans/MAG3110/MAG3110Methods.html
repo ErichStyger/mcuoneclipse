@@ -409,18 +409,6 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
-<li><a name="GetTemperature">
-<b>GetTemperature</b></a>
- - Returns the temperature of the die as signed 8bit values in degree Celsius
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte GetTemperature(signed char *temperature)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>temperature: Pointer to signed char</i> - Pointer to variable where to store the temperature</li>
-<li><i>Return value:byte</i> - Error code
-</li>
-</ul><br />
-</li>
 <li><a name="WhoAmI">
 <b>WhoAmI</b></a>
  - Returns the value of the WHO_AM_I (0x07) register
@@ -429,6 +417,18 @@ LI.EXP {
 <br /><i>ANSIC prototype:</i> byte WhoAmI(byte *value)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>value: Pointer to byte</i> - Pointer to where to store the value</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="GetTemperature">
+<b>GetTemperature</b></a>
+ - Returns the temperature of the die as signed 8bit values in degree Celsius
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte GetTemperature(signed char *temperature)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>temperature: Pointer to signed char</i> - Pointer to variable where to store the temperature</li>
 <li><i>Return value:byte</i> - Error code
 </li>
 </ul><br />

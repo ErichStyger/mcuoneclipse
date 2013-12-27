@@ -457,6 +457,44 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="WhoAmI">
+<b>WhoAmI</b></a>
+ - Returns the value of the WHO_AM_I (0x0D) register
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte WhoAmI(byte *value)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>value: Pointer to byte</i> - Pointer to value to store</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="GetTemperature">
+<b>GetTemperature</b></a>
+ - Returns the temperature of the die as signed 8bit values in degree Celsius
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte GetTemperature(byte *temperature)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>temperature: Pointer to byte</i> - Pointer to variable where to store the temperature</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="ParseCommand">
+<b>ParseCommand</b></a>
+ - Shell Command Line parser. This method is enabled/disabled depending on if you have the Shell enabled/disabled in the properties.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>cmd: Pointer to byte</i> - Pointer to command string</li>
+<li><i>handled: Pointer to bool</i> - Pointer to variable which tells if the command has been handled or not</li>
+<li><i>io: Pointer to byte</i> - Pointer to I/O structure</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
 <li><a name="Init">
 <b>Init</b></a>
  - Initializes the device driver
@@ -476,20 +514,6 @@ LI.EXP {
 <br /><i>ANSIC prototype:</i> uint8_t Deinit(void)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>Return value:uint8_t</i> - Error code, ERR_OK if everything is ok.
-</li>
-</ul><br />
-</li>
-<li><a name="ParseCommand">
-<b>ParseCommand</b></a>
- - Shell Command Line parser. This method is enabled/disabled depending on if you have the Shell enabled/disabled in the properties.
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>cmd: Pointer to byte</i> - Pointer to command string</li>
-<li><i>handled: Pointer to bool</i> - Pointer to variable which tells if the command has been handled or not</li>
-<li><i>io: Pointer to byte</i> - Pointer to I/O structure</li>
-<li><i>Return value:byte</i> - Error code
 </li>
 </ul><br />
 </li>
