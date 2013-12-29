@@ -74,7 +74,7 @@ void APP_HandleEvent(uint8_t event) {
 static uint8_t InitAccelMagnetometer(void) {
   uint8_t databyte;
   
-  FX1_Init();
+  FX1_Init(); /* call init function of component */
   
   if (FX1_WhoAmI(&databyte)!=ERR_OK) {
     CLS1_SendStr((unsigned char*)"Failed!\r\n", CLS1_GetStdio()->stdErr);
@@ -137,8 +137,7 @@ static uint8_t InitAccelMagnetometer(void) {
     CLS1_SendStr((unsigned char*)"Failed!\r\n", CLS1_GetStdio()->stdErr);
     return ERR_FAILED;
   }
-  // normal return
-  return ERR_OK;
+  return ERR_OK; /* normal return */
 }
 
 static void AppTask(void *pvParameters) {
