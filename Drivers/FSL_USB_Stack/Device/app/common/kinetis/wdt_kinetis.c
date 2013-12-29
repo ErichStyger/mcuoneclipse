@@ -38,7 +38,7 @@
 /*****************************************************************************/
 void Watchdog_Reset(void)
 {	
-#if defined(MCU_MKL25Z4) || defined(MCU_MKL46Z4)
+#if defined(MCU_MKL25Z4) || defined(MCU_MKL26Z4) || defined(MCU_MKL46Z4)
 	(void)(RCM_SRS0 |= RCM_SRS0_WDOG_MASK);
 #else
 	(void)(WDOG_REFRESH = 0xA602, WDOG_REFRESH = 0xB480);

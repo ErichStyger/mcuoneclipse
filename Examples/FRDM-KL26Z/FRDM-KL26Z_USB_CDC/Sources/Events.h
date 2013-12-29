@@ -1,7 +1,7 @@
 /* ###################################################################
 **     Filename    : Events.h
 **     Project     : ProcessorExpert
-**     Processor   : MKL26Z128VMC4
+**     Processor   : MKL26Z128VLH4
 **     Component   : Events
 **     Version     : Driver 01.00
 **     Compiler    : GNU C Compiler
@@ -43,6 +43,13 @@
 #include "LED3.h"
 #include "LEDpin3.h"
 #include "BitIoLdd3.h"
+#include "USB1.h"
+#include "USB0.h"
+#include "CDC1.h"
+#include "Tx1.h"
+#include "Rx1.h"
+#include "WAIT1.h"
+#include "UTIL1.h"
 
 #ifdef __cplusplus
 extern "C" {

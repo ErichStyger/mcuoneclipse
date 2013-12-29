@@ -24,7 +24,7 @@
 	#include <stddef.h>
 
 	#if (defined _MK_xxx_H_)
-    #if (defined MCU_MKL25Z4) || (defined MCU_MKL46Z4)
+    #if (defined MCU_MKL25Z4) || defined MCU_MKL26Z4) || (defined MCU_MKL46Z4)
         #define __RESET_WATCHDOG()  (void)(RCM_SRS0 |= RCM_SRS0_WDOG_MASK)
     #else
 		#define __RESET_WATCHDOG()  (void)(WDOG_REFRESH = 0xA602, WDOG_REFRESH = 0xB480)
@@ -45,7 +45,7 @@
 	#endif
 #elif defined(__IAR_SYSTEMS_ICC__)
 	#include <intrinsics.h>
-    #if (defined MCU_MKL25Z4) || (defined MCU_MKL46Z4)
+    #if (defined MCU_MKL25Z4) || defined MCU_MKL26Z4) || (defined MCU_MKL46Z4)
         #define __RESET_WATCHDOG()  (void)(RCM_SRS0 |= RCM_SRS0_WDOG_MASK)
     #else
 	#define __RESET_WATCHDOG()  (void)(WDOG_REFRESH = 0xA602, WDOG_REFRESH = 0xB480)
