@@ -365,6 +365,36 @@ byte %'ModuleName'%.%GetTemperature(signed char *temperature);
 
 %endif %- GetTemperature
 %-BW_METHOD_END GetTemperature
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetMagX
+%ifdef GetMagX
+byte %'ModuleName'%.%GetMagX(int16_t *value);
+%define! Parvalue
+%define! RetVal
+%include Common\FXOS8700CQGetMagX.Inc
+
+%endif %- GetMagX
+%-BW_METHOD_END GetMagX
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetMagY
+%ifdef GetMagY
+byte %'ModuleName'%.%GetMagY(int16_t *value);
+%define! Parvalue
+%define! RetVal
+%include Common\FXOS8700CQGetMagY.Inc
+
+%endif %- GetMagY
+%-BW_METHOD_END GetMagY
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetMagZ
+%ifdef GetMagZ
+byte %'ModuleName'%.%GetMagZ(int16_t *value);
+%define! Parvalue
+%define! RetVal
+%include Common\FXOS8700CQGetMagZ.Inc
+
+%endif %- GetMagZ
+%-BW_METHOD_END GetMagZ
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -419,10 +449,18 @@ byte %'ModuleName'%.%GetTemperature(signed char *temperature);
 
 #define %'ModuleName'_WHO_AM_I  0x0D  /* Who am I register, should return 0xC4 for preproduction devices and 0xC7 for production devices */
 
+/* Magnetometer data register addresses */
+#define %'ModuleName'_M_OUT_X_MSB 0x33
+#define %'ModuleName'_M_OUT_X_LSB 0x34
+#define %'ModuleName'_M_OUT_Y_MSB 0x35
+#define %'ModuleName'_M_OUT_Y_LSB 0x36
+#define %'ModuleName'_M_OUT_Z_MSB 0x37
+#define %'ModuleName'_M_OUT_Z_LSB 0x38
+
+
 /* die temperature (needs to add an offset as not factory trimmed) */
 #define %'ModuleName'%.DIE_TEMP  0x51 /* die temperature register, signed 8bit in C */
 #define %'ModuleName'_DIE_TEMP_OFFSET %DieTempOffset /* offset to temperature reading as value on device is not calibrated */
-
 
 #define %'ModuleName'_I2C_ADDR   (%I2CSlaveAddress) /* I2C slave device address as set in the properties */
 
@@ -463,6 +501,7 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   uint16_t val;
   uint8_t val8;
   bool isEnabled;
+  int16_t val16s;
 
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"%'ModuleName'", (unsigned char*)"\r\n", io->stdOut);
 
@@ -552,6 +591,18 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
     %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"FAILED\r\n");
   }
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Who am I", buf, io->stdOut);
+
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  GetMagX,Y,Z", (unsigned char*)"", io->stdOut);
+  (void)%'ModuleName'%.GetMagX(&val16s);
+  %@Shell@'ModuleName'%.SendNum16s(val16s, io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
+  (void)%'ModuleName'%.GetMagY(&val16s);
+  %@Shell@'ModuleName'%.SendNum16s(val16s, io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
+  (void)%'ModuleName'%.GetMagY(&val16s);
+  %@Shell@'ModuleName'%.SendNum16s(val16s, io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
+
 
   return ERR_OK;
 }
@@ -1107,6 +1158,87 @@ byte %'ModuleName'%.%GetTemperature(signed char *temperature)
 
 %endif %- GetTemperature
 %-BW_METHOD_END GetTemperature
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetMagX
+%ifdef GetMagX
+%define! Parvalue
+%define! RetVal
+%include Common\FXOS8700CQGetMagX.Inc
+byte %'ModuleName'%.%GetMagX(int16_t *value)
+{
+  union {
+    uint8_t buf[2]; /* value from device is in big endian */
+    int16_t be;
+  } val;
+  static const uint8_t addr = %'ModuleName'%.M_OUT_X_MSB;
+
+  if(%@I2C@'ModuleName'%.ReadAddress(%'ModuleName'%.I2C_ADDR, (uint8_t*)&addr, sizeof(addr), &val.buf[0], sizeof(val.buf))!=ERR_OK) {
+    return ERR_FAILED; /* failure */
+  }
+#if %'ModuleName'_CPU_IS_LITTLE_ENDIAN
+  *value = (int16_t)((val.buf[0]<<8)|val.buf[1]); /* transform into LE value */
+#else
+  *value = val.be; /* already in BE */
+#endif
+  return ERR_OK;
+}
+
+%endif %- GetMagX
+%-BW_METHOD_END GetMagX
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetMagY
+%ifdef GetMagY
+%define! Parvalue
+%define! RetVal
+%include Common\FXOS8700CQGetMagY.Inc
+byte %'ModuleName'%.%GetMagY(int16_t *value)
+{
+  union {
+    uint8_t buf[2]; /* value from device is in big endian */
+    int16_t be;
+  } val;
+  static const uint8_t addr = %'ModuleName'%.M_OUT_Y_MSB;
+
+  if(%@I2C@'ModuleName'%.ReadAddress(%'ModuleName'%.I2C_ADDR, (uint8_t*)&addr, sizeof(addr), &val.buf[0], sizeof(val.buf))!=ERR_OK) {
+    return ERR_FAILED; /* failure */
+  }
+#if %'ModuleName'_CPU_IS_LITTLE_ENDIAN
+  *value = (int16_t)((val.buf[0]<<8)|val.buf[1]); /* transform into LE value */
+#else
+  *value = val.be; /* already in BE */
+#endif
+  return ERR_OK;
+}
+
+%endif %- GetMagY
+%-BW_METHOD_END GetMagY
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetMagZ
+%ifdef GetMagZ
+%define! Parvalue
+%define! RetVal
+%include Common\FXOS8700CQGetMagZ.Inc
+byte %'ModuleName'%.%GetMagZ(int16_t *value)
+{
+  union {
+    uint8_t buf[2]; /* value from device is in big endian */
+    int16_t be;
+  } val;
+  static const uint8_t addr = %'ModuleName'%.M_OUT_Z_MSB;
+
+  if(%@I2C@'ModuleName'%.ReadAddress(%'ModuleName'%.I2C_ADDR, (uint8_t*)&addr, sizeof(addr), &val.buf[0], sizeof(val.buf))!=ERR_OK) {
+    return ERR_FAILED; /* failure */
+  }
+#if %'ModuleName'_CPU_IS_LITTLE_ENDIAN
+  *value = (int16_t)((val.buf[0]<<8)|val.buf[1]); /* transform into LE value */
+#else
+  *value = val.be; /* already in BE */
+#endif
+  return ERR_OK;
+}
+
+%endif %- GetMagZ
+%-BW_METHOD_END GetMagZ
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
