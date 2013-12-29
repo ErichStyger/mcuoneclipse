@@ -3,13 +3,12 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (MagneticSensorReset)
+%include Common\GeneralMethod.inc (ReadReg8)
 %;**     Description :
-%;**         Initiates a magnetic sensor reset cycle that will restore
-%;**         correct operation after exposure to an excessive magnetic
-%;**         field which exceeds the Full Scale Range but is less than
-%;**         the Maximum Applied Magnetic Field.
-%include Common\GeneralParametersNone.inc
+%;**         Reads an 8bit device register
+%include Common\GeneralParameters.inc(27)
+%;**         addr%Paraddr %>27 - device memory map address
+%;**       * val%Parval %>27 - Pointer to value
 %;**     Returns     :
 %;**         ---%RetVal %>27 - Error code
 %include Common\GeneralDamage.inc

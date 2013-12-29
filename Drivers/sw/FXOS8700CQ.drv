@@ -105,6 +105,49 @@
 %else
 #define %'ModuleName'%.PARSE_COMMAND_ENABLED  0 /* set to 1 if method ParseCommand() is present, 0 otherwise */
 %endif %- ParseCommand
+
+/* 3-axis accelerometer control register addresses */
+#define %'ModuleName'_CTRL_REG_1 0x2A
+/* 3-axis accelerometer control register bit masks */
+#define %'ModuleName'_ACTIVE_BIT_MASK 0x01
+#define %'ModuleName'_F_READ_BIT_MASK 0x02
+
+#define %'ModuleName'_CTRL_REG_2 0x2B
+#define %'ModuleName'_CTRL_REG_2_MASK_RST (1<<4) /* software reset */
+
+/* External 3-axis accelerometer data register addresses */
+#define %'ModuleName'_OUT_X_MSB 0x01
+#define %'ModuleName'_OUT_X_LSB 0x02
+#define %'ModuleName'_OUT_Y_MSB 0x03
+#define %'ModuleName'_OUT_Y_LSB 0x04
+#define %'ModuleName'_OUT_Z_MSB 0x05
+#define %'ModuleName'_OUT_Z_LSB 0x06
+
+#define %'ModuleName'_WHO_AM_I  0x0D    /* Who am I register, should return 0xC4 for preproduction devices and 0xC7 for production devices */
+#define %'ModuleName'_WHO_AM_I_VAL 0xC7 /* production device value */
+
+#define %'ModuleName'_XYZ_DATA_CFG 0x0E  /* XYZ Data Configuration Register */
+
+/* magnetometer control register */
+#define %'ModuleName'_M_CTRL_REG_1 0x5B
+#define %'ModuleName'_M_CTRL_REG_2 0x5C
+#define %'ModuleName'_M_CTRL_REG_3 0x5D
+
+/* Magnetometer data register addresses */
+#define %'ModuleName'_M_OUT_X_MSB 0x33
+#define %'ModuleName'_M_OUT_X_LSB 0x34
+#define %'ModuleName'_M_OUT_Y_MSB 0x35
+#define %'ModuleName'_M_OUT_Y_LSB 0x36
+#define %'ModuleName'_M_OUT_Z_MSB 0x37
+#define %'ModuleName'_M_OUT_Z_LSB 0x38
+
+/* die temperature (needs to add an offset as not factory trimmed) */
+#define %'ModuleName'%.DIE_TEMP  0x51 /* die temperature register, signed 8bit in C */
+#define %'ModuleName'_DIE_TEMP_OFFSET %DieTempOffset /* offset to temperature reading as value on device is not calibrated */
+
+#define %'ModuleName'_I2C_ADDR   (%I2CSlaveAddress) /* I2C slave device address as set in the properties */
+
+
 %-BW_CUSTOM_USERTYPE_END
 
 %-BW_DEFINITION_START
@@ -395,6 +438,37 @@ byte %'ModuleName'%.%GetMagZ(int16_t *value);
 
 %endif %- GetMagZ
 %-BW_METHOD_END GetMagZ
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN MagneticSensorReset
+%ifdef MagneticSensorReset
+byte %'ModuleName'%.%MagneticSensorReset(void);
+%define! RetVal
+%include Common\FXOS8700CQMagneticSensorReset.Inc
+
+%endif %- MagneticSensorReset
+%-BW_METHOD_END MagneticSensorReset
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ReadReg8
+%ifdef ReadReg8
+byte %'ModuleName'%.%ReadReg8(byte addr, byte *val);
+%define! Paraddr
+%define! Parval
+%define! RetVal
+%include Common\FXOS8700CQReadReg8.Inc
+
+%endif %- ReadReg8
+%-BW_METHOD_END ReadReg8
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN WriteReg8
+%ifdef WriteReg8
+byte %'ModuleName'%.%WriteReg8(byte addr, byte val);
+%define! Paraddr
+%define! Parval
+%define! RetVal
+%include Common\FXOS8700CQWriteReg8.Inc
+
+%endif %- WriteReg8
+%-BW_METHOD_END WriteReg8
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -432,37 +506,6 @@ byte %'ModuleName'%.%GetMagZ(int16_t *value);
 %else
 #define %'ModuleName'_CPU_IS_LITTLE_ENDIAN 0 /* Cpu is big endian */
 %endif
-
-/* External 3-axis accelerometer control register addresses */
-#define %'ModuleName'_CTRL_REG_1 0x2A
-/* MMA8451 3-axis accelerometer control register bit masks */
-#define %'ModuleName'_ACTIVE_BIT_MASK 0x01
-#define %'ModuleName'_F_READ_BIT_MASK 0x02
-
-/* External 3-axis accelerometer data register addresses */
-#define %'ModuleName'_OUT_X_MSB 0x01
-#define %'ModuleName'_OUT_X_LSB 0x02
-#define %'ModuleName'_OUT_Y_MSB 0x03
-#define %'ModuleName'_OUT_Y_LSB 0x04
-#define %'ModuleName'_OUT_Z_MSB 0x05
-#define %'ModuleName'_OUT_Z_LSB 0x06
-
-#define %'ModuleName'_WHO_AM_I  0x0D  /* Who am I register, should return 0xC4 for preproduction devices and 0xC7 for production devices */
-
-/* Magnetometer data register addresses */
-#define %'ModuleName'_M_OUT_X_MSB 0x33
-#define %'ModuleName'_M_OUT_X_LSB 0x34
-#define %'ModuleName'_M_OUT_Y_MSB 0x35
-#define %'ModuleName'_M_OUT_Y_LSB 0x36
-#define %'ModuleName'_M_OUT_Z_MSB 0x37
-#define %'ModuleName'_M_OUT_Z_LSB 0x38
-
-
-/* die temperature (needs to add an offset as not factory trimmed) */
-#define %'ModuleName'%.DIE_TEMP  0x51 /* die temperature register, signed 8bit in C */
-#define %'ModuleName'_DIE_TEMP_OFFSET %DieTempOffset /* offset to temperature reading as value on device is not calibrated */
-
-#define %'ModuleName'_I2C_ADDR   (%I2CSlaveAddress) /* I2C slave device address as set in the properties */
 
 %if defined(CalibrateX1g) | defined(CalibrateY1g) | defined(CalibrateZ1g)
 typedef struct {
@@ -599,10 +642,9 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   (void)%'ModuleName'%.GetMagY(&val16s);
   %@Shell@'ModuleName'%.SendNum16s(val16s, io->stdOut);
   %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);
-  (void)%'ModuleName'%.GetMagY(&val16s);
+  (void)%'ModuleName'%.GetMagZ(&val16s);
   %@Shell@'ModuleName'%.SendNum16s(val16s, io->stdOut);
   %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
-
 
   return ERR_OK;
 }
@@ -1239,6 +1281,55 @@ byte %'ModuleName'%.%GetMagZ(int16_t *value)
 
 %endif %- GetMagZ
 %-BW_METHOD_END GetMagZ
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN MagneticSensorReset
+%ifdef MagneticSensorReset
+%define! RetVal
+%include Common\FXOS8700CQMagneticSensorReset.Inc
+byte %'ModuleName'%.%MagneticSensorReset(void)
+{
+  uint8_t val;
+
+  if (%@I2C@'ModuleName'%.ReadByteAddress8(%'ModuleName'%.I2C_ADDR, %'ModuleName'%.CTRL_REG_2, &val)!=ERR_OK) {
+    return ERR_FAILED;
+  }
+  val |= %'ModuleName'_CTRL_REG_2_MASK_RST; /* set one shot reset bit */
+  return %@I2C@'ModuleName'%.WriteByteAddress8(%'ModuleName'%.I2C_ADDR, %'ModuleName'%.CTRL_REG_2, val);
+}
+
+%endif %- MagneticSensorReset
+%-BW_METHOD_END MagneticSensorReset
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ReadReg8
+%ifdef ReadReg8
+%define! Paraddr
+%define! Parval
+%define! RetVal
+%include Common\FXOS8700CQReadReg8.Inc
+byte %'ModuleName'%.%ReadReg8(byte addr, byte *val)
+{
+  if (%@I2C@'ModuleName'%.ReadByteAddress8(%'ModuleName'%.I2C_ADDR, addr, val)!=ERR_OK) {
+    return ERR_FAILED;
+  }
+  return ERR_OK;
+}
+
+%endif %- ReadReg8
+%-BW_METHOD_END ReadReg8
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN WriteReg8
+%ifdef WriteReg8
+%define! Paraddr
+%define! Parval
+%define! RetVal
+%include Common\FXOS8700CQWriteReg8.Inc
+byte %'ModuleName'%.%WriteReg8(byte addr, byte val)
+{
+  return %@I2C@'ModuleName'%.WriteByteAddress8(%'ModuleName'%.I2C_ADDR, addr, val);
+}
+
+%endif %- WriteReg8
+%-BW_METHOD_END WriteReg8
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
