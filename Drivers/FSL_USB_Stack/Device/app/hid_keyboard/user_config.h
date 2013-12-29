@@ -18,6 +18,7 @@
  *
  *****************************************************************************/
 #include "derivative.h"
+#include "FSL_USB_Stack_Config.h"
 
 #if (defined MCU_MK70F12)
 	#define  HIGH_SPEED_DEVICE	(0)

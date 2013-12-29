@@ -4,7 +4,7 @@
     <Name>FSL_USB_CDC_Device</Name>
     <Description>Freescale USB Stack (CDC)</Description>
     <Author>Erich Styger</Author>
-    <Version>01.021</Version>
+    <Version>01.022</Version>
     <Icon>FSL_USB_CDC_Device</Icon>
     <TypesFiles>PE,FSL_USB_CDC_Device\FSL_USB_CDC_Device</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -35,38 +35,6 @@
         <EditLine>true</EditLine>
         <DefaultValue/>
       </TCompNameItem>
-    </Property>
-    <Property>
-      <TGrupItem>
-        <Name>Configuration</Name>
-        <Symbol>ConfigurationGroup</Symbol>
-        <Hint>Configuration</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <BoldName>true</BoldName>
-        <EditLine>false</EditLine>
-        <Description/>
-        <Expanded>Yes</Expanded>
-        <Children>
-          <GrupItem>
-            <TBoolItem>
-              <Name>Use USB Stack Inititalization</Name>
-              <Symbol>UseUSBStackInitialization</Symbol>
-              <TypeSpec>typeYesNo</TypeSpec>
-              <Hint>This defines the value of the USB_USER_CONFIG_USE_STACK_INIT macro  in the usb_user_config.h. If set to yes, it uses the USB inititialization of the USB stack. If set to no, it uses the initialization of the Processor Expert USB Init component.</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>false</EditLine>
-              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-              <DefaultIndex>0</DefaultIndex>
-              <TextValueIndex>false</TextValueIndex>
-              <RuntimeProperty>false</RuntimeProperty>
-              <CanDelete>false</CanDelete>
-              <IconPopup>false</IconPopup>
-              <DefaultValue>true</DefaultValue>
-              <Popup>false</Popup>
-            </TBoolItem>
-          </GrupItem>
-        </Children>
-      </TGrupItem>
     </Property>
     <Property>
       <TEnumItem>

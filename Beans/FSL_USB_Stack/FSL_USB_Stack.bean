@@ -4,7 +4,7 @@
     <Name>FSL_USB_Stack</Name>
     <Description>Freescale USB Stack</Description>
     <Author>Erich Styger</Author>
-    <Version>01.023</Version>
+    <Version>01.024</Version>
     <Icon>FSL_USB_Stack</Icon>
     <TypesFiles>PE,FSL_USB_Stack\FSL_USB_Stack</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -170,7 +170,7 @@ For Kinetis, select 'Init_USB_OTG_VAR0'.</Hint>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
         <Description>Disabled</Description>
-        <Expanded>Yes</Expanded>
+        <Expanded>No</Expanded>
         <DefaultValue>false</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
@@ -250,22 +250,54 @@ For Kinetis, select 'Init_USB_OTG_VAR0'.</Hint>
       </TIntgItem>
     </Property>
     <Property>
-      <TBoolItem>
-        <Name>Call Init Method</Name>
-        <Symbol>CallInitMethod</Symbol>
-        <TypeSpec>typeYesNo</TypeSpec>
-        <Hint>If set to yes, then the Init() method will be called in PE_low_level_init().</Hint>
+      <TGrupItem>
+        <Name>Initialization</Name>
+        <Symbol>InitializationGroup</Symbol>
+        <Hint>Here the initialization of the USB stack can be configured</Hint>
         <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-      </TBoolItem>
+        <Description/>
+        <Expanded>Yes</Expanded>
+        <Children>
+          <GrupItem>
+            <TBoolItem>
+              <Name>Use USB Stack Inititalization</Name>
+              <Symbol>UseUSBStackInitialization</Symbol>
+              <TypeSpec>typeYesNo</TypeSpec>
+              <Hint>This defines the value of the USB_USER_CONFIG_USE_STACK_INIT macro  in the usb_user_config.h. If set to yes, it uses the USB inititialization of the USB stack. If set to no, it uses the initialization of the Processor Expert USB Init component.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>0</DefaultIndex>
+              <TextValueIndex>false</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <DefaultValue>true</DefaultValue>
+              <Popup>false</Popup>
+            </TBoolItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolItem>
+              <Name>Call Init Method</Name>
+              <Symbol>CallInitMethod</Symbol>
+              <TypeSpec>typeYesNo</TypeSpec>
+              <Hint>If set to yes, then the Init() method will be called in PE_low_level_init().</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>0</DefaultIndex>
+              <TextValueIndex>false</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <DefaultValue>true</DefaultValue>
+              <Popup>false</Popup>
+            </TBoolItem>
+          </GrupItem>
+        </Children>
+      </TGrupItem>
     </Property>
   </PropertyList>
   <MethodList>

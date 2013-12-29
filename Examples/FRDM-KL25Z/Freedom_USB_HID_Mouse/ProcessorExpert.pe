@@ -3,10 +3,10 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>52</ModificationStamp>
-    <Date>2013-08-01</Date>
+    <ModificationStamp>54</ModificationStamp>
+    <Date>2013-12-29</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion>1.6.0.RT4_b1316-1577</PEversion>
+    <PEversion>1.8.0.RT5_b1337-1809</PEversion>
   </Header>
   <Options>
     <EventsDirectory>Sources</EventsDirectory>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>137</ProjectCompNumb>
+    <ProjectCompNumb>140</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -1400,7 +1400,7 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigResetPinFunction</TypeSpecNameState>
         <Index>1</Index>
-        <EnumSymbVal>disabled</EnumSymbVal>
+        <EnumSymbVal>enabled</EnumSymbVal>
         <CustomValue />
       </ItemState>
       <ItemState>
@@ -3271,6 +3271,16 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>Auto select</Value>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>I2S0_CLKINCondGrp0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>I2S0_MclkClkSrcCondGrp0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -3385,6 +3395,17 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>never</LastUserSel>
         <UsrMethodName>VLPModeDisable</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SystemReset</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>never</LastUserSel>
+        <UsrMethodName>SystemReset</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Methods>
     <Events>
@@ -4232,7 +4253,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.061</BeanVersion>
+    <BeanVersion>01.062</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -5018,7 +5039,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.061</BeanVersion>
+    <BeanVersion>01.062</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -5804,7 +5825,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.061</BeanVersion>
+    <BeanVersion>01.062</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -6590,7 +6611,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.059</BeanVersion>
+    <BeanVersion>01.064</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -6661,6 +6682,28 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Watchdog</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>nonLDDWatchDogEnabled</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LDDWatchDogEnabled</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>true</Value>
+        <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>WatchdogLDD</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value />
@@ -6738,6 +6781,15 @@
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>WaitOSms</UsrMethodName>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>WaitLongCycles</ItemSymbol>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>WaitLongCycles</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -6751,7 +6803,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.023</BeanVersion>
+    <BeanVersion>01.024</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -8000,7 +8052,7 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Value />
+              <Value>default</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>InterruptVector_OTG_ID_CHGPriorityFeatureGroup</ItemSymbol>
@@ -8376,7 +8428,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.016</BeanVersion>
+          <BeanVersion>01.022</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -8475,7 +8527,7 @@
                 <UserFolderName />
                 <Comment lines_count="0" />
                 <Template>FSL_USB_CDC_Device\Buffer</Template>
-                <BeanVersion>01.005</BeanVersion>
+                <BeanVersion>01.007</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
                 <Properties>
                   <ItemState>
@@ -8620,7 +8672,7 @@
                 <UserFolderName />
                 <Comment lines_count="0" />
                 <Template>FSL_USB_CDC_Device\Buffer</Template>
-                <BeanVersion>01.005</BeanVersion>
+                <BeanVersion>01.007</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
                 <Properties>
                   <ItemState>
@@ -8769,6 +8821,20 @@
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <Value>0</Value>
               <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ConfigurationGroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Expanded>false</Expanded>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UseUSBStackInitialization</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Index>0</Index>
+              <Value>true</Value>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
             </ItemState>
           </Properties>
           <Methods>
@@ -8989,7 +9055,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.040</BeanVersion>
+          <BeanVersion>01.049</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -9003,7 +9069,7 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>10</Index>
+              <Index>7</Index>
               <EnumSymbVal>Kinetis L2K</EnumSymbVal>
               <CustomValue />
             </ItemState>
@@ -9344,7 +9410,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.055</BeanVersion>
+          <BeanVersion>01.062</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -9358,7 +9424,7 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>10</Index>
+              <Index>7</Index>
               <EnumSymbVal>Kinetis L2K</EnumSymbVal>
               <CustomValue />
             </ItemState>
@@ -9692,6 +9758,20 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>64</Value>
         <Base>DEC</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InitializationGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>UseUSBStackInitialization</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Properties>

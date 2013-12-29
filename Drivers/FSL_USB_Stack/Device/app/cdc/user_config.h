@@ -41,20 +41,13 @@
 #endif
 
 #else
+#include "FSL_USB_Stack_Config.h"
+
 /* device is %CPUDevice << EST */
 %if (CPUDevice="MCF52277") | (CPUDevice="Kinetis K70F")
 #define  HIGH_SPEED_DEVICE            (0)
 %else
 #define  HIGH_SPEED_DEVICE            (0)
-%endif
-
-/* Overwrite initialization values from Processor Expert Init() component. These are 'known working values'. 
- * Otherwise you have to setup the bits (e.g. Pull-up/pull-down resistors!
- * */ /* << EST */
-%if %UseUSBStackInitialization='yes'
-#define USB_USER_CONFIG_USE_STACK_INIT  1 /* value set by component property 'Use USB Stack Initialization' */
-%else
-#define USB_USER_CONFIG_USE_STACK_INIT  0 /* value set by component property 'Use USB Stack Initialization' */
 %endif
 
 %if (CPUDevice="Kintis K20D7") | (CPUDevice="Kinetis K40D7")
