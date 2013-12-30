@@ -29,6 +29,8 @@
 #include "BitIoLdd12.h"
 #include "EN1.h"
 #include "BitIoLdd1.h"
+#include "EN2.h"
+#include "BitIoLdd13.h"
 #include "RS1.h"
 #include "BitIoLdd2.h"
 #include "Inhr1.h"

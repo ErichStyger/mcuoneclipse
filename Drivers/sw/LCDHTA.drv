@@ -1172,7 +1172,7 @@ void %'ModuleName'%.%SetEntryMode(bool increment, bool shiftLeft)
 byte %'ModuleName'%.%UseDisplay(byte display)
 {
 %if defined(E2)
-  if (display!=1 || display!=2) {
+  if (!(display==1 || display==2)) {
     return ERR_FAILED; /* wrong argument */
   }
   %'ModuleName'%.currDisplay = display;

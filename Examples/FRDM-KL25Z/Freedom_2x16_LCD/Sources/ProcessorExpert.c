@@ -43,6 +43,49 @@
 #include "IO_Map.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#if 0
+static void LCD_Demo1(void) {
+  uint8_t cnt;
+  uint8_t buf[5];
+  
+  LCD1_Clear();
+  LCD1_WriteLineStr(1, "Hello FRDM-KL25Z");
+  cnt = 0;
+  for(;;) {
+    LCD1_GotoXY(2,1);
+    UTIL1_Num16uToStr(buf, sizeof(buf), cnt);
+    LCD1_WriteString((char*)buf);
+    cnt++;
+    WAIT1_Waitms(100);
+  }
+}
+#else
+/* LCD Demo with an LCD having two E lines (E1 and E2): that makes 2x2 lines */
+static void LCD_Demo1(void) {
+  uint8_t cnt;
+  uint8_t buf[5];
+  
+  LCD1_UseDisplay(1);  /* switch to upper/first display */
+  LCD1_Clear();
+  LCD1_WriteLineStr(1, "Hello LCD 1");
+  
+  LCD1_UseDisplay(2);  /* switch to second display */
+  LCD1_Clear();
+  LCD1_WriteLineStr(1, "Hello LCD 2");
+  cnt = 0;
+  for(;;) {
+    UTIL1_Num16uToStr(buf, sizeof(buf), cnt);
+    LCD1_UseDisplay(1);  /* switch to first display */
+    LCD1_GotoXY(2,1);
+    LCD1_WriteString((char*)buf);
+    LCD1_UseDisplay(2);  /* switch to second display */
+    LCD1_GotoXY(2,1);
+    LCD1_WriteString((char*)buf);
+    cnt++;
+    WAIT1_Waitms(100);
+  }
+}
+#endif
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -55,18 +98,8 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
-  LCD1_Clear();
-  LCD1_WriteLineStr(1, "Hello FRDM-KL25K");
-  for(;;) {
-    uint8_t cnt;
-    uint8_t buf[5];
-
-    LCD1_GotoXY(2,1);
-    UTIL1_Num16uToStr(buf, sizeof(buf), cnt);
-    LCD1_WriteString((char*)buf);
-    cnt++;
-    WAIT1_Waitms(100);
-  }
+  LCD_Demo1();
+  
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
   #ifdef PEX_RTOS_START
