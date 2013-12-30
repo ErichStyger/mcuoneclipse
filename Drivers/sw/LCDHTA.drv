@@ -580,7 +580,7 @@ static void EnablePulse(void)
 
 %-INTERNAL_METHOD_END EnablePulse
 %-INTERNAL_METHOD_BEG WaitForLCDReady
-%if %ReadFromDisplay='yes' & %CheckBusyFlag = "yes"
+%if %ReadFromDisplay='yes' & %CheckBusyFlag = 'yes'
 %include Common\GeneralInternal.inc (WaitForLCDReady)
 void %'ModuleName'%.WaitForLCDReady(void)
 {
@@ -661,8 +661,8 @@ static void WriteLCDCommand(byte cmd)
 %if %WaitDisplayUs >. '0'
   %@Wait@'ModuleName'%.Waitus(%WaitDisplayUs);                   %>40 /* wait for some time not to write to the display while he may be busy with previous command */
 %endif
-%if %ReadFromDisplay='yes' & %CheckBusyFlag = "yes"
-  WaitForLCDReady();                                             %>40 /* Wait until LCD is ready */
+%if %ReadFromDisplay='yes' & %CheckBusyFlag = 'yes'
+  %'ModuleName'%.WaitForLCDReady();                              %>40 /* Wait until LCD is ready */
 %endif
 %if %DataBusWidth='4bit'
   /* 2 4bit transfer */
@@ -708,8 +708,8 @@ void %'ModuleName'%.WriteLCDData(byte ch)
 %if %WaitDisplayUs >. '0'
    %@Wait@'ModuleName'%.Waitus(%WaitDisplayUs);                  %>40 /* wait for some time not to write to the display while he may be busy with previous command */
 %endif
-%if %ReadFromDisplay='yes' & %CheckBusyFlag = "yes"
-   WaitForLCDReady();                                            %>40 /* Wait until LCD is ready */
+%if %ReadFromDisplay='yes' & %CheckBusyFlag = 'yes'
+   %'ModuleName'%.WaitForLCDReady();                             %>40 /* Wait until LCD is ready */
 %endif
    SetRS();                                                      %>40 /* RS = 1: data mode */
 %if %DataBusWidth='4bit'
