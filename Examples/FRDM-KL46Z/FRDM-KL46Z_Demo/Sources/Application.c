@@ -66,7 +66,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
       cntr = 0;
     }
 #if APP_USE_KEY_COMPONENT
-    KEY1_ScanKeys();
+    KEY1_ScanKeys(); /* using component in polling mode: poll keys, this will create events as needed. */
     EVNT1_HandleEvent();
 #else
     if (SW1_GetVal()==0) { /* button pressed */
@@ -83,7 +83,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
     }
 #endif
     LED1_Neg();
-    FRTOS1_vTaskDelay(250/portTICK_RATE_MS);
+    FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
   }
 }
 
