@@ -386,7 +386,7 @@ byte %'ModuleName'%.%isEnabled(bool *isEnabled);
 /* External 3-axis accelerometer control register addresses */
 #define %'ModuleName'_CTRL_REG_1 0x2A
 /* MMA8451 3-axis accelerometer control register bit masks */
-#define %'ModuleName'__ACTIVE_BIT_MASK 0x01
+#define %'ModuleName'_ACTIVE_BIT_MASK 0x01
 #define %'ModuleName'_F_READ_BIT_MASK 0x02
 
 /* External 3-axis accelerometer data register addresses */
