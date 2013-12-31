@@ -54,7 +54,6 @@ uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
   return ERR_OK;
 }
 
-
 void APP_HandleEvent(uint8_t event) {
   switch(event) {
     case EVNT1_KEY1_PRESSED:
