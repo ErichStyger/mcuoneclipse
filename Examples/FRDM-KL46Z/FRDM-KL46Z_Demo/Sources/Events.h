@@ -51,10 +51,6 @@
 #include "I2C0.h"
 #include "I2CSPY1.h"
 #include "SegLCD1.h"
-#include "SW1.h"
-#include "BitIoLdd3.h"
-#include "SW3.h"
-#include "BitIoLdd4.h"
 #include "PTC.h"
 #include "AD1.h"
 #include "AdcLdd1.h"
@@ -62,6 +58,13 @@
 #include "MAG1.h"
 #include "MINT1.h"
 #include "ExtIntLdd1.h"
+#include "TRG1.h"
+#include "KEY1.h"
+#include "Inhr1.h"
+#include "BitIoLdd5.h"
+#include "Inhr2.h"
+#include "BitIoLdd6.h"
+#include "EVNT1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -142,38 +145,6 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 ** ===================================================================
 */
 
-void AD1_OnEnd(void);
-/*
-** ===================================================================
-**     Event       :  AD1_OnEnd (module Events)
-**
-**     Component   :  AD1 [ADC]
-**     Description :
-**         This event is called after the measurement (which consists
-**         of <1 or more conversions>) is/are finished.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-
-void AD1_OnCalibrationEnd(void);
-/*
-** ===================================================================
-**     Event       :  AD1_OnCalibrationEnd (module Events)
-**
-**     Component   :  AD1 [ADC]
-**     Description :
-**         This event is called when the calibration has been finished.
-**         User should check if the calibration pass or fail by
-**         Calibration status method./nThis event is enabled only if
-**         the <Interrupt service/event> property is enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-
 void MINT1_OnInterrupt(void);
 /*
 ** ===================================================================
@@ -184,6 +155,70 @@ void MINT1_OnInterrupt(void);
 **         This event is called when an active signal edge/level has
 **         occurred.
 **     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void EVNT1_AppHandleEvent(byte event);
+/*
+** ===================================================================
+**     Event       :  EVNT1_AppHandleEvent (module Events)
+**
+**     Component   :  EVNT1 [SimpleEvents]
+**     Description :
+**         
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         event           - Event (event number) to be processed.
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyPressed(byte keys);
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyPressed (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated at the time a key has been pressed.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyReleased(byte keys);
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyReleased (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated after a key has been released.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyReleasedLong(byte keys);
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyReleasedLong (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated after a key has been released (long key
+**         press).
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
 **     Returns     : Nothing
 ** ===================================================================
 */

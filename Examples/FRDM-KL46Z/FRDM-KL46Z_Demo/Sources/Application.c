@@ -2,6 +2,9 @@
  * Application.c
  *      Author: Erich Styger
  */
+
+#define APP_USE_KEY_COMPONENT 1 /* using Key component */
+
 #include "Application.h"
 #include "LED1.h"
 #include "LED2.h"
@@ -11,9 +14,39 @@
 #include "Trace.h"
 #include "LCD.h"
 #include "SegLCD1.h"
-#include "SW1.h"
-#include "SW3.h"
+#if APP_USE_KEY_COMPONENT
+  #include "KEY1.h"
+  #include "EVNT1.h"
+#else
+  #include "SW1.h"
+  #include "SW3.h"
+#endif
 #include "MAG1.h"
+
+void APP_HandleEvent(uint8_t event) {
+  switch(event) {
+    case EVNT1_KEY1_PRESSED:
+      CLS1_SendStr((unsigned char*)"SW1 pressed!\r\n", CLS1_GetStdio()->stdOut);
+      break;
+    case EVNT1_KEY1_RELEASED:
+      CLS1_SendStr((unsigned char*)"SW1 released!\r\n", CLS1_GetStdio()->stdOut);
+      break;
+    case EVNT1_KEY1_LONG_RELEASED:
+      CLS1_SendStr((unsigned char*)"SW1 long released!\r\n", CLS1_GetStdio()->stdOut);
+      break;
+    case EVNT1_KEY3_PRESSED:
+      CLS1_SendStr((unsigned char*)"SW3 pressed!\r\n", CLS1_GetStdio()->stdOut);
+      break;
+    case EVNT1_KEY3_RELEASED:
+      CLS1_SendStr((unsigned char*)"SW3 released!\r\n", CLS1_GetStdio()->stdOut);
+      break;
+    case EVNT1_KEY3_LONG_RELEASED:
+      CLS1_SendStr((unsigned char*)"SW3 long released!\r\n", CLS1_GetStdio()->stdOut);
+      break;
+    default:
+      break;
+  }
+}
 
 static portTASK_FUNCTION(MainTask, pvParameters) {
   unsigned char lcdBuf[sizeof("1234")];
@@ -32,6 +65,10 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
     if (cntr>9999) { /* can only display 4 digits */
       cntr = 0;
     }
+#if APP_USE_KEY_COMPONENT
+    KEY1_ScanKeys();
+    EVNT1_HandleEvent();
+#else
     if (SW1_GetVal()==0) { /* button pressed */
       FRTOS1_vTaskDelay(50/portTICK_RATE_MS); /* wait to debounce */
       while (SW1_GetVal()==0) { /* still pressed? */
@@ -44,6 +81,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
         LED2_On();
       }
     }
+#endif
     LED1_Neg();
     FRTOS1_vTaskDelay(250/portTICK_RATE_MS);
   }
