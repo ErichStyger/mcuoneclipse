@@ -25,6 +25,8 @@
 #include "BitIoLdd12.h"
 #include "EN1.h"
 #include "BitIoLdd1.h"
+#include "EN2.h"
+#include "BitIoLdd13.h"
 #include "RS1.h"
 #include "BitIoLdd2.h"
 #include "Inhr1.h"
@@ -67,11 +69,13 @@ static void LCD_Demo1(void) {
   
   LCD1_UseDisplay(1);  /* switch to upper/first display */
   LCD1_Clear();
-  LCD1_WriteLineStr(1, "Hello LCD 1");
+  LCD1_WriteLineStr(1, "LCD Line 1");
+  LCD1_WriteLineStr(2, "LCD Line 2");
   
   LCD1_UseDisplay(2);  /* switch to second display */
   LCD1_Clear();
-  LCD1_WriteLineStr(1, "Hello LCD 2");
+  LCD1_WriteLineStr(1, "Hello LCD 3");
+  LCD1_WriteLineStr(2, "Hello LCD 4");
   cnt = 0;
   for(;;) {
     UTIL1_Num16uToStr(buf, sizeof(buf), cnt);
