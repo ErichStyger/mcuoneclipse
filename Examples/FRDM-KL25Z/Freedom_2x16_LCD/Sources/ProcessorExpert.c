@@ -74,8 +74,8 @@ static void LCD_Demo1(void) {
   
   LCD1_UseDisplay(2);  /* switch to second display */
   LCD1_Clear();
-  LCD1_WriteLineStr(1, "Hello LCD 3");
-  LCD1_WriteLineStr(2, "Hello LCD 4");
+  LCD1_WriteLineStr(1, "LCD Line 3");
+  LCD1_WriteLineStr(2, "LCD Line 4");
   cnt = 0;
   for(;;) {
     UTIL1_Num16uToStr(buf, sizeof(buf), cnt);
