@@ -1,7 +1,7 @@
 /* ###################################################################
 **     Filename    : ProcessorExpert.c
 **     Project     : ProcessorExpert
-**     Processor   : MKL26Z256VMC4
+**     Processor   : MKL25Z128VLK4
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
 **     Date/Time   : 2014-01-02, 18:39, # CodeGen: 0
@@ -30,6 +30,26 @@
 /* Including needed modules to compile this module/procedure */
 #include "Cpu.h"
 #include "Events.h"
+#include "LED1.h"
+#include "LEDpin1.h"
+#include "BitIoLdd1.h"
+#include "LED2.h"
+#include "LEDpin2.h"
+#include "BitIoLdd2.h"
+#include "UTIL1.h"
+#include "WAIT1.h"
+#include "FRTOS1.h"
+#include "AS1.h"
+#include "ASerialLdd1.h"
+#include "CLS1.h"
+#include "TmDt1.h"
+#include "SD1.h"
+#include "SS1.h"
+#include "TMOUT1.h"
+#include "FAT1.h"
+#include "SM1.h"
+#include "Bit1.h"
+#include "BitIoLdd4.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -37,6 +57,7 @@
 #include "IO_Map.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "Application.h"
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -48,8 +69,7 @@ int main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
-  /* Write your code here */
-  /* For example: for(;;) { } */
+  APP_Run();
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
