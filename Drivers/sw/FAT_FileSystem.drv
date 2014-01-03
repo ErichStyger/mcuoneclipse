@@ -1248,16 +1248,8 @@ static byte CdCmd(const unsigned char *cmd, const %@Shell@'ModuleName'%.ConstStd
 
 static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"%'ModuleName'", (unsigned char*)"\r\n", io->stdOut);
-  if (%'ModuleName'%.isDiskPresent()) {
-    %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"SD present", (unsigned char*)"yes\r\n", io->stdOut);
-  } else {
-    %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"SD present", (unsigned char*)"no\r\n", io->stdOut);
-  }
-  if (%'ModuleName'%.isWriteProtected()) {
-    %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"SD protected", (unsigned char*)"yes\r\n", io->stdOut);
-  } else {
-    %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"SD protected", (unsigned char*)"no\r\n", io->stdOut);
-  }
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  present", %'ModuleName'%.isDiskPresent()?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  protected", %'ModuleName'%.isWriteProtected()?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
   return ERR_OK;
 }
 
