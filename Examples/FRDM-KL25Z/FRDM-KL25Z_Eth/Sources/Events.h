@@ -52,7 +52,7 @@
 #include "TMOUT1.h"
 #include "FAT1.h"
 #include "SM1.h"
-#include "Bit1.h"
+#include "ETH_CS.h"
 #include "BitIoLdd4.h"
 
 #ifdef __cplusplus
@@ -117,6 +117,25 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
+
+/*
+** ===================================================================
+**     Event       :  SD1_OnBlockReceived (module SD1)
+**
+**     Component   :  SM1 [SPIMaster_LDD]
+*/
+/*!
+**     @brief
+**         This event is called when the requested number of data is
+**         moved to the input buffer. This method is available only if
+**         the ReceiveBlock method is enabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. The pointer is passed
+**                           as the parameter of Init method. 
+*/
+/* ===================================================================*/
+void SD1_OnBlockReceived(LDD_TUserData *UserDataPtr);
 
 /* END Events */
 

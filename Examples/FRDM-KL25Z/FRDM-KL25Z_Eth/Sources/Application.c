@@ -6,9 +6,11 @@
 #include "LED1.h"
 #include "FRTOS1.h"
 #include "Shell.h"
+#include "w5100.h"
 
 static portTASK_FUNCTION(Task1, pvParameters) {
   (void)pvParameters; /* parameter not used */
+  //W5100_Init();
   for(;;) {
     LED1_Neg();
     FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
