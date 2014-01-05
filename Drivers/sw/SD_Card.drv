@@ -1258,6 +1258,7 @@ byte %'ModuleName'%.%Init(void* unused)
   /* Send 8 SPI clocks (SS unasserted). */
   %'ModuleName'%.SPI_WRITE(%'ModuleName'%.DUMMY);                %>40 /* dummy SPI cycle */
   %'ModuleName'%.ENABLE_SS();                                    %>40 /* select slave */
+  %'ModuleName'%.SPI_SetFastMode();                              %>40 /* Switch gears to fast mode */
   return ERR_OK;
 }
 
