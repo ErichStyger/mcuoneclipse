@@ -402,9 +402,9 @@
 %elif (CPUfamily = "HCS12") | (CPUfamily = "HCS12X")
 #define configCPU_FAMILY  %>50 configCPU_FAMILY_S12
 %elif (CPUfamily = "ColdFireV1")
-#define configCPU_FAMILY  %>50 configCPU_FAMILY_V1
+#define configCPU_FAMILY  %>50 configCPU_FAMILY_CF1
 %elif (CPUfamily = "MCF")
-#define configCPU_FAMILY  %>50 configCPU_FAMILY_V2
+#define configCPU_FAMILY  %>50 configCPU_FAMILY_CF2
 %elif (CPUfamily = "56800")
 #define configCPU_FAMILY  %>50 configCPU_FAMILY_DSC  
 %elif (CPUfamily = "Kinetis")
