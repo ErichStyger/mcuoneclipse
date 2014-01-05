@@ -11,11 +11,34 @@
 //#include "ETH_INT.h"
 #include "WAIT1.h"
 #include "SM1.h"
+#include "FRTOS1.h"
 
 #define W5100_CS_ENABLE()   ETH_CS_ClrVal() /* chip select is low active */
 #define W5100_CS_DISABLE()  ETH_CS_SetVal() /* chip select is low active */
 
 static volatile bool W5100_DataReceivedFlag = FALSE;
+static xSemaphoreHandle SPImutex = NULL; /* Semaphore to protect shell SCI access */
+static int inc, dec;
+
+void W5100_RequestSPIBus(void) {
+//  (void)xSemaphoreTakeRecursive(SPImutex, portMAX_DELAY);
+  inc++;
+}
+
+void W5100_ReleaseSPIBus(void) {
+ // (void)xSemaphoreGiveRecursive(SPImutex);
+  dec++;
+}
+
+void W5100_GetBus(void) {
+  W5100_RequestSPIBus();
+  W5100_CS_ENABLE();
+}
+
+void W5100_ReleaseBus(void) {
+  W5100_CS_DISABLE();
+  W5100_ReleaseSPIBus();
+}
 
 void W5100_OnBlockReceived(LDD_TUserData *UserDataPtr) {
   (void)UserDataPtr;
@@ -41,36 +64,38 @@ static uint8_t SPIReadByte(void) {
   return val;
 }
 
-
 void W5100_MemWrite(uint16_t addr, uint8_t val) {
-  W5100_CS_ENABLE();
+  W5100_GetBus();
   SPIWriteByte(W5100_CMD_WRITE);
   SPIWriteByte(addr>>8); /* high address */
   SPIWriteByte(addr&0xff); /* low address */
   SPIWriteByte(val); /* data */
-  W5100_CS_DISABLE();
+  W5100_ReleaseBus();
 }
 
 uint8_t W5100_MemRead(uint16_t addr) {
   uint8_t val;
   
-  W5100_CS_ENABLE();
+  W5100_GetBus();
   SPIWriteByte(W5100_CMD_READ);
   SPIWriteByte(addr>>8); /* high address */
   SPIWriteByte(addr&0xff); /* low address */
   val = SPIReadByte(); /* data */
-  W5100_CS_DISABLE();
+  W5100_ReleaseBus();
   return val;
 }
 
 static uint8_t tmp;
+void W5100_Test(void) {
+  W5100_MemWrite(W5100_GAR0, 0xc0); /* 192 */
+  tmp = W5100_MemRead(W5100_GAR0);
+}
 
 void W5100_Init(void) {
+  SPImutex = xSemaphoreCreateRecursiveMutex();
   /* bring reset pin low */
  // ETH_RESET_ClrVal();
  // WAIT1_Waitms(10);
  // ETH_RESET_SetVal();
   /* gateway IP register */
-  W5100_MemWrite(W5100_GAR0, 0xc0); /* 192 */
-  tmp = W5100_MemRead(W5100_GAR0);
 }

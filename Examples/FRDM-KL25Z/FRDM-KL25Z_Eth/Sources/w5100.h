@@ -143,6 +143,9 @@ typedef struct w5100_config {
         uint8_t ipaddr[4];
 } w5100_config_t;
 
+void W5100_RequestSPIBus(void);
+
+void W5100_ReleaseSPIBus(void);
 
 void W5100_OnBlockReceived(LDD_TUserData *UserDataPtr);
 
