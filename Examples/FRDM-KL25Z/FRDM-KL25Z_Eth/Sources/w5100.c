@@ -8,7 +8,7 @@
 /* https://github.com/braiden/embedded-ac-controller/blob/master/w5100.c */
 #include "w5100.h"
 #include "ETH_CS.h"
-//#include "ETH_INT.h"
+#include "ETH_INT.h"
 #include "WAIT1.h"
 #include "SM1.h"
 #include "FRTOS1.h"
@@ -21,13 +21,13 @@ static xSemaphoreHandle SPImutex = NULL; /* Semaphore to protect shell SCI acces
 static int inc, dec;
 
 void W5100_RequestSPIBus(void) {
-//  (void)xSemaphoreTakeRecursive(SPImutex, portMAX_DELAY);
-  inc++;
+  (void)xSemaphoreTakeRecursive(SPImutex, portMAX_DELAY);
+  inc++; ETH_INT_SetVal(); /* debugging only */
 }
 
 void W5100_ReleaseSPIBus(void) {
- // (void)xSemaphoreGiveRecursive(SPImutex);
-  dec++;
+  (void)xSemaphoreGiveRecursive(SPImutex);
+  dec++; ETH_INT_ClrVal(); /* debugging only */
 }
 
 void W5100_GetBus(void) {
@@ -92,6 +92,7 @@ void W5100_Test(void) {
 }
 
 void W5100_Init(void) {
+  ETH_INT_ClrVal();
   SPImutex = xSemaphoreCreateRecursiveMutex();
   /* bring reset pin low */
  // ETH_RESET_ClrVal();

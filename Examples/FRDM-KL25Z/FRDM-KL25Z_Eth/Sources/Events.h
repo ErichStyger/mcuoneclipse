@@ -54,6 +54,8 @@
 #include "SM1.h"
 #include "ETH_CS.h"
 #include "BitIoLdd4.h"
+#include "ETH_INT.h"
+#include "BitIoLdd5.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -162,6 +164,32 @@ void SD1_OnDeactivate(void);
 **         Event called when Deactivate() method is called. This gives
 **         an opportunity to the application to synchronize access to a
 **         shared bus.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void SD1_OnGetBus(void);
+/*
+** ===================================================================
+**     Event       :  SD1_OnGetBus (module Events)
+**
+**     Component   :  SD1 [SD_Card]
+**     Description :
+**         Called before needing access to bus.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void SD1_OnReleaseBus(void);
+/*
+** ===================================================================
+**     Event       :  SD1_OnReleaseBus (module Events)
+**
+**     Component   :  SD1 [SD_Card]
+**     Description :
+**         Called after releasing the bus.
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================

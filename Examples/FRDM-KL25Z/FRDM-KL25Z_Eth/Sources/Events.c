@@ -185,7 +185,6 @@ void SD1_OnDeactivate(void)
   W5100_ReleaseSPIBus();
 }
 
-
 /* END Events */
 
 #ifdef __cplusplus

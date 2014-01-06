@@ -56,10 +56,7 @@ void W5100_Test(void);
 
 static portTASK_FUNCTION(Task1, pvParameters) {
   (void)pvParameters; /* parameter not used */
-  //SD1_Activate();
-  FAT1_Init();
-  //SD1_Deactivate();
-  //W5100_Test();
+  W5100_Test();
   for(;;) {
     LED1_Neg();
     FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
@@ -69,11 +66,11 @@ static portTASK_FUNCTION(Task1, pvParameters) {
 void APP_Run(void) {
   cardMounted = FALSE;
   SHELL_Init();
-  //W5100_Init();
+  W5100_Init();
   if (FRTOS1_xTaskCreate(
         Task1,  /* pointer to the task */
         (signed char *)"Task1", /* task name for kernel awareness debugging */
-        configMINIMAL_STACK_SIZE, /* task stack size */
+        configMINIMAL_STACK_SIZE+100, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
         (xTaskHandle*)NULL /* optional task handle to create */
