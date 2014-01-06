@@ -31,12 +31,13 @@ Package from component(s):
 - FontDisplay version 01.195
 - FreeRTOS version 01.325
 - FreeRTOSTrace version 01.003
-- FSL_USB_CDC_Device version 01.021
-- FSL_USB_HID_Keyboard_Device version 01.049
-- FSL_USB_HID_Mouse_Device version 01.062
-- FSL_USB_MSD_Host version 01.015
-- FSL_USB_Stack version 01.023
+- FSL_USB_CDC_Device version 01.024
+- FSL_USB_HID_Keyboard_Device version 01.050
+- FSL_USB_HID_Mouse_Device version 01.063
+- FSL_USB_MSD_Host version 01.016
+- FSL_USB_Stack version 01.024
 - FSShell version 01.231
+- FXOS8700CQ version 01.015
 - GDisplay version 01.190
 - GenericBitIO version 01.065
 - GenericI2C version 01.014
@@ -50,8 +51,8 @@ Package from component(s):
 - I2CSpy version 01.009
 - KentChLCD version 01.110
 - Key version 01.103
-- LCDHTA version 01.015
-- LED version 01.061
+- LCDHTA version 01.016
+- LED version 01.062
 - LEDbit version 01.003
 - LEDbyte version 01.036
 - LEDmatrix version 01.095
@@ -60,7 +61,7 @@ Package from component(s):
 - LightComm version 01.126
 - LM61B version 01.030
 - LowPower version 01.016
-- MAG3110 version 01.004
+- MAG3110 version 01.010
 - MaxonF2140 version 01.001
 - MC13192 version 01.168
 - MC34673 version 01.019
@@ -69,7 +70,7 @@ Package from component(s):
 - MMA8451Q version 01.028
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 22.12.2013
+created 06.01.2014
 
 Package from component(s):
 - nRF24L01 version 01.055
@@ -88,7 +89,7 @@ Package from component(s):
 - RTC_Maxim version 01.003
 - S19 version 01.034
 - S65Sharp version 01.079
-- SD_Card version 01.158
+- SD_Card version 01.160
 - Servo version 01.066
 - Shell version 01.023
 - SimpleEvents version 01.046
@@ -124,5 +125,4 @@ Package from component(s):
 - UTI version 01.125
 - Utility version 01.092
 - Wait version 01.064
-created 22.12.2013
-
+created 06.01.2014
