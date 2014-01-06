@@ -19,17 +19,14 @@
 #define W5100_CS_DISABLE()  ETH_CS_SetVal() /* chip select is low active */
 
 static volatile bool W5100_DataReceivedFlag = FALSE;
-static xSemaphoreHandle SPImutex = NULL; /* Semaphore to protect shell SCI access */
-//static int inc, dec;
+static xSemaphoreHandle SPImutex = NULL; /* Semaphore to protect SPI access */
 
 void W5100_RequestSPIBus(void) {
   (void)xSemaphoreTakeRecursive(SPImutex, portMAX_DELAY);
-  //inc++; ETH_INT_SetVal(); /* debugging only */
 }
 
 void W5100_ReleaseSPIBus(void) {
   (void)xSemaphoreGiveRecursive(SPImutex);
-  //dec++; ETH_INT_ClrVal(); /* debugging only */
 }
 
 void W5100_GetBus(void) {
@@ -115,7 +112,6 @@ uint8_t W5100_ReadConfig(w5100_config_t *config) {
 }
 
 void W5100_Init(void) {
-  //ETH_INT_ClrVal();
   SPImutex = xSemaphoreCreateRecursiveMutex();
   /* bring reset pin low */
  // ETH_RESET_ClrVal();
@@ -172,7 +168,7 @@ static uint8_t PrintStatus(CLS1_ConstStdIOType *io) {
   for(i=0;i<sizeof(config.ipaddr);i++) {
     UTIL1_strcatNum8u(buf, sizeof(buf), config.ipaddr[i]);
     if (i<sizeof(config.ipaddr)-1) {
-      UTIL1_chcat(buf, sizeof(buf), '.');
+      UTIL1_chcat(buf, sizeof(buf), ':');
     } else {
       UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
     }

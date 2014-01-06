@@ -173,10 +173,10 @@
 #define W5100_WRITE_P 2
 
 typedef struct w5100_config {
-  uint8_t gateway[4];
-  uint8_t netmask[4];
-  uint8_t hwaddr[6];
-  uint8_t ipaddr[4];
+  uint8_t gateway[4]; /* gateway address, e.g. 192.168.0.1 */
+  uint8_t netmask[4]; /* network mask, e.g. 255.255.255.0 */
+  uint8_t hwaddr[6]; /* hardware MAC address, e.g. 90:a2:da:0D:42:dd */
+  uint8_t ipaddr[4]; /* own IP address, e.g. 192.168.0.90 */
 } w5100_config_t;
 
 void W5100_RequestSPIBus(void);
