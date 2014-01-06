@@ -53,17 +53,24 @@
 <listAttribute key="com.freescale.cdt.debug.cw.Embedded Download.TaskSuccessiveRuns"/>
 <listAttribute key="com.freescale.cdt.debug.cw.Embedded Download.TaskTypes"/>
 <listAttribute key="com.freescale.cdt.debug.cw.ExecutablePath"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.InitializePC" value="true"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.InitializePCAtProgramEntryPoint" value="true"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.InitializePCAtSymbol" value="main"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.InitializePCAtUserSpecified" value="false"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.LaunchMode" value="DOWNLOAD"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.PN_StopAtProgramEntryPoint" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.PN_StopAtStartUp" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.PN_StopAtUserSpecified" value="true"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.RefreshPolicy.RefreshPeriod" value="2.0"/>
 <listAttribute key="com.freescale.cdt.debug.cw.RemoteDownload"/>
 <listAttribute key="com.freescale.cdt.debug.cw.RemotePath"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.ResumeProgram" value="true"/>
 <listAttribute key="com.freescale.cdt.debug.cw.SMPCores"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.SYNC_WITH_ENCL_PROJ" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.Symbolics.CacheSymbolicsBetweenRuns" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.Symbolics.UseExecutableCopy" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.UDPPort" value="1234"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.UseApplication" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.RetryConnectionOn" value="false"/>
 <intAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.RetryTimeout" value="20"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.RetryWithTimeoutOn" value="false"/>
@@ -73,15 +80,18 @@
 <stringAttribute key="com.freescale.cdt.debug.cw.core.settings.DebuggerCommonData.Connection Type" value="com.pemicro.mcu.debug.connections.pne.arm"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.core.settings.DebuggerCommonData.Processor Attr Name" value="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.ARM Debugger.processor"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.core.settings.GdiConnection.Common.PhysicalConnectionAttributeBase" value="com.pemicro.mcu.debug.connections.pne.arm."/>
+<stringAttribute key="com.freescale.cdt.debug.cw.core.settings.GdiConnection.Common.SimulatorConnectionAttributeBase" value=""/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.GdiConnection.Common.logData" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.core.settings.rseSystemId" value="com.freescale.cdt.debug.cw.core.ui.rse.systemtype.bareboard.hardware.130624154154+0200"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.core.settings.wizardSystemNameHint" value="OpenSDA"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.debuggerAddress" value="127.0.0.1"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.disableIO" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.ethCtrl" value="UEC1"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.executeInitScripts" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.executePerCoresReset" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.executePerprocessorReset" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.executeReset" value="true"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.executeResetSequence" value="true"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.gateway" value="127.0.0.1"/>
 <listAttribute key="com.freescale.cdt.debug.cw.initPathList">
 <listEntry value="${ProjDirPath}/Project_Settings/Debugger/init_kinetis.tcl"/>
@@ -100,6 +110,7 @@
 <listAttribute key="com.freescale.cdt.debug.cw.runOutOfResetList">
 <listEntry value="false"/>
 </listAttribute>
+<booleanAttribute key="com.freescale.cdt.debug.cw.skipSystemInitialization" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.targetAddress" value="127.0.0.1"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.useGateway" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.useHSSTIO" value="false"/>
@@ -141,12 +152,42 @@
 <booleanAttribute key="com.freescale.sa.mcu.launch.ENABLE_LOGGING" value="false"/>
 <intAttribute key="com.freescale.sa.mcu.launch.MTB_SIZE_IDX" value="5"/>
 <booleanAttribute key="com.freescale.sa.mcu.launch.SET_TGT_SETTING_ON_RUN" value="false"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.CommandLineArgs" value="arm_icd "/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.ConfigFile" value=""/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.Library" value="arm_pne_gdi"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.PEDEBUG_ALTERNATIVE_ALGORITHM_CHECKBOX" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.PEDEBUG_ALTERNATIVE_ALGORITHM_PATH" value=""/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.PEDEBUG_AUTO_SYNC" value="1"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.PEDEBUG_CURRENT_ALGORITHM_INDEX" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.PEDEBUG_ENABLE_FLASH_PROGRAMMING_DIALOG" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.PEDEBUG_ERASE_PROGRAM_WITHOUT_ASKING" value="0"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.RESET_DELAY" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_CyclonePro_PowerDownDelay" value="250"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_CyclonePro_PowerUpDelay" value="250"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_CyclonePro_currentvoltage" value="128"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_CyclonePro_poweroffonexit" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_FORCE_MASS_ERASE" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_FREQ_CYCLONE" value="3"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_FREQ_FX" value="4"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_FREQ_NORMAL" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_FREQ_OPENSDA" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_FREQ_OSJTAG" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_FREQ_TRACELINK" value="3"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_Multilink_PowerDownDelay" value="250"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_Multilink_PowerUpDelay" value="1000"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_PCI_DELAY" value="3"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_PORT" value="181"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_PORT_NAME_STRING" value="OpenSDA"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_RESET_DELAY" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_SPECIFY_IP" value="127.0.0.1"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_SPECIFY_IP_ENABLED" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_SPECIFY_NETWORKCARD" value="127.0.0.1"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_SPECIFY_NETWORKCARD_ENABLED" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_TraceLink_MaxBufferSize" value="1"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_USE_CYCLONEPRO_RELAYS" value="0"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_USE_SWD" value="1"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_interface_selection" value="7"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.UUID" value="6efa29f0-e56e-48a3-9d78-9155b7e3e663"/>
 <booleanAttribute key="forceShellDownload" value="false"/>
 <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_ID" value="com.freescale.cdt.debug.cw.arm.ArmDebugger"/>
@@ -160,7 +201,7 @@
 <stringAttribute key="org.eclipse.cdt.launch.FORMAT" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&lt;contentList/&gt;"/>
 <stringAttribute key="org.eclipse.cdt.launch.GLOBAL_VARIABLES" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;globalVariableList/&gt;&#13;&#10;"/>
 <stringAttribute key="org.eclipse.cdt.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList/&gt;&#13;&#10;"/>
-<stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="FLASH/Freedom_USB_HID_Kbd.elf"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="FLASH/Freedom_USB_HID_Mouse.elf"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="Freedom_USB_HID_Mouse"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.1679783906"/>
 <intAttribute key="org.eclipse.cdt.launch.SET_REGULAR_BREAKPOINT_TYPE_AS" value="0"/>
