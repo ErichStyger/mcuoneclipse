@@ -13,7 +13,7 @@
 #include "LED2.h"
 #include "FAT1.h"
 #include "TmDt1.h"
-
+#include "w5100.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -22,6 +22,7 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
   APP_ParseCommand,
   FAT1_ParseCommand,
   TmDt1_ParseCommand,
+  W5100_ParseCommand,
   NULL /* sentinel */
 };
 

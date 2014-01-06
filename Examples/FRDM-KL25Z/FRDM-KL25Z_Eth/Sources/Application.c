@@ -14,8 +14,9 @@ static FAT1_FATFS fileSystemObject;
 
 uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, CLS1_ConstStdIOType *io) {
   if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "app help")==0) {
-    CLS1_SendHelpStr((unsigned char*)"app", (const unsigned char*)"Group of CLS1 commands\r\n", io->stdOut);
-    CLS1_SendHelpStr((unsigned char*)"  mount|unmount", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"app", (const unsigned char*)"Group of app commands\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"print help or status information\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  mount|unmount", (const unsigned char*)"mount or unmount file system\r\n", io->stdOut);
     *handled = TRUE;
     return ERR_OK;
   } else if (UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0 || UTIL1_strcmp((char*)cmd, "app status")==0) {
@@ -53,10 +54,18 @@ uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, CLS1_ConstStdI
 
 
 void W5100_Test(void);
+static const w5100_config_t W5100_config = {
+  {192, 168, 1, 1}, /* gateway */
+  {255, 255, 255, 0}, /* netmask */
+  {0x90, 0xa2, 0xda,0x0D, 0x42, 0xdd}, /* hw/mac address */
+  {192, 168, 0, 80} /* ip address */
+};
 
 static portTASK_FUNCTION(Task1, pvParameters) {
   (void)pvParameters; /* parameter not used */
-  W5100_Test();
+  if (W5100_WriteConfig((w5100_config_t*)&W5100_config)!=ERR_OK) {
+    CLS1_SendStr((unsigned char*)"Failed to set Net Configuration!\r\n", CLS1_GetStdio()->stdErr);
+  }
   for(;;) {
     LED1_Neg();
     FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);

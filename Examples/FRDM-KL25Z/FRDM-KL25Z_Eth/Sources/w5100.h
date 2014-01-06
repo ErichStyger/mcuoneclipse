@@ -8,6 +8,7 @@
 #define __W5100_H_
 
 #include "PE_Types.h"
+#include "CLS1.h"
 
 /* SPI COMMANDS */
 #define W5100_CMD_READ 0x0F
@@ -137,10 +138,10 @@
 #define W5100_WRITE_P 2
 
 typedef struct w5100_config {
-        uint8_t gateway[4];
-        uint8_t netmask[4];
-        uint8_t hwaddr[6];
-        uint8_t ipaddr[4];
+  uint8_t gateway[4];
+  uint8_t netmask[4];
+  uint8_t hwaddr[6];
+  uint8_t ipaddr[4];
 } w5100_config_t;
 
 void W5100_RequestSPIBus(void);
@@ -149,6 +150,12 @@ void W5100_ReleaseSPIBus(void);
 
 void W5100_OnBlockReceived(LDD_TUserData *UserDataPtr);
 
+uint8_t W5100_WriteConfig(w5100_config_t *config);
+uint8_t W5100_ReadConfig(w5100_config_t *config);
+
+uint8_t W5100_ParseCommand(const unsigned char *cmd, bool *handled, CLS1_ConstStdIOType *io);
+
 void W5100_Init(void);
+
 
 #endif
