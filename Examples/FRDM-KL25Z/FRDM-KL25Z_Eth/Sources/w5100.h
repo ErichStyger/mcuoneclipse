@@ -21,41 +21,76 @@
 #define W5100_RX_MEMORY 0x60
 
 /* COMMON REGISTERS */
-#define W5100_MR 0x00
-#define W5100_GAR0 0x01
+#define W5100_MR    0x00 /* MR (Mode Register */
+#define W5100_MR_BIT_IND    (1<<0) /* indirect bus interface mode */
+#define W5100_MR_BIT_AI     (1<<1) /* address auto-increment in indirect bus interface, 1 to enable */
+#define W5100_MR_BIT_PPPoE  (1<<3) /* PPPoE mode, 1 to enable */
+#define W5100_MR_BIT_PB     (1<<4) /* ping block bit, 1 to block pings */
+#define W5100_MR_BIT_RST    (1<<7) /* reset bit, 1 to reset internal registers */
+
+#define W5100_GAR0 0x01 /* gateway IP address */
 #define W5100_GAR1 0x02
 #define W5100_GAR2 0x03
 #define W5100_GAR3 0x04
-#define W5100_SUBR0 0x05
+#define W5100_SUBR0 0x05 /* subnet mask register */
 #define W5100_SUBR1 0x06
 #define W5100_SUBR2 0x07
 #define W5100_SUBR3 0x08
-#define W5100_SHAR0 0x09
+#define W5100_SHAR0 0x09 /* source hardware address register */ 
 #define W5100_SHAR1 0x0A
 #define W5100_SHAR2 0x0B
 #define W5100_SHAR3 0x0C
 #define W5100_SHAR4 0x0D
 #define W5100_SHAR5 0x0E
-#define W5100_SIPR0 0x0F
+#define W5100_SIPR0 0x0F /* source IP address register */
 #define W5100_SIPR1 0x10
 #define W5100_SIPR2 0x11
 #define W5100_SIPR3 0x12
-#define W5100_IR 0x15
-#define W5100_IMR 0x16
-#define W5100_RTR0 0x17
+#define W5100_IR 0x15  /* interrupt register */
+#define W5100_IR_BIT_S0_INT       (1<<0) /* occurrence of socket 0 interrupt */
+#define W5100_IR_BIT_S1_INT       (1<<1) /* occurrence of socket 0 interrupt */
+#define W5100_IR_BIT_S2_INT       (1<<2) /* occurrence of socket 0 interrupt */
+#define W5100_IR_BIT_S3_INT       (1<<3) /* occurrence of socket 0 interrupt */
+#define W5100_IR_BIT_PPPoE_CLOSE  (1<<5) /* PPPoE Connection close */
+#define W5100_IR_BIT_UNREACH      (1<<6) /* Destination unreachable */
+#define W5100_IR_BIT_CONFLICT     (1<<7) /* IP conflict */
+
+#define W5100_IMR 0x16 /* interrupt mask register */
+#define W5100_RTR0 0x17 /* retry time-value register */
 #define W5100_RTR1 0x18
-#define W5100_RCR 0x19
-#define W5100_RMSR 0x1A
-#define W5100_TMSR 0x1B
-#define W5100_PATR0 0x1C
+#define W5100_RCR 0x19 /* retry count register */
+#define W5100_RMSR 0x1A /* RX memory size register */
+#define W5100_TMSR 0x1B /* TX memory size register */
+#define W5100_xMSR_SOCKET_MEM_SIZE_1KB  0
+#define W5100_xMSR_SOCKET_MEM_SIZE_2KB  1
+#define W5100_xMSR_SOCKET_MEM_SIZE_4KB  2
+#define W5100_xMSR_SOCKET_MEM_SIZE_8KB  3
+#define W5100_xMSR_SOCKET_1_MEM_SIZE_1KB  (W5100_xMSR_SOCKET_MEM_SIZE_1KB<<0)
+#define W5100_xMSR_SOCKET_1_MEM_SIZE_2KB  (W5100_xMSR_SOCKET_MEM_SIZE_2KB<<0)
+#define W5100_xMSR_SOCKET_1_MEM_SIZE_4KB  (W5100_xMSR_SOCKET_MEM_SIZE_4KB<<0)
+#define W5100_xMSR_SOCKET_1_MEM_SIZE_8KB  (W5100_xMSR_SOCKET_MEM_SIZE_8KB<<0)
+#define W5100_xMSR_SOCKET_2_MEM_SIZE_1KB  (W5100_xMSR_SOCKET_MEM_SIZE_1KB<<2)
+#define W5100_xMSR_SOCKET_2_MEM_SIZE_2KB  (W5100_xMSR_SOCKET_MEM_SIZE_2KB<<2)
+#define W5100_xMSR_SOCKET_2_MEM_SIZE_4KB  (W5100_xMSR_SOCKET_MEM_SIZE_4KB<<2)
+#define W5100_xMSR_SOCKET_2_MEM_SIZE_8KB  (W5100_xMSR_SOCKET_MEM_SIZE_8KB<<2)
+#define W5100_xMSR_SOCKET_3_MEM_SIZE_1KB  (W5100_xMSR_SOCKET_MEM_SIZE_1KB<<4)
+#define W5100_xMSR_SOCKET_3_MEM_SIZE_2KB  (W5100_xMSR_SOCKET_MEM_SIZE_2KB<<4)
+#define W5100_xMSR_SOCKET_3_MEM_SIZE_4KB  (W5100_xMSR_SOCKET_MEM_SIZE_4KB<<4)
+#define W5100_xMSR_SOCKET_3_MEM_SIZE_8KB  (W5100_xMSR_SOCKET_MEM_SIZE_8KB<<4)
+#define W5100_xMSR_SOCKET_4_MEM_SIZE_1KB  (W5100_xMSR_SOCKET_MEM_SIZE_1KB<<6)
+#define W5100_xMSR_SOCKET_4_MEM_SIZE_2KB  (W5100_xMSR_SOCKET_MEM_SIZE_2KB<<6)
+#define W5100_xMSR_SOCKET_4_MEM_SIZE_4KB  (W5100_xMSR_SOCKET_MEM_SIZE_4KB<<6)
+#define W5100_xMSR_SOCKET_4_MEM_SIZE_8KB  (W5100_xMSR_SOCKET_MEM_SIZE_8KB<<6)
+
+#define W5100_PATR0 0x1C /* Authentication type in PPPoE mode */
 #define W5100_PATR1 0x1D
-#define W5100_PTIMER 0x28
-#define W5100_PMAGIC 0x29
-#define W5100_UIPR0 0x2A
+#define W5100_PTIMER 0x28 /* PPP Link Control Protocol Request Timer */
+#define W5100_PMAGIC 0x29 /* PPP Link Control Magic number */
+#define W5100_UIPR0 0x2A  /* Unreachable IP Address Register */
 #define W5100_UIPR1 0x2B
 #define W5100_UIPR2 0x2C
 #define W5100_UIPR3 0x2D
-#define W5100_UPORT0 0x2E
+#define W5100_UPORT0 0x2E /* Unreachable Port Register */
 #define W5100_UPORT1 0x2F
 
 /* SOCKET REGISTERS */
@@ -152,6 +187,9 @@ void W5100_OnBlockReceived(LDD_TUserData *UserDataPtr);
 
 uint8_t W5100_WriteConfig(w5100_config_t *config);
 uint8_t W5100_ReadConfig(w5100_config_t *config);
+
+uint8_t W5100_MemWriteByte(uint16_t addr, uint8_t val);
+uint8_t W5100_MemReadByte(uint16_t addr, uint8_t *val);
 
 uint8_t W5100_ParseCommand(const unsigned char *cmd, bool *handled, CLS1_ConstStdIOType *io);
 

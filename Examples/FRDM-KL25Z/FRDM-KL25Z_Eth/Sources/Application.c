@@ -61,11 +61,43 @@ static const w5100_config_t W5100_config = {
   {192, 168, 0, 80} /* ip address */
 };
 
-static portTASK_FUNCTION(Task1, pvParameters) {
-  (void)pvParameters; /* parameter not used */
+static void WiznetSetup(void) {
+  CLS1_SendStr((unsigned char*)"Reset W5100.\r\n", CLS1_GetStdio()->stdOut);
+  /* reset device */
+  if (W5100_MemWriteByte(W5100_MR, W5100_MR_BIT_RST)!=ERR_OK) {
+    CLS1_SendStr((unsigned char*)"Failed to reset device!\r\n", CLS1_GetStdio()->stdErr);
+  }
+  CLS1_SendStr((unsigned char*)"Configure network.\r\n", CLS1_GetStdio()->stdOut);
+  /* configure network: IP address, gateway, netmask, MAC */
   if (W5100_WriteConfig((w5100_config_t*)&W5100_config)!=ERR_OK) {
     CLS1_SendStr((unsigned char*)"Failed to set Net Configuration!\r\n", CLS1_GetStdio()->stdErr);
   }
+  CLS1_SendStr((unsigned char*)"Configure RX/TX memory.\r\n", CLS1_GetStdio()->stdOut);
+  /* we have 8 KByte we can use for the RX and TX sockets: */
+  if (W5100_MemWriteByte(W5100_RMSR, 
+       W5100_xMSR_SOCKET_1_MEM_SIZE_2KB
+      |W5100_xMSR_SOCKET_2_MEM_SIZE_2KB
+      |W5100_xMSR_SOCKET_3_MEM_SIZE_2KB
+      |W5100_xMSR_SOCKET_4_MEM_SIZE_2KB
+     )!=ERR_OK) 
+  {
+    CLS1_SendStr((unsigned char*)"Failed to set RX socket memory size!\r\n", CLS1_GetStdio()->stdErr);
+  }
+  if (W5100_MemWriteByte(W5100_TMSR, 
+       W5100_xMSR_SOCKET_1_MEM_SIZE_2KB
+      |W5100_xMSR_SOCKET_2_MEM_SIZE_2KB
+      |W5100_xMSR_SOCKET_3_MEM_SIZE_2KB
+      |W5100_xMSR_SOCKET_4_MEM_SIZE_2KB
+     )!=ERR_OK) 
+  {
+    CLS1_SendStr((unsigned char*)"Failed to set TX socket memory size!\r\n", CLS1_GetStdio()->stdErr);
+  }
+  CLS1_SendStr((unsigned char*)"done!\r\n", CLS1_GetStdio()->stdOut);
+}
+
+static portTASK_FUNCTION(Task1, pvParameters) {
+  (void)pvParameters; /* parameter not used */
+  WiznetSetup();
   for(;;) {
     LED1_Neg();
     FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);

@@ -66,30 +66,31 @@ static uint8_t SPIReadByte(void) {
   return val;
 }
 
-void W5100_MemWriteByte(uint16_t addr, uint8_t val) {
+uint8_t W5100_MemWriteByte(uint16_t addr, uint8_t val) {
   W5100_GetBus();
   SPIWriteByte(W5100_CMD_WRITE);
   SPIWriteByte(addr>>8); /* high address */
   SPIWriteByte(addr&0xff); /* low address */
   SPIWriteByte(val); /* data */
   W5100_ReleaseBus();
+  return ERR_OK;
 }
 
-uint8_t W5100_MemReadByte(uint16_t addr) {
-  uint8_t val;
-  
+uint8_t W5100_MemReadByte(uint16_t addr, uint8_t *val) {
   W5100_GetBus();
   SPIWriteByte(W5100_CMD_READ);
   SPIWriteByte(addr>>8); /* high address */
   SPIWriteByte(addr&0xff); /* low address */
-  val = SPIReadByte(); /* data */
+  *val = SPIReadByte(); /* data */
   W5100_ReleaseBus();
-  return val;
+  return ERR_OK;
 }
 
 uint8_t W5100_MemReadBlock(uint16_t addr, void *data, size_t dataSize) {
   while(dataSize>0) {
-    *((uint8_t*)data) = W5100_MemReadByte(addr);
+    if (W5100_MemReadByte(addr, (uint8_t*)data)!=ERR_OK) {
+      return ERR_FAILED;
+    }
     data++; addr++; dataSize--;
   }
   return ERR_OK;
@@ -97,7 +98,9 @@ uint8_t W5100_MemReadBlock(uint16_t addr, void *data, size_t dataSize) {
 
 uint8_t W5100_MemWriteBlock(uint16_t addr, void *data, size_t dataSize) {
   while(dataSize>0) {
-    W5100_MemWriteByte(addr, *((uint8_t*)data));
+    if (W5100_MemWriteByte(addr, *((uint8_t*)data))!=ERR_OK) {
+      return ERR_FAILED;
+    }
     data++; addr++; dataSize--;
   }
   return ERR_OK;
