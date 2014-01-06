@@ -438,8 +438,12 @@ DSTATUS disk_initialize (
 {
   uint8_t n, cmd, ty, ocr[4];
 
-  if (drv!=0) return STA_NOINIT;                                 %>40 /* Supports only single drive */
-  if (Stat & STA_NODISK) return Stat;                            %>40 /* No card in the socket */
+  if (drv!=0) {
+    return STA_NOINIT;                                           %>40 /* Supports only single drive */
+  }
+  if (Stat & STA_NODISK) {
+    return Stat;                                                 %>40 /* No card in the socket */
+  }
   if (%'ModuleName'%.Init(NULL) != ERR_OK) {
     return STA_NOINIT;
   }
@@ -505,8 +509,12 @@ DRESULT disk_read (
         uint8_t count                                            %>40 /* Number of sectors to read (1..255) */
 )
 {
-  if (drv!=0 || !count) return RES_PARERR;
-  if (Stat & STA_NOINIT) return RES_NOTRDY;
+  if (drv!=0 || !count) {
+    return RES_PARERR;
+  }
+  if (Stat & STA_NOINIT) {
+    return RES_NOTRDY;
+  }
   if (!(CardType & CT_BLOCK)) {
     sector *= %'ModuleName'%.BLOCK_SIZE;                         %>40 /* Convert to byte address if needed */
   }
@@ -540,9 +548,15 @@ DRESULT disk_write (
         uint8_t count                                            %>40 /* Number of sectors to write (1..255) */
 )
 {
-  if (drv!=0 || !count) return RES_PARERR;
-  if (Stat & STA_NOINIT) return RES_NOTRDY;
-  if (Stat & STA_PROTECT) return RES_WRPRT;
+  if (drv!=0 || !count) {
+    return RES_PARERR;
+  }
+  if (Stat & STA_NOINIT) {
+    return RES_NOTRDY;
+  }
+  if (Stat & STA_PROTECT) {
+    return RES_WRPRT;
+  }
   if (!(CardType & CT_BLOCK)) {
     sector *= %'ModuleName'%.BLOCK_SIZE;                         %>40 /* Convert to byte address if needed */
   }
@@ -587,7 +601,9 @@ DRESULT disk_ioctl (
   uint8_t n, csd[16], *ptr = (uint8_t*)buff;
   uint16_t csize;
 
-  if (drv!=0) return RES_PARERR;
+  if (drv!=0) {
+    return RES_PARERR;
+  }
   if (ctrl == CTRL_POWER) {
     switch (*ptr) {
       case 0:                                                    %>40 /* Sub control code == 0 (POWER_OFF) */
@@ -610,7 +626,6 @@ DRESULT disk_ioctl (
     }
     switch (ctrl) {
       case CTRL_SYNC :                                           %>40 /* Make sure that no pending write process. Do not remove this or written sector might not left updated. */
-        %'ModuleName'%.Activate();
         if (%'ModuleName'%.WaitReady() != ERR_OK) {
           res = RES_ERROR;
         }
@@ -717,8 +732,7 @@ DRESULT disk_ioctl (
       default:
         res = RES_PARERR;
     } /* switch */
-    %'ModuleName'%.%Deactivate();
-  }
+  } /* if-else */
   return res;
 }
 
@@ -887,7 +901,7 @@ void %'ModuleName'%.%Activate(void)
 %if defined(OnActivate)
   %OnActivate();
 %endif
-  %'ModuleName'%.%InitCommChannel();
+  //%'ModuleName'%.%InitCommChannel();
 %if defined(ACT)
   %@ACT@'ModuleName'%.SetVal();                                  %>40 /* enable bus driver (high level) */
 %elif defined(LDDACT)
@@ -904,7 +918,7 @@ void %'ModuleName'%.%Activate(void)
 %include Common\SD_CardDeactivate.Inc
 void %'ModuleName'%.%Deactivate(void)
 {
-  %'ModuleName'%.DISABLE_SS();
+  %'ModuleName'%.DISABLE_SS();                                   %>40 /* de-select slave */
 %if defined(ACT)
   %@ACT@'ModuleName'%.ClrVal();                                  %>40 /* disable bus driver (low level) */
 %elif defined(LDDACT)
@@ -927,6 +941,7 @@ byte %'ModuleName'%.%WaitReady(void)
   byte tmp;
   %@Timeout@'ModuleName'%.CounterHandle timeout;
 
+  %'ModuleName'%.Activate();
   %'ModuleName'%.SPI_WRITE(%'ModuleName'%.DUMMY);
   timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_READY_MS/%@Timeout@'ModuleName'%.TICK_PERIOD_MS);%>40/* set up timeout counter */
   for (;;) {                                                     %>40 /* will timeout */
@@ -942,6 +957,7 @@ byte %'ModuleName'%.%WaitReady(void)
 %endif
   } /* for */
   %@Timeout@'ModuleName'%.LeaveCounter(timeout);
+  %'ModuleName'%.Deactivate();
   if (tmp==0xff) {
     return ERR_OK; /* device is ready */
   } else {
@@ -967,6 +983,7 @@ bool %'ModuleName'%.%ReceiveDataBlock(byte *data, word nofBytes)
   %@Timeout@'ModuleName'%.CounterHandle timeout;
   word cnt = 512; /* polling counter */
 
+  %'ModuleName'%.Activate();
   /* poll response */
   do {
     %'ModuleName'%.SPI_WRITE_READ(%'ModuleName'%.DUMMY, &tmp);   %>40 /* send dummy value, poll response */
@@ -998,6 +1015,7 @@ bool %'ModuleName'%.%ReceiveDataBlock(byte *data, word nofBytes)
 %ifdef OnError
     %OnError();
 %endif
+    %'ModuleName'%.Deactivate();
     return FALSE;
   }
 #ifdef SPI_WRITE_READ_BLOCK_ENABLED
@@ -1015,6 +1033,7 @@ bool %'ModuleName'%.%ReceiveDataBlock(byte *data, word nofBytes)
 #endif
   %'ModuleName'%.SPI_WRITE(%'ModuleName'%.DUMMY);                %>40 /* checksum Bytes not needed */
   %'ModuleName'%.SPI_WRITE(%'ModuleName'%.DUMMY);
+  %'ModuleName'%.Deactivate();
   return TRUE;
 }
 
@@ -1038,6 +1057,7 @@ bool %'ModuleName'%.%SendDataBlock(byte *data, byte token, word nofBytes)
 %endif
     return FALSE;                                                %>40 /* device not ready */
   }
+  %'ModuleName'%.Activate();
   %'ModuleName'%.SPI_WRITE(token);                               %>40 /* Xmit data token */
   if (token != 0xFD) {                                           %>40 /* Is data token, not STOP_TRAN */
 #ifdef SPI_WRITE_BLOCK_ENABLED
@@ -1056,6 +1076,7 @@ bool %'ModuleName'%.%SendDataBlock(byte *data, byte token, word nofBytes)
 %ifdef OnError
       %OnError();
 %endif
+      %'ModuleName'%.Deactivate();
       return FALSE;
     }
     /* if we do not poll the device for its busy state, we need to provide at least 8 clocks (dummy cycle).
@@ -1070,6 +1091,7 @@ bool %'ModuleName'%.%SendDataBlock(byte *data, byte token, word nofBytes)
      */
     %'ModuleName'%.SPI_WRITE(%'ModuleName'%.DUMMY);
   }
+  %'ModuleName'%.Deactivate();
   return TRUE;
 }
 
@@ -1098,13 +1120,13 @@ byte %'ModuleName'%.%SendCmd(byte cmd, dword arg)
     }
   }
   /* Select the card and wait for ready */
-  %'ModuleName'%.Activate();
   if (%'ModuleName'%.WaitReady() != ERR_OK) {
 %ifdef OnError
     %OnError();
 %endif
     return 0xFF;
   }
+  %'ModuleName'%.Activate();
   /* Send command packet */
   %'ModuleName'%.SPI_WRITE(cmd);                                 %>40 /* Start + Command index */
   n = (byte)(arg>>24);
@@ -1122,7 +1144,6 @@ byte %'ModuleName'%.%SendCmd(byte cmd, dword arg)
     n = 0x01;                                                    %>40 /* Dummy CRC + Stop */
   }
   %'ModuleName'%.SPI_WRITE(n);
-
   /* Receive command response */
   if (cmd == %'ModuleName'%.CMD12) {
     %'ModuleName'%.SPI_WRITE_READ(%'ModuleName'%.DUMMY, &res);   %>40 /* send dummy value, poll response */
@@ -1141,6 +1162,7 @@ byte %'ModuleName'%.%SendCmd(byte cmd, dword arg)
 %endif
   }
   %@Timeout@'ModuleName'%.LeaveCounter(timeout);
+  %'ModuleName'%.Deactivate();
   return res;                                                    %>40 /* Return with the response value */
 }
 %if defined(COMPILER_HIX)
@@ -1175,6 +1197,7 @@ static byte SendCommand(byte cmd, byte *arg, byte response)
   byte u8Temp=0;
   byte u8Counter;
 
+  %'ModuleName'%.Activate();
   %'ModuleName'%.SPI_WRITE(cmd);                                 %>40 /* Send Start byte */
   /* Send Argument */
   for(u8Counter=0; u8Counter<4; u8Counter++) {
@@ -1191,6 +1214,7 @@ static byte SendCommand(byte cmd, byte *arg, byte response)
     %OnIdle();
 %endif
   } /* for */
+  %'ModuleName'%.Deactivate();
   if (u8Temp==response) {
     return ERR_OK;
   } else {
@@ -1227,14 +1251,14 @@ byte %'ModuleName'%.%Init(void* unused)
   /* -------------------------------- Init & Slow Mode -------------------------------- */
   /* after voltage reaches 2.2V, need to wait at least 1 ms. Then we need to set Data and CS/Chipselect high for at least 74 clocks */
   %@Wait@'ModuleName'%.Waitms(1);                                %>40 /* wait at least for 1 ms on insertion and power on */
-  %'ModuleName'%.Activate();                                     %>40 /* activate card (configure SPI) and select device */
+  %'ModuleName'%.Activate();                                     %>40 /* select slave */
   %'ModuleName'%.SPI_SetSlowMode();                              %>40 /* set the SPI clock to 375 kbps. This is required for compatibility across a wide range of SD and MMC cards. */
   %'ModuleName'%.DISABLE_SS();                                   %>40 /* disable slave (CS high) */
   for(cnt=0;cnt<10;cnt++) {                                      %>40 /* send at least 75 SPI clock cycles with the SS signal asserted to ensure that the SD card internal state machine is initialized. */
     %'ModuleName'%.SPI_WRITE(%'ModuleName'%.DUMMY);
   }
   %@Wait@'ModuleName'%.Waitus(50);                               %>40 /* need to wait a little bin in order SPI transfer to be finished (need this on CN128, but on others too?) */
-  %'ModuleName'%.ENABLE_SS();                                    %>40 /* select slave */
+  %'ModuleName'%.Deactivate();
   /* -------------------------------- IDLE Command -------------------------------- */
   arg = 0;
   timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_READY_MS/%@Timeout@'ModuleName'%.TICK_PERIOD_MS);%>40/* timeout */
@@ -1248,7 +1272,6 @@ byte %'ModuleName'%.%Init(void* unused)
 %endif
   } /* while */
   %@Timeout@'ModuleName'%.LeaveCounter(timeout);
-  %'ModuleName'%.DISABLE_SS();                                   %>40 /* disable slave */
   if (isTimeout) {                                               %>40 /* timeout */
 %ifdef OnError
     %OnError();
@@ -1256,9 +1279,10 @@ byte %'ModuleName'%.%Init(void* unused)
     return ERR_FAULT;
   }
   /* Send 8 SPI clocks (SS unasserted). */
+  %'ModuleName'%.Activate();
+  %'ModuleName'%.DISABLE_SS();                                   %>40 /* disable slave */
   %'ModuleName'%.SPI_WRITE(%'ModuleName'%.DUMMY);                %>40 /* dummy SPI cycle */
-  %'ModuleName'%.ENABLE_SS();                                    %>40 /* select slave */
-  %'ModuleName'%.SPI_SetFastMode();                              %>40 /* Switch gears to fast mode */
+  %'ModuleName'%.Deactivate();                                   %>40 /* de-select slave */
   return ERR_OK;
 }
 
@@ -1272,7 +1296,9 @@ byte %'ModuleName'%.ReceiveByte(void)
 {
   byte data;
 
+  %'ModuleName'%.Activate();
   %'ModuleName'%.SPI_WRITE_READ(%'ModuleName'%.DUMMY, &data);    %>40 /* send dummy value, poll response */
+  %'ModuleName'%.Deactivate();
   return data;
 }
 
@@ -1343,11 +1369,11 @@ void %'ModuleName'%.%Deinit(void* unused)
 %include Common\GeneralInternal.inc (OnBlockReceived)
 void %@LDDHWSPI@OnBlockReceived(LDD_TUserData *UserDataPtr)
 {
-  %'ModuleName'%.DataReceivedFlag=TRUE;
   /* Calling inherited event */
 %ifdef OnBlockReceived
   %OnBlockReceived(UserDataPtr);
 %endif OnBlockReceived
+  %'ModuleName'%.DataReceivedFlag=TRUE;
 }
 
 %endif %- @LDDHWSPI@OnBlockReceived
