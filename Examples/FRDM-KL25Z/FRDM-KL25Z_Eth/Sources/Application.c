@@ -53,7 +53,6 @@ uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, CLS1_ConstStdI
 }
 
 
-void W5100_Test(void);
 static const w5100_config_t W5100_config = {
   {192, 168, 1, 1}, /* gateway */
   {255, 255, 255, 0}, /* netmask */
