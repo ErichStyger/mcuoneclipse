@@ -1,13 +1,19 @@
-/*
- * Application.c
- *      Author: Erich Styger
+/**
+ * \file
+ * \brief This is the application interface
+ * \author (c) 2014 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html).
+ *
+ * This module is the main module of the application.
  */
+
 #include "Application.h"
 #include "LED1.h"
 #include "FRTOS1.h"
 #include "Shell.h"
 #include "FAT1.h"
 #include "w5100.h"
+#include "socket.h"
 
 static bool cardMounted = FALSE;
 static FAT1_FATFS fileSystemObject;
@@ -107,6 +113,7 @@ void APP_Run(void) {
   cardMounted = FALSE;
   SHELL_Init();
   W5100_Init();
+  SOCK_Init();
   if (FRTOS1_xTaskCreate(
         Task1,  /* pointer to the task */
         (signed char *)"Task1", /* task name for kernel awareness debugging */

@@ -83,6 +83,54 @@ uint8_t W5100_MemReadByte(uint16_t addr, uint8_t *val) {
   return ERR_OK;
 }
 
+uint8_t W5100_MemWriteWord(uint16_t addr, uint16_t val) {
+  W5100_RequestSPIBus();
+
+  W5100_CS_ENABLE();
+  SPIWriteByte(W5100_CMD_WRITE);
+  SPIWriteByte(addr>>8); /* high address */
+  SPIWriteByte(addr&0xff); /* low address */
+  SPIWriteByte(val>>8); /* data */
+  W5100_CS_DISABLE();
+
+  addr++;
+  W5100_CS_ENABLE();
+  SPIWriteByte(W5100_CMD_WRITE);
+  SPIWriteByte(addr>>8); /* high address */
+  SPIWriteByte(addr&0xff); /* low address */
+  SPIWriteByte(val&0xff); /* data */
+  W5100_CS_DISABLE();
+
+  W5100_ReleaseSPIBus();
+  return ERR_OK;
+}
+
+uint8_t W5100_MemReadWord(uint16_t addr, uint16_t *val) {
+  uint8_t low, high;
+  
+  W5100_RequestSPIBus();
+
+  W5100_CS_ENABLE();
+  SPIWriteByte(W5100_CMD_READ);
+  SPIWriteByte(addr>>8); /* high address */
+  SPIWriteByte(addr&0xff); /* low address */
+  high = SPIReadByte(); /* data */
+  W5100_CS_DISABLE();
+  
+  addr++;
+  W5100_CS_ENABLE();
+  SPIWriteByte(W5100_CMD_READ);
+  SPIWriteByte(addr>>8); /* high address */
+  SPIWriteByte(addr&0xff); /* low address */
+  low = SPIReadByte(); /* data */
+  W5100_CS_DISABLE();
+  
+  W5100_ReleaseSPIBus();
+  
+  *val = (high<<8)|low;
+  return ERR_OK;
+}
+
 uint8_t W5100_MemReadBlock(uint16_t addr, void *data, size_t dataSize) {
   while(dataSize>0) {
     if (W5100_MemReadByte(addr, (uint8_t*)data)!=ERR_OK) {
