@@ -1,7 +1,10 @@
-/*
- * Application.h
+/**
+ * \file
+ * \brief Main application interface
+ * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html)
  *
- *      Author: Erich Styger
+ * This header file is the interface for the main application.
  */
 
 #ifndef APPLICATION_H_

@@ -1,11 +1,11 @@
 /**
  * \file
- * \brief PID implementation.
- * \author Erich Styger, erich.styger@hslu.ch
+ * \brief Tracing module
+ * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html)
  *
- * This module implements tracing out data to multiple channels.
+ * This is a simple shell/string based trace to monitor values.
  */
-
 
 #include "Trace.h"
 #include "FRTOS1.h"

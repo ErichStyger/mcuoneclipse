@@ -1,9 +1,10 @@
 /**
  * \file
- * \brief PID interface.
- * \author Erich Styger, erich.styger@hslu.ch
+ * \brief Tracing interface
+ * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html)
  *
- * This module implements the interface to the PID algorithm.
+ * This is a simple shell/string based trace to monitor values.
  */
 
 #ifndef __TRACE_H_

@@ -1,6 +1,10 @@
-/*
- * Application.c
- *      Author: Erich Styger
+/**
+ * \file
+ * \brief Main application
+ * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html)
+ *
+ * This implements the application main loop.
  */
 
 #define APP_USE_KEY_COMPONENT 1 /* using Key component */

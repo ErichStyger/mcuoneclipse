@@ -1,9 +1,12 @@
-/*
- * Shell.c
+/**
+ * \file
+ * \brief Shell
+ * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html)
  *
- *  Created on: 04.08.2011
- *      Author: Erich Styger
+ * This implements a command line shell.
  */
+
 
 #include "Application.h"
 #include "FRTOS1.h"

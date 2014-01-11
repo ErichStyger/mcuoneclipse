@@ -1,8 +1,10 @@
-/*
- * Shell.h
+/**
+ * \file
+ * \brief Shell interface
+ * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html)
  *
- *  Created on: 23.05.2011
- *      Author: Erich Styger
+ * This header file is the interface for the main application.
  */
 
 #ifndef SHELL_H_
