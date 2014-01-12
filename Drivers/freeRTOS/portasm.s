@@ -342,12 +342,12 @@ vPortEnableVFP:
   .global vPortClearInterruptMask
   .global vPortSVCHandler
   .global vPortStartFirstTask
-  .global vOnCounterRestart
+  .global vPortTickHandler
 #if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
   .global vPortEnableVFP
 #endif
 /*-----------------------------------------------------------*/
-vOnCounterRestart:
+vPortTickHandler:
   %if %CompilerOptimizationLevel='0'
   /* Compiler optimization level 0 */
   pop {lr,r3} /* remove stacked registers from the caller routine */
