@@ -2071,14 +2071,22 @@ dword %'ModuleName'%.%get_fattime(void)
 %if defined(RTC)
   TIMEREC time;
   DATEREC date;
+  uint8_t res;
 
-  (void)%@RTC@'ModuleName'%.GetTime(&time);                      %>40 /* get time information */
-  (void)%@RTC@'ModuleName'%.GetDate(&date);                      %>40 /* get time information */
+  res = %@RTC@'ModuleName'%.GetTime(&time);                      %>40 /* get time information */
+  if (res!=ERR_OK) {
+    return 0; /* failed */
+  }
+  res = %@RTC@'ModuleName'%.GetDate(&date);                      %>40 /* get date information */
+  if (res!=ERR_OK) {
+    return 0; /* failed */
+  }
   return ((uint32_t)(date.Year - 1980) << 25)
        | ((uint32_t)date.Month << 21)
        | ((uint32_t)date.Day << 16)
        | ((uint32_t)time.Hour << 11)
-       | ((uint32_t)time.Min << 5);
+       | ((uint32_t)time.Min << 5)
+       | ((uint32_t)time.Sec);
 %else
   /* Get time and date information and store it in 'time' and 'date'.
      If not using the DateTime component, you need to implement your own method here.
