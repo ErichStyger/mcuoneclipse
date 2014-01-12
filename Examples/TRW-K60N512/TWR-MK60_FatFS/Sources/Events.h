@@ -37,7 +37,6 @@
 #include "BitIoLdd1.h"
 #include "FRTOS1.h"
 #include "Inhr2.h"
-#include "Inhr1.h"
 #include "UTIL1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
@@ -67,7 +66,7 @@ void Cpu_OnNMIINT(void);
 */
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
