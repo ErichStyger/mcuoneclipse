@@ -35,7 +35,6 @@
 #include "AS1.h"
 #include "ASerialLdd1.h"
 #include "FRTOS1.h"
-#include "RTOSTICKLDD1.h"
 #include "LED1.h"
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"
@@ -48,6 +47,7 @@
 #include "LED4.h"
 #include "LEDpin4.h"
 #include "BitIoLdd4.h"
+#include "HF1.h"
 #include "PE_LDD.h"
 
 void Cpu_OnNMIINT(void);
@@ -82,7 +82,7 @@ void TI1_OnInterrupt(void);
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
