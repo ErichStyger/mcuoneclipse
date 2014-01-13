@@ -1,0 +1,42 @@
+/*!
+\page page_Tasks Lab: Tasks
+\author Erich Styger, erich.styger@hslu.ch
+
+\section s_requirement Requirements
+We are transforming our non-RTOS application into a task based system.
+Additionally we enable the sounder (if not already done).
+Additionally we are exploring the FreeRTOS scheduling system.
+For this we are creating two additional 'test' task.
+
+\section s_hints Hints
+- Implement two tasks:
+  - Application main loop, handling events
+  - Shell task, handling shell and serial console
+- Enable Sounder for SRB board (if not already done)
+  - Use triggers to start/stop sounder
+  - Create a 'welcome' beep (you can do this with the EVNT_INIT event)
+  - Create a beep whenever you press a key
+- Verify that everything works
+- Create two additional test tasks, each toggling an LED, each with tskIDLE_PRIORITY:
+\verbatim
+static portTASK_FUNCTION(Task1, pvParameters) {
+  for(;;) {
+    LED1_Neg();
+  }
+}
+
+static portTASK_FUNCTION(Task2, pvParameters) {
+  for(;;) {
+    LED2_Neg();
+  }
+}
+\endverbatim
+- If you run into a problem: see the Questions section below.
+- Have fun :-)  
+
+\section s_journal Questions
+- Predict the execution pattern over time of Task1() and Task2().
+  Is it matching your expectation or not?
+- You likely will run into a problem that the buzzer is not getting stopped.
+  Investigate the problem. What is the cause of the problem? How to solve it?
+*/

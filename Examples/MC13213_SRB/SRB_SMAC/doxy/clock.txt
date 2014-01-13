@@ -1,0 +1,28 @@
+/*!
+\page page_Clock Lab: Clock & Timer
+\author Erich Styger, erich.styger@hslu.ch
+
+\section s_requirement Requirements
+A realtime system needs precise clocks infrastructure.
+In this lab session we are going to set up our system with a 20 MHz bus clock (SRB), and a 40 MHz bus clock for the Tower.
+Additionally, we create a timer module. To test it, we are going to blink an LED every second.
+
+\section s_hardware Hardware
+- MCF52259 (Tower)
+- MC13213 SRB
+
+\section s_hints Hints
+- Configure the SRB to 20 MHz (well, close to this) and the MCF52259 to a bus clock of 40 MHz
+- Create Timer.c and Timer.h
+- Add a Processor Expert component which provides you a 10ms periodic interrupt
+- Route the timer interrupt call to your timer module routine
+- Every second, create a heartbeat event which is handled in your application event handler
+- Have fun :-)  
+
+\section s_questions Questions
+- Inspect the MC13213 SRB and the MCF52259: what is its external clock configuration/frequency?
+- Think about different ways to verify that your system is running at a bus clock speed you have configured.
+- What kind of lab equipment would use to verify the clock speed?
+- It would make sense to directly issue the heartbeat in the timer interrupt function, instead creating an event.
+  Discuss the advantages and disadvantages of each approach.
+*/

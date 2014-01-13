@@ -1,0 +1,19 @@
+/*!
+\page page_LCD Lab: Touch Screen LCD Display for Trace
+\author Erich Styger, erich.styger@hslu.ch
+
+\section s_requirement Requirements
+Following functionality shall be supported:
+- Have a touch screen LCD attached to your system
+- Use the JM128 bootloader on the LCD to load applications
+- Show motor speed on an LCD graph
+
+\section s_hints Hints
+- Do not use a sharp tool to touch the LCD, otherwise you might damage the surface of the device
+- Inspect the I2C code on the tower and on the LCD board how the two boards communicate with each other.
+- Have fun :-)
+
+\section s_journal Questions
+- List use cases where a bootloader makes sense.
+- How are messages sent from the LCD to the Tower? Why?
+*/

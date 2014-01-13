@@ -1,0 +1,9 @@
+OPENFILE "%ABS_FILE%.s19"
+format=motorola
+busWidth=1
+origin=0
+len=0x1000000
+destination=0
+SRECORD=Sx
+SENDBYTE 1 "%ABS_FILE%"
+CLOSE

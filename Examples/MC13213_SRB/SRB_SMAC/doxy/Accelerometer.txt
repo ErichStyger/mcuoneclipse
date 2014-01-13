@@ -1,0 +1,20 @@
+/*!
+\page page_Accel Lab: Accelerometer
+\author Erich Styger, erich.styger@hslu.ch
+
+\section s_requirement Requirements
+We intergrate drivers for the accelerometer sensors on the TWR and SRB board.
+We learn how to calibrate them and how to get sensor values. 
+Finally we write the values both to the shell and the LCD display.
+
+\section s_Hints Hints
+- Make sure you map the correct pins for your driver, with the proper A/D channel
+- Think about a useful implementation in ACCEL_Init(): could you think about using calibration to initialized the sensor?
+- Enable the shell interface and try it out
+- Have fun :-)
+
+\section s_journal Questions
+- Why is there a need to calibrate the sensor?
+- What is the difference between ACCEL1_MeasureGetRawX() and ACCEL1_GetXmg()? 
+- Explain in few sentences the process of calibration.
+*/

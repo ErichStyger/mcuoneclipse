@@ -1,0 +1,23 @@
+/*!
+\page page_Tacho Lab: Tacho and trace
+\author Erich Styger, erich.styger@hslu.ch
+
+\section s_requirement Requirements
+Following functionality shall be supported:
+- Implement a speed/tacho module
+- Think about a good timing with the right number of samples to take.
+- Show information/status on the shell
+
+\section s_hints Hints
+- Use Tacho.c and Tacho.h as starting point
+- NOF_ROUND_PULSE is the number of pulses per revolution. Note that this is the number of signal changes of C1 + C2 (combined!).
+- SPEED_CALC_PERIOD_MS needs to be set with the appropriate timing value (milli seconds)
+- NOF_HISTORY is used to determine the number of speed samples
+- Integrate Trace.c and Trace.h into your application and explore them.
+  Use it to show speed information on the shell 
+- Have fun :-)
+
+\section s_journal Questions
+- How does the tacho sampling period and the number of samples affect the speed calculation?
+- We use 'steps per second' as speed entity. Why not using RPM (Revolutions Per Minute)?
+*/

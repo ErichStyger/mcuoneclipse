@@ -1,0 +1,68 @@
+/*!
+\page page_Mealy Lab: Mealy Sequential State Machine
+\author Erich Styger, erich.styger@hslu.ch
+
+\section s_requirement Requirements
+We create a sequential state machine (more precise: a Mealy Sequential State Machine).
+We have two inputs (a and b) and we change the state of our 4 LEDs in following way:
+\image html MealyLed.jpg
+
+\section s_hints Hints
+- Refresh your knowledge about Mealy Sequential State Machines
+- Create files Mealy.c and Mealy.h and add them to your project.
+- Create a function like GetInput() in mealy.c which returns you the input state
+- Use one of the available switches of your board to get the input value.
+- SRB switch pins
+\verbatim
+SW1 [Input]              => PTA2_KBIP2 [64]
+SW2 [Input]              => PTA3_KBIP3 [1]
+SW3 [Input]              => PTA4_KBIP4 [2]
+SW4 [Input]              => PTA5_KBIP5 [3]
+\endverbatim
+- Tower switch pins
+\verbatim
+SW1 [Input]              => GPT0_PWM1_PTA0 [93]
+SW3 [Input]              => GPT1_PWM3_PTA1 [94]
+\endverbatim
+- Don't forget the pull-ups for the switches
+- Create a function MEALY_Run() for the state machine itself
+- Draw on paper the state machine and verify it 'by hand' that it will work
+- Implement the mealy state machine in mealy.c
+- If you implement the mealy machine as table, then it is a good idea to have the table
+  in ROM (means: use the 'const' qualifier for it).
+- Call the mealy state machine from your application.
+- Document your state machine in the sources using dot and doxygen.
+  Below a dot source with corresponding created dot graph:
+  \verbatim
+  \dot
+  digraph example_dot_graph {
+      node [shape=triangle];
+      rankdir=RL;
+      A    [fillcolor=lightblue,style=filled,label="A"];
+      B    [fillcolor=green,style=filled,label="B"];
+      C    [fillcolor=red,style=filled,label="C"];
+      A -> A [label="a/something"];
+      A -> B -> C -> A -> C;
+      B -> B [label="b"];
+  }
+  \enddot
+  \endverbatim
+  \dot
+  digraph example_dot_graph {
+      node [shape=triangle];
+      rankdir=RL;
+      A    [fillcolor=lightblue,style=filled,label="A" ];
+      B    [fillcolor=green,style=filled,label="B" ];
+      C    [fillcolor=red,style=filled,label="C"];
+      A -> A [label="a/something"];
+      A -> B -> C -> A -> C;
+      B -> B [label="b"];
+  }
+  \enddot
+
+\section s_journal Questions
+- Some compilers may not allow the usage of multidimensional arrays (CodeWarrior does). How would you then implement the Mealy Sequential State Machine?
+- Explore the dot documentation: what feature do you find the most useful for you?
+- Discuss the advantages/disadvantages of using a Mealy Sequential Machine.
+- Implement the same state machine using a functional state machine (using switch and functions). What do you observe?
+*/

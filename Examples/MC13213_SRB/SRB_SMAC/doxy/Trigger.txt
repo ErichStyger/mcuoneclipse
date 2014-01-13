@@ -1,0 +1,32 @@
+/*!
+\page page_Trigger Lab: Simple Trigger
+\author Erich Styger, erich.styger@hslu.ch
+
+\section s_requirement Requirements
+We implement the infrastructure for the application to install simple triggers.
+Simple triggers are callback we can install for the future and are very useful.
+To prove and test our design, we implement a flashing LED (flashing every second).
+For the implementation consider
+- Reentrancy: the code shall be reentrant
+- Portability: use generic (and portable) types (so no 'char' or 'int', etc)
+- Extensibility: it shall be possible to add new triggers to the list in trigger.h without changing trigger.c
+- Proof of functionality: demonstrate your implementation with using TRG_LED_BLINK to blink a LED every second
+
+\section s_hints Hints
+- Implement trigger.c based on trigger.h interface
+- Make sure that your actual implementation of the trigger 'list' in memory is depending on TRG_LAST
+- Take care that your implementation is reentrant
+- You need to add a 10ms timer to your system. Use the timer you implemented in the previous lab session.
+- Use an event (e.g. EVNT_INIT) to start your LED flashing heartbeat
+- Verify and test your implementation with a flashing LED
+- Have fun :-)  
+
+\section s_journal Questions
+- What is the difference if you increment the tick counter in TRG_AddTick() 
+  either at the beginning of the function or if you increment it at the end of the function?
+  The pseudo code in the slide deck does it at the beginning, but is this the correct way?
+- The tick counter is designed in such a way that the counter will run over (0xffff -> 0 -> 1 -> ...). Think about the consequences of this.
+- Why is it important to use types like uint8_t, int16_t, int32_t instead of plain char, short or int?
+- Find out how the type 'char' is defined for our compiler. What is the minimum/maximum decimal number it can hold?
+- Discuss the advantages and disadvantages of your implementation with other groups: what would you change/improve?
+*/

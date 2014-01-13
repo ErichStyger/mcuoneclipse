@@ -1,0 +1,32 @@
+/*!
+\page page_RadioPID Lab: Radio PID
+\author Erich Styger, erich.styger@hslu.ch
+
+\section s_requirement Requirements
+In this lab session, we want to control the speed and direction of the 
+DC motor with a 3-axis acceleromter sensor on the SRB (remote control unit).
+Following shall be accomplished:
+- Set the set point of the PID for the motor based on the accelerometer value
+- Optionally, think about to set the RPM value to zero (emergency stop) and set the speed to a max value
+
+\section s_Hints Hints
+- Think about putting things for the remote control unit into a remote.c and remote.h
+- Think about a concept (which values) you want to use the 3-axis accelerator sensor to control the motor.
+- Make sure your sensor is calibrated
+- Use the shell trace to report the accelerometer values, this is useful for debugging and to show the values (xyz)
+- Implement a protocol to transfer the xyz data from the SRB to the Trainer.
+- Be careful while debugging the A/D conversion code: the debugger may read the analog I/O port which may reset flags
+- There are routines in the accelerometer driver to get both the numerical values and as well the milli-g values.
+  Choose which one you want to use.
+- Make sure you understand the control flow and state machine transmitting/receiving data through the transceiver
+- Create new events and or new message queue items to deal with the accelerometer messages
+- Have a shell interface to your remote control unit software
+- Think about ways how you can reduce amount/frequency of communication
+- Have fun :-)
+
+\section s_journal Questions
+- Describe your strategy how you minimize the time spent in the communication.
+- Sensor calibration values are stored in the embedded component settings. What would be an alternative way?
+- If you place the SRB on your desk and even if you do not move it, the z sensor value still reports an acceleration around 1g. Why?
+- Why do the xyz sensor values report an acceleration value even if the SRB is not moved?
+*/

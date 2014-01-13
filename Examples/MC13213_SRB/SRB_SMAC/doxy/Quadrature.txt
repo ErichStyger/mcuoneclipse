@@ -1,0 +1,31 @@
+/*!
+\page page_Quad Lab: Quadrature
+\author Erich Styger, erich.styger@hslu.ch
+
+\section s_requirement Requirements
+Following functionality shall be supported:
+- Decoding signal provided by quadratic decoder
+- Counting the steps of the motor (quadrature encoder steps)
+- Report in shell
+  - The current position
+  - The number of errors
+
+\section s_hints Hints
+- Use QuadCounter.c and QuadCounter.h as starting point
+- Make sure get the C1 and C2 signals correctly.
+- The version without error correction is provided
+- Use QUAD_USE_ERROR_CORRECTION to enable/disable error correction
+- Complete the quadrature decoding tables (QUAD_Table) in Quadrature.c
+- Have fun :-)
+
+\section s_journal Questions
+- Check the encoder data sheet and the motor data sheet:
+  calculate the signal rate with maximum speed and the used encoder and document it
+- See http://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem:
+  you will need to sample the signal twice as fast as the max signal frequency: what is your required sampling frequency?
+- Why it could be a good idea to connect C1 and C2 signals to a bit 0 and bit 1 of a port?
+- When will you get errors in your decoding/counting algorithm?
+- Compare the decoder with error correction and the one without.
+  At which speed the one without error correction will start producing errors?
+  At which speed the one with error correction starts producing errors?
+*/

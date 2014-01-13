@@ -1,0 +1,21 @@
+/*!
+\page page_Slider Lab: Slider Widget
+\author Erich Styger, erich.styger@hslu.ch
+
+\section s_requirement Requirements
+We are going to extend the UI of the TWR-LCD with an additional widget: a slider widget.
+That widget allows to set a value in a given range.
+
+\section s_Hints Hints
+- Make sure the bootloader on the TWR-LCD works
+- You have two projects: one to build the bootloader and one project with the LCD application (with or without bootloader)
+- To build a bootloader file, use the _BL_ Processor Expert configuration
+- To debug your application without bootloader (which might be easier), use the _noBL_ configuration. Keep in mind that later on you need to put back the bootloader
+- The interface is provided with slider.h: implement the module slider.cpp
+- It might be easier for now to have everything in slider.cpp. But you are free to implement your classes in separate files.
+- Have fun :-)
+
+\section s_journal Questions
+- Which method is used to share bootloader files between the Bootloader project and the LCD application project?
+- Discuss pros and cons using an object oriented approach for the slider implementation.
+*/
