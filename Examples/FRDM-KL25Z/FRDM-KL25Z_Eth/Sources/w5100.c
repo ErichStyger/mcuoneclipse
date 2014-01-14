@@ -6,6 +6,8 @@
  */
 
 /* https://github.com/braiden/embedded-ac-controller/blob/master/w5100.c */
+/* http://www.seanet.com/~karllunt/w5100_library.html */
+
 #include "w5100.h"
 #include "ETH_CS.h"
 //#include "ETH_INT.h"
