@@ -46,6 +46,14 @@
 #include "LED4.h"
 #include "LEDpin4.h"
 #include "BitIoLdd4.h"
+#include "USB1.h"
+#include "USB0.h"
+#include "CDC1.h"
+#include "Tx1.h"
+#include "Rx1.h"
+#include "WAIT1.h"
+#include "UTIL1.h"
+#include "HF1.h"
 
 #ifdef __cplusplus
 extern "C" {
