@@ -11,4 +11,4 @@
 #endif
 
 #define __MK_xxx_H__
-#define USED_PIT0
+//#define USED_PIT0
