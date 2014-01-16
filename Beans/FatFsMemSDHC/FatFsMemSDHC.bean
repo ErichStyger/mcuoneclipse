@@ -4,7 +4,7 @@
     <Name>FatFsMemSDHC</Name>
     <Description>Memory Implementation for FatFS using SDHC_LDD</Description>
     <Author>Erich Styger</Author>
-    <Version>01.007</Version>
+    <Version>01.010</Version>
     <Icon>FatFsMemSDHC</Icon>
     <TypesFiles>PE,FatFsMemSDHC\FatFsMemSDHC</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -23,7 +23,7 @@
     <DemoDriver>no</DemoDriver>
     <BeanLevel>Low</BeanLevel>
     <Shortcut>FATM</Shortcut>
-    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2012, all rights reserved.\n\nThis an open source software using Processor Expert.\nThis is a free software and is opened for education,  research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
+    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2014, all rights reserved.\n\nThis an open source software using Processor Expert.\nThis is a free software and is opened for education,  research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
   </Options>
   <PropertyList>
     <Property>
@@ -396,7 +396,7 @@
         <Name>Deinit</Name>
         <Symbol>Deinit</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Method to denitialize the device driver</Hint>
+        <Hint>Method to deinitialize the device driver</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -648,7 +648,7 @@
         <Name>OnPortEvent</Name>
         <Symbol>OnPortEvent</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Called if defined event on any pin of the port occured. OnPortEvent event and GPIO interrupt must be enabled. See SetPortEventMask() and GetPortEventMask() methods. This event is enabled if &lt;a href="UntitledProperties.html#IntService"&gt;Interrupt service/event&lt;/a&gt; is Enabled and disabled if &lt;a href="UntitledProperties.html#IntService"&gt;Interrupt service/event&lt;/a&gt; is Disabled.</Hint>
+        <Hint>Called if defined event on any pin of the port occured. OnPortEvent event and GPIO interrupt must be enabled. See SetPortEventMask() and GetPortEventMask() methods.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
