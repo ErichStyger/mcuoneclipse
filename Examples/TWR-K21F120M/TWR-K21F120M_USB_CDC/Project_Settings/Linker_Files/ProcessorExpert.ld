@@ -6,11 +6,11 @@
 /*##                                   */
 /*##     Project   : ProcessorExpert   */
 /*##                                   */
-/*##     Processor : MK21FN1M0VLQ12    */
+/*##     Processor : MK21FN1M0VMC12    */
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2014-01-14, 15:49, # CodeGen: 1 */
+/*##     Date/Time : 2014-01-15, 16:52, # CodeGen: 11 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */

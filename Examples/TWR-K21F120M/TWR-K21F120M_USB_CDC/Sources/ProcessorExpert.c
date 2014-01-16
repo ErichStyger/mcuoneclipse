@@ -1,7 +1,7 @@
 /* ###################################################################
 **     Filename    : ProcessorExpert.c
 **     Project     : ProcessorExpert
-**     Processor   : MK21FN1M0VLQ12
+**     Processor   : MK21FN1M0VMC12
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
 **     Date/Time   : 2014-01-14, 15:42, # CodeGen: 0

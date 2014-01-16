@@ -1,7 +1,7 @@
 /* ###################################################################
 **     Filename    : Events.c
 **     Project     : ProcessorExpert
-**     Processor   : MK21FN1M0VLQ12
+**     Processor   : MK21FN1M0VMC12
 **     Component   : Events
 **     Version     : Driver 01.00
 **     Compiler    : GNU C Compiler

@@ -3,8 +3,8 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>9</ModificationStamp>
-    <Date>2014-01-14</Date>
+    <ModificationStamp>10</ModificationStamp>
+    <Date>2014-01-15</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.8.1.RT5_b1349-1839</PEversion>
   </Header>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>35</ProjectCompNumb>
+    <ProjectCompNumb>39</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -40,9 +40,9 @@
     <ProjectStaticFilesGenerationMode>LINKED</ProjectStaticFilesGenerationMode>
   </Options>
   <CPU>
-    <BeanType>MK21FN1M0LQ12</BeanType>
+    <BeanType>MK21FN1M0MC12</BeanType>
     <Name>Cpu</Name>
-    <CompNumb>4</CompNumb>
+    <CompNumb>35</CompNumb>
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>CPU_CHIP2</IconName>
@@ -62,7 +62,7 @@
         <ItemSymbol>CPU</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>MK21FN1M0VLQ12</Value>
+        <Value>MK21FN1M0VMC12</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>SharedInternalProperties</ItemSymbol>
@@ -96,7 +96,7 @@
         <ItemSymbol>ClockSettingGrp</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>ICLK</ItemSymbol>
@@ -11407,7 +11407,7 @@
         <ItemState>
           <ItemSymbol>InitializationState</ItemSymbol>
           <ReadOnly>false</ReadOnly>
-          <Value>User_PE_initialization</Value>
+          <Value>Defaul_PE_initialization</Value>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         </ItemState>
         <ItemState>
@@ -11945,7 +11945,7 @@
       <AsmDataFormat>HEX</AsmDataFormat>
       <AsmBitsFormat>HEX</AsmBitsFormat>
       <CPUDB_Settings>
-        <CpuType>MK21FN1M0VLQ12</CpuType>
+        <CpuType>MK21FN1M0VMC12</CpuType>
         <ActualClock>4</ActualClock>
         <ActualClockLow>32.768000000000</ActualClockLow>
         <DeviceNamesDefines>
@@ -11958,30 +11958,30 @@
     <CompNumb>3</CompNumb>
     <NodeName>FLASH</NodeName>
     <CnfgEnabled>true</CnfgEnabled>
-    <TargetCPU>4</TargetCPU>
+    <TargetCPU>35</TargetCPU>
     <ConfigurationComment lines_count="0" />
     <BoolList_FpgaConfig>
       <Count>0</Count>
     </BoolList_FpgaConfig>
     <BoolList_BeanConfig>
       <Count>9</Count>
-      <ItemId0>4</ItemId0>
-      <Value0>false</Value0>
-      <ItemId1>11</ItemId1>
+      <ItemId0>11</ItemId0>
+      <Value0>true</Value0>
+      <ItemId1>14</ItemId1>
       <Value1>true</Value1>
-      <ItemId2>14</ItemId2>
+      <ItemId2>17</ItemId2>
       <Value2>true</Value2>
-      <ItemId3>17</ItemId3>
+      <ItemId3>20</ItemId3>
       <Value3>true</Value3>
-      <ItemId4>20</ItemId4>
+      <ItemId4>23</ItemId4>
       <Value4>true</Value4>
-      <ItemId5>23</ItemId5>
+      <ItemId5>32</ItemId5>
       <Value5>true</Value5>
-      <ItemId6>32</ItemId6>
+      <ItemId6>33</ItemId6>
       <Value6>true</Value6>
-      <ItemId7>33</ItemId7>
+      <ItemId7>34</ItemId7>
       <Value7>true</Value7>
-      <ItemId8>34</ItemId8>
+      <ItemId8>35</ItemId8>
       <Value8>true</Value8>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
@@ -16834,7 +16834,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.026</BeanVersion>
+          <BeanVersion>01.027</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
