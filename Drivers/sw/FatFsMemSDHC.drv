@@ -613,6 +613,7 @@ DSTATUS disk_initialize (
       }
       SD_Wait(&SD, &Error);
     }
+#if 0 /* the code below is causing problems, disabled for now */
     if (!Error) {
       /* switching gears for higher speed */
       Error = %@SDHC@'ModuleName'%.SelectBusClock(SD.SDHCPtr, (%@SDHC@'ModuleName'%.TBusClock)%'ModuleName'%.SPEED_INDEX_NORMAL)!=ERR_OK;
@@ -633,6 +634,7 @@ DSTATUS disk_initialize (
       }
       SD_Wait(&SD, &Error);
     }
+#endif
   }
   Stat &= ~STA_NOINIT;                                           %>40 /* Clear STA_NOINIT */
   return Stat;
