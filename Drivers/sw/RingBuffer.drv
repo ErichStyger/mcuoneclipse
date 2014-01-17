@@ -99,21 +99,30 @@
 %- Write your own types here ...
 %-  Example:
 %-    typedef int TMyInteger;
-#define %'ModuleName'%.BUF_SIZE   %BufferSize  /* number of elements in the buffer */
-%if %ElementSize="1"
-typedef uint8_t %'ModuleName'_ElementType; /* type of single element */
-%elif %ElementSize="2"
-typedef uint16_t %'ModuleName'_ElementType; /* type of single element */
-%elif %ElementSize="4"
-typedef uint32_t %'ModuleName'_ElementType; /* type of single element */
+#define %'ModuleName'%.BUF_SIZE    %BufferSize   /* number of elements in the buffer */
+#define %'ModuleName'%.ELEM_SIZE   %ElementSize  /* size of a single element in bytes */
+%if %isReentrant='yes'
+  #define %'ModuleName'%.IS_REENTRANT   1  /* 1: Critical section used for accessing shared data, 0 otherwise */
 %else
-#error "illegal element type size in properties"
+  #define %'ModuleName'%.IS_REENTRANT   0  /* 0: Critical section NOT used for accessing shared data, 1 otherwise  */
 %endif
-typedef uint8_t %'ModuleName'_ElementSizeType; /* support up to 256 elements */
+#if %'ModuleName'%.ELEM_SIZE==1
+  typedef uint8_t %'ModuleName'_ElementType; /* type of single element */
+#elif %'ModuleName'%.ELEM_SIZE==2
+  typedef uint16_t %'ModuleName'_ElementType; /* type of single element */
+#elif %'ModuleName'%.ELEM_SIZE==4
+  typedef uint32_t %'ModuleName'_ElementType; /* type of single element */
+#else
+  #error "illegal element type size in properties"
+#endif
+#if %'ModuleName'%.BUF_SIZE<=256
+  typedef uint8_t %'ModuleName'_BufSizeType; /* up to 256 elements (index 0x00..0xff) */
+#else
+  typedef uint16_t %'ModuleName'_BufSizeType; /* more than 256 elements, up to 2^16 */
+#endif
+
 %-
 %-BW_CUSTOM_USERTYPE_END
-
-
 %-BW_DEFINITION_START
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Put
@@ -138,7 +147,7 @@ byte %'ModuleName'%.%Get(%'ModuleName'_ElementType *elemP);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN NofElements
 %ifdef NofElements
-%'ModuleName'_ElementSizeType %'ModuleName'%.%NofElements(void);
+%'ModuleName'_BufSizeType %'ModuleName'%.%NofElements(void);
 %define! RetVal
 %include Common\RingBufferNofElements.Inc
 
@@ -155,7 +164,7 @@ void %'ModuleName'%.%Init(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN NofFreeElements
 %ifdef NofFreeElements
-%'ModuleName'_ElementSizeType %'ModuleName'%.%NofFreeElements(void);
+%'ModuleName'_BufSizeType %'ModuleName'%.%NofFreeElements(void);
 %define! RetVal
 %include Common\RingBufferNofFreeElements.Inc
 
@@ -217,10 +226,17 @@ void %OnBufferEmpty(void);
 %-   Example:
 %-     static int counter1;
 %-     int %'ModuleName'%.counter2;
+#if %'ModuleName'%.IS_REENTRANT
+  #define %'ModuleName'%.ENTER_CRITICAL()  EnterCritical()
+  #define %'ModuleName'%.EXIT_CRITICAL()   ExitCritical()
+#else
+  #define %'ModuleName'%.ENTER_CRITICAL()  /* nothing */
+  #define %'ModuleName'%.EXIT_CRITICAL()   /* nothing */
+#endif
 static %'ModuleName'_ElementType %'ModuleName'%.buffer[%'ModuleName'%.BUF_SIZE]; /* ring buffer */
-static %'ModuleName'_ElementSizeType %'ModuleName'%.inIdx;  /* input index */
-static %'ModuleName'_ElementSizeType %'ModuleName'%.outIdx; /* output index */
-static %'ModuleName'_ElementSizeType %'ModuleName'%.inSize; /* size of input data */
+static %'ModuleName'_BufSizeType %'ModuleName'%.inIdx;  /* input index */
+static %'ModuleName'_BufSizeType %'ModuleName'%.outIdx; /* output index */
+static %'ModuleName'_BufSizeType %'ModuleName'%.inSize; /* size data in buffer */
 %-
 %-BW_CUSTOM_VARIABLE_END
 %-BW_INTERN_METHOD_DECL_START
@@ -237,7 +253,7 @@ byte %'ModuleName'%.%Put(%'ModuleName'_ElementType elem)
 {
   byte res = ERR_OK;
 
-  EnterCritical();
+  %'ModuleName'%.ENTER_CRITICAL();
   if (%'ModuleName'%.inSize==%'ModuleName'%.BUF_SIZE) {
     res = ERR_TXFULL;
   } else {
@@ -248,7 +264,7 @@ byte %'ModuleName'%.%Put(%'ModuleName'_ElementType elem)
       %'ModuleName'%.inIdx = 0;
     }
   }
-  ExitCritical();
+  %'ModuleName'%.EXIT_CRITICAL();
 %if defined(OnBufferFull)
   if (res==ERR_TXFULL) {
     %OnBufferFull(); /* call user event */
@@ -269,7 +285,7 @@ byte %'ModuleName'%.%Get(%'ModuleName'_ElementType *elemP)
 {
   byte res = ERR_OK;
 
-  EnterCritical();
+  %'ModuleName'%.ENTER_CRITICAL();
   if (%'ModuleName'%.inSize==0) {
     res = ERR_RXEMPTY;
   } else {
@@ -280,7 +296,7 @@ byte %'ModuleName'%.%Get(%'ModuleName'_ElementType *elemP)
       %'ModuleName'%.outIdx = 0;
     }
   }
-  ExitCritical();
+  %'ModuleName'%.EXIT_CRITICAL();
 %if defined(OnBufferEmpty)
   if (res==ERR_RXEMPTY) {
     %OnBufferEmpty(); /* call user event */
@@ -296,7 +312,7 @@ byte %'ModuleName'%.%Get(%'ModuleName'_ElementType *elemP)
 %ifdef NofElements
 %define! RetVal
 %include Common\RingBufferNofElements.Inc
-%'ModuleName'_ElementSizeType %'ModuleName'%.%NofElements(void)
+%'ModuleName'_BufSizeType %'ModuleName'%.%NofElements(void)
 {
   return %'ModuleName'%.inSize;
 }
@@ -308,9 +324,9 @@ byte %'ModuleName'%.%Get(%'ModuleName'_ElementType *elemP)
 %ifdef NofFreeElements
 %define! RetVal
 %include Common\RingBufferNofFreeElements.Inc
-%'ModuleName'_ElementSizeType %'ModuleName'%.%NofFreeElements(void)
+%'ModuleName'_BufSizeType %'ModuleName'%.%NofFreeElements(void)
 {
-  return (%'ModuleName'_ElementSizeType)(%'ModuleName'%.BUF_SIZE-%'ModuleName'%.inSize);
+  return (%'ModuleName'_BufSizeType)(%'ModuleName'%.BUF_SIZE-%'ModuleName'%.inSize);
 }
 
 %endif %- NofFreeElements
@@ -334,9 +350,9 @@ void %'ModuleName'%.%Init(void)
 %include Common\RingBufferClear.Inc
 void %'ModuleName'%.%Clear(void)
 {
-  EnterCritical();
+  %'ModuleName'%.ENTER_CRITICAL();
   %'ModuleName'%.%Init();
-  ExitCritical();
+  %'ModuleName'%.EXIT_CRITICAL();
 }
 
 %endif %- Clear

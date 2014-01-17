@@ -4,7 +4,7 @@
     <Name>RingBuffer</Name>
     <Description>Implements a ring buffer for 16bit elements</Description>
     <Author>Erich Styger</Author>
-    <Version>01.015</Version>
+    <Version>01.020</Version>
     <Icon>RingBuffer</Icon>
     <TypesFiles>PE,RingBuffer\RingBuffer</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -19,7 +19,7 @@
     <BW_NeedUst>2</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2013, all rights reserved.\nWeb: http://www.mcuoneclipse.com\n\nThis an open source software of an embedded component for Processor Expert.\nThis is a free software and is opened for education,  research  and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
+    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2014, all rights reserved.\nWeb: http://www.mcuoneclipse.com\n\nThis an open source software of an embedded component for Processor Expert.\nThis is a free software and is opened for education,  research  and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
     <Category>SW-User Components</Category>
     <DemoDriver>no</DemoDriver>
     <BeanLevel>High</BeanLevel>
@@ -40,13 +40,13 @@
       <TIntgItem>
         <Name>Buffer Size</Name>
         <Symbol>BufferSize</Symbol>
-        <Hint>Number of elements for the buffer</Hint>
+        <Hint>Number of elements for the buffer. If using &lt;= 256 bytes, 8bit index type is used., otherwise a 16bit one.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>true</EditLine>
         <DefaultValue>1</DefaultValue>
         <MinValue>1</MinValue>
-        <MaxValue>255</MaxValue>
-        <Bases>DEC</Bases>
+        <MaxValue>65535</MaxValue>
+        <Bases>DEC HEX</Bases>
         <DefaultBase>DEC</DefaultBase>
         <ExtraHintDisabled>false</ExtraHintDisabled>
         <ChangeValueIntoRange>false</ChangeValueIntoRange>
@@ -68,6 +68,24 @@
         <CanDelete>false</CanDelete>
         <IconPopup>false</IconPopup>
       </TEnumItem>
+    </Property>
+    <Property>
+      <TBoolItem>
+        <Name>Reentrant</Name>
+        <Symbol>isReentrant</Symbol>
+        <TypeSpec>typeYesNo</TypeSpec>
+        <Hint>If the driver shall be reentrant. If set to 'yes', then a critical section is used to access the global ring buffer data.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+      </TBoolItem>
     </Property>
   </PropertyList>
   <MethodList>
@@ -186,12 +204,12 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>ElementSizeType</ReturnType>
+        <ReturnType>BufSizeType</ReturnType>
         <RetHint>Number of elements in the buffer.</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>%'ModuleName'_ElementSizeType #M#_#C#(void)</ANSIC>
+          <ANSIC>%'ModuleName'_BufSizeType #M#_#C#(void)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -214,12 +232,12 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>ElementSizeType</ReturnType>
+        <ReturnType>BufSizeType</ReturnType>
         <RetHint>Number of elements in the buffer.</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>%'ModuleName'_ElementSizeType #M#_#C#(void)</ANSIC>
+          <ANSIC>%'ModuleName'_BufSizeType #M#_#C#(void)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

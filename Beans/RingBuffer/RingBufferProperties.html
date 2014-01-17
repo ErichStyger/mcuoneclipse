@@ -222,7 +222,7 @@ LI.EXP {
 </li>
 <li>
 <a name="BufferSize">
-<b>Buffer Size</b></a> - Number of elements for the buffer
+<b>Buffer Size</b></a> - Number of elements for the buffer. If using &lt;= 256 bytes, 8bit index type is used., otherwise a 16bit one.
 </li>
 <li>
 <a name="ElementSize">
@@ -234,6 +234,10 @@ There are 3 options:<br />
   <li><u>4 Bytes</u>: 4 Bytes</li>
 </ul><br />
 
+</li>
+<li>
+<a name="isReentrant">
+<b>Reentrant</b></a> - If the driver shall be reentrant. If set to 'yes', then a critical section is used to access the global ring buffer data.
 </li>
 
      </ul>
