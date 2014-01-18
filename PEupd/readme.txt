@@ -27,14 +27,14 @@ Package from component(s):
 - DCF77 version 01.060
 - FAT_FileSystem version 01.148
 - FatFsMem_USB_MSD version 01.019
-- FatFsMemSDHC version 01.007
+- FatFsMemSDHC version 01.013
 - FontDisplay version 01.195
 - FreeRTOS version 01.325
 - FreeRTOSTrace version 01.003
-- FSL_USB_CDC_Device version 01.024
-- FSL_USB_HID_Keyboard_Device version 01.050
-- FSL_USB_HID_Mouse_Device version 01.063
-- FSL_USB_MSD_Host version 01.016
+- FSL_USB_CDC_Device version 01.028
+- FSL_USB_HID_Keyboard_Device version 01.052
+- FSL_USB_HID_Mouse_Device version 01.065
+- FSL_USB_MSD_Host version 01.018
 - FSL_USB_Stack version 01.024
 - FSShell version 01.231
 - FXOS8700CQ version 01.015
@@ -70,7 +70,8 @@ Package from component(s):
 - MMA8451Q version 01.028
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 06.01.2014
+created 18.01.2014
+
 
 Package from component(s):
 - nRF24L01 version 01.055
@@ -84,8 +85,7 @@ Package from component(s):
 - PtConv version 01.005
 - PWMServo16bit version 01.011
 - QuadCounter version 01.019
-- RingBuffer version 01.015
-- RingBufferUInt8 version 01.007
+- RingBuffer version 01.020
 - RTC_Maxim version 01.003
 - S19 version 01.034
 - S65Sharp version 01.079
@@ -117,12 +117,8 @@ Package from component(s):
 - UISpace version 01.012
 - UIText version 01.059
 - UIWindow version 01.033
-- USB_CMX version 01.027
-- USB_Config_CMX version 01.022
-- USB_HID_CMX version 01.012
-- USB_Host_CMX version 01.058
 - UserInterface version 01.510
 - UTI version 01.125
 - Utility version 01.092
 - Wait version 01.064
-created 06.01.2014
+created 18.01.2014
