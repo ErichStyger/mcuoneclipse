@@ -1,7 +1,7 @@
 /** ###################################################################
 **     Filename    : Events.h
 **     Project     : ProcessorExpert
-**     Processor   : MK60DN512ZVLQ10
+**     Processor   : MK60DN512ZVMD10
 **     Component   : Events
 **     Version     : Driver 01.00
 **     Compiler    : GNU C Compiler

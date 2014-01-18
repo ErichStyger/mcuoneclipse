@@ -6,11 +6,11 @@
 /*##                                   */
 /*##     Project   : ProcessorExpert   */
 /*##                                   */
-/*##     Processor : MK60DN512ZVLQ10   */
+/*##     Processor : MK60DN512ZVMD10   */
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2014-01-11, 12:51, # CodeGen: 16 */
+/*##     Date/Time : 2014-01-18, 11:34, # CodeGen: 22 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */

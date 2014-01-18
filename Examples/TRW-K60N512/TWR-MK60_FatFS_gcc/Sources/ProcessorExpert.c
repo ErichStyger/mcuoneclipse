@@ -1,7 +1,7 @@
 /** ###################################################################
 **     Filename    : ProcessorExpert.c
 **     Project     : ProcessorExpert
-**     Processor   : MK60DN512ZVLQ10
+**     Processor   : MK60DN512ZVMD10
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
 **     Date/Time   : 2013-01-07, 11:24, # CodeGen: 0
