@@ -95,7 +95,11 @@ task.h is included from an application file. */
 #define configADJUSTED_HEAP_SIZE	( configTOTAL_HEAP_SIZE - portBYTE_ALIGNMENT )
 
 /* Allocate the memory for the heap. */
-#if configUSE_HEAP_SECTION_NAME
+#if configUSE_HEAP_SECTION_NAME && configCOMPILER==configCOMPILER_ARM_IAR
+  #pragma language=extended
+  #pragma location = configHEAP_SECTION_NAME_STRING
+  static unsigned char ucHeap[configTOTAL_HEAP_SIZE] @ configHEAP_SECTION_NAME_STRING; 
+#elif configUSE_HEAP_SECTION_NAME
   static unsigned char __attribute__((section (configHEAP_SECTION_NAME_STRING))) ucHeap[configTOTAL_HEAP_SIZE];
 #else
   static unsigned char ucHeap[ configTOTAL_HEAP_SIZE ];

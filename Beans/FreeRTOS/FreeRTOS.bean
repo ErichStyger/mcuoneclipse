@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.325</Version>
+    <Version>01.326</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -1317,7 +1317,7 @@ heap_4.c is particularly useful for applications that want to use the portable l
                   <TStrgItem>
                     <Name>Heap Section Name</Name>
                     <Symbol>HeapSectionName</Symbol>
-                    <Hint>The following will be added to the heap variable: __attribute__((section ("sectionName")))</Hint>
+                    <Hint>The following will be added to the heap variable: __attribute__((section ("sectionName"))). For IAR a similar construct is used.</Hint>
                     <ItemLevel>BASIC</ItemLevel>
                     <EditLine>true</EditLine>
                     <DefaultValue>.m_data_20000000</DefaultValue>
