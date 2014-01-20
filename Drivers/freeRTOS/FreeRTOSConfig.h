@@ -170,7 +170,10 @@
 #define configUSE_HEAP_SECTION_NAME                              %>50 0 /* set to 1 if a custom section name (configHEAP_SECTION_NAME_STRING) shall be used, 0 otherwise */
 %endif
 #if configUSE_HEAP_SECTION_NAME
-  #define configHEAP_SECTION_NAME_STRING                         %>50 "%HeapSectionName" /* heap section name (Use ".m_data_20000000" for gcc and "m_data_20000000" for IAR). Check your linker file for the name used. */
+%if defined(HeapSectionName)
+  #define configHEAP_SECTION_NAME_STRING                         %>50 "%HeapSectionName" /* heap section name (Use ".m_data_20000000" for gcc and "m_data_20000000" %else
+  #define configHEAP_SECTION_NAME_STRING                         %>50 ".m_data_20000000" /* heap section name (Use ".m_data_20000000" for gcc and "m_data_20000000" %endif
+for IAR). Check your linker file for the name used. */
 #endif
 /*----------------------------------------------------------*/
 #define configMAX_TASK_NAME_LEN                                  %>50 %TaskNameLength /* task name length */
