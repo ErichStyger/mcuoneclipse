@@ -47,25 +47,6 @@ void Cpu_OnNMIINT(void);
 */
 
 
-void SM1_OnBlockReceived(LDD_TUserData *UserDataPtr);
-/*
-** ===================================================================
-**     Event       :  SM1_OnBlockReceived (module Events)
-**
-**     Component   :  SM1 [SPIMaster_LDD]
-**     Description :
-**         This event is called when the requested number of data is
-**         moved to the input buffer. This method is available only if
-**         the ReceiveBlock method is enabled.
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**       * UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. The pointer is passed
-**                           as the parameter of Init method. 
-**     Returns     : Nothing
-** ===================================================================
-*/
-
 /* END Events */
 #endif /* __Events_H*/
 

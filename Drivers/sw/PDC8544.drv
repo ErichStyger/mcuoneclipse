@@ -51,7 +51,6 @@
 %- List of descriptions of internal methods
 %define! Description_WriteCmd Writes a command to the display
 %define! Description_WriteData Write a data byte to the display
-%define! Description_Init Display driver initialization
 %ifdef SPILDD
   %ifdef @SPILDD@OnBlockReceived
     %define! Description_%@SPILDD@OnBlockReceived This event is called when the requested number of data is moved to the input buffer. This method is available only if the ReceiveBlock method is enabled. The event services the event of the inherited component and eventually invokes other events.
@@ -230,11 +229,13 @@ void %'ModuleName'%.%ClearLine(byte lineNumber);
 %endif %- ClearLine
 %-BW_METHOD_END ClearLine
 %-************************************************************************************************************
-%-INTERNAL_METHOD_BEG Init
-void %'ModuleName'%.Init(void);
-%include Common\GeneralInternal.inc (Init)
+%-BW_METHOD_BEGIN Init
+%ifdef Init
+void %'ModuleName'%.%Init(void);
+%include Common\PDC8544Init.Inc
 
-%-INTERNAL_METHOD_END Init
+%endif %- Init
+%-BW_METHOD_END Init
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN WriteChar
 %ifdef WriteChar
@@ -397,6 +398,14 @@ void %@SPILDD@OnBlockReceived(LDD_TUserData *UserDataPtr);
 
 %endif %- @SPILDD@OnBlockReceived
 %-INHERITED_EVENT_END SPILDD OnBlockReceived
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Deinit
+%ifdef Deinit
+void %'ModuleName'%.%Deinit(void);
+%include Common\PDC8544Deinit.Inc
+
+%endif %- Deinit
+%-BW_METHOD_END Deinit
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -728,9 +737,10 @@ void %'ModuleName'%.%ClearLine(byte lineNumber)
 %endif %- ClearLine
 %-BW_METHOD_END ClearLine
 %-************************************************************************************************************
-%-INTERNAL_METHOD_BEG Init
-%include Common\GeneralInternal.inc (Init)
-void %'ModuleName'%.Init(void)
+%-BW_METHOD_BEGIN Init
+%ifdef Init
+%include Common\PDC8544Init.Inc
+void %'ModuleName'%.%Init(void)
 {
 %if defined(RESLDD)
   RES_DeviceData = %@RESLDD@'ModuleName'%.Init(NULL); /* device handle for RES pin */
@@ -775,7 +785,8 @@ void %'ModuleName'%.Init(void)
   %'ModuleName'%.%SetPos(0,0);                                   %>40 /* Cursor Home */
 }
 
-%-INTERNAL_METHOD_END Init
+%endif %- Init
+%-BW_METHOD_END Init
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN WriteChar
 %ifdef WriteChar
@@ -1036,6 +1047,25 @@ void %@SPILDD@OnBlockReceived(LDD_TUserData *UserDataPtr)
 
 %endif %- @SPILDD@OnBlockReceived
 %-INHERITED_EVENT_END SPILDD OnBlockReceived
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Deinit
+%ifdef Deinit
+%include Common\PDC8544Deinit.Inc
+void %'ModuleName'%.%Deinit(void)
+{
+%if defined(RESLDD)
+  %@RESLDD@'ModuleName'%.Deinit(RES_DeviceData); /* device handle for RES pin */
+%endif
+%if defined(SCELDD)
+  %@SCELDD@'ModuleName'%.Deinit(SCE_DeviceData); /* device handle for SCE pin */
+%endif
+%if defined(D_CLDD)
+  %@D_CLDD@'ModuleName'%.Deinit(D_C_DeviceData); /* device handle for D_C pin */
+%endif
+}
+
+%endif %- Deinit
+%-BW_METHOD_END Deinit
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
@@ -1059,7 +1089,9 @@ void %OnBlockReceived(LDD_TUserData *UserDataPtr)
 %INITIALIZATION
   /* ### %DeviceType "%DeviceName" init code ... */
 %CODE_BEGIN
+%if %InitializeOnInit='yes'
   %'ModuleName'%.Init();
+%endif
 %CODE_END
 %-
 %ENABLE

@@ -370,6 +370,10 @@ The following items are available only if the group is enabled (the value is "En
   <a name="Wait">
   <b>Wait</b></a> - Interface for busy waiting.
   </li>
+  <li>
+  <a name="InitializeOnInit">
+  <b>Initialize on Init</b></a> - If set to 'yes', it will initialize the driver during startup in PE_low_level_init() inside main(). If set to 'no', it is your responsibility to call the  component Init() method.
+  </li>
 </ul>
 </li>
 
