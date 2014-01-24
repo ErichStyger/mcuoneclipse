@@ -4,7 +4,7 @@
     <Name>Utility</Name>
     <Description>Utility Module</Description>
     <Author>Erich Styger</Author>
-    <Version>01.092</Version>
+    <Version>01.093</Version>
     <Icon>Utility</Icon>
     <TypesFiles>PE,Utility\Utility</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -2302,6 +2302,46 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>int16_t #M#_#C#(const char *, const char *, size_t size)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>strFind</Name>
+        <Symbol>strFind</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Searches a substring inside a string and returns the position.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>16bit signed</ReturnType>
+        <RetHint>-1 if not found, otherwise the character index.</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>str</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to string which will be searched</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>subStr</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to substring to search inside str</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>int16_t #M#_#C#(byte *str, byte *subStr)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

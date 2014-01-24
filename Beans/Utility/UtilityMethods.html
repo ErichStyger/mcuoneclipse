@@ -802,6 +802,19 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="strFind">
+<b>strFind</b></a>
+ - Searches a substring inside a string and returns the position.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> int16_t strFind(byte *str, byte *subStr)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>str: Pointer to byte</i> - Pointer to string which will be searched</li>
+<li><i>subStr: Pointer to byte</i> - Pointer to substring to search inside str</li>
+<li><i>Return value:int16_t</i> - -1 if not found, otherwise the character index.
+</li>
+</ul><br />
+</li>
 <li><a name="strtailcmp">
 <b>strtailcmp</b></a>
  - Compares the tail of a string and returns 0 if it matches, 1 otherwise

@@ -680,6 +680,17 @@ byte %'ModuleName'%.%ScanDecimal32sNumber(const unsigned char **str, uint32_t *v
 
 %endif %- ScanDecimal32sNumber
 %-BW_METHOD_END ScanDecimal32sNumber
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN strFind
+%ifdef strFind
+int16_t %'ModuleName'%.%strFind(byte *str, byte *subStr);
+%define! Parstr
+%define! ParsubStr
+%define! RetVal
+%include Common\UtilitystrFind.Inc
+
+%endif %- strFind
+%-BW_METHOD_END strFind
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -2404,6 +2415,28 @@ void %'ModuleName'%.%strcatNum32sDotValue100(byte *dst, size_t dstSize, long num
 
 %endif %- strcatNum32sDotValue100
 %-BW_METHOD_END strcatNum32sDotValue100
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN strFind
+%ifdef strFind
+%define! Parstr
+%define! ParsubStr
+%define! RetVal
+%include Common\UtilitystrFind.Inc
+int16_t %'ModuleName'%.%strFind(byte *str, byte *subStr)
+{
+  int i, len;
+
+  len = UTIL1_strlen((char*)subStr);
+  for (i=0; *str!='\0'; i++, str++) {
+    if (%'ModuleName'%.%strncmp((char*)str, (char*)subStr, len)==0) {
+      return i; /* found */
+    }
+  }
+  return -1; /* not found */
+}
+
+%endif %- strFind
+%-BW_METHOD_END strFind
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
