@@ -3,8 +3,9 @@
  * \brief Implementation of sockets for W5100
  * \author (c) 2014 Erich Styger, http://mcuoneclipse.com/
  * \note MIT License (http://opensource.org/licenses/mit-license.html).
- * This module is based on the fantastic work and blog of rwb:
- * (http://www.ermicro.com/blog/?p=1773).
+ * Credits to:
+ * - http://www.ermicro.com/blog/?p=1773
+ * - http://www.seanet.com/~karllunt/w5100_library.html
  *
  * This module implements sockets for W5100.
  */
@@ -13,198 +14,198 @@
 #include "w5100.h"
 #include "WAIT1.h"
 
-#define _DEBUG_MODE  0
-
-void SOCK_Close(uint8_t sock) {
+uint8_t SOCK_CloseSocket(uint8_t sock) {
   uint8_t val;
+  uint16_t sockaddr;
   
-  if (sock!=0) {
-    return;
+  if (sock>=W5100_NUM_SOCKETS) {
+    return ERR_VALUE;
   }
+  sockaddr = W5100_SKT_BASE(sock);
   /* Send Close Command */
-  W5100_MemWriteByte(W5100_S0_CR, W5100_CR_CLOSE);
+  W5100_MemWriteByte(sockaddr+W5100_CR_OFFSET, W5100_CR_CLOSE);
   do { /* Waiting until the S0_CR is clear */
-    W5100_MemReadByte(W5100_S0_CR, &val);
+    W5100_MemReadByte(sockaddr+W5100_CR_OFFSET, &val);
   } while(val!=0);
+  return ERR_OK;
 }
 
-void SOCK_Disconnect(uint8_t sock) {
+uint8_t SOCK_Disconnect(uint8_t sock) {
   uint8_t val;
+  uint16_t sockaddr;
 
-  if (sock!=0) {
-    return;
+  if (sock>=W5100_NUM_SOCKETS) {
+    return ERR_VALUE;
   }
+  sockaddr = W5100_SKT_BASE(sock);
   /* Send Disconnect Command */
-  W5100_MemWriteByte(W5100_S0_CR, W5100_CR_DISCON);
+  W5100_MemWriteByte(sockaddr+W5100_CR_OFFSET, W5100_CR_DISCON);
   do { /* Wait for Disconnecting Process */
-    W5100_MemReadByte(W5100_S0_CR, &val);
+    W5100_MemReadByte(sockaddr+W5100_CR_OFFSET, &val);
   } while(val!=0);
+  return ERR_OK;
 }
 
-uint8_t SOCK_Socket(uint8_t sock, uint8_t eth_protocol, uint16_t tcp_port) {
-  uint8_t val, retval = 0;
+uint8_t SOCK_OpenSocket(uint8_t sock, uint8_t eth_protocol, uint16_t tcp_port) {
+  uint8_t val;
+  uint16_t sockaddr;
 
-  if (sock!=0) {
-    return retval;
+  if (sock>=W5100_NUM_SOCKETS) {
+    return ERR_VALUE; /* out of range */
   }
+  sockaddr =  W5100_SKT_BASE(sock);
   /* Make sure we close the socket first */
-  if (W5100_MemReadByte(W5100_S0_SR, &val)!=ERR_OK) {
-    return 0; /* failure */
+  if (W5100_MemReadByte(sockaddr+W5100_SR_OFFSET, &val)!=ERR_OK) {
+    return ERR_FAILED; /* failure */
   }
   if (val==W5100_SOCK_CLOSED) {
-    SOCK_Close(sock);
+    /* make sure we close the socket */
+    SOCK_CloseSocket(sock);
   }
   /* Assigned Socket 0 Mode Register */
-  W5100_MemWriteByte(W5100_S0_MR, eth_protocol);
+  W5100_MemWriteByte(sockaddr+W5100_MR_OFFSET, eth_protocol);
   /* Now open the Socket 0 */
-  W5100_MemWriteWord(W5100_S0_PORT, tcp_port);
-  W5100_MemWriteByte(W5100_S0_CR, W5100_CR_OPEN);  /* Open Socket */
+  W5100_MemWriteWord(sockaddr+W5100_PORT_OFFSET, tcp_port);
+  W5100_MemWriteByte(sockaddr+W5100_CR_OFFSET, W5100_CR_OPEN);  /* Open Socket */
   /* Wait for Opening Process */
   do {
-    W5100_MemReadByte(W5100_S0_CR, &val);
+    W5100_MemReadByte(sockaddr+W5100_CR_OFFSET, &val);
   } while(val!=0);
   /* Check for Init Status */
-  W5100_MemReadByte(W5100_S0_SR, &val);
+  W5100_MemReadByte(sockaddr+W5100_SR_OFFSET, &val);
   if (val==W5100_SOCK_INIT) {
-    retval = 1;
+    return ERR_OK;
   } else {
-    SOCK_Close(sock);
+    SOCK_CloseSocket(sock);
   }
-  return retval;
+  return ERR_FAILED;
 }
 
 uint8_t SOCK_Listen(uint8_t sock) {
-  uint8_t val, retval = 0;
+  uint8_t val;
+  uint16_t sockaddr;
   
-  if (sock!=0) {
-    return retval;
+  if (sock>=W5100_NUM_SOCKETS) {
+    return ERR_VALUE;
   }
-  W5100_MemReadByte(W5100_S0_SR, &val);
+  sockaddr = W5100_SKT_BASE(sock);
+  W5100_MemReadByte(sockaddr+W5100_SR_OFFSET, &val);
   if (val==W5100_SOCK_INIT) {
     /* Send the LISTEN Command */
-    W5100_MemWriteByte(W5100_S0_CR, W5100_CR_LISTEN);
+    W5100_MemWriteByte(sockaddr+W5100_CR_OFFSET, W5100_CR_LISTEN);
     /* Wait for Listening Process */
     do {
-      W5100_MemReadByte(W5100_S0_CR, &val);
+      W5100_MemReadByte(sockaddr+W5100_CR_OFFSET, &val);
     } while(val!=0);
     /* Check for Listen Status */
-    W5100_MemReadByte(W5100_S0_SR, &val);
+    W5100_MemReadByte(sockaddr+W5100_SR_OFFSET, &val);
     if (val==W5100_SOCK_LISTEN) {
-      retval = 1;
+      return ERR_OK;
     } else {
-      SOCK_Close(sock);
+      SOCK_CloseSocket(sock);
     }
   }
-  return retval;
+  return ERR_FAILED;
 }
 
-uint16_t SOCK_Send(uint8_t sock, const uint8_t *buf, uint16_t buflen) {
-  uint16_t offaddr, realaddr, txsize, timeout;
+uint8_t SOCK_Send(uint8_t sock, const uint8_t *buf, size_t buflen) {
+  uint16_t offaddr, realaddr, txsize, timeout, sockaddr;
   uint8_t val;
 
-  if (buflen<=0 || sock!=0) {
-    return 0;
+  if (buflen<=0 || sock>=W5100_NUM_SOCKETS) {
+    return ERR_VALUE;
   }
-#if _DEBUG_MODE
-  printf("Send Size: %d\n",buflen);
-#endif
+  sockaddr = W5100_SKT_BASE(sock);
   /* Make sure the TX Free Size Register is available */
-  W5100_MemReadWord(W5100_SO_TX_FSR, &txsize);
-#if _DEBUG_MODE
-  printf("TX Free Size: %d\n",txsize);
-#endif
+  W5100_MemReadWord(sockaddr+W5100_TX_FSR_OFFSET, &txsize);
   timeout=0;
   while (txsize<buflen) {
     WAIT1_WaitOSms(1);
     
-    W5100_MemReadWord(W5100_SO_TX_FSR, &txsize);
+    W5100_MemReadWord(sockaddr+W5100_TX_FSR_OFFSET, &txsize);
    /* Timeout for approximately 1000 ms */
    if (timeout++ > 1000) {
-#if _DEBUG_MODE
-     printf("TX Free Size Error!\n");
-#endif
      /* Disconnect the connection */
      SOCK_Disconnect(sock);
-     return 0;
-   }
- }  
- /* Read the Tx Write Pointer */
- W5100_MemReadWord(W5100_S0_TX_WR, &offaddr);
-#if _DEBUG_MODE
-  printf("TX Buffer: %x\n", offaddr);
-#endif  
+     return ERR_FAILED;
+    }
+  }  
+  /* Read the Tx Write Pointer */
+  W5100_MemReadWord(sockaddr+W5100_TX_WR_OFFSET, &offaddr);
   while(buflen) {
     buflen--;
     /* Calculate the real W5100 physical Tx Buffer Address */
-    realaddr = W5100_TXBUFADDR+(offaddr&W5100_TX_BUF_MASK);
+    realaddr = (W5100_TXBUFADDR+(0x0800*sock)) + (offaddr&W5100_TX_BUF_MASK);
     /* Copy the application data to the W5100 Tx Buffer */
     W5100_MemWriteByte(realaddr, *buf);
     offaddr++;
     buf++;
   }
   /* Increase the S0_TX_WR value, so it point to the next transmit */
-  W5100_MemWriteWord(W5100_S0_TX_WR, offaddr);
+  W5100_MemWriteWord(sockaddr+W5100_TX_WR_OFFSET, offaddr);
   /* Now Send the SEND command */
-  W5100_MemWriteByte(W5100_S0_CR, W5100_CR_SEND);
+  W5100_MemWriteByte(sockaddr+W5100_CR_OFFSET, W5100_CR_SEND);
   /* Wait for Sending Process */
   do {
-    W5100_MemReadByte(W5100_S0_CR, &val);
+    W5100_MemReadByte(sockaddr+W5100_CR_OFFSET, &val);
   } while(val!=0);
-  return 1;
+  return ERR_OK;
 }
 
-#define W5100_MAX_BUF 512
-//static uint8_t buf[W5100_MAX_BUF];
+uint8_t SOCK_Receive(uint8_t sock, uint8_t *buf, size_t bufSize, size_t readSize) {
+  uint16_t offaddr, realaddr;
+  uint16_t sockaddr;
 
-uint16_t SOCK_Recv(uint8_t sock, uint8_t *buf, uint16_t buflen) {
-  uint16_t offaddr, realaddr;    
-
-  if (buflen<=0 || sock!=0) {
-    return 1;   
+  if (readSize<=0 || sock>=W5100_NUM_SOCKETS) {
+    return ERR_VALUE; /* failure */
   }
-  /* If the request size > MAX_BUF,just truncate it */
-  if (buflen>W5100_MAX_BUF) {
-    buflen = W5100_MAX_BUF-2;
+  if (readSize>bufSize) { /* If the request size > MAX_BUF, just truncate it */
+    readSize = bufSize-2;
   }
+  sockaddr = W5100_SKT_BASE(sock);
   /* Read the Rx Read Pointer */
-  W5100_MemReadWord(W5100_S0_RX_RD, &offaddr);
-#if _DEBUG_MODE
-  printf("RX Buffer: %x\n",offaddr);
-#endif  
-  while (buflen) {
-    buflen--;
-    realaddr = W5100_RXBUFADDR+(offaddr&W5100_RX_BUF_MASK);
-    W5100_MemWriteByte(realaddr, *buf);
+  W5100_MemReadWord(sockaddr+W5100_RX_RD_OFFSET, &offaddr);
+  while (readSize) {
+    readSize--;
+    realaddr = (W5100_RXBUFADDR + (0x0800*sock))+(offaddr&W5100_RX_BUF_MASK);
+    W5100_MemReadByte(realaddr, buf);
     offaddr++;
     buf++;
   }
-  *buf='\0';  /* String terminated character */
+  *buf='\0';  /* string terminated character */
   /* Increase the S0_RX_RD value, so it point to the next receive */
-  W5100_MemWriteWord(W5100_S0_RX_RD, offaddr);
+  W5100_MemWriteWord(sockaddr+W5100_RX_RD_OFFSET, offaddr);
   /* Now Send the RECV command */
-  W5100_MemWriteByte(W5100_S0_CR, W5100_CR_RECV);
-  WAIT1_Waitus(5);    // Wait for Receive Process
-  return 1;
+  W5100_MemWriteByte(sockaddr+W5100_CR_OFFSET, W5100_CR_RECV);
+  WAIT1_Waitus(5);    /* Wait for Receive Process */
+  return ERR_OK;
 }
 
-
-uint16_t SOCK_Recv_size(void) {
-  uint16_t val;
+uint8_t SOCK_ReceivedSize(uint8_t sock, uint16_t *rxSize) {
+  uint16_t sockaddr;
   
-  W5100_MemReadWord(W5100_S0_RX_RSR, &val);
-  return val;
-}
-
-int strindex(char *s, char *t) {
-  uint16_t i,n;
-
-  n=UTIL1_strlen(t);
-  for(i=0;*(s+i); i++) {
-    if (UTIL1_strncmp(s+i,t,n) == 0)
-      return i;
+  *rxSize = 0;
+  if (sock>=W5100_NUM_SOCKETS)  {
+    return ERR_VALUE;
   }
-  return -1;
+  sockaddr = W5100_SKT_BASE(sock); // calc base addr for this socket
+  return W5100_MemReadWord(sockaddr+W5100_RX_RSR_OFFSET, rxSize);
 }
 
-void SOCK_Init(void) { 
+uint8_t SOCK_GetStatus(uint8_t sock, uint8_t *status) {
+  uint16_t sockaddr;
+  
+  if (sock>=W5100_NUM_SOCKETS)  {
+    return ERR_VALUE;
+  }
+  sockaddr = W5100_SKT_BASE(sock);
+  return W5100_MemReadByte(sockaddr+W5100_SR_OFFSET, status);
+}
+
+void SOCK_Deinit(void){
+  /* nothing needed */
+}
+
+void SOCK_Init(void) {
+  /* nothing needed */
 }

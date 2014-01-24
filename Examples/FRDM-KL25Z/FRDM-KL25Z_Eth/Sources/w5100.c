@@ -1,8 +1,13 @@
-/*
- * w5100.c
+/**
+ * \file
+ * \brief Driver for the the W5100
+ * \author (c) 2014 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html).
+ * Credits to:
+ * - http://www.ermicro.com/blog/?p=1773
+ * - http://www.seanet.com/~karllunt/w5100_library.html
  *
- *  Created on: Jan 3, 2014
- *      Author: tastyger
+ * This module is implements a low level driver for the W5100 chip.
  */
 
 /* https://github.com/braiden/embedded-ac-controller/blob/master/w5100.c */
@@ -53,6 +58,8 @@ static void SPIWriteByte(unsigned char write) {
   (void)SM1_ReceiveBlock(SM1_DeviceData, &dummy, sizeof(dummy));
   (void)SM1_SendBlock(SM1_DeviceData, &write, sizeof(write));
   while(!W5100_DataReceivedFlag){}
+  // GetBlockReceivedStatus()?
+  // while (SS1_GetBlockReceivedStatus(slaveDevData1)); /* Wait until data block is transmitted/received */
 }
 
 static uint8_t SPIReadByte(void) {

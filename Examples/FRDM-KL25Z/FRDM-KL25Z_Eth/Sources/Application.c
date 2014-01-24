@@ -14,6 +14,7 @@
 #include "FAT1.h"
 #include "w5100.h"
 #include "socket.h"
+#include "Server.h"
 
 static bool cardMounted = FALSE;
 static FAT1_FATFS fileSystemObject;
@@ -57,7 +58,6 @@ uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, CLS1_ConstStdI
   }
   return ERR_OK; /* no error */
 }
-
 
 static const w5100_config_t W5100_config = {
   {192, 168, 1, 1}, /* gateway */
@@ -103,9 +103,10 @@ static void WiznetSetup(void) {
 static portTASK_FUNCTION(Task1, pvParameters) {
   (void)pvParameters; /* parameter not used */
   WiznetSetup();
+  CLS1_SendStr((unsigned char*)"Running web server...\r\n", CLS1_GetStdio()->stdOut);
   for(;;) {
-    LED1_Neg();
-    FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
+    SERVER_Process(0);
+    FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
   }
 }
 
@@ -114,6 +115,7 @@ void APP_Run(void) {
   SHELL_Init();
   W5100_Init();
   SOCK_Init();
+  SERVER_Init();
   if (FRTOS1_xTaskCreate(
         Task1,  /* pointer to the task */
         (signed char *)"Task1", /* task name for kernel awareness debugging */

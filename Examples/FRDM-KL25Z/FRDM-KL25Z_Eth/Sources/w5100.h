@@ -3,6 +3,9 @@
  * \brief This is the interface to the W5100.
  * \author (c) 2014 Erich Styger, http://mcuoneclipse.com/
  * \note MIT License (http://opensource.org/licenses/mit-license.html).
+ * Credits to:
+ * - http://www.ermicro.com/blog/?p=1773
+ * - http://www.seanet.com/~karllunt/w5100_library.html
  *
  * This module provides an interface to the Wiztronic W5100 Ethernet chip.
  */
@@ -134,7 +137,7 @@
 #define W5100_Sn_IR_DISCON 1
 #define W5100_Sn_IR_CON 0
 
-/* S0_SR values */
+/* S0_SR socket status values */
 #define W5100_SOCK_CLOSED      0x00   /* Closed */
 #define W5100_SOCK_INIT        0x13   /* Init state */
 #define W5100_SOCK_LISTEN      0x14   /* Listen state */
@@ -168,6 +171,54 @@ typedef struct w5100_config {
   uint8_t hwaddr[6]; /* hardware MAC address, e.g. 90:a2:da:0D:42:dd */
   uint8_t ipaddr[4]; /* own IP address, e.g. 192.168.0.90 */
 } w5100_config_t;
+
+/*
+ *  Use W5100_SKT_REG_BASE and W5100_SKT_OFFSET to calc the address of each set of socket registers.
+ *  For example, the base address of the socket registers for socket 2 would be:
+ *  (W5100_SKT_REG_BASE + (2 * W5100_SKT_OFFSET))
+ */
+#define  W5100_SKT_REG_BASE   0x0400    /* start of socket registers */
+#define  W5100_SKT_OFFSET     0x0100    /* offset to each socket regester set */
+#define  W5100_SKT_BASE(n)    (W5100_SKT_REG_BASE+(n*W5100_SKT_OFFSET))
+#define  W5100_NUM_SOCKETS    4
+
+/*
+ *  The following offsets are added to a socket's base register address to find
+ *  a specific socket register.  For example, the address of the command register
+ *  for socket 2 would be:
+ *  (W5100_SKT_BASE(2) + W5100_CR_OFFSET
+ */
+#define  W5100_MR_OFFSET      0x0000    /* socket Mode Register offset */
+#define  W5100_CR_OFFSET      0x0001    /* socket Command Register offset */
+#define  W5100_IR_OFFSET      0x0002    /* socket Interrupt Register offset */
+#define  W5100_SR_OFFSET      0x0003    /* socket Status Register offset */
+#define  W5100_PORT_OFFSET    0x0004    /* socket Port Register offset (2 bytes) */
+#define  W5100_DHAR_OFFSET    0x0006    /* socket Destination Hardware Address Register (MAC, 6 bytes) */
+#define  W5100_DIPR_OFFSET    0x000C    /* socket Destination IP Address Register (IP, 4 bytes) */
+#define  W5100_DPORT_OFFSET   0x0010    /* socket Destination Port Register (2 bytes) */
+#define  W5100_MSS_OFFSET     0x0012    /* socket Maximum Segment Size (2 bytes) */
+#define  W5100_PROTO_OFFSET   0x0014    /* socket IP Protocol Register */
+#define  W5100_TOS_OFFSET     0x0015    /* socket Type Of Service Register */
+#define  W5100_TTL_OFFSET     0x0016    /* socket Time To Live Register */
+#define  W5100_TX_FSR_OFFSET  0x0020    /* socket Transmit Free Size Register (2 bytes) */
+#define  W5100_TX_RR_OFFSET   0x0022    /* socket Transmit Read Pointer Register (2 bytes) */
+#define  W5100_TX_WR_OFFSET   0x0024    /* socket Transmit Write Pointer Register (2 bytes) */
+#define  W5100_RX_RSR_OFFSET  0x0026    /* socket Receive Received Size Register (2 bytes) */
+#define  W5100_RX_RD_OFFSET   0x0028    /* socket Receive Read Pointer Register (2 bytes) */
+
+/*
+ *  The following #defines are values written to a socket's Mode register to select
+ *  the protocol and other operating characteristics.
+ */
+#define  W5100_SKT_MR_CLOSE     0x00      /* Unused socket */
+#define  W5100_SKT_MR_TCP   0x01      /* TCP */
+#define  W5100_SKT_MR_UDP   0x02      /* UDP */
+#define  W5100_SKT_MR_IPRAW     0x03      /* IP LAYER RAW SOCK */
+#define  W5100_SKT_MR_MACRAW  0x04      /* MAC LAYER RAW SOCK */
+#define  W5100_SKT_MR_PPPOE     0x05      /* PPPoE */
+#define  W5100_SKT_MR_ND    0x20      /* No Delayed Ack(TCP) flag */
+#define  W5100_SKT_MR_MULTI     0x80      /* support multicasting */
+
 
 /*!
  * \brief Requests the SPI bus and sets the CS low.
