@@ -121,7 +121,6 @@ uint8_t SOCK_Send(uint8_t sock, const uint8_t *buf, size_t buflen) {
   timeout=0;
   while (txsize<buflen) {
     WAIT1_WaitOSms(1);
-    
     W5100_MemReadWord(sockaddr+W5100_TX_FSR_OFFSET, &txsize);
    /* Timeout for approximately 1000 ms */
    if (timeout++ > 1000) {
@@ -159,7 +158,7 @@ uint8_t SOCK_Receive(uint8_t sock, uint8_t *buf, size_t bufSize, size_t readSize
   if (readSize<=0 || sock>=W5100_NUM_SOCKETS) {
     return ERR_VALUE; /* failure */
   }
-  if (readSize>bufSize) { /* If the request size > MAX_BUF, just truncate it */
+  if (readSize>bufSize) { /* If the requested size > MAX_BUF, just truncate it */
     readSize = bufSize-2;
   }
   sockaddr = W5100_SKT_BASE(sock);

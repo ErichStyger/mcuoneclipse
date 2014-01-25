@@ -210,14 +210,14 @@ typedef struct w5100_config {
  *  The following #defines are values written to a socket's Mode register to select
  *  the protocol and other operating characteristics.
  */
-#define  W5100_SKT_MR_CLOSE     0x00      /* Unused socket */
-#define  W5100_SKT_MR_TCP   0x01      /* TCP */
-#define  W5100_SKT_MR_UDP   0x02      /* UDP */
-#define  W5100_SKT_MR_IPRAW     0x03      /* IP LAYER RAW SOCK */
+#define  W5100_SKT_MR_CLOSE   0x00      /* Unused socket */
+#define  W5100_SKT_MR_TCP     0x01      /* TCP */
+#define  W5100_SKT_MR_UDP     0x02      /* UDP */
+#define  W5100_SKT_MR_IPRAW   0x03      /* IP LAYER RAW SOCK */
 #define  W5100_SKT_MR_MACRAW  0x04      /* MAC LAYER RAW SOCK */
-#define  W5100_SKT_MR_PPPOE     0x05      /* PPPoE */
-#define  W5100_SKT_MR_ND    0x20      /* No Delayed Ack(TCP) flag */
-#define  W5100_SKT_MR_MULTI     0x80      /* support multicasting */
+#define  W5100_SKT_MR_PPPOE   0x05      /* PPPoE */
+#define  W5100_SKT_MR_ND      0x20      /* No Delayed Ack(TCP) flag */
+#define  W5100_SKT_MR_MULTI   0x80      /* support multicasting */
 
 
 /*!

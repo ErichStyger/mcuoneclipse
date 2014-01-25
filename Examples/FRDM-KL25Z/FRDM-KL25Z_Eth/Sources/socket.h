@@ -16,6 +16,13 @@
 #include <stddef.h> /* for size_t */
 #include "PE_Types.h"
 
+/*!
+ * \brief Opens a socket
+ * \param sock
+ * \param eth_protocol Ethernet protocol for the socket (TCP, UPD, PPPOE, ...)
+ * \param tcp_port TCP port to be used (typically 80 for HTTP)
+ * \return Error code, ERR_OK for success
+ */
 uint8_t SOCK_OpenSocket(uint8_t sock, uint8_t eth_protocol, uint16_t tcp_port);
 
 /*!

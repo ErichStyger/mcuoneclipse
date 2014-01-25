@@ -22,18 +22,6 @@
 
 static uint8_t buf[512]; /* buffer for HTML code */
 
-int strindex(char *s, char *t) {
-  uint16_t i,n;
-
-  n = UTIL1_strlen(t);
-  for (i=0;*(s+i); i++) {
-    if (UTIL1_strncmp(s+i,t,n) == 0) {
-      return i;
-    }
-  }
-  return -1;
-}
-
 static uint8_t SendPage(uint8_t socket, int8_t temperature, bool ledIsOn) {
   /* construct web page content */
   UTIL1_strcpy(buf, sizeof(buf), (uint8_t*)"HTTP/1.0 200 OK\r\nContent-Type: text/html\r\nPragma: no-cache\r\n\r\n");
@@ -83,7 +71,7 @@ static void CheckData(uint8_t socket, uint8_t *buf, size_t bufSize, uint16_t rsi
         LED1_On();
       }
     }
-    SendPage(socket, 27, LED1_Get());
+    SendPage(socket, 23, LED1_Get());
   }
 }
 
