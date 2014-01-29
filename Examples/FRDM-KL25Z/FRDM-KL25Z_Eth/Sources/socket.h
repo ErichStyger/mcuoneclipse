@@ -19,7 +19,7 @@
 /*!
  * \brief Opens a socket
  * \param sock
- * \param eth_protocol Ethernet protocol for the socket (TCP, UPD, PPPOE, ...)
+ * \param eth_protocol Ethernet protocol for the socket (W5100_SKT_MR_TCP, UPD, PPPOE, ...)
  * \param tcp_port TCP port to be used (typically 80 for HTTP)
  * \return Error code, ERR_OK for success
  */
