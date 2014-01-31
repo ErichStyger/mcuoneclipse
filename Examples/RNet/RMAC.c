@@ -63,6 +63,9 @@ void RMAC_DecodeType(uint8_t *buf, size_t bufSize, RPHY_PacketDesc *packet) {
   if (type&RMAC_MSG_TYPE_REQ_ACK) {
     UTIL1_strcat(buf, bufSize, (unsigned char*)"RACK");
     first = FALSE;
+  } else {
+    UTIL1_strcat(buf, bufSize, (unsigned char*)"NACK");
+    first = FALSE;
   }
   if (type&RMAC_MSG_TYPE_DATA) {
     if (!first) {
