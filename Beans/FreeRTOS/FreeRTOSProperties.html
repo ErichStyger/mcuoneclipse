@@ -227,8 +227,12 @@ LI.EXP {
 <b>RTOS Version</b></a> - Identifies the RTOS version
 </li>
 <li>
-<a name="configCOMPILER">
-<b>Compiler</b></a> - Compiler to be used for code generation<br /><br />
+<a name="CustomPortGroup">
+<b>Custom Port</b></a> - Allows custom settings for FreeRTOS port
+<ul>
+  <li>
+  <a name="configCOMPILER">
+  <b>Compiler</b></a> - Compiler to be used for code generation<br /><br />
 There are 10 options:<br />
 <ul>
   <li><u>automatic</u>: Automatic compiler selection, based on Processor Expert CPU settings</li>
@@ -243,38 +247,60 @@ There are 10 options:<br />
   <li><u>DSC FSL</u>: Freescale DSC compiler</li>
 </ul><br />
 
-</li>
-<li>
-<a name="SourceGenerationOptions">
-<b>Static Sources</b></a> - Source Code Generation Option for the RTOS. With this, the source file generation can be configured so they can be easily used outside of Processor Expert.<br />
-The following items are available only if the group is enabled (the value is "Enabled"):<br />
-
-<ul>
-  <li>
-  <a name="RTOSSrcFolderName">
-  <b>Source Folder</b></a> - RTOS source files are generated into this sub folder name. The name can be empty.
   </li>
   <li>
-  <a name="RTOSHeaderFolderName">
-  <b>Header Folder</b></a> - RTOS header files are generated into this sub folder name. The name can be empty.
-  </li>
-  <li>
-  <a name="RTOSPortFolderName">
-  <b>Port Folder</b></a> - RTOS port depending sources files are generated into this sub folder name. The name can be empty.
-  </li>
-  <li>
-  <a name="UseManualClockValues">
-  <b>Manual Clock Values</b></a> - If enabled, it is using predefined clock values instead of the values from the Processor Expert Cpu.h<br />
+  <a name="SourceGenerationOptions">
+  <b>Static Sources</b></a> - Source Code Generation Option for the RTOS. With this, the source file generation can be configured so they can be easily used outside of Processor Expert.<br />
 The following items are available only if the group is enabled (the value is "Enabled"):<br />
 
   <ul>
     <li>
-    <a name="configCPU_CLOCK_HZ">
-    <b>configCPU_CLOCK_HZ</b></a> - Clock speed of CPU, default is CPU_CORE_CLK_HZ with Processor Expert
+    <a name="RTOSSrcFolderName">
+    <b>Source Folder</b></a> - RTOS source files are generated into this sub folder name. The name can be empty.
     </li>
     <li>
-    <a name="configBUS_CLOCK_HZ">
-    <b>configBUS_CLOCK_HZ</b></a> - Bus clock speed, default is CPU_BUS_CLK_HZ with Processor Expert
+    <a name="RTOSHeaderFolderName">
+    <b>Header Folder</b></a> - RTOS header files are generated into this sub folder name. The name can be empty.
+    </li>
+    <li>
+    <a name="RTOSPortFolderName">
+    <b>Port Folder</b></a> - RTOS port depending sources files are generated into this sub folder name. The name can be empty.
+    </li>
+    <li>
+    <a name="UseManualClockValues">
+    <b>Manual Clock Values</b></a> - If enabled, it is using predefined clock values instead of the values from the Processor Expert Cpu.h<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+    <ul>
+      <li>
+      <a name="configCPU_CLOCK_HZ">
+      <b>configCPU_CLOCK_HZ</b></a> - Clock speed of CPU, default is CPU_CORE_CLK_HZ with Processor Expert
+      </li>
+      <li>
+      <a name="configBUS_CLOCK_HZ">
+      <b>configBUS_CLOCK_HZ</b></a> - Bus clock speed, default is CPU_BUS_CLK_HZ with Processor Expert
+      </li>
+    </ul>
+    </li>
+  </ul>
+  </li>
+  <li>
+  <a name="Custom_portBASE_TYPE">
+  <b>Custom portBASE_TYPE</b></a> - portBASE_TYPE<br />This is defined to be the most efficient, natural, type for the architecture. For example, on a 32-bit architecture portBASE_TYPE will be defined to be a 32-bit type. On a 16-bit architecture portBASE_TYPE will be defined to be a 16-bit type. If portBASE_TYPE is define to char then particular care must be taken to ensure signed chars are used for function return values that can be negative to indicate an error. <br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+  <ul>
+    <li>
+    <a name="portBASE_TYPE">
+    <b>portBASE_TYPE</b></a> - Custom portBASE_TYPE<br /><br />
+There are 4 options:<br />
+<ul>
+  <li><u>char</u>: char</li>
+  <li><u>short</u>: short</li>
+  <li><u>int</u>: int</li>
+  <li><u>long</u>: long</li>
+</ul><br />
+
     </li>
   </ul>
   </li>
@@ -287,10 +313,6 @@ The following items are available only if the group is enabled (the value is "En
 <li>
 <a name="DisabledInterruptsInStartup">
 <b>Disabled Interrupts in Startup</b></a> - If set to 'yes', then interrupts will be disabled in PE_low_level_init() using the PEX_RTOS_INIT() macro.
-</li>
-<li>
-<a name="Utility">
-<b>Utility</b></a> - Interface to utility functions
 </li>
 <li>
 <a name="UseApplicationTaskTags">
@@ -717,6 +739,10 @@ The following items are available only if the group is enabled (the value is "En
   <b>Shell</b></a> - Interface to shell
   </li>
 </ul>
+</li>
+<li>
+<a name="Utility">
+<b>Utility</b></a> - Interface to utility functions
 </li>
 
      </ul>

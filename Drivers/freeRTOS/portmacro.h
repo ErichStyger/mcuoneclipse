@@ -105,32 +105,24 @@ extern "C" {
 #endif
 
 /* Type definitions. */
-%if (CPUfamily = "ColdFireV1") | (CPUfamily = "MCF") | (CPUfamily = "Kinetis")
 #define portCHAR               char
 #define portFLOAT              float
 #define portDOUBLE             double
 #define portLONG               long
 #define portSHORT              short
-#define portSTACK_TYPE         unsigned portLONG
-#define portBASE_TYPE          long
-%elif (CPUfamily = "56800")
-#define portCHAR               char
-#define portFLOAT              float
-#define portDOUBLE             double
-#define portLONG               long
-#define portSHORT              short
-#define portSTACK_TYPE         unsigned long
-#define portBASE_TYPE          long
-%elif (CPUfamily = "HCS08") | (CPUfamily = "HC08") | (CPUfamily = "HCS12") | (CPUfamily = "HCS12X")
-#define portCHAR               char
-#define portFLOAT              float
-#define portDOUBLE             double
-#define portLONG               long
-#define portSHORT              short
-#define portSTACK_TYPE         unsigned char
-#define portBASE_TYPE          char
+#if (configCPU_FAMILY==configCPU_FAMILY_CF1) || (configCPU_FAMILY==configCPU_FAMILY_CF2) || configCPU_FAMILY_IS_ARM(configCPU_FAMILY) || (configCPU_FAMILY==configCPU_FAMILY_DSC)
+  #define portSTACK_TYPE       unsigned long
+#elif (configCPU_FAMILY==configCPU_FAMILY_S08) || (configCPU_FAMILY==configCPU_FAMILY_S12)
+  #define portSTACK_TYPE       unsigned char
+#endif
+%if defined(Custom_portBASE_TYPE) & Custom_portBASE_TYPE='yes'
+#define portBASE_TYPE          %portBASE_TYPE /* custom type as specified in properties */
 %else
-  #error "undefined target %CPUfamily!"
+#if (configCPU_FAMILY==configCPU_FAMILY_CF1) || (configCPU_FAMILY==configCPU_FAMILY_CF2) || configCPU_FAMILY_IS_ARM(configCPU_FAMILY) || (configCPU_FAMILY==configCPU_FAMILY_DSC)
+  #define portBASE_TYPE        long
+#elif (configCPU_FAMILY==configCPU_FAMILY_S08) || (configCPU_FAMILY==configCPU_FAMILY_S12)
+  #define portBASE_TYPE        char
+#endif
 %endif
 
 #if( configUSE_16_BIT_TICKS == 1 )
@@ -147,21 +139,20 @@ extern "C" {
 %endif
 /*-----------------------------------------------------------*/
 /* Hardware specifics. */
-%if (CPUfamily = "ColdFireV1") | (CPUfamily = "MCF")
-#define portBYTE_ALIGNMENT     4
-#define portSTACK_GROWTH       -1 /* stack grows from HIGH to LOW */
-%elif (CPUfamily = "Kinetis")
-#define portBYTE_ALIGNMENT     8
-#define portSTACK_GROWTH       -1 /* stack grows from HIGH to LOW */
-%elif (CPUfamily = "HCS08") | (CPUfamily = "HC08") | (CPUfamily = "HCS12") | (CPUfamily = "HCS12X")
-#define portBYTE_ALIGNMENT     1
-#define portSTACK_GROWTH       -1 /* stack grows from HIGH to LOW */
-%elif (CPUfamily = "56800")
-#define portBYTE_ALIGNMENT     4
-#define portSTACK_GROWTH       1 /* stack grows from LOW to HIGH */
-%else
-  #error "undefined target %CPUfamily!"
-%endif
+#if (configCPU_FAMILY==configCPU_FAMILY_CF1) || (configCPU_FAMILY==configCPU_FAMILY_CF2)
+  #define portBYTE_ALIGNMENT     4
+  #define portSTACK_GROWTH       -1 /* stack grows from HIGH to LOW */
+#elif configCPU_FAMILY_IS_ARM(configCPU_FAMILY)
+  #define portBYTE_ALIGNMENT     8
+  #define portSTACK_GROWTH       -1 /* stack grows from HIGH to LOW */
+#elif (configCPU_FAMILY==configCPU_FAMILY_S08) || (configCPU_FAMILY==configCPU_FAMILY_S12)
+  #define portBYTE_ALIGNMENT     1
+  #define portSTACK_GROWTH       -1 /* stack grows from HIGH to LOW */
+#elif (configCPU_FAMILY==configCPU_FAMILY_DSC)
+  #define portBYTE_ALIGNMENT     4
+  #define portSTACK_GROWTH       1 /* stack grows from LOW to HIGH */
+#endif
+
 #define portTICK_RATE_MS       ((portTickType)1000/configTICK_RATE_HZ)
 /*-----------------------------------------------------------*/
 /* Critical section management. */

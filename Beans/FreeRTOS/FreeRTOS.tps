@@ -195,5 +195,27 @@
         <Line>configCOMPILER_DSC_FSL</Line>
       </Defines>
     </Type>
+    <Type>
+      <Type>TEnumSpec</Type>
+      <Name>typePortBASE_TYPE</Name>
+      <Items lines_count="4">
+        <Line>char</Line>
+        <Line>short</Line>
+        <Line>int</Line>
+        <Line>long</Line>
+      </Items>
+      <Hints lines_count="4">
+        <Line>char</Line>
+        <Line>short</Line>
+        <Line>int</Line>
+        <Line>long</Line>
+      </Hints>
+      <Defines lines_count="4">
+        <Line>char</Line>
+        <Line>short</Line>
+        <Line>int</Line>
+        <Line>long</Line>
+      </Defines>
+    </Type>
   </Types>
 </TypesAndGlobals>

@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.327</Version>
+    <Version>01.335</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -52,98 +52,55 @@
       </TStrgItem>
     </Property>
     <Property>
-      <TEnumItem>
-        <Name>Compiler</Name>
-        <Symbol>configCOMPILER</Symbol>
-        <TypeSpec>type_configCOMPILER</TypeSpec>
-        <Hint>Compiler to be used for code generation</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>true</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>true</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-      </TEnumItem>
-    </Property>
-    <Property>
-      <TBoolGrupItem>
-        <Name>Static Sources</Name>
-        <Symbol>SourceGenerationOptions</Symbol>
-        <TypeSpec>typeEnaDis</TypeSpec>
-        <Hint>Source Code Generation Option for the RTOS. With this, the source file generation can be configured so they can be easily used outside of Processor Expert.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
+      <TGrupItem>
+        <Name>Custom Port</Name>
+        <Symbol>CustomPortGroup</Symbol>
+        <Hint>Allows custom settings for FreeRTOS port</Hint>
+        <ItemLevel>EXPERT</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <Description>Disabled</Description>
+        <Description>Custom port settings</Description>
         <Expanded>No</Expanded>
-        <DefaultValue>false</DefaultValue>
-        <DefineSymbol>YES_NO</DefineSymbol>
-        <IfDisabled>setNOTHING</IfDisabled>
         <Children>
           <GrupItem>
-            <TStrgItem>
-              <Name>Source Folder</Name>
-              <Symbol>RTOSSrcFolderName</Symbol>
-              <Hint>RTOS source files are generated into this sub folder name. The name can be empty.</Hint>
-              <ItemLevel>BASIC</ItemLevel>
+            <TEnumItem>
+              <Name>Compiler</Name>
+              <Symbol>configCOMPILER</Symbol>
+              <TypeSpec>type_configCOMPILER</TypeSpec>
+              <Hint>Compiler to be used for code generation</Hint>
+              <ItemLevel>EXPERT</ItemLevel>
               <EditLine>true</EditLine>
-              <DefaultValue>FreeRTOS\src</DefaultValue>
-              <StrDefine>nothing</StrDefine>
-              <MinLength>0</MinLength>
-              <MaxLength>-1</MaxLength>
-            </TStrgItem>
-          </GrupItem>
-          <GrupItem>
-            <TStrgItem>
-              <Name>Header Folder</Name>
-              <Symbol>RTOSHeaderFolderName</Symbol>
-              <Hint>RTOS header files are generated into this sub folder name. The name can be empty.</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>FreeRTOS\include</DefaultValue>
-              <StrDefine>nothing</StrDefine>
-              <MinLength>0</MinLength>
-              <MaxLength>-1</MaxLength>
-            </TStrgItem>
-          </GrupItem>
-          <GrupItem>
-            <TStrgItem>
-              <Name>Port Folder</Name>
-              <Symbol>RTOSPortFolderName</Symbol>
-              <Hint>RTOS port depending sources files are generated into this sub folder name. The name can be empty.</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>FreeRTOS\port</DefaultValue>
-              <StrDefine>nothing</StrDefine>
-              <MinLength>0</MinLength>
-              <MaxLength>-1</MaxLength>
-            </TStrgItem>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>0</DefaultIndex>
+              <TextValueIndex>true</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+            </TEnumItem>
           </GrupItem>
           <GrupItem>
             <TBoolGrupItem>
-              <Name>Manual Clock Values</Name>
-              <Symbol>UseManualClockValues</Symbol>
+              <Name>Static Sources</Name>
+              <Symbol>SourceGenerationOptions</Symbol>
               <TypeSpec>typeEnaDis</TypeSpec>
-              <Hint>If enabled, it is using predefined clock values instead of the values from the Processor Expert Cpu.h</Hint>
-              <ItemLevel>BASIC</ItemLevel>
+              <Hint>Source Code Generation Option for the RTOS. With this, the source file generation can be configured so they can be easily used outside of Processor Expert.</Hint>
+              <ItemLevel>EXPERT</ItemLevel>
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
-              <Description>Enabled</Description>
-              <Expanded>Yes</Expanded>
-              <DefaultValue>true</DefaultValue>
+              <Description>Disabled</Description>
+              <Expanded>No</Expanded>
+              <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
               <Children>
                 <GrupItem>
                   <TStrgItem>
-                    <Name>configCPU_CLOCK_HZ</Name>
-                    <Symbol>configCPU_CLOCK_HZ</Symbol>
-                    <Hint>Clock speed of CPU, default is CPU_CORE_CLK_HZ with Processor Expert</Hint>
+                    <Name>Source Folder</Name>
+                    <Symbol>RTOSSrcFolderName</Symbol>
+                    <Hint>RTOS source files are generated into this sub folder name. The name can be empty.</Hint>
                     <ItemLevel>BASIC</ItemLevel>
                     <EditLine>true</EditLine>
-                    <DefaultValue>CPU_CORE_CLK_HZ /* CPU core clock from Processor Expert Cpu.h */</DefaultValue>
+                    <DefaultValue>FreeRTOS\src</DefaultValue>
                     <StrDefine>nothing</StrDefine>
                     <MinLength>0</MinLength>
                     <MaxLength>-1</MaxLength>
@@ -151,22 +108,114 @@
                 </GrupItem>
                 <GrupItem>
                   <TStrgItem>
-                    <Name>configBUS_CLOCK_HZ</Name>
-                    <Symbol>configBUS_CLOCK_HZ</Symbol>
-                    <Hint>Bus clock speed, default is CPU_BUS_CLK_HZ with Processor Expert</Hint>
+                    <Name>Header Folder</Name>
+                    <Symbol>RTOSHeaderFolderName</Symbol>
+                    <Hint>RTOS header files are generated into this sub folder name. The name can be empty.</Hint>
                     <ItemLevel>BASIC</ItemLevel>
                     <EditLine>true</EditLine>
-                    <DefaultValue>CPU_BUS_CLK_HZ /* CPU bus clock from Processor Expert Cpu.h */</DefaultValue>
+                    <DefaultValue>FreeRTOS\include</DefaultValue>
                     <StrDefine>nothing</StrDefine>
                     <MinLength>0</MinLength>
                     <MaxLength>-1</MaxLength>
                   </TStrgItem>
                 </GrupItem>
+                <GrupItem>
+                  <TStrgItem>
+                    <Name>Port Folder</Name>
+                    <Symbol>RTOSPortFolderName</Symbol>
+                    <Hint>RTOS port depending sources files are generated into this sub folder name. The name can be empty.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>FreeRTOS\port</DefaultValue>
+                    <StrDefine>nothing</StrDefine>
+                    <MinLength>0</MinLength>
+                    <MaxLength>-1</MaxLength>
+                  </TStrgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolGrupItem>
+                    <Name>Manual Clock Values</Name>
+                    <Symbol>UseManualClockValues</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>If enabled, it is using predefined clock values instead of the values from the Processor Expert Cpu.h</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
+                    <EditLine>false</EditLine>
+                    <Description>Enabled</Description>
+                    <Expanded>Yes</Expanded>
+                    <DefaultValue>true</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TStrgItem>
+                          <Name>configCPU_CLOCK_HZ</Name>
+                          <Symbol>configCPU_CLOCK_HZ</Symbol>
+                          <Hint>Clock speed of CPU, default is CPU_CORE_CLK_HZ with Processor Expert</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>true</EditLine>
+                          <DefaultValue>CPU_CORE_CLK_HZ /* CPU core clock from Processor Expert Cpu.h */</DefaultValue>
+                          <StrDefine>nothing</StrDefine>
+                          <MinLength>0</MinLength>
+                          <MaxLength>-1</MaxLength>
+                        </TStrgItem>
+                      </GrupItem>
+                      <GrupItem>
+                        <TStrgItem>
+                          <Name>configBUS_CLOCK_HZ</Name>
+                          <Symbol>configBUS_CLOCK_HZ</Symbol>
+                          <Hint>Bus clock speed, default is CPU_BUS_CLK_HZ with Processor Expert</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>true</EditLine>
+                          <DefaultValue>CPU_BUS_CLK_HZ /* CPU bus clock from Processor Expert Cpu.h */</DefaultValue>
+                          <StrDefine>nothing</StrDefine>
+                          <MinLength>0</MinLength>
+                          <MaxLength>-1</MaxLength>
+                        </TStrgItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>Custom portBASE_TYPE</Name>
+              <Symbol>Custom_portBASE_TYPE</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>portBASE_TYPE\n
+This is defined to be the most efficient, natural, type for the architecture. For example, on a 32-bit architecture portBASE_TYPE will be defined to be a 32-bit type. On a 16-bit architecture portBASE_TYPE will be defined to be a 16-bit type. If portBASE_TYPE is define to char then particular care must be taken to ensure signed chars are used for function return values that can be negative to indicate an error. </Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Disabled</Description>
+              <Expanded>Yes</Expanded>
+              <DefaultValue>false</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TEnumItem>
+                    <Name>portBASE_TYPE</Name>
+                    <Symbol>portBASE_TYPE</Symbol>
+                    <TypeSpec>typePortBASE_TYPE</TypeSpec>
+                    <Hint>Custom portBASE_TYPE</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                    <DefaultIndex>-1</DefaultIndex>
+                    <TextValueIndex>true</TextValueIndex>
+                    <RuntimeProperty>false</RuntimeProperty>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                  </TEnumItem>
+                </GrupItem>
               </Children>
             </TBoolGrupItem>
           </GrupItem>
         </Children>
-      </TBoolGrupItem>
+      </TGrupItem>
     </Property>
     <Property>
       <TBoolItem>
@@ -174,7 +223,7 @@
         <Symbol>IsClassicCW</Symbol>
         <TypeSpec>typeYesNo</TypeSpec>
         <Hint>If you are using this component in classic (non-eclipse based) CodeWarrior, then this setting has to be set to 'yes'. If you want to know why: The reason is that classic CodeWarrior does not come with the common_RTOSAdaptor.prg file. As such a test has to be present  in FreeRTOS.ts2.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
+        <ItemLevel>EXPERT</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>1</DefaultIndex>
@@ -192,7 +241,7 @@
         <Symbol>DisabledInterruptsInStartup</Symbol>
         <TypeSpec>typeYesNo</TypeSpec>
         <Hint>If set to 'yes', then interrupts will be disabled in PE_low_level_init() using the PEX_RTOS_INIT() macro.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
+        <ItemLevel>EXPERT</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
@@ -205,26 +254,12 @@
       </TBoolItem>
     </Property>
     <Property>
-      <TInhrLinkItem>
-        <Name>Utility</Name>
-        <Symbol>Utility</Symbol>
-        <TypeSpec>Utility_I</TypeSpec>
-        <Hint>Interface to utility functions</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <DefaultValue/>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <SortStyle/>
-      </TInhrLinkItem>
-    </Property>
-    <Property>
       <TBoolItem>
         <Name>Application Task Tags</Name>
         <Symbol>UseApplicationTaskTags</Symbol>
         <TypeSpec>typeYesNo</TypeSpec>
         <Hint>This configures configUSE_APPLICATION_TASK_TAG. If enabled, the methodsxTaskGetApplicationTaskTag(), vTaskSetApplicationTaskTag() and xTaskCallApplicationTaskHook() are enabled.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
+        <ItemLevel>EXPERT</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>1</DefaultIndex>
@@ -1308,7 +1343,7 @@ heap_4.c is particularly useful for applications that want to use the portable l
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
               <Description>Disabled</Description>
-              <Expanded>Yes</Expanded>
+              <Expanded>No</Expanded>
               <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
@@ -1355,7 +1390,7 @@ heap_4.c is particularly useful for applications that want to use the portable l
         <Symbol>CommandInterpreterEnabled</Symbol>
         <TypeSpec>typeEnaDis</TypeSpec>
         <Hint>Settings for the Command Interpreter. Earlier FreeRTOS included an open source command interpreter, now this has moved to a non-free-of-charge FreeRTOS+ version. This port includes for compatibility the original and free version of it.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
+        <ItemLevel>EXPERT</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
         <Description>Disabled</Description>
@@ -1584,6 +1619,20 @@ heap_4.c is particularly useful for applications that want to use the portable l
           </GrupItem>
         </Children>
       </TBoolGrupItem>
+    </Property>
+    <Property>
+      <TInhrLinkItem>
+        <Name>Utility</Name>
+        <Symbol>Utility</Symbol>
+        <TypeSpec>Utility_I</TypeSpec>
+        <Hint>Interface to utility functions</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <DefaultValue/>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <SortStyle/>
+      </TInhrLinkItem>
     </Property>
   </PropertyList>
   <MethodList>
