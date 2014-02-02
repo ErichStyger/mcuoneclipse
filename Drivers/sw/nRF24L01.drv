@@ -615,6 +615,16 @@ byte %'ModuleName'%.%ReadReceivedPowerDetector(byte *rpd);
 
 %endif %- ReadReceivedPowerDetector
 %-BW_METHOD_END ReadReceivedPowerDetector
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetChannel
+%ifdef GetChannel
+byte %'ModuleName'%.%GetChannel(byte *channel);
+%define! Parchannel
+%define! RetVal
+%include Common\nRF24L01GetChannel.Inc
+
+%endif %- GetChannel
+%-BW_METHOD_END GetChannel
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -967,6 +977,20 @@ byte %'ModuleName'%.%SetChannel(byte channel)
 
 %endif %- SetChannel
 %-BW_METHOD_END SetChannel
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetChannel
+%ifdef GetChannel
+%define! Parchannel
+%define! RetVal
+%include Common\nRF24L01GetChannel.Inc
+byte %'ModuleName'%.%GetChannel(byte *channel)
+{
+  *channel = %'ModuleName'%.ReadRegister(%'ModuleName'%.RF_CH); /* read channel */
+  return ERR_OK;
+}
+
+%endif %- GetChannel
+%-BW_METHOD_END GetChannel
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN EnableAutoAck
 %ifdef EnableAutoAck
