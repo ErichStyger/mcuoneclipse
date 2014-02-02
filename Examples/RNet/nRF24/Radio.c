@@ -36,7 +36,8 @@ typedef enum RADIO_AppStatusKind {
   RADIO_TRANSMIT_DATA, /* send data */
   RADIO_WAITING_DATA_SENT, /* wait until data is sent */
   RADIO_TIMEOUT,
-  RADIO_READY_FOR_TX_RX_DATA
+  RADIO_READY_FOR_TX_RX_DATA,
+  RADIO_POWER_DOWN, /* transceiver powered down */
 } RADIO_AppStatusKind;
 
 static RADIO_AppStatusKind RADIO_AppStatus = RADIO_INITIAL_STATE;
@@ -57,17 +58,37 @@ void RADIO_OnInterrupt(void) {
   RADIO_isrFlag = TRUE;
 }
 
+uint8_t RADIO_PowerDown(void) {
+  uint8_t res = ERR_OK;
+  
+  POWERDOWN();
+  if (RPHY_FlushRxQueue()!=ERR_OK) {
+    res = ERR_FAILED;
+  }
+  if (RPHY_FlushTxQueue()!=ERR_OK) {
+    res = ERR_FAILED;
+  }
+  return res;
+}
+
 static uint8_t CheckTx(void) {
   RPHY_PacketDesc packet;
   uint8_t res = ERR_OK;
   uint8_t TxDataBuffer[RPHY_BUFFER_SIZE];
+  RPHY_FlagsType flags;
   
   if (RMSG_GetTxMsg(TxDataBuffer, sizeof(TxDataBuffer))==ERR_OK) {
+    flags = RPHY_BUF_FLAGS(TxDataBuffer);
+    if (flags&RPHY_PACKET_FLAGS_POWER_DOWN) {
+      /* special request */
+      (void)RADIO_PowerDown();
+      return ERR_DISABLED; /* no more data, pipes flushed */
+    }
     RF1_StopRxTx();  /* CE low */
     TX_POWERUP();
     /* set up packet structure */
     packet.phyData = &TxDataBuffer[0];
-    packet.flags = RPHY_BUF_FLAGS(packet.phyData);
+    packet.flags = flags;
     packet.phySize = sizeof(TxDataBuffer);
 #if NRF24_DYNAMIC_PAYLOAD
     packet.rxtx = RPHY_BUF_PAYLOAD_START(packet.phyData);
@@ -137,7 +158,7 @@ static uint8_t CheckRx(void) {
 }
 
 static void RADIO_HandleStateMachine(void) {
-  uint8_t status;
+  uint8_t status, res;
   
   for(;;) { /* will break/return */
     switch (RADIO_AppStatus) {
@@ -159,10 +180,16 @@ static void RADIO_HandleStateMachine(void) {
           RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON; /* continue listening */
           break; /* process switch again */
         }
-        if (CheckTx()==ERR_OK) { /* there was data and it has been sent */
+        res = CheckTx();
+        if (res==ERR_OK) { /* there was data and it has been sent */
           RADIO_AppStatus = RADIO_WAITING_DATA_SENT;
           break; /* process switch again */
+        } else if (res==ERR_DISABLED) { /* powered down transceiver */
+          RADIO_AppStatus = RADIO_POWER_DOWN;
         }
+        return;
+        
+      case RADIO_POWER_DOWN:
         return;
   
       case RADIO_WAITING_DATA_SENT:
@@ -206,7 +233,6 @@ uint8_t RADIO_SetChannel(uint8_t channel) {
  * \return Error code, ERR_OK if everything is ok.
  */
 uint8_t RADIO_PowerUp(void) {
-  /*WAIT1_WaitOSms(100);*/ /* the transceiver needs 100 ms power up time */
   RF1_Init(); /* set CE and CSN to initialization value */
   
   RF1_WriteRegister(RF1_RF_SETUP, RF1_RF_SETUP_RF_PWR_0|RF1_RF_SETUP_RF_DR_250);
@@ -244,19 +270,6 @@ uint8_t RADIO_PowerUp(void) {
   return ERR_OK;
 }
 
-uint8_t RADIO_PowerDown(void) {
-  uint8_t res = ERR_OK;
-  
-  POWERDOWN();
-  if (RPHY_FlushRxQueue()!=ERR_OK) {
-    res = ERR_FAILED;
-  }
-  if (RPHY_FlushTxQueue()!=ERR_OK) {
-    res = ERR_FAILED;
-  }
-  return res;
-}
-
 uint8_t RADIO_Process(void) {
   uint8_t res;
   
@@ -284,6 +297,7 @@ static const unsigned char *RadioStateStr(RADIO_AppStatusKind state) {
     case RADIO_TRANSMIT_DATA:         return (const unsigned char*)"TRANSMIT_DATA";
     case RADIO_WAITING_DATA_SENT:     return (const unsigned char*)"WAITING_DATA_SENT";
     case RADIO_READY_FOR_TX_RX_DATA:  return (const unsigned char*)"READY_TX_RX"; 
+    case RADIO_POWER_DOWN:            return (const unsigned char*)"POWER_DOWN"; 
     default:                          return (const unsigned char*)"UNKNOWN";
   }
   return (const unsigned char*)"UNKNOWN";

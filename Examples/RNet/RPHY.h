@@ -32,12 +32,14 @@
 
 typedef uint8_t RPHY_FlagsType;
 /* flag bits inside PacketDesc below */
-#define RPHY_PACKET_FLAGS_NONE     (0)
+#define RPHY_PACKET_FLAGS_NONE        (0)
   /*!< initialization value */
-#define RPHY_PACKET_FLAGS_IS_ACK   (1<<0)
+#define RPHY_PACKET_FLAGS_IS_ACK      (1<<0)
   /*!< valid ACK received */
-#define RPHY_PACKET_FLAGS_REQ_ACK  (1<<1)
+#define RPHY_PACKET_FLAGS_REQ_ACK     (1<<1)
   /*!< request acknowledge */
+#define RPHY_PACKET_FLAGS_POWER_DOWN  (1<<2)
+  /*!< power down transceiver */
 
 typedef struct {
   RPHY_FlagsType flags;/*!< flags, see RPHY_PACKET_FLAGS_XXXX above */
