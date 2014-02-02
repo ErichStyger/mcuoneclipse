@@ -47,6 +47,18 @@ typedef struct {
 } RPHY_PacketDesc;
 
 /*!
+ * \brief Flushes the Rx queue.
+ * \return Error code, ERR_OK for everything fine.
+ */
+uint8_t RPHY_FlushRxQueue(void);
+
+/*!
+ * \brief Flushes the Tx queue.
+ * \return Error code, ERR_OK for everything fine.
+ */
+uint8_t RPHY_FlushTxQueue(void);
+
+/*!
  * \brief Function called on Rx of a packet.
  * \param packet Pointer to packet
  * \return ERR_OK, if everything is fine, error code otherwise.

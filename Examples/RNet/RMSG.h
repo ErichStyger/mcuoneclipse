@@ -15,6 +15,18 @@
 #include "RPHY.h"
 
 /*!
+ * \brief Flushes the Rx queue (makes it empty).
+ * \return Error code, ERR_OK for everything fine.
+ */
+uint8_t RMSG_FlushRxQueue(void);
+
+/*!
+ * \brief Flushes the Rx queue (makes it empty).
+ * \return Error code, ERR_OK for everything fine.
+ */
+uint8_t RMSG_FlushTxQueue(void);
+
+/*!
  * \brief Queues a message to be sent to the radio transceiver.
  * \param buf Pointer to the message data to be sent.
  * \param bufSize Size of buffer.

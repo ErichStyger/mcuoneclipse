@@ -24,6 +24,7 @@
 #define RF1_CONFIG_SETTINGS  (RF1_EN_CRC|RF1_CRCO)
 #define TX_POWERUP()         RF1_WriteRegister(RF1_CONFIG, RF1_CONFIG_SETTINGS|RF1_PWR_UP|RF1_PRIM_TX) /* enable 1 byte CRC, power up and set as PTX */
 #define RX_POWERUP()         RF1_WriteRegister(RF1_CONFIG, RF1_CONFIG_SETTINGS|RF1_PWR_UP|RF1_PRIM_RX) /* enable 1 byte CRC, power up and set as PRX */
+#define POWERDOWN()          RF1_WriteRegister(RF1_CONFIG, RF1_CONFIG_SETTINGS) /* power down */
 
 static bool RADIO_isSniffing = FALSE;
 static uint8_t RADIO_channel = RADIO_CHANNEL_DEFAULT;
@@ -198,8 +199,12 @@ static void RADIO_HandleStateMachine(void) {
 }
 
 uint8_t RADIO_SetChannel(uint8_t channel) {
-  RADIO_channel = channel;
-  return RF1_SetChannel(channel);
+  if (channel!=RADIO_channel) {
+    RADIO_channel = channel;
+    return RF1_SetChannel(channel);
+  } else {
+    return ERR_OK;
+  }
 }
 
 /*! 
@@ -207,7 +212,7 @@ uint8_t RADIO_SetChannel(uint8_t channel) {
  * \return Error code, ERR_OK if everything is ok.
  */
 uint8_t RADIO_PowerUp(void) {
-  WAIT1_WaitOSms(100); /* the transceiver needs 100 ms power up time */
+  /*WAIT1_WaitOSms(100);*/ /* the transceiver needs 100 ms power up time */
   RF1_Init(); /* set CE and CSN to initialization value */
   
   RF1_WriteRegister(RF1_RF_SETUP, RF1_RF_SETUP_RF_PWR_0|RF1_RF_SETUP_RF_DR_250);
@@ -246,8 +251,16 @@ uint8_t RADIO_PowerUp(void) {
 }
 
 uint8_t RADIO_PowerDown(void) {
-  /*! \todo NYI */
-  return ERR_OK;
+  uint8_t res = ERR_OK;
+  
+  POWERDOWN();
+  if (RPHY_FlushRxQueue()!=ERR_OK) {
+    res = ERR_FAILED;
+  }
+  if (RPHY_FlushTxQueue()!=ERR_OK) {
+    res = ERR_FAILED;
+  }
+  return res;
 }
 
 uint8_t RADIO_Process(void) {

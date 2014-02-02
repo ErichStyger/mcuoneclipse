@@ -24,6 +24,21 @@
 
 static xQueueHandle RMSG_MsgRxQueue, RMSG_MsgTxQueue; /* queue for messages,  format is: kind(8bit) dataSize(8bit) data */
 
+uint8_t RMSG_FlushRxQueue(void) {
+  if (FRTOS1_xQueueReset(RMSG_MsgRxQueue)!=pdPASS) {
+    return ERR_FAILED;
+  }
+  return ERR_OK;
+}
+
+uint8_t RMSG_FlushTxQueue(void) {
+  if (FRTOS1_xQueueReset(RMSG_MsgTxQueue)!=pdPASS) {
+    return ERR_FAILED;
+  }
+  return ERR_OK;
+}
+
+
 uint8_t RMSG_QueuePut(uint8_t *buf, size_t bufSize, uint8_t payloadSize, bool fromISR, bool isTx, RPHY_FlagsType flags) {
   /* data format is: dataSize(8bit) data */
   uint8_t res = ERR_OK;

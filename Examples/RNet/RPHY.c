@@ -16,6 +16,14 @@
   #include "CLS1.h"
 #endif
 
+uint8_t RPHY_FlushRxQueue(void) {
+  return RMSG_FlushRxQueue();
+}
+
+uint8_t RPHY_FlushTxQueue(void) {
+  return RMSG_FlushTxQueue();
+}
+
 uint8_t RPHY_GetPayload(RPHY_PacketDesc *packet) {
   packet->flags = RPHY_PACKET_FLAGS_NONE;
   return RMSG_GetRxMsg(packet->phyData, packet->phySize); /* ERR_OK, ERR_OVERFLOW or ERR_RXEMPTY */
