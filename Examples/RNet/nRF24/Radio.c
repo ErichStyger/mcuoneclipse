@@ -27,7 +27,6 @@
 #define POWERDOWN()          RF1_WriteRegister(RF1_CONFIG, RF1_CONFIG_SETTINGS) /* power down */
 
 static bool RADIO_isSniffing = FALSE;
-static uint8_t RADIO_channel = RADIO_CHANNEL_DEFAULT;
 static const uint8_t TADDR[5] = {0x11, 0x22, 0x33, 0x44, 0x55}; /* device address */
 
 /* Radio state definitions */
@@ -199,12 +198,7 @@ static void RADIO_HandleStateMachine(void) {
 }
 
 uint8_t RADIO_SetChannel(uint8_t channel) {
-  if (channel!=RADIO_channel) {
-    RADIO_channel = channel;
-    return RF1_SetChannel(channel);
-  } else {
-    return ERR_OK;
-  }
+  return RF1_SetChannel(channel);
 }
 
 /*! 
@@ -313,7 +307,8 @@ static void RADIO_PrintStatus(const CLS1_StdIOType *io) {
   
   CLS1_SendStatusStr((unsigned char*)"  sniff", RADIO_isSniffing?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
   
-  UTIL1_Num8uToStr(buf, sizeof(buf), RADIO_channel);
+  (void)RF1_GetChannel(&val0);
+  UTIL1_Num8uToStr(buf, sizeof(buf), val0);
   UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   CLS1_SendStatusStr((unsigned char*)"  channel", buf, io->stdOut);
   
@@ -371,7 +366,6 @@ void RADIO_Deinit(void) {
 
 void RADIO_Init(void) {
   RADIO_isSniffing = FALSE;
-  RADIO_channel = RADIO_CHANNEL_DEFAULT;
 }
 #else
 void RADIO_OnInterrupt(void) {
