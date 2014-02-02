@@ -41,7 +41,7 @@
 %FILE %'DirRel_Code'%'RTOSSrcDirFolder'heap_4.c
 %include freeRTOS\heap_4.c
 
-%FILE %'DirRel_Code'%'RTOSSrcDirFolder'license.txt
+%FILE %'DirRel_Code'%'RTOSSrcDirFolder'FreeRTOS_license.txt
 %include freeRTOS\license.txt
 
 %FILE %'DirRel_Code'%'RTOSHeaderDirFolder'list.h
