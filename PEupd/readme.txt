@@ -29,7 +29,7 @@ Package from component(s):
 - FatFsMem_USB_MSD version 01.019
 - FatFsMemSDHC version 01.013
 - FontDisplay version 01.195
-- FreeRTOS version 01.325
+- FreeRTOS version 01.335
 - FreeRTOSTrace version 01.003
 - FSL_USB_CDC_Device version 01.028
 - FSL_USB_HID_Keyboard_Device version 01.052
@@ -70,15 +70,17 @@ Package from component(s):
 - MMA8451Q version 01.028
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 18.01.2014
+created 03.02.2014
 
 
+Part2_Beans_*.PEupd Content:
+-------------------------------------
 Package from component(s):
-- nRF24L01 version 01.055
+- nRF24L01 version 01.056
 - OLED version 01.045
 - PCA9554 version 01.024
 - PCA9554BitIO version 01.037
-- PDC8544 version 01.001
+- PDC8544 version 01.003
 - PercepioTrace version 01.011
 - PID_Float version 01.005
 - PID_Int version 01.001
@@ -119,6 +121,6 @@ Package from component(s):
 - UIWindow version 01.033
 - UserInterface version 01.510
 - UTI version 01.125
-- Utility version 01.092
+- Utility version 01.093
 - Wait version 01.064
-created 18.01.2014
+created 03.02.2014
