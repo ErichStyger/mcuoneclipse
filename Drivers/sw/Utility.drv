@@ -923,9 +923,13 @@ void %'ModuleName'%.%Num16sToStr(byte *dst, size_t dstSize, int16_t val)
   unsigned char tmp;
   unsigned char sign = (unsigned char)(val < 0);
 
+  if (val==(int16_t)(0x8000)) { /* special case 0x8000/-32768: prevent overflow below. */
+    %'ModuleName'%.%strcpy(dst, dstSize, (unsigned char*)"-32768");
+    return;
+  }
   dstSize--; /* for zero byte */
-  if (sign){
-    val *= -1;
+  if (sign) {
+    val = -val;
   }
   if (val == 0 && dstSize > 0){
     ptr[i++] = '0';
@@ -1503,14 +1507,18 @@ void %'ModuleName'%.%strcatNum32u(byte *dst, size_t dstSize, dword val)
  */
 void %'ModuleName'%.%Num32sToStr(byte *dst, size_t dstSize, long val)
 {
-  unsigned char *ptr =  ((unsigned char *)dst);
+  unsigned char *ptr = ((unsigned char *)dst);
   unsigned char i=0, j;
   unsigned char tmp;
   unsigned char sign = (unsigned char)(val < 0);
 
+  if (val==(int32_t)(0x80000000)) { /* special case 0x80000000/-2147483648: prevent overflow below. */
+    %'ModuleName'%.%strcpy(dst, dstSize, (unsigned char*)"-2147483648");
+    return;
+  }
   dstSize--; /* for zero byte */
-  if (sign){
-    val *= -1;
+  if (sign) {
+    val = -val;
   }
   if (val == 0 && dstSize > 0){
     ptr[i++] = '0';
