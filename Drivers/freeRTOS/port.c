@@ -764,17 +764,20 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
       SET_TICK_DURATION(((ulCompleteTickPeriods+1)*ulTimerCountsForOneTick)-ulCompletedSysTickIncrements);
     }
 
-    /* Restart SysTick so it runs from portNVIC_SYSTICK_LOAD_REG, 
-     * again, then set portNVIC_SYSTICK_LOAD_REG back to its standard value.
+    /* Restart SysTick so it runs from portNVIC_SYSTICK_LOAD_REG
+       again, then set portNVIC_SYSTICK_LOAD_REG back to its standard
+       value.  The critical section is used to ensure the tick interrupt
+       can only execute once in the case that the reload register is near
+       zero. 
      */
     RESET_TICK_COUNTER_VAL();
-    ENABLE_TICK_COUNTER();
-
-    vTaskStepTick(ulCompleteTickPeriods);
-    
-    /* The counter must start by the time the reload value is reset. */
-    /*configASSERT(portNVIC_SYSTICK_CURRENT_VALUE_REG);*/
-    SET_TICK_DURATION(ulTimerCountsForOneTick-1UL);
+    portENTER_CRITICAL();
+    {
+      ENABLE_TICK_COUNTER();
+      vTaskStepTick(ulCompleteTickPeriods);
+      SET_TICK_DURATION(ulTimerCountsForOneTick-1UL);
+    }
+    portEXIT_CRITICAL();
   }
 }
 #endif /* #if configUSE_TICKLESS_IDLE */
