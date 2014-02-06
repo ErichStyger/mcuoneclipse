@@ -4,7 +4,7 @@
     <Name>nRF24L01</Name>
     <Description>Driver for the Nordic nRF241L01+ Wireless Transceiver</Description>
     <Author>Erich Styger</Author>
-    <Version>01.056</Version>
+    <Version>01.059</Version>
     <Icon>nRF24L01</Icon>
     <TypesFiles>PE,nRF24L01\nRF24L01</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -1052,6 +1052,108 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>byte #M#_#C#(byte *channel)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ConstantCarrierWave</Name>
+        <Symbol>ConstantCarrierWave</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Put the transceiver into contant carrier wave output for testing. The output power of a radio is a critical factor for achieving wanted range. Output power is also the first test</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>turnOn</ParName>
+          <ParType>Boolean</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Set to true to start constant carrier wave, false to stop it.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(bool turnOn)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>SetOutputPower</Name>
+        <Symbol>SetOutputPower</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Sets the output power</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>power</ParName>
+          <ParType>8bit signed</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Ouput power in dBm, either 0, -10, -12 or -18</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(signed char power)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>GetOutputPower</Name>
+        <Symbol>GetOutputPower</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Returns the current output power</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>power</ParName>
+          <ParType>8bit signed</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to where to store the value. Returns the output power in dBm</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(signed char *power)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

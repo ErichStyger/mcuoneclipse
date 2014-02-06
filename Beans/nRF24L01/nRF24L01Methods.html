@@ -458,6 +458,42 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="ConstantCarrierWave">
+<b>ConstantCarrierWave</b></a>
+ - Put the transceiver into contant carrier wave output for testing. The output power of a radio is a critical factor for achieving wanted range. Output power is also the first test
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ConstantCarrierWave(bool turnOn)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>turnOn:bool</i> - Set to true to start constant carrier wave, false to stop it.</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="SetOutputPower">
+<b>SetOutputPower</b></a>
+ - Sets the output power
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte SetOutputPower(signed char power)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>power:signed char</i> - Ouput power in dBm, either 0, -10, -12 or -18</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="GetOutputPower">
+<b>GetOutputPower</b></a>
+ - Returns the current output power
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte GetOutputPower(signed char *power)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>power: Pointer to signed char</i> - Pointer to where to store the value. Returns the output power in dBm</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
 <li><a name="Init">
 <b>Init</b></a>
  - Initialization method

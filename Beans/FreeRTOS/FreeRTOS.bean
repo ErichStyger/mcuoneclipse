@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.335</Version>
+    <Version>01.337</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -190,7 +190,7 @@ This is defined to be the most efficient, natural, type for the architecture. Fo
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
               <Description>Disabled</Description>
-              <Expanded>Yes</Expanded>
+              <Expanded>No</Expanded>
               <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
@@ -714,6 +714,22 @@ The highest interrupt priority that can be used by any interrupt service routine
                         </TBoolItem>
                       </GrupItem>
                     </Children>
+                  </TBoolGrupItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolGrupItem>
+                    <Name>Low Power Timer</Name>
+                    <Symbol>useARMLowPowerTimer</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>If enabled, it uses the Low Power Timer of the Kinetis.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
+                    <EditLine>false</EditLine>
+                    <Description>Disabled</Description>
+                    <Expanded>No</Expanded>
+                    <DefaultValue>false</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
                   </TBoolGrupItem>
                 </GrupItem>
               </Children>

@@ -235,7 +235,8 @@ uint8_t RADIO_SetChannel(uint8_t channel) {
 uint8_t RADIO_PowerUp(void) {
   RF1_Init(); /* set CE and CSN to initialization value */
   
-  RF1_WriteRegister(RF1_RF_SETUP, RF1_RF_SETUP_RF_PWR_0|RF1_RF_SETUP_RF_DR_250);
+//  RF1_WriteRegister(RF1_RF_SETUP, RF1_RF_SETUP_RF_PWR_0|RF1_RF_SETUP_RF_DR_250);
+  RF1_WriteRegister(RF1_RF_SETUP, RF1_RF_SETUP_RF_PWR_18|RF1_RF_SETUP_RF_DR_1000);
 #if NRF24_DYNAMIC_PAYLOAD
   /* enable dynamic payload */
   RF1_WriteFeature(RF1_FEATURE_EN_DPL|RF1_FEATURE_EN_ACK_PAY|RF1_FEATURE_EN_DYN_PAY); /* set EN_DPL for dynamic payload */
@@ -307,12 +308,14 @@ static void RADIO_PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"radio", (unsigned char*)"Group of radio commands\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows radio help or status\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  channel <number>", (unsigned char*)"Switches to the given channel. Channel must be in the range 0..127\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  power <number>", (unsigned char*)"Changes output power to 0, -10, -12, -18\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  sniff on|off", (unsigned char*)"Turns sniffing on or off\r\n", io->stdOut);
 }
 
 static void RADIO_PrintStatus(const CLS1_StdIOType *io) {
   uint8_t buf[24];
   uint8_t val0, val1;
+  int8_t val;
   
   CLS1_SendStatusStr((unsigned char*)"Radio", (unsigned char*)"\r\n", io->stdOut);
   
@@ -325,7 +328,12 @@ static void RADIO_PrintStatus(const CLS1_StdIOType *io) {
   UTIL1_Num8uToStr(buf, sizeof(buf), val0);
   UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   CLS1_SendStatusStr((unsigned char*)"  channel", buf, io->stdOut);
-  
+
+  (void)RF1_GetOutputPower(&val);
+  UTIL1_Num8sToStr(buf, sizeof(buf), val);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" dBm\r\n");
+  CLS1_SendStatusStr((unsigned char*)"  power", buf, io->stdOut);
+ 
   (void)RF1_ReadObserveTxRegister(&val0, &val1);
   UTIL1_Num8uToStr(buf, sizeof(buf), val0);
   UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" lost, ");
@@ -347,6 +355,7 @@ uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_S
   uint8_t res = ERR_OK;
   const unsigned char *p;
   uint8_t val;
+  int8_t vals;
 
   if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, (char*)"radio help")==0) {
     RADIO_PrintHelp(io);
@@ -367,6 +376,15 @@ uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_S
       *handled = TRUE;
     } else {
       CLS1_SendStr((unsigned char*)"Wrong argument, must be in the range 0..128\r\n", io->stdErr);
+      res = ERR_FAILED;
+    }
+  } else if (UTIL1_strncmp((char*)cmd, (char*)"radio power", sizeof("radio power")-1)==0) {
+    p = cmd+sizeof("radio power");
+    if (UTIL1_ScanDecimal8sNumber(&p, &vals)==ERR_OK && (vals==0 || vals==-10 || vals==-12 || vals==-18)) {
+      (void)RF1_SetOutputPower(vals);
+      *handled = TRUE;
+    } else {
+      CLS1_SendStr((unsigned char*)"Wrong argument, must be 0, -10, -12 or -18\r\n", io->stdErr);
       res = ERR_FAILED;
     }
   }

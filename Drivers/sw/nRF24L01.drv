@@ -128,8 +128,24 @@
 #define %'ModuleName'%.SETUP_RETR  0x04
 
 #define %'ModuleName'%.RF_CH       0x05 /* Channel register, valid channels from 0x0 to 0x7F */
+  /* RF_CH register bitwise definitions */
+  #define %'ModuleName'%.RF_CH_RESERVED    0x80
 
-#define %'ModuleName'%.RF_SETUP    0x06 /* SETUP register */
+#define %'ModuleName'%.RF_SETUP    0x06 /* RF_SETUP register */
+  /* RF_SETUP register bits: */
+  #define %'ModuleName'%.RF_SETUP_CONT_WAVE      (1<<7) /* Enables continuous carrier transmit when high. */
+  #define %'ModuleName'%.RF_SETUP_RF_DR_LOW      (1<<5) /* Set RF Data Rate to 250kbps. See RF_DR_HIGH for encoding. */
+  #define %'ModuleName'%.RF_SETUP_PLL_LOCK       (1<<4) /* Force PLL lock signal. Only used in test */
+  #define %'ModuleName'%.RF_SETUP_RF_DR_HIGH     (1<<3) /* Select between the high speed data rates. */
+  #define %'ModuleName'%.RF_SETUP_RF_DR_1000     (0) /* RF_DR_LOW|RF_DR_HIGH: 00 */
+  #define %'ModuleName'%.RF_SETUP_RF_DR_2000     (%'ModuleName'%.RF_SETUP_RF_DR_HIGH) /* RF_DR_LOW|RF_DR_HIGH: 01 */
+  #define %'ModuleName'%.RF_SETUP_RF_DR_250      (%'ModuleName'%.RF_SETUP_RF_DR_LOW)  /* RF_DR_LOW|RF_DR_HIGH: 10 */
+  #define %'ModuleName'%.RF_SETUP_RF_PWR_MASK    (3<<1) /* xx: mask bits */
+  #define %'ModuleName'%.RF_SETUP_RF_PWR_18      (0<<1) /* 00: -18dBm */
+  #define %'ModuleName'%.RF_SETUP_RF_PWR_12      (1<<1) /* 01: -12dBm */
+  #define %'ModuleName'%.RF_SETUP_RF_PWR_10      (2<<1) /* 10: -10dBm */
+  #define %'ModuleName'%.RF_SETUP_RF_PWR_0       (3<<1) /* 11: 0dBm, default */
+
 #define %'ModuleName'%.STATUS      0x07
 #define %'ModuleName'%.OBSERVE_TX  0x08
 #define %'ModuleName'%.RPD         0x09 /* Received Power Detector */
@@ -314,23 +330,6 @@
 #define %'ModuleName'%.SETUP_RETR_ARC_2      0x02 /* 2 retry count */
 #define %'ModuleName'%.SETUP_RETR_ARC_1      0x01 /* 1 retry count */
 #define %'ModuleName'%.SETUP_RETR_ARC_0      0x00 /* 0 retry count, retry disabled */
-
-/* RF_CH register bitwise definitions */
-#define %'ModuleName'%.RF_CH_RESERVED    0x80
-
-/* RF_SETUP register bitwise definitions */
-#define %'ModuleName'%.RF_SETUP_RESERVED    0xE0
-#define %'ModuleName'%.RF_SETUP_PLL_LOCK    0x10
-#define %'ModuleName'%.RF_SETUP_RF_DR       0x08
-#define %'ModuleName'%.RF_SETUP_RF_DR_250   0x20
-#define %'ModuleName'%.RF_SETUP_RF_DR_1000  0x00
-#define %'ModuleName'%.RF_SETUP_RF_DR_2000  0x08
-#define %'ModuleName'%.RF_SETUP_RF_PWR      0x06
-#define %'ModuleName'%.RF_SETUP_RF_PWR_0    0x06
-#define %'ModuleName'%.RF_SETUP_RF_PWR_6    0x04
-#define %'ModuleName'%.RF_SETUP_RF_PWR_12   0x02
-#define %'ModuleName'%.RF_SETUP_RF_PWR_18   0x00
-#define %'ModuleName'%.RF_SETUP_LNA_HCURR   0x01
 
 /* STATUS register bit definitions */
 #define %'ModuleName'%.STATUS_RESERVED                    0x80   /* bit 1xxx xxxx: This bit is reserved */
@@ -625,6 +624,36 @@ byte %'ModuleName'%.%GetChannel(byte *channel);
 
 %endif %- GetChannel
 %-BW_METHOD_END GetChannel
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ConstantCarrierWave
+%ifdef ConstantCarrierWave
+byte %'ModuleName'%.%ConstantCarrierWave(bool turnOn);
+%define! ParturnOn
+%define! RetVal
+%include Common\nRF24L01ConstantCarrierWave.Inc
+
+%endif %- ConstantCarrierWave
+%-BW_METHOD_END ConstantCarrierWave
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SetOutputPower
+%ifdef SetOutputPower
+byte %'ModuleName'%.%SetOutputPower(signed char power);
+%define! Parpower
+%define! RetVal
+%include Common\nRF24L01SetOutputPower.Inc
+
+%endif %- SetOutputPower
+%-BW_METHOD_END SetOutputPower
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetOutputPower
+%ifdef GetOutputPower
+byte %'ModuleName'%.%GetOutputPower(signed char *power);
+%define! Parpower
+%define! RetVal
+%include Common\nRF24L01GetOutputPower.Inc
+
+%endif %- GetOutputPower
+%-BW_METHOD_END GetOutputPower
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -1122,6 +1151,98 @@ byte %'ModuleName'%.%ReadReceivedPowerDetector(byte *rpd)
 
 %endif %- ReadReceivedPowerDetector
 %-BW_METHOD_END ReadReceivedPowerDetector
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ConstantCarrierWave
+%ifdef ConstantCarrierWave
+%define! ParturnOn
+%define! RetVal
+%include Common\nRF24L01ConstantCarrierWave.Inc
+byte %'ModuleName'%.%ConstantCarrierWave(bool turnOn)
+{
+  /* note: RF channel, output power should be set independently */
+  uint8_t val;
+
+  if (turnOn) {
+    /* Set PWR_UP = 1 and PRIM_RX = 0 in the CONFIG register. */
+    %'ModuleName'%.WriteRegister(%'ModuleName'%.CONFIG, %'ModuleName'%.PWR_UP|%'ModuleName'%.PRIM_TX);
+    %@Wait@'ModuleName'%.Waitus(1500); /* Wait 1.5ms PWR_UP->standby */
+    /* In the RF register set:
+       - CONT_WAVE = 1.
+       - PLL_LOCK = 1.
+       - RF_PWR (is set independently)
+    */
+    val = %'ModuleName'%.ReadRegister(%'ModuleName'%.RF_SETUP); /* read RF_SETUP register */
+    val |= %'ModuleName'%.RF_SETUP_CONT_WAVE|%'ModuleName'%.RF_SETUP_PLL_LOCK; /* set bits */
+    %'ModuleName'%.WriteRegister(%'ModuleName'%.RF_SETUP, val);
+    %'ModuleName'%.CE_HIGH(); /* CE is high for carrier transmission */
+    /* CE is kept high as long the carrier is needed */
+  } else {
+    val = %'ModuleName'%.ReadRegister(%'ModuleName'%.RF_SETUP); /* read RF_SETUP register */
+    val &= ~(%'ModuleName'%.RF_SETUP_CONT_WAVE|%'ModuleName'%.RF_SETUP_PLL_LOCK); /* clear bits */
+    %'ModuleName'%.WriteRegister(%'ModuleName'%.RF_SETUP, val); /* write back value */
+    %'ModuleName'%.CE_LOW(); /* pull CE Low to disable transceiver */
+  }
+  return ERR_OK;
+}
+
+%endif %- ConstantCarrierWave
+%-BW_METHOD_END ConstantCarrierWave
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SetOutputPower
+%ifdef SetOutputPower
+%define! Parpower
+%define! RetVal
+%include Common\nRF24L01SetOutputPower.Inc
+byte %'ModuleName'%.%SetOutputPower(signed char power)
+{
+  uint8_t val;
+
+  /* get current register value */
+  val = %'ModuleName'%.ReadRegister(%'ModuleName'%.RF_SETUP); /* read RF_SETUP register */
+  val &= ~%'ModuleName'%.RF_SETUP_RF_PWR_MASK; /* clear bits */
+  if (power==-18) {
+    val |= %'ModuleName'%.RF_SETUP_RF_PWR_18;
+  } else if (power==-12) {
+    val |= %'ModuleName'%.RF_SETUP_RF_PWR_12;
+  } else if (power==-10) {
+    val |= %'ModuleName'%.RF_SETUP_RF_PWR_10;
+  } else if (power==0) {
+    val |= %'ModuleName'%.RF_SETUP_RF_PWR_0;
+  } else {
+    return ERR_FAILED;
+  }
+  %'ModuleName'%.WriteRegister(%'ModuleName'%.RF_SETUP, val);
+  return ERR_OK;
+}
+
+%endif %- SetOutputPower
+%-BW_METHOD_END SetOutputPower
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetOutputPower
+%ifdef GetOutputPower
+%define! Parpower
+%define! RetVal
+%include Common\nRF24L01GetOutputPower.Inc
+byte %'ModuleName'%.%GetOutputPower(signed char *power)
+{
+  uint8_t val;
+  val = %'ModuleName'%.ReadRegister(%'ModuleName'%.RF_SETUP); /* read RF_SETUP register */
+  if ((val&%'ModuleName'%.RF_SETUP_RF_PWR_MASK)==%'ModuleName'%.RF_SETUP_RF_PWR_18) {
+    *power = -18;
+  } else if ((val&%'ModuleName'%.RF_SETUP_RF_PWR_MASK)==%'ModuleName'%.RF_SETUP_RF_PWR_12) {
+    *power = -12;
+  } else if ((val&%'ModuleName'%.RF_SETUP_RF_PWR_MASK)==%'ModuleName'%.RF_SETUP_RF_PWR_10) {
+    *power = -10;
+  } else if ((val&%'ModuleName'%.RF_SETUP_RF_PWR_MASK)==%'ModuleName'%.RF_SETUP_RF_PWR_0) {
+    *power = 0;
+  } else {
+    return ERR_RANGE;
+  }
+  return ERR_OK;
+}
+
+%endif %- GetOutputPower
+%-BW_METHOD_END GetOutputPower
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
