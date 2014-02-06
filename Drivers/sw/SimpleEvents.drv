@@ -235,10 +235,12 @@ static byte %'ModuleName'%.Events[((%'ModuleName'%.NOF_EVENTS-1)/8)+1];%>40 /*!<
 %include Common\SimpleEventsSetEvent.Inc
 void %'ModuleName'%.%SetEvent(byte event)
 {
+  %@CriticalSection@'ModuleName'%.CriticalVariable();
+
   /* event is in the range of 0..255: find bit position in array */
-  EnterCritical();
+  %@CriticalSection@'ModuleName'%.EnterCritical();
   %'ModuleName'%.Events[event/8] |= 0x80>>(event%%8);
-  ExitCritical();
+  %@CriticalSection@'ModuleName'%.ExitCritical();
 }
 
 %endif %- SetEvent
@@ -250,10 +252,12 @@ void %'ModuleName'%.%SetEvent(byte event)
 %include Common\SimpleEventsClearEvent.Inc
 void %'ModuleName'%.%ClearEvent(byte event)
 {
-  /* event is in the range of 0..255: find bit position in array */
-  EnterCritical();
+  %@CriticalSection@'ModuleName'%.CriticalVariable();
+
+ /* event is in the range of 0..255: find bit position in array */
+  %@CriticalSection@'ModuleName'%.EnterCritical();
   %'ModuleName'%.Events[event/8] &= ~(0x80>>(event%%8));
-  ExitCritical();
+  %@CriticalSection@'ModuleName'%.ExitCritical();
 }
 
 %endif %- ClearEvent
@@ -281,13 +285,14 @@ bool %'ModuleName'%.%GetEvent(byte event)
 bool %'ModuleName'%.%GetClearEvent(byte event)
 {
   bool isSet = FALSE;
+  %@CriticalSection@'ModuleName'%.CriticalVariable();
 
-  EnterCritical();
+  %@CriticalSection@'ModuleName'%.EnterCritical();
   if (%'ModuleName'%.GetEvent(event)) { /* event present */
     %'ModuleName'%.Events[event/8] &= ~(0x80>>(event%%8)); /* clear event */
     isSet = TRUE;
   }
-  ExitCritical();
+  %@CriticalSection@'ModuleName'%.ExitCritical();
   return isSet;
 }
 
@@ -331,6 +336,7 @@ void %'ModuleName'%.%HandleEvent(void)
 {
   /* Handle the one with the highest priority. */
   byte event;
+  %@CriticalSection@'ModuleName'%.CriticalVariable();
 
 %if %PowerSave = 'yes'
    if (!%'ModuleName'%.%EventsPending()) {
@@ -338,14 +344,14 @@ void %'ModuleName'%.%HandleEvent(void)
     %'ProcessorModule'%.SetWaitMode(); /* make sure that this method is enabled in the CPU bean */
    }
 %endif /* PowerSave */
-  EnterCritical();
+  %@CriticalSection@'ModuleName'%.EnterCritical();
   for (event=0; event<%'ModuleName'%.NOF_EVENTS; event++) { /* does a test on every event */
     if (%'ModuleName'%.GetEvent(event)) { /* event present */
       %'ModuleName'%.Events[event/8] &= ~(0x80>>(event%%8)); /* clear event */
       break; /* get out of loop */
     }
   }
-  ExitCritical();
+  %@CriticalSection@'ModuleName'%.ExitCritical();
 %if defined(AppHandleEvent)
   if (event != %'ModuleName'%.NOF_EVENTS) {
     %AppHandleEvent(event);

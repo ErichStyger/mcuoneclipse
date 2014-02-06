@@ -243,11 +243,13 @@ static bool CheckCallbacks(void);
 %include Common\TriggerAddTrigger.Inc
 void %'ModuleName'%.%AddTrigger(byte trigger, word incTicks, void (*callback)(void))
 {
+  %@CriticalSection@'ModuleName'%.CriticalVariable();
+
   /* method can be called from an interrupt service routine! */
-  EnterCritical();
+  %@CriticalSection@'ModuleName'%.EnterCritical();
   TriggerList[trigger].triggerTime = incTicks;
   TriggerList[trigger].callback = callback;
-  ExitCritical();
+  %@CriticalSection@'ModuleName'%.ExitCritical();
 }
 
 %endif %- AddTrigger
@@ -262,17 +264,18 @@ static bool CheckCallbacks(void)
   uint8_t i; /* counter through all triggers */
   void (*callback)(void); /* variable to temporarily store the callback pointer */
   bool calledCallBack = FALSE; /* flag to indicate if the callback has been called */
+  %@CriticalSection@'ModuleName'%.CriticalVariable();
 
   for(i=0;i<sizeof(TriggerList)/sizeof(TriggerDesc);i++) {
-    EnterCritical();
+    %@CriticalSection@'ModuleName'%.EnterCritical();
     if (TriggerList[i].callback!=NULL && TriggerList[i].triggerTime==0) {   %>%CTAB /* we have a trigger to check */
       callback = TriggerList[i].callback;
       TriggerList[i].callback = NULL;    %>%CTAB /* do not trigger again */
-      ExitCritical();
+      %@CriticalSection@'ModuleName'%.ExitCritical();
       callback();
       calledCallBack = TRUE;              %>%CTAB /* callback may have set a trigger at the current time: rescan trigger list */
     } else {
-      ExitCritical();
+      %@CriticalSection@'ModuleName'%.ExitCritical();
     }
   } /* for */
   return calledCallBack;
@@ -287,13 +290,14 @@ void %'ModuleName'%.%AddTick(void)
 {
   /* This method is usually called from a periodic timer interrupt! */
   uint8_t i;
+  %@CriticalSection@'ModuleName'%.CriticalVariable();
 
   for(i=0;i<sizeof(TriggerList)/sizeof(TriggerDesc);i++) {
-    EnterCritical();
+    %@CriticalSection@'ModuleName'%.EnterCritical();
     if (TriggerList[i].triggerTime!=0) { /* prevent underflow */
       TriggerList[i].triggerTime--;
     }
-    ExitCritical();
+    %@CriticalSection@'ModuleName'%.ExitCritical();
   } /* for */
   while(CheckCallbacks()) {
     /* while we have callbacks, re-iterate the list as this may have added new triggers at the current time */
@@ -325,22 +329,24 @@ bool %'ModuleName'%.%AnyTriggerPending(void)
 {
   uint8_t i;
   bool res = FALSE;
-%if defined(OperatingSystemId)
-  %inclSUB RTOSAdap_genCriticalSectionBegin(no)
-%else
-  EnterCritical();
-%endif
+  %@CriticalSection@'ModuleName'%.CriticalVariable();
+
+%- %if defined(OperatingSystemId)
+%-  %inclSUB RTOSAdap_genCriticalSectionBegin(no)
+%- %else
+  %@CriticalSection@'ModuleName'%.EnterCritical();
+%- %endif
   for(i=0;i<sizeof(TriggerList)/sizeof(TriggerDesc);i++) {
     if (TriggerList[i].callback != NULL) {
       res = TRUE;
       break;                                                     %>40/* leave the for loop */
     }
   }
-%if defined(OperatingSystemId)
-  %inclSUB RTOSAdap_genCriticalSectionEnd(no)
-%else
-  ExitCritical();
-%endif
+%- %if defined(OperatingSystemId)
+%-   %inclSUB RTOSAdap_genCriticalSectionEnd(no)
+%- %else
+  %@CriticalSection@'ModuleName'%.ExitCritical();
+%- %endif
   return res;
 }
 

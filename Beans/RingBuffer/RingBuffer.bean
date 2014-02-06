@@ -4,7 +4,7 @@
     <Name>RingBuffer</Name>
     <Description>Implements a ring buffer for 16bit elements</Description>
     <Author>Erich Styger</Author>
-    <Version>01.020</Version>
+    <Version>01.024</Version>
     <Icon>RingBuffer</Icon>
     <TypesFiles>PE,RingBuffer\RingBuffer</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -35,6 +35,38 @@
         <EditLine>true</EditLine>
         <DefaultValue/>
       </TCompNameItem>
+    </Property>
+    <Property>
+      <TBoolItem>
+        <Name>Reentrant</Name>
+        <Symbol>isReentrant</Symbol>
+        <TypeSpec>typeYesNo</TypeSpec>
+        <Hint>If the driver shall be reentrant. If set to 'yes', then a critical section is used to access the global ring buffer data.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+      </TBoolItem>
+    </Property>
+    <Property>
+      <TInhrLinkItem>
+        <Name>Critical Section</Name>
+        <Symbol>CriticalSection</Symbol>
+        <TypeSpec>CriticalSection_I</TypeSpec>
+        <Hint>Interface to critical section handling</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <DefaultValue/>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <SortStyle/>
+      </TInhrLinkItem>
     </Property>
     <Property>
       <TIntgItem>
@@ -68,24 +100,6 @@
         <CanDelete>false</CanDelete>
         <IconPopup>false</IconPopup>
       </TEnumItem>
-    </Property>
-    <Property>
-      <TBoolItem>
-        <Name>Reentrant</Name>
-        <Symbol>isReentrant</Symbol>
-        <TypeSpec>typeYesNo</TypeSpec>
-        <Hint>If the driver shall be reentrant. If set to 'yes', then a critical section is used to access the global ring buffer data.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-      </TBoolItem>
     </Property>
   </PropertyList>
   <MethodList>

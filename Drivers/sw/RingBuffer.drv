@@ -227,9 +227,11 @@ void %OnBufferEmpty(void);
 %-     static int counter1;
 %-     int %'ModuleName'%.counter2;
 #if %'ModuleName'%.IS_REENTRANT
-  #define %'ModuleName'%.ENTER_CRITICAL()  EnterCritical()
-  #define %'ModuleName'%.EXIT_CRITICAL()   ExitCritical()
+  #define %'ModuleName'%.DEFINE_CRITICAL() %@CriticalSection@'ModuleName'%.CriticalVariable()
+  #define %'ModuleName'%.ENTER_CRITICAL()  %@CriticalSection@'ModuleName'%.EnterCritical()
+  #define %'ModuleName'%.EXIT_CRITICAL()   %@CriticalSection@'ModuleName'%.ExitCritical()
 #else
+  #define %'ModuleName'%.DEFINE_CRITICAL() /* nothing */
   #define %'ModuleName'%.ENTER_CRITICAL()  /* nothing */
   #define %'ModuleName'%.EXIT_CRITICAL()   /* nothing */
 #endif
@@ -252,6 +254,7 @@ static %'ModuleName'_BufSizeType %'ModuleName'%.inSize; /* size data in buffer *
 byte %'ModuleName'%.%Put(%'ModuleName'_ElementType elem)
 {
   byte res = ERR_OK;
+  %'ModuleName'%.DEFINE_CRITICAL();
 
   %'ModuleName'%.ENTER_CRITICAL();
   if (%'ModuleName'%.inSize==%'ModuleName'%.BUF_SIZE) {
@@ -284,6 +287,7 @@ byte %'ModuleName'%.%Put(%'ModuleName'_ElementType elem)
 byte %'ModuleName'%.%Get(%'ModuleName'_ElementType *elemP)
 {
   byte res = ERR_OK;
+  %'ModuleName'%.DEFINE_CRITICAL();
 
   %'ModuleName'%.ENTER_CRITICAL();
   if (%'ModuleName'%.inSize==0) {
@@ -350,6 +354,8 @@ void %'ModuleName'%.%Init(void)
 %include Common\RingBufferClear.Inc
 void %'ModuleName'%.%Clear(void)
 {
+  %'ModuleName'%.DEFINE_CRITICAL();
+
   %'ModuleName'%.ENTER_CRITICAL();
   %'ModuleName'%.%Init();
   %'ModuleName'%.EXIT_CRITICAL();

@@ -4,7 +4,7 @@
     <Name>Key</Name>
     <Description>Debounced keyboard driver for single or multiple keys (up to 8 keys)</Description>
     <Author>Erich Styger</Author>
-    <Version>01.103</Version>
+    <Version>01.104</Version>
     <Icon>Key</Icon>
     <TypesFiles>PE,Key\Key</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -35,6 +35,20 @@
         <EditLine>true</EditLine>
         <DefaultValue/>
       </TCompNameItem>
+    </Property>
+    <Property>
+      <TInhrLinkItem>
+        <Name>Critical Section</Name>
+        <Symbol>CriticalSection</Symbol>
+        <TypeSpec>CriticalSection_I</TypeSpec>
+        <Hint>Interface to critical section handling</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <DefaultValue/>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <SortStyle/>
+      </TInhrLinkItem>
     </Property>
     <Property>
       <TBoolItem>

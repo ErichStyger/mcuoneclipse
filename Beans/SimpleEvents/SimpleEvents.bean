@@ -4,7 +4,7 @@
     <Name>SimpleEvents</Name>
     <Description>Simple Event Handling</Description>
     <Author>Erich Styger</Author>
-    <Version>01.046</Version>
+    <Version>01.047</Version>
     <Icon>SimpleEvents</Icon>
     <TypesFiles>PE,SimpleEvents\SimpleEvents</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -35,6 +35,20 @@
         <EditLine>true</EditLine>
         <DefaultValue/>
       </TCompNameItem>
+    </Property>
+    <Property>
+      <TInhrLinkItem>
+        <Name>Critical Section</Name>
+        <Symbol>CriticalSection</Symbol>
+        <TypeSpec>CriticalSection_I</TypeSpec>
+        <Hint>Interface to critical section handling</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <DefaultValue/>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <SortStyle/>
+      </TInhrLinkItem>
     </Property>
     <Property>
       <TBoolItem>

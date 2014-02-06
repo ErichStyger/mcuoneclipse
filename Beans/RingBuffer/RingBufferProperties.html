@@ -221,6 +221,14 @@ LI.EXP {
 <b>Component name</b></a> - Name of the component.
 </li>
 <li>
+<a name="isReentrant">
+<b>Reentrant</b></a> - If the driver shall be reentrant. If set to 'yes', then a critical section is used to access the global ring buffer data.
+</li>
+<li>
+<a name="CriticalSection">
+<b>Critical Section</b></a> - Interface to critical section handling
+</li>
+<li>
 <a name="BufferSize">
 <b>Buffer Size</b></a> - Number of elements for the buffer. If using &lt;= 256 bytes, 8bit index type is used., otherwise a 16bit one.
 </li>
@@ -234,10 +242,6 @@ There are 3 options:<br />
   <li><u>4 Bytes</u>: 4 Bytes</li>
 </ul><br />
 
-</li>
-<li>
-<a name="isReentrant">
-<b>Reentrant</b></a> - If the driver shall be reentrant. If set to 'yes', then a critical section is used to access the global ring buffer data.
 </li>
 
      </ul>

@@ -4,7 +4,7 @@
     <Name>Timeout</Name>
     <Description>Component to manage timeouts, e.g. to be used in loops.</Description>
     <Author>Erich Styger</Author>
-    <Version>01.023</Version>
+    <Version>01.024</Version>
     <Icon>Timeout</Icon>
     <TypesFiles>PE,Timeout\Timeout</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -35,6 +35,20 @@
         <EditLine>true</EditLine>
         <DefaultValue/>
       </TCompNameItem>
+    </Property>
+    <Property>
+      <TInhrLinkItem>
+        <Name>Critical Section</Name>
+        <Symbol>CriticalSection</Symbol>
+        <TypeSpec>CriticalSection_I</TypeSpec>
+        <Hint>Interface to critical section handling</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <DefaultValue/>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <SortStyle/>
+      </TInhrLinkItem>
     </Property>
     <Property>
       <TIntgItem>

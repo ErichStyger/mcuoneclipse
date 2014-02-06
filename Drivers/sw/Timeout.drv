@@ -227,12 +227,13 @@ static bool %'ModuleName'%.FreeCounters[%'ModuleName'%.NOF_COUNTERS];%>40/* arra
 %'ModuleName'_CounterHandle %'ModuleName'%.%GetCounter(%'ModuleName'_CounterType nofTicks)
 {
   %'ModuleName'%.CounterHandle handle;
+  %@CriticalSection@'ModuleName'%.CriticalVariable();
 
   handle = 0;
   if (nofTicks==0) {
     nofTicks = 1; /* wait at least for one tick, otherwise will timeout immediately */
   }
-  EnterCritical();
+  %@CriticalSection@'ModuleName'%.EnterCritical();
   while (!%'ModuleName'%.FreeCounters[handle] && handle<%'ModuleName'%.NOF_COUNTERS) {
     handle++;
   }
@@ -240,7 +241,7 @@ static bool %'ModuleName'%.FreeCounters[%'ModuleName'%.NOF_COUNTERS];%>40/* arra
     %'ModuleName'%.FreeCounters[handle]=FALSE;
     %'ModuleName'%.Counters[handle] = nofTicks;
   }
-  ExitCritical();
+  %@CriticalSection@'ModuleName'%.ExitCritical();
   if (handle==%'ModuleName'%.NOF_COUNTERS) {
     return %'ModuleName'%.OUT_OF_HANDLE;
   }
@@ -256,13 +257,15 @@ static bool %'ModuleName'%.FreeCounters[%'ModuleName'%.NOF_COUNTERS];%>40/* arra
 %include Common\TimeoutLeaveCounter.Inc
 void %'ModuleName'%.%LeaveCounter(%'ModuleName'_CounterHandle handle)
 {
+  %@CriticalSection@'ModuleName'%.CriticalVariable();
+
   if (handle==%'ModuleName'%.OUT_OF_HANDLE) {
     return;
   }
-  EnterCritical();
+  %@CriticalSection@'ModuleName'%.EnterCritical();
   %'ModuleName'%.Counters[handle] = 0;
   %'ModuleName'%.FreeCounters[handle]=TRUE;
-  ExitCritical();
+  %@CriticalSection@'ModuleName'%.ExitCritical();
 }
 
 %endif %- LeaveCounter
@@ -276,13 +279,14 @@ void %'ModuleName'%.%LeaveCounter(%'ModuleName'_CounterHandle handle)
 bool %'ModuleName'%.%CounterExpired(%'ModuleName'_CounterHandle handle)
 {
   bool res;
+  %@CriticalSection@'ModuleName'%.CriticalVariable();
 
   if (handle==%'ModuleName'%.OUT_OF_HANDLE) {
     return TRUE;
   }
-  EnterCritical();
+  %@CriticalSection@'ModuleName'%.EnterCritical();
   res = (bool)(%'ModuleName'%.Counters[handle]==0);
-  ExitCritical();
+  %@CriticalSection@'ModuleName'%.ExitCritical();
   return res;
 }
 
@@ -295,14 +299,15 @@ bool %'ModuleName'%.%CounterExpired(%'ModuleName'_CounterHandle handle)
 void %'ModuleName'%.%AddTick(void)
 {
   byte i;
+  %@CriticalSection@'ModuleName'%.CriticalVariable();
 
-  EnterCritical();
+  %@CriticalSection@'ModuleName'%.EnterCritical();
   for(i=0;i<%'ModuleName'%.NOF_COUNTERS;i++) {
     if (%'ModuleName'%.Counters[i]>0) {
       %'ModuleName'%.Counters[i]--;
     }
   }
-  ExitCritical();
+  %@CriticalSection@'ModuleName'%.ExitCritical();
 }
 
 %endif %- AddTick
@@ -332,10 +337,11 @@ void %'ModuleName'%.%Init(void)
 %'ModuleName'_CounterType %'ModuleName'%.%Value(%'ModuleName'_CounterHandle handle)
 {
   %'ModuleName'_CounterType res;
+  %@CriticalSection@'ModuleName'%.CriticalVariable();
 
-  EnterCritical();
+  %@CriticalSection@'ModuleName'%.EnterCritical();
   res = %'ModuleName'%.Counters[handle];
-  ExitCritical();
+  %@CriticalSection@'ModuleName'%.ExitCritical();
   return res;
 }
 
