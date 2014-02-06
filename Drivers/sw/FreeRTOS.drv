@@ -203,7 +203,9 @@ void vPortTickHandler(void);
        %define_prj %'vect' vPortSVCHandler
      %elif vect = 'ivINT_PendableSrvReq'
        %define_prj %'vect' vPortPendSVHandler
-     %elif useARMSysTickTimer='yes' & vect = 'ivINT_SysTick'
+     %elif defined(useARMLowPowerTimer) & useARMLowPowerTimer='yes' & vect = 'ivINT_LPTimer'
+       %define_prj %'vect' vPortTickHandler
+     %elif defined(useARMSysTickTimer) & useARMSysTickTimer='yes' & defined(useARMLowPowerTimer) & useARMLowPowerTimer='no' & vect = 'ivINT_SysTick'
        %define_prj %'vect' vPortTickHandler
      %else
        %- keep PEx default
@@ -2787,6 +2789,11 @@ void %vOnPreSleepProcessing(portTickType expectedIdleTicks)
 %-BW_EVENT_IMPLEMENT_END
 %INITIALIZATION
   /* ### %DeviceType "%DeviceName" init code ... */
+
+#if configSYSTICK_USE_LOW_POWER_TIMER
+  /* enable clocking for low power timer, otherwise vPortStopTickTimer() will crash */
+  SIM_SCGC5 |= SIM_SCGC5_LPTMR_MASK; /* SIM_SCGC5: LPTMR=1 */
+#endif
   vPortStopTickTimer(); /* tick timer shall not run until the RTOS scheduler is started */
 %CODE_BEGIN
 %CODE_END

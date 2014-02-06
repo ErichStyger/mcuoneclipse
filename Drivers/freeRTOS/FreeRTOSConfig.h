@@ -121,6 +121,14 @@
 %else
 #define configUSE_MALLOC_FAILED_HOOK                             %>50 0
 %endif
+#define configTICK_RATE_HZ                                       %>50 ((portTickType)%TickRateHz) /* frequency of tick interrupt */
+%if defined(useARMLowPowerTimer) & useARMLowPowerTimer='yes'
+#define configSYSTICK_USE_LOW_POWER_TIMER                        %>50 1 /* If using Kinetis Low Power Timer (LPTMR) instead of SysTick timer */
+#define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ                   %>50 1000 /* 1 kHz LPO */
+%else
+#define configSYSTICK_USE_LOW_POWER_TIMER                        %>50 0 /* If using Kinetis Low Power Timer (LPTMR) instead of SysTick timer */
+#define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ                   %>50 1 /* dummy value */
+%endif
 %if defined(configCPU_CLOCK_HZ)
 #define configCPU_CLOCK_HZ                                       %>50 %configCPU_CLOCK_HZ
 %else
@@ -131,7 +139,6 @@
 %else
 #define configBUS_CLOCK_HZ                                       %>50 CPU_BUS_CLK_HZ /* CPU bus clock defined in %ProcessorModule.h */
 %endif
-#define configTICK_RATE_HZ                                       %>50 ((portTickType)%TickRateHz) /* frequency of tick interrupt */
 %if defined(useARMSysTickUseCoreClock) & useARMSysTickUseCoreClock='no'
 #define configSYSTICK_USE_CORE_CLOCK                             %>50 0 /* System Tick is using external reference clock clock  */
 %else

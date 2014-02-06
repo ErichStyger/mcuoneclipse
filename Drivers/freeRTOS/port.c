@@ -75,19 +75,28 @@
 /*-----------------------------------------------------------
  * FreeRTOS for 56800EX port by Richy Ye in Jan. 2013.
  *----------------------------------------------------------*/
-
 /* Kernel includes. */
 #include "portmacro.h" /* for configCPU_FAMILY */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "portTicks.h" /* for CPU_CORE_CLK_HZ used in configSYSTICK_CLOCK_HZ */
-
+#if configSYSTICK_USE_LOW_POWER_TIMER
+  #include "LPTMR_PDD.h"
+#endif
 /* --------------------------------------------------- */
 /* macros dealing with tick counter */
 %if (CPUfamily = "Kinetis")
-#define ENABLE_TICK_COUNTER()       portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT
-#define DISABLE_TICK_COUNTER()      portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT
-#define RESET_TICK_COUNTER_VAL()    portNVIC_SYSTICK_CURRENT_VALUE_REG = 0 /*portNVIC_SYSTICK_LOAD_REG*/
+#if configSYSTICK_USE_LOW_POWER_TIMER
+  #define ENABLE_TICK_COUNTER()       LPTMR_PDD_EnableDevice(LPTMR0_BASE_PTR, PDD_ENABLE); LPTMR_PDD_EnableInterrupt(LPTMR0_BASE_PTR)
+  #define DISABLE_TICK_COUNTER()      LPTMR_PDD_EnableDevice(LPTMR0_BASE_PTR, PDD_DISABLE); LPTMR_PDD_DisableInterrupt(LPTMR0_BASE_PTR)
+  #define RESET_TICK_COUNTER_VAL()    DISABLE_TICK_COUNTER()  /* CNR is reset when the LPTMR is disabled or counter register overflows */
+  #define ACKNOWLEDGE_TICK_ISR()      LPTMR_PDD_ClearInterruptFlag(LPTMR0_BASE_PTR)
+#else
+  #define ENABLE_TICK_COUNTER()       portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT
+  #define DISABLE_TICK_COUNTER()      portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT
+  #define RESET_TICK_COUNTER_VAL()    portNVIC_SYSTICK_CURRENT_VALUE_REG = 0 /*portNVIC_SYSTICK_LOAD_REG*/
+  #define ACKNOWLEDGE_TICK_ISR()      /* not needed */
+#endif
 %elif defined(TickCntr)
 #define ENABLE_TICK_COUNTER()       (void)%@TickCntr@'ModuleName'%.Enable()
 #define DISABLE_TICK_COUNTER()      (void)%@TickCntr@'ModuleName'%.Disable()
@@ -99,12 +108,20 @@
 %endif
 
 %if (CPUfamily = "Kinetis")
-typedef unsigned long TickCounter_t; /* for 24 bits */
-#define TICK_NOF_BITS               24
-#define COUNTS_UP                   0 /* SysTick is counting down to zero */
-#define SET_TICK_DURATION(val)      portNVIC_SYSTICK_LOAD_REG = val
-#define GET_TICK_DURATION()         portNVIC_SYSTICK_LOAD_REG
-#define GET_TICK_CURRENT_VAL(addr)  *(addr)=portNVIC_SYSTICK_CURRENT_VALUE_REG
+typedef unsigned long TickCounter_t; /* enough for 24 bit Systick */
+#if configSYSTICK_USE_LOW_POWER_TIMER
+  #define TICK_NOF_BITS               16
+  #define COUNTS_UP                   1 /* LPTMR is counting up */
+  #define SET_TICK_DURATION(val)      LPTMR_PDD_WriteCompareReg(LPTMR0_BASE_PTR, val)
+  #define GET_TICK_DURATION()         LPTMR_PDD_ReadCompareReg(LPTMR0_BASE_PTR)
+  #define GET_TICK_CURRENT_VAL(addr)  *(addr)=LPTMR_PDD_ReadCounterReg(LPTMR0_BASE_PTR)
+#else
+  #define TICK_NOF_BITS               24
+  #define COUNTS_UP                   0 /* SysTick is counting down to zero */
+  #define SET_TICK_DURATION(val)      portNVIC_SYSTICK_LOAD_REG = val
+  #define GET_TICK_DURATION()         portNVIC_SYSTICK_LOAD_REG
+  #define GET_TICK_CURRENT_VAL(addr)  *(addr)=portNVIC_SYSTICK_CURRENT_VALUE_REG
+#endif
 %elif defined(TickCntr)
 #define TICK_NOF_BITS               16
 #define COUNTS_UP                   %@TickCntr@'ModuleName'%.UP_COUNTER
@@ -117,7 +134,14 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
 #define GET_TICK_CURRENT_VAL(addr)  (void)%@TickCntr@'ModuleName'%.GetCounterValue(addr)
 %endif
 
+#if configSYSTICK_USE_LOW_POWER_TIMER
+  #define TIMER_COUNTS_FOR_ONE_TICK     (configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ/configTICK_RATE_HZ)
+#else
+  #define TIMER_COUNTS_FOR_ONE_TICK     (configSYSTICK_CLOCK_HZ/configTICK_RATE_HZ)
+#endif
+
 #if configUSE_TICKLESS_IDLE == 1
+#define UL_TIMER_COUNTS_FOR_ONE_TICK  ((TickCounter_t)(TIMER_COUNTS_FOR_ONE_TICK))
 
 #if configCPU_FAMILY_IS_ARM(configCPU_FAMILY)
   #define TICKLESS_DISABLE_INTERRUPTS()  __asm volatile("cpsid i") /* disable interrupts. Note that the wfi (wait for interrupt) instruction later will still be able to wait for interrupts! */
@@ -135,10 +159,17 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
 %else
   #if 0
 %endif
-    /* using directly SysTick Timer */
-    #define TICK_INTERRUPT_HAS_FIRED()   ((portNVIC_SYSTICK_CTRL_REG&portNVIC_SYSTICK_COUNT_FLAG_BIT)!=0)  /* returns TRUE if tick interrupt had fired */
-    #define TICK_INTERRUPT_FLAG_RESET()  /* not needed */
-    #define TICK_INTERRUPT_FLAG_SET()    /* not needed */
+    #if configSYSTICK_USE_LOW_POWER_TIMER
+      /* using Low Power Timer */
+      #define TICK_INTERRUPT_HAS_FIRED()   (LPTMR_PDD_GetInterruptFlag(LPTMR0_BASE_PTR)!=0)  /* returns TRUE if tick interrupt had fired */
+      #define TICK_INTERRUPT_FLAG_RESET()  /* not needed */
+      #define TICK_INTERRUPT_FLAG_SET()    /* not needed */
+    #else
+      /* using directly SysTick Timer */
+      #define TICK_INTERRUPT_HAS_FIRED()   ((portNVIC_SYSTICK_CTRL_REG&portNVIC_SYSTICK_COUNT_FLAG_BIT)!=0)  /* returns TRUE if tick interrupt had fired */
+      #define TICK_INTERRUPT_FLAG_RESET()  /* not needed */
+      #define TICK_INTERRUPT_FLAG_SET()    /* not needed */
+    #endif
   #else 
     /* using global variable to find out if interrupt has fired */
     volatile uint8_t portTickCntr; /* used to find out if we woke up by the tick interrupt */
@@ -147,13 +178,6 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
     #define TICK_INTERRUPT_FLAG_SET()    portTickCntr=1
   #endif
 #endif /* configUSE_TICKLESS_IDLE == 1 */
-
-/*
- * The number of timer tick increments that make up one tick period.
- */
-#if configUSE_TICKLESS_IDLE == 1
-  static TickCounter_t ulTimerCountsForOneTick  = 0;
-#endif
 
 /*
  * The maximum number of tick periods that can be suppressed is limited by the
@@ -178,9 +202,7 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
 
 #if (configCPU_FAMILY==configCPU_FAMILY_CF1) || (configCPU_FAMILY==configCPU_FAMILY_CF2)
   #define portINITIAL_FORMAT_VECTOR           ((portSTACK_TYPE)0x4000)
-  
-  /* Supervisor mode set. */
-  #define portINITIAL_STATUS_REGISTER         ((portSTACK_TYPE)0x2000)
+  #define portINITIAL_STATUS_REGISTER         ((portSTACK_TYPE)0x2000)  /* Supervisor mode set. */
 #endif
 
 #if configCPU_FAMILY_IS_ARM(configCPU_FAMILY)
@@ -216,14 +238,17 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
 #define portNVIC_SYSTICK_PRI                (((unsigned long)configKERNEL_INTERRUPT_PRIORITY)<<24) /* priority of SysTick interrupt (in portNVIC_SYSPRI3) */
 #define portNVIC_PENDSV_PRI                 (((unsigned long)configKERNEL_INTERRUPT_PRIORITY)<<16) /* priority of PendableService interrupt (in portNVIC_SYSPRI3) */
 
+#define portNVIC_SYSPRI7                    ((volatile unsigned long*)0xe000e41c) /* system handler priority register 7, PRI_28 is LPTMR */
+#define portNVIC_LP_TIMER_PRI               (((unsigned long)configKERNEL_INTERRUPT_PRIORITY)<<0) /* priority of SysTick interrupt (in portNVIC_SYSPRI3) */
+
 /* Constants required to set up the initial stack. */
 #define portINITIAL_XPSR         (0x01000000)
 #define portINITIAL_EXEC_RETURN  (0xfffffffd)
 
 #if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
-/* Constants required to manipulate the VFP. */
-#define portFPCCR                ((volatile unsigned long *)0xe000ef34) /* Floating point context control register. */
-#define portASPEN_AND_LSPEN_BITS (0x3UL<<30UL)
+  /* Constants required to manipulate the VFP. */
+  #define portFPCCR                ((volatile unsigned long *)0xe000ef34) /* Floating point context control register. */
+  #define portASPEN_AND_LSPEN_BITS (0x3UL<<30UL)
 #endif
 %-
 %if defined(TickTimerLDD)
@@ -652,6 +677,7 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
 %endif
   unsigned long ulReloadValue, ulCompleteTickPeriods, ulCompletedSysTickIncrements;
   TickCounter_t tmp; /* because of how we get the current tick counter */
+  bool tickISRfired;
 
   /* Make sure the tick timer reload value does not overflow the counter. */
   if(xExpectedIdleTime>xMaximumPossibleSuppressedTicks) {
@@ -670,7 +696,7 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
    * through one of the tick periods. 
    */
   GET_TICK_CURRENT_VAL(&tmp);
-  ulReloadValue = tmp+(ulTimerCountsForOneTick*(xExpectedIdleTime-1UL));
+  ulReloadValue = tmp+(UL_TIMER_COUNTS_FOR_ONE_TICK*(xExpectedIdleTime-1UL));
   if (ulReloadValue>ulStoppedTimerCompensation) {
     ulReloadValue -= ulStoppedTimerCompensation;
   }
@@ -687,10 +713,17 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
     ENABLE_TICK_COUNTER(); /* Restart SysTick. */
     TICKLESS_ENABLE_INTERRUPTS();
   } else {
+#if configUSE_LP_TIMER
+    DisableDevice();
+    ClearInterruptFlag();
+    WriteCompareReg(xExpectedIdleTime-1);
+    EnableDevice(); /* start timer */
+#else
     SET_TICK_DURATION(ulReloadValue); /* Set the new reload value. */
     RESET_TICK_COUNTER_VAL(); /* Reset the counter. */
     ENABLE_TICK_COUNTER(); /* Restart tick timer. */
     TICK_INTERRUPT_FLAG_RESET(); /* reset flag so we know later if it has fired */
+#endif
 
     /* Sleep until something happens. configPRE_SLEEP_PROCESSING() can
      * set its parameter to 0 to indicate that its implementation contains
@@ -715,21 +748,21 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
     #error "unsupported CPU family! vOnPreSleepProcessing() event and go into sleep mode there!"
   %endif    
 %endif
-    /* Here the CPU *HAS TO BE* low power mode, waiting to wake up by an interrupt */
+    /* ----------------------------------------------------------------------------
+     * Here the CPU *HAS TO BE* low power mode, waiting to wake up by an interrupt 
+     * ----------------------------------------------------------------------------*/
 %if defined(vOnPostSleepProcessing)
     %vOnPostSleepProcessing(xExpectedIdleTime); /* process post-low power actions */
 %endif
-
     /* Stop tick counter. Again, the time the tick counter is stopped for is
      * accounted for as best it can be, but using the tickless mode will
      * inevitably result in some tiny drift of the time maintained by the
      * kernel with respect to calendar time. 
      */
+    tickISRfired = TICK_INTERRUPT_HAS_FIRED(); /* need to check Interrupt flag here, as might be modified below */
     DISABLE_TICK_COUNTER();
-
     TICKLESS_ENABLE_INTERRUPTS();/* Re-enable interrupts */
-
-    if (TICK_INTERRUPT_HAS_FIRED()) {
+    if (tickISRfired) {
       /* The tick interrupt has already executed, and the timer
        * count reloaded with the modulo/match value.
        * Reset the counter register with whatever remains of
@@ -737,11 +770,10 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
        */
       GET_TICK_CURRENT_VAL(&tmp);
 #if COUNTS_UP
-      SET_TICK_DURATION((ulTimerCountsForOneTick-1UL)-tmp);
+      SET_TICK_DURATION((UL_TIMER_COUNTS_FOR_ONE_TICK-1UL)-tmp);
 #else
-      SET_TICK_DURATION((ulTimerCountsForOneTick-1UL)-(ulReloadValue-tmp));
+      SET_TICK_DURATION((UL_TIMER_COUNTS_FOR_ONE_TICK-1UL)-(ulReloadValue-tmp));
 #endif
-      
       /* The tick interrupt handler will already have pended the tick
        * processing in the kernel.  As the pending tick will be
        * processed as soon as this function exits, the tick value
@@ -755,13 +787,13 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
        * periods (not the ulReload value which accounted for part ticks). 
        */
       GET_TICK_CURRENT_VAL(&tmp);
-      ulCompletedSysTickIncrements = (xExpectedIdleTime*ulTimerCountsForOneTick )-tmp;
+      ulCompletedSysTickIncrements = (xExpectedIdleTime*UL_TIMER_COUNTS_FOR_ONE_TICK)-tmp;
 
       /* How many complete tick periods passed while the processor was waiting? */
-      ulCompleteTickPeriods = ulCompletedSysTickIncrements/ulTimerCountsForOneTick;
+      ulCompleteTickPeriods = ulCompletedSysTickIncrements/UL_TIMER_COUNTS_FOR_ONE_TICK;
 
       /* The reload value is set to whatever fraction of a single tick period remains. */
-      SET_TICK_DURATION(((ulCompleteTickPeriods+1)*ulTimerCountsForOneTick)-ulCompletedSysTickIncrements);
+      SET_TICK_DURATION(((ulCompleteTickPeriods+1)*UL_TIMER_COUNTS_FOR_ONE_TICK)-ulCompletedSysTickIncrements);
     }
 
     /* Restart SysTick so it runs from portNVIC_SYSTICK_LOAD_REG
@@ -775,7 +807,7 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
     {
       ENABLE_TICK_COUNTER();
       vTaskStepTick(ulCompleteTickPeriods);
-      SET_TICK_DURATION(ulTimerCountsForOneTick-1UL);
+      SET_TICK_DURATION(UL_TIMER_COUNTS_FOR_ONE_TICK-1UL);
     }
     portEXIT_CRITICAL();
   }
@@ -783,35 +815,56 @@ void vPortSuppressTicksAndSleep(portTickType xExpectedIdleTime) {
 #endif /* #if configUSE_TICKLESS_IDLE */
 /*-----------------------------------------------------------*/
 void vPortInitTickTimer(void) {
+#if configUSE_TICKLESS_IDLE == 1
+{
+#if TICK_NOF_BITS==32
+  xMaximumPossibleSuppressedTicks = 0xffffffffUL/TIMER_COUNTS_FOR_ONE_TICK; /* 32bit timer register */
+#elif TICK_NOF_BITS==24
+  xMaximumPossibleSuppressedTicks = 0xffffffUL/TIMER_COUNTS_FOR_ONE_TICK; /* 24bit timer register */
+#elif TICK_NOF_BITS==16
+  xMaximumPossibleSuppressedTicks = 0xffffUL/TIMER_COUNTS_FOR_ONE_TICK; /* 16bit timer register */
+#elif TICK_NOF_BITS==8
+  xMaximumPossibleSuppressedTicks = 0xffUL/TIMER_COUNTS_FOR_ONE_TICK; /* 8bit timer register */
+#else
+  error "unknown configuration!"
+#endif
+#if configSYSTICK_USE_LOW_POWER_TIMER
+  ulStoppedTimerCompensation = configSTOPPED_TIMER_COMPENSATION/(configCPU_CLOCK_HZ/configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ);
+#else
+  ulStoppedTimerCompensation = configSTOPPED_TIMER_COMPENSATION/(configCPU_CLOCK_HZ/configSYSTICK_CLOCK_HZ);
+#endif
+}
+#endif /* configUSE_TICKLESS_IDLE */
 %ifdef TickTimerLDD
   RTOS_TickDevice = %@TickTimerLDD@'ModuleName'%.Init(NULL);     %>40/* initialize the tick timer */
   RESET_TICK_COUNTER_VAL();
   /* overwrite SysTick priority is set inside the FreeRTOS component */
   *(portNVIC_SYSPRI3) |= portNVIC_SYSTICK_PRI; /* set priority of SysTick interrupt */
 %elif defined(useARMSysTickTimer) & useARMSysTickTimer='yes'
+#if configSYSTICK_USE_LOW_POWER_TIMER
+  SIM_SCGC5 |= SIM_SCGC5_LPTMR_MASK; /* enable clock: SIM_SCGC5: LPTMR=1 */
+
+  /* LPTMR0_CSR: ??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,TCF=1,TIE=0,TPS=0,TPP=0,TFC=0,TMS=0,TEN=0 */
+  LPTMR0_CSR = (LPTMR_CSR_TCF_MASK | LPTMR_CSR_TPS(0x00)); /* Clear control register */
+  /* LPTMR0_PSR: ??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,PRESCALE=0,PBYP=1,PCS=1 */
+  LPTMR0_PSR = LPTMR_PSR_PRESCALE(0x00) |
+               LPTMR_PSR_PBYP_MASK |
+               LPTMR_PSR_PCS(0x01);    /* Set up prescaler register */
+
+  *(portNVIC_SYSPRI7) |= portNVIC_LP_TIMER_PRI; /* set priority of low power timer interrupt */
+  /* NVIC_ISER: SETENA|=0x10000000 */
+  NVIC_ISER |= NVIC_ISER_SETENA(0x10000000);     /* 0xE000E100 <= 0x10000000 */                              
+
+  /* LPTMR0_CSR: ??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,TCF=0,TIE=0,TPS=0,TPP=0,TFC=0,TMS=0,TEN=1 */
+  LPTMR0_CSR = (LPTMR_CSR_TPS(0x00) | LPTMR_CSR_TEN_MASK); /* Set up control register */
+#else /* use normal SysTick Counter */
   *(portNVIC_SYSPRI3) |= portNVIC_SYSTICK_PRI; /* set priority of SysTick interrupt */
-  /* Configure SysTick to interrupt at the requested rate. */
-  SET_TICK_DURATION((configSYSTICK_CLOCK_HZ/configTICK_RATE_HZ)-1UL);
+#endif
+  /* Configure timer to interrupt at the requested rate. */
+  SET_TICK_DURATION(TIMER_COUNTS_FOR_ONE_TICK-1UL);
   RESET_TICK_COUNTER_VAL();
   ENABLE_TICK_COUNTER();
 %endif
-#if configUSE_TICKLESS_IDLE == 1
-{
-  ulTimerCountsForOneTick  = (configSYSTICK_CLOCK_HZ/configTICK_RATE_HZ)-1UL;
-#if TICK_NOF_BITS==32
-  xMaximumPossibleSuppressedTicks = 0xffffffffUL/((configSYSTICK_CLOCK_HZ/configTICK_RATE_HZ)-1UL); /* 32bit timer register */
-#elif TICK_NOF_BITS==24
-  xMaximumPossibleSuppressedTicks = 0xffffffUL/((configSYSTICK_CLOCK_HZ/configTICK_RATE_HZ)-1UL); /* 24bit timer register */
-#elif TICK_NOF_BITS==16
-  xMaximumPossibleSuppressedTicks = 0xffffUL/((configSYSTICK_CLOCK_HZ/configTICK_RATE_HZ)-1UL); /* 16bit timer register */
-#elif TICK_NOF_BITS==8
-  xMaximumPossibleSuppressedTicks = 0xffUL/((configSYSTICK_CLOCK_HZ/configTICK_RATE_HZ)-1UL); /* 8bit timer register */
-#else
-  error "unknown configuration!"
-#endif
-  ulStoppedTimerCompensation = configSTOPPED_TIMER_COMPENSATION/(configCPU_CLOCK_HZ/configSYSTICK_CLOCK_HZ);
-}
-#endif /* configUSE_TICKLESS_IDLE */
 }
 /*-----------------------------------------------------------*/
 void vPortStartTickTimer(void) {
@@ -1198,6 +1251,7 @@ PE_ISR(RTOSTICKLDD1_Interrupt)
   #endif
 #endif
 %endif -% useARMSysTickTimer='no'
+  ACKNOWLEDGE_TICK_ISR();
 #if configUSE_TICKLESS_IDLE == 1
   TICK_INTERRUPT_FLAG_SET();
 #endif
