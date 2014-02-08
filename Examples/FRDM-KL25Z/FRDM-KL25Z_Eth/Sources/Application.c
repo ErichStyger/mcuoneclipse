@@ -62,8 +62,12 @@ uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, CLS1_ConstStdI
 static const w5100_config_t W5100_config = {
   {192, 168, 1, 1}, /* gateway */
   {255, 255, 255, 0}, /* netmask */
-  {0x90, 0xa2, 0xda,0x0D, 0x42, 0xdd}, /* hw/mac address */
-  {192, 168, 0, 80} /* ip address */
+#if 1
+  {0x90, 0xa2, 0xda, 0x0D, 0x42, 0xdd}, /* hw/mac address */
+#elif 1
+  {0x90, 0xa2, 0xda, 0x0F, 0x16, 0x43}, /* hw/mac address */
+#endif
+  {192, 168, 0, 90} /* ip address */
 };
 
 static void WiznetSetup(void) {
