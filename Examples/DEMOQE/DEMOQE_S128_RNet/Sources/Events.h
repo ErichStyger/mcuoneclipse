@@ -66,6 +66,7 @@
 #include "RTXEN1.h"
 #include "ATTN1.h"
 #include "IRQ1.h"
+#include "CS1.h"
 
 
 void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName);

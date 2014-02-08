@@ -42,6 +42,8 @@
 #include "GI2C1.h"
 #include "I2C1.h"
 #include "HF1.h"
+#include "CS1.h"
+#include "WAIT1.h"
 #include "PE_LDD.h"
 
 void Cpu_OnNMIINT0(void);

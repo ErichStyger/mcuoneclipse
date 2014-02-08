@@ -56,6 +56,7 @@
 #include "BitIoLdd4.h"
 #include "ETH_INT.h"
 #include "BitIoLdd5.h"
+#include "CS1.h"
 
 #ifdef __cplusplus
 extern "C" {
