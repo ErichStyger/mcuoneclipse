@@ -435,15 +435,17 @@ static byte PrintStatus(%@Shell@'ModuleName'%.ConstStdIOType *io) {
 #endif
 byte %'ModuleName'%.%SetTime(byte Hour, byte Min, byte Sec, byte Sec100)
 {
+  %@CriticalSection@'ModuleName'%.CriticalVariable();
+
   if ((Sec100>99U) || (Sec>59U) || (Min>59U) || (Hour>23U)) {    %>40/* Test correctnes of given time */
     return ERR_RANGE;                                            %>40/* If not correct then error */
   }
-  EnterCritical();
+  %@CriticalSection@'ModuleName'%.EnterCritical();
   tickCntr = (3600UL*%'ModuleName'%.TICKS_PER_S*(dword)Hour)
               + (60UL*%'ModuleName'%.TICKS_PER_S*(dword)Min)
               + (%'ModuleName'%.TICKS_PER_S*(dword)Sec)
               + ((%'ModuleName'%.TICKS_PER_S/100)*(dword)Sec100);%>40/* Load given time re-calculated to %'ModuleName'%.TICK_TIME_MS ms ticks into software tick counter */
-  ExitCritical();
+  %@CriticalSection@'ModuleName'%.ExitCritical();
   return ERR_OK;                                                 %>40/* OK */
 }
 #ifdef __HIWARE__
@@ -491,11 +493,12 @@ void %'ModuleName'%.%AddTick(void)
 %include Common\GenericTimeDateGetTime.Inc
 byte %'ModuleName'%.%GetTime(TIMEREC *Time)
 {
+  %@CriticalSection@'ModuleName'%.CriticalVariable();
   dword ticks;                                                   %>40/* temporary variable of software tick counter */
 
-  EnterCritical();                                               %>40/* need exclusive access to tick counter */
+  %@CriticalSection@'ModuleName'%.EnterCritical();               %>40/* need exclusive access to tick counter */
   ticks = tickCntr;                                              %>40/* actual number of ticks */
-  ExitCritical();                                                %>40/* end of critical section */
+  %@CriticalSection@'ModuleName'%.ExitCritical();                %>40/* end of critical section */
   Time->Hour = (byte)(ticks/(3600*%'ModuleName'%.TICKS_PER_S));  %>40/* number of hours */
   ticks %%= (3600*%'ModuleName'%.TICKS_PER_S);                   %>40/* remainder of ticks inside hour */
   Time->Min = (byte)(ticks/(60*%'ModuleName'%.TICKS_PER_S));     %>40/* number of minutes */
@@ -517,6 +520,7 @@ byte %'ModuleName'%.%GetTime(TIMEREC *Time)
 %include Common\GenericTimeDateSetDate.Inc
 byte %'ModuleName'%.%SetDate(word Year, byte Month, byte Day)
 {
+  %@CriticalSection@'ModuleName'%.CriticalVariable();
   const byte * ptr;                                              %>40/* Pointer to ULY/LY table */
 
   if ((Year < 1998U) || (Year > 2099U) || (Month > 12U) || (Month == 0U) || (Day > 31U) || (Day == 0U)) {%>40/* Test correctness of given parameters */
@@ -526,11 +530,11 @@ byte %'ModuleName'%.%SetDate(word Year, byte Month, byte Day)
   if (ptr[Month - 1U] < Day) {                                   %>40/* Does the obtained number of days exceed number of days in the appropriate month & year? */
     return ERR_RANGE;                                            %>40/* If yes (incorrect date inserted) then error */
   }
-  EnterCritical();                                               %>40/* Save the PS register */
+  %@CriticalSection@'ModuleName'%.EnterCritical();               %>40/* Save the PS register */
   CntDay = Day;                                                  %>40/* Set day counter to the given value */
   CntMonth = Month;                                              %>40/* Set month counter to the given value */
   CntYear = Year;                                                %>40/* Set year counter to the given value */
-  ExitCritical();                                                %>40/* Restore the PS register */
+  %@CriticalSection@'ModuleName'%.ExitCritical();                %>40/* Restore the PS register */
   return ERR_OK;                                                 %>40/* OK */
 }
 
@@ -544,11 +548,13 @@ byte %'ModuleName'%.%SetDate(word Year, byte Month, byte Day)
 %include Common\GenericTimeDateGetDate.Inc
 byte %'ModuleName'%.%GetDate(DATEREC *Date)
 {
-  EnterCritical();                                               %>40/* Save the PS register */
+  %@CriticalSection@'ModuleName'%.CriticalVariable();
+
+  %@CriticalSection@'ModuleName'%.EnterCritical();               %>40/* Save the PS register */
   Date->Year = CntYear;                                          %>40/* Year */
   Date->Month = CntMonth;                                        %>40/* Month */
   Date->Day = CntDay;                                            %>40/* Day */
-  ExitCritical();                                                %>40/* Restore the PS register */
+  %@CriticalSection@'ModuleName'%.ExitCritical();                %>40/* Restore the PS register */
   return ERR_OK;                                                 %>40/* OK */
 }
 

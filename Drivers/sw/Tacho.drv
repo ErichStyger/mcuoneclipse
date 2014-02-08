@@ -190,6 +190,7 @@ static volatile byte %'ModuleName'%.PosHistory_Index = 0;
 %include Common\TachoGetSpeed.Inc
 int16_t %'ModuleName'%.%GetSpeed(void)
 {
+  %@CriticalSection@'ModuleName'%.CriticalVariable();
 %if %RPMenabled = 'yes'
   /* we calculate the speed as follow:
                            1000                  1
@@ -203,14 +204,14 @@ int16_t %'ModuleName'%.%GetSpeed(void)
   bool neg;
 %endif
 
-  EnterCritical();
+  %@CriticalSection@'ModuleName'%.EnterCritical();
   curr = (int16_t)%'ModuleName'%.PosHistory[%'ModuleName'%.PosHistory_Index];
   if (%'ModuleName'%.PosHistory_Index == 0) {
     pos = (int16_t)%'ModuleName'%.PosHistory[NOF_HISTORY-1];
   } else {
     pos = (int16_t)%'ModuleName'%.PosHistory[%'ModuleName'%.PosHistory_Index-1];
   }
-  ExitCritical();
+  %@CriticalSection@'ModuleName'%.ExitCritical();
   delta = curr-pos;
   if (delta < 0) {
     delta = -delta;
