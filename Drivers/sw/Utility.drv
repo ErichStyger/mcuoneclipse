@@ -2128,9 +2128,9 @@ byte %'ModuleName'%.%ScanDecimal32sNumber(const unsigned char **str, uint32_t *v
     return res;
   }
   if (isNeg) {
-    *val = - (int32_t)val32u;
+    *val = (uint32_t)(-(int32_t)val32u);
   } else {
-    *val = (int32_t)val32u;
+    *val = val32u;
   }
   *str = p;
   return ERR_OK;
@@ -2432,9 +2432,9 @@ void %'ModuleName'%.%strcatNum32sDotValue100(byte *dst, size_t dstSize, long num
 %include Common\UtilitystrFind.Inc
 int16_t %'ModuleName'%.%strFind(byte *str, byte *subStr)
 {
-  int i, len;
+  int16_t i, len;
 
-  len = UTIL1_strlen((char*)subStr);
+  len = (int16_t)UTIL1_strlen((char*)subStr);
   for (i=0; *str!='\0'; i++, str++) {
     if (%'ModuleName'%.%strncmp((char*)str, (char*)subStr, len)==0) {
       return i; /* found */
