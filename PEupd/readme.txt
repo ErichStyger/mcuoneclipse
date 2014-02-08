@@ -12,7 +12,7 @@ https://github.com/ErichStyger/mcuoneclipse/Drivers
 Part1_Beans_*.PEupd Content:
 -------------------------------------
 Package from component(s):
-- 24AA_EEPROM version 01.030
+- 24AA_EEPROM version 01.031
 - 74HC164 version 01.031
 - 74HC595 version 01.022
 - App_SMAC_Hello version 01.085
@@ -22,6 +22,7 @@ Package from component(s):
 - BootLoaderDisk version 01.018
 - BootLoaderUSB version 01.020
 - ChLCD version 01.160
+- CriticalSection version 01.003
 - CTouchScanner version 01.021
 - CTouchSensor version 01.032
 - DCF77 version 01.060
@@ -29,7 +30,7 @@ Package from component(s):
 - FatFsMem_USB_MSD version 01.019
 - FatFsMemSDHC version 01.013
 - FontDisplay version 01.195
-- FreeRTOS version 01.335
+- FreeRTOS version 01.337
 - FreeRTOSTrace version 01.003
 - FSL_USB_CDC_Device version 01.028
 - FSL_USB_HID_Keyboard_Device version 01.052
@@ -40,17 +41,17 @@ Package from component(s):
 - FXOS8700CQ version 01.015
 - GDisplay version 01.190
 - GenericBitIO version 01.065
-- GenericI2C version 01.014
+- GenericI2C version 01.017
 - GenericKBI version 01.025
 - GenericSPI version 01.029
 - GenericSWI2C version 01.005
 - GenericSWSPI version 01.001
-- GenericTimeDate version 01.015
+- GenericTimeDate version 01.016
 - GFont version 01.123
 - HardFault version 01.008
 - I2CSpy version 01.009
 - KentChLCD version 01.110
-- Key version 01.103
+- Key version 01.104
 - LCDHTA version 01.016
 - LED version 01.062
 - LEDbit version 01.003
@@ -70,13 +71,10 @@ Package from component(s):
 - MMA8451Q version 01.028
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 03.02.2014
+created 08.02.2014
 
-
-Part2_Beans_*.PEupd Content:
--------------------------------------
 Package from component(s):
-- nRF24L01 version 01.056
+- nRF24L01 version 01.059
 - OLED version 01.045
 - PCA9554 version 01.024
 - PCA9554BitIO version 01.037
@@ -87,24 +85,24 @@ Package from component(s):
 - PtConv version 01.005
 - PWMServo16bit version 01.011
 - QuadCounter version 01.019
-- RingBuffer version 01.020
+- RingBuffer version 01.025
 - RTC_Maxim version 01.003
 - S19 version 01.034
 - S65Sharp version 01.079
 - SD_Card version 01.160
 - Servo version 01.066
-- Shell version 01.023
-- SimpleEvents version 01.046
+- Shell version 01.025
+- SimpleEvents version 01.047
 - SMAC version 01.009
 - SPHY version 01.108
 - SPIHCS08 version 01.025
 - SSD1289 version 01.158
 - SSEC version 01.067
-- Tacho version 01.001
-- Timeout version 01.023
+- Tacho version 01.002
+- Timeout version 01.024
 - TouchScreen version 01.077
 - TouchScreenSensor version 01.053
-- Trigger version 01.055
+- Trigger version 01.057
 - UI version 01.056
 - UIButton version 01.121
 - UICalendar version 01.030
@@ -121,6 +119,6 @@ Package from component(s):
 - UIWindow version 01.033
 - UserInterface version 01.510
 - UTI version 01.125
-- Utility version 01.093
+- Utility version 01.095
 - Wait version 01.064
-created 03.02.2014
+created 08.02.2014
