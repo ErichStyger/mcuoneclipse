@@ -4,7 +4,7 @@
     <Name>GenericI2C</Name>
     <Description>Generic high level I2C Driver on top of the I2C hardware driver</Description>
     <Author>Erich Styger</Author>
-    <Version>01.014</Version>
+    <Version>01.017</Version>
     <Icon>Generic2C</Icon>
     <TypesFiles>PE,GenericI2C\GenericI2C</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -37,6 +37,20 @@
       </TCompNameItem>
     </Property>
     <Property>
+      <TInhrLinkItem>
+        <Name>Wait</Name>
+        <Symbol>Wait</Symbol>
+        <TypeSpec>Wait_I</TypeSpec>
+        <Hint>Interface to waiting routines.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <DefaultValue/>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <SortStyle/>
+      </TInhrLinkItem>
+    </Property>
+    <Property>
       <TIntgItem>
         <Name>Write Buffer Size</Name>
         <Symbol>WriteBufferSize</Symbol>
@@ -63,7 +77,7 @@
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
         <Description>Disabled</Description>
-        <Expanded>Yes</Expanded>
+        <Expanded>No</Expanded>
         <DefaultValue>false</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
@@ -95,7 +109,7 @@
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
         <Description>Disabled</Description>
-        <Expanded>Yes</Expanded>
+        <Expanded>No</Expanded>
         <DefaultValue>false</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
@@ -653,6 +667,59 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>byte #M#_#C#(byte i2cAddr, byte memAddr, byte data)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ProbeACK</Name>
+        <Symbol>ProbeACK</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Accesses the bus to check if the device responds with an ACK (ACK polling).</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>4</ParamCount>
+        <Parameter>
+          <ParName>data</ParName>
+          <ParType>pointer</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Data write buffer</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>dataSize</ParName>
+          <ParType>16bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint/>
+        </Parameter>
+        <Parameter>
+          <ParName>flags</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>flags for the transaction</ParHint>
+          <ParUserDeclaration>%'ModuleName'_EnumSendFlags flags</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>WaitTimeUS</ParName>
+          <ParType>16bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Waiting time in microseconds to wait for the ACK on the bus.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(void* data, word dataSize, %'ModuleName'_EnumSendFlags flags, word WaitTimeUS)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

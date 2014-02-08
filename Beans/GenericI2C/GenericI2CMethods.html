@@ -335,6 +335,21 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="ProbeACK">
+<b>ProbeACK</b></a>
+ - Accesses the bus to check if the device responds with an ACK (ACK polling).
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte ProbeACK(void* data, word dataSize, <i>ComponentName_</i>EnumSendFlags flags, word WaitTimeUS)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>data:void*</i> - Data write buffer</li>
+<li><i>dataSize:word</i> - no hint</li>
+<li><i>flags:byte</i> - flags for the transaction</li>
+<li><i>WaitTimeUS:word</i> - Waiting time in microseconds to wait for the ACK on the bus.</li>
+<li><i>Return value:byte</i> - Error code
+</li>
+</ul><br />
+</li>
 <li><a name="GetSemaphore">
 <b>GetSemaphore</b></a>
  - Returns the currently allocated semaphore.

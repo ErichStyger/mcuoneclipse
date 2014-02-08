@@ -145,6 +145,7 @@
 %if %DoAcknowledgePolling = 'yes'
 #define %'ModuleName'%.DO_ACKNOWLEDGE_POLLING    1               %>40 /* Perform acknowledge polling in the driver */
 #define %'ModuleName'%.PAGE_WRITE_TIME_MS        %PageWriteTimeMs%>40 /* Page Write Time as per data sheet */
+#define %'ModuleName'%.ACK_POLLING_TIME_US       %AckPollingTimeUs%>40 /* Acknowledge polling time in the I2C driver*/
 %else
 #define %'ModuleName'%.DO_ACKNOWLEDGE_POLLING    0               %>40 /* No acknowledge polling in the driver */
 %endif
@@ -422,7 +423,6 @@ byte %'ModuleName'%.%WriteByte(%'ModuleName'_Address addr, byte data)
   }
 #if %'ModuleName'%.DO_ACKNOWLEDGE_POLLING
   /* do acknowledge polling */
-  %@Wait@'ModuleName'%.WaitOSms(%'ModuleName'%.PAGE_WRITE_TIME_MS);
   block[0] = 0xff; /* dummy value */
 %if defined(Timeout)
 #if %'ModuleName'%.TIMEOUT_BYTE_TICKS>0
@@ -442,7 +442,8 @@ byte %'ModuleName'%.%WriteByte(%'ModuleName'_Address addr, byte data)
     }
 #endif
 %endif
-    res = %@I2C@'ModuleName'%.WriteBlock(block, 1, %@I2C@'ModuleName'%.SEND_STOP);%>40 /* send address and data */
+    %@Wait@'ModuleName'%.WaitOSms(%'ModuleName'%.PAGE_WRITE_TIME_MS);
+    res = %@I2C@'ModuleName'%.ProbeACK(block, 1, %@I2C@'ModuleName'%.SEND_STOP, %'ModuleName'%.ACK_POLLING_TIME_US);%>40 /* send address and data */
   } while(res!=ERR_OK); /* wait until we get an ACK */
 %if defined(Timeout)
 #if %'ModuleName'%.TIMEOUT_BYTE_TICKS>0
@@ -618,7 +619,6 @@ byte %'ModuleName'%.WriteBlockPage(%'ModuleName'_Address addr, byte *data, word 
     }
 #if %'ModuleName'%.DO_ACKNOWLEDGE_POLLING
     /* do acknowledge polling */
-    %@Wait@'ModuleName'%.WaitOSms(%'ModuleName'%.PAGE_WRITE_TIME_MS);
 %if defined(Timeout)
 #if %'ModuleName'%.TIMEOUT_BLOCK_TICKS>0
     timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_BLOCK_TICKS); /* set up timeout counter */
@@ -630,7 +630,8 @@ byte %'ModuleName'%.WriteBlockPage(%'ModuleName'_Address addr, byte *data, word 
 %endif
     block[0] = 0xff; /* dummy value */
     do {
-      res = %@I2C@'ModuleName'%.WriteBlock(block, 1, %@I2C@'ModuleName'%.SEND_STOP);%>40 /* send address and data */
+      %@Wait@'ModuleName'%.WaitOSms(%'ModuleName'%.PAGE_WRITE_TIME_MS);
+      res = %@I2C@'ModuleName'%.ProbeACK(block, 1, %@I2C@'ModuleName'%.SEND_STOP, %'ModuleName'%.ACK_POLLING_TIME_US);%>40 /* send address and data */
 %if defined(Timeout)
 #if %'ModuleName'%.TIMEOUT_BLOCK_TICKS>0
       isTimeout = %@Timeout@'ModuleName'%.CounterExpired(timeout);

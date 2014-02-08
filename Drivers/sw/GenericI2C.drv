@@ -297,6 +297,19 @@ byte %'ModuleName'%.%ScanDevice(byte i2cAddr);
 
 %endif %- ScanDevice
 %-BW_METHOD_END ScanDevice
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ProbeACK
+%ifdef ProbeACK
+byte %'ModuleName'%.%ProbeACK(void* data, word dataSize, %'ModuleName'_EnumSendFlags flags, word WaitTimeUS);
+%define! Pardata
+%define! PardataSize
+%define! Parflags
+%define! ParWaitTimeUS
+%define! RetVal
+%include Common\GenericI2CProbeACK.Inc
+
+%endif %- ProbeACK
+%-BW_METHOD_END ProbeACK
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -378,7 +391,7 @@ static %'ModuleName'%.TDataState %'ModuleName'%.deviceData;
 
 %if defined(Timeout)
 #define %'ModuleName'%.TIMEOUT_US  %TimeoutUs  /* number of microseconds as specified in properties */
-#define %'ModuleName'%.TIMEOUT_TICKS(factor) (((%'ModuleName'%.TIMEOUT_US*(factor))/1000/%@Timeout@'ModuleName'%.TICK_PERIOD_MS)+2)
+#define %'ModuleName'%.TIMEOUT_TICKS(factor) ((%'ModuleName'%.TIMEOUT_US*(factor))/1000/%@Timeout@'ModuleName'%.TICK_PERIOD_MS)
 %endif
 %endif
 %if defined(RTOS) & %UseSemaphore='yes'
@@ -496,7 +509,7 @@ byte %'ModuleName'%.%ReadBlock(void* data, word dataSize, %'ModuleName'_EnumSend
       break; /* break for(;;) */
     }
 %if defined(Timeout)
-    timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_TICKS(dataSize+1)); /* set up timeout counter */
+    timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_TICKS(dataSize)); /* set up timeout counter */
     if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
       res = ERR_FAILED;
       break; /* break for(;;) */
@@ -566,7 +579,7 @@ byte %'ModuleName'%.%WriteBlock(void* data, word dataSize, %'ModuleName'_EnumSen
       break; /* break for(;;) */
     }
 %if defined(Timeout)
-    timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_TICKS(dataSize+1)); /* set up timeout counter */
+    timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_TICKS(dataSize)); /* set up timeout counter */
     if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
       res = ERR_FAILED;
       break; /* break for(;;) */
@@ -644,7 +657,7 @@ byte %'ModuleName'%.%ReadAddress(byte i2cAddr, byte *memAddr, byte memAddrSize, 
       break; /* break for(;;) */
     }
 %if defined(Timeout)
-    timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_TICKS(memAddrSize+1)); /* set up timeout counter */
+    timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_TICKS(memAddrSize)); /* set up timeout counter */
     if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
       res = ERR_FAILED;
       break; /* break for(;;) */
@@ -672,7 +685,7 @@ byte %'ModuleName'%.%ReadAddress(byte i2cAddr, byte *memAddr, byte memAddrSize, 
       break; /* break for(;;) */
     }
 %if defined(Timeout)
-    timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_TICKS(dataSize+1)); /* set up timeout counter */
+    timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_TICKS(dataSize)); /* set up timeout counter */
     if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
       res = ERR_FAILED;
       break; /* break for(;;) */
@@ -968,7 +981,7 @@ byte %'ModuleName'%.%ScanDevice(byte i2cAddr)
       break; /* break for(;;) */
     }
 %if defined(Timeout)
-    timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_TICKS(2)); /* set up timeout counter */
+    timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_TICKS(1)); /* set up timeout counter */
     if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
       res = ERR_FAILED;
       break; /* break for(;;) */
@@ -1014,6 +1027,54 @@ byte %'ModuleName'%.%ScanDevice(byte i2cAddr)
 
 %endif %- ScanDevice
 %-BW_METHOD_END ScanDevice
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ProbeACK
+%ifdef ProbeACK
+%define! Pardata
+%define! PardataSize
+%define! Parflags
+%define! ParWaitTimeUS
+%define! RetVal
+%include Common\GenericI2CProbeACK.Inc
+byte %'ModuleName'%.%ProbeACK(void* data, word dataSize, %'ModuleName'_EnumSendFlags flags, word WaitTimeUS)
+{
+%if defined(I2C)
+  word nof;
+%endif
+  byte res = ERR_OK;
+
+%if defined(LDD_I2C)
+  %'ModuleName'%.deviceData.dataTransmittedFlg = FALSE;
+  res = %@LDD_I2C@'ModuleName'%.MasterSendBlock(%'ModuleName'%.deviceData.handle, data, dataSize, flags==%'ModuleName'_SEND_STOP?LDD_I2C_SEND_STOP:LDD_I2C_NO_SEND_STOP);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  %@Wait@'ModuleName'%.Waitus(WaitTimeUS);
+  if (!%'ModuleName'%.deviceData.dataTransmittedFlg) {
+    return ERR_FAILED; /* no ACK received? */
+  }
+%else
+  (void)WaitTimeUS; /* not used */
+  for(;;) { /* breaks */
+    res = %@I2C@'ModuleName'%.SendBlock(data, dataSize, &nof);
+    if (res!=ERR_OK) {
+      (void)%@I2C@'ModuleName'%.SendStop();
+      break; /* break for(;;) */
+    }
+    if (flags==%'ModuleName'_SEND_STOP) {
+      res = %@I2C@'ModuleName'%.SendStop();
+      if (res!=ERR_OK) {
+        break; /* break for(;;) */
+      }
+    }
+    break; /* break for(;;) */
+  } /* for(;;) */
+%endif
+  return res;
+}
+
+%endif %- ProbeACK
+%-BW_METHOD_END ProbeACK
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
