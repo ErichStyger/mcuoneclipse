@@ -4,7 +4,7 @@
     <Name>Key</Name>
     <Description>Debounced keyboard driver for single or multiple keys (up to 8 keys)</Description>
     <Author>Erich Styger</Author>
-    <Version>01.104</Version>
+    <Version>01.108</Version>
     <Icon>Key</Icon>
     <TypesFiles>PE,Key\Key</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -19,7 +19,7 @@
     <BW_NeedUst>0</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>License   : Open Source (LGPL)\nCopyright : Erich Styger, 2013, all rights reserved.\nWeb       : www.mcuoneclipse.com\n\nThis an open source software implementing a driver using Processor Expert.\nThis is a free software and is opened for education, research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
+    <Copyright>License   : Open Source (LGPL)\nCopyright : Erich Styger, 2014, all rights reserved.\nWeb       : www.mcuoneclipse.com\n\nThis an open source software implementing a driver using Processor Expert.\nThis is a free software and is opened for education, research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
     <Category>CPU External Devices-Keypad/Keyboard</Category>
     <Shortcut>KEY</Shortcut>
     <DemoDriver>no</DemoDriver>
@@ -95,7 +95,7 @@
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
         <Description>Disabled</Description>
-        <Expanded>No</Expanded>
+        <Expanded>Yes</Expanded>
         <DefaultValue>false</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
@@ -116,6 +116,22 @@
               <ChangeValueIntoRange>true</ChangeValueIntoRange>
               <RuntimeProperty>false</RuntimeProperty>
             </TIntgItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>Holding key</Name>
+              <Symbol>HoldingKeyEvents</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>If a holding key (events during press of a key) shall be detected.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Disabled</Description>
+              <Expanded>Yes</Expanded>
+              <DefaultValue>false</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+            </TBoolGrupItem>
           </GrupItem>
         </Children>
       </TBoolGrupItem>
@@ -584,6 +600,51 @@
               <Name>Event procedure name</Name>
               <Symbol>Name</Symbol>
               <Hint>OnKeyReleasedLong procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OnKeyHold</Name>
+        <Symbol>OnKeyHold</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Called during holding of the key(s)</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>keys</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>the key(s) hold, as bitset (e.g. 1 is key 1, 2 is key 2, 4 is key 3, ....)</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(byte keys)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OnKeyHold procedure name</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
               <DefaultValue/>

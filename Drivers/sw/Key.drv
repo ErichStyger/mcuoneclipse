@@ -226,6 +226,15 @@ void %OnKeyReleasedLong(byte keys);
 
 %endif %- OnKeyReleasedLong
 %-BW_METHOD_END OnKeyReleasedLong
+%-BW_METHOD_BEGIN OnKeyHold
+%ifdef OnKeyHold
+%INTERFACE OnKeyHold
+void %OnKeyHold(byte keys);
+%define! Parkeys
+%include Common\KeyOnKeyHold.Inc
+
+%endif %- OnKeyHold
+%-BW_METHOD_END OnKeyHold
 %-BW_EVENT_DEFINITION_END
 %IMPLEMENTATION
 %define! Settings Common\KeySettings.Inc
@@ -350,6 +359,11 @@ static void Scan(void)
           DBC_KeyState = DBC_KEY_WAIT_RELEASE_LONG; /* advance to next state */
           %@Trigger@'ModuleName'%.AddTrigger(%@Trigger@'ModuleName'%.%'ModuleName'%.PRESS, 1, Scan);
         } else {
+%if (HoldingKeyEvents='yes')
+          %if defined(OnKeyHold)
+          %OnKeyHold(DBC_ScanValue);
+          %endif
+%endif
           %@Trigger@'ModuleName'%.AddTrigger(%@Trigger@'ModuleName'%.%'ModuleName'%.PRESS, 1, Scan); /* continue waiting */
         }
 %else
@@ -533,6 +547,18 @@ void %OnKeyReleasedLong(byte keys)
 
 %endif %- OnKeyReleasedLong
 %-BW_METHOD_END OnKeyReleasedLong
+%-BW_METHOD_BEGIN OnKeyHold
+%ifdef OnKeyHold
+%IMPLEMENTATION OnKeyHold
+%define! Parkeys
+%include Common\KeyOnKeyHold.Inc
+void %OnKeyHold(byte keys)
+{
+  /* Write your code here ... */
+}
+
+%endif %- OnKeyHold
+%-BW_METHOD_END OnKeyHold
 %-BW_EVENT_IMPLEMENT_END
 %INITIALIZATION
   /* ### %DeviceType "%DeviceName" init code ... */
