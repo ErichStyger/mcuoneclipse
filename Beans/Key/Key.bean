@@ -4,7 +4,7 @@
     <Name>Key</Name>
     <Description>Debounced keyboard driver for single or multiple keys (up to 8 keys)</Description>
     <Author>Erich Styger</Author>
-    <Version>01.108</Version>
+    <Version>01.109</Version>
     <Icon>Key</Icon>
     <TypesFiles>PE,Key\Key</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -119,10 +119,10 @@
           </GrupItem>
           <GrupItem>
             <TBoolGrupItem>
-              <Name>Holding key</Name>
+              <Name>Holding key events</Name>
               <Symbol>HoldingKeyEvents</Symbol>
               <TypeSpec>typeEnaDis</TypeSpec>
-              <Hint>If a holding key (events during press of a key) shall be detected.</Hint>
+              <Hint>If during pressing a key events shall be generated while the key is hold.</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
