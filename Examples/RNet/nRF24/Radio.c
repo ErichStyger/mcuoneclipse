@@ -235,8 +235,8 @@ uint8_t RADIO_SetChannel(uint8_t channel) {
 uint8_t RADIO_PowerUp(void) {
   RF1_Init(); /* set CE and CSN to initialization value */
   
-//  RF1_WriteRegister(RF1_RF_SETUP, RF1_RF_SETUP_RF_PWR_0|RF1_RF_SETUP_RF_DR_250);
-  RF1_WriteRegister(RF1_RF_SETUP, RF1_RF_SETUP_RF_PWR_18|RF1_RF_SETUP_RF_DR_1000);
+  RF1_WriteRegister(RF1_RF_SETUP, RF1_RF_SETUP_RF_PWR_0|RF1_RF_SETUP_RF_DR_250);
+//  RF1_WriteRegister(RF1_RF_SETUP, RF1_RF_SETUP_RF_PWR_18|RF1_RF_SETUP_RF_DR_1000);
 #if NRF24_DYNAMIC_PAYLOAD
   /* enable dynamic payload */
   RF1_WriteFeature(RF1_FEATURE_EN_DPL|RF1_FEATURE_EN_ACK_PAY|RF1_FEATURE_EN_DYN_PAY); /* set EN_DPL for dynamic payload */
