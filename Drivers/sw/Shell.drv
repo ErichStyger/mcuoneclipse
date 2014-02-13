@@ -435,6 +435,17 @@ byte %'ModuleName'%.%SetStdio(%'ModuleName'_ConstStdIOTypePtr stdio);
 
 %endif %- SetStdio
 %-BW_METHOD_END SetStdio
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SendData
+%ifdef SendData
+void %'ModuleName'%.%SendData(const byte *data, word dataSize, %'ModuleName'_StdIO_OutErr_FctType io);
+%define! Pardata
+%define! PardataSize
+%define! Pario
+%include Common\ShellSendData.Inc
+
+%endif %- SendData
+%-BW_METHOD_END SendData
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -1151,6 +1162,28 @@ void %'ModuleName'%.%Deinit(void)
 
 %endif %- Deinit
 %-BW_METHOD_END Deinit
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SendData
+%ifdef SendData
+%define! Pardata
+%define! PardataSize
+%define! Pario
+%include Common\ShellSendData.Inc
+/*!
+ * \brief Sends data using I/O callbacks
+ * \param[in] data Pointer to data to be sent
+ * \param[in] io I/O function to be used for sending
+ */
+void %'ModuleName'%.%SendData(const byte *data, word dataSize, %'ModuleName'_StdIO_OutErr_FctType io)
+{
+  while(dataSize>0) {
+    io(*data++);
+    dataSize--;
+  }
+}
+
+%endif %- SendData
+%-BW_METHOD_END SendData
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

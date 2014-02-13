@@ -4,7 +4,7 @@
     <Name>Shell</Name>
     <Description>Command Line Shell</Description>
     <Author>Erich Styger</Author>
-    <Version>01.025</Version>
+    <Version>01.026</Version>
     <Icon>Shell</Icon>
     <TypesFiles>PE,Shell\Shell</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -573,8 +573,8 @@
         <Parameter>
           <ParName>str</ParName>
           <ParType>8bit unsigned</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>String (zero terminated) to be printed.</ParHint>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to string (zero terminated) to be printed.</ParHint>
           <ParUserDeclaration>const byte *str</ParUserDeclaration>
         </Parameter>
         <Parameter>
@@ -586,6 +586,53 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>void #M#_#C#(const byte *str, %'ModuleName'_StdIO_OutErr_FctType io)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>SendData</Name>
+        <Symbol>SendData</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Sends data using an I/O function. Unlike SendStr(), with this method it is possible to send binary data, including zero bytes.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>none</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>data</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to data to be sent</ParHint>
+          <ParUserDeclaration>const byte *data</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>dataSize</ParName>
+          <ParType>16bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Number of bytes to be sent.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>io</ParName>
+          <ParType>StdIO_OutErr_FctType</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>I/O callbacks to be used for printing.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(const byte *data, word dataSize, %'ModuleName'_StdIO_OutErr_FctType io)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

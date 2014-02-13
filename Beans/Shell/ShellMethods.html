@@ -285,7 +285,19 @@ LI.EXP {
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
 <br /><i>ANSIC prototype:</i> void SendStr(const byte *str, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>str:byte</i> - String (zero terminated) to be printed.</li>
+<li><i>str: Pointer to byte</i> - Pointer to string (zero terminated) to be printed.</li>
+<li><i>io:<i>ComponentName_</i>StdIO_OutErr_FctType</i> - I/O callbacks to be used for printing.</li>
+</ul><br />
+</li>
+<li><a name="SendData">
+<b>SendData</b></a>
+ - Sends data using an I/O function. Unlike SendStr(), with this method it is possible to send binary data, including zero bytes.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SendData(const byte *data, word dataSize, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>data: Pointer to byte</i> - Pointer to data to be sent</li>
+<li><i>dataSize:word</i> - Number of bytes to be sent.</li>
 <li><i>io:<i>ComponentName_</i>StdIO_OutErr_FctType</i> - I/O callbacks to be used for printing.</li>
 </ul><br />
 </li>
