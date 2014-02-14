@@ -10,7 +10,7 @@
 %-  /* END %ModuleName. */
 %-  /* MODULE %ModuleName. */
 %-  %-INTERNAL_METHOD_BEG
-%-  %-INTERNAL_METHOD_END 
+%-  %-INTERNAL_METHOD_END
 %-  %-INHERITED_EVENT_BEGIN
 %-  %-INHERITED_EVENT_END
 %-  %-BW_METHOD_BEGIN
@@ -38,6 +38,8 @@
 %-
 %- readyCPU ...
 %- readyDEVICE ...
+%-
+%include RNet_Files.prg
 %-
 %define DriverAuthor  Author
 %define DriverVersion 01.00
@@ -78,7 +80,7 @@
   %endfor
 %endif
 %-BW_CUSTOM_INCLUDE_START_H
-%- Write your own includes here ... 
+%- Write your own includes here ...
 %-   Example:
 %-     #include "header_name.h"
 %-
@@ -98,7 +100,7 @@
 %-BW_CUSTOM_USERTYPE_START
 %- Write your own types here ...
 %-  Example:
-%-    typedef int TMyInteger; 
+%-    typedef int TMyInteger;
 %-
 %-BW_CUSTOM_USERTYPE_END
 
@@ -107,7 +109,7 @@
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
-#endif 
+#endif
 /* ifndef __%'ModuleName'_H */
 %include Common\Header.End
 %-
@@ -132,7 +134,7 @@
 %-BW_CUSTOM_INCLUDE_END_M
 
 %-BW_CUSTOM_VARIABLE_START
-%- Write your static variables here 
+%- Write your static variables here
 %-   Example:
 %-     static int counter1;
 %-     int %'ModuleName'%.counter2;
