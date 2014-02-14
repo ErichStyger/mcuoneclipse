@@ -80,12 +80,6 @@
 #include "%'var'.h"
   %endfor
 %endif
-/* Include inherited components */
-%ifdef InhrSymbolList
-  %for var from InhrSymbolList
-#include "%@%var@ModuleName.h"
-  %endfor
-%endif
 %-BW_CUSTOM_INCLUDE_START_H
 %- Write your own includes here ...
 %-   Example:
@@ -268,7 +262,6 @@ byte %'ModuleName'%.%ParseWithCommandTable(const unsigned char *cmd, %'ModuleNam
 
 %endif %- GetStdio
 %-BW_METHOD_END GetStdio
-%-************************************************************************************************************
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SendNum32u
 %ifdef SendNum32u
@@ -466,6 +459,12 @@ void %'ModuleName'%.%SendData(const byte *data, word dataSize, %'ModuleName'_Std
 #include "%var.h"
 %endfor
 #include "%'ModuleName'.h"
+/* Include inherited components */
+%ifdef InhrSymbolList
+  %for var from InhrSymbolList
+#include "%@%var@ModuleName.h"
+  %endfor
+%endif
 %-BW_CUSTOM_INCLUDE_START_M
 %- Write your own includes here ...
 %-   Example:
