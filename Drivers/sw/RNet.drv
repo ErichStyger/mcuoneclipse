@@ -101,6 +101,11 @@
 %- Write your own types here ...
 %-  Example:
 %-    typedef int TMyInteger;
+%ifdef ParseCommand
+#define %'ModuleName'%.PARSE_COMMAND_ENABLED  1  /* set to 1 if method ParseCommand() is present, 0 otherwise */
+%else
+#define %'ModuleName'%.PARSE_COMMAND_ENABLED  0 /* set to 1 if method ParseCommand() is present, 0 otherwise */
+%endif %- ParseCommand
 %-
 %-BW_CUSTOM_USERTYPE_END
 

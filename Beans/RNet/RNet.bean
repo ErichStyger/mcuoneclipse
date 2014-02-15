@@ -4,7 +4,7 @@
     <Name>RNet</Name>
     <Description>RNet (Radio and Remote Network) Stack</Description>
     <Author>Erich Styger</Author>
-    <Version>01.001</Version>
+    <Version>01.003</Version>
     <Icon>RNet</Icon>
     <TypesFiles>PE,RNet\RNet</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -50,6 +50,52 @@
         <CanDelete>false</CanDelete>
         <IconPopup>false</IconPopup>
       </TEnumItem>
+    </Property>
+    <Property>
+      <TBoolGrupItem>
+        <Name>Shell</Name>
+        <Symbol>ShellEnabled</Symbol>
+        <TypeSpec>typeEnaDis</TypeSpec>
+        <Hint>If shell support is enabled. This enables/disables the method ParseCommand().</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>Disabled</Description>
+        <Expanded>Yes</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <Children>
+          <GrupItem>
+            <TInhrLinkItem>
+              <Name>Shell</Name>
+              <Symbol>Shell</Symbol>
+              <TypeSpec>RNet\Shell</TypeSpec>
+              <Hint>Interface to Shell</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <DefaultValue/>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <SortStyle/>
+            </TInhrLinkItem>
+          </GrupItem>
+          <GrupItem>
+            <TInhrLinkItem>
+              <Name>Utility</Name>
+              <Symbol>Utility</Symbol>
+              <TypeSpec>RNet\Utility</TypeSpec>
+              <Hint>Interface to Utility functions</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <DefaultValue/>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <SortStyle/>
+            </TInhrLinkItem>
+          </GrupItem>
+        </Children>
+      </TBoolGrupItem>
     </Property>
   </PropertyList>
   <Links>
