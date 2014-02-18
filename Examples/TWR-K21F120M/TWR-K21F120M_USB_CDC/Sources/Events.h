@@ -54,6 +54,7 @@
 #include "WAIT1.h"
 #include "UTIL1.h"
 #include "HF1.h"
+#include "CS1.h"
 
 #ifdef __cplusplus
 extern "C" {
