@@ -1,6 +1,6 @@
 
 [USED_FACES]
-BeanVersion=01.013
+BeanVersion=01.020
 
 InterfacesCount=4
 
@@ -9,10 +9,10 @@ Link=No
 Interface=FatFsMemSDHC\SDHC
 Version=01.001
 
-Symbol=GPIO_LDD
-Link=Yes
-Interface=FatFsMemSDHC\CD_GPIO_LDD
-Version=01.004
+Symbol=CD
+Link=No
+Interface=FatFsMemSDHC\CardDetect
+Version=01.002
 
 Symbol=WP
 Link=No

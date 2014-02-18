@@ -249,20 +249,12 @@ The following items are available only if the group is enabled (the value is "En
 
 <ul>
   <li>
-  <a name="GPIO_LDD">
-  <b>GPIO_LDD</b></a> - Interface to card detect GPIO_LDD
+  <a name="CD">
+  <b>CD</b></a> - Interface to card detect pin. Note that many cards need a pull-up or even pull-down resistor added.
   </li>
   <li>
-  <a name="CDFieldName">
-  <b>Field Name</b></a> - Field name as specified in the GPIO_LDD component
-  </li>
-  <li>
-  <a name="CDPinSelectPullupCode">
-  <b>Pin Select Pullup code</b></a> - Code to set pull-up of card detect pin. Example code for Kinetis Tower K60 board using PTE28 is provided.
-  </li>
-  <li>
-  <a name="CDPinEnablePullupCode">
-  <b>Pin Pullup Enable code</b></a> - Code to enable card detect pin. Example code for Kinetis Tower K60 board using PTE28 is provided.
+  <a name="CDLowActive">
+  <b>Low Active</b></a> - Set to 'yes' if a card inserted will be LOW logical level, otherwise set it to 'no'
   </li>
 </ul>
 </li>

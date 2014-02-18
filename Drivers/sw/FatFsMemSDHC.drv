@@ -50,11 +50,6 @@
 %-BW_INTERN_COMMENTS_START
 %- List of descriptions of internal methods
 %define! Description_SD_Wait Wait until SD operation is completed
-%ifdef GPIO_LDD
-  %ifdef @GPIO_LDD@OnPortEvent
-    %define! Description_%@GPIO_LDD@OnPortEvent Called if defined event on any pin of the port occured. OnPortEvent event and GPIO interrupt must be enabled. See SetPortEventMask() and GetPortEventMask() methods. This event is enabled if <a href="UntitledProperties.html#IntService">Interrupt service/event</a> is Enabled and disabled if <a href="UntitledProperties.html#IntService">Interrupt service/event</a> is Disabled. The event services the event of the inherited component and eventually invokes other events.
-  %endif %- @GPIO_LDD@OnPortEvent
-%endif %- GPIO_LDD
 %ifdef SDHC
   %ifdef @SDHC@OnCardInserted
     %define! Description_%@SDHC@OnCardInserted This event is called when a card is inserted into the slot. The card identification number is retrieved and it is passed to the event. If card detection pin is not available, the DetectCards method calls this event. The event services the event of the inherited component and eventually invokes other events.
@@ -112,9 +107,6 @@
 
 typedef struct {
   LDD_TDeviceData *SDHCPtr;     /* SDHC component data */
-%ifdef GPIO_LDD
-  LDD_TDeviceData *GPIOPtr;     /* GPIO component data */
-%endif
   bool Finished;                /* Operation end indication */
   bool Inserted;                /* Card insertion indication */
   uint8_t CardId;               /* Initialized card ID */
@@ -166,12 +158,6 @@ bool %'ModuleName'%.%CardPresent(void);
 
 %endif %- CardPresent
 %-BW_METHOD_END CardPresent
-%-INHERITED_EVENT_BEGIN GPIO_LDD OnPortEvent
-%if defined(GPIO_LDD) & defined(@GPIO_LDD@OnPortEvent)
-void %@GPIO_LDD@OnPortEvent(LDD_TUserData *UserDataPtr);
-
-%endif %- @GPIO_LDD@OnPortEvent
-%-INHERITED_EVENT_END GPIO_LDD OnPortEvent
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Init
 %ifdef Init
@@ -253,15 +239,6 @@ void %OnFinished(LDD_TUserData *UserDataPtr);
 
 %endif %- OnFinished
 %-BW_METHOD_END OnFinished
-%-BW_METHOD_BEGIN OnPortEvent
-%ifdef OnPortEvent
-%INTERFACE OnPortEvent
-void %OnPortEvent(LDD_TUserData *UserDataPtr);
-%define! ParUserDataPtr
-%include Common\FatFsMemSDHCOnPortEvent.Inc
-
-%endif %- OnPortEvent
-%-BW_METHOD_END OnPortEvent
 %-BW_EVENT_DEFINITION_END
 %IMPLEMENTATION
 %define! Settings Common\FatFsMemSDHCSettings.Inc
@@ -372,27 +349,19 @@ void %@SDHC@OnFinished(LDD_TUserData *UserDataPtr)
 %include Common\FatFsMemSDHCCardPresent.Inc
 bool %'ModuleName'%.%CardPresent(void)
 {
-  return SD.Inserted;
+%if defined(CD)
+%if %CDLowActive='yes'
+  return %@CD@'ModuleName'%.GetVal()==0;
+%else
+  return %@CD@'ModuleName'%.GetVal()!=0;
+%endif
+%else
+  return FALSE; /* no CD pin, assume card is not inserted */
+%endif
 }
 
 %endif %- CardPresent
 %-BW_METHOD_END CardPresent
-%-INHERITED_EVENT_BEGIN GPIO_LDD OnPortEvent
-%if defined(GPIO_LDD) & defined(@GPIO_LDD@OnPortEvent)
-%include Common\GeneralInternal.inc (OnPortEvent)
-void %@GPIO_LDD@OnPortEvent(LDD_TUserData *UserDataPtr)
-{
-  TSDData *SD = (TSDData*)UserDataPtr;
-
-  SD->Inserted = (%@GPIO_LDD@'ModuleName'%.GetFieldValue(SD->GPIOPtr, SD_CARD_DETECT) != 1);
-  %ifdef OnPortEvent
-  /* Calling inherited event */
-  %OnPortEvent(UserDataPtr);
-  %endif OnPortEvent
-}
-
-%endif %- @GPIO_LDD@OnPortEvent
-%-INHERITED_EVENT_END GPIO_LDD OnPortEvent
 %-************************************************************************************************************
 %-INTERNAL_METHOD_BEG SD_Wait
 %define! ParSD
@@ -430,24 +399,10 @@ LDD_TDeviceData* %'ModuleName'%.%Init(LDD_TUserData *UserDataPtr)
 
   (void)UserDataPtr; /* not used */
   SD.SDHCPtr = 0;
-%ifdef GPIO_LDD
-  SD.GPIOPtr = 0;
-%endif
   SD.Finished = FALSE;
-  SD.Inserted = FALSE;
   SD.CardId = %@SDHC@'ModuleName'%.NO_CARD;
-%ifdef GPIO_LDD
-  /* Enable pull-up on GPIO pin used for SD card detection */
-  %CDPinSelectPullupCode
-  %CDPinEnablePullupCode
-  SD.GPIOPtr = %@GPIO_LDD@'ModuleName'%.Init(&SD);
-%endif
   SD.SDHCPtr = %@SDHC@'ModuleName'%.Init(&SD);
-%ifdef GPIO_LDD
-  SD.Inserted = (%@GPIO_LDD@'ModuleName'%.GetFieldValue(SD.GPIOPtr, %CDFieldName) != 1);
-%else
-  SD.Inserted = FALSE;
-%endif
+  SD.Inserted = %'ModuleName'%.%CardPresent();
   SD_Wait(&SD, &Error); /* Wait for card reset to finish */
   if (!Error && SD.Inserted) {
     if (%@SDHC@'ModuleName'%.DetectCards(SD.SDHCPtr)!=ERR_OK) {
@@ -501,9 +456,6 @@ void %'ModuleName'%.%Deinit(LDD_TDeviceData *DeviceDataPtr)
   (void)DeviceDataPtr; /* not used */
   /* Deinit components/devices */
   %@SDHC@'ModuleName'%.Deinit(SD.SDHCPtr);
-%ifdef GPIO_LDD
-  %@GPIO_LDD@'ModuleName'%.Deinit(SD.GPIOPtr);
-%endif
 }
 
 %endif %- Deinit
@@ -892,18 +844,6 @@ void %OnFinished(LDD_TUserData *UserDataPtr)
 
 %endif %- OnFinished
 %-BW_METHOD_END OnFinished
-%-BW_METHOD_BEGIN OnPortEvent
-%ifdef OnPortEvent
-%IMPLEMENTATION OnPortEvent
-%define! ParUserDataPtr
-%include Common\FatFsMemSDHCOnPortEvent.Inc
-void %OnPortEvent(LDD_TUserData *UserDataPtr)
-{
-  /* Write your code here ... */
-}
-
-%endif %- OnPortEvent
-%-BW_METHOD_END OnPortEvent
 %-BW_EVENT_IMPLEMENT_END
 %INITIALIZATION
   /* ### %DeviceType "%DeviceName" init code ... */

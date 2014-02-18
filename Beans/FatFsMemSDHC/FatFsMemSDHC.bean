@@ -4,7 +4,7 @@
     <Name>FatFsMemSDHC</Name>
     <Description>Memory Implementation for FatFS using SDHC_LDD</Description>
     <Author>Erich Styger</Author>
-    <Version>01.013</Version>
+    <Version>01.020</Version>
     <Icon>FatFsMemSDHC</Icon>
     <TypesFiles>PE,FatFsMemSDHC\FatFsMemSDHC</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -129,63 +129,46 @@
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
         <Description>Disabled</Description>
-        <Expanded>No</Expanded>
+        <Expanded>Yes</Expanded>
         <DefaultValue>false</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
         <Children>
           <GrupItem>
-            <TInhrLinkItem>
-              <Name>GPIO_LDD</Name>
-              <Symbol>GPIO_LDD</Symbol>
-              <TypeSpec>FatFsMemSDHC\CD_GPIO_LDD</TypeSpec>
-              <Hint>Interface to card detect GPIO_LDD</Hint>
+            <TInhrItem>
+              <Name>CD</Name>
+              <Symbol>CD</Symbol>
+              <TypeSpec>FatFsMemSDHC\CardDetect</TypeSpec>
+              <Hint>Interface to card detect pin. Note that many cards need a pull-up or even pull-down resistor added.</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>false</EditLine>
-              <DefaultValue/>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>-1</DefaultIndex>
+              <TextValueIndex>false</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
               <CanDelete>false</CanDelete>
               <IconPopup>false</IconPopup>
-              <SortStyle/>
-            </TInhrLinkItem>
+              <InhrBeanBaseName>CD</InhrBeanBaseName>
+              <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+            </TInhrItem>
           </GrupItem>
           <GrupItem>
-            <TStrgItem>
-              <Name>Field Name</Name>
-              <Symbol>CDFieldName</Symbol>
-              <Hint>Field name as specified in the GPIO_LDD component</Hint>
+            <TBoolItem>
+              <Name>Low Active</Name>
+              <Symbol>CDLowActive</Symbol>
+              <TypeSpec>typeYesNo</TypeSpec>
+              <Hint>Set to 'yes' if a card inserted will be LOW logical level, otherwise set it to 'no'</Hint>
               <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>SD_CARD_DETECT</DefaultValue>
-              <StrDefine>nothing</StrDefine>
-              <MinLength>0</MinLength>
-              <MaxLength>-1</MaxLength>
-            </TStrgItem>
-          </GrupItem>
-          <GrupItem>
-            <TStrgItem>
-              <Name>Pin Select Pullup code</Name>
-              <Symbol>CDPinSelectPullupCode</Symbol>
-              <Hint>Code to set pull-up of card detect pin. Example code for Kinetis Tower K60 board using PTE28 is provided.</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>PORT_PDD_SetPinPullSelect(PORTE_BASE_PTR, 28, PORT_PDD_PULL_UP);</DefaultValue>
-              <StrDefine>nothing</StrDefine>
-              <MinLength>0</MinLength>
-              <MaxLength>-1</MaxLength>
-            </TStrgItem>
-          </GrupItem>
-          <GrupItem>
-            <TStrgItem>
-              <Name>Pin Pullup Enable code</Name>
-              <Symbol>CDPinEnablePullupCode</Symbol>
-              <Hint>Code to enable card detect pin. Example code for Kinetis Tower K60 board using PTE28 is provided.</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>PORT_PDD_SetPinPullEnable(PORTE_BASE_PTR, 28, PORT_PDD_PULL_ENABLE);</DefaultValue>
-              <StrDefine>nothing</StrDefine>
-              <MinLength>0</MinLength>
-              <MaxLength>-1</MaxLength>
-            </TStrgItem>
+              <EditLine>false</EditLine>
+              <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+              <DefaultIndex>0</DefaultIndex>
+              <TextValueIndex>false</TextValueIndex>
+              <RuntimeProperty>false</RuntimeProperty>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <DefaultValue>true</DefaultValue>
+              <Popup>false</Popup>
+            </TBoolItem>
           </GrupItem>
         </Children>
       </TBoolGrupItem>
@@ -630,51 +613,6 @@
               <Name>Event procedure name</Name>
               <Symbol>Name</Symbol>
               <Hint>OnFinished procedure name</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue/>
-              <StrDefine>nothing</StrDefine>
-              <MinLength>0</MinLength>
-              <MaxLength>-1</MaxLength>
-              <ErrorIfNotSet>true</ErrorIfNotSet>
-              <IdentType>EVNT</IdentType>
-            </TEvntName>
-          </GrupItem>
-        </Children>
-      </TEvntItem>
-    </Event>
-    <Event>
-      <TEvntItem>
-        <Name>OnPortEvent</Name>
-        <Symbol>OnPortEvent</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Called if defined event on any pin of the port occured. OnPortEvent event and GPIO interrupt must be enabled. See SetPortEventMask() and GetPortEventMask() methods.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <BoldName>true</BoldName>
-        <EditLine>false</EditLine>
-        <Description>don't generate code</Description>
-        <Expanded>No</Expanded>
-        <DefaultValue>false</DefaultValue>
-        <DefineSymbol>YES_NO</DefineSymbol>
-        <IfDisabled>setNOTHING</IfDisabled>
-        <IsAssembler>true</IsAssembler>
-        <ParamCount>1</ParamCount>
-        <Parameter>
-          <ParName>UserDataPtr</ParName>
-          <ParType>LDD_TUserData</ParType>
-          <ParPassing>Address</ParPassing>
-          <ParHint>Pointer to RTOS device data structure pointer.</ParHint>
-        </Parameter>
-        <Scope>OVERRIDE</Scope>
-        <Declarations>
-          <ANSIC>void #C#(LDD_TUserData *UserDataPtr)</ANSIC>
-        </Declarations>
-        <Children>
-          <GrupItem>
-            <TEvntName>
-              <Name>Event procedure name</Name>
-              <Symbol>Name</Symbol>
-              <Hint>OnPortEvent procedure name</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
               <DefaultValue/>
