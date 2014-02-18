@@ -106,7 +106,7 @@
 %-BW_METHOD_BEGIN CriticalVariable
 %ifdef CriticalVariable
 #define %'ModuleName'%.%CriticalVariable() \
-%if (CPUfamily = "Kinetis") & (%Compiler = "GNUC")
+%if (%UseProcessorExpertDefault='no') & (CPUfamily = "Kinetis") & (%Compiler = "GNUC")
   uint8_t cpuSR; /* variable to store current status */
 %else
   /* nothing needed */
@@ -120,7 +120,7 @@
 %-BW_METHOD_BEGIN EnterCritical
 %ifdef EnterCritical
 #define %'ModuleName'%.%EnterCritical() \
-%if (CPUfamily = "Kinetis") & (%Compiler = "GNUC")
+%if (%UseProcessorExpertDefault='no') & (%CPUfamily = "Kinetis") & (%Compiler = "GNUC")
   do {                                  \
     asm (                               \
     "MRS   R0, PRIMASK\n\t"             \
@@ -140,7 +140,7 @@
 %-BW_METHOD_BEGIN ExitCritical
 %ifdef ExitCritical
 #define %'ModuleName'%.%ExitCritical() \
-%if (CPUfamily = "Kinetis") & (%Compiler = "GNUC")
+%if (%UseProcessorExpertDefault='no') & (%CPUfamily = "Kinetis") & (%Compiler = "GNUC")
   do{                                  \
     asm (                              \
     "ldrb r0, %%[input]\n\t"            \
