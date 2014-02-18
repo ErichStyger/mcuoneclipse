@@ -42,6 +42,8 @@
 #include "UTIL1.h"
 #include "HF1.h"
 #include "FRTOS1.h"
+#include "EVNT1.h"
+#include "CS1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -120,6 +122,21 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 **         If enabled, the RTOS will call this hook in case memory
 **         allocation failed.
 **     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void EVNT1_AppHandleEvent(byte event);
+/*
+** ===================================================================
+**     Event       :  EVNT1_AppHandleEvent (module Events)
+**
+**     Component   :  EVNT1 [SimpleEvents]
+**     Description :
+**         
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         event           - Event (event number) to be processed.
 **     Returns     : Nothing
 ** ===================================================================
 */

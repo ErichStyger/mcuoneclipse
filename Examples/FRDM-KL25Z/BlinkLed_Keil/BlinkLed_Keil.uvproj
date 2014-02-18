@@ -30,6 +30,7 @@
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
           <SFDFile>SFD\Freescale\Kinetis\MKL25Z4.sfr</SFDFile>
+          <bCustSvd>0</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
           <IncludePath></IncludePath>
@@ -97,6 +98,7 @@
           <StopOnExitCode>3</StopOnExitCode>
           <CustomArgument></CustomArgument>
           <IncludeLibraryModules></IncludeLibraryModules>
+          <ComprImg>1</ComprImg>
         </CommonProperty>
         <DllOption>
           <SimDllName>SARMCM3.DLL</SimDllName>
@@ -130,7 +132,7 @@
           <Target>
             <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>0</RunToMain>
+            <RunToMain>1</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
             <RestoreWatchpoints>1</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
@@ -139,7 +141,7 @@
             <RestoreTracepoints>1</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>14</TargetSelection>
+          <TargetSelection>12</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -165,10 +167,14 @@
             <Capability>1</Capability>
             <DriverSelection>4104</DriverSelection>
           </Flash1>
-          <bUseTDR>0</bUseTDR>
+          <bUseTDR>1</bUseTDR>
           <Flash2>BIN\CMSIS_AGDI.dll</Flash2>
           <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
+          <pFcarmOut></pFcarmOut>
+          <pFcarmGrp></pFcarmGrp>
+          <pFcArmRoot></pFcArmRoot>
+          <FcArmLst>0</FcArmLst>
         </Utilities>
         <TargetArmAds>
           <ArmAdsMisc>
@@ -517,6 +523,16 @@
               <FileType>1</FileType>
               <FilePath>.\Generated_Code\heap_4.c</FilePath>
             </File>
+            <File>
+              <FileName>CS1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Generated_Code\CS1.c</FilePath>
+            </File>
+            <File>
+              <FileName>EVNT1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Generated_Code\EVNT1.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -661,6 +677,16 @@
               <FileName>timers.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Generated_Code\timers.h</FilePath>
+            </File>
+            <File>
+              <FileName>CS1.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Generated_Code\CS1.h</FilePath>
+            </File>
+            <File>
+              <FileName>EVNT1.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Generated_Code\EVNT1.h</FilePath>
             </File>
           </Files>
         </Group>
