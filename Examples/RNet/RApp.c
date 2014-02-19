@@ -11,6 +11,7 @@
 #if PL_HAS_RADIO
 #include "RApp.h"
 #include "RNWK.h"
+#include "UTIL1.h"
 
 static const RAPP_MsgHandler *RAPP_MsgHandlerTable;
 
