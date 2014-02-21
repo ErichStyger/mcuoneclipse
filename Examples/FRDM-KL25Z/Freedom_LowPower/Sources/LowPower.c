@@ -15,10 +15,11 @@
 #if PL_HAS_LED
   #include "LED3.h"
 #endif
-
+#include "UTIL1.h"
 
 #define LP_CAN_CHANGE_CLOCK  0
 
+static bool LP_EnableSTOP;
 static LP_PowerMode LP_mode;
 #if LP_CAN_CHANGE_CLOCK
 static LP_ClockMode LP_clock;
@@ -113,22 +114,7 @@ uint8_t LP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdI
 #endif
 
 void LP_EnterPowerMode(LP_PowerMode mode) {
-#if PL_HAS_LED
-  //LED3_Neg();
-#endif
-#if PL_IS_SRB
-  if (mode==LP_WAIT) {
-    Cpu_SetWaitMode();
-  }
-  /* interrupt will wake us up, and we are back in RUN mode */
-#endif
-#if defined(PL_BOARD_IS_TOWER)
-  if (mode==LP_STOP) {
-    __asm("stop #0x2000"); /* put CPU into stop mode (USB does not work! */
-  }
-  /* interrupt will wake us up, and we are back in RUN mode */
-#endif
-#if defined(PL_BOARD_IS_FRDM)
+  LP_mode = mode;
 #if configUSE_TICKLESS_IDLE
   if (LP_mode==LP_RUN) { /* need to wait for interrupt! */
     __asm volatile("dsb");
@@ -136,19 +122,34 @@ void LP_EnterPowerMode(LP_PowerMode mode) {
     __asm volatile("isb");  
   } else 
 #endif
-  if (mode==LP_WAIT) {
+  if (LP_mode==LP_WAIT) {
+#if PL_HAS_CLOCK_CONFIG 
+    Cpu_SetClockConfiguration(CPU_CLOCK_CONFIG_1); /* go into slow speed */
+#endif
     Cpu_SetOperationMode(DOM_WAIT, NULL, NULL); /* next interrupt will wake us up */
-  } else if (mode==LP_SLEEP) {
+#if PL_HAS_CLOCK_CONFIG 
+    Cpu_SetClockConfiguration(CPU_CLOCK_CONFIG_0); /* go back to normal speed */
+#endif
+  } else if (LP_mode==LP_SLEEP) {
     Cpu_SetOperationMode(DOM_SLEEP, NULL, NULL); /* next interrupt will wake us up */
-  } else if (mode==LP_STOP) {
-    Cpu_SetOperationMode(DOM_STOP, NULL, NULL); /* next interrupt will wake us up */
+  } else if (LP_mode==LP_STOP) {
+    if (LP_EnableSTOP) {
+      Cpu_SetOperationMode(DOM_STOP, NULL, NULL); /* next interrupt will wake us up */
+    } else {
+      __asm volatile("dsb");
+      __asm volatile("wfi"); /* wait for interrupt */
+      __asm volatile("isb");  
+    }
   }
   /* interrupt will wake us up, and we are back in RUN mode */
-#endif
 }
 
 void LP_EnterLowPower(void) {
   LP_EnterPowerMode(LP_mode);
+}
+
+void LP_SetStopMode(bool enable) {
+  LP_EnableSTOP = enable;
 }
 
 void LP_Deinit(void) {
@@ -156,9 +157,11 @@ void LP_Deinit(void) {
 }
 
 void LP_Init(void) {
-  LP_mode = LP_WAIT;
+//  LP_mode = LP_WAIT;
+  LP_mode = LP_STOP;
 #if LP_CAN_CHANGE_CLOCK
   LP_clock = LP_SPEED_FAST;
 #endif
+  LP_EnableSTOP = (LP_mode==LP_STOP);
 }
 #endif /* PL_HAS_LOW_POWER */

@@ -32,9 +32,6 @@
 #include "Cpu.h"
 #include "Events.h"
 #include "WAIT1.h"
-#include "TU1.h"
-#include "TI1.h"
-#include "TimerIntLdd1.h"
 #include "LED1.h"
 #include "LEDpin2.h"
 #include "BitIoLdd2.h"
@@ -44,8 +41,12 @@
 #include "LED3.h"
 #include "LEDpin4.h"
 #include "BitIoLdd4.h"
+#include "AS1.h"
+#include "ASerialLdd1.h"
+#include "CLS1.h"
 #include "UTIL1.h"
 #include "FRTOS1.h"
+#include "CS1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -66,6 +67,9 @@ int main(void)
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
+  LED2_On();
+  WAIT1_Waitms(1000);
+  LED2_Off();
 #if PL_HAS_LOW_POWER
   LP_Init();
 #endif

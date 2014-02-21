@@ -54,26 +54,6 @@ void Cpu_OnNMIINT(void)
   /* Write your code here ... */
 }
 
-/*
-** ===================================================================
-**     Event       :  TI1_OnInterrupt (module Events)
-**
-**     Component   :  TI1 [TimerInt]
-**     Description :
-**         When a timer interrupt occurs this event is called (only
-**         when the component is enabled - <Enable> and the events are
-**         enabled - <EnableEvent>). This event is enabled only if a
-**         <interrupt service/event> is enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void TI1_OnInterrupt(void)
-{
-  LED2_On();
-  WAIT1_Waitms(20);
-  LED2_Off();
-}
 
 /*
 ** ===================================================================
@@ -93,11 +73,21 @@ void TI1_OnInterrupt(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
+#include "LPTMR_PDD.h"
 void Cpu_OnLLSWakeUpINT(void)
 {
-  LED3_On();
-  WAIT1_Waitms(1);
-  LED3_Off();
+  uint32_t tmp;
+  
+  tmp = Cpu_GetLLSWakeUpFlags();
+  if (tmp&LLWU_INT_MODULE0) { /* LPTMR */
+#if 0
+    LED1_On(); /* red */
+    WAIT1_Waitms(1);
+    LED1_Off(); /* red */
+    WAIT1_Waitms(100);
+#endif
+    LPTMR_PDD_ClearInterruptFlag(LPTMR0_BASE_PTR); /* Clear interrupt flag */
+  }
 }
 
 /*
@@ -146,8 +136,8 @@ void FRTOS1_vApplicationIdleHook(void)
 {
   /* Called whenever the RTOS is idle (from the IDLE task).
      Here would be a good place to put the CPU into low power mode. */
+#if !configUSE_TICKLESS_IDLE /* not! for tickless idle mode */
 #if PL_HAS_LOW_POWER
-#if !configUSE_TICKLESS_IDLE
   LP_EnterLowPower();
 #endif
 #endif

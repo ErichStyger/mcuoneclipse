@@ -65,10 +65,10 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
     (void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), ioLocal, CmdParserTable);
     /* do a short blink with the the green LED */
     cnt++;
-    if (cnt==150) {
-      //LED2_On();
-    } else if (cnt==153) {
-      //LED2_Off();
+    if (cnt==50) {
+      LED2_On();
+    } else if (cnt==53) {
+      LED2_Off();
       cnt = 0; /* restart */
     }
     FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
