@@ -847,10 +847,16 @@ void vPortInitTickTimer(void) {
   /* LPTMR0_CSR: ??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,TCF=1,TIE=0,TPS=0,TPP=0,TFC=0,TMS=0,TEN=0 */
   LPTMR0_CSR = (LPTMR_CSR_TCF_MASK | LPTMR_CSR_TPS(0x00)); /* Clear control register */
   /* LPTMR0_PSR: ??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,PRESCALE=0,PBYP=1,PCS=1 */
-  LPTMR0_PSR = LPTMR_PSR_PRESCALE(0x00) |
-               LPTMR_PSR_PBYP_MASK |
-               LPTMR_PSR_PCS(0x01);    /* Set up prescaler register */
-
+  LPTMR0_PSR = LPTMR_PSR_PRESCALE(0x00) | /* prescaler value */
+               LPTMR_PSR_PBYP_MASK | /* prescaler bypass */
+               LPTMR_PSR_PCS(0x01);    /* Clock source */
+  /*
+   *           PBYP PCS
+   * ERCLK32    1   10
+   * LPO_1kHz   1   01
+   * ERCLK      0   00
+   * IRCLK      1   00
+   */
   *(portNVIC_SYSPRI7) |= portNVIC_LP_TIMER_PRI; /* set priority of low power timer interrupt */
   /* NVIC_ISER: SETENA|=0x10000000 */
   NVIC_ISER |= NVIC_ISER_SETENA(0x10000000);     /* 0xE000E100 <= 0x10000000 */                              
