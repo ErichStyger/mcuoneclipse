@@ -35,6 +35,7 @@
 #include "BitIoLdd6.h"
 #include "UTIL1.h"
 #include "TMOUT1.h"
+#include "CS1.h"
 #include "TI1.h"
 #include "TimerIntLdd1.h"
 #include "TU1.h"
