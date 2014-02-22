@@ -4,7 +4,7 @@
     <Name>RNet</Name>
     <Description>RNet (Radio and Remote Network) Stack</Description>
     <Author>Erich Styger</Author>
-    <Version>01.007</Version>
+    <Version>01.011</Version>
     <Icon>RNet</Icon>
     <TypesFiles>PE,RNet\RNet</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -58,10 +58,11 @@
         <TypeSpec>typeEnaDis</TypeSpec>
         <Hint>nRF24L01+ settings</Hint>
         <ItemLevel>BASIC</ItemLevel>
+        <ReadOnly>true</ReadOnly>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
         <Description>Disabled</Description>
-        <Expanded>Yes</Expanded>
+        <Expanded>No</Expanded>
         <DefaultValue>false</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
