@@ -57,10 +57,12 @@
 #include "TmDt1.h"
 #include "FATM1.h"
 #include "SDHC1.h"
-#include "GPIO1.h"
+#include "CD1.h"
+#include "BitIoLdd5.h"
 #include "TMOUT1.h"
 #include "FAT1.h"
 #include "HF1.h"
+#include "CS1.h"
 
 #ifdef __cplusplus
 extern "C" {
