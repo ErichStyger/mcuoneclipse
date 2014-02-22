@@ -13,6 +13,7 @@
 #include "RMAC.h"
 #include "RNWK.h"
 #include "RAPP.h"
+#include "UTIL1.h"
 
 static RNWK_ShortAddrType RNWK_ThisNodeAddr = RNWK_ADDR_BROADCAST; /* address of this network node */
 static RNWK_AppOnRxCallbackType RNWK_AppOnRxCallback = NULL; /* notification callback installed by upper layer */

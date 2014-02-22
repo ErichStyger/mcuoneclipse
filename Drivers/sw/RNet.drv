@@ -51,6 +51,11 @@
 %-
 %-BW_INTERN_COMMENTS_START
 %- List of descriptions of internal methods
+%ifdef nRF24L01p
+  %ifdef @nRF24L01p@OnInterrupt
+    %define! Description_%@nRF24L01p@OnInterrupt Called in case of an interrupt from the transcevier The event services the event of the inherited component and eventually invokes other events.
+  %endif %- @nRF24L01p@OnInterrupt
+%endif %- nRF24L01p
 %-BW_INTERN_COMMENTS_END
 %-
 %-BW_SECTIONS_INSERT
@@ -111,6 +116,12 @@
 
 
 %-BW_DEFINITION_START
+%-INHERITED_EVENT_BEGIN nRF24L01p OnInterrupt
+%ifdef @nRF24L01p@OnInterrupt
+void %@nRF24L01p@OnInterrupt(void);
+
+%endif %- @nRF24L01p@OnInterrupt
+%-INHERITED_EVENT_END nRF24L01p OnInterrupt
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -149,6 +160,16 @@
 %- List of internal methods headers
 %-BW_INTERN_METHOD_DECL_END
 %-BW_IMPLEMENT_START
+%-INHERITED_EVENT_BEGIN nRF24L01p OnInterrupt
+%ifdef @nRF24L01p@OnInterrupt
+%include Common\GeneralInternal.inc (OnInterrupt)
+void %@nRF24L01p@OnInterrupt(void)
+{
+  /* Write your code here ... */
+}
+
+%endif %- @nRF24L01p@OnInterrupt
+%-INHERITED_EVENT_END nRF24L01p OnInterrupt
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

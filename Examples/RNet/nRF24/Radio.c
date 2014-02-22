@@ -117,7 +117,9 @@ static uint8_t CheckRx(void) {
   uint8_t RxDataBuffer[RPHY_BUFFER_SIZE];
   uint8_t status;
   RPHY_PacketDesc packet;
+  bool hasRxData;
   
+  hasRxData = FALSE;
   packet.flags = RPHY_PACKET_FLAGS_NONE;
   packet.phyData = &RxDataBuffer[0];
   packet.phySize = sizeof(RxDataBuffer);
@@ -128,6 +130,7 @@ static uint8_t CheckRx(void) {
 #endif
   status = RF1_GetStatus();
   if (status&RF1_STATUS_RX_DR) { /* data received interrupt */
+    hasRxData = TRUE;
 #if NRF24_DYNAMIC_PAYLOAD
     uint8_t payloadSize;
     
@@ -150,10 +153,16 @@ static uint8_t CheckRx(void) {
   if (status&RF1_STATUS_MAX_RT) { /* retry timeout interrupt */
     RF1_ResetStatusIRQ(RF1_STATUS_MAX_RT); /* clear bit */
   }
-  /* put message into Rx queue */
-  res = RMSG_QueueRxMsg(packet.phyData, packet.phySize, RPHY_BUF_SIZE(packet.phyData), packet.flags);
-  if (res!=ERR_OK) {
-    Err((unsigned char*)"ERR: Rx Queue full?\r\n");
+  if (hasRxData) {
+    /* put message into Rx queue */
+    res = RMSG_QueueRxMsg(packet.phyData, packet.phySize, RPHY_BUF_SIZE(packet.phyData), packet.flags);
+    if (res!=ERR_OK) {
+      if (res==ERR_OVERFLOW) {
+        Err((unsigned char*)"ERR: Rx queue overflow!\r\n");
+      } else {
+        Err((unsigned char*)"ERR: Rx Queue full?\r\n");
+      }
+    }
   }
   return res;
 }
