@@ -4,7 +4,7 @@
     <Name>FatFsMemSDHC</Name>
     <Description>Memory Implementation for FatFS using SDHC_LDD</Description>
     <Author>Erich Styger</Author>
-    <Version>01.020</Version>
+    <Version>01.023</Version>
     <Icon>FatFsMemSDHC</Icon>
     <TypesFiles>PE,FatFsMemSDHC\FatFsMemSDHC</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -169,6 +169,50 @@
               <DefaultValue>true</DefaultValue>
               <Popup>false</Popup>
             </TBoolItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>Pull Code</Name>
+              <Symbol>PullCodeEnabled</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>Here optional pull-up/pull down code can be specified. This code is added to the Initialization code.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Disabled</Description>
+              <Expanded>Yes</Expanded>
+              <DefaultValue>false</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TStrgItem>
+                    <Name>Include Code</Name>
+                    <Symbol>PullIncludeCode</Symbol>
+                    <Hint>Here a header file include can be specified which is include just before Init()</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>#include "PORT_PDD.h"</DefaultValue>
+                    <StrDefine>nothing</StrDefine>
+                    <MinLength>0</MinLength>
+                    <MaxLength>-1</MaxLength>
+                  </TStrgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TStrgItem>
+                    <Name>Pull Code</Name>
+                    <Symbol>PullCode</Symbol>
+                    <Hint>Here user pull-up/pull-down code can be added. This code is inserted into the Init code.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>PORT_PDD_SetPinPullSelect(PORTE_BASE_PTR, 28, PORT_PDD_PULL_UP);  PORT_PDD_SetPinPullEnable(PORTE_BASE_PTR, 28, PORT_PDD_PULL_ENABLE);</DefaultValue>
+                    <StrDefine>nothing</StrDefine>
+                    <MinLength>0</MinLength>
+                    <MaxLength>-1</MaxLength>
+                  </TStrgItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
           </GrupItem>
         </Children>
       </TBoolGrupItem>

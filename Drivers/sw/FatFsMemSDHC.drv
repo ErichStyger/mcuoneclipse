@@ -393,11 +393,23 @@ static void SD_Wait(TSDData *SD, bool *ErrorFlag)
 %define! ParUserDataPtr
 %define! RetVal
 %include Common\FatFsMemSDHCInit.Inc
+%if %PullCodeEnabled='yes' & defined(PullIncludeCode)
+%PullIncludeCode  /* user provided include code */
+%else
+/* no user include code provided/enabled */
+%endif
 LDD_TDeviceData* %'ModuleName'%.%Init(LDD_TUserData *UserDataPtr)
 {
   bool Error = FALSE;
 
   (void)UserDataPtr; /* not used */
+  /* Enable pull-up/pull-down on GPIO pin used for SD card detection with user code provided in properties */
+%if %PullCodeEnabled='yes' & defined(PullCodeEnabled)
+  %PullCode  /* user provided code */
+%else
+  /* no user code provided/enabled */
+%endif
+  /* initialize device structure */
   SD.SDHCPtr = 0;
   SD.Finished = FALSE;
   SD.CardId = %@SDHC@'ModuleName'%.NO_CARD;
@@ -565,7 +577,6 @@ DSTATUS disk_initialize (
       }
       SD_Wait(&SD, &Error);
     }
-#if 0 /* the code below is causing problems, disabled for now */
     if (!Error) {
       /* switching gears for higher speed */
       Error = %@SDHC@'ModuleName'%.SelectBusClock(SD.SDHCPtr, (%@SDHC@'ModuleName'%.TBusClock)%'ModuleName'%.SPEED_INDEX_NORMAL)!=ERR_OK;
@@ -586,7 +597,6 @@ DSTATUS disk_initialize (
       }
       SD_Wait(&SD, &Error);
     }
-#endif
   }
   Stat &= ~STA_NOINIT;                                           %>40 /* Clear STA_NOINIT */
   return Stat;
