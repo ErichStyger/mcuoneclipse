@@ -10,7 +10,7 @@
     <BeanType>FreeCntr</BeanType>
     <Comment lines_count="0"/>
     <Template>TickCntr</Template>
-    <BeanVersion>01.115</BeanVersion>
+    <BeanVersion>01.118</BeanVersion>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
@@ -165,6 +165,21 @@
         <ReadOnly>false</ReadOnly>
         <Index>1</Index>
         <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FeatureCondGrpLDD</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RefComp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InheritedComponent</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <Index>-1</Index>
+        <RegCompType/>
       </ItemState>
     </Properties>
     <Methods>

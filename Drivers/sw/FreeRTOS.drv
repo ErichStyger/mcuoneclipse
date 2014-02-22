@@ -2122,7 +2122,11 @@ void %@TickCntr@OnInterrupt(void)
   asm {
     MOVE.L D0, D7 ; /* save ulSavedInterruptMask for later */
   }
-  (void)%@TickCntr@'ModuleName'%.Reset(); /* reset tick counter: need this for trace */
+  %if defined(TickCntr) & defined(@TickCntr@Reset)
+    %@TickCntr@'ModuleName'%.Reset(); /* reset tick counter: need this for trace */
+  %else
+    /* WARNING: Reset() not available, FreeRTOS Percepio Trace would need it! */
+  %endif
   asm { /* need to do this in assembly, otherwise the compiler might use the stack! :-( */
     JSR xTaskIncrementTick  /* return value != 0 (pdFALSE): yield */
     TST D0
@@ -2160,7 +2164,11 @@ void %@TickCntr@OnInterrupt(void)
 #endif
   #if configUSE_PREEMPTION == 1
     portSAVE_CONTEXT(); /* A context switch might happen so save the context. */
+  %if defined(TickCntr) & defined(@TickCntr@Reset)
     %@TickCntr@'ModuleName'%.Reset(); /* reset tick counter: need this for trace */
+  %else
+    /* WARNING: Reset() not available, FreeRTOS Percepio Trace would need it! */
+  %endif
     if (xTaskIncrementTick()!=pdFALSE) {
       vTaskSwitchContext(); /* a context switch is necessary */
     }
@@ -2185,7 +2193,11 @@ void %@TickCntr@OnInterrupt(void)
 #endif
   #if configUSE_PREEMPTION == 1
     portSAVE_CONTEXT(); /* A context switch might happen so save the context. */
+  %if defined(TickCntr) & defined(@TickCntr@Reset)
     %@TickCntr@'ModuleName'%.Reset(); /* reset tick counter: need this for trace */
+  %else
+    /* WARNING: Reset() not available, FreeRTOS Percepio Trace would need it! */
+  %endif
     if (xTaskIncrementTick()!=pdFALSE) {
       vTaskSwitchContext(); /* a context switch is necessary */
     }
@@ -2214,7 +2226,11 @@ void %@TickCntr@OnInterrupt(void)
 //    MOVE.L D0, D7 ; /* save ulSavedInterruptMask for later */
 //  }
   {
-     %@TickCntr@'ModuleName'%.Reset(); /* reset tick counter: need this for trace */
+  %if defined(TickCntr) & defined(@TickCntr@Reset)
+    %@TickCntr@'ModuleName'%.Reset(); /* reset tick counter: need this for trace */
+  %else
+    /* WARNING: Reset() not available, FreeRTOS Percepio Trace would need it! */
+  %endif
     if (xTaskIncrementTick()!=pdFALSE) {
       taskYIELD();
     }
