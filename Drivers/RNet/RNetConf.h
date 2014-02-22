@@ -11,6 +11,7 @@
 #ifndef RNETCONF_H_
 #define RNETCONF_H_
 
+#include "%'ModuleName'.h"  /* component main header file */
 #include "RNet_AppConfig.h" /* User application configuration file */
 
 /* Default configuration items, can be overwritten by the application configuration header file: */
