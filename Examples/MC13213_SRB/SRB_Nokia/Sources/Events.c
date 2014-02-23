@@ -56,7 +56,7 @@ void KB1_OnInterrupt(void)
 */
 void KEY1_OnKeyPressed(byte keys)
 {
-  /* Write your code here. A bit in 'keys' indicates key pressed ... */
+  (void)keys;
 }
 
 /*
@@ -75,7 +75,7 @@ void KEY1_OnKeyPressed(byte keys)
 */
 void KEY1_OnKeyReleased(byte keys)
 {
-  /* Write your code here. A bit in 'keys' indicates key released ... */
+  (void)keys;
 }
 
 /* END Events */

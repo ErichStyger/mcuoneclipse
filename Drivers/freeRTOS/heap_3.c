@@ -3,7 +3,8 @@
 #if configFRTOS_MEMORY_SCHEME==3
 
 /*
-    FreeRTOS V7.5.0 - Copyright (C) 2013 Real Time Engineers Ltd.
+    FreeRTOS V8.0.0 - Copyright (C) 2014 Real Time Engineers Ltd. 
+    All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
@@ -104,6 +105,7 @@ void *pvReturn;
 	vTaskSuspendAll();
 	{
 		pvReturn = malloc( xWantedSize );
+		traceMALLOC( pvReturn, xWantedSize );
 	}
 	(void)xTaskResumeAll();
 
@@ -133,6 +135,7 @@ void vPortFree( void *pv )
 		vTaskSuspendAll();
 		{
 			free( pv );
+			traceFREE( pv, 0 );
 		}
 		(void)xTaskResumeAll();
 	}

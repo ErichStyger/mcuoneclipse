@@ -3,7 +3,8 @@
 #if configFRTOS_MEMORY_SCHEME==1
 
 /*
-    FreeRTOS V7.5.0 - Copyright (C) 2013 Real Time Engineers Ltd.
+    FreeRTOS V8.0.0 - Copyright (C) 2014 Real Time Engineers Ltd. 
+    All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
@@ -95,14 +96,14 @@ task.h is included from an application file. */
 #define configADJUSTED_HEAP_SIZE	( configTOTAL_HEAP_SIZE - portBYTE_ALIGNMENT )
 
 /* Allocate the memory for the heap. */
-#if configUSE_HEAP_SECTION_NAME && configCOMPILER==configCOMPILER_ARM_IAR
+#if configUSE_HEAP_SECTION_NAME && configCOMPILER==configCOMPILER_ARM_IAR /* << EST */
   #pragma language=extended
   #pragma location = configHEAP_SECTION_NAME_STRING
-  static unsigned char ucHeap[configTOTAL_HEAP_SIZE] @ configHEAP_SECTION_NAME_STRING; 
+  static uint8_t ucHeap[configTOTAL_HEAP_SIZE] @ configHEAP_SECTION_NAME_STRING; 
 #elif configUSE_HEAP_SECTION_NAME
-  static unsigned char __attribute__((section (configHEAP_SECTION_NAME_STRING))) ucHeap[configTOTAL_HEAP_SIZE];
+  static uint8_t __attribute__((section (configHEAP_SECTION_NAME_STRING))) ucHeap[configTOTAL_HEAP_SIZE];
 #else
-  static unsigned char ucHeap[ configTOTAL_HEAP_SIZE ];
+  static uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
 #endif
 static size_t xNextFreeByte = ( size_t ) 0;
 
@@ -111,7 +112,7 @@ static size_t xNextFreeByte = ( size_t ) 0;
 void *pvPortMalloc( size_t xWantedSize )
 {
 void *pvReturn = NULL;
-static unsigned char *pucAlignedHeap = NULL;
+static uint8_t *pucAlignedHeap = NULL;
 
 	/* Ensure that blocks are always aligned to the required number of bytes. */
 	#if portBYTE_ALIGNMENT != 1
@@ -127,7 +128,7 @@ static unsigned char *pucAlignedHeap = NULL;
 		if( pucAlignedHeap == NULL )
 		{
 			/* Ensure the heap starts on a correctly aligned boundary. */
-			pucAlignedHeap = ( unsigned char * ) ( ( ( portPOINTER_SIZE_TYPE ) &ucHeap[ portBYTE_ALIGNMENT ] ) & ( ( portPOINTER_SIZE_TYPE ) ~portBYTE_ALIGNMENT_MASK ) );
+			pucAlignedHeap = ( uint8_t * ) ( ( ( portPOINTER_SIZE_TYPE ) &ucHeap[ portBYTE_ALIGNMENT ] ) & ( ( portPOINTER_SIZE_TYPE ) ~portBYTE_ALIGNMENT_MASK ) );
 		}
 
 		/* Check there is enough room left for the allocation. */
@@ -139,7 +140,9 @@ static unsigned char *pucAlignedHeap = NULL;
 			pvReturn = pucAlignedHeap + xNextFreeByte;
 			xNextFreeByte += xWantedSize;
 		}
-	}
+
+		traceMALLOC( pvReturn, xWantedSize );
+	}	
 	(void)xTaskResumeAll();
 
 	#if( configUSE_MALLOC_FAILED_HOOK == 1 )

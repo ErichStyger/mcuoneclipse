@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.342</Version>
+    <Version>01.345</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -45,7 +45,7 @@
         <Hint>Identifies the RTOS version</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>true</EditLine>
-        <DefaultValue>V7.5.0</DefaultValue>
+        <DefaultValue>V8.0.0</DefaultValue>
         <StrDefine>nothing</StrDefine>
         <MinLength>0</MinLength>
         <MaxLength>-1</MaxLength>
@@ -1399,41 +1399,6 @@ heap_4.c is particularly useful for applications that want to use the portable l
           </GrupItem>
         </Children>
       </TGrupItem>
-    </Property>
-    <Property>
-      <TBoolGrupItem>
-        <Name>Command Interpreter</Name>
-        <Symbol>CommandInterpreterEnabled</Symbol>
-        <TypeSpec>typeEnaDis</TypeSpec>
-        <Hint>Settings for the Command Interpreter. Earlier FreeRTOS included an open source command interpreter, now this has moved to a non-free-of-charge FreeRTOS+ version. This port includes for compatibility the original and free version of it.</Hint>
-        <ItemLevel>EXPERT</ItemLevel>
-        <BoldName>true</BoldName>
-        <EditLine>false</EditLine>
-        <Description>Disabled</Description>
-        <Expanded>No</Expanded>
-        <DefaultValue>false</DefaultValue>
-        <DefineSymbol>YES_NO</DefineSymbol>
-        <IfDisabled>setNOTHING</IfDisabled>
-        <Children>
-          <GrupItem>
-            <TIntgItem>
-              <Name>Output Buffer Size</Name>
-              <Symbol>CommandIntMaxOutputSize</Symbol>
-              <Hint>Buffer size into which command outputs can be written. This defines configCOMMAND_INT_MAX_OUTPUT_SIZE</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>32</DefaultValue>
-              <MinValue>1</MinValue>
-              <MaxValue>-1</MaxValue>
-              <Bases>DEC</Bases>
-              <DefaultBase>DEC</DefaultBase>
-              <ExtraHintDisabled>false</ExtraHintDisabled>
-              <ChangeValueIntoRange>false</ChangeValueIntoRange>
-              <RuntimeProperty>false</RuntimeProperty>
-            </TIntgItem>
-          </GrupItem>
-        </Children>
-      </TBoolGrupItem>
     </Property>
     <Property>
       <TGrupItem>
@@ -4474,11 +4439,10 @@ Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total accumulated ex
           <ParType>char</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to task name</ParHint>
-          <ParUserDeclaration>signed portCHAR *pcTaskName</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #C#(xTaskHandle pxTask, signed portCHAR *pcTaskName)</ANSIC>
+          <ANSIC>void #C#(xTaskHandle pxTask, char *pcTaskName)</ANSIC>
         </Declarations>
         <Children>
           <GrupItem>

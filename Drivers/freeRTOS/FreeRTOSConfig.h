@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.5.0 - Copyright (C) 2013 Real Time Engineers Ltd.
+    FreeRTOS V8.0.0 - Copyright (C) 2013 Real Time Engineers Ltd.
 
     FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
     http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -121,7 +121,7 @@
 %else
 #define configUSE_MALLOC_FAILED_HOOK                             %>50 0
 %endif
-#define configTICK_RATE_HZ                                       %>50 ((portTickType)%TickRateHz) /* frequency of tick interrupt */
+#define configTICK_RATE_HZ                                       %>50 ((TickType_t)%TickRateHz) /* frequency of tick interrupt */
 %if defined(useARMLowPowerTimer) & useARMLowPowerTimer='yes'
 #define configSYSTICK_USE_LOW_POWER_TIMER                        %>50 1 /* If using Kinetis Low Power Timer (LPTMR) instead of SysTick timer */
 #define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ                   %>50 1000 /* 1 kHz LPO */
@@ -350,11 +350,6 @@
 #define INCLUDE_pcTaskGetTaskName                                %>50 1
 %else
 #define INCLUDE_pcTaskGetTaskName                                %>50 0
-%endif
-%if CommandInterpreterEnabled='yes'
-%- --------------------------------------------------------------------
-/* CommandInterpreter configuration. */
-#define configCOMMAND_INT_MAX_OUTPUT_SIZE                        %>50 %CommandIntMaxOutputSize
 %endif
 /* -------------------------------------------------------------------- */
 /* Macros to identify the compiler used: */

@@ -95,13 +95,11 @@
 %FILE %'DirRel_Code'%'RTOSSrcDirFolder'timers.c
 %include freeRTOS\timers.c
 
-%if %CommandInterpreterEnabled='yes'
-  %FILE? %'DirRel_Code'%'RTOSSrcDirFolder'CommandInterpreter.h
-  %include freeRTOS\CommandInterpreter.h
+%FILE %'DirRel_Code'%'RTOSSrcDirFolder'event_groups.c
+%include freeRTOS\event_groups.c
 
-  %FILE? %'DirRel_Code'%'RTOSSrcDirFolder'CommandInterpreter.c
-  %include freeRTOS\CommandInterpreter.c
-%endif
+%FILE %'DirRel_Code'%'RTOSHeaderDirFolder'event_groups.h
+%include freeRTOS\event_groups.h
 
 %undef RTOSSrcDirFolder
 %undef RTOSHeaderDirFolder
