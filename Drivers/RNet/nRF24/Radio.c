@@ -128,7 +128,7 @@ static uint8_t CheckRx(void) {
 #else
   packet.rxtx = &RPHY_BUF_SIZE(packet.phyData); /* we transmit the data size too */
 #endif
-  status = RF1_GetStatus();
+  status = RF1_GetStatusClrIRQ();
   if (status&RF1_STATUS_RX_DR) { /* data received interrupt */
     hasRxData = TRUE;
 #if NRF24_DYNAMIC_PAYLOAD
@@ -145,13 +145,6 @@ static uint8_t CheckRx(void) {
 #else
     RF1_RxPayload(packet.rxtx, RPHY_PAYLOAD_SIZE); /* get payload: note that we transmit <size> as payload! */
 #endif
-    RF1_ResetStatusIRQ(RF1_STATUS_RX_DR|RF1_STATUS_TX_DS|RF1_STATUS_MAX_RT); /* make sure we reset all flags. Need to have the pipe number too */
-  }
-  if (status&RF1_STATUS_TX_DS) { /* data sent interrupt */
-    RF1_ResetStatusIRQ(RF1_STATUS_TX_DS); /* clear bit */
-  }
-  if (status&RF1_STATUS_MAX_RT) { /* retry timeout interrupt */
-    RF1_ResetStatusIRQ(RF1_STATUS_MAX_RT); /* clear bit */
   }
   if (hasRxData) {
     /* put message into Rx queue */
@@ -205,15 +198,8 @@ static void RADIO_HandleStateMachine(void) {
       case RADIO_WAITING_DATA_SENT:
         if (RADIO_isrFlag) { /* check if we have received an interrupt: this is either timeout or low level ack */
           RADIO_isrFlag = FALSE; /* reset interrupt flag */
-          status = RF1_GetStatus();
-          if (status&RF1_STATUS_RX_DR) { /* data received interrupt */
-            RF1_ResetStatusIRQ(RF1_STATUS_RX_DR); /* clear bit */
-          }
-          if (status&RF1_STATUS_TX_DS) { /* data sent interrupt */
-            RF1_ResetStatusIRQ(RF1_STATUS_TX_DS); /* clear bit */
-          }
+          status = RF1_GetStatusClrIRQ();
           if (status&RF1_STATUS_MAX_RT) { /* retry timeout interrupt */
-            RF1_ResetStatusIRQ(RF1_STATUS_MAX_RT); /* clear bit */
             RF1_Write(RF1_FLUSH_TX); /* flush old data */
             RADIO_AppStatus = RADIO_TIMEOUT; /* timeout */
           } else {

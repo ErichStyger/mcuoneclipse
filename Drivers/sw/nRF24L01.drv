@@ -654,6 +654,15 @@ byte %'ModuleName'%.%GetOutputPower(signed char *power);
 
 %endif %- GetOutputPower
 %-BW_METHOD_END GetOutputPower
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetStatusClrIRQ
+%ifdef GetStatusClrIRQ
+byte %'ModuleName'%.%GetStatusClrIRQ(void);
+%define! RetVal
+%include Common\nRF24L01GetStatusClrIRQ.Inc
+
+%endif %- GetStatusClrIRQ
+%-BW_METHOD_END GetStatusClrIRQ
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -927,17 +936,30 @@ byte %'ModuleName'%.%GetStatus(void)
 %include Common\nRF24L01ResetStatusIRQ.Inc
 void %'ModuleName'%.%ResetStatusIRQ(byte flags)
 {
-  %'ModuleName'%.WAIT_US(10);
-  %'ModuleName'%.CSN_LOW();
-  %'ModuleName'%.WAIT_US(10);
   %'ModuleName'%.%WriteRegister(%'ModuleName'%.STATUS, flags); /* reset all IRQ in status register */
-  %'ModuleName'%.WAIT_US(10);
-  %'ModuleName'%.CSN_HIGH();
-  %'ModuleName'%.WAIT_US(10);
 }
 
 %endif %- ResetStatusIRQ
 %-BW_METHOD_END ResetStatusIRQ
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetStatusClrIRQ
+%ifdef GetStatusClrIRQ
+%define! RetVal
+%include Common\nRF24L01GetStatusClrIRQ.Inc
+byte %'ModuleName'%.%GetStatusClrIRQ(void)
+{
+  uint8_t status;
+
+  %'ModuleName'%.CSN_LOW(); /* initiate command sequence */
+  status = SPIWriteRead(%'ModuleName'%.W_REGISTER|%'ModuleName'%.STATUS); /* get status */
+  (void)SPIWriteRead(status&(%'ModuleName'%.STATUS_RX_DR|%'ModuleName'%.STATUS_TX_DS|%'ModuleName'%.STATUS_MAX_RT)); /* reset IRQ Bits */
+  %'ModuleName'%.CSN_HIGH(); /* end command sequence */
+  %'ModuleName'%.WAIT_US(10); /* insert a delay until next command */
+  return status;
+}
+
+%endif %- GetStatusClrIRQ
+%-BW_METHOD_END GetStatusClrIRQ
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN TxPayload
 %ifdef TxPayload
@@ -946,7 +968,7 @@ void %'ModuleName'%.%ResetStatusIRQ(byte flags)
 %include Common\nRF24L01TxPayload.Inc
 void %'ModuleName'%.%TxPayload(byte *payload, byte payloadSize)
 {
-  %'ModuleName'%.Write(%'ModuleName'%.FLUSH_TX); /* flush old data */
+  %'ModuleName'%.%Write(%'ModuleName'%.FLUSH_TX); /* flush old data */
   %'ModuleName'%.%WriteRegisterData(%'ModuleName'%.W_TX_PAYLOAD, payload, payloadSize); /* write payload */
   %'ModuleName'%.CE_HIGH(); /* start transmission */
   %'ModuleName'%.WAIT_US(15); /* keep signal high for 15 micro-seconds */
@@ -1165,7 +1187,7 @@ byte %'ModuleName'%.%ConstantCarrierWave(bool turnOn)
   if (turnOn) {
     /* Set PWR_UP = 1 and PRIM_RX = 0 in the CONFIG register. */
     %'ModuleName'%.WriteRegister(%'ModuleName'%.CONFIG, %'ModuleName'%.PWR_UP|%'ModuleName'%.PRIM_TX);
-    %@Wait@'ModuleName'%.Waitus(1500); /* Wait 1.5ms PWR_UP->standby */
+    %'ModuleName'%.WAIT_US(1500); /* Wait 1.5ms PWR_UP->standby */
     /* In the RF register set:
        - CONT_WAVE = 1.
        - PLL_LOCK = 1.
@@ -1243,6 +1265,7 @@ byte %'ModuleName'%.%GetOutputPower(signed char *power)
 
 %endif %- GetOutputPower
 %-BW_METHOD_END GetOutputPower
+%-************************************************************************************************************
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

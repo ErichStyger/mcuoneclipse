@@ -29,15 +29,11 @@ static RNWK_ShortAddrType APP_dstAddr = RNWK_ADDR_BROADCAST; /* destination node
 typedef enum {
   RNETA_NONE,
   RNETA_POWERUP, /* powered up */
-  RNETA_CHECK_SIGNAL, /* check for init or send data signal */
-  RNETA_WAIT_FOR_SEND, /* waiting for read station */
-  RNETA_DATA_WINDOW, /* send data to read out station */
   RNETA_TX_RX,
   RNETA_DONE,
 } RNETA_State;
 
 static RNETA_State appState = RNETA_NONE;
-
 
 static const RAPP_MsgHandler handlerTable[] = 
 {
@@ -56,11 +52,7 @@ static unsigned char *StringForState(RNETA_State state) {
   switch(state) {
     case RNETA_NONE: return (unsigned char*)"NONE";
     case RNETA_POWERUP: return (unsigned char*)"POWERUP";
-    case RNETA_CHECK_SIGNAL: return (unsigned char*)"CHECK_SIGNAL";
-    case RNETA_WAIT_FOR_SEND: return (unsigned char*)"WAIT_FOR_SEND";
-    case RNETA_DATA_WINDOW: return (unsigned char*)"DATA_WINDOW";
     case RNETA_TX_RX: return (unsigned char*)"TX_RX";
-    case RNETA_DONE: return (unsigned char*)"DONE";
     default: return (unsigned char*)"UNKNOWN";
   }
 }
