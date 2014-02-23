@@ -2048,7 +2048,7 @@ byte %'ModuleName'%.%ScanDecimal16sNumber(const unsigned char **str, int16_t *va
   } else {
     isNeg = FALSE;
   }
-  res = %'ModuleName'%.%ScanDecimal16uNumber(&p, &val16u);
+  res = %'ModuleName'%.%ScanDecimal16uNumber(&p, (word*)&val16u);
   if (res != ERR_OK) {
     return res;
   }
