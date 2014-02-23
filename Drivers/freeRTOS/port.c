@@ -91,7 +91,11 @@
 %elif defined(TickCntr)
 #define ENABLE_TICK_COUNTER()       (void)%@TickCntr@'ModuleName'%.Enable()
 #define DISABLE_TICK_COUNTER()      (void)%@TickCntr@'ModuleName'%.Disable()
+%if defined(TickCntr) & defined(@TickCntr@Reset)
 #define RESET_TICK_COUNTER_VAL()    (void)%@TickCntr@'ModuleName'%.Reset()
+%else
+#define RESET_TICK_COUNTER_VAL()    /* WARNING: not possible to reset tick timer! */
+%endif
 %elif defined(TickTimerLDD)
 #define ENABLE_TICK_COUNTER()       (void)%@TickTimerLDD@'ModuleName'%.Enable(RTOS_TickDevice)
 #define DISABLE_TICK_COUNTER()      (void)%@TickTimerLDD@'ModuleName'%.Disable(RTOS_TickDevice)
@@ -866,7 +870,11 @@ void vPortInitTickTimer(void) {
 /*-----------------------------------------------------------*/
 void vPortStartTickTimer(void) {
 %ifdef TickCntr
+%if defined(TickCntr) & defined(@TickCntr@Reset)
   (void)%@TickCntr@'ModuleName'%.Reset();   %>40/* reset the tick counter */
+%else
+  /* Warning: not possible to reset timer! */
+%endif
   (void)%@TickCntr@'ModuleName'%.Enable();  %>40/* start the tick timer */
 %endif
 %ifdef TickTimerLDD

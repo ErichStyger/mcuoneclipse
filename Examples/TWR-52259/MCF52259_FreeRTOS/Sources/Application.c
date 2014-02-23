@@ -45,7 +45,7 @@ static portTASK_FUNCTION(Task4, pvParameters) {
 void APP_Run(void) {
   if (FRTOS1_xTaskCreate(
         Task1,  /* pointer to the task */
-        (signed portCHAR *)"Task1", /* task name for kernel awareness debugging */
+        "Task1", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
@@ -57,7 +57,7 @@ void APP_Run(void) {
   }
   if (FRTOS1_xTaskCreate(
         Task2,  /* pointer to the task */
-        (signed portCHAR *)"Task2", /* task name for kernel awareness debugging */
+        "Task2", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
@@ -69,7 +69,7 @@ void APP_Run(void) {
   }
   if (FRTOS1_xTaskCreate(
         Task3,  /* pointer to the task */
-        (signed portCHAR *)"Task3", /* task name for kernel awareness debugging */
+        "Task3", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
@@ -81,7 +81,7 @@ void APP_Run(void) {
   }
   if (FRTOS1_xTaskCreate(
         Task4,  /* pointer to the task */
-        (signed portCHAR *)"Task4", /* task name for kernel awareness debugging */
+        "Task4", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
