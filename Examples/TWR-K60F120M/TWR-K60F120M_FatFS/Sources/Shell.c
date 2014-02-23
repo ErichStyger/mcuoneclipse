@@ -52,7 +52,7 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
 }
 
 void SHELL_Init(void) {
-  if (FRTOS1_xTaskCreate(ShellTask, (signed char*)"Shell", configMINIMAL_STACK_SIZE+350, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (FRTOS1_xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+350, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 }

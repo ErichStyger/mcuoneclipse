@@ -1197,7 +1197,7 @@ TaskHandle_t xTaskGetIdleTaskHandle( void );
     // This example demonstrates how a human readable table of run time stats
 	// information is generated from raw data provided by uxTaskGetSystemState().
 	// The human readable table is written to pcWriteBuffer
-	void vTaskGetRunTimeStats( char *pcWriteBuffer )
+	void vTaskGetRunTimeStats( char *pcWriteBuffer, size_t bufSize )
 	{
 	TaskStatus_t *pxTaskStatusArray;
 	volatile UBaseType_t uxArraySize, x;
@@ -1259,7 +1259,7 @@ UBaseType_t uxTaskGetSystemState( TaskStatus_t * const pxTaskStatusArray, const 
 
 /**
  * task. h
- * <PRE>void vTaskList( char *pcWriteBuffer );</PRE>
+ * <PRE>void vTaskList( char *pcWriteBuffer, size_t bufSize);</PRE>
  *
  * configUSE_TRACE_FACILITY and configUSE_STATS_FORMATTING_FUNCTIONS must
  * both be defined as 1 for this function to be available.  See the
@@ -1302,11 +1302,11 @@ UBaseType_t uxTaskGetSystemState( TaskStatus_t * const pxTaskStatusArray, const 
  * \defgroup vTaskList vTaskList
  * \ingroup TaskUtils
  */
-void vTaskList( char * pcWriteBuffer ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+void vTaskList( char * pcWriteBuffer, size_t bufSize) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 /**
  * task. h
- * <PRE>void vTaskGetRunTimeStats( char *pcWriteBuffer );</PRE>
+ * <PRE>void vTaskGetRunTimeStats( char *pcWriteBuffer, size_t bufSize );</PRE>
  *
  * configGENERATE_RUN_TIME_STATS and configUSE_STATS_FORMATTING_FUNCTIONS
  * must both be defined as 1 for this function to be available.  The application
@@ -1356,7 +1356,7 @@ void vTaskList( char * pcWriteBuffer ) PRIVILEGED_FUNCTION; /*lint !e971 Unquali
  * \defgroup vTaskGetRunTimeStats vTaskGetRunTimeStats
  * \ingroup TaskUtils
  */
-void vTaskGetRunTimeStats( char *pcWriteBuffer ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+void vTaskGetRunTimeStats( char *pcWriteBuffer, size_t bufSize ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 /*-----------------------------------------------------------
  * SCHEDULER INTERNALS AVAILABLE FOR PORTING PURPOSES

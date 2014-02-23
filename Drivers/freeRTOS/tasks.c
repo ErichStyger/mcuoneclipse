@@ -3359,7 +3359,7 @@ TCB_t *pxTCB;
 
 #if ( ( configUSE_TRACE_FACILITY == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS == 1 ) )
 
-	void vTaskList( char * pcWriteBuffer )
+	void vTaskList( char * pcWriteBuffer, size_t bufSize)
 	{
 	TaskStatus_t *pxTaskStatusArray;
 	volatile UBaseType_t uxArraySize, x;
@@ -3430,16 +3430,16 @@ TCB_t *pxTCB;
 #if 0
 				sprintf( ( char * ) pcWriteBuffer, ( char * ) "%%s\t\t%%c\t%%u\t%%u\t%%u\r\n", pxTaskStatusArray[ x ].pcTaskName, cStatus, ( unsigned int ) pxTaskStatusArray[ x ].uxCurrentPriority, ( unsigned int ) pxTaskStatusArray[ x ].usStackHighWaterMark, ( unsigned int ) pxTaskStatusArray[ x ].xTaskNumber );
 #else /* << EST */
-	      %@Utility@'ModuleName'%.strcat(pcWriteBuffer, bufSize, (const unsigned char*)pxTaskStatusArray[ x ].pcTaskName);
-	      %@Utility@'ModuleName'%.strcat(pcWriteBuffer, bufSize, (const unsigned char*)"\t\t");
-	      %@Utility@'ModuleName'%.chcat(pcWriteBuffer, bufSize, (unsigned char)cStatus);
-	      %@Utility@'ModuleName'%.chcat(pcWriteBuffer, bufSize, (unsigned char)'\t');
+	      %@Utility@'ModuleName'%.strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)pxTaskStatusArray[ x ].pcTaskName);
+	      %@Utility@'ModuleName'%.strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)"\t\t");
+	      %@Utility@'ModuleName'%.chcat((uint8_t*)pcWriteBuffer, bufSize, (unsigned char)cStatus);
+	      %@Utility@'ModuleName'%.chcat((uint8_t*)pcWriteBuffer, bufSize, (unsigned char)'\t');
 	      %@Utility@'ModuleName'%.strcatNum32u((unsigned char*)pcWriteBuffer, bufSize, pxTaskStatusArray[ x ].uxCurrentPriority);
-	      %@Utility@'ModuleName'%.chcat(pcWriteBuffer, bufSize, (unsigned char)'\t');
-	      %@Utility@'ModuleName'%.strcatNum32u(pcWriteBuffer, bufSize, pxTaskStatusArray[ x ].usStackHighWaterMark);
-	      %@Utility@'ModuleName'%.chcat(pcWriteBuffer, bufSize, (unsigned char)'\t');
-	      %@Utility@'ModuleName'%.strcatNum32u(pcWriteBuffer, bufSize, pxTaskStatusArray[ x ].xTaskNumber);
-	      %@Utility@'ModuleName'%.strcat(pcWriteBuffer, bufSize, (const unsigned char*)"\r\n");
+	      %@Utility@'ModuleName'%.chcat((uint8_t*)pcWriteBuffer, bufSize, (unsigned char)'\t');
+	      %@Utility@'ModuleName'%.strcatNum32u((uint8_t*)pcWriteBuffer, bufSize, pxTaskStatusArray[ x ].usStackHighWaterMark);
+	      %@Utility@'ModuleName'%.chcat((uint8_t*)pcWriteBuffer, bufSize, (unsigned char)'\t');
+	      %@Utility@'ModuleName'%.strcatNum32u((uint8_t*)pcWriteBuffer, bufSize, pxTaskStatusArray[ x ].xTaskNumber);
+	      %@Utility@'ModuleName'%.strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)"\r\n");
 #endif
 			}
 
@@ -3457,7 +3457,7 @@ TCB_t *pxTCB;
 
 #if ( ( configGENERATE_RUN_TIME_STATS == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS == 1 ) )
 
-	void vTaskGetRunTimeStats( char *pcWriteBuffer )
+	void vTaskGetRunTimeStats( char *pcWriteBuffer, size_t bufSize)
 	{
 	TaskStatus_t *pxTaskStatusArray;
 	volatile UBaseType_t uxArraySize, x;
@@ -3536,12 +3536,12 @@ TCB_t *pxTCB;
 #if 0
 							sprintf( ( char * ) pcWriteBuffer, ( char * ) "%%s\t\t%%u\t\t%%u%%%%\r\n", pxTaskStatusArray[ x ].pcTaskName, ( unsigned int ) pxTaskStatusArray[ x ].ulRunTimeCounter, ( unsigned int ) ulStatsAsPercentage );
 #else /* << EST */
-              %@Utility@'ModuleName'%.strcat(pcWriteBuffer, bufSize, (const unsigned char*)pxTaskStatusArray[ x ].pcTaskName);
-              %@Utility@'ModuleName'%.strcat(pcWriteBuffer, bufSize, (const unsigned char*)"\t\t");
-              %@Utility@'ModuleName'%.strcatNum32u((unsigned char*)pcWriteBuffer, bufSize, pxTaskStatusArray[ x ].ulRunTimeCounter);
-              %@Utility@'ModuleName'%.strcat(pcWriteBuffer, bufSize, (const unsigned char*)"\t\t");
-              %@Utility@'ModuleName'%.strcatNum32u(pcWriteBuffer, bufSize, ulStatsAsPercentage);
-              %@Utility@'ModuleName'%.strcat(pcWriteBuffer, bufSize, (const unsigned char*)"%%\r\n");
+              %@Utility@'ModuleName'%.strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)pxTaskStatusArray[ x ].pcTaskName);
+              %@Utility@'ModuleName'%.strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)"\t\t");
+              %@Utility@'ModuleName'%.strcatNum32u((uint8_t*)pcWriteBuffer, bufSize, pxTaskStatusArray[ x ].ulRunTimeCounter);
+              %@Utility@'ModuleName'%.strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)"\t\t");
+              %@Utility@'ModuleName'%.strcatNum32u((uint8_t*)pcWriteBuffer, bufSize, ulStatsAsPercentage);
+              %@Utility@'ModuleName'%.strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)"%%\r\n");
 #endif
 						}
 						#endif
