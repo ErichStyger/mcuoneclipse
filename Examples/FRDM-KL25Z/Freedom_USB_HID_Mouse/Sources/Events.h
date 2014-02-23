@@ -51,6 +51,9 @@
 #include "SW1.h"
 #include "BitIoLdd4.h"
 #include "CS1.h"
+#include "GI2C1.h"
+#include "I2C2.h"
+#include "MMA1.h"
 
 #ifdef __cplusplus
 extern "C" {
