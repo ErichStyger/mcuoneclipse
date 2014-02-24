@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.345</Version>
+    <Version>01.358</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -18,7 +18,7 @@
     <BW_AutoSaveDriver>yes</BW_AutoSaveDriver>
     <BW_DetailedHelp>yes</BW_DetailedHelp>
     <BW_NeedTps>yes</BW_NeedTps>
-    <BW_NeedUst>13</BW_NeedUst>
+    <BW_NeedUst>16</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
     <Copyright>License : Open Source (LGPL)\nFreeRTOS (c) Copyright 2003-2013 Richard Barry, http: www.FreeRTOS.org\nFreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013\nProcessor Expert and CodeWarrior (c) Copyright Freescale Semiconductor, 2013, all rights reserved\nThis is a free software and is opened for education, research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
@@ -4318,6 +4318,403 @@ Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total accumulated ex
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>xQueueSetMemberHandle #M#_#C#(xQueueSetHandle xQueueSet)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xEventGroupCreate</Name>
+        <Symbol>xEventGroupCreate</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint> Create a new RTOS event group. This function cannot be called from an interrupt.\n
+\n
+Event groups are stored in variables of type EventGroupHandle_t. The number of bits (or flags) implemented within an event group is 8 if configUSE_16_BIT_TICKS is set to 1, or 24 if configUSE_16_BIT_TICKS is set to 0. The dependency on configUSE_16_BIT_TICKS results from the data type used for thread local storage in the internal implementation of RTOS tasks. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>EventGroupHandle_t</ReturnType>
+        <RetHint>Event Group Handle. If the event group was created then a handle to the event group is returned. If there was insufficient FreeRTOS heap available to create the event group then NULL is returned. </RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>EventGroupHandle_t #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xEventGroupWaitBits</Name>
+        <Symbol>xEventGroupWaitBits</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint> Read bits within an RTOS event group, optionally entering the Blocked state (with a timeout) to wait for a bit or group of bits to become set. This function cannot be called from an interrupt. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>EventBits_t: The value of the event group at the time either the event bits being waited for became set, or the block time expired. The current value of the event bits in an event group will be different to the returned value if a higher priority task or interrupt changed the value of an event bit between the calling task leaving the Blocked state and exiting the xEventGroupWaitBits() function.\n\nTest the return value to know which bits were set. If xEventGroupWaitBits() returned because its timeout expired then not all the bits being waited for will be set. If xEventGroupWaitBits() returned because the bits it was waiting for were set then the returned value is the event group value before any bits were automatically cleared because the xClearOnExit parameter was set to pdTRUE. </RetHint>
+        <ParamCount>5</ParamCount>
+        <Parameter>
+          <ParName>xEventGroup</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The event group in which the bits are being tested. The event group must have previously been created using a call to xEventGroupCreate(). </ParHint>
+          <ParUserDeclaration>const EventGroupHandle_t xEventGroup</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>uxBitsToWaitFor</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>A bitwise value that indicates the bit or bits to test inside the event group. For example, to wait for bit 0 and/or bit 2 set uxBitsToWaitFor to 0x05. To wait for bits 0 and/or bit 1 and/or bit 2 set uxBitsToWaitFor to 0x07. Etc.\n\nuxBitsToWaitFor must not be set to 0. </ParHint>
+          <ParUserDeclaration>const EventBits_t uxBitsToWaitFor</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>xClearOnExit</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>If xClearOnExit is set to pdTRUE then any bits set in the value passed as the uxBitsToWaitFor parameter will be cleared in the event group before xEventGroupWaitBits() returns if xEventGroupWaitBits() returns for any reason other than a timeout. The timeout value is set by the xTicksToWait parameter.\n\nIf xClearOnExit is set to pdFALSE then the bits set in the event group are not altered when the call to xEventGroupWaitBits() returns. </ParHint>
+          <ParUserDeclaration>const BaseType_t xClearOnExit</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>xWaitForAllBits</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>xWaitForAllBits is used to create either a logical AND test (where all bits must be set) or a logical OR test (where one or more bits must be set) as follows:\n\nIf xWaitForAllBits is set to pdTRUE then xEventGroupWaitBits() will return when either all the bits set in the value passed as the uxBitsToWaitFor parameter are set in the event group or the specified block time expires.\n\nIf xWaitForAllBits is set to pdFALSE then xEventGroupWaitBits() will return when any of the bits set in the value passed as the uxBitsToWaitFor parameter are set in the event group or the specified block time expires. </ParHint>
+          <ParUserDeclaration>const BaseType_t xWaitForAllBits</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>xTicksToWait</ParName>
+          <ParType>TickType_t</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The maximum amount of time (specified in 'ticks') to wait for one/all (depending on the xWaitForAllBits value) of the bits specified by uxBitsToWaitFor to become set. </ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(const EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToWaitFor, const BaseType_t xClearOnExit, const BaseType_t xWaitForAllBits, TickType_t xTicksToWait)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xEventGroupSetBits</Name>
+        <Symbol>xEventGroupSetBits</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint> Set bits (flags) within an RTOS event group. This function cannot be called from an interrupt. xEventGroupSetBitsFromISR() is a version that can be called from an interrupt.\n
+\n
+Setting bits in an event group will automatically unblock tasks that are blocked waiting for the bits. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>EventBits_t</ReturnType>
+        <RetHint>The value of the event group at the time the call to xEventGroupSetBits() returns.\n\nThere are two reasons why the returned value might have the bits specified by the uxBitsToSet parameter cleared:\n\n    If setting a bit results in a task that was waiting for the bit leaving the blocked state then it is possible the bit will have been cleared automatically (see the xClearBitOnExit parameter of xEventGroupWaitBits()).\n\n    Any unblocked (or otherwise Ready state) task that has a priority above that of the task that called xEventGroupSetBits() will execute and may change the event group value before the call to xEventGroupSetBits() returns.</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>xEventGroup</ParName>
+          <ParType>EventGroupHandle_t</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The event group in which the bits are to be set. The event group must have previously been created using a call to xEventGroupCreate(). </ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>uxBitsToSet</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>A bitwise value that indicates the bit or bits to set in the event group. For example, set uxBitsToSet to 0x08 to set only bit 3. Set uxBitsToSet to 0x09 to set bit 3 and bit 0. </ParHint>
+          <ParUserDeclaration>const EventBits_t uxBitsToSet </ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>EventBits_t #M#_#C#(EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet )</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xEventGroupSetBitsFromISR</Name>
+        <Symbol>xEventGroupSetBitsFromISR</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint> Set bits (flags) within an RTOS event group. A version of xEventGroupSetBits() that can be called from an interrupt service routine (ISR).\n
+\n
+Setting bits in an event group will automatically unblock tasks that are blocked waiting for the bits.\n
+\n
+Setting bits in an event group is not a deterministic operation because there are an unknown number of tasks that may be waiting for the bit or bits being set. FreeRTOS does not allow non-deterministic operations to be performed in interrupts or from critical sections. Therefore xEventGroupSetBitFromISR() sends a message to the RTOS daemon task to have the set operation performed in the context of the daemon task - where a scheduler lock is used in place of a critical section.\n
+\n
+INCLUDE_xEventGroupSetBitFromISR, configUSE_TIMERS and INCLUDE_xTimerPendFunctionCall must all be set to 1 in FreeRTOSConfig.h for the xEventGroupSetBitsFromISR() function to be available. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>EventBits_t</ReturnType>
+        <RetHint>The value of the event group at the time the call to xEventGroupSetBits() returns.\n\nThere are two reasons why the returned value might have the bits specified by the uxBitsToSet parameter cleared:\n\n    If setting a bit results in a task that was waiting for the bit leaving the blocked state then it is possible the bit will have been cleared automatically (see the xClearBitOnExit parameter of xEventGroupWaitBits()).\n\n    Any unblocked (or otherwise Ready state) task that has a priority above that of the task that called xEventGroupSetBits() will execute and may change the event group value before the call to xEventGroupSetBits() returns.</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>xEventGroup</ParName>
+          <ParType>EventGroupHandle_t</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The event group in which the bits are to be set. The event group must have previously been created using a call to xEventGroupCreate(). </ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>uxBitsToSet</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>A bitwise value that indicates the bit or bits to set in the event group. For example, set uxBitsToSet to 0x08 to set only bit 3. Set uxBitsToSet to 0x09 to set bit 3 and bit 0. </ParHint>
+          <ParUserDeclaration>const EventBits_t uxBitsToSet </ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>pxHigherPriorityTaskWoken</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Calling this function will result in a message being sent to the RTOS daemon task. If the priority of the daemon task is higher than the priority of the currently running task (the task the interrupt interrupted) then *pxHigherPriorityTaskWoken will be set to pdTRUE by xEventGroupSetBitsFromISR(), indicating that a context switch should be requested before the interrupt exits. For that reason *pxHigherPriorityTaskWoken must be initialised to pdFALSE. See the example code below. </ParHint>
+          <ParUserDeclaration>BaseType_t *pxHigherPriorityTaskWoken</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>EventBits_t #M#_#C#(EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet , BaseType_t *pxHigherPriorityTaskWoken)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xEventGroupClearBits</Name>
+        <Symbol>xEventGroupClearBits</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Clear bits (flags) within an RTOS event group. This function cannot be called from an interrupt. See xEventGroupClearBitsFromISR() for a version that can be called from an interrupt. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>EventBits_t</ReturnType>
+        <RetHint>The value of the event group at the time the call to xEventGroupSetBits() returns.\n\nThere are two reasons why the returned value might have the bits specified by the uxBitsToSet parameter cleared:\n\n    If setting a bit results in a task that was waiting for the bit leaving the blocked state then it is possible the bit will have been cleared automatically (see the xClearBitOnExit parameter of xEventGroupWaitBits()).\n\n    Any unblocked (or otherwise Ready state) task that has a priority above that of the task that called xEventGroupSetBits() will execute and may change the event group value before the call to xEventGroupSetBits() returns.</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>xEventGroup</ParName>
+          <ParType>EventGroupHandle_t</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The event group in which the bits are to be cleared. The event group must have previously been created using a call to xEventGroupCreate(). </ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>uxBitsToSet</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>A bitwise value that indicates the bit or bits to clear in the event group. For example set uxBitsToClear to 0x08 to clear just bit 3. Set uxBitsToClear to 0x09 to clear bit 3 and bit 0. </ParHint>
+          <ParUserDeclaration>const EventBits_t uxBitsToSet </ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>EventBits_t #M#_#C#(EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet )</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xEventGroupClearBitsFromISR</Name>
+        <Symbol>xEventGroupClearBitsFromISR</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint> A version of xEventGroupClearBits() that can be called from an interrupt. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>EventBits_t</ReturnType>
+        <RetHint>The value of the event group at the time the call to xEventGroupSetBits() returns.\n\nThere are two reasons why the returned value might have the bits specified by the uxBitsToSet parameter cleared:\n\n    If setting a bit results in a task that was waiting for the bit leaving the blocked state then it is possible the bit will have been cleared automatically (see the xClearBitOnExit parameter of xEventGroupWaitBits()).\n\n    Any unblocked (or otherwise Ready state) task that has a priority above that of the task that called xEventGroupSetBits() will execute and may change the event group value before the call to xEventGroupSetBits() returns.</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>xEventGroup</ParName>
+          <ParType>EventGroupHandle_t</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The event group in which the bits are to be set. The event group must have previously been created using a call to xEventGroupCreate(). </ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>uxBitsToSet</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>A bitwise value that indicates the bit or bits to set in the event group. For example, set uxBitsToSet to 0x08 to set only bit 3. Set uxBitsToSet to 0x09 to set bit 3 and bit 0. </ParHint>
+          <ParUserDeclaration>const EventBits_t uxBitsToSet </ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>EventBits_t #M#_#C#(EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet )</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xEventGroupGetBits</Name>
+        <Symbol>xEventGroupGetBits</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Returns the current value of the event bits (event flags) in an RTOS event group. This function cannot be used from an interrupt. See xEventGroupsGetBitsFromISR() for a version that can be used in an interrupt. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>EventBits_t</ReturnType>
+        <RetHint>The value of the event bits in the event group at the time xEventGroupGetBits() was called. </RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>xEventGroup</ParName>
+          <ParType>EventGroupHandle_t</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The event group being queried. The event group must have previously been created using a call to xEventGroupCreate().</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>EventBits_t #M#_#C#(EventGroupHandle_t xEventGroup)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xEventGroupGetBitsFromISR</Name>
+        <Symbol>xEventGroupGetBitsFromISR</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>A version of xEventGroupGetBits() that can be called from an interrupt. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>EventBits_t</ReturnType>
+        <RetHint>The value of the event bits in the event group at the time xEventGroupGetBits() was called. </RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>xEventGroup</ParName>
+          <ParType>EventGroupHandle_t</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The event group being queried. The event group must have previously been created using a call to xEventGroupCreate().</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>EventBits_t #M#_#C#(EventGroupHandle_t xEventGroup)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>xEventGroupSync</Name>
+        <Symbol>xEventGroupSync</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint> Atomically set bits (flags) within an RTOS event group, then wait for a combination of bits to be set within the same event group. This functionality is typically used to synchronise multiple tasks (often called a task rendezvous), where each task has to wait for the other tasks to reach a synchronisation point before proceeding.\n
+\n
+This function cannot be used from an interrupt.\n
+\n
+The function will return before its block time expires if the bits specified by the uxBitsToWait parameter are set, or become set within that time. In this case all the bits specified by uxBitsToWait will be automatically cleared before the function returns. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>EventBits_t</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>4</ParamCount>
+        <Parameter>
+          <ParName>xEventGroup</ParName>
+          <ParType>EventGroupHandle_t</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The event group in which the bits are being set and tested. The event group must have previously been created using a call to xEventGroupCreate().</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>uxBitsToSet</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The bit or bits to set in the event group before determining if (and possibly waiting for), all the bits specified by the uxBitsToWait parameter are set. For example, set uxBitsToSet to 0x04 to set bit 2 within the event group. </ParHint>
+          <ParUserDeclaration>const EventBits_t uxBitsToSet</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>uxBitsToWaitFor</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>A bitwise value that indicates the bit or bits to test inside the event group. For example, set uxBitsToWaitFor to 0x05 to wait for bits 0 and bit 2. Set uxBitsToWaitFor to 0x07 to wait for bit 0 and bit 1 and bit 2. Etc. </ParHint>
+          <ParUserDeclaration>const EventBits_t uxBitsToWaitFor</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>xTicksToWait</ParName>
+          <ParType>TickType_t</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The maximum amount of time (specified in 'ticks') to wait for all the bits specified by the uxBitsToWaitFor parameter value to become set. </ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>EventBits_t #M#_#C#(EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, const EventBits_t uxBitsToWaitFor, TickType_t xTicksToWait)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

@@ -116,6 +116,7 @@
 #include "FreeRTOS.h"
 #include "task.h"                                                %>40/* task API */
 #include "semphr.h"                                              %>40/* semaphore API */
+#include "event_groups.h"                                        %>40/* event group API */
 #include <stddef.h>                                              %>40/* for size_t type */
 
 /* Macro for shell support */
@@ -1126,6 +1127,116 @@ void %'ModuleName'%.%Init(void);
 
 %endif %- xQueueSelectFromSetFromISR
 %-BW_METHOD_END xQueueSelectFromSetFromISR
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xEventGroupCreate
+%ifdef xEventGroupCreate
+#define %'ModuleName'%.%xEventGroupCreate() \
+  xEventGroupCreate()
+%define! RetVal
+%include Common\FreeRTOSxEventGroupCreate.Inc
+
+%endif %- xEventGroupCreate
+%-BW_METHOD_END xEventGroupCreate
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xEventGroupWaitBits
+%ifdef xEventGroupWaitBits
+#define %'ModuleName'%.%xEventGroupWaitBits(xEventGroup, uxBitsToWaitFor, xClearOnExit, xWaitForAllBits, xTicksToWait) \
+  xEventGroupWaitBits(xEventGroup, uxBitsToWaitFor, xClearOnExit, xWaitForAllBits, xTicksToWait)
+%define! ParxEventGroup
+%define! ParuxBitsToWaitFor
+%define! ParxClearOnExit
+%define! ParxWaitForAllBits
+%define! ParxTicksToWait
+%define! RetVal
+%include Common\FreeRTOSxEventGroupWaitBits.Inc
+
+%endif %- xEventGroupWaitBits
+%-BW_METHOD_END xEventGroupWaitBits
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xEventGroupSetBits
+%ifdef xEventGroupSetBits
+#define %'ModuleName'%.%xEventGroupSetBits(xEventGroup, uxBitsToSet) \
+  xEventGroupSetBits(xEventGroup, uxBitsToSet)
+%define! ParxEventGroup
+%define! ParuxBitsToSet
+%define! RetVal
+%include Common\FreeRTOSxEventGroupSetBits.Inc
+
+%endif %- xEventGroupSetBits
+%-BW_METHOD_END xEventGroupSetBits
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xEventGroupSetBitsFromISR
+%ifdef xEventGroupSetBitsFromISR
+#define %'ModuleName'%.%xEventGroupSetBitsFromISR(xEventGroup, uxBitsToSet, pxHigherPriorityTaskWoken) \
+  xEventGroupSetBitsFromISR(xEventGroup, uxBitsToSet, pxHigherPriorityTaskWoken)
+%define! ParxEventGroup
+%define! ParuxBitsToSet
+%define! ParpxHigherPriorityTaskWoken
+%define! RetVal
+%include Common\FreeRTOSxEventGroupSetBitsFromISR.Inc
+
+%endif %- xEventGroupSetBitsFromISR
+%-BW_METHOD_END xEventGroupSetBitsFromISR
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xEventGroupClearBits
+%ifdef xEventGroupClearBits
+#define %'ModuleName'%.%xEventGroupClearBits(xEventGroup, uxBitsToSet) \
+  xEventGroupClearBits(xEventGroup, uxBitsToSet)
+%define! ParxEventGroup
+%define! ParuxBitsToSet
+%define! RetVal
+%include Common\FreeRTOSxEventGroupClearBits.Inc
+
+%endif %- xEventGroupClearBits
+%-BW_METHOD_END xEventGroupClearBits
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xEventGroupClearBitsFromISR
+%ifdef xEventGroupClearBitsFromISR
+#define %'ModuleName'%.%xEventGroupClearBitsFromISR(xEventGroup, uxBitsToSet) \
+  xEventGroupClearBitsFromISR(xEventGroup, uxBitsToSet)
+%define! ParxEventGroup
+%define! ParuxBitsToSet
+%define! RetVal
+%include Common\FreeRTOSxEventGroupClearBitsFromISR.Inc
+
+%endif %- xEventGroupClearBitsFromISR
+%-BW_METHOD_END xEventGroupClearBitsFromISR
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xEventGroupGetBits
+%ifdef xEventGroupGetBits
+#define %'ModuleName'%.%xEventGroupGetBits(xEventGroup) \
+  xEventGroupGetBits(xEventGroup)
+%define! ParxEventGroup
+%define! RetVal
+%include Common\FreeRTOSxEventGroupGetBits.Inc
+
+%endif %- xEventGroupGetBits
+%-BW_METHOD_END xEventGroupGetBits
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xEventGroupGetBitsFromISR
+%ifdef xEventGroupGetBitsFromISR
+#define %'ModuleName'%.%xEventGroupGetBitsFromISR(xEventGroup) \
+  xEventGroupGetBitsFromISR(xEventGroup)
+%define! ParxEventGroup
+%define! RetVal
+%include Common\FreeRTOSxEventGroupGetBitsFromISR.Inc
+
+%endif %- xEventGroupGetBitsFromISR
+%-BW_METHOD_END xEventGroupGetBitsFromISR
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xEventGroupSync
+%ifdef xEventGroupSync
+#define %'ModuleName'%.%xEventGroupSync(xEventGroup, uxBitsToSet, uxBitsToWaitFor, xTicksToWait) \
+  xEventGroupSync(xEventGroup, uxBitsToSet, uxBitsToWaitFor, xTicksToWait)
+%define! ParxEventGroup
+%define! ParuxBitsToSet
+%define! ParuxBitsToWaitFor
+%define! ParxTicksToWait
+%define! RetVal
+%include Common\FreeRTOSxEventGroupSync.Inc
+
+%endif %- xEventGroupSync
+%-BW_METHOD_END xEventGroupSync
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -2658,6 +2769,152 @@ xQueueSetMemberHandle %'ModuleName'%.%xQueueSelectFromSetFromISR(xQueueSetHandle
 
 %endif %- xQueueSelectFromSetFromISR
 %-BW_METHOD_END xQueueSelectFromSetFromISR
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xEventGroupCreate
+%ifdef xEventGroupCreate
+%define! RetVal
+%include Common\FreeRTOSxEventGroupCreate.Inc
+/*
+EventGroupHandle_t %'ModuleName'%.%xEventGroupCreate(void)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xEventGroupCreate
+%-BW_METHOD_END xEventGroupCreate
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xEventGroupWaitBits
+%ifdef xEventGroupWaitBits
+%define! ParxEventGroup
+%define! ParuxBitsToWaitFor
+%define! ParxClearOnExit
+%define! ParxWaitForAllBits
+%define! ParxTicksToWait
+%define! RetVal
+%include Common\FreeRTOSxEventGroupWaitBits.Inc
+/*
+byte %'ModuleName'%.%xEventGroupWaitBits(const EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToWaitFor, const BaseType_t xClearOnExit, const BaseType_t xWaitForAllBits, TickType_t xTicksToWait)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xEventGroupWaitBits
+%-BW_METHOD_END xEventGroupWaitBits
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xEventGroupSetBits
+%ifdef xEventGroupSetBits
+%define! ParxEventGroup
+%define! ParuxBitsToSet
+%define! RetVal
+%include Common\FreeRTOSxEventGroupSetBits.Inc
+/*
+EventBits_t %'ModuleName'%.%xEventGroupSetBits(EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet )
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xEventGroupSetBits
+%-BW_METHOD_END xEventGroupSetBits
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xEventGroupSetBitsFromISR
+%ifdef xEventGroupSetBitsFromISR
+%define! ParxEventGroup
+%define! ParuxBitsToSet
+%define! ParpxHigherPriorityTaskWoken
+%define! RetVal
+%include Common\FreeRTOSxEventGroupSetBitsFromISR.Inc
+/*
+EventBits_t %'ModuleName'%.%xEventGroupSetBitsFromISR(EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet , BaseType_t *pxHigherPriorityTaskWoken)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xEventGroupSetBitsFromISR
+%-BW_METHOD_END xEventGroupSetBitsFromISR
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xEventGroupClearBits
+%ifdef xEventGroupClearBits
+%define! ParxEventGroup
+%define! ParuxBitsToSet
+%define! RetVal
+%include Common\FreeRTOSxEventGroupClearBits.Inc
+/*
+EventBits_t %'ModuleName'%.%xEventGroupClearBits(EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet )
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xEventGroupClearBits
+%-BW_METHOD_END xEventGroupClearBits
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xEventGroupClearBitsFromISR
+%ifdef xEventGroupClearBitsFromISR
+%define! ParxEventGroup
+%define! ParuxBitsToSet
+%define! RetVal
+%include Common\FreeRTOSxEventGroupClearBitsFromISR.Inc
+/*
+EventBits_t %'ModuleName'%.%xEventGroupClearBitsFromISR(EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet )
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xEventGroupClearBitsFromISR
+%-BW_METHOD_END xEventGroupClearBitsFromISR
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xEventGroupGetBits
+%ifdef xEventGroupGetBits
+%define! ParxEventGroup
+%define! RetVal
+%include Common\FreeRTOSxEventGroupGetBits.Inc
+/*
+EventBits_t %'ModuleName'%.%xEventGroupGetBits(EventGroupHandle_t xEventGroup)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xEventGroupGetBits
+%-BW_METHOD_END xEventGroupGetBits
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xEventGroupGetBitsFromISR
+%ifdef xEventGroupGetBitsFromISR
+%define! ParxEventGroup
+%define! RetVal
+%include Common\FreeRTOSxEventGroupGetBitsFromISR.Inc
+/*
+EventBits_t %'ModuleName'%.%xEventGroupGetBitsFromISR(EventGroupHandle_t xEventGroup)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xEventGroupGetBitsFromISR
+%-BW_METHOD_END xEventGroupGetBitsFromISR
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN xEventGroupSync
+%ifdef xEventGroupSync
+%define! ParxEventGroup
+%define! ParuxBitsToSet
+%define! ParuxBitsToWaitFor
+%define! ParxTicksToWait
+%define! RetVal
+%include Common\FreeRTOSxEventGroupSync.Inc
+/*
+EventBits_t %'ModuleName'%.%xEventGroupSync(EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, const EventBits_t uxBitsToWaitFor, TickType_t xTicksToWait)
+{
+  *** Implemented as macro in the header file %'ModuleName'.h
+}
+*/
+
+%endif %- xEventGroupSync
+%-BW_METHOD_END xEventGroupSync
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
@@ -2671,7 +2928,7 @@ xQueueSetMemberHandle %'ModuleName'%.%xQueueSelectFromSetFromISR(xQueueSetHandle
 %define! ParpxTask
 %define! ParpcTaskName
 %include Common\FreeRTOSvApplicationStackOverflowHook.Inc
-void %vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName)
+void %vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName)
 {
   /* This will get called if a stack overflow is detected during the context
      switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack
