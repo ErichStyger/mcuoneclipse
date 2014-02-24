@@ -3434,7 +3434,7 @@ TCB_t *pxTCB;
 	      %@Utility@'ModuleName'%.strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)"\t\t");
 	      %@Utility@'ModuleName'%.chcat((uint8_t*)pcWriteBuffer, bufSize, (unsigned char)cStatus);
 	      %@Utility@'ModuleName'%.chcat((uint8_t*)pcWriteBuffer, bufSize, (unsigned char)'\t');
-	      %@Utility@'ModuleName'%.strcatNum32u((unsigned char*)pcWriteBuffer, bufSize, pxTaskStatusArray[ x ].uxCurrentPriority);
+	      %@Utility@'ModuleName'%.strcatNum32u((uint8_t*)pcWriteBuffer, bufSize, pxTaskStatusArray[ x ].uxCurrentPriority);
 	      %@Utility@'ModuleName'%.chcat((uint8_t*)pcWriteBuffer, bufSize, (unsigned char)'\t');
 	      %@Utility@'ModuleName'%.strcatNum32u((uint8_t*)pcWriteBuffer, bufSize, pxTaskStatusArray[ x ].usStackHighWaterMark);
 	      %@Utility@'ModuleName'%.chcat((uint8_t*)pcWriteBuffer, bufSize, (unsigned char)'\t');
@@ -3561,10 +3561,10 @@ TCB_t *pxTCB;
 #if 0
               sprintf( ( char * ) pcWriteBuffer, ( char * ) "%%s\t\t%%u\t\t<1%%%%\r\n", pxTaskStatusArray[ x ].pcTaskName, ( unsigned int ) pxTaskStatusArray[ x ].ulRunTimeCounter );
 #else /* << EST */
-              %@Utility@'ModuleName'%.strcat(pcWriteBuffer, bufSize, (const unsigned char*)pxTaskStatusArray[ x ].pcTaskName);
-              %@Utility@'ModuleName'%.strcat(pcWriteBuffer, bufSize, (const unsigned char*)"\t\t");
-              %@Utility@'ModuleName'%.strcatNum32u((unsigned char*)pcWriteBuffer, bufSize, pxTaskStatusArray[ x ].ulRunTimeCounter);
-              %@Utility@'ModuleName'%.strcat(pcWriteBuffer, bufSize, (const unsigned char*)"\t\t<1%%\r\n");
+              %@Utility@'ModuleName'%.strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)pxTaskStatusArray[ x ].pcTaskName);
+              %@Utility@'ModuleName'%.strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)"\t\t");
+              %@Utility@'ModuleName'%.strcatNum32u((uint8_t*)pcWriteBuffer, bufSize, pxTaskStatusArray[ x ].ulRunTimeCounter);
+              %@Utility@'ModuleName'%.strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)"\t\t<1%%\r\n");
 #endif
 						}
 						#endif
