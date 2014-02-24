@@ -1381,7 +1381,7 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   taskListBufferP = %'ModuleName'%.pvPortMalloc(bufSize); /* about 40 bytes for a task should be enough */
 #endif
   if (taskListBufferP != NULL) {
-    %'ModuleName'%.vTaskList(taskListBufferP, bufSize);
+    %'ModuleName'%.vTaskList((char*)taskListBufferP, bufSize);
     %@Shell@'ModuleName'%.SendStr(taskListBufferP, io->stdOut);
 #if configFRTOS_MEMORY_SCHEME!=1 /* this scheme does not allow deallocation of memory */
     %'ModuleName'%.vPortFree(taskListBufferP);
@@ -1405,7 +1405,7 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   taskListBufferP = %'ModuleName'%.pvPortMalloc(bufSize);
 #endif
   if (taskListBufferP != NULL) {
-    %'ModuleName'%.vTaskGetRunTimeStats(taskListBufferP, bufSize);
+    %'ModuleName'%.vTaskGetRunTimeStats((char*)taskListBufferP, bufSize);
     %@Shell@'ModuleName'%.SendStr(taskListBufferP, io->stdOut);
 #if configFRTOS_MEMORY_SCHEME!=1 /* this scheme does not allow deallocation of memory */
     %'ModuleName'%.vPortFree(taskListBufferP);
