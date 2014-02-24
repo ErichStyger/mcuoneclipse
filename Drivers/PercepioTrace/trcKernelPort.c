@@ -54,11 +54,11 @@ traceObjectClass TraceObjectClassTable[5] = {
 };
 
 extern unsigned char ucQueueGetQueueType(void*);
-extern unsigned char ucQueueGetQueueNumber(void*);
+extern unsigned char uxQueueGetQueueNumber(void*);
 
 objectHandleType prvTraceGetObjectNumber(void* handle)
 {
-	return ucQueueGetQueueNumber(handle);	
+	return uxQueueGetQueueNumber(handle);	
 }
 
 unsigned char prvTraceGetObjectType(void* handle)
