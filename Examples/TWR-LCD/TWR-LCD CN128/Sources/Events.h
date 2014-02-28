@@ -69,6 +69,7 @@
 #include "UICalendar1.h"
 #include "IFsh1.h"
 #include "UIG1.h"
+#include "CS1.h"
 
 
 void UICalendar1_OnCalendarGetAppointments(UICalendar1_CalendarDateTime *startHint, UICalendar1_CalendarAppointment **appointmentList);
@@ -246,7 +247,7 @@ void I2C1_OnTxChar(void);
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

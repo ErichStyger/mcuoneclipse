@@ -19,7 +19,9 @@ usederivative "MCF52259"
 //         Memory Map:
 //         ----------------------------------------------------------------------
 range      0x00000000 0x0007FFFF 4 ReadWrite // 512 KBytes
-reserved   0x00080000 0x1FFFFFFF
+reserved   0x00080000 0x003FFFFF
+range      0x00400000 0x0041FFFF 4 ReadWrite // 128 KBytes
+reserved   0x00420000 0x1FFFFFFF
 range      0x20000000 0x2000FFFF 4 ReadWrite // 64 KBytes
 reserved   0x20010000 0x3FFFFFFF
 //         0x40000000 0x401FFFFF             // Memory Mapped Registers

@@ -4,9 +4,9 @@
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
     <ModificationStamp>76</ModificationStamp>
-    <Date>2013-04-18</Date>
+    <Date>2014-02-28</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion>1.5.0.RT4_b1306-1475</PEversion>
+    <PEversion>1.8.1.RT5_b1349-1839</PEversion>
   </Header>
   <Options>
     <EventsDirectory>Sources</EventsDirectory>
@@ -203,6 +203,7 @@
         <Index>1</Index>
         <EnumSymbVal>1</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ExtOscOperatingMode</ItemSymbol>
@@ -211,6 +212,7 @@
         <Index>0</Index>
         <EnumSymbVal>1</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ExtRefClkForPeripherals</ItemSymbol>
@@ -259,6 +261,7 @@
         <Index>1</Index>
         <EnumSymbVal>2</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>EnableIntClkInStopMode</ItemSymbol>
@@ -296,6 +299,7 @@
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SharedInternalMappingGrp</ItemSymbol>
@@ -535,6 +539,7 @@
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>BackdoorKey</ItemSymbol>
@@ -652,6 +657,7 @@
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>InitUnusedIO_OutputValue</ItemSymbol>
@@ -660,6 +666,7 @@
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ShrdUnbondedIOGrp</ItemSymbol>
@@ -680,6 +687,7 @@
         <Index>2</Index>
         <EnumSymbVal>2</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>InitUnbondedIO_OutputValue</ItemSymbol>
@@ -688,6 +696,7 @@
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PortAGrp</ItemSymbol>
@@ -2171,6 +2180,7 @@
         <Index>1</Index>
         <EnumSymbVal>0</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>LVWvoltage</ItemSymbol>
@@ -2179,6 +2189,7 @@
         <Index>1</Index>
         <EnumSymbVal>0</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SharedTMP</ItemSymbol>
@@ -3362,6 +3373,7 @@
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>HighFLLMode</ItemSymbol>
@@ -3413,6 +3425,7 @@
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>HighFrclkdiv_MHz</ItemSymbol>
@@ -3558,6 +3571,7 @@
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>LowFLLMode</ItemSymbol>
@@ -3609,6 +3623,7 @@
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>LowFrclkdiv_MHz</ItemSymbol>
@@ -3754,6 +3769,7 @@
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SlowFLLMode</ItemSymbol>
@@ -3805,6 +3821,7 @@
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SlowFrclkdiv_MHz</ItemSymbol>
@@ -5259,7 +5276,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.057</BeanVersion>
+    <BeanVersion>01.064</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -5330,6 +5347,28 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Watchdog</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>nonLDDWatchDogEnabled</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>true</Value>
+        <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LDDWatchDogEnabled</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>WatchdogLDD</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value />
@@ -5405,6 +5444,15 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>WaitOSms</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>WaitLongCycles</ItemSymbol>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>WaitLongCycles</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Methods>
@@ -5624,6 +5672,7 @@
         <Index>0</Index>
         <EnumSymbVal>Landscape</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>UseMemBuffer</ItemSymbol>
@@ -6079,6 +6128,7 @@
         <Index>0</Index>
         <EnumSymbVal>Helv</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FontSize</ItemSymbol>
@@ -6087,6 +6137,7 @@
         <Index>0</Index>
         <EnumSymbVal>8</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FontStyle</ItemSymbol>
@@ -6095,6 +6146,7 @@
         <Index>0</Index>
         <EnumSymbVal>normal</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
     </Properties>
     <Methods>
@@ -6166,7 +6218,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.154</BeanVersion>
+    <BeanVersion>01.158</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -6182,6 +6234,7 @@
         <Index>0</Index>
         <EnumSymbVal>landscape</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>Width</ItemSymbol>
@@ -7490,7 +7543,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.084</BeanVersion>
+    <BeanVersion>01.095</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -7993,6 +8046,72 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>always</LastUserSel>
         <UsrMethodName>strCutTail</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>strcatNum32sDotValue100</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>strcatNum32sDotValue100</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanDecimal8sNumber</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ScanDecimal8sNumber</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanDecimal16sNumber</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ScanDecimal16sNumber</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanDecimal32sNumber</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ScanDecimal32sNumber</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanHex8uNumberNoPrefix</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ScanHex8uNumberNoPrefix</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>strFind</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>strFind</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Methods>
@@ -8995,6 +9114,7 @@
         <Index>0</Index>
         <EnumSymbVal>Low</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PWMEmergencyShutdownOutputLevel</ItemSymbol>
@@ -9003,6 +9123,7 @@
         <Index>0</Index>
         <EnumSymbVal>Low</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>_PeriodTmg</ItemSymbol>
@@ -9246,6 +9367,7 @@
         <Index>0</Index>
         <EnumSymbVal>pwm</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>HighOutputValueSimulink</ItemSymbol>
@@ -9723,7 +9845,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>02.407</BeanVersion>
+    <BeanVersion>02.409</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -9769,6 +9891,7 @@
         <Index>1</Index>
         <EnumSymbVal>1</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>IntService</ItemSymbol>
@@ -9940,6 +10063,7 @@
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>DSP56x_Cond3</ItemSymbol>
@@ -9962,6 +10086,7 @@
         <Index>1</Index>
         <EnumSymbVal>1</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>_VirtualPageGrp</ItemSymbol>
@@ -9978,6 +10103,7 @@
         <Index>0</Index>
         <EnumSymbVal>By the bean</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PageSize</ItemSymbol>
@@ -10012,6 +10138,7 @@
         <Index>0</Index>
         <EnumSymbVal>By the bean</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PageSize_56800</ItemSymbol>
@@ -10234,6 +10361,42 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>medium priority</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DSP56x_Cond67</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DSP56x_Cond68</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DSP56x_Cond70</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFx_CmdCompleteInterruptRegMode</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DSP56x_Cond69</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFx_ReadCollisionErrorInterruptRegMode</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Properties>
@@ -11037,6 +11200,7 @@
         <Index>6</Index>
         <EnumSymbVal>6</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>width16</ItemSymbol>
@@ -11051,6 +11215,7 @@
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>DSP85xgrp</ItemSymbol>
@@ -11203,6 +11368,7 @@
         <Index>0</Index>
         <EnumSymbVal>Input</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SSActiveLevelGrp</ItemSymbol>
@@ -11216,6 +11382,7 @@
         <Index>0</Index>
         <EnumSymbVal>Low</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SSPULLD</ItemSymbol>
@@ -11423,6 +11590,7 @@
         <Index>0</Index>
         <EnumSymbVal>Standard</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SKpolarity</ItemSymbol>
@@ -11431,6 +11599,7 @@
         <Index>1</Index>
         <EnumSymbVal>Low</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>HC08grp</ItemSymbol>
@@ -11457,6 +11626,7 @@
         <Index>1</Index>
         <EnumSymbVal>Low</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FaultModeFeature</ItemSymbol>
@@ -11502,6 +11672,7 @@
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>803xGrp2</ItemSymbol>
@@ -12404,6 +12575,7 @@
         <Index>0</Index>
         <EnumSymbVal>MCF51JM128</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>USBBufferStart</ItemSymbol>

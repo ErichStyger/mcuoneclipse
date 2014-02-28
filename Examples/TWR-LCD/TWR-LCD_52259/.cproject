@@ -14,22 +14,22 @@
 					<extension id="com.freescale.core.ide.cdt.errorParsers.IcodeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="com.freescale.core.ide.cdt.errorParsers.CobjErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="com.freescale.core.ide.cdt.errorParsers.LnkErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="com.freescale.core.ide.cdt.errorParsers.MwfeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="com.freescale.core.ide.cdt.errorParsers.MwErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="com.freescale.core.ide.cdt.errorParsers.MPWErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="elf" artifactName="TWR-LCD_52259" buildProperties="" cleanCommand="&quot;${system:ECLIPSE_HOME}/../gnu/bin/rm&quot; -f" description="" errorParsers="org.eclipse.cdt.core.MakeErrorParser;com.freescale.core.ide.cdt.errorParsers.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser;com.freescale.core.ide.cdt.errorParsers.LnkErrorParser;com.freescale.core.ide.cdt.errorParsers.AsmErrorParser;com.freescale.core.ide.cdt.errorParsers.CobjErrorParser;com.freescale.core.ide.cdt.errorParsers.IcodeErrorParser;com.freescale.core.ide.cdt.errorParsers.LltErrorParser;com.freescale.core.ide.cdt.errorParsers.MwfeErrorParser;com.freescale.core.ide.cdt.errorParsers.MwErrorParser;com.freescale.core.ide.cdt.errorParsers.MPWErrorParser" id="com.freescale.coldfire.toolchain.configuration.1910721437" isPrebuildInvalidatingBuild="false" name="MCF52259_Internal_Flash" parent="com.freescale.coldfire.toolchain.configuration">
+				<configuration artifactExtension="elf" artifactName="TWR-LCD_52259" buildProperties="" cleanCommand="&quot;${system:ECLIPSE_HOME}/../gnu/bin/rm&quot; -f" description="" errorParsers="com.freescale.core.ide.cdt.errorParsers.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser;com.freescale.core.ide.cdt.errorParsers.LnkErrorParser;com.freescale.core.ide.cdt.errorParsers.AsmErrorParser;com.freescale.core.ide.cdt.errorParsers.CobjErrorParser;com.freescale.core.ide.cdt.errorParsers.IcodeErrorParser;com.freescale.core.ide.cdt.errorParsers.LltErrorParser;com.freescale.core.ide.cdt.errorParsers.MwfeErrorParser;com.freescale.core.ide.cdt.errorParsers.MwErrorParser;com.freescale.core.ide.cdt.errorParsers.MPWErrorParser;org.eclipse.cdt.core.GmakeErrorParser;" id="com.freescale.coldfire.toolchain.configuration.1910721437" isPrebuildInvalidatingBuild="false" isVersionInfoProjSpecific="false" name="MCF52259_Internal_Flash" parent="com.freescale.coldfire.toolchain.configuration">
 					<folderInfo id="com.freescale.coldfire.toolchain.configuration.1910721437." name="/" resourcePath="">
 						<toolChain errorParsers="" id="com.freescale.coldfire.toolchain.toolchain.project.428063452" name="ColdFire Toolchain Tools" superClass="com.freescale.coldfire.toolchain.toolchain.project">
 							<option id="com.freescale.coldfire.toolchain.sharedoption.processor.704151819" name="Processor Family (-proc)" superClass="com.freescale.coldfire.toolchain.sharedoption.processor" value="com.freescale.coldfire.toolchain.sharedoption.processor.52259" valueType="enumerated"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="com.freescale.coldfire.toolchain.platform.530911940" name="ColdFire Target Platform" superClass="com.freescale.coldfire.toolchain.platform"/>
-							<builder autoBuildTarget="" buildPath="${ProjDirPath}/MCF52259_Internal_Flash" cleanBuildTarget="" enableAutoBuild="false" enableCleanBuild="true" enabledIncrementalBuild="true" errorParsers="com.freescale.core.ide.cdt.errorParsers.GCCErrorParser;com.freescale.core.ide.cdt.errorParsers.MwErrorParser;com.freescale.core.ide.cdt.errorParsers.MPWErrorParser;com.freescale.core.ide.cdt.errorParsers.MwfeErrorParser;org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GLDErrorParser" id="com.freescale.coldfire.toolchain.builder.1768471245" incrementalBuildTarget="" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="GNU Make Builder" parallelBuildWorkspaceOn="true" parallelizationNumber="-1" superClass="com.freescale.coldfire.toolchain.builder"/>
+							<builder autoBuildTarget="" buildPath="${ProjDirPath}/MCF52259_Internal_Flash" cleanBuildTarget="" enableAutoBuild="false" enableCleanBuild="true" enabledIncrementalBuild="true" errorParsers="org.eclipse.cdt.core.GmakeErrorParser;com.freescale.core.ide.cdt.errorParsers.MwErrorParser;com.freescale.core.ide.cdt.errorParsers.MPWErrorParser;com.freescale.core.ide.cdt.errorParsers.MwfeErrorParser" id="com.freescale.coldfire.toolchain.builder.1768471245" incrementalBuildTarget="" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="GNU Make Builder" parallelBuildOn="true" parallelBuildWorkspaceOn="true" parallelizationNumber="-1" superClass="com.freescale.coldfire.toolchain.builder"/>
 							<tool errorParsers="" id="coldfire.toolchain.burner.1072114538" name="Burner" superClass="coldfire.toolchain.burner"/>
 							<tool errorParsers="" id="com.freescale.coldfire.toolchain.linker.debug.1088212343" name="ColdFire Linker" superClass="com.freescale.coldfire.toolchain.linker.debug">
 								<option id="com.freescale.coldfire.toolchain.linker.base.generateLinkMap.1524088446" name="Generate Link Map" superClass="com.freescale.coldfire.toolchain.linker.base.generateLinkMap" value="true" valueType="boolean"/>
@@ -48,7 +48,7 @@
 							<tool errorParsers="" id="com.freescale.coldfire.toolchain.compiler.debug.1496010847" name="ColdFire Compiler" superClass="com.freescale.coldfire.toolchain.compiler.debug">
 								<option id="com.freescale.coldfire.toolchain.compiler.base.input.include.2095574451" name="User Path (-i)" superClass="com.freescale.coldfire.toolchain.compiler.base.input.include" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Project_Headers&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TWR-LCD_52259/Sources/Common}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../TWR-LCD JM128/Sources/Common&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Project_Settings/Startup_Code&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Generated_Code&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Sources&quot;"/>
@@ -65,8 +65,8 @@
 								<option id="com.freescale.coldfire.toolchain.compiler.base.options.speedSpace.1472573318" name="Speed vs. Size" superClass="com.freescale.coldfire.toolchain.compiler.base.options.speedSpace" value="com.freescale.coldfire.toolchain.compiler.base.optionCategory.optimization.speedspace.speed" valueType="enumerated"/>
 								<option id="com.freescale.coldfire.toolchain.compiler.base.options.optLevel.1808638023" name="Optimization Level (-opt)" superClass="com.freescale.coldfire.toolchain.compiler.base.options.optLevel" value="com.freescale.coldfire.toolchain.compiler.base.optionCategory.optimization.optlevel.4" valueType="enumerated"/>
 								<option id="com.freescale.coldfire.toolchain.compiler.base.general.otherflags.bool.254366913" name="Enable C++ 'bool' type, 'true' and 'false' Constants (-bool)" superClass="com.freescale.coldfire.toolchain.compiler.base.general.otherflags.bool" value="true" valueType="boolean"/>
-								<option id="com.freescale.coldfire.toolchain.compiler.base.warnings.missingreturn.1082783015" superClass="com.freescale.coldfire.toolchain.compiler.base.warnings.missingreturn" value="true" valueType="boolean"/>
-								<option id="com.freescale.coldfire.toolchain.compiler.base.warnings.filecaps.1300836249" superClass="com.freescale.coldfire.toolchain.compiler.base.warnings.filecaps" value="true" valueType="boolean"/>
+								<option id="com.freescale.coldfire.toolchain.compiler.base.warnings.missingreturn.1082783015" name="Missing 'return' Statement" superClass="com.freescale.coldfire.toolchain.compiler.base.warnings.missingreturn" value="true" valueType="boolean"/>
+								<option id="com.freescale.coldfire.toolchain.compiler.base.warnings.filecaps.1300836249" name="Include File Capitalization" superClass="com.freescale.coldfire.toolchain.compiler.base.warnings.filecaps" value="true" valueType="boolean"/>
 								<inputType id="com.freescale.coldfire.toolchain.compiler.base.input.916030536" name="C Source File" superClass="com.freescale.coldfire.toolchain.compiler.base.input"/>
 								<inputType id="com.freescale.coldfire.toolchain.compiler.base.input.c++.802089845" name="C++ Source File" superClass="com.freescale.coldfire.toolchain.compiler.base.input.c++"/>
 							</tool>
@@ -908,4 +908,5 @@
 			</profile>
 		</scannerConfigBuildInfo>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 </cproject>

@@ -244,7 +244,7 @@ void RTOS_Start(void) {
   SERIAL_Start();
 #endif
 #if PL_USE_RTOS
-  if (FRTOS1_xTaskCreate(TaskMain, (signed portCHAR *)"Main", configMINIMAL_STACK_SIZE+350, NULL, tskIDLE_PRIORITY+2, (xTaskHandle *) NULL)==pdPASS) {
+  if (FRTOS1_xTaskCreate(TaskMain, "Main", configMINIMAL_STACK_SIZE+350, NULL, tskIDLE_PRIORITY+2, (xTaskHandle *) NULL)==pdPASS) {
     FRTOS1_vTaskStartScheduler(); /* Start the scheduler */
   }
 #endif

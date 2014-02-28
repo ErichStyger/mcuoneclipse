@@ -685,7 +685,7 @@ void APP_SetApplicationMode(APP_ApplicationMode mode) {
     bufSize = 40*uxTaskGetNumberOfTasks(); /* about 40 bytes for a task should be enough */
     App.u.taskListW.taskListBufferP = FRTOS1_pvPortMalloc(bufSize);
     if (App.u.taskListW.taskListBufferP != NULL) {
-      FRTOS1_vTaskList((unsigned char*)App.u.taskListW.taskListBufferP, bufSize);
+      FRTOS1_vTaskList((char*)App.u.taskListW.taskListBufferP, bufSize);
     }
     (void)UI1_CreateText(&App.u.taskListW.window, &App.u.taskListW.txtTaskList, 2, yPos, 0, 0, App.u.taskListW.taskListBufferP, FONT_12);
 

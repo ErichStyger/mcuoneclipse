@@ -2439,7 +2439,7 @@ byte %'ModuleName'%.%PrintStatus(%'ModuleName'_ConstStdIOType *io)
   taskListBufferP = %@RTOS@'ModuleName'%.pvPortMalloc(bufSize); /* about 40 bytes for a task should be enough */
 #endif
   if (taskListBufferP != NULL) {
-    %@RTOS@'ModuleName'%.vTaskList(taskListBufferP, bufSize);
+    %@RTOS@'ModuleName'%.vTaskList((char*)taskListBufferP, bufSize);
     %'ModuleName'%.%SendStr(taskListBufferP, io->stdOut);
 #if FRTOS_MEMORY_SCHEME!=1 /* this scheme does not allow deallocation of memory */
     %@RTOS@'ModuleName'%.vPortFree(taskListBufferP);

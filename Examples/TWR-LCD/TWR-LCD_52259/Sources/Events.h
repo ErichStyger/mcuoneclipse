@@ -72,6 +72,7 @@
 #include "FSSH1.h"
 #include "AS1.h"
 #include "UIG1.h"
+#include "CS1.h"
 
 void Cpu_OnCoreWatchdogINT(void);
 /*
@@ -104,7 +105,7 @@ void EVNT1_AppHandleEvent(byte event);
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

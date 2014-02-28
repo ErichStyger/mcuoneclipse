@@ -237,7 +237,7 @@ void ACCEL_StartDemoTask(ACCEL_WindowDesc *desc) {
   /* update the screen */
   UI1_UpdateScreen(&desc->screen);
 
-  FRTOS1_xTaskCreate(TaskAccelDemo, (signed portCHAR *)"Accel", configMINIMAL_STACK_SIZE+50, desc, tskIDLE_PRIORITY+1, NULL);
+  FRTOS1_xTaskCreate(TaskAccelDemo, "Accel", configMINIMAL_STACK_SIZE+50, desc, tskIDLE_PRIORITY+1, NULL);
 }
 
 void ACCEL_StartOrientationTask(void) {

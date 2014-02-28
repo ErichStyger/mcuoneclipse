@@ -525,13 +525,13 @@ void CUBE_CreateWindow(CUBE_WindowDesc *desc) {
   
   doCloseCubeWindow = FALSE;
   CUBE_CreateScreen();
-  if (FRTOS1_xTaskCreate(Task3Dcube, (signed portCHAR *)"Cube", configMINIMAL_STACK_SIZE+80, &cubeParam, tskIDLE_PRIORITY+3, NULL)!=pdPASS) {
+  if (FRTOS1_xTaskCreate(Task3Dcube, "Cube", configMINIMAL_STACK_SIZE+80, &cubeParam, tskIDLE_PRIORITY+3, NULL)!=pdPASS) {
     for(;;) {} /* out of memory? */
   }
 #if PL_HAS_SHIP_DEMO
   doCloseShipWindow = FALSE;
   /* Start space ship task */
-  if (FRTOS1_xTaskCreate(Task3Dship, (signed portCHAR *)"Ship", configMINIMAL_STACK_SIZE+80, &cubeParam, tskIDLE_PRIORITY+3, &xHandleTask3Dship)!=pdPASS) {
+  if (FRTOS1_xTaskCreate(Task3Dship, "Ship", configMINIMAL_STACK_SIZE+80, &cubeParam, tskIDLE_PRIORITY+3, &xHandleTask3Dship)!=pdPASS) {
     /* task creation failed */
     for(;;) {} /* out of memory? */
   }

@@ -1362,7 +1362,7 @@ void TETRIS_CreateWindow(TETRIS_WindowDesc *desc) {
   /* update the screen */
   UI1_UpdateScreen(&desc->screen);
   
-  if (FRTOS1_xTaskCreate(TaskTetris, (signed portCHAR *)"Tetris", configMINIMAL_STACK_SIZE+50, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (FRTOS1_xTaskCreate(TaskTetris, "Tetris", configMINIMAL_STACK_SIZE+50, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;) {} /* out of memory for task? */
   }
   TETRIS_isRunning = TRUE;

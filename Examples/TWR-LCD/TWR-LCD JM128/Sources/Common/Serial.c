@@ -54,7 +54,7 @@ void SERIAL_Start(void) {
   FSSH1_Init(); /* create mutex/semaphore */
   if (FRTOS1_xTaskCreate(
         ShellTask,  /* pointer to the task */
-        (signed char*)"Shell", /* task name for kernel awareness debugging */
+        "Shell", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE+350, /* task stack size */ /* note: 250 without shell 'copy' command */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY+1,  /* initial priority */

@@ -69,6 +69,7 @@
 #include "IFsh1.h"
 #include "UIG1.h"
 #include "WDog1.h"
+#include "CS1.h"
 
 
 void KEY2_OnKeyPressed(byte keys);
@@ -261,7 +262,7 @@ void UICalendar1_OnCalendarGetAppointments(UICalendar1_CalendarDateTime *startHi
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

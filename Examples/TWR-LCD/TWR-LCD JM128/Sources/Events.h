@@ -86,6 +86,7 @@
 #include "Yplus2.h"
 #include "TMOUT1.h"
 #include "UIG1.h"
+#include "CS1.h"
 
 #include "Platform.h"
 
@@ -212,7 +213,7 @@ void UI1_OnEvent(UI1_Screen *screen, UI1_Window *window, UI1_Element *element, U
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
