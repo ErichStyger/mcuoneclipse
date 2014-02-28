@@ -10,7 +10,7 @@
 %-  /* END %ModuleName. */
 %-  /* MODULE %ModuleName. */
 %-  %-INTERNAL_METHOD_BEG
-%-  %-INTERNAL_METHOD_END 
+%-  %-INTERNAL_METHOD_END
 %-  %-INHERITED_EVENT_BEGIN
 %-  %-INHERITED_EVENT_END
 %-  %-BW_METHOD_BEGIN
@@ -99,6 +99,14 @@
 %- Write your own types here ...
 %-  Example:
 %-    typedef int TMyInteger;
+/* workaround macros for wrong EnterCritical()/ExitCritical() in the low level drivers. Will be removed once PEx is fixed */
+#define %'ModuleName'%.CriticalVariableDrv() \
+  %'ModuleName'%.%CriticalVariable()
+#define %'ModuleName'%.EnterCriticalDrv() \
+  %'ModuleName'%.%EnterCritical()
+#define %'ModuleName'%.ExitCriticalDrv() \
+  %'ModuleName'%.%ExitCritical()
+
 %-
 %-BW_CUSTOM_USERTYPE_END
 %-BW_DEFINITION_START
