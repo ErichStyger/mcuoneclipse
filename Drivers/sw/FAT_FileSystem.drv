@@ -571,7 +571,8 @@ char* %'ModuleName'%.%errDResultMsg(int errNo);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Init
 %ifdef Init
-void %'ModuleName'%.%Init(void);
+byte %'ModuleName'%.%Init(void);
+%define! RetVal
 %include Common\FAT_FileSystemInit.Inc
 
 %endif %- Init
@@ -2034,10 +2035,11 @@ dword %'ModuleName'%.%f_size(FIL *fil)
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Init
 %ifdef Init
+%define! RetVal
 %include Common\FAT_FileSystemInit.Inc
-void %'ModuleName'%.%Init(void)
+byte %'ModuleName'%.%Init(void)
 {
-  (void)%@Memory@'ModuleName'%.Init(NULL);
+  return %@Memory@'ModuleName'%.Init(NULL);
 }
 
 %endif %- Init

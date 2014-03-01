@@ -7,7 +7,8 @@
 %;**     Description :
 %;**         Initializes the device driver.
 %include Common\GeneralParametersNone.inc
-%include Common\GeneralReturnNothing.inc
+%;**     Returns     :
+%;**         ---%RetVal %>27 - Error code
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

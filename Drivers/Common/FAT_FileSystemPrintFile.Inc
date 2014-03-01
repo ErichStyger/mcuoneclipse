@@ -7,7 +7,7 @@
 %;**     Description :
 %;**         Prints the content of a file
 %include Common\GeneralParameters.inc(27)
-%;**         fileName%ParFileName %>27 - Name of file to be printed
+%;**         fileName%ParfileName %>27 - Name of file to be printed
 %;**         io%Pario %>27 - Pointer to I/O handler
 %;**     Returns     :
 %;**         ---%RetVal %>27 - Error code

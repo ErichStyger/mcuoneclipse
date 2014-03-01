@@ -12,7 +12,7 @@
 %;**         the each file system object so that it also affects other
 %;**         tasks that using the drive.
 %include Common\GeneralParameters.inc(27)
-%;**         Path%Parpath %>27 - Pointer to the path name
+%;**         Path%ParPath %>27 - Pointer to the path name
 %;**     Returns     :
 %;**         ---%RetVal %>27 - Error code
 %include Common\GeneralDamage.inc

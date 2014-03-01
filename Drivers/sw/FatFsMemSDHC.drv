@@ -161,7 +161,7 @@ bool %'ModuleName'%.%CardPresent(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Init
 %ifdef Init
-LDD_TDeviceData* %'ModuleName'%.%Init(LDD_TUserData *UserDataPtr);
+byte %'ModuleName'%.%Init(LDD_TUserData *UserDataPtr);
 %define! ParUserDataPtr
 %define! RetVal
 %include Common\FatFsMemSDHCInit.Inc
@@ -398,7 +398,7 @@ static void SD_Wait(TSDData *SD, bool *ErrorFlag)
 %else
 /* no user include code provided/enabled */
 %endif
-LDD_TDeviceData* %'ModuleName'%.%Init(LDD_TUserData *UserDataPtr)
+byte %'ModuleName'%.%Init(LDD_TUserData *UserDataPtr)
 {
   bool Error = FALSE;
 
@@ -453,7 +453,11 @@ LDD_TDeviceData* %'ModuleName'%.%Init(LDD_TUserData *UserDataPtr)
       /* selected highest possible data width */
     }
   }
-  return &SD;
+  if (!Error) {
+    return ERR_OK;
+  } else {
+    return ERR_FAILED;
+  }
 }
 
 %endif %- Init
