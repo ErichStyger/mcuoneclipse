@@ -74,7 +74,9 @@ static void DiskTest(void) {
   CLS1_ConstStdIOTypePtr io;
 
   io = CLS1_GetStdio();
-  FAT1_Init();
+  if (FAT1_Init()!=ERR_OK) {
+    CLS1_SendStr((unsigned char*)"Failed FatFS initialization!\r\n", io->stdOut);
+  }
   CLS1_SendStr((unsigned char*)"Waiting for disk to be inserted...\r\n", io->stdOut);
   while(!FAT1_isDiskPresent()) {
     /* wait until card is present */

@@ -40,15 +40,16 @@
 #include "AS1.h"
 #include "ASerialLdd1.h"
 #include "CLS1.h"
-#include "GPIO2.h"
+#include "CS1.h"
 #include "FAT1.h"
 #include "WAIT1.h"
 #include "TMOUT1.h"
 #include "FATM1.h"
 #include "SDHC1.h"
+#include "CD1.h"
+#include "BitIoLdd6.h"
 #include "Inhr1.h"
 #include "BitIoLdd5.h"
-#include "GPIO1.h"
 #include "TmDt1.h"
 #include "PE_LDD.h"
 
@@ -68,7 +69,7 @@ void Cpu_OnNMIINT(void);
 */
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
