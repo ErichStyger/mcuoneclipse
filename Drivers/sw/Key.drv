@@ -326,15 +326,15 @@ void %'ModuleName'%.Init(void)
 static void Scan(void)
 {
   %'ModuleName'%.KeyStorage keys;
-  %@CriticalSection@'ModuleName'%.CriticalVariable();
+%-  %@CriticalSection@'ModuleName'%.CriticalVariable();
 
-  %@CriticalSection@'ModuleName'%.EnterCritical();
+%-  %@CriticalSection@'ModuleName'%.EnterCritical();
   switch(DBC_KeyState) {
     case DBC_KEY_IDLE: /* Idle, and now getting a key */
       DBC_ScanValue = %'ModuleName'%.GetKeys();                  %>40/* a one bit indicates key pressed */
       %if PollingEnabled='yes'
       if (DBC_ScanValue==0) {                                    %>40/* no keys pressed */
-        %@CriticalSection@'ModuleName'%.ExitCritical();
+%-        %@CriticalSection@'ModuleName'%.ExitCritical();
         return;
       }
       %endif
@@ -417,7 +417,7 @@ static void Scan(void)
       }
       break;
   }
-  %@CriticalSection@'ModuleName'%.ExitCritical();
+%-  %@CriticalSection@'ModuleName'%.ExitCritical();
 }
 
 %-INTERNAL_METHOD_END Scan
