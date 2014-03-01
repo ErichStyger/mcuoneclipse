@@ -16,11 +16,15 @@
 #include "timers.h"
 #include "TMOUT1.h"
 #include "CLS1.h"
-//#include "KEY1.h"
+#if PL_HAS_KEYS
+  #include "KEY1.h"
+  #include "TRG1.h"
+#endif
 
 static xTimerHandle timerHndl;
 #define TIMER_PERIOD_MS TMOUT1_TICK_PERIOD_MS
 
+#if PL_HAS_KEYS
 void APP_OnKeyPressed(uint8_t keys) {
   if (keys&1) {
     CLS1_SendStr((uint8_t*)"SW3 pressed!\r\n", CLS1_GetStdio()->stdOut);
@@ -44,11 +48,12 @@ void APP_OnKeyReleasedLong(uint8_t keys) {
     CLS1_SendStr((uint8_t*)"SW2 long released!\r\n", CLS1_GetStdio()->stdOut);
   }
 }
+#endif /* PL_HAS_KEYS */
 
 static void vTimerCallback(xTimerHandle pxTimer) {
   /* TIMER_PERIOD_MS ms timer */
   TMOUT1_AddTick();
-//  TRG1_AddTick();
+  TRG1_AddTick();
 }
 
 #if PL_HAS_DEBUG_PRINT
@@ -61,7 +66,9 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
   (void)pvParameters; /* parameter not used */
   for(;;) {
     LED3_Neg();
-    //KEY1_ScanKeys();
+#if PL_HAS_KEYS
+    KEY1_ScanKeys();
+#endif
     FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
   }
 }

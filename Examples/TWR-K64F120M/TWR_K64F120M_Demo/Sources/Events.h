@@ -55,6 +55,20 @@
 #include "CLS1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
+#include "FAT1.h"
+#include "TmDt1.h"
+#include "FATM1.h"
+#include "SDHC1.h"
+#include "CD1.h"
+#include "BitIoLdd5.h"
+#include "WP1.h"
+#include "BitIoLdd6.h"
+#include "KEY1.h"
+#include "Inhr1.h"
+#include "BitIoLdd7.h"
+#include "Inhr2.h"
+#include "BitIoLdd8.h"
+#include "TRG1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -210,6 +224,55 @@ void AS1_OnFullRxBuf(void);
 ** ===================================================================
 */
 void AS1_OnFreeTxBuf(void);
+
+void KEY1_OnKeyPressed(byte keys);
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyPressed (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated at the time a key has been pressed.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyReleased(byte keys);
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyReleased (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated after a key has been released.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyReleasedLong(byte keys);
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyReleasedLong (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated after a key has been released (long key
+**         press).
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
 
 /* END Events */
 

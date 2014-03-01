@@ -38,6 +38,7 @@ extern "C" {
 
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "Application.h"
 
 /*
 ** ===================================================================
@@ -235,6 +236,64 @@ void AS1_OnFullRxBuf(void)
 void AS1_OnFreeTxBuf(void)
 {
   /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyPressed (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated at the time a key has been pressed.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyPressed(byte keys)
+{
+  APP_OnKeyPressed(keys);
+}
+
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyReleased (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated after a key has been released.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyReleased(byte keys)
+{
+  APP_OnKeyReleased(keys);
+}
+
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyReleasedLong (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated after a key has been released (long key
+**         press).
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyReleasedLong(byte keys)
+{
+  APP_OnKeyReleasedLong(keys);
 }
 
 /* END Events */
