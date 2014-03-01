@@ -45,6 +45,12 @@
 #include "BitIoLdd4.h"
 #include "WAIT1.h"
 #include "UTIL1.h"
+#include "FRTOS1.h"
+#include "TMOUT1.h"
+#include "CS1.h"
+#include "CLS1.h"
+#include "AS1.h"
+#include "ASerialLdd1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -54,6 +60,7 @@
 #include "Init_Config.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "Application.h"
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -65,12 +72,12 @@ int main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
-  for(;;) {
-    LED1_Neg(); WAIT1_Waitms(100);
-    LED2_Neg(); WAIT1_Waitms(100);
-    LED3_Neg(); WAIT1_Waitms(100);
-    LED4_Neg(); WAIT1_Waitms(100);
-  }
+  LED1_Neg(); WAIT1_Waitms(50);
+  LED2_Neg(); WAIT1_Waitms(50);
+  LED3_Neg(); WAIT1_Waitms(50);
+  LED4_Neg(); WAIT1_Waitms(50);
+  APP_Start();
+
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
   #ifdef PEX_RTOS_START
