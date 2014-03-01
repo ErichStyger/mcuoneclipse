@@ -30,7 +30,6 @@
 /* Including needed modules to compile this module/procedure */
 #include "Cpu.h"
 #include "Events.h"
-#include "Pins1.h"
 #include "LED1.h"
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"
@@ -46,6 +45,7 @@
 #include "WAIT1.h"
 #include "UTIL1.h"
 #include "FRTOS1.h"
+#include "RTOSCNTRLDD1.h"
 #include "TMOUT1.h"
 #include "CS1.h"
 #include "CLS1.h"
@@ -53,18 +53,18 @@
 #include "ASerialLdd1.h"
 #include "FAT1.h"
 #include "TmDt1.h"
-#include "FATM1.h"
-#include "SDHC1.h"
-#include "CD1.h"
-#include "BitIoLdd5.h"
-#include "WP1.h"
-#include "BitIoLdd6.h"
 #include "KEY1.h"
 #include "Inhr1.h"
 #include "BitIoLdd7.h"
 #include "Inhr2.h"
 #include "BitIoLdd8.h"
 #include "TRG1.h"
+#include "MMA1.h"
+#include "GI2C1.h"
+#include "I2C.h"
+#include "SD1.h"
+#include "SS1.h"
+#include "SM1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -87,13 +87,15 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* enable internal pull-ups */
+  /* SD card detect: PTB20 */
+  //PORT_PDD_SetPinPullSelect(PORTB_BASE_PTR, 20, PORT_PDD_PULL_UP);
+  //PORT_PDD_SetPinPullEnable(PORTB_BASE_PTR, 20, PORT_PDD_PULL_ENABLE);
   /* SW1: PTC6 */
   PORT_PDD_SetPinPullSelect(PORTC_BASE_PTR, 6, PORT_PDD_PULL_UP);
   PORT_PDD_SetPinPullEnable(PORTC_BASE_PTR, 6, PORT_PDD_PULL_ENABLE);
   /* SW3: PTA4 */
   PORT_PDD_SetPinPullSelect(PORTA_BASE_PTR, 4, PORT_PDD_PULL_UP);
   PORT_PDD_SetPinPullEnable(PORTA_BASE_PTR, 4, PORT_PDD_PULL_ENABLE);
-
 
   LED1_Neg(); WAIT1_Waitms(50);
   LED2_Neg(); WAIT1_Waitms(50);

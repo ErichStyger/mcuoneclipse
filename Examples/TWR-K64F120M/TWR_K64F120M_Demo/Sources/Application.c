@@ -10,6 +10,7 @@
 #include "LED1.h"
 #include "LED2.h"
 #include "LED3.h"
+#include "LED4.h"
 #include "WAIT1.h"
 #include "FRTOS1.h"
 #include "Shell.h"
@@ -19,6 +20,9 @@
 #if PL_HAS_KEYS
   #include "KEY1.h"
   #include "TRG1.h"
+#endif
+#if PL_HAS_ACCELEROMETER
+  #include "MMA1.h"
 #endif
 
 static xTimerHandle timerHndl;
@@ -63,12 +67,26 @@ void APP_DebugPrint(unsigned char *str) {
 #endif
 
 static portTASK_FUNCTION(MainTask, pvParameters) {
+#if PL_HAS_ACCELEROMETER
+  int16_t xmg, ymg;
+#endif
+
   (void)pvParameters; /* parameter not used */
+#if PL_HAS_ACCELEROMETER
+  (void)MMA1_Enable(); /* enable accelerometer */
+#endif
   for(;;) {
-    LED3_Neg();
 #if PL_HAS_KEYS
     KEY1_ScanKeys();
 #endif
+#if PL_HAS_ACCELEROMETER
+    xmg = MMA1_GetXmg();
+    ymg = MMA1_GetYmg();
+    LED1_Put(xmg>100||xmg<-100||ymg>100||ymg<-100);
+    LED2_Put(xmg>500||xmg<-500||ymg>500||ymg<-500);
+    LED3_Put(xmg>800||xmg<-800||ymg>800||ymg<-800);
+#endif
+    LED4_Neg();
     FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
   }
 }

@@ -19,18 +19,10 @@
   #include "BT1.h"
 #endif
 #if PL_HAS_ACCELEROMETER
-  #include "FX1.h"
+  #include "MMA1.h"
 #endif
 #if PL_HAS_SD_CARD
   #include "FAT1.h"
-#endif
-#if PL_HAS_RADIO
-  #include "Radio.h"
-  #include "RApp.h"
-  #include "RNet_App.h"
-#endif
-#if PL_HAS_RSTDIO
-  #include "RStdIO.h"
 #endif
 
 void SHELL_SendString(unsigned char *msg) {
@@ -56,19 +48,14 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if BT1_PARSE_COMMAND_ENABLED
   BT1_ParseCommand,
 #endif
-#if FX1_PARSE_COMMAND_ENABLED
-  FX1_ParseCommand,
 #endif
+#if MMA1_PARSE_COMMAND_ENABLED
+  MMA1_ParseCommand,
 #endif
 #if PL_HAS_SD_CARD
 #if FAT1_PARSE_COMMAND_ENABLED
   FAT1_ParseCommand,
 #endif
-#endif
-#if PL_HAS_RADIO
-  RADIO_ParseCommand,
-  RNWK_ParseCommand,
-  RNETA_ParseCommand,
 #endif
   NULL /* Sentinel */
 };
@@ -115,7 +102,9 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
   (void)CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, ioLocal, CmdParserTable);
 #endif
 #if PL_HAS_SD_CARD
-  FAT1_Init();
+  if (FAT1_Init()!=ERR_OK) {
+    CLS1_SendStr((uint8_t*)"FatFS Initialization failed!\r\n", ioLocal->stdErr);
+  }
 #endif
   for(;;) {
 #if PL_HAS_SD_CARD
