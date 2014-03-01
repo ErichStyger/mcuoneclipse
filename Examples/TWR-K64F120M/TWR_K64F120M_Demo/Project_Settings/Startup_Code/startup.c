@@ -40,7 +40,7 @@ typedef struct RomInfo {
 	unsigned long 	Size;
 } RomInfo;
 
-RomInfo __S_romp[] __attribute__((weak));		/* linker defined symbol */
+extern RomInfo __S_romp[] __attribute__((weak));		/* linker defined symbol */
 
 /*
  * Routine to flush cache follow the ROM to RAM copy
