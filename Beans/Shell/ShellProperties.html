@@ -235,7 +235,23 @@ LI.EXP {
 </li>
 <li>
 <a name="BlockingSend">
-<b>Blocking Send</b></a> - If enabled, then sending using SendChar() to the communication channel will block until success.
+<b>Blocking Send</b></a> - If enabled, then sending using SendChar() to the communication channel will block until success.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+<ul>
+  <li>
+  <a name="Wait">
+  <b>Wait</b></a> - Interface to waiting routine
+  </li>
+  <li>
+  <a name="WaitTimeMs">
+  <b>Wait Time (ms)</b></a> - Waiting time in milli seconds if sending was blocked (output buffer full). Use 0 for polling mode.
+  </li>
+  <li>
+  <a name="RTOSWait">
+  <b>RTOS Wait</b></a> - If set to yes, then it uses the RTOS waiting/delay instead of busy waiting if RTOS is present.
+  </li>
+</ul>
 </li>
 <li>
 <a name="StatusColonPos">

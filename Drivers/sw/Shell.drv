@@ -1093,6 +1093,15 @@ void %'ModuleName'%.%SendChar(byte ch)
     %@CriticalSection@'ModuleName'%.EnterCriticalDrv();
     res = %@Serial@'ModuleName'%.SendChar((uint8_t)ch);          %>40/* Send char */
     %@CriticalSection@'ModuleName'%.ExitCriticalDrv();
+  %if defined(WaitTimeMs) & WaitTimeMs >. '0'
+    if (res==ERR_TXFULL) {
+    %if defined(RTOSWait) & RTOSWait='yes'
+      %@Wait@'ModuleName'%.WaitOSms(%WaitTimeMs);
+    %else
+      %@Wait@'ModuleName'%.Waitms(%WaitTimeMs);
+    %endif
+    }
+  %endif
   } while(res==ERR_TXFULL);
   %else
   %@CriticalSection@'ModuleName'%.EnterCriticalDrv();
