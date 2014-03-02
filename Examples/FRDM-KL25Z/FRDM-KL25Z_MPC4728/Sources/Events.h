@@ -54,6 +54,7 @@
 #include "I2C0.h"
 #include "TMOUT1.h"
 #include "I2CSPY1.h"
+#include "CS1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -75,7 +76,7 @@ extern "C" {
 void Cpu_OnNMIINT(void);
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

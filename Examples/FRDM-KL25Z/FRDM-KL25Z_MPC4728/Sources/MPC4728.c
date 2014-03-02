@@ -11,7 +11,6 @@
 
 #define MPC4728_CPU_IS_LITTLE_ENDIAN 1 /* Cpu is little endian */
 
-
 /* commands */
 #define MPC4728_GC_RESET            0x06 /* general call reset command */
 #define MPC4728_GC_SOFTWARE_UPDATE  0x08 /* general call software command */
@@ -154,8 +153,8 @@ static void DecodeChannelDACInputRegister(uint8_t *info, uint8_t data[3], const 
 static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   uint8_t data[2*3*4];
   
-  CLS1_SendStatusStr((unsigned char*)"MPC4728", (unsigned char*)"\r\n", io->stdOut);
   if (MPC4728_Read(data, sizeof(data))==ERR_OK) {
+    CLS1_SendStatusStr((unsigned char*)"MPC4728", (unsigned char*)"\r\n", io->stdOut);
     DecodeChannelDACInputRegister((unsigned char*)"  A DAC Reg", &data[0], io);
     DecodeChannelDACInputRegister((unsigned char*)"  A EEPROM",  &data[3], io);
     DecodeChannelDACInputRegister((unsigned char*)"  B DAC Reg", &data[6], io);
@@ -164,6 +163,8 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
     DecodeChannelDACInputRegister((unsigned char*)"  C EEPROM",  &data[15], io);
     DecodeChannelDACInputRegister((unsigned char*)"  D DAC Reg", &data[18], io);
     DecodeChannelDACInputRegister((unsigned char*)"  D EEPROM",  &data[21], io);
+  } else {
+    CLS1_SendStatusStr((unsigned char*)"MPC4728", (unsigned char*)"ERROR!\r\n", io->stdOut);
   }
   return ERR_OK;
 }

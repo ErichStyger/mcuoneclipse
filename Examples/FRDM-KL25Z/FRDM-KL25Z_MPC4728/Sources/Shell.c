@@ -35,14 +35,13 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
   buf[0] = '\0';
   for(;;) {
     (void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), ioLocal, CmdParserTable);
-    /* do a short blink with the the green LED */
     FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
   } /* for */
 }
 
 void SHELL_Init(void) {
   CLS1_Init();
-  if (FRTOS1_xTaskCreate(ShellTask, (signed portCHAR *)"Shell", configMINIMAL_STACK_SIZE+100, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (FRTOS1_xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+100, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 }
