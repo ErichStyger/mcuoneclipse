@@ -212,7 +212,6 @@ extern void vPortExitCritical(void);
 #define portENTER_CRITICAL()                 vPortEnterCritical()
 #define portEXIT_CRITICAL()                  vPortExitCritical()
 %elif (CPUfamily = "Kinetis") & ((%Compiler == "GNUC")|(%Compiler = "ARM_CC"))
-/* macro to identify CPU: 0 for M0+ and 4 for M4 */
 #define portDISABLE_ALL_INTERRUPTS()         __asm volatile("cpsid i")
 
 #if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 */
