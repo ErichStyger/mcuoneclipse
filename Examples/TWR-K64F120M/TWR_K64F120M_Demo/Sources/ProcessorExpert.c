@@ -64,6 +64,7 @@
 #include "I2C.h"
 #include "SD1.h"
 #include "SS1.h"
+#include "CD2.h"
 #include "SM1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
@@ -88,8 +89,8 @@ int main(void)
 
   /* enable internal pull-ups */
   /* SD card detect: PTB20 */
-  //PORT_PDD_SetPinPullSelect(PORTB_BASE_PTR, 20, PORT_PDD_PULL_UP);
-  //PORT_PDD_SetPinPullEnable(PORTB_BASE_PTR, 20, PORT_PDD_PULL_ENABLE);
+  PORT_PDD_SetPinPullSelect(PORTB_BASE_PTR, 20, PORT_PDD_PULL_UP);
+  PORT_PDD_SetPinPullEnable(PORTB_BASE_PTR, 20, PORT_PDD_PULL_ENABLE);
   /* SW1: PTC6 */
   PORT_PDD_SetPinPullSelect(PORTC_BASE_PTR, 6, PORT_PDD_PULL_UP);
   PORT_PDD_SetPinPullEnable(PORTC_BASE_PTR, 6, PORT_PDD_PULL_ENABLE);

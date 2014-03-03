@@ -103,7 +103,7 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
 #endif
 #if PL_HAS_SD_CARD
   if (FAT1_Init()!=ERR_OK) {
-    CLS1_SendStr((uint8_t*)"FatFS Initialization failed!\r\n", ioLocal->stdErr);
+    //CLS1_SendStr((uint8_t*)"FatFS Initialization failed. No card inserted?\r\n", ioLocal->stdErr);
   }
 #endif
   for(;;) {

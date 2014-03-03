@@ -68,6 +68,7 @@
 #include "I2C.h"
 #include "SD1.h"
 #include "SS1.h"
+#include "CD2.h"
 #include "SM1.h"
 
 #ifdef __cplusplus
