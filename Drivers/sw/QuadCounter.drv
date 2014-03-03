@@ -105,6 +105,15 @@
 %-  Example:
 %-    typedef int TMyInteger;
 %-
+%if %SamplingMethod='yes'
+#define %'ModuleName'%.GET_C1_PIN()      (%@C1@'ModuleName'%.GetVal())
+#define %'ModuleName'%.GET_C2_PIN()      (%@C2@'ModuleName'%.GetVal())
+%if %C1C2swapped='yes'
+#define %'ModuleName'%.GET_C1_C2_PINS()  ((%'ModuleName'%.GET_C2_PIN()!=0?2:0)|(%'ModuleName'%.GET_C1_PIN()!=0?1:0))
+%else
+#define %'ModuleName'%.GET_C1_C2_PINS()  ((%'ModuleName'%.GET_C1_PIN()!=0?2:0)|(%'ModuleName'%.GET_C2_PIN()!=0?1:0))
+%endif
+
 %ifdef ParseCommand
 #define %'ModuleName'%.PARSE_COMMAND_ENABLED  1  /* set to 1 if method ParseCommand() is present, 0 otherwise */
 %else
@@ -185,6 +194,17 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
 
 %endif %- ParseCommand
 %-BW_METHOD_END ParseCommand
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetVal
+%ifdef GetVal
+#define %'ModuleName'%.%GetVal() \
+  %'ModuleName'%.GET_C1_C2_PINS()
+
+%define! RetVal
+%include Common\QuadCounterGetVal.Inc
+
+%endif %- GetVal
+%-BW_METHOD_END GetVal
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -378,15 +398,6 @@ static word %'ModuleName'%.currPos = 0; /*!< Current position */
 static word %'ModuleName'%.nofErrors = 0;
 %endif
 
-%if %SamplingMethod='yes'
-#define %'ModuleName'%.GET_C1_PIN()      (%@C1@'ModuleName'%.GetVal())
-#define %'ModuleName'%.GET_C2_PIN()      (%@C2@'ModuleName'%.GetVal())
-%if %C1C2swapped='yes'
-#define %'ModuleName'%.GET_C1_C2_PINS()  ((%'ModuleName'%.GET_C2_PIN()!=0?2:0)|(%'ModuleName'%.GET_C1_PIN()!=0?1:0))
-%else
-#define %'ModuleName'%.GET_C1_C2_PINS()  ((%'ModuleName'%.GET_C1_PIN()!=0?2:0)|(%'ModuleName'%.GET_C2_PIN()!=0?1:0))
-%endif
-
 %endif
 %-BW_CUSTOM_VARIABLE_END
 %-BW_INTERN_METHOD_DECL_START
@@ -568,6 +579,20 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
 
 %endif %- ParseCommand
 %-BW_METHOD_END ParseCommand
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetVal
+%ifdef GetVal
+%define! RetVal
+%include Common\QuadCounterGetVal.Inc
+/*
+byte %'ModuleName'%.%GetVal(void)
+{
+  *** Implemented as macro on the header file.
+}
+*/
+
+%endif %- GetVal
+%-BW_METHOD_END GetVal
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

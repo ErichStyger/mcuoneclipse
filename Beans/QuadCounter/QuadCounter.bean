@@ -4,7 +4,7 @@
     <Name>QuadCounter</Name>
     <Description>Counter/Decoder for a Digital Quadrature Encoder</Description>
     <Author>Erich Styger</Author>
-    <Version>01.019</Version>
+    <Version>01.020</Version>
     <Icon>QuadEncoder</Icon>
     <TypesFiles>PE,QuadCounter\QuadCounter</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -20,7 +20,7 @@
     <BW_NeedUst>0</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2013, all rights reserved.\n\nThis an open source software using Processor Expert.\nThis is a free software and is opened for education,  research  and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
+    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2014, all rights reserved.\n\nThis an open source software using Processor Expert.\nThis is a free software and is opened for education,  research  and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
     <Shortcut>Q4C</Shortcut>
     <DemoDriver>no</DemoDriver>
     <BeanLevel>Low</BeanLevel>
@@ -318,6 +318,34 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>void #M#_#C#(word pos)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>GetVal</Name>
+        <Symbol>GetVal</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Returns the quadrature value (0, 1, 2 or 3)</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Quadrature value (0-3)</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(void)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
