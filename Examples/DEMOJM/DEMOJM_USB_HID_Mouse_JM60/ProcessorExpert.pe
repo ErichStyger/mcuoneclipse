@@ -3,10 +3,10 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>62</ModificationStamp>
-    <Date>2013-09-08</Date>
+    <ModificationStamp>63</ModificationStamp>
+    <Date>2014-03-03</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion>1.6.0.RT4_b1316-1577</PEversion>
+    <PEversion>1.8.1.RT5_b1349-1839</PEversion>
   </Header>
   <Options>
     <EventsDirectory>Sources</EventsDirectory>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>136</ProjectCompNumb>
+    <ProjectCompNumb>138</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>false</AssignInitComponentNameToPrph>
@@ -39,6 +39,13 @@
     <SaveProjectBeforeGeneration>true</SaveProjectBeforeGeneration>
     <ProjectStaticFilesGenerationMode>LINKED</ProjectStaticFilesGenerationMode>
   </Options>
+  <UserFolder>
+    <UserFolderName />
+    <NodeName>Referenced_Components</NodeName>
+    <CompNumb>137</CompNumb>
+    <FolderType>Beans</FolderType>
+    <ExpandedAll>true</ExpandedAll>
+  </UserFolder>
   <CPU>
     <BeanType>MC9S08JM60_64</BeanType>
     <Name>Cpu</Name>
@@ -3283,7 +3290,7 @@
       <Count>0</Count>
     </BoolList_FpgaConfig>
     <BoolList_BeanConfig>
-      <Count>7</Count>
+      <Count>8</Count>
       <ItemId0>10</ItemId0>
       <Value0>true</Value0>
       <ItemId1>2</ItemId1>
@@ -3298,6 +3305,8 @@
       <Value5>true</Value5>
       <ItemId6>135</ItemId6>
       <Value6>true</Value6>
+      <ItemId7>136</ItemId7>
+      <Value7>true</Value7>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
       <Count>0</Count>
@@ -3364,7 +3373,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.061</BeanVersion>
+    <BeanVersion>01.062</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -3869,7 +3878,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.061</BeanVersion>
+    <BeanVersion>01.062</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -4374,7 +4383,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.023</BeanVersion>
+    <BeanVersion>01.024</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -5342,7 +5351,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.020</BeanVersion>
+          <BeanVersion>01.028</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -5429,9 +5438,9 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <Index>0</Index>
-              <RegCompType>Buffer</RegCompType>
+              <RegCompType>RingBuffer</RegCompType>
               <InheritedComponentState>
-                <BeanType>RingBufferUInt8</BeanType>
+                <BeanType>RingBuffer</BeanType>
                 <Name>Tx1</Name>
                 <CompNumb>107</CompNumb>
                 <CompEnabled>true</CompEnabled>
@@ -5440,7 +5449,7 @@
                 <UserFolderName />
                 <Comment lines_count="0" />
                 <Template>FSL_USB_CDC_Device\Buffer</Template>
-                <BeanVersion>01.005</BeanVersion>
+                <BeanVersion>01.025</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
                 <Properties>
                   <ItemState>
@@ -5456,6 +5465,32 @@
                     <Value>64</Value>
                     <Base>DEC</Base>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>isReentrant</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>CriticalSection</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value />
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>ElementSize</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <EnumSymbVal>1</EnumSymbVal>
+                    <CustomValue />
                   </ItemState>
                 </Properties>
                 <Methods>
@@ -5494,11 +5529,11 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>NofFreeElements</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>0</Index>
                     <Value>true</Value>
-                    <LastSelection>false</LastSelection>
+                    <LastSelection>true</LastSelection>
                     <LastUserSel>yes</LastUserSel>
                     <UsrMethodName>NofFreeElements</UsrMethodName>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
@@ -5574,9 +5609,9 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <Index>0</Index>
-              <RegCompType>Buffer</RegCompType>
+              <RegCompType>RingBuffer</RegCompType>
               <InheritedComponentState>
-                <BeanType>RingBufferUInt8</BeanType>
+                <BeanType>RingBuffer</BeanType>
                 <Name>Rx1</Name>
                 <CompNumb>108</CompNumb>
                 <CompEnabled>true</CompEnabled>
@@ -5585,7 +5620,7 @@
                 <UserFolderName />
                 <Comment lines_count="0" />
                 <Template>FSL_USB_CDC_Device\Buffer</Template>
-                <BeanVersion>01.005</BeanVersion>
+                <BeanVersion>01.025</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
                 <Properties>
                   <ItemState>
@@ -5601,6 +5636,32 @@
                     <Value>64</Value>
                     <Base>DEC</Base>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>isReentrant</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>CriticalSection</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value />
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>ElementSize</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <EnumSymbVal>1</EnumSymbVal>
+                    <CustomValue />
                   </ItemState>
                 </Properties>
                 <Methods>
@@ -5639,11 +5700,11 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>NofFreeElements</ItemSymbol>
-                    <ReadOnly>false</ReadOnly>
+                    <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Index>0</Index>
                     <Value>true</Value>
-                    <LastSelection>false</LastSelection>
+                    <LastSelection>true</LastSelection>
                     <LastUserSel>yes</LastUserSel>
                     <UsrMethodName>NofFreeElements</UsrMethodName>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
@@ -5955,7 +6016,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.049</BeanVersion>
+          <BeanVersion>01.052</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -6008,7 +6069,7 @@
                 <UserFolderName />
                 <Comment lines_count="0" />
                 <Template>FSL_USB_HID_Keyboard_Device\Buffer</Template>
-                <BeanVersion>01.015</BeanVersion>
+                <BeanVersion>01.025</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
                 <Properties>
                   <ItemState>
@@ -6033,6 +6094,20 @@
                     <Index>1</Index>
                     <EnumSymbVal>2</EnumSymbVal>
                     <CustomValue />
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>isReentrant</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>CriticalSection</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value />
                   </ItemState>
                 </Properties>
                 <Methods>
@@ -6293,7 +6368,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.061</BeanVersion>
+          <BeanVersion>01.065</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -6346,7 +6421,7 @@
                 <UserFolderName />
                 <Comment lines_count="0" />
                 <Template>FSL_USB_HID_Mouse_Device\Buffer</Template>
-                <BeanVersion>01.015</BeanVersion>
+                <BeanVersion>01.025</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
                 <Properties>
                   <ItemState>
@@ -6371,6 +6446,20 @@
                     <Index>2</Index>
                     <EnumSymbVal>4</EnumSymbVal>
                     <CustomValue />
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>isReentrant</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>CriticalSection</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value>CS1</Value>
                   </ItemState>
                 </Properties>
                 <Methods>
@@ -6586,6 +6675,20 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>64</Value>
         <Base>DEC</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InitializationGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>UseUSBStackInitialization</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Properties>
@@ -7447,6 +7550,76 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>GetRawVal</UsrMethodName>
+      </ItemState>
+    </Methods>
+    <Events />
+  </Bean>
+  <Bean>
+    <BeanType>CriticalSection</BeanType>
+    <Name>CS1</Name>
+    <CompNumb>136</CompNumb>
+    <CompEnabled>true</CompEnabled>
+    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
+    <IconName>CPU_CHIP2</IconName>
+    <UserFolderName>Referenced_Components</UserFolderName>
+    <Comment lines_count="0" />
+    <Template />
+    <BeanVersion>01.004</BeanVersion>
+    <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Properties>
+      <ItemState>
+        <ItemSymbol>DeviceName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>CS1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>UseProcessorExpertDefault</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
+    </Properties>
+    <Methods>
+      <ItemState>
+        <ItemSymbol>CriticalVariable</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>CriticalVariable</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EnterCritical</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>EnterCritical</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExitCritical</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ExitCritical</UsrMethodName>
       </ItemState>
     </Methods>
     <Events />
