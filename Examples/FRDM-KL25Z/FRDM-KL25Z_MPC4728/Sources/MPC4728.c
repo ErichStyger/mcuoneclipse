@@ -50,12 +50,13 @@ uint8_t MPC4728_Update(void) {
   return MPC4728_GeneralCall(MPC4728_GC_SOFTWARE_UPDATE);
 }
 
-uint8_t MPC4728_FastWrite(uint16_t dac[4], size_t dacSize, uint8_t pd[4], size_t pdSize) {
+/* Fast Mode Write: updates all 4 channels, but does not affect EEPROM */
+uint8_t MPC4728_FastWriteDAC(uint16_t dac[4], size_t dacSize, uint8_t pd[4], size_t pdSize) {
   uint8_t res;
   uint8_t data[4*2], *p;
   int i;
   
-  /* dac contains PD1|PD0|D11..D0 */
+  /* DAC contains PD1|PD0|D11..D0 */
   if (dacSize!=4*sizeof(uint16_t) || pdSize!=4) {
     return ERR_FAILED;
   }
@@ -83,14 +84,18 @@ uint8_t MPC4728_FastWrite(uint16_t dac[4], size_t dacSize, uint8_t pd[4], size_t
   return ERR_OK;
 }
 
-uint8_t MPC4728_SingleWrite(uint8_t channel, uint16_t val) {
+/* Single Write DAC Input Register and EEPROM */
+uint8_t MPC4728_SingleWriteDACandEE(uint8_t channel, uint16_t val) {
   uint8_t res;
   uint8_t data[3];
   
   /* 01011|DAC1|DAC0|UDAC VREF|PD1|PD0|Gx|D11-D0 */
-  data[0] = 0xB0|((channel&0x3)<<1);
-  data[1] = (uint8_t)(val>>8);
-  data[2] = (uint8_t)(val&0xff);
+  if (channel>3) {
+    return ERR_FAILED; /* only channel 0-3 allowed */
+  }
+  data[0] = 0xB0|((channel&0x3)<<1); /* UDAC zero */
+  data[1] = (uint8_t)((val>>8)&0x0F); /* VREF, PD1, PD2 and Gx zero */
+  data[2] = (uint8_t)(val&0xff); /* low byte */
   res = GI2C1_SelectSlave(MPC4728_I2C_ADDRESS);
   if (res!=ERR_OK) {
     return res;
@@ -175,7 +180,8 @@ static uint8_t PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"  reset", (unsigned char*)"General Call Reset\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  wakeup", (unsigned char*)"General Call Wake-Up\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  update", (unsigned char*)"General Call software update\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  fastwrite 0x...", (unsigned char*)"Fast write DAC values. Command followed by 4 hex values\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  fastwrite 0x...", (unsigned char*)"Fast write DAC values with four 12bit hex values (EEPROM not affected)\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  write <ch> <val>", (unsigned char*)"Single write DAC value (hex 12bit) for channel 0-3\r\n", io->stdOut);
   return ERR_OK;
 }
 
@@ -215,7 +221,7 @@ byte MPC4728_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
     int i;
     
     *handled = TRUE;
-    p = cmd+sizeof("I2CSPY1 fastwrite ")-1;
+    p = cmd+sizeof("MPC4728 fastwrite ")-1;
     for(i=0;i<4;i++) { /* init */
       dac[i] = 0;
       pd[i] = 0;
@@ -230,12 +236,34 @@ byte MPC4728_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
       CLS1_SendStr((unsigned char*)"**** Not enough values, 4 expected.\r\n", io->stdErr);
       return ERR_FAILED;
     }
-    if (MPC4728_FastWrite(dac, sizeof(dac), pd, sizeof(pd))!=ERR_OK) {
+    if (MPC4728_FastWriteDAC(dac, sizeof(dac), pd, sizeof(pd))!=ERR_OK) {
       CLS1_SendStr((unsigned char*)"**** FastWrite failed.\r\n", io->stdErr);
       return ERR_FAILED;
     } else {
       return ERR_OK;
     }
+  } else if (UTIL1_strncmp((char*)cmd, "MPC4728 write ", sizeof("MPC4728 write ")-1)==0) {
+    uint16_t dac;
+    uint8_t ch, res;
+    
+    *handled = TRUE;
+    res = ERR_OK;
+    p = cmd+sizeof("MPC4728 write ")-1;
+    if (UTIL1_ScanDecimal8uNumber(&p, &ch)!=ERR_OK || ch>3) {
+      CLS1_SendStr((unsigned char*)"**** Failed reading channel. Must be 0, 1, 2 or 3\r\n", io->stdErr);
+      res = ERR_FAILED;
+    } else {
+      if (UTIL1_ScanHex16uNumber(&p, &dac)!=ERR_OK) {
+        CLS1_SendStr((unsigned char*)"**** Failed DAC value, must start with 0x\r\n", io->stdErr);
+        res = ERR_FAILED;
+      } else {
+        if (MPC4728_SingleWriteDACandEE(ch, dac)!=ERR_OK) {
+          CLS1_SendStr((unsigned char*)"**** Write failed.\r\n", io->stdErr);
+          res = ERR_FAILED;
+        }
+      }
+    }
+    return res;
   }
   return ERR_OK;
 }

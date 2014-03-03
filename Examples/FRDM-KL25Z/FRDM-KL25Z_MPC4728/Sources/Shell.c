@@ -6,12 +6,19 @@
  * This module implements the front to the console/shell functionality.
  */
 
+#include "Platform.h"
 #include "Shell.h"
 #include "CLS1.h"
 #include "LED1.h"
 #include "FRTOS1.h"
 #include "I2CSPY1.h"
 #include "MPC4728.h"
+#include "Q4CLeft.h"
+#include "Q4CRight.h"
+#if PL_HAS_MOTOR
+#include "Motor.h"
+#endif
+
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -21,6 +28,15 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if defined(I2CSPY1_PARSE_COMMAND_ENABLED) && I2CSPY1_PARSE_COMMAND_ENABLED==1
   I2CSPY1_ParseCommand,
+#endif
+#if defined(Q4CLeft_PARSE_COMMAND_ENABLED) && Q4CLeft_PARSE_COMMAND_ENABLED==1
+  Q4CLeft_ParseCommand,
+#endif
+#if defined(Q4CRight_PARSE_COMMAND_ENABLED) && Q4CRight_PARSE_COMMAND_ENABLED==1
+  Q4CRight_ParseCommand,
+#endif
+#if PL_HAS_MOTOR
+  MOT_ParseCommand,
 #endif
   MPC4728_ParseCommand,
   NULL /* sentinel */

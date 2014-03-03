@@ -2,12 +2,16 @@
  * Application.c
  *      Author: Erich Styger
  */
+#include "Platform.h"
 #include "Application.h"
 #include "Shell.h"
 #include "LED1.h"
 #include "FRTOS1.h"
 #include "WAIT1.h"
 #include "MPC4728.h"
+#if PL_HAS_MOTOR
+#include "Motor.h"
+#endif
 
 static portTASK_FUNCTION(AppTask, pvParameters) {
   (void)pvParameters; /* not used */
@@ -16,7 +20,6 @@ static portTASK_FUNCTION(AppTask, pvParameters) {
     FRTOS1_vTaskDelay(500/portTICK_RATE_MS);
   } /* for */
 }
-
 
 void APP_Run(void) {
   if (FRTOS1_xTaskCreate(
@@ -31,6 +34,7 @@ void APP_Run(void) {
     for(;;){}; /* error! probably out of memory */
     /*lint +e527 */
   }
+  MOT_Init();
   SHELL_Init();
   MPC4728_Init();
   FRTOS1_vTaskStartScheduler();

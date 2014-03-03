@@ -35,7 +35,6 @@
 #include "PE_Const.h"
 #include "IO_Map.h"
 #include "FRTOS1.h"
-#include "RTOSCNTRLDD1.h"
 #include "LED1.h"
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"
@@ -55,6 +54,28 @@
 #include "TMOUT1.h"
 #include "I2CSPY1.h"
 #include "CS1.h"
+#include "Q4CLeft.h"
+#include "C11.h"
+#include "BitIoLdd4.h"
+#include "C21.h"
+#include "BitIoLdd5.h"
+#include "Q4CRight.h"
+#include "C12.h"
+#include "BitIoLdd7.h"
+#include "C23.h"
+#include "BitIoLdd8.h"
+#include "TI1.h"
+#include "TimerIntLdd1.h"
+#include "TU1.h"
+#include "MOTTU.h"
+#include "DIRL.h"
+#include "BitIoLdd10.h"
+#include "PWML.h"
+#include "PwmLdd1.h"
+#include "DIRR.h"
+#include "BitIoLdd11.h"
+#include "PWMR.h"
+#include "PwmLdd2.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -134,6 +155,22 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
+
+/*
+** ===================================================================
+**     Event       :  TI1_OnInterrupt (module Events)
+**
+**     Component   :  TI1 [TimerInt]
+**     Description :
+**         When a timer interrupt occurs this event is called (only
+**         when the component is enabled - <Enable> and the events are
+**         enabled - <EnableEvent>). This event is enabled only if a
+**         <interrupt service/event> is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void TI1_OnInterrupt(void);
 
 /* END Events */
 
