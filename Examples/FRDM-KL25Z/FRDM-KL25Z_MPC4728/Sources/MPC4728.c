@@ -93,7 +93,7 @@ uint8_t MPC4728_SingleWriteDACandEE(uint8_t channel, uint16_t val) {
   if (channel>3) {
     return ERR_FAILED; /* only channel 0-3 allowed */
   }
-  data[0] = 0xB0|((channel&0x3)<<1); /* UDAC zero */
+  data[0] = 0x58|((channel&0x3)<<1); /* UDAC zero */
   data[1] = (uint8_t)((val>>8)&0x0F); /* VREF, PD1, PD2 and Gx zero */
   data[2] = (uint8_t)(val&0xff); /* low byte */
   res = GI2C1_SelectSlave(MPC4728_I2C_ADDRESS);
