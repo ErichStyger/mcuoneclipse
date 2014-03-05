@@ -4,7 +4,7 @@
     <Name>S65Sharp</Name>
     <Description>Display driver for the Siemens S65 display (using Sharp LS020xxx controller)</Description>
     <Author>Erich Styger</Author>
-    <Version>01.079</Version>
+    <Version>01.082</Version>
     <Icon>S65Sharp</Icon>
     <TypesFiles>PE,S65Sharp\S65Sharp</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -20,7 +20,7 @@
     <BW_NeedUst>4</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>(c) Copyright Erich Styger, 2009\nhttp      : www.hslu.ch\nmail      : erich.styger@hslu.ch</Copyright>
+    <Copyright>License : Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2009-2014, all rights reserved.\nWeb       : www.mcuoneclipse.com\n\nThis an open source software implemented with using Processor Expert.\nThis is a free software and is opened for education, research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
     <Shortcut>S65S</Shortcut>
     <DemoDriver>no</DemoDriver>
     <BeanLevel>Low</BeanLevel>
@@ -276,6 +276,7 @@
               <CanDelete>false</CanDelete>
               <IconPopup>false</IconPopup>
               <InhrBeanBaseName>RESpin</InhrBeanBaseName>
+              <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
             </TInhrItem>
           </GrupItem>
           <GrupItem>
@@ -293,6 +294,7 @@
               <CanDelete>false</CanDelete>
               <IconPopup>false</IconPopup>
               <InhrBeanBaseName>SCEpin</InhrBeanBaseName>
+              <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
             </TInhrItem>
           </GrupItem>
           <GrupItem>
@@ -310,6 +312,7 @@
               <CanDelete>false</CanDelete>
               <IconPopup>false</IconPopup>
               <InhrBeanBaseName>D_Cpin</InhrBeanBaseName>
+              <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
             </TInhrItem>
           </GrupItem>
           <GrupItem>
@@ -321,9 +324,9 @@
               <ItemLevel>BASIC</ItemLevel>
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
-              <Description>Enabled</Description>
-              <Expanded>Yes</Expanded>
-              <DefaultValue>true</DefaultValue>
+              <Description>Disabled</Description>
+              <Expanded>No</Expanded>
+              <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
               <Children>
@@ -351,12 +354,11 @@
               <TypeSpec>typeEnaDis</TypeSpec>
               <Hint>This sets up a Hardware SPI communication</Hint>
               <ItemLevel>BASIC</ItemLevel>
-              <ReadOnly>true</ReadOnly>
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
-              <Description>Enabled</Description>
-              <Expanded>Yes</Expanded>
-              <DefaultValue>true</DefaultValue>
+              <Description>Disabled</Description>
+              <Expanded>No</Expanded>
+              <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
               <Children>
