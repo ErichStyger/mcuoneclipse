@@ -4,7 +4,7 @@
     <Name>KentChLCD</Name>
     <Description>Kent 132x64 ChLCD</Description>
     <Author>Erich Styger</Author>
-    <Version>01.110</Version>
+    <Version>01.111</Version>
     <Icon>KentChLCD</Icon>
     <TypesFiles>PE,KentChLCD\KentChLCD</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -20,7 +20,7 @@
     <BW_NeedUst>3</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>(c) Copyright Erich Styger, 2008\nhttp      : www.hslu.ch\nmail      : erich.styger@hslu.ch</Copyright>
+    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2014, all rights reserved.\nhttp      : http://www.mcuoneclipse.com\n\nThis an open source software implementing a Kent ChLCD display driver with Processor Expert.\nThis is a free software and is opened for education,  research  and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
     <Shortcut>ChLCD</Shortcut>
     <DemoDriver>no</DemoDriver>
     <BeanLevel>Low</BeanLevel>
@@ -215,18 +215,36 @@
         <Expanded>Yes</Expanded>
         <Children>
           <GrupItem>
-            <TInhrLinkItem>
-              <Name>SPI Interface</Name>
-              <Symbol>SPI</Symbol>
-              <TypeSpec>KentChLCD\spi</TypeSpec>
-              <Hint>Interface to the display.</Hint>
+            <TBoolGrupItem>
+              <Name>SPI</Name>
+              <Symbol>SPIenabled</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>Group to enable the SPI interface</Hint>
               <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
               <EditLine>false</EditLine>
-              <DefaultValue/>
-              <CanDelete>false</CanDelete>
-              <IconPopup>false</IconPopup>
-              <SortStyle/>
-            </TInhrLinkItem>
+              <Description>Enabled</Description>
+              <Expanded>Yes</Expanded>
+              <DefaultValue>true</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TInhrLinkItem>
+                    <Name>SPI Interface</Name>
+                    <Symbol>SPI</Symbol>
+                    <TypeSpec>KentChLCD\spi</TypeSpec>
+                    <Hint>Interface to the display.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <DefaultValue/>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <SortStyle/>
+                  </TInhrLinkItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
           </GrupItem>
           <GrupItem>
             <TInhrItem>

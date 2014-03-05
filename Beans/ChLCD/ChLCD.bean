@@ -4,7 +4,7 @@
     <Name>ChLCD</Name>
     <Description>Kent 240x160 ChLCD</Description>
     <Author>Erich Styger</Author>
-    <Version>01.160</Version>
+    <Version>01.164</Version>
     <Icon>ChLCD</Icon>
     <TypesFiles>PE,ChLCD\ChLCD</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -20,7 +20,7 @@
     <BW_NeedUst>4</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>(c) Copyright Erich Styger, 2009\nhttp      : www.hslu.ch\nmail      : erich.styger@hslu.ch</Copyright>
+    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2014, all rights reserved.\nhttp      : http://www.mcuoneclipse.com\n\nThis an open source software implementing a Kent ChLCD display driver with Processor Expert.\nThis is a free software and is opened for education,  research  and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
     <Shortcut>ChLCD</Shortcut>
     <DemoDriver>no</DemoDriver>
     <BeanLevel>Low</BeanLevel>
@@ -251,18 +251,36 @@
         <Expanded>Yes</Expanded>
         <Children>
           <GrupItem>
-            <TInhrLinkItem>
-              <Name>SPI Interface</Name>
-              <Symbol>SPI</Symbol>
-              <TypeSpec>ChLCD\spi</TypeSpec>
-              <Hint>Interface to the display.</Hint>
+            <TBoolGrupItem>
+              <Name>SPI</Name>
+              <Symbol>SPIEnabled</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>Enables the SPI interface</Hint>
               <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
               <EditLine>false</EditLine>
-              <DefaultValue/>
-              <CanDelete>false</CanDelete>
-              <IconPopup>false</IconPopup>
-              <SortStyle/>
-            </TInhrLinkItem>
+              <Description>Disabled</Description>
+              <Expanded>Yes</Expanded>
+              <DefaultValue>false</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TInhrLinkItem>
+                    <Name>SPI Interface</Name>
+                    <Symbol>SPI</Symbol>
+                    <TypeSpec>ChLCD\spi</TypeSpec>
+                    <Hint>Interface to the display.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>false</EditLine>
+                    <DefaultValue/>
+                    <CanDelete>false</CanDelete>
+                    <IconPopup>false</IconPopup>
+                    <SortStyle/>
+                  </TInhrLinkItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
           </GrupItem>
           <GrupItem>
             <TInhrItem>
@@ -279,6 +297,7 @@
               <CanDelete>false</CanDelete>
               <IconPopup>false</IconPopup>
               <InhrBeanBaseName>CS</InhrBeanBaseName>
+              <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
             </TInhrItem>
           </GrupItem>
           <GrupItem>
@@ -296,6 +315,7 @@
               <CanDelete>false</CanDelete>
               <IconPopup>false</IconPopup>
               <InhrBeanBaseName>ChLCDReset</InhrBeanBaseName>
+              <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
             </TInhrItem>
           </GrupItem>
           <GrupItem>
@@ -313,6 +333,7 @@
               <CanDelete>false</CanDelete>
               <IconPopup>false</IconPopup>
               <InhrBeanBaseName>Busy</InhrBeanBaseName>
+              <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
             </TInhrItem>
           </GrupItem>
           <GrupItem>
@@ -345,6 +366,7 @@
                     <CanDelete>false</CanDelete>
                     <IconPopup>false</IconPopup>
                     <InhrBeanBaseName>Vcc</InhrBeanBaseName>
+                    <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
                   </TInhrItem>
                 </GrupItem>
               </Children>
@@ -387,9 +409,9 @@
               <ItemLevel>BASIC</ItemLevel>
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
-              <Description>Enabled</Description>
-              <Expanded>Yes</Expanded>
-              <DefaultValue>true</DefaultValue>
+              <Description>Disabled</Description>
+              <Expanded>No</Expanded>
+              <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
               <Children>

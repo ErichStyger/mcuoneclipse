@@ -114,6 +114,12 @@ LI.EXP {
   COLOR: gray; 
   FONT: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
 }
+.code {
+  background-color: RGB(243, 242, 230);
+  padding: 10px;
+  white-space: pre;
+  font-family: Courier New, Monospace;
+}
 </STYLE>
 
 </head>
@@ -263,8 +269,16 @@ LI.EXP {
 <b>Hardware</b></a> - Used hardware pins
 <ul>
   <li>
-  <a name="SPI">
-  <b>SPI Interface</b></a> - Interface to the display.
+  <a name="SPIEnabled">
+  <b>SPI</b></a> - Enables the SPI interface<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+  <ul>
+    <li>
+    <a name="SPI">
+    <b>SPI Interface</b></a> - Interface to the display.
+    </li>
+  </ul>
   </li>
   <li>
   <a name="CS">
