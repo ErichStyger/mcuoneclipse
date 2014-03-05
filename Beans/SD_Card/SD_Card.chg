@@ -1,4 +1,4 @@
-%if (CPUfamily = "Kinetis")
+%if defined(CPUfamily) & CPUfamily="Kinetis"
   %set LDD_HW_SPI_Enabled Value Enabled
   %set nonLDD_HW_SPI_Enabled Value Disabled
   %set nonLDD_HW_SPI_Enabled Expanded no
@@ -12,8 +12,8 @@
 %set LDD_HW_SPI_Enabled ReadOnly yes
 %set nonLDD_HW_SPI_Enabled ReadOnly yes
 
-%if SlaveSelectEnabled='yes'
-  %if (CPUfamily = "Kinetis")
+%if defined(SlaveSelectEnabled) & SlaveSelectEnabled='yes'
+  %if defined(CPUfamily) & CPUfamily="Kinetis"
     %set LDD_SS_Group Value Enabled
     %set nonLDD_SS_Group Value Disabled
   %else
@@ -24,8 +24,8 @@
   %set nonLDD_SS_Group ReadOnly yes
 %endif
 
-%if CardDetectionGroup='yes'
-  %if (CPUfamily = "Kinetis")
+%if defined(CardDetectionGroup) & CardDetectionGroup='yes'
+  %if defined(CPUfamily) & CPUfamily="Kinetis"
     %set LDD_CD_Group Value Enabled
     %set nonLDD_CD_Group Value Disabled
   %else
@@ -36,8 +36,8 @@
   %set nonLDD_CD_Group ReadOnly yes
 %endif
 
-%if WriteProtectGroup='yes'
-  %if (CPUfamily = "Kinetis")
+%if defined(WriteProtectGroup) & WriteProtectGroup='yes'
+  %if defined(CPUfamily) & CPUfamily="Kinetis"
     %set LDD_WP_Group Value Enabled
     %set nonLDD_WP_Group Value Disabled
   %else
@@ -48,8 +48,8 @@
   %set nonLDD_WP_Group ReadOnly yes
 %endif
 
-%if ActivateGroup='yes'
-  %if (CPUfamily = "Kinetis")
+%if defined(ActivateGroup) & ActivateGroup='yes'
+  %if defined(CPUfamily) & CPUfamily="Kinetis"
     %set LDD_Activate_Group Value Enabled
     %set nonLDD_Activate_Grp Value Disabled
   %else

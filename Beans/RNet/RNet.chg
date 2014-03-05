@@ -1,4 +1,4 @@
-%if %TransceiverType='nRF24L01+'
+%if defined(TransceiverType) & %TransceiverType='nRF24L01+'
   %set nRF24L01pEnabled Value Enabled
 %else
   %set nRF24L01pEnabled Value Disabled
