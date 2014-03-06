@@ -60,8 +60,6 @@
 #include "BitIoLdd7.h"
 #include "C23.h"
 #include "BitIoLdd8.h"
-#include "TI1.h"
-#include "TimerIntLdd1.h"
 #include "TU1.h"
 #include "MOTTU.h"
 #include "DIRL.h"
@@ -72,6 +70,7 @@
 #include "BitIoLdd11.h"
 #include "PWMR.h"
 #include "PwmLdd2.h"
+#include "TU2.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

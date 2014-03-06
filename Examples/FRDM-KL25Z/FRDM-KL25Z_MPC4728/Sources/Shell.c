@@ -8,6 +8,7 @@
 
 #include "Platform.h"
 #include "Shell.h"
+#include "Application.h"
 #include "CLS1.h"
 #include "LED1.h"
 #include "FRTOS1.h"
@@ -39,6 +40,7 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
   MOT_ParseCommand,
 #endif
   MPC4728_ParseCommand,
+  APP_ParseCommand,
   NULL /* sentinel */
 };
 
