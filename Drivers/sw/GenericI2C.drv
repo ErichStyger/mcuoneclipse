@@ -511,7 +511,7 @@ byte %'ModuleName'%.%ReadBlock(void* data, word dataSize, %'ModuleName'_EnumSend
 %if defined(Timeout)
     timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_TICKS(dataSize)); /* set up timeout counter */
     if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
-      res = ERR_FAILED;
+      res = ERR_QFULL;
       break; /* break for(;;) */
     }
 %endif
@@ -526,7 +526,7 @@ byte %'ModuleName'%.%ReadBlock(void* data, word dataSize, %'ModuleName'_EnumSend
 %if defined(Timeout)
     %@Timeout@'ModuleName'%.LeaveCounter(timeout);
     if (isTimeout) {
-      res = ERR_FAILED;
+      res = ERR_BUSY;
       break; /* break for(;;) */
     }
 %endif
@@ -581,7 +581,7 @@ byte %'ModuleName'%.%WriteBlock(void* data, word dataSize, %'ModuleName'_EnumSen
 %if defined(Timeout)
     timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_TICKS(dataSize)); /* set up timeout counter */
     if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
-      res = ERR_FAILED;
+      res = ERR_QFULL;
       break; /* break for(;;) */
     }
 %endif
@@ -596,7 +596,7 @@ byte %'ModuleName'%.%WriteBlock(void* data, word dataSize, %'ModuleName'_EnumSen
 %if defined(Timeout)
     %@Timeout@'ModuleName'%.LeaveCounter(timeout);
     if (isTimeout) {
-      res = ERR_FAILED;
+      res = ERR_BUSY;
       break; /* break for(;;) */
     }
 %endif
@@ -659,7 +659,7 @@ byte %'ModuleName'%.%ReadAddress(byte i2cAddr, byte *memAddr, byte memAddrSize, 
 %if defined(Timeout)
     timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_TICKS(memAddrSize)); /* set up timeout counter */
     if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
-      res = ERR_FAILED;
+      res = ERR_QFULL;
       break; /* break for(;;) */
     }
 %endif
@@ -674,7 +674,7 @@ byte %'ModuleName'%.%ReadAddress(byte i2cAddr, byte *memAddr, byte memAddrSize, 
 %if defined(Timeout)
     %@Timeout@'ModuleName'%.LeaveCounter(timeout);
     if (isTimeout) {
-      res = ERR_FAILED;
+      res = ERR_BUSY;
       break; /* break for(;;) */
     }
 %endif
@@ -687,7 +687,7 @@ byte %'ModuleName'%.%ReadAddress(byte i2cAddr, byte *memAddr, byte memAddrSize, 
 %if defined(Timeout)
     timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_TICKS(dataSize)); /* set up timeout counter */
     if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
-      res = ERR_FAILED;
+      res = ERR_QFULL;
       break; /* break for(;;) */
     }
 %endif
@@ -702,7 +702,7 @@ byte %'ModuleName'%.%ReadAddress(byte i2cAddr, byte *memAddr, byte memAddrSize, 
 %if defined(Timeout)
     %@Timeout@'ModuleName'%.LeaveCounter(timeout);
     if (isTimeout) {
-      res = ERR_FAILED;
+      res = ERR_BUSY;
       break; /* break for(;;) */
     }
 %endif
@@ -785,7 +785,7 @@ byte %'ModuleName'%.%WriteAddress(byte i2cAddr, byte *memAddr, byte memAddrSize,
 %if defined(Timeout)
     timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_TICKS(i)); /* set up timeout counter */
     if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
-      res = ERR_FAILED;
+      res = ERR_QFULL;
       break; /* break for(;;) */
     }
 %endif
@@ -800,7 +800,7 @@ byte %'ModuleName'%.%WriteAddress(byte i2cAddr, byte *memAddr, byte memAddrSize,
 %if defined(Timeout)
     %@Timeout@'ModuleName'%.LeaveCounter(timeout);
     if (isTimeout) {
-      res = ERR_FAILED;
+      res = ERR_BUSY;
       break; /* break for(;;) */
     }
 %endif
@@ -983,7 +983,7 @@ byte %'ModuleName'%.%ScanDevice(byte i2cAddr)
 %if defined(Timeout)
     timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_TICKS(1)); /* set up timeout counter */
     if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
-      res = ERR_FAILED;
+      res = ERR_QFULL;
       break; /* break for(;;) */
     }
 %endif
