@@ -137,7 +137,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
 void RNETA_Run(void) {
   if (FRTOS1_xTaskCreate(
         MainTask,  /* pointer to the task */
-        (signed char *)"Main", /* task name for kernel awareness debugging */
+        "Main", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
@@ -149,7 +149,7 @@ void RNETA_Run(void) {
   }
   if (FRTOS1_xTaskCreate(
         RadioTask,  /* pointer to the task */
-        (signed char *)"Radio", /* task name for kernel awareness debugging */
+        "Radio", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY+1,  /* initial priority */
