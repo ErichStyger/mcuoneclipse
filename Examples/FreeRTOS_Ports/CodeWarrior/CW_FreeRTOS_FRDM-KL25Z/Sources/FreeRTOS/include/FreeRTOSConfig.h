@@ -179,7 +179,11 @@
 #define configCPU_FAMILY                          configCPU_FAMILY_ARM_M0P
 /* -------------------------------------------------------------------- */
 /* Cortex-M specific definitions. */
-#define configPRIO_BITS                           2 /* 4 priority levels on ARM Cortex M0+ (Kinetis L Family) */
+#if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY)
+  #define configPRIO_BITS                         4 /* 4 bits/16 priority levels on ARM Cortex M4 (Kinetis K Family) */
+#else
+  #define configPRIO_BITS                         2 /* 2 bits/4 priority levels on ARM Cortex M0+ (Kinetis L Family) */
+#endif
 
 /* The lowest interrupt priority that can be used in a call to a "set priority" function. */
 #define configLIBRARY_LOWEST_INTERRUPT_PRIORITY   3

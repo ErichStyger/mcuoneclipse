@@ -16,4 +16,10 @@ How to use the FreeRTOS port in a new CodeWarrior project:
 - Include
   #include "FreeRTOS.h"
   in kinetis_sysinit.c
+- In FreeRTOSConfig.h you need to specify the CPU bus and clock speed:
+    #define configCPU_CLOCK_HZ                        20971530U
+    #define configBUS_CLOCK_HZ                        20971520U
+    #define configCPU_FAMILY                          configCPU_FAMILY_ARM_M4
+    #define configUSE_HEAP_SECTION_NAME               1
+    #define configHEAP_SECTION_NAME_STRING            ".user_data2" /* heap section name (use e.g. ".m_data_20000000" for gcc and "m_data_20000000" for IAR). Check your linker file for the name used. */
 - Have fun :-)

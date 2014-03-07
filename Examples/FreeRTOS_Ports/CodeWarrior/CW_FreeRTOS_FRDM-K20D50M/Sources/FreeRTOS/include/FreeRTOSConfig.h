@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.5.0 - Copyright (C) 2013 Real Time Engineers Ltd.
+    FreeRTOS V8.0.0 - Copyright (C) 2013 Real Time Engineers Ltd.
 
     FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
     http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -85,14 +85,17 @@
  *
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
+#define configGENERATE_STATIC_SOURCES             1 /* if set to one, it will create 'static' sources to be used without Processor Expert */
 #define configGENERATE_RUN_TIME_STATS             0
 #define configUSE_PREEMPTION                      1
 #define configUSE_IDLE_HOOK                       0
 #define configUSE_TICK_HOOK                       0
 #define configUSE_MALLOC_FAILED_HOOK              0
-#define configCPU_CLOCK_HZ                        20971520U
-#define configBUS_CLOCK_HZ                        20971520U
-#define configTICK_RATE_HZ                        ((portTickType)100) /* frequency of tick interrupt */
+#define configTICK_RATE_HZ                        ((TickType_t)100) /* frequency of tick interrupt */
+#define configSYSTICK_USE_LOW_POWER_TIMER         0 /* If using Kinetis Low Power Timer (LPTMR) instead of SysTick timer */
+#define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ    1 /* dummy value */
+#define configCPU_CLOCK_HZ                        20971530U
+#define configBUS_CLOCK_HZ                        20971530U
 #define configSYSTICK_USE_CORE_CLOCK              1 /* System Tick is using core clock  */
 #define configSYSTICK_CLOCK_DIVIDER               1 /* no divider */
 #define configSYSTICK_CLOCK_HZ                    ((configCPU_CLOCK_HZ)/configSYSTICK_CLOCK_DIVIDER) /* frequency of system tick counter */
@@ -100,10 +103,10 @@
 /*----------------------------------------------------------*/
 /* Heap Memory */
 #define configFRTOS_MEMORY_SCHEME                 2 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc) or 4 (coalesc blocks) */
-#define configTOTAL_HEAP_SIZE                     ((size_t)(5500)) /* size of heap in bytes */
-#define configUSE_HEAP_SECTION_NAME               0 /* set to 1 if a custom section name (configHEAP_SECTION_NAME_STRING) shall be used, 0 otherwise */
+#define configTOTAL_HEAP_SIZE                     ((size_t)(8092)) /* size of heap in bytes */
+#define configUSE_HEAP_SECTION_NAME               1 /* set to 1 if a custom section name (configHEAP_SECTION_NAME_STRING) shall be used, 0 otherwise */
 #if configUSE_HEAP_SECTION_NAME
-  #define configHEAP_SECTION_NAME_STRING          ".m_data_20000000" /* heap section name (supported by GCC). Check your linker file for the name used. */
+#define configHEAP_SECTION_NAME_STRING            ".user_data2" /* heap section name (use e.g. ".m_data_20000000" for gcc and "m_data_20000000" for IAR). Check your linker file for the name used. */
 #endif
 /*----------------------------------------------------------*/
 #define configMAX_TASK_NAME_LEN                   12 /* task name length */
@@ -113,7 +116,7 @@
 #define configIDLE_SHOULD_YIELD                   1
 #define configUSE_CO_ROUTINES                     0
 #define configUSE_MUTEXES                         1
-#define configCHECK_FOR_STACK_OVERFLOW            0
+#define configCHECK_FOR_STACK_OVERFLOW            0 /* 0 is disabling stack overflow. Set it to 1 for Method1 or 2 for Method2 */  
 #define configUSE_RECURSIVE_MUTEXES               1
 #define configQUEUE_REGISTRY_SIZE                 0
 #define configUSE_QUEUE_SETS                      0
@@ -173,13 +176,17 @@
 #define configCPU_FAMILY_IS_ARM_M4(fam)      (((fam)==configCPU_FAMILY_ARM_M4)  || ((fam)==configCPU_FAMILY_ARM_M4F))
 #define configCPU_FAMILY_IS_ARM(fam)         (((fam)==configCPU_FAMILY_ARM_M0P) || configCPU_FAMILY_IS_ARM_M4(fam))
 
-#define configCPU_FAMILY                          configCPU_FAMILY_ARM_M0P
+#define configCPU_FAMILY                          configCPU_FAMILY_ARM_M4
 /* -------------------------------------------------------------------- */
 /* Cortex-M specific definitions. */
-#define configPRIO_BITS                           4 /* 16 priority levels on ARM Cortex M4 (Kinetis K Family) */
+#if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY)
+  #define configPRIO_BITS                         4 /* 4 bits/16 priority levels on ARM Cortex M4 (Kinetis K Family) */
+#else
+  #define configPRIO_BITS                         2 /* 2 bits/4 priority levels on ARM Cortex M0+ (Kinetis L Family) */
+#endif
 
 /* The lowest interrupt priority that can be used in a call to a "set priority" function. */
-#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY   15
+#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY   3
 
 /* The highest interrupt priority that can be used by any interrupt service
    routine that makes calls to interrupt safe FreeRTOS API functions.  DO NOT CALL
