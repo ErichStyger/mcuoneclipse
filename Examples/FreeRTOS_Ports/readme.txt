@@ -10,6 +10,10 @@ See the readme.txt inside that project for details.
 
 Following ports are available:
 - CodeWarrior:
-  KL25Z (FRDM-KL25Z board)
+  - FRDM-KL25Z board
+  - FRDM-K20D50M board
+- IAR:
+  - FRDM-KL25Z board
+  
 
 To change the RTOS, adopt the FreeRTOSconfig.h header file.
