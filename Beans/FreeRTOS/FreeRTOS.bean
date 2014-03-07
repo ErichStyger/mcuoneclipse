@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.358</Version>
+    <Version>01.360</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -21,7 +21,7 @@
     <BW_NeedUst>16</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>License : Open Source (LGPL)\nFreeRTOS (c) Copyright 2003-2013 Richard Barry, http: www.FreeRTOS.org\nFreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013\nProcessor Expert and CodeWarrior (c) Copyright Freescale Semiconductor, 2013, all rights reserved\nThis is a free software and is opened for education, research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
+    <Copyright>License : Open Source (LGPL)\nFreeRTOS (c) Copyright 2003-2014 Richard Barry, http: www.FreeRTOS.org\nFreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013\nProcessor Expert and CodeWarrior (c) Copyright Freescale Semiconductor, 2013, all rights reserved\nThis is a free software and is opened for education, research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
     <Shortcut>FRTOS</Shortcut>
     <DemoDriver>no</DemoDriver>
     <BeanLevel>High</BeanLevel>
@@ -60,7 +60,7 @@
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
         <Description>Custom port settings</Description>
-        <Expanded>No</Expanded>
+        <Expanded>Yes</Expanded>
         <Children>
           <GrupItem>
             <TEnumItem>
@@ -81,14 +81,14 @@
           <GrupItem>
             <TBoolGrupItem>
               <Name>Static Sources</Name>
-              <Symbol>SourceGenerationOptions</Symbol>
+              <Symbol>StaticSourcesEnabled</Symbol>
               <TypeSpec>typeEnaDis</TypeSpec>
               <Hint>Source Code Generation Option for the RTOS. With this, the source file generation can be configured so they can be easily used outside of Processor Expert.</Hint>
               <ItemLevel>EXPERT</ItemLevel>
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
               <Description>Disabled</Description>
-              <Expanded>No</Expanded>
+              <Expanded>Yes</Expanded>
               <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>

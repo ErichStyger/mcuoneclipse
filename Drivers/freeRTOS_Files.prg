@@ -71,7 +71,7 @@
 %FILE %'DirRel_Code'%'RTOSSrcDirFolder'queue.c
 %include freeRTOS\queue.c
 
-%FILE %'DirRel_Code'%'RTOSSrcDirFolder'queue.h
+%FILE %'DirRel_Code'%'RTOSHeaderDirFolder'queue.h
 %include freeRTOS\queue.h
 
 %FILE %'DirRel_Code'%'RTOSHeaderDirFolder'semphr.h

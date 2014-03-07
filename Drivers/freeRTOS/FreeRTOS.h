@@ -84,10 +84,11 @@
  *     contains the typedefs required to build FreeRTOS.  Read the instructions
  *     in FreeRTOS/source/stdint.readme for more information.
  */
-#if 1 /* << EST */
-#include "PE_Types.h"
+#include "FreeRTOSConfig.h" /* << EST */
+#if configGENERATE_STATIC_SOURCES /* << EST */
+  #include <stdint.h> /* READ COMMENT ABOVE. */
 #else
-#include <stdint.h> /* READ COMMENT ABOVE. */
+  #include "PE_Types.h"
 #endif
 
 #ifdef __cplusplus

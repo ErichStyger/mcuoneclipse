@@ -88,6 +88,11 @@
  *
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
+%if defined(StaticSourcesEnabled) & %StaticSourcesEnabled='yes'
+#define configGENERATE_STATIC_SOURCES                            %>50 1 /* if set to one, it will create 'static' sources to be used without Processor Expert */
+%else
+#define configGENERATE_STATIC_SOURCES                            %>50 0 /* if set to one, it will create 'static' sources to be used without Processor Expert */
+%endif
 %if %CollectRuntimeStatisticsGroup='yes'
 #define configGENERATE_RUN_TIME_STATS                            %>50 1
 %if defined(RuntimeCntr)

@@ -70,8 +70,11 @@ extern "C" {
 #endif
 
 #include "FreeRTOSConfig.h"
-#include "PE_Types.h" /* for int8_t, etc */
-
+#if configGENERATE_STATIC_SOURCES
+  #include <stdint.h>
+#else
+  #include "PE_Types.h" /* for int8_t, etc */
+#endif
 /*-----------------------------------------------------------
  * Port specific definitions.
  *

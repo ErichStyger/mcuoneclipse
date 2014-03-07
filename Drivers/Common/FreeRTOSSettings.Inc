@@ -3,8 +3,8 @@
 %;**                                                             %>12 RTOS Version %>60: %get(FreeRTOSVersion,Text)
 %;**%>12 Custom Port %>60: %get(CustomPortGroup,Text)
 %;**%>14 Compiler %>60: %get(configCOMPILER,Text)
-%;**%>14 Static Sources %>60: %get(SourceGenerationOptions,Text)
-%if %get(SourceGenerationOptions, Bool) = 'yes'
+%;**%>14 Static Sources %>60: %get(StaticSourcesEnabled,Text)
+%if %get(StaticSourcesEnabled, Bool) = 'yes'
 %;**%>16 Source Folder %>60: %get(RTOSSrcFolderName,Text)
 %;**%>16 Header Folder %>60: %get(RTOSHeaderFolderName,Text)
 %;**%>16 Port Folder %>60: %get(RTOSPortFolderName,Text)
@@ -14,8 +14,8 @@
 %;**%>18 configBUS_CLOCK_HZ %>60: %get(configBUS_CLOCK_HZ,Text)
 %else %- UseManualClockValues
 %endif %- UseManualClockValues
-%else %- SourceGenerationOptions
-%endif %- SourceGenerationOptions
+%else %- StaticSourcesEnabled
+%endif %- StaticSourcesEnabled
 %;**%>14 Custom portBASE_TYPE %>60: %get(Custom_portBASE_TYPE,Text)
 %if %get(Custom_portBASE_TYPE, Bool) = 'yes'
 %;**%>16 portBASE_TYPE %>60: %get(portBASE_TYPE,Text)
