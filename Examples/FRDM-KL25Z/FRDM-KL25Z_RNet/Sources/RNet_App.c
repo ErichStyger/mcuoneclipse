@@ -111,13 +111,6 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
   localConsole_buf[0] = '\0';
   CLS1_SendStr((unsigned char*)"nRF24L01+ Demo\r\n", ioLocal->stdOut);
 #endif
-  RSTACK_Init(); /* initialize stack */
-  if (RAPP_SetMessageHandlerTable(handlerTable)!=ERR_OK) { /* assign application message handler */
-    Err((unsigned char*)"Failed setting message handler!\r\n");
-  }
-  if (RAPP_SetThisNodeAddr(RNWK_ADDR_BROADCAST)!=ERR_OK) { /* set a default address */
-    Err((unsigned char*)"Failed setting source address!\r\n");
-  }
 #if PL_HAS_SHELL
   (void)CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, ioLocal, CmdParserTable);
 #endif
@@ -135,6 +128,13 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
 }
 
 void RNETA_Run(void) {
+  RSTACK_Init(); /* initialize stack */
+  if (RAPP_SetMessageHandlerTable(handlerTable)!=ERR_OK) { /* assign application message handler */
+    Err((unsigned char*)"Failed setting message handler!\r\n");
+  }
+  if (RAPP_SetThisNodeAddr(RNWK_ADDR_BROADCAST)!=ERR_OK) { /* set a default address */
+    Err((unsigned char*)"Failed setting source address!\r\n");
+  }
   if (FRTOS1_xTaskCreate(
         MainTask,  /* pointer to the task */
         "Main", /* task name for kernel awareness debugging */
