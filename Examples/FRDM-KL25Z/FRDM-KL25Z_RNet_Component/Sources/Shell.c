@@ -88,7 +88,7 @@ void SHELL_Init(void) {
 #if !CLS1_DEFAULT_SERIAL
   (void)CLS1_SetStdio(&Dummy_stdio); /* use the Bluetooth stdio as default */
 #endif
-  if (FRTOS1_xTaskCreate(ShellTask, (signed portCHAR *)"Shell", configMINIMAL_STACK_SIZE+100, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (FRTOS1_xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+100, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 }
