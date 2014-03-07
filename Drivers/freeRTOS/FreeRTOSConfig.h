@@ -442,15 +442,11 @@
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY    %>50 7
 %elif (CPUfamily = "Kinetis")
 /* Cortex-M specific definitions. */
-%if ARMFamilyType="M4"
-#define configPRIO_BITS                         %>50 4 /* 16 priority levels on ARM Cortex M4 (Kinetis K Family) */
-%elif ARMFamilyType="M4F"
-#define configPRIO_BITS                         %>50 4 /* 16 priority levels on ARM Cortex M4F (Kinetis K Family) */
-%elif ARMFamilyType="M0+"
-#define configPRIO_BITS                         %>50 2 /* 4 priority levels on ARM Cortex M0+ (Kinetis L Family) */
-%elif
-#error "Unknown Cortex CPU! */
-%endif
+#if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY)
+  #define configPRIO_BITS                         %>50 4 /* 4 bits/16 priority levels on ARM Cortex M4 (Kinetis K Family) */
+#else
+  #define configPRIO_BITS                         %>50 2 /* 2 bits/4 priority levels on ARM Cortex M0+ (Kinetis L Family) */
+#endif
 
 /* The lowest interrupt priority that can be used in a call to a "set priority" function. */
 #define configLIBRARY_LOWEST_INTERRUPT_PRIORITY   %>50 %KinetisLibraryLowestInterruptPriority
