@@ -58,7 +58,7 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
 #define SHELL_STACK_SIZE configMINIMAL_STACK_SIZE+1000
 
 void SHELL_Init(void) {
-  if (FRTOS1_xTaskCreate(ShellTask, (signed char*)"Shell", SHELL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (FRTOS1_xTaskCreate(ShellTask, "Shell", SHELL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 }

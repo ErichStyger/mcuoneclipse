@@ -60,7 +60,7 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
 	{
 		MSGLN("Mount point: %s, start: %d, end: %d",
 				m->mount, m->start_block, m->end_block);
-		m->next;
+		//m->next;
 	}
 
 	return ERR_OK;
@@ -277,7 +277,7 @@ byte UFFS_FAT_CopyFile(const byte *srcFileName, const byte *dstFileName, const C
 {
 	bool sourceUffs = pdTRUE;	///< source is uffs (otherwise FAT)
 	bool destUffs = pdTRUE;		///< destination is uffs (otherwise FAT)
-	int fd1, fd2;			// uffs file pointers
+	int fd1=-1, fd2=-1;			// uffs file pointers
 	FAT1_FIL fsrc, fdst;  	// FAT file objects
 	FAT1_FRESULT fres;		// FAT result
 	uint8_t buffer[32];   /* copy buffer */
@@ -413,14 +413,14 @@ static byte CopyCmd(const unsigned char *cmd, const CLS1_ConstStdIOType *io) {
 	char fileName[UFFS_PATHSIZE];
 	char fileName2[UFFS_PATHSIZE];
 
-	if (   (UTIL1_ReadEscapedName(cmd+sizeof("copy"), fileName,
+	if (   (UTIL1_ReadEscapedName(cmd+sizeof("copy"), (unsigned char*)fileName,
 			sizeof(fileName), &lenRead, NULL, NULL)==ERR_OK)
 			&& *(cmd+sizeof("copy")+lenRead)==' '
-					&& (UTIL1_ReadEscapedName(cmd+sizeof("copy")+lenRead+1, fileName2,
+					&& (UTIL1_ReadEscapedName(cmd+sizeof("copy")+lenRead+1, (unsigned char*)fileName2,
 							sizeof(fileName2), NULL, NULL, NULL)==ERR_OK)
 	)
 	{
-		res = UFFS_FAT_CopyFile(fileName, fileName2, io);
+		res = UFFS_FAT_CopyFile((unsigned char*)fileName, (unsigned char*)fileName2, io);
 	} else {
 		CmdUsageError(cmd, (unsigned char*)"copy srcFileName dstFileName", io);
 		res = ERR_FAILED;
@@ -432,7 +432,7 @@ static byte CopyCmd(const unsigned char *cmd, const CLS1_ConstStdIOType *io) {
 byte UFFS_PrintDiskInfo(const CLS1_StdIOType *io)
 {
 	uffs_MountTable *m;
-	uffs_Device *d;
+	//uffs_Device *d;
 	int i, b = 0, g = 0;
 	MSGLN("UFFS disk info:");
 	m = get_flash_mount_table();
