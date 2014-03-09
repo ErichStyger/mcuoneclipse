@@ -339,9 +339,12 @@ static byte %'ModuleName'%.I2CAddress = (%DeviceAddress&%'ModuleName'%.MAX_I2C_A
   #define %'ModuleName'%.BANK_1         (1<<2)                   %>40 /* B0 bit (1) inside the CTRL_BYTE: 1010|B0|A1|A0 */
   #define %'ModuleName'%.CTRL_BYTE      (%'ModuleName'%.CTRL_NBL|%'ModuleName'%.CTRL_ADDR)%>40 /* 1010|B0|A1|A0 */
   #define %'ModuleName'%.DEVICE_ADDR(addr) \
-    (((addr)&0x100)? \
+    ( %'ModuleName'%.CTRL_BYTE|((addr>>8)&0x07) )
+  #if 0 /* old style */
+    (((addr)&0x400)? \
         (%'ModuleName'%.CTRL_BYTE|%'ModuleName'%.BANK_1) \
       : (%'ModuleName'%.CTRL_BYTE|%'ModuleName'%.BANK_0) )       %>40 /* 7bit address of device used to select device */
+  #endif        
 #elif (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_32) || (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_256) || (%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_512)
   #define %'ModuleName'%.CTRL_ADDR      %'ModuleName'%.I2CAddress%>40 /* address inside control byte */
   /* define control byte as 1010|A2|A1|A0 */
@@ -413,10 +416,16 @@ byte %'ModuleName'%.%WriteByte(%'ModuleName'_Address addr, byte data)
     (void)%@I2C@'ModuleName'%.UnselectSlave();
     return res;
   }
-  block[0] = (uint8_t)(addr>>8);                                 %>40 /* high byte of address */
-  block[1] = (uint8_t)(addr&0xff);                               %>40 /* low byte of address */
-  block[2] = data; /* switch to read mode */
-  res = %@I2C@'ModuleName'%.WriteBlock(block, sizeof(block), %@I2C@'ModuleName'%.SEND_STOP);%>40 /* send address and data */
+  #if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8  
+    block[0] = (uint8_t)(addr&0xff);                               %>40 /* low byte of address */
+    block[1] = data; /* switch to read mode */
+    res = %@I2C@'ModuleName'%.WriteBlock(block, 2, %@I2C@'ModuleName'%.SEND_STOP);%>40 /* send address and data */
+  #else
+    block[0] = (uint8_t)(addr>>8);                                 %>40 /* high byte of address */
+    block[1] = (uint8_t)(addr&0xff);                               %>40 /* low byte of address */
+    block[2] = data; /* switch to read mode */
+    res = %@I2C@'ModuleName'%.WriteBlock(block, sizeof(block), %@I2C@'ModuleName'%.SEND_STOP);%>40 /* send address and data */
+  #endif
   if (res != ERR_OK) {
     (void)%@I2C@'ModuleName'%.UnselectSlave();
     return res;
@@ -473,22 +482,26 @@ byte %'ModuleName'%.%WriteByte(%'ModuleName'_Address addr, byte data)
 byte %'ModuleName'%.%ReadByte(%'ModuleName'_Address addr, byte *data)
 {
   uint8_t res;
-#if %'ModuleName'%.DEVICE_ID!=%'ModuleName'%.DEVICE_ID_8
-  uint8_t addr16[2];                                             %>40 /* big endian address on I2C bus needs to be 16bit */
+  #if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8
+    uint8_t addr8;
+    addr8 = (uint8_t)(addr&0xff); // low address byte
+  #else
+    uint8_t addr16[2];                                             %>40 /* big endian address on I2C bus needs to be 16bit */
+  
+    addr16[0] = (uint8_t)(addr>>8); /* 16 bit address must be in big endian format */
+    addr16[1] = (uint8_t)(addr&0xff);
+  #endif
 
-  addr16[0] = (uint8_t)(addr>>8); /* 16 bit address must be in big endian format */
-  addr16[1] = (uint8_t)(addr&0xff);
-#endif
   res = %@I2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_ADDR(addr));
   if (res != ERR_OK) {
     (void)%@I2C@'ModuleName'%.UnselectSlave();
     return res;
   }
-#if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8
-  res = %@I2C@'ModuleName'%.WriteBlock(&addr, 1, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send 8bit address */
-#else /* use 16bit address */
-  res = %@I2C@'ModuleName'%.WriteBlock(&addr16, 2, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send 16bit address */
-#endif
+  #if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8
+    res = %@I2C@'ModuleName'%.WriteBlock(&addr8, 1, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send 8bit address */
+  #else /* use 16bit address */
+    res = %@I2C@'ModuleName'%.WriteBlock(addr16, 2, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send 16bit address */
+  #endif
   if (res != ERR_OK) {
     (void)%@I2C@'ModuleName'%.UnselectSlave();
     return res;
@@ -514,22 +527,25 @@ byte %'ModuleName'%.%ReadByte(%'ModuleName'_Address addr, byte *data)
 byte %'ModuleName'%.%ReadBlock(%'ModuleName'_Address addr, byte *data, word dataSize)
 {
   uint8_t res;
-#if %'ModuleName'%.DEVICE_ID!=%'ModuleName'%.DEVICE_ID_8
-  uint8_t addr16[2];                                             %>40 /* big endian address on I2C bus needs to be 16bit */
+  #if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8
+    uint8_t addr8;
+    addr8 = (uint8_t)(addr&0xff);
+  #else  
+    uint8_t addr16[2];                                             %>40 /* big endian address on I2C bus needs to be 16bit */
+    addr16[0] = (uint8_t)(addr>>8); /* 16 bit address must be in big endian format */
+    addr16[1] = (uint8_t)(addr&0xff);
+  #endif
 
-  addr16[0] = (uint8_t)(addr>>8); /* 16 bit address must be in big endian format */
-  addr16[1] = (uint8_t)(addr&0xff);
-#endif
   res = %@I2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_ADDR(addr));
   if (res != ERR_OK) {
     (void)%@I2C@'ModuleName'%.UnselectSlave();
     return res;
   }
-#if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8
-  res = %@I2C@'ModuleName'%.WriteBlock(&addr, 1, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send 8bit address */
-#else
-  res = %@I2C@'ModuleName'%.WriteBlock(&addr16, 2, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send 16bit address */
-#endif
+  #if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8
+    res = %@I2C@'ModuleName'%.WriteBlock(&addr8, 1, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send 8bit address */
+  #else
+    res = %@I2C@'ModuleName'%.WriteBlock(addr16, 2, %@I2C@'ModuleName'%.DO_NOT_SEND_STOP);%>40 /* send 16bit address */
+  #endif
   if (res != ERR_OK) {
     (void)%@I2C@'ModuleName'%.UnselectSlave();
     return res;
@@ -604,15 +620,23 @@ byte %'ModuleName'%.WriteBlockPage(%'ModuleName'_Address addr, byte *data, word 
       (void)%@I2C@'ModuleName'%.UnselectSlave();
       return res;
     }
-    block[0] = (uint8_t)(addr>>8);                               %>40 /* high byte of address */
-    block[1] = (uint8_t)(addr&0xff);                             %>40 /* low byte of address */
+    #if %'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8 
+      /* 8 bit address byte, high byte of address have been place in SelectSlave(addr) */
+      block[0] = (uint8_t)(addr&0xff);                             %>40 /* low byte of address */
+      p = &block[1]; i = (uint8_t)dataSize;
+    #else /* 16 bit address byte */
+      block[0] = (uint8_t)(addr>>8);                               %>40 /* high byte of address */
+      block[1] = (uint8_t)(addr&0xff);                             %>40 /* low byte of address */
+      p = &block[2]; i = (uint8_t)dataSize;
+    #endif
+
     /* copy block */
-    p = &block[2]; i = (uint8_t)dataSize;
     while(i>0) {
       *p++ = *data++;
       i--;
     }
-    res = %@I2C@'ModuleName'%.WriteBlock(block, dataSize+2, %@I2C@'ModuleName'%.SEND_STOP);%>40 /* send address and data */
+    res = %@I2C@'ModuleName'%.WriteBlock(block, 
+        dataSize+((%'ModuleName'%.DEVICE_ID==%'ModuleName'%.DEVICE_ID_8)? 1:2), %@I2C@'ModuleName'%.SEND_STOP);%>40 /* send address and data */
     if (res != ERR_OK) {
       (void)%@I2C@'ModuleName'%.UnselectSlave();
       return res;
