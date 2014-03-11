@@ -50,6 +50,7 @@
 #include "Rx1.h"
 #include "WAIT1.h"
 #include "UTIL1.h"
+#include "CS1.h"
 
 #ifdef __cplusplus
 extern "C" {

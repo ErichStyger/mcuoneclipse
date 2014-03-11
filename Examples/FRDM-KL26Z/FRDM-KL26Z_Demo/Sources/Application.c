@@ -171,7 +171,7 @@ void APP_Run(void) {
   SHELL_Init();
   if (FRTOS1_xTaskCreate(
         AppTask,  /* pointer to the task */
-        (signed char *)"App", /* task name for kernel awareness debugging */
+        "App", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY+2,  /* initial priority */
