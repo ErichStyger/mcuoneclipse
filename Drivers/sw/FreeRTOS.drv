@@ -1422,10 +1422,12 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Utility@'ModuleName'%.Num16sToStr(buf, sizeof(buf), 1000/configTICK_RATE_HZ);
   %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
   %@Shell@'ModuleName'%.SendStr((unsigned char*)" ms\r\n", io->stdOut);
+#if configFRTOS_MEMORY_SCHEME!=3 /* wrapper to malloc() does not have xPortGetFreeHeapSize() */
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Free heap", (const unsigned char*)"", io->stdOut);
   %@Utility@'ModuleName'%.Num32uToStr(buf, sizeof(buf), %'ModuleName'%.xPortGetFreeHeapSize());
   %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
   %@Shell@'ModuleName'%.SendStr((unsigned char*)" bytes\r\n", io->stdOut);
+#endif
 
   return ERR_OK;
 }
