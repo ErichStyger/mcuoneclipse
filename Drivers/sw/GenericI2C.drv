@@ -133,8 +133,10 @@
 
 typedef enum %'ModuleName'_EnumSendFlags_ {
   %'ModuleName'_SEND_STOP,        /* STOP is sent */
-  %'ModuleName'_DO_NOT_SEND_STOP  /* STOP is not sent */
+  %'ModuleName'_DO_NOT_SEND_STOP, /* STOP is not sent */
+  %'ModuleName'_STOP_NOSTART      /* send STOP without START condition */
 } %'ModuleName'_EnumSendFlags;
+
 %-
 %-BW_CUSTOM_USERTYPE_END
 %-BW_DEFINITION_START
@@ -604,12 +606,20 @@ byte %'ModuleName'%.%WriteBlock(void* data, word dataSize, %'ModuleName'_EnumSen
   } /* for(;;) */
 %else
   for(;;) { /* breaks */
+%if %SupportStopNoStart='yes'
+    if (%'ModuleName'_STOP_NOSTART==flags) {
+      res = %@I2C@'ModuleName'%.SendBlockContinue(data, dataSize, &nof);
+    } else {
+      res = %@I2C@'ModuleName'%.SendBlock(data, dataSize, &nof);
+    }
+%else
     res = %@I2C@'ModuleName'%.SendBlock(data, dataSize, &nof);
+%endif
     if (res!=ERR_OK) {
       (void)%@I2C@'ModuleName'%.SendStop();
       break; /* break for(;;) */
     }
-    if (flags==%'ModuleName'_SEND_STOP) {
+    if (flags==%'ModuleName'_SEND_STOP || (flags==%'ModuleName'_STOP_NOSTART)) {
       res = %@I2C@'ModuleName'%.SendStop();
       if (res!=ERR_OK) {
         break; /* break for(;;) */

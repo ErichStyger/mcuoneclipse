@@ -4,7 +4,7 @@
     <Name>GenericSWI2C</Name>
     <Description>Generic Software I2C</Description>
     <Author>Erich Styger, Marc Lindahl</Author>
-    <Version>01.005</Version>
+    <Version>01.007</Version>
     <Icon>GenericSWI2C</Icon>
     <TypesFiles>PE,GenericSWI2C\GenericSWI2C</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -19,7 +19,7 @@
     <BW_NeedUst>0</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>(c) Copyright Freescale Semiconductor, 2013\nhttp      : www.freescale.com</Copyright>
+    <Copyright>(c) Copyright Freescale Semiconductor, 2014\nhttp      : www.freescale.com</Copyright>
     <Category>CPU External Devices-Communication</Category>
     <DemoDriver>no</DemoDriver>
     <BeanLevel>Low</BeanLevel>
@@ -450,6 +450,53 @@
         <Symbol>SendBlock</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
         <Hint>When working as a MASTER, this method writes 7 bits of slave address plus R/W bit = 0 to the I2C bus and then writes the block of characters to the bus. If the component is disabled (by the "Disable" method or initialization), the block is moved to the output buffer if the 'Output buffer size' property is different from zero. The content of the output buffer is sent immediately with the stop condition at the end when the component is enabled by the "Enable" method. After the output buffer transmission, the whole output buffer is cleared. The slave address must be specified before by the "SelectSlave" method or in component initialization section of 'Slave address init' property.  When working as a SLAVE, this method writes block of characters to the bus. If the ERR_NOTAVAIL error code is returned, the whole block is successfully sent to a master but the master device responds by an acknowledgment instead of no acknowledgment sent at the end of the last block byte transfer. 'OnError' event is called in this case.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code, possible codes:\nERR_OK - OK\nERR_SPEED - This device does not work in the active speed mode\nERR_BUSY - The slave device is busy, it does not respond by the acknowledgment (MASTER mode only)\nERR_TXFULL - Output buffer is full (MASTER mode only)\nERR_NOTAVAIL - The master device sends acknowledgment instead of no acknowledgment after the last byte transfer (SLAVE mode only)\nERR_DISABLED - Device is disabled\nERR_BUSOFF - Clock timeout elapsed (SLAVE mode only)</RetHint>
+        <ParamCount>3</ParamCount>
+        <Parameter>
+          <ParName>Ptr</ParName>
+          <ParType>pointer</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>A pointer to the block of data to send</ParHint>
+          <ParUserDeclaration>void *Ptr</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>Siz</ParName>
+          <ParType>16bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The size of the block</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>Snt</ParName>
+          <ParType>16bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>A pointer to the number of data that are sent (copied to buffer)</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(void *Ptr, word Siz, word *Snt)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>SendBlockContinue</Name>
+        <Symbol>SendBlockContinue</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Same is SendBlock() but does not send start condition. When working as a MASTER, this method writes 7 bits of slave address plus R/W bit = 0 to the I2C bus and then writes the block of characters to the bus. If the component is disabled (by the "Disable" method or initialization), the block is moved to the output buffer if the 'Output buffer size' property is different from zero. The content of the output buffer is sent immediately with the stop condition at the end when the component is enabled by the "Enable" method. After the output buffer transmission, the whole output buffer is cleared. The slave address must be specified before by the "SelectSlave" method or in component initialization section of 'Slave address init' property.  When working as a SLAVE, this method writes block of characters to the bus. If the ERR_NOTAVAIL error code is returned, the whole block is successfully sent to a master but the master device responds by an acknowledgment instead of no acknowledgment sent at the end of the last block byte transfer. 'OnError' event is called in this case.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>

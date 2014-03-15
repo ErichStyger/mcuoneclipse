@@ -225,6 +225,10 @@ LI.EXP {
 <b>Wait</b></a> - Interface to waiting routines.
 </li>
 <li>
+<a name="SupportStopNoStart">
+<b>Support STOP_NOSTART</b></a> - If enabled, the driver supports sending a STOP condition whithout sending a new START condition. This is currently only supported with the GenericSWI2C driver, so disabled by default.
+</li>
+<li>
 <a name="WriteBufferSize">
 <b>Write Buffer Size</b></a> - WriteAddress() needs a buffer to build up the data to transmit. This defines how many bytes are transmitted in one transfer.
 </li>

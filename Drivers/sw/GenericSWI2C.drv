@@ -200,6 +200,18 @@ bool %'ModuleName'%.%ResetBus(void);
 
 %endif %- ResetBus
 %-BW_METHOD_END ResetBus
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SendBlockContinue
+%ifdef SendBlockContinue
+byte %'ModuleName'%.%SendBlockContinue(void *Ptr, word Siz, word *Snt);
+%define! ParPtr
+%define! ParSiz
+%define! ParSnt
+%define! RetVal
+%include Common\GenericSWI2CSendBlockContinue.Inc
+
+%endif %- SendBlockContinue
+%-BW_METHOD_END SendBlockContinue
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -684,7 +696,6 @@ byte %'ModuleName'%.%SendBlock(void *Ptr, word Siz, word *Snt)
     }
     Delay();
     if (timeout==0) {
-      /*InternalStop(); */ /* MSL: the next level up is responsible for the following.... this caused an empty start-stop which is technically illegal */
       return ERR_BUSY;
     }
     SDA_SetDir((bool)OUTPUT);
@@ -701,10 +712,6 @@ byte %'ModuleName'%.%SendBlock(void *Ptr, word Siz, word *Snt)
 %if defined(OnNACK)
     %OnNACK();
 %endif
-    /* MSL: the next level up is responsible for the following.... this caused an empty start-stop which is technically illegal */
-    /* SCL_SetDir((bool)OUTPUT); */
-    /* SCL_ClrVal(); */               /* CLOCK LOW PULSE */
-    /* InternalStop(); */
     return ERR_BUSY;
   } else {
     SCL_SetDir((bool)OUTPUT);
@@ -738,7 +745,6 @@ byte %'ModuleName'%.%SendBlock(void *Ptr, word Siz, word *Snt)
     %'ModuleName'%.OSYIELD();
   }
   if (timeout==0) {
-    /* InternalStop(); */ /* MSL: the next level up is responsible for the following.... this caused an empty start-stop which is technically illegal */
     return ERR_BUSY;
   }
   return ERR_OK;
@@ -746,6 +752,52 @@ byte %'ModuleName'%.%SendBlock(void *Ptr, word Siz, word *Snt)
 
 %endif %- SendBlock
 %-BW_METHOD_END SendBlock
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SendBlockContinue
+%ifdef SendBlockContinue
+%define! ParPtr
+%define! ParSiz
+%define! ParSnt
+%define! RetVal
+%include Common\GenericSWI2CSendBlockContinue.Inc
+byte %'ModuleName'%.%SendBlockContinue(void *Ptr, word Siz, word *Snt)
+{
+  register word I;
+  bool Acknowledge;
+  word Trial;
+  word timeout;
+
+  *Snt = 0U;
+  Trial = TRIALS;
+  for (I = 0U; I < Siz; I++) {
+    Write (*((const byte*)Ptr + I) );
+    if (GetAck()) {
+      I2C1_OnNACK();
+      SCL_SetDir((bool)OUTPUT);
+      SCL_ClrVal();              /* CLOCK LOW PULSE */
+      InternalStop();
+      return ERR_BUSY;
+    } else {
+      SCL_SetDir((bool)OUTPUT);
+      SCL_ClrVal();              /* CLOCK LOW PULSE */
+      Delay();
+    }
+    ++(*Snt);
+  }
+  Delay();
+  timeout = 65535U;
+  while((SDA_GetVal()==0U)&&(timeout!=0U)) { /* WAIT FOR CLOCK HIGH PULSE */
+    timeout--;
+    %'ModuleName'%.OSYIELD();
+  }
+  if (timeout==0) {
+    return ERR_BUSY;
+  }
+  return ERR_OK;
+}
+
+%endif %- SendBlockContinue
+%-BW_METHOD_END SendBlockContinue
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN RecvBlock
 %ifdef RecvBlock
@@ -875,6 +927,7 @@ byte %'ModuleName'%.%GetSelected(byte *Slv)
 
 %endif %- GetSelected
 %-BW_METHOD_END GetSelected
+%-************************************************************************************************************
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

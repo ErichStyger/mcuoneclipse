@@ -264,6 +264,20 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="SendBlockContinue">
+<b>SendBlockContinue</b></a>
+ - Same is SendBlock() but does not send start condition. When working as a MASTER, this method writes 7 bits of slave address plus R/W bit = 0 to the I2C bus and then writes the block of characters to the bus. If the component is disabled (by the &quot;Disable&quot; method or initialization), the block is moved to the output buffer if the 'Output buffer size' property is different from zero. The content of the output buffer is sent immediately with the stop condition at the end when the component is enabled by the &quot;Enable&quot; method. After the output buffer transmission, the whole output buffer is cleared. The slave address must be specified before by the &quot;SelectSlave&quot; method or in component initialization section of 'Slave address init' property.  When working as a SLAVE, this method writes block of characters to the bus. If the ERR_NOTAVAIL error code is returned, the whole block is successfully sent to a master but the master device responds by an acknowledgment instead of no acknowledgment sent at the end of the last block byte transfer. 'OnError' event is called in this case.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> byte SendBlockContinue(void *Ptr, word Siz, word *Snt)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Ptr:void*</i> - A pointer to the block of data to send</li>
+<li><i>Siz:word</i> - The size of the block</li>
+<li><i>Snt: Pointer to word</i> - A pointer to the number of data that are sent (copied to buffer)</li>
+<li><i>Return value:byte</i> - Error code, possible codes:<br />ERR_OK - OK<br />ERR_SPEED - This device does not work in the active speed mode<br />ERR_BUSY - The slave device is busy, it does not respond by the acknowledgment (MASTER mode only)<br />ERR_TXFULL - Output buffer is full (MASTER mode only)<br />ERR_NOTAVAIL - The master device sends acknowledgment instead of no acknowledgment after the last byte transfer (SLAVE mode only)<br />ERR_DISABLED - Device is disabled<br />ERR_BUSOFF - Clock timeout elapsed (SLAVE mode only)
+</li>
+</ul><br />
+</li>
 <li><a name="RecvBlock">
 <b>RecvBlock</b></a>
  - When working as a MASTER, this method writes 7 bits of slave address plus R/W bit = 1 to the I2C bus and then reads the block of characters from the bus. The slave address must be specified before by the &quot;SelectSlave&quot; method or in component initialization section of 'Slave address init' property.  When working as a SLAVE, this method reads the block of characters from the bus.
