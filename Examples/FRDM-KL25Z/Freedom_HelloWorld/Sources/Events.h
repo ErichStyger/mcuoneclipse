@@ -25,6 +25,7 @@
 #include "IO_Map.h"
 #include "AS1.h"
 #include "RxBuf.h"
+#include "CS1.h"
 #include "PE_LDD.h"
 
 void Cpu_OnNMIINT(void);
