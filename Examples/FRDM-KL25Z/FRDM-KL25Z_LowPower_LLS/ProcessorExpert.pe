@@ -102,7 +102,7 @@
         <ItemSymbol>ICLK</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>IntOsc</ItemSymbol>
@@ -283,7 +283,7 @@
         <ReadOnly>false</ReadOnly>
         <ListItemCount>1</ListItemCount>
         <UserReadOnly>false</UserReadOnly>
-        <Expanded>false</Expanded>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>CLKMode0</ItemSymbol>
@@ -960,7 +960,7 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>PeriphDeviceFTFL_FlashConfig</ItemSymbol>
@@ -1620,7 +1620,7 @@
         <ItemSymbol>PMCGrp</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>PeriphDevicePMC</ItemSymbol>
@@ -2136,7 +2136,7 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>IntNMI</ItemSymbol>
@@ -2488,7 +2488,7 @@
         <ItemSymbol>LLWULLWUSettingGrp</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUExtPin5</ItemSymbol>
@@ -3081,7 +3081,7 @@
         <ItemSymbol>SetOperationMode_WAIT</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Expanded>false</Expanded>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>SetOperationMode_WAIT_SLEEPONEXIT</ItemSymbol>
@@ -7178,7 +7178,7 @@
               <ItemSymbol>IntPeriodTmg</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>init:;prec:5%;RTS:none</Value>
+              <Value>init:1 sec;prec:5%;RTS:none;clksrc_presc[SpeedMode0]LPO_1kHzSrc</Value>
               <RuntimeSetting>0</RuntimeSetting>
               <ReqDevPrescHigh>25483472622</ReqDevPrescHigh>
               <ReqStrDevPrescHigh>LPO_1kHzSrc</ReqStrDevPrescHigh>
@@ -7985,7 +7985,7 @@
         <ItemSymbol>Tmg_Period</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>init:;prec:5%;RTS:none</Value>
+        <Value>init:1 sec;prec:5%;RTS:none;clksrc_presc[SpeedMode0]LPO_1kHzSrc</Value>
         <RuntimeSetting>0</RuntimeSetting>
         <ReqDevPrescHigh>25483472622</ReqDevPrescHigh>
         <ReqStrDevPrescHigh>LPO_1kHzSrc</ReqStrDevPrescHigh>
