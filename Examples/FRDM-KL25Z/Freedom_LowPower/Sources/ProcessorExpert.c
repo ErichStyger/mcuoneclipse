@@ -70,6 +70,7 @@ int main(void)
   LED2_On();
   WAIT1_Waitms(1000);
   LED2_Off();
+  
 #if PL_HAS_LOW_POWER
   LP_Init();
 #endif
