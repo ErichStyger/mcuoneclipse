@@ -548,7 +548,7 @@ void %'ModuleName'%.%SensorOn(void)
   %@AccelADC@'ModuleName'%.Enable(); /* enable AD block */
   %endif
   %@SleepPin@'ModuleName'%.SetVal(); /* the sleep pin is low active: setting it to high to enable sensor */
-  %@Wait@'ModuleName'%.Waitms(10); /* wait some time to give the sensor some time to wake up */
+  //%@Wait@'ModuleName'%.Waitms(10); /* wait some time to give the sensor some time to wake up */
 }
 
 %endif %- SensorOn
