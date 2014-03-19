@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site pack200="true">
+<!-- 
+	mirrorsURL="http://www.rxtx.org/eclipse/mirrors.xml"
+	digestURL="http://www.rxtx.org/eclipse/">
+-->
+   <description url="http://users.frii.com/jarvi/rxtx/eclipse/site.xml">
+      This is the RXTX Update Site.
+   </description>
+<!-- BEGIN_2_1_7_2 -->
+<!--
+   <feature url="features/gnu.io.rxtx_2.1.7.200704042019.jar" id="gnu.io.rxtx" version="2.1.7.200704042019" os="linux,macosx,solaris,win32" arch="ppc,sparc,x86,x86_64">
+      <category name="RXTX 2.1-7r2"/>
+   </feature>
+   <category-def name="RXTX 2.1-7r2" label="RXTX 2.1-7r2">
+      <description>
+         RXTX 2.1-7r2 as available from www.rxtx.org
+      </description>
+   </category-def>
+-->
+<!-- END_2_1_7_2 -->
+<!-- BEGIN_2_1_7_3 -->
+   <feature url="features/gnu.io.rxtx_2.1.7.3_v20070718-7B57e7TAXMAAqAqGr.jar" id="gnu.io.rxtx" version="2.1.7.3_v20070718-7B57e7TAXMAAqAqGr" os="linux,macosx,solaris,win32" arch="ppc,sparc,x86,x86_64">
+      <category name="RXTX 2.1-7r3"/>
+   </feature>
+   <feature url="features/gnu.io.rxtx.sdk_2.1.7.3_v20070718-417C7CP1Bh_dDhQLBrBrHs.jar" id="gnu.io.rxtx.sdk" version="2.1.7.3_v20070718-417C7CP1Bh_dDhQLBrBrHs" os="linux,macosx,solaris,win32" arch="ppc,sparc,x86,x86_64">
+      <category name="RXTX 2.1-7r3"/>
+   </feature>
+   <category-def name="RXTX 2.1-7r3" label="RXTX 2.1-7r3">
+      <description>
+         RXTX 2.1-7r2 plus disable-version-output (RXTXCommDriver v1.16.2.57, RXTX bug 71), disable-lockfiles, sparc-sun-solaris2.7 support (RXTX bug 73)
+      </description>
+   </category-def>
+<!-- END_2_1_7_3 -->
+<!-- BEGIN_2_1_7_4 -->
+   <feature url="features/gnu.io.rxtx_2.1.7.4_v20071016-7B57e7UAXMAAqGAGf.jar" id="gnu.io.rxtx" version="2.1.7.4_v20071016-7B57e7UAXMAAqGAGf" os="linux,macosx,solaris,win32" arch="ppc,sparc,x86,x86_64">
+      <category name="RXTX 2.1-7r4"/>
+   </feature>
+   <feature url="features/gnu.io.rxtx.sdk_2.1.7.4_v20071016-417C7DP1Bh_eEaQJBrHBHg.jar" id="gnu.io.rxtx.sdk" version="2.1.7.4_v20071016-417C7DP1Bh_eEaQJBrHBHg" os="linux,macosx,solaris,win32" arch="ppc,sparc,x86,x86_64">
+      <category name="RXTX 2.1-7r4"/>
+   </feature>
+   <category-def name="RXTX 2.1-7r4" label="RXTX 2.1-7r4">
+      <description>
+         RXTX 2.1-7r2 plus disable-version-output (RXTXCommDriver v1.16.2.57, RXTX bug 71), fix-deadlock (CommPortIdentifier, RXTX bug 83), disable-lockfiles, sparc-sun-solaris2.7 support (RXTX bug 73)
+      </description>
+   </category-def>
+<!-- END_2_1_7_4 -->
+</site>
