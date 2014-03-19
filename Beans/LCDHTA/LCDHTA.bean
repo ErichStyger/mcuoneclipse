@@ -4,7 +4,7 @@
     <Name>LCDHTA</Name>
     <Description>Character LCD Display</Description>
     <Author>Erich Styger</Author>
-    <Version>01.018</Version>
+    <Version>01.019</Version>
     <Icon>LCDHTA</Icon>
     <TypesFiles>PE,LCDHTA\LCDHTA</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -117,7 +117,7 @@
                     <EditLine>true</EditLine>
                     <DefaultValue>0</DefaultValue>
                     <MinValue>0</MinValue>
-                    <MaxValue>-1</MaxValue>
+                    <MaxValue>255</MaxValue>
                     <Bases>DEC HEX</Bases>
                     <DefaultBase>HEX</DefaultBase>
                     <ExtraHintDisabled>false</ExtraHintDisabled>
@@ -134,7 +134,7 @@
                     <EditLine>true</EditLine>
                     <DefaultValue>64</DefaultValue>
                     <MinValue>0</MinValue>
-                    <MaxValue>-1</MaxValue>
+                    <MaxValue>255</MaxValue>
                     <Bases>DEC HEX</Bases>
                     <DefaultBase>HEX</DefaultBase>
                     <ExtraHintDisabled>false</ExtraHintDisabled>
@@ -151,7 +151,7 @@
                     <EditLine>true</EditLine>
                     <DefaultValue>16</DefaultValue>
                     <MinValue>0</MinValue>
-                    <MaxValue>-1</MaxValue>
+                    <MaxValue>255</MaxValue>
                     <Bases>DEC HEX</Bases>
                     <DefaultBase>HEX</DefaultBase>
                     <ExtraHintDisabled>false</ExtraHintDisabled>
@@ -168,7 +168,7 @@
                     <EditLine>true</EditLine>
                     <DefaultValue>80</DefaultValue>
                     <MinValue>0</MinValue>
-                    <MaxValue>-1</MaxValue>
+                    <MaxValue>255</MaxValue>
                     <Bases>DEC HEX</Bases>
                     <DefaultBase>HEX</DefaultBase>
                     <ExtraHintDisabled>false</ExtraHintDisabled>
