@@ -4,9 +4,9 @@
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
     <ModificationStamp>43</ModificationStamp>
-    <Date>2014-01-01</Date>
+    <Date>2014-03-18</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion>1.8.0.RT5_b1337-1809</PEversion>
+    <PEversion>1.8.1.RT5_b1349-1839</PEversion>
   </Header>
   <Options>
     <EventsDirectory>Sources</EventsDirectory>
@@ -4247,7 +4247,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.016</BeanVersion>
+    <BeanVersion>01.018</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -13015,6 +13015,44 @@
         </InheritedComponentState>
         <Index>0</Index>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>LineAddressesGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Line1Address</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+        <Base>HEX</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Line2Address</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>64</Value>
+        <Base>HEX</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Line3Address</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>16</Value>
+        <Base>HEX</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Line4Address</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>80</Value>
+        <Base>HEX</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -13239,7 +13277,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.092</BeanVersion>
+    <BeanVersion>01.095</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -13787,6 +13825,17 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>always</LastUserSel>
         <UsrMethodName>ScanDecimal32sNumber</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>strFind</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>strFind</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Methods>
