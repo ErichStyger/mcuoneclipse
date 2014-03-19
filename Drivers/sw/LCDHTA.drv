@@ -354,10 +354,10 @@ byte %'ModuleName'%.%UseDisplay(byte display);
 #define CursorOnCmd    (DisplayOnOffControlCmd|DisplayOnOffControl_DisplayOn|DisplayOnOffControl_CursorOn)
 #define CursorOffCmd   (DisplayOnOffControlCmd|DisplayOnOffControl_DisplayOn)
 #define GotoXYCmd      0x80  /* 0x80 | Display RAM address */
-#define Line1Offset    0x00  /* Display RAM address of first line */
-#define Line2Offset    0x40  /* Display RAM address of second line */
-#define Line3Offset    0x10  /* Display RAM address of third line */
-#define Line4Offset    0x50  /* Display RAM address of fourth line */
+#define Line1Offset    %Line1Address /* Display RAM address of first line, usually 0x00 */
+#define Line2Offset    %Line2Address /* Display RAM address of second line, usually 0x40 */
+#define Line3Offset    %Line3Address /* Display RAM address of third line, usually 0x10 */
+#define Line4Offset    %Line4Address /* Display RAM address of fourth line, usually 0x50 */
 #define FirstLineCmd   (GotoXYCmd|Line1Offset)
 #define SecondLineCmd  (GotoXYCmd|Line2Offset)
 #define ThirdLineCmd   (GotoXYCmd|Line3Offset)

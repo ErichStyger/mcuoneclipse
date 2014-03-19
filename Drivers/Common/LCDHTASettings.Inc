@@ -3,6 +3,12 @@
 %;**%>12 HW Interface %>60: %get(HWInterface,Text)
 %;**%>14 LCD Type %>60: %get(LCDType,Text)
 %;**%>14 LCD Lines %>60: %get(LCD_Nof_Lines,Text)
+%;**%>14 Characters per Line %>60: %get(CharsPerLine,Text)
+%;**%>14 Line Addresses %>60: %get(LineAddressesGroup,Text)
+%;**%>16 Line 1 %>60: %get(Line1Address,Text)
+%;**%>16 Line 2 %>60: %get(Line2Address,Text)
+%;**%>16 Line 3 %>60: %get(Line3Address,Text)
+%;**%>16 Line 4 %>60: %get(Line4Address,Text)
 %;**%>14 LCD Enable Signal %>60: %get(Symbol,Text)
 %if %get(Symbol, Bool) = 'yes'
 %;**%>16 LCD Enable signal %>60: %get(LCD_ENABLE,Text)
@@ -16,6 +22,11 @@
 %endif %- ReadFromDisplay
 %;**%>14 Wait (us) %>60: %get(WaitDisplayUs,Text)
 %;**%>14 E signal %>60: %get(EN,Text)
+%;**%>14 E2 %>60: %get(E2Enabled,Text)
+%if %get(E2Enabled, Bool) = 'yes'
+%;**%>16 E2 signal %>60: %get(E2,Text)
+%else %- E2Enabled
+%endif %- E2Enabled
 %;**%>14 RS signal %>60: %get(RS,Text)
 %;**%>14 Data/Control Bus %>60: %get(DataControlBusGroup,Text)
 %;**%>16 Data/Control Bus Width %>60: %get(DataBusWidth,Text)
