@@ -41,9 +41,6 @@
 #include "LED3.h"
 #include "LEDpin4.h"
 #include "BitIoLdd4.h"
-#include "AS1.h"
-#include "ASerialLdd1.h"
-#include "CLS1.h"
 #include "UTIL1.h"
 #include "FRTOS1.h"
 #include "CS1.h"
@@ -57,6 +54,18 @@
 #include "Platform.h"
 #include "Shell.h"
 #include "LowPower.h"
+
+#if PL_HAS_RTOS
+static portTASK_FUNCTION(BlinkTask, pvParameters) {
+
+  (void)pvParameters; /* not used */
+  for(;;) {
+    LED2_Neg();
+    FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
+  } /* for */
+}
+#endif /* PL_HAS_RTOS */
+
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -73,6 +82,11 @@ int main(void)
   
 #if PL_HAS_LOW_POWER
   LP_Init();
+#endif
+#if PL_HAS_RTOS
+  if (FRTOS1_xTaskCreate(BlinkTask, "Blink", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL) != pdPASS) {
+    for(;;){} /* error */
+  }
 #endif
 #if PL_HAS_SHELL
   SHELL_Init();
