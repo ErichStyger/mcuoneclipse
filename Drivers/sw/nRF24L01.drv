@@ -402,7 +402,7 @@ void %'ModuleName'%.%Init(void);
 %endif %- Init
 %-BW_METHOD_END Init
 %-INHERITED_EVENT_BEGIN IRQ OnInterrupt
-%ifdef @IRQ@OnInterrupt
+%if defined(IRQ) & defined(@IRQ@OnInterrupt)
 void %@IRQ@OnInterrupt(void);
 
 %endif %- @IRQ@OnInterrupt
@@ -793,7 +793,7 @@ void %'ModuleName'%.%Init(void)
 %-BW_METHOD_END Init
 %-************************************************************************************************************
 %-INHERITED_EVENT_BEGIN IRQ OnInterrupt
-%ifdef @IRQ@OnInterrupt
+%if defined(IRQ) & defined(@IRQ@OnInterrupt)
 %include Common\GeneralInternal.inc (OnInterrupt)
 void %@IRQ@OnInterrupt(void)
 {
