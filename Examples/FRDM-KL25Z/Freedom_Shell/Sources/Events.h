@@ -41,6 +41,7 @@
 #include "GI2C1.h"
 #include "MMA1.h"
 #include "I2C1.h"
+#include "CS1.h"
 #include "TU1.h"
 #include "TU3.h"
 #include "PE_LDD.h"
@@ -61,7 +62,7 @@ void Cpu_OnNMIINT(void);
 */
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

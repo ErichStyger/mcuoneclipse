@@ -110,6 +110,7 @@ static void CDC_Run(void) {
       cnt++;
       if ((cnt%1024)==0) { /* from time to time, write some text */
         (void)CDC1_SendString((unsigned char*)"Type some text and it will echo.\r\n");
+        CDC1_SendBlock((unsigned char*)"hello?\r\n", sizeof("hello?\r\n")-1);
       }
     }
   }

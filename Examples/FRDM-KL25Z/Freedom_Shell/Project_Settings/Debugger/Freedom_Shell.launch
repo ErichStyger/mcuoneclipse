@@ -53,6 +53,11 @@
 <listAttribute key="com.freescale.cdt.debug.cw.Embedded Download.TaskSuccessiveRuns"/>
 <listAttribute key="com.freescale.cdt.debug.cw.Embedded Download.TaskTypes"/>
 <listAttribute key="com.freescale.cdt.debug.cw.ExecutablePath"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.InitializePC" value="true"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.InitializePCAtProgramEntryPoint" value="true"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.InitializePCAtSymbol" value="main"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.InitializePCAtUserSpecified" value="false"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.LaunchMode" value="DOWNLOAD"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.PN_StopAtExit" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.PN_StopAtProgramEntryPoint" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.PN_StopAtStartUp" value="true"/>
@@ -60,11 +65,13 @@
 <stringAttribute key="com.freescale.cdt.debug.cw.RefreshPolicy.RefreshPeriod" value="2.0"/>
 <listAttribute key="com.freescale.cdt.debug.cw.RemoteDownload"/>
 <listAttribute key="com.freescale.cdt.debug.cw.RemotePath"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.ResumeProgram" value="true"/>
 <listAttribute key="com.freescale.cdt.debug.cw.SMPCores"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.SYNC_WITH_ENCL_PROJ" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.Symbolics.CacheSymbolicsBetweenRuns" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.Symbolics.UseExecutableCopy" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.UDPPort" value="1234"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.UseApplication" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.RetryConnectionOn" value="false"/>
 <intAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.RetryTimeout" value="20"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.RetryWithTimeoutOn" value="false"/>
@@ -82,9 +89,11 @@
 <stringAttribute key="com.freescale.cdt.debug.cw.debuggerAddress" value="127.0.0.1"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.disableIO" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.ethCtrl" value="Ethernet Controller 1"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.executeInitScripts" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.executePerCoresReset" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.executePerprocessorReset" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.executeReset" value="true"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.executeResetSequence" value="true"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.gateway" value="127.0.0.1"/>
 <listAttribute key="com.freescale.cdt.debug.cw.initPathList">
 <listEntry value="${ProjDirPath}/Project_Settings/Debugger/init_kinetis.tcl"/>
@@ -94,12 +103,16 @@
 <listEntry value=""/>
 </listAttribute>
 <stringAttribute key="com.freescale.cdt.debug.cw.netMask" value="255.255.255.255"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.osawareness.osContributorID" value="None"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.osawareness.rtospluginname" value=""/>
+<stringAttribute key="com.freescale.cdt.debug.cw.osawareness.targetos" value="None"/>
 <listAttribute key="com.freescale.cdt.debug.cw.perCoreResetList"/>
 <listAttribute key="com.freescale.cdt.debug.cw.perProcessorResetList"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.processor" value="Generic"/>
 <listAttribute key="com.freescale.cdt.debug.cw.runOutOfResetList">
 <listEntry value="false"/>
 </listAttribute>
+<booleanAttribute key="com.freescale.cdt.debug.cw.skipSystemInitialization" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.targetAddress" value="127.0.0.1"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.useGateway" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.useHSSTIO" value="false"/>
@@ -122,9 +135,24 @@
 <listEntry value="Debugger PIC Settings Panel"/>
 <listEntry value="Other Executables"/>
 <listEntry value="Symbolics"/>
+<listEntry value="osawareness"/>
 </listAttribute>
+<intAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_MASK_0" value="0"/>
+<intAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_MASK_1" value="0"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_MATCH_DATA_SIZE_0" value="Word"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_MATCH_DATA_SIZE_1" value=""/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_MATCH_EV_0" value="Disabled"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_MATCH_EV_1" value="Disabled"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_VALUE_0" value="0"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.DWT_COMP_VALUE_1" value="0"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.ETM_ICE_START_MASK" value="0"/>
+<stringAttribute key="com.freescale.sa.arm.targetconfig.ETM_ICE_STOP_MASK" value="0"/>
+<booleanAttribute key="com.freescale.sa.arm.targetconfig.ETM_TRACE_START_STOP_ENABLE" value="false"/>
+<booleanAttribute key="com.freescale.sa.mcu.launch.BACKUP_ELD" value="true"/>
+<booleanAttribute key="com.freescale.sa.mcu.launch.CONTINUOUS_TRACE" value="false"/>
 <booleanAttribute key="com.freescale.sa.mcu.launch.ENABLE_ANALYSIS" value="false"/>
 <booleanAttribute key="com.freescale.sa.mcu.launch.ENABLE_LOGGING" value="false"/>
+<intAttribute key="com.freescale.sa.mcu.launch.MTB_SIZE_IDX" value="5"/>
 <booleanAttribute key="com.freescale.sa.mcu.launch.SET_TGT_SETTING_ON_RUN" value="false"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.CommandLineArgs" value="arm_icd "/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.ConfigFile" value=""/>
@@ -181,7 +209,7 @@
 <booleanAttribute key="org.eclipse.cdt.launch.ENABLE_REGISTER_BOOKKEEPING" value="false"/>
 <booleanAttribute key="org.eclipse.cdt.launch.ENABLE_RESTORE_WATCHPOINTS" value="true"/>
 <booleanAttribute key="org.eclipse.cdt.launch.ENABLE_VARIABLE_BOOKKEEPING" value="false"/>
-<stringAttribute key="org.eclipse.cdt.launch.FORMAT" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&lt;contentList&gt;&lt;content id=&quot;*p-p-UTIL1_ScanDecimal16uNumber-(format)&quot; val=&quot;0&quot;/&gt;&lt;content id=&quot;*p-p-LEDG_ParseCommand-(format)&quot; val=&quot;0&quot;/&gt;&lt;content id=&quot;stacked_r0-HardFault_HandlerC-(cast)&quot; val=&quot;unsigned char&quot;/&gt;&lt;content id=&quot;stacked_r0-HardFault_HandlerC-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;addr-MMA_ReadReg-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;[0]-InpData--(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;[4]-cmdBuf-FSSH1_ReadAndParseLine-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;cmdBuf-FSSH1_ReadAndParseCmd-(cast_to_array)&quot; val=&quot;0:5&quot;/&gt;&lt;content id=&quot;reg-TestLED-(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;val-TestLED-(cast)&quot; val=&quot;int&quot;/&gt;&lt;content id=&quot;[2]-pcWriteBuffer-vTaskGetRunTimeStats-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;taskListBufferP-FSSH1_PrintStatus-(cast_to_array)&quot; val=&quot;0:50&quot;/&gt;&lt;content id=&quot;pcWriteBuffer-vTaskGetRunTimeStats-(cast_to_array)&quot; val=&quot;0:50&quot;/&gt;&lt;content id=&quot;reg-MMA_ReadReg-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;addr--(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;val-MMA_ReadReg-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;val--(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;vval--(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;MMA_DataTransmittedFlg--(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;MMA_DataTransmittedFlg--(cast)&quot; val=&quot;unsigned char&quot;/&gt;&lt;content id=&quot;MMA_DataReceivedFlg--(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;*p-p-LEDR_ParseCommand-(format)&quot; val=&quot;0&quot;/&gt;&lt;content id=&quot;cmdBuf-FSSH1_ReadAndParseLine-(cast_to_array)&quot; val=&quot;0:10&quot;/&gt;&lt;content id=&quot;c-FSSH1_ReadLine-(format)&quot; val=&quot;1&quot;/&gt;&lt;/contentList&gt;"/>
+<stringAttribute key="org.eclipse.cdt.launch.FORMAT" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&lt;contentList&gt;&lt;content id=&quot;c-FSSH1_ReadLine-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;cmdBuf-FSSH1_ReadAndParseLine-(cast_to_array)&quot; val=&quot;0:10&quot;/&gt;&lt;content id=&quot;*p-p-LEDR_ParseCommand-(format)&quot; val=&quot;0&quot;/&gt;&lt;content id=&quot;MMA_DataReceivedFlg--(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;MMA_DataTransmittedFlg--(cast)&quot; val=&quot;unsigned char&quot;/&gt;&lt;content id=&quot;MMA_DataTransmittedFlg--(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;vval--(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;val--(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;val-MMA_ReadReg-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;addr--(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;reg-MMA_ReadReg-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;pcWriteBuffer-vTaskGetRunTimeStats-(cast_to_array)&quot; val=&quot;0:50&quot;/&gt;&lt;content id=&quot;taskListBufferP-FSSH1_PrintStatus-(cast_to_array)&quot; val=&quot;0:50&quot;/&gt;&lt;content id=&quot;[2]-pcWriteBuffer-vTaskGetRunTimeStats-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;val-TestLED-(cast)&quot; val=&quot;int&quot;/&gt;&lt;content id=&quot;reg-TestLED-(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;cmdBuf-FSSH1_ReadAndParseCmd-(cast_to_array)&quot; val=&quot;0:5&quot;/&gt;&lt;content id=&quot;[4]-cmdBuf-FSSH1_ReadAndParseLine-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;[0]-InpData--(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;addr-MMA_ReadReg-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;stacked_r0-HardFault_HandlerC-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;stacked_r0-HardFault_HandlerC-(cast)&quot; val=&quot;unsigned char&quot;/&gt;&lt;content id=&quot;*p-p-LEDG_ParseCommand-(format)&quot; val=&quot;0&quot;/&gt;&lt;content id=&quot;*p-p-UTIL1_ScanDecimal16uNumber-(format)&quot; val=&quot;0&quot;/&gt;&lt;/contentList&gt;"/>
 <stringAttribute key="org.eclipse.cdt.launch.GLOBAL_VARIABLES" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;globalVariableList&gt;&#13;&#10;&lt;globalVariable name=&quot;PE_LDD_DeviceDataList&quot; path=&quot;&quot;/&gt;&#13;&#10;&lt;/globalVariableList&gt;&#13;&#10;"/>
 <stringAttribute key="org.eclipse.cdt.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList/&gt;&#13;&#10;"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="FLASH/Freedom_Shell.elf"/>
