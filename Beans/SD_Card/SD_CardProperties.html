@@ -279,46 +279,10 @@ The following items are available only if the group is enabled (the value is "En
     <b>Fast Baud Rate Mode</b></a> - Defines which SPI baud rate mode shall be used in InitCommChannelMethod(). 0 denotes the initial baud rate specified in the SPI configuration component. (max 12 MHz)
     </li>
     <li>
-    <a name="LDD_HW_SPI_Enabled">
-    <b>LDD HW SPI</b></a> - If enabled, a LDD (Logical Device Driver) HW SPI interface is used<br />
-The following items are available only if the group is enabled (the value is "Enabled"):<br />
-
-    <ul>
-      <li>
-      <a name="LDDHWSPI">
-      <b>LDD HW SPI</b></a> - Interface to the Logical Device Driver SPI
-      </li>
-    </ul>
-    </li>
-    <li>
-    <a name="nonLDD_HW_SPI_Enabled">
-    <b>non-LDD HW SPI</b></a> - If enabled, a non-LDD (traditional) HW SPI interface is used<br />
-The following items are available only if the group is enabled (the value is "Enabled"):<br />
-
-    <ul>
-      <li>
-      <a name="HWSPI">
-      <b>HW SPI</b></a> - SPI communication interface
-      </li>
-    </ul>
+    <a name="HWSPI">
+    <b>HW SPI</b></a> - SPI communication interface
     </li>
   </ul>
-  </li>
-  <li>
-  <a name="SPI_Read_Write_Macros">
-  <b>SPI Read/Write Macros</b></a> - If enabled, mcros for optimization purpuse to read and write/read from the SPI bus can be provided. With this access to the SPI bus can be optimized.<br />
-The following items are available only if the group is enabled (the value is "Enabled"):<br />
-
-  <ul>
-    <li>
-    <a name="SPIMacrosList">
-    <b>SPI Macros</b></a> - Macros
-    </li>
-  </ul>
-  </li>
-  <li>
-  <a name="ActivateSPIBus">
-  <b>Activate SPI bus</b></a> - If multiple devices are using the same SPI bus, and if the SPI bus protocol is not the same, then this option needs to by set to 'yes'. This ensures that the bus protocol is changed properly.
   </li>
   <li>
   <a name="SlaveSelectEnabled">
@@ -327,30 +291,14 @@ The following items are available only if the group is enabled (the value is "En
 
   <ul>
     <li>
-    <a name="LDD_SS_Group">
-    <b>LDD SS</b></a> - Logical Device Driver Slave/Chip Select Signal<br />
-The following items are available only if the group is enabled (the value is "Enabled"):<br />
-
-    <ul>
-      <li>
-      <a name="LDDSS">
-      <b>Slave Select Pin</b></a> - Logical Device Driver for Slave/Chip select pin
-      </li>
-    </ul>
-    </li>
-    <li>
-    <a name="nonLDD_SS_Group">
-    <b>non-LDD SS</b></a> - Non-Logical Device Driver Slave/Chip Select Signal<br />
-The following items are available only if the group is enabled (the value is "Enabled"):<br />
-
-    <ul>
-      <li>
-      <a name="SS">
-      <b>Slave Select pin</b></a> - Device (Slave) select pin
-      </li>
-    </ul>
+    <a name="SS">
+    <b>Slave Select pin</b></a> - Device (Slave) select pin
     </li>
   </ul>
+  </li>
+  <li>
+  <a name="ActivateSPIBus">
+  <b>Activate SPI bus</b></a> - If multiple devices are using the same SPI bus, and if the SPI bus protocol is not the same, then this option needs to by set to 'yes'. This ensures that the bus protocol is changed properly.
   </li>
   <li>
   <a name="ActivateGroup">
@@ -359,28 +307,8 @@ The following items are available only if the group is enabled (the value is "En
 
   <ul>
     <li>
-    <a name="LDD_Activate_Group">
-    <b>LDD Activate</b></a> - Logical Device Driver Activate interface<br />
-The following items are available only if the group is enabled (the value is "Enabled"):<br />
-
-    <ul>
-      <li>
-      <a name="LDDACT">
-      <b>Activate pin</b></a> - If using the memory card with a tristate bus driver, then this needs to be activated. A high level on this pin activates the bus for the memory card.
-      </li>
-    </ul>
-    </li>
-    <li>
-    <a name="nonLDD_Activate_Grp">
-    <b>non-LDD Activate</b></a> - classic (non Logical Device Driver) Activate interface<br />
-The following items are available only if the group is enabled (the value is "Enabled"):<br />
-
-    <ul>
-      <li>
-      <a name="ACT">
-      <b>Activate pin</b></a> - If using the memory card with a tristate bus driver, then this needs to be activated. A high level on this pin activates the bus for the memory card.
-      </li>
-    </ul>
+    <a name="ACT">
+    <b>Activate pin</b></a> - If using the memory card with a tristate bus driver, then this needs to be activated. A high level on this pin activates the bus for the memory card.
     </li>
   </ul>
   </li>
@@ -391,32 +319,12 @@ The following items are available only if the group is enabled (the value is "En
 
   <ul>
     <li>
+    <a name="CDI">
+    <b>Card detection pin</b></a> - Card detection pin is on low level in case a card is inserted.
+    </li>
+    <li>
     <a name="CardDetectIsLow">
     <b>Card Detect is LOW active</b></a> - Normally the driver will detect a LOW signal on this pin as card detection of the card. As there are card holders which do have HIGH signal instead, this setting can be used.
-    </li>
-    <li>
-    <a name="LDD_CD_Group">
-    <b>LDD CD</b></a> - LDD (Logical Device Driver) Card Detect Interface<br />
-The following items are available only if the group is enabled (the value is "Enabled"):<br />
-
-    <ul>
-      <li>
-      <a name="LDDCDI">
-      <b>Card detection pin</b></a> - LDD interface to Card Detect pin
-      </li>
-    </ul>
-    </li>
-    <li>
-    <a name="nonLDD_CD_Group">
-    <b>non-LDD CD</b></a> - classic (non-LDD) Card Detect interface<br />
-The following items are available only if the group is enabled (the value is "Enabled"):<br />
-
-    <ul>
-      <li>
-      <a name="CDI">
-      <b>Card detection pin</b></a> - Card detection pin is on low level in case a card is inserted.
-      </li>
-    </ul>
     </li>
   </ul>
   </li>
@@ -435,28 +343,8 @@ The following items are available only if the group is enabled (the value is "En
     <b>Write Protect is LOW active</b></a> - Normally the driver will detect a LOW signal on this pin as write protection of the card. As there are card holders which do have HIGH signal for the write protection, this setting can be used.
     </li>
     <li>
-    <a name="LDD_WP_Group">
-    <b>LDD WP</b></a> - LDD (Logical Device Driver) interface for WP (Write Protect) pin<br />
-The following items are available only if the group is enabled (the value is "Enabled"):<br />
-
-    <ul>
-      <li>
-      <a name="LDDWP">
-      <b>Write Protect Pin</b></a> - Interface to Write Protect (WP) pin
-      </li>
-    </ul>
-    </li>
-    <li>
-    <a name="nonLDD_WP_Group">
-    <b>non-LDD WP</b></a> - classic (non-Logical Device Driver) Write Protect Interface<br />
-The following items are available only if the group is enabled (the value is "Enabled"):<br />
-
-    <ul>
-      <li>
-      <a name="WP">
-      <b>WP pin</b></a> - Write protect pin, low if write protection is detected. Note that this is NOT a hardware write protection: even if the write protection is set on the card, there is no hardware way to prevent writing to the card.
-      </li>
-    </ul>
+    <a name="WP">
+    <b>WP pin</b></a> - Write protect pin, low if write protection is detected. Note that this is NOT a hardware write protection: even if the write protection is set on the card, there is no hardware way to prevent writing to the card.
     </li>
   </ul>
   </li>
