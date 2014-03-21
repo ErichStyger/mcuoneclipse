@@ -80,7 +80,7 @@ void Cpu_OnNMIINT(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *pcTaskName)
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName)
 {
   /* This will get called if a stack overflow is detected during the context
      switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack
@@ -162,7 +162,7 @@ void SMAC1_ResetIndication(void)
 
 /*
 ** ===================================================================
-**     Event       :  SMAC1_DataIndicationPacket (module Events)
+**     Event       :  PHY1_DataIndicationPacket (module Events)
 **
 **     Component   :  PHY1 [SPHY]
 **     Description :
@@ -174,7 +174,7 @@ void SMAC1_ResetIndication(void)
 ** ===================================================================
 */
 #if PL_HAS_RADIO
-void SMAC1_DataIndicationPacket(tRxPacket *sRxPacket)
+void PHY1_DataIndicationPacket(tRxPacket *sRxPacket)
 {
   RADIO_DataIndicationPacket(sRxPacket);
 }
@@ -230,6 +230,22 @@ void TU_US_OnChannel0(LDD_TUserData *UserDataPtr)
 #if PL_HAS_ULTRASONIC
   US_EventEchoCapture(UserDataPtr);
 #endif
+}
+
+/*
+** ===================================================================
+**     Event       :  SMAC1_OnInterrupt (module Events)
+**
+**     Component   :  TRSVR1 [MC13192]
+**     Description :
+**         Event raised in case of transceiver interrupt.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void SMAC1_OnInterrupt(void)
+{
+  /* Write your code here ... */
 }
 
 /* END Events */

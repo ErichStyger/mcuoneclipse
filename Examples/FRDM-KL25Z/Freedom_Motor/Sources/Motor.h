@@ -8,7 +8,7 @@
 #define MOTOR_H_
 
 #include "PE_Types.h"
-#include "FSSH1.h"
+#include "CLS1.h"
 
 typedef enum {
   MOT_DIR_FORWARD,  /*!< Motor forward direction */
@@ -66,7 +66,7 @@ MOT_Direction MOT_GetDirection(MOT_MotorDevice *motor);
  * \param[out] handled If command is handled by the parser
  * \param[in] io Std I/O handler of shell
  */
-uint8_t MOT_ParseCommand(const unsigned char *cmd, bool *handled, const FSSH1_StdIOType *io);
+uint8_t MOT_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
 
 /*!
  * \brief Initialization function.

@@ -175,7 +175,9 @@ static void _bsp_platform_init(void) {
     USB0_USBCTRL = 0x40;
   
 }
+#endif
 
+#if ONLY_HOST
 static void HOST_Run(void) {
   LEDB_On();
   for(;;) {
@@ -212,7 +214,7 @@ void HOST_Init(void) {
   Cpu_SetBASEPRI(0U);
   HOST_Run();
 #else
-  if (FRTOS1_xTaskCreate(HostTask, (signed portCHAR *)"Host", configMINIMAL_STACK_SIZE+100, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (FRTOS1_xTaskCreate(HostTask, "Host", configMINIMAL_STACK_SIZE+100, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 #endif

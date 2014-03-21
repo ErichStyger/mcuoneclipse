@@ -56,6 +56,7 @@
 #include "USB0.h"
 #include "HIDK1.h"
 #include "Tx2.h"
+#include "CS1.h"
 
 #ifdef __cplusplus
 extern "C" {

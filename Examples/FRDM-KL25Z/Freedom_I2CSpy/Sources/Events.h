@@ -26,7 +26,6 @@
 #include "WAIT1.h"
 #include "I2C1.h"
 #include "FRTOS1.h"
-#include "RTOSTICKLDD1.h"
 #include "UTIL1.h"
 #include "LEDR.h"
 #include "LEDpin1.h"
@@ -40,6 +39,7 @@
 #include "CLS1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
+#include "CS1.h"
 #include "TMOUT1.h"
 #include "RTC1.h"
 #include "AD1.h"
@@ -102,7 +102,7 @@ void Cpu_OnNMIINT(void);
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

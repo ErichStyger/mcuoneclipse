@@ -38,6 +38,7 @@
 #include "Tx1.h"
 #include "Rx1.h"
 #include "UTIL1.h"
+#include "CS1.h"
 
 
 void USB1_OnError(byte error);

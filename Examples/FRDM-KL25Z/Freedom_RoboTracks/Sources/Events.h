@@ -35,7 +35,6 @@
 #include "PE_Const.h"
 #include "IO_Map.h"
 #include "FRTOS1.h"
-#include "RTOSTICKLDD1.h"
 #include "UTIL1.h"
 #include "LEDR.h"
 #include "LEDpin1.h"
@@ -101,6 +100,7 @@
 #include "IR8.h"
 #include "BitIoLdd21.h"
 #include "RefCnt.h"
+#include "CS1.h"
 #include "Platform.h"
 
 #ifdef __cplusplus
@@ -123,7 +123,7 @@ extern "C" {
 void Cpu_OnNMIINT(void);
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
@@ -181,11 +181,11 @@ void SMAC1_ResetIndication(void);
 ** ===================================================================
 */
 #if PL_HAS_RADIO
-void SMAC1_DataIndicationPacket(tRxPacket *sRxPacket);
+void PHY1_DataIndicationPacket(tRxPacket *sRxPacket);
 #endif
 /*
 ** ===================================================================
-**     Event       :  SMAC1_DataIndicationPacket (module Events)
+**     Event       :  PHY1_DataIndicationPacket (module Events)
 **
 **     Component   :  PHY1 [SPHY]
 **     Description :
@@ -238,6 +238,19 @@ void TU_US_OnCounterRestart(LDD_TUserData *UserDataPtr);
 */
 /* ===================================================================*/
 void TU_US_OnChannel0(LDD_TUserData *UserDataPtr);
+
+void SMAC1_OnInterrupt(void);
+/*
+** ===================================================================
+**     Event       :  SMAC1_OnInterrupt (module Events)
+**
+**     Component   :  TRSVR1 [MC13192]
+**     Description :
+**         Event raised in case of transceiver interrupt.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
 
 /* END Events */
 

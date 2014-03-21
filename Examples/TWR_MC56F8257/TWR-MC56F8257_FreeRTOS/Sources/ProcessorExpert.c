@@ -24,7 +24,6 @@
 #include "UTIL1.h"
 #include "WAIT1.h"
 #include "FRTOS1.h"
-#include "RTOSSWI1.h"
 #include "TickCntr1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"

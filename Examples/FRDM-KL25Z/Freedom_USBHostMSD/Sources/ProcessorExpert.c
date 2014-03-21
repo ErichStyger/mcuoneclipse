@@ -52,6 +52,7 @@
 #include "TI1.h"
 #include "TimerIntLdd1.h"
 #include "TU1.h"
+#include "CS1.h"
 #include "FAT1.h"
 #include "TmDt1.h"
 #include "FsMSD1.h"

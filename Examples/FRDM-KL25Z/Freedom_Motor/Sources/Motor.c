@@ -7,10 +7,12 @@
 #include "Motor.h"
 #include "DIRA.h"
 #include "DIRB.h"
+#include "PWMA.h"
 #include "PWMB.h"
 #include "BrakeA.h"
 #include "BrakeB.h"
 #include "SNS0.h"
+#include "UTIL1.h"
 
 static MOT_MotorDevice motorA, motorB;
 
@@ -99,76 +101,76 @@ void MOT_MeasureCurrent(MOT_MotorDevice *motorA, MOT_MotorDevice *motorB) {
   motorB->currentValue = MeasuredValues[0];
 }
 
-static void MOT_PrintHelp(const FSSH1_StdIOType *io) {
-  FSSH1_SendHelpStr((unsigned char*)"motor", (unsigned char*)"Group of motor commands\r\n", io->stdOut);
-  FSSH1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows motor help or status\r\n", io->stdOut);
-  FSSH1_SendHelpStr((unsigned char*)"  (A|B) forward|backward", (unsigned char*)"Change motor direction\r\n", io->stdOut);
-  FSSH1_SendHelpStr((unsigned char*)"  (A|B) duty <number>", (unsigned char*)"Change motor PWM (-100..+100)%\r\n", io->stdOut);
-  FSSH1_SendHelpStr((unsigned char*)"  (A|B) brake (on|off)", (unsigned char*)"Enable/disable brake on motor\r\n", io->stdOut);
+static void MOT_PrintHelp(const CLS1_StdIOType *io) {
+  CLS1_SendHelpStr((unsigned char*)"motor", (unsigned char*)"Group of motor commands\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows motor help or status\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  (A|B) forward|backward", (unsigned char*)"Change motor direction\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  (A|B) duty <number>", (unsigned char*)"Change motor PWM (-100..+100)%\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  (A|B) brake (on|off)", (unsigned char*)"Enable/disable brake on motor\r\n", io->stdOut);
 }
 
-static void WriteCurrent(MOT_MotorDevice *motor, const FSSH1_StdIOType *io) {
+static void WriteCurrent(MOT_MotorDevice *motor, const CLS1_StdIOType *io) {
   unsigned char buf[26];
   uint16_t val;
 
   buf[0] = '\0';
   UTIL1_strcat(buf, sizeof(buf), (unsigned char*)", current val 0x");
   UTIL1_strcatNum16Hex(buf, sizeof(buf), motor->currentValue);
-  FSSH1_SendStr(buf, io->stdOut);
+  CLS1_SendStr(buf, io->stdOut);
 
   val = motor->currentValue/(0xFFFF/3300); /* 3300 mV full scale */
   buf[0] = '\0';
   UTIL1_strcat(buf, sizeof(buf), (unsigned char*)", mV ");
   UTIL1_strcatNum16u(buf, sizeof(buf), val);
-  FSSH1_SendStr(buf, io->stdOut);
+  CLS1_SendStr(buf, io->stdOut);
 
   val = motor->currentValue/(0xFFFF/2000); /* 2000 mA full scale */
   buf[0] = '\0';
   UTIL1_strcat(buf, sizeof(buf), (unsigned char*)", mA ");
   UTIL1_strcatNum16u(buf, sizeof(buf), val);
-  FSSH1_SendStr(buf, io->stdOut);
+  CLS1_SendStr(buf, io->stdOut);
 }
 
-static void MOT_PrintStatus(const FSSH1_StdIOType *io) {
+static void MOT_PrintStatus(const CLS1_StdIOType *io) {
   unsigned char buf[32];
 
   MOT_MeasureCurrent(&motorA, &motorB);
-  FSSH1_SendStatusStr((unsigned char*)"Motor", (unsigned char*)"\r\n", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"Motor", (unsigned char*)"\r\n", io->stdOut);
 
-  FSSH1_SendStatusStr((unsigned char*)"  motor A", (unsigned char*)"", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  motor A", (unsigned char*)"", io->stdOut);
   buf[0] = '\0';
   UTIL1_Num16sToStrFormatted(buf, sizeof(buf), (int16_t)motorA.currSpeedPercent, ' ', 4);
   UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"% 0x");
   UTIL1_strcatNum16Hex(buf, sizeof(buf), MOT_GetVal(&motorA));
   UTIL1_strcat(buf, sizeof(buf),(unsigned char*)(MOT_GetDirection(&motorA)==MOT_DIR_FORWARD?", fw":", bw"));
   UTIL1_strcat(buf, sizeof(buf),(unsigned char*)(MOT_GetBrake(&motorA)?", brake on":", brake off"));
-  FSSH1_SendStr(buf, io->stdOut);
+  CLS1_SendStr(buf, io->stdOut);
 
   WriteCurrent(&motorA, io);
-  FSSH1_SendStr((unsigned char*)"\r\n", io->stdOut);
+  CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
 
-  FSSH1_SendStatusStr((unsigned char*)"  motor B", (unsigned char*)"", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  motor B", (unsigned char*)"", io->stdOut);
   buf[0] = '\0';
   UTIL1_Num16sToStrFormatted(buf, sizeof(buf), (int16_t)motorB.currSpeedPercent, ' ', 4);
   UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"% 0x");
   UTIL1_strcatNum16Hex(buf, sizeof(buf), MOT_GetVal(&motorB));
   UTIL1_strcat(buf, sizeof(buf),(unsigned char*)(MOT_GetDirection(&motorB)==MOT_DIR_FORWARD?", fw":", bw"));
   UTIL1_strcat(buf, sizeof(buf),(unsigned char*)(MOT_GetBrake(&motorB)?", brake on":", brake off"));
-  FSSH1_SendStr(buf, io->stdOut);
+  CLS1_SendStr(buf, io->stdOut);
 
   WriteCurrent(&motorB, io);
-  FSSH1_SendStr((unsigned char*)"\r\n", io->stdOut);
+  CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
 }
 
-uint8_t MOT_ParseCommand(const unsigned char *cmd, bool *handled, const FSSH1_StdIOType *io) {
+uint8_t MOT_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
   uint8_t res = ERR_OK;
   long val;
   const unsigned char *p;
 
-  if (UTIL1_strcmp((char*)cmd, (char*)FSSH1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, (char*)"motor help")==0) {
+  if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, (char*)"motor help")==0) {
     MOT_PrintHelp(io);
     *handled = TRUE;
-  } else if (UTIL1_strcmp((char*)cmd, (char*)FSSH1_CMD_STATUS)==0 || UTIL1_strcmp((char*)cmd, (char*)"motor status")==0) {
+  } else if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_STATUS)==0 || UTIL1_strcmp((char*)cmd, (char*)"motor status")==0) {
     MOT_PrintStatus(io);
     *handled = TRUE;
   } else if (UTIL1_strcmp((char*)cmd, (char*)"motor A forward")==0) {
@@ -201,7 +203,7 @@ uint8_t MOT_ParseCommand(const unsigned char *cmd, bool *handled, const FSSH1_St
       MOT_SetSpeedPercent(&motorA, (MOT_SpeedPercent)val);
       *handled = TRUE;
     } else {
-      FSSH1_SendStr((unsigned char*)"Wrong argument, must be in the range -100..100\r\n", io->stdErr);
+      CLS1_SendStr((unsigned char*)"Wrong argument, must be in the range -100..100\r\n", io->stdErr);
       res = ERR_FAILED;
     }
   } else if (UTIL1_strncmp((char*)cmd, (char*)"motor B duty", sizeof("motor B duty")-1)==0) {
@@ -210,7 +212,7 @@ uint8_t MOT_ParseCommand(const unsigned char *cmd, bool *handled, const FSSH1_St
       MOT_SetSpeedPercent(&motorB, (MOT_SpeedPercent)val);
       *handled = TRUE;
     } else {
-      FSSH1_SendStr((unsigned char*)"Wrong argument, must be in the range -100..100\r\n", io->stdErr);
+      CLS1_SendStr((unsigned char*)"Wrong argument, must be in the range -100..100\r\n", io->stdErr);
       res = ERR_FAILED;
     }
   }

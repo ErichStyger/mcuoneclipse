@@ -46,6 +46,7 @@
 #include "TI1.h"
 #include "TimerIntLdd1.h"
 #include "TU2.h"
+#include "CS1.h"
 
 #ifdef __cplusplus
 extern "C" {

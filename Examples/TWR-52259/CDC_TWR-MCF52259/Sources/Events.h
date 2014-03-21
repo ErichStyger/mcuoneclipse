@@ -36,6 +36,7 @@
 #include "LED4.h"
 #include "LEDpin4.h"
 #include "WAIT1.h"
+#include "CS1.h"
 
 void Cpu_OnCoreWatchdogINT(void);
 /*

@@ -68,6 +68,7 @@
 #include "BitIoLdd11.h"
 #include "PWM0B.h"
 #include "BitIoLdd12.h"
+#include "CS1.h"
 
 #ifdef __cplusplus
 extern "C" {

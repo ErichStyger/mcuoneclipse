@@ -51,7 +51,7 @@ static portTASK_FUNCTION(RemoteTask, pvParameters) {
       buf[3] = (uint8_t)(y>>8);
       buf[4] = (uint8_t)(z&0xFF);
       buf[5] = (uint8_t)(z>>8);
-      (void)RAPP_SendPayloadDataBlock(buf, sizeof(buf), RAPP_MSG_TYPE_ACCEL, RNETA_GetDestAddr());
+      (void)RAPP_SendPayloadDataBlock(buf, sizeof(buf), RAPP_MSG_TYPE_ACCEL, RNETA_GetDestAddr(), RPHY_PACKET_FLAGS_NONE);
       LED1_Neg();
 #endif
 #if PL_HAS_WATCHDOG
@@ -201,7 +201,7 @@ void REMOTE_Deinit(void) {
 void REMOTE_Init(void) {
   REMOTE_isOn = FALSE;
 #if PL_APP_ACCEL_CONTROL_SENDER
-  if (FRTOS1_xTaskCreate(RemoteTask, (signed portCHAR *)"Remote", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL) != pdPASS) {
+  if (FRTOS1_xTaskCreate(RemoteTask, "Remote", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 #endif

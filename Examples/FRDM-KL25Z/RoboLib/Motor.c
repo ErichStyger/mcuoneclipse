@@ -10,6 +10,7 @@
 #include "DIRL.h"
 #include "PWMR.h"
 #include "PWML.h"
+#include "UTIL1.h"
 #if PL_HAS_MOTOR_BRAKE
   #include "BrakeL.h"
   #include "BrakeR.h"

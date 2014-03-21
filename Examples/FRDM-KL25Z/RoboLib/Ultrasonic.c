@@ -11,6 +11,7 @@
 #include "TU_US.h"
 #include "WAIT1.h"
 #include "TRIG.h"
+#include "UTIL1.h"
 
 typedef enum {
   ECHO_IDLE, /* device not used */

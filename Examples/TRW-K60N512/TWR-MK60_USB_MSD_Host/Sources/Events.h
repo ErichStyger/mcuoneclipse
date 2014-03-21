@@ -40,7 +40,6 @@
 #include "USB0.h"
 #include "MSD1.h"
 #include "FRTOS1.h"
-#include "RTOSTICKLDD1.h"
 #include "LEDR.h"
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"
@@ -64,6 +63,7 @@
 #include "TI1.h"
 #include "TimerIntLdd1.h"
 #include "TU1.h"
+#include "CS1.h"
 
 /*
 ** ===================================================================
@@ -96,7 +96,7 @@ void Cpu_OnNMIINT(void);
 */
 void Cpu_OnNMIINT0(void);
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

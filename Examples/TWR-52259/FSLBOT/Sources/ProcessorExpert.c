@@ -46,6 +46,7 @@
 #include "FLASH_WP.h"
 #include "AS1.h"
 #include "CLS1.h"
+#include "CS2.h"
 #include "ACCEL.h"
 
 /* Including shared modules, which are used for whole project */

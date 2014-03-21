@@ -34,6 +34,7 @@
 #include "Tx1.h"
 #include "Rx1.h"
 #include "UTIL1.h"
+#include "CS1.h"
 /* Include shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

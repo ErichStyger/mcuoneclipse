@@ -47,6 +47,7 @@
 #include "CDC1.h"
 #include "Tx1.h"
 #include "Rx1.h"
+#include "CS1.h"
 
 void Cpu_OnCoreWatchdogINT(void);
 /*

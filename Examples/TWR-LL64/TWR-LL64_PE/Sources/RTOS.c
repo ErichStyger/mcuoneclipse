@@ -28,7 +28,7 @@ static portTASK_FUNCTION(MyTask, pvParameters) {
 void RTOS_Start(void) {
   if (FRTOS1_xTaskCreate(
         MyTask,  /* pointer to the task */
-        (signed portCHAR *)"MyTask", /* task name for kernel awareness debugging */
+        "MyTask", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */

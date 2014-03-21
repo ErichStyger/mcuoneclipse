@@ -384,7 +384,7 @@ uint8_t LF_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdI
 void LF_Init(void) {
   PID_Init();
   LF_currState = STATE_IDLE;
-  if (FRTOS1_xTaskCreate(LineTask, (signed portCHAR *)"Line", configMINIMAL_STACK_SIZE+100, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
+  if (FRTOS1_xTaskCreate(LineTask, "Line", configMINIMAL_STACK_SIZE+100, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 }

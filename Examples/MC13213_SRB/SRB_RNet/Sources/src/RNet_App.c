@@ -96,7 +96,7 @@ void RNETA_Init(void) {
   }
   if (FRTOS1_xTaskCreate(
         RadioTask,  /* pointer to the task */
-        (signed char *)"Radio", /* task name for kernel awareness debugging */
+        "Radio", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY+1,  /* initial priority */
@@ -162,7 +162,7 @@ uint8_t RNETA_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_S
     p = cmd + sizeof("app send val")-1;
     *handled = TRUE;
     if (UTIL1_ScanDecimal8uNumber(&p, &val8)==ERR_OK) {
-      (void)RAPP_SendPayloadDataBlock(&val8, sizeof(val8), RAPP_MSG_TYPE_DATA, APP_dstAddr); /* only send low byte */
+      (void)RAPP_SendPayloadDataBlock(&val8, sizeof(val8), RAPP_MSG_TYPE_DATA, APP_dstAddr, RPHY_PACKET_FLAGS_NONE); /* only send low byte */
     } else {
       CLS1_SendStr((unsigned char*)"ERR: wrong number format\r\n", io->stdErr);
       return ERR_FAILED;

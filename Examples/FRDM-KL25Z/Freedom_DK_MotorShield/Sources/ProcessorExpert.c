@@ -64,6 +64,7 @@
 #include "BitIoLdd11.h"
 #include "PWM0B.h"
 #include "BitIoLdd12.h"
+#include "CS1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

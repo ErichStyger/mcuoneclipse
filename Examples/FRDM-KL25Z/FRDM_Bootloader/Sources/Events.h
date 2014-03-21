@@ -46,6 +46,7 @@
 #include "LEDR.h"
 #include "LEDpin1.h"
 #include "BitIoLdd2.h"
+#include "CS1.h"
 #include "BL_SW.h"
 #include "BitIoLdd3.h"
 

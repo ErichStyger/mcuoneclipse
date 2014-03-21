@@ -56,6 +56,7 @@
 #include "USB0.h"
 #include "HIDM1.h"
 #include "Tx3.h"
+#include "CS1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

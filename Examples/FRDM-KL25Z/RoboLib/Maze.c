@@ -9,6 +9,7 @@
 #include "Maze.h"
 #include "Turn.h"
 #include "CLS1.h"
+#include "UTIL1.h"
 
 #define MAZE_MAX_PATH 32 /* maximum number of turns in path */
 #define MAZE_LEFT_HAND_RULE  1  /* 1 for 'left-hand-on-the-wall, 0 otherwise */

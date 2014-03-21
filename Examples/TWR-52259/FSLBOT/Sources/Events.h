@@ -50,6 +50,7 @@
 #include "FLASH_WP.h"
 #include "AS1.h"
 #include "CLS1.h"
+#include "CS2.h"
 #include "ACCEL.h"
 
 void Cpu_OnCoreWatchdogINT(void);
@@ -98,7 +99,7 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

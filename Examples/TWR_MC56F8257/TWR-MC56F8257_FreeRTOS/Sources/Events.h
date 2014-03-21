@@ -28,11 +28,10 @@
 #include "UTIL1.h"
 #include "WAIT1.h"
 #include "FRTOS1.h"
-#include "RTOSSWI1.h"
 #include "TickCntr1.h"
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

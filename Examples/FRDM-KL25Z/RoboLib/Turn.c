@@ -63,6 +63,10 @@
     /*!< number of steps for a 90 degree turn */
   #define TURN_STEPS_FW_BW   20
     /*!< number of steps for one inch forward/backward */
+  #define TURN_STEPS_LINE       12
+    /*!< number of steps stepping over the line */
+  #define TURN_STEPS_POST_LINE  7
+    /*!< number of steps after the line, before making a turn */
 #elif PL_IS_INTRO_ZUMO_ROBOT
   #define TURN_STEPS_90         34
     /*!< number of steps for a 90 degree turn */

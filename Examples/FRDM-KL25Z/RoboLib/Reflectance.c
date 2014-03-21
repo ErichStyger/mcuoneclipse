@@ -694,7 +694,7 @@ void REF_Init(void) {
   }
   timerHandle = RefCnt_Init(NULL);
   REF_InitSensorValues();
-  if (FRTOS1_xTaskCreate(ReflTask, (signed portCHAR *)"Refl", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1+2, NULL) != pdPASS) {
+  if (FRTOS1_xTaskCreate(ReflTask, "Refl", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1+2, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 }

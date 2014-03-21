@@ -32,11 +32,10 @@
 #include "PE_Timer.h"
 #include "FRTOS1.h"
 #include "RTOSSWI1.h"
-#include "RTOSTMR1.h"
+#include "TickCntr1.h"
 #include "LED1.h"
 #include "LEDpin1.h"
 #include "UTIL1.h"
-#include "FSSH1.h"
 #include "LED2.h"
 #include "LEDpin2.h"
 #include "LED3.h"
@@ -52,15 +51,16 @@
 #include "TRG1.h"
 #include "EVNT1.h"
 #include "KEY1.h"
-#include "keyPin1.h"
-#include "MultiKey1.h"
+#include "Inhr2.h"
+#include "Inhr3.h"
 #include "KEY2.h"
-#include "keyPin2.h"
-#include "MultiKey2.h"
+#include "Inhr4.h"
 #include "WAIT1.h"
 #include "COM_EN.h"
 #include "SOUND.h"
-#include "AS1.h"
+#include "CS1.h"
+#include "CLS1.h"
+#include "AS2.h"
 
 void KEY2_OnKeyPressed(byte keys);
 /*
@@ -109,7 +109,7 @@ void EVNT1_AppHandleEvent(byte event);
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

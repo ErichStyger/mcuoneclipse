@@ -34,6 +34,7 @@
 #include "LEDpin3.h"
 #include "LED4.h"
 #include "LEDpin4.h"
+#include "CS1.h"
 #include "FRTOS1.h"
 #include "RTOSSWI1.h"
 #include "TickCntr1.h"
@@ -74,7 +75,7 @@ void SM1_OnTxChar(void);
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle *pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

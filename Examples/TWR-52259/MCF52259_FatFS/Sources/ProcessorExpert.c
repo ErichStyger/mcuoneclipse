@@ -31,6 +31,7 @@
 #include "LEDpin3.h"
 #include "LED4.h"
 #include "LEDpin4.h"
+#include "CS1.h"
 #include "FRTOS1.h"
 #include "RTOSSWI1.h"
 #include "TickCntr1.h"

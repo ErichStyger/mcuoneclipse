@@ -19,7 +19,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
 }
 
 void APP_Run(void) {
-  if (FRTOS1_xTaskCreate(MainTask, (signed portCHAR *)"Main", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL) != pdPASS) {
+  if (FRTOS1_xTaskCreate(MainTask, "Main", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL) != pdPASS) {
     for(;;){} /* error */
   }
   (void)TickCntr1_Enable();

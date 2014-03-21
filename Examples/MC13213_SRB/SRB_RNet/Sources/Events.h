@@ -69,6 +69,7 @@
 #include "IRQ1.h"
 #include "SM1.h"
 #include "TMOUT1.h"
+#include "CS1.h"
 #include "IFsh1.h"
 
 
@@ -103,7 +104,7 @@ void TI1_OnInterrupt(void);
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

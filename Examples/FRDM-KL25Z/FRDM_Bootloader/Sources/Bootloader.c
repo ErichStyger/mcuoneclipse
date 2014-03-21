@@ -12,6 +12,8 @@
 #include "Shell.h"
 #include "WAIT1.h"
 #include "LEDR.h"
+#include "UTIL1.h"
+#include "AS1.h"
 
 #define FLASH_PAGE_SIZE             (IntFlashLdd1_ERASABLE_UNIT_SIZE) /* flash page size */
 #define BL_FLASH_VECTOR_TABLE       0x0000 /* bootloader vector table in flash */

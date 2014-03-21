@@ -54,6 +54,7 @@
 #include "FRTOS1.h"
 #include "RTOSSWI1.h"
 #include "TickCntr1.h"
+#include "CS1.h"
 
 void EVNT1_AppHandleEvent(byte event);
 /*

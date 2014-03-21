@@ -224,7 +224,7 @@ void APP_Start(void) {
 #if SHELL
   if (FRTOS1_xTaskCreate(
         ShellTask,  /* pointer to the task */
-        (signed char *)"Shell", /* task name for kernel awareness debugging */
+        "Shell", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE+200, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY+1,  /* initial priority */
@@ -236,7 +236,7 @@ void APP_Start(void) {
 #if WALKING
   if (FRTOS1_xTaskCreate(
           WalkingTask,  /* pointer to the task */
-          (signed char *)"Walk", /* task name for kernel awareness debugging */
+          "Walk", /* task name for kernel awareness debugging */
           configMINIMAL_STACK_SIZE+200, /* task stack size */
           (void*)NULL, /* optional task startup argument */
           tskIDLE_PRIORITY+3,  /* initial priority */
@@ -248,7 +248,7 @@ void APP_Start(void) {
 #if ACCEL
   if (FRTOS1_xTaskCreate(
             AccelToLEDTask,  /* pointer to the task */
-            (signed char *)"Accel", /* task name for kernel awareness debugging */
+            "Accel", /* task name for kernel awareness debugging */
             configMINIMAL_STACK_SIZE+200, /* task stack size */
             (void*)NULL, /* optional task startup argument */
             tskIDLE_PRIORITY+2,  /* initial priority */
@@ -260,7 +260,7 @@ void APP_Start(void) {
 #if TOUCH
   if (FRTOS1_xTaskCreate(
             TouchTask,  /* pointer to the task */
-            (signed char *)"Touch", /* task name for kernel awareness debugging */
+            "Touch", /* task name for kernel awareness debugging */
             configMINIMAL_STACK_SIZE+100, /* task stack size */
             (void*)NULL, /* optional task startup argument */
             tskIDLE_PRIORITY+4,  /* initial priority */

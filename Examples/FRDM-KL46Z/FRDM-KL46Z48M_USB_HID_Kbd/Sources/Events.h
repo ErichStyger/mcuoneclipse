@@ -50,6 +50,7 @@
 #include "SW3.h"
 #include "BitIoLdd5.h"
 #include "PTC.h"
+#include "CS1.h"
 
 #ifdef __cplusplus
 extern "C" {

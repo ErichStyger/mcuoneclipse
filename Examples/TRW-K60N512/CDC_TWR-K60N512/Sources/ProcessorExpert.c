@@ -36,6 +36,7 @@
 #include "LED4.h"
 #include "LEDpin4.h"
 #include "BitIoLdd4.h"
+#include "CS1.h"
 #include "AS1.h"
 #include "WAIT1.h"
 /* Including shared modules, which are used for whole project */

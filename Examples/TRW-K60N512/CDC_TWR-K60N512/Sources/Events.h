@@ -40,6 +40,7 @@
 #include "LED4.h"
 #include "LEDpin4.h"
 #include "BitIoLdd4.h"
+#include "CS1.h"
 #include "AS1.h"
 #include "WAIT1.h"
 #include "PE_LDD.h"

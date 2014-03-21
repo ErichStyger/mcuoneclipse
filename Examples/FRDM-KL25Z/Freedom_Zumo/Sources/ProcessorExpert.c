@@ -44,6 +44,7 @@
 #include "I2CSPY1.h"
 #include "TMOUT1.h"
 #include "HF1.h"
+#include "CS1.h"
 #include "CLS1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"

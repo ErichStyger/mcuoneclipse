@@ -31,7 +31,6 @@
 #include "Cpu.h"
 #include "Events.h"
 #include "FRTOS1.h"
-#include "RTOSTICKLDD1.h"
 #include "UTIL1.h"
 #include "LEDR.h"
 #include "LEDpin1.h"
@@ -97,6 +96,7 @@
 #include "IR8.h"
 #include "BitIoLdd21.h"
 #include "RefCnt.h"
+#include "CS1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

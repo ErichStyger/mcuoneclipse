@@ -36,6 +36,7 @@
 #include "LEDpin3.h"
 #include "LED4.h"
 #include "LEDpin4.h"
+#include "CS1.h"
 #include "WAIT1.h"
 
 
