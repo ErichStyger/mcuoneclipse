@@ -772,7 +772,9 @@ byte %'ModuleName'%.%SendBlockContinue(void *Ptr, word Siz, word *Snt)
   for (I = 0U; I < Siz; I++) {
     Write (*((const byte*)Ptr + I) );
     if (GetAck()) {
-      I2C1_OnNACK();
+%if defined(OnNACK)
+      %OnNACK();
+%endif
       SCL_SetDir((bool)OUTPUT);
       SCL_ClrVal();              /* CLOCK LOW PULSE */
       InternalStop();
