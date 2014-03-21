@@ -763,7 +763,6 @@ byte %'ModuleName'%.%SendBlock(void *Ptr, word Siz, word *Snt)
 byte %'ModuleName'%.%SendBlockContinue(void *Ptr, word Siz, word *Snt)
 {
   register word I;
-  bool Acknowledge;
   word Trial;
   word timeout;
 
