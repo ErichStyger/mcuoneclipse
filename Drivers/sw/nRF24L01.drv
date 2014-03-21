@@ -679,6 +679,22 @@ void %OnInterrupt(void);
 
 %endif %- OnInterrupt
 %-BW_METHOD_END OnInterrupt
+%-BW_METHOD_BEGIN OnActivate
+%ifdef OnActivate
+%INTERFACE OnActivate
+void %OnActivate(void);
+%include Common\nRF24L01OnActivate.Inc
+
+%endif %- OnActivate
+%-BW_METHOD_END OnActivate
+%-BW_METHOD_BEGIN OnDeactivate
+%ifdef OnDeactivate
+%INTERFACE OnDeactivate
+void %OnDeactivate(void);
+%include Common\nRF24L01OnDeactivate.Inc
+
+%endif %- OnDeactivate
+%-BW_METHOD_END OnDeactivate
 %-BW_EVENT_DEFINITION_END
 %IMPLEMENTATION
 %define! Settings Common\nRF24L01Settings.Inc
@@ -708,8 +724,8 @@ void %OnInterrupt(void);
 #define %'ModuleName'%.WAIT_MS(x)  %@Wait@'ModuleName'%.Waitms(x)%>50/* wait for the given number of milli-seconds */
 #define %'ModuleName'%.CE_LOW()    %@CE@'ModuleName'%.ClrVal()   %>50/* put CE LOW */
 #define %'ModuleName'%.CE_HIGH()   %@CE@'ModuleName'%.SetVal()   %>50/* put CE HIGH */
-#define %'ModuleName'%.CSN_LOW()   %@CSN@'ModuleName'%.ClrVal()  %>50/* put CSN LOW */
-#define %'ModuleName'%.CSN_HIGH()  %@CSN@'ModuleName'%.SetVal()  %>50/* put CSN HIGH */
+#define %'ModuleName'%.CSN_LOW()   %@CSN@'ModuleName'%.ClrVal()  %>50/* put CSN LOW, activate bus */
+#define %'ModuleName'%.CSN_HIGH()  %@CSN@'ModuleName'%.SetVal()  %>50/* put CSN HIGH, deactivate bus */
 
 %-
 %-BW_CUSTOM_VARIABLE_END
@@ -820,10 +836,19 @@ void %@IRQ@OnInterrupt(void)
 %include Common\nRF24L01WriteRegister.Inc
 void %'ModuleName'%.%WriteRegister(byte reg, byte val)
 {
+%if defined(OnActivate)
+  %OnActivate(); /* call user event */
+%endif
+%if defined(SwitchBusEnabled) & SwitchBusEnabled='yes'
+  (void)%@SPI@'ModuleName'%.SetBaudRateMode(%BaudRateMode); /* change bus speed */
+%endif
   %'ModuleName'%.CSN_LOW(); /* initiate command sequence */
   (void)SPIWriteRead(%'ModuleName'%.W_REGISTER|reg); /* write register command */
   (void)SPIWriteRead(val); /* write value */
   %'ModuleName'%.CSN_HIGH(); /* end command sequence */
+%if defined(OnDeactivate)
+  %OnDeactivate(); /* call user event */
+%endif
   %'ModuleName'%.WAIT_US(10); /* insert a delay until next command */
 }
 
@@ -839,10 +864,19 @@ byte %'ModuleName'%.%ReadRegister(byte reg)
 {
   uint8_t val;
 
+%if defined(OnActivate)
+  %OnActivate(); /* call user event */
+%endif
+%if defined(SwitchBusEnabled) & SwitchBusEnabled='yes'
+  (void)%@SPI@'ModuleName'%.SetBaudRateMode(%BaudRateMode); /* change bus speed */
+%endif
   %'ModuleName'%.CSN_LOW();
   (void)SPIWriteRead(reg);
   val = SPIWriteRead(0); /* write dummy */
   %'ModuleName'%.CSN_HIGH();
+%if defined(OnDeactivate)
+  %OnDeactivate(); /* call user event */
+%endif
   %'ModuleName'%.WAIT_US(10);
   return val;
 }
@@ -858,10 +892,19 @@ byte %'ModuleName'%.%ReadRegister(byte reg)
 %include Common\nRF24L01ReadRegisterData.Inc
 void %'ModuleName'%.%ReadRegisterData(byte reg, byte *buf, byte bufSize)
 {
+%if defined(OnActivate)
+  %OnActivate(); /* call user event */
+%endif
+%if defined(SwitchBusEnabled) & SwitchBusEnabled='yes'
+  (void)%@SPI@'ModuleName'%.SetBaudRateMode(%BaudRateMode); /* change bus speed */
+%endif
   %'ModuleName'%.CSN_LOW();
   (void)SPIWriteRead(%'ModuleName'%.R_REGISTER|reg);
   SPIWriteReadBuffer(buf, buf, bufSize);
   %'ModuleName'%.CSN_HIGH();
+%if defined(OnDeactivate)
+  %OnDeactivate(); /* call user event */
+%endif
   %'ModuleName'%.WAIT_US(10);
 }
 
@@ -876,10 +919,19 @@ void %'ModuleName'%.%ReadRegisterData(byte reg, byte *buf, byte bufSize)
 %include Common\nRF24L01WriteRegisterData.Inc
 void %'ModuleName'%.%WriteRegisterData(byte reg, byte *buf, byte bufSize)
 {
+%if defined(OnActivate)
+  %OnActivate(); /* call user event */
+%endif
+%if defined(SwitchBusEnabled) & SwitchBusEnabled='yes'
+  (void)%@SPI@'ModuleName'%.SetBaudRateMode(%BaudRateMode); /* change bus speed */
+%endif
   %'ModuleName'%.CSN_LOW();
   (void)SPIWriteRead(%'ModuleName'%.W_REGISTER|reg); /* not masking registers as it would conflict with %'ModuleName'%.W_TX_PAYLOAD */
   SPIWriteBuffer(buf, bufSize);
   %'ModuleName'%.CSN_HIGH();
+%if defined(OnDeactivate)
+  %OnDeactivate(); /* call user event */
+%endif
   %'ModuleName'%.WAIT_US(10);
 }
 
@@ -893,9 +945,18 @@ void %'ModuleName'%.%WriteRegisterData(byte reg, byte *buf, byte bufSize)
 %include Common\nRF24L01WriteRead.Inc
 byte %'ModuleName'%.%WriteRead(byte val)
 {
+%if defined(OnActivate)
+  %OnActivate(); /* call user event */
+%endif
+%if defined(SwitchBusEnabled) & SwitchBusEnabled='yes'
+  (void)%@SPI@'ModuleName'%.SetBaudRateMode(%BaudRateMode); /* change bus speed */
+%endif
   %'ModuleName'%.CSN_LOW();
   val = SPIWriteRead(val);
   %'ModuleName'%.CSN_HIGH();
+%if defined(OnDeactivate)
+  %OnDeactivate(); /* call user event */
+%endif
   %'ModuleName'%.WAIT_US(10);
   return val;
 }
@@ -909,9 +970,18 @@ byte %'ModuleName'%.%WriteRead(byte val)
 %include Common\nRF24L01Write.Inc
 void %'ModuleName'%.%Write(byte val)
 {
+%if defined(OnActivate)
+  %OnActivate(); /* call user event */
+%endif
+%if defined(SwitchBusEnabled) & SwitchBusEnabled='yes'
+  (void)%@SPI@'ModuleName'%.SetBaudRateMode(%BaudRateMode); /* change bus speed */
+%endif
   %'ModuleName'%.CSN_LOW();
   (void)SPIWriteRead(val);
   %'ModuleName'%.CSN_HIGH();
+%if defined(OnDeactivate)
+  %OnDeactivate(); /* call user event */
+%endif
   %'ModuleName'%.WAIT_US(10);
 }
 
@@ -950,10 +1020,19 @@ byte %'ModuleName'%.%GetStatusClrIRQ(void)
 {
   uint8_t status;
 
+%if defined(OnActivate)
+  %OnActivate(); /* call user event */
+%endif
+%if defined(SwitchBusEnabled) & SwitchBusEnabled='yes'
+  (void)%@SPI@'ModuleName'%.SetBaudRateMode(%BaudRateMode); /* change bus speed */
+%endif
   %'ModuleName'%.CSN_LOW(); /* initiate command sequence */
   status = SPIWriteRead(%'ModuleName'%.W_REGISTER|%'ModuleName'%.STATUS); /* get status */
   (void)SPIWriteRead(status&(%'ModuleName'%.STATUS_RX_DR|%'ModuleName'%.STATUS_TX_DS|%'ModuleName'%.STATUS_MAX_RT)); /* reset IRQ Bits */
   %'ModuleName'%.CSN_HIGH(); /* end command sequence */
+%if defined(OnDeactivate)
+  %OnDeactivate(); /* call user event */
+%endif
   %'ModuleName'%.WAIT_US(10); /* insert a delay until next command */
   return status;
 }
@@ -1284,6 +1363,28 @@ void %OnInterrupt(void)
 
 %endif %- OnInterrupt
 %-BW_METHOD_END OnInterrupt
+%-BW_METHOD_BEGIN OnActivate
+%ifdef OnActivate
+%IMPLEMENTATION OnActivate
+%include Common\nRF24L01OnActivate.Inc
+void %OnActivate(void)
+{
+  /* Write your code here ... */
+}
+
+%endif %- OnActivate
+%-BW_METHOD_END OnActivate
+%-BW_METHOD_BEGIN OnDeactivate
+%ifdef OnDeactivate
+%IMPLEMENTATION OnDeactivate
+%include Common\nRF24L01OnDeactivate.Inc
+void %OnDeactivate(void)
+{
+  /* Write your code here ... */
+}
+
+%endif %- OnDeactivate
+%-BW_METHOD_END OnDeactivate
 %-BW_EVENT_IMPLEMENT_END
 %INITIALIZATION
   /* ### %DeviceType "%DeviceName" init code ... */

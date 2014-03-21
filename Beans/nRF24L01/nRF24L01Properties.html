@@ -237,6 +237,18 @@ LI.EXP {
 <b>SPI Bus</b></a> - SPI interface
 </li>
 <li>
+<a name="SwitchBusEnabled">
+<b>Switch Bus</b></a> - If enabled, the driver will switch and change bus settings before accessing the SPI. This is needed if another driver is using the bus with different parameters.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+<ul>
+  <li>
+  <a name="BaudRateMode">
+  <b>Baud Rate Mode</b></a> - Index of the Baud rate mode, as specified in the SPI bus settings (list of values)
+  </li>
+</ul>
+</li>
+<li>
 <a name="IRQPinEnabled">
 <b>IRQ Pin</b></a> - IRQ pin<br />
 The following items are available only if the group is enabled (the value is "Enabled"):<br />
