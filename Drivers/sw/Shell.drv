@@ -1157,7 +1157,7 @@ void %'ModuleName'%.%Init(void)
   bool schedulerStarted;
   %@CriticalSection@'ModuleName'%.CriticalVariable();
 
-  schedulerStarted = xTaskGetSchedulerState()!=taskSCHEDULER_NOT_STARTED;
+  schedulerStarted = (bool)(xTaskGetSchedulerState()!=taskSCHEDULER_NOT_STARTED);
   if (!schedulerStarted) { /* FreeRTOS not started yet. We are called in PE_low_level_init(), and interrupts are disabled */
     %@CriticalSection@'ModuleName'%.EnterCritical();
   }
