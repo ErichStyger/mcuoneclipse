@@ -1,0 +1,61 @@
+%if defined(CPUfamily) & CPUfamily="Kinetis"
+  %set LDD_HW_SPI_Enabled Value Enabled
+  %set nonLDD_HW_SPI_Enabled Value Disabled
+  %set nonLDD_HW_SPI_Enabled Expanded no
+  %set LDD_HW_SPI_Enabled Expanded yes
+%else
+  %set LDD_HW_SPI_Enabled Value Disabled
+  %set nonLDD_HW_SPI_Enabled Value Enabled
+  %set nonLDD_HW_SPI_Enabled Expanded yes
+  %set LDD_HW_SPI_Enabled Expanded no
+%endif
+%set LDD_HW_SPI_Enabled ReadOnly yes
+%set nonLDD_HW_SPI_Enabled ReadOnly yes
+
+%if defined(SlaveSelectEnabled) & SlaveSelectEnabled='yes'
+  %if defined(CPUfamily) & CPUfamily="Kinetis"
+    %set LDD_SS_Group Value Enabled
+    %set nonLDD_SS_Group Value Disabled
+  %else
+    %set LDD_SS_Group Value Disabled
+    %set nonLDD_SS_Group Value Enabled
+  %endif
+  %set LDD_SS_Group ReadOnly yes
+  %set nonLDD_SS_Group ReadOnly yes
+%endif
+
+%if defined(CardDetectionGroup) & CardDetectionGroup='yes'
+  %if defined(CPUfamily) & CPUfamily="Kinetis"
+    %set LDD_CD_Group Value Enabled
+    %set nonLDD_CD_Group Value Disabled
+  %else
+    %set LDD_CD_Group Value Disabled
+    %set nonLDD_CD_Group Value Enabled
+  %endif
+  %set LDD_CD_Group ReadOnly yes
+  %set nonLDD_CD_Group ReadOnly yes
+%endif
+
+%if defined(WriteProtectGroup) & WriteProtectGroup='yes'
+  %if defined(CPUfamily) & CPUfamily="Kinetis"
+    %set LDD_WP_Group Value Enabled
+    %set nonLDD_WP_Group Value Disabled
+  %else
+    %set LDD_WP_Group Value Disabled
+    %set nonLDD_WP_Group Value Enabled
+  %endif
+  %set LDD_WP_Group ReadOnly yes
+  %set nonLDD_WP_Group ReadOnly yes
+%endif
+
+%if defined(ActivateGroup) & ActivateGroup='yes'
+  %if defined(CPUfamily) & CPUfamily="Kinetis"
+    %set LDD_Activate_Group Value Enabled
+    %set nonLDD_Activate_Grp Value Disabled
+  %else
+    %set LDD_Activate_Group Value Disabled
+    %set nonLDD_Activate_Grp Value Enabled
+  %endif
+  %set LDD_Activate_Group ReadOnly yes
+  %set nonLDD_Activate_Grp ReadOnly yes
+%endif

@@ -51,6 +51,11 @@
 %- List of descriptions of internal methods
 %define! Description_SendCommand Sends a command to the SD card
 %define! Description_ReceiveByte Receives a byte from the SPI bus
+%ifdef LDDHWSPI
+  %ifdef @LDDHWSPI@OnBlockReceived
+    %define! Description_%@LDDHWSPI@OnBlockReceived This event is called when the requested number of data is moved to the input buffer. This method is available only if the ReceiveBlock method is enabled. The event services the event of the inherited component and eventually invokes other events.
+  %endif %- @LDDHWSPI@OnBlockReceived
+%endif %- LDDHWSPI
 %-BW_INTERN_COMMENTS_END
 %-
 %-BW_SECTIONS_INSERT
@@ -191,13 +196,17 @@ void %'ModuleName'%.%Deactivate(void);
 %-BW_METHOD_BEGIN isWriteProtected
 %ifdef isWriteProtected
 #define %'ModuleName'%.%isWriteProtected() \
-%if defined(WP)
+%if defined(WP) | defined(LDDWP)
   %if WriteProtectIsLow='yes'
-  %ifdef WP
+  %ifdef LDDWP
+  (bool)(%@LDDWP@'ModuleName'%.GetVal(%@LDDWP@'ModuleName'%.DeviceData)==0)%>40 /* low level means write protected */
+  %else
   (bool)(%@WP@'ModuleName'%.GetVal()==0)                         %>40 /* low level means write protected */
   %endif
   %else
-  %ifdef WB
+  %ifdef LDDWP
+  (bool)(%@LDDWP@'ModuleName'%.GetVal(%@LDDWP@'ModuleName'%.DeviceData)!=0)%>40 /* high level means write protected */
+  %else
   (bool)(%@WP@'ModuleName'%.GetVal()!=0)                         %>40 /* high level means write protected */
   %endif
   %endif
@@ -252,13 +261,17 @@ byte %'ModuleName'%.ReceiveByte(void);
 %-BW_METHOD_BEGIN CardPresent
 %ifdef CardPresent
 #define %'ModuleName'%.%CardPresent() \
-%if defined(CDI)
+%if defined(CDI) | defined(LDDCDI)
   %if %CardDetectIsLow='yes'
-  %if defined(CDI)
+  %if defined(LDDCDI)
+  (bool)(%@LDDCDI@'ModuleName'%.GetVal(%@LDDCDI@'ModuleName'%.DeviceData)==0)%>40 /* low level means card present */
+  %else
   (bool)(%@CDI@'ModuleName'%.GetVal()==0)                        %>40 /* low level means card present */
   %endif
   %else
-  %if defined(CDI)
+  %if defined(LDDCDI)
+  (bool)(%@LDDCDI@'ModuleName'%.GetVal(%@LDDCDI@'ModuleName'%.DeviceData)!=0)%>40 /* high level means card present */
+  %else
   (bool)(%@CDI@'ModuleName'%.GetVal()!=0)                        %>40 /* high level means card present */
   %endif
   %endif
@@ -312,6 +325,12 @@ void %'ModuleName'%.%Deinit(void* unused);
 
 %endif %- Deinit
 %-BW_METHOD_END Deinit
+%-INHERITED_EVENT_BEGIN LDDHWSPI OnBlockReceived
+%if defined(LDDHWSPI) & defined(@LDDHWSPI@OnBlockReceived)
+void %@LDDHWSPI@OnBlockReceived(LDD_TUserData *UserDataPtr);
+
+%endif %- @LDDHWSPI@OnBlockReceived
+%-INHERITED_EVENT_END LDDHWSPI OnBlockReceived
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -352,6 +371,15 @@ void %OnDeactivate(void);
 
 %endif %- OnDeactivate
 %-BW_METHOD_END OnDeactivate
+%-BW_METHOD_BEGIN OnBlockReceived
+%ifdef OnBlockReceived
+%INTERFACE OnBlockReceived
+void %OnBlockReceived(LDD_TUserData *UserDataPtr);
+%define! ParUserDataPtr
+%include Common\SD_CardOnBlockReceived.Inc
+
+%endif %- OnBlockReceived
+%-BW_METHOD_END OnBlockReceived
 %-BW_EVENT_DEFINITION_END
 %IMPLEMENTATION
 %define! Settings Common\SD_CardSettings.Inc
@@ -369,7 +397,7 @@ void %OnDeactivate(void);
 %-   Example:
 %-     #include "header_name.h"
 %-
-#include "diskio.h" /* interface to FatFS */
+#include "diskio.h"
 %-BW_CUSTOM_INCLUDE_END_M
 
 %-BW_CUSTOM_VARIABLE_START
@@ -393,6 +421,9 @@ enum { /* SD card response codes */
 %ifdef SS
 #define %'ModuleName'%.ENABLE_SS()   %@SS@'ModuleName'%.ClrVal() /* enable slave (low active) */
 #define %'ModuleName'%.DISABLE_SS()  %@SS@'ModuleName'%.SetVal() /* disable slave (low active) */
+%elif defined(LDDSS)
+#define %'ModuleName'%.ENABLE_SS()   %@LDDSS@'ModuleName'%.ClrVal(%@LDDSS@'ModuleName'%.DeviceData) /* enable slave (low active) */
+#define %'ModuleName'%.DISABLE_SS()  %@LDDSS@'ModuleName'%.SetVal(%@LDDSS@'ModuleName'%.DeviceData) /* disable slave (low active) */
 %else
 #define %'ModuleName'%.ENABLE_SS()   /* dummy macro, as not using slave selection */
 #define %'ModuleName'%.DISABLE_SS()  /* dummy macro, as not using slave selection */
@@ -705,7 +736,17 @@ DRESULT disk_ioctl (
   return res;
 }
 
+%if SPI_Read_Write_Macros='yes'
+/* SPI Read/Write macros provided by user */
+%for i from SPIMacrosList
+                                                                 %>5 %i
+%endfor
+#define %'ModuleName'%.SPI_WRITE(write)                          %>40 SPI_WRITE(write)
+#define %'ModuleName'%.SPI_WRITE_READ(write, readP)              %>40 SPI_WRITE_READ(write, readP)
+
+%endif
 %ifdef HWSPI
+%if SPI_Read_Write_Macros='no'
 static byte rxDummy; /* dummy byte if we do not need the result. Needed to read from SPI register. */
 #define %'ModuleName'%.SPI_WRITE(write)            \
    { \
@@ -717,14 +758,118 @@ static byte rxDummy; /* dummy byte if we do not need the result. Needed to read 
      while(%@HWSPI@'ModuleName'%.SendChar(write)!=ERR_OK) {} \
      while(%@HWSPI@'ModuleName'%.RecvChar(readP)!=ERR_OK) {} \
    }
+#if 0 /* reference example implementation for MCF51CN128 */
+#if 0 /* example for TWR-MCF51CN128 */
+#define SPI_WRITE(write) \
+   { \
+     while(SPI2S_SPTEF==0) {} /* wait until transmitter is not full */ \
+     SPI2D = write; /* send character */ \
+     while(SPI2S_SPTEF==0) {} /* wait until character is sent */ \
+   }
 
+#define SPI_WRITE_READ(write, readP) \
+   { \
+     SPI_WRITE(write); \
+     while(SPI2S_SPRF==0) {} /* wait until rx is complete */ \
+     *readP = SPI2D; /* store rx character */ \
+   }
+#endif
+#if 0 /* example for TWR-MCF52259 */
+#define SPI_WRITE(write) \
+  { \
+  while((QDLYR&QDLYR_SPE_BITMASK)!=0) {} /* wait until previous transmit is over (SPE goes to zero) */ \
+  QAR = 0;                     /* Set transmit RAM */ \
+  QDR = write;                   /* Store char to transmitter */ \
+  QDLYR |= QDLYR_SPE_BITMASK;            /* Launch transfer (set SPE bit) */ \
+  while((QDLYR&QDLYR_SPE_BITMASK)!=0) {} /* wait until character is sent (SPE will be cleared by hardware) */ \
+  }
+
+#define SPI_WRITE_READ(write, readP) \
+  { \
+  SPI_WRITE(write); \
+  while(!(QIR&QIR_SPIF_BITMASK)) {} /* wait until rx is complete */ \
+  QAR = 16;                    /* Set receive RAM */ \
+  *readP = (SM1_TComData)getReg16(QDR);  /* Read data from receiver */ \
+  }
+#endif
+
+#endif
+%endif
 #define %'ModuleName'%.SPI_SetSlowMode()              (void)%@HWSPI@'ModuleName'%.SetBaudRateMode(%HWSlowBaudRateMode) /* max 400kbps */
 #define %'ModuleName'%.SPI_SetFastMode()              (void)%@HWSPI@'ModuleName'%.SetBaudRateMode(%HWFastBaudRateMode) /* max 12Mbps */
 #define %'ModuleName'%.SPI_SetShiftClockPolarity(val) (void)%@HWSPI@'ModuleName'%.SetShiftClockPolarity(val)
 #define %'ModuleName'%.SPI_SetIdleClockPolarity(val)  (void)%@HWSPI@'ModuleName'%.SetIdleClockPolarity(val)
 %endif
 %---------------------------------------------------------------------------------------------------
+%ifdef LDDHWSPI
+#define %'ModuleName'%.SPI_SetSlowMode()              (void)%@LDDHWSPI@'ModuleName'%.SelectConfiguration(%@LDDHWSPI@'ModuleName'%.DeviceData, %HWSlowBaudRateMode, %HWSlowBaudRateMode) /* max 400kbps */
+#define %'ModuleName'%.SPI_SetFastMode()              (void)%@LDDHWSPI@'ModuleName'%.SelectConfiguration(%@LDDHWSPI@'ModuleName'%.DeviceData, %HWFastBaudRateMode, %HWFastBaudRateMode) /* max 12Mbps */
+#define %'ModuleName'%.SPI_SetShiftClockPolarity(val) /* not needed for LDD */
+#define %'ModuleName'%.SPI_SetIdleClockPolarity(val)  /* not needed for LDD */
+
+static volatile bool %'ModuleName'%.DataReceivedFlag = FALSE;
+
+void %'ModuleName'%.SPI_WRITE(unsigned char write) {
+  unsigned char dummy;
+
+  %'ModuleName'%.DataReceivedFlag = FALSE;
+  (void)%@LDDHWSPI@'ModuleName'%.ReceiveBlock(%@LDDHWSPI@'ModuleName'%.DeviceData, &dummy, sizeof(dummy));
+  (void)%@LDDHWSPI@'ModuleName'%.SendBlock(%@LDDHWSPI@'ModuleName'%.DeviceData, &write, sizeof(write));
+  while(!%'ModuleName'%.DataReceivedFlag){}
+}
+
+#define SPI_WRITE_BLOCK_ENABLED
+void %'ModuleName'%.SPI_WRITE_BLOCK(unsigned char *writeP, uint16_t size) {
+  unsigned char dummy[4];
+  uint16_t writeSize;
+
+  while(size>0) {
+    if (size>sizeof(dummy)) {
+      writeSize = sizeof(dummy);
+    } else {
+      writeSize = size;
+    }
+    %'ModuleName'%.DataReceivedFlag = FALSE;
+    (void)%@LDDHWSPI@'ModuleName'%.ReceiveBlock(%@LDDHWSPI@'ModuleName'%.DeviceData, &dummy[0], writeSize);
+    (void)%@LDDHWSPI@'ModuleName'%.SendBlock(%@LDDHWSPI@'ModuleName'%.DeviceData, writeP, writeSize);
+    while(!%'ModuleName'%.DataReceivedFlag){}
+    size -= writeSize;
+    writeP += writeSize;
+  }
+}
+
+void %'ModuleName'%.SPI_WRITE_READ(unsigned char write, unsigned char *readP) {
+  %'ModuleName'%.DataReceivedFlag = FALSE;
+  (void)%@LDDHWSPI@'ModuleName'%.ReceiveBlock(%@LDDHWSPI@'ModuleName'%.DeviceData, readP, 1);
+  (void)%@LDDHWSPI@'ModuleName'%.SendBlock(%@LDDHWSPI@'ModuleName'%.DeviceData, &write, 1);
+  while(!%'ModuleName'%.DataReceivedFlag){}
+}
+
+#define SPI_WRITE_READ_BLOCK_ENABLED
+#define SPI_WRITE_READ_BLOCK_SIZE_DUMMY 512 /* 512 bytes of dummy values */
+static const uint8_t dummyArr[SPI_WRITE_READ_BLOCK_SIZE_DUMMY] = {
+  %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY,
+  %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY,
+  %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY,
+  %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY,
+  %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY,
+  %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY
+};
+
+void %'ModuleName'%.SPI_WRITE_READ_BLOCK(unsigned char *writeP, unsigned char *readP, uint16_t size) {
+  %'ModuleName'%.DataReceivedFlag = FALSE;
+  (void)%@LDDHWSPI@'ModuleName'%.ReceiveBlock(%@LDDHWSPI@'ModuleName'%.DeviceData, readP, size);
+  (void)%@LDDHWSPI@'ModuleName'%.SendBlock(%@LDDHWSPI@'ModuleName'%.DeviceData, writeP, size);
+  while(!%'ModuleName'%.DataReceivedFlag){}
+}
+
+%endif %- LDDHWSPI
+%---------------------------------------------------------------------------------------------------
 %ifdef SPI /* SW SPI */
+%if SPI_Read_Write_Macros='no'
+#define %'ModuleName'%.SPI_WRITE(write)               ((void)%@SPI@'ModuleName'%.Write_ReadDummy(write))
+#define %'ModuleName'%.SPI_WRITE_READ(write, readP)   {(void)%@SPI@'ModuleName'%.SendChar(write); (void)%@SPI@'ModuleName'%.RecvChar(readP);}
+%endif
 #define %'ModuleName'%.SPI_SetFastMode()              %@SPI@'ModuleName'%.SetFastMode()
 #define %'ModuleName'%.SPI_SetSlowMode()              %@SPI@'ModuleName'%.SetSlowMode()
 #define %'ModuleName'%.SPI_SetShiftClockPolarity(val) (void)%@SPI@'ModuleName'%.SetShiftClockPolarity(val)
@@ -756,8 +901,11 @@ void %'ModuleName'%.%Activate(void)
 %if defined(OnActivate)
   %OnActivate();
 %endif
+  //%'ModuleName'%.%InitCommChannel();
 %if defined(ACT)
   %@ACT@'ModuleName'%.SetVal();                                  %>40 /* enable bus driver (high level) */
+%elif defined(LDDACT)
+  %@LDDACT@'ModuleName'%.SetVal(%@LDDACT@'ModuleName'%.DeviceData);%>40 /* enable bus driver (high level) */
 %endif
   %'ModuleName'%.ENABLE_SS();                                    %>40 /* select slave */
 }
@@ -773,6 +921,8 @@ void %'ModuleName'%.%Deactivate(void)
   %'ModuleName'%.DISABLE_SS();                                   %>40 /* de-select slave */
 %if defined(ACT)
   %@ACT@'ModuleName'%.ClrVal();                                  %>40 /* disable bus driver (low level) */
+%elif defined(LDDACT)
+  %@LDDACT@'ModuleName'%.ClrVal(%@LDDACT@'ModuleName'%.DeviceData);%>40 /* disable bus driver (low level) */
 %endif
 %if defined(OnDeactivate)
   %OnDeactivate();
@@ -1195,6 +1345,9 @@ void %'ModuleName'%.%InitCommChannel(void)
   %@HWSPI@'ModuleName'%.SetShiftClockPolarity(0); /* shift clock polarity: falling edge */
   %'ModuleName'%.SPI_SetFastMode(); /* use fast baud rate */
 %endif
+%ifdef LDDHWSPI
+  %'ModuleName'%.SPI_SetFastMode(); /* use fast mode. This will use the fast configuration. */
+%endif
 }
 
 %endif %- InitCommChannel
@@ -1211,6 +1364,20 @@ void %'ModuleName'%.%Deinit(void* unused)
 
 %endif %- Deinit
 %-BW_METHOD_END Deinit
+%-INHERITED_EVENT_BEGIN LDDHWSPI OnBlockReceived
+%if defined(LDDHWSPI) & defined(@LDDHWSPI@OnBlockReceived)
+%include Common\GeneralInternal.inc (OnBlockReceived)
+void %@LDDHWSPI@OnBlockReceived(LDD_TUserData *UserDataPtr)
+{
+  /* Calling inherited event */
+%ifdef OnBlockReceived
+  %OnBlockReceived(UserDataPtr);
+%endif OnBlockReceived
+  %'ModuleName'%.DataReceivedFlag=TRUE;
+}
+
+%endif %- @LDDHWSPI@OnBlockReceived
+%-INHERITED_EVENT_END LDDHWSPI OnBlockReceived
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
@@ -1263,6 +1430,18 @@ void %OnDeactivate(void)
 %endif %- OnDeactivate
 %-BW_METHOD_END OnDeactivate
 
+%-BW_METHOD_BEGIN OnBlockReceived
+%ifdef OnBlockReceived
+%IMPLEMENTATION OnBlockReceived
+%define! ParUserDataPtr
+%include Common\SD_CardOnBlockReceived.Inc
+void %OnBlockReceived(LDD_TUserData *UserDataPtr)
+{
+  /* Write your code here ... */
+}
+
+%endif %- OnBlockReceived
+%-BW_METHOD_END OnBlockReceived
 %-BW_EVENT_IMPLEMENT_END
 %INITIALIZATION
   /* ### %DeviceType "%DeviceName" init code ... */

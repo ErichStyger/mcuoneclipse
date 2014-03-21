@@ -4,7 +4,7 @@
     <Name>SD_Card</Name>
     <Description>SD Card</Description>
     <Author>Erich Styger</Author>
-    <Version>01.168</Version>
+    <Version>01.160</Version>
     <Icon>SD_Card</Icon>
     <TypesFiles>PE,SD_Card\SD_Card</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -20,7 +20,7 @@
     <BW_NeedUst>0</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2012-2014, all rights reserved.\n\nThis an open source software implementing an SD card low level driver useful for the the ChaN FatFS, using Processor Expert.\nThis is a free software and is opened for education,  research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
+    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2012, all rights reserved.\n\nThis an open source software implementing an SD card low level driver useful for the the ChaN FatFS, using Processor Expert.\nThis is a free software and is opened for education,  research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
     <Shortcut>SD</Shortcut>
     <DemoDriver>no</DemoDriver>
     <BeanLevel>Low</BeanLevel>
@@ -141,7 +141,7 @@
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
               <Description>Disabled</Description>
-              <Expanded>Yes</Expanded>
+              <Expanded>No</Expanded>
               <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
@@ -172,9 +172,9 @@
               <ItemLevel>BASIC</ItemLevel>
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
-              <Description>Disabled</Description>
+              <Description>Enabled</Description>
               <Expanded>Yes</Expanded>
-              <DefaultValue>false</DefaultValue>
+              <DefaultValue>true</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
               <Children>
@@ -213,54 +213,134 @@
                   </TIntgItem>
                 </GrupItem>
                 <GrupItem>
-                  <TInhrLinkItem>
-                    <Name>HW SPI</Name>
-                    <Symbol>HWSPI</Symbol>
-                    <TypeSpec>SD_Card\HWSPI</TypeSpec>
-                    <Hint>SPI communication interface</Hint>
+                  <TBoolGrupItem>
+                    <Name>LDD HW SPI</Name>
+                    <Symbol>LDD_HW_SPI_Enabled</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>If enabled, a LDD (Logical Device Driver) HW SPI interface is used</Hint>
                     <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
                     <EditLine>false</EditLine>
-                    <DefaultValue/>
-                    <CanDelete>false</CanDelete>
-                    <IconPopup>false</IconPopup>
-                    <SortStyle/>
-                  </TInhrLinkItem>
+                    <Description>Enabled</Description>
+                    <Expanded>Yes</Expanded>
+                    <DefaultValue>true</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TInhrLinkItem>
+                          <Name>LDD HW SPI</Name>
+                          <Symbol>LDDHWSPI</Symbol>
+                          <TypeSpec>SD_Card\LDD_HW_SPI</TypeSpec>
+                          <Hint>Interface to the Logical Device Driver SPI</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>false</EditLine>
+                          <DefaultValue/>
+                          <CanDelete>false</CanDelete>
+                          <IconPopup>false</IconPopup>
+                          <SortStyle/>
+                        </TInhrLinkItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolGrupItem>
+                    <Name>non-LDD HW SPI</Name>
+                    <Symbol>nonLDD_HW_SPI_Enabled</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>If enabled, a non-LDD (traditional) HW SPI interface is used</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
+                    <EditLine>false</EditLine>
+                    <Description>Enabled</Description>
+                    <Expanded>Yes</Expanded>
+                    <DefaultValue>true</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TInhrLinkItem>
+                          <Name>HW SPI</Name>
+                          <Symbol>HWSPI</Symbol>
+                          <TypeSpec>SD_Card\HWSPI</TypeSpec>
+                          <Hint>SPI communication interface</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>false</EditLine>
+                          <DefaultValue/>
+                          <CanDelete>false</CanDelete>
+                          <IconPopup>false</IconPopup>
+                          <SortStyle/>
+                        </TInhrLinkItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
                 </GrupItem>
               </Children>
             </TBoolGrupItem>
           </GrupItem>
           <GrupItem>
             <TBoolGrupItem>
-              <Name>Slave Select</Name>
-              <Symbol>SlaveSelectEnabled</Symbol>
+              <Name>SPI Read/Write Macros</Name>
+              <Symbol>SPI_Read_Write_Macros</Symbol>
               <TypeSpec>typeEnaDis</TypeSpec>
-              <Hint>Pin to select slave</Hint>
+              <Hint>If enabled, mcros for optimization purpuse to read and write/read from the SPI bus can be provided. With this access to the SPI bus can be optimized.</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
               <Description>Disabled</Description>
-              <Expanded>Yes</Expanded>
+              <Expanded>No</Expanded>
               <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
               <Children>
                 <GrupItem>
-                  <TInhrItem>
-                    <Name>Slave Select pin</Name>
-                    <Symbol>SS</Symbol>
-                    <TypeSpec>SD_Card\SS</TypeSpec>
-                    <Hint>Device (Slave) select pin</Hint>
+                  <TStrgListItem>
+                    <Name>SPI Macros</Name>
+                    <Symbol>SPIMacrosList</Symbol>
+                    <Hint>Macros</Hint>
                     <ItemLevel>BASIC</ItemLevel>
                     <EditLine>false</EditLine>
-                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-                    <DefaultIndex>-1</DefaultIndex>
-                    <TextValueIndex>false</TextValueIndex>
-                    <RuntimeProperty>false</RuntimeProperty>
-                    <CanDelete>false</CanDelete>
-                    <IconPopup>false</IconPopup>
-                    <InhrBeanBaseName>SDSS</InhrBeanBaseName>
-                    <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
-                  </TInhrItem>
+                    <DefaultValue>(string list)</DefaultValue>
+                    <DefineList>false</DefineList>
+                    <ExternEditorEnabled>false</ExternEditorEnabled>
+                    <AcceptNonPrintChars>false</AcceptNonPrintChars>
+                    <DefaultStrgList lines_count="33">
+                      <Line>#if 0 /* example for TWR-MCF51CN128 */</Line>
+                      <Line>#define SPI_WRITE(write) \</Line>
+                      <Line>{ \</Line>
+                      <Line>while(SPI2S_SPTEF==0) {} /* wait until transmitter is not full */ \</Line>
+                      <Line>SPI2D = write; /* send character */ \</Line>
+                      <Line>while(SPI2S_SPTEF==0) {} /* wait until character is sent */ \</Line>
+                      <Line>}</Line>
+                      <Line/>
+                      <Line>#define SPI_WRITE_READ(write, readP) \</Line>
+                      <Line>{ \</Line>
+                      <Line>SPI_WRITE(write); \</Line>
+                      <Line>while(SPI2S_SPRF==0) {} /* wait until rx is complete */ \</Line>
+                      <Line>*readP = SPI2D; /* store rx character */ \</Line>
+                      <Line>}</Line>
+                      <Line>#endif</Line>
+                      <Line>#if 0 /* example for TWR-MCF52259 */</Line>
+                      <Line>#define SPI_WRITE(write) \</Line>
+                      <Line>{ \</Line>
+                      <Line>while((QDLYR&amp;QDLYR_SPE_BITMASK)!=0) {} /* wait until previous transmit is over (SPE goes to zero) */ \</Line>
+                      <Line>QAR = 0;                     /* Set transmit RAM */ \</Line>
+                      <Line>QDR = write;                   /* Store char to transmitter */ \</Line>
+                      <Line>QDLYR |= QDLYR_SPE_BITMASK;            /* Launch transfer (set SPE bit) */ \</Line>
+                      <Line>while((QDLYR&amp;QDLYR_SPE_BITMASK)!=0) {} /* wait until character is sent (SPE will be cleared by hardware) */ \</Line>
+                      <Line>}</Line>
+                      <Line/>
+                      <Line>#define SPI_WRITE_READ(write, readP) \</Line>
+                      <Line>{ \</Line>
+                      <Line>SPI_WRITE(write); \</Line>
+                      <Line>while(!(QIR&amp;QIR_SPIF_BITMASK)) {} /* wait until rx is complete */ \</Line>
+                      <Line>QAR = 16;                    /* Set receive RAM */ \</Line>
+                      <Line>*readP = (SM1_TComData)getReg16(QDR);  /* Read data from receiver */ \</Line>
+                      <Line>}</Line>
+                      <Line>#endif</Line>
+                    </DefaultStrgList>
+                  </TStrgListItem>
                 </GrupItem>
               </Children>
             </TBoolGrupItem>
@@ -285,6 +365,96 @@
           </GrupItem>
           <GrupItem>
             <TBoolGrupItem>
+              <Name>Slave Select</Name>
+              <Symbol>SlaveSelectEnabled</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>Pin to select slave</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Enabled</Description>
+              <Expanded>Yes</Expanded>
+              <DefaultValue>true</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TBoolGrupItem>
+                    <Name>LDD SS</Name>
+                    <Symbol>LDD_SS_Group</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>Logical Device Driver Slave/Chip Select Signal</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
+                    <EditLine>false</EditLine>
+                    <Description>Enabled</Description>
+                    <Expanded>Yes</Expanded>
+                    <DefaultValue>true</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TInhrItem>
+                          <Name>Slave Select Pin</Name>
+                          <Symbol>LDDSS</Symbol>
+                          <TypeSpec>SD_Card\LDDSS</TypeSpec>
+                          <Hint>Logical Device Driver for Slave/Chip select pin</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>false</EditLine>
+                          <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                          <DefaultIndex>-1</DefaultIndex>
+                          <TextValueIndex>false</TextValueIndex>
+                          <RuntimeProperty>false</RuntimeProperty>
+                          <CanDelete>false</CanDelete>
+                          <IconPopup>false</IconPopup>
+                          <InhrBeanBaseName>SS</InhrBeanBaseName>
+                          <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+                        </TInhrItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolGrupItem>
+                    <Name>non-LDD SS</Name>
+                    <Symbol>nonLDD_SS_Group</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>Non-Logical Device Driver Slave/Chip Select Signal</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
+                    <EditLine>false</EditLine>
+                    <Description>Enabled</Description>
+                    <Expanded>Yes</Expanded>
+                    <DefaultValue>true</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TInhrItem>
+                          <Name>Slave Select pin</Name>
+                          <Symbol>SS</Symbol>
+                          <TypeSpec>SD_Card\SS</TypeSpec>
+                          <Hint>Device (Slave) select pin</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>false</EditLine>
+                          <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                          <DefaultIndex>-1</DefaultIndex>
+                          <TextValueIndex>false</TextValueIndex>
+                          <RuntimeProperty>false</RuntimeProperty>
+                          <CanDelete>false</CanDelete>
+                          <IconPopup>false</IconPopup>
+                          <InhrBeanBaseName>SDSS</InhrBeanBaseName>
+                          <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+                        </TInhrItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
+          <GrupItem>
+            <TBoolGrupItem>
               <Name>Activate</Name>
               <Symbol>ActivateGroup</Symbol>
               <TypeSpec>typeEnaDis</TypeSpec>
@@ -293,28 +463,82 @@
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
               <Description>Disabled</Description>
-              <Expanded>Yes</Expanded>
+              <Expanded>No</Expanded>
               <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
               <Children>
                 <GrupItem>
-                  <TInhrItem>
-                    <Name>Activate pin</Name>
-                    <Symbol>ACT</Symbol>
-                    <TypeSpec>SD_Card\Activate</TypeSpec>
-                    <Hint>If using the memory card with a tristate bus driver, then this needs to be activated. A high level on this pin activates the bus for the memory card.</Hint>
+                  <TBoolGrupItem>
+                    <Name>LDD Activate</Name>
+                    <Symbol>LDD_Activate_Group</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>Logical Device Driver Activate interface</Hint>
                     <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
                     <EditLine>false</EditLine>
-                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-                    <DefaultIndex>-1</DefaultIndex>
-                    <TextValueIndex>false</TextValueIndex>
-                    <RuntimeProperty>false</RuntimeProperty>
-                    <CanDelete>false</CanDelete>
-                    <IconPopup>false</IconPopup>
-                    <InhrBeanBaseName>ACT</InhrBeanBaseName>
-                    <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
-                  </TInhrItem>
+                    <Description>Enabled</Description>
+                    <Expanded>Yes</Expanded>
+                    <DefaultValue>true</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TInhrItem>
+                          <Name>Activate pin</Name>
+                          <Symbol>LDDACT</Symbol>
+                          <TypeSpec>SD_Card\LDDActivate</TypeSpec>
+                          <Hint>If using the memory card with a tristate bus driver, then this needs to be activated. A high level on this pin activates the bus for the memory card.</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>false</EditLine>
+                          <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                          <DefaultIndex>-1</DefaultIndex>
+                          <TextValueIndex>false</TextValueIndex>
+                          <RuntimeProperty>false</RuntimeProperty>
+                          <CanDelete>false</CanDelete>
+                          <IconPopup>false</IconPopup>
+                          <InhrBeanBaseName>ACT</InhrBeanBaseName>
+                          <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+                        </TInhrItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolGrupItem>
+                    <Name>non-LDD Activate</Name>
+                    <Symbol>nonLDD_Activate_Grp</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>classic (non Logical Device Driver) Activate interface</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
+                    <EditLine>false</EditLine>
+                    <Description>Enabled</Description>
+                    <Expanded>Yes</Expanded>
+                    <DefaultValue>true</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TInhrItem>
+                          <Name>Activate pin</Name>
+                          <Symbol>ACT</Symbol>
+                          <TypeSpec>SD_Card\Activate</TypeSpec>
+                          <Hint>If using the memory card with a tristate bus driver, then this needs to be activated. A high level on this pin activates the bus for the memory card.</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>false</EditLine>
+                          <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                          <DefaultIndex>-1</DefaultIndex>
+                          <TextValueIndex>false</TextValueIndex>
+                          <RuntimeProperty>false</RuntimeProperty>
+                          <CanDelete>false</CanDelete>
+                          <IconPopup>false</IconPopup>
+                          <InhrBeanBaseName>SDACT</InhrBeanBaseName>
+                          <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+                        </TInhrItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
                 </GrupItem>
               </Children>
             </TBoolGrupItem>
@@ -329,29 +553,11 @@
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
               <Description>Disabled</Description>
-              <Expanded>Yes</Expanded>
+              <Expanded>No</Expanded>
               <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
               <Children>
-                <GrupItem>
-                  <TInhrItem>
-                    <Name>Card detection pin</Name>
-                    <Symbol>CDI</Symbol>
-                    <TypeSpec>SD_Card\CDI</TypeSpec>
-                    <Hint>Card detection pin is on low level in case a card is inserted.</Hint>
-                    <ItemLevel>BASIC</ItemLevel>
-                    <EditLine>false</EditLine>
-                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-                    <DefaultIndex>-1</DefaultIndex>
-                    <TextValueIndex>false</TextValueIndex>
-                    <RuntimeProperty>false</RuntimeProperty>
-                    <CanDelete>false</CanDelete>
-                    <IconPopup>false</IconPopup>
-                    <InhrBeanBaseName>CD</InhrBeanBaseName>
-                    <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
-                  </TInhrItem>
-                </GrupItem>
                 <GrupItem>
                   <TBoolItem>
                     <Name>Card Detect is LOW active</Name>
@@ -369,6 +575,78 @@
                     <DefaultValue>true</DefaultValue>
                     <Popup>false</Popup>
                   </TBoolItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolGrupItem>
+                    <Name>LDD CD</Name>
+                    <Symbol>LDD_CD_Group</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>LDD (Logical Device Driver) Card Detect Interface</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
+                    <EditLine>false</EditLine>
+                    <Description>Enabled</Description>
+                    <Expanded>Yes</Expanded>
+                    <DefaultValue>true</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TInhrItem>
+                          <Name>Card detection pin</Name>
+                          <Symbol>LDDCDI</Symbol>
+                          <TypeSpec>SD_Card\LDDCDI</TypeSpec>
+                          <Hint>LDD interface to Card Detect pin</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>false</EditLine>
+                          <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                          <DefaultIndex>-1</DefaultIndex>
+                          <TextValueIndex>false</TextValueIndex>
+                          <RuntimeProperty>false</RuntimeProperty>
+                          <CanDelete>false</CanDelete>
+                          <IconPopup>false</IconPopup>
+                          <InhrBeanBaseName>CD</InhrBeanBaseName>
+                          <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+                        </TInhrItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolGrupItem>
+                    <Name>non-LDD CD</Name>
+                    <Symbol>nonLDD_CD_Group</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>classic (non-LDD) Card Detect interface</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
+                    <EditLine>false</EditLine>
+                    <Description>Enabled</Description>
+                    <Expanded>Yes</Expanded>
+                    <DefaultValue>true</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TInhrItem>
+                          <Name>Card detection pin</Name>
+                          <Symbol>CDI</Symbol>
+                          <TypeSpec>SD_Card\CDI</TypeSpec>
+                          <Hint>Card detection pin is on low level in case a card is inserted.</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>false</EditLine>
+                          <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                          <DefaultIndex>-1</DefaultIndex>
+                          <TextValueIndex>false</TextValueIndex>
+                          <RuntimeProperty>false</RuntimeProperty>
+                          <CanDelete>false</CanDelete>
+                          <IconPopup>false</IconPopup>
+                          <InhrBeanBaseName>CD</InhrBeanBaseName>
+                          <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+                        </TInhrItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
                 </GrupItem>
               </Children>
             </TBoolGrupItem>
@@ -401,7 +679,7 @@
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
               <Description>Disabled</Description>
-              <Expanded>Yes</Expanded>
+              <Expanded>No</Expanded>
               <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
@@ -425,22 +703,76 @@
                   </TBoolItem>
                 </GrupItem>
                 <GrupItem>
-                  <TInhrItem>
-                    <Name>WP pin</Name>
-                    <Symbol>WP</Symbol>
-                    <TypeSpec>SD_Card\WP</TypeSpec>
-                    <Hint>Write protect pin, low if write protection is detected. Note that this is NOT a hardware write protection: even if the write protection is set on the card, there is no hardware way to prevent writing to the card.</Hint>
+                  <TBoolGrupItem>
+                    <Name>LDD WP</Name>
+                    <Symbol>LDD_WP_Group</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>LDD (Logical Device Driver) interface for WP (Write Protect) pin</Hint>
                     <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
                     <EditLine>false</EditLine>
-                    <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-                    <DefaultIndex>-1</DefaultIndex>
-                    <TextValueIndex>false</TextValueIndex>
-                    <RuntimeProperty>false</RuntimeProperty>
-                    <CanDelete>false</CanDelete>
-                    <IconPopup>false</IconPopup>
-                    <InhrBeanBaseName>SDWP</InhrBeanBaseName>
-                    <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
-                  </TInhrItem>
+                    <Description>Enabled</Description>
+                    <Expanded>Yes</Expanded>
+                    <DefaultValue>true</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TInhrItem>
+                          <Name>Write Protect Pin</Name>
+                          <Symbol>LDDWP</Symbol>
+                          <TypeSpec>SD_Card\LDDWP</TypeSpec>
+                          <Hint>Interface to Write Protect (WP) pin</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>false</EditLine>
+                          <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                          <DefaultIndex>-1</DefaultIndex>
+                          <TextValueIndex>false</TextValueIndex>
+                          <RuntimeProperty>false</RuntimeProperty>
+                          <CanDelete>false</CanDelete>
+                          <IconPopup>false</IconPopup>
+                          <InhrBeanBaseName>WP</InhrBeanBaseName>
+                          <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+                        </TInhrItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolGrupItem>
+                    <Name>non-LDD WP</Name>
+                    <Symbol>nonLDD_WP_Group</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>classic (non-Logical Device Driver) Write Protect Interface</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
+                    <EditLine>false</EditLine>
+                    <Description>Enabled</Description>
+                    <Expanded>Yes</Expanded>
+                    <DefaultValue>true</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TInhrItem>
+                          <Name>WP pin</Name>
+                          <Symbol>WP</Symbol>
+                          <TypeSpec>SD_Card\WP</TypeSpec>
+                          <Hint>Write protect pin, low if write protection is detected. Note that this is NOT a hardware write protection: even if the write protection is set on the card, there is no hardware way to prevent writing to the card.</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>false</EditLine>
+                          <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+                          <DefaultIndex>-1</DefaultIndex>
+                          <TextValueIndex>false</TextValueIndex>
+                          <RuntimeProperty>false</RuntimeProperty>
+                          <CanDelete>false</CanDelete>
+                          <IconPopup>false</IconPopup>
+                          <InhrBeanBaseName>SDWP</InhrBeanBaseName>
+                          <ShowInheritedMethodsEventsInPrjTree>true</ShowInheritedMethodsEventsInPrjTree>
+                        </TInhrItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
                 </GrupItem>
               </Children>
             </TBoolGrupItem>
@@ -1146,6 +1478,52 @@
               <Name>Event procedure name</Name>
               <Symbol>Name</Symbol>
               <Hint>OnDeactivate procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OnBlockReceived</Name>
+        <Symbol>OnBlockReceived</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>This event is called when the requested number of data is moved to the input buffer. This method is available only if the ReceiveBlock method is enabled.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <IsInSimulink>true</IsInSimulink>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>DEF_UNDEF</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>true</IsAssembler>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>UserDataPtr</ParName>
+          <ParType>LDD_TUserData</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the user or RTOS specific data. The pointer is passed as the parameter of Init method. </ParHint>
+        </Parameter>
+        <Scope>OVERRIDE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(LDD_TUserData *UserDataPtr)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OnBlockReceived procedure name</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
               <DefaultValue/>
