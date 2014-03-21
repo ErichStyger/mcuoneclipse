@@ -435,7 +435,7 @@ static byte PrintStatus(%@Shell@'ModuleName'%.ConstStdIOType *io) {
 #endif
 byte %'ModuleName'%.%SetTime(byte Hour, byte Min, byte Sec, byte Sec100)
 {
-  %@CriticalSection@'ModuleName'%.CriticalVariable();
+  %@CriticalSection@'ModuleName'%.CriticalVariable()
 
   if ((Sec100>99U) || (Sec>59U) || (Min>59U) || (Hour>23U)) {    %>40/* Test correctnes of given time */
     return ERR_RANGE;                                            %>40/* If not correct then error */
@@ -493,8 +493,8 @@ void %'ModuleName'%.%AddTick(void)
 %include Common\GenericTimeDateGetTime.Inc
 byte %'ModuleName'%.%GetTime(TIMEREC *Time)
 {
-  %@CriticalSection@'ModuleName'%.CriticalVariable();
   dword ticks;                                                   %>40/* temporary variable of software tick counter */
+  %@CriticalSection@'ModuleName'%.CriticalVariable()
 
   %@CriticalSection@'ModuleName'%.EnterCritical();               %>40/* need exclusive access to tick counter */
   ticks = tickCntr;                                              %>40/* actual number of ticks */
@@ -520,8 +520,8 @@ byte %'ModuleName'%.%GetTime(TIMEREC *Time)
 %include Common\GenericTimeDateSetDate.Inc
 byte %'ModuleName'%.%SetDate(word Year, byte Month, byte Day)
 {
-  %@CriticalSection@'ModuleName'%.CriticalVariable();
   const byte * ptr;                                              %>40/* Pointer to ULY/LY table */
+  %@CriticalSection@'ModuleName'%.CriticalVariable()
 
   if ((Year < 1998U) || (Year > 2099U) || (Month > 12U) || (Month == 0U) || (Day > 31U) || (Day == 0U)) {%>40/* Test correctness of given parameters */
     return ERR_RANGE;                                            %>40/* If not correct then error */
@@ -548,7 +548,7 @@ byte %'ModuleName'%.%SetDate(word Year, byte Month, byte Day)
 %include Common\GenericTimeDateGetDate.Inc
 byte %'ModuleName'%.%GetDate(DATEREC *Date)
 {
-  %@CriticalSection@'ModuleName'%.CriticalVariable();
+  %@CriticalSection@'ModuleName'%.CriticalVariable()
 
   %@CriticalSection@'ModuleName'%.EnterCritical();               %>40/* Save the PS register */
   Date->Year = CntYear;                                          %>40/* Year */
