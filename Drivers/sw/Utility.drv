@@ -2434,7 +2434,7 @@ int16_t %'ModuleName'%.%strFind(byte *str, byte *subStr)
 {
   int16_t i, len;
 
-  len = (int16_t)UTIL1_strlen((char*)subStr);
+  len = (int16_t)%'ModuleName'%.%strlen((char*)subStr);
   for (i=0; *str!='\0'; i++, str++) {
     if (%'ModuleName'%.%strncmp((char*)str, (char*)subStr, len)==0) {
       return i; /* found */
