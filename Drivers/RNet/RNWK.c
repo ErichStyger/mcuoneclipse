@@ -8,12 +8,11 @@
  */
 
 #include "RNetConf.h"
-#if PL_HAS_RADIO
 #include "RPHY.h"
 #include "RMAC.h"
 #include "RNWK.h"
 #include "RAPP.h"
-#include "UTIL1.h"
+#include "%@Utility@'ModuleName'.h"
 
 static RNWK_ShortAddrType RNWK_ThisNodeAddr = RNWK_ADDR_BROADCAST; /* address of this network node */
 static RNWK_AppOnRxCallbackType RNWK_AppOnRxCallback = NULL; /* notification callback installed by upper layer */
@@ -88,41 +87,41 @@ void RNWK_SniffPacket(RPHY_PacketDesc *packet, bool isTx) {
   RAPP_SniffPacket(packet, isTx);
 }
 
-#if PL_HAS_SHELL
-static uint8_t PrintHelp(const CLS1_StdIOType *io) {
-  CLS1_SendHelpStr((unsigned char*)"rnwk", (unsigned char*)"Group of rnwk commands\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows help or status\r\n", io->stdOut);
+%if defined(Shell)
+static uint8_t PrintHelp(const %@Shell@'ModuleName'%.StdIOType *io) {
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"rnwk", (unsigned char*)"Group of rnwk commands\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows help or status\r\n", io->stdOut);
   return ERR_OK;
 }
 
-static uint8_t PrintStatus(const CLS1_StdIOType *io) {
+static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   uint8_t buf[32];
   
-  CLS1_SendStatusStr((unsigned char*)"rnwk", (unsigned char*)"\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"rnwk", (unsigned char*)"\r\n", io->stdOut);
   
-  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"0x");
 #if RNWK_SHORT_ADDR_SIZE==1
-  UTIL1_strcatNum8Hex(buf, sizeof(buf), RNWK_GetThisNodeAddr());
+  %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), RNWK_GetThisNodeAddr());
 #else
-  UTIL1_strcatNum16Hex(buf, sizeof(buf), RNWK_GetThisNodeAddr());
+  %@Utility@'ModuleName'%.strcatNum16Hex(buf, sizeof(buf), RNWK_GetThisNodeAddr());
 #endif
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-  CLS1_SendStatusStr((unsigned char*)"  addr", buf, io->stdOut);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  addr", buf, io->stdOut);
 
   return ERR_OK;
 }
 
-uint8_t RNWK_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
-  if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, (char*)"rnwk help")==0) {
+uint8_t RNWK_ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io) {
+  if (%@Utility@'ModuleName'%.strcmp((char*)cmd, (char*)%@Shell@'ModuleName'%.CMD_HELP)==0 || %@Utility@'ModuleName'%.strcmp((char*)cmd, (char*)"rnwk help")==0) {
     *handled = TRUE;
     return PrintHelp(io);
-  } else if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_STATUS)==0 || UTIL1_strcmp((char*)cmd, (char*)"rnwk status")==0) {
+  } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, (char*)%@Shell@'ModuleName'%.CMD_STATUS)==0 || %@Utility@'ModuleName'%.strcmp((char*)cmd, (char*)"rnwk status")==0) {
     *handled = TRUE;
     return PrintStatus(io);
   }
   return ERR_OK;
 }
-#endif /* PL_HAS_SHELL */
+%endif
 
 void RNWK_Deinit(void) {
   /* nothing needed */
@@ -132,5 +131,3 @@ void RNWK_Init(void) {
   RNWK_ThisNodeAddr = RNWK_ADDR_BROADCAST;
   RNWK_AppOnRxCallback = NULL;
 }
-
-#endif /* PL_HAS_RADIO */

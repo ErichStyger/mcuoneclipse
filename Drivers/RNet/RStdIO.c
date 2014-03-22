@@ -10,15 +10,14 @@
 #include "RNetConf.h"
 #if PL_HAS_RSTDIO
 #include "RStdIO.h"
-#include "FRTOS1.h"
-#include "UTIL1.h"
+#include "%@RTOS@'ModuleName'.h"
+#include "%@Utility@'ModuleName'.h"
 #if PL_HAS_RTOS_TRACE
   #include "RTOSTRC1.h"
 #endif
-#include "CLS1.h"
+#include "%@Shell@'ModuleName'.h"
 #include "Radio.h"
 #include "RMSG.h"
-#include "UTIL1.h"
 #include "RNWK.h"
 #include "RApp.h"
 
@@ -58,7 +57,7 @@ xQueueHandle GetQueueForType(RSTDIO_QueueType queueType) {
  */
 static uint8_t AddToQueue(xQueueHandle queue, const unsigned char *data, size_t dataSize) {
   while(dataSize!=0) {
-    if (FRTOS1_xQueueSendToBack(queue, data, RSTDIO_QUEUE_TIMEOUT_MS/portTICK_RATE_MS)!=pdPASS) {
+    if (%@RTOS@'ModuleName'%.xQueueSendToBack(queue, data, RSTDIO_QUEUE_TIMEOUT_MS/portTICK_RATE_MS)!=pdPASS) {
       return ERR_FAULT;
     }
     data++;
@@ -86,7 +85,7 @@ uint8_t RSTDIO_AddToQueue(RSTDIO_QueueType queueType, const unsigned char *data,
  * \return '\0' if the queue is empty, otherwise it contains the character. 
  */
 static unsigned short RSTDIO_NofElements(xQueueHandle queue) {
-  return (unsigned short)FRTOS1_uxQueueMessagesWaiting(queue);
+  return (unsigned short)%@RTOS@'ModuleName'%.uxQueueMessagesWaiting(queue);
 }
 
 uint8_t RSTDIO_NofInQueue(RSTDIO_QueueType queueType) {
@@ -110,7 +109,7 @@ static unsigned char RSTDIO_ReceiveChar(xQueueHandle queue) {
   unsigned char ch;
   portBASE_TYPE res;
 
-  res = FRTOS1_xQueueReceive(queue, &ch, 0);
+  res = %@RTOS@'ModuleName'%.xQueueReceive(queue, &ch, 0);
   if (res==errQUEUE_EMPTY) {
     return '\0';
   } else {
@@ -172,7 +171,7 @@ static uint8_t FlushAndTxQueue(RSTDIO_QueueType queueType, RAPP_MSG_Type msgType
   }
   res = RAPP_PutPayload(buf, sizeof(buf), i, msgType, RSTDIO_dstAddr, RPHY_PACKET_FLAGS_REQ_ACK);
   if (res!=ERR_OK) {
-    CLS1_ConstStdIOType *io = CLS1_GetStdio();
+    %@Shell@'ModuleName'%.ConstStdIOType *io = %@Shell@'ModuleName'%.GetStdio();
 
     io->stdErr('*');
     io->stdErr('F');
@@ -256,11 +255,11 @@ static bool RSTDIO_RxStdInKeyPressed(void) {
   return (bool)(RSTDIO_NofElements(RSTDIO_RxStdInQ)!=0); 
 }
 
-CLS1_ConstStdIOTypePtr RSTDIO_GetStdioRx(void) {
-  static CLS1_ConstStdIOType RSTDIO_stdioRx = {
-    (CLS1_StdIO_In_FctType)RSTDIO_RxStdInReadChar, /* stdin */
-    (CLS1_StdIO_OutErr_FctType)RSTDIO_TxStdOut, /* stdout */
-    (CLS1_StdIO_OutErr_FctType)RSTDIO_TxStdErr, /* stderr */
+%@Shell@'ModuleName'%.ConstStdIOTypePtr RSTDIO_GetStdioRx(void) {
+  static %@Shell@'ModuleName'%.ConstStdIOType RSTDIO_stdioRx = {
+    (%@Shell@'ModuleName'%.StdIO_In_FctType)RSTDIO_RxStdInReadChar, /* stdin */
+    (%@Shell@'ModuleName'%.StdIO_OutErr_FctType)RSTDIO_TxStdOut, /* stdout */
+    (%@Shell@'ModuleName'%.StdIO_OutErr_FctType)RSTDIO_TxStdErr, /* stderr */
     RSTDIO_RxStdInKeyPressed /* if input is not empty */
   };
   return &RSTDIO_stdioRx; 
@@ -270,7 +269,7 @@ CLS1_ConstStdIOTypePtr RSTDIO_GetStdioRx(void) {
  * \brief Called from the application task. This function checks the Radio RX queue and checks if it contains stdio messages.
  * If so, it dispatches it to the corresponding shell queues.
  */
-void RSTDIO_Print(CLS1_ConstStdIOTypePtr io) {
+void RSTDIO_Print(%@Shell@'ModuleName'%.ConstStdIOTypePtr io) {
   unsigned char ch;
 
   for(;;) { /* breaks */
@@ -291,37 +290,37 @@ void RSTDIO_Print(CLS1_ConstStdIOTypePtr io) {
 
 /*! \brief Deinitializes the queue module */
 void RSTDIO_Deinit(void) {
-  FRTOS1_vQueueDelete(RSTDIO_RxStdInQ);
-  FRTOS1_vQueueDelete(RSTDIO_RxStdOutQ);
-  FRTOS1_vQueueDelete(RSTDIO_RxStdErrQ);
-  FRTOS1_vQueueDelete(RSTDIO_TxStdInQ);
-  FRTOS1_vQueueDelete(RSTDIO_TxStdOutQ);
-  FRTOS1_vQueueDelete(RSTDIO_TxStdErrQ);
+  %@RTOS@'ModuleName'%.vQueueDelete(RSTDIO_RxStdInQ);
+  %@RTOS@'ModuleName'%.vQueueDelete(RSTDIO_RxStdOutQ);
+  %@RTOS@'ModuleName'%.vQueueDelete(RSTDIO_RxStdErrQ);
+  %@RTOS@'ModuleName'%.vQueueDelete(RSTDIO_TxStdInQ);
+  %@RTOS@'ModuleName'%.vQueueDelete(RSTDIO_TxStdOutQ);
+  %@RTOS@'ModuleName'%.vQueueDelete(RSTDIO_TxStdErrQ);
 }
 
 void RSTDIO_Init(void) {
   RSTDIO_dstAddr = RNWK_ADDR_BROADCAST;
-  RSTDIO_RxStdInQ = FRTOS1_xQueueCreate(RSTDIO_QUEUE_LENGTH, RSTDIO_QUEUE_ITEM_SIZE);
+  RSTDIO_RxStdInQ = %@RTOS@'ModuleName'%.xQueueCreate(RSTDIO_QUEUE_LENGTH, RSTDIO_QUEUE_ITEM_SIZE);
   if (RSTDIO_RxStdInQ==NULL) {
     for(;;){} /* out of memory? */
   }
-  RSTDIO_RxStdOutQ = FRTOS1_xQueueCreate(RSTDIO_QUEUE_LENGTH, RSTDIO_QUEUE_ITEM_SIZE);
+  RSTDIO_RxStdOutQ = %@RTOS@'ModuleName'%.xQueueCreate(RSTDIO_QUEUE_LENGTH, RSTDIO_QUEUE_ITEM_SIZE);
   if (RSTDIO_RxStdOutQ==NULL) {
     for(;;){} /* out of memory? */
   }
-  RSTDIO_RxStdErrQ = FRTOS1_xQueueCreate(RSTDIO_QUEUE_LENGTH, RSTDIO_QUEUE_ITEM_SIZE);
+  RSTDIO_RxStdErrQ = %@RTOS@'ModuleName'%.xQueueCreate(RSTDIO_QUEUE_LENGTH, RSTDIO_QUEUE_ITEM_SIZE);
   if (RSTDIO_RxStdErrQ==NULL) {
     for(;;){} /* out of memory? */
   }
-  RSTDIO_TxStdInQ = FRTOS1_xQueueCreate(RSTDIO_QUEUE_LENGTH, RSTDIO_QUEUE_ITEM_SIZE);
+  RSTDIO_TxStdInQ = %@RTOS@'ModuleName'%.xQueueCreate(RSTDIO_QUEUE_LENGTH, RSTDIO_QUEUE_ITEM_SIZE);
   if (RSTDIO_TxStdInQ==NULL) {
     for(;;){} /* out of memory? */
   }
-  RSTDIO_TxStdOutQ = FRTOS1_xQueueCreate(RSTDIO_QUEUE_LENGTH, RSTDIO_QUEUE_ITEM_SIZE);
+  RSTDIO_TxStdOutQ = %@RTOS@'ModuleName'%.xQueueCreate(RSTDIO_QUEUE_LENGTH, RSTDIO_QUEUE_ITEM_SIZE);
   if (RSTDIO_TxStdOutQ==NULL) {
     for(;;){} /* out of memory? */
   }
-  RSTDIO_TxStdErrQ = FRTOS1_xQueueCreate(RSTDIO_QUEUE_LENGTH, RSTDIO_QUEUE_ITEM_SIZE);
+  RSTDIO_TxStdErrQ = %@RTOS@'ModuleName'%.xQueueCreate(RSTDIO_QUEUE_LENGTH, RSTDIO_QUEUE_ITEM_SIZE);
   if (RSTDIO_TxStdErrQ==NULL) {
     for(;;){} /* out of memory? */
   }
@@ -334,4 +333,4 @@ void RSTDIO_Init(void) {
   RTOSTRC1_vTraceSetQueueName(RSTDIO_TxStdErrQ, "TxStdErr");
 #endif
 }
-#endif /* PL_HAS_RADIO */
+#endif /* PL_HAS_RSTDIO */

@@ -11,7 +11,6 @@
 #define RADIOMESSAGE_H_
 
 #include "RNetConf.h"
-#if PL_HAS_RADIO
 #include "RPHY.h"
 
 /*!
@@ -81,7 +80,5 @@ void RMSG_Init(void);
 
 /*! \brief Deinitializes the module */
 void RMSG_Deinit(void);
-
-#endif /* PL_HAS_RADIO */
 
 #endif /* RADIOMESSAGE_H_ */

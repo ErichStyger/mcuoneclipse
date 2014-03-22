@@ -8,7 +8,6 @@
  */
 
 #include "RNetConf.h"
-#if PL_HAS_RADIO
 #include "Radio.h"
 #include "RadioNRF24.h"
 #include "RF1.h"
@@ -16,7 +15,7 @@
 #include "RStdIO.h"
 #include "RPHY.h"
 #include "WAIT1.h"
-#include "UTIL1.h"
+#include "%@Utility@'ModuleName'.h"
 
 #define NRF24_DYNAMIC_PAYLOAD  1 /* if set to one, use dynamic payload size */
 #define RADIO_CHANNEL_DEFAULT  0  /* default communication channel */
@@ -49,9 +48,9 @@ static uint8_t radioRxBuf[RPHY_BUFFER_SIZE];
 static volatile bool RADIO_isrFlag; /* flag set by ISR */
 
 static void Err(unsigned char *msg) {
-#if PL_HAS_SHELL
-  CLS1_SendStr(msg, CLS1_GetStdio()->stdErr);
-#endif
+%if defined(Shell)
+  %@Shell@'ModuleName'%.SendStr(msg, %@Shell@'ModuleName'%.GetStdio()->stdErr);
+%endif
 }
 
 /* callback called from radio driver */
@@ -286,7 +285,7 @@ uint8_t RADIO_Process(void) {
   return ERR_OK;
 }
 
-#if PL_HAS_SHELL
+%if defined(Shell)
 static const unsigned char *RadioStateStr(RADIO_AppStatusKind state) {
   switch(state) {
     case RADIO_INITIAL_STATE:         return (const unsigned char*)"INITIAL";
@@ -300,93 +299,93 @@ static const unsigned char *RadioStateStr(RADIO_AppStatusKind state) {
   return (const unsigned char*)"UNKNOWN";
 }
 
-static void RADIO_PrintHelp(const CLS1_StdIOType *io) {
-  CLS1_SendHelpStr((unsigned char*)"radio", (unsigned char*)"Group of radio commands\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows radio help or status\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  channel <number>", (unsigned char*)"Switches to the given channel. Channel must be in the range 0..127\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  power <number>", (unsigned char*)"Changes output power to 0, -10, -12, -18\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  sniff on|off", (unsigned char*)"Turns sniffing on or off\r\n", io->stdOut);
+static void RADIO_PrintHelp(const %@Shell@'ModuleName'%.StdIOType *io) {
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"radio", (unsigned char*)"Group of radio commands\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows radio help or status\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  channel <number>", (unsigned char*)"Switches to the given channel. Channel must be in the range 0..127\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  power <number>", (unsigned char*)"Changes output power to 0, -10, -12, -18\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  sniff on|off", (unsigned char*)"Turns sniffing on or off\r\n", io->stdOut);
 }
 
-static void RADIO_PrintStatus(const CLS1_StdIOType *io) {
+static void RADIO_PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   uint8_t buf[24];
   uint8_t val0, val1;
   int8_t val;
   
-  CLS1_SendStatusStr((unsigned char*)"Radio", (unsigned char*)"\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"Radio", (unsigned char*)"\r\n", io->stdOut);
   
-  CLS1_SendStatusStr((unsigned char*)"  state", RadioStateStr(RADIO_AppStatus), io->stdOut);
-  CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  state", RadioStateStr(RADIO_AppStatus), io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
   
-  CLS1_SendStatusStr((unsigned char*)"  sniff", RADIO_isSniffing?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  sniff", RADIO_isSniffing?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
   
   (void)RF1_GetChannel(&val0);
-  UTIL1_Num8uToStr(buf, sizeof(buf), val0);
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-  CLS1_SendStatusStr((unsigned char*)"  channel", buf, io->stdOut);
+  %@Utility@'ModuleName'%.Num8uToStr(buf, sizeof(buf), val0);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  channel", buf, io->stdOut);
 
   (void)RF1_GetOutputPower(&val);
-  UTIL1_Num8sToStr(buf, sizeof(buf), val);
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" dBm\r\n");
-  CLS1_SendStatusStr((unsigned char*)"  power", buf, io->stdOut);
+  %@Utility@'ModuleName'%.Num8sToStr(buf, sizeof(buf), val);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" dBm\r\n");
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  power", buf, io->stdOut);
  
   (void)RF1_ReadObserveTxRegister(&val0, &val1);
-  UTIL1_Num8uToStr(buf, sizeof(buf), val0);
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" lost, ");
-  UTIL1_strcatNum8u(buf, sizeof(buf), val1);
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" retry\r\n");
-  CLS1_SendStatusStr((unsigned char*)"  OBSERVE_TX", buf, io->stdOut);
+  %@Utility@'ModuleName'%.Num8uToStr(buf, sizeof(buf), val0);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" lost, ");
+  %@Utility@'ModuleName'%.strcatNum8u(buf, sizeof(buf), val1);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" retry\r\n");
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  OBSERVE_TX", buf, io->stdOut);
 #if 0  /* The RPD status will get reset very fast by another (e.g. WLAN) packet. So this is not really a useful feature :-( */
   (void)RF1_ReadReceivedPowerDetector(&val0); /*! \todo only works in RX mode, but somehow this still does not work? */
   if (val0&1) {
-    UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"1, > -64 dBm\r\n");
+    %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"1, > -64 dBm\r\n");
   } else {
-    UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"0, < -64 dBm\r\n");
+    %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"0, < -64 dBm\r\n");
   }
-  CLS1_SendStatusStr((unsigned char*)"  RPD", buf, io->stdOut);
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  RPD", buf, io->stdOut);
 #endif
 }
 
-uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
+uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io) {
   uint8_t res = ERR_OK;
   const unsigned char *p;
   uint8_t val;
   int8_t vals;
 
-  if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, (char*)"radio help")==0) {
+  if (%@Utility@'ModuleName'%.strcmp((char*)cmd, (char*)%@Shell@'ModuleName'%.CMD_HELP)==0 || %@Utility@'ModuleName'%.strcmp((char*)cmd, (char*)"radio help")==0) {
     RADIO_PrintHelp(io);
     *handled = TRUE;
-  } else if (UTIL1_strcmp((char*)cmd, (char*)CLS1_CMD_STATUS)==0 || UTIL1_strcmp((char*)cmd, (char*)"radio status")==0) {
+  } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, (char*)%@Shell@'ModuleName'%.CMD_STATUS)==0 || %@Utility@'ModuleName'%.strcmp((char*)cmd, (char*)"radio status")==0) {
     RADIO_PrintStatus(io);
     *handled = TRUE;
-  } else if (UTIL1_strcmp((char*)cmd, (char*)"radio sniff on")==0) {
+  } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, (char*)"radio sniff on")==0) {
     RADIO_isSniffing = TRUE;
     *handled = TRUE;
-  } else if (UTIL1_strcmp((char*)cmd, (char*)"radio sniff off")==0) {
+  } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, (char*)"radio sniff off")==0) {
     RADIO_isSniffing = FALSE;
     *handled = TRUE;
-  } else if (UTIL1_strncmp((char*)cmd, (char*)"radio channel", sizeof("radio channel")-1)==0) {
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, (char*)"radio channel", sizeof("radio channel")-1)==0) {
     p = cmd+sizeof("radio channel");
-    if (UTIL1_ScanDecimal8uNumber(&p, &val)==ERR_OK && val>=0 && val<=0x7F) {
+    if (%@Utility@'ModuleName'%.ScanDecimal8uNumber(&p, &val)==ERR_OK && val>=0 && val<=0x7F) {
       RADIO_SetChannel(val);
       *handled = TRUE;
     } else {
-      CLS1_SendStr((unsigned char*)"Wrong argument, must be in the range 0..128\r\n", io->stdErr);
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"Wrong argument, must be in the range 0..128\r\n", io->stdErr);
       res = ERR_FAILED;
     }
-  } else if (UTIL1_strncmp((char*)cmd, (char*)"radio power", sizeof("radio power")-1)==0) {
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, (char*)"radio power", sizeof("radio power")-1)==0) {
     p = cmd+sizeof("radio power");
-    if (UTIL1_ScanDecimal8sNumber(&p, &vals)==ERR_OK && (vals==0 || vals==-10 || vals==-12 || vals==-18)) {
+    if (%@Utility@'ModuleName'%.ScanDecimal8sNumber(&p, &vals)==ERR_OK && (vals==0 || vals==-10 || vals==-12 || vals==-18)) {
       (void)RF1_SetOutputPower(vals);
       *handled = TRUE;
     } else {
-      CLS1_SendStr((unsigned char*)"Wrong argument, must be 0, -10, -12 or -18\r\n", io->stdErr);
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"Wrong argument, must be 0, -10, -12 or -18\r\n", io->stdErr);
       res = ERR_FAILED;
     }
   }
   return res;
 }
-#endif
+%endif
 
 void RADIO_Deinit(void) {
   /* nothing to do */
@@ -395,8 +394,3 @@ void RADIO_Deinit(void) {
 void RADIO_Init(void) {
   RADIO_isSniffing = FALSE;
 }
-#else
-void RADIO_OnInterrupt(void) {
-  /* dummy to make linker happy */
-}
-#endif /* PL_HAS_RADIO */

@@ -8,10 +8,9 @@
  */
 
 #include "RNetConf.h"
-#if PL_HAS_RADIO
 #include "RApp.h"
 #include "RNWK.h"
-#include "UTIL1.h"
+#include "%@Utility@'ModuleName'.h"
 
 static const RAPP_MsgHandler *RAPP_MsgHandlerTable;
 
@@ -90,84 +89,84 @@ uint8_t RAPP_SetThisNodeAddr(RNWK_ShortAddrType addr) {
 }
 
 void RAPP_SniffPacket(RPHY_PacketDesc *packet, bool isTx) {
-#if PL_HAS_SHELL
+%if defined(Shell)
   uint8_t buf[32];
-  const CLS1_StdIOType *io;
+  const %@Shell@'ModuleName'%.StdIOType *io;
   int i;
   uint8_t dataSize;
   RNWK_ShortAddrType addr;
   
-  io = CLS1_GetStdio();
+  io = %@Shell@'ModuleName'%.GetStdio();
   if (isTx) {
-    CLS1_SendStr((unsigned char*)"Packet Tx ", io->stdOut);
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"Packet Tx ", io->stdOut);
   } else {
-    CLS1_SendStr((unsigned char*)"Packet Rx ", io->stdOut);
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"Packet Rx ", io->stdOut);
   }
-  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"flags: ");
-  UTIL1_strcatNum16s(buf, sizeof(buf), packet->flags);
-  CLS1_SendStr(buf, io->stdOut);
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"flags: ");
+  %@Utility@'ModuleName'%.strcatNum16s(buf, sizeof(buf), packet->flags);
+  %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
   if (packet->flags!=RPHY_PACKET_FLAGS_NONE) {
-    CLS1_SendStr((unsigned char*)"(", io->stdOut);
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"(", io->stdOut);
     if (packet->flags&RPHY_PACKET_FLAGS_IS_ACK) {
-      CLS1_SendStr((unsigned char*)"IS_ACK,", io->stdOut);
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"IS_ACK,", io->stdOut);
     }
     if (packet->flags&RPHY_PACKET_FLAGS_REQ_ACK) {
-      CLS1_SendStr((unsigned char*)"REQ_ACK", io->stdOut);
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"REQ_ACK", io->stdOut);
     }
-    CLS1_SendStr((unsigned char*)")", io->stdOut);
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)")", io->stdOut);
   }
-  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)" size: ");
-  UTIL1_strcatNum16s(buf, sizeof(buf), packet->phySize);
-  CLS1_SendStr(buf, io->stdOut);
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)" size: ");
+  %@Utility@'ModuleName'%.strcatNum16s(buf, sizeof(buf), packet->phySize);
+  %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
   /* PHY */
-  CLS1_SendStr((unsigned char*)" PHY data: ", io->stdOut);
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)" PHY data: ", io->stdOut);
   dataSize = RPHY_BUF_SIZE(packet->phyData);
   for(i=0; i<dataSize+RPHY_HEADER_SIZE;i++) {
     buf[0] = '\0';
-    UTIL1_strcatNum8Hex(buf, sizeof(buf), packet->phyData[i]);
-    UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" ");
-    CLS1_SendStr(buf, io->stdOut);
+    %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), packet->phyData[i]);
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" ");
+    %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
   }
   /* MAC */
-  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)" MAC size:");
-  UTIL1_strcatNum8u(buf, sizeof(buf), dataSize);
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" type:");
-  UTIL1_strcatNum8Hex(buf, sizeof(buf), RMAC_BUF_TYPE(packet->phyData));
-  CLS1_SendStr(buf, io->stdOut);
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)" MAC size:");
+  %@Utility@'ModuleName'%.strcatNum8u(buf, sizeof(buf), dataSize);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" type:");
+  %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), RMAC_BUF_TYPE(packet->phyData));
+  %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
   RMAC_DecodeType(buf, sizeof(buf), packet);
-  CLS1_SendStr(buf, io->stdOut);
-  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)" s#:");
-  UTIL1_strcatNum8Hex(buf, sizeof(buf), RMAC_BUF_SEQN(packet->phyData));
-  CLS1_SendStr(buf, io->stdOut);
+  %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)" s#:");
+  %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), RMAC_BUF_SEQN(packet->phyData));
+  %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
   /* NWK */
-  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)" NWK src:");
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)" NWK src:");
   addr = RNWK_BUF_GET_SRC_ADDR(packet->phyData);
 #if RNWK_SHORT_ADDR_SIZE==1
-  UTIL1_strcatNum8Hex(buf, sizeof(buf), addr);
+  %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), addr);
 #else
-  UTIL1_strcatNum16Hex(buf, sizeof(buf), addr);
+  %@Utility@'ModuleName'%.strcatNum16Hex(buf, sizeof(buf), addr);
 #endif
-  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" dst:");
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" dst:");
   addr = RNWK_BUF_GET_DST_ADDR(packet->phyData);
 #if RNWK_SHORT_ADDR_SIZE==1
-  UTIL1_strcatNum8Hex(buf, sizeof(buf), addr);
+  %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), addr);
 #else
-  UTIL1_strcatNum16Hex(buf, sizeof(buf), addr);
+  %@Utility@'ModuleName'%.strcatNum16Hex(buf, sizeof(buf), addr);
 #endif
-  CLS1_SendStr(buf, io->stdOut);
+  %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
   /* APP */
   if (dataSize>RMAC_HEADER_SIZE+RNWK_HEADER_SIZE) { /* there is application data */
-    UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)" APP type:");
-    UTIL1_strcatNum8Hex(buf, sizeof(buf), RAPP_BUF_TYPE(packet->phyData));
-    UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" size:");
-    UTIL1_strcatNum8Hex(buf, sizeof(buf), RAPP_BUF_SIZE(packet->phyData));
-    CLS1_SendStr(buf, io->stdOut);
+    %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)" APP type:");
+    %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), RAPP_BUF_TYPE(packet->phyData));
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" size:");
+    %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), RAPP_BUF_SIZE(packet->phyData));
+    %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
   }
-  CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
-#else
+  %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdOut);
+%else
   (void)packet;
   (void)isTx;
-#endif
+%endif
 }
 void RAPP_Deinit(void) {
   /* nothing needed */
@@ -177,5 +176,3 @@ void RAPP_Init(void) {
   (void)RNWK_SetAppOnPacketRxCallback(RAPP_OnPacketRx);
   RAPP_MsgHandlerTable = NULL;
 }
-
-#endif /* PL_HAS_RADIO */

@@ -11,7 +11,6 @@
 #define RNWK_H_
 
 #include "RNetConf.h"
-#if PL_HAS_RADIO
 #include "RMAC.h"
 #include "RPHY.h"
 
@@ -79,10 +78,10 @@ uint8_t RNWK_OnPacketRx(RPHY_PacketDesc *packet);
  */
 uint8_t RNWK_PutPayload(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RNWK_ShortAddrType dstAddr, RPHY_FlagsType flags);
 
-#if PL_HAS_SHELL
-#include "CLS1.h"
-uint8_t RNWK_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
-#endif
+%if defined(Shell)
+#include "%@Shell@'ModuleName'.h"
+uint8_t RNWK_ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io);
+%endif
 
 /*!
  * \brief Returns the node network address.
@@ -108,7 +107,5 @@ void RNWK_Init(void);
 
 /*! \brief Deinitializes the module */
 void RNWK_Deinit(void);
-
-#endif /* PL_HAS_RADIO */
 
 #endif /* RNWK_H_ */

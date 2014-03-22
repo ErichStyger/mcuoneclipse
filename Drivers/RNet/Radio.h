@@ -12,8 +12,8 @@
 
 #include "RNetConf.h"
 
-#if PL_HAS_SHELL
-#include "CLS1.h"
+%if defined(Shell)
+#include "%@Shell@'ModuleName'.h"
 /*!
  * \brief Parses a command
  * \param cmd Command string to be parsed
@@ -21,8 +21,8 @@
  * \param io I/O stream to be used for input/output
  * \return Error code, ERR_OK if everything was fine
  */
-uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
-#endif
+uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io);
+%endif
 
 /*!
  * \brief Set the radio communication channel

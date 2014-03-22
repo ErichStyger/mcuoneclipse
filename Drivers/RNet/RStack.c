@@ -8,7 +8,6 @@
  */
 
 #include "RNetConf.h"
-#if PL_HAS_RADIO
 #include "RStack.h"
 #include "Radio.h"
 #include "RMSG.h"
@@ -43,4 +42,3 @@ void RSTACK_Deinit(void) {
   RMSG_Deinit();
   RADIO_Deinit();
 }
-#endif

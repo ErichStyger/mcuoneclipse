@@ -11,7 +11,6 @@
 #define RAPP_H_
 
 #include "Platform.h"
-#if PL_HAS_RADIO
 #include "RNetConf.h"
 #include "RNWK.h"
 #include "RPHY.h"
@@ -66,7 +65,5 @@ void RAPP_Init(void);
 
 /*! \brief Deinitializes the module */
 void RAPP_Deinit(void);
-
-#endif /* #if PL_HAS_RADIO */
 
 #endif /* RAPP_H_ */

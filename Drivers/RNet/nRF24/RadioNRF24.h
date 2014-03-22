@@ -11,11 +11,8 @@
 #define RADIO_NRF24_H_
 
 #include "RNetConf.h"
-#if PL_HAS_RADIO
 #include "Radio.h"
 
 void Radio_OnInterrupt(void);
-
-#endif /* PL_HAS_RADIO */
 
 #endif /* RADIO_NRF24_H_ */

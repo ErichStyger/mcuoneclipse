@@ -8,9 +8,8 @@
  */
 
 #include "RNetConf.h"
-#if PL_HAS_RADIO
 #include "RMSG.h"
-#include "FRTOS1.h"
+#include "%@RTOS@'ModuleName'.h"
 #include "WAIT1.h"
 #if PL_HAS_RTOS_TRACE
   #include "RTOSTRC1.h"
@@ -25,14 +24,14 @@
 static xQueueHandle RMSG_MsgRxQueue, RMSG_MsgTxQueue; /* queue for messages,  format is: kind(8bit) dataSize(8bit) data */
 
 uint8_t RMSG_FlushRxQueue(void) {
-  if (FRTOS1_xQueueReset(RMSG_MsgRxQueue)!=pdPASS) {
+  if (%@RTOS@'ModuleName'%.xQueueReset(RMSG_MsgRxQueue)!=pdPASS) {
     return ERR_FAILED;
   }
   return ERR_OK;
 }
 
 uint8_t RMSG_FlushTxQueue(void) {
-  if (FRTOS1_xQueueReset(RMSG_MsgTxQueue)!=pdPASS) {
+  if (%@RTOS@'ModuleName'%.xQueueReset(RMSG_MsgTxQueue)!=pdPASS) {
     return ERR_FAILED;
   }
   return ERR_OK;
@@ -60,12 +59,12 @@ uint8_t RMSG_QueuePut(uint8_t *buf, size_t bufSize, uint8_t payloadSize, bool fr
   if (fromISR) {
     signed portBASE_TYPE pxHigherPriorityTaskWoken;
     
-    if (FRTOS1_xQueueSendToBackFromISR(queue, buf, &pxHigherPriorityTaskWoken)!=pdTRUE) {
+    if (%@RTOS@'ModuleName'%.xQueueSendToBackFromISR(queue, buf, &pxHigherPriorityTaskWoken)!=pdTRUE) {
       /* was not able to send to the queue. Well, not much we can do here... */
       res = ERR_BUSY;
     }
   } else {
-    if (FRTOS1_xQueueSendToBack(queue, buf, RMSG_QUEUE_PUT_WAIT)!=pdTRUE) {
+    if (%@RTOS@'ModuleName'%.xQueueSendToBack(queue, buf, RMSG_QUEUE_PUT_WAIT)!=pdTRUE) {
       res = ERR_BUSY;
     }
   }
@@ -76,7 +75,7 @@ uint8_t RMSG_GetTxMsg(uint8_t *buf, size_t bufSize) {
   if (bufSize<RPHY_BUFFER_SIZE) {
     return ERR_OVERFLOW; /* not enough space in buffer */
   }
-  if (FRTOS1_xQueueReceive(RMSG_MsgTxQueue, buf, 0)==pdPASS) {
+  if (%@RTOS@'ModuleName'%.xQueueReceive(RMSG_MsgTxQueue, buf, 0)==pdPASS) {
     /* received message from queue */
     return ERR_OK;
   }
@@ -88,7 +87,7 @@ uint8_t RMSG_GetRxMsg(uint8_t *buf, size_t bufSize) {
   if (bufSize<RPHY_BUFFER_SIZE) {
     return ERR_OVERFLOW; /* not enough space in buffer */
   }
-  if (FRTOS1_xQueueReceive(RMSG_MsgRxQueue, buf, 0)==pdPASS) { /* immediately returns if queue is empty */
+  if (%@RTOS@'ModuleName'%.xQueueReceive(RMSG_MsgRxQueue, buf, 0)==pdPASS) { /* immediately returns if queue is empty */
     /* received message from queue */
     return ERR_OK;
   }
@@ -107,14 +106,14 @@ void RMSG_Deinit(void) {
 }
 
 void RMSG_Init(void) {
-  RMSG_MsgRxQueue = FRTOS1_xQueueCreate(RMSG_QUEUE_RX_NOF_ITEMS, RPHY_BUFFER_SIZE);
+  RMSG_MsgRxQueue = %@RTOS@'ModuleName'%.xQueueCreate(RMSG_QUEUE_RX_NOF_ITEMS, RPHY_BUFFER_SIZE);
 #if PL_HAS_RTOS_TRACE
   RTOSTRC1_vTraceSetQueueName(RMSG_MsgRxQueue, "RadioRxMsg");
 #endif
   if (RMSG_MsgRxQueue==NULL) { /* queue creation failed! */
     for(;;) {} /* not enough memory? */
   }
-  RMSG_MsgTxQueue = FRTOS1_xQueueCreate(RMSG_QUEUE_TX_NOF_ITEMS, RPHY_BUFFER_SIZE);
+  RMSG_MsgTxQueue = %@RTOS@'ModuleName'%.xQueueCreate(RMSG_QUEUE_TX_NOF_ITEMS, RPHY_BUFFER_SIZE);
 #if PL_HAS_RTOS_TRACE
   RTOSTRC1_vTraceSetQueueName(RMSG_MsgTxQueue, "RadioTxMsg");
 #endif
@@ -122,5 +121,3 @@ void RMSG_Init(void) {
     for(;;) {} /* not enough memory? */
   }
 }
-
-#endif /* PL_HAS_RADIO */

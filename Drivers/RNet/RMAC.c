@@ -8,11 +8,10 @@
  */
 
 #include "RNetConf.h"
-#if PL_HAS_RADIO
 #include "RMAC.h"
 #include "RPHY.h"
 #include "RNWK.h"
-#include "UTIL1.h"
+#include "%@Utility@'ModuleName'.h"
 
 static uint8_t RMAC_SeqNr = 0;
 static uint8_t RMAC_ExpectedAckSeqNr;
@@ -59,33 +58,33 @@ void RMAC_DecodeType(uint8_t *buf, size_t bufSize, RPHY_PacketDesc *packet) {
   
   type = RMAC_BUF_TYPE(packet->phyData);
   buf[0] = '\0';
-  UTIL1_chcat(buf, bufSize, '(');
+  %@Utility@'ModuleName'%.chcat(buf, bufSize, '(');
   if (type&RMAC_MSG_TYPE_REQ_ACK) {
-    UTIL1_strcat(buf, bufSize, (unsigned char*)"RACK");
+    %@Utility@'ModuleName'%.strcat(buf, bufSize, (unsigned char*)"RACK");
     first = FALSE;
   } else {
-    UTIL1_strcat(buf, bufSize, (unsigned char*)"NACK");
+    %@Utility@'ModuleName'%.strcat(buf, bufSize, (unsigned char*)"NACK");
     first = FALSE;
   }
   if (type&RMAC_MSG_TYPE_DATA) {
     if (!first) {
-      UTIL1_chcat(buf, bufSize, '|');
+      %@Utility@'ModuleName'%.chcat(buf, bufSize, '|');
     }
-    UTIL1_strcat(buf, bufSize, (unsigned char*)"DATA");
+    %@Utility@'ModuleName'%.strcat(buf, bufSize, (unsigned char*)"DATA");
     first = FALSE;
   }
   if (type&RMAC_MSG_TYPE_ACK) {
     if (!first) {
-      UTIL1_chcat(buf, bufSize, '|');
+      %@Utility@'ModuleName'%.chcat(buf, bufSize, '|');
     }
-    UTIL1_strcat(buf, bufSize, (unsigned char*)"ACK");
+    %@Utility@'ModuleName'%.strcat(buf, bufSize, (unsigned char*)"ACK");
     first = FALSE;
   }
   if (type&RMAC_MSG_TYPE_CMD) {
-    UTIL1_strcat(buf, bufSize, (unsigned char*)"CMD");
+    %@Utility@'ModuleName'%.strcat(buf, bufSize, (unsigned char*)"CMD");
     first = FALSE;
   }
-  UTIL1_chcat(buf, bufSize, ')');
+  %@Utility@'ModuleName'%.chcat(buf, bufSize, ')');
 }
 
 void RMAC_Deinit(void) {
@@ -96,4 +95,3 @@ void RMAC_Init(void) {
   RMAC_SeqNr = 0;
   RMAC_ExpectedAckSeqNr = 0;
 }
-#endif /* PL_HAS_RADIO */

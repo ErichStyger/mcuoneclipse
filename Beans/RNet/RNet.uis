@@ -1,12 +1,17 @@
 
 [USED_FACES]
-BeanVersion=01.011
+BeanVersion=01.021
 
-InterfacesCount=3
+InterfacesCount=4
 
 Symbol=nRF24L01p
 Link=Yes
 Interface=RNet\NRF24
+Version=01.001
+
+Symbol=RTOS
+Link=Yes
+Interface=RNet\RTOS
 Version=01.001
 
 Symbol=Shell

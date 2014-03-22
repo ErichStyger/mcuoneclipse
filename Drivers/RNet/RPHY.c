@@ -8,13 +8,9 @@
  */
 
 #include "RNetConf.h"
-#if PL_HAS_RADIO
 #include "RPHY.h"
 #include "RMAC.h"
 #include "RMSG.h"
-#if PL_HAS_SHELL
-  #include "CLS1.h"
-#endif
 
 uint8_t RPHY_FlushRxQueue(void) {
   return RMSG_FlushRxQueue();
@@ -48,5 +44,3 @@ void RPHY_Deinit(void) {
 void RPHY_Init(void) {
   /* nothing needed */
 }
-
-#endif /* PL_HAS_RADIO */

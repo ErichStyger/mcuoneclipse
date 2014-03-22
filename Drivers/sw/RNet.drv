@@ -106,6 +106,8 @@
 %- Write your own types here ...
 %-  Example:
 %-    typedef int TMyInteger;
+#define %'ModuleName'%.ShortAddrType  RNWK_ShortAddrType
+
 %ifdef ParseCommand
 #define %'ModuleName'%.PARSE_COMMAND_ENABLED  1  /* set to 1 if method ParseCommand() is present, 0 otherwise */
 %else
@@ -122,6 +124,50 @@ void %@nRF24L01p@OnInterrupt(void);
 
 %endif %- @nRF24L01p@OnInterrupt
 %-INHERITED_EVENT_END nRF24L01p OnInterrupt
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Init
+%ifdef Init
+void %'ModuleName'%.%Init(void);
+%include Common\RNetInit.Inc
+
+%endif %- Init
+%-BW_METHOD_END Init
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Deinit
+%ifdef Deinit
+void %'ModuleName'%.%Deinit(void);
+%include Common\RNetDeinit.Inc
+
+%endif %- Deinit
+%-BW_METHOD_END Deinit
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Process
+%ifdef Process
+byte %'ModuleName'%.%Process(void);
+%define! RetVal
+%include Common\RNetProcess.Inc
+
+%endif %- Process
+%-BW_METHOD_END Process
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN PowerUp
+%ifdef PowerUp
+byte %'ModuleName'%.%PowerUp(void);
+%define! RetVal
+%include Common\RNetPowerUp.Inc
+
+%endif %- PowerUp
+%-BW_METHOD_END PowerUp
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SetChannel
+%ifdef SetChannel
+byte %'ModuleName'%.%SetChannel(byte channel);
+%define! Parchannel
+%define! RetVal
+%include Common\RNetSetChannel.Inc
+
+%endif %- SetChannel
+%-BW_METHOD_END SetChannel
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -146,6 +192,8 @@ void %@nRF24L01p@OnInterrupt(void);
 %- Write your own includes here ...
 %-   Example:
 %-     #include "header_name.h"
+#include "Rstack.h"
+#include "Radio.h"
 %-
 %-BW_CUSTOM_INCLUDE_END_M
 
@@ -170,6 +218,65 @@ void %@nRF24L01p@OnInterrupt(void)
 
 %endif %- @nRF24L01p@OnInterrupt
 %-INHERITED_EVENT_END nRF24L01p OnInterrupt
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Init
+%ifdef Init
+%include Common\RNetInit.Inc
+void %'ModuleName'%.%Init(void)
+{
+  RSTACK_Init();
+}
+
+%endif %- Init
+%-BW_METHOD_END Init
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Deinit
+%ifdef Deinit
+%include Common\RNetDeinit.Inc
+void %'ModuleName'%.%Deinit(void)
+{
+  RSTACK_Deinit();
+}
+
+%endif %- Deinit
+%-BW_METHOD_END Deinit
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Process
+%ifdef Process
+%define! RetVal
+%include Common\RNetProcess.Inc
+byte %'ModuleName'%.%Process(void)
+{
+  return RADIO_Process();
+}
+
+%endif %- Process
+%-BW_METHOD_END Process
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN PowerUp
+%ifdef PowerUp
+%define! RetVal
+%include Common\RNetPowerUp.Inc
+byte %'ModuleName'%.%PowerUp(void)
+{
+  return RADIO_PowerUp();
+}
+
+%endif %- PowerUp
+%-BW_METHOD_END PowerUp
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SetChannel
+%ifdef SetChannel
+%define! Parchannel
+%define! RetVal
+%include Common\RNetSetChannel.Inc
+byte %'ModuleName'%.%SetChannel(byte channel)
+{
+  return RADIO_SetChannel(channel);
+}
+
+%endif %- SetChannel
+%-BW_METHOD_END SetChannel
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

@@ -11,7 +11,6 @@
 #define RADIO_SMAC_H_
 
 #include "RNetConf.h"
-#if PL_HAS_RADIO
 #include "Radio.h"
 #include "Event.h"
 
@@ -23,7 +22,5 @@ void RADIO_AppHandleEvent(EVNT_Handle event);
 
 /*! \brief Called in the event of a radio transceiver interrupt */
 void RADIO_OnInterrupt(void);
-
-#endif /* PL_HAS_RADIO */
 
 #endif /* RADIO_SMAC_H_ */

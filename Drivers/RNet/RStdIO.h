@@ -14,9 +14,7 @@
 #if PL_HAS_RSTDIO
 #include "RPHY.h"
 #include "RNWK.h"
-#if PL_HAS_SHELL
-  #include "CLS1.h"
-#endif
+#include "%@Shell@'ModuleName'.h"
 
 typedef enum RSTDIO_QueueType {
   /* Rx stdio queues: */
@@ -44,7 +42,7 @@ uint8_t RSTDIO_AddToQueue(RSTDIO_QueueType queueType, const unsigned char *data,
  * \brief returns the Standard I/O hander for the remote Rx channel
  * \return Standard I/O handler with stdin, stdout and stderr
  */
-CLS1_ConstStdIOTypePtr RSTDIO_GetStdioRx(void);
+%@Shell@'ModuleName'%.ConstStdIOTypePtr RSTDIO_GetStdioRx(void);
 
 /*!
  * \brief Message handler for StdIO messages sent over the radio
@@ -60,7 +58,7 @@ uint8_t RSTDIO_HandleStdioRxMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *d
 /*!
  * \brief Call this routines periodically. It will parse incoming remote messages and will dispatch them between stdin, stdout and stderr.
  */
-void RSTDIO_Print(CLS1_ConstStdIOTypePtr io);
+void RSTDIO_Print(%@Shell@'ModuleName'%.ConstStdIOTypePtr io);
 
 /*! \brief Initializes the module */
 void RSTDIO_Init(void);
@@ -68,6 +66,6 @@ void RSTDIO_Init(void);
 /*! \brief Deinitializes the module */
 void RSTDIO_Deinit(void);
 
-#endif /* PL_HAS_SHELL */
+#endif /* PL_HAS_RSTDIO */
 
 #endif /* RSTDIO_C_ */
