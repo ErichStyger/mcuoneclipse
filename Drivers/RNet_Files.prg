@@ -49,11 +49,13 @@
 %FILE %'DirRel_Code'RStack.h
 %include RNet\RStack.h
 
-%FILE %'DirRel_Code'RStdIO.c
-%include RNet\RStdIO.c
+%if defined(RStdioEnabled) & %RStdioEnabled='yes'
+  %FILE %'DirRel_Code'RStdIO.c
+  %include RNet\RStdIO.c
 
-%FILE %'DirRel_Code'RStdIO.h
-%include RNet\RStdIO.h
+  %FILE %'DirRel_Code'RStdIO.h
+  %include RNet\RStdIO.h
+%endif
 
 %if TransceiverType='nRF24L01+'
   %FILE? %'DirRel_Code'Radio.c

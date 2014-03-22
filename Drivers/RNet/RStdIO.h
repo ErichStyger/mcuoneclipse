@@ -11,7 +11,7 @@
 #define RSTDIO_C_
 
 #include "RNetConf.h"
-#if PL_HAS_RSTDIO
+%if defined(RStdioEnabled) & %RStdioEnabled='yes'
 #include "RPHY.h"
 #include "RNWK.h"
 #include "%@Shell@'ModuleName'.h"
@@ -66,6 +66,6 @@ void RSTDIO_Init(void);
 /*! \brief Deinitializes the module */
 void RSTDIO_Deinit(void);
 
-#endif /* PL_HAS_RSTDIO */
+%endif
 
 #endif /* RSTDIO_C_ */

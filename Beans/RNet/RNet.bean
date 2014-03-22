@@ -4,7 +4,7 @@
     <Name>RNet</Name>
     <Description>RNet (Radio and Remote Network) Stack</Description>
     <Author>Erich Styger</Author>
-    <Version>01.021</Version>
+    <Version>01.024</Version>
     <Icon>RNet</Icon>
     <TypesFiles>PE,RNet\RNet</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -108,11 +108,63 @@
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
         <Description>Disabled</Description>
-        <Expanded>No</Expanded>
+        <Expanded>Yes</Expanded>
         <DefaultValue>false</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
         <Children>
+          <GrupItem>
+            <TBoolGrupItem>
+              <Name>Remote StdIO</Name>
+              <Symbol>RStdioEnabled</Symbol>
+              <TypeSpec>typeEnaDis</TypeSpec>
+              <Hint>Enables stdio handling</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <BoldName>true</BoldName>
+              <EditLine>false</EditLine>
+              <Description>Disabled</Description>
+              <Expanded>No</Expanded>
+              <DefaultValue>false</DefaultValue>
+              <DefineSymbol>YES_NO</DefineSymbol>
+              <IfDisabled>setNOTHING</IfDisabled>
+              <Children>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>Queue length</Name>
+                    <Symbol>RStdioQueueLength</Symbol>
+                    <Hint>Size of queue length (RSTDIO_QUEUE_LENGTH)</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>48</DefaultValue>
+                    <MinValue>1</MinValue>
+                    <MaxValue>-1</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>false</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TIntgItem>
+                    <Name>Queue Timeout (ms)</Name>
+                    <Symbol>QueueTimeoutMs</Symbol>
+                    <Hint>Timeout for stdio queues (RSTDIO_QUEUE_TIMEOUT_MS)</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <EditLine>true</EditLine>
+                    <DefaultValue>500</DefaultValue>
+                    <MinValue>0</MinValue>
+                    <MaxValue>-1</MaxValue>
+                    <Bases>DEC</Bases>
+                    <DefaultBase>DEC</DefaultBase>
+                    <ExtraHintDisabled>false</ExtraHintDisabled>
+                    <ChangeValueIntoRange>false</ChangeValueIntoRange>
+                    <RuntimeProperty>false</RuntimeProperty>
+                  </TIntgItem>
+                </GrupItem>
+              </Children>
+            </TBoolGrupItem>
+          </GrupItem>
           <GrupItem>
             <TInhrLinkItem>
               <Name>Shell</Name>

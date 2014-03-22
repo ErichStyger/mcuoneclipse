@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Radio/remote Stdandard I/O module.
+ * \brief Radio/remote Standard I/O module.
  * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
  * \note MIT License (http://opensource.org/licenses/mit-license.html), see 'RNet_License.txt'
  *
@@ -8,7 +8,7 @@
  */
 
 #include "RNetConf.h"
-#if PL_HAS_RSTDIO
+%if defined(RStdioEnabled) & %RStdioEnabled='yes'
 #include "RStdIO.h"
 #include "%@RTOS@'ModuleName'.h"
 #include "%@Utility@'ModuleName'.h"
@@ -29,10 +29,10 @@ static xQueueHandle RSTDIO_TxStdInQ, RSTDIO_TxStdOutQ, RSTDIO_TxStdErrQ;
 
 #define RSTDIO_PAYLOAD_SIZE       (RNWK_PAYLOAD_SIZE-1/*type*/-1/*size*/) /* data size we can transmit in one message. stdout string will be added */
 
-#define RSTDIO_QUEUE_LENGTH        48 /* items in queue, that's my buffer size */
-#define RSTDIO_QUEUE_ITEM_SIZE      1 /* each item is a single character */
+#define RSTDIO_QUEUE_LENGTH        %RStdioQueueLength /* items in queue, that's my buffer size */
+#define RSTDIO_QUEUE_ITEM_SIZE     1 /* each item is a single character */
 
-#define RSTDIO_QUEUE_TIMEOUT_MS   500 /* timout for stdio queues */
+#define RSTDIO_QUEUE_TIMEOUT_MS   %QueueTimeoutMs /* timeout for stdio queues */
 
 static RNWK_ShortAddrType RSTDIO_dstAddr; /* destination address */
 
@@ -333,4 +333,4 @@ void RSTDIO_Init(void) {
   RTOSTRC1_vTraceSetQueueName(RSTDIO_TxStdErrQ, "TxStdErr");
 #endif
 }
-#endif /* PL_HAS_RSTDIO */
+%endif

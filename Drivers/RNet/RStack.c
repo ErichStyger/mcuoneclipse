@@ -14,9 +14,9 @@
 #include "RPHY.h"
 #include "RMAC.h"
 #include "RNWK.h"
-#if PL_HAS_RSTDIO
+%if defined(RStdioEnabled) & %RStdioEnabled='yes'
 #include "RStdIO.h"
-#endif
+%endif
 #include "RApp.h"
 
 void RSTACK_Init(void) {
@@ -25,17 +25,17 @@ void RSTACK_Init(void) {
   RPHY_Init();
   RMAC_Init();
   RNWK_Init();
-#if PL_HAS_RSTDIO
+%if defined(RStdioEnabled) & %RStdioEnabled='yes'
   RSTDIO_Init();
-#endif
+%endif
   RAPP_Init();
 }
 
 void RSTACK_Deinit(void) {
   RAPP_Deinit();
-#if PL_HAS_RSTDIO
+%if defined(RStdioEnabled) & %RStdioEnabled='yes'
   RSTDIO_Deinit();
-#endif
+%endif
   RNWK_Deinit();
   RMAC_Deinit();
   RPHY_Deinit();
