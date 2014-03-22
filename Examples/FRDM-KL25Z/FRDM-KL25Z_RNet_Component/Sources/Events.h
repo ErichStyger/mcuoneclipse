@@ -57,9 +57,14 @@
 #include "IRQ1.h"
 #include "ExtIntLdd1.h"
 #include "CS1.h"
-#include "SM1.h"
-#include "SMasterLdd1.h"
 #include "RNET1.h"
+#include "SPI1.h"
+#include "Clock1.h"
+#include "BitIoLdd6.h"
+#include "Input1.h"
+#include "BitIoLdd7.h"
+#include "Output1.h"
+#include "BitIoLdd8.h"
 
 #ifdef __cplusplus
 extern "C" {

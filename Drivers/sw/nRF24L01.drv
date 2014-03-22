@@ -727,6 +727,32 @@ void %OnDeactivate(void);
 #define %'ModuleName'%.CSN_LOW()   %@CSN@'ModuleName'%.ClrVal()  %>50/* put CSN LOW, activate bus */
 #define %'ModuleName'%.CSN_HIGH()  %@CSN@'ModuleName'%.SetVal()  %>50/* put CSN HIGH, deactivate bus */
 
+%ifdef SWSPI
+/* SW SPI */
+#define %'ModuleName'%.SPI_SetFastMode()              %@SWSPI@'ModuleName'%.SetFastMode()
+#define %'ModuleName'%.SPI_SetSlowMode()              %@SWSPI@'ModuleName'%.SetSlowMode()
+#define %'ModuleName'%.SPI_SetShiftClockPolarity(val) (void)%@SWSPI@'ModuleName'%.SetShiftClockPolarity(val)
+#define %'ModuleName'%.SPI_SetIdleClockPolarity(val)  (void)%@SWSPI@'ModuleName'%.SetIdleClockPolarity(val)
+#define %'ModuleName'%.SPI_GetCharsInTxBuf()          %@SWSPI@'ModuleName'%.CharsInTxBuf()
+#define %'ModuleName'%.SPI_GetCharsInRxBuf()          %@SWSPI@'ModuleName'%.CharsInRxBuf()
+#define %'ModuleName'%.SPI_SendChar(ch)               %@SWSPI@'ModuleName'%.SendChar(ch)
+#define %'ModuleName'%.SPI_RecvChar(p)                %@SWSPI@'ModuleName'%.RecvChar(p)
+#define %'ModuleName'%.SPI_SetBaudRateMode(m)         %@SWSPI@'ModuleName'%.SetBaudRateMode(m)
+%endif
+%-
+%ifdef SPI
+/* HW SPI */
+#define %'ModuleName'%.SPI_SetFastMode()              %@SPI@'ModuleName'%.SetFastMode()
+#define %'ModuleName'%.SPI_SetSlowMode()              %@SPI@'ModuleName'%.SetSlowMode()
+#define %'ModuleName'%.SPI_SetShiftClockPolarity(val) (void)%@SPI@'ModuleName'%.SetShiftClockPolarity(val)
+#define %'ModuleName'%.SPI_SetIdleClockPolarity(val)  (void)%@SPI@'ModuleName'%.SetIdleClockPolarity(val)
+#define %'ModuleName'%.SPI_GetCharsInTxBuf()          %@SPI@'ModuleName'%.GetCharsInTxBuf()
+#define %'ModuleName'%.SPI_GetCharsInRxBuf()          %@SPI@'ModuleName'%.GetCharsInRxBuf()
+#define %'ModuleName'%.SPI_SendChar(ch)               %@SPI@'ModuleName'%.SendChar(ch)
+#define %'ModuleName'%.SPI_RecvChar(p)                %@SPI@'ModuleName'%.RecvChar(p)
+#define %'ModuleName'%.SPI_SetBaudRateMode(m)         %@SPI@'ModuleName'%.SetBaudRateMode(m)
+%endif
+
 %-
 %-BW_CUSTOM_VARIABLE_END
 %-BW_INTERN_METHOD_DECL_START
@@ -755,11 +781,11 @@ static byte SPIWriteRead(byte val)
 {
   uint8_t ch;
 
-  while (%@SPI@'ModuleName'%.GetCharsInTxBuf()!=0) {} /* wait until tx is empty */
-  while (%@SPI@'ModuleName'%.SendChar(val)!=ERR_OK) {} /* send character */
-  while (%@SPI@'ModuleName'%.GetCharsInTxBuf()!=0) {} /* wait until data has been sent */
-  while (%@SPI@'ModuleName'%.GetCharsInRxBuf()==0) {} /* wait until we receive data */
-  while (%@SPI@'ModuleName'%.RecvChar(&ch)!=ERR_OK) {} /* get data */
+  while (%'ModuleName'%.SPI_GetCharsInTxBuf()!=0) {} /* wait until tx is empty */
+  while (%'ModuleName'%.SPI_SendChar(val)!=ERR_OK) {} /* send character */
+  while (%'ModuleName'%.SPI_GetCharsInTxBuf()!=0) {} /* wait until data has been sent */
+  while (%'ModuleName'%.SPI_GetCharsInRxBuf()==0) {} /* wait until we receive data */
+  while (%'ModuleName'%.SPI_RecvChar(&ch)!=ERR_OK) {} /* get data */
   return ch;
 }
 
@@ -840,7 +866,7 @@ void %'ModuleName'%.%WriteRegister(byte reg, byte val)
   %OnActivate(); /* call user event */
 %endif
 %if defined(SwitchBusEnabled) & SwitchBusEnabled='yes'
-  (void)%@SPI@'ModuleName'%.SetBaudRateMode(%BaudRateMode); /* change bus speed */
+  (void)%'ModuleName'%.SPI_SetBaudRateMode(%BaudRateMode); /* change bus speed */
 %endif
   %'ModuleName'%.CSN_LOW(); /* initiate command sequence */
   (void)SPIWriteRead(%'ModuleName'%.W_REGISTER|reg); /* write register command */
@@ -868,7 +894,7 @@ byte %'ModuleName'%.%ReadRegister(byte reg)
   %OnActivate(); /* call user event */
 %endif
 %if defined(SwitchBusEnabled) & SwitchBusEnabled='yes'
-  (void)%@SPI@'ModuleName'%.SetBaudRateMode(%BaudRateMode); /* change bus speed */
+  (void)%'ModuleName'%.SPI_SetBaudRateMode(%BaudRateMode); /* change bus speed */
 %endif
   %'ModuleName'%.CSN_LOW();
   (void)SPIWriteRead(reg);
@@ -896,7 +922,7 @@ void %'ModuleName'%.%ReadRegisterData(byte reg, byte *buf, byte bufSize)
   %OnActivate(); /* call user event */
 %endif
 %if defined(SwitchBusEnabled) & SwitchBusEnabled='yes'
-  (void)%@SPI@'ModuleName'%.SetBaudRateMode(%BaudRateMode); /* change bus speed */
+  (void)%'ModuleName'%.SPI_SetBaudRateMode(%BaudRateMode); /* change bus speed */
 %endif
   %'ModuleName'%.CSN_LOW();
   (void)SPIWriteRead(%'ModuleName'%.R_REGISTER|reg);
@@ -923,7 +949,7 @@ void %'ModuleName'%.%WriteRegisterData(byte reg, byte *buf, byte bufSize)
   %OnActivate(); /* call user event */
 %endif
 %if defined(SwitchBusEnabled) & SwitchBusEnabled='yes'
-  (void)%@SPI@'ModuleName'%.SetBaudRateMode(%BaudRateMode); /* change bus speed */
+  (void)%'ModuleName'%.SPI_SetBaudRateMode(%BaudRateMode); /* change bus speed */
 %endif
   %'ModuleName'%.CSN_LOW();
   (void)SPIWriteRead(%'ModuleName'%.W_REGISTER|reg); /* not masking registers as it would conflict with %'ModuleName'%.W_TX_PAYLOAD */
@@ -949,7 +975,7 @@ byte %'ModuleName'%.%WriteRead(byte val)
   %OnActivate(); /* call user event */
 %endif
 %if defined(SwitchBusEnabled) & SwitchBusEnabled='yes'
-  (void)%@SPI@'ModuleName'%.SetBaudRateMode(%BaudRateMode); /* change bus speed */
+  (void)%'ModuleName'%.SPI_SetBaudRateMode(%BaudRateMode); /* change bus speed */
 %endif
   %'ModuleName'%.CSN_LOW();
   val = SPIWriteRead(val);
@@ -974,7 +1000,7 @@ void %'ModuleName'%.%Write(byte val)
   %OnActivate(); /* call user event */
 %endif
 %if defined(SwitchBusEnabled) & SwitchBusEnabled='yes'
-  (void)%@SPI@'ModuleName'%.SetBaudRateMode(%BaudRateMode); /* change bus speed */
+  (void)%'ModuleName'%.SPI_SetBaudRateMode(%BaudRateMode); /* change bus speed */
 %endif
   %'ModuleName'%.CSN_LOW();
   (void)SPIWriteRead(val);
@@ -1024,7 +1050,7 @@ byte %'ModuleName'%.%GetStatusClrIRQ(void)
   %OnActivate(); /* call user event */
 %endif
 %if defined(SwitchBusEnabled) & SwitchBusEnabled='yes'
-  (void)%@SPI@'ModuleName'%.SetBaudRateMode(%BaudRateMode); /* change bus speed */
+  (void)%'ModuleName'%.SPI_SetBaudRateMode(%BaudRateMode); /* change bus speed */
 %endif
   %'ModuleName'%.CSN_LOW(); /* initiate command sequence */
   status = SPIWriteRead(%'ModuleName'%.W_REGISTER|%'ModuleName'%.STATUS); /* get status */

@@ -118,7 +118,7 @@ void RNETA_Init(void) {
   }
   if (FRTOS1_xTaskCreate(
         RNetTask,  /* pointer to the task */
-        (signed char *)"RNet", /* task name for kernel awareness debugging */
+        "RNet", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY+3,  /* initial priority */
