@@ -30,7 +30,7 @@ static void CheckKey(void) {
         WAIT1_WaitOSms(10);
         cnt += 10;
       }
-      if (cnt>1000) { /* long press*/
+      if (cnt>1000) { /* long press */
         data = 2; /* toggle LED2 */
       } else {
         data = 1; /* toggle LED1 */
