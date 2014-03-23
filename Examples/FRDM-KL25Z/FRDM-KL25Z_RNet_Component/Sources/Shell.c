@@ -15,11 +15,9 @@
 #include "LED1.h"
 #include "LED2.h"
 #include "LED3.h"
-#if PL_HAS_RADIO
-  #include "Radio.h"
-  #include "RApp.h"
-  #include "RNet_App.h"
-#endif
+#include "Radio.h"
+#include "RApp.h"
+#include "RNet_App.h"
 #if PL_HAS_RSTDIO
   #include "RStdIO.h"
 #endif
@@ -30,11 +28,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if FRTOS1_PARSE_COMMAND_ENABLED
   FRTOS1_ParseCommand,
 #endif
-#if PL_HAS_RADIO
   RADIO_ParseCommand,
   RNWK_ParseCommand,
   RNETA_ParseCommand,
-#endif
   NULL /* sentinel */
 };
 

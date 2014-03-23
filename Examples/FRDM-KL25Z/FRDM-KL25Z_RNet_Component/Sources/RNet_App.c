@@ -8,7 +8,6 @@
  */
 
 #include "Platform.h"
-#if PL_HAS_RADIO
 #include "Application.h"
 #include "RNet_App.h"
 #include "RStack.h"
@@ -220,4 +219,3 @@ uint8_t RNETA_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_S
 }
 #endif /* PL_HAS_SHELL */
 
-#endif /* PL_HAS_RADIO */

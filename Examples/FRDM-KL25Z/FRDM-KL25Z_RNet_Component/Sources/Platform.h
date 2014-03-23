@@ -12,7 +12,6 @@
 #include "PE_Error.h"
 #include <stddef.h> /* for size_t */
 
-#define PL_HAS_RADIO        1
 #define PL_HAS_SHELL        1
 #define PL_HAS_RSTDIO       1
 #define PL_HAS_DEBUG_PRINT  1

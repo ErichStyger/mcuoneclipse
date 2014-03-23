@@ -13,9 +13,7 @@
   #include "CLS1.h"
   #include "Shell.h"
 #endif
-#if PL_HAS_RADIO
-  #include "RNet_App.h"
-#endif
+#include "RNet_App.h"
 
 #if PL_HAS_DEBUG_PRINT
 void APP_DebugPrint(unsigned char *str) {
@@ -34,9 +32,7 @@ void APP_Run(void) {
 #if PL_HAS_SHELL
   SHELL_Init();
 #endif
-#if PL_HAS_RADIO
   RNETA_Init();
-#endif
   if (FRTOS1_xTaskCreate(
         AppTask,  /* pointer to the task */
         "App", /* task name for kernel awareness debugging */

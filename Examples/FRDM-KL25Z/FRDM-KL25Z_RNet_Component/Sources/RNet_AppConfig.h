@@ -11,7 +11,6 @@
 #define __RNET_APP_CONFIG__
 
 #include "Platform.h"
-#if PL_HAS_RADIO
 
 /*! type ID's for application messages */
 typedef enum {
@@ -28,7 +27,5 @@ typedef enum {
 
 #define RNET_CONFIG_USE_ACK           1
   /*!< If set to 1, the NWK layer will send an acknowledge message for every data packet received */
-
-#endif /* PL_HAS_RADIO */
 
 #endif /* __RNET_APP_CONFIG__ */
