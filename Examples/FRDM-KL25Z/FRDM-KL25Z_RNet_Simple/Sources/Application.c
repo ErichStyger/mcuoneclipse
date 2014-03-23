@@ -11,18 +11,47 @@
 #include "Application.h"
 #include "FRTOS1.h"
 #include "LED1.h"
+#include "LED2.h"
+#include "LED3.h"
 #include "RNET1.h"
 #include "RNet_App.h"
 #include "RAPP.h"
+#include "SW1.h"
 
-static void AppTask(void *pvParameters) {
+static void CheckKey(void) {
+  uint16_t cnt;
   uint8_t data;
   
+  if (SW1_GetVal()==0) { /* low active */
+    WAIT1_WaitOSms(50); /* simple debounce */
+    if (SW1_GetVal()==0) { /* still pressed? */
+      cnt = 0;
+      while(SW1_GetVal()==0) { /* wait until released */
+        WAIT1_WaitOSms(10);
+        cnt += 10;
+      }
+      if (cnt>1000) { /* long press*/
+        data = 2; /* toggle LED2 */
+      } else {
+        data = 1; /* toggle LED1 */
+      }
+      (void)RAPP_SendPayloadDataBlock(&data, sizeof(data), RAPP_MSG_TYPE_DATA, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
+    }
+  }
+}
+
+static void AppTask(void *pvParameters) {
+  uint16_t cntMs;
+  
+  cntMs = 0;
   for(;;) {
-    LED1_Neg();
-    FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
-    data = 0x1;
-    (void)RAPP_SendPayloadDataBlock(&data, sizeof(data), RAPP_MSG_TYPE_DATA, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
+    if (cntMs>1000) {
+      LED3_Neg();
+      cntMs = 0;
+    }
+    CheckKey();
+    FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
+    cntMs += 10;
   }
 }
 

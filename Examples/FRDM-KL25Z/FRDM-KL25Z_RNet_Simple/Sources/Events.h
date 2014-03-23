@@ -55,6 +55,8 @@
 #include "ExtIntLdd1.h"
 #include "CS1.h"
 #include "RNET1.h"
+#include "SW1.h"
+#include "BitIoLdd6.h"
 #include "SM1.h"
 #include "SMasterLdd1.h"
 
