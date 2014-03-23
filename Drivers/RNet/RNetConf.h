@@ -1,7 +1,7 @@
 /**
  * \file
  * \brief This is a main configuration file for the RNet stack
- * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \author (c) 2013-2014 Erich Styger, http://mcuoneclipse.com/
  * \note MIT License (http://opensource.org/licenses/mit-license.html)
  *
  * With this header file, the stack is configured. It sets the configuration defaults.

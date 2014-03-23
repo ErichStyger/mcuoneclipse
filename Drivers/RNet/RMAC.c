@@ -1,7 +1,7 @@
 /**
  * \file
  * \brief This is the implementation of the Radio MAC part.
- * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \author (c) 2013-2014 Erich Styger, http://mcuoneclipse.com/
  * \note MIT License (http://opensource.org/licenses/mit-license.html), see 'RNet_License.txt'
  *
  * This module encapsulates the Media Access of network stack.

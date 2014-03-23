@@ -1,7 +1,7 @@
 /**
  * \file
  * \brief Radio/remote Standard I/O module.
- * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \author (c) 2013-2014 Erich Styger, http://mcuoneclipse.com/
  * \note MIT License (http://opensource.org/licenses/mit-license.html), see 'RNet_License.txt'
  *
  * This module uses queues for remote/radio standard I/O handling.

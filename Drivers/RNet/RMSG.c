@@ -1,7 +1,7 @@
 /**
  * \file
  * \brief This implements a queue/buffer for radio messages
- * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \author (c) 2013-2014 Erich Styger, http://mcuoneclipse.com/
  * \note MIT License (http://opensource.org/licenses/mit-license.html), see 'RNet_License.txt'
  *
  * This module uses queues to retrieve and store radio messages.

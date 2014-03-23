@@ -4,7 +4,7 @@
     <Name>RNet</Name>
     <Description>RNet (Radio and Remote Network) Stack</Description>
     <Author>Erich Styger</Author>
-    <Version>01.027</Version>
+    <Version>01.029</Version>
     <Icon>RNet</Icon>
     <TypesFiles>PE,RNet\RNet</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -214,9 +214,9 @@
         <IconPopup>false</IconPopup>
         <DefaultValue>false</DefaultValue>
         <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
+        <PublicMethod>false</PublicMethod>
         <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
+        <InDefinition>false</InDefinition>
         <ReturnType>8bit unsigned</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>5</ParamCount>

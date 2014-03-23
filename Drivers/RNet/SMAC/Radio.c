@@ -1,7 +1,7 @@
 /**
  * \file
  * \brief Radio Module
- * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \author (c) 2013-2014 Erich Styger, http://mcuoneclipse.com/
  * \note MIT License (http://opensource.org/licenses/mit-license.html), see 'RNet_License.txt'
  *
  * Implementation of the Radio module to handle everything around the radio transceiver

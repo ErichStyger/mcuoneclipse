@@ -1,7 +1,7 @@
 /**
  * \file
  * \brief This is the implementation for the Radio Application service part.
- * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \author (c) 2013-2014 Erich Styger, http://mcuoneclipse.com/
  * \note MIT License (http://opensource.org/licenses/mit-license.html), see 'RNet_License.txt'
  *
  * This module provides application services of the network stack.

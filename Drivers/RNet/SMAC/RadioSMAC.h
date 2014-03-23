@@ -1,7 +1,7 @@
 /**
  * \file
  * \brief Private Radio Module for the MC1320x/MC12321x transceivers.
- * \author (c) 2013 Erich Styger, http://mcuoneclipse.com/
+ * \author (c) 2013-2014 Erich Styger, http://mcuoneclipse.com/
  * \note MIT License (http://opensource.org/licenses/mit-license.html), see 'RNet_License.txt'
  *
  * Interface to handle everything around the radio transceiver
