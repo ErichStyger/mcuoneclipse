@@ -13,10 +13,10 @@
 #include "LED1.h"
 #include "LED2.h"
 #include "LED3.h"
-#include "RNET1.h"
 #include "RNet_App.h"
-#include "RAPP.h"
+#include "RApp.h"
 #include "SW1.h"
+#include "WAIT1.h"
 
 static void CheckKey(void) {
   uint16_t cnt;

@@ -1,8 +1,10 @@
-/*
- * Platform.h
+/**
+ * \file
+ * \brief Platform configuration file.
+ * \author (c) 2014 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html)
  *
- *  Created on: Aug 7, 2013
- *      Author: Erich Styger
+ * This header file configures platform and application specific features.
  */
 
 #ifndef PLATFORM_H_

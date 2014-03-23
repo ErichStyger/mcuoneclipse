@@ -1,8 +1,10 @@
-/*
- * Application.h
+/**
+ * \file
+ * \brief Application main interface.
+ * \author (c) 2014 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html)
  *
- *  Created on: Feb 22, 2014
- *      Author: tastyger
+ * This header file defines the interface to the main application.
  */
 
 #ifndef APPLICATION_H_
@@ -16,7 +18,9 @@
   #define APP_DebugPrint(str) /*nothing */
 #endif
 
-  
+/*! 
+ * \brief Run the application main loop.
+ */
 void APP_Run(void);
 
 #endif /* APPLICATION_H_ */

@@ -9,12 +9,10 @@
 
 #include "Platform.h"
 #include "Application.h"
-#include "RNet_App.h"
-#include "RStack.h"
-#include "RApp.h"
 #include "FRTOS1.h"
-#include "RPHY.h"
-#include "Radio.h"
+#include "RNET1.h"
+#include "RNet_App.h"
+#include "RApp.h"
 #if PL_HAS_RSTDIO
   #include "RStdIO.h"
 #endif
@@ -29,7 +27,6 @@ typedef enum {
   RNETA_NONE,
   RNETA_POWERUP, /* powered up */
   RNETA_TX_RX,
-  RNETA_DONE,
 } RNETA_State;
 
 static RNETA_State appState = RNETA_NONE;
@@ -67,7 +64,7 @@ static void RadioPowerUp(void) {
     xTime = (100/portTICK_RATE_MS)-xTime; /* remaining ticks to wait */
     FRTOS1_vTaskDelay(xTime);
   }
-  (void)RADIO_PowerUp();
+  (void)RNET1_PowerUp();
 }
 
 static void Process(void) {
@@ -79,12 +76,12 @@ static void Process(void) {
       
     case RNETA_POWERUP:
       RadioPowerUp();
-      (void)RADIO_SetChannel(RADIO_CHANNEL_DATA);
+      (void)RNET1_SetChannel(RADIO_CHANNEL_DATA);
       appState = RNETA_TX_RX;
       break;
       
     case RNETA_TX_RX:
-      (void)RADIO_Process();
+      (void)RNET1_Process();
       break;
   
     default:
@@ -111,7 +108,7 @@ static portTASK_FUNCTION(RNetTask, pvParameters) {
 }
 
 void RNETA_Init(void) {
-  RSTACK_Init(); /* initialize stack */
+  RNET1_Init(); /* initialize stack */
   if (RAPP_SetMessageHandlerTable(handlerTable)!=ERR_OK) { /* assign application message handler */
     APP_DebugPrint((unsigned char*)"ERR: failed setting message handler!\r\n");
   }

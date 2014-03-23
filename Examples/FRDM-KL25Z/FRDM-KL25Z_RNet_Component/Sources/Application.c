@@ -1,8 +1,10 @@
-/*
- * Application.c
+/**
+ * \file
+ * \brief Application main loop.
+ * \author (c) 2014 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html)
  *
- *  Created on: Feb 22, 2014
- *      Author: tastyger
+ * This implements the application main task.
  */
 
 #include "Platform.h"

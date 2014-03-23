@@ -3,3 +3,8 @@
 %else
   %set nRF24L01pEnabled Value Disabled
 %endif
+%ifndef Shell
+  %set ParseCommand Selection never
+%else
+  %set ParseCommand Selection always
+%endif
