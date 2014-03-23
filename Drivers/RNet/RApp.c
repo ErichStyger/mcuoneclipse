@@ -10,7 +10,9 @@
 #include "RNetConf.h"
 #include "RApp.h"
 #include "RNWK.h"
+%if defined(Shell)
 #include "%@Utility@'ModuleName'.h"
+%endif
 
 static const RAPP_MsgHandler *RAPP_MsgHandlerTable;
 

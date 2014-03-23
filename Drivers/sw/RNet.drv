@@ -106,8 +106,6 @@
 %- Write your own types here ...
 %-  Example:
 %-    typedef int TMyInteger;
-#define %'ModuleName'%.ShortAddrType  RNWK_ShortAddrType
-
 %ifdef ParseCommand
 #define %'ModuleName'%.PARSE_COMMAND_ENABLED  1  /* set to 1 if method ParseCommand() is present, 0 otherwise */
 %else
@@ -115,8 +113,6 @@
 %endif %- ParseCommand
 %-
 %-BW_CUSTOM_USERTYPE_END
-
-
 %-BW_DEFINITION_START
 %-INHERITED_EVENT_BEGIN nRF24L01p OnInterrupt
 %ifdef @nRF24L01p@OnInterrupt
@@ -168,6 +164,20 @@ byte %'ModuleName'%.%SetChannel(byte channel);
 
 %endif %- SetChannel
 %-BW_METHOD_END SetChannel
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SendPayloadDataBlock
+%ifdef SendPayloadDataBlock
+byte %'ModuleName'%.%SendPayloadDataBlock(uint8_t *appPayload, uint8_t appPayloadSize, uint8_t msgType, RNWK_ShortAddrType dstAddr, RPHY_FlagsType flags);
+%define! ParappPayload
+%define! ParappPayloadSize
+%define! ParmsgType
+%define! PardstAddr
+%define! Parflags
+%define! RetVal
+%include Common\RNetSendPayloadDataBlock.Inc
+
+%endif %- SendPayloadDataBlock
+%-BW_METHOD_END SendPayloadDataBlock
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -192,7 +202,7 @@ byte %'ModuleName'%.%SetChannel(byte channel);
 %- Write your own includes here ...
 %-   Example:
 %-     #include "header_name.h"
-#include "Rstack.h"
+#include "RStack.h"
 #include "Radio.h"
 %-
 %-BW_CUSTOM_INCLUDE_END_M
@@ -277,6 +287,23 @@ byte %'ModuleName'%.%SetChannel(byte channel)
 
 %endif %- SetChannel
 %-BW_METHOD_END SetChannel
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SendPayloadDataBlock
+%ifdef SendPayloadDataBlock
+%define! ParappPayload
+%define! ParappPayloadSize
+%define! ParmsgType
+%define! PardstAddr
+%define! Parflags
+%define! RetVal
+%include Common\RNetSendPayloadDataBlock.Inc
+byte %'ModuleName'%.%SendPayloadDataBlock(uint8_t *appPayload, uint8_t appPayloadSize, uint8_t msgType, RNWK_ShortAddrType dstAddr, RPHY_FlagsType flags)
+{
+  return RAPP_SendPayloadDataBlock(appPayload, appPayloadSize, msgType, dstAddr, flags);
+}
+
+%endif %- SendPayloadDataBlock
+%-BW_METHOD_END SendPayloadDataBlock
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

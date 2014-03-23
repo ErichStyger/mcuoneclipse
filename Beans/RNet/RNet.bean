@@ -4,7 +4,7 @@
     <Name>RNet</Name>
     <Description>RNet (Radio and Remote Network) Stack</Description>
     <Author>Erich Styger</Author>
-    <Version>01.024</Version>
+    <Version>01.027</Version>
     <Icon>RNet</Icon>
     <TypesFiles>PE,RNet\RNet</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -198,6 +198,69 @@
     </Property>
   </PropertyList>
   <MethodList>
+    <Method>
+      <TMthdItem>
+        <Name>SendPayloadDataBlock</Name>
+        <Symbol>SendPayloadDataBlock</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Send an application payload data block.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>false</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>5</ParamCount>
+        <Parameter>
+          <ParName>appPayload</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to </ParHint>
+          <ParUserDeclaration>uint8_t *appPayload</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>appPayloadSize</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint/>
+          <ParUserDeclaration>uint8_t appPayloadSize</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>msgType</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint/>
+          <ParUserDeclaration>uint8_t msgType</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>dstAddr</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint/>
+          <ParUserDeclaration>RNWK_ShortAddrType dstAddr</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>flags</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint/>
+          <ParUserDeclaration>RPHY_FlagsType flags</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(uint8_t *appPayload, uint8_t appPayloadSize, uint8_t msgType, RNWK_ShortAddrType dstAddr, RPHY_FlagsType flags)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
     <Method>
       <TMthdItem>
         <Name>SetChannel</Name>

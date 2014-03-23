@@ -7,7 +7,6 @@
  * Implementation of the Radio module to handle everything around the radio transceiver
  */
 
-#include "Platform.h"
 #include "RNetConf.h"
 #include "Radio.h"
 #include "RadioSMAC.h"
