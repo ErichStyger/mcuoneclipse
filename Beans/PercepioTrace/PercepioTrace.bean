@@ -4,7 +4,7 @@
     <Name>PercepioTrace</Name>
     <Description>Percepio FreeRTOS Trace</Description>
     <Author>Erich Styger</Author>
-    <Version>01.011</Version>
+    <Version>01.014</Version>
     <Icon>irc</Icon>
     <TypesFiles>PE,PercepioTrace\PercepioTrace</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -44,19 +44,6 @@
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>true</EditLine>
         <DefaultValue/>
-        <StrDefine>nothing</StrDefine>
-        <MinLength>0</MinLength>
-        <MaxLength>-1</MaxLength>
-      </TStrgItem>
-    </Property>
-    <Property>
-      <TStrgItem>
-        <Name>Team License Code</Name>
-        <Symbol>TeamLicenseCode</Symbol>
-        <Hint>Sets the macro TEAM_LICENSE_CODE.  Macro which defines a string - the team license code. If no team license is available, this should be an empty string "". This should be maximum 32 chars, including zero-termination.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>true</EditLine>
-        <DefaultValue>""</DefaultValue>
         <StrDefine>nothing</StrDefine>
         <MinLength>0</MinLength>
         <MaxLength>-1</MaxLength>
@@ -320,25 +307,6 @@ If enabled (1), the recorder will count each type of event, in order to give an 
     </Property>
     <Property>
       <TBoolItem>
-        <Name>Include save to file</Name>
-        <Symbol>IncludeSaveToFile</Symbol>
-        <TypeSpec>typeYesNo</TypeSpec>
-        <Hint>This sets INCLUDE_SAVE_TO_FILE in trcConfig.h\n
-If enabled (1), the recorder will include code for saving the trace to a local file system.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>1</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>false</DefaultValue>
-        <Popup>false</Popup>
-      </TBoolItem>
-    </Property>
-    <Property>
-      <TBoolItem>
         <Name>Float support</Name>
         <Symbol>floatingPointForvTracePrintF</Symbol>
         <TypeSpec>typeYesNo</TypeSpec>
@@ -496,6 +464,40 @@ This does not limit the total amount of objects created, if objects are deleted 
       </TIntgItem>
     </Property>
     <Property>
+      <TIntgItem>
+        <Name>Number of Timer</Name>
+        <Symbol>NTimer</Symbol>
+        <Hint>This sets the NTimer define.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>2</DefaultValue>
+        <MinValue>0</MinValue>
+        <MaxValue>-1</MaxValue>
+        <Bases>DEC</Bases>
+        <DefaultBase>DEC</DefaultBase>
+        <ExtraHintDisabled>false</ExtraHintDisabled>
+        <ChangeValueIntoRange>false</ChangeValueIntoRange>
+        <RuntimeProperty>false</RuntimeProperty>
+      </TIntgItem>
+    </Property>
+    <Property>
+      <TIntgItem>
+        <Name>Number of Event Groups</Name>
+        <Symbol>NEventGroup</Symbol>
+        <Hint>This sets the NEventGroup macro.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>2</DefaultValue>
+        <MinValue>0</MinValue>
+        <MaxValue>-1</MaxValue>
+        <Bases>DEC</Bases>
+        <DefaultBase>DEC</DefaultBase>
+        <ExtraHintDisabled>false</ExtraHintDisabled>
+        <ChangeValueIntoRange>false</ChangeValueIntoRange>
+        <RuntimeProperty>false</RuntimeProperty>
+      </TIntgItem>
+    </Property>
+    <Property>
       <TStrgItem>
         <Name>Name length for task</Name>
         <Symbol>NameLenTaskStr</Symbol>
@@ -579,6 +581,40 @@ This does not limit the total amount of objects created, if objects are deleted 
 A group of Macros which should be defined as an integer value of zero (0) or larger.\n
 This defines the capacity of the Object Table, in number of objects, of each object class. The Object Table holds information about the currently active kernel objects (i.e., the ones that have been created but not terminated), such as name and Tracelayzer ID, for Tasks, Queues, Semaphores, Mutexes and user-registered ISRs.\n
 This does not limit the total amount of objects created, if objects are deleted during runtime. The object table size however limits the number of objects active at any given time, since the slots in the Object Table are reused when objects are deleted.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>15</DefaultValue>
+        <MinValue>0</MinValue>
+        <MaxValue>-1</MaxValue>
+        <Bases>DEC</Bases>
+        <DefaultBase>DEC</DefaultBase>
+        <ExtraHintDisabled>false</ExtraHintDisabled>
+        <ChangeValueIntoRange>false</ChangeValueIntoRange>
+        <RuntimeProperty>false</RuntimeProperty>
+      </TIntgItem>
+    </Property>
+    <Property>
+      <TIntgItem>
+        <Name>Name length for timer</Name>
+        <Symbol>NameLenTimer</Symbol>
+        <Hint>Sets NameLenTimer define.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>15</DefaultValue>
+        <MinValue>0</MinValue>
+        <MaxValue>-1</MaxValue>
+        <Bases>DEC</Bases>
+        <DefaultBase>DEC</DefaultBase>
+        <ExtraHintDisabled>false</ExtraHintDisabled>
+        <ChangeValueIntoRange>false</ChangeValueIntoRange>
+        <RuntimeProperty>false</RuntimeProperty>
+      </TIntgItem>
+    </Property>
+    <Property>
+      <TIntgItem>
+        <Name>Name length for event group</Name>
+        <Symbol>NameLenEventGroup</Symbol>
+        <Hint>Sets NameLenEventGroup define.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>true</EditLine>
         <DefaultValue>15</DefaultValue>

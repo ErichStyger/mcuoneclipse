@@ -1,5 +1,5 @@
 /******************************************************************************* 
- * Tracealyzer v2.5.0 Recorder Library
+ * Tracealyzer v2.6.0 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcHardwarePort.c
@@ -37,17 +37,17 @@
  ******************************************************************************/
 
 #include "trcHardwarePort.h"
+#include "trcKernelPort.h"
 #if 1 /* << EST */
 #include "portTicks.h"
 #endif
 
-#if (configUSE_TRACE_FACILITY == 1)
+#if (USE_TRACEALYZER_RECORDER == 1)
 
-#if (INCLUDE_SAVE_TO_FILE == 1)
-static char* prvFileName = NULL;
-#endif
+#include <stdint.h>
 
-uint32_t trace_disable_timestamp;
+uint32_t trace_disable_timestamp = 0;
+uint32_t last_timestamp = 0;
 
 /*******************************************************************************
  * uiTraceTickCount
@@ -58,6 +58,45 @@ uint32_t trace_disable_timestamp;
  * give sufficient flexibility.
  ******************************************************************************/
 uint32_t uiTraceTickCount = 0;
+
+uint32_t DWT_CYCLES_ADDED = 0;
+
+#if (SELECTED_PORT == PORT_ARM_CortexM)
+
+void prvTraceEnableIRQ(void)
+{
+	asm volatile ("cpsie i");
+}
+
+void prvTraceDisableIRQ(void)
+{
+	asm volatile ("cpsid i");
+}
+
+void prvTraceSetIRQMask(uint32_t priMask)
+{
+	asm volatile ("MSR primask, %%0" : : "r" (priMask) );
+}
+
+uint32_t prvTraceGetIRQMask(void)
+{
+	uint32_t result;
+	asm volatile ("MRS %%0, primask" : "=r" (result) );
+	return result;
+}
+
+void prvTraceInitCortexM()
+{
+	DWT_CTRL_REG |= 1;     /* Enable the cycle counter */
+	DWT_CYCLE_COUNTER = 0;
+	
+	if (RecorderDataPtr->frequency == 0)
+	{		
+		RecorderDataPtr->frequency = TRACE_CPU_CLOCK_HZ / HWTC_DIVISOR;
+	}
+}
+
+#endif
 
 /******************************************************************************
  * vTracePortGetTimeStamp
@@ -72,128 +111,63 @@ uint32_t uiTraceTickCount = 0;
  ******************************************************************************/
 void vTracePortGetTimeStamp(uint32_t *pTimestamp)
 {
-    /* Keep these static to avoid using more stack than necessary */
-    static uint32_t last_timestamp = 0;
-    static uint32_t timestamp;
-
-#if 0
-    if (trace_disable_timestamp == 1) {
-      if (pTimestamp != NULL) {
-        *pTimestamp = last_timestamp;
-      }
-      return;
-    }
-#endif
+	static uint32_t last_traceTickCount = 0;
+    static uint32_t last_hwtc_count = 0;
+    uint32_t traceTickCount = 0;
+    uint32_t hwtc_count = 0;
     
+	if (trace_disable_timestamp == 1)
+	{
+		if (pTimestamp)
+			*pTimestamp = last_timestamp;
+		return;
+	}
+			
+    /* Retrieve HWTC_COUNT only once since the same value should be used all throughout this function. */
 #if (HWTC_COUNT_DIRECTION == DIRECTION_INCREMENTING)
-    timestamp = ((uiTraceTickCount * HWTC_PERIOD) + HWTC_COUNT) / HWTC_DIVISOR;
-#else
-#if (HWTC_COUNT_DIRECTION == DIRECTION_DECREMENTING)
-    timestamp = ((uiTraceTickCount * HWTC_PERIOD) + (HWTC_PERIOD - HWTC_COUNT)) / HWTC_DIVISOR;
+    hwtc_count = HWTC_COUNT;
+#elif (HWTC_COUNT_DIRECTION == DIRECTION_DECREMENTING)
+    hwtc_count = HWTC_PERIOD - HWTC_COUNT;
 #else
     Junk text to cause compiler error - HWTC_COUNT_DIRECTION is not set correctly!
     Should be DIRECTION_INCREMENTING or DIRECTION_DECREMENTING
 #endif
-#endif
-
-    /* May occur due to overflow, if the update of uiTraceTickCount has been 
-    delayed due to disabled interrupts. */
-    if (timestamp < last_timestamp)
+    
+    if (last_traceTickCount - uiTraceTickCount - 1 < 0x80000000)
     {
-        timestamp += (HWTC_PERIOD / HWTC_DIVISOR);
-    }
-
-    last_timestamp = timestamp;
-
-    if (pTimestamp != NULL) {
-      *pTimestamp = timestamp;
-    }
-}
-
-/*******************************************************************************
- * vTracePortEnd
- * 
- * This function is called by the monitor when a recorder stop is detected.
- * This is used by the Win32 port to store the trace to a file. The file path is
- * set using vTracePortSetOutFile.
- ******************************************************************************/
-void vTracePortEnd(void)
-{
-    vTraceConsoleMessage("\n\r[FreeRTOS+Trace] Running vTracePortEnd.\n\r");
-
-    #if (WIN32_PORT_SAVE_WHEN_STOPPED == 1)
-    vTracePortSave();
-    #endif
-
-    #if (WIN32_PORT_EXIT_WHEN_STOPPED == 1)
-    /* In the FreeRTOS/Win32 demo, this allows for killing the application 
-    when the recorder is stopped (e.g., when the buffer is full) */
-    system("pause");
-    exit(0);
-    #endif
-}
-
-#if (INCLUDE_SAVE_TO_FILE == 1)
-/*******************************************************************************
- * vTracePortSetOutFile
- *
- * Sets the filename/path used in vTracePortSave.
- * This is set in a separate function, since the Win32 port calls vTracePortSave
- * in vTracePortEnd if WIN32_PORT_SAVE_WHEN_STOPPED is set.
- ******************************************************************************/
-void vTracePortSetOutFile(char* path)
-{
-    prvFileName = path;
-}
-
-/*******************************************************************************
- * vTracePortSave
- *
- * Saves the trace to a file on a local file system. The path is set in a 
- * separate function, vTracePortSetOutFile, since the Win32 port calls 
- * vTracePortSave in vTracePortEnd if WIN32_PORT_SAVE_WHEN_STOPPED is set.
- ******************************************************************************/
-void vTracePortSave(void)
-{
-    char buf[180];
-    FILE* f;
-
-    if (prvFileName == NULL)
-    {
-        prvFileName = "FreeRTOSPlusTrace.dump";
-#if 1 /* << EST */
-        %@Utility@'ModuleName'%.strcpy((unsigned char*)buf, sizeof(buf), (unsigned char*)"No filename specified, using default \"");
-        %@Utility@'ModuleName'%.strcat((unsigned char*)buf, sizeof(buf), (unsigned char*)prvFileName);
-        %@Utility@'ModuleName'%.strcat((unsigned char*)buf, sizeof(buf), (unsigned char*)"\".");
-#else
-        sprintf(buf, "No filename specified, using default \"%%s\".", prvFileName);
-#endif
-        vTraceConsoleMessage(buf);
-    }
-
-    fopen_s(&f, prvFileName, "wb");
-    if (f)
-    {
-        fwrite(RecorderDataPtr, sizeof(RecorderDataType), 1, f);
-        fclose(f);
-#if 1 /* << EST */
-        %@Utility@'ModuleName'%.strcpy((unsigned char*)buf, sizeof(buf), (unsigned char*)"\n\r[FreeRTOS+Trace] Saved in: ");
-        %@Utility@'ModuleName'%.strcat((unsigned char*)buf, sizeof(buf), (unsigned char*)prvFileName);
-        %@Utility@'ModuleName'%.strcat((unsigned char*)buf, sizeof(buf), (unsigned char*)"\n\r");
-#else
-        sprintf(buf, "\n\r[FreeRTOS+Trace] Saved in: %%s\n\r", prvFileName);
-#endif
-        vTraceConsoleMessage(buf);
+        /* This means last_traceTickCount is higher than uiTraceTickCount,
+        so we have previously compensated for a missed tick.
+        Therefore we use the last stored value because that is more accurate. */
+        traceTickCount = last_traceTickCount;
     }
     else
     {
-#if 1 /* << EST */
-        %@Utility@'ModuleName'%.strcpy((unsigned char*)buf, sizeof(buf), (unsigned char*)"\n\r[FreeRTOS+Trace] Failed to write to output file!\n\r");
-#else
-        sprintf(buf, "\n\r[FreeRTOS+Trace] Failed to write to output file!\n\r");
-#endif
-        vTraceConsoleMessage(buf);
+        /* Business as usual */
+        traceTickCount = uiTraceTickCount;
     }
+
+    /* Check for overflow. May occur if the update of uiTraceTickCount has been 
+    delayed due to disabled interrupts. */
+    if (traceTickCount == last_traceTickCount && hwtc_count < last_hwtc_count)
+    {
+        /* A trace tick has occurred but not been executed by the kernel, so we compensate manually. */
+        traceTickCount++;
+    }
+    
+    /* Check if the return address is OK, then we perform the calculation. */
+    if (pTimestamp)
+    {
+        /* Get timestamp from trace ticks. Scale down the period to avoid unwanted overflows. */
+        *pTimestamp = traceTickCount * (HWTC_PERIOD / HWTC_DIVISOR);
+        /* Increase timestamp by (hwtc_count + "lost hardware ticks from scaling down period") / HWTC_DIVISOR. */
+        *pTimestamp += (hwtc_count + traceTickCount * (HWTC_PERIOD %% HWTC_DIVISOR)) / HWTC_DIVISOR;
+		
+		last_timestamp = *pTimestamp;
+    }
+    
+    /* Store the previous values. */
+    last_traceTickCount = traceTickCount;
+    last_hwtc_count = hwtc_count;
 }
-#endif
+
 #endif

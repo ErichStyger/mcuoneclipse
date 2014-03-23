@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.5.0 Recorder Library
+ * Tracealyzer v2.6.0 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcConfig.h
@@ -48,6 +48,15 @@
  ******************************************************************************/
 
 /*******************************************************************************
+ * TRACE_SCHEDULING_ONLY
+ *
+ * When defined disables all events except scheduling.
+ * Useful for Free Edition users.
+ ******************************************************************************/
+
+//#define TRACE_SCHEDULING_ONLY
+
+/*******************************************************************************
  * EVENT_BUFFER_SIZE
  *
  * Macro which should be defined as an integer value.
@@ -55,12 +64,14 @@
  * This defines the capacity of the event buffer, i.e., the number of records
  * it may store. Each registered event typically use one record (4 byte), but
  * vTracePrintF may use multiple records depending on the number of data args.
+ 
+ * Note: Free Edition supports a maximum buffer size of 1024.
  ******************************************************************************/
 
 #if 1 /* << EST */
 #define EVENT_BUFFER_SIZE %EventBufferSize
 #else
-#define EVENT_BUFFER_SIZE 4000 /* Adjust wrt. to available RAM */
+#define EVENT_BUFFER_SIZE 4096 /* Adjust wrt. to available RAM */
 #endif
 
 
@@ -102,7 +113,7 @@
 #if 1 /* << EST */
 #define SYMBOL_TABLE_SIZE %SymbolTableSize
 #else
-#define SYMBOL_TABLE_SIZE 400
+#define SYMBOL_TABLE_SIZE 800
 #endif
 
 #if (SYMBOL_TABLE_SIZE == 0)
@@ -184,12 +195,16 @@
 #define NQueue            %NQueue
 #define NSemaphore        %NSemaphore
 #define NMutex            %NMutex
+#define NTimer            %NTimer
+#define NEventGroup       %NEventGroup
 #else
 #define NTask             15
-#define NISR              4
+#define NISR              5
 #define NQueue            10
 #define NSemaphore        10
 #define NMutex            10
+#define NTimer            2
+#define NEventGroup       2
 #endif
 
 /* Maximum object name length for each class (includes zero termination) */
@@ -199,12 +214,16 @@
 #define NameLenQueue      %NameLenQueue
 #define NameLenSemaphore  %NameLenSemaphore
 #define NameLenMutex      %NameLenMutex
+#define NameLenTimer      %NameLenTimer
+#define NameLenEventGroup %NameLenEventGroup
 #else
 #define NameLenTask       15
 #define NameLenISR        15
 #define NameLenQueue      15
 #define NameLenSemaphore  15
 #define NameLenMutex      15
+#define NameLenTimer      15
+#define NameLenEventGroup 15
 #endif
 
 /******************************************************************************
@@ -276,7 +295,7 @@
  * If this is one (1), the TRACE_ASSERT macro will verify that a condition is 
  * true. If the condition is false, vTraceError() will be called.
  *****************************************************************************/
-#define USE_TRACE_ASSERT 0
+#define USE_TRACE_ASSERT 1
 
 /******************************************************************************
  * INCLUDE_FLOAT_SUPPORT
@@ -296,7 +315,7 @@
 %if %floatingPointForvTracePrintF='yes'
 #define INCLUDE_FLOAT_SUPPORT 1
 %else
-#define INCLUDE_FLOAT_SUPPORT 0
+#define INCLUDE_FLOAT_SUPPORT 1
 %endif
 
 /******************************************************************************
@@ -311,8 +330,7 @@
  * much faster than a printf and can therefore be used in timing critical code.
  * See vTraceUserEvent() and vTracePrintF() in trcUser.h
  * 
- * Note that Tracealyzer Professional Edition is required for User Events, 
- * they are not displayed in Tracealyzer Free Edition.
+ * Note that User Events are not displayed in FreeRTOS+Trace Free Edition.
  *****************************************************************************/
 #if 1 /* << EST */
 %if %IncludeUserEvents='yes'
@@ -389,6 +407,17 @@
 #else
 #define INCLUDE_OBJECT_DELETE 1
 #endif
+
+/******************************************************************************
+ * INCLUDE_MEMMANG_EVENTS
+ * 
+ * Macro which should be defined as either zero (0) or one (1). 
+ * Default is 1.
+ *
+ * This controls if malloc and free calls should be traced. Set this to zero to
+ * exclude malloc/free calls from the tracing.
+ *****************************************************************************/
+#define INCLUDE_MEMMANG_EVENTS 1
 
 /******************************************************************************
  * CONFIGURATION RELATED TO BEHAVIOR
@@ -504,41 +533,86 @@
  *****************************************************************************/
 #define USE_IMPLICIT_IFE_RULES 1
 
+
 /******************************************************************************
- * INCLUDE_SAVE_TO_FILE
+ * USE_16BIT_OBJECT_HANDLES
  *
  * Macro which should be defined as either zero (0) or one (1).
  * Default is 0.
  *
- * If enabled (1), the recorder will include code for saving the trace
- * to a local file system.
- ******************************************************************************/
-#if 1 /* << EST */
-%if %IncludeSaveToFile='yes'
-    #define INCLUDE_SAVE_TO_FILE 1
-%else
-    #define INCLUDE_SAVE_TO_FILE 0
-%endif
-#else
-#ifdef WIN32
-    #define INCLUDE_SAVE_TO_FILE 1
-#else
-    #define INCLUDE_SAVE_TO_FILE 0
-#endif
+ * If set to 0 (zero), the recorder uses 8-bit handles to identify kernel 
+ * objects such as tasks and queues. This limits the supported number of
+ * concurrently active objects to 255 of each type (object class).
+ *
+ * If set to 1 (one), the recorder uses 16-bit handles to identify kernel 
+ * objects such as tasks and queues. This limits the supported number of
+ * concurrent objects to 65535 of each type (object class). However, since the
+ * object property table is limited to 64 KB, the practical limit is about
+ * 3000 objects in total. 
+ * 
+ * NOTE: An object with a high ID (> 255) will generate an extra event 
+ * (= 4 byte) in the event buffer. 
+ * 
+ * NOTE: Some internal tables in the recorder gets larger when using 16-bit 
+ * handles. The additional RAM usage is 5-10 byte plus 1 byte per kernel object
+ *, i.e., task, queue, semaphore, mutex, etc.
+ *****************************************************************************/
+#define USE_16BIT_OBJECT_HANDLES 0
+
+/****** Port Name ******************** Code ** Official ** OS Platform ******
+* PORT_APPLICATION_DEFINED               -2     -           -                 
+* PORT_NOT_SET                           -1     -           -                 
+* PORT_HWIndependent                     0      Yes         Any               
+* PORT_Win32                             1      Yes         FreeRTOS Win32
+* PORT_Atmel_AT91SAM7                    2      No          Any               
+* PORT_Atmel_UC3A0                       3      No          Any               
+* PORT_ARM_CortexM                       4      Yes         Any               
+* PORT_Renesas_RX600                     5      Yes         Any               
+* PORT_Microchip_dsPIC_AND_PIC24         6      Yes         Any               
+* PORT_TEXAS_INSTRUMENTS_TMS570          7      No          Any               
+* PORT_TEXAS_INSTRUMENTS_MSP430          8      No          Any               
+* PORT_MICROCHIP_PIC32                   9      No          Any               
+* PORT_XILINX_PPC405                     10     No          FreeRTOS          
+* PORT_XILINX_PPC440                     11     No          FreeRTOS          
+* PORT_XILINX_MICROBLAZE                 12     No          Any               
+* PORT_NXP_LPC210X                       13     No          Any               
+*****************************************************************************/
+//#define SELECTED_PORT PORT_ARM_CortexM
+
+#if (SELECTED_PORT == PORT_NOT_SET)
+#error "You need to define SELECTED_PORT here!"
 #endif
 
 /******************************************************************************
- * TEAM_LICENSE_CODE
+* USE_PRIMASK_CS (for Cortex M devices only)
+*
+* An integer constant that selects between two options for the critical
+* sections of the recorder library.
  *
- * Macro which defines a string - the team license code.
- * If no team license is available, this should be an empty string "".
- * This should be maximum 32 chars, including zero-termination.
- *****************************************************************************/
-#if 1 /* << EST */
-#define TEAM_LICENSE_CODE %TeamLicenseCode
-#else
-#define TEAM_LICENSE_CODE ""
-#endif
+*   0: The default FreeRTOS critical section (BASEPRI) - default setting
+*   1: Always disable ALL interrupts (using PRIMASK)
+ *
+* Option 0 uses the standard FreeRTOS macros for critical sections.
+* However, on Cortex-M devices they only disable interrupts with priorities 
+* below a certain configurable level, while higher priority ISRs remain active.
+* Such high-priority ISRs may not use the recorder functions in this mode.
+*
+* Option 1 allows you to safely call the recorder from any ISR, independent of 
+* the interrupt priority. This mode may however cause higher IRQ latencies
+* (some microseconds) since ALL configurable interrupts are disabled during 
+* the recorder's critical sections in this mode, using the PRIMASK register.
+ ******************************************************************************/
+#define USE_PRIMASK_CS 0
+
+/******************************************************************************
+* HEAP_SIZE_BELOW_16M
+*
+* An integer constant that can be used to reduce the buffer usage of memory
+* allocation events (malloc/free). This value should be 1 if the heap size is 
+* below 16 MB (2^24 byte), and you can live with addresses truncated to the 
+* lower 24 bit. Otherwise set it to 0 to get the full 32-bit addresses.
+******************************************************************************/
+#define HEAP_SIZE_BELOW_16M 0
 
 #endif
 

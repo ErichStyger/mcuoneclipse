@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.5.0 Recorder Library
+ * Tracealyzer v2.6.0 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcTypes.h
@@ -43,12 +43,17 @@
 #else
   #include <stdint.h>
 #endif
+#include <trcConfig.h>
 
 typedef uint16_t traceLabel;
 
 typedef uint8_t UserEventChannel;
 
+#if (USE_16BIT_OBJECT_HANDLES == 1)
+typedef uint16_t objectHandleType;
+#else
 typedef uint8_t objectHandleType;
+#endif
 
 typedef uint8_t traceObjectClass;
 

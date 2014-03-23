@@ -225,10 +225,6 @@ LI.EXP {
 <b>RTOS+Trace Version</b></a> - Identifies the RTOS+Trace version used from Percepio AB
 </li>
 <li>
-<a name="TeamLicenseCode">
-<b>Team License Code</b></a> - Sets the macro TEAM_LICENSE_CODE.  Macro which defines a string - the team license code. If no team license is available, this should be an empty string &quot;&quot;. This should be maximum 32 chars, including zero-termination.
-</li>
-<li>
 <a name="Utility">
 <b>Utility</b></a> - Interface to utility functions
 </li>
@@ -322,11 +318,6 @@ If enabled (1), the recorder will count each type of event, in order to give an 
 <b>Event Count Size</b></a> - If 'Include event stats' is enabled, then this defines the size of the gloabal event count array. This setting defines the EVENT_COUNT_SIZE macro.
 </li>
 <li>
-<a name="IncludeSaveToFile">
-<b>Include save to file</b></a> - This sets INCLUDE_SAVE_TO_FILE in trcConfig.h<br />
-If enabled (1), the recorder will include code for saving the trace to a local file system.
-</li>
-<li>
 <a name="floatingPointForvTracePrintF">
 <b>Float support</b></a> - If floating point is supported for vTracePrintF()
 </li>
@@ -380,6 +371,14 @@ This defines the capacity of the Object Table, in number of objects, of each obj
 This does not limit the total amount of objects created, if objects are deleted during runtime. The object table size however limits the number of objects active at any given time, since the slots in the Object Table are reused when objects are deleted.
 </li>
 <li>
+<a name="NTimer">
+<b>Number of Timer</b></a> - This sets the NTimer define.
+</li>
+<li>
+<a name="NEventGroup">
+<b>Number of Event Groups</b></a> - This sets the NEventGroup macro.
+</li>
+<li>
 <a name="NameLenTaskStr">
 <b>Name length for task</b></a> - This sets NameLenTask in trcConfig.h<br />
 A group of Macros which should be defined as an integer value of zero (0) or larger.<br />
@@ -413,6 +412,14 @@ This does not limit the total amount of objects created, if objects are deleted 
 A group of Macros which should be defined as an integer value of zero (0) or larger.<br />
 This defines the capacity of the Object Table, in number of objects, of each object class. The Object Table holds information about the currently active kernel objects (i.e., the ones that have been created but not terminated), such as name and Tracelayzer ID, for Tasks, Queues, Semaphores, Mutexes and user-registered ISRs.<br />
 This does not limit the total amount of objects created, if objects are deleted during runtime. The object table size however limits the number of objects active at any given time, since the slots in the Object Table are reused when objects are deleted.
+</li>
+<li>
+<a name="NameLenTimer">
+<b>Name length for timer</b></a> - Sets NameLenTimer define.
+</li>
+<li>
+<a name="NameLenEventGroup">
+<b>Name length for event group</b></a> - Sets NameLenEventGroup define.
 </li>
 
      </ul>

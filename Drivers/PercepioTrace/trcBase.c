@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.5.0 Recorder Library
+ * Tracealyzer v2.6.0 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcBase.c
@@ -115,14 +115,15 @@ void prvTraceInitTraceData()
 	/* DO NOTHING */
 #endif
 
-	TRACE_ASSERT(RecorderDataPtr != NULL, "prvTraceInitTraceData, RecorderDataPtr == NULL", ;);
+
+	TRACE_ASSERT(RecorderDataPtr != NULL, "prvTraceInitTraceData, RecorderDataPtr == NULL", );
 
     if (! RecorderDataPtr)
     {
         vTraceError("No recorder data structure allocated!");
         return;
     }
-
+		
     (void)memset(RecorderDataPtr, 0, sizeof(RecorderDataType));
 
     RecorderDataPtr->startmarker0 = 0x00;
@@ -146,6 +147,8 @@ void prvTraceInitTraceData()
     RecorderDataPtr->maxEvents = EVENT_BUFFER_SIZE;
 
     RecorderDataPtr->debugMarker0 = 0xF0F0F0F0;
+
+	RecorderDataPtr->isUsing16bitHandles = USE_16BIT_OBJECT_HANDLES;
 
 	/* This function is kernel specific */
 	vTraceInitObjectPropertyTable();
@@ -184,6 +187,10 @@ void prvTraceInitTraceData()
 
 	/* Fix the start markers of the trace data structure */
 	vInitStartMarkers();
+	
+	#ifdef PORT_SPECIFIC_INIT
+	PORT_SPECIFIC_INIT();
+	#endif
 }
 
 static void vInitStartMarkers()
@@ -257,7 +264,7 @@ uint16_t uiIndexOfObject(objectHandleType objecthandle, uint8_t objectclass)
 
 objectHandleType xTraceGetObjectHandle(traceObjectClass objectclass)
 {
-    static objectHandleType handle;
+    objectHandleType handle;
     static int indexOfHandle;
 
 	TRACE_ASSERT(objectclass < TRACE_NCLASSES, "xTraceGetObjectHandle: Invalid value for objectclass", (objectHandleType)0);
@@ -308,15 +315,15 @@ void vTraceFreeObjectHandle(traceObjectClass objectclass, objectHandleType handl
 {
     int indexOfHandle;
 
-    TRACE_ASSERT(objectclass < TRACE_NCLASSES, "vTraceFreeObjectHandle: Invalid value for objectclass", ; );
-    TRACE_ASSERT(handle > 0 && handle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass], "vTraceFreeObjectHandle: Invalid value for handle", ; );
+    TRACE_ASSERT(objectclass < TRACE_NCLASSES, "vTraceFreeObjectHandle: Invalid value for objectclass", );
+    TRACE_ASSERT(handle > 0 && handle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass], "vTraceFreeObjectHandle: Invalid value for handle", );
 
     /* Check that there is room to push the handle on the stack */
     if ((objectHandleStacks.indexOfNextAvailableHandle[objectclass] - 1) <
         objectHandleStacks.lowestIndexOfClass[objectclass])
     {
         /* Error */
-        vTraceError("Attempt to free more handles than allocated! (duplicate xTaskDelete or xQueueDelete?)");
+        vTraceError("Attempt to free more handles than allocated!");
     }
     else
     {
@@ -354,7 +361,7 @@ void vTraceSetObjectName(traceObjectClass objectclass,
 {
     static uint16_t idx;
 
-	TRACE_ASSERT(name != NULL, "vTraceSetObjectName: name == NULL", ; );
+	TRACE_ASSERT(name != NULL, "vTraceSetObjectName: name == NULL", );
 
     if (objectclass >= TRACE_NCLASSES)
     {
@@ -391,8 +398,11 @@ traceLabel prvTraceOpenSymbol(const char* name, traceLabel userEventChannel)
     uint16_t result;
     uint8_t len;
     uint8_t crc;
+	TRACE_SR_ALLOC_CRITICAL_SECTION();
+	
     len = 0;
     crc = 0;
+    
 
     TRACE_ASSERT(name != NULL, "prvTraceOpenSymbol: name == NULL", (traceLabel)0);
 
@@ -413,8 +423,6 @@ traceLabel prvTraceOpenSymbol(const char* name, traceLabel userEventChannel)
  * Supporting functions
  ******************************************************************************/
 
-extern volatile uint32_t rtest_error_flag;
-
 /*******************************************************************************
  * vTraceError
  *
@@ -429,11 +437,11 @@ extern volatile uint32_t rtest_error_flag;
  ******************************************************************************/
 void vTraceError(const char* msg)
 {
-	TRACE_ASSERT(msg != NULL, "vTraceError: msg == NULL", ; );
-	TRACE_ASSERT(RecorderDataPtr != NULL, "vTraceError: RecorderDataPtr == NULL", ; );
+	TRACE_ASSERT(msg != NULL, "vTraceError: msg == NULL", );
+	TRACE_ASSERT(RecorderDataPtr != NULL, "vTraceError: RecorderDataPtr == NULL", );
 
-	// Stop the recorder. Note: We do not call vTraceStop, since that adds a weird
-	// and unnecessary dependency to trcUser.c.
+	/* Stop the recorder. Note: We do not call vTraceStop, since that adds a weird
+	and unnecessary dependency to trcUser.c */
 
 	RecorderDataPtr->recorderActive = 0;
 
@@ -467,7 +475,7 @@ void prvCheckDataToBeOverwrittenForMultiEntryEvents(uint8_t nofEntriesToCheck)
     unsigned int i = 0;
     unsigned int e = 0;
 
-    TRACE_ASSERT(nofEntriesToCheck != 0, "prvCheckDataToBeOverwrittenForMultiEntryEvents: nofEntriesToCheck == 0", ; );
+    TRACE_ASSERT(nofEntriesToCheck != 0, "prvCheckDataToBeOverwrittenForMultiEntryEvents: nofEntriesToCheck == 0", );
 
     while (i < nofEntriesToCheck)
     {
@@ -505,12 +513,12 @@ void prvCheckDataToBeOverwrittenForMultiEntryEvents(uint8_t nofEntriesToCheck)
  * Updates the index of the event buffer.
  ******************************************************************************/
 void prvTraceUpdateCounters(void)
-{
-    if (RecorderDataPtr->recorderActive == 0)
+{	
+	if (RecorderDataPtr->recorderActive == 0)
     {
         return;
     }
-
+	
     RecorderDataPtr->numEvents++;
 
     RecorderDataPtr->nextFreeIndex++;
@@ -564,13 +572,17 @@ uint16_t prvTraceGetDTS(uint16_t param_maxDTS)
 
     TRACE_ASSERT(param_maxDTS == 0xFF || param_maxDTS == 0xFFFF, "prvTraceGetDTS: Invalid value for param_maxDTS", 0);
 
+#if (SELECTED_PORT != PORT_ARM_CortexM)
+
     if (RecorderDataPtr->frequency == 0 && init_hwtc_count != HWTC_COUNT)
     {
         /* If HWTC_PERIOD is mapped to the timer reload register,
-        such as in the Cortex M port, it might not be initialized
-		before the Kernel scheduler has been started has been
-		started. We therefore store the frequency of the timer
-		once the counter register has changed. */
+        it might not be initialized	before the scheduler has been started. 
+		We therefore store the frequency of the timer when the counter
+		register has changed from its initial value. 
+		(Note that this function is called also by vTraceStart and
+		uiTraceStart, which might be called before the scheduler
+		has been started.) */
 
 #if (SELECTED_PORT == PORT_Win32)
         RecorderDataPtr->frequency = 100000;
@@ -580,15 +592,15 @@ uint16_t prvTraceGetDTS(uint16_t param_maxDTS)
 		RecorderDataPtr->frequency = (HWTC_PERIOD * TRACE_TICK_RATE_HZ) / (uint32_t)HWTC_DIVISOR;
 #endif
     }
-
+#endif
     /**************************************************************************
     * The below statements read the timestamp from the timer port module.
     * If necessary, whole seconds are extracted using division while the rest
     * comes from the modulo operation.
     **************************************************************************/
-
-    vTracePortGetTimeStamp(&timestamp);
-
+    
+    vTracePortGetTimeStamp(&timestamp);    
+    
     /***************************************************************************
     * Since dts is unsigned the result will be correct even if timestamp has
 	* wrapped around.
@@ -778,12 +790,12 @@ uint16_t prvTraceCreateSymbolTableEntry(const char* name,
 void prvTraceGetChecksum(const char *pname, uint8_t* pcrc, uint8_t* plength)
 {
    unsigned char c;
-   int length = 0;
+   int length = 1;
    int crc = 0;
 
-   TRACE_ASSERT(pname != NULL, "prvTraceGetChecksum: pname == NULL", ; );
-   TRACE_ASSERT(pcrc != NULL, "prvTraceGetChecksum: pcrc == NULL", ; );
-   TRACE_ASSERT(plength != NULL, "prvTraceGetChecksum: plength == NULL", ; );
+   TRACE_ASSERT(pname != NULL, "prvTraceGetChecksum: pname == NULL", );
+   TRACE_ASSERT(pcrc != NULL, "prvTraceGetChecksum: pcrc == NULL", );
+   TRACE_ASSERT(plength != NULL, "prvTraceGetChecksum: plength == NULL", );
 
    if (pname != (const char *) 0)
    {
@@ -796,5 +808,53 @@ void prvTraceGetChecksum(const char *pname, uint8_t* pcrc, uint8_t* plength)
    *pcrc = (uint8_t)(crc & 0x3F);
    *plength = (uint8_t)length;
 }
+
+#if (USE_16BIT_OBJECT_HANDLES == 1)
+
+void prvTraceStoreXID(objectHandleType handle); 
+
+/******************************************************************************
+ * prvTraceStoreXID
+ *
+ * Stores an XID (eXtended IDentifier) event.
+ * This is used if an object/task handle is larger than 255.
+ * The parameter "handle" is the full (16 bit) handle, assumed to be 256 or 
+ * larger. Handles below 256 should not use this function.
+ *
+ * NOTE: this function MUST be called from within a critical section.
+ *****************************************************************************/
+
+void prvTraceStoreXID(objectHandleType handle)
+{
+	XPSEvent* xid;
+
+	TRACE_ASSERT(handle >= 256, "prvTraceStoreXID: Handle < 256", );
+
+	xid = (XPSEvent*)xTraceNextFreeEventBufferSlot();
+
+	if (xid != NULL)
+	{
+		xid->type = XID;
+
+		/* This function is (only) used when objectHandleType is 16 bit... */
+		xid->xps_16 = handle;  
+
+		prvTraceUpdateCounters();
+	}
+}
+
+unsigned char prvTraceGet8BitHandle(objectHandleType handle)
+{
+	if (handle > 255)
+	{		
+		prvTraceStoreXID(handle);
+        /* The full handle (16 bit) is stored in the XID event. 
+           This code (255) is used instead of zero (which is an error code).*/
+		return 255; 
+	}
+	return (unsigned char)(handle & 0xFF);
+}
+
+#endif
 
 #endif
