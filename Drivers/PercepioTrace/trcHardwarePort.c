@@ -44,7 +44,9 @@
 
 #if (USE_TRACEALYZER_RECORDER == 1)
 
+#ifndef __HIWARE__ /* << EST */
 #include <stdint.h>
+#endif
 
 uint32_t trace_disable_timestamp = 0;
 uint32_t last_timestamp = 0;

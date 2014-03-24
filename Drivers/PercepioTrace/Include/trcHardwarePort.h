@@ -38,7 +38,10 @@
 
 #ifndef TRCPORT_H
 #define TRCPORT_H
+
+#ifndef __HIWARE__
 #include <stdint.h>
+#endif
 
 /* If Win32 port */
 #ifdef WIN32

@@ -43,6 +43,10 @@
 #include <stdint.h>
 #endif
 
+#ifdef __HIWARE__ /* << EST */
+#pragma MESSAGE DISABLE C1855 /* recursive function call */
+#endif
+
 /*******************************************************************************
  * Static data initializations
  ******************************************************************************/
@@ -116,7 +120,7 @@ void prvTraceInitTraceData()
 #endif
 
 
-	TRACE_ASSERT(RecorderDataPtr != NULL, "prvTraceInitTraceData, RecorderDataPtr == NULL", );
+	TRACE_ASSERT(RecorderDataPtr != NULL, "prvTraceInitTraceData, RecorderDataPtr == NULL", ;);
 
     if (! RecorderDataPtr)
     {
@@ -315,8 +319,8 @@ void vTraceFreeObjectHandle(traceObjectClass objectclass, objectHandleType handl
 {
     int indexOfHandle;
 
-    TRACE_ASSERT(objectclass < TRACE_NCLASSES, "vTraceFreeObjectHandle: Invalid value for objectclass", );
-    TRACE_ASSERT(handle > 0 && handle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass], "vTraceFreeObjectHandle: Invalid value for handle", );
+    TRACE_ASSERT(objectclass < TRACE_NCLASSES, "vTraceFreeObjectHandle: Invalid value for objectclass", ;);
+    TRACE_ASSERT(handle > 0 && handle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass], "vTraceFreeObjectHandle: Invalid value for handle", ;);
 
     /* Check that there is room to push the handle on the stack */
     if ((objectHandleStacks.indexOfNextAvailableHandle[objectclass] - 1) <
@@ -361,7 +365,7 @@ void vTraceSetObjectName(traceObjectClass objectclass,
 {
     static uint16_t idx;
 
-	TRACE_ASSERT(name != NULL, "vTraceSetObjectName: name == NULL", );
+	TRACE_ASSERT(name != NULL, "vTraceSetObjectName: name == NULL", ;);
 
     if (objectclass >= TRACE_NCLASSES)
     {
@@ -437,8 +441,8 @@ traceLabel prvTraceOpenSymbol(const char* name, traceLabel userEventChannel)
  ******************************************************************************/
 void vTraceError(const char* msg)
 {
-	TRACE_ASSERT(msg != NULL, "vTraceError: msg == NULL", );
-	TRACE_ASSERT(RecorderDataPtr != NULL, "vTraceError: RecorderDataPtr == NULL", );
+	TRACE_ASSERT(msg != NULL, "vTraceError: msg == NULL", ;);
+	TRACE_ASSERT(RecorderDataPtr != NULL, "vTraceError: RecorderDataPtr == NULL", ;);
 
 	/* Stop the recorder. Note: We do not call vTraceStop, since that adds a weird
 	and unnecessary dependency to trcUser.c */
@@ -475,7 +479,7 @@ void prvCheckDataToBeOverwrittenForMultiEntryEvents(uint8_t nofEntriesToCheck)
     unsigned int i = 0;
     unsigned int e = 0;
 
-    TRACE_ASSERT(nofEntriesToCheck != 0, "prvCheckDataToBeOverwrittenForMultiEntryEvents: nofEntriesToCheck == 0", );
+    TRACE_ASSERT(nofEntriesToCheck != 0, "prvCheckDataToBeOverwrittenForMultiEntryEvents: nofEntriesToCheck == 0", ;);
 
     while (i < nofEntriesToCheck)
     {
@@ -793,9 +797,9 @@ void prvTraceGetChecksum(const char *pname, uint8_t* pcrc, uint8_t* plength)
    int length = 1;
    int crc = 0;
 
-   TRACE_ASSERT(pname != NULL, "prvTraceGetChecksum: pname == NULL", );
-   TRACE_ASSERT(pcrc != NULL, "prvTraceGetChecksum: pcrc == NULL", );
-   TRACE_ASSERT(plength != NULL, "prvTraceGetChecksum: plength == NULL", );
+   TRACE_ASSERT(pname != NULL, "prvTraceGetChecksum: pname == NULL", ;);
+   TRACE_ASSERT(pcrc != NULL, "prvTraceGetChecksum: pcrc == NULL", ;);
+   TRACE_ASSERT(plength != NULL, "prvTraceGetChecksum: plength == NULL", ;);
 
    if (pname != (const char *) 0)
    {
@@ -828,7 +832,7 @@ void prvTraceStoreXID(objectHandleType handle)
 {
 	XPSEvent* xid;
 
-	TRACE_ASSERT(handle >= 256, "prvTraceStoreXID: Handle < 256", );
+	TRACE_ASSERT(handle >= 256, "prvTraceStoreXID: Handle < 256", ;);
 
 	xid = (XPSEvent*)xTraceNextFreeEventBufferSlot();
 

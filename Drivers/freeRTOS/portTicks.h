@@ -77,6 +77,7 @@
 %ifdef TickCntr %- non-LDD version
 /* support for trace and access to tick counter */
 #include "%@TickCntr@'ModuleName'.h"
+#include "portmacro.h"
 
 /*!
  * \brief Return the tick raw counter value. It is assumed that the counter register has been reset at the last tick time

@@ -299,7 +299,7 @@
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN vTraceInitTraceData
 %ifdef vTraceInitTraceData
-#define %'ModuleName'%.%vTraceInitTraceData(void) \
+#define %'ModuleName'%.%vTraceInitTraceData() \
   vTraceInitTraceData()
 
 %define! RetVal
