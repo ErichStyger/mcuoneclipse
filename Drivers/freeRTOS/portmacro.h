@@ -676,6 +676,12 @@ void vPortPendSVHandler(void); /* PendSV interrupt handler */
 void vPortTickHandler(void); /* Systick interrupt handler */
 %endif
 
+#if configUSE_TICKLESS_IDLE_DECISION_HOOK /* << EST */
+BaseType_t configUSE_TICKLESS_IDLE_DECISION_HOOK_NAME(void); /* return pdTRUE if RTOS can enter tickless idle mode, pdFALSE otherwise */
+#endif
+
+
+
 #ifdef __cplusplus
 }
 #endif

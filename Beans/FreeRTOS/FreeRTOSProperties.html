@@ -596,6 +596,18 @@ The following items are available only if the group is enabled (the value is "En
     <a name="ExpectedIdleTimeBeforeSleep">
     <b>Expected Idle Time (Ticks) before Sleep</b></a> - Tickless mode will only be entered if the idle ticks are larger than this value. This defines the value for configEXPECTED_IDLE_TIME_BEFORE_SLEEP.
     </li>
+    <li>
+    <a name="TicklessIdleDecisionHookEnabled">
+    <b>Idle Decision Hook</b></a> - Hook called to ask the application if the RTOS is allowed to enter the tickless idle mode. The application might prevent entering tickless idle mode e.g. if this would shug down serial or USB communication.<br />
+The following items are available only if the group is enabled (the value is "Enabled"):<br />
+
+    <ul>
+      <li>
+      <a name="xEnterTicklessIdleFctName">
+      <b>Hook function name</b></a> - Function name of the decision hook. The implementation must use this prototype: BaseType_t  xEnterTicklessIdle(void)
+      </li>
+    </ul>
+    </li>
   </ul>
   </li>
   <li>

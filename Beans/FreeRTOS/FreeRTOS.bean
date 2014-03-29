@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.360</Version>
+    <Version>01.366</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -88,7 +88,7 @@
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
               <Description>Disabled</Description>
-              <Expanded>Yes</Expanded>
+              <Expanded>No</Expanded>
               <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
@@ -961,7 +961,7 @@ To use this method in combination with method 1 set configCHECK_FOR_STACK_OVERFL
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
               <Description>Disabled</Description>
-              <Expanded>No</Expanded>
+              <Expanded>Yes</Expanded>
               <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
@@ -999,6 +999,37 @@ To use this method in combination with method 1 set configCHECK_FOR_STACK_OVERFL
                     <ChangeValueIntoRange>false</ChangeValueIntoRange>
                     <RuntimeProperty>false</RuntimeProperty>
                   </TIntgItem>
+                </GrupItem>
+                <GrupItem>
+                  <TBoolGrupItem>
+                    <Name>Idle Decision Hook</Name>
+                    <Symbol>TicklessIdleDecisionHookEnabled</Symbol>
+                    <TypeSpec>typeEnaDis</TypeSpec>
+                    <Hint>Hook called to ask the application if the RTOS is allowed to enter the tickless idle mode. The application might prevent entering tickless idle mode e.g. if this would shug down serial or USB communication.</Hint>
+                    <ItemLevel>BASIC</ItemLevel>
+                    <BoldName>true</BoldName>
+                    <EditLine>false</EditLine>
+                    <Description>Disabled</Description>
+                    <Expanded>Yes</Expanded>
+                    <DefaultValue>false</DefaultValue>
+                    <DefineSymbol>YES_NO</DefineSymbol>
+                    <IfDisabled>setNOTHING</IfDisabled>
+                    <Children>
+                      <GrupItem>
+                        <TStrgItem>
+                          <Name>Hook function name</Name>
+                          <Symbol>xEnterTicklessIdleFctName</Symbol>
+                          <Hint>Function name of the decision hook. The implementation must use this prototype: BaseType_t  xEnterTicklessIdle(void)</Hint>
+                          <ItemLevel>BASIC</ItemLevel>
+                          <EditLine>true</EditLine>
+                          <DefaultValue>xEnterTicklessIdle</DefaultValue>
+                          <StrDefine>nothing</StrDefine>
+                          <MinLength>0</MinLength>
+                          <MaxLength>-1</MaxLength>
+                        </TStrgItem>
+                      </GrupItem>
+                    </Children>
+                  </TBoolGrupItem>
                 </GrupItem>
               </Children>
             </TBoolGrupItem>

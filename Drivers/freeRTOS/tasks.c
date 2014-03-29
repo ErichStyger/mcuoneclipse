@@ -2634,6 +2634,9 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 		user defined low power mode	implementations require
 		configUSE_TICKLESS_IDLE to be set to a value other than 1. */
 		#if ( configUSE_TICKLESS_IDLE != 0 )
+    #if configUSE_TICKLESS_IDLE_DECISION_HOOK /* << EST */
+		if (configUSE_TICKLESS_IDLE_DECISION_HOOK_NAME()) /* ask application if it shall enter tickless idle mode */
+    #endif
 		{
 		TickType_t xExpectedIdleTime;
 
