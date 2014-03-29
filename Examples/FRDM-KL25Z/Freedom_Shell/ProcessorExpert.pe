@@ -4,7 +4,7 @@
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
     <ModificationStamp>189</ModificationStamp>
-    <Date>2014-03-19</Date>
+    <Date>2014-03-27</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.8.1.RT5_b1349-1839</PEversion>
   </Header>
@@ -10871,7 +10871,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.360</BeanVersion>
+    <BeanVersion>01.366</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -10931,7 +10931,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template>FreeRTOS\FreeRTOSTraceInterface</Template>
-          <BeanVersion>01.011</BeanVersion>
+          <BeanVersion>01.015</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -12148,6 +12148,38 @@
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <Value>15</Value>
               <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>NTimer</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>2</Value>
+              <Base>DEC</Base>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>NEventGroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>2</Value>
+              <Base>DEC</Base>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>NameLenTimer</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>15</Value>
+              <Base>DEC</Base>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>NameLenEventGroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>15</Value>
+              <Base>DEC</Base>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
             </ItemState>
           </Properties>
           <Methods>
@@ -15135,6 +15167,20 @@
         <Value>false</Value>
         <Expanded>false</Expanded>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TicklessIdleDecisionHookEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xEnterTicklessIdleFctName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>xEnterTicklessIdle</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -22705,7 +22751,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.019</BeanVersion>
+    <BeanVersion>01.020</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
