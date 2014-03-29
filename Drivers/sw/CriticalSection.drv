@@ -99,6 +99,10 @@
 %- Write your own types here ...
 %-  Example:
 %-    typedef int TMyInteger;
+%if (%useRTOScritical='yes')
+#include "FreeRTOS.h"
+
+%endif
 /* workaround macros for wrong EnterCritical()/ExitCritical() in the low level drivers. Will be removed once PEx is fixed */
 #define %'ModuleName'%.CriticalVariableDrv() \
   %'ModuleName'%.%CriticalVariable()
@@ -128,7 +132,9 @@
 %-BW_METHOD_BEGIN EnterCritical
 %ifdef EnterCritical
 #define %'ModuleName'%.%EnterCritical() \
-%if (%UseProcessorExpertDefault='no') & (%CPUfamily = "Kinetis") & (%Compiler = "GNUC")
+%if (%useRTOScritical='yes')
+  taskENTER_CRITICAL()
+%elif (%UseProcessorExpertDefault='no') & (%CPUfamily = "Kinetis") & (%Compiler = "GNUC")
   do {                                  \
     asm (                               \
     "MRS   R0, PRIMASK\n\t"             \
@@ -148,7 +154,9 @@
 %-BW_METHOD_BEGIN ExitCritical
 %ifdef ExitCritical
 #define %'ModuleName'%.%ExitCritical() \
-%if (%UseProcessorExpertDefault='no') & (%CPUfamily = "Kinetis") & (%Compiler = "GNUC")
+%if (%useRTOScritical='yes')
+  taskEXIT_CRITICAL()
+%elif (%UseProcessorExpertDefault='no') & (%CPUfamily = "Kinetis") & (%Compiler = "GNUC")
   do{                                  \
     asm (                              \
     "ldrb r0, %%[input]\n\t"            \

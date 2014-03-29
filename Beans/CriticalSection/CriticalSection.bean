@@ -4,7 +4,7 @@
     <Name>CriticalSection</Name>
     <Description>Critical Section handling</Description>
     <Author>Erich Styger</Author>
-    <Version>01.004</Version>
+    <Version>01.006</Version>
     <Icon>CPU_CHIP2</Icon>
     <TypesFiles>PE,CriticalSection\CriticalSection</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -42,6 +42,24 @@
         <Symbol>UseProcessorExpertDefault</Symbol>
         <TypeSpec>typeYesNo</TypeSpec>
         <Hint>If set to yes, it uses the default Processor Expert EnterCritical() and ExitCritical()</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>false</DefaultValue>
+        <Popup>false</Popup>
+      </TBoolItem>
+    </Property>
+    <Property>
+      <TBoolItem>
+        <Name>Use FreeRTOS</Name>
+        <Symbol>useRTOScritical</Symbol>
+        <TypeSpec>typeYesNo</TypeSpec>
+        <Hint>If enabled, it uses the FreeRTOS taskEnterCritical() and taskExitCritical() macros</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
