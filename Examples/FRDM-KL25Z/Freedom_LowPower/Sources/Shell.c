@@ -1,9 +1,10 @@
-/*
- * Shell.c
- *
- *  Created on: 04.08.2011
- *      Author: Erich Styger
+/**
+ * \file
+ * \brief Platform configuration file.
+ * \author (c) 2014 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html)
  */
+
 #include "Platform.h"
 #if PL_HAS_SHELL
 #if PL_HAS_RTOS
@@ -66,9 +67,9 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
     /* do a short blink with the the green LED */
     cnt++;
     if (cnt==50) {
-      LED2_On();
+      LED1_On();
     } else if (cnt==53) {
-      LED2_Off();
+      LED1_Off();
       cnt = 0; /* restart */
     }
     FRTOS1_vTaskDelay(50/portTICK_RATE_MS);

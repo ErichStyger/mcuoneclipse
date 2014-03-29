@@ -1,8 +1,8 @@
-/*
- * LowPower.h
- *
- *  Created on: May 6, 2013
- *      Author: tastyger
+/**
+ * \file
+ * \brief Platform configuration file.
+ * \author (c) 2014 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html)
  */
 
 #ifndef LOWPOWER_H_

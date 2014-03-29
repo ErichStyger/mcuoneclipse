@@ -5,9 +5,10 @@
  * \note MIT License (http://opensource.org/licenses/mit-license.html)
  */
 
-#ifndef SHELL_H_
-#define SHELL_H_
+#ifndef APPLICATION_H_
+#define APPLICATION_H_
 
-void SHELL_Init(void);
 
-#endif /* SHELL_H_ */
+void APP_Run(void);
+
+#endif /* APPLICATION_H_ */

@@ -1,9 +1,10 @@
-/*
- * LowPower.c
- *
- *  Created on: May 6, 2013
- *      Author: tastyger
+/**
+ * \file
+ * \brief Platform configuration file.
+ * \author (c) 2014 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html)
  */
+
 #include "Platform.h"
 #if PL_HAS_LOW_POWER
 #include "LowPower.h"
@@ -16,6 +17,7 @@
   #include "LED3.h"
 #endif
 #include "UTIL1.h"
+#include "FRTOS1.h"
 
 #define LP_CAN_CHANGE_CLOCK  0
 
@@ -24,6 +26,35 @@ static LP_PowerMode LP_mode;
 #if LP_CAN_CHANGE_CLOCK
 static LP_ClockMode LP_clock;
 #endif
+
+#include "AS1.h"
+/*!
+ * \brief Callback called by the RTOS from the IDLE task to know if it can go into tickless idle mode.
+ * \return pdTRUE if RTOS can enter tickless idle mode, pdFALSE otherwise.
+ */
+BaseType_t LP_EnterTicklessIdle(void) {
+#if PL_HAS_SHELL
+  static TickType_t tickCnt;
+  TickType_t newTickCnt;  
+  
+  if (AS1_GetCharsInRxBuf()!=0) {
+    tickCnt = FRTOS1_xTaskGetTickCount();
+    return pdFALSE;
+  }
+  if (AS1_GetCharsInTxBuf()!=0) {
+    tickCnt = FRTOS1_xTaskGetTickCount();
+    return pdFALSE;
+  }
+  newTickCnt = FRTOS1_xTaskGetTickCount();
+  if (((newTickCnt-tickCnt)/portTICK_RATE_MS)<25) { /* wait some time after last activity */
+    return pdFALSE;
+  }
+  return pdTRUE;
+#else
+  return pdTRUE;
+#endif
+}
+
 
 #if LP_CAN_CHANGE_CLOCK
 static void LP_ChangeClock(LP_ClockMode mode) {
