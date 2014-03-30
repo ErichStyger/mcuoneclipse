@@ -28,8 +28,10 @@ Components:
 - Bluetooth_EGBT
 
 Known issues:
-- Processor Expert SCI/SCI component has an issue that baud rate is not correct. See https://community.freescale.com/message/312027
+- Processor Expert SCI/SCI component in MCU10.3 has an issue that baud rate is not correct. See https://community.freescale.com/message/312027
 
 More information: 
 - http://mcuoneclipse.wordpress.com/
 - http://mcuoneclipse.com/2013/02/14/bluetooth-with-the-freedom-board/
+- http://mcuoneclipse.com/2013/06/19/using-the-hc-06-bluetooth-module/
+- http://mcuoneclipse.com/2014/03/30/getting-bluetooth-working-with-jy-mcu-bt_board-v1-06/

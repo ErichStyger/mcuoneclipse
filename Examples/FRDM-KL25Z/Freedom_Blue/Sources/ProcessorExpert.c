@@ -45,6 +45,7 @@
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Shell.h"
+#include "PORT_PDD.h"
 
 int main(void)
 {
@@ -53,6 +54,10 @@ int main(void)
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
+  
+  ///* UART Bluetooth Rx on PTA1 */
+  //PORT_PDD_SetPinPullSelect(PORTA_BASE_PTR, 1, PORT_PDD_PULL_UP);
+  //PORT_PDD_SetPinPullEnable(PORTA_BASE_PTR, 1, PORT_PDD_PULL_ENABLE);
 
   SHELL_Run();
 
