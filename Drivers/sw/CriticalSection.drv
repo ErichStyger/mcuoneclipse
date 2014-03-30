@@ -118,7 +118,9 @@
 %-BW_METHOD_BEGIN CriticalVariable
 %ifdef CriticalVariable
 #define %'ModuleName'%.%CriticalVariable() \
-%if (%UseProcessorExpertDefault='no') & (CPUfamily = "Kinetis") & (%Compiler = "GNUC")
+%if (%useRTOScritical='yes')
+  /* nothing needed */
+%elif (%UseProcessorExpertDefault='no') & (CPUfamily = "Kinetis") & (%Compiler = "GNUC")
   uint8_t cpuSR; /* variable to store current status */
 %else
   /* nothing needed */
