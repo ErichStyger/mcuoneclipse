@@ -49,7 +49,10 @@ void SHELL_Run(void) {
   CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, CLS1_GetStdio(), CmdParserTable);
   for(;;) {
     (void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), CLS1_GetStdio(), CmdParserTable);
+    WAIT1_Waitms(50);
     (void)CLS1_ReadAndParseWithCommandTable(bTbuf, sizeof(bTbuf), &BT_stdio, CmdParserTable);
+    WAIT1_Waitms(50);
+    LEDR_Neg();
   }
 }
 
