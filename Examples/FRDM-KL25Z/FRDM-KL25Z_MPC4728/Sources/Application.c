@@ -140,7 +140,7 @@ static uint8_t Tune(const CLS1_StdIOType *io) {
         res = ERR_FAILED;
         break;
       }
-      WAIT1_Waitms(10); /* wait some time to allow change */
+      WAIT1_Waitms(50); /* wait some time to allow change */
       if (Measure(channel, &timing)==ERR_OK) {
         buf[0] = '\0';
         UTIL1_strcatNum8u(buf, sizeof(buf), timing.highPercent);

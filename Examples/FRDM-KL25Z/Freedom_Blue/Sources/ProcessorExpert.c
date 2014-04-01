@@ -35,6 +35,7 @@
 #include "BitIoLdd4.h"
 #include "CLS1.h"
 #include "CS1.h"
+#include "GPIO1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
 /* Including shared modules, which are used for whole project */
@@ -55,9 +56,10 @@ int main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
   
-  ///* UART Bluetooth Rx on PTA1 */
-  //PORT_PDD_SetPinPullSelect(PORTA_BASE_PTR, 1, PORT_PDD_PULL_UP);
-  //PORT_PDD_SetPinPullEnable(PORTA_BASE_PTR, 1, PORT_PDD_PULL_ENABLE);
+  /* UART Bluetooth Rx on PTC3 and Tx on PTC4 */
+  /* pull-up RX/PTC3 for BT_BOARD V1.06 needed, see http://mcuoneclipse.com/2014/03/30/getting-bluetooth-working-with-jy-mcu-bt_board-v1-06/ */
+  PORT_PDD_SetPinPullSelect(PORTC_BASE_PTR, 3, PORT_PDD_PULL_UP);
+  PORT_PDD_SetPinPullEnable(PORTC_BASE_PTR, 3, PORT_PDD_PULL_ENABLE);
 
   SHELL_Run();
 
