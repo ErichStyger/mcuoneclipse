@@ -138,7 +138,7 @@ extern "C" {
 #define %'ModuleName'%.WAIT_C(cycles) \
      ( (cycles)<=10 ? \
           %'ModuleName'%.Wait10Cycles() \
-        : %'ModuleName'%.WaitCycles((word)cycles) \
+        : %'ModuleName'%.WaitCycles((uint16_t)cycles) \
       )  %>%CTAB /*!< wait for some cycles */
 
 %if (CPU_FAMILY = "HCS08") | (CPU_FAMILY = "HC08") | (CPU_FAMILY = "RS08") | (CPU_FAMILY = "HCS12X") | (CPU_FAMILY = "HCS12")
@@ -192,7 +192,7 @@ void %'ModuleName'%.%Wait100Cycles(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN WaitCycles
 %ifdef WaitCycles
-void %'ModuleName'%.%WaitCycles(word cycles);
+void %'ModuleName'%.%WaitCycles(uint16_t cycles);
 %define! Parcycles
 %include Common\WaitWaitCycles.Inc
 
@@ -201,7 +201,7 @@ void %'ModuleName'%.%WaitCycles(word cycles);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Waitms
 %ifdef Waitms
-void %'ModuleName'%.%Waitms(word ms);
+void %'ModuleName'%.%Waitms(uint16_t ms);
 %define! Parms
 %include Common\WaitWaitms.Inc
 
@@ -215,12 +215,12 @@ void %'ModuleName'%.%Waitms(word ms);
 #define %'ModuleName'%.Waitus(us)  \
        (  ((%'ModuleName'%.NofCyclesUs((us),CPU_BUS_CLK_HZ)==0)||(us)==0) ? \
           (void)0 : \
-          ( ((us)/1000)==0 ? (void)0 : %'ModuleName'%.Waitms((word)((us)/1000))) \
+          ( ((us)/1000)==0 ? (void)0 : %'ModuleName'%.Waitms((uint16_t)((us)/1000))) \
           , (%'ModuleName'%.NofCyclesUs(((us)%%1000), CPU_BUS_CLK_HZ)==0) ? (void)0 : \
             %'ModuleName'%.WAIT_C(%'ModuleName'%.NofCyclesUs(((us)%%1000), CPU_BUS_CLK_HZ)) \
        )
 %else
-void %'ModuleName'%.%Waitus(word us);
+void %'ModuleName'%.%Waitus(uint16_t us);
 %endif
 %define! Parus
 %include Common\WaitWaitus.Inc
@@ -241,7 +241,7 @@ void %'ModuleName'%.%Waitus(word us);
               %'ModuleName'%.WAIT_C(%'ModuleName'%.NofCyclesNs(((ns)%%1000), CPU_BUS_CLK_HZ)) \
        )
 %else
-void %'ModuleName'%.%Waitns(word ns);
+void %'ModuleName'%.%Waitns(uint16_t ns);
 %endif
 %define! Parns
 %include Common\WaitWaitns.Inc
@@ -273,7 +273,7 @@ void %'ModuleName'%.%Waitns(word ns);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN WaitLongCycles
 %ifdef WaitLongCycles
-void %'ModuleName'%.%WaitLongCycles(dword cycles);
+void %'ModuleName'%.%WaitLongCycles(uint32_t cycles);
 %define! Parcycles
 %include Common\WaitWaitLongCycles.Inc
 
@@ -529,7 +529,7 @@ loop
 %ifdef WaitCycles
 %define! Parcycles
 %include Common\WaitWaitCycles.Inc
-void %'ModuleName'%.%WaitCycles(word cycles)
+void %'ModuleName'%.%WaitCycles(uint16_t cycles)
 {
   while(cycles > 100) {
     %'ModuleName'%.%Wait100Cycles();
@@ -548,13 +548,13 @@ void %'ModuleName'%.%WaitCycles(word cycles)
 %ifdef WaitLongCycles
 %define! Parcycles
 %include Common\WaitWaitLongCycles.Inc
-void %'ModuleName'%.%WaitLongCycles(dword cycles)
+void %'ModuleName'%.%WaitLongCycles(uint32_t cycles)
 {
   while(cycles>60000) {
     %'ModuleName'%.%WaitCycles(60000);
     cycles -= 60000;
   }
-  %'ModuleName'%.%WaitCycles((word)cycles);
+  %'ModuleName'%.%WaitCycles((uint16_t)cycles);
 }
 
 %endif %- WaitLongCycles
@@ -567,13 +567,13 @@ void %'ModuleName'%.%WaitLongCycles(dword cycles)
 %ifdef COMPILER_HIX
 #pragma MESSAGE DISABLE C5905 /* multiplication with one */
 %endif
-void %'ModuleName'%.%Waitms(word ms)
+void %'ModuleName'%.%Waitms(uint16_t ms)
 {
 %if (CPU_FAMILY = "Kinetis") | (CPU_FAMILY = "HCS08") | (CPU_FAMILY = "HC08") | (CPU_FAMILY = "RS08")  | (CPU_FAMILY = "HCS12X") | (CPU_FAMILY = "HCS12")
 %if (CPU_FAMILY = "Kinetis")
-  dword msCycles; /* cycles for 1 ms */
+  uint32_t msCycles; /* cycles for 1 ms */
 %else
-  word msCycles; /* cycles for 1 ms */
+  uint16_t msCycles; /* cycles for 1 ms */
 %endif
 
 %if defined(LowClock_kHz) | defined(SlowClock_kHz)
@@ -618,7 +618,7 @@ void %'ModuleName'%.%Waitms(word ms)
   }
 %else
   if (ms>0) {
-    %'ProcessorModule'%.%Delay100usFunction((word)(ms*10)); /* Use function in CPU component. If you get a compiler error here, this typically means that the method is not enabled. Enable this method in the CPU component */
+    %'ProcessorModule'%.%Delay100usFunction((uint16_t)(ms*10)); /* Use function in CPU component. If you get a compiler error here, this typically means that the method is not enabled. Enable this method in the CPU component */
   %if WatchdogEnabled='yes'
     %if defined(Watchdog)
     %@Watchdog@'ModuleName'%.Clear();                            %>40/* kick the dog in order not to timeout */
@@ -645,28 +645,28 @@ void %'ModuleName'%.%Waitms(word ms)
 %ifdef COMPILER_HIX
 #pragma MESSAGE DISABLE C5905 /* multiplication with one */
 %endif
-void %'ModuleName'%.%Waitus(word us)
+void %'ModuleName'%.%Waitus(uint16_t us)
 {
 %if defined(LowClock_kHz) | defined(SlowClock_kHz)
   /* dynamic clock/speed configuration */
   if (CpuMode == HIGH_SPEED) {
-    %'ModuleName'%.WaitCycles((word)%'ModuleName'%.NofCyclesUs(us, CPU_BUS_CLK_HZ_HIGH));
+    %'ModuleName'%.WaitCycles((uint16_t)%'ModuleName'%.NofCyclesUs(us, CPU_BUS_CLK_HZ_HIGH));
  %if defined(LowClock_kHz)
   %if defined(SlowClock_kHz)
   } else if (CpuMode == LOW_SPEED) {
   %else
   } else { /* LOW_SPEED */
   %endif
-    %'ModuleName'%.WaitCycles((word)%'ModuleName'%.NofCyclesUs(us, CPU_BUS_CLK_HZ_LOW));
+    %'ModuleName'%.WaitCycles((uint16_t)%'ModuleName'%.NofCyclesUs(us, CPU_BUS_CLK_HZ_LOW));
  %endif
  %if defined(SlowClock_kHz)
   } else { /* SLOW_SPEED */
-    %'ModuleName'%.WaitCycles((word)%'ModuleName'%.NofCyclesUs(us, CPU_BUS_CLK_HZ_SLOW));
+    %'ModuleName'%.WaitCycles((uint16_t)%'ModuleName'%.NofCyclesUs(us, CPU_BUS_CLK_HZ_SLOW));
  %endif
   }
 %else
   /* static clock/speed configuration */
-  %'ModuleName'%.WaitCycles((word)%'ModuleName'%.NofCyclesUs(us, CPU_BUS_CLK_HZ));
+  %'ModuleName'%.WaitCycles((uint16_t)%'ModuleName'%.NofCyclesUs(us, CPU_BUS_CLK_HZ));
 %endif
 }
 %ifdef COMPILER_HIX
@@ -686,27 +686,27 @@ void %'ModuleName'%.%Waitus(word us)
 %ifdef COMPILER_HIX
 #pragma MESSAGE DISABLE C5905 /* multiplication with one */
 %endif
-void %'ModuleName'%.%Waitns(word ns)
+void %'ModuleName'%.%Waitns(uint16_t ns)
 {
 %if defined(LowClock_kHz) | defined(SlowClock_kHz)
   /* dynamic clock/speed configuration */
   if (CpuMode == HIGH_SPEED) {
-    %'ModuleName'%.WaitCycles((word)%'ModuleName'%.NofCyclesNs(ns, CPU_BUS_CLK_HZ_HIGH));
+    %'ModuleName'%.WaitCycles((uint16_t)%'ModuleName'%.NofCyclesNs(ns, CPU_BUS_CLK_HZ_HIGH));
  %if defined(LowClock_kHz)
   %if defined(SlowClock_kHz)
   } else if (CpuMode == LOW_SPEED) {
   %else
   } else { /* LOW_SPEED */
   %endif
-    %'ModuleName'%.WaitCycles((word)%'ModuleName'%.NofCyclesNs(ns, CPU_BUS_CLK_HZ_LOW));
+    %'ModuleName'%.WaitCycles((uint16_t)%'ModuleName'%.NofCyclesNs(ns, CPU_BUS_CLK_HZ_LOW));
  %endif
  %if defined(SlowClock_kHz)
   } else { /* SLOW_SPEED */
-    %'ModuleName'%.WaitCycles((word)%'ModuleName'%.NofCyclesNs(ns, CPU_BUS_CLK_HZ_SLOW));
+    %'ModuleName'%.WaitCycles((uint16_t)%'ModuleName'%.NofCyclesNs(ns, CPU_BUS_CLK_HZ_SLOW));
  %endif
   }
 %else
-  %'ModuleName'%.WaitCycles((word)%'ModuleName'%.NofCyclesNs(ns, CPU_BUS_CLK_HZ));
+  %'ModuleName'%.WaitCycles((uint16_t)%'ModuleName'%.NofCyclesNs(ns, CPU_BUS_CLK_HZ));
 %endif
 }
 %ifdef COMPILER_HIX

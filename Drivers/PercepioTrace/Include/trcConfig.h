@@ -576,8 +576,22 @@
 * PORT_XILINX_PPC440                     11     No          FreeRTOS          
 * PORT_XILINX_MICROBLAZE                 12     No          Any               
 * PORT_NXP_LPC210X                       13     No          Any               
+* PORT_FREESCALE_PROCESSOR_EXPERT        14     No          Any  << EST               
 *****************************************************************************/
-//#define SELECTED_PORT PORT_ARM_CortexM
+
+/*** Select your port here! **************************************************/
+#if 1 /* << EST */
+#include "FreeRTOSConfig.h"
+#if configCPU_FAMILY_IS_ARM(configCPU_FAMILY))
+#define SELECTED_PORT PORT_ARM_CortexM
+#else
+#define SELECTED_PORT PORT_FREESCALE_PROCESSOR_EXPERT
+#endif
+#else
+#define SELECTED_PORT PORT_ARM_CortexM
+#endif
+/*****************************************************************************/
+
 
 #if (SELECTED_PORT == PORT_NOT_SET)
 #error "You need to define SELECTED_PORT here!"

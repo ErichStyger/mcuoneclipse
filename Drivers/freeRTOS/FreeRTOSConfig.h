@@ -89,12 +89,12 @@
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
 %if defined(StaticSourcesEnabled) & %StaticSourcesEnabled='yes'
-#define configGENERATE_STATIC_SOURCES                            %>50 1 /* if set to one, it will create 'static' sources to be used without Processor Expert */
+#define configGENERATE_STATIC_SOURCES                            %>50 1 /* 1: it will create 'static' sources to be used without Processor Expert; 0: Processor Expert code generated */
 %else
-#define configGENERATE_STATIC_SOURCES                            %>50 0 /* if set to one, it will create 'static' sources to be used without Processor Expert */
+#define configGENERATE_STATIC_SOURCES                            %>50 0 /* 1: it will create 'static' sources to be used without Processor Expert; 0: Processor Expert code generated */
 %endif
 %if %CollectRuntimeStatisticsGroup='yes'
-#define configGENERATE_RUN_TIME_STATS                            %>50 1
+#define configGENERATE_RUN_TIME_STATS                            %>50 1 /* 1: generate runtime statistics; 0: no runtime statistics */
 %if defined(RuntimeCntr)
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()                 %>50 {%'ModuleName'%.RunTimeCounter = 0; (void)%@RuntimeCntr@'ModuleName'%.Enable();}
 #define portGET_RUN_TIME_COUNTER_VALUE()                         %>50 %'ModuleName'%.RunTimeCounter
@@ -103,44 +103,44 @@
 #define portGET_RUN_TIME_COUNTER_VALUE()                         %>50 %'ModuleName'%.RunTimeCounter
 %endif
 %else
-#define configGENERATE_RUN_TIME_STATS                            %>50 0
+#define configGENERATE_RUN_TIME_STATS                            %>50 0 /* 1: generate runtime statistics; 0: no runtime statistics */
 %endif
 %-
 %if UsePreemption = 'yes'
-#define configUSE_PREEMPTION                                     %>50 1
+#define configUSE_PREEMPTION                                     %>50 1 /* 1: pre-emptive mode; 0: cooperative mode */
 %else
-#define configUSE_PREEMPTION                                     %>50 0
+#define configUSE_PREEMPTION                                     %>50 0 /* 1: pre-emptive mode; 0: cooperative mode */
 %endif
 %ifdef vApplicationIdleHook
-#define configUSE_IDLE_HOOK                                      %>50 1
+#define configUSE_IDLE_HOOK                                      %>50 1 /* 1: use Idle hook; 0: no Idle hook */
 %else
-#define configUSE_IDLE_HOOK                                      %>50 0
+#define configUSE_IDLE_HOOK                                      %>50 0 /* 1: use Idle hook; 0: no Idle hook */
 %endif
 %ifdef vApplicationTickHook
-#define configUSE_TICK_HOOK                                      %>50 1
+#define configUSE_TICK_HOOK                                      %>50 1 /* 1: use Tick hook; 0: no Tick hook */
 %else
-#define configUSE_TICK_HOOK                                      %>50 0
+#define configUSE_TICK_HOOK                                      %>50 0 /* 1: use Tick hook; 0: no Tick hook */
 %endif
 %ifdef vApplicationMallocFailedHook
-#define configUSE_MALLOC_FAILED_HOOK                             %>50 1
+#define configUSE_MALLOC_FAILED_HOOK                             %>50 1 /* 1: use MallocFailed hook; 0: no MallocFailed hook */
 %else
-#define configUSE_MALLOC_FAILED_HOOK                             %>50 0
+#define configUSE_MALLOC_FAILED_HOOK                             %>50 0 /* 1: use MallocFailed hook; 0: no MallocFailed hook */
 %endif
 #define configTICK_RATE_HZ                                       %>50 ((TickType_t)%TickRateHz) /* frequency of tick interrupt */
 %if defined(useARMLowPowerTimer) & useARMLowPowerTimer='yes'
 #define configSYSTICK_USE_LOW_POWER_TIMER                        %>50 1 /* If using Kinetis Low Power Timer (LPTMR) instead of SysTick timer */
-#define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ                   %>50 1000 /* 1 kHz LPO */
+#define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ                   %>50 1000 /* 1 kHz LPO timer. Set to 1 if not used */
 %else
 #define configSYSTICK_USE_LOW_POWER_TIMER                        %>50 0 /* If using Kinetis Low Power Timer (LPTMR) instead of SysTick timer */
-#define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ                   %>50 1 /* dummy value */
+#define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ                   %>50 1 /* 1 kHz LPO timer. Set to 1 if not used */
 %endif
 %if defined(configCPU_CLOCK_HZ)
-#define configCPU_CLOCK_HZ                                       %>50 %configCPU_CLOCK_HZ
+#define configCPU_CLOCK_HZ                                       %>50 %configCPU_CLOCK_HZ /* CPU clock frequency */
 %else
 #define configCPU_CLOCK_HZ                                       %>50 CPU_CORE_CLK_HZ /* CPU core clock defined in %ProcessorModule.h */
 %endif
 %if defined(configBUS_CLOCK_HZ)
-#define configBUS_CLOCK_HZ                                       %>50 %configBUS_CLOCK_HZ
+#define configBUS_CLOCK_HZ                                       %>50 %configBUS_CLOCK_HZ /* Bus clock frequency */
 %else
 #define configBUS_CLOCK_HZ                                       %>50 CPU_BUS_CLK_HZ /* CPU bus clock defined in %ProcessorModule.h */
 %endif
@@ -163,7 +163,7 @@
 %else
 #define configSYSTICK_CLOCK_HZ                                   %>50 configBUS_CLOCK_HZ /* frequency of system tick counter */
 %endif
-#define configMINIMAL_STACK_SIZE                                 %>50 ((unsigned portSHORT)%MinimalStackSize)
+#define configMINIMAL_STACK_SIZE                                 %>50 ((unsigned portSHORT)%MinimalStackSize) /* stack size in addressable stack units */
 /*----------------------------------------------------------*/
 /* Heap Memory */
 %if MemoryScheme = "Scheme1"

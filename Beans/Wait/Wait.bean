@@ -4,7 +4,7 @@
     <Name>Wait</Name>
     <Description>Wait</Description>
     <Author>Erich Styger</Author>
-    <Version>01.064</Version>
+    <Version>01.067</Version>
     <Icon>wait</Icon>
     <TypesFiles>PE,Wait\Wait</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -16,10 +16,10 @@
     <BW_AutoSaveDriver>yes</BW_AutoSaveDriver>
     <BW_DetailedHelp>yes</BW_DetailedHelp>
     <BW_NeedTps>no</BW_NeedTps>
-    <BW_NeedUst>0</BW_NeedUst>
+    <BW_NeedUst>2</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>License   : Open Source (LGPL)\nCopyright : Erich Styger, 2013, all rights reserved.\nWeb       : www.mcuoneclipse.com\n\nThis an open source software implementing waiting routines using Processor Expert.\nThis is a free software and is opened for education,  research  and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
+    <Copyright>License   : Open Source (LGPL)\nCopyright : Erich Styger, 2013-2014, all rights reserved.\nWeb       : www.mcuoneclipse.com\n\nThis an open source software implementing waiting routines using Processor Expert.\nThis is a free software and is opened for education,  research  and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
     <Category>SW-User Components</Category>
     <DemoDriver>no</DemoDriver>
     <BeanLevel>High</BeanLevel>
@@ -318,13 +318,13 @@
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>cycles</ParName>
-          <ParType>16bit unsigned</ParType>
+          <ParType>uint16_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>The number of cycles to wait.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(word cycles)</ANSIC>
+          <ANSIC>void #M#_#C#(uint16_t cycles)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -353,13 +353,13 @@
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>cycles</ParName>
-          <ParType>32bit unsigned</ParType>
+          <ParType>uint32_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>The number of cycles to wait.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(dword cycles)</ANSIC>
+          <ANSIC>void #M#_#C#(uint32_t cycles)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -387,13 +387,13 @@
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>ms</ParName>
-          <ParType>16bit unsigned</ParType>
+          <ParType>uint16_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>How many milliseconds the function has to wait</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(word ms)</ANSIC>
+          <ANSIC>void #M#_#C#(uint16_t ms)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -421,13 +421,13 @@
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>us</ParName>
-          <ParType>16bit unsigned</ParType>
+          <ParType>uint16_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>How many microseconds the function has to wait</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(word us)</ANSIC>
+          <ANSIC>void #M#_#C#(uint16_t us)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -455,13 +455,13 @@
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>ns</ParName>
-          <ParType>16bit unsigned</ParType>
+          <ParType>uint16_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>How many ns the function has to wait</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(word ns)</ANSIC>
+          <ANSIC>void #M#_#C#(uint16_t ns)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

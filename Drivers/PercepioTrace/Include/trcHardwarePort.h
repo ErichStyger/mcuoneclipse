@@ -114,15 +114,7 @@
 #define PORT_XILINX_PPC440             11   /* No          FreeRTOS          */
 #define PORT_XILINX_MICROBLAZE         12   /* No          Any               */
 #define PORT_NXP_LPC210X               13   /* No          Any               */
-#define PORT_FREESCALE_PROCESSOR_EXPERT       14 /* << EST */
-
-/*** Select your port here! **************************************************/
-#if 1 /* << EST */
-#define SELECTED_PORT PORT_FREESCALE_PROCESSOR_EXPERT
-#else
-#define SELECTED_PORT PORT_NOT_SET
-#endif
-/*****************************************************************************/
+#define PORT_FREESCALE_PROCESSOR_EXPERT 14  /* No          FreeRTOS          */ /* << EST */
 
 #include "trcConfig.h" // Where SELECTED_PORT is defined
 
@@ -234,8 +226,12 @@
 		
 	#define PORT_SPECIFIC_INIT() prvTraceInitCortexM()	
 		
-	extern uint32_t DWT_CYCLES_ADDED;		
+	extern uint32_t DWT_CYCLES_ADDED;
+#if 1 /* << EST: avoid conflict with existing macro */
+  #define DWT_CTRL_REG_TRACE (*((uint32_t*)0xE0001000))
+#else
 	#define DWT_CTRL_REG (*((uint32_t*)0xE0001000))
+#endif
 	#define DWT_CYCLE_COUNTER (*((uint32_t*)0xE0001004))
 	
     #define HWTC_COUNT_DIRECTION DIRECTION_INCREMENTING

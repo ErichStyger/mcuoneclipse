@@ -87,10 +87,14 @@ uint32_t prvTraceGetIRQMask(void)
 	return result;
 }
 
-void prvTraceInitCortexM()
+void prvTraceInitCortexM(void)
 {
-	DWT_CTRL_REG |= 1;     /* Enable the cycle counter */
-	DWT_CYCLE_COUNTER = 0;
+#if 1 /* << EST: avoid conflict with existing macro */
+  DWT_CTRL_REG_TRACE |= 1;     /* Enable the cycle counter */
+#else
+  DWT_CTRL_REG |= 1;     /* Enable the cycle counter */
+#endif
+  DWT_CYCLE_COUNTER = 0;
 	
 	if (RecorderDataPtr->frequency == 0)
 	{		

@@ -54,6 +54,9 @@
 %-
 %-BW_SECTIONS_INSERT
 %if Language='ANSIC'
+%--------------------------
+%include KSDK.prg
+%--------------------------
 %-
 %-
 %INTERFACE
@@ -112,7 +115,7 @@
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strcpy
 %ifdef strcpy
-void %'ModuleName'%.%strcpy(byte *dst, size_t dstSize, const unsigned char *src);
+void %'ModuleName'%.%strcpy(uint8_t *dst, size_t dstSize, const unsigned char *src);
 %define! Pardst
 %define! PardstSize
 %define! Parsrc
@@ -123,7 +126,7 @@ void %'ModuleName'%.%strcpy(byte *dst, size_t dstSize, const unsigned char *src)
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strcat
 %ifdef strcat
-void %'ModuleName'%.%strcat(byte *dst, size_t dstSize, const unsigned char *src);
+void %'ModuleName'%.%strcat(uint8_t *dst, size_t dstSize, const unsigned char *src);
 %define! Pardst
 %define! PardstSize
 %define! Parsrc
@@ -134,7 +137,7 @@ void %'ModuleName'%.%strcat(byte *dst, size_t dstSize, const unsigned char *src)
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Num16sToStr
 %ifdef Num16sToStr
-void %'ModuleName'%.%Num16sToStr(byte *dst, size_t dstSize, int16_t val);
+void %'ModuleName'%.%Num16sToStr(uint8_t *dst, size_t dstSize, int16_t val);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -145,7 +148,7 @@ void %'ModuleName'%.%Num16sToStr(byte *dst, size_t dstSize, int16_t val);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Num16sToStrFormatted
 %ifdef Num16sToStrFormatted
-void %'ModuleName'%.%Num16sToStrFormatted(byte *dst, size_t dstSize, int16_t val, char fill, byte nofFill);
+void %'ModuleName'%.%Num16sToStrFormatted(uint8_t *dst, size_t dstSize, int16_t val, char fill, uint8_t nofFill);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -158,7 +161,7 @@ void %'ModuleName'%.%Num16sToStrFormatted(byte *dst, size_t dstSize, int16_t val
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strcatNum16s
 %ifdef strcatNum16s
-void %'ModuleName'%.%strcatNum16s(byte *dst, size_t dstSize, int16_t val);
+void %'ModuleName'%.%strcatNum16s(uint8_t *dst, size_t dstSize, int16_t val);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -169,7 +172,7 @@ void %'ModuleName'%.%strcatNum16s(byte *dst, size_t dstSize, int16_t val);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strcatNum16sFormatted
 %ifdef strcatNum16sFormatted
-void %'ModuleName'%.%strcatNum16sFormatted(byte *dst, size_t dstSize, int16_t val, char fill, byte nofFill);
+void %'ModuleName'%.%strcatNum16sFormatted(uint8_t *dst, size_t dstSize, int16_t val, char fill, uint8_t nofFill);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -182,7 +185,7 @@ void %'ModuleName'%.%strcatNum16sFormatted(byte *dst, size_t dstSize, int16_t va
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strcatNum8Hex
 %ifdef strcatNum8Hex
-void %'ModuleName'%.%strcatNum8Hex(byte *dst, size_t dstSize, byte num);
+void %'ModuleName'%.%strcatNum8Hex(uint8_t *dst, size_t dstSize, uint8_t num);
 %define! Pardst
 %define! PardstSize
 %define! Parnum
@@ -193,7 +196,7 @@ void %'ModuleName'%.%strcatNum8Hex(byte *dst, size_t dstSize, byte num);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strcatNum16Hex
 %ifdef strcatNum16Hex
-void %'ModuleName'%.%strcatNum16Hex(byte *dst, size_t dstSize, word num);
+void %'ModuleName'%.%strcatNum16Hex(uint8_t *dst, size_t dstSize, uint16_t num);
 %define! Pardst
 %define! PardstSize
 %define! Parnum
@@ -204,7 +207,7 @@ void %'ModuleName'%.%strcatNum16Hex(byte *dst, size_t dstSize, word num);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strcatNum32s
 %ifdef strcatNum32s
-void %'ModuleName'%.%strcatNum32s(byte *dst, size_t dstSize, long val);
+void %'ModuleName'%.%strcatNum32s(uint8_t *dst, size_t dstSize, long val);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -215,7 +218,7 @@ void %'ModuleName'%.%strcatNum32s(byte *dst, size_t dstSize, long val);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Num32sToStr
 %ifdef Num32sToStr
-void %'ModuleName'%.%Num32sToStr(byte *dst, size_t dstSize, long val);
+void %'ModuleName'%.%Num32sToStr(uint8_t *dst, size_t dstSize, long val);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -226,7 +229,7 @@ void %'ModuleName'%.%Num32sToStr(byte *dst, size_t dstSize, long val);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strcatNum32Hex
 %ifdef strcatNum32Hex
-void %'ModuleName'%.%strcatNum32Hex(byte *dst, size_t dstSize, dword num);
+void %'ModuleName'%.%strcatNum32Hex(uint8_t *dst, size_t dstSize, uint32_t num);
 %define! Pardst
 %define! PardstSize
 %define! Parnum
@@ -237,7 +240,7 @@ void %'ModuleName'%.%strcatNum32Hex(byte *dst, size_t dstSize, dword num);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN IsLeapYear
 %ifdef IsLeapYear
-bool %'ModuleName'%.%IsLeapYear(word year);
+bool %'ModuleName'%.%IsLeapYear(uint16_t year);
 %define! Paryear
 %define! RetVal
 %include Common\UtilityIsLeapYear.Inc
@@ -247,7 +250,7 @@ bool %'ModuleName'%.%IsLeapYear(word year);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN WeekDay
 %ifdef WeekDay
-byte %'ModuleName'%.%WeekDay(word year, byte month, byte day);
+uint8_t %'ModuleName'%.%WeekDay(uint16_t year, uint8_t month, uint8_t day);
 %define! Paryear
 %define! Parmonth
 %define! Parday
@@ -259,7 +262,7 @@ byte %'ModuleName'%.%WeekDay(word year, byte month, byte day);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN chcat
 %ifdef chcat
-void %'ModuleName'%.%chcat(byte *dst, size_t dstSize, byte ch);
+void %'ModuleName'%.%chcat(uint8_t *dst, size_t dstSize, uint8_t ch);
 %define! Pardst
 %define! PardstSize
 %define! Parch
@@ -270,7 +273,7 @@ void %'ModuleName'%.%chcat(byte *dst, size_t dstSize, byte ch);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strcatNum32u
 %ifdef strcatNum32u
-void %'ModuleName'%.%strcatNum32u(byte *dst, size_t dstSize, dword val);
+void %'ModuleName'%.%strcatNum32u(uint8_t *dst, size_t dstSize, uint32_t val);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -281,7 +284,7 @@ void %'ModuleName'%.%strcatNum32u(byte *dst, size_t dstSize, dword val);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Num32uToStr
 %ifdef Num32uToStr
-void %'ModuleName'%.%Num32uToStr(byte *dst, size_t dstSize, dword val);
+void %'ModuleName'%.%Num32uToStr(uint8_t *dst, size_t dstSize, uint32_t val);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -292,7 +295,7 @@ void %'ModuleName'%.%Num32uToStr(byte *dst, size_t dstSize, dword val);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strcatNum32uFormatted
 %ifdef strcatNum32uFormatted
-void %'ModuleName'%.%strcatNum32uFormatted(byte *dst, size_t dstSize, dword val, char fill, byte nofFill);
+void %'ModuleName'%.%strcatNum32uFormatted(uint8_t *dst, size_t dstSize, uint32_t val, char fill, uint8_t nofFill);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -305,7 +308,7 @@ void %'ModuleName'%.%strcatNum32uFormatted(byte *dst, size_t dstSize, dword val,
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Num32uToStrFormatted
 %ifdef Num32uToStrFormatted
-void %'ModuleName'%.%Num32uToStrFormatted(byte *dst, size_t dstSize, dword val, char fill, byte nofFill);
+void %'ModuleName'%.%Num32uToStrFormatted(uint8_t *dst, size_t dstSize, uint32_t val, char fill, uint8_t nofFill);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -318,7 +321,7 @@ void %'ModuleName'%.%Num32uToStrFormatted(byte *dst, size_t dstSize, dword val, 
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strcatNum24Hex
 %ifdef strcatNum24Hex
-void %'ModuleName'%.%strcatNum24Hex(byte *dst, size_t dstSize, dword num);
+void %'ModuleName'%.%strcatNum24Hex(uint8_t *dst, size_t dstSize, uint32_t num);
 %define! Pardst
 %define! PardstSize
 %define! Parnum
@@ -329,7 +332,7 @@ void %'ModuleName'%.%strcatNum24Hex(byte *dst, size_t dstSize, dword num);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ReadEscapedName
 %ifdef ReadEscapedName
-byte %'ModuleName'%.%ReadEscapedName(const unsigned char *filename, byte *destname, size_t maxlen, size_t *lenRead, size_t *lenWritten, const char *terminators);
+uint8_t %'ModuleName'%.%ReadEscapedName(const unsigned char *filename, uint8_t *destname, size_t maxlen, size_t *lenRead, size_t *lenWritten, const char *terminators);
 %define! Parfilename
 %define! Pardestname
 %define! Parmaxlen
@@ -345,7 +348,7 @@ byte %'ModuleName'%.%ReadEscapedName(const unsigned char *filename, byte *destna
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN xatoi
 %ifdef xatoi
-byte %'ModuleName'%.%xatoi(const unsigned char **str, int32_t *res);
+uint8_t %'ModuleName'%.%xatoi(const unsigned char **str, int32_t *res);
 %define! Parstr
 %define! Parres
 %define! RetVal
@@ -356,7 +359,7 @@ byte %'ModuleName'%.%xatoi(const unsigned char **str, int32_t *res);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ScanDate
 %ifdef ScanDate
-byte %'ModuleName'%.%ScanDate(const unsigned char **str, byte *day, byte *month, word *year);
+uint8_t %'ModuleName'%.%ScanDate(const unsigned char **str, uint8_t *day, uint8_t *month, uint16_t *year);
 %define! Parstr
 %define! Parday
 %define! Parmonth
@@ -369,7 +372,7 @@ byte %'ModuleName'%.%ScanDate(const unsigned char **str, byte *day, byte *month,
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ScanTime
 %ifdef ScanTime
-byte %'ModuleName'%.%ScanTime(const unsigned char **str, byte *hour, byte *minute, byte *second, byte *hSecond);
+uint8_t %'ModuleName'%.%ScanTime(const unsigned char **str, uint8_t *hour, uint8_t *minute, uint8_t *second, uint8_t *hSecond);
 %define! Parstr
 %define! Parhour
 %define! Parminute
@@ -383,7 +386,7 @@ byte %'ModuleName'%.%ScanTime(const unsigned char **str, byte *hour, byte *minut
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ScanDecimal16uNumber
 %ifdef ScanDecimal16uNumber
-byte %'ModuleName'%.%ScanDecimal16uNumber(const unsigned char **str, word *val);
+uint8_t %'ModuleName'%.%ScanDecimal16uNumber(const unsigned char **str, uint16_t *val);
 %define! Parstr
 %define! Parval
 %define! RetVal
@@ -394,7 +397,7 @@ byte %'ModuleName'%.%ScanDecimal16uNumber(const unsigned char **str, word *val);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ScanDecimal8uNumber
 %ifdef ScanDecimal8uNumber
-byte %'ModuleName'%.%ScanDecimal8uNumber(const unsigned char **str, byte *val);
+uint8_t %'ModuleName'%.%ScanDecimal8uNumber(const unsigned char **str, uint8_t *val);
 %define! Parstr
 %define! Parval
 %define! RetVal
@@ -405,7 +408,7 @@ byte %'ModuleName'%.%ScanDecimal8uNumber(const unsigned char **str, byte *val);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Num16uToStr
 %ifdef Num16uToStr
-void %'ModuleName'%.%Num16uToStr(byte *dst, size_t dstSize, word val);
+void %'ModuleName'%.%Num16uToStr(uint8_t *dst, size_t dstSize, uint16_t val);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -416,7 +419,7 @@ void %'ModuleName'%.%Num16uToStr(byte *dst, size_t dstSize, word val);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Num8sToStr
 %ifdef Num8sToStr
-void %'ModuleName'%.%Num8sToStr(byte *dst, size_t dstSize, signed char val);
+void %'ModuleName'%.%Num8sToStr(uint8_t *dst, size_t dstSize, signed char val);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -427,7 +430,7 @@ void %'ModuleName'%.%Num8sToStr(byte *dst, size_t dstSize, signed char val);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Num8uToStr
 %ifdef Num8uToStr
-void %'ModuleName'%.%Num8uToStr(byte *dst, size_t dstSize, byte val);
+void %'ModuleName'%.%Num8uToStr(uint8_t *dst, size_t dstSize, uint8_t val);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -438,7 +441,7 @@ void %'ModuleName'%.%Num8uToStr(byte *dst, size_t dstSize, byte val);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Num16uToStrFormatted
 %ifdef Num16uToStrFormatted
-void %'ModuleName'%.%Num16uToStrFormatted(byte *dst, size_t dstSize, word val, char fill, byte nofFill);
+void %'ModuleName'%.%Num16uToStrFormatted(uint8_t *dst, size_t dstSize, uint16_t val, char fill, uint8_t nofFill);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -451,7 +454,7 @@ void %'ModuleName'%.%Num16uToStrFormatted(byte *dst, size_t dstSize, word val, c
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Num32sToStrFormatted
 %ifdef Num32sToStrFormatted
-void %'ModuleName'%.%Num32sToStrFormatted(byte *dst, size_t dstSize, long val, char fill, byte nofFill);
+void %'ModuleName'%.%Num32sToStrFormatted(uint8_t *dst, size_t dstSize, long val, char fill, uint8_t nofFill);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -464,7 +467,7 @@ void %'ModuleName'%.%Num32sToStrFormatted(byte *dst, size_t dstSize, long val, c
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strcatNum16u
 %ifdef strcatNum16u
-void %'ModuleName'%.%strcatNum16u(byte *dst, size_t dstSize, word val);
+void %'ModuleName'%.%strcatNum16u(uint8_t *dst, size_t dstSize, uint16_t val);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -475,7 +478,7 @@ void %'ModuleName'%.%strcatNum16u(byte *dst, size_t dstSize, word val);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strcatNum16uFormatted
 %ifdef strcatNum16uFormatted
-void %'ModuleName'%.%strcatNum16uFormatted(byte *dst, size_t dstSize, word val, char fill, byte nofFill);
+void %'ModuleName'%.%strcatNum16uFormatted(uint8_t *dst, size_t dstSize, uint16_t val, char fill, uint8_t nofFill);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -488,7 +491,7 @@ void %'ModuleName'%.%strcatNum16uFormatted(byte *dst, size_t dstSize, word val, 
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strcatNum32sFormatted
 %ifdef strcatNum32sFormatted
-void %'ModuleName'%.%strcatNum32sFormatted(byte *dst, size_t dstSize, long val, char fill, byte nofFill);
+void %'ModuleName'%.%strcatNum32sFormatted(uint8_t *dst, size_t dstSize, long val, char fill, uint8_t nofFill);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -501,7 +504,7 @@ void %'ModuleName'%.%strcatNum32sFormatted(byte *dst, size_t dstSize, long val, 
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ScanDecimal32uNumber
 %ifdef ScanDecimal32uNumber
-byte %'ModuleName'%.%ScanDecimal32uNumber(const unsigned char **str, uint32_t *val);
+uint8_t %'ModuleName'%.%ScanDecimal32uNumber(const unsigned char **str, uint32_t *val);
 %define! Parstr
 %define! Parval
 %define! RetVal
@@ -512,7 +515,7 @@ byte %'ModuleName'%.%ScanDecimal32uNumber(const unsigned char **str, uint32_t *v
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strcatNum8u
 %ifdef strcatNum8u
-void %'ModuleName'%.%strcatNum8u(byte *dst, size_t dstSize, byte val);
+void %'ModuleName'%.%strcatNum8u(uint8_t *dst, size_t dstSize, uint8_t val);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -523,7 +526,7 @@ void %'ModuleName'%.%strcatNum8u(byte *dst, size_t dstSize, byte val);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strcatNum8s
 %ifdef strcatNum8s
-void %'ModuleName'%.%strcatNum8s(byte *dst, size_t dstSize, signed char val);
+void %'ModuleName'%.%strcatNum8s(uint8_t *dst, size_t dstSize, signed char val);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -573,7 +576,7 @@ void %'ModuleName'%.%strcatNum8s(byte *dst, size_t dstSize, signed char val);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ScanHex32uNumber
 %ifdef ScanHex32uNumber
-byte %'ModuleName'%.%ScanHex32uNumber(const unsigned char **str, uint32_t *val);
+uint8_t %'ModuleName'%.%ScanHex32uNumber(const unsigned char **str, uint32_t *val);
 %define! Parstr
 %define! Parval
 %define! RetVal
@@ -584,7 +587,7 @@ byte %'ModuleName'%.%ScanHex32uNumber(const unsigned char **str, uint32_t *val);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ScanHex16uNumber
 %ifdef ScanHex16uNumber
-byte %'ModuleName'%.%ScanHex16uNumber(const unsigned char **str, word *val);
+uint8_t %'ModuleName'%.%ScanHex16uNumber(const unsigned char **str, uint16_t *val);
 %define! Parstr
 %define! Parval
 %define! RetVal
@@ -595,7 +598,7 @@ byte %'ModuleName'%.%ScanHex16uNumber(const unsigned char **str, word *val);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ScanHex8uNumber
 %ifdef ScanHex8uNumber
-byte %'ModuleName'%.%ScanHex8uNumber(const unsigned char **str, byte *val);
+uint8_t %'ModuleName'%.%ScanHex8uNumber(const unsigned char **str, uint8_t *val);
 %define! Parstr
 %define! Parval
 %define! RetVal
@@ -606,7 +609,7 @@ byte %'ModuleName'%.%ScanHex8uNumber(const unsigned char **str, byte *val);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strtailcmp
 %ifdef strtailcmp
-byte %'ModuleName'%.%strtailcmp(byte *str, byte *tail);
+uint8_t %'ModuleName'%.%strtailcmp(uint8_t *str, uint8_t *tail);
 %define! Parstr
 %define! Partail
 %define! RetVal
@@ -617,7 +620,7 @@ byte %'ModuleName'%.%strtailcmp(byte *str, byte *tail);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strCutTail
 %ifdef strCutTail
-byte %'ModuleName'%.%strCutTail(byte *str, byte *tail);
+uint8_t %'ModuleName'%.%strCutTail(uint8_t *str, uint8_t *tail);
 %define! Parstr
 %define! Partail
 %define! RetVal
@@ -628,7 +631,7 @@ byte %'ModuleName'%.%strCutTail(byte *str, byte *tail);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ScanHex8uNumberNoPrefix
 %ifdef ScanHex8uNumberNoPrefix
-byte %'ModuleName'%.%ScanHex8uNumberNoPrefix(const unsigned char **str, byte *val);
+uint8_t %'ModuleName'%.%ScanHex8uNumberNoPrefix(const unsigned char **str, uint8_t *val);
 %define! Parstr
 %define! Parval
 %define! RetVal
@@ -639,7 +642,7 @@ byte %'ModuleName'%.%ScanHex8uNumberNoPrefix(const unsigned char **str, byte *va
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strcatNum32sDotValue100
 %ifdef strcatNum32sDotValue100
-void %'ModuleName'%.%strcatNum32sDotValue100(byte *dst, size_t dstSize, long num);
+void %'ModuleName'%.%strcatNum32sDotValue100(uint8_t *dst, size_t dstSize, long num);
 %define! Pardst
 %define! PardstSize
 %define! Parnum
@@ -650,7 +653,7 @@ void %'ModuleName'%.%strcatNum32sDotValue100(byte *dst, size_t dstSize, long num
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ScanDecimal8sNumber
 %ifdef ScanDecimal8sNumber
-byte %'ModuleName'%.%ScanDecimal8sNumber(const unsigned char **str, signed char *val);
+uint8_t %'ModuleName'%.%ScanDecimal8sNumber(const unsigned char **str, signed char *val);
 %define! Parstr
 %define! Parval
 %define! RetVal
@@ -661,7 +664,7 @@ byte %'ModuleName'%.%ScanDecimal8sNumber(const unsigned char **str, signed char 
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ScanDecimal16sNumber
 %ifdef ScanDecimal16sNumber
-byte %'ModuleName'%.%ScanDecimal16sNumber(const unsigned char **str, int16_t *val);
+uint8_t %'ModuleName'%.%ScanDecimal16sNumber(const unsigned char **str, int16_t *val);
 %define! Parstr
 %define! Parval
 %define! RetVal
@@ -672,7 +675,7 @@ byte %'ModuleName'%.%ScanDecimal16sNumber(const unsigned char **str, int16_t *va
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ScanDecimal32sNumber
 %ifdef ScanDecimal32sNumber
-byte %'ModuleName'%.%ScanDecimal32sNumber(const unsigned char **str, uint32_t *val);
+uint8_t %'ModuleName'%.%ScanDecimal32sNumber(const unsigned char **str, uint32_t *val);
 %define! Parstr
 %define! Parval
 %define! RetVal
@@ -683,7 +686,7 @@ byte %'ModuleName'%.%ScanDecimal32sNumber(const unsigned char **str, uint32_t *v
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strFind
 %ifdef strFind
-int16_t %'ModuleName'%.%strFind(byte *str, byte *subStr);
+int16_t %'ModuleName'%.%strFind(uint8_t *str, uint8_t *subStr);
 %define! Parstr
 %define! ParsubStr
 %define! RetVal
@@ -715,6 +718,9 @@ int16_t %'ModuleName'%.%strFind(byte *str, byte *subStr);
 %- Write your own includes here ...
 %-   Example:
 %-     #include "header_name.h"
+%if (%CPUDB_prph_has_feature(CPU,SDK_SUPPORT) = 'yes') %- TRUE/FALSE not defined for SDK projects
+#include "PE_KSDK_Types.h"
+%endif
 %-
 %-BW_CUSTOM_INCLUDE_END_M
 
@@ -730,7 +736,7 @@ int16_t %'ModuleName'%.%strFind(byte *str, byte *subStr);
 %-UNLOCKED
 /* Internal method prototypes */
 %-INTERNAL_LOC_METHOD_BEG ShiftRightAndFill
-static void ShiftRightAndFill(byte *dst, byte fill, byte nofFill);
+static void ShiftRightAndFill(uint8_t *dst, uint8_t fill, uint8_t nofFill);
 %-INTERNAL_LOC_METHOD_END ShiftRightAndFill
 %-
 
@@ -747,15 +753,15 @@ static void ShiftRightAndFill(byte *dst, byte fill, byte nofFill);
   \brief copy the string src into dst. It performs the same task as strncpy, except
      - always terminates the result string.
      - does not zero out the remaining part in dst.
-     Note: dstSize is the size of dst INCLUDING zero byte.
+     Note: dstSize is the size of dst INCLUDING zero uint8_t.
      Precondition: src, dst != NULL
   \param[in,out] dst Start of buffer, where to append the number string
-  \param[in] dstSize The size of the buffer, including the zero byte
+  \param[in] dstSize The size of the buffer, including the zero uint8_t
   \param[in] src The source string to copy
 */
-void %'ModuleName'%.%strcpy(byte *dst, size_t dstSize, const unsigned char *src)
+void %'ModuleName'%.%strcpy(uint8_t *dst, size_t dstSize, const unsigned char *src)
 {
-  dstSize--; /* for zero byte */
+  dstSize--; /* for zero uint8_t */
   while (dstSize > 0 && *src != '\0') {
     *dst++ = *src++;
     dstSize--;
@@ -774,15 +780,15 @@ void %'ModuleName'%.%strcpy(byte *dst, size_t dstSize, const unsigned char *src)
 %include Common\Utilitystrcat.Inc
 /*!
   \brief Concat the string src into dst. Always terminates the result string.
-     Note: count is the size of dst INCLUDING zero byte.
+     Note: count is the size of dst INCLUDING zero uint8_t.
      Precondition: src, dst != NULL
   \param[in,out] dst Start of buffer, where to append the number string
-  \param[in] dstSize The size of the buffer, including the zero byte
+  \param[in] dstSize The size of the buffer, including the zero uint8_t
   \param[in] src The source string to add
   */
-void %'ModuleName'%.%strcat(byte *dst, size_t dstSize, const unsigned char *src)
+void %'ModuleName'%.%strcat(uint8_t *dst, size_t dstSize, const unsigned char *src)
 {
-  dstSize--; /* for zero byte */
+  dstSize--; /* for zero uint8_t */
   /* point to the end of the source */
   while (dstSize > 0 && *dst != '\0') {
     dst++;
@@ -806,9 +812,9 @@ void %'ModuleName'%.%strcat(byte *dst, size_t dstSize, const unsigned char *src)
 %define! PardstSize
 %define! Parch
 %include Common\Utilitychcat.Inc
-void %'ModuleName'%.%chcat(byte *dst, size_t dstSize, byte ch)
+void %'ModuleName'%.%chcat(uint8_t *dst, size_t dstSize, uint8_t ch)
 {
-  dstSize--; /* for zero byte */
+  dstSize--; /* for zero uint8_t */
   /* point to the end of the source */
   while (dstSize > 0 && *dst != '\0') {
     dst++;
@@ -834,10 +840,10 @@ void %'ModuleName'%.%chcat(byte *dst, size_t dstSize, byte ch)
 /*!
   \brief Converts an 8bit unsigned number into a string.
   \param[in,out] dst String buffer to store the number.
-  \param[in] dstSize Size of the destination buffer in bytes.
+  \param[in] dstSize Size of the destination buffer in uint8_ts.
   \param[in] val 8bit unsigned number to convert.
  */
-void %'ModuleName'%.%Num8uToStr(byte *dst, size_t dstSize, byte val)
+void %'ModuleName'%.%Num8uToStr(uint8_t *dst, size_t dstSize, uint8_t val)
 {
   %'ModuleName'%.Num16uToStr(dst, dstSize, (uint16_t)val);
 }
@@ -854,10 +860,10 @@ void %'ModuleName'%.%Num8uToStr(byte *dst, size_t dstSize, byte val)
 /*!
   \brief Converts an 8bit signed number into a string.
   \param[in,out] dst String buffer to store the number.
-  \param[in] dstSize Size of the destination buffer in bytes.
+  \param[in] dstSize Size of the destination buffer in uint8_ts.
   \param[in] val 8bit signed number to convert.
  */
-void %'ModuleName'%.%Num8sToStr(byte *dst, size_t dstSize, signed char val)
+void %'ModuleName'%.%Num8sToStr(uint8_t *dst, size_t dstSize, signed char val)
 {
   %'ModuleName'%.Num16sToStr(dst, dstSize, (int16_t)val);
 }
@@ -874,16 +880,16 @@ void %'ModuleName'%.%Num8sToStr(byte *dst, size_t dstSize, signed char val)
 /*!
   \brief Converts a 16bit unsigned number into a string.
   \param[in,out] dst String buffer to store the number.
-  \param[in] dstSize Size of the destination buffer in bytes.
+  \param[in] dstSize Size of the destination buffer in uint8_ts.
   \param[in] val 16bit unsigned number to convert.
  */
-void %'ModuleName'%.%Num16uToStr(byte *dst, size_t dstSize, word val)
+void %'ModuleName'%.%Num16uToStr(uint8_t *dst, size_t dstSize, uint16_t val)
 {
   unsigned char *ptr = ((unsigned char *)dst);
   unsigned char i=0, j;
   unsigned char tmp;
 
-  dstSize--; /* for zero byte */
+  dstSize--; /* for zero uint8_t */
   if (val == 0 && dstSize > 0){
     ptr[i++] = '0';
     dstSize--;
@@ -913,10 +919,10 @@ void %'ModuleName'%.%Num16uToStr(byte *dst, size_t dstSize, word val)
 /*!
   \brief Converts a 16bit signed number into a string.
   \param[in,out] dst String buffer to store the number.
-  \param[in] dstSize Size of the destination buffer in bytes.
+  \param[in] dstSize Size of the destination buffer in uint8_ts.
   \param[in] val 16bit signed number to convert.
  */
-void %'ModuleName'%.%Num16sToStr(byte *dst, size_t dstSize, int16_t val)
+void %'ModuleName'%.%Num16sToStr(uint8_t *dst, size_t dstSize, int16_t val)
 {
   unsigned char *ptr =  ((unsigned char *)dst);
   unsigned char i=0, j;
@@ -927,7 +933,7 @@ void %'ModuleName'%.%Num16sToStr(byte *dst, size_t dstSize, int16_t val)
     %'ModuleName'%.%strcpy(dst, dstSize, (unsigned char*)"-32768");
     return;
   }
-  dstSize--; /* for zero byte */
+  dstSize--; /* for zero uint8_t */
   if (sign) {
     val = -val;
   }
@@ -960,7 +966,7 @@ void %'ModuleName'%.%Num16sToStr(byte *dst, size_t dstSize, int16_t val)
 %define! Parfill
 %define! ParnofFill
 %include Common\GeneralInternalGlobal.inc (ShiftRightAndFill)
-static void ShiftRightAndFill(byte *dst, byte fill, byte nofFill)
+static void ShiftRightAndFill(uint8_t *dst, uint8_t fill, uint8_t nofFill)
 {
   signed char i, j;
 
@@ -998,15 +1004,15 @@ static void ShiftRightAndFill(byte *dst, byte fill, byte nofFill)
 /*!
   \brief Converts a 16bit signed number to a string, in a formatted way (like printf with "%%0d").
      Always terminates the result string.
-     Note: count is the size of dst INCLUDING zero byte.
+     Note: count is the size of dst INCLUDING zero uint8_t.
      Precondition: src, dst != NULL
   \param[in,out] dst Start of buffer, where to append the number string
-  \param[in] dstSize Size of the destination buffer, in bytes.
+  \param[in] dstSize Size of the destination buffer, in uint8_ts.
   \param[in] val The 16bit signed number to add
   \param[in] fill Fill character, typically ' ' (like for "%%2d" or '0' (for "%%02d")
   \param[in] nofFill Size for the format (right aligned) string, e.g. '2' for "%%2d"
 */
-void %'ModuleName'%.%Num16sToStrFormatted(byte *dst, size_t dstSize, int16_t val, char fill, byte nofFill)
+void %'ModuleName'%.%Num16sToStrFormatted(uint8_t *dst, size_t dstSize, int16_t val, char fill, uint8_t nofFill)
 {
   %'ModuleName'%.%Num16sToStr(dst, dstSize, val);
   ShiftRightAndFill(dst, fill, nofFill);
@@ -1026,15 +1032,15 @@ void %'ModuleName'%.%Num16sToStrFormatted(byte *dst, size_t dstSize, int16_t val
 /*!
   \brief Converts a 16bit unsigned number to a string, in a formatted way (like printf with "%%0d").
      Always terminates the result string.
-     Note: count is the size of dst INCLUDING zero byte.
+     Note: count is the size of dst INCLUDING zero uint8_t.
      Precondition: src, dst != NULL
   \param[in,out] dst Start of buffer, where to append the number string
-  \param[in] dstSize Size of the destination buffer, in bytes.
+  \param[in] dstSize Size of the destination buffer, in uint8_ts.
   \param[in] val The 16bit unsigned number to add
   \param[in] fill Fill character, typically ' ' (like for "%%2d" or '0' (for "%%02d")
   \param[in] nofFill Size for the format (right aligned) string, e.g. '2' for "%%2d"
 */
-void %'ModuleName'%.%Num16uToStrFormatted(byte *dst, size_t dstSize, word val, char fill, byte nofFill)
+void %'ModuleName'%.%Num16uToStrFormatted(uint8_t *dst, size_t dstSize, uint16_t val, char fill, uint8_t nofFill)
 {
   %'ModuleName'%.%Num16uToStr(dst, dstSize, val);
   ShiftRightAndFill(dst, fill, nofFill);
@@ -1054,15 +1060,15 @@ void %'ModuleName'%.%Num16uToStrFormatted(byte *dst, size_t dstSize, word val, c
 /*!
   \brief Converts a 32bit unsigned number to a string, in a formatted way (like printf with "%%0d").
      Always terminates the result string.
-     Note: count is the size of dst INCLUDING zero byte.
+     Note: count is the size of dst INCLUDING zero uint8_t.
      Precondition: src, dst != NULL
   \param[in,out] dst Start of buffer, where to append the number string
-  \param[in] dstSize Size of the destination buffer, in bytes.
+  \param[in] dstSize Size of the destination buffer, in uint8_ts.
   \param[in] val The 32bit unsigned number to add
   \param[in] fill Fill character, typically ' ' (like for "%%2d" or '0' (for "%%02d")
   \param[in] nofFill Size for the format (right aligned) string, e.g. '2' for "%%2d"
 */
-void %'ModuleName'%.%Num32uToStrFormatted(byte *dst, size_t dstSize, dword val, char fill, byte nofFill)
+void %'ModuleName'%.%Num32uToStrFormatted(uint8_t *dst, size_t dstSize, uint32_t val, char fill, uint8_t nofFill)
 {
   %'ModuleName'%.%Num32uToStr(dst, dstSize, val);
   ShiftRightAndFill(dst, fill, nofFill);
@@ -1082,15 +1088,15 @@ void %'ModuleName'%.%Num32uToStrFormatted(byte *dst, size_t dstSize, dword val, 
 /*!
   \brief Converts a 32bit signed number to a string, in a formatted way (like printf with "%%0d").
      Always terminates the result string.
-     Note: count is the size of dst INCLUDING zero byte.
+     Note: count is the size of dst INCLUDING zero uint8_t.
      Precondition: src, dst != NULL
   \param[in,out] dst Start of buffer, where to append the number string
-  \param[in] dstSize Size of the destination buffer, in bytes.
+  \param[in] dstSize Size of the destination buffer, in uint8_ts.
   \param[in] val The 32bit signed number to add
   \param[in] fill Fill character, typically ' ' (like for "%%2d" or '0' (for "%%02d")
   \param[in] nofFill Size for the format (right aligned) string, e.g. '2' for "%%2d"
 */
-void %'ModuleName'%.%Num32sToStrFormatted(byte *dst, size_t dstSize, long val, char fill, byte nofFill)
+void %'ModuleName'%.%Num32sToStrFormatted(uint8_t *dst, size_t dstSize, long val, char fill, uint8_t nofFill)
 {
   %'ModuleName'%.%Num32sToStr(dst, dstSize, val);
   ShiftRightAndFill(dst, fill, nofFill);
@@ -1107,13 +1113,13 @@ void %'ModuleName'%.%Num32sToStrFormatted(byte *dst, size_t dstSize, long val, c
 %include Common\UtilitystrcatNum8u.Inc
 /*!
   \brief appends a 8bit unsigned number to a string. Always terminates the result string.
-     Note: count is the size of dst INCLUDING zero byte.
+     Note: count is the size of dst INCLUDING zero uint8_t.
      Precondition: src, dst != NULL
   \param[in,out] dst Start of buffer, where to append the number string
-  \param[in] dstSize The size of the buffer, including the zero byte
+  \param[in] dstSize The size of the buffer, including the zero uint8_t
   \param[in] val The 8bit unsigned number to add
   */
-void %'ModuleName'%.%strcatNum8u(byte *dst, size_t dstSize, byte val)
+void %'ModuleName'%.%strcatNum8u(uint8_t *dst, size_t dstSize, uint8_t val)
 {
   unsigned char buf[sizeof("256")]; /* maximum buffer size we need */
 
@@ -1132,13 +1138,13 @@ void %'ModuleName'%.%strcatNum8u(byte *dst, size_t dstSize, byte val)
 %include Common\UtilitystrcatNum8s.Inc
 /*!
   \brief appends a 8bit signed number to a string. Always terminates the result string.
-     Note: count is the size of dst INCLUDING zero byte.
+     Note: count is the size of dst INCLUDING zero uint8_t.
      Precondition: src, dst != NULL
   \param[in,out] dst Start of buffer, where to append the number string
-  \param[in] dstSize The size of the buffer, including the zero byte
+  \param[in] dstSize The size of the buffer, including the zero uint8_t
   \param[in] val The 8bit signed number to add
   */
-void %'ModuleName'%.%strcatNum8s(byte *dst, size_t dstSize, signed char val)
+void %'ModuleName'%.%strcatNum8s(uint8_t *dst, size_t dstSize, signed char val)
 {
   unsigned char buf[sizeof("-128")]; /* maximum buffer size we need */
 
@@ -1157,13 +1163,13 @@ void %'ModuleName'%.%strcatNum8s(byte *dst, size_t dstSize, signed char val)
 %include Common\UtilitystrcatNum16u.Inc
 /*!
   \brief appends a 16bit unsigned number to a string. Always terminates the result string.
-     Note: count is the size of dst INCLUDING zero byte.
+     Note: count is the size of dst INCLUDING zero uint8_t.
      Precondition: src, dst != NULL
   \param[in,out] dst Start of buffer, where to append the number string
-  \param[in] dstSize The size of the buffer, including the zero byte
+  \param[in] dstSize The size of the buffer, including the zero uint8_t
   \param[in] val The 16bit unsigned number to add
   */
-void %'ModuleName'%.%strcatNum16u(byte *dst, size_t dstSize, word val)
+void %'ModuleName'%.%strcatNum16u(uint8_t *dst, size_t dstSize, uint16_t val)
 {
   unsigned char buf[sizeof("32768")]; /* maximum buffer size we need */
 
@@ -1182,13 +1188,13 @@ void %'ModuleName'%.%strcatNum16u(byte *dst, size_t dstSize, word val)
 %include Common\UtilitystrcatNum16s.Inc
 /*!
   \brief appends a 16bit signed number to a string. Always terminates the result string.
-     Note: count is the size of dst INCLUDING zero byte.
+     Note: count is the size of dst INCLUDING zero uint8_t.
      Precondition: src, dst != NULL
   \param[in,out] dst Start of buffer, where to append the number string
-  \param[in] dstSize The size of the buffer, including the zero byte
+  \param[in] dstSize The size of the buffer, including the zero uint8_t
   \param[in] val The 16bit signed number to add
   */
-void %'ModuleName'%.%strcatNum16s(byte *dst, size_t dstSize, int16_t val)
+void %'ModuleName'%.%strcatNum16s(uint8_t *dst, size_t dstSize, int16_t val)
 {
   unsigned char buf[sizeof("-32768")]; /* maximum buffer size we need */
 
@@ -1210,15 +1216,15 @@ void %'ModuleName'%.%strcatNum16s(byte *dst, size_t dstSize, int16_t val)
 /*!
   \brief appends a 16bit unsigned number to a string, in a formatted way (like printf with "%%0d".
      Always terminates the result string.
-     Note: count is the size of dst INCLUDING zero byte.
+     Note: count is the size of dst INCLUDING zero uint8_t.
      Precondition: src, dst != NULL
   \param[in,out] dst Start of buffer, where to append the number string
-  \param[in] dstSize The size of the buffer, including the zero byte
+  \param[in] dstSize The size of the buffer, including the zero uint8_t
   \param[in] val The 16bit unsigned number to add
   \param[in] fill Fill character
   \param[in] nofFill Number of fill characters
   */
-void %'ModuleName'%.%strcatNum16uFormatted(byte *dst, size_t dstSize, word val, char fill, byte nofFill)
+void %'ModuleName'%.%strcatNum16uFormatted(uint8_t *dst, size_t dstSize, uint16_t val, char fill, uint8_t nofFill)
 {
   unsigned char buf[sizeof("32768")]; /* maximum buffer size we need */
 
@@ -1240,15 +1246,15 @@ void %'ModuleName'%.%strcatNum16uFormatted(byte *dst, size_t dstSize, word val, 
 /*!
   \brief appends a 16bit signed number to a string, in a formatted way (like printf with "%%0d".
      Always terminates the result string.
-     Note: count is the size of dst INCLUDING zero byte.
+     Note: count is the size of dst INCLUDING zero uint8_t.
      Precondition: src, dst != NULL
   \param[in,out] dst Start of buffer, where to append the number string
-  \param[in] dstSize The size of the buffer, including the zero byte
+  \param[in] dstSize The size of the buffer, including the zero uint8_t
   \param[in] val The 16bit signed number to add
   \param[in] fill Fill character
   \param[in] nofFill Number of fill characters
   */
-void %'ModuleName'%.%strcatNum16sFormatted(byte *dst, size_t dstSize, int16_t val, char fill, byte nofFill)
+void %'ModuleName'%.%strcatNum16sFormatted(uint8_t *dst, size_t dstSize, int16_t val, char fill, uint8_t nofFill)
 {
   unsigned char buf[sizeof("-32768")]; /* maximum buffer size we need */
 
@@ -1270,15 +1276,15 @@ void %'ModuleName'%.%strcatNum16sFormatted(byte *dst, size_t dstSize, int16_t va
 /*!
   \brief appends a 32bit unsigned number to a string, in a formatted way (like printf with "%%0d".
      Always terminates the result string.
-     Note: count is the size of dst INCLUDING zero byte.
+     Note: count is the size of dst INCLUDING zero uint8_t.
      Precondition: src, dst != NULL
   \param[in,out] dst Start of buffer, where to append the number string
-  \param[in] dstSize The size of the buffer, including the zero byte
+  \param[in] dstSize The size of the buffer, including the zero uint8_t
   \param[in] val The 32bit unsigned number to add
   \param[in] fill Fill character
   \param[in] nofFill Number of fill characters
   */
-void %'ModuleName'%.%strcatNum32uFormatted(byte *dst, size_t dstSize, dword val, char fill, byte nofFill)
+void %'ModuleName'%.%strcatNum32uFormatted(uint8_t *dst, size_t dstSize, uint32_t val, char fill, uint8_t nofFill)
 {
   unsigned char buf[sizeof("4294967295")]; /* maximum buffer size we need */
 
@@ -1300,15 +1306,15 @@ void %'ModuleName'%.%strcatNum32uFormatted(byte *dst, size_t dstSize, dword val,
 /*!
   \brief appends a 32bit signed number to a string, in a formatted way (like printf with "%%0d".
      Always terminates the result string.
-     Note: count is the size of dst INCLUDING zero byte.
+     Note: count is the size of dst INCLUDING zero uint8_t.
      Precondition: src, dst != NULL
   \param[in,out] dst Start of buffer, where to append the number string
-  \param[in] dstSize The size of the buffer, including the zero byte
+  \param[in] dstSize The size of the buffer, including the zero uint8_t
   \param[in] val The 32bit signed number to add
   \param[in] fill Fill character
   \param[in] nofFill Number of fill characters
   */
-void %'ModuleName'%.%strcatNum32sFormatted(byte *dst, size_t dstSize, long val, char fill, byte nofFill)
+void %'ModuleName'%.%strcatNum32sFormatted(uint8_t *dst, size_t dstSize, long val, char fill, uint8_t nofFill)
 {
   unsigned char buf[sizeof("-4294967295")]; /* maximum buffer size we need */
 
@@ -1328,10 +1334,10 @@ void %'ModuleName'%.%strcatNum32sFormatted(byte *dst, size_t dstSize, long val, 
 /*!
   \brief Adds a 8bit number as hex value to a string.
   \param[in,out] dst Start of buffer, where to append the number string
-  \param[in] dstSize The size of the buffer, including the zero byte
+  \param[in] dstSize The size of the buffer, including the zero uint8_t
   \param[in] num The 8bit number to add
   */
-void %'ModuleName'%.%strcatNum8Hex(byte *dst, size_t dstSize, byte num)
+void %'ModuleName'%.%strcatNum8Hex(uint8_t *dst, size_t dstSize, uint8_t num)
 {
   unsigned char buf[sizeof("FF")]; /* maximum buffer size we need */
   unsigned char hex;
@@ -1356,10 +1362,10 @@ void %'ModuleName'%.%strcatNum8Hex(byte *dst, size_t dstSize, byte num)
 /*!
   \brief Adds a 16bit number as hex value to a string.
   \param[in,out] dst Start of buffer, where to append the number string
-  \param[in] dstSize The size of the buffer, including the zero byte
+  \param[in] dstSize The size of the buffer, including the zero uint8_t
   \param[in] num The 16bit number to add
   */
-void %'ModuleName'%.%strcatNum16Hex(byte *dst, size_t dstSize, word num)
+void %'ModuleName'%.%strcatNum16Hex(uint8_t *dst, size_t dstSize, uint16_t num)
 {
   unsigned char buf[sizeof("FFFF")]; /* maximum buffer size we need */
   unsigned char hex;
@@ -1388,10 +1394,10 @@ void %'ModuleName'%.%strcatNum16Hex(byte *dst, size_t dstSize, word num)
 /*!
   \brief Adds a 24bit number as hex value to a string.
   \param[in,out] dst Start of buffer, where to append the number string
-  \param[in] dstSize The size of the buffer, including the zero byte
+  \param[in] dstSize The size of the buffer, including the zero uint8_t
   \param[in] num The 24bit number to add
   */
-void %'ModuleName'%.%strcatNum24Hex(byte *dst, size_t dstSize, dword num)
+void %'ModuleName'%.%strcatNum24Hex(uint8_t *dst, size_t dstSize, uint32_t num)
 {
   unsigned char buf[sizeof("FFFFFF")]; /* maximum buffer size we need */
   unsigned char hex;
@@ -1420,10 +1426,10 @@ void %'ModuleName'%.%strcatNum24Hex(byte *dst, size_t dstSize, dword num)
 /*!
   \brief Adds a 32bit number as hex value to a string.
   \param[in,out] dst Start of buffer, where to append the number string
-  \param[in] dstSize The size of the buffer, including the zero byte
+  \param[in] dstSize The size of the buffer, including the zero uint8_t
   \param[in] num The 32bit number to add
   */
-void %'ModuleName'%.%strcatNum32Hex(byte *dst, size_t dstSize, dword num)
+void %'ModuleName'%.%strcatNum32Hex(uint8_t *dst, size_t dstSize, uint32_t num)
 {
   unsigned char buf[sizeof("FFFFFFFF")]; /* maximum buffer size we need */
   unsigned char hex;
@@ -1451,13 +1457,13 @@ void %'ModuleName'%.%strcatNum32Hex(byte *dst, size_t dstSize, dword num)
 %include Common\UtilitystrcatNum32s.Inc
 /*!
   \brief appends a 32bit (long) number to a string. Always terminates the result string.
-     Note: count is the size of dst INCLUDING zero byte.
+     Note: count is the size of dst INCLUDING zero uint8_t.
      Precondition: src, dst != NULL
   \param[in,out] dst Start of buffer, where to append the number string
-  \param[in] dstSize The size of the buffer, including the zero byte
+  \param[in] dstSize The size of the buffer, including the zero uint8_t
   \param[in] val The 32bit number to add
   */
-void %'ModuleName'%.%strcatNum32s(byte *dst, size_t dstSize, long val)
+void %'ModuleName'%.%strcatNum32s(uint8_t *dst, size_t dstSize, long val)
 {
   unsigned char buf[sizeof("-4294967295")]; /* maximum buffer size we need */
 
@@ -1476,13 +1482,13 @@ void %'ModuleName'%.%strcatNum32s(byte *dst, size_t dstSize, long val)
 %include Common\UtilitystrcatNum32u.Inc
 /*!
   \brief appends a 32bit (unsigned long) number to a string. Always terminates the result string.
-     Note: count is the size of dst INCLUDING zero byte.
+     Note: count is the size of dst INCLUDING zero uint8_t.
      Precondition: src, dst != NULL
   \param[in,out] dst Start of buffer, where to append the number string
-  \param[in] dstSize The size of the buffer, including the zero byte
+  \param[in] dstSize The size of the buffer, including the zero uint8_t
   \param[in] val The 32bit unsigned number to add
   */
-void %'ModuleName'%.%strcatNum32u(byte *dst, size_t dstSize, dword val)
+void %'ModuleName'%.%strcatNum32u(uint8_t *dst, size_t dstSize, uint32_t val)
 {
   unsigned char buf[sizeof("4294967295")]; /* maximum buffer size we need */
 
@@ -1502,10 +1508,10 @@ void %'ModuleName'%.%strcatNum32u(byte *dst, size_t dstSize, dword val)
 /*!
   \brief Converts a 32bit number to a string.
   \param[in,out] dst String buffer to store the number.
-  \param[in] dstSize Size of the destination buffer in bytes.
+  \param[in] dstSize Size of the destination buffer in uint8_ts.
   \param[in] val 32bit signed number to convert.
  */
-void %'ModuleName'%.%Num32sToStr(byte *dst, size_t dstSize, long val)
+void %'ModuleName'%.%Num32sToStr(uint8_t *dst, size_t dstSize, long val)
 {
   unsigned char *ptr = ((unsigned char *)dst);
   unsigned char i=0, j;
@@ -1516,7 +1522,7 @@ void %'ModuleName'%.%Num32sToStr(byte *dst, size_t dstSize, long val)
     %'ModuleName'%.%strcpy(dst, dstSize, (unsigned char*)"-2147483648");
     return;
   }
-  dstSize--; /* for zero byte */
+  dstSize--; /* for zero uint8_t */
   if (sign) {
     val = -val;
   }
@@ -1553,16 +1559,16 @@ void %'ModuleName'%.%Num32sToStr(byte *dst, size_t dstSize, long val)
 /*!
   \brief Converts a 32bit signed number to a string.
   \param[in,out] dst String buffer to store the number.
-  \param[in] dstSize Size of the destination buffer in bytes.
+  \param[in] dstSize Size of the destination buffer in uint8_ts.
   \param[in] val 32bit unsigned number to convert.
  */
-void %'ModuleName'%.%Num32uToStr(byte *dst, size_t dstSize, dword val)
+void %'ModuleName'%.%Num32uToStr(uint8_t *dst, size_t dstSize, uint32_t val)
 {
   unsigned char *ptr = ((unsigned char *)dst);
   unsigned char i=0, j;
   unsigned char tmp;
 
-  dstSize--; /* for zero byte */
+  dstSize--; /* for zero uint8_t */
   if (val == 0 && dstSize > 0){
     ptr[i++] = '0';
     dstSize--;
@@ -1588,7 +1594,7 @@ void %'ModuleName'%.%Num32uToStr(byte *dst, size_t dstSize, dword val)
 %define! Paryear
 %define! RetVal
 %include Common\UtilityIsLeapYear.Inc
-bool %'ModuleName'%.%IsLeapYear(word year)
+bool %'ModuleName'%.%IsLeapYear(uint16_t year)
 {
   return ((((year%%4)==0) && (year%%100)!=0) || (year%%400)==0);
 }
@@ -1603,13 +1609,13 @@ bool %'ModuleName'%.%IsLeapYear(word year)
 %define! Parday
 %define! RetVal
 %include Common\UtilityWeekDay.Inc
-byte %'ModuleName'%.%WeekDay(word year, byte month, byte day)
+uint8_t %'ModuleName'%.%WeekDay(uint16_t year, uint8_t month, uint8_t day)
 {
   /* see http://klausler.com/new-dayofweek.html */
-  static const byte skew[12] = {0,3,3,6,1,4,6,2,5,0,3,5};
-  word sum;
+  static const uint8_t skew[12] = {0,3,3,6,1,4,6,2,5,0,3,5};
+  uint16_t sum;
 
-  sum = (word)(year-1900);
+  sum = (uint16_t)(year-1900);
   sum += sum/4;
   sum %%= 7;
   if (%'ModuleName'%.%IsLeapYear(year) && (month==1 || month==2)) {
@@ -1619,7 +1625,7 @@ byte %'ModuleName'%.%WeekDay(word year, byte month, byte day)
   sum %%= 7;
   sum += skew[month-1];
   sum %%= 7;
-  return (byte)sum; /* 0: Sunday, 1: Monday, 2: Tuesday, 3: Wednesday, ... */
+  return (uint8_t)sum; /* 0: Sunday, 1: Monday, 2: Tuesday, 3: Wednesday, ... */
 }
 
 %endif %- WeekDay
@@ -1636,7 +1642,7 @@ byte %'ModuleName'%.%WeekDay(word year, byte month, byte day)
 %define! Parterminators
 %define! RetVal
 %include Common\UtilityReadEscapedName.Inc
-byte %'ModuleName'%.%ReadEscapedName(const unsigned char *filename, byte *destname, size_t maxlen, size_t *lenRead, size_t *lenWritten, const char *terminators)
+uint8_t %'ModuleName'%.%ReadEscapedName(const unsigned char *filename, uint8_t *destname, size_t maxlen, size_t *lenRead, size_t *lenWritten, const char *terminators)
 {
   size_t lenCopied = 0, lenOverread = 0;
   bool quoteMode = FALSE;  /* quoteMode means the name is surrounded by ". In this mode, only a second single quote "
@@ -1692,7 +1698,7 @@ byte %'ModuleName'%.%ReadEscapedName(const unsigned char *filename, byte *destna
     *lenRead = lenCopied+lenOverread;
   }
   if (lenWritten != NULL) {
-    *lenWritten = lenCopied + 1; /* additionally a zero byte written */
+    *lenWritten = lenCopied + 1; /* additionally a zero uint8_t written */
   }
   return res;
 }
@@ -1721,7 +1727,7 @@ byte %'ModuleName'%.%ReadEscapedName(const unsigned char *filename, byte *destna
 #ifdef __HC12__
   #pragma MESSAGE DISABLE C12056  /* message about SP debug info */
 #endif
-byte %'ModuleName'%.%xatoi(const unsigned char **str, int32_t *res)
+uint8_t %'ModuleName'%.%xatoi(const unsigned char **str, int32_t *res)
 {
 /* 123 -5   0x3ff 0b1111 0377 3.25  w "
       ^                               1st call returns 123 and next ptr
@@ -1801,7 +1807,7 @@ byte %'ModuleName'%.%xatoi(const unsigned char **str, int32_t *res)
 %define! Paryear
 %define! RetVal
 %include Common\UtilityScanDate.Inc
-byte %'ModuleName'%.%ScanDate(const unsigned char **str, byte *day, byte *month, word *year)
+uint8_t %'ModuleName'%.%ScanDate(const unsigned char **str, uint8_t *day, uint8_t *month, uint16_t *year)
 {
   /* precondition: string points to starting of date, e.g. "01.01.10" or "12.5.2010", and date is in format dd.mm.yy or dd.mm.yyyy */
   const unsigned char *p;
@@ -1852,7 +1858,7 @@ byte %'ModuleName'%.%ScanDate(const unsigned char **str, byte *day, byte *month,
 %define! ParhSecond
 %define! RetVal
 %include Common\UtilityScanTime.Inc
-byte %'ModuleName'%.%ScanTime(const unsigned char **str, byte *hour, byte *minute, byte *second, byte *hSecond)
+uint8_t %'ModuleName'%.%ScanTime(const unsigned char **str, uint8_t *hour, uint8_t *minute, uint8_t *second, uint8_t *hSecond)
 {
   /* precondition: string points to starting of time string, e.g. "03:15:05" or "03:15:05,3" or "03:15:05,17", and time is in format hh:mm:ss[,hh] */
   const unsigned char *p;
@@ -1920,7 +1926,7 @@ byte %'ModuleName'%.%ScanTime(const unsigned char **str, byte *hour, byte *minut
 %define! Parval
 %define! RetVal
 %include Common\UtilityScanDecimal8uNumber.Inc
-byte %'ModuleName'%.%ScanDecimal8uNumber(const unsigned char **str, byte *val)
+uint8_t %'ModuleName'%.%ScanDecimal8uNumber(const unsigned char **str, uint8_t *val)
 {
   /* scans a decimal number, and stops at any non-number. Number can have any preceding zeros or spaces. */
   #define _8_NOF_DIGITS  (3+1)
@@ -1955,7 +1961,7 @@ byte %'ModuleName'%.%ScanDecimal8uNumber(const unsigned char **str, byte *val)
 %define! Parval
 %define! RetVal
 %include Common\UtilityScanDecimal8sNumber.Inc
-byte %'ModuleName'%.%ScanDecimal8sNumber(const unsigned char **str, signed char *val)
+uint8_t %'ModuleName'%.%ScanDecimal8sNumber(const unsigned char **str, signed char *val)
 {
   /* Scans a decimal number, and stops at any non-number. Number can have any preceding spaces. */
   const unsigned char *p = *str;
@@ -1995,7 +2001,7 @@ byte %'ModuleName'%.%ScanDecimal8sNumber(const unsigned char **str, signed char 
 %define! Parval
 %define! RetVal
 %include Common\UtilityScanDecimal16uNumber.Inc
-byte %'ModuleName'%.%ScanDecimal16uNumber(const unsigned char **str, word *val)
+uint8_t %'ModuleName'%.%ScanDecimal16uNumber(const unsigned char **str, uint16_t *val)
 {
   /* scans a decimal number, and stops at any non-number. Number can have any preceding zeros or spaces. */
   #define _16_NOF_DIGITS  (5+1)
@@ -2030,7 +2036,7 @@ byte %'ModuleName'%.%ScanDecimal16uNumber(const unsigned char **str, word *val)
 %define! Parval
 %define! RetVal
 %include Common\UtilityScanDecimal16sNumber.Inc
-byte %'ModuleName'%.%ScanDecimal16sNumber(const unsigned char **str, int16_t *val)
+uint8_t %'ModuleName'%.%ScanDecimal16sNumber(const unsigned char **str, int16_t *val)
 {
   /* Scans a decimal number, and stops at any non-number. Number can have any preceding spaces. */
   const unsigned char *p = *str;
@@ -2048,7 +2054,7 @@ byte %'ModuleName'%.%ScanDecimal16sNumber(const unsigned char **str, int16_t *va
   } else {
     isNeg = FALSE;
   }
-  res = %'ModuleName'%.%ScanDecimal16uNumber(&p, (word*)&val16u);
+  res = %'ModuleName'%.%ScanDecimal16uNumber(&p, (uint16_t*)&val16u);
   if (res != ERR_OK) {
     return res;
   }
@@ -2070,7 +2076,7 @@ byte %'ModuleName'%.%ScanDecimal16sNumber(const unsigned char **str, int16_t *va
 %define! Parval
 %define! RetVal
 %include Common\UtilityScanDecimal32uNumber.Inc
-byte %'ModuleName'%.%ScanDecimal32uNumber(const unsigned char **str, uint32_t *val)
+uint8_t %'ModuleName'%.%ScanDecimal32uNumber(const unsigned char **str, uint32_t *val)
 {
   /* scans a decimal number, and stops at any non-number. Number can have any preceding zeros or spaces. */
   #define _32_NOF_DIGITS  (10+1)
@@ -2105,7 +2111,7 @@ byte %'ModuleName'%.%ScanDecimal32uNumber(const unsigned char **str, uint32_t *v
 %define! Parval
 %define! RetVal
 %include Common\UtilityScanDecimal32sNumber.Inc
-byte %'ModuleName'%.%ScanDecimal32sNumber(const unsigned char **str, uint32_t *val)
+uint8_t %'ModuleName'%.%ScanDecimal32sNumber(const unsigned char **str, uint32_t *val)
 {
   /* Scans a decimal number, and stops at any non-number. Number can have any preceding spaces. */
   const unsigned char *p = *str;
@@ -2178,7 +2184,7 @@ int16_t %'ModuleName'%.%strncmp(const char *, const char *, size_t size)
 %define! RetVal
 %include Common\Utilitystrlen.Inc
 /***
-word %'ModuleName'%.%strlen(const char *)
+uint16_t %'ModuleName'%.%strlen(const char *)
 {
   Method is implemented as macro in the header file as wrapper to the standard strlen() function
 }
@@ -2188,7 +2194,7 @@ word %'ModuleName'%.%strlen(const char *)
 %-BW_METHOD_END strlen
 %-************************************************************************************************************
 %if defined(ScanHex8uNumber) | defined(ScanHex16uNumber) | defined(ScanHex32uNumber)
-static byte PreScanHexNumber(const unsigned char **str)
+static uint8_t PreScanHexNumber(const unsigned char **str)
 {
   const unsigned char *p = *str;
 
@@ -2207,7 +2213,7 @@ static byte PreScanHexNumber(const unsigned char **str)
   return ERR_OK;
 }
 
-static byte HexToDec(const unsigned char **p, unsigned char *val) {
+static uint8_t HexToDec(const unsigned char **p, unsigned char *val) {
   /* convert a hexadecimal character into a decimal value */
   unsigned char ch = **p;
 
@@ -2234,12 +2240,12 @@ static byte HexToDec(const unsigned char **p, unsigned char *val) {
 %define! Parval
 %define! RetVal
 %include Common\UtilityScanHex32uNumber.Inc
-byte %'ModuleName'%.%ScanHex32uNumber(const unsigned char **str, uint32_t *val)
+uint8_t %'ModuleName'%.%ScanHex32uNumber(const unsigned char **str, uint32_t *val)
 {
   /* scans a decimal number, and stops at any non-number. Number can have any preceding zeros or spaces. */
   uint8_t nofDigits = 8+1; /* maximum number of digits to avoid overflow */
   const unsigned char *p = *str;
-  byte v;
+  uint8_t v;
 
   if (PreScanHexNumber(&p)!=ERR_OK) { /* skip leading spaces, and scan '0x' */
     return ERR_FAILED;
@@ -2265,12 +2271,12 @@ byte %'ModuleName'%.%ScanHex32uNumber(const unsigned char **str, uint32_t *val)
 %define! Parval
 %define! RetVal
 %include Common\UtilityScanHex16uNumber.Inc
-byte %'ModuleName'%.%ScanHex16uNumber(const unsigned char **str, word *val)
+uint8_t %'ModuleName'%.%ScanHex16uNumber(const unsigned char **str, uint16_t *val)
 {
   /* scans a decimal number, and stops at any non-number. Number can have any preceding zeros or spaces. */
   uint8_t nofDigits = 4+1; /* maximum number of digits to avoid overflow */
   const unsigned char *p = *str;
-  byte v;
+  uint8_t v;
 
   if (PreScanHexNumber(&p)!=ERR_OK) { /* skip leading spaces, and scan '0x' */
     return ERR_FAILED;
@@ -2296,12 +2302,12 @@ byte %'ModuleName'%.%ScanHex16uNumber(const unsigned char **str, word *val)
 %define! Parval
 %define! RetVal
 %include Common\UtilityScanHex8uNumber.Inc
-byte %'ModuleName'%.%ScanHex8uNumber(const unsigned char **str, byte *val)
+uint8_t %'ModuleName'%.%ScanHex8uNumber(const unsigned char **str, uint8_t *val)
 {
   /* scans a hex number with 0x, and stops at any non-number. Number can have any preceding zeros or spaces. */
   uint8_t nofDigits = 2+1; /* maximum number of digits to avoid overflow */
   const unsigned char *p = *str;
-  byte v;
+  uint8_t v;
 
   if (PreScanHexNumber(&p)!=ERR_OK) { /* skip leading spaces, and scan '0x' */
     return ERR_FAILED;
@@ -2327,12 +2333,12 @@ byte %'ModuleName'%.%ScanHex8uNumber(const unsigned char **str, byte *val)
 %define! Parval
 %define! RetVal
 %include Common\UtilityScanHex8uNumberNoPrefix.Inc
-byte %'ModuleName'%.%ScanHex8uNumberNoPrefix(const unsigned char **str, byte *val)
+uint8_t %'ModuleName'%.%ScanHex8uNumberNoPrefix(const unsigned char **str, uint8_t *val)
 {
   /* scans a hex number without 0x, and stops at any non-number. Number can have any preceding zeros or spaces. */
   uint8_t nofDigits = 2+1; /* maximum number of digits to avoid overflow */
   const unsigned char *p = *str;
-  byte v;
+  uint8_t v;
 
   while(*p==' ') { /* skip leading spaces */
     p++; /* skip space */
@@ -2358,7 +2364,7 @@ byte %'ModuleName'%.%ScanHex8uNumberNoPrefix(const unsigned char **str, byte *va
 %define! Partail
 %define! RetVal
 %include Common\Utilitystrtailcmp.Inc
-byte %'ModuleName'%.%strtailcmp(byte *str, byte *tail)
+uint8_t %'ModuleName'%.%strtailcmp(uint8_t *str, uint8_t *tail)
 {
   int i, j;
 
@@ -2387,7 +2393,7 @@ byte %'ModuleName'%.%strtailcmp(byte *str, byte *tail)
 %define! Partail
 %define! RetVal
 %include Common\UtilitystrCutTail.Inc
-byte %'ModuleName'%.%strCutTail(byte *str, byte *tail)
+uint8_t %'ModuleName'%.%strCutTail(uint8_t *str, uint8_t *tail)
 {
   /* cut the tail from the string */
   size_t strLen, tailLen;
@@ -2411,7 +2417,7 @@ byte %'ModuleName'%.%strCutTail(byte *str, byte *tail)
 %define! PardstSize
 %define! Parnum
 %include Common\UtilitystrcatNum32sDotValue100.Inc
-void %'ModuleName'%.%strcatNum32sDotValue100(byte *dst, size_t dstSize, long num)
+void %'ModuleName'%.%strcatNum32sDotValue100(uint8_t *dst, size_t dstSize, long num)
 {
   %'ModuleName'%.%strcatNum32s(dst, dstSize, num/100);
   %'ModuleName'%.%chcat(dst, dstSize, '.');
@@ -2430,7 +2436,7 @@ void %'ModuleName'%.%strcatNum32sDotValue100(byte *dst, size_t dstSize, long num
 %define! ParsubStr
 %define! RetVal
 %include Common\UtilitystrFind.Inc
-int16_t %'ModuleName'%.%strFind(byte *str, byte *subStr)
+int16_t %'ModuleName'%.%strFind(uint8_t *str, uint8_t *subStr)
 {
   int16_t i, len;
 

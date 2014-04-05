@@ -4,7 +4,7 @@
     <Name>Utility</Name>
     <Description>Utility Module</Description>
     <Author>Erich Styger</Author>
-    <Version>01.095</Version>
+    <Version>01.097</Version>
     <Icon>Utility</Icon>
     <TypesFiles>PE,Utility\Utility</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -16,7 +16,7 @@
     <BW_AutoSaveDriver>yes</BW_AutoSaveDriver>
     <BW_DetailedHelp>yes</BW_DetailedHelp>
     <BW_NeedTps>no</BW_NeedTps>
-    <BW_NeedUst>0</BW_NeedUst>
+    <BW_NeedUst>6</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
     <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2014, all rights reserved.\nxatoi(): Copyright (C) 2010, ChaN, all right reserved. (see copyright notice and license at the function implementation).\n\nThis an open source software implementing utility functions using Processor Expert.\nThis is a free software and is opened for education,  research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for\n  personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
@@ -62,27 +62,27 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>src</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to source string.</ParHint>
           <ParUserDeclaration>const unsigned char *src</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, const unsigned char *src)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, const unsigned char *src)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -110,20 +110,20 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>src</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to source string.</ParHint>
           <ParUserDeclaration>const unsigned char *src</ParUserDeclaration>
@@ -158,20 +158,20 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>ch</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>character to append</ParHint>
         </Parameter>
@@ -205,19 +205,19 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>fill</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>fill character</ParHint>
         </Parameter>
         <Parameter>
           <ParName>nofFill</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>number of maximum fill character</ParHint>
         </Parameter>
@@ -251,13 +251,13 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
@@ -270,7 +270,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, signed char val)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, signed char val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -298,26 +298,26 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Value to be converted.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, byte val)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, uint8_t val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -345,13 +345,13 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
@@ -364,7 +364,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, int16_t val)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, int16_t val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -392,26 +392,26 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>16bit unsigned</ParType>
+          <ParType>uint16_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Value to be converted.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, word val)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, uint16_t val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -439,26 +439,26 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>32bit unsigned</ParType>
+          <ParType>uint32_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Value to be converted.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, dword val)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, uint32_t val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -486,13 +486,13 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
@@ -505,7 +505,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, long val)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, long val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -533,13 +533,13 @@
         <ParamCount>5</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
@@ -558,13 +558,13 @@
         </Parameter>
         <Parameter>
           <ParName>nofFill</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Number of fill characters</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, int16_t val, char fill, byte nofFill)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, int16_t val, char fill, uint8_t nofFill)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -592,20 +592,20 @@
         <ParamCount>5</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>16bit unsigned</ParType>
+          <ParType>uint16_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Value to convert.</ParHint>
         </Parameter>
@@ -617,13 +617,13 @@
         </Parameter>
         <Parameter>
           <ParName>nofFill</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Number of fill characters</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, word val, char fill, byte nofFill)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, uint16_t val, char fill, uint8_t nofFill)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -651,20 +651,20 @@
         <ParamCount>5</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>32bit unsigned</ParType>
+          <ParType>uint32_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Value to convert.</ParHint>
         </Parameter>
@@ -676,13 +676,13 @@
         </Parameter>
         <Parameter>
           <ParName>nofFill</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Number of fill characters</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, dword val, char fill, byte nofFill)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, uint32_t val, char fill, uint8_t nofFill)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -710,13 +710,13 @@
         <ParamCount>5</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
@@ -735,13 +735,13 @@
         </Parameter>
         <Parameter>
           <ParName>nofFill</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Number of fill characters</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, long val, char fill, byte nofFill)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, long val, char fill, uint8_t nofFill)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -769,26 +769,26 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Value to convert.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, byte val)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, uint8_t val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -816,13 +816,13 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
@@ -835,7 +835,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, signed char val)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, signed char val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -863,26 +863,26 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>16bit unsigned</ParType>
+          <ParType>uint16_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Value to convert.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, word val)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, uint16_t val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -910,13 +910,13 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
@@ -929,7 +929,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, int16_t val)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, int16_t val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -957,26 +957,26 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>32bit unsigned</ParType>
+          <ParType>uint32_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Value to convert.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, dword val)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, uint32_t val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1004,13 +1004,13 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
@@ -1023,7 +1023,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, long val)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, long val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1051,20 +1051,20 @@
         <ParamCount>5</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>16bit unsigned</ParType>
+          <ParType>uint16_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Value to convert.</ParHint>
         </Parameter>
@@ -1076,13 +1076,13 @@
         </Parameter>
         <Parameter>
           <ParName>nofFill</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Number of fill characters</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, word val, char fill, byte nofFill)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, uint16_t val, char fill, uint8_t nofFill)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1110,13 +1110,13 @@
         <ParamCount>5</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
@@ -1135,13 +1135,13 @@
         </Parameter>
         <Parameter>
           <ParName>nofFill</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Number of fill characters</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, int16_t val, char fill, byte nofFill)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, int16_t val, char fill, uint8_t nofFill)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1169,20 +1169,20 @@
         <ParamCount>5</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>32bit unsigned</ParType>
+          <ParType>uint32_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Value to convert.</ParHint>
         </Parameter>
@@ -1194,13 +1194,13 @@
         </Parameter>
         <Parameter>
           <ParName>nofFill</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Number of fill characters</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, dword val, char fill, byte nofFill)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, uint32_t val, char fill, uint8_t nofFill)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1228,13 +1228,13 @@
         <ParamCount>5</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
@@ -1253,13 +1253,13 @@
         </Parameter>
         <Parameter>
           <ParName>nofFill</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Number of fill characters</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, long val, char fill, byte nofFill)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, long val, char fill, uint8_t nofFill)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1287,26 +1287,26 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>num</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Value to convert.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, byte num)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, uint8_t num)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1334,26 +1334,26 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>num</ParName>
-          <ParType>16bit unsigned</ParType>
+          <ParType>uint16_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Value to convert.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, word num)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, uint16_t num)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1381,26 +1381,26 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>num</ParName>
-          <ParType>32bit unsigned</ParType>
+          <ParType>uint32_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Value to convert.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, dword num)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, uint32_t num)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1428,26 +1428,26 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>num</ParName>
-          <ParType>32bit unsigned</ParType>
+          <ParType>uint32_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Value to convert.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, dword num)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, uint32_t num)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1475,13 +1475,13 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>dst</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to destination string</ParHint>
         </Parameter>
         <Parameter>
           <ParName>dstSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of the destination buffer (in bytes).</ParHint>
           <ParUserDeclaration>size_t dstSize</ParUserDeclaration>
@@ -1494,7 +1494,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, long num)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, long num)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1522,13 +1522,13 @@
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>year</ParName>
-          <ParType>16bit unsigned</ParType>
+          <ParType>uint16_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Year, in the YYYY format.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>bool #M#_#C#(word year)</ANSIC>
+          <ANSIC>bool #M#_#C#(uint16_t year)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1556,25 +1556,25 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>year</ParName>
-          <ParType>16bit unsigned</ParType>
+          <ParType>uint16_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>year in YYYY format</ParHint>
         </Parameter>
         <Parameter>
           <ParName>month</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>month of the year (1: January, 2: February, etc)</ParHint>
         </Parameter>
         <Parameter>
           <ParName>day</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>day of the moth (starting with 1)</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(word year, byte month, byte day)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(uint16_t year, uint8_t month, uint8_t day)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1602,20 +1602,20 @@
         <ParamCount>6</ParamCount>
         <Parameter>
           <ParName>filename</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>the name to be copied. Names may be in quoted format</ParHint>
           <ParUserDeclaration>const unsigned char *filename</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>destname</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>the destination of the copy. Names are not in quoted format. destname may be NULL to get the other return values only</ParHint>
         </Parameter>
         <Parameter>
           <ParName>maxlen</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>length allocated for destname</ParHint>
           <ParUserDeclaration>size_t maxlen</ParUserDeclaration>
@@ -1629,21 +1629,21 @@
         </Parameter>
         <Parameter>
           <ParName>lenWritten</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>the size written in destname. In case of overflows in destname, lenWritten is still increased but destname no longer written. The have the string length in these cases use strlen(destname)</ParHint>
           <ParUserDeclaration>size_t *lenWritten</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>terminators</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>additional characters where a name should terminate. May be NULL</ParHint>
           <ParUserDeclaration>const char *terminators</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char *filename, byte *destname, size_t maxlen, size_t *lenRead, size_t *lenWritten, const char *terminators)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(const unsigned char *filename, uint8_t *destname, size_t maxlen, size_t *lenRead, size_t *lenWritten, const char *terminators)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1671,7 +1671,7 @@
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>str</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to string to scan. Returns until where it has scanned.</ParHint>
           <ParUserDeclaration>const unsigned char **str</ParUserDeclaration>
@@ -1685,7 +1685,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char **str, int32_t *res)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, int32_t *res)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1713,32 +1713,32 @@
         <ParamCount>4</ParamCount>
         <Parameter>
           <ParName>str</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to the string to be scanned. The function advances the pointer.</ParHint>
           <ParUserDeclaration>const unsigned char **str</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>day</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to where to store the day value</ParHint>
         </Parameter>
         <Parameter>
           <ParName>month</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to where to store the month value</ParHint>
         </Parameter>
         <Parameter>
           <ParName>year</ParName>
-          <ParType>16bit unsigned</ParType>
+          <ParType>uint16_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to where to store the year value</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char **str, byte *day, byte *month, word *year)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, uint8_t *day, uint8_t *month, uint16_t *year)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1766,38 +1766,38 @@
         <ParamCount>5</ParamCount>
         <Parameter>
           <ParName>str</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Pointer to the string to be scanned. The function advances the pointer.</ParHint>
           <ParUserDeclaration>const unsigned char **str</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>hour</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to where to store the hour value</ParHint>
         </Parameter>
         <Parameter>
           <ParName>minute</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to where to store the minute value</ParHint>
         </Parameter>
         <Parameter>
           <ParName>second</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to where to store the second value</ParHint>
         </Parameter>
         <Parameter>
           <ParName>hSecond</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to scans the hundreds of second part. If not present in string, zero is stored</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char **str, byte *hour, byte *minute, byte *second, byte *hSecond)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, uint8_t *hour, uint8_t *minute, uint8_t *second, uint8_t *hSecond)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1825,20 +1825,20 @@
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>str</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>String to scan. It returns as well until where it has scanned</ParHint>
           <ParUserDeclaration>const unsigned char **str</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to value</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char **str, byte *val)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, uint8_t *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1866,7 +1866,7 @@
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>str</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>String to scan. It returns as well until where it has scanned</ParHint>
           <ParUserDeclaration>const unsigned char **str</ParUserDeclaration>
@@ -1879,7 +1879,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char **str, signed char *val)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, signed char *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1907,20 +1907,20 @@
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>str</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>String to scan. It returns as well until where it has scanned</ParHint>
           <ParUserDeclaration>const unsigned char **str</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>16bit unsigned</ParType>
+          <ParType>uint16_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to value</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char **str, word *val)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, uint16_t *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1948,7 +1948,7 @@
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>str</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>String to scan. It returns as well until where it has scanned</ParHint>
           <ParUserDeclaration>const unsigned char **str</ParUserDeclaration>
@@ -1961,7 +1961,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char **str, int16_t *val)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, int16_t *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1989,21 +1989,21 @@
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>str</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>string to scan. It returns as well until where it has scanned</ParHint>
           <ParUserDeclaration>const unsigned char **str</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>32bit unsigned</ParType>
+          <ParType>uint32_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to value</ParHint>
           <ParUserDeclaration>uint32_t *val</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char **str, uint32_t *val)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, uint32_t *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2031,7 +2031,7 @@
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>str</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>string to scan. It returns as well until where it has scanned</ParHint>
           <ParUserDeclaration>const unsigned char **str</ParUserDeclaration>
@@ -2045,7 +2045,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char **str, uint32_t *val)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, uint32_t *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2073,20 +2073,20 @@
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>str</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>String to scan, starting with 0x. It returns as well until where it has scanned</ParHint>
           <ParUserDeclaration>const unsigned char **str</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to value</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char **str, byte *val)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, uint8_t *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2114,20 +2114,20 @@
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>str</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>String to scan, starting with 0x. It returns as well until where it has scanned</ParHint>
           <ParUserDeclaration>const unsigned char **str</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to value</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char **str, byte *val)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, uint8_t *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2155,20 +2155,20 @@
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>str</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>String to scan, starting with 0x.. It returns as well until where it has scanned</ParHint>
           <ParUserDeclaration>const unsigned char **str</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>16bit unsigned</ParType>
+          <ParType>uint16_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to value</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char **str, word *val)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, uint16_t *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2196,21 +2196,21 @@
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>str</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>String to scan, starting with 0x. It returns as well until where it has scanned</ParHint>
           <ParUserDeclaration>const unsigned char **str</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>32bit unsigned</ParType>
+          <ParType>uint32_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to value</ParHint>
           <ParUserDeclaration>uint32_t *val</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char **str, uint32_t *val)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, uint32_t *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2294,7 +2294,7 @@
         </Parameter>
         <Parameter>
           <ParName>size</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint/>
           <ParUserDeclaration>size_t size</ParUserDeclaration>
@@ -2329,19 +2329,19 @@
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>str</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to string which will be searched</ParHint>
         </Parameter>
         <Parameter>
           <ParName>subStr</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to substring to search inside str</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>int16_t #M#_#C#(byte *str, byte *subStr)</ANSIC>
+          <ANSIC>int16_t #M#_#C#(uint8_t *str, uint8_t *subStr)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2369,19 +2369,19 @@
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>str</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to string. This string is compared if it contains the tail.</ParHint>
         </Parameter>
         <Parameter>
           <ParName>tail</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to tail string.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(byte *str, byte *tail)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(uint8_t *str, uint8_t *tail)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2409,14 +2409,14 @@
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>str</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint/>
           <ParUserDeclaration>const char *</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>word #M#_#C#(const char *)</ANSIC>
+          <ANSIC>uint16_t #M#_#C#(const char *)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2444,19 +2444,19 @@
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>str</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to string where to remove the tail</ParHint>
         </Parameter>
         <Parameter>
           <ParName>tail</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to substring to remove</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(byte *str, byte *tail)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(uint8_t *str, uint8_t *tail)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
