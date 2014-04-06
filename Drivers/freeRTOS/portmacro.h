@@ -72,7 +72,7 @@ extern "C" {
 #include "FreeRTOSConfig.h"
 #if configGENERATE_STATIC_SOURCES
   #include <stdint.h>
-#else
+#elif !configPEX_KINETIS_SDK
   #include "PE_Types.h" /* for int8_t, etc */
 #endif
 /*-----------------------------------------------------------

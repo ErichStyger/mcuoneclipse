@@ -87,7 +87,7 @@
 #include "FreeRTOSConfig.h" /* << EST */
 #if configGENERATE_STATIC_SOURCES /* << EST */
   #include <stdint.h> /* READ COMMENT ABOVE. */
-#else
+#elif !configPEX_KINETIS_SDK
   #include "PE_Types.h"
 #endif
 
