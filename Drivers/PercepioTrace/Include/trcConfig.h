@@ -582,7 +582,7 @@
 /*** Select your port here! **************************************************/
 #if 1 /* << EST */
 #include "FreeRTOSConfig.h"
-#if configCPU_FAMILY_IS_ARM(configCPU_FAMILY))
+#if configCPU_FAMILY_IS_ARM(configCPU_FAMILY)
 #define SELECTED_PORT PORT_ARM_CortexM
 #else
 #define SELECTED_PORT PORT_FREESCALE_PROCESSOR_EXPERT

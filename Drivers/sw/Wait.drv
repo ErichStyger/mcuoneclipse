@@ -112,6 +112,10 @@ extern "C" {
 
 #undef CPU_BUS_CLK_HZ_LOW     %>%CTAB /* if already defined in "%ProcessorModule.h" */
 #define CPU_BUS_CLK_HZ_LOW      %'CpuBusClkHzLow'UL   %>%CTAB /*!< CPU clock frequency in slow speed mode */
+
+%endif
+%if (%CPUDB_prph_has_feature(CPU,SDK_SUPPORT) = 'yes') %- TRUE/FALSE not defined for SDK projects
+#define CPU_CORE_CLK_HZ        %>%CTAB SystemCoreClock /*!< CPU clock frequency defined in SDK */
 %endif
 
 %if ndefined(LowClock_kHz) & ndefined(SlowClock_kHz)
@@ -145,16 +149,16 @@ extern "C" {
 #pragma MESSAGE DISABLE C5908 /* Constant switch expression */
 #define %'ModuleName'%.WAIT_CYCLES(cycles) \
   switch(cycles) { \
-    case 10: asm("nop"); \
-    case  9: asm("nop"); \
-    case  8: asm("nop"); \
-    case  7: asm("nop"); \
-    case  6: asm("nop"); \
-    case  5: asm("nop"); \
-    case  4: asm("nop"); \
-    case  3: asm("nop"); \
-    case  2: asm("nop"); \
-    case  1: asm("nop"); break;\
+    case 10: __asm("nop"); \
+    case  9: __asm("nop"); \
+    case  8: __asm("nop"); \
+    case  7: __asm("nop"); \
+    case  6: __asm("nop"); \
+    case  5: __asm("nop"); \
+    case  4: __asm("nop"); \
+    case  3: __asm("nop"); \
+    case  2: __asm("nop"); \
+    case  1: __asm("nop"); break;\
     default: WAIT1_WAIT_C(cycles); break; \
   } /*!< wait for some cycles */
 %endif /* %if (CPU_FAMILY = "HCS08") | (CPU_FAMILY = "HC08") | (CPU_FAMILY = "RS08") | (CPU_FAMILY = "HCS12X") | (CPU_FAMILY = "HCS12") */
@@ -334,12 +338,12 @@ void %'ModuleName'%.%Wait10Cycles(void)
 {
   /* This function will wait 10 CPU cycles (including call overhead). */
 %if (CPU_FAMILY = "HCS08") | (CPU_FAMILY = "HC08")
-  asm {
+  __asm {
       ; BSR to here  ;  [5]
       ; RTS would be    [6]
   }
 %elif (CPU_FAMILY = "RS08")
-  asm {
+  __asm {
       ; jsr to here [4]
       nop          ;[1]
       nop          ;[1]
@@ -347,12 +351,12 @@ void %'ModuleName'%.%Wait10Cycles(void)
       ; rts         [3]
   }
 %elif (CPU_FAMILY = "HCS12X") | (CPU_FAMILY = "HCS12")
-  asm {
+  __asm {
       ; call to here   [7]
       ; RTC would be   [7]
   }
 %elif (CPU_FAMILY = "ColdFireV1") | (CPU_FAMILY = "MCF")
-  asm {
+  __asm {
                        %>%CTAB /* [3] JSR to here on the caller side */
     nop                %>%CTAB /* [1]  */
     nop                %>%CTAB /* [1]  */
@@ -362,7 +366,7 @@ void %'ModuleName'%.%Wait10Cycles(void)
   /* NOTE: Cortex-M0 and M4 have 1 cycle for a NOP */
   /* Compiler is %Compiler */
 %if %Compiler = "GNUC"
-  asm (
+  __asm (
    /* bl Wai10Cycles() to here: [4] */
    "nop   \n\t" /* [1] */
    "nop   \n\t" /* [1] */
@@ -371,10 +375,10 @@ void %'ModuleName'%.%Wait10Cycles(void)
   );
 %elif (%Compiler = "IARARM")
   /* bl Wai10Cycles() to here: [4] */
-  asm("nop");   /* [1] */
-  asm("nop");   /* [1] */
-  asm("nop");   /* [1] */
-  asm("bx lr"); /* [3] */
+  __asm("nop");   /* [1] */
+  __asm("nop");   /* [1] */
+  __asm("nop");   /* [1] */
+  __asm("bx lr"); /* [3] */
 %elif (%Compiler = "ARM_CC") %- Keil/ARM compiler
   __asm {
     nop                %>%CTAB /* [1] */
@@ -383,7 +387,7 @@ void %'ModuleName'%.%Wait10Cycles(void)
     /*bx lr*/          %>%CTAB /* [3] */
   }
 %else
-  asm {
+  __asm {
     nop                %>%CTAB /* [1] */
     nop                %>%CTAB /* [1] */
     nop                %>%CTAB /* [1] */
@@ -418,7 +422,7 @@ void %'ModuleName'%.%Wait100Cycles(void)
 {
   /* This function will spend 100 CPU cycles (including call overhead). */
 %if (CPU_FAMILY = "HCS08") | (CPU_FAMILY = "HC08")
-  asm {
+  __asm {
       ; BSR to here  ;  [5]
       PSHH            ; [2], reserve space on stack
       LDA #13         ; [2], n
@@ -430,7 +434,7 @@ void %'ModuleName'%.%Wait100Cycles(void)
       ; RTS would be    [6]
   }
 %elif (CPU_FAMILY = "RS08")
-  asm {
+  __asm {
       ; jsr to here [4]
       LDA #23      ;[2]
     Label:
@@ -439,7 +443,7 @@ void %'ModuleName'%.%Wait100Cycles(void)
       ; rts         [3]
   }
 %elif (CPU_FAMILY = "HCS12X") | (CPU_FAMILY = "HCS12")
-  asm {
+  __asm {
       ; call to here   [7]
       LDAB  #22      ; [1]
   Label:
@@ -447,7 +451,7 @@ void %'ModuleName'%.%Wait100Cycles(void)
       ; RTC would be   [7]
   }
 %elif (CPU_FAMILY = "ColdFireV1") | (CPU_FAMILY = "MCF")
-  asm {
+  __asm {
                        %>%CTAB /* [3] JSR to here on the caller side */
     move.l #31,d1      %>%CTAB /* [1] number of iterations */
   loop:
@@ -457,7 +461,7 @@ void %'ModuleName'%.%Wait100Cycles(void)
   }
 %elif (CPU_FAMILY = "Kinetis")
 %if %Compiler = "GNUC"
-  asm (
+  __asm (
    /* bl to here:               [4] */
    "movs r0, #0 \n\t"        /* [1] */
    "loop:       \n\t"
@@ -489,7 +493,7 @@ loop
     nop           /* [1] */
     bx lr         /* [3] */
 %else
-  asm {
+  __asm {
    /* bl Wai10Cycles() to here: [4] */
     movs r0, #0 /* [1] */
    loop:
@@ -507,7 +511,7 @@ loop
 %endif
 %elif (CPU_FAMILY = "56800")
   /* JSR to here is 4-5 cycles */
-  asm {
+  __asm {
     move.w #11, A  /* 2 cycles  */
     /* burn 100-5-2-8=85 cycles. Doing this with 11*8=88 cycles */
     do A, label    /* 8 cycles */

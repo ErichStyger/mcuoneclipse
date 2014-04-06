@@ -67,23 +67,23 @@ uint32_t DWT_CYCLES_ADDED = 0;
 
 void prvTraceEnableIRQ(void)
 {
-	asm volatile ("cpsie i");
+	__asm volatile ("cpsie i");
 }
 
 void prvTraceDisableIRQ(void)
 {
-	asm volatile ("cpsid i");
+	__asm volatile ("cpsid i");
 }
 
 void prvTraceSetIRQMask(uint32_t priMask)
 {
-	asm volatile ("MSR primask, %%0" : : "r" (priMask) );
+	__asm volatile ("MSR primask, %%0" : : "r" (priMask) );
 }
 
 uint32_t prvTraceGetIRQMask(void)
 {
 	uint32_t result;
-	asm volatile ("MRS %%0, primask" : "=r" (result) );
+	__asm volatile ("MRS %%0, primask" : "=r" (result) );
 	return result;
 }
 

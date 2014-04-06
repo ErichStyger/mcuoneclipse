@@ -140,6 +140,11 @@
 #define configSYSTICK_USE_LOW_POWER_TIMER                        %>50 0 /* If using Kinetis Low Power Timer (LPTMR) instead of SysTick timer */
 #define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ                   %>50 1 /* 1 kHz LPO timer. Set to 1 if not used */
 %endif
+#if configPEX_KINETIS_SDK
+/* The SDK variable SystemCoreClock contains the current clock speed */
+#define configCPU_CLOCK_HZ                                       %>50 SystemCoreClock /* CPU clock frequency */
+#define configBUS_CLOCK_HZ                                       %>50 SystemCoreClock /* Bus clock frequency */
+#else
 %if defined(configCPU_CLOCK_HZ)
 #define configCPU_CLOCK_HZ                                       %>50 %configCPU_CLOCK_HZ /* CPU clock frequency */
 %else
@@ -150,6 +155,7 @@
 %else
 #define configBUS_CLOCK_HZ                                       %>50 CPU_BUS_CLK_HZ /* CPU bus clock defined in %ProcessorModule.h */
 %endif
+#endif /* configPEX_KINETIS_SDK */
 %if defined(useARMSysTickUseCoreClock) & useARMSysTickUseCoreClock='no'
 #define configSYSTICK_USE_CORE_CLOCK                             %>50 0 /* System Tick is using external reference clock clock  */
 %else
