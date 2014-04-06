@@ -1351,7 +1351,11 @@ void vPortStartFirstTask(void) {
 /*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_ARM_KEIL)
 #if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 */
+#if configPEX_KINETIS_SDK /* the SDK expects different interrupt handler names */
+__asm void SVC_Handler(void) {
+#else
 __asm void vPortSVCHandler(void) {
+#endif
   EXTERN pxCurrentTCB
 
   /* Get the location of the current TCB. */
@@ -1376,7 +1380,11 @@ __asm void vPortSVCHandler(void) {
 }
 /*-----------------------------------------------------------*/
 #else /* Cortex M0+ */
+#if configPEX_KINETIS_SDK /* the SDK expects different interrupt handler names */
+__asm void SVC_Handler(void) {
+#else
 __asm void vPortSVCHandler(void) {
+#endif
   EXTERN pxCurrentTCB
 
   /* Get the location of the current TCB. */
@@ -1404,7 +1412,11 @@ __asm void vPortSVCHandler(void) {
 #endif
 /*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_ARM_GCC)
+#if configPEX_KINETIS_SDK /* the SDK expects different interrupt handler names */
+__attribute__ ((naked)) void SVC_Handler(void) {
+#else
 __attribute__ ((naked)) void vPortSVCHandler(void) {
+#endif
 #if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 */
 __asm volatile (
     " ldr r3, pxCurrentTCBConst2 \n" /* Restore the context. */
