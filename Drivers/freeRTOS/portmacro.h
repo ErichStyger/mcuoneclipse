@@ -671,9 +671,15 @@ void vPortYieldHandler(void);
 %if (CPUfamily = "Kinetis")
 
 /* Prototypes for interrupt service handlers */
-void vPortSVCHandler(void); /* SVC interrupt handler */
-void vPortPendSVHandler(void); /* PendSV interrupt handler */
-void vPortTickHandler(void); /* Systick interrupt handler */
+#if configPEX_KINETIS_SDK /* the SDK expects different interrupt handler names */
+  void SVC_Handler(void); /* SVC interrupt handler */
+  void PendSV_Handler(void); /* PendSV interrupt handler */
+  void SysTick_Handler(void); /* Systick interrupt handler */
+#else
+  void vPortSVCHandler(void); /* SVC interrupt handler */
+  void vPortPendSVHandler(void); /* PendSV interrupt handler */
+  void vPortTickHandler(void); /* Systick interrupt handler */
+#endif
 %endif
 
 #if configUSE_TICKLESS_IDLE_DECISION_HOOK /* << EST */

@@ -1137,7 +1137,11 @@ portLONG uxGetTickCounterValue(void) {
 /*-----------------------------------------------------------*/
 %endif
 #if (configCOMPILER==configCOMPILER_ARM_KEIL)
+#if configPEX_KINETIS_SDK /* the SDK expects different interrupt handler names */
+void SysTick_Handler(void) {
+#else
 void vPortTickHandler(void) {
+#endif
   /* this is how we get here:
     RTOSTICKLDD1_Interrupt:
     push {r4, lr}
@@ -1160,9 +1164,17 @@ void vPortTickHandler(void) {
 /*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_ARM_GCC)
 %if defined(useARMSysTickTimer) && useARMSysTickTimer='yes'
+#if configPEX_KINETIS_SDK /* the SDK expects different interrupt handler names */
+void SysTick_Handler(void) {
+#else
 void vPortTickHandler(void) {
+#endif
 %else
+#if configPEX_KINETIS_SDK /* the SDK expects different interrupt handler names */
+  __attribute__ ((naked)) void SysTick_Handler(void) {
+#else
 __attribute__ ((naked)) void vPortTickHandler(void) {
+#endif
 %endif
 %if defined(useARMSysTickTimer) && useARMSysTickTimer='no'
 #if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 */
@@ -1446,7 +1458,11 @@ __asm volatile (
 #endif
 #if (configCOMPILER==configCOMPILER_ARM_KEIL)
 #if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 */
+#if configPEX_KINETIS_SDK /* the SDK expects different interrupt handler names */
+__asm void PendSV_Handler(void) {
+#else
 __asm void vPortPendSVHandler(void) {
+#endif
   EXTERN pxCurrentTCB
 
   mrs r0, psp
@@ -1484,7 +1500,11 @@ __asm void vPortPendSVHandler(void) {
   nop
 }
 #else /* Cortex M0+ */
+#if configPEX_KINETIS_SDK /* the SDK expects different interrupt handler names */
+__asm void PendSV_Handler(void) {
+#else
 __asm void vPortPendSVHandler(void) {
+#endif
   EXTERN pxCurrentTCB
   EXTERN vTaskSwitchContext
 	
@@ -1529,7 +1549,11 @@ __asm void vPortPendSVHandler(void) {
 #endif
 /*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_ARM_GCC)
+#if configPEX_KINETIS_SDK /* the SDK expects different interrupt handler names */
+__attribute__ ((naked)) void PendSV_Handler(void) {
+#else
 __attribute__ ((naked)) void vPortPendSVHandler(void) {
+#endif
 #if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 */
   __asm volatile (
     " mrs r0, psp                \n"
