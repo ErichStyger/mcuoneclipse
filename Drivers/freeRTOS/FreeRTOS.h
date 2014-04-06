@@ -85,9 +85,9 @@
  *     in FreeRTOS/source/stdint.readme for more information.
  */
 #include "FreeRTOSConfig.h" /* << EST */
-#if configGENERATE_STATIC_SOURCES /* << EST */
+#if configGENERATE_STATIC_SOURCES || configPEX_KINETIS_SDK /* << EST */
   #include <stdint.h> /* READ COMMENT ABOVE. */
-#elif !configPEX_KINETIS_SDK
+#else
   #include "PE_Types.h"
 #endif
 
