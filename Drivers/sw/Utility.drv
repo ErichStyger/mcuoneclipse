@@ -54,10 +54,6 @@
 %-
 %-BW_SECTIONS_INSERT
 %if Language='ANSIC'
-%--------------------------
-%include KSDK.prg
-%--------------------------
-%-
 %-
 %INTERFACE
 %define! Settings Common\UtilitySettings.Inc
@@ -85,6 +81,9 @@
 %- Write your own includes here ...
 %-   Example:
 %-     #include "header_name.h"
+%if (%CPUDB_prph_has_feature(CPU,SDK_SUPPORT) = 'yes') %- TRUE/FALSE not defined for SDK projects
+#include "PE_KSDK_Types.h" /* if this file is missing: have you added the Kinetis SDK component? */
+%endif
 %-
 %-BW_CUSTOM_INCLUDE_END_H
 %-

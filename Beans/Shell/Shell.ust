@@ -8,9 +8,9 @@
     <Generate>yes</Generate>
     <Unique>yes</Unique>
     <GenerateHelp>yes</GenerateHelp>
-    <PreparedHint>typedef void (*%'ModuleName'%.StdIO_OutErr_FctType)(byte); /* Callback for an output or error I/O function */\n
+    <PreparedHint>typedef void (*%'ModuleName'%.StdIO_OutErr_FctType)(uint8_t); /* Callback for an output or error I/O function */\n
 </PreparedHint>
-    <Type>typedef void (*%'ModuleName'%.StdIO_OutErr_FctType)(byte);</Type>
+    <Type>typedef void (*%'ModuleName'%.StdIO_OutErr_FctType)(uint8_t);</Type>
     <HWTestType/>
   </Type>
   <Type>
@@ -20,9 +20,9 @@
     <Generate>yes</Generate>
     <Unique>yes</Unique>
     <GenerateHelp>yes</GenerateHelp>
-    <PreparedHint>typedef void (*%'ModuleName'%.StdIO_In_FctType)(byte *); /* Callback for an I/O input function. */\n
+    <PreparedHint>typedef void (*%'ModuleName'%.StdIO_In_FctType)(uint8_t *); /* Callback for an I/O input function. */\n
 </PreparedHint>
-    <Type>typedef void (*%'ModuleName'%.StdIO_In_FctType)(byte *);</Type>
+    <Type>typedef void (*%'ModuleName'%.StdIO_In_FctType)(uint8_t *);</Type>
     <HWTestType/>
   </Type>
   <Type>
@@ -90,50 +90,14 @@
   </Type>
   <Type>
     <UsrType>TUserType</UsrType>
-    <Name>FATFS</Name>
-    <Hint>Alias to FATFS type</Hint>
-    <Generate>no</Generate>
-    <Unique>yes</Unique>
-    <GenerateHelp>no</GenerateHelp>
-    <PreparedHint>typedef %'ModuleName'%.FS_FATFS %'ModuleName'%.FATFS; /* Alias to FATFS type */\n
-</PreparedHint>
-    <Type>typedef %'ModuleName'%.FS_FATFS %'ModuleName'%.FATFS;</Type>
-    <HWTestType/>
-  </Type>
-  <Type>
-    <UsrType>TUserType</UsrType>
-    <Name>DRESULT</Name>
-    <Hint>Alias to FATFS type</Hint>
-    <Generate>no</Generate>
-    <Unique>yes</Unique>
-    <GenerateHelp>no</GenerateHelp>
-    <PreparedHint>typedef %'ModuleName'%.FS_DRESULT %'ModuleName'%.DRESULT; /* Alias to FATFS type */\n
-</PreparedHint>
-    <Type>typedef %'ModuleName'%.FS_DRESULT %'ModuleName'%.DRESULT;</Type>
-    <HWTestType/>
-  </Type>
-  <Type>
-    <UsrType>TUserType</UsrType>
-    <Name>FRESULT</Name>
-    <Hint>Alias to FATFS type</Hint>
-    <Generate>no</Generate>
-    <Unique>yes</Unique>
-    <GenerateHelp>no</GenerateHelp>
-    <PreparedHint>typedef %'ModuleName'%.FS_FRESULT %'ModuleName'%.FRESULT; /* Alias to FATFS type */\n
-</PreparedHint>
-    <Type>typedef %'ModuleName'%.FS_FRESULT %'ModuleName'%.FRESULT;</Type>
-    <HWTestType/>
-  </Type>
-  <Type>
-    <UsrType>TUserType</UsrType>
     <Name>ParseCommandCallback</Name>
     <Hint>Callback for parsing a shell command</Hint>
     <Generate>yes</Generate>
     <Unique>yes</Unique>
     <GenerateHelp>yes</GenerateHelp>
-    <PreparedHint>typedef byte (*%'ModuleName'%.ParseCommandCallback)(const byte *cmd, bool *handled, const %'ModuleName'%.StdIOType *io); /* Callback for parsing a shell command */\n
+    <PreparedHint>typedef uint8_t (*%'ModuleName'%.ParseCommandCallback)(const uint8_t *cmd, bool *handled, const %'ModuleName'%.StdIOType *io); /* Callback for parsing a shell command */\n
 </PreparedHint>
-    <Type>typedef byte (*%'ModuleName'%.ParseCommandCallback)(const byte *cmd, bool *handled, const %'ModuleName'%.StdIOType *io);</Type>
+    <Type>typedef uint8_t (*%'ModuleName'%.ParseCommandCallback)(const uint8_t *cmd, bool *handled, const %'ModuleName'%.StdIOType *io);</Type>
     <HWTestType/>
   </Type>
   <Type>
@@ -158,6 +122,78 @@
     <PreparedHint>typedef const %'ModuleName'%.ParseCommandCallback %'ModuleName'%.ConstParseCommandCallback; /* Callback for parsing a shell command */\n
 </PreparedHint>
     <Type>typedef const %'ModuleName'%.ParseCommandCallback %'ModuleName'%.ConstParseCommandCallback;</Type>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>uint8_t</Name>
+    <Hint/>
+    <Generate>no</Generate>
+    <Unique>no</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>uint32_t</Name>
+    <Hint/>
+    <Generate>no</Generate>
+    <Unique>no</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>uint16_t</Name>
+    <Hint/>
+    <Generate>no</Generate>
+    <Unique>no</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>int8_t</Name>
+    <Hint/>
+    <Generate>no</Generate>
+    <Unique>no</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>int32_t</Name>
+    <Hint/>
+    <Generate>no</Generate>
+    <Unique>no</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>\n
+</PreparedHint>
+    <Type/>
+    <HWTestType/>
+  </Type>
+  <Type>
+    <UsrType>TUserType</UsrType>
+    <Name>int16_t</Name>
+    <Hint/>
+    <Generate>no</Generate>
+    <Unique>no</Unique>
+    <GenerateHelp>no</GenerateHelp>
+    <PreparedHint>\n
+</PreparedHint>
+    <Type/>
     <HWTestType/>
   </Type>
 </UserTypes>

@@ -4,7 +4,7 @@
     <Name>Shell</Name>
     <Description>Command Line Shell</Description>
     <Author>Erich Styger</Author>
-    <Version>01.029</Version>
+    <Version>01.047</Version>
     <Icon>Shell</Icon>
     <TypesFiles>PE,Shell\Shell</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -16,7 +16,7 @@
     <BW_AutoSaveDriver>yes</BW_AutoSaveDriver>
     <BW_DetailedHelp>yes</BW_DetailedHelp>
     <BW_NeedTps>no</BW_NeedTps>
-    <BW_NeedUst>11</BW_NeedUst>
+    <BW_NeedUst>14</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
     <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2014, all rights reserved.\nhttp      : http://www.mcuoneclipse.com\n\nThis an open source software implementing a command line shell with Processor Expert.\nThis is a free software and is opened for education,  research  and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
@@ -381,7 +381,7 @@
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>number to print</ParHint>
         </Parameter>
@@ -393,7 +393,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte val, %'ModuleName'_StdIO_OutErr_FctType io)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t val, %'ModuleName'_StdIO_OutErr_FctType io)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -421,7 +421,7 @@
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>8bit signed</ParType>
+          <ParType>int8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>number to print</ParHint>
         </Parameter>
@@ -433,7 +433,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(signed char val, %'ModuleName'_StdIO_OutErr_FctType io)</ANSIC>
+          <ANSIC>void #M#_#C#(int8_t val, %'ModuleName'_StdIO_OutErr_FctType io)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -461,7 +461,7 @@
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>16bit unsigned</ParType>
+          <ParType>uint16_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>number to print</ParHint>
         </Parameter>
@@ -473,7 +473,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(word val, %'ModuleName'_StdIO_OutErr_FctType io)</ANSIC>
+          <ANSIC>void #M#_#C#(uint16_t val, %'ModuleName'_StdIO_OutErr_FctType io)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -501,7 +501,7 @@
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>16bit signed</ParType>
+          <ParType>int16_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>number to print</ParHint>
         </Parameter>
@@ -541,7 +541,7 @@
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>32bit unsigned</ParType>
+          <ParType>uint32_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>number to print</ParHint>
         </Parameter>
@@ -553,7 +553,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(dword val, %'ModuleName'_StdIO_OutErr_FctType io)</ANSIC>
+          <ANSIC>void #M#_#C#(uint32_t val, %'ModuleName'_StdIO_OutErr_FctType io)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -581,7 +581,7 @@
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>32bit signed</ParType>
+          <ParType>int32_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>number to print</ParHint>
         </Parameter>
@@ -593,7 +593,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(long val, %'ModuleName'_StdIO_OutErr_FctType io)</ANSIC>
+          <ANSIC>void #M#_#C#(int32_t val, %'ModuleName'_StdIO_OutErr_FctType io)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -621,10 +621,10 @@
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>str</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to string (zero terminated) to be printed.</ParHint>
-          <ParUserDeclaration>const byte *str</ParUserDeclaration>
+          <ParUserDeclaration>const uint8_t *str</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>io</ParName>
@@ -634,7 +634,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(const byte *str, %'ModuleName'_StdIO_OutErr_FctType io)</ANSIC>
+          <ANSIC>void #M#_#C#(const uint8_t *str, %'ModuleName'_StdIO_OutErr_FctType io)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -665,11 +665,11 @@
           <ParType>8bit unsigned</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to data to be sent</ParHint>
-          <ParUserDeclaration>const byte *data</ParUserDeclaration>
+          <ParUserDeclaration>const uint8_t *data</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>dataSize</ParName>
-          <ParType>16bit unsigned</ParType>
+          <ParType>uint16_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Number of bytes to be sent.</ParHint>
         </Parameter>
@@ -681,7 +681,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(const byte *data, word dataSize, %'ModuleName'_StdIO_OutErr_FctType io)</ANSIC>
+          <ANSIC>void #M#_#C#(const uint8_t *data, uint16_t dataSize, %'ModuleName'_StdIO_OutErr_FctType io)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -704,7 +704,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>1</ParamCount>
         <Parameter>
@@ -715,7 +715,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(%'ModuleName'_ConstStdIOType *io)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(%'ModuleName'_ConstStdIOType *io)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -738,15 +738,15 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>cmd</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to command string</ParHint>
-          <ParUserDeclaration>const unsigned char *cmd</ParUserDeclaration>
+          <ParUserDeclaration>const uint8_t *cmd</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>handled</ParName>
@@ -762,7 +762,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char *cmd, bool *handled, %'ModuleName'_ConstStdIOType *io)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(const uint8_t *cmd, bool *handled, %'ModuleName'_ConstStdIOType *io)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -790,13 +790,13 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>buf</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to buffer where to read in the information</ParHint>
         </Parameter>
         <Parameter>
           <ParName>bufSize</ParName>
-          <ParType>16bit unsigned</ParType>
+          <ParType>uint16_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>size of buffer</ParHint>
           <ParUserDeclaration>size_t bufSize</ParUserDeclaration>
@@ -809,7 +809,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>bool #M#_#C#(byte *buf, size_t bufSize, %'ModuleName'_ConstStdIOType *io)</ANSIC>
+          <ANSIC>bool #M#_#C#(uint8_t *buf, size_t bufSize, %'ModuleName'_ConstStdIOType *io)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -837,10 +837,10 @@
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>cmd</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to command which was failing</ParHint>
-          <ParUserDeclaration>const unsigned char *cmd</ParUserDeclaration>
+          <ParUserDeclaration>const uint8_t *cmd</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>io</ParName>
@@ -850,7 +850,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(const unsigned char *cmd, %'ModuleName'_ConstStdIOType *io)</ANSIC>
+          <ANSIC>void #M#_#C#(const uint8_t *cmd, %'ModuleName'_ConstStdIOType *io)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -873,15 +873,15 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>4</ParamCount>
         <Parameter>
           <ParName>cmd</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to command string</ParHint>
-          <ParUserDeclaration>const unsigned char *cmd</ParUserDeclaration>
+          <ParUserDeclaration>const uint8_t *cmd</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>handled</ParName>
@@ -903,7 +903,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char *cmd, bool *handled, %'ModuleName'_ConstStdIOType *io, %'ModuleName'_ConstParseCommandCallback *parserTable)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(const uint8_t *cmd, bool *handled, %'ModuleName'_ConstStdIOType *io, %'ModuleName'_ConstParseCommandCallback *parserTable)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -926,7 +926,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>1</ParamCount>
         <Parameter>
@@ -937,7 +937,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(%'ModuleName'_ConstStdIOTypePtr stdio)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(%'ModuleName'_ConstStdIOTypePtr stdio)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1044,18 +1044,18 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>4</ParamCount>
         <Parameter>
           <ParName>cmdBuf</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to buffer provided by the caller where to store the command to read in. Characters will be appended, so make sure string buffer is initialized with a zero byte at the beginning.</ParHint>
         </Parameter>
         <Parameter>
           <ParName>cmdBufSize</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Size of buffer</ParHint>
           <ParUserDeclaration>size_t cmdBufSize</ParUserDeclaration>
@@ -1074,7 +1074,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(byte *cmdBuf, size_t cmdBufSize, %'ModuleName'_ConstStdIOType *io, %'ModuleName'_ConstParseCommandCallback *parseCallback)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(uint8_t *cmdBuf, size_t cmdBufSize, %'ModuleName'_ConstStdIOType *io, %'ModuleName'_ConstParseCommandCallback *parseCallback)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1097,15 +1097,15 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>cmd</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to command string</ParHint>
-          <ParUserDeclaration>const unsigned char *cmd</ParUserDeclaration>
+          <ParUserDeclaration>const uint8_t *cmd</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>io</ParName>
@@ -1121,7 +1121,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char *cmd, %'ModuleName'_ConstStdIOType *io, %'ModuleName'_ConstParseCommandCallback *parseCallback)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(const uint8_t *cmd, %'ModuleName'_ConstStdIOType *io, %'ModuleName'_ConstParseCommandCallback *parseCallback)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1180,24 +1180,24 @@
           <ParType>char</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to first string</ParHint>
-          <ParUserDeclaration>const byte *strA</ParUserDeclaration>
+          <ParUserDeclaration>const uint8_t *strA</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>strB</ParName>
           <ParType>char</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to second string</ParHint>
-          <ParUserDeclaration>const byte *strB</ParUserDeclaration>
+          <ParUserDeclaration>const uint8_t *strB</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>tabChar</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Character to be used as separator</ParHint>
         </Parameter>
         <Parameter>
           <ParName>tabPos</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Position of the tab character</ParHint>
         </Parameter>
@@ -1209,7 +1209,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(const byte *strA, const byte *strB, byte tabChar, byte tabPos, %'ModuleName'_StdIO_OutErr_FctType io)</ANSIC>
+          <ANSIC>void #M#_#C#(const uint8_t *strA, const uint8_t *strB, uint8_t tabChar, uint8_t tabPos, %'ModuleName'_StdIO_OutErr_FctType io)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1240,14 +1240,14 @@
           <ParType>char</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to string of the command</ParHint>
-          <ParUserDeclaration>const byte *strItem</ParUserDeclaration>
+          <ParUserDeclaration>const uint8_t *strItem</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>strStatus</ParName>
           <ParType>char</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to help text string</ParHint>
-          <ParUserDeclaration>const byte *strStatus</ParUserDeclaration>
+          <ParUserDeclaration>const uint8_t *strStatus</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>io</ParName>
@@ -1257,7 +1257,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(const byte *strItem, const byte *strStatus, %'ModuleName'_StdIO_OutErr_FctType io)</ANSIC>
+          <ANSIC>void #M#_#C#(const uint8_t *strItem, const uint8_t *strStatus, %'ModuleName'_StdIO_OutErr_FctType io)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1288,14 +1288,14 @@
           <ParType>char</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to string of the command</ParHint>
-          <ParUserDeclaration>const byte *strCmd</ParUserDeclaration>
+          <ParUserDeclaration>const uint8_t *strCmd</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>strHelp</ParName>
           <ParType>char</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to help text string</ParHint>
-          <ParUserDeclaration>const byte *strHelp</ParUserDeclaration>
+          <ParUserDeclaration>const uint8_t *strHelp</ParUserDeclaration>
         </Parameter>
         <Parameter>
           <ParName>io</ParName>
@@ -1305,7 +1305,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(const byte *strCmd, const byte *strHelp, %'ModuleName'_StdIO_OutErr_FctType io)</ANSIC>
+          <ANSIC>void #M#_#C#(const uint8_t *strCmd, const uint8_t *strHelp, %'ModuleName'_StdIO_OutErr_FctType io)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1333,13 +1333,13 @@
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>c</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to character to be used to store the result</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *c)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *c)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1367,13 +1367,13 @@
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>ch</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>character to be sent</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte ch)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t ch)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

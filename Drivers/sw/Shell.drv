@@ -84,7 +84,10 @@
 %- Write your own includes here ...
 %-   Example:
 %-     #include "header_name.h"
+%if (%CPUDB_prph_has_feature(CPU,SDK_SUPPORT) = 'yes') %- TRUE/FALSE not defined for SDK projects
+#include "PE_KSDK_Types.h" /* if this file is missing: have you added the Kinetis SDK component? */
 
+%endif
 #define %'ModuleName'_8_3_SIZE       sizeof("12345678.txt") /* length of a 8.3 file name (13 including the zero byte) */
 %-
 %-BW_CUSTOM_INCLUDE_END_H
@@ -99,11 +102,11 @@
 
 #ifndef __BWUserType_%'ModuleName'_StdIO_OutErr_FctType
 #define __BWUserType_%'ModuleName'_StdIO_OutErr_FctType
-  typedef void (*%'ModuleName'%.StdIO_OutErr_FctType)(byte);     %>40/* Callback for an output or error I/O function */
+  typedef void (*%'ModuleName'%.StdIO_OutErr_FctType)(uint8_t);  %>40/* Callback for an output or error I/O function */
 #endif
 #ifndef __BWUserType_%'ModuleName'_StdIO_In_FctType
 #define __BWUserType_%'ModuleName'_StdIO_In_FctType
-  typedef void (*%'ModuleName'%.StdIO_In_FctType)(byte *);       %>40/* Callback for an I/O input function. */
+  typedef void (*%'ModuleName'%.StdIO_In_FctType)(uint8_t *);    %>40/* Callback for an I/O input function. */
 #endif
 #ifndef __BWUserType_%'ModuleName'_StdIO_KeyPressed_FctType
 #define __BWUserType_%'ModuleName'_StdIO_KeyPressed_FctType
@@ -124,7 +127,7 @@
 #endif
 #ifndef __BWUserType_%'ModuleName'_ParseCommandCallback
 #define __BWUserType_%'ModuleName'_ParseCommandCallback
-  typedef byte (*%'ModuleName'%.ParseCommandCallback)(const byte *cmd, bool *handled, const %'ModuleName'%.StdIOType *io);%>40/* Callback for parsing a shell command */
+  typedef uint8_t (*%'ModuleName'%.ParseCommandCallback)(const uint8_t *cmd, bool *handled, const %'ModuleName'%.StdIOType *io);%>40/* Callback for parsing a shell command */
 #endif
 #ifndef __BWUserType_%'ModuleName'_ConstStdIOTypePtr
 #define __BWUserType_%'ModuleName'_ConstStdIOTypePtr
@@ -161,7 +164,7 @@
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SendStr
 %ifdef SendStr
-void %'ModuleName'%.%SendStr(const byte *str, %'ModuleName'_StdIO_OutErr_FctType io);
+void %'ModuleName'%.%SendStr(const uint8_t *str, %'ModuleName'_StdIO_OutErr_FctType io);
 %define! Parstr
 %define! Pario
 %include Common\ShellSendStr.Inc
@@ -171,7 +174,7 @@ void %'ModuleName'%.%SendStr(const byte *str, %'ModuleName'_StdIO_OutErr_FctType
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ParseCommand
 %ifdef ParseCommand
-byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, %'ModuleName'_ConstStdIOType *io);
+uint8_t %'ModuleName'%.%ParseCommand(const uint8_t *cmd, bool *handled, %'ModuleName'_ConstStdIOType *io);
 %define! Pario
 %define! Parcmd
 %define! Parhandled
@@ -183,7 +186,7 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, %'Mod
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SendNum32s
 %ifdef SendNum32s
-void %'ModuleName'%.%SendNum32s(long val, %'ModuleName'_StdIO_OutErr_FctType io);
+void %'ModuleName'%.%SendNum32s(int32_t val, %'ModuleName'_StdIO_OutErr_FctType io);
 %define! Parval
 %define! Pario
 %include Common\ShellSendNum32s.Inc
@@ -212,7 +215,7 @@ void %'ModuleName'%.%PrintPrompt(%'ModuleName'_ConstStdIOType *io);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ReadLine
 %ifdef ReadLine
-bool %'ModuleName'%.%ReadLine(byte *buf, size_t bufSize, %'ModuleName'_ConstStdIOType *io);
+bool %'ModuleName'%.%ReadLine(uint8_t *buf, size_t bufSize, %'ModuleName'_ConstStdIOType *io);
 %define! Parbuf
 %define! ParbufSize
 %define! Pario
@@ -224,7 +227,7 @@ bool %'ModuleName'%.%ReadLine(byte *buf, size_t bufSize, %'ModuleName'_ConstStdI
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN PrintStatus
 %ifdef PrintStatus
-byte %'ModuleName'%.%PrintStatus(%'ModuleName'_ConstStdIOType *io);
+uint8_t %'ModuleName'%.%PrintStatus(%'ModuleName'_ConstStdIOType *io);
 %define! Pario
 %define! RetVal
 %include Common\ShellPrintStatus.Inc
@@ -234,7 +237,7 @@ byte %'ModuleName'%.%PrintStatus(%'ModuleName'_ConstStdIOType *io);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN PrintCommandFailed
 %ifdef PrintCommandFailed
-void %'ModuleName'%.%PrintCommandFailed(const unsigned char *cmd, %'ModuleName'_ConstStdIOType *io);
+void %'ModuleName'%.%PrintCommandFailed(const uint8_t *cmd, %'ModuleName'_ConstStdIOType *io);
 %define! Pario
 %define! Parcmd
 %include Common\ShellPrintCommandFailed.Inc
@@ -244,7 +247,7 @@ void %'ModuleName'%.%PrintCommandFailed(const unsigned char *cmd, %'ModuleName'_
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ParseWithCommandTable
 %ifdef ParseWithCommandTable
-byte %'ModuleName'%.%ParseWithCommandTable(const unsigned char *cmd, %'ModuleName'_ConstStdIOType *io, %'ModuleName'_ConstParseCommandCallback *parseCallback);
+uint8_t %'ModuleName'%.%ParseWithCommandTable(const uint8_t *cmd, %'ModuleName'_ConstStdIOType *io, %'ModuleName'_ConstParseCommandCallback *parseCallback);
 %define! Parcmd
 %define! Pario
 %define! ParparseCallback
@@ -265,7 +268,7 @@ byte %'ModuleName'%.%ParseWithCommandTable(const unsigned char *cmd, %'ModuleNam
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SendNum32u
 %ifdef SendNum32u
-void %'ModuleName'%.%SendNum32u(dword val, %'ModuleName'_StdIO_OutErr_FctType io);
+void %'ModuleName'%.%SendNum32u(uint32_t val, %'ModuleName'_StdIO_OutErr_FctType io);
 %define! Parval
 %define! Pario
 %include Common\ShellSendNum32u.Inc
@@ -275,7 +278,7 @@ void %'ModuleName'%.%SendNum32u(dword val, %'ModuleName'_StdIO_OutErr_FctType io
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SendNum16u
 %ifdef SendNum16u
-void %'ModuleName'%.%SendNum16u(word val, %'ModuleName'_StdIO_OutErr_FctType io);
+void %'ModuleName'%.%SendNum16u(uint16_t val, %'ModuleName'_StdIO_OutErr_FctType io);
 %define! Parval
 %define! Pario
 %include Common\ShellSendNum16u.Inc
@@ -285,7 +288,7 @@ void %'ModuleName'%.%SendNum16u(word val, %'ModuleName'_StdIO_OutErr_FctType io)
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SendNum8u
 %ifdef SendNum8u
-void %'ModuleName'%.%SendNum8u(byte val, %'ModuleName'_StdIO_OutErr_FctType io);
+void %'ModuleName'%.%SendNum8u(uint8_t val, %'ModuleName'_StdIO_OutErr_FctType io);
 %define! Parval
 %define! Pario
 %include Common\ShellSendNum8u.Inc
@@ -295,7 +298,7 @@ void %'ModuleName'%.%SendNum8u(byte val, %'ModuleName'_StdIO_OutErr_FctType io);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SendNum8s
 %ifdef SendNum8s
-void %'ModuleName'%.%SendNum8s(signed char val, %'ModuleName'_StdIO_OutErr_FctType io);
+void %'ModuleName'%.%SendNum8s(int8_t val, %'ModuleName'_StdIO_OutErr_FctType io);
 %define! Parval
 %define! Pario
 %include Common\ShellSendNum8s.Inc
@@ -329,7 +332,7 @@ void %'ModuleName'%.%ReleaseSerial(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SendHelpStr
 %ifdef SendHelpStr
-void %'ModuleName'%.%SendHelpStr(const byte *strCmd, const byte *strHelp, %'ModuleName'_StdIO_OutErr_FctType io);
+void %'ModuleName'%.%SendHelpStr(const uint8_t *strCmd, const uint8_t *strHelp, %'ModuleName'_StdIO_OutErr_FctType io);
 %define! ParstrCmd
 %define! Pario
 %define! ParstrHelp
@@ -340,7 +343,7 @@ void %'ModuleName'%.%SendHelpStr(const byte *strCmd, const byte *strHelp, %'Modu
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SendStatusStr
 %ifdef SendStatusStr
-void %'ModuleName'%.%SendStatusStr(const byte *strItem, const byte *strStatus, %'ModuleName'_StdIO_OutErr_FctType io);
+void %'ModuleName'%.%SendStatusStr(const uint8_t *strItem, const uint8_t *strStatus, %'ModuleName'_StdIO_OutErr_FctType io);
 %define! ParstrItem
 %define! ParstrStatus
 %define! Pario
@@ -351,7 +354,7 @@ void %'ModuleName'%.%SendStatusStr(const byte *strItem, const byte *strStatus, %
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ReadChar
 %ifdef ReadChar
-void %'ModuleName'%.%ReadChar(byte *c);
+void %'ModuleName'%.%ReadChar(uint8_t *c);
 %define! Parc
 %include Common\ShellReadChar.Inc
 
@@ -360,7 +363,7 @@ void %'ModuleName'%.%ReadChar(byte *c);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SendChar
 %ifdef SendChar
-void %'ModuleName'%.%SendChar(byte ch);
+void %'ModuleName'%.%SendChar(uint8_t ch);
 %define! Parch
 %include Common\ShellSendChar.Inc
 
@@ -395,7 +398,7 @@ void* %'ModuleName'%.%GetSemaphore(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ReadAndParseWithCommandTable
 %ifdef ReadAndParseWithCommandTable
-byte %'ModuleName'%.%ReadAndParseWithCommandTable(byte *cmdBuf, size_t cmdBufSize, %'ModuleName'_ConstStdIOType *io, %'ModuleName'_ConstParseCommandCallback *parseCallback);
+uint8_t %'ModuleName'%.%ReadAndParseWithCommandTable(uint8_t *cmdBuf, size_t cmdBufSize, %'ModuleName'_ConstStdIOType *io, %'ModuleName'_ConstParseCommandCallback *parseCallback);
 %define! ParcmdBuf
 %define! ParcmdBufSize
 %define! Pario
@@ -408,7 +411,7 @@ byte %'ModuleName'%.%ReadAndParseWithCommandTable(byte *cmdBuf, size_t cmdBufSiz
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN IterateTable
 %ifdef IterateTable
-byte %'ModuleName'%.%IterateTable(const unsigned char *cmd, bool *handled, %'ModuleName'_ConstStdIOType *io, %'ModuleName'_ConstParseCommandCallback *parserTable);
+uint8_t %'ModuleName'%.%IterateTable(const uint8_t *cmd, bool *handled, %'ModuleName'_ConstStdIOType *io, %'ModuleName'_ConstParseCommandCallback *parserTable);
 %define! Parcmd
 %define! Pario
 %define! Parhandled
@@ -421,7 +424,7 @@ byte %'ModuleName'%.%IterateTable(const unsigned char *cmd, bool *handled, %'Mod
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SetStdio
 %ifdef SetStdio
-byte %'ModuleName'%.%SetStdio(%'ModuleName'_ConstStdIOTypePtr stdio);
+uint8_t %'ModuleName'%.%SetStdio(%'ModuleName'_ConstStdIOTypePtr stdio);
 %define! Parstdio
 %define! RetVal
 %include Common\ShellSetStdio.Inc
@@ -431,7 +434,7 @@ byte %'ModuleName'%.%SetStdio(%'ModuleName'_ConstStdIOTypePtr stdio);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SendData
 %ifdef SendData
-void %'ModuleName'%.%SendData(const byte *data, word dataSize, %'ModuleName'_StdIO_OutErr_FctType io);
+void %'ModuleName'%.%SendData(const uint8_t *data, uint16_t dataSize, %'ModuleName'_StdIO_OutErr_FctType io);
 %define! Pardata
 %define! PardataSize
 %define! Pario
@@ -508,7 +511,7 @@ static %'ModuleName'_ConstStdIOType *%'ModuleName'%.currStdIO = NULL; /* needs t
 %-UNLOCKED
 /* Internal method prototypes */
 %-INTERNAL_LOC_METHOD_BEG SendSeparatedStrings
-static void SendSeparatedStrings(const byte *strA, const byte *strB, byte tabChar, byte tabPos, %'ModuleName'_StdIO_OutErr_FctType io);
+static void SendSeparatedStrings(const uint8_t *strA, const uint8_t *strB, uint8_t tabChar, uint8_t tabPos, %'ModuleName'_StdIO_OutErr_FctType io);
 %-INTERNAL_LOC_METHOD_END SendSeparatedStrings
 %-
 
@@ -525,7 +528,7 @@ static void SendSeparatedStrings(const byte *strA, const byte *strB, byte tabCha
  * \param[in] str String (zero terminated) to be printed
  * \param[in] io I/O function to be used for printing
  */
-void %'ModuleName'%.%SendStr(const byte *str, %'ModuleName'_StdIO_OutErr_FctType io)
+void %'ModuleName'%.%SendStr(const uint8_t *str, %'ModuleName'_StdIO_OutErr_FctType io)
 {
   while(*str!='\0') {
     io(*str++);
@@ -540,7 +543,7 @@ void %'ModuleName'%.%SendStr(const byte *str, %'ModuleName'_StdIO_OutErr_FctType
 %define! Parval
 %define! Pario
 %include Common\ShellSendNum32s.Inc
-void %'ModuleName'%.%SendNum32s(long val, %'ModuleName'_StdIO_OutErr_FctType io)
+void %'ModuleName'%.%SendNum32s(int32_t val, %'ModuleName'_StdIO_OutErr_FctType io)
 {
   unsigned char buf[sizeof("-1234567890")];
 
@@ -556,7 +559,7 @@ void %'ModuleName'%.%SendNum32s(long val, %'ModuleName'_StdIO_OutErr_FctType io)
 %define! Parval
 %define! Pario
 %include Common\ShellSendNum32u.Inc
-void %'ModuleName'%.%SendNum32u(dword val, %'ModuleName'_StdIO_OutErr_FctType io)
+void %'ModuleName'%.%SendNum32u(uint32_t val, %'ModuleName'_StdIO_OutErr_FctType io)
 {
   unsigned char buf[sizeof("1234567890")];
 
@@ -588,7 +591,7 @@ void %'ModuleName'%.%SendNum16s(int16_t val, %'ModuleName'_StdIO_OutErr_FctType 
 %define! Parval
 %define! Pario
 %include Common\ShellSendNum16u.Inc
-void %'ModuleName'%.%SendNum16u(word val, %'ModuleName'_StdIO_OutErr_FctType io)
+void %'ModuleName'%.%SendNum16u(uint16_t val, %'ModuleName'_StdIO_OutErr_FctType io)
 {
   unsigned char buf[sizeof("12345")];
 
@@ -604,7 +607,7 @@ void %'ModuleName'%.%SendNum16u(word val, %'ModuleName'_StdIO_OutErr_FctType io)
 %define! Parval
 %define! Pario
 %include Common\ShellSendNum8u.Inc
-void %'ModuleName'%.%SendNum8u(byte val, %'ModuleName'_StdIO_OutErr_FctType io)
+void %'ModuleName'%.%SendNum8u(uint8_t val, %'ModuleName'_StdIO_OutErr_FctType io)
 {
   unsigned char buf[sizeof("123")];
 
@@ -620,7 +623,7 @@ void %'ModuleName'%.%SendNum8u(byte val, %'ModuleName'_StdIO_OutErr_FctType io)
 %define! Parval
 %define! Pario
 %include Common\ShellSendNum8s.Inc
-void %'ModuleName'%.%SendNum8s(signed char val, %'ModuleName'_StdIO_OutErr_FctType io)
+void %'ModuleName'%.%SendNum8s(int8_t val, %'ModuleName'_StdIO_OutErr_FctType io)
 {
   unsigned char buf[sizeof("-123")];
 
@@ -638,7 +641,7 @@ void %'ModuleName'%.%SendNum8s(signed char val, %'ModuleName'_StdIO_OutErr_FctTy
 %define! Parhandled
 %define! RetVal
 %include Common\ShellParseCommand.Inc
-byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, %'ModuleName'_ConstStdIOType *io)
+uint8_t %'ModuleName'%.%ParseCommand(const uint8_t *cmd, bool *handled, %'ModuleName'_ConstStdIOType *io)
 {
   if (%@Utility@'ModuleName'%.strcmp((char*)cmd, %'ModuleName'%.CMD_HELP)==0 || %@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' help")==0) {
     %'ModuleName'%.%SendStr((unsigned char*)"\r\n", io->stdOut);
@@ -687,9 +690,9 @@ void %'ModuleName'%.%PrintPrompt(%'ModuleName'_ConstStdIOType *io)
 %define! Pario
 %define! RetVal
 %include Common\ShellReadLine.Inc
-bool %'ModuleName'%.%ReadLine(byte *buf, size_t bufSize, %'ModuleName'_ConstStdIOType *io)
+bool %'ModuleName'%.%ReadLine(uint8_t *buf, size_t bufSize, %'ModuleName'_ConstStdIOType *io)
 {
-  byte c;
+  uint8_t c;
 
   if (io->keyPressed()) {
     for(;;) {                                                    %>40/* while not '\r' or '\n' */
@@ -701,7 +704,7 @@ bool %'ModuleName'%.%ReadLine(byte *buf, size_t bufSize, %'ModuleName'_ConstStdI
 %if %EchoEnabled='yes'
       io->stdOut(c);                                             %>40/* echo character */
 %endif
-      *buf = (byte)c;                                            %>40/* append character to the string */
+      *buf = (uint8_t)c;                                         %>40/* append character to the string */
       buf++;
       bufSize--;
       if ((c=='\r') || (c=='\n')) {
@@ -726,7 +729,7 @@ bool %'ModuleName'%.%ReadLine(byte *buf, size_t bufSize, %'ModuleName'_ConstStdI
 %define! Pario
 %define! RetVal
 %include Common\ShellPrintStatus.Inc
-byte %'ModuleName'%.%PrintStatus(%'ModuleName'_ConstStdIOType *io)
+uint8_t %'ModuleName'%.%PrintStatus(%'ModuleName'_ConstStdIOType *io)
 {
   %'ModuleName'%.%SendStr((unsigned char*)"\r\n", io->stdOut);
   %'ModuleName'%.%SendStr((unsigned char*)%'ModuleName'%.DASH_LINE, io->stdOut);
@@ -748,7 +751,7 @@ byte %'ModuleName'%.%PrintStatus(%'ModuleName'_ConstStdIOType *io)
 %define! Pario
 %define! Parcmd
 %include Common\ShellPrintCommandFailed.Inc
-void %'ModuleName'%.%PrintCommandFailed(const unsigned char *cmd, %'ModuleName'_ConstStdIOType *io)
+void %'ModuleName'%.%PrintCommandFailed(const uint8_t *cmd, %'ModuleName'_ConstStdIOType *io)
 {
   %'ModuleName'%.%SendStr((unsigned char*)"*** Failed or unknown command: ", io->stdErr);
   %'ModuleName'%.%SendStr(cmd, io->stdErr);
@@ -769,9 +772,9 @@ void %'ModuleName'%.%PrintCommandFailed(const unsigned char *cmd, %'ModuleName'_
 %define! ParparserTable
 %define! RetVal
 %include Common\ShellIterateTable.Inc
-byte %'ModuleName'%.%IterateTable(const unsigned char *cmd, bool *handled, %'ModuleName'_ConstStdIOType *io, %'ModuleName'_ConstParseCommandCallback *parserTable)
+uint8_t %'ModuleName'%.%IterateTable(const uint8_t *cmd, bool *handled, %'ModuleName'_ConstStdIOType *io, %'ModuleName'_ConstParseCommandCallback *parserTable)
 {
-  byte res = ERR_OK;
+  uint8_t res = ERR_OK;
 
   if (parserTable==NULL) { /* no table??? */
     return ERR_FAILED;
@@ -796,15 +799,15 @@ byte %'ModuleName'%.%IterateTable(const unsigned char *cmd, bool *handled, %'Mod
 %define! ParparseCallback
 %define! RetVal
 %include Common\ShellParseWithCommandTable.Inc
-byte %'ModuleName'%.%ParseWithCommandTable(const unsigned char *cmd, %'ModuleName'_ConstStdIOType *io, %'ModuleName'_ConstParseCommandCallback *parseCallback)
+uint8_t %'ModuleName'%.%ParseWithCommandTable(const uint8_t *cmd, %'ModuleName'_ConstStdIOType *io, %'ModuleName'_ConstParseCommandCallback *parseCallback)
 {
-  byte res = ERR_OK;
+  uint8_t res = ERR_OK;
   bool handled;
 %if %SilentModePrefixChar<>''
   bool silent;
 %endif
 %if %MultiCommandEnabled='yes'
-  byte buf[%MaxSubCommandStringSize];
+  uint8_t buf[%MaxSubCommandStringSize];
   uint8_t i;
   bool parseBuffer, finished;
 %endif
@@ -877,7 +880,7 @@ byte %'ModuleName'%.%ParseWithCommandTable(const unsigned char *cmd, %'ModuleNam
 %define! Parstdio
 %define! RetVal
 %include Common\ShellSetStdio.Inc
-byte %'ModuleName'%.%SetStdio(%'ModuleName'_ConstStdIOTypePtr stdio)
+uint8_t %'ModuleName'%.%SetStdio(%'ModuleName'_ConstStdIOTypePtr stdio)
 {
   %'ModuleName'%.currStdIO = stdio;
   return ERR_OK;
@@ -906,9 +909,9 @@ byte %'ModuleName'%.%SetStdio(%'ModuleName'_ConstStdIOTypePtr stdio)
 %define! ParparseCallback
 %define! RetVal
 %include Common\ShellReadAndParseWithCommandTable.Inc
-byte %'ModuleName'%.%ReadAndParseWithCommandTable(byte *cmdBuf, size_t cmdBufSize, %'ModuleName'_ConstStdIOType *io, %'ModuleName'_ConstParseCommandCallback *parseCallback)
+uint8_t %'ModuleName'%.%ReadAndParseWithCommandTable(uint8_t *cmdBuf, size_t cmdBufSize, %'ModuleName'_ConstStdIOType *io, %'ModuleName'_ConstParseCommandCallback *parseCallback)
 {
-  byte res = ERR_OK;
+  uint8_t res = ERR_OK;
   size_t len;
 
   /* IMPORTANT NOTE: this function *appends* to the buffer, so the buffer needs to be initialized first! */
@@ -987,7 +990,7 @@ void* %'ModuleName'%.%GetSemaphore(void)
 %define! PartabPos
 %define! Pario
 %include Common\GeneralInternalGlobal.inc (SendSeparatedStrings)
-static void SendSeparatedStrings(const byte *strA, const byte *strB, byte tabChar, byte tabPos, %'ModuleName'_StdIO_OutErr_FctType io)
+static void SendSeparatedStrings(const uint8_t *strA, const uint8_t *strB, uint8_t tabChar, uint8_t tabPos, %'ModuleName'_StdIO_OutErr_FctType io)
 {
   /* write command part */
   while(*strA!='\0' && tabPos>0) {
@@ -1014,7 +1017,7 @@ static void SendSeparatedStrings(const byte *strA, const byte *strB, byte tabCha
 %define! Pario
 %define! ParstrHelp
 %include Common\ShellSendHelpStr.Inc
-void %'ModuleName'%.%SendHelpStr(const byte *strCmd, const byte *strHelp, %'ModuleName'_StdIO_OutErr_FctType io)
+void %'ModuleName'%.%SendHelpStr(const uint8_t *strCmd, const uint8_t *strHelp, %'ModuleName'_StdIO_OutErr_FctType io)
 {
   #define HELP_SEMICOLON_POS  %HelpSemicolonPos /* position of the ';' after the command string */
   SendSeparatedStrings(strCmd, strHelp, ';', HELP_SEMICOLON_POS, io);
@@ -1029,7 +1032,7 @@ void %'ModuleName'%.%SendHelpStr(const byte *strCmd, const byte *strHelp, %'Modu
 %define! ParstrStatus
 %define! Pario
 %include Common\ShellSendStatusStr.Inc
-void %'ModuleName'%.%SendStatusStr(const byte *strItem, const byte *strStatus, %'ModuleName'_StdIO_OutErr_FctType io)
+void %'ModuleName'%.%SendStatusStr(const uint8_t *strItem, const uint8_t *strStatus, %'ModuleName'_StdIO_OutErr_FctType io)
 {
   #define STATUS_COLON_POS  %StatusColonPos /* position of the ':' after the item string */
   SendSeparatedStrings(strItem, strStatus, ':', STATUS_COLON_POS, io);
@@ -1042,7 +1045,7 @@ void %'ModuleName'%.%SendStatusStr(const byte *strItem, const byte *strStatus, %
 %ifdef ReadChar
 %define! Parc
 %include Common\ShellReadChar.Inc
-void %'ModuleName'%.%ReadChar(byte *c)
+void %'ModuleName'%.%ReadChar(uint8_t *c)
 {
 %if defined(Serial)
   uint8_t res;
@@ -1076,7 +1079,7 @@ void %'ModuleName'%.%ReadChar(byte *c)
 %ifdef SendChar
 %define! Parch
 %include Common\ShellSendChar.Inc
-void %'ModuleName'%.%SendChar(byte ch)
+void %'ModuleName'%.%SendChar(uint8_t ch)
 {
 %if defined(Serial)
   %if BlockingSend='yes'
@@ -1199,7 +1202,7 @@ void %'ModuleName'%.%Deinit(void)
  * \param[in] data Pointer to data to be sent
  * \param[in] io I/O function to be used for sending
  */
-void %'ModuleName'%.%SendData(const byte *data, word dataSize, %'ModuleName'_StdIO_OutErr_FctType io)
+void %'ModuleName'%.%SendData(const uint8_t *data, uint16_t dataSize, %'ModuleName'_StdIO_OutErr_FctType io)
 {
   while(dataSize>0) {
     io(*data++);

@@ -217,9 +217,9 @@ LI.EXP {
  - Sends an 8bit unsigned number to the given I/O
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void SendNum8u(byte val, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
+<br /><i>ANSIC prototype:</i> void SendNum8u(uint8_t val, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>val:byte</i> - number to print</li>
+<li><i>val:uint8_t</i> - number to print</li>
 <li><i>io:<i>ComponentName_</i>StdIO_OutErr_FctType</i> - I/O callbacks to be used for printing.</li>
 </ul><br />
 </li>
@@ -228,9 +228,9 @@ LI.EXP {
  - Sends an 8bit signed number to the given I/O
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void SendNum8s(signed char val, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
+<br /><i>ANSIC prototype:</i> void SendNum8s(int8_t val, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>val:signed char</i> - number to print</li>
+<li><i>val:int8_t</i> - number to print</li>
 <li><i>io:<i>ComponentName_</i>StdIO_OutErr_FctType</i> - I/O callbacks to be used for printing.</li>
 </ul><br />
 </li>
@@ -239,9 +239,9 @@ LI.EXP {
  - Sends a 16bit unsigned number to the given I/O
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void SendNum16u(word val, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
+<br /><i>ANSIC prototype:</i> void SendNum16u(uint16_t val, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>val:word</i> - number to print</li>
+<li><i>val:uint16_t</i> - number to print</li>
 <li><i>io:<i>ComponentName_</i>StdIO_OutErr_FctType</i> - I/O callbacks to be used for printing.</li>
 </ul><br />
 </li>
@@ -261,9 +261,9 @@ LI.EXP {
  - Sends a 32bit unsigned number to the given I/O
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void SendNum32u(dword val, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
+<br /><i>ANSIC prototype:</i> void SendNum32u(uint32_t val, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>val:dword</i> - number to print</li>
+<li><i>val:uint32_t</i> - number to print</li>
 <li><i>io:<i>ComponentName_</i>StdIO_OutErr_FctType</i> - I/O callbacks to be used for printing.</li>
 </ul><br />
 </li>
@@ -272,9 +272,9 @@ LI.EXP {
  - Sends a 32bit signed number to the given I/O
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void SendNum32s(long val, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
+<br /><i>ANSIC prototype:</i> void SendNum32s(int32_t val, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>val:long</i> - number to print</li>
+<li><i>val:int32_t</i> - number to print</li>
 <li><i>io:<i>ComponentName_</i>StdIO_OutErr_FctType</i> - I/O callbacks to be used for printing.</li>
 </ul><br />
 </li>
@@ -283,9 +283,9 @@ LI.EXP {
  - Prints a string using an I/O function
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void SendStr(const byte *str, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
+<br /><i>ANSIC prototype:</i> void SendStr(const uint8_t *str, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>str: Pointer to byte</i> - Pointer to string (zero terminated) to be printed.</li>
+<li><i>str: Pointer to uint8_t</i> - Pointer to string (zero terminated) to be printed.</li>
 <li><i>io:<i>ComponentName_</i>StdIO_OutErr_FctType</i> - I/O callbacks to be used for printing.</li>
 </ul><br />
 </li>
@@ -294,10 +294,10 @@ LI.EXP {
  - Sends data using an I/O function. Unlike SendStr(), with this method it is possible to send binary data, including zero bytes.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void SendData(const byte *data, word dataSize, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
+<br /><i>ANSIC prototype:</i> void SendData(const uint8_t *data, uint16_t dataSize, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>data: Pointer to byte</i> - Pointer to data to be sent</li>
-<li><i>dataSize:word</i> - Number of bytes to be sent.</li>
+<li><i>dataSize:uint16_t</i> - Number of bytes to be sent.</li>
 <li><i>io:<i>ComponentName_</i>StdIO_OutErr_FctType</i> - I/O callbacks to be used for printing.</li>
 </ul><br />
 </li>
@@ -306,10 +306,10 @@ LI.EXP {
  - Prints various available system status information
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte PrintStatus(<i>ComponentName_</i>ConstStdIOType *io)<br />
+<br /><i>ANSIC prototype:</i> uint8_t PrintStatus(<i>ComponentName_</i>ConstStdIOType *io)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callbacks</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -318,12 +318,12 @@ LI.EXP {
  - Parses a shell command. Use 'help' to get a list of supported commands.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte ParseCommand(const unsigned char *cmd, bool *handled, <i>ComponentName_</i>ConstStdIOType *io)<br />
+<br /><i>ANSIC prototype:</i> uint8_t ParseCommand(const uint8_t *cmd, bool *handled, <i>ComponentName_</i>ConstStdIOType *io)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>cmd: Pointer to byte</i> - Pointer to command string</li>
+<li><i>cmd: Pointer to uint8_t</i> - Pointer to command string</li>
 <li><i>handled: Pointer to bool</i> - Pointer to variable to indicate if the command has been handled. The caller passes this variable to the command scanner to find out if the passed command has been handled. The variable is initialized by the caller.</li>
 <li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callbacks</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -332,10 +332,10 @@ LI.EXP {
  - Reads a line from stdIn and returns TRUE if we have a line, FALSE otherwise.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> bool ReadLine(byte *buf, size_t bufSize, <i>ComponentName_</i>ConstStdIOType *io)<br />
+<br /><i>ANSIC prototype:</i> bool ReadLine(uint8_t *buf, size_t bufSize, <i>ComponentName_</i>ConstStdIOType *io)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>buf: Pointer to byte</i> - Pointer to buffer where to read in the information</li>
-<li><i>bufSize:word</i> - size of buffer</li>
+<li><i>buf: Pointer to uint8_t</i> - Pointer to buffer where to read in the information</li>
+<li><i>bufSize:uint16_t</i> - size of buffer</li>
 <li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callbacks</li>
 <li><i>Return value:bool</i> - Error code
 </li>
@@ -346,9 +346,9 @@ LI.EXP {
  - Prints a standard message for failed or unknown commands
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void PrintCommandFailed(const unsigned char *cmd, <i>ComponentName_</i>ConstStdIOType *io)<br />
+<br /><i>ANSIC prototype:</i> void PrintCommandFailed(const uint8_t *cmd, <i>ComponentName_</i>ConstStdIOType *io)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>cmd: Pointer to byte</i> - Pointer to command which was failing</li>
+<li><i>cmd: Pointer to uint8_t</i> - Pointer to command which was failing</li>
 <li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callbacks</li>
 </ul><br />
 </li>
@@ -357,13 +357,13 @@ LI.EXP {
  - Parses a shell command. It handles first the internal commands and will call the provided callback.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte IterateTable(const unsigned char *cmd, bool *handled, <i>ComponentName_</i>ConstStdIOType *io, <i>ComponentName_</i>ConstParseCommandCallback *parserTable)<br />
+<br /><i>ANSIC prototype:</i> uint8_t IterateTable(const uint8_t *cmd, bool *handled, <i>ComponentName_</i>ConstStdIOType *io, <i>ComponentName_</i>ConstParseCommandCallback *parserTable)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>cmd: Pointer to byte</i> - Pointer to command string</li>
+<li><i>cmd: Pointer to uint8_t</i> - Pointer to command string</li>
 <li><i>handled: Pointer to bool</i> - Pointer to boolean which is set to TRUE if a command parser has handled the command.</li>
 <li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callbacks</li>
 <li><i>parserTable: Pointer to <i>ComponentName_</i>ConstParseCommandCallback</i> - Pointer to callback which will be called to parse commands in the user application, or NULL if not used.</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -372,10 +372,10 @@ LI.EXP {
  - Sets an StdIO structure which is returned by GetStdio()
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte SetStdio(<i>ComponentName_</i>ConstStdIOTypePtr stdio)<br />
+<br /><i>ANSIC prototype:</i> uint8_t SetStdio(<i>ComponentName_</i>ConstStdIOTypePtr stdio)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>stdio:<i>ComponentName_</i>ConstStdIOTypePtr</i> - New stdio structure to be used.</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -413,13 +413,13 @@ LI.EXP {
  - Reads characters from the default input channel and appends it to the buffer. Once a new line has been detected, the line will be parsed using the handlers in the table.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte ReadAndParseWithCommandTable(byte *cmdBuf, size_t cmdBufSize, <i>ComponentName_</i>ConstStdIOType *io, <i>ComponentName_</i>ConstParseCommandCallback *parseCallback)<br />
+<br /><i>ANSIC prototype:</i> uint8_t ReadAndParseWithCommandTable(uint8_t *cmdBuf, size_t cmdBufSize, <i>ComponentName_</i>ConstStdIOType *io, <i>ComponentName_</i>ConstParseCommandCallback *parseCallback)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>cmdBuf: Pointer to byte</i> - Pointer to buffer provided by the caller where to store the command to read in. Characters will be appended, so make sure string buffer is initialized with a zero byte at the beginning.</li>
-<li><i>cmdBufSize:byte</i> - Size of buffer</li>
+<li><i>cmdBuf: Pointer to uint8_t</i> - Pointer to buffer provided by the caller where to store the command to read in. Characters will be appended, so make sure string buffer is initialized with a zero byte at the beginning.</li>
+<li><i>cmdBufSize:uint8_t</i> - Size of buffer</li>
 <li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O channels to be used</li>
 <li><i>parseCallback: Pointer to <i>ComponentName_</i>ConstParseCommandCallback</i> - Pointer to callback table provided by the user application to parse commands. The table has a NULL sentinel.</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -428,12 +428,12 @@ LI.EXP {
  - Parses a shell command. It handles first the internal commands and will call the provided callback.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte ParseWithCommandTable(const unsigned char *cmd, <i>ComponentName_</i>ConstStdIOType *io, <i>ComponentName_</i>ConstParseCommandCallback *parseCallback)<br />
+<br /><i>ANSIC prototype:</i> uint8_t ParseWithCommandTable(const uint8_t *cmd, <i>ComponentName_</i>ConstStdIOType *io, <i>ComponentName_</i>ConstParseCommandCallback *parseCallback)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>cmd: Pointer to byte</i> - Pointer to command string</li>
+<li><i>cmd: Pointer to uint8_t</i> - Pointer to command string</li>
 <li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callbacks</li>
 <li><i>parseCallback: Pointer to <i>ComponentName_</i>ConstParseCommandCallback</i> - Pointer to callback which will be called to parse commands in the user application, or NULL if not used.</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -453,7 +453,7 @@ LI.EXP {
  - Prints a status string using an I/O function, formated for the 'status' command
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void SendStatusStr(const byte *strItem, const byte *strStatus, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
+<br /><i>ANSIC prototype:</i> void SendStatusStr(const uint8_t *strItem, const uint8_t *strStatus, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>strItem: Pointer to char</i> - Pointer to string of the command</li>
 <li><i>strStatus: Pointer to char</i> - Pointer to help text string</li>
@@ -465,7 +465,7 @@ LI.EXP {
  - Prints a string using an I/O function, formated for the 'help' command
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void SendHelpStr(const byte *strCmd, const byte *strHelp, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
+<br /><i>ANSIC prototype:</i> void SendHelpStr(const uint8_t *strCmd, const uint8_t *strHelp, <i>ComponentName_</i>StdIO_OutErr_FctType io)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>strCmd: Pointer to char</i> - Pointer to string of the command</li>
 <li><i>strHelp: Pointer to char</i> - Pointer to help text string</li>
@@ -477,9 +477,9 @@ LI.EXP {
  - Reads a character (blocking)
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void ReadChar(byte *c)<br />
+<br /><i>ANSIC prototype:</i> void ReadChar(uint8_t *c)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>c: Pointer to byte</i> - Pointer to character to be used to store the result</li>
+<li><i>c: Pointer to uint8_t</i> - Pointer to character to be used to store the result</li>
 </ul><br />
 </li>
 <li><a name="SendChar">
@@ -487,9 +487,9 @@ LI.EXP {
  - Sends a character (blocking)
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void SendChar(byte ch)<br />
+<br /><i>ANSIC prototype:</i> void SendChar(uint8_t ch)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>ch:byte</i> - character to be sent</li>
+<li><i>ch:uint8_t</i> - character to be sent</li>
 </ul><br />
 </li>
 <li><a name="KeyPressed">
