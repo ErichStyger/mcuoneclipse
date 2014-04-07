@@ -363,8 +363,15 @@
  * If this is zero (1), events will be generated whenever the os clock is
  * increased.
  *****************************************************************************/
+#if 1 /* << EST */
+%if defined(IncludeNewTimeEvents) & %IncludeNewTimeEvents='yes'
+#define INCLUDE_NEW_TIME_EVENTS 1
+%else
 #define INCLUDE_NEW_TIME_EVENTS 0
-
+%endif
+#else
+#define INCLUDE_NEW_TIME_EVENTS 0
+#endif
 /*****************************************************************************
  * INCLUDE_ISR_TRACING
  *
@@ -417,7 +424,15 @@
  * This controls if malloc and free calls should be traced. Set this to zero to
  * exclude malloc/free calls from the tracing.
  *****************************************************************************/
+#if 1 /* << EST */
+%if defined(IncludeMemManageEvents) & %IncludeMemManageEvents='yes'
 #define INCLUDE_MEMMANG_EVENTS 1
+%else
+#define INCLUDE_MEMMANG_EVENTS 0
+%endif
+#else
+#define INCLUDE_MEMMANG_EVENTS 1
+#endif
 
 /******************************************************************************
  * CONFIGURATION RELATED TO BEHAVIOR

@@ -4,7 +4,7 @@
     <Name>PercepioTrace</Name>
     <Description>Percepio FreeRTOS Trace</Description>
     <Author>Erich Styger</Author>
-    <Version>01.015</Version>
+    <Version>01.018</Version>
     <Icon>irc</Icon>
     <TypesFiles>PE,PercepioTrace\PercepioTrace</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -151,11 +151,49 @@ If this is zero (0), the code for recording Interrupt Service Routines is exclud
     </Property>
     <Property>
       <TBoolItem>
-        <Name>Include object delete</Name>
+        <Name>Include object delete events</Name>
         <Symbol>IncludeObjectDelete</Symbol>
         <TypeSpec>typeYesNo</TypeSpec>
         <Hint>This sets INCLUDE_OBJECT_DELETE in trcConfig.h\n
 This must be enabled (1) if tasks, queues or other traced kernel objects are deleted at runtime, e.g., using vTaskDelete or vQueueDelete. If no deletes are made, this can be set to 0 in order to exclude the delete-handling code. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+      </TBoolItem>
+    </Property>
+    <Property>
+      <TBoolItem>
+        <Name>Include time events</Name>
+        <Symbol>IncludeMemManageEvents0</Symbol>
+        <TypeSpec>typeYesNo</TypeSpec>
+        <Hint>This sets INCLUDE_NEW_TIME_EVENTS in trcConfig.h\n
+This must be enabled (1) if it shall be recorded whenever the os clock is increased.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>1</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>false</DefaultValue>
+        <Popup>false</Popup>
+      </TBoolItem>
+    </Property>
+    <Property>
+      <TBoolItem>
+        <Name>Include memory manager events</Name>
+        <Symbol>IncludeMemManageEvents</Symbol>
+        <TypeSpec>typeYesNo</TypeSpec>
+        <Hint>This sets INCLUDE_MEMMANG_EVENTS in trcConfig.h\n
+This must be enabled (1) if memory allocation and deallocatinon have to be traced.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>

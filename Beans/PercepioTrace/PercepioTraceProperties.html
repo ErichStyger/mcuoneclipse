@@ -253,8 +253,18 @@ If this is zero (0), the code for recording Interrupt Service Routines is exclud
 </li>
 <li>
 <a name="IncludeObjectDelete">
-<b>Include object delete</b></a> - This sets INCLUDE_OBJECT_DELETE in trcConfig.h<br />
+<b>Include object delete events</b></a> - This sets INCLUDE_OBJECT_DELETE in trcConfig.h<br />
 This must be enabled (1) if tasks, queues or other traced kernel objects are deleted at runtime, e.g., using vTaskDelete or vQueueDelete. If no deletes are made, this can be set to 0 in order to exclude the delete-handling code. 
+</li>
+<li>
+<a name="IncludeMemManageEvents0">
+<b>Include time events</b></a> - This sets INCLUDE_NEW_TIME_EVENTS in trcConfig.h<br />
+This must be enabled (1) if it shall be recorded whenever the os clock is increased.
+</li>
+<li>
+<a name="IncludeMemManageEvents">
+<b>Include memory manager events</b></a> - This sets INCLUDE_MEMMANG_EVENTS in trcConfig.h<br />
+This must be enabled (1) if memory allocation and deallocatinon have to be traced.
 </li>
 <li>
 <a name="TraceDataAllocation">
