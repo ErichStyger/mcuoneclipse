@@ -30,6 +30,51 @@
 /* Including needed modules to compile this module/procedure */
 #include "Cpu.h"
 #include "Events.h"
+#include "KEY1.h"
+#include "Inhr1.h"
+#include "BitIoLdd4.h"
+#include "Inhr2.h"
+#include "BitIoLdd5.h"
+#include "Inhr3.h"
+#include "BitIoLdd6.h"
+#include "Inhr4.h"
+#include "BitIoLdd7.h"
+#include "Inhr5.h"
+#include "BitIoLdd10.h"
+#include "Inhr6.h"
+#include "BitIoLdd11.h"
+#include "Inhr7.h"
+#include "BitIoLdd12.h"
+#include "CS1.h"
+#include "TRG1.h"
+#include "TI1.h"
+#include "TimerIntLdd1.h"
+#include "TU1.h"
+#include "WAIT1.h"
+#include "LED1.h"
+#include "LEDpin1.h"
+#include "BitIoLdd1.h"
+#include "LED2.h"
+#include "LEDpin2.h"
+#include "BitIoLdd2.h"
+#include "CLS1.h"
+#include "AS1.h"
+#include "ASerialLdd1.h"
+#include "UTIL1.h"
+#include "EVNT1.h"
+#include "RF1.h"
+#include "CE1.h"
+#include "BitIoLdd8.h"
+#include "CSN1.h"
+#include "BitIoLdd9.h"
+#include "IRQ1.h"
+#include "ExtIntLdd2.h"
+#include "SM1.h"
+#include "SMasterLdd1.h"
+#include "RNET1.h"
+#include "FRTOS1.h"
+#include "AD1.h"
+#include "AdcLdd1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -37,6 +82,7 @@
 #include "IO_Map.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "Application.h"
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -48,9 +94,8 @@ int main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
-  /* Write your code here */
-  /* For example: for(;;) { } */
-
+  APP_Run();
+  
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
   #ifdef PEX_RTOS_START
