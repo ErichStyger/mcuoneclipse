@@ -257,7 +257,7 @@ If this is zero (0), the code for recording Interrupt Service Routines is exclud
 This must be enabled (1) if tasks, queues or other traced kernel objects are deleted at runtime, e.g., using vTaskDelete or vQueueDelete. If no deletes are made, this can be set to 0 in order to exclude the delete-handling code. 
 </li>
 <li>
-<a name="IncludeMemManageEvents0">
+<a name="IncludeNewTimeEvents">
 <b>Include time events</b></a> - This sets INCLUDE_NEW_TIME_EVENTS in trcConfig.h<br />
 This must be enabled (1) if it shall be recorded whenever the os clock is increased.
 </li>

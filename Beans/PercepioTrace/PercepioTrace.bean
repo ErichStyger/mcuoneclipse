@@ -4,7 +4,7 @@
     <Name>PercepioTrace</Name>
     <Description>Percepio FreeRTOS Trace</Description>
     <Author>Erich Styger</Author>
-    <Version>01.018</Version>
+    <Version>01.019</Version>
     <Icon>irc</Icon>
     <TypesFiles>PE,PercepioTrace\PercepioTrace</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -171,19 +171,19 @@ This must be enabled (1) if tasks, queues or other traced kernel objects are del
     <Property>
       <TBoolItem>
         <Name>Include time events</Name>
-        <Symbol>IncludeMemManageEvents0</Symbol>
+        <Symbol>IncludeNewTimeEvents</Symbol>
         <TypeSpec>typeYesNo</TypeSpec>
         <Hint>This sets INCLUDE_NEW_TIME_EVENTS in trcConfig.h\n
 This must be enabled (1) if it shall be recorded whenever the os clock is increased.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>1</DefaultIndex>
+        <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>false</TextValueIndex>
         <RuntimeProperty>false</RuntimeProperty>
         <CanDelete>false</CanDelete>
         <IconPopup>false</IconPopup>
-        <DefaultValue>false</DefaultValue>
+        <DefaultValue>true</DefaultValue>
         <Popup>false</Popup>
       </TBoolItem>
     </Property>
