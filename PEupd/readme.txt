@@ -8,9 +8,7 @@ Note: The latest and greates version of the components are always available on G
 https://github.com/ErichStyger/mcuoneclipse/Beans
 https://github.com/ErichStyger/mcuoneclipse/Drivers
 
-
 Part1_Beans_*.PEupd Content:
--------------------------------------
 Package from component(s):
 - 24AA_EEPROM version 01.031
 - 74HC164 version 01.031
@@ -18,11 +16,11 @@ Package from component(s):
 - App_SMAC_Hello version 01.085
 - AT25HP512 version 01.033
 - BitIO_to_PCA9554 version 01.018
-- Bluetooth_EGBT version 01.043
+- Bluetooth_EGBT version 01.046
 - BootLoaderDisk version 01.018
 - BootLoaderUSB version 01.020
 - ChLCD version 01.164
-- CriticalSection version 01.004
+- CriticalSection version 01.006
 - CTouchScanner version 01.021
 - CTouchSensor version 01.032
 - DCF77 version 01.060
@@ -30,7 +28,7 @@ Package from component(s):
 - FatFsMem_USB_MSD version 01.019
 - FatFsMemSDHC version 01.024
 - FontDisplay version 01.195
-- FreeRTOS version 01.360
+- FreeRTOS version 01.366
 - FreeRTOSTrace version 01.003
 - FSL_USB_CDC_Device version 01.031
 - FSL_USB_HID_Keyboard_Device version 01.052
@@ -51,6 +49,7 @@ Package from component(s):
 - I2CSpy version 01.009
 - KentChLCD version 01.111
 - Key version 01.109
+- KinetisSDK version 01.001
 - LCDHTA version 01.019
 - LED version 01.062
 - LEDbit version 01.003
@@ -70,7 +69,7 @@ Package from component(s):
 - MMA8451Q version 01.028
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 23.03.2014
+created 09.04.2014
 
 Package from component(s):
 - nRF24L01 version 01.065
@@ -78,7 +77,7 @@ Package from component(s):
 - PCA9554 version 01.024
 - PCA9554BitIO version 01.037
 - PDC8544 version 01.003
-- PercepioTrace version 01.011
+- PercepioTrace version 01.019
 - PID_Float version 01.005
 - PID_Int version 01.001
 - PtConv version 01.005
@@ -91,7 +90,7 @@ Package from component(s):
 - S65Sharp version 01.082
 - SD_Card version 01.161
 - Servo version 01.066
-- Shell version 01.029
+- Shell version 01.047
 - SimpleEvents version 01.047
 - SMAC version 01.009
 - SPHY version 01.108
@@ -103,6 +102,7 @@ Package from component(s):
 - TouchScreen version 01.077
 - TouchScreenSensor version 01.053
 - Trigger version 01.057
+- TwoKeys version 01.015
 - UI version 01.056
 - UIButton version 01.121
 - UICalendar version 01.030
@@ -119,6 +119,6 @@ Package from component(s):
 - UIWindow version 01.033
 - UserInterface version 01.510
 - UTI version 01.125
-- Utility version 01.095
-- Wait version 01.064
-created 23.03.2014
+- Utility version 01.097
+- Wait version 01.067
+created 09.04.2014
