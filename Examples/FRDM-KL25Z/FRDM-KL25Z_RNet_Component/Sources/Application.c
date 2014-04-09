@@ -16,6 +16,7 @@
   #include "Shell.h"
 #endif
 #include "RNet_App.h"
+#include "WAIT1.h"
 
 #if PL_HAS_DEBUG_PRINT
 void APP_DebugPrint(unsigned char *str) {
@@ -31,6 +32,7 @@ static void AppTask(void *pvParameters) {
 }
 
 void APP_Run(void) {
+  WAIT1_Waitms(500); /* wait after powerup for transceiver */
 #if PL_HAS_SHELL
   SHELL_Init();
 #endif
