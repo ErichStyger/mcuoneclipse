@@ -1,5 +1,5 @@
 %if ((%configCOMPILER='automatic') & (%Compiler == "GNUC")) | (%configCOMPILER='configCOMPILER_ARM_GCC')
-/* file is intentionally empty as not needed for this FreeRTOS port */
+/* file is intentionally empty as not needed for this GNU gcc FreeRTOS port */
 %endif %- ARM gcc compiler
 %---------------------------------------------------------------------------------------
 %if ((%configCOMPILER='automatic') & (%Compiler=="ARM_CC")) | (%configCOMPILER='configCOMPILER_ARM_KEIL')
@@ -115,19 +115,29 @@ _vPortStartFirstTask:
   EXTERN vTaskSwitchContext
   EXTERN xTaskIncrementTick
 
+#if configPEX_KINETIS_SDK /* the SDK expects different interrupt handler names */
+  PUBLIC SysTick_Handler
+  PUBLIC PendSV_Handler
+  PUBLIC SVC_Handler
+#else
   PUBLIC vPortTickHandler
-  PUBLIC vSetMSP
   PUBLIC vPortPendSVHandler
+  PUBLIC vPortSVCHandler
+#endif
+  PUBLIC vSetMSP
   PUBLIC vPortSetInterruptMask
   PUBLIC vPortClearInterruptMask
-  PUBLIC vPortSVCHandler
   PUBLIC vPortStartFirstTask
 
 #if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
   PUBLIC vPortEnableVFP
 #endif
 /*-----------------------------------------------------------*/
+#if configPEX_KINETIS_SDK /* the SDK expects different interrupt handler names */
+SysTick_Handler:
+#else
 vPortTickHandler:
+#endif
   push {lr}
   #if configUSE_PREEMPTION
   /* If using preemption, also force a context switch. */
@@ -145,7 +155,11 @@ vSetMSP:
   bx lr
   nop
 /*-----------------------------------------------------------*/
+#if configPEX_KINETIS_SDK /* the SDK expects different interrupt handler names */
+PendSV_Handler:
+#else
 vPortPendSVHandler:
+#endif
 #if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 or M4F */
     mrs r0, psp
     ldr  r3, =pxCurrentTCB      /* Get the location of the current TCB. */
@@ -247,7 +261,11 @@ vPortClearInterruptMask:
   bx r14
   nop
 /*-----------------------------------------------------------*/
+#if configPEX_KINETIS_SDK /* the SDK expects different interrupt handler names */
+SVC_Handler
+#else
 vPortSVCHandler:
+#endif
 #if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 or M4F */
     ldr r3, =pxCurrentTCB  /* Restore the context. */
     ldr r1, [r3]           /* Use pxCurrentTCBConst to get the pxCurrentTCB address. */
@@ -511,5 +529,3 @@ vPortEnableVFP:
 #endif
 
 %endif %- legacy FSL ARM Compiler
-
-
