@@ -1,0 +1,1 @@
+Kinetis SDK can work with different RTOS through OS Abstraction layer. This folder is reserved for “FreeRTOS” kernel. The “FreeRTOS” kernel is pre-integrated with Kinetis SDK and packed as a separate add-on ZIP package. It can be downloaded and unzipped directly to here without creating sub-folder.
