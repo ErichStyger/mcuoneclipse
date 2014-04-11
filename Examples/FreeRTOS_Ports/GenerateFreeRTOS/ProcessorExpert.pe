@@ -3,8 +3,8 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>47</ModificationStamp>
-    <Date>2014-04-06</Date>
+    <ModificationStamp>51</ModificationStamp>
+    <Date>2014-04-10</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.8.1.RT5_b1349-1839</PEversion>
   </Header>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>72</ProjectCompNumb>
+    <ProjectCompNumb>75</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -5932,8 +5932,8 @@
         <ItemSymbol>configCOMPILER</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>1</Index>
-        <EnumSymbVal>configCOMPILER_ARM_GCC</EnumSymbVal>
+        <Index>2</Index>
+        <EnumSymbVal>configCOMPILER_ARM_IAR</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <CustomValue />
       </ItemState>
@@ -5953,7 +5953,7 @@
         <ItemSymbol>RTOSPortFolderName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>FreeRTOS\port</Value>
+        <Value>FreeRTOS\port\iar</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>CustomPortGroup</ItemSymbol>
@@ -6026,10 +6026,10 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
+        <Index>0</Index>
+        <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>no</LastUserSel>
+        <LastUserSel>yes</LastUserSel>
         <UsrMethodName>vTaskDelete</UsrMethodName>
       </ItemState>
       <ItemState>
