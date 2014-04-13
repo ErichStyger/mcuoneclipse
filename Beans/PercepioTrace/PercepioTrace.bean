@@ -4,7 +4,7 @@
     <Name>PercepioTrace</Name>
     <Description>Percepio FreeRTOS Trace</Description>
     <Author>Erich Styger</Author>
-    <Version>01.019</Version>
+    <Version>01.020</Version>
     <Icon>irc</Icon>
     <TypesFiles>PE,PercepioTrace\PercepioTrace</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -170,7 +170,7 @@ This must be enabled (1) if tasks, queues or other traced kernel objects are del
     </Property>
     <Property>
       <TBoolItem>
-        <Name>Include time events</Name>
+        <Name>Include new time events</Name>
         <Symbol>IncludeNewTimeEvents</Symbol>
         <TypeSpec>typeYesNo</TypeSpec>
         <Hint>This sets INCLUDE_NEW_TIME_EVENTS in trcConfig.h\n
