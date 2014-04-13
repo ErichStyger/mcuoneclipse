@@ -22,5 +22,6 @@
 #define PL_HAS_SD_CARD        (1 && !configRF)
 #define PL_HAS_DEBUG_PRINT    (1)
 #define PL_HAS_RTOS_TRACE     (1)
+#define PL_HAS_MINI_INI       (1)
 
 #endif /* PLATFORM_H_ */
