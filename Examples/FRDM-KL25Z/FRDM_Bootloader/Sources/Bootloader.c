@@ -120,6 +120,8 @@ static uint8_t BL_onS19Flash(S19_ParserStruct *info) {
  * \return TRUE if the bootloader mode shall be started
  */
 #include "BL_SW.h"
+#include "PORT_PDD.h"
+
 static bool BL_CheckBootloaderMode(void) {
   /* let's check if the user presses the BTLD switch. Need to configure the pin first */
   /* PTB8 as input */
@@ -138,7 +140,11 @@ static bool BL_CheckBootloaderMode(void) {
   /* PORTB_PCR8: ISF=0,MUX=1 */
   PORTB_PCR8 = (uint32_t)((PORTB_PCR8 & (uint32_t)~0x01000600UL) | (uint32_t)0x0100UL);
 #else
-  (void)BitIoLdd3_Init(NULL); /* initialize the port pin */
+  (void)BitIoLdd3_Init(NULL); /* initialize the port pin PTB8 */
+  /* enable internal pull-up on PTB8 */
+  PORT_PDD_SetPinPullSelect(PORTB_BASE_PTR, 8, PORT_PDD_PULL_UP);
+  PORT_PDD_SetPinPullEnable(PORTB_BASE_PTR, 8, PORT_PDD_PULL_ENABLE);
+  WAIT1_Waitms(5); /* wait get pull-up a chance to pull-up */
 #endif
   if (!BL_SW_GetVal()) { /* button pressed (has pull-up!) */
     WAIT1_Waitms(50); /* wait to debounce */

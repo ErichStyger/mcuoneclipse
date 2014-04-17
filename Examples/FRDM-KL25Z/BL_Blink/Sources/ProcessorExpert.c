@@ -34,6 +34,12 @@
 #include "LEDB.h"
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"
+#include "LEDG.h"
+#include "LEDpin2.h"
+#include "BitIoLdd2.h"
+#include "LEDR.h"
+#include "LEDpin3.h"
+#include "BitIoLdd3.h"
 #include "WAIT1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
@@ -54,6 +60,10 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   for(;;) {
+    LEDB_Neg();
+    WAIT1_Waitms(500);
+    LEDG_Neg();
+    WAIT1_Waitms(500);
     LEDB_Neg();
     WAIT1_Waitms(500);
   }
