@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bean>
+  <Header>
+    <Name>minIni</Name>
+    <Description>minIni is a programmer’s library to read and write 'ini' files in embedded systems.</Description>
+    <Author>Erich Styger</Author>
+    <Version>01.010</Version>
+    <Icon>CPU_CHIP</Icon>
+    <TypesFiles>PE,minIni\minIni</TypesFiles>
+    <FileVersion>6</FileVersion>
+  </Header>
+  <Options>
+    <BW_HelpType>Basic</BW_HelpType>
+    <BW_HelpFiles>,Properties,Methods,Events</BW_HelpFiles>
+    <BW_AutoSaveHelp>yes</BW_AutoSaveHelp>
+    <BW_AutoSaveDriver>yes</BW_AutoSaveDriver>
+    <BW_DetailedHelp>yes</BW_DetailedHelp>
+    <BW_NeedTps>no</BW_NeedTps>
+    <BW_NeedUst>0</BW_NeedUst>
+    <BW_NeedCns>0</BW_NeedCns>
+    <BeanStatus>PROPOSAL</BeanStatus>
+    <Copyright>(c) Copyright 2008-2012, CompuPhase;\nhttp      : www.compuphase.com\nProcessor Expert port: Erich Styger, 2014, http://www.mcuoneclipse.com\nLicense: See miniIni_LICENSE.txt and minIni_NOTICE.txt</Copyright>
+    <Category>SW-User Components</Category>
+    <DemoDriver>no</DemoDriver>
+    <Shortcut>MINI</Shortcut>
+    <BeanLevel>High</BeanLevel>
+  </Options>
+  <PropertyList>
+    <Property>
+      <TCompNameItem>
+        <Name>Component name</Name>
+        <Symbol>DeviceName</Symbol>
+        <Hint>Name of the component.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue/>
+      </TCompNameItem>
+    </Property>
+    <Property>
+      <TStrgItem>
+        <Name>minIni Version</Name>
+        <Symbol>minIniVersion</Symbol>
+        <Hint>Identifies the minIni version</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>1.2B</DefaultValue>
+        <StrDefine>nothing</StrDefine>
+        <MinLength>0</MinLength>
+        <MaxLength>-1</MaxLength>
+      </TStrgItem>
+    </Property>
+  </PropertyList>
+  <MethodList>
+    <Method>
+      <TMthdItem>
+        <Name>ini_getkey</Name>
+        <Symbol>ini_getkey</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint/>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>byte #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+  </MethodList>
+  <Links>
+    <EmptySection_DummyValue/>
+  </Links>
+  <Revisions>
+    <RevisionVersion>2</RevisionVersion>
+  </Revisions>
+</Bean>
