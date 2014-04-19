@@ -58,11 +58,15 @@
 static uint8_t cdc_buffer[USB1_DATA_BUFF_SIZE];
 static uint8_t in_buffer[USB1_DATA_BUFF_SIZE];
 
+//static unsigned char myBuffer[4096] __attribute__((section (".m_data_20000000")));
+//need (NOLOAD) in the linker script!!!
+
 static void CDC_Run(void) {
   int i;
   uint32_t val = 0;
   unsigned char buf[16];
 
+  //myBuffer[0] = '\0';
   for(;;) {
     while(CDC1_App_Task(cdc_buffer, sizeof(cdc_buffer))==ERR_BUSOFF) {
       /* device not enumerated */

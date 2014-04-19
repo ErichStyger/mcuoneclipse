@@ -16,6 +16,7 @@
 #include "Shell.h"
 #include "timers.h"
 #include "TMOUT1.h"
+#include "UTIL1.h"
 #if PL_HAS_RADIO
   #include "RNet_App.h"
 #endif
@@ -74,7 +75,9 @@ void APP_DebugPrint(unsigned char *str) {
 #endif
 
 #if PL_HAS_MINI_INI
-/* content of file:
+#define sizearray(a)  (sizeof(a) / sizeof((a)[0]))
+static const char inifile[] = "test.ini";
+/* content of inifile:
 [First]
 String=noot # trailing commment
 Val=1
@@ -84,16 +87,30 @@ Val = 2
 #comment=3
 String = mies
  */
-
-#define sizearray(a)  (sizeof(a) / sizeof((a)[0]))
-static const char inifile[] = "test.ini";
-static const char inifile2[] = "testplain.ini";
+static const char inifile2[] = "testpl.ini"; /* must be 8.3 format */
+/* content of inifile2:
+String=noot # trailing commment
+#comment=3
+Val=1
+ */
 
 int Callback(const char *section, const char *key, const char *value, const void *userdata)
 {
   (void)userdata; /* this parameter is not used in this example */
-  printf("    [%s]\t%s=%s\n", section, key, value);
+  SHELL_SendString((unsigned char*)"    [");
+  SHELL_SendString((unsigned char*)section);
+  SHELL_SendString((unsigned char*)"]\t");
+  SHELL_SendString((unsigned char*)key);
+  SHELL_SendString((unsigned char*)"=");
+  SHELL_SendString((unsigned char*)value);
+  SHELL_SendString((unsigned char*)"\r\n");
   return 1;
+}
+
+static void Check(bool ok) {
+  if (!ok) {
+    SHELL_SendString((unsigned char*)"ERR: Failed!\r\n");
+  }
 }
 
 static int TestMiniIni(void) {
@@ -104,84 +121,88 @@ static int TestMiniIni(void) {
 
   /* string reading */
   n = ini_gets("first", "string", "dummy", str, sizearray(str), inifile);
-  assert(n==4 && strcmp(str,"noot")==0);
+  Check(n==4 && UTIL1_strcmp(str,"noot")==0);
   n = ini_gets("second", "string", "dummy", str, sizearray(str), inifile);
-  assert(n==4 && strcmp(str,"mies")==0);
+  Check(n==4 && UTIL1_strcmp(str,"mies")==0);
   n = ini_gets("first", "undefined", "dummy", str, sizearray(str), inifile);
-  assert(n==5 && strcmp(str,"dummy")==0);
+  Check(n==5 && UTIL1_strcmp(str,"dummy")==0);
   /* ----- */
   n = ini_gets("", "string", "dummy", str, sizearray(str), inifile2);
-  assert(n==4 && strcmp(str,"noot")==0);
+  Check(n==4 && UTIL1_strcmp(str,"noot")==0);
   n = ini_gets(NULL, "string", "dummy", str, sizearray(str), inifile2);
-  assert(n==4 && strcmp(str,"noot")==0);
+  Check(n==4 && UTIL1_strcmp(str,"noot")==0);
   /* ----- */
-  printf("1. String reading tests passed\n");
+  SHELL_SendString((unsigned char*)"1. String reading tests passed\n");
 
   /* value reading */
   n = ini_getl("first", "val", -1, inifile);
-  assert(n==1);
+  Check(n==1);
   n = ini_getl("second", "val", -1, inifile);
-  assert(n==2);
+  Check(n==2);
   n = ini_getl("first", "undefined", -1, inifile);
-  assert(n==-1);
+  Check(n==-1);
   /* ----- */
   n = ini_getl(NULL, "val", -1, inifile2);
-  assert(n==1);
+  Check(n==1);
   /* ----- */
-  printf("2. Value reading tests passed\n");
+  SHELL_SendString((unsigned char*)"2. Value reading tests passed\n");
 
   /* string writing */
   n = ini_puts("first", "alt", "flagged as \"correct\"", inifile);
-  assert(n==1);
+  Check(n==1);
   n = ini_gets("first", "alt", "dummy", str, sizearray(str), inifile);
-  assert(n==20 && strcmp(str,"flagged as \"correct\"")==0);
+  Check(n==20 && UTIL1_strcmp(str,"flagged as \"correct\"")==0);
   /* ----- */
   n = ini_puts("second", "alt", "correct", inifile);
-  assert(n==1);
+  Check(n==1);
   n = ini_gets("second", "alt", "dummy", str, sizearray(str), inifile);
-  assert(n==7 && strcmp(str,"correct")==0);
+  Check(n==7 && UTIL1_strcmp(str,"correct")==0);
   /* ----- */
   n = ini_puts("third", "test", "correct", inifile);
-  assert(n==1);
+  Check(n==1);
   n = ini_gets("third", "test", "dummy", str, sizearray(str), inifile);
-  assert(n==7 && strcmp(str,"correct")==0);
+  Check(n==7 && UTIL1_strcmp(str,"correct")==0);
   /* ----- */
   n = ini_puts("second", "alt", "overwrite", inifile);
-  assert(n==1);
+  Check(n==1);
   n = ini_gets("second", "alt", "dummy", str, sizearray(str), inifile);
-  assert(n==9 && strcmp(str,"overwrite")==0);
+  Check(n==9 && UTIL1_strcmp(str,"overwrite")==0);
   /* ----- */
   n = ini_puts(NULL, "alt", "correct", inifile2);
-  assert(n==1);
+  Check(n==1);
   n = ini_gets(NULL, "alt", "dummy", str, sizearray(str), inifile2);
-  assert(n==7 && strcmp(str,"correct")==0);
+  Check(n==7 && UTIL1_strcmp(str,"correct")==0);
   /* ----- */
-  printf("3. String writing tests passed\n");
+  SHELL_SendString((unsigned char*)"3. String writing tests passed\n");
 
   /* section/key enumeration */
-  printf("4. Section/key enumertion, file contents follows\n");
+  SHELL_SendString((unsigned char*)"4. Section/key enumeration, file contents follows\n");
   for (s = 0; ini_getsection(s, section, sizearray(section), inifile) > 0; s++) {
-    printf("    [%s]\n", section);
+    SHELL_SendString((unsigned char*)"    [");
+    SHELL_SendString((unsigned char*)section);
+    SHELL_SendString((unsigned char*)"]\r\n");
     for (k = 0; ini_getkey(section, k, str, sizearray(str), inifile) > 0; k++) {
-      printf("\t%s\n", str);
+      SHELL_SendString((unsigned char*)"\t");
+      SHELL_SendString((unsigned char*)str);
+      SHELL_SendString((unsigned char*)"\r\n");
     } /* for */
   } /* for */
 
   /* browsing through the file */
-  printf("5. browse through all settings, file contents follows\n");
+  SHELL_SendString((unsigned char*)"5. browse through all settings, file contents follows\n");
   ini_browse(Callback, NULL, inifile);
 
   /* string deletion */
   n = ini_puts("first", "alt", NULL, inifile);
-  assert(n==1);
+  Check(n==1);
   n = ini_puts("second", "alt", NULL, inifile);
-  assert(n==1);
+  Check(n==1);
   n = ini_puts("third", NULL, NULL, inifile);
-  assert(n==1);
+  Check(n==1);
   /* ----- */
   n = ini_puts(NULL, "alt", NULL, inifile2);
-  assert(n==1);
-  printf("6. String deletion tests passed\n");
+  Check(n==1);
+  SHELL_SendString((unsigned char*)"6. String deletion tests passed\n");
 
   return 0;
 }
@@ -225,7 +246,7 @@ void APP_Start(void) {
   if (FRTOS1_xTaskCreate(
       MainTask,  /* pointer to the task */
       "Main", /* task name for kernel awareness debugging */
-      configMINIMAL_STACK_SIZE, /* task stack size */
+      configMINIMAL_STACK_SIZE+500, /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY,  /* initial priority */
       (xTaskHandle*)NULL /* optional task handle to create */

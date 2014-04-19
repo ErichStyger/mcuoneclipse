@@ -162,7 +162,7 @@ SECTIONS
   ___data_size = _edata - _sdata;
 
   ___m_data_20000000_ROMStart = ___ROM_AT + SIZEOF(.data);
-  .m_data_20000000 : AT(___m_data_20000000_ROMStart)
+  .m_data_20000000 (NOLOAD) : AT(___m_data_20000000_ROMStart)
   {
      . = ALIGN(4);
      ___m_data_20000000_RAMStart = .;
