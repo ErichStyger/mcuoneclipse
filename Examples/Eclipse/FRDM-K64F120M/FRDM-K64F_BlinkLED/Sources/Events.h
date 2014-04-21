@@ -47,8 +47,6 @@
 #include "WAIT1.h"
 #include "HF1.h"
 #include "UTIL1.h"
-#include "NMI.h"
-#include "BitIoLdd4.h"
 
 #ifdef __cplusplus
 extern "C" {
