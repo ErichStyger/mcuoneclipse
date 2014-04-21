@@ -136,6 +136,50 @@
 
 %endif %- ini_getbool
 %-BW_METHOD_END ini_getbool
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ini_gets
+%ifdef ini_gets
+#define %'ModuleName'%.%ini_gets(Section, Key, DefValue, Buffer, BufferSize, Filename) \
+  ini_gets(Section, Key, DefValue, Buffer, BufferSize, Filename)
+%define! ParSection
+%define! ParKey
+%define! ParDefValue
+%define! ParFilename
+%define! ParBuffer
+%define! ParBufferSize
+%define! RetVal
+%include Common\minIniini_gets.Inc
+
+%endif %- ini_gets
+%-BW_METHOD_END ini_gets
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ini_getl
+%ifdef ini_getl
+#define %'ModuleName'%.%ini_getl(Section, Key, DefValue, Filename) \
+  ini_getl(Section, Key, DefValue, Filename)
+%define! ParSection
+%define! ParKey
+%define! ParDefValue
+%define! ParFilename
+%define! RetVal
+%include Common\minIniini_getl.Inc
+
+%endif %- ini_getl
+%-BW_METHOD_END ini_getl
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ini_getsection
+%ifdef ini_getsection
+#define %'ModuleName'%.%ini_getsection(idx, Buffer, BufferSize, Filename) \
+  ini_getsection(idx, Buffer, BufferSize, Filename)
+%define! Paridx
+%define! ParBuffer
+%define! ParBufferSize
+%define! ParFilename
+%define! RetVal
+%include Common\minIniini_getsection.Inc
+
+%endif %- ini_getsection
+%-BW_METHOD_END ini_getsection
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -189,8 +233,8 @@ int %'ModuleName'%.%ini_getkey(const mTCHAR *Section, int idx, mTCHAR *Buffer, i
 {
   Implemented as macro in the header file
 }
-
 */
+
 %endif %- ini_getkey
 %-BW_METHOD_END ini_getkey
 %-************************************************************************************************************
@@ -207,10 +251,66 @@ int %'ModuleName'%.%ini_getbool(const mTCHAR *Section, const mTCHAR *Key, int De
 {
   Implemented as macro in the header file
 }
-
 */
+
 %endif %- ini_getbool
 %-BW_METHOD_END ini_getbool
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ini_gets
+%ifdef ini_gets
+%define! ParSection
+%define! ParKey
+%define! ParDefValue
+%define! ParFilename
+%define! ParBuffer
+%define! ParBufferSize
+%define! RetVal
+%include Common\minIniini_gets.Inc
+/**
+int %'ModuleName'%.%ini_gets(const mTCHAR *Section, const mTCHAR *Key, const mTCHAR *DefValue, nTCHAR *Buffer, int BufferSize, const mTCHAR *Filename)
+{
+  Implemented as macro in the header file
+}
+*/
+
+%endif %- ini_gets
+%-BW_METHOD_END ini_gets
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ini_getl
+%ifdef ini_getl
+%define! ParSection
+%define! ParKey
+%define! ParDefValue
+%define! ParFilename
+%define! RetVal
+%include Common\minIniini_getl.Inc
+/**
+long %'ModuleName'%.%ini_getl(const mTCHAR *Section, const mTCHAR *Key, long DefValue, const mTCHAR *Filename)
+{
+  Implemented as macro in the header file
+}
+*/
+
+%endif %- ini_getl
+%-BW_METHOD_END ini_getl
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ini_getsection
+%ifdef ini_getsection
+%define! Paridx
+%define! ParBuffer
+%define! ParBufferSize
+%define! ParFilename
+%define! RetVal
+%include Common\minIniini_getsection.Inc
+/**
+int %'ModuleName'%.%ini_getsection(int idx, mTCHAR *Buffer, int BufferSize, const mTCHAR *Filename)
+{
+  Implemented as macro in the header file
+}
+*/
+
+%endif %- ini_getsection
+%-BW_METHOD_END ini_getsection
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
@@ -222,7 +322,6 @@ int %'ModuleName'%.%ini_getbool(const mTCHAR *Section, const mTCHAR *Key, int De
 %INITIALIZATION
   /* ### %DeviceType "%DeviceName" init code ... */
 %CODE_BEGIN
-  /* Write code here ... */
 %CODE_END
 %-
 %ENABLE

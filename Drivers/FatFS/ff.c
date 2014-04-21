@@ -89,14 +89,17 @@
 #include "diskio.h"		/* Declarations of low level disk I/O functions */
 
 %- << EST added
-%if defined(COMPILER_HIX)
-/* switching off some warnings */
-#pragma MESSAGE DISABLE C5909 /* assignment in condition */
-#pragma MESSAGE DISABLE C2705 /* possible loss of data */
-#pragma MESSAGE DISABLE C4000 /* condition always is false */
-#pragma MESSAGE DISABLE C4001 /* condition always is true */
-#pragma MESSAGE DISABLE C5703 /* parameter declared but not used */
-%endif
+#ifdef __HIWARE__
+  /* switching off some warnings */
+  #pragma MESSAGE DISABLE C5909 /* assignment in condition */
+  #pragma MESSAGE DISABLE C2705 /* possible loss of data */
+  #pragma MESSAGE DISABLE C4000 /* condition always is false */
+  #pragma MESSAGE DISABLE C4001 /* condition always is true */
+  #pragma MESSAGE DISABLE C5703 /* parameter declared but not used */
+  #pragma MESSAGE DISABLE C5904 /* Division by one */
+  #pragma MESSAGE DISABLE C5905 /* Multiplication with one */
+  #pragma MESSAGE DISABLE C5917 /* Removed dead assignment */
+#endif
 %for var from EventModules
 #include "%var.h"
 %endfor
@@ -3569,20 +3572,20 @@ TCHAR* f_gets (
 
 
 	while (n < len - 1) {			/* Read bytes until buffer gets filled */
-		f_read(fil, s, 1, &rc);
+		(void)f_read(fil, s, 1, &rc);
 		if (rc != 1) break;			/* Break on EOF or error */
 		c = s[0];
 #if _LFN_UNICODE					/* Read a character in UTF-8 encoding */
 		if (c >= 0x80) {
 			if (c < 0xC0) continue;	/* Skip stray trailer */
 			if (c < 0xE0) {			/* Two-byte sequense */
-				f_read(fil, s, 1, &rc);
+				(void)f_read(fil, s, 1, &rc);
 				if (rc != 1) break;
 				c = ((c & 0x1F) << 6) | (s[0] & 0x3F);
 				if (c < 0x80) c = '?';
 			} else {
 				if (c < 0xF0) {		/* Three-byte sequense */
-					f_read(fil, s, 2, &rc);
+				  (void)f_read(fil, s, 2, &rc);
 					if (rc != 2) break;
 					c = (c << 12) | ((s[0] & 0x3F) << 6) | (s[1] & 0x3F);
 					if (c < 0x800) c = '?';
@@ -3643,7 +3646,7 @@ int f_putc (
 	s[0] = (uint8_t)c;
 	btw = 1;
 #endif
-	f_write(fil, s, btw, &bw);		/* Write the char to the file */
+	(void)f_write(fil, s, btw, &bw);		/* Write the char to the file */
 	return (bw == btw) ? 1 : EOF;	/* Return the result */
 }
 

@@ -14,6 +14,9 @@
 %FILE %'DirRel_Code'minGlue-FatFs.h
 %include minIni\minGlue-FatFs.h
 
+%FILE %'DirRel_Code'minGlue-FatFs.c
+%include minIni\minGlue-FatFs.c
+
 %FILE %'DirRel_Code'minIni_NOTICE.txt
 %include minIni\NOTICE
 

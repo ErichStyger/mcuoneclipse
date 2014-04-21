@@ -4,7 +4,7 @@
     <Name>minIni</Name>
     <Description>minIni is a programmer’s library to read and write 'ini' files in embedded systems.</Description>
     <Author>Erich Styger</Author>
-    <Version>01.016</Version>
+    <Version>01.023</Version>
     <Icon>CPU_CHIP</Icon>
     <TypesFiles>PE,minIni\minIni</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -50,18 +50,49 @@
       </TStrgItem>
     </Property>
     <Property>
-      <TInhrLinkItem>
+      <TGrupItem>
         <Name>FatFS</Name>
-        <Symbol>FatFS</Symbol>
-        <TypeSpec>minIni\FatFS</TypeSpec>
-        <Hint>Link to FatFS (FAT File System) component.</Hint>
+        <Symbol>FatFSGroup</Symbol>
+        <Hint>FatFS configuration items</Hint>
         <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <DefaultValue/>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <SortStyle/>
-      </TInhrLinkItem>
+        <Description/>
+        <Expanded>Yes</Expanded>
+        <Children>
+          <GrupItem>
+            <TInhrLinkItem>
+              <Name>FatFS</Name>
+              <Symbol>FatFS</Symbol>
+              <TypeSpec>minIni\FatFS</TypeSpec>
+              <Hint>Link to FatFS (FAT File System) component.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>false</EditLine>
+              <DefaultValue/>
+              <CanDelete>false</CanDelete>
+              <IconPopup>false</IconPopup>
+              <SortStyle/>
+            </TInhrLinkItem>
+          </GrupItem>
+          <GrupItem>
+            <TIntgItem>
+              <Name>Buffer Size</Name>
+              <Symbol>FatFsIniBufferSize</Symbol>
+              <Hint>Configures the macro INI_BUFFERSIZE which configures the maximum line length adn maxium path length.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>64</DefaultValue>
+              <MinValue>2</MinValue>
+              <MaxValue>-1</MaxValue>
+              <Bases>DEC</Bases>
+              <DefaultBase>DEC</DefaultBase>
+              <ExtraHintDisabled>false</ExtraHintDisabled>
+              <ChangeValueIntoRange>false</ChangeValueIntoRange>
+              <RuntimeProperty>false</RuntimeProperty>
+            </TIntgItem>
+          </GrupItem>
+        </Children>
+      </TGrupItem>
     </Property>
   </PropertyList>
   <MethodList>
@@ -124,6 +155,184 @@ A false boolean is found if one of the following is matched:\n
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>int #M#_#C#(const mTCHAR *Section, const mTCHAR *Key, int DefValue, const mTCHAR *Filename)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ini_getl</Name>
+        <Symbol>ini_getl</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Return the long integral value for a given section and key.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>long</ReturnType>
+        <RetHint>The value located at Key</RetHint>
+        <ParamCount>4</ParamCount>
+        <Parameter>
+          <ParName>Section</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>The name of the section to search for</ParHint>
+          <ParUserDeclaration>const mTCHAR *Section</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>Key</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the name of the entry to find the value of</ParHint>
+          <ParUserDeclaration>const mTCHAR *Key</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>DefValue</ParName>
+          <ParType>long</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Default value in the event of a failed read</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>Filename</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>The name and full path of the .ini file to read from</ParHint>
+          <ParUserDeclaration>const mTCHAR *Filename</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>long #M#_#C#(const mTCHAR *Section, const mTCHAR *Key, long DefValue, const mTCHAR *Filename)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ini_gets</Name>
+        <Symbol>ini_gets</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Return the string for a given section and key.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>int</ReturnType>
+        <RetHint>The number of characters copied into the supplied buffer</RetHint>
+        <ParamCount>6</ParamCount>
+        <Parameter>
+          <ParName>Section</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>The name of the section to search for</ParHint>
+          <ParUserDeclaration>const mTCHAR *Section</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>Key</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the name of the entry to find the value of</ParHint>
+          <ParUserDeclaration>const mTCHAR *Key</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>DefValue</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the default value in the event of a failed read</ParHint>
+          <ParUserDeclaration>const mTCHAR *DefValue</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>Buffer</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>A pointer to the buffer to copy into</ParHint>
+          <ParUserDeclaration>nTCHAR *Buffer</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>BufferSize</ParName>
+          <ParType>int</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The maximum number of characters to copy</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>Filename</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>The name and full path of the .ini file to read from</ParHint>
+          <ParUserDeclaration>const mTCHAR *Filename</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>int #M#_#C#(const mTCHAR *Section, const mTCHAR *Key, const mTCHAR *DefValue, nTCHAR *Buffer, int BufferSize, const mTCHAR *Filename)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ini_getsection</Name>
+        <Symbol>ini_getsection</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Return the key inside a section</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>int</ReturnType>
+        <RetHint>The number of characters copied into the supplied buffer</RetHint>
+        <ParamCount>4</ParamCount>
+        <Parameter>
+          <ParName>idx</ParName>
+          <ParType>int</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The zero-based sequence number of the section to return</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>Buffer</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>A pointer to the buffer to copy into</ParHint>
+          <ParUserDeclaration>mTCHAR *Buffer</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>BufferSize</ParName>
+          <ParType>int</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The maximum number of characters to copy</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>Filename</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>The name and full path of the .ini file to read from</ParHint>
+          <ParUserDeclaration>const mTCHAR *Filename</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>int #M#_#C#(int idx, mTCHAR *Buffer, int BufferSize, const mTCHAR *Filename)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

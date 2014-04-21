@@ -221,6 +221,53 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="ini_getl">
+<b>ini_getl</b></a>
+ - Return the long integral value for a given section and key.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> long ini_getl(const mTCHAR *Section, const mTCHAR *Key, long DefValue, const mTCHAR *Filename)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Section: Pointer to byte</i> - The name of the section to search for</li>
+<li><i>Key: Pointer to char</i> - Pointer to the name of the entry to find the value of</li>
+<li><i>DefValue:long</i> - Default value in the event of a failed read</li>
+<li><i>Filename: Pointer to char</i> - The name and full path of the .ini file to read from</li>
+<li><i>Return value:long</i> - The value located at Key
+</li>
+</ul><br />
+</li>
+<li><a name="ini_gets">
+<b>ini_gets</b></a>
+ - Return the string for a given section and key.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> int ini_gets(const mTCHAR *Section, const mTCHAR *Key, const mTCHAR *DefValue, nTCHAR *Buffer, int BufferSize, const mTCHAR *Filename)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Section: Pointer to byte</i> - The name of the section to search for</li>
+<li><i>Key: Pointer to char</i> - Pointer to the name of the entry to find the value of</li>
+<li><i>DefValue: Pointer to char</i> - Pointer to the default value in the event of a failed read</li>
+<li><i>Buffer: Pointer to byte</i> - A pointer to the buffer to copy into</li>
+<li><i>BufferSize:int</i> - The maximum number of characters to copy</li>
+<li><i>Filename: Pointer to char</i> - The name and full path of the .ini file to read from</li>
+<li><i>Return value:int</i> - The number of characters copied into the supplied buffer
+</li>
+</ul><br />
+</li>
+<li><a name="ini_getsection">
+<b>ini_getsection</b></a>
+ - Return the key inside a section
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> int ini_getsection(int idx, mTCHAR *Buffer, int BufferSize, const mTCHAR *Filename)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>idx:int</i> - The zero-based sequence number of the section to return</li>
+<li><i>Buffer: Pointer to char</i> - A pointer to the buffer to copy into</li>
+<li><i>BufferSize:int</i> - The maximum number of characters to copy</li>
+<li><i>Filename: Pointer to char</i> - The name and full path of the .ini file to read from</li>
+<li><i>Return value:int</i> - The number of characters copied into the supplied buffer
+</li>
+</ul><br />
+</li>
 <li><a name="ini_getkey">
 <b>ini_getkey</b></a>
  - Return the key inside a section

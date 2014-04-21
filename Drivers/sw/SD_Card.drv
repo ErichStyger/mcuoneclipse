@@ -1341,8 +1341,8 @@ void %'ModuleName'%.%InitCommChannel(void)
     - Clock edge: falling edge
   */
 %if defined(HWSPI)
-  %@HWSPI@'ModuleName'%.SetIdleClockPolarity(0); /* low idle clock polarity */
-  %@HWSPI@'ModuleName'%.SetShiftClockPolarity(0); /* shift clock polarity: falling edge */
+  (void)%@HWSPI@'ModuleName'%.SetIdleClockPolarity(0); /* low idle clock polarity */
+  (void)%@HWSPI@'ModuleName'%.SetShiftClockPolarity(0); /* shift clock polarity: falling edge */
   %'ModuleName'%.SPI_SetFastMode(); /* use fast baud rate */
 %endif
 %ifdef LDDHWSPI

@@ -9,7 +9,21 @@
  *  its own terms.)
  */
 
+#ifndef _MINGLUE_FATFS_H__
+#define _MINGLUE_FATFS_H__
+
+#ifdef __HIWARE__
+  /* switching off some warnings */
+  #pragma MESSAGE DISABLE C1420 /* Result of function call is ignored */
+  #pragma MESSAGE DISABLE C5909 /* Assignment in condition */
+#endif
+
+
+%if defined(FatFsIniBufferSize)
+#define INI_BUFFERSIZE  %FatFsIniBufferSize       /* maximum line length, maximum path length */
+%else
 #define INI_BUFFERSIZE  256       /* maximum line length, maximum path length */
+%endif
 
 /* You must set _USE_STRFUNC to 1 or 2 in the include file ff.h (or tff.h)
  * to enable the "string functions" fgets() and fputs().
@@ -28,10 +42,6 @@
 #define ini_tell(file,pos)            (*(pos) = f_tell((file)))
 #define ini_seek(file,pos)            (f_lseek((file), *(pos)) == FR_OK)
 
-static int ini_rename(TCHAR *source, const TCHAR *dest)
-{
-  /* Function f_rename() does not allow drive letters in the destination file */
-  char *drive = strchr(dest, ':');
-  drive = (drive == NULL) ? (char*)dest : drive + 1;
-  return (f_rename(source, drive) == FR_OK);
-}
+int ini_rename(TCHAR *source, const TCHAR *dest);
+
+#endif /* _MINGLUE-FATFS_H__ */
