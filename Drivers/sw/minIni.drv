@@ -110,12 +110,32 @@
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ini_getkey
 %ifdef ini_getkey
-byte %'ModuleName'%.%ini_getkey(void);
+#define %'ModuleName'%.%ini_getkey(Section, idx, Buffer, BufferSize, Filename) \
+  ini_getkey(Section, idx, Buffer, BufferSize, Filename)
+%define! ParSection
+%define! Paridx
+%define! ParBuffer
+%define! ParBufferSize
+%define! ParFilename
 %define! RetVal
 %include Common\minIniini_getkey.Inc
 
 %endif %- ini_getkey
 %-BW_METHOD_END ini_getkey
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ini_getbool
+%ifdef ini_getbool
+#define %'ModuleName'%.%ini_getbool(Section, Key, DefValue, Filename) \
+  ini_getbool(Section, Key, DefValue, Filename)
+%define! ParSection
+%define! ParKey
+%define! ParDefValue
+%define! ParFilename
+%define! RetVal
+%include Common\minIniini_getbool.Inc
+
+%endif %- ini_getbool
+%-BW_METHOD_END ini_getbool
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -157,15 +177,40 @@ byte %'ModuleName'%.%ini_getkey(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ini_getkey
 %ifdef ini_getkey
+%define! ParSection
+%define! Paridx
+%define! ParBuffer
+%define! ParBufferSize
+%define! ParFilename
 %define! RetVal
 %include Common\minIniini_getkey.Inc
-byte %'ModuleName'%.%ini_getkey(void)
+/**
+int %'ModuleName'%.%ini_getkey(const mTCHAR *Section, int idx, mTCHAR *Buffer, int BufferSize, const mTCHAR *Filename)
 {
-  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+  Implemented as macro in the header file
 }
 
+*/
 %endif %- ini_getkey
 %-BW_METHOD_END ini_getkey
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ini_getbool
+%ifdef ini_getbool
+%define! ParSection
+%define! ParKey
+%define! ParDefValue
+%define! ParFilename
+%define! RetVal
+%include Common\minIniini_getbool.Inc
+/**
+int %'ModuleName'%.%ini_getbool(const mTCHAR *Section, const mTCHAR *Key, int DefValue, const mTCHAR *Filename)
+{
+  Implemented as macro in the header file
+}
+
+*/
+%endif %- ini_getbool
+%-BW_METHOD_END ini_getbool
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

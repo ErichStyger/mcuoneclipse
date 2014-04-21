@@ -350,8 +350,6 @@ INI_REAL ini_getf(const TCHAR *Section, const TCHAR *Key, INI_REAL DefValue, con
  * \param Key         the name of the entry to find the value of
  * \param DefValue    default value in the event of a failed read; it should
  *                    zero (0) or one (1).
- * \param Buffer      a pointer to the buffer to copy into
- * \param BufferSize  the maximum number of characters to copy
  * \param Filename    the name and full path of the .ini file to read from
  *
  * A true boolean is found if one of the following is matched:

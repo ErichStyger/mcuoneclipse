@@ -206,14 +206,34 @@ LI.EXP {
 <!---USERBEG DON'T CHANGE THIS LINE-->
 
 <!---USEREND DON'T CHANGE THIS LINE-->
-<li><a name="ini_getkey">
-<b>ini_getkey</b></a>
- - no hint
+<li><a name="ini_getbool">
+<b>ini_getbool</b></a>
+ - Return a boolean key.  A true boolean is found if one of the following is matched:<br />  - A string starting with 'y' or 'Y'<br />  - A string starting with 't' or 'T'<br />  - A string starting with '1'<br />A false boolean is found if one of the following is matched:<br />  - A string starting with 'n' or 'N'<br />  - A string starting with 'f' or 'F'<br />  - A string starting with '0'
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte ini_getkey(void)<br />
+<br /><i>ANSIC prototype:</i> int ini_getbool(const mTCHAR *Section, const mTCHAR *Key, int DefValue, const mTCHAR *Filename)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>Return value:byte</i> - Error code
+<li><i>Section: Pointer to char</i> - The name of the section to search for</li>
+<li><i>Key: Pointer to char</i> - The name of the entry to find the value of</li>
+<li><i>DefValue:int</i> - Default value in the event of a failed read; it should be zero (0) or one (1).</li>
+<li><i>Filename: Pointer to char</i> - The name and full path of the .ini file to read from</li>
+<li><i>Return value:int</i> - The true/false flag as interpreted at Key
+</li>
+</ul><br />
+</li>
+<li><a name="ini_getkey">
+<b>ini_getkey</b></a>
+ - Return the key inside a section
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> int ini_getkey(const mTCHAR *Section, int idx, mTCHAR *Buffer, int BufferSize, const mTCHAR *Filename)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Section: Pointer to byte</i> - The name of the section to browse through, or NULL to browse through the keys outside any section</li>
+<li><i>idx:int</i> - The zero-based sequence number of the key to return</li>
+<li><i>Buffer: Pointer to char</i> - A pointer to the buffer to copy into</li>
+<li><i>BufferSize:int</i> - The maximum number of characters to copy</li>
+<li><i>Filename: Pointer to char</i> - The name and full path of the .ini file to read from</li>
+<li><i>Return value:int</i> - The number of characters copied into the supplied buffer
 </li>
 </ul><br />
 </li>
