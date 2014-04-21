@@ -236,6 +236,21 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="ini_getf">
+<b>ini_getf</b></a>
+ - Return the long integral value for a given section and key.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> INI_REAL ini_getf(const mTCHAR *Section, const mTCHAR *Key, INI_REAL DefValue, const mTCHAR *Filename)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Section: Pointer to byte</i> - The name of the section to search for</li>
+<li><i>Key: Pointer to char</i> - Pointer to the name of the entry to find the value of</li>
+<li><i>DefValue:INI_REAL</i> - Default value in the event of a failed read</li>
+<li><i>Filename: Pointer to char</i> - The name and full path of the .ini file to read from</li>
+<li><i>Return value:INI_REAL</i> - The value located at Key
+</li>
+</ul><br />
+</li>
 <li><a name="ini_gets">
 <b>ini_gets</b></a>
  - Return the string for a given section and key.

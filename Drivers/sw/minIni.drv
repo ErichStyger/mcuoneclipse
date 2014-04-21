@@ -84,6 +84,7 @@
 %- Write your own includes here ...
 %-   Example:
 %-     #include "header_name.h"
+#include "minIni.h" /* minIni Header file */
 %-
 %-BW_CUSTOM_INCLUDE_END_H
 %-
@@ -180,6 +181,20 @@
 
 %endif %- ini_getsection
 %-BW_METHOD_END ini_getsection
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ini_getf
+%ifdef ini_getf
+#define %'ModuleName'%.%ini_getf(Section, Key, DefValue, Filename) \
+  ini_getf(Section, Key, DefValue, Filename)
+%define! ParSection
+%define! ParKey
+%define! ParDefValue
+%define! ParFilename
+%define! RetVal
+%include Common\minIniini_getf.Inc
+
+%endif %- ini_getf
+%-BW_METHOD_END ini_getf
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -311,6 +326,24 @@ int %'ModuleName'%.%ini_getsection(int idx, mTCHAR *Buffer, int BufferSize, cons
 
 %endif %- ini_getsection
 %-BW_METHOD_END ini_getsection
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ini_getf
+%ifdef ini_getf
+%define! ParSection
+%define! ParKey
+%define! ParDefValue
+%define! ParFilename
+%define! RetVal
+%include Common\minIniini_getf.Inc
+/**
+INI_REAL %'ModuleName'%.%ini_getf(const mTCHAR *Section, const mTCHAR *Key, INI_REAL DefValue, const mTCHAR *Filename)
+{
+  Implemented as macro in the header file
+}
+*/
+
+%endif %- ini_getf
+%-BW_METHOD_END ini_getf
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

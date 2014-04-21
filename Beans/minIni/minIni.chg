@@ -1,1 +1,6 @@
 %set minIniVersion Value 1.2B
+%if defined(useReal) & %useReal='no'
+  %set ini_getf Selection never
+%else
+  %set ini_getf Selection enable
+%endif

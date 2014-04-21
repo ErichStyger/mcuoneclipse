@@ -7,10 +7,12 @@
  * This implements the DHCP part for the W5100.
  */
 
+#include "Platform.h"
+#if PL_USE_DHCP
 #include "dhcp.h"
 #include "w5100.h"
 #include "socket.h"
-#if 0
+
 static uint8_t g_DHCP_YourIPAddress[4];
 static uint8_t g_DHCP_RouterIPAddress[4];
 static uint8_t g_DHCP_DNSIPAddress[4];
@@ -605,4 +607,4 @@ static uint8_t DHCP_Parse(uint8_t u8Socket) {
 	
 	return u8MessageType;
 }
-#endif
+#endif /* PL_USE_DHCP */

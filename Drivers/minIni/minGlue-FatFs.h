@@ -42,6 +42,8 @@
 #define ini_tell(file,pos)            (*(pos) = f_tell((file)))
 #define ini_seek(file,pos)            (f_lseek((file), *(pos)) == FR_OK)
 
+#define ini_assert(condition)         /* empty */
+
 int ini_rename(TCHAR *source, const TCHAR *dest);
 
 #endif /* _MINGLUE-FATFS_H__ */

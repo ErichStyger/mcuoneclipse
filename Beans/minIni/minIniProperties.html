@@ -225,6 +225,22 @@ LI.EXP {
 <b>minIni Version</b></a> - Identifies the minIni version
 </li>
 <li>
+<a name="portableStrnicmp">
+<b>Portable strnicmp()</b></a> - If set to yes, it enables PORTABLE_STRNICMP in minIni.h. With this, the minIni.c implements the strnicmp() function .
+</li>
+<li>
+<a name="useReal">
+<b>Use Real</b></a> - If set to yes, defines INI_REAL in minIni.h. If enabled, then the function ini_getf() is available to read floating point values.
+</li>
+<li>
+<a name="isReadOnly">
+<b>Read Only</b></a> - If set to yes, defines INI_READONLY in minIni.h. Then access to the ini file is read only.
+</li>
+<li>
+<a name="isNoDebug">
+<b>No Debug</b></a> - If set to yes, then it defines NDEBUG in minIni.h, so assert() calls are not performed.
+</li>
+<li>
 <a name="FatFSGroup">
 <b>FatFS</b></a> - FatFS configuration items
 <ul>

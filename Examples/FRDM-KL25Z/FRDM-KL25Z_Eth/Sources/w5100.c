@@ -225,7 +225,7 @@ static uint8_t PrintStatus(CLS1_ConstStdIOType *io) {
   for(i=0;i<sizeof(config.ipaddr);i++) {
     UTIL1_strcatNum8u(buf, sizeof(buf), config.ipaddr[i]);
     if (i<sizeof(config.ipaddr)-1) {
-      UTIL1_chcat(buf, sizeof(buf), ':');
+      UTIL1_chcat(buf, sizeof(buf), '.');
     } else {
       UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
     }

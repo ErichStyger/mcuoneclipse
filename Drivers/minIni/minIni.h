@@ -21,6 +21,19 @@
 
 #include "minGlue-FatFs.h"
 
+%if defined(portableStrnicmp) & %portableStrnicmp='yes'
+#define PORTABLE_STRNICMP
+%endif
+%if defined(useReal) & %useReal='yes'
+#define INI_REAL
+%endif
+%if defined(isReadOnly) & %isReadOnly='yes'
+#define INI_READONLY
+%endif
+%if defined(isNoDebug) & %isNoDebug='yes'
+#define NDEBUG
+%endif
+
 #if (defined _UNICODE || defined __UNICODE__ || defined UNICODE) && !defined MININI_ANSI
   #include <tchar.h>
   #define mTCHAR TCHAR

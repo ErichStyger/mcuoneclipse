@@ -7,6 +7,7 @@
  * This module is the main module of the application.
  */
 
+#include "Platform.h"
 #include "Application.h"
 #include "LED1.h"
 #include "FRTOS1.h"
@@ -15,6 +16,9 @@
 #include "w5100.h"
 #include "socket.h"
 #include "Server.h"
+#if PL_USE_INI
+  #include "MINI1.h"
+#endif
 
 static bool cardMounted = FALSE;
 static FAT1_FATFS fileSystemObject;
@@ -59,6 +63,21 @@ uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, CLS1_ConstStdI
   return ERR_OK; /* no error */
 }
 
+#if PL_USE_INI
+#define INI_FILE_NAME "config.ini"
+#define INI_SECTION_NAME "W5100"
+
+static w5100_config_t W5100_config = {
+  {192, 168, 1, 1}, /* gateway */
+  {255, 255, 255, 0}, /* netmask */
+#if 1
+  {0x90, 0xa2, 0xda, 0x0D, 0x42, 0xdd}, /* hw/mac address */
+#elif 1
+  {0x90, 0xa2, 0xda, 0x0F, 0x16, 0x43}, /* hw/mac address */
+#endif
+  {192, 168, 0, 90} /* ip address */
+};
+#else
 static const w5100_config_t W5100_config = {
   {192, 168, 1, 1}, /* gateway */
   {255, 255, 255, 0}, /* netmask */
@@ -69,6 +88,7 @@ static const w5100_config_t W5100_config = {
 #endif
   {192, 168, 0, 90} /* ip address */
 };
+#endif
 
 static void WiznetSetup(void) {
   CLS1_SendStr((unsigned char*)"Reset W5100.\r\n", CLS1_GetStdio()->stdOut);
@@ -77,6 +97,36 @@ static void WiznetSetup(void) {
     CLS1_SendStr((unsigned char*)"Failed to reset device!\r\n", CLS1_GetStdio()->stdErr);
   }
   CLS1_SendStr((unsigned char*)"Configure network.\r\n", CLS1_GetStdio()->stdOut);
+#if PL_USE_INI
+  {
+    uint8_t buf[32];
+    int val;
+    const unsigned char *p;
+    uint8_t val8u;
+    
+    CLS1_SendStr((unsigned char*)"Loading values from " INI_FILE_NAME "\r\n", CLS1_GetStdio()->stdOut);
+    val = MINI1_ini_gets(INI_SECTION_NAME, "Gateway", "192.168.1.1", (char*)buf, sizeof(buf), INI_FILE_NAME);
+    if (val!=0) {
+      p = &buf[0];
+      val8u = 0;
+      if (UTIL1_ScanDecimal8uNumber(&p, &val8u)==ERR_OK && *p=='.') {
+        W5100_config.gateway[0] = val8u;
+        p++;
+        if (UTIL1_ScanDecimal8uNumber(&p, &val8u)==ERR_OK && *p=='.') {
+          W5100_config.gateway[1] = val8u;
+          p++;
+          if (UTIL1_ScanDecimal8uNumber(&p, &val8u)==ERR_OK && *p=='.') {
+            W5100_config.gateway[2] = val8u;
+            p++;
+            if (UTIL1_ScanDecimal8uNumber(&p, &val8u)==ERR_OK && *p=='\0') {
+              W5100_config.gateway[3] = val8u;
+            }
+          }
+        }
+      }
+    }
+  }
+#endif
   /* configure network: IP address, gateway, netmask, MAC */
   if (W5100_WriteConfig((w5100_config_t*)&W5100_config)!=ERR_OK) {
     CLS1_SendStr((unsigned char*)"Failed to set Net Configuration!\r\n", CLS1_GetStdio()->stdErr);
@@ -106,6 +156,7 @@ static void WiznetSetup(void) {
 
 static portTASK_FUNCTION(Task1, pvParameters) {
   (void)pvParameters; /* parameter not used */
+  FRTOS1_vTaskDelay(1000/portTICK_RATE_MS); /* provide other tasks time to run, especially to mount file system */
   WiznetSetup();
   CLS1_SendStr((unsigned char*)"Running web server...\r\n", CLS1_GetStdio()->stdOut);
   for(;;) {
@@ -122,8 +173,8 @@ void APP_Run(void) {
   SERVER_Init();
   if (FRTOS1_xTaskCreate(
         Task1,  /* pointer to the task */
-        (signed char *)"Task1", /* task name for kernel awareness debugging */
-        configMINIMAL_STACK_SIZE+100, /* task stack size */
+        "Task1", /* task name for kernel awareness debugging */
+        configMINIMAL_STACK_SIZE+300, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
         (xTaskHandle*)NULL /* optional task handle to create */

@@ -57,12 +57,13 @@
 #include "ETH_INT.h"
 #include "BitIoLdd5.h"
 #include "CS1.h"
+#include "MINI1.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

@@ -10,6 +10,9 @@
 #ifndef	DHCP_H_
 #define	DHCP_H_
 
+#include "Platform.h"
+#if PL_USE_DHCP
+
 #include "PE_Types.h"
 
 /* Socket used in W5100 device */
@@ -128,5 +131,6 @@ typedef enum
 bool DHCP_GetIPAddress(void);
 static bool DHCP_SendMessage(uint8_t u8Socket, uint8_t u8MessageType);
 static uint8_t DHCP_Parse(uint8_t u8Socket);
+#endif /* PL_USE_DHCP */
 
 #endif
