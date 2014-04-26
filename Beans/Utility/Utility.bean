@@ -4,7 +4,7 @@
     <Name>Utility</Name>
     <Description>Utility Module</Description>
     <Author>Erich Styger</Author>
-    <Version>01.097</Version>
+    <Version>01.101</Version>
     <Icon>Utility</Icon>
     <TypesFiles>PE,Utility\Utility</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -16,7 +16,7 @@
     <BW_AutoSaveDriver>yes</BW_AutoSaveDriver>
     <BW_DetailedHelp>yes</BW_DetailedHelp>
     <BW_NeedTps>no</BW_NeedTps>
-    <BW_NeedUst>6</BW_NeedUst>
+    <BW_NeedUst>7</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
     <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2014, all rights reserved.\nxatoi(): Copyright (C) 2010, ChaN, all right reserved. (see copyright notice and license at the function implementation).\n\nThis an open source software implementing utility functions using Processor Expert.\nThis is a free software and is opened for education,  research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for\n  personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
@@ -130,7 +130,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, const unsigned char *src)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, const unsigned char *src)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -177,7 +177,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, size_t dstSize, byte ch)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, uint8_t ch)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -223,7 +223,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte *dst, byte fill, byte nofFill)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, uint8_t fill, uint8_t nofFill)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1574,7 +1574,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>uint8_t #M#_#C#(uint16_t year, uint8_t month, uint8_t day)</ANSIC>
+          <ANSIC>byte #M#_#C#(uint16_t year, uint8_t month, uint8_t day)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1643,7 +1643,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>uint8_t #M#_#C#(const unsigned char *filename, uint8_t *destname, size_t maxlen, size_t *lenRead, size_t *lenWritten, const char *terminators)</ANSIC>
+          <ANSIC>byte #M#_#C#(const unsigned char *filename, uint8_t *destname, size_t maxlen, size_t *lenRead, size_t *lenWritten, const char *terminators)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1685,7 +1685,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, int32_t *res)</ANSIC>
+          <ANSIC>byte #M#_#C#(const unsigned char **str, int32_t *res)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1738,7 +1738,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, uint8_t *day, uint8_t *month, uint16_t *year)</ANSIC>
+          <ANSIC>byte #M#_#C#(const unsigned char **str, uint8_t *day, uint8_t *month, uint16_t *year)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1797,7 +1797,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, uint8_t *hour, uint8_t *minute, uint8_t *second, uint8_t *hSecond)</ANSIC>
+          <ANSIC>byte #M#_#C#(const unsigned char **str, uint8_t *hour, uint8_t *minute, uint8_t *second, uint8_t *hSecond)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1838,7 +1838,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, uint8_t *val)</ANSIC>
+          <ANSIC>byte #M#_#C#(const unsigned char **str, uint8_t *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1879,7 +1879,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, signed char *val)</ANSIC>
+          <ANSIC>byte #M#_#C#(const unsigned char **str, signed char *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1920,7 +1920,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, uint16_t *val)</ANSIC>
+          <ANSIC>byte #M#_#C#(const unsigned char **str, uint16_t *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1961,7 +1961,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, int16_t *val)</ANSIC>
+          <ANSIC>byte #M#_#C#(const unsigned char **str, int16_t *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2003,7 +2003,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, uint32_t *val)</ANSIC>
+          <ANSIC>byte #M#_#C#(const unsigned char **str, uint32_t *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2045,7 +2045,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, uint32_t *val)</ANSIC>
+          <ANSIC>byte #M#_#C#(const unsigned char **str, uint32_t *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2086,7 +2086,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, uint8_t *val)</ANSIC>
+          <ANSIC>byte #M#_#C#(const unsigned char **str, uint8_t *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2127,7 +2127,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, uint8_t *val)</ANSIC>
+          <ANSIC>byte #M#_#C#(const unsigned char **str, uint8_t *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2168,7 +2168,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, uint16_t *val)</ANSIC>
+          <ANSIC>byte #M#_#C#(const unsigned char **str, uint16_t *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2191,7 +2191,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>2</ParamCount>
         <Parameter>
@@ -2211,6 +2211,65 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>uint8_t #M#_#C#(const unsigned char **str, uint32_t *val)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ScanSeparatedNumbers</Name>
+        <Symbol>ScanSeparatedNumbers</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Scans multiple numbers separated by character, e.g. "123.68.5.3"</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>uint8_t</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>5</ParamCount>
+        <Parameter>
+          <ParName>str</ParName>
+          <ParType>uint8_t</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>String to scan. It returns as well until where it has scanned</ParHint>
+          <ParUserDeclaration>const unsigned char **str</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>values</ParName>
+          <ParType>uint8_t</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to array where to store the values</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>nofValues</ParName>
+          <ParType>uint8_t</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Number of values in the array</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>separator</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Character separator, e.g. '.'</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>numberType</ParName>
+          <ParType>SeparatedNumberType</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>type of number to scan</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, uint8_t *values, uint8_t nofValues, char separator, %'ModuleName'_SeparatedNumberType numberType)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2381,7 +2440,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>uint8_t #M#_#C#(uint8_t *str, uint8_t *tail)</ANSIC>
+          <ANSIC>byte #M#_#C#(uint8_t *str, uint8_t *tail)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2416,7 +2475,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>uint16_t #M#_#C#(const char *)</ANSIC>
+          <ANSIC>word #M#_#C#(const char *)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2456,7 +2515,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>uint8_t #M#_#C#(uint8_t *str, uint8_t *tail)</ANSIC>
+          <ANSIC>byte #M#_#C#(uint8_t *str, uint8_t *tail)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

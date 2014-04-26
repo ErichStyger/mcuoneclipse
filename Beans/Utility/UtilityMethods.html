@@ -214,8 +214,8 @@ LI.EXP {
 <br /><i>ANSIC prototype:</i> void strcpy(uint8_t *dst, size_t dstSize, const unsigned char *src)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
-<li><i>src: Pointer to byte</i> - Pointer to source string.</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
+<li><i>src: Pointer to uint8_t</i> - Pointer to source string.</li>
 </ul><br />
 </li>
 <li><a name="strcat">
@@ -223,11 +223,11 @@ LI.EXP {
  - Same as normal strcat, but safe as it does not write beyond the buffer.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void strcat(byte *dst, size_t dstSize, const unsigned char *src)<br />
+<br /><i>ANSIC prototype:</i> void strcat(uint8_t *dst, size_t dstSize, const unsigned char *src)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
-<li><i>src: Pointer to byte</i> - Pointer to source string.</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
+<li><i>src: Pointer to uint8_t</i> - Pointer to source string.</li>
 </ul><br />
 </li>
 <li><a name="chcat">
@@ -235,11 +235,11 @@ LI.EXP {
  - Adds a single character to a zero byte terminated buffer. It cares about buffer overflow.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void chcat(byte *dst, size_t dstSize, byte ch)<br />
+<br /><i>ANSIC prototype:</i> void chcat(uint8_t *dst, size_t dstSize, uint8_t ch)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
-<li><i>ch:byte</i> - character to append</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
+<li><i>ch:uint8_t</i> - character to append</li>
 </ul><br />
 </li>
 <li><a name="Num8sToStr">
@@ -247,10 +247,10 @@ LI.EXP {
  - Converts a signed 8bit value into a string.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void Num8sToStr(byte *dst, size_t dstSize, signed char val)<br />
+<br /><i>ANSIC prototype:</i> void Num8sToStr(uint8_t *dst, size_t dstSize, signed char val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
 <li><i>val:signed char</i> - Value to be converted.</li>
 </ul><br />
 </li>
@@ -259,11 +259,11 @@ LI.EXP {
  - Converts an unsigned 8bit value into a string.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void Num8uToStr(byte *dst, size_t dstSize, byte val)<br />
+<br /><i>ANSIC prototype:</i> void Num8uToStr(uint8_t *dst, size_t dstSize, uint8_t val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
-<li><i>val:byte</i> - Value to be converted.</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
+<li><i>val:uint8_t</i> - Value to be converted.</li>
 </ul><br />
 </li>
 <li><a name="Num16sToStr">
@@ -271,10 +271,10 @@ LI.EXP {
  - Converts a signed 16bit value into a string.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void Num16sToStr(byte *dst, size_t dstSize, int16_t val)<br />
+<br /><i>ANSIC prototype:</i> void Num16sToStr(uint8_t *dst, size_t dstSize, int16_t val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
 <li><i>val:int16_t</i> - Value to be converted.</li>
 </ul><br />
 </li>
@@ -283,11 +283,11 @@ LI.EXP {
  - Converts a signed 16bit value into a string.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void Num16uToStr(byte *dst, size_t dstSize, word val)<br />
+<br /><i>ANSIC prototype:</i> void Num16uToStr(uint8_t *dst, size_t dstSize, uint16_t val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
-<li><i>val:word</i> - Value to be converted.</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
+<li><i>val:uint16_t</i> - Value to be converted.</li>
 </ul><br />
 </li>
 <li><a name="Num32uToStr">
@@ -295,11 +295,11 @@ LI.EXP {
  - Converts an unsigned 32bit value into a string.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void Num32uToStr(byte *dst, size_t dstSize, dword val)<br />
+<br /><i>ANSIC prototype:</i> void Num32uToStr(uint8_t *dst, size_t dstSize, uint32_t val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
-<li><i>val:dword</i> - Value to be converted.</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
+<li><i>val:uint32_t</i> - Value to be converted.</li>
 </ul><br />
 </li>
 <li><a name="Num32sToStr">
@@ -307,10 +307,10 @@ LI.EXP {
  - Converts a signed 32bit value into a string.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void Num32sToStr(byte *dst, size_t dstSize, long val)<br />
+<br /><i>ANSIC prototype:</i> void Num32sToStr(uint8_t *dst, size_t dstSize, long val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
 <li><i>val:long</i> - Value to be converted.</li>
 </ul><br />
 </li>
@@ -319,13 +319,13 @@ LI.EXP {
  - Converts a 16bit signed value to string.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void Num16sToStrFormatted(byte *dst, size_t dstSize, int16_t val, char fill, byte nofFill)<br />
+<br /><i>ANSIC prototype:</i> void Num16sToStrFormatted(uint8_t *dst, size_t dstSize, int16_t val, char fill, uint8_t nofFill)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
 <li><i>val:int16_t</i> - Value to convert.</li>
 <li><i>fill:char</i> - Fill character</li>
-<li><i>nofFill:byte</i> - Number of fill characters</li>
+<li><i>nofFill:uint8_t</i> - Number of fill characters</li>
 </ul><br />
 </li>
 <li><a name="Num16uToStrFormatted">
@@ -333,13 +333,13 @@ LI.EXP {
  - Converts a 16bit unsigned value to string.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void Num16uToStrFormatted(byte *dst, size_t dstSize, word val, char fill, byte nofFill)<br />
+<br /><i>ANSIC prototype:</i> void Num16uToStrFormatted(uint8_t *dst, size_t dstSize, uint16_t val, char fill, uint8_t nofFill)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
-<li><i>val:word</i> - Value to convert.</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
+<li><i>val:uint16_t</i> - Value to convert.</li>
 <li><i>fill:char</i> - Fill character</li>
-<li><i>nofFill:byte</i> - Number of fill characters</li>
+<li><i>nofFill:uint8_t</i> - Number of fill characters</li>
 </ul><br />
 </li>
 <li><a name="Num32uToStrFormatted">
@@ -347,13 +347,13 @@ LI.EXP {
  - Converts a 32bit unsigned value to string.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void Num32uToStrFormatted(byte *dst, size_t dstSize, dword val, char fill, byte nofFill)<br />
+<br /><i>ANSIC prototype:</i> void Num32uToStrFormatted(uint8_t *dst, size_t dstSize, uint32_t val, char fill, uint8_t nofFill)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
-<li><i>val:dword</i> - Value to convert.</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
+<li><i>val:uint32_t</i> - Value to convert.</li>
 <li><i>fill:char</i> - Fill character</li>
-<li><i>nofFill:byte</i> - Number of fill characters</li>
+<li><i>nofFill:uint8_t</i> - Number of fill characters</li>
 </ul><br />
 </li>
 <li><a name="Num32sToStrFormatted">
@@ -361,13 +361,13 @@ LI.EXP {
  - Converts a 32bit signed value to string.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void Num32sToStrFormatted(byte *dst, size_t dstSize, long val, char fill, byte nofFill)<br />
+<br /><i>ANSIC prototype:</i> void Num32sToStrFormatted(uint8_t *dst, size_t dstSize, long val, char fill, uint8_t nofFill)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
 <li><i>val:long</i> - Value to convert.</li>
 <li><i>fill:char</i> - Fill character</li>
-<li><i>nofFill:byte</i> - Number of fill characters</li>
+<li><i>nofFill:uint8_t</i> - Number of fill characters</li>
 </ul><br />
 </li>
 <li><a name="strcatNum8u">
@@ -375,11 +375,11 @@ LI.EXP {
  - Appends a 8bit unsigned value to a string buffer.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void strcatNum8u(byte *dst, size_t dstSize, byte val)<br />
+<br /><i>ANSIC prototype:</i> void strcatNum8u(uint8_t *dst, size_t dstSize, uint8_t val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
-<li><i>val:byte</i> - Value to convert.</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
+<li><i>val:uint8_t</i> - Value to convert.</li>
 </ul><br />
 </li>
 <li><a name="strcatNum8s">
@@ -387,10 +387,10 @@ LI.EXP {
  - Appends a 8bit signed value to a string buffer.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void strcatNum8s(byte *dst, size_t dstSize, signed char val)<br />
+<br /><i>ANSIC prototype:</i> void strcatNum8s(uint8_t *dst, size_t dstSize, signed char val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
 <li><i>val:signed char</i> - Value to convert.</li>
 </ul><br />
 </li>
@@ -399,11 +399,11 @@ LI.EXP {
  - Appends a 16bit unsigned value to a string buffer.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void strcatNum16u(byte *dst, size_t dstSize, word val)<br />
+<br /><i>ANSIC prototype:</i> void strcatNum16u(uint8_t *dst, size_t dstSize, uint16_t val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
-<li><i>val:word</i> - Value to convert.</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
+<li><i>val:uint16_t</i> - Value to convert.</li>
 </ul><br />
 </li>
 <li><a name="strcatNum16s">
@@ -411,10 +411,10 @@ LI.EXP {
  - Appends a 16bit signed value to a string buffer.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void strcatNum16s(byte *dst, size_t dstSize, int16_t val)<br />
+<br /><i>ANSIC prototype:</i> void strcatNum16s(uint8_t *dst, size_t dstSize, int16_t val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
 <li><i>val:int16_t</i> - Value to convert.</li>
 </ul><br />
 </li>
@@ -423,11 +423,11 @@ LI.EXP {
  - Appends a 32bit signed value to a string buffer.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void strcatNum32u(byte *dst, size_t dstSize, dword val)<br />
+<br /><i>ANSIC prototype:</i> void strcatNum32u(uint8_t *dst, size_t dstSize, uint32_t val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
-<li><i>val:dword</i> - Value to convert.</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
+<li><i>val:uint32_t</i> - Value to convert.</li>
 </ul><br />
 </li>
 <li><a name="strcatNum32s">
@@ -435,10 +435,10 @@ LI.EXP {
  - Appends a 32bit signed value to a string buffer.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void strcatNum32s(byte *dst, size_t dstSize, long val)<br />
+<br /><i>ANSIC prototype:</i> void strcatNum32s(uint8_t *dst, size_t dstSize, long val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
 <li><i>val:long</i> - Value to convert.</li>
 </ul><br />
 </li>
@@ -447,13 +447,13 @@ LI.EXP {
  - Appends a 16bit unsigned value to a string buffer in a formatted way.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void strcatNum16uFormatted(byte *dst, size_t dstSize, word val, char fill, byte nofFill)<br />
+<br /><i>ANSIC prototype:</i> void strcatNum16uFormatted(uint8_t *dst, size_t dstSize, uint16_t val, char fill, uint8_t nofFill)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
-<li><i>val:word</i> - Value to convert.</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
+<li><i>val:uint16_t</i> - Value to convert.</li>
 <li><i>fill:char</i> - Fill character</li>
-<li><i>nofFill:byte</i> - Number of fill characters</li>
+<li><i>nofFill:uint8_t</i> - Number of fill characters</li>
 </ul><br />
 </li>
 <li><a name="strcatNum16sFormatted">
@@ -461,13 +461,13 @@ LI.EXP {
  - Appends a 16bit signed value to a string buffer in a formatted way.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void strcatNum16sFormatted(byte *dst, size_t dstSize, int16_t val, char fill, byte nofFill)<br />
+<br /><i>ANSIC prototype:</i> void strcatNum16sFormatted(uint8_t *dst, size_t dstSize, int16_t val, char fill, uint8_t nofFill)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
 <li><i>val:int16_t</i> - Value to convert.</li>
 <li><i>fill:char</i> - Fill character</li>
-<li><i>nofFill:byte</i> - Number of fill characters</li>
+<li><i>nofFill:uint8_t</i> - Number of fill characters</li>
 </ul><br />
 </li>
 <li><a name="strcatNum32uFormatted">
@@ -475,13 +475,13 @@ LI.EXP {
  - Appends a 32bit unsigned value to a string buffer in a formatted way.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void strcatNum32uFormatted(byte *dst, size_t dstSize, dword val, char fill, byte nofFill)<br />
+<br /><i>ANSIC prototype:</i> void strcatNum32uFormatted(uint8_t *dst, size_t dstSize, uint32_t val, char fill, uint8_t nofFill)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
-<li><i>val:dword</i> - Value to convert.</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
+<li><i>val:uint32_t</i> - Value to convert.</li>
 <li><i>fill:char</i> - Fill character</li>
-<li><i>nofFill:byte</i> - Number of fill characters</li>
+<li><i>nofFill:uint8_t</i> - Number of fill characters</li>
 </ul><br />
 </li>
 <li><a name="strcatNum32sFormatted">
@@ -489,13 +489,13 @@ LI.EXP {
  - Appends a 32bit signed value to a string buffer in a formatted way.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void strcatNum32sFormatted(byte *dst, size_t dstSize, long val, char fill, byte nofFill)<br />
+<br /><i>ANSIC prototype:</i> void strcatNum32sFormatted(uint8_t *dst, size_t dstSize, long val, char fill, uint8_t nofFill)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
 <li><i>val:long</i> - Value to convert.</li>
 <li><i>fill:char</i> - Fill character</li>
-<li><i>nofFill:byte</i> - Number of fill characters</li>
+<li><i>nofFill:uint8_t</i> - Number of fill characters</li>
 </ul><br />
 </li>
 <li><a name="strcatNum8Hex">
@@ -503,11 +503,11 @@ LI.EXP {
  - Appends a 8bit unsigned value to a buffer as hex number (without a 0x prefix).
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void strcatNum8Hex(byte *dst, size_t dstSize, byte num)<br />
+<br /><i>ANSIC prototype:</i> void strcatNum8Hex(uint8_t *dst, size_t dstSize, uint8_t num)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
-<li><i>num:byte</i> - Value to convert.</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
+<li><i>num:uint8_t</i> - Value to convert.</li>
 </ul><br />
 </li>
 <li><a name="strcatNum16Hex">
@@ -515,11 +515,11 @@ LI.EXP {
  - Appends a 16bit unsigned value to a buffer as hex number (without a 0x prefix).
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void strcatNum16Hex(byte *dst, size_t dstSize, word num)<br />
+<br /><i>ANSIC prototype:</i> void strcatNum16Hex(uint8_t *dst, size_t dstSize, uint16_t num)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
-<li><i>num:word</i> - Value to convert.</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
+<li><i>num:uint16_t</i> - Value to convert.</li>
 </ul><br />
 </li>
 <li><a name="strcatNum24Hex">
@@ -527,11 +527,11 @@ LI.EXP {
  - Appends a 32bit unsigned value to a buffer as hex number (without a 0x prefix). Only 24bits are used.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void strcatNum24Hex(byte *dst, size_t dstSize, dword num)<br />
+<br /><i>ANSIC prototype:</i> void strcatNum24Hex(uint8_t *dst, size_t dstSize, uint32_t num)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
-<li><i>num:dword</i> - Value to convert.</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
+<li><i>num:uint32_t</i> - Value to convert.</li>
 </ul><br />
 </li>
 <li><a name="strcatNum32Hex">
@@ -539,11 +539,11 @@ LI.EXP {
  - Appends a 16bit unsigned value to a buffer as hex number (without a 0x prefix).
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void strcatNum32Hex(byte *dst, size_t dstSize, dword num)<br />
+<br /><i>ANSIC prototype:</i> void strcatNum32Hex(uint8_t *dst, size_t dstSize, uint32_t num)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
-<li><i>num:dword</i> - Value to convert.</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
+<li><i>num:uint32_t</i> - Value to convert.</li>
 </ul><br />
 </li>
 <li><a name="strcatNum32sDotValue100">
@@ -551,10 +551,10 @@ LI.EXP {
  - Appends a 32bit signed value to a buffer. The value is in 1/100 units.  For example for the value -13456 it will append the string &quot;-134.56&quot;
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void strcatNum32sDotValue100(byte *dst, size_t dstSize, long num)<br />
+<br /><i>ANSIC prototype:</i> void strcatNum32sDotValue100(uint8_t *dst, size_t dstSize, long num)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>dst: Pointer to byte</i> - Pointer to destination string</li>
-<li><i>dstSize:byte</i> - Size of the destination buffer (in bytes).</li>
+<li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
+<li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
 <li><i>num:long</i> - Value to convert.</li>
 </ul><br />
 </li>
@@ -563,9 +563,9 @@ LI.EXP {
  - Returns true if a given year is a leap year
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> bool IsLeapYear(word year)<br />
+<br /><i>ANSIC prototype:</i> bool IsLeapYear(uint16_t year)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>year:word</i> - Year, in the YYYY format.</li>
+<li><i>year:uint16_t</i> - Year, in the YYYY format.</li>
 <li><i>Return value:bool</i> - If the year is a leap year or not.
 </li>
 </ul><br />
@@ -575,11 +575,11 @@ LI.EXP {
  - Returns the weekday for a given date &gt;= 1.Jan.1900
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte WeekDay(word year, byte month, byte day)<br />
+<br /><i>ANSIC prototype:</i> byte WeekDay(uint16_t year, uint8_t month, uint8_t day)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>year:word</i> - year in YYYY format</li>
-<li><i>month:byte</i> - month of the year (1: January, 2: February, etc)</li>
-<li><i>day:byte</i> - day of the moth (starting with 1)</li>
+<li><i>year:uint16_t</i> - year in YYYY format</li>
+<li><i>month:uint8_t</i> - month of the year (1: January, 2: February, etc)</li>
+<li><i>day:uint8_t</i> - day of the moth (starting with 1)</li>
 <li><i>Return value:byte</i> - Returns the weekday, 0 for Sunday, 1 for Monday, 2 for Tuesday, etc.
 </li>
 </ul><br />
@@ -589,14 +589,14 @@ LI.EXP {
  - Scans an escaped name from a string. This is useful e.g. for double quoted file names.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte ReadEscapedName(const unsigned char *filename, byte *destname, size_t maxlen, size_t *lenRead, size_t *lenWritten, const char *terminators)<br />
+<br /><i>ANSIC prototype:</i> byte ReadEscapedName(const unsigned char *filename, uint8_t *destname, size_t maxlen, size_t *lenRead, size_t *lenWritten, const char *terminators)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>filename: Pointer to byte</i> - the name to be copied. Names may be in quoted format</li>
-<li><i>destname: Pointer to byte</i> - the destination of the copy. Names are not in quoted format. destname may be NULL to get the other return values only</li>
-<li><i>maxlen:byte</i> - length allocated for destname</li>
+<li><i>filename: Pointer to uint8_t</i> - the name to be copied. Names may be in quoted format</li>
+<li><i>destname: Pointer to uint8_t</i> - the destination of the copy. Names are not in quoted format. destname may be NULL to get the other return values only</li>
+<li><i>maxlen:uint8_t</i> - length allocated for destname</li>
 <li><i>lenRead: Pointer to char</i> - length read in filename to copy the whole name. Note that filenames maybe space terminated, so *lenRead &lt; strlen(filename)</li>
-<li><i>lenWritten:byte</i> - the size written in destname. In case of overflows in destname, lenWritten is still increased but destname no longer written. The have the string length in these cases use strlen(destname)</li>
-<li><i>terminators:byte</i> - additional characters where a name should terminate. May be NULL</li>
+<li><i>lenWritten:uint8_t</i> - the size written in destname. In case of overflows in destname, lenWritten is still increased but destname no longer written. The have the string length in these cases use strlen(destname)</li>
+<li><i>terminators:uint8_t</i> - additional characters where a name should terminate. May be NULL</li>
 <li><i>Return value:byte</i> - Error code
 </li>
 </ul><br />
@@ -608,7 +608,7 @@ LI.EXP {
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
 <br /><i>ANSIC prototype:</i> byte xatoi(const unsigned char **str, int32_t *res)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>str: Pointer to byte</i> - Pointer to string to scan. Returns until where it has scanned.</li>
+<li><i>str: Pointer to uint8_t</i> - Pointer to string to scan. Returns until where it has scanned.</li>
 <li><i>res: Pointer to long</i> - Pointer to where to store the result</li>
 <li><i>Return value:byte</i> - Error code
 </li>
@@ -619,12 +619,12 @@ LI.EXP {
  - Scans a date in the format &quot;dd.mm.yyyy&quot; or &quot;dd-mm-yyyy&quot;. For yy it will expand it to 20yy.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte ScanDate(const unsigned char **str, byte *day, byte *month, word *year)<br />
+<br /><i>ANSIC prototype:</i> byte ScanDate(const unsigned char **str, uint8_t *day, uint8_t *month, uint16_t *year)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>str: Pointer to byte</i> - Pointer to the string to be scanned. The function advances the pointer.</li>
-<li><i>day: Pointer to byte</i> - Pointer to where to store the day value</li>
-<li><i>month: Pointer to byte</i> - Pointer to where to store the month value</li>
-<li><i>year: Pointer to word</i> - Pointer to where to store the year value</li>
+<li><i>str: Pointer to uint8_t</i> - Pointer to the string to be scanned. The function advances the pointer.</li>
+<li><i>day: Pointer to uint8_t</i> - Pointer to where to store the day value</li>
+<li><i>month: Pointer to uint8_t</i> - Pointer to where to store the month value</li>
+<li><i>year: Pointer to uint16_t</i> - Pointer to where to store the year value</li>
 <li><i>Return value:byte</i> - Error code
 </li>
 </ul><br />
@@ -634,13 +634,13 @@ LI.EXP {
  - Scans a time string in the format &quot;hh:mm:ss,hh&quot; with the part for the &quot;,hh&quot; is optional.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte ScanTime(const unsigned char **str, byte *hour, byte *minute, byte *second, byte *hSecond)<br />
+<br /><i>ANSIC prototype:</i> byte ScanTime(const unsigned char **str, uint8_t *hour, uint8_t *minute, uint8_t *second, uint8_t *hSecond)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>str:byte</i> - Pointer to the string to be scanned. The function advances the pointer.</li>
-<li><i>hour: Pointer to byte</i> - Pointer to where to store the hour value</li>
-<li><i>minute: Pointer to byte</i> - Pointer to where to store the minute value</li>
-<li><i>second: Pointer to byte</i> - Pointer to where to store the second value</li>
-<li><i>hSecond: Pointer to byte</i> - Pointer to scans the hundreds of second part. If not present in string, zero is stored</li>
+<li><i>str:uint8_t</i> - Pointer to the string to be scanned. The function advances the pointer.</li>
+<li><i>hour: Pointer to uint8_t</i> - Pointer to where to store the hour value</li>
+<li><i>minute: Pointer to uint8_t</i> - Pointer to where to store the minute value</li>
+<li><i>second: Pointer to uint8_t</i> - Pointer to where to store the second value</li>
+<li><i>hSecond: Pointer to uint8_t</i> - Pointer to scans the hundreds of second part. If not present in string, zero is stored</li>
 <li><i>Return value:byte</i> - Error code
 </li>
 </ul><br />
@@ -650,10 +650,10 @@ LI.EXP {
  - Scans a decimal 8bit unsigned number
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte ScanDecimal8uNumber(const unsigned char **str, byte *val)<br />
+<br /><i>ANSIC prototype:</i> byte ScanDecimal8uNumber(const unsigned char **str, uint8_t *val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>str:byte</i> - String to scan. It returns as well until where it has scanned</li>
-<li><i>val: Pointer to byte</i> - Pointer to value</li>
+<li><i>str:uint8_t</i> - String to scan. It returns as well until where it has scanned</li>
+<li><i>val: Pointer to uint8_t</i> - Pointer to value</li>
 <li><i>Return value:byte</i> - Error code
 </li>
 </ul><br />
@@ -665,7 +665,7 @@ LI.EXP {
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
 <br /><i>ANSIC prototype:</i> byte ScanDecimal8sNumber(const unsigned char **str, signed char *val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>str:byte</i> - String to scan. It returns as well until where it has scanned</li>
+<li><i>str:uint8_t</i> - String to scan. It returns as well until where it has scanned</li>
 <li><i>val: Pointer to signed char</i> - Pointer to value</li>
 <li><i>Return value:byte</i> - Error code
 </li>
@@ -676,10 +676,10 @@ LI.EXP {
  - Scans a decimal 16bit unsigned number
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte ScanDecimal16uNumber(const unsigned char **str, word *val)<br />
+<br /><i>ANSIC prototype:</i> byte ScanDecimal16uNumber(const unsigned char **str, uint16_t *val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>str:byte</i> - String to scan. It returns as well until where it has scanned</li>
-<li><i>val: Pointer to word</i> - Pointer to value</li>
+<li><i>str:uint8_t</i> - String to scan. It returns as well until where it has scanned</li>
+<li><i>val: Pointer to uint16_t</i> - Pointer to value</li>
 <li><i>Return value:byte</i> - Error code
 </li>
 </ul><br />
@@ -691,7 +691,7 @@ LI.EXP {
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
 <br /><i>ANSIC prototype:</i> byte ScanDecimal16sNumber(const unsigned char **str, int16_t *val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>str:byte</i> - String to scan. It returns as well until where it has scanned</li>
+<li><i>str:uint8_t</i> - String to scan. It returns as well until where it has scanned</li>
 <li><i>val: Pointer to int16_t</i> - Pointer to value</li>
 <li><i>Return value:byte</i> - Error code
 </li>
@@ -704,8 +704,8 @@ LI.EXP {
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
 <br /><i>ANSIC prototype:</i> byte ScanDecimal32uNumber(const unsigned char **str, uint32_t *val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>str:byte</i> - string to scan. It returns as well until where it has scanned</li>
-<li><i>val: Pointer to dword</i> - Pointer to value</li>
+<li><i>str:uint8_t</i> - string to scan. It returns as well until where it has scanned</li>
+<li><i>val: Pointer to uint32_t</i> - Pointer to value</li>
 <li><i>Return value:byte</i> - Error code
 </li>
 </ul><br />
@@ -717,7 +717,7 @@ LI.EXP {
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
 <br /><i>ANSIC prototype:</i> byte ScanDecimal32sNumber(const unsigned char **str, uint32_t *val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>str:byte</i> - string to scan. It returns as well until where it has scanned</li>
+<li><i>str:uint8_t</i> - string to scan. It returns as well until where it has scanned</li>
 <li><i>val: Pointer to long</i> - Pointer to value</li>
 <li><i>Return value:byte</i> - Error code
 </li>
@@ -728,10 +728,10 @@ LI.EXP {
  - Scans a hexadecimal 8bit number, starting with 0x
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte ScanHex8uNumber(const unsigned char **str, byte *val)<br />
+<br /><i>ANSIC prototype:</i> byte ScanHex8uNumber(const unsigned char **str, uint8_t *val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>str:byte</i> - String to scan, starting with 0x. It returns as well until where it has scanned</li>
-<li><i>val: Pointer to byte</i> - Pointer to value</li>
+<li><i>str:uint8_t</i> - String to scan, starting with 0x. It returns as well until where it has scanned</li>
+<li><i>val: Pointer to uint8_t</i> - Pointer to value</li>
 <li><i>Return value:byte</i> - Error code
 </li>
 </ul><br />
@@ -741,10 +741,10 @@ LI.EXP {
  - Scans a hexadecimal 8bit number, without 0x
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte ScanHex8uNumberNoPrefix(const unsigned char **str, byte *val)<br />
+<br /><i>ANSIC prototype:</i> byte ScanHex8uNumberNoPrefix(const unsigned char **str, uint8_t *val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>str:byte</i> - String to scan, starting with 0x. It returns as well until where it has scanned</li>
-<li><i>val: Pointer to byte</i> - Pointer to value</li>
+<li><i>str:uint8_t</i> - String to scan, starting with 0x. It returns as well until where it has scanned</li>
+<li><i>val: Pointer to uint8_t</i> - Pointer to value</li>
 <li><i>Return value:byte</i> - Error code
 </li>
 </ul><br />
@@ -754,10 +754,10 @@ LI.EXP {
  - Scans a hexadecimal 16bit number, starting with 0x
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte ScanHex16uNumber(const unsigned char **str, word *val)<br />
+<br /><i>ANSIC prototype:</i> byte ScanHex16uNumber(const unsigned char **str, uint16_t *val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>str:byte</i> - String to scan, starting with 0x.. It returns as well until where it has scanned</li>
-<li><i>val: Pointer to word</i> - Pointer to value</li>
+<li><i>str:uint8_t</i> - String to scan, starting with 0x.. It returns as well until where it has scanned</li>
+<li><i>val: Pointer to uint16_t</i> - Pointer to value</li>
 <li><i>Return value:byte</i> - Error code
 </li>
 </ul><br />
@@ -767,11 +767,27 @@ LI.EXP {
  - Scans a hexadecimal 32bit number, starting with 0x
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte ScanHex32uNumber(const unsigned char **str, uint32_t *val)<br />
+<br /><i>ANSIC prototype:</i> uint8_t ScanHex32uNumber(const unsigned char **str, uint32_t *val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>str:byte</i> - String to scan, starting with 0x. It returns as well until where it has scanned</li>
-<li><i>val: Pointer to dword</i> - Pointer to value</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>str:uint8_t</i> - String to scan, starting with 0x. It returns as well until where it has scanned</li>
+<li><i>val: Pointer to uint32_t</i> - Pointer to value</li>
+<li><i>Return value:uint8_t</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="ScanSeparatedNumbers">
+<b>ScanSeparatedNumbers</b></a>
+ - Scans multiple numbers separated by character, e.g. &quot;123.68.5.3&quot;
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> uint8_t ScanSeparatedNumbers(const unsigned char **str, uint8_t *values, uint8_t nofValues, char separator, <i>ComponentName_</i>SeparatedNumberType numberType)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>str:uint8_t</i> - String to scan. It returns as well until where it has scanned</li>
+<li><i>values: Pointer to uint8_t</i> - Pointer to array where to store the values</li>
+<li><i>nofValues:uint8_t</i> - Number of values in the array</li>
+<li><i>separator:char</i> - Character separator, e.g. '.'</li>
+<li><i>numberType:<i>ComponentName_</i>SeparatedNumberType</i> - type of number to scan</li>
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -797,7 +813,7 @@ LI.EXP {
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>str1: Pointer to char</i> - Pointer to string</li>
 <li><i>str2: Pointer to char</i> - Pointer to string</li>
-<li><i>size:byte</i> - no hint</li>
+<li><i>size:uint8_t</i> - no hint</li>
 <li><i>Return value:int16_t</i> - Returns zero if the two strings are the same
 </li>
 </ul><br />
@@ -807,10 +823,10 @@ LI.EXP {
  - Searches a substring inside a string and returns the position.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> int16_t strFind(byte *str, byte *subStr)<br />
+<br /><i>ANSIC prototype:</i> int16_t strFind(uint8_t *str, uint8_t *subStr)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>str: Pointer to byte</i> - Pointer to string which will be searched</li>
-<li><i>subStr: Pointer to byte</i> - Pointer to substring to search inside str</li>
+<li><i>str: Pointer to uint8_t</i> - Pointer to string which will be searched</li>
+<li><i>subStr: Pointer to uint8_t</i> - Pointer to substring to search inside str</li>
 <li><i>Return value:int16_t</i> - -1 if not found, otherwise the character index.
 </li>
 </ul><br />
@@ -820,10 +836,10 @@ LI.EXP {
  - Compares the tail of a string and returns 0 if it matches, 1 otherwise
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte strtailcmp(byte *str, byte *tail)<br />
+<br /><i>ANSIC prototype:</i> byte strtailcmp(uint8_t *str, uint8_t *tail)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>str: Pointer to byte</i> - Pointer to string. This string is compared if it contains the tail.</li>
-<li><i>tail: Pointer to byte</i> - Pointer to tail string.</li>
+<li><i>str: Pointer to uint8_t</i> - Pointer to string. This string is compared if it contains the tail.</li>
+<li><i>tail: Pointer to uint8_t</i> - Pointer to tail string.</li>
 <li><i>Return value:byte</i> - returns 0 if tail matches, -1 otherwise
 </li>
 </ul><br />
@@ -835,7 +851,7 @@ LI.EXP {
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
 <br /><i>ANSIC prototype:</i> word strlen(const char *)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>str:byte</i> - no hint</li>
+<li><i>str:uint8_t</i> - no hint</li>
 <li><i>Return value:word</i> - size of strinig
 </li>
 </ul><br />
@@ -845,10 +861,10 @@ LI.EXP {
  - Removes a tailing substring from a string. The string passed will be modified (the tail is cut by writing a zero byte to the string!)
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte strCutTail(byte *str, byte *tail)<br />
+<br /><i>ANSIC prototype:</i> byte strCutTail(uint8_t *str, uint8_t *tail)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>str: Pointer to byte</i> - Pointer to string where to remove the tail</li>
-<li><i>tail: Pointer to byte</i> - Pointer to substring to remove</li>
+<li><i>str: Pointer to uint8_t</i> - Pointer to string where to remove the tail</li>
+<li><i>tail: Pointer to uint8_t</i> - Pointer to substring to remove</li>
 <li><i>Return value:byte</i> - Error code, ERR_OK if no error, otherwise ERR_FAIL if tail is not found
 </li>
 </ul><br />

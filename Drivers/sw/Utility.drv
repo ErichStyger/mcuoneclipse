@@ -107,6 +107,11 @@
 %-    typedef int TMyInteger;
 %-
 #include <stddef.h>
+
+typedef enum {
+  %'ModuleName'_SEP_NUM_TYPE_UINT8, /* uint8_t number type */
+  %'ModuleName'_SEP_NUM_TYPE_UINT8_HEX_NO_PREFIX, /* uint8_t hex number type, no 0x prefix */
+} %'ModuleName'_SeparatedNumberType;
 %-BW_CUSTOM_USERTYPE_END
 
 
@@ -693,6 +698,20 @@ int16_t %'ModuleName'%.%strFind(uint8_t *str, uint8_t *subStr);
 
 %endif %- strFind
 %-BW_METHOD_END strFind
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ScanSeparatedNumbers
+%ifdef ScanSeparatedNumbers
+uint8_t %'ModuleName'%.%ScanSeparatedNumbers(const unsigned char **str, uint8_t *values, uint8_t nofValues, char separator, %'ModuleName'_SeparatedNumberType numberType);
+%define! Parstr
+%define! ParnofValues
+%define! Parseparator
+%define! ParnumberType
+%define! Parvalues
+%define! RetVal
+%include Common\UtilityScanSeparatedNumbers.Inc
+
+%endif %- ScanSeparatedNumbers
+%-BW_METHOD_END ScanSeparatedNumbers
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -2450,6 +2469,51 @@ int16_t %'ModuleName'%.%strFind(uint8_t *str, uint8_t *subStr)
 
 %endif %- strFind
 %-BW_METHOD_END strFind
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ScanSeparatedNumbers
+%ifdef ScanSeparatedNumbers
+%define! Parstr
+%define! ParnofValues
+%define! Parseparator
+%define! ParnumberType
+%define! Parvalues
+%define! RetVal
+%include Common\UtilityScanSeparatedNumbers.Inc
+uint8_t %'ModuleName'%.%ScanSeparatedNumbers(const unsigned char **str, uint8_t *values, uint8_t nofValues, char separator, %'ModuleName'_SeparatedNumberType numberType)
+{
+  int i;
+  uint8_t res;
+  const unsigned char *p;
+
+  if (nofValues<=1) {
+    return ERR_FAILED; /* need at least two values */
+  }
+  p = *str;
+  for(i=0;i<nofValues;i++) {
+    if (numberType==%'ModuleName'%.SEP_NUM_TYPE_UINT8) {
+      res = %'ModuleName'%.%ScanDecimal8uNumber(&p, &values[i]);
+    } else if (numberType==%'ModuleName'%.SEP_NUM_TYPE_UINT8_HEX_NO_PREFIX) {
+      res = %'ModuleName'%.%ScanHex8uNumberNoPrefix(&p, &values[i]);
+    } else {
+      res = ERR_FAILED;
+    }
+    if (res==ERR_OK) { /* parsing ok */
+      if (i!=nofValues-1) {
+        if ((*p)!=separator) { /* not last one */
+          return ERR_FAILED; /* wrong separator */
+        } /* if */
+        p++; /* skip separator and continue scanning */
+      } /* if */
+    } else {
+      return ERR_FAILED; /* failed parsing number */
+    } /* if */
+  } /* for */
+  *str = p;
+  return ERR_OK;
+}
+
+%endif %- ScanSeparatedNumbers
+%-BW_METHOD_END ScanSeparatedNumbers
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
