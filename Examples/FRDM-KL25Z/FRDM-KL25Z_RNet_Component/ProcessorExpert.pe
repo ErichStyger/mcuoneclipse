@@ -3,8 +3,8 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>28</ModificationStamp>
-    <Date>2014-04-25</Date>
+    <ModificationStamp>36</ModificationStamp>
+    <Date>2014-04-26</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.0.RT6_b1411-0406</PEversion>
   </Header>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>83</ProjectCompNumb>
+    <ProjectCompNumb>106</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -8881,10 +8881,10 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>true</Value>
+        <Value>false</Value>
         <Expanded>true</Expanded>
         <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <LastUserSel>no</LastUserSel>
       </ItemState>
       <ItemState>
         <ItemSymbol>vApplicationTickHookName</ItemSymbol>
@@ -8897,10 +8897,10 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>true</Value>
+        <Value>false</Value>
         <Expanded>true</Expanded>
         <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <LastUserSel>no</LastUserSel>
       </ItemState>
       <ItemState>
         <ItemSymbol>vApplicationIdleHookName</ItemSymbol>
@@ -12893,6 +12893,84 @@
     <Events />
   </Bean>
   <Bean>
+    <BeanType>CriticalSection</BeanType>
+    <Name>CS1</Name>
+    <CompNumb>35</CompNumb>
+    <CompEnabled>true</CompEnabled>
+    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
+    <IconName>CPU_CHIP2</IconName>
+    <UserFolderName />
+    <Comment lines_count="0" />
+    <Template />
+    <BeanVersion>01.006</BeanVersion>
+    <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Properties>
+      <ItemState>
+        <ItemSymbol>DeviceName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>CS1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>UseProcessorExpertDefault</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>useRTOScritical</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>1</Index>
+        <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+    </Properties>
+    <Methods>
+      <ItemState>
+        <ItemSymbol>CriticalVariable</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>CriticalVariable</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EnterCritical</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>EnterCritical</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExitCritical</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ExitCritical</UsrMethodName>
+      </ItemState>
+    </Methods>
+    <Events />
+  </Bean>
+  <Bean>
     <BeanType>nRF24L01</BeanType>
     <Name>RF1</Name>
     <CompNumb>28</CompNumb>
@@ -12902,7 +12980,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.071</BeanVersion>
+    <BeanVersion>01.074</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -15063,7 +15141,7 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>true</Value>
         <Expanded>true</Expanded>
-        <LastSelection>false</LastSelection>
+        <LastSelection>true</LastSelection>
         <LastUserSel>no</LastUserSel>
       </ItemState>
       <ItemState>
@@ -15107,84 +15185,6 @@
     </Events>
   </Bean>
   <Bean>
-    <BeanType>CriticalSection</BeanType>
-    <Name>CS1</Name>
-    <CompNumb>35</CompNumb>
-    <CompEnabled>true</CompEnabled>
-    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
-    <IconName>CPU_CHIP2</IconName>
-    <UserFolderName />
-    <Comment lines_count="0" />
-    <Template />
-    <BeanVersion>01.006</BeanVersion>
-    <LightErrorsIgnored>false</LightErrorsIgnored>
-    <Properties>
-      <ItemState>
-        <ItemSymbol>DeviceName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>CS1</Value>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>UseProcessorExpertDefault</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Index>1</Index>
-        <Value>false</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>useRTOScritical</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>1</Index>
-        <Value>false</Value>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-    </Properties>
-    <Methods>
-      <ItemState>
-        <ItemSymbol>CriticalVariable</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>CriticalVariable</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>EnterCritical</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>EnterCritical</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ExitCritical</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>ExitCritical</UsrMethodName>
-      </ItemState>
-    </Methods>
-    <Events />
-  </Bean>
-  <Bean>
     <BeanType>RNet</BeanType>
     <Name>RNET1</Name>
     <CompNumb>39</CompNumb>
@@ -15194,7 +15194,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.040</BeanVersion>
+    <BeanVersion>01.041</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>

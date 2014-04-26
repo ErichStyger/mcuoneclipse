@@ -4,7 +4,7 @@
     <Name>nRF24L01</Name>
     <Description>Driver for the Nordic nRF241L01+ Wireless Transceiver</Description>
     <Author>Erich Styger</Author>
-    <Version>01.073</Version>
+    <Version>01.074</Version>
     <Icon>nRF24L01</Icon>
     <TypesFiles>PE,nRF24L01\nRF24L01</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -186,6 +186,19 @@
       </TBoolGrupItem>
     </Property>
     <Property>
+      <TStrgItem>
+        <Name>Application Event Handler</Name>
+        <Symbol>AppEventHandler</Symbol>
+        <Hint>If not empty, it will call an event handler of the form 'void AppEventHandler(void)' which can be used instead the Processor Expert Events.c module. </Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <DefaultValue>RADIO_OnInterrupt</DefaultValue>
+        <StrDefine>nothing</StrDefine>
+        <MinLength>0</MinLength>
+        <MaxLength>-1</MaxLength>
+      </TStrgItem>
+    </Property>
+    <Property>
       <TBoolGrupItem>
         <Name>IRQ Pin</Name>
         <Symbol>IRQPinEnabled</Symbol>
@@ -195,24 +208,11 @@
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
         <Description>Disabled</Description>
-        <Expanded>No</Expanded>
+        <Expanded>Yes</Expanded>
         <DefaultValue>false</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
         <Children>
-          <GrupItem>
-            <TStrgItem>
-              <Name>Application Event Handler</Name>
-              <Symbol>AppEventHandler</Symbol>
-              <Hint>If not empty, it will call an event handler of the form 'void AppEventHandler(void)' which can be used instead the Processor Expert Events.c module. </Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>true</EditLine>
-              <DefaultValue>RADIO_OnInterrupt</DefaultValue>
-              <StrDefine>nothing</StrDefine>
-              <MinLength>0</MinLength>
-              <MaxLength>-1</MaxLength>
-            </TStrgItem>
-          </GrupItem>
           <GrupItem>
             <TInhrItem>
               <Name>IRQ</Name>

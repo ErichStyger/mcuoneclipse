@@ -101,34 +101,6 @@ void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationTickHook(void);
-/*
-** ===================================================================
-**     Event       :  FRTOS1_vApplicationTickHook (module Events)
-**
-**     Component   :  FRTOS1 [FreeRTOS]
-**     Description :
-**         If enabled, this hook will be called by the RTOS for every
-**         tick increment.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-
-void FRTOS1_vApplicationIdleHook(void);
-/*
-** ===================================================================
-**     Event       :  FRTOS1_vApplicationIdleHook (module Events)
-**
-**     Component   :  FRTOS1 [FreeRTOS]
-**     Description :
-**         If enabled, this hook will be called when the RTOS is idle.
-**         This might be a good place to go into low power mode.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-
 void FRTOS1_vApplicationMallocFailedHook(void);
 /*
 ** ===================================================================

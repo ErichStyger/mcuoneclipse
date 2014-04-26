@@ -1406,7 +1406,7 @@ void %'ModuleName'%.%PollInterrupt(void)
   void %AppEventHandler(void); /* prototype */
 %endif
 
-  status = %'ModuleName'%.%GetStatusClrIRQ();
+  status = %'ModuleName'%.%GetStatus();
   if (status&(%'ModuleName'%.STATUS_RX_DR|%'ModuleName'%.STATUS_TX_DS|%'ModuleName'%.STATUS_MAX_RT)) {
     %'ModuleName'%.CE_LOW(); /* pull CE Low to disable transceiver */
 %if defined(AppEventHandler) & AppEventHandler<>"" %- not empty
