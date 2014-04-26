@@ -126,7 +126,7 @@ static void WiznetSetup(void) {
       p = &buf[0];
       res = UTIL1_ScanSeparatedNumbers(&p, &W5100_config.gateway[0], sizeof(W5100_config.gateway), '.', UTIL1_SEP_NUM_TYPE_UINT8);
       if (res!=ERR_OK) {
-        CLS1_SendStr((unsigned char*)"Gateway FAILED!\r\n", CLS1_GetStdio()->stdOut);
+        CLS1_SendStr((unsigned char*)"Gateway FAILED!\r\n", CLS1_GetStdio()->stdErr);
       }
     }
     /* NetMask */
@@ -138,7 +138,7 @@ static void WiznetSetup(void) {
       p = &buf[0];
       res = UTIL1_ScanSeparatedNumbers(&p, &W5100_config.netmask[0], sizeof(W5100_config.netmask), '.', UTIL1_SEP_NUM_TYPE_UINT8);
       if (res!=ERR_OK) {
-        CLS1_SendStr((unsigned char*)"Netmask FAILED!\r\n", CLS1_GetStdio()->stdOut);
+        CLS1_SendStr((unsigned char*)"Netmask FAILED!\r\n", CLS1_GetStdio()->stdErr);
       }
     }
     /* IP */
@@ -150,7 +150,7 @@ static void WiznetSetup(void) {
       p = &buf[0];
       res = UTIL1_ScanSeparatedNumbers(&p, &W5100_config.ipaddr[0], sizeof(W5100_config.ipaddr), '.', UTIL1_SEP_NUM_TYPE_UINT8);
       if (res!=ERR_OK) {
-        CLS1_SendStr((unsigned char*)"IP FAILED!\r\n", CLS1_GetStdio()->stdOut);
+        CLS1_SendStr((unsigned char*)"IP FAILED!\r\n", CLS1_GetStdio()->stdErr);
       }
     }
     /* IP */
@@ -162,7 +162,7 @@ static void WiznetSetup(void) {
       p = &buf[0];
       res = UTIL1_ScanSeparatedNumbers(&p, &W5100_config.hwaddr[0], sizeof(W5100_config.hwaddr), '-', UTIL1_SEP_NUM_TYPE_UINT8_HEX_NO_PREFIX);
       if (res!=ERR_OK) {
-        CLS1_SendStr((unsigned char*)"MAC FAILED!\r\n", CLS1_GetStdio()->stdOut);
+        CLS1_SendStr((unsigned char*)"MAC FAILED!\r\n", CLS1_GetStdio()->stdErr);
       }
     }
   }
