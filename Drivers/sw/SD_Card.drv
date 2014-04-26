@@ -818,7 +818,14 @@ void %'ModuleName'%.SPI_WRITE(unsigned char write) {
   while(!%'ModuleName'%.DataReceivedFlag){}
 }
 
-#define SPI_WRITE_BLOCK_ENABLED
+%if defined(SpiBlockTransferEnabled) & %SpiBlockTransferEnabled='yes'
+#define %'ModuleName'%.SPI_WRITE_BLOCK_ENABLED          1
+#define %'ModuleName'%.SPI_WRITE_READ_BLOCK_ENABLED     1
+%else
+#define %'ModuleName'%.SPI_WRITE_BLOCK_ENABLED          0
+#define %'ModuleName'%.SPI_WRITE_READ_BLOCK_ENABLED     0
+%endif
+
 void %'ModuleName'%.SPI_WRITE_BLOCK(unsigned char *writeP, uint16_t size) {
   unsigned char dummy[4];
   uint16_t writeSize;
@@ -845,8 +852,8 @@ void %'ModuleName'%.SPI_WRITE_READ(unsigned char write, unsigned char *readP) {
   while(!%'ModuleName'%.DataReceivedFlag){}
 }
 
-#define SPI_WRITE_READ_BLOCK_ENABLED
 #define SPI_WRITE_READ_BLOCK_SIZE_DUMMY 512 /* 512 bytes of dummy values */
+
 static const uint8_t dummyArr[SPI_WRITE_READ_BLOCK_SIZE_DUMMY] = {
   %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY,
   %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY, %'ModuleName'%.DUMMY,
@@ -875,7 +882,6 @@ void %'ModuleName'%.SPI_WRITE_READ_BLOCK(unsigned char *writeP, unsigned char *r
 #define %'ModuleName'%.SPI_SetShiftClockPolarity(val) (void)%@SPI@'ModuleName'%.SetShiftClockPolarity(val)
 #define %'ModuleName'%.SPI_SetIdleClockPolarity(val)  (void)%@SPI@'ModuleName'%.SetIdleClockPolarity(val)
 %endif
-
 %-BW_CUSTOM_VARIABLE_END
 
 %-BW_INTERN_METHOD_DECL_START
@@ -1018,7 +1024,7 @@ bool %'ModuleName'%.%ReceiveDataBlock(byte *data, word nofBytes)
     %'ModuleName'%.Deactivate();
     return FALSE;
   }
-#ifdef SPI_WRITE_READ_BLOCK_ENABLED
+#if %'ModuleName'%.SPI_WRITE_READ_BLOCK_ENABLED
   if (nofBytes<=SPI_WRITE_READ_BLOCK_SIZE_DUMMY) {
     %'ModuleName'%.SPI_WRITE_READ_BLOCK((unsigned char*)&dummyArr[0], data, nofBytes);%>40 /* write dummy value, read data */
   } else {
@@ -1028,7 +1034,7 @@ bool %'ModuleName'%.%ReceiveDataBlock(byte *data, word nofBytes)
       data++;
       nofBytes--;
     }
-#ifdef SPI_WRITE_READ_BLOCK_ENABLED
+#if %'ModuleName'%.SPI_WRITE_READ_BLOCK_ENABLED
   }
 #endif
   %'ModuleName'%.SPI_WRITE(%'ModuleName'%.DUMMY);                %>40 /* checksum Bytes not needed */
@@ -1060,7 +1066,7 @@ bool %'ModuleName'%.%SendDataBlock(byte *data, byte token, word nofBytes)
   %'ModuleName'%.Activate();
   %'ModuleName'%.SPI_WRITE(token);                               %>40 /* Xmit data token */
   if (token != 0xFD) {                                           %>40 /* Is data token, not STOP_TRAN */
-#ifdef SPI_WRITE_BLOCK_ENABLED
+#if %'ModuleName'%.SPI_WRITE_BLOCK_ENABLED
     %'ModuleName'%.SPI_WRITE_BLOCK(data, nofBytes);
 #else
     while (nofBytes!=0) {                                        %>40 /* send the bytes */

@@ -5,6 +5,7 @@
 %;**%>12 Wait Ready Timeout (ms) %>60: %get(WaitReadyMs,Text)
 %;**%>12 Wait Cmd Timeout (ms) %>60: %get(WaitCmdMs,Text)
 %;**%>12 Receive Block Timeout (ms) %>60: %get(WaitReadBlockMs,Text)
+%;**%>12 SPI Block Transfer %>60: %get(SpiBlockTransferEnabled,Text)
 %;**%>12 Hardware %>60: %get(HardwareGroup,Text)
 %;**%>14 SW SPI %>60: %get(SWSPIenabled,Text)
 %if %get(SWSPIenabled, Bool) = 'yes'
@@ -76,6 +77,7 @@
 %endif %- nonLDD_CD_Group
 %else %- CardDetectionGroup
 %endif %- CardDetectionGroup
+%;**%>14 Report 'Card present' if no Card detection pin %>60: %get(CardPresentIfNoCardDetectionPin,Text)
 %;**%>14 Write protection %>60: %get(WriteProtectGroup,Text)
 %if %get(WriteProtectGroup, Bool) = 'yes'
 %;**%>16 Write Protect is LOW active %>60: %get(WriteProtectIsLow,Text)

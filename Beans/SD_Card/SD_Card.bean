@@ -4,7 +4,7 @@
     <Name>SD_Card</Name>
     <Description>SD Card</Description>
     <Author>Erich Styger</Author>
-    <Version>01.161</Version>
+    <Version>01.163</Version>
     <Icon>SD_Card</Icon>
     <TypesFiles>PE,SD_Card\SD_Card</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -119,6 +119,24 @@
         <ChangeValueIntoRange>false</ChangeValueIntoRange>
         <RuntimeProperty>false</RuntimeProperty>
       </TIntgItem>
+    </Property>
+    <Property>
+      <TBoolItem>
+        <Name>SPI Block Transfer</Name>
+        <Symbol>SpiBlockTransferEnabled</Symbol>
+        <TypeSpec>typeYesNo</TypeSpec>
+        <Hint>If set to 'yes' the SPI driver will use block transfer for better performance. This is enabled by SPI_WRITE_BLOCK_ENABLED in the driver.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+      </TBoolItem>
     </Property>
     <Property>
       <TGrupItem>
