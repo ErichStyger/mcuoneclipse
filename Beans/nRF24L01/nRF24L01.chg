@@ -1,5 +1,7 @@
+%set OnInterrupt Selection enable
+
 %if defined(IRQ)
-  %set OnInterrupt Selection enable
+%-  %set OnInterrupt Selection enable
 %else
-  %set OnInterrupt Selection never
+%-  %set OnInterrupt Selection never
 %endif

@@ -176,6 +176,9 @@ static void RADIO_HandleStateMachine(void) {
         break; /* process switch again */
   
       case RADIO_READY_FOR_TX_RX_DATA: /* we are ready to receive/send data data */
+#if !%@nRF24L01p@'ModuleName'%.IRQ_PIN_ENABLED
+        %@nRF24L01p@'ModuleName'%.PollInterrupt();
+#endif
         if (RADIO_isrFlag) { /* Rx interrupt? */
           RADIO_isrFlag = FALSE; /* reset interrupt flag */
           (void)CheckRx(); /* get message */
@@ -195,6 +198,9 @@ static void RADIO_HandleStateMachine(void) {
         return;
   
       case RADIO_WAITING_DATA_SENT:
+#if !%@nRF24L01p@'ModuleName'%.IRQ_PIN_ENABLED
+        %@nRF24L01p@'ModuleName'%.PollInterrupt();
+#endif
         if (RADIO_isrFlag) { /* check if we have received an interrupt: this is either timeout or low level ack */
           RADIO_isrFlag = FALSE; /* reset interrupt flag */
           status = RF1_GetStatusClrIRQ();

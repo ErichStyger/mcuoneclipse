@@ -140,7 +140,7 @@ void %'ModuleName'%.%Deinit(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Process
 %ifdef Process
-byte %'ModuleName'%.%Process(void);
+uint8_t %'ModuleName'%.%Process(void);
 %define! RetVal
 %include Common\RNetProcess.Inc
 
@@ -149,7 +149,7 @@ byte %'ModuleName'%.%Process(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN PowerUp
 %ifdef PowerUp
-byte %'ModuleName'%.%PowerUp(void);
+uint8_t %'ModuleName'%.%PowerUp(void);
 %define! RetVal
 %include Common\RNetPowerUp.Inc
 
@@ -158,7 +158,7 @@ byte %'ModuleName'%.%PowerUp(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SetChannel
 %ifdef SetChannel
-byte %'ModuleName'%.%SetChannel(byte channel);
+uint8_t %'ModuleName'%.%SetChannel(uint8_t channel);
 %define! Parchannel
 %define! RetVal
 %include Common\RNetSetChannel.Inc
@@ -168,7 +168,7 @@ byte %'ModuleName'%.%SetChannel(byte channel);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ParseCommand
 %ifdef ParseCommand
-byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io);
+uint8_t %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io);
 %define! Parcmd
 %define! Parhandled
 %define! Pario
@@ -256,7 +256,7 @@ void %'ModuleName'%.%Deinit(void)
 %ifdef Process
 %define! RetVal
 %include Common\RNetProcess.Inc
-byte %'ModuleName'%.%Process(void)
+uint8_t %'ModuleName'%.%Process(void)
 {
   return RADIO_Process();
 }
@@ -268,7 +268,7 @@ byte %'ModuleName'%.%Process(void)
 %ifdef PowerUp
 %define! RetVal
 %include Common\RNetPowerUp.Inc
-byte %'ModuleName'%.%PowerUp(void)
+uint8_t %'ModuleName'%.%PowerUp(void)
 {
   return RADIO_PowerUp();
 }
@@ -281,7 +281,7 @@ byte %'ModuleName'%.%PowerUp(void)
 %define! Parchannel
 %define! RetVal
 %include Common\RNetSetChannel.Inc
-byte %'ModuleName'%.%SetChannel(byte channel)
+uint8_t %'ModuleName'%.%SetChannel(uint8_t channel)
 {
   return RADIO_SetChannel(channel);
 }
@@ -296,7 +296,7 @@ byte %'ModuleName'%.%SetChannel(byte channel)
 %define! Pario
 %define! RetVal
 %include Common\RNetParseCommand.Inc
-byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)
+uint8_t %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)
 {
   static const %@Shell@'ModuleName'%.ParseCommandCallback CmdParserTable[] =
   {

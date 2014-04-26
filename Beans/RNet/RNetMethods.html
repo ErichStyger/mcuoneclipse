@@ -184,7 +184,7 @@ LI.EXP {
               RNet
             </div>
             <div class="descrtext">RNet (Radio and Remote Network) Stack</div>
-            <div class="info_name">Component Level: <span class="info_text"></span></div>
+            <div class="info_name">Component Level: <span class="info_text"><a href="../../DOCs/BeanCategoriesInfo.html#LevelAbstraction">High</a></span></div>
             <div class="info_name">Category: 
               <span class="info_text">
               <a href="../../DOCs/BeanCategoriesInfo.html">SW-User Components</a>
@@ -211,10 +211,10 @@ LI.EXP {
  - Sets the radio channel
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte SetChannel(byte channel)<br />
+<br /><i>ANSIC prototype:</i> uint8_t SetChannel(uint8_t channel)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>channel:byte</i> - Channel number</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>channel:uint8_t</i> - Channel number</li>
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -223,9 +223,9 @@ LI.EXP {
  - Processes the Radio Rx and Tx messages
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte Process(void)<br />
+<br /><i>ANSIC prototype:</i> uint8_t Process(void)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>Return value:byte</i> - Error code
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -234,9 +234,9 @@ LI.EXP {
  - Initializes and powers the radio up.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte PowerUp(void)<br />
+<br /><i>ANSIC prototype:</i> uint8_t PowerUp(void)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>Return value:byte</i> - Error code
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -245,12 +245,12 @@ LI.EXP {
  - Shell Command Line parser. This method is enabled/disabled depending on if you have the Shell enabled/disabled in the properties.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)<br />
+<br /><i>ANSIC prototype:</i> uint8_t ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>cmd: Pointer to byte</i> - Pointer to command string</li>
+<li><i>cmd: Pointer to uint8_t</i> - Pointer to command string</li>
 <li><i>handled: Pointer to bool</i> - Pointer to variable which tells if the command has been handled or not</li>
-<li><i>io: Pointer to byte</i> - Pointer to I/O structure</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>io: Pointer to uint8_t</i> - Pointer to I/O structure</li>
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>

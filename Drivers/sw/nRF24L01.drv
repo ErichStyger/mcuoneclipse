@@ -107,6 +107,14 @@
 %- Write your own types here ...
 %-  Example:
 %-    typedef int TMyInteger;
+%if defined(IRQPinEnabled) & %IRQPinEnabled='yes'
+#define %'ModuleName'%.IRQ_PIN_ENABLED   1
+  /*!< IRQ pin is enabled */
+%else
+#define %'ModuleName'%.IRQ_PIN_ENABLED   0
+  /*!< no IRQ pin or not enabled */
+%endif
+
 /* Memory Map - register address defines */
 #define %'ModuleName'%.CONFIG      0x00 /* CONFIG register */
 
@@ -410,7 +418,7 @@ void %@IRQ@OnInterrupt(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN WriteRegister
 %ifdef WriteRegister
-void %'ModuleName'%.%WriteRegister(byte reg, byte val);
+void %'ModuleName'%.%WriteRegister(uint8_t reg, uint8_t val);
 %define! Parreg
 %define! Parval
 %include Common\nRF24L01WriteRegister.Inc
@@ -420,7 +428,7 @@ void %'ModuleName'%.%WriteRegister(byte reg, byte val);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ReadRegister
 %ifdef ReadRegister
-byte %'ModuleName'%.%ReadRegister(byte reg);
+uint8_t %'ModuleName'%.%ReadRegister(uint8_t reg);
 %define! Parreg
 %define! RetVal
 %include Common\nRF24L01ReadRegister.Inc
@@ -430,7 +438,7 @@ byte %'ModuleName'%.%ReadRegister(byte reg);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ReadRegisterData
 %ifdef ReadRegisterData
-void %'ModuleName'%.%ReadRegisterData(byte reg, byte *buf, byte bufSize);
+void %'ModuleName'%.%ReadRegisterData(uint8_t reg, uint8_t *buf, uint8_t bufSize);
 %define! Parreg
 %define! Parbuf
 %define! ParbufSize
@@ -441,7 +449,7 @@ void %'ModuleName'%.%ReadRegisterData(byte reg, byte *buf, byte bufSize);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN WriteRegisterData
 %ifdef WriteRegisterData
-void %'ModuleName'%.%WriteRegisterData(byte reg, byte *buf, byte bufSize);
+void %'ModuleName'%.%WriteRegisterData(byte reg, uint8_t *buf, uint8_t bufSize);
 %define! Parreg
 %define! Parbuf
 %define! ParbufSize
@@ -452,7 +460,7 @@ void %'ModuleName'%.%WriteRegisterData(byte reg, byte *buf, byte bufSize);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN WriteRead
 %ifdef WriteRead
-byte %'ModuleName'%.%WriteRead(byte val);
+uint8_t %'ModuleName'%.%WriteRead(uint8_t val);
 %define! Parval
 %define! RetVal
 %include Common\nRF24L01WriteRead.Inc
@@ -462,7 +470,7 @@ byte %'ModuleName'%.%WriteRead(byte val);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Write
 %ifdef Write
-void %'ModuleName'%.%Write(byte val);
+void %'ModuleName'%.%Write(uint8_t val);
 %define! Parval
 %include Common\nRF24L01Write.Inc
 
@@ -471,7 +479,7 @@ void %'ModuleName'%.%Write(byte val);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN GetStatus
 %ifdef GetStatus
-byte %'ModuleName'%.%GetStatus(void);
+uint8_t %'ModuleName'%.%GetStatus(void);
 %define! RetVal
 %include Common\nRF24L01GetStatus.Inc
 
@@ -480,7 +488,7 @@ byte %'ModuleName'%.%GetStatus(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ResetStatusIRQ
 %ifdef ResetStatusIRQ
-void %'ModuleName'%.%ResetStatusIRQ(byte flags);
+void %'ModuleName'%.%ResetStatusIRQ(uint8_t flags);
 %define! Parflags
 %include Common\nRF24L01ResetStatusIRQ.Inc
 
@@ -489,7 +497,7 @@ void %'ModuleName'%.%ResetStatusIRQ(byte flags);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN TxPayload
 %ifdef TxPayload
-void %'ModuleName'%.%TxPayload(byte *payload, byte payloadSize);
+void %'ModuleName'%.%TxPayload(uint8_t *payload, uint8_t payloadSize);
 %define! Parpayload
 %define! ParpayloadSize
 %include Common\nRF24L01TxPayload.Inc
@@ -499,7 +507,7 @@ void %'ModuleName'%.%TxPayload(byte *payload, byte payloadSize);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN RxPayload
 %ifdef RxPayload
-void %'ModuleName'%.%RxPayload(byte *payload, byte payloadSize);
+void %'ModuleName'%.%RxPayload(uint8_t *payload, uint8_t payloadSize);
 %define! Parpayload
 %define! ParpayloadSize
 %include Common\nRF24L01RxPayload.Inc
@@ -525,7 +533,7 @@ void %'ModuleName'%.%StartRxTx(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SetChannel
 %ifdef SetChannel
-byte %'ModuleName'%.%SetChannel(byte channel);
+uint8_t %'ModuleName'%.%SetChannel(uint8_t channel);
 %define! Parchannel
 %define! RetVal
 %include Common\nRF24L01SetChannel.Inc
@@ -535,7 +543,7 @@ byte %'ModuleName'%.%SetChannel(byte channel);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN EnableAutoAck
 %ifdef EnableAutoAck
-byte %'ModuleName'%.%EnableAutoAck(byte pipes);
+uint8_t %'ModuleName'%.%EnableAutoAck(uint8_t pipes);
 %define! Parpipes
 %define! RetVal
 %include Common\nRF24L01EnableAutoAck.Inc
@@ -545,7 +553,7 @@ byte %'ModuleName'%.%EnableAutoAck(byte pipes);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ReadNofRxPayload
 %ifdef ReadNofRxPayload
-byte %'ModuleName'%.%ReadNofRxPayload(byte *nof);
+uint8_t %'ModuleName'%.%ReadNofRxPayload(uint8_t *nof);
 %define! Parnof
 %define! RetVal
 %include Common\nRF24L01ReadNofRxPayload.Inc
@@ -555,7 +563,7 @@ byte %'ModuleName'%.%ReadNofRxPayload(byte *nof);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SetStaticPipePayload
 %ifdef SetStaticPipePayload
-byte %'ModuleName'%.%SetStaticPipePayload(byte pipe, byte payloadBytes);
+uint8_t %'ModuleName'%.%SetStaticPipePayload(uint8_t pipe, uint8_t payloadBytes);
 %define! Parpipe
 %define! ParpayloadBytes
 %define! RetVal
@@ -566,7 +574,7 @@ byte %'ModuleName'%.%SetStaticPipePayload(byte pipe, byte payloadBytes);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN EnableDynanicPayloadLength
 %ifdef EnableDynanicPayloadLength
-byte %'ModuleName'%.%EnableDynanicPayloadLength(byte pipeMask);
+uint8_t %'ModuleName'%.%EnableDynanicPayloadLength(uint8_t pipeMask);
 %define! ParpipeMask
 %define! RetVal
 %include Common\nRF24L01EnableDynanicPayloadLength.Inc
@@ -576,7 +584,7 @@ byte %'ModuleName'%.%EnableDynanicPayloadLength(byte pipeMask);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN WriteFeature
 %ifdef WriteFeature
-byte %'ModuleName'%.%WriteFeature(byte featureMask);
+uint8_t %'ModuleName'%.%WriteFeature(uint8_t featureMask);
 %define! ParfeatureMask
 %define! RetVal
 %include Common\nRF24L01WriteFeature.Inc
@@ -586,7 +594,7 @@ byte %'ModuleName'%.%WriteFeature(byte featureMask);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ReadFeature
 %ifdef ReadFeature
-byte %'ModuleName'%.%ReadFeature(byte *featureMask);
+uint8_t %'ModuleName'%.%ReadFeature(uint8_t *featureMask);
 %define! ParfeatureMask
 %define! RetVal
 %include Common\nRF24L01ReadFeature.Inc
@@ -596,7 +604,7 @@ byte %'ModuleName'%.%ReadFeature(byte *featureMask);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ReadObserveTxRegister
 %ifdef ReadObserveTxRegister
-byte %'ModuleName'%.%ReadObserveTxRegister(byte *nofLoss, byte *nofRetransmitted);
+uint8_t %'ModuleName'%.%ReadObserveTxRegister(uint8_t *nofLoss, uint8_t *nofRetransmitted);
 %define! ParnofRetransmitted
 %define! ParnofLoss
 %define! RetVal
@@ -607,7 +615,7 @@ byte %'ModuleName'%.%ReadObserveTxRegister(byte *nofLoss, byte *nofRetransmitted
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ReadReceivedPowerDetector
 %ifdef ReadReceivedPowerDetector
-byte %'ModuleName'%.%ReadReceivedPowerDetector(byte *rpd);
+uint8_t %'ModuleName'%.%ReadReceivedPowerDetector(uint8_t *rpd);
 %define! Parrpd
 %define! RetVal
 %include Common\nRF24L01ReadReceivedPowerDetector.Inc
@@ -617,7 +625,7 @@ byte %'ModuleName'%.%ReadReceivedPowerDetector(byte *rpd);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN GetChannel
 %ifdef GetChannel
-byte %'ModuleName'%.%GetChannel(byte *channel);
+uint8_t %'ModuleName'%.%GetChannel(uint8_t *channel);
 %define! Parchannel
 %define! RetVal
 %include Common\nRF24L01GetChannel.Inc
@@ -627,7 +635,7 @@ byte %'ModuleName'%.%GetChannel(byte *channel);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ConstantCarrierWave
 %ifdef ConstantCarrierWave
-byte %'ModuleName'%.%ConstantCarrierWave(bool turnOn);
+uint8_t %'ModuleName'%.%ConstantCarrierWave(bool turnOn);
 %define! ParturnOn
 %define! RetVal
 %include Common\nRF24L01ConstantCarrierWave.Inc
@@ -637,7 +645,7 @@ byte %'ModuleName'%.%ConstantCarrierWave(bool turnOn);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SetOutputPower
 %ifdef SetOutputPower
-byte %'ModuleName'%.%SetOutputPower(signed char power);
+uint8_t %'ModuleName'%.%SetOutputPower(uint8_t power);
 %define! Parpower
 %define! RetVal
 %include Common\nRF24L01SetOutputPower.Inc
@@ -647,7 +655,7 @@ byte %'ModuleName'%.%SetOutputPower(signed char power);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN GetOutputPower
 %ifdef GetOutputPower
-byte %'ModuleName'%.%GetOutputPower(signed char *power);
+uint8_t %'ModuleName'%.%GetOutputPower(int8_t *power);
 %define! Parpower
 %define! RetVal
 %include Common\nRF24L01GetOutputPower.Inc
@@ -657,12 +665,28 @@ byte %'ModuleName'%.%GetOutputPower(signed char *power);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN GetStatusClrIRQ
 %ifdef GetStatusClrIRQ
-byte %'ModuleName'%.%GetStatusClrIRQ(void);
+uint8_t %'ModuleName'%.%GetStatusClrIRQ(void);
 %define! RetVal
 %include Common\nRF24L01GetStatusClrIRQ.Inc
 
 %endif %- GetStatusClrIRQ
 %-BW_METHOD_END GetStatusClrIRQ
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN PollInterrupt
+%ifdef PollInterrupt
+void %'ModuleName'%.%PollInterrupt(void);
+%include Common\nRF24L01PollInterrupt.Inc
+
+%endif %- PollInterrupt
+%-BW_METHOD_END PollInterrupt
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Deinit
+%ifdef Deinit
+void %'ModuleName'%.%Deinit(void);
+%include Common\nRF24L01Deinit.Inc
+
+%endif %- Deinit
+%-BW_METHOD_END Deinit
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -760,13 +784,13 @@ void %OnDeactivate(void);
 %-UNLOCKED
 /* Internal method prototypes */
 %-INTERNAL_LOC_METHOD_BEG SPIWriteRead
-static byte SPIWriteRead(byte val);
+static uint8_t SPIWriteRead(uint8_t val);
 %-INTERNAL_LOC_METHOD_END SPIWriteRead
 %-INTERNAL_LOC_METHOD_BEG SPIWriteReadBuffer
-static void SPIWriteReadBuffer(byte *bufOut, byte *bufIn, byte bufSize);
+static void SPIWriteReadBuffer(uint8_t *bufOut, uint8_t *bufIn, uint8_t bufSize);
 %-INTERNAL_LOC_METHOD_END SPIWriteReadBuffer
 %-INTERNAL_LOC_METHOD_BEG SPIWriteBuffer
-static void SPIWriteBuffer(byte *bufOut, byte bufSize);
+static void SPIWriteBuffer(uint8_t *bufOut, uint8_t bufSize);
 %-INTERNAL_LOC_METHOD_END SPIWriteBuffer
 %-
 
@@ -777,7 +801,7 @@ static void SPIWriteBuffer(byte *bufOut, byte bufSize);
 %define! Parval
 %define! RetVal
 %include Common\GeneralInternalGlobal.inc (SPIWriteRead)
-static byte SPIWriteRead(byte val)
+static uint8_t SPIWriteRead(uint8_t val)
 {
   uint8_t ch;
 
@@ -796,7 +820,7 @@ static byte SPIWriteRead(byte val)
 %define! ParbufIn
 %define! ParbufSize
 %include Common\GeneralInternalGlobal.inc (SPIWriteReadBuffer)
-static void SPIWriteReadBuffer(byte *bufOut, byte *bufIn, byte bufSize)
+static void SPIWriteReadBuffer(uint8_t *bufOut, uint8_t *bufIn, uint8_t bufSize)
 {
   uint8_t i;
 
@@ -811,7 +835,7 @@ static void SPIWriteReadBuffer(byte *bufOut, byte *bufIn, byte bufSize)
 %define! ParbufOut
 %define! ParbufSize
 %include Common\GeneralInternalGlobal.inc (SPIWriteBuffer)
-static void SPIWriteBuffer(byte *bufOut, byte bufSize)
+static void SPIWriteBuffer(uint8_t *bufOut, uint8_t bufSize)
 {
   uint8_t i;
 
@@ -860,7 +884,7 @@ void %@IRQ@OnInterrupt(void)
 %define! Parreg
 %define! Parval
 %include Common\nRF24L01WriteRegister.Inc
-void %'ModuleName'%.%WriteRegister(byte reg, byte val)
+void %'ModuleName'%.%WriteRegister(uint8_t reg, uint8_t val)
 {
 %if defined(OnActivate)
   %OnActivate(); /* call user event */
@@ -886,7 +910,7 @@ void %'ModuleName'%.%WriteRegister(byte reg, byte val)
 %define! Parreg
 %define! RetVal
 %include Common\nRF24L01ReadRegister.Inc
-byte %'ModuleName'%.%ReadRegister(byte reg)
+uint8_t %'ModuleName'%.%ReadRegister(uint8_t reg)
 {
   uint8_t val;
 
@@ -916,7 +940,7 @@ byte %'ModuleName'%.%ReadRegister(byte reg)
 %define! Parbuf
 %define! ParbufSize
 %include Common\nRF24L01ReadRegisterData.Inc
-void %'ModuleName'%.%ReadRegisterData(byte reg, byte *buf, byte bufSize)
+void %'ModuleName'%.%ReadRegisterData(uint8_t reg, uint8_t *buf, uint8_t bufSize)
 {
 %if defined(OnActivate)
   %OnActivate(); /* call user event */
@@ -943,7 +967,7 @@ void %'ModuleName'%.%ReadRegisterData(byte reg, byte *buf, byte bufSize)
 %define! Parbuf
 %define! ParbufSize
 %include Common\nRF24L01WriteRegisterData.Inc
-void %'ModuleName'%.%WriteRegisterData(byte reg, byte *buf, byte bufSize)
+void %'ModuleName'%.%WriteRegisterData(byte reg, uint8_t *buf, uint8_t bufSize)
 {
 %if defined(OnActivate)
   %OnActivate(); /* call user event */
@@ -969,7 +993,7 @@ void %'ModuleName'%.%WriteRegisterData(byte reg, byte *buf, byte bufSize)
 %define! Parval
 %define! RetVal
 %include Common\nRF24L01WriteRead.Inc
-byte %'ModuleName'%.%WriteRead(byte val)
+uint8_t %'ModuleName'%.%WriteRead(uint8_t val)
 {
 %if defined(OnActivate)
   %OnActivate(); /* call user event */
@@ -994,7 +1018,7 @@ byte %'ModuleName'%.%WriteRead(byte val)
 %ifdef Write
 %define! Parval
 %include Common\nRF24L01Write.Inc
-void %'ModuleName'%.%Write(byte val)
+void %'ModuleName'%.%Write(uint8_t val)
 {
 %if defined(OnActivate)
   %OnActivate(); /* call user event */
@@ -1018,7 +1042,7 @@ void %'ModuleName'%.%Write(byte val)
 %ifdef GetStatus
 %define! RetVal
 %include Common\nRF24L01GetStatus.Inc
-byte %'ModuleName'%.%GetStatus(void)
+uint8_t %'ModuleName'%.%GetStatus(void)
 {
   return %'ModuleName'%.%WriteRead(%'ModuleName'%.NOP);
 }
@@ -1030,7 +1054,7 @@ byte %'ModuleName'%.%GetStatus(void)
 %ifdef ResetStatusIRQ
 %define! Parflags
 %include Common\nRF24L01ResetStatusIRQ.Inc
-void %'ModuleName'%.%ResetStatusIRQ(byte flags)
+void %'ModuleName'%.%ResetStatusIRQ(uint8_t flags)
 {
   %'ModuleName'%.%WriteRegister(%'ModuleName'%.STATUS, flags); /* reset all IRQ in status register */
 }
@@ -1042,7 +1066,7 @@ void %'ModuleName'%.%ResetStatusIRQ(byte flags)
 %ifdef GetStatusClrIRQ
 %define! RetVal
 %include Common\nRF24L01GetStatusClrIRQ.Inc
-byte %'ModuleName'%.%GetStatusClrIRQ(void)
+uint8_t %'ModuleName'%.%GetStatusClrIRQ(void)
 {
   uint8_t status;
 
@@ -1071,7 +1095,7 @@ byte %'ModuleName'%.%GetStatusClrIRQ(void)
 %define! Parpayload
 %define! ParpayloadSize
 %include Common\nRF24L01TxPayload.Inc
-void %'ModuleName'%.%TxPayload(byte *payload, byte payloadSize)
+void %'ModuleName'%.%TxPayload(uint8_t *payload, uint8_t payloadSize)
 {
   %'ModuleName'%.%Write(%'ModuleName'%.FLUSH_TX); /* flush old data */
   %'ModuleName'%.%WriteRegisterData(%'ModuleName'%.W_TX_PAYLOAD, payload, payloadSize); /* write payload */
@@ -1088,7 +1112,7 @@ void %'ModuleName'%.%TxPayload(byte *payload, byte payloadSize)
 %define! Parpayload
 %define! ParpayloadSize
 %include Common\nRF24L01RxPayload.Inc
-void %'ModuleName'%.%RxPayload(byte *payload, byte payloadSize)
+void %'ModuleName'%.%RxPayload(uint8_t *payload, uint8_t payloadSize)
 {
   %'ModuleName'%.CE_LOW(); /* need to disable rx mode during reading RX data */
   %'ModuleName'%.%ReadRegisterData(%'ModuleName'%.R_RX_PAYLOAD, payload, payloadSize); /* rx payload */
@@ -1125,7 +1149,7 @@ void %'ModuleName'%.%StartRxTx(void)
 %define! Parchannel
 %define! RetVal
 %include Common\nRF24L01SetChannel.Inc
-byte %'ModuleName'%.%SetChannel(byte channel)
+uint8_t %'ModuleName'%.%SetChannel(uint8_t channel)
 {
   %'ModuleName'%.WriteRegister(%'ModuleName'%.RF_CH, channel&0x7F); /* set channel */
   return ERR_OK;
@@ -1139,7 +1163,7 @@ byte %'ModuleName'%.%SetChannel(byte channel)
 %define! Parchannel
 %define! RetVal
 %include Common\nRF24L01GetChannel.Inc
-byte %'ModuleName'%.%GetChannel(byte *channel)
+uint8_t %'ModuleName'%.%GetChannel(uint8_t *channel)
 {
   *channel = %'ModuleName'%.ReadRegister(%'ModuleName'%.RF_CH); /* read channel */
   return ERR_OK;
@@ -1153,7 +1177,7 @@ byte %'ModuleName'%.%GetChannel(byte *channel)
 %define! Parpipes
 %define! RetVal
 %include Common\nRF24L01EnableAutoAck.Inc
-byte %'ModuleName'%.%EnableAutoAck(byte pipes)
+uint8_t %'ModuleName'%.%EnableAutoAck(uint8_t pipes)
 {
   %'ModuleName'%.WriteRegister(%'ModuleName'%.EN_AA, pipes&%'ModuleName'%.EN_AA_ENAA_ALL); /* enable auto acknowledge for the given pipes */
   return ERR_OK;
@@ -1167,7 +1191,7 @@ byte %'ModuleName'%.%EnableAutoAck(byte pipes)
 %define! Parnof
 %define! RetVal
 %include Common\nRF24L01ReadNofRxPayload.Inc
-byte %'ModuleName'%.%ReadNofRxPayload(byte *nof)
+uint8_t %'ModuleName'%.%ReadNofRxPayload(uint8_t *nof)
 {
   *nof = %'ModuleName'%.ReadRegister(%'ModuleName'%.R_RX_PL_WID); /* read number of RX payload for pipe */
   return ERR_OK;
@@ -1182,7 +1206,7 @@ byte %'ModuleName'%.%ReadNofRxPayload(byte *nof)
 %define! ParpayloadBytes
 %define! RetVal
 %include Common\nRF24L01SetStaticPipePayload.Inc
-byte %'ModuleName'%.%SetStaticPipePayload(byte pipe, byte payloadBytes)
+uint8_t %'ModuleName'%.%SetStaticPipePayload(uint8_t pipe, uint8_t payloadBytes)
 {
   if (pipe > 5) {
     return ERR_FAULT; /* only pipe 0 to 5 allowed */
@@ -1202,7 +1226,7 @@ byte %'ModuleName'%.%SetStaticPipePayload(byte pipe, byte payloadBytes)
 %define! ParpipeMask
 %define! RetVal
 %include Common\nRF24L01EnableDynanicPayloadLength.Inc
-byte %'ModuleName'%.%EnableDynanicPayloadLength(byte pipeMask)
+uint8_t %'ModuleName'%.%EnableDynanicPayloadLength(uint8_t pipeMask)
 {
   /* note: dynamic payload requires EN_DPL and ENAA_Px set for the pipe */
   if (pipeMask>0x3F) {
@@ -1220,7 +1244,7 @@ byte %'ModuleName'%.%EnableDynanicPayloadLength(byte pipeMask)
 %define! ParfeatureMask
 %define! RetVal
 %include Common\nRF24L01WriteFeature.Inc
-byte %'ModuleName'%.%WriteFeature(byte featureMask)
+uint8_t %'ModuleName'%.%WriteFeature(uint8_t featureMask)
 {
   if (featureMask>(%'ModuleName'%.FEATURE_EN_DPL|%'ModuleName'%.FEATURE_EN_ACK_PAY|%'ModuleName'%.FEATURE_EN_DYN_PAY)) {
     return ERR_FAULT; /* mismatch of feature mask */
@@ -1237,7 +1261,7 @@ byte %'ModuleName'%.%WriteFeature(byte featureMask)
 %define! ParfeatureMask
 %define! RetVal
 %include Common\nRF24L01ReadFeature.Inc
-byte %'ModuleName'%.%ReadFeature(byte *featureMask)
+uint8_t %'ModuleName'%.%ReadFeature(uint8_t *featureMask)
 {
   *featureMask = %'ModuleName'%.ReadRegister(%'ModuleName'%.FEATURE); /* read FEATURE register */
   return ERR_OK;
@@ -1252,7 +1276,7 @@ byte %'ModuleName'%.%ReadFeature(byte *featureMask)
 %define! ParnofLoss
 %define! RetVal
 %include Common\nRF24L01ReadObserveTxRegister.Inc
-byte %'ModuleName'%.%ReadObserveTxRegister(byte *nofLoss, byte *nofRetransmitted)
+uint8_t %'ModuleName'%.%ReadObserveTxRegister(uint8_t *nofLoss, uint8_t *nofRetransmitted)
 {
   uint8_t val;
 
@@ -1270,7 +1294,7 @@ byte %'ModuleName'%.%ReadObserveTxRegister(byte *nofLoss, byte *nofRetransmitted
 %define! Parrpd
 %define! RetVal
 %include Common\nRF24L01ReadReceivedPowerDetector.Inc
-byte %'ModuleName'%.%ReadReceivedPowerDetector(byte *rpd)
+uint8_t %'ModuleName'%.%ReadReceivedPowerDetector(uint8_t *rpd)
 {
   *rpd = %'ModuleName'%.ReadRegister(%'ModuleName'%.RPD); /* read RPD register */
   return ERR_OK;
@@ -1284,7 +1308,7 @@ byte %'ModuleName'%.%ReadReceivedPowerDetector(byte *rpd)
 %define! ParturnOn
 %define! RetVal
 %include Common\nRF24L01ConstantCarrierWave.Inc
-byte %'ModuleName'%.%ConstantCarrierWave(bool turnOn)
+uint8_t %'ModuleName'%.%ConstantCarrierWave(bool turnOn)
 {
   /* note: RF channel, output power should be set independently */
   uint8_t val;
@@ -1320,7 +1344,7 @@ byte %'ModuleName'%.%ConstantCarrierWave(bool turnOn)
 %define! Parpower
 %define! RetVal
 %include Common\nRF24L01SetOutputPower.Inc
-byte %'ModuleName'%.%SetOutputPower(signed char power)
+uint8_t %'ModuleName'%.%SetOutputPower(uint8_t power)
 {
   uint8_t val;
 
@@ -1350,9 +1374,10 @@ byte %'ModuleName'%.%SetOutputPower(signed char power)
 %define! Parpower
 %define! RetVal
 %include Common\nRF24L01GetOutputPower.Inc
-byte %'ModuleName'%.%GetOutputPower(signed char *power)
+uint8_t %'ModuleName'%.%GetOutputPower(int8_t *power)
 {
   uint8_t val;
+
   val = %'ModuleName'%.ReadRegister(%'ModuleName'%.RF_SETUP); /* read RF_SETUP register */
   if ((val&%'ModuleName'%.RF_SETUP_RF_PWR_MASK)==%'ModuleName'%.RF_SETUP_RF_PWR_18) {
     *power = -18;
@@ -1371,6 +1396,41 @@ byte %'ModuleName'%.%GetOutputPower(signed char *power)
 %endif %- GetOutputPower
 %-BW_METHOD_END GetOutputPower
 %-************************************************************************************************************
+%-BW_METHOD_BEGIN PollInterrupt
+%ifdef PollInterrupt
+%include Common\nRF24L01PollInterrupt.Inc
+void %'ModuleName'%.%PollInterrupt(void)
+{
+  uint8_t status;
+%if defined(AppEventHandler) & AppEventHandler<>"" %- not empty
+  void %AppEventHandler(void); /* prototype */
+%endif
+
+  status = %'ModuleName'%.%GetStatusClrIRQ();
+  if (status&(%'ModuleName'%.STATUS_RX_DR|%'ModuleName'%.STATUS_TX_DS|%'ModuleName'%.STATUS_MAX_RT)) {
+    %'ModuleName'%.CE_LOW(); /* pull CE Low to disable transceiver */
+%if defined(AppEventHandler) & AppEventHandler<>"" %- not empty
+    %AppEventHandler();
+%endif
+%if defined(OnInterrupt)
+    %OnInterrupt(); /* call user event (if enabled)... */
+%endif
+  }
+}
+
+%endif %- PollInterrupt
+%-BW_METHOD_END PollInterrupt
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN Deinit
+%ifdef Deinit
+%include Common\nRF24L01Deinit.Inc
+void %'ModuleName'%.%Deinit(void)
+{
+  /* nothing needed */
+}
+
+%endif %- Deinit
+%-BW_METHOD_END Deinit
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

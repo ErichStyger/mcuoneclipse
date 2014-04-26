@@ -6,9 +6,17 @@
 %;**%>14 nRF24L01+ %>60: %get(nRF24L01p,Text)
 %else %- nRF24L01pEnabled
 %endif %- nRF24L01pEnabled
+%;**%>12 Poll Transceiver %>60: %get(Symbol,Text)
+%;**%>12 RTOS %>60: %get(RTOS,Text)
+%;**%>12 Utility %>60: %get(Utility,Text)
 %;**%>12 Shell %>60: %get(ShellEnabled,Text)
 %if %get(ShellEnabled, Bool) = 'yes'
+%;**%>14 Remote StdIO %>60: %get(RStdioEnabled,Text)
+%if %get(RStdioEnabled, Bool) = 'yes'
+%;**%>16 Queue length %>60: %get(RStdioQueueLength,Text)
+%;**%>16 Queue Timeout (ms) %>60: %get(QueueTimeoutMs,Text)
+%else %- RStdioEnabled
+%endif %- RStdioEnabled
 %;**%>14 Shell %>60: %get(Shell,Text)
-%;**%>14 Utility %>60: %get(Utility,Text)
 %else %- ShellEnabled
 %endif %- ShellEnabled
