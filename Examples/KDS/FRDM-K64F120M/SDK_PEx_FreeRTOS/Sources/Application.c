@@ -11,7 +11,10 @@
 #include "FreeRTOS.h" /* FreeRTOS interface */
 #include "RTOSTRC1.h"
 
+#define USE_SDK_RTOS   0
+
 /*--------------------------------------------------------------------------*/
+#if USE_SDK_RTOS
 /* Kinetis SDK Task variables and defines */
 #define SDK_TASK_STACK_SIZE  200 /* Task size (in 32bit units) */
 #define SDK_TASK_PRIO        3 /* task priority */
@@ -32,7 +35,7 @@ static void SDK_CreateTask(void) {
     for(;;); /* error! */
   }
 }
-
+#endif /* USE_SDK_RTOS */
 /*--------------------------------------------------------------------------*/
 /* traditional FreeRTOS task */
 static xTaskHandle mainTaskHndl;
@@ -75,8 +78,10 @@ void APP_Start (void) {
   }
 #endif
 	/* create tasks */
-	CreateTask();
-	SDK_CreateTask();
+	CreateTask(); /* normal FreeRTOS tasks */
+#if USE_SDK_RTOS
+	SDK_CreateTask(); /* using SDK API */
+#endif
 
 	/* start the scheduler */
   vTaskStartScheduler(); /* does usually not return! */
