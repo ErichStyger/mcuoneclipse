@@ -550,7 +550,7 @@ void vTraceStoreISRBegin(objectHandleType handle)
  ******************************************************************************/
 void vTraceStoreISREnd(void)
 {
-	TSEvent* ts;
+	TSEvent* ts=NULL; /* << EST: initialize always */
 	uint16_t dts5;
 	TRACE_SR_ALLOC_CRITICAL_SECTION();
 
