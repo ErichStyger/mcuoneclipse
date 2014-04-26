@@ -211,9 +211,9 @@ LI.EXP {
  - Returns the current position based on the encoder tracking.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> word GetPos(void)<br />
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>QuadCntrType GetPos(void)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>Return value:word</i> - position
+<li><i>Return value:<i>ComponentName_</i>QuadCntrType</i> - position
 </li>
 </ul><br />
 </li>
@@ -222,9 +222,9 @@ LI.EXP {
  - Sets the position information. Can be used as well to reset the position information.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void SetPos(word pos)<br />
+<br /><i>ANSIC prototype:</i> void SetPos(<i>ComponentName_</i>QuadCntrType pos)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>pos:word</i> - Position value to be set.</li>
+<li><i>pos:<i>ComponentName_</i>QuadCntrType</i> - Position value to be set.</li>
 </ul><br />
 </li>
 <li><a name="GetVal">
@@ -232,9 +232,9 @@ LI.EXP {
  - Returns the quadrature value (0, 1, 2 or 3)
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte GetVal(void)<br />
+<br /><i>ANSIC prototype:</i> uint8_t GetVal(void)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>Return value:byte</i> - Quadrature value (0-3)
+<li><i>Return value:uint8_t</i> - Quadrature value (0-3)
 </li>
 </ul><br />
 </li>
@@ -252,9 +252,9 @@ LI.EXP {
  - Returns the number of decoding errors
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> word NofErrors(void)<br />
+<br /><i>ANSIC prototype:</i> uint16_t NofErrors(void)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>Return value:word</i> - Error code
+<li><i>Return value:uint16_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -281,12 +281,12 @@ LI.EXP {
  - Handler to process shell commands
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)<br />
+<br /><i>ANSIC prototype:</i> uint8_t ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>cmd:byte</i> - Command string to be parsed</li>
 <li><i>handled: Pointer to bool</i> - Pointer to boolean. The handler sets this variable to TRUE if command was handled, otherwise let it untouched.</li>
 <li><i>io:byte</i> - Pointer to I/O structure</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>

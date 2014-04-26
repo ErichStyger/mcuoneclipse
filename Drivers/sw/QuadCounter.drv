@@ -114,6 +114,18 @@
 #define %'ModuleName'%.GET_C1_C2_PINS()  ((%'ModuleName'%.GET_C1_PIN()!=0?2:0)|(%'ModuleName'%.GET_C2_PIN()!=0?1:0))
 %endif
 
+%if %CounterType='16'
+typedef uint16_t %'ModuleName'%.QuadCntrType;
+#define %'ModuleName'%.CNTR_BITS  16
+  /*!< Number of bits in counter */
+%elif %CounterType='32'
+typedef uint32_t %'ModuleName'%.QuadCntrType;
+#define %'ModuleName'%.CNTR_BITS  32
+  /*!< Number of bits in counter */
+%else
+  %error "Unknown counter type?"
+%endif
+
 %ifdef ParseCommand
 #define %'ModuleName'%.PARSE_COMMAND_ENABLED  1  /* set to 1 if method ParseCommand() is present, 0 otherwise */
 %else
@@ -126,7 +138,7 @@
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SetPos
 %ifdef SetPos
-void %'ModuleName'%.%SetPos(word pos);
+void %'ModuleName'%.%SetPos(%'ModuleName'_QuadCntrType pos);
 %define! Parpos
 %include Common\QuadCounterSetPos.Inc
 
@@ -135,7 +147,7 @@ void %'ModuleName'%.%SetPos(word pos);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN GetPos
 %ifdef GetPos
-word %'ModuleName'%.%GetPos(void);
+%'ModuleName'_QuadCntrType %'ModuleName'%.%GetPos(void);
 %define! RetVal
 %include Common\QuadCounterGetPos.Inc
 
@@ -160,7 +172,7 @@ void %'ModuleName'%.%Sample(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN NofErrors
 %ifdef NofErrors
-word %'ModuleName'%.%NofErrors(void);
+uint16_t %'ModuleName'%.%NofErrors(void);
 %define! RetVal
 %include Common\QuadCounterNofErrors.Inc
 
@@ -185,7 +197,7 @@ void %'ModuleName'%.%Init(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ParseCommand
 %ifdef ParseCommand
-byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io);
+uint8_t %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io);
 %define! Parcmd
 %define! Parhandled
 %define! Pario
@@ -252,7 +264,7 @@ void %OnError(void);
 #define QUAD_ERROR  3 /*!< Value to indicate an error in impulse detection. Has to be different from 0,1,-1 */
 
 %if %ErrorCorrection = 'yes'
-static byte %'ModuleName'%.prevlast_quadrature_value; /*! Value of C1&C2 before last_quadrature_value. */
+static uint8_t %'ModuleName'%.prevlast_quadrature_value; /*! Value of C1&C2 before last_quadrature_value. */
 
 static const signed char %'ModuleName'%.Quad_Table[4][4][4] =
   {               /* pprev prev   new    */
@@ -390,13 +402,13 @@ static const signed char %'ModuleName'%.Quad_Table[4][4] =
      }
   };
 %endif %- ErrorCorrection
-static byte %'ModuleName'%.last_quadrature_value; /*! Value of C1&C2 during last round. */
+static uint8_t %'ModuleName'%.last_quadrature_value; /*! Value of C1&C2 during last round. */
 %endif %- %SamplingMethod = 'yes'
 
-static word %'ModuleName'%.currPos = 0; /*!< Current position */
+static %'ModuleName'_QuadCntrType %'ModuleName'%.currPos = 0; /*!< Current position */
 %ifdef NofErrors
-static word %'ModuleName'%.nofErrors = 0;
-%endif
+static uint16_t %'ModuleName'%.nofErrors = 0;
+%endif %- NofErrors
 
 %endif
 %-BW_CUSTOM_VARIABLE_END
@@ -409,7 +421,7 @@ static word %'ModuleName'%.nofErrors = 0;
 %ifdef SetPos
 %define! Parpos
 %include Common\QuadCounterSetPos.Inc
-void %'ModuleName'%.%SetPos(word pos)
+void %'ModuleName'%.%SetPos(%'ModuleName'_QuadCntrType pos)
 {
   %'ModuleName'%.currPos = pos;
 }
@@ -421,7 +433,7 @@ void %'ModuleName'%.%SetPos(word pos)
 %ifdef GetPos
 %define! RetVal
 %include Common\QuadCounterGetPos.Inc
-word %'ModuleName'%.%GetPos(void)
+%'ModuleName'_QuadCntrType %'ModuleName'%.%GetPos(void)
 {
   return %'ModuleName'%.currPos;
 }
@@ -452,7 +464,7 @@ void %@EventCounterC1@OnEnd(void)
 void %'ModuleName'%.%Sample(void)
 {
   signed char new_step;
-  byte c12; /* value of the two sensor input */
+  uint8_t c12; /* value of the two sensor input */
 
   c12 = %'ModuleName'%.GET_C1_C2_PINS();
 %if %ErrorCorrection = 'yes'
@@ -465,7 +477,7 @@ void %'ModuleName'%.%Sample(void)
   if (new_step == QUAD_ERROR) {
 %ifdef NofErrors
     %'ModuleName'%.nofErrors++;
-%endif
+%endif %- NofErrors
 %ifdef OnError
     %OnError(); /* call error handler */
 %endif
@@ -481,7 +493,7 @@ void %'ModuleName'%.%Sample(void)
 %ifdef NofErrors
 %define! RetVal
 %include Common\QuadCounterNofErrors.Inc
-word %'ModuleName'%.%NofErrors(void)
+uint16_t %'ModuleName'%.%NofErrors(void)
 {
   return %'ModuleName'%.nofErrors;
 }
@@ -514,7 +526,7 @@ void %'ModuleName'%.%Init(void)
 %endif
 %ifdef NofErrors
   %'ModuleName'%.nofErrors = 0;
-%endif
+%endif %- NofErrors
 }
 
 %endif %- Init
@@ -534,7 +546,7 @@ void %'ModuleName'%.%Init(void)
  * \param io I/O stream to be used for input/output
  * \return Error code, ERR_OK if everything was fine
  */
-byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)
+uint8_t %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)
 {
   uint8_t res=ERR_OK;
 
@@ -546,9 +558,21 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
   } else if (%@Utility@'ModuleName'%.strcmp((const char*)cmd, %@Shell@'ModuleName'%.CMD_STATUS)==0 || %@Utility@'ModuleName'%.strcmp((const char*)cmd, "%'ModuleName' status")==0) {
     %@Shell@'ModuleName'%.SendStr((const unsigned char*)"%'ModuleName':\r\n", io->stdOut);
     %@Shell@'ModuleName'%.SendStatusStr((const unsigned char*)"  pos", (const unsigned char*)"", io->stdOut);
+  #if %'ModuleName'%.CNTR_BITS==16
     %@Shell@'ModuleName'%.SendNum16u(%'ModuleName'%.currPos, io->stdOut);
+  #elif %'ModuleName'%.CNTR_BITS==32
+    %@Shell@'ModuleName'%.SendNum32u(%'ModuleName'%.currPos, io->stdOut);
+  #else
+    #error "unknown counter size!"
+  #endif
     %@Shell@'ModuleName'%.SendStr((const unsigned char*)", ", io->stdOut);
+  #if %'ModuleName'%.CNTR_BITS==16
     %@Shell@'ModuleName'%.SendNum16s((int16_t)%'ModuleName'%.currPos, io->stdOut);
+  #elif %'ModuleName'%.CNTR_BITS==32
+    %@Shell@'ModuleName'%.SendNum32s((int32_t)%'ModuleName'%.currPos, io->stdOut);
+  #else
+    #error "unknown counter size!"
+  #endif
     %@Shell@'ModuleName'%.SendStr((const unsigned char*)"\r\n", io->stdOut);
     %@Shell@'ModuleName'%.SendStatusStr((const unsigned char*)"  C1 C2", (const unsigned char*)"", io->stdOut);
     if (%'ModuleName'%.GET_C1_PIN()!=0) {
@@ -565,7 +589,7 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
     %@Shell@'ModuleName'%.SendStatusStr((const unsigned char*)"  errors", (const unsigned char*)"", io->stdOut);
     %@Shell@'ModuleName'%.SendNum16u(%'ModuleName'%.nofErrors, io->stdOut);
     %@Shell@'ModuleName'%.SendStr((const unsigned char*)"\r\n", io->stdOut);
-%endif
+%endif %- NofErrors
     *handled = TRUE;
   } else if (%@Utility@'ModuleName'%.strcmp((const char*)cmd, "%'ModuleName' reset")==0) {
     %'ModuleName'%.SetPos(0);
@@ -585,7 +609,7 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
 %define! RetVal
 %include Common\QuadCounterGetVal.Inc
 /*
-byte %'ModuleName'%.%GetVal(void)
+uint8_t %'ModuleName'%.%GetVal(void)
 {
   *** Implemented as macro on the header file.
 }
