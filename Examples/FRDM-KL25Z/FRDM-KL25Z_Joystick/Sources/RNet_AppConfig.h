@@ -14,6 +14,9 @@
 
 /*! type ID's for application messages */
 typedef enum {
+  RAPP_MSG_TYPE_STDIN = 0x00,
+  RAPP_MSG_TYPE_STDOUT = 0x01,
+  RAPP_MSG_TYPE_STDERR = 0x02,
   RAPP_MSG_TYPE_DATA = 0x55, /* ID for data message */
 } RAPP_MSG_Type;
 

@@ -34,8 +34,6 @@ static portTASK_FUNCTION(BlinkTask, pvParameters) {
 }
 #endif /* PL_HAS_RTOS */
 
-
-
 void APP_Run(void) {
   LED2_On();
   WAIT1_Waitms(1000); /* blink to indicate reset/power-up situation */

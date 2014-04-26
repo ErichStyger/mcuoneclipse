@@ -15,126 +15,84 @@
 
 #include "w5100.h"
 #include "ETH_CS.h"
-//#include "ETH_INT.h"
+#include "ETH_INT.h"
 #include "WAIT1.h"
 #include "SM1.h"
 #include "FRTOS1.h"
 #include "CLS1.h"
 #include "UTIL1.h"
+#include "SPI.h"
 
 #define W5100_CS_ENABLE()   ETH_CS_ClrVal() /* chip select is low active */
 #define W5100_CS_DISABLE()  ETH_CS_SetVal() /* chip select is low active */
 
-static volatile bool W5100_DataReceivedFlag = FALSE;
-static xSemaphoreHandle SPImutex = NULL; /* Semaphore to protect SPI access */
-
-void W5100_RequestSPIBus(void) {
-  (void)xSemaphoreTakeRecursive(SPImutex, portMAX_DELAY);
-}
-
-void W5100_ReleaseSPIBus(void) {
-  (void)xSemaphoreGiveRecursive(SPImutex);
-}
-
-void W5100_GetBus(void) {
-  W5100_RequestSPIBus();
-  W5100_CS_ENABLE();
-}
-
-void W5100_ReleaseBus(void) {
-  W5100_CS_DISABLE();
-  W5100_ReleaseSPIBus();
-}
-
-void W5100_OnBlockReceived(LDD_TUserData *UserDataPtr) {
-  (void)UserDataPtr;
-  W5100_DataReceivedFlag = TRUE;
-}
-
-static void SPIWriteByte(unsigned char write) {
-  unsigned char dummy;
-
-  W5100_DataReceivedFlag = FALSE;
-  (void)SM1_ReceiveBlock(SM1_DeviceData, &dummy, sizeof(dummy));
-  (void)SM1_SendBlock(SM1_DeviceData, &write, sizeof(write));
-  while(!W5100_DataReceivedFlag){}
-  // GetBlockReceivedStatus()?
-  // while (SS1_GetBlockReceivedStatus(slaveDevData1)); /* Wait until data block is transmitted/received */
-}
-
-static uint8_t SPIReadByte(void) {
-  uint8_t val, write = 0xff; /* dummy */
-  
-  W5100_DataReceivedFlag = FALSE;
-  (void)SM1_ReceiveBlock(SM1_DeviceData, &val, 1);
-  (void)SM1_SendBlock(SM1_DeviceData, &write, 1);
-  while(!W5100_DataReceivedFlag){}
-  return val;
-}
-
 uint8_t W5100_MemWriteByte(uint16_t addr, uint8_t val) {
-  W5100_GetBus();
-  SPIWriteByte(W5100_CMD_WRITE);
-  SPIWriteByte(addr>>8); /* high address */
-  SPIWriteByte(addr&0xff); /* low address */
-  SPIWriteByte(val); /* data */
-  W5100_ReleaseBus();
+  SPI_RequestSPIBus();
+  W5100_CS_ENABLE();
+  SPI_WriteByte(W5100_CMD_WRITE);
+  SPI_WriteByte(addr>>8); /* high address */
+  SPI_WriteByte(addr&0xff); /* low address */
+  SPI_WriteByte(val); /* data */
+  W5100_CS_DISABLE();
+  SPI_ReleaseSPIBus();
   return ERR_OK;
 }
 
 uint8_t W5100_MemReadByte(uint16_t addr, uint8_t *val) {
-  W5100_GetBus();
-  SPIWriteByte(W5100_CMD_READ);
-  SPIWriteByte(addr>>8); /* high address */
-  SPIWriteByte(addr&0xff); /* low address */
-  *val = SPIReadByte(); /* data */
-  W5100_ReleaseBus();
+  SPI_RequestSPIBus();
+  W5100_CS_ENABLE();
+  SPI_WriteByte(W5100_CMD_READ);
+  SPI_WriteByte(addr>>8); /* high address */
+  SPI_WriteByte(addr&0xff); /* low address */
+  *val = SPI_ReadByte(); /* data */
+  W5100_CS_DISABLE();
+  SPI_ReleaseSPIBus();
   return ERR_OK;
 }
 
 uint8_t W5100_MemWriteWord(uint16_t addr, uint16_t val) {
-  W5100_RequestSPIBus();
+  SPI_RequestSPIBus();
 
   W5100_CS_ENABLE();
-  SPIWriteByte(W5100_CMD_WRITE);
-  SPIWriteByte(addr>>8); /* high address */
-  SPIWriteByte(addr&0xff); /* low address */
-  SPIWriteByte(val>>8); /* data */
+  SPI_WriteByte(W5100_CMD_WRITE);
+  SPI_WriteByte(addr>>8); /* high address */
+  SPI_WriteByte(addr&0xff); /* low address */
+  SPI_WriteByte(val>>8); /* data */
   W5100_CS_DISABLE();
 
   addr++;
   W5100_CS_ENABLE();
-  SPIWriteByte(W5100_CMD_WRITE);
-  SPIWriteByte(addr>>8); /* high address */
-  SPIWriteByte(addr&0xff); /* low address */
-  SPIWriteByte(val&0xff); /* data */
+  SPI_WriteByte(W5100_CMD_WRITE);
+  SPI_WriteByte(addr>>8); /* high address */
+  SPI_WriteByte(addr&0xff); /* low address */
+  SPI_WriteByte(val&0xff); /* data */
   W5100_CS_DISABLE();
 
-  W5100_ReleaseSPIBus();
+  SPI_ReleaseSPIBus();
   return ERR_OK;
 }
 
 uint8_t W5100_MemReadWord(uint16_t addr, uint16_t *val) {
   uint8_t low, high;
   
-  W5100_RequestSPIBus();
+  SPI_RequestSPIBus();
 
   W5100_CS_ENABLE();
-  SPIWriteByte(W5100_CMD_READ);
-  SPIWriteByte(addr>>8); /* high address */
-  SPIWriteByte(addr&0xff); /* low address */
-  high = SPIReadByte(); /* data */
+  SPI_WriteByte(W5100_CMD_READ);
+  SPI_WriteByte(addr>>8); /* high address */
+  SPI_WriteByte(addr&0xff); /* low address */
+  high = SPI_ReadByte(); /* data */
   W5100_CS_DISABLE();
   
   addr++;
   W5100_CS_ENABLE();
-  SPIWriteByte(W5100_CMD_READ);
-  SPIWriteByte(addr>>8); /* high address */
-  SPIWriteByte(addr&0xff); /* low address */
-  low = SPIReadByte(); /* data */
+  SPI_WriteByte(W5100_CMD_READ);
+  SPI_WriteByte(addr>>8); /* high address */
+  SPI_WriteByte(addr&0xff); /* low address */
+  low = SPI_ReadByte(); /* data */
   W5100_CS_DISABLE();
   
-  W5100_ReleaseSPIBus();
+  SPI_ReleaseSPIBus();
   
   *val = (high<<8)|low;
   return ERR_OK;
@@ -169,7 +127,6 @@ uint8_t W5100_ReadConfig(w5100_config_t *config) {
 }
 
 void W5100_Init(void) {
-  SPImutex = xSemaphoreCreateRecursiveMutex();
   /* bring reset pin low */
  // ETH_RESET_ClrVal();
  // WAIT1_Waitms(10);

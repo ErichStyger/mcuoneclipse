@@ -65,19 +65,34 @@
     </IncludePaths>
     <SourceCodePaths>
       <Path>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\</Path>
+      <Path>C:\Freescale\KSDK_1.0.0-Beta\platform\drivers\clock\src\</Path>
+      <Path>C:\Freescale\KSDK_1.0.0-Beta\platform\drivers\gpio\src\</Path>
+      <Path>C:\Freescale\KSDK_1.0.0-Beta\platform\drivers\interrupt\src\</Path>
+      <Path>C:\Freescale\KSDK_1.0.0-Beta\platform\drivers\pit\src\</Path>
+      <Path>C:\Freescale\KSDK_1.0.0-Beta\platform\hal\gpio\</Path>
+      <Path>C:\Freescale\KSDK_1.0.0-Beta\platform\hal\mcg\</Path>
+      <Path>C:\Freescale\KSDK_1.0.0-Beta\platform\hal\pit\</Path>
+      <Path>C:\Freescale\KSDK_1.0.0-Beta\platform\hal\port\</Path>
+      <Path>C:\Freescale\KSDK_1.0.0-Beta\platform\hal\sim\</Path>
       <Path>C:\Freescale\KSDK_1.0.0-Beta\rtos\osa_src\</Path>
+      <Path>C:\Freescale\KSDK_1.0.0-Beta\platform\startup\MK64F12\</Path>
+      <Path>C:\Freescale\KSDK_1.0.0-Beta\platform\startup\</Path>
+      <Path>C:\Freescale\KSDK_1.0.0-Beta\platform\utilities\src\</Path>
       <Path>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Sources\</Path>
       <Path>C:\Freescale\KDS_1.0\eclipse\ProcessorExpert\lib\Kinetis\pdd2\MK64FN1M0LQ12_4SDK\system\sdk\</Path>
+      <Path>C:\Freescale\KSDK_1.0.0-Beta\platform\startup\MK64F12\gcc\</Path>
     </SourceCodePaths>
   </PATHS>
   <FILES>
     <GeneratedCs>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\CS1.c</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\Cpu.c</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\FRTOS1.c</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\KSDK1.c</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\LED_RGB.c</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\RTOSTRC1.c</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\UTIL1.c</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\WAIT1.c</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\croutine.c</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\event_groups.c</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\hardware_init.c</PathName>
@@ -96,13 +111,30 @@
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\trcKernel.c</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\trcKernelPort.c</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\trcUser.c</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\drivers\clock\src\fsl_clock_manager.c</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\drivers\gpio\src\fsl_gpio_driver.c</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\drivers\gpio\src\fsl_gpio_irq.c</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\drivers\interrupt\src\fsl_interrupt_manager.c</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\drivers\pit\src\fsl_pit_driver.c</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\drivers\pit\src\fsl_pit_irq.c</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\hal\gpio\fsl_gpio_hal.c</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\hal\mcg\fsl_mcg_hal.c</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\hal\pit\fsl_pit_hal.c</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\hal\port\fsl_port_hal.c</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\hal\sim\fsl_sim_clock_module_names_K64F12.c</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\hal\sim\fsl_sim_hal.c</PathName>
       <PathName>C:\Freescale\KSDK_1.0.0-Beta\rtos\osa_src\fsl_os_abstraction_free_rtos.c</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\startup\MK64F12\system_MK64F12.c</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\startup\startup.c</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\utilities\src\fsl_os_abstraction_bm.c</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\utilities\src\sw_timer.c</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Sources\Application.c</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Sources\Events.c</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Sources\main.c</PathName>
       <PathName>C:\Freescale\KDS_1.0\eclipse\ProcessorExpert\lib\Kinetis\pdd2\MK64FN1M0LQ12_4SDK\system\sdk\PE_low_level_init.c</PathName>
     </GeneratedCs>
     <GeneratedHs>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\CS1.h</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\Cpu.h</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\FRTOS1.h</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\FreeRTOS.h</PathName>
@@ -113,6 +145,7 @@
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\RTOSTRC1.h</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\StackMacros.h</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\UTIL1.h</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\WAIT1.h</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\board.h</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\croutine.h</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\event_groups.h</PathName>
@@ -135,11 +168,88 @@
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\trcKernelPort.h</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\trcTypes.h</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\trcUser.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\arm_common_tables.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\arm_const_structs.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\arm_math.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\core_cm4.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\core_cm4_simd.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\core_cmFunc.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\core_cmInstr.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_adc.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_aips.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_axbs.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_can.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_cau.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_cmp.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_cmt.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_crc.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_dac.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_dma.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_dmamux.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_enet.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_ewm.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_fb.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_fmc.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_ftfe.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_ftm.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_gpio.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_i2c.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_i2s.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_llwu.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_lptmr.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_mcg.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_mcm.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_mpu.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_nv.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_osc.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_pdb.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_pit.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_pmc.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_port.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_rcm.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_rfsys.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_rfvbat.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_rng.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_rtc.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_sdhc.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_sim.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_smc.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_spi.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_uart.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_usb.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_usbdcd.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_vref.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\MK64F12_wdog.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\regs.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\MK64F12\system_MK64F12.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\CMSIS\Include\device\fsl_device_registers.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\drivers\clock\fsl_clock_manager.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\drivers\clock\src\fsl_clock_manager_private.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\drivers\gpio\fsl_gpio_driver.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\drivers\interrupt\fsl_interrupt_features.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\drivers\interrupt\fsl_interrupt_manager.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\drivers\pit\fsl_pit_driver.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\hal\gpio\fsl_gpio_features.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\hal\gpio\fsl_gpio_hal.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\hal\mcg\fsl_mcg_features.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\hal\mcg\fsl_mcg_hal.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\hal\pit\fsl_pit_features.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\hal\pit\fsl_pit_hal.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\hal\port\fsl_port_features.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\hal\port\fsl_port_hal.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\hal\sim\fsl_sim_features.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\hal\sim\fsl_sim_hal.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\startup\startup.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\utilities\fsl_os_abstraction.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\utilities\fsl_os_abstraction_bm.h</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\utilities\sw_timer.h</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Sources\Application.h</PathName>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Sources\Events.h</PathName>
     </GeneratedHs>
     <GeneratedASMs>
       <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\SDK_PEx_FreeRTOS\Generated_Code\portasm.s</PathName>
+      <PathName>C:\Freescale\KSDK_1.0.0-Beta\platform\startup\MK64F12\gcc\startup_MK64F12.S</PathName>
     </GeneratedASMs>
   </FILES>
   <OPTIONS>

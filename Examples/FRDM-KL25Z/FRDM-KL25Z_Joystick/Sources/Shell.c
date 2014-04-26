@@ -12,22 +12,12 @@
 #include "CLS1.h"
 #include "LED1.h"
 #include "LED2.h"
-#include "FAT1.h"
-#include "TmDt1.h"
-#include "w5100.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
   FRTOS1_ParseCommand,
   CLS1_ParseCommand,
   APP_ParseCommand,
-  TmDt1_ParseCommand,
-#if PL_USE_SD
-  FAT1_ParseCommand,
-#endif
-#if PL_USE_ETH
-  W5100_ParseCommand,
-#endif
   NULL /* sentinel */
 };
 
@@ -36,9 +26,6 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
 
   (void)pvParameters; /* not used */
   buf[0] = '\0';
-#if PL_USE_SD
-  (void)CLS1_ParseWithCommandTable((unsigned char*)"app mount", CLS1_GetStdio(), CmdParserTable);
-#endif
   (void)CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, CLS1_GetStdio(), CmdParserTable);
   for(;;) {
     (void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), CLS1_GetStdio(), CmdParserTable);

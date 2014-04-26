@@ -71,14 +71,12 @@
 #include "BitIoLdd8.h"
 #include "CSN1.h"
 #include "BitIoLdd9.h"
-#include "IRQ1.h"
-#include "ExtIntLdd2.h"
 #include "SM1.h"
 #include "SMasterLdd1.h"
-#include "RNET1.h"
 #include "FRTOS1.h"
 #include "AD1.h"
 #include "AdcLdd1.h"
+#include "RNET1.h"
 
 #ifdef __cplusplus
 extern "C" {

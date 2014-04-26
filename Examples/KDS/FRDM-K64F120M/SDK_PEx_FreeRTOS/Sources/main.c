@@ -35,6 +35,8 @@
 #include "RTOSTRC1.h"
 #include "UTIL1.h"
 #include "LED_RGB.h"
+#include "WAIT1.h"
+#include "CS1.h"
 #include "KSDK1.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */

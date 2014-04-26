@@ -17,6 +17,7 @@
 #include "RNet_App.h"
 #include "AD1.h"
 #include "UTIL1.h"
+#include "Shell.h"
 
 void APP_DebugPrint(unsigned char *str) {
   CLS1_SendStr(str, CLS1_GetStdio()->stdOut);
@@ -99,7 +100,7 @@ void APP_HandleEvent(uint8_t event) {
   } /* switch */
 }
 
-static void PrintXY(void) {
+static void StatusPrintXY(CLS1_ConstStdIOType *io) {
   uint16_t x, y;
   uint8_t buf[32];
   
@@ -109,10 +110,25 @@ static void PrintXY(void) {
     UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" Y: 0x");
     UTIL1_strcatNum16Hex(buf, sizeof(buf), y);
     UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-    CLS1_SendStr(buf, CLS1_GetStdio()->stdOut);
   } else {
-    CLS1_SendStr((unsigned char*)"GetXY() failed!\r\n", CLS1_GetStdio()->stdErr);
+    UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"GetXY() failed!\r\n");
   }
+  CLS1_SendStatusStr((unsigned char*)"  Analog", buf, io->stdOut);
+}
+
+uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, CLS1_ConstStdIOType *io) {
+  if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "app help")==0) {
+    CLS1_SendHelpStr((unsigned char*)"app", (const unsigned char*)"Group of app commands\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"print help or status information\r\n", io->stdOut);
+    *handled = TRUE;
+    return ERR_OK;
+  } else if (UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0 || UTIL1_strcmp((char*)cmd, "app status")==0) {
+    CLS1_SendStatusStr((unsigned char*)"app", (unsigned char*)"\r\n", io->stdOut);
+    StatusPrintXY(io);
+    *handled = TRUE;
+    return ERR_OK;
+  }
+  return ERR_OK; /* no error */
 }
 
 static void AppTask(void *pvParameters) {
@@ -122,7 +138,7 @@ static void AppTask(void *pvParameters) {
   cntMs = 0;
   for(;;) {
     if (cntMs>500) {
-      PrintXY();
+      //PrintXY();
       LED1_Neg();
       cntMs = 0;
     }
@@ -134,9 +150,9 @@ static void AppTask(void *pvParameters) {
   }
 }
 
-
 void APP_Run(void) {
-//  RNETA_Init();
+  SHELL_Init();
+  RNETA_Init();
   if (FRTOS1_xTaskCreate(
         AppTask,  /* pointer to the task */
         "App", /* task name for kernel awareness debugging */

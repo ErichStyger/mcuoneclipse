@@ -50,8 +50,6 @@
 #include "BitIoLdd3.h"
 #include "CSN2.h"
 #include "BitIoLdd4.h"
-#include "IRQ1.h"
-#include "ExtIntLdd1.h"
 #include "CS1.h"
 #include "RNET1.h"
 #include "SPI1.h"

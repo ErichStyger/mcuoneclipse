@@ -36,7 +36,7 @@ extern "C" {
 
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
-#include "w5100.h"
+#include "SPI.h"
 
 /*
 ** ===================================================================
@@ -146,7 +146,7 @@ void FRTOS1_vApplicationMallocFailedHook(void)
 /* ===================================================================*/
 void SD1_OnBlockReceived(LDD_TUserData *UserDataPtr)
 {
-  W5100_OnBlockReceived(UserDataPtr);
+  SPI_OnBlockReceived(UserDataPtr);
 }
 
 /*
@@ -164,7 +164,7 @@ void SD1_OnBlockReceived(LDD_TUserData *UserDataPtr)
 */
 void SD1_OnActivate(void)
 {
-  W5100_RequestSPIBus();
+  SPI_RequestSPIBus();
 }
 
 /*
@@ -182,7 +182,7 @@ void SD1_OnActivate(void)
 */
 void SD1_OnDeactivate(void)
 {
-  W5100_ReleaseSPIBus();
+  SPI_ReleaseSPIBus();
 }
 
 /* END Events */
