@@ -200,26 +200,32 @@ static void AppTask(void *pvParameters) {
   uint16_t cntMs;
   uint16_t x, y;
   int8_t x8, y8, x8prev, y8prev;
+#if PL_HAS_NRF24
   uint8_t data[2];
+#endif
   uint8_t buf[24];
   
   CLS1_SendStr((unsigned char*)"Hello from the Joystick App!\r\n", CLS1_GetStdio()->stdOut);
   cntMs = 0;
   x8prev = 127; y8prev = 127; /* should be different from center position */
   for(;;) {
-    if (APP_GetXY(&x, &y, &x8, &y8)==ERR_OK) {
+    if (APP_GetXY(&x, &y, &x8, &y8)!=ERR_OK) {
       CLS1_SendStr((unsigned char*)"Failed to get x/y!\r\n", CLS1_GetStdio()->stdErr);
     } else {
-      if (x8!=x8prev || y8!=y8prev || x8!=0 || y8!=0) { /* send only changing data, and only if not zero/midpoint */
+      if (x8!=x8prev || y8!=y8prev) { /* send only changing data, and only if not zero/midpoint */
         UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"xy: ");
         UTIL1_strcatNum8s(buf, sizeof(buf), x8);
         UTIL1_chcat(buf, sizeof(buf), ',');
         UTIL1_strcatNum8s(buf, sizeof(buf), y8);
         UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
         CLS1_SendStr(buf, CLS1_GetStdio()->stdOut);
+#if PL_HAS_NRF24
         data[0] = (uint8_t)x8;
         data[1] = (uint8_t)y8;
         (void)RAPP_SendPayloadDataBlock(&data[0], sizeof(data), RAPP_MSG_TYPE_JOYSTICK_XY, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
+#endif
+        x8prev = x8;
+        y8prev = y8;
       }
     }
     if (cntMs>500) {
@@ -229,9 +235,8 @@ static void AppTask(void *pvParameters) {
     }
     KEY1_ScanKeys();
     EVNT1_HandleEvent();
-    WAIT1_Waitms(20);
-    FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
-    cntMs += 10;
+    FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
+    cntMs += 50;
   }
 }
 
