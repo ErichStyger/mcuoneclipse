@@ -17,6 +17,8 @@ typedef enum {
   RAPP_MSG_TYPE_STDIN = 0x00,
   RAPP_MSG_TYPE_STDOUT = 0x01,
   RAPP_MSG_TYPE_STDERR = 0x02,
+  RAPP_MSG_TYPE_JOYSTICK_XY = 0x53, /* Joystick xy message: data is x,y (two signed bytes) from -128...127 */
+  RAPP_MSG_TYPE_JOYSTICK_BTN = 0x54, /* Joystick button message (data is one byte: 'A', 'B', ... 'F' and 'K') */
   RAPP_MSG_TYPE_DATA = 0x55, /* ID for data message */
 } RAPP_MSG_Type;
 

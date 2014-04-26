@@ -14,10 +14,11 @@
 #include "FRTOS1.h"
 #include "LED1.h"
 #include "LED2.h"
-
 #include "RStack.h"
 #include "RApp.h"
-#include "RPHY.h"
+#if PL_HAS_RSTDIO
+  #include "RStdIO.h"
+#endif
 
 #define RADIO_CHANNEL_DATA    0  /* communication channel for read station */
 
@@ -54,6 +55,9 @@ static uint8_t RNETA_HandleRxMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *
 
 static const RAPP_MsgHandler handlerTable[] = 
 {
+#if PL_HAS_RSTDIO
+  RSTDIO_HandleStdioRxMessage,
+#endif
   RNETA_HandleRxMessage,
   NULL /* sentinel */
 };
@@ -107,7 +111,7 @@ static portTASK_FUNCTION(RNetTask, pvParameters) {
   appState = RNETA_NONE;
   for(;;) {
     Process(); /* process radio in/out queues */
-    FRTOS1_vTaskDelay(2/portTICK_RATE_MS);
+    FRTOS1_vTaskDelay(5/portTICK_RATE_MS);
   } /* for */
 }
 
