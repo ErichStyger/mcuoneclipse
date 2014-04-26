@@ -221,6 +221,38 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="ini_gets">
+<b>ini_gets</b></a>
+ - Return the string for a given section and key.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> int ini_gets(const mTCHAR *Section, const mTCHAR *Key, const mTCHAR *DefValue, nTCHAR *Buffer, int BufferSize, const mTCHAR *Filename)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Section: Pointer to byte</i> - The name of the section to search for</li>
+<li><i>Key: Pointer to char</i> - Pointer to the name of the entry to find the value of</li>
+<li><i>DefValue: Pointer to char</i> - Pointer to the default value in the event of a failed read</li>
+<li><i>Buffer: Pointer to byte</i> - A pointer to the buffer to copy into</li>
+<li><i>BufferSize:int</i> - The maximum number of characters to copy</li>
+<li><i>Filename: Pointer to char</i> - The name and full path of the .ini file to read from</li>
+<li><i>Return value:int</i> - The number of characters copied into the supplied buffer
+</li>
+</ul><br />
+</li>
+<li><a name="ini_puts">
+<b>ini_puts</b></a>
+ - Writes a string value for a given section and key. Method is only enabled if 'Read only' is set to  'no' in the properties.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> int ini_puts(const mTCHAR *Section, const mTCHAR *Key, const mTCHAR *Value, const mTCHAR *Filename)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Section: Pointer to byte</i> - The name of the section to write the string in</li>
+<li><i>Key: Pointer to char</i> - The name of the entry to write</li>
+<li><i>Value: Pointer to char</i> - Pointer to the buffer the string, or NULL to erase the key</li>
+<li><i>Filename: Pointer to char</i> - The name and full path of the .ini file to write to</li>
+<li><i>Return value:int</i> - 1 if successful, otherwise 0
+</li>
+</ul><br />
+</li>
 <li><a name="ini_getl">
 <b>ini_getl</b></a>
  - Return the long integral value for a given section and key.
@@ -236,9 +268,24 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
+<li><a name="ini_putl">
+<b>ini_putl</b></a>
+ - Writes a long integral value for a given section and key. Method is only enabled if 'Read only' is set to  'no' in the properties.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> int ini_putl(const mTCHAR *Section, const mTCHAR *Key, long Value, const mTCHAR *Filename)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Section: Pointer to byte</i> - The name of the section to write the value in</li>
+<li><i>Key: Pointer to char</i> - The name of the entry to write</li>
+<li><i>Value:long</i> - The value to write</li>
+<li><i>Filename: Pointer to char</i> - The name and full path of the .ini file to write to</li>
+<li><i>Return value:int</i> - 1 if successful, otherwise 0
+</li>
+</ul><br />
+</li>
 <li><a name="ini_getf">
 <b>ini_getf</b></a>
- - Return the long integral value for a given section and key.
+ - Return the long integral value for a given section and key. Only enabled if 'Use Real' is enabled in properties.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
 <br /><i>ANSIC prototype:</i> INI_REAL ini_getf(const mTCHAR *Section, const mTCHAR *Key, INI_REAL DefValue, const mTCHAR *Filename)<br />
@@ -251,20 +298,18 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
-<li><a name="ini_gets">
-<b>ini_gets</b></a>
- - Return the string for a given section and key.
+<li><a name="ini_putf">
+<b>ini_putf</b></a>
+ - Writes a long float value for a given section and key. Method is only enabled if 'Read only' is set to  'no' in the properties and 'Use Real' is enabled.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> int ini_gets(const mTCHAR *Section, const mTCHAR *Key, const mTCHAR *DefValue, nTCHAR *Buffer, int BufferSize, const mTCHAR *Filename)<br />
+<br /><i>ANSIC prototype:</i> int ini_putf(const mTCHAR *Section, const mTCHAR *Key, INI_REAL Value, const mTCHAR *Filename)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>Section: Pointer to byte</i> - The name of the section to search for</li>
-<li><i>Key: Pointer to char</i> - Pointer to the name of the entry to find the value of</li>
-<li><i>DefValue: Pointer to char</i> - Pointer to the default value in the event of a failed read</li>
-<li><i>Buffer: Pointer to byte</i> - A pointer to the buffer to copy into</li>
-<li><i>BufferSize:int</i> - The maximum number of characters to copy</li>
-<li><i>Filename: Pointer to char</i> - The name and full path of the .ini file to read from</li>
-<li><i>Return value:int</i> - The number of characters copied into the supplied buffer
+<li><i>Section: Pointer to byte</i> - The name of the section to write the value in</li>
+<li><i>Key: Pointer to char</i> - The name of the entry to write</li>
+<li><i>Value:INI_REAL</i> - The value to write</li>
+<li><i>Filename: Pointer to char</i> - The name and full path of the .ini file to write to</li>
+<li><i>Return value:int</i> - 1 if successful, otherwise 0
 </li>
 </ul><br />
 </li>

@@ -4,7 +4,7 @@
     <Name>minIni</Name>
     <Description>minIni is a programmer’s library to read and write 'ini' files in embedded systems.</Description>
     <Author>Erich Styger</Author>
-    <Version>01.029</Version>
+    <Version>01.037</Version>
     <Icon>CPU_CHIP</Icon>
     <TypesFiles>PE,minIni\minIni</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -233,116 +233,6 @@ A false boolean is found if one of the following is matched:\n
     </Method>
     <Method>
       <TMthdItem>
-        <Name>ini_getl</Name>
-        <Symbol>ini_getl</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Return the long integral value for a given section and key.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>long</ReturnType>
-        <RetHint>The value located at Key</RetHint>
-        <ParamCount>4</ParamCount>
-        <Parameter>
-          <ParName>Section</ParName>
-          <ParType>8bit unsigned</ParType>
-          <ParPassing>Address</ParPassing>
-          <ParHint>The name of the section to search for</ParHint>
-          <ParUserDeclaration>const mTCHAR *Section</ParUserDeclaration>
-        </Parameter>
-        <Parameter>
-          <ParName>Key</ParName>
-          <ParType>char</ParType>
-          <ParPassing>Address</ParPassing>
-          <ParHint>Pointer to the name of the entry to find the value of</ParHint>
-          <ParUserDeclaration>const mTCHAR *Key</ParUserDeclaration>
-        </Parameter>
-        <Parameter>
-          <ParName>DefValue</ParName>
-          <ParType>long</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>Default value in the event of a failed read</ParHint>
-        </Parameter>
-        <Parameter>
-          <ParName>Filename</ParName>
-          <ParType>char</ParType>
-          <ParPassing>Address</ParPassing>
-          <ParHint>The name and full path of the .ini file to read from</ParHint>
-          <ParUserDeclaration>const mTCHAR *Filename</ParUserDeclaration>
-        </Parameter>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>long #M#_#C#(const mTCHAR *Section, const mTCHAR *Key, long DefValue, const mTCHAR *Filename)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>ini_getf</Name>
-        <Symbol>ini_getf</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Return the long integral value for a given section and key.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>INI_REAL</ReturnType>
-        <RetHint>The value located at Key</RetHint>
-        <ParamCount>4</ParamCount>
-        <Parameter>
-          <ParName>Section</ParName>
-          <ParType>8bit unsigned</ParType>
-          <ParPassing>Address</ParPassing>
-          <ParHint>The name of the section to search for</ParHint>
-          <ParUserDeclaration>const mTCHAR *Section</ParUserDeclaration>
-        </Parameter>
-        <Parameter>
-          <ParName>Key</ParName>
-          <ParType>char</ParType>
-          <ParPassing>Address</ParPassing>
-          <ParHint>Pointer to the name of the entry to find the value of</ParHint>
-          <ParUserDeclaration>const mTCHAR *Key</ParUserDeclaration>
-        </Parameter>
-        <Parameter>
-          <ParName>DefValue</ParName>
-          <ParType>INI_REAL</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>Default value in the event of a failed read</ParHint>
-        </Parameter>
-        <Parameter>
-          <ParName>Filename</ParName>
-          <ParType>char</ParType>
-          <ParPassing>Address</ParPassing>
-          <ParHint>The name and full path of the .ini file to read from</ParHint>
-          <ParUserDeclaration>const mTCHAR *Filename</ParUserDeclaration>
-        </Parameter>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>INI_REAL #M#_#C#(const mTCHAR *Section, const mTCHAR *Key, INI_REAL DefValue, const mTCHAR *Filename)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
         <Name>ini_gets</Name>
         <Symbol>ini_gets</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
@@ -407,6 +297,282 @@ A false boolean is found if one of the following is matched:\n
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>int #M#_#C#(const mTCHAR *Section, const mTCHAR *Key, const mTCHAR *DefValue, nTCHAR *Buffer, int BufferSize, const mTCHAR *Filename)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ini_puts</Name>
+        <Symbol>ini_puts</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Writes a string value for a given section and key. Method is only enabled if 'Read only' is set to  'no' in the properties.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>int</ReturnType>
+        <RetHint>1 if successful, otherwise 0</RetHint>
+        <ParamCount>4</ParamCount>
+        <Parameter>
+          <ParName>Section</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>The name of the section to write the string in</ParHint>
+          <ParUserDeclaration>const mTCHAR *Section</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>Key</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>The name of the entry to write</ParHint>
+          <ParUserDeclaration>const mTCHAR *Key</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>Value</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the buffer the string, or NULL to erase the key</ParHint>
+          <ParUserDeclaration>const mTCHAR *Value</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>Filename</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>The name and full path of the .ini file to write to</ParHint>
+          <ParUserDeclaration>const mTCHAR *Filename</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>int #M#_#C#(const mTCHAR *Section, const mTCHAR *Key, const mTCHAR *Value, const mTCHAR *Filename)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ini_getl</Name>
+        <Symbol>ini_getl</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Return the long integral value for a given section and key.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>long</ReturnType>
+        <RetHint>The value located at Key</RetHint>
+        <ParamCount>4</ParamCount>
+        <Parameter>
+          <ParName>Section</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>The name of the section to search for</ParHint>
+          <ParUserDeclaration>const mTCHAR *Section</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>Key</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the name of the entry to find the value of</ParHint>
+          <ParUserDeclaration>const mTCHAR *Key</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>DefValue</ParName>
+          <ParType>long</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Default value in the event of a failed read</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>Filename</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>The name and full path of the .ini file to read from</ParHint>
+          <ParUserDeclaration>const mTCHAR *Filename</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>long #M#_#C#(const mTCHAR *Section, const mTCHAR *Key, long DefValue, const mTCHAR *Filename)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ini_putl</Name>
+        <Symbol>ini_putl</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Writes a long integral value for a given section and key. Method is only enabled if 'Read only' is set to  'no' in the properties.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>int</ReturnType>
+        <RetHint>1 if successful, otherwise 0</RetHint>
+        <ParamCount>4</ParamCount>
+        <Parameter>
+          <ParName>Section</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>The name of the section to write the value in</ParHint>
+          <ParUserDeclaration>const mTCHAR *Section</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>Key</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>The name of the entry to write</ParHint>
+          <ParUserDeclaration>const mTCHAR *Key</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>Value</ParName>
+          <ParType>long</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The value to write</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>Filename</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>The name and full path of the .ini file to write to</ParHint>
+          <ParUserDeclaration>const mTCHAR *Filename</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>int #M#_#C#(const mTCHAR *Section, const mTCHAR *Key, long Value, const mTCHAR *Filename)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ini_getf</Name>
+        <Symbol>ini_getf</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Return the long integral value for a given section and key. Only enabled if 'Use Real' is enabled in properties.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>INI_REAL</ReturnType>
+        <RetHint>The value located at Key</RetHint>
+        <ParamCount>4</ParamCount>
+        <Parameter>
+          <ParName>Section</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>The name of the section to search for</ParHint>
+          <ParUserDeclaration>const mTCHAR *Section</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>Key</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the name of the entry to find the value of</ParHint>
+          <ParUserDeclaration>const mTCHAR *Key</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>DefValue</ParName>
+          <ParType>INI_REAL</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Default value in the event of a failed read</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>Filename</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>The name and full path of the .ini file to read from</ParHint>
+          <ParUserDeclaration>const mTCHAR *Filename</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>INI_REAL #M#_#C#(const mTCHAR *Section, const mTCHAR *Key, INI_REAL DefValue, const mTCHAR *Filename)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>ini_putf</Name>
+        <Symbol>ini_putf</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Writes a long float value for a given section and key. Method is only enabled if 'Read only' is set to  'no' in the properties and 'Use Real' is enabled.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>int</ReturnType>
+        <RetHint>1 if successful, otherwise 0</RetHint>
+        <ParamCount>4</ParamCount>
+        <Parameter>
+          <ParName>Section</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>The name of the section to write the value in</ParHint>
+          <ParUserDeclaration>const mTCHAR *Section</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>Key</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>The name of the entry to write</ParHint>
+          <ParUserDeclaration>const mTCHAR *Key</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>Value</ParName>
+          <ParType>INI_REAL</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>The value to write</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>Filename</ParName>
+          <ParType>char</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>The name and full path of the .ini file to write to</ParHint>
+          <ParUserDeclaration>const mTCHAR *Filename</ParUserDeclaration>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>int #M#_#C#(const mTCHAR *Section, const mTCHAR *Key, INI_REAL Value, const mTCHAR *Filename)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

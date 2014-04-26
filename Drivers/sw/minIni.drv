@@ -195,6 +195,45 @@
 
 %endif %- ini_getf
 %-BW_METHOD_END ini_getf
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ini_putl
+%ifdef ini_putl
+int %'ModuleName'%.%ini_putl(const mTCHAR *Section, const mTCHAR *Key, long Value, const mTCHAR *Filename);
+%define! ParSection
+%define! ParKey
+%define! ParValue
+%define! ParFilename
+%define! RetVal
+%include Common\minIniini_putl.Inc
+
+%endif %- ini_putl
+%-BW_METHOD_END ini_putl
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ini_puts
+%ifdef ini_puts
+int %'ModuleName'%.%ini_puts(const mTCHAR *Section, const mTCHAR *Key, const mTCHAR *Value, const mTCHAR *Filename);
+%define! ParSection
+%define! ParKey
+%define! ParValue
+%define! ParFilename
+%define! RetVal
+%include Common\minIniini_puts.Inc
+
+%endif %- ini_puts
+%-BW_METHOD_END ini_puts
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ini_putf
+%ifdef ini_putf
+int %'ModuleName'%.%ini_putf(const mTCHAR *Section, const mTCHAR *Key, INI_REAL Value, const mTCHAR *Filename);
+%define! ParSection
+%define! ParKey
+%define! ParValue
+%define! ParFilename
+%define! RetVal
+%include Common\minIniini_putf.Inc
+
+%endif %- ini_putf
+%-BW_METHOD_END ini_putf
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -344,6 +383,60 @@ INI_REAL %'ModuleName'%.%ini_getf(const mTCHAR *Section, const mTCHAR *Key, INI_
 
 %endif %- ini_getf
 %-BW_METHOD_END ini_getf
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ini_putl
+%ifdef ini_putl
+%define! ParSection
+%define! ParKey
+%define! ParValue
+%define! ParFilename
+%define! RetVal
+%include Common\minIniini_putl.Inc
+/**
+int %'ModuleName'%.%ini_putl(const mTCHAR *Section, const mTCHAR *Key, long Value, const mTCHAR *Filename)
+{
+  Implemented as macro in the header file
+}
+*/
+
+%endif %- ini_putl
+%-BW_METHOD_END ini_putl
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ini_puts
+%ifdef ini_puts
+%define! ParSection
+%define! ParKey
+%define! ParValue
+%define! ParFilename
+%define! RetVal
+%include Common\minIniini_puts.Inc
+/**
+int %'ModuleName'%.%ini_puts(const mTCHAR *Section, const mTCHAR *Key, const mTCHAR *Value, const mTCHAR *Filename)
+{
+  Implemented as macro in the header file
+}
+*/
+
+%endif %- ini_puts
+%-BW_METHOD_END ini_puts
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN ini_putf
+%ifdef ini_putf
+%define! ParSection
+%define! ParKey
+%define! ParValue
+%define! ParFilename
+%define! RetVal
+%include Common\minIniini_putf.Inc
+/**
+int %'ModuleName'%.%ini_putf(const mTCHAR *Section, const mTCHAR *Key, INI_REAL Value, const mTCHAR *Filename)
+{
+  Implemented as macro in the header file
+}
+*/
+
+%endif %- ini_putf
+%-BW_METHOD_END ini_putf
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

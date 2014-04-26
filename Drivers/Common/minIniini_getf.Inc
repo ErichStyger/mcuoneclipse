@@ -6,6 +6,7 @@
 %include Common\GeneralMethod.inc (ini_getf)
 %;**     Description :
 %;**         Return the long integral value for a given section and key.
+%;**         Only enabled if 'Use Real' is enabled in properties.
 %include Common\GeneralParameters.inc(27)
 %;**       * Section%ParSection %>27 - The name of the section to search
 %;** %>29 for

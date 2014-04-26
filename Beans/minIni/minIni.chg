@@ -1,6 +1,20 @@
 %set minIniVersion Value 1.2B
-%if defined(useReal) & %useReal='no'
-  %set ini_getf Selection never
+%if defined(isReadOnly) & %isReadOnly='no'
+  %set ini_puts Selection enable
+  %set ini_putl Selection enable
 %else
+  %set ini_puts Selection never
+  %set ini_putl Selection never
+%endif
+
+%if defined(useReal) & %useReal='yes'
   %set ini_getf Selection enable
+  %if defined(isReadOnly) & %isReadOnly='no'
+  %set ini_putf Selection enable
+  %else
+  %set ini_putf Selection never
+  %endif
+%else
+  %set ini_getf Selection never
+  %set ini_putf Selection never
 %endif
