@@ -212,7 +212,7 @@ static void AppTask(void *pvParameters) {
     if (APP_GetXY(&x, &y, &x8, &y8)!=ERR_OK) {
       CLS1_SendStr((unsigned char*)"Failed to get x/y!\r\n", CLS1_GetStdio()->stdErr);
     } else {
-      if (x8!=x8prev || y8!=y8prev) { /* send only changing data, and only if not zero/midpoint */
+      if ((x8!=x8prev) || (y8!=y8prev)) { /* send only changing data, and only if not zero/midpoint */
         UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"xy: ");
         UTIL1_strcatNum8s(buf, sizeof(buf), x8);
         UTIL1_chcat(buf, sizeof(buf), ',');
@@ -229,14 +229,13 @@ static void AppTask(void *pvParameters) {
       }
     }
     if (cntMs>500) {
-      //PrintXY();
       LED1_Neg();
       cntMs = 0;
     }
     KEY1_ScanKeys();
     EVNT1_HandleEvent();
-    FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
-    cntMs += 50;
+    FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
+    cntMs += 100;
   }
 }
 
