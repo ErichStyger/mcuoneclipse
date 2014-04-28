@@ -588,7 +588,7 @@ void %'ModuleName'%.%Deinit(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN get_fattime
 %ifdef get_fattime
-dword %'ModuleName'%.%get_fattime(void);
+uint32_t %'ModuleName'%.%get_fattime(void);
 %define! RetVal
 %include Common\FAT_FileSystemget_fattime.Inc
 
@@ -2065,7 +2065,7 @@ void %'ModuleName'%.%Deinit(void)
 #if !_FS_READONLY
 %define! RetVal
 %include Common\FAT_FileSystemget_fattime.Inc
-dword %'ModuleName'%.%get_fattime(void)
+uint32_t %'ModuleName'%.%get_fattime(void)
 {
   /* 31-25: Year(0-127 org.1980), 24-21: Month(1-12), 20-16: Day(1-31) */
   /* 15-11: Hour(0-23), 10-5: Minute(0-59), 4-0: Second(0-29 *2) */
