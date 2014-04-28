@@ -4,7 +4,7 @@
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
     <ModificationStamp>114</ModificationStamp>
-    <Date>2014-04-20</Date>
+    <Date>2014-04-27</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.0.RT6_b1413-0625</PEversion>
   </Header>
@@ -15931,7 +15931,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.097</BeanVersion>
+    <BeanVersion>01.101</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -16543,6 +16543,17 @@
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>strCutTail</UsrMethodName>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanSeparatedNumbers</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ScanSeparatedNumbers</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -16702,7 +16713,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.019</BeanVersion>
+          <BeanVersion>01.020</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -16715,7 +16726,7 @@
               <ItemSymbol>RTOSplusTraceVersion</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>V2.5.0</Value>
+              <Value>V2.6.0</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>TeamLicenseCode</ItemSymbol>
@@ -29052,7 +29063,7 @@
     <UserFolderName>SD</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.149</BeanVersion>
+    <BeanVersion>01.150</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -30157,7 +30168,7 @@
     <UserFolderName>SD</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.161</BeanVersion>
+    <BeanVersion>01.163</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -32338,6 +32349,14 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SpiBlockTransferEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Properties>
     <Methods>
@@ -39854,7 +39873,7 @@
     <UserFolderName>RF</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.065</BeanVersion>
+    <BeanVersion>01.073</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -41978,6 +41997,28 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>always</LastUserSel>
         <UsrMethodName>GetStatusClrIRQ</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>PollInterrupt</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>PollInterrupt</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Methods>
@@ -44470,7 +44511,7 @@
     <UserFolderName>RF</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.032</BeanVersion>
+    <BeanVersion>01.041</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -44549,6 +44590,14 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>500</Value>
         <Base>DEC</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Symbol</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>1</Index>
+        <Value>false</Value>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Properties>

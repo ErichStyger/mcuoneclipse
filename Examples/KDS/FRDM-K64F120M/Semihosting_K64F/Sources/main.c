@@ -46,15 +46,16 @@
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
-  /* Write your local variable definition here */
+  int i;
 
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
-  for(;;) {
-    printf("hello world!\r\n");
+  for(i=0;i<100;i++) {
+    printf("Hello world!013456\r\n"); /* 20 characters */
   }
+  printf("****FINISHED****\n"); /* 2000 characters finished */
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
