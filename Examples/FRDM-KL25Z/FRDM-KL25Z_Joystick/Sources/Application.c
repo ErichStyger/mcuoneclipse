@@ -22,6 +22,9 @@
 #include "RNWK.h"
 #include "Rapp.h"
 
+static bool JoyStickEnabled = FALSE; /* controlled by F key */
+static bool ButtonsEnabled = TRUE;  /* controlled by E key */
+
 void APP_DebugPrint(unsigned char *str) {
   CLS1_SendStr(str, CLS1_GetStdio()->stdOut);
 }
@@ -124,6 +127,7 @@ void APP_HandleEvent(uint8_t event) {
     break;
   case EVNT1_E_PRESSED:
     CLS1_SendStr((unsigned char*)"E pressed!\r\n", CLS1_GetStdio()->stdOut);
+    ButtonsEnabled = !ButtonsEnabled;
 #if PL_HAS_NRF24
     data = 'E';
     (void)RAPP_SendPayloadDataBlock(&data, sizeof(data), RAPP_MSG_TYPE_JOYSTICK_BTN, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
@@ -131,6 +135,7 @@ void APP_HandleEvent(uint8_t event) {
     break;
   case EVNT1_F_PRESSED:
     CLS1_SendStr((unsigned char*)"F pressed!\r\n", CLS1_GetStdio()->stdOut);
+    JoyStickEnabled = !JoyStickEnabled;
 #if PL_HAS_NRF24
     data = 'F';
     (void)RAPP_SendPayloadDataBlock(&data, sizeof(data), RAPP_MSG_TYPE_JOYSTICK_BTN, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
@@ -179,6 +184,8 @@ static void StatusPrintXY(CLS1_ConstStdIOType *io) {
     UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"GetXY() failed!\r\n");
   }
   CLS1_SendStatusStr((unsigned char*)"  Analog", buf, io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  Joystick", JoyStickEnabled?(unsigned char*)"yes (toggle with F)\r\n":(unsigned char*)"no (toggle with F)\r\n", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  Buttons", ButtonsEnabled?(unsigned char*)"yes (toggle with E)\r\n":(unsigned char*)"no (toggle with E)\r\n", io->stdOut);
 }
 
 uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, CLS1_ConstStdIOType *io) {
@@ -206,13 +213,14 @@ static void AppTask(void *pvParameters) {
   uint8_t buf[24];
   
   CLS1_SendStr((unsigned char*)"Hello from the Joystick App!\r\n", CLS1_GetStdio()->stdOut);
+  FRTOS1_vTaskDelay(3000/portTICK_RATE_MS); /* wait some time until sending data */
   cntMs = 0;
   x8prev = 127; y8prev = 127; /* should be different from center position */
   for(;;) {
     if (APP_GetXY(&x, &y, &x8, &y8)!=ERR_OK) {
       CLS1_SendStr((unsigned char*)"Failed to get x/y!\r\n", CLS1_GetStdio()->stdErr);
     } else {
-      if ((x8!=x8prev) || (y8!=y8prev)) { /* send only changing data, and only if not zero/midpoint */
+      if (JoyStickEnabled && ((x8!=x8prev) || (y8!=y8prev))) { /* send only changing data, and only if not zero/midpoint */
         UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"xy: ");
         UTIL1_strcatNum8s(buf, sizeof(buf), x8);
         UTIL1_chcat(buf, sizeof(buf), ',');
@@ -220,9 +228,11 @@ static void AppTask(void *pvParameters) {
         UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
         CLS1_SendStr(buf, CLS1_GetStdio()->stdOut);
 #if PL_HAS_NRF24
-        data[0] = (uint8_t)x8;
-        data[1] = (uint8_t)y8;
-        (void)RAPP_SendPayloadDataBlock(&data[0], sizeof(data), RAPP_MSG_TYPE_JOYSTICK_XY, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
+        if (JoyStickEnabled) {
+          data[0] = (uint8_t)x8;
+          data[1] = (uint8_t)y8;
+          (void)RAPP_SendPayloadDataBlock(&data[0], sizeof(data), RAPP_MSG_TYPE_JOYSTICK_XY, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
+        }
 #endif
         x8prev = x8;
         y8prev = y8;

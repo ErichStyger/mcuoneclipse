@@ -20,8 +20,6 @@
   #include "RStdIO.h"
 #endif
 
-#define RADIO_CHANNEL_DATA    0  /* communication channel for read station */
-
 typedef enum {
   RNETA_NONE,
   RNETA_POWERUP, /* powered up */
@@ -84,7 +82,6 @@ static void Process(void) {
       
     case RNETA_POWERUP:
       RadioPowerUp();
-      (void)RNET1_SetChannel(RADIO_CHANNEL_DATA);
       appState = RNETA_TX_RX;
       break;
       
