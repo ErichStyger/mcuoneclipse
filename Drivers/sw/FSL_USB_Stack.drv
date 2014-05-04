@@ -262,6 +262,8 @@ void %'ModuleName'%.usb_int_dis(void)
 #else
   NVICICER3 = 1;        /* Disable interrupts on USBHS (Interrupt Clear-Enable Register) */
 #endif
+%elif (CPUDevice="Kinetis K64F")
+  NVICICER1 = (1<<21);   /* Disable interrupts from USB module (Interrupt Clear-Enable Register) */
 %elif (CPUDevice="Kinetis L2K")
   NVIC_ICER = (1<<24);    /* Disable interrupts from USB module (Interrupt Clear-Enable Register) */
 %elif (CPUDevice="Kinetis KL26Z48")
@@ -313,6 +315,10 @@ void %'ModuleName'%.usb_int_en(void)
   NVICICPR3 = 1;        /* Clear any pending interrupts on USBHS (Interrupt Clear-Pending Register) */
   NVICISER3 = 1;        /* Enable interrupts on USBHS (Interrupt Set-Enable Register) */
 #endif
+%elif (CPUDevice="Kinetis K64F")
+  /* IRQ53 ==> 53 mod 32 ==> 21 */
+  NVICICPR1 = (1<<21);    /* Clear any pending interrupts on USB (Interrupt Clear-Pending Register) */
+  NVICISER1 = (1<<21);    /* Enable interrupts from USB module (Interrupt Set-Enable Register) */
 %elif (CPUDevice="Kinetis L2K")
   NVIC_ICPR = (1<<24);    /* Clear any pending interrupts on USB (Interrupt Clear-Pending Register) */
   NVIC_ISER = (1<<24);    /* Enable interrupts from USB module (Interrupt Set-Enable Register) */
@@ -322,7 +328,7 @@ void %'ModuleName'%.usb_int_en(void)
 %elif (CPUDevice="Kinetis KL46Z48")
   NVIC_ICPR = (1<<24);    /* Clear any pending interrupts on USB (Interrupt Clear-Pending Register) */
   NVIC_ISER = (1<<24);    /* Enable interrupts from USB module (Interrupt Set-Enable Register) */
-%elif (CPUDevice="Kinetis K20D50")
+%elif (CPUDevice="Kinetis K20D50") %- /* USB OTG: Vector 51, IRQ *35*, NVC-non-IPR *1*, NVIC IPR 8  => 35 mod 32 ==> (<< 3)
   NVICICPR1 = (1<<3);   /* Clear any pending interrupts on USB (Interrupt Clear-Pending Register) */
   NVICISER1 = (1<<3);   /* Enable interrupts from USB module (Interrupt Set-Enable Register) */
 %elif (CPUDevice="Kinetis K20D72")

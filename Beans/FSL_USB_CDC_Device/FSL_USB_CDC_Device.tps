@@ -4,7 +4,7 @@
     <Type>
       <Type>TEnumSpec</Type>
       <Name>typeDeviceSupported</Name>
-      <Items lines_count="19">
+      <Items lines_count="20">
         <Line>MC9S08JS16</Line>
         <Line>MC9S08JM16</Line>
         <Line>MC9S08JM60</Line>
@@ -23,9 +23,10 @@
         <Line>Kinetis K22F120</Line>
         <Line>Kinetis K40</Line>
         <Line>Kinetis K60</Line>
+        <Line>Kinetis K64F</Line>
         <Line>Kinetis K70</Line>
       </Items>
-      <Hints lines_count="19">
+      <Hints lines_count="20">
         <Line>MC9S08JS16</Line>
         <Line>MC9S08JM16</Line>
         <Line>MC9S08JM60</Line>
@@ -44,9 +45,10 @@
         <Line>Kinetis K22F50, K22F120</Line>
         <Line>Kinetis K40</Line>
         <Line>Kinetis K60</Line>
+        <Line>Kinetis K64F (e.g. FRDM-K64F)</Line>
         <Line>Kinetis K70</Line>
       </Hints>
-      <Defines lines_count="19">
+      <Defines lines_count="20">
         <Line>MC9S08JS16</Line>
         <Line>MC9S08JM16</Line>
         <Line>MC9S08JM60</Line>
@@ -65,6 +67,7 @@
         <Line>Kinetis K22F120</Line>
         <Line>Kinetis K40</Line>
         <Line>Kinetis K60</Line>
+        <Line>Kinetis K64F</Line>
         <Line>Kinetis K70</Line>
       </Defines>
     </Type>
