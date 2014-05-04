@@ -10,24 +10,28 @@
 #include "RNetConf.h"
 #include "Radio.h"
 #include "RadioNRF24.h"
-#include "RF1.h"
+#include "%@nRF24L01p@'ModuleName'.h"
 #include "RMSG.h"
 #include "RStdIO.h"
 #include "RPHY.h"
-#include "WAIT1.h"
 #include "%@Utility@'ModuleName'.h"
 
 #define NRF24_DYNAMIC_PAYLOAD  1 /* if set to one, use dynamic payload size */
-#define RADIO_CHANNEL_DEFAULT  0  /* default communication channel */
+#define RADIO_CHANNEL_DEFAULT  RNET_CONFIG_TRANSCEIVER_CHANNEL  /* default communication channel */
 
 /* macros to configure device either for RX or TX operation */
-#define RF1_CONFIG_SETTINGS  (RF1_EN_CRC|RF1_CRCO)
-#define TX_POWERUP()         RF1_WriteRegister(RF1_CONFIG, RF1_CONFIG_SETTINGS|RF1_PWR_UP|RF1_PRIM_TX) /* enable 1 byte CRC, power up and set as PTX */
-#define RX_POWERUP()         RF1_WriteRegister(RF1_CONFIG, RF1_CONFIG_SETTINGS|RF1_PWR_UP|RF1_PRIM_RX) /* enable 1 byte CRC, power up and set as PRX */
-#define POWERDOWN()          RF1_WriteRegister(RF1_CONFIG, RF1_CONFIG_SETTINGS) /* power down */
+#define %@nRF24L01p@'ModuleName'%.CONFIG_SETTINGS  (%@nRF24L01p@'ModuleName'%.EN_CRC|%@nRF24L01p@'ModuleName'%.CRCO)
+#define TX_POWERUP()         %@nRF24L01p@'ModuleName'%.WriteRegister(%@nRF24L01p@'ModuleName'%.CONFIG, %@nRF24L01p@'ModuleName'%.CONFIG_SETTINGS|%@nRF24L01p@'ModuleName'%.PWR_UP|%@nRF24L01p@'ModuleName'%.PRIM_TX) /* enable 1 byte CRC, power up and set as PTX */
+#define RX_POWERUP()         %@nRF24L01p@'ModuleName'%.WriteRegister(%@nRF24L01p@'ModuleName'%.CONFIG, %@nRF24L01p@'ModuleName'%.CONFIG_SETTINGS|%@nRF24L01p@'ModuleName'%.PWR_UP|%@nRF24L01p@'ModuleName'%.PRIM_RX) /* enable 1 byte CRC, power up and set as PRX */
+#define POWERDOWN()          %@nRF24L01p@'ModuleName'%.WriteRegister(%@nRF24L01p@'ModuleName'%.CONFIG, %@nRF24L01p@'ModuleName'%.CONFIG_SETTINGS) /* power down */
 
 static bool RADIO_isSniffing = FALSE;
-static const uint8_t TADDR[5] = {0x11, 0x22, 0x33, 0x44, 0x55}; /* device address */
+static const uint8_t RADIO_TADDR[5] = {0x11, 0x22, 0x33, 0x44, 0x55}; /* device address */
+
+#if RNET_CONFIG_SEND_RETRY_CNT>0
+static uint8_t RADIO_RetryCnt;
+static uint8_t TxDataBuffer[RPHY_BUFFER_SIZE]; /*!< global buffer if using retries */
+#endif
 
 /* Radio state definitions */
 typedef enum RADIO_AppStatusKind {
@@ -37,6 +41,7 @@ typedef enum RADIO_AppStatusKind {
   RADIO_WAITING_DATA_SENT, /* wait until data is sent */
   RADIO_TIMEOUT,
   RADIO_READY_FOR_TX_RX_DATA,
+  RADIO_CHECK_TX,   /* send data if any */
   RADIO_POWER_DOWN, /* transceiver powered down */
 } RADIO_AppStatusKind;
 
@@ -74,7 +79,9 @@ uint8_t RADIO_PowerDown(void) {
 static uint8_t CheckTx(void) {
   RPHY_PacketDesc packet;
   uint8_t res = ERR_OK;
-  uint8_t TxDataBuffer[RPHY_BUFFER_SIZE];
+#if RNET_CONFIG_SEND_RETRY_CNT==0
+  uint8_t TxDataBuffer[RPHY_BUFFER_SIZE]; /* local tx buffer if not using retries */
+#endif
   RPHY_FlagsType flags;
   
   if (RMSG_GetTxMsg(TxDataBuffer, sizeof(TxDataBuffer))==ERR_OK) {
@@ -84,7 +91,7 @@ static uint8_t CheckTx(void) {
       (void)RADIO_PowerDown();
       return ERR_DISABLED; /* no more data, pipes flushed */
     }
-    RF1_StopRxTx();  /* CE low */
+    %@nRF24L01p@'ModuleName'%.StopRxTx();  /* CE low */
     TX_POWERUP();
     /* set up packet structure */
     packet.phyData = &TxDataBuffer[0];
@@ -99,9 +106,9 @@ static uint8_t CheckTx(void) {
       RPHY_SniffPacket(&packet, TRUE); /* sniff outgoing packet */
     }
 #if NRF24_DYNAMIC_PAYLOAD
-    RF1_TxPayload(packet.rxtx, RPHY_BUF_SIZE(packet.phyData)); /* send data, using dynamic payload size */
+    %@nRF24L01p@'ModuleName'%.TxPayload(packet.rxtx, RPHY_BUF_SIZE(packet.phyData)); /* send data, using dynamic payload size */
 #else
-    RF1_TxPayload(packet.rxtx, RPHY_PAYLOAD_SIZE); /* send data, using fixed payload size */
+    %@nRF24L01p@'ModuleName'%.TxPayload(packet.rxtx, RPHY_PAYLOAD_SIZE); /* send data, using fixed payload size */
 #endif
     return ERR_OK;
   } else {
@@ -127,22 +134,22 @@ static uint8_t CheckRx(void) {
 #else
   packet.rxtx = &RPHY_BUF_SIZE(packet.phyData); /* we transmit the data size too */
 #endif
-  status = RF1_GetStatusClrIRQ();
-  if (status&RF1_STATUS_RX_DR) { /* data received interrupt */
+  status = %@nRF24L01p@'ModuleName'%.GetStatusClrIRQ();
+  if (status&%@nRF24L01p@'ModuleName'%.STATUS_RX_DR) { /* data received interrupt */
     hasRxData = TRUE;
 #if NRF24_DYNAMIC_PAYLOAD
     uint8_t payloadSize;
     
-    (void)RF1_ReadNofRxPayload(&payloadSize);
+    (void)%@nRF24L01p@'ModuleName'%.ReadNofRxPayload(&payloadSize);
     if (payloadSize>32) { /* packet with error? */
-      RF1_Write(RF1_FLUSH_RX); /* flush old data */
+      %@nRF24L01p@'ModuleName'%.Write(%@nRF24L01p@'ModuleName'%.FLUSH_RX); /* flush old data */
       return ERR_FAILED;
     } else {
-      RF1_RxPayload(packet.rxtx, payloadSize); /* get payload: note that we transmit <size> as payload! */
+      %@nRF24L01p@'ModuleName'%.RxPayload(packet.rxtx, payloadSize); /* get payload: note that we transmit <size> as payload! */
       RPHY_BUF_SIZE(packet.phyData) = payloadSize;
     }
 #else
-    RF1_RxPayload(packet.rxtx, RPHY_PAYLOAD_SIZE); /* get payload: note that we transmit <size> as payload! */
+    %@nRF24L01p@'ModuleName'%.RxPayload(packet.rxtx, RPHY_PAYLOAD_SIZE); /* get payload: note that we transmit <size> as payload! */
 #endif
   }
   if (hasRxData) {
@@ -165,13 +172,13 @@ static void RADIO_HandleStateMachine(void) {
   for(;;) { /* will break/return */
     switch (RADIO_AppStatus) {
       case RADIO_INITIAL_STATE:
-        RF1_StopRxTx();  /* will send/receive data later */
+        %@nRF24L01p@'ModuleName'%.StopRxTx();  /* will send/receive data later */
         RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON; /* turn receive on */
         break; /* process switch again */
   
       case RADIO_RECEIVER_ALWAYS_ON: /* turn receive on */
         RX_POWERUP();
-        RF1_StartRxTx(); /* Listening for packets */
+        %@nRF24L01p@'ModuleName'%.StartRxTx(); /* Listening for packets */
         RADIO_AppStatus = RADIO_READY_FOR_TX_RX_DATA;
         break; /* process switch again */
   
@@ -185,12 +192,21 @@ static void RADIO_HandleStateMachine(void) {
           RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON; /* continue listening */
           break; /* process switch again */
         }
+#if RNET_CONFIG_SEND_RETRY_CNT>0
+        RADIO_RetryCnt=0;
+#endif
+        RADIO_AppStatus = RADIO_CHECK_TX; /* check if we can send something */
+        break;
+        
+      case RADIO_CHECK_TX:
         res = CheckTx();
         if (res==ERR_OK) { /* there was data and it has been sent */
           RADIO_AppStatus = RADIO_WAITING_DATA_SENT;
           break; /* process switch again */
         } else if (res==ERR_DISABLED) { /* powered down transceiver */
           RADIO_AppStatus = RADIO_POWER_DOWN;
+        } else {
+          RADIO_AppStatus = RADIO_READY_FOR_TX_RX_DATA;
         }
         return;
         
@@ -203,9 +219,9 @@ static void RADIO_HandleStateMachine(void) {
 #endif
         if (RADIO_isrFlag) { /* check if we have received an interrupt: this is either timeout or low level ack */
           RADIO_isrFlag = FALSE; /* reset interrupt flag */
-          status = RF1_GetStatusClrIRQ();
-          if (status&RF1_STATUS_MAX_RT) { /* retry timeout interrupt */
-            RF1_Write(RF1_FLUSH_TX); /* flush old data */
+          status = %@nRF24L01p@'ModuleName'%.GetStatusClrIRQ();
+          if (status&%@nRF24L01p@'ModuleName'%.STATUS_MAX_RT) { /* retry timeout interrupt */
+            %@nRF24L01p@'ModuleName'%.Write(%@nRF24L01p@'ModuleName'%.FLUSH_TX); /* flush old data */
             RADIO_AppStatus = RADIO_TIMEOUT; /* timeout */
           } else {
             RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON; /* turn receive on */
@@ -215,6 +231,18 @@ static void RADIO_HandleStateMachine(void) {
         return;
         
       case RADIO_TIMEOUT:
+#if RNET_CONFIG_SEND_RETRY_CNT>0
+        if (RADIO_RetryCnt<RNET_CONFIG_SEND_RETRY_CNT) {
+          Err((unsigned char*)"ERR: Retry\r\n");
+          RADIO_RetryCnt++;
+          if (RMSG_PutRetryTxMsg(TxDataBuffer, sizeof(TxDataBuffer))==ERR_OK) {
+            RADIO_AppStatus = RADIO_CHECK_TX; /* resend packet */
+            return; /* iterate state machine next time */
+          } else {
+            Err((unsigned char*)"ERR: Retry failed!\r\n");
+          }
+        }
+#endif
         Err((unsigned char*)"ERR: Timeout\r\n");
         RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON; /* turn receive on */
         break; /* process switch again */
@@ -226,7 +254,7 @@ static void RADIO_HandleStateMachine(void) {
 }
 
 uint8_t RADIO_SetChannel(uint8_t channel) {
-  return RF1_SetChannel(channel);
+  return %@nRF24L01p@'ModuleName'%.SetChannel(channel);
 }
 
 /*! 
@@ -234,35 +262,35 @@ uint8_t RADIO_SetChannel(uint8_t channel) {
  * \return Error code, ERR_OK if everything is ok.
  */
 uint8_t RADIO_PowerUp(void) {
-  RF1_Init(); /* set CE and CSN to initialization value */
+  %@nRF24L01p@'ModuleName'%.Init(); /* set CE and CSN to initialization value */
   
-  RF1_WriteRegister(RF1_RF_SETUP, RF1_RF_SETUP_RF_PWR_0|RF1_RF_SETUP_RF_DR_250);
-//  RF1_WriteRegister(RF1_RF_SETUP, RF1_RF_SETUP_RF_PWR_18|RF1_RF_SETUP_RF_DR_1000);
+  %@nRF24L01p@'ModuleName'%.WriteRegister(%@nRF24L01p@'ModuleName'%.RF_SETUP, %@nRF24L01p@'ModuleName'%.RF_SETUP_RF_PWR_0|RNET_CONFIG_NRF24_DATA_RATE);
+//  %@nRF24L01p@'ModuleName'%.WriteRegister(%@nRF24L01p@'ModuleName'%.RF_SETUP, %@nRF24L01p@'ModuleName'%.RF_SETUP_RF_PWR_18|%@nRF24L01p@'ModuleName'%.RF_SETUP_RF_DR_1000);
 #if NRF24_DYNAMIC_PAYLOAD
   /* enable dynamic payload */
-  RF1_WriteFeature(RF1_FEATURE_EN_DPL|RF1_FEATURE_EN_ACK_PAY|RF1_FEATURE_EN_DYN_PAY); /* set EN_DPL for dynamic payload */
-  RF1_EnableDynanicPayloadLength(RF1_DYNPD_DPL_P0); /* set DYNPD register for dynamic payload for pipe0 */
+  %@nRF24L01p@'ModuleName'%.WriteFeature(%@nRF24L01p@'ModuleName'%.FEATURE_EN_DPL|%@nRF24L01p@'ModuleName'%.FEATURE_EN_ACK_PAY|%@nRF24L01p@'ModuleName'%.FEATURE_EN_DYN_PAY); /* set EN_DPL for dynamic payload */
+  %@nRF24L01p@'ModuleName'%.EnableDynanicPayloadLength(%@nRF24L01p@'ModuleName'%.DYNPD_DPL_P0); /* set DYNPD register for dynamic payload for pipe0 */
 #else
-  RF1_SetStaticPipePayload(0, RPHY_PAYLOAD_SIZE); /* static number of payload bytes we want to send and receive */
+  %@nRF24L01p@'ModuleName'%.SetStaticPipePayload(0, RPHY_PAYLOAD_SIZE); /* static number of payload bytes we want to send and receive */
 #endif
   (void)RADIO_SetChannel(RADIO_CHANNEL_DEFAULT);
 
   /* Set RADDR and TADDR as the transmit address since we also enable auto acknowledgment */
-  RF1_WriteRegisterData(RF1_RX_ADDR_P0, (uint8_t*)TADDR, sizeof(TADDR));
-  RF1_WriteRegisterData(RF1_TX_ADDR, (uint8_t*)TADDR, sizeof(TADDR));
+  %@nRF24L01p@'ModuleName'%.WriteRegisterData(%@nRF24L01p@'ModuleName'%.RX_ADDR_P0, (uint8_t*)RADIO_TADDR, sizeof(RADIO_TADDR));
+  %@nRF24L01p@'ModuleName'%.WriteRegisterData(%@nRF24L01p@'ModuleName'%.TX_ADDR, (uint8_t*)RADIO_TADDR, sizeof(RADIO_TADDR));
 
   /* Enable RX_ADDR_P0 address matching */
-  RF1_WriteRegister(RF1_EN_RXADDR, RF1_EN_RXADDR_ERX_P0); /* enable data pipe 0 */
+  %@nRF24L01p@'ModuleName'%.WriteRegister(%@nRF24L01p@'ModuleName'%.EN_RXADDR, %@nRF24L01p@'ModuleName'%.EN_RXADDR_ERX_P0); /* enable data pipe 0 */
   
   /* clear interrupt flags */
-  RF1_ResetStatusIRQ(RF1_STATUS_RX_DR|RF1_STATUS_TX_DS|RF1_STATUS_MAX_RT);
+  %@nRF24L01p@'ModuleName'%.ResetStatusIRQ(%@nRF24L01p@'ModuleName'%.STATUS_RX_DR|%@nRF24L01p@'ModuleName'%.STATUS_TX_DS|%@nRF24L01p@'ModuleName'%.STATUS_MAX_RT);
   
   /* rx/tx mode */
-  RF1_EnableAutoAck(RF1_EN_AA_ENAA_P0); /* enable auto acknowledge on pipe 0. RX_ADDR_P0 needs to be equal to TX_ADDR! */
-  RF1_WriteRegister(RF1_SETUP_RETR, RF1_SETUP_RETR_ARD_750|RF1_SETUP_RETR_ARC_15); /* Important: need 750 us delay between every retry */
+  %@nRF24L01p@'ModuleName'%.EnableAutoAck(%@nRF24L01p@'ModuleName'%.EN_AA_ENAA_P0); /* enable auto acknowledge on pipe 0. RX_ADDR_P0 needs to be equal to TX_ADDR! */
+  %@nRF24L01p@'ModuleName'%.WriteRegister(%@nRF24L01p@'ModuleName'%.SETUP_RETR, %@nRF24L01p@'ModuleName'%.SETUP_RETR_ARD_750|%@nRF24L01p@'ModuleName'%.SETUP_RETR_ARC_15); /* Important: need 750 us delay between every retry */
   
   RX_POWERUP();  /* Power up in receiving mode */
-  RF1_StartRxTx(); /* Listening for packets */
+  %@nRF24L01p@'ModuleName'%.StartRxTx(); /* Listening for packets */
 
   RADIO_AppStatus = RADIO_INITIAL_STATE;
   /* init Rx descriptor */
@@ -298,7 +326,8 @@ static const unsigned char *RadioStateStr(RADIO_AppStatusKind state) {
     case RADIO_RECEIVER_ALWAYS_ON:    return (const unsigned char*)"ALWAYS_ON";
     case RADIO_TRANSMIT_DATA:         return (const unsigned char*)"TRANSMIT_DATA";
     case RADIO_WAITING_DATA_SENT:     return (const unsigned char*)"WAITING_DATA_SENT";
-    case RADIO_READY_FOR_TX_RX_DATA:  return (const unsigned char*)"READY_TX_RX"; 
+    case RADIO_READY_FOR_TX_RX_DATA:  return (const unsigned char*)"READY_TX_RX";
+    case RADIO_CHECK_TX:              return (const unsigned char*)"CHECK_TX";
     case RADIO_POWER_DOWN:            return (const unsigned char*)"POWER_DOWN"; 
     default:                          return (const unsigned char*)"UNKNOWN";
   }
@@ -311,6 +340,24 @@ static void RADIO_PrintHelp(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  channel <number>", (unsigned char*)"Switches to the given channel. Channel must be in the range 0..127\r\n", io->stdOut);
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  power <number>", (unsigned char*)"Changes output power to 0, -10, -12, -18\r\n", io->stdOut);
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  sniff on|off", (unsigned char*)"Turns sniffing on or off\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  writereg 0xReg 0xVal", (unsigned char*)"Write a transceiver register\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  printreg", (unsigned char*)"Print the radio registers\r\n", io->stdOut);
+}
+
+static void RadioPrintRegisters(%@Shell@'ModuleName'%.ConstStdIOType *io) {
+  int i;
+  uint8_t val;
+  uint8_t bufidx[16], buf[16];
+  
+  for(i=0;i<=0x1D;i++) {
+    val = %@nRF24L01p@'ModuleName'%.ReadRegister(i);
+    %@Utility@'ModuleName'%.strcpy(bufidx, sizeof(bufidx), (unsigned char*)"  addr 0x");
+    %@Utility@'ModuleName'%.strcatNum8Hex(bufidx, sizeof(bufidx), i);
+    buf[0] = '\0';
+    %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), val);
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+    %@Shell@'ModuleName'%.SendStatusStr(bufidx, buf, io->stdOut);
+  }
 }
 
 static void RADIO_PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
@@ -325,24 +372,24 @@ static void RADIO_PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  sniff", RADIO_isSniffing?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
   
-  (void)RF1_GetChannel(&val0);
+  (void)%@nRF24L01p@'ModuleName'%.GetChannel(&val0);
   %@Utility@'ModuleName'%.Num8uToStr(buf, sizeof(buf), val0);
   %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  channel", buf, io->stdOut);
 
-  (void)RF1_GetOutputPower(&val);
+  (void)%@nRF24L01p@'ModuleName'%.GetOutputPower(&val);
   %@Utility@'ModuleName'%.Num8sToStr(buf, sizeof(buf), val);
   %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" dBm\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  power", buf, io->stdOut);
  
-  (void)RF1_ReadObserveTxRegister(&val0, &val1);
+  (void)%@nRF24L01p@'ModuleName'%.ReadObserveTxRegister(&val0, &val1);
   %@Utility@'ModuleName'%.Num8uToStr(buf, sizeof(buf), val0);
   %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" lost, ");
   %@Utility@'ModuleName'%.strcatNum8u(buf, sizeof(buf), val1);
   %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" retry\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  OBSERVE_TX", buf, io->stdOut);
 #if 0  /* The RPD status will get reset very fast by another (e.g. WLAN) packet. So this is not really a useful feature :-( */
-  (void)RF1_ReadReceivedPowerDetector(&val0); /*! \todo only works in RX mode, but somehow this still does not work? */
+  (void)%@nRF24L01p@'ModuleName'%.ReadReceivedPowerDetector(&val0); /*! \todo only works in RX mode, but somehow this still does not work? */
   if (val0&1) {
     %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"1, > -64 dBm\r\n");
   } else {
@@ -382,12 +429,26 @@ uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const %@Shel
   } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, (char*)"radio power", sizeof("radio power")-1)==0) {
     p = cmd+sizeof("radio power");
     if (%@Utility@'ModuleName'%.ScanDecimal8sNumber(&p, &vals)==ERR_OK && (vals==0 || vals==-10 || vals==-12 || vals==-18)) {
-      (void)RF1_SetOutputPower(vals);
+      (void)%@nRF24L01p@'ModuleName'%.SetOutputPower(vals);
       *handled = TRUE;
     } else {
       %@Shell@'ModuleName'%.SendStr((unsigned char*)"Wrong argument, must be 0, -10, -12 or -18\r\n", io->stdErr);
       res = ERR_FAILED;
     }
+  } else if (%@Utility@'ModuleName'%.strncmp((char*)cmd, (char*)"radio writereg", sizeof("radio writereg")-1)==0) {
+    uint8_t reg;
+    
+    p = cmd+sizeof("radio writereg");
+    if (%@Utility@'ModuleName'%.ScanHex8uNumber(&p, &reg)==ERR_OK && %@Utility@'ModuleName'%.ScanHex8uNumber(&p, &val)==ERR_OK) {
+      %@nRF24L01p@'ModuleName'%.WriteRegister(reg, val);
+      *handled = TRUE;
+    } else {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"Wrong arguments\r\n", io->stdErr);
+      res = ERR_FAILED;
+    }
+  } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, (char*)"radio printreg")==0) {
+    RadioPrintRegisters(io);
+    *handled = TRUE;
   }
   return res;
 }

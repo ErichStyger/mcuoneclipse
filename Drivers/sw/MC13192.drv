@@ -822,6 +822,8 @@ byte %'ModuleName'%.%CheckRx(tRxPacket *sRxPacket)
 void %@IRQ@OnInterrupt(void)
 {
 %if defined(OnInterrupt)
+  void %OnInterrupt(void); /* prototype */
+
   %OnInterrupt(); /* call user event */
 %else
   /* no user event enabled in transceiver properties */

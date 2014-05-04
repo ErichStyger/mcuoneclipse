@@ -57,13 +57,13 @@
   %include RNet\RStdIO.h
 %endif
 
-%if TransceiverType='nRF24L01+'
+%if TransceiverType='RNET_CONFIG_TRANSCEIVER_NRF24'
   %FILE? %'DirRel_Code'Radio.c
   %include Rnet\nRF24\Radio.c
   
   %FILE? %'DirRel_Code'RadioNRF24.h
   %include Rnet\nRF24\RadioNRF24.h
-%elif TransceiverType='MC13201'
+%elif TransceiverType='RNET_CONFIG_TRANSCEIVER_MC13201'
   %FILE? %'DirRel_Code'Radio.c
   %include Rnet\SMAC\Radio.c
   

@@ -32,10 +32,19 @@ uint8_t RMSG_FlushTxQueue(void);
  * \param payloadSize Size of payload data.
  * \param fromISR If called from an ISR routine.
  * \param isTx If message is TX or RX.
+ * \param toBack If message shall be sent to the back of the list.
  * \param flags Packet flags.
  * \return Error code, ERR_OK if message has been queued.
  */
-uint8_t RMSG_QueuePut(uint8_t *buf, size_t bufSize, uint8_t payloadSize, bool fromISR, bool isTx, RPHY_FlagsType flags);
+uint8_t RMSG_QueuePut(uint8_t *buf, size_t bufSize, uint8_t payloadSize, bool fromISR, bool isTx, bool toBack, RPHY_FlagsType flags);
+
+/*!
+ * \brief Puts a message into the TX queue for resending (in front of the queue)
+ * \param buf[in] pointer to message
+ * \param bufSize[in] size of message
+ * \return Error code, ERR_OK if message has been queued.
+ */
+uint8_t RMSG_PutRetryTxMsg(uint8_t *buf, size_t bufSize);
 
 /*!
  * \brief Used to check if we have a message incoming from the RX queue.

@@ -10,12 +10,9 @@
 #include "RNetConf.h"
 #include "Radio.h"
 #include "RadioSMAC.h"
-#include "SMAC1.h"
+#include "%@SMAC@'ModuleName'.h"
 #include "%@Utility@'ModuleName'.h"
 #include "Event.h"
-#if PL_HAS_RTOS_TRACE
-  #include "RTOSTRC1.h"
-#endif
 #include "RPHY.h"
 #include "RMAC.h"
 #include "RMSG.h"
@@ -33,8 +30,8 @@ typedef enum RADIO_AppStatusKind {
 #define RADIO_TIMEOUT_COUNT    0xB000 /*!< how long the timeout value will be while transmitting a message */
 
 static volatile RADIO_AppStatusKind RADIO_AppStatus = RADIO_INITIAL_STATE;
-static uint8_t RADIO_Channel = 5; /* default channel */
-static uint8_t RADIO_OutputPower = 15; /* default Tx power */
+static uint8_t RADIO_Channel = RNET_CONFIG_TRANSCEIVER_CHANNEL; /* default channel */
+static uint8_t RADIO_OutputPower = RNET_CONFIG_SMAC_OUPTUT_POWER; /* default Tx power */
 static bool RADIO_isOn = TRUE; /* if radio is on or off */
 static bool RADIO_isSniffing = FALSE; /* if we sniff messages */
 
@@ -46,16 +43,16 @@ static uint8_t RADIO_TxDataBuffer[RPHY_BUFFER_SIZE]; /*!< Data buffer to hold TX
 void RADIO_OnInterrupt(void) {
   uint8_t res;
   
-  res = SMAC1_CheckRx(&RADIO_RxPacket);
+  res = %@SMAC@'ModuleName'%.CheckRx(&RADIO_RxPacket);
   if (res==ERR_OK) {
-    if (RADIO_RxPacket.u8Status==SMAC1_TIMEOUT) { /* Put timeout condition code here */
+    if (RADIO_RxPacket.u8Status==%@SMAC@'ModuleName'%.TIMEOUT) { /* Put timeout condition code here */
       EVNT_SetEvent(EVNT_RADIO_TIMEOUT);
-    } else if (RADIO_RxPacket.u8Status == SMAC1_SUCCESS) { /* good packet received: handle it. */
-      (void)RMSG_QueuePut(RADIO_RxPacket.pu8Data-RPHY_BUF_IDX_PAYLOAD, RPHY_BUFFER_SIZE, RADIO_RxPacket.u8DataLength, TRUE, FALSE, RPHY_PACKET_FLAGS_NONE);
+    } else if (RADIO_RxPacket.u8Status == %@SMAC@'ModuleName'%.SUCCESS) { /* good packet received: handle it. */
+      (void)RMSG_QueuePut(RADIO_RxPacket.pu8Data-RPHY_BUF_IDX_PAYLOAD, RPHY_BUFFER_SIZE, RADIO_RxPacket.u8DataLength, TRUE, FALSE, TRUE, RPHY_PACKET_FLAGS_NONE);
       EVNT_SetEvent(EVNT_RADIO_DATA);
-    } else if (RADIO_RxPacket.u8Status==SMAC1_OVERFLOW) { /* received packet, but it was longer than what we expect. */
+    } else if (RADIO_RxPacket.u8Status==%@SMAC@'ModuleName'%.OVERFLOW) { /* received packet, but it was longer than what we expect. */
       EVNT_SetEvent(EVNT_RADIO_OVERFLOW);
-    } else if (RADIO_RxPacket.u8Status==SMAC1_RESET) {
+    } else if (RADIO_RxPacket.u8Status==%@SMAC@'ModuleName'%.RESET) {
       EVNT_SetEvent(EVNT_RADIO_RESET); /* MC13192 reset, re-initialize.*/
     } else { /* something unknown? */
       EVNT_SetEvent(EVNT_RADIO_UNKNOWN);
@@ -69,7 +66,7 @@ void RADIO_OnInterrupt(void) {
  */
 uint8_t RADIO_SetChannel(uint8_t channel) {
   RADIO_Channel = channel&0xF; /* make sure it remains in range 0..15 */
-  return SMAC1_MLMESetChannelRequest(RADIO_Channel);  /* Set channel */
+  return %@SMAC@'ModuleName'%.MLMESetChannelRequest(RADIO_Channel);  /* Set channel */
 }
 
 /*!
@@ -78,16 +75,16 @@ uint8_t RADIO_SetChannel(uint8_t channel) {
  */
 static void RADIO_SetOutputPower(uint8_t power) {
   RADIO_OutputPower = power&0xF; /* make sure it remains in range 0..15 */
-  (void)SMAC1_MLMEMC13192PAOutputAdjust(RADIO_OutputPower); /* Set output power setting */
+  (void)%@SMAC@'ModuleName'%.MLMEMC13192PAOutputAdjust(RADIO_OutputPower); /* Set output power setting */
 }
 
 static void RADIO_InitRadio(void) {
   RADIO_isSniffing = FALSE;
   RADIO_isOn = TRUE;
   TRSVR1_Init(); /* init transceiver and get it out of reset */
-  SMAC1_RadioInit();
+  %@SMAC@'ModuleName'%.RadioInit();
   
-  (void)SMAC1_MLMESetMC13192ClockRate(0);    /* Set initial Clock speed from transceiver (CLKO)*/
+  (void)%@SMAC@'ModuleName'%.MLMESetMC13192ClockRate(0);    /* Set initial Clock speed from transceiver (CLKO)*/
   (void)RADIO_SetChannel(RADIO_Channel);           /* Set channel */
   RADIO_SetOutputPower(RADIO_OutputPower);   /* Set output power */
 
@@ -97,22 +94,10 @@ static void RADIO_InitRadio(void) {
 
   RADIO_RxPacket.u8DataLength = 0;               /* Set RX default to 0*/
   RADIO_RxPacket.pu8Data = &RADIO_RxDataBuffer[RPHY_BUF_IDX_PAYLOAD];  /* Load the address of our rxbuffer into rx structure */
-  RADIO_RxPacket.u8MaxDataLength = SMAC1_RADIO_BUF_SIZE; /* Define the max buffer we are interested in */
+  RADIO_RxPacket.u8MaxDataLength = %@SMAC@'ModuleName'%.RADIO_BUF_SIZE; /* Define the max buffer we are interested in */
   RADIO_RxPacket.u8Status = TRSVR1_INITIAL_VALUE;  /* initialize the status packet to 0 */
 
   RADIO_AppStatus = RADIO_INITIAL_STATE;        /* Set the initial status of the application state variable */
-}
-
-static const unsigned char *RadioStateStr(RADIO_AppStatusKind state) {
-  switch(state) {
-    case RADIO_INITIAL_STATE:         return (const unsigned char*)"INITIAL";
-    case RADIO_RESET_STATE:           return (const unsigned char*)"RESET";
-    case RADIO_RECEIVER_ALWAYS_ON:    return (const unsigned char*)"ALWAYS_ON";
-    case RADIO_TRANSMIT_DATA:         return (const unsigned char*)"TRANSMIT_DATA";
-    case RADIO_WAIT_FOR_ACK:          return (const unsigned char*)"WAIT_FOR_ACK"; 
-    case RADIO_READY_FOR_TX_RX_DATA:  return (const unsigned char*)"READY_TX_RX"; 
-    default:                          return (const unsigned char*)"UNKNOWN";
-  }
 }
 
 /*!
@@ -135,21 +120,21 @@ static void RADIO_HandleStateMachine(void) {
   
       case RADIO_RECEIVER_ALWAYS_ON:
         RADIO_AppStatus = RADIO_READY_FOR_TX_RX_DATA;
-        (void)SMAC1_MLMERXEnableRequest(0); /* Zero means wait forever with RX ON. */
+        (void)%@SMAC@'ModuleName'%.MLMERXEnableRequest(0); /* Zero means wait forever with RX ON. */
         return;
   
       case RADIO_READY_FOR_TX_RX_DATA: /* we are ready to receive/send data data */
         return;
   
       case RADIO_TRANSMIT_DATA:
-        res = SMAC1_MLMERXDisableRequest(); /* turn RX receiver off */
-        if (res != SMAC1_SUCCESS) { /* Turn off the RX forever mode. */
+        res = %@SMAC@'ModuleName'%.MLMERXDisableRequest(); /* turn RX receiver off */
+        if (res != %@SMAC@'ModuleName'%.SUCCESS) { /* Turn off the RX forever mode. */
           RADIO_AppStatus = RADIO_TRANSMIT_DATA; /* retry */
           break;
         }       
-        res = SMAC1_MCPSDataRequest(&RADIO_TxPacket); /* send data */
+        res = %@SMAC@'ModuleName'%.MCPSDataRequest(&RADIO_TxPacket); /* send data */
 #if RNET_CONFIG_USE_ACK
-        if (res == SMAC1_SUCCESS) { /* transmitting data was ok */
+        if (res == %@SMAC@'ModuleName'%.SUCCESS) { /* transmitting data was ok */
           RMAC_MsgType type;
           
           type = RMAC_GetType(RADIO_TxPacket.pu8Data-RPHY_BUF_IDX_PAYLOAD, 0);
@@ -157,7 +142,7 @@ static void RADIO_HandleStateMachine(void) {
             RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON; /* we have sent ACK, go back to receiving mode */
           } else {
             RADIO_AppStatus = RADIO_WAIT_FOR_ACK;
-            (void)SMAC1_MLMERXEnableRequest(RADIO_TIMEOUT_COUNT); /* turn RX receiver on with timeout for ack */
+            (void)%@SMAC@'ModuleName'%.MLMERXEnableRequest(RADIO_TIMEOUT_COUNT); /* turn RX receiver on with timeout for ack */
           }
         } else {
           RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON; /* what could we otherwise do? */
@@ -312,6 +297,18 @@ uint8_t RADIO_Process(void) {
 }
 
 %if defined(Shell)
+static const unsigned char *RadioStateStr(RADIO_AppStatusKind state) {
+  switch(state) {
+    case RADIO_INITIAL_STATE:         return (const unsigned char*)"INITIAL";
+    case RADIO_RESET_STATE:           return (const unsigned char*)"RESET";
+    case RADIO_RECEIVER_ALWAYS_ON:    return (const unsigned char*)"ALWAYS_ON";
+    case RADIO_TRANSMIT_DATA:         return (const unsigned char*)"TRANSMIT_DATA";
+    case RADIO_WAIT_FOR_ACK:          return (const unsigned char*)"WAIT_FOR_ACK"; 
+    case RADIO_READY_FOR_TX_RX_DATA:  return (const unsigned char*)"READY_TX_RX"; 
+    default:                          return (const unsigned char*)"UNKNOWN";
+  }
+}
+
 static void RADIO_PrintHelp(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"radio", (unsigned char*)"Group of radio commands\r\n", io->stdOut);
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows radio help or status\r\n", io->stdOut);
@@ -329,7 +326,7 @@ static void RADIO_PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"Radio", (unsigned char*)"\r\n", io->stdOut);
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  on", RADIO_isOn?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  sniff", RADIO_isSniffing?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
-  link_quality = SMAC1_MLMELinkQuality();  /* Read the link quality of the last received packet.*/
+  link_quality = %@SMAC@'ModuleName'%.MLMELinkQuality();  /* Read the link quality of the last received packet.*/
   dBm = (short)(-(link_quality/2));
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  LQ", (unsigned char*)"", io->stdOut); 
   %@Shell@'ModuleName'%.SendNum16s(dBm, io->stdOut); 

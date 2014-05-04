@@ -10,7 +10,6 @@
 #include "RNetConf.h"
 #include "RMSG.h"
 #include "%@RTOS@'ModuleName'.h"
-#include "WAIT1.h"
 #if PL_HAS_RTOS_TRACE
   #include "RTOSTRC1.h"
 #endif
@@ -37,11 +36,11 @@ uint8_t RMSG_FlushTxQueue(void) {
   return ERR_OK;
 }
 
-
-uint8_t RMSG_QueuePut(uint8_t *buf, size_t bufSize, uint8_t payloadSize, bool fromISR, bool isTx, RPHY_FlagsType flags) {
+uint8_t RMSG_QueuePut(uint8_t *buf, size_t bufSize, uint8_t payloadSize, bool fromISR, bool isTx, bool toBack, RPHY_FlagsType flags) {
   /* data format is: dataSize(8bit) data */
   uint8_t res = ERR_OK;
   xQueueHandle queue;
+  BaseType_t qRes;
 
   if (payloadSize>RPHY_PAYLOAD_SIZE) {
     return ERR_OVERFLOW; /* more data than can fit into payload! */
@@ -59,16 +58,37 @@ uint8_t RMSG_QueuePut(uint8_t *buf, size_t bufSize, uint8_t payloadSize, bool fr
   if (fromISR) {
     signed portBASE_TYPE pxHigherPriorityTaskWoken;
     
-    if (%@RTOS@'ModuleName'%.xQueueSendToBackFromISR(queue, buf, &pxHigherPriorityTaskWoken)!=pdTRUE) {
+    if (toBack) {
+      qRes = %@RTOS@'ModuleName'%.xQueueSendToBackFromISR(queue, buf, &pxHigherPriorityTaskWoken);
+    } else {
+      qRes = %@RTOS@'ModuleName'%.xQueueSendToFrontFromISR(queue, buf, &pxHigherPriorityTaskWoken);
+    }
+    if (qRes!=pdTRUE) {
       /* was not able to send to the queue. Well, not much we can do here... */
       res = ERR_BUSY;
     }
   } else {
-    if (%@RTOS@'ModuleName'%.xQueueSendToBack(queue, buf, RMSG_QUEUE_PUT_WAIT)!=pdTRUE) {
+    if (toBack) {
+      qRes = %@RTOS@'ModuleName'%.xQueueSendToBack(queue, buf, RMSG_QUEUE_PUT_WAIT);
+    } else {
+      qRes = %@RTOS@'ModuleName'%.xQueueSendToFront(queue, buf, RMSG_QUEUE_PUT_WAIT);
+    }
+    if (qRes!=pdTRUE) {
       res = ERR_BUSY;
     }
   }
   return res;
+}
+
+uint8_t RMSG_PutRetryTxMsg(uint8_t *buf, size_t bufSize) {
+  if (bufSize<RPHY_BUFFER_SIZE) {
+    return ERR_OVERFLOW; /* not enough space in buffer */
+  }
+  if (%@RTOS@'ModuleName'%.xQueueSendToFront(RMSG_MsgTxQueue, buf, 0)==pdPASS) {
+    /* received message from queue */
+    return ERR_OK;
+  }
+  return ERR_RXEMPTY;
 }
 
 uint8_t RMSG_GetTxMsg(uint8_t *buf, size_t bufSize) {
@@ -95,11 +115,11 @@ uint8_t RMSG_GetRxMsg(uint8_t *buf, size_t bufSize) {
 }
 
 uint8_t RMSG_QueueTxMsg(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RPHY_FlagsType flags) {
-  return RMSG_QueuePut(buf, bufSize, payloadSize, FALSE, TRUE, flags);
+  return RMSG_QueuePut(buf, bufSize, payloadSize, FALSE, TRUE, TRUE, flags);
 }
 
 uint8_t RMSG_QueueRxMsg(uint8_t *buf, size_t bufSize, uint8_t payloadSize, RPHY_FlagsType flags) {
-  return RMSG_QueuePut(buf, bufSize, payloadSize, FALSE, FALSE, flags);
+  return RMSG_QueuePut(buf, bufSize, payloadSize, FALSE, FALSE, TRUE, flags);
 }
 
 void RMSG_Deinit(void) {
