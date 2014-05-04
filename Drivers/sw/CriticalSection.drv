@@ -138,7 +138,7 @@
   taskENTER_CRITICAL()
 %elif (%UseProcessorExpertDefault='no') & (%CPUfamily = "Kinetis") & (%Compiler = "GNUC")
   do {                                  \
-    asm (                               \
+    __asm (                             \
     "MRS   R0, PRIMASK\n\t"             \
     "CPSID I\n\t"                       \
     "STRB R0, %%[output]"                \
@@ -160,7 +160,7 @@
   taskEXIT_CRITICAL()
 %elif (%UseProcessorExpertDefault='no') & (%CPUfamily = "Kinetis") & (%Compiler = "GNUC")
   do{                                  \
-    asm (                              \
+    __asm (                            \
     "ldrb r0, %%[input]\n\t"            \
     "msr PRIMASK,r0;\n\t"              \
     ::[input] "m" (cpuSR) : "r0");     \
