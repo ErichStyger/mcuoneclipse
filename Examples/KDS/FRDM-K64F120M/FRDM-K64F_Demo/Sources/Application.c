@@ -30,7 +30,7 @@
   #include "RTOSTRC1.h"
 #endif
 #if PL_HAS_MINI_INI
-  #include "minIni.h"
+  #include "MINI1.h"
 #endif
 
 static xTimerHandle timerHndl;

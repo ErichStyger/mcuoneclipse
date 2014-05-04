@@ -80,6 +80,7 @@
 #include "Output1.h"
 #include "BitIoLdd14.h"
 #include "TRG1.h"
+#include "MINI1.h"
 
 #ifdef __cplusplus
 extern "C" {
