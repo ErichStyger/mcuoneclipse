@@ -8,7 +8,6 @@ Note: The latest and greates version of the components are always available on G
 https://github.com/ErichStyger/mcuoneclipse/Beans
 https://github.com/ErichStyger/mcuoneclipse/Drivers
 
-Part1_Beans_*.PEupd Content:
 Package from component(s):
 - 24AA_EEPROM version 01.031
 - 74HC164 version 01.031
@@ -24,15 +23,15 @@ Package from component(s):
 - CTouchScanner version 01.021
 - CTouchSensor version 01.032
 - DCF77 version 01.060
-- FAT_FileSystem version 01.150
+- FAT_FileSystem version 01.152
 - FatFsMem_USB_MSD version 01.019
 - FatFsMemSDHC version 01.024
 - FontDisplay version 01.195
 - FreeRTOS version 01.366
 - FreeRTOSTrace version 01.003
-- FSL_USB_CDC_Device version 01.031
-- FSL_USB_HID_Keyboard_Device version 01.052
-- FSL_USB_HID_Mouse_Device version 01.065
+- FSL_USB_CDC_Device version 01.033
+- FSL_USB_HID_Keyboard_Device version 01.054
+- FSL_USB_HID_Mouse_Device version 01.066
 - FSL_USB_MSD_Host version 01.018
 - FSL_USB_Stack version 01.025
 - FXOS8700CQ version 01.015
@@ -64,16 +63,16 @@ Package from component(s):
 - MaxonF2140 version 01.001
 - MC13192 version 01.168
 - MC34673 version 01.019
+- minIni version 01.037
 - MMA7260Q version 01.111
 - MMA7455L version 01.043
 - MMA8451Q version 01.028
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 15.04.2014
+created 04.05.2014
 
 Package from component(s):
-Package from component(s):
-- nRF24L01 version 01.065
+- nRF24L01 version 01.074
 - OLED version 01.045
 - PCA9554 version 01.024
 - PCA9554BitIO version 01.037
@@ -83,13 +82,13 @@ Package from component(s):
 - PID_Int version 01.001
 - PtConv version 01.005
 - PWMServo16bit version 01.011
-- QuadCounter version 01.020
+- QuadCounter version 01.026
 - RingBuffer version 01.025
-- RNet version 01.032
+- RNet version 01.068
 - RTC_Maxim version 01.009
 - S19 version 01.034
 - S65Sharp version 01.082
-- SD_Card version 01.161
+- SD_Card version 01.165
 - Servo version 01.066
 - Shell version 01.047
 - SimpleEvents version 01.047
@@ -119,7 +118,6 @@ Package from component(s):
 - UIWindow version 01.033
 - UserInterface version 01.510
 - UTI version 01.125
-- Utility version 01.097
+- Utility version 01.104
 - Wait version 01.067
-created 15.04.2014
-
+created 04.05.2014
