@@ -211,7 +211,7 @@ void %'ModuleName'%.%strcatNum16Hex(uint8_t *dst, size_t dstSize, uint16_t num);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strcatNum32s
 %ifdef strcatNum32s
-void %'ModuleName'%.%strcatNum32s(uint8_t *dst, size_t dstSize, long val);
+void %'ModuleName'%.%strcatNum32s(uint8_t *dst, size_t dstSize, int32_t val);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -222,7 +222,7 @@ void %'ModuleName'%.%strcatNum32s(uint8_t *dst, size_t dstSize, long val);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Num32sToStr
 %ifdef Num32sToStr
-void %'ModuleName'%.%Num32sToStr(uint8_t *dst, size_t dstSize, long val);
+void %'ModuleName'%.%Num32sToStr(uint8_t *dst, size_t dstSize, int32_t val);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -458,7 +458,7 @@ void %'ModuleName'%.%Num16uToStrFormatted(uint8_t *dst, size_t dstSize, uint16_t
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Num32sToStrFormatted
 %ifdef Num32sToStrFormatted
-void %'ModuleName'%.%Num32sToStrFormatted(uint8_t *dst, size_t dstSize, long val, char fill, uint8_t nofFill);
+void %'ModuleName'%.%Num32sToStrFormatted(uint8_t *dst, size_t dstSize, int32_t val, char fill, uint8_t nofFill);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -495,7 +495,7 @@ void %'ModuleName'%.%strcatNum16uFormatted(uint8_t *dst, size_t dstSize, uint16_
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strcatNum32sFormatted
 %ifdef strcatNum32sFormatted
-void %'ModuleName'%.%strcatNum32sFormatted(uint8_t *dst, size_t dstSize, long val, char fill, uint8_t nofFill);
+void %'ModuleName'%.%strcatNum32sFormatted(uint8_t *dst, size_t dstSize, int32_t val, char fill, uint8_t nofFill);
 %define! Pardst
 %define! PardstSize
 %define! Parval
@@ -646,7 +646,7 @@ uint8_t %'ModuleName'%.%ScanHex8uNumberNoPrefix(const unsigned char **str, uint8
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN strcatNum32sDotValue100
 %ifdef strcatNum32sDotValue100
-void %'ModuleName'%.%strcatNum32sDotValue100(uint8_t *dst, size_t dstSize, long num);
+void %'ModuleName'%.%strcatNum32sDotValue100(uint8_t *dst, size_t dstSize, int32_t num);
 %define! Pardst
 %define! PardstSize
 %define! Parnum
@@ -679,7 +679,7 @@ uint8_t %'ModuleName'%.%ScanDecimal16sNumber(const unsigned char **str, int16_t 
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ScanDecimal32sNumber
 %ifdef ScanDecimal32sNumber
-uint8_t %'ModuleName'%.%ScanDecimal32sNumber(const unsigned char **str, uint32_t *val);
+byte %'ModuleName'%.%ScanDecimal32sNumber(const unsigned char **str, int32_t *val);
 %define! Parstr
 %define! Parval
 %define! RetVal
@@ -1114,7 +1114,7 @@ void %'ModuleName'%.%Num32uToStrFormatted(uint8_t *dst, size_t dstSize, uint32_t
   \param[in] fill Fill character, typically ' ' (like for "%%2d" or '0' (for "%%02d")
   \param[in] nofFill Size for the format (right aligned) string, e.g. '2' for "%%2d"
 */
-void %'ModuleName'%.%Num32sToStrFormatted(uint8_t *dst, size_t dstSize, long val, char fill, uint8_t nofFill)
+void %'ModuleName'%.%Num32sToStrFormatted(uint8_t *dst, size_t dstSize, int32_t val, char fill, uint8_t nofFill)
 {
   %'ModuleName'%.%Num32sToStr(dst, dstSize, val);
   ShiftRightAndFill(dst, fill, nofFill);
@@ -1332,7 +1332,7 @@ void %'ModuleName'%.%strcatNum32uFormatted(uint8_t *dst, size_t dstSize, uint32_
   \param[in] fill Fill character
   \param[in] nofFill Number of fill characters
   */
-void %'ModuleName'%.%strcatNum32sFormatted(uint8_t *dst, size_t dstSize, long val, char fill, uint8_t nofFill)
+void %'ModuleName'%.%strcatNum32sFormatted(uint8_t *dst, size_t dstSize, int32_t val, char fill, uint8_t nofFill)
 {
   unsigned char buf[sizeof("-4294967295")]; /* maximum buffer size we need */
 
@@ -1481,7 +1481,7 @@ void %'ModuleName'%.%strcatNum32Hex(uint8_t *dst, size_t dstSize, uint32_t num)
   \param[in] dstSize The size of the buffer, including the zero uint8_t
   \param[in] val The 32bit number to add
   */
-void %'ModuleName'%.%strcatNum32s(uint8_t *dst, size_t dstSize, long val)
+void %'ModuleName'%.%strcatNum32s(uint8_t *dst, size_t dstSize, int32_t val)
 {
   unsigned char buf[sizeof("-4294967295")]; /* maximum buffer size we need */
 
@@ -1529,7 +1529,7 @@ void %'ModuleName'%.%strcatNum32u(uint8_t *dst, size_t dstSize, uint32_t val)
   \param[in] dstSize Size of the destination buffer in uint8_ts.
   \param[in] val 32bit signed number to convert.
  */
-void %'ModuleName'%.%Num32sToStr(uint8_t *dst, size_t dstSize, long val)
+void %'ModuleName'%.%Num32sToStr(uint8_t *dst, size_t dstSize, int32_t val)
 {
   unsigned char *ptr = ((unsigned char *)dst);
   unsigned char i=0, j;
@@ -2129,7 +2129,7 @@ uint8_t %'ModuleName'%.%ScanDecimal32uNumber(const unsigned char **str, uint32_t
 %define! Parval
 %define! RetVal
 %include Common\UtilityScanDecimal32sNumber.Inc
-uint8_t %'ModuleName'%.%ScanDecimal32sNumber(const unsigned char **str, uint32_t *val)
+byte %'ModuleName'%.%ScanDecimal32sNumber(const unsigned char **str, int32_t *val)
 {
   /* Scans a decimal number, and stops at any non-number. Number can have any preceding spaces. */
   const unsigned char *p = *str;
@@ -2152,9 +2152,9 @@ uint8_t %'ModuleName'%.%ScanDecimal32sNumber(const unsigned char **str, uint32_t
     return res;
   }
   if (isNeg) {
-    *val = (uint32_t)(-(int32_t)val32u);
+    *val = (int32_t)(-(int32_t)val32u);
   } else {
-    *val = val32u;
+    *val = (int32_t)val32u;
   }
   *str = p;
   return ERR_OK;
@@ -2435,7 +2435,7 @@ uint8_t %'ModuleName'%.%strCutTail(uint8_t *str, uint8_t *tail)
 %define! PardstSize
 %define! Parnum
 %include Common\UtilitystrcatNum32sDotValue100.Inc
-void %'ModuleName'%.%strcatNum32sDotValue100(uint8_t *dst, size_t dstSize, long num)
+void %'ModuleName'%.%strcatNum32sDotValue100(uint8_t *dst, size_t dstSize, int32_t num)
 {
   %'ModuleName'%.%strcatNum32s(dst, dstSize, num/100);
   %'ModuleName'%.%chcat(dst, dstSize, '.');

@@ -307,11 +307,11 @@ LI.EXP {
  - Converts a signed 32bit value into a string.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void Num32sToStr(uint8_t *dst, size_t dstSize, long val)<br />
+<br /><i>ANSIC prototype:</i> void Num32sToStr(uint8_t *dst, size_t dstSize, int32_t val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
 <li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
-<li><i>val:long</i> - Value to be converted.</li>
+<li><i>val:int32_t</i> - Value to be converted.</li>
 </ul><br />
 </li>
 <li><a name="Num16sToStrFormatted">
@@ -361,11 +361,11 @@ LI.EXP {
  - Converts a 32bit signed value to string.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void Num32sToStrFormatted(uint8_t *dst, size_t dstSize, long val, char fill, uint8_t nofFill)<br />
+<br /><i>ANSIC prototype:</i> void Num32sToStrFormatted(uint8_t *dst, size_t dstSize, int32_t val, char fill, uint8_t nofFill)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
 <li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
-<li><i>val:long</i> - Value to convert.</li>
+<li><i>val:int32_t</i> - Value to convert.</li>
 <li><i>fill:char</i> - Fill character</li>
 <li><i>nofFill:uint8_t</i> - Number of fill characters</li>
 </ul><br />
@@ -435,11 +435,11 @@ LI.EXP {
  - Appends a 32bit signed value to a string buffer.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void strcatNum32s(uint8_t *dst, size_t dstSize, long val)<br />
+<br /><i>ANSIC prototype:</i> void strcatNum32s(uint8_t *dst, size_t dstSize, int32_t val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
 <li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
-<li><i>val:long</i> - Value to convert.</li>
+<li><i>val:int32_t</i> - Value to convert.</li>
 </ul><br />
 </li>
 <li><a name="strcatNum16uFormatted">
@@ -489,11 +489,11 @@ LI.EXP {
  - Appends a 32bit signed value to a string buffer in a formatted way.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void strcatNum32sFormatted(uint8_t *dst, size_t dstSize, long val, char fill, uint8_t nofFill)<br />
+<br /><i>ANSIC prototype:</i> void strcatNum32sFormatted(uint8_t *dst, size_t dstSize, int32_t val, char fill, uint8_t nofFill)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
 <li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
-<li><i>val:long</i> - Value to convert.</li>
+<li><i>val:int32_t</i> - Value to convert.</li>
 <li><i>fill:char</i> - Fill character</li>
 <li><i>nofFill:uint8_t</i> - Number of fill characters</li>
 </ul><br />
@@ -551,11 +551,11 @@ LI.EXP {
  - Appends a 32bit signed value to a buffer. The value is in 1/100 units.  For example for the value -13456 it will append the string &quot;-134.56&quot;
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void strcatNum32sDotValue100(uint8_t *dst, size_t dstSize, long num)<br />
+<br /><i>ANSIC prototype:</i> void strcatNum32sDotValue100(uint8_t *dst, size_t dstSize, int32_t num)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>dst: Pointer to uint8_t</i> - Pointer to destination string</li>
 <li><i>dstSize:uint8_t</i> - Size of the destination buffer (in bytes).</li>
-<li><i>num:long</i> - Value to convert.</li>
+<li><i>num:int32_t</i> - Value to convert.</li>
 </ul><br />
 </li>
 <li><a name="IsLeapYear">
@@ -715,10 +715,10 @@ LI.EXP {
  - Scans a decimal 32bit signed number
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte ScanDecimal32sNumber(const unsigned char **str, uint32_t *val)<br />
+<br /><i>ANSIC prototype:</i> byte ScanDecimal32sNumber(const unsigned char **str, int32_t *val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>str:uint8_t</i> - string to scan. It returns as well until where it has scanned</li>
-<li><i>val: Pointer to long</i> - Pointer to value</li>
+<li><i>val: Pointer to int32_t</i> - Pointer to value</li>
 <li><i>Return value:byte</i> - Error code
 </li>
 </ul><br />

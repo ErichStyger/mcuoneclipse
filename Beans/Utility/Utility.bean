@@ -4,7 +4,7 @@
     <Name>Utility</Name>
     <Description>Utility Module</Description>
     <Author>Erich Styger</Author>
-    <Version>01.101</Version>
+    <Version>01.104</Version>
     <Icon>Utility</Icon>
     <TypesFiles>PE,Utility\Utility</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -499,13 +499,13 @@
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>32bit signed</ParType>
+          <ParType>int32_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Value to be converted.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, long val)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, int32_t val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -723,7 +723,7 @@
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>32bit signed</ParType>
+          <ParType>int32_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Value to convert.</ParHint>
         </Parameter>
@@ -741,7 +741,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, long val, char fill, uint8_t nofFill)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, int32_t val, char fill, uint8_t nofFill)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1017,13 +1017,13 @@
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>32bit signed</ParType>
+          <ParType>int32_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Value to convert.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, long val)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, int32_t val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1241,7 +1241,7 @@
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>32bit signed</ParType>
+          <ParType>int32_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Value to convert.</ParHint>
         </Parameter>
@@ -1259,7 +1259,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, long val, char fill, uint8_t nofFill)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, int32_t val, char fill, uint8_t nofFill)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1488,13 +1488,13 @@
         </Parameter>
         <Parameter>
           <ParName>num</ParName>
-          <ParType>32bit signed</ParType>
+          <ParType>int32_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Value to convert.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, long num)</ANSIC>
+          <ANSIC>void #M#_#C#(uint8_t *dst, size_t dstSize, int32_t num)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2038,14 +2038,14 @@
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>32bit signed</ParType>
+          <ParType>int32_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to value</ParHint>
-          <ParUserDeclaration>uint32_t *val</ParUserDeclaration>
+          <ParUserDeclaration>int32_t *val</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char **str, uint32_t *val)</ANSIC>
+          <ANSIC>byte #M#_#C#(const unsigned char **str, int32_t *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
