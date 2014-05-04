@@ -4,7 +4,7 @@
     <Name>FSL_USB_HID_Keyboard_Device</Name>
     <Description>Freescale USB Stack (HID Keyboard)</Description>
     <Author>Erich Styger</Author>
-    <Version>01.052</Version>
+    <Version>01.054</Version>
     <Icon>FSL_USB_HID_Keyboard_Device</Icon>
     <TypesFiles>PE,FSL_USB_HID_Keyboard_Device\FSL_USB_HID_Keyboard_Device</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -77,7 +77,7 @@
               <EditLine>true</EditLine>
               <DefaultValue>FSL HID Keyboard   </DefaultValue>
               <StrDefine>nothing</StrDefine>
-              <MinLength>19</MinLength>
+              <MinLength>-1</MinLength>
               <MaxLength>19</MaxLength>
             </TStrgItem>
           </GrupItem>
@@ -90,7 +90,7 @@
               <EditLine>true</EditLine>
               <DefaultValue>FREESCALE INC.              </DefaultValue>
               <StrDefine>nothing</StrDefine>
-              <MinLength>28</MinLength>
+              <MinLength>-1</MinLength>
               <MaxLength>28</MaxLength>
             </TStrgItem>
           </GrupItem>

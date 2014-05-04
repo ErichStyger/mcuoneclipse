@@ -4,7 +4,7 @@
     <Name>FSL_USB_CDC_Device</Name>
     <Description>Freescale USB Stack (CDC)</Description>
     <Author>Erich Styger</Author>
-    <Version>01.031</Version>
+    <Version>01.032</Version>
     <Icon>FSL_USB_CDC_Device</Icon>
     <TypesFiles>PE,FSL_USB_CDC_Device\FSL_USB_CDC_Device</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -176,7 +176,7 @@
               <EditLine>true</EditLine>
               <DefaultValue>FSL CDC DEVICE  </DefaultValue>
               <StrDefine>nothing</StrDefine>
-              <MinLength>16</MinLength>
+              <MinLength>-1</MinLength>
               <MaxLength>16</MaxLength>
             </TStrgItem>
           </GrupItem>
@@ -189,7 +189,7 @@
               <EditLine>true</EditLine>
               <DefaultValue>FREESCALE INC.              </DefaultValue>
               <StrDefine>nothing</StrDefine>
-              <MinLength>28</MinLength>
+              <MinLength>-1</MinLength>
               <MaxLength>28</MaxLength>
             </TStrgItem>
           </GrupItem>
