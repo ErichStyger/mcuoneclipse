@@ -13,6 +13,8 @@
 #include "LEDG.h"
 #include "RTC1.h"
 #include "FAT1.h"
+#include "SD_RedLed.h"
+#include "SD_GreenLed.h"
 
 #define PL_HAS_SD_CARD  1 /* if we have SD card support */
 
@@ -57,6 +59,13 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
 #if PL_HAS_SD_CARD
     (void)FAT1_CheckCardPresence(&cardMounted,
         0 /* volume */, &fileSystemObject, CLS1_GetStdio());
+    if (cardMounted) {
+      SD_GreenLed_On();
+      SD_RedLed_Off();
+    } else {
+      SD_GreenLed_Off();
+      SD_RedLed_On();
+    }
 #endif
     (void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), CLS1_GetStdio(), CmdParserTable);
     FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
@@ -65,7 +74,7 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
 }
 
 void SHELL_Init(void) {
-  if (FRTOS1_xTaskCreate(ShellTask, (signed portCHAR *)"Shell", configMINIMAL_STACK_SIZE+200, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (FRTOS1_xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+200, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 }
