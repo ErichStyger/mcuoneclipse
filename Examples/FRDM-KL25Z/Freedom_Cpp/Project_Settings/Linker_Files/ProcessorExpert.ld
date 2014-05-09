@@ -10,7 +10,7 @@
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2013-02-24, 10:12, # CodeGen: 0 */
+/*##     Date/Time : 2014-05-09, 07:16, # CodeGen: 33 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */
@@ -79,7 +79,6 @@ SECTIONS
     KEEP (*(.fini))
 
     . = ALIGN(4);
-
 
     _etext = .;        /* define a global symbols at end of code */
   } > m_text
@@ -166,7 +165,6 @@ SECTIONS
     *(.data*)          /* .data* sections */
 
     . = ALIGN(4);
-    /* # Additional data content defined by components END */
 
     _edata = .;        /* define a global symbol at data end */
   } > m_data
@@ -192,26 +190,15 @@ SECTIONS
   {
     /* This is used by the startup in order to initialize the .bss section */
     __START_BSS = .;
-    __bss_start__ = __START_BSS;
+          PROVIDE ( __bss_start__ = __START_BSS );
+
     *(.bss)
     *(.bss*)
     *(COMMON)
 
     . = ALIGN(4);
     __END_BSS = .;
-    __bss_end__ = __END_BSS;
-  } > m_data
-
-  /* User_heap_stack section, used to check that there is enough RAM left */
-  ._user_heap_stack :
-  {
-    . = ALIGN(4);
-    PROVIDE ( end = . );
-    PROVIDE ( _end = . );
-    __heap_addr = .;
-    . = . + __heap_size;
-    . = . + __stack_size;
-    . = ALIGN(4);
+          PROVIDE ( __bss_end__ = __END_BSS );
   } > m_data
 
   _romp_at = ___ROM_AT + SIZEOF(.data) +SIZEOF(.m_data_1FFFF000);
@@ -227,7 +214,19 @@ SECTIONS
     LONG(0);
     LONG(0);
     LONG(0);
-  }
+  } > m_data
+
+  /* User_heap_stack section, used to check that there is enough RAM left */
+  ._user_heap_stack :
+  {
+    . = ALIGN(4);
+    PROVIDE ( end = . );
+    PROVIDE ( _end = . );
+    __heap_addr = .;
+    . = . + __heap_size;
+    . = . + __stack_size;
+    . = ALIGN(4);
+  } > m_data
 
   .ARM.attributes 0 : { *(.ARM.attributes) }
 }

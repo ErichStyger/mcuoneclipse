@@ -29,11 +29,6 @@
 #include "TmDt1.h"
 #include "SD1.h"
 #include "SS1.h"
-#include "FRTOS1.h"
-#include "RTOSTRC1.h"
-#include "Ptrc1.h"
-#include "RTOSCNTRLDD1.h"
-#include "RTOSTICKLDD1.h"
 #include "SPI2.h"
 #include "Clock1.h"
 #include "BitIoLdd1.h"
@@ -52,7 +47,6 @@
 #include "AS1.h"
 #include "ASerialLdd1.h"
 #include "S191.h"
-#include "RNG1.h"
 #include "RNG2.h"
 #include "ACCEL1.h"
 #include "AD1.h"
@@ -60,6 +54,7 @@
 #include "MMA1.h"
 #include "GI2C1.h"
 #include "I2C3.h"
+#include "CS1.h"
 #include "SM1.h"
 #include "TMOUT1.h"
 #include "PE_LDD.h"
@@ -186,62 +181,6 @@ void AD1_OnCalibrationEnd(void);
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName);
-/*
-** ===================================================================
-**     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
-**
-**     Component   :  FRTOS1 [FreeRTOS]
-**     Description :
-**         if enabled, this hook will be called in case of a stack
-**         overflow.
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**       * pxTask          - Pointer to task handle
-**       * pcTaskName      - Pointer to task name
-**     Returns     : Nothing
-** ===================================================================
-*/
-
-/*
-** ===================================================================
-**     Event       :  FRTOS1_vApplicationTickHook (module Events)
-**
-**     Component   :  FRTOS1 [FreeRTOS]
-**     Description :
-**         If enabled, this hook will be called by the RTOS for every
-**         tick increment.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-
-/*
-** ===================================================================
-**     Event       :  FRTOS1_vApplicationIdleHook (module Events)
-**
-**     Component   :  FRTOS1 [FreeRTOS]
-**     Description :
-**         If enabled, this hook will be called when the RTOS is idle.
-**         This might be a good place to go into low power mode.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-
-void FRTOS1_vApplicationMallocFailedHook(void);
-/*
-** ===================================================================
-**     Event       :  FRTOS1_vApplicationMallocFailedHook (module Events)
-**
-**     Component   :  FRTOS1 [FreeRTOS]
-**     Description :
-**         If enabled, the RTOS will call this hook in case memory
-**         allocation failed.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
 
 void Ptrc1_OnTraceWrap(void);
 /*
