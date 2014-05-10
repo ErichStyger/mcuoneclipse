@@ -32,6 +32,7 @@
 #include "LED4.h"
 #include "LEDpin4.h"
 #include "CS1.h"
+#include "CLS1.h"
 #include "FRTOS1.h"
 #include "RTOSSWI1.h"
 #include "TickCntr1.h"
@@ -39,7 +40,6 @@
 #include "SD1.h"
 #include "SDSS1.h"
 #include "CDI1.h"
-#include "FSSH1.h"
 #include "SM1.h"
 #include "AS1.h"
 /* Including shared modules, which are used for whole project */

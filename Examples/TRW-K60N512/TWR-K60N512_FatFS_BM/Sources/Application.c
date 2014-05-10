@@ -75,14 +75,18 @@ static void DiskTest(void) {
 
   io = CLS1_GetStdio();
   if (FAT1_Init()!=ERR_OK) {
-    CLS1_SendStr((unsigned char*)"Failed FatFS initialization!\r\n", io->stdOut);
+    CLS1_SendStr((unsigned char*)"Failed FatFS initialization!\r\n", io->stdErr);
+    return;
   }
   CLS1_SendStr((unsigned char*)"Waiting for disk to be inserted...\r\n", io->stdOut);
   while(!FAT1_isDiskPresent()) {
     /* wait until card is present */
   }
   CLS1_SendStr((unsigned char*)"Mounting File system...\r\n", io->stdOut);
-  FAT1_mount(0, &fileSystemObject); /* mount file system */
+  if (FAT1_mount(0, &fileSystemObject) != FR_OK) { /* mount file system */
+    CLS1_SendStr((unsigned char*)"Failed FatFS initialization!\r\n", io->stdErr);
+    return;
+  }
   (void)Test(io);
   CLS1_SendStr((unsigned char*)"Finished test...\r\n", io->stdOut);
   for(;;) {

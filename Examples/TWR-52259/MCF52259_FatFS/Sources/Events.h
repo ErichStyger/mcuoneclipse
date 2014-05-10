@@ -35,6 +35,7 @@
 #include "LED4.h"
 #include "LEDpin4.h"
 #include "CS1.h"
+#include "CLS1.h"
 #include "FRTOS1.h"
 #include "RTOSSWI1.h"
 #include "TickCntr1.h"
@@ -42,7 +43,6 @@
 #include "SD1.h"
 #include "SDSS1.h"
 #include "CDI1.h"
-#include "FSSH1.h"
 #include "SM1.h"
 #include "AS1.h"
 
@@ -61,19 +61,6 @@ void Cpu_OnCoreWatchdogINT(void);
 ** ===================================================================
 */
 
-
-void SM1_OnTxChar(void);
-/*
-** ===================================================================
-**     Event       :  SM1_OnTxChar (module Events)
-**
-**     Component   :  SM1 [SynchroMaster]
-**     Description :
-**         This event is called after a character is transmitted.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
 
 void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
 /*
@@ -191,6 +178,54 @@ void AS1_OnFreeTxBuf(void);
 **     Description :
 **         This event is called after the last character in output
 **         buffer is transmitted.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void SM1_OnTxChar(void);
+/*
+** ===================================================================
+**     Event       :  SM1_OnTxChar (module Events)
+**
+**     Component   :  SM1 [SynchroMaster]
+**     Description :
+**         This event is called after a character is transmitted.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void SM1_OnFullRxBuf(void);
+/*
+** ===================================================================
+**     Event       :  SM1_OnFullRxBuf (module Events)
+**
+**     Component   :  SM1 [SynchroMaster]
+**     Description :
+**         This event is called when the input buffer is full, i.e.
+**         after reception of the last character that was successfully
+**         placed into input buffer.
+**         This event is available only when the <Interrupt
+**         service/event> property is enabled and the <Input buffer
+**         size> property is set to non-zero value.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void SM1_OnFreeTxBuf(void);
+/*
+** ===================================================================
+**     Event       :  SM1_OnFreeTxBuf (module Events)
+**
+**     Component   :  SM1 [SynchroMaster]
+**     Description :
+**         This event is called after the last character in output
+**         buffer is transmitted.
+**         This event is available only when the <Interrupt
+**         service/event> property is enabled and the <Output buffer
+**         size> property is set to non-zero value.
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================
