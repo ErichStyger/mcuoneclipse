@@ -761,6 +761,24 @@ static void %'ModuleName'%.SPI_WRITE_READ_BLOCK(unsigned char *writeP, unsigned 
   (void)%@HWSPI@'ModuleName'%.SendBlock(writeP, size, &dummy);
   (void)%@HWSPI@'ModuleName'%.RecvBlock(readP, size, &dummy);
 }
+
+static void %'ModuleName'%.SPI_WRITE_BLOCK(unsigned char *writeP, uint16_t size) {
+  unsigned char dummy[4];
+  uint16_t writeSize;
+  uint16_t snt;
+
+  while(size>0) {
+    if (size>sizeof(dummy)) {
+      writeSize = sizeof(dummy);
+    } else {
+      writeSize = size;
+    }
+    (void)%@HWSPI@'ModuleName'%.SendBlock(writeP, writeSize, &snt);
+    (void)%@HWSPI@'ModuleName'%.RecvBlock(&dummy[0], writeSize, &snt);
+    size -= writeSize;
+    writeP += writeSize;
+  }
+}
 #endif
 
 %if SPI_Read_Write_Macros='no'
@@ -816,7 +834,7 @@ static byte rxDummy; /* dummy byte if we do not need the result. Needed to read 
 #define %'ModuleName'%.SPI_SetFastMode()              (void)%@HWSPI@'ModuleName'%.SetBaudRateMode(%HWFastBaudRateMode) /* max 12Mbps */
 #define %'ModuleName'%.SPI_SetShiftClockPolarity(val) (void)%@HWSPI@'ModuleName'%.SetShiftClockPolarity(val)
 #define %'ModuleName'%.SPI_SetIdleClockPolarity(val)  (void)%@HWSPI@'ModuleName'%.SetIdleClockPolarity(val)
-%endif
+%endif %- HWSPI
 %---------------------------------------------------------------------------------------------------
 %ifdef LDDHWSPI
 #define %'ModuleName'%.SPI_SetSlowMode()              (void)%@LDDHWSPI@'ModuleName'%.SelectConfiguration(%@LDDHWSPI@'ModuleName'%.DeviceData, %HWSlowBaudRateMode, %HWSlowBaudRateMode) /* max 400kbps */
@@ -835,7 +853,7 @@ void %'ModuleName'%.SPI_WRITE(unsigned char write) {
   while(!%'ModuleName'%.DataReceivedFlag){}
 }
 
-void %'ModuleName'%.SPI_WRITE_BLOCK(unsigned char *writeP, uint16_t size) {
+static void %'ModuleName'%.SPI_WRITE_BLOCK(unsigned char *writeP, uint16_t size) {
   unsigned char dummy[4];
   uint16_t writeSize;
 
@@ -854,14 +872,14 @@ void %'ModuleName'%.SPI_WRITE_BLOCK(unsigned char *writeP, uint16_t size) {
   }
 }
 
-void %'ModuleName'%.SPI_WRITE_READ(unsigned char write, unsigned char *readP) {
+static void %'ModuleName'%.SPI_WRITE_READ(unsigned char write, unsigned char *readP) {
   %'ModuleName'%.DataReceivedFlag = FALSE;
   (void)%@LDDHWSPI@'ModuleName'%.ReceiveBlock(%@LDDHWSPI@'ModuleName'%.DeviceData, readP, 1);
   (void)%@LDDHWSPI@'ModuleName'%.SendBlock(%@LDDHWSPI@'ModuleName'%.DeviceData, &write, 1);
   while(!%'ModuleName'%.DataReceivedFlag){}
 }
 
-void %'ModuleName'%.SPI_WRITE_READ_BLOCK(unsigned char *writeP, unsigned char *readP, uint16_t size) {
+static void %'ModuleName'%.SPI_WRITE_READ_BLOCK(unsigned char *writeP, unsigned char *readP, uint16_t size) {
   %'ModuleName'%.DataReceivedFlag = FALSE;
   (void)%@LDDHWSPI@'ModuleName'%.ReceiveBlock(%@LDDHWSPI@'ModuleName'%.DeviceData, readP, size);
   (void)%@LDDHWSPI@'ModuleName'%.SendBlock(%@LDDHWSPI@'ModuleName'%.DeviceData, writeP, size);
@@ -891,6 +909,34 @@ static const uint8_t dummyArr[SPI_WRITE_READ_BLOCK_SIZE_DUMMY] = {
 #define %'ModuleName'%.SPI_SetSlowMode()              %@SPI@'ModuleName'%.SetSlowMode()
 #define %'ModuleName'%.SPI_SetShiftClockPolarity(val) (void)%@SPI@'ModuleName'%.SetShiftClockPolarity(val)
 #define %'ModuleName'%.SPI_SetIdleClockPolarity(val)  (void)%@SPI@'ModuleName'%.SetIdleClockPolarity(val)
+
+#if %'ModuleName'%.SPI_WRITE_BLOCK_ENABLED
+static void %'ModuleName'%.SPI_WRITE_BLOCK(unsigned char *writeP, uint16_t size) {
+  while(size>0) {
+    %@SPI@'ModuleName'%.Write_ReadDummy(*writeP);
+    writeP++;
+    size--;
+  }
+}
+
+static void %'ModuleName'%.SPI_WRITE_READ_BLOCK(unsigned char *writeP, unsigned char *readP, uint16_t size) {
+  uint8_t res;
+
+  while(size>0) {
+    res = %@SPI@'ModuleName'%.SendChar(*writeP);
+    if (res!=ERR_OK) {
+      break;
+    }
+    writeP++;
+    res = %@SPI@'ModuleName'%.RecvChar(readP);
+    if (res!=ERR_OK) {
+      break;
+    }
+    readP++;
+    size--;
+  }
+}
+#endif /* %'ModuleName'%.SPI_WRITE_BLOCK_ENABLED */
 %endif
 %-BW_CUSTOM_VARIABLE_END
 
