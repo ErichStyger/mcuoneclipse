@@ -47,39 +47,10 @@
 #include "WAIT1.h"
 #include "HF1.h"
 #include "UTIL1.h"
-#include "FAT1.h"
-#include "TmDt1.h"
-#include "TimeDateLdd1.h"
-#include "SD1.h"
-#include "SS1.h"
-#include "TU1.h"
-#include "SM1.h"
-#include "TMOUT1.h"
-#include "CS1.h"
-#include "MINI1.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif 
-
-/*
-** ===================================================================
-**     Event       :  SM1_OnBlockSent (module Events)
-**
-**     Component   :  SM1 [SPIMaster_LDD]
-*/
-/*!
-**     @brief
-**         This event is called after the last character from the
-**         output buffer is moved to the transmitter. This event is
-**         available only if the SendBlock method is enabled.
-**     @param
-**         UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. The pointer is passed
-**                           as the parameter of Init method. 
-*/
-/* ===================================================================*/
-void SM1_OnBlockSent(LDD_TUserData *UserDataPtr);
 
 /* END Events */
 
