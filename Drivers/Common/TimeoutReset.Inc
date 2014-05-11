@@ -3,13 +3,15 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (Value)
+%include Common\GeneralMethod.inc (Reset)
 %;**     Description :
-%;**         Return the current value of the counter (in ticks)
+%;**         Resets the counter value and return the value just prior to
+%;**         the call.
 %include Common\GeneralParameters.inc(27)
-%;**         handle%Parhandle %>27 - Handle of the timeout counter
+%;**         handle%Parhandle %>27 - Counter handle
+%;**         nofTicks%ParnofTicks %>27 - 
 %;**     Returns     :
-%;**         ---%RetVal %>27 - Returns the value of the timeout counter.
+%;**         ---%RetVal %>27 - Value of counter before reset.
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

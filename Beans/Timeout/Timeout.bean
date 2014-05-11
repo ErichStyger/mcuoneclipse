@@ -4,7 +4,7 @@
     <Name>Timeout</Name>
     <Description>Component to manage timeouts, e.g. to be used in loops.</Description>
     <Author>Erich Styger</Author>
-    <Version>01.024</Version>
+    <Version>01.029</Version>
     <Icon>Timeout</Icon>
     <TypesFiles>PE,Timeout\Timeout</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -206,7 +206,7 @@
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>CounterType</ReturnType>
-        <RetHint>none</RetHint>
+        <RetHint>Returns the value of the timeout counter.</RetHint>
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>handle</ParName>
@@ -217,6 +217,46 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>%'ModuleName'_CounterType #M#_#C#(%'ModuleName'_CounterHandle handle)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>SetCounter</Name>
+        <Symbol>SetCounter</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Sets the counter to a new value and returns the value just prior to the call.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>CounterType</ReturnType>
+        <RetHint>Value of counter before reset.</RetHint>
+        <ParamCount>2</ParamCount>
+        <Parameter>
+          <ParName>handle</ParName>
+          <ParType>CounterHandle</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Counter handle which shall get a new value.</ParHint>
+        </Parameter>
+        <Parameter>
+          <ParName>nofTicks</ParName>
+          <ParType>CounterType</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>New value (tick count) of the timeout counter. Pass zero to have it expire immediately.</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>%'ModuleName'_CounterType #M#_#C#(%'ModuleName'_CounterHandle handle, %'ModuleName'_CounterType nofTicks)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

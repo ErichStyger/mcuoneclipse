@@ -237,7 +237,20 @@ LI.EXP {
 <br /><i>ANSIC prototype:</i> <i>ComponentName_</i>CounterType Value(<i>ComponentName_</i>CounterHandle handle)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>handle:<i>ComponentName_</i>CounterHandle</i> - Handle of the timeout counter</li>
-<li><i>Return value:<i>ComponentName_</i>CounterType</i> - none
+<li><i>Return value:<i>ComponentName_</i>CounterType</i> - Returns the value of the timeout counter.
+</li>
+</ul><br />
+</li>
+<li><a name="SetCounter">
+<b>SetCounter</b></a>
+ - Sets the counter to a new value and returns the value just prior to the call.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> <i>ComponentName_</i>CounterType SetCounter(<i>ComponentName_</i>CounterHandle handle, <i>ComponentName_</i>CounterType nofTicks)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>handle:<i>ComponentName_</i>CounterHandle</i> - Counter handle which shall get a new value.</li>
+<li><i>nofTicks:<i>ComponentName_</i>CounterType</i> - New value (tick count) of the timeout counter. Pass zero to have it expire immediately.</li>
+<li><i>Return value:<i>ComponentName_</i>CounterType</i> - Value of counter before reset.
 </li>
 </ul><br />
 </li>

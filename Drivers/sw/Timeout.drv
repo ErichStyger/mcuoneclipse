@@ -175,6 +175,17 @@ void %'ModuleName'%.%Init(void);
 
 %endif %- Value
 %-BW_METHOD_END Value
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SetCounter
+%ifdef SetCounter
+%'ModuleName'_CounterType %'ModuleName'%.%SetCounter(%'ModuleName'_CounterHandle handle, %'ModuleName'_CounterType nofTicks);
+%define! Parhandle
+%define! ParnofTicks
+%define! RetVal
+%include Common\TimeoutSetCounter.Inc
+
+%endif %- SetCounter
+%-BW_METHOD_END SetCounter
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -336,17 +347,44 @@ void %'ModuleName'%.%Init(void)
 %include Common\TimeoutValue.Inc
 %'ModuleName'_CounterType %'ModuleName'%.%Value(%'ModuleName'_CounterHandle handle)
 {
-  %'ModuleName'_CounterType res;
+  %'ModuleName'_CounterType val;
   %@CriticalSection@'ModuleName'%.CriticalVariable();
 
+  if (handle==%'ModuleName'%.OUT_OF_HANDLE) {
+    return 0; /* return dummy value */
+  }
   %@CriticalSection@'ModuleName'%.EnterCritical();
-  res = %'ModuleName'%.Counters[handle];
+  val = %'ModuleName'%.Counters[handle];
   %@CriticalSection@'ModuleName'%.ExitCritical();
-  return res;
+  return val;
 }
 
 %endif %- Value
 %-BW_METHOD_END Value
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SetCounter
+%ifdef SetCounter
+%define! Parhandle
+%define! ParnofTicks
+%define! RetVal
+%include Common\TimeoutSetCounter.Inc
+%'ModuleName'_CounterType %'ModuleName'%.%SetCounter(%'ModuleName'_CounterHandle handle, %'ModuleName'_CounterType nofTicks)
+{
+  %'ModuleName'%.CounterType res;
+  %@CriticalSection@'ModuleName'%.CriticalVariable();
+
+  if (handle==%'ModuleName'%.OUT_OF_HANDLE) {
+    return 0; /* return dummy value */
+  }
+  %@CriticalSection@'ModuleName'%.EnterCritical();
+  res = %'ModuleName'%.Counters[handle];
+  %'ModuleName'%.Counters[handle] = nofTicks;
+  %@CriticalSection@'ModuleName'%.ExitCritical();
+  return res;
+}
+
+%endif %- SetCounter
+%-BW_METHOD_END SetCounter
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
