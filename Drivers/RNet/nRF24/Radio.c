@@ -63,17 +63,23 @@ void RADIO_OnInterrupt(void) {
   RADIO_isrFlag = TRUE;
 }
 
-uint8_t RADIO_PowerDown(void) {
+static uint8_t RADIO_Flush(void) {
   uint8_t res = ERR_OK;
   
-  POWERDOWN();
   if (RPHY_FlushRxQueue()!=ERR_OK) {
     res = ERR_FAILED;
   }
   if (RPHY_FlushTxQueue()!=ERR_OK) {
     res = ERR_FAILED;
   }
+  %@nRF24L01p@'ModuleName'%.Write(%@nRF24L01p@'ModuleName'%.FLUSH_RX); /* flush old data */
+  %@nRF24L01p@'ModuleName'%.Write(%@nRF24L01p@'ModuleName'%.FLUSH_TX); /* flush old data */
   return res;
+}
+
+uint8_t RADIO_PowerDown(void) {
+  POWERDOWN();
+  return RADIO_Flush();
 }
 
 static uint8_t CheckTx(void) {
@@ -269,7 +275,7 @@ uint8_t RADIO_PowerUp(void) {
 #if NRF24_DYNAMIC_PAYLOAD
   /* enable dynamic payload */
   %@nRF24L01p@'ModuleName'%.WriteFeature(%@nRF24L01p@'ModuleName'%.FEATURE_EN_DPL|%@nRF24L01p@'ModuleName'%.FEATURE_EN_ACK_PAY|%@nRF24L01p@'ModuleName'%.FEATURE_EN_DYN_PAY); /* set EN_DPL for dynamic payload */
-  %@nRF24L01p@'ModuleName'%.EnableDynanicPayloadLength(%@nRF24L01p@'ModuleName'%.DYNPD_DPL_P0); /* set DYNPD register for dynamic payload for pipe0 */
+  %@nRF24L01p@'ModuleName'%.EnableDynamicPayloadLength(%@nRF24L01p@'ModuleName'%.DYNPD_DPL_P0); /* set DYNPD register for dynamic payload for pipe0 */
 #else
   %@nRF24L01p@'ModuleName'%.SetStaticPipePayload(0, RPHY_PAYLOAD_SIZE); /* static number of payload bytes we want to send and receive */
 #endif
@@ -290,6 +296,7 @@ uint8_t RADIO_PowerUp(void) {
   %@nRF24L01p@'ModuleName'%.WriteRegister(%@nRF24L01p@'ModuleName'%.SETUP_RETR, %@nRF24L01p@'ModuleName'%.SETUP_RETR_ARD_750|%@nRF24L01p@'ModuleName'%.SETUP_RETR_ARC_15); /* Important: need 750 us delay between every retry */
   
   RX_POWERUP();  /* Power up in receiving mode */
+  RADIO_Flush(); /* flush possible old data */
   %@nRF24L01p@'ModuleName'%.StartRxTx(); /* Listening for packets */
 
   RADIO_AppStatus = RADIO_INITIAL_STATE;
@@ -341,6 +348,7 @@ static void RADIO_PrintHelp(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  power <number>", (unsigned char*)"Changes output power to 0, -10, -12, -18\r\n", io->stdOut);
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  sniff on|off", (unsigned char*)"Turns sniffing on or off\r\n", io->stdOut);
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  writereg 0xReg 0xVal", (unsigned char*)"Write a transceiver register\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  flush", (unsigned char*)"Empty all queues\r\n", io->stdOut);
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  printreg", (unsigned char*)"Print the radio registers\r\n", io->stdOut);
 }
 
@@ -361,9 +369,10 @@ static void RadioPrintRegisters(%@Shell@'ModuleName'%.ConstStdIOType *io) {
 }
 
 static void RADIO_PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
-  uint8_t buf[24];
+  uint8_t buf[32];
   uint8_t val0, val1;
   int8_t val;
+  uint16_t dataRate;
   
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"Radio", (unsigned char*)"\r\n", io->stdOut);
   
@@ -382,6 +391,76 @@ static void RADIO_PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" dBm\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  power", buf, io->stdOut);
  
+  (void)%@nRF24L01p@'ModuleName'%.GetDataRate(&dataRate);
+  %@Utility@'ModuleName'%.Num16uToStr(buf, sizeof(buf), dataRate);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" kbps\r\n");
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  data rate", buf, io->stdOut);
+
+  val0 = %@nRF24L01p@'ModuleName'%.GetStatus();
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+  %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), val0);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)": ");
+  if (val0&%@nRF24L01p@'ModuleName'%.STATUS_RX_DR) {
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"RX_DR ");
+  }
+  if (val0&%@nRF24L01p@'ModuleName'%.STATUS_TX_DS) {
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"TX_DS ");
+  }
+  if (val0&%@nRF24L01p@'ModuleName'%.STATUS_MAX_RT) {
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"MAX_RT ");
+  }
+  if ((val0&%@nRF24L01p@'ModuleName'%.STATUS_RX_P_NO) == %@nRF24L01p@'ModuleName'%.STATUS_RX_P_NO_RX_FIFO_EMPTY) {
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"RxFifoEmpty ");
+  }
+  if ((val0&%@nRF24L01p@'ModuleName'%.STATUS_RX_P_NO) == %@nRF24L01p@'ModuleName'%.STATUS_RX_P_NO_UNUSED) {
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"RxUnused ");
+  }
+  if ((val0&%@nRF24L01p@'ModuleName'%.STATUS_RX_P_NO) == %@nRF24L01p@'ModuleName'%.STATUS_RX_P_NO_5) {
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"RxP#5 ");
+  }
+  if ((val0&%@nRF24L01p@'ModuleName'%.STATUS_RX_P_NO) == %@nRF24L01p@'ModuleName'%.STATUS_RX_P_NO_4) {
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"RxP#4 ");
+  }
+  if ((val0&%@nRF24L01p@'ModuleName'%.STATUS_RX_P_NO) == %@nRF24L01p@'ModuleName'%.STATUS_RX_P_NO_3) {
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"RxP#3 ");
+  }
+  if ((val0&%@nRF24L01p@'ModuleName'%.STATUS_RX_P_NO) == %@nRF24L01p@'ModuleName'%.STATUS_RX_P_NO_2) {
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"RxP#2 ");
+  }
+  if ((val0&%@nRF24L01p@'ModuleName'%.STATUS_RX_P_NO) == %@nRF24L01p@'ModuleName'%.STATUS_RX_P_NO_1) {
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"RxP#1 ");
+  }
+  if ((val0&%@nRF24L01p@'ModuleName'%.STATUS_RX_P_NO) == %@nRF24L01p@'ModuleName'%.STATUS_RX_P_NO_0) {
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"RxP#0 ");
+  }
+  if (val0&%@nRF24L01p@'ModuleName'%.STATUS_TX_FULL) {
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"TX_FULL ");
+  }
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  STATUS", buf, io->stdOut);
+
+  (void)%@nRF24L01p@'ModuleName'%.GetFifoStatus(&val0);
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+  %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), val0);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)": ");
+  if (val0&%@nRF24L01p@'ModuleName'%.FIFO_STATUS_TX_REUSE) {
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"REUSE ");
+  }
+  if (val0&%@nRF24L01p@'ModuleName'%.FIFO_STATUS_TX_FULL) {
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"TX_FULL ");
+  }
+  if (val0&%@nRF24L01p@'ModuleName'%.FIFO_STATUS_TX_EMPTY) {
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"TX_EMPTY ");
+  }
+  if (val0&%@nRF24L01p@'ModuleName'%.FIFO_STATUS_RX_FULL) {
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"RX_FULL ");
+  }
+  if (val0&%@nRF24L01p@'ModuleName'%.FIFO_STATUS_RX_EMPTY) {
+    %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"RX_EMPTY ");
+  }
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  FIFO_STATUS", buf, io->stdOut);
+
   (void)%@nRF24L01p@'ModuleName'%.ReadObserveTxRegister(&val0, &val1);
   %@Utility@'ModuleName'%.Num8uToStr(buf, sizeof(buf), val0);
   %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" lost, ");
@@ -444,6 +523,12 @@ uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const %@Shel
       *handled = TRUE;
     } else {
       %@Shell@'ModuleName'%.SendStr((unsigned char*)"Wrong arguments\r\n", io->stdErr);
+      res = ERR_FAILED;
+    }
+  } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, (char*)"radio flush")==0) {
+    *handled = TRUE;
+    if (RADIO_Flush()!=ERR_OK) {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"Flushing failed!\r\n", io->stdErr);
       res = ERR_FAILED;
     }
   } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, (char*)"radio printreg")==0) {

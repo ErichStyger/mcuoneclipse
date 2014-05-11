@@ -142,12 +142,15 @@
 #define %'ModuleName'%.RF_SETUP    0x06 /* RF_SETUP register */
   /* RF_SETUP register bits: */
   #define %'ModuleName'%.RF_SETUP_CONT_WAVE      (1<<7) /* Enables continuous carrier transmit when high. */
-  #define %'ModuleName'%.RF_SETUP_RF_DR_LOW      (1<<5) /* Set RF Data Rate to 250kbps. See RF_DR_HIGH for encoding. */
   #define %'ModuleName'%.RF_SETUP_PLL_LOCK       (1<<4) /* Force PLL lock signal. Only used in test */
+
+  #define %'ModuleName'%.RF_SETUP_RF_DR_MASK     (%'ModuleName'%.RF_SETUP_RF_DR_LOW|%'ModuleName'%.RF_SETUP_RF_DR_HIGH) /* xx: mask bits */
+  #define %'ModuleName'%.RF_SETUP_RF_DR_LOW      (1<<5) /* Set RF Data Rate to 250kbps. See RF_DR_HIGH for encoding. */
   #define %'ModuleName'%.RF_SETUP_RF_DR_HIGH     (1<<3) /* Select between the high speed data rates. */
   #define %'ModuleName'%.RF_SETUP_RF_DR_1000     (0) /* RF_DR_LOW|RF_DR_HIGH: 00 */
   #define %'ModuleName'%.RF_SETUP_RF_DR_2000     (%'ModuleName'%.RF_SETUP_RF_DR_HIGH) /* RF_DR_LOW|RF_DR_HIGH: 01 */
   #define %'ModuleName'%.RF_SETUP_RF_DR_250      (%'ModuleName'%.RF_SETUP_RF_DR_LOW)  /* RF_DR_LOW|RF_DR_HIGH: 10 */
+
   #define %'ModuleName'%.RF_SETUP_RF_PWR_MASK    (3<<1) /* xx: mask bits */
   #define %'ModuleName'%.RF_SETUP_RF_PWR_18      (0<<1) /* 00: -18dBm */
   #define %'ModuleName'%.RF_SETUP_RF_PWR_12      (1<<1) /* 01: -12dBm */
@@ -155,6 +158,23 @@
   #define %'ModuleName'%.RF_SETUP_RF_PWR_0       (3<<1) /* 11: 0dBm, default */
 
 #define %'ModuleName'%.STATUS      0x07
+  /* STATUS register bits */
+  #define %'ModuleName'%.STATUS_RESERVED                    0x80   /* bit 1xxx xxxx: This bit is reserved */
+  #define %'ModuleName'%.STATUS_RX_DR                       0x40   /* bit x1xx xxxx: Data ready RX FIFO interrupt. Asserted when new data arrives RX FIFO */
+  #define %'ModuleName'%.STATUS_TX_DS                       0x20   /* bit xx1x xxxx: Data sent TX FIFO interrupt. Asserted when packet transmitted on TX. */
+  #define %'ModuleName'%.STATUS_MAX_RT                      0x10   /* bit xxx1 xxxx: maximum number of TX retransmit interrupts */
+  #define %'ModuleName'%.STATUS_RX_P_NO                     0x0E
+  #define %'ModuleName'%.STATUS_RX_P_NO_RX_FIFO_EMPTY       0x0E
+  #define %'ModuleName'%.STATUS_RX_P_NO_UNUSED              0x0C
+  #define %'ModuleName'%.STATUS_RX_P_NO_5                   0x0A
+  #define %'ModuleName'%.STATUS_RX_P_NO_4                   0x08
+  #define %'ModuleName'%.STATUS_RX_P_NO_3                   0x06
+  #define %'ModuleName'%.STATUS_RX_P_NO_2                   0x04
+  #define %'ModuleName'%.STATUS_RX_P_NO_1                   0x02
+  #define %'ModuleName'%.STATUS_RX_P_NO_0                   0x00   /* bit xxxx 111x: pipe number for payload */
+  #define %'ModuleName'%.STATUS_TX_FULL                     0x01   /* bit xxxx xxx1: if bit set, then TX FIFO is full */
+
+
 #define %'ModuleName'%.OBSERVE_TX  0x08
 #define %'ModuleName'%.RPD         0x09 /* Received Power Detector */
 #define %'ModuleName'%.RX_ADDR_P0  0x0A
@@ -170,7 +190,16 @@
 #define %'ModuleName'%.RX_PW_P3    0x14 /* register to set static RX payload on pipe 3, 0 to 32 bytes */
 #define %'ModuleName'%.RX_PW_P4    0x15 /* register to set static RX payload on pipe 4, 0 to 32 bytes */
 #define %'ModuleName'%.RX_PW_P5    0x16 /* register to set static RX payload on pipe 5, 0 to 32 bytes */
+
 #define %'ModuleName'%.FIFO_STATUS 0x17 /* FIFO status register */
+  /* FIFO_STATUS register bits */
+  #define %'ModuleName'%.FIFO_STATUS_RESERVED  (0x8C) /* reserved bits */
+  #define %'ModuleName'%.FIFO_STATUS_TX_REUSE  (1<<6)
+  #define %'ModuleName'%.FIFO_STATUS_TX_FULL   (1<<5)
+  #define %'ModuleName'%.FIFO_STATUS_TX_EMPTY  (1<<4)
+  #define %'ModuleName'%.FIFO_STATUS_RX_FULL   (1<<1)
+  #define %'ModuleName'%.FIFO_STATUS_RX_EMPTY  (1<<0)
+
 #define %'ModuleName'%.DYNPD       0x1C /* enable dynamic payload length */
   /* DYNPD register bits: */
   #define %'ModuleName'%.DYNPD_DPL_P0  (1<<0) /* enable DPL for pipe 0 */
@@ -339,22 +368,6 @@
 #define %'ModuleName'%.SETUP_RETR_ARC_1      0x01 /* 1 retry count */
 #define %'ModuleName'%.SETUP_RETR_ARC_0      0x00 /* 0 retry count, retry disabled */
 
-/* STATUS register bit definitions */
-#define %'ModuleName'%.STATUS_RESERVED                    0x80   /* bit 1xxx xxxx: This bit is reserved */
-#define %'ModuleName'%.STATUS_RX_DR                       0x40   /* bit x1xx xxxx: Data ready RX FIFO interrupt. Asserted when new data arrives RX FIFO */
-#define %'ModuleName'%.STATUS_TX_DS                       0x20   /* bit xx1x xxxx: Data sent TX FIFO interrupt. Asserted when packet transmitted on TX. */
-#define %'ModuleName'%.STATUS_MAX_RT                      0x10   /* bit xxx1 xxxx: maximum number of TX retransmit interrupts */
-#define %'ModuleName'%.STATUS_RX_P_NO                     0x0E
-#define %'ModuleName'%.STATUS_RX_P_NO_RX_FIFO_NOT_EMPTY   0x0E
-#define %'ModuleName'%.STATUS_RX_P_NO_UNUSED              0x0C
-#define %'ModuleName'%.STATUS_RX_P_NO_5                   0x0A
-#define %'ModuleName'%.STATUS_RX_P_NO_4                   0x08
-#define %'ModuleName'%.STATUS_RX_P_NO_3                   0x06
-#define %'ModuleName'%.STATUS_RX_P_NO_2                   0x04
-#define %'ModuleName'%.STATUS_RX_P_NO_1                   0x02
-#define %'ModuleName'%.STATUS_RX_P_NO_0                   0x00   /* bit xxxx 111x: pipe number for payload */
-#define %'ModuleName'%.STATUS_TX_FULL                     0x01   /* bit xxxx xxx1: if bit set, then TX FIFO is full */
-
 /* OBSERVE_TX register bitwise definitions */
 #define %'ModuleName'%.OBSERVE_TX_PLOS_CNT   0xF0
 #define %'ModuleName'%.OBSERVE_TX_ARC_CNT    0x0F
@@ -387,14 +400,6 @@
 
 /* RX_PW_P5 register bitwise definitions */
 #define %'ModuleName'%.RX_PW_P5_RESERVED 0xC0
-
-/* FIFO_STATUS register bitwise definitions */
-#define %'ModuleName'%.FIFO_STATUS_RESERVED  0x8C
-#define %'ModuleName'%.FIFO_STATUS_TX_REUSE  0x40
-#define %'ModuleName'%.FIFO_STATUS_TX_FULL   0x20
-#define %'ModuleName'%.FIFO_STATUS_TX_EMPTY  0x10
-#define %'ModuleName'%.FIFO_STATUS_RX_FULL   0x02
-#define %'ModuleName'%.FIFO_STATUS_RX_EMPTY  0x01
 
 %-
 %-BW_CUSTOM_USERTYPE_END
@@ -572,15 +577,15 @@ uint8_t %'ModuleName'%.%SetStaticPipePayload(uint8_t pipe, uint8_t payloadBytes)
 %endif %- SetStaticPipePayload
 %-BW_METHOD_END SetStaticPipePayload
 %-************************************************************************************************************
-%-BW_METHOD_BEGIN EnableDynanicPayloadLength
-%ifdef EnableDynanicPayloadLength
-uint8_t %'ModuleName'%.%EnableDynanicPayloadLength(uint8_t pipeMask);
+%-BW_METHOD_BEGIN EnableDynamicPayloadLength
+%ifdef EnableDynamicPayloadLength
+uint8_t %'ModuleName'%.%EnableDynamicPayloadLength(uint8_t pipeMask);
 %define! ParpipeMask
 %define! RetVal
-%include Common\nRF24L01EnableDynanicPayloadLength.Inc
+%include Common\nRF24L01EnableDynamicPayloadLength.Inc
 
-%endif %- EnableDynanicPayloadLength
-%-BW_METHOD_END EnableDynanicPayloadLength
+%endif %- EnableDynamicPayloadLength
+%-BW_METHOD_END EnableDynamicPayloadLength
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN WriteFeature
 %ifdef WriteFeature
@@ -687,6 +692,36 @@ void %'ModuleName'%.%Deinit(void);
 
 %endif %- Deinit
 %-BW_METHOD_END Deinit
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SetDataRate
+%ifdef SetDataRate
+uint8_t %'ModuleName'%.%SetDataRate(uint16_t rate);
+%define! Parrate
+%define! RetVal
+%include Common\nRF24L01SetDataRate.Inc
+
+%endif %- SetDataRate
+%-BW_METHOD_END SetDataRate
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetDataRate
+%ifdef GetDataRate
+uint8_t %'ModuleName'%.%GetDataRate(uint16_t *rate);
+%define! Parrate
+%define! RetVal
+%include Common\nRF24L01GetDataRate.Inc
+
+%endif %- GetDataRate
+%-BW_METHOD_END GetDataRate
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetFifoStatus
+%ifdef GetFifoStatus
+uint8_t %'ModuleName'%.%GetFifoStatus(uint8_t *status);
+%define! Parstatus
+%define! RetVal
+%include Common\nRF24L01GetFifoStatus.Inc
+
+%endif %- GetFifoStatus
+%-BW_METHOD_END GetFifoStatus
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -1221,12 +1256,12 @@ uint8_t %'ModuleName'%.%SetStaticPipePayload(uint8_t pipe, uint8_t payloadBytes)
 %endif %- SetStaticPipePayload
 %-BW_METHOD_END SetStaticPipePayload
 %-************************************************************************************************************
-%-BW_METHOD_BEGIN EnableDynanicPayloadLength
-%ifdef EnableDynanicPayloadLength
+%-BW_METHOD_BEGIN EnableDynamicPayloadLength
+%ifdef EnableDynamicPayloadLength
 %define! ParpipeMask
 %define! RetVal
-%include Common\nRF24L01EnableDynanicPayloadLength.Inc
-uint8_t %'ModuleName'%.%EnableDynanicPayloadLength(uint8_t pipeMask)
+%include Common\nRF24L01EnableDynamicPayloadLength.Inc
+uint8_t %'ModuleName'%.%EnableDynamicPayloadLength(uint8_t pipeMask)
 {
   /* note: dynamic payload requires EN_DPL and ENAA_Px set for the pipe */
   if (pipeMask>0x3F) {
@@ -1236,8 +1271,8 @@ uint8_t %'ModuleName'%.%EnableDynanicPayloadLength(uint8_t pipeMask)
   return ERR_OK;
 }
 
-%endif %- EnableDynanicPayloadLength
-%-BW_METHOD_END EnableDynanicPayloadLength
+%endif %- EnableDynamicPayloadLength
+%-BW_METHOD_END EnableDynamicPayloadLength
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN WriteFeature
 %ifdef WriteFeature
@@ -1360,7 +1395,7 @@ uint8_t %'ModuleName'%.%SetOutputPower(uint8_t power)
   } else if (power==0) {
     val |= %'ModuleName'%.RF_SETUP_RF_PWR_0;
   } else {
-    return ERR_FAILED;
+    return ERR_RANGE;
   }
   %'ModuleName'%.WriteRegister(%'ModuleName'%.RF_SETUP, val);
   return ERR_OK;
@@ -1395,6 +1430,59 @@ uint8_t %'ModuleName'%.%GetOutputPower(int8_t *power)
 
 %endif %- GetOutputPower
 %-BW_METHOD_END GetOutputPower
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SetDataRate
+%ifdef SetDataRate
+%define! Parrate
+%define! RetVal
+%include Common\nRF24L01SetDataRate.Inc
+uint8_t %'ModuleName'%.%SetDataRate(uint16_t rate)
+{
+  uint8_t val;
+
+  /* get current register value */
+  val = %'ModuleName'%.ReadRegister(%'ModuleName'%.RF_SETUP); /* read RF_SETUP register */
+  val &= ~%'ModuleName'%.RF_SETUP_RF_DR_MASK; /* clear bits */
+  if (rate==250) {
+    val |= %'ModuleName'%.RF_SETUP_RF_DR_250;
+  } else if (rate==1000) {
+    val |= %'ModuleName'%.RF_SETUP_RF_DR_1000;
+  } else if (rate==2000) {
+    val |= %'ModuleName'%.RF_SETUP_RF_DR_2000;
+  } else { /* illegal parameter */
+    return ERR_RANGE;
+  }
+  %'ModuleName'%.WriteRegister(%'ModuleName'%.RF_SETUP, val);
+  return ERR_OK;
+}
+
+%endif %- SetDataRate
+%-BW_METHOD_END SetDataRate
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetDataRate
+%ifdef GetDataRate
+%define! Parrate
+%define! RetVal
+%include Common\nRF24L01GetDataRate.Inc
+uint8_t %'ModuleName'%.%GetDataRate(uint16_t *rate)
+{
+  uint8_t val;
+
+  val = %'ModuleName'%.ReadRegister(%'ModuleName'%.RF_SETUP); /* read RF_SETUP register */
+  if ((val&%'ModuleName'%.RF_SETUP_RF_DR_MASK)==%'ModuleName'%.RF_SETUP_RF_DR_250) {
+    *rate = 250;
+  } else if ((val&%'ModuleName'%.RF_SETUP_RF_DR_MASK)==%'ModuleName'%.RF_SETUP_RF_DR_1000) {
+    *rate = 1000;
+  } else if ((val&%'ModuleName'%.RF_SETUP_RF_DR_MASK)==%'ModuleName'%.RF_SETUP_RF_DR_2000) {
+    *rate = 2000;
+  } else {
+    return ERR_RANGE;
+  }
+  return ERR_OK;
+}
+
+%endif %- GetDataRate
+%-BW_METHOD_END GetDataRate
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN PollInterrupt
 %ifdef PollInterrupt
@@ -1431,6 +1519,20 @@ void %'ModuleName'%.%Deinit(void)
 
 %endif %- Deinit
 %-BW_METHOD_END Deinit
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN GetFifoStatus
+%ifdef GetFifoStatus
+%define! Parstatus
+%define! RetVal
+%include Common\nRF24L01GetFifoStatus.Inc
+uint8_t %'ModuleName'%.%GetFifoStatus(uint8_t *status)
+{
+  *status = %'ModuleName'%.ReadRegister(%'ModuleName'%.FIFO_STATUS); /* read FIFO_STATUS register */
+  return ERR_OK;
+}
+
+%endif %- GetFifoStatus
+%-BW_METHOD_END GetFifoStatus
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

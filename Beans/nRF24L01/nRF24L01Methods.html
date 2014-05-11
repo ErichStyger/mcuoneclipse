@@ -372,12 +372,12 @@ LI.EXP {
 </li>
 </ul><br />
 </li>
-<li><a name="EnableDynanicPayloadLength">
-<b>EnableDynanicPayloadLength</b></a>
+<li><a name="EnableDynamicPayloadLength">
+<b>EnableDynamicPayloadLength</b></a>
  - Enables dynamic payload length for the give pipes
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> uint8_t EnableDynanicPayloadLength(uint8_t pipeMask)<br />
+<br /><i>ANSIC prototype:</i> uint8_t EnableDynamicPayloadLength(uint8_t pipeMask)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>pipeMask:uint8_t</i> - Mask of pipes, with 1 for pipe 0, 2 for pipe 1, 4 for pipe 2 and so on.</li>
 <li><i>Return value:uint8_t</i> - Error code
@@ -501,6 +501,42 @@ LI.EXP {
 <br /><i>ANSIC prototype:</i> uint8_t GetOutputPower(int8_t *power)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>power: Pointer to int8_t</i> - Pointer to where to store the value. Returns the output power in dBm</li>
+<li><i>Return value:uint8_t</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="SetDataRate">
+<b>SetDataRate</b></a>
+ - Sets the data rate
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> uint8_t SetDataRate(uint16_t rate)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>rate:uint16_t</i> - Data rate, either 250, 1000 or 2000 (kbps)</li>
+<li><i>Return value:uint8_t</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="GetDataRate">
+<b>GetDataRate</b></a>
+ - Returns the current data rate
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> uint8_t GetDataRate(uint16_t *rate)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>rate: Pointer to uint16_t</i> - Pointer to where to store the value. Returns the data rate, either 250, 1000 or 2000 (kbps)</li>
+<li><i>Return value:uint8_t</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="GetFifoStatus">
+<b>GetFifoStatus</b></a>
+ - Returns the FIFO_STATUS register value
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> uint8_t GetFifoStatus(uint8_t *status)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>status: Pointer to uint8_t</i> - Pointer to where to store the FIFO status value.</li>
 <li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
