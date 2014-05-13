@@ -11,7 +11,7 @@
 ;##                                                
 ;##     Compiler  : Keil ARM C/C++ Compiler                    
 ;##                                                
-;##     Date/Time : 2013-06-28, 14:37, # CodeGen: 0                     
+;##     Date/Time : 2014-05-13, 15:56, # CodeGen: 9                     
 ;##                                                
 ;##     Abstract  :                                
 ;##                                                
@@ -43,9 +43,7 @@
 
 LR_m_text m_text_start m_text_size  {  ; load region size_region
   ER_m_text m_text_start m_text_size  { ; load address = execution address
-   *.o (RESET)
    *(InRoot$$Sections)
-   *(KERNEL)
    .ANY (+RO)
   }
   RW_m_data m_data_start m_data_size-stack_size-heap_size  { ; RW data

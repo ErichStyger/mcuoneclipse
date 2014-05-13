@@ -14,12 +14,12 @@
         <TargetCommonOption>
           <Device>MKL25Z128xxx4</Device>
           <Vendor>Freescale Semiconductor</Vendor>
-          <Cpu>IRAM(0x1FFFF000-0x1FFFFFFF) IRAM2(0x20000000-0x20002FFF) IROM(0x0-0x1FFFF) CLOCK(8000000) CPUTYPE("Cortex-M0+") ELITTLE</Cpu>
+          <Cpu>IROM(0x00000000,0x20000) IRAM(0x20000000,0x3000) IRAM2(0x1FFFF000,0x1000) CPUTYPE("Cortex-M0+") CLOCK(48000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
-          <StartupFile>"STARTUP\Freescale\Kinetis\startup_MKL25Z4.s" ("Freescale MKL25Zxxxxxx4 Startup Code")</StartupFile>
-          <FlashDriverDll>ULP2CM3(-O2510 -S0 -C0 -FO15 -FD20000000 -FC800 -FN1 -FF0MK_P128_48MHZ -FS00 -FL020000)</FlashDriverDll>
+          <StartupFile></StartupFile>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD1FFFF000 -FC4000 -FN1 -FF0MK_P128_48MHZ -FS00 -FL020000 -FP0($$Device:MKL25Z128xxx4$Flash\MK_P128_48MHZ.FLM))</FlashDriverDll>
           <DeviceId>6533</DeviceId>
-          <RegisterFile>MKL25Z4.H</RegisterFile>
+          <RegisterFile>$$Device:MKL25Z128xxx4$Device\Include\MKL25Z4.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
           <Asm></Asm>
@@ -29,14 +29,14 @@
           <SLE66CMisc></SLE66CMisc>
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
-          <SFDFile>SFD\Freescale\Kinetis\MKL25Z4.sfr</SFDFile>
+          <SFDFile>$$Device:MKL25Z128xxx4$SVD\MKL25Z4.svd</SFDFile>
           <bCustSvd>0</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
           <IncludePath></IncludePath>
           <LibPath></LibPath>
-          <RegisterFilePath>Freescale\Kinetis\</RegisterFilePath>
-          <DBRegisterFilePath>Freescale\Kinetis\</DBRegisterFilePath>
+          <RegisterFilePath></RegisterFilePath>
+          <DBRegisterFilePath></DBRegisterFilePath>
           <TargetStatus>
             <Error>0</Error>
             <ExitCodeStop>0</ExitCodeStop>
@@ -102,11 +102,11 @@
         </CommonProperty>
         <DllOption>
           <SimDllName>SARMCM3.DLL</SimDllName>
-          <SimDllArguments></SimDllArguments>
+          <SimDllArguments> </SimDllArguments>
           <SimDlgDll>DARMCM1.DLL</SimDlgDll>
           <SimDlgDllArguments>-pCM0+</SimDlgDllArguments>
           <TargetDllName>SARMCM3.DLL</TargetDllName>
-          <TargetDllArguments></TargetDllArguments>
+          <TargetDllArguments> </TargetDllArguments>
           <TargetDlgDll>TARMCM1.DLL</TargetDlgDll>
           <TargetDlgDllArguments>-pCM0+</TargetDlgDllArguments>
         </DllOption>
@@ -165,10 +165,10 @@
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
-            <DriverSelection>4104</DriverSelection>
+            <DriverSelection>4096</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
-          <Flash2>BIN\CMSIS_AGDI.dll</Flash2>
+          <Flash2>BIN\UL2CM3.DLL</Flash2>
           <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
@@ -273,8 +273,8 @@
               </Ocm6>
               <IRAM>
                 <Type>0</Type>
-                <StartAddress>0x1ffff000</StartAddress>
-                <Size>0x1000</Size>
+                <StartAddress>0x20000000</StartAddress>
+                <Size>0x3000</Size>
               </IRAM>
               <IROM>
                 <Type>1</Type>
@@ -328,13 +328,13 @@
               </OCR_RVCT8>
               <OCR_RVCT9>
                 <Type>0</Type>
-                <StartAddress>0x1ffff000</StartAddress>
-                <Size>0x1000</Size>
+                <StartAddress>0x20000000</StartAddress>
+                <Size>0x3000</Size>
               </OCR_RVCT9>
               <OCR_RVCT10>
                 <Type>0</Type>
-                <StartAddress>0x20000000</StartAddress>
-                <Size>0x3000</Size>
+                <StartAddress>0x1ffff000</StartAddress>
+                <Size>0x1000</Size>
               </OCR_RVCT10>
             </OnChipMemories>
             <RvctStartVector></RvctStartVector>
@@ -357,7 +357,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>"C:\Freescale\PExDrv v10.2\eclipse\ProcessorExpert\lib\Kinetis\iofiles";"C:\Freescale\PExDrv v10.2\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc";".\Sources";".\Generated_Code";".\Generated_Code";".\Sources";".\Project_Settings\Startup_Code"</IncludePath>
+              <IncludePath>"C:\Freescale\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc";"C:\Freescale\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\iofiles";".\Sources";".\Generated_Code";".\Generated_Code";".\Project_Settings\Startup_Code";".\Sources"</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -373,7 +373,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>"C:\Freescale\PExDrv v10.2\eclipse\ProcessorExpert\lib\Kinetis\iofiles";"C:\Freescale\PExDrv v10.2\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc";".\Sources";".\Generated_Code";".\Generated_Code";".\Sources";".\Project_Settings\Startup_Code"</IncludePath>
+              <IncludePath>"C:\Freescale\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc";"C:\Freescale\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\iofiles";".\Sources";".\Generated_Code";".\Generated_Code";".\Project_Settings\Startup_Code";".\Sources"</IncludePath>
             </VariousControls>
           </Aads>
           <LDads>
@@ -533,6 +533,11 @@
               <FileType>1</FileType>
               <FilePath>.\Generated_Code\EVNT1.c</FilePath>
             </File>
+            <File>
+              <FileName>event_groups.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Generated_Code\event_groups.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -687,6 +692,126 @@
               <FileName>EVNT1.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Generated_Code\EVNT1.h</FilePath>
+            </File>
+            <File>
+              <FileName>event_groups.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Generated_Code\event_groups.h</FilePath>
+            </File>
+            <File>
+              <FileName>ADC_PDD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Freescale\Kepler\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\ADC_PDD.h</FilePath>
+            </File>
+            <File>
+              <FileName>CMP_PDD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Freescale\Kepler\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\CMP_PDD.h</FilePath>
+            </File>
+            <File>
+              <FileName>COP_PDD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Freescale\Kepler\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\COP_PDD.h</FilePath>
+            </File>
+            <File>
+              <FileName>DAC_PDD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Freescale\Kepler\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\DAC_PDD.h</FilePath>
+            </File>
+            <File>
+              <FileName>DMAMUX_PDD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Freescale\Kepler\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\DMAMUX_PDD.h</FilePath>
+            </File>
+            <File>
+              <FileName>DMA_PDD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Freescale\Kepler\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\DMA_PDD.h</FilePath>
+            </File>
+            <File>
+              <FileName>FTFA_PDD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Freescale\Kepler\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\FTFA_PDD.h</FilePath>
+            </File>
+            <File>
+              <FileName>GPIO_PDD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Freescale\Kepler\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\GPIO_PDD.h</FilePath>
+            </File>
+            <File>
+              <FileName>I2C_PDD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Freescale\Kepler\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\I2C_PDD.h</FilePath>
+            </File>
+            <File>
+              <FileName>LPTMR_PDD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Freescale\Kepler\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\LPTMR_PDD.h</FilePath>
+            </File>
+            <File>
+              <FileName>MCM_PDD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Freescale\Kepler\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\MCM_PDD.h</FilePath>
+            </File>
+            <File>
+              <FileName>MKL25Z4.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Freescale\Kepler\eclipse\ProcessorExpert\lib\Kinetis\iofiles\MKL25Z4.h</FilePath>
+            </File>
+            <File>
+              <FileName>PDD_Types.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Freescale\Kepler\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\PDD_Types.h</FilePath>
+            </File>
+            <File>
+              <FileName>PIT_PDD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Freescale\Kepler\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\PIT_PDD.h</FilePath>
+            </File>
+            <File>
+              <FileName>PORT_PDD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Freescale\Kepler\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\PORT_PDD.h</FilePath>
+            </File>
+            <File>
+              <FileName>RTC_PDD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Freescale\Kepler\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\RTC_PDD.h</FilePath>
+            </File>
+            <File>
+              <FileName>SIM_PDD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Freescale\Kepler\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\SIM_PDD.h</FilePath>
+            </File>
+            <File>
+              <FileName>SPI_PDD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Freescale\Kepler\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\SPI_PDD.h</FilePath>
+            </File>
+            <File>
+              <FileName>SysTick_PDD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Freescale\Kepler\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\SysTick_PDD.h</FilePath>
+            </File>
+            <File>
+              <FileName>TPM_PDD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Freescale\Kepler\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\TPM_PDD.h</FilePath>
+            </File>
+            <File>
+              <FileName>UART0_PDD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Freescale\Kepler\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\UART0_PDD.h</FilePath>
+            </File>
+            <File>
+              <FileName>UART_PDD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Freescale\Kepler\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\UART_PDD.h</FilePath>
+            </File>
+            <File>
+              <FileName>USB_PDD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Freescale\Kepler\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\USB_PDD.h</FilePath>
             </File>
           </Files>
         </Group>
