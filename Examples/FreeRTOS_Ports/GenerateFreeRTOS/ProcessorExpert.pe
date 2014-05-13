@@ -3,10 +3,10 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>51</ModificationStamp>
-    <Date>2014-04-11</Date>
+    <ModificationStamp>55</ModificationStamp>
+    <Date>2014-05-13</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion>1.8.1.RT5_b1349-1839</PEversion>
+    <PEversion>1.9.0.RT6_b1411-0406</PEversion>
   </Header>
   <Options>
     <EventsDirectory>Sources</EventsDirectory>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>75</ProjectCompNumb>
+    <ProjectCompNumb>78</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -38,6 +38,8 @@
     <GenerateCodeGenLog>false</GenerateCodeGenLog>
     <DontWriteGeneratedModules lines_count="0" />
     <ProjectStaticFilesGenerationMode>LINKED</ProjectStaticFilesGenerationMode>
+    <ProjectMainModule>ProcessorExpert</ProjectMainModule>
+    <SdkSourceFilesDirectory />
   </Options>
   <CPU>
     <BeanType>MKL25Z128LK4</BeanType>
@@ -251,7 +253,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ExtOscOperatingMode</ItemSymbol>
@@ -260,7 +261,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>1</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>CLKModeList</ItemSymbol>
@@ -312,7 +312,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>1</Index>
         <EnumSymbVal>1</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>IRCLKClkCLKMode0</ItemSymbol>
@@ -353,7 +352,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>-1</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ERCLK32KClkCLKMode0</ItemSymbol>
@@ -378,7 +376,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>FLLOUT</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>MCGModeCLKMode0</ItemSymbol>
@@ -428,7 +425,7 @@
       <ItemState>
         <ItemSymbol>FLLFixedClkCLKMode0</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>16.384</Value>
+        <Value>32.768</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>FLL_RefClkSrcCLKMode0</ItemSymbol>
@@ -445,7 +442,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>Auto select</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FLLRefClkCLKMode0</ItemSymbol>
@@ -459,7 +455,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>Auto select</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PLLGrp0</ItemSymbol>
@@ -497,7 +492,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>Auto select</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PLLRefClkCLKMode0</ItemSymbol>
@@ -511,7 +505,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>Auto select</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PLL_LOLIECLKMode0</ItemSymbol>
@@ -688,7 +681,6 @@
         <TypeSpecNameState>typeKinetisRCMFilterInStop</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RCMFilterInRunWait</ItemSymbol>
@@ -698,7 +690,6 @@
         <TypeSpecNameState>typeKinetisRCMFilterInRunWait</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RCMFilterWidth</ItemSymbol>
@@ -756,7 +747,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>Dpart_</ItemSymbol>
@@ -819,7 +809,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>EEEpart_</ItemSymbol>
@@ -941,7 +930,8 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigSecurity</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unsecure</EnumSymbVal>
-        <CustomValue />
+        <Value>false</Value>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigFslAccess</ItemSymbol>
@@ -951,7 +941,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigFslAccess</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>granted</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigMassEraseEnable</ItemSymbol>
@@ -961,7 +950,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigMassEraseEnable</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigBackdoorkeyEnable</ItemSymbol>
@@ -971,7 +959,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigBackdoorkeyEnable</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigBackdoorKey0</ItemSymbol>
@@ -1075,7 +1062,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion1</ItemSymbol>
@@ -1085,7 +1071,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion2</ItemSymbol>
@@ -1095,7 +1080,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion3</ItemSymbol>
@@ -1105,7 +1089,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion4</ItemSymbol>
@@ -1115,7 +1098,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion5</ItemSymbol>
@@ -1125,7 +1107,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion6</ItemSymbol>
@@ -1135,7 +1116,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion7</ItemSymbol>
@@ -1145,7 +1125,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion8</ItemSymbol>
@@ -1155,7 +1134,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion9</ItemSymbol>
@@ -1165,7 +1143,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion10</ItemSymbol>
@@ -1175,7 +1152,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion11</ItemSymbol>
@@ -1185,7 +1161,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion12</ItemSymbol>
@@ -1195,7 +1170,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion13</ItemSymbol>
@@ -1205,7 +1179,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion14</ItemSymbol>
@@ -1215,7 +1188,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion15</ItemSymbol>
@@ -1225,7 +1197,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion16</ItemSymbol>
@@ -1235,7 +1206,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion17</ItemSymbol>
@@ -1245,7 +1215,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion18</ItemSymbol>
@@ -1255,7 +1224,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion19</ItemSymbol>
@@ -1265,7 +1233,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion20</ItemSymbol>
@@ -1275,7 +1242,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion21</ItemSymbol>
@@ -1285,7 +1251,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion22</ItemSymbol>
@@ -1295,7 +1260,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion23</ItemSymbol>
@@ -1305,7 +1269,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion24</ItemSymbol>
@@ -1315,7 +1278,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion25</ItemSymbol>
@@ -1325,7 +1287,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion26</ItemSymbol>
@@ -1335,7 +1296,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion27</ItemSymbol>
@@ -1345,7 +1305,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion28</ItemSymbol>
@@ -1355,7 +1314,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion29</ItemSymbol>
@@ -1365,7 +1323,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion30</ItemSymbol>
@@ -1375,7 +1332,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigProgramFlashProtectionRegion31</ItemSymbol>
@@ -1385,7 +1341,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigProgramFlashProtectionRegion</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>unprotected</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigPeripheralSettingsGrp</ItemSymbol>
@@ -1401,7 +1356,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigResetPinFunction</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigNmiFunction</ItemSymbol>
@@ -1411,7 +1365,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigNmiFunction</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigFlashInitSpeed</ItemSymbol>
@@ -1421,7 +1374,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigFlashInitSpeed</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>fast</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigLowPowerBoot</ItemSymbol>
@@ -1431,7 +1383,6 @@
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigLowPowerBoot</TypeSpecNameState>
         <Index>3</Index>
         <EnumSymbVal>FastClockBoot</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FTFL_FlashConfigInternalUsageGrp</ItemSymbol>
@@ -1478,7 +1429,6 @@
         <TypeSpecNameState>typeKinetisMCMFMC_StallingFlashController</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>MCMFMC_FlashControllerSpeculation</ItemSymbol>
@@ -1488,7 +1438,6 @@
         <TypeSpecNameState>typeKinetisMCMFMC_FlashControllerSpeculation</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>MCMFMC_FlashDataSpeculation</ItemSymbol>
@@ -1498,7 +1447,6 @@
         <TypeSpecNameState>typeKinetisMCMFMC_FlashDataSpeculation</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>MCMFMC_FlashControllerCache</ItemSymbol>
@@ -1508,7 +1456,6 @@
         <TypeSpecNameState>typeKinetisMCMFMC_FlashControllerCache</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>MCMFMC_FlashControllerInstructionCaching</ItemSymbol>
@@ -1518,7 +1465,6 @@
         <TypeSpecNameState>typeKinetisMCMFMC_FlashControllerInstructionCaching</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>MCMFMC_FlashControllerDataCaching</ItemSymbol>
@@ -1528,7 +1474,6 @@
         <TypeSpecNameState>typeKinetisMCMFMC_FlashControllerDataCaching</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>MCMAXBSGrp</ItemSymbol>
@@ -1544,7 +1489,6 @@
         <TypeSpecNameState>typeKinetisMCMAXBS_ArbitrationType</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>FIXED_PRIORITY</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>MCMInternalUsageGrp</ItemSymbol>
@@ -1583,7 +1527,6 @@
         <TypeSpecNameState>typeKinetisPMCLVDreset</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PMCLVDvoltageSelect</ItemSymbol>
@@ -1593,7 +1536,6 @@
         <TypeSpecNameState>typeKinetisPMCLVDvoltageSelect</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>low</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PMCLVWvoltageSelect</ItemSymbol>
@@ -1603,7 +1545,6 @@
         <TypeSpecNameState>typeKinetisPMCLVWvoltageSelect</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>low</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PMCBangapBuffer</ItemSymbol>
@@ -1613,7 +1554,6 @@
         <TypeSpecNameState>typeKinetisPMCBangapBuffer</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PMCBangapVLPBuffer</ItemSymbol>
@@ -1623,7 +1563,6 @@
         <TypeSpecNameState>typeKinetisPMCBangapVLPBuffer</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PMCPMCIntGrp</ItemSymbol>
@@ -1648,7 +1587,6 @@
         <TypeSpecNameState>typeKinetisPMCLVDIntNameRequest</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PMCLVDIntNamePriorityFeatureGroup</ItemSymbol>
@@ -1663,7 +1601,6 @@
         <TypeSpecNameState>typeKinetisPMCLVDIntNamePriority</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>DevInit_PMCISRnameLVDGrp</ItemSymbol>
@@ -1684,7 +1621,6 @@
         <TypeSpecNameState>typeKinetisPMCLVDinterrupt</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PMCLVWinterrupt</ItemSymbol>
@@ -1694,7 +1630,6 @@
         <TypeSpecNameState>typeKinetisPMCLVWinterrupt</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PMCInternalUsageGrp</ItemSymbol>
@@ -1754,7 +1689,6 @@
         <TypeSpecNameState>typeKinetisSIMCLKOUT</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>busClk</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMSCGCGrp</ItemSymbol>
@@ -1772,7 +1706,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateI2C1</ItemSymbol>
@@ -1782,7 +1715,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateUART0</ItemSymbol>
@@ -1792,7 +1724,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateUART1</ItemSymbol>
@@ -1802,7 +1733,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateUART2</ItemSymbol>
@@ -1812,7 +1742,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateUSB0</ItemSymbol>
@@ -1822,7 +1751,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateCMP</ItemSymbol>
@@ -1832,7 +1760,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateSPI0</ItemSymbol>
@@ -1842,7 +1769,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateSPI1</ItemSymbol>
@@ -1852,7 +1778,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateLPTMR0</ItemSymbol>
@@ -1862,7 +1787,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateTSI0</ItemSymbol>
@@ -1872,7 +1796,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGatePORTA</ItemSymbol>
@@ -1882,7 +1805,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGatePORTB</ItemSymbol>
@@ -1892,7 +1814,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGatePORTC</ItemSymbol>
@@ -1902,7 +1823,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGatePORTD</ItemSymbol>
@@ -1912,7 +1832,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGatePORTE</ItemSymbol>
@@ -1922,7 +1841,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateFTFA</ItemSymbol>
@@ -1932,7 +1850,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateDMA_MULTIPLEXOR0</ItemSymbol>
@@ -1942,7 +1859,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGatePIT</ItemSymbol>
@@ -1952,7 +1868,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateTPM0</ItemSymbol>
@@ -1962,7 +1877,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateTPM1</ItemSymbol>
@@ -1972,7 +1886,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateTPM2</ItemSymbol>
@@ -1982,7 +1895,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateADC0</ItemSymbol>
@@ -1992,7 +1904,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateRTC</ItemSymbol>
@@ -2002,7 +1913,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateDAC0</ItemSymbol>
@@ -2012,7 +1922,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMClkGateDMA</ItemSymbol>
@@ -2022,7 +1931,6 @@
         <TypeSpecNameState>typeKinetisSIMClkGate</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SIMInternalUsageGrp</ItemSymbol>
@@ -2549,7 +2457,6 @@
         <TypeSpecNameState>typeKinetisLLWUIntModule</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUIntModule1</ItemSymbol>
@@ -2559,7 +2466,6 @@
         <TypeSpecNameState>typeKinetisLLWUIntModule</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUIntModule4</ItemSymbol>
@@ -2569,7 +2475,6 @@
         <TypeSpecNameState>typeKinetisLLWUIntModule</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUIntModule5</ItemSymbol>
@@ -2579,7 +2484,6 @@
         <TypeSpecNameState>typeKinetisLLWUIntModule</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUIntModule7</ItemSymbol>
@@ -2589,7 +2493,6 @@
         <TypeSpecNameState>typeKinetisLLWUIntModule</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUFiltr1</ItemSymbol>
@@ -2854,7 +2757,6 @@
         <TypeSpecNameState>typeKinetisLLWUIntCommonRequest</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>disabled</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>LLWUIntCommonPriorityFeatureGroup</ItemSymbol>
@@ -2869,7 +2771,6 @@
         <TypeSpecNameState>typeKinetisLLWUIntCommonPriority</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>DevInit_LLWUISRHandleCommonGrp</ItemSymbol>
@@ -2936,7 +2837,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SetOperationMode_SLEEP_SLEEPONEXIT</ItemSymbol>
@@ -3114,7 +3014,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>MCGOutputSpeedMode0</ItemSymbol>
@@ -3135,7 +3034,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>FLLFixedClkSpeedMode0</ItemSymbol>
-        <Value>16.384</Value>
+        <Value>32.768</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>SystemClocksGrp0</ItemSymbol>
@@ -3281,6 +3180,151 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>FlexNVMCondGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FlexNVMSettings</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FlexNVMComponentVersion</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FlexNVMSize_Txt</ItemSymbol>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DataFlashSize_KB_Txt</ItemSymbol>
+        <Value>0 KB</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FlexNVMPartitionCodeValue</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EepromSize_Enum</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Expanded>true</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EepromSplitFactorCondGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EepromSplitFactor</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>2</Index>
+        <EnumSymbVal>2</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EepromBackupSize_KB_Enum</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <EnumSymbVal>8</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DflashSettingsGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EepromBackupSettingsGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EepromBackupStart</ItemSymbol>
+        <Value>268435456</Value>
+        <Base>HEX</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EepromBackupSize</ItemSymbol>
+        <Value>0</Value>
+        <Base>HEX</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EepromDataSettingsGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EepromStart</ItemSymbol>
+        <Value>335544320</Value>
+        <Base>HEX</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EepromSize</ItemSymbol>
+        <Value>0</Value>
+        <Base>HEX</Base>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FTFL_FlashConfigSecureValue</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisFTFL_FlashConfigSecureValue</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>00</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>MCMCPOGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>MCMCPO_CPOWOI</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <TypeSpecNameState>typeKinetisMCMCPO_CPOWOI</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>state_0</EnumSymbVal>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>AllowedPowerModesGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SMC_AHSRUNCondGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SMC_AHSRUN</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -3405,6 +3449,60 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>never</LastUserSel>
         <UsrMethodName>SystemReset</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GetLLSWakeUpFlagsPDD2CondGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OpenBackDoor</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>never</LastUserSel>
+        <UsrMethodName>OpenBackDoor</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FlexNVMfeatureMethodsGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GetFlexNVMPartitionCode</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>never</LastUserSel>
+        <UsrMethodName>GetFlexNVMPartitionCode</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SetFlexNVMPartition</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>never</LastUserSel>
+        <UsrMethodName>SetFlexNVMPartition</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SetFlexRAMFunction</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>never</LastUserSel>
+        <UsrMethodName>SetFlexRAMFunction</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Methods>
@@ -3615,6 +3713,69 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>Cpu_OnDDRINT</Value>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>LossOfClockOSC0EvntCondGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnLossOfClockOSC0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>never</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnLossOfClockOSC0Name</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LossOfClockRTCEvntCondGrp0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnLossOfClockRTC</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>never</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnLossOfClockRTCName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LossOfClockOSC1EvntCondGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnLossOfClockOSC1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>never</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnLossOfClockOSC1Name</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+      </ItemState>
     </Events>
     <Cpu_State>
       <Orientation>L</Orientation>
@@ -3780,7 +3941,6 @@
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
           <Index>2</Index>
           <EnumSymbVal>INTERNAL_FLASH</EnumSymbVal>
-          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>DefaultMemCode</ItemSymbol>
@@ -3788,7 +3948,6 @@
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
           <Index>2</Index>
           <EnumSymbVal>INTERNAL_FLASH</EnumSymbVal>
-          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>DefaultMemData</ItemSymbol>
@@ -3796,7 +3955,6 @@
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
           <Index>0</Index>
           <EnumSymbVal>INTERNAL_RAM</EnumSymbVal>
-          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamList</ItemSymbol>
@@ -3827,7 +3985,6 @@
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
           <Index>1</Index>
           <EnumSymbVal>RX</EnumSymbVal>
-          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamPhysicalType0</ItemSymbol>
@@ -3878,7 +4035,6 @@
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
           <Index>1</Index>
           <EnumSymbVal>RX</EnumSymbVal>
-          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamPhysicalType1</ItemSymbol>
@@ -3929,7 +4085,6 @@
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
           <Index>1</Index>
           <EnumSymbVal>RX</EnumSymbVal>
-          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamPhysicalType2</ItemSymbol>
@@ -3980,7 +4135,6 @@
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
           <Index>2</Index>
           <EnumSymbVal>RW</EnumSymbVal>
-          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamPhysicalType3</ItemSymbol>
@@ -4106,7 +4260,6 @@
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
           <Index>1</Index>
           <EnumSymbVal>DOS</EnumSymbVal>
-          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>C_LINKPars</ItemSymbol>
@@ -4143,6 +4296,14 @@
         </ItemState>
         <ItemState>
           <ItemSymbol>GNUC_ARM_Directory</ItemSymbol>
+          <ReadOnly>false</ReadOnly>
+        </ItemState>
+        <ItemState>
+          <ItemSymbol>UserInitFeatureGrp</ItemSymbol>
+          <ReadOnly>false</ReadOnly>
+        </ItemState>
+        <ItemState>
+          <ItemSymbol>NotSDK</ItemSymbol>
           <ReadOnly>false</ReadOnly>
         </ItemState>
       </CompilerProperties>
@@ -4380,7 +4541,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>MCF51CN</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ColdFireSWI</ItemSymbol>
@@ -4389,7 +4549,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>VL1swi</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ColdFireV2CPUSpecific</ItemSymbol>
@@ -4406,7 +4565,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>MCF5225x</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ColdFireV2LibraryLowestInterruptPriority</ItemSymbol>
@@ -4439,7 +4597,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>2</Index>
         <EnumSymbVal>M4F</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>M4FFloatingPointSupport</ItemSymbol>
@@ -4478,7 +4635,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>LDDSWIGroup</ItemSymbol>
@@ -4632,7 +4788,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>2</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>CleanupResources</ItemSymbol>
@@ -4730,7 +4885,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template>FreeRTOS\TickLDD</Template>
-          <BeanVersion>01.158</BeanVersion>
+          <BeanVersion>01.164</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -4758,7 +4913,6 @@
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <Index>1</Index>
               <EnumSymbVal>1</EnumSymbVal>
-              <CustomValue />
             </ItemState>
             <ItemState>
               <ItemSymbol>CntWidth</ItemSymbol>
@@ -4771,7 +4925,6 @@
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <Index>0</Index>
               <EnumSymbVal>0</EnumSymbVal>
-              <CustomValue />
             </ItemState>
             <ItemState>
               <ItemSymbol>InputClock</ItemSymbol>
@@ -5256,6 +5409,11 @@
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <Index>0</Index>
               <Value>true</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ISRHandleFeatureGroup0</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
             </ItemState>
           </Properties>
           <Methods>
@@ -5743,7 +5901,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>1</Index>
         <EnumSymbVal>Scheme2</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>UserHeapSectionEnabled</ItemSymbol>
@@ -5932,10 +6089,9 @@
         <ItemSymbol>configCOMPILER</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>2</Index>
-        <EnumSymbVal>configCOMPILER_ARM_IAR</EnumSymbVal>
+        <Index>3</Index>
+        <EnumSymbVal>configCOMPILER_ARM_KEIL</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RTOSSrcFolderName</ItemSymbol>
@@ -5953,7 +6109,7 @@
         <ItemSymbol>RTOSPortFolderName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>FreeRTOS\port\iar</Value>
+        <Value>FreeRTOS\port\keil</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>CustomPortGroup</ItemSymbol>
@@ -5975,7 +6131,6 @@
         <UserReadOnly>false</UserReadOnly>
         <EnumSymbVal>int</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <CustomValue />
         <Index>2</Index>
       </ItemState>
       <ItemState>
@@ -7050,7 +7205,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.097</BeanVersion>
+    <BeanVersion>01.104</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -7611,6 +7766,17 @@
         <UsrMethodName>strFind</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanSeparatedNumbers</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ScanSeparatedNumbers</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -7868,7 +8034,6 @@
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                     <Index>0</Index>
                     <EnumSymbVal>0</EnumSymbVal>
-                    <CustomValue />
                   </ItemState>
                 </Properties>
                 <Methods>
