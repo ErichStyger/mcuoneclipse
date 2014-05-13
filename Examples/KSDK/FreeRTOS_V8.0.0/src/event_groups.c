@@ -84,36 +84,36 @@ privileged Vs unprivileged linkage and placement. */
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE /*lint !e961 !e750. */
 
 #if ( INCLUDE_xEventGroupSetBitFromISR == 1 ) && ( configUSE_TIMERS == 0 )
-        #error configUSE_TIMERS must be set to 1 to make the xEventGroupSetBitFromISR() function available.
+	#error configUSE_TIMERS must be set to 1 to make the xEventGroupSetBitFromISR() function available.
 #endif
 
 #if ( INCLUDE_xEventGroupSetBitFromISR == 1 ) && ( INCLUDE_xTimerPendFunctionCall == 0 )
-        #error INCLUDE_xTimerPendFunctionCall must also be set to one to make the xEventGroupSetBitFromISR() function available.
+	#error INCLUDE_xTimerPendFunctionCall must also be set to one to make the xEventGroupSetBitFromISR() function available.
 #endif
 
 /* The following bit fields convey control information in a task's event list
 item value.  It is important they don't clash with the
 taskEVENT_LIST_ITEM_VALUE_IN_USE definition. */
 #if configUSE_16_BIT_TICKS == 1
-        #define eventCLEAR_EVENTS_ON_EXIT_BIT   0x0100U
-        #define eventUNBLOCKED_DUE_TO_BIT_SET   0x0200U
-        #define eventWAIT_FOR_ALL_BITS                  0x0400U
-        #define eventEVENT_BITS_CONTROL_BYTES   0xff00U
+	#define eventCLEAR_EVENTS_ON_EXIT_BIT	0x0100U
+	#define eventUNBLOCKED_DUE_TO_BIT_SET	0x0200U
+	#define eventWAIT_FOR_ALL_BITS			0x0400U
+	#define eventEVENT_BITS_CONTROL_BYTES	0xff00U
 #else
-        #define eventCLEAR_EVENTS_ON_EXIT_BIT   0x01000000UL
-        #define eventUNBLOCKED_DUE_TO_BIT_SET   0x02000000UL
-        #define eventWAIT_FOR_ALL_BITS                  0x04000000UL
-        #define eventEVENT_BITS_CONTROL_BYTES   0xff000000UL
+	#define eventCLEAR_EVENTS_ON_EXIT_BIT	0x01000000UL
+	#define eventUNBLOCKED_DUE_TO_BIT_SET	0x02000000UL
+	#define eventWAIT_FOR_ALL_BITS			0x04000000UL
+	#define eventEVENT_BITS_CONTROL_BYTES	0xff000000UL
 #endif
 
 typedef struct xEventGroupDefinition
 {
-        EventBits_t uxEventBits;
-        List_t xTasksWaitingForBits;            /*< List of tasks waiting for a bit to be set. */
+	EventBits_t uxEventBits;
+	List_t xTasksWaitingForBits;		/*< List of tasks waiting for a bit to be set. */
 
-        #if( configUSE_TRACE_FACILITY == 1 )
-                UBaseType_t uxEventGroupNumber;
-        #endif
+	#if( configUSE_TRACE_FACILITY == 1 )
+		UBaseType_t uxEventGroupNumber;
+	#endif
 
 } EventGroup_t;
 
@@ -135,19 +135,19 @@ EventGroupHandle_t xEventGroupCreate( void )
 {
 EventGroup_t *pxEventBits;
 
-        pxEventBits = pvPortMalloc( sizeof( EventGroup_t ) );
-        if( pxEventBits != NULL )
-        {
-                pxEventBits->uxEventBits = 0;
-                vListInitialise( &( pxEventBits->xTasksWaitingForBits ) );
-                traceEVENT_GROUP_CREATE( pxEventBits );
-        }
-        else
-        {
-                traceEVENT_GROUP_CREATE_FAILED();
-        }
+	pxEventBits = pvPortMalloc( sizeof( EventGroup_t ) );
+	if( pxEventBits != NULL )
+	{
+		pxEventBits->uxEventBits = 0;
+		vListInitialise( &( pxEventBits->xTasksWaitingForBits ) );
+		traceEVENT_GROUP_CREATE( pxEventBits );
+	}
+	else
+	{
+		traceEVENT_GROUP_CREATE_FAILED();
+	}
 
-        return ( EventGroupHandle_t ) pxEventBits;
+	return ( EventGroupHandle_t ) pxEventBits;
 }
 /*-----------------------------------------------------------*/
 
@@ -158,109 +158,109 @@ EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup;
 BaseType_t xAlreadyYielded;
 BaseType_t xTimeoutOccurred = pdFALSE;
 
-        configASSERT( ( uxBitsToWaitFor & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
-        configASSERT( uxBitsToWaitFor != 0 );
-        #if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
-        {
-                configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
-        }
-        #endif
+	configASSERT( ( uxBitsToWaitFor & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
+	configASSERT( uxBitsToWaitFor != 0 );
+	#if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
+	{
+		configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
+	}
+	#endif
 
-        vTaskSuspendAll();
-        {
-                uxOriginalBitValue = pxEventBits->uxEventBits;
+	vTaskSuspendAll();
+	{
+		uxOriginalBitValue = pxEventBits->uxEventBits;
 
-                ( void ) xEventGroupSetBits( xEventGroup, uxBitsToSet );
+		( void ) xEventGroupSetBits( xEventGroup, uxBitsToSet );
 
-                if( ( ( uxOriginalBitValue | uxBitsToSet ) & uxBitsToWaitFor ) == uxBitsToWaitFor )
-                {
-                        /* All the rendezvous bits are now set - no need to block. */
-                        uxReturn = ( uxOriginalBitValue | uxBitsToSet );
+		if( ( ( uxOriginalBitValue | uxBitsToSet ) & uxBitsToWaitFor ) == uxBitsToWaitFor )
+		{
+			/* All the rendezvous bits are now set - no need to block. */
+			uxReturn = ( uxOriginalBitValue | uxBitsToSet );
 
-                        /* Rendezvous always clear the bits.  They will have been cleared
-                        already unless this is the only task in the rendezvous. */
-                        pxEventBits->uxEventBits &= uxBitsToWaitFor;
+			/* Rendezvous always clear the bits.  They will have been cleared
+			already unless this is the only task in the rendezvous. */
+			pxEventBits->uxEventBits &= uxBitsToWaitFor;
 
-                        xTicksToWait = 0;
-                }
-                else
-                {
-                        if( xTicksToWait != ( TickType_t ) 0 )
-                        {
-                                traceEVENT_GROUP_SYNC_BLOCK( xEventGroup, uxBitsToSet, uxBitsToWaitFor );
+			xTicksToWait = 0;
+		}
+		else
+		{
+			if( xTicksToWait != ( TickType_t ) 0 )
+			{
+				traceEVENT_GROUP_SYNC_BLOCK( xEventGroup, uxBitsToSet, uxBitsToWaitFor );
 
-                                /* Store the bits that the calling task is waiting for in the
-                                task's event list item so the kernel knows when a match is
-                                found.  Then enter the blocked state. */
-                                vTaskPlaceOnUnorderedEventList( &( pxEventBits->xTasksWaitingForBits ), ( uxBitsToWaitFor | eventCLEAR_EVENTS_ON_EXIT_BIT | eventWAIT_FOR_ALL_BITS ), xTicksToWait );
+				/* Store the bits that the calling task is waiting for in the
+				task's event list item so the kernel knows when a match is
+				found.  Then enter the blocked state. */
+				vTaskPlaceOnUnorderedEventList( &( pxEventBits->xTasksWaitingForBits ), ( uxBitsToWaitFor | eventCLEAR_EVENTS_ON_EXIT_BIT | eventWAIT_FOR_ALL_BITS ), xTicksToWait );
 
-                                /* This assignment is obsolete as uxReturn will get set after
-                                the task unblocks, but some compilers mistakenly generate a
-                                warning about uxReturn being returned without being set if the
-                                assignment is omitted. */
-                                uxReturn = 0;
-                        }
-                        else
-                        {
-                                /* The rendezvous bits were not set, but no block time was
-                                specified - just return the current event bit value. */
-                                uxReturn = pxEventBits->uxEventBits;
-                        }
-                }
-        }
-        xAlreadyYielded = xTaskResumeAll();
+				/* This assignment is obsolete as uxReturn will get set after
+				the task unblocks, but some compilers mistakenly generate a
+				warning about uxReturn being returned without being set if the
+				assignment is omitted. */
+				uxReturn = 0;
+			}
+			else
+			{
+				/* The rendezvous bits were not set, but no block time was
+				specified - just return the current event bit value. */
+				uxReturn = pxEventBits->uxEventBits;
+			}
+		}
+	}
+	xAlreadyYielded = xTaskResumeAll();
 
-        if( xTicksToWait != ( TickType_t ) 0 )
-        {
-                if( xAlreadyYielded == pdFALSE )
-                {
-                        portYIELD_WITHIN_API();
-                }
-                else
-                {
-                        mtCOVERAGE_TEST_MARKER();
-                }
+	if( xTicksToWait != ( TickType_t ) 0 )
+	{
+		if( xAlreadyYielded == pdFALSE )
+		{
+			portYIELD_WITHIN_API();
+		}
+		else
+		{
+			mtCOVERAGE_TEST_MARKER();
+		}
 
-                /* The task blocked to wait for its required bits to be set - at this
-                point either the required bits were set or the block time expired.  If
-                the required bits were set they will have been stored in the task's
-                event list item, and they should now be retrieved then cleared. */
-                uxReturn = uxTaskResetEventItemValue();
+		/* The task blocked to wait for its required bits to be set - at this
+		point either the required bits were set or the block time expired.  If
+		the required bits were set they will have been stored in the task's
+		event list item, and they should now be retrieved then cleared. */
+		uxReturn = uxTaskResetEventItemValue();
 
-                if( ( uxReturn & eventUNBLOCKED_DUE_TO_BIT_SET ) == ( EventBits_t ) 0 )
-                {
-                        /* The task timed out, just return the current event bit value. */
-                        taskENTER_CRITICAL();
-                        {
-                                uxReturn = pxEventBits->uxEventBits;
+		if( ( uxReturn & eventUNBLOCKED_DUE_TO_BIT_SET ) == ( EventBits_t ) 0 )
+		{
+			/* The task timed out, just return the current event bit value. */
+			taskENTER_CRITICAL();
+			{
+				uxReturn = pxEventBits->uxEventBits;
 
-                                /* Although the task got here because it timed out before the
-                                bits it was waiting for were set, it is possible that since it
-                                unblocked another task has set the bits.  If this is the case
-                                then it may be required to clear the bits before exiting. */
-                                if( ( uxReturn & uxBitsToWaitFor ) == uxBitsToWaitFor )
-                                {
-                                        pxEventBits->uxEventBits &= ~uxBitsToWaitFor;
-                                }
-                                else
-                                {
-                                        mtCOVERAGE_TEST_MARKER();
-                                }
-                        }
-                        taskEXIT_CRITICAL();
+				/* Although the task got here because it timed out before the
+				bits it was waiting for were set, it is possible that since it
+				unblocked another task has set the bits.  If this is the case
+				then it may be required to clear the bits before exiting. */
+				if( ( uxReturn & uxBitsToWaitFor ) == uxBitsToWaitFor )
+				{
+					pxEventBits->uxEventBits &= ~uxBitsToWaitFor;
+				}
+				else
+				{
+					mtCOVERAGE_TEST_MARKER();
+				}
+			}
+			taskEXIT_CRITICAL();
 
-                        xTimeoutOccurred = pdTRUE;
-                }
-                else
-                {
-                        /* The task unblocked because the bits were set.  Clear the control
-                        bits before returning the value. */
-                        uxReturn &= ~eventEVENT_BITS_CONTROL_BYTES;
-                }
-        }
+			xTimeoutOccurred = pdTRUE;
+		}
+		else
+		{
+			/* The task unblocked because the bits were set.  Clear the control
+			bits before returning the value. */
+			uxReturn &= ~eventEVENT_BITS_CONTROL_BYTES;
+		}
+	}
 
-        traceEVENT_GROUP_SYNC_END( xEventGroup, uxBitsToSet, uxBitsToWaitFor, xTimeoutOccurred );
-        return uxReturn;
+	traceEVENT_GROUP_SYNC_END( xEventGroup, uxBitsToSet, uxBitsToWaitFor, xTimeoutOccurred );
+	return uxReturn;
 }
 /*-----------------------------------------------------------*/
 
@@ -271,140 +271,140 @@ EventBits_t uxReturn, uxControlBits = 0;
 BaseType_t xWaitConditionMet, xAlreadyYielded;
 BaseType_t xTimeoutOccurred = pdFALSE;
 
-        /* Check the user is not attempting to wait on the bits used by the kernel
-        itself, and that at least one bit is being requested. */
-        configASSERT( ( uxBitsToWaitFor & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
-        configASSERT( uxBitsToWaitFor != 0 );
-        #if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
-        {
-                configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
-        }
-        #endif
+	/* Check the user is not attempting to wait on the bits used by the kernel
+	itself, and that at least one bit is being requested. */
+	configASSERT( ( uxBitsToWaitFor & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
+	configASSERT( uxBitsToWaitFor != 0 );
+	#if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
+	{
+		configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
+	}
+	#endif
 
-        vTaskSuspendAll();
-        {
-                const EventBits_t uxCurrentEventBits = pxEventBits->uxEventBits;
+	vTaskSuspendAll();
+	{
+		const EventBits_t uxCurrentEventBits = pxEventBits->uxEventBits;
 
-                /* Check to see if the wait condition is already met or not. */
-                xWaitConditionMet = prvTestWaitCondition( uxCurrentEventBits, uxBitsToWaitFor, xWaitForAllBits );
+		/* Check to see if the wait condition is already met or not. */
+		xWaitConditionMet = prvTestWaitCondition( uxCurrentEventBits, uxBitsToWaitFor, xWaitForAllBits );
 
-                if( xWaitConditionMet != pdFALSE )
-                {
-                        /* The wait condition has already been met so there is no need to
-                        block. */
-                        uxReturn = uxCurrentEventBits;
-                        xTicksToWait = ( TickType_t ) 0;
+		if( xWaitConditionMet != pdFALSE )
+		{
+			/* The wait condition has already been met so there is no need to
+			block. */
+			uxReturn = uxCurrentEventBits;
+			xTicksToWait = ( TickType_t ) 0;
 
-                        /* Clear the wait bits if requested to do so. */
-                        if( xClearOnExit != pdFALSE )
-                        {
-                                pxEventBits->uxEventBits &= ~uxBitsToWaitFor;
-                        }
-                        else
-                        {
-                                mtCOVERAGE_TEST_MARKER();
-                        }
-                }
-                else if( xTicksToWait == ( TickType_t ) 0 )
-                {
-                        /* The wait condition has not been met, but no block time was
-                        specified, so just return the current value. */
-                        uxReturn = uxCurrentEventBits;
-                }
-                else
-                {
-                        /* The task is going to block to wait for its required bits to be
-                        set.  uxControlBits are used to remember the specified behaviour of
-                        this call to xEventGroupWaitBits() - for use when the event bits
-                        unblock the task. */
-                        if( xClearOnExit != pdFALSE )
-                        {
-                                uxControlBits |= eventCLEAR_EVENTS_ON_EXIT_BIT;
-                        }
-                        else
-                        {
-                                mtCOVERAGE_TEST_MARKER();
-                        }
+			/* Clear the wait bits if requested to do so. */
+			if( xClearOnExit != pdFALSE )
+			{
+				pxEventBits->uxEventBits &= ~uxBitsToWaitFor;
+			}
+			else
+			{
+				mtCOVERAGE_TEST_MARKER();
+			}
+		}
+		else if( xTicksToWait == ( TickType_t ) 0 )
+		{
+			/* The wait condition has not been met, but no block time was
+			specified, so just return the current value. */
+			uxReturn = uxCurrentEventBits;
+		}
+		else
+		{
+			/* The task is going to block to wait for its required bits to be
+			set.  uxControlBits are used to remember the specified behaviour of
+			this call to xEventGroupWaitBits() - for use when the event bits
+			unblock the task. */
+			if( xClearOnExit != pdFALSE )
+			{
+				uxControlBits |= eventCLEAR_EVENTS_ON_EXIT_BIT;
+			}
+			else
+			{
+				mtCOVERAGE_TEST_MARKER();
+			}
 
-                        if( xWaitForAllBits != pdFALSE )
-                        {
-                                uxControlBits |= eventWAIT_FOR_ALL_BITS;
-                        }
-                        else
-                        {
-                                mtCOVERAGE_TEST_MARKER();
-                        }
+			if( xWaitForAllBits != pdFALSE )
+			{
+				uxControlBits |= eventWAIT_FOR_ALL_BITS;
+			}
+			else
+			{
+				mtCOVERAGE_TEST_MARKER();
+			}
 
-                        /* Store the bits that the calling task is waiting for in the
-                        task's event list item so the kernel knows when a match is
-                        found.  Then enter the blocked state. */
-                        vTaskPlaceOnUnorderedEventList( &( pxEventBits->xTasksWaitingForBits ), ( uxBitsToWaitFor | uxControlBits ), xTicksToWait );
+			/* Store the bits that the calling task is waiting for in the
+			task's event list item so the kernel knows when a match is
+			found.  Then enter the blocked state. */
+			vTaskPlaceOnUnorderedEventList( &( pxEventBits->xTasksWaitingForBits ), ( uxBitsToWaitFor | uxControlBits ), xTicksToWait );
 
-                        /* This is obsolete as it will get set after the task unblocks, but
-                        some compilers mistakenly generate a warning about the variable
-                        being returned without being set if it is not done. */
-                        uxReturn = 0;
+			/* This is obsolete as it will get set after the task unblocks, but
+			some compilers mistakenly generate a warning about the variable
+			being returned without being set if it is not done. */
+			uxReturn = 0;
 
-                        traceEVENT_GROUP_WAIT_BITS_BLOCK( xEventGroup, uxBitsToWaitFor );
-                }
-        }
-        xAlreadyYielded = xTaskResumeAll();
+			traceEVENT_GROUP_WAIT_BITS_BLOCK( xEventGroup, uxBitsToWaitFor );
+		}
+	}
+	xAlreadyYielded = xTaskResumeAll();
 
-        if( xTicksToWait != ( TickType_t ) 0 )
-        {
-                if( xAlreadyYielded == pdFALSE )
-                {
-                        portYIELD_WITHIN_API();
-                }
-                else
-                {
-                        mtCOVERAGE_TEST_MARKER();
-                }
+	if( xTicksToWait != ( TickType_t ) 0 )
+	{
+		if( xAlreadyYielded == pdFALSE )
+		{
+			portYIELD_WITHIN_API();
+		}
+		else
+		{
+			mtCOVERAGE_TEST_MARKER();
+		}
 
-                /* The task blocked to wait for its required bits to be set - at this
-                point either the required bits were set or the block time expired.  If
-                the required bits were set they will have been stored in the task's
-                event list item, and they should now be retrieved then cleared. */
-                uxReturn = uxTaskResetEventItemValue();
+		/* The task blocked to wait for its required bits to be set - at this
+		point either the required bits were set or the block time expired.  If
+		the required bits were set they will have been stored in the task's
+		event list item, and they should now be retrieved then cleared. */
+		uxReturn = uxTaskResetEventItemValue();
 
-                if( ( uxReturn & eventUNBLOCKED_DUE_TO_BIT_SET ) == ( EventBits_t ) 0 )
-                {
-                        taskENTER_CRITICAL();
-                        {
-                                /* The task timed out, just return the current event bit value. */
-                                uxReturn = pxEventBits->uxEventBits;
+		if( ( uxReturn & eventUNBLOCKED_DUE_TO_BIT_SET ) == ( EventBits_t ) 0 )
+		{
+			taskENTER_CRITICAL();
+			{
+				/* The task timed out, just return the current event bit value. */
+				uxReturn = pxEventBits->uxEventBits;
 
-                                /* It is possible that the event bits were updated between this
-                                task leaving the Blocked state and running again. */
-                                if( prvTestWaitCondition( uxReturn, uxBitsToWaitFor, xWaitForAllBits ) != pdFALSE )
-                                {
-                                        if( xClearOnExit != pdFALSE )
-                                        {
-                                                pxEventBits->uxEventBits &= ~uxBitsToWaitFor;
-                                        }
-                                        else
-                                        {
-                                                mtCOVERAGE_TEST_MARKER();
-                                        }
-                                }
-                                else
-                                {
-                                        mtCOVERAGE_TEST_MARKER();
-                                }
-                        }
-                        taskEXIT_CRITICAL();
+				/* It is possible that the event bits were updated between this
+				task leaving the Blocked state and running again. */
+				if( prvTestWaitCondition( uxReturn, uxBitsToWaitFor, xWaitForAllBits ) != pdFALSE )
+				{
+					if( xClearOnExit != pdFALSE )
+					{
+						pxEventBits->uxEventBits &= ~uxBitsToWaitFor;
+					}
+					else
+					{
+						mtCOVERAGE_TEST_MARKER();
+					}
+				}
+				else
+				{
+					mtCOVERAGE_TEST_MARKER();
+				}
+			}
+			taskEXIT_CRITICAL();
 
-                        xTimeoutOccurred = pdFALSE;
-                }
-                else
-                {
-                        /* The task unblocked because the bits were set.  Clear the control
-                        bits before returning the value. */
-                        uxReturn &= ~eventEVENT_BITS_CONTROL_BYTES;
-                }
-        }
-        traceEVENT_GROUP_WAIT_BITS_END( xEventGroup, uxBitsToWaitFor, xTimeoutOccurred );
-        return uxReturn;
+			xTimeoutOccurred = pdFALSE;
+		}
+		else
+		{
+			/* The task unblocked because the bits were set.  Clear the control
+			bits before returning the value. */
+			uxReturn &= ~eventEVENT_BITS_CONTROL_BYTES;
+		}
+	}
+	traceEVENT_GROUP_WAIT_BITS_END( xEventGroup, uxBitsToWaitFor, xTimeoutOccurred );
+	return uxReturn;
 }
 /*-----------------------------------------------------------*/
 
@@ -413,24 +413,24 @@ EventBits_t xEventGroupClearBits( EventGroupHandle_t xEventGroup, const EventBit
 EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup;
 EventBits_t uxReturn;
 
-        /* Check the user is not attempting to clear the bits used by the kernel
-        itself. */
-        configASSERT( ( uxBitsToClear & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
+	/* Check the user is not attempting to clear the bits used by the kernel
+	itself. */
+	configASSERT( ( uxBitsToClear & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
 
-        taskENTER_CRITICAL();
-        {
-                traceEVENT_GROUP_CLEAR_BITS( xEventGroup, uxBitsToClear );
+	taskENTER_CRITICAL();
+	{
+		traceEVENT_GROUP_CLEAR_BITS( xEventGroup, uxBitsToClear );
 
-                /* The value returned is the event group value prior to the bits being
-                cleared. */
-                uxReturn = pxEventBits->uxEventBits;
+		/* The value returned is the event group value prior to the bits being
+		cleared. */
+		uxReturn = pxEventBits->uxEventBits;
 
-                /* Clear the bits. */
-                pxEventBits->uxEventBits &= ~uxBitsToClear;
-        }
-        taskEXIT_CRITICAL();
+		/* Clear the bits. */
+		pxEventBits->uxEventBits &= ~uxBitsToClear;
+	}
+	taskEXIT_CRITICAL();
 
-        return uxReturn;
+	return uxReturn;
 }
 /*-----------------------------------------------------------*/
 
@@ -440,24 +440,24 @@ UBaseType_t uxSavedInterruptStatus;
 EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup;
 EventBits_t uxReturn;
 
-        /* Check the user is not attempting to clear the bits used by the kernel
-        itself. */
-        configASSERT( ( uxBitsToClear & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
+	/* Check the user is not attempting to clear the bits used by the kernel
+	itself. */
+	configASSERT( ( uxBitsToClear & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
 
-        uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
-        {
-                traceEVENT_GROUP_CLEAR_BITS_FROM_ISR( xEventGroup, uxBitsToClear );
+	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
+	{
+		traceEVENT_GROUP_CLEAR_BITS_FROM_ISR( xEventGroup, uxBitsToClear );
 
-                /* The value returned is the event group value prior to the bits being
-                cleared. */
-                uxReturn = pxEventBits->uxEventBits;
+		/* The value returned is the event group value prior to the bits being
+		cleared. */
+		uxReturn = pxEventBits->uxEventBits;
 
-                /* Clear the bits. */
-                pxEventBits->uxEventBits &= ~uxBitsToClear;
-        }
-        portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );
+		/* Clear the bits. */
+		pxEventBits->uxEventBits &= ~uxBitsToClear;
+	}
+	portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );
 
-        return uxReturn;
+	return uxReturn;
 }
 /*-----------------------------------------------------------*/
 
@@ -470,87 +470,87 @@ EventBits_t uxBitsToClear = 0, uxBitsWaitedFor, uxControlBits;
 EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup;
 BaseType_t xMatchFound = pdFALSE;
 
-        /* Check the user is not attempting to set the bits used by the kernel
-        itself. */
-        configASSERT( ( uxBitsToSet & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
+	/* Check the user is not attempting to set the bits used by the kernel
+	itself. */
+	configASSERT( ( uxBitsToSet & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
 
-        pxList = &( pxEventBits->xTasksWaitingForBits );
-        pxListEnd = listGET_END_MARKER( pxList ); /*lint !e826 !e740 The mini list structure is used as the list end to save RAM.  This is checked and valid. */
-        vTaskSuspendAll();
-        {
-                traceEVENT_GROUP_SET_BITS( xEventGroup, uxBitsToSet );
+	pxList = &( pxEventBits->xTasksWaitingForBits );
+	pxListEnd = listGET_END_MARKER( pxList ); /*lint !e826 !e740 The mini list structure is used as the list end to save RAM.  This is checked and valid. */
+	vTaskSuspendAll();
+	{
+		traceEVENT_GROUP_SET_BITS( xEventGroup, uxBitsToSet );
 
-                pxListItem = listGET_HEAD_ENTRY( pxList );
+		pxListItem = listGET_HEAD_ENTRY( pxList );
 
-                /* Set the bits. */
-                pxEventBits->uxEventBits |= uxBitsToSet;
+		/* Set the bits. */
+		pxEventBits->uxEventBits |= uxBitsToSet;
 
-                /* See if the new bit value should unblock any tasks. */
-                while( pxListItem != pxListEnd )
-                {
-                        pxNext = listGET_NEXT( pxListItem );
-                        uxBitsWaitedFor = listGET_LIST_ITEM_VALUE( pxListItem );
-                        xMatchFound = pdFALSE;
+		/* See if the new bit value should unblock any tasks. */
+		while( pxListItem != pxListEnd )
+		{
+			pxNext = listGET_NEXT( pxListItem );
+			uxBitsWaitedFor = listGET_LIST_ITEM_VALUE( pxListItem );
+			xMatchFound = pdFALSE;
 
-                        /* Split the bits waited for from the control bits. */
-                        uxControlBits = uxBitsWaitedFor & eventEVENT_BITS_CONTROL_BYTES;
-                        uxBitsWaitedFor &= ~eventEVENT_BITS_CONTROL_BYTES;
+			/* Split the bits waited for from the control bits. */
+			uxControlBits = uxBitsWaitedFor & eventEVENT_BITS_CONTROL_BYTES;
+			uxBitsWaitedFor &= ~eventEVENT_BITS_CONTROL_BYTES;
 
-                        if( ( uxControlBits & eventWAIT_FOR_ALL_BITS ) == ( EventBits_t ) 0 )
-                        {
-                                /* Just looking for single bit being set. */
-                                if( ( uxBitsWaitedFor & pxEventBits->uxEventBits ) != ( EventBits_t ) 0 )
-                                {
-                                        xMatchFound = pdTRUE;
-                                }
-                                else
-                                {
-                                        mtCOVERAGE_TEST_MARKER();
-                                }
-                        }
-                        else if( ( uxBitsWaitedFor & pxEventBits->uxEventBits ) == uxBitsWaitedFor )
-                        {
-                                /* All bits are set. */
-                                xMatchFound = pdTRUE;
-                        }
-                        else
-                        {
-                                /* Need all bits to be set, but not all the bits were set. */
-                        }
+			if( ( uxControlBits & eventWAIT_FOR_ALL_BITS ) == ( EventBits_t ) 0 )
+			{
+				/* Just looking for single bit being set. */
+				if( ( uxBitsWaitedFor & pxEventBits->uxEventBits ) != ( EventBits_t ) 0 )
+				{
+					xMatchFound = pdTRUE;
+				}
+				else
+				{
+					mtCOVERAGE_TEST_MARKER();
+				}
+			}
+			else if( ( uxBitsWaitedFor & pxEventBits->uxEventBits ) == uxBitsWaitedFor )
+			{
+				/* All bits are set. */
+				xMatchFound = pdTRUE;
+			}
+			else
+			{
+				/* Need all bits to be set, but not all the bits were set. */
+			}
 
-                        if( xMatchFound != pdFALSE )
-                        {
-                                /* The bits match.  Should the bits be cleared on exit? */
-                                if( ( uxControlBits & eventCLEAR_EVENTS_ON_EXIT_BIT ) != ( EventBits_t ) 0 )
-                                {
-                                        uxBitsToClear |= uxBitsWaitedFor;
-                                }
-                                else
-                                {
-                                        mtCOVERAGE_TEST_MARKER();
-                                }
+			if( xMatchFound != pdFALSE )
+			{
+				/* The bits match.  Should the bits be cleared on exit? */
+				if( ( uxControlBits & eventCLEAR_EVENTS_ON_EXIT_BIT ) != ( EventBits_t ) 0 )
+				{
+					uxBitsToClear |= uxBitsWaitedFor;
+				}
+				else
+				{
+					mtCOVERAGE_TEST_MARKER();
+				}
 
-                                /* Store the actual event flag value in the task's event list
-                                item before removing the task from the event list.  The
-                                eventUNBLOCKED_DUE_TO_BIT_SET bit is set so the task knows
-                                that is was unblocked due to its required bits matching, rather
-                                than because it timed out. */
-                                ( void ) xTaskRemoveFromUnorderedEventList( pxListItem, pxEventBits->uxEventBits | eventUNBLOCKED_DUE_TO_BIT_SET );
-                        }
+				/* Store the actual event flag value in the task's event list
+				item before removing the task from the event list.  The
+				eventUNBLOCKED_DUE_TO_BIT_SET bit is set so the task knows
+				that is was unblocked due to its required bits matching, rather
+				than because it timed out. */
+				( void ) xTaskRemoveFromUnorderedEventList( pxListItem, pxEventBits->uxEventBits | eventUNBLOCKED_DUE_TO_BIT_SET );
+			}
 
-                        /* Move onto the next list item.  Note pxListItem->pxNext is not
-                        used here as the list item may have been removed from the event list
-                        and inserted into the ready/pending reading list. */
-                        pxListItem = pxNext;
-                }
+			/* Move onto the next list item.  Note pxListItem->pxNext is not
+			used here as the list item may have been removed from the event list
+			and inserted into the ready/pending reading list. */
+			pxListItem = pxNext;
+		}
 
-                /* Clear any bits that matched when the eventCLEAR_EVENTS_ON_EXIT_BIT
-                bit was set in the control word. */
-                pxEventBits->uxEventBits &= ~uxBitsToClear;
-        }
-        ( void ) xTaskResumeAll();
+		/* Clear any bits that matched when the eventCLEAR_EVENTS_ON_EXIT_BIT
+		bit was set in the control word. */
+		pxEventBits->uxEventBits &= ~uxBitsToClear;
+	}
+	( void ) xTaskResumeAll();
 
-        return pxEventBits->uxEventBits;
+	return pxEventBits->uxEventBits;
 }
 /*-----------------------------------------------------------*/
 
@@ -559,21 +559,21 @@ void vEventGroupDelete( EventGroupHandle_t xEventGroup )
 EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup;
 const List_t *pxTasksWaitingForBits = &( pxEventBits->xTasksWaitingForBits );
 
-        vTaskSuspendAll();
-        {
-                traceEVENT_GROUP_DELETE( xEventGroup );
+	vTaskSuspendAll();
+	{
+		traceEVENT_GROUP_DELETE( xEventGroup );
 
-                while( listCURRENT_LIST_LENGTH( pxTasksWaitingForBits ) > ( UBaseType_t ) 0 )
-                {
-                        /* Unblock the task, returning 0 as the event list is being deleted
-                        and     cannot therefore have any bits set. */
-                        configASSERT( pxTasksWaitingForBits->xListEnd.pxNext != ( ListItem_t * ) &( pxTasksWaitingForBits->xListEnd ) );
-                        ( void ) xTaskRemoveFromUnorderedEventList( pxTasksWaitingForBits->xListEnd.pxNext, eventUNBLOCKED_DUE_TO_BIT_SET );
-                }
+		while( listCURRENT_LIST_LENGTH( pxTasksWaitingForBits ) > ( UBaseType_t ) 0 )
+		{
+			/* Unblock the task, returning 0 as the event list is being deleted
+			and	cannot therefore have any bits set. */
+			configASSERT( pxTasksWaitingForBits->xListEnd.pxNext != ( ListItem_t * ) &( pxTasksWaitingForBits->xListEnd ) );
+			( void ) xTaskRemoveFromUnorderedEventList( pxTasksWaitingForBits->xListEnd.pxNext, eventUNBLOCKED_DUE_TO_BIT_SET );
+		}
 
-                vPortFree( pxEventBits );
-        }
-        ( void ) xTaskResumeAll();
+		vPortFree( pxEventBits );
+	}
+	( void ) xTaskResumeAll();
 }
 /*-----------------------------------------------------------*/
 
@@ -581,7 +581,7 @@ const List_t *pxTasksWaitingForBits = &( pxEventBits->xTasksWaitingForBits );
 an interrupt. */
 void vEventGroupSetBitsCallback( void *pvEventGroup, const uint32_t ulBitsToSet )
 {
-        ( void ) xEventGroupSetBits( pvEventGroup, ( EventBits_t ) ulBitsToSet );
+	( void ) xEventGroupSetBits( pvEventGroup, ( EventBits_t ) ulBitsToSet );
 }
 /*-----------------------------------------------------------*/
 
@@ -589,67 +589,67 @@ static BaseType_t prvTestWaitCondition( const EventBits_t uxCurrentEventBits, co
 {
 BaseType_t xWaitConditionMet = pdFALSE;
 
-        if( xWaitForAllBits == pdFALSE )
-        {
-                /* Task only has to wait for one bit within uxBitsToWaitFor to be
-                set.  Is one already set? */
-                if( ( uxCurrentEventBits & uxBitsToWaitFor ) != ( EventBits_t ) 0 )
-                {
-                        xWaitConditionMet = pdTRUE;
-                }
-                else
-                {
-                        mtCOVERAGE_TEST_MARKER();
-                }
-        }
-        else
-        {
-                /* Task has to wait for all the bits in uxBitsToWaitFor to be set.
-                Are they set already? */
-                if( ( uxCurrentEventBits & uxBitsToWaitFor ) == uxBitsToWaitFor )
-                {
-                        xWaitConditionMet = pdTRUE;
-                }
-                else
-                {
-                        mtCOVERAGE_TEST_MARKER();
-                }
-        }
+	if( xWaitForAllBits == pdFALSE )
+	{
+		/* Task only has to wait for one bit within uxBitsToWaitFor to be
+		set.  Is one already set? */
+		if( ( uxCurrentEventBits & uxBitsToWaitFor ) != ( EventBits_t ) 0 )
+		{
+			xWaitConditionMet = pdTRUE;
+		}
+		else
+		{
+			mtCOVERAGE_TEST_MARKER();
+		}
+	}
+	else
+	{
+		/* Task has to wait for all the bits in uxBitsToWaitFor to be set.
+		Are they set already? */
+		if( ( uxCurrentEventBits & uxBitsToWaitFor ) == uxBitsToWaitFor )
+		{
+			xWaitConditionMet = pdTRUE;
+		}
+		else
+		{
+			mtCOVERAGE_TEST_MARKER();
+		}
+	}
 
-        return xWaitConditionMet;
+	return xWaitConditionMet;
 }
 /*-----------------------------------------------------------*/
 
 #if ( ( configUSE_TRACE_FACILITY == 1 ) && ( INCLUDE_xTimerPendFunctionCall == 1 ) && ( configUSE_TIMERS == 1 ) )
-        BaseType_t xEventGroupSetBitsFromISR( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, BaseType_t *pxHigherPriorityTaskWoken )
-        {
-        BaseType_t xReturn;
+	BaseType_t xEventGroupSetBitsFromISR( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, BaseType_t *pxHigherPriorityTaskWoken )
+	{
+	BaseType_t xReturn;
 
-                traceEVENT_GROUP_SET_BITS_FROM_ISR( xEventGroup, uxBitsToSet );
-                xReturn = xTimerPendFunctionCallFromISR( vEventGroupSetBitsCallback, ( void * ) xEventGroup, ( uint32_t ) uxBitsToSet, pxHigherPriorityTaskWoken );
+		traceEVENT_GROUP_SET_BITS_FROM_ISR( xEventGroup, uxBitsToSet );
+		xReturn = xTimerPendFunctionCallFromISR( vEventGroupSetBitsCallback, ( void * ) xEventGroup, ( uint32_t ) uxBitsToSet, pxHigherPriorityTaskWoken );
 
-                return xReturn;
-        }
+		return xReturn;
+	}
 #endif
 /*-----------------------------------------------------------*/
 
 #if (configUSE_TRACE_FACILITY == 1)
-        UBaseType_t uxEventGroupGetNumber( void* xEventGroup )
-        {
-        UBaseType_t xReturn;
-        EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup;
+	UBaseType_t uxEventGroupGetNumber( void* xEventGroup )
+	{
+	UBaseType_t xReturn;
+	EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup;
 
-                if( xEventGroup == NULL )
-                {
-                        xReturn = 0;
-                }
-                else
-                {
-                        xReturn = pxEventBits->uxEventGroupNumber;
-                }
+		if( xEventGroup == NULL )
+		{
+			xReturn = 0;
+		}
+		else
+		{
+			xReturn = pxEventBits->uxEventGroupNumber;
+		}
 
-                return xReturn;
-        }
+		return xReturn;
+	}
 #endif
 
 

@@ -124,7 +124,7 @@
  * "#define configLIST_VOLATILE volatile"
  */
 #ifndef configLIST_VOLATILE
-        #define configLIST_VOLATILE
+	#define configLIST_VOLATILE
 #endif /* configSUPPORT_CROSS_MODULE_OPTIMISATION */
 
 #ifdef __cplusplus
@@ -135,19 +135,19 @@ extern "C" {
  */
 struct xLIST_ITEM
 {
-        configLIST_VOLATILE TickType_t xItemValue;                      /*< The value being listed.  In most cases this is used to sort the list in descending order. */
-        struct xLIST_ITEM * configLIST_VOLATILE pxNext;         /*< Pointer to the next ListItem_t in the list. */
-        struct xLIST_ITEM * configLIST_VOLATILE pxPrevious;     /*< Pointer to the previous ListItem_t in the list. */
-        void * pvOwner;                                                                         /*< Pointer to the object (normally a TCB) that contains the list item.  There is therefore a two way link between the object containing the list item and the list item itself. */
-        void * configLIST_VOLATILE pvContainer;                         /*< Pointer to the list in which this list item is placed (if any). */
+	configLIST_VOLATILE TickType_t xItemValue;			/*< The value being listed.  In most cases this is used to sort the list in descending order. */
+	struct xLIST_ITEM * configLIST_VOLATILE pxNext;		/*< Pointer to the next ListItem_t in the list. */
+	struct xLIST_ITEM * configLIST_VOLATILE pxPrevious;	/*< Pointer to the previous ListItem_t in the list. */
+	void * pvOwner;										/*< Pointer to the object (normally a TCB) that contains the list item.  There is therefore a two way link between the object containing the list item and the list item itself. */
+	void * configLIST_VOLATILE pvContainer;				/*< Pointer to the list in which this list item is placed (if any). */
 };
-typedef struct xLIST_ITEM ListItem_t;                                   /* For some reason lint wants this as two separate definitions. */
+typedef struct xLIST_ITEM ListItem_t;					/* For some reason lint wants this as two separate definitions. */
 
 struct xMINI_LIST_ITEM
 {
-        configLIST_VOLATILE TickType_t xItemValue;
-        struct xLIST_ITEM * configLIST_VOLATILE pxNext;
-        struct xLIST_ITEM * configLIST_VOLATILE pxPrevious;
+	configLIST_VOLATILE TickType_t xItemValue;
+	struct xLIST_ITEM * configLIST_VOLATILE pxNext;
+	struct xLIST_ITEM * configLIST_VOLATILE pxPrevious;
 };
 typedef struct xMINI_LIST_ITEM MiniListItem_t;
 
@@ -156,9 +156,9 @@ typedef struct xMINI_LIST_ITEM MiniListItem_t;
  */
 typedef struct xLIST
 {
-        configLIST_VOLATILE UBaseType_t uxNumberOfItems;
-        ListItem_t * configLIST_VOLATILE pxIndex;               /*< Used to walk through the list.  Points to the last item returned by a call to listGET_OWNER_OF_NEXT_ENTRY (). */
-        MiniListItem_t xListEnd;                                                /*< List item that contains the maximum possible item value meaning it is always at the end of the list and is therefore used as a marker. */
+	configLIST_VOLATILE UBaseType_t uxNumberOfItems;
+	ListItem_t * configLIST_VOLATILE pxIndex;		/*< Used to walk through the list.  Points to the last item returned by a call to listGET_OWNER_OF_NEXT_ENTRY (). */
+	MiniListItem_t xListEnd;						/*< List item that contains the maximum possible item value meaning it is always at the end of the list and is therefore used as a marker. */
 } List_t;
 
 /*
@@ -168,7 +168,7 @@ typedef struct xLIST
  * \page listSET_LIST_ITEM_OWNER listSET_LIST_ITEM_OWNER
  * \ingroup LinkedList
  */
-#define listSET_LIST_ITEM_OWNER( pxListItem, pxOwner )          ( ( pxListItem )->pvOwner = ( void * ) ( pxOwner ) )
+#define listSET_LIST_ITEM_OWNER( pxListItem, pxOwner )		( ( pxListItem )->pvOwner = ( void * ) ( pxOwner ) )
 
 /*
  * Access macro to get the owner of a list item.  The owner of a list item
@@ -177,7 +177,7 @@ typedef struct xLIST
  * \page listSET_LIST_ITEM_OWNER listSET_LIST_ITEM_OWNER
  * \ingroup LinkedList
  */
-#define listGET_LIST_ITEM_OWNER( pxListItem )   ( ( pxListItem )->pvOwner )
+#define listGET_LIST_ITEM_OWNER( pxListItem )	( ( pxListItem )->pvOwner )
 
 /*
  * Access macro to set the value of the list item.  In most cases the value is
@@ -186,7 +186,7 @@ typedef struct xLIST
  * \page listSET_LIST_ITEM_VALUE listSET_LIST_ITEM_VALUE
  * \ingroup LinkedList
  */
-#define listSET_LIST_ITEM_VALUE( pxListItem, xValue )   ( ( pxListItem )->xItemValue = ( xValue ) )
+#define listSET_LIST_ITEM_VALUE( pxListItem, xValue )	( ( pxListItem )->xItemValue = ( xValue ) )
 
 /*
  * Access macro to retrieve the value of the list item.  The value can
@@ -196,7 +196,7 @@ typedef struct xLIST
  * \page listGET_LIST_ITEM_VALUE listGET_LIST_ITEM_VALUE
  * \ingroup LinkedList
  */
-#define listGET_LIST_ITEM_VALUE( pxListItem )   ( ( pxListItem )->xItemValue )
+#define listGET_LIST_ITEM_VALUE( pxListItem )	( ( pxListItem )->xItemValue )
 
 /*
  * Access macro to retrieve the value of the list item at the head of a given
@@ -205,7 +205,7 @@ typedef struct xLIST
  * \page listGET_LIST_ITEM_VALUE listGET_LIST_ITEM_VALUE
  * \ingroup LinkedList
  */
-#define listGET_ITEM_VALUE_OF_HEAD_ENTRY( pxList )      ( ( ( pxList )->xListEnd ).pxNext->xItemValue )
+#define listGET_ITEM_VALUE_OF_HEAD_ENTRY( pxList )	( ( ( pxList )->xListEnd ).pxNext->xItemValue )
 
 /*
  * Return the list item at the head of the list.
@@ -213,7 +213,7 @@ typedef struct xLIST
  * \page listGET_HEAD_ENTRY listGET_HEAD_ENTRY
  * \ingroup LinkedList
  */
-#define listGET_HEAD_ENTRY( pxList )    ( ( ( pxList )->xListEnd ).pxNext )
+#define listGET_HEAD_ENTRY( pxList )	( ( ( pxList )->xListEnd ).pxNext )
 
 /*
  * Return the list item at the head of the list.
@@ -221,7 +221,7 @@ typedef struct xLIST
  * \page listGET_NEXT listGET_NEXT
  * \ingroup LinkedList
  */
-#define listGET_NEXT( pxListItem )      ( ( pxListItem )->pxNext )
+#define listGET_NEXT( pxListItem )	( ( pxListItem )->pxNext )
 
 /*
  * Return the list item that marks the end of the list
@@ -229,7 +229,7 @@ typedef struct xLIST
  * \page listGET_END_MARKER listGET_END_MARKER
  * \ingroup LinkedList
  */
-#define listGET_END_MARKER( pxList )    ( ( ListItem_t const * ) ( &( ( pxList )->xListEnd ) ) )
+#define listGET_END_MARKER( pxList )	( ( ListItem_t const * ) ( &( ( pxList )->xListEnd ) ) )
 
 /*
  * Access macro to determine if a list contains any items.  The macro will
@@ -238,12 +238,12 @@ typedef struct xLIST
  * \page listLIST_IS_EMPTY listLIST_IS_EMPTY
  * \ingroup LinkedList
  */
-#define listLIST_IS_EMPTY( pxList )     ( ( BaseType_t ) ( ( pxList )->uxNumberOfItems == ( UBaseType_t ) 0 ) )
+#define listLIST_IS_EMPTY( pxList )	( ( BaseType_t ) ( ( pxList )->uxNumberOfItems == ( UBaseType_t ) 0 ) )
 
 /*
  * Access macro to return the number of items in the list.
  */
-#define listCURRENT_LIST_LENGTH( pxList )       ( ( pxList )->uxNumberOfItems )
+#define listCURRENT_LIST_LENGTH( pxList )	( ( pxList )->uxNumberOfItems )
 
 /*
  * Access function to obtain the owner of the next entry in a list.
@@ -265,17 +265,17 @@ typedef struct xLIST
  * \page listGET_OWNER_OF_NEXT_ENTRY listGET_OWNER_OF_NEXT_ENTRY
  * \ingroup LinkedList
  */
-#define listGET_OWNER_OF_NEXT_ENTRY( pxTCB, pxList )                                                                            \
-{                                                                                                                                                                                       \
-List_t * const pxConstList = ( pxList );                                                                                                        \
-        /* Increment the index to the next item and return the item, ensuring */                                \
-        /* we don't return the marker used at the end of the list.  */                                                  \
-        ( pxConstList )->pxIndex = ( pxConstList )->pxIndex->pxNext;                                                    \
-        if( ( void * ) ( pxConstList )->pxIndex == ( void * ) &( ( pxConstList )->xListEnd ) )  \
-        {                                                                                                                                                                               \
-                ( pxConstList )->pxIndex = ( pxConstList )->pxIndex->pxNext;                                            \
-        }                                                                                                                                                                               \
-        ( pxTCB ) = ( pxConstList )->pxIndex->pvOwner;                                                                                  \
+#define listGET_OWNER_OF_NEXT_ENTRY( pxTCB, pxList )										\
+{																							\
+List_t * const pxConstList = ( pxList );													\
+	/* Increment the index to the next item and return the item, ensuring */				\
+	/* we don't return the marker used at the end of the list.  */							\
+	( pxConstList )->pxIndex = ( pxConstList )->pxIndex->pxNext;							\
+	if( ( void * ) ( pxConstList )->pxIndex == ( void * ) &( ( pxConstList )->xListEnd ) )	\
+	{																						\
+		( pxConstList )->pxIndex = ( pxConstList )->pxIndex->pxNext;						\
+	}																						\
+	( pxTCB ) = ( pxConstList )->pxIndex->pvOwner;											\
 }
 
 

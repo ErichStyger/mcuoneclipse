@@ -264,10 +264,32 @@ static unsigned portBASE_TYPE uxCriticalNesting = 0xaaaaaaaa;
   #error "undefined target %CPUfamily!"
 %endif
 
-%ifdef vTaskEndScheduler
+#define configUSE_TASK_END_SCHEDULER   1
+
+#if configUSE_TASK_END_SCHEDULER
 #include <setjmp.h>
 static jmp_buf xJumpBuf; /* Used to restore the original context when the scheduler is ended. */
-%endif
+#endif
+/*-----------------------------------------------------------*/
+#if (configCOMPILER==configCOMPILER_ARM_KEIL) && configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY)
+__asm uint32_t ulPortSetInterruptMask(void) {
+  PRESERVE8
+
+  mrs r0, basepri
+  mov r1, #configMAX_SYSCALL_INTERRUPT_PRIORITY
+  msr basepri, r1
+  bx r14
+}
+#endif /* (configCOMPILER==configCOMPILER_ARM_KEIL) */
+/*-----------------------------------------------------------*/
+#if (configCOMPILER==configCOMPILER_ARM_KEIL) && configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY)
+__asm void vPortClearInterruptMask(uint32_t ulNewMask) {
+  PRESERVE8
+
+  msr basepri, r0
+  bx r14
+}
+#endif /* (configCOMPILER==configCOMPILER_ARM_KEIL) */
 /*-----------------------------------------------------------*/
 %if (CPUfamily = "56800")
 /* We require the address of the pxCurrentTCB variable, but don't want to know any details of its type. */
@@ -895,8 +917,8 @@ void vPortStopTickTimer(void) {
 %endif
 }
 /*-----------------------------------------------------------*/
-#if (configCOMPILER==configCOMPILER_ARM_KEIL) || (configCOMPILER==configCOMPILER_ARM_GCC)
 #if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
+#if (configCOMPILER==configCOMPILER_ARM_GCC)
 void vPortEnableVFP(void) {
   /* The FPU enable bits are in the CPACR. */
   __asm volatile (
@@ -909,20 +931,34 @@ void vPortEnableVFP(void) {
     : "r0","r1" /* clobber */
   );
 }
-#endif /* configCPU_FAMILY_ARM_M4F */
+#elif (configCOMPILER==configCOMPILER_ARM_KEIL)
+__asm void vPortEnableVFP(void) {
+	PRESERVE8
+
+	/* The FPU enable bits are in the CPACR. */
+	ldr.w r0, =0xE000ED88
+	ldr	r1, [r0]
+
+	/* Enable CP10 and CP11 coprocessors, then save back. */
+	orr	r1, r1, #( 0xf << 20 )
+	str r1, [r0]
+	bx	r14
+	nop
+}
 #endif /* GNU or Keil */
+#endif /* configCPU_FAMILY_ARM_M4F */
 /*-----------------------------------------------------------*/
 BaseType_t xPortStartScheduler(void) {
 %if (CPUfamily = "ColdFireV1") | (CPUfamily = "MCF")
   uxCriticalNesting = 0;
   vPortInitTickTimer();
   vPortStartTickTimer();
-%ifdef vTaskEndScheduler
-  if(setjmp(xJumpBuf) != 0 ) {
+#if configUSE_TASK_END_SCHEDULER
+  if (setjmp(xJumpBuf)!=0) {
     /* here we will get in case of call to vTaskEndScheduler() */
     return pdFALSE;
   }
-%endif
+#endif
   /* Kick off the scheduler by setting up the context of the first task. */
   vPortStartFirstTask();     %>40/* start the first task executing. Note that we will not return here */
   return pdFALSE;
@@ -934,12 +970,12 @@ BaseType_t xPortStartScheduler(void) {
      which does use the CODE_SEG pragma. */
   vPortInitTickTimer();
   vPortStartTickTimer();
-%ifdef vTaskEndScheduler
+#if configUSE_TASK_END_SCHEDULER
   if(setjmp(xJumpBuf) != 0 ) {
     /* here we will get in case of call to vTaskEndScheduler() */
     return pdFALSE;
   }
-%endif
+#endif
   return xBankedStartScheduler();
 %elif (CPUfamily = "Kinetis")
   /* Make PendSV, SVCall and SysTick the lowest priority interrupts. SysTick priority will be set in vPortInitTickTimer(). */
@@ -956,6 +992,12 @@ BaseType_t xPortStartScheduler(void) {
   vPortEnableVFP(); /* Ensure the VFP is enabled - it should be anyway */
   *(portFPCCR) |= portASPEN_AND_LSPEN_BITS; /* Lazy register save always */
 #endif
+#if configUSE_TASK_END_SCHEDULER
+    if(setjmp(xJumpBuf) != 0 ) {
+      /* here we will get in case of call to vTaskEndScheduler() */
+      return pdFALSE;
+    }
+#endif
   vPortStartFirstTask(); /* Start the first task. */
   /* Should not get here, unless you call vTaskEndScheduler()! */
   return pdFALSE;
@@ -963,12 +1005,12 @@ BaseType_t xPortStartScheduler(void) {
   uxCriticalNesting = 0; /* initialize critical nesting count */
   vPortInitTickTimer(); /* initialize tick timer */
   vPortStartTickTimer(); /* start tick timer */
-%ifdef vTaskEndScheduler
+#if configUSE_TASK_END_SCHEDULER
   if(setjmp(xJumpBuf) != 0 ) {
     /* here we will get in case of call to vTaskEndScheduler() */
     return pdFALSE;
   }
-%endif
+#endif
   /* Kick off the scheduler by setting up the context of the first task. */
   vPortStartFirstTask();     %>40/* start the first task executing. Note that we will not return here */
   return pdFALSE;
@@ -977,16 +1019,18 @@ BaseType_t xPortStartScheduler(void) {
   #error "unsupported target %CPUfamily!"
 %endif
 }
-%ifdef vTaskEndScheduler
 /*-----------------------------------------------------------*/
 void vPortEndScheduler(void) {
   vPortStopTickTimer();
   /* Jump back to the processor state prior to starting the
      scheduler.  This means we are not going to be using a
      task stack frame so the task can be deleted. */
+#if configUSE_TASK_END_SCHEDULER
   longjmp(xJumpBuf, 1);
+#else
+  for(;;){} /* wait here */
+#endif
 }
-%endif
 /*-----------------------------------------------------------*/
 void vPortEnterCritical(void) {
 /*
@@ -1356,6 +1400,7 @@ __asm void SVC_Handler(void) {
 #else
 __asm void vPortSVCHandler(void) {
 #endif
+  PRESERVE8
   EXTERN pxCurrentTCB
 
   /* Get the location of the current TCB. */
@@ -1376,7 +1421,6 @@ __asm void vPortSVCHandler(void) {
   orr r14, r14, #13
 #endif
   bx r14
-  nop
 }
 /*-----------------------------------------------------------*/
 #else /* Cortex M0+ */
@@ -1475,7 +1519,9 @@ __asm void PendSV_Handler(void) {
 #else
 __asm void vPortPendSVHandler(void) {
 #endif
+  PRESERVE8
   EXTERN pxCurrentTCB
+  EXTERN vTaskSwitchContext
 
   mrs r0, psp
   ldr  r3, =pxCurrentTCB     /* Get the location of the current TCB. */
@@ -1491,7 +1537,7 @@ __asm void vPortPendSVHandler(void) {
 #endif
   str r0, [r2]               /* Save the new top of stack into the first member of the TCB. */
   stmdb sp!, {r3, r14}
-  mov r0, %%0
+  mov r0, #0
   msr basepri, r0
   bl vTaskSwitchContext
   mov r0, #0

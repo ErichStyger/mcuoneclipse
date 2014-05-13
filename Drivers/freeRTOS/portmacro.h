@@ -218,32 +218,40 @@ extern void vPortExitCritical(void);
 #define portDISABLE_ALL_INTERRUPTS()         __asm volatile("cpsid i")
 
 #if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY) /* Cortex M4 */
-/*
- * Set basepri to portMAX_SYSCALL_INTERRUPT_PRIORITY without effecting other
- * registers.  r0 is clobbered.
- */
-#define portSET_INTERRUPT_MASK()  \
-  __asm volatile            \
-  (                         \
-    "  mov r0, %%0 \n" \
-    "  msr basepri, r0 \n"  \
-    : /* no output operands */ \
-    :"i"(configMAX_SYSCALL_INTERRUPT_PRIORITY) /* input */\
-    :"r0" /* clobber */    \
-  )
-/*
- * Set basepri back to 0 without effective other registers.
- * r0 is clobbered.
- */
-#define portCLEAR_INTERRUPT_MASK() \
-  __asm volatile            \
-  (                         \
-    "  mov r0, #0      \n"  \
-    "  msr basepri, r0 \n"  \
-    : /* no output */       \
-    : /* no input */        \
-    :"r0" /* clobber */     \
-  )
+#if (configCOMPILER==configCOMPILER_ARM_KEIL)
+  __asm uint32_t ulPortSetInterruptMask(void);
+  __asm void vPortClearInterruptMask(uint32_t ulNewMask);
+
+  #define portSET_INTERRUPT_MASK()				ulPortSetInterruptMask()
+  #define portCLEAR_INTERRUPT_MASK()			vPortClearInterruptMask(0)
+#elif (configCOMPILER==configCOMPILER_ARM_GCC)
+  /*
+   * Set basepri to portMAX_SYSCALL_INTERRUPT_PRIORITY without effecting other
+   * registers.  r0 is clobbered.
+   */
+  #define portSET_INTERRUPT_MASK()  \
+    __asm volatile            \
+    (                         \
+      "  mov r0, %%0 \n" \
+      "  msr basepri, r0 \n"  \
+      : /* no output operands */ \
+      :"i"(configMAX_SYSCALL_INTERRUPT_PRIORITY) /* input */\
+      :"r0" /* clobber */    \
+    )
+  /*
+   * Set basepri back to 0 without effective other registers.
+   * r0 is clobbered.
+   */
+  #define portCLEAR_INTERRUPT_MASK() \
+    __asm volatile            \
+    (                         \
+      "  mov r0, #0      \n"  \
+      "  msr basepri, r0 \n"  \
+      : /* no output */       \
+      : /* no input */        \
+      :"r0" /* clobber */     \
+    )
+#endif
 #else
 #define portSET_INTERRUPT_MASK()              __asm volatile("cpsid i")
 #define portCLEAR_INTERRUPT_MASK()            __asm volatile("cpsie i")

@@ -67,16 +67,16 @@
 #define SEMAPHORE_H
 
 #ifndef INC_FREERTOS_H
-        #error "include FreeRTOS.h" must appear in source files before "include semphr.h"
+	#error "include FreeRTOS.h" must appear in source files before "include semphr.h"
 #endif
 
 #include "queue.h"
 
 typedef QueueHandle_t SemaphoreHandle_t;
 
-#define semBINARY_SEMAPHORE_QUEUE_LENGTH        ( ( uint8_t ) 1U )
-#define semSEMAPHORE_QUEUE_ITEM_LENGTH          ( ( uint8_t ) 0U )
-#define semGIVE_BLOCK_TIME                                      ( ( TickType_t ) 0U )
+#define semBINARY_SEMAPHORE_QUEUE_LENGTH	( ( uint8_t ) 1U )
+#define semSEMAPHORE_QUEUE_ITEM_LENGTH		( ( uint8_t ) 0U )
+#define semGIVE_BLOCK_TIME					( ( TickType_t ) 0U )
 
 
 /**
@@ -124,14 +124,14 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * \defgroup vSemaphoreCreateBinary vSemaphoreCreateBinary
  * \ingroup Semaphores
  */
-#define vSemaphoreCreateBinary( xSemaphore )                                                                                                                                                                                    \
-        {                                                                                                                                                                                                                                                                       \
-                ( xSemaphore ) = xQueueGenericCreate( ( UBaseType_t ) 1, semSEMAPHORE_QUEUE_ITEM_LENGTH, queueQUEUE_TYPE_BINARY_SEMAPHORE );    \
-                if( ( xSemaphore ) != NULL )                                                                                                                                                                                                    \
-                {                                                                                                                                                                                                                                                               \
-                        ( void ) xSemaphoreGive( ( xSemaphore ) );                                                                                                                                                                      \
-                }                                                                                                                                                                                                                                                               \
-        }
+#define vSemaphoreCreateBinary( xSemaphore )																							\
+	{																																	\
+		( xSemaphore ) = xQueueGenericCreate( ( UBaseType_t ) 1, semSEMAPHORE_QUEUE_ITEM_LENGTH, queueQUEUE_TYPE_BINARY_SEMAPHORE );	\
+		if( ( xSemaphore ) != NULL )																									\
+		{																																\
+			( void ) xSemaphoreGive( ( xSemaphore ) );																					\
+		}																																\
+	}
 
 /**
  * semphr. h
@@ -245,7 +245,7 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * \defgroup xSemaphoreTake xSemaphoreTake
  * \ingroup Semaphores
  */
-#define xSemaphoreTake( xSemaphore, xBlockTime )                xQueueGenericReceive( ( QueueHandle_t ) ( xSemaphore ), NULL, ( xBlockTime ), pdFALSE )
+#define xSemaphoreTake( xSemaphore, xBlockTime )		xQueueGenericReceive( ( QueueHandle_t ) ( xSemaphore ), NULL, ( xBlockTime ), pdFALSE )
 
 /**
  * semphr. h
@@ -309,23 +309,23 @@ typedef QueueHandle_t SemaphoreHandle_t;
 
             // ...
             // For some reason due to the nature of the code further calls to
-                        // xSemaphoreTakeRecursive() are made on the same mutex.  In real
-                        // code these would not be just sequential calls as this would make
-                        // no sense.  Instead the calls are likely to be buried inside
-                        // a more complex call structure.
+			// xSemaphoreTakeRecursive() are made on the same mutex.  In real
+			// code these would not be just sequential calls as this would make
+			// no sense.  Instead the calls are likely to be buried inside
+			// a more complex call structure.
             xSemaphoreTakeRecursive( xMutex, ( TickType_t ) 10 );
             xSemaphoreTakeRecursive( xMutex, ( TickType_t ) 10 );
 
             // The mutex has now been 'taken' three times, so will not be
-                        // available to another task until it has also been given back
-                        // three times.  Again it is unlikely that real code would have
-                        // these calls sequentially, but instead buried in a more complex
-                        // call structure.  This is just for illustrative purposes.
+			// available to another task until it has also been given back
+			// three times.  Again it is unlikely that real code would have
+			// these calls sequentially, but instead buried in a more complex
+			// call structure.  This is just for illustrative purposes.
             xSemaphoreGiveRecursive( xMutex );
-                        xSemaphoreGiveRecursive( xMutex );
-                        xSemaphoreGiveRecursive( xMutex );
+			xSemaphoreGiveRecursive( xMutex );
+			xSemaphoreGiveRecursive( xMutex );
 
-                        // Now the mutex can be taken by other tasks.
+			// Now the mutex can be taken by other tasks.
         }
         else
         {
@@ -338,22 +338,22 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * \defgroup xSemaphoreTakeRecursive xSemaphoreTakeRecursive
  * \ingroup Semaphores
  */
-#define xSemaphoreTakeRecursive( xMutex, xBlockTime )   xQueueTakeMutexRecursive( ( xMutex ), ( xBlockTime ) )
+#define xSemaphoreTakeRecursive( xMutex, xBlockTime )	xQueueTakeMutexRecursive( ( xMutex ), ( xBlockTime ) )
 
 
 /*
  * xSemaphoreAltTake() is an alternative version of xSemaphoreTake().
  *
  * The source code that implements the alternative (Alt) API is much
- * simpler      because it executes everything from within a critical section.
- * This is      the approach taken by many other RTOSes, but FreeRTOS.org has the
+ * simpler	because it executes everything from within a critical section.
+ * This is	the approach taken by many other RTOSes, but FreeRTOS.org has the
  * preferred fully featured API too.  The fully featured API has more
- * complex      code that takes longer to execute, but makes much less use of
+ * complex	code that takes longer to execute, but makes much less use of
  * critical sections.  Therefore the alternative API sacrifices interrupt
  * responsiveness to gain execution speed, whereas the fully featured API
  * sacrifices execution speed to ensure better interrupt responsiveness.
  */
-#define xSemaphoreAltTake( xSemaphore, xBlockTime )             xQueueAltGenericReceive( ( QueueHandle_t ) ( xSemaphore ), NULL, ( xBlockTime ), pdFALSE )
+#define xSemaphoreAltTake( xSemaphore, xBlockTime )		xQueueAltGenericReceive( ( QueueHandle_t ) ( xSemaphore ), NULL, ( xBlockTime ), pdFALSE )
 
 /**
  * semphr. h
@@ -416,7 +416,7 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * \defgroup xSemaphoreGive xSemaphoreGive
  * \ingroup Semaphores
  */
-#define xSemaphoreGive( xSemaphore )            xQueueGenericSend( ( QueueHandle_t ) ( xSemaphore ), NULL, semGIVE_BLOCK_TIME, queueSEND_TO_BACK )
+#define xSemaphoreGive( xSemaphore )		xQueueGenericSend( ( QueueHandle_t ) ( xSemaphore ), NULL, semGIVE_BLOCK_TIME, queueSEND_TO_BACK )
 
 /**
  * semphr. h
@@ -470,24 +470,24 @@ typedef QueueHandle_t SemaphoreHandle_t;
 
             // ...
             // For some reason due to the nature of the code further calls to
-                        // xSemaphoreTakeRecursive() are made on the same mutex.  In real
-                        // code these would not be just sequential calls as this would make
-                        // no sense.  Instead the calls are likely to be buried inside
-                        // a more complex call structure.
+			// xSemaphoreTakeRecursive() are made on the same mutex.  In real
+			// code these would not be just sequential calls as this would make
+			// no sense.  Instead the calls are likely to be buried inside
+			// a more complex call structure.
             xSemaphoreTakeRecursive( xMutex, ( TickType_t ) 10 );
             xSemaphoreTakeRecursive( xMutex, ( TickType_t ) 10 );
 
             // The mutex has now been 'taken' three times, so will not be
-                        // available to another task until it has also been given back
-                        // three times.  Again it is unlikely that real code would have
-                        // these calls sequentially, it would be more likely that the calls
-                        // to xSemaphoreGiveRecursive() would be called as a call stack
-                        // unwound.  This is just for demonstrative purposes.
+			// available to another task until it has also been given back
+			// three times.  Again it is unlikely that real code would have
+			// these calls sequentially, it would be more likely that the calls
+			// to xSemaphoreGiveRecursive() would be called as a call stack
+			// unwound.  This is just for demonstrative purposes.
             xSemaphoreGiveRecursive( xMutex );
-                        xSemaphoreGiveRecursive( xMutex );
-                        xSemaphoreGiveRecursive( xMutex );
+			xSemaphoreGiveRecursive( xMutex );
+			xSemaphoreGiveRecursive( xMutex );
 
-                        // Now the mutex can be taken by other tasks.
+			// Now the mutex can be taken by other tasks.
         }
         else
         {
@@ -500,21 +500,21 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * \defgroup xSemaphoreGiveRecursive xSemaphoreGiveRecursive
  * \ingroup Semaphores
  */
-#define xSemaphoreGiveRecursive( xMutex )       xQueueGiveMutexRecursive( ( xMutex ) )
+#define xSemaphoreGiveRecursive( xMutex )	xQueueGiveMutexRecursive( ( xMutex ) )
 
 /*
  * xSemaphoreAltGive() is an alternative version of xSemaphoreGive().
  *
  * The source code that implements the alternative (Alt) API is much
- * simpler      because it executes everything from within a critical section.
- * This is      the approach taken by many other RTOSes, but FreeRTOS.org has the
+ * simpler	because it executes everything from within a critical section.
+ * This is	the approach taken by many other RTOSes, but FreeRTOS.org has the
  * preferred fully featured API too.  The fully featured API has more
- * complex      code that takes longer to execute, but makes much less use of
+ * complex	code that takes longer to execute, but makes much less use of
  * critical sections.  Therefore the alternative API sacrifices interrupt
  * responsiveness to gain execution speed, whereas the fully featured API
  * sacrifices execution speed to ensure better interrupt responsiveness.
  */
-#define xSemaphoreAltGive( xSemaphore )         xQueueAltGenericSend( ( QueueHandle_t ) ( xSemaphore ), NULL, semGIVE_BLOCK_TIME, queueSEND_TO_BACK )
+#define xSemaphoreAltGive( xSemaphore )		xQueueAltGenericSend( ( QueueHandle_t ) ( xSemaphore ), NULL, semGIVE_BLOCK_TIME, queueSEND_TO_BACK )
 
 /**
  * semphr. h
@@ -546,7 +546,7 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * Example usage:
  <pre>
  \#define LONG_TIME 0xffff
- \#define TICKS_TO_WAIT 10
+ \#define TICKS_TO_WAIT	10
  SemaphoreHandle_t xSemaphore = NULL;
 
  // Repetitive task.
@@ -567,7 +567,7 @@ typedef QueueHandle_t SemaphoreHandle_t;
             // We have finished our task.  Return to the top of the loop where
             // we will block on the semaphore until it is time to execute
             // again.  Note when using the semaphore for synchronisation with an
-                        // ISR in this manner there is no need to 'give' the semaphore back.
+			// ISR in this manner there is no need to 'give' the semaphore back.
         }
     }
  }
@@ -583,7 +583,7 @@ typedef QueueHandle_t SemaphoreHandle_t;
     // ... Do other time functions.
 
     // Is it time for vATask () to run?
-        xHigherPriorityTaskWoken = pdFALSE;
+	xHigherPriorityTaskWoken = pdFALSE;
     ucLocalTickCount++;
     if( ucLocalTickCount >= TICKS_TO_WAIT )
     {
@@ -605,7 +605,7 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * \defgroup xSemaphoreGiveFromISR xSemaphoreGiveFromISR
  * \ingroup Semaphores
  */
-#define xSemaphoreGiveFromISR( xSemaphore, pxHigherPriorityTaskWoken )  xQueueGenericSendFromISR( ( QueueHandle_t ) ( xSemaphore ), NULL, ( pxHigherPriorityTaskWoken ), queueSEND_TO_BACK )
+#define xSemaphoreGiveFromISR( xSemaphore, pxHigherPriorityTaskWoken )	xQueueGenericSendFromISR( ( QueueHandle_t ) ( xSemaphore ), NULL, ( pxHigherPriorityTaskWoken ), queueSEND_TO_BACK )
 
 /**
  * semphr. h
@@ -639,7 +639,7 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * @return pdTRUE if the semaphore was successfully taken, otherwise
  * pdFALSE
  */
-#define xSemaphoreTakeFromISR( xSemaphore, pxHigherPriorityTaskWoken )  xQueueReceiveFromISR( ( QueueHandle_t ) ( xSemaphore ), NULL, ( pxHigherPriorityTaskWoken ) )
+#define xSemaphoreTakeFromISR( xSemaphore, pxHigherPriorityTaskWoken )	xQueueReceiveFromISR( ( QueueHandle_t ) ( xSemaphore ), NULL, ( pxHigherPriorityTaskWoken ) )
 
 /**
  * semphr. h
@@ -664,7 +664,7 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * service routines.
  *
  * @return xSemaphore Handle to the created mutex semaphore.  Should be of type
- *              SemaphoreHandle_t.
+ *		SemaphoreHandle_t.
  *
  * Example usage:
  <pre>
@@ -719,7 +719,7 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * service routines.
  *
  * @return xSemaphore Handle to the created mutex semaphore.  Should be of type
- *              SemaphoreHandle_t.
+ *		SemaphoreHandle_t.
  *
  * Example usage:
  <pre>

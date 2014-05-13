@@ -89,7 +89,7 @@ task.h is included from an application file. */
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
 /* A few bytes might be lost to byte aligning the heap start address. */
-#define configADJUSTED_HEAP_SIZE        ( configTOTAL_HEAP_SIZE - portBYTE_ALIGNMENT )
+#define configADJUSTED_HEAP_SIZE	( configTOTAL_HEAP_SIZE - portBYTE_ALIGNMENT )
 
 /* Allocate the memory for the heap. */
 #if configUSE_HEAP_SECTION_NAME && configCOMPILER==configCOMPILER_ARM_IAR /* << EST */
@@ -110,73 +110,73 @@ void *pvPortMalloc( size_t xWantedSize )
 void *pvReturn = NULL;
 static uint8_t *pucAlignedHeap = NULL;
 
-        /* Ensure that blocks are always aligned to the required number of bytes. */
-        #if portBYTE_ALIGNMENT != 1
-                if( xWantedSize & portBYTE_ALIGNMENT_MASK )
-                {
-                        /* Byte alignment required. */
-                        xWantedSize += ( portBYTE_ALIGNMENT - ( xWantedSize & portBYTE_ALIGNMENT_MASK ) );
-                }
-        #endif
+	/* Ensure that blocks are always aligned to the required number of bytes. */
+	#if portBYTE_ALIGNMENT != 1
+		if( xWantedSize & portBYTE_ALIGNMENT_MASK )
+		{
+			/* Byte alignment required. */
+			xWantedSize += ( portBYTE_ALIGNMENT - ( xWantedSize & portBYTE_ALIGNMENT_MASK ) );
+		}
+	#endif
 
-        vTaskSuspendAll();
-        {
-                if( pucAlignedHeap == NULL )
-                {
-                        /* Ensure the heap starts on a correctly aligned boundary. */
-                        pucAlignedHeap = ( uint8_t * ) ( ( ( portPOINTER_SIZE_TYPE ) &ucHeap[ portBYTE_ALIGNMENT ] ) & ( ( portPOINTER_SIZE_TYPE ) ~portBYTE_ALIGNMENT_MASK ) );
-                }
+	vTaskSuspendAll();
+	{
+		if( pucAlignedHeap == NULL )
+		{
+			/* Ensure the heap starts on a correctly aligned boundary. */
+			pucAlignedHeap = ( uint8_t * ) ( ( ( portPOINTER_SIZE_TYPE ) &ucHeap[ portBYTE_ALIGNMENT ] ) & ( ( portPOINTER_SIZE_TYPE ) ~portBYTE_ALIGNMENT_MASK ) );
+		}
 
-                /* Check there is enough room left for the allocation. */
-                if( ( ( xNextFreeByte + xWantedSize ) < configADJUSTED_HEAP_SIZE ) &&
-                        ( ( xNextFreeByte + xWantedSize ) > xNextFreeByte )     )/* Check for overflow. */
-                {
-                        /* Return the next free byte then increment the index past this
-                        block. */
-                        pvReturn = pucAlignedHeap + xNextFreeByte;
-                        xNextFreeByte += xWantedSize;
-                }
+		/* Check there is enough room left for the allocation. */
+		if( ( ( xNextFreeByte + xWantedSize ) < configADJUSTED_HEAP_SIZE ) &&
+			( ( xNextFreeByte + xWantedSize ) > xNextFreeByte )	)/* Check for overflow. */
+		{
+			/* Return the next free byte then increment the index past this
+			block. */
+			pvReturn = pucAlignedHeap + xNextFreeByte;
+			xNextFreeByte += xWantedSize;
+		}
 
-                traceMALLOC( pvReturn, xWantedSize );
-        }	
-        (void)xTaskResumeAll();
+		traceMALLOC( pvReturn, xWantedSize );
+	}	
+	(void)xTaskResumeAll();
 
-        #if( configUSE_MALLOC_FAILED_HOOK == 1 )
-        {
-                if( pvReturn == NULL )
-                {
-                        extern void vApplicationMallocFailedHook( void );
-                        vApplicationMallocFailedHook();
-                }
-        }
-        #endif
+	#if( configUSE_MALLOC_FAILED_HOOK == 1 )
+	{
+		if( pvReturn == NULL )
+		{
+			extern void vApplicationMallocFailedHook( void );
+			vApplicationMallocFailedHook();
+		}
+	}
+	#endif
 
-        return pvReturn;
+	return pvReturn;
 }
 /*-----------------------------------------------------------*/
 
 void vPortFree( void *pv )
 {
-        /* Memory cannot be freed using this scheme.  See heap_2.c, heap_3.c and
-        heap_4.c for alternative implementations, and the memory management pages of
-        http://www.FreeRTOS.org for more information. */
-        ( void ) pv;
+	/* Memory cannot be freed using this scheme.  See heap_2.c, heap_3.c and
+	heap_4.c for alternative implementations, and the memory management pages of
+	http://www.FreeRTOS.org for more information. */
+	( void ) pv;
 
-        /* Force an assert as it is invalid to call this function. */
-        configASSERT( pv == NULL );
+	/* Force an assert as it is invalid to call this function. */
+	configASSERT( pv == NULL );
 }
 /*-----------------------------------------------------------*/
 
 void vPortInitialiseBlocks( void )
 {
-        /* Only required when static memory is not cleared. */
-        xNextFreeByte = ( size_t ) 0;
+	/* Only required when static memory is not cleared. */
+	xNextFreeByte = ( size_t ) 0;
 }
 /*-----------------------------------------------------------*/
 
 size_t xPortGetFreeHeapSize( void )
 {
-        return ( configADJUSTED_HEAP_SIZE - xNextFreeByte );
+	return ( configADJUSTED_HEAP_SIZE - xNextFreeByte );
 }
 #endif /* configFRTOS_MEMORY_SCHEME==1 */ /* << EST */
 
