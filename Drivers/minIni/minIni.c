@@ -324,7 +324,7 @@ long ini_getl(const TCHAR *Section, const TCHAR *Key, long DefValue, const TCHAR
   TCHAR LocalBuffer[64];
   int len = ini_gets(Section, Key, __T(""), LocalBuffer, sizearray(LocalBuffer), Filename);
   return (len == 0) ? DefValue
-                    : ((len >= 2 && _totupper(LocalBuffer[1]) == 'X') ? _tcstol(LocalBuffer, NULL, 16)
+                    : ((len >= 2 && _totupper((unsigned char)LocalBuffer[1]) == 'X') ? _tcstol(LocalBuffer, NULL, 16)
                                                                       : _tcstol(LocalBuffer, NULL, 10));
 }
 
@@ -370,7 +370,7 @@ int ini_getbool(const TCHAR *Section, const TCHAR *Key, int DefValue, const TCHA
   int ret;
 
   ini_gets(Section, Key, __T(""), LocalBuffer, sizearray(LocalBuffer), Filename);
-  LocalBuffer[0] = (TCHAR)toupper(LocalBuffer[0]);
+  LocalBuffer[0] = (TCHAR)toupper((unsigned char)LocalBuffer[0]);
   if (LocalBuffer[0] == 'Y' || LocalBuffer[0] == '1' || LocalBuffer[0] == 'T')
     ret = 1;
   else if (LocalBuffer[0] == 'N' || LocalBuffer[0] == '0' || LocalBuffer[0] == 'F')

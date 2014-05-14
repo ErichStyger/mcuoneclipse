@@ -25,7 +25,7 @@
 #define PORTABLE_STRNICMP
 %endif
 %if defined(useReal) & %useReal='yes'
-#define INI_REAL
+#define INI_REAL double
 %endif
 %if defined(isReadOnly) & %isReadOnly='yes'
 #define INI_READONLY
