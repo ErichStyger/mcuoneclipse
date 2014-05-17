@@ -3,8 +3,8 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>58</ModificationStamp>
-    <Date>2014-03-21</Date>
+    <ModificationStamp>60</ModificationStamp>
+    <Date>2014-05-15</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.8.1.RT5_b1349-1839</PEversion>
   </Header>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>144</ProjectCompNumb>
+    <ProjectCompNumb>147</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -4340,7 +4340,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.360</BeanVersion>
+    <BeanVersion>01.366</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -4402,7 +4402,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template>FreeRTOS\FreeRTOSTraceInterface</Template>
-          <BeanVersion>01.011</BeanVersion>
+          <BeanVersion>01.020</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -5619,6 +5619,54 @@
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <Value>15</Value>
               <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>IncludeNewTimeEvents</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Index>0</Index>
+              <Value>true</Value>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>IncludeMemManageEvents</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Index>1</Index>
+              <Value>false</Value>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>NTimer</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>2</Value>
+              <Base>DEC</Base>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>NEventGroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>2</Value>
+              <Base>DEC</Base>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>NameLenTimer</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>15</Value>
+              <Base>DEC</Base>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>NameLenEventGroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>15</Value>
+              <Base>DEC</Base>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
             </ItemState>
           </Properties>
           <Methods>
@@ -8571,6 +8619,20 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>.m_data_20000000</Value>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>TicklessIdleDecisionHookEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xEnterTicklessIdleFctName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>xEnterTicklessIdle</Value>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -9613,7 +9675,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.095</BeanVersion>
+    <BeanVersion>01.104</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -10172,6 +10234,17 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>always</LastUserSel>
         <UsrMethodName>strFind</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanSeparatedNumbers</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ScanSeparatedNumbers</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Methods>
@@ -13924,7 +13997,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.029</BeanVersion>
+    <BeanVersion>01.047</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -23667,7 +23740,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.064</BeanVersion>
+    <BeanVersion>01.067</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -23982,8 +24055,8 @@
                     <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-                    <Index>0</Index>
-                    <Value>true</Value>
+                    <Index>1</Index>
+                    <Value>false</Value>
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>Wait</ItemSymbol>
@@ -32458,7 +32531,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.024</BeanVersion>
+    <BeanVersion>01.029</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -32570,6 +32643,17 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>Init</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SetCounter</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>SetCounter</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Methods>
     <Events />
@@ -41144,7 +41228,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.004</BeanVersion>
+    <BeanVersion>01.006</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -41162,6 +41246,14 @@
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
         <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>useRTOScritical</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>1</Index>
+        <Value>false</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Properties>
     <Methods>
