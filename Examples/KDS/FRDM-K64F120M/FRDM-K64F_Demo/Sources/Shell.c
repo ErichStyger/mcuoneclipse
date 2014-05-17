@@ -30,6 +30,7 @@
 #if PL_HAS_RSTDIO
   #include "RStdIO.h"
 #endif
+#include "TmDt1.h"
 
 void SHELL_SendString(unsigned char *msg) {
   CLS1_SendStr(msg, CLS1_GetStdio()->stdOut);
@@ -62,6 +63,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if FAT1_PARSE_COMMAND_ENABLED
   FAT1_ParseCommand,
 #endif
+#endif
+#if TmDt1_PARSE_COMMAND_ENABLED
+  TmDt1_ParseCommand,
 #endif
 #if PL_HAS_RADIO
   RADIO_ParseCommand,

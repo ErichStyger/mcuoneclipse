@@ -68,13 +68,6 @@
 #include "BitIoLdd8.h"
 #include "Inhr2.h"
 #include "BitIoLdd9.h"
-#include "SWSPI1.h"
-#include "Clock1.h"
-#include "BitIoLdd12.h"
-#include "Input1.h"
-#include "BitIoLdd13.h"
-#include "Output1.h"
-#include "BitIoLdd14.h"
 #include "TRG1.h"
 #include "MINI1.h"
 /* Including shared modules, which are used for whole project */
