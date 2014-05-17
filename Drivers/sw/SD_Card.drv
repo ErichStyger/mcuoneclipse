@@ -754,14 +754,7 @@ DRESULT disk_ioctl (
 
 %endif
 %ifdef HWSPI
-#if %'ModuleName'%.SPI_WRITE_BLOCK_ENABLED || %'ModuleName'%.SPI_WRITE_READ_BLOCK_ENABLED
-static void %'ModuleName'%.SPI_WRITE_READ_BLOCK(unsigned char *writeP, unsigned char *readP, uint16_t size) {
-  uint16_t dummy;
-
-  (void)%@HWSPI@'ModuleName'%.SendBlock(writeP, size, &dummy);
-  (void)%@HWSPI@'ModuleName'%.RecvBlock(readP, size, &dummy);
-}
-
+#if %'ModuleName'%.SPI_WRITE_BLOCK_ENABLED
 static void %'ModuleName'%.SPI_WRITE_BLOCK(unsigned char *writeP, uint16_t size) {
   unsigned char dummy[4];
   uint16_t writeSize;
@@ -779,7 +772,16 @@ static void %'ModuleName'%.SPI_WRITE_BLOCK(unsigned char *writeP, uint16_t size)
     writeP += writeSize;
   }
 }
-#endif
+#endif /* %'ModuleName'%.SPI_WRITE_BLOCK_ENABLED */
+
+#if %'ModuleName'%.SPI_WRITE_READ_BLOCK_ENABLED
+static void %'ModuleName'%.SPI_WRITE_READ_BLOCK(unsigned char *writeP, unsigned char *readP, uint16_t size) {
+  uint16_t dummy;
+
+  (void)%@HWSPI@'ModuleName'%.SendBlock(writeP, size, &dummy);
+  (void)%@HWSPI@'ModuleName'%.RecvBlock(readP, size, &dummy);
+}
+#endif /* %'ModuleName'%.SPI_WRITE_READ_BLOCK_ENABLED */
 
 %if SPI_Read_Write_Macros='no'
 static byte rxDummy; /* dummy byte if we do not need the result. Needed to read from SPI register. */
@@ -853,6 +855,7 @@ void %'ModuleName'%.SPI_WRITE(unsigned char write) {
   while(!%'ModuleName'%.DataReceivedFlag){}
 }
 
+#if %'ModuleName'%.SPI_WRITE_BLOCK_ENABLED
 static void %'ModuleName'%.SPI_WRITE_BLOCK(unsigned char *writeP, uint16_t size) {
   unsigned char dummy[4];
   uint16_t writeSize;
@@ -871,6 +874,7 @@ static void %'ModuleName'%.SPI_WRITE_BLOCK(unsigned char *writeP, uint16_t size)
     writeP += writeSize;
   }
 }
+#endif /* %'ModuleName'%.SPI_WRITE_BLOCK_ENABLED */
 
 static void %'ModuleName'%.SPI_WRITE_READ(unsigned char write, unsigned char *readP) {
   %'ModuleName'%.DataReceivedFlag = FALSE;
@@ -879,12 +883,14 @@ static void %'ModuleName'%.SPI_WRITE_READ(unsigned char write, unsigned char *re
   while(!%'ModuleName'%.DataReceivedFlag){}
 }
 
+#if %'ModuleName'%.SPI_WRITE_READ_BLOCK_ENABLED
 static void %'ModuleName'%.SPI_WRITE_READ_BLOCK(unsigned char *writeP, unsigned char *readP, uint16_t size) {
   %'ModuleName'%.DataReceivedFlag = FALSE;
   (void)%@LDDHWSPI@'ModuleName'%.ReceiveBlock(%@LDDHWSPI@'ModuleName'%.DeviceData, readP, size);
   (void)%@LDDHWSPI@'ModuleName'%.SendBlock(%@LDDHWSPI@'ModuleName'%.DeviceData, writeP, size);
   while(!%'ModuleName'%.DataReceivedFlag){}
 }
+#endif /* %'ModuleName'%.SPI_WRITE_READ_BLOCK_ENABLED */
 
 %endif %- LDDHWSPI
 
