@@ -39,7 +39,10 @@
 #include "CLS1.h"
 #include "CS1.h"
 #include "KSDK1.h"
-//#include "Init_Config.h"
+#include "TmDt1.h"
+#if CPU_INIT_CONFIG
+  #include "Init_Config.h"
+#endif
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Application.h"
