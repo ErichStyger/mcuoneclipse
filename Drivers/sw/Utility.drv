@@ -679,7 +679,7 @@ uint8_t %'ModuleName'%.%ScanDecimal16sNumber(const unsigned char **str, int16_t 
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ScanDecimal32sNumber
 %ifdef ScanDecimal32sNumber
-byte %'ModuleName'%.%ScanDecimal32sNumber(const unsigned char **str, int32_t *val);
+uint8_t %'ModuleName'%.%ScanDecimal32sNumber(const unsigned char **str, int32_t *val);
 %define! Parstr
 %define! Parval
 %define! RetVal
@@ -2129,7 +2129,7 @@ uint8_t %'ModuleName'%.%ScanDecimal32uNumber(const unsigned char **str, uint32_t
 %define! Parval
 %define! RetVal
 %include Common\UtilityScanDecimal32sNumber.Inc
-byte %'ModuleName'%.%ScanDecimal32sNumber(const unsigned char **str, int32_t *val)
+uint8_t %'ModuleName'%.%ScanDecimal32sNumber(const unsigned char **str, int32_t *val)
 {
   /* Scans a decimal number, and stops at any non-number. Number can have any preceding spaces. */
   const unsigned char *p = *str;
