@@ -1440,7 +1440,9 @@ void %@LDDHWSPI@OnBlockReceived(LDD_TUserData *UserDataPtr)
   /* Calling inherited event */
 %ifdef OnBlockReceived
   %OnBlockReceived(UserDataPtr);
-%endif OnBlockReceived
+%else
+  (void)UserDataPtr; /* unused */
+%endif %-OnBlockReceived
   %'ModuleName'%.DataReceivedFlag=TRUE;
 }
 
