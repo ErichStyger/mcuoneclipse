@@ -273,6 +273,9 @@ void %OnTimeSet(uint8_t hour, uint8_t minute, uint8_t second, uint8_t hSecond);
 %else
   %TickTimeMs                                                    %>40 /* Period in milliseconds as defined in component properties, at which %'ModuleName'.%.AddTick() is called */
 %endif
+#if %'ModuleName'%.TICK_TIME_MS==0
+  #error "Tick period cannot be zero!"
+#endif
 #define %'ModuleName'%.TICKS_PER_S  (1000/%'ModuleName'%.TICK_TIME_MS)%>40/* number of timer ticks per second */
 
 static uint8_t CntDay;                                           %>40/* Day counter */
@@ -508,7 +511,7 @@ uint8_t %'ModuleName'%.%GetTime(TIMEREC *Time)
   Time->Min = (uint8_t)(ticks/(60*%'ModuleName'%.TICKS_PER_S));  %>40/* number of minutes */
   ticks %%= (60*%'ModuleName'%.TICKS_PER_S);                     %>40/* remainder of ticks inside minute */
   Time->Sec = (uint8_t)(ticks/%'ModuleName'%.TICKS_PER_S);       %>40/* number of seconds */
-  Time->Sec100 = (uint8_t)((ticks%%%'ModuleName'%.TICKS_PER_S)*(%'ModuleName'%.TICK_TIME_MS/10));%>40/* number of 1/10 seconds */
+  Time->Sec100 = (uint8_t)((ticks%%%'ModuleName'%.TICKS_PER_S)*(%'ModuleName'%.TICK_TIME_MS/10));%>40/* number of 1/100 seconds */
   return ERR_OK;
 }
 
