@@ -354,6 +354,14 @@ void %OnReleaseBus(void);
 
 %endif %- OnReleaseBus
 %-BW_METHOD_END OnReleaseBus
+%-BW_METHOD_BEGIN OnError
+%ifdef OnError
+%INTERFACE OnError
+void %OnError(void);
+%include Common\GenericI2COnError.Inc
+
+%endif %- OnError
+%-BW_METHOD_END OnError
 %-BW_EVENT_DEFINITION_END
 %IMPLEMENTATION
 %define! Settings Common\GenericI2CSettings.Inc
@@ -392,8 +400,9 @@ typedef struct {
 static %'ModuleName'%.TDataState %'ModuleName'%.deviceData;
 
 %if defined(Timeout)
-#define %'ModuleName'%.TIMEOUT_US  %TimeoutUs  /* number of microseconds as specified in properties */
-#define %'ModuleName'%.TIMEOUT_TICKS(factor) ((%'ModuleName'%.TIMEOUT_US*(factor))/1000/%@Timeout@'ModuleName'%.TICK_PERIOD_MS)
+#define %'ModuleName'%.TIMEOUT_US  ((uint32_t)%TimeoutUs)  /* number of microseconds as specified in properties */
+#define %'ModuleName'%.TIMEOUT_NOF_TICKS(factor) ((%'ModuleName'%.TIMEOUT_US*(factor))/1000/%@Timeout@'ModuleName'%.TICK_PERIOD_MS)
+#define %'ModuleName'%.TIMEOUT_TICKS(factor) (%'ModuleName'%.TIMEOUT_NOF_TICKS(factor)>0?%'ModuleName'%.TIMEOUT_NOF_TICKS(factor):1)  /* at least one tick */
 %endif
 %endif
 %if defined(RTOS) & %UseSemaphore='yes'
@@ -452,6 +461,9 @@ byte %'ModuleName'%.%SelectSlave(byte i2cAddr)
   %if (defined(OnReleaseBus)) | (defined(RTOS) & %UseSemaphore='yes')
     %'ModuleName'%.%ReleaseBus();
   %endif
+  %if defined(OnError)
+    %OnError();
+  %endif
     return ERR_FAILED;
   }
 %endif
@@ -459,6 +471,9 @@ byte %'ModuleName'%.%SelectSlave(byte i2cAddr)
   if (%@I2C@'ModuleName'%.SelectSlave(i2cAddr)!=ERR_OK) {
   %if (defined(OnReleaseBus)) | (defined(RTOS) & %UseSemaphore='yes')
     %'ModuleName'%.%ReleaseBus();
+  %endif
+  %if defined(OnError)
+    %OnError();
   %endif
     return ERR_FAILED;
   }
@@ -508,12 +523,18 @@ byte %'ModuleName'%.%ReadBlock(void* data, word dataSize, %'ModuleName'_EnumSend
     %'ModuleName'%.deviceData.dataReceivedFlg = FALSE;
     res = %@LDD_I2C@'ModuleName'%.MasterReceiveBlock(%'ModuleName'%.deviceData.handle, data, dataSize, flags==%'ModuleName'_SEND_STOP?LDD_I2C_SEND_STOP:LDD_I2C_NO_SEND_STOP);
     if (res!=ERR_OK) {
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
 %if defined(Timeout)
     timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_TICKS(dataSize)); /* set up timeout counter */
     if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
       res = ERR_QFULL;
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
 %endif
@@ -521,6 +542,9 @@ byte %'ModuleName'%.%ReadBlock(void* data, word dataSize, %'ModuleName'_EnumSend
 %if defined(Timeout)
       isTimeout = %@Timeout@'ModuleName'%.CounterExpired(timeout);
       if (isTimeout) {
+      %if defined(OnError)
+        %OnError();
+      %endif
         break; /* break while() */
       }
 %endif
@@ -529,6 +553,9 @@ byte %'ModuleName'%.%ReadBlock(void* data, word dataSize, %'ModuleName'_EnumSend
     %@Timeout@'ModuleName'%.LeaveCounter(timeout);
     if (isTimeout) {
       res = ERR_BUSY;
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
 %endif
@@ -538,11 +565,17 @@ byte %'ModuleName'%.%ReadBlock(void* data, word dataSize, %'ModuleName'_EnumSend
   for(;;) { /* breaks */
     res = %@I2C@'ModuleName'%.RecvBlock(data, dataSize, &nof);
     if (res!=ERR_OK) {
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
     if (flags==%'ModuleName'_SEND_STOP) {
       res = %@I2C@'ModuleName'%.SendStop();
       if (res!=ERR_OK) {
+      %if defined(OnError)
+        %OnError();
+      %endif
         break; /* break for(;;) */
       }
     }
@@ -578,12 +611,18 @@ byte %'ModuleName'%.%WriteBlock(void* data, word dataSize, %'ModuleName'_EnumSen
     %'ModuleName'%.deviceData.dataTransmittedFlg = FALSE;
     res = %@LDD_I2C@'ModuleName'%.MasterSendBlock(%'ModuleName'%.deviceData.handle, data, dataSize, flags==%'ModuleName'_SEND_STOP?LDD_I2C_SEND_STOP:LDD_I2C_NO_SEND_STOP);
     if (res!=ERR_OK) {
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
 %if defined(Timeout)
     timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_TICKS(dataSize)); /* set up timeout counter */
     if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
       res = ERR_QFULL;
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
 %endif
@@ -591,6 +630,9 @@ byte %'ModuleName'%.%WriteBlock(void* data, word dataSize, %'ModuleName'_EnumSen
 %if defined(Timeout)
       isTimeout = %@Timeout@'ModuleName'%.CounterExpired(timeout);
       if (isTimeout) {
+      %if defined(OnError)
+        %OnError();
+      %endif
         break; /* break while loop */
       }
 %endif
@@ -599,6 +641,9 @@ byte %'ModuleName'%.%WriteBlock(void* data, word dataSize, %'ModuleName'_EnumSen
     %@Timeout@'ModuleName'%.LeaveCounter(timeout);
     if (isTimeout) {
       res = ERR_BUSY;
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
 %endif
@@ -617,11 +662,17 @@ byte %'ModuleName'%.%WriteBlock(void* data, word dataSize, %'ModuleName'_EnumSen
 %endif
     if (res!=ERR_OK) {
       (void)%@I2C@'ModuleName'%.SendStop();
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
     if (flags==%'ModuleName'_SEND_STOP || (flags==%'ModuleName'_STOP_NOSTART)) {
       res = %@I2C@'ModuleName'%.SendStop();
       if (res!=ERR_OK) {
+      %if defined(OnError)
+        %OnError();
+      %endif
         break; /* break for(;;) */
       }
     }
@@ -656,6 +707,9 @@ byte %'ModuleName'%.%ReadAddress(byte i2cAddr, byte *memAddr, byte memAddrSize, 
 %endif
 
   if (%'ModuleName'%.%SelectSlave(i2cAddr)!=ERR_OK) {
+  %if defined(OnError)
+    %OnError();
+  %endif
     return ERR_FAILED;
   }
 %if defined(LDD_I2C)
@@ -664,12 +718,18 @@ byte %'ModuleName'%.%ReadAddress(byte i2cAddr, byte *memAddr, byte memAddrSize, 
     %'ModuleName'%.deviceData.dataTransmittedFlg = FALSE;
     res = %@LDD_I2C@'ModuleName'%.MasterSendBlock(%'ModuleName'%.deviceData.handle, memAddr, memAddrSize, LDD_I2C_NO_SEND_STOP);
     if (res!=ERR_OK) {
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
 %if defined(Timeout)
     timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_TICKS(memAddrSize)); /* set up timeout counter */
     if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
       res = ERR_QFULL;
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
 %endif
@@ -677,6 +737,9 @@ byte %'ModuleName'%.%ReadAddress(byte i2cAddr, byte *memAddr, byte memAddrSize, 
 %if defined(Timeout)
       isTimeout = %@Timeout@'ModuleName'%.CounterExpired(timeout);
       if (isTimeout) {
+      %if defined(OnError)
+        %OnError();
+      %endif
         break; /* break while() */
       }
 %endif
@@ -685,6 +748,9 @@ byte %'ModuleName'%.%ReadAddress(byte i2cAddr, byte *memAddr, byte memAddrSize, 
     %@Timeout@'ModuleName'%.LeaveCounter(timeout);
     if (isTimeout) {
       res = ERR_BUSY;
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
 %endif
@@ -692,12 +758,18 @@ byte %'ModuleName'%.%ReadAddress(byte i2cAddr, byte *memAddr, byte memAddrSize, 
     %'ModuleName'%.deviceData.dataReceivedFlg = FALSE;
     res = %@LDD_I2C@'ModuleName'%.MasterReceiveBlock(%'ModuleName'%.deviceData.handle, data, dataSize, LDD_I2C_SEND_STOP);
     if (res!=ERR_OK) {
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
 %if defined(Timeout)
     timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_TICKS(dataSize)); /* set up timeout counter */
     if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
       res = ERR_QFULL;
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
 %endif
@@ -705,6 +777,9 @@ byte %'ModuleName'%.%ReadAddress(byte i2cAddr, byte *memAddr, byte memAddrSize, 
 %if defined(Timeout)
       isTimeout = %@Timeout@'ModuleName'%.CounterExpired(timeout);
       if (isTimeout) {
+      %if defined(OnError)
+        %OnError();
+      %endif
         break; /* break while() */
       }
 %endif
@@ -713,6 +788,9 @@ byte %'ModuleName'%.%ReadAddress(byte i2cAddr, byte *memAddr, byte memAddrSize, 
     %@Timeout@'ModuleName'%.LeaveCounter(timeout);
     if (isTimeout) {
       res = ERR_BUSY;
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
 %endif
@@ -723,21 +801,33 @@ byte %'ModuleName'%.%ReadAddress(byte i2cAddr, byte *memAddr, byte memAddrSize, 
     res = %@I2C@'ModuleName'%.SendBlock((void*)memAddr, memAddrSize, &nof);
     if (res!=ERR_OK) {
       (void)%@I2C@'ModuleName'%.SendStop();
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
     res = %@I2C@'ModuleName'%.RecvBlock(data, dataSize, &nof);
     if (res!=ERR_OK) {
       (void)%@I2C@'ModuleName'%.SendStop();
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
     res = %@I2C@'ModuleName'%.SendStop();
     if (res!=ERR_OK) {
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
     break; /* break for(;;) */
   } /* for(;;) */
 %endif
   if (%'ModuleName'%.%UnselectSlave()!=ERR_OK) {
+  %if defined(OnError)
+    %OnError();
+  %endif
     return ERR_FAILED;
   }
   return res;
@@ -770,9 +860,15 @@ byte %'ModuleName'%.%WriteAddress(byte i2cAddr, byte *memAddr, byte memAddrSize,
   byte res = ERR_OK;
 
   if (%'ModuleName'%.%SelectSlave(i2cAddr)!=ERR_OK) {
+  %if defined(OnError)
+    %OnError();
+  %endif
     return ERR_FAILED;
   }
   if (memAddrSize+dataSize>%'ModuleName'%.WRITE_BUFFER_SIZE) {
+  %if defined(OnError)
+    %OnError();
+  %endif
     return ERR_FAILED;
   }
   i = 0; p = memAddr;
@@ -790,12 +886,18 @@ byte %'ModuleName'%.%WriteAddress(byte i2cAddr, byte *memAddr, byte memAddrSize,
     /* send device address, memory address and data */
     %'ModuleName'%.deviceData.dataTransmittedFlg = FALSE;
     if (%@LDD_I2C@'ModuleName'%.MasterSendBlock(%'ModuleName'%.deviceData.handle, writeBuf, i, LDD_I2C_SEND_STOP)!=ERR_OK) {
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
 %if defined(Timeout)
     timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_TICKS(i)); /* set up timeout counter */
     if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
       res = ERR_QFULL;
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
 %endif
@@ -803,6 +905,9 @@ byte %'ModuleName'%.%WriteAddress(byte i2cAddr, byte *memAddr, byte memAddrSize,
 %if defined(Timeout)
       isTimeout = %@Timeout@'ModuleName'%.CounterExpired(timeout);
       if (isTimeout) {
+      %if defined(OnError)
+        %OnError();
+      %endif
         break; /* break while loop */
       }
 %endif
@@ -811,6 +916,9 @@ byte %'ModuleName'%.%WriteAddress(byte i2cAddr, byte *memAddr, byte memAddrSize,
     %@Timeout@'ModuleName'%.LeaveCounter(timeout);
     if (isTimeout) {
       res = ERR_BUSY;
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
 %endif
@@ -821,16 +929,25 @@ byte %'ModuleName'%.%WriteAddress(byte i2cAddr, byte *memAddr, byte memAddrSize,
     res = %@I2C@'ModuleName'%.SendBlock((void*)writeBuf, i, &nof);
     if (res!=ERR_OK) {
       (void)%@I2C@'ModuleName'%.SendStop();
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
     res = %@I2C@'ModuleName'%.SendStop();
     if (res!=ERR_OK) {
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
     break; /* break for(;;) */
   } /* for(;;) */
 %endif
   if (%'ModuleName'%.%UnselectSlave()!=ERR_OK) {
+  %if defined(OnError)
+    %OnError();
+  %endif
     return ERR_FAILED;
   }
   return res;
@@ -884,12 +1001,18 @@ void %'ModuleName'%.%Init(void)
 %if defined(LDD_I2C)
   %'ModuleName'%.deviceData.handle = %@LDD_I2C@'ModuleName'%.Init(&%'ModuleName'%.deviceData);
   if (%'ModuleName'%.deviceData.handle==NULL) {
+  %if defined(OnError)
+    %OnError();
+  %endif
     for(;;){} /* failure! */
   }
 %endif
 %if defined(RTOS) & %UseSemaphore='yes'
   %'ModuleName'%.busSem = %@RTOS@'ModuleName'%.xSemaphoreCreateRecursiveMutex();
   if (%'ModuleName'%.busSem==NULL) { /* semaphore creation failed */
+  %if defined(OnError)
+    %OnError();
+  %endif
     for(;;) {} /* error, not enough memory? */
   }
 %endif
@@ -988,12 +1111,18 @@ byte %'ModuleName'%.%ScanDevice(byte i2cAddr)
     %'ModuleName'%.deviceData.dataTransmittedFlg = FALSE;
     res = %@LDD_I2C@'ModuleName'%.MasterReceiveBlock(%'ModuleName'%.deviceData.handle, &dummy, 1, LDD_I2C_SEND_STOP);
     if (res!=ERR_OK) {
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
 %if defined(Timeout)
     timeout = %@Timeout@'ModuleName'%.GetCounter(%'ModuleName'%.TIMEOUT_TICKS(1)); /* set up timeout counter */
     if (timeout==%@Timeout@'ModuleName'%.OUT_OF_HANDLE) {
       res = ERR_QFULL;
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
 %endif
@@ -1001,6 +1130,9 @@ byte %'ModuleName'%.%ScanDevice(byte i2cAddr)
 %if defined(Timeout)
       isTimeout = %@Timeout@'ModuleName'%.CounterExpired(timeout);
       if (isTimeout) {
+      %if defined(OnError)
+        %OnError();
+      %endif
         break; /* break while() */
       }
 %endif
@@ -1012,6 +1144,9 @@ byte %'ModuleName'%.%ScanDevice(byte i2cAddr)
 %endif
     if (errMask&LDD_I2C_MASTER_NACK) { /* master did not receive ACK from slave */
       res = ERR_NOTAVAIL; /* device did not respond with ACK */
+    %if defined(OnError)
+      %OnError();
+    %endif
     }
     break; /* break for(;;) */
   } /* for(;;) */
@@ -1020,16 +1155,25 @@ byte %'ModuleName'%.%ScanDevice(byte i2cAddr)
     res = %@I2C@'ModuleName'%.RecvBlock((void*)&dummy, 1, &nof);
     if (res!=ERR_OK) {
       (void)%@I2C@'ModuleName'%.SendStop();
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
     res = %@I2C@'ModuleName'%.SendStop();
     if (res!=ERR_OK) {
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
     break; /* break for(;;) */
   } /* for(;;) */
 %endif
   if (%'ModuleName'%.%UnselectSlave()!=ERR_OK) {
+    %if defined(OnError)
+      %OnError();
+    %endif
     return ERR_FAILED;
   }
   return res;
@@ -1057,10 +1201,16 @@ byte %'ModuleName'%.%ProbeACK(void* data, word dataSize, %'ModuleName'_EnumSendF
   %'ModuleName'%.deviceData.dataTransmittedFlg = FALSE;
   res = %@LDD_I2C@'ModuleName'%.MasterSendBlock(%'ModuleName'%.deviceData.handle, data, dataSize, flags==%'ModuleName'_SEND_STOP?LDD_I2C_SEND_STOP:LDD_I2C_NO_SEND_STOP);
   if (res!=ERR_OK) {
+  %if defined(OnError)
+    %OnError();
+  %endif
     return res;
   }
   %@Wait@'ModuleName'%.Waitus(WaitTimeUS);
   if (!%'ModuleName'%.deviceData.dataTransmittedFlg) {
+  %if defined(OnError)
+    %OnError();
+  %endif
     return ERR_FAILED; /* no ACK received? */
   }
 %else
@@ -1069,11 +1219,17 @@ byte %'ModuleName'%.%ProbeACK(void* data, word dataSize, %'ModuleName'_EnumSendF
     res = %@I2C@'ModuleName'%.SendBlock(data, dataSize, &nof);
     if (res!=ERR_OK) {
       (void)%@I2C@'ModuleName'%.SendStop();
+    %if defined(OnError)
+      %OnError();
+    %endif
       break; /* break for(;;) */
     }
     if (flags==%'ModuleName'_SEND_STOP) {
       res = %@I2C@'ModuleName'%.SendStop();
       if (res!=ERR_OK) {
+      %if defined(OnError)
+        %OnError();
+      %endif
         break; /* break for(;;) */
       }
     }
@@ -1114,6 +1270,17 @@ void %OnReleaseBus(void)
 
 %endif %- OnReleaseBus
 %-BW_METHOD_END OnReleaseBus
+%-BW_METHOD_BEGIN OnError
+%ifdef OnError
+%IMPLEMENTATION OnError
+%include Common\GenericI2COnError.Inc
+void %OnError(void)
+{
+  /* Write your code here ... */
+}
+
+%endif %- OnError
+%-BW_METHOD_END OnError
 %-BW_EVENT_IMPLEMENT_END
 %INITIALIZATION
   /* ### %DeviceType "%DeviceName" init code ... */

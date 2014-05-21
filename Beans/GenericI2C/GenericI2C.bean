@@ -4,7 +4,7 @@
     <Name>GenericI2C</Name>
     <Description>Generic high level I2C Driver on top of the I2C hardware driver</Description>
     <Author>Erich Styger</Author>
-    <Version>01.020</Version>
+    <Version>01.023</Version>
     <Icon>Generic2C</Icon>
     <TypesFiles>PE,GenericI2C\GenericI2C</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -127,7 +127,7 @@
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
         <Description>Disabled</Description>
-        <Expanded>No</Expanded>
+        <Expanded>Yes</Expanded>
         <DefaultValue>false</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
@@ -156,7 +156,7 @@
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
               <Description>Disabled</Description>
-              <Expanded>No</Expanded>
+              <Expanded>Yes</Expanded>
               <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
@@ -182,7 +182,7 @@
                     <Hint>Timeout value in microseconds for every byte on the bus. Note that this willl be scaled to timout ticks.</Hint>
                     <ItemLevel>BASIC</ItemLevel>
                     <EditLine>true</EditLine>
-                    <DefaultValue>250</DefaultValue>
+                    <DefaultValue>5000</DefaultValue>
                     <MinValue>0</MinValue>
                     <MaxValue>-1</MaxValue>
                     <Bases>DEC</Bases>
@@ -1029,6 +1029,45 @@
               <Name>Event procedure name</Name>
               <Symbol>Name</Symbol>
               <Hint>OnReleaseBus procedure name</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue/>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+              <ErrorIfNotSet>true</ErrorIfNotSet>
+              <IdentType>EVNT</IdentType>
+            </TEvntName>
+          </GrupItem>
+        </Children>
+      </TEvntItem>
+    </Event>
+    <Event>
+      <TEvntItem>
+        <Name>OnError</Name>
+        <Symbol>OnError</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Event called in case of error condition</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>don't generate code</Description>
+        <Expanded>No</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <IsAssembler>false</IsAssembler>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #C#(void)</ANSIC>
+        </Declarations>
+        <Children>
+          <GrupItem>
+            <TEvntName>
+              <Name>Event procedure name</Name>
+              <Symbol>Name</Symbol>
+              <Hint>OnError procedure name</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
               <DefaultValue/>
