@@ -434,10 +434,12 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   unsigned char buf[8];
   uint16_t val;
   bool isEnabled;
+  uint8_t res;
 
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"%'ModuleName'", (unsigned char*)"\r\n", io->stdOut);
 
-  if (%'ModuleName'%.isEnabled(&isEnabled)!=ERR_OK) {
+  res = %'ModuleName'%.isEnabled(&isEnabled);
+  if (res!=ERR_OK) {
     %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"FAIL!\r\n");
   } else {
     if (isEnabled) {
@@ -447,6 +449,9 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
     }
   }
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  enabled", buf, io->stdOut);
+  if (res!=ERR_OK) { /* do not access the device if not enabled */
+    return ERR_OK;
+  }
 
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  raw", (unsigned char*)"0x", io->stdOut);
   val = %'ModuleName'%.MeasureGetRawX();
@@ -1018,6 +1023,7 @@ byte %'ModuleName'%.%isEnabled(bool *isEnabled)
 
   res = %@I2C@'ModuleName'%.ReadByteAddress8(%'ModuleName'_I2C_ADDR, %'ModuleName'_CTRL_REG_1, &val);
   if (res!=ERR_OK) {
+    *isEnabled = FALSE;
     return ERR_FAILED;
   }
   *isEnabled = (val&%'ModuleName'_ACTIVE_BIT_MASK)!=0; /* TRUE if bit is set, FALSE otherwise */
