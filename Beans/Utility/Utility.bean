@@ -4,7 +4,7 @@
     <Name>Utility</Name>
     <Description>Utility Module</Description>
     <Author>Erich Styger</Author>
-    <Version>01.104</Version>
+    <Version>01.105</Version>
     <Icon>Utility</Icon>
     <TypesFiles>PE,Utility\Utility</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -2026,7 +2026,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>2</ParamCount>
         <Parameter>
@@ -2045,7 +2045,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char **str, int32_t *val)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(const unsigned char **str, int32_t *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
