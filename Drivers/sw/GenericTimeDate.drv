@@ -511,7 +511,8 @@ uint8_t %'ModuleName'%.%GetTime(TIMEREC *Time)
   Time->Min = (uint8_t)(ticks/(60*%'ModuleName'%.TICKS_PER_S));  %>40/* number of minutes */
   ticks %%= (60*%'ModuleName'%.TICKS_PER_S);                     %>40/* remainder of ticks inside minute */
   Time->Sec = (uint8_t)(ticks/%'ModuleName'%.TICKS_PER_S);       %>40/* number of seconds */
-  Time->Sec100 = (uint8_t)((ticks%%%'ModuleName'%.TICKS_PER_S)*(%'ModuleName'%.TICK_TIME_MS/10));%>40/* number of 1/100 seconds */
+  ticks %%= %'ModuleName'%.TICKS_PER_S;
+  Time->Sec100 = (uint8_t)((ticks*(1000/%'ModuleName'%.TICKS_PER_S))/10);%>40/* number of 1/100 seconds */
   return ERR_OK;
 }
 
