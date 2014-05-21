@@ -4,7 +4,7 @@
     <Name>GenericTimeDate</Name>
     <Description>Generic Software Time and Date component</Description>
     <Author>Erich Styger</Author>
-    <Version>01.016</Version>
+    <Version>01.018</Version>
     <Icon>GenericTimeDate</Icon>
     <TypesFiles>PE,GenericTimeDate\GenericTimeDate</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -16,7 +16,7 @@
     <BW_AutoSaveDriver>yes</BW_AutoSaveDriver>
     <BW_DetailedHelp>yes</BW_DetailedHelp>
     <BW_NeedTps>no</BW_NeedTps>
-    <BW_NeedUst>2</BW_NeedUst>
+    <BW_NeedUst>4</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
     <Copyright>(c) Copyright Freescale Semiconductor, 2014\nhttp: www.freescale.com\nSource code is based on the original TimeDate Processor Expert component.</Copyright>
@@ -255,36 +255,36 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>4</ParamCount>
         <Parameter>
           <ParName>Hour</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Hours (0 - 23)</ParHint>
         </Parameter>
         <Parameter>
           <ParName>Min</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Minutes (0 - 59)</ParHint>
         </Parameter>
         <Parameter>
           <ParName>Sec</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Seconds (0 - 59)</ParHint>
         </Parameter>
         <Parameter>
           <ParName>Sec100</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Hundredth of seconds (0 - 99)</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(byte Hour, byte Min, byte Sec, byte Sec100)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(uint8_t Hour, uint8_t Min, uint8_t Sec, uint8_t Sec100)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -307,7 +307,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>1</ParamCount>
         <Parameter>
@@ -318,7 +318,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(TIMEREC *Time)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(TIMEREC *Time)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -341,30 +341,30 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>Year</ParName>
-          <ParType>16bit unsigned</ParType>
+          <ParType>uint16_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Years (16-bit unsigned integer)</ParHint>
         </Parameter>
         <Parameter>
           <ParName>Month</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Months (8-bit unsigned integer)</ParHint>
         </Parameter>
         <Parameter>
           <ParName>Day</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Days (8-bit unsigned integer)</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(word Year, byte Month, byte Day)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(uint16_t Year, uint8_t Month, uint8_t Day)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -387,7 +387,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>1</ParamCount>
         <Parameter>
@@ -398,7 +398,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(DATEREC *Date)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(DATEREC *Date)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -421,12 +421,12 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>cmd</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to command line</ParHint>
           <ParUserDeclaration>const unsigned char *cmd</ParUserDeclaration>
@@ -439,14 +439,14 @@
         </Parameter>
         <Parameter>
           <ParName>io</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to I/O structure</ParHint>
           <ParUserDeclaration>const %@Shell@'ModuleName'%.StdIOType *io</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -539,31 +539,31 @@
         <ParamCount>4</ParamCount>
         <Parameter>
           <ParName>hour</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>The new hour</ParHint>
         </Parameter>
         <Parameter>
           <ParName>minute</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>The new minute</ParHint>
         </Parameter>
         <Parameter>
           <ParName>second</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>The new second</ParHint>
         </Parameter>
         <Parameter>
           <ParName>hSecond</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>The new 0.01 second part</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #C#(byte hour, byte minute, byte second, byte hSecond)</ANSIC>
+          <ANSIC>void #C#(uint8_t hour, uint8_t minute, uint8_t second, uint8_t hSecond)</ANSIC>
         </Declarations>
         <Children>
           <GrupItem>
@@ -602,25 +602,25 @@
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>day</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>the new day</ParHint>
         </Parameter>
         <Parameter>
           <ParName>month</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>the new month</ParHint>
         </Parameter>
         <Parameter>
           <ParName>year</ParName>
-          <ParType>16bit unsigned</ParType>
+          <ParType>uint16_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>the new year</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #C#(byte day, byte month, word year)</ANSIC>
+          <ANSIC>void #C#(uint8_t day, uint8_t month, uint16_t year)</ANSIC>
         </Declarations>
         <Children>
           <GrupItem>

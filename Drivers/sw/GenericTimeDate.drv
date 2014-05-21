@@ -81,6 +81,10 @@
 %- Write your own includes here ...
 %-   Example:
 %-     #include "header_name.h"
+%if (%CPUDB_prph_has_feature(CPU,SDK_SUPPORT) = 'yes') %- TRUE/FALSE not defined for SDK projects
+#include "PE_KSDK_Types.h" /* if this file is missing: have you added the Kinetis SDK component? */
+
+%endif
 %ifdef ParseCommand
 #define %'ModuleName'%.PARSE_COMMAND_ENABLED  1  /* set to 1 if method ParseCommand() is present, 0 otherwise */
 %else
@@ -90,18 +94,18 @@
 #ifndef __BWUserType_TIMEREC
 #define __BWUserType_TIMEREC
   typedef struct {                                               %>40/* It contains actual number of hours, minutes, seconds and hundreth of seconds. */
-    byte Hour;                                                   %>40/* hours (0 - 23) */
-    byte Min;                                                    %>40/* minutes (0 - 59) */
-    byte Sec;                                                    %>40/* seconds (0 - 59) */
-    byte Sec100;                                                 %>40/* hundredth of seconds (0 - 99) */
+    uint8_t Hour;                                                %>40/* hours (0 - 23) */
+    uint8_t Min;                                                 %>40/* minutes (0 - 59) */
+    uint8_t Sec;                                                 %>40/* seconds (0 - 59) */
+    uint8_t Sec100;                                              %>40/* hundredth of seconds (0 - 99) */
   } TIMEREC;
 #endif
 #ifndef __BWUserType_DATEREC
 #define __BWUserType_DATEREC
   typedef struct {                                               %>40/* It contains actual year, month, and day description. */
-    word Year;                                                   %>40/* years (1998 - 2099) */
-    byte Month;                                                  %>40/* months (1 - 12) */
-    byte Day;                                                    %>40/* days (1 - 31) */
+    uint16_t Year;                                               %>40/* years (1998 - 2099) */
+    uint8_t Month;                                               %>40/* months (1 - 12) */
+    uint8_t Day;                                                 %>40/* days (1 - 31) */
   } DATEREC;
 #endif
 %-
@@ -130,7 +134,7 @@
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SetTime
 %ifdef SetTime
-byte %'ModuleName'%.%SetTime(byte Hour, byte Min, byte Sec, byte Sec100);
+uint8_t %'ModuleName'%.%SetTime(uint8_t Hour, uint8_t Min, uint8_t Sec, uint8_t Sec100);
 %define! ParHour
 %define! ParMin
 %define! ParSec
@@ -151,7 +155,7 @@ void %'ModuleName'%.%AddTick(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN GetTime
 %ifdef GetTime
-byte %'ModuleName'%.%GetTime(TIMEREC *Time);
+uint8_t %'ModuleName'%.%GetTime(TIMEREC *Time);
 %define! ParTime
 %define! RetVal
 %include Common\GenericTimeDateGetTime.Inc
@@ -161,7 +165,7 @@ byte %'ModuleName'%.%GetTime(TIMEREC *Time);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SetDate
 %ifdef SetDate
-byte %'ModuleName'%.%SetDate(word Year, byte Month, byte Day);
+uint8_t %'ModuleName'%.%SetDate(uint16_t Year, uint8_t Month, uint8_t Day);
 %define! ParYear
 %define! ParMonth
 %define! ParDay
@@ -173,7 +177,7 @@ byte %'ModuleName'%.%SetDate(word Year, byte Month, byte Day);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN GetDate
 %ifdef GetDate
-byte %'ModuleName'%.%GetDate(DATEREC *Date);
+uint8_t %'ModuleName'%.%GetDate(DATEREC *Date);
 %define! ParDate
 %define! RetVal
 %include Common\GenericTimeDateGetDate.Inc
@@ -191,7 +195,7 @@ void %'ModuleName'%.%Init(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ParseCommand
 %ifdef ParseCommand
-byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io);
+uint8_t %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io);
 %define! Parcmd
 %define! Parhandled
 %define! Pario
@@ -219,7 +223,7 @@ void %'ModuleName'%.%DeInit(void);
 %-BW_METHOD_BEGIN OnDateSet
 %ifdef OnDateSet
 %INTERFACE OnDateSet
-void %OnDateSet(byte day, byte month, word year);
+void %OnDateSet(uint8_t day, uint8_t month, uint16_t year);
 %define! Parday
 %define! Parmonth
 %define! Paryear
@@ -230,7 +234,7 @@ void %OnDateSet(byte day, byte month, word year);
 %-BW_METHOD_BEGIN OnTimeSet
 %ifdef OnTimeSet
 %INTERFACE OnTimeSet
-void %OnTimeSet(byte hour, byte minute, byte second, byte hSecond);
+void %OnTimeSet(uint8_t hour, uint8_t minute, uint8_t second, uint8_t hSecond);
 %define! Parhour
 %define! Parminute
 %define! Parsecond
@@ -271,17 +275,17 @@ void %OnTimeSet(byte hour, byte minute, byte second, byte hSecond);
 %endif
 #define %'ModuleName'%.TICKS_PER_S  (1000/%'ModuleName'%.TICK_TIME_MS)%>40/* number of timer ticks per second */
 
-static byte CntDay;                                              %>40/* Day counter */
-static byte CntMonth;                                            %>40/* Month counter */
-static word CntYear;                                             %>40/* Year Counter */
-static dword tickCntr;                                           %>40/* Software tick counter (1 tick = %'ModuleName'%.TICK_TIME_MS ms) */
+static uint8_t CntDay;                                           %>40/* Day counter */
+static uint8_t CntMonth;                                         %>40/* Month counter */
+static uint16_t CntYear;                                         %>40/* Year Counter */
+static uint32_t tickCntr;                                        %>40/* Software tick counter (1 tick = %'ModuleName'%.TICK_TIME_MS ms) */
 
 /* Table of month length (in days) */
-static const  byte ULY[12] = {31U,28U,31U,30U,31U,30U,31U,31U,30U,31U,30U,31U}; /* Un-leap-year */
-static const  byte  LY[12] = {31U,29U,31U,30U,31U,30U,31U,31U,30U,31U,30U,31U}; /* Leap-year */
+static const  uint8_t ULY[12] = {31U,28U,31U,30U,31U,30U,31U,31U,30U,31U,30U,31U}; /* Un-leap-year */
+static const  uint8_t  LY[12] = {31U,29U,31U,30U,31U,30U,31U,31U,30U,31U,30U,31U}; /* Leap-year */
 
 %ifdef ParseCommand
-static byte AddDate(byte *buf, word bufSize) {
+static uint8_t AddDate(uint8_t *buf, uint16_t bufSize) {
   DATEREC tdate;
 
   if (%'ModuleName'%.%GetDate(&tdate)!=ERR_OK) {
@@ -295,7 +299,7 @@ static byte AddDate(byte *buf, word bufSize) {
   return ERR_OK;
 }
 
-static byte AddTime(byte *buf, word bufSize) {
+static uint8_t AddTime(uint8_t *buf, uint16_t bufSize) {
   TIMEREC ttime;
 
   if (%'ModuleName'%.%GetTime(&ttime)!=ERR_OK) {
@@ -311,12 +315,12 @@ static byte AddTime(byte *buf, word bufSize) {
   return ERR_OK;
 }
 
-static byte DateCmd(const unsigned char *cmd, %@Shell@'ModuleName'%.ConstStdIOType *io) {
+static uint8_t DateCmd(const unsigned char *cmd, %@Shell@'ModuleName'%.ConstStdIOType *io) {
   /* precondition: cmd points to "%'ModuleName' date" */
-  byte day, month;
-  word year;
+  uint8_t day, month;
+  uint16_t year;
   const unsigned char *p;
-  byte res = ERR_OK;
+  uint8_t res = ERR_OK;
 
   p = cmd + sizeof("%'ModuleName' date")-1;
   if (*p==' ') { /* ok, have an argument */
@@ -353,10 +357,10 @@ static byte DateCmd(const unsigned char *cmd, %@Shell@'ModuleName'%.ConstStdIOTy
   return res;
 }
 
-static byte TimeCmd(const unsigned char *cmd, %@Shell@'ModuleName'%.ConstStdIOType *io) {
-  byte hour, minute, second, hSecond;
+static uint8_t TimeCmd(const unsigned char *cmd, %@Shell@'ModuleName'%.ConstStdIOType *io) {
+  uint8_t hour, minute, second, hSecond;
   const unsigned char *p;
-  byte res = ERR_OK;
+  uint8_t res = ERR_OK;
 
   p = cmd + sizeof("%'ModuleName' time")-1;
   if (*p==' ') { /* has an argument */
@@ -393,8 +397,8 @@ static byte TimeCmd(const unsigned char *cmd, %@Shell@'ModuleName'%.ConstStdIOTy
   return res;
 }
 
-static byte PrintStatus(%@Shell@'ModuleName'%.ConstStdIOType *io) {
-  byte buf[24];
+static uint8_t PrintStatus(%@Shell@'ModuleName'%.ConstStdIOType *io) {
+  uint8_t buf[24];
 
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"%'ModuleName'", (const unsigned char*)"", io->stdOut);
   buf[0] = '\0';
@@ -433,7 +437,7 @@ static byte PrintStatus(%@Shell@'ModuleName'%.ConstStdIOType *io) {
 #ifdef __HIWARE__
   #pragma MESSAGE DISABLE C5905 /* multiplication with one (happens if %'ModuleName'%.TICKS_PER_S is 100) */
 #endif
-byte %'ModuleName'%.%SetTime(byte Hour, byte Min, byte Sec, byte Sec100)
+uint8_t %'ModuleName'%.%SetTime(uint8_t Hour, uint8_t Min, uint8_t Sec, uint8_t Sec100)
 {
   %@CriticalSection@'ModuleName'%.CriticalVariable()
 
@@ -441,10 +445,10 @@ byte %'ModuleName'%.%SetTime(byte Hour, byte Min, byte Sec, byte Sec100)
     return ERR_RANGE;                                            %>40/* If not correct then error */
   }
   %@CriticalSection@'ModuleName'%.EnterCritical();
-  tickCntr = (3600UL*%'ModuleName'%.TICKS_PER_S*(dword)Hour)
-              + (60UL*%'ModuleName'%.TICKS_PER_S*(dword)Min)
-              + (%'ModuleName'%.TICKS_PER_S*(dword)Sec)
-              + ((%'ModuleName'%.TICKS_PER_S/100)*(dword)Sec100);%>40/* Load given time re-calculated to %'ModuleName'%.TICK_TIME_MS ms ticks into software tick counter */
+  tickCntr = (3600UL*%'ModuleName'%.TICKS_PER_S*(uint32_t)Hour)
+              + (60UL*%'ModuleName'%.TICKS_PER_S*(uint32_t)Min)
+              + (%'ModuleName'%.TICKS_PER_S*(uint32_t)Sec)
+              + ((%'ModuleName'%.TICKS_PER_S/100)*(uint32_t)Sec100);%>40/* Load given time re-calculated to %'ModuleName'%.TICK_TIME_MS ms ticks into software tick counter */
   %@CriticalSection@'ModuleName'%.ExitCritical();
   return ERR_OK;                                                 %>40/* OK */
 }
@@ -460,7 +464,7 @@ byte %'ModuleName'%.%SetTime(byte Hour, byte Min, byte Sec, byte Sec100)
 %include Common\GenericTimeDateAddTick.Inc
 void %'ModuleName'%.%AddTick(void)
 {
-  const byte * ptr;                                              %>40/* Pointer to ULY/LY table */
+  const uint8_t* ptr;                                            %>40/* Pointer to ULY/LY table */
 
   tickCntr++;                                                    %>40/* Software timer counter increment by timer period */
   if (tickCntr >= 24*3600UL*%'ModuleName'%.TICKS_PER_S) {        %>40/* Does the counter reach 24 hours? */
@@ -491,20 +495,20 @@ void %'ModuleName'%.%AddTick(void)
 %define! ParTime
 %define! RetVal
 %include Common\GenericTimeDateGetTime.Inc
-byte %'ModuleName'%.%GetTime(TIMEREC *Time)
+uint8_t %'ModuleName'%.%GetTime(TIMEREC *Time)
 {
-  dword ticks;                                                   %>40/* temporary variable of software tick counter */
+  uint32_t ticks;                                                %>40/* temporary variable of software tick counter */
   %@CriticalSection@'ModuleName'%.CriticalVariable()
 
   %@CriticalSection@'ModuleName'%.EnterCritical();               %>40/* need exclusive access to tick counter */
   ticks = tickCntr;                                              %>40/* actual number of ticks */
   %@CriticalSection@'ModuleName'%.ExitCritical();                %>40/* end of critical section */
-  Time->Hour = (byte)(ticks/(3600*%'ModuleName'%.TICKS_PER_S));  %>40/* number of hours */
+  Time->Hour = (uint8_t)(ticks/(3600*%'ModuleName'%.TICKS_PER_S));%>40/* number of hours */
   ticks %%= (3600*%'ModuleName'%.TICKS_PER_S);                   %>40/* remainder of ticks inside hour */
-  Time->Min = (byte)(ticks/(60*%'ModuleName'%.TICKS_PER_S));     %>40/* number of minutes */
+  Time->Min = (uint8_t)(ticks/(60*%'ModuleName'%.TICKS_PER_S));  %>40/* number of minutes */
   ticks %%= (60*%'ModuleName'%.TICKS_PER_S);                     %>40/* remainder of ticks inside minute */
-  Time->Sec = (byte)(ticks/%'ModuleName'%.TICKS_PER_S);          %>40/* number of seconds */
-  Time->Sec100 = (byte)((ticks%%%'ModuleName'%.TICKS_PER_S)*(%'ModuleName'%.TICK_TIME_MS/10));%>40/* number of 1/10 seconds */
+  Time->Sec = (uint8_t)(ticks/%'ModuleName'%.TICKS_PER_S);       %>40/* number of seconds */
+  Time->Sec100 = (uint8_t)((ticks%%%'ModuleName'%.TICKS_PER_S)*(%'ModuleName'%.TICK_TIME_MS/10));%>40/* number of 1/10 seconds */
   return ERR_OK;
 }
 
@@ -518,9 +522,9 @@ byte %'ModuleName'%.%GetTime(TIMEREC *Time)
 %define! ParDay
 %define! RetVal
 %include Common\GenericTimeDateSetDate.Inc
-byte %'ModuleName'%.%SetDate(word Year, byte Month, byte Day)
+uint8_t %'ModuleName'%.%SetDate(uint16_t Year, uint8_t Month, uint8_t Day)
 {
-  const byte * ptr;                                              %>40/* Pointer to ULY/LY table */
+  const uint8_t* ptr;                                            %>40/* Pointer to ULY/LY table */
   %@CriticalSection@'ModuleName'%.CriticalVariable()
 
   if ((Year < 1998U) || (Year > 2099U) || (Month > 12U) || (Month == 0U) || (Day > 31U) || (Day == 0U)) {%>40/* Test correctness of given parameters */
@@ -546,7 +550,7 @@ byte %'ModuleName'%.%SetDate(word Year, byte Month, byte Day)
 %define! ParDate
 %define! RetVal
 %include Common\GenericTimeDateGetDate.Inc
-byte %'ModuleName'%.%GetDate(DATEREC *Date)
+uint8_t %'ModuleName'%.%GetDate(DATEREC *Date)
 {
   %@CriticalSection@'ModuleName'%.CriticalVariable()
 
@@ -583,7 +587,7 @@ void %'ModuleName'%.%Init(void)
 %define! Pario
 %define! RetVal
 %include Common\GenericTimeDateParseCommand.Inc
-byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)
+uint8_t %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)
 {
   if (%@Utility@'ModuleName'%.strcmp((char*)cmd, %@Shell@'ModuleName'%.CMD_HELP)==0 || %@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' help")==0) {
     %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"%'ModuleName'", (const unsigned char*)"Group of %'ModuleName' commands\r\n", io->stdOut);
@@ -632,7 +636,7 @@ void %'ModuleName'%.%DeInit(void)
 %define! Parmonth
 %define! Paryear
 %include Common\GenericTimeDateOnDateSet.Inc
-void %OnDateSet(byte day, byte month, word year)
+void %OnDateSet(uint8_t day, uint8_t month, uint16_t year)
 {
   /* Write your code here ... */
 }
@@ -647,7 +651,7 @@ void %OnDateSet(byte day, byte month, word year)
 %define! Parsecond
 %define! ParhSecond
 %include Common\GenericTimeDateOnTimeSet.Inc
-void %OnTimeSet(byte hour, byte minute, byte second, byte hSecond)
+void %OnTimeSet(uint8_t hour, uint8_t minute, uint8_t second, uint8_t hSecond)
 {
   /* Write your code here ... */
 }

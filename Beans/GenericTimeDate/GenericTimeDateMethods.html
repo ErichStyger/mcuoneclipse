@@ -222,13 +222,13 @@ LI.EXP {
  - This method sets a new actual time.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte SetTime(byte Hour, byte Min, byte Sec, byte Sec100)<br />
+<br /><i>ANSIC prototype:</i> uint8_t SetTime(uint8_t Hour, uint8_t Min, uint8_t Sec, uint8_t Sec100)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>Hour:byte</i> - Hours (0 - 23)</li>
-<li><i>Min:byte</i> - Minutes (0 - 59)</li>
-<li><i>Sec:byte</i> - Seconds (0 - 59)</li>
-<li><i>Sec100:byte</i> - Hundredth of seconds (0 - 99)</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>Hour:uint8_t</i> - Hours (0 - 23)</li>
+<li><i>Min:uint8_t</i> - Minutes (0 - 59)</li>
+<li><i>Sec:uint8_t</i> - Seconds (0 - 59)</li>
+<li><i>Sec100:uint8_t</i> - Hundredth of seconds (0 - 99)</li>
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -237,10 +237,10 @@ LI.EXP {
  - This method returns current time.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte GetTime(TIMEREC *Time)<br />
+<br /><i>ANSIC prototype:</i> uint8_t GetTime(TIMEREC *Time)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>Time: Pointer to TIMEREC</i> - Pointer to the structure TIMEREC. It contains actual number of hours, minutes, seconds and hundredth of seconds.</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -249,12 +249,12 @@ LI.EXP {
  - This method sets a new actual date.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte SetDate(word Year, byte Month, byte Day)<br />
+<br /><i>ANSIC prototype:</i> uint8_t SetDate(uint16_t Year, uint8_t Month, uint8_t Day)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>Year:word</i> - Years (16-bit unsigned integer)</li>
-<li><i>Month:byte</i> - Months (8-bit unsigned integer)</li>
-<li><i>Day:byte</i> - Days (8-bit unsigned integer)</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>Year:uint16_t</i> - Years (16-bit unsigned integer)</li>
+<li><i>Month:uint8_t</i> - Months (8-bit unsigned integer)</li>
+<li><i>Day:uint8_t</i> - Days (8-bit unsigned integer)</li>
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -263,10 +263,10 @@ LI.EXP {
  - This method returns current date.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte GetDate(DATEREC *Date)<br />
+<br /><i>ANSIC prototype:</i> uint8_t GetDate(DATEREC *Date)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>Date: Pointer to DATEREC</i> - Pointer to DATEREC</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -275,12 +275,12 @@ LI.EXP {
  - Shell Command Line parser
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)<br />
+<br /><i>ANSIC prototype:</i> uint8_t ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>cmd: Pointer to byte</i> - Pointer to command line</li>
+<li><i>cmd: Pointer to uint8_t</i> - Pointer to command line</li>
 <li><i>handled: Pointer to bool</i> - Pointer to variable which tells if the command has been handled or not</li>
-<li><i>io: Pointer to byte</i> - Pointer to I/O structure</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>io: Pointer to uint8_t</i> - Pointer to I/O structure</li>
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>

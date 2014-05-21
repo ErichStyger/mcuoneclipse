@@ -218,12 +218,12 @@ LI.EXP {
  - Called in the event of a new time set
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void OnTimeSet(byte hour, byte minute, byte second, byte hSecond)<br />
+<br /><i>ANSIC prototype:</i> void OnTimeSet(uint8_t hour, uint8_t minute, uint8_t second, uint8_t hSecond)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>hour:byte</i> - The new hour</li>
-<li><i>minute:byte</i> - The new minute</li>
-<li><i>second:byte</i> - The new second</li>
-<li><i>hSecond:byte</i> - The new 0.01 second part</li>
+<li><i>hour:uint8_t</i> - The new hour</li>
+<li><i>minute:uint8_t</i> - The new minute</li>
+<li><i>second:uint8_t</i> - The new second</li>
+<li><i>hSecond:uint8_t</i> - The new 0.01 second part</li>
 </ul><br />
 </li>
 <li>
@@ -233,11 +233,11 @@ LI.EXP {
  - called in the event of a date set
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void OnDateSet(byte day, byte month, word year)<br />
+<br /><i>ANSIC prototype:</i> void OnDateSet(uint8_t day, uint8_t month, uint16_t year)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>day:byte</i> - the new day</li>
-<li><i>month:byte</i> - the new month</li>
-<li><i>year:word</i> - the new year</li>
+<li><i>day:uint8_t</i> - the new day</li>
+<li><i>month:uint8_t</i> - the new month</li>
+<li><i>year:uint16_t</i> - the new year</li>
 </ul><br />
 </li>
 </ul>
