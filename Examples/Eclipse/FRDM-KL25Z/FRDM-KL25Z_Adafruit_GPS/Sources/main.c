@@ -4,7 +4,7 @@
 **     Processor   : MKL25Z128VLK4
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2014-05-18, 18:47, # CodeGen: 0
+**     Date/Time   : 2014-05-20, 15:16, # CodeGen: 15
 **     Abstract    :
 **         Main module.
 **         This module contains user's application code.
@@ -49,6 +49,13 @@
 #include "FAT1.h"
 #include "SD1.h"
 #include "SS1.h"
+#include "CD1.h"
+#include "GPIO_D.h"
+#include "MINI1.h"
+#include "GPS.h"
+#include "ASerialLdd2.h"
+#include "PPS.h"
+#include "BitIoLdd5.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

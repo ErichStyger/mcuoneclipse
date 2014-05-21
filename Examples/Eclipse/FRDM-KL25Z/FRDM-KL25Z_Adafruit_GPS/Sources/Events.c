@@ -5,13 +5,21 @@
 **     Component   : Events
 **     Version     : Driver 01.00
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2014-05-18, 18:47, # CodeGen: 0
+**     Date/Time   : 2014-05-20, 15:16, # CodeGen: 15
 **     Abstract    :
 **         This is user's event module.
 **         Put your event handler code here.
 **     Settings    :
 **     Contents    :
-**         Cpu_OnNMIINT - void Cpu_OnNMIINT(void);
+**         GPS_OnError                          - void GPS_OnError(void);
+**         GPS_OnRxChar                         - void GPS_OnRxChar(void);
+**         GPS_OnTxChar                         - void GPS_OnTxChar(void);
+**         GPS_OnFullRxBuf                      - void GPS_OnFullRxBuf(void);
+**         GPS_OnFreeTxBuf                      - void GPS_OnFreeTxBuf(void);
+**         FRTOS1_vApplicationStackOverflowHook - void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+**         FRTOS1_vApplicationTickHook          - void FRTOS1_vApplicationTickHook(void);
+**         FRTOS1_vApplicationMallocFailedHook  - void FRTOS1_vApplicationMallocFailedHook(void);
+**         Cpu_OnNMIINT                         - void Cpu_OnNMIINT(void);
 **
 ** ###################################################################*/
 /*!
@@ -39,18 +47,91 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Event       :  Cpu_OnNMIINT (module Events)
+**     Event       :  GPS_OnError (module Events)
 **
-**     Component   :  Cpu [MKL25Z128LK4]
+**     Component   :  GPS [AsynchroSerial]
+**     Description :
+**         This event is called when a channel error (not the error
+**         returned by a given method) occurs. The errors can be read
+**         using <GetError> method.
+**         The event is available only when the <Interrupt
+**         service/event> property is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
 */
-/*!
-**     @brief
-**         This event is called when the Non maskable interrupt had
-**         occurred. This event is automatically enabled when the [NMI
-**         interrupt] property is set to 'Enabled'.
+void GPS_OnError(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  GPS_OnRxChar (module Events)
+**
+**     Component   :  GPS [AsynchroSerial]
+**     Description :
+**         This event is called after a correct character is received.
+**         The event is available only when the <Interrupt
+**         service/event> property is enabled and either the <Receiver>
+**         property is enabled or the <SCI output mode> property (if
+**         supported) is set to Single-wire mode.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
 */
-/* ===================================================================*/
-void Cpu_OnNMIINT(void)
+void GPS_OnRxChar(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  GPS_OnTxChar (module Events)
+**
+**     Component   :  GPS [AsynchroSerial]
+**     Description :
+**         This event is called after a character is transmitted.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void GPS_OnTxChar(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  GPS_OnFullRxBuf (module Events)
+**
+**     Component   :  GPS [AsynchroSerial]
+**     Description :
+**         This event is called when the input buffer is full;
+**         i.e. after reception of the last character 
+**         that was successfully placed into input buffer.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void GPS_OnFullRxBuf(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  GPS_OnFreeTxBuf (module Events)
+**
+**     Component   :  GPS [AsynchroSerial]
+**     Description :
+**         This event is called after the last character in output
+**         buffer is transmitted.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void GPS_OnFreeTxBuf(void)
 {
   /* Write your code here ... */
 }
@@ -123,6 +204,24 @@ void FRTOS1_vApplicationMallocFailedHook(void)
   taskDISABLE_INTERRUPTS();
   /* Write your code here ... */
   for(;;) {}
+}
+
+/*
+** ===================================================================
+**     Event       :  Cpu_OnNMIINT (module Events)
+**
+**     Component   :  Cpu [MKL25Z128LK4]
+*/
+/*!
+**     @brief
+**         This event is called when the Non maskable interrupt had
+**         occurred. This event is automatically enabled when the [NMI
+**         interrupt] property is set to 'Enabled'.
+*/
+/* ===================================================================*/
+void Cpu_OnNMIINT(void)
+{
+  /* Write your code here ... */
 }
 
 /* END Events */

@@ -5,6 +5,7 @@
  *      Author: Erich Styger
  */
 
+#include "Platform.h"
 #include "Shell.h"
 #include "Application.h"
 #include "FRTOS1.h"
@@ -15,8 +16,6 @@
 #include "FAT1.h"
 //#include "SD_RedLed.h"
 //#include "SD_GreenLed.h"
-
-#define PL_HAS_SD_CARD  1 /* if we have SD card support */
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -36,7 +35,7 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if RTC1_PARSE_COMMAND_ENABLED
   RTC1_ParseCommand,
 #endif
-#if FAT1_PARSE_COMMAND_ENABLED
+#if FAT1_PARSE_COMMAND_ENABLED && PL_HAS_SD_CARD
   FAT1_ParseCommand,
 #endif
   NULL /* sentinel */
@@ -53,7 +52,7 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
   buf[0] = '\0';
   (void)CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, CLS1_GetStdio(), CmdParserTable);
 #if PL_HAS_SD_CARD
-  FAT1_Init();
+//  FAT1_Init();
 #endif
   for(;;) {
 #if PL_HAS_SD_CARD
