@@ -3,10 +3,10 @@
   <Header>
     <Name>SDK_PEx_FreeRTOS</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>21</ModificationStamp>
-    <Date>2014-04-27</Date>
+    <ModificationStamp>22</ModificationStamp>
+    <Date>2014-05-21</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion>1.9.0.RT6_b1413-0625</PEversion>
+    <PEversion>1.9.2.RT6b1416-0656</PEversion>
   </Header>
   <Options>
     <ProjectMainModule>main</ProjectMainModule>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>37</ProjectCompNumb>
+    <ProjectCompNumb>39</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -41,6 +41,7 @@
     <ProjectStaticFilesGenerationMode>LINKED</ProjectStaticFilesGenerationMode>
     <SdkSourceFilesDirectory>${KSDK_PATH}</SdkSourceFilesDirectory>
     <SdkLibraryModes lines_count="0" />
+    <SdkVersionValue>1.0.0-Beta</SdkVersionValue>
   </Options>
   <CPU>
     <BeanType>MK64FN1M0LQ12_4SDK</BeanType>
@@ -2094,7 +2095,30 @@
     <Methods>
       <ItemState>
         <ItemSymbol>CPUCond</ItemSymbol>
-        <ListItemCount>0</ListItemCount>
+        <ListItemCount>1</ListItemCount>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SharedCpuMethodsInvisibleGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SystemInit</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>SystemInit</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SystemCoreClockUpdate</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>SystemCoreClockUpdate</UsrMethodName>
       </ItemState>
     </Methods>
     <Events>
@@ -22569,7 +22593,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.101</BeanVersion>
+    <BeanVersion>01.104</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>

@@ -85,25 +85,33 @@
  *
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
-#define configGENERATE_STATIC_SOURCES             1 /* if set to one, it will create 'static' sources to be used without Processor Expert */
-#define configGENERATE_RUN_TIME_STATS             0
-#define configUSE_PREEMPTION                      1
-#define configUSE_IDLE_HOOK                       0
-#define configUSE_TICK_HOOK                       0
-#define configUSE_MALLOC_FAILED_HOOK              0
-#define configTICK_RATE_HZ                        ((TickType_t)100) /* frequency of tick interrupt */
+#define configGENERATE_STATIC_SOURCES             1 /* 1: it will create 'static' sources to be used without Processor Expert; 0: Processor Expert code generated */
+#define configPEX_KINETIS_SDK                     1 /* 1: project is a Kinetis SDK Processor Expert project; 0: No Kinetis Processor Expert project */
+
+#define configGENERATE_RUN_TIME_STATS             0 /* 1: generate runtime statistics; 0: no runtime statistics */
+#define configUSE_PREEMPTION                      1 /* 1: pre-emptive mode; 0: cooperative mode */
+#define configUSE_IDLE_HOOK                       0 /* 1: use Idle hook; 0: no Idle hook */
+#define configUSE_TICK_HOOK                       0 /* 1: use Tick hook; 0: no Tick hook */
+#define configUSE_MALLOC_FAILED_HOOK              0 /* 1: use MallocFailed hook; 0: no MallocFailed hook */
+#define configTICK_RATE_HZ                        ((TickType_t)1000) /* frequency of tick interrupt */
 #define configSYSTICK_USE_LOW_POWER_TIMER         0 /* If using Kinetis Low Power Timer (LPTMR) instead of SysTick timer */
-#define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ    1 /* dummy value */
-#define configCPU_CLOCK_HZ                        20971520u
-#define configBUS_CLOCK_HZ                        20971520u
+#define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ    1 /* 1 kHz LPO timer. Set to 1 if not used */
+#if configPEX_KINETIS_SDK
+/* The SDK variable SystemCoreClock contains the current clock speed */
+#define configCPU_CLOCK_HZ                        SystemCoreClock /* CPU clock frequency */
+#define configBUS_CLOCK_HZ                        SystemCoreClock /* Bus clock frequency */
+#else
+#define configCPU_CLOCK_HZ                        120000000u /* CPU clock frequency */
+#define configBUS_CLOCK_HZ                        60000000u /* Bus clock frequency */
+#endif /* configPEX_KINETIS_SDK */
 #define configSYSTICK_USE_CORE_CLOCK              1 /* System Tick is using core clock  */
 #define configSYSTICK_CLOCK_DIVIDER               1 /* no divider */
 #define configSYSTICK_CLOCK_HZ                    ((configCPU_CLOCK_HZ)/configSYSTICK_CLOCK_DIVIDER) /* frequency of system tick counter */
-#define configMINIMAL_STACK_SIZE                  ((unsigned portSHORT)200)
+#define configMINIMAL_STACK_SIZE                  ((unsigned portSHORT)200) /* stack size in addressable stack units */
 /*----------------------------------------------------------*/
 /* Heap Memory */
 #define configFRTOS_MEMORY_SCHEME                 2 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc) or 4 (coalesc blocks) */
-#define configTOTAL_HEAP_SIZE                     ((size_t)(8192)) /* size of heap in bytes */
+#define configTOTAL_HEAP_SIZE                     ((size_t)(0x4000)) /* size of heap in bytes */
 #define configUSE_HEAP_SECTION_NAME               0 /* set to 1 if a custom section name (configHEAP_SECTION_NAME_STRING) shall be used, 0 otherwise */
 #if configUSE_HEAP_SECTION_NAME
 #define configHEAP_SECTION_NAME_STRING            ".m_data_20000000" /* heap section name (use e.g. ".m_data_20000000" for gcc and "m_data_20000000" for IAR). Check your linker file for the name used. */
@@ -141,7 +149,7 @@
    to exclude the API function. */
 #define INCLUDE_vTaskPrioritySet                  1
 #define INCLUDE_uxTaskPriorityGet                 1
-#define INCLUDE_vTaskDelete                       0
+#define INCLUDE_vTaskDelete                       1
 #define INCLUDE_vTaskCleanUpResources             1
 #define INCLUDE_vTaskSuspend                      1
 #define INCLUDE_vTaskDelayUntil                   1
@@ -180,7 +188,7 @@
 #define configCPU_FAMILY_IS_ARM_M4(fam)      (((fam)==configCPU_FAMILY_ARM_M4)  || ((fam)==configCPU_FAMILY_ARM_M4F))
 #define configCPU_FAMILY_IS_ARM(fam)         (((fam)==configCPU_FAMILY_ARM_M0P) || configCPU_FAMILY_IS_ARM_M4(fam))
 
-#define configCPU_FAMILY                          configCPU_FAMILY_ARM_M0P
+#define configCPU_FAMILY                          configCPU_FAMILY_ARM_M4F
 /* -------------------------------------------------------------------- */
 /* Cortex-M specific definitions. */
 #if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY)
