@@ -123,6 +123,10 @@ portLONG uxGetTickCounterValue(void);
 #include "FreeRTOSConfig.h"
 #include "portmacro.h"
 
+#if configPEX_KINETIS_SDK
+extern uint32_t SystemCoreClock; /* in Kinetis SDK, this contains the system core clock speed */
+#endif
+
 /*!
  * \brief Return the tick raw counter value. It is assumed that the counter register has been reset at the last tick time
  * \return Tick counter value. The value is reset at tick interrupt time.
