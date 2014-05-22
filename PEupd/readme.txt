@@ -37,7 +37,7 @@ Package from component(s):
 - FXOS8700CQ version 01.015
 - GDisplay version 01.190
 - GenericBitIO version 01.065
-- GenericI2C version 01.020
+- GenericI2C version 01.023
 - GenericKBI version 01.025
 - GenericSPI version 01.029
 - GenericSWI2C version 01.007
@@ -69,10 +69,10 @@ Package from component(s):
 - MMA8451Q version 01.028
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 04.05.2014
+created 21.05.2014
 
 Package from component(s):
-- nRF24L01 version 01.074
+- nRF24L01 version 01.080
 - OLED version 01.045
 - PCA9554 version 01.024
 - PCA9554BitIO version 01.037
@@ -84,7 +84,7 @@ Package from component(s):
 - PWMServo16bit version 01.011
 - QuadCounter version 01.026
 - RingBuffer version 01.025
-- RNet version 01.068
+- RNet version 01.069
 - RTC_Maxim version 01.009
 - S19 version 01.034
 - S65Sharp version 01.082
@@ -98,7 +98,7 @@ Package from component(s):
 - SSD1289 version 01.158
 - SSEC version 01.067
 - Tacho version 01.002
-- Timeout version 01.024
+- Timeout version 01.029
 - TouchScreen version 01.077
 - TouchScreenSensor version 01.053
 - Trigger version 01.057
@@ -118,6 +118,6 @@ Package from component(s):
 - UIWindow version 01.033
 - UserInterface version 01.510
 - UTI version 01.125
-- Utility version 01.104
+- Utility version 01.105
 - Wait version 01.067
-created 04.05.2014
+created 21.05.2014
