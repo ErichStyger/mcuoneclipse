@@ -178,8 +178,7 @@ void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName)
 */
 void FRTOS1_vApplicationTickHook(void)
 {
-  /* Called for every RTOS tick. */
-  /* Write your code here ... */
+  TmDt1_AddTick();
 }
 
 /*

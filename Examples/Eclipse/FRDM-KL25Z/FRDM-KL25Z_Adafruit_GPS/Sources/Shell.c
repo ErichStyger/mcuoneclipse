@@ -8,14 +8,13 @@
 #include "Platform.h"
 #include "Shell.h"
 #include "Application.h"
+#include "TmDt1.h"
 #include "FRTOS1.h"
 #include "CLS1.h"
 #include "LEDR.h"
 #include "LEDG.h"
 //#include "RTC1.h"
 #include "FAT1.h"
-//#include "SD_RedLed.h"
-//#include "SD_GreenLed.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -37,6 +36,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if FAT1_PARSE_COMMAND_ENABLED && PL_HAS_SD_CARD
   FAT1_ParseCommand,
+#endif
+#if TmDt1_PARSE_COMMAND_ENABLED
+  TmDt1_ParseCommand,
 #endif
   NULL /* sentinel */
 };

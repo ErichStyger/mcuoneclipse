@@ -11,6 +11,7 @@
 #include "GPS.h"
 #include "CLS1.h"
 
+#if PL_HAS_GPS
 static portTASK_FUNCTION(NmeaTask, pvParameters) {
   GPS_TComData ch;
 
@@ -25,8 +26,10 @@ static portTASK_FUNCTION(NmeaTask, pvParameters) {
     FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
   }
 }
+#endif /* PL_HAS_GPS */
 
 void NMEA_Init(void) {
+#if PL_HAS_GPS
   if (FRTOS1_xTaskCreate(
         NmeaTask,  /* pointer to the task */
         "NMEA", /* task name for kernel awareness debugging */
@@ -39,6 +42,7 @@ void NMEA_Init(void) {
     for(;;){}; /* error! probably out of memory */
     /*lint +e527 */
   }
+#endif
 }
 
 

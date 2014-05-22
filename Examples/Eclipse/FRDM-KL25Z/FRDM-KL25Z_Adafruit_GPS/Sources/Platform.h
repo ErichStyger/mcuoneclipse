@@ -10,6 +10,7 @@
 
 
 #define PL_HAS_SD_CARD  1 /* if we have SD card support */
+#define PL_HAS_GPS      0 /* if we have GPS */
 
 
 #endif /* PLATFORM_H_ */
