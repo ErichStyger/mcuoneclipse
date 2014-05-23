@@ -1049,15 +1049,12 @@ void %'ModuleName'%.%ReadChar(uint8_t *c)
 {
 %if defined(Serial)
   uint8_t res;
-  %@CriticalSection@'ModuleName'%.CriticalVariableDrv();
 
 %if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & defined(ConsoleSempahore) & %ConsoleSempahore='yes'
   (void)xSemaphoreTakeRecursive(ShellSem, portMAX_DELAY);
 %endif
 %if defined(Serial)
-  %@CriticalSection@'ModuleName'%.EnterCriticalDrv();
   res = %@Serial@'ModuleName'%.RecvChar((uint8_t*)c);
-  %@CriticalSection@'ModuleName'%.ExitCriticalDrv();
   if (res==ERR_RXEMPTY) {
     /* no character in buffer */
     *c = '\0';
@@ -1085,7 +1082,6 @@ void %'ModuleName'%.%SendChar(uint8_t ch)
   %if BlockingSend='yes'
   uint8_t res;
   %endif
-  %@CriticalSection@'ModuleName'%.CriticalVariableDrv();
 
 %if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & defined(ConsoleSempahore) & %ConsoleSempahore='yes'
   (void)xSemaphoreTakeRecursive(ShellSem, portMAX_DELAY);
@@ -1093,9 +1089,7 @@ void %'ModuleName'%.%SendChar(uint8_t ch)
  %if defined(Serial)
   %if BlockingSend='yes'
   do {
-    %@CriticalSection@'ModuleName'%.EnterCriticalDrv();
     res = %@Serial@'ModuleName'%.SendChar((uint8_t)ch);          %>40/* Send char */
-    %@CriticalSection@'ModuleName'%.ExitCriticalDrv();
   %if defined(WaitTimeMs) & WaitTimeMs >. '0'
     if (res==ERR_TXFULL) {
     %if defined(RTOSWait) & RTOSWait='yes'
@@ -1107,9 +1101,7 @@ void %'ModuleName'%.%SendChar(uint8_t ch)
   %endif
   } while(res==ERR_TXFULL);
   %else
-  %@CriticalSection@'ModuleName'%.EnterCriticalDrv();
   (void)%@Serial@'ModuleName'%.SendChar((uint8_t)ch);            %>40/* non blocking send */
-  %@CriticalSection@'ModuleName'%.ExitCriticalDrv();
   %endif
  %endif
 %if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & defined(ConsoleSempahore) & %ConsoleSempahore='yes'
