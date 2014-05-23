@@ -233,7 +233,7 @@ int16_t %'ModuleName'%.%GetZmg(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN MeasureGetRawX
 %ifdef MeasureGetRawX
-word %'ModuleName'%.%MeasureGetRawX(void);
+uint16_t %'ModuleName'%.%MeasureGetRawX(void);
 %define! RetVal
 %include Common\FXOS8700CQMeasureGetRawX.Inc
 
@@ -242,7 +242,7 @@ word %'ModuleName'%.%MeasureGetRawX(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN MeasureGetRawY
 %ifdef MeasureGetRawY
-word %'ModuleName'%.%MeasureGetRawY(void);
+uint16_t %'ModuleName'%.%MeasureGetRawY(void);
 %define! RetVal
 %include Common\FXOS8700CQMeasureGetRawY.Inc
 
@@ -251,7 +251,7 @@ word %'ModuleName'%.%MeasureGetRawY(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN MeasureGetRawZ
 %ifdef MeasureGetRawZ
-word %'ModuleName'%.%MeasureGetRawZ(void);
+uint16_t %'ModuleName'%.%MeasureGetRawZ(void);
 %define! RetVal
 %include Common\FXOS8700CQMeasureGetRawZ.Inc
 
@@ -341,7 +341,7 @@ int16_t %'ModuleName'%.%GetZ(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ParseCommand
 %ifdef ParseCommand
-byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io);
+uint8_t %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io);
 %define! Parcmd
 %define! Parhandled
 %define! Pario
@@ -353,7 +353,7 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SetFastMode
 %ifdef SetFastMode
-byte %'ModuleName'%.%SetFastMode(bool on);
+uint8_t %'ModuleName'%.%SetFastMode(bool on);
 %define! Paron
 %define! RetVal
 %include Common\FXOS8700CQSetFastMode.Inc
@@ -363,7 +363,7 @@ byte %'ModuleName'%.%SetFastMode(bool on);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Enable
 %ifdef Enable
-byte %'ModuleName'%.%Enable(void);
+uint8_t %'ModuleName'%.%Enable(void);
 %define! RetVal
 %include Common\FXOS8700CQEnable.Inc
 
@@ -372,7 +372,7 @@ byte %'ModuleName'%.%Enable(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Disable
 %ifdef Disable
-byte %'ModuleName'%.%Disable(void);
+uint8_t %'ModuleName'%.%Disable(void);
 %define! RetVal
 %include Common\FXOS8700CQDisable.Inc
 
@@ -381,8 +381,7 @@ byte %'ModuleName'%.%Disable(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN isEnabled
 %ifdef isEnabled
-byte %'ModuleName'%.%isEnabled(bool *isEnabled);
-%define! ParisEnabled
+uint8_t %'ModuleName'%.%isEnabled(bool *isEnabled);
 %define! RetVal
 %include Common\FXOS8700CQisEnabled.Inc
 
@@ -391,7 +390,7 @@ byte %'ModuleName'%.%isEnabled(bool *isEnabled);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN WhoAmI
 %ifdef WhoAmI
-byte %'ModuleName'%.%WhoAmI(byte *value);
+uint8_t %'ModuleName'%.%WhoAmI(uint8_t *value);
 %define! Parvalue
 %define! RetVal
 %include Common\FXOS8700CQWhoAmI.Inc
@@ -401,7 +400,7 @@ byte %'ModuleName'%.%WhoAmI(byte *value);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN GetTemperature
 %ifdef GetTemperature
-byte %'ModuleName'%.%GetTemperature(signed char *temperature);
+uint8_t %'ModuleName'%.%GetTemperature(int8_t *temperature);
 %define! Partemperature
 %define! RetVal
 %include Common\FXOS8700CQGetTemperature.Inc
@@ -411,7 +410,7 @@ byte %'ModuleName'%.%GetTemperature(signed char *temperature);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN GetMagX
 %ifdef GetMagX
-byte %'ModuleName'%.%GetMagX(int16_t *value);
+uint8_t %'ModuleName'%.%GetMagX(int16_t *value);
 %define! Parvalue
 %define! RetVal
 %include Common\FXOS8700CQGetMagX.Inc
@@ -421,7 +420,7 @@ byte %'ModuleName'%.%GetMagX(int16_t *value);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN GetMagY
 %ifdef GetMagY
-byte %'ModuleName'%.%GetMagY(int16_t *value);
+uint8_t %'ModuleName'%.%GetMagY(int16_t *value);
 %define! Parvalue
 %define! RetVal
 %include Common\FXOS8700CQGetMagY.Inc
@@ -431,7 +430,7 @@ byte %'ModuleName'%.%GetMagY(int16_t *value);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN GetMagZ
 %ifdef GetMagZ
-byte %'ModuleName'%.%GetMagZ(int16_t *value);
+uint8_t %'ModuleName'%.%GetMagZ(int16_t *value);
 %define! Parvalue
 %define! RetVal
 %include Common\FXOS8700CQGetMagZ.Inc
@@ -441,7 +440,7 @@ byte %'ModuleName'%.%GetMagZ(int16_t *value);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN MagneticSensorReset
 %ifdef MagneticSensorReset
-byte %'ModuleName'%.%MagneticSensorReset(void);
+uint8_t %'ModuleName'%.%MagneticSensorReset(void);
 %define! RetVal
 %include Common\FXOS8700CQMagneticSensorReset.Inc
 
@@ -450,7 +449,7 @@ byte %'ModuleName'%.%MagneticSensorReset(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ReadReg8
 %ifdef ReadReg8
-byte %'ModuleName'%.%ReadReg8(byte addr, byte *val);
+uint8_t %'ModuleName'%.%ReadReg8(uint8_t addr, uint8_t *val);
 %define! Paraddr
 %define! Parval
 %define! RetVal
@@ -461,7 +460,7 @@ byte %'ModuleName'%.%ReadReg8(byte addr, byte *val);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN WriteReg8
 %ifdef WriteReg8
-byte %'ModuleName'%.%WriteReg8(byte addr, byte val);
+uint8_t %'ModuleName'%.%WriteReg8(uint8_t addr, uint8_t val);
 %define! Paraddr
 %define! Parval
 %define! RetVal
@@ -853,7 +852,7 @@ int16_t %'ModuleName'%.%GetZmg(void)
 %ifdef MeasureGetRawX
 %define! RetVal
 %include Common\FXOS8700CQMeasureGetRawX.Inc
-word %'ModuleName'%.%MeasureGetRawX(void)
+uint16_t %'ModuleName'%.%MeasureGetRawX(void)
 {
   union {
     uint8_t buf[2]; /* value from device is in big endian */
@@ -878,7 +877,7 @@ word %'ModuleName'%.%MeasureGetRawX(void)
 %ifdef MeasureGetRawY
 %define! RetVal
 %include Common\FXOS8700CQMeasureGetRawY.Inc
-word %'ModuleName'%.%MeasureGetRawY(void)
+uint16_t %'ModuleName'%.%MeasureGetRawY(void)
 {
   union {
     uint8_t buf[2]; /* value from device is in big endian */
@@ -903,7 +902,7 @@ word %'ModuleName'%.%MeasureGetRawY(void)
 %ifdef MeasureGetRawZ
 %define! RetVal
 %include Common\FXOS8700CQMeasureGetRawZ.Inc
-word %'ModuleName'%.%MeasureGetRawZ(void)
+uint16_t %'ModuleName'%.%MeasureGetRawZ(void)
 {
   union {
     uint8_t buf[2]; /* value from device is in big endian */
@@ -1051,7 +1050,7 @@ int16_t %'ModuleName'%.%GetZ(void)
 %define! Pario
 %define! RetVal
 %include Common\FXOS8700CQParseCommand.Inc
-byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)
+uint8_t %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)
 {
   if (%@Utility@'ModuleName'%.strcmp((char*)cmd, %@Shell@'ModuleName'%.CMD_HELP)==0 || %@Utility@'ModuleName'%.strcmp((char*)cmd, "%'ModuleName' help")==0) {
     *handled = TRUE;
@@ -1092,7 +1091,7 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
 %define! Paron
 %define! RetVal
 %include Common\FXOS8700CQSetFastMode.Inc
-byte %'ModuleName'%.%SetFastMode(bool on)
+uint8_t %'ModuleName'%.%SetFastMode(bool on)
 {
   uint8_t val, res;
 
@@ -1115,7 +1114,7 @@ byte %'ModuleName'%.%SetFastMode(bool on)
 %ifdef Enable
 %define! RetVal
 %include Common\FXOS8700CQEnable.Inc
-byte %'ModuleName'%.%Enable(void)
+uint8_t %'ModuleName'%.%Enable(void)
 {
   uint8_t val, res;
 
@@ -1134,7 +1133,7 @@ byte %'ModuleName'%.%Enable(void)
 %ifdef Disable
 %define! RetVal
 %include Common\FXOS8700CQDisable.Inc
-byte %'ModuleName'%.%Disable(void)
+uint8_t %'ModuleName'%.%Disable(void)
 {
   uint8_t val, res;
 
@@ -1151,10 +1150,9 @@ byte %'ModuleName'%.%Disable(void)
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN isEnabled
 %ifdef isEnabled
-%define! ParisEnabled
 %define! RetVal
 %include Common\FXOS8700CQisEnabled.Inc
-byte %'ModuleName'%.%isEnabled(bool *isEnabled)
+uint8_t %'ModuleName'%.%isEnabled(bool *isEnabled)
 {
   uint8_t val, res;
 
@@ -1174,7 +1172,7 @@ byte %'ModuleName'%.%isEnabled(bool *isEnabled)
 %define! Parvalue
 %define! RetVal
 %include Common\FXOS8700CQWhoAmI.Inc
-byte %'ModuleName'%.%WhoAmI(byte *value)
+uint8_t %'ModuleName'%.%WhoAmI(uint8_t *value)
 {
   return %@I2C@'ModuleName'%.ReadByteAddress8(%'ModuleName'%.I2C_ADDR, %'ModuleName'%.WHO_AM_I, value);
 }
@@ -1187,7 +1185,7 @@ byte %'ModuleName'%.%WhoAmI(byte *value)
 %define! Partemperature
 %define! RetVal
 %include Common\FXOS8700CQGetTemperature.Inc
-byte %'ModuleName'%.%GetTemperature(signed char *temperature)
+uint8_t %'ModuleName'%.%GetTemperature(int8_t *temperature)
 {
   int8_t temp;
 
@@ -1206,7 +1204,7 @@ byte %'ModuleName'%.%GetTemperature(signed char *temperature)
 %define! Parvalue
 %define! RetVal
 %include Common\FXOS8700CQGetMagX.Inc
-byte %'ModuleName'%.%GetMagX(int16_t *value)
+uint8_t %'ModuleName'%.%GetMagX(int16_t *value)
 {
   union {
     uint8_t buf[2]; /* value from device is in big endian */
@@ -1233,7 +1231,7 @@ byte %'ModuleName'%.%GetMagX(int16_t *value)
 %define! Parvalue
 %define! RetVal
 %include Common\FXOS8700CQGetMagY.Inc
-byte %'ModuleName'%.%GetMagY(int16_t *value)
+uint8_t %'ModuleName'%.%GetMagY(int16_t *value)
 {
   union {
     uint8_t buf[2]; /* value from device is in big endian */
@@ -1260,7 +1258,7 @@ byte %'ModuleName'%.%GetMagY(int16_t *value)
 %define! Parvalue
 %define! RetVal
 %include Common\FXOS8700CQGetMagZ.Inc
-byte %'ModuleName'%.%GetMagZ(int16_t *value)
+uint8_t %'ModuleName'%.%GetMagZ(int16_t *value)
 {
   union {
     uint8_t buf[2]; /* value from device is in big endian */
@@ -1286,7 +1284,7 @@ byte %'ModuleName'%.%GetMagZ(int16_t *value)
 %ifdef MagneticSensorReset
 %define! RetVal
 %include Common\FXOS8700CQMagneticSensorReset.Inc
-byte %'ModuleName'%.%MagneticSensorReset(void)
+uint8_t %'ModuleName'%.%MagneticSensorReset(void)
 {
   uint8_t val;
 
@@ -1306,7 +1304,7 @@ byte %'ModuleName'%.%MagneticSensorReset(void)
 %define! Parval
 %define! RetVal
 %include Common\FXOS8700CQReadReg8.Inc
-byte %'ModuleName'%.%ReadReg8(byte addr, byte *val)
+uint8_t %'ModuleName'%.%ReadReg8(uint8_t addr, uint8_t *val)
 {
   if (%@I2C@'ModuleName'%.ReadByteAddress8(%'ModuleName'%.I2C_ADDR, addr, val)!=ERR_OK) {
     return ERR_FAILED;
@@ -1323,7 +1321,7 @@ byte %'ModuleName'%.%ReadReg8(byte addr, byte *val)
 %define! Parval
 %define! RetVal
 %include Common\FXOS8700CQWriteReg8.Inc
-byte %'ModuleName'%.%WriteReg8(byte addr, byte val)
+uint8_t %'ModuleName'%.%WriteReg8(uint8_t addr, uint8_t val)
 {
   return %@I2C@'ModuleName'%.WriteByteAddress8(%'ModuleName'%.I2C_ADDR, addr, val);
 }

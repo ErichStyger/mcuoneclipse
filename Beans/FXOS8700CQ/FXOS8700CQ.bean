@@ -4,7 +4,7 @@
     <Name>FXOS8700CQ</Name>
     <Description>Driver for the Freescale FXOS8700CQ digital I2C accelerometer and magnetometer.</Description>
     <Author>Erich Styger</Author>
-    <Version>01.015</Version>
+    <Version>01.018</Version>
     <Icon>FXOS8700CQ</Icon>
     <TypesFiles>PE,FXOS8700CQ\FXOS8700CQ</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -16,7 +16,7 @@
     <BW_DetailedHelp>yes</BW_DetailedHelp>
     <BW_HelpFiles>,Properties,Methods,Events,"User Types"</BW_HelpFiles>
     <BW_NeedTps>yes</BW_NeedTps>
-    <BW_NeedUst>0</BW_NeedUst>
+    <BW_NeedUst>4</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <Shortcut>FX</Shortcut>
     <BeanStatus>RELEASE</BeanStatus>
@@ -219,12 +219,12 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(void)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(void)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -247,12 +247,12 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(void)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(void)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -275,7 +275,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>error code</RetHint>
         <ParamCount>1</ParamCount>
         <Parameter>
@@ -286,7 +286,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(bool *isEnabled)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(bool *isEnabled)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -309,24 +309,24 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>addr</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>device memory map address</ParHint>
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to value</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(byte addr, byte *val)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(uint8_t addr, uint8_t *val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -349,24 +349,24 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>addr</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>device memory map address</ParHint>
         </Parameter>
         <Parameter>
           <ParName>val</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>value to write</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(byte addr, byte val)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(uint8_t addr, uint8_t val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -389,7 +389,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>16bit signed</ReturnType>
+        <ReturnType>int16_t</ReturnType>
         <RetHint>Measured X value</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
@@ -417,7 +417,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>16bit signed</ReturnType>
+        <ReturnType>int16_t</ReturnType>
         <RetHint>Measured Y value</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
@@ -445,7 +445,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>16bit signed</ReturnType>
+        <ReturnType>int16_t</ReturnType>
         <RetHint>Measured Z value</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
@@ -591,7 +591,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>16bit signed</ReturnType>
+        <ReturnType>int16_t</ReturnType>
         <RetHint>The g value in 1/1000g units</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
@@ -619,7 +619,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>16bit signed</ReturnType>
+        <ReturnType>int16_t</ReturnType>
         <RetHint>The g value in 1/1000g units</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
@@ -647,7 +647,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>16bit signed</ReturnType>
+        <ReturnType>int16_t</ReturnType>
         <RetHint>The g value in 1/1000g units</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
@@ -675,12 +675,12 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>16bit unsigned</ReturnType>
+        <ReturnType>uint16_t</ReturnType>
         <RetHint>X sensor value</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>word #M#_#C#(void)</ANSIC>
+          <ANSIC>uint16_t #M#_#C#(void)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -703,12 +703,12 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>16bit unsigned</ReturnType>
+        <ReturnType>uint16_t</ReturnType>
         <RetHint>Y sensor value</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>word #M#_#C#(void)</ANSIC>
+          <ANSIC>uint16_t #M#_#C#(void)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -731,12 +731,12 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>16bit unsigned</ReturnType>
+        <ReturnType>uint16_t</ReturnType>
         <RetHint>Z sensor value</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>word #M#_#C#(void)</ANSIC>
+          <ANSIC>uint16_t #M#_#C#(void)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -759,7 +759,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>16bit signed</ReturnType>
+        <ReturnType>int16_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
@@ -787,7 +787,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>16bit signed</ReturnType>
+        <ReturnType>int16_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
@@ -815,7 +815,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>16bit signed</ReturnType>
+        <ReturnType>int16_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
@@ -843,7 +843,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>16bit signed</ReturnType>
+        <ReturnType>int16_t</ReturnType>
         <RetHint>1g value for X</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
@@ -871,7 +871,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>16bit signed</ReturnType>
+        <ReturnType>int16_t</ReturnType>
         <RetHint>1g value for Y</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
@@ -899,7 +899,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>16bit signed</ReturnType>
+        <ReturnType>int16_t</ReturnType>
         <RetHint>1g value for Z</RetHint>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
@@ -927,7 +927,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>1</ParamCount>
         <Parameter>
@@ -938,7 +938,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(bool on)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(bool on)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -961,18 +961,18 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>value</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to value to store</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(byte *value)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(uint8_t *value)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -995,18 +995,18 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>temperature</ParName>
-          <ParType>8bit signed</ParType>
+          <ParType>int8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to variable where to store the temperature</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(signed char *temperature)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(int8_t *temperature)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1029,18 +1029,18 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>value</ParName>
-          <ParType>16bit signed</ParType>
+          <ParType>int16_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to where to store the value.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(int16_t *value)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(int16_t *value)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1063,18 +1063,18 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>value</ParName>
-          <ParType>16bit signed</ParType>
+          <ParType>int16_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to where to store the value.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(int16_t *value)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(int16_t *value)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1097,18 +1097,18 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>value</ParName>
-          <ParType>16bit signed</ParType>
+          <ParType>int16_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to where to store the value.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(int16_t *value)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(int16_t *value)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1131,7 +1131,7 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
+        <ReturnType>uint8_t</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>3</ParamCount>
         <Parameter>
@@ -1149,14 +1149,42 @@
         </Parameter>
         <Parameter>
           <ParName>io</ParName>
-          <ParType>8bit unsigned</ParType>
+          <ParType>uint8_t</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Pointer to I/O structure</ParHint>
           <ParUserDeclaration>const %@Shell@'ModuleName'%.StdIOType *io</ParUserDeclaration>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)</ANSIC>
+          <ANSIC>uint8_t #M#_#C#(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>MagneticSensorReset</Name>
+        <Symbol>MagneticSensorReset</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Initiates a magnetic sensor reset cycle that will restore correct operation after exposure to an excessive magnetic field which exceeds the Full Scale Range but is less than the Maximum Applied Magnetic Field.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>uint8_t</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>uint8_t #M#_#C#(void)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1213,34 +1241,6 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>uint8_t #M#_#C#(void)</ANSIC>
-        </Declarations>
-      </TMthdItem>
-    </Method>
-    <Method>
-      <TMthdItem>
-        <Name>MagneticSensorReset</Name>
-        <Symbol>MagneticSensorReset</Symbol>
-        <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Initiates a magnetic sensor reset cycle that will restore correct operation after exposure to an excessive magnetic field which exceeds the Full Scale Range but is less than the Maximum Applied Magnetic Field.</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
-        <TextValueIndex>false</TextValueIndex>
-        <RuntimeProperty>false</RuntimeProperty>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
-        <Popup>false</Popup>
-        <PublicMethod>true</PublicMethod>
-        <IsAssembler>false</IsAssembler>
-        <InDefinition>true</InDefinition>
-        <ReturnType>8bit unsigned</ReturnType>
-        <RetHint>Error code</RetHint>
-        <ParamCount>0</ParamCount>
-        <Scope>PRIVATE</Scope>
-        <Declarations>
-          <ANSIC>byte #M#_#C#(void)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

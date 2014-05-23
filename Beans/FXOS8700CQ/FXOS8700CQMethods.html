@@ -212,9 +212,9 @@ LI.EXP {
  - Enables the device with setting the ACTIVE bit in the CTRL register 1
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte Enable(void)<br />
+<br /><i>ANSIC prototype:</i> uint8_t Enable(void)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>Return value:byte</i> - Error code
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -223,9 +223,9 @@ LI.EXP {
  - Disables the device with clearing the ACTIVE bit in the CTRL register 1
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte Disable(void)<br />
+<br /><i>ANSIC prototype:</i> uint8_t Disable(void)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>Return value:byte</i> - Error code
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -234,10 +234,10 @@ LI.EXP {
  - Returns the status of the the ACTIVE bit in the CTRL register 1
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte isEnabled(bool *isEnabled)<br />
+<br /><i>ANSIC prototype:</i> uint8_t isEnabled(bool *isEnabled)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>isEnabled: Pointer to bool</i> - Pointer to where to store the result, TRUE if ACTIVE bit is set, FALSE otherwise</li>
-<li><i>Return value:byte</i> - error code
+<li><i>Return value:uint8_t</i> - error code
 </li>
 </ul><br />
 </li>
@@ -246,11 +246,11 @@ LI.EXP {
  - Reads an 8bit device register
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte ReadReg8(byte addr, byte *val)<br />
+<br /><i>ANSIC prototype:</i> uint8_t ReadReg8(uint8_t addr, uint8_t *val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>addr:byte</i> - device memory map address</li>
-<li><i>val: Pointer to byte</i> - Pointer to value</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>addr:uint8_t</i> - device memory map address</li>
+<li><i>val: Pointer to uint8_t</i> - Pointer to value</li>
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -259,11 +259,11 @@ LI.EXP {
  - Write an 8bit device register
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte WriteReg8(byte addr, byte val)<br />
+<br /><i>ANSIC prototype:</i> uint8_t WriteReg8(uint8_t addr, uint8_t val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>addr:byte</i> - device memory map address</li>
-<li><i>val:byte</i> - value to write</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>addr:uint8_t</i> - device memory map address</li>
+<li><i>val:uint8_t</i> - value to write</li>
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -377,9 +377,9 @@ LI.EXP {
  - Performs a measurement on X channel and returns the raw value.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> word MeasureGetRawX(void)<br />
+<br /><i>ANSIC prototype:</i> uint16_t MeasureGetRawX(void)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>Return value:word</i> - X sensor value
+<li><i>Return value:uint16_t</i> - X sensor value
 </li>
 </ul><br />
 </li>
@@ -388,9 +388,9 @@ LI.EXP {
  - Performs a measurement on Y channel and returns the raw value.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> word MeasureGetRawY(void)<br />
+<br /><i>ANSIC prototype:</i> uint16_t MeasureGetRawY(void)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>Return value:word</i> - Y sensor value
+<li><i>Return value:uint16_t</i> - Y sensor value
 </li>
 </ul><br />
 </li>
@@ -399,9 +399,9 @@ LI.EXP {
  - Performs a measurement on Z channel and returns the raw value.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> word MeasureGetRawZ(void)<br />
+<br /><i>ANSIC prototype:</i> uint16_t MeasureGetRawZ(void)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>Return value:word</i> - Z sensor value
+<li><i>Return value:uint16_t</i> - Z sensor value
 </li>
 </ul><br />
 </li>
@@ -476,10 +476,10 @@ LI.EXP {
  - Turns the F_READ (Fast Read Mode) on or off
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte SetFastMode(bool on)<br />
+<br /><i>ANSIC prototype:</i> uint8_t SetFastMode(bool on)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>on:bool</i> - if to turn the F_READ mode on or off</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -488,10 +488,10 @@ LI.EXP {
  - Returns the value of the WHO_AM_I (0x0D) register
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte WhoAmI(byte *value)<br />
+<br /><i>ANSIC prototype:</i> uint8_t WhoAmI(uint8_t *value)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>value: Pointer to byte</i> - Pointer to value to store</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>value: Pointer to uint8_t</i> - Pointer to value to store</li>
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -500,10 +500,10 @@ LI.EXP {
  - Returns the temperature of the die as signed 8bit values in degree Celsius
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte GetTemperature(signed char *temperature)<br />
+<br /><i>ANSIC prototype:</i> uint8_t GetTemperature(int8_t *temperature)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>temperature: Pointer to signed char</i> - Pointer to variable where to store the temperature</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>temperature: Pointer to int8_t</i> - Pointer to variable where to store the temperature</li>
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -512,10 +512,10 @@ LI.EXP {
  - Returns the X magnetometer value.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte GetMagX(int16_t *value)<br />
+<br /><i>ANSIC prototype:</i> uint8_t GetMagX(int16_t *value)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>value: Pointer to int16_t</i> - Pointer to where to store the value.</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -524,10 +524,10 @@ LI.EXP {
  - Returns the Y magnetometer value.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte GetMagY(int16_t *value)<br />
+<br /><i>ANSIC prototype:</i> uint8_t GetMagY(int16_t *value)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>value: Pointer to int16_t</i> - Pointer to where to store the value.</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -536,10 +536,10 @@ LI.EXP {
  - Returns the Z magnetometer value.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte GetMagZ(int16_t *value)<br />
+<br /><i>ANSIC prototype:</i> uint8_t GetMagZ(int16_t *value)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>value: Pointer to int16_t</i> - Pointer to where to store the value.</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -548,12 +548,23 @@ LI.EXP {
  - Shell Command Line parser. This method is enabled/disabled depending on if you have the Shell enabled/disabled in the properties.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)<br />
+<br /><i>ANSIC prototype:</i> uint8_t ParseCommand(const unsigned char *cmd, bool *handled, const %@Shell@'ModuleName'%.StdIOType *io)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>cmd: Pointer to byte</i> - Pointer to command string</li>
 <li><i>handled: Pointer to bool</i> - Pointer to variable which tells if the command has been handled or not</li>
-<li><i>io: Pointer to byte</i> - Pointer to I/O structure</li>
-<li><i>Return value:byte</i> - Error code
+<li><i>io: Pointer to uint8_t</i> - Pointer to I/O structure</li>
+<li><i>Return value:uint8_t</i> - Error code
+</li>
+</ul><br />
+</li>
+<li><a name="MagneticSensorReset">
+<b>MagneticSensorReset</b></a>
+ - Initiates a magnetic sensor reset cycle that will restore correct operation after exposure to an excessive magnetic field which exceeds the Full Scale Range but is less than the Maximum Applied Magnetic Field.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> uint8_t MagneticSensorReset(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:uint8_t</i> - Error code
 </li>
 </ul><br />
 </li>
@@ -576,17 +587,6 @@ LI.EXP {
 <br /><i>ANSIC prototype:</i> uint8_t Deinit(void)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>Return value:uint8_t</i> - Error code, ERR_OK if everything is ok.
-</li>
-</ul><br />
-</li>
-<li><a name="MagneticSensorReset">
-<b>MagneticSensorReset</b></a>
- - Initiates a magnetic sensor reset cycle that will restore correct operation after exposure to an excessive magnetic field which exceeds the Full Scale Range but is less than the Maximum Applied Magnetic Field.
-<ul>
-<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte MagneticSensorReset(void)<br />
-<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>Return value:byte</i> - Error code
 </li>
 </ul><br />
 </li>
