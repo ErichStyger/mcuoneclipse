@@ -117,8 +117,8 @@ static void CDC_Run(void) {
 }
 #endif
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
-int main(void)
-/*lint -restore Enable MISRA rule (6.3) checking. */{
+int main(void) {
+/*lint -restore Enable MISRA rule (6.3) checking. */
   /* Write your local variable definition here */
 
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
