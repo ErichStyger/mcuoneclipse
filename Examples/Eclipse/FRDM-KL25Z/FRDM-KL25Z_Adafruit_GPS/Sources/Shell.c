@@ -13,8 +13,8 @@
 #include "CLS1.h"
 #include "LEDR.h"
 #include "LEDG.h"
-//#include "RTC1.h"
 #include "FAT1.h"
+#include "NMEA.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -40,6 +40,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if TmDt1_PARSE_COMMAND_ENABLED
   TmDt1_ParseCommand,
 #endif
+#if NMEA_PARSE_COMMAND_ENABLED
+  NMEA_ParseCommand,
+#endif
   NULL /* sentinel */
 };
 
@@ -53,9 +56,6 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
   (void)pvParameters; /* not used */
   buf[0] = '\0';
   (void)CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, CLS1_GetStdio(), CmdParserTable);
-#if PL_HAS_SD_CARD
-//  FAT1_Init();
-#endif
   for(;;) {
 #if PL_HAS_SD_CARD
     (void)FAT1_CheckCardPresence(&cardMounted,
