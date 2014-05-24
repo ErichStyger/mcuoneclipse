@@ -1414,7 +1414,7 @@ __asm void vPortSVCHandler(void) {
   ldmia r0!, {r4-r11}
 #endif
   msr psp, r0
-  mov r0, #0
+  mov r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
   msr basepri, r0
 #if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
 #else
