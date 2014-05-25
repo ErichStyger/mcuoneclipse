@@ -1,7 +1,7 @@
 /* ###################################################################
 **     Filename    : Events.c
 **     Project     : FRDM-K64F_DataLogger
-**     Processor   : MK64FN1M0VLQ12
+**     Processor   : MK64FN1M0VLL12
 **     Component   : Events
 **     Version     : Driver 01.00
 **     Compiler    : GNU C Compiler
@@ -75,28 +75,6 @@ void TI1_OnInterrupt(void)
 {
   TmDt1_AddTick();
   TMOUT1_AddTick();
-}
-
-/*
-** ===================================================================
-**     Event       :  SM1_OnBlockSent (module Events)
-**
-**     Component   :  SM1 [SPIMaster_LDD]
-*/
-/*!
-**     @brief
-**         This event is called after the last character from the
-**         output buffer is moved to the transmitter. This event is
-**         available only if the SendBlock method is enabled.
-**     @param
-**         UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. The pointer is passed
-**                           as the parameter of Init method. 
-*/
-/* ===================================================================*/
-void SM1_OnBlockSent(LDD_TUserData *UserDataPtr)
-{
-  /* Write your code here ... */
 }
 
 /* END Events */

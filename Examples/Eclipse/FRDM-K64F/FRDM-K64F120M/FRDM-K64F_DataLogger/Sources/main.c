@@ -1,7 +1,7 @@
 /* ###################################################################
 **     Filename    : main.c
 **     Project     : FRDM-K64F_DataLogger
-**     Processor   : MK64FN1M0VLQ12
+**     Processor   : MK64FN1M0VLL12
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
 **     Date/Time   : 2014-05-22, 17:05, # CodeGen: 0
