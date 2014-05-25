@@ -34,7 +34,7 @@ Package from component(s):
 - FSL_USB_HID_Mouse_Device version 01.066
 - FSL_USB_MSD_Host version 01.018
 - FSL_USB_Stack version 01.025
-- FXOS8700CQ version 01.015
+- FXOS8700CQ version 01.022
 - GDisplay version 01.190
 - GenericBitIO version 01.065
 - GenericI2C version 01.023
@@ -42,7 +42,7 @@ Package from component(s):
 - GenericSPI version 01.029
 - GenericSWI2C version 01.007
 - GenericSWSPI version 01.020
-- GenericTimeDate version 01.016
+- GenericTimeDate version 01.018
 - GFont version 01.123
 - HardFault version 01.008
 - I2CSpy version 01.009
@@ -69,7 +69,7 @@ Package from component(s):
 - MMA8451Q version 01.028
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 21.05.2014
+created 25.05.2014
 
 Package from component(s):
 - nRF24L01 version 01.080
@@ -120,4 +120,4 @@ Package from component(s):
 - UTI version 01.125
 - Utility version 01.105
 - Wait version 01.067
-created 21.05.2014
+created 25.05.2014
