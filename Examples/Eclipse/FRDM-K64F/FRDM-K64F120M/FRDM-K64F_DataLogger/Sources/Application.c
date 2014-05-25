@@ -80,7 +80,6 @@ void APP_Run(void) {
     Err();
   }
   for(;;) {
-    //LED1_Neg();
     x = FX1_GetX();
     y = FX1_GetY();
     z = FX1_GetZ();
