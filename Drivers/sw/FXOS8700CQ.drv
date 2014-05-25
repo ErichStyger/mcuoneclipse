@@ -382,6 +382,7 @@ uint8_t %'ModuleName'%.%Disable(void);
 %-BW_METHOD_BEGIN isEnabled
 %ifdef isEnabled
 uint8_t %'ModuleName'%.%isEnabled(bool *isEnabled);
+%define! ParisEnabled
 %define! RetVal
 %include Common\FXOS8700CQisEnabled.Inc
 
@@ -1150,6 +1151,7 @@ uint8_t %'ModuleName'%.%Disable(void)
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN isEnabled
 %ifdef isEnabled
+%define! ParisEnabled
 %define! RetVal
 %include Common\FXOS8700CQisEnabled.Inc
 uint8_t %'ModuleName'%.%isEnabled(bool *isEnabled)
