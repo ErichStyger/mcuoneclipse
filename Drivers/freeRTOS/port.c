@@ -240,6 +240,15 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
 #define portINITIAL_XPSR         (0x01000000)
 #define portINITIAL_EXEC_RETURN  (0xfffffffd)
 
+/* Let the user override the pre-loading of the initial LR with the address of
+   prvTaskExitError() in case is messes up unwinding of the stack in the
+   debugger. */
+#ifdef configTASK_RETURN_ADDRESS
+  #define portTASK_RETURN_ADDRESS	configTASK_RETURN_ADDRESS
+#else
+  #define portTASK_RETURN_ADDRESS	prvTaskExitError
+#endif
+
 #if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
   /* Constants required to manipulate the VFP. */
   #define portFPCCR                ((volatile unsigned long *)0xe000ef34) /* Floating point context control register. */
@@ -270,6 +279,18 @@ static unsigned portBASE_TYPE uxCriticalNesting = 0xaaaaaaaa;
 #include <setjmp.h>
 static jmp_buf xJumpBuf; /* Used to restore the original context when the scheduler is ended. */
 #endif
+/*-----------------------------------------------------------*/
+static void prvTaskExitError(void) {
+	/* A function that implements a task must not exit or attempt to return to
+	its caller as there is nothing to return to.  If a task wants to exit it
+	should instead call vTaskDelete( NULL ).
+
+	Artificially force an assert() to be triggered if configASSERT() is
+	defined, then stop here so application writers can catch the error. */
+	configASSERT(uxCriticalNesting == ~0UL);
+	portDISABLE_INTERRUPTS();
+	for(;;);
+}
 /*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_ARM_KEIL) && configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY)
 __asm uint32_t ulPortSetInterruptMask(void) {
@@ -543,17 +564,13 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_COD
 
 %elif (CPUfamily = "Kinetis")
   /* Simulate the stack frame as it would be created by a context switch interrupt. */
-#if configCPU_FAMILY==configCPU_FAMILY_ARM_M4F /* floating point unit */
-  pxTopOfStack -= 2; /* Offset added to account for the way the MCU uses the stack on entry/exit of interrupts,
+  pxTopOfStack--; /* Offset added to account for the way the MCU uses the stack on entry/exit of interrupts,
                         and to ensure alignment. */
-#else
-  pxTopOfStack--;
-#endif
   *pxTopOfStack = portINITIAL_XPSR;   /* xPSR */
   pxTopOfStack--;
   *pxTopOfStack = (portSTACK_TYPE)pxCode;  /* PC */
   pxTopOfStack--;
-  *pxTopOfStack = 0;  /* LR */
+  *pxTopOfStack = (portSTACK_TYPE)portTASK_RETURN_ADDRESS;  /* LR */
 
   /* Save code space by skipping register initialization. */
   pxTopOfStack -= 5;  /* R12, R3, R2 and R1. */
