@@ -34,12 +34,11 @@
 #include "FRTOS1.h"
 #include "RTOSTRC1.h"
 #include "UTIL1.h"
-#include "LED_RGB.h"
+#include "gpio1.h"
 #include "WAIT1.h"
 #include "CLS1.h"
 #include "CS1.h"
 #include "KSDK1.h"
-#include "TmDt1.h"
 #if CPU_INIT_CONFIG
   #include "Init_Config.h"
 #endif

@@ -71,7 +71,7 @@ void APP_Start (void) {
   gpio_init(NULL, ledPins);
 
   /* enable trace */
-#if 1
+#if 0
   if(RTOSTRC1_uiTraceStart()!=1) {
     for(;;){} /* failure? */
   }

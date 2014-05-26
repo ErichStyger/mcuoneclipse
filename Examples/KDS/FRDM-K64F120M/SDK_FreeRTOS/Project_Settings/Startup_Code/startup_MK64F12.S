@@ -55,11 +55,11 @@ __isr_vector:
     .long   0                           /* Reserved                     */
     .long   0                           /* Reserved                     */
     .long   0                           /* Reserved                     */
-    .long   vPortSVCHandler /*SVC_Handler*/                /* SVCall Handler               */
+    .long   SVC_Handler                 /* SVCall Handler               */
     .long   DebugMon_Handler            /* Debug Monitor Handler        */
     .long   0                           /* Reserved                     */
-    .long   vPortPendSVHandler /*PendSV_Handler*/              /* PendSV Handler               */
-    .long   vPortTickHandler /*SysTick_Handler*/             /* SysTick Handler              */
+    .long   PendSV_Handler              /* PendSV Handler               */
+    .long   SysTick_Handler             /* SysTick Handler              */
 
     /* External Interrupts */
     .long   DMA0_IRQHandler  /* DMA Channel 0 Transfer Complete */

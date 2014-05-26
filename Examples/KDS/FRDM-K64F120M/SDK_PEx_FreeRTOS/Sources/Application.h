@@ -1,8 +1,8 @@
-/*
- * Application.h
- *
- *  Created on: 03.04.2014
- *      Author: tastyger
+/**
+ * \file
+ * \brief Demo application using FreeRTOS with the Kinetis SDK
+ * \author (c) 2014 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html)
  */
 
 #ifndef APPLICATION_H_

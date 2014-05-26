@@ -5,46 +5,53 @@
  * \note MIT License (http://opensource.org/licenses/mit-license.html)
  */
 
-#include <board.h> /* board configuration */
 #include <fsl_os_abstraction.h> /* SDK RTOS abstraction */
-#include "LED_RGB.h" /* RGB LED */
+#include "board.h" /* board header file */
+#include "gpio1.h" /* General purpose I/O pins */
 #include "FreeRTOS.h" /* FreeRTOS interface */
 #include "RTOSTRC1.h"
 
-#define USE_SDK_RTOS   0
-
+#define USE_SDK_RTOS  0 /* for now, cannot use RTOS in SDK as PEx assumes 'bare'? */
 /*--------------------------------------------------------------------------*/
 #if USE_SDK_RTOS
 /* Kinetis SDK Task variables and defines */
-#define SDK_TASK_STACK_SIZE  200 /* Task size (in 32bit units) */
-#define SDK_TASK_PRIO        3 /* task priority */
+#define SDK_TASK_STACK_SIZE  200 /* Task stack size (in 32bit units) */
+#define SDK_TASK_PRIO        0 /* task priority */
 static void sdk_task(void *param); /* prototype of the task */
 FSL_RTOS_TASK_DEFINE(sdk_task, SDK_TASK_STACK_SIZE, "sdk", false);
 static task_handler_t sdk_task_hdl; /* task handle */
 
+/*!
+ * \brief Kinetis SDK task, toggles a LED every 1 second.
+ * \param param task parameter
+ */
 static void sdk_task(void *param) {
-  (void)param;
+  (void)param; /* unused parameter */
   for(;;) {
-    gpio_toggle_pin_output(LED_BLUE);
-	  time_delay(1000);
+    gpio_toggle_pin_output(kGpioLED3); /* toggle blue LED */
+	time_delay(1000); /* wait 1000 ms */
   }
 }
 
+/*!
+ * \brief Creates a task using the Kinetis SDK API
+ */
 static void SDK_CreateTask(void) {
   if (task_create(sdk_task, SDK_TASK_PRIO, NULL, &sdk_task_hdl)!=kSuccess) {
     for(;;); /* error! */
   }
 }
 #endif /* USE_SDK_RTOS */
+
 /*--------------------------------------------------------------------------*/
-/* traditional FreeRTOS task */
+/* traditional FreeRTOS task API */
 static xTaskHandle mainTaskHndl;
 
 static void main_task(void *param) {
   (void)param;
   for(;;) {
-    gpio_toggle_pin_output(LED_RED);
-    vTaskDelay(1000/portTICK_RATE_MS);
+    gpio_toggle_pin_output(kGpioLED2); /* toggle green LED */
+    vTaskDelay(500/portTICK_RATE_MS); /* wait for 500 ms */
   } /* for */
 }
 
@@ -54,7 +61,7 @@ static void CreateTask(void) {
         "Main", /* task name for kernel awareness */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
-        tskIDLE_PRIORITY+1,  /* initial priority */
+        tskIDLE_PRIORITY,  /* initial priority */
         &mainTaskHndl /* task handle */
       ) != pdPASS) {
       for(;;){} /* error! probably out of memory */
@@ -62,27 +69,19 @@ static void CreateTask(void) {
 }
 
 void APP_Start (void) {
-  //hardware_init();
-  /* turn off LEDs */
-  gpio_set_pin_output(LED_RED);
-  gpio_set_pin_output(LED_GREEN);
-  gpio_set_pin_output(LED_BLUE);
-  //gpio_toggle_pin_output(LED_RED);
-	//gpio_toggle_pin_output(LED_GREEN);
-	//gpio_toggle_pin_output(LED_BLUE);
+  hardware_init(); /* initialize the hardware */
 
-  /* enable trace */
-#if 1
+#if 1 /* Percipio Trace */
   if(RTOSTRC1_uiTraceStart()!=1) {
     for(;;){} /* failure? */
   }
 #endif
-	/* create tasks */
-	CreateTask(); /* normal FreeRTOS tasks */
+
+  /* create tasks */
+  CreateTask(); /* create a task with the 'traditional' FreeRTOS API */
 #if USE_SDK_RTOS
-	SDK_CreateTask(); /* using SDK API */
+  SDK_CreateTask(); /* create a task with the Kinetis SDK API */
 #endif
 
-	/* start the scheduler */
-  vTaskStartScheduler(); /* does usually not return! */
+  vTaskStartScheduler(); /* start FreeRTOS scheduler, does usually not return! */
 }
