@@ -2,32 +2,66 @@
  * Application.c
  *      Author: Erich Styger
  */
+#include "Platform.h"
 #include "Application.h"
 #include "LEDR.h"
 #include "FRTOS1.h"
 #include "Shell.h"
-#include "GPS.h"
 #include "CLS1.h"
 #include "PORT_PDD.h"
-#include "NMEA.h"
+#if PL_HAS_GPS
+  #include "GPS.h"
+  #include "NMEA.h"
+  #include "TmDt1.h"
+#endif
 
-static portTASK_FUNCTION(Task1, pvParameters) {
+static portTASK_FUNCTION(AppTask, pvParameters) {
+#if PL_HAS_GPS
+  bool gotTime = FALSE;
+  bool gotDate = FALSE;
+  uint8_t hour, minute, second;
+  uint16_t mSecond;
+  uint8_t day, month;
+  uint16_t year;
+#endif
+
   (void)pvParameters; /* parameter not used */
   for(;;) {
-    LEDR_Neg();
-    FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
+#if PL_HAS_GPS
+    if (!gotTime) {
+      if (NMEA_GetTime(&hour, &minute, &second, &mSecond)==ERR_OK) {
+        gotTime = TRUE;
+        (void)TmDt1_SetTime(hour, minute, second, mSecond/10);
+      }
+    }
+    if (!gotDate) {
+      if (NMEA_GetDate(&day, &month, &year)==ERR_OK) {
+        gotDate = TRUE;
+        (void)TmDt1_SetDate(year, month, day);
+      }
+    }
+#endif
+    //LEDR_Neg();
+    FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
   }
 }
 
 void APP_Run(void) {
-  /* pull-up on Rx pin (PTE0) */
-  PORT_PDD_SetPinPullSelect(PORTE_BASE_PTR, 1, PORT_PDD_PULL_UP);
-  PORT_PDD_SetPinPullEnable(PORTE_BASE_PTR, 1, PORT_PDD_PULL_ENABLE);
+#if PL_HAS_GPS
+  /* GPS: pull-up on microcontroller Rx pin (PTE1) */
+ // PORT_PDD_SetPinPullSelect(PORTE_BASE_PTR, 1, PORT_PDD_PULL_UP);
+ // PORT_PDD_SetPinPullEnable(PORTE_BASE_PTR, 1, PORT_PDD_PULL_ENABLE);
+#endif
+#if PL_HAS_SD_CARD
+  /* SD card: pull-up on Card Detect (PTE) */
+#endif
   SHELL_Init();
+#if PL_HAS_GPS
   NMEA_Init();
+#endif
   if (FRTOS1_xTaskCreate(
-        Task1,  /* pointer to the task */
-        "Task1", /* task name for kernel awareness debugging */
+        AppTask,  /* pointer to the task */
+        "App", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */

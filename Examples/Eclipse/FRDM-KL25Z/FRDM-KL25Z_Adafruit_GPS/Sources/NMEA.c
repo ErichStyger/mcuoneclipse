@@ -12,7 +12,8 @@
 #include "GPS.h"
 #include "CLS1.h"
 #include "CS1.h"
-#include "TmDt1.h"
+#include "LEDR.h"
+#include "LEDG.h"
 
 static bool NMEA_printMsg = FALSE;
 static bool NMEA_parseMsg = TRUE;
@@ -88,32 +89,44 @@ static uint8_t VerifyCheckSum(uint8_t *msg) {
   return ERR_FAILED;
 }
 
-uint8_t NMEA_GetTime(NMEA_TimeT *time) {
-  int8_t hour;
+uint8_t NMEA_GetTime(uint8_t *hour, uint8_t *minute, uint8_t *second, uint16_t* mSecond) {
+  int8_t h;
+  NMEA_TimeT time;
 
   if (NMEA_Data.hasTime) {
     FRTOS1_taskENTER_CRITICAL();
-    *time = NMEA_Data.time; /* struct copy */
+    time = NMEA_Data.time; /* struct copy */
     FRTOS1_taskEXIT_CRITICAL();
     /* adjust with GMT offset */
-    hour = time->hour+NMEA_GMT_OFFSET;
-    if (hour>=24) { /* overflow */
-      hour -= 24;
-    } else if (hour<0) {
-      hour += 24;
+    h = time.hour+NMEA_GMT_OFFSET;
+    if (h>=24) { /* overflow */
+      h -= 24;
+    } else if (h<0) {
+      h += 24;
     }
-    time->hour = (uint8_t)hour;
+    time.hour = (uint8_t)h;
+    /* return values */
+    *hour = time.hour;
+    *minute = time.minute;
+    *second = time.second;
+    *mSecond = time.milliSecond;
     return ERR_OK;
   } else {
     return ERR_FAILED;
   }
 }
 
-uint8_t NMEA_GetDate(NMEA_DateT *date) {
-  if (NMEA_Data.hasTime) {
+uint8_t NMEA_GetDate(uint8_t *day, uint8_t *month, uint16_t *year) {
+  NMEA_DateT date;
+
+  if (NMEA_Data.hasDate) {
     FRTOS1_taskENTER_CRITICAL();
-    *date = NMEA_Data.date; /* struct copy */
+    date = NMEA_Data.date; /* struct copy */
     FRTOS1_taskEXIT_CRITICAL();
+    /* return values */
+    *day = date.day;
+    *month = date.month;
+    *year = date.year+2000;
     return ERR_OK;
   } else {
     return ERR_FAILED;
@@ -210,7 +223,7 @@ static uint8_t ParseDate(const uint8_t **p, NMEA_DateT *date) {
 static uint8_t ParseCoordinate(const uint8_t **p, NMEA_CoordT *coord, bool isLongitude) {
   /* ",4703.2781,N" */
   const uint8_t *q, *t;
-  uint8_t degreeBuf[4]; /* latitude is xx, longitude is xxx */
+  uint8_t degreeBuf[4]; /* latitude has two chars, longitude is three chars */
 
   coord->degree = 0;
   coord->minutesIntegral = 0;
@@ -451,12 +464,17 @@ static void ReadChar(uint8_t ch) {
 
 static portTASK_FUNCTION(NmeaTask, pvParameters) {
   GPS_TComData ch;
-  bool hasDate = FALSE;
-  bool hasTime = FALSE;
 
   (void)pvParameters; /* parameter not used */
   GPS_ClearRxBuf();
   for(;;) {
+    if (GPS_GetCharsInRxBuf()==0) {
+      LEDR_Neg();
+      LEDG_Off();
+    } else {
+      LEDR_Off();
+      LEDG_Neg();
+    }
     while(GPS_GetCharsInRxBuf()!=0) {
       if (GPS_RecvChar(&ch)==ERR_OK) {
         ReadChar(ch);
@@ -465,15 +483,7 @@ static portTASK_FUNCTION(NmeaTask, pvParameters) {
         }
       }
     }
-    if (!hasDate && NMEA_Data.hasDate) {
-      (void)TmDt1_SetDate(NMEA_Data.date.year+2000, NMEA_Data.date.month, NMEA_Data.date.day);
-      hasDate = TRUE;
-    }
-    if (!hasTime && NMEA_Data.hasTime) {
-      (void)TmDt1_SetTime(NMEA_Data.time.hour, NMEA_Data.time.minute, NMEA_Data.time.second, NMEA_Data.time.second/10);
-      hasDate = TRUE;
-    }
-    FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
+    FRTOS1_vTaskDelay(500/portTICK_RATE_MS);
   }
 }
 
@@ -487,11 +497,13 @@ static uint8_t PrintHelp(const CLS1_StdIOType *io) {
 
 static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   uint8_t buf[40], res;
-  NMEA_TimeT time;
-  NMEA_DateT date;
+  uint8_t day, month;
+  uint16_t year;
   NMEA_CoordT coord;
   NMEA_SpeedT speed;
   NMEA_AngleT angle;
+  uint8_t hour, minute, second;
+  uint16_t milliSecond;
 
   CLS1_SendStatusStr((unsigned char*)"nmea", (unsigned char*)"\r\n", io->stdOut);
   CLS1_SendStatusStr((unsigned char*)"  print msg", NMEA_printMsg?(const unsigned char*)"on\r\n":(const unsigned char*)"off\r\n", io->stdOut);
@@ -500,15 +512,15 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   CLS1_SendStatusStr((unsigned char*)"  active", NMEA_Data.isActive?(const unsigned char*)"yes\r\n":(const unsigned char*)"no\r\n", io->stdOut);
 
   buf[0] = 0;
-  res = NMEA_GetTime(&time);
+  res = NMEA_GetTime(&hour, &minute, &second, &milliSecond);
   if (res==ERR_OK) {
-    UTIL1_strcatNum32sFormatted(buf, sizeof(buf), time.hour, '0', 2);
+    UTIL1_strcatNum32sFormatted(buf, sizeof(buf), hour, '0', 2);
     UTIL1_chcat(buf, sizeof(buf), ':');
-    UTIL1_strcatNum32sFormatted(buf, sizeof(buf), time.minute, '0', 2);
+    UTIL1_strcatNum32sFormatted(buf, sizeof(buf), minute, '0', 2);
     UTIL1_chcat(buf, sizeof(buf), ':');
-    UTIL1_strcatNum32sFormatted(buf, sizeof(buf), time.second, '0', 2);
+    UTIL1_strcatNum32sFormatted(buf, sizeof(buf), second, '0', 2);
     UTIL1_chcat(buf, sizeof(buf), ',');
-    UTIL1_strcatNum32sFormatted(buf, sizeof(buf), time.milliSecond, '0', 3);
+    UTIL1_strcatNum32sFormatted(buf, sizeof(buf), milliSecond, '0', 3);
     UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
   } else {
     UTIL1_strcpy(buf, sizeof(buf), (uint8_t*)"FAILED\r\n");
@@ -516,13 +528,13 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   CLS1_SendStatusStr((unsigned char*)"  time", buf, io->stdOut);
 
   buf[0] = 0;
-  res = NMEA_GetDate(&date);
+  res = NMEA_GetDate(&day, &month, &year);
   if (res==ERR_OK) {
-    UTIL1_strcatNum32sFormatted(buf, sizeof(buf), date.day, '0', 2);
+    UTIL1_strcatNum32sFormatted(buf, sizeof(buf), day, '0', 2);
     UTIL1_chcat(buf, sizeof(buf), '.');
-    UTIL1_strcatNum32sFormatted(buf, sizeof(buf), date.month, '0', 2);
+    UTIL1_strcatNum32sFormatted(buf, sizeof(buf), month, '0', 2);
     UTIL1_chcat(buf, sizeof(buf), '.');
-    UTIL1_strcatNum32sFormatted(buf, sizeof(buf), date.year, '0', 2);
+    UTIL1_strcatNum32sFormatted(buf, sizeof(buf), year, '0', 4);
     UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
   } else {
     UTIL1_strcpy(buf, sizeof(buf), (uint8_t*)"FAILED\r\n");

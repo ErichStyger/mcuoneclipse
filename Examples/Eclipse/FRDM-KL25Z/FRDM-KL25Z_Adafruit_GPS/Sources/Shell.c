@@ -13,8 +13,12 @@
 #include "CLS1.h"
 #include "LEDR.h"
 #include "LEDG.h"
-#include "FAT1.h"
-#include "NMEA.h"
+#if PL_HAS_GPS
+  #include "NMEA.h"
+#endif
+#if PL_HAS_SD_CARD
+  #include "FAT1.h"
+#endif
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -34,13 +38,13 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if RTC1_PARSE_COMMAND_ENABLED
   RTC1_ParseCommand,
 #endif
-#if FAT1_PARSE_COMMAND_ENABLED && PL_HAS_SD_CARD
+#if PL_HAS_SD_CARD && FAT1_PARSE_COMMAND_ENABLED
   FAT1_ParseCommand,
 #endif
 #if TmDt1_PARSE_COMMAND_ENABLED
   TmDt1_ParseCommand,
 #endif
-#if NMEA_PARSE_COMMAND_ENABLED
+#if PL_HAS_GPS && NMEA_PARSE_COMMAND_ENABLED
   NMEA_ParseCommand,
 #endif
   NULL /* sentinel */
@@ -60,17 +64,10 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
 #if PL_HAS_SD_CARD
     (void)FAT1_CheckCardPresence(&cardMounted,
         0 /* volume */, &fileSystemObject, CLS1_GetStdio());
-    if (cardMounted) {
-      //SD_GreenLed_On();
-      //SD_RedLed_Off();
-    } else {
-      //SD_GreenLed_Off();
-      //SD_RedLed_On();
-    }
 #endif
     (void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), CLS1_GetStdio(), CmdParserTable);
     FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
-    LEDG_Neg();
+    //LEDG_Neg();
   }
 }
 
