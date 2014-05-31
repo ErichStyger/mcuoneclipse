@@ -44,64 +44,11 @@ extern "C" {
 
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "Platform.h"
+#if PL_HAS_GPS
+  #include "NMEA.h"
+#endif
 
-/*
-** ===================================================================
-**     Event       :  GPS_OnError (module Events)
-**
-**     Component   :  GPS [AsynchroSerial]
-**     Description :
-**         This event is called when a channel error (not the error
-**         returned by a given method) occurs. The errors can be read
-**         using <GetError> method.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void GPS_OnError(void)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Event       :  GPS_OnRxChar (module Events)
-**
-**     Component   :  GPS [AsynchroSerial]
-**     Description :
-**         This event is called after a correct character is received.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled and either the <Receiver>
-**         property is enabled or the <SCI output mode> property (if
-**         supported) is set to Single-wire mode.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void GPS_OnRxChar(void)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Event       :  GPS_OnFullRxBuf (module Events)
-**
-**     Component   :  GPS [AsynchroSerial]
-**     Description :
-**         This event is called when the input buffer is full;
-**         i.e. after reception of the last character 
-**         that was successfully placed into input buffer.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void GPS_OnFullRxBuf(void)
-{
-  /* Write your code here ... */
-}
 
 /*
 ** ===================================================================
@@ -192,39 +139,6 @@ void Cpu_OnNMIINT(void)
 
 /*
 ** ===================================================================
-**     Event       :  GPS_OnTxChar (module Events)
-**
-**     Component   :  GPS [AsynchroSerial]
-**     Description :
-**         This event is called after a character is transmitted.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void GPS_OnTxChar(void)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Event       :  GPS_OnFreeTxBuf (module Events)
-**
-**     Component   :  GPS [AsynchroSerial]
-**     Description :
-**         This event is called after the last character in output
-**         buffer is transmitted.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void GPS_OnFreeTxBuf(void)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
 **     Event       :  PPS_OnInterrupt (module Events)
 **
 **     Component   :  PPS [ExtInt]
@@ -237,7 +151,9 @@ void GPS_OnFreeTxBuf(void)
 */
 void PPS_OnInterrupt(void)
 {
-  /* Write your code here ... */
+#if PL_HAS_GPS
+  NMEA_OnPPS();
+#endif
 }
 
 /* END Events */

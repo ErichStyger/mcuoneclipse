@@ -17,11 +17,13 @@
 #include "LEDR.h"
 #include "LEDG.h"
 
-static bool NMEA_printMsg = FALSE;
-static bool NMEA_parseMsg = TRUE;
+#define NMEA_GMT_OFFSET  2  /* (GMT+1) plus summer time */
+
+static bool NMEA_printMsg = FALSE; /* set to TRUE if we print NMEA messages to the console */
+static bool NMEA_parseMsg = TRUE; /* set to TRUE if we parse NMEA messages */
 static uint8_t NMEA_msg[83]; /* contains current message. Maximum 80 bytes for message, plus \r\n, plus zero byte */
 static uint8_t NMEA_msgIdx; /* index into NMEA_msg[] */
-#define NMEA_GMT_OFFSET  2  /* (GMT+2) */
+static uint32_t NMEA_nofPPS; /* number of PPS ticks received */
 
 typedef struct {
   uint8_t hour, minute, second;
@@ -34,8 +36,8 @@ typedef struct {
 
 typedef struct { /* 4703.2781,N,00835.1051,E */
   int16_t degree;  /* 47° */
-  uint8_t minutesIntegral;
-  uint16_t minutesfractional; /* e.g. 03.2781' */
+  uint8_t minutesIntegral; /* 03 */
+  uint16_t minutesfractional; /* e.g. 2781' */
 } NMEA_CoordT;
 
 typedef struct {
@@ -63,6 +65,10 @@ static void Err(uint8_t *msg) {
   CLS1_SendStr((uint8_t*)"ERROR: ", io->stdErr);
   CLS1_SendStr(msg, io->stdErr);
   CLS1_SendStr((uint8_t*)"\r\n", io->stdErr);
+}
+
+void NMEA_OnPPS(void) {
+  NMEA_nofPPS++;
 }
 
 static uint8_t VerifyCheckSum(uint8_t *msg) {
@@ -526,6 +532,11 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   CLS1_SendStatusStr((unsigned char*)"  active", NMEA_Data.isActive?(const unsigned char*)"yes\r\n":(const unsigned char*)"no\r\n", io->stdOut);
 
   buf[0] = 0;
+  UTIL1_strcatNum8s(buf, sizeof(buf), NMEA_GMT_OFFSET);
+  UTIL1_strcat(buf, sizeof(buf), (uint8_t*)" hours\r\n");
+  CLS1_SendStatusStr((unsigned char*)"  GMT offset", buf, io->stdOut);
+
+  buf[0] = 0;
   res = NMEA_GetTime(&hour, &minute, &second, &milliSecond);
   if (res==ERR_OK) {
     UTIL1_strcatNum32sFormatted(buf, sizeof(buf), hour, '0', 2);
@@ -610,6 +621,11 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   }
   CLS1_SendStatusStr((unsigned char*)"  angle", buf, io->stdOut);
 
+  buf[0] = 0;
+  UTIL1_strcatNum32u(buf, sizeof(buf), NMEA_nofPPS);
+  UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
+  CLS1_SendStatusStr((unsigned char*)"  PPS count", buf, io->stdOut);
+
   return ERR_OK;
 }
 
@@ -641,6 +657,7 @@ uint8_t NMEA_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
 void NMEA_Init(void) {
   NMEA_Data.hasTime = FALSE;
   NMEA_Data.hasDate = FALSE;
+  NMEA_nofPPS = 0;
   if (FRTOS1_xTaskCreate(
         NmeaTask,  /* pointer to the task */
         "NMEA", /* task name for kernel awareness debugging */

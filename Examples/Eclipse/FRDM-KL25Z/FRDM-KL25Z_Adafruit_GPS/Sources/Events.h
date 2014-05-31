@@ -74,55 +74,6 @@
 extern "C" {
 #endif 
 
-/*
-** ===================================================================
-**     Event       :  GPS_OnError (module Events)
-**
-**     Component   :  GPS [AsynchroSerial]
-**     Description :
-**         This event is called when a channel error (not the error
-**         returned by a given method) occurs. The errors can be read
-**         using <GetError> method.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void GPS_OnError(void);
-
-/*
-** ===================================================================
-**     Event       :  GPS_OnRxChar (module Events)
-**
-**     Component   :  GPS [AsynchroSerial]
-**     Description :
-**         This event is called after a correct character is received.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled and either the <Receiver>
-**         property is enabled or the <SCI output mode> property (if
-**         supported) is set to Single-wire mode.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void GPS_OnRxChar(void);
-
-/*
-** ===================================================================
-**     Event       :  GPS_OnFullRxBuf (module Events)
-**
-**     Component   :  GPS [AsynchroSerial]
-**     Description :
-**         This event is called when the input buffer is full;
-**         i.e. after reception of the last character 
-**         that was successfully placed into input buffer.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void GPS_OnFullRxBuf(void);
-
 void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
 /*
 ** ===================================================================
@@ -183,33 +134,6 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 /* ===================================================================*/
 void Cpu_OnNMIINT(void);
 
-
-/*
-** ===================================================================
-**     Event       :  GPS_OnTxChar (module Events)
-**
-**     Component   :  GPS [AsynchroSerial]
-**     Description :
-**         This event is called after a character is transmitted.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void GPS_OnTxChar(void);
-
-/*
-** ===================================================================
-**     Event       :  GPS_OnFreeTxBuf (module Events)
-**
-**     Component   :  GPS [AsynchroSerial]
-**     Description :
-**         This event is called after the last character in output
-**         buffer is transmitted.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void GPS_OnFreeTxBuf(void);
 
 void PPS_OnInterrupt(void);
 /*
