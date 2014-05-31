@@ -3,7 +3,7 @@
 #if configFRTOS_MEMORY_SCHEME==1
 
 /*
-    FreeRTOS V8.0.0 - Copyright (C) 2014 Real Time Engineers Ltd. 
+    FreeRTOS V8.0.1 - Copyright (C) 2014 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -28,10 +28,10 @@
     the terms of the GNU General Public License (version 2) as published by the
     Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
 
-    >>! NOTE: The modification to the GPL is included to allow you to distribute
-    >>! a combined work that includes FreeRTOS without being obliged to provide
-    >>! the source code for proprietary components outside of the FreeRTOS
-    >>! kernel.
+    >>!   NOTE: The modification to the GPL is included to allow you to     !<<
+    >>!   distribute a combined work that includes FreeRTOS without being   !<<
+    >>!   obliged to provide the source code for proprietary components     !<<
+    >>!   outside of the FreeRTOS kernel.                                   !<<
 
     FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
     WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
@@ -103,7 +103,7 @@ task.h is included from an application file. */
 #elif configUSE_HEAP_SECTION_NAME
   static uint8_t __attribute__((section (configHEAP_SECTION_NAME_STRING))) ucHeap[configTOTAL_HEAP_SIZE];
 #else
-  static uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
+static uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
 #endif
 static size_t xNextFreeByte = ( size_t ) 0;
 
@@ -142,8 +142,8 @@ static uint8_t *pucAlignedHeap = NULL;
 		}
 
 		traceMALLOC( pvReturn, xWantedSize );
-	}	
-	(void)xTaskResumeAll();
+	}
+	( void ) xTaskResumeAll();
 
 	#if( configUSE_MALLOC_FAILED_HOOK == 1 )
 	{

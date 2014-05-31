@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.366</Version>
+    <Version>01.367</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -45,7 +45,7 @@
         <Hint>Identifies the RTOS version</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>true</EditLine>
-        <DefaultValue>V8.0.0</DefaultValue>
+        <DefaultValue>V8.0.1</DefaultValue>
         <StrDefine>nothing</StrDefine>
         <MinLength>0</MinLength>
         <MaxLength>-1</MaxLength>
@@ -961,7 +961,7 @@ To use this method in combination with method 1 set configCHECK_FOR_STACK_OVERFL
               <BoldName>true</BoldName>
               <EditLine>false</EditLine>
               <Description>Disabled</Description>
-              <Expanded>Yes</Expanded>
+              <Expanded>No</Expanded>
               <DefaultValue>false</DefaultValue>
               <DefineSymbol>YES_NO</DefineSymbol>
               <IfDisabled>setNOTHING</IfDisabled>
@@ -1010,7 +1010,7 @@ To use this method in combination with method 1 set configCHECK_FOR_STACK_OVERFL
                     <BoldName>true</BoldName>
                     <EditLine>false</EditLine>
                     <Description>Disabled</Description>
-                    <Expanded>Yes</Expanded>
+                    <Expanded>No</Expanded>
                     <DefaultValue>false</DefaultValue>
                     <DefineSymbol>YES_NO</DefineSymbol>
                     <IfDisabled>setNOTHING</IfDisabled>

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.0.0 - Copyright (C) 2014 Real Time Engineers Ltd.
+    FreeRTOS V8.0.1 - Copyright (C) 2014 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -24,10 +24,10 @@
     the terms of the GNU General Public License (version 2) as published by the
     Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
 
-    >>! NOTE: The modification to the GPL is included to allow you to distribute
-    >>! a combined work that includes FreeRTOS without being obliged to provide
-    >>! the source code for proprietary components outside of the FreeRTOS
-    >>! kernel.
+    >>!   NOTE: The modification to the GPL is included to allow you to     !<<
+    >>!   distribute a combined work that includes FreeRTOS without being   !<<
+    >>!   obliged to provide the source code for proprietary components     !<<
+    >>!   outside of the FreeRTOS kernel.                                   !<<
 
     FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
     WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
@@ -361,6 +361,14 @@ DaemonTaskMessage_t xMessage;
 	}
 
 #endif
+/*-----------------------------------------------------------*/
+
+const char * pcTimerGetTimerName( TimerHandle_t xTimer )
+{
+Timer_t *pxTimer = ( Timer_t * ) xTimer;
+
+	return pxTimer->pcTimerName;
+}
 /*-----------------------------------------------------------*/
 
 static void prvProcessExpiredTimer( const TickType_t xNextExpireTime, const TickType_t xTimeNow )
@@ -804,7 +812,7 @@ Timer_t *pxTimer = ( Timer_t * ) xTimer;
 		/* Checking to see if it is in the NULL list in effect checks to see if
 		it is referenced from either the current or the overflow timer lists in
 		one go, but the logic has to be reversed, hence the '!'. */
-		xTimerIsInActiveList = !( listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) ) );
+		xTimerIsInActiveList = ( BaseType_t ) !( listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) ) );
 	}
 	taskEXIT_CRITICAL();
 

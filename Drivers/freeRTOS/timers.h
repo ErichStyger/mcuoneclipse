@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.0.0 - Copyright (C) 2014 Real Time Engineers Ltd.
+    FreeRTOS V8.0.1 - Copyright (C) 2014 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -24,10 +24,10 @@
     the terms of the GNU General Public License (version 2) as published by the
     Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
 
-    >>! NOTE: The modification to the GPL is included to allow you to distribute
-    >>! a combined work that includes FreeRTOS without being obliged to provide
-    >>! the source code for proprietary components outside of the FreeRTOS
-    >>! kernel.
+    >>!   NOTE: The modification to the GPL is included to allow you to     !<<
+    >>!   distribute a combined work that includes FreeRTOS without being   !<<
+    >>!   obliged to provide the source code for proprietary components     !<<
+    >>!   outside of the FreeRTOS kernel.                                   !<<
 
     FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
     WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
@@ -1093,6 +1093,17 @@ BaseType_t xTimerPendFunctionCallFromISR( PendedFunction_t xFunctionToPend, void
   *
   */
 BaseType_t xTimerPendFunctionCall( PendedFunction_t xFunctionToPend, void *pvParameter1, uint32_t ulParameter2, TickType_t xTicksToWait );
+
+/**
+ * const char * const pcTimerGetTimerName( TimerHandle_t xTimer );
+ *
+ * Returns the name that was assigned to a timer when the timer was created.
+ *
+ * @param xTimer The handle of the timer being queried.
+ *
+ * @return The name assigned to the timer specified by the xTimer parameter.
+ */
+const char * pcTimerGetTimerName( TimerHandle_t xTimer );
 
 /*
  * Functions beyond this part are not part of the public API and are intended

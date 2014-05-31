@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.0.0 - Copyright (C) 2014 Real Time Engineers Ltd.
+    FreeRTOS V8.0.1 - Copyright (C) 2014 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -24,10 +24,10 @@
     the terms of the GNU General Public License (version 2) as published by the
     Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
 
-    >>! NOTE: The modification to the GPL is included to allow you to distribute
-    >>! a combined work that includes FreeRTOS without being obliged to provide
-    >>! the source code for proprietary components outside of the FreeRTOS
-    >>! kernel.
+    >>!   NOTE: The modification to the GPL is included to allow you to     !<<
+    >>!   distribute a combined work that includes FreeRTOS without being   !<<
+    >>!   obliged to provide the source code for proprietary components     !<<
+    >>!   outside of the FreeRTOS kernel.                                   !<<
 
     FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
     WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
@@ -772,7 +772,11 @@ TCB_t * pxNewTCB;
 			{
 				/* Reset the next expected unblock time in case it referred to
 				the task that has just been deleted. */
-				prvResetNextTaskUnblockTime();
+				taskENTER_CRITICAL();
+				{
+					prvResetNextTaskUnblockTime();
+				}
+				taskEXIT_CRITICAL();
 			}
 		}
 	}
@@ -1271,7 +1275,11 @@ TCB_t * pxNewTCB;
 				/* A task other than the currently running task was suspended,
 				reset the next expected unblock time in case it referred to the
 				task that is now in the Suspended state. */
-				prvResetNextTaskUnblockTime();
+				taskENTER_CRITICAL();
+				{
+					prvResetNextTaskUnblockTime();
+				}
+				taskEXIT_CRITICAL();
 			}
 			else
 			{
@@ -3114,8 +3122,13 @@ TCB_t *pxNewTCB;
 		want to allocate and clean RAM statically. */
 		portCLEAN_UP_TCB( pxTCB );
 
-		/* Free up the memory allocated by the scheduler for the task.  It is up to
-		the task to free any memory allocated at the application level. */
+		/* Free up the memory allocated by the scheduler for the task.  It is up
+		to the task to free any memory allocated at the application level. */
+		#if ( configUSE_NEWLIB_REENTRANT == 1 )
+		{
+			_reclaim_reent( &( pxTCB->xNewLib_reent ) );
+		}
+		#endif /* configUSE_NEWLIB_REENTRANT */
 		vPortFreeAligned( pxTCB->pxStack );
 		vPortFree( pxTCB );
 	}

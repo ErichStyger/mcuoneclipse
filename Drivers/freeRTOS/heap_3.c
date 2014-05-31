@@ -3,7 +3,7 @@
 #if configFRTOS_MEMORY_SCHEME==3
 
 /*
-    FreeRTOS V8.0.0 - Copyright (C) 2014 Real Time Engineers Ltd. 
+    FreeRTOS V8.0.1 - Copyright (C) 2014 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -28,10 +28,10 @@
     the terms of the GNU General Public License (version 2) as published by the
     Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
 
-    >>! NOTE: The modification to the GPL is included to allow you to distribute
-    >>! a combined work that includes FreeRTOS without being obliged to provide
-    >>! the source code for proprietary components outside of the FreeRTOS
-    >>! kernel.
+    >>!   NOTE: The modification to the GPL is included to allow you to     !<<
+    >>!   distribute a combined work that includes FreeRTOS without being   !<<
+    >>!   obliged to provide the source code for proprietary components     !<<
+    >>!   outside of the FreeRTOS kernel.                                   !<<
 
     FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
     WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
@@ -75,7 +75,7 @@
  * This file can only be used if the linker is configured to to generate
  * a heap memory area.
  *
- * See heap_1.c, heap_2.c and heap_4.c for alternative implementations, and the 
+ * See heap_1.c, heap_2.c and heap_4.c for alternative implementations, and the
  * memory management pages of http://www.FreeRTOS.org for more information.
  */
 
@@ -107,7 +107,7 @@ void *pvReturn;
 		pvReturn = malloc( xWantedSize );
 		traceMALLOC( pvReturn, xWantedSize );
 	}
-	(void)xTaskResumeAll();
+	( void ) xTaskResumeAll();
 
 	#if( configUSE_MALLOC_FAILED_HOOK == 1 )
 	{
@@ -123,7 +123,7 @@ void *pvReturn;
 		}
 	}
 	#endif
-	
+
 	return pvReturn;
 }
 /*-----------------------------------------------------------*/
@@ -137,7 +137,7 @@ void vPortFree( void *pv )
 			free( pv );
 			traceFREE( pv, 0 );
 		}
-		(void)xTaskResumeAll();
+		( void ) xTaskResumeAll();
 	}
 }
 
