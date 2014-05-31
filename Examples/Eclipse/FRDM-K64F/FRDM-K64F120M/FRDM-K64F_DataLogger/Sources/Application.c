@@ -7,20 +7,15 @@
 
 #include "Application.h"
 #include "WAIT1.h"
-#include "LED1.h"
-#include "LED2.h"
-#include "LED3.h"
 #include "FX1.h"
 #include "FAT1.h"
 #include "UTIL1.h"
+#include "PORT_PDD.h"
 
 static FAT1_FATFS fileSystemObject;
 static FIL fp;
 
 static void Err(void) {
-  LED1_On();
-  LED2_On();
-  LED3_On();
   for(;;){}
 }
 
@@ -67,36 +62,29 @@ static void LogToFile(int16_t x, int16_t y, int16_t z) {
 void APP_Run(void) {
   int16_t x,y,z;
   uint8_t res;
-  #define ACCEL_VAL  2000
+
+  /* SD card detection: PTE6 with pull-down! */
+  PORT_PDD_SetPinPullSelect(PORTE_BASE_PTR, 6, PORT_PDD_PULL_DOWN);
+  PORT_PDD_SetPinPullEnable(PORTE_BASE_PTR, 6, PORT_PDD_PULL_ENABLE);
 
   res = FX1_Enable(); /* enable accelerometer (just in case) */
   if (res!=ERR_OK) {
     Err();
   }
-  if (FAT1_Init()!=ERR_OK) {
+  if (FAT1_Init()!=ERR_OK) { /* initialize FAT driver */
     Err();
   }
   if (FAT1_mount(0, &fileSystemObject) != FR_OK) { /* mount file system */
     Err();
   }
   for(;;) {
+    /* get accelerometer values */
     x = FX1_GetX();
     y = FX1_GetY();
     z = FX1_GetZ();
-    if (x>ACCEL_VAL || x<-ACCEL_VAL) {
-      LED1_On();
-      LED2_Off();
-      LED3_Off();
-    } else if (y>ACCEL_VAL || y<-ACCEL_VAL) {
-      LED1_Off();
-      LED2_On();
-      LED3_Off();
-    } else if (z>ACCEL_VAL || z<-ACCEL_VAL) {
-      LED1_Off();
-      LED2_Off();
-      LED3_On();
-    }
+    /* log it to the file on the SD card */
     LogToFile(x, y, z);
+    /* do this every second */
     WAIT1_Waitms(1000);
   }
 }

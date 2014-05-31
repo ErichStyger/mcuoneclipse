@@ -1,11 +1,11 @@
 /* ###################################################################
 **     Filename    : Events.c
-**     Project     : FRDM-K64F_DataLogger
+**     Project     : DataLogger
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Events
 **     Version     : Driver 01.00
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2014-05-22, 17:05, # CodeGen: 0
+**     Date/Time   : 2014-05-25, 07:45, # CodeGen: 0
 **     Abstract    :
 **         This is user's event module.
 **         Put your event handler code here.
@@ -73,8 +73,7 @@ void Cpu_OnNMI(void)
 */
 void TI1_OnInterrupt(void)
 {
-  TmDt1_AddTick();
-  TMOUT1_AddTick();
+  TmDt1_AddTick();/* Write your code here ... */
 }
 
 /* END Events */
