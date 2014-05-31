@@ -46,4 +46,12 @@
 
 int ini_rename(TCHAR *source, const TCHAR *dest);
 
+#if defined(INI_REAL)
+  #include <stdio.h> /* for sprintf() */
+
+  #define ini_ftoa(string,value)        sprintf((string),"%%f",(value))
+  #define ini_atof(string)              (INI_REAL)strtod((string),NULL)
+#endif /* defined INI_REAL */
+
+
 #endif /* _MINGLUE-FATFS_H__ */

@@ -19,8 +19,6 @@
 #ifndef MININI_H
 #define MININI_H
 
-#include "minGlue-FatFs.h"
-
 %if defined(portableStrnicmp) & %portableStrnicmp='yes'
 #define PORTABLE_STRNICMP
 %endif
@@ -33,6 +31,8 @@
 %if defined(isNoDebug) & %isNoDebug='yes'
 #define NDEBUG
 %endif
+
+#include "minGlue-FatFs.h"
 
 #if (defined _UNICODE || defined __UNICODE__ || defined UNICODE) && !defined MININI_ANSI
   #include <tchar.h>
