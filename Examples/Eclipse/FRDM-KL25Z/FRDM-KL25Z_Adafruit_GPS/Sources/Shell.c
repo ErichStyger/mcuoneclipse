@@ -1,11 +1,14 @@
-/*
- * Shell.c
+/**
+ * \file
+ * \brief Command Line Shell Implementation
+ * \author (c) 2014 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html)
  *
- *  Created on: 04.08.2011
- *      Author: Erich Styger
+ * This module implements a command line shell for the application.
  */
 
 #include "Platform.h"
+#if PL_HAS_SHELL
 #include "Shell.h"
 #include "Application.h"
 #include "TmDt1.h"
@@ -67,7 +70,6 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
 #endif
     (void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), CLS1_GetStdio(), CmdParserTable);
     FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
-    //LEDG_Neg();
   }
 }
 
@@ -76,4 +78,5 @@ void SHELL_Init(void) {
     for(;;){} /* error */
   }
 }
+#endif /* PL_HAS_SHELL */
 

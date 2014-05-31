@@ -1,8 +1,10 @@
-/*
- * NMEA.c
+/**
+ * \file
+ * \brief NMEA Parser and GPS handling
+ * \author (c) 2014 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html)
  *
- *  Created on: 20.05.2014
- *      Author: tastyger
+ * This module implements the NMEA parser plus a task handling the serial connection to the GPS module.
  */
 
 #include "Platform.h"
@@ -68,6 +70,7 @@ static uint8_t VerifyCheckSum(uint8_t *msg) {
   uint8_t checksum, sum;
   unsigned int i;
   const unsigned char *p;
+  uint8_t buf[48];
 
   len = UTIL1_strlen((char*)msg);
   if (len>5) {
@@ -86,6 +89,12 @@ static uint8_t VerifyCheckSum(uint8_t *msg) {
       }
     }
   }
+  UTIL1_strcpy(buf, sizeof(buf), (uint8_t*)"Checksum failure, expected 0x");
+  UTIL1_strcatNum8Hex(buf, sizeof(buf), checksum);
+  UTIL1_strcat(buf, sizeof(buf), (uint8_t*)", have 0x");
+  UTIL1_strcatNum8Hex(buf, sizeof(buf), sum);
+  UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"!!!");
+  Err(buf);
   return ERR_FAILED;
 }
 
@@ -429,33 +438,39 @@ static uint8_t ParseGPRMC(const uint8_t **p) {
 static uint8_t ParseMsg(void) {
   const uint8_t *p;
 
-  if (UTIL1_strncmp((char*)NMEA_msg, (char*)"$GPRMC", sizeof("$GPRMC")-1)==0) {
-    p = NMEA_msg+sizeof("$GPRMC")-1;
-    return ParseGPRMC(&p);
+  if (UTIL1_strncmp((char*)NMEA_msg, (char*)"$GPRMC", sizeof("$GPRMC")-1)==0) { /* recommended minimum data message */
+    p = NMEA_msg+sizeof("$GPRMC")-1; /* skip start */
+    return ParseGPRMC(&p); /* parse message */
   }
   return ERR_OK;
 }
 
 static void ReadChar(uint8_t ch) {
-  static uint8_t prevCh = '\0';
+  static uint8_t prevCh = '\0'; /* needed to detect \r\n as end of a message */
 
-  if (NMEA_parseMsg) {
-    if (ch=='$') { /* start of a message */
+  if (NMEA_parseMsg) { /* enabled to parse messages? */
+    if (ch=='$') { /* check start of a message */
+      NMEA_msgIdx = 0; /* reset index */
+      prevCh = '\0'; /* reset previous char */
+    }
+    if (NMEA_msgIdx<sizeof(NMEA_msg)-1) { /* check for buffer overflow */
+      NMEA_msg[NMEA_msgIdx++] = ch; /* store character */
+    } else { /* message too long! */
+      Err((uint8_t*)"Buffer overflow!");
       NMEA_msgIdx = 0;
       prevCh = '\0';
     }
-    if (NMEA_msgIdx<sizeof(NMEA_msg)-1) {
-      NMEA_msg[NMEA_msgIdx++] = ch;
-    } else {
-      /* error case: buffer overflow */
-    }
-    if (NMEA_msgIdx>sizeof("$GPxxx,") && (ch=='\n' && prevCh=='\r')) {
+    if (NMEA_msgIdx>sizeof("$GPxxx,") && (ch=='\n' && prevCh=='\r')) { /* valid end of message */
       NMEA_msg[NMEA_msgIdx] = '\0'; /* terminate */
-      /* end of a message */
-      if (VerifyCheckSum(NMEA_msg)==ERR_OK) {
-        ParseMsg();
+      /* reached end of a message */
+      if (UTIL1_strncmp((char*)NMEA_msg, (char*)"$GP", sizeof("$GP")-1)==0) { /* valid start of a message? */
+        if (VerifyCheckSum(NMEA_msg)==ERR_OK) { /* check first the checksum */
+          ParseMsg(); /* checksum ok, parse message and store data */
+        } else {
+          Err((uint8_t*)"Checksum failure!");
+        }
       } else {
-        Err((uint8_t*)"Checksum failure!");
+        Err((uint8_t*)"Message does not start with \"$GP\"?");
       }
     }
   }
@@ -466,24 +481,23 @@ static portTASK_FUNCTION(NmeaTask, pvParameters) {
   GPS_TComData ch;
 
   (void)pvParameters; /* parameter not used */
-  GPS_ClearRxBuf();
+  GPS_ClearRxBuf(); /* clear GPS RX buffer, as it already could contain some data */
   for(;;) {
+    /* indicate we are receiving data from GPS with green and red LED */
     if (GPS_GetCharsInRxBuf()==0) {
-      LEDR_Neg();
-      LEDG_Off();
+      LEDR_Neg(); LEDG_Off(); /* blink red led if no GPS data */
     } else {
-      LEDR_Off();
-      LEDG_Neg();
+      LEDR_Off(); LEDG_Neg(); /* blink green led if we have GPS data */
     }
-    while(GPS_GetCharsInRxBuf()!=0) {
-      if (GPS_RecvChar(&ch)==ERR_OK) {
-        ReadChar(ch);
-        if (NMEA_printMsg) {
-          CLS1_SendChar(ch);
-        }
-      }
-    }
-    FRTOS1_vTaskDelay(500/portTICK_RATE_MS);
+    while(GPS_GetCharsInRxBuf()!=0) { /* do we have data? */
+      if (GPS_RecvChar(&ch)==ERR_OK) { /* yes, and no problem to get it */
+        ReadChar(ch); /* read character and store in buffer */
+        if (NMEA_printMsg) { /* print messages to console? */
+          CLS1_SendChar(ch); /* yes, print it */
+        } /* if */
+      } /* if */
+    } /* while */
+    FRTOS1_vTaskDelay(200/portTICK_RATE_MS); /* give back some time */
   }
 }
 

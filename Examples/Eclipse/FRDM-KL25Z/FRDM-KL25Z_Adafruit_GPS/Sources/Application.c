@@ -1,7 +1,12 @@
-/*
- * Application.c
- *      Author: Erich Styger
+/**
+ * \file
+ * \brief GPS Data Logger Application
+ * \author (c) 2014 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html)
+ *
+ * This module implements the main module for the GPS data logger.
  */
+
 #include "Platform.h"
 #include "Application.h"
 #include "LEDR.h"
@@ -41,7 +46,6 @@ static portTASK_FUNCTION(AppTask, pvParameters) {
       }
     }
 #endif
-    //LEDR_Neg();
     FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
   }
 }
@@ -53,9 +57,11 @@ void APP_Run(void) {
  // PORT_PDD_SetPinPullEnable(PORTE_BASE_PTR, 1, PORT_PDD_PULL_ENABLE);
 #endif
 #if PL_HAS_SD_CARD
-  /* SD card: pull-up on Card Detect (PTE) */
+  /* SD card: pull-up on Card Detect (PTE) is done in the GPIO_LDD component */
 #endif
+#if PL_HAS_SHELL
   SHELL_Init();
+#endif
 #if PL_HAS_GPS
   NMEA_Init();
 #endif

@@ -87,22 +87,6 @@ void GPS_OnRxChar(void)
 
 /*
 ** ===================================================================
-**     Event       :  GPS_OnTxChar (module Events)
-**
-**     Component   :  GPS [AsynchroSerial]
-**     Description :
-**         This event is called after a character is transmitted.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void GPS_OnTxChar(void)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
 **     Event       :  GPS_OnFullRxBuf (module Events)
 **
 **     Component   :  GPS [AsynchroSerial]
@@ -115,23 +99,6 @@ void GPS_OnTxChar(void)
 ** ===================================================================
 */
 void GPS_OnFullRxBuf(void)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Event       :  GPS_OnFreeTxBuf (module Events)
-**
-**     Component   :  GPS [AsynchroSerial]
-**     Description :
-**         This event is called after the last character in output
-**         buffer is transmitted.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void GPS_OnFreeTxBuf(void)
 {
   /* Write your code here ... */
 }
@@ -219,6 +186,56 @@ void FRTOS1_vApplicationMallocFailedHook(void)
 */
 /* ===================================================================*/
 void Cpu_OnNMIINT(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  GPS_OnTxChar (module Events)
+**
+**     Component   :  GPS [AsynchroSerial]
+**     Description :
+**         This event is called after a character is transmitted.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void GPS_OnTxChar(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  GPS_OnFreeTxBuf (module Events)
+**
+**     Component   :  GPS [AsynchroSerial]
+**     Description :
+**         This event is called after the last character in output
+**         buffer is transmitted.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void GPS_OnFreeTxBuf(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  PPS_OnInterrupt (module Events)
+**
+**     Component   :  PPS [ExtInt]
+**     Description :
+**         This event is called when an active signal edge/level has
+**         occurred.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void PPS_OnInterrupt(void)
 {
   /* Write your code here ... */
 }

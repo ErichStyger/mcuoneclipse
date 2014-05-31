@@ -1,8 +1,10 @@
-/*
- * Shell.h
+/**
+ * \file
+ * \brief Command Line Shell Interface
+ * \author (c) 2014 Erich Styger, http://mcuoneclipse.com/
+ * \note MIT License (http://opensource.org/licenses/mit-license.html)
  *
- *  Created on: 23.05.2011
- *      Author: Erich Styger
+ * This header file is used as interface to the command line shell.
  */
 
 #ifndef SHELL_H_
