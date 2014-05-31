@@ -5,8 +5,8 @@
       <Type>TEnumSpec</Type>
       <Name>typeTransceiver</Name>
       <Items lines_count="2">
-        <Line>MPC1320x</Line>
-        <Line>MPC1321x</Line>
+        <Line>MC1320x</Line>
+        <Line>MC1321x</Line>
       </Items>
       <Hints lines_count="2">
         <Line>Separate chip as found on the RF daughter card.</Line>
