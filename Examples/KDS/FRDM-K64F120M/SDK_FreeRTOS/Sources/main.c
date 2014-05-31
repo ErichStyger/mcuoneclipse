@@ -32,9 +32,12 @@
 
 #include "Application.h"
 
+static uint32_t testVar = 35;
+static uint32_t xxx=0;
+
 int main(void) {
   APP_Start();
-  return 0;
+  return testVar+xxx;
 }
 ////////////////////////////////////////////////////////////////////////////////
 // EOF
