@@ -16,5 +16,7 @@
   /*!< 1 if we have GPS, 0 otherwise */
 #define PL_HAS_SHELL    1
   /*!< 1 if we have shell, 0 otherwise */
+#define PL_HAS_LOGGER   (1 && PL_HAS_SD_CARD && PL_HAS_GPS)
+  /*!< 1 if we have a data logger, 0 otherwise */
 
 #endif /* PLATFORM_H_ */

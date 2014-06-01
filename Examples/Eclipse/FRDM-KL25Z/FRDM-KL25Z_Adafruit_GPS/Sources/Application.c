@@ -19,6 +19,9 @@
   #include "NMEA.h"
   #include "TmDt1.h"
 #endif
+#if PL_HAS_LOGGER
+  #include "Logger.h"
+#endif
 
 static portTASK_FUNCTION(AppTask, pvParameters) {
 #if PL_HAS_GPS
@@ -64,6 +67,9 @@ void APP_Run(void) {
 #endif
 #if PL_HAS_GPS
   NMEA_Init();
+#endif
+#if PL_HAS_LOGGER
+  LOG_Init();
 #endif
   if (FRTOS1_xTaskCreate(
         AppTask,  /* pointer to the task */

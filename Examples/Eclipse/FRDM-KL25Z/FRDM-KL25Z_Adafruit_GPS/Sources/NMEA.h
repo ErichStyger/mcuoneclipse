@@ -42,6 +42,15 @@ uint8_t NMEA_GetTime(uint8_t *hour, uint8_t *minute, uint8_t *second, uint16_t* 
 uint8_t NMEA_GetDate(uint8_t *day, uint8_t *month, uint16_t *year);
 
 /*!
+ * \brief return the current GPS position as a string.
+ * \param buf Pointer to buffer where to store the position.
+ * \param bufSize Size of buffer in bytes.
+ * \param isLatitude If TRUE, return latitude, otherwise longitude.
+ * \return ERR_OK for no failure, error code otherwise.
+ */
+uint8_t NMEA_GetPosString(uint8_t *buf, size_t bufSize, bool isLatitude);
+
+/*!
  * \brief Event hook to be called from the PPS (Pulse-Per-Second) interrupt to count the PPS.
  */
 void NMEA_OnPPS(void);

@@ -69,6 +69,7 @@
 #include "ExtIntLdd1.h"
 #include "GPS.h"
 #include "ASerialLdd2.h"
+#include "HF1.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -21,7 +21,7 @@
 
 static bool NMEA_printMsg = FALSE; /* set to TRUE if we print NMEA messages to the console */
 static bool NMEA_parseMsg = TRUE; /* set to TRUE if we parse NMEA messages */
-static uint8_t NMEA_msg[83]; /* contains current message. Maximum 80 bytes for message, plus \r\n, plus zero byte */
+static uint8_t NMEA_msg[100]; /* contains current message. Maximum 80 bytes for message, plus \r\n, plus zero byte */
 static uint8_t NMEA_msgIdx; /* index into NMEA_msg[] */
 static uint32_t NMEA_nofPPS; /* number of PPS ticks received */
 
@@ -95,6 +95,7 @@ static uint8_t VerifyCheckSum(uint8_t *msg) {
       }
     }
   }
+  Err(msg); /* print message */
   UTIL1_strcpy(buf, sizeof(buf), (uint8_t*)"Checksum failure, expected 0x");
   UTIL1_strcatNum8Hex(buf, sizeof(buf), checksum);
   UTIL1_strcat(buf, sizeof(buf), (uint8_t*)", have 0x");
@@ -174,6 +175,40 @@ uint8_t NMEA_GetAngle(NMEA_AngleT *angle) {
   *angle = NMEA_Data.angle; /* struct copy */
   FRTOS1_taskEXIT_CRITICAL();
   return ERR_OK;
+}
+
+/*!
+ * \brief return the current GPS position as a string.
+ * \param buf Pointer to buffer where to store the position.
+ * \param bufSize Size of buffer in bytes.
+ * \param isLatitude If TRUE, return latitude, otherwise longitude.
+ * \return ERR_OK for no failure, error code otherwise.
+ */
+uint8_t NMEA_GetPosString(uint8_t *buf, size_t bufSize, bool isLatitude) {
+  uint8_t res = ERR_OK;
+  NMEA_CoordT coord;
+
+  if (isLatitude) {
+    res = NMEA_GetLatitude(&coord);
+  } else {
+    res = NMEA_GetLongitude(&coord);
+  }
+  if (res==ERR_OK) {
+    buf[0] = 0;
+    if (coord.degree>=0) {
+      UTIL1_chcat(buf, bufSize, '+');
+    }
+    UTIL1_strcatNum32sFormatted(buf, bufSize, coord.degree, '0', isLatitude?2:3);
+    UTIL1_strcat(buf, bufSize, (uint8_t*)"° ");
+    UTIL1_strcatNum32sFormatted(buf, bufSize, coord.minutesIntegral, '0', 2);
+    UTIL1_chcat(buf, bufSize, '.');
+    UTIL1_strcatNum16u(buf, bufSize, coord.minutesfractional);
+    UTIL1_chcat(buf, bufSize, '\'');
+    res = ERR_OK;
+  } else {
+    res = ERR_FAILED;
+  }
+  return res;
 }
 
 static uint8_t ParseTime(const uint8_t **p, NMEA_TimeT *time) {
@@ -503,7 +538,7 @@ static portTASK_FUNCTION(NmeaTask, pvParameters) {
         } /* if */
       } /* if */
     } /* while */
-    FRTOS1_vTaskDelay(200/portTICK_RATE_MS); /* give back some time */
+    FRTOS1_vTaskDelay(50/portTICK_RATE_MS); /* give back some time */
   }
 }
 
@@ -519,11 +554,11 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   uint8_t buf[40], res;
   uint8_t day, month;
   uint16_t year;
-  NMEA_CoordT coord;
   NMEA_SpeedT speed;
   NMEA_AngleT angle;
   uint8_t hour, minute, second;
   uint16_t milliSecond;
+  int strLen;
 
   CLS1_SendStatusStr((unsigned char*)"nmea", (unsigned char*)"\r\n", io->stdOut);
   CLS1_SendStatusStr((unsigned char*)"  print msg", NMEA_printMsg?(const unsigned char*)"on\r\n":(const unsigned char*)"off\r\n", io->stdOut);
@@ -566,35 +601,17 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   }
   CLS1_SendStatusStr((unsigned char*)"  date", buf, io->stdOut);
 
-  buf[0] = 0;
-  res = NMEA_GetLatitude(&coord);
-  if (res==ERR_OK) {
-    if (coord.degree>=0) {
-      UTIL1_chcat(buf, sizeof(buf), '+');
-    }
-    UTIL1_strcatNum32sFormatted(buf, sizeof(buf), coord.degree, '0', 2);
-    UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"° ");
-    UTIL1_strcatNum32sFormatted(buf, sizeof(buf), coord.minutesIntegral, '0', 2);
-    UTIL1_chcat(buf, sizeof(buf), '.');
-    UTIL1_strcatNum16u(buf, sizeof(buf), coord.minutesfractional);
-    UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"', ");
-  } else {
-    UTIL1_strcpy(buf, sizeof(buf), (uint8_t*)"FAILED\r\n");
+  res = NMEA_GetPosString(buf, sizeof(buf), TRUE); /* latitude */
+  if (res!=ERR_OK) {
+    UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"FAILED! ");
   }
-  res = NMEA_GetLongitude(&coord);
-  if (res==ERR_OK) {
-    if (coord.degree>=0) {
-      UTIL1_chcat(buf, sizeof(buf), '+');
-    }
-    UTIL1_strcatNum32sFormatted(buf, sizeof(buf), coord.degree, '0', 3);
-    UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"° ");
-    UTIL1_strcatNum32sFormatted(buf, sizeof(buf), coord.minutesIntegral, '0', 2);
-    UTIL1_chcat(buf, sizeof(buf), '.');
-    UTIL1_strcatNum16u(buf, sizeof(buf), coord.minutesfractional);
-    UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"'\r\n");
-  } else {
-    UTIL1_strcpy(buf, sizeof(buf), (uint8_t*)"FAILED\r\n");
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)", ");
+  strLen = UTIL1_strlen((char*)buf);
+  res = NMEA_GetPosString(buf+strLen, sizeof(buf)-strLen, FALSE); /* longitude */
+  if (res!=ERR_OK) {
+    UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"FAILED! ");
   }
+  UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
   CLS1_SendStatusStr((unsigned char*)"  pos", buf, io->stdOut);
 
   buf[0] = 0;
@@ -663,7 +680,7 @@ void NMEA_Init(void) {
         "NMEA", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
-        tskIDLE_PRIORITY+1,  /* initial priority */
+        tskIDLE_PRIORITY+2,  /* initial priority */
         (xTaskHandle*)NULL /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */
