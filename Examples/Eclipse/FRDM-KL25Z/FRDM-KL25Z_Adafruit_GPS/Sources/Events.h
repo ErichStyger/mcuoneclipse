@@ -70,6 +70,9 @@
 #include "GPS.h"
 #include "ASerialLdd2.h"
 #include "HF1.h"
+#include "I2C1.h"
+#include "GI2C1.h"
+#include "MMA1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -145,6 +148,19 @@ void PPS_OnInterrupt(void);
 **     Description :
 **         This event is called when an active signal edge/level has
 **         occurred.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void GI2C1_OnError(void);
+/*
+** ===================================================================
+**     Event       :  GI2C1_OnError (module Events)
+**
+**     Component   :  GI2C1 [GenericI2C]
+**     Description :
+**         Event called in case of error condition
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================
