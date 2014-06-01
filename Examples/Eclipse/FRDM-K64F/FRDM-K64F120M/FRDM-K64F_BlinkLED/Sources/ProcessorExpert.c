@@ -30,7 +30,6 @@
 /* Including needed modules to compile this module/procedure */
 #include "Cpu.h"
 #include "Events.h"
-#include "Pins1.h"
 #include "LED1.h"
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"
