@@ -51,6 +51,22 @@ uint8_t NMEA_GetDate(uint8_t *day, uint8_t *month, uint16_t *year);
 uint8_t NMEA_GetPosString(uint8_t *buf, size_t bufSize, bool isLatitude);
 
 /*!
+ * \brief return the current GPS angle as a string.
+ * \param buf Pointer to buffer where to store the position.
+ * \param bufSize Size of buffer in bytes.
+ * \return ERR_OK for no failure, error code otherwise.
+ */
+uint8_t NMEA_GetAngleString(uint8_t *buf, size_t bufSize);
+
+/*!
+ * \brief return the current GPS speed as a string.
+ * \param buf Pointer to buffer where to store the position.
+ * \param bufSize Size of buffer in bytes.
+ * \return ERR_OK for no failure, error code otherwise.
+ */
+uint8_t NMEA_GetSpeedString(uint8_t *buf, size_t bufSize);
+
+/*!
  * \brief Event hook to be called from the PPS (Pulse-Per-Second) interrupt to count the PPS.
  */
 void NMEA_OnPPS(void);

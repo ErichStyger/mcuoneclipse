@@ -25,6 +25,9 @@
 #if PL_HAS_ACCEL
   #include "MMA1.h"
 #endif
+#if PL_HAS_LOGGER
+  #include "Logger.h"
+#endif
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -56,6 +59,11 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if PL_HAS_ACCEL
 #if MMA1_PARSE_COMMAND_ENABLED
   MMA1_ParseCommand,
+#endif
+#endif
+#if PL_HAS_LOGGER
+#if LOG_PARSE_COMMAND_ENABLED
+  LOG_ParseCommand,
 #endif
 #endif
   NULL /* sentinel */

@@ -3,10 +3,10 @@
   <Header>
     <Name>FRDM-KL25Z_Adafruit_GPS</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>46</ModificationStamp>
-    <Date>2014-06-01</Date>
+    <ModificationStamp>52</ModificationStamp>
+    <Date>2014-06-07</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion>1.10.0.RT6_b1421-0050</PEversion>
+    <PEversion>1.10.0.RT6_b1423-0069</PEversion>
   </Header>
   <Options>
     <ProjectMainModule>main</ProjectMainModule>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>97</ProjectCompNumb>
+    <ProjectCompNumb>106</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -5469,8 +5469,6 @@
               <List lines_count="0" />
               <UnitText>ms</UnitText>
               <MinCounterTicks>0</MinCounterTicks>
-              <ControlledTimingCfgFromPropertySymbol>PeriodTmg</ControlledTimingCfgFromPropertySymbol>
-              <ControlledTimingCfgFromComponentRef>InheritedComponent</ControlledTimingCfgFromComponentRef>
             </ItemState>
             <ItemState>
               <ItemSymbol>InitDuty</ItemSymbol>
@@ -5510,8 +5508,6 @@
               <List lines_count="0" />
               <UnitText>us</UnitText>
               <MinCounterTicks>0</MinCounterTicks>
-              <ControlledTimingCfgFromPropertySymbol>DutyTmg</ControlledTimingCfgFromPropertySymbol>
-              <ControlledTimingCfgFromComponentRef>InheritedComponent</ControlledTimingCfgFromComponentRef>
             </ItemState>
             <ItemState>
               <ItemSymbol>HC08grp</ItemSymbol>
@@ -5736,7 +5732,6 @@
                     <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
                     <Index>0</Index>
                     <Value>true</Value>
                   </ItemState>
@@ -5786,8 +5781,6 @@
                     <List lines_count="0" />
                     <UnitText>ms</UnitText>
                     <MinCounterTicks>0</MinCounterTicks>
-                    <ControlledTimingCfgFromPropertySymbol>Tmg_Period</ControlledTimingCfgFromPropertySymbol>
-                    <ControlledTimingCfgFromComponentRef>LinkedTimerUnit</ControlledTimingCfgFromComponentRef>
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>DutyTmg</ItemSymbol>
@@ -5827,8 +5820,6 @@
                     <List lines_count="0" />
                     <UnitText>us</UnitText>
                     <MinCounterTicks>0</MinCounterTicks>
-                    <ControlledTimingCfgFromPropertySymbol>Tmg_ChanOffset0</ControlledTimingCfgFromPropertySymbol>
-                    <ControlledTimingCfgFromComponentRef>LinkedTimerUnit</ControlledTimingCfgFromComponentRef>
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>InitOutputLevel</ItemSymbol>
@@ -9357,7 +9348,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>64</Value>
+        <Value>128</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -15560,7 +15551,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>11500</Value>
+        <Value>10000</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -16765,7 +16756,7 @@
         <ItemSymbol>InitialDate</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Date>2013-01-01</Date>
+        <Date>2000-01-01</Date>
       </ItemState>
       <ItemState>
         <ItemSymbol>InitialTime</ItemSymbol>
@@ -29001,7 +28992,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>512</Value>
+        <Value>2048</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -29009,7 +29000,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>64</Value>
+        <Value>16</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>

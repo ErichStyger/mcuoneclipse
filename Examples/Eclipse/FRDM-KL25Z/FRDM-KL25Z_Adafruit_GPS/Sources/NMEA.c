@@ -90,22 +90,33 @@ static uint8_t VerifyCheckSum(uint8_t *msg) {
           } /* for */
           if (checksum==sum) { /* checksum ok */
             return ERR_OK;
+          } else {
+            Err(msg); /* print message */
+            UTIL1_strcpy(buf, sizeof(buf), (uint8_t*)"Checksum failure, expected 0x");
+            UTIL1_strcatNum8Hex(buf, sizeof(buf), checksum);
+            UTIL1_strcat(buf, sizeof(buf), (uint8_t*)", have 0x");
+            UTIL1_strcatNum8Hex(buf, sizeof(buf), sum);
+            UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"!!!");
+            Err(buf);
+            return ERR_FAILED;
           }
         }
+      } else {
+        Err((unsigned char*)"Checksum does not start with '*'!\r\n");
+        return ERR_FAILED;
       }
+    } else {
+      Err((unsigned char*)"Illegal message end!\r\n");
+      return ERR_FAILED;
     }
+  } else {
+    Err((unsigned char*)"Message too short for checksum!\r\n");
+    return ERR_FAILED;
   }
-  Err(msg); /* print message */
-  UTIL1_strcpy(buf, sizeof(buf), (uint8_t*)"Checksum failure, expected 0x");
-  UTIL1_strcatNum8Hex(buf, sizeof(buf), checksum);
-  UTIL1_strcat(buf, sizeof(buf), (uint8_t*)", have 0x");
-  UTIL1_strcatNum8Hex(buf, sizeof(buf), sum);
-  UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"!!!");
-  Err(buf);
   return ERR_FAILED;
 }
 
-uint8_t NMEA_GetTime(uint8_t *hour, uint8_t *minute, uint8_t *second, uint16_t* mSecond) {
+uint8_t NMEA_GetTime(uint8_t *hour, uint8_t *minute, uint8_t *second, uint16_t *mSecond) {
   int8_t h;
   NMEA_TimeT time;
 
@@ -174,6 +185,36 @@ uint8_t NMEA_GetAngle(NMEA_AngleT *angle) {
   FRTOS1_taskENTER_CRITICAL();
   *angle = NMEA_Data.angle; /* struct copy */
   FRTOS1_taskEXIT_CRITICAL();
+  return ERR_OK;
+}
+
+uint8_t NMEA_GetSpeedString(uint8_t *buf, size_t bufSize) {
+  uint8_t res;
+  NMEA_SpeedT speed;
+
+  res = NMEA_GetSpeed(&speed);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  buf[0] = '\0';
+  UTIL1_strcatNum16u(buf, bufSize, speed.integral);
+  UTIL1_chcat(buf, bufSize, '.');
+  UTIL1_strcatNum16u(buf, bufSize, speed.fractional);
+  return ERR_OK;
+}
+
+uint8_t NMEA_GetAngleString(uint8_t *buf, size_t bufSize) {
+  uint8_t res;
+  NMEA_AngleT angle;
+
+  res = NMEA_GetAngle(&angle);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  buf[0] = '\0';
+  UTIL1_strcatNum16s(buf, bufSize, angle.integral);
+  UTIL1_chcat(buf, bufSize, '.');
+  UTIL1_strcatNum16s(buf, bufSize, angle.fractional);
   return ERR_OK;
 }
 
@@ -524,12 +565,14 @@ static portTASK_FUNCTION(NmeaTask, pvParameters) {
   (void)pvParameters; /* parameter not used */
   GPS_ClearRxBuf(); /* clear GPS RX buffer, as it already could contain some data */
   for(;;) {
+#if 0
     /* indicate we are receiving data from GPS with green and red LED */
     if (GPS_GetCharsInRxBuf()==0) {
       LEDR_Neg(); LEDG_Off(); /* blink red led if no GPS data */
     } else {
       LEDR_Off(); LEDG_Neg(); /* blink green led if we have GPS data */
     }
+#endif
     while(GPS_GetCharsInRxBuf()!=0) { /* do we have data? */
       if (GPS_RecvChar(&ch)==ERR_OK) { /* yes, and no problem to get it */
         ReadChar(ch); /* read character and store in buffer */
@@ -554,8 +597,6 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   uint8_t buf[40], res;
   uint8_t day, month;
   uint16_t year;
-  NMEA_SpeedT speed;
-  NMEA_AngleT angle;
   uint8_t hour, minute, second;
   uint16_t milliSecond;
   int strLen;
@@ -614,24 +655,16 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
   CLS1_SendStatusStr((unsigned char*)"  pos", buf, io->stdOut);
 
-  buf[0] = 0;
-  res = NMEA_GetSpeed(&speed);
+  res = NMEA_GetSpeedString(buf, sizeof(buf));
   if (res==ERR_OK) {
-    UTIL1_strcatNum16s(buf, sizeof(buf), speed.integral);
-    UTIL1_chcat(buf, sizeof(buf), '.');
-    UTIL1_strcatNum16s(buf, sizeof(buf), speed.fractional);
-    UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
+    UTIL1_strcat(buf, sizeof(buf), (uint8_t*)" knots\r\n");
   } else {
     UTIL1_strcpy(buf, sizeof(buf), (uint8_t*)"FAILED\r\n");
   }
   CLS1_SendStatusStr((unsigned char*)"  speed", buf, io->stdOut);
 
-  buf[0] = 0;
-  res = NMEA_GetAngle(&angle);
+  res = NMEA_GetAngleString(buf, sizeof(buf));
   if (res==ERR_OK) {
-    UTIL1_strcatNum16s(buf, sizeof(buf), angle.integral);
-    UTIL1_chcat(buf, sizeof(buf), '.');
-    UTIL1_strcatNum16s(buf, sizeof(buf), angle.fractional);
     UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
   } else {
     UTIL1_strcpy(buf, sizeof(buf), (uint8_t*)"FAILED\r\n");
@@ -647,7 +680,6 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
 }
 
 uint8_t NMEA_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
-#if PL_HAS_GPS
   if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "nmea help")==0) {
     *handled = TRUE;
     return PrintHelp(io);
@@ -667,7 +699,6 @@ uint8_t NMEA_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
     *handled = TRUE;
     NMEA_parseMsg = FALSE;
   }
-#endif
   return ERR_OK;
 }
 
