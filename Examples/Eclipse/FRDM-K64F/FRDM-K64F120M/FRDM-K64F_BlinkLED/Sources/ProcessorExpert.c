@@ -51,7 +51,7 @@
 #include "Init_Config.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
-
+#include <stdio.h>
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
@@ -63,6 +63,7 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   for(;;) {
+    //printf("hello world!\r\n");
     LED1_On();
     WAIT1_Waitms(100);
     LED1_Off();
