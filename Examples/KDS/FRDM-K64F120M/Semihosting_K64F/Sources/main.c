@@ -43,20 +43,25 @@
 #include <stdio.h>
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
+double d = 3.56;
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
-  int i;
 
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
+#if 1
+  {
+	 int i;
   for(i=0;i<100;i++) {
     printf("Hello world!013456\r\n"); /* 20 characters */
+  //  printf("float: %f\r\n", d);
   }
   printf("****FINISHED****\n"); /* 2000 characters finished */
-
+  }
+#endif
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
   #ifdef PEX_RTOS_START
