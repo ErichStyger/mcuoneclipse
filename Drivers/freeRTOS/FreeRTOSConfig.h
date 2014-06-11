@@ -283,11 +283,15 @@
 #define configTIMER_TASK_PRIORITY                                %>50 %TimerTaskPriority
 #define configTIMER_QUEUE_LENGTH                                 %>50 %TimerTaskQueueLength
 #define configTIMER_TASK_STACK_DEPTH                             %>50 %TimerTaskStackDepth
+#define INCLUDE_xEventGroupSetBitFromISR                         %>50 1
+#define INCLUDE_xTimerPendFunctionCall                           %>50 1
 %else
 #define configUSE_TIMERS                                         %>50 0
 #define configTIMER_TASK_PRIORITY                                %>50 0
 #define configTIMER_QUEUE_LENGTH                                 %>50 0
 #define configTIMER_TASK_STACK_DEPTH                             %>50 0
+#define INCLUDE_xEventGroupSetBitFromISR                         %>50 0
+#define INCLUDE_xTimerPendFunctionCall                           %>50 0
 %endif
 
 /* Set the following definitions to 1 to include the API function, or zero
