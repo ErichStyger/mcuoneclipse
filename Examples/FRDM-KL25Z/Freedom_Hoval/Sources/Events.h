@@ -35,7 +35,6 @@
 #include "PE_Const.h"
 #include "IO_Map.h"
 #include "FRTOS1.h"
-#include "RTOSTICKLDD1.h"
 #include "LEDR.h"
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"
@@ -74,6 +73,7 @@
 #include "BitIoLdd9.h"
 #include "SW2.h"
 #include "BitIoLdd10.h"
+#include "CS1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -95,7 +95,7 @@ extern "C" {
 void Cpu_OnNMIINT(void);
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

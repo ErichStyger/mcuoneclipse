@@ -513,7 +513,7 @@ byte HOVAL_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdI
 void HOVAL_Init(void) {
   if (FRTOS1_xTaskCreate(
         Hoval,  /* pointer to the task */
-        (signed char *)"Hoval", /* task name for kernel awareness debugging */
+        "Hoval", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE+100, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
@@ -525,7 +525,7 @@ void HOVAL_Init(void) {
   }
   if (FRTOS1_xTaskCreate(
         Button,  /* pointer to the task */
-        (signed char *)"Button", /* task name for kernel awareness debugging */
+        "Button", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */

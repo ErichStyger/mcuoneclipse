@@ -10,7 +10,7 @@
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2013-07-07, 15:22, # CodeGen: 0 */
+/*##     Date/Time : 2014-06-09, 07:38, # CodeGen: 30 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */
@@ -58,8 +58,8 @@ SECTIONS
   .cfmprotect :
   {
     . = ALIGN(4);
-        KEEP(*(.cfmconfig))     /* Flash Configuration Field (FCF) */
-        . = ALIGN(4);
+	KEEP(*(.cfmconfig))	/* Flash Configuration Field (FCF) */
+	. = ALIGN(4);
   } > m_cfmprotrom
 
   /* The program code and other data goes into INTERNAL_FLASH */
@@ -78,7 +78,6 @@ SECTIONS
     KEEP (*(.fini))
 
     . = ALIGN(4);
-
 
     _etext = .;        /* define a global symbols at end of code */
   } > m_text
@@ -143,7 +142,7 @@ SECTIONS
     KEEP (*(.fini_array*))
     PROVIDE_HIDDEN (__fini_array_end = .);
 
-        ___ROM_AT = .;
+	___ROM_AT = .;
   } > m_text
 
   /* reserve MTB memory at the beginning of m_data */
@@ -165,7 +164,6 @@ SECTIONS
     *(.data*)          /* .data* sections */
 
     . = ALIGN(4);
-    /* # Additional data content defined by components END */
 
     _edata = .;        /* define a global symbol at data end */
   } > m_data
@@ -179,14 +177,27 @@ SECTIONS
   {
     /* This is used by the startup in order to initialize the .bss section */
     __START_BSS = .;
-    __bss_start__ = __START_BSS;
+	  PROVIDE ( __bss_start__ = __START_BSS );
+
     *(.bss)
     *(.bss*)
     *(COMMON)
 
     . = ALIGN(4);
     __END_BSS = .;
-    __bss_end__ = __END_BSS;
+ 	  PROVIDE ( __bss_end__ = __END_BSS );
+  } > m_data
+
+  _romp_at = ___ROM_AT + SIZEOF(.data);
+  .romp : AT(_romp_at)
+  {
+    __S_romp = _romp_at;
+    LONG(___ROM_AT);
+    LONG(_sdata);
+    LONG(___data_size);
+    LONG(0);
+    LONG(0);
+    LONG(0);
   } > m_data
 
   /* User_heap_stack section, used to check that there is enough RAM left */
@@ -200,18 +211,6 @@ SECTIONS
     . = . + __stack_size;
     . = ALIGN(4);
   } > m_data
-
-  _romp_at = ___ROM_AT + SIZEOF(.data);
-  .romp : AT(_romp_at)
-  {
-    __S_romp = _romp_at;
-    LONG(___ROM_AT);
-    LONG(_sdata);
-    LONG(___data_size);
-    LONG(0);
-    LONG(0);
-    LONG(0);
-  }
 
   .ARM.attributes 0 : { *(.ARM.attributes) }
 }
