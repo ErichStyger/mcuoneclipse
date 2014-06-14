@@ -4,7 +4,7 @@
  *  Created on: 04.08.2011
  *      Author: Erich Styger
  */
-#define PL_HAS_SD_CARD  0 /* if we have SD card support */
+#define PL_HAS_SD_CARD  1 /* if we have SD card support */
 
 #include "Shell.h"
 #include "Application.h"
