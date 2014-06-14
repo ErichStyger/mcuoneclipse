@@ -41,6 +41,7 @@
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include <stdio.h>
+#include <math.h>
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 double d = 3.56;
@@ -57,6 +58,7 @@ int main(void)
 	 int i;
   for(i=0;i<100;i++) {
     printf("Hello world!013456\r\n"); /* 20 characters */
+    d = sin(3.5);
   //  printf("float: %f\r\n", d);
   }
   printf("****FINISHED****\n"); /* 2000 characters finished */
