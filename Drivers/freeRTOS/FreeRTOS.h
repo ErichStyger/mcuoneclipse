@@ -90,6 +90,10 @@
 #else
   #include "PE_Types.h"
 #endif
+#if configSYSTICK_USE_LOW_POWER_TIMER
+  #include "IO_Map.h"
+  #include "SIM_PDD.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {

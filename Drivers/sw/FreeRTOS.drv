@@ -3065,10 +3065,9 @@ void %vOnPreSleepProcessing(portTickType expectedIdleTicks)
 %-BW_EVENT_IMPLEMENT_END
 %INITIALIZATION
   /* ### %DeviceType "%DeviceName" init code ... */
-
 #if configSYSTICK_USE_LOW_POWER_TIMER
   /* enable clocking for low power timer, otherwise vPortStopTickTimer() will crash */
-  SIM_SCGC5 |= SIM_SCGC5_LPTMR_MASK; /* SIM_SCGC5: LPTMR=1 */
+  SIM_PDD_SetClockGate(SIM_BASE_PTR, SIM_PDD_CLOCK_GATE_LPTMR0, PDD_ENABLE);
 #endif
   vPortStopTickTimer(); /* tick timer shall not run until the RTOS scheduler is started */
 %CODE_BEGIN
