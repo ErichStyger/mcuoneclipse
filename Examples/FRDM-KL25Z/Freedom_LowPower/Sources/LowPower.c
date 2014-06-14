@@ -46,10 +46,10 @@ BaseType_t LP_EnterTicklessIdle(void) {
     return pdFALSE;
   }
   newTickCnt = FRTOS1_xTaskGetTickCount();
-  if (((newTickCnt-tickCnt)/portTICK_RATE_MS)<25) { /* wait some time after last activity */
+  if (((newTickCnt-tickCnt)*portTICK_RATE_MS)<250) { /* wait 250ms after last activity */
     return pdFALSE;
   }
-  return pdTRUE;
+  return pdTRUE; /* yes, enter tickless idle mode */
 #else
   return pdTRUE;
 #endif
