@@ -23,7 +23,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
 void APP_Run(void) {
   if (FRTOS1_xTaskCreate(
         MainTask,  /* pointer to the task */
-        (signed portCHAR *)"Main", /* task name for kernel awareness debugging */
+        "Main", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */

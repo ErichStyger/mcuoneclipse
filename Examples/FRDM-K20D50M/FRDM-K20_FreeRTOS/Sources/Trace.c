@@ -123,7 +123,7 @@ void TRACE_Deinit(void) {
 /*! \brief Initialization of the module */
 void TRACE_Init(void) {
   traceChannel = TRACE_TO_NONE;
-  if (FRTOS1_xTaskCreate(TraceTask, (signed char *)"Trace", configMINIMAL_STACK_SIZE+150, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (FRTOS1_xTaskCreate(TraceTask, "Trace", configMINIMAL_STACK_SIZE+150, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error, maybe not enough memory? */
   }
 }
