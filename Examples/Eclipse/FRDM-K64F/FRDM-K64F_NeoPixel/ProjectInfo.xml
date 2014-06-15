@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+  Copyright : 2012 Freescale, Inc. All Rights Reserved.
+
+  This configuration file is a standard interchange file that's format is maintained
+  by Freescale, Inc. The configuration file is a derivative work
+  of the Processor Expert Software technology licensed for use by customers
+  as defined as SOFTWARE in the product's End User License Agreement. This file
+  and format are free to use and distribute for read-only purposes. You do not have
+  the right to create these files or modify this format or use for any purposes other
+  than interchange with the Processor Expert Software technology.
+
+  THIS SOFTWARE IS PROVIDED "AS IS".
+
+  NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT
+  LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+  PURPOSE APPLY TO THIS SOFTWARE. IN NO EVENT WILL FREESCALE BE LIABLE, WHETHER
+  IN CONTRACT, TORT, OR OTHERWISE, FOR ANY INCIDENTAL, SPECIAL, INDIRECT,
+  CONSEQUENTIAL OR PUNITIVE DAMAGES, INCLUDING, BUT NOT LIMITED TO, DAMAGES FOR
+  ANY LOSS OF USE, LOSS OF TIME, INCONVENIENCE, COMMERCIAL LOSS, OR LOST PROFITS,
+  SAVINGS, OR REVENUES TO THE FULL EXTENT SUCH MAY BE DISCLAIMED BY LAW.
+
+-->
+<export xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ProjectInfoDescription.xsd">
+  <PROCESSOR>
+    <DeviceID>MK64FN1M0xxx12</DeviceID>
+    <CoreNum>1</CoreNum>
+    <Cores>
+      <Core>
+        <CoreSet>Cortex-M4</CoreSet>
+      </Core>
+    </Cores>
+    <SRAMsize>256k</SRAMsize>
+    <FLASHsize>1M</FLASHsize>
+  </PROCESSOR>
+  <PATHS>
+    <LinkerCommandFile>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Project_Settings\Linker_Files\ProcessorExpert.ld</LinkerCommandFile>
+    <IncludePaths>
+      <Path>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd2\MK64FN1M0LL12\system\</Path>
+      <Path>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\</Path>
+      <Path>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\iofiles\</Path>
+      <Path>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Sources\</Path>
+      <Path>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Generated_Code\</Path>
+    </IncludePaths>
+    <SourceCodePaths>
+      <Path>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Generated_Code\</Path>
+      <Path>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Project_Settings\Startup_Code\</Path>
+      <Path>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Sources\</Path>
+      <Path>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd2\MK64FN1M0LL12\system\</Path>
+    </SourceCodePaths>
+  </PATHS>
+  <FILES>
+    <GeneratedCs>
+      <PathName>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Generated_Code\Cpu.c</PathName>
+      <PathName>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Generated_Code\DMA1.c</PathName>
+      <PathName>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Generated_Code\DMACH1.c</PathName>
+      <PathName>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Generated_Code\PE_LDD.c</PathName>
+      <PathName>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Generated_Code\WAIT1.c</PathName>
+      <PathName>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Project_Settings\Startup_Code\startup.c</PathName>
+      <PathName>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Sources\DMA.c</PathName>
+      <PathName>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Sources\Events.c</PathName>
+      <PathName>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Sources\main.c</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd2\MK64FN1M0LL12\system\CPU_Init.c</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd2\MK64FN1M0LL12\system\Peripherals_Init.c</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd2\MK64FN1M0LL12\system\Vectors.c</PathName>
+    </GeneratedCs>
+    <GeneratedHs>
+      <PathName>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Generated_Code\CPU_Config.h</PathName>
+      <PathName>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Generated_Code\Cpu.h</PathName>
+      <PathName>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Generated_Code\DMA1.h</PathName>
+      <PathName>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Generated_Code\DMACH1.h</PathName>
+      <PathName>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Generated_Code\IO_Map.h</PathName>
+      <PathName>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Generated_Code\Init_Config.h</PathName>
+      <PathName>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Generated_Code\PE_Const.h</PathName>
+      <PathName>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Generated_Code\PE_Error.h</PathName>
+      <PathName>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Generated_Code\PE_LDD.h</PathName>
+      <PathName>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Generated_Code\PE_Types.h</PathName>
+      <PathName>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Generated_Code\Vectors_Config.h</PathName>
+      <PathName>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Generated_Code\WAIT1.h</PathName>
+      <PathName>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Sources\DMA.h</PathName>
+      <PathName>C:\tmp\wsp_keplerNew\FRDM-K64F_NeoPixel\Sources\Events.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\iofiles\MK64F12.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\ADC_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\CAN_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\CMP_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\CMT_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\CRC_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\DAC_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\DMAMUX_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\DMA_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\ENET_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\EWM_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\FMC_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\FTFE_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\FTM_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\GPIO_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\I2C_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\LLWU_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\LPTMR_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\MCM_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\PDB_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\PDD_Types.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\PIT_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\PMC_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\PORT_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\RCM_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\RNGA_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\RTC_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\SAI_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\SCB_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\SDHC_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\SIM_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\SMC_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\SPI_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\SysTick_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\UART_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\USBDCD_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\USB_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\VREF_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\WDOG_PDD.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd2\MK64FN1M0LL12\system\CPU_Init.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd2\MK64FN1M0LL12\system\PDD_Includes.h</PathName>
+      <PathName>C:\Tools\IDE\eclipse\ProcessorExpert\lib\Kinetis\pdd2\MK64FN1M0LL12\system\Peripherals_Init.h</PathName>
+    </GeneratedHs>
+  </FILES>
+  <OPTIONS>
+  </OPTIONS>
+</export>
