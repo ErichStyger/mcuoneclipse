@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>FRDM-K64F_Bare_SDK</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.cdt.managedbuilder.core.genmakebuilder</name>
+			<triggers>clean,full,incremental,</triggers>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.cdt.managedbuilder.core.ScannerConfigBuilder</name>
+			<triggers>full,incremental,</triggers>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.cdt.core.cnature</nature>
+		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
+		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>SDK/platform/startup/startup.c</name>
+			<type>1</type>
+			<locationURI>KSDK_LOC/platform/startup/startup.c</locationURI>
+		</link>
+		<link>
+			<name>SDK/platform/startup/MK64F12/system_MK64F12.c</name>
+			<type>1</type>
+			<locationURI>KSDK_LOC/platform/startup/MK64F12/system_MK64F12.c</locationURI>
+		</link>
+		<link>
+			<name>SDK/platform/startup/MK64F12/gcc/startup_MK64F12.S</name>
+			<type>1</type>
+			<locationURI>KSDK_LOC/platform/startup/MK64F12/gcc/startup_MK64F12.S</locationURI>
+		</link>
+	</linkedResources>
+</projectDescription>
