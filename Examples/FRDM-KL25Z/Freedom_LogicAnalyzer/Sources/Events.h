@@ -33,13 +33,12 @@
 #include "LEDG.h"
 #include "LEDpin2.h"
 #include "BitIoLdd2.h"
-#include "LEDB.h"
-#include "LEDpin3.h"
-#include "BitIoLdd3.h"
-#include "WAIT1.h"
+#include "TPM0.h"
 #include "DMA1.h"
+#include "DMACH1.h"
 #include "TU1.h"
-#include "GPIO1.h"
+#include "PWM1.h"
+#include "PwmLdd1.h"
 #include "PE_LDD.h"
 
 void Cpu_OnNMIINT(void);
@@ -115,6 +114,26 @@ void DMAT1_OnError(LDD_TUserData *UserDataPtr);
 **     Returns     : Nothing
 ** ===================================================================
 */
+
+/*
+** ===================================================================
+**     Event       :  DMACH1_OnComplete (module Events)
+**
+**     Component   :  DMACH1 [DMAChannel_LDD]
+*/
+/*!
+**     @brief
+**         Called at the end of a DMA transfer. If the Half complete
+**         property in initialization section is enabled, this event is
+**         also called when current major iteration count reaches the
+**         halfway point. See SetEventMask() and GetEventMask() methods.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void DMACH1_OnComplete(LDD_TUserData *UserDataPtr);
 
 /* END Events */
 #endif /* __Events_H*/

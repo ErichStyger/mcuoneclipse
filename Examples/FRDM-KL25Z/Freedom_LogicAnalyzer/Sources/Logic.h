@@ -76,4 +76,6 @@ void LOGIC_dmat1OnCompleted(void);
 void LOGIC_dmat1OnError(void);
 void LOGIC_Run(void);
 
+void LOGIC_OnComplete(void);
+
 #endif /* LOGIC_H_ */

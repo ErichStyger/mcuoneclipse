@@ -85,8 +85,31 @@ void DMA1_OnComplete(void)
 */
 void DMA1_OnError(void)
 {
-  /* Write your code here ... */
 	LOGIC_dmat1OnError();
+}
+
+/*
+** ===================================================================
+**     Event       :  DMACH1_OnComplete (module Events)
+**
+**     Component   :  DMACH1 [DMAChannel_LDD]
+*/
+/*!
+**     @brief
+**         Called at the end of a DMA transfer. If the Half complete
+**         property in initialization section is enabled, this event is
+**         also called when current major iteration count reaches the
+**         halfway point. See SetEventMask() and GetEventMask() methods.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void DMACH1_OnComplete(LDD_TUserData *UserDataPtr)
+{
+  (void)UserDataPtr;
+  LOGIC_OnComplete();
 }
 
 /* END Events */
