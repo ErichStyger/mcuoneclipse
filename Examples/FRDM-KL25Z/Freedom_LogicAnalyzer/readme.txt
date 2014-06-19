@@ -10,3 +10,8 @@ See also:
 - http://mcuoneclipse.com/2013/02/03/turning-the-freedom-board-into-a-logic-analyzer/
 - http://mcuoneclipse.com/2013/03/24/freedom-logic-analyzer-with-dma/
 - http://mcuoneclipse.com/2014/06/19/updated-freedom-board-logic-analyzer-with-dma
+
+
+Note:
+for the ols-0.9.7 release, use the ols.profile-frdm.cfg
+Note that this cfg file needs to have Unix (only LF) line endings!
