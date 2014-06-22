@@ -33,7 +33,7 @@ void MyDMAComplete(void) {
 }
 
 static void Transfer(void) {
-  TPM_PDD_WriteModuloReg(TPM0_DEVICE, TICKS_PERIOD); /* set period */
+  TPM_PDD_WriteModuloReg(TPM0_BASE_PTR, TICKS_PERIOD); /* set period */
   TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 1, 0); /* PWM low, zero duty */
   TPM_PDD_EnableChannelDma(TPM0_DEVICE, 1); /* enable DMA for channel */
 
@@ -58,5 +58,4 @@ void NP_Start(void) {
   Transfer();
   for(;;) {
   }
-
 }
