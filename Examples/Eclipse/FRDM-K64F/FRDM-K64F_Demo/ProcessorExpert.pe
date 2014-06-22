@@ -3,8 +3,8 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>131</ModificationStamp>
-    <Date>2014-06-15</Date>
+    <ModificationStamp>133</ModificationStamp>
+    <Date>2014-06-20</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.10.0.RT6_b1423-0069</PEversion>
   </Header>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>181</ProjectCompNumb>
+    <ProjectCompNumb>183</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -33787,13 +33787,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ConnectPin</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>1</Index>
         <Value>false</Value>
         <LastSelection>false</LastSelection>
-        <LastUserSel>no</LastUserSel>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>ConnectPin</UsrMethodName>
       </ItemState>
     </Methods>
@@ -33822,7 +33822,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>OnBlockReceived</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
+        <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>true</Value>
@@ -44693,8 +44693,8 @@
         <ItemSymbol>nRF24DataRate</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <EnumSymbVal>RF_SETUP_RF_DR_250</EnumSymbVal>
+        <Index>1</Index>
+        <EnumSymbVal>RF_SETUP_RF_DR_1000</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
@@ -45226,8 +45226,8 @@
                           <ReadOnly>true</ReadOnly>
                           <UserReadOnly>false</UserReadOnly>
                           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-                          <Index>1</Index>
-                          <Value>false</Value>
+                          <Index>0</Index>
+                          <Value>true</Value>
                           <LastSelection>false</LastSelection>
                           <LastUserSel>no</LastUserSel>
                           <UsrMethodName>SetEdge</UsrMethodName>
