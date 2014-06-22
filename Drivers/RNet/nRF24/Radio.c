@@ -78,8 +78,11 @@ static uint8_t RADIO_Flush(void) {
 }
 
 uint8_t RADIO_PowerDown(void) {
+  uint8_t res;
+  
+  res = RADIO_Flush();
   POWERDOWN();
-  return RADIO_Flush();
+  return res;
 }
 
 static uint8_t CheckTx(void) {
@@ -369,7 +372,7 @@ static void RadioPrintRegisters(%@Shell@'ModuleName'%.ConstStdIOType *io) {
 }
 
 static void RADIO_PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
-  uint8_t buf[32];
+  uint8_t buf[48];
   uint8_t val0, val1;
   int8_t val;
   uint16_t dataRate;
