@@ -201,10 +201,16 @@ vTraceStoreKernelCall(SERVICE, TRACE_CLASS_TIMER, TRACE_GET_TIMER_NUMBER(pxTimer
 #endif
 
 #undef trcKERNEL_HOOKS_TIMER_DELETE
+#if (INCLUDE_OBJECT_DELETE == 1) /* << EST */
 #define trcKERNEL_HOOKS_TIMER_DELETE(SERVICE, pxTimer) \
 vTraceStoreKernelCall(SERVICE, TRACE_CLASS_TIMER, TRACE_GET_TIMER_NUMBER(pxTimer)); \
 vTraceStoreObjectNameOnCloseEvent(TRACE_GET_TIMER_NUMBER(pxTimer), TRACE_CLASS_TIMER); \
 vTraceStoreObjectPropertiesOnCloseEvent(TRACE_GET_TIMER_NUMBER(pxTimer), TRACE_CLASS_TIMER); \
 vTraceFreeObjectHandle(TRACE_CLASS_TIMER, TRACE_GET_TIMER_NUMBER(pxTimer));
+#else
+#define trcKERNEL_HOOKS_TIMER_DELETE(SERVICE, pxTimer) \
+vTraceStoreKernelCall(SERVICE, TRACE_CLASS_TIMER, TRACE_GET_TIMER_NUMBER(pxTimer)); \
+vTraceFreeObjectHandle(TRACE_CLASS_TIMER, TRACE_GET_TIMER_NUMBER(pxTimer));
+#endif
 
 #endif /* TRCKERNELHOOKS_H */

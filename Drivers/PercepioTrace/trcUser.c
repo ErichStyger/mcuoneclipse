@@ -63,9 +63,9 @@ TRACE_STOP_HOOK vTraceStopHookPtr = (TRACE_STOP_HOOK)0;
 #if (INCLUDE_USER_EVENTS==1) /* << EST */
 extern uint8_t inExcludedTask;
 #endif
-#if (INCLUDE_ISR_TRACING==1) || (INCLUDE_USER_EVENTS==1) /* << EST */
+//#if (INCLUDE_ISR_TRACING==1) || (INCLUDE_USER_EVENTS==1) /* << EST */
 extern uint8_t nISRactive;
-#endif
+//#endif
 extern objectHandleType handle_of_last_logged_task;
 #if 0 /* << EST */
 extern uint32_t dts_min;

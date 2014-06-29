@@ -315,7 +315,7 @@
 %if %floatingPointForvTracePrintF='yes'
 #define INCLUDE_FLOAT_SUPPORT 1
 %else
-#define INCLUDE_FLOAT_SUPPORT 1
+#define INCLUDE_FLOAT_SUPPORT 0
 %endif
 
 /******************************************************************************
