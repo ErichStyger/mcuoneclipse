@@ -27,7 +27,7 @@ Package from component(s):
 - FatFsMem_USB_MSD version 01.019
 - FatFsMemSDHC version 01.024
 - FontDisplay version 01.195
-- FreeRTOS version 01.366
+- FreeRTOS version 01.368
 - FreeRTOSTrace version 01.003
 - FSL_USB_CDC_Device version 01.033
 - FSL_USB_HID_Keyboard_Device version 01.054
@@ -61,7 +61,7 @@ Package from component(s):
 - LowPower version 01.016
 - MAG3110 version 01.010
 - MaxonF2140 version 01.001
-- MC13192 version 01.168
+- MC13192 version 01.169
 - MC34673 version 01.019
 - minIni version 01.037
 - MMA7260Q version 01.111
@@ -69,7 +69,7 @@ Package from component(s):
 - MMA8451Q version 01.028
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 25.05.2014
+created 24.06.2014
 
 Package from component(s):
 - nRF24L01 version 01.080
@@ -120,4 +120,4 @@ Package from component(s):
 - UTI version 01.125
 - Utility version 01.105
 - Wait version 01.067
-created 25.05.2014
+created 24.06.2014
