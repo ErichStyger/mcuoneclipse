@@ -39,6 +39,7 @@
 #include "TPM0.h"
 #include "TMOUT1.h"
 #include "CS1.h"
+#include "WAIT1.h"
 
 #ifdef __cplusplus
 extern "C" {
