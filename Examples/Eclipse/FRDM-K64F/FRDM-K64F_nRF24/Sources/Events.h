@@ -46,6 +46,16 @@
 #include "IRQ1.h"
 #include "ExtIntLdd1.h"
 #include "WAIT1.h"
+#include "LED1.h"
+#include "LEDpin1.h"
+#include "BitIoLdd3.h"
+#include "LED2.h"
+#include "LEDpin2.h"
+#include "BitIoLdd4.h"
+#include "LED3.h"
+#include "LEDpin3.h"
+#include "BitIoLdd5.h"
+#include "Pins1.h"
 #include "FRTOS1.h"
 
 #ifdef __cplusplus
@@ -218,23 +228,6 @@ void SM1_OnTxChar(void);
 ** ===================================================================
 */
 
-void SM1_OnError(void);
-/*
-** ===================================================================
-**     Event       :  SM1_OnError (module Events)
-**
-**     Component   :  SM1 [SynchroMaster]
-**     Description :
-**         This event is called when a channel error (not the error
-**         returned by a given method) occurs. The errors can be read
-**         using <GetError> method.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-
 void SM1_OnFullRxBuf(void);
 /*
 ** ===================================================================
@@ -266,6 +259,39 @@ void SM1_OnFreeTxBuf(void);
 **         service/event> property is enabled and the <Output buffer
 **         size> property is set to non-zero value.
 **     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void SM1_OnError(void);
+/*
+** ===================================================================
+**     Event       :  SM1_OnError (module Events)
+**
+**     Component   :  SM1 [SynchroMaster]
+**     Description :
+**         This event is called when a channel error (not the error
+**         returned by a given method) occurs. The errors can be read
+**         using <GetError> method.
+**         The event is available only when the <Interrupt
+**         service/event> property is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void RNET1_OnEvent(RNET1_RadioEvent event);
+/*
+** ===================================================================
+**     Event       :  RNET1_OnEvent (module Events)
+**
+**     Component   :  RNET1 [RNet]
+**     Description :
+**         Event created for various radio states, like timeout, ack
+**         received, data sent, ...
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         event           - 
 **     Returns     : Nothing
 ** ===================================================================
 */
