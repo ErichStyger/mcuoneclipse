@@ -12,7 +12,9 @@
 #include "CLS1.h"
 #include "LED1.h"
 #include "LED2.h"
-#include "RNET1.h"
+#if PL_HAS_NRF24
+  #include "RNET1.h"
+#endif
 #if PL_HAS_RSTDIO
   #include "RStdIO.h"
 #endif

@@ -8,6 +8,7 @@
  */
 
 #include "Platform.h"
+#if PL_HAS_NRF24
 #include "RNET1.h"
 #include "Application.h"
 #include "RNet_App.h"
@@ -134,3 +135,4 @@ void RNETA_Init(void) {
     /*lint +e527 */
   }
 }
+#endif /* PL_HAS_NRF24 */

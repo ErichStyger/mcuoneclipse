@@ -14,13 +14,20 @@
 #include "LED2.h"
 #include "CLS1.h"
 #include "FRTOS1.h"
-#include "RNet_App.h"
 #include "AD1.h"
 #include "UTIL1.h"
 #include "Shell.h"
-#include "RNet_AppConfig.h"
-#include "RNWK.h"
-#include "Rapp.h"
+#if PL_HAS_NRF24
+  #include "RNet_App.h"
+  #include "RNet_AppConfig.h"
+  #include "RNWK.h"
+  #include "Rapp.h"
+#endif
+#if PL_HAS_LCD
+  #include "PDC1.h"
+  #include "Snake.h"
+#endif
+#include "Control.h"
 
 static bool JoyStickEnabled = FALSE; /* controlled by F key */
 static bool ButtonsEnabled = TRUE;  /* controlled by E key */
@@ -61,96 +68,83 @@ static uint8_t APP_GetXY(uint16_t *x, uint16_t *y, int8_t *x8, int8_t *y8) {
   return ERR_OK;
 }
 
-void APP_OnKeyPressed(uint8_t keys) {
-  if (keys&(1<<0)) {
-    EVNT1_SetEvent(EVNT1_A_PRESSED);
-  }
-  if (keys&(1<<1)) {
-    EVNT1_SetEvent(EVNT1_B_PRESSED);
-  }
-  if (keys&(1<<2)) {
-    EVNT1_SetEvent(EVNT1_C_PRESSED);
-  }
-  if (keys&(1<<3)) {
-    EVNT1_SetEvent(EVNT1_D_PRESSED);
-  }
-  if (keys&(1<<4)) {
-    EVNT1_SetEvent(EVNT1_E_PRESSED);
-  }
-  if (keys&(1<<5)) {
-    EVNT1_SetEvent(EVNT1_F_PRESSED);
-  }
-  if (keys&(1<<6)) {
-    EVNT1_SetEvent(EVNT1_KEY_PRESSED);
-  }
-}
-
-void APP_OnKeyReleasedLong(uint8_t keys) {
-}
-
-void APP_OnKeyReleased(uint8_t keys) {
-}
-
-void APP_HandleEvent(uint8_t event) {
+static void APP_HandleEvent(void) {
 #if PL_HAS_NRF24
   uint8_t data;
 #endif
   
-  switch(event) {
-  case EVNT1_A_PRESSED:
+  if (EVNT1_GetClearEvent(EVNT1_A_PRESSED)) {
     CLS1_SendStr((unsigned char*)"A pressed!\r\n", CLS1_GetStdio()->stdOut);
 #if PL_HAS_NRF24
     data = 'A';
     (void)RAPP_SendPayloadDataBlock(&data, sizeof(data), RAPP_MSG_TYPE_JOYSTICK_BTN, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
 #endif
-    break;
-  case EVNT1_B_PRESSED:
+#if PL_HAS_SNAKE_GAME
+    EVNT1_SetEvent(EVNT1_SNAKE_UP);
+#endif
+  }
+  if (EVNT1_GetClearEvent(EVNT1_B_PRESSED)) {
     CLS1_SendStr((unsigned char*)"B pressed!\r\n", CLS1_GetStdio()->stdOut);
 #if PL_HAS_NRF24
     data = 'B';
     (void)RAPP_SendPayloadDataBlock(&data, sizeof(data), RAPP_MSG_TYPE_JOYSTICK_BTN, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
 #endif
-    break;
-  case EVNT1_C_PRESSED:
+#if PL_HAS_SNAKE_GAME
+    EVNT1_SetEvent(EVNT1_SNAKE_RIGHT);
+#endif
+  }
+  if (EVNT1_GetClearEvent(EVNT1_C_PRESSED)) {
     CLS1_SendStr((unsigned char*)"C pressed!\r\n", CLS1_GetStdio()->stdOut);
 #if PL_HAS_NRF24
     data = 'C';
     (void)RAPP_SendPayloadDataBlock(&data, sizeof(data), RAPP_MSG_TYPE_JOYSTICK_BTN, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
 #endif
-    break;
-  case EVNT1_D_PRESSED:
+#if PL_HAS_SNAKE_GAME
+    EVNT1_SetEvent(EVNT1_SNAKE_DOWN);
+#endif
+  }  
+  if (EVNT1_GetClearEvent(EVNT1_D_PRESSED)) {
     CLS1_SendStr((unsigned char*)"D pressed!\r\n", CLS1_GetStdio()->stdOut);
 #if PL_HAS_NRF24
     data = 'D';
     (void)RAPP_SendPayloadDataBlock(&data, sizeof(data), RAPP_MSG_TYPE_JOYSTICK_BTN, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
 #endif
-    break;
-  case EVNT1_E_PRESSED:
+#if PL_HAS_SNAKE_GAME
+    EVNT1_SetEvent(EVNT1_SNAKE_LEFT);
+#endif
+  }  
+  if (EVNT1_GetClearEvent(EVNT1_E_PRESSED)) {
     CLS1_SendStr((unsigned char*)"E pressed!\r\n", CLS1_GetStdio()->stdOut);
     ButtonsEnabled = !ButtonsEnabled;
 #if PL_HAS_NRF24
     data = 'E';
     (void)RAPP_SendPayloadDataBlock(&data, sizeof(data), RAPP_MSG_TYPE_JOYSTICK_BTN, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
 #endif
-    break;
-  case EVNT1_F_PRESSED:
+#if PL_HAS_SNAKE_GAME
+    EVNT1_SetEvent(EVNT1_SNAKE_RESET);
+#endif
+  }  
+  if (EVNT1_GetClearEvent(EVNT1_F_PRESSED)) {
     CLS1_SendStr((unsigned char*)"F pressed!\r\n", CLS1_GetStdio()->stdOut);
     JoyStickEnabled = !JoyStickEnabled;
 #if PL_HAS_NRF24
     data = 'F';
     (void)RAPP_SendPayloadDataBlock(&data, sizeof(data), RAPP_MSG_TYPE_JOYSTICK_BTN, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
 #endif
-    break;
-  case EVNT1_KEY_PRESSED:
+#if PL_HAS_SNAKE_GAME
+    EVNT1_SetEvent(EVNT1_SNAKE_RESET);
+#endif
+  }  
+  if (EVNT1_GetClearEvent(EVNT1_KEY_PRESSED)) {
     CLS1_SendStr((unsigned char*)"KEY pressed!\r\n", CLS1_GetStdio()->stdOut);
 #if PL_HAS_NRF24
     data = 'K';
     (void)RAPP_SendPayloadDataBlock(&data, sizeof(data), RAPP_MSG_TYPE_JOYSTICK_BTN, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
 #endif
-    break;
-  default:
-    break;
-  } /* switch */
+#if PL_HAS_SNAKE_GAME
+    EVNT1_SetEvent(EVNT1_SNAKE_START_PAUSE);
+#endif
+  }  
 }
 
 static void StatusPrintXY(CLS1_ConstStdIOType *io) {
@@ -212,15 +206,25 @@ static void AppTask(void *pvParameters) {
 #endif
   uint8_t buf[24];
   
-  CLS1_SendStr((unsigned char*)"Hello from the Joystick App!\r\n", CLS1_GetStdio()->stdOut);
-  FRTOS1_vTaskDelay(3000/portTICK_RATE_MS); /* wait some time until sending data */
   cntMs = 0;
   x8prev = 127; y8prev = 127; /* should be different from center position */
   for(;;) {
     if (APP_GetXY(&x, &y, &x8, &y8)!=ERR_OK) {
       CLS1_SendStr((unsigned char*)"Failed to get x/y!\r\n", CLS1_GetStdio()->stdErr);
     } else {
-      if (JoyStickEnabled && ((x8!=x8prev) || (y8!=y8prev))) { /* send only changing data, and only if not zero/midpoint */
+#if PL_HAS_SNAKE_GAME
+      if (y8>25) {
+        EVNT1_SetEvent(EVNT1_SNAKE_UP);
+      } else if (y8<-25) {
+        EVNT1_SetEvent(EVNT1_SNAKE_DOWN);
+      }
+      if (x8>25) {
+        EVNT1_SetEvent(EVNT1_SNAKE_RIGHT);
+      } else if (x8<-25) {
+        EVNT1_SetEvent(EVNT1_SNAKE_LEFT);
+      }
+#endif
+      if (JoyStickEnabled && ((x8!=x8prev) || (y8!=y8prev))) { /* process only changing data, and only if not zero/midpoint */
         UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"xy: ");
         UTIL1_strcatNum8s(buf, sizeof(buf), x8);
         UTIL1_chcat(buf, sizeof(buf), ',');
@@ -242,14 +246,21 @@ static void AppTask(void *pvParameters) {
       LED1_Neg();
       cntMs = 0;
     }
-    KEY1_ScanKeys();
-    EVNT1_HandleEvent();
-    FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
-    cntMs += 100;
+    CTRL_ScanKeys();
+    APP_HandleEvent();
+    FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
+    cntMs += 10;
   }
 }
 
 void APP_Run(void) {
+  CTRL_Init();
+#if PL_HAS_SNAKE_GAME
+  SNAKE_Init();
+#endif
+#if PL_HAS_NRF24
+  WAIT1_Waitms(200); /* wait at least 100 ms to power-up the receiver */
+#endif
 #if PL_HAS_SHELL
   SHELL_Init();
 #endif
@@ -261,7 +272,7 @@ void APP_Run(void) {
         "App", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
-        tskIDLE_PRIORITY+2,  /* initial priority */
+        tskIDLE_PRIORITY,  /* initial priority */
         (xTaskHandle*)NULL /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */

@@ -63,17 +63,24 @@
 #include "ASerialLdd1.h"
 #include "UTIL1.h"
 #include "EVNT1.h"
-#include "RF1.h"
-#include "CE1.h"
-#include "BitIoLdd8.h"
-#include "CSN1.h"
-#include "BitIoLdd9.h"
-#include "SM1.h"
-#include "SMasterLdd1.h"
 #include "FRTOS1.h"
 #include "AD1.h"
 #include "AdcLdd1.h"
-#include "RNET1.h"
+#include "PDC1.h"
+#include "RESpin2.h"
+#include "BitIoLdd13.h"
+#include "SCEpin2.h"
+#include "BitIoLdd14.h"
+#include "D_Cpin2.h"
+#include "BitIoLdd15.h"
+#include "SPI1.h"
+#include "Clock1.h"
+#include "BitIoLdd16.h"
+#include "Output1.h"
+#include "BitIoLdd18.h"
+#include "GDisp1.h"
+#include "GFONT1.h"
+#include "FDisp1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -156,21 +163,6 @@ void KEY1_OnKeyReleasedLong(byte keys);
 **         NAME            - DESCRIPTION
 **         keys            - the key(s) pressed, as bitset (e.g. 1 is
 **                           key 1, 2 is key 2, 4 is key 3, ....)
-**     Returns     : Nothing
-** ===================================================================
-*/
-
-void EVNT1_AppHandleEvent(byte event);
-/*
-** ===================================================================
-**     Event       :  EVNT1_AppHandleEvent (module Events)
-**
-**     Component   :  EVNT1 [SimpleEvents]
-**     Description :
-**         
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**         event           - Event (event number) to be processed.
 **     Returns     : Nothing
 ** ===================================================================
 */

@@ -26,8 +26,6 @@ void APP_OnKeyPressed(uint8_t keys);
 void APP_OnKeyReleasedLong(uint8_t keys);
 void APP_OnKeyReleased(uint8_t keys);
 
-void APP_HandleEvent(uint8_t event);
-
 void APP_DebugPrint(unsigned char*);
 
 void APP_Run(void);

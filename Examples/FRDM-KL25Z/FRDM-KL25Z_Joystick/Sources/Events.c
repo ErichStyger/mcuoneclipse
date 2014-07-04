@@ -36,7 +36,7 @@ extern "C" {
 
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
-#include "Application.h"
+#include "Control.h"
 /*
 ** ===================================================================
 **     Event       :  Cpu_OnNMIINT (module Events)
@@ -90,7 +90,7 @@ void TI1_OnInterrupt(void)
 */
 void KEY1_OnKeyPressed(byte keys)
 {
-  APP_OnKeyPressed(keys);
+  CTRL_OnKeyPressed(keys);
 }
 
 /*
@@ -109,7 +109,7 @@ void KEY1_OnKeyPressed(byte keys)
 */
 void KEY1_OnKeyReleased(byte keys)
 {
-  APP_OnKeyReleased(keys);
+  CTRL_OnKeyReleased(keys);
 }
 
 /*
@@ -129,25 +129,7 @@ void KEY1_OnKeyReleased(byte keys)
 */
 void KEY1_OnKeyReleasedLong(byte keys)
 {
-  APP_OnKeyReleasedLong(keys);
-}
-
-/*
-** ===================================================================
-**     Event       :  EVNT1_AppHandleEvent (module Events)
-**
-**     Component   :  EVNT1 [SimpleEvents]
-**     Description :
-**         
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**         event           - Event (event number) to be processed.
-**     Returns     : Nothing
-** ===================================================================
-*/
-void EVNT1_AppHandleEvent(byte event)
-{
-  APP_HandleEvent(event);
+  CTRL_OnKeyReleasedLong(keys);
 }
 
 /*
