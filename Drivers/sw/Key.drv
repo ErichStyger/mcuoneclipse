@@ -474,9 +474,10 @@ bool %'ModuleName'%.%isIdle(void)
 %ifdef GetKeys
 %define! RetVal
 %include Common\KeyGetKeys.Inc
-#if 0 /* method is implemented as a macro in the header file %'ModuleName'.h */
+/*
 byte %'ModuleName'%.%GetKeys(void)
 {
+ method is implemented as a macro in the header file %'ModuleName'.h
 %if (OpenIsLogicalOne='yes')
   %if InterruptEnabled='yes'
   return ((byte)((~%@KBI@'ModuleName'%.GetVal())&%'ModuleName'%.KEYS_MASK));
@@ -487,7 +488,7 @@ byte %'ModuleName'%.%GetKeys(void)
   %endif
 %endif
 }
-#endif
+*/
 
 %endif %- GetKeys
 %-BW_METHOD_END GetKeys
