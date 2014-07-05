@@ -19,11 +19,20 @@ typedef enum {
 
 /* 48 MHz, WS2812 */
 #define TICKS_PERIOD  59  /* 1.25 us  (need: 1.25 us)*/
+#if 1
 #define VAL0  18          /* 0.396 us (need: 0.4 us low) */
 #define VAL1  37          /* 0.792 us (need: 0.8 us high */
+#elif 0
+#define VAL0  15          /* 0.396 us (need: 0.4 us low) */
+#define VAL1  (TICKS_PERIOD/2)          /* 0.625 us high */
+#else
+#define VAL0  10          /* 0.396 us (need: 0.4 us low) */
+#define VAL1  (TICKS_PERIOD/2)          /* 0.625 us high */
+#endif
+
 #define VAL00 0
 
-#define NEO_NOF_PIXEL       (1+16) /* number of pixels */
+#define NEO_NOF_PIXEL       (1+15) /* number of pixels */
 #define NEO_PIXEL_FIRST      0
 #define NEO_PIXEL_LAST      (NEO_NOF_PIXEL-1)
 #define NEO_NOF_PRE         2 /* somehow need trailing values? */
@@ -245,7 +254,7 @@ void NP_Start(void) {
 
   for (;;) {
     PixelTrail(100, NEO_COLOR_RED, NEO_PIXEL_FIRST, NEO_PIXEL_LAST);
-    PixelTrail(200, NEO_COLOR_GREEN, NEO_PIXEL_FIRST+2, 10);
+    PixelTrail(200, NEO_COLOR_GREEN, NEO_PIXEL_FIRST+4, NEO_PIXEL_LAST-2);
     PixelTrail(100, NEO_COLOR_BLUE, NEO_PIXEL_FIRST, NEO_PIXEL_LAST);
   }
   NEO_ClearAllPixel();
