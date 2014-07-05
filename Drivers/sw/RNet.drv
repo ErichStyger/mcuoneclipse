@@ -56,6 +56,11 @@
     %define! Description_%@nRF24L01p@OnInterrupt Called in case of an interrupt from the transcevier The event services the event of the inherited component and eventually invokes other events.
   %endif %- @nRF24L01p@OnInterrupt
 %endif %- nRF24L01p
+%ifdef SMAC
+  %ifdef @SMAC@OnInterrupt
+    %define! Description_%@SMAC@OnInterrupt Event raised in case of transceiver interrupt. The event services the event of the inherited component and eventually invokes other events.
+  %endif %- @SMAC@OnInterrupt
+%endif %- SMAC
 %-BW_INTERN_COMMENTS_END
 %-
 %-BW_SECTIONS_INSERT
@@ -111,6 +116,21 @@
 %else
 #define %'ModuleName'%.PARSE_COMMAND_ENABLED  0 /* set to 1 if method ParseCommand() is present, 0 otherwise */
 %endif %- ParseCommand
+
+typedef enum {
+  %'ModuleName'%.RADIO_MSG_RECEIVED,        /* message has been received */
+  %'ModuleName'%.RADIO_MSG_SENT,            /* message has been sent */
+  %'ModuleName'%.RADIO_TIMEOUT,             /* timeout, no response received */
+  %'ModuleName'%.RADIO_RETRY,               /* retry, sending message again */
+  %'ModuleName'%.RADIO_RETRY_MSG_FAILED,    /* creating retry message failed */
+  %'ModuleName'%.RADIO_ACK_RECEIVED         /* acknowledge message received */
+} %'ModuleName'%.RadioEvent;
+
+%if defined(OnEvent)
+#define %'ModuleName'%.CREATE_EVENTS   1  /* call user event handler */
+%else
+#define %'ModuleName'%.CREATE_EVENTS   0  /* do not call user event handler */
+%endif
 
 %-
 %-BW_CUSTOM_USERTYPE_END
@@ -178,6 +198,14 @@ uint8_t %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, co
 %endif %- ParseCommand
 %-BW_METHOD_END ParseCommand
 %-************************************************************************************************************
+%-INHERITED_EVENT_BEGIN SMAC OnInterrupt
+%if defined(SMAC)
+%ifdef @SMAC@OnInterrupt
+void %@SMAC@OnInterrupt(void);
+%endif
+
+%endif %- @SMAC@OnInterrupt
+%-INHERITED_EVENT_END SMAC OnInterrupt
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -186,6 +214,15 @@ uint8_t %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, co
 %include Common\Header.End
 %-
 %-BW_EVENT_DEFINITION_START
+%-BW_METHOD_BEGIN OnRadioEvent
+%ifdef OnRadioEvent
+%INTERFACE OnRadioEvent
+void %OnRadioEvent(%'ModuleName'_RadioEvent event);
+%define! Parevent
+%include Common\RNetOnRadioEvent.Inc
+
+%endif %- OnRadioEvent
+%-BW_METHOD_END OnRadioEvent
 %-BW_EVENT_DEFINITION_END
 %IMPLEMENTATION
 %define! Settings Common\RNetSettings.Inc
@@ -310,6 +347,18 @@ uint8_t %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, co
 %endif %- ParseCommand
 %-BW_METHOD_END ParseCommand
 %-************************************************************************************************************
+%-INHERITED_EVENT_BEGIN SMAC OnInterrupt
+%if defined(SMAC)
+%ifdef @SMAC@OnInterrupt
+%include Common\GeneralInternal.inc (OnInterrupt)
+void %@SMAC@OnInterrupt(void)
+{
+  /* Write your code here ... */
+}
+
+%endif %- @SMAC@OnInterrupt
+%endif
+%-INHERITED_EVENT_END SMAC OnInterrupt
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 
@@ -317,6 +366,18 @@ uint8_t %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, co
 %-
 %-
 %-BW_EVENT_IMPLEMENT_START
+%-BW_METHOD_BEGIN OnRadioEvent
+%ifdef OnRadioEvent
+%IMPLEMENTATION OnRadioEvent
+%define! Parevent
+%include Common\RNetOnRadioEvent.Inc
+void %OnRadioEvent(%'ModuleName'_RadioEvent event)
+{
+  /* Write your code here ... */
+}
+
+%endif %- OnRadioEvent
+%-BW_METHOD_END OnRadioEvent
 %-BW_EVENT_IMPLEMENT_END
 %INITIALIZATION
   /* ### %DeviceType "%DeviceName" init code ... */

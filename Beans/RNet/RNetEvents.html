@@ -202,7 +202,33 @@ LI.EXP {
      </div>
      <div class="user_text">
 <div class="user_text" style="margin-top:10px">
-<b>There are no events in this component</b>
+<ul>
+<li>
+<a name="EventModule">
+<b>EventModule</b>
+</a>
+ - Name of the user module (without extension), where the events from this component are placed.
+</li>
+<li>
+<a name="OnRadioEvent">
+<b>OnRadioEvent</b>
+</a>
+ - Event created for various radio states, like timeout, ack received, data sent, ...
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void OnRadioEvent(%'ModuleName'_RadioEvent event)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>event:<i>ComponentName_</i>RadioEvent</i> - no hint</li>
+</ul><br />
+</li>
+</ul>
+<hr />
+<font style="font: 12px Verdana, Geneva, Arial, Helvetica, sans-serif;COLOR: #005ba2;">
+<b><i>For each generated event it is possible to set:</i></b><br />
+</font>
+<ul>
+  <li><b>Procedure Name</b> - name of procedure (written by user) that handles the event.</li>
+</ul>
 
 </div>
 <!---USERBEG DON'T CHANGE THIS LINE-->
