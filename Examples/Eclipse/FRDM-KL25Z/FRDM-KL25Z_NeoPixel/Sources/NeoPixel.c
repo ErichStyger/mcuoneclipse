@@ -32,7 +32,7 @@ typedef enum {
 
 #define VAL00 0
 
-#define NEO_NOF_PIXEL       (1+15) /* number of pixels */
+#define NEO_NOF_PIXEL       (2+(4*15)) /* number of pixels */
 #define NEO_PIXEL_FIRST      0
 #define NEO_PIXEL_LAST      (NEO_NOF_PIXEL-1)
 #define NEO_NOF_PRE         2 /* somehow need trailing values? */
@@ -55,7 +55,7 @@ void NEO_SetPixelRGB(NEO_PixelIdxT pixelNo, uint8_t red, uint8_t green, uint8_t 
   NEO_PixelIdxT idx;
   int i;
 
-  if (pixelNo>=NEO_NOF_BITS_PIXEL) {
+  if (pixelNo>=NEO_NOF_PIXEL) {
     return; /* error, out of range */
   }
   idx = NEO_NOF_PRE+(pixelNo*NEO_NOF_BITS_PIXEL);
@@ -97,7 +97,7 @@ void NEO_GetPixelRGB(NEO_PixelIdxT pixelNo, uint8_t *redP, uint8_t *greenP, uint
   uint8_t red, green, blue;
   int i;
 
-  if (pixelNo>=NEO_NOF_BITS_PIXEL) {
+  if (pixelNo>=NEO_NOF_PIXEL) {
     return; /* error, out of range */
   }
   red = green = blue = 0;
@@ -210,19 +210,12 @@ static void Transfer(uint32_t src) {
   DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_ENABLE); /* enable request from peripheral */
 }
 
-static void PixelTrail(uint16_t delayMs, NEO_ColorE color, NEO_PixelIdxT start, NEO_PixelIdxT end) {
+static void PixelTrail(uint16_t delayMs, NEO_ColorE color, NEO_PixelIdxT start, NEO_PixelIdxT end, NEO_PixelIdxT nofTail) {
   NEO_PixelIdxT pixel;
+  unsigned int i;
 
-  for(pixel=start;pixel<=end+3;pixel++) {
-    if (pixel-start>0 && pixel-1<=end) {
-      NEO_DimmPercentPixel(pixel-1, color, 50);
-    }
-    if (pixel-start>1 && pixel-2<=end) {
-      NEO_DimmPercentPixel(pixel-2, color, 25);
-    }
-    if (pixel-start>2 && pixel-3<=end) {
-      NEO_ClearPixel(pixel-3);
-    }
+  for(pixel=start;pixel<=end+nofTail+1;pixel++) {
+    /* move head */
     if (pixel<=end) {
       if (color==NEO_COLOR_RED) {
         NEO_SetPixelRGB(pixel, 0xff, 0, 0);
@@ -230,6 +223,16 @@ static void PixelTrail(uint16_t delayMs, NEO_ColorE color, NEO_PixelIdxT start, 
         NEO_SetPixelRGB(pixel, 0, 0xff, 0);
       } else if (color==NEO_COLOR_BLUE) {
         NEO_SetPixelRGB(pixel, 0, 0, 0xff);
+      }
+    }
+    /* clear tail pixel */
+    if (pixel-start>nofTail && pixel-(nofTail+1)<=end) {
+      NEO_ClearPixel(pixel-(nofTail+1));
+    }
+    /* dim remaining tail pixel */
+    for(i=0;i<nofTail;i++) {
+      if (pixel-start>i && pixel-(i+1)<=end) {
+        NEO_DimmPercentPixel(pixel-(i+1), color, 50);
       }
     }
     Transfer((uint32_t)&transmitBuf[0]);
@@ -251,12 +254,13 @@ void NP_Start(void) {
 
   NEO_ClearAllPixel();
   Transfer((uint32_t)&transmitBuf[0]);
-
   for (;;) {
-    PixelTrail(100, NEO_COLOR_RED, NEO_PIXEL_FIRST, NEO_PIXEL_LAST);
-    PixelTrail(200, NEO_COLOR_GREEN, NEO_PIXEL_FIRST+4, NEO_PIXEL_LAST-2);
-    PixelTrail(100, NEO_COLOR_BLUE, NEO_PIXEL_FIRST, NEO_PIXEL_LAST);
+    PixelTrail(80, NEO_COLOR_RED, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 2);
+    PixelTrail(50, NEO_COLOR_GREEN, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 3);
+    PixelTrail(20, NEO_COLOR_BLUE, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 5);
+    PixelTrail(10, NEO_COLOR_GREEN, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 5);
   }
+  /* at the end, clear all */
   NEO_ClearAllPixel();
   Transfer((uint32_t)&transmitBuf[0]);
 #if 0

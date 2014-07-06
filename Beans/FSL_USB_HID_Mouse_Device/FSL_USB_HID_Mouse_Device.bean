@@ -4,7 +4,7 @@
     <Name>FSL_USB_HID_Mouse_Device</Name>
     <Description>Freescale USB Stack (HID Mouse)</Description>
     <Author>Erich Styger</Author>
-    <Version>01.066</Version>
+    <Version>01.069</Version>
     <Icon>FSL_USB_HID_Mouse_Device</Icon>
     <TypesFiles>PE,FSL_USB_HID_Mouse_Device\FSL_USB_HID_Mouse_Device</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -19,7 +19,7 @@
     <BW_NeedUst>0</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>(c) Copyright Freescale, all rights reserved, 2013\nPorted as Processor Expert component: Erich Styger\nhttp: www.freescale.com</Copyright>
+    <Copyright>(c) Copyright Freescale, all rights reserved, 2013\nhttp: www.freescale.com\nPorted as Processor Expert component by Erich Styger, 2013-2014\nWeb       : www.mcuoneclipse.com</Copyright>
     <Category>SW-Communication</Category>
     <DemoDriver>no</DemoDriver>
     <Shortcut>HIDM</Shortcut>
@@ -93,6 +93,23 @@
               <MinLength>-1</MinLength>
               <MaxLength>28</MaxLength>
             </TStrgItem>
+          </GrupItem>
+          <GrupItem>
+            <TIntgItem>
+              <Name>Message Size</Name>
+              <Symbol>HIDMouseMsgSize</Symbol>
+              <Hint>Message size (number of bytes) for HID mouse message. Default is 4 bytes, but can be 5 bytes for extended scroll wheel messages.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>4</DefaultValue>
+              <MinValue>4</MinValue>
+              <MaxValue>5</MaxValue>
+              <Bases>DEC</Bases>
+              <DefaultBase>DEC</DefaultBase>
+              <ExtraHintDisabled>false</ExtraHintDisabled>
+              <ChangeValueIntoRange>false</ChangeValueIntoRange>
+              <RuntimeProperty>false</RuntimeProperty>
+            </TIntgItem>
           </GrupItem>
         </Children>
       </TBoolGrupItem>
