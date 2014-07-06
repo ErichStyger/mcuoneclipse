@@ -187,7 +187,6 @@ bool %'ModuleName'%.%isEnumerated(void);
 %endif %- isEnumerated
 %-BW_METHOD_END isEnumerated
 %-************************************************************************************************************
-%-************************************************************************************************************
 %-BW_METHOD_BEGIN Send
 %ifdef Send
 byte %'ModuleName'%.%Send(byte action, signed char x, signed char y);
@@ -268,10 +267,14 @@ void %OnEvent(byte error);
 %-   Example:
 %-     static int counter1;
 %-     int %'ModuleName'%.counter2;
-#define  CONTROLLER_ID      (0)   /* ID to identify USB CONTROLLER */
+#define  CONTROLLER_ID     (0)   /* ID to identify USB CONTROLLER */
 
-#define  MOUSE_BUFF_SIZE   (4)   /* report buffer size */
+#define  MOUSE_BUFF_SIZE   (%HIDMouseMsgSize)   /* report buffer size, number of bytes in message, specified in component properties */
 #define  REQ_DATA_SIZE     (1)
+
+#if (MOUSE_BUFF_SIZE<4) || (MOUSE_BUFF_SIZE>5)
+  #error "Only buffer size of 4 or 5 supported!"
+#endif
 
 static uint_8 rpt_buf[MOUSE_BUFF_SIZE];     /* Mouse Event Report Buffer Key press */
 static uint_8 g_app_request_params[2];      /* for get/set idle and protocol requests*/
@@ -388,6 +391,7 @@ void %'ModuleName'%.App_Callback(byte controller_ID, byte event_type, void *val)
 byte %'ModuleName'%.%App_Task(void)
 {
   uint32_t hidCode; /* upper 8bits are modifier, lower 8bits are hid code value */
+  int i;
 
   /* device is %CPUDevice */
 %if (CPUDevice="MC9S08JE128") | (CPUDevice="MC9S08JM16") | (CPUDevice="MC9S08JM60") | (CPUDevice="MC9S08JS16") | (CPUDevice="MC9S08MM128")
@@ -400,11 +404,16 @@ byte %'ModuleName'%.%App_Task(void)
     return ERR_BUSOFF; /* bus not available, device not enumerated */
   }
   while (%@TxBuffer@'ModuleName'%.Get(&hidCode)==ERR_OK) { /* send everything in the queue */
-    /* send character */
+    /* send message */
+    #if MOUSE_BUFF_SIZE==4
     rpt_buf[0] = (hidCode>>24)&0xFF; /* button information */
     rpt_buf[1] = (hidCode>>16)&0xFF; /* x */
     rpt_buf[2] = (hidCode>>8)&0xFF; /* y */
     rpt_buf[3] = hidCode&0xFF;
+    #else
+      #error "NYI"
+    /*! \todo */
+    #endif
     transactionOngoing = TRUE;
     if (USB_Class_HID_Send_Data(CONTROLLER_ID, HID_ENDPOINT, rpt_buf, sizeof(rpt_buf))!=USB_OK) {
       transactionOngoing = FALSE;
@@ -476,8 +485,13 @@ byte %'ModuleName'%.%Send(byte action, signed char x, signed char y)
   rpt_buf[0] = action;
   rpt_buf[1] = (uint8_t)x;
   rpt_buf[2] = (uint8_t)y;
+#if MOUSE_BUFF_SIZE==4
   rpt_buf[3] = 0;
-  status = USB_Class_HID_Send_Data(CONTROLLER_ID,HID_ENDPOINT, rpt_buf, MOUSE_BUFF_SIZE);
+#elif MOUSE_BUFF_SIZE==5
+  rpt_buf[3] = 0;
+  rpt_buf[4] = 0;
+#endif
+  status = USB_Class_HID_Send_Data(CONTROLLER_ID,HID_ENDPOINT, rpt_buf, sizeof(rpt_buf));
   if (status != USB_OK) {
     return ERR_FAILED;
   }
@@ -496,7 +510,7 @@ byte %'ModuleName'%.%Send(byte action, signed char x, signed char y)
 byte %'ModuleName'%.%Move(signed char x, signed char y)
 {
   union {
-   uint8_t bytes[4];
+   uint8_t bytes[4]; /*! \todo */
    uint32_t val;
   } u;
 
