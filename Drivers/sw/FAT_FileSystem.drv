@@ -294,13 +294,9 @@
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN isWriteProtected
 %ifdef isWriteProtected
-#define %'ModuleName'%.%isWriteProtected() \
-%if WriteEnabled='no'
-  %'ModuleName'%.FS_READONLY
-%else
-  %@Memory@'ModuleName'%.isWriteProtected()
-%endif
+bool %'ModuleName'%.%isWriteProtected(byte drv);
 
+%define! Pardrv
 %define! RetVal
 %include Common\FAT_FileSystemisWriteProtected.Inc
 
@@ -458,9 +454,9 @@ char* %'ModuleName'%.%errDResultMsg(int errNo);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN isDiskPresent
 %ifdef isDiskPresent
-#define %'ModuleName'%.%isDiskPresent() \
-  %@Memory@'ModuleName'%.CardPresent()
+bool %'ModuleName'%.%isDiskPresent(byte drv);
 
+%define! Pardrv
 %define! RetVal
 %include Common\FAT_FileSystemisDiskPresent.Inc
 
@@ -812,6 +808,99 @@ void %OnCreateSyncObject(void *sobj);
 %-   Example:
 %-     static int counter1;
 %-     int %'ModuleName'%.counter2;
+%- -------------------------------------------------------------------------------------------
+%:maxDrive=%DriveSymbolNumItems
+%:maxDrive-=1
+/*-----------------------------------------------------------------------*/
+/* Initialize a Drive                                                    */
+DSTATUS disk_initialize (
+        uint8_t drv                                              %>40 /* Physical drive number (0..) */
+)
+{
+  switch(drv) {
+    %for i from [0..%maxDrive]
+    case %i:
+      return %@Drive%i@'ModuleName'%.disk_initialize(drv);
+    %endfor
+    default:
+      break;
+  } /* switch */
+  return RES_PARERR;
+}
+/*-----------------------------------------------------------------------*/
+/* Return Disk Status                                                    */
+DSTATUS disk_status (
+        uint8_t drv                                              %>40 /* Physical drive number (0..) */
+)
+{
+  switch(drv) {
+    %for i from [0..%maxDrive]
+    case %i:
+      return %@Drive%i@'ModuleName'%.disk_status(drv);
+    %endfor
+    default:
+      break;
+  } /* switch */
+  return RES_PARERR;
+}
+/*-----------------------------------------------------------------------*/
+/* Read Sector(s)                                                        */
+DRESULT disk_read (
+        uint8_t drv,                                             %>40 /* Physical drive number (0..) */
+        uint8_t *buff,                                           %>40 /* Data buffer to store read data */
+        uint32_t sector,                                         %>40 /* Sector address (LBA) */
+        uint8_t count                                            %>40 /* Number of sectors to read (1..255) */
+)
+{
+  switch(drv) {
+    %for i from [0..%maxDrive]
+    case %i:
+      return %@Drive%i@'ModuleName'%.disk_read(drv, buff, sector, count);
+    %endfor
+    default:
+      break;
+  } /* switch */
+  return RES_PARERR;
+}
+/*-----------------------------------------------------------------------*/
+/* Write Sector(s)                                                       */
+#if _READONLY == 0
+DRESULT disk_write (
+        uint8_t drv,                                             %>40 /* Physical drive number (0..) */
+        const uint8_t *buff,                                     %>40 /* Data to be written */
+        uint32_t sector,                                         %>40 /* Sector address (LBA) */
+        uint8_t count                                            %>40 /* Number of sectors to write (1..255) */
+)
+{
+  switch(drv) {
+    %for i from [0..%maxDrive]
+    case %i:
+      return %@Drive%i@'ModuleName'%.disk_write(drv, buff, sector, count);
+    %endfor
+    default:
+      break;
+  } /* switch */
+  return RES_PARERR;
+}
+#endif /* _READONLY == 0 */
+/*-----------------------------------------------------------------------*/
+DRESULT disk_ioctl (
+        uint8_t drv,                                             %>40 /* Physical drive number (0..) */
+        uint8_t ctrl,                                            %>40 /* Control code */
+        void *buff                                               %>40 /* Buffer to send/receive control data */
+)
+{
+  switch(drv) {
+    %for i from [0..%maxDrive]
+    case %i:
+      return %@Drive%i@'ModuleName'%.disk_ioctl(drv, ctrl, buff);
+    %endfor
+    default:
+      break;
+  } /* switch */
+  return RES_PARERR;
+}
+/*-----------------------------------------------------------------------*/
 %if defined(Shell)
 #define %'ModuleName'_8_3_SIZE       sizeof("12345678.txt") /* length of a 8.3 file name (13 including the zero byte) */
 
@@ -1249,8 +1338,10 @@ static byte CdCmd(const unsigned char *cmd, const %@Shell@'ModuleName'%.ConstStd
 
 static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"%'ModuleName'", (unsigned char*)"\r\n", io->stdOut);
-  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  present", %'ModuleName'%.isDiskPresent()?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
-  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  protected", %'ModuleName'%.isWriteProtected()?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
+%for i from [0..%maxDrive]
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  present", %'ModuleName'%.isDiskPresent(%i)?(unsigned char*)"drive%i: yes\r\n":(unsigned char*)"drive%i: no\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  protected", %'ModuleName'%.isWriteProtected(%i)?(unsigned char*)"drive%i: yes\r\n":(unsigned char*)"drive%i: no\r\n", io->stdOut);
+%endfor
   return ERR_OK;
 }
 
@@ -1418,7 +1509,6 @@ int ff_req_grant (_SYNC_t sobj) {
 int ff_req_grant (_SYNC_t sobj) {
 %if defined(RTOS)
   if (%@RTOS@'ModuleName'%.xSemaphoreTake(sobj, _FS_TIMEOUT) == pdTRUE) {
-    %@Memory@'ModuleName'%.Activate(); /* select memory device */
     return TRUE; /* success */
   } else {  /* failed to get the sync object? */
     return FALSE; /* failure */
@@ -1431,7 +1521,6 @@ int ff_req_grant (_SYNC_t sobj) {
      If you have parallel access to the memory bus, you need to handle this from the memory component.
    */
   (void)sobj; /* unused parameter */
-  %@Memory@'ModuleName'%.Activate(); /* select memory device */
   return TRUE; /* success */
 %endif
 }
@@ -1453,7 +1542,6 @@ void ff_rel_grant (_SYNC_t sobj) {
 #endif
 %else
 void ff_rel_grant (_SYNC_t sobj) {
-  %@Memory@'ModuleName'%.Deactivate(); /* un-select memory device */
 %if defined(RTOS)
   (void)%@RTOS@'ModuleName'%.xSemaphoreGive(sobj); /* FreeRTOS */
 %-      OSMutexPost(sobj);              /* uC/OS-II */
@@ -1662,20 +1750,6 @@ FRESULT %'ModuleName'%.%rename(const XCHAR *path_old, const XCHAR *path_new)
 
 %endif %- rename
 %-BW_METHOD_END rename
-%-************************************************************************************************************
-%-BW_METHOD_BEGIN isWriteProtected
-%ifdef isWriteProtected
-%define! RetVal
-%include Common\FAT_FileSystemisWriteProtected.Inc
-/*
-bool %'ModuleName'%.%isWriteProtected(void)
-{
-  *** method is implemented as macro in the header file
-}
-*/
-
-%endif %- isWriteProtected
-%-BW_METHOD_END isWriteProtected
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN mkdir
 %ifdef mkdir
@@ -1893,16 +1967,48 @@ char* %'ModuleName'%.%errDResultMsg(int errNo)
 %endif %- errDResultMsg
 %-BW_METHOD_END errDResultMsg
 %-************************************************************************************************************
+%-BW_METHOD_BEGIN isWriteProtected
+%ifdef isWriteProtected
+%define! Pardrv
+%define! RetVal
+%include Common\FAT_FileSystemisWriteProtected.Inc
+bool %'ModuleName'%.%isWriteProtected(byte drv)
+{
+%if WriteEnabled='no'
+  return %'ModuleName'%.FS_READONLY;
+%else
+  switch(drv) {
+    %for i from [0..%maxDrive]
+    case %i:
+      return %@Drive%i@'ModuleName'%.isWriteProtected();
+    %endfor
+    default:
+      break;
+  } /* switch */
+  return TRUE;
+%endif
+}
+
+%endif %- isWriteProtected
+%-BW_METHOD_END isWriteProtected
+%-************************************************************************************************************
 %-BW_METHOD_BEGIN isDiskPresent
 %ifdef isDiskPresent
+%define! Pardrv
 %define! RetVal
 %include Common\FAT_FileSystemisDiskPresent.Inc
-/*
-bool %'ModuleName'%.%isDiskPresent(void)
+bool %'ModuleName'%.%isDiskPresent(byte drv)
 {
-  *** method is implemented as macro in the header file
+  switch(drv) {
+    %for i from [0..%maxDrive]
+    case %i:
+      return %@Drive%i@'ModuleName'%.CardPresent();
+    %endfor
+    default:
+      break;
+  } /* switch */
+  return FALSE;
 }
-*/
 
 %endif %- isDiskPresent
 %-BW_METHOD_END isDiskPresent
@@ -2039,7 +2145,9 @@ dword %'ModuleName'%.%f_size(FIL *fil)
 %include Common\FAT_FileSystemInit.Inc
 byte %'ModuleName'%.%Init(void)
 {
-  return %@Memory@'ModuleName'%.Init(NULL);
+%for i from [0..%maxDrive]
+  return %@Drive%i@'ModuleName'%.Init(NULL);
+%endfor
 }
 
 %endif %- Init
@@ -2050,7 +2158,9 @@ byte %'ModuleName'%.%Init(void)
 %include Common\FAT_FileSystemDeinit.Inc
 void %'ModuleName'%.%Deinit(void)
 {
-  %@Memory@'ModuleName'%.Deinit(NULL);
+%for i from [0..%maxDrive]
+  return %@Drive%i@'ModuleName'%.Deinit(NULL);
+%endfor
 }
 
 %endif %- Deinit
@@ -2187,7 +2297,7 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
 %include Common\FAT_FileSystemCheckCardPresence.Inc
 byte %'ModuleName'%.%CheckCardPresence(bool *cardMounted, byte drive, FATFS *fileSystemObject, const %@Shell@'ModuleName'%.StdIOType *io)
 {
-  if (!(*cardMounted) && %'ModuleName'%.isDiskPresent()) {
+  if (!(*cardMounted) && %'ModuleName'%.isDiskPresent(drive)) {
     /* card inserted */
     if (%'ModuleName'%.MountFileSystem(fileSystemObject, drive, io)==ERR_OK) {
       *cardMounted = TRUE;
@@ -2197,7 +2307,7 @@ byte %'ModuleName'%.%CheckCardPresence(bool *cardMounted, byte drive, FATFS *fil
     } else {
       return ERR_FAILED;
     }
-  } else if (*cardMounted && !%'ModuleName'%.isDiskPresent()) {
+  } else if (*cardMounted && !%'ModuleName'%.isDiskPresent(drive)) {
     /* card removed */
     if (%'ModuleName'%.UnMountFileSystem(drive, io)==ERR_OK) {
       *cardMounted = FALSE;
@@ -2320,7 +2430,7 @@ byte %'ModuleName'%.%CopyFile(const byte *srcFileName, const byte *dstFileName, 
   UINT br, bw;          /* file read/write counters */
   byte res =  ERR_OK;
 
-  if (%'ModuleName'%.isWriteProtected()) {
+  if (%'ModuleName'%.isWriteProtected(0)) {
     %@Shell@'ModuleName'%.SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
     return ERR_FAILED;
   }
@@ -2398,7 +2508,7 @@ byte %'ModuleName'%.%DeleteFile(const byte *fileName, const %@Shell@'ModuleName'
 {
   %'ModuleName'%.FRESULT fres;
 
-  if (%'ModuleName'%.isWriteProtected()) {
+  if (%'ModuleName'%.isWriteProtected(0)) {
     %@Shell@'ModuleName'%.SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
     return ERR_FAILED;
   }
@@ -2478,7 +2588,7 @@ byte %'ModuleName'%.%MakeDirectory(const byte *dirName, const %@Shell@'ModuleNam
 {
   %'ModuleName'%.FRESULT fres;
 
-  if (%'ModuleName'%.isWriteProtected()) {
+  if (%'ModuleName'%.isWriteProtected(0)) {
     %@Shell@'ModuleName'%.SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
     return ERR_FAILED;
   }
@@ -2538,7 +2648,7 @@ byte %'ModuleName'%.%RenameFile(const byte *srcFileName, const byte *dstFileName
 {
   %'ModuleName'%.FRESULT fres;
 
-  if (%'ModuleName'%.isWriteProtected()) {
+  if (%'ModuleName'%.isWriteProtected(0)) {
     %@Shell@'ModuleName'%.SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
     return ERR_FAILED;
   }
@@ -2867,7 +2977,7 @@ byte %'ModuleName'%.%Benchmark(const %@Shell@'ModuleName'%.StdIOType *io)
   TIMEREC time, startTime;
   int32_t start_mseconds, mseconds;
 
-  if (%'ModuleName'%.isWriteProtected()) {
+  if (%'ModuleName'%.isWriteProtected(0)) {
     %@Shell@'ModuleName'%.SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
     return ERR_FAILED;
   }

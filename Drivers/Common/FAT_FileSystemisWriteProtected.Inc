@@ -6,7 +6,8 @@
 %include Common\GeneralMethod.inc (isWriteProtected)
 %;**     Description :
 %;**         Determines if the file system is write protected.
-%include Common\GeneralParametersNone.inc
+%include Common\GeneralParameters.inc(27)
+%;**         drv%Pardrv %>27 - disk drive number
 %;**     Returns     :
 %;**         ---%RetVal %>27 - TRUE if file system is write protected
 %include Common\GeneralDamage.inc

@@ -91,6 +91,35 @@
 #include "%ProcessorModule.h"
 %include sw\CommonSupport.prg
 
+/* interface for FatFS low level disk functions */
+#include "diskio.h"
+
+DSTATUS %'ModuleName'%.disk_initialize (
+        uint8_t drv                                              %>40 /* Physical drive number (0..) */
+);
+DSTATUS %'ModuleName'%.disk_status (
+        uint8_t drv                                              %>40 /* Physical drive number (0..) */
+);
+DRESULT %'ModuleName'%.disk_read (
+        uint8_t drv,                                             %>40 /* Physical drive number (0..) */
+        uint8_t *buff,                                           %>40 /* Data buffer to store read data */
+        uint32_t sector,                                         %>40 /* Sector address (LBA) */
+        uint8_t count                                            %>40 /* Number of sectors to read (1..255) */
+);
+#if _READONLY == 0
+DRESULT %'ModuleName'%.disk_write (
+        uint8_t drv,                                             %>40 /* Physical drive number (0..) */
+        const uint8_t *buff,                                     %>40 /* Data to be written */
+        uint32_t sector,                                         %>40 /* Sector address (LBA) */
+        uint8_t count                                            %>40 /* Number of sectors to write (1..255) */
+);
+#endif
+DRESULT %'ModuleName'%.disk_ioctl (
+        uint8_t drv,                                             %>40 /* Physical drive number (0..) */
+        uint8_t ctrl,                                            %>40 /* Control code */
+        void *buff                                               %>40 /* Buffer to send/receive control data */
+);
+
 %-STARTUSERTYPES - Do not make changes between lines (included this lines) marked with %-STARTUSERTYPES and %-ENDUSRTYPES
 
 %-ENDUSRTYPES
@@ -378,15 +407,15 @@ void callback_bulk_pipe
 } /* Endbody */
 /*-----------------------------------------------------------------------*/
 /* Initialize a Drive                                                    */
-DSTATUS disk_initialize (
+DSTATUS %'ModuleName'%.disk_initialize (
         uint8_t drv                                              %>40 /* Physical drive number (0..) */
 )
 {
+  static uint_8 first_time_flag = TRUE;
   CBW_STRUCT_PTR cbw_ptr;
   CSW_STRUCT_PTR csw_ptr;
 
-  static uint_8 first_time_flag = TRUE;
-  /* Allocate memory for Command Block Wrapper and Comamnd Status Wrapper */
+  /* Allocate memory for Command Block Wrapper and Command Status Wrapper */
   if (TRUE == first_time_flag) {
     pCmd.CBW_PTR = (CBW_STRUCT_PTR) pvPortMalloc(sizeof(CBW_STRUCT)); /* << EST using FreeRTOS malloc() */
     if (pCmd.CBW_PTR == NULL) {
@@ -417,17 +446,17 @@ DSTATUS disk_initialize (
 
 /*-----------------------------------------------------------------------*/
 /* Return Disk Status                                                    */
-DSTATUS disk_status (
+DSTATUS %'ModuleName'%.disk_status (
         uint8_t drv                                              %>40 /* Physical drive number (0..) */
 )
 {
-  if (drv!=0) return STA_NOINIT;                                 %>40 /* Supports only single drive */
+  (void)drv; /* not used */
   return RES_OK;
 }
 
 /*-----------------------------------------------------------------------*/
 /* Read Sector(s)                                                        */
-DRESULT disk_read (
+DRESULT %'ModuleName'%.disk_read (
         uint8_t drv,                                             %>40 /* Physical drive number (0..) */
         uint8_t *buff,                                           %>40 /* Data buffer to store read data */
         uint32_t sector,                                         %>40 /* Sector address (LBA) */
@@ -437,9 +466,11 @@ DRESULT disk_read (
   DRESULT     res = RES_OK;
   USB_STATUS  status = USB_OK;
 
-  (void)drv;
+  (void)drv; /* not used */
   /* Check sector count */
-  if (!count) return RES_PARERR;
+  if (!count) {
+    return RES_PARERR;
+  }
   /* Send read_10 SCSI command */
   bCallBack = FALSE;
   status = usb_mass_ufi_read_10(&pCmd, sector, buff, (uint_32)(512*count), count);
@@ -461,7 +492,7 @@ DRESULT disk_read (
 /*-----------------------------------------------------------------------*/
 /* Write Sector(s)                                                       */
 #if _READONLY == 0
-DRESULT disk_write (
+DRESULT %'ModuleName'%.disk_write (
         uint8_t drv,                                             %>40 /* Physical drive number (0..) */
         const uint8_t *buff,                                     %>40 /* Data to be written */
         uint32_t sector,                                         %>40 /* Sector address (LBA) */
@@ -471,10 +502,11 @@ DRESULT disk_write (
   DRESULT res = RES_OK;
   USB_STATUS   status = USB_OK;
 
-  (void)drv;
+  (void)drv; /* not used */
   /* Check sector count */
-  if (!count) return RES_PARERR;
-
+  if (!count) {
+    return RES_PARERR;
+  }
   /* Send Write_10 SCSI command */
   bCallBack = FALSE;
   status = usb_mass_ufi_write_10(&pCmd, sector, (uchar_ptr)buff, (uint_32)(512*count), count);
@@ -495,7 +527,7 @@ DRESULT disk_write (
 #endif /* _READONLY */
 
 /*-----------------------------------------------------------------------*/
-DRESULT disk_ioctl (
+DRESULT %'ModuleName'%.disk_ioctl (
         uint8_t drv,                                             %>40 /* Physical drive number (0..) */
         uint8_t ctrl,                                            %>40 /* Control code */
         void *buff                                               %>40 /* Buffer to send/receive control data */
@@ -505,7 +537,7 @@ DRESULT disk_ioctl (
   USB_STATUS   status = USB_OK;
   MASS_STORAGE_READ_CAPACITY_CMD_STRUCT_INFO read_capacity;
 
-  (void)drv;
+  (void)drv; /* not used */
   if ((GET_SECTOR_COUNT == ctrl)||(GET_SECTOR_SIZE == ctrl)) {
     /* Send read_capacity SCSI command */
     bCallBack = FALSE;

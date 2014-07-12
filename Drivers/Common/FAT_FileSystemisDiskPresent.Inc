@@ -6,7 +6,8 @@
 %include Common\GeneralMethod.inc (isDiskPresent)
 %;**     Description :
 %;**         Determines if the disk is present or not (e.g. disk inserted).
-%include Common\GeneralParametersNone.inc
+%include Common\GeneralParameters.inc(27)
+%;**         drv%Pardrv %>27 - Disk drive number
 %;**     Returns     :
 %;**         ---%RetVal %>27 - TRUE if file system is write protected
 %include Common\GeneralDamage.inc

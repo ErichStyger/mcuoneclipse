@@ -105,6 +105,35 @@
 
 #include "%ProcessorModule.h"
 
+/* interface for FatFS low level disk functions */
+#include "diskio.h"
+
+DSTATUS %'ModuleName'%.disk_initialize (
+        uint8_t drv                                              %>40 /* Physical drive number (0..) */
+);
+DSTATUS %'ModuleName'%.disk_status (
+        uint8_t drv                                              %>40 /* Physical drive number (0..) */
+);
+DRESULT %'ModuleName'%.disk_read (
+        uint8_t drv,                                             %>40 /* Physical drive number (0..) */
+        uint8_t *buff,                                           %>40 /* Data buffer to store read data */
+        uint32_t sector,                                         %>40 /* Sector address (LBA) */
+        uint8_t count                                            %>40 /* Number of sectors to read (1..255) */
+);
+#if _READONLY == 0
+DRESULT %'ModuleName'%.disk_write (
+        uint8_t drv,                                             %>40 /* Physical drive number (0..) */
+        const uint8_t *buff,                                     %>40 /* Data to be written */
+        uint32_t sector,                                         %>40 /* Sector address (LBA) */
+        uint8_t count                                            %>40 /* Number of sectors to write (1..255) */
+);
+#endif
+DRESULT %'ModuleName'%.disk_ioctl (
+        uint8_t drv,                                             %>40 /* Physical drive number (0..) */
+        uint8_t ctrl,                                            %>40 /* Control code */
+        void *buff                                               %>40 /* Buffer to send/receive control data */
+);
+
 typedef struct {
   LDD_TDeviceData *SDHCPtr;     /* SDHC component data */
   bool Finished;                /* Operation end indication */
@@ -258,15 +287,9 @@ void %OnFinished(LDD_TUserData *UserDataPtr);
 %- Write your own includes here ...
 %-   Example:
 %-     #include "header_name.h"
-/*-----------------------------------------------------------------------*/
-/* Low level disk I/O module skeleton for FatFs     (C)ChaN, 2007        */
-/*-----------------------------------------------------------------------*/
-/* This is a stub disk I/O module that acts as front end of the existing */
-/* disk I/O modules and attach it to FatFs module with common interface. */
-/*-----------------------------------------------------------------------*/
-
 #include "ff.h"
 #include "diskio.h"
+
 %-
 %-BW_CUSTOM_INCLUDE_END_M
 
@@ -545,15 +568,13 @@ static bool SD_TransferBlock(TSDData *SD, bool Read, uint32_t Address, uint8_t *
 }
 /*-----------------------------------------------------------------------*/
 /* Initialize a Drive                                                    */
-DSTATUS disk_initialize (
+DSTATUS %'ModuleName'%.disk_initialize (
         uint8_t drv                                              %>40 /* Physical drive number (0..) */
 )
 {
   bool Error = FALSE;
 
-  if (drv!=0) {
-    return STA_NOINIT;                                           %>40 /* Supports only single drive */
-  }
+  (void)drv; /* not used */
   if (Stat & STA_NODISK) {
     return Stat;                                                 %>40 /* No card in the socket */
   }
@@ -607,25 +628,24 @@ DSTATUS disk_initialize (
 }
 /*-----------------------------------------------------------------------*/
 /* Return Disk Status                                                    */
-DSTATUS disk_status (
+DSTATUS %'ModuleName'%.disk_status (
         uint8_t drv                                              %>40 /* Physical drive number (0..) */
 )
 {
-  if (drv!=0) {
-    return STA_NOINIT;                                           %>40 /* Supports only single drive */
-  }
+  (void)drv; /* not used */
   return Stat;
 }
 /*-----------------------------------------------------------------------*/
 /* Read Sector(s)                                                        */
-DRESULT disk_read (
+DRESULT %'ModuleName'%.disk_read (
         uint8_t drv,                                             %>40 /* Physical drive number (0..) */
         uint8_t *buff,                                           %>40 /* Data buffer to store read data */
         uint32_t sector,                                         %>40 /* Sector address (LBA) */
         uint8_t count                                            %>40 /* Number of sectors to read (1..255) */
 )
 {
-  if (drv!=0 || !count) {
+  (void)drv; /* not used */
+  if (!count) {
     return RES_PARERR;
   }
   if (Stat & STA_NOINIT) {
@@ -650,14 +670,15 @@ DRESULT disk_read (
 /*-----------------------------------------------------------------------*/
 /* Write Sector(s)                                                       */
 #if _READONLY == 0
-DRESULT disk_write (
+DRESULT %'ModuleName'%.disk_write (
         uint8_t drv,                                             %>40 /* Physical drive number (0..) */
         const uint8_t *buff,                                     %>40 /* Data to be written */
         uint32_t sector,                                         %>40 /* Sector address (LBA) */
         uint8_t count                                            %>40 /* Number of sectors to write (1..255) */
 )
 {
-  if (drv!=0 || !count) {
+  (void)drv; /* not used */
+  if (!count) {
     return RES_PARERR;
   }
   if (Stat & STA_NOINIT) {
@@ -689,7 +710,7 @@ static bool chk_power(void) { return 1;}
 static void power_off(void) {}
 static void power_on(void) {}
 /*-----------------------------------------------------------------------*/
-DRESULT disk_ioctl (
+DRESULT %'ModuleName'%.disk_ioctl (
         uint8_t drv,                                             %>40 /* Physical drive number (0..) */
         uint8_t ctrl,                                            %>40 /* Control code */
         void *buff                                               %>40 /* Buffer to send/receive control data */
@@ -699,9 +720,7 @@ DRESULT disk_ioctl (
   DRESULT res = RES_OK;
   uint8_t *ptr = (uint8_t*)buff;
 
-  if (drv!=0) {
-    return RES_PARERR;
-  }
+  (void)drv; /* not used */
   if (ctrl == CTRL_POWER) {
     switch (*ptr) {
       case 0:                                                    %>40 /* Sub control code == 0 (POWER_OFF) */

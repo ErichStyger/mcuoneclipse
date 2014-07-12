@@ -157,7 +157,7 @@
 /* Maximum sector size to be handled.
 /  Always set 512 for memory card and hard disk but a larger value may be
 /  required for floppy disk (512/1024) and optical disk (512/2048).
-/  When _MAX_SS is larger than 512, GET_SECTOR_SIZE command must be implememted
+/  When _MAX_SS is larger than 512, GET_SECTOR_SIZE command must be implemented
 /  to the disk_ioctl function. */
 
 

@@ -370,8 +370,9 @@ LI.EXP {
  - Determines if the file system is write protected.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> bool isWriteProtected(void)<br />
+<br /><i>ANSIC prototype:</i> bool isWriteProtected(byte drv)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>drv:byte</i> - disk drive number</li>
 <li><i>Return value:bool</i> - TRUE if file system is write protected
 </li>
 </ul><br />
@@ -381,8 +382,9 @@ LI.EXP {
  - Determines if the disk is present or not (e.g. disk inserted).
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> bool isDiskPresent(void)<br />
+<br /><i>ANSIC prototype:</i> bool isDiskPresent(byte drv)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>drv:byte</i> - Disk drive number</li>
 <li><i>Return value:bool</i> - TRUE if file system is write protected
 </li>
 </ul><br />

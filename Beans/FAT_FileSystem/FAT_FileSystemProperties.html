@@ -233,6 +233,13 @@ LI.EXP {
 <b>Volumes</b></a> - Number of volumes (logical drives) to be used.
 </li>
 <li>
+<a name="DriveSymbol">
+<b>Drives</b></a> - List of drives used by FatFS. The first item is drive number 0, the next is 1, and so on. This defines the number of volumes for FatFS.
+<br />One Item of the list looks like:<br />
+  <a name="Drive0">
+  <b>Drive0</b></a> - 
+</li>
+<li>
 <a name="FS_MINIMIZE">
 <b>FS_MINIMIZE</b></a> - The _FS_MINIMIZE option defines minimization level to remove some functions.<br />
 0: Full function.<br />
@@ -405,10 +412,6 @@ The following items are available only if the group is enabled (the value is "En
   </ul>
   </li>
 </ul>
-</li>
-<li>
-<a name="Memory">
-<b>Memory</b></a> - Interface for the underlying memory (e.g. SD Card)
 </li>
 <li>
 <a name="ShellEnabled">

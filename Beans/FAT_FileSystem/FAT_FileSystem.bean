@@ -4,7 +4,7 @@
     <Name>FAT_FileSystem</Name>
     <Description>FAT file system module</Description>
     <Author>ChaN, adopted by Erich Styger for Processor Expert</Author>
-    <Version>01.152</Version>
+    <Version>01.158</Version>
     <Icon>FAT_FileSystem</Icon>
     <TypesFiles>PE,FAT_FileSystem\FAT_FileSystem</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -20,7 +20,7 @@
     <BW_NeedUst>6</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2014, all rights reserved.\nFatFS: Copyright (C) 2014, ChaN, all right reserved. (see copyright notice and license in the FatFS implementation).\n\nThis an open source software implementing an interface to the ChaN FatFS using Processor Expert.\nThis is a free software and is opened for education,  research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
+    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2012-2014, all rights reserved.\nWeb       : www.mcuoneclipse.com\nFatFS: Copyright (C) 2014, ChaN, all right reserved. (see copyright notice and license in the FatFS implementation).\n\nThis an open source software implementing an interface to the ChaN FatFS using Processor Expert.\nThis is a free software and is opened for education,  research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
     <Shortcut>FAT</Shortcut>
     <DemoDriver>no</DemoDriver>
     <BeanLevel>High</BeanLevel>
@@ -84,6 +84,28 @@
         <ChangeValueIntoRange>false</ChangeValueIntoRange>
         <RuntimeProperty>false</RuntimeProperty>
       </TIntgItem>
+    </Property>
+    <Property>
+      <TListItem>
+        <Name>Drives</Name>
+        <Symbol>DriveSymbol</Symbol>
+        <Hint>List of drives used by FatFS. The first item is drive number 0, the next is 1, and so on. This defines the number of volumes for FatFS.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>true</EditLine>
+        <Description/>
+        <Expanded>Yes</Expanded>
+        <ItemsType>TInhrLinkItem</ItemsType>
+        <ItemsTypeChangeAble>false</ItemsTypeChangeAble>
+        <ItemsName>Drive</ItemsName>
+        <ItemsNameFrstIndx>0</ItemsNameFrstIndx>
+        <ItemsHint/>
+        <ItemsSymb>Drive</ItemsSymb>
+        <ItemsTypeSpec>Fat_FileSystem\Drive</ItemsTypeSpec>
+        <MinItems>1</MinItems>
+        <MaxItems>-1</MaxItems>
+        <MinItemsProtected>false</MinItemsProtected>
+        <SetNumOfListItemsAfterLoad>1</SetNumOfListItemsAfterLoad>
+      </TListItem>
     </Property>
     <Property>
       <TIntgItem>
@@ -472,20 +494,6 @@ You need to implement your own 'DWORD get_fattime (void)', see the implementatio
           </GrupItem>
         </Children>
       </TBoolGrupItem>
-    </Property>
-    <Property>
-      <TInhrLinkItem>
-        <Name>Memory</Name>
-        <Symbol>Memory</Symbol>
-        <TypeSpec>FAT_FileSystem\Memory</TypeSpec>
-        <Hint>Interface for the underlying memory (e.g. SD Card)</Hint>
-        <ItemLevel>BASIC</ItemLevel>
-        <EditLine>false</EditLine>
-        <DefaultValue/>
-        <CanDelete>false</CanDelete>
-        <IconPopup>false</IconPopup>
-        <SortStyle/>
-      </TInhrLinkItem>
     </Property>
     <Property>
       <TBoolGrupItem>
@@ -1113,10 +1121,16 @@ You need to implement your own 'DWORD get_fattime (void)', see the implementatio
         <InDefinition>true</InDefinition>
         <ReturnType>Boolean</ReturnType>
         <RetHint>TRUE if file system is write protected</RetHint>
-        <ParamCount>0</ParamCount>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>drv</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>disk drive number</ParHint>
+        </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>bool #M#_#C#(void)</ANSIC>
+          <ANSIC>bool #M#_#C#(byte drv)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1141,10 +1155,16 @@ You need to implement your own 'DWORD get_fattime (void)', see the implementatio
         <InDefinition>true</InDefinition>
         <ReturnType>Boolean</ReturnType>
         <RetHint>TRUE if file system is write protected</RetHint>
-        <ParamCount>0</ParamCount>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>drv</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Disk drive number</ParHint>
+        </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>bool #M#_#C#(void)</ANSIC>
+          <ANSIC>bool #M#_#C#(byte drv)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
