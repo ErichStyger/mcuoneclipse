@@ -13,50 +13,32 @@
 #include "TPM_PDD.h"
 
 typedef enum {
-  NEO_PIXEL_TYPE_WS2812,  /* 6-pin version WS2812 */
-  NEO_PIXEL_TYPE_WS2812B  /* 4-pin version WS2812B */
+  NEO_PIXEL_TYPE_WS2812S, /* 6-pin version WS2812S, 'old' device */
+  NEO_PIXEL_TYPE_WS2812B  /* 4-pin version WS2812B, 'new' device */
 } NEO_PixelType;
 
-/* 48 MHz, WS2812 */
+/* 48 MHz, WS2812(S) */
 #define TICKS_PERIOD  59  /* 1.25 us  (need: 1.25 us)*/
-#if 1
-#define VAL0  18          /* 0.396 us (need: 0.4 us low) */
-#define VAL1  37          /* 0.792 us (need: 0.8 us high */
-#elif 0
-#define VAL0  15          /* 0.396 us (need: 0.4 us low) */
-#define VAL1  (TICKS_PERIOD/2)          /* 0.625 us high */
-#else
-#define VAL0  10          /* 0.396 us (need: 0.4 us low) */
-#define VAL1  (TICKS_PERIOD/2)          /* 0.625 us high */
-#endif
+#define VAL0          18  /* 0 Bit: 0.396 us (need: 0.4 us low) */
+#define VAL1          37  /* 1 Bit: 0.792 us (need: 0.8 us high */
+#define VAL00         0   /* data line low value, e.g. for reset/latch */
 
-#define VAL00 0
-
-#define NEO_NOF_PIXEL       (2+(4*15)) /* number of pixels */
-#define NEO_PIXEL_FIRST      0
-#define NEO_PIXEL_LAST      (NEO_NOF_PIXEL-1)
 #define NEO_NOF_PRE         2 /* somehow need trailing values? */
 #define NEO_NOF_BITS_PIXEL  24  /* 24 bits for pixel */
 #define NEO_NOF_POST        40 /* latch, low for at least 50 us (40x1.25us) */
 #define NEO_DMA_NOF_BYTES   sizeof(transmitBuf)
 
 static bool transferComplete = FALSE;
-typedef uint32_t NEO_PixelIdxT;
-typedef enum {
-  NEO_COLOR_RED,
-  NEO_COLOR_GREEN,
-  NEO_COLOR_BLUE
-} NEO_ColorE;
 
 static uint16_t transmitBuf[NEO_NOF_PRE+(NEO_NOF_PIXEL*NEO_NOF_BITS_PIXEL)+NEO_NOF_POST];
 
 /* sets the color of an individual pixel */
-void NEO_SetPixelRGB(NEO_PixelIdxT pixelNo, uint8_t red, uint8_t green, uint8_t blue) {
+uint8_t NEO_SetPixelRGB(NEO_PixelIdxT pixelNo, uint8_t red, uint8_t green, uint8_t blue) {
   NEO_PixelIdxT idx;
   int i;
 
   if (pixelNo>=NEO_NOF_PIXEL) {
-    return; /* error, out of range */
+    return ERR_RANGE; /* error, out of range */
   }
   idx = NEO_NOF_PRE+(pixelNo*NEO_NOF_BITS_PIXEL);
   /* green */
@@ -89,16 +71,17 @@ void NEO_SetPixelRGB(NEO_PixelIdxT pixelNo, uint8_t red, uint8_t green, uint8_t 
     blue <<= 1; /* next bit */
     idx++;
   }
+  return ERR_OK;
 }
 
 /* returns the color of an individual pixel */
-void NEO_GetPixelRGB(NEO_PixelIdxT pixelNo, uint8_t *redP, uint8_t *greenP, uint8_t *blueP) {
+uint8_t NEO_GetPixelRGB(NEO_PixelIdxT pixelNo, uint8_t *redP, uint8_t *greenP, uint8_t *blueP) {
   NEO_PixelIdxT idx;
   uint8_t red, green, blue;
   int i;
 
   if (pixelNo>=NEO_NOF_PIXEL) {
-    return; /* error, out of range */
+    return ERR_RANGE; /* error, out of range */
   }
   red = green = blue = 0;
   idx = NEO_NOF_PRE+(pixelNo*NEO_NOF_BITS_PIXEL);
@@ -129,36 +112,69 @@ void NEO_GetPixelRGB(NEO_PixelIdxT pixelNo, uint8_t *redP, uint8_t *greenP, uint
   *redP = red;
   *greenP = green;
   *blueP = blue;
+  return ERR_OK;
 }
 
+/* binary OR the color of an individual pixel */
+uint8_t NEO_OrPixelRGB(NEO_PixelIdxT pixelNo, uint8_t red, uint8_t green, uint8_t blue) {
+  uint8_t r, g, b;
 
-void NEO_ClearPixel(NEO_PixelIdxT pixelNo) {
-  NEO_SetPixelRGB(pixelNo, 0, 0, 0);
-}
-
-void NEO_DimmPercentPixel(NEO_PixelIdxT pixelNo, NEO_ColorE color, uint8_t percent) {
-  uint8_t red, green, blue;
-  uint32_t val;
-
-  NEO_GetPixelRGB(pixelNo, &red, &green, &blue);
-  if (color==NEO_COLOR_RED) {
-    val = (red*percent)/100;
-    NEO_SetPixelRGB(pixelNo, (uint8_t)val, 0, 0);
-  } else if (color==NEO_COLOR_GREEN) {
-    val = (green*percent)/100;
-    NEO_SetPixelRGB(pixelNo, 0, (uint8_t)val, 0);
-  } else if (color==NEO_COLOR_BLUE) {
-    val = (blue*percent)/100;
-    NEO_SetPixelRGB(pixelNo, 0, 0, (uint8_t)val);
+  if (pixelNo>=NEO_NOF_PIXEL) {
+    return ERR_RANGE; /* error, out of range */
   }
+  NEO_GetPixelRGB(pixelNo, &r, &g, &b);
+  r |= red;
+  b |= blue;
+  g |= blue;
+  NEO_SetPixelRGB(pixelNo, red, green, blue);
+  return ERR_OK;
 }
 
-void NEO_ClearAllPixel(void) {
+/* binary XOR the color of an individual pixel */
+uint8_t NEO_XorPixelRGB(NEO_PixelIdxT pixelNo, uint8_t red, uint8_t green, uint8_t blue) {
+  uint8_t r, g, b;
+
+  if (pixelNo>=NEO_NOF_PIXEL) {
+    return ERR_RANGE; /* error, out of range */
+  }
+  NEO_GetPixelRGB(pixelNo, &r, &g, &b);
+  r ^= red;
+  b ^= blue;
+  g ^= blue;
+  NEO_SetPixelRGB(pixelNo, red, green, blue);
+  return ERR_OK;
+}
+
+uint8_t NEO_ClearPixel(NEO_PixelIdxT pixelNo) {
+  return NEO_SetPixelRGB(pixelNo, 0, 0, 0);
+}
+
+uint8_t NEO_DimmPercentPixel(NEO_PixelIdxT pixelNo, uint8_t percent) {
+  uint8_t red, green, blue;
+  uint32_t dRed, dGreen, dBlue;
+  uint8_t res;
+
+  res = NEO_GetPixelRGB(pixelNo, &red, &green, &blue);
+  if (res != ERR_OK) {
+    return res;
+  }
+  dRed = ((uint32_t)red*(100-percent))/100;
+  dGreen = ((uint32_t)green*(100-percent))/100;
+  dBlue = ((uint32_t)blue*(100-percent))/100;
+  return NEO_SetPixelRGB(pixelNo, (uint8_t)dRed, (uint8_t)dGreen, (uint8_t)dBlue);
+}
+
+uint8_t NEO_ClearAllPixel(void) {
   NEO_PixelIdxT i;
+  uint8_t res;
 
   for(i=0;i<NEO_NOF_PIXEL;i++) {
-    NEO_ClearPixel(i);
+    res = NEO_ClearPixel(i);
+    if (res!=ERR_OK) {
+      return res;
+    }
   }
+  return ERR_OK;
 }
 
 static void InitTransmitBuf(void) {
@@ -200,7 +216,7 @@ static void InitDMA(void) {
   DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_ENABLE); /* enable request from peripheral */
 }
 
-static void Transfer(uint32_t src) {
+static uint8_t Transfer(uint32_t src) {
   while(!transferComplete) {
     /* wait until previous transfer is complete */
   }
@@ -208,73 +224,16 @@ static void Transfer(uint32_t src) {
   DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, src); /* set source address */
   DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, NEO_DMA_NOF_BYTES); /* set number of bytes to transfer */
   DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_ENABLE); /* enable request from peripheral */
+  return ERR_OK;
 }
 
-static void PixelTrail(uint16_t delayMs, NEO_ColorE color, NEO_PixelIdxT start, NEO_PixelIdxT end, NEO_PixelIdxT nofTail) {
-  NEO_PixelIdxT pixel;
-  unsigned int i;
-
-  for(pixel=start;pixel<=end+nofTail+1;pixel++) {
-    /* move head */
-    if (pixel<=end) {
-      if (color==NEO_COLOR_RED) {
-        NEO_SetPixelRGB(pixel, 0xff, 0, 0);
-      } else if (color==NEO_COLOR_GREEN) {
-        NEO_SetPixelRGB(pixel, 0, 0xff, 0);
-      } else if (color==NEO_COLOR_BLUE) {
-        NEO_SetPixelRGB(pixel, 0, 0, 0xff);
-      }
-    }
-    /* clear tail pixel */
-    if (pixel-start>nofTail && pixel-(nofTail+1)<=end) {
-      NEO_ClearPixel(pixel-(nofTail+1));
-    }
-    /* dim remaining tail pixel */
-    for(i=0;i<nofTail;i++) {
-      if (pixel-start>i && pixel-(i+1)<=end) {
-        NEO_DimmPercentPixel(pixel-(i+1), color, 50);
-      }
-    }
-    Transfer((uint32_t)&transmitBuf[0]);
-    WAIT1_Waitms(delayMs);
-  }
+uint8_t NEO_TransferPixels(void) {
+  return Transfer((uint32_t)&transmitBuf[0]);
 }
 
-void NP_Start(void) {
-#if 0
-  uint8_t red, green, blue;
-  uint32_t pixel;
-#endif
-
+void NEO_Init(void) {
   InitTransmitBuf();
   InitTimer();
   InitDMA();
   transferComplete = FALSE;
-  Cpu_EnableInt(); /* enable interrupts */
-
-  NEO_ClearAllPixel();
-  Transfer((uint32_t)&transmitBuf[0]);
-  for (;;) {
-    PixelTrail(80, NEO_COLOR_RED, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 2);
-    PixelTrail(50, NEO_COLOR_GREEN, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 3);
-    PixelTrail(20, NEO_COLOR_BLUE, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 5);
-    PixelTrail(10, NEO_COLOR_GREEN, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 5);
-  }
-  /* at the end, clear all */
-  NEO_ClearAllPixel();
-  Transfer((uint32_t)&transmitBuf[0]);
-#if 0
-  red = green = blue = 0;
-  for(;;) {
-    for(pixel=1;pixel<NEO_NOF_PIXEL;pixel++) {
-      NEO_SetPixelRGB(pixel, red, green, blue);
-      Transfer((uint32_t)&transmitBuf[0]);
-      WAIT1_Waitms(100);
-      red += 2u;
-      green += 2u;
-      blue += 2u;
-      NEO_ClearPixel(pixel); /* clear pixel again */
-    }
-  }
-#endif
 }
