@@ -33,6 +33,16 @@
 #include "Pins1.h"
 #include "CsIO1.h"
 #include "IO1.h"
+#include "WAIT1.h"
+#include "LED1.h"
+#include "LEDpin1.h"
+#include "BitIoLdd1.h"
+#include "LED2.h"
+#include "LEDpin2.h"
+#include "BitIoLdd2.h"
+#include "LED3.h"
+#include "LEDpin3.h"
+#include "BitIoLdd3.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -60,24 +70,15 @@ int main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
-  /* Write your code here */
-  /* For example: for(;;) { } */
-  //initialise_monitor_handles();
-
-  temp0 = RCM_SRS0;
-	temp0 &= 0;
-	temp1 = RCM_SRS1;
-	temp1 &= RCM_SRS1_LOCKUP_MASK;
-	if(temp0 | temp1)	// If last reset was a Lockup reset
-	{
-		// Turn on Red LED, PTB22
-		SIM_SCGC5 |= SIM_SCGC5_PORTB_MASK;	// Enable PortB Clock gate
-		GPIOB_PCOR = (1 << 22);				// Set PTB22 output low
-		GPIOB_PDDR |= (1 << 22);			// Set PTB22 as output
-		PORTB_PCR22 = PORT_PCR_MUX(1);		// Set pin mux for GPIO
-	}
-
-  printf("Test printf\n\r");
+  for(;;) {
+    printf("Test printf\n\r");
+    LED1_On();
+    WAIT1_Waitms(100);
+    LED1_Off();
+    LED2_On();
+    WAIT1_Waitms(100);
+    LED2_Off();
+  }
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
