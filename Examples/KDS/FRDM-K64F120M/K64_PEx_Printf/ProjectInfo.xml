@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+  Copyright : 2012 Freescale, Inc. All Rights Reserved.
+
+  This configuration file is a standard interchange file that's format is maintained
+  by Freescale, Inc. The configuration file is a derivative work
+  of the Processor Expert Software technology licensed for use by customers
+  as defined as SOFTWARE in the product's End User License Agreement. This file
+  and format are free to use and distribute for read-only purposes. You do not have
+  the right to create these files or modify this format or use for any purposes other
+  than interchange with the Processor Expert Software technology.
+
+  THIS SOFTWARE IS PROVIDED "AS IS".
+
+  NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT
+  LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+  PURPOSE APPLY TO THIS SOFTWARE. IN NO EVENT WILL FREESCALE BE LIABLE, WHETHER
+  IN CONTRACT, TORT, OR OTHERWISE, FOR ANY INCIDENTAL, SPECIAL, INDIRECT,
+  CONSEQUENTIAL OR PUNITIVE DAMAGES, INCLUDING, BUT NOT LIMITED TO, DAMAGES FOR
+  ANY LOSS OF USE, LOSS OF TIME, INCONVENIENCE, COMMERCIAL LOSS, OR LOST PROFITS,
+  SAVINGS, OR REVENUES TO THE FULL EXTENT SUCH MAY BE DISCLAIMED BY LAW.
+
+-->
+<export xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ProjectInfoDescription.xsd">
+  <PROCESSOR>
+    <DeviceID>MK64FN1M0xxx12</DeviceID>
+    <CoreNum>1</CoreNum>
+    <Cores>
+      <Core>
+        <CoreSet>Cortex-M4</CoreSet>
+      </Core>
+    </Cores>
+    <SRAMsize>256k</SRAMsize>
+    <FLASHsize>1M</FLASHsize>
+  </PROCESSOR>
+  <PATHS>
+    <LinkerCommandFile>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Project_Settings\Linker_Files\ProcessorExpert.ld</LinkerCommandFile>
+    <IncludePaths>
+      <Path>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Static_Code\Peripherals\</Path>
+      <Path>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Static_Code\System\</Path>
+      <Path>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Static_Code\PDD\</Path>
+      <Path>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Static_Code\IO_Map\</Path>
+      <Path>C:\Freescale\KDS_1.0.1\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\</Path>
+      <Path>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Sources\</Path>
+      <Path>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Generated_Code\</Path>
+    </IncludePaths>
+    <SourceCodePaths>
+      <Path>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Generated_Code\</Path>
+      <Path>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Project_Settings\Startup_Code\</Path>
+      <Path>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Sources\</Path>
+      <Path>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Static_Code\System\</Path>
+    </SourceCodePaths>
+  </PATHS>
+  <FILES>
+    <GeneratedCs>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Generated_Code\Cpu.c</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Generated_Code\CsIO1.c</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Generated_Code\IO1.c</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Generated_Code\PE_LDD.c</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Generated_Code\Pins1.c</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Project_Settings\Startup_Code\startup.c</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Sources\Events.c</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Sources\main.c</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Static_Code\System\CPU_Init.c</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Static_Code\System\Peripherals_Init.c</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Static_Code\System\Vectors.c</PathName>
+    </GeneratedCs>
+    <GeneratedHs>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Generated_Code\CPU_Config.h</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Generated_Code\Cpu.h</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Generated_Code\CsIO1.h</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Generated_Code\IO1.h</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Generated_Code\IO_Map.h</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Generated_Code\Init_Config.h</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Generated_Code\PE_Const.h</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Generated_Code\PE_Error.h</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Generated_Code\PE_LDD.h</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Generated_Code\PE_Types.h</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Generated_Code\Pins1.h</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Generated_Code\Vectors_Config.h</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Sources\Events.h</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Static_Code\IO_Map\MK64F12.h</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Static_Code\PDD\PDD_Types.h</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Static_Code\System\CPU_Init.h</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Static_Code\System\PDD_Includes.h</PathName>
+      <PathName>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\KDS\FRDM-K64F120M\K64_PEx_Printf\Static_Code\System\Peripherals_Init.h</PathName>
+    </GeneratedHs>
+  </FILES>
+  <OPTIONS>
+  </OPTIONS>
+</export>
