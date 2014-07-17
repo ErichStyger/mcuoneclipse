@@ -75,6 +75,19 @@
   #include "LPTMR_PDD.h" /* PDD interface to low power timer */
   #include "SIM_PDD.h"   /* PDD interface to system integration module */
 #endif
+#if !configPEX_KINETIS_SDK
+  #include "%ProcessorModule.h"
+#endif
+
+/* --------------------------------------------------- */
+/* Let the user override the pre-loading of the initial LR with the address of
+   prvTaskExitError() in case is messes up unwinding of the stack in the
+   debugger. */
+#ifdef configTASK_RETURN_ADDRESS
+  #define portTASK_RETURN_ADDRESS   configTASK_RETURN_ADDRESS
+#else
+  #define portTASK_RETURN_ADDRESS   prvTaskExitError
+#endif
 /* --------------------------------------------------- */
 /* macros dealing with tick counter */
 %if (CPUfamily = "Kinetis")
@@ -125,7 +138,7 @@ typedef %@TickCntr@'ModuleName'%.TTimerValue TickCounter_t; /* for holding count
 #if configUSE_TICKLESS_IDLE == 1
 static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration as no API to get it from the FreeCntr component */
 #endif
-#define SET_TICK_DURATION(val)      (void)%@TickCntr@'ModuleName'%.SetCompare(val); currTickDuration=val
+#define SET_TICK_DURATION(val)      (void)%@TickCntr@'ModuleName'%.SetCompare((%@TickCntr@'ModuleName'%.TTimerValue)(val)); currTickDuration=(TickCounter_t)(val)
 #define GET_TICK_DURATION()         currTickDuration
 #define GET_TICK_CURRENT_VAL(addr)  (void)%@TickCntr@'ModuleName'%.GetCounterValue(addr)
 %endif
@@ -321,15 +334,6 @@ static void NVIC_EnableIRQ(IRQn_Type IRQn) {
 #define portINITIAL_XPSR         (0x01000000)
 #define portINITIAL_EXEC_RETURN  (0xfffffffd)
 
-/* Let the user override the pre-loading of the initial LR with the address of
-   prvTaskExitError() in case is messes up unwinding of the stack in the
-   debugger. */
-#ifdef configTASK_RETURN_ADDRESS
-  #define portTASK_RETURN_ADDRESS	configTASK_RETURN_ADDRESS
-#else
-  #define portTASK_RETURN_ADDRESS	prvTaskExitError
-#endif
-
 #if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
   /* Constants required to manipulate the VFP. */
   #define portFPCCR                ((volatile unsigned long *)0xe000ef34) /* Floating point context control register. */
@@ -362,15 +366,17 @@ static jmp_buf xJumpBuf; /* Used to restore the original context when the schedu
 #endif
 /*-----------------------------------------------------------*/
 static void prvTaskExitError(void) {
-	/* A function that implements a task must not exit or attempt to return to
-	its caller as there is nothing to return to.  If a task wants to exit it
-	should instead call vTaskDelete( NULL ).
+  /* A function that implements a task must not exit or attempt to return to
+  its caller as there is nothing to return to.  If a task wants to exit it
+  should instead call vTaskDelete( NULL ).
 
-	Artificially force an assert() to be triggered if configASSERT() is
-	defined, then stop here so application writers can catch the error. */
-	configASSERT(uxCriticalNesting == ~0UL);
-	portDISABLE_INTERRUPTS();
-	for(;;);
+  Artificially force an assert() to be triggered if configASSERT() is
+  defined, then stop here so application writers can catch the error. */
+  configASSERT(uxCriticalNesting == ~0UL);
+  portDISABLE_INTERRUPTS();
+  for(;;) {
+    /* wait here */
+  }
 }
 /*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_ARM_KEIL) && configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY)
@@ -482,7 +488,7 @@ extern tskTCB *volatile pxCurrentTCB;
     } while(0)
 
 %endif %- (CPUfamily = "56800")
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters ) {
+portSTACK_TYPE *pxPortInitialiseStack(portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters) {
 %if (CPUfamily = "ColdFireV1") | (CPUfamily = "MCF")
   unsigned portLONG ulOriginalA5;
 
@@ -508,16 +514,11 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_COD
 
   return pxTopOfStack;
 %elif (CPUfamily = "HCS08") | (CPUfamily = "HC08")
-  /*
-  Place a few bytes of known values on the bottom of the stack.
-  This can be uncommented to provide useful stack markers when debugging.
-  *pxTopOfStack = (portSTACK_TYPE)0x11;
+  /* Set as task caller the prvTaskExitError function. */
+  *pxTopOfStack = (uint8_t)portTASK_RETURN_ADDRESS;
   pxTopOfStack--;
-  *pxTopOfStack = (portSTACK_TYPE)0x22;
+  *pxTopOfStack = (uint8_t)(((uint16_t)portTASK_RETURN_ADDRESS)>>8);
   pxTopOfStack--;
-  *pxTopOfStack = (portSTACK_TYPE)0x33;
-  pxTopOfStack--;
-  */
 
   /* Setup the initial stack of the task.  The stack is set exactly as
   expected by the portRESTORE_CONTEXT() macro.  In this case the stack as
@@ -620,7 +621,6 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_COD
   *pxTopOfStack = (portSTACK_TYPE)0x40; /* have the X bit still masked */
   pxTopOfStack--;
 #endif
-
 #ifdef __BANKED__
   #ifdef __HCS12X__
     *pxTopOfStack = (portSTACK_TYPE) *(((portSTACK_TYPE*)(&pxCode))+2);  /* PPage of task created */
@@ -637,12 +637,9 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_COD
     pxTopOfStack--;
   #endif
 #endif
-
   /* Finally the critical nesting depth is initialised with 0 (not within a critical section). */
   *pxTopOfStack = (portSTACK_TYPE)0x00;
-
   return pxTopOfStack;
-
 %elif (CPUfamily = "Kinetis")
   /* Simulate the stack frame as it would be created by a context switch interrupt. */
   pxTopOfStack--; /* Offset added to account for the way the MCU uses the stack on entry/exit of interrupts,
@@ -672,7 +669,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_COD
 
   const portSTACK_TYPE xInitialStack[] = 
   {
-	0x03030303UL,	/* R3 */
+	0x03030303UL, /* R3 */
 	0x04040404UL, /* R4 */
 	0x05050505UL, /* R5 */
 	0x06060606UL, /* N */
@@ -828,17 +825,10 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
     ENABLE_TICK_COUNTER(); /* Restart SysTick. */
     TICKLESS_ENABLE_INTERRUPTS();
   } else {
-#if configUSE_LP_TIMER
-    DisableDevice();
-    ClearInterruptFlag();
-    WriteCompareReg(xExpectedIdleTime-1);
-    EnableDevice(); /* start timer */
-#else
     SET_TICK_DURATION(ulReloadValue); /* Set the new reload value. */
     RESET_TICK_COUNTER_VAL(); /* Reset the counter. */
     ENABLE_TICK_COUNTER(); /* Restart tick timer. */
     TICK_INTERRUPT_FLAG_RESET(); /* reset flag so we know later if it has fired */
-#endif
 
     /* Sleep until something happens. configPRE_SLEEP_PROCESSING() can
      * set its parameter to 0 to indicate that its implementation contains
@@ -874,7 +864,7 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
      * inevitably result in some tiny drift of the time maintained by the
      * kernel with respect to calendar time. 
      */
-    tickISRfired = TICK_INTERRUPT_HAS_FIRED(); /* need to check Interrupt flag here, as might be modified below */
+    tickISRfired = (bool)TICK_INTERRUPT_HAS_FIRED(); /* need to check Interrupt flag here, as might be modified below */
     DISABLE_TICK_COUNTER();
     TICKLESS_ENABLE_INTERRUPTS();/* Re-enable interrupts */
     if (tickISRfired) {

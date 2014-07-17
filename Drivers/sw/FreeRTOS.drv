@@ -3016,6 +3016,7 @@ void %vApplicationMallocFailedHook(void)
 %include Common\FreeRTOSvOnPostSleepProcessing.Inc
 void %vOnPostSleepProcessing(portTickType expectedIdleTicks)
 {
+  (void)expectedIdleTicks; /* not used (yet?) */
   /* Write your code here ... */
 }
 
@@ -3028,6 +3029,7 @@ void %vOnPostSleepProcessing(portTickType expectedIdleTicks)
 %include Common\FreeRTOSvOnPreSleepProcessing.Inc
 void %vOnPreSleepProcessing(portTickType expectedIdleTicks)
 {
+  (void)expectedIdleTicks; /* not used */
 %if (CPUfamily = "Kinetis")
 #if 1
 %else
