@@ -81,7 +81,15 @@ static void drawDemo(void) {
   GDisp1_UpdateFull(); /* display it */
 }
 
+static portTASK_FUNCTION(AppTask, pvParameters) {
+  (void)pvParameters;
+  for(;;) {
+    LED1_Neg();
+    FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
+  }
+}
 
+//#include "PE_Types.h"
 void main(void) {
   /* Write your local variable definition here */
 
@@ -99,7 +107,20 @@ void main(void) {
   PDC1_WriteString("Hello World!");
   draw4Dots();
   drawDemo();
-  Cpu_SetWaitMode();
+  if (FRTOS1_xTaskCreate(
+      AppTask,  /* pointer to the task */
+        "Main", /* task name for kernel awareness debugging */
+        configMINIMAL_STACK_SIZE, /* task stack size */
+        (void*)NULL, /* optional task startup argument */
+        tskIDLE_PRIORITY,  /* initial priority */
+        (xTaskHandle*)NULL /* optional task handle to create */
+      ) != pdPASS) 
+  {
+    /*lint -e527 */
+    for(;;){} /* error! probably out of memory */
+    /*lint +e527 */
+  }
+  FRTOS1_vTaskStartScheduler(); 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
   for(;;){}

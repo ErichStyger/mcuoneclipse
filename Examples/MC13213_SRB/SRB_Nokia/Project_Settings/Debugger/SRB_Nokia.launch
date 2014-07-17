@@ -70,17 +70,24 @@
 <listAttribute key="com.freescale.cdt.debug.cw.Embedded Download.TaskSuccessiveRuns"/>
 <listAttribute key="com.freescale.cdt.debug.cw.Embedded Download.TaskTypes"/>
 <listAttribute key="com.freescale.cdt.debug.cw.ExecutablePath"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.InitializePC" value="true"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.InitializePCAtProgramEntryPoint" value="true"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.InitializePCAtSymbol" value="main"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.InitializePCAtUserSpecified" value="false"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.LaunchMode" value="DOWNLOAD"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.PN_StopAtProgramEntryPoint" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.PN_StopAtStartUp" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.PN_StopAtUserSpecified" value="true"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.RefreshPolicy.RefreshPeriod" value="2.0"/>
 <listAttribute key="com.freescale.cdt.debug.cw.RemoteDownload"/>
 <listAttribute key="com.freescale.cdt.debug.cw.RemotePath"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.ResumeProgram" value="true"/>
 <listAttribute key="com.freescale.cdt.debug.cw.SMPCores"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.SYNC_WITH_ENCL_PROJ" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.Symbolics.CacheSymbolicsBetweenRuns" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.Symbolics.UseExecutableCopy" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.UDPPort" value="1234"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.UseApplication" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.RetryConnectionOn" value="false"/>
 <intAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.RetryTimeout" value="20"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.RetryWithTimeoutOn" value="false"/>
@@ -103,9 +110,11 @@
 <stringAttribute key="com.freescale.cdt.debug.cw.debuggerAddress" value="127.0.0.1"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.disableIO" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.ethCtrl" value="UEC1"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.executeInitScripts" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.executePerCoresReset" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.executePerprocessorReset" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.executeReset" value="false"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.executeResetSequence" value="true"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.gateway" value="127.0.0.1"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.initPath" value=""/>
 <listAttribute key="com.freescale.cdt.debug.cw.initPathList">
@@ -125,6 +134,7 @@
 <listAttribute key="com.freescale.cdt.debug.cw.runOutOfResetList">
 <listEntry value="false"/>
 </listAttribute>
+<booleanAttribute key="com.freescale.cdt.debug.cw.skipSystemInitialization" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.targetAddress" value="127.0.0.1"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.useGateway" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.useHSSTIO" value="false"/>
@@ -169,11 +179,13 @@
 <booleanAttribute key="com.freescale.sa.mcu.launch.EXPERT_SETTINGS" value="false"/>
 <booleanAttribute key="com.freescale.sa.mcu.launch.HCS08_COLLECT_ALWAYS" value="true"/>
 <booleanAttribute key="com.freescale.sa.mcu.launch.HCS08_COLLECT_FROM_TRIGGER" value="false"/>
+<intAttribute key="com.freescale.sa.mcu.launch.HCS08_COLLECT_TRIGGER_PROGRAM" value="0"/>
 <booleanAttribute key="com.freescale.sa.mcu.launch.HCS08_COLLECT_UNTIL_TRIGGER" value="false"/>
 <booleanAttribute key="com.freescale.sa.mcu.launch.HCS08_STOP_ON_BUFFER_FULL" value="true"/>
 <booleanAttribute key="com.freescale.sa.mcu.launch.HCS08_STOP_ON_TRIGGER" value="true"/>
 <stringAttribute key="com.freescale.sa.mcu.launch.HCS08_TRIGGER_DATA_COMPARE" value="0xFFFFFFFF"/>
 <intAttribute key="com.freescale.sa.mcu.launch.HCS08_TRIGGER_TYPE" value="0"/>
+<intAttribute key="com.freescale.sa.mcu.launch.HCS08_TRIGGER_TYPE_PROGRAM" value="0"/>
 <booleanAttribute key="com.freescale.sa.mcu.launch.INST_MEMORY_ACCESS" value="true"/>
 <booleanAttribute key="com.freescale.sa.mcu.launch.LOOP1_MODE" value="false"/>
 <booleanAttribute key="com.freescale.sa.mcu.launch.PCSYNC_TRACE" value="false"/>
@@ -231,9 +243,9 @@
 <booleanAttribute key="org.eclipse.cdt.launch.ENABLE_REGISTER_BOOKKEEPING" value="false"/>
 <booleanAttribute key="org.eclipse.cdt.launch.ENABLE_RESTORE_WATCHPOINTS" value="true"/>
 <booleanAttribute key="org.eclipse.cdt.launch.ENABLE_VARIABLE_BOOKKEEPING" value="false"/>
-<stringAttribute key="org.eclipse.cdt.launch.FORMAT" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&lt;contentList/&gt;"/>
+<stringAttribute key="org.eclipse.cdt.launch.FORMAT" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&lt;contentList&gt;&lt;content id=&quot;portTickCntr-vPortSuppressTicksAndSleep-(cast)&quot; val=&quot;int&quot;/&gt;&lt;content id=&quot;tickISRfired-vPortSuppressTicksAndSleep-(cast)&quot; val=&quot;int&quot;/&gt;&lt;/contentList&gt;"/>
 <stringAttribute key="org.eclipse.cdt.launch.GLOBAL_VARIABLES" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;globalVariableList/&gt;&#13;&#10;"/>
-<stringAttribute key="org.eclipse.cdt.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList/&gt;&#13;&#10;"/>
+<stringAttribute key="org.eclipse.cdt.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList&gt;&#13;&#10;&lt;memoryBlockExpressionItem&gt;&#13;&#10;&lt;expression text=&quot;0x00000147&quot;/&gt;&#13;&#10;&lt;/memoryBlockExpressionItem&gt;&#13;&#10;&lt;/memoryBlockExpressionList&gt;&#13;&#10;"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="MC13213/SRB_Nokia.abs"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="SRB_Nokia"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="toolchain.config.hcs08.release.1299769551"/>

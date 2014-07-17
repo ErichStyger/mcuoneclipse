@@ -3,10 +3,10 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>12</ModificationStamp>
-    <Date>2014-03-21</Date>
+    <ModificationStamp>19</ModificationStamp>
+    <Date>2014-07-16</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion>1.8.1.RT5_b1349-1839</PEversion>
+    <PEversion>1.9.0.RT6_b1411-0406</PEversion>
   </Header>
   <Options>
     <EventsDirectory>Sources</EventsDirectory>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>26</ProjectCompNumb>
+    <ProjectCompNumb>32</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -38,6 +38,8 @@
     <GenerateCodeGenLog>false</GenerateCodeGenLog>
     <DontWriteGeneratedModules lines_count="0" />
     <ProjectStaticFilesGenerationMode>LINKED</ProjectStaticFilesGenerationMode>
+    <ProjectMainModule>ProcessorExpert</ProjectMainModule>
+    <SdkSourceFilesDirectory />
   </Options>
   <CPU>
     <BeanType>MCF51CN128_80</BeanType>
@@ -203,7 +205,6 @@
         <TypeSpecNameState>typeExtCrystalFreqRange</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>1</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ExtOscOperatingMode</ItemSymbol>
@@ -212,7 +213,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>1</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ExtRefClkForPeripherals</ItemSymbol>
@@ -261,7 +261,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>1</Index>
         <EnumSymbVal>2</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>EnableIntClkInStopMode</ItemSymbol>
@@ -299,7 +298,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SharedInternalMappingGrp</ItemSymbol>
@@ -554,7 +552,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>BackdoorKey</ItemSymbol>
@@ -672,7 +669,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>InitUnusedIO_OutputValue</ItemSymbol>
@@ -681,7 +677,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PortAGrp</ItemSymbol>
@@ -2670,7 +2665,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>IntLVWGrp</ItemSymbol>
@@ -2744,7 +2738,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>1</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>LVWvoltage</ItemSymbol>
@@ -2753,7 +2746,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>1</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SharedTMP</ItemSymbol>
@@ -4001,7 +3993,6 @@
         <TypeSpecNameState>typeFColdFireV1ExternalBusCSAddressSetup</TypeSpecNameState>
         <Index>3</Index>
         <EnumSymbVal>11</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ExternalBusCS0ReadAddrHold</ItemSymbol>
@@ -4011,7 +4002,6 @@
         <TypeSpecNameState>typeFColdFireV1ExternalBusCSReadAddrHold</TypeSpecNameState>
         <Index>3</Index>
         <EnumSymbVal>11</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ExternalBusCS0WriteAddrHold</ItemSymbol>
@@ -4021,7 +4011,6 @@
         <TypeSpecNameState>typeFColdFireV1ExternalBusCSWriteAddrHold</TypeSpecNameState>
         <Index>3</Index>
         <EnumSymbVal>11</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ExternalBusCS0MultiplexedMode</ItemSymbol>
@@ -4103,7 +4092,6 @@
         <TypeSpecNameState>typeFColdFireV1ExternalBusCSAddressSetup</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>00</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ExternalBusCS1ReadAddrHold</ItemSymbol>
@@ -4113,7 +4101,6 @@
         <TypeSpecNameState>typeFColdFireV1ExternalBusCSReadAddrHold</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>00</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ExternalBusCS1WriteAddrHold</ItemSymbol>
@@ -4123,7 +4110,6 @@
         <TypeSpecNameState>typeFColdFireV1ExternalBusCSWriteAddrHold</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>00</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ExternalBusCS1MultiplexedMode</ItemSymbol>
@@ -4917,7 +4903,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>HighFLLMode</ItemSymbol>
@@ -4969,7 +4954,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>HighFrclkdiv_MHz</ItemSymbol>
@@ -5115,7 +5099,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>LowFLLMode</ItemSymbol>
@@ -5167,7 +5150,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>LowFrclkdiv_MHz</ItemSymbol>
@@ -5313,7 +5295,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SlowFLLMode</ItemSymbol>
@@ -5365,7 +5346,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SlowFrclkdiv_MHz</ItemSymbol>
@@ -5593,10 +5573,10 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
+        <Index>0</Index>
+        <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>no</LastUserSel>
+        <LastUserSel>yes</LastUserSel>
         <UsrMethodName>SetWaitMode</UsrMethodName>
       </ItemState>
       <ItemState>
@@ -6445,7 +6425,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.064</BeanVersion>
+    <BeanVersion>01.067</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -8529,7 +8509,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.360</BeanVersion>
+    <BeanVersion>01.368</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -8550,7 +8530,7 @@
         <ItemSymbol>FreeRTOSVersion</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>V8.0.0</Value>
+        <Value>V8.0.1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>IsClassicCW</ItemSymbol>
@@ -8662,7 +8642,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>MCF51CN</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ColdFireSWI</ItemSymbol>
@@ -8671,7 +8650,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>VL1swi</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ColdFireV2CPUSpecific</ItemSymbol>
@@ -8688,7 +8666,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>MCF5225x</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ColdFireV2LibraryLowestInterruptPriority</ItemSymbol>
@@ -8721,7 +8698,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>1</Index>
         <EnumSymbVal>M4</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>M4FFloatingPointSupport</ItemSymbol>
@@ -8760,7 +8736,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>LDDSWIGroup</ItemSymbol>
@@ -8914,7 +8889,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>1</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>CleanupResources</ItemSymbol>
@@ -9087,7 +9061,7 @@
               <ReqExtCompPrescSpeedMode5>-1</ReqExtCompPrescSpeedMode5>
               <ReqExtCompPrescSpeedMode6>-1</ReqExtCompPrescSpeedMode6>
               <ReqExtCompPrescSpeedMode7>-1</ReqExtCompPrescSpeedMode7>
-              <ReqSrcClkPrescHigh>-1</ReqSrcClkPrescHigh>
+              <ReqSrcClkPrescHigh>128</ReqSrcClkPrescHigh>
               <ReqSrcClkPrescLow>-1</ReqSrcClkPrescLow>
               <ReqSrcClkPrescSlow>-1</ReqSrcClkPrescSlow>
               <ReqSrcClkPrescSpeedMode3>-1</ReqSrcClkPrescSpeedMode3>
@@ -9282,10 +9256,10 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>1</Index>
-              <Value>false</Value>
+              <Index>0</Index>
+              <Value>true</Value>
               <LastSelection>false</LastSelection>
-              <LastUserSel>no</LastUserSel>
+              <LastUserSel>yes</LastUserSel>
               <UsrMethodName>SetCompare</UsrMethodName>
             </ItemState>
             <ItemState>
@@ -9462,7 +9436,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>1</Index>
         <EnumSymbVal>Scheme2</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>UserHeapSectionEnabled</ItemSymbol>
@@ -9601,7 +9574,6 @@
         <Index>0</Index>
         <EnumSymbVal>automatic</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>StaticSourcesEnabled</ItemSymbol>
@@ -9664,7 +9636,6 @@
         <Value />
         <EnumSymbVal>-1</EnumSymbVal>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>useARMSysTickTimer</ItemSymbol>
@@ -9697,6 +9668,20 @@
         <Index>1</Index>
         <Value>false</Value>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TicklessIdleDecisionHookEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xEnterTicklessIdleFctName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>xEnterTicklessIdle</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -10740,7 +10725,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.095</BeanVersion>
+    <BeanVersion>01.105</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -11299,6 +11284,17 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>always</LastUserSel>
         <UsrMethodName>strFind</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanSeparatedNumbers</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ScanSeparatedNumbers</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Methods>

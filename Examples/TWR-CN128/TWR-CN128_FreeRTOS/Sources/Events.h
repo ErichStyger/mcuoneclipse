@@ -123,6 +123,40 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 ** ===================================================================
 */
 
+void FRTOS1_vOnPreSleepProcessing(portTickType expectedIdleTicks);
+/*
+** ===================================================================
+**     Event       :  FRTOS1_vOnPreSleepProcessing (module Events)
+**
+**     Component   :  FRTOS1 [FreeRTOS]
+**     Description :
+**         Used in tickless idle mode only, but required in this mode.
+**         Hook for the application to enter low power mode.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void FRTOS1_vOnPostSleepProcessing(portTickType expectedIdleTicks);
+/*
+** ===================================================================
+**     Event       :  FRTOS1_vOnPostSleepProcessing (module Events)
+**
+**     Component   :  FRTOS1 [FreeRTOS]
+**     Description :
+**         Event called after the CPU woke up after low power mode.
+**         This event is optional.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+
 /* END Events */
 #endif /* __Events_H*/
 

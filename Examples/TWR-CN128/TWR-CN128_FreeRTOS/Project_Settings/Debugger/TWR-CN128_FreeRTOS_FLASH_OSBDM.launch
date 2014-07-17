@@ -41,20 +41,47 @@
 <booleanAttribute key="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.Embedded Download.SVexecutable" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.Embedded Download.SVinitialized" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.Embedded Download.SVuninitialized" value="false"/>
+<intAttribute key="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.Embedded Initialization.coreIndex" value="0"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.Embedded Initialization.homogeneousMulticore" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.Embedded Initialization.initPath" value=""/>
 <stringAttribute key="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.Embedded Initialization.memConfigPath" value="${ProjDirPath}/Project_Settings/Debugger/MCF51CN128.mem"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.Embedded Initialization.simulator" value=""/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.Embedded Initialization.smp" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.Embedded Initialization.systemType" value="com.freescale.cw.system.coldfire.MCF51CN.MCF51CN128"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.Embedded Initialization.useDefaultConfigFile" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.Embedded Initialization.useInitFile" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.Embedded Initialization.useMemoryConfigFile" value="true"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.Remote Debug.downloadPath" value=""/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.Remote Debug.enabled" value="true"/>
 <listAttribute key="com.freescale.cdt.debug.cw.CoreNameList">
 <listEntry value="MCF51CN128#0"/>
 </listAttribute>
+<listAttribute key="com.freescale.cdt.debug.cw.Debug"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.Embedded Download.ExecuteTasks" value="false"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.Embedded Download.StandardDownload" value="true"/>
+<listAttribute key="com.freescale.cdt.debug.cw.Embedded Download.TaskInitialLaunches"/>
+<listAttribute key="com.freescale.cdt.debug.cw.Embedded Download.TaskNames"/>
+<listAttribute key="com.freescale.cdt.debug.cw.Embedded Download.TaskSuccessiveRuns"/>
+<listAttribute key="com.freescale.cdt.debug.cw.Embedded Download.TaskTypes"/>
+<listAttribute key="com.freescale.cdt.debug.cw.ExecutablePath"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.InitializePC" value="true"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.InitializePCAtProgramEntryPoint" value="true"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.InitializePCAtSymbol" value="main"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.InitializePCAtUserSpecified" value="false"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.LaunchMode" value="DOWNLOAD"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.PN_StopAtProgramEntryPoint" value="false"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.PN_StopAtStartUp" value="true"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.PN_StopAtUserSpecified" value="true"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.RefreshPolicy.RefreshPeriod" value="2.0"/>
+<listAttribute key="com.freescale.cdt.debug.cw.RemoteDownload"/>
+<listAttribute key="com.freescale.cdt.debug.cw.RemotePath"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.ResumeProgram" value="true"/>
+<listAttribute key="com.freescale.cdt.debug.cw.SMPCores"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.SYNC_WITH_ENCL_PROJ" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.Symbolics.CacheSymbolicsBetweenRuns" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.Symbolics.UseExecutableCopy" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.UDPPort" value="1234"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.UseApplication" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.RetryConnectionOn" value="false"/>
 <intAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.RetryTimeout" value="20"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.RetryWithTimeoutOn" value="false"/>
@@ -64,15 +91,18 @@
 <stringAttribute key="com.freescale.cdt.debug.cw.core.settings.DebuggerCommonData.Connection Type" value="com.pemicro.mcu.debug.connections.pne.cfv1"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.core.settings.DebuggerCommonData.Processor Attr Name" value="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.CF Debugger.processor"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.core.settings.GdiConnection.Common.PhysicalConnectionAttributeBase" value="com.pemicro.mcu.debug.connections.pne.cfv1."/>
+<stringAttribute key="com.freescale.cdt.debug.cw.core.settings.GdiConnection.Common.SimulatorConnectionAttributeBase" value=""/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.GdiConnection.Common.logData" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.core.settings.rseSystemId" value="com.freescale.cdt.debug.cw.core.ui.rse.systemtype.bareboard.hardware.130715111245+0200"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.core.settings.wizardSystemNameHint" value="OSBDM"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.debuggerAddress" value="127.0.0.1"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.disableIO" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.ethCtrl" value="UEC1"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.executeInitScripts" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.executePerCoresReset" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.executePerprocessorReset" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.executeReset" value="false"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.executeResetSequence" value="true"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.gateway" value="127.0.0.1"/>
 <listAttribute key="com.freescale.cdt.debug.cw.initPathList">
 <listEntry value=""/>
@@ -82,6 +112,9 @@
 <listEntry value="${ProjDirPath}/Project_Settings/Debugger/MCF51CN128.mem"/>
 </listAttribute>
 <stringAttribute key="com.freescale.cdt.debug.cw.netMask" value="255.255.255.255"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.osawareness.osContributorID" value="None"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.osawareness.rtospluginname" value=""/>
+<stringAttribute key="com.freescale.cdt.debug.cw.osawareness.targetos" value="None"/>
 <listAttribute key="com.freescale.cdt.debug.cw.perCoreResetList"/>
 <listAttribute key="com.freescale.cdt.debug.cw.perProcessorResetList"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.processor" value="MCF51CN128"/>
@@ -91,6 +124,7 @@
 <listAttribute key="com.freescale.cdt.debug.cw.runOutOfResetList">
 <listEntry value="false"/>
 </listAttribute>
+<booleanAttribute key="com.freescale.cdt.debug.cw.skipSystemInitialization" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.targetAddress" value="127.0.0.1"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.useGateway" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.useHSSTIO" value="false"/>
@@ -105,24 +139,84 @@
 <booleanAttribute key="com.freescale.cdt.debug.cw.useSerialTransferIO" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.useStopTransferIO" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.useUDPPort" value="false"/>
-<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.CommandLineArgs" value="cf_icd"/>
+<listAttribute key="com.freescale.panel.list">
+<listEntry value="Debugger Common Settings"/>
+<listEntry value="CF Exceptions"/>
+<listEntry value="CF Reset"/>
+<listEntry value="CF Interrupt"/>
+<listEntry value="Embedded Download"/>
+<listEntry value="Debugger PIC Settings Panel"/>
+<listEntry value="Remote Debug"/>
+<listEntry value="Other Executables"/>
+<listEntry value="Symbolics"/>
+<listEntry value="osawareness"/>
+</listAttribute>
+<booleanAttribute key="com.freescale.sa.mcu.launch.BACKUP_ELD" value="true"/>
+<booleanAttribute key="com.freescale.sa.mcu.launch.CFv1_STOP_TARGET_AT_BUFFER_FULL" value="false"/>
+<intAttribute key="com.freescale.sa.mcu.launch.CFv1_TRACE_START_STOP_CONDITION" value="0"/>
+<booleanAttribute key="com.freescale.sa.mcu.launch.CONTINUOUS_TRACE" value="false"/>
+<booleanAttribute key="com.freescale.sa.mcu.launch.ENABLE_ANALYSIS" value="false"/>
+<booleanAttribute key="com.freescale.sa.mcu.launch.ENABLE_LOGGING" value="false"/>
+<booleanAttribute key="com.freescale.sa.mcu.launch.EXPERT_SETTINGS" value="false"/>
+<booleanAttribute key="com.freescale.sa.mcu.launch.PCSYNC_TRACE" value="false"/>
+<booleanAttribute key="com.freescale.sa.mcu.launch.PC_2_BYTES" value="false"/>
+<booleanAttribute key="com.freescale.sa.mcu.launch.PC_3_BYTES" value="true"/>
+<booleanAttribute key="com.freescale.sa.mcu.launch.READ_DATA_TRACE" value="false"/>
+<booleanAttribute key="com.freescale.sa.mcu.launch.SET_TGT_SETTING_ON_RUN" value="false"/>
+<booleanAttribute key="com.freescale.sa.mcu.launch.USER_CONFIG" value="false"/>
+<intAttribute key="com.freescale.sa.mcu.launch.VAL_PCSYNC_CYCLES_INDEX" value="0"/>
+<booleanAttribute key="com.freescale.sa.mcu.launch.WRITE_DATA_TRACE" value="false"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.CommandLineArgs" value=""/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.ConfigFile" value=""/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.Library" value="cf_pne_gdi"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.PEDEBUG_ALTERNATIVE_ALGORITHM_CHECKBOX" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.PEDEBUG_ALTERNATIVE_ALGORITHM_PATH" value=""/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.PEDEBUG_AUTO_SYNC" value="1"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.PEDEBUG_CURRENTDEVICE" value="MCF51CN128"/>
-<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_PORT" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.PEDEBUG_CURRENT_ALGORITHM_INDEX" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.PEDEBUG_ENABLE_FLASH_PROGRAMMING_DIALOG" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.PEDEBUG_ERASE_PROGRAM_WITHOUT_ASKING" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_CyclonePro_PowerDownDelay" value="250"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_CyclonePro_PowerUpDelay" value="250"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_CyclonePro_currentvoltage" value="255"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_CyclonePro_poweroffonexit" value="1"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_Multilink_PowerDownDelay" value="250"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_Multilink_PowerUpDelay" value="1000"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_PORT" value="1"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_PORT_NAME_STRING" value="PE5011359"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_SPECIFY_IP" value="127.0.0.1"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_SPECIFY_IP_ENABLED" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_SPECIFY_NETWORKCARD" value="127.0.0.1"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_SPECIFY_NETWORKCARD_ENABLED" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_USE_CYCLONEPRO_RELAYS" value="1"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_interface_selection" value="3"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.UUID" value="acc3a088-ebf6-414d-92c8-bc4c70816e60"/>
+<intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_ID" value="com.freescale.cdt.debug.cw.coldfire.ColdFireDebugger"/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_REGISTER_GROUPS" value=""/>
+<stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_START_MODE" value="run"/>
+<booleanAttribute key="org.eclipse.cdt.launch.DEBUGGER_STOP_AT_MAIN" value="true"/>
+<stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_STOP_AT_MAIN_SYMBOL" value="main"/>
+<booleanAttribute key="org.eclipse.cdt.launch.ENABLE_REGISTER_BOOKKEEPING" value="false"/>
+<booleanAttribute key="org.eclipse.cdt.launch.ENABLE_RESTORE_WATCHPOINTS" value="true"/>
+<booleanAttribute key="org.eclipse.cdt.launch.ENABLE_VARIABLE_BOOKKEEPING" value="false"/>
 <stringAttribute key="org.eclipse.cdt.launch.FORMAT" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&lt;contentList/&gt;"/>
 <stringAttribute key="org.eclipse.cdt.launch.GLOBAL_VARIABLES" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;globalVariableList/&gt;&#13;&#10;"/>
 <stringAttribute key="org.eclipse.cdt.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList/&gt;&#13;&#10;"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="FLASH/TWR-CN128_FreeRTOS.elf"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="TWR-CN128_FreeRTOS"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="com.freescale.coldfire.toolchain.configuration.87619972"/>
+<intAttribute key="org.eclipse.cdt.launch.SET_REGULAR_BREAKPOINT_TYPE_AS" value="0"/>
+<booleanAttribute key="org.eclipse.cdt.launch.USE_SET_REGULAR_BREAKPOINT_TYPE_AS" value="false"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/TWR-CN128_FreeRTOS"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="4"/>
 </listAttribute>
+<booleanAttribute key="org.eclipse.debug.ui.ATTR_REDIRECT_TO_SERVER_SOCKET" value="false"/>
+<booleanAttribute key="org.eclipse.debug.ui.ATTR_REDIRECT_TO_SOCKET" value="false"/>
+<stringAttribute key="org.eclipse.debug.ui.ATTR_REDIRECT_TO_SOCKET_HOST" value=""/>
+<stringAttribute key="org.eclipse.debug.ui.ATTR_REDIRECT_TO_SOCKET_PORT" value=""/>
 <stringAttribute key="process_factory_id" value="com.freescale.cdt.debug.cw.core.ProcessFactoryID"/>
 </launchConfiguration>
