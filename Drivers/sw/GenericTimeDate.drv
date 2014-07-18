@@ -469,10 +469,16 @@ void %'ModuleName'%.%AddTick(void)
 {
   const uint8_t* ptr;                                            %>40/* Pointer to ULY/LY table */
 
+  %@CriticalSection@'ModuleName'%.CriticalVariable()
+
+  %@CriticalSection@'ModuleName'%.EnterCritical();               %>40/* need exclusive access to tick counter */
   tickCntr++;                                                    %>40/* Software timer counter increment by timer period */
+  %@CriticalSection@'ModuleName'%.ExitCritical();                %>40/* end of critical section */
   if (tickCntr >= 24*3600UL*%'ModuleName'%.TICKS_PER_S) {        %>40/* Does the counter reach 24 hours? */
     tickCntr -= 24*3600UL*%'ModuleName'%.TICKS_PER_S;            %>40/* If yes then reset it by subtracting exactly 24 hours */
+    %@CriticalSection@'ModuleName'%.EnterCritical();
     CntDay++;                                                    %>40/* Increment day counter */
+    %@CriticalSection@'ModuleName'%.ExitCritical();
     if (CntYear & 0x03U) {                                       %>40/* Is this year un-leap-one? */
       ptr = ULY;                                                 %>40/* Set pointer to un-leap-year day table */
     } else {                                                     %>40/* Is this year leap-one? */
@@ -481,10 +487,14 @@ void %'ModuleName'%.%AddTick(void)
     ptr--;                                                       %>40/* Decrement the pointer */
     if (CntDay > ptr[CntMonth]) {                                %>40/* Day counter overflow? */
       CntDay = 1U;                                               %>40/* Set day counter on 1 */
+      %@CriticalSection@'ModuleName'%.EnterCritical();
       CntMonth++;                                                %>40/* Increment month counter */
+      %@CriticalSection@'ModuleName'%.ExitCritical();
       if (CntMonth > 12U) {                                      %>40/* Month counter overflow? */
         CntMonth = 1U;                                           %>40/* Set month counter on 1 */
+        %@CriticalSection@'ModuleName'%.EnterCritical();
         CntYear++;                                               %>40/* Increment year counter */
+        %@CriticalSection@'ModuleName'%.ExitCritical();
       }
     }
   }
