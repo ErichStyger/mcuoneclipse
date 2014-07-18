@@ -3,8 +3,8 @@
   <Header>
     <Name>FRDM-K64F_NeoPixel</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>7</ModificationStamp>
-    <Date>2014-06-04</Date>
+    <ModificationStamp>8</ModificationStamp>
+    <Date>2014-07-14</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.10.0.RT6_b1423-0069</PEversion>
   </Header>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>13</ProjectCompNumb>
+    <ProjectCompNumb>15</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -4206,7 +4206,7 @@
         <ItemSymbol>StaticChannelList</ItemSymbol>
         <ReadOnly>true</ReadOnly>
         <ListItemCount>1</ListItemCount>
-        <UserReadOnly>false</UserReadOnly>
+        <UserReadOnly>true</UserReadOnly>
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
@@ -4276,8 +4276,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
+        <Index>1</Index>
+        <Value>false</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>StaticChannelInterruptService0</ItemSymbol>
@@ -4302,7 +4302,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>medium priority</Value>
+        <Value>112</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>StaticChannelTransferCompleteInterruptVectorISRHandleGrp0</ItemSymbol>
@@ -4860,7 +4860,7 @@
       <ItemState>
         <ItemSymbol>TransferCompleteIntPriority</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>medium priority</Value>
+        <Value>112</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>TransferCompleteIntISRHandleGrp</ItemSymbol>

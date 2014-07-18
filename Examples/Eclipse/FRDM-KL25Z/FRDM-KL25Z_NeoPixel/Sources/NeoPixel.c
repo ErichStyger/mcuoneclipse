@@ -12,23 +12,18 @@
 #include "DMA_PDD.h"
 #include "TPM_PDD.h"
 
-typedef enum {
-  NEO_PIXEL_TYPE_WS2812S, /* 6-pin version WS2812S, 'old' device */
-  NEO_PIXEL_TYPE_WS2812B  /* 4-pin version WS2812B, 'new' device */
-} NEO_PixelType;
-
 /* 48 MHz, WS2812(S) */
 #define TICKS_PERIOD  59  /* 1.25 us  (need: 1.25 us)*/
-#define VAL0          18  /* 0 Bit: 0.396 us (need: 0.4 us low) */
-#define VAL1          37  /* 1 Bit: 0.792 us (need: 0.8 us high */
+#define VAL0          16  /* 0 Bit: 0.396 us (need: 0.4 us low) */
+#define VAL1          31  /* 1 Bit: 0.792 us (need: 0.8 us high */
 #define VAL00         0   /* data line low value, e.g. for reset/latch */
 
-#define NEO_NOF_PRE         2 /* somehow need trailing values? */
+#define NEO_NOF_PRE         3 /* somehow needs trailing values? */
 #define NEO_NOF_BITS_PIXEL  24  /* 24 bits for pixel */
-#define NEO_NOF_POST        40 /* latch, low for at least 50 us (40x1.25us) */
+#define NEO_NOF_POST        10 /*40*/ /* latch, low for at least 50 us (40x1.25us) */
 #define NEO_DMA_NOF_BYTES   sizeof(transmitBuf)
 
-static bool transferComplete = FALSE;
+static volatile bool transferComplete = FALSE;
 
 static uint16_t transmitBuf[NEO_NOF_PRE+(NEO_NOF_PIXEL*NEO_NOF_BITS_PIXEL)+NEO_NOF_POST];
 
@@ -217,13 +212,26 @@ static void InitDMA(void) {
 }
 
 static uint8_t Transfer(uint32_t src) {
-  while(!transferComplete) {
-    /* wait until previous transfer is complete */
-  }
+  TMOUT1_CounterHandle handle;
+  bool isTimeout;
+
   transferComplete = FALSE;
   DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, src); /* set source address */
   DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, NEO_DMA_NOF_BYTES); /* set number of bytes to transfer */
   DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_ENABLE); /* enable request from peripheral */
+  handle = TMOUT1_GetCounter(100/TMOUT1_TICK_PERIOD_MS);
+  isTimeout = FALSE;
+  while(!transferComplete) {
+    /* wait until transfer is complete */
+    if (TMOUT1_CounterExpired(handle)) {
+      isTimeout = TRUE;
+      break; /* leave loop */
+    }
+  }
+  TMOUT1_LeaveCounter(handle);
+  if (isTimeout) {
+    return ERR_BUSY;
+  }
   return ERR_OK;
 }
 
