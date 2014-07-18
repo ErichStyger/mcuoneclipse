@@ -477,6 +477,14 @@ uint8_t %'ModuleName'%.%WriteReg8(uint8_t addr, uint8_t val);
 %include Common\Header.End
 %-
 %-BW_EVENT_DEFINITION_START
+%-BW_METHOD_BEGIN OnError
+%ifdef OnError
+%INTERFACE OnError
+void %OnError(void);
+%include Common\FXOS8700CQOnError.Inc
+
+%endif %- OnError
+%-BW_METHOD_END OnError
 %-BW_EVENT_DEFINITION_END
 %IMPLEMENTATION
 %define! Settings Common\FXOS8700CQSettings.Inc
@@ -547,6 +555,11 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   int16_t val16s;
 
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"%'ModuleName'", (unsigned char*)"\r\n", io->stdOut);
+
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+  %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), (uint8_t)%'ModuleName'_I2C_ADDR);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  I2C addr", buf, io->stdOut);
 
   if (%'ModuleName'%.isEnabled(&isEnabled)!=ERR_OK) {
     %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"FAIL!\r\n");
@@ -862,6 +875,9 @@ uint16_t %'ModuleName'%.%MeasureGetRawX(void)
   static const uint8_t addr = %'ModuleName'_OUT_X_MSB;
 
   if(%@I2C@'ModuleName'%.ReadAddress(%'ModuleName'_I2C_ADDR, (uint8_t*)&addr, sizeof(addr), &val.buf[0], sizeof(val.buf))!=ERR_OK) {
+  %if defined(OnError)
+    %OnError();
+  %endif
     return 0; /* failure */
   }
 #if %'ModuleName'_CPU_IS_LITTLE_ENDIAN
@@ -887,6 +903,9 @@ uint16_t %'ModuleName'%.%MeasureGetRawY(void)
   static const uint8_t addr = %'ModuleName'_OUT_Y_MSB;
 
   if(%@I2C@'ModuleName'%.ReadAddress(%'ModuleName'_I2C_ADDR, (uint8_t*)&addr, sizeof(addr), &val.buf[0], sizeof(val.buf))!=ERR_OK) {
+  %if defined(OnError)
+    %OnError();
+  %endif
     return 0; /* failure */
   }
 #if %'ModuleName'_CPU_IS_LITTLE_ENDIAN
@@ -912,6 +931,9 @@ uint16_t %'ModuleName'%.%MeasureGetRawZ(void)
   static const uint8_t addr = %'ModuleName'_OUT_Z_MSB;
 
   if(%@I2C@'ModuleName'%.ReadAddress(%'ModuleName'_I2C_ADDR, (uint8_t*)&addr, sizeof(addr), &val.buf[0], sizeof(val.buf))!=ERR_OK) {
+  %if defined(OnError)
+    %OnError();
+  %endif
     return 0; /* failure */
   }
 #if %'ModuleName'_CPU_IS_LITTLE_ENDIAN
@@ -1098,6 +1120,9 @@ uint8_t %'ModuleName'%.%SetFastMode(bool on)
 
   res = %@I2C@'ModuleName'%.ReadByteAddress8(%'ModuleName'_I2C_ADDR, %'ModuleName'_CTRL_REG_1, &val);
   if (res!=ERR_OK) {
+  %if defined(OnError)
+    %OnError();
+  %endif
     return res;
   }
   if (on) {
@@ -1121,6 +1146,9 @@ uint8_t %'ModuleName'%.%Enable(void)
 
   res = %@I2C@'ModuleName'%.ReadByteAddress8(%'ModuleName'_I2C_ADDR, %'ModuleName'_CTRL_REG_1, &val);
   if (res!=ERR_OK) {
+  %if defined(OnError)
+    %OnError();
+  %endif
     return res;
   }
   val |= %'ModuleName'_ACTIVE_BIT_MASK; /* enable device */
@@ -1140,6 +1168,9 @@ uint8_t %'ModuleName'%.%Disable(void)
 
   res = %@I2C@'ModuleName'%.ReadByteAddress8(%'ModuleName'_I2C_ADDR, %'ModuleName'_CTRL_REG_1, &val);
   if (res!=ERR_OK) {
+  %if defined(OnError)
+    %OnError();
+  %endif
     return res;
   }
   val &= ~%'ModuleName'_ACTIVE_BIT_MASK; /* disable device */
@@ -1160,6 +1191,9 @@ uint8_t %'ModuleName'%.%isEnabled(bool *isEnabled)
 
   res = %@I2C@'ModuleName'%.ReadByteAddress8(%'ModuleName'_I2C_ADDR, %'ModuleName'_CTRL_REG_1, &val);
   if (res!=ERR_OK) {
+  %if defined(OnError)
+    %OnError();
+  %endif
     return ERR_FAILED;
   }
   *isEnabled = (val&%'ModuleName'_ACTIVE_BIT_MASK)!=0; /* TRUE if bit is set, FALSE otherwise */
@@ -1192,6 +1226,9 @@ uint8_t %'ModuleName'%.%GetTemperature(int8_t *temperature)
   int8_t temp;
 
   if (%@I2C@'ModuleName'%.ReadByteAddress8(%'ModuleName'%.I2C_ADDR, %'ModuleName'%.DIE_TEMP, (uint8_t*)&temp) != ERR_OK) {
+  %if defined(OnError)
+    %OnError();
+  %endif
     return ERR_FAILED;
   }
   *temperature = (int8_t)(temp+%'ModuleName'_DIE_TEMP_OFFSET);
@@ -1242,6 +1279,9 @@ uint8_t %'ModuleName'%.%GetMagY(int16_t *value)
   static const uint8_t addr = %'ModuleName'%.M_OUT_Y_MSB;
 
   if(%@I2C@'ModuleName'%.ReadAddress(%'ModuleName'%.I2C_ADDR, (uint8_t*)&addr, sizeof(addr), &val.buf[0], sizeof(val.buf))!=ERR_OK) {
+  %if defined(OnError)
+    %OnError();
+  %endif
     return ERR_FAILED; /* failure */
   }
 #if %'ModuleName'_CPU_IS_LITTLE_ENDIAN
@@ -1291,6 +1331,9 @@ uint8_t %'ModuleName'%.%MagneticSensorReset(void)
   uint8_t val;
 
   if (%@I2C@'ModuleName'%.ReadByteAddress8(%'ModuleName'%.I2C_ADDR, %'ModuleName'%.CTRL_REG_2, &val)!=ERR_OK) {
+  %if defined(OnError)
+    %OnError();
+  %endif
     return ERR_FAILED;
   }
   val |= %'ModuleName'_CTRL_REG_2_MASK_RST; /* set one shot reset bit */
@@ -1309,6 +1352,9 @@ uint8_t %'ModuleName'%.%MagneticSensorReset(void)
 uint8_t %'ModuleName'%.%ReadReg8(uint8_t addr, uint8_t *val)
 {
   if (%@I2C@'ModuleName'%.ReadByteAddress8(%'ModuleName'%.I2C_ADDR, addr, val)!=ERR_OK) {
+  %if defined(OnError)
+    %OnError();
+  %endif
     return ERR_FAILED;
   }
   return ERR_OK;
@@ -1337,6 +1383,17 @@ uint8_t %'ModuleName'%.%WriteReg8(uint8_t addr, uint8_t val)
 %-
 %-
 %-BW_EVENT_IMPLEMENT_START
+%-BW_METHOD_BEGIN OnError
+%ifdef OnError
+%IMPLEMENTATION OnError
+%include Common\FXOS8700CQOnError.Inc
+void %OnError(void)
+{
+  /* Write your code here ... */
+}
+
+%endif %- OnError
+%-BW_METHOD_END OnError
 %-BW_EVENT_IMPLEMENT_END
 %INITIALIZATION
   /* ### %DeviceType "%DeviceName" init code ... */
