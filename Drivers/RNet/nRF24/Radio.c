@@ -56,6 +56,8 @@ static volatile bool RADIO_isrFlag; /* flag set by ISR */
 static void Err(unsigned char *msg) {
 %if defined(Shell)
   %@Shell@'ModuleName'%.SendStr(msg, %@Shell@'ModuleName'%.GetStdio()->stdErr);
+%else
+  (void)msg; /* not used, as no Shell used */
 %endif
 }
 
