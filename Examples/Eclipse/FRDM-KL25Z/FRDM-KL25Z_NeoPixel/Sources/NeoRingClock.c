@@ -10,13 +10,13 @@
 #include "NeoLine.h"
 
 #define CLOCK_NOF_PIXEL         60 /* number of pixels in ring */
-#define CLOCK_IDX_START_PIXEL   4  /* start index of clock */
+#define CLOCK_IDX_START_PIXEL   0  /* start index of clock */
 #define CLOCK_IDX_END_PIXEL     (CLOCK_IDX_START_PIXEL+CLOCK_NOF_PIXEL-1) /* index of last pixel */
 #define CLOCK_NOF_HOUR_MARKS    12 /* number of markings for the hours */
 
 #define CLOCK_DIMM_HOURLY_MARKS  16 /* dimming divisor for hour marks */
-#define CLOCK_DIMM_HMS_MARKS     2 /*16*/ /* dimming factor for hour, minute and seconds dots */
-#define CLOCK_MULTI_HOUR_MARKS   1 /* 1 or zero */
+#define CLOCK_DIMM_HMS_MARKS     2  /* dimming factor for hour, minute and seconds dots */
+#define CLOCK_MULTI_HOUR_MARKS   1  /* 1 or 0 */
 
 #define CLOCK_RGB_HOURLY_MARKS (0xff/CLOCK_DIMM_HOURLY_MARKS), (0xff/CLOCK_DIMM_HOURLY_MARKS), (0xff/CLOCK_DIMM_HOURLY_MARKS)
 
@@ -104,8 +104,9 @@ void CLOCK_SetTime(uint8_t hour, uint8_t min, uint8_t second) {
   CLOCK_AddMinute(min);
   CLOCK_AddSecond(second);
 }
+
 #include "TI1.h"
-#include "WAIT1.h"
+
 void CLOCK_Update(void) {
   static int prevHour=-1, prevMinute=-1, prevSecond=1;
   TIMEREC time;

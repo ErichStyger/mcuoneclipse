@@ -10,6 +10,6 @@
 
 #include "PE_Types.h"
 
-#define NEOC_NOF_PIXEL     (4+60) /*(4+(8*8)+60+24+12)*/ /*(2+(4*15))*/ /* number of pixels */
+#define NEOC_NOF_PIXEL     (60) /* number of pixels */
 
 #endif /* NEOCONFIG_H_ */

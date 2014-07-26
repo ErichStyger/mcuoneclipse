@@ -29,7 +29,7 @@ uint8_t NEOL_PixelTrail(uint8_t red, uint8_t green, uint8_t blue, NEO_PixelIdxT 
       }
     }
     NEO_TransferPixels();
-    WAIT1_Waitms(delayMs);
+    WAIT1_WaitOSms(delayMs);
   }
   return ERR_OK;
 }
