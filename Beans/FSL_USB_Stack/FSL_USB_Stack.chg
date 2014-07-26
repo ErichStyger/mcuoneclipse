@@ -3,6 +3,8 @@
 
 %set CDCDeviceGroup Value Disabled
 %set CDCDeviceGroup Expanded no
+%set CDCHostGroup Value Disabled
+%set CDCHostGroup Expanded no
 %set HIDKDeviceGroup Value Disabled
 %set HIDKDeviceGroup Expanded no
 %set HIDMDeviceGroup Value Disabled
@@ -17,6 +19,9 @@
 %if defined(USBDeviceClass) & %USBDeviceClass = "CDC Device"
   %set CDCDeviceGroup Value Enabled
   %set CDCDeviceGroup Expanded yes
+%elif defined(USBDeviceClass) & %USBDeviceClass = "CDC Host"
+  %set CDCHostGroup Value Enabled
+  %set CDCHostGroup Expanded yes
 %elif defined(USBDeviceClass) & %USBDeviceClass = "HID Keyboard Device"
   %set HIDKDeviceGroup Value Enabled
   %set HIDKDeviceGroup Expanded yes
@@ -27,7 +32,9 @@
   %set MSDHostGroup Value Enabled
   %set MSDHostGroup Expanded yes
 %endif
+
 %set CDCDeviceGroup ReadOnly yes
+%set CDCHostGroup ReadOnly yes
 %set HIDKDeviceGroup ReadOnly yes
 %set HIDMDeviceGroup ReadOnly yes
 %set MSDHostGroup ReadOnly yes

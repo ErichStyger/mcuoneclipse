@@ -64,6 +64,8 @@
 %- get and define device name from inherited sub component
 %if defined(CDCDevice)
   %define CPUDevice %@CDCDevice@CPUDevice
+%elif defined(CDCHost)
+  %define CPUDevice %@CDCHost@CPUDevice
 %elif defined(HIDKDevice)
   %define CPUDevice %@HIDKDevice@CPUDevice
 %elif defined(HIDMDevice)
@@ -367,6 +369,8 @@ byte %'ModuleName'%.%Init(void)
   /* Initialize the USB interface */
 %if USBDeviceClass="CDC Device"
   err = %@CDCDevice@'ModuleName'%.Init();
+%elif USBDeviceClass="CDC Host"
+  err = %@CDCHost@'ModuleName'%.Init();
 %elif USBDeviceClass="HID Keyboard Device"
   err = %@HIDKDevice@'ModuleName'%.Init();
 %elif USBDeviceClass="HID Mouse Device"

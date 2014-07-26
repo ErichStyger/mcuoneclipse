@@ -1,5 +1,5 @@
 %-
-%- Freescale USB Stack HID Keyboard source files
+%- Freescale USB Stack HID Mouse Device source files
 %-
 
 %- \Device\source\class -------------------------------------------

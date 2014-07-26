@@ -1,5 +1,5 @@
 %-
-%- Freescale USB Stack CDC source files
+%- Freescale USB Stack CDC Device source files
 %-
 %-
 %- \Device\source\class -------------------------------------------
