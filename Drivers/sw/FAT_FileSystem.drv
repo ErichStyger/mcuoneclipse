@@ -576,7 +576,8 @@ byte %'ModuleName'%.%Init(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Deinit
 %ifdef Deinit
-void %'ModuleName'%.%Deinit(void);
+byte %'ModuleName'%.%Deinit(void);
+%define! RetVal
 %include Common\FAT_FileSystemDeinit.Inc
 
 %endif %- Deinit
@@ -2155,8 +2156,9 @@ byte %'ModuleName'%.%Init(void)
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Deinit
 %ifdef Deinit
+%define! RetVal
 %include Common\FAT_FileSystemDeinit.Inc
-void %'ModuleName'%.%Deinit(void)
+byte %'ModuleName'%.%Deinit(void)
 {
 %for i from [0..%maxDrive]
   return %@Drive%i@'ModuleName'%.Deinit(NULL);
