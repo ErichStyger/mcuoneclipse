@@ -650,7 +650,7 @@ uint8_t %'ModuleName'%.%ConstantCarrierWave(bool turnOn);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN SetOutputPower
 %ifdef SetOutputPower
-uint8_t %'ModuleName'%.%SetOutputPower(uint8_t power);
+uint8_t %'ModuleName'%.%SetOutputPower(int8_t power);
 %define! Parpower
 %define! RetVal
 %include Common\nRF24L01SetOutputPower.Inc
@@ -1379,7 +1379,7 @@ uint8_t %'ModuleName'%.%ConstantCarrierWave(bool turnOn)
 %define! Parpower
 %define! RetVal
 %include Common\nRF24L01SetOutputPower.Inc
-uint8_t %'ModuleName'%.%SetOutputPower(uint8_t power)
+uint8_t %'ModuleName'%.%SetOutputPower(int8_t power)
 {
   uint8_t val;
 
