@@ -5,7 +5,7 @@
 %;** ===================================================================
 %include Common\GeneralMethod.inc (AppTask)
 %;**     Description :
-%;**         Call this method periodiacally from the main application
+%;**         Call this method periodically from the main application
 %include Common\GeneralParametersNone.inc
 %include Common\GeneralReturnNothing.inc
 %include Common\GeneralDamage.inc
