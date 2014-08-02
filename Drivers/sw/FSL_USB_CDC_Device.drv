@@ -468,9 +468,16 @@ byte %'ModuleName'%.%RecvChar(%'ModuleName'_TComData *Chr)
 byte %'ModuleName'%.%SendChar(%'ModuleName'_TComData Chr)
 {
   static uint8_t txBuf[%'ModuleName'%.DATA_BUFF_SIZE];
+  uint8_t res;
 
   if (%@TxBuffer@'ModuleName'%.Put(Chr)==ERR_TXFULL) { /* retry once, otherwise throw it away  */
-    if (%'ModuleName'%.%App_Task(txBuf, sizeof(txBuf))!=ERR_OK) { /* call USB handler: if active, then this will empty the buffer */
+    res = %'ModuleName'%.%App_Task(txBuf, sizeof(txBuf)); /* call USB handler: if active, then this will empty the buffer */
+    if (res==ERR_BUSOFF) { /* USB not enumerated */
+%if defined(OnError)
+      %OnError(%'ModuleName'%.USB_ERR_BUSOFF);
+%endif
+      return ERR_FAILED;
+    } else if (res!=ERR_OK) {
 %if defined(OnError)
       %OnError(%'ModuleName'%.USB_ERR_TX_CHAR);
 %endif
@@ -702,7 +709,7 @@ byte %'ModuleName'%.%App_Task(byte *txBuf, size_t txBufSize)
       if (res!=ERR_OK) {
         return res;
       }
-#if 0 /* workaround for problem in USB stack v3.1.1: if last block is 8, 16, 32, 40, 48, ... bytes, it does not get out until the next transfer? */
+#if 1 /* workaround for problem in USB stack v3.1.1: if last block is 8, 16, 32, 40, 48, ... bytes, it does not get out until the next transfer? */
       if ((i%%8)==0) {
         /* workaround: sending a dummy block of zero bytes */
         res = %'ModuleName'%.SendDataBlock(txBuf, 0);
