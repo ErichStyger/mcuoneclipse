@@ -4,7 +4,7 @@
     <Name>FreeRTOS</Name>
     <Description>FreeRTOS</Description>
     <Author>Erich Styger</Author>
-    <Version>01.368</Version>
+    <Version>01.370</Version>
     <Icon>FreeRTOS</Icon>
     <TypesFiles>PE,FreeRTOS\FreeRTOS</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -60,7 +60,7 @@
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
         <Description>Custom port settings</Description>
-        <Expanded>Yes</Expanded>
+        <Expanded>No</Expanded>
         <Children>
           <GrupItem>
             <TEnumItem>
@@ -142,7 +142,7 @@
                     <BoldName>true</BoldName>
                     <EditLine>false</EditLine>
                     <Description>Enabled</Description>
-                    <Expanded>Yes</Expanded>
+                    <Expanded>No</Expanded>
                     <DefaultValue>true</DefaultValue>
                     <DefineSymbol>YES_NO</DefineSymbol>
                     <IfDisabled>setNOTHING</IfDisabled>
@@ -154,7 +154,7 @@
                           <Hint>Clock speed of CPU, default is CPU_CORE_CLK_HZ with Processor Expert</Hint>
                           <ItemLevel>BASIC</ItemLevel>
                           <EditLine>true</EditLine>
-                          <DefaultValue>CPU_CORE_CLK_HZ /* CPU core clock from Processor Expert Cpu.h */</DefaultValue>
+                          <DefaultValue>CPU_CORE_CLK_HZ</DefaultValue>
                           <StrDefine>nothing</StrDefine>
                           <MinLength>0</MinLength>
                           <MaxLength>-1</MaxLength>
@@ -167,7 +167,7 @@
                           <Hint>Bus clock speed, default is CPU_BUS_CLK_HZ with Processor Expert</Hint>
                           <ItemLevel>BASIC</ItemLevel>
                           <EditLine>true</EditLine>
-                          <DefaultValue>CPU_BUS_CLK_HZ /* CPU bus clock from Processor Expert Cpu.h */</DefaultValue>
+                          <DefaultValue>CPU_BUS_CLK_HZ</DefaultValue>
                           <StrDefine>nothing</StrDefine>
                           <MinLength>0</MinLength>
                           <MaxLength>-1</MaxLength>
