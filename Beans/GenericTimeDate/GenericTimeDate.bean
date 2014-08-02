@@ -4,7 +4,7 @@
     <Name>GenericTimeDate</Name>
     <Description>Generic Software Time and Date component</Description>
     <Author>Erich Styger</Author>
-    <Version>01.018</Version>
+    <Version>01.020</Version>
     <Icon>GenericTimeDate</Icon>
     <TypesFiles>PE,GenericTimeDate\GenericTimeDate</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -233,6 +233,40 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>AddTicks</Name>
+        <Symbol>AddTicks</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Same as AddTick(), but multiple ticks can be added in one step.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>void</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>1</ParamCount>
+        <Parameter>
+          <ParName>nofTicks</ParName>
+          <ParType>uint16_t</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>Number of ticks to be added</ParHint>
+        </Parameter>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(uint16_t nofTicks)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

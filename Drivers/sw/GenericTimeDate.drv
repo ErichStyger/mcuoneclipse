@@ -212,6 +212,15 @@ void %'ModuleName'%.%DeInit(void);
 
 %endif %- DeInit
 %-BW_METHOD_END DeInit
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN AddTicks
+%ifdef AddTicks
+void %'ModuleName'%.%AddTicks(uint16_t nofTicks);
+%define! ParnofTicks
+%include Common\GenericTimeDateAddTicks.Inc
+
+%endif %- AddTicks
+%-BW_METHOD_END AddTicks
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -468,7 +477,6 @@ uint8_t %'ModuleName'%.%SetTime(uint8_t Hour, uint8_t Min, uint8_t Sec, uint8_t 
 void %'ModuleName'%.%AddTick(void)
 {
   const uint8_t* ptr;                                            %>40/* Pointer to ULY/LY table */
-
   %@CriticalSection@'ModuleName'%.CriticalVariable()
 
   %@CriticalSection@'ModuleName'%.EnterCritical();               %>40/* need exclusive access to tick counter */
@@ -502,6 +510,21 @@ void %'ModuleName'%.%AddTick(void)
 
 %endif %- AddTick
 %-BW_METHOD_END AddTick
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN AddTicks
+%ifdef AddTicks
+%define! ParnofTicks
+%include Common\GenericTimeDateAddTicks.Inc
+void %'ModuleName'%.%AddTicks(uint16_t nofTicks)
+{
+  while(nofTicks>0) {
+    %'ModuleName'%.%AddTick();
+    nofTicks--;
+  }
+}
+
+%endif %- AddTicks
+%-BW_METHOD_END AddTicks
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN GetTime
 %ifdef GetTime
