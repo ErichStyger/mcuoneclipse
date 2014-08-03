@@ -4,7 +4,7 @@
     <Name>SD_Card</Name>
     <Description>SD Card</Description>
     <Author>Erich Styger</Author>
-    <Version>01.168</Version>
+    <Version>01.169</Version>
     <Icon>SD_Card</Icon>
     <TypesFiles>PE,SD_Card\SD_Card</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -973,18 +973,18 @@
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>void</ReturnType>
+        <ReturnType>8bit unsigned</ReturnType>
         <RetHint>Error code</RetHint>
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>unused</ParName>
           <ParType>pointer</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint/>
+          <ParHint>dummy parameter</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(void* unused)</ANSIC>
+          <ANSIC>byte #M#_#C#(void* unused)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

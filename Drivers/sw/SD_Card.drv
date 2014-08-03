@@ -348,8 +348,9 @@ void %'ModuleName'%.%InitCommChannel(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Deinit
 %ifdef Deinit
-void %'ModuleName'%.%Deinit(void* unused);
+byte %'ModuleName'%.%Deinit(void* unused);
 %define! Parunused
+%define! RetVal
 %include Common\SD_CardDeinit.Inc
 
 %endif %- Deinit
@@ -1451,10 +1452,12 @@ void %'ModuleName'%.%InitCommChannel(void)
 %-BW_METHOD_BEGIN Deinit
 %ifdef Deinit
 %define! Parunused
+%define! RetVal
 %include Common\SD_CardDeinit.Inc
-void %'ModuleName'%.%Deinit(void* unused)
+byte %'ModuleName'%.%Deinit(void* unused)
 {
   (void)unused;
+  return ERR_OK;
 }
 
 %endif %- Deinit

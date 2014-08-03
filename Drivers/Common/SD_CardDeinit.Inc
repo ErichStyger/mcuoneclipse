@@ -7,8 +7,9 @@
 %;**     Description :
 %;**         Driver deinitialization routine.
 %include Common\GeneralParameters.inc(27)
-%;**       * unused%Parunused %>27 - 
-%include Common\GeneralReturnNothing.inc
+%;**       * unused%Parunused %>27 - dummy parameter
+%;**     Returns     :
+%;**         ---%RetVal %>27 - Error code
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine
