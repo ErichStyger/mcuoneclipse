@@ -2146,9 +2146,14 @@ dword %'ModuleName'%.%f_size(FIL *fil)
 %include Common\FAT_FileSystemInit.Inc
 byte %'ModuleName'%.%Init(void)
 {
+  uint8_t res = ERR_OK;
+
 %for i from [0..%maxDrive]
-  return %@Drive%i@'ModuleName'%.Init(NULL);
+  if (%@Drive%i@'ModuleName'%.Init(NULL)!=ERR_OK) {
+    res = ERR_FAILED;
+  }
 %endfor
+  return res;
 }
 
 %endif %- Init
@@ -2160,9 +2165,14 @@ byte %'ModuleName'%.%Init(void)
 %include Common\FAT_FileSystemDeinit.Inc
 byte %'ModuleName'%.%Deinit(void)
 {
+  uint8_t res = ERR_OK;
+
 %for i from [0..%maxDrive]
-  return %@Drive%i@'ModuleName'%.Deinit(NULL);
+  if (%@Drive%i@'ModuleName'%.Deinit(NULL)!=ERR_OK) {
+    res = ERR_FAILED;
+  }
 %endfor
+  return res;
 }
 
 %endif %- Deinit
