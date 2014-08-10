@@ -667,7 +667,7 @@ DRESULT %'ModuleName'%.disk_ioctl (
         }
         break;
       case MMC_GET_READ_BL_LEN:                                  %>40 /* get Block Length */
-        if ((%'ModuleName'%.SendCmd(SD1_CMD9, 0) == 0) && %'ModuleName'%.ReceiveDataBlock(csd, 16)) {
+        if ((%'ModuleName'%.SendCmd(%'ModuleName'%.CMD9, 0) == 0) && %'ModuleName'%.ReceiveDataBlock(csd, 16)) {
           switch((csd[5]&15)) {                                  %>40 /* READ_BL_LEN is either 9, 10 or 11, end the block size is 2^READ_BL_LEN */
             case 9: *(uint16_t*)ptr = 512; break;
             case 10: *(uint16_t*)ptr = 1024; break;
@@ -677,7 +677,7 @@ DRESULT %'ModuleName'%.disk_ioctl (
         }
         break;
       case MMC_GET_SDC_VERSION:                                  %>40 /* get CSD Version (1 byte: 1 for 1.xx or MMC, 2 for 2.0 */
-        if ((%'ModuleName'%.SendCmd(SD1_CMD9, 0) == 0) && %'ModuleName'%.ReceiveDataBlock(csd, 16)) {
+        if ((%'ModuleName'%.SendCmd(%'ModuleName'%.CMD9, 0) == 0) && %'ModuleName'%.ReceiveDataBlock(csd, 16)) {
           if ((csd[0] >> 6) == 1) {                              %>40 /* SDC ver 2.00 */
             *ptr = 2;
           } else {                                               %>40 /* SDC ver 1.XX or MMC*/
