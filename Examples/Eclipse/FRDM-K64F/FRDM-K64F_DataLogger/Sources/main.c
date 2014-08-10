@@ -31,7 +31,7 @@
 #include "Cpu.h"
 #include "Events.h"
 #include "FAT1.h"
-#include "SD1.h"
+#include "SD_SPI1.h"
 #include "FX1.h"
 #include "CI2C1.h"
 #include "SS1.h"

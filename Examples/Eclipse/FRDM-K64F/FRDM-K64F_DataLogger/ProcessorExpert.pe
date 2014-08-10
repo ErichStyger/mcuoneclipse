@@ -3,8 +3,8 @@
   <Header>
     <Name>FRDM-K64F_DataLogger</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>20</ModificationStamp>
-    <Date>2014-07-25</Date>
+    <ModificationStamp>22</ModificationStamp>
+    <Date>2014-08-10</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.10.0.RT6_b1428-0121</PEversion>
   </Header>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>32</ProjectCompNumb>
+    <ProjectCompNumb>34</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -4031,7 +4031,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.158</BeanVersion>
+    <BeanVersion>01.159</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -4289,7 +4289,7 @@
         <ItemSymbol>Drive0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>SD1</Value>
+        <Value>SD_SPI1</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -4914,7 +4914,7 @@
   </Bean>
   <Bean>
     <BeanType>SD_Card</BeanType>
-    <Name>SD1</Name>
+    <Name>SD_SPI1</Name>
     <CompNumb>13</CompNumb>
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
@@ -4929,7 +4929,7 @@
         <ItemSymbol>DeviceName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>SD1</Value>
+        <Value>SD_SPI1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>BlockSize</ItemSymbol>
@@ -6105,7 +6105,7 @@
         <ItemSymbol>OnIdleName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>SD1_OnIdle</Value>
+        <Value>SD_SPI1_OnIdle</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnError</ItemSymbol>
@@ -6121,7 +6121,7 @@
         <ItemSymbol>OnErrorName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>SD1_OnError</Value>
+        <Value>SD_SPI1_OnError</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnActivate</ItemSymbol>
@@ -6137,7 +6137,7 @@
         <ItemSymbol>OnActivateName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>SD1_OnActivate</Value>
+        <Value>SD_SPI1_OnActivate</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnDeactivate</ItemSymbol>
@@ -6153,7 +6153,7 @@
         <ItemSymbol>OnDeactivateName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>SD1_OnDeactivate</Value>
+        <Value>SD_SPI1_OnDeactivate</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnBlockReceived</ItemSymbol>
@@ -6169,7 +6169,7 @@
         <ItemSymbol>OnBlockReceivedName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>SD1_OnBlockReceived</Value>
+        <Value>SD_SPI1_OnBlockReceived</Value>
       </ItemState>
     </Events>
   </Bean>
@@ -9917,7 +9917,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.022</BeanVersion>
+    <BeanVersion>01.024</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -10377,7 +10377,30 @@
         <UsrMethodName>Deinit</UsrMethodName>
       </ItemState>
     </Methods>
-    <Events />
+    <Events>
+      <ItemState>
+        <ItemSymbol>EventModule</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>Events</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnError</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>no</LastUserSel>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnErrorName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>FX1_OnError</Value>
+      </ItemState>
+    </Events>
   </Bean>
   <Bean>
     <BeanType>GenericI2C</BeanType>
