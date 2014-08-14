@@ -29,8 +29,8 @@
 #define CLOCK_IDX_END_PIXEL     (CLOCK_IDX_START_PIXEL+CLOCK_NOF_PIXEL-1) /* index of last pixel */
 #define CLOCK_NOF_HOUR_MARKS    12 /* number of markings for the hours */
 
-#define CLOCK_DIMM_HOURLY_MARKS  16 /* dimming divisor for hour marks */
-#define CLOCK_DIMM_HMS_MARKS     2  /* dimming factor for hour, minute and seconds dots */
+#define CLOCK_DIMM_HOURLY_MARKS  16 /* >=1, dimming divisor for hour marks */
+#define CLOCK_DIMM_HMS_MARKS     1  /* >=1, dimming divisor for hour, minute and seconds dots */
 #define CLOCK_MULTI_HOUR_MARKS   1  /* 1 or 0 */
 
 #define CLOCK_RGB_HOURLY_MARKS (0xff/CLOCK_DIMM_HOURLY_MARKS), (0xff/CLOCK_DIMM_HOURLY_MARKS), (0xff/CLOCK_DIMM_HOURLY_MARKS)
