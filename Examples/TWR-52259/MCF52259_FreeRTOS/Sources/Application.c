@@ -10,6 +10,8 @@
 #include "LED4.h"
 #include "FRTOS1.h"
 
+int myCounter;
+
 static portTASK_FUNCTION(Task1, pvParameters) {
   (void)pvParameters; /* parameter not used */
   for(;;) {
@@ -37,6 +39,7 @@ static portTASK_FUNCTION(Task3, pvParameters) {
 static portTASK_FUNCTION(Task4, pvParameters) {
   (void)pvParameters; /* parameter not used */
   for(;;) {
+    myCounter++;
     LED4_Neg();
     FRTOS1_vTaskDelay(800/portTICK_RATE_MS);
   }
