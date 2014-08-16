@@ -9,7 +9,8 @@
 %include Common\GeneralParameters.inc(27)
 %;**       * DeviceDataPtr%ParDeviceDataPtr %>27 - Pointer to RTOS
 %;** %>29 structure
-%include Common\GeneralReturnNothing.inc
+%;**     Returns     :
+%;**         ---%RetVal %>27 - Error code
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

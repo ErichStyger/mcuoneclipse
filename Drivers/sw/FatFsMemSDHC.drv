@@ -200,8 +200,9 @@ byte %'ModuleName'%.%Init(LDD_TUserData *UserDataPtr);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN Deinit
 %ifdef Deinit
-void %'ModuleName'%.%Deinit(LDD_TDeviceData *DeviceDataPtr);
+byte %'ModuleName'%.%Deinit(LDD_TDeviceData *DeviceDataPtr);
 %define! ParDeviceDataPtr
+%define! RetVal
 %include Common\FatFsMemSDHCDeinit.Inc
 
 %endif %- Deinit
@@ -489,12 +490,14 @@ byte %'ModuleName'%.%Init(LDD_TUserData *UserDataPtr)
 %-BW_METHOD_BEGIN Deinit
 %ifdef Deinit
 %define! ParDeviceDataPtr
+%define! RetVal
 %include Common\FatFsMemSDHCDeinit.Inc
-void %'ModuleName'%.%Deinit(LDD_TDeviceData *DeviceDataPtr)
+byte %'ModuleName'%.%Deinit(LDD_TDeviceData *DeviceDataPtr)
 {
   (void)DeviceDataPtr; /* not used */
   /* Deinit components/devices */
   %@SDHC@'ModuleName'%.Deinit(SD.SDHCPtr);
+  return ERR_OK;
 }
 
 %endif %- Deinit

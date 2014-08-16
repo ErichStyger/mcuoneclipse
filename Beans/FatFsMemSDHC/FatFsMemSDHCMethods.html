@@ -245,9 +245,11 @@ LI.EXP {
  - Method to deinitialize the device driver
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void Deinit(LDD_TDeviceData *DeviceDataPtr)<br />
+<br /><i>ANSIC prototype:</i> byte Deinit(LDD_TDeviceData *DeviceDataPtr)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>DeviceDataPtr: Pointer to LDD_TDeviceData</i> - Pointer to RTOS structure</li>
+<li><i>Return value:byte</i> - Error code
+</li>
 </ul><br />
 </li>
 <li><a name="Activate">
