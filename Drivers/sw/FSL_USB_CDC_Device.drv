@@ -565,13 +565,13 @@ void %'ModuleName'%.%App_Callback(byte controller_ID, byte event_type, void *val
                                            DIC_BULK_OUT_ENDP_PACKET_SIZE);
 #endif
     start_app = TRUE;
-  } else if ((event_type == USB_APP_DATA_RECEIVED)&&(start_transactions==TRUE)) {
+  } else if ((event_type==USB_APP_DATA_RECEIVED) && (start_transactions==TRUE)) {
     /* Copy Received Data buffer to Application Buffer */
     USB_PACKET_SIZE BytesToBeCopied;
     APP_DATA_STRUCT *dp_rcv = (APP_DATA_STRUCT*)val;
     uint_8 index;
 
-    BytesToBeCopied = (USB_PACKET_SIZE)((dp_rcv->data_size > %'ModuleName'%.DATA_BUFF_SIZE) ? %'ModuleName'%.DATA_BUFF_SIZE:dp_rcv->data_size);
+    BytesToBeCopied = (USB_PACKET_SIZE)((dp_rcv->data_size>%'ModuleName'%.DATA_BUFF_SIZE) ? %'ModuleName'%.DATA_BUFF_SIZE:dp_rcv->data_size);
     for(index = 0; index<BytesToBeCopied ; index++) {
       if (%@RxBuffer@'ModuleName'%.Put(dp_rcv->data_ptr[index])!=ERR_OK) {
         /* Failed to put byte into buffer. Is the buffer to small? Then increase the Rx buffer.
@@ -585,7 +585,7 @@ void %'ModuleName'%.%App_Callback(byte controller_ID, byte event_type, void *val
       }
     }
     (void)USB_Class_CDC_Interface_DIC_Recv_Data(CONTROLLER_ID, NULL, 0); /* see http://eprints.utar.edu.my/143/1/BI-2011-0708672-1.pdf, page 131 */
-  } else if ((event_type == USB_APP_SEND_COMPLETE)&&(start_transactions==TRUE)) {
+  } else if ((event_type==USB_APP_SEND_COMPLETE) && (start_transactions==TRUE)) {
     transactionOngoing = FALSE;
     /* Previous Send is complete. Queue next receive */
 #if HIGH_SPEED_DEVICE
