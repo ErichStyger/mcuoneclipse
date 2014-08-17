@@ -23,18 +23,19 @@ Package from component(s):
 - CTouchScanner version 01.021
 - CTouchSensor version 01.032
 - DCF77 version 01.060
-- FAT_FileSystem version 01.158
-- FatFsMem_USB_MSD version 01.020
-- FatFsMemSDHC version 01.026
+- FAT_FileSystem version 01.159
+- FatFsMem_USB_MSD version 01.021
+- FatFsMemSDHC version 01.027
 - FontDisplay version 01.195
-- FreeRTOS version 01.368
+- FreeRTOS version 01.370
 - FreeRTOSTrace version 01.003
 - FSL_USB_CDC_Device version 01.033
+- FSL_USB_CDC_Host version 01.002
 - FSL_USB_HID_Keyboard_Device version 01.054
 - FSL_USB_HID_Mouse_Device version 01.069
 - FSL_USB_MSD_Host version 01.018
-- FSL_USB_Stack version 01.025
-- FXOS8700CQ version 01.022
+- FSL_USB_Stack version 01.029
+- FXOS8700CQ version 01.024
 - GDisplay version 01.190
 - GenericBitIO version 01.065
 - GenericI2C version 01.023
@@ -42,7 +43,7 @@ Package from component(s):
 - GenericSPI version 01.029
 - GenericSWI2C version 01.007
 - GenericSWSPI version 01.020
-- GenericTimeDate version 01.018
+- GenericTimeDate version 01.020
 - GFont version 01.123
 - HardFault version 01.008
 - I2CSpy version 01.009
@@ -61,7 +62,6 @@ Package from component(s):
 - LowPower version 01.016
 - MAG3110 version 01.010
 - MaxonF2140 version 01.001
-- MC13192 version 01.169
 - MC34673 version 01.019
 - minIni version 01.037
 - MMA7260Q version 01.111
@@ -69,10 +69,10 @@ Package from component(s):
 - MMA8451Q version 01.028
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 13.07.2014
+created 17.08.2014
 
 Package from component(s):
-- nRF24L01 version 01.080
+- nRF24L01 version 01.083
 - OLED version 01.045
 - PCA9554 version 01.024
 - PCA9554BitIO version 01.037
@@ -88,9 +88,9 @@ Package from component(s):
 - RTC_Maxim version 01.009
 - S19 version 01.034
 - S65Sharp version 01.082
-- SD_Card version 01.168
+- SD_Card version 01.169
 - Servo version 01.066
-- Shell version 01.047
+- Shell version 01.048
 - SimpleEvents version 01.047
 - SMAC version 01.009
 - SPHY version 01.108
@@ -120,4 +120,5 @@ Package from component(s):
 - UTI version 01.125
 - Utility version 01.105
 - Wait version 01.067
-created 13.07.2014
+- XFormat version 01.012
+created 17.08.2014
