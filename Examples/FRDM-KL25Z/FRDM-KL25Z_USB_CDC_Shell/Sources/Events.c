@@ -58,6 +58,29 @@ void TI1_OnInterrupt(void)
   TMOUT1_AddTick();
 }
 
+/*
+** ===================================================================
+**     Event       :  CDC1_OnError (module Events)
+**
+**     Component   :  CDC1 [FSL_USB_CDC_Device]
+**     Description :
+**         Hook called in case of an error
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         error           - Error code
+**     Returns     : Nothing
+** ===================================================================
+*/
+//Rx1_ElementType nRX_Buffer;
+void CDC1_OnError(byte error)
+{
+#if 0
+  if (error==CDC1_USB_ERR_RX_PUT) { /* not enough space in input buffer */
+    (void)Rx1_Get(&nRX_Buffer); /* free up some space in Rx buffer */
+  }
+#endif
+}
+
 /* END Events */
 
 /*

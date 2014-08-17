@@ -42,6 +42,7 @@
 #include "MMA1.h"
 #include "I2C1.h"
 #include "CS1.h"
+#include "XF1.h"
 #include "TU1.h"
 #include "TU3.h"
 #include "PE_LDD.h"

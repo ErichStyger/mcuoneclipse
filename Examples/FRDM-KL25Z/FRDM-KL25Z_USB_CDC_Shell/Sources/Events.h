@@ -79,6 +79,21 @@ void Cpu_OnNMIINT(void);
 */
 void TI1_OnInterrupt(void);
 
+void CDC1_OnError(byte error);
+/*
+** ===================================================================
+**     Event       :  CDC1_OnError (module Events)
+**
+**     Component   :  CDC1 [FSL_USB_CDC_Device]
+**     Description :
+**         Hook called in case of an error
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         error           - Error code
+**     Returns     : Nothing
+** ===================================================================
+*/
+
 /* END Events */
 #endif /* __Events_H*/
 

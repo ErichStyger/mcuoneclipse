@@ -38,6 +38,7 @@
 #include "MMA1.h"
 #include "I2C1.h"
 #include "CS1.h"
+#include "XF1.h"
 #include "TU1.h"
 #include "TU3.h"
 /* Including shared modules, which are used for whole project */
