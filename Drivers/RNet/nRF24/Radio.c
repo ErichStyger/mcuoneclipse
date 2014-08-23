@@ -49,6 +49,7 @@ typedef enum RADIO_AppStatusKind {
 static RADIO_AppStatusKind RADIO_AppStatus = RADIO_INITIAL_STATE;
 static RPHY_PacketDesc radioRx;
 static uint8_t radioRxBuf[RPHY_BUFFER_SIZE];
+static uint8_t RADIO_CurrChannel = RADIO_CHANNEL_DEFAULT;
 
 /* need to have this in case RF device is still added to project */
 static volatile bool RADIO_isrFlag; /* flag set by ISR */
@@ -281,6 +282,7 @@ static void RADIO_HandleStateMachine(void) {
 }
 
 uint8_t RADIO_SetChannel(uint8_t channel) {
+  RADIO_CurrChannel = channel;
   return %@nRF24L01p@'ModuleName'%.SetChannel(channel);
 }
 
@@ -300,7 +302,7 @@ uint8_t RADIO_PowerUp(void) {
 #else
   %@nRF24L01p@'ModuleName'%.SetStaticPipePayload(0, RPHY_PAYLOAD_SIZE); /* static number of payload bytes we want to send and receive */
 #endif
-  (void)RADIO_SetChannel(RADIO_CHANNEL_DEFAULT);
+  (void)RADIO_SetChannel(RADIO_CurrChannel);
 
   /* Set RADDR and TADDR as the transmit address since we also enable auto acknowledgment */
   %@nRF24L01p@'ModuleName'%.WriteRegisterData(%@nRF24L01p@'ModuleName'%.RX_ADDR_P0, (uint8_t*)RADIO_TADDR, sizeof(RADIO_TADDR));
@@ -406,7 +408,9 @@ static void RADIO_PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   
   (void)%@nRF24L01p@'ModuleName'%.GetChannel(&val0);
   %@Utility@'ModuleName'%.Num8uToStr(buf, sizeof(buf), val0);
-  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" (HW), ");
+  %@Utility@'ModuleName'%.strcatNum8u(buf, sizeof(buf), RADIO_CurrChannel);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)" (SW)\r\n");
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  channel", buf, io->stdOut);
 
   (void)%@nRF24L01p@'ModuleName'%.GetOutputPower(&val);
@@ -568,4 +572,5 @@ void RADIO_Deinit(void) {
 
 void RADIO_Init(void) {
   RADIO_isSniffing = FALSE;
+  RADIO_CurrChannel = RADIO_CHANNEL_DEFAULT;
 }
