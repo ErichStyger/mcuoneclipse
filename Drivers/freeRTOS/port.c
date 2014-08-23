@@ -892,8 +892,11 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
        * periods (not the ulReload value which accounted for part ticks). 
        */
       GET_TICK_CURRENT_VAL(&tmp);
+#if COUNTS_UP
+      ulCompletedSysTickIncrements = tmp;
+#else
       ulCompletedSysTickIncrements = (xExpectedIdleTime*UL_TIMER_COUNTS_FOR_ONE_TICK)-tmp;
-
+#endif
       /* How many complete tick periods passed while the processor was waiting? */
       ulCompleteTickPeriods = ulCompletedSysTickIncrements/UL_TIMER_COUNTS_FOR_ONE_TICK;
 
