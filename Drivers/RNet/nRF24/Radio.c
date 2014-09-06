@@ -67,7 +67,7 @@ void RADIO_OnInterrupt(void) {
   RADIO_isrFlag = TRUE;
 }
 
-static uint8_t RADIO_Flush(void) {
+static uint8_t RADIO_FlushQueues(void) {
   uint8_t res = ERR_OK;
   
   if (RPHY_FlushRxQueue()!=ERR_OK) {
@@ -76,9 +76,13 @@ static uint8_t RADIO_Flush(void) {
   if (RPHY_FlushTxQueue()!=ERR_OK) {
     res = ERR_FAILED;
   }
+  return res;
+}
+
+static uint8_t RADIO_Flush(void) {
   %@nRF24L01p@'ModuleName'%.Write(%@nRF24L01p@'ModuleName'%.FLUSH_RX); /* flush old data */
   %@nRF24L01p@'ModuleName'%.Write(%@nRF24L01p@'ModuleName'%.FLUSH_TX); /* flush old data */
-  return res;
+  return ERR_OK;
 }
 
 uint8_t RADIO_PowerDown(void) {
@@ -556,6 +560,10 @@ uint8_t RADIO_ParseCommand(const unsigned char *cmd, bool *handled, const %@Shel
     *handled = TRUE;
     if (RADIO_Flush()!=ERR_OK) {
       %@Shell@'ModuleName'%.SendStr((unsigned char*)"Flushing failed!\r\n", io->stdErr);
+      res = ERR_FAILED;
+    }
+    if (RADIO_FlushQueues()!=ERR_OK) {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"Flushing queues failed!\r\n", io->stdErr);
       res = ERR_FAILED;
     }
   } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, (char*)"radio printreg")==0) {
