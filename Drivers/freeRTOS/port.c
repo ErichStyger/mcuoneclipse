@@ -1013,8 +1013,8 @@ void vPortEnableVFP(void) {
   __asm volatile (
     "  ldr.w r0, =0xE000ED88  \n" /* CAPCR, 0xE000ED88 */
     "  ldr r1, [r0]           \n" /* read CAPR */
-    /* Enable CP10 and CP11 coprocessors, then save back. */
-    "  orr r1, r1, #(0xf<<20) \n" /* wait for store to complete */
+    "  orr r1, r1, #(0xf<<20) \n" /* enable CP10 and CP11 coprocessors */
+    "  str r1, [r0]           \n" /* store to new value back */
     : /* no output */
     : /* no input */
     : "r0","r1" /* clobber */
@@ -1027,9 +1027,8 @@ __asm void vPortEnableVFP(void) {
 	/* The FPU enable bits are in the CPACR. */
 	ldr.w r0, =0xE000ED88
 	ldr	r1, [r0]
-
 	/* Enable CP10 and CP11 coprocessors, then save back. */
-	orr	r1, r1, #( 0xf << 20 )
+	orr	r1, r1, #(0xf<<20)
 	str r1, [r0]
 	bx	r14
 	nop
