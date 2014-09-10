@@ -736,14 +736,14 @@ uint8_t %'ModuleName'%.%Init(void)
 void %'ModuleName'%.%CalibrateX1g(void)
 {
   /* assumption is that accelerometer is placed with 1g for X and 0g for Y and Z */
-  uint32_t X=0, Y=0, Z=0;
+  int32_t X=0, Y=0, Z=0;
   uint8_t i;
 
-  /* Get the raw data */
+  /* Get the raw data and remove 2 bits (16bit to 14bit) */
   for (i=0; i<8; i++) {
-   X += %'ModuleName'%.%MeasureGetRawX();
-   Y += %'ModuleName'%.%MeasureGetRawY();
-   Z += %'ModuleName'%.%MeasureGetRawZ();
+   X += ((int16_t)%'ModuleName'%.%MeasureGetRawX() >> 2);
+   Y += ((int16_t)%'ModuleName'%.%MeasureGetRawY() >> 2);
+   Z += ((int16_t)%'ModuleName'%.%MeasureGetRawZ() >> 2);
   }
   /* build average of 8 measured values */
   X >>= 3;
@@ -751,6 +751,7 @@ void %'ModuleName'%.%CalibrateX1g(void)
   Z >>= 3;
   /* store the calibration values */
   /* offset: both Y and Z shall have zero g */
+  sCalValues.NzOff = (X - (1000 << 2));
   sCalValues.NyOff = (int16_t)Y;
   sCalValues.NzOff = (int16_t)Z;
 }
@@ -764,14 +765,14 @@ void %'ModuleName'%.%CalibrateX1g(void)
 void %'ModuleName'%.%CalibrateY1g(void)
 {
   /* assumption is that accelerometer is placed with 1g for Y and 0g for X and Z */
-  uint32_t X=0, Y=0, Z=0;
+  int32_t X=0, Y=0, Z=0;
   uint8_t i;
 
-  /* Get the raw data */
+  /* Get the raw data and remove 2 bits (16bit to 14bit) */
   for (i=0; i<8; i++) {
-   X += %'ModuleName'%.%MeasureGetRawX();
-   Y += %'ModuleName'%.%MeasureGetRawY();
-   Z += %'ModuleName'%.%MeasureGetRawZ();
+   X += ((int16_t)%'ModuleName'%.%MeasureGetRawX() >> 2);
+   Y += ((int16_t)%'ModuleName'%.%MeasureGetRawY() >> 2);
+   Z += ((int16_t)%'ModuleName'%.%MeasureGetRawZ() >> 2);
   }
   /* build average of 8 measured values */
   X >>= 3;
@@ -779,8 +780,9 @@ void %'ModuleName'%.%CalibrateY1g(void)
   Z >>= 3;
   /* store the calibration values */
   /* offset: both X and Z shall have zero g */
-  sCalValues.NxOff = (int16_t)X;
-  sCalValues.NzOff = (int16_t)Z;
+  sCalValues.NxOff = X;
+  sCalValues.NzOff = (Y - (1000 << 2));
+  sCalValues.NzOff = Z;;
 }
 
 %endif %- CalibrateY1g
@@ -792,14 +794,14 @@ void %'ModuleName'%.%CalibrateY1g(void)
 void %'ModuleName'%.%CalibrateZ1g(void)
 {
   /* assumption is that accelerometer is placed with 1g for Z and 0g for X and Y */
-  uint32_t X=0, Y=0, Z=0;
+  int32_t X=0, Y=0, Z=0;
   uint8_t i;
 
-  /* Get the raw data */
+  /* Get the raw data and remove 2 bits (16bit to 14bit) */
   for (i=0; i<8; i++) {
-   X += %'ModuleName'%.%MeasureGetRawX();
-   Y += %'ModuleName'%.%MeasureGetRawY();
-   Z += %'ModuleName'%.%MeasureGetRawZ();
+   X += ((int16_t)%'ModuleName'%.%MeasureGetRawX() >> 2);
+   Y += ((int16_t)%'ModuleName'%.%MeasureGetRawY() >> 2);
+   Z += ((int16_t)%'ModuleName'%.%MeasureGetRawZ() >> 2);
   }
   /* build average of 8 measured values */
   X >>= 3;
@@ -807,8 +809,9 @@ void %'ModuleName'%.%CalibrateZ1g(void)
   Z >>= 3;
   /* store the calibration values */
   /* offset: both X and Y shall have zero g (midpoint) */
-  sCalValues.NxOff = (int16_t)X;
-  sCalValues.NyOff = (int16_t)Y;
+  sCalValues.NxOff = X;
+  sCalValues.NyOff = Y;
+  sCalValues.NzOff = (Z - (1000 << 2));
 }
 
 %endif %- CalibrateZ1g
@@ -820,11 +823,7 @@ void %'ModuleName'%.%CalibrateZ1g(void)
 %include Common\FXOS8700CQGetXmg.Inc
 int16_t %'ModuleName'%.%GetXmg(void)
 {
-  int16_t val;
-
-  val = %'ModuleName'%.%GetX();
-  /* with 14bits and 2g mode, each count corresponds to 0.25 mg */
-  return (int16_t)((val>>2)/4); /* remove 2 bits (16bit to 14bit) and scale */
+  return %'ModuleName'%.%GetX() / 4;
 }
 
 %endif %- GetXmg
@@ -836,11 +835,7 @@ int16_t %'ModuleName'%.%GetXmg(void)
 %include Common\FXOS8700CQGetYmg.Inc
 int16_t %'ModuleName'%.%GetYmg(void)
 {
-  int16_t val;
-
-  val = %'ModuleName'%.%GetY();
-  /* with 14bits and 2g mode, each count corresponds to 0.25 mg */
-  return (int16_t)((val>>2)/4); /* remove 2 bits (16bit to 14bit) and scale */
+  return %'ModuleName'%.%GetY() / 4;
 }
 
 %endif %- GetYmg
@@ -852,11 +847,7 @@ int16_t %'ModuleName'%.%GetYmg(void)
 %include Common\FXOS8700CQGetZmg.Inc
 int16_t %'ModuleName'%.%GetZmg(void)
 {
-  int16_t val;
-
-  val = %'ModuleName'%.%GetZ();
-  /* with 14bits and 2g mode, each count corresponds to 0.25 mg */
-  return (int16_t)((val>>2)/4); /* remove 2 bits (16bit to 14bit) and scale */
+  return %'ModuleName'%.%GetZ() / 4;
 }
 
 %endif %- GetZmg
@@ -1026,8 +1017,8 @@ int16_t %'ModuleName'%.%GetX(void)
 {
   int16_t value;
 
-  value = (int16_t)%'ModuleName'%.%MeasureGetRawX();
-  value += CalNxOff; /* adjust with calibration offset */
+  value = (int16_t)%'ModuleName'%.%MeasureGetRawX() >> 2; /* remove 2 bits (16bit to 14bit) */
+  value -= CalNxOff; /* adjust with calibration offset */
   return value;
 }
 
@@ -1042,8 +1033,8 @@ int16_t %'ModuleName'%.%GetY(void)
 {
   int16_t value;
 
-  value = (int16_t)%'ModuleName'%.%MeasureGetRawY();
-  value += CalNyOff; /* adjust with calibration offset */
+  value = (int16_t)%'ModuleName'%.%MeasureGetRawY() >> 2; /* remove 2 bits (16bit to 14bit) */
+  value -= CalNyOff; /* adjust with calibration offset */
   return value;
 }
 
@@ -1058,8 +1049,8 @@ int16_t %'ModuleName'%.%GetZ(void)
 {
   int16_t value;
 
-  value = (int16_t)%'ModuleName'%.%MeasureGetRawZ();
-  value += CalNzOff; /* adjust with calibration offset */
+  value = (int16_t)%'ModuleName'%.%MeasureGetRawZ() >> 2; /* remove 2 bits (16bit to 14bit) */
+  value -= CalNzOff; /* adjust with calibration offset */
   return value;
 }
 
