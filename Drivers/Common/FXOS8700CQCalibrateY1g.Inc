@@ -6,7 +6,7 @@
 %include Common\GeneralMethod.inc (CalibrateY1g)
 %;**     Description :
 %;**         Performs a calibration of the sensor. It is assumed that the
-%;**         Y and Z sensors have 0 g, and the X sensor has 1 g.
+%;**         X and Z sensors have 0 g, and the Y sensor has 1 g.
 %include Common\GeneralParametersNone.inc
 %include Common\GeneralReturnNothing.inc
 %include Common\GeneralDamage.inc
