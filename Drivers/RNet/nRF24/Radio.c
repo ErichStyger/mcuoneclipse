@@ -67,7 +67,7 @@ void RADIO_OnInterrupt(void) {
   RADIO_isrFlag = TRUE;
 }
 
-static uint8_t RADIO_FlushQueues(void) {
+uint8_t RADIO_FlushQueues(void) {
   uint8_t res = ERR_OK;
   
   if (RPHY_FlushRxQueue()!=ERR_OK) {
