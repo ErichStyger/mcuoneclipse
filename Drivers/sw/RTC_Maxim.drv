@@ -503,12 +503,15 @@ static byte DateCmd(const unsigned char *cmd, %@Shell@'ModuleName'%.ConstStdIOTy
       %OnDateSet(day, month, year); /* call user event */
       %endif
       res = %'ModuleName'%.%SetDate(year, month, day);
-      if (res != ERR_OK) {
+      if (res!=ERR_OK) {
         %@Shell@'ModuleName'%.SendStr((unsigned char*)"*** Failure setting RTC\r\n", io->stdErr);
         res = ERR_FAILED;
+      } else {
+        /* note: spending some time here, as the RTC is busy writing data, we will read data back below */
+        %@Shell@'ModuleName'%.SendStr((unsigned char*)"Reading date from RTC: ", io->stdOut);
       }
     } else {
-      %@Shell@'ModuleName'%.SendStr((unsigned char*)"*** error while reading command! ***", io->stdErr);
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"*** Error while reading command! ***", io->stdErr);
       %@Shell@'ModuleName'%.SendStr((void *)cmd, io->stdErr);
       %@Shell@'ModuleName'%.SendStr((unsigned char*)"\r\n", io->stdErr);
       res = ERR_FAILED;
@@ -520,7 +523,7 @@ static byte DateCmd(const unsigned char *cmd, %@Shell@'ModuleName'%.ConstStdIOTy
 
     buf[0]='\0';
     if (AddHWRTCDate(buf, sizeof(buf))!=ERR_OK) {
-      %@Shell@'ModuleName'%.SendStr((unsigned char*)"***Failed to get RTC date\r\n", io->stdErr);
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"*** Failed to get RTC date\r\n", io->stdErr);
       res = ERR_FAILED;
     } else {
       %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
@@ -546,6 +549,9 @@ static byte TimeCmd(const unsigned char *cmd, %@Shell@'ModuleName'%.ConstStdIOTy
       if (res != ERR_OK) {
         %@Shell@'ModuleName'%.SendStr((unsigned char*)"*** Failure setting RTC time\r\n", io->stdErr);
         res = ERR_FAILED;
+      } else {
+        /* note: spending some time here, as the RTC is busy writing data, we will read data back below */
+        %@Shell@'ModuleName'%.SendStr((unsigned char*)"Reading time from RTC: ", io->stdOut);
       }
     } else {
       %@Shell@'ModuleName'%.SendStr((unsigned char*)"*** Error while reading command: ", io->stdErr);
@@ -560,7 +566,7 @@ static byte TimeCmd(const unsigned char *cmd, %@Shell@'ModuleName'%.ConstStdIOTy
 
     buf[0] = '\0';
     if (AddHWRTCTime(buf, sizeof(buf))!=ERR_OK) {
-      %@Shell@'ModuleName'%.SendStr((unsigned char*)"***Failed to get RTC time\r\n", io->stdErr);
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"*** Failed to get RTC time\r\n", io->stdErr);
       res = ERR_FAILED;
     } else {
       %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
@@ -576,13 +582,13 @@ static byte PrintStatus(%@Shell@'ModuleName'%.ConstStdIOType *io) {
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"%'ModuleName'", (const unsigned char*)"", io->stdOut);
   buf[0] = '\0';
   if (AddHWRTCDate(buf, sizeof(buf))!=ERR_OK) {
-    %@Shell@'ModuleName'%.SendStr((unsigned char*)"***Failed to get RTC date!\r\n", io->stdErr);
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"*** Failed to get RTC date!\r\n", io->stdErr);
     return ERR_FAILED;
   }
   %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
   %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)", ");
   if (AddHWRTCTime(buf, sizeof(buf))!=ERR_OK) {
-    %@Shell@'ModuleName'%.SendStr((unsigned char*)"***Failed to get RTC time!\r\n", io->stdErr);
+    %@Shell@'ModuleName'%.SendStr((unsigned char*)"*** Failed to get RTC time!\r\n", io->stdErr);
     return ERR_FAILED;
   }
   %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
