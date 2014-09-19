@@ -85,6 +85,34 @@ static uint8_t RADIO_Flush(void) {
   return ERR_OK;
 }
 
+bool RADIO_CanDoPowerDown(void) {
+  if (RADIO_isrFlag) {
+    return FALSE; /* interrupt pending */
+  }
+  switch(RADIO_AppStatus) {
+    case RADIO_TRANSMIT_DATA:
+    case RADIO_WAITING_DATA_SENT:
+    case RADIO_TIMEOUT:
+      return FALSE; /* sending/receiving data, cannot power down */
+
+    case RADIO_INITIAL_STATE:
+    case RADIO_RECEIVER_ALWAYS_ON:
+    case RADIO_READY_FOR_TX_RX_DATA:
+    case RADIO_CHECK_TX:
+    case RADIO_POWER_DOWN:
+      break; /* check other conditions */
+    default:
+      break;
+  } /* switch */
+  if (RMSG_RxQueueNofItems()!=0) {
+    return FALSE; /* items received, cannot power down */
+  }
+  if (RMSG_TxQueueNofItems()!=0) {
+    return FALSE; /* items to be sent, cannot power down */
+  }
+  return TRUE; /* ok to power down */
+}
+
 uint8_t RADIO_PowerDown(void) {
   uint8_t res;
   

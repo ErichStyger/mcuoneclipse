@@ -13,6 +13,6 @@
 #include "RNetConf.h"
 #include "Radio.h"
 
-void Radio_OnInterrupt(void);
+void RADIO_OnInterrupt(void);
 
 #endif /* RADIO_NRF24_H_ */

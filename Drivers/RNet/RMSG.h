@@ -14,6 +14,18 @@
 #include "RPHY.h"
 
 /*!
+ * \brief Returns the number of messages in the Rx queue
+ * \return Number of items in the Rx queue
+ */
+unsigned int RMSG_RxQueueNofItems(void);
+
+/*!
+ * \brief Returns the number of messages in the Tx queue
+ * \return Number of items in the Tx queue
+ */
+unsigned int RMSG_TxQueueNofItems(void);
+
+/*!
  * \brief Flushes the Rx queue (makes it empty).
  * \return Error code, ERR_OK for everything fine.
  */

@@ -22,6 +22,14 @@
 
 static xQueueHandle RMSG_MsgRxQueue, RMSG_MsgTxQueue; /* queue for messages,  format is: kind(8bit) dataSize(8bit) data */
 
+unsigned int RMSG_RxQueueNofItems(void) {
+  return (unsigned int)%@RTOS@'ModuleName'%.uxQueueMessagesWaiting(RMSG_MsgRxQueue);
+}
+
+unsigned int RMSG_TxQueueNofItems(void) {
+  return (unsigned int)%@RTOS@'ModuleName'%.uxQueueMessagesWaiting(RMSG_MsgTxQueue);
+}
+
 uint8_t RMSG_FlushRxQueue(void) {
   if (%@RTOS@'ModuleName'%.xQueueReset(RMSG_MsgRxQueue)!=pdPASS) {
     return ERR_FAILED;

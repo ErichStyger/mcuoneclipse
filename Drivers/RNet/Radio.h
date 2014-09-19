@@ -38,6 +38,12 @@ uint8_t RADIO_SetChannel(uint8_t channel);
 uint8_t RADIO_PowerUp(void);
 
 /*! 
+ * \brief Function to determine if we could power down the radio.
+ * \return TRUE if there is no transmission pending so we can power down the radio.
+ */
+bool RADIO_CanDoPowerDown(void);
+
+/*! 
  * \brief Power down the radio.
  * \return Error code, ERR_OK if everything is ok.
  */
