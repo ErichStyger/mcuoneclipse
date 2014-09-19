@@ -512,7 +512,7 @@ byte %'ModuleName'%.%ReadBlock(void* data, word dataSize, %'ModuleName'_EnumSend
 %if defined(LDD_I2C)
 %if defined(Timeout)
   %@Timeout@'ModuleName'%.CounterHandle timeout;
-  bool isTimeout;
+  bool isTimeout=FALSE;
 %endif
 %else
   word nof;
@@ -602,7 +602,7 @@ byte %'ModuleName'%.%WriteBlock(void* data, word dataSize, %'ModuleName'_EnumSen
 %endif
 %if defined(Timeout)
   %@Timeout@'ModuleName'%.CounterHandle timeout;
-  bool isTimeout;
+  bool isTimeout=FALSE;
 %endif
   byte res = ERR_OK;
 
@@ -700,7 +700,7 @@ byte %'ModuleName'%.%ReadAddress(byte i2cAddr, byte *memAddr, byte memAddrSize, 
 %if defined(LDD_I2C)
 %if defined(Timeout)
   %@Timeout@'ModuleName'%.CounterHandle timeout;
-  bool isTimeout;
+  bool isTimeout=FALSE;
 %endif
 %else
   word nof;
@@ -855,7 +855,7 @@ byte %'ModuleName'%.%WriteAddress(byte i2cAddr, byte *memAddr, byte memAddrSize,
 %endif
 %if defined(Timeout)
   %@Timeout@'ModuleName'%.CounterHandle timeout;
-  bool isTimeout;
+  bool isTimeout=FALSE;
 %endif
   byte res = ERR_OK;
 
@@ -1094,7 +1094,7 @@ byte %'ModuleName'%.%ScanDevice(byte i2cAddr)
 %if defined(LDD_I2C)
 %if defined(Timeout)
   %@Timeout@'ModuleName'%.CounterHandle timeout;
-  bool isTimeout;
+  bool isTimeout=FALSE;
 %endif
   LDD_I2C_TErrorMask errMask;
 %else
