@@ -69,7 +69,7 @@ Package from component(s):
 - MMA8451Q version 01.028
 - MPR08x version 01.205
 - MPVZ5004 version 01.021
-created 17.08.2014
+created 19.09.2014
 
 Package from component(s):
 - nRF24L01 version 01.083
@@ -121,4 +121,4 @@ Package from component(s):
 - Utility version 01.105
 - Wait version 01.067
 - XFormat version 01.012
-created 17.08.2014
+created 19.09.2014
