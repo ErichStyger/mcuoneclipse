@@ -782,7 +782,7 @@ void %'ModuleName'%.%CalibrateY1g(void)
   /* offset: both X and Z shall have zero g */
   sCalValues.NxOff = X;
   sCalValues.NzOff = (Y - (1000 << 2));
-  sCalValues.NzOff = Z;;
+  sCalValues.NzOff = Z;
 }
 
 %endif %- CalibrateY1g
