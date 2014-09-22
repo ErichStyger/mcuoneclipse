@@ -3,13 +3,11 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (CalibrateZ1g)
+%include Common\GeneralEvent.inc (OnError)
 %;**     Description :
-%;**         Performs a calibration of the sensor. It is assumed that the
-%;**         X and Y sensors have 0 g, and the Z sensor has 1 g.
+%;**         Event called for errors
 %include Common\GeneralParametersNone.inc
 %include Common\GeneralReturnNothing.inc
-%include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine
 %}

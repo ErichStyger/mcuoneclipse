@@ -3,12 +3,13 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (CalibrateZ1g)
+%include Common\GeneralMethod.inc (WhoAmI)
 %;**     Description :
-%;**         Performs a calibration of the sensor. It is assumed that the
-%;**         X and Y sensors have 0 g, and the Z sensor has 1 g.
-%include Common\GeneralParametersNone.inc
-%include Common\GeneralReturnNothing.inc
+%;**         Returns the value of the WHO_AM_I (0x0D) register
+%include Common\GeneralParameters.inc(27)
+%;**       * value%Parvalue %>27 - Pointer to value to store
+%;**     Returns     :
+%;**         ---%RetVal %>27 - Error code
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine
