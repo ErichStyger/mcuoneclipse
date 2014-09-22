@@ -167,9 +167,13 @@ void LP_EnterPowerMode(LP_PowerMode mode) {
     if (LP_EnableSTOP) {
       Cpu_SetOperationMode(DOM_STOP, NULL, NULL); /* next interrupt will wake us up */
     } else {
+#if 1 /* go at least into WAIT mode */
+      Cpu_SetOperationMode(DOM_STOP, NULL, NULL); /* next interrupt will wake us up */
+#else
       __asm volatile("dsb");
       __asm volatile("wfi"); /* wait for interrupt */
-      __asm volatile("isb");  
+      __asm volatile("isb");
+#endif
     }
   }
   /* interrupt will wake us up, and we are back in RUN mode */
@@ -188,8 +192,8 @@ void LP_Deinit(void) {
 }
 
 void LP_Init(void) {
-//  LP_mode = LP_WAIT;
-  LP_mode = LP_STOP;
+  LP_mode = LP_WAIT;
+//  LP_mode = LP_STOP;
 #if LP_CAN_CHANGE_CLOCK
   LP_clock = LP_SPEED_FAST;
 #endif
