@@ -801,13 +801,18 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
    * inevitably result in some tiny drift of the time maintained by the
    * kernel with respect to calendar time. 
    */
+#if configSYSTICK_USE_LOW_POWER_TIMER
+  /* disabling the LPTMR does reset the timer register! So I need to get the value first, then disable the timer: */
+  GET_TICK_CURRENT_VAL(&tmp);
   DISABLE_TICK_COUNTER();
-
+#else /* using normal timer or SysTick */
+  DISABLE_TICK_COUNTER();
+  GET_TICK_CURRENT_VAL(&tmp);
+#endif
   /* Calculate the reload value required to wait xExpectedIdleTime
    * tick periods. -1 is used because this code will execute part way
    * through one of the tick periods. 
    */
-  GET_TICK_CURRENT_VAL(&tmp);
   ulReloadValue = tmp+(UL_TIMER_COUNTS_FOR_ONE_TICK*(xExpectedIdleTime-1UL));
   if (ulReloadValue>ulStoppedTimerCompensation) {
     ulReloadValue -= ulStoppedTimerCompensation;
@@ -865,7 +870,14 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
      * kernel with respect to calendar time. 
      */
     tickISRfired = (bool)TICK_INTERRUPT_HAS_FIRED(); /* need to check Interrupt flag here, as might be modified below */
+#if configSYSTICK_USE_LOW_POWER_TIMER
+    /* disabling the LPTMR does reset the timer register! So I need to get the value first, then disable the timer: */
+    GET_TICK_CURRENT_VAL(&tmp);
     DISABLE_TICK_COUNTER();
+#else
+    DISABLE_TICK_COUNTER();
+    GET_TICK_CURRENT_VAL(&tmp);
+#endif
     TICKLESS_ENABLE_INTERRUPTS();/* Re-enable interrupts */
     if (tickISRfired) {
       /* The tick interrupt has already executed, and the timer
@@ -873,7 +885,6 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
        * Reset the counter register with whatever remains of
        * this tick period. 
        */
-      GET_TICK_CURRENT_VAL(&tmp);
 #if COUNTS_UP
       SET_TICK_DURATION((UL_TIMER_COUNTS_FOR_ONE_TICK-1UL)-tmp);
 #else
@@ -891,7 +902,6 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
        * Work out how long the sleep lasted rounded to complete tick
        * periods (not the ulReload value which accounted for part ticks). 
        */
-      GET_TICK_CURRENT_VAL(&tmp);
 #if COUNTS_UP
       ulCompletedSysTickIncrements = tmp;
 #else
