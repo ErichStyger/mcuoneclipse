@@ -1,3 +1,6 @@
+%if (CPUfamily = "HCS08") | (CPUfamily = "HC08") | (CPUfamily = "HCS12") | (CPUfamily = "HCS12X")
+; This file is intentionally empty as not needed for HCS08/HCS12(X) port
+%else
 /*
     FreeRTOS V8.0.1 - Copyright (C) 2014 Real Time Engineers Ltd.
     All rights reserved
@@ -62,6 +65,7 @@
 
     1 tab == 4 spaces!
 */
+%endif /* HC08, HC12 */
 %if ((%configCOMPILER='automatic') & (%Compiler == "GNUC")) | (%configCOMPILER='configCOMPILER_ARM_GCC')
 /* file is intentionally empty as not needed for this GNU gcc FreeRTOS port */
 %endif %- ARM gcc compiler

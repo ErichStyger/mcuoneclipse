@@ -365,7 +365,7 @@ static unsigned portBASE_TYPE uxCriticalNesting = 0xaaaaaaaa;
 static jmp_buf xJumpBuf; /* Used to restore the original context when the scheduler is ended. */
 #endif
 /*-----------------------------------------------------------*/
-static void prvTaskExitError(void) {
+void prvTaskExitError(void) {
   /* A function that implements a task must not exit or attempt to return to
   its caller as there is nothing to return to.  If a task wants to exit it
   should instead call vTaskDelete( NULL ).
