@@ -2,9 +2,9 @@
 <Bean>
   <Header>
     <Name>OneWire</Name>
-    <Description />
-    <Author />
-    <Version>01.005</Version>
+    <Description/>
+    <Author/>
+    <Version>01.006</Version>
     <Icon>OneWire</Icon>
     <TypesFiles>PE,OneWire\OneWire</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -14,13 +14,17 @@
     <DemoDriver>no</DemoDriver>
     <Category>SW-Communication</Category>
     <BeanLevel>High</BeanLevel>
-    <Copyright>For non-commercial use only.
-(c) Copyright &lt;company/user-name&gt;, 2014
-http://www.&lt;company&gt;.com
-mail: info@&lt;company&gt;.com</Copyright>
+    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Omar Isaí Pinales Ayala, 2014, all rights reserved.\nhttp      : http://www.mcuoneclipse.com\n\nThis an open source software driver for Processor Expert.\nThis is a free software and is opened for education,  research  and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
     <BW_HelpType>Default</BW_HelpType>
     <BW_HelpFiles>,Properties,Methods,Events,"User Types"</BW_HelpFiles>
     <OneBeanInstance>!yes</OneBeanInstance>
+    <BW_AutoSaveHelp>yes</BW_AutoSaveHelp>
+    <BW_AutoSaveDriver>yes</BW_AutoSaveDriver>
+    <BW_DetailedHelp>yes</BW_DetailedHelp>
+    <BW_NeedTps>yes</BW_NeedTps>
+    <BW_NeedUst>0</BW_NeedUst>
+    <BW_NeedCns>0</BW_NeedCns>
+    <BeanStatus>RELEASE</BeanStatus>
   </Options>
   <PropertyList>
     <Property>
@@ -30,10 +34,7 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Hint>Name of the component.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>true</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_StringStyle>EDITBOX</UI_StringStyle>
-        <DefaultValue />
+        <DefaultValue/>
       </TCompNameItem>
     </Property>
     <Property>
@@ -44,9 +45,6 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Hint>Link component  (for details about settings see &amp;lt;a href="../../DOCs/InheritanceAndSharing.html"&amp;gt;Component Inheritance &amp;amp;amp; Component Sharing&amp;lt;/a&amp;gt;).</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_EnumStyle>COMBO</UI_EnumStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>-1</DefaultIndex>
         <TextValueIndex>false</TextValueIndex>
@@ -65,9 +63,6 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Hint>Link component  (for details about settings see &amp;lt;a href="../../DOCs/InheritanceAndSharing.html"&amp;gt;Component Inheritance &amp;amp;amp; Component Sharing&amp;lt;/a&amp;gt;).</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_EnumStyle>COMBO</UI_EnumStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>-1</DefaultIndex>
         <TextValueIndex>false</TextValueIndex>
@@ -82,16 +77,11 @@ mail: info@&lt;company&gt;.com</Copyright>
       <TGrupItem>
         <Name>Connection time settings</Name>
         <Symbol>connSettings</Symbol>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_GroupStyle>GROUP</UI_GroupStyle>
-        <UI_Layout>DEFAULT</UI_Layout>
-        <UI_NumColumnsInWrappedLayout>4</UI_NumColumnsInWrappedLayout>
-        <Description />
+        <Description/>
         <Expanded>Yes</Expanded>
         <Children>
           <GrupItem>
@@ -99,19 +89,15 @@ mail: info@&lt;company&gt;.com</Copyright>
               <Name>Connection Mode</Name>
               <Symbol>connMode</Symbol>
               <TypeSpec>typeConnMode</TypeSpec>
-              <Hint />
+              <Hint/>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
-              <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-              <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-              <UI_EnumStyle>COMBO</UI_EnumStyle>
               <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
               <DefaultIndex>0</DefaultIndex>
               <TextValueIndex>true</TextValueIndex>
               <RuntimeProperty>false</RuntimeProperty>
               <CanDelete>false</CanDelete>
               <IconPopup>false</IconPopup>
-              <TypeAssignment>BEAN_FILE</TypeAssignment>
             </TEnumItem>
           </GrupItem>
           <GrupItem>
@@ -121,9 +107,6 @@ mail: info@&lt;company&gt;.com</Copyright>
               <Hint>Duration of the reset pulse that the master send to slave devices.</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
-              <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-              <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-              <UI_IntegerStyle>EDITBOX</UI_IntegerStyle>
               <DefaultValue>500</DefaultValue>
               <MinValue>480</MinValue>
               <MaxValue>-1</MaxValue>
@@ -142,9 +125,6 @@ mail: info@&lt;company&gt;.com</Copyright>
               <Hint>Time that master waits before read, after send the reset pulse.</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
-              <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-              <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-              <UI_IntegerStyle>EDITBOX</UI_IntegerStyle>
               <DefaultValue>100</DefaultValue>
               <MinValue>15</MinValue>
               <MaxValue>300</MaxValue>
@@ -162,9 +142,6 @@ mail: info@&lt;company&gt;.com</Copyright>
               <Hint>Period that master holds the DQ signal low to send a bit '1'.</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
-              <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-              <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-              <UI_IntegerStyle>EDITBOX</UI_IntegerStyle>
               <DefaultValue>5</DefaultValue>
               <MinValue>1</MinValue>
               <MaxValue>15</MaxValue>
@@ -182,9 +159,6 @@ mail: info@&lt;company&gt;.com</Copyright>
               <Hint>Period that master holds the DQ signal low to send a bit '0'.</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
-              <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-              <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-              <UI_IntegerStyle>EDITBOX</UI_IntegerStyle>
               <DefaultValue>80</DefaultValue>
               <MinValue>60</MinValue>
               <MaxValue>120</MaxValue>
@@ -199,12 +173,9 @@ mail: info@&lt;company&gt;.com</Copyright>
             <TIntgItem>
               <Name>Output low time to read (us)</Name>
               <Symbol>readTime</Symbol>
-              <Hint />
+              <Hint/>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
-              <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-              <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-              <UI_IntegerStyle>EDITBOX</UI_IntegerStyle>
               <DefaultValue>5</DefaultValue>
               <MinValue>1</MinValue>
               <MaxValue>14</MaxValue>
@@ -222,9 +193,6 @@ mail: info@&lt;company&gt;.com</Copyright>
               <Hint>Wait time to read after start to send the low signal to read.</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
-              <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-              <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-              <UI_IntegerStyle>EDITBOX</UI_IntegerStyle>
               <DefaultValue>10</DefaultValue>
               <MinValue>2</MinValue>
               <MaxValue>10</MaxValue>
@@ -239,12 +207,9 @@ mail: info@&lt;company&gt;.com</Copyright>
             <TIntgItem>
               <Name>Total slot time (us)</Name>
               <Symbol>slotTime</Symbol>
-              <Hint />
+              <Hint/>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
-              <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-              <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-              <UI_IntegerStyle>EDITBOX</UI_IntegerStyle>
               <DefaultValue>100</DefaultValue>
               <MinValue>60</MinValue>
               <MaxValue>-1</MaxValue>
@@ -262,16 +227,11 @@ mail: info@&lt;company&gt;.com</Copyright>
       <TGrupItem>
         <Name>Buffers</Name>
         <Symbol>propBuffers</Symbol>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_IN_TOOLTIP</UI_DisplayExtraText>
-        <UI_GroupStyle>TAB</UI_GroupStyle>
-        <UI_Layout>DEFAULT</UI_Layout>
-        <UI_NumColumnsInWrappedLayout>4</UI_NumColumnsInWrappedLayout>
-        <Description />
+        <Description/>
         <Expanded>Yes</Expanded>
         <Children>
           <GrupItem>
@@ -281,9 +241,6 @@ mail: info@&lt;company&gt;.com</Copyright>
               <Hint>Determines the output buffer size.</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
-              <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-              <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-              <UI_IntegerStyle>EDITBOX</UI_IntegerStyle>
               <DefaultValue>20</DefaultValue>
               <MinValue>10</MinValue>
               <MaxValue>-1</MaxValue>
@@ -298,12 +255,9 @@ mail: info@&lt;company&gt;.com</Copyright>
             <TIntgItem>
               <Name>Input buffer size</Name>
               <Symbol>szInput</Symbol>
-              <Hint />
+              <Hint/>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
-              <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-              <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-              <UI_IntegerStyle>EDITBOX</UI_IntegerStyle>
               <DefaultValue>20</DefaultValue>
               <MinValue>10</MinValue>
               <MaxValue>-1</MaxValue>
@@ -318,12 +272,9 @@ mail: info@&lt;company&gt;.com</Copyright>
             <TIntgItem>
               <Name>Time buffer size</Name>
               <Symbol>szTime</Symbol>
-              <Hint />
+              <Hint/>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
-              <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-              <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-              <UI_IntegerStyle>EDITBOX</UI_IntegerStyle>
               <DefaultValue>2</DefaultValue>
               <MinValue>1</MinValue>
               <MaxValue>-1</MaxValue>
@@ -338,12 +289,9 @@ mail: info@&lt;company&gt;.com</Copyright>
             <TIntgItem>
               <Name>Program buffer size</Name>
               <Symbol>szProgram</Symbol>
-              <Hint />
+              <Hint/>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
-              <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-              <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-              <UI_IntegerStyle>EDITBOX</UI_IntegerStyle>
               <DefaultValue>10</DefaultValue>
               <MinValue>5</MinValue>
               <MaxValue>-1</MaxValue>
@@ -365,14 +313,10 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Hint>Link component  (for details about settings see &amp;lt;a href="../../DOCs/InheritanceAndSharing.html"&amp;gt;Component Inheritance &amp;amp;amp; Component Sharing&amp;lt;/a&amp;gt;).</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_EnumStyle>COMBO</UI_EnumStyle>
-        <DefaultValue />
+        <DefaultValue/>
         <CanDelete>false</CanDelete>
         <IconPopup>false</IconPopup>
-        <SortStyle />
-        <DefaultComponentSubFolder>Referenced_Components</DefaultComponentSubFolder>
+        <SortStyle/>
       </TInhrLinkItem>
     </Property>
   </PropertyList>
@@ -386,9 +330,6 @@ mail: info@&lt;company&gt;.com</Copyright>
         <ItemLevel>BASIC</ItemLevel>
         <ReadOnly>true</ReadOnly>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_BoolStyle>DROPDOWN</UI_BoolStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>true</TextValueIndex>
@@ -402,9 +343,12 @@ mail: info@&lt;company&gt;.com</Copyright>
         <InDefinition>true</InDefinition>
         <ReturnTypeANSICUserDeclaration>void %'ModuleName'%.Init(void)</ReturnTypeANSICUserDeclaration>
         <ReturnType>void</ReturnType>
-        <RetHint />
+        <RetHint/>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void %'ModuleName'%.Init(void) #M#_#C#(void)</ANSIC>
+        </Declarations>
       </TMthdItem>
     </Method>
     <Method>
@@ -412,12 +356,9 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>SendReset</Name>
         <Symbol>SendReset</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_BoolStyle>DROPDOWN</UI_BoolStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>true</TextValueIndex>
@@ -430,9 +371,12 @@ mail: info@&lt;company&gt;.com</Copyright>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>void</ReturnType>
-        <RetHint />
+        <RetHint/>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
       </TMthdItem>
     </Method>
     <Method>
@@ -444,9 +388,6 @@ mail: info@&lt;company&gt;.com</Copyright>
         <ItemLevel>BASIC</ItemLevel>
         <ReadOnly>true</ReadOnly>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_BoolStyle>DROPDOWN</UI_BoolStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>true</TextValueIndex>
@@ -463,17 +404,20 @@ mail: info@&lt;company&gt;.com</Copyright>
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>numOfBytes</ParName>
-          <ParType>uint8_t</ParType>
+          <ParType>pointer</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint />
+          <ParHint/>
         </Parameter>
         <Parameter>
           <ParName>count</ParName>
-          <ParType>uint8_t</ParType>
+          <ParType>pointer</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Number of bytes to receive from slave.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>bool #M#_#C#(void* numOfBytes, void* count)</ANSIC>
+        </Declarations>
       </TMthdItem>
     </Method>
     <Method>
@@ -484,9 +428,6 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Hint>Returns the number of elements stored on input buffer that are ready to read.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_BoolStyle>DROPDOWN</UI_BoolStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>true</TextValueIndex>
@@ -499,9 +440,12 @@ mail: info@&lt;company&gt;.com</Copyright>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>uint8_t</ReturnType>
-        <RetHint />
+        <RetHint/>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>uint8_t #M#_#C#(void)</ANSIC>
+        </Declarations>
       </TMthdItem>
     </Method>
     <Method>
@@ -509,12 +453,9 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>ProgramEvent</Name>
         <Symbol>ProgramEvent</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_BoolStyle>DROPDOWN</UI_BoolStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>true</TextValueIndex>
@@ -531,11 +472,14 @@ mail: info@&lt;company&gt;.com</Copyright>
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>key</ParName>
-          <ParType>uint16_t</ParType>
+          <ParType>pointer</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Key to identificate the event, applies only if OProgramEvent is enabled. (Valid range 0 - 31)</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>bool #M#_#C#(void* key)</ANSIC>
+        </Declarations>
       </TMthdItem>
     </Method>
     <Method>
@@ -546,9 +490,6 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Hint>Programs a pause between instruccions.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_BoolStyle>DROPDOWN</UI_BoolStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>true</TextValueIndex>
@@ -565,23 +506,26 @@ mail: info@&lt;company&gt;.com</Copyright>
         <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>key</ParName>
-          <ParType>uint8_t</ParType>
+          <ParType>pointer</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Key to identificate the source of the event.</ParHint>
         </Parameter>
         <Parameter>
           <ParName>key</ParName>
-          <ParType>uint8_t</ParType>
+          <ParType>pointer</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Key to identificate the period end, applies only if OnWaitEnd evet is enabled.  (Valid range 0 - 31)</ParHint>
         </Parameter>
         <Parameter>
           <ParName>time_ms</ParName>
-          <ParType>uint16_t</ParType>
+          <ParType>pointer</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Value of time to wait.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>bool #M#_#C#(void* key, void* key, void* time_ms)</ANSIC>
+        </Declarations>
       </TMthdItem>
     </Method>
     <Method>
@@ -593,9 +537,6 @@ mail: info@&lt;company&gt;.com</Copyright>
         <ItemLevel>@ HIDDEN @</ItemLevel>
         <Visible>false</Visible>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>NOT_DISPLAYED</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_BoolStyle>DROPDOWN</UI_BoolStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>true</TextValueIndex>
@@ -608,21 +549,24 @@ mail: info@&lt;company&gt;.com</Copyright>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>void</ReturnType>
-        <RetHint />
+        <RetHint/>
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>bit_value</ParName>
-          <ParType>bool</ParType>
+          <ParType>pointer</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Bit to add to CRC accumulator.</ParHint>
         </Parameter>
         <Parameter>
           <ParName>bit_value</ParName>
-          <ParType>uint8_t</ParType>
+          <ParType>pointer</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint />
+          <ParHint/>
         </Parameter>
         <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void* bit_value, void* bit_value)</ANSIC>
+        </Declarations>
       </TMthdItem>
     </Method>
     <Method>
@@ -630,13 +574,10 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>i_run</Name>
         <Symbol>i_run</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <Visible>false</Visible>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>NOT_DISPLAYED</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_BoolStyle>DROPDOWN</UI_BoolStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>true</TextValueIndex>
@@ -649,9 +590,12 @@ mail: info@&lt;company&gt;.com</Copyright>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>void</ReturnType>
-        <RetHint />
+        <RetHint/>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
       </TMthdItem>
     </Method>
     <Method>
@@ -659,13 +603,10 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>i_action</Name>
         <Symbol>i_action</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <Visible>false</Visible>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>NOT_DISPLAYED</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_BoolStyle>DROPDOWN</UI_BoolStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>true</TextValueIndex>
@@ -678,9 +619,12 @@ mail: info@&lt;company&gt;.com</Copyright>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>void</ReturnType>
-        <RetHint />
+        <RetHint/>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
       </TMthdItem>
     </Method>
     <Method>
@@ -688,13 +632,10 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>i_reset</Name>
         <Symbol>i_reset</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <Visible>false</Visible>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>NOT_DISPLAYED</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_BoolStyle>DROPDOWN</UI_BoolStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>true</TextValueIndex>
@@ -707,9 +648,12 @@ mail: info@&lt;company&gt;.com</Copyright>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>void</ReturnType>
-        <RetHint />
+        <RetHint/>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
       </TMthdItem>
     </Method>
     <Method>
@@ -717,13 +661,10 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>i_presence</Name>
         <Symbol>i_presence</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <Visible>false</Visible>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>NOT_DISPLAYED</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_BoolStyle>DROPDOWN</UI_BoolStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>true</TextValueIndex>
@@ -736,9 +677,12 @@ mail: info@&lt;company&gt;.com</Copyright>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>void</ReturnType>
-        <RetHint />
+        <RetHint/>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
       </TMthdItem>
     </Method>
     <Method>
@@ -746,13 +690,10 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>i_send_low</Name>
         <Symbol>i_send_low</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <Visible>false</Visible>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>NOT_DISPLAYED</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_BoolStyle>DROPDOWN</UI_BoolStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>true</TextValueIndex>
@@ -765,9 +706,12 @@ mail: info@&lt;company&gt;.com</Copyright>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>void</ReturnType>
-        <RetHint />
+        <RetHint/>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
       </TMthdItem>
     </Method>
     <Method>
@@ -775,13 +719,10 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>i_send_float</Name>
         <Symbol>i_send_float</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <Visible>false</Visible>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>NOT_DISPLAYED</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_BoolStyle>DROPDOWN</UI_BoolStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>true</TextValueIndex>
@@ -794,9 +735,12 @@ mail: info@&lt;company&gt;.com</Copyright>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>void</ReturnType>
-        <RetHint />
+        <RetHint/>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
       </TMthdItem>
     </Method>
     <Method>
@@ -804,13 +748,10 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>i_recv_float</Name>
         <Symbol>i_recv_float</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <Visible>false</Visible>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>NOT_DISPLAYED</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_BoolStyle>DROPDOWN</UI_BoolStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>true</TextValueIndex>
@@ -823,9 +764,12 @@ mail: info@&lt;company&gt;.com</Copyright>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>void</ReturnType>
-        <RetHint />
+        <RetHint/>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
       </TMthdItem>
     </Method>
     <Method>
@@ -833,13 +777,10 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>i_recv_get</Name>
         <Symbol>i_recv_get</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <Visible>false</Visible>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>NOT_DISPLAYED</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_BoolStyle>DROPDOWN</UI_BoolStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>true</TextValueIndex>
@@ -852,9 +793,12 @@ mail: info@&lt;company&gt;.com</Copyright>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>void</ReturnType>
-        <RetHint />
+        <RetHint/>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
       </TMthdItem>
     </Method>
     <Method>
@@ -862,13 +806,10 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>read_Pin</Name>
         <Symbol>read_Pin</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <Visible>false</Visible>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>NOT_DISPLAYED</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_BoolStyle>DROPDOWN</UI_BoolStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>true</TextValueIndex>
@@ -881,9 +822,12 @@ mail: info@&lt;company&gt;.com</Copyright>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>bool</ReturnType>
-        <RetHint />
+        <RetHint/>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>bool #M#_#C#(void)</ANSIC>
+        </Declarations>
       </TMthdItem>
     </Method>
     <Method>
@@ -891,13 +835,10 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>i_recv_low</Name>
         <Symbol>i_recv_low</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <Visible>false</Visible>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>NOT_DISPLAYED</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_BoolStyle>DROPDOWN</UI_BoolStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>true</TextValueIndex>
@@ -910,9 +851,12 @@ mail: info@&lt;company&gt;.com</Copyright>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>void</ReturnType>
-        <RetHint />
+        <RetHint/>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
       </TMthdItem>
     </Method>
     <Method>
@@ -920,13 +864,10 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>i_wait</Name>
         <Symbol>i_wait</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <Visible>false</Visible>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>NOT_DISPLAYED</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_BoolStyle>DROPDOWN</UI_BoolStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>true</TextValueIndex>
@@ -939,9 +880,12 @@ mail: info@&lt;company&gt;.com</Copyright>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>void</ReturnType>
-        <RetHint />
+        <RetHint/>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
       </TMthdItem>
     </Method>
     <Method>
@@ -949,12 +893,9 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>SendByte</Name>
         <Symbol>SendByte</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_BoolStyle>DROPDOWN</UI_BoolStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>true</TextValueIndex>
@@ -967,15 +908,18 @@ mail: info@&lt;company&gt;.com</Copyright>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>bool</ReturnType>
-        <RetHint />
+        <RetHint/>
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>_byte</ParName>
-          <ParType>uint8_t</ParType>
+          <ParType>pointer</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Variable to save the byte.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>bool #M#_#C#(void* _byte)</ANSIC>
+        </Declarations>
       </TMthdItem>
     </Method>
     <Method>
@@ -983,12 +927,9 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>SendBytes</Name>
         <Symbol>SendBytes</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_BoolStyle>DROPDOWN</UI_BoolStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>true</TextValueIndex>
@@ -1001,21 +942,24 @@ mail: info@&lt;company&gt;.com</Copyright>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>bool</ReturnType>
-        <RetHint />
+        <RetHint/>
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>_bytes</ParName>
-          <ParType>uint8_t</ParType>
+          <ParType>pointer</ParType>
           <ParPassing>Address</ParPassing>
           <ParHint>Array of bytes to add to output stream.</ParHint>
         </Parameter>
         <Parameter>
           <ParName>count</ParName>
-          <ParType>uint8_t</ParType>
+          <ParType>pointer</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Number of bytes to add to output stream. (Valid range 0 - 31)</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>bool #M#_#C#(void* *_bytes, void* count)</ANSIC>
+        </Declarations>
       </TMthdItem>
     </Method>
     <Method>
@@ -1023,12 +967,9 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>GetBytes</Name>
         <Symbol>GetBytes</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_BoolStyle>DROPDOWN</UI_BoolStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>true</TextValueIndex>
@@ -1041,21 +982,24 @@ mail: info@&lt;company&gt;.com</Copyright>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>bool</ReturnType>
-        <RetHint />
+        <RetHint/>
         <ParamCount>2</ParamCount>
         <Parameter>
           <ParName>_bytes</ParName>
-          <ParType>uint8_t</ParType>
+          <ParType>pointer</ParType>
           <ParPassing>Address</ParPassing>
-          <ParHint />
+          <ParHint/>
         </Parameter>
         <Parameter>
           <ParName>count</ParName>
-          <ParType>uint8_t</ParType>
+          <ParType>pointer</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint />
+          <ParHint/>
         </Parameter>
         <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>bool #M#_#C#(void* *_bytes, void* count)</ANSIC>
+        </Declarations>
       </TMthdItem>
     </Method>
     <Method>
@@ -1063,12 +1007,9 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>GetByte</Name>
         <Symbol>GetByte</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_BoolStyle>DROPDOWN</UI_BoolStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>true</TextValueIndex>
@@ -1081,15 +1022,18 @@ mail: info@&lt;company&gt;.com</Copyright>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>bool</ReturnType>
-        <RetHint />
+        <RetHint/>
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>_byte</ParName>
-          <ParType>uint8_t</ParType>
+          <ParType>pointer</ParType>
           <ParPassing>Address</ParPassing>
-          <ParHint />
+          <ParHint/>
         </Parameter>
         <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>bool #M#_#C#(void* *_byte)</ANSIC>
+        </Declarations>
       </TMthdItem>
     </Method>
     <Method>
@@ -1097,12 +1041,9 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>GetError</Name>
         <Symbol>GetError</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_BoolStyle>DROPDOWN</UI_BoolStyle>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
         <DefaultIndex>0</DefaultIndex>
         <TextValueIndex>true</TextValueIndex>
@@ -1115,9 +1056,12 @@ mail: info@&lt;company&gt;.com</Copyright>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
         <ReturnType>void</ReturnType>
-        <RetHint />
+        <RetHint/>
         <ParamCount>0</ParamCount>
         <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>void #M#_#C#(void)</ANSIC>
+        </Declarations>
       </TMthdItem>
     </Method>
   </MethodList>
@@ -1126,13 +1070,10 @@ mail: info@&lt;company&gt;.com</Copyright>
       <TStrgItem>
         <Name>Event module name</Name>
         <Symbol>EventModule</Symbol>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>true</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_StringStyle>EDITBOX</UI_StringStyle>
-        <DefaultValue />
+        <DefaultValue/>
         <StrDefine>nothing</StrDefine>
         <MinLength>0</MinLength>
         <MaxLength>-1</MaxLength>
@@ -1143,16 +1084,10 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>OnProgramEvent</Name>
         <Symbol>OnProgramEvent</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_GroupStyle>GROUP</UI_GroupStyle>
-        <UI_Layout>DEFAULT</UI_Layout>
-        <UI_NumColumnsInWrappedLayout>4</UI_NumColumnsInWrappedLayout>
-        <UI_ValueSelectionStyle>DROPDOWN</UI_ValueSelectionStyle>
         <Description>generate code</Description>
         <Expanded>Yes</Expanded>
         <DefaultValue>true</DefaultValue>
@@ -1162,13 +1097,13 @@ mail: info@&lt;company&gt;.com</Copyright>
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>key</ParName>
-          <ParType>int8_t</ParType>
+          <ParType>pointer</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Key to identificate the source of the event.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #C#(void)</ANSIC>
+          <ANSIC>void #C#(void* key)</ANSIC>
         </Declarations>
         <Children>
           <GrupItem>
@@ -1178,10 +1113,7 @@ mail: info@&lt;company&gt;.com</Copyright>
               <Hint>Event procedure name</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
-              <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-              <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-              <UI_StringStyle>EDITBOX</UI_StringStyle>
-              <DefaultValue />
+              <DefaultValue/>
               <StrDefine>nothing</StrDefine>
               <MinLength>0</MinLength>
               <MaxLength>-1</MaxLength>
@@ -1197,16 +1129,10 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>OnError</Name>
         <Symbol>OnError</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_GroupStyle>GROUP</UI_GroupStyle>
-        <UI_Layout>DEFAULT</UI_Layout>
-        <UI_NumColumnsInWrappedLayout>4</UI_NumColumnsInWrappedLayout>
-        <UI_ValueSelectionStyle>DROPDOWN</UI_ValueSelectionStyle>
         <Description>generate code</Description>
         <Expanded>Yes</Expanded>
         <DefaultValue>true</DefaultValue>
@@ -1216,13 +1142,13 @@ mail: info@&lt;company&gt;.com</Copyright>
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>error</ParName>
-          <ParType>Error</ParType>
+          <ParType>pointer</ParType>
           <ParPassing>Value</ParPassing>
-          <ParHint />
+          <ParHint/>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #C#(void)</ANSIC>
+          <ANSIC>void #C#(void* error)</ANSIC>
         </Declarations>
         <Children>
           <GrupItem>
@@ -1232,10 +1158,7 @@ mail: info@&lt;company&gt;.com</Copyright>
               <Hint>Event procedure name</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
-              <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-              <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-              <UI_StringStyle>EDITBOX</UI_StringStyle>
-              <DefaultValue />
+              <DefaultValue/>
               <StrDefine>nothing</StrDefine>
               <MinLength>0</MinLength>
               <MaxLength>-1</MaxLength>
@@ -1251,16 +1174,10 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>OnBlockReceived</Name>
         <Symbol>OnBlockReceived</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_GroupStyle>GROUP</UI_GroupStyle>
-        <UI_Layout>DEFAULT</UI_Layout>
-        <UI_NumColumnsInWrappedLayout>4</UI_NumColumnsInWrappedLayout>
-        <UI_ValueSelectionStyle>DROPDOWN</UI_ValueSelectionStyle>
         <Description>generate code</Description>
         <Expanded>Yes</Expanded>
         <DefaultValue>true</DefaultValue>
@@ -1280,10 +1197,7 @@ mail: info@&lt;company&gt;.com</Copyright>
               <Hint>Event procedure name</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
-              <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-              <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-              <UI_StringStyle>EDITBOX</UI_StringStyle>
-              <DefaultValue />
+              <DefaultValue/>
               <StrDefine>nothing</StrDefine>
               <MinLength>0</MinLength>
               <MaxLength>-1</MaxLength>
@@ -1299,16 +1213,10 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>OnWaitEnd</Name>
         <Symbol>OnWaitEnd</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_GroupStyle>GROUP</UI_GroupStyle>
-        <UI_Layout>DEFAULT</UI_Layout>
-        <UI_NumColumnsInWrappedLayout>4</UI_NumColumnsInWrappedLayout>
-        <UI_ValueSelectionStyle>DROPDOWN</UI_ValueSelectionStyle>
         <Description>generate code</Description>
         <Expanded>Yes</Expanded>
         <DefaultValue>true</DefaultValue>
@@ -1318,13 +1226,13 @@ mail: info@&lt;company&gt;.com</Copyright>
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>key</ParName>
-          <ParType>uint8_t</ParType>
+          <ParType>pointer</ParType>
           <ParPassing>Value</ParPassing>
           <ParHint>Key to identificate the source of the event.</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #C#(void)</ANSIC>
+          <ANSIC>void #C#(void* key)</ANSIC>
         </Declarations>
         <Children>
           <GrupItem>
@@ -1334,10 +1242,7 @@ mail: info@&lt;company&gt;.com</Copyright>
               <Hint>Event procedure name</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
-              <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-              <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-              <UI_StringStyle>EDITBOX</UI_StringStyle>
-              <DefaultValue />
+              <DefaultValue/>
               <StrDefine>nothing</StrDefine>
               <MinLength>0</MinLength>
               <MaxLength>-1</MaxLength>
@@ -1353,16 +1258,10 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>OnSendEnd</Name>
         <Symbol>OnSendEnd</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_GroupStyle>GROUP</UI_GroupStyle>
-        <UI_Layout>DEFAULT</UI_Layout>
-        <UI_NumColumnsInWrappedLayout>4</UI_NumColumnsInWrappedLayout>
-        <UI_ValueSelectionStyle>DROPDOWN</UI_ValueSelectionStyle>
         <Description>generate code</Description>
         <Expanded>Yes</Expanded>
         <DefaultValue>true</DefaultValue>
@@ -1382,10 +1281,7 @@ mail: info@&lt;company&gt;.com</Copyright>
               <Hint>Event procedure name</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
-              <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-              <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-              <UI_StringStyle>EDITBOX</UI_StringStyle>
-              <DefaultValue />
+              <DefaultValue/>
               <StrDefine>nothing</StrDefine>
               <MinLength>0</MinLength>
               <MaxLength>-1</MaxLength>
@@ -1401,16 +1297,10 @@ mail: info@&lt;company&gt;.com</Copyright>
         <Name>OnSendedReset</Name>
         <Symbol>OnSendedReset</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint />
+        <Hint/>
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
-        <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-        <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-        <UI_GroupStyle>GROUP</UI_GroupStyle>
-        <UI_Layout>DEFAULT</UI_Layout>
-        <UI_NumColumnsInWrappedLayout>4</UI_NumColumnsInWrappedLayout>
-        <UI_ValueSelectionStyle>DROPDOWN</UI_ValueSelectionStyle>
         <Description>generate code</Description>
         <Expanded>Yes</Expanded>
         <DefaultValue>true</DefaultValue>
@@ -1430,10 +1320,7 @@ mail: info@&lt;company&gt;.com</Copyright>
               <Hint>Event procedure name</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>true</EditLine>
-              <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
-              <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
-              <UI_StringStyle>EDITBOX</UI_StringStyle>
-              <DefaultValue />
+              <DefaultValue/>
               <StrDefine>nothing</StrDefine>
               <MinLength>0</MinLength>
               <MaxLength>-1</MaxLength>
@@ -1446,42 +1333,41 @@ mail: info@&lt;company&gt;.com</Copyright>
     </Event>
   </EventList>
   <Links>
-    <EmptySection_DummyValue />
+    <EmptySection_DummyValue/>
   </Links>
   <Revisions>
     <RevisionVersion>2</RevisionVersion>
     <Revision>
-      <Date>10-Sep-2014</Date>
+      <Date>2014-09-25</Date>
       <Version>01.002</Version>
-      <Level />
+      <Level>0</Level>
       <Author>Auto Generated field</Author>
-      <Verified />
+      <Verified/>
       <Comment>Auto Generated field</Comment>
     </Revision>
     <Revision>
-      <Date>10-Sep-2014</Date>
+      <Date>2014-09-25</Date>
       <Version>01.003</Version>
-      <Level />
+      <Level>0</Level>
       <Author>Omar Isai Pinales Ayala</Author>
-      <Verified />
+      <Verified/>
       <Comment>Receive data code</Comment>
     </Revision>
     <Revision>
-      <Date>10-Sep-2014</Date>
+      <Date>2014-09-25</Date>
       <Version>01.004</Version>
-      <Level />
+      <Level>0</Level>
       <Author>Omar Isai Pinales Ayala</Author>
-      <Verified />
+      <Verified/>
       <Comment>Auto Generated field</Comment>
     </Revision>
     <Revision>
-      <Date>14-Sep-2014</Date>
-      <Version>01.005</Version>
-      <Level />
+      <Date>2014-09-25</Date>
+      <Version>01.006</Version>
+      <Level>0</Level>
       <Author>Omar Isai Pinales Ayala</Author>
-      <Verified />
+      <Verified/>
       <Comment>New prespective</Comment>
     </Revision>
   </Revisions>
 </Bean>
-
