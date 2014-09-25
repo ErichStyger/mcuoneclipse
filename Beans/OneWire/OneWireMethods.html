@@ -1,0 +1,512 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1250">
+<title>
+OneWire documentation - Methods
+</title>
+<STYLE type="text/css">
+body{
+  background-color: white;
+  margin:0px;
+  font: 13px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+A:visited {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:link {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:active {
+	COLOR: #2D8AA7; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #2D8AA7; TEXT-DECORATION: underline
+}
+.VSP {
+	COLOR: #2D8AA7; FONT: bold italic 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.reflink {
+	FONT: 11px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+ 	COLOR: #2D8AA7;
+}
+.user_text {
+	FONT: 12px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+	COLOR: #000000;
+}
+.bluetext {
+  COLOR: #695F52;
+}
+.versionspec {
+  padding:5px; 
+  background-color: RGB(243, 242, 230);
+  margin-top:5px;
+  margin-bottom:5px;  
+}
+.versionspecdetail {
+  padding:5px; 
+  background-color: RGB(243, 242, 230);
+  margin-top:5px;
+  margin-bottom:5px;  
+}
+.versionspeclabel {
+  font-style: italic;
+}
+LI.DEF {
+  list-style-image: url(DefaultLI.gif) ;
+}
+LI.BAS {
+	list-style-image: url(BasicLI.gif) ;
+}
+LI.ADV {
+	list-style-image: url(AdvancedLI.gif) ;
+}
+LI.EXP {
+	list-style-image: url(ExpertLI.gif) ;
+}
+.titlebox {  
+  font: bold 18px Helvetica Neue, Helvetica, Arial, sans-serif;
+  color: #51626F;
+  margin-bottom: 10px;
+}
+.lefttitlebox {
+  background-color:#C3CFD1;  
+}
+.lefttitle {
+  color:#51626F;
+  font: bold 11px Helvetica Neue, Helvetica, Arial, sans-serif;   
+}
+.beanname {
+  font: bold 14px/18px Helvetica Neue, Helvetica, Arial, sans-serif;
+  padding-top:6px;
+  padding-bottom:5px;
+  margin-bottom: 5px;
+  border-bottom-style: dotted;
+  border-bottom-width: 1;  
+}
+.descrtext {
+  font-style: italic;
+  font: 14px/18px Helvetica Neue, Helvetica, Arial, sans-serif;  
+  padding-bottom:9px;
+}
+.footer {
+  color: #b0b0b0; 
+  font: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+  text-align: center;
+  border-top-style: solid;
+  border-top-color: #BOBOBO;
+  border-top-width: 1px;  
+  padding-top: 5px;
+  margin-top: 20px;
+}
+.info_name {
+  font: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+  padding: 0px;
+  color: black;
+}
+.info_text {
+  font: 11px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.text_title {
+  COLOR: #000000; 
+  FONT: bold 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.descr_line {
+  COLOR: gray; 
+  FONT: 9px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.code {
+  background-color: RGB(243, 242, 230);
+  padding: 10px;
+  white-space: pre;
+  font-family: Courier New, Monospace;
+}
+</STYLE>
+
+</head>
+
+<body>
+
+<table border="0"  cellspacing="0" cellpadding="0">
+  <tr>
+    <td valign="top" width="150" >
+      <table  width="150" height="160" cellpadding="3" cellspacing="0" border="0">
+        <tbody>
+        <tr class="lefttitlebox">
+          <td width="4"></td>
+          <td align="center" valign="middle" height="30" width="128">
+            <span class="lefttitle">
+<b>OneWire</b>
+            </span>
+          </td>
+        </tr>
+        <tr height="700">
+          <td width="4"></td>
+          <td width="128" valign="top">
+            &nbsp;<br />
+            <div class="reflink">
+<!---HTMLLISTBEG_SHORT DON'T CHANGE THIS LINE-->
+<a href="OneWire.html">General Info</a><br />
+<a href="OneWireProperties.html">Properties</a><br />
+<i>Methods</i><br />
+<a href="OneWireEvents.html">Events</a><br />
+<a href="OneWireUser Types.html">Types and constants</a><br />
+<!---HTMLLISTEND DON'T CHANGE THIS LINE-->
+<br /><br /><br />
+<a href="../../DOCs/PredefSymbols.html">Types &amp; definitions</a><br />
+<a href="../../DOCs/EmbeddedBeans.html">Embedded Components</a><br />
+
+<br /><br /><br />
+<center>
+<img src="OneWire_b.gif" alt="OneWire icon"/>
+
+</center>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </td>
+    <td width="1" class="lefttitlebox" valign="top">
+      <table class="lefttitlebox" width="1" cellpadding="0" cellspacing="0" height="100%" border="0">
+        <tr class="lefttitlebox"><td width="1"></td></tr>
+      </table>
+    </td>
+    <td style="padding-left:15px;padding-right:10px;" valign="top" align="left" width="100%" >
+
+         <div class="titlebox">
+            <div class="beanname">
+              Component
+               OneWire
+            </div>
+            <div class="descrtext"></div>
+             <div class="info_name">Component Level: <span class="info_text"><a href="../../DOCs/BeanCategoriesInfo.html#LevelAbstraction">High</a></span></div>
+            <div class="info_name">Category: 
+              <span class="info_text">
+              <a href="../../DOCs/BeanCategoriesInfo.html">SW-Communication</a>
+              </span>
+            </div>
+          </div>
+
+         <div class="text_title">
+              Methods:
+    		 </div>		 
+    		 <div class="descr_line">                  
+              (Methods are user-callable functions/subroutines intended for
+               the component functions control. Please see the <a href="../../DOCs/EmbeddedBeans.html#Methods">Embedded Components page</a> for more information.)                   
+         </div>
+                  
+         <div class="user_text">
+            <ul>
+<!---USERBEG DON'T CHANGE THIS LINE-->
+
+<!---USEREND DON'T CHANGE THIS LINE-->
+<!--BEG_CDE_METHODS--><li>
+<a name="Init">
+<b>Init -</b>
+</a>
+Initializes this device.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void Init(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:void</i> - 
+</li></ul><br />
+</li>
+<li>
+<a name="SendReset">
+<b>SendReset -</b>
+</a>
+
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void SendReset(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:void</i> - 
+</li></ul><br />
+</li>
+<li>
+<a name="Receive">
+<b>Receive -</b>
+</a>
+Programs a read operation after the master send all in output buffer. Don't use a SendReset while the data is coming.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> bool Receive(uint8_t numOfBytes,uint8_t count)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>numOfBytes:uint8_t</i> - </li>
+<li><i>count:uint8_t</i> - Number of bytes to receive from slave.</li>
+<li><i>Return value:bool</i> - Returns FALSE if the program buffer is full or if count is greater than the free space of input buffer-
+</li></ul><br />
+</li>
+<li>
+<a name="Count">
+<b>Count -</b>
+</a>
+Returns the number of elements stored on input buffer that are ready to read.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> uint8_t Count(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:uint8_t</i> - 
+</li></ul><br />
+</li>
+<li>
+<a name="ProgramEvent">
+<b>ProgramEvent -</b>
+</a>
+
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> bool ProgramEvent(uint16_t key)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>key:uint16_t</i> - Key to identificate the event, applies only if OProgramEvent is enabled. (Valid range 0 - 31)</li>
+<li><i>Return value:bool</i> - Returns false if the program buffer is full.
+</li></ul><br />
+</li>
+<li>
+<a name="Waitms">
+<b>Waitms -</b>
+</a>
+Programs a pause between instruccions.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> bool Waitms(uint8_t key,uint16_t time_ms)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>key:uint8_t</i> - Key to identificate the period end, applies only if OnWaitEnd evet is enabled.  (Valid range 0 - 31)</li>
+<li><i>time_ms:uint16_t</i> - Value of time to wait.</li>
+<li><i>Return value:bool</i> - Returns false if the program buffer or the time buffer is full.
+</li></ul><br />
+</li>
+<li>
+<a name="add_CRC">
+<b>add_CRC -</b>
+</a>
+Adds a bit to CRC accumulator.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void add_CRC(uint8_t bit_value)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>bit_value:uint8_t</i> - </li>
+<li><i>Return value:void</i> - 
+</li></ul><br />
+</li>
+<li>
+<a name="i_run">
+<b>i_run -</b>
+</a>
+
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void i_run(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:void</i> - 
+</li></ul><br />
+</li>
+<li>
+<a name="i_action">
+<b>i_action -</b>
+</a>
+
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void i_action(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:void</i> - 
+</li></ul><br />
+</li>
+<li>
+<a name="i_reset">
+<b>i_reset -</b>
+</a>
+
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void i_reset(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:void</i> - 
+</li></ul><br />
+</li>
+<li>
+<a name="i_presence">
+<b>i_presence -</b>
+</a>
+
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void i_presence(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:void</i> - 
+</li></ul><br />
+</li>
+<li>
+<a name="i_send_low">
+<b>i_send_low -</b>
+</a>
+
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void i_send_low(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:void</i> - 
+</li></ul><br />
+</li>
+<li>
+<a name="i_send_float">
+<b>i_send_float -</b>
+</a>
+
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void i_send_float(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:void</i> - 
+</li></ul><br />
+</li>
+<li>
+<a name="i_recv_float">
+<b>i_recv_float -</b>
+</a>
+
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void i_recv_float(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:void</i> - 
+</li></ul><br />
+</li>
+<li>
+<a name="i_recv_get">
+<b>i_recv_get -</b>
+</a>
+
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void i_recv_get(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:void</i> - 
+</li></ul><br />
+</li>
+<li>
+<a name="read_Pin">
+<b>read_Pin -</b>
+</a>
+
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> bool read_Pin(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:bool</i> - 
+</li></ul><br />
+</li>
+<li>
+<a name="i_recv_low">
+<b>i_recv_low -</b>
+</a>
+
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void i_recv_low(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:void</i> - 
+</li></ul><br />
+</li>
+<li>
+<a name="i_wait">
+<b>i_wait -</b>
+</a>
+
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void i_wait(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:void</i> - 
+</li></ul><br />
+</li>
+<li>
+<a name="SendByte">
+<b>SendByte -</b>
+</a>
+
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> bool SendByte(uint8_t _byte)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>_byte:uint8_t</i> - Variable to save the byte.</li>
+<li><i>Return value:bool</i> - 
+</li></ul><br />
+</li>
+<li>
+<a name="SendBytes">
+<b>SendBytes -</b>
+</a>
+
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> bool SendBytes(uint8_t *_bytes,uint8_t count)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>_bytes: Pointer to uint8_t</i> - Array of bytes to add to output stream.</li>
+<li><i>count:uint8_t</i> - Number of bytes to add to output stream. (Valid range 0 - 31)</li>
+<li><i>Return value:bool</i> - 
+</li></ul><br />
+</li>
+<li>
+<a name="GetBytes">
+<b>GetBytes -</b>
+</a>
+
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> bool GetBytes(uint8_t *_bytes,uint8_t count)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>_bytes: Pointer to uint8_t</i> - </li>
+<li><i>count:uint8_t</i> - </li>
+<li><i>Return value:bool</i> - 
+</li></ul><br />
+</li>
+<li>
+<a name="GetByte">
+<b>GetByte -</b>
+</a>
+
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> bool GetByte(uint8_t *_byte)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>_byte: Pointer to uint8_t</i> - </li>
+<li><i>Return value:bool</i> - 
+</li></ul><br />
+</li>
+<li>
+<a name="GetError">
+<b>GetError -</b>
+</a>
+
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void GetError(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>Return value:void</i> - 
+</li></ul><br />
+</li>
+<!--END_CDE_METHODS-->
+           </ul>
+<!---USERBEG DON'T CHANGE THIS LINE-->
+
+<!---USEREND DON'T CHANGE THIS LINE-->
+<p>
+<br />
+Note: Some methods can be implemented as macros.
+</p>
+          </div>
+          <p class="footer">
+            PROCESSOR EXPERT is trademark of Freescale Semiconductor, Inc.
+            <br />
+            Copyright 1997 - 2014 Freescale Semiconductor, Inc.
+          </p>
+    </td>
+  </tr>
+
+</table>
+
+</body>
+</html>

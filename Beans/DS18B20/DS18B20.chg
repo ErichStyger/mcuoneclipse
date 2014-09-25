@@ -1,0 +1,84 @@
+%-This is the Chg script. It is used for tests, verifications and
+%- validations of the component every time it is changed.
+
+%set Init Selection always
+
+%set @OW@szOutput ReadOnly yes
+%set @OW@szInput ReadOnly yes
+%set @OW@szTime ReadOnly yes
+%set @OW@szProgram ReadOnly yes
+
+%if %get(readAuto, Bool) = 'yes'
+	%set ReadTemperature Selection never
+%else
+	%set ReadTemperature Selection enable
+%endif
+
+%if %get(connMultiple, Bool) = 'yes'
+%- Functions and events
+	%- Enable
+		%set ConvertAll Selection enable
+	%- Disable
+%-		%set ReadRom Selection never
+%-		%set StartConvInAll Selection never
+%-		%set OnRomRead Selection never
+	%- *******
+%- Properties
+	
+%- inherited properties
+	%if %get(readAuto, Bool) = 'yes'
+		%set OnAllConverted Selection enable
+		%set @OW@szOutput Value D:40
+		%set @OW@szInput Value D:40
+		%set @OW@szTime Value D:10
+		%set @OW@szProgram Value D:20
+	%else
+		%set OnAllConverted Selection never
+		%set @OW@szOutput Value D:20
+		%set @OW@szInput Value D:20
+		%set @OW@szTime Value D:5
+		%set @OW@szProgram Value D:10
+	%endif
+%- Properties check
+	%for i from [0..%EXPR(%get(deviceCount, Value)-1)]
+		%setVariable(CRC, 0)
+		%setVariable(data, %get(rom0%i, Value))
+		%set itemSensor%i Value 
+		%for j from [0..6]
+			%setVariable(data, %get(rom%j%%i, Value))
+			%for k from [0..7]
+				%setVariable(fb, %EXPR((%getVariable(CRC) & 1) ~ (%getVariable(data) & 1)))
+				%setVariable(CRC, %EXPR(%getVariable(CRC)\2))
+				%setVariable(data, %EXPR(%getVariable(data)\2))
+				%if %getVariable(fb) =. '1'
+					%setVariable(CRC, %EXPR(%getVariable(CRC)~140))
+				%endif
+			%endfor
+			%set itemSensor%i Value %get(itemSensor%i, Value)%#b%get(rom%j%%i, Value)-
+		%endfor
+		%set rom7%i Value D:%getVariable(CRC)
+		%set itemSensor%i Value %get(itemSensor%i, Value)%#b%get(rom7%i, Value)
+		%for j from [0..%EXPR(%i-1)]
+			%if %get(itemSensor%i, Value) = %get(itemSensor%j, Value)
+				%set itemSensor%i Warning There is an other sensor with the same serial number.
+			%endif
+		%endfor
+	%endfor
+%else
+%- Functions and events
+	%- Disable
+	%set ConvertAll Selection never
+	%set OnAllConverted Selection never
+	%- Enable
+%-	%set ReadRom Selection enable
+%-	%set StartConvInAll Selection enable
+%-	%set OnRomRead Selection enable
+	%- ******
+%- Properties
+	
+%- inherited properties
+	%set @OW@szOutput Value D:10
+	%set @OW@szInput Value D:10
+	%set @OW@szTime Value D:4
+	%set @OW@szProgram Value D:8
+%endif

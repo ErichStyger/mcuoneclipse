@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListItem>
+  <TGrupItem>
+    <Name>Sensor 64-bit ROM code</Name>
+    <Symbol>itemSensor</Symbol>
+    <Hint />
+    <ItemLevel>BASIC</ItemLevel>
+    <ReadOnly>true</ReadOnly>
+    <BoldName>true</BoldName>
+    <EditLine>false</EditLine>
+    <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
+    <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
+    <UI_GroupStyle>GROUP</UI_GroupStyle>
+    <UI_Layout>DEFAULT</UI_Layout>
+    <UI_NumColumnsInWrappedLayout>4</UI_NumColumnsInWrappedLayout>
+    <Description />
+    <Expanded>No</Expanded>
+    <Children>
+      <GrupItem>
+        <TIntgItem>
+          <Name>Family code</Name>
+          <Symbol>rom0</Symbol>
+          <Hint />
+          <ItemLevel>BASIC</ItemLevel>
+          <ReadOnly>true</ReadOnly>
+          <EditLine>true</EditLine>
+          <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
+          <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
+          <UI_IntegerStyle>EDITBOX</UI_IntegerStyle>
+          <DefaultValue>40</DefaultValue>
+          <MinValue>0</MinValue>
+          <MaxValue>255</MaxValue>
+          <Bases>BIN DEC HEX</Bases>
+          <DefaultBase>HEX</DefaultBase>
+          <ExtraHintDisabled>false</ExtraHintDisabled>
+          <ChangeValueIntoRange>false</ChangeValueIntoRange>
+          <RuntimeProperty>false</RuntimeProperty>
+        </TIntgItem>
+      </GrupItem>
+      <GrupItem>
+        <TIntgItem>
+          <Name>Serial number 1</Name>
+          <Symbol>rom1</Symbol>
+          <Hint />
+          <ItemLevel>BASIC</ItemLevel>
+          <EditLine>true</EditLine>
+          <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
+          <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
+          <UI_IntegerStyle>EDITBOX</UI_IntegerStyle>
+          <DefaultValue>0</DefaultValue>
+          <MinValue>0</MinValue>
+          <MaxValue>255</MaxValue>
+          <Bases>BIN DEC HEX</Bases>
+          <DefaultBase>HEX</DefaultBase>
+          <ExtraHintDisabled>false</ExtraHintDisabled>
+          <ChangeValueIntoRange>false</ChangeValueIntoRange>
+          <RuntimeProperty>false</RuntimeProperty>
+        </TIntgItem>
+      </GrupItem>
+      <GrupItem>
+        <TIntgItem>
+          <Name>Serial number 2</Name>
+          <Symbol>rom2</Symbol>
+          <Hint />
+          <ItemLevel>BASIC</ItemLevel>
+          <EditLine>true</EditLine>
+          <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
+          <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
+          <UI_IntegerStyle>EDITBOX</UI_IntegerStyle>
+          <DefaultValue>0</DefaultValue>
+          <MinValue>0</MinValue>
+          <MaxValue>255</MaxValue>
+          <Bases>BIN DEC HEX</Bases>
+          <DefaultBase>HEX</DefaultBase>
+          <ExtraHintDisabled>false</ExtraHintDisabled>
+          <ChangeValueIntoRange>false</ChangeValueIntoRange>
+          <RuntimeProperty>false</RuntimeProperty>
+        </TIntgItem>
+      </GrupItem>
+      <GrupItem>
+        <TIntgItem>
+          <Name>Serial number 3</Name>
+          <Symbol>rom3</Symbol>
+          <Hint />
+          <ItemLevel>BASIC</ItemLevel>
+          <EditLine>true</EditLine>
+          <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
+          <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
+          <UI_IntegerStyle>EDITBOX</UI_IntegerStyle>
+          <DefaultValue>0</DefaultValue>
+          <MinValue>0</MinValue>
+          <MaxValue>255</MaxValue>
+          <Bases>BIN DEC HEX</Bases>
+          <DefaultBase>HEX</DefaultBase>
+          <ExtraHintDisabled>false</ExtraHintDisabled>
+          <ChangeValueIntoRange>false</ChangeValueIntoRange>
+          <RuntimeProperty>false</RuntimeProperty>
+        </TIntgItem>
+      </GrupItem>
+      <GrupItem>
+        <TIntgItem>
+          <Name>Serial number 4</Name>
+          <Symbol>rom4</Symbol>
+          <Hint />
+          <ItemLevel>BASIC</ItemLevel>
+          <EditLine>true</EditLine>
+          <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
+          <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
+          <UI_IntegerStyle>EDITBOX</UI_IntegerStyle>
+          <DefaultValue>0</DefaultValue>
+          <MinValue>0</MinValue>
+          <MaxValue>255</MaxValue>
+          <Bases>BIN DEC HEX</Bases>
+          <DefaultBase>HEX</DefaultBase>
+          <ExtraHintDisabled>false</ExtraHintDisabled>
+          <ChangeValueIntoRange>false</ChangeValueIntoRange>
+          <RuntimeProperty>false</RuntimeProperty>
+        </TIntgItem>
+      </GrupItem>
+      <GrupItem>
+        <TIntgItem>
+          <Name>Serial number 5</Name>
+          <Symbol>rom5</Symbol>
+          <Hint />
+          <ItemLevel>BASIC</ItemLevel>
+          <EditLine>true</EditLine>
+          <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
+          <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
+          <UI_IntegerStyle>EDITBOX</UI_IntegerStyle>
+          <DefaultValue>0</DefaultValue>
+          <MinValue>0</MinValue>
+          <MaxValue>255</MaxValue>
+          <Bases>BIN DEC HEX</Bases>
+          <DefaultBase>HEX</DefaultBase>
+          <ExtraHintDisabled>false</ExtraHintDisabled>
+          <ChangeValueIntoRange>false</ChangeValueIntoRange>
+          <RuntimeProperty>false</RuntimeProperty>
+        </TIntgItem>
+      </GrupItem>
+      <GrupItem>
+        <TIntgItem>
+          <Name>Serial number 6</Name>
+          <Symbol>rom6</Symbol>
+          <Hint />
+          <ItemLevel>BASIC</ItemLevel>
+          <EditLine>true</EditLine>
+          <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
+          <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
+          <UI_IntegerStyle>EDITBOX</UI_IntegerStyle>
+          <DefaultValue>0</DefaultValue>
+          <MinValue>0</MinValue>
+          <MaxValue>255</MaxValue>
+          <Bases>BIN DEC HEX</Bases>
+          <DefaultBase>HEX</DefaultBase>
+          <ExtraHintDisabled>false</ExtraHintDisabled>
+          <ChangeValueIntoRange>false</ChangeValueIntoRange>
+          <RuntimeProperty>false</RuntimeProperty>
+        </TIntgItem>
+      </GrupItem>
+      <GrupItem>
+        <TIntgItem>
+          <Name>CRC</Name>
+          <Symbol>rom7</Symbol>
+          <Hint />
+          <ItemLevel>BASIC</ItemLevel>
+          <ReadOnly>true</ReadOnly>
+          <EditLine>true</EditLine>
+          <UI_DisplayIn>TABLE_AND_GRAPHICAL_VIEW</UI_DisplayIn>
+          <UI_DisplayExtraText>DISPLAY_AUTO_POSITION</UI_DisplayExtraText>
+          <UI_IntegerStyle>EDITBOX</UI_IntegerStyle>
+          <DefaultValue>0</DefaultValue>
+          <MinValue>0</MinValue>
+          <MaxValue>255</MaxValue>
+          <Bases>BIN DEC HEX</Bases>
+          <DefaultBase>HEX</DefaultBase>
+          <ExtraHintDisabled>false</ExtraHintDisabled>
+          <ChangeValueIntoRange>false</ChangeValueIntoRange>
+          <RuntimeProperty>false</RuntimeProperty>
+        </TIntgItem>
+      </GrupItem>
+    </Children>
+  </TGrupItem>
+  <Links>
+    <EmptySection_DummyValue />
+  </Links>
+</ListItem>
+
