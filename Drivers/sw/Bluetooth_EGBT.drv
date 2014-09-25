@@ -1321,9 +1321,21 @@ byte %'ModuleName'%.%QueryString(byte *cmd, byte *expectedResponse, byte *string
 %-BW_METHOD_BEGIN Init
 %ifdef Init
 %include Common\Bluetooth_EGBTInit.Inc
+%if defined(RxPullupEnable) & %RxPullupEnable='yes'
+#include "PORT_PDD.h" /* include PDD macro header file */
+
+#define %'ModuleName'%.RX_PULLUP_PIN    %RxPullUpPinNumber       %>60/* pin number */
+#define %'ModuleName'%.RX_PULLUP_PORT   PORT##%RxPullupPinName##_BASE_PTR%>60/* port name */
+
+%endif
 void %'ModuleName'%.%Init(void)
 {
   %'ModuleName'%.lastErr = %'ModuleName'%.NO_ERROR; /* reset error */
+%if defined(RxPullupEnable) & %RxPullupEnable='yes'
+  /* Enable internal pull up for Rx (microcontroller side), see http://mcuoneclipse.com/2014/03/30/getting-bluetooth-working-with-jy-mcu-bt_board-v1-06/ */
+  PORT_PDD_SetPinPullSelect(%'ModuleName'%.RX_PULLUP_PORT, %'ModuleName'%.RX_PULLUP_PIN, PORT_PDD_PULL_UP); /* configure for pull-up */
+  PORT_PDD_SetPinPullEnable(%'ModuleName'%.RX_PULLUP_PORT, %'ModuleName'%.RX_PULLUP_PIN, PORT_PDD_PULL_ENABLE); /* enable pull-up */
+%endif
 }
 
 %endif %- Init
