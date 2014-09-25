@@ -202,6 +202,32 @@ void %OnBufferEmpty(void);
 
 %endif %- OnBufferEmpty
 %-BW_METHOD_END OnBufferEmpty
+%-BW_METHOD_BEGIN OnItemPut
+%ifdef OnItemPut
+%INTERFACE OnItemPut
+void %OnItemPut(%'ModuleName'_ElementType elem);
+%define! Parelem
+%include Common\RingBufferOnItemPut.Inc
+
+%endif %- OnItemPut
+%-BW_METHOD_END OnItemPut
+%-BW_METHOD_BEGIN OnItemGet
+%ifdef OnItemGet
+%INTERFACE OnItemGet
+void %OnItemGet(%'ModuleName'_ElementType elem);
+%define! Parelem
+%include Common\RingBufferOnItemGet.Inc
+
+%endif %- OnItemGet
+%-BW_METHOD_END OnItemGet
+%-BW_METHOD_BEGIN OnClear
+%ifdef OnClear
+%INTERFACE OnClear
+void %OnClear(void);
+%include Common\RingBufferOnClear.Inc
+
+%endif %- OnClear
+%-BW_METHOD_END OnClear
 %-BW_EVENT_DEFINITION_END
 %IMPLEMENTATION
 %define! Settings Common\RingBufferSettings.Inc
@@ -273,6 +299,9 @@ byte %'ModuleName'%.%Put(%'ModuleName'_ElementType elem)
     %OnBufferFull(); /* call user event */
   }
 %endif
+%if defined(OnItemPut)
+  %OnItemPut(elem); /* call optional user event */
+%endif
   return res;
 }
 
@@ -305,6 +334,9 @@ byte %'ModuleName'%.%Get(%'ModuleName'_ElementType *elemP)
   if (res==ERR_RXEMPTY) {
     %OnBufferEmpty(); /* call user event */
   }
+%endif
+%if defined(OnItemGet)
+  %OnItemGet(*elemP); /* call optional user event */
 %endif
   return res;
 }
@@ -359,6 +391,9 @@ void %'ModuleName'%.%Clear(void)
   %'ModuleName'%.ENTER_CRITICAL();
   %'ModuleName'%.%Init();
   %'ModuleName'%.EXIT_CRITICAL();
+%if defined(OnClear)
+  %OnClear(); /* call optional user event */
+%endif
 }
 
 %endif %- Clear
@@ -392,6 +427,41 @@ void %OnBufferEmpty(void)
 
 %endif %- OnBufferEmpty
 %-BW_METHOD_END OnBufferEmpty
+%-BW_METHOD_BEGIN OnItemPut
+%ifdef OnItemPut
+%IMPLEMENTATION OnItemPut
+%define! Parelem
+%include Common\RingBufferOnItemPut.Inc
+void %OnItemPut(%'ModuleName'_ElementType elem)
+{
+  /* Write your code here ... */
+}
+
+%endif %- OnItemPut
+%-BW_METHOD_END OnItemPut
+%-BW_METHOD_BEGIN OnItemGet
+%ifdef OnItemGet
+%IMPLEMENTATION OnItemGet
+%define! Parelem
+%include Common\RingBufferOnItemGet.Inc
+void %OnItemGet(%'ModuleName'_ElementType elem)
+{
+  /* Write your code here ... */
+}
+
+%endif %- OnItemGet
+%-BW_METHOD_END OnItemGet
+%-BW_METHOD_BEGIN OnClear
+%ifdef OnClear
+%IMPLEMENTATION OnClear
+%include Common\RingBufferOnClear.Inc
+void %OnClear(void)
+{
+  /* Write your code here ... */
+}
+
+%endif %- OnClear
+%-BW_METHOD_END OnClear
 %-BW_EVENT_IMPLEMENT_END
 %INITIALIZATION
   /* ### %DeviceType "%DeviceName" init code ... */

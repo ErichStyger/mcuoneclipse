@@ -231,6 +231,41 @@ LI.EXP {
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 </ul><br />
 </li>
+<li>
+<a name="OnItemPut">
+<b>OnItemPut</b>
+</a>
+ - Optional event created for every item added with the Put() method.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void OnItemPut(%'ModuleName'_ElementType elem)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>elem:<i>ComponentName_</i>ElementType</i> - item which gets added</li>
+</ul><br />
+</li>
+<li>
+<a name="OnItemGet">
+<b>OnItemGet</b>
+</a>
+ - Optional event created for every item removed with the Get() method.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void OnItemGet(%'ModuleName'_ElementType elem)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>elem:<i>ComponentName_</i>ElementType</i> - item which gets removed</li>
+</ul><br />
+</li>
+<li>
+<a name="OnClear">
+<b>OnClear</b>
+</a>
+ - Optional event called in case of Clear() call.
+<ul>
+<!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
+<br /><i>ANSIC prototype:</i> void OnClear(void)<br />
+<!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+</ul><br />
+</li>
 </ul>
 <hr />
 <font style="font: 12px Verdana, Geneva, Arial, Helvetica, sans-serif;COLOR: #005ba2;">
