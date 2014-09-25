@@ -4,7 +4,7 @@
     <Name>Bluetooth_EGBT</Name>
     <Description>Driver for Bluetooth Modules (like e-Gizmo EGBT-045MS, HC-05, HC-06 and BC04)</Description>
     <Author>Erich Styger</Author>
-    <Version>01.046</Version>
+    <Version>01.051</Version>
     <Icon>Bluetooth_EGBT</Icon>
     <TypesFiles>PE,Bluetooth_EGBT\Bluetooth_EGBT</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -19,7 +19,7 @@
     <BW_NeedUst>2</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2013, all rights reserved. BC04 contribution by Mihai Surdeanu.\nWeb: http://mcuoneclipse.com\n\nThis an open source software implementing an LED driver using Processor Expert.\nThis is a free software and is opened for education, research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
+    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2013-2014, all rights reserved. BC04 contribution by Mihai Surdeanu.\nWeb: http://mcuoneclipse.com\n\nThis an open source software implementing an LED driver using Processor Expert.\nThis is a free software and is opened for education, research and commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
     <Category>SW-User Components</Category>
     <DemoDriver>no</DemoDriver>
     <BeanLevel>High</BeanLevel>
@@ -137,6 +137,54 @@
               <InhrBeanBaseName>BTState</InhrBeanBaseName>
               <ShowInheritedMethodsEventsInPrjTree>false</ShowInheritedMethodsEventsInPrjTree>
             </TInhrItem>
+          </GrupItem>
+        </Children>
+      </TBoolGrupItem>
+    </Property>
+    <Property>
+      <TBoolGrupItem>
+        <Name>Rx Pull-Up</Name>
+        <Symbol>RxPullupEnable</Symbol>
+        <TypeSpec>typeEnaDis</TypeSpec>
+        <Hint>If on the RX (Microcontroller side) an internal pull-up shall be enabled. Needed for some Bluetooth modules, e.g. V1.06 of JY-MCU.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <BoldName>true</BoldName>
+        <EditLine>false</EditLine>
+        <Description>Disabled</Description>
+        <Expanded>Yes</Expanded>
+        <DefaultValue>false</DefaultValue>
+        <DefineSymbol>YES_NO</DefineSymbol>
+        <IfDisabled>setNOTHING</IfDisabled>
+        <Children>
+          <GrupItem>
+            <TStrgItem>
+              <Name>Pin Name</Name>
+              <Symbol>RxPullupPinName</Symbol>
+              <Hint>Port Pin Character Name, e.g. A (for PTA) or C for PTC.</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>E</DefaultValue>
+              <StrDefine>nothing</StrDefine>
+              <MinLength>0</MinLength>
+              <MaxLength>-1</MaxLength>
+            </TStrgItem>
+          </GrupItem>
+          <GrupItem>
+            <TIntgItem>
+              <Name>Pin Number</Name>
+              <Symbol>RxPullUpPinNumber</Symbol>
+              <Hint>Pin number, .e.g 0 or 1 or 3, etc</Hint>
+              <ItemLevel>BASIC</ItemLevel>
+              <EditLine>true</EditLine>
+              <DefaultValue>1</DefaultValue>
+              <MinValue>0</MinValue>
+              <MaxValue>-1</MaxValue>
+              <Bases>DEC</Bases>
+              <DefaultBase>DEC</DefaultBase>
+              <ExtraHintDisabled>false</ExtraHintDisabled>
+              <ChangeValueIntoRange>false</ChangeValueIntoRange>
+              <RuntimeProperty>false</RuntimeProperty>
+            </TIntgItem>
           </GrupItem>
         </Children>
       </TBoolGrupItem>
