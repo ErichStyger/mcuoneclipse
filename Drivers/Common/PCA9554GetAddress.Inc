@@ -5,8 +5,7 @@
 %;** ===================================================================
 %include Common\GeneralMethod.inc (GetAddress)
 %;**     Description :
-%;**         Returns the currently used device address used. Note that
-%;**         the address is without the base address (it starts with zero).
+%;**         Returns the current I2C device address.
 %include Common\GeneralParametersNone.inc
 %;**     Returns     :
 %;**         ---%RetVal %>27 - Error code

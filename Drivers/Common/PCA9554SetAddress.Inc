@@ -6,7 +6,7 @@
 %include Common\GeneralMethod.inc (SetAddress)
 %;**     Description :
 %;**         Sets the I2C address of the device to communicate with. The
-%;**         address will be stored in a global variable in the component..
+%;**         address will be stored in a global variable in the component.
 %;**         Disable this method if you do not need it.
 %include Common\GeneralParameters.inc(27)
 %;**         addr%Paraddr %>27 - Device address (to be added to the base

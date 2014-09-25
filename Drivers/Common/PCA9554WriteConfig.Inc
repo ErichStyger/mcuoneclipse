@@ -15,7 +15,8 @@
 %;**         I/Os are configured as inputs with a weak pull-up to VDD.
 %include Common\GeneralParameters.inc(27)
 %;**         val%Parval %>27 - register value
-%include Common\GeneralReturnNothing.inc
+%;**     Returns     :
+%;**         ---%RetVal %>27 - Error code
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

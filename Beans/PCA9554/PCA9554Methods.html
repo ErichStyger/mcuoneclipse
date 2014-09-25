@@ -341,7 +341,7 @@ LI.EXP {
 </li>
 <li><a name="ReadConfig">
 <b>ReadConfig</b></a>
- - Reads the polarity inversion register.<br />This register configures the directions of the I/O pins. If a bit in this register is set, the<br />corresponding port pin is enabled as an input with high-impedance output driver. If a bit in<br />this register is cleared, the corresponding port pin is enabled as an output. At reset, the<br />I/Os are configured as inputs with a weak pull-up to VDD.
+ - Reads the configuration register.<br />This register configures the directions of the I/O pins. If a bit in this register is set, the<br />corresponding port pin is enabled as an input with high-impedance output driver. If a bit in<br />this register is cleared, the corresponding port pin is enabled as an output. At reset, the<br />I/Os are configured as inputs with a weak pull-up to VDD.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
 <br /><i>ANSIC prototype:</i> byte ReadConfig(void)<br />
@@ -355,14 +355,16 @@ LI.EXP {
  - Writes the configuration register.<br />This register configures the directions of the I/O pins. If a bit in this register is set, the<br />corresponding port pin is enabled as an input with high-impedance output driver. If a bit in<br />this register is cleared, the corresponding port pin is enabled as an output. At reset, the<br />I/Os are configured as inputs with a weak pull-up to VDD.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> void WriteConfig(byte val)<br />
+<br /><i>ANSIC prototype:</i> byte WriteConfig(byte val)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>val:byte</i> - register value</li>
+<li><i>Return value:byte</i> - Error code
+</li>
 </ul><br />
 </li>
 <li><a name="SetAddress">
 <b>SetAddress</b></a>
- - Sets the I2C address of the device to communicate with. The address will be stored in a global variable in the component..Disable this method if you do not need it.
+ - Sets the I2C address of the device to communicate with. The address will be stored in a global variable in the component. Disable this method if you do not need it.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
 <br /><i>ANSIC prototype:</i> void SetAddress(byte addr)<br />
@@ -372,7 +374,7 @@ LI.EXP {
 </li>
 <li><a name="GetAddress">
 <b>GetAddress</b></a>
- - Returns the currently used device address used. Note that the address is without the base address (it starts with zero).
+ - Returns the current I2C device address.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
 <br /><i>ANSIC prototype:</i> byte GetAddress(void)<br />

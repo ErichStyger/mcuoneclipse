@@ -5,7 +5,7 @@
 %;** ===================================================================
 %include Common\GeneralMethod.inc (ReadConfig)
 %;**     Description :
-%;**         Reads the polarity inversion register.
+%;**         Reads the configuration register.
 %;**         This register configures the directions of the I/O pins. If
 %;**         a bit in this register is set, the
 %;**         corresponding port pin is enabled as an input with

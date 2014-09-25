@@ -247,8 +247,9 @@ byte %'ModuleName'%.%ReadConfig(void);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN WriteConfig
 %ifdef WriteConfig
-void %'ModuleName'%.%WriteConfig(byte val);
+byte %'ModuleName'%.%WriteConfig(byte val);
 %define! Parval
+%define! RetVal
 %include Common\PCA9554WriteConfig.Inc
 
 %endif %- WriteConfig
@@ -271,7 +272,6 @@ byte %'ModuleName'%.%GetAddress(void);
 
 %endif %- GetAddress
 %-BW_METHOD_END GetAddress
-%-************************************************************************************************************
 %-************************************************************************************************************
 %-INHERITED_EVENT_BEGIN ExternalInterrupt OnInterrupt
 %if %usingExternalInterrupt = 'yes'
@@ -334,20 +334,20 @@ void %OnInterrupt(void);
 #define %'ModuleName'%.DEVICE_BASE_ADDRESS_PCA9554      0x20 /* I2C device base address for PCA9554, will be shifted by one on the bus! */
 #define %'ModuleName'%.DEVICE_BASE_ADDRESS_PCA9554A     0x38 /* I2C device base address for PCA9554A, will be shifted by one on the bus! */
 %if %Device = 'PCA9554'
-#define %'ModuleName'%.DEVICE_BASE_ADDRESS              %'ModuleName'%.DEVICE_BASE_ADDRESS_PCA9554
+#define %'ModuleName'%.DEVICE_BASE_ADDRESS              %'ModuleName'%.DEVICE_BASE_ADDRESS_PCA9554 /* we are a PCA9554 */
 %elif %Device = 'PCA9554A'
-#define %'ModuleName'%.DEVICE_BASE_ADDRESS              %'ModuleName'%.DEVICE_BASE_ADDRESS_PCA9554A
+#define %'ModuleName'%.DEVICE_BASE_ADDRESS              %'ModuleName'%.DEVICE_BASE_ADDRESS_PCA9554A /* we are a PCA9554A */
 %else
   #error "unknown device type %Device!"
 %endif
-/* default address of device, as set in the properties */
-#define %'ModuleName'%.DEVICE_DEFAULT_ADDR   %I2CAddress /* address of the device, defined by A0, A1 and A3 pins, will be shifted by one on the bus! */
+/* I2C address bits formed by pins A0, A1 and A2, as set in the properties */
+#define %'ModuleName'%.DEVICE_I2C_ADDR_PIN_BITS   (%I2CAddress) /* address of the device, defined by A0, A1 and A3 pins, will be shifted by one on the bus! */
 
-/* current address of the device: */
+/* current I2C address of the device: */
 %if defined(SetAddress)
-static uint8_t %'ModuleName'%.DEVICE_ADDR = %'ModuleName'%.DEVICE_DEFAULT_ADDR;
+static uint8_t %'ModuleName'%.I2C_ADDR = (%'ModuleName'%.DEVICE_BASE_ADDRESS)|(%'ModuleName'%.DEVICE_I2C_ADDR_PIN_BITS);
 %else
-#define %'ModuleName'%.DEVICE_ADDR %'ModuleName'%.DEVICE_DEFAULT_ADDR
+#define %'ModuleName'%.I2C_ADDR          (%'ModuleName'%.DEVICE_BASE_ADDRESS)|(%'ModuleName'%.DEVICE_I2C_ADDR_PIN_BITS)
 %endif
 
 %-BW_CUSTOM_VARIABLE_END
@@ -364,20 +364,15 @@ static uint8_t %'ModuleName'%.DEVICE_ADDR = %'ModuleName'%.DEVICE_DEFAULT_ADDR;
 %include Common\PCA9554WriteI2CByte.Inc
 byte %'ModuleName'%.%WriteI2CByte(byte addr, byte ch)
 {
-  uint8_t buf[2], res;
-  uint16_t snt;
+  uint8_t res;
 
   if (addr > %'ModuleName'%.ADDR_MAX_ADDRESS) {
     return ERR_RANGE;
   }
-  buf[0] = (uint8_t)(addr);
-  buf[1] = ch;
-  (void)%@SWI2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_BASE_ADDRESS|%'ModuleName'%.DEVICE_ADDR);
-  res = %@SWI2C@'ModuleName'%.SendBlock(&buf, 2, &snt);
+  res = %@SWI2C@'ModuleName'%.WriteAddress(%'ModuleName'%.I2C_ADDR, (uint8_t*)&addr, sizeof(addr), &ch, sizeof(ch));
   if (res!=ERR_OK) {
     return res;
   }
-  (void)%@SWI2C@'ModuleName'%.SendStop();
   return ERR_OK;
 }
 
@@ -392,22 +387,10 @@ byte %'ModuleName'%.%WriteI2CByte(byte addr, byte ch)
 %include Common\PCA9554ReadI2CByte.Inc
 byte %'ModuleName'%.%ReadI2CByte(byte addr, byte *chp)
 {
-  uint8_t res;
-
   if (addr > %'ModuleName'%.ADDR_MAX_ADDRESS) {
     return ERR_RANGE;
   }
-  (void)%@SWI2C@'ModuleName'%.SelectSlave(%'ModuleName'%.DEVICE_BASE_ADDRESS|%'ModuleName'%.DEVICE_ADDR);
-  res = %@SWI2C@'ModuleName'%.SendChar((uint8_t)(addr));
-  if (res!=ERR_OK) {
-    return res;
-  }
-  res = %@SWI2C@'ModuleName'%.RecvChar(chp);
-  if (res!=ERR_OK) {
-    return res;
-  }
-  (void)%@SWI2C@'ModuleName'%.SendStop();
-  return ERR_OK;
+  return %@SWI2C@'ModuleName'%.ReadAddress(%'ModuleName'%.I2C_ADDR, (uint8_t*)&addr, sizeof(addr), chp, 1);
 }
 
 %endif %- ReadI2CByte
@@ -562,10 +545,11 @@ byte %'ModuleName'%.%ReadConfig(void)
 %-BW_METHOD_BEGIN WriteConfig
 %ifdef WriteConfig
 %define! Parval
+%define! RetVal
 %include Common\PCA9554WriteConfig.Inc
-void %'ModuleName'%.%WriteConfig(byte val)
+byte %'ModuleName'%.%WriteConfig(byte val)
 {
-  %'ModuleName'%.%WriteI2CByte(%'ModuleName'%.ADDR_REG_CONFIG, val);
+  return %'ModuleName'%.%WriteI2CByte(%'ModuleName'%.ADDR_REG_CONFIG, val);
 }
 
 %endif %- WriteConfig
@@ -577,7 +561,7 @@ void %'ModuleName'%.%WriteConfig(byte val)
 %include Common\PCA9554SetAddress.Inc
 void %'ModuleName'%.%SetAddress(byte addr)
 {
-  %'ModuleName'%.DEVICE_ADDR = addr; /* store the address */
+  %'ModuleName'%.I2C_ADDR = addr; /* store the address */
 }
 
 %endif %- SetAddress
@@ -589,12 +573,11 @@ void %'ModuleName'%.%SetAddress(byte addr)
 %include Common\PCA9554GetAddress.Inc
 byte %'ModuleName'%.%GetAddress(void)
 {
-  return %'ModuleName'%.DEVICE_ADDR; /* return the base address, starting with zero */
+  return %'ModuleName'%.I2C_ADDR; /* return the current I2C address */
 }
 
 %endif %- GetAddress
 %-BW_METHOD_END GetAddress
-%-************************************************************************************************************
 %-************************************************************************************************************
 %-INHERITED_EVENT_BEGIN ExternalInterrupt OnInterrupt
 %if %usingExternalInterrupt = 'yes'

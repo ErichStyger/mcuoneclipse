@@ -4,7 +4,7 @@
     <Name>PCA9554</Name>
     <Description>NXP PCA9554 and PCA9554A I2C I/O Expander</Description>
     <Author>Erich Styger</Author>
-    <Version>01.024</Version>
+    <Version>01.028</Version>
     <Icon>CPU_CHIP2</Icon>
     <TypesFiles>PE,PCA9554\PCA9554</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -19,7 +19,7 @@
     <BW_NeedUst>0</BW_NeedUst>
     <BW_NeedCns>0</BW_NeedCns>
     <BeanStatus>PROPOSAL</BeanStatus>
-    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2011, all right reserved.\n\nThis an open source software implementing a driver for the \nNXP Semiconductor PCA955(A) (I2C I/O expander) using Processor Expert.\nThis is a free software and is opened for education,  research \nand commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for\n  personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
+    <Copyright>License   :  Open Source (LGPL)\nCopyright : (c) Copyright Erich Styger, 2011-2014, all right reserved.\n\nThis an open source software implementing a driver for the \nNXP Semiconductor PCA955(A) (I2C I/O expander) using Processor Expert.\nThis is a free software and is opened for education,  research \nand commercial developments under license policy of following terms:\n* This is a free software and there is NO WARRANTY.\n* No restriction on use. You can use, modify and redistribute it for\n  personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.\n* Redistributions of source code must retain the above copyright notice.</Copyright>
     <Category>CPU External Devices-Port I/O</Category>
     <DemoDriver>no</DemoDriver>
     <Shortcut>PCA</Shortcut>
@@ -88,7 +88,7 @@
         <Name>Using external interrupt</Name>
         <Symbol>usingExternalInterrupt</Symbol>
         <TypeSpec>typeEnaDis</TypeSpec>
-        <Hint/>
+        <Hint>Configures the external interrupt pin of the device.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
@@ -542,7 +542,7 @@ this register is cleared (written with a ‘0’), the Input Port data polarity 
         <Name>ReadConfig</Name>
         <Symbol>ReadConfig</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Reads the polarity inversion register.\n
+        <Hint>Reads the configuration register.\n
 This register configures the directions of the I/O pins. If a bit in this register is set, the\n
 corresponding port pin is enabled as an input with high-impedance output driver. If a bit in\n
 this register is cleared, the corresponding port pin is enabled as an output. At reset, the\n
@@ -592,8 +592,8 @@ I/Os are configured as inputs with a weak pull-up to VDD.</Hint>
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
         <InDefinition>true</InDefinition>
-        <ReturnType>void</ReturnType>
-        <RetHint>none</RetHint>
+        <ReturnType>8bit unsigned</ReturnType>
+        <RetHint>Error code</RetHint>
         <ParamCount>1</ParamCount>
         <Parameter>
           <ParName>val</ParName>
@@ -603,7 +603,7 @@ I/Os are configured as inputs with a weak pull-up to VDD.</Hint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>void #M#_#C#(byte val)</ANSIC>
+          <ANSIC>byte #M#_#C#(byte val)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -612,16 +612,16 @@ I/Os are configured as inputs with a weak pull-up to VDD.</Hint>
         <Name>SetAddress</Name>
         <Symbol>SetAddress</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Sets the I2C address of the device to communicate with. The address will be stored in a global variable in the component..Disable this method if you do not need it.</Hint>
+        <Hint>Sets the I2C address of the device to communicate with. The address will be stored in a global variable in the component. Disable this method if you do not need it.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
+        <DefaultIndex>1</DefaultIndex>
         <TextValueIndex>false</TextValueIndex>
         <RuntimeProperty>false</RuntimeProperty>
         <CanDelete>false</CanDelete>
         <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
+        <DefaultValue>false</DefaultValue>
         <Popup>false</Popup>
         <PublicMethod>true</PublicMethod>
         <IsAssembler>false</IsAssembler>
@@ -646,7 +646,7 @@ I/Os are configured as inputs with a weak pull-up to VDD.</Hint>
         <Name>GetAddress</Name>
         <Symbol>GetAddress</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Returns the currently used device address used. Note that the address is without the base address (it starts with zero).</Hint>
+        <Hint>Returns the current I2C device address.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
