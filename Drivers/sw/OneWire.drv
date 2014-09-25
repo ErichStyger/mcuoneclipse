@@ -225,7 +225,7 @@ void %'ModuleName'%.%i_send_float();
 %include Common\OneWirei_send_low.inc
 void %'ModuleName'%.%i_send_low();
 %endif  %-i_send_low
-%-BW_METHOD_END i_send_low_7
+%-BW_METHOD_END i_send_low
 
 %-*****************************************************************************************************
 %-BW_METHOD_BEGIN Method
@@ -817,7 +817,7 @@ bool %'ModuleName'%.%SendByte(uint8_t _byte)
 %CODE_END
 }
 %endif %-SendByte
-%-BW_METHOD_END SendBytes
+%-BW_METHOD_END SendByte
 
 %-*****************************************************************************************************
 %-BW_METHOD_BEGIN i_recv_float
