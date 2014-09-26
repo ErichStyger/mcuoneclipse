@@ -209,6 +209,13 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
 %endif
 #endif /* configUSE_TICKLESS_IDLE */
 
+/* Flag indicating that the tick counter interval needs to be restored back to
+ * the normal setting. Used when waken up from a low power mode using the LPTMR.
+ */
+#if (configUSE_TICKLESS_IDLE == 1) && configSYSTICK_USE_LOW_POWER_TIMER
+  static bool restoreTickInterval = pdFALSE; /* used to flag in tick ISR that compare register needs to be reloaded */
+#endif
+
 #if (configCPU_FAMILY==configCPU_FAMILY_CF1) || (configCPU_FAMILY==configCPU_FAMILY_CF2)
   #define portINITIAL_FORMAT_VECTOR           ((portSTACK_TYPE)0x4000)
   #define portINITIAL_STATUS_REGISTER         ((portSTACK_TYPE)0x2000)  /* Supervisor mode set. */
@@ -810,10 +817,15 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
   GET_TICK_CURRENT_VAL(&tmp);
 #endif
   /* Calculate the reload value required to wait xExpectedIdleTime
-   * tick periods. -1 is used because this code will execute part way
-   * through one of the tick periods. 
+   * tick periods. This code will execute part way through one
+   * of the tick periods.
    */
+#if COUNTS_UP
+  ulReloadValue = (UL_TIMER_COUNTS_FOR_ONE_TICK*xExpectedIdleTime)-tmp;
+#else
+  /* -1UL is used because this code will execute part way through one of the tick periods */
   ulReloadValue = tmp+(UL_TIMER_COUNTS_FOR_ONE_TICK*(xExpectedIdleTime-1UL));
+#endif
   if (ulReloadValue>ulStoppedTimerCompensation) {
     ulReloadValue -= ulStoppedTimerCompensation;
   }
@@ -827,6 +839,12 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
    * to be unsuspended then abandon the low power entry. 
    */
   if (eTaskConfirmSleepModeStatus()==eAbortSleep) {
+     /* Must restore the duration before re-enabling the timers */
+#if COUNTS_UP
+    SET_TICK_DURATION((UL_TIMER_COUNTS_FOR_ONE_TICK-1UL)-tmp);
+#else
+    SET_TICK_DURATION(tmp);
+#endif
     ENABLE_TICK_COUNTER(); /* Restart SysTick. */
     TICKLESS_ENABLE_INTERRUPTS();
   } else {
@@ -925,7 +943,17 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
     {
       ENABLE_TICK_COUNTER();
       vTaskStepTick(ulCompleteTickPeriods);
+#if configSYSTICK_USE_LOW_POWER_TIMER
+      /* The compare register of the LPTMR should not be modified when the
+       * timer is running, so wait for the next tick interrupt to change it.
+       */
+      restoreTickInterval = pdTRUE; /* flag for the next tick ISR to reload the normal compare value */
+#else
+      /* The systick has a load register that will automatically be used
+       * when the counter counts down to zero.
+       */
       SET_TICK_DURATION(UL_TIMER_COUNTS_FOR_ONE_TICK-1UL);
+#endif
     }
     portEXIT_CRITICAL();
   }
@@ -1297,6 +1325,14 @@ void vPortTickHandler(void) {
   TICK_INTERRUPT_FLAG_SET();
 #endif
   portSET_INTERRUPT_MASK();   /* disable interrupts */
+#if (configUSE_TICKLESS_IDLE == 1) && configSYSTICK_USE_LOW_POWER_TIMER
+  if (restoreTickInterval) { /* we got interrupted during tickless mode and non-standard compare value: reload normal compare value */
+    DISABLE_TICK_COUNTER();
+    SET_TICK_DURATION(UL_TIMER_COUNTS_FOR_ONE_TICK-1UL);
+    ENABLE_TICK_COUNTER();
+    restoreTickInterval = pdFALSE;
+  }
+#endif
   if (xTaskIncrementTick()!=pdFALSE) { /* increment tick count */
     taskYIELD();
   }
@@ -1415,6 +1451,14 @@ PE_ISR(RTOSTICKLDD1_Interrupt)
   TICK_INTERRUPT_FLAG_SET();
 #endif
   portSET_INTERRUPT_MASK();   /* disable interrupts */
+#if (configUSE_TICKLESS_IDLE == 1) && configSYSTICK_USE_LOW_POWER_TIMER
+  if (restoreTickInterval) { /* we got interrupted during tickless mode and non-standard compare value: reload normal compare value */
+    DISABLE_TICK_COUNTER();
+    SET_TICK_DURATION(UL_TIMER_COUNTS_FOR_ONE_TICK-1UL);
+    ENABLE_TICK_COUNTER();
+    restoreTickInterval = pdFALSE;
+  }
+#endif
   if (xTaskIncrementTick()!=pdFALSE) { /* increment tick count */
     taskYIELD();
   }
