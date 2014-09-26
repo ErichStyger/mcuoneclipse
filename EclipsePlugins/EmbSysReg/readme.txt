@@ -1,5 +1,8 @@
-support files for the Eclipse Embedded Systems Register View
+support files for the Eclipse Embedded Systems Register View, see
 https://sourceforge.net/projects/embsysregview/
+
+V0.3:
+- added more Freescale SVD XML files.
 
 V0.2:
 - added support for %s and CMSIS-SVD dimElementGroup
