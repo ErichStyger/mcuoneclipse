@@ -14,7 +14,6 @@
 void APP_Run(void) {
   int value;
   char buffer[64];
-
 #if 0
   for(;;) {
     printf("Hello world!\r\n");
@@ -27,7 +26,6 @@ void APP_Run(void) {
     LEDG_Off();
   }
 #endif
-
   for(;;) {
     printf("Hello world!\r\n");
     printf("Please enter a name:\n\r");

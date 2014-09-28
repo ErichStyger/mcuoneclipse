@@ -6,6 +6,7 @@
 #include "derivative.h" /* include peripheral declarations */
 #include <stdio.h>
 #include "ConsoleIO.h"
+#include "Application.h"
 
 #define RED         (18)
 #define RED_SHIFT   (1<<RED)
@@ -40,9 +41,12 @@ static char buffer[64];
 #endif
 
 int main(void) {
-	int counter = 0;
-	
 	ConsoleIO_Init();
+#if 1
+	APP_Run();
+#else
+    int counter = 0;
+    
 	InitLED();
   printf("Hello world!\r\n");
 	for(;;) {	   
@@ -63,5 +67,6 @@ int main(void) {
     }
 #endif
 	}
+#endif
 	return 0;
 }
