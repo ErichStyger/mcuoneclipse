@@ -649,6 +649,7 @@ static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  Who am I", buf, io->stdOut);
 
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  GetMagX,Y,Z", (unsigned char*)"", io->stdOut);
+  val16s = 0;
   (void)%'ModuleName'%.GetMagX(&val16s);
   %@Shell@'ModuleName'%.SendNum16s(val16s, io->stdOut);
   %@Shell@'ModuleName'%.SendStr((unsigned char*)" ", io->stdOut);

@@ -4,7 +4,7 @@
     <Name>FXOS8700CQ</Name>
     <Description>Driver for the Freescale FXOS8700CQ digital I2C accelerometer and magnetometer.</Description>
     <Author>Erich Styger</Author>
-    <Version>01.024</Version>
+    <Version>01.027</Version>
     <Icon>FXOS8700CQ</Icon>
     <TypesFiles>PE,FXOS8700CQ\FXOS8700CQ</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -521,7 +521,7 @@
         <Name>CalibrateY1g</Name>
         <Symbol>CalibrateY1g</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Performs a calibration of the sensor. It is assumed that the Y and Z sensors have 0 g, and the X sensor has 1 g.</Hint>
+        <Hint>Performs a calibration of the sensor. It is assumed that the X and Z sensors have 0 g, and the Y sensor has 1 g.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
@@ -549,7 +549,7 @@
         <Name>CalibrateZ1g</Name>
         <Symbol>CalibrateZ1g</Symbol>
         <TypeSpec>typeMethod</TypeSpec>
-        <Hint>Performs a calibration of the sensor. It is assumed that the X and Y sensors have 0 g, and the X sensor has 1 g.</Hint>
+        <Hint>Performs a calibration of the sensor. It is assumed that the X and Y sensors have 0 g, and the Z sensor has 1 g.</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
