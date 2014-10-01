@@ -198,14 +198,14 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
 
 /*
  * Compensate for the CPU cycles that pass while the tick timer is stopped (low
- * power functionality only.
+ * power functionality only).
  */
 #if configUSE_TICKLESS_IDLE == 1
-  static TickCounter_t ulStoppedTimerCompensation = 0;
+  static TickCounter_t ulStoppedTimerCompensation = 0; /* number of timer ticks to compensate */
 %if defined(StoppedTimerCompensation)
-  #define configSTOPPED_TIMER_COMPENSATION    %'StoppedTimerCompensation'UL  /* number of ticks to compensate, as defined in properties */
+  #define configSTOPPED_TIMER_COMPENSATION    %'StoppedTimerCompensation'UL  /* number of CPU cycles to compensate, as defined in properties. ulStoppedTimerCompensation will contain the number of timer ticks. */
 %else
-  #define configSTOPPED_TIMER_COMPENSATION    45UL  /* number of ticks to compensate */
+  #define configSTOPPED_TIMER_COMPENSATION    45UL  /* number of CPU cycles to compensate. ulStoppedTimerCompensation will contain the number of timer ticks. */
 %endif
 #endif /* configUSE_TICKLESS_IDLE */
 
@@ -214,6 +214,7 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
  */
 #if (configUSE_TICKLESS_IDLE == 1) && configSYSTICK_USE_LOW_POWER_TIMER
   static bool restoreTickInterval = pdFALSE; /* used to flag in tick ISR that compare register needs to be reloaded */
+  static uint32_t ulCumulatedStoppedLPCycles = 0; /* counts us for ulStoppedTimerCompensation */
 #endif
 
 #if (configCPU_FAMILY==configCPU_FAMILY_CF1) || (configCPU_FAMILY==configCPU_FAMILY_CF2)
@@ -826,6 +827,14 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
   /* -1UL is used because this code will execute part way through one of the tick periods */
   ulReloadValue = tmp+(UL_TIMER_COUNTS_FOR_ONE_TICK*(xExpectedIdleTime-1UL));
 #endif
+#if configSYSTICK_USE_LOW_POWER_TIMER
+  /* we have a 1 ms low power timer, so we need to account for the small delays until it counts up to 1 ms */
+  ulCumulatedStoppedLPCycles += configSTOPPED_TIMER_COMPENSATION;
+  if (ulCumulatedStoppedLPCycles>=(configCPU_CLOCK_HZ/configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ)) {
+    ulStoppedTimerCompensation = 1; /* \todo Count for real timer period */
+    ulCumulatedStoppedLPCycles -= (configCPU_CLOCK_HZ/configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ);
+  }
+#endif
   if (ulReloadValue>ulStoppedTimerCompensation) {
     ulReloadValue -= ulStoppedTimerCompensation;
   }
@@ -976,6 +985,7 @@ void vPortInitTickTimer(void) {
 #endif
 #if configSYSTICK_USE_LOW_POWER_TIMER
   ulStoppedTimerCompensation = configSTOPPED_TIMER_COMPENSATION/(configCPU_CLOCK_HZ/configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ);
+  ulCumulatedStoppedLPCycles = 0;
 #else
   ulStoppedTimerCompensation = configSTOPPED_TIMER_COMPENSATION/(configCPU_CLOCK_HZ/configSYSTICK_CLOCK_HZ);
 #endif
