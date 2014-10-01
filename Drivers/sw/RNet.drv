@@ -126,7 +126,7 @@ typedef enum {
   %'ModuleName'%.RADIO_ACK_RECEIVED         /* acknowledge message received */
 } %'ModuleName'%.RadioEvent;
 
-%if defined(OnEvent)
+%if defined(OnRadioEvent)
 #define %'ModuleName'%.CREATE_EVENTS   1  /* call user event handler */
 %else
 #define %'ModuleName'%.CREATE_EVENTS   0  /* do not call user event handler */

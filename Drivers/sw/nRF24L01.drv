@@ -786,6 +786,8 @@ void %OnDeactivate(void);
 #define %'ModuleName'%.CSN_LOW()   %@CSN@'ModuleName'%.ClrVal()  %>50/* put CSN LOW, activate bus */
 #define %'ModuleName'%.CSN_HIGH()  %@CSN@'ModuleName'%.SetVal()  %>50/* put CSN HIGH, deactivate bus */
 
+#define %'ModuleName'%.USE_SPI_BLOCK_MODE   0                    %>50/* using SPI block read/write */
+
 %ifdef SWSPI
 /* SW SPI */
 #define %'ModuleName'%.SPI_SetFastMode()              %@SWSPI@'ModuleName'%.SetFastMode()
@@ -840,11 +842,11 @@ static uint8_t SPIWriteRead(uint8_t val)
 {
   uint8_t ch;
 
-  while (%'ModuleName'%.SPI_GetCharsInTxBuf()!=0) {} /* wait until tx is empty */
-  while (%'ModuleName'%.SPI_SendChar(val)!=ERR_OK) {} /* send character */
-  while (%'ModuleName'%.SPI_GetCharsInTxBuf()!=0) {} /* wait until data has been sent */
-  while (%'ModuleName'%.SPI_GetCharsInRxBuf()==0) {} /* wait until we receive data */
-  while (%'ModuleName'%.SPI_RecvChar(&ch)!=ERR_OK) {} /* get data */
+  while(%'ModuleName'%.SPI_GetCharsInTxBuf()!=0) {} /* wait until tx is empty */
+  while(%'ModuleName'%.SPI_SendChar(val)!=ERR_OK) {} /* send character */
+  while(%'ModuleName'%.SPI_GetCharsInTxBuf()!=0) {} /* wait until data has been sent */
+  while(%'ModuleName'%.SPI_GetCharsInRxBuf()==0) {} /* wait until we receive data */
+  while(%'ModuleName'%.SPI_RecvChar(&ch)!=ERR_OK) {} /* get data */
   return ch;
 }
 
@@ -857,11 +859,25 @@ static uint8_t SPIWriteRead(uint8_t val)
 %include Common\GeneralInternalGlobal.inc (SPIWriteReadBuffer)
 static void SPIWriteReadBuffer(uint8_t *bufOut, uint8_t *bufIn, uint8_t bufSize)
 {
+#if %'ModuleName'%.USE_SPI_BLOCK_MODE
+  uint16_t snt, rcvd;
+
+  while(%'ModuleName'%.SPI_GetCharsInTxBuf()!=0) {} /* wait until tx is empty */
+  while(%@SPI@'ModuleName'%.SendBlock(bufOut, bufSize, &snt)!=ERR_OK) {
+    /* send buffer */
+  }
+  while(%'ModuleName'%.SPI_GetCharsInTxBuf()!=0) {} /* wait until data has been sent */
+  while(%'ModuleName'%.SPI_GetCharsInRxBuf()==0) {} /* wait until we receive data */
+  while(%@SPI@'ModuleName'%.RecvBlock(bufIn, bufSize, &rcvd)!=ERR_OK) {
+    /* get data */
+  }
+#else
   uint8_t i;
 
   for(i=0;i<bufSize;i++) {
     bufIn[i] = SPIWriteRead(bufOut[i]);
   }
+#endif
 }
 
 %-INTERNAL_METHOD_END SPIWriteReadBuffer
@@ -872,11 +888,34 @@ static void SPIWriteReadBuffer(uint8_t *bufOut, uint8_t *bufIn, uint8_t bufSize)
 %include Common\GeneralInternalGlobal.inc (SPIWriteBuffer)
 static void SPIWriteBuffer(uint8_t *bufOut, uint8_t bufSize)
 {
+#if %'ModuleName'%.USE_SPI_BLOCK_MODE
+  uint16_t snt, rcvd;
+  static uint8_t dummyBuf[%@SPI@'ModuleName'%.INP_BUF_SIZE];
+
+  if (bufSize>%@SPI@'ModuleName'%.INP_BUF_SIZE) { /* not enough dummy buffer */
+    uint8_t i;
+
+    for(i=0;i<bufSize;i++) {
+      (void)SPIWriteRead(bufOut[i]);
+    }
+  } else {
+    while(%'ModuleName'%.SPI_GetCharsInTxBuf()!=0) {} /* wait until tx is empty */
+    while(%@SPI@'ModuleName'%.SendBlock(bufOut, bufSize, &snt)!=ERR_OK) {
+      /* send buffer */
+    }
+    while(%'ModuleName'%.SPI_GetCharsInTxBuf()!=0) {} /* wait until data has been sent */
+    while(%'ModuleName'%.SPI_GetCharsInRxBuf()==0) {} /* wait until we receive data */
+    while(%@SPI@'ModuleName'%.RecvBlock(dummyBuf, bufSize, &rcvd)!=ERR_OK) {
+      /* get data */
+    }
+  }
+#else
   uint8_t i;
 
   for(i=0;i<bufSize;i++) {
     (void)SPIWriteRead(bufOut[i]);
   }
+#endif
 }
 
 %-INTERNAL_METHOD_END SPIWriteBuffer

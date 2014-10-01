@@ -200,7 +200,7 @@ static uint8_t CheckRx(void) {
   if (hasRxData) {
     /* put message into Rx queue */
 #if %'ModuleName'%.CREATE_EVENTS
-    %'ModuleName'%.OnEvent(%'ModuleName'%.RADIO_MSG_RECEIVED);
+    %'ModuleName'%.OnRadioEvent(%'ModuleName'%.RADIO_MSG_RECEIVED);
 #endif
     res = RMSG_QueueRxMsg(packet.phyData, packet.phySize, RPHY_BUF_SIZE(packet.phyData), packet.flags);
     if (res!=ERR_OK) {
@@ -273,7 +273,7 @@ static void RADIO_HandleStateMachine(void) {
             RADIO_AppStatus = RADIO_TIMEOUT; /* timeout */
           } else {
     #if %'ModuleName'%.CREATE_EVENTS
-            %'ModuleName'%.OnEvent(%'ModuleName'%.RADIO_MSG_SENT);
+            %'ModuleName'%.OnRadioEvent(%'ModuleName'%.RADIO_MSG_SENT);
     #endif
             RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON; /* turn receive on */
           }
@@ -286,7 +286,7 @@ static void RADIO_HandleStateMachine(void) {
         if (RADIO_RetryCnt<RNET_CONFIG_SEND_RETRY_CNT) {
           Err((unsigned char*)"ERR: Retry\r\n");
   #if %'ModuleName'%.CREATE_EVENTS
-          %'ModuleName'%.OnEvent(%'ModuleName'%.RADIO_RETRY);
+          %'ModuleName'%.OnRadioEvent(%'ModuleName'%.RADIO_RETRY);
   #endif
           RADIO_RetryCnt++;
           if (RMSG_PutRetryTxMsg(TxDataBuffer, sizeof(TxDataBuffer))==ERR_OK) {
@@ -295,14 +295,14 @@ static void RADIO_HandleStateMachine(void) {
           } else {
             Err((unsigned char*)"ERR: PutRetryTxMsg failed!\r\n");
   #if %'ModuleName'%.CREATE_EVENTS
-            %'ModuleName'%.OnEvent(%'ModuleName'%.RADIO_RETRY_MSG_FAILED);
+            %'ModuleName'%.OnRadioEvent(%'ModuleName'%.RADIO_RETRY_MSG_FAILED);
   #endif
           }
         }
 #endif
         Err((unsigned char*)"ERR: Timeout\r\n");
 #if %'ModuleName'%.CREATE_EVENTS
-        %'ModuleName'%.OnEvent(%'ModuleName'%.RADIO_TIMEOUT);
+        %'ModuleName'%.OnRadioEvent(%'ModuleName'%.RADIO_TIMEOUT);
 #endif
         RADIO_AppStatus = RADIO_RECEIVER_ALWAYS_ON; /* turn receive on */
         break; /* process switch again */
@@ -375,7 +375,7 @@ uint8_t RADIO_Process(void) {
     if (RPHY_OnPacketRx(&radioRx)==ERR_OK) { /* process incoming packets */
 #if %'ModuleName'%.CREATE_EVENTS
       if (radioRx.flags&RPHY_PACKET_FLAGS_IS_ACK) { /* it was an ack! */
-        %'ModuleName'%.OnEvent(%'ModuleName'%.RADIO_ACK_RECEIVED);
+        %'ModuleName'%.OnRadioEvent(%'ModuleName'%.RADIO_ACK_RECEIVED);
       }
 #endif
     }
