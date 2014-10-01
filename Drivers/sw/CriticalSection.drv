@@ -139,9 +139,9 @@
 %elif (%UseProcessorExpertDefault='no') & (%CPUfamily = "Kinetis") & (%Compiler = "GNUC")
   do {                                  \
     __asm (                             \
-    "MRS   R0, PRIMASK\n\t"             \
-    "CPSID I\n\t"                       \
-    "STRB R0, %%[output]"                \
+    "mrs   r0, PRIMASK     \n\t"        \
+    "cpsid i               \n\t"        \
+    "strb r0, %%[output]   \n\t"         \
     : [output] "=m" (cpuSR) :: "r0");   \
   } while(0)
 %else
@@ -161,8 +161,8 @@
 %elif (%UseProcessorExpertDefault='no') & (%CPUfamily = "Kinetis") & (%Compiler = "GNUC")
   do{                                  \
     __asm (                            \
-    "ldrb r0, %%[input]\n\t"            \
-    "msr PRIMASK,r0;\n\t"              \
+    "ldrb r0, %%[input]    \n\t"        \
+    "msr PRIMASK,r0        \n\t"       \
     ::[input] "m" (cpuSR) : "r0");     \
   } while(0)
 %else
