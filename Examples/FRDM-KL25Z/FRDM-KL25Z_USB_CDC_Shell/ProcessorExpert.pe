@@ -3,8 +3,8 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>101</ModificationStamp>
-    <Date>2014-08-16</Date>
+    <ModificationStamp>106</ModificationStamp>
+    <Date>2014-10-05</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.0.RT6_b1411-0406</PEversion>
   </Header>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>173</ProjectCompNumb>
+    <ProjectCompNumb>176</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>false</AssignInitComponentNameToPrph>
@@ -6742,7 +6742,7 @@
                 <UserFolderName />
                 <Comment lines_count="0" />
                 <Template>FSL_USB_CDC_Device\Buffer</Template>
-                <BeanVersion>01.025</BeanVersion>
+                <BeanVersion>01.029</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
                 <Properties>
                   <ItemState>
@@ -6755,7 +6755,7 @@
                     <ItemSymbol>BufferSize</ItemSymbol>
                     <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
-                    <Value>6</Value>
+                    <Value>32</Value>
                     <Base>DEC</Base>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                   </ItemState>
@@ -6891,6 +6891,54 @@
                     <UserReadOnly>false</UserReadOnly>
                     <Value>Tx1_OnBufferEmpty</Value>
                   </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemPut</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value>false</Value>
+                    <Expanded>false</Expanded>
+                    <LastSelection>false</LastSelection>
+                    <LastUserSel>never</LastUserSel>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemPutName</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value />
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemGet</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value>false</Value>
+                    <Expanded>false</Expanded>
+                    <LastSelection>false</LastSelection>
+                    <LastUserSel>never</LastUserSel>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemGetName</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value />
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnClear</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value>false</Value>
+                    <Expanded>false</Expanded>
+                    <LastSelection>false</LastSelection>
+                    <LastUserSel>never</LastUserSel>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnClearName</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value />
+                  </ItemState>
                 </Events>
               </InheritedComponentState>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
@@ -6911,7 +6959,7 @@
                 <UserFolderName />
                 <Comment lines_count="0" />
                 <Template>FSL_USB_CDC_Device\Buffer</Template>
-                <BeanVersion>01.025</BeanVersion>
+                <BeanVersion>01.029</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
                 <Properties>
                   <ItemState>
@@ -6924,7 +6972,7 @@
                     <ItemSymbol>BufferSize</ItemSymbol>
                     <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
-                    <Value>6</Value>
+                    <Value>32</Value>
                     <Base>DEC</Base>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                   </ItemState>
@@ -7059,6 +7107,54 @@
                     <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Value>Rx1_OnBufferEmpty</Value>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemPut</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value>false</Value>
+                    <Expanded>false</Expanded>
+                    <LastSelection>false</LastSelection>
+                    <LastUserSel>never</LastUserSel>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemPutName</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value />
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemGet</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value>false</Value>
+                    <Expanded>false</Expanded>
+                    <LastSelection>false</LastSelection>
+                    <LastUserSel>never</LastUserSel>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemGetName</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value />
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnClear</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value>false</Value>
+                    <Expanded>false</Expanded>
+                    <LastSelection>false</LastSelection>
+                    <LastUserSel>never</LastUserSel>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnClearName</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value />
                   </ItemState>
                 </Events>
               </InheritedComponentState>
