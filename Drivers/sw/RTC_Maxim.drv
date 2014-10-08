@@ -146,34 +146,82 @@
 %endif %- ParseCommand
 
 %if Device="DS3232"
-#define %'ModuleName'%.DEVICE_ADDRESS 0x68  /* I2C DS3232 device address */
+#define %'ModuleName'%.DEVICE 3232 /* DS1307, DS3232 or DS1342 */
 %elif Device="DS1307"
-#define %'ModuleName'%.DEVICE_ADDRESS 0x68  /* I2C DS1307 device address */
+#define %'ModuleName'%.DEVICE 1307 /* DS1307, DS3232 or DS1342 */
+%elif Device="DS1342"
+#define %'ModuleName'%.DEVICE 1342 /* DS1307, DS3232 or DS1342 */
 %else
-#error "Unknown device"
+#error "Unknown device %Device ?"
 %endif
+
+/* I2C address of the device on the bus: */
+#if %'ModuleName'%.DEVICE==3232
+  #define %'ModuleName'%.DEVICE_ADDRESS 0x68  /* I2C DS3232 device address */
+#elif %'ModuleName'%.DEVICE==1307
+  #define %'ModuleName'%.DEVICE_ADDRESS 0x68  /* I2C DS1307 device address */
+#elif %'ModuleName'%.DEVICE==1342
+  #define %'ModuleName'%.DEVICE_ADDRESS 0x68  /* I2C DS1342 device address */
+#else
+  #error "Unknown device"
+#endif
 
 /* device memory addresses */
-#define %'ModuleName'%.MEM_TIME_ADDR      0x00  /* device memory start address for time */
-#define %'ModuleName'%.MEM_TIME_SIZE      0x03  /* device memory size for time */
+#if %'ModuleName'%.DEVICE==3232
+  #define %'ModuleName'%.MEM_SECONDS_ADDR       0x00  /* Seconds */
+  #define %'ModuleName'%.MEM_MINUTES_ADDR       0x01  /* Minutes */
+  #define %'ModuleName'%.MEM_HOURS_ADDR         0x02  /* Hours */
+  #define %'ModuleName'%.MEM_DAY_ADDR           0x03  /* Day */
+  #define %'ModuleName'%.MEM_DATE_ADDR          0x04  /* Date */
+  #define %'ModuleName'%.MEM_MONTH_ADDR         0x05  /* Month */
+  #define %'ModuleName'%.MEM_YEAR_ADDR          0x06  /* Year */
+  #define %'ModuleName'%.MEM_CTRL_ADDR          0x0E  /* Control */
+  #define %'ModuleName'%.MEM_CTRL_STATUS_ADDR   0x0F  /* Control/Status */
+  #define %'ModuleName'%.MEM_AGING_OFFSET_ADDR  0x10  /* Aging offset */
+  #define %'ModuleName'%.MEM_MSB_TEMP_ADDR      0x11  /* MSB of Temp */
+  #define %'ModuleName'%.MEM_LSB_TEMP_ADDR      0x12  /* LSB of Temp */
+  /* Address 0x13 is reserved */
+  #define %'ModuleName'%.MEM_RAM_START_ADDR     0x14  /* device memory start address of non-volatile RAM */
+  #define %'ModuleName'%.MEM_RAM_END_ADDR       0xFF  /* device memory end address of non-volatile RAM */
+#elif %'ModuleName'%.DEVICE==1307
+  #define %'ModuleName'%.MEM_SECONDS_ADDR       0x00  /* Seconds */
+  #define %'ModuleName'%.MEM_MINUTES_ADDR       0x01  /* Minutes */
+  #define %'ModuleName'%.MEM_HOURS_ADDR         0x02  /* Hours */
+  #define %'ModuleName'%.MEM_DAY_ADDR           0x03  /* Day */
+  #define %'ModuleName'%.MEM_DATE_ADDR          0x04  /* Date */
+  #define %'ModuleName'%.MEM_MONTH_ADDR         0x05  /* Month */
+  #define %'ModuleName'%.MEM_YEAR_ADDR          0x06  /* Year */
+  #define %'ModuleName'%.MEM_CTRL_ADDR          0x07  /* Control */
+  #define %'ModuleName'%.MEM_RAM_START_ADDR     0x08  /* device memory start address of non-volatile RAM */
+  #define %'ModuleName'%.MEM_RAM_END_ADDR       0x3F  /* device memory end address of non-volatile RAM */
+#elif %'ModuleName'%.DEVICE==1342
+  #define %'ModuleName'%.MEM_SECONDS_ADDR       0x00  /* Seconds */
+  #define %'ModuleName'%.MEM_MINUTES_ADDR       0x01  /* Minutes */
+  #define %'ModuleName'%.MEM_HOURS_ADDR         0x02  /* Hours */
+  #define %'ModuleName'%.MEM_DAY_ADDR           0x03  /* Day */
+  #define %'ModuleName'%.MEM_DATE_ADDR          0x04  /* Date */
+  #define %'ModuleName'%.MEM_MONTH_ADDR         0x05  /* Month */
+  #define %'ModuleName'%.MEM_YEAR_ADDR          0x06  /* Year */
+  #define %'ModuleName'%.MEM_CTRL_ADDR          0x0E  /* Control */
+#else
+  #error "unknown device?"
+#endif
 
-#define %'ModuleName'%.MEM_DATE_ADDR      0x03  /* device memory start address for date */
-#define %'ModuleName'%.MEM_DATE_SIZE      0x04  /* device memory size for date */
+#if %'ModuleName'%.DEVICE==1342
+  #define %'ModuleName'%.MEM_SIZE               (0)  /* no memory for DS1342 */
+#else
+  #define %'ModuleName'%.MEM_SIZE               (%'ModuleName'%.MEM_RAM_END_ADDR-%'ModuleName'%.MEM_RAM_START_ADDR+1)  /* device memory start address of non-volatile RAM, in bytes */
+  #define %'ModuleName'%.MAX_ADDRESS            (%'ModuleName'%.MEM_SIZE-1)  /* maximum RAM address of device */
+#endif
 
-#define %'ModuleName'%.MEM_TIME_DATE_ADDR (%'ModuleName'%.MEM_TIME_ADDR)  /* device memory start address for time and date */
-#define %'ModuleName'%.MEM_TIME_DATE_SIZE (%'ModuleName'%.MEM_TIME_SIZE+%'ModuleName'%.MEM_DATE_SIZE)  /* device memory size for time and date */
+#define %'ModuleName'%.MEM_TIME_STRUCT_ADDR      %'ModuleName'%.MEM_SECONDS_ADDR  /* device memory start address for time */
+#define %'ModuleName'%.MEM_TIME_STRUCT_SIZE      0x03  /* device memory size for time */
 
-#define %'ModuleName'%.MEM_CTRL_ADDR      0x07  /* device memory location of control settings */
+#define %'ModuleName'%.MEM_DATE_STRUCT_ADDR      %'ModuleName'%.MEM_DAY_ADDR  /* device memory start address for date */
+#define %'ModuleName'%.MEM_DATE_STRUCT_SIZE      0x04  /* device memory size for date */
 
-%if Device="DS3232"
-#define %'ModuleName'%.MEM_RAM_START_ADDR 0x14  /* device memory start address of non-volatile RAM */
-#define %'ModuleName'%.MEM_RAM_END_ADDR   0xFF  /* device memory end address of non-volatile RAM */
-%elif Device="DS1307"
-#define %'ModuleName'%.MEM_RAM_START_ADDR 0x08  /* device memory start address of non-volatile RAM */
-#define %'ModuleName'%.MEM_RAM_END_ADDR   0x3F  /* device memory end address of non-volatile RAM */
-%endif
-#define %'ModuleName'%.MEM_SIZE           (%'ModuleName'%.MEM_RAM_END_ADDR-%'ModuleName'%.MEM_RAM_START_ADDR+1)  /* device memory start address of non-volatile RAM, in bytes */
-#define %'ModuleName'%.MAX_ADDRESS        (%'ModuleName'%.MEM_SIZE-1)  /* maximum RAM address of device */
+#define %'ModuleName'%.MEM_TIME_DATE_STRUCT_ADDR (%'ModuleName'%.MEM_TIME_STRUCT_ADDR)  /* device memory start address for time and date */
+#define %'ModuleName'%.MEM_TIME_DATE_STRUCT_SIZE (%'ModuleName'%.MEM_TIME_STRUCT_SIZE+%'ModuleName'%.MEM_DATE_STRUCT_SIZE)  /* device memory size for time and date */
 
 #define %'ModuleName'_TTIME_AMPM_AM   0  /* AM */
 #define %'ModuleName'_TTIME_AMPM_PM   1  /* PM */
@@ -577,33 +625,41 @@ static byte TimeCmd(const unsigned char *cmd, %@Shell@'ModuleName'%.ConstStdIOTy
 }
 
 static byte PrintStatus(%@Shell@'ModuleName'%.ConstStdIOType *io) {
-  byte buf[24];
+  uint8_t buf[32];
 
-  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"%'ModuleName'", (const unsigned char*)"", io->stdOut);
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"%'ModuleName'", (const unsigned char*)"\r\n", io->stdOut);
   buf[0] = '\0';
   if (AddHWRTCDate(buf, sizeof(buf))!=ERR_OK) {
     %@Shell@'ModuleName'%.SendStr((unsigned char*)"*** Failed to get RTC date!\r\n", io->stdErr);
     return ERR_FAILED;
   }
-  %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
-  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)", ");
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  date", buf, io->stdOut);
+  buf[0] = '\0';
   if (AddHWRTCTime(buf, sizeof(buf))!=ERR_OK) {
     %@Shell@'ModuleName'%.SendStr((unsigned char*)"*** Failed to get RTC time!\r\n", io->stdErr);
     return ERR_FAILED;
   }
-  %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  time", buf, io->stdOut);
 
-  %@Shell@'ModuleName'%.SendStr((unsigned char*)", %Device", io->stdOut);
-  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)", Addr 0x");
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"%Device");
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)", Addr 0x");
   %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), %'ModuleName'%.DEVICE_ADDRESS);
-  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)", RAM 0x");
-  %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), %'ModuleName'%.MEM_RAM_START_ADDR);
-  %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  device", buf, io->stdOut);
 
-  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"..0x");
+#if %'ModuleName'%.DEVICE==1342
+  /* there is no RAM for this device */
+#else
+  %@Utility@'ModuleName'%.cpy(buf, sizeof(buf), (unsigned char*)"0x");
+  %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), %'ModuleName'%.MEM_RAM_START_ADDR);
+  %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"..0x");
   %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), %'ModuleName'%.MEM_RAM_END_ADDR);
   %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-  %@Shell@'ModuleName'%.SendStr(buf, io->stdOut);
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  RAM", buf, io->stdOut);
+#endif
+
   return ERR_OK;
 }
 
@@ -653,11 +709,15 @@ byte %'ModuleName'%.%Write(byte addr, byte *buf, byte bufSize)
 %include Common\RTC_MaximReadByte.Inc
 byte %'ModuleName'%.%ReadByte(byte addr, byte *buf)
 {
+#if %'ModuleName'%.DEVICE==1342
+  return ERR_FAILED; /* there is no RAM for this device */
+#else
   if (addr>%'ModuleName'%.MAX_ADDRESS) {
     return ERR_RANGE; /* memory address out of range */
   }
   addr += %'ModuleName'%.MEM_RAM_START_ADDR;
   return %@I2C@'ModuleName'%.ReadAddress(%'ModuleName'%.DEVICE_ADDRESS, &addr, 1, buf, 1);
+#endif
 }
 
 %endif %- ReadByte
@@ -671,11 +731,15 @@ byte %'ModuleName'%.%ReadByte(byte addr, byte *buf)
 %include Common\RTC_MaximWriteByte.Inc
 byte %'ModuleName'%.%WriteByte(byte addr, byte buf)
 {
+#if %'ModuleName'%.DEVICE==1342
+  return ERR_FAILED; /* there is no RAM for this device */
+#else
   if (addr>%'ModuleName'%.MAX_ADDRESS) {
     return ERR_RANGE; /* memory address out of range */
   }
   addr += %'ModuleName'%.MEM_RAM_START_ADDR;
   return %@I2C@'ModuleName'%.WriteAddress(%'ModuleName'%.DEVICE_ADDRESS, &addr, 1, &buf, 1);
+#endif
 }
 
 %endif %- WriteByte
@@ -690,11 +754,15 @@ byte %'ModuleName'%.%WriteByte(byte addr, byte buf)
 %include Common\RTC_MaximReadBlock.Inc
 byte %'ModuleName'%.%ReadBlock(byte addr, byte *buf, byte bufSize)
 {
+#if %'ModuleName'%.DEVICE==1342
+  return ERR_FAILED; /* there is no RAM for this device */
+#else
   if (addr>%'ModuleName'%.MAX_ADDRESS || (addr+bufSize)>%'ModuleName'%.MEM_SIZE) {
     return ERR_RANGE; /* memory address out of range */
   }
   addr += %'ModuleName'%.MEM_RAM_START_ADDR;
   return %@I2C@'ModuleName'%.ReadAddress(%'ModuleName'%.DEVICE_ADDRESS, &addr, 1, buf, bufSize);
+#endif
 }
 
 %endif %- ReadBlock
@@ -709,11 +777,15 @@ byte %'ModuleName'%.%ReadBlock(byte addr, byte *buf, byte bufSize)
 %include Common\RTC_MaximWriteBlock.Inc
 byte %'ModuleName'%.%WriteBlock(byte addr, byte *buf, byte bufSize)
 {
+#if %'ModuleName'%.DEVICE==1342
+  return ERR_FAILED; /* there is no RAM for this device */
+#else
   if (addr>%'ModuleName'%.MAX_ADDRESS || (addr+bufSize)>%'ModuleName'%.MEM_SIZE) {
     return ERR_RANGE; /* memory address out of range */
   }
   addr += %'ModuleName'%.MEM_RAM_START_ADDR;
   return %@I2C@'ModuleName'%.WriteAddress(%'ModuleName'%.DEVICE_ADDRESS, &addr, 1, buf, bufSize);
+#endif
 }
 
 %endif %- WriteBlock
@@ -727,9 +799,9 @@ byte %'ModuleName'%.%WriteBlock(byte addr, byte *buf, byte bufSize)
 %include Common\RTC_MaximGetRTCTimeDate.Inc
 byte %'ModuleName'%.%GetRTCTimeDate(%'ModuleName'_TTIME *time, %'ModuleName'_TDATE *date)
 {
-  byte buf[%'ModuleName'%.MEM_TIME_DATE_SIZE];
+  byte buf[%'ModuleName'%.MEM_TIME_DATE_STRUCT_SIZE];
 
-  if (%'ModuleName'%.Read(%'ModuleName'%.MEM_TIME_DATE_ADDR, buf, sizeof(buf))!=ERR_OK) {
+  if (%'ModuleName'%.Read(%'ModuleName'%.MEM_TIME_DATE_STRUCT_ADDR, buf, sizeof(buf))!=ERR_OK) {
     return ERR_FAILED;
   }
   time->sec = (byte)(((buf[0]&0x70)>>4)*10 + (buf[0]&0x0F));
@@ -761,7 +833,7 @@ byte %'ModuleName'%.%GetRTCTimeDate(%'ModuleName'_TTIME *time, %'ModuleName'_TDA
 %include Common\RTC_MaximSetRTCTimeDate.Inc
 byte %'ModuleName'%.%SetRTCTimeDate(%'ModuleName'_TTIME *time, %'ModuleName'_TDATE *date)
 {
-  byte buf[%'ModuleName'%.MEM_TIME_DATE_SIZE];
+  byte buf[%'ModuleName'%.MEM_TIME_DATE_STRUCT_SIZE];
 
   if (   ((time->mode==%'ModuleName'_TTIME_MODE_12H)&&((time->hour>12)||(time->hour==0)))
       || ((time->mode==%'ModuleName'_TTIME_MODE_24H)&&(time->hour>23))
@@ -782,7 +854,7 @@ byte %'ModuleName'%.%SetRTCTimeDate(%'ModuleName'_TTIME *time, %'ModuleName'_TDA
   buf[4] = (byte)(((date->day/10)<<4) | (date->day%%10));
   buf[5] = (byte)(((date->month/10)<<4) | (date->month%%10));
   buf[6] = (byte)(((date->year/10)<<4) | (date->year%%10));
-  if (%'ModuleName'%.Write(%'ModuleName'%.MEM_TIME_DATE_ADDR, buf, sizeof(buf))!=ERR_OK) {
+  if (%'ModuleName'%.Write(%'ModuleName'%.MEM_TIME_DATE_STRUCT_ADDR, buf, sizeof(buf))!=ERR_OK) {
     return ERR_FAILED;
   }
   return ERR_OK;
@@ -798,7 +870,7 @@ byte %'ModuleName'%.%SetRTCTimeDate(%'ModuleName'_TTIME *time, %'ModuleName'_TDA
 %include Common\RTC_MaximSetRTCTime.Inc
 byte %'ModuleName'%.%SetRTCTime(%'ModuleName'_TTIME *time)
 {
-  byte buf[%'ModuleName'%.MEM_TIME_SIZE];
+  byte buf[%'ModuleName'%.MEM_TIME_STRUCT_SIZE];
 
   if (   ((time->mode==%'ModuleName'_TTIME_MODE_12H)&&((time->hour>12)||(time->hour==0)))
       || ((time->mode==%'ModuleName'_TTIME_MODE_24H)&&(time->hour>23))
@@ -813,7 +885,7 @@ byte %'ModuleName'%.%SetRTCTime(%'ModuleName'_TTIME *time)
   if (time->mode==%'ModuleName'_TTIME_MODE_12H) {
     buf[2] |= (time->am_pm)?0x60:0x40;
   }
-  if (%'ModuleName'%.Write(%'ModuleName'%.MEM_TIME_ADDR, buf, sizeof(buf))!=ERR_OK) {
+  if (%'ModuleName'%.Write(%'ModuleName'%.MEM_TIME_STRUCT_ADDR, buf, sizeof(buf))!=ERR_OK) {
     return ERR_FAILED;
   }
   return ERR_OK;
@@ -829,9 +901,9 @@ byte %'ModuleName'%.%SetRTCTime(%'ModuleName'_TTIME *time)
 %include Common\RTC_MaximGetRTCTime.Inc
 byte %'ModuleName'%.%GetRTCTime(%'ModuleName'_TTIME *time)
 {
-  byte buf[%'ModuleName'%.MEM_TIME_SIZE];
+  byte buf[%'ModuleName'%.MEM_TIME_STRUCT_SIZE];
 
-  if (%'ModuleName'%.Read(%'ModuleName'%.MEM_TIME_ADDR, buf, sizeof(buf))!=ERR_OK) {
+  if (%'ModuleName'%.Read(%'ModuleName'%.MEM_TIME_STRUCT_ADDR, buf, sizeof(buf))!=ERR_OK) {
     return ERR_FAILED;
   }
   time->sec = (byte)(((buf[0]&0x70)>>4)*10 + (buf[0]&0x0F));
@@ -858,9 +930,9 @@ byte %'ModuleName'%.%GetRTCTime(%'ModuleName'_TTIME *time)
 %include Common\RTC_MaximGetRTCDate.Inc
 byte %'ModuleName'%.%GetRTCDate(%'ModuleName'_TDATE *date)
 {
-  byte buf[%'ModuleName'%.MEM_DATE_SIZE];
+  byte buf[%'ModuleName'%.MEM_DATE_STRUCT_SIZE];
 
-  if (%'ModuleName'%.Read(%'ModuleName'%.MEM_DATE_ADDR, buf, sizeof(buf))!=ERR_OK) {
+  if (%'ModuleName'%.Read(%'ModuleName'%.MEM_DATE_STRUCT_ADDR, buf, sizeof(buf))!=ERR_OK) {
     return ERR_FAILED;
   }
   date->dayOfWeek =(byte)(buf[0]-1);
@@ -880,7 +952,7 @@ byte %'ModuleName'%.%GetRTCDate(%'ModuleName'_TDATE *date)
 %include Common\RTC_MaximSetRTCDate.Inc
 byte %'ModuleName'%.%SetRTCDate(%'ModuleName'_TDATE *date)
 {
-  byte buf[%'ModuleName'%.MEM_DATE_SIZE];
+  byte buf[%'ModuleName'%.MEM_DATE_STRUCT_SIZE];
 
   if (   (date->year>99)
       || (date->month>12)||(date->month==0)
@@ -894,7 +966,7 @@ byte %'ModuleName'%.%SetRTCDate(%'ModuleName'_TDATE *date)
   buf[1] = (byte)(((date->day/10)<<4) | (date->day%%10));
   buf[2] = (byte)(((date->month/10)<<4) | (date->month%%10));
   buf[3] = (byte)(((date->year/10)<<4) | (date->year%%10));
-  if (%'ModuleName'%.Write(%'ModuleName'%.MEM_DATE_ADDR, buf, sizeof(buf))!=ERR_OK) {
+  if (%'ModuleName'%.Write(%'ModuleName'%.MEM_DATE_STRUCT_ADDR, buf, sizeof(buf))!=ERR_OK) {
     return ERR_FAILED;
   }
   return ERR_OK;
