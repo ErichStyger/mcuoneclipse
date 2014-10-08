@@ -210,11 +210,11 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
 #endif /* configUSE_TICKLESS_IDLE */
 
 /* Flag indicating that the tick counter interval needs to be restored back to
- * the normal setting. Used when waken up from a low power mode using the LPTMR.
+ * the normal setting. Used when woken up from a low power mode using the LPTMR.
  */
 #if (configUSE_TICKLESS_IDLE == 1) && configSYSTICK_USE_LOW_POWER_TIMER
   static bool restoreTickInterval = pdFALSE; /* used to flag in tick ISR that compare register needs to be reloaded */
-  static uint32_t ulCumulatedStoppedLPCycles = 0; /* counts us for ulStoppedTimerCompensation */
+  static bool waitForTickInterrupt = pdFALSE; /* flag indicating that we wait for the next tick interrupt to happen */
 #endif
 
 #if (configCPU_FAMILY==configCPU_FAMILY_CF1) || (configCPU_FAMILY==configCPU_FAMILY_CF2)
@@ -798,6 +798,15 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
   unsigned long ulReloadValue, ulCompleteTickPeriods, ulCompletedSysTickIncrements;
   TickCounter_t tmp; /* because of how we get the current tick counter */
   bool tickISRfired;
+  
+#if configSYSTICK_USE_LOW_POWER_TIMER
+  /* if we wait for the tick interrupt, do not enter low power again below */
+  if (waitForTickInterrupt && restoreTickInterval) {
+    while(restoreTickInterval) {
+    }
+    return;
+  }
+#endif
 
   /* Make sure the tick timer reload value does not overflow the counter. */
   if(xExpectedIdleTime>xMaximumPossibleSuppressedTicks) {
@@ -826,14 +835,6 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
 #else
   /* -1UL is used because this code will execute part way through one of the tick periods */
   ulReloadValue = tmp+(UL_TIMER_COUNTS_FOR_ONE_TICK*(xExpectedIdleTime-1UL));
-#endif
-#if configSYSTICK_USE_LOW_POWER_TIMER
-  /* we have a 1 ms low power timer, so we need to account for the small delays until it counts up to 1 ms */
-  ulCumulatedStoppedLPCycles += configSTOPPED_TIMER_COMPENSATION;
-  if (ulCumulatedStoppedLPCycles>=(configCPU_CLOCK_HZ/configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ)) {
-    ulStoppedTimerCompensation = 1; /* \todo Count for real timer period */
-    ulCumulatedStoppedLPCycles -= (configCPU_CLOCK_HZ/configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ);
-  }
 #endif
   if (ulReloadValue>ulStoppedTimerCompensation) {
     ulReloadValue -= ulStoppedTimerCompensation;
@@ -924,6 +925,7 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
        * time spent waiting.
        */
       ulCompleteTickPeriods = xExpectedIdleTime-1UL;
+      waitForTickInterrupt = FALSE;
     } else {
       /* Something other than the tick interrupt ended the sleep.
        * Work out how long the sleep lasted rounded to complete tick
@@ -939,6 +941,7 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
 
       /* The reload value is set to whatever fraction of a single tick period remains. */
       SET_TICK_DURATION(((ulCompleteTickPeriods+1)*UL_TIMER_COUNTS_FOR_ONE_TICK)-ulCompletedSysTickIncrements);
+      waitForTickInterrupt = TRUE;
     }
 
     /* Restart SysTick so it runs from portNVIC_SYSTICK_LOAD_REG
@@ -985,7 +988,6 @@ void vPortInitTickTimer(void) {
 #endif
 #if configSYSTICK_USE_LOW_POWER_TIMER
   ulStoppedTimerCompensation = configSTOPPED_TIMER_COMPENSATION/(configCPU_CLOCK_HZ/configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ);
-  ulCumulatedStoppedLPCycles = 0;
 #else
   ulStoppedTimerCompensation = configSTOPPED_TIMER_COMPENSATION/(configCPU_CLOCK_HZ/configSYSTICK_CLOCK_HZ);
 #endif
