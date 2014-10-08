@@ -803,6 +803,21 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
   /* if we wait for the tick interrupt, do not enter low power again below */
   if (waitForTickInterrupt && restoreTickInterval) {
     while(restoreTickInterval) {
+      %if defined(vOnPreSleepProcessing)
+          %vOnPreSleepProcessing(xExpectedIdleTime); /* go into low power mode. Re-enable interrupts as needed! */
+      %else
+          /* default wait/sleep code */
+        %if (CPUfamily = "Kinetis")
+          __asm volatile("dsb");
+          __asm volatile("wfi");
+          __asm volatile("isb");
+        %elif (CPUfamily = "HCS08") | (CPUfamily = "HC08") | (CPUfamily = "HCS12") | (CPUfamily = "HCS12X")
+          __asm("cli"); /* re-enable interrupts */
+          __asm("wait");
+        %else
+          #error "unsupported CPU family! vOnPreSleepProcessing() event and go into sleep mode there!"
+        %endif    
+      %endif
     }
     return;
   }
@@ -830,13 +845,13 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
    * tick periods. This code will execute part way through one
    * of the tick periods.
    */
-#if COUNTS_UP
-  ulReloadValue = (UL_TIMER_COUNTS_FOR_ONE_TICK*xExpectedIdleTime)-tmp;
-#else
   /* -1UL is used because this code will execute part way through one of the tick periods */
+#if COUNTS_UP
+  ulReloadValue = (UL_TIMER_COUNTS_FOR_ONE_TICK-1-tmp)+(UL_TIMER_COUNTS_FOR_ONE_TICK*(xExpectedIdleTime-1UL));
+#else
   ulReloadValue = tmp+(UL_TIMER_COUNTS_FOR_ONE_TICK*(xExpectedIdleTime-1UL));
 #endif
-  if (ulReloadValue>ulStoppedTimerCompensation) {
+  if (ulStoppedTimerCompensation!=0 && ulReloadValue>ulStoppedTimerCompensation) {
     ulReloadValue -= ulStoppedTimerCompensation;
   }
 
@@ -932,16 +947,27 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
        * periods (not the ulReload value which accounted for part ticks). 
        */
 #if COUNTS_UP
+      uint32_t tickDuration;
+      
       ulCompletedSysTickIncrements = tmp;
-#else
-      ulCompletedSysTickIncrements = (xExpectedIdleTime*UL_TIMER_COUNTS_FOR_ONE_TICK)-tmp;
-#endif
       /* How many complete tick periods passed while the processor was waiting? */
       ulCompleteTickPeriods = ulCompletedSysTickIncrements/UL_TIMER_COUNTS_FOR_ONE_TICK;
-
+      /* The reload value is set to whatever fraction of a single tick period remains. */
+      tickDuration = (((ulCompleteTickPeriods+1)*UL_TIMER_COUNTS_FOR_ONE_TICK)-1)-ulCompletedSysTickIncrements;
+      if (tickDuration>0) {
+        tickDuration--; /* decrement by one, to compensate for one timer tick, as we are already part way through it */
+      }
+      SET_TICK_DURATION(tickDuration);
+#else
+      ulCompletedSysTickIncrements = (xExpectedIdleTime*UL_TIMER_COUNTS_FOR_ONE_TICK)-tmp;
+      /* How many complete tick periods passed while the processor was waiting? */
+      ulCompleteTickPeriods = ulCompletedSysTickIncrements/UL_TIMER_COUNTS_FOR_ONE_TICK;
       /* The reload value is set to whatever fraction of a single tick period remains. */
       SET_TICK_DURATION(((ulCompleteTickPeriods+1)*UL_TIMER_COUNTS_FOR_ONE_TICK)-ulCompletedSysTickIncrements);
+#endif
+#if configSYSTICK_USE_LOW_POWER_TIMER
       waitForTickInterrupt = TRUE;
+#endif
     }
 
     /* Restart SysTick so it runs from portNVIC_SYSTICK_LOAD_REG
