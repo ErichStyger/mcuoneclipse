@@ -18,6 +18,7 @@
 #endif
 #include "UTIL1.h"
 #include "FRTOS1.h"
+#include "BitLP.h"
 
 #define LP_CAN_CHANGE_CLOCK  0
 
@@ -145,6 +146,7 @@ uint8_t LP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdI
 #endif
 
 void LP_EnterPowerMode(LP_PowerMode mode) {
+  BitLP_NegVal();
   LP_mode = mode;
 #if configUSE_TICKLESS_IDLE
   if (LP_mode==LP_RUN) { /* need to wait for interrupt! */
@@ -192,7 +194,8 @@ void LP_Deinit(void) {
 }
 
 void LP_Init(void) {
-  LP_mode = LP_WAIT;
+  //LP_mode = LP_WAIT;
+  LP_mode = LP_RUN;
 //  LP_mode = LP_STOP;
 #if LP_CAN_CHANGE_CLOCK
   LP_clock = LP_SPEED_FAST;

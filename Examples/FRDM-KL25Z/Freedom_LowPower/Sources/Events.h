@@ -51,6 +51,17 @@
 #include "UTIL1.h"
 #include "FRTOS1.h"
 #include "CS1.h"
+#include "BitTimer.h"
+#include "BitIoLdd1.h"
+#include "BitTick.h"
+#include "BitIoLdd5.h"
+#include "BitTask.h"
+#include "BitIoLdd6.h"
+#include "BitLP.h"
+#include "BitIoLdd7.h"
+#include "TI1.h"
+#include "TimerIntLdd1.h"
+#include "TU1.h"
 
 #include "Platform.h"
 /*
@@ -166,6 +177,22 @@ void FRTOS1_vOnPreSleepProcessing(portTickType expectedIdleTicks);
 **     Returns     : Nothing
 ** ===================================================================
 */
+
+/*
+** ===================================================================
+**     Event       :  TI1_OnInterrupt (module Events)
+**
+**     Component   :  TI1 [TimerInt]
+**     Description :
+**         When a timer interrupt occurs this event is called (only
+**         when the component is enabled - <Enable> and the events are
+**         enabled - <EnableEvent>). This event is enabled only if a
+**         <interrupt service/event> is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void TI1_OnInterrupt(void);
 
 /* END Events */
 #endif /* __Events_H*/
