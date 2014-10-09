@@ -942,15 +942,15 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
         tickDuration -= tmp;
       }
       if (tickDuration > 1) {
-        tickDuration -= 1; /* decrement by one, to compensate for one timer tick, as we are already part way through it */
+        //tickDuration -= 1; /* decrement by one, to compensate for one timer tick, as we are already part way through it */
       } else {
         /* Not enough time to setup for the next tick, so skip it and setup for the
          * next. Make sure to count the tick we skipped.
          */
         tickDuration += (UL_TIMER_COUNTS_FOR_ONE_TICK - 1UL);
-        if (tickDuration > 1) { /* check for underflow */
-          tickDuration -= 1;
-        }
+        //if (tickDuration > 1) { /* check for underflow */
+        //  tickDuration -= 1;
+        //}
         vTaskStepTick(1);
       }
 #else
