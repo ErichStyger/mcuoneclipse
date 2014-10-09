@@ -213,8 +213,7 @@ static TickCounter_t currTickDuration; /* holds the modulo counter/tick duration
  * the normal setting. Used when woken up from a low power mode using the LPTMR.
  */
 #if (configUSE_TICKLESS_IDLE == 1) && configSYSTICK_USE_LOW_POWER_TIMER
-  static bool restoreTickInterval = pdFALSE; /* used to flag in tick ISR that compare register needs to be reloaded */
-  static bool waitForTickInterrupt = pdFALSE; /* flag indicating that we wait for the next tick interrupt to happen */
+  static uint8_t restoreTickInterval = 0; /* used to flag in tick ISR that compare register needs to be reloaded */
 #endif
 
 #if (configCPU_FAMILY==configCPU_FAMILY_CF1) || (configCPU_FAMILY==configCPU_FAMILY_CF2)
@@ -798,33 +797,32 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
   unsigned long ulReloadValue, ulCompleteTickPeriods, ulCompletedSysTickIncrements;
   TickCounter_t tmp; /* because of how we get the current tick counter */
   bool tickISRfired;
+  uint32_t tickDuration;
   
 #if configSYSTICK_USE_LOW_POWER_TIMER
   /* if we wait for the tick interrupt, do not enter low power again below */
-  if (waitForTickInterrupt && restoreTickInterval) {
-    while(restoreTickInterval) {
-      %if defined(vOnPreSleepProcessing)
-          %vOnPreSleepProcessing(xExpectedIdleTime); /* go into low power mode. Re-enable interrupts as needed! */
-      %else
-          /* default wait/sleep code */
-        %if (CPUfamily = "Kinetis")
-          __asm volatile("dsb");
-          __asm volatile("wfi");
-          __asm volatile("isb");
-        %elif (CPUfamily = "HCS08") | (CPUfamily = "HC08") | (CPUfamily = "HCS12") | (CPUfamily = "HCS12X")
-          __asm("cli"); /* re-enable interrupts */
-          __asm("wait");
-        %else
-          #error "unsupported CPU family! vOnPreSleepProcessing() event and go into sleep mode there!"
-        %endif    
-      %endif
-    }
+  if (restoreTickInterval!=0) {
+%if defined(vOnPreSleepProcessing)
+    %vOnPreSleepProcessing(xExpectedIdleTime); /* go into low power mode. Re-enable interrupts as needed! */
+%else
+    /* default wait/sleep code */
+  %if (CPUfamily = "Kinetis")
+    __asm volatile("dsb");
+    __asm volatile("wfi");
+    __asm volatile("isb");
+  %elif (CPUfamily = "HCS08") | (CPUfamily = "HC08") | (CPUfamily = "HCS12") | (CPUfamily = "HCS12X")
+    __asm("cli"); /* re-enable interrupts */
+    __asm("wait");
+  %else
+    #error "unsupported CPU family! vOnPreSleepProcessing() event and go into sleep mode there!"
+  %endif    
+%endif
     return;
   }
 #endif
 
   /* Make sure the tick timer reload value does not overflow the counter. */
-  if(xExpectedIdleTime>xMaximumPossibleSuppressedTicks) {
+  if(xExpectedIdleTime > xMaximumPossibleSuppressedTicks) {
     xExpectedIdleTime = xMaximumPossibleSuppressedTicks;
   }
 
@@ -847,7 +845,13 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
    */
   /* -1UL is used because this code will execute part way through one of the tick periods */
 #if COUNTS_UP
-  ulReloadValue = (UL_TIMER_COUNTS_FOR_ONE_TICK-1-tmp)+(UL_TIMER_COUNTS_FOR_ONE_TICK*(xExpectedIdleTime-1UL));
+  ulReloadValue = (UL_TIMER_COUNTS_FOR_ONE_TICK*xExpectedIdleTime);
+  if (ulReloadValue>=tmp && tmp!=0) { /* make sure it does not underflow */
+    ulReloadValue -= tmp;
+  }
+  if (ulReloadValue >= 1) { /* make sure it does not underflow */
+    ulReloadValue -= 1UL;
+  }
 #else
   ulReloadValue = tmp+(UL_TIMER_COUNTS_FOR_ONE_TICK*(xExpectedIdleTime-1UL));
 #endif
@@ -866,10 +870,14 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
   if (eTaskConfirmSleepModeStatus()==eAbortSleep) {
      /* Must restore the duration before re-enabling the timers */
 #if COUNTS_UP
-    SET_TICK_DURATION((UL_TIMER_COUNTS_FOR_ONE_TICK-1UL)-tmp);
+    tickDuration = UL_TIMER_COUNTS_FOR_ONE_TICK-1UL;
+    if (tickDuration >= tmp) { /* make sure it does not underflow */
+      tickDuration -= tmp;
+    }
 #else
-    SET_TICK_DURATION(tmp);
+    tickDuration = tmp;
 #endif
+    SET_TICK_DURATION(tickDuration);
     ENABLE_TICK_COUNTER(); /* Restart SysTick. */
     TICKLESS_ENABLE_INTERRUPTS();
   } else {
@@ -884,7 +892,7 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
      * should not be executed again.  However, the original expected idle
      * time variable must remain unmodified, so a copy is taken.
      */
-    
+
      /* CPU *HAS TO WAIT* in the sequence below for an interrupt. If vOnPreSleepProcessing() is not used, a default implementation is provided */
 %if defined(vOnPreSleepProcessing)
     %vOnPreSleepProcessing(xExpectedIdleTime); /* go into low power mode. Re-enable interrupts as needed! */
@@ -929,10 +937,26 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
        * this tick period. 
        */
 #if COUNTS_UP
-      SET_TICK_DURATION((UL_TIMER_COUNTS_FOR_ONE_TICK-1UL)-tmp);
+      tickDuration = (UL_TIMER_COUNTS_FOR_ONE_TICK-1UL);
+      if (tickDuration >= tmp) { /* make sure it does not underflow */
+        tickDuration -= tmp;
+      }
+      if (tickDuration > 1) {
+        tickDuration -= 1; /* decrement by one, to compensate for one timer tick, as we are already part way through it */
+      } else {
+        /* Not enough time to setup for the next tick, so skip it and setup for the
+         * next. Make sure to count the tick we skipped.
+         */
+        tickDuration += (UL_TIMER_COUNTS_FOR_ONE_TICK - 1UL);
+        if (tickDuration > 1) { /* check for underflow */
+          tickDuration -= 1;
+        }
+        vTaskStepTick(1);
+      }
 #else
-      SET_TICK_DURATION((UL_TIMER_COUNTS_FOR_ONE_TICK-1UL)-(ulReloadValue-tmp));
+      tickDuration = (UL_TIMER_COUNTS_FOR_ONE_TICK-1UL)-(ulReloadValue-tmp);
 #endif
+      SET_TICK_DURATION(tickDuration);
       /* The tick interrupt handler will already have pended the tick
        * processing in the kernel.  As the pending tick will be
        * processed as soon as this function exits, the tick value
@@ -940,34 +964,37 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
        * time spent waiting.
        */
       ulCompleteTickPeriods = xExpectedIdleTime-1UL;
-      waitForTickInterrupt = FALSE;
     } else {
       /* Something other than the tick interrupt ended the sleep.
        * Work out how long the sleep lasted rounded to complete tick
        * periods (not the ulReload value which accounted for part ticks). 
        */
 #if COUNTS_UP
-      uint32_t tickDuration;
-      
       ulCompletedSysTickIncrements = tmp;
       /* How many complete tick periods passed while the processor was waiting? */
       ulCompleteTickPeriods = ulCompletedSysTickIncrements/UL_TIMER_COUNTS_FOR_ONE_TICK;
       /* The reload value is set to whatever fraction of a single tick period remains. */
       tickDuration = (((ulCompleteTickPeriods+1)*UL_TIMER_COUNTS_FOR_ONE_TICK)-1)-ulCompletedSysTickIncrements;
-      if (tickDuration>0) {
-        tickDuration--; /* decrement by one, to compensate for one timer tick, as we are already part way through it */
+      if (tickDuration > 1) {
+        tickDuration -= 1; /* decrement by one, to compensate for one timer tick, as we are already part way through it */
+      } else {
+         /* Not enough time to setup for the next tick, so skip it and setup for the
+          * next. Make sure to count the tick we skipped.
+          */
+         tickDuration += (UL_TIMER_COUNTS_FOR_ONE_TICK - 1UL);
+         if (tickDuration > 1) { /* check for underflow */
+           tickDuration -= 1;
+         }
+         vTaskStepTick(1);
       }
-      SET_TICK_DURATION(tickDuration);
 #else
       ulCompletedSysTickIncrements = (xExpectedIdleTime*UL_TIMER_COUNTS_FOR_ONE_TICK)-tmp;
       /* How many complete tick periods passed while the processor was waiting? */
       ulCompleteTickPeriods = ulCompletedSysTickIncrements/UL_TIMER_COUNTS_FOR_ONE_TICK;
       /* The reload value is set to whatever fraction of a single tick period remains. */
-      SET_TICK_DURATION(((ulCompleteTickPeriods+1)*UL_TIMER_COUNTS_FOR_ONE_TICK)-ulCompletedSysTickIncrements);
+      tickDuration = ((ulCompleteTickPeriods+1)*UL_TIMER_COUNTS_FOR_ONE_TICK)-ulCompletedSysTickIncrements;
 #endif
-#if configSYSTICK_USE_LOW_POWER_TIMER
-      waitForTickInterrupt = TRUE;
-#endif
+      SET_TICK_DURATION(tickDuration);
     }
 
     /* Restart SysTick so it runs from portNVIC_SYSTICK_LOAD_REG
@@ -985,7 +1012,25 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
       /* The compare register of the LPTMR should not be modified when the
        * timer is running, so wait for the next tick interrupt to change it.
        */
-      restoreTickInterval = pdTRUE; /* flag for the next tick ISR to reload the normal compare value */
+      if (tickDuration != (UL_TIMER_COUNTS_FOR_ONE_TICK-1UL)) {
+        if (tickISRfired) {
+          /* The pending tick interrupt will be immediately processed after
+           * exiting this function so we need to delay the change of the tick
+           * duration until the one after that.
+           */
+          restoreTickInterval = 2;
+        } else {
+          /* Notify the tick interrupt that the tick duration needs to be
+           * changed back to the normal setting.
+           */
+          restoreTickInterval = 1;
+        }
+      } else {
+        /* If the duration is the standard full tick, then there's no reason
+         * to stop and restart LPTMR in the tick interrupt.
+         */
+        restoreTickInterval = 0;
+      }
 #else
       /* The systick has a load register that will automatically be used
        * when the counter counts down to zero.
@@ -1364,11 +1409,13 @@ void vPortTickHandler(void) {
 #endif
   portSET_INTERRUPT_MASK();   /* disable interrupts */
 #if (configUSE_TICKLESS_IDLE == 1) && configSYSTICK_USE_LOW_POWER_TIMER
-  if (restoreTickInterval) { /* we got interrupted during tickless mode and non-standard compare value: reload normal compare value */
-    DISABLE_TICK_COUNTER();
-    SET_TICK_DURATION(UL_TIMER_COUNTS_FOR_ONE_TICK-1UL);
-    ENABLE_TICK_COUNTER();
-    restoreTickInterval = pdFALSE;
+  if (restoreTickInterval > 0) { /* we got interrupted during tickless mode and non-standard compare value: reload normal compare value */
+    if (restoreTickInterval == 1) {
+      DISABLE_TICK_COUNTER();
+      SET_TICK_DURATION(UL_TIMER_COUNTS_FOR_ONE_TICK-1UL);
+      ENABLE_TICK_COUNTER();
+    }
+    restoreTickInterval -= 1;
   }
 #endif
   if (xTaskIncrementTick()!=pdFALSE) { /* increment tick count */
@@ -1490,11 +1537,13 @@ PE_ISR(RTOSTICKLDD1_Interrupt)
 #endif
   portSET_INTERRUPT_MASK();   /* disable interrupts */
 #if (configUSE_TICKLESS_IDLE == 1) && configSYSTICK_USE_LOW_POWER_TIMER
-  if (restoreTickInterval) { /* we got interrupted during tickless mode and non-standard compare value: reload normal compare value */
-    DISABLE_TICK_COUNTER();
-    SET_TICK_DURATION(UL_TIMER_COUNTS_FOR_ONE_TICK-1UL);
-    ENABLE_TICK_COUNTER();
-    restoreTickInterval = pdFALSE;
+  if (restoreTickInterval > 0) { /* we got interrupted during tickless mode and non-standard compare value: reload normal compare value */
+    if (restoreTickInterval == 1) {
+      DISABLE_TICK_COUNTER();
+      SET_TICK_DURATION(UL_TIMER_COUNTS_FOR_ONE_TICK-1UL);
+      ENABLE_TICK_COUNTER();
+    }
+    restoreTickInterval -= 1;
   }
 #endif
   if (xTaskIncrementTick()!=pdFALSE) { /* increment tick count */
