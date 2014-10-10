@@ -1,6 +1,6 @@
 
 [USED_FACES]
-BeanVersion=01.033
+BeanVersion=01.038
 
 InterfacesCount=2
 
@@ -9,7 +9,7 @@ Link=No
 Interface=AT25HP512\EEPROM_SelectPin
 Version=01.002
 
-Symbol=SPIBus
+Symbol=HWSPI
 Link=Yes
-Interface=AT25HP512\EEPROM_SPI
-Version=01.001
+Interface=AT25HP512\HW_SPI
+Version=01.002

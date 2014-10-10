@@ -205,24 +205,16 @@ byte %'ModuleName'%.ClrWriteEnable(void);
 %-UNLOCKED
 /* Internal method prototypes */
 %-INTERNAL_LOC_METHOD_BEG SendRecvByte
-%if defined(SendRecvByte)
 static byte SendRecvByte(byte *Byte);
-%endif %- SendRecvByte
 %-INTERNAL_LOC_METHOD_END SendRecvByte
 %-INTERNAL_LOC_METHOD_BEG ReadStatusRegister
-%if defined(ReadStatusRegister)
 static byte ReadStatusRegister(byte *Reg);
-%endif %- ReadStatusRegister
 %-INTERNAL_LOC_METHOD_END ReadStatusRegister
 %-INTERNAL_LOC_METHOD_BEG SendAddr
-%if defined(SendAddr)
 static byte SendAddr(EEPROM_Address Addr);
-%endif %- SendAddr
 %-INTERNAL_LOC_METHOD_END SendAddr
 %-INTERNAL_LOC_METHOD_BEG Write128Byte
-%if defined(Write128Byte)
 static byte Write128Byte(EEPROM_Address addr, byte *data, word size);
-%endif %- Write128Byte
 %-INTERNAL_LOC_METHOD_END Write128Byte
 %-
 
@@ -238,25 +230,25 @@ static byte SendRecvByte(byte *Byte)
   word Cnt;                            %>%CTAB /* Temporary variable - data register address */
 
   do {
-    ErrCode = %@SPIBus@'ModuleName'%.RecvChar(&SM_RCB); %>%CTAB /* Recive data from SPI bus */
+    ErrCode = %@HWSPI@'ModuleName'%.RecvChar(&SM_RCB); %>%CTAB /* Recive data from SPI bus */
   } while (ErrCode == ERR_OK);
   if (ErrCode != ERR_RXEMPTY) {        %>%CTAB /* Is not release value ERR_EMPTY */
     *Byte = 0x00;                      %>%CTAB /* Set data to 0 */
     return ErrCode;                    %>%CTAB /* Return error code */
   }
-  ErrCode = %@SPIBus@'ModuleName'%.SendChar(*Byte); %>%CTAB /* Send data to SPI bus */
+  ErrCode = %@HWSPI@'ModuleName'%.SendChar(*Byte); %>%CTAB /* Send data to SPI bus */
   if (ErrCode != ERR_OK) {             %>%CTAB /* Is release value error */
     *Byte = 0x00;                      %>%CTAB /* Return error */
     return ErrCode;                    %>%CTAB /* Return error code */
   }
   do {
-    ErrCode = %@SPIBus@'ModuleName'%.CharsInRxBuf(&Cnt); %>%CTAB /* Get count char in TX buffer */
+    ErrCode = %@HWSPI@'ModuleName'%.CharsInRxBuf(&Cnt); %>%CTAB /* Get count char in TX buffer */
     if (ErrCode != ERR_OK) {           %>%CTAB /* Is release value error */
       *Byte = 0x00;                    %>%CTAB /* Send data to SPI bus */
       return ErrCode;                  %>%CTAB /* Return error code */
     }
   } while (Cnt == 0x00);
-  return(%@SPIBus@'ModuleName'%.RecvChar(Byte)); %>%CTAB /* Return release error */
+  return(%@HWSPI@'ModuleName'%.RecvChar(Byte)); %>%CTAB /* Return release error */
 }
 
 %-INTERNAL_METHOD_END SendRecvByte
@@ -319,8 +311,8 @@ static byte Write128Byte(EEPROM_Address addr, byte *data, word size)
   if (size <= 0 || size != %'ModuleName'%.BLOCK_SIZE || (addr%%%'ModuleName'%.BLOCK_SIZE)!=0) { /* can only write 128 bytes, at page start address */
     return ERR_RANGE;
   }
-  (void)%@SPIBus@'ModuleName'%.SetShiftClockPolarity(0x00);
-  (void)%@SPIBus@'ModuleName'%.SetIdleClockPolarity(0x00);
+  (void)%@HWSPI@'ModuleName'%.SetShiftClockPolarity(0x00);
+  (void)%@HWSPI@'ModuleName'%.SetIdleClockPolarity(0x00);
   do {
     ErrCode = ReadStatusRegister(&Reg); %>%CTAB /* Get status register selected EEPROM */
     Trials++;                           %>%CTAB /* Increased fault */
@@ -460,8 +452,8 @@ byte %'ModuleName'%.%ReadByte(EEPROM_Address addr, byte *data)
   byte ErrCode, Reg;                   %>%CTAB /* Temporary variable - data register address */
   word Trials = 0x00;                  %>%CTAB /* Temporary variable - data register address */
 
-  (void)%@SPIBus@'ModuleName'%.SetShiftClockPolarity(0x00);
-  (void)%@SPIBus@'ModuleName'%.SetIdleClockPolarity(0x00);
+  (void)%@HWSPI@'ModuleName'%.SetShiftClockPolarity(0x00);
+  (void)%@HWSPI@'ModuleName'%.SetIdleClockPolarity(0x00);
   do {
     ErrCode = ReadStatusRegister(&Reg);%>%CTAB /* Get status register selected EEPROM */
     Trials++;                          %>%CTAB /* Increased fault */
@@ -491,8 +483,8 @@ byte %'ModuleName'%.SetWriteEnable(void)
   byte ErrCode = ERR_OK, Reg;          %>%CTAB /* Temporary variable - data register address */
   word Trials = 0x00;                  %>%CTAB /* Temporary variable - data register address */
 
-  (void)%@SPIBus@'ModuleName'%.SetShiftClockPolarity(0x00);
-  (void)%@SPIBus@'ModuleName'%.SetIdleClockPolarity(0x00);
+  (void)%@HWSPI@'ModuleName'%.SetShiftClockPolarity(0x00);
+  (void)%@HWSPI@'ModuleName'%.SetIdleClockPolarity(0x00);
   do {
     ErrCode = ReadStatusRegister(&Reg); %>%CTAB /* Get status register selected EEPROM */
     Trials++;                        %>%CTAB /* Increased fault */
@@ -515,8 +507,8 @@ byte %'ModuleName'%.ClrWriteEnable(void)
   byte ErrCode = ERR_OK, Reg;          %>%CTAB /* Temporary variable - data register address */
   word Trials = 0x00;                  %>%CTAB /* Temporary variable - data register address */
 
-  (void)%@SPIBus@'ModuleName'%.SetShiftClockPolarity(0x00);
-  (void)%@SPIBus@'ModuleName'%.SetIdleClockPolarity(0x00);
+  (void)%@HWSPI@'ModuleName'%.SetShiftClockPolarity(0x00);
+  (void)%@HWSPI@'ModuleName'%.SetIdleClockPolarity(0x00);
   do {
     ErrCode = ReadStatusRegister(&Reg); %>%CTAB /* Get status register selected EEPROM */
     Trials++;                        %>%CTAB /* Increased fault */
