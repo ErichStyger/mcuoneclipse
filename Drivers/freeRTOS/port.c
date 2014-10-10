@@ -78,7 +78,6 @@
 #if !configPEX_KINETIS_SDK
   #include "%ProcessorModule.h"
 #endif
-
 /* --------------------------------------------------- */
 /* Let the user override the pre-loading of the initial LR with the address of
    prvTaskExitError() in case is messes up unwinding of the stack in the
@@ -846,11 +845,13 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
   /* -1UL is used because this code will execute part way through one of the tick periods */
 #if COUNTS_UP
   ulReloadValue = (UL_TIMER_COUNTS_FOR_ONE_TICK*xExpectedIdleTime);
-  if (ulReloadValue>=tmp && tmp!=0) { /* make sure it does not underflow */
-    ulReloadValue -= tmp;
+  #if configSYSTICK_USE_LOW_POWER_TIMER
+  if (ulReloadValue > 0) { /* make sure it does not underflow */
+    ulReloadValue -= 1UL; /* LPTMR: interrupt will happen at match of compare register && increment, thus minus 1 */
   }
-  if (ulReloadValue >= 1) { /* make sure it does not underflow */
-    ulReloadValue -= 1UL;
+  #endif
+  if (tmp!=0 && ulReloadValue>=tmp) { /* make sure it does not underflow */
+    ulReloadValue -= tmp; /* take into account what we already executed in the current tick period */
   }
 #else
   ulReloadValue = tmp+(UL_TIMER_COUNTS_FOR_ONE_TICK*(xExpectedIdleTime-1UL));
@@ -870,15 +871,19 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
   if (eTaskConfirmSleepModeStatus()==eAbortSleep) {
      /* Must restore the duration before re-enabling the timers */
 #if COUNTS_UP
-    tickDuration = UL_TIMER_COUNTS_FOR_ONE_TICK-1UL;
-    if (tickDuration >= tmp) { /* make sure it does not underflow */
-      tickDuration -= tmp;
+    #if configSYSTICK_USE_LOW_POWER_TIMER
+    tickDuration = UL_TIMER_COUNTS_FOR_ONE_TICK-1UL; /* LPTMR: interrupt will happen at match of compare register && increment, thus minus 1 */
+    #else
+    tickDuration = UL_TIMER_COUNTS_FOR_ONE_TICK;
+    #endif
+    if (tmp!=0 && tickDuration >= tmp) { /* make sure it does not underflow */
+      tickDuration -= tmp; /* take into account what we already executed in the current tick period */
     }
 #else
     tickDuration = tmp;
 #endif
     SET_TICK_DURATION(tickDuration);
-    ENABLE_TICK_COUNTER(); /* Restart SysTick. */
+    ENABLE_TICK_COUNTER(); /* Restart tick timer. */
     TICKLESS_ENABLE_INTERRUPTS();
   } else {
     SET_TICK_DURATION(ulReloadValue); /* Set the new reload value. */
@@ -937,20 +942,22 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
        * this tick period. 
        */
 #if COUNTS_UP
-      tickDuration = (UL_TIMER_COUNTS_FOR_ONE_TICK-1UL);
+    #if configSYSTICK_USE_LOW_POWER_TIMER
+      tickDuration = (UL_TIMER_COUNTS_FOR_ONE_TICK-1UL); /* LPTMR: interrupt will happen at match of compare register && increment, thus minus 1 */
+    #else
+      tickDuration = UL_TIMER_COUNTS_FOR_ONE_TICK;
+    #endif
       if (tickDuration >= tmp) { /* make sure it does not underflow */
         tickDuration -= tmp;
       }
       if (tickDuration > 1) {
+        /*! \todo Need to rethink this one! */
         //tickDuration -= 1; /* decrement by one, to compensate for one timer tick, as we are already part way through it */
       } else {
         /* Not enough time to setup for the next tick, so skip it and setup for the
          * next. Make sure to count the tick we skipped.
          */
         tickDuration += (UL_TIMER_COUNTS_FOR_ONE_TICK - 1UL);
-        //if (tickDuration > 1) { /* check for underflow */
-        //  tickDuration -= 1;
-        //}
         vTaskStepTick(1);
       }
 #else
@@ -963,7 +970,7 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
        * maintained by the tick is stepped forward by one less than the
        * time spent waiting.
        */
-      ulCompleteTickPeriods = xExpectedIdleTime-1UL;
+      ulCompleteTickPeriods = xExpectedIdleTime-1UL; /* -1 because we already added a completed tick from the tick interrupt */
     } else {
       /* Something other than the tick interrupt ended the sleep.
        * Work out how long the sleep lasted rounded to complete tick
@@ -996,7 +1003,6 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
 #endif
       SET_TICK_DURATION(tickDuration);
     }
-
     /* Restart SysTick so it runs from portNVIC_SYSTICK_LOAD_REG
        again, then set portNVIC_SYSTICK_LOAD_REG back to its standard
        value.  The critical section is used to ensure the tick interrupt
@@ -1012,7 +1018,7 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
       /* The compare register of the LPTMR should not be modified when the
        * timer is running, so wait for the next tick interrupt to change it.
        */
-      if (tickDuration != (UL_TIMER_COUNTS_FOR_ONE_TICK-1UL)) {
+      if (tickDuration != (UL_TIMER_COUNTS_FOR_ONE_TICK-1UL)) { /* minus one because of LPTMR way to trigger interrupts */
         if (tickISRfired) {
           /* The pending tick interrupt will be immediately processed after
            * exiting this function so we need to delay the change of the tick
