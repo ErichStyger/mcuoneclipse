@@ -242,7 +242,7 @@ static byte SendRecvByte(byte *Byte)
     return ErrCode;                    %>%CTAB /* Return error code */
   }
   do {
-    ErrCode = %@HWSPI@'ModuleName'%.CharsInRxBuf(&Cnt); %>%CTAB /* Get count char in TX buffer */
+    Cnt = %@HWSPI@'ModuleName'%.GetCharsInRxBuf(); %>%CTAB /* Get count char in TX buffer */
     if (ErrCode != ERR_OK) {           %>%CTAB /* Is release value error */
       *Byte = 0x00;                    %>%CTAB /* Send data to SPI bus */
       return ErrCode;                  %>%CTAB /* Return error code */
