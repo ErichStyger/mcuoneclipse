@@ -469,6 +469,15 @@ uint8_t %'ModuleName'%.%WriteReg8(uint8_t addr, uint8_t val);
 
 %endif %- WriteReg8
 %-BW_METHOD_END WriteReg8
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SwReset
+%ifdef SwReset
+uint8_t %'ModuleName'%.%SwReset(void);
+%define! RetVal
+%include Common\FXOS8700CQSwReset.Inc
+
+%endif %- SwReset
+%-BW_METHOD_END SwReset
 %-BW_DEFINITION_END
 /* END %ModuleName. */
 
@@ -669,6 +678,7 @@ static uint8_t PrintHelp(const %@Shell@'ModuleName'%.StdIOType *io) {
 %if defined(CalibrateX1g) | defined(CalibrateY1g) | defined(CalibrateZ1g)
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  calibrate x|y|z", (unsigned char*)"Performs accelerometer calibration\r\n", io->stdOut);
 %endif
+  %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  swreset", (unsigned char*)"Performs a software reset\r\n", io->stdOut);
   %@Shell@'ModuleName'%.SendHelpStr((unsigned char*)"  enable|disable", (unsigned char*)"Enables or disables the sensor\r\n", io->stdOut);
   return ERR_OK;
 }
@@ -1094,6 +1104,12 @@ uint8_t %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, co
   } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, (char*)"%'ModuleName' disable")==0) {
     %'ModuleName'%.Disable();
     *handled = TRUE;
+  } else if (%@Utility@'ModuleName'%.strcmp((char*)cmd, (char*)"%'ModuleName' swreset")==0) {
+    *handled = TRUE;
+    if (%'ModuleName'%.SwReset()!=ERR_OK) {
+      %@Shell@'ModuleName'%.SendStr((unsigned char*)"SW reset failed!\r\n", io->stdErr);
+      return ERR_FAILED;
+    }
   }
   return ERR_OK;
 }
@@ -1143,6 +1159,10 @@ uint8_t %'ModuleName'%.%Enable(void)
   %endif
     return res;
   }
+  if (val&%'ModuleName'_ACTIVE_BIT_MASK) {
+    return ERR_OK; /* already enabled */
+  }
+  %@Wait@'ModuleName'%.Waitms(1); /* for unknown reasons, need to wait for 1 ms after reading the register */
   val |= %'ModuleName'_ACTIVE_BIT_MASK; /* enable device */
   return %@I2C@'ModuleName'%.WriteByteAddress8(%'ModuleName'_I2C_ADDR, %'ModuleName'_CTRL_REG_1, val);
 }
@@ -1165,6 +1185,10 @@ uint8_t %'ModuleName'%.%Disable(void)
   %endif
     return res;
   }
+  if ((val&%'ModuleName'_ACTIVE_BIT_MASK)==0) {
+    return ERR_OK; /* already disabled */
+  }
+  %@Wait@'ModuleName'%.Waitms(1); /* for unknown reasons, need to wait for 1 ms after reading the register */
   val &= ~%'ModuleName'_ACTIVE_BIT_MASK; /* disable device */
   return %@I2C@'ModuleName'%.WriteByteAddress8(%'ModuleName'_I2C_ADDR, %'ModuleName'_CTRL_REG_1, val);
 }
@@ -1368,6 +1392,36 @@ uint8_t %'ModuleName'%.%WriteReg8(uint8_t addr, uint8_t val)
 
 %endif %- WriteReg8
 %-BW_METHOD_END WriteReg8
+%-************************************************************************************************************
+%-BW_METHOD_BEGIN SwReset
+%ifdef SwReset
+%define! RetVal
+%include Common\FXOS8700CQSwReset.Inc
+uint8_t %'ModuleName'%.%SwReset(void)
+{
+  uint8_t val, res;
+
+  res = %@I2C@'ModuleName'%.ReadByteAddress8(%'ModuleName'_I2C_ADDR, %'ModuleName'_CTRL_REG_2, &val);
+  if (res!=ERR_OK) {
+  %if defined(OnError)
+    %OnError();
+  %endif
+    return res;
+  }
+  val |= %'ModuleName'_CTRL_REG_2_MASK_RST; /* reset device */
+  res = %@I2C@'ModuleName'%.WriteByteAddress8(%'ModuleName'_I2C_ADDR, %'ModuleName'_CTRL_REG_2, val);
+  if (res!=ERR_OK) {
+  %if defined(OnError)
+    %OnError();
+  %endif
+    return res;
+  }
+  %@Wait@'ModuleName'%.Waitms(1); /* wait for one ms after sending the software reset */
+  return ERR_OK;
+}
+
+%endif %- SwReset
+%-BW_METHOD_END SwReset
 %-BW_IMPLEMENT_END
 /* END %ModuleName. */
 

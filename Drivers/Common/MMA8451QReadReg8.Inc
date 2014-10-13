@@ -7,7 +7,7 @@
 %;**     Description :
 %;**         Reads an 8bit device register
 %include Common\GeneralParameters.inc(27)
-%;**         addr%Paraddr %>27 - device memory map address
+%;**       * addr%Paraddr %>27 - device memory map address
 %;**       * val%Parval %>27 - Pointer to value
 %;**     Returns     :
 %;**         ---%RetVal %>27 - Error code

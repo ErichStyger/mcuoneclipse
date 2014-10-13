@@ -4,7 +4,7 @@
     <Name>FXOS8700CQ</Name>
     <Description>Driver for the Freescale FXOS8700CQ digital I2C accelerometer and magnetometer.</Description>
     <Author>Erich Styger</Author>
-    <Version>01.027</Version>
+    <Version>01.028</Version>
     <Icon>FXOS8700CQ</Icon>
     <TypesFiles>PE,FXOS8700CQ\FXOS8700CQ</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -58,6 +58,20 @@
         <Symbol>I2C</Symbol>
         <TypeSpec>FXOS8700CQ\I2C</TypeSpec>
         <Hint>Interface to I2C bus connected to the accelerometer.</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <DefaultValue/>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <SortStyle/>
+      </TInhrLinkItem>
+    </Property>
+    <Property>
+      <TInhrLinkItem>
+        <Name>Wait</Name>
+        <Symbol>Wait</Symbol>
+        <TypeSpec>FXOS8700CQ\Wait</TypeSpec>
+        <Hint>Interface to waiting routines</Hint>
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <DefaultValue/>
@@ -287,6 +301,34 @@
         <Scope>PRIVATE</Scope>
         <Declarations>
           <ANSIC>uint8_t #M#_#C#(bool *isEnabled)</ANSIC>
+        </Declarations>
+      </TMthdItem>
+    </Method>
+    <Method>
+      <TMthdItem>
+        <Name>SwReset</Name>
+        <Symbol>SwReset</Symbol>
+        <TypeSpec>typeMethod</TypeSpec>
+        <Hint>Perform a software reset using the rst bit in the CTRL register 2</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
+        <DefaultIndex>0</DefaultIndex>
+        <TextValueIndex>false</TextValueIndex>
+        <RuntimeProperty>false</RuntimeProperty>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <DefaultValue>true</DefaultValue>
+        <Popup>false</Popup>
+        <PublicMethod>true</PublicMethod>
+        <IsAssembler>false</IsAssembler>
+        <InDefinition>true</InDefinition>
+        <ReturnType>uint8_t</ReturnType>
+        <RetHint>Error code</RetHint>
+        <ParamCount>0</ParamCount>
+        <Scope>PRIVATE</Scope>
+        <Declarations>
+          <ANSIC>uint8_t #M#_#C#(void)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

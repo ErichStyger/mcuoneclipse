@@ -1,12 +1,17 @@
 
 [USED_FACES]
-BeanVersion=01.028
+BeanVersion=01.036
 
-InterfacesCount=3
+InterfacesCount=4
 
 Symbol=I2C
 Link=Yes
 Interface=MMA8451Q\I2C
+Version=01.000
+
+Symbol=Wait
+Link=Yes
+Interface=MMA8451Q\Wait
 Version=01.000
 
 Symbol=Shell

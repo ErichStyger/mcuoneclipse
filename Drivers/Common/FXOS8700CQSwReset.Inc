@@ -3,12 +3,11 @@
 %{
 %endif CommentLine
 %;** ===================================================================
-%include Common\GeneralMethod.inc (WriteReg8)
+%include Common\GeneralMethod.inc (SwReset)
 %;**     Description :
-%;**         Write an 8bit device register
-%include Common\GeneralParameters.inc(27)
-%;**       * addr%Paraddr %>27 - device memory map address
-%;**       * val%Parval %>27 - value to write
+%;**         Perform a software reset using the rst bit in the CTRL
+%;**         register 2
+%include Common\GeneralParametersNone.inc
 %;**     Returns     :
 %;**         ---%RetVal %>27 - Error code
 %include Common\GeneralDamage.inc
