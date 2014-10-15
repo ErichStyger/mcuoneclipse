@@ -10,7 +10,7 @@
 /*##                                   */
 /*##     Compiler  : IAR ARM C Compiler */
 /*##                                   */
-/*##     Date/Time : 2013-10-17, 07:31, # CodeGen: 0 */
+/*##     Date/Time : 2014-10-14, 16:21, # CodeGen: 14 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */
@@ -24,16 +24,16 @@
 /*## ###################################################################*/
 
 define symbol m_interrupts_start       = 0x00000000;
-define symbol m_interrupts_end         = 0x000000F8;
+define symbol m_interrupts_end         = 0x000000F7;
 
 define symbol m_text_start             = 0x00000410;
-define symbol m_text_end               = 0x00020000;
+define symbol m_text_end               = 0x0001FFFF;
 
 define symbol m_data_start             = 0x1FFFE000;
-define symbol m_data_end               = 0x20000000;
+define symbol m_data_end               = 0x1FFFFFFF;
 
 define symbol m_data_20000000_start    = 0x20000000;
-define symbol m_data_20000000_end      = 0x20002000;
+define symbol m_data_20000000_end      = 0x20001FFF;
 
 define symbol FlashConfig_start__    = 0x00000400;
 define symbol FlashConfig_end__      = 0x0000040f;
@@ -53,7 +53,6 @@ define block CSTACK    with alignment = 8, size = __size_cstack__   { };
 define block HEAP      with alignment = 8, size = __size_heap__     { };
 
 define exported symbol __VECTOR_TABLE_START = m_interrupts_start;
-
 define exported symbol __vect_table = m_interrupts_start;
 
 define region FlashConfig_region = mem:[from FlashConfig_start__ to FlashConfig_end__];
@@ -63,7 +62,6 @@ define region m_data_20000000_region = mem:[from m_data_20000000_start to m_data
 
 initialize by copy { readwrite };
 do not initialize  { section .noinit };
-
 place at address mem: m_interrupts_start { readonly section .intvec };
 
 place in ROM_region   { readonly };
