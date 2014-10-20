@@ -55,6 +55,10 @@
 #include "I2CSPY1.h"
 #include "RTC1.h"
 #include "TMOUT1.h"
+#include "PTC.h"
+#include "DMA1.h"
+#include "DMACH1.h"
+#include "TPM0.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -137,79 +141,23 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 
 /*
 ** ===================================================================
-**     Event       :  AS1_OnError (module Events)
+**     Event       :  DMACH1_OnComplete (module Events)
 **
-**     Component   :  AS1 [AsynchroSerial]
-**     Description :
-**         This event is called when a channel error (not the error
-**         returned by a given method) occurs. The errors can be read
-**         using <GetError> method.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
+**     Component   :  DMACH1 [DMAChannel_LDD]
 */
-void AS1_OnError(void);
-
-/*
-** ===================================================================
-**     Event       :  AS1_OnRxChar (module Events)
-**
-**     Component   :  AS1 [AsynchroSerial]
-**     Description :
-**         This event is called after a correct character is received.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled and either the <Receiver>
-**         property is enabled or the <SCI output mode> property (if
-**         supported) is set to Single-wire mode.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
+/*!
+**     @brief
+**         Called at the end of a DMA transfer. If the Half complete
+**         property in initialization section is enabled, this event is
+**         also called when current major iteration count reaches the
+**         halfway point. See SetEventMask() and GetEventMask() methods.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
 */
-void AS1_OnRxChar(void);
-
-/*
-** ===================================================================
-**     Event       :  AS1_OnTxChar (module Events)
-**
-**     Component   :  AS1 [AsynchroSerial]
-**     Description :
-**         This event is called after a character is transmitted.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void AS1_OnTxChar(void);
-
-/*
-** ===================================================================
-**     Event       :  AS1_OnFullRxBuf (module Events)
-**
-**     Component   :  AS1 [AsynchroSerial]
-**     Description :
-**         This event is called when the input buffer is full;
-**         i.e. after reception of the last character 
-**         that was successfully placed into input buffer.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void AS1_OnFullRxBuf(void);
-
-/*
-** ===================================================================
-**     Event       :  AS1_OnFreeTxBuf (module Events)
-**
-**     Component   :  AS1 [AsynchroSerial]
-**     Description :
-**         This event is called after the last character in output
-**         buffer is transmitted.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void AS1_OnFreeTxBuf(void);
+/* ===================================================================*/
+void DMACH1_OnComplete(LDD_TUserData *UserDataPtr);
 
 /* END Events */
 
