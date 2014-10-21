@@ -9,16 +9,15 @@
 #include "board.h" /* board header file */
 #include "gpio1.h" /* General purpose I/O pins */
 #include "FreeRTOS.h" /* FreeRTOS interface */
-//#include "RTOSTRC1.h"
 
-#define USE_SDK_RTOS  0 /* Using the SDK RTOS API or not */
+#define USE_SDK_RTOS  1 /* Using the SDK RTOS API or not */
 /*--------------------------------------------------------------------------*/
 #if USE_SDK_RTOS
 /* Kinetis SDK Task variables and defines */
-#define SDK_TASK_STACK_SIZE  200 /* Task stack size (in 32bit units) */
+//#define SDK_TASK_STACK_SIZE  200 /* Task stack size (in 32bit units) */
 #define SDK_TASK_PRIO        0 /* task priority */
 static void sdk_task(void *param); /* prototype of the task */
-FSL_RTOS_TASK_DEFINE(sdk_task, SDK_TASK_STACK_SIZE, "sdk", false);
+//FSL_RTOS_TASK_DEFINE(sdk_task, SDK_TASK_STACK_SIZE, "sdk", false);
 static task_handler_t sdk_task_hdl; /* task handle */
 
 /*!
@@ -28,8 +27,8 @@ static task_handler_t sdk_task_hdl; /* task handle */
 static void sdk_task(void *param) {
   (void)param; /* unused parameter */
   for(;;) {
-    gpio_toggle_pin_output(kGpioLED3); /* toggle blue LED */
-	time_delay(1000); /* wait 1000 ms */
+    GPIO_DRV_TogglePinOutput(LED_RED); /* toggle blue LED */
+	  time_delay(1000); /* wait 1000 ms */
   }
 }
 
@@ -41,8 +40,7 @@ static void SDK_CreateTask(void) {
     for(;;); /* error! */
   }
 }
-#endif /* USE_SDK_RTOS */
-
+#else /* USE_SDK_RTOS */
 /*--------------------------------------------------------------------------*/
 /* traditional FreeRTOS task API */
 static xTaskHandle mainTaskHndl;
@@ -67,21 +65,15 @@ static void CreateTask(void) {
       for(;;){} /* error! probably out of memory */
     }
 }
+#endif /* USE_SDK_RTOS */
 
 void APP_Start (void) {
   hardware_init(); /* initialize the hardware */
-
-#if 0 /* Percipio Trace */
-  if(RTOSTRC1_uiTraceStart()!=1) {
-    for(;;){} /* failure? */
-  }
-#endif
-
   /* create tasks */
-  CreateTask(); /* create a task with the 'traditional' FreeRTOS API */
 #if USE_SDK_RTOS
   SDK_CreateTask(); /* create a task with the Kinetis SDK API */
+#else
+  CreateTask(); /* create a task with the 'traditional' FreeRTOS API */
 #endif
-
   vTaskStartScheduler(); /* start FreeRTOS scheduler, does usually not return! */
 }
