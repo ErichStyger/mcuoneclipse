@@ -11,7 +11,7 @@
 #include "FreeRTOS.h" /* FreeRTOS interface */
 #include "RTOSTRC1.h"
 
-#define USE_SDK_RTOS  1 /* Using the SDK RTOS API or not */
+#define USE_SDK_RTOS  0 /* Using the SDK RTOS API or not */
 /*--------------------------------------------------------------------------*/
 #if USE_SDK_RTOS
 /* Kinetis SDK Task variables and defines */
