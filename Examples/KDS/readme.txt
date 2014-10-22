@@ -1,0 +1,1 @@
+This folder contains projects for Kinetis Design Studio (KDS).
