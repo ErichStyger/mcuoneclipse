@@ -65,7 +65,7 @@
 <layer number="56" name="wert" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="91" name="Nets" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="92" name="Busses" color="1" fill="1" visible="yes" active="yes"/>
-<layer number="93" name="Pins" color="2" fill="1" visible="no" active="yes"/>
+<layer number="93" name="Pins" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="94" name="Symbols" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="95" name="Names" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="96" name="Values" color="7" fill="1" visible="yes" active="yes"/>
@@ -130,6 +130,40 @@
 <smd name="21" x="5.4" y="-15.94" dx="1.8" dy="1" layer="1" rot="R90"/>
 <text x="-5.35" y="11.31" size="1.27" layer="25">&gt;name</text>
 </package>
+<package name="BT_BOARD_FOOTPRINT">
+<description>Bluetooth Board V1.05 Footprint</description>
+<pad name="RX" x="-16.51" y="3.81" drill="0.9" diameter="1.778"/>
+<pad name="TX" x="-16.51" y="1.27" drill="0.9" diameter="1.778"/>
+<pad name="GND" x="-16.51" y="-1.27" drill="0.9" diameter="1.778"/>
+<text x="-15.24" y="3.556" size="0.6096" layer="21" font="vector">RX</text>
+<text x="-15.24" y="1.016" size="0.6096" layer="21" font="vector">TX</text>
+<text x="-15.24" y="-1.524" size="0.6096" layer="21" font="vector">GND</text>
+<pad name="VCC" x="-16.51" y="-3.81" drill="0.9" diameter="1.778"/>
+<text x="-15.24" y="-4.064" size="0.6096" layer="21" font="vector">VCC</text>
+<wire x1="-17.78" y1="6.985" x2="-17.78" y2="-6.985" width="0.127" layer="21"/>
+<wire x1="-17.78" y1="-6.985" x2="16.51" y2="-6.985" width="0.127" layer="21"/>
+<wire x1="16.51" y1="-6.985" x2="16.51" y2="6.985" width="0.127" layer="21"/>
+<wire x1="16.51" y1="6.985" x2="-17.78" y2="6.985" width="0.127" layer="21"/>
+<text x="-17.78" y="7.493" size="1.016" layer="25" font="vector" ratio="12">&gt;NAME</text>
+</package>
+<package name="BT_BOARD_FOOTPRINT_STANDING">
+<pad name="RX" x="-3.81" y="3.81" drill="0.9" diameter="1.6764"/>
+<pad name="TX" x="-3.81" y="1.27" drill="0.9" diameter="1.6764"/>
+<pad name="GND" x="-3.81" y="-1.27" drill="0.9" diameter="1.6764" shape="square"/>
+<text x="-2.286" y="3.556" size="0.6096" layer="21" font="vector">RX</text>
+<text x="-2.286" y="1.016" size="0.6096" layer="21" font="vector">TX</text>
+<text x="-2.286" y="-1.524" size="0.6096" layer="21" font="vector">GND</text>
+<pad name="VCC" x="-3.81" y="-3.81" drill="0.9" diameter="1.6764"/>
+<text x="-2.286" y="-4.064" size="0.6096" layer="21" font="vector">VCC</text>
+<wire x1="-2.48" y1="-7.985" x2="0.47" y2="-7.985" width="0.127" layer="21"/>
+<wire x1="0.47" y1="7.985" x2="-2.58" y2="7.985" width="0.127" layer="21"/>
+<text x="-5.08" y="5.293" size="0.8128" layer="25" font="vector" ratio="12">&gt;NAME</text>
+<wire x1="-5.08" y1="-5.08" x2="-5.08" y2="5.08" width="0.127" layer="21"/>
+<wire x1="-5.08" y1="5.08" x2="-2.54" y2="5.08" width="0.127" layer="21"/>
+<wire x1="-2.54" y1="5.08" x2="-2.54" y2="7.95" width="0.127" layer="21"/>
+<wire x1="-5.08" y1="-5.08" x2="-2.54" y2="-5.08" width="0.127" layer="21"/>
+<wire x1="-2.54" y1="-5.08" x2="-2.54" y2="-7.95" width="0.127" layer="21"/>
+</package>
 </packages>
 <symbols>
 <symbol name="HC-05">
@@ -173,6 +207,19 @@
 <pin name="PIO9" x="25.4" y="10.16" length="middle" rot="R180"/>
 <pin name="PIO10" x="25.4" y="12.7" length="middle" rot="R180"/>
 <pin name="PIO11" x="25.4" y="15.24" length="middle" rot="R180"/>
+</symbol>
+<symbol name="BT_BOARD_SCHEMATIC">
+<description>Bluetooth Board V1.05 Schematic</description>
+<pin name="GND" x="-12.7" y="2.54" length="middle"/>
+<pin name="VCC" x="-12.7" y="7.62" length="middle"/>
+<pin name="TX" x="-12.7" y="-2.54" length="middle"/>
+<pin name="RX" x="-12.7" y="-7.62" length="middle"/>
+<wire x1="-7.62" y1="10.16" x2="-7.62" y2="-10.16" width="0.254" layer="94"/>
+<wire x1="-7.62" y1="-10.16" x2="7.62" y2="-10.16" width="0.254" layer="94"/>
+<wire x1="7.62" y1="-10.16" x2="7.62" y2="10.16" width="0.254" layer="94"/>
+<wire x1="7.62" y1="10.16" x2="-7.62" y2="10.16" width="0.254" layer="94"/>
+<text x="-7.62" y="10.922" size="1.778" layer="95" ratio="15">&gt;NAME</text>
+<text x="-7.62" y="-12.7" size="1.778" layer="96" ratio="15">&gt;VALUE</text>
 </symbol>
 </symbols>
 <devicesets>
@@ -218,6 +265,36 @@
 <connect gate="G$1" pin="TX" pad="1"/>
 <connect gate="G$1" pin="VBUSD+" pad="20"/>
 <connect gate="G$1" pin="VBUSD-" pad="15"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="BLUETOOTH_BOARD" prefix="J_BT_BOARD_">
+<description>Bluetooth Board V1.05</description>
+<gates>
+<gate name="J_BT_BOARD" symbol="BT_BOARD_SCHEMATIC" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="BT_BOARD_FOOTPRINT">
+<connects>
+<connect gate="J_BT_BOARD" pin="GND" pad="GND"/>
+<connect gate="J_BT_BOARD" pin="RX" pad="RX"/>
+<connect gate="J_BT_BOARD" pin="TX" pad="TX"/>
+<connect gate="J_BT_BOARD" pin="VCC" pad="VCC"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="STANDING" package="BT_BOARD_FOOTPRINT_STANDING">
+<connects>
+<connect gate="J_BT_BOARD" pin="GND" pad="GND"/>
+<connect gate="J_BT_BOARD" pin="RX" pad="RX"/>
+<connect gate="J_BT_BOARD" pin="TX" pad="TX"/>
+<connect gate="J_BT_BOARD" pin="VCC" pad="VCC"/>
 </connects>
 <technologies>
 <technology name=""/>

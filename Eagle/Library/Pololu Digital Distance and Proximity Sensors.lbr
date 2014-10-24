@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.05" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
+<grid distance="0.05" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.005" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
@@ -55,47 +55,53 @@
 <layer number="98" name="Guide" color="6" fill="1" visible="yes" active="yes"/>
 </layers>
 <library>
+<description>Pololu Digital Distance and Proximity Sensors; Pololu Items Nr. 1134; 1132; 2460; 2461</description>
 <packages>
-<package name="MINI_PUSHBUTTON_FOOTPRINT">
-<description>Footprint of Mini Pushbutton Switch, 2-Pin, SPST, 50mA
-Pololu Item #1400</description>
-<pad name="1" x="-3.81" y="0" drill="1.2" diameter="2.1844" shape="square"/>
-<pad name="2" x="3.175" y="0" drill="1.2" diameter="2.1844"/>
-<wire x1="-5.08" y1="1.905" x2="-5.08" y2="-1.905" width="0.127" layer="21"/>
-<wire x1="-5.08" y1="-1.905" x2="4.445" y2="-1.905" width="0.127" layer="21"/>
-<wire x1="4.445" y1="-1.905" x2="4.445" y2="1.905" width="0.127" layer="21"/>
-<wire x1="4.445" y1="1.905" x2="-5.08" y2="1.905" width="0.127" layer="21"/>
-<text x="-5.08" y="2.54" size="1.016" layer="21" ratio="12">&gt;NAME</text>
+<package name="POLOLU_DIST_PROX_SENS_FOOTPRINT">
+<description>Pololu Digital Distance and Proximity Sensors; Pololu Items Nr. 1134; 1132; 2460; 2461. Footprint.</description>
+<pad name="VDD" x="0" y="1.27" drill="0.9" diameter="1.778"/>
+<pad name="OUT" x="0" y="-1.27" drill="0.9" diameter="1.778"/>
+<pad name="ENABLE" x="0" y="-3.81" drill="0.9" diameter="1.778"/>
+<pad name="GND" x="0" y="3.81" drill="0.9" diameter="1.778" shape="square"/>
+<wire x1="-1.27" y1="5.08" x2="-1.27" y2="-5.08" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="-5.08" x2="1.27" y2="-5.08" width="0.127" layer="21"/>
+<wire x1="1.27" y1="-5.08" x2="1.27" y2="5.08" width="0.127" layer="21"/>
+<wire x1="1.27" y1="5.08" x2="-1.27" y2="5.08" width="0.127" layer="21"/>
+<text x="1.397" y="4.826" size="0.6096" layer="21" rot="R270">GND</text>
+<text x="1.397" y="2.159" size="0.6096" layer="21" rot="R270">VDD</text>
+<text x="1.397" y="-0.381" size="0.6096" layer="21" rot="R270">OUT</text>
+<text x="1.397" y="-3.175" size="0.6096" layer="21" rot="R270">EN</text>
+<text x="-1.651" y="-5.08" size="1.016" layer="25" ratio="12" rot="R90">&gt;NAME</text>
 </package>
 </packages>
 <symbols>
-<symbol name="MINI_PUSHBUTTON_SCHEMATIC">
-<description>Schematic of Mini Pushbutton Switch, 2-Pin, SPST, 50mA
-Pololu Item #1400</description>
-<pin name="1" x="-7.62" y="0" length="short" swaplevel="1"/>
-<pin name="2" x="7.62" y="0" length="short" swaplevel="1" rot="R180"/>
-<wire x1="-5.08" y1="0" x2="0" y2="1.27" width="0.254" layer="94"/>
-<wire x1="0" y1="1.27" x2="5.08" y2="2.54" width="0.254" layer="94"/>
-<wire x1="0" y1="5.08" x2="0" y2="1.27" width="0.254" layer="94"/>
-<wire x1="1.27" y1="4.064" x2="1.27" y2="5.08" width="0.254" layer="94"/>
-<wire x1="1.27" y1="5.08" x2="-1.27" y2="5.08" width="0.254" layer="94"/>
-<text x="-7.62" y="6.858" size="1.778" layer="95" ratio="12">&gt;NAME</text>
-<wire x1="-1.27" y1="5.08" x2="-1.27" y2="4.064" width="0.254" layer="94"/>
-<text x="-7.62" y="-3.556" size="1.778" layer="96" ratio="12">&gt;VALUE</text>
+<symbol name="POLOLU_DIST_PROX_SENS_SYMBOL">
+<description>Pololu Digital Distance and Proximity Sensors; Pololu Items Nr. 1134; 1132; 2460; 2461. Schematic Part.</description>
+<pin name="GND" x="-15.24" y="7.62" length="middle"/>
+<pin name="VDD" x="-15.24" y="2.54" length="middle"/>
+<pin name="OUT" x="-15.24" y="-2.54" length="middle"/>
+<pin name="ENABLE" x="-15.24" y="-7.62" length="middle"/>
+<wire x1="-10.16" y1="10.16" x2="-10.16" y2="-10.16" width="0.254" layer="94"/>
+<wire x1="-10.16" y1="-10.16" x2="2.54" y2="-10.16" width="0.254" layer="94"/>
+<wire x1="2.54" y1="-10.16" x2="2.54" y2="10.16" width="0.254" layer="94"/>
+<wire x1="2.54" y1="10.16" x2="-10.16" y2="10.16" width="0.254" layer="94"/>
+<text x="-10.16" y="10.922" size="1.778" layer="95" ratio="12">&gt;NAME</text>
+<text x="-10.16" y="-12.7" size="1.778" layer="96" ratio="12">&gt;VALUE</text>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="MINI_PUSHBUTTON" prefix="BUTTON_">
-<description>Mini Pushbutton Switch, 2-Pin, SPST, 50mA
-Pololu Item #1400</description>
+<deviceset name="POLOLU_DIST_PROX_SENS" prefix="J_DIST_SENS_">
+<description>Pololu Digital Distance and Proximity Sensors; Pololu Items Nr. 1134; 1132; 2460; 2461</description>
 <gates>
-<gate name="BUTTON" symbol="MINI_PUSHBUTTON_SCHEMATIC" x="0" y="2.54"/>
+<gate name="J_DIST_SENS" symbol="POLOLU_DIST_PROX_SENS_SYMBOL" x="0" y="0"/>
 </gates>
 <devices>
-<device name="" package="MINI_PUSHBUTTON_FOOTPRINT">
+<device name="" package="POLOLU_DIST_PROX_SENS_FOOTPRINT">
 <connects>
-<connect gate="BUTTON" pin="1" pad="1"/>
-<connect gate="BUTTON" pin="2" pad="2"/>
+<connect gate="J_DIST_SENS" pin="ENABLE" pad="ENABLE"/>
+<connect gate="J_DIST_SENS" pin="GND" pad="GND"/>
+<connect gate="J_DIST_SENS" pin="OUT" pad="OUT"/>
+<connect gate="J_DIST_SENS" pin="VDD" pad="VDD"/>
 </connects>
 <technologies>
 <technology name=""/>

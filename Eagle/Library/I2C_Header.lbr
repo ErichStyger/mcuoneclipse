@@ -56,46 +56,48 @@
 </layers>
 <library>
 <packages>
-<package name="MINI_PUSHBUTTON_FOOTPRINT">
-<description>Footprint of Mini Pushbutton Switch, 2-Pin, SPST, 50mA
-Pololu Item #1400</description>
-<pad name="1" x="-3.81" y="0" drill="1.2" diameter="2.1844" shape="square"/>
-<pad name="2" x="3.175" y="0" drill="1.2" diameter="2.1844"/>
-<wire x1="-5.08" y1="1.905" x2="-5.08" y2="-1.905" width="0.127" layer="21"/>
-<wire x1="-5.08" y1="-1.905" x2="4.445" y2="-1.905" width="0.127" layer="21"/>
-<wire x1="4.445" y1="-1.905" x2="4.445" y2="1.905" width="0.127" layer="21"/>
-<wire x1="4.445" y1="1.905" x2="-5.08" y2="1.905" width="0.127" layer="21"/>
-<text x="-5.08" y="2.54" size="1.016" layer="21" ratio="12">&gt;NAME</text>
+<package name="I2C_HEADER_FOOTPRINT">
+<pad name="GND" x="-3.81" y="0" drill="0.9" diameter="1.778" shape="square"/>
+<pad name="3_3_V" x="-1.27" y="0" drill="0.9" diameter="1.778"/>
+<pad name="SCL" x="1.27" y="0" drill="0.9" diameter="1.778"/>
+<pad name="SDA" x="3.81" y="0" drill="0.9" diameter="1.778"/>
+<wire x1="-5.08" y1="1.27" x2="-5.08" y2="-1.27" width="0.127" layer="21"/>
+<wire x1="-5.08" y1="-1.27" x2="5.08" y2="-1.27" width="0.127" layer="21"/>
+<wire x1="5.08" y1="-1.27" x2="5.08" y2="1.27" width="0.127" layer="21"/>
+<wire x1="5.08" y1="1.27" x2="-5.08" y2="1.27" width="0.127" layer="21"/>
+<text x="-3.556" y="1.524" size="0.6096" layer="21" rot="R90">GND</text>
+<text x="-1.016" y="1.524" size="0.6096" layer="21" rot="R90">3.3V</text>
+<text x="1.524" y="1.524" size="0.6096" layer="21" rot="R90">SCL</text>
+<text x="4.064" y="1.524" size="0.6096" layer="21" rot="R90">SDA</text>
+<text x="-5.08" y="-2.54" size="1.016" layer="25" ratio="12">&gt;NAME</text>
 </package>
 </packages>
 <symbols>
-<symbol name="MINI_PUSHBUTTON_SCHEMATIC">
-<description>Schematic of Mini Pushbutton Switch, 2-Pin, SPST, 50mA
-Pololu Item #1400</description>
-<pin name="1" x="-7.62" y="0" length="short" swaplevel="1"/>
-<pin name="2" x="7.62" y="0" length="short" swaplevel="1" rot="R180"/>
-<wire x1="-5.08" y1="0" x2="0" y2="1.27" width="0.254" layer="94"/>
-<wire x1="0" y1="1.27" x2="5.08" y2="2.54" width="0.254" layer="94"/>
-<wire x1="0" y1="5.08" x2="0" y2="1.27" width="0.254" layer="94"/>
-<wire x1="1.27" y1="4.064" x2="1.27" y2="5.08" width="0.254" layer="94"/>
-<wire x1="1.27" y1="5.08" x2="-1.27" y2="5.08" width="0.254" layer="94"/>
-<text x="-7.62" y="6.858" size="1.778" layer="95" ratio="12">&gt;NAME</text>
-<wire x1="-1.27" y1="5.08" x2="-1.27" y2="4.064" width="0.254" layer="94"/>
-<text x="-7.62" y="-3.556" size="1.778" layer="96" ratio="12">&gt;VALUE</text>
+<symbol name="I2C_HEADER">
+<pin name="3.3V" x="-10.16" y="2.54" length="middle"/>
+<pin name="GND" x="-10.16" y="7.62" length="middle"/>
+<pin name="I2C_CLK" x="-10.16" y="-2.54" length="middle"/>
+<pin name="I2C_DA" x="-10.16" y="-7.62" length="middle"/>
+<wire x1="-5.08" y1="10.16" x2="-5.08" y2="-10.16" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="-10.16" x2="7.62" y2="-10.16" width="0.254" layer="94"/>
+<wire x1="7.62" y1="-10.16" x2="7.62" y2="10.16" width="0.254" layer="94"/>
+<wire x1="7.62" y1="10.16" x2="-5.08" y2="10.16" width="0.254" layer="94"/>
+<text x="-5.08" y="10.922" size="1.778" layer="95" ratio="12">&gt;NAME</text>
+<text x="-5.08" y="-12.954" size="1.778" layer="96" ratio="12">&gt;VALUE</text>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="MINI_PUSHBUTTON" prefix="BUTTON_">
-<description>Mini Pushbutton Switch, 2-Pin, SPST, 50mA
-Pololu Item #1400</description>
+<deviceset name="I2C_HEADER" prefix="J_I2C_HEADER_">
 <gates>
-<gate name="BUTTON" symbol="MINI_PUSHBUTTON_SCHEMATIC" x="0" y="2.54"/>
+<gate name="J_I2C_HEADER" symbol="I2C_HEADER" x="0" y="0"/>
 </gates>
 <devices>
-<device name="" package="MINI_PUSHBUTTON_FOOTPRINT">
+<device name="" package="I2C_HEADER_FOOTPRINT">
 <connects>
-<connect gate="BUTTON" pin="1" pad="1"/>
-<connect gate="BUTTON" pin="2" pad="2"/>
+<connect gate="J_I2C_HEADER" pin="3.3V" pad="3_3_V"/>
+<connect gate="J_I2C_HEADER" pin="GND" pad="GND"/>
+<connect gate="J_I2C_HEADER" pin="I2C_CLK" pad="SCL"/>
+<connect gate="J_I2C_HEADER" pin="I2C_DA" pad="SDA"/>
 </connects>
 <technologies>
 <technology name=""/>

@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE eagle SYSTEM "eagle.dtd">
+<eagle version="6.4">
+<drawing>
+<settings>
+<setting alwaysvectorfont="no"/>
+<setting verticaltext="up"/>
+</settings>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<layers>
+<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
+<layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="27" name="tValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="29" name="tStop" color="7" fill="3" visible="yes" active="yes"/>
+<layer number="30" name="bStop" color="7" fill="6" visible="yes" active="yes"/>
+<layer number="31" name="tCream" color="7" fill="4" visible="yes" active="yes"/>
+<layer number="32" name="bCream" color="7" fill="5" visible="yes" active="yes"/>
+<layer number="33" name="tFinish" color="6" fill="3" visible="yes" active="yes"/>
+<layer number="34" name="bFinish" color="6" fill="6" visible="yes" active="yes"/>
+<layer number="35" name="tGlue" color="7" fill="4" visible="yes" active="yes"/>
+<layer number="36" name="bGlue" color="7" fill="5" visible="yes" active="yes"/>
+<layer number="37" name="tTest" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="38" name="bTest" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="39" name="tKeepout" color="4" fill="11" visible="yes" active="yes"/>
+<layer number="40" name="bKeepout" color="1" fill="11" visible="yes" active="yes"/>
+<layer number="41" name="tRestrict" color="4" fill="10" visible="yes" active="yes"/>
+<layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
+<layer number="43" name="vRestrict" color="2" fill="10" visible="yes" active="yes"/>
+<layer number="44" name="Drills" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="45" name="Holes" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="46" name="Milling" color="3" fill="1" visible="yes" active="yes"/>
+<layer number="47" name="Measures" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="48" name="Document" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="49" name="Reference" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="50" name="dxf" color="7" fill="1" visible="no" active="no"/>
+<layer number="51" name="tDocu" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="53" name="tGND_GNDA" color="7" fill="9" visible="no" active="no"/>
+<layer number="54" name="bGND_GNDA" color="1" fill="9" visible="no" active="no"/>
+<layer number="56" name="wert" color="7" fill="1" visible="no" active="no"/>
+<layer number="91" name="Nets" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="92" name="Busses" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="93" name="Pins" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="94" name="Symbols" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="95" name="Names" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="96" name="Values" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="97" name="Info" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="98" name="Guide" color="6" fill="1" visible="yes" active="yes"/>
+<layer number="99" name="SpiceOrder" color="5" fill="1" visible="no" active="no"/>
+<layer number="100" name="Muster" color="7" fill="1" visible="no" active="no"/>
+<layer number="101" name="Patch_Top" color="12" fill="4" visible="yes" active="yes"/>
+<layer number="102" name="Vscore" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="103" name="tMap" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="104" name="Name" color="16" fill="1" visible="yes" active="yes"/>
+<layer number="105" name="tPlate" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="106" name="bPlate" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="107" name="Crop" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="116" name="Patch_BOT" color="9" fill="4" visible="yes" active="yes"/>
+<layer number="121" name="_tsilk" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="122" name="_bsilk" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="125" name="_tNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="144" name="Drill_legend" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="151" name="HeatSink" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="199" name="Contour" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="200" name="200bmp" color="1" fill="10" visible="yes" active="yes"/>
+<layer number="201" name="201bmp" color="2" fill="10" visible="yes" active="yes"/>
+<layer number="202" name="202bmp" color="3" fill="10" visible="yes" active="yes"/>
+<layer number="203" name="203bmp" color="4" fill="10" visible="yes" active="yes"/>
+<layer number="204" name="204bmp" color="5" fill="10" visible="yes" active="yes"/>
+<layer number="205" name="205bmp" color="6" fill="10" visible="yes" active="yes"/>
+<layer number="206" name="206bmp" color="7" fill="10" visible="yes" active="yes"/>
+<layer number="207" name="207bmp" color="8" fill="10" visible="yes" active="yes"/>
+<layer number="208" name="208bmp" color="9" fill="10" visible="yes" active="yes"/>
+<layer number="209" name="209bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="210" name="210bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="211" name="211bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="212" name="212bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="213" name="213bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="214" name="214bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="215" name="215bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="216" name="216bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="217" name="217bmp" color="18" fill="1" visible="no" active="no"/>
+<layer number="218" name="218bmp" color="19" fill="1" visible="no" active="no"/>
+<layer number="219" name="219bmp" color="20" fill="1" visible="no" active="no"/>
+<layer number="220" name="220bmp" color="21" fill="1" visible="no" active="no"/>
+<layer number="221" name="221bmp" color="22" fill="1" visible="no" active="no"/>
+<layer number="222" name="222bmp" color="23" fill="1" visible="no" active="no"/>
+<layer number="223" name="223bmp" color="24" fill="1" visible="no" active="no"/>
+<layer number="224" name="224bmp" color="25" fill="1" visible="no" active="no"/>
+<layer number="250" name="Descript" color="3" fill="1" visible="no" active="no"/>
+<layer number="251" name="SMDround" color="12" fill="11" visible="no" active="no"/>
+<layer number="254" name="cooling" color="7" fill="1" visible="yes" active="yes"/>
+</layers>
+<library>
+<description>Motor Controller and Encoder from Pololu plus Connectors for the Motors itself</description>
+<packages>
+<package name="ENCODER_FOOTPRINT">
+<description>Encoder for Pololu Wheel 42x19mm Footprint</description>
+<pad name="VCC" x="-1.27" y="0" drill="0.9" diameter="1.778"/>
+<pad name="OUTA" x="1.27" y="0" drill="0.9" diameter="1.778"/>
+<pad name="GND" x="-3.81" y="0" drill="0.9" diameter="1.778" shape="square"/>
+<pad name="OUTB" x="3.81" y="0" drill="0.9" diameter="1.778"/>
+<text x="-3.556" y="1.651" size="0.6096" layer="21" rot="R90">GND</text>
+<text x="-1.016" y="1.651" size="0.6096" layer="21" rot="R90">VCC</text>
+<text x="1.524" y="1.651" size="0.6096" layer="21" rot="R90">OUTA</text>
+<text x="4.064" y="1.651" size="0.6096" layer="21" rot="R90">OUTB</text>
+<wire x1="-5.08" y1="1.27" x2="-5.08" y2="-1.27" width="0.127" layer="21"/>
+<wire x1="-5.08" y1="-1.27" x2="5.08" y2="-1.27" width="0.127" layer="21"/>
+<wire x1="5.08" y1="-1.27" x2="5.08" y2="1.27" width="0.127" layer="21"/>
+<wire x1="5.08" y1="1.27" x2="-5.08" y2="1.27" width="0.127" layer="21"/>
+<text x="-5.08" y="-2.54" size="1.016" layer="21" ratio="12">&gt;NAME</text>
+</package>
+<package name="MOTOR_DRIVER_FOOTPRINT">
+<description>DRV8835 Dual Motor Driver Carrier Footprint</description>
+<pad name="GND1" x="-3.81" y="7.62" drill="0.9" diameter="1.778" shape="square"/>
+<pad name="VIN" x="-3.81" y="5.08" drill="0.9" diameter="1.778"/>
+<pad name="B_O2" x="-3.81" y="2.54" drill="0.9" diameter="1.778"/>
+<pad name="B_O1" x="-3.81" y="0" drill="0.9" diameter="1.778"/>
+<pad name="A_O2" x="-3.81" y="-2.54" drill="0.9" diameter="1.778"/>
+<pad name="A_O1" x="-3.81" y="-5.08" drill="0.9" diameter="1.778"/>
+<pad name="VMM" x="-3.81" y="-7.62" drill="0.9" diameter="1.778"/>
+<pad name="GND2" x="3.81" y="7.62" drill="0.9" diameter="1.778"/>
+<pad name="VCC" x="3.81" y="5.08" drill="0.9" diameter="1.778"/>
+<pad name="B_IN2" x="3.81" y="2.54" drill="0.9" diameter="1.778"/>
+<pad name="B_IN1" x="3.81" y="0" drill="0.9" diameter="1.778"/>
+<pad name="A_IN2" x="3.81" y="-2.54" drill="0.9" diameter="1.778"/>
+<pad name="A_IN1" x="3.81" y="-5.08" drill="0.9" diameter="1.778"/>
+<pad name="MODE" x="3.81" y="-7.62" drill="0.9" diameter="1.778"/>
+<text x="-7.112" y="7.366" size="0.6096" layer="21">GND</text>
+<text x="-6.985" y="4.826" size="0.6096" layer="21">VIN</text>
+<text x="-7.62" y="2.286" size="0.6096" layer="21">B_O2</text>
+<text x="-7.493" y="-0.254" size="0.6096" layer="21">B_O1</text>
+<text x="-7.493" y="-2.794" size="0.6096" layer="21">A_O2</text>
+<text x="-7.493" y="-5.334" size="0.6096" layer="21">A_O1</text>
+<text x="-7.112" y="-8.001" size="0.6096" layer="21">VMM</text>
+<text x="5.461" y="-7.874" size="0.6096" layer="21">MODE</text>
+<text x="5.461" y="-5.207" size="0.6096" layer="21">A_IN1</text>
+<text x="5.461" y="-2.794" size="0.6096" layer="21">A_IN2</text>
+<text x="5.461" y="-0.254" size="0.6096" layer="21">B_IN1</text>
+<text x="5.461" y="2.286" size="0.6096" layer="21">B_IN2</text>
+<text x="5.461" y="4.826" size="0.6096" layer="21">VCC</text>
+<text x="5.461" y="7.366" size="0.6096" layer="21">GND</text>
+<text x="-5.08" y="9.525" size="1.016" layer="21" ratio="12">&gt;NAME</text>
+<wire x1="-5.08" y1="8.89" x2="-5.08" y2="-8.89" width="0.127" layer="21"/>
+<wire x1="-5.08" y1="-8.89" x2="5.08" y2="-8.89" width="0.127" layer="21"/>
+<wire x1="5.08" y1="-8.89" x2="5.08" y2="8.89" width="0.127" layer="21"/>
+<wire x1="5.08" y1="8.89" x2="-5.08" y2="8.89" width="0.127" layer="21"/>
+</package>
+<package name="MOTOR_CONNECTOR_FOOTPRINT">
+<description>Connectors for the Motors, Footprint.</description>
+<pad name="2" x="0" y="-1.27" drill="0.9" diameter="1.778"/>
+<pad name="1" x="0" y="1.27" drill="0.9" diameter="1.778" shape="square"/>
+<wire x1="-1.27" y1="2.54" x2="-1.27" y2="-2.54" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="-2.54" x2="1.27" y2="-2.54" width="0.127" layer="21"/>
+<wire x1="1.27" y1="-2.54" x2="1.27" y2="2.54" width="0.127" layer="21"/>
+<wire x1="1.27" y1="2.54" x2="-1.27" y2="2.54" width="0.127" layer="21"/>
+<text x="1.651" y="1.016" size="0.6096" layer="21">1</text>
+<text x="1.651" y="-1.524" size="0.6096" layer="21">2</text>
+<text x="-1.651" y="-2.54" size="1.016" layer="25" ratio="12" rot="R90">&gt;NAME</text>
+</package>
+<package name="ENCODER_2591">
+<smd name="M1" x="0.01" y="4.99" dx="3" dy="1" layer="1"/>
+<smd name="M2" x="0.01" y="2.99" dx="3" dy="1" layer="1"/>
+<smd name="VCC" x="0.01" y="0.99" dx="3" dy="1" layer="1"/>
+<smd name="OUTA" x="0.01" y="-1.01" dx="3" dy="1" layer="1"/>
+<smd name="OUTB" x="0.01" y="-3.01" dx="3" dy="1" layer="1"/>
+<smd name="GND" x="0.01" y="-5.01" dx="3" dy="1" layer="1"/>
+<wire x1="-4.032" y1="6" x2="-4.032" y2="-6" width="0.127" layer="21"/>
+<wire x1="-4.032" y1="-6" x2="6" y2="-6" width="0.127" layer="21"/>
+<wire x1="6" y1="-6" x2="6" y2="6" width="0.127" layer="21"/>
+<wire x1="6" y1="6" x2="-4.032" y2="6" width="0.127" layer="21"/>
+<wire x1="3.97" y1="4.5" x2="3.97" y2="-4.44" width="2.5" layer="44"/>
+<text x="-4.0762" y="6.1976" size="0.762" layer="21" font="vector" ratio="12">&gt;NAME</text>
+<text x="-1.524" y="-4.699" size="0.6096" layer="21" font="vector" rot="R180">GND</text>
+<text x="-1.524" y="-2.699" size="0.6096" layer="21" font="vector" rot="R180">OUTB</text>
+<text x="-1.524" y="-0.699" size="0.6096" layer="21" font="vector" rot="R180">OUTA</text>
+<text x="-1.524" y="1.301" size="0.6096" layer="21" font="vector" rot="R180">VCC</text>
+<text x="-1.524" y="3.301" size="0.6096" layer="21" font="vector" rot="R180">M2</text>
+<text x="-1.524" y="5.301" size="0.6096" layer="21" font="vector" rot="R180">M1</text>
+<rectangle x1="-1.7526" y1="-5.8166" x2="5.8166" y2="5.842" layer="39"/>
+</package>
+<package name="ENCODER_2591_THT">
+<wire x1="-5.302" y1="4.095" x2="-5.302" y2="-4.095" width="0.127" layer="21"/>
+<wire x1="-5.302" y1="-4.095" x2="6" y2="-4.095" width="0.127" layer="21"/>
+<wire x1="6" y1="4.095" x2="-5.302" y2="4.095" width="0.127" layer="21"/>
+<wire x1="7.78" y1="4.5" x2="7.78" y2="-4.44" width="2.5" layer="46"/>
+<text x="-5.3462" y="4.2926" size="0.762" layer="21" font="vector" ratio="12">&gt;NAME</text>
+<text x="-2.54" y="2.8702" size="0.6096" layer="21" font="vector">GND</text>
+<text x="-2.54" y="1.6068" size="0.6096" layer="21" font="vector">OUTB</text>
+<text x="-2.54" y="0.318" size="0.6096" layer="21" font="vector">OUTA</text>
+<text x="-2.54" y="-0.9454" size="0.6096" layer="21" font="vector">VCC</text>
+<text x="-2.54" y="-2.2342" size="0.6096" layer="21" font="vector">M2</text>
+<text x="-2.54" y="-3.4976" size="0.6096" layer="21" font="vector">M1</text>
+<pad name="GND" x="-4.445" y="3.175" drill="0.5" diameter="0.8128" shape="square"/>
+<pad name="OUTB" x="-4.445" y="1.905" drill="0.5" diameter="0.8128"/>
+<pad name="OUTA" x="-4.445" y="0.635" drill="0.5" diameter="0.8128"/>
+<pad name="VCC" x="-4.445" y="-0.635" drill="0.5" diameter="0.8128"/>
+<pad name="M2" x="-4.445" y="-1.905" drill="0.5" diameter="0.8128"/>
+<pad name="M1" x="-4.445" y="-3.175" drill="0.5" diameter="0.8128"/>
+<wire x1="6.096" y1="4.064" x2="6.096" y2="6.096" width="0.127" layer="21"/>
+<wire x1="6.096" y1="6.096" x2="9.398" y2="6.096" width="0.127" layer="21"/>
+<wire x1="9.398" y1="6.096" x2="9.398" y2="-6.096" width="0.127" layer="21"/>
+<wire x1="9.398" y1="-6.096" x2="6.096" y2="-6.096" width="0.127" layer="21"/>
+<wire x1="6.096" y1="-6.096" x2="6.096" y2="-4.064" width="0.127" layer="21"/>
+<wire x1="-3.175" y1="-3.175" x2="-3.683" y2="-3.175" width="0.127" layer="21"/>
+<wire x1="-3.175" y1="-0.635" x2="-3.683" y2="-0.635" width="0.127" layer="21"/>
+<wire x1="-3.175" y1="-1.905" x2="-3.683" y2="-1.905" width="0.127" layer="21"/>
+<wire x1="-3.175" y1="0.635" x2="-3.683" y2="0.635" width="0.127" layer="21"/>
+<wire x1="-3.175" y1="1.905" x2="-3.683" y2="1.905" width="0.127" layer="21"/>
+<wire x1="-3.175" y1="3.175" x2="-3.683" y2="3.175" width="0.127" layer="21"/>
+<wire x1="-3.175" y1="-3.81" x2="-3.175" y2="3.81" width="0.127" layer="21"/>
+<wire x1="-3.175" y1="3.81" x2="1.016" y2="3.81" width="0.127" layer="21"/>
+<wire x1="1.016" y1="3.81" x2="1.016" y2="-3.81" width="0.127" layer="21"/>
+<wire x1="1.016" y1="-3.81" x2="-3.175" y2="-3.81" width="0.127" layer="21"/>
+<wire x1="1.016" y1="-3.81" x2="3.175" y2="-3.81" width="0.127" layer="21"/>
+<wire x1="3.175" y1="-3.81" x2="3.175" y2="-3.175" width="0.127" layer="21"/>
+<wire x1="3.175" y1="-3.175" x2="3.175" y2="-1.905" width="0.127" layer="21"/>
+<wire x1="3.175" y1="-1.905" x2="3.175" y2="-0.635" width="0.127" layer="21"/>
+<wire x1="3.175" y1="-0.635" x2="3.175" y2="0.635" width="0.127" layer="21"/>
+<wire x1="3.175" y1="0.635" x2="3.175" y2="1.905" width="0.127" layer="21"/>
+<wire x1="3.175" y1="1.905" x2="3.175" y2="3.175" width="0.127" layer="21"/>
+<wire x1="3.175" y1="3.175" x2="3.175" y2="3.81" width="0.127" layer="21"/>
+<wire x1="3.175" y1="3.81" x2="1.016" y2="3.81" width="0.127" layer="21"/>
+<wire x1="3.175" y1="-3.175" x2="6.35" y2="-3.175" width="0.127" layer="21"/>
+<wire x1="3.175" y1="-0.635" x2="6.35" y2="-0.635" width="0.127" layer="21"/>
+<wire x1="3.175" y1="-1.905" x2="6.35" y2="-1.905" width="0.127" layer="21"/>
+<wire x1="3.175" y1="0.635" x2="6.35" y2="0.635" width="0.127" layer="21"/>
+<wire x1="3.175" y1="1.905" x2="6.35" y2="1.905" width="0.127" layer="21"/>
+<wire x1="3.175" y1="3.175" x2="6.35" y2="3.175" width="0.127" layer="21"/>
+</package>
+<package name="SOCKET_TE_MICRO_MATCH_SMD">
+<smd name="P$1" x="-3.175" y="2.286" dx="1.5" dy="3" layer="1"/>
+<smd name="P$2" x="-1.905" y="-2.286" dx="1.5" dy="3" layer="1"/>
+<smd name="P$3" x="-0.635" y="2.286" dx="1.5" dy="3" layer="1"/>
+<smd name="P$4" x="0.635" y="-2.286" dx="1.5" dy="3" layer="1"/>
+<smd name="P$5" x="1.905" y="2.286" dx="1.5" dy="3" layer="1"/>
+<smd name="P$6" x="3.175" y="-2.286" dx="1.5" dy="3" layer="1"/>
+<text x="-5.478" y="-2.5314" size="0.762" layer="25" font="vector" ratio="12" rot="R90" align="center-left">&gt;NAME</text>
+<wire x1="-2.286" y1="2.54" x2="-1.524" y2="2.54" width="0.127" layer="21"/>
+<wire x1="0.254" y1="2.54" x2="1.016" y2="2.54" width="0.127" layer="21"/>
+<wire x1="-0.254" y1="-2.54" x2="-1.016" y2="-2.54" width="0.127" layer="21"/>
+<wire x1="1.524" y1="-2.54" x2="2.286" y2="-2.54" width="0.127" layer="21"/>
+<wire x1="-4.826" y1="-2.54" x2="-2.794" y2="-2.54" width="0.127" layer="21"/>
+<wire x1="4.064" y1="-2.54" x2="4.826" y2="-2.54" width="0.127" layer="21"/>
+<wire x1="4.826" y1="-2.54" x2="4.826" y2="2.54" width="0.127" layer="21"/>
+<wire x1="4.826" y1="2.54" x2="2.794" y2="2.54" width="0.127" layer="21"/>
+<wire x1="-4.064" y1="2.54" x2="-4.826" y2="2.54" width="0.127" layer="21"/>
+<wire x1="-4.826" y1="2.54" x2="-4.826" y2="1.905" width="0.127" layer="21"/>
+<wire x1="-4.826" y1="1.905" x2="-4.318" y2="1.905" width="0.127" layer="21"/>
+<wire x1="-4.318" y1="1.905" x2="-4.318" y2="-1.905" width="0.127" layer="21"/>
+<wire x1="-4.826" y1="-2.54" x2="-4.826" y2="-1.905" width="0.127" layer="21"/>
+<wire x1="-4.826" y1="-1.905" x2="-4.318" y2="-1.905" width="0.127" layer="21"/>
+<wire x1="-4.826" y1="-1.905" x2="-4.826" y2="1.905" width="0.127" layer="21" style="shortdash"/>
+</package>
+</packages>
+<symbols>
+<symbol name="ENCODER_SYMBOL">
+<description>Encoder for Polulu Wheel 42x19mm Schematic</description>
+<pin name="GND" x="-12.7" y="7.62" length="middle"/>
+<pin name="VCC" x="-12.7" y="2.54" length="middle"/>
+<pin name="OUTA" x="-12.7" y="-2.54" length="middle"/>
+<pin name="OUTB" x="-12.7" y="-7.62" length="middle"/>
+<wire x1="-7.62" y1="-10.16" x2="-7.62" y2="10.16" width="0.254" layer="94"/>
+<wire x1="-7.62" y1="10.16" x2="5.08" y2="10.16" width="0.254" layer="94"/>
+<wire x1="5.08" y1="10.16" x2="5.08" y2="-10.16" width="0.254" layer="94"/>
+<wire x1="5.08" y1="-10.16" x2="-7.62" y2="-10.16" width="0.254" layer="94"/>
+<text x="-7.62" y="10.922" size="1.778" layer="94" ratio="12">&gt;NAME</text>
+</symbol>
+<symbol name="MOTOR_DRIVER_SYMBOL">
+<description>DRV8835 Dual Motor Driver Carrier Schematic</description>
+<pin name="GND" x="-20.32" y="15.24" length="middle"/>
+<pin name="VIN" x="-20.32" y="10.16" length="middle"/>
+<pin name="B_OUT2" x="-20.32" y="5.08" length="middle"/>
+<pin name="B_OUT1" x="-20.32" y="0" length="middle"/>
+<pin name="A_OUT2" x="-20.32" y="-5.08" length="middle"/>
+<pin name="A_OUT1" x="-20.32" y="-10.16" length="middle"/>
+<pin name="VMM" x="-20.32" y="-15.24" length="middle"/>
+<pin name="VCC" x="20.32" y="12.7" length="middle" rot="R180"/>
+<pin name="B_IN2_EN" x="20.32" y="7.62" length="middle" rot="R180"/>
+<pin name="B_IN1_PH" x="20.32" y="2.54" length="middle" rot="R180"/>
+<pin name="A_IN2_EN" x="20.32" y="-2.54" length="middle" rot="R180"/>
+<pin name="A_IN1_PH" x="20.32" y="-7.62" length="middle" rot="R180"/>
+<pin name="MODE" x="20.32" y="-12.7" length="middle" rot="R180"/>
+<wire x1="-15.24" y1="17.78" x2="-15.24" y2="-17.78" width="0.254" layer="94"/>
+<wire x1="-15.24" y1="-17.78" x2="15.24" y2="-17.78" width="0.254" layer="94"/>
+<wire x1="15.24" y1="-17.78" x2="15.24" y2="17.78" width="0.254" layer="94"/>
+<wire x1="15.24" y1="17.78" x2="-15.24" y2="17.78" width="0.254" layer="94"/>
+<text x="-15.24" y="18.542" size="1.778" layer="94" ratio="12">&gt;NAME</text>
+</symbol>
+<symbol name="MOTOR_CONNECTOR_SYMBOL">
+<description>Connectors for the Motors, Schematic.</description>
+<pin name="1" x="-10.16" y="2.54" length="middle"/>
+<pin name="2" x="-10.16" y="-5.08" length="middle"/>
+<wire x1="-5.08" y1="5.08" x2="-5.08" y2="-7.62" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="-7.62" x2="2.54" y2="-7.62" width="0.254" layer="94"/>
+<wire x1="2.54" y1="-7.62" x2="2.54" y2="5.08" width="0.254" layer="94"/>
+<wire x1="2.54" y1="5.08" x2="-5.08" y2="5.08" width="0.254" layer="94"/>
+<text x="-5.08" y="5.842" size="1.778" layer="94" ratio="12">&gt;NAME</text>
+</symbol>
+<symbol name="ENCODER_AND_MOTOR">
+<pin name="GND" x="-10.16" y="12.7" visible="pin" length="middle"/>
+<pin name="VCC" x="-10.16" y="7.62" visible="pin" length="middle"/>
+<pin name="OUTA" x="-10.16" y="2.54" visible="pin" length="middle"/>
+<pin name="OUTB" x="-10.16" y="-2.54" visible="pin" length="middle"/>
+<pin name="M1" x="-10.16" y="-7.62" visible="pin" length="middle"/>
+<pin name="M2" x="-10.16" y="-12.7" visible="pin" length="middle"/>
+<wire x1="-5.08" y1="15.24" x2="-5.08" y2="-15.24" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="-15.24" x2="5.08" y2="-15.24" width="0.254" layer="94"/>
+<wire x1="5.08" y1="-15.24" x2="5.08" y2="15.24" width="0.254" layer="94"/>
+<wire x1="5.08" y1="15.24" x2="-5.08" y2="15.24" width="0.254" layer="94"/>
+<text x="-5.08" y="16.002" size="1.778" layer="95">&gt;NAME</text>
+<text x="-5.08" y="-17.78" size="1.778" layer="96">&gt;VALUE</text>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="ENCODER" prefix="J_ENCODER_">
+<description>Encoder for Pololu Wheel 42x19mm</description>
+<gates>
+<gate name="J_ENCODER" symbol="ENCODER_SYMBOL" x="-17.78" y="-12.7"/>
+</gates>
+<devices>
+<device name="" package="ENCODER_FOOTPRINT">
+<connects>
+<connect gate="J_ENCODER" pin="GND" pad="GND"/>
+<connect gate="J_ENCODER" pin="OUTA" pad="OUTA"/>
+<connect gate="J_ENCODER" pin="OUTB" pad="OUTB"/>
+<connect gate="J_ENCODER" pin="VCC" pad="VCC"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="MOTOR_DRIVER" prefix="J_MOTOR_DRIVER_">
+<description>DRV8835 Dual Motor Driver Carrier</description>
+<gates>
+<gate name="J_MOTOR_DRIVER" symbol="MOTOR_DRIVER_SYMBOL" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="MOTOR_DRIVER_FOOTPRINT">
+<connects>
+<connect gate="J_MOTOR_DRIVER" pin="A_IN1_PH" pad="A_IN1"/>
+<connect gate="J_MOTOR_DRIVER" pin="A_IN2_EN" pad="A_IN2"/>
+<connect gate="J_MOTOR_DRIVER" pin="A_OUT1" pad="A_O1"/>
+<connect gate="J_MOTOR_DRIVER" pin="A_OUT2" pad="A_O2"/>
+<connect gate="J_MOTOR_DRIVER" pin="B_IN1_PH" pad="B_IN1"/>
+<connect gate="J_MOTOR_DRIVER" pin="B_IN2_EN" pad="B_IN2"/>
+<connect gate="J_MOTOR_DRIVER" pin="B_OUT1" pad="B_O1"/>
+<connect gate="J_MOTOR_DRIVER" pin="B_OUT2" pad="B_O2"/>
+<connect gate="J_MOTOR_DRIVER" pin="GND" pad="GND1 GND2"/>
+<connect gate="J_MOTOR_DRIVER" pin="MODE" pad="MODE"/>
+<connect gate="J_MOTOR_DRIVER" pin="VCC" pad="VCC"/>
+<connect gate="J_MOTOR_DRIVER" pin="VIN" pad="VIN"/>
+<connect gate="J_MOTOR_DRIVER" pin="VMM" pad="VMM"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="MOTOR_CONNECTOR" prefix="J_MOTOR_">
+<description>Connector for a Motor</description>
+<gates>
+<gate name="J_MOTOR" symbol="MOTOR_CONNECTOR_SYMBOL" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="MOTOR_CONNECTOR_FOOTPRINT">
+<connects>
+<connect gate="J_MOTOR" pin="1" pad="1"/>
+<connect gate="J_MOTOR" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="ENCODER_2591" prefix="X">
+<gates>
+<gate name="G$1" symbol="ENCODER_AND_MOTOR" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="ENCODER_2591">
+<connects>
+<connect gate="G$1" pin="GND" pad="GND"/>
+<connect gate="G$1" pin="M1" pad="M1"/>
+<connect gate="G$1" pin="M2" pad="M2"/>
+<connect gate="G$1" pin="OUTA" pad="OUTA"/>
+<connect gate="G$1" pin="OUTB" pad="OUTB"/>
+<connect gate="G$1" pin="VCC" pad="VCC"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="DESCRIPTION" value="Only connectors, nothing to populate"/>
+</technology>
+</technologies>
+</device>
+<device name="ENCODER_2591_THT" package="ENCODER_2591_THT">
+<connects>
+<connect gate="G$1" pin="GND" pad="GND"/>
+<connect gate="G$1" pin="M1" pad="M1"/>
+<connect gate="G$1" pin="M2" pad="M2"/>
+<connect gate="G$1" pin="OUTA" pad="OUTA"/>
+<connect gate="G$1" pin="OUTB" pad="OUTB"/>
+<connect gate="G$1" pin="VCC" pad="VCC"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="ENCODER_2591_MICRO_MATCH" package="SOCKET_TE_MICRO_MATCH_SMD">
+<connects>
+<connect gate="G$1" pin="GND" pad="P$1"/>
+<connect gate="G$1" pin="M1" pad="P$6"/>
+<connect gate="G$1" pin="M2" pad="P$5"/>
+<connect gate="G$1" pin="OUTA" pad="P$3"/>
+<connect gate="G$1" pin="OUTB" pad="P$2"/>
+<connect gate="G$1" pin="VCC" pad="P$4"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
+</drawing>
+</eagle>

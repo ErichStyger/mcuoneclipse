@@ -37,9 +37,9 @@
 <layer number="41" name="tRestrict" color="4" fill="10" visible="yes" active="yes"/>
 <layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
 <layer number="43" name="vRestrict" color="2" fill="10" visible="yes" active="yes"/>
-<layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
-<layer number="45" name="Holes" color="7" fill="1" visible="no" active="yes"/>
-<layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
+<layer number="44" name="Drills" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="45" name="Holes" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="46" name="Milling" color="3" fill="1" visible="yes" active="yes"/>
 <layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
 <layer number="48" name="Document" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="49" name="Reference" color="7" fill="1" visible="yes" active="yes"/>
@@ -55,47 +55,64 @@
 <layer number="98" name="Guide" color="6" fill="1" visible="yes" active="yes"/>
 </layers>
 <library>
+<description>Battery Connection for the Zuma Robot</description>
 <packages>
-<package name="MINI_PUSHBUTTON_FOOTPRINT">
-<description>Footprint of Mini Pushbutton Switch, 2-Pin, SPST, 50mA
-Pololu Item #1400</description>
-<pad name="1" x="-3.81" y="0" drill="1.2" diameter="2.1844" shape="square"/>
-<pad name="2" x="3.175" y="0" drill="1.2" diameter="2.1844"/>
-<wire x1="-5.08" y1="1.905" x2="-5.08" y2="-1.905" width="0.127" layer="21"/>
-<wire x1="-5.08" y1="-1.905" x2="4.445" y2="-1.905" width="0.127" layer="21"/>
-<wire x1="4.445" y1="-1.905" x2="4.445" y2="1.905" width="0.127" layer="21"/>
-<wire x1="4.445" y1="1.905" x2="-5.08" y2="1.905" width="0.127" layer="21"/>
-<text x="-5.08" y="2.54" size="1.016" layer="21" ratio="12">&gt;NAME</text>
+<package name="BATTERY_CONNECTION_FOOTPRINT">
+<description>Battery Connection for the Zuma Robot, Footprint</description>
+<pad name="GND" x="22.225" y="0" drill="2" diameter="5.08" shape="square"/>
+<pad name="+" x="-22.86" y="0" drill="2" diameter="5.08"/>
+<wire x1="-25.4" y1="2.54" x2="-25.4" y2="-2.54" width="0.127" layer="21"/>
+<wire x1="-25.4" y1="-2.54" x2="-20.32" y2="-2.54" width="0.127" layer="21"/>
+<wire x1="-20.32" y1="-2.54" x2="-20.32" y2="2.54" width="0.127" layer="21"/>
+<wire x1="-20.32" y1="2.54" x2="-25.4" y2="2.54" width="0.127" layer="21"/>
+<wire x1="19.685" y1="2.54" x2="19.685" y2="-2.54" width="0.127" layer="21"/>
+<wire x1="19.685" y1="-2.54" x2="24.765" y2="-2.54" width="0.127" layer="21"/>
+<wire x1="24.765" y1="-2.54" x2="24.765" y2="2.54" width="0.127" layer="21"/>
+<wire x1="24.765" y1="2.54" x2="19.685" y2="2.54" width="0.127" layer="21"/>
+<text x="21.336" y="2.54" size="2.54" layer="21" ratio="15">-</text>
+<text x="-23.749" y="2.54" size="2.54" layer="21" ratio="15">+</text>
+</package>
+<package name="BATTERY_CONNECTION_DIRECT">
+<pad name="GND" x="22.225" y="0" drill="1" diameter="3.7" shape="long"/>
+<pad name="+" x="-22.86" y="0" drill="1" diameter="3.7" shape="long"/>
+<text x="-24.102" y="-4.562" size="2.54" layer="21" font="vector" ratio="15">+</text>
+<wire x1="-25.5" y1="-0.01" x2="-20.42" y2="-0.01" width="1.2" layer="46"/>
+<wire x1="19.7" y1="-0.01" x2="24.78" y2="-0.01" width="1.2" layer="46"/>
+<text x="21.237" y="-4.181" size="2.54" layer="21" font="vector" ratio="15">-</text>
 </package>
 </packages>
 <symbols>
-<symbol name="MINI_PUSHBUTTON_SCHEMATIC">
-<description>Schematic of Mini Pushbutton Switch, 2-Pin, SPST, 50mA
-Pololu Item #1400</description>
-<pin name="1" x="-7.62" y="0" length="short" swaplevel="1"/>
-<pin name="2" x="7.62" y="0" length="short" swaplevel="1" rot="R180"/>
-<wire x1="-5.08" y1="0" x2="0" y2="1.27" width="0.254" layer="94"/>
-<wire x1="0" y1="1.27" x2="5.08" y2="2.54" width="0.254" layer="94"/>
-<wire x1="0" y1="5.08" x2="0" y2="1.27" width="0.254" layer="94"/>
-<wire x1="1.27" y1="4.064" x2="1.27" y2="5.08" width="0.254" layer="94"/>
-<wire x1="1.27" y1="5.08" x2="-1.27" y2="5.08" width="0.254" layer="94"/>
-<text x="-7.62" y="6.858" size="1.778" layer="95" ratio="12">&gt;NAME</text>
-<wire x1="-1.27" y1="5.08" x2="-1.27" y2="4.064" width="0.254" layer="94"/>
-<text x="-7.62" y="-3.556" size="1.778" layer="96" ratio="12">&gt;VALUE</text>
+<symbol name="BATTERY_CONNECTION_SYMBOL">
+<description>Battery Connection for the Zuma Robot, Schematic</description>
+<pin name="+" x="-10.16" y="2.54" length="middle"/>
+<pin name="-" x="-10.16" y="-2.54" length="middle"/>
+<wire x1="-5.08" y1="5.08" x2="-5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="-5.08" x2="5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="5.08" y1="-5.08" x2="5.08" y2="5.08" width="0.254" layer="94"/>
+<wire x1="5.08" y1="5.08" x2="-5.08" y2="5.08" width="0.254" layer="94"/>
+<text x="-5.08" y="5.842" size="1.778" layer="95" ratio="12">&gt;NAME</text>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="MINI_PUSHBUTTON" prefix="BUTTON_">
-<description>Mini Pushbutton Switch, 2-Pin, SPST, 50mA
-Pololu Item #1400</description>
+<deviceset name="BATTERY_CONNECTION" prefix="J_BATT_">
+<description>Battery Connection for the Zuma Robot</description>
 <gates>
-<gate name="BUTTON" symbol="MINI_PUSHBUTTON_SCHEMATIC" x="0" y="2.54"/>
+<gate name="J_BATT" symbol="BATTERY_CONNECTION_SYMBOL" x="0" y="0"/>
 </gates>
 <devices>
-<device name="" package="MINI_PUSHBUTTON_FOOTPRINT">
+<device name="" package="BATTERY_CONNECTION_FOOTPRINT">
 <connects>
-<connect gate="BUTTON" pin="1" pad="1"/>
-<connect gate="BUTTON" pin="2" pad="2"/>
+<connect gate="J_BATT" pin="+" pad="+"/>
+<connect gate="J_BATT" pin="-" pad="GND"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="DIRECT" package="BATTERY_CONNECTION_DIRECT">
+<connects>
+<connect gate="J_BATT" pin="+" pad="+"/>
+<connect gate="J_BATT" pin="-" pad="GND"/>
 </connects>
 <technologies>
 <technology name=""/>
