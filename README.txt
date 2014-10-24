@@ -9,6 +9,8 @@ Erich
 NOTES:
 - The content of the 'EclipsePlugins' folder has been move to SourceForge:
 https://sourceforge.net/projects/mcuoneclipse/files/Eclipse%20Plugins
+- The releases of the Processor Expert components can be found on SourceForge_
+https://sourceforge.net/projects/mcuoneclipse/files/PEx%20Components/
 
 
 List of Components:
