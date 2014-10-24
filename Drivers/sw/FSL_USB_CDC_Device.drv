@@ -563,6 +563,8 @@ void %'ModuleName'%.%App_Callback(byte controller_ID, byte event_type, void *val
     USB_Class_CDC_Interface_DIC_Recv_Data(&controller_ID,
                                            (uint_8_ptr)g_cdcBuffer,
                                            DIC_BULK_OUT_ENDP_PACKET_SIZE);
+#else
+    (void)USB_Class_CDC_Interface_DIC_Recv_Data(CONTROLLER_ID, NULL, 0);
 #endif
     start_app = TRUE;
   } else if ((event_type==USB_APP_DATA_RECEIVED) && (start_transactions==TRUE)) {
@@ -591,7 +593,7 @@ void %'ModuleName'%.%App_Callback(byte controller_ID, byte event_type, void *val
 #if HIGH_SPEED_DEVICE
     //(void)USB_Class_CDC_Interface_DIC_Recv_Data(CONTROLLER_ID, g_cdcBuffer, 0);
 #else
-    (void)USB_Class_CDC_Interface_DIC_Recv_Data(CONTROLLER_ID, NULL, 0);
+    //(void)USB_Class_CDC_Interface_DIC_Recv_Data(CONTROLLER_ID, NULL, 0);
 #endif
   } else if (event_type == USB_APP_ERROR) { /* detach? */
     start_app = FALSE;
