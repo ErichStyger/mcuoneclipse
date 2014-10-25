@@ -72,7 +72,6 @@ static void CDC_Run(void) {
       WAIT1_Waitms(10);
     }
     LED1_Off(); LED2_Neg();
-    (void)CDC1_SendString((unsigned char*)"Hello world from the KL25Z with USB CDC\r\n");
     if (CDC1_GetCharsInRxBuf()!=0) {
       i = 0;
       while(   i<sizeof(in_buffer)-1
@@ -111,7 +110,6 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
-  //clocksetup();
   CDC_Run();
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
