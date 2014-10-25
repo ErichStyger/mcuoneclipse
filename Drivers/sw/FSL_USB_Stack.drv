@@ -366,6 +366,9 @@ byte %'ModuleName'%.%Init(void)
 %if (CPUDevice="MCF51JM128") | (CPUDevice="MC9S08JM128") | (CPUDevice="MC9S08JM32")
   SOPT2_USB_BIGEND = 0; /* Needs to be in little endian mode. */
 %endif
+%if (CPUDevice="Kinetis K64F")
+  MPU_CESR = 0; /* K64F has memory protection unit, disable it! */
+%endif
   /* Initialize the USB interface */
 %if USBDeviceClass="CDC Device"
   err = %@CDCDevice@'ModuleName'%.Init();
