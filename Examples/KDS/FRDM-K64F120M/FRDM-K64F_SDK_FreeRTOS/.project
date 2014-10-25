@@ -27,7 +27,7 @@
 		<link>
 			<name>SDK/FreeRTOS/include</name>
 			<type>2</type>
-			<locationURI>PARENT-8-PROJECT_LOC/FSL/SDK/mcu-sdk_rw/rtos/FreeRTOS/include</locationURI>
+			<location>C:/Freescale/KSDK_1.0.0/rtos/FreeRTOS/include</location>
 		</link>
 		<link>
 			<name>SDK/FreeRTOS/src</name>
@@ -35,24 +35,9 @@
 			<location>C:/Freescale/KSDK_1.0.0/rtos/FreeRTOS/src</location>
 		</link>
 		<link>
-			<name>SDK/FreeRTOS/port/port.c</name>
-			<type>1</type>
-			<locationURI>PARENT-8-PROJECT_LOC/FSL/SDK/mcu-sdk_rw/rtos/FreeRTOS/port/iar/port.c</locationURI>
-		</link>
-		<link>
-			<name>SDK/FreeRTOS/port/portTicks.h</name>
-			<type>1</type>
-			<locationURI>PARENT-8-PROJECT_LOC/FSL/SDK/mcu-sdk_rw/rtos/FreeRTOS/port/iar/portTicks.h</locationURI>
-		</link>
-		<link>
-			<name>SDK/FreeRTOS/port/portasm.s</name>
-			<type>1</type>
-			<locationURI>PARENT-8-PROJECT_LOC/FSL/SDK/mcu-sdk_rw/rtos/FreeRTOS/port/iar/portasm.s</locationURI>
-		</link>
-		<link>
-			<name>SDK/FreeRTOS/port/portmacro.h</name>
-			<type>1</type>
-			<locationURI>PARENT-8-PROJECT_LOC/FSL/SDK/mcu-sdk_rw/rtos/FreeRTOS/port/iar/portmacro.h</locationURI>
+			<name>SDK/FreeRTOS/port/gcc</name>
+			<type>2</type>
+			<location>C:/Freescale/KSDK_1.0.0/rtos/FreeRTOS/port/gcc</location>
 		</link>
 	</linkedResources>
 </projectDescription>

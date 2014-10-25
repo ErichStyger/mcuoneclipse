@@ -5,11 +5,12 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1196365039" moduleId="org.eclipse.cdt.core.settings" name="Debug">
 				<externalSettings/>
 				<extensions>
-					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
@@ -54,21 +55,25 @@
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.2011483615" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.278649389" name="Cross ARM C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler">
-								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths.1860089105" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths" valueType="includePath">
+								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths.1860089105" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;..\startup&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${kpsdk_path}\platform\CMSIS\Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${kpsdk_path}\platform\CMSIS\Include\device&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Freescale\KSDK_1.0.0\rtos\FreeRTOS\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Freescale\KSDK_1.0.0\platform\CMSIS\Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Freescale\KSDK_1.0.0\platform\CMSIS\Include\device&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;..\sources&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${kpsdk_path}\rtos&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${kpsdk_path}\platform\drivers\gpio&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${kpsdk_path}\platform\hal\port&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${kpsdk_path}\platform\hal\gpio&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${kpsdk_path}\platform\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${kpsdk_path}\platform\include\device&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${kpsdk_path}\platform\include\device\MK64F12&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Freescale\KSDK_1.0.0\rtos&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Freescale\KSDK_1.0.0\platform\drivers\gpio&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Freescale\KSDK_1.0.0\platform\hal\port&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Freescale\KSDK_1.0.0\platform\hal\gpio&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Freescale\KSDK_1.0.0\platform\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Freescale\KSDK_1.0.0\platform\include\device&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Freescale\KSDK_1.0.0\platform\include\device\MK64F12&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Freescale\KSDK_1.0.0\platform\osa&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Freescale\KSDK_1.0.0\rtos\FreeRTOS\port\gcc&quot;"/>
 								</option>
-								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.2101858556" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" valueType="definedSymbols">
+								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.2101858556" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="CPU_MK64FN1M0VMD12"/>
+									<listOptionValue builtIn="false" value="FSL_RTOS_FREE_RTOS"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1596804262" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>
@@ -119,11 +124,12 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.release.1458271991" moduleId="org.eclipse.cdt.core.settings" name="Release">
 				<externalSettings/>
 				<extensions>
-					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">

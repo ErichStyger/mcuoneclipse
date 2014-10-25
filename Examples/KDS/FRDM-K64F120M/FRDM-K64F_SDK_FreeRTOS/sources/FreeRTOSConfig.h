@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.5.0 - Copyright (C) 2013 Real Time Engineers Ltd.
+    FreeRTOS V8.0.0 - Copyright (C) 2013 Real Time Engineers Ltd.
 
     FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
     http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -85,25 +85,36 @@
  *
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
-#define configGENERATE_RUN_TIME_STATS             0
-#define configUSE_PREEMPTION                      1
-#define configUSE_IDLE_HOOK                       0
-#define configUSE_TICK_HOOK                       0
-#define configUSE_MALLOC_FAILED_HOOK              0
-#define configCPU_CLOCK_HZ                        48000000u
-#define configBUS_CLOCK_HZ                        48000000u
-#define configTICK_RATE_HZ                        ((portTickType)100) /* frequency of tick interrupt */
+#define configGENERATE_STATIC_SOURCES             1 /* 1: it will create 'static' sources to be used without Processor Expert; 0: Processor Expert code generated */
+#define configPEX_KINETIS_SDK                     1 /* 1: project is a Kinetis SDK Processor Expert project; 0: No Kinetis Processor Expert project */
+
+#define configGENERATE_RUN_TIME_STATS             0 /* 1: generate runtime statistics; 0: no runtime statistics */
+#define configUSE_PREEMPTION                      1 /* 1: pre-emptive mode; 0: cooperative mode */
+#define configUSE_IDLE_HOOK                       0 /* 1: use Idle hook; 0: no Idle hook */
+#define configUSE_TICK_HOOK                       0 /* 1: use Tick hook; 0: no Tick hook */
+#define configUSE_MALLOC_FAILED_HOOK              0 /* 1: use MallocFailed hook; 0: no MallocFailed hook */
+#define configTICK_RATE_HZ                        ((TickType_t)1000) /* frequency of tick interrupt */
+#define configSYSTICK_USE_LOW_POWER_TIMER         0 /* If using Kinetis Low Power Timer (LPTMR) instead of SysTick timer */
+#define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ    1 /* 1 kHz LPO timer. Set to 1 if not used */
+#if configPEX_KINETIS_SDK
+/* The SDK variable SystemCoreClock contains the current clock speed */
+#define configCPU_CLOCK_HZ                        SystemCoreClock /* CPU clock frequency */
+#define configBUS_CLOCK_HZ                        SystemCoreClock /* Bus clock frequency */
+#else
+#define configCPU_CLOCK_HZ                        120000000u /* CPU clock frequency */
+#define configBUS_CLOCK_HZ                        60000000u /* Bus clock frequency */
+#endif /* configPEX_KINETIS_SDK */
 #define configSYSTICK_USE_CORE_CLOCK              1 /* System Tick is using core clock  */
 #define configSYSTICK_CLOCK_DIVIDER               1 /* no divider */
 #define configSYSTICK_CLOCK_HZ                    ((configCPU_CLOCK_HZ)/configSYSTICK_CLOCK_DIVIDER) /* frequency of system tick counter */
-#define configMINIMAL_STACK_SIZE                  ((unsigned portSHORT)200)
+#define configMINIMAL_STACK_SIZE                  ((unsigned portSHORT)200) /* stack size in addressable stack units */
 /*----------------------------------------------------------*/
 /* Heap Memory */
 #define configFRTOS_MEMORY_SCHEME                 2 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc) or 4 (coalesc blocks) */
-#define configTOTAL_HEAP_SIZE                     ((size_t)(8092)) /* size of heap in bytes */
+#define configTOTAL_HEAP_SIZE                     ((size_t)(0x8000)) /* size of heap in bytes */
 #define configUSE_HEAP_SECTION_NAME               0 /* set to 1 if a custom section name (configHEAP_SECTION_NAME_STRING) shall be used, 0 otherwise */
 #if configUSE_HEAP_SECTION_NAME
-  #define configHEAP_SECTION_NAME_STRING          ".m_data_20000000" /* heap section name (supported by GCC). Check your linker file for the name used. */
+#define configHEAP_SECTION_NAME_STRING            ".m_data_20000000" /* heap section name (use e.g. ".m_data_20000000" for gcc and "m_data_20000000" for IAR). Check your linker file for the name used. */
 #endif
 /*----------------------------------------------------------*/
 #define configMAX_TASK_NAME_LEN                   12 /* task name length */
@@ -119,22 +130,26 @@
 #define configUSE_QUEUE_SETS                      0
 #define configUSE_COUNTING_SEMAPHORES             1
 #define configUSE_APPLICATION_TASK_TAG            0
-#define configUSE_TICKLESS_IDLE                   0
+/* Tickless Idle Mode ----------------------------------------------------------*/
+#define configUSE_TICKLESS_IDLE                   0 /* set to 1 for tickless idle mode, 0 otherwise */
+#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP     2 /* number of ticks must be larger than this to enter tickless idle mode */
+#define configUSE_TICKLESS_IDLE_DECISION_HOOK     0 /* set to 1 to enable application hook, zero otherwise */
+#define configUSE_TICKLESS_IDLE_DECISION_HOOK_NAME xEnterTicklessIdle /* function name of decision hook */
 
-#define configMAX_PRIORITIES                      ((unsigned portBASE_TYPE)6)
+#define configMAX_PRIORITIES                      ((unsigned portBASE_TYPE)18)
 #define configMAX_CO_ROUTINE_PRIORITIES           2
 
 /* Software timer definitions. */
-#define configUSE_TIMERS                          0
-#define configTIMER_TASK_PRIORITY                 0
-#define configTIMER_QUEUE_LENGTH                  0
-#define configTIMER_TASK_STACK_DEPTH              0
+#define configUSE_TIMERS                          1
+#define configTIMER_TASK_PRIORITY                 ( configMAX_PRIORITIES - 1)
+#define configTIMER_QUEUE_LENGTH                  10
+#define configTIMER_TASK_STACK_DEPTH              ( configMINIMAL_STACK_SIZE * 2 )
 
 /* Set the following definitions to 1 to include the API function, or zero
    to exclude the API function. */
 #define INCLUDE_vTaskPrioritySet                  1
 #define INCLUDE_uxTaskPriorityGet                 1
-#define INCLUDE_vTaskDelete                       0
+#define INCLUDE_vTaskDelete                       1
 #define INCLUDE_vTaskCleanUpResources             1
 #define INCLUDE_vTaskSuspend                      1
 #define INCLUDE_vTaskDelayUntil                   1
@@ -146,6 +161,8 @@
 #define INCLUDE_xTaskGetIdleTaskHandle            0
 #define INCLUDE_eTaskGetState                     0
 #define INCLUDE_pcTaskGetTaskName                 0
+#define INCLUDE_xEventGroupSetBitFromISR          1
+#define INCLUDE_xTimerPendFunctionCall            1
 /* -------------------------------------------------------------------- */
 /* Macros to identify the compiler used: */
 #define configCOMPILER_ARM_GCC               1 /* GNU ARM gcc compiler */
@@ -158,7 +175,7 @@
 #define configCOMPILER_CF2_FSL               8 /* Freescale ColdFire V2 compiler */
 #define configCOMPILER_DSC_FSL               9 /* Freescale DSC compiler */
 
-#define configCOMPILER                            configCOMPILER_ARM_IAR
+#define configCOMPILER                            configCOMPILER_ARM_GCC
 /* -------------------------------------------------------------------- */
 /* CPU family identification */
 #define configCPU_FAMILY_S08                 1  /* S08 core */
@@ -176,10 +193,14 @@
 #define configCPU_FAMILY                          configCPU_FAMILY_ARM_M4F
 /* -------------------------------------------------------------------- */
 /* Cortex-M specific definitions. */
-#define configPRIO_BITS                           2 /* 4 priority levels on ARM Cortex M0+ (Kinetis L Family) */
+#if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY)
+  #define configPRIO_BITS                         4 /* 4 bits/16 priority levels on ARM Cortex M4 (Kinetis K Family) */
+#else
+  #define configPRIO_BITS                         2 /* 2 bits/4 priority levels on ARM Cortex M0+ (Kinetis L Family) */
+#endif
 
 /* The lowest interrupt priority that can be used in a call to a "set priority" function. */
-#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY   3
+#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY   15
 
 /* The highest interrupt priority that can be used by any interrupt service
    routine that makes calls to interrupt safe FreeRTOS API functions.  DO NOT CALL
