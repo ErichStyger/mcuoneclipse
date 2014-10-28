@@ -6,11 +6,11 @@
 /*##                                   */
 /*##     Project   : FRDM-K64F_nRF24   */
 /*##                                   */
-/*##     Processor : MK64FN1M0VLQ12    */
+/*##     Processor : MK64FN1M0VLL12    */
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2014-10-28, 06:53, # CodeGen: 0 */
+/*##     Date/Time : 2014-10-28, 07:13, # CodeGen: 3 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */
