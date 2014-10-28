@@ -4,7 +4,7 @@
     <Name>FSL_USB_Stack</Name>
     <Description>Freescale USB Stack</Description>
     <Author>Erich Styger</Author>
-    <Version>01.029</Version>
+    <Version>01.030</Version>
     <Icon>FSL_USB_Stack</Icon>
     <TypesFiles>PE,FSL_USB_Stack\FSL_USB_Stack</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -52,7 +52,7 @@
     </Property>
     <Property>
       <TInhrItem>
-        <Name>USB</Name>
+        <Name>USB Init</Name>
         <Symbol>USBInit</Symbol>
         <TypeSpec>FSL_USB_Stack\InitUSB</TypeSpec>
         <Hint>USB peripheral to initialize. \n
