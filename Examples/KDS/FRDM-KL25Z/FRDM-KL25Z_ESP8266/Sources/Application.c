@@ -10,7 +10,7 @@
 #include "AS2.h"
 #include "UTIL1.h"
 
-#define ESP_TIMOUT_MS 100
+#define ESP_TIMOUT_MS 200
 
 static void Send(unsigned char *str) {
   while(*str!='\0') {
@@ -66,40 +66,53 @@ static uint8_t RxResponse(unsigned char *rxBuf, size_t rxBufLength, uint16_t msT
 uint8_t ESP_SendATCommand(uint8_t *cmd, uint8_t *rxBuf, size_t rxBufSize, uint8_t *expectedTailStr)
 {
   uint16_t snt;
+  uint8_t res;
 
   if (AS2_SendBlock(cmd, (uint16_t)UTIL1_strlen((char*)cmd), &snt) != ERR_OK) {
     return ERR_FAILED;
   }
-  return RxResponse(rxBuf, rxBufSize, ESP_TIMOUT_MS, expectedTailStr);
+  CLS1_SendStr(cmd, CLS1_GetStdio()->stdOut);
+  res = RxResponse(rxBuf, rxBufSize, ESP_TIMOUT_MS, expectedTailStr);
+  CLS1_SendStr(rxBuf, CLS1_GetStdio()->stdOut);
+  return res;
 }
 
 uint8_t ESP_Test(void) {
-  uint8_t rxBuf[sizeof("AT\r\n\r\nOK\r\n")];
-  //Send("AT\r\n"); /* response is "AT\r\n\r\nOK\r\n" */
-  return ESP_SendATCommand("AT\r\n", rxBuf, sizeof(rxBuf), "AT\r\n\r\nOK\r\n");
+  uint8_t rxBuf[sizeof("AT\r\r\n\r\nOK\r\n")];
+  uint8_t res;
+
+  res = ESP_SendATCommand("AT\r\n", rxBuf, sizeof(rxBuf), "AT\r\r\n\r\nOK\r\n");
+  return res;
 }
 
 uint8_t ESP_Restart(void) {
-  uint8_t rxBuf[sizeof("AT+RST\r\n\r\nOK\r\n")];
+  uint8_t rxBuf[sizeof("AT+RST\r\r\n\r\nOK\r\n")];
+  uint8_t res;
 
-  //Send("AT+RST\r\n"); /* response is "AT+RST\r\n\r\nOK\r\n" */
-  return ESP_SendATCommand("AT+RST\r\n", rxBuf, sizeof(rxBuf), "AT+RST\r\n\r\nOK\r\n");
+//  return ESP_SendATCommand("AT+RST\r\n", rxBuf, sizeof(rxBuf), "\r\nready\r\n");
+  res = ESP_SendATCommand("AT+RST\r\n", rxBuf, sizeof(rxBuf), "AT+RST\r\r\n\r\nOK\r\n");
+  WAIT1_Waitms(500); /* wait after restart */
+  AS2_ClearRxBuf();
+  return res;
 }
 
 void APP_Run(void) {
   CLS1_ConstStdIOType *io;
 
   io = CLS1_GetStdio();
-  if (Test()!=ERR_OK) {
+  if (ESP_Test()!=ERR_OK) {
     CLS1_SendStr("TEST failed!\r\n", io->stdErr);
   } else {
     CLS1_SendStr("TEST ok!\r\n", io->stdOut);
   }
-  Restart();
-  WAIT1_Waitms(1000);
+  if (ESP_Restart()!=ERR_OK) {
+    CLS1_SendStr("Restart failed!\r\n", io->stdErr);
+  } else {
+    CLS1_SendStr("Restart ok!\r\n", io->stdOut);
+  }
   for(;;) {
     CLS1_SendStr("Hello ESP8266!\r\n", io->stdOut);
-    Test();
+    ESP_Test();
     WAIT1_Waitms(1000);
   }
 }
