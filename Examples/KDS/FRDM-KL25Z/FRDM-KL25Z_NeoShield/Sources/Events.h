@@ -57,7 +57,9 @@
 #include "TMOUT1.h"
 #include "PTC.h"
 #include "DMA1.h"
+#include "DMACH0.h"
 #include "DMACH1.h"
+#include "DMACH2.h"
 #include "TPM0.h"
 
 #ifdef __cplusplus
@@ -141,6 +143,26 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 
 /*
 ** ===================================================================
+**     Event       :  DMACH2_OnComplete (module Events)
+**
+**     Component   :  DMACH2 [DMAChannel_LDD]
+*/
+/*!
+**     @brief
+**         Called at the end of a DMA transfer. If the Half complete
+**         property in initialization section is enabled, this event is
+**         also called when current major iteration count reaches the
+**         halfway point. See SetEventMask() and GetEventMask() methods.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void DMACH2_OnComplete(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
 **     Event       :  DMACH1_OnComplete (module Events)
 **
 **     Component   :  DMACH1 [DMAChannel_LDD]
@@ -158,6 +180,26 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 */
 /* ===================================================================*/
 void DMACH1_OnComplete(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  DMACH0_OnComplete (module Events)
+**
+**     Component   :  DMACH0 [DMAChannel_LDD]
+*/
+/*!
+**     @brief
+**         Called at the end of a DMA transfer. If the Half complete
+**         property in initialization section is enabled, this event is
+**         also called when current major iteration count reaches the
+**         halfway point. See SetEventMask() and GetEventMask() methods.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void DMACH0_OnComplete(LDD_TUserData *UserDataPtr);
 
 /* END Events */
 

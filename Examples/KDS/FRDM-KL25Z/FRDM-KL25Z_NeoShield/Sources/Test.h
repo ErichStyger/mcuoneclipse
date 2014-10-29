@@ -10,6 +10,8 @@
 
 
 void Test(void);
-void MyDMAComplete(void);
+void MyDMAComplete0(void);
+void MyDMAComplete1(void);
+void MyDMAComplete2(void);
 
 #endif /* TEST_H_ */

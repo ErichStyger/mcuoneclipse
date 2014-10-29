@@ -53,7 +53,9 @@
 #include "TMOUT1.h"
 #include "PTC.h"
 #include "DMA1.h"
+#include "DMACH0.h"
 #include "DMACH1.h"
+#include "DMACH2.h"
 #include "TPM0.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"

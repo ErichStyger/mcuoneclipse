@@ -146,6 +146,29 @@ void FRTOS1_vApplicationMallocFailedHook(void)
 
 /*
 ** ===================================================================
+**     Event       :  DMACH2_OnComplete (module Events)
+**
+**     Component   :  DMACH2 [DMAChannel_LDD]
+*/
+/*!
+**     @brief
+**         Called at the end of a DMA transfer. If the Half complete
+**         property in initialization section is enabled, this event is
+**         also called when current major iteration count reaches the
+**         halfway point. See SetEventMask() and GetEventMask() methods.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void DMACH2_OnComplete(LDD_TUserData *UserDataPtr)
+{
+  MyDMAComplete2();
+}
+
+/*
+** ===================================================================
 **     Event       :  DMACH1_OnComplete (module Events)
 **
 **     Component   :  DMACH1 [DMAChannel_LDD]
@@ -164,7 +187,30 @@ void FRTOS1_vApplicationMallocFailedHook(void)
 /* ===================================================================*/
 void DMACH1_OnComplete(LDD_TUserData *UserDataPtr)
 {
-  MyDMAComplete();
+  MyDMAComplete1();
+}
+
+/*
+** ===================================================================
+**     Event       :  DMACH0_OnComplete (module Events)
+**
+**     Component   :  DMACH0 [DMAChannel_LDD]
+*/
+/*!
+**     @brief
+**         Called at the end of a DMA transfer. If the Half complete
+**         property in initialization section is enabled, this event is
+**         also called when current major iteration count reaches the
+**         halfway point. See SetEventMask() and GetEventMask() methods.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void DMACH0_OnComplete(LDD_TUserData *UserDataPtr)
+{
+  MyDMAComplete0();
 }
 
 /* END Events */
