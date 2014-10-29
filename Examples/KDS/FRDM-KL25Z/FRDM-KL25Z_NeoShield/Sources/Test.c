@@ -16,7 +16,7 @@
 
 static volatile int nofTransfersToGo = 0;
 static uint8_t OneValue[6] = {0xFF, 0xff, 0xff, 0xff, 0xff, 0xff};
-static uint8_t DataValue[6] = {1,2,3,4,5,6};
+static uint8_t DataValue[6] = {2,2,3,4,5,6};
 static uint8_t ZeroValue[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 void MyDMAComplete0(void) {
@@ -44,7 +44,14 @@ static uint8_t Transfer(uint32_t src) {
   //DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, src); /* set source address */
   DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, (uint32_t)&OneValue[0]); /* set source address */
   DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, (uint32_t)&DataValue[0]); /* set source address */
-  DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, (uint32_t)&OneValue[0]); /* set source address */
+  DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, (uint32_t)&ZeroValue[0]); /* set source address */
+
+  /* destination settings */
+  /* GPIOC_PDOR Data Out */
+  /* GPIOC_PTOR Data Toggle */
+  DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, (uint32_t)&GPIOC_PDOR); /* set destination address: address of PTC Output register */
+  DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, (uint32_t)&GPIOC_PDOR); /* set destination address: address of PTC Output register */
+  DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, (uint32_t)&GPIOC_PDOR); /* set destination address: address of PTC Output register */
 
   DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, 1); /* set number of bytes to transfer */
   DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, 1); /* set number of bytes to transfer */
@@ -54,10 +61,12 @@ static uint8_t Transfer(uint32_t src) {
   DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* enable request from peripheral */
   DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, PDD_ENABLE); /* enable request from peripheral */
 
-  nofTransfersToGo = 1;
+  nofTransfersToGo = 3;
 
   TPM_PDD_InitializeCounter(TPM0_DEVICE); /* reset timer counter */
   TPM_PDD_ClearOverflowInterruptFlag(TPM0_DEVICE); /* reset any pending overflow flag */
+  TPM_PDD_ClearChannelInterruptFlag(TPM0_DEVICE, 0);
+  TPM_PDD_ClearChannelInterruptFlag(TPM0_DEVICE, 1);
   TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_SYSTEM); /* enable timer */
 
   handle = TMOUT1_GetCounter(100/TMOUT1_TICK_PERIOD_MS);
