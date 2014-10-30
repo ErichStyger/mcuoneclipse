@@ -60,6 +60,10 @@
 #include "DMACH0.h"
 #include "DMACH1.h"
 #include "DMACH2.h"
+#include "Bit2.h"
+#include "BitIoLdd5.h"
+#include "SM1.h"
+#include "SMasterLdd1.h"
 #include "TPM0.h"
 
 #ifdef __cplusplus

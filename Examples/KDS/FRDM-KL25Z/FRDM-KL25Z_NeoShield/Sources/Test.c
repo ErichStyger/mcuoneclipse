@@ -13,10 +13,11 @@
 #include "WAIT1.h"
 #include "TMOUT1.h"
 #include "TPM0.h"
+#include "Bit2.h"
 
 static volatile int nofTransfersToGo = 0;
 static uint8_t OneValue[6] = {0xFF, 0xff, 0xff, 0xff, 0xff, 0xff};
-static uint8_t DataValue[6] = {2,2,3,4,5,6};
+static uint8_t DataValue[6] = {1,2,3,4,5,6};
 static uint8_t ZeroValue[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 void MyDMAComplete0(void) {
@@ -46,6 +47,9 @@ static uint8_t Transfer(uint32_t src) {
   DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, (uint32_t)&DataValue[0]); /* set source address */
   DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, (uint32_t)&ZeroValue[0]); /* set source address */
 
+  /***** */
+  DMA_PDD_EnableSourceAddressIncrement(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* source address incremented by transfer size */
+
   /* destination settings */
   /* GPIOC_PDOR Data Out */
   /* GPIOC_PTOR Data Toggle */
@@ -55,6 +59,7 @@ static uint8_t Transfer(uint32_t src) {
 
   DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, 1); /* set number of bytes to transfer */
   DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, 1); /* set number of bytes to transfer */
+//  DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, 3); /* set number of bytes to transfer */
   DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, 1); /* set number of bytes to transfer */
 
   DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_ENABLE); /* enable request from peripheral */
@@ -67,6 +72,9 @@ static uint8_t Transfer(uint32_t src) {
   TPM_PDD_ClearOverflowInterruptFlag(TPM0_DEVICE); /* reset any pending overflow flag */
   TPM_PDD_ClearChannelInterruptFlag(TPM0_DEVICE, 0);
   TPM_PDD_ClearChannelInterruptFlag(TPM0_DEVICE, 1);
+
+  Bit2_NegVal();
+
   TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_SYSTEM); /* enable timer */
 
   handle = TMOUT1_GetCounter(100/TMOUT1_TICK_PERIOD_MS);
