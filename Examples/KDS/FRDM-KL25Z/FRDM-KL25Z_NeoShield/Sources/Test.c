@@ -20,15 +20,20 @@ static uint8_t OneValue[6] = {0xFF, 0xff, 0xff, 0xff, 0xff, 0xff};
 static uint8_t DataValue[6] = {1,2,3,4,5,6};
 static uint8_t ZeroValue[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
+void TPM0_OnOverflow(void) {
+  TPM_PDD_ClearOverflowInterruptFlag(TPM0_DEVICE);
+//  GPIO_PDD_TogglePortDataOutputMask(PTC_BASE_PTR, 0xff);
+}
+
 void MyDMAComplete0(void) {
   if (nofTransfersToGo>0) {
-    nofTransfersToGo--;
+    //nofTransfersToGo--; /*! \todo Do not interrupts for channels, but somehow needed???? */
   }
 }
 
 void MyDMAComplete1(void) {
   if (nofTransfersToGo>0) {
-    nofTransfersToGo--;
+   // nofTransfersToGo--;
   }
 }
 
@@ -42,38 +47,48 @@ static uint8_t Transfer(uint32_t src) {
   TMOUT1_CounterHandle handle;
   bool isTimeout;
 
-  //DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, src); /* set source address */
   DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, (uint32_t)&OneValue[0]); /* set source address */
-  DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, (uint32_t)&DataValue[0]); /* set source address */
-  DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, (uint32_t)&ZeroValue[0]); /* set source address */
-
-  /***** */
-  DMA_PDD_EnableSourceAddressIncrement(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* source address incremented by transfer size */
-
-  /* destination settings */
-  /* GPIOC_PDOR Data Out */
-  /* GPIOC_PTOR Data Toggle */
-  DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, (uint32_t)&GPIOC_PDOR); /* set destination address: address of PTC Output register */
-  DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, (uint32_t)&GPIOC_PDOR); /* set destination address: address of PTC Output register */
-  DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, (uint32_t)&GPIOC_PDOR); /* set destination address: address of PTC Output register */
+  DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, (uint32_t)&OneValue[0]); /* set source address */
+  DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, (uint32_t)&OneValue[0]); /* set source address */
 
   DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, 1); /* set number of bytes to transfer */
   DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, 1); /* set number of bytes to transfer */
-//  DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, 3); /* set number of bytes to transfer */
+//  DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, 2); /* set number of bytes to transfer */
   DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, 1); /* set number of bytes to transfer */
 
+//  DMA_PDD_EnableSourceAddressIncrement(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* source address incremented by transfer size */
+
+  nofTransfersToGo = 1;
+
+ // DMA_PDD_EnableInterrupts(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, DMA_PDD_TRANSFER_COMPLETE_INTERRUPT);
+
+#if 0
+  TPM_PDD_InitializeCounter(TPM0_DEVICE); /* reset timer counter */
+  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 0, 0); /* reset channel counter reg */
+  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 1, 0); /* reset channel counter reg */
+  TPM_PDD_ClearOverflowInterruptFlag(TPM0_DEVICE); /* reset any pending overflow flag */
+  TPM_PDD_ClearChannelFlags(TPM0_DEVICE, 0);
+  TPM_PDD_ClearChannelFlags(TPM0_DEVICE, 1);
+  TPM_PDD_ClearChannelInterruptFlag(TPM0_DEVICE, 0);
+  TPM_PDD_ClearChannelInterruptFlag(TPM0_DEVICE, 1);
+
+  //TPM_PDD_DisableChannelDma(TPM0_DEVICE, 0);
+  //TPM_PDD_DisableChannelDma(TPM0_DEVICE, 1);
+#endif
+
+#if 0
+  DMA_PDD_ClearInterruptFlags(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_TRANSFER_COMPLETE_FLAG);
+  DMA_PDD_ClearInterruptFlags(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, DMA_PDD_TRANSFER_COMPLETE_FLAG);
+  DMA_PDD_ClearInterruptFlags(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, DMA_PDD_TRANSFER_COMPLETE_FLAG);
+#endif
+
+  Bit2_SetVal();
   DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_ENABLE); /* enable request from peripheral */
   DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* enable request from peripheral */
   DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, PDD_ENABLE); /* enable request from peripheral */
 
-  nofTransfersToGo = 3;
-
-  TPM_PDD_InitializeCounter(TPM0_DEVICE); /* reset timer counter */
-  TPM_PDD_ClearOverflowInterruptFlag(TPM0_DEVICE); /* reset any pending overflow flag */
-  TPM_PDD_ClearChannelInterruptFlag(TPM0_DEVICE, 0);
-  TPM_PDD_ClearChannelInterruptFlag(TPM0_DEVICE, 1);
-
-  Bit2_NegVal();
+//  TPM_PDD_EnableChannelDma(TPM0_DEVICE, 0);
+//  TPM_PDD_EnableChannelDma(TPM0_DEVICE, 1);
 
   TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_SYSTEM); /* enable timer */
 
@@ -89,6 +104,9 @@ static uint8_t Transfer(uint32_t src) {
   /* disable timer */
   TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_DISABLED);
   TMOUT1_LeaveCounter(handle);
+
+  Bit2_ClrVal();
+
   if (isTimeout) {
     return ERR_BUSY;
   }
@@ -102,8 +120,8 @@ static void InitDMA(void) {
 
   /* source settings */
   DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, (uint32_t)&OneValue); /* set source address */
-  DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, (uint32_t)&DataValue); /* set source address */
-  DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, (uint32_t)&ZeroValue); /* set source address */
+  DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, (uint32_t)&OneValue); /* set source address */
+  DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, (uint32_t)&OneValue); /* set source address */
 
   DMA_PDD_SetSourceAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* no circular buffer */
   DMA_PDD_SetSourceAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* no circular buffer */
@@ -132,12 +150,14 @@ static void InitDMA(void) {
   DMA_PDD_SetDestinationDataTransferSize(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_8_BIT); /* Transfer to destination size is 16bit */
   DMA_PDD_SetDestinationDataTransferSize(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, DMA_PDD_8_BIT); /* Transfer to destination size is 16bit */
   DMA_PDD_SetDestinationDataTransferSize(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, DMA_PDD_8_BIT); /* Transfer to destination size is 16bit */
-}
 
-/* not used */
-void TPM0_OnOverflow(void) {
-  TPM_PDD_ClearOverflowInterruptFlag(TPM0_DEVICE);
-//  GPIO_PDD_TogglePortDataOutputMask(PTC_BASE_PTR, 0xff);
+  DMA_PDD_EnableRequestAutoDisable(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_ENABLE); /* disable DMA request at the end of the sequence */
+  DMA_PDD_EnableRequestAutoDisable(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* disable DMA request at the end of the sequence */
+  DMA_PDD_EnableRequestAutoDisable(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, PDD_ENABLE); /* disable DMA request at the end of the sequence */
+
+  DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_ENABLE); /* enable request from peripheral */
+  DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* enable request from peripheral */
+  DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, PDD_ENABLE); /* enable request from peripheral */
 }
 
 static portTASK_FUNCTION(TaskT0, pvParameters) {
