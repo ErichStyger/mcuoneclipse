@@ -16,9 +16,9 @@
 #include "Bit2.h"
 
 static volatile int nofTransfersToGo = 0;
-static uint8_t OneValue[6] = {0xFF, 0xff, 0xff, 0xff, 0xff, 0xff};
-static uint8_t DataValue[6] = {1,2,3,4,5,6};
-static uint8_t ZeroValue[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+static uint8_t OneValue[] = {0xFF, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xFF, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
+static uint8_t DataValue[] = {1,2,3,4,5,6};
+//static uint8_t ZeroValue[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 void TPM0_OnOverflow(void) {
   TPM_PDD_ClearOverflowInterruptFlag(TPM0_DEVICE);
@@ -48,19 +48,14 @@ static uint8_t Transfer(uint32_t src) {
   bool isTimeout;
 
   DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, (uint32_t)&OneValue[0]); /* set source address */
-  DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, (uint32_t)&OneValue[0]); /* set source address */
+  DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, (uint32_t)&DataValue[0]); /* set source address */
   DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, (uint32_t)&OneValue[0]); /* set source address */
 
-  DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, 1); /* set number of bytes to transfer */
-  DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, 1); /* set number of bytes to transfer */
-//  DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, 2); /* set number of bytes to transfer */
-  DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, 1); /* set number of bytes to transfer */
-
-//  DMA_PDD_EnableSourceAddressIncrement(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* source address incremented by transfer size */
+  DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, 4); /* set number of bytes to transfer */
+  DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, 4); /* set number of bytes to transfer */
+  DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, 4); /* set number of bytes to transfer */
 
   nofTransfersToGo = 1;
-
- // DMA_PDD_EnableInterrupts(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, DMA_PDD_TRANSFER_COMPLETE_INTERRUPT);
 
 #if 0
   TPM_PDD_InitializeCounter(TPM0_DEVICE); /* reset timer counter */
@@ -120,15 +115,15 @@ static void InitDMA(void) {
 
   /* source settings */
   DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, (uint32_t)&OneValue); /* set source address */
-  DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, (uint32_t)&OneValue); /* set source address */
+  DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, (uint32_t)&DataValue); /* set source address */
   DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, (uint32_t)&OneValue); /* set source address */
 
-  DMA_PDD_SetSourceAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* no circular buffer */
-  DMA_PDD_SetSourceAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* no circular buffer */
-  DMA_PDD_SetSourceAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* no circular buffer */
+  DMA_PDD_SetSourceAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_CIRCULAR_BUFFER_16_BYTES); /* circular buffer */
+  DMA_PDD_SetSourceAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* circular buffer */
+  DMA_PDD_SetSourceAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, DMA_PDD_CIRCULAR_BUFFER_16_BYTES); /* circular buffer */
 
   DMA_PDD_EnableSourceAddressIncrement(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_DISABLE); /* source address incremented by transfer size */
-  DMA_PDD_EnableSourceAddressIncrement(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_DISABLE); /* source address incremented by transfer size */
+  DMA_PDD_EnableSourceAddressIncrement(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* source address incremented by transfer size */
   DMA_PDD_EnableSourceAddressIncrement(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, PDD_DISABLE); /* source address incremented by transfer size */
 
   DMA_PDD_SetSourceDataTransferSize(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_8_BIT); /* Transfer size from source is 8bit */
@@ -138,9 +133,9 @@ static void InitDMA(void) {
   /* destination settings */
   /* GPIOC_PDOR Data Out */
   /* GPIOC_PTOR Data Toggle */
-  DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, (uint32_t)&GPIOC_PTOR); /* set destination address: address of PTC Output register */
-  DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, (uint32_t)&GPIOC_PTOR); /* set destination address: address of PTC Output register */
-  DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, (uint32_t)&GPIOC_PTOR); /* set destination address: address of PTC Output register */
+  DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, (uint32_t)&GPIOC_PSOR); /* set destination address: address of PTC Output register */
+  DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, (uint32_t)&GPIOC_PDOR); /* set destination address: address of PTC Output register */
+  DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, (uint32_t)&GPIOC_PCOR); /* set destination address: address of PTC Output register */
   DMA_PDD_SetDestinationAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* no circular buffer */
   DMA_PDD_SetDestinationAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* no circular buffer */
   DMA_PDD_SetDestinationAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* no circular buffer */
