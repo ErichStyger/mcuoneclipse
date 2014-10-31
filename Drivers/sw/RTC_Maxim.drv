@@ -652,7 +652,7 @@ static byte PrintStatus(%@Shell@'ModuleName'%.ConstStdIOType *io) {
 #if %'ModuleName'%.DEVICE==1342
   /* there is no RAM for this device */
 #else
-  %@Utility@'ModuleName'%.cpy(buf, sizeof(buf), (unsigned char*)"0x");
+  %@Utility@'ModuleName'%.strcpy(buf, sizeof(buf), (unsigned char*)"0x");
   %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), %'ModuleName'%.MEM_RAM_START_ADDR);
   %@Utility@'ModuleName'%.strcat(buf, sizeof(buf), (unsigned char*)"..0x");
   %@Utility@'ModuleName'%.strcatNum8Hex(buf, sizeof(buf), %'ModuleName'%.MEM_RAM_END_ADDR);
