@@ -143,6 +143,7 @@
     "cpsid i               \n\t"        \
     "strb r0, %%[output]   \n\t"         \
     : [output] "=m" (cpuSR) :: "r0");   \
+    __asm ("" ::: "memory");            \
   } while(0)
 %else
   EnterCritical()
