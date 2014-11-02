@@ -142,6 +142,11 @@
   %include FSL_USB_Stack\Host\examples\msd\cw10\kinetis_k60\derivative.h
   %FILE? %'DirRel_Code'khci_kinetis.c
   %include FSL_USB_Stack\Host\source\driver\kinetis\khci_kinetis.c
+%elif CPUDevice="Kinetis K64F"
+  %FILE? %'DirRel_Code'derivative.h
+  %include FSL_USB_Stack\Host\examples\msd\cw10\kinetis_k64f\derivative.h
+  %FILE? %'DirRel_Code'khci_kinetis.c
+  %include FSL_USB_Stack\Host\source\driver\kinetis\khci_kinetis.c
 %else
   %error No or unknow (%CPUDevice) device selected in component?
 %endif
