@@ -191,8 +191,6 @@ void CLOCK_SetTime(uint8_t hour, uint8_t min, uint8_t second) {
   CLOCK_AddSecond(second);
 }
 
-#include "TI1.h"
-
 void CLOCK_Update(void) {
   static int prevHour=-1, prevMinute=-1, prevSecond=1;
   TIMEREC time;
