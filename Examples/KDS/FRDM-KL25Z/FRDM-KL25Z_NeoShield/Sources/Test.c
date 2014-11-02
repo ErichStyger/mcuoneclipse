@@ -16,31 +16,32 @@
 #include "Bit2.h"
 
 static volatile int nofTransfersToGo = 0;
+/*! \todo only one 0xFF value, move to flash */
 static uint8_t OneValue[] = {0xFF, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xFF, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
-static uint8_t DataValue[] = {1,2,3,4,5,6};
-//static uint8_t ZeroValue[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+static uint8_t DataValue[] = {1,2,3,4,5,6,8,9,10,11,12,13,14};
 
 void TPM0_OnOverflow(void) {
   TPM_PDD_ClearOverflowInterruptFlag(TPM0_DEVICE);
-//  GPIO_PDD_TogglePortDataOutputMask(PTC_BASE_PTR, 0xff);
 }
 
 void MyDMAComplete0(void) {
-  if (nofTransfersToGo>0) {
-    //nofTransfersToGo--; /*! \todo Do not interrupts for channels, but somehow needed???? */
-  }
+  /*! \todo remove need for interrupt */
 }
 
 void MyDMAComplete1(void) {
-  if (nofTransfersToGo>0) {
-   // nofTransfersToGo--;
-  }
+  /*! \todo remove need for interrupt */
 }
 
 void MyDMAComplete2(void) {
   if (nofTransfersToGo>0) {
     nofTransfersToGo--;
   }
+#if 1
+  /*! \todo remove? */
+  DMA_PDD_ClearInterruptFlags(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_TRANSFER_COMPLETE_FLAG);
+  DMA_PDD_ClearInterruptFlags(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, DMA_PDD_TRANSFER_COMPLETE_FLAG);
+  DMA_PDD_ClearInterruptFlags(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, DMA_PDD_TRANSFER_COMPLETE_FLAG);
+#endif
 }
 
 static uint8_t Transfer(uint32_t src) {
@@ -69,12 +70,6 @@ static uint8_t Transfer(uint32_t src) {
 
   //TPM_PDD_DisableChannelDma(TPM0_DEVICE, 0);
   //TPM_PDD_DisableChannelDma(TPM0_DEVICE, 1);
-#endif
-
-#if 0
-  DMA_PDD_ClearInterruptFlags(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_TRANSFER_COMPLETE_FLAG);
-  DMA_PDD_ClearInterruptFlags(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, DMA_PDD_TRANSFER_COMPLETE_FLAG);
-  DMA_PDD_ClearInterruptFlags(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, DMA_PDD_TRANSFER_COMPLETE_FLAG);
 #endif
 
   Bit2_SetVal();
@@ -109,6 +104,10 @@ static uint8_t Transfer(uint32_t src) {
 }
 
 static void InitDMA(void) {
+  /* timer setup */
+  TPM_PDD_WriteModuloReg(TPM0_DEVICE, 12000);
+  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 0, 3000);
+  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 1, 6000);
 
   /* initialize PORT C as output */
   //GPIO_PDD_SetPortOutputDirectionMask(PTC_DEVICE, 0xff); /* PTC0..PTC7 as output */
@@ -149,6 +148,12 @@ static void InitDMA(void) {
   DMA_PDD_EnableRequestAutoDisable(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_ENABLE); /* disable DMA request at the end of the sequence */
   DMA_PDD_EnableRequestAutoDisable(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* disable DMA request at the end of the sequence */
   DMA_PDD_EnableRequestAutoDisable(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, PDD_ENABLE); /* disable DMA request at the end of the sequence */
+
+  /*! \todo remove, as no effect? */
+  TPM_PDD_ClearChannelInterruptFlag(TPM0_BASE_PTR, 0);
+  TPM_PDD_ClearChannelInterruptFlag(TPM0_BASE_PTR, 1);
+  TPM_PDD_DisableChannelDma(TPM0_DEVICE, 0);
+  TPM_PDD_DisableChannelDma(TPM0_DEVICE, 1);
 
   DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_ENABLE); /* enable request from peripheral */
   DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* enable request from peripheral */

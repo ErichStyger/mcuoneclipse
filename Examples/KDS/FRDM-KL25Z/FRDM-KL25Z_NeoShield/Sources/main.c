@@ -60,6 +60,8 @@
 #include "BitIoLdd5.h"
 #include "SM1.h"
 #include "SMasterLdd1.h"
+#include "TU1.h"
+#include "TmDt1.h"
 #include "TPM0.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"

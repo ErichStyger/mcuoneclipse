@@ -1,3 +1,3 @@
 readme.txt
 ----------
-This folder contains projects for the FRDM-K64F board and the Kinetis Design Studio (KDS) V1.1.0.
+This folder contains projects for the FRDM-K64F board and the Kinetis Design Studio (KDS).

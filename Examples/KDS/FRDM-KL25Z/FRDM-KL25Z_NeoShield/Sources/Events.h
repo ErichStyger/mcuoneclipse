@@ -64,6 +64,8 @@
 #include "BitIoLdd5.h"
 #include "SM1.h"
 #include "SMasterLdd1.h"
+#include "TU1.h"
+#include "TmDt1.h"
 #include "TPM0.h"
 
 #ifdef __cplusplus
