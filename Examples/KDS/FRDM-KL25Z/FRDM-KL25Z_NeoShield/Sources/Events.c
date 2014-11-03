@@ -164,7 +164,7 @@ void FRTOS1_vApplicationMallocFailedHook(void)
 /* ===================================================================*/
 void DMACH2_OnComplete(LDD_TUserData *UserDataPtr)
 {
-  MyDMAComplete2();
+  /* Write your code here ... */
 }
 
 /*
@@ -187,7 +187,7 @@ void DMACH2_OnComplete(LDD_TUserData *UserDataPtr)
 /* ===================================================================*/
 void DMACH1_OnComplete(LDD_TUserData *UserDataPtr)
 {
-  MyDMAComplete1();
+  /* Write your code here ... */
 }
 
 /*
@@ -210,7 +210,7 @@ void DMACH1_OnComplete(LDD_TUserData *UserDataPtr)
 /* ===================================================================*/
 void DMACH0_OnComplete(LDD_TUserData *UserDataPtr)
 {
-  MyDMAComplete0();
+  /* Write your code here ... */
 }
 
 /* END Events */

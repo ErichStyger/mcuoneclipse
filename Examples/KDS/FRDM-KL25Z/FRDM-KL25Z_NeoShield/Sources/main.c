@@ -83,7 +83,6 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   Test();
-
   APP_Run();
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/

@@ -15,14 +15,17 @@
 #include "TPM0.h"
 #include "Bit2.h"
 
-static volatile int nofTransfersToGo = 0;
+//static volatile int nofTransfersToGo = 0;
 /*! \todo only one 0xFF value, move to flash */
 static uint8_t DataValue[] = {1,2,3,4,5,6,8,9,10,11,12,13,14};
 
+#if 0
 void TPM0_OnOverflow(void) {
   TPM_PDD_ClearOverflowInterruptFlag(TPM0_DEVICE);
 }
+#endif
 
+#if 0
 void MyDMAComplete0(void) {
   /*! \todo remove need for interrupt */
 }
@@ -36,6 +39,7 @@ void MyDMAComplete2(void) {
     nofTransfersToGo--;
   }
 }
+#endif
 
 static void InitTimer(void) {
   TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_SYSTEM); /* enable timer so I can reset the value below */
@@ -74,7 +78,7 @@ static uint8_t Transfer(uint32_t dataAddress, size_t nofData) {
   DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, nofData); /* set number of bytes to transfer */
   DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, nofData); /* set number of bytes to transfer */
 
-  nofTransfersToGo = 1;
+  //nofTransfersToGo = 1;
 
   Bit2_SetVal(); /* toggle pin for debugging purpose */
 
@@ -86,7 +90,8 @@ static uint8_t Transfer(uint32_t dataAddress, size_t nofData) {
 
   isTimeout = FALSE;
   handle = TMOUT1_GetCounter(100/TMOUT1_TICK_PERIOD_MS);
-  while(nofTransfersToGo>0) {
+  //while(nofTransfersToGo>0) {
+  for(;;) {
     /* wait until transfer is complete */
     if (TMOUT1_CounterExpired(handle)) {
       isTimeout = TRUE;
@@ -154,11 +159,6 @@ static void InitDMA(void) {
   DMA_PDD_EnableRequestAutoDisable(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* disable DMA request at the end of the sequence */
   DMA_PDD_EnableRequestAutoDisable(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, PDD_ENABLE); /* disable DMA request at the end of the sequence */
 
-#if 0
-  DMA_PDD_ClearDoneFlag(DMA_BASE_PTR, DMA_PDD_CHANNEL_0);
-  DMA_PDD_ClearDoneFlag(DMA_BASE_PTR, DMA_PDD_CHANNEL_1);
-  DMA_PDD_ClearDoneFlag(DMA_BASE_PTR, DMA_PDD_CHANNEL_2);
-#endif
 #if 1
   DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_ENABLE); /* enable request from peripheral */
   DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* enable request from peripheral */
