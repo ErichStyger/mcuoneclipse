@@ -17,7 +17,7 @@
 
 static volatile int nofTransfersToGo = 0;
 /*! \todo only one 0xFF value, move to flash */
-static uint8_t DataValue[] = {1,1+2,3,1+4,5,6,8,9,10,11,12,13,14};
+static uint8_t DataValue[] = {1,2,3,4,5,6,8,9,10,11,12,13,14};
 
 void TPM0_OnOverflow(void) {
   TPM_PDD_ClearOverflowInterruptFlag(TPM0_DEVICE);
@@ -35,6 +35,23 @@ void MyDMAComplete2(void) {
   if (nofTransfersToGo>0) {
     nofTransfersToGo--;
   }
+}
+
+static void InitTimer(void) {
+  TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_SYSTEM); /* enable timer so I can reset the value below */
+  TPM_PDD_InitializeCounter(TPM0_DEVICE); /* reset timer counter */
+  TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_DISABLED); /* disable timer */
+  TPM_PDD_WriteModuloReg(TPM0_DEVICE, 6000);
+  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 0, 1000);
+  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 1, 3000);
+}
+
+static void StartTimer(void) {
+  TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_SYSTEM); /* enable timer so I can reset the value below */
+}
+
+static void StopTimer(void) {
+  TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_DISABLED); /* disable timer */
 }
 
 static uint8_t Transfer(uint32_t dataAddress, size_t nofData) {
@@ -92,7 +109,8 @@ static uint8_t Transfer(uint32_t dataAddress, size_t nofData) {
   //TPM_PDD_EnableChannelDma(TPM0_DEVICE, 0);
   //TPM_PDD_EnableChannelDma(TPM0_DEVICE, 1);
 
-  TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_SYSTEM); /* enable timer */
+  //TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_SYSTEM); /* enable timer using system clock */
+  StartTimer();
 
   handle = TMOUT1_GetCounter(100/TMOUT1_TICK_PERIOD_MS);
   isTimeout = FALSE;
@@ -103,8 +121,8 @@ static uint8_t Transfer(uint32_t dataAddress, size_t nofData) {
       break; /* leave loop */
     }
   }
-  /* disable timer */
-  TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_DISABLED);
+  StopTimer();
+  TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_DISABLED); /* disable timer */
   TMOUT1_LeaveCounter(handle);
 
   Bit2_ClrVal();
@@ -124,15 +142,13 @@ static uint8_t Transfer(uint32_t dataAddress, size_t nofData) {
 
 static void InitDMA(void) {
   /* timer setup */
-  TPM_PDD_WriteModuloReg(TPM0_DEVICE, 6000);
-  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 0, 1000);
-  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 1, 3000);
+  InitTimer();
 
   /* initialize PORT C as output */
   //GPIO_PDD_SetPortOutputDirectionMask(PTC_DEVICE, 0xff); /* PTC0..PTC7 as output */
 
   /* source settings */
-  /* source will be set in Tranfer() */
+  /* source will be set in Transfer() */
   //DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, (uint32_t)&OneValue); /* set source address */
   //DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, (uint32_t)&DataValue); /* set source address */
   //DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, (uint32_t)&OneValue); /* set source address */
