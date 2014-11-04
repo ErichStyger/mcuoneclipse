@@ -11,21 +11,20 @@
 #include "DMACH1.h"
 #include "DMA_PDD.h"
 #include "TPM_PDD.h"
+#include "WAIT1.h"
 
 /* 48 MHz, WS2812(S) */
 #define TICKS_PERIOD  59  /* 1.25 us  (need: 1.25 us)*/
-#define VAL0          16  /* 0 Bit: 0.396 us (need: 0.4 us low) */
-#define VAL1          31  /* 1 Bit: 0.792 us (need: 0.8 us high */
+#define VAL0          0  /* 0 Bit: 0.396 us (need: 0.4 us low) */
+#define VAL1          1  /* 1 Bit: 0.792 us (need: 0.8 us high */
 #define VAL00         0   /* data line low value, e.g. for reset/latch */
 
-#define NEO_NOF_PRE         3 /* somehow needs trailing values? */
+#define NEO_NOF_PRE         0 /* somehow needs trailing values? */
 #define NEO_NOF_BITS_PIXEL  24  /* 24 bits for pixel */
-#define NEO_NOF_POST        10 /*40*/ /* latch, low for at least 50 us (40x1.25us) */
+#define NEO_NOF_POST        0  /* latch, low for at least 50 us (40x1.25us) */
 #define NEO_DMA_NOF_BYTES   sizeof(transmitBuf)
 
-static volatile bool transferComplete = FALSE;
-
-static uint16_t transmitBuf[NEO_NOF_PRE+(NEO_NOF_PIXEL*NEO_NOF_BITS_PIXEL)+NEO_NOF_POST];
+static uint8_t transmitBuf[NEO_NOF_PRE+(NEO_NOF_PIXEL*NEO_NOF_BITS_PIXEL)+NEO_NOF_POST];
 
 /* sets the color of an individual pixel */
 uint8_t NEO_SetPixelRGB(NEO_PixelIdxT pixelNo, uint8_t red, uint8_t green, uint8_t blue) {
@@ -184,51 +183,117 @@ static void InitTransmitBuf(void) {
   }
 }
 
-void MyDMAComplete(void) {
-  transferComplete = TRUE;
+static void InitTimer(void) {
+  TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_SYSTEM); /* enable timer so I can reset the value below */
+  TPM_PDD_InitializeCounter(TPM0_DEVICE); /* reset timer counter */
+  TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_DISABLED); /* disable timer */
+  TPM_PDD_WriteModuloReg(TPM0_DEVICE, 3*18);
+  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 0, 18);
+  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 1, 36);
 }
 
-static void InitTimer(void) {
-  TPM_PDD_WriteModuloReg(TPM0_BASE_PTR, TICKS_PERIOD); /* set period */
-  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 1, 0); /* PWM low, zero duty */
-  TPM_PDD_EnableChannelDma(TPM0_DEVICE, 1); /* enable DMA for channel */
+static void StartTimer(void) {
+  TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_SYSTEM); /* enable timer so I can reset the value below */
+}
+
+static void StopTimer(void) {
+  TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_DISABLED); /* disable timer */
 }
 
 static void InitDMA(void) {
-  DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, (uint32_t)&transmitBuf[0]); /* set source address */
-  DMA_PDD_SetSourceAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* no circular buffer */
-  DMA_PDD_EnableSourceAddressIncrement(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_ENABLE); /* source address will be incremented by transfer size */
-  DMA_PDD_SetSourceDataTransferSize(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_16_BIT); /* Transfer size from source is 16bit */
+  InitTransmitBuf();
+  InitTimer(); /* timer setup */
 
-  DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, (uint32_t)&TPM0_C1V); /* set destination address */
+  /* initialize PORT C as output */
+  //GPIO_PDD_SetPortOutputDirectionMask(PTC_DEVICE, 0xff); /* PTC0..PTC7 as output */
+
+  DMA_PDD_SetSourceAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* circular buffer */
+  DMA_PDD_SetSourceAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* circular buffer */
+  DMA_PDD_SetSourceAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* circular buffer */
+
+  DMA_PDD_EnableSourceAddressIncrement(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_DISABLE); /* source address incremented by transfer size */
+  DMA_PDD_EnableSourceAddressIncrement(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* source address incremented by transfer size */
+  DMA_PDD_EnableSourceAddressIncrement(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, PDD_DISABLE); /* source address incremented by transfer size */
+
+  DMA_PDD_SetSourceDataTransferSize(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_8_BIT); /* Transfer size from source is 8bit */
+  DMA_PDD_SetSourceDataTransferSize(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, DMA_PDD_8_BIT); /* Transfer size from source is 8bit */
+  DMA_PDD_SetSourceDataTransferSize(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, DMA_PDD_8_BIT); /* Transfer size from source is 8bit */
+
+  /* destination settings */
+  /* GPIOC_PDOR Data Out */
+  /* GPIOC_PTOR Data Toggle */
+  DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, (uint32_t)&GPIOC_PSOR); /* set destination address: address of PTC Output register */
+  DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, (uint32_t)&GPIOC_PDOR); /* set destination address: address of PTC Output register */
+  DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, (uint32_t)&GPIOC_PCOR); /* set destination address: address of PTC Output register */
   DMA_PDD_SetDestinationAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* no circular buffer */
+  DMA_PDD_SetDestinationAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* no circular buffer */
+  DMA_PDD_SetDestinationAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* no circular buffer */
   DMA_PDD_EnableDestinationAddressIncrement(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_DISABLE); /* no auto-increment for destination address */
-  DMA_PDD_SetDestinationDataTransferSize(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_16_BIT); /* Transfer to destination size is 16bit */
+  DMA_PDD_EnableDestinationAddressIncrement(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_DISABLE); /* no auto-increment for destination address */
+  DMA_PDD_EnableDestinationAddressIncrement(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, PDD_DISABLE); /* no auto-increment for destination address */
+  DMA_PDD_SetDestinationDataTransferSize(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_8_BIT); /* Transfer to destination size is 16bit */
+  DMA_PDD_SetDestinationDataTransferSize(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, DMA_PDD_8_BIT); /* Transfer to destination size is 16bit */
+  DMA_PDD_SetDestinationDataTransferSize(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, DMA_PDD_8_BIT); /* Transfer to destination size is 16bit */
 
-  DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, NEO_DMA_NOF_BYTES); /* set number of bytes to transfer */
-  DMA_PDD_EnableTransferCompleteInterrupt(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_ENABLE); /* request interrupt at the end of the DMA transfer to set new byte count */
   DMA_PDD_EnableRequestAutoDisable(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_ENABLE); /* disable DMA request at the end of the sequence */
+  DMA_PDD_EnableRequestAutoDisable(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* disable DMA request at the end of the sequence */
+  DMA_PDD_EnableRequestAutoDisable(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, PDD_ENABLE); /* disable DMA request at the end of the sequence */
+
+#if 1
   DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_ENABLE); /* enable request from peripheral */
+  DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* enable request from peripheral */
+  DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, PDD_ENABLE); /* enable request from peripheral */
+#endif
 }
 
-static uint8_t Transfer(uint32_t src) {
+static uint8_t Transfer(uint32_t dataAddress, size_t nofBytes) {
+  static const uint8_t OneValue = 0xFF; /* value to clear or set the port bits */
   TMOUT1_CounterHandle handle;
   bool isTimeout;
+  uint32_t done0, done1, done2;
 
-  transferComplete = FALSE;
-  DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, src); /* set source address */
-  DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, NEO_DMA_NOF_BYTES); /* set number of bytes to transfer */
+#if 1
+  DMA_PDD_ClearDoneFlag(DMA_BASE_PTR, DMA_PDD_CHANNEL_0);
+  DMA_PDD_ClearDoneFlag(DMA_BASE_PTR, DMA_PDD_CHANNEL_1);
+  DMA_PDD_ClearDoneFlag(DMA_BASE_PTR, DMA_PDD_CHANNEL_2);
+#endif
+
+  DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, (uint32_t)&OneValue); /* set source address */
+  DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, dataAddress); /* set source address */
+  DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, (uint32_t)&OneValue); /* set source address */
+
+  DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, nofBytes); /* set number of bytes to transfer */
+  DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, nofBytes); /* set number of bytes to transfer */
+  DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, nofBytes); /* set number of bytes to transfer */
+
+  Bit2_SetVal(); /* toggle pin for debugging purpose */
+
   DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_ENABLE); /* enable request from peripheral */
-  handle = TMOUT1_GetCounter(100/TMOUT1_TICK_PERIOD_MS);
+  DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* enable request from peripheral */
+  DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, PDD_ENABLE); /* enable request from peripheral */
+
+  StartTimer();
+
   isTimeout = FALSE;
-  while(!transferComplete) {
+  handle = TMOUT1_GetCounter(100/TMOUT1_TICK_PERIOD_MS);
+  for(;;) {
     /* wait until transfer is complete */
     if (TMOUT1_CounterExpired(handle)) {
       isTimeout = TRUE;
       break; /* leave loop */
     }
+    done0 = DMA_PDD_GetDoneFlag(DMA_BASE_PTR, DMA_PDD_CHANNEL_0);
+    done1 = DMA_PDD_GetDoneFlag(DMA_BASE_PTR, DMA_PDD_CHANNEL_1);
+    done2 = DMA_PDD_GetDoneFlag(DMA_BASE_PTR, DMA_PDD_CHANNEL_2);
+    if (done0 && done1 && done2) {
+      break; /* done! */
+    }
   }
+  StopTimer();
   TMOUT1_LeaveCounter(handle);
+  WAIT1_Waitus(50); /* latch, low for at least 50 us (40x1.25us) */
+  Bit2_ClrVal(); /* toggle pin for debugging purpose */
+
   if (isTimeout) {
     return ERR_BUSY;
   }
@@ -236,12 +301,9 @@ static uint8_t Transfer(uint32_t src) {
 }
 
 uint8_t NEO_TransferPixels(void) {
-  return Transfer((uint32_t)&transmitBuf[0]);
+  return Transfer((uint32_t)&transmitBuf[0], sizeof(transmitBuf));
 }
 
 void NEO_Init(void) {
-  InitTransmitBuf();
-  InitTimer();
   InitDMA();
-  transferComplete = FALSE;
 }

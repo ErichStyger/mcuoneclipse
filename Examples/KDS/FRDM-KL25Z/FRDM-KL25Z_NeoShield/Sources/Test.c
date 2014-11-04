@@ -14,6 +14,7 @@
 #include "TMOUT1.h"
 #include "TPM0.h"
 #include "Bit2.h"
+#include "NeoPixel.h"
 
 //static volatile int nofTransfersToGo = 0;
 /*! \todo only one 0xFF value, move to flash */
@@ -170,13 +171,23 @@ static portTASK_FUNCTION(TaskT0, pvParameters) {
   (void)pvParameters; /* not used */
   //DataValue = 0xff;
   for(;;) {
-    Transfer((uint32_t)&DataValue[0], 4 /*sizeof(DataValue)*/);
+    //Transfer((uint32_t)&DataValue[0], 4 /*sizeof(DataValue)*/);
+    NEO_TransferPixels();
     FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
   } /* for */
 }
 
 void Test(void) {
-  InitDMA();
+  //InitDMA();
+  NEO_Init();
+  NEO_SetPixelRGB(0, 0xff, 0x00, 0x00);
+  NEO_SetPixelRGB(1, 0x00, 0xFF, 0x00);
+  NEO_SetPixelRGB(2, 0x00, 0x00, 0xff);
+  NEO_SetPixelRGB(3, 0xff, 0x00, 0x00);
+  NEO_SetPixelRGB(4, 0xff, 0x00, 0xFF);
+  NEO_SetPixelRGB(5, 0xff, 0x00, 0xFF);
+  NEO_SetPixelRGB(6, 0xff, 0x00, 0xFF);
+  NEO_SetPixelRGB(7, 0xff, 0x00, 0xFF);
 #if 0
   //for(;;) {
 //#if 0
