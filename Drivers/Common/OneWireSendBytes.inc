@@ -4,16 +4,15 @@
 %endif CommentLine
 %;** ===================================================================
 %include Common\GeneralMethod.inc (SendBytes)
-%;**     @brief
-%;**          
+%;**     Description :
+%;**         
 %include Common\GeneralParameters.inc(27)
-%;**         @param
-%;**         uint8_t _bytes%>27 - Array of bytes to add to output stream. 
-%;**         @param
-%;**         uint8_t count%>27 - Number of bytes to add to output stream. (Valid 
-%;**         %>29 range 0 - 31) 
-%;**         @return
-%;**         bool %>27 - 
+%;**       * _bytes%Par_bytes %>27 - Array of bytes to add to output
+%;** %>29 stream.
+%;**       * count%Parcount %>27 - Number of bytes to add to output
+%;** %>29 stream. (Valid range 0 - 31)
+%;**     Returns     :
+%;**         ---%RetVal %>27 - 
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

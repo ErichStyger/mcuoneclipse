@@ -4,11 +4,11 @@
 %endif CommentLine
 %;** ===================================================================
 %include Common\GeneralMethod.inc (read_Pin)
-%;**     @brief
-%;**          
-%include Common\GeneralParameters.inc(27)
-%;**         @return
-%;**         bool %>27 - 
+%;**     Description :
+%;**         
+%include Common\GeneralParametersNone.inc
+%;**     Returns     :
+%;**         ---%RetVal %>27 - 
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

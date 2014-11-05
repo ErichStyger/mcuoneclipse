@@ -4,12 +4,11 @@
 %endif CommentLine
 %;** ===================================================================
 %include Common\GeneralEvent.inc (OnWaitEnd)
-%;**     @brief
-%;**          
+%;**     Description :
+%;**         
 %include Common\GeneralParameters.inc(27)
-%;**         @param
-%;**         uint8_t key%>27 - Key to identificate the source of the event. 
-%;**         @return
+%;**       * key%Parkey %>27 - Key to identificate the source of the
+%;** %>29 event.
 %include Common\GeneralReturnNothing.inc
 %;** ===================================================================
 %ifndef CommentLine

@@ -4,12 +4,12 @@
 %endif CommentLine
 %;** ===================================================================
 %include Common\GeneralMethod.inc (Count)
-%;**     @brief
-%;**         Returns the number of elements stored on input buffer that are 
-%;**         ready to read. 
-%include Common\GeneralParameters.inc(27)
-%;**         @return
-%;**         uint8_t %>27 - 
+%;**     Description :
+%;**         Returns the number of elements stored on input buffer that
+%;**         are ready to read.
+%include Common\GeneralParametersNone.inc
+%;**     Returns     :
+%;**         ---%RetVal %>27 - 
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

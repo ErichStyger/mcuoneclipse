@@ -4,11 +4,10 @@
 %endif CommentLine
 %;** ===================================================================
 %include Common\GeneralMethod.inc (i_reset)
-%;**     @brief
-%;**          
-%include Common\GeneralParameters.inc(27)
-%;**         @return
-%;**         void %>27 - 
+%;**     Description :
+%;**         
+%include Common\GeneralParametersNone.inc
+%include Common\GeneralReturnNothing.inc
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

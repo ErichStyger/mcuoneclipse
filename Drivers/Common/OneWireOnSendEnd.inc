@@ -4,10 +4,9 @@
 %endif CommentLine
 %;** ===================================================================
 %include Common\GeneralEvent.inc (OnSendEnd)
-%;**     @brief
-%;**          
-%include Common\GeneralParameters.inc(27)
-%;**         @return
+%;**     Description :
+%;**         
+%include Common\GeneralParametersNone.inc
 %include Common\GeneralReturnNothing.inc
 %;** ===================================================================
 %ifndef CommentLine

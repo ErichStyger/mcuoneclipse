@@ -49,9 +49,9 @@
 %-BW_INTERN_COMMENTS_START
 %- List of descriptions of internal methods
 %ifdef TU
-	%ifdef @TU@OnCounterRestart
-		%define! Description_%@TU@OnCounterRestart Called if counter overflow/underflow or counter is reinitialized by modulo or compare register matching. OnCounterRestart event and Timer unit must be enabled. See <a href="TimerUnit_LDDMethods.html#SetEventMask">SetEventMask</a> and <a href="TimerUnit_LDDMethods.html#GetEventMask">GetEventMask</a> methods.This event is available only if a <a href="TimerUnit_LDDProperties.html#IntServiceCounter">Interrupt</a> is enabled. The event services the event of the inherited component and eventually invokes other events.
-	%endif %- @TU@OnCounterRestart
+  %ifdef @TU@OnCounterRestart
+    %define! Description_%@TU@OnCounterRestart Called if counter overflow/underflow or counter is reinitialized by modulo or compare register matching. OnCounterRestart event and Timer unit must be enabled. See <a href="TimerUnit_LDDMethods.html#SetEventMask">SetEventMask</a> and <a href="TimerUnit_LDDMethods.html#GetEventMask">GetEventMask</a> methods.This event is available only if a <a href="TimerUnit_LDDProperties.html#IntServiceCounter">Interrupt</a> is enabled. The event services the event of the inherited component and eventually invokes other events.
+  %endif %- @TU@OnCounterRestart
 %endif %- TU
 %-BW_INTERN_COMMENTS_END
 %-
@@ -61,8 +61,8 @@
   %-
 %-
 %INTERFACE
-%define! Settings Common\OneWireSettings.inc
-%define! Abstract Common\OneWireAbstract.inc
+%define! Settings Common\OneWireSettings.Inc
+%define! Abstract Common\OneWireAbstract.Inc
 %include Common\Header.h
 
 #ifndef __%'ModuleName'_H
@@ -95,8 +95,10 @@
 #include "%ProcessorModule.h"
 
 %-STARTUSERTYPES - Do not make changes between lines (included this lines) marked with %-STARTUSERTYPES and %-ENDUSRTYPES
+
 %-ENDUSRTYPES
 %-BW_BEAN_CONSTANTS_START  - Do not make changes between lines (included this lines) marked with %-BW_BEAN_CONSTANTS_START and %-BW_BEAN_CONSTANTS_END
+%- No constants defined in the BeanWizard for this bean
 %-BW_BEAN_CONSTANTS_END
 %-BW_CUSTOM_USERTYPE_START
 %- Write your own types here ...
@@ -390,8 +392,8 @@ void %OnProgramEvent(int8_t key);
 
 %-BW_EVENT_DEFINITION_END
 %IMPLEMENTATION
-%define! Settings Common\OneWireSettings.inc
-%define! Abstract Common\OneWireAbstract.inc
+%define! Settings Common\OneWireSettings.Inc
+%define! Abstract Common\OneWireAbstract.Inc
 %include Common\Header.C
 
 /* MODULE %ModuleName. */

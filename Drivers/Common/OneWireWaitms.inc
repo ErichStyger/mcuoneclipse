@@ -4,18 +4,18 @@
 %endif CommentLine
 %;** ===================================================================
 %include Common\GeneralMethod.inc (Waitms)
-%;**     @brief
-%;**         Programs a pause between instruccions. 
+%;**     Description :
+%;**         Programs a pause between instruccions.
 %include Common\GeneralParameters.inc(27)
-%;**         @param
-%;**         uint8_t key%>27 - Key to identificate the period end, applies 
-%;**         %>29 only if OnWaitEnd evet is enabled.  (Valid 
-%;**         %>29 range 0 - 31) 
-%;**         @param
-%;**         uint16_t time_ms%>27 - Value of time to wait. 
-%;**         @return
-%;**         bool %>27 - Returns false if the program buffer or the time buffer 
-%;**         is full. 
+%;**       * key%Parkey %>27 - Key to identificate the source of the
+%;** %>29 event.
+%;**       * key%Parkey %>27 - Key to identificate the period end,
+%;** %>29 applies only if OnWaitEnd evet is enabled.
+%;** %>29 (Valid range 0 - 31)
+%;**       * time_ms%Partime_ms %>27 - Value of time to wait.
+%;**     Returns     :
+%;**         ---%RetVal %>27 - Returns false if the program buffer or the
+%;** %>29 time buffer is full.
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

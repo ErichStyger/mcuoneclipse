@@ -4,13 +4,12 @@
 %endif CommentLine
 %;** ===================================================================
 %include Common\GeneralMethod.inc (SendByte)
-%;**     @brief
-%;**          
+%;**     Description :
+%;**         
 %include Common\GeneralParameters.inc(27)
-%;**         @param
-%;**         uint8_t _byte%>27 - Variable to save the byte. 
-%;**         @return
-%;**         bool %>27 - 
+%;**       * _byte%Par_byte %>27 - Variable to save the byte.
+%;**     Returns     :
+%;**         ---%RetVal %>27 - 
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine

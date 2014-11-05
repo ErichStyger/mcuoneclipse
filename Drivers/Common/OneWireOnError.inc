@@ -4,12 +4,10 @@
 %endif CommentLine
 %;** ===================================================================
 %include Common\GeneralEvent.inc (OnError)
-%;**     @brief
-%;**          
+%;**     Description :
+%;**         
 %include Common\GeneralParameters.inc(27)
-%;**         @param
-%;**         Error error%>27 -  
-%;**         @return
+%;**       * error%Parerror %>27 - 
 %include Common\GeneralReturnNothing.inc
 %;** ===================================================================
 %ifndef CommentLine

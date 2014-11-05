@@ -4,15 +4,13 @@
 %endif CommentLine
 %;** ===================================================================
 %include Common\GeneralMethod.inc (GetBytes)
-%;**     @brief
-%;**          
+%;**     Description :
+%;**         
 %include Common\GeneralParameters.inc(27)
-%;**         @param
-%;**         uint8_t _bytes%>27 -  
-%;**         @param
-%;**         uint8_t count%>27 -  
-%;**         @return
-%;**         bool %>27 - 
+%;**       * _bytes%Par_bytes %>27 - 
+%;**       * count%Parcount %>27 - 
+%;**     Returns     :
+%;**         ---%RetVal %>27 - 
 %include Common\GeneralDamage.inc
 %;** ===================================================================
 %ifndef CommentLine
