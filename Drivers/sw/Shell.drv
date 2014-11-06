@@ -1163,6 +1163,7 @@ void %'ModuleName'%.%Init(void)
   if (ShellSem==NULL) { /* semaphore creation failed */
     for(;;) {} /* error, not enough memory? */
   }
+  vQueueAddToRegistry(ShellSem, "ShellSem");
 %endif
 }
 
@@ -1175,6 +1176,7 @@ void %'ModuleName'%.%Init(void)
 void %'ModuleName'%.%Deinit(void)
 {
 %if defined(OperatingSystemId) & OperatingSystemId = 'FreeRTOS' & defined(ConsoleSempahore) & %ConsoleSempahore='yes'
+  vQueueUnregisterQueue(ShellSem);
   vSemaphoreDelete(ShellSem);
   ShellSem = NULL;
 %endif

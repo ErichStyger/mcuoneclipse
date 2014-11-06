@@ -4,7 +4,7 @@
     <Name>Shell</Name>
     <Description>Command Line Shell</Description>
     <Author>Erich Styger</Author>
-    <Version>01.048</Version>
+    <Version>01.049</Version>
     <Icon>Shell</Icon>
     <TypesFiles>PE,Shell\Shell</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -291,7 +291,7 @@
     </Property>
     <Property>
       <TBoolItem>
-        <Name>Serial Semaphore</Name>
+        <Name>Semaphore</Name>
         <Symbol>ConsoleSempahore</Symbol>
         <TypeSpec>typeYesNo</TypeSpec>
         <Hint>If enabled and an RTOS is present, a semaphore is used to grant mutual access to the console/serial/SCI hardware. Useful if multiple tasks needs to write to the shell console. Make sure you call the Init() routine of the componenent first in order to create the semaphore.</Hint>
