@@ -215,7 +215,8 @@ void %'ModuleName'%.%PrintPrompt(%'ModuleName'_ConstStdIOType *io);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ReadLine
 %ifdef ReadLine
-bool %'ModuleName'%.%ReadLine(uint8_t *buf, size_t bufSize, %'ModuleName'_ConstStdIOType *io);
+bool %'ModuleName'%.%ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, %'ModuleName'_ConstStdIOType *io);
+%define! ParbufStart
 %define! Parbuf
 %define! ParbufSize
 %define! Pario
@@ -685,12 +686,13 @@ void %'ModuleName'%.%PrintPrompt(%'ModuleName'_ConstStdIOType *io)
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN ReadLine
 %ifdef ReadLine
+%define! ParbufStart
 %define! Parbuf
 %define! ParbufSize
 %define! Pario
 %define! RetVal
 %include Common\ShellReadLine.Inc
-bool %'ModuleName'%.%ReadLine(uint8_t *buf, size_t bufSize, %'ModuleName'_ConstStdIOType *io)
+bool %'ModuleName'%.%ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, %'ModuleName'_ConstStdIOType *io)
 {
   uint8_t c;
 
@@ -701,17 +703,31 @@ bool %'ModuleName'%.%ReadLine(uint8_t *buf, size_t bufSize, %'ModuleName'_ConstS
       if (c=='\0') { /* nothing in rx buffer? Something is wrong... */
         break; /* get out of loop */
       }
+      if (c== '\b') {                                            %>40/* check for backspace */
+        if (buf > bufStart) {                                    %>40/* Avoid buffer underflow */
 %if %EchoEnabled='yes'
-      io->stdOut(c);                                             %>40/* echo character */
+           io->stdOut('\b');                                     %>40/* delete character on terminal */
+           io->stdOut(' ');
+           io->stdOut('\b');
 %endif
-      *buf = (uint8_t)c;                                         %>40/* append character to the string */
-      buf++;
-      bufSize--;
-      if ((c=='\r') || (c=='\n')) {
-        break;
-      }
-      if (bufSize <= 1) {                                        %>40/* buffer full */
-        break;
+           buf--;                                                %>40/* delete last charracter in buffer */
+           *buf = '\0';
+           bufSize++;
+
+        }
+      } else {
+%if %EchoEnabled='yes'
+        io->stdOut(c);                                             %>40/* echo character */
+%endif
+        *buf = (uint8_t)c;                                         %>40/* append character to the string */
+        buf++;
+        bufSize--;
+        if ((c=='\r') || (c=='\n')) {
+          break;
+        }
+        if (bufSize <= 1) {                                        %>40/* buffer full */
+          break;
+        }
       }
     } /* for */
     *buf = '\0';                                                 %>40/* zero terminate string */
@@ -916,7 +932,7 @@ uint8_t %'ModuleName'%.%ReadAndParseWithCommandTable(uint8_t *cmdBuf, size_t cmd
 
   /* IMPORTANT NOTE: this function *appends* to the buffer, so the buffer needs to be initialized first! */
   len = %@Utility@'ModuleName'%.strlen((const char*)cmdBuf);
-  if (%'ModuleName'%.ReadLine(cmdBuf+len, cmdBufSize-len, io)) {
+  if (%'ModuleName'%.ReadLine(cmdBuf, cmdBuf+len, cmdBufSize-len, io)) {
     len = %@Utility@'ModuleName'%.strlen((const char*)cmdBuf);   %>40/* length of buffer string */
     if (len==0) { /* error case */
       return ERR_FAILED;

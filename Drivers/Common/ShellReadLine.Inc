@@ -8,6 +8,7 @@
 %;**         Reads a line from stdIn and returns TRUE if we have a line,
 %;**         FALSE otherwise.
 %include Common\GeneralParameters.inc(27)
+%;**       * bufStart%ParbufStart %>27 - Pointer to start of buffer
 %;**       * buf%Parbuf %>27 - Pointer to buffer where to read in the
 %;** %>29 information
 %;**         bufSize%ParbufSize %>27 - size of buffer
