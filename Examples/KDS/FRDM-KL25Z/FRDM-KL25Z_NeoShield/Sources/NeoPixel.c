@@ -296,7 +296,9 @@ static uint8_t Transfer(uint32_t dataAddress, size_t nofBytes) {
     if (done0 && done1 && done2) {
       break; /* done! */
     }
+    WAIT1_WaitOSms(1); /* give back some time */
   }
+  TMOUT1_LeaveCounter(handle);
   WAIT1_Waitus(50); /* latch, low for at least 50 us (40x1.25us) */
 
   /* disable DMA-Muxing: necessary, otherwise DMA events on TPM0 channel 0 might be still latched.
@@ -304,17 +306,14 @@ static uint8_t Transfer(uint32_t dataAddress, size_t nofBytes) {
   DMAMUX_PDD_EnableChannel(DMAMUX0_BASE_PTR, 0, PDD_DISABLE);
   DMAMUX_PDD_EnableChannel(DMAMUX0_BASE_PTR, 1, PDD_DISABLE);
   DMAMUX_PDD_EnableChannel(DMAMUX0_BASE_PTR, 2, PDD_DISABLE);
-#if 1
+  /* disable peripheral DMA */
   TPM_PDD_WriteStatusControlReg(TPM0_DEVICE,TPM_PDD_ReadStatusControlReg(TPM0_DEVICE)&(~TPM_SC_DMA_MASK));
   TPM_PDD_DisableChannelDma(TPM0_DEVICE, 1);
   TPM_PDD_DisableChannelDma(TPM0_DEVICE, 0);
-#endif
 
-  StopTimer();
+  StopTimer(); /* stop TPM */
 
   Bit2_ClrVal(); /* toggle pin for debugging purpose */
-
-  TMOUT1_LeaveCounter(handle);
 
   if (isTimeout) {
     return ERR_BUSY;

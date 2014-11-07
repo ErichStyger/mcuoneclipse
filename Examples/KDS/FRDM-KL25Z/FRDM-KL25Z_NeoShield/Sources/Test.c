@@ -15,15 +15,20 @@
 #include "TPM0.h"
 #include "Bit2.h"
 #include "NeoPixel.h"
+#include "NeoLine.h"
 
-static int transferCntr = 50;
+//static int transferCntr = 50;
 static portTASK_FUNCTION(TaskT0, pvParameters) {
+  int i;
+
   (void)pvParameters; /* not used */
   for(;;) {
-    if (transferCntr>0) {
-      NEO_TransferPixels();
-      transferCntr--;
-    }
+    NEOL_PixelTrail(0xff, 0x00, 0x00, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10);
+    NEOL_PixelTrail(0xff, 0xff, 0x00, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10);
+    NEOL_PixelTrail(0x00, 0xff, 0x00, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10);
+    NEOL_PixelTrail(0x00, 0xff, 0xff, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10);
+    NEOL_PixelTrail(0x00, 0x00, 0xff, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10);
+    NEOL_PixelTrail(0xff, 0x00, 0xff, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10);
     FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
   } /* for */
 }
