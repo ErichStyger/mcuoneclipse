@@ -184,24 +184,26 @@ static void InitTransmitBuf(void) {
 }
 
 static void InitTimer(void) {
-  TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_SYSTEM); /* enable timer so I can reset the value below */
+  TPM_PDD_WriteStatusControlReg(TPM0_DEVICE, 0); /* init timer */
   TPM_PDD_InitializeCounter(TPM0_DEVICE); /* reset timer counter */
-  TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_DISABLED); /* disable timer */
-  TPM_PDD_WriteModuloReg(TPM0_DEVICE, 3*18);
-  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 0, 18);
-  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 1, 36);
+  TPM_PDD_WriteModuloReg(TPM0_DEVICE, 2*(3*18));
+  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 0, 2*18);
+  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 1, 2*36);
+  //TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_SYSTEM); /* enable timer so I can reset the value below */
 }
 
 static void StartTimer(void) {
+  TPM_PDD_InitializeCounter(TPM0_DEVICE); /* reset timer counter */
   TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_SYSTEM); /* enable timer so I can reset the value below */
 }
 
 static void StopTimer(void) {
+  /* set CMOD of SC register to zero to disable timer */
+  //TPM_PDD_InitializeCounter(TPM0_DEVICE); /* reset timer counter */
   TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_DISABLED); /* disable timer */
 }
 
 static void InitDMA(void) {
-  InitTransmitBuf();
   InitTimer(); /* timer setup */
 
   /* initialize PORT C as output */
@@ -252,6 +254,16 @@ static uint8_t Transfer(uint32_t dataAddress, size_t nofBytes) {
   bool isTimeout;
   uint32_t done0, done1, done2;
 
+#if 0 /* init timer */
+  //InitTimer();
+//  TPM_PDD_ClearChannelFlags(TPM0_DEVICE, 0xff);
+//  TPM_PDD_ClearChannelFlags(TPM0_DEVICE, 0x1);
+//  TPM_PDD_ClearChannelFlags(TPM0_DEVICE, 0x2);
+  TPM_PDD_DisableChannelDma(TPM0_DEVICE, 0);
+  TPM_PDD_ClearChannelFlags(TPM0_DEVICE, 0x0);
+  TPM_PDD_ClearOverflowInterruptFlag(TPM0_DEVICE);
+#endif
+
 #if 1
   DMA_PDD_ClearDoneFlag(DMA_BASE_PTR, DMA_PDD_CHANNEL_0);
   DMA_PDD_ClearDoneFlag(DMA_BASE_PTR, DMA_PDD_CHANNEL_1);
@@ -266,13 +278,31 @@ static uint8_t Transfer(uint32_t dataAddress, size_t nofBytes) {
   DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, nofBytes); /* set number of bytes to transfer */
   DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, nofBytes); /* set number of bytes to transfer */
 
-  Bit2_SetVal(); /* toggle pin for debugging purpose */
+  //DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, (uint32_t)&GPIOC_PCOR); /* set destination address: address of PTC Output register */
+#if 0
+  TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_SYSTEM); /* enable timer so I can reset the value below */
+  TPM_PDD_InitializeCounter(TPM0_DEVICE); /* reset timer counter */
+  TPM_PDD_ReadCounterReg(TPM0_DEVICE); /* read value to latch it */
+  TPM_PDD_ReadCounterReg(TPM0_DEVICE); /* read value to latch it */
+  TPM_PDD_ReadCounterReg(TPM0_DEVICE); /* read value to latch it */
+  TPM_PDD_ReadCounterReg(TPM0_DEVICE); /* read value to latch it */
+  TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_DISABLED); /* disable timer */
+#endif
+  TPM_PDD_ClearChannelFlags(TPM0_DEVICE, 0x00);
 
-  DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_ENABLE); /* enable request from peripheral */
-  DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* enable request from peripheral */
   DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, PDD_ENABLE); /* enable request from peripheral */
+  DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* enable request from peripheral */
+  DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_ENABLE); /* enable request from peripheral */
 
+  //WAIT1_Waitus(20); /* latch, low for at least 50 us (40x1.25us) */
+
+  TPM_PDD_ClearChannelFlags(TPM0_DEVICE, 0x00);
+  TPM_PDD_WriteStatusControlReg(TPM0_DEVICE,TPM_PDD_ReadStatusControlReg(TPM0_DEVICE)|TPM_SC_DMA_MASK);
+  TPM_PDD_EnableChannelDma(TPM0_DEVICE, 1);
+  TPM_PDD_EnableChannelDma(TPM0_DEVICE, 0);
   StartTimer();
+  Bit2_SetVal(); /* toggle pin for debugging purpose */
+//  DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, (uint32_t)&GPIOC_PSOR); /* set destination address: address of PTC Output register */
 
   isTimeout = FALSE;
   handle = TMOUT1_GetCounter(100/TMOUT1_TICK_PERIOD_MS);
@@ -289,10 +319,26 @@ static uint8_t Transfer(uint32_t dataAddress, size_t nofBytes) {
       break; /* done! */
     }
   }
-  StopTimer();
-  TMOUT1_LeaveCounter(handle);
   WAIT1_Waitus(50); /* latch, low for at least 50 us (40x1.25us) */
+
+  TPM_PDD_WriteStatusControlReg(TPM0_DEVICE,TPM_PDD_ReadStatusControlReg(TPM0_DEVICE)&(~TPM_SC_DMA_MASK));
+  TPM_PDD_DisableChannelDma(TPM0_DEVICE, 1);
+  TPM_PDD_DisableChannelDma(TPM0_DEVICE, 0);
+  //TPM_PDD_InitializeCounter(TPM0_DEVICE); /* reset timer counter */
+  StopTimer();
   Bit2_ClrVal(); /* toggle pin for debugging purpose */
+#if 0
+  TPM_PDD_DisableChannelDma(TPM0_DEVICE, 0);
+  TPM_PDD_DisableChannelDma(TPM0_DEVICE, 1);
+  TPM_PDD_ClearChannelInterruptFlag(TPM0_DEVICE,0);
+  TPM_PDD_ClearChannelInterruptFlag(TPM0_DEVICE,1);
+  TPM_PDD_ClearOverflowInterruptFlag(TPM0_DEVICE);
+
+  TPM_PDD_EnableChannelDma(TPM0_DEVICE, 0);
+  TPM_PDD_EnableChannelDma(TPM0_DEVICE, 1);
+#endif
+  //GPIO_PDD_SetPortDataOutput(PTC_DEVICE, 0x00); /* pull lines low for latching */
+  TMOUT1_LeaveCounter(handle);
 
   if (isTimeout) {
     return ERR_BUSY;
@@ -305,5 +351,6 @@ uint8_t NEO_TransferPixels(void) {
 }
 
 void NEO_Init(void) {
+  InitTransmitBuf();
   InitDMA();
 }

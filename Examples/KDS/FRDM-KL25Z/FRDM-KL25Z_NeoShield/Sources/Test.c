@@ -167,12 +167,14 @@ static void InitDMA(void) {
 #endif
 }
 
+static int transferCntr = 10;
 static portTASK_FUNCTION(TaskT0, pvParameters) {
   (void)pvParameters; /* not used */
-  //DataValue = 0xff;
   for(;;) {
-    //Transfer((uint32_t)&DataValue[0], 4 /*sizeof(DataValue)*/);
-    NEO_TransferPixels();
+    if (transferCntr>0) {
+      NEO_TransferPixels();
+      transferCntr--;
+    }
     FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
   } /* for */
 }
@@ -210,7 +212,7 @@ void Test(void) {
   GPIO_PDD_SetPortDataOutput(PTC_DEVICE, 0xff);
   GPIO_PDD_SetPortDataOutput(PTC_DEVICE, 0x00);
 #endif
-  if (FRTOS1_xTaskCreate(TaskT0, "T0", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
+  if (FRTOS1_xTaskCreate(TaskT0, "T0", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+3, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 

@@ -3,8 +3,8 @@
   <Header>
     <Name>FRDM-KL25Z_NeoShield</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>98</ModificationStamp>
-    <Date>2014-11-04</Date>
+    <ModificationStamp>103</ModificationStamp>
+    <Date>2014-11-06</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.10.0.RT6_b1433-0202</PEversion>
   </Header>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>113</ProjectCompNumb>
+    <ProjectCompNumb>116</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -6990,7 +6990,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.048</BeanVersion>
+    <BeanVersion>01.049</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -11512,8 +11512,6 @@
               <List lines_count="0" />
               <UnitText>ms</UnitText>
               <MinCounterTicks>0</MinCounterTicks>
-              <ControlledTimingCfgFromPropertySymbol>PeriodTmg</ControlledTimingCfgFromPropertySymbol>
-              <ControlledTimingCfgFromComponentRef>InheritedComponent</ControlledTimingCfgFromComponentRef>
             </ItemState>
             <ItemState>
               <ItemSymbol>InitDuty</ItemSymbol>
@@ -11553,8 +11551,6 @@
               <List lines_count="0" />
               <UnitText>ms</UnitText>
               <MinCounterTicks>0</MinCounterTicks>
-              <ControlledTimingCfgFromPropertySymbol>DutyTmg</ControlledTimingCfgFromPropertySymbol>
-              <ControlledTimingCfgFromComponentRef>InheritedComponent</ControlledTimingCfgFromComponentRef>
             </ItemState>
             <ItemState>
               <ItemSymbol>HC08grp</ItemSymbol>
@@ -13673,8 +13669,6 @@
               <List lines_count="0" />
               <UnitText>ms</UnitText>
               <MinCounterTicks>0</MinCounterTicks>
-              <ControlledTimingCfgFromPropertySymbol>PeriodTmg</ControlledTimingCfgFromPropertySymbol>
-              <ControlledTimingCfgFromComponentRef>InheritedComponent</ControlledTimingCfgFromComponentRef>
             </ItemState>
             <ItemState>
               <ItemSymbol>InitDuty</ItemSymbol>
@@ -13714,8 +13708,6 @@
               <List lines_count="0" />
               <UnitText>ms</UnitText>
               <MinCounterTicks>0</MinCounterTicks>
-              <ControlledTimingCfgFromPropertySymbol>DutyTmg</ControlledTimingCfgFromPropertySymbol>
-              <ControlledTimingCfgFromComponentRef>InheritedComponent</ControlledTimingCfgFromComponentRef>
             </ItemState>
             <ItemState>
               <ItemSymbol>HC08grp</ItemSymbol>
@@ -15834,8 +15826,6 @@
               <List lines_count="0" />
               <UnitText>ms</UnitText>
               <MinCounterTicks>0</MinCounterTicks>
-              <ControlledTimingCfgFromPropertySymbol>PeriodTmg</ControlledTimingCfgFromPropertySymbol>
-              <ControlledTimingCfgFromComponentRef>InheritedComponent</ControlledTimingCfgFromComponentRef>
             </ItemState>
             <ItemState>
               <ItemSymbol>InitDuty</ItemSymbol>
@@ -15875,8 +15865,6 @@
               <List lines_count="0" />
               <UnitText>ms</UnitText>
               <MinCounterTicks>0</MinCounterTicks>
-              <ControlledTimingCfgFromPropertySymbol>DutyTmg</ControlledTimingCfgFromPropertySymbol>
-              <ControlledTimingCfgFromComponentRef>InheritedComponent</ControlledTimingCfgFromComponentRef>
             </ItemState>
             <ItemState>
               <ItemSymbol>HC08grp</ItemSymbol>
@@ -27206,8 +27194,8 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typeDMAChanEn</TypeSpecNameState>
-        <Index>0</Index>
-        <EnumSymbVal>enabled</EnumSymbVal>
+        <Index>1</Index>
+        <EnumSymbVal>disabled</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>ChannelGrp1FeatureCondGroup</ItemSymbol>
@@ -27317,8 +27305,8 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typeDMAChanEn</TypeSpecNameState>
-        <Index>0</Index>
-        <EnumSymbVal>enabled</EnumSymbVal>
+        <Index>1</Index>
+        <EnumSymbVal>disabled</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>ChannelGrp2FeatureCondGroup</ItemSymbol>
@@ -27898,8 +27886,8 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typeDMAOverflowEn</TypeSpecNameState>
-        <Index>0</Index>
-        <EnumSymbVal>enabled</EnumSymbVal>
+        <Index>1</Index>
+        <EnumSymbVal>disabled</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>IntOverflowEn</ItemSymbol>
