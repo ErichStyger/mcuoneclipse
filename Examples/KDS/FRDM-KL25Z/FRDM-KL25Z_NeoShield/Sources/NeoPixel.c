@@ -187,10 +187,9 @@ static void InitTransmitBuf(void) {
 static void InitTimer(void) {
   TPM_PDD_WriteStatusControlReg(TPM0_DEVICE, 0); /* init timer */
   TPM_PDD_InitializeCounter(TPM0_DEVICE); /* reset timer counter */
-  TPM_PDD_WriteModuloReg(TPM0_DEVICE, 2*(3*18));
-  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 0, 2*18);
-  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 1, 2*36);
-  //TPM_PDD_SelectPrescalerSource(TPM0_DEVICE, TPM_PDD_SYSTEM); /* enable timer so I can reset the value below */
+  TPM_PDD_WriteModuloReg(TPM0_DEVICE, (3*18));
+  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 0, 18);
+  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 1, 36);
 }
 
 static void StartTimer(void) {
@@ -240,12 +239,6 @@ static void InitDMA(void) {
   DMA_PDD_EnableRequestAutoDisable(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_ENABLE); /* disable DMA request at the end of the sequence */
   DMA_PDD_EnableRequestAutoDisable(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* disable DMA request at the end of the sequence */
   DMA_PDD_EnableRequestAutoDisable(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, PDD_ENABLE); /* disable DMA request at the end of the sequence */
-
-#if 1
-  DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_ENABLE); /* enable request from peripheral */
-  DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* enable request from peripheral */
-  DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, PDD_ENABLE); /* enable request from peripheral */
-#endif
 }
 
 static uint8_t Transfer(uint32_t dataAddress, size_t nofBytes) {
@@ -254,42 +247,38 @@ static uint8_t Transfer(uint32_t dataAddress, size_t nofBytes) {
   bool isTimeout;
   uint32_t done0, done1, done2;
 
-#if 1
+  /* clear any pending done flags for DMA channels */
   DMA_PDD_ClearDoneFlag(DMA_BASE_PTR, DMA_PDD_CHANNEL_0);
   DMA_PDD_ClearDoneFlag(DMA_BASE_PTR, DMA_PDD_CHANNEL_1);
   DMA_PDD_ClearDoneFlag(DMA_BASE_PTR, DMA_PDD_CHANNEL_2);
-#endif
-
+  /* set DMA source addresses */
   DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, (uint32_t)&OneValue); /* set source address */
   DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, dataAddress); /* set source address */
   DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, (uint32_t)&OneValue); /* set source address */
-
+  /* set byte count addresses */
   DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, nofBytes); /* set number of bytes to transfer */
   DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, nofBytes); /* set number of bytes to transfer */
   DMA_PDD_SetByteCount(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, nofBytes); /* set number of bytes to transfer */
-
+  /* reset TPM counter */
   TPM_PDD_InitializeCounter(TPM0_DEVICE); /* reset timer counter */
-  //TPM_PDD_ReadCounterReg(TPM0_DEVICE); /* read value to latch it */
   TPM_PDD_ClearChannelFlags(TPM0_DEVICE, 0x00);
   TPM_PDD_ClearOverflowInterruptFlag(TPM0_DEVICE);
-#if 0
-  TPM_PDD_InitializeCounter(TPM0_DEVICE); /* reset timer counter */
-  TPM_PDD_WriteModuloReg(TPM0_DEVICE, 2*(3*18));
-  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 0, 2*18);
-  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 1, 2*36);
-#endif
+  /* re-enable DMA Muxing: it will disabled at the end of the transfer */
   DMAMUX_PDD_EnableChannel(DMAMUX0_BASE_PTR, 0, PDD_ENABLE);
   DMAMUX_PDD_EnableChannel(DMAMUX0_BASE_PTR, 1, PDD_ENABLE);
   DMAMUX_PDD_EnableChannel(DMAMUX0_BASE_PTR, 2, PDD_ENABLE);
-
+  /* enable DMA peripheral requests */
   DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, PDD_ENABLE); /* enable request from peripheral */
   DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* enable request from peripheral */
   DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_ENABLE); /* enable request from peripheral */
-
+  /* clear timer flags and status so it starts from a clean starting point */
   TPM_PDD_ClearChannelFlags(TPM0_DEVICE, 0x00);
+  TPM_PDD_ClearOverflowInterruptFlag(TPM0_DEVICE);
+  /* enable TPM DMA */
   TPM_PDD_WriteStatusControlReg(TPM0_DEVICE,TPM_PDD_ReadStatusControlReg(TPM0_DEVICE)|TPM_SC_DMA_MASK);
   TPM_PDD_EnableChannelDma(TPM0_DEVICE, 1);
   TPM_PDD_EnableChannelDma(TPM0_DEVICE, 0);
+  /* start the TPM timer */
   StartTimer();
   Bit2_SetVal(); /* toggle pin for debugging purpose */
 
@@ -309,11 +298,9 @@ static uint8_t Transfer(uint32_t dataAddress, size_t nofBytes) {
     }
   }
   WAIT1_Waitus(50); /* latch, low for at least 50 us (40x1.25us) */
-#if 0
-  DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, PDD_DISABLE); /* disable request from peripheral */
-  DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_DISABLE); /* disable request from peripheral */
-  DMA_PDD_EnablePeripheralRequest(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_DISABLE); /* disable request from peripheral */
-#endif
+
+  /* disable DMA-Muxing: necessary, otherwise DMA events on TPM0 channel 0 might be still latched.
+   * Will enable muxing for next transfer */
   DMAMUX_PDD_EnableChannel(DMAMUX0_BASE_PTR, 0, PDD_DISABLE);
   DMAMUX_PDD_EnableChannel(DMAMUX0_BASE_PTR, 1, PDD_DISABLE);
   DMAMUX_PDD_EnableChannel(DMAMUX0_BASE_PTR, 2, PDD_DISABLE);
@@ -322,14 +309,7 @@ static uint8_t Transfer(uint32_t dataAddress, size_t nofBytes) {
   TPM_PDD_DisableChannelDma(TPM0_DEVICE, 1);
   TPM_PDD_DisableChannelDma(TPM0_DEVICE, 0);
 #endif
-#if 0
-  TPM_PDD_InitializeCounter(TPM0_DEVICE); /* reset timer counter */
-  TPM_PDD_WriteModuloReg(TPM0_DEVICE, 0x8000);
-  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 0, 0x2000);
-  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 1, 0x3000);
-  TPM_PDD_ClearChannelFlags(TPM0_DEVICE, 0x00);
-  TPM_PDD_ClearOverflowInterruptFlag(TPM0_DEVICE);
-#endif
+
   StopTimer();
 
   Bit2_ClrVal(); /* toggle pin for debugging purpose */
