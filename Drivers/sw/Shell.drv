@@ -703,7 +703,7 @@ bool %'ModuleName'%.%ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, %
       if (c=='\0') { /* nothing in rx buffer? Something is wrong... */
         break; /* get out of loop */
       }
-      if (c== '\b') {                                            %>40/* check for backspace */
+      if (c=='\b') {                                             %>40/* check for backspace */
         if (buf > bufStart) {                                    %>40/* Avoid buffer underflow */
 %if %EchoEnabled='yes'
            io->stdOut('\b');                                     %>40/* delete character on terminal */
@@ -717,15 +717,15 @@ bool %'ModuleName'%.%ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, %
         }
       } else {
 %if %EchoEnabled='yes'
-        io->stdOut(c);                                             %>40/* echo character */
+        io->stdOut(c);                                           %>40/* echo character */
 %endif
-        *buf = (uint8_t)c;                                         %>40/* append character to the string */
+        *buf = (uint8_t)c;                                       %>40/* append character to the string */
         buf++;
         bufSize--;
         if ((c=='\r') || (c=='\n')) {
           break;
         }
-        if (bufSize <= 1) {                                        %>40/* buffer full */
+        if (bufSize <= 1) {                                      %>40/* buffer full */
           break;
         }
       }

@@ -4,7 +4,7 @@
     <Name>Shell</Name>
     <Description>Command Line Shell</Description>
     <Author>Erich Styger</Author>
-    <Version>01.049</Version>
+    <Version>01.050</Version>
     <Icon>Shell</Icon>
     <TypesFiles>PE,Shell\Shell</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -787,7 +787,13 @@
         <InDefinition>true</InDefinition>
         <ReturnType>Boolean</ReturnType>
         <RetHint>Error code</RetHint>
-        <ParamCount>3</ParamCount>
+        <ParamCount>4</ParamCount>
+        <Parameter>
+          <ParName>bufStart</ParName>
+          <ParType>uint8_t</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to start of buffer</ParHint>
+        </Parameter>
         <Parameter>
           <ParName>buf</ParName>
           <ParType>uint8_t</ParType>
@@ -809,7 +815,7 @@
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>bool #M#_#C#(uint8_t *buf, size_t bufSize, %'ModuleName'_ConstStdIOType *io)</ANSIC>
+          <ANSIC>bool #M#_#C#(uint8_t *bufStart, uint8_t *buf, size_t bufSize, %'ModuleName'_ConstStdIOType *io)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

@@ -332,8 +332,9 @@ LI.EXP {
  - Reads a line from stdIn and returns TRUE if we have a line, FALSE otherwise.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> bool ReadLine(uint8_t *buf, size_t bufSize, <i>ComponentName_</i>ConstStdIOType *io)<br />
+<br /><i>ANSIC prototype:</i> bool ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, <i>ComponentName_</i>ConstStdIOType *io)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
+<li><i>bufStart: Pointer to uint8_t</i> - Pointer to start of buffer</li>
 <li><i>buf: Pointer to uint8_t</i> - Pointer to buffer where to read in the information</li>
 <li><i>bufSize:uint16_t</i> - size of buffer</li>
 <li><i>io: Pointer to <i>ComponentName_</i>ConstStdIOType</i> - Pointer to I/O callbacks</li>
