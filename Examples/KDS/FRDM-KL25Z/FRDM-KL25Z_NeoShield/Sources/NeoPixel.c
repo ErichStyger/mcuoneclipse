@@ -15,17 +15,16 @@
 #include "WAIT1.h"
 
 /* 48 MHz, WS2812(S) */
-#define TICKS_PERIOD  59  /* 1.25 us  (need: 1.25 us)*/
+#define TPM_CH0_TICKS 18  /* 0.4 us */
+#define TPM_CH1_TICKS 36  /* 0.8 us */
+#define TPM_OVL_TICKS 54  /* 1.25 us  */
 #define VAL0          0  /* 0 Bit: 0.396 us (need: 0.4 us low) */
 #define VAL1          1  /* 1 Bit: 0.792 us (need: 0.8 us high */
-#define VAL00         0   /* data line low value, e.g. for reset/latch */
 
-#define NEO_NOF_PRE         0 /* somehow needs trailing values? */
 #define NEO_NOF_BITS_PIXEL  24  /* 24 bits for pixel */
-#define NEO_NOF_POST        0  /* latch, low for at least 50 us (40x1.25us) */
 #define NEO_DMA_NOF_BYTES   sizeof(transmitBuf)
 
-static uint8_t transmitBuf[NEO_NOF_PRE+(NEO_NOF_PIXEL*NEO_NOF_BITS_PIXEL)+NEO_NOF_POST];
+static uint8_t transmitBuf[NEO_NOF_PIXEL*NEO_NOF_BITS_PIXEL];
 
 /* sets the color of an individual pixel */
 uint8_t NEO_SetPixelRGB(NEO_PixelIdxT pixelNo, uint8_t red, uint8_t green, uint8_t blue) {
@@ -35,7 +34,7 @@ uint8_t NEO_SetPixelRGB(NEO_PixelIdxT pixelNo, uint8_t red, uint8_t green, uint8
   if (pixelNo>=NEO_NOF_PIXEL) {
     return ERR_RANGE; /* error, out of range */
   }
-  idx = NEO_NOF_PRE+(pixelNo*NEO_NOF_BITS_PIXEL);
+  idx = pixelNo*NEO_NOF_BITS_PIXEL;
   /* green */
   for(i=0;i<8;i++) {
     if (green&0x80) {
@@ -79,7 +78,7 @@ uint8_t NEO_GetPixelRGB(NEO_PixelIdxT pixelNo, uint8_t *redP, uint8_t *greenP, u
     return ERR_RANGE; /* error, out of range */
   }
   red = green = blue = 0;
-  idx = NEO_NOF_PRE+(pixelNo*NEO_NOF_BITS_PIXEL);
+  idx = pixelNo*NEO_NOF_BITS_PIXEL;
   /* green */
   for(i=0;i<8;i++) {
     green <<= 1;
@@ -173,23 +172,15 @@ uint8_t NEO_ClearAllPixel(void) {
 }
 
 static void InitTransmitBuf(void) {
-  uint32_t i;
-
-  for(i=0;i<NEO_NOF_PRE;i++) {
-    transmitBuf[i] = 0; /* pre sequence */
-  }
   NEO_ClearAllPixel();
-  for(i=NEO_NOF_PRE+(NEO_NOF_PIXEL*NEO_NOF_BITS_PIXEL);i<sizeof(transmitBuf)/sizeof(transmitBuf[0]);i++) {
-    transmitBuf[i] = 0; /* post sequence */
-  }
 }
 
 static void InitTimer(void) {
-  TPM_PDD_WriteStatusControlReg(TPM0_DEVICE, 0); /* init timer */
+  TPM_PDD_WriteStatusControlReg(TPM0_DEVICE, 0); /* init timer status and control register */
   TPM_PDD_InitializeCounter(TPM0_DEVICE); /* reset timer counter */
-  TPM_PDD_WriteModuloReg(TPM0_DEVICE, (3*18));
-  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 0, 18);
-  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 1, 36);
+  TPM_PDD_WriteModuloReg(TPM0_DEVICE, TPM_OVL_TICKS); /* set overflow to 1.25 us */
+  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 0, TPM_CH0_TICKS); /* channel 0 match at 0.4 us */
+  TPM_PDD_WriteChannelValueReg(TPM0_DEVICE, 1, TPM_CH1_TICKS); /* channel 1 match at 0.8 us */
 }
 
 static void StartTimer(void) {
@@ -204,38 +195,41 @@ static void StopTimer(void) {
 
 static void InitDMA(void) {
   InitTimer(); /* timer setup */
-
-  /* initialize PORT C as output */
-  //GPIO_PDD_SetPortOutputDirectionMask(PTC_DEVICE, 0xff); /* PTC0..PTC7 as output */
-
+  /* setup address modulo: we are not using it as we stream out the data once and then latch it */
   DMA_PDD_SetSourceAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* circular buffer */
   DMA_PDD_SetSourceAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* circular buffer */
   DMA_PDD_SetSourceAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* circular buffer */
-
+  /* the 'set all bits' and 'clear all bits' DMA events will use a single value, so no address increment.
+   * But for the data we will increment the source address counter
+   */
   DMA_PDD_EnableSourceAddressIncrement(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_DISABLE); /* source address incremented by transfer size */
   DMA_PDD_EnableSourceAddressIncrement(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* source address incremented by transfer size */
   DMA_PDD_EnableSourceAddressIncrement(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, PDD_DISABLE); /* source address incremented by transfer size */
-
+  /* we transfer one byte every time */
   DMA_PDD_SetSourceDataTransferSize(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_8_BIT); /* Transfer size from source is 8bit */
   DMA_PDD_SetSourceDataTransferSize(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, DMA_PDD_8_BIT); /* Transfer size from source is 8bit */
   DMA_PDD_SetSourceDataTransferSize(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, DMA_PDD_8_BIT); /* Transfer size from source is 8bit */
-
-  /* destination settings */
-  /* GPIOC_PDOR Data Out */
-  /* GPIOC_PTOR Data Toggle */
+  /* set up destination address:
+   * PSOR (Port Set Output Register) will use 0xff to set the bits
+   * PDOR (Port Data Output Register) will use the data
+   * PDCR (Port Data Clear Register) will use 0xff to clear the bits
+   */
   DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, (uint32_t)&GPIOC_PSOR); /* set destination address: address of PTC Output register */
   DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, (uint32_t)&GPIOC_PDOR); /* set destination address: address of PTC Output register */
   DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, (uint32_t)&GPIOC_PCOR); /* set destination address: address of PTC Output register */
+  /* no destination address buffer module: we will stream data only once */
   DMA_PDD_SetDestinationAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* no circular buffer */
   DMA_PDD_SetDestinationAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* no circular buffer */
   DMA_PDD_SetDestinationAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* no circular buffer */
+  /* no destination address increments needed */
   DMA_PDD_EnableDestinationAddressIncrement(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_DISABLE); /* no auto-increment for destination address */
   DMA_PDD_EnableDestinationAddressIncrement(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_DISABLE); /* no auto-increment for destination address */
   DMA_PDD_EnableDestinationAddressIncrement(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, PDD_DISABLE); /* no auto-increment for destination address */
+  /* we are transferring 1 byte of data */
   DMA_PDD_SetDestinationDataTransferSize(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_8_BIT); /* Transfer to destination size is 16bit */
   DMA_PDD_SetDestinationDataTransferSize(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, DMA_PDD_8_BIT); /* Transfer to destination size is 16bit */
   DMA_PDD_SetDestinationDataTransferSize(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, DMA_PDD_8_BIT); /* Transfer to destination size is 16bit */
-
+  /* at the and of the DMA sequence, disable DMA */
   DMA_PDD_EnableRequestAutoDisable(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, PDD_ENABLE); /* disable DMA request at the end of the sequence */
   DMA_PDD_EnableRequestAutoDisable(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, PDD_ENABLE); /* disable DMA request at the end of the sequence */
   DMA_PDD_EnableRequestAutoDisable(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, PDD_ENABLE); /* disable DMA request at the end of the sequence */
@@ -280,7 +274,6 @@ static uint8_t Transfer(uint32_t dataAddress, size_t nofBytes) {
   TPM_PDD_EnableChannelDma(TPM0_DEVICE, 0);
   /* start the TPM timer */
   StartTimer();
-  Bit2_SetVal(); /* toggle pin for debugging purpose */
 
   isTimeout = FALSE;
   handle = TMOUT1_GetCounter(100/TMOUT1_TICK_PERIOD_MS);
@@ -312,8 +305,6 @@ static uint8_t Transfer(uint32_t dataAddress, size_t nofBytes) {
   TPM_PDD_DisableChannelDma(TPM0_DEVICE, 0);
 
   StopTimer(); /* stop TPM */
-
-  Bit2_ClrVal(); /* toggle pin for debugging purpose */
 
   if (isTimeout) {
     return ERR_BUSY;

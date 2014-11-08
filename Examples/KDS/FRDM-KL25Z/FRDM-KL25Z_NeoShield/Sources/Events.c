@@ -36,7 +36,6 @@ extern "C" {
 
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
-#include "Test.h"
 /*
 ** ===================================================================
 **     Event       :  Cpu_OnNMIINT (module Events)

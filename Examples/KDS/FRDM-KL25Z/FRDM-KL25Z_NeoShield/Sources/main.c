@@ -56,8 +56,14 @@
 #include "DMACH0.h"
 #include "DMACH1.h"
 #include "DMACH2.h"
-#include "Bit2.h"
-#include "BitIoLdd5.h"
+#include "RNET1.h"
+#include "RF1.h"
+#include "CE1.h"
+#include "BitIoLdd6.h"
+#include "CSN1.h"
+#include "BitIoLdd7.h"
+#include "IRQ1.h"
+#include "ExtIntLdd1.h"
 #include "SM1.h"
 #include "SMasterLdd1.h"
 #include "TmDt1.h"
@@ -69,7 +75,6 @@
 #include "IO_Map.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Application.h"
-#include "Test.h"
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -81,7 +86,6 @@ int main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
-  Test();
   APP_Run();
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/

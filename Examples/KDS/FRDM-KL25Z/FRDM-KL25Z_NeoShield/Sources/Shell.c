@@ -14,6 +14,7 @@
 #include "LED3.h"
 #include "I2CSPY1.h"
 #include "RTC1.h"
+#include "RNET1.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -26,6 +27,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if RTC1_PARSE_COMMAND_ENABLED
   RTC1_ParseCommand,
+#endif
+#if RNET1_PARSE_COMMAND_ENABLED
+  RNET1_ParseCommand,
 #endif
   NULL /* sentinel */
 };
