@@ -10,7 +10,7 @@
 #include "gpio1.h" /* General purpose I/O pins */
 #include "FreeRTOS.h" /* FreeRTOS interface */
 
-#define USE_SDK_RTOS  1 /* Using the SDK RTOS API or not. If set to 1, define FSL_RTOS_FREE_RTOS in the compiler preprocessor settings */
+#define USE_SDK_RTOS  0 /* Using the SDK RTOS API or not. If set to 1, define FSL_RTOS_FREE_RTOS in the compiler preprocessor settings */
 /*--------------------------------------------------------------------------*/
 #if USE_SDK_RTOS
 /* Kinetis SDK Task variables and defines */
