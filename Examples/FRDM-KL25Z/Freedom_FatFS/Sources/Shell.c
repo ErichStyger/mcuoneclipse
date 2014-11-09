@@ -15,6 +15,7 @@
 #include "FAT1.h"
 #include "SD_RedLed.h"
 #include "SD_GreenLed.h"
+#include "TmDt1.h"
 
 #define PL_HAS_SD_CARD  1 /* if we have SD card support */
 
@@ -35,6 +36,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if RTC1_PARSE_COMMAND_ENABLED
   RTC1_ParseCommand,
+#endif
+#if TmDt1_PARSE_COMMAND_ENABLED
+  TmDt1_ParseCommand,
 #endif
 #if FAT1_PARSE_COMMAND_ENABLED
   FAT1_ParseCommand,
@@ -58,7 +62,7 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
   for(;;) {
 #if PL_HAS_SD_CARD
     (void)FAT1_CheckCardPresence(&cardMounted,
-        0 /* drive */, &fileSystemObject, CLS1_GetStdio());
+        (unsigned char*)"0", &fileSystemObject, CLS1_GetStdio());
     if (cardMounted) {
       SD_GreenLed_On();
       SD_RedLed_Off();
