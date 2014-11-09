@@ -3,10 +3,10 @@
   <Header>
     <Name>FRDM-K64F_BlinkLed_Keil</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>12</ModificationStamp>
-    <Date>2014-10-14</Date>
+    <ModificationStamp>15</ModificationStamp>
+    <Date>2014-11-09</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion>1.9.0.RT6_b1411-0502</PEversion>
+    <PEversion>1.10.0.RT6_b1428-0121</PEversion>
   </Header>
   <Options>
     <ProjectMainModule>main</ProjectMainModule>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>23</ProjectCompNumb>
+    <ProjectCompNumb>28</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -3878,7 +3878,7 @@
       <Count>0</Count>
     </BoolList_FpgaConfig>
     <BoolList_BeanConfig>
-      <Count>7</Count>
+      <Count>8</Count>
       <ItemId0>5</ItemId0>
       <Value0>true</Value0>
       <ItemId1>4</ItemId1>
@@ -3893,6 +3893,8 @@
       <Value5>true</Value5>
       <ItemId6>20</ItemId6>
       <Value6>true</Value6>
+      <ItemId7>27</ItemId7>
+      <Value7>true</Value7>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
       <Count>0</Count>
@@ -19359,6 +19361,41 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>WaitOSms</UsrMethodName>
+      </ItemState>
+    </Methods>
+    <Events />
+  </Bean>
+  <Bean>
+    <BeanType>HardFault</BeanType>
+    <Name>HF1</Name>
+    <CompNumb>27</CompNumb>
+    <CompEnabled>true</CompEnabled>
+    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
+    <IconName>CPU_CHIP2</IconName>
+    <UserFolderName />
+    <Comment lines_count="0" />
+    <Template />
+    <BeanVersion>01.008</BeanVersion>
+    <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Properties>
+      <ItemState>
+        <ItemSymbol>DeviceName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>HF1</Value>
+      </ItemState>
+    </Properties>
+    <Methods>
+      <ItemState>
+        <ItemSymbol>HardFaultHandler</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>HardFaultHandler</UsrMethodName>
       </ItemState>
     </Methods>
     <Events />
