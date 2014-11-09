@@ -7,10 +7,12 @@
 %;**     Description :
 %;**         Mount/unmount a logical drive
 %include Common\GeneralParameters.inc(27)
-%;**         vol%Parvol %>27 - logical drive number to be
-%;** %>29 mounted/unmounted
 %;**         fs%Parfs %>27 - pointer to the new file system object (NULL
 %;** %>29 for unmount)
+%;**       * path%Parpath %>27 - Logical drive number to be
+%;** %>29 mounted/unmounted
+%;**         opt%Paropt %>27 - options: 0:Do not mount (delayed mount), 1:
+%;** %>29 Mount immediately
 %;**     Returns     :
 %;**         ---%RetVal %>27 - Error code
 %include Common\GeneralDamage.inc

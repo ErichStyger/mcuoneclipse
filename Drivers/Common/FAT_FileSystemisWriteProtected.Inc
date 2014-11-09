@@ -7,7 +7,8 @@
 %;**     Description :
 %;**         Determines if the file system is write protected.
 %include Common\GeneralParameters.inc(27)
-%;**         drv%Pardrv %>27 - disk drive number
+%;**       * drvStr%PardrvStr %>27 - Pointer to drive string, e.g. "" or
+%;** %>29 "0"
 %;**     Returns     :
 %;**         ---%RetVal %>27 - TRUE if file system is write protected
 %include Common\GeneralDamage.inc

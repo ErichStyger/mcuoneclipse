@@ -318,10 +318,11 @@ LI.EXP {
  - Mount/unmount a logical drive
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> FRESULT mount(byte vol, FATFS *fs)<br />
+<br /><i>ANSIC prototype:</i> FRESULT mount(FATFS *fs, const TCHAR* path, byte opt)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>vol:byte</i> - logical drive number to be mounted/unmounted</li>
 <li><i>fs:byte</i> - pointer to the new file system object (NULL for unmount)</li>
+<li><i>path: Pointer to byte</i> - Logical drive number to be mounted/unmounted</li>
+<li><i>opt:byte</i> - options: 0:Do not mount (delayed mount), 1:Mount immediately</li>
 <li><i>Return value:FRESULT</i> - Error code
 </li>
 </ul><br />
@@ -370,9 +371,9 @@ LI.EXP {
  - Determines if the file system is write protected.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> bool isWriteProtected(byte drv)<br />
+<br /><i>ANSIC prototype:</i> bool isWriteProtected(byte *drvStr)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>drv:byte</i> - disk drive number</li>
+<li><i>drvStr: Pointer to byte</i> - Pointer to drive string, e.g. &quot;&quot; or &quot;0&quot;</li>
 <li><i>Return value:bool</i> - TRUE if file system is write protected
 </li>
 </ul><br />
@@ -382,9 +383,9 @@ LI.EXP {
  - Determines if the disk is present or not (e.g. disk inserted).
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> bool isDiskPresent(byte drv)<br />
+<br /><i>ANSIC prototype:</i> bool isDiskPresent(byte *drvStr)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>drv:byte</i> - Disk drive number</li>
+<li><i>drvStr: Pointer to byte</i> - drive string, &quot;&quot; or &quot;0&quot; or &quot;1&quot;</li>
 <li><i>Return value:bool</i> - TRUE if file system is write protected
 </li>
 </ul><br />
@@ -697,10 +698,10 @@ LI.EXP {
  - This method checks if card has been inserted or removed and mounts or unmounts the file system.
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte CheckCardPresence(bool *cardMounted, byte drive, FATFS *fileSystemObject, const %@Shell@'ModuleName'%.StdIOType *io)<br />
+<br /><i>ANSIC prototype:</i> byte CheckCardPresence(bool *cardMounted, byte *drive, FATFS *fileSystemObject, const %@Shell@'ModuleName'%.StdIOType *io)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>cardMounted: Pointer to bool</i> - Pointer to initialize this variable to FALSE on the caller side the first time.</li>
-<li><i>drive:byte</i> - drive number, pass 0 as default drive</li>
+<li><i>drive: Pointer to byte</i> - drive string, or &quot;&quot;</li>
 <li><i>fileSystemObject: Pointer to FATFS</i> - Pointer to file system object</li>
 <li><i>io:byte</i> - Pointer to io handler to be used. Can be NULL, then no messages are written.</li>
 <li><i>Return value:byte</i> - Error code
@@ -712,10 +713,10 @@ LI.EXP {
  - Mounts a file system
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte MountFileSystem(FATFS *fileSystemObject, byte logicalDrive, const %@Shell@'ModuleName'%.StdIOType *io)<br />
+<br /><i>ANSIC prototype:</i> byte MountFileSystem(FATFS *fileSystemObject, byte *logicalDrive, const %@Shell@'ModuleName'%.StdIOType *io)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
 <li><i>fileSystemObject: Pointer to FATFS</i> - Pointer to a file system object</li>
-<li><i>logicalDrive:byte</i> - The drive number to be used</li>
+<li><i>logicalDrive: Pointer to byte</i> - Pointer to the drive string, or &quot;&quot;</li>
 <li><i>io: Pointer to byte</i> - Pointer to I/O handler</li>
 <li><i>Return value:byte</i> - Error code
 </li>
@@ -726,9 +727,9 @@ LI.EXP {
  - Mounts a file system
 <ul>
 <!---VER_SPEC #ANSIC#  DON'T CHANGE THIS LINE-->
-<br /><i>ANSIC prototype:</i> byte UnMountFileSystem(byte logicalDrive, const %@Shell@'ModuleName'%.StdIOType *io)<br />
+<br /><i>ANSIC prototype:</i> byte UnMountFileSystem(byte *logicalDrive, const %@Shell@'ModuleName'%.StdIOType *io)<br />
 <!---VER_SPEC_END  DON'T CHANGE THIS LINE-->
-<li><i>logicalDrive:byte</i> - The drive number to be used</li>
+<li><i>logicalDrive: Pointer to byte</i> - Pointer to the drive string, or &quot;&quot;</li>
 <li><i>io: Pointer to byte</i> - Pointer to I/O handler</li>
 <li><i>Return value:byte</i> - Error code
 </li>

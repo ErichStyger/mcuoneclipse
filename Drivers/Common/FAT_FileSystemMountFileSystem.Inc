@@ -9,8 +9,8 @@
 %include Common\GeneralParameters.inc(27)
 %;**       * fileSystemObject%ParfileSystemObject %>27 - Pointer to a
 %;** %>29 file system object
-%;**         logicalDrive%ParlogicalDrive %>27 - The drive number to be
-%;** %>29 used
+%;**       * logicalDrive%ParlogicalDrive %>27 - Pointer to the drive
+%;** %>29 string, or ""
 %;**       * io%Pario %>27 - Pointer to I/O handler
 %;**     Returns     :
 %;**         ---%RetVal %>27 - Error code

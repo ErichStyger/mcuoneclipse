@@ -1,12 +1,14 @@
 /*-----------------------------------------------------------------------*/
-/* Low level disk I/O module skeleton for FatFs     (C)ChaN, 2007        */
+/* Low level disk I/O module skeleton for FatFs     (C)ChaN, 2014        */
 /*-----------------------------------------------------------------------*/
-/* This is a stub disk I/O module that acts as front end of the existing */
-/* disk I/O modules and attach it to FatFs module with common interface. */
+/* If a working storage control module is available, it should be        */
+/* attached to the FatFs via a glue function rather than modifying it.   */
+/* This is an example of glue functions to attach various exsisting      */
+/* storage control modules to the FatFs module with a defined API.       */
 /*-----------------------------------------------------------------------*/
 
 #include "ff.h"
-#include "diskio.h"
+#include "diskio.h"		/* FatFs lower layer API */
 %for var from EventModules
 #include "%var.h"
 %endfor

@@ -4,7 +4,7 @@
     <Name>FAT_FileSystem</Name>
     <Description>FAT file system module</Description>
     <Author>ChaN, adopted by Erich Styger for Processor Expert</Author>
-    <Version>01.159</Version>
+    <Version>01.165</Version>
     <Icon>FAT_FileSystem</Icon>
     <TypesFiles>PE,FAT_FileSystem\FAT_FileSystem</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -496,6 +496,20 @@ You need to implement your own 'DWORD get_fattime (void)', see the implementatio
       </TBoolGrupItem>
     </Property>
     <Property>
+      <TInhrLinkItem>
+        <Name>Utility</Name>
+        <Symbol>Utility</Symbol>
+        <TypeSpec>FAT_FileSystem\Utility</TypeSpec>
+        <Hint>Interface to utility functions</Hint>
+        <ItemLevel>BASIC</ItemLevel>
+        <EditLine>false</EditLine>
+        <DefaultValue/>
+        <CanDelete>false</CanDelete>
+        <IconPopup>false</IconPopup>
+        <SortStyle/>
+      </TInhrLinkItem>
+    </Property>
+    <Property>
       <TBoolGrupItem>
         <Name>Shell</Name>
         <Symbol>ShellEnabled</Symbol>
@@ -505,7 +519,7 @@ You need to implement your own 'DWORD get_fattime (void)', see the implementatio
         <BoldName>true</BoldName>
         <EditLine>false</EditLine>
         <Description>Disabled</Description>
-        <Expanded>No</Expanded>
+        <Expanded>Yes</Expanded>
         <DefaultValue>false</DefaultValue>
         <DefineSymbol>YES_NO</DefineSymbol>
         <IfDisabled>setNOTHING</IfDisabled>
@@ -516,20 +530,6 @@ You need to implement your own 'DWORD get_fattime (void)', see the implementatio
               <Symbol>Shell</Symbol>
               <TypeSpec>FAT_FileSystem\Shell</TypeSpec>
               <Hint>Interface to command line shell</Hint>
-              <ItemLevel>BASIC</ItemLevel>
-              <EditLine>false</EditLine>
-              <DefaultValue/>
-              <CanDelete>false</CanDelete>
-              <IconPopup>false</IconPopup>
-              <SortStyle/>
-            </TInhrLinkItem>
-          </GrupItem>
-          <GrupItem>
-            <TInhrLinkItem>
-              <Name>Utility</Name>
-              <Symbol>Utility</Symbol>
-              <TypeSpec>FAT_FileSystem\Utility</TypeSpec>
-              <Hint>Interface to utility functions</Hint>
               <ItemLevel>BASIC</ItemLevel>
               <EditLine>false</EditLine>
               <DefaultValue/>
@@ -955,13 +955,7 @@ You need to implement your own 'DWORD get_fattime (void)', see the implementatio
         <InDefinition>true</InDefinition>
         <ReturnType>FRESULT</ReturnType>
         <RetHint>Error code</RetHint>
-        <ParamCount>2</ParamCount>
-        <Parameter>
-          <ParName>vol</ParName>
-          <ParType>8bit unsigned</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>logical drive number to be mounted/unmounted</ParHint>
-        </Parameter>
+        <ParamCount>3</ParamCount>
         <Parameter>
           <ParName>fs</ParName>
           <ParType>8bit unsigned</ParType>
@@ -969,9 +963,22 @@ You need to implement your own 'DWORD get_fattime (void)', see the implementatio
           <ParHint>pointer to the new file system object (NULL for unmount)</ParHint>
           <ParUserDeclaration>FATFS *fs</ParUserDeclaration>
         </Parameter>
+        <Parameter>
+          <ParName>path</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Logical drive number to be mounted/unmounted</ParHint>
+          <ParUserDeclaration>const TCHAR* path</ParUserDeclaration>
+        </Parameter>
+        <Parameter>
+          <ParName>opt</ParName>
+          <ParType>8bit unsigned</ParType>
+          <ParPassing>Value</ParPassing>
+          <ParHint>options: 0:Do not mount (delayed mount), 1:Mount immediately</ParHint>
+        </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>FRESULT #M#_#C#(byte vol, FATFS *fs)</ANSIC>
+          <ANSIC>FRESULT #M#_#C#(FATFS *fs, const TCHAR* path, byte opt)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1123,14 +1130,14 @@ You need to implement your own 'DWORD get_fattime (void)', see the implementatio
         <RetHint>TRUE if file system is write protected</RetHint>
         <ParamCount>1</ParamCount>
         <Parameter>
-          <ParName>drv</ParName>
+          <ParName>drvStr</ParName>
           <ParType>8bit unsigned</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>disk drive number</ParHint>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to drive string, e.g. "" or "0"</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>bool #M#_#C#(byte drv)</ANSIC>
+          <ANSIC>bool #M#_#C#(byte *drvStr)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -1157,14 +1164,14 @@ You need to implement your own 'DWORD get_fattime (void)', see the implementatio
         <RetHint>TRUE if file system is write protected</RetHint>
         <ParamCount>1</ParamCount>
         <Parameter>
-          <ParName>drv</ParName>
+          <ParName>drvStr</ParName>
           <ParType>8bit unsigned</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>Disk drive number</ParHint>
+          <ParPassing>Address</ParPassing>
+          <ParHint>drive string, "" or "0" or "1"</ParHint>
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>bool #M#_#C#(byte drv)</ANSIC>
+          <ANSIC>bool #M#_#C#(byte *drvStr)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2144,8 +2151,8 @@ The truncate() function truncates the file size to the current file read/write p
         <Parameter>
           <ParName>drive</ParName>
           <ParType>8bit unsigned</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>drive number, pass 0 as default drive</ParHint>
+          <ParPassing>Address</ParPassing>
+          <ParHint>drive string, or ""</ParHint>
         </Parameter>
         <Parameter>
           <ParName>fileSystemObject</ParName>
@@ -2162,7 +2169,7 @@ The truncate() function truncates the file size to the current file read/write p
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(bool *cardMounted, byte drive, FATFS *fileSystemObject, const %@Shell@'ModuleName'%.StdIOType *io)</ANSIC>
+          <ANSIC>byte #M#_#C#(bool *cardMounted, byte *drive, FATFS *fileSystemObject, const %@Shell@'ModuleName'%.StdIOType *io)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2197,8 +2204,8 @@ The truncate() function truncates the file size to the current file read/write p
         <Parameter>
           <ParName>logicalDrive</ParName>
           <ParType>8bit unsigned</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>The drive number to be used</ParHint>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the drive string, or ""</ParHint>
         </Parameter>
         <Parameter>
           <ParName>io</ParName>
@@ -2209,7 +2216,7 @@ The truncate() function truncates the file size to the current file read/write p
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(FATFS *fileSystemObject, byte logicalDrive, const %@Shell@'ModuleName'%.StdIOType *io)</ANSIC>
+          <ANSIC>byte #M#_#C#(FATFS *fileSystemObject, byte *logicalDrive, const %@Shell@'ModuleName'%.StdIOType *io)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>
@@ -2238,8 +2245,8 @@ The truncate() function truncates the file size to the current file read/write p
         <Parameter>
           <ParName>logicalDrive</ParName>
           <ParType>8bit unsigned</ParType>
-          <ParPassing>Value</ParPassing>
-          <ParHint>The drive number to be used</ParHint>
+          <ParPassing>Address</ParPassing>
+          <ParHint>Pointer to the drive string, or ""</ParHint>
         </Parameter>
         <Parameter>
           <ParName>io</ParName>
@@ -2250,7 +2257,7 @@ The truncate() function truncates the file size to the current file read/write p
         </Parameter>
         <Scope>PRIVATE</Scope>
         <Declarations>
-          <ANSIC>byte #M#_#C#(byte logicalDrive, const %@Shell@'ModuleName'%.StdIOType *io)</ANSIC>
+          <ANSIC>byte #M#_#C#(byte *logicalDrive, const %@Shell@'ModuleName'%.StdIOType *io)</ANSIC>
         </Declarations>
       </TMthdItem>
     </Method>

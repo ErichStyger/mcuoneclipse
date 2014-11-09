@@ -11,7 +11,7 @@
 %;**       * cardMounted%ParcardMounted %>27 - Pointer to initialize this
 %;** %>29 variable to FALSE on the caller side the
 %;** %>29 first time.
-%;**         drive%Pardrive %>27 - drive number, pass 0 as default drive
+%;**       * drive%Pardrive %>27 - drive string, or ""
 %;**       * fileSystemObject%ParfileSystemObject %>27 - Pointer to file
 %;** %>29 system object
 %;**         io%Pario %>27 - Pointer to io handler to be used. Can be

@@ -7,8 +7,8 @@
 %;**     Description :
 %;**         Mounts a file system
 %include Common\GeneralParameters.inc(27)
-%;**         logicalDrive%ParlogicalDrive %>27 - The drive number to be
-%;** %>29 used
+%;**       * logicalDrive%ParlogicalDrive %>27 - Pointer to the drive
+%;** %>29 string, or ""
 %;**       * io%Pario %>27 - Pointer to I/O handler
 %;**     Returns     :
 %;**         ---%RetVal %>27 - Error code

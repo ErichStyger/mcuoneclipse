@@ -1,11 +1,13 @@
-/*-----------------------------------------------------------------------
-/  Low level disk interface module include file   (C)ChaN, 2010
+/*-----------------------------------------------------------------------/
+/  Low level disk interface modlue include file   (C)ChaN, 2014          /
 /-----------------------------------------------------------------------*/
 
-#ifndef _DISKIO
+#ifndef _DISKIO_DEFINED
+#define _DISKIO_DEFINED
 
-#define _READONLY  _FS_READONLY  /* 1: Remove write functions */
-#define _USE_IOCTL  1  /* 1: Use disk_ioctl function */
+#define _READONLY  _FS_READONLY  /* \todo: remove 1: Remove write functions */
+#define _USE_WRITE	(!_FS_READONLY)	/* 1: Enable disk_write function */
+#define _USE_IOCTL	1	/* 1: Enable disk_ioctl fucntion */
 
 #include "integer.h"
 
@@ -30,22 +32,20 @@ typedef enum {
   RES_ERROR,    	/* 1: R/W Error */
   RES_WRPRT,            /* 2: Write Protected */
   RES_NOTRDY,           /* 3: Not Ready */
-  RES_PARERR,           /* 4: Invalid Parameter */
-  RES_NOT_ENOUGH_CORE   /* 5: Not enough heap memory */
+  RES_PARERR           /* 4: Invalid Parameter */
 } DRESULT;
 
 
 /*---------------------------------------*/
 /* Prototypes for disk control functions */
 
-int assign_drives (int, int);
 DSTATUS disk_initialize (uint8_t);
 DSTATUS disk_status (uint8_t);
-DRESULT disk_read (uint8_t, uint8_t*, uint32_t, uint8_t);
+DRESULT disk_read (uint8_t pdrv, uint8_t* buff, uint32_t sector, uint8_t count); /* \todo: UINT instead of uint8_t? */
 #if  _READONLY == 0
-DRESULT disk_write (uint8_t, const uint8_t*, uint32_t, uint8_t);
+DRESULT disk_write (uint8_t pdrv, const uint8_t* buff, uint32_t sector, uint8_t count); /* \todo type of count */
 #endif
-DRESULT disk_ioctl (uint8_t, uint8_t, void*);
+DRESULT disk_ioctl (uint8_t pdrv, uint8_t cmd, void* buff);
 
 
 
@@ -58,24 +58,25 @@ DRESULT disk_ioctl (uint8_t, uint8_t, void*);
 
 /* Command code for disk_ioctrl function */
 
-/* Generic command (defined for FatFs) */
-#define CTRL_SYNC      0  /* Flush disk cache (for write functions) */
-#define GET_SECTOR_COUNT  1  /* Get media size (for only f_mkfs()) */
-#define GET_SECTOR_SIZE    2  /* Get sector size (for multiple sector size (_MAX_SS >= 1024)) */
-#define GET_BLOCK_SIZE    3  /* Get erase block size (for only f_mkfs()) */
-#define CTRL_ERASE_SECTOR  4  /* Force erased a block of sectors (for only _USE_ERASE) */
+/* Generic command (Used by FatFs) */
+#define CTRL_SYNC			0	/* Complete pending write process (needed at _FS_READONLY == 0) */
+#define GET_SECTOR_COUNT	1	/* Get media size (needed at _USE_MKFS == 1) */
+#define GET_SECTOR_SIZE		2	/* Get sector size (needed at _MAX_SS != _MIN_SS) */
+#define GET_BLOCK_SIZE		3	/* Get erase block size (needed at _USE_MKFS == 1) */
+#define CTRL_TRIM			4	/* Inform device that the data on the block of sectors is no longer used (needed at _USE_TRIM == 1) */
 
-/* Generic command */
-#define CTRL_POWER    5  /* Get/Set power status */
-#define CTRL_LOCK    6  /* Lock/Unlock media removal */
-#define CTRL_EJECT    7  /* Eject media */
+/* Generic command (Not used by FatFs) */
+#define CTRL_POWER			5	/* Get/Set power status */
+#define CTRL_LOCK			6	/* Lock/Unlock media removal */
+#define CTRL_EJECT			7	/* Eject media */
+#define CTRL_FORMAT			8	/* Create physical format on the media */
 
 /* MMC/SDC specific ioctl command */
-#define MMC_GET_TYPE    10  /* Get card type */
-#define MMC_GET_CSD    11  /* Get CSD */
-#define MMC_GET_CID    12  /* Get CID */
-#define MMC_GET_OCR    13  /* Get OCR */
-#define MMC_GET_SDSTAT    14  /* Get SD status */
+#define MMC_GET_TYPE		10	/* Get card type */
+#define MMC_GET_CSD			11	/* Get CSD */
+#define MMC_GET_CID			12	/* Get CID */
+#define MMC_GET_OCR			13	/* Get OCR */
+#define MMC_GET_SDSTAT		14	/* Get SD status */
 
 /*<< EST added: */
 #define MMC_GET_SDC_VERSION     15  /* 1 byte */
@@ -89,13 +90,8 @@ DRESULT disk_ioctl (uint8_t, uint8_t, void*);
   #define MMC_GET_LLD_CMD_OPERATIONS     4 /* return 1 byte (bitset), 0x1: block read, 0x2: block write, 0x4: block erase, 0x8: write protection, 0x10: I/O */
 
 /* ATA/CF specific ioctl command */
-#define ATA_GET_REV    20  /* Get F/W revision */
-#define ATA_GET_MODEL    21  /* Get model name */
-#define ATA_GET_SN    22  /* Get serial number */
+#define ATA_GET_REV			20	/* Get F/W revision */
+#define ATA_GET_MODEL		21	/* Get model name */
+#define ATA_GET_SN			22	/* Get serial number */
 
-/* NAND specific ioctl command */
-#define NAND_FORMAT    30  /* Create physical format */
-
-
-#define _DISKIO
 #endif

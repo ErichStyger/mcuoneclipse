@@ -245,11 +245,12 @@
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN mount
 %ifdef mount
-#define %'ModuleName'%.%mount(vol, fs) \
-  f_mount(vol, fs)
+#define %'ModuleName'%.%mount(fs, path, opt) \
+  f_mount(fs, path, opt)
 
-%define! Parvol
 %define! Parfs
+%define! Parpath
+%define! Paropt
 %define! RetVal
 %include Common\FAT_FileSystemmount.Inc
 
@@ -294,9 +295,9 @@
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN isWriteProtected
 %ifdef isWriteProtected
-bool %'ModuleName'%.%isWriteProtected(byte drv);
+bool %'ModuleName'%.%isWriteProtected(byte *drvStr);
 
-%define! Pardrv
+%define! PardrvStr
 %define! RetVal
 %include Common\FAT_FileSystemisWriteProtected.Inc
 
@@ -454,9 +455,9 @@ char* %'ModuleName'%.%errDResultMsg(int errNo);
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN isDiskPresent
 %ifdef isDiskPresent
-bool %'ModuleName'%.%isDiskPresent(byte drv);
+bool %'ModuleName'%.%isDiskPresent(byte *drvStr);
 
-%define! Pardrv
+%define! PardrvStr
 %define! RetVal
 %include Common\FAT_FileSystemisDiskPresent.Inc
 
@@ -606,7 +607,7 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN CheckCardPresence
 %ifdef CheckCardPresence
-byte %'ModuleName'%.%CheckCardPresence(bool *cardMounted, byte drive, FATFS *fileSystemObject, const %@Shell@'ModuleName'%.StdIOType *io);
+byte %'ModuleName'%.%CheckCardPresence(bool *cardMounted, byte *drive, FATFS *fileSystemObject, const %@Shell@'ModuleName'%.StdIOType *io);
 %define! ParcardMounted
 %define! Pardrive
 %define! ParfileSystemObject
@@ -619,7 +620,7 @@ byte %'ModuleName'%.%CheckCardPresence(bool *cardMounted, byte drive, FATFS *fil
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN MountFileSystem
 %ifdef MountFileSystem
-byte %'ModuleName'%.%MountFileSystem(FATFS *fileSystemObject, byte logicalDrive, const %@Shell@'ModuleName'%.StdIOType *io);
+byte %'ModuleName'%.%MountFileSystem(FATFS *fileSystemObject, byte *logicalDrive, const %@Shell@'ModuleName'%.StdIOType *io);
 %define! ParfileSystemObject
 %define! ParlogicalDrive
 %define! Pario
@@ -631,7 +632,7 @@ byte %'ModuleName'%.%MountFileSystem(FATFS *fileSystemObject, byte logicalDrive,
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN UnMountFileSystem
 %ifdef UnMountFileSystem
-byte %'ModuleName'%.%UnMountFileSystem(byte logicalDrive, const %@Shell@'ModuleName'%.StdIOType *io);
+byte %'ModuleName'%.%UnMountFileSystem(byte *logicalDrive, const %@Shell@'ModuleName'%.StdIOType *io);
 %define! ParlogicalDrive
 %define! Pario
 %define! RetVal
@@ -1340,8 +1341,8 @@ static byte CdCmd(const unsigned char *cmd, const %@Shell@'ModuleName'%.ConstStd
 static uint8_t PrintStatus(const %@Shell@'ModuleName'%.StdIOType *io) {
   %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"%'ModuleName'", (unsigned char*)"\r\n", io->stdOut);
 %for i from [0..%maxDrive]
-  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  present", %'ModuleName'%.isDiskPresent(%i)?(unsigned char*)"drive%i: yes\r\n":(unsigned char*)"drive%i: no\r\n", io->stdOut);
-  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  protected", %'ModuleName'%.isWriteProtected(%i)?(unsigned char*)"drive%i: yes\r\n":(unsigned char*)"drive%i: no\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  present", %'ModuleName'%.isDiskPresent((uint8_t*)"%i")?(unsigned char*)"drive%i: yes\r\n":(unsigned char*)"drive%i: no\r\n", io->stdOut);
+  %@Shell@'ModuleName'%.SendStatusStr((unsigned char*)"  protected", %'ModuleName'%.isWriteProtected((uint8_t*)"%i")?(unsigned char*)"drive%i: yes\r\n":(unsigned char*)"drive%i: no\r\n", io->stdOut);
 %endfor
   return ERR_OK;
 }
@@ -1690,12 +1691,13 @@ FRESULT %'ModuleName'%.%unlink(const XCHAR *path)
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN mount
 %ifdef mount
-%define! Parvol
 %define! Parfs
+%define! Parpath
+%define! Paropt
 %define! RetVal
 %include Common\FAT_FileSystemmount.Inc
 /*
-FRESULT %'ModuleName'%.%mount(byte vol, FATFS *fs)
+FRESULT %'ModuleName'%.%mount(FATFS *fs, const TCHAR* path, byte opt)
 {
   *** method is implemented as macro in the header file
 }
@@ -1970,14 +1972,25 @@ char* %'ModuleName'%.%errDResultMsg(int errNo)
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN isWriteProtected
 %ifdef isWriteProtected
-%define! Pardrv
+%define! PardrvStr
 %define! RetVal
 %include Common\FAT_FileSystemisWriteProtected.Inc
-bool %'ModuleName'%.%isWriteProtected(byte drv)
+bool %'ModuleName'%.%isWriteProtected(byte *drvStr)
 {
 %if WriteEnabled='no'
   return %'ModuleName'%.FS_READONLY;
 %else
+  uint8_t drv = 0;
+  const unsigned char *p;
+
+  if (drvStr==NULL || *drvStr=='\0') { /* default, "" */
+    drv = 0;
+  } else {
+    p = drvStr;
+    if (%@Utility@'ModuleName'%.ScanDecimal8uNumber(&p, &drv)!=ERR_OK) { /* "0", "1", ... */
+      return FALSE; /* error */
+    }
+  }
   switch(drv) {
     %for i from [0..%maxDrive]
     case %i:
@@ -1995,11 +2008,22 @@ bool %'ModuleName'%.%isWriteProtected(byte drv)
 %-************************************************************************************************************
 %-BW_METHOD_BEGIN isDiskPresent
 %ifdef isDiskPresent
-%define! Pardrv
+%define! PardrvStr
 %define! RetVal
 %include Common\FAT_FileSystemisDiskPresent.Inc
-bool %'ModuleName'%.%isDiskPresent(byte drv)
+bool %'ModuleName'%.%isDiskPresent(byte *drvStr)
 {
+  uint8_t drv = 0;
+  const unsigned char *p;
+
+  if (drvStr==NULL || *drvStr=='\0') { /* default, "" */
+    drv = 0;
+  } else {
+    p = drvStr;
+    if (%@Utility@'ModuleName'%.ScanDecimal8uNumber(&p, &drv)!=ERR_OK) { /* "0", "1", ... */
+      return FALSE; /* error */
+    }
+  }
   switch(drv) {
     %for i from [0..%maxDrive]
     case %i:
@@ -2307,8 +2331,11 @@ byte %'ModuleName'%.%ParseCommand(const unsigned char *cmd, bool *handled, const
 %define! Pario
 %define! RetVal
 %include Common\FAT_FileSystemCheckCardPresence.Inc
-byte %'ModuleName'%.%CheckCardPresence(bool *cardMounted, byte drive, FATFS *fileSystemObject, const %@Shell@'ModuleName'%.StdIOType *io)
+byte %'ModuleName'%.%CheckCardPresence(bool *cardMounted, byte *drive, FATFS *fileSystemObject, const %@Shell@'ModuleName'%.StdIOType *io)
 {
+  if (drive==NULL) { /* backward compatibility with drive numbers before (which could be zero or NULL) */
+    drive = (unsigned char*)"";
+  }
   if (!(*cardMounted) && %'ModuleName'%.isDiskPresent(drive)) {
     /* card inserted */
     if (%'ModuleName'%.MountFileSystem(fileSystemObject, drive, io)==ERR_OK) {
@@ -2350,11 +2377,11 @@ byte %'ModuleName'%.%CheckCardPresence(bool *cardMounted, byte drive, FATFS *fil
  * \param[in] io IO handler for output
  * \return Error code, ERR_OK for success.
  */
-byte %'ModuleName'%.%MountFileSystem(FATFS *fileSystemObject, byte logicalDrive, const %@Shell@'ModuleName'%.StdIOType *io)
+byte %'ModuleName'%.%MountFileSystem(FATFS *fileSystemObject, byte *logicalDrive, const %@Shell@'ModuleName'%.StdIOType *io)
 {
   %'ModuleName'%.FRESULT fres;
 
-  fres = %'ModuleName'%.mount(logicalDrive, fileSystemObject);
+  fres = %'ModuleName'%.mount(fileSystemObject, (const TCHAR*)logicalDrive, 0);
   if (fres != FR_OK) {
     FatFsFResultMsg((unsigned char*)"mount failed", fres, io);
     return ERR_FAILED;
@@ -2377,11 +2404,11 @@ byte %'ModuleName'%.%MountFileSystem(FATFS *fileSystemObject, byte logicalDrive,
  * \param[in] io IO handler for output
  * \return Error code, ERR_OK for success.
  */
-byte %'ModuleName'%.%UnMountFileSystem(byte logicalDrive, const %@Shell@'ModuleName'%.StdIOType *io)
+byte %'ModuleName'%.%UnMountFileSystem(byte *logicalDrive, const %@Shell@'ModuleName'%.StdIOType *io)
 {
   %'ModuleName'%.FRESULT fres;
 
-  fres = %'ModuleName'%.mount(logicalDrive, NULL);
+  fres = %'ModuleName'%.mount(NULL, (const TCHAR*)logicalDrive, 0);
   if (fres != FR_OK) {
     FatFsFResultMsg((unsigned char*)"unmount failed", fres, io);
     return ERR_FAILED;
@@ -2442,7 +2469,7 @@ byte %'ModuleName'%.%CopyFile(const byte *srcFileName, const byte *dstFileName, 
   UINT br, bw;          /* file read/write counters */
   byte res =  ERR_OK;
 
-  if (%'ModuleName'%.isWriteProtected(0)) {
+  if (%'ModuleName'%.isWriteProtected((uint8_t*)"")) {
     %@Shell@'ModuleName'%.SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
     return ERR_FAILED;
   }
@@ -2520,7 +2547,7 @@ byte %'ModuleName'%.%DeleteFile(const byte *fileName, const %@Shell@'ModuleName'
 {
   %'ModuleName'%.FRESULT fres;
 
-  if (%'ModuleName'%.isWriteProtected(0)) {
+  if (%'ModuleName'%.isWriteProtected((uint8_t*)"")) {
     %@Shell@'ModuleName'%.SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
     return ERR_FAILED;
   }
@@ -2600,7 +2627,7 @@ byte %'ModuleName'%.%MakeDirectory(const byte *dirName, const %@Shell@'ModuleNam
 {
   %'ModuleName'%.FRESULT fres;
 
-  if (%'ModuleName'%.isWriteProtected(0)) {
+  if (%'ModuleName'%.isWriteProtected((uint8_t*)"")) {
     %@Shell@'ModuleName'%.SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
     return ERR_FAILED;
   }
@@ -2660,7 +2687,7 @@ byte %'ModuleName'%.%RenameFile(const byte *srcFileName, const byte *dstFileName
 {
   %'ModuleName'%.FRESULT fres;
 
-  if (%'ModuleName'%.isWriteProtected(0)) {
+  if (%'ModuleName'%.isWriteProtected((uint8_t*)"")) {
     %@Shell@'ModuleName'%.SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
     return ERR_FAILED;
   }
@@ -2989,7 +3016,7 @@ byte %'ModuleName'%.%Benchmark(const %@Shell@'ModuleName'%.StdIOType *io)
   TIMEREC time, startTime;
   int32_t start_mseconds, mseconds;
 
-  if (%'ModuleName'%.isWriteProtected(0)) {
+  if (%'ModuleName'%.isWriteProtected((uint8_t*)"")) {
     %@Shell@'ModuleName'%.SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
     return ERR_FAILED;
   }

@@ -7,7 +7,7 @@
 %;**     Description :
 %;**         Determines if the disk is present or not (e.g. disk inserted).
 %include Common\GeneralParameters.inc(27)
-%;**         drv%Pardrv %>27 - Disk drive number
+%;**       * drvStr%PardrvStr %>27 - drive string, "" or "0" or "1"
 %;**     Returns     :
 %;**         ---%RetVal %>27 - TRUE if file system is write protected
 %include Common\GeneralDamage.inc
