@@ -32,7 +32,8 @@ typedef enum {
   RES_ERROR,    	/* 1: R/W Error */
   RES_WRPRT,            /* 2: Write Protected */
   RES_NOTRDY,           /* 3: Not Ready */
-  RES_PARERR           /* 4: Invalid Parameter */
+  RES_PARERR,           /* 4: Invalid Parameter */
+  RES_NOT_ENOUGH_CORE   /* 5: Not enough memory */ /* << EST added */
 } DRESULT;
 
 
@@ -41,9 +42,9 @@ typedef enum {
 
 DSTATUS disk_initialize (uint8_t);
 DSTATUS disk_status (uint8_t);
-DRESULT disk_read (uint8_t pdrv, uint8_t* buff, uint32_t sector, uint8_t count); /* \todo: UINT instead of uint8_t? */
+DRESULT disk_read (uint8_t pdrv, uint8_t* buff, uint32_t sector, unsigned int count);
 #if  _READONLY == 0
-DRESULT disk_write (uint8_t pdrv, const uint8_t* buff, uint32_t sector, uint8_t count); /* \todo type of count */
+DRESULT disk_write (uint8_t pdrv, const uint8_t* buff, uint32_t sector, unsigned int count);
 #endif
 DRESULT disk_ioctl (uint8_t pdrv, uint8_t cmd, void* buff);
 

@@ -851,7 +851,7 @@ DRESULT disk_read (
         uint8_t drv,                                             %>40 /* Physical drive number (0..) */
         uint8_t *buff,                                           %>40 /* Data buffer to store read data */
         uint32_t sector,                                         %>40 /* Sector address (LBA) */
-        uint8_t count                                            %>40 /* Number of sectors to read (1..255) */
+        unsigned int count                                       %>40 /* Number of sectors to read */
 )
 {
   switch(drv) {
@@ -871,7 +871,7 @@ DRESULT disk_write (
         uint8_t drv,                                             %>40 /* Physical drive number (0..) */
         const uint8_t *buff,                                     %>40 /* Data to be written */
         uint32_t sector,                                         %>40 /* Sector address (LBA) */
-        uint8_t count                                            %>40 /* Number of sectors to write (1..255) */
+        unsigned int count                                       %>40 /* Number of sectors to write */
 )
 {
   switch(drv) {
