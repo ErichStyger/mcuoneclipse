@@ -1221,7 +1221,7 @@ FRESULT dir_next (	/* FR_OK:Succeeded, FR_NO_FILE:End of table, FR_DENIED:Could 
 	UINT i;
 
 
-	i = dp->index + 1;
+	i = (UINT)(dp->index + 1);
 	if (!(i & 0xFFFF) || !dp->sect)	/* Report EOT when index has reached 65535 */
 		return FR_NO_FILE;
 
@@ -2137,7 +2137,7 @@ int get_ldnumber (		/* Returns logical drive number (-1:invalid drive) */
 		for (tt = *path; (UINT)*tt >= (_USE_LFN ? ' ' : '!') && *tt != ':'; tt++) ;	/* Find ':' in the path */
 		if (*tt == ':') {	/* If a ':' is exist in the path name */
 			tp = *path;
-			i = *tp++ - '0'; 
+			i = (UINT)(*tp++ - '0');
 			if (i < 10 && tp == tt) {	/* Is there a numeric drive id? */
 				if (i < _VOLUMES) {	/* If a drive id is found, get the value and strip it */
 					vol = (int)i;
@@ -2646,7 +2646,7 @@ FRESULT f_read (
 			cc = btr / SS(fp->fs);				/* When remaining bytes >= sector size, */
 			if (cc) {							/* Read maximum contiguous sectors directly */
 				if (csect + cc > fp->fs->csize)	/* Clip at cluster boundary */
-					cc = fp->fs->csize - csect;
+					cc = (UINT)(fp->fs->csize - csect);
 				if (disk_read(fp->fs->drv, rbuff, sect, cc) != RES_OK)
 					ABORT(fp->fs, FR_DISK_ERR);
 #if !_FS_READONLY && _FS_MINIMIZE <= 2			/* Replace one of the read sectors with cached data if it contains a dirty sector */
@@ -2761,7 +2761,7 @@ FRESULT f_write (
 			cc = btw / SS(fp->fs);			/* When remaining bytes >= sector size, */
 			if (cc) {						/* Write maximum contiguous sectors directly */
 				if (csect + cc > fp->fs->csize)	/* Clip at cluster boundary */
-					cc = fp->fs->csize - csect;
+					cc = (UINT)(fp->fs->csize - csect);
 				if (disk_write(fp->fs->drv, wbuff, sect, cc) != RES_OK)
 					ABORT(fp->fs, FR_DISK_ERR);
 #if _FS_MINIMIZE <= 2
