@@ -121,7 +121,7 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
 #endif
   for(;;) {
 #if PL_HAS_SD_CARD
-    (void)FAT1_CheckCardPresence(&cardMounted, 0 /*volume*/, &fileSystemObject, CLS1_GetStdio());
+    (void)FAT1_CheckCardPresence(&cardMounted, "0" /*volume*/, &fileSystemObject, CLS1_GetStdio());
 #endif
 #if CLS1_DEFAULT_SERIAL
     (void)CLS1_ReadAndParseWithCommandTable(localConsole_buf, sizeof(localConsole_buf), ioLocal, CmdParserTable);

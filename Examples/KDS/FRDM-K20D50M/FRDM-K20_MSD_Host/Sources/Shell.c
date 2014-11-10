@@ -135,7 +135,7 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
   (void)CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, CLS1_GetStdio(), CmdParserTable);
   for(;;) {
     (void)FAT1_CheckCardPresence(&cardMounted,
-        0 /* volume */, &fileSystemObject, CLS1_GetStdio());
+        "0" /* volume */, &fileSystemObject, CLS1_GetStdio());
     (void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), CLS1_GetStdio(), CmdParserTable);
     LEDG_Neg();
     FRTOS1_vTaskDelay(50/portTICK_RATE_MS);

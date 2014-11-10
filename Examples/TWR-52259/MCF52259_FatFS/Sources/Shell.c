@@ -56,7 +56,7 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
   for(;;) {
 #if PL_HAS_SD_CARD
     (void)FAT1_CheckCardPresence(&cardMounted,
-        0 /* volume */, &fileSystemObject, CLS1_GetStdio());
+        (uint8_t*)"0" /* volume */, &fileSystemObject, CLS1_GetStdio());
 #endif
     (void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), CLS1_GetStdio(), CmdParserTable);
     FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
