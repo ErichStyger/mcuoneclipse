@@ -35,11 +35,11 @@
 #include "Inhr1.h"
 #include "PwmLdd1.h"
 #include "LEDG.h"
-#include "LEDpin2.h"
-#include "BitIoLdd2.h"
+#include "Inhr2.h"
+#include "PwmLdd2.h"
 #include "LEDB.h"
-#include "LEDpin3.h"
-#include "BitIoLdd3.h"
+#include "Inhr3.h"
+#include "PwmLdd3.h"
 #include "WAIT1.h"
 #include "TU1.h"
 /* Including shared modules, which are used for whole project */
@@ -56,7 +56,6 @@ int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
   /* Write your local variable definition here */
-  int i;
 
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
@@ -67,10 +66,28 @@ int main(void)
     WAIT1_Waitms(500);
     LEDR_Off();
     WAIT1_Waitms(500);
-    for(i=0;i<10;i++) {
 
-    }
-  }
+    LEDG_On();
+    WAIT1_Waitms(500);
+    LEDG_Off();
+
+    LEDB_On();
+    WAIT1_Waitms(500);
+    LEDB_Off();
+
+    LEDR_SetRatio16(0xc000);
+    WAIT1_Waitms(500);
+    LEDR_SetRatio16(0x8000);
+    WAIT1_Waitms(500);
+    LEDR_SetRatio16(0x4000);
+    WAIT1_Waitms(500);
+    LEDR_SetRatio16(0x1000);
+    WAIT1_Waitms(500);
+    LEDR_SetRatio16(0x500);
+    WAIT1_Waitms(500);
+    LEDR_SetRatio16(0x100);
+    WAIT1_Waitms(500);
+ }
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
