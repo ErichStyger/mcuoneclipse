@@ -58,7 +58,7 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
   for(;;) {
 #if PL_HAS_SD_CARD
     (void)FAT1_CheckCardPresence(&cardMounted,
-        0 /* drive */, &fileSystemObject, CLS1_GetStdio());
+        "0" /* drive */, &fileSystemObject, CLS1_GetStdio());
     if (cardMounted) {
       SD_GreenLed_On();
       SD_RedLed_Off();
