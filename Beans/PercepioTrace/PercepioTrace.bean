@@ -4,7 +4,7 @@
     <Name>PercepioTrace</Name>
     <Description>Percepio FreeRTOS Trace</Description>
     <Author>Erich Styger</Author>
-    <Version>01.021</Version>
+    <Version>01.022</Version>
     <Icon>irc</Icon>
     <TypesFiles>PE,PercepioTrace\PercepioTrace</TypesFiles>
     <FileVersion>6</FileVersion>
@@ -24,7 +24,6 @@
     <DemoDriver>no</DemoDriver>
     <Shortcut>PTRC</Shortcut>
     <BeanLevel>High</BeanLevel>
-    <OnlyForInheritanceSharing>true</OnlyForInheritanceSharing>
   </Options>
   <PropertyList>
     <Property>
@@ -179,12 +178,12 @@ This must be enabled (1) if it shall be recorded whenever the os clock is increa
         <ItemLevel>BASIC</ItemLevel>
         <EditLine>false</EditLine>
         <TypeSpecNameChangeAble>false</TypeSpecNameChangeAble>
-        <DefaultIndex>0</DefaultIndex>
+        <DefaultIndex>1</DefaultIndex>
         <TextValueIndex>false</TextValueIndex>
         <RuntimeProperty>false</RuntimeProperty>
         <CanDelete>false</CanDelete>
         <IconPopup>false</IconPopup>
-        <DefaultValue>true</DefaultValue>
+        <DefaultValue>false</DefaultValue>
         <Popup>false</Popup>
       </TBoolItem>
     </Property>

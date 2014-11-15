@@ -287,6 +287,11 @@
 %else
 #define configUSE_TRACE_FACILITY                                 %>50 0
 %endif
+%if defined(UseTraceHooksGroup) & %UseTraceHooksGroup='yes' & defined(FRTrace)
+#define configUSE_TRACE_HOOKS                                    %>50 1 /* using Percepio Trace hooks */
+%else
+#define configUSE_TRACE_HOOKS                                    %>50 0 /* not using Percepio Trace hooks */
+%endif
 #define configUSE_STATS_FORMATTING_FUNCTIONS                     %>50 (configUSE_TRACE_FACILITY || configGENERATE_RUN_TIME_STATS)
 %if %Use16bitTicks='yes'
 #define configUSE_16_BIT_TICKS                                   %>50 1
