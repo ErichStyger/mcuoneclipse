@@ -4,7 +4,7 @@
     <Type>
       <Type>TEnumSpec</Type>
       <Name>typeDeviceSupported</Name>
-      <Items lines_count="20">
+      <Items lines_count="21">
         <Line>MC9S08JS16</Line>
         <Line>MC9S08JM16</Line>
         <Line>MC9S08JM60</Line>
@@ -13,6 +13,7 @@
         <Line>MCF51JM128</Line>
         <Line>MCF51MM256</Line>
         <Line>MCF52259</Line>
+        <Line>Kinetis KL24Z48</Line>
         <Line>Kinetis KL25</Line>
         <Line>Kinetis KL26Z48</Line>
         <Line>Kinetis KL46Z48</Line>
@@ -26,7 +27,7 @@
         <Line>Kinetis K64F</Line>
         <Line>Kinetis K70</Line>
       </Items>
-      <Hints lines_count="20">
+      <Hints lines_count="21">
         <Line>MC9S08JS16</Line>
         <Line>MC9S08JM16</Line>
         <Line>MC9S08JM60</Line>
@@ -35,6 +36,7 @@
         <Line>ColdFire V1 MCF51JM128</Line>
         <Line>ColdFire V1 MCF51MM256</Line>
         <Line>ColdFire V2 MCF52259</Line>
+        <Line>Kinetis KL24Z48</Line>
         <Line>FRDM-KL25Z or TWR-KL25Z</Line>
         <Line>Kinetis KL26Z (e.g. FRDM-KL26Z)</Line>
         <Line>TWR-KL46Z48M, FRDM-KL46Z48M</Line>
@@ -48,7 +50,7 @@
         <Line>Kinetis K64F (e.g. FRDM-K64F)</Line>
         <Line>Kinetis K70</Line>
       </Hints>
-      <Defines lines_count="20">
+      <Defines lines_count="21">
         <Line>MC9S08JS16</Line>
         <Line>MC9S08JM16</Line>
         <Line>MC9S08JM60</Line>
@@ -57,6 +59,7 @@
         <Line>MCF51JM128</Line>
         <Line>MCF51MM256</Line>
         <Line>MCF52259</Line>
+        <Line>Kinetis KL24Z48</Line>
         <Line>Kinetis L2K</Line>
         <Line>Kinetis KL26Z48</Line>
         <Line>Kinetis KL46Z48</Line>

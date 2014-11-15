@@ -117,6 +117,11 @@
   %include FSL_USB_Stack\Host\examples\msd\cw10\kinetis_l2k\derivative.h
   %FILE? %'DirRel_Code'khci_kinetis.c
   %include FSL_USB_Stack\Host\source\driver\kinetis\khci_kinetis.c
+%elif CPUDevice="Kinetis KL24Z48"
+  %FILE? %'DirRel_Code'derivative.h
+  %include FSL_USB_Stack\Host\examples\msd\cw10\kinetis_kl24z48\derivative.h
+  %FILE? %'DirRel_Code'khci_kinetis.c
+  %include FSL_USB_Stack\Host\source\driver\kinetis\khci_kinetis.c
 %elif CPUDevice="Kinetis KL26Z48"
   %FILE? %'DirRel_Code'derivative.h
   %include FSL_USB_Stack\Host\examples\msd\cw10\kinetis_kl26z48\derivative.h
