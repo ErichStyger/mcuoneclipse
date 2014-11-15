@@ -22,7 +22,7 @@
 
 /* macros to configure device either for RX or TX operation */
 #define %@nRF24L01p@'ModuleName'%.CONFIG_SETTINGS  (%@nRF24L01p@'ModuleName'%.EN_CRC|%@nRF24L01p@'ModuleName'%.CRCO)
-#define TX_POWERUP()         %@nRF24L01p@'ModuleName'%.WriteRegister(%@nRF24L01p@'ModuleName'%.CONFIG, %@nRF24L01p@'ModuleName'%.CONFIG_SETTINGS|%@nRF24L01p@'ModuleName'%.PWR_UP|%@nRF24L01p@'ModuleName'%.PRIM_TX) /* enable 1 byte CRC, power up and set as PTX */
+#define TX_POWERUP()         %@nRF24L01p@'ModuleName'%.WriteRegister(%@nRF24L01p@'ModuleName'%.CONFIG, %@nRF24L01p@'ModuleName'%.CONFIG_SETTINGS|%@nRF24L01p@'ModuleName'%.PWR_UP|%@nRF24L01p@'ModuleName'%.PRIM_TX) /* enable 2 byte CRC, power up and set as PTX */
 #define RX_POWERUP()         %@nRF24L01p@'ModuleName'%.WriteRegister(%@nRF24L01p@'ModuleName'%.CONFIG, %@nRF24L01p@'ModuleName'%.CONFIG_SETTINGS|%@nRF24L01p@'ModuleName'%.PWR_UP|%@nRF24L01p@'ModuleName'%.PRIM_RX) /* enable 1 byte CRC, power up and set as PRX */
 #define POWERDOWN()          %@nRF24L01p@'ModuleName'%.WriteRegister(%@nRF24L01p@'ModuleName'%.CONFIG, %@nRF24L01p@'ModuleName'%.CONFIG_SETTINGS) /* power down */
 
