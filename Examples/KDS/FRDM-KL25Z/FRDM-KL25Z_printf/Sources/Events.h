@@ -46,7 +46,6 @@
 #include "LEDpin3.h"
 #include "BitIoLdd3.h"
 #include "WAIT1.h"
-#include "KIN1.h"
 
 #ifdef __cplusplus
 extern "C" {
