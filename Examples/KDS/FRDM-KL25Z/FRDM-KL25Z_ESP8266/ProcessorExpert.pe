@@ -3,8 +3,8 @@
   <Header>
     <Name>FRDM-KL25Z_ESP8266</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>13</ModificationStamp>
-    <Date>2014-10-16</Date>
+    <ModificationStamp>16</ModificationStamp>
+    <Date>2014-11-16</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.10.0.RT6_b1433-0202</PEversion>
   </Header>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>19</ProjectCompNumb>
+    <ProjectCompNumb>22</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -4650,7 +4650,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Waitms</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
@@ -4661,7 +4661,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Waitus</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
@@ -4672,7 +4672,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Waitns</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
@@ -4683,7 +4683,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>WaitOSms</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
@@ -5486,7 +5486,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>32</Value>
+        <Value>64</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -5494,7 +5494,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>32</Value>
+        <Value>64</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -8197,7 +8197,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.048</BeanVersion>
+    <BeanVersion>01.050</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -8237,8 +8237,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>Wait</ItemSymbol>
@@ -8888,7 +8888,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>64</Value>
+        <Value>256</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -8896,7 +8896,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>64</Value>
+        <Value>256</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
