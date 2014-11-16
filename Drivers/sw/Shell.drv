@@ -703,14 +703,14 @@ bool %'ModuleName'%.%ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, %
       if (c=='\0') { /* nothing in rx buffer? Something is wrong... */
         break; /* get out of loop */
       }
-      if (c=='\b') {                                             %>40/* check for backspace */
+      if (c=='\b' || c=='\177') {                                %>40/* check for backspace */
         if (buf > bufStart) {                                    %>40/* Avoid buffer underflow */
 %if %EchoEnabled='yes'
            io->stdOut('\b');                                     %>40/* delete character on terminal */
            io->stdOut(' ');
            io->stdOut('\b');
 %endif
-           buf--;                                                %>40/* delete last charracter in buffer */
+           buf--;                                                %>40/* delete last character in buffer */
            *buf = '\0';
            bufSize++;
 
