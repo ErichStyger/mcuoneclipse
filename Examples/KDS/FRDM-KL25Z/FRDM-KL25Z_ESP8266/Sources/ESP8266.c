@@ -214,6 +214,30 @@ uint8_t ESP_ConnectWiFi(uint8_t *ssid, uint8_t *pwd, int nofRetries, CLS1_ConstS
   return res;
 }
 
+uint8_t ESP_SendWebPage(const CLS1_StdIOType *io) {
+  static uint8_t httpHdr[64];
+  uint8_t cmd[32];
+
+  UTIL1_strcpy(httpHdr, sizeof(httpHdr), "HTTP/1.1 200 OK\r\n");
+  UTIL1_strcat(httpHdr, sizeof(httpHdr), "Content-Type: text/html\r\n");
+  UTIL1_strcat(httpHdr, sizeof(httpHdr), "Connection: close\r\n");
+
+  UTIL1_strcpy(cmd, sizeof(cmd), "AT+CIPSEND=0,");
+  UTIL1_strcatNum16s(cmd, sizeof(cmd), UTIL1_strlen(httpHdr));
+  ESP_SendStr(cmd, io); /* single connection mode */
+  WAIT1_WaitOSms(100); /* wait some time */
+  return ERR_OK;
+}
+
+uint8_t ESP_StartWebServer(const CLS1_StdIOType *io) {
+  ESP_SendStr("AT+CIPMUX=1", io); /* multiple connections, seems to be needed for server */
+  ESP_SendStr("AT+CIPSERVER=1,80", io); /* single connection mode */
+  CLS1_SendStr("INFO: Web Server started!\r\n", io->stdOut);
+
+  ESP_SendWebPage(io);
+  return ERR_OK;
+}
+
 uint8_t ESP_SendStr(const uint8_t *str, CLS1_ConstStdIOType *io) {
   uint8_t buf[32];
   uint8_t rxBuf[48];
@@ -247,6 +271,8 @@ static uint8_t ESP_PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr("  test", "Sends a test AT command\r\n", io->stdOut);
   CLS1_SendHelpStr("  listAP", "List Access Points\r\n", io->stdOut);
   CLS1_SendHelpStr("  connectedAP", "Show connected Access Points\r\n", io->stdOut);
+  CLS1_SendHelpStr("  printIP", "Print own IP address\r\n", io->stdOut);
+  CLS1_SendHelpStr("  startWeb", "Start web server\r\n", io->stdOut);
   return ERR_OK;
 }
 
@@ -291,10 +317,31 @@ uint8_t ESP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
   } else if (UTIL1_strcmp((char*)cmd, "ESP listAP")==0) {
     *handled = TRUE;
     (void)ESP_SendStr("AT+CWLAP", io);
+    /* AT + CWLAP
+    response
+    + CWLAP: <ecn>, <ssid>, <rssi> [, <mode>]
+    OK Or Fails, the return ERROR
+    <Ecn> 0 OPEN
+    1 WEP
+    2 WPA_PSK
+    3 WPA2_PSK
+    4 WPA_WPA2_PSK
+    <Ssid> string parameter, the access point name
+    <Rssi> signal strength
+    <Mode> 0: manually connect 1: An automatic connection
+     */
     return ERR_OK;
   } else if (UTIL1_strcmp((char*)cmd, "ESP connectedAP")==0) {
     *handled = TRUE;
     (void)ESP_SendStr("AT+CWJAP?", io);
+    return ERR_OK;
+  } else if (UTIL1_strcmp((char*)cmd, "ESP printIP")==0) {
+    *handled = TRUE;
+    (void)ESP_SendStr("AT+CIFSR", io);
+    return ERR_OK;
+  } else if (UTIL1_strcmp((char*)cmd, "ESP startWeb")==0) {
+    *handled = TRUE;
+    (void)ESP_StartWebServer(io);
     return ERR_OK;
   }
   return ERR_OK;

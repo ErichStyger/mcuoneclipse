@@ -48,10 +48,17 @@ void APP_Run(void) {
   }
   AS2_ClearRxBuf(); /* clear buffer */
 
+
   ESP_Init();
   SHELL_Init();
   for(;;) {
+    while (AS2_GetCharsInRxBuf()>0) {
+      uint8_t ch;
+
+      (void)AS2_RecvChar(&ch);
+      CLS1_SendChar(ch);
+    }
     SHELL_Parse();
-    WAIT1_Waitms(50);
+    WAIT1_Waitms(10);
   }
 }
