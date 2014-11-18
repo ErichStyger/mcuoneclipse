@@ -1,6 +1,0 @@
-%if %@Display@WindowCapability='no'
-  %- if we cannot use windowing, then we use a memory buffer
-  %set UseMemBuffer Value Enabled
-%else %- using windowing/no memory buffer
-  %set UseMemBuffer Value Disabled
-%endif

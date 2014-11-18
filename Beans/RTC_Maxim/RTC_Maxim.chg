@@ -1,9 +1,0 @@
-%ifndef Shell
-  %set ParseCommand Selection never
-  %set OnDateSet Selection never
-  %set OnTimeSet Selection never
-%else
-  %set ParseCommand Selection enable
-  %set OnDateSet Selection enable
-  %set OnTimeSet Selection enable
-%endif

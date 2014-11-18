@@ -7,8 +7,11 @@ See
 http://mcuoneclipse.com/2014/10/15/cheap-and-simple-wifi-with-esp8266-for-the-frdm-board/
 http://www.electrodragon.com/w/Wi07c
 
-http://nerdclub-uk.blogspot.ch/2014/10/getting-esp8266-wifi-module-to-work.html
+
 http://scargill.wordpress.com/category/esp8266/
 http://www.instructables.com/id/ESP8266-Wifi-Temperature-Logger/?ALLSTEPS
 http://tomeko.net/other/ESP8266/index.php?lang=en
 http://www.snip2code.com/Snippet/194415/Webserver-for-Arduino-ESP8266
+
+
+http://nerdclub-uk.blogspot.ch/2014/10/getting-esp8266-wifi-module-to-work.html

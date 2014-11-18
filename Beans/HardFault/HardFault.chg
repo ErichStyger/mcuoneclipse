@@ -1,8 +1,0 @@
-%if defined(CPUfamily) & CPUfamily = "Kinetis"
-  %- ok
-%else
-  %error "This component is only usable for ARM/Kinetis projects!"
-%endif
-%- %if Compiler = 'CodeWarriorARM'
-%-  %error "Freescale ARM/Kinetis compiler is NOT supported! Only ARM gcc is supported."
-%- %endif

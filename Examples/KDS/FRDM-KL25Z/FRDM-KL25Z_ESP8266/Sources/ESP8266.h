@@ -16,11 +16,11 @@ uint8_t ESP_SendStr(const uint8_t *str, CLS1_ConstStdIOType *io);
 
 uint8_t ESP_Test(void);
 
-uint8_t ESP_Restart(void);
+uint8_t ESP_Restart(const CLS1_StdIOType *io, uint16_t timeoutMs);
 
 uint8_t ESP_SelectWiFiMode(uint8_t mode);
 
-uint8_t ESP_CheckFirmware(uint8_t *fwBuf, size_t fwBufSize);
+uint8_t ESP_GetFirmwareString(uint8_t *fwBuf, size_t fwBufSize);
 
 uint8_t ESP_ListAccessPoint(void);
 
