@@ -74,7 +74,7 @@ void APP_Run(void) {
   if (FAT1_Init()!=ERR_OK) { /* initialize FAT driver */
     Err();
   }
-  if (FAT1_mount(0, &fileSystemObject) != FR_OK) { /* mount file system */
+  if (FAT1_mount(&fileSystemObject, "0", 1) != FR_OK) { /* mount file system */
     Err();
   }
   for(;;) {
