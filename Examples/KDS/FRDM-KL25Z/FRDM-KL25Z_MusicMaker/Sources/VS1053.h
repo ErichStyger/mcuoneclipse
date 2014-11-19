@@ -25,6 +25,9 @@
 #define VS_AICTRL1      0x0D
 #define VS_AICTRL2      0x0E
 #define VS_AICTRL3      0x0F
+#define VS_IO_DDR       0xC017
+#define VS_IO_IDATA     0xC018
+#define VS_IO_ODATA     0xC019
 
 #include "CLS1.h"
 uint8_t VS_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
