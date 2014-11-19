@@ -59,6 +59,7 @@
 #include "ASerialLdd1.h"
 #include "CLS1.h"
 #include "FRTOS1.h"
+#include "PTA.h"
 
 #ifdef __cplusplus
 extern "C" {

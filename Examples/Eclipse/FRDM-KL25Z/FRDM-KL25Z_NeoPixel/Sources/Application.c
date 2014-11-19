@@ -18,7 +18,7 @@
 
 #define HAS_CLOCK    1
 #define HAS_ELEVATOR 0
-#define HAS_SHELL    0
+#define HAS_SHELL    1
 
 #if HAS_CLOCK
 void TestClock(void) {
@@ -56,6 +56,7 @@ static portTASK_FUNCTION(AppTask, pvParameters) {
   (void)pvParameters; /* not used */
   RTC1_TTIME time;
   RTC1_TDATE date;
+  TIMEREC swTime;
 
   if (RTC1_GetRTCTimeDate(&time, &date)==ERR_OK) {
     TmDt1_SetDate((uint16_t)date.year+2000, date.month, date.day);
@@ -77,6 +78,18 @@ static portTASK_FUNCTION(AppTask, pvParameters) {
     Elevator();
     FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
 #else
+    if (TmDt1_GetTime(&swTime)==ERR_OK) {
+      if (swTime.Sec==0) {
+        if (swTime.Min==0) { /* every full hour */
+          (void)NEOL_PixelTrail(0x00, 0x00, 0xFF, NEO_PIXEL_FIRST, NEO_PIXEL_LAST,  16, 25, 25);
+          (void)NEOL_PixelTrail(0x00, 0xff, 0x00, NEO_PIXEL_FIRST, NEO_PIXEL_LAST,  16, 25, 25);
+          RTC1_GetRTCTime(&time); /* propagate RTC time to software RTC */
+          TmDt1_SetTime(time.hour, time.min, time.sec, 0);
+        } else if (swTime.Min==15 || swTime.Min==30 || swTime.Min==45) {
+          (void)NEOL_PixelTrail(0xFF, 0x00, 0x00, NEO_PIXEL_FIRST, NEO_PIXEL_LAST,  32, 25, 20);
+        }
+      }
+    }
     CLOCK_Update();
     FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
 #endif
