@@ -13,5 +13,5 @@ http://www.instructables.com/id/ESP8266-Wifi-Temperature-Logger/?ALLSTEPS
 http://tomeko.net/other/ESP8266/index.php?lang=en
 http://www.snip2code.com/Snippet/194415/Webserver-for-Arduino-ESP8266
 https://github.com/esp8266/esp8266-webserver
-
+http://thomaspfeifer.net/esp8266_wlan_seriell_modul_at_kommandos.htm
 http://nerdclub-uk.blogspot.ch/2014/10/getting-esp8266-wifi-module-to-work.html
