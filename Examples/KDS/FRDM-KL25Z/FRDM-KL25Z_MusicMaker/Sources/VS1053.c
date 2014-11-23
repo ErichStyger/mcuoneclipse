@@ -1,8 +1,6 @@
 /*
  * VS1053.c
- *
- *  Created on: 18.11.2014
- *      Author: tastyger
+ *      Author: Erich Styger
  */
 
 #include "VS1053.h"
@@ -13,6 +11,7 @@
 #include "UTIL1.h"
 #include "CLS1.h"
 #include "FAT1.h"
+#include "FRTOS1.h"
 
 /* macros to select device and to switch between data and control mode */
 #define VS_CONTROL_MODE_ON()    DCS_SetVal(); MCS_ClrVal()
@@ -22,33 +21,43 @@
 
 #define VS_DATA_SIZE_BYTES      32  /* always 32 bytes of data */
 
-static volatile bool VS_DataReceivedFlag = FALSE;
+static volatile bool VS_SPIDataReceivedFlag = FALSE;
+static SemaphoreHandle_t spiSem;
 
-void VS_OnBlockReceived(void) {
-  VS_DataReceivedFlag = TRUE;
+void VS_OnSPIBlockReceived(void) {
+  VS_SPIDataReceivedFlag = TRUE;
+}
+
+void VS_OnSPIActivate(void) {
+  FRTOS1_xSemaphoreTakeRecursive(spiSem, portMAX_DELAY);
+}
+
+void VS_OnSPIDeactivate(void) {
+  FRTOS1_xSemaphoreGiveRecursive(spiSem);
 }
 
 static void VS_SPI_WRITE(unsigned char write) {
   unsigned char dummy;
 
-  VS_DataReceivedFlag = FALSE;
+  VS_SPIDataReceivedFlag = FALSE;
   (void)SM1_ReceiveBlock(SM1_DeviceData, &dummy, sizeof(dummy));
   (void)SM1_SendBlock(SM1_DeviceData, &write, sizeof(write));
-  while(!VS_DataReceivedFlag){}
+  while(!VS_SPIDataReceivedFlag){}
 }
 
 static void VS_SPI_WRITE_READ(unsigned char write, unsigned char *readP) {
-  VS_DataReceivedFlag = FALSE;
+  VS_SPIDataReceivedFlag = FALSE;
   (void)SM1_ReceiveBlock(SM1_DeviceData, readP, 1);
   (void)SM1_SendBlock(SM1_DeviceData, &write, 1);
-  while(!VS_DataReceivedFlag){}
+  while(!VS_SPIDataReceivedFlag){}
 }
 
-bool VS_Ready(void) {
+static bool VS_Ready(void) {
   return DREQ_GetVal()!=0; /* HIGH: ready to receive data */
 }
 
 uint8_t VS_WriteRegister(uint8_t reg, uint16_t value) {
+  VS_OnSPIActivate();
   VS_CONTROL_MODE_ON();
   while(!VS_Ready()) {
     /* wait until pin goes high so we know it is ready */
@@ -65,12 +74,14 @@ uint8_t VS_WriteRegister(uint8_t reg, uint16_t value) {
     /* wait until pin goes high so we know it is ready */
   }
   VS_CONTROL_MODE_OFF();
+  VS_OnSPIDeactivate();
   return ERR_OK;
 }
 
 uint8_t VS_ReadRegister(uint8_t reg, uint16_t *value) {
   uint8_t val0, val1;
 
+  VS_OnSPIActivate();
   VS_CONTROL_MODE_ON();
   while(!VS_Ready()) {
     /* wait until pin goes high so we know it is ready */
@@ -88,12 +99,14 @@ uint8_t VS_ReadRegister(uint8_t reg, uint16_t *value) {
   }
   VS_CONTROL_MODE_OFF();
   *value = (val0<<8)|val1;
+  VS_OnSPIDeactivate();
   return ERR_OK;
 }
 
-uint8_t VS_SendZeroes(size_t nof) {
+static uint8_t VS_SendZeroes(size_t nof) {
   size_t chunk;
 
+  VS_OnSPIActivate();
   VS_DATA_MODE_ON();
   while(nof!=0) {
     while(!VS_Ready()) {
@@ -111,6 +124,7 @@ uint8_t VS_SendZeroes(size_t nof) {
     }
   }
   VS_DATA_MODE_OFF();
+  VS_OnSPIDeactivate();
   return ERR_OK;
 }
 
@@ -123,6 +137,7 @@ uint8_t VS_SendData(uint8_t *data, size_t dataSize) {
   if (dataSize!=VS_DATA_SIZE_BYTES) {
     return ERR_FAULT; /* need 32 bytes! */
   }
+  VS_OnSPIActivate();
   VS_DATA_MODE_ON();
   while(dataSize>0) {
     while(!VS_Ready()) {
@@ -132,6 +147,7 @@ uint8_t VS_SendData(uint8_t *data, size_t dataSize) {
     dataSize--;
   }
   VS_DATA_MODE_OFF();
+  VS_OnSPIDeactivate();
   return ERR_OK;
 }
 
@@ -187,7 +203,7 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   uint8_t buf[24];
   uint16_t val;
 
-  CLS1_SendStatusStr((unsigned char*)"VLS1053", (unsigned char*)"\r\n", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"VS1053", (unsigned char*)"\r\n", io->stdOut);
 
   if (VS_ReadRegister(VS_MODE, &val)==ERR_OK) {
     UTIL1_strcpy(buf, sizeof(buf), "0x");
@@ -229,7 +245,7 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
 }
 
 static uint8_t PrintHelp(const CLS1_StdIOType *io) {
-  CLS1_SendHelpStr((unsigned char*)"VLS1053", (unsigned char*)"Group of VSL1053 commands\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"VS1053", (unsigned char*)"Group of VL1053 commands\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  volume <number>", (unsigned char*)"Set volume, full: 0x0000, 0xFEFE silence\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  play <file>", (unsigned char*)"Play song file\r\n", io->stdOut);
@@ -241,24 +257,24 @@ uint8_t VS_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdI
   const uint8_t *p;
   uint32_t val32u;
 
-  if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "VLS1053 help")==0) {
+  if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "VS1053 help")==0) {
     *handled = TRUE;
     return PrintHelp(io);
-  } else if ((UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0) || (UTIL1_strcmp((char*)cmd, "VLS1053 status")==0)) {
+  } else if ((UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0) || (UTIL1_strcmp((char*)cmd, "VS1053 status")==0)) {
     *handled = TRUE;
     return PrintStatus(io);
-  } else if (UTIL1_strncmp((char*)cmd, "VLS1053 volume ", sizeof("VLS1053 volume ")-1)==0) {
+  } else if (UTIL1_strncmp((char*)cmd, "VS1053 volume ", sizeof("VS1053 volume ")-1)==0) {
     *handled = TRUE;
-    p = cmd+sizeof("VLS1053 volume ")-1;
+    p = cmd+sizeof("VS1053 volume ")-1;
     if (UTIL1_xatoi(&p, &val32u)==ERR_OK) {
       return VS_SetVolume((uint16_t)val32u);
     } else {
       CLS1_SendStr("Failed reading volume", io->stdErr);
       return ERR_FAILED;
     }
-  } else if (UTIL1_strncmp((char*)cmd, "VLS1053 play ", sizeof("VLS1053 play ")-1)==0) {
+  } else if (UTIL1_strncmp((char*)cmd, "VS1053 play ", sizeof("VS1053 play ")-1)==0) {
     *handled = TRUE;
-    p = cmd+sizeof("VLS1053 play ")-1;
+    p = cmd+sizeof("VS1053 play ")-1;
     return VS_PlaySong(p, io);
   }
   return ERR_OK;
@@ -271,5 +287,10 @@ void VS_Deinit(void) {
 void VS_Init(void) {
   MCS_SetVal(); /* chip select is low active, deselect it */
   DCS_SetVal(); /* data mode is low active, deselect data mode */
-  VS_DataReceivedFlag = FALSE; /* Initialization */
+  VS_SPIDataReceivedFlag = FALSE; /* Initialization */
+  spiSem = FRTOS1_xSemaphoreCreateRecursiveMutex();
+  if (spiSem==NULL) { /* creation failed? */
+    for(;;);
+  }
+  FRTOS1_vQueueAddToRegistry(spiSem, "SpiSem");
 }

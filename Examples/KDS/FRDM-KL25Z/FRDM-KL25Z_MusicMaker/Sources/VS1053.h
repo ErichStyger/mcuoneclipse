@@ -1,8 +1,7 @@
 /*
  * VS1053.h
  *
- *  Created on: 18.11.2014
- *      Author: tastyger
+ *      Author: Erich Styger
  */
 
 #ifndef VS1053_H_
@@ -29,14 +28,54 @@
 #define VS_IO_IDATA     0xC018
 #define VS_IO_ODATA     0xC019
 
-#include "CLS1.h"
+#include "CLS1.h" /* shell interface */
+/*!
+ * \brief Module command line parser
+ * \param cmd Pointer to the command
+ * \param handled Return value if the command has been handled by parser
+ * \param io Shell standard I/O handle
+ * \return Error code, ERR_OK if everything is OK
+ */
 uint8_t VS_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
 
-void VS_OnBlockReceived(void);
+/*!
+ * \brief Event hook called before activating/accessing the SPI bus
+ */
+void VS_OnSPIActivate(void);
 
+/*!
+ * \brief Event hook called after activating/accessing the SPI bus
+ */
+void VS_OnSPIDeactivate(void);
+
+/*!
+ * \brief Event hook handler, called from an interrupt when we have received the MISO SPI data from the device.
+ */
+void VS_OnSPIBlockReceived(void);
+
+/*!
+ * \brief Plays a song file
+ * \param fileName file name of the song
+ * \param io Shell standard I/O for messages, NULL for no message printing
+ * \return Error code, ERR_OK if everything is OK
+ */
 uint8_t VS_PlaySong(const uint8_t *fileName, const CLS1_StdIOType *io);
 
+/*!
+ * \brief Read a device register
+ * \param reg Register address to read
+ * \param value Pointer where to store the register value
+ * \return Error code, ERR_OK if everything is OK
+ */
 uint8_t VS_ReadRegister(uint8_t reg, uint16_t *value);
+
+/*!
+ * \brief Write a device register
+ * \param reg Register address to write
+ * \param value VAlue to write to the register
+ * \return Error code, ERR_OK if everything is OK
+ */
+uint8_t VS_WriteRegister(uint8_t reg, uint16_t value);
 
 /*!
  * \brief Driver initialization.

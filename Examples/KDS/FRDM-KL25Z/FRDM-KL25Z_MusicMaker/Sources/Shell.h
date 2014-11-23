@@ -1,7 +1,6 @@
 /*
  * Shell.h
  *
- *  Created on: 23.05.2011
  *      Author: Erich Styger
  */
 

@@ -147,8 +147,45 @@ void FRTOS1_vApplicationMallocFailedHook(void)
 /* ===================================================================*/
 void SD1_OnBlockReceived(LDD_TUserData *UserDataPtr)
 {
-  VS_OnBlockReceived();
+  VS_OnSPIBlockReceived();
 }
+
+/*
+** ===================================================================
+**     Event       :  SD1_OnActivate (module Events)
+**
+**     Component   :  SD1 [SD_Card]
+**     Description :
+**         Event called when Activate() method is called. This gives an
+**         opportunity to the application to synchronize access to a
+**         shared bus.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void SD1_OnActivate(void)
+{
+  VS_OnSPIActivate();
+}
+
+/*
+** ===================================================================
+**     Event       :  SD1_OnDeactivate (module Events)
+**
+**     Component   :  SD1 [SD_Card]
+**     Description :
+**         Event called when Deactivate() method is called. This gives
+**         an opportunity to the application to synchronize access to a
+**         shared bus.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void SD1_OnDeactivate(void)
+{
+  VS_OnSPIDeactivate();
+}
+
 
 /* END Events */
 
