@@ -28,7 +28,7 @@ static uint8_t ReadCharsUntil(uint8_t *buf, size_t bufSize, uint8_t sentinelChar
   if (bufSize<=1) {
     return ERR_OVERRUN; /* buffer to small */
   }
-  buf[bufSize-1] = '\0'; /* always terminate */
+  buf[0] = '\0'; buf[bufSize-1] = '\0'; /* always terminate */
   bufSize--;
   for(;;) { /* breaks */
     if (bufSize==0) {
@@ -46,10 +46,10 @@ static uint8_t ReadCharsUntil(uint8_t *buf, size_t bufSize, uint8_t sentinelChar
       }
     } else {
       if (timeoutMs>10) {
-        WAIT1_WaitOSms(10);
-        timeoutMs -= 10;
+        WAIT1_WaitOSms(5);
+        timeoutMs -= 5;
       } else {
-        res = ERR_IDLE; /* timeout */
+        res = ERR_NOTAVAIL; /* timeout */
         break;
       }
     }
@@ -105,15 +105,27 @@ static uint8_t RxResponse(unsigned char *rxBuf, size_t rxBufLength, unsigned cha
   return res;
 }
 
-uint8_t ESP_SendATCommand(uint8_t *cmd, uint8_t *rxBuf, size_t rxBufSize, uint8_t *expectedTailStr, uint16_t msTimeout) {
+uint8_t ESP_SendATCommand(uint8_t *cmd, uint8_t *rxBuf, size_t rxBufSize, uint8_t *expectedTailStr, uint16_t msTimeout, const CLS1_StdIOType *io) {
   uint16_t snt;
   uint8_t res;
 
-  rxBuf[0] = '\0';
+  if (rxBuf!=NULL) {
+    rxBuf[0] = '\0';
+  }
+  if (io!=NULL) {
+    CLS1_SendStr("sending>>:\r\n", io->stdOut);
+    CLS1_SendStr(cmd, io->stdOut);
+  }
   if (AS2_SendBlock(cmd, (uint16_t)UTIL1_strlen((char*)cmd), &snt) != ERR_OK) {
     return ERR_FAILED;
   }
-  res = RxResponse(rxBuf, rxBufSize, expectedTailStr, msTimeout);
+  if (rxBuf!=NULL) {
+    res = RxResponse(rxBuf, rxBufSize, expectedTailStr, msTimeout);
+    if (io!=NULL) {
+      CLS1_SendStr("received<<:\r\n", io->stdOut);
+      CLS1_SendStr(rxBuf, io->stdOut);
+    }
+  }
   return res;
 }
 
@@ -122,7 +134,7 @@ uint8_t ESP_Test(void) {
   uint8_t rxBuf[sizeof("AT\r\r\n\r\nOK\r\n")];
   uint8_t res;
 
-  res = ESP_SendATCommand("AT\r\n", rxBuf, sizeof(rxBuf), "AT\r\r\n\r\nOK\r\n", ESP_DEFAULT_TIMEOUT_MS);
+  res = ESP_SendATCommand("AT\r\n", rxBuf, sizeof(rxBuf), "AT\r\r\n\r\nOK\r\n", ESP_DEFAULT_TIMEOUT_MS, NULL);
   return res;
 }
 
@@ -133,7 +145,7 @@ uint8_t ESP_Restart(const CLS1_StdIOType *io, uint16_t timeoutMs) {
   uint8_t buf[64];
 
   AS2_ClearRxBuf(); /* clear buffer */
-  res = ESP_SendATCommand("AT+RST\r\n", rxBuf, sizeof(rxBuf), "AT+RST\r\r\n\r\nOK\r\n", ESP_DEFAULT_TIMEOUT_MS);
+  res = ESP_SendATCommand("AT+RST\r\n", rxBuf, sizeof(rxBuf), "AT+RST\r\r\n\r\nOK\r\n", ESP_DEFAULT_TIMEOUT_MS, io);
   if (res==ERR_OK) {
     for(;;) {
       ReadCharsUntil(buf, sizeof(buf), '\n', 1000);
@@ -165,7 +177,7 @@ uint8_t ESP_SelectWiFiMode(uint8_t mode) {
   UTIL1_strcpy(expected, sizeof(expected), "AT+CWMODE=");
   UTIL1_strcatNum16u(expected, sizeof(expected), mode);
   UTIL1_strcat(expected, sizeof(expected), "\r\r\n\n");
-  res = ESP_SendATCommand(txBuf, rxBuf, sizeof(rxBuf), expected, ESP_DEFAULT_TIMEOUT_MS);
+  res = ESP_SendATCommand(txBuf, rxBuf, sizeof(rxBuf), expected, ESP_DEFAULT_TIMEOUT_MS, NULL);
   if (res!=ERR_OK) {
     /* answer could be as well "AT+CWMODE=x\r\r\nno change\r\n"!! */
     UTIL1_strcpy(txBuf, sizeof(txBuf), "AT+CWMODE=");
@@ -187,7 +199,7 @@ uint8_t ESP_GetFirmwareString(uint8_t *fwBuf, size_t fwBufSize) {
   uint8_t res;
   const unsigned char *p;
 
-  res = ESP_SendATCommand("AT+GMR\r\n", rxBuf, sizeof(rxBuf), "\r\n\r\nOK\r\n", ESP_DEFAULT_TIMEOUT_MS);
+  res = ESP_SendATCommand("AT+GMR\r\n", rxBuf, sizeof(rxBuf), "\r\n\r\nOK\r\n", ESP_DEFAULT_TIMEOUT_MS, NULL);
   if (res!=ERR_OK) {
     if (UTIL1_strtailcmp(rxBuf, "\r\n\r\nOK\r\n")) {
       res = ERR_OK;
@@ -214,7 +226,7 @@ uint8_t ESP_GetIPAddrString(uint8_t *ipBuf, size_t ipBufSize) {
   uint8_t res;
   const unsigned char *p;
 
-  res = ESP_SendATCommand("AT+CIFSR\r\n", rxBuf, sizeof(rxBuf), NULL, ESP_DEFAULT_TIMEOUT_MS);
+  res = ESP_SendATCommand("AT+CIFSR\r\n", rxBuf, sizeof(rxBuf), NULL, ESP_DEFAULT_TIMEOUT_MS, NULL);
   if (res!=ERR_OK) {
     if (UTIL1_strtailcmp(rxBuf, "\r\n")) {
       res = ERR_OK;
@@ -241,7 +253,7 @@ uint8_t ESP_GetCIPMUXString(uint8_t *cipmuxBuf, size_t cipmuxBufSize) {
   uint8_t res;
   const unsigned char *p;
 
-  res = ESP_SendATCommand("AT+CIPMUX?\r\n", rxBuf, sizeof(rxBuf), "\r\n\r\nOK\r\n", ESP_DEFAULT_TIMEOUT_MS);
+  res = ESP_SendATCommand("AT+CIPMUX?\r\n", rxBuf, sizeof(rxBuf), "\r\n\r\nOK\r\n", ESP_DEFAULT_TIMEOUT_MS, NULL);
   if (res==ERR_OK) {
     if (UTIL1_strncmp(rxBuf, "AT+CIPMUX?\r\r\n+CIPMUX:", sizeof("AT+CIPMUX?\r\r\n+CIPMUX:")-1)==0) { /* check for beginning of response */
       UTIL1_strCutTail(rxBuf, "\r\n\r\nOK\r\n"); /* cut tailing response */
@@ -264,7 +276,7 @@ uint8_t ESP_GetConnectedAPString(uint8_t *apBuf, size_t apBufSize) {
   uint8_t res;
   const unsigned char *p;
 
-  res = ESP_SendATCommand("AT+CWJAP?\r\n", rxBuf, sizeof(rxBuf), "\r\n\r\nOK\r\n", ESP_DEFAULT_TIMEOUT_MS);
+  res = ESP_SendATCommand("AT+CWJAP?\r\n", rxBuf, sizeof(rxBuf), "\r\n\r\nOK\r\n", ESP_DEFAULT_TIMEOUT_MS, NULL);
   if (res==ERR_OK) {
     if (UTIL1_strncmp(rxBuf, "AT+CWJAP?\r\r\n+CWJAP:\"", sizeof("AT+CWJAP?\r\r\n+CWJAP:\"")-1)==0) { /* check for beginning of response */
       UTIL1_strCutTail(rxBuf, "\"\r\n\r\nOK\r\n"); /* cut tailing response */
@@ -280,7 +292,6 @@ uint8_t ESP_GetConnectedAPString(uint8_t *apBuf, size_t apBufSize) {
   return res;
 
 }
-
 
 uint8_t ESP_JoinAccessPoint(uint8_t *ssid, uint8_t *pwd, CLS1_ConstStdIOType *io) {
   /* AT+CWJAP="<ssid>","<pwd>" */
@@ -301,10 +312,7 @@ uint8_t ESP_JoinAccessPoint(uint8_t *ssid, uint8_t *pwd, CLS1_ConstStdIOType *io
   UTIL1_strcat(expected, sizeof(expected), pwd);
   UTIL1_strcat(expected, sizeof(expected), "\"\r\r\n\r\nOK\r\n");
 
-  res = ESP_SendATCommand(txBuf, rxBuf, sizeof(rxBuf), expected, ESP_DEFAULT_TIMEOUT_MS);
-  if (io!=NULL) {
-    CLS1_SendStr(rxBuf, res==ERR_OK?io->stdOut:io->stdErr);
-  }
+  res = ESP_SendATCommand(txBuf, rxBuf, sizeof(rxBuf), expected, ESP_DEFAULT_TIMEOUT_MS, io);
   return res;
 }
 
@@ -326,39 +334,74 @@ uint8_t ESP_ConnectWiFi(uint8_t *ssid, uint8_t *pwd, int nofRetries, CLS1_ConstS
   return res;
 }
 
+
 static uint8_t ESP_SendWebPage(uint8_t ch_id, const CLS1_StdIOType *io) {
-  static uint8_t httpHdr[64];
-  uint8_t cmd[24], rxBuf[24], expected[24];
+  static uint8_t http[1024];
+  uint8_t cmd[24], rxBuf[48], expected[48];
   uint8_t buf[16];
   uint8_t res;
 
-  UTIL1_strcpy(httpHdr, sizeof(httpHdr), "HTTP/1.1 200 OK\r\n");
-  UTIL1_strcat(httpHdr, sizeof(httpHdr), "Content-Type: text/html\r\n");
-  UTIL1_strcat(httpHdr, sizeof(httpHdr), "Connection: close\r\n");
+  /* construct web page content */
+  UTIL1_strcpy(http, sizeof(http), (uint8_t*)"HTTP/1.0 200 OK\r\nContent-Type: text/html\r\nPragma: no-cache\r\n\r\n");
+  UTIL1_strcat(http, sizeof(http), (uint8_t*)"<html>\r\n<body>\r\n");
+  UTIL1_strcat(http, sizeof(http), (uint8_t*)"<title>ESP8266 Web Server</title>\r\n");
+  UTIL1_strcat(http, sizeof(http), (uint8_t*)"<h2>Web Server using ESP8266</h2>\r\n");
+  UTIL1_strcat(http, sizeof(http), (uint8_t*)"<br /><hr>\r\n");
+  UTIL1_strcat(http, sizeof(http), (uint8_t*)"<p><form method=\"POST\"><strong>Temp: <input type=\"text\" size=2 value=\"");
+  UTIL1_strcatNum8s(http, sizeof(http), 21/*temperature*/);
+  UTIL1_strcat(http, sizeof(http), (uint8_t*)"\"> <sup>O</sup>C");
+  //if (ledIsOn) {
+    UTIL1_strcat(http, sizeof(http), (uint8_t*)"<p><input type=\"radio\" name=\"radio\" value=\"0\" >Red LED off");
+    UTIL1_strcat(http, sizeof(http), (uint8_t*)"<br><input type=\"radio\" name=\"radio\" value=\"1\" checked>Red LED on");
+  //} else {
+  //  UTIL1_strcat(http, sizeof(http), (uint8_t*)"<p><input type=\"radio\" name=\"radio\" value=\"0\" checked>Red LED off");
+  //  UTIL1_strcat(http, sizeof(http), (uint8_t*)"<br><input type=\"radio\" name=\"radio\" value=\"1\" >Red LED on");
+ // }
+  UTIL1_strcat(http, sizeof(http), (uint8_t*)"</strong><p><input type=\"submit\"></form></span>");
+  UTIL1_strcat(http, sizeof(http), (uint8_t*)"</body>\r\n</html>\r\n");
 
   UTIL1_strcpy(cmd, sizeof(cmd), "AT+CIPSEND="); /* parameters are <ch_id>,<size> */
   UTIL1_strcatNum8u(cmd, sizeof(cmd), ch_id);
   UTIL1_chcat(cmd, sizeof(cmd), ',');
-  UTIL1_strcatNum16u(cmd, sizeof(cmd), UTIL1_strlen(httpHdr));
-  UTIL1_strcat(cmd, sizeof(cmd), "\r\n");
+  UTIL1_strcatNum16u(cmd, sizeof(cmd), UTIL1_strlen(http));
   UTIL1_strcpy(expected, sizeof(expected), cmd); /* we expect the echo of our command */
-  res = ESP_SendATCommand(cmd, rxBuf, sizeof(rxBuf), expected, ESP_DEFAULT_TIMEOUT_MS);
-  for(;;) { /* breaks */
-    res = ReadCharsUntil(buf, sizeof(buf), '\n', 1000);
-    if (res==ERR_OK) { /* line read */
-      if (io!=NULL) {
-        CLS1_SendStr(buf, io->stdOut); /* copy on console */
-      }
-      if (UTIL1_strncmp(buf, ">", sizeof(">")-1)==0) { /* have ready signal to send data */
-        Send(httpHdr);
+  UTIL1_strcat(expected, sizeof(expected), "\r\r\n> "); /* expect "> " */
+  UTIL1_strcat(cmd, sizeof(cmd), "\r\n");
+  res = ESP_SendATCommand(cmd, rxBuf, sizeof(rxBuf), expected, ESP_DEFAULT_TIMEOUT_MS, io);
+  if (res!=ERR_OK) {
+    if (io!=NULL) {
+      CLS1_SendStr("INFO: TIMEOUT, closing connection!\r\n", io->stdOut);
+    }
+  } else {
+    if (io!=NULL) {
+      CLS1_SendStr("INFO: Sending http page...\r\n", io->stdOut);
+    }
+    UTIL1_strcat(http, sizeof(http), "\r\n\r\n"); /* need to add this to end the command! */
+    res = ESP_SendATCommand(http, NULL, 0, NULL, ESP_DEFAULT_TIMEOUT_MS, io);
+    if (res!=ERR_OK) {
+      CLS1_SendStr("Sending page failed!\r\n", io->stdErr); /* copy on console */
+    } else {
+      for(;;) { /* breaks */
+        res = ReadCharsUntil(buf, sizeof(buf), '\n', 1000);
+        if (res==ERR_OK) { /* line read */
+          if (io!=NULL) {
+            CLS1_SendStr(buf, io->stdOut); /* copy on console */
+          }
+        }
+        if (UTIL1_strncmp(buf, "SEND OK\r\n", sizeof("SEND OK\r\n")-1)==0) { /* ok from module */
+          break;
+        }
       }
     }
   }
+  CLS1_SendStr("INFO: Closing connection!\r\n", io->stdOut);
+  res = ESP_SendATCommand("AT+CIPCLOSE=0\r\n", rxBuf, sizeof(rxBuf), "Unlink\r\n", ESP_DEFAULT_TIMEOUT_MS, io);
+  ESP_SendStr("AT+CIPCLOSE=0\r\n", io); /* need this to show the page in the browser */
   return ERR_OK;
 }
 
 uint8_t ESP_StartWebServer(const CLS1_StdIOType *io) {
-  uint8_t buf[64];
+  static uint8_t buf[128];
   uint8_t res=ERR_OK;
   uint8_t ch_id=0;
   uint16_t size=0;
@@ -366,7 +409,14 @@ uint8_t ESP_StartWebServer(const CLS1_StdIOType *io) {
 
   ESP_SendStr("AT+CIPMUX=1", io); /* multiple connections, seems to be needed for server */
   ESP_SendStr("AT+CIPSERVER=1,80", io); /* single connection mode */
-  CLS1_SendStr("INFO: Web Server started, waiting for connection.\r\n", io->stdOut);
+  CLS1_SendStr("INFO: Web Server started, waiting for connection on ", io->stdOut);
+  if (ESP_GetIPAddrString(buf, sizeof(buf))==ERR_OK) {
+    CLS1_SendStr(buf, io->stdOut);
+    CLS1_SendStr(":80", io->stdOut);
+  } else {
+    CLS1_SendStr("(ERROR!)", io->stdOut);
+  }
+  CLS1_SendStr("\r\n", io->stdOut);
 
   for(;;) { /* breaks */
     res = ReadCharsUntil(buf, sizeof(buf), '\n', 1000);
@@ -434,10 +484,7 @@ uint8_t ESP_SendStr(const uint8_t *str, CLS1_ConstStdIOType *io) {
 
   UTIL1_strcpy(buf, sizeof(buf), str);
   UTIL1_strcat(buf, sizeof(buf), "\r\n");
-  res = ESP_SendATCommand(buf, rxBuf, sizeof(rxBuf), NULL, ESP_DEFAULT_TIMEOUT_MS);
-  if (io!=NULL) {
-    CLS1_SendStr(rxBuf, io->stdOut);
-  }
+  res = ESP_SendATCommand(buf, rxBuf, sizeof(rxBuf), NULL, ESP_DEFAULT_TIMEOUT_MS, io);
   timeoutMs = 0;
   while(timeoutMs<RX_TIMEOUT_MS) {
     WAIT1_WaitOSms(100);
