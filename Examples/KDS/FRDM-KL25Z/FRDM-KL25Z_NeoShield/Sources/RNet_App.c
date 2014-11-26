@@ -100,7 +100,7 @@ static portTASK_FUNCTION(RNetTask, pvParameters) {
     cntr++;
     if (cntr==100) { /* with an RTOS 10 ms/100 Hz tick rate, this is every second */
       LED3_On(); /* blink blue LED for 20 ms */
-      RAPP_SendPayloadDataBlock(&msgCntr, sizeof(msgCntr), RAPP_MSG_TYPE_PING, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
+     // RAPP_SendPayloadDataBlock(&msgCntr, sizeof(msgCntr), RAPP_MSG_TYPE_PING, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
       msgCntr++;
       cntr = 0;
       FRTOS1_vTaskDelay(20/portTICK_RATE_MS);

@@ -38,12 +38,7 @@ void APP_Run(void) {
 
   CLS1_PrintPrompt(io);
   for(;;) {
-    while (AS2_GetCharsInRxBuf()>0) {
-      uint8_t ch;
-
-      (void)AS2_RecvChar(&ch);
-      CLS1_SendChar(ch);
-    }
+    ESP_Process();
     SHELL_Parse();
     WAIT1_Waitms(10);
   }

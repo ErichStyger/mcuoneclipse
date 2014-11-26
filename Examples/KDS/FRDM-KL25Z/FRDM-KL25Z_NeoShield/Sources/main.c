@@ -48,7 +48,6 @@
 #include "BitIoLdd3.h"
 #include "GI2C1.h"
 #include "I2C1.h"
-#include "I2CSPY1.h"
 #include "RTC1.h"
 #include "TMOUT1.h"
 #include "PTC.h"

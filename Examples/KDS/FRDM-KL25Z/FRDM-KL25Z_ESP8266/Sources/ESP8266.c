@@ -11,13 +11,22 @@
 #include "CLS1.h"
 #include "AS2.h"
 #include "WAIT1.h"
+#include "LEDR.h"
 
 #define ESP_DEFAULT_TIMEOUT_MS    (100)
+
+static bool WebServerIsOn = FALSE;
 
 static void Send(unsigned char *str) {
   while(*str!='\0') {
     AS2_SendChar(*str);
     str++;
+  }
+}
+
+static void SkipNewLines(const unsigned char **p) {
+  while(**p=='\n' || **p=='\r') {
+    (*p)++; /* skip new lines */
   }
 }
 
@@ -236,6 +245,7 @@ uint8_t ESP_GetIPAddrString(uint8_t *ipBuf, size_t ipBufSize) {
     if (UTIL1_strncmp(rxBuf, "AT+CIFSR\r\r\n", sizeof("AT+CIFSR\r\r\n")-1)==0) { /* check for beginning of response */
       UTIL1_strCutTail(rxBuf, "\r\n"); /* cut tailing response */
       p = rxBuf+sizeof("AT+CIFSR\r\r\n")-1; /* skip beginning */
+      SkipNewLines(&p);
       UTIL1_strcpy(ipBuf, ipBufSize, p); /* copy IP information string */
     } else {
       res = ERR_FAILED;
@@ -335,7 +345,7 @@ uint8_t ESP_ConnectWiFi(uint8_t *ssid, uint8_t *pwd, int nofRetries, CLS1_ConstS
 }
 
 
-static uint8_t ESP_SendWebPage(uint8_t ch_id, const CLS1_StdIOType *io) {
+static uint8_t ESP_SendWebPage(uint8_t ch_id, bool ledIsOn, uint8_t temperature, const CLS1_StdIOType *io) {
   static uint8_t http[1024];
   uint8_t cmd[24], rxBuf[48], expected[48];
   uint8_t buf[16];
@@ -348,15 +358,15 @@ static uint8_t ESP_SendWebPage(uint8_t ch_id, const CLS1_StdIOType *io) {
   UTIL1_strcat(http, sizeof(http), (uint8_t*)"<h2>Web Server using ESP8266</h2>\r\n");
   UTIL1_strcat(http, sizeof(http), (uint8_t*)"<br /><hr>\r\n");
   UTIL1_strcat(http, sizeof(http), (uint8_t*)"<p><form method=\"POST\"><strong>Temp: <input type=\"text\" size=2 value=\"");
-  UTIL1_strcatNum8s(http, sizeof(http), 21/*temperature*/);
+  UTIL1_strcatNum8s(http, sizeof(http), temperature);
   UTIL1_strcat(http, sizeof(http), (uint8_t*)"\"> <sup>O</sup>C");
-  //if (ledIsOn) {
+  if (ledIsOn) {
     UTIL1_strcat(http, sizeof(http), (uint8_t*)"<p><input type=\"radio\" name=\"radio\" value=\"0\" >Red LED off");
     UTIL1_strcat(http, sizeof(http), (uint8_t*)"<br><input type=\"radio\" name=\"radio\" value=\"1\" checked>Red LED on");
-  //} else {
-  //  UTIL1_strcat(http, sizeof(http), (uint8_t*)"<p><input type=\"radio\" name=\"radio\" value=\"0\" checked>Red LED off");
-  //  UTIL1_strcat(http, sizeof(http), (uint8_t*)"<br><input type=\"radio\" name=\"radio\" value=\"1\" >Red LED on");
- // }
+  } else {
+    UTIL1_strcat(http, sizeof(http), (uint8_t*)"<p><input type=\"radio\" name=\"radio\" value=\"0\" checked>Red LED off");
+    UTIL1_strcat(http, sizeof(http), (uint8_t*)"<br><input type=\"radio\" name=\"radio\" value=\"1\" >Red LED on");
+  }
   UTIL1_strcat(http, sizeof(http), (uint8_t*)"</strong><p><input type=\"submit\"></form></span>");
   UTIL1_strcat(http, sizeof(http), (uint8_t*)"</body>\r\n</html>\r\n");
 
@@ -400,12 +410,69 @@ static uint8_t ESP_SendWebPage(uint8_t ch_id, const CLS1_StdIOType *io) {
   return ERR_OK;
 }
 
-uint8_t ESP_StartWebServer(const CLS1_StdIOType *io) {
+static uint8_t ESP_GetIPD(uint8_t *ch_id, uint16_t *size, bool *isGet, uint16_t timeoutMs, const CLS1_StdIOType *io) {
+  /* scan e.g. for
+   * +IPD,0,404:POST / HTTP/1.1
+   * and return ch_id (0), size (404)
+   */
   static uint8_t buf[128];
-  uint8_t res=ERR_OK;
-  uint8_t ch_id=0;
-  uint16_t size=0;
+  uint8_t res = ERR_OK;
   const uint8_t *p;
+
+  *ch_id = 0; *size = 0; *isGet = FALSE; /* init */
+  for(;;) { /* breaks */
+    res = ReadCharsUntil(buf, sizeof(buf), '\n', timeoutMs);
+    if (res!=ERR_OK) {
+      break;
+    }
+    if (res==ERR_OK) { /* line read */
+      if (io!=NULL) {
+        CLS1_SendStr(buf, io->stdOut); /* copy on console */
+      }
+      if (UTIL1_strncmp(buf, "+IPD,", sizeof("+IPD,")-1)==0) { /* start of IPD message */
+        p = buf+sizeof("+IPD,")-1;
+        if (UTIL1_ScanDecimal8uNumber(&p, ch_id)!=ERR_OK) {
+          if (io!=NULL) {
+            CLS1_SendStr("ERR: wrong channel?\r\n", io->stdErr); /* error on console */
+          }
+          res = ERR_FAILED;
+          break;
+        }
+        if (*p!=',') {
+          res = ERR_FAILED;
+          break;
+        }
+        p++; /* skip comma */
+        if (UTIL1_ScanDecimal16uNumber(&p, size)!=ERR_OK) {
+          if (io!=NULL) {
+            CLS1_SendStr("ERR: wrong size?\r\n", io->stdErr); /* error on console */
+          }
+          res = ERR_FAILED;
+          break;
+        } else {
+          break; /* everything ok! */
+        }
+        if (*p!=':') {
+          res = ERR_FAILED;
+          break;
+        }
+        p++; /* skip ':' */
+        if (UTIL1_strncmp(p, "GET", sizeof("GET")-1)) {
+          *isGet = TRUE;
+        } else if (UTIL1_strncmp(p, "PUT", sizeof("PUT")-1)) {
+          *isGet = FALSE;
+        } else {
+          res = ERR_FAILED;
+          break;
+        }
+      }
+    }
+  }
+  return res;
+}
+
+uint8_t ESP_StartWebServer(const CLS1_StdIOType *io) {
+  uint8_t buf[32];
 
   ESP_SendStr("AT+CIPMUX=1", io); /* multiple connections, seems to be needed for server */
   ESP_SendStr("AT+CIPSERVER=1,80", io); /* single connection mode */
@@ -418,60 +485,50 @@ uint8_t ESP_StartWebServer(const CLS1_StdIOType *io) {
   }
   CLS1_SendStr("\r\n", io->stdOut);
 
-  for(;;) { /* breaks */
-    res = ReadCharsUntil(buf, sizeof(buf), '\n', 1000);
-    if (res==ERR_OK) { /* line read */
-      if (io!=NULL) {
-        CLS1_SendStr(buf, io->stdOut); /* copy on console */
-      }
-      if (UTIL1_strncmp(buf, "+IPD,", sizeof("+IPD,")-1)==0) { /* start of IPD message */
-        p = buf+sizeof("+IPD,")-1;
-        if (UTIL1_ScanDecimal8uNumber(&p, &ch_id)!=ERR_OK) {
+  return ERR_OK;
+}
+
+void ESP_Process(void) {
+  static uint8_t buf[128];
+  uint8_t res=ERR_OK;
+  bool isGet;
+  uint8_t ch_id=0;
+  uint16_t size=0;
+  const uint8_t *p;
+  const CLS1_StdIOType *io;
+
+  if (WebServerIsOn) {
+    io = CLS1_GetStdio();
+    res = ESP_GetIPD(&ch_id, &size, &isGet, 1000, io);
+    if (res==ERR_OK) {
+      /* scan for OK at the end */
+      for(;;) { /* breaks */
+        res = ReadCharsUntil(buf, sizeof(buf), '\n', 1000);
+        if (res==ERR_OK) {
           if (io!=NULL) {
-            CLS1_SendStr("ERR: wrong channel?\r\n", io->stdErr); /* error on console */
+            CLS1_SendStr(buf, io->stdOut); /* copy on console */
           }
-          res = ERR_FAILED;
-          break;
-        }
-        if (*p!=',') {
-          res = ERR_FAILED;
-          break;
-        }
-        p++; /* skip comma */
-        if (UTIL1_ScanDecimal16uNumber(&p, &size)!=ERR_OK) {
-          if (io!=NULL) {
-            CLS1_SendStr("ERR: wrong size?\r\n", io->stdErr); /* error on console */
+          if (UTIL1_strncmp(buf, "OK", sizeof("OK")-1)==0) { /* finish of message */
+            break;
           }
-          res = ERR_FAILED;
-          break;
-        } else {
-          break; /* everything ok! */
         }
       }
     }
-  }
-  if (res==ERR_OK) {
-    /* scan for OK at the end */
-    for(;;) { /* breaks */
-      res = ReadCharsUntil(buf, sizeof(buf), '\n', 1000);
-      if (res==ERR_OK) {
-        if (io!=NULL) {
-          CLS1_SendStr(buf, io->stdOut); /* copy on console */
-        }
-        if (UTIL1_strncmp(buf, "OK", sizeof("OK")-1)==0) { /* finish of message */
-          break;
-        }
-      }
+    if (io!=NULL) {
+      CLS1_SendStr("Connected!\r\n", io->stdOut); /* copy on console */
+    }
+    res = ESP_SendWebPage(ch_id, LEDR_Get()!=FALSE, 21 /*dummy*/, io);
+    if (res!=ERR_OK) {
+      CLS1_SendStr("Sending page failed!\r\n", io->stdErr); /* copy on console */
+    }
+  } else { /* copy messages we receive to console */
+    while (AS2_GetCharsInRxBuf()>0) {
+      uint8_t ch;
+
+      (void)AS2_RecvChar(&ch);
+      CLS1_SendChar(ch);
     }
   }
-  if (io!=NULL) {
-    CLS1_SendStr("Connected!\r\n", io->stdOut); /* copy on console */
-  }
-  res = ESP_SendWebPage(ch_id, io);
-  if (res!=ERR_OK) {
-    CLS1_SendStr("Sending page failed!\r\n", io->stdErr); /* copy on console */
-  }
-  return res;
 }
 
 uint8_t ESP_SendStr(const uint8_t *str, CLS1_ConstStdIOType *io) {
@@ -506,7 +563,7 @@ static uint8_t ESP_PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr("  listAP", "List Access Points\r\n", io->stdOut);
   CLS1_SendHelpStr("  connectedAP", "Show connected Access Points\r\n", io->stdOut);
   CLS1_SendHelpStr("  printIP", "Print own IP address\r\n", io->stdOut);
-  CLS1_SendHelpStr("  startWeb", "Start web server\r\n", io->stdOut);
+  CLS1_SendHelpStr("  server (start|stop)", "Start or stop web server\r\n", io->stdOut);
   return ERR_OK;
 }
 
@@ -514,6 +571,8 @@ static uint8_t ESP_PrintStatus(const CLS1_StdIOType *io) {
   uint8_t buf[32];
 
   CLS1_SendStatusStr("ESP8266", "\r\n", io->stdOut);
+
+  CLS1_SendStatusStr("  Webserver", WebServerIsOn?"ON\r\n":"OFF\r\n", io->stdOut);
 
   if (ESP_GetFirmwareString(buf, sizeof(buf)) != ERR_OK) {
     UTIL1_strcpy(buf, sizeof(buf), "FAILED\r\n");
@@ -595,9 +654,13 @@ uint8_t ESP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
     *handled = TRUE;
     (void)ESP_SendStr("AT+CIFSR", io);
     return ERR_OK;
-  } else if (UTIL1_strcmp((char*)cmd, "ESP startWeb")==0) {
+  } else if (UTIL1_strcmp((char*)cmd, "ESP server start")==0) {
     *handled = TRUE;
-    (void)ESP_StartWebServer(io);
+    WebServerIsOn = ESP_StartWebServer(io)==ERR_OK;
+    return ERR_OK;
+  } else if (UTIL1_strcmp((char*)cmd, "ESP server stop")==0) {
+    *handled = TRUE;
+    WebServerIsOn = FALSE;
     return ERR_OK;
   } else if (UTIL1_strcmp((char*)cmd, "ESP restart")==0) {
     *handled = TRUE;

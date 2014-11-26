@@ -30,6 +30,16 @@ static portTASK_FUNCTION(Task1, pvParameters) {
   NEO_TransferPixels();
 
   for(;;) {
+    for(i=0;i<=NEO_PIXEL_LAST;i++) {
+      NEO_SetPixelRGB(i, 0xff, 0x00, 0x00);
+      if (i>0) {
+        NEO_SetPixelRGB(i-1, 0x00, 0x00, 0x00);
+      } else if (i==0) {
+        NEO_SetPixelRGB(NEO_PIXEL_LAST, 0x00, 0x00, 0x00);
+      }
+      NEO_TransferPixels();
+      FRTOS1_vTaskDelay(200/portTICK_RATE_MS);
+    }
 #if 0
     NEOL_PixelTrail(0xff, 0x00, 0x00, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10);
     NEOL_PixelTrail(0xff, 0xff, 0x00, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10);
@@ -40,7 +50,7 @@ static portTASK_FUNCTION(Task1, pvParameters) {
 #endif
     LED1_Neg();
     FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
-    NEO_TransferPixels();
+    //NEO_TransferPixels();
   }
 }
 

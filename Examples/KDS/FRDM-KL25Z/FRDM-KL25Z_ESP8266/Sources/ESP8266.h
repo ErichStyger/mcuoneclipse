@@ -28,6 +28,8 @@ uint8_t ESP_JoinAccessPoint(uint8_t *ssid, uint8_t *pwd, CLS1_ConstStdIOType *io
 
 uint8_t ESP_ConnectWiFi(uint8_t *ssid, uint8_t *pwd, int nofRetries, CLS1_ConstStdIOType *io);
 
+void ESP_Process(void);
+
 void ESP_Init(void);
 
 #endif /* ESP8266_H_ */
