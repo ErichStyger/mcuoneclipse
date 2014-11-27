@@ -15,9 +15,9 @@
 #include "WAIT1.h"
 
 /* 48 MHz, WS2812(S) */
-#define TPM_CH0_TICKS 18  /* 0.4 us */
-#define TPM_CH1_TICKS 36  /* 0.8 us */
-#define TPM_OVL_TICKS 54  /* 1.25 us  */
+#define TPM_CH0_TICKS 18  /* 0.35 us */
+#define TPM_CH1_TICKS 36  /* 0.9 us */
+#define TPM_OVL_TICKS 54+6  /* 1.25 us  */
 #define VAL0          0  /* 0 Bit: 0.396 us (need: 0.4 us low) */
 #define VAL1          1  /* 1 Bit: 0.792 us (need: 0.8 us high */
 

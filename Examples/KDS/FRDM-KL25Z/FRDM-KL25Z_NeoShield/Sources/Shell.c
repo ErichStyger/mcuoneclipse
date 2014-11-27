@@ -5,6 +5,7 @@
  *      Author: Erich Styger
  */
 
+#include "Platform.h"
 #include "Application.h"
 #include "FRTOS1.h"
 #include "Shell.h"
@@ -28,8 +29,10 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if RTC1_PARSE_COMMAND_ENABLED
   RTC1_ParseCommand,
 #endif
+#if PL_HAS_RNET
 #if RNET1_PARSE_COMMAND_ENABLED
   RNET1_ParseCommand,
+#endif
 #endif
   NULL /* sentinel */
 };
@@ -48,7 +51,7 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
 }
 
 void SHELL_Init(void) {
-  if (FRTOS1_xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+200, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (FRTOS1_xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+80, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 }
