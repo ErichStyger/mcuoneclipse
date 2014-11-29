@@ -1,14 +1,15 @@
 /*
  * Application.h
  *
- *  Created on: 15.10.2014
- *      Author: tastyger
+ *      Author: Erich Styger
  */
 
 #ifndef APPLICATION_H_
 #define APPLICATION_H_
 
-
+/*!
+ * \brief Application main routine
+ */
 void APP_Run(void);
 
 

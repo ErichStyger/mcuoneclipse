@@ -138,7 +138,7 @@ uint8_t ESP_SendATCommand(uint8_t *cmd, uint8_t *rxBuf, size_t rxBufSize, uint8_
   return res;
 }
 
-uint8_t ESP_Test(void) {
+uint8_t ESP_TestAT(void) {
   /* AT */
   uint8_t rxBuf[sizeof("AT\r\r\n\r\nOK\r\n")];
   uint8_t res;
@@ -170,7 +170,7 @@ uint8_t ESP_Restart(const CLS1_StdIOType *io, uint16_t timeoutMs) {
   return res;
 }
 
-uint8_t ESP_SelectWiFiMode(uint8_t mode) {
+uint8_t ESP_SelectMode(uint8_t mode) {
   /* AT+CWMODE=<mode>, where <mode> is 1=Sta, 2=AP or 3=both */
   uint8_t txBuf[sizeof("AT+CWMODE=x\r\n")];
   uint8_t rxBuf[sizeof("AT+CWMODE=x\r\r\nno change\r\n")];
@@ -257,6 +257,28 @@ uint8_t ESP_GetIPAddrString(uint8_t *ipBuf, size_t ipBufSize) {
   return res;
 }
 
+uint8_t ESP_GetModeString(uint8_t *buf, size_t bufSize) {
+  /* AT+CIPMUX? */
+  uint8_t rxBuf[32];
+  uint8_t res;
+  const unsigned char *p;
+
+  res = ESP_SendATCommand("AT+CWMODE?\r\n", rxBuf, sizeof(rxBuf), "\r\n\r\nOK\r\n", ESP_DEFAULT_TIMEOUT_MS, NULL);
+  if (res==ERR_OK) {
+    if (UTIL1_strncmp(rxBuf, "AT+CWMODE?\r\r\n+CWMODE:", sizeof("AT+CWMODE?\r\r\n+CWMODE:")-1)==0) { /* check for beginning of response */
+      UTIL1_strCutTail(rxBuf, "\r\n\r\nOK\r\n"); /* cut tailing response */
+      p = rxBuf+sizeof("AT+CWMODE?\r\r\n+CWMODE:")-1; /* skip beginning */
+      UTIL1_strcpy(buf, bufSize, p); /* copy information string */
+    } else {
+      res = ERR_FAILED;
+    }
+  }
+  if (res!=ERR_OK) {
+    UTIL1_strcpy(buf, bufSize, "ERROR");
+  }
+  return res;
+}
+
 uint8_t ESP_GetCIPMUXString(uint8_t *cipmuxBuf, size_t cipmuxBufSize) {
   /* AT+CIPMUX? */
   uint8_t rxBuf[32];
@@ -303,12 +325,11 @@ uint8_t ESP_GetConnectedAPString(uint8_t *apBuf, size_t apBufSize) {
 
 }
 
-uint8_t ESP_JoinAccessPoint(uint8_t *ssid, uint8_t *pwd, CLS1_ConstStdIOType *io) {
+static uint8_t JoinAccessPoint(const uint8_t *ssid, const uint8_t *pwd, CLS1_ConstStdIOType *io) {
   /* AT+CWJAP="<ssid>","<pwd>" */
   uint8_t txBuf[48];
   uint8_t rxBuf[64];
   uint8_t expected[48];
-  uint8_t res;
 
   UTIL1_strcpy(txBuf, sizeof(txBuf), "AT+CWJAP=\"");
   UTIL1_strcat(txBuf, sizeof(txBuf), ssid);
@@ -322,25 +343,21 @@ uint8_t ESP_JoinAccessPoint(uint8_t *ssid, uint8_t *pwd, CLS1_ConstStdIOType *io
   UTIL1_strcat(expected, sizeof(expected), pwd);
   UTIL1_strcat(expected, sizeof(expected), "\"\r\r\n\r\nOK\r\n");
 
-  res = ESP_SendATCommand(txBuf, rxBuf, sizeof(rxBuf), expected, ESP_DEFAULT_TIMEOUT_MS, io);
-  return res;
+  return ESP_SendATCommand(txBuf, rxBuf, sizeof(rxBuf), expected, ESP_DEFAULT_TIMEOUT_MS, io);
 }
 
-uint8_t ESP_ConnectWiFi(uint8_t *ssid, uint8_t *pwd, int nofRetries, CLS1_ConstStdIOType *io) {
+uint8_t ESP_JoinAP(const uint8_t *ssid, const uint8_t *pwd, int nofRetries, CLS1_ConstStdIOType *io) {
   uint8_t buf[32];
   uint8_t res;
 
-  res = ESP_SelectWiFiMode(1);
-  if (res==ERR_OK) {
-    while(nofRetries>0) {
-      res = ESP_JoinAccessPoint(ssid, pwd, io);
-      if (res==ERR_OK) {
-        break;
-      }
-      WAIT1_WaitOSms(2000);
-      nofRetries--;
+  do {
+    res = JoinAccessPoint(ssid, pwd, io);
+    if (res==ERR_OK) {
+      break;
     }
-  }
+    WAIT1_WaitOSms(1000);
+    nofRetries--;
+  } while (nofRetries>0);
   return res;
 }
 
@@ -560,15 +577,14 @@ static uint8_t ESP_PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr("  send <str>", "Sends a string to the module\r\n", io->stdOut);
   CLS1_SendHelpStr("  test", "Sends a test AT command\r\n", io->stdOut);
   CLS1_SendHelpStr("  restart", "Restart module\r\n", io->stdOut);
-  CLS1_SendHelpStr("  listAP", "List Access Points\r\n", io->stdOut);
-  CLS1_SendHelpStr("  connectedAP", "Show connected Access Points\r\n", io->stdOut);
-  CLS1_SendHelpStr("  printIP", "Print own IP address\r\n", io->stdOut);
+  CLS1_SendHelpStr("  listAP", "List available Access Points\r\n", io->stdOut);
+  CLS1_SendHelpStr("  connectAP \"ssid\",\"pwd\"", "Connect to an Access Point\r\n", io->stdOut);
   CLS1_SendHelpStr("  server (start|stop)", "Start or stop web server\r\n", io->stdOut);
   return ERR_OK;
 }
 
 static uint8_t ESP_PrintStatus(const CLS1_StdIOType *io) {
-  uint8_t buf[32];
+  uint8_t buf[48];
 
   CLS1_SendStatusStr("ESP8266", "\r\n", io->stdOut);
 
@@ -579,26 +595,48 @@ static uint8_t ESP_PrintStatus(const CLS1_StdIOType *io) {
   } else {
     UTIL1_strcat(buf, sizeof(buf), "\r\n");
   }
-  CLS1_SendStatusStr("  Firmware", buf, io->stdOut);
+  CLS1_SendStatusStr("  AT+GMR", buf, io->stdOut);
+
+  if (ESP_GetModeString(buf, sizeof(buf)) != ERR_OK) {
+    UTIL1_strcpy(buf, sizeof(buf), "FAILED\r\n");
+  } else {
+    if (UTIL1_strcmp(buf, "1")==0) {
+      UTIL1_strcat(buf, sizeof(buf), " (device)");
+    } else if (UTIL1_strcmp(buf, "2")==0) {
+      UTIL1_strcat(buf, sizeof(buf), " (AP)");
+    } else if (UTIL1_strcmp(buf, "3")==0) {
+      UTIL1_strcat(buf, sizeof(buf), " (device+AP)");
+    } else {
+      UTIL1_strcat(buf, sizeof(buf), " (ERROR)");
+    }
+    UTIL1_strcat(buf, sizeof(buf), "\r\n");
+  }
+  CLS1_SendStatusStr("  AT+CWMODE?", buf, io->stdOut);
 
   if (ESP_GetIPAddrString(buf, sizeof(buf)) != ERR_OK) {
     UTIL1_strcpy(buf, sizeof(buf), "FAILED\r\n");
   } else {
     UTIL1_strcat(buf, sizeof(buf), "\r\n");
   }
-  CLS1_SendStatusStr("  IP", buf, io->stdOut);
+  CLS1_SendStatusStr("  AT+CIFSR", buf, io->stdOut);
 
   if (ESP_GetConnectedAPString(buf, sizeof(buf)) != ERR_OK) {
     UTIL1_strcpy(buf, sizeof(buf), "FAILED\r\n");
   } else {
     UTIL1_strcat(buf, sizeof(buf), "\r\n");
   }
-  CLS1_SendStatusStr("  AP", buf, io->stdOut);
-
+  CLS1_SendStatusStr("  AT+CWJAP?", buf, io->stdOut);
 
   if (ESP_GetCIPMUXString(buf, sizeof(buf)) != ERR_OK) {
     UTIL1_strcpy(buf, sizeof(buf), "FAILED\r\n");
   } else {
+    if (UTIL1_strcmp(buf, "0")==0) {
+      UTIL1_strcat(buf, sizeof(buf), " (single connection)");
+    } else if (UTIL1_strcmp(buf, "1")==0) {
+      UTIL1_strcat(buf, sizeof(buf), " (multiple connections)");
+    } else {
+      UTIL1_strcat(buf, sizeof(buf), " (ERROR)");
+    }
     UTIL1_strcat(buf, sizeof(buf), "\r\n");
   }
   CLS1_SendStatusStr("  CIPMUX", buf, io->stdOut);
@@ -607,28 +645,29 @@ static uint8_t ESP_PrintStatus(const CLS1_StdIOType *io) {
 
 uint8_t ESP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
   uint32_t val;
+  uint8_t res;
   const unsigned char *p;
+  uint8_t pwd[24], ssid[24];
 
   if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "ESP help")==0) {
     *handled = TRUE;
-    return ESP_PrintHelp(io);
+    res = ESP_PrintHelp(io);
   } else if (UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0 || UTIL1_strcmp((char*)cmd, "ESP status")==0) {
     *handled = TRUE;
-    return ESP_PrintStatus(io);
+    res = ESP_PrintStatus(io);
   } else if (UTIL1_strncmp((char*)cmd, "ESP send ", sizeof("ESP send ")-1)==0) {
     *handled = TRUE;
     p = cmd+sizeof("ESP send ")-1;
 
     (void)ESP_SendStr(p, io);
-    return ERR_OK;
   } else if (UTIL1_strcmp((char*)cmd, "ESP test")==0) {
     *handled = TRUE;
-    if (ESP_Test()!=ERR_OK) {
+    if (ESP_TestAT()!=ERR_OK) {
       CLS1_SendStr("TEST failed!\r\n", io->stdErr);
+      res = ERR_FAILED;
     } else {
       CLS1_SendStr("TEST ok!\r\n", io->stdOut);
     }
-    return ERR_OK;
   } else if (UTIL1_strcmp((char*)cmd, "ESP listAP")==0) {
     *handled = TRUE;
     (void)ESP_SendStr("AT+CWLAP", io);
@@ -646,28 +685,36 @@ uint8_t ESP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
     <Mode> 0: manually connect 1: An automatic connection
      */
     return ERR_OK;
-  } else if (UTIL1_strcmp((char*)cmd, "ESP connectedAP")==0) {
+  } else if (UTIL1_strncmp((char*)cmd, "ESP connectAP ", sizeof("ESP connectAP ")-1)==0) {
     *handled = TRUE;
-    (void)ESP_SendStr("AT+CWJAP?", io);
-    return ERR_OK;
-  } else if (UTIL1_strcmp((char*)cmd, "ESP printIP")==0) {
-    *handled = TRUE;
-    (void)ESP_SendStr("AT+CIFSR", io);
-    return ERR_OK;
+    p = cmd+sizeof("ESP connectAP ")-1;
+    ssid[0] = '\0'; pwd[0] = '\0';
+    res = UTIL1_ScanDoubleQuotedString(&p, ssid, sizeof(ssid));
+    if (res==ERR_OK && *p!='\0' && *p==',') {
+      p++; /* skip comma */
+      res = UTIL1_ScanDoubleQuotedString(&p, pwd, sizeof(pwd));
+    } else {
+      CLS1_SendStr("Comma expected between strings!\r\n", io->stdErr);
+      res = ERR_FAILED;
+    }
+    if (res==ERR_OK) {
+      res = ESP_JoinAP(ssid, pwd, 3, io);
+    } else {
+      CLS1_SendStr("Wrong command format!\r\n", io->stdErr);
+      res = ERR_FAILED;
+    }
   } else if (UTIL1_strcmp((char*)cmd, "ESP server start")==0) {
     *handled = TRUE;
-    WebServerIsOn = ESP_StartWebServer(io)==ERR_OK;
-    return ERR_OK;
+    res = ESP_StartWebServer(io);
+    WebServerIsOn = res==ERR_OK;
   } else if (UTIL1_strcmp((char*)cmd, "ESP server stop")==0) {
     *handled = TRUE;
     WebServerIsOn = FALSE;
-    return ERR_OK;
   } else if (UTIL1_strcmp((char*)cmd, "ESP restart")==0) {
     *handled = TRUE;
     ESP_Restart(io, 2000);
-    return ERR_OK;
   }
-  return ERR_OK;
+  return res;
 }
 
 void ESP_Init(void) {
