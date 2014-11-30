@@ -1,7 +1,6 @@
 /*
  * ESP8266.c
  *
- *  Created on: 16.11.2014
  *      Author: tastyger
  */
 
@@ -11,11 +10,12 @@
 #include "CLS1.h"
 #include "AS2.h"
 #include "WAIT1.h"
-#include "LEDR.h"
 
-#define ESP_DEFAULT_TIMEOUT_MS    (100)
+static bool ESP_WebServerIsOn = FALSE;
 
-static bool WebServerIsOn = FALSE;
+bool ESP_IsServerOn(void) {
+  return ESP_WebServerIsOn;
+}
 
 static void Send(unsigned char *str) {
   while(*str!='\0') {
@@ -30,7 +30,7 @@ static void SkipNewLines(const unsigned char **p) {
   }
 }
 
-static uint8_t ReadCharsUntil(uint8_t *buf, size_t bufSize, uint8_t sentinelChar, uint16_t timeoutMs) {
+uint8_t ESP_ReadCharsUntil(uint8_t *buf, size_t bufSize, uint8_t sentinelChar, uint16_t timeoutMs) {
   uint8_t ch;
   uint8_t res = ERR_OK;
 
@@ -157,7 +157,7 @@ uint8_t ESP_Restart(const CLS1_StdIOType *io, uint16_t timeoutMs) {
   res = ESP_SendATCommand("AT+RST\r\n", rxBuf, sizeof(rxBuf), "AT+RST\r\r\n\r\nOK\r\n", ESP_DEFAULT_TIMEOUT_MS, io);
   if (res==ERR_OK) {
     for(;;) {
-      ReadCharsUntil(buf, sizeof(buf), '\n', 1000);
+      ESP_ReadCharsUntil(buf, sizeof(buf), '\n', 1000);
       if (io!=NULL) {
         CLS1_SendStr(buf, io->stdOut);
       }
@@ -264,7 +264,7 @@ uint8_t ESP_SelectMode(uint8_t mode) {
   return res;
 }
 
-uint8_t ESP_GetFirmwareString(uint8_t *fwBuf, size_t fwBufSize) {
+uint8_t ESP_GetFirmwareVersionString(uint8_t *fwBuf, size_t fwBufSize) {
   /* AT+GMR */
   uint8_t rxBuf[32];
   uint8_t res;
@@ -424,75 +424,14 @@ uint8_t ESP_JoinAP(const uint8_t *ssid, const uint8_t *pwd, int nofRetries, CLS1
 }
 
 
-static uint8_t ESP_SendWebPage(uint8_t ch_id, bool ledIsOn, uint8_t temperature, const CLS1_StdIOType *io) {
-  static uint8_t http[1024];
-  uint8_t cmd[24], rxBuf[48], expected[48];
-  uint8_t buf[16];
-  uint8_t res = ERR_OK;
-
-  /* construct web page content */
-  UTIL1_strcpy(http, sizeof(http), (uint8_t*)"HTTP/1.0 200 OK\r\nContent-Type: text/html\r\nPragma: no-cache\r\n\r\n");
-  UTIL1_strcat(http, sizeof(http), (uint8_t*)"<html>\r\n<body>\r\n");
-  UTIL1_strcat(http, sizeof(http), (uint8_t*)"<title>ESP8266 Web Server</title>\r\n");
-  UTIL1_strcat(http, sizeof(http), (uint8_t*)"<h2>Web Server using ESP8266</h2>\r\n");
-  UTIL1_strcat(http, sizeof(http), (uint8_t*)"<br /><hr>\r\n");
-  UTIL1_strcat(http, sizeof(http), (uint8_t*)"<p><form method=\"POST\"><strong>Temp: <input type=\"text\" size=2 value=\"");
-  UTIL1_strcatNum8s(http, sizeof(http), temperature);
-  UTIL1_strcat(http, sizeof(http), (uint8_t*)"\"> <sup>O</sup>C");
-  if (ledIsOn) {
-    UTIL1_strcat(http, sizeof(http), (uint8_t*)"<p><input type=\"radio\" name=\"radio\" value=\"0\" >Red LED off");
-    UTIL1_strcat(http, sizeof(http), (uint8_t*)"<br><input type=\"radio\" name=\"radio\" value=\"1\" checked>Red LED on");
-  } else {
-    UTIL1_strcat(http, sizeof(http), (uint8_t*)"<p><input type=\"radio\" name=\"radio\" value=\"0\" checked>Red LED off");
-    UTIL1_strcat(http, sizeof(http), (uint8_t*)"<br><input type=\"radio\" name=\"radio\" value=\"1\" >Red LED on");
-  }
-  UTIL1_strcat(http, sizeof(http), (uint8_t*)"</strong><p><input type=\"submit\"></form></span>");
-  UTIL1_strcat(http, sizeof(http), (uint8_t*)"</body>\r\n</html>\r\n");
-
-  UTIL1_strcpy(cmd, sizeof(cmd), "AT+CIPSEND="); /* parameters are <ch_id>,<size> */
-  UTIL1_strcatNum8u(cmd, sizeof(cmd), ch_id);
-  UTIL1_chcat(cmd, sizeof(cmd), ',');
-  UTIL1_strcatNum16u(cmd, sizeof(cmd), UTIL1_strlen(http));
-  UTIL1_strcpy(expected, sizeof(expected), cmd); /* we expect the echo of our command */
-  UTIL1_strcat(expected, sizeof(expected), "\r\r\n> "); /* expect "> " */
-  UTIL1_strcat(cmd, sizeof(cmd), "\r\n");
-  res = ESP_SendATCommand(cmd, rxBuf, sizeof(rxBuf), expected, ESP_DEFAULT_TIMEOUT_MS, io);
-  if (res!=ERR_OK) {
-    if (io!=NULL) {
-      CLS1_SendStr("INFO: TIMEOUT, closing connection!\r\n", io->stdOut);
-    }
-  } else {
-    if (io!=NULL) {
-      CLS1_SendStr("INFO: Sending http page...\r\n", io->stdOut);
-    }
-    UTIL1_strcat(http, sizeof(http), "\r\n\r\n"); /* need to add this to end the command! */
-    res = ESP_SendATCommand(http, NULL, 0, NULL, ESP_DEFAULT_TIMEOUT_MS, io);
-    if (res!=ERR_OK) {
-      CLS1_SendStr("Sending page failed!\r\n", io->stdErr); /* copy on console */
-    } else {
-      for(;;) { /* breaks */
-        res = ReadCharsUntil(buf, sizeof(buf), '\n', 1000);
-        if (res==ERR_OK) { /* line read */
-          if (io!=NULL) {
-            CLS1_SendStr(buf, io->stdOut); /* copy on console */
-          }
-        }
-        if (UTIL1_strncmp(buf, "SEND OK\r\n", sizeof("SEND OK\r\n")-1)==0) { /* ok from module */
-          break;
-        }
-      }
-    }
-  }
-  return res;
-}
-
-static uint8_t ipdBuf[512];
-
-static uint8_t ReadIntoIPDBuffer(uint8_t *buf, size_t bufSize, uint8_t *p, uint16_t msgSize, const CLS1_StdIOType *io) {
+static uint8_t ReadIntoIPDBuffer(uint8_t *buf, size_t bufSize, uint8_t *p, uint16_t msgSize, uint16_t msTimeout, const CLS1_StdIOType *io) {
   uint8_t ch;
+  size_t nofInBuf;
+  int timeout;
 
-  bufSize -= p-buf; /* take into account what we already have in buffer */
-  //msgSize -= p-buf;
+  nofInBuf = p-buf;
+  bufSize -= nofInBuf; /* take into account what we already have in buffer */
+  timeout = msTimeout;
   while (msgSize>0 && bufSize>0) {
     if (AS2_GetCharsInRxBuf()>0) {
       (void)AS2_RecvChar(&ch);
@@ -501,14 +440,25 @@ static uint8_t ReadIntoIPDBuffer(uint8_t *buf, size_t bufSize, uint8_t *p, uint1
         io->stdOut(ch);
       }
       p++;
-      msgSize--; bufSize--;
+      *p = '\0'; /* terminate */
+      nofInBuf++; msgSize--; bufSize--;
+    } else {
+      /* check in case we recveive less characters than expected, happens for POST? */
+      if (nofInBuf>6 && UTIL1_strncmp(&p[-6], "\r\nOK\r\n", sizeof("\r\nOK\r\n")-1)==0) {
+        break;
+      } else {
+        timeout -= 10;
+        WAIT1_WaitOSms(10);
+        if (timeout<0) {
+          return ERR_BUSY;
+        }
+      }
     }
   }
   return ERR_OK;
 }
 
-
-static uint8_t ESP_GetIPD(uint8_t *ch_id, uint16_t *size, bool *isGet, uint16_t timeoutMs, const CLS1_StdIOType *io) {
+uint8_t ESP_GetIPD(uint8_t *msgBuf, size_t msgBufSize, uint8_t *ch_id, uint16_t *size, bool *isGet, uint16_t timeoutMs, const CLS1_StdIOType *io) {
   /* scan e.g. for
    * +IPD,0,404:POST / HTTP/1.1
    * and return ch_id (0), size (404)
@@ -521,17 +471,17 @@ static uint8_t ESP_GetIPD(uint8_t *ch_id, uint16_t *size, bool *isGet, uint16_t 
 
   *ch_id = 0; *size = 0; *isGet = FALSE; /* init */
   for(;;) { /* breaks */
-    res = ReadCharsUntil(ipdBuf, sizeof(ipdBuf), '\n', timeoutMs);
+    res = ESP_ReadCharsUntil(msgBuf, msgBufSize, '\n', timeoutMs);
     if (res!=ERR_OK) {
       break; /* timeout */
     }
     if (res==ERR_OK) { /* line read */
       if (io!=NULL) {
-        CLS1_SendStr(ipdBuf, io->stdOut); /* copy on console */
+        CLS1_SendStr(msgBuf, io->stdOut); /* copy on console */
       }
-      isIPD = UTIL1_strncmp(ipdBuf, "+IPD,", sizeof("+IPD,")-1)==0;
+      isIPD = UTIL1_strncmp(msgBuf, "+IPD,", sizeof("+IPD,")-1)==0;
       if (isIPD) { /* start of IPD message */
-        p = ipdBuf+sizeof("+IPD,")-1;
+        p = msgBuf+sizeof("+IPD,")-1;
         if (UTIL1_ScanDecimal8uNumber(&p, ch_id)!=ERR_OK) {
           if (io!=NULL) {
             CLS1_SendStr("ERR: wrong channel?\r\n", io->stdErr); /* error on console */
@@ -555,7 +505,7 @@ static uint8_t ESP_GetIPD(uint8_t *ch_id, uint16_t *size, bool *isGet, uint16_t 
           res = ERR_FAILED;
           break;
         }
-        ipdSize = p-ipdBuf; /* length of "+IPD,<channel>,<size>" string */
+        ipdSize = p-msgBuf; /* length of "+IPD,<channel>,<size>" string */
         p++; /* skip ':' */
         if (UTIL1_strncmp(p, "GET", sizeof("GET")-1)==0) {
           *isGet = TRUE;
@@ -568,7 +518,7 @@ static uint8_t ESP_GetIPD(uint8_t *ch_id, uint16_t *size, bool *isGet, uint16_t 
           p++; /* skip to the end */
         }
         /* read the rest of the message */
-        res = ReadIntoIPDBuffer(ipdBuf, sizeof(ipdBuf), (uint8_t*)p, (*size)-ipdSize, io);
+        res = ReadIntoIPDBuffer(msgBuf, msgBufSize, (uint8_t*)p, (*size)-ipdSize, ESP_DEFAULT_TIMEOUT_MS, io);
         break;
       }
     }
@@ -602,58 +552,6 @@ uint8_t ESP_StartWebServer(const CLS1_StdIOType *io) {
   return ERR_OK;
 }
 
-void ESP_Process(void) {
-  static uint8_t buf[128];
-  uint8_t res=ERR_OK;
-  bool isGet;
-  uint8_t ch_id=0;
-  uint16_t size=0;
-  const uint8_t *p;
-  const CLS1_StdIOType *io;
-
-  if (WebServerIsOn) {
-    io = CLS1_GetStdio();
-    res = ESP_GetIPD(&ch_id, &size, &isGet, 1000, io);
-    if (res==ERR_OK) {
-      if (isGet) { /* GET: put web page */
-        res = ESP_SendWebPage(ch_id, LEDR_Get()!=FALSE, 21 /*dummy temperature*/, io);
-        if (res!=ERR_OK && io!=NULL) {
-          CLS1_SendStr("Sending page failed!\r\n", io->stdErr); /* copy on console */
-        }
-      } else { /* POST: received info */
-        if (io!=NULL) {
-          CLS1_SendStr("POST received!\r\n", io->stdOut); /* copy on console */
-        }
-      }
-      CLS1_SendStr("INFO: Closing connection...\r\n", io->stdOut);
-      res = ESP_CloseConnection(ch_id, io, ESP_DEFAULT_TIMEOUT_MS);
-
-#if 0
-      /* scan for OK at the end */
-      for(;;) { /* breaks */
-        res = ReadCharsUntil(buf, sizeof(buf), '\n', 1000);
-        if (res==ERR_OK) {
-          if (io!=NULL) {
-            CLS1_SendStr(buf, io->stdOut); /* copy on console */
-          }
-          if (UTIL1_strncmp(buf, "OK", sizeof("OK")-1)==0) { /* finish of message */
-            if (io!=NULL) {
-              CLS1_SendStr("Connected!\r\n", io->stdOut); /* copy on console */
-            }
-          }
-        }
-      }
-#endif
-    }
-  } else { /* copy messages we receive to console */
-    while (AS2_GetCharsInRxBuf()>0) {
-      uint8_t ch;
-
-      (void)AS2_RecvChar(&ch);
-      CLS1_SendChar(ch);
-    }
-  }
-}
 
 uint8_t ESP_SendStr(const uint8_t *str, CLS1_ConstStdIOType *io) {
   uint8_t buf[32];
@@ -695,9 +593,9 @@ static uint8_t ESP_PrintStatus(const CLS1_StdIOType *io) {
 
   CLS1_SendStatusStr("ESP8266", "\r\n", io->stdOut);
 
-  CLS1_SendStatusStr("  Webserver", WebServerIsOn?"ON\r\n":"OFF\r\n", io->stdOut);
+  CLS1_SendStatusStr("  Webserver", ESP_WebServerIsOn?"ON\r\n":"OFF\r\n", io->stdOut);
 
-  if (ESP_GetFirmwareString(buf, sizeof(buf)) != ERR_OK) {
+  if (ESP_GetFirmwareVersionString(buf, sizeof(buf)) != ERR_OK) {
     UTIL1_strcpy(buf, sizeof(buf), "FAILED\r\n");
   } else {
     UTIL1_strcat(buf, sizeof(buf), "\r\n");
@@ -813,15 +711,19 @@ uint8_t ESP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
   } else if (UTIL1_strcmp((char*)cmd, "ESP server start")==0) {
     *handled = TRUE;
     res = ESP_StartWebServer(io);
-    WebServerIsOn = res==ERR_OK;
+    ESP_WebServerIsOn = res==ERR_OK;
   } else if (UTIL1_strcmp((char*)cmd, "ESP server stop")==0) {
     *handled = TRUE;
-    WebServerIsOn = FALSE;
+    ESP_WebServerIsOn = FALSE;
   } else if (UTIL1_strcmp((char*)cmd, "ESP restart")==0) {
     *handled = TRUE;
     ESP_Restart(io, 2000);
   }
   return res;
+}
+
+void ESP_Deinit(void) {
+  /* nothing to do */
 }
 
 void ESP_Init(void) {
