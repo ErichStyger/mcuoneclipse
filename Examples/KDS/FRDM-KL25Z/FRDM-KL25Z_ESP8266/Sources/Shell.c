@@ -7,11 +7,15 @@
 #include "Shell.h"
 #include "CLS1.h"
 #include "ESP8266.h"
+#include "LEDR.h"
 
 /* table with shell parser/handler */
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
   CLS1_ParseCommand,
+#if LEDR_PARSE_COMMAND_ENABLED
+  LEDR_ParseCommand,
+#endif
   ESP_ParseCommand,
   NULL /* sentinel */
 };

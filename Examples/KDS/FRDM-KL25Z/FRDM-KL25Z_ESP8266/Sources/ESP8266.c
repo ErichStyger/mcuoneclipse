@@ -170,6 +170,68 @@ uint8_t ESP_Restart(const CLS1_StdIOType *io, uint16_t timeoutMs) {
   return res;
 }
 
+uint8_t ESP_CloseConnection(uint8_t channel, const CLS1_StdIOType *io, uint16_t timeoutMs) {
+  /* AT+CIPCLOSE=<channel> */
+  uint8_t res;
+  uint8_t cmd[64];
+
+  UTIL1_strcpy(cmd, sizeof(cmd), "AT+CIPCLOSE=");
+  UTIL1_strcatNum8u(cmd, sizeof(cmd), channel);
+  UTIL1_strcat(cmd, sizeof(cmd), "\r\n");
+  res = ESP_SendATCommand(cmd, NULL, 0, "Unlink\r\n", timeoutMs, io);
+  return res;
+}
+
+uint8_t ESP_SetNumberOfConnections(uint8_t nof, const CLS1_StdIOType *io, uint16_t timeoutMs) {
+  /* AT+CIPMUX=<nof>, 0: single connection, 1: multiple connections */
+  uint8_t res;
+  uint8_t cmd[sizeof("AT+CIPMUX=12\r\n")];
+  uint8_t rxBuf[sizeof("AT+CIPMUX=12\r\n\r\nOK\r\n")+10];
+
+  if (nof>1) { /* only 0 and 1 allowed */
+    if (io!=NULL) {
+      CLS1_SendStr("Wrong number of connection parameter!\r\n", io->stdErr);
+    }
+    return ERR_FAILED;
+  }
+  UTIL1_strcpy(cmd, sizeof(cmd), "AT+CIPMUX=");
+  UTIL1_strcatNum8u(cmd, sizeof(cmd), nof);
+  UTIL1_strcat(cmd, sizeof(cmd), "\r\n");
+  res = ESP_SendATCommand(cmd, rxBuf, sizeof(rxBuf), "OK\r\n", timeoutMs, io);
+  return res;
+}
+
+uint8_t ESP_SetServer(bool startIt, uint16_t port, const CLS1_StdIOType *io, uint16_t timeoutMs) {
+  /* AT+CIPSERVER=<en>,<port>, where <en>: 0: stop, 1: start */
+  uint8_t res;
+  uint8_t cmd[sizeof("AT+CIPSERVER=1,80\r\n\r\nOK\r\n")+sizeof("no change")];
+  uint8_t rxBuf[sizeof("AT+CIPSERVER=1,80\r\n\r\nOK\r\n")+sizeof("no change")];
+
+  UTIL1_strcpy(cmd, sizeof(cmd), "AT+CIPSERVER=");
+  if (startIt) {
+    UTIL1_strcat(cmd, sizeof(cmd), "1,");
+  } else {
+    UTIL1_strcat(cmd, sizeof(cmd), "0,");
+  }
+  UTIL1_strcatNum16u(cmd, sizeof(cmd), port);
+  UTIL1_strcat(cmd, sizeof(cmd), "\r\n");
+  res = ESP_SendATCommand(cmd, rxBuf, sizeof(rxBuf), "OK\r\n", timeoutMs, io);
+  if (res!=ERR_OK) { /* accept "no change" too */
+    UTIL1_strcpy(cmd, sizeof(cmd), "AT+CIPSERVER=");
+    if (startIt) {
+      UTIL1_strcat(cmd, sizeof(cmd), "1,");
+    } else {
+      UTIL1_strcat(cmd, sizeof(cmd), "0,");
+    }
+    UTIL1_strcatNum16u(cmd, sizeof(cmd), port);
+    UTIL1_strcat(cmd, sizeof(cmd), "\r\r\nno change\r\n");
+    if (UTIL1_strcmp(rxBuf, cmd)==0) {
+      res = ERR_OK;
+    }
+  }
+  return res;
+}
+
 uint8_t ESP_SelectMode(uint8_t mode) {
   /* AT+CWMODE=<mode>, where <mode> is 1=Sta, 2=AP or 3=both */
   uint8_t txBuf[sizeof("AT+CWMODE=x\r\n")];
@@ -258,7 +320,7 @@ uint8_t ESP_GetIPAddrString(uint8_t *ipBuf, size_t ipBufSize) {
 }
 
 uint8_t ESP_GetModeString(uint8_t *buf, size_t bufSize) {
-  /* AT+CIPMUX? */
+  /* AT+CWMODE? */
   uint8_t rxBuf[32];
   uint8_t res;
   const unsigned char *p;
@@ -366,7 +428,7 @@ static uint8_t ESP_SendWebPage(uint8_t ch_id, bool ledIsOn, uint8_t temperature,
   static uint8_t http[1024];
   uint8_t cmd[24], rxBuf[48], expected[48];
   uint8_t buf[16];
-  uint8_t res;
+  uint8_t res = ERR_OK;
 
   /* construct web page content */
   UTIL1_strcpy(http, sizeof(http), (uint8_t*)"HTTP/1.0 200 OK\r\nContent-Type: text/html\r\nPragma: no-cache\r\n\r\n");
@@ -421,33 +483,55 @@ static uint8_t ESP_SendWebPage(uint8_t ch_id, bool ledIsOn, uint8_t temperature,
       }
     }
   }
-  CLS1_SendStr("INFO: Closing connection!\r\n", io->stdOut);
-  res = ESP_SendATCommand("AT+CIPCLOSE=0\r\n", rxBuf, sizeof(rxBuf), "Unlink\r\n", ESP_DEFAULT_TIMEOUT_MS, io);
-  ESP_SendStr("AT+CIPCLOSE=0\r\n", io); /* need this to show the page in the browser */
+  return res;
+}
+
+static uint8_t ipdBuf[512];
+
+static uint8_t ReadIntoIPDBuffer(uint8_t *buf, size_t bufSize, uint8_t *p, uint16_t msgSize, const CLS1_StdIOType *io) {
+  uint8_t ch;
+
+  bufSize -= p-buf; /* take into account what we already have in buffer */
+  //msgSize -= p-buf;
+  while (msgSize>0 && bufSize>0) {
+    if (AS2_GetCharsInRxBuf()>0) {
+      (void)AS2_RecvChar(&ch);
+      *p = ch;
+      if (io!=NULL) { /* copy on console */
+        io->stdOut(ch);
+      }
+      p++;
+      msgSize--; bufSize--;
+    }
+  }
   return ERR_OK;
 }
+
 
 static uint8_t ESP_GetIPD(uint8_t *ch_id, uint16_t *size, bool *isGet, uint16_t timeoutMs, const CLS1_StdIOType *io) {
   /* scan e.g. for
    * +IPD,0,404:POST / HTTP/1.1
    * and return ch_id (0), size (404)
    */
-  static uint8_t buf[128];
   uint8_t res = ERR_OK;
   const uint8_t *p;
+  bool isIPD = FALSE;
+  uint8_t cmd[24], rxBuf[48];
+  uint16_t ipdSize;
 
   *ch_id = 0; *size = 0; *isGet = FALSE; /* init */
   for(;;) { /* breaks */
-    res = ReadCharsUntil(buf, sizeof(buf), '\n', timeoutMs);
+    res = ReadCharsUntil(ipdBuf, sizeof(ipdBuf), '\n', timeoutMs);
     if (res!=ERR_OK) {
-      break;
+      break; /* timeout */
     }
     if (res==ERR_OK) { /* line read */
       if (io!=NULL) {
-        CLS1_SendStr(buf, io->stdOut); /* copy on console */
+        CLS1_SendStr(ipdBuf, io->stdOut); /* copy on console */
       }
-      if (UTIL1_strncmp(buf, "+IPD,", sizeof("+IPD,")-1)==0) { /* start of IPD message */
-        p = buf+sizeof("+IPD,")-1;
+      isIPD = UTIL1_strncmp(ipdBuf, "+IPD,", sizeof("+IPD,")-1)==0;
+      if (isIPD) { /* start of IPD message */
+        p = ipdBuf+sizeof("+IPD,")-1;
         if (UTIL1_ScanDecimal8uNumber(&p, ch_id)!=ERR_OK) {
           if (io!=NULL) {
             CLS1_SendStr("ERR: wrong channel?\r\n", io->stdErr); /* error on console */
@@ -466,22 +550,26 @@ static uint8_t ESP_GetIPD(uint8_t *ch_id, uint16_t *size, bool *isGet, uint16_t 
           }
           res = ERR_FAILED;
           break;
-        } else {
-          break; /* everything ok! */
         }
         if (*p!=':') {
           res = ERR_FAILED;
           break;
         }
+        ipdSize = p-ipdBuf; /* length of "+IPD,<channel>,<size>" string */
         p++; /* skip ':' */
-        if (UTIL1_strncmp(p, "GET", sizeof("GET")-1)) {
+        if (UTIL1_strncmp(p, "GET", sizeof("GET")-1)==0) {
           *isGet = TRUE;
-        } else if (UTIL1_strncmp(p, "PUT", sizeof("PUT")-1)) {
+        } else if (UTIL1_strncmp(p, "POST", sizeof("POST")-1)==0) {
           *isGet = FALSE;
         } else {
           res = ERR_FAILED;
-          break;
         }
+        while(*p!='\0') {
+          p++; /* skip to the end */
+        }
+        /* read the rest of the message */
+        res = ReadIntoIPDBuffer(ipdBuf, sizeof(ipdBuf), (uint8_t*)p, (*size)-ipdSize, io);
+        break;
       }
     }
   }
@@ -490,9 +578,18 @@ static uint8_t ESP_GetIPD(uint8_t *ch_id, uint16_t *size, bool *isGet, uint16_t 
 
 uint8_t ESP_StartWebServer(const CLS1_StdIOType *io) {
   uint8_t buf[32];
+  uint8_t res;
 
-  ESP_SendStr("AT+CIPMUX=1", io); /* multiple connections, seems to be needed for server */
-  ESP_SendStr("AT+CIPSERVER=1,80", io); /* single connection mode */
+  res = ESP_SetNumberOfConnections(1, io, ESP_DEFAULT_TIMEOUT_MS);
+  if (res!=ERR_OK) {
+    CLS1_SendStr("ERR: failed to set multiple connections.\r\n", io->stdErr);
+    return res;
+  }
+  res = ESP_SetServer(TRUE, 80, io, ESP_DEFAULT_TIMEOUT_MS);
+  if (res!=ERR_OK) {
+    CLS1_SendStr("ERR: failed to set server.\r\n", io->stdErr);
+    return res;
+  }
   CLS1_SendStr("INFO: Web Server started, waiting for connection on ", io->stdOut);
   if (ESP_GetIPAddrString(buf, sizeof(buf))==ERR_OK) {
     CLS1_SendStr(buf, io->stdOut);
@@ -518,6 +615,20 @@ void ESP_Process(void) {
     io = CLS1_GetStdio();
     res = ESP_GetIPD(&ch_id, &size, &isGet, 1000, io);
     if (res==ERR_OK) {
+      if (isGet) { /* GET: put web page */
+        res = ESP_SendWebPage(ch_id, LEDR_Get()!=FALSE, 21 /*dummy temperature*/, io);
+        if (res!=ERR_OK && io!=NULL) {
+          CLS1_SendStr("Sending page failed!\r\n", io->stdErr); /* copy on console */
+        }
+      } else { /* POST: received info */
+        if (io!=NULL) {
+          CLS1_SendStr("POST received!\r\n", io->stdOut); /* copy on console */
+        }
+      }
+      CLS1_SendStr("INFO: Closing connection...\r\n", io->stdOut);
+      res = ESP_CloseConnection(ch_id, io, ESP_DEFAULT_TIMEOUT_MS);
+
+#if 0
       /* scan for OK at the end */
       for(;;) { /* breaks */
         res = ReadCharsUntil(buf, sizeof(buf), '\n', 1000);
@@ -526,17 +637,13 @@ void ESP_Process(void) {
             CLS1_SendStr(buf, io->stdOut); /* copy on console */
           }
           if (UTIL1_strncmp(buf, "OK", sizeof("OK")-1)==0) { /* finish of message */
-            break;
+            if (io!=NULL) {
+              CLS1_SendStr("Connected!\r\n", io->stdOut); /* copy on console */
+            }
           }
         }
       }
-    }
-    if (io!=NULL) {
-      CLS1_SendStr("Connected!\r\n", io->stdOut); /* copy on console */
-    }
-    res = ESP_SendWebPage(ch_id, LEDR_Get()!=FALSE, 21 /*dummy*/, io);
-    if (res!=ERR_OK) {
-      CLS1_SendStr("Sending page failed!\r\n", io->stdErr); /* copy on console */
+#endif
     }
   } else { /* copy messages we receive to console */
     while (AS2_GetCharsInRxBuf()>0) {
