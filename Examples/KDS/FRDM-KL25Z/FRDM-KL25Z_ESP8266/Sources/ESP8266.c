@@ -1,7 +1,7 @@
 /*
  * ESP8266.c
  *
- *      Author: tastyger
+ *      Author: Erich Styger
  */
 
 #include "ESP8266.h"

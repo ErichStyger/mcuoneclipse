@@ -12,5 +12,4 @@
  */
 void APP_Run(void);
 
-
 #endif /* APPLICATION_H_ */

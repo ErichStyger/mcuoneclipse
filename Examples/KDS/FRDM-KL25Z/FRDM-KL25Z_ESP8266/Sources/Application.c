@@ -15,7 +15,6 @@
 
 static uint8_t APP_EspMsgBuf[512]; /* buffer for messages from ESP8266 */
 
-
 static uint8_t SendWebPage(uint8_t ch_id, bool ledIsOn, uint8_t temperature, const CLS1_StdIOType *io) {
   static uint8_t http[1024];
   uint8_t cmd[24], rxBuf[48], expected[48];
@@ -77,7 +76,6 @@ static uint8_t SendWebPage(uint8_t ch_id, bool ledIsOn, uint8_t temperature, con
   }
   return res;
 }
-
 
 static void WebProcess(void) {
   uint8_t res=ERR_OK;
