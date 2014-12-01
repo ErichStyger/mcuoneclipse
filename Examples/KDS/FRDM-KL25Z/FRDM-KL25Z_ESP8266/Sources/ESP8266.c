@@ -13,6 +13,34 @@
 
 static bool ESP_WebServerIsOn = FALSE;
 
+uint8_t UTIL_ScanDoubleQuotedString(const uint8_t **cmd, uint8_t *buf, size_t bufSize)
+{
+  const uint8_t *p = *cmd;
+
+  if (bufSize==1) {
+    return ERR_FAILED; /* buffer too small */
+  }
+  buf[bufSize-1] = '\0'; /* terminate buffer */
+  bufSize--;
+  if (*p!='\"') {
+    return ERR_FAILED; /* does not start with double quote */
+  }
+  p++; /* skip double quote */
+  while(*p!='\"' && *p!='\0' && bufSize>0) {
+    *buf++ = *p++;
+    bufSize--;
+  }
+  if (*p!='\"') {
+    return ERR_FAILED; /* no terminating double quote */
+  } else {
+    p++; /* skip double quote */
+    *buf = '\0'; /* terminate buffer */
+  }
+  *cmd = p; /* advance pointer */
+  return ERR_OK;
+}
+
+
 bool ESP_IsServerOn(void) {
   return ESP_WebServerIsOn;
 }
@@ -598,6 +626,7 @@ static uint8_t ESP_PrintStatus(const CLS1_StdIOType *io) {
   if (ESP_GetFirmwareVersionString(buf, sizeof(buf)) != ERR_OK) {
     UTIL1_strcpy(buf, sizeof(buf), "FAILED\r\n");
   } else {
+    /* 00160901: 0016 is SDK version, 0901 is the AT version */
     UTIL1_strcat(buf, sizeof(buf), "\r\n");
   }
   CLS1_SendStatusStr("  AT+GMR", buf, io->stdOut);
@@ -694,10 +723,10 @@ uint8_t ESP_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
     *handled = TRUE;
     p = cmd+sizeof("ESP connectAP ")-1;
     ssid[0] = '\0'; pwd[0] = '\0';
-    res = UTIL1_ScanDoubleQuotedString(&p, ssid, sizeof(ssid));
+    res = UTIL_ScanDoubleQuotedString(&p, ssid, sizeof(ssid));
     if (res==ERR_OK && *p!='\0' && *p==',') {
       p++; /* skip comma */
-      res = UTIL1_ScanDoubleQuotedString(&p, pwd, sizeof(pwd));
+      res = UTIL_ScanDoubleQuotedString(&p, pwd, sizeof(pwd));
     } else {
       CLS1_SendStr("Comma expected between strings!\r\n", io->stdErr);
       res = ERR_FAILED;
