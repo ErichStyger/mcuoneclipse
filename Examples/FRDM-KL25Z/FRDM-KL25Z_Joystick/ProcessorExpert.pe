@@ -4,7 +4,7 @@
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
     <ModificationStamp>76</ModificationStamp>
-    <Date>2014-11-28</Date>
+    <Date>2014-12-06</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.0.RT6_b1411-0406</PEversion>
   </Header>
@@ -14500,7 +14500,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.050</BeanVersion>
+    <BeanVersion>01.051</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -14948,7 +14948,46 @@
         <UsrMethodName>Deinit</UsrMethodName>
       </ItemState>
     </Methods>
-    <Events />
+    <Events>
+      <ItemState>
+        <ItemSymbol>EventModule</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>Events</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnBeforeIterateCmd</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>never</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnBeforeIterateCmdName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnAfterIterateCmd</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>never</LastUserSel>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnAfterIterateCmdName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+      </ItemState>
+    </Events>
   </Bean>
   <Bean>
     <BeanType>AsynchroSerial</BeanType>
@@ -17792,7 +17831,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.105</BeanVersion>
+    <BeanVersion>01.106</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -18413,6 +18452,17 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>always</LastUserSel>
         <UsrMethodName>ScanSeparatedNumbers</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanDoubleQuotedString</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ScanDoubleQuotedString</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
     </Methods>
@@ -20872,7 +20922,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.081</BeanVersion>
+    <BeanVersion>01.083</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -21100,6 +21150,12 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>nRFAddress</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0x11, 0x22, 0x33, 0x44, 0x55</Value>
       </ItemState>
     </Properties>
     <Methods>
