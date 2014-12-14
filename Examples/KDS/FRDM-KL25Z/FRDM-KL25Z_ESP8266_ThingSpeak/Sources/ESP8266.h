@@ -97,8 +97,8 @@ uint8_t ESP_JoinAP(const uint8_t *ssid, const uint8_t *pwd, int nofRetries, CLS1
  * \param ch_id Pointer to where to store the channel/id
  * \param size Pointer where to store the size of the message
  * \param isGet TRUE if it is a GET message, FALSE for a POST message
- * \param timeoutMs Error code, ERR_OK for no failure
- * \param io
+ * \param timeoutMs Timeout in milliseconds
+ * \param io Optional IO channel for printing messages
  * \return Error code, ERR_OK for no failure
  */
 uint8_t ESP_GetIPD(uint8_t *msgBuf, size_t msgBufSize, uint8_t *ch_id, uint16_t *size, bool *isGet, uint16_t timeoutMs, const CLS1_StdIOType *io);
@@ -106,11 +106,20 @@ uint8_t ESP_GetIPD(uint8_t *msgBuf, size_t msgBufSize, uint8_t *ch_id, uint16_t 
 /*!
  * \brief Closes a connection
  * \param channel Channel ID
- * \param io Error code, ERR_OK for no failure
- * \param timeoutMs Error code, ERR_OK for no failure
+ * \param io Optional IO channel for printing messages
+ * \param timeoutMs timeout in milli seconds
  * \return Error code, ERR_OK for no failure
  */
 uint8_t ESP_CloseConnection(uint8_t channel, const CLS1_StdIOType *io, uint16_t timeoutMs);
+
+/*!
+ * \brief Sets the number of connections
+ * \param nof Number of connections, 0: single connection, 1: multiple connections
+ * \param io Optional IO channel for printing messages
+ * \param timeoutMs Timeout in milliseconds
+ * \return Error code, ERR_OK for no failure
+ */
+uint8_t ESP_SetNumberOfConnections(uint8_t nof, const CLS1_StdIOType *io, uint16_t timeoutMs);
 
 /*!
  * \brief Used to determine if the web server is running or not.

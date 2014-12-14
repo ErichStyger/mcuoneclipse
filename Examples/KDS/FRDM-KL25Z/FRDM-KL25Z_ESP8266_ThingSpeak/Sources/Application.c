@@ -12,6 +12,7 @@
 #include "LEDR.h"
 #include "LEDG.h"
 #include "AS2.h"
+#include "ThingSpeak.h"
 
 static uint8_t APP_EspMsgBuf[512]; /* buffer for messages from ESP8266 */
 
@@ -130,6 +131,7 @@ void APP_Run(void) {
   WAIT1_Waitms(1000); /* wait after power-on */
   ESP_Init();
   SHELL_Init();
+  THING_Init();
   io = CLS1_GetStdio();
   CLS1_SendStr("\r\n------------------------------------------\r\n", io->stdOut);
   CLS1_SendStr("ESP8266 with FRDM-KL25Z\r\n", io->stdOut);

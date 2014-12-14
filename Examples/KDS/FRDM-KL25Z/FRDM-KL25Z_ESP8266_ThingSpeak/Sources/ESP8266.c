@@ -554,7 +554,7 @@ uint8_t ESP_StartWebServer(const CLS1_StdIOType *io) {
 
 
 uint8_t ESP_SendStr(const uint8_t *str, CLS1_ConstStdIOType *io) {
-  uint8_t buf[32];
+  uint8_t buf[64];
   uint8_t rxBuf[48];
   uint8_t res;
   uint16_t timeoutMs;
