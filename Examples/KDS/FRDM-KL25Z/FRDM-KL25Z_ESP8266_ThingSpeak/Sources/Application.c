@@ -18,7 +18,6 @@ static uint8_t APP_EspMsgBuf[512]; /* buffer for messages from ESP8266 */
 
 static uint8_t SendWebPage(uint8_t ch_id, bool ledIsOn, uint8_t temperature, const CLS1_StdIOType *io) {
   static uint8_t http[1024];
-  uint8_t cmd[24], rxBuf[48], expected[48];
   uint8_t buf[16];
   uint8_t res = ERR_OK;
 
@@ -41,14 +40,7 @@ static uint8_t SendWebPage(uint8_t ch_id, bool ledIsOn, uint8_t temperature, con
   UTIL1_strcat(http, sizeof(http), (uint8_t*)"</strong><p><input type=\"submit\"></form></span>");
   UTIL1_strcat(http, sizeof(http), (uint8_t*)"</body>\r\n</html>\r\n");
 
-  UTIL1_strcpy(cmd, sizeof(cmd), "AT+CIPSEND="); /* parameters are <ch_id>,<size> */
-  UTIL1_strcatNum8u(cmd, sizeof(cmd), ch_id);
-  UTIL1_chcat(cmd, sizeof(cmd), ',');
-  UTIL1_strcatNum16u(cmd, sizeof(cmd), UTIL1_strlen(http));
-  UTIL1_strcpy(expected, sizeof(expected), cmd); /* we expect the echo of our command */
-  UTIL1_strcat(expected, sizeof(expected), "\r\r\n> "); /* expect "> " */
-  UTIL1_strcat(cmd, sizeof(cmd), "\r\n");
-  res = ESP_SendATCommand(cmd, rxBuf, sizeof(rxBuf), expected, ESP_DEFAULT_TIMEOUT_MS, io);
+  res = ESP_PrepareMsgSend(ch_id, UTIL1_strlen(http), 3000, io);
   if (res!=ERR_OK) {
     if (io!=NULL) {
       CLS1_SendStr("INFO: TIMEOUT, closing connection!\r\n", io->stdOut);

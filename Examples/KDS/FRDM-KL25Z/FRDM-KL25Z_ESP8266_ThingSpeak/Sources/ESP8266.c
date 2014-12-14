@@ -116,7 +116,7 @@ static uint8_t RxResponse(unsigned char *rxBuf, size_t rxBufLength, unsigned cha
 
 uint8_t ESP_SendATCommand(uint8_t *cmd, uint8_t *rxBuf, size_t rxBufSize, uint8_t *expectedTailStr, uint16_t msTimeout, const CLS1_StdIOType *io) {
   uint16_t snt;
-  uint8_t res;
+  uint8_t res = ERR_OK;
 
   if (rxBuf!=NULL) {
     rxBuf[0] = '\0';
@@ -170,15 +170,44 @@ uint8_t ESP_Restart(const CLS1_StdIOType *io, uint16_t timeoutMs) {
   return res;
 }
 
+uint8_t ESP_OpenConnection(int8_t ch_id, bool isTCP, const uint8_t *IPAddrStr, uint16_t port, uint16_t msTimeout, const CLS1_StdIOType *io) {
+  /* AT+CIPSTART=4,"TCP","184.106.153.149",80 */
+  uint8_t txBuf[54];
+  uint8_t rxBuf[72];
+  uint8_t expected[72];
+
+  UTIL1_strcpy(txBuf, sizeof(txBuf), "AT+CIPSTART=");
+  if (ch_id>=0) {
+    UTIL1_strcatNum16u(txBuf, sizeof(txBuf), ch_id);
+    UTIL1_chcat(txBuf, sizeof(txBuf), ',');
+  }
+  if (isTCP) {
+    UTIL1_strcat(txBuf, sizeof(txBuf), "\"TCP\",\"");
+  } else {
+    UTIL1_strcat(txBuf, sizeof(txBuf), "\"UDP\",\"");
+  }
+  UTIL1_strcat(txBuf, sizeof(txBuf), IPAddrStr);
+  UTIL1_strcat(txBuf, sizeof(txBuf), "\",");
+  UTIL1_strcatNum16u(txBuf, sizeof(txBuf), port);
+
+  UTIL1_strcpy(expected, sizeof(expected), txBuf);
+  UTIL1_strcat(expected, sizeof(expected), "\r\r\n\r\nOK\r\nLinked\r\n");
+
+  UTIL1_strcat(txBuf, sizeof(txBuf), "\r\n");
+
+  return ESP_SendATCommand(txBuf, rxBuf, sizeof(rxBuf), expected, msTimeout, io);
+}
+
 uint8_t ESP_CloseConnection(uint8_t channel, const CLS1_StdIOType *io, uint16_t timeoutMs) {
   /* AT+CIPCLOSE=<channel> */
   uint8_t res;
-  uint8_t cmd[64];
+  uint8_t cmd[sizeof("AT+CIPCLOSE=444\r\n")];
+  uint8_t rxBuf[sizeof("AT+CIPCLOSE=444\r\n\r\nOK\r\n")+10];
 
   UTIL1_strcpy(cmd, sizeof(cmd), "AT+CIPCLOSE=");
   UTIL1_strcatNum8u(cmd, sizeof(cmd), channel);
   UTIL1_strcat(cmd, sizeof(cmd), "\r\n");
-  res = ESP_SendATCommand(cmd, NULL, 0, "Unlink\r\n", timeoutMs, io);
+  res = ESP_SendATCommand(cmd, rxBuf, sizeof(rxBuf), "Unlink\r\n", timeoutMs, io);
   return res;
 }
 
@@ -423,7 +452,6 @@ uint8_t ESP_JoinAP(const uint8_t *ssid, const uint8_t *pwd, int nofRetries, CLS1
   return res;
 }
 
-
 static uint8_t ReadIntoIPDBuffer(uint8_t *buf, size_t bufSize, uint8_t *p, uint16_t msgSize, uint16_t msTimeout, const CLS1_StdIOType *io) {
   uint8_t ch;
   size_t nofInBuf;
@@ -574,6 +602,20 @@ uint8_t ESP_SendStr(const uint8_t *str, CLS1_ConstStdIOType *io) {
     }
   }
   return ERR_OK;
+}
+
+uint8_t ESP_PrepareMsgSend(int8_t ch_id, size_t msgSize, uint16_t msTimeout, const CLS1_StdIOType *io) {
+  /* AT+CIPSEND=<ch_id>,<size> */
+  uint8_t cmd[24], rxBuf[48], expected[48];
+
+  UTIL1_strcpy(cmd, sizeof(cmd), "AT+CIPSEND="); /* parameters are <ch_id>,<size> */
+  UTIL1_strcatNum8u(cmd, sizeof(cmd), ch_id);
+  UTIL1_chcat(cmd, sizeof(cmd), ',');
+  UTIL1_strcatNum16u(cmd, sizeof(cmd), msgSize);
+  UTIL1_strcpy(expected, sizeof(expected), cmd); /* we expect the echo of our command */
+  UTIL1_strcat(expected, sizeof(expected), "\r\r\n> "); /* expect "> " */
+  UTIL1_strcat(cmd, sizeof(cmd), "\r\n");
+  return ESP_SendATCommand(cmd, rxBuf, sizeof(rxBuf), expected, msTimeout, io);
 }
 
 static uint8_t ESP_PrintHelp(const CLS1_StdIOType *io) {

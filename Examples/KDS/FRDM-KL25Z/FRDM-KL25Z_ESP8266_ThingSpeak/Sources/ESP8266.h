@@ -104,6 +104,17 @@ uint8_t ESP_JoinAP(const uint8_t *ssid, const uint8_t *pwd, int nofRetries, CLS1
 uint8_t ESP_GetIPD(uint8_t *msgBuf, size_t msgBufSize, uint8_t *ch_id, uint16_t *size, bool *isGet, uint16_t timeoutMs, const CLS1_StdIOType *io);
 
 /*!
+ * \brief Open a UDP or TCP connection.
+ * \param ch_id Channel id to be used, -1 for no channel
+ * \param isTCP TRUE for TCP, FALSE for UDP
+ * \param IPAddrStr IP string of host ("xxx.xxx.xxx.xxx")
+ * \param port Port number
+ * \param io Shell I/O handler or NULL if not used
+ * \return Error code, ERR_OK for no failure
+ */
+uint8_t ESP_OpenConnection(int8_t ch_id, bool isTCP, const uint8_t *IPAddrStr, uint16_t port, uint16_t msTimeout, const CLS1_StdIOType *io);
+
+/*!
  * \brief Closes a connection
  * \param channel Channel ID
  * \param io Optional IO channel for printing messages
@@ -120,6 +131,16 @@ uint8_t ESP_CloseConnection(uint8_t channel, const CLS1_StdIOType *io, uint16_t 
  * \return Error code, ERR_OK for no failure
  */
 uint8_t ESP_SetNumberOfConnections(uint8_t nof, const CLS1_StdIOType *io, uint16_t timeoutMs);
+
+/*!
+ * \brief Prepares for sending a message, and waits for '>' response
+ * \param ch_id Channel ID, or -1
+ * \param msgSize String size of the message to be sent afterwards
+ * \param timeoutMs Timeout in milliseconds
+ * \param io Shell I/O handler or NULL if not used
+ * \return Error code, ERR_OK for no failure
+ */
+uint8_t ESP_PrepareMsgSend(int8_t ch_id, size_t msgSize, uint16_t msTimeout, const CLS1_StdIOType *io);
 
 /*!
  * \brief Used to determine if the web server is running or not.
