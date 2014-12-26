@@ -9,8 +9,10 @@
 #define PLATFORM_H_
 
 /* for now on the same SPI bus */
-#define configSD  0
-#define configRF  1
+#include "Cpu.h"
+
+#define configSD  defined(PEcfg_SD) && (PEcfg_SD==1)
+#define configRF  defined(PEcfg_RF) && (PEcfg_RF==1)
 
 #define PL_HAS_BLUETOOTH      (1)
 #define PL_HAS_SHELL          (1)

@@ -60,28 +60,20 @@
 #include "FX1.h"
 #include "GI2C1.h"
 #include "I2C.h"
+#include "FAT1.h"
+#include "TmDt1.h"
+#include "SD1.h"
+#include "SS1.h"
+#include "CD2.h"
+#include "SM1.h"
 #include "TMOUT1.h"
-#include "RF1.h"
-#include "CE1.h"
-#include "BitIoLdd6.h"
-#include "CSN1.h"
-#include "BitIoLdd7.h"
-#include "IRQ1.h"
-#include "ExtIntLdd1.h"
-#include "RNET1.h"
 #include "KEY1.h"
 #include "Inhr1.h"
 #include "BitIoLdd8.h"
 #include "Inhr2.h"
 #include "BitIoLdd9.h"
-#include "SWSPI1.h"
-#include "Clock1.h"
-#include "BitIoLdd12.h"
-#include "Input1.h"
-#include "BitIoLdd13.h"
-#include "Output1.h"
-#include "BitIoLdd14.h"
 #include "TRG1.h"
+#include "MINI1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -224,6 +216,25 @@ void KEY1_OnKeyReleasedLong(byte keys);
 **     Returns     : Nothing
 ** ===================================================================
 */
+
+/*
+** ===================================================================
+**     Event       :  SM1_OnBlockSent (module Events)
+**
+**     Component   :  SM1 [SPIMaster_LDD]
+*/
+/*!
+**     @brief
+**         This event is called after the last character from the
+**         output buffer is moved to the transmitter. This event is
+**         available only if the SendBlock method is enabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. The pointer is passed
+**                           as the parameter of Init method. 
+*/
+/* ===================================================================*/
+void SM1_OnBlockSent(LDD_TUserData *UserDataPtr);
 
 /* END Events */
 
