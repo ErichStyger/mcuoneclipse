@@ -61,6 +61,7 @@
 #include "SD1.h"
 #include "SS1.h"
 #include "CD2.h"
+#include "MINI1.h"
 #include "SM1.h"
 #include "TMOUT1.h"
 #include "KEY1.h"
@@ -69,7 +70,6 @@
 #include "Inhr2.h"
 #include "BitIoLdd9.h"
 #include "TRG1.h"
-#include "MINI1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

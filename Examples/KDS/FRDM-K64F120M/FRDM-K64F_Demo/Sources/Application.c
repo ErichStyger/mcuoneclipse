@@ -32,7 +32,9 @@
 #if PL_HAS_MINI_INI
   #include "MINI1.h"
 #endif
-#include "TmDt1.h"
+#if PL_HAS_SD_CARD
+  #include "TmDt1.h"
+#endif
 
 static xTimerHandle timerHndl;
 #define TIMER_PERIOD_MS TMOUT1_TICK_PERIOD_MS
@@ -67,7 +69,9 @@ static void vTimerCallback(xTimerHandle pxTimer) {
   /* TIMER_PERIOD_MS ms timer */
   TMOUT1_AddTick();
   TRG1_AddTick();
+#if PL_HAS_SD_CARD
   TmDt1_AddTick();
+#endif
 }
 
 #if PL_HAS_DEBUG_PRINT

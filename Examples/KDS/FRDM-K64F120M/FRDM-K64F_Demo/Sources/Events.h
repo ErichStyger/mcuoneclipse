@@ -65,6 +65,7 @@
 #include "SD1.h"
 #include "SS1.h"
 #include "CD2.h"
+#include "MINI1.h"
 #include "SM1.h"
 #include "TMOUT1.h"
 #include "KEY1.h"
@@ -73,7 +74,6 @@
 #include "Inhr2.h"
 #include "BitIoLdd9.h"
 #include "TRG1.h"
-#include "MINI1.h"
 
 #ifdef __cplusplus
 extern "C" {

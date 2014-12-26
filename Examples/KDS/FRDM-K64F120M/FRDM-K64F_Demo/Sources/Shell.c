@@ -21,6 +21,7 @@
 #include "FX1.h"
 #if PL_HAS_SD_CARD
   #include "FAT1.h"
+  #include "TmDt1.h"
 #endif
 #if PL_HAS_RADIO
   #include "Radio.h"
@@ -30,7 +31,6 @@
 #if PL_HAS_RSTDIO
   #include "RStdIO.h"
 #endif
-#include "TmDt1.h"
 
 void SHELL_SendString(unsigned char *msg) {
   CLS1_SendStr(msg, CLS1_GetStdio()->stdOut);
@@ -121,7 +121,7 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
 #endif
   for(;;) {
 #if PL_HAS_SD_CARD
-    (void)FAT1_CheckCardPresence(&cardMounted, "0" /*volume*/, &fileSystemObject, CLS1_GetStdio());
+    (void)FAT1_CheckCardPresence(&cardMounted, (unsigned char*)"0" /*volume*/, &fileSystemObject, CLS1_GetStdio());
 #endif
 #if CLS1_DEFAULT_SERIAL
     (void)CLS1_ReadAndParseWithCommandTable(localConsole_buf, sizeof(localConsole_buf), ioLocal, CmdParserTable);

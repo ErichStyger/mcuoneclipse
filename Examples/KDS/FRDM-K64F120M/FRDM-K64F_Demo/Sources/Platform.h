@@ -8,9 +8,11 @@
 #ifndef PLATFORM_H_
 #define PLATFORM_H_
 
+#include "Cpu.h"
+
 /* for now on the same SPI bus */
-#define configSD  1
-#define configRF  0
+#define configSD  defined(PEcfg_SD) && PEcfg_SD==1
+#define configRF  defined(PEcfg_RF) && PEcfg_RF==1
 
 #define PL_HAS_BLUETOOTH      (1)
 #define PL_HAS_SHELL          (1)
@@ -22,6 +24,6 @@
 #define PL_HAS_SD_CARD        (1 && !configRF)
 #define PL_HAS_DEBUG_PRINT    (1)
 #define PL_HAS_RTOS_TRACE     (1)
-#define PL_HAS_MINI_INI       (1)
+#define PL_HAS_MINI_INI       (1 && PL_HAS_SD_CARD)
 
 #endif /* PLATFORM_H_ */
