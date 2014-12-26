@@ -45,22 +45,9 @@
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 
 #include "Test.h"
-void _exit(int);
+#include "coverage_stubs.h"
 
 static bool doExit = FALSE;
-
-static void static_init(void) {
-  void (**p)(void);
-  extern uint32_t __init_array_start, __init_array_end; /* linker defined symbols, array of function pointers */
-  uint32_t beg = (uint32_t)&__init_array_start;
-  uint32_t end = (uint32_t)&__init_array_end;
-
-  while(beg<end) {
-    p = (void(**)(void))beg;
-    (*p)();
-    beg += sizeof(p); /* next pointer */
-  }
-}
 
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
@@ -71,13 +58,17 @@ int main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
   /* Write your code here */
+#if DO_COVERAGE
   static_init();
+#endif
   for (;;) {
     TEST_Test(10);
     TEST_Test(1);
+#if DO_COVERAGE
     if (doExit) {
       _exit(0);
     }
+#endif
   }
   /* For example: for(;;) { } */
 
