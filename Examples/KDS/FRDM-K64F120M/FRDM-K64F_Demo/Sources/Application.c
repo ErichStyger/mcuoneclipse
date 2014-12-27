@@ -115,7 +115,7 @@ int Callback(const char *section, const char *key, const char *value, const void
 
 static void Check(bool ok) {
   if (!ok) {
-    SHELL_SendString((unsigned char*)"ERR: Failed!\r\n");
+    SHELL_SendString((unsigned char*)"MinINI ERR: Failed!\r\n");
   }
 }
 
@@ -221,7 +221,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
 #endif
 
   (void)pvParameters; /* parameter not used */
-#if PL_HAS_MINI_INI
+#if 0 && PL_HAS_MINI_INI
   TestMiniIni();
 #endif
   for(;;) {
