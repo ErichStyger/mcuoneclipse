@@ -113,13 +113,13 @@ int Callback(const char *section, const char *key, const char *value, const void
   return 1;
 }
 
-static void Check(bool ok) {
+void Check(bool ok) {
   if (!ok) {
     SHELL_SendString((unsigned char*)"MinINI ERR: Failed!\r\n");
   }
 }
 
-static int TestMiniIni(void) {
+int TestMiniIni(void) {
   char str[100];
   long n;
   int s, k;
