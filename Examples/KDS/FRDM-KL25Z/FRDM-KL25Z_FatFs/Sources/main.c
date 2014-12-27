@@ -41,6 +41,7 @@
 #include "WAIT1.h"
 #include "TMOUT1.h"
 #include "SM1.h"
+#include "SMasterLdd1.h"
 #include "FAT1.h"
 #include "SD1.h"
 #include "SS1.h"
