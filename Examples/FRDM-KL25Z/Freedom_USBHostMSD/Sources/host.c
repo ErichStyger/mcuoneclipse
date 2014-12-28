@@ -27,16 +27,17 @@ static void CheckStatus(void) {
      case USB_DEVICE_ATTACHED:
        LEDR_Off();
        LEDG_On();
-       print((unsigned char*)"Mass Storage Device Attached\n" );
+       print((unsigned char*)"Mass Storage Device Attached\n");
        break;
      case USB_DEVICE_SET_INTERFACE_STARTED:
        break;
-     case USB_DEVICE_INTERFACED:
+     case USB_DEVICE_INTERFACED: /* here we have a volume! */
+      /* print((unsigned char*)"Mass Storage Device Interfaced\n"); */
        break;
      case USB_DEVICE_DETACHED:
        LEDR_On();
        LEDG_Off();
-       print((unsigned char*)"\nMass Storage Device Detached\n" );
+       print((unsigned char*)"\nMass Storage Device Detached\n");
        break;
      case USB_DEVICE_OTHER:
        break;
@@ -49,13 +50,13 @@ static void CheckStatus(void) {
 #if ONLY_HOST
 static void HOST_Run(void) {
   LEDB_On();
+  Cpu_EnableInt();
   for(;;) {
     FsMSD1_AppTask();
     CheckStatus();
   }
 }
-#endif
-
+#else
 static portTASK_FUNCTION(HostTask, pvParameters) {
   (void)pvParameters; /* not used */
   for(;;) {
@@ -65,6 +66,7 @@ static portTASK_FUNCTION(HostTask, pvParameters) {
     //FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
   }
 }
+#endif
 
 void HOST_Init(void) {
 #if ONLY_HOST

@@ -10,7 +10,7 @@
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2014-06-19, 10:07, # CodeGen: 62 */
+/*##     Date/Time : 2014-12-28, 09:06, # CodeGen: 14 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */
@@ -32,7 +32,7 @@ _estack = 0x20003000;    /* end of m_data */
 __SP_INIT = _estack;
 
 /* Generate a link error if heap and stack don't fit into RAM */
-__heap_size = 0x00;                    /* required amount of heap  */
+__heap_size = 0x0800;                  /* required amount of heap  */
 __stack_size = 0x0400;                 /* required amount of stack */
 
 
