@@ -55,6 +55,7 @@
 #include "PDD_Includes.h"
 #include "Init_Config.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#if 1
 #include <stdio.h>
 static uint8_t cdc_buffer[USB1_DATA_BUFF_SIZE];
 static uint8_t in_buffer[USB1_DATA_BUFF_SIZE];
@@ -97,7 +98,7 @@ static void CDC_Run(void) {
     }
   }
 }
-
+#endif
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
