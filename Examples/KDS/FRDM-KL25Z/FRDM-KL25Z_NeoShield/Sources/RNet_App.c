@@ -15,7 +15,7 @@
 #include "Radio.h"
 #include "LED1.h"
 #include "LED2.h"
-#include "LED3.h"
+//#include "LED3.h"
 
 typedef enum {
   RNETA_INITIAL, /* initialization state */
@@ -99,12 +99,12 @@ static portTASK_FUNCTION(RNetTask, pvParameters) {
     Process(); /* process state machine */
     cntr++;
     if (cntr==100) { /* with an RTOS 10 ms/100 Hz tick rate, this is every second */
-      LED3_On(); /* blink blue LED for 20 ms */
+     // LED3_On(); /* blink blue LED for 20 ms */
      // RAPP_SendPayloadDataBlock(&msgCntr, sizeof(msgCntr), RAPP_MSG_TYPE_PING, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
       msgCntr++;
       cntr = 0;
       FRTOS1_vTaskDelay(20/portTICK_RATE_MS);
-      LED3_Off(); /* blink blue LED */
+      //LED3_Off(); /* blink blue LED */
     }
     FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
   } /* for */

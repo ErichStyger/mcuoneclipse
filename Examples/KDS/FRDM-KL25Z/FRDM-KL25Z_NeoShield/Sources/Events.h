@@ -47,9 +47,6 @@
 #include "LED2.h"
 #include "LEDpin2.h"
 #include "BitIoLdd2.h"
-#include "LED3.h"
-#include "LEDpin3.h"
-#include "BitIoLdd3.h"
 #include "GI2C1.h"
 #include "I2C1.h"
 #include "RTC1.h"
@@ -70,6 +67,13 @@
 #include "SM1.h"
 #include "SMasterLdd1.h"
 #include "TmDt1.h"
+#include "PTD.h"
+#include "MCS.h"
+#include "BitIoLdd4.h"
+#include "DCS.h"
+#include "BitIoLdd5.h"
+#include "DREQ.h"
+#include "BitIoLdd8.h"
 #include "TPM0.h"
 
 #ifdef __cplusplus

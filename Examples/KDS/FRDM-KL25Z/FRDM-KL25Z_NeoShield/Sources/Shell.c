@@ -12,8 +12,6 @@
 #include "CLS1.h"
 #include "LED1.h"
 #include "LED2.h"
-#include "LED3.h"
-//#include "I2CSPY1.h"
 #include "RTC1.h"
 #include "RNET1.h"
 
@@ -22,9 +20,6 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
   CLS1_ParseCommand,
 #if FRTOS1_PARSE_COMMAND_ENABLED
   FRTOS1_ParseCommand,
-#endif
-#if I2CSPY1_PARSE_COMMAND_ENABLED
-  I2CSPY1_ParseCommand,
 #endif
 #if RTC1_PARSE_COMMAND_ENABLED
   RTC1_ParseCommand,

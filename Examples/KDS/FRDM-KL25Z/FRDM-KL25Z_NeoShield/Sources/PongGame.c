@@ -10,9 +10,9 @@
 #include "FRTOS1.h"
 #include "NeoPixel.h"
 
-#define PONG_NOF_PIXELS 30
-#define PONG_NOF_BALLS   2
-#define PONG_DEFAULT_BACKGROUND_RGB 0x000000
+#define PONG_NOF_PIXELS 144
+#define PONG_NOF_BALLS   4
+#define PONG_DEFAULT_BACKGROUND_RGB 0x010101
 
 typedef struct {
   NEO_PixelIdxT pos; /* current pos */
@@ -59,11 +59,11 @@ static void PONG_RemoveBall(PONG_BallT *ball) {
 
   color = PONG_DEFAULT_BACKGROUND_RGB; /* default */
   for(i=0;i<PONG_NOF_BALLS;i++) {
-    if (&PONG_Balls[i] != ball && PONG_Balls[i].pos==ball->pos) { /* other ball on our position */
+    if (&PONG_Balls[i]!=ball && PONG_Balls[i].pos==ball->pos) { /* other ball on our position */
       color = PONG_Balls[i].color; /* use other balls color */
     }
   }
-  (void)NEO_SetPixelColor(ball->pos, PONG_DEFAULT_BACKGROUND_RGB);
+  (void)NEO_SetPixelColor(ball->pos, color);
 }
 
 static void PONG_PlayerLooses(bool isLeft) {
@@ -88,15 +88,29 @@ static void PONG_InitGame(void) {
 static void PONG_StartGame(void) {
   int i;
 
+#if PONG_NOF_BALLS>=1
   PONG_Balls[0].pos = 0; /* leftmost */
   PONG_Balls[0].color = 0x00ff00; /* green */
   PONG_Balls[0].forward = TRUE; /* left to right */
-  PONG_Balls[0].speedMs = 200; /* initial speed */
-#if PONG_NOF_BALLS>1
+  PONG_Balls[0].speedMs = 250; /* initial speed */
+#endif
+#if PONG_NOF_BALLS>=2
   PONG_Balls[1].pos = PONG_NOF_PIXELS-1; /* rightmost */
   PONG_Balls[1].color = 0x0000ff; /* blue */
   PONG_Balls[1].forward = FALSE; /* right to left */
-  PONG_Balls[1].speedMs = 250; /* initial speed */
+  PONG_Balls[1].speedMs = 150; /* initial speed */
+#endif
+#if PONG_NOF_BALLS>=3
+  PONG_Balls[2].pos = PONG_NOF_PIXELS-1; /* rightmost */
+  PONG_Balls[2].color = 0x500050;
+  PONG_Balls[2].forward = FALSE; /* right to left */
+  PONG_Balls[2].speedMs = 50; /* initial speed */
+#endif
+#if PONG_NOF_BALLS>=4
+  PONG_Balls[3].pos = 0; /* rightmost */
+  PONG_Balls[3].color = 0x302050;
+  PONG_Balls[3].forward = TRUE; /* right to left */
+  PONG_Balls[3].speedMs = 5; /* initial speed */
 #endif
   for(i=0;i<PONG_NOF_BALLS;i++) {
     PONG_DrawBall(&PONG_Balls[i]);
@@ -113,7 +127,7 @@ static void PONG_UpdateBall(PONG_BallT *ball) {
         PONG_DrawBall(ball);
         break;
       } else if (ButtonRightPressed()) { /* play back */
-        ball->color = 0x0000ff; /* blue */
+        //ball->color = 0x0000ff; /* blue */
         ball->forward = FALSE;
         continue;
       } else {
@@ -126,7 +140,7 @@ static void PONG_UpdateBall(PONG_BallT *ball) {
         PONG_DrawBall(ball);
         break;
       } else if (ButtonLeftPressed()) { /* play back */
-        ball->color = 0x00ff00; /* green */
+        //ball->color = 0x00ff00; /* green */
         ball->forward = TRUE;
         continue;
       } else {
@@ -182,7 +196,7 @@ static portTASK_FUNCTION(PongTask, pvParameters) {
   PONG_gameState = PONG_GAME_STATE_INIT;
   for(;;) {
     PONG_RunMachine();
-    FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
+    FRTOS1_vTaskDelay(5/portTICK_RATE_MS);
   }
 }
 
