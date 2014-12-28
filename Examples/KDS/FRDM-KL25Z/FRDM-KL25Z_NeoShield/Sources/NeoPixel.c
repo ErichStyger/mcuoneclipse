@@ -26,6 +26,18 @@
 
 static uint8_t transmitBuf[NEO_NOF_PIXEL*NEO_NOF_BITS_PIXEL];
 
+uint8_t NEO_GetPixelColor(NEO_PixelIdxT pixelNo, uint32_t *rgb) {
+  uint8_t res, r,g,b;
+
+  res = NEO_GetPixelRGB(pixelNo, &r, &g, &b);
+  *rgb = (r<<16)|(g<<8)|b;
+  return res;
+}
+
+uint8_t NEO_SetPixelColor(NEO_PixelIdxT pixelNo, uint32_t rgb) {
+  return NEO_SetPixelRGB(pixelNo, (rgb>>16)&0xff, (rgb>>8)&0xff, rgb&0xff);
+}
+
 /* sets the color of an individual pixel */
 uint8_t NEO_SetPixelRGB(NEO_PixelIdxT pixelNo, uint8_t red, uint8_t green, uint8_t blue) {
   NEO_PixelIdxT idx;

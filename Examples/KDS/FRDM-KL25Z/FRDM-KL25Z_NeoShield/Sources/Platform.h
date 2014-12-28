@@ -10,6 +10,7 @@
 
 
 #define PL_HAS_RNET   1
+#define PL_HAS_PONG   1
 
 
 #endif /* PLATFORM_H_ */

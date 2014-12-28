@@ -2,6 +2,7 @@
  * Application.c
  *      Author: Erich Styger
  */
+#include "Platform.h"
 #include "Application.h"
 #include "LED1.h"
 #include "FRTOS1.h"
@@ -9,6 +10,9 @@
 #include "NeoPixel.h"
 #include "NeoLine.h"
 #include "RNet_App.h"
+#if PL_HAS_PONG
+  #include "PongGame.h"
+#endif
 
 static void DimmColor(NEO_PixelIdxT start, NEO_PixelIdxT end, bool isRed, bool isGreen, bool isBlue) {
   int i, j;
@@ -47,6 +51,7 @@ static portTASK_FUNCTION(NeoTask, pvParameters) {
     FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
   }
 #endif
+#if 0
   NEO_SetPixelRGB(0, 0xff, 0x00, 0x00);
   NEO_SetPixelRGB(1, 0x00, 0xFF, 0x00);
   NEO_SetPixelRGB(2, 0x00, 0x00, 0xff);
@@ -60,6 +65,7 @@ static portTASK_FUNCTION(NeoTask, pvParameters) {
     NEO_DimmPercentPixel(i,50);
   }
   NEO_TransferPixels();
+#endif
 
   for(;;) {
 #if 0
@@ -74,7 +80,7 @@ static portTASK_FUNCTION(NeoTask, pvParameters) {
       FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
     }
 #endif
-#if 1
+#if 0
     NEOL_PixelTrail(0xff, 0x00, 0x00, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10);
     DimmColor(NEO_PIXEL_FIRST, NEO_PIXEL_LAST, TRUE, FALSE, FALSE);
     NEOL_PixelTrail(0xff, 0xff, 0x00, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10);
@@ -102,6 +108,9 @@ void APP_Run(void) {
 #if PL_HAS_RNET
   RNETA_Init();
 #endif
+#if PL_HAS_PONG
+  PONG_Init();
+#else
   if (FRTOS1_xTaskCreate(
         NeoTask,  /* pointer to the task */
         "Neo", /* task name for kernel awareness debugging */
@@ -114,6 +123,7 @@ void APP_Run(void) {
     for(;;){}; /* error! probably out of memory */
     /*lint +e527 */
   }
+#endif
   FRTOS1_vTaskStartScheduler();
 }
 

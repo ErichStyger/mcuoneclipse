@@ -24,6 +24,9 @@ uint8_t NEO_ClearPixel(NEO_PixelIdxT pixelNo);
  */
 uint8_t NEO_ClearAllPixel(void);
 
+uint8_t NEO_SetPixelColor(NEO_PixelIdxT pixelNo, uint32_t rgb);
+uint8_t NEO_GetPixelColor(NEO_PixelIdxT pixelNo, uint32_t *rgb);
+
 uint8_t NEO_SetPixelRGB(NEO_PixelIdxT pixelNo, uint8_t red, uint8_t green, uint8_t blue);
 
 uint8_t NEO_GetPixelRGB(NEO_PixelIdxT pixelNo, uint8_t *redP, uint8_t *greenP, uint8_t *blueP);
