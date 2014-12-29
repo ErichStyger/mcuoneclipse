@@ -13,6 +13,7 @@
 #if PL_HAS_PONG
   #include "PongGame.h"
 #endif
+#include "SPIBus.h"
 
 static void DimmColor(NEO_PixelIdxT start, NEO_PixelIdxT end, bool isRed, bool isGreen, bool isBlue) {
   int i, j;
@@ -105,6 +106,9 @@ static portTASK_FUNCTION(NeoTask, pvParameters) {
 void APP_Run(void) {
   NEO_Init();
   SHELL_Init();
+#if PL_HAS_MUSIC || PL_HAS_SD_CARD
+  SPIBus_Init();
+#endif
 #if PL_HAS_RNET
   RNETA_Init();
 #endif

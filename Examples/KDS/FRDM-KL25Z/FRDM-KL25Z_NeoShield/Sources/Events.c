@@ -36,6 +36,8 @@ extern "C" {
 
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "SPIBus.h"
+
 /*
 ** ===================================================================
 **     Event       :  Cpu_OnNMIINT (module Events)
@@ -211,6 +213,79 @@ void DMACH0_OnComplete(LDD_TUserData *UserDataPtr)
 {
   /* Write your code here ... */
 }
+
+/*
+** ===================================================================
+**     Event       :  VS1_OnActivateSPI (module Events)
+**
+**     Component   :  VS1 [VS1053]
+**     Description :
+**         Event called before activating SPI bus
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void VS1_OnActivateSPI(void)
+{
+  SPIBus_OnActivate();
+}
+
+/*
+** ===================================================================
+**     Event       :  VS1_OnDeactivateSPI (module Events)
+**
+**     Component   :  VS1 [VS1053]
+**     Description :
+**         Event called after deactivating SPI bus.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void VS1_OnDeactivateSPI(void)
+{
+  SPIBus_OnDeactivate();
+}
+
+/*
+** ===================================================================
+**     Event       :  SD1_OnActivate (module Events)
+**
+**     Component   :  SD1 [SD_Card]
+**     Description :
+**         Event called when Activate() method is called. This gives an
+**         opportunity to the application to synchronize access to a
+**         shared bus.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         mode            - 0: slow mode, 1: fast mode
+**     Returns     : Nothing
+** ===================================================================
+*/
+void SD1_OnActivate(byte mode)
+{
+  SPIBus_OnActivate();
+}
+
+/*
+** ===================================================================
+**     Event       :  SD1_OnDeactivate (module Events)
+**
+**     Component   :  SD1 [SD_Card]
+**     Description :
+**         Event called when Deactivate() method is called. This gives
+**         an opportunity to the application to synchronize access to a
+**         shared bus.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         mode            - 0: slow mode, 1: fast mode
+**     Returns     : Nothing
+** ===================================================================
+*/
+void SD1_OnDeactivate(byte mode)
+{
+  SPIBus_OnDeactivate();
+}
+
 
 /* END Events */
 
