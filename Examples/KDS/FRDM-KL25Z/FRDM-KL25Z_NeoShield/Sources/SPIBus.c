@@ -18,6 +18,13 @@ void SPIBus_OnDeactivate(void) {
   FRTOS1_xSemaphoreGiveRecursive(spiSem);
 }
 
+void SPIBus_Deinit(void) {
+  if (spiSem!=NULL) {
+    FRTOS1_vQueueUnregisterQueue(spiSem);
+    FRTOS1_vSemaphoreDelete(spiSem);
+  }
+}
+
 void SPIBus_Init(void) {
   spiSem = FRTOS1_xSemaphoreCreateRecursiveMutex();
   if (spiSem==NULL) { /* creation failed? */

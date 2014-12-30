@@ -18,6 +18,7 @@
 #endif
 #if PL_HAS_MUSIC
   #include "VS1.h"
+  #include "Music.h"
 #endif
 #if PL_HAS_SD_CARD
   #include "FAT1.h"
@@ -41,6 +42,7 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if VS1_PARSE_COMMAND_ENABLED
   VS1_ParseCommand,
 #endif
+  MUSIC_ParseCommand,
 #endif
 #if PL_HAS_SD_CARD
 #if FAT1_PARSE_COMMAND_ENABLED

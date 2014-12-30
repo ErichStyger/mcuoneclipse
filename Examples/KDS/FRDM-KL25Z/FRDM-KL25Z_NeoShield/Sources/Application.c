@@ -13,7 +13,12 @@
 #if PL_HAS_PONG
   #include "PongGame.h"
 #endif
+#if PL_HAS_MUSIC || PL_HAS_SD_CARD
 #include "SPIBus.h"
+#endif
+#if PL_HAS_MUSIC
+  #include "Music.h"
+#endif
 
 static void DimmColor(NEO_PixelIdxT start, NEO_PixelIdxT end, bool isRed, bool isGreen, bool isBlue) {
   int i, j;
@@ -108,6 +113,9 @@ void APP_Run(void) {
   SHELL_Init();
 #if PL_HAS_MUSIC || PL_HAS_SD_CARD
   SPIBus_Init();
+#endif
+#if PL_HAS_MUSIC
+  MUSIC_Init();
 #endif
 #if PL_HAS_RNET
   RNETA_Init();

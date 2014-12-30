@@ -12,6 +12,8 @@ void SPIBus_OnActivate(void);
 
 void SPIBus_OnDeactivate(void);
 
+void SPIBus_Deinit(void);
+
 void SPIBus_Init(void);
 
 #endif /* SPIBUS_H_ */

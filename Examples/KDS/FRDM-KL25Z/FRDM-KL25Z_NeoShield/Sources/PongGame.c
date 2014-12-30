@@ -9,9 +9,12 @@
 #include "PongGame.h"
 #include "FRTOS1.h"
 #include "NeoPixel.h"
+#if PL_HAS_MUSIC
+  #include "Music.h"
+#endif
 
-#define PONG_NOF_PIXELS 144
-#define PONG_NOF_BALLS   4
+#define PONG_NOF_PIXELS  20
+#define PONG_NOF_BALLS   1
 #define PONG_DEFAULT_BACKGROUND_RGB 0x010101
 
 typedef struct {
@@ -33,10 +36,18 @@ static PONG_GameState PONG_gameState;
 static PONG_BallT PONG_Balls[PONG_NOF_BALLS];
 
 static bool ButtonRightPressed(void) {
+#if 1 && PL_HAS_MUSIC
+  MUSIC_PlayTheme(MUSIC_THEME_WHOSH1);
+  FRTOS1_taskYIELD();
+#endif
   return TRUE;
 }
 
 static bool ButtonLeftPressed(void) {
+#if 1 && PL_HAS_MUSIC
+  MUSIC_PlayTheme(MUSIC_THEME_WHOSH1);
+  FRTOS1_taskYIELD();
+#endif
   return TRUE;
 }
 
@@ -90,9 +101,9 @@ static void PONG_StartGame(void) {
 
 #if PONG_NOF_BALLS>=1
   PONG_Balls[0].pos = 0; /* leftmost */
-  PONG_Balls[0].color = 0x00ff00; /* green */
+  PONG_Balls[0].color = 0x001100; /* green */
   PONG_Balls[0].forward = TRUE; /* left to right */
-  PONG_Balls[0].speedMs = 250; /* initial speed */
+  PONG_Balls[0].speedMs = 200; /* initial speed */
 #endif
 #if PONG_NOF_BALLS>=2
   PONG_Balls[1].pos = PONG_NOF_PIXELS-1; /* rightmost */
@@ -120,35 +131,32 @@ static void PONG_StartGame(void) {
 
 static void PONG_UpdateBall(PONG_BallT *ball) {
   PONG_RemoveBall(ball); /* clear current ball */
-  for(;;) { /* breaks */
+ // for(;;) { /* breaks */
     if (ball->forward) {
       if (ball->pos<PONG_NOF_PIXELS-1) {
         ball->pos++;
         PONG_DrawBall(ball);
-        break;
-      } else if (ButtonRightPressed()) { /* play back */
-        //ball->color = 0x0000ff; /* blue */
-        ball->forward = FALSE;
-        continue;
-      } else {
-        PONG_PlayerLooses(FALSE); /* right player looses */
-        break;
       }
     } else { /* backward */
       if (ball->pos>0) {
         ball->pos--;
         PONG_DrawBall(ball);
-        break;
-      } else if (ButtonLeftPressed()) { /* play back */
-        //ball->color = 0x00ff00; /* green */
-        ball->forward = TRUE;
-        continue;
-      } else {
-        PONG_PlayerLooses(TRUE); /* left player looses */
-        break;
       }
     }
-  } /* for */
+ // } /* for */
+  if (ball->forward && ball->pos==PONG_NOF_PIXELS-1) {
+    if (ButtonRightPressed()) {
+      ball->forward = FALSE;
+    } else {
+      PONG_PlayerLooses(FALSE); /* right player looses */
+    }
+  } else if (!ball->forward && ball->pos == 0) {
+    if (ButtonLeftPressed()) {
+      ball->forward = TRUE;
+    } else {
+      PONG_PlayerLooses(TRUE); /* right player looses */
+    }
+  }
 }
 
 static void PONG_UpdateBalls(void) {
@@ -206,7 +214,7 @@ void PONG_Init(void) {
         "Pong", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
-        tskIDLE_PRIORITY,  /* initial priority */
+        tskIDLE_PRIORITY+2,  /* initial priority */
         (xTaskHandle*)NULL /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */

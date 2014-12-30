@@ -70,6 +70,7 @@
 #include "PTD.h"
 #include "SM2.h"
 #include "SMasterLdd2.h"
+#include "HF1.h"
 #include "VS1.h"
 #include "MCS1.h"
 #include "BitIoLdd9.h"
