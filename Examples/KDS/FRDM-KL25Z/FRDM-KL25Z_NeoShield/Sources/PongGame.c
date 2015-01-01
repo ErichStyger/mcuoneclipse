@@ -13,6 +13,9 @@
   #include "Music.h"
   #include "VS1.h"
 #endif
+#if PL_HAS_MIDI
+  #include "MidiMusic.h"
+#endif
 #if PL_HAS_KEYS
   #include "EVNT1.h"
   #include "Keys.h"
@@ -314,10 +317,8 @@ static void PONG_RunMachine(void) {
 static void PlayMIDI(void) {
   int instrument, note;
 
-  //VS1_MIDI_Talk(VS1_MIDI_MSG_CH_PARAMETER|0, VS1_MIDI_MSG_CH_PARAM_BANK_SELECT, 0);
   VS1_MIDI_SetBank(0, 0);
   for(instrument=0; instrument<127; instrument++) {
-    //VS1_MIDI_Talk(VS1_MIDI_MSG_CH_PRG|0, instrument, 0); /* Default bank GM1 */
     VS1_MIDI_SetInstrument(0, instrument);
     for(note=30; note<40; note++) {
       VS1_MIDI_NoteOn(0, note, 127);
@@ -336,11 +337,7 @@ static portTASK_FUNCTION(PongTask, pvParameters) {
   PONG_gameState = PONG_GAME_STATE_INIT;
 #if PL_HAS_MIDI
   VS1_LoadRealtimeMidiPlugin();
-  VS1_MIDI_Talk(VS1_MIDI_MSG_CH_PARAMETER|0, VS1_MIDI_MSG_CH_PARAM_VOLUME, 120); /* 0xB0 is channel message, set channel volume to near max (127) */
-  PlayTrack();
-//  for(;;) {
-//    PlayMIDI();
-//  }
+  MM_Play();
 #endif
   for(;;) {
 #if PL_HAS_KEYS
