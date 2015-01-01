@@ -31,6 +31,8 @@ typedef enum {
   MUSIC_THEME_LASER_RIGHT,  /* right laser contact */
   MUSIC_THEME_LASER_BOTH,   /* both laser contact */
   MUSIC_THEME_WHOSH1,       /* wosh sound */
+  MUSIC_THEME_BUZZER,       /* wrong answer buzzer */
+  MUSIC_THEME_JACK1,        /* introduction sounds */
   MUSIC_THEME_LAST /* sentinel, must be last in list! */
 } MUSIC_Theme;
 

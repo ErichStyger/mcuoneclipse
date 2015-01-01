@@ -75,6 +75,12 @@
 #include "SM2.h"
 #include "SMasterLdd2.h"
 #include "HF1.h"
+#include "KEY1.h"
+#include "Inhr4.h"
+#include "BitIoLdd5.h"
+#include "EVNT1.h"
+#include "TRG1.h"
+#include "PTB.h"
 #include "VS1.h"
 #include "MCS1.h"
 #include "BitIoLdd9.h"
@@ -279,6 +285,53 @@ void SD1_OnDeactivate(byte mode);
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **         mode            - 0: slow mode, 1: fast mode
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void EVNT1_AppHandleEvent(byte event);
+/*
+** ===================================================================
+**     Event       :  EVNT1_AppHandleEvent (module Events)
+**
+**     Component   :  EVNT1 [SimpleEvents]
+**     Description :
+**         
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         event           - Event (event number) to be processed.
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyPressed(byte keys);
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyPressed (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated at the time a key has been pressed.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyReleased(byte keys);
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyReleased (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated after a key has been released.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
 **     Returns     : Nothing
 ** ===================================================================
 */

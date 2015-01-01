@@ -35,6 +35,8 @@ static const unsigned char MUSIC_ThemeFiles[][32] = {
   /* MUSIC_THEME_LASER_RIGHT */   "0:\\lightsbr.MP3",
   /* MUSIC_THEME_LASER_BOTH */    "0:\\lightsbr.MP3",
   /* MUSIC_THEME_WHOSH1 */        "0:\\woosh_3.mp3",
+  /* MUSIC_THEME_BUZZER */        "0:\\buzzer.mp3",
+  /* MUSIC_THEME_JACK1 */         "0:\\jack_1.mp3",
   /* MUSIC_THEME_LAST */
 };
 
@@ -56,6 +58,7 @@ static uint8_t MUSIC_PlaySong(const uint8_t *fileName, const CLS1_StdIOType *io)
   uint8_t res = ERR_OK;
   static FIL fp;
 
+  MUSIC_isPlaying = TRUE;
   if (io!=NULL) {
     CLS1_SendStr("Playing file '", io->stdOut);
     CLS1_SendStr(fileName, io->stdOut);
@@ -67,7 +70,6 @@ static uint8_t MUSIC_PlaySong(const uint8_t *fileName, const CLS1_StdIOType *io)
     }
     return ERR_FAILED;
   }
-  MUSIC_isPlaying = TRUE;
   for(;;) { /* breaks */
     if (FRTOS1_xSemaphoreTake(MUSIC_StopSem, 0)==pdTRUE) {
       CLS1_SendStr("Stop playing!\r\n", io->stdOut);

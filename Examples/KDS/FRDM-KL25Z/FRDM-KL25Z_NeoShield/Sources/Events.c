@@ -37,6 +37,7 @@ extern "C" {
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "SPIBus.h"
+#include "Keys.h"
 
 /*
 ** ===================================================================
@@ -100,6 +101,7 @@ void FRTOS1_vApplicationTickHook(void)
 {
   /* Called for every RTOS tick. */
   TMOUT1_AddTick();
+  TRG1_AddTick();
 }
 
 /*
@@ -286,6 +288,63 @@ void SD1_OnDeactivate(byte mode)
   SPIBus_OnDeactivate();
 }
 
+
+/*
+** ===================================================================
+**     Event       :  EVNT1_AppHandleEvent (module Events)
+**
+**     Component   :  EVNT1 [SimpleEvents]
+**     Description :
+**         
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         event           - Event (event number) to be processed.
+**     Returns     : Nothing
+** ===================================================================
+*/
+void EVNT1_AppHandleEvent(byte event)
+{
+  (void)event; /* only to avoid compiler warning about unused variable */
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyPressed (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated at the time a key has been pressed.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyPressed(byte keys)
+{
+  KEYS_OnKeyPressed(keys);
+}
+
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyReleased (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated after a key has been released.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyReleased(byte keys)
+{
+  KEYS_OnKeyReleased(keys);
+}
 
 /* END Events */
 
