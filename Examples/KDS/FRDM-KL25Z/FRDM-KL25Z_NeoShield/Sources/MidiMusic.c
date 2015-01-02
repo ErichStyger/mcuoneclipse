@@ -14,11 +14,12 @@
 static bool PlayTrackItem(MIDI_MusicTrack *track, unsigned int currTimeMs, uint8_t channel) {
   uint32_t beatsPerSecond = 2; /* 120 bpm */
   uint32_t currentMillis;
-  uint32_t ppqn = 400; /* ticks per beat */
+  uint32_t ppqn; /* ticks per beat/quarter note */
   uint32_t tempo = 110;
   uint8_t event;
   unsigned int itemNo;
 
+  ppqn = track->nofTicksPerQuarterNote;
   for(;;) { /* breaks */
     itemNo = track->currLine;
     if (itemNo>=track->nofLines) { /* out of list */

@@ -9,7 +9,8 @@
 #include "MidiMusicReady.h"
 #include "VS1.h"
 
-#define NOF_TRACKS   2  /* this music has two tracks */
+#define NOF_TRACKS                  2  /* this music has two tracks */
+#define NOF_TICKS_PER_QUARTER_NOTE  0x180 /* see http://www.ccarh.org/courses/253/assignment/midifile/ */
 
 static const MIDI_MusicLine track0[] =
 {
@@ -169,9 +170,11 @@ uint8_t MMReady_GetMidiMusicInfo(MIDI_MusicTrack *tracks, uint8_t nofTracks) {
   tracks[0].lines = &track0[0];
   tracks[0].nofLines = sizeof(track0)/sizeof(track0[0]);
   tracks[0].currLine = 0;
+  tracks[0].nofTicksPerQuarterNote = NOF_TICKS_PER_QUARTER_NOTE;
   tracks[1].lines = &track1[0];
   tracks[1].nofLines = sizeof(track1)/sizeof(track1[0]);
   tracks[1].currLine = 0;
+  tracks[1].nofTicksPerQuarterNote = NOF_TICKS_PER_QUARTER_NOTE;
   return ERR_OK;
 }
 

@@ -29,6 +29,7 @@ typedef struct {
 } MIDI_MusicLine;
 
 typedef struct {
+  uint16_t nofTicksPerQuarterNote;
   const MIDI_MusicLine *lines;
   uint32_t nofLines;
   uint32_t currLine;

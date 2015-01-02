@@ -337,6 +337,7 @@ static portTASK_FUNCTION(PongTask, pvParameters) {
   PONG_gameState = PONG_GAME_STATE_INIT;
 #if PL_HAS_MIDI
   VS1_LoadRealtimeMidiPlugin();
+  //PlayMIDI();
   MM_Play();
 #endif
   for(;;) {
