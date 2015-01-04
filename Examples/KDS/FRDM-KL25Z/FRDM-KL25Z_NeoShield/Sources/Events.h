@@ -35,6 +35,7 @@
 #include "PE_Const.h"
 #include "IO_Map.h"
 #include "FRTOS1.h"
+#include "RTOSTRC1.h"
 #include "UTIL1.h"
 #include "CLS1.h"
 #include "WAIT1.h"
@@ -332,6 +333,20 @@ void KEY1_OnKeyReleased(byte keys);
 **         NAME            - DESCRIPTION
 **         keys            - the key(s) pressed, as bitset (e.g. 1 is
 **                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void RTOSTRC1_OnTraceWrap(void);
+/*
+** ===================================================================
+**     Event       :  RTOSTRC1_OnTraceWrap (module Events)
+**
+**     Component   :  RTOSTRC1 [PercepioTrace]
+**     Description :
+**         Called for trace ring buffer wrap around. This gives the
+**         application a chance to dump the trace buffer.
+**     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================
 */
