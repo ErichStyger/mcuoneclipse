@@ -40,6 +40,7 @@
 #include "LEDpin3.h"
 #include "BitIoLdd3.h"
 #include "FRTOS1.h"
+#include "RTOSTRC1.h"
 #include "UTIL1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
@@ -78,7 +79,7 @@ int main(void)
     for(;;){}; /* error! probably out of memory */
     /*lint +e527 */
   }
-//  FRTOS1_vTaskStartScheduler();
+//  FRTOS1_vTaskStartScheduler(); /* this is done with PEX_RTOS_START() below */
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
