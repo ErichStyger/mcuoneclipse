@@ -3,6 +3,9 @@
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
 		<cconfiguration id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1904865247">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1904865247" moduleId="org.eclipse.cdt.core.settings" name="Debug">
+				<macros>
+					<stringMacro name="PROJECT_KSDK_PATH" type="VALUE_TEXT" value="C:/Freescale/KSDK_1.0.0"/>
+				</macros>
 				<externalSettings/>
 				<extensions>
 					<extension id="org.eclipse.cdt.managedbuilder.core.ManagedBuildManager" point="org.eclipse.cdt.core.ScannerInfoProvider"/>
@@ -51,20 +54,20 @@
 									<listOptionValue builtIn="false" value="FSL_RTOS_FREE_RTOS"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths.1790927048" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/hal/mcg&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/hal/sim/MK64F12&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/hal/sim&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/hal/osc&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/system/clock/MK64F12&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/system/clock&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/hal/port&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/CMSIS/Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/CMSIS/Include/device&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/CMSIS/Include/device/MK64F12&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/utilities&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/utilities/src&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/startup&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/startup/MK64F12/gcc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/hal/mcg&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/hal/sim/MK64F12&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/hal/sim&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/hal/osc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/system/clock/MK64F12&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/system/clock&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/hal/port&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/CMSIS/Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/CMSIS/Include/device&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/CMSIS/Include/device/MK64F12&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/utilities&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/utilities/src&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/startup&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/startup/MK64F12/gcc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/SDK/platform/startup/MK64F12&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProcessorExpertPath}/lib/Kinetis/pdd2/MK64FN1M0LQ12_4SDK/system/sdk&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Sources&quot;"/>
@@ -72,13 +75,33 @@
 									<listOptionValue builtIn="false" value="&quot;C:\Freescale\KSDK_1.0.0\platform\drivers\gpio&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Freescale\KSDK_1.0.0\platform\hal\gpio&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Freescale\KSDK_1.0.0\platform\osa&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/system/interrupt&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/system/interrupt/src&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/hal/gpio&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/drivers/gpio&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/drivers/gpio/src&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/drivers/gpio/common&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/hal&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/hal/mcg&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/hal/sim/MK64F12&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/hal/sim&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/hal/osc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/system/clock/MK64F12&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/system/clock&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/hal/port&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/system/interrupt&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/system/interrupt/src&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/hal/gpio&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/drivers/gpio&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/drivers/gpio/src&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/drivers/gpio/common&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/hal&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/CMSIS/Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/CMSIS/Include/device&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/CMSIS/Include/device/MK64F12&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/utilities&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/utilities/src&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/startup&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/startup/MK64F12/gcc&quot;"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.116479112" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>
@@ -126,6 +149,9 @@
 		</cconfiguration>
 		<cconfiguration id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.release.1803029116">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.release.1803029116" moduleId="org.eclipse.cdt.core.settings" name="Release">
+				<macros>
+					<stringMacro name="PROJECT_KSDK_PATH" type="VALUE_TEXT" value="C:/Freescale/KSDK_1.0.0"/>
+				</macros>
 				<externalSettings/>
 				<extensions>
 					<extension id="org.eclipse.cdt.managedbuilder.core.ManagedBuildManager" point="org.eclipse.cdt.core.ScannerInfoProvider"/>
@@ -172,6 +198,34 @@
 									<listOptionValue builtIn="false" value="&quot;CPU_MK64FN1M0VLQ12&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths.894063666" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/hal/mcg&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/hal/sim/MK64F12&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/hal/sim&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/hal/osc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/system/clock/MK64F12&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/system/clock&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/hal/port&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/CMSIS/Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/CMSIS/Include/device&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/CMSIS/Include/device/MK64F12&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/utilities&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/utilities/src&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/startup&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/startup/MK64F12/gcc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/SDK/platform/startup/MK64F12&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProcessorExpertPath}/lib/Kinetis/pdd2/MK64FN1M0LQ12_4SDK/system/sdk&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Sources&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Generated_Code&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Freescale\KSDK_1.0.0\platform\drivers\gpio&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Freescale\KSDK_1.0.0\platform\hal\gpio&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Freescale\KSDK_1.0.0\platform\osa&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/system/interrupt&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/system/interrupt/src&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/hal/gpio&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/drivers/gpio&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/drivers/gpio/src&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/drivers/gpio/common&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/hal&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/hal/mcg&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/hal/sim/MK64F12&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/hal/sim&quot;"/>
@@ -179,6 +233,12 @@
 									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/system/clock/MK64F12&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/system/clock&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/hal/port&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/system/interrupt&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/system/interrupt/src&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/hal/gpio&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/drivers/gpio&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/drivers/gpio/src&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/drivers/gpio/common&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/CMSIS/Include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/CMSIS/Include/device&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/CMSIS/Include/device/MK64F12&quot;"/>
@@ -186,16 +246,6 @@
 									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/utilities/src&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/startup&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/startup/MK64F12/gcc&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/SDK/platform/startup/MK64F12&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProcessorExpertPath}/lib/Kinetis/pdd2/MK64FN1M0LQ12_4SDK/system/sdk&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Sources&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Generated_Code&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/system/interrupt&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/system/interrupt/src&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/hal/gpio&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/drivers/gpio&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/drivers/gpio/src&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:/Freescale/KSDK_1.0.0/platform/drivers/gpio/common&quot;"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.615324807" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>
