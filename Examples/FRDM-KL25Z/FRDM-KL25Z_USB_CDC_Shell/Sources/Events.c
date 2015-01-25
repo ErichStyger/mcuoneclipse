@@ -72,7 +72,7 @@ void TI1_OnInterrupt(void)
 ** ===================================================================
 */
 //Rx1_ElementType nRX_Buffer;
-void CDC1_OnError(byte error)
+void CDC1_OnError(uint8_t error)
 {
 #if 0
   if (error==CDC1_USB_ERR_RX_PUT) { /* not enough space in input buffer */

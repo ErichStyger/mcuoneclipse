@@ -79,7 +79,7 @@ void Cpu_OnNMIINT(void);
 */
 void TI1_OnInterrupt(void);
 
-void CDC1_OnError(byte error);
+void CDC1_OnError(uint8_t error);
 /*
 ** ===================================================================
 **     Event       :  CDC1_OnError (module Events)
