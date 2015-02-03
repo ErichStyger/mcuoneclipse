@@ -4,7 +4,7 @@
     <Name>FRDM-K64F_SDK_FreeRTOS_PEx</Name>
     <SavedBy>tastyger</SavedBy>
     <ModificationStamp>13</ModificationStamp>
-    <Date>2015-01-12</Date>
+    <Date>2015-02-02</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.10.1.RT6_b1444-1070</PEversion>
   </Header>
@@ -337,7 +337,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>0.032768</Value>
+        <Value>0</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>_SYSTEM_PRESCALER0</ItemSymbol>
@@ -1024,7 +1024,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>DataFlashSize_KB_Txt</ItemSymbol>
-        <Value />
+        <Value>0 KB</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
       <ItemState>
@@ -1084,7 +1084,7 @@
       <ItemState>
         <ItemSymbol>DataFlashSize</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>262144</Value>
+        <Value>0</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Base>HEX</Base>
       </ItemState>
@@ -1161,7 +1161,7 @@
         <Value>false</Value>
       </ItemState>
       <ItemState>
-        <ListItemCount>1</ListItemCount>
+        <ListItemCount>2</ListItemCount>
         <ItemSymbol>FlashOrgDscrBlockList</ItemSymbol>
         <Expanded>true</Expanded>
       </ItemState>
@@ -1180,25 +1180,25 @@
       <ItemState>
         <ItemSymbol>FlashOrgDscrBlockSize0</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>0</Value>
+        <Value>524288</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
         <ItemSymbol>FlashOrgDscrBlockWUnitSize0</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>1</Value>
+        <Value>8</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
         <ItemSymbol>FlashOrgDscrBlockEUnitSize0</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>1</Value>
+        <Value>4096</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
         <ItemSymbol>FlashOrgDscrBlockPUnitSize0</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>1</Value>
+        <Value>32768</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -2068,6 +2068,42 @@
         <ItemSymbol>SharedSWDSettingsGrp</ItemSymbol>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <ListItemCount>0</ListItemCount>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FlashOrgDscrBlock1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FlashOrgDscrBlockAddress1</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>524288</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FlashOrgDscrBlockSize1</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>524288</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FlashOrgDscrBlockWUnitSize1</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>8</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FlashOrgDscrBlockEUnitSize1</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>4096</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FlashOrgDscrBlockPUnitSize1</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>32768</Value>
+        <Base>DEC</Base>
       </ItemState>
     </Properties>
     <Methods>
@@ -2969,7 +3005,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.002</BeanVersion>
+    <BeanVersion>01.000</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -3030,6 +3066,19 @@
               <UserReadOnly>false</UserReadOnly>
               <Value>MCG</Value>
               <SharedPrphMode>false</SharedPrphMode>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CompVersion</ItemSymbol>
+              <Value>1.0.0-GA</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>VersionSpecificItem</ItemSymbol>
+              <ListItemCount>1</ListItemCount>
+              <ItemsTypeState>Beans\sdk_main_default.item</ItemsTypeState>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>DefaultMainProperty</ItemSymbol>
+              <Value>load sdk verison failed</Value>
             </ItemState>
           </Properties>
           <Methods>
@@ -4682,6 +4731,19 @@
               <Value>SIM</Value>
               <SharedPrphMode>false</SharedPrphMode>
             </ItemState>
+            <ItemState>
+              <ItemSymbol>CompVersion</ItemSymbol>
+              <Value>1.0.0-GA</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>VersionSpecificItem</ItemSymbol>
+              <ListItemCount>1</ListItemCount>
+              <ItemsTypeState>Beans\sdk_main_default.item</ItemsTypeState>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>DefaultMainProperty</ItemSymbol>
+              <Value>load sdk verison failed</Value>
+            </ItemState>
           </Properties>
           <Methods>
             <ItemState>
@@ -5679,6 +5741,19 @@
               <Value>OSC</Value>
               <SharedPrphMode>false</SharedPrphMode>
             </ItemState>
+            <ItemState>
+              <ItemSymbol>CompVersion</ItemSymbol>
+              <Value>1.0.0-GA</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>VersionSpecificItem</ItemSymbol>
+              <ListItemCount>1</ListItemCount>
+              <ItemsTypeState>Beans\sdk_main_default.item</ItemsTypeState>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>DefaultMainProperty</ItemSymbol>
+              <Value>load sdk verison failed</Value>
+            </ItemState>
           </Properties>
           <Methods>
             <ItemState>
@@ -5780,6 +5855,10 @@
           </Methods>
           <Events />
         </InheritedComponentState>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>CompVersion</ItemSymbol>
+        <Value>1.0.0-GA</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -6914,7 +6993,36 @@
         <UsrMethodName>CLOCK_HAL_GetInternalRefClk</UsrMethodName>
       </ItemState>
     </Methods>
-    <Events />
+    <Events>
+      <ItemState>
+        <ItemSymbol>SdkSpecificEvents</ItemSymbol>
+        <ListItemCount>1</ListItemCount>
+        <ItemsTypeState>Beans\sdk_events_default.item</ItemsTypeState>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>eventgroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EventModule</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>Events</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DefaultEvent</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>never</LastUserSel>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DefaultEventName</ItemSymbol>
+        <Value>clockMan1_DefaultEvent</Value>
+      </ItemState>
+    </Events>
   </Bean>
   <Bean>
     <BeanType>PinSettings</BeanType>
@@ -18501,7 +18609,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.011</BeanVersion>
+          <BeanVersion>01.000</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -21627,6 +21735,19 @@
               <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <SharedPrphMode>false</SharedPrphMode>
             </ItemState>
+            <ItemState>
+              <ItemSymbol>CompVersion</ItemSymbol>
+              <Value>1.0.0-GA</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>VersionSpecificItem</ItemSymbol>
+              <ListItemCount>1</ListItemCount>
+              <ItemsTypeState>Beans\sdk_main_default.item</ItemsTypeState>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>DefaultMainProperty</ItemSymbol>
+              <Value>load sdk verison failed</Value>
+            </ItemState>
           </Properties>
           <Methods>
             <ItemState>
@@ -21876,6 +21997,19 @@
               <UserReadOnly>false</UserReadOnly>
               <Value>SIM</Value>
               <SharedPrphMode>false</SharedPrphMode>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CompVersion</ItemSymbol>
+              <Value>1.0.0-GA</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>VersionSpecificItem</ItemSymbol>
+              <ListItemCount>1</ListItemCount>
+              <ItemsTypeState>Beans\sdk_main_default.item</ItemsTypeState>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>DefaultMainProperty</ItemSymbol>
+              <Value>load sdk verison failed</Value>
             </ItemState>
           </Properties>
           <Methods>
@@ -22854,6 +22988,20 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>clockMan1</Value>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>TPIU_UserName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>TPIU</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>IsLinked</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -23207,7 +23355,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.388</BeanVersion>
+    <BeanVersion>01.401</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -23220,7 +23368,7 @@
         <ItemSymbol>FreeRTOSVersion</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>V8.2.0 RC1</Value>
+        <Value>V8.2.0</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>CustomPortGroup</ItemSymbol>
@@ -23983,6 +24131,14 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>1</Index>
         <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>configASSERTdefined</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -25075,6 +25231,72 @@
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>xTimerPendFunctionCallFromISR</UsrMethodName>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>xTaskNotifyGive</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xTaskNotifyGive</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vTaskNotifyGiveFromISR</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>vTaskNotifyGiveFromISR</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ulTaskNotifyTake</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ulTaskNotifyTake</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xTaskNotify</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xTaskNotify</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xTaskNotifyFromISR</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xTaskNotifyFromISR</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xTaskNotifyWait</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xTaskNotifyWait</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events>
       <ItemState>
@@ -25864,7 +26086,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.106</BeanVersion>
+    <BeanVersion>01.000</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -26134,7 +26356,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>true</PropertyModelIsAutomatic>
-        <Index>0</Index>
+        <Index>1</Index>
       </ItemState>
       <ItemState>
         <ItemSymbol>driveStrengthOut0_0</ItemSymbol>
@@ -26463,7 +26685,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.011</BeanVersion>
+          <BeanVersion>01.000</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -29589,6 +29811,19 @@
               <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <SharedPrphMode>false</SharedPrphMode>
             </ItemState>
+            <ItemState>
+              <ItemSymbol>CompVersion</ItemSymbol>
+              <Value>1.0.0-GA</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>VersionSpecificItem</ItemSymbol>
+              <ListItemCount>1</ListItemCount>
+              <ItemsTypeState>Beans\sdk_main_default.item</ItemsTypeState>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>DefaultMainProperty</ItemSymbol>
+              <Value>load sdk verison failed</Value>
+            </ItemState>
           </Properties>
           <Methods>
             <ItemState>
@@ -29817,7 +30052,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.017</BeanVersion>
+          <BeanVersion>01.000</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -32936,6 +33171,19 @@
               <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <SharedPrphMode>false</SharedPrphMode>
             </ItemState>
+            <ItemState>
+              <ItemSymbol>CompVersion</ItemSymbol>
+              <Value>1.0.0-GA</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>VersionSpecificItem</ItemSymbol>
+              <ListItemCount>1</ListItemCount>
+              <ItemsTypeState>Beans\sdk_main_default.item</ItemsTypeState>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>DefaultMainProperty</ItemSymbol>
+              <Value>load sdk verison failed</Value>
+            </ItemState>
           </Properties>
           <Methods>
             <ItemState>
@@ -33159,6 +33407,10 @@
           <Events />
         </InheritedComponentState>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>CompVersion</ItemSymbol>
+        <Value>1.0.0-GA</Value>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -33323,6 +33575,19 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>intMan1</Value>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>CompVersion</ItemSymbol>
+        <Value>1.0.0-GA</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>VersionSpecificItem</ItemSymbol>
+        <ListItemCount>1</ListItemCount>
+        <ItemsTypeState>Beans\sdk_main_default.item</ItemsTypeState>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DefaultMainProperty</ItemSymbol>
+        <Value>load sdk verison failed</Value>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -33381,7 +33646,36 @@
         <UsrMethodName>INT_SYS_DisableIRQGlobal</UsrMethodName>
       </ItemState>
     </Methods>
-    <Events />
+    <Events>
+      <ItemState>
+        <ItemSymbol>SdkSpecificEvents</ItemSymbol>
+        <ListItemCount>1</ListItemCount>
+        <ItemsTypeState>Beans\sdk_events_default.item</ItemsTypeState>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>eventgroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EventModule</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>Events</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DefaultEvent</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>never</LastUserSel>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DefaultEventName</ItemSymbol>
+        <Value>intMan1_DefaultEvent</Value>
+      </ItemState>
+    </Events>
   </Bean>
 </PEproject>
 

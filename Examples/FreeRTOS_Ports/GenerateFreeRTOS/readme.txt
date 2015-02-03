@@ -37,7 +37,21 @@ Settings for IAR, KL25Z board:
   ARM Family: Cortex M0+
   Max SysCAll: 1 (or any value from 1-3)
   RTOS Interrupt Priority: 3 (lowest priority)
-  
+ 
+Settings for Kinetis SDK (Ports are in ..\..\KSDK)
+ - Compiler: ARM Keil
+ - Port Folder: FreeRTOS\port\mdk
+IAR:
+ - Compiler: ARM IAR
+ - Port Folder: FreeRTOS\port\iar
+KDS/GCC:
+ - Compiler: ARM gcc
+ - Port Folder: FreeRTOS\port\gcc
+ Produce config files:
+ - compiler:
+ - set configPEX_KINETIS_SDK to 1
+ - tick rate 1000 Hz
+ - memory scheme: 3
  
  How to use the generated files:
  -------------------------------
