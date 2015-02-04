@@ -3,8 +3,8 @@
   <Header>
     <Name>FRDM-KL25Z_NeoShield</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>166</ModificationStamp>
-    <Date>2015-01-04</Date>
+    <ModificationStamp>168</ModificationStamp>
+    <Date>2015-02-03</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.10.1.RT6_b1444-1070</PEversion>
   </Header>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>222</ProjectCompNumb>
+    <ProjectCompNumb>225</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -4588,7 +4588,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.386</BeanVersion>
+    <BeanVersion>01.402</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -4601,7 +4601,7 @@
         <ItemSymbol>FreeRTOSVersion</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>V8.0.1</Value>
+        <Value>V8.2.0</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>CustomPortGroup</ItemSymbol>
@@ -4734,7 +4734,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.028</BeanVersion>
+          <BeanVersion>01.037</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -4747,7 +4747,7 @@
               <ItemSymbol>RTOSplusTraceVersion</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>V2.6.0</Value>
+              <Value>V2.7.0</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>Utility</ItemSymbol>
@@ -5272,6 +5272,72 @@
               <LastSelection>true</LastSelection>
               <LastUserSel>yes</LastUserSel>
               <UsrMethodName>vTraceInitTraceData</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>vGetGDBDumpCommand</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>vGetGDBDumpCommand</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>vTraceSetStopHook</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>vTraceSetStopHook</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>xTraceGetLastError</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>xTraceGetLastError</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>vTraceClearError</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>vTraceClearError</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>vTraceTaskInstanceFinish</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>vTraceTaskInstanceFinish</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>vTraceTaskInstanceFinishDirect</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>vTraceTaskInstanceFinishDirect</UsrMethodName>
             </ItemState>
           </Methods>
           <Events>
@@ -6802,7 +6868,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>6400</Value>
+        <Value>6300</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -6906,6 +6972,14 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>1</Index>
         <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>configASSERTdefined</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -7998,6 +8072,72 @@
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>xTimerPendFunctionCallFromISR</UsrMethodName>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>xTaskNotifyGive</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xTaskNotifyGive</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vTaskNotifyGiveFromISR</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>vTaskNotifyGiveFromISR</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ulTaskNotifyTake</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ulTaskNotifyTake</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xTaskNotify</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xTaskNotify</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xTaskNotifyFromISR</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xTaskNotifyFromISR</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xTaskNotifyWait</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xTaskNotifyWait</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events>
       <ItemState>
@@ -8763,7 +8903,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.061</BeanVersion>
+    <BeanVersion>01.065</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>

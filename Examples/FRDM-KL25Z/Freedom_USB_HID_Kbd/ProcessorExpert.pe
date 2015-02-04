@@ -3,10 +3,10 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>55</ModificationStamp>
-    <Date>2014-08-03</Date>
+    <ModificationStamp>56</ModificationStamp>
+    <Date>2015-02-04</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion>1.9.0.RT6_b1411-0406</PEversion>
+    <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
   <Options>
     <EventsDirectory>Sources</EventsDirectory>
@@ -4416,7 +4416,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.062</BeanVersion>
+    <BeanVersion>01.063</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -5201,7 +5201,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.062</BeanVersion>
+    <BeanVersion>01.063</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -5986,7 +5986,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.062</BeanVersion>
+    <BeanVersion>01.063</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -6963,7 +6963,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.029</BeanVersion>
+    <BeanVersion>01.034</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -8509,7 +8509,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.033</BeanVersion>
+          <BeanVersion>01.045</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -8607,7 +8607,7 @@
                 <UserFolderName />
                 <Comment lines_count="0" />
                 <Template>FSL_USB_CDC_Device\Buffer</Template>
-                <BeanVersion>01.025</BeanVersion>
+                <BeanVersion>01.033</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
                 <Properties>
                   <ItemState>
@@ -8757,6 +8757,60 @@
                     <UserReadOnly>false</UserReadOnly>
                     <Value>Tx1_OnBufferEmpty</Value>
                   </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemPut</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Value>false</Value>
+                    <Expanded>false</Expanded>
+                    <LastSelection>false</LastSelection>
+                    <LastUserSel>no</LastUserSel>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemPutName</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value>Tx1_OnItemPut</Value>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemGet</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Value>false</Value>
+                    <Expanded>false</Expanded>
+                    <LastSelection>false</LastSelection>
+                    <LastUserSel>no</LastUserSel>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemGetName</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value>Tx1_OnItemGet</Value>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnClear</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Value>false</Value>
+                    <Expanded>false</Expanded>
+                    <LastSelection>false</LastSelection>
+                    <LastUserSel>no</LastUserSel>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnClearName</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value>Tx1_OnClear</Value>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                  </ItemState>
                 </Events>
               </InheritedComponentState>
             </ItemState>
@@ -8777,7 +8831,7 @@
                 <UserFolderName />
                 <Comment lines_count="0" />
                 <Template>FSL_USB_CDC_Device\Buffer</Template>
-                <BeanVersion>01.025</BeanVersion>
+                <BeanVersion>01.033</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
                 <Properties>
                   <ItemState>
@@ -8926,6 +8980,60 @@
                     <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <Value>Rx1_OnBufferEmpty</Value>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemPut</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Value>false</Value>
+                    <Expanded>false</Expanded>
+                    <LastSelection>false</LastSelection>
+                    <LastUserSel>no</LastUserSel>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemPutName</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value>Rx1_OnItemPut</Value>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemGet</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Value>false</Value>
+                    <Expanded>false</Expanded>
+                    <LastSelection>false</LastSelection>
+                    <LastUserSel>no</LastUserSel>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemGetName</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value>Rx1_OnItemGet</Value>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnClear</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Value>false</Value>
+                    <Expanded>false</Expanded>
+                    <LastSelection>false</LastSelection>
+                    <LastUserSel>no</LastUserSel>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnClearName</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value>Rx1_OnClear</Value>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
                   </ItemState>
                 </Events>
               </InheritedComponentState>
@@ -9119,6 +9227,17 @@
               <LastUserSel>yes</LastUserSel>
               <UsrMethodName>Init</UsrMethodName>
             </ItemState>
+            <ItemState>
+              <ItemSymbol>Deinit</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>Deinit</UsrMethodName>
+            </ItemState>
           </Methods>
           <Events>
             <ItemState>
@@ -9171,7 +9290,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.054</BeanVersion>
+          <BeanVersion>01.059</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -9185,7 +9304,7 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>7</Index>
+              <Index>8</Index>
               <EnumSymbVal>Kinetis L2K</EnumSymbVal>
             </ItemState>
             <ItemState>
@@ -9223,7 +9342,7 @@
                 <UserFolderName />
                 <Comment lines_count="0" />
                 <Template>FSL_USB_HID_Keyboard_Device\Buffer</Template>
-                <BeanVersion>01.025</BeanVersion>
+                <BeanVersion>01.033</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
                 <Properties>
                   <ItemState>
@@ -9370,6 +9489,60 @@
                     <UserReadOnly>false</UserReadOnly>
                     <Value>Tx2_OnBufferEmpty</Value>
                   </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemPut</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Value>false</Value>
+                    <Expanded>false</Expanded>
+                    <LastSelection>false</LastSelection>
+                    <LastUserSel>no</LastUserSel>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemPutName</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value>Tx2_OnItemPut</Value>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemGet</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Value>false</Value>
+                    <Expanded>false</Expanded>
+                    <LastSelection>false</LastSelection>
+                    <LastUserSel>no</LastUserSel>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemGetName</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value>Tx2_OnItemGet</Value>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnClear</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Value>false</Value>
+                    <Expanded>false</Expanded>
+                    <LastSelection>false</LastSelection>
+                    <LastUserSel>no</LastUserSel>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnClearName</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value>Tx2_OnClear</Value>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                  </ItemState>
                 </Events>
               </InheritedComponentState>
             </ItemState>
@@ -9462,6 +9635,17 @@
               <LastSelection>true</LastSelection>
               <LastUserSel>yes</LastUserSel>
               <UsrMethodName>Init</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>Deinit</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>Deinit</UsrMethodName>
             </ItemState>
           </Methods>
           <Events>
@@ -9570,6 +9754,14 @@
         <RegCompType />
         <InheritedComponentState />
       </ItemState>
+      <ItemState>
+        <ItemSymbol>UseFreeRTOSMemory</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -9582,6 +9774,17 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>Init</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
       </ItemState>
     </Methods>
     <Events>
