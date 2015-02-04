@@ -67,7 +67,6 @@
     1 tab == 4 spaces!
 */
 
-
 #ifndef PORTMACRO_H
 #define PORTMACRO_H
 
@@ -206,12 +205,17 @@ extern void vPortClearInterruptMaskFromISR(unsigned portBASE_TYPE);
 	   : /* no input */        \
 	   :"r0" /* clobber */     \
       )
+  #elif configCOMPILER==configCOMPILER_ARM_IAR
+    void vPortSetInterruptMask(void); /* prototype, implemented in portasm.s */
+    void vPortClearInterruptMask(void); /* prototype, implemented in portasm.s */
+    #define portSET_INTERRUPT_MASK()    vPortSetInterruptMask()
+    #define portCLEAR_INTERRUPT_MASK()  vPortClearInterruptMask()
   #endif
-#else
+#else /* Cortex-M0+ */
   #if configCOMPILER==configCOMPILER_ARM_KEIL
     #define portSET_INTERRUPT_MASK()              __disable_irq()
     #define portCLEAR_INTERRUPT_MASK()            __enable_irq()
-  #else
+  #else /* IAR, CW ARM or GNU ARM gcc */
     #define portSET_INTERRUPT_MASK()              __asm volatile("cpsid i")
     #define portCLEAR_INTERRUPT_MASK()            __asm volatile("cpsie i")
   #endif
@@ -225,7 +229,7 @@ extern void vPortExitCritical(void);
 
 #if configCOMPILER==configCOMPILER_ARM_KEIL
   #define portDISABLE_ALL_INTERRUPTS()   __disable_irq()
-#else
+#else /* IAR, CW ARM or GNU ARM gcc */
   #define portDISABLE_ALL_INTERRUPTS()   __asm volatile("cpsid i")
 #endif
 #define portDISABLE_INTERRUPTS()   portSET_INTERRUPT_MASK()
@@ -236,7 +240,6 @@ extern void vPortExitCritical(void);
 /* There are an uneven number of items on the initial stack, so
 portALIGNMENT_ASSERT_pxCurrentTCB() will trigger false positive asserts. */
 #define portALIGNMENT_ASSERT_pxCurrentTCB (void)
-
 /*-----------------------------------------------------------*/
 /* Scheduler utilities. */
 
@@ -321,6 +324,8 @@ void vPortYieldHandler(void);
 BaseType_t configUSE_TICKLESS_IDLE_DECISION_HOOK_NAME(void); /* return pdTRUE if RTOS can enter tickless idle mode, pdFALSE otherwise */
 #endif
 
+void prvTaskExitError(void);
+  /* handler to catch task exit errors */
 
 
 #ifdef __cplusplus

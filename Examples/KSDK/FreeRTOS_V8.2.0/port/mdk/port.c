@@ -415,7 +415,10 @@ static portBASE_TYPE xBankedStartScheduler(void) {
 #endif
 /*-----------------------------------------------------------*/
 #if configUSE_TICKLESS_IDLE == 1
-__attribute__((weak)) void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
+#if (configCOMPILER==configCOMPILER_ARM_GCC) || (configCOMPILER==configCOMPILER_ARM_KEIL)
+__attribute__((weak))
+#endif
+void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
   unsigned long ulReloadValue, ulCompleteTickPeriods, ulCompletedSysTickIncrements;
   TickCounter_t tmp; /* because of how we get the current tick counter */
   bool tickISRfired;
