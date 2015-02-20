@@ -11,7 +11,6 @@
 #include "LED2.h"
 #include "LED3.h"
 #include "LED4.h"
-#include "Buzzer.h"
 #include "WAIT1.h"
 #include "USB1.h"
 #include "CDC1.h"
@@ -24,7 +23,6 @@ void APP_Run(void) {
   uint32_t val = 0;
   unsigned char buf[16];
 
-  Buzzer_SetRatio16(0xFFFF/2); /* 50% duty ratio */
   for(;;) {
     while(CDC1_App_Task(cdc_buffer, sizeof(cdc_buffer))==ERR_BUSOFF) {
       /* device not enumerated */
