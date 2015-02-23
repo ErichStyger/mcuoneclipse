@@ -55,7 +55,6 @@
 #include "ASerialLdd1.h"
 #include "CLS1.h"
 #include "FRTOS1.h"
-#include "RTOSCNTRLDD1.h"
 #include "TmDt1.h"
 #include "TMOUT1.h"
 #include "GPIO_D.h"

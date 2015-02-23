@@ -37,7 +37,8 @@ typedef struct {
 typedef struct { /* 4703.2781,N,00835.1051,E */
   int16_t degree;  /* 47° */
   uint8_t minutesIntegral; /* 03 */
-  uint16_t minutesfractional; /* e.g. 2781' */
+  uint8_t nofFractionalZeros; /* leading fractional zeros, e.g. 2 for ".00145" */
+  uint32_t minutesfractional; /* e.g. 2781' */
 } NMEA_CoordT;
 
 typedef struct {
@@ -243,7 +244,7 @@ uint8_t NMEA_GetPosString(uint8_t *buf, size_t bufSize, bool isLatitude) {
     UTIL1_strcat(buf, bufSize, (uint8_t*)"° ");
     UTIL1_strcatNum32sFormatted(buf, bufSize, coord.minutesIntegral, '0', 2);
     UTIL1_chcat(buf, bufSize, '.');
-    UTIL1_strcatNum16u(buf, bufSize, coord.minutesfractional);
+    UTIL1_strcatNum32u(buf, bufSize, coord.minutesfractional);
     UTIL1_chcat(buf, bufSize, '\'');
     res = ERR_OK;
   } else {
@@ -315,10 +316,14 @@ static uint8_t ParseCoordinate(const uint8_t **p, NMEA_CoordT *coord, bool isLon
   /* ",4703.2781,N" */
   const uint8_t *q, *t;
   uint8_t degreeBuf[4]; /* latitude has two chars, longitude is three chars */
+  int32_t tmp;
+  uint8_t res;
 
+  /* init */
   coord->degree = 0;
   coord->minutesIntegral = 0;
   coord->minutesfractional = 0;
+  coord->nofFractionalZeros = 0;
   q = *p;
   if (*q!=',') {
     return ERR_FAILED;
@@ -328,6 +333,7 @@ static uint8_t ParseCoordinate(const uint8_t **p, NMEA_CoordT *coord, bool isLon
     coord->degree = 0;
     coord->minutesIntegral = 0;
     coord->minutesfractional = 0;
+    coord->nofFractionalZeros = 0;
   } else {
     /* the degrees are in the first two digits! */
     degreeBuf[0] = q[0];
@@ -347,17 +353,11 @@ static uint8_t ParseCoordinate(const uint8_t **p, NMEA_CoordT *coord, bool isLon
     } else {
       q += 2; /* skip the two degree digits */
     }
-    /* parse the minutes */
-    if (UTIL1_ScanDecimal8uNumber(&q, &coord->minutesIntegral)!=ERR_OK) {
+    res = UTIL1_ScanDecimal32sDotNumber(&q, &tmp, &coord->minutesfractional, &coord->nofFractionalZeros);
+    if (res!=ERR_OK || tmp<0 || tmp>0xff) {
       return ERR_FAILED;
     }
-    if (*q!='.') {
-      return ERR_FAILED;
-    }
-    q++;
-    if (UTIL1_ScanDecimal16uNumber(&q, &coord->minutesfractional)!=ERR_OK) {
-      return ERR_FAILED;
-    }
+    coord->minutesfractional = (uint8_t)tmp;
   }
   if (*q!=',') {
     return ERR_FAILED;
