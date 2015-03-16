@@ -62,6 +62,25 @@
 #include "PE_Const.h"
 #include "IO_Map.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
+  int val, val2, val3, msCycles, msCycles2, one = 1;
+
+
+static void waitus(int us) {
+#if 0
+  #define WAIT1_Waitus(us)  \
+       (  ((WAIT1_NofCyclesUs((us),CPU_BUS_CLK_HZ)==0)||(us)==0) ? \
+          (void)0 : \
+          ( ((us)/1000)==0 ? (void)0 : WAIT1_Waitms((uint16_t)((us)/1000))) \
+          , (WAIT1_NofCyclesUs(((us)%1000), CPU_BUS_CLK_HZ)==0) ? (void)0 : \
+            WAIT1_WAIT_C(WAIT1_NofCyclesUs(((us)%1000), CPU_BUS_CLK_HZ)) \
+       )
+#endif
+  val = WAIT1_NofCyclesUs((us),CPU_BUS_CLK_HZ);
+  val2 = WAIT1_NofCyclesUs(((us)%1000), CPU_BUS_CLK_HZ);
+  val3 = WAIT1_NofCyclesMs(us, CPU_BUS_CLK_HZ);
+  msCycles = WAIT1_NofCyclesMs(1, CPU_CORE_CLK_HZ);
+  msCycles2 = WAIT1_NofCyclesMs(one, CPU_CORE_CLK_HZ);
+}
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)

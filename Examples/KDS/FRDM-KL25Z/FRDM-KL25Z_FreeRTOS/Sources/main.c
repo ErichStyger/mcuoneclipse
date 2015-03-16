@@ -40,7 +40,7 @@
 #include "LEDpin3.h"
 #include "BitIoLdd3.h"
 #include "FRTOS1.h"
-#include "RTOSCNTRLDD1.h"
+#include "RTOSTRC1.h"
 #include "UTIL1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
@@ -53,7 +53,7 @@ static portTASK_FUNCTION(Task1, pvParameters) {
   (void)pvParameters; /* parameter not used */
   for(;;) {
     LEDR_Neg();
-    FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
+    FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
   }
 }
 
