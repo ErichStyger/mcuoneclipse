@@ -21,7 +21,7 @@ static uint8_t Test(CLS1_ConstStdIOTypePtr io) {
   uint8_t write_buf[10];
   uint8_t i;
 
-  if (FAT1_isWriteProtected()) {
+  if (FAT1_isWriteProtected((uint8_t*)"0")) {
     CLS1_SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
     return ERR_FAILED;
   }
@@ -79,11 +79,11 @@ static void DiskTest(void) {
     return;
   }
   CLS1_SendStr((unsigned char*)"Waiting for disk to be inserted...\r\n", io->stdOut);
-  while(!FAT1_isDiskPresent()) {
+  while(!FAT1_isDiskPresent((uint8_t*)"0")) {
     /* wait until card is present */
   }
   CLS1_SendStr((unsigned char*)"Mounting File system...\r\n", io->stdOut);
-  if (FAT1_mount(0, &fileSystemObject) != FR_OK) { /* mount file system */
+  if (FAT1_mount(&fileSystemObject, (const TCHAR*)"0", 1) != FR_OK) { /* mount file system */
     CLS1_SendStr((unsigned char*)"Failed FatFS initialization!\r\n", io->stdErr);
     return;
   }
