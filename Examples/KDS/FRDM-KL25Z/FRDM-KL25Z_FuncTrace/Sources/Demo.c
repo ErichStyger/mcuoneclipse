@@ -1,8 +1,7 @@
-/*
- * Demo.c
- *
- *  Created on: 15.03.2015
- *      Author: tastyger
+/**
+ * \file
+ * \brief Demo functions to test the profile/function recorder.
+ * \author Erich Styger
  */
 
 #include "Demo.h"

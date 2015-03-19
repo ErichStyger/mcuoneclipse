@@ -1,8 +1,12 @@
-/*
- * CygProfile.h
+/**
+ * \file
+ * \brief Interface to profile/function recorder.
+ * \author Erich Styger
  *
- *  Created on: 15.03.2015
- *      Author: tastyger
+ * With -finstrument-functions compiler option, each function entry and exit function
+ * will call the hooks __cyg_profile_func_enter() and __cyg_profile_func_exit() which
+ * can be used to trace function calls.
+ * Functions which shall *not* be profiled/recorded need __attribute__((no_instrument_function)).
  */
 
 #ifndef CYGPROFILE_H_

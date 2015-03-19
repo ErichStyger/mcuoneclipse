@@ -1,7 +1,7 @@
 /**
  * \file
- * \brief Implements profile function recorder.
- * \author Erich Styger, erich.styger@hslu.ch
+ * \brief Implements profile/function recorder.
+ * \author Erich Styger
  *
  * With -finstrument-functions compiler option, each function entry and exit function
  * will call the hooks __cyg_profile_func_enter() and __cyg_profile_func_exit() which
@@ -40,11 +40,18 @@ static CYG_RNG_BufSizeType CYG_RNG_outIdx; /*!< output index */
 static CYG_RNG_BufSizeType CYG_RNG_inSize; /*!< size/number of elements in buffer */
 
 #if CYG_FUNC_TRACE_NAMES_ENABLED
-static void *callstack[CYG_CALL_STACK_NOF_ELEMS];
-static int topOfCallStack = 0; /* points to next free element */
 
-static __attribute__((no_instrument_function))
-const char *getFuncName(void *addr) {
+static void *callstack[CYG_CALL_STACK_NOF_ELEMS]; /*!< stack of function call information for function call name trace */
+static int topOfCallStack = 0; /*!< points to next free element on stack */
+
+/*!
+ * \brief Returns based on the function address the function name.
+ * \param addr Address of the function.
+ * \return Name of the function, empty string ("") if function is unknown.
+ */
+__attribute__((no_instrument_function))
+static const char *getFuncName(void *addr) {
+  /* prototypes of special functions */
   int main(void);
   void PE_low_level_init(void);
 
@@ -53,22 +60,32 @@ const char *getFuncName(void *addr) {
   } else if (addr==PE_low_level_init) {
     return "PE_low_level_init";
   }
-  return "";
+  return ""; /* unknown */
 }
 
+/*! Array of callbacks/function pointers to find the names for the functions */
 static CYG_GetFuncNameFct GetFuncNames[] = {
   getFuncName,
+  /* list all your decoder/function name functions here... */
   DEMO_getFuncName
 };
 
-static __attribute__((no_instrument_function))
-void CYG_Push(void *context) {
+/*!
+ * \brief Pushes the current context address on the stack.
+ * \param context Current context
+ */
+__attribute__((no_instrument_function))
+static void CYG_Push(void *context) {
   callstack[topOfCallStack] = context;
   if (topOfCallStack<CYG_CALL_STACK_NOF_ELEMS-1) {
     topOfCallStack++;
   }
 }
 
+/*!
+ * \brief Pops the current context from the stack.
+ * \return The top-of-stack context.
+ */
 static __attribute__((no_instrument_function))
 void *CYG_Pop(void) {
   if (topOfCallStack>0) {
@@ -78,36 +95,46 @@ void *CYG_Pop(void) {
   return NULL; /* error case */
 }
 
-static __attribute__((no_instrument_function))
-void *CYG_GetTop(void) {
+/*!
+ * \brief Returns the top-of-stack context element.
+ * \return Top of stack element.
+ */
+__attribute__((no_instrument_function))
+static void *CYG_GetTop(void) {
   if (topOfCallStack>0) {
     return callstack[topOfCallStack-1];
   }
   return NULL; /* error case */
 }
 
-static __attribute__((no_instrument_function))
-const char *CYG_getFuncName(void *addr) {
+/*!
+ * \brief Returns the function name for a given address.
+ * \param addr Address of function.
+ * \return Name of the function, or empty string ("") if not found.
+ */
+__attribute__((no_instrument_function))
+static const char *CYG_getFuncName(void *addr) {
   CYG_GetFuncNameFct fct;
   const char* name;
   int i;
-  int main(void);
 
-  if (addr==main) {
-    return "main";
-  }
   for(i=0;i<sizeof(GetFuncNames)/sizeof(GetFuncNames[0]);i++) {
     name = GetFuncNames[i](addr);
-    if (*name!='\0') {
+    if (*name!='\0') { /* found! */
       return name;
     }
   }
-  return "";
+  return ""; /* not found */
 }
 #endif /* CYG_FUNC_TRACE_NAMES_ENABLED */
 
+/*!
+ * \brief Stores a trace element into the ring buffer.
+ * \param elem Trace element to put into the buffer.
+ * \return Error code, ERR_OK if everything is ok.
+ */
 __attribute__((no_instrument_function))
-uint8_t CYG_RNG_Put(CYG_RNG_ElementType *elem) {
+static uint8_t CYG_RNG_Put(CYG_RNG_ElementType *elem) {
   uint8_t res = ERR_OK;
   CS1_CriticalVariable();
 
@@ -126,8 +153,13 @@ uint8_t CYG_RNG_Put(CYG_RNG_ElementType *elem) {
   return res;
 }
 
+/*!
+ * \brief Gets a trace element from the ring buffer.
+ * \param elem Pointer where to store the trace element.
+ * \return Error code, ERR_OK if everything is ok.
+ */
 __attribute__((no_instrument_function))
-uint8_t CYG_RNG_Get(CYG_RNG_ElementType *elemP) {
+static uint8_t CYG_RNG_Get(CYG_RNG_ElementType *elemP) {
   uint8_t res = ERR_OK;
   CS1_CriticalVariable();
 
@@ -146,10 +178,14 @@ uint8_t CYG_RNG_Get(CYG_RNG_ElementType *elemP) {
   return res;
 }
 
-static __attribute__((no_instrument_function))
-void CYG_Store(bool isEnter, void *this_fn, void *call_site) {
-  /* this_fn is the address (with thumb bit) of the (caller) function */
-  /* call_site: return address to the function which called this_fn */
+/*!
+ * \brief Stores a trace element into the ring buffer.
+ * \param this_fn Address of the caller function.
+ * \param call_site Return address to the function which called this_fn
+ * \return Error code, ERR_OK if everything is ok.
+ */
+__attribute__((no_instrument_function))
+static void CYG_Store(bool isEnter, void *this_fn, void *call_site) {
   CYG_RNG_ElementType elem;
 
   elem.isEnter = isEnter;
@@ -158,15 +194,23 @@ void CYG_Store(bool isEnter, void *this_fn, void *call_site) {
   (void)CYG_RNG_Put(&elem);
 }
 
+/*!
+ * \brief Function which is called upon function enter. The function call is inserted by the compiler.
+ * \param this_fn Address of the caller function.
+ * \param call_site Return address to the function which called this_fn
+ */
 __attribute__((no_instrument_function))
 void __cyg_profile_func_enter(void *this_fn, void *call_site) {
-  /* this_fn is the address (with thumb bit) of the (caller) function */
-  /* call_site: return address to the function which called this_fn */
   if (CYG_Enabled) {
     CYG_Store(TRUE, call_site, this_fn);
   }
 }
 
+/*!
+ * \brief Function which is called upon function exit. The function call is inserted by the compiler.
+ * \param this_fn Address of the caller function.
+ * \param call_site Return address to the function which called this_fn
+ */
 __attribute__((no_instrument_function))
 void __cyg_profile_func_exit(void *this_fn, void *call_site) {
   if (CYG_Enabled) {
@@ -174,6 +218,9 @@ void __cyg_profile_func_exit(void *this_fn, void *call_site) {
   }
 }
 
+/*!
+ *
+ */
 __attribute__((no_instrument_function))
 void CYG_PrintCallTrace(void) {
   CYG_RNG_BufSizeType nof, i;
