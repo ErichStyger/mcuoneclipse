@@ -1,0 +1,1 @@
+This folder contains Altium files for creating a shield for the FRDM-KL25Z board.
