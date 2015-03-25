@@ -162,7 +162,7 @@ void SD1_OnBlockReceived(LDD_TUserData *UserDataPtr)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void SD1_OnActivate(void)
+void SD1_OnActivate(byte mode)
 {
   SPI_RequestSPIBus();
 }
@@ -180,7 +180,7 @@ void SD1_OnActivate(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void SD1_OnDeactivate(void)
+void SD1_OnDeactivate(byte mode)
 {
   SPI_ReleaseSPIBus();
 }
