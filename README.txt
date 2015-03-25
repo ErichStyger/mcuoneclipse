@@ -15,3 +15,5 @@ https://sourceforge.net/projects/mcuoneclipse/files/PEx%20Components/
   GitHub repository (https://github.com/ErichStyger/McuOnEclipse_PEx), see
   http://mcuoneclipse.com/2014/11/16/mcuoneclipse-component-sources-in-dedicated-github-repository/
 
+
+NOTE: everything is provided 'as is', with no warranty!
