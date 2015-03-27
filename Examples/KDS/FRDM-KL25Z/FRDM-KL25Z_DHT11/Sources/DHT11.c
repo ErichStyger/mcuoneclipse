@@ -1,29 +1,14 @@
-/*
- * DHT11.c
- *
- *  Created on: 26.03.2015
- *      Author: tastyger
+/**
+ * \file
+ * \brief Implementation of a driver for the DHT11 temperature/humidity sensor.
+ * \author Erich Styger
  */
 
 #include "DHT11.h"
 #include "WAIT1.h"
-#include "LEDR.h"
-#include "LEDG.h"
 #include "Data.h"
-#include "CLS1.h"
-#include "UTIL1.h"
 
-typedef enum {
-  DHT11_OK, /* OK */
-  DHT11_NO_PULLUP, /* no pullup present */
-  DHT11_NO_ACK_0, /* no 0 acknowledge detected */
-  DHT11_NO_ACK_1, /* no 1 acknowledge detected */
-  DHT11_NO_DATA_0, /* low level expected during data transmission */
-  DHT11_NO_DATA_1, /* high level expected during data transmission */
-  DHT11_BAD_CRC,   /* bad CRC */
-} DHT11_ReturnCode;
-
-const unsigned char* DHT1_GetReturnCodeString(DHT11_ReturnCode code) {
+const unsigned char* DHT1_GetReturnCodeString(DHT11_ErrorCode code) {
   switch(code) {
     case DHT11_OK:        return "OK";
     case DHT11_NO_PULLUP: return "NO_PULLUP";
@@ -36,7 +21,7 @@ const unsigned char* DHT1_GetReturnCodeString(DHT11_ReturnCode code) {
   }
 }
 
-DHT11_ReturnCode DHT11_Read(uint16_t *temperatureCentigrade, uint16_t *humidityCentipercent) {
+DHT11_ErrorCode DHT11_Read(uint16_t *temperatureCentigrade, uint16_t *humidityCentipercent) {
   int cntr;
   int loopBits;
   uint8_t buffer[5];
@@ -47,6 +32,10 @@ DHT11_ReturnCode DHT11_Read(uint16_t *temperatureCentigrade, uint16_t *humidityC
   for(i=0;i<sizeof(buffer); i++) {
     buffer[i] = 0;
   }
+  EnterCritical(); /* disabling interrupts */
+  /* Disabling interrupts so we do not get interrupted. Note that this is for a about 25 ms!
+   * Alternatively only disable interrupts during sampling the data bits, and not during the first 18 ms.
+   */
   /* set to input and check if the signal gets pulled up */
   Data_SetInput();
   WAIT1_Waitus(50);
@@ -108,6 +97,8 @@ DHT11_ReturnCode DHT11_Read(uint16_t *temperatureCentigrade, uint16_t *humidityC
       data = 0;
     }
   } while(--loopBits!=0);
+  ExitCritical(); /* re-enabling interrupts */
+
   /* now we have the 40 bit (5 bytes) data:
    * byte 1: humidity integer data
    * byte 2: humidity decimal data (not used for DTH11, always zero)
@@ -119,35 +110,8 @@ DHT11_ReturnCode DHT11_Read(uint16_t *temperatureCentigrade, uint16_t *humidityC
   if (buffer[0]+buffer[1]+buffer[2]+buffer[3]!=buffer[4]) {
     return DHT11_BAD_CRC;
   }
+  /* store data values for caller */
   *humidityCentipercent = buffer[0]*100+buffer[1];
   *temperatureCentigrade = buffer[2]*100+buffer[3];
   return DHT11_OK;
-}
-
-void DHT11_Run(void) {
-  DHT11_ReturnCode res;
-  uint16_t temperature, humidity;
-  CLS1_ConstStdIOType *io = CLS1_GetStdio();
-  uint8_t buf[48];
-
-  CLS1_SendStr("DHT11 Sensor:\r\n", io->stdErr);
-  WAIT1_Waitms(1000); /* wait one second after power-up to get the sensor stable */
-  for(;;) {
-    res = DHT11_Read(&temperature, &humidity);
-    if (res!=DHT11_OK) {
-      LEDR_Neg(); /* error */
-      CLS1_SendStr("ERROR: ", io->stdErr);
-      CLS1_SendStr(DHT1_GetReturnCodeString(res), io->stdErr);
-      CLS1_SendStr("\r\n", io->stdErr);
-    } else {
-      LEDG_Neg(); /* ok */
-      UTIL1_strcpy(buf, sizeof(buf), "Temperature ");
-      UTIL1_strcatNum32sDotValue100(buf, sizeof(buf), (int32_t)temperature);
-      UTIL1_strcat(buf, sizeof(buf), "°C, Humidity ");
-      UTIL1_strcatNum32sDotValue100(buf, sizeof(buf), (int32_t)humidity);
-      UTIL1_strcat(buf, sizeof(buf), "%\r\n");
-      CLS1_SendStr(buf, io->stdOut);
-    }
-    WAIT1_Waitms(1000); /* can only read sensor values with 1 Hz! */
-  }
 }
