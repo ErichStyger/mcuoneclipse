@@ -4,24 +4,24 @@
  * \author Erich Styger
  */
 
-#include "DHT11.h"
+#include "DHTxx.h"
 #include "WAIT1.h"
 #include "Data.h"
 
-const unsigned char* DHT1_GetReturnCodeString(DHT11_ErrorCode code) {
+const unsigned char *DHTxx_GetReturnCodeString(DHTxx_ErrorCode code) {
   switch(code) {
-    case DHT11_OK:        return "OK";
-    case DHT11_NO_PULLUP: return "NO_PULLUP";
-    case DHT11_NO_ACK_0:  return "NO_ACK_0";
-    case DHT11_NO_ACK_1:  return "NO_ACK_1";
-    case DHT11_NO_DATA_0: return "NO_DATA_0";
-    case DHT11_NO_DATA_1: return "NO_DATA_1";
-    case DHT11_BAD_CRC:   return "BAD_CRC";
+    case DHTxx_OK:        return "OK";
+    case DHTxx_NO_PULLUP: return "NO_PULLUP";
+    case DHTxx_NO_ACK_0:  return "NO_ACK_0";
+    case DHTxx_NO_ACK_1:  return "NO_ACK_1";
+    case DHTxx_NO_DATA_0: return "NO_DATA_0";
+    case DHTxx_NO_DATA_1: return "NO_DATA_1";
+    case DHTxx_BAD_CRC:   return "BAD_CRC";
     default:              return "UNKNOWN?";
   }
 }
 
-DHT11_ErrorCode DHT11_Read(uint16_t *temperatureCentigrade, uint16_t *humidityCentipercent) {
+DHTxx_ErrorCode DHTxx_Read(uint16_t *temperatureCentigrade, uint16_t *humidityCentipercent) {
   int cntr;
   int loopBits;
   uint8_t buffer[5];
@@ -40,7 +40,7 @@ DHT11_ErrorCode DHT11_Read(uint16_t *temperatureCentigrade, uint16_t *humidityCe
   Data_SetInput();
   WAIT1_Waitus(50);
   if(Data_GetVal()==0) {
-    return DHT11_NO_PULLUP;
+    return DHTxx_NO_PULLUP;
   }
   /* send start signal */
   Data_SetOutput();
@@ -50,14 +50,14 @@ DHT11_ErrorCode DHT11_Read(uint16_t *temperatureCentigrade, uint16_t *humidityCe
   WAIT1_Waitus(50);
   /* check for acknowledge signal */
   if (Data_GetVal()!=0) { /* signal must be pulled low by the sensor */
-    return DHT11_NO_ACK_0;
+    return DHTxx_NO_ACK_0;
   }
   /* wait max 100 us for the ack signal from the sensor */
   cntr = 18;
   while(Data_GetVal()==0) { /* wait until signal goes up */
     WAIT1_Waitus(5);
     if (--cntr==0) {
-      return DHT11_NO_ACK_1; /* signal should be up for the ACK here */
+      return DHTxx_NO_ACK_1; /* signal should be up for the ACK here */
     }
   }
   /* wait until it goes down again, end of ack sequence */
@@ -65,7 +65,7 @@ DHT11_ErrorCode DHT11_Read(uint16_t *temperatureCentigrade, uint16_t *humidityCe
   while(Data_GetVal()!=0) { /* wait until signal goes down */
     WAIT1_Waitus(5);
     if (--cntr==0) {
-      return DHT11_NO_ACK_0; /* signal should be down to zero again here */
+      return DHTxx_NO_ACK_0; /* signal should be down to zero again here */
     }
   }
   /* now read the 40 bit data */
@@ -77,14 +77,14 @@ DHT11_ErrorCode DHT11_Read(uint16_t *temperatureCentigrade, uint16_t *humidityCe
     while(Data_GetVal()==0) {
       WAIT1_Waitus(5);
       if (--cntr==0) {
-        return DHT11_NO_DATA_0;
+        return DHTxx_NO_DATA_0;
       }
     }
     cntr = 15; /* wait max 75 us */
     while(Data_GetVal()!=0) {
       WAIT1_Waitus(5);
       if (--cntr==0) {
-        return DHT11_NO_DATA_1;
+        return DHTxx_NO_DATA_1;
       }
     }
     data <<= 1; /* next data bit */
@@ -108,10 +108,15 @@ DHT11_ErrorCode DHT11_Read(uint16_t *temperatureCentigrade, uint16_t *humidityCe
    */
   /* test CRC */
   if (buffer[0]+buffer[1]+buffer[2]+buffer[3]!=buffer[4]) {
-    return DHT11_BAD_CRC;
+    return DHTxx_BAD_CRC;
   }
   /* store data values for caller */
-  *humidityCentipercent = buffer[0]*100+buffer[1];
-  *temperatureCentigrade = buffer[2]*100+buffer[3];
-  return DHT11_OK;
+#if DHTxx_SENSOR_TYPE_IS_DHT11
+  *humidityCentipercent = ((int)buffer[0])*100;
+  *temperatureCentigrade = ((int)buffer[2])*100;
+#else
+  *humidityCentipercent = (((int)buffer[0]<<8)+buffer[1])*10;
+  *temperatureCentigrade = (((int)buffer[2]<<8)+buffer[3])*10;
+#endif
+  return DHTxx_OK;
 }

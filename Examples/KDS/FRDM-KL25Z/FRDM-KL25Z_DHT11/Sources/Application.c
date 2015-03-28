@@ -5,7 +5,7 @@
  */
 
 #include "Application.h"
-#include "DHT11.h"
+#include "DHTxx.h"
 #include "WAIT1.h"
 #include "LEDR.h"
 #include "LEDG.h"
@@ -13,20 +13,24 @@
 #include "UTIL1.h"
 
 void APP_Run(void) {
-  DHT11_ErrorCode res;
+  DHTxx_ErrorCode res;
   uint16_t temperature, humidity;
   CLS1_ConstStdIOType *io = CLS1_GetStdio();
   uint8_t buf[48];
 
+#if DHTxx_SENSOR_TYPE_IS_DHT11
   CLS1_SendStr("DHT11 Sensor Demo:\r\n", io->stdErr);
+#else
+  CLS1_SendStr("DHT22 Sensor Demo:\r\n", io->stdErr);
+#endif
   WAIT1_Waitms(1000); /* wait one second after power-up to get the sensor stable */
   for(;;) {
-    res = DHT11_Read(&temperature, &humidity);
-    if (res!=DHT11_OK) { /* error */
+    res = DHTxx_Read(&temperature, &humidity);
+    if (res!=DHTxx_OK) { /* error */
       LEDR_Neg(); /* indicate error with red LED */
       /* write error message */
       CLS1_SendStr("ERROR: ", io->stdErr);
-      CLS1_SendStr(DHT1_GetReturnCodeString(res), io->stdErr);
+      CLS1_SendStr(DHTxx_GetReturnCodeString(res), io->stdErr);
       CLS1_SendStr("\r\n", io->stdErr);
     } else { /* ok! */
       LEDG_Neg();
@@ -38,6 +42,6 @@ void APP_Run(void) {
       UTIL1_strcat(buf, sizeof(buf), "%\r\n");
       CLS1_SendStr(buf, io->stdOut);
     }
-    WAIT1_Waitms(1000); /* can only read sensor values with 1 Hz! */
+    WAIT1_Waitms(DHTxx_SENSOR_PERIOD_MS); /* can only read sensor values with a certain frequency! */
   }
 }
