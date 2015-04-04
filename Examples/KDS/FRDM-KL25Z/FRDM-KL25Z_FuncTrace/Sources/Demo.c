@@ -7,19 +7,23 @@
 #include "Demo.h"
 #include "CygProfile.h"
 
-static int foobar(int i, int j) {
-  return i+j;
+static int calcValue(int i, int j) {
+  return i/j;
 }
 
-static int bar(int i) {
-  return foobar(i, 5);
-}
-
-static int foo(int i) {
-  if (i<10) {
-    return foobar(i,5)+bar(7);
+static int getValue(int i) {
+  if (i>0) {
+    return calcValue(i, 5);
   } else {
-    return bar(i);
+    return 0;
+  }
+}
+
+static int decide(int i) {
+  if (i<10) {
+    return calcValue(i,5)+getValue(7);
+  } else {
+    return getValue(i);
   }
 }
 
@@ -27,9 +31,9 @@ int DEMO_Run(void) {
   int i, j, k;
 
   for(i=0;i<3;i++) {
-    j = foo(i);
+    j = decide(i);
   }
-  k = bar(j*4);
+  k = getValue(j*4);
   return j+k;
 }
 
@@ -39,12 +43,12 @@ void DEMO_Init(void) {
 #if CYG_FUNC_TRACE_NAMES_ENABLED
 __attribute__((no_instrument_function))
 const char *DEMO_getFuncName(void *addr) {
-  if (addr==foobar) {
-    return "foobar";
-  } else if (addr==foo) {
-    return "foo";
-  } else if (addr==bar) {
-    return "bar";
+  if (addr==calcValue) {
+    return "calcValue";
+  } else if (addr==decide) {
+    return "decide";
+  } else if (addr==getValue) {
+    return "getValue";
   } else if (addr==DEMO_Run) {
     return "DEMO_Run";
   } else if (addr==DEMO_Init) {

@@ -219,7 +219,7 @@ void __cyg_profile_func_exit(void *this_fn, void *call_site) {
 }
 
 /*!
- *
+ * \brief Dumps the trace to the console.
  */
 __attribute__((no_instrument_function))
 void CYG_PrintCallTrace(void) {
