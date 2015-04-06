@@ -50,7 +50,7 @@ static int iSHT_Humi;
 *           ___     ___
 * SCK : ___|   |___|   |______
 **************************************************************************************************/
-void s_transstart(void) {
+void SHT11_TransmissionStart(void) {
   /* Initial state */
   SDA_SetInput(); /* release DATA-line */
   SCL_ClrVal(); /* SCL low */
@@ -113,50 +113,32 @@ uint8_t s_read_byte(unsigned char ack) {
 /**************************************************************************************************
 * Writes a byte on the Sensibus and checks the acknowledge.
 **************************************************************************************************/
-unsigned char s_write_byte(unsigned char value)
-{
+unsigned char SHT11_WriteByte(unsigned char value) {
   unsigned char i=0x80;
-  unsigned char error=0;
+  unsigned char error=ERR_OK;
 
-  //SDA_pin_DIR = 1;        // DATA as output
-  SDA_SetOutput();
-  while(i)
-  { //shift bit for masking
-    if (i & value)
-    {
-      //SDA_pin = 1;        //masking value with i , write to SENSI-BUS
-      SDA_SetVal();
-    }
-    else
-    {
-      //SDA_pin = 0;
+  SDA_SetOutput(); /* DATA as output */
+  while(i) { /* shift bit for masking */
+    if (i&value) {
+      SDA_SetVal(); /* masking value with i , write to SENSI-BUS */
+    } else  {
       SDA_ClrVal();
     }
-
-    //SCL_pin = 1;          //clk for SENSI-BUS
-    SCL_SetVal();
+    SCL_SetVal(); /* clk for SENSI-BUS */
     Delay_uS(3);
-    //SCL_pin = 0;
     SCL_ClrVal();
     Delay_uS(3);
     i=(i>>1);
   }
-
-  //SDA_pin_DIR = 0;        //release DATA-line
-  SDA_SetInput();
-
-  //SCL_pin = 1;            //clk #9 for ack
-  SCL_SetVal();
+  SDA_SetInput(); /* release DATA-line */
+  SCL_SetVal(); /* clk #9 for ack */
   Delay_uS(3);
-  //if (SDA_pin == 1)  error = 1; //check ack (DATA will be pulled down by SHT11)
   if (SDA_GetVal() == 1)  {
-    error = 1; //check ack (DATA will be pulled down by SHT11)
+    error = ERR_FAILED; /* check ack (DATA will be pulled down by SHT11) */
   }
   Delay_uS(1);
-  //SCL_pin = 0;
   SCL_ClrVal();
-
-  return(error); //error=1 in case of no acknowledge
+  return error; /* error=ERR_FAILED in case of no acknowledge */
 }
 
 /**************************************************************************************************
@@ -165,58 +147,42 @@ unsigned char s_write_byte(unsigned char value)
 * mode: 1=humidity 0=temperature
 * return value: 0=ok, 1=write error, 2=timeout
 **************************************************************************************************/
-unsigned char s_measure(unsigned int *p_value, unsigned char mode)
-{
+unsigned char s_measure(unsigned int *p_value, unsigned char mode) {
   unsigned char i=0;
   unsigned char msb,lsb;
   unsigned char checksum;
 
   *p_value=0;
-  s_transstart(); //transmission start
-
-  if(mode)
-  {
+  SHT11_TransmissionStart(); /* transmission start */
+  if(mode) {
     mode = MEASURE_HUMI;
-  }
-  else
-  {
+  } else {
     mode = MEASURE_TEMP;
   }
-
-  if (s_write_byte(mode)) {
-    return(1);
+  if (SHT11_WriteByte(mode)!=ERR_OK) {
+    return ERR_FAILED;
   }
-  // normal delays: temp i=70, humi i=20
-
-  //SDA_pin_DIR = 0;           //release DATA-line
-  SDA_SetInput();
-
-  while(i<240)
-  {
+  /* normal delays: temp i=70, humi i=20 */
+  SDA_SetInput(); /* release DATA-line */
+  while(i<240) {
     Delay_mS(1);
     Delay_mS(1);
     Delay_mS(1);
-    //if (SDA_pin == 0)
-    if (SDA_GetVal()==0)
-    {
+    if (SDA_GetVal()==0) {
       i=0;
       break;
     }
     i++;
   }
-
-  // or timeout
-  if(i) {
-    return(2);
+  /* or timeout */
+  if (i) {
+    return ERR_NOTAVAIL;
   }
-
   msb=s_read_byte(ACK); //read the first byte (MSB)
   lsb=s_read_byte(ACK); //read the second byte (LSB)
   checksum=s_read_byte(noACK);                //read checksum (8-bit)
-
   *p_value=(msb<<8)|(lsb);
-
-  return(0);
+  return ERR_OK;
 }
 
 /**************************************************************************************************
@@ -224,8 +190,7 @@ unsigned char s_measure(unsigned int *p_value, unsigned char mode)
 * input : temp [Ticks] (14 bit)
 * output: temp [C] times 10 (e.g 253 = 25.3'C)
 **************************************************************************************************/
-float calc_sth11_temp(unsigned int t)
-{
+float calc_sth11_temp(unsigned int t) {
   float t_out;
   t_out =  t*0.01 - 40;
 
@@ -237,15 +202,14 @@ float calc_sth11_temp(unsigned int t)
 * input : humi [Ticks] (12 bit), temperature in 'C * 100 (e.g 253 for 25.3'C)
 * output: humi [%RH] (=integer value from 0 to 100)
 **************************************************************************************************/
-float calc_sth11_humi(unsigned int h, int t)
-{
+float calc_sth11_humi(unsigned int h, int t) {
   float rh_lin;                             // rh_lin:  Humidity linear
   float rh_true;                            // rh_true: Temperature compensated humidity
   float t_C;                                // t_C   :  Temperature [°C]
 
   t_C=t*0.01 - 40;                          //calc. temperature from ticks to [°C]
   rh_lin=C3*h*h + C2*h + C1;                //calc. humidity from ticks to [%RH]
-  rh_true=(t_C-25)*(Temp1+Temp2*h)+rh_lin;        //calc. temperature compensated humidity
+  rh_true=(t_C-25)*(Temp1+Temp2*h)+rh_lin;  //calc. temperature compensated humidity
 
   // now calc. Temperature compensated humidity [%RH]
   // the correct formula is:
@@ -254,22 +218,24 @@ float calc_sth11_humi(unsigned int h, int t)
   // we use:
   // rh_true=(t/10-25) * 1/8;
 
-  if(rh_true>100)rh_true=100;               //cut if the value is outside of
-  if(rh_true<0.1)rh_true=0.1;               //the physical possible range
-
+  if(rh_true>100) { /* cut if the value is outside of */
+    rh_true=100;
+  }
+  if(rh_true<0.1) { /* the physical possible range */
+    rh_true=0.1;
+  }
   return rh_true;
 }
 
 /**************************************************************************************************
 * reads temperature and humidity
 **************************************************************************************************/
-void Read_SHT11(float *fT, float *fRH) {
+void SHT11_Read(float *fT, float *fRH) {
   unsigned int t;
   unsigned int h;
   float value;
 
-  ucSens_Error = 0;
-
+  ucSens_Error = ERR_OK;
   ucSens_Error = s_measure(&t, 0);
   iSHT_Temp = (int)(calc_sth11_temp(t) * 10);
 
@@ -285,30 +251,32 @@ void Read_SHT11(float *fT, float *fRH) {
 /**************************************************************************************************
 * reads the status register with checksum (8-bit)
 **************************************************************************************************/
-char s_read_statusreg(unsigned char *p_value)
-{
+unsigned char SHT11_read_statusreg(unsigned char *p_value) {
   unsigned char checksum = 0;
 
-  s_transstart();                             //transmission start
-  if(s_write_byte(STATUS_REG_R)) return 1;    //send command to sensor
+  SHT11_TransmissionStart();                             //transmission start
+  if(SHT11_WriteByte(STATUS_REG_R)!=ERR_OK) {    //send command to sensor
+    return ERR_FAILED;
+  }
   *p_value=s_read_byte(ACK);                  //read status register (8-bit)
   checksum=s_read_byte(noACK);                //read checksum (8-bit)
-
-  return 0;
+  return ERR_OK;
 }
 
 /**************************************************************************************************
 * writes the status register with checksum (8-bit)
 * input: status register value
-* return value: 0=ok, 1=write error
+* return value: ERR_OK=ok, ERR_FAILED=write error
 **************************************************************************************************/
-char s_write_statusreg(unsigned char value)
-{
-  s_transstart();                             //transmission start
-  if(s_write_byte(STATUS_REG_W)) return 1;    //send command to sensor
-  if(s_write_byte(value)) return 1;           //send value of status register
-
-  return 0;
+uint8_t SHT11_write_statusreg(uint8_t value) {
+  SHT11_TransmissionStart();                  //transmission start
+  if (SHT11_WriteByte(STATUS_REG_W)!=ERR_OK) { //send command to sensor
+    return ERR_FAILED;
+  }
+  if (SHT11_WriteByte(value)!=ERR_OK) { //send value of status register
+    return ERR_FAILED;
+  }
+  return ERR_OK;
 }
 
 /**************************************************************************************************
@@ -318,27 +286,26 @@ char s_write_statusreg(unsigned char value)
 *          _    _    _    _    _    _    _    _    _        ___     ___
 * SCK : __| |__| |__| |__| |__| |__| |__| |__| |__| |______|   |___|   |______
 **************************************************************************************************/
-void s_connectionreset(void) {
-  unsigned char i;
+void SHT11_ConnectionReset(void) {
+  int i;
 
   SDA_SetInput();
   SCL_ClrVal();
-  for(i=0; i<9; i++) {                    //9 SCK cycles
+  for(i=0; i<9; i++) {  /* 9 SCK cycles */
     SCL_SetVal();
     Delay_uS(3);
     SCL_ClrVal();
     Delay_uS(3);
   }
-  s_transstart();                        //transmission start
+  SHT11_TransmissionStart(); /* transmission start */
 }
 
 /**************************************************************************************************
 * Resets the sensor by a softreset
 **************************************************************************************************/
-unsigned char s_softreset(void) {
-  s_connectionreset();                         //reset communication
-                                               //send RESET-command to sensor
-  return (s_write_byte(RESET));                //return=1 in case of no response form the sensor
+uint8_t SHT11_SoftReset(void) {
+  SHT11_ConnectionReset();  /* reset communication, send RESET-command to sensor */
+  return SHT11_WriteByte(RESET); /* return ERR_FAILED in case of no response form the sensor */
 }
 
 /**************************************************************************************************

@@ -67,7 +67,7 @@ int main(void)
 {
   /* Write your local variable definition here */
   float temperature, humidity;
-  unsigned char res;
+  uint8_t res;
   unsigned char buf[32];
 
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
@@ -75,10 +75,14 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
-  CLS1_SendStr("\r\nSHT11 Example\r\n", CLS1_GetStdio()->stdOut);
-  res = s_softreset();
+  CLS1_SendStr("\r\n-----------------------\r\nSHT11 Example\r\n-----------------------\r\n", CLS1_GetStdio()->stdOut);
+  res = SHT11_SoftReset();
+  if (res!=ERR_OK) {
+    CLS1_SendStr("FAILED to reset device\r\n ", CLS1_GetStdio()->stdErr);
+    for(;;){}
+  }
   for(;;) {
-    Read_SHT11(&temperature, &humidity);
+    SHT11_Read(&temperature, &humidity);
     CLS1_SendStr("Temperature ", CLS1_GetStdio()->stdOut);
     buf[0] = '\0';
     UTIL1_strcatNum32sDotValue100(buf, sizeof(buf), temperature*100);

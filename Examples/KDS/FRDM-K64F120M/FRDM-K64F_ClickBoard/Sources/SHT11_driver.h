@@ -8,8 +8,12 @@
 #ifndef SHT11_DRIVER_H_
 #define SHT11_DRIVER_H_
 
-void Read_SHT11(float *fT, float *fRH);
+void SHT11_Read(float *fT, float *fRH);
 
-uint8_t s_softreset(void);
+/*!
+ * \brief Performs a softreset of the device
+ * \return Error code, ERR_OK if everything is ok.
+ */
+uint8_t SHT11_SoftReset(void);
 
 #endif /* SHT11_DRIVER_H_ */
