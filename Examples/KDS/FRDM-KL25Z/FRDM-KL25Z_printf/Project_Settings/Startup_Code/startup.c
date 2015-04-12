@@ -246,7 +246,8 @@ int addr = (int)__SP_INIT;
 		// initializations before main, user specific
 		__init_user();
 
-		main(0, argv);
+		_start(); /* needed for float printf()! */
+		//main(0, argv);
 
 
 
