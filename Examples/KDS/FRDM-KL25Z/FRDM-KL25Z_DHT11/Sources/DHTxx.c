@@ -1,7 +1,7 @@
 /**
  * \file
  * \brief Implementation of a driver for the DHT11 temperature/humidity sensor.
- * \author Erich Styger
+ * \author Erich Styger, adopted from http://doitwireless.com/2014/07/01/temperature-and-humidity-measurement-with-dht11/
  */
 
 #include "DHTxx.h"
