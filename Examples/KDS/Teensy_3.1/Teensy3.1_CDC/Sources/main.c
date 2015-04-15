@@ -49,7 +49,7 @@
 #include "IO_Map.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #if 1
-#include <stdio.h>
+
 static uint8_t cdc_buffer[USB1_DATA_BUFF_SIZE];
 static uint8_t in_buffer[USB1_DATA_BUFF_SIZE];
 
