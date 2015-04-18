@@ -39,7 +39,7 @@ static void DimmColor(NEO_PixelIdxT start, NEO_PixelIdxT end, bool isRed, bool i
       NEO_SetPixelRGB(j, red, green, blue);
     }
     NEO_TransferPixels();
-    FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
+    FRTOS1_vTaskDelay(25/portTICK_RATE_MS);
   }
 }
 
@@ -49,7 +49,7 @@ static portTASK_FUNCTION(NeoTask, pvParameters) {
 #define DIMM 0x50
   (void)pvParameters; /* parameter not used */
 
-#if 0
+#if PL_NEO_DEMO
   NEO_ClearAllPixel();
   for(i=0;i<10;i++) {
     NEO_SetPixelRGB(0, 0xff, 0x00, 0x00);
@@ -57,7 +57,7 @@ static portTASK_FUNCTION(NeoTask, pvParameters) {
     FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
   }
 #endif
-#if 0
+#if PL_NEO_DEMO
   NEO_SetPixelRGB(0, 0xff, 0x00, 0x00);
   NEO_SetPixelRGB(1, 0x00, 0xFF, 0x00);
   NEO_SetPixelRGB(2, 0x00, 0x00, 0xff);
@@ -74,11 +74,11 @@ static portTASK_FUNCTION(NeoTask, pvParameters) {
 #endif
 
   for(;;) {
-#if 0
+#if 0 && PL_NEO_DEMO
     for(i=0;i<=NEO_PIXEL_LAST;i++) {
       NEO_SetPixelRGB(i, 0xff, 0x00, 0x00);
       if (i>0) {
-        NEO_SetPixelRGB(i-1, 0x00, 0x00, 0x00);
+        NEO_SetPixelRGB(i-1, 0x00, 0x00, 0x00); /* clear previous pixel */
       } else if (i==0) {
         NEO_SetPixelRGB(NEO_PIXEL_LAST, 0x00, 0x00, 0x00);
       }
@@ -86,7 +86,7 @@ static portTASK_FUNCTION(NeoTask, pvParameters) {
       FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
     }
 #endif
-#if 0
+#if 0 && PL_NEO_DEMO
     NEOL_PixelTrail(0xff, 0x00, 0x00, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10);
     DimmColor(NEO_PIXEL_FIRST, NEO_PIXEL_LAST, TRUE, FALSE, FALSE);
     NEOL_PixelTrail(0xff, 0xff, 0x00, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10);
@@ -101,6 +101,15 @@ static portTASK_FUNCTION(NeoTask, pvParameters) {
     NEO_ClearAllPixel();
     NEOL_PixelTrail(0xff, 0x00, 0xff, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10);
     DimmColor(NEO_PIXEL_FIRST, NEO_PIXEL_LAST, TRUE, TRUE, TRUE);
+#endif
+#if 1
+    NEO_ClearAllPixel();
+    NEOL_PixelTrail(0x10, 0x00, 0x00, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 36, 50, 2);
+//    DimmColor(NEO_PIXEL_FIRST, NEO_PIXEL_LAST, TRUE, FALSE, FALSE);
+//    NEOL_PixelTrail(0x00, 0xff/64, 0x00, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 36, 50, 2);
+//    DimmColor(NEO_PIXEL_FIRST, NEO_PIXEL_LAST, FALSE, TRUE, FALSE);
+//    NEOL_PixelTrail(0x00, 0x00, 0xff/64, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 36, 50, 2);
+//    DimmColor(NEO_PIXEL_FIRST, NEO_PIXEL_LAST, FALSE, TRUE, TRUE);
 #endif
     LED1_Neg();
     FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
