@@ -65,9 +65,9 @@ int main(void)
 
   /* Write your code here */
   /* For example: for(;;) { } */
-  buffer[0] = '\0';
+  buffer[0] = '\0'; /* initialize buffer for ReadLine() */
   for(;;) {
-    CLS1_SendStr("Hello world! Type in some text with CR or LF at the end...\r\n", CLS1_GetStdio()->stdOut);
+    CLS1_SendStr("Type in some text with CR or LF at the end...\r\n", CLS1_GetStdio()->stdOut);
     LED1_Neg();
     WAIT1_Waitms(1000);
     if (CLS1_ReadLine(buffer, buffer, sizeof(buffer), CLS1_GetStdio())) {
