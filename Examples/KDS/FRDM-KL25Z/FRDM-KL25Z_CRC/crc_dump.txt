@@ -1,0 +1,10 @@
+# srec_cat command file to dump the CRC for a code area
+# Usage: srec_cat @filename
+FRDM-KL25Z_CRC.srec          # input file
+-fill 0xFF 0x0410 0x20000          # fill code area with 0xff
+-crop 0x0410 0x1FFFE               # just keep code area for CRC calculation below (CRC will be at 0x1FFFE..0x1FFFF)
+-CRC16_Big_Endian 0x1FFFE -CCITT   # calculate big endian CCITT CRC16 at given address.
+-crop 0x1FFFE 0x20000              # keep the CRC itself
+-Output                            # produce output
+-                                  # '-' is special 'file': use console output
+-hex-dump                          # dump in hex format

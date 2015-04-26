@@ -1,0 +1,17 @@
+# srec_cat command file to add the CRC and produce application file to be flashed
+# Usage: srec_cat @filename
+
+#first: create CRC checksum
+FRDM-KL25Z_CRC.srec                # input file
+-fill 0xFF 0x0410 0x20000          # fill code area with 0xff
+-crop 0x0410 0x1FFFE               # just keep code area for CRC calculation below (CRC will be at 0x1FFFE..0x1FFFF)
+-CRC16_Big_Endian 0x1FFFE -CCITT   # calculate big endian CCITT CRC16 at given address.
+-crop 0x1FFFE 0x20000              # keep the CRC itself
+
+#second: add application file
+FRDM-KL25Z_CRC.srec                # input file
+-fill 0xFF 0x0410 0x1FFFE          # fill code area with 0xff
+
+#finally, produce the output file
+-Output                            # produce output
+FRDM-KL25Z_CRC_Added.srec
