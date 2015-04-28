@@ -42,6 +42,8 @@
 #include "CS1.h"
 #include "CLS1.h"
 #include "UTIL1.h"
+#include "IFsh1.h"
+#include "IntFlashLdd1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -95,6 +97,8 @@ static void CDC_Run(void) {
   }
 }
 #endif
+
+
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
@@ -107,6 +111,18 @@ int main(void)
 
   /* Write your code here */
   /* For example: for(;;) { } */
+#if 0 /* test code for flash programming */
+  {
+    static uint8_t res;
+    static int16_t val = 0x1234;
+    val = 0xffff;
+    res = IFsh1_SetBlockFlash((IFsh1_TDataAddress)&val, 0x30000, sizeof(val));
+    val = 0x0012;
+    res = IFsh1_SetBlockFlash((IFsh1_TDataAddress)&val, 0x30000, sizeof(val));
+    val = 0x3412;
+    res = IFsh1_SetBlockFlash((IFsh1_TDataAddress)&val, 0x30000, sizeof(val));
+  }
+#endif
   CDC_Run();
   for(;;) {
     LED1_Neg();
