@@ -8,8 +8,8 @@
 				</macros>
 				<externalSettings/>
 				<extensions>
-					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.managedbuilder.core.ManagedBuildManager" point="org.eclipse.cdt.core.ScannerInfoProvider"/>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
@@ -55,9 +55,34 @@
 									<listOptionValue builtIn="false" value="&quot;../SDK/platform/CMSIS/Include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../SDK/platform/devices&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../SDK/platform/devices/MK64F12/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../Percepio&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../SDK/rtos/FreeRTOS/src&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../SDK/rtos/FreeRTOS/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../SDK/rtos/FreeRTOS/port/gcc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../SDK/platform/drivers/src/uart&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../SDK/platform/drivers/src/rtc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../SDK/platform/drivers/inc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../SDK/platform/drivers/src/gpio&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../SDK/platform/osa/src&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../SDK/platform/osa/inc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../SDK/platform/hal/src/mcg&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../SDK/platform/hal/src/rtc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../SDK/platform/hal/src/uart&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../SDK/platform/hal/src/gpio&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../SDK/platform/hal/src/osc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../SDK/platform/hal/src/sim/MK64F12&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../SDK/platform/hal/inc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../SDK/platform/hal/src/port&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../SDK/platform/system/inc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../SDK/platform/system/src/interrupt&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../SDK/platform/system/src/clock&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../SDK/platform/system/src/clock/MK64F12&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../SDK/platform/utilities/inc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../SDK/platform/utilities/src&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.674245702" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="&quot;CPU_MK64FN1M0VMD12&quot;"/>
+									<listOptionValue builtIn="false" value="FSL_RTOS_FREE_RTOS"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1800818567" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>

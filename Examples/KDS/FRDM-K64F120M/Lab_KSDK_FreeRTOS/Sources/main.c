@@ -28,15 +28,137 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "Platform.h"
 #include "fsl_device_registers.h"
+#include "FreeRTOS.h"
+#include "FreeRTOSConfig.h"
+#include "board.h"
+#include "Utility.h"
+#include "fsl_debug_console.h"
 
 static int i = 0;
 
-int main(void)
-{
+// Define gpio input pin config structure SW.
+gpio_input_pin_user_config_t inputPin[] = {
+    {
+        .pinName                       = BOARD_SW_GPIO,
+        .config.isPullEnable           = true,
+#if FSL_FEATURE_PORT_HAS_PULL_SELECTION
+        .config.pullSelect             = kPortPullUp,
+#endif
+#if FSL_FEATURE_PORT_HAS_PASSIVE_FILTER
+        .config.isPassiveFilterEnabled = false,
+#endif
+#if FSL_FEATURE_PORT_HAS_DIGITAL_FILTER
+        .config.isDigitalFilterEnabled = false,
+#endif
+        .config.interrupt              = kPortIntFallingEdge,
+    },
+    {
+        .pinName = GPIO_PINS_OUT_OF_RANGE,
+    }
+};
 
-    /* Write your code here */
+// Define gpio output pin config structure LED1.
+gpio_output_pin_user_config_t outputPin[] = {
+    {
+        .pinName              = kGpioLED1,
+        .config.outputLogic   = 0,
+#if FSL_FEATURE_PORT_HAS_SLEW_RATE
+        .config.slewRate      = kPortFastSlewRate,
+#endif
+#if FSL_FEATURE_PORT_HAS_DRIVE_STRENGTH
+        .config.driveStrength = kPortHighDriveStrength,
+#endif
+    },
+    {
+        .pinName              = kGpioLED2,
+        .config.outputLogic   = 0,
+#if FSL_FEATURE_PORT_HAS_SLEW_RATE
+        .config.slewRate      = kPortFastSlewRate,
+#endif
+#if FSL_FEATURE_PORT_HAS_DRIVE_STRENGTH
+        .config.driveStrength = kPortHighDriveStrength,
+#endif
+    },
+    {
+        .pinName              = kGpioLED3,
+        .config.outputLogic   = 0,
+#if FSL_FEATURE_PORT_HAS_SLEW_RATE
+        .config.slewRate      = kPortFastSlewRate,
+#endif
+#if FSL_FEATURE_PORT_HAS_DRIVE_STRENGTH
+        .config.driveStrength = kPortHighDriveStrength,
+#endif
+    },
+    {
+        .pinName = GPIO_PINS_OUT_OF_RANGE,
+    }
+};
 
+
+#if PL_USE_SW_TIMERS
+static xTimerHandle timerHndl;
+#define SW_TIMER_PERIOD_MS 50
+
+static void vTimerCallback(xTimerHandle pxTimer) {
+  /* TIMER_PERIOD_MS ms timer */
+    GPIO_DRV_TogglePinOutput(kGpioLED2); /* toggle red LED */
+}
+#endif
+
+
+int doIt = 0;
+
+static void blinky_task(void *param) {
+  (void)param;
+  for(;;) {
+    GPIO_DRV_TogglePinOutput(kGpioLED1); /* toggle green LED */
+    vTaskDelay(500/portTICK_RATE_MS); /* wait for 500 ms */
+  } /* for */
+}
+
+int main(void) {
+	hardware_init();
+	/* !\todo add serial console */
+#if configUSE_TRACE_HOOKS
+	vTraceInitTraceData();
+	if (uiTraceStart()==0) {
+		for(;;); /* error */
+	}
+#endif
+	// Init LED1, SW1.
+    GPIO_DRV_Init(inputPin, outputPin);
+    // Turn LED1 on.
+    GPIO_DRV_SetPinOutput(kGpioLED1); /* turn Green LED off */
+    GPIO_DRV_ClearPinOutput(kGpioLED1); /* turn Green led on */
+    GPIO_DRV_SetPinOutput(kGpioLED1); /* turn Green LED off */
+
+    GPIO_DRV_ClearPinOutput(kGpioLED2);
+    GPIO_DRV_ClearPinOutput(kGpioLED3);
+    GPIO_DRV_SetPinOutput(kGpioLED2);
+    GPIO_DRV_SetPinOutput(kGpioLED3);
+
+    debug_printf("hello world\r\n");
+
+#if PL_USE_SW_TIMERS /* create software timer */
+  timerHndl = xTimerCreate("timer0", SW_TIMER_PERIOD_MS/portTICK_RATE_MS, pdTRUE, (void *)0, vTimerCallback);
+  if (timerHndl==NULL) {
+    for(;;); /* failure! */
+  }
+  if (xTimerStart(timerHndl, 0)!=pdPASS) {
+    for(;;); /* failure! */
+  }
+#endif
+
+	 if (xTaskCreate(blinky_task, "Blinky", configMINIMAL_STACK_SIZE,
+	      NULL,
+	      tskIDLE_PRIORITY,
+	      NULL
+	    ) != pdPASS) {
+	    for(;;){} /* error! probably out of memory */
+	  }
+    vTaskStartScheduler();
     /* This for loop should be replaced. By default this loop allows a single stepping. */
     for (;;) {
         i++;
