@@ -35,6 +35,10 @@
 #include "board.h"
 #include "Utility.h"
 #include "fsl_debug_console.h"
+#include "FreeRTOS_Trace.h"
+#if PL_HAS_SHELL_QUEUE
+  #include "ShellQueue.h"
+#endif
 
 static int i = 0;
 
@@ -107,25 +111,61 @@ static void vTimerCallback(xTimerHandle pxTimer) {
 }
 #endif
 
+static void busydelay(uint32_t val) {
+	while(val>0) {
+		val--;
+		__asm("nop");
+	}
+}
 
-int doIt = 0;
+static void shell_task(void *param) {
+  (void)param;
+  for(;;) {
+#if PL_HAS_SHELL_QUEUE
+    {
+      /*! \todo Handle shell queue */
+      unsigned char ch;
+
+      while((ch=SQUEUE_ReceiveChar()) && ch!='\0') {
+    	  debug_putchar(ch);
+      }
+    }
+#endif
+    vTaskDelay(50/portTICK_RATE_MS); /* wait for 500 ms */
+  } /* for */
+}
+
 
 static void blinky_task(void *param) {
   (void)param;
   for(;;) {
     GPIO_DRV_TogglePinOutput(kGpioLED1); /* toggle green LED */
+    busydelay(100000);
     vTaskDelay(500/portTICK_RATE_MS); /* wait for 500 ms */
   } /* for */
 }
+
+#if 0
+  float f=3.5, g;
+  double d, dd;
+#endif
 
 int main(void) {
 	hardware_init();
 	/* !\todo add serial console */
 #if configUSE_TRACE_HOOKS
-	vTraceInitTraceData();
-	if (uiTraceStart()==0) {
-		for(;;); /* error */
-	}
+	RTOSTRC_Init();
+#endif
+#if PL_HAS_SHELL_QUEUE
+	SQUEUE_Init();
+#endif
+#if 0
+	f++;
+	g = f/2;
+	d = 37.5;
+	dd = d/55;
+	memset(0, 5, 70);
+	dd++;
 #endif
 	// Init LED1, SW1.
     GPIO_DRV_Init(inputPin, outputPin);
@@ -150,14 +190,22 @@ int main(void) {
     for(;;); /* failure! */
   }
 #endif
-
 	 if (xTaskCreate(blinky_task, "Blinky", configMINIMAL_STACK_SIZE,
+		  NULL,
+		  tskIDLE_PRIORITY,
+		  NULL
+		) != pdPASS) {
+		for(;;){} /* error! probably out of memory */
+	  }
+	 if (xTaskCreate(shell_task, "Shell", configMINIMAL_STACK_SIZE,
 	      NULL,
 	      tskIDLE_PRIORITY,
 	      NULL
 	    ) != pdPASS) {
 	    for(;;){} /* error! probably out of memory */
 	  }
+
+
     vTaskStartScheduler();
     /* This for loop should be replaced. By default this loop allows a single stepping. */
     for (;;) {

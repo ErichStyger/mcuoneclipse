@@ -9,5 +9,6 @@
 #define SOURCES_PLATFORM_H_
 
 #define PL_USE_SW_TIMERS  1
+#define PL_HAS_SHELL_QUEUE   1
 
 #endif /* SOURCES_PLATFORM_H_ */

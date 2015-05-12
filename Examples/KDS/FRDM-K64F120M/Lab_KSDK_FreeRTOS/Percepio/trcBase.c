@@ -557,8 +557,8 @@ void prvTraceUpdateCounters(void)
 		RecorderDataPtr->bufferIsFull = 1;
 		RecorderDataPtr->nextFreeIndex = 0;
         {
-          void RTOSTRC1_OnTraceWrap(void); /* prototype */
-          RTOSTRC1_OnTraceWrap();
+          void RTOSTRC_OnTraceWrap(void); /* prototype */
+          RTOSTRC_OnTraceWrap();
         }
 #else
 		vTraceStop();

@@ -153,7 +153,7 @@
 #define configUSE_MUTEXES                         1
 #define configCHECK_FOR_STACK_OVERFLOW            0 /* 0 is disabling stack overflow. Set it to 1 for Method1 or 2 for Method2 */  
 #define configUSE_RECURSIVE_MUTEXES               1
-#define configQUEUE_REGISTRY_SIZE                 0
+#define configQUEUE_REGISTRY_SIZE                10
 #define configUSE_QUEUE_SETS                      0
 #define configUSE_COUNTING_SEMAPHORES             1
 #define configUSE_APPLICATION_TASK_TAG            0

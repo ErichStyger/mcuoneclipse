@@ -15,7 +15,7 @@
 #endif
 
 #if configUSE_TRACE_HOOKS
-void vGetGDBDumpCommand(uint8_t *buf, uint16_t bufSize, uint8_t *fileName) {
+static void vGetGDBDumpCommand(uint8_t *buf, uint16_t bufSize, uint8_t *fileName) {
   /* construct gdb command string: dump binary memory <file> <hexStartAddr> <hexEndAddr> */
   uint8_t *ptr; /* pointer to data */
   size_t len; /* size/length of data */
@@ -30,12 +30,18 @@ void vGetGDBDumpCommand(uint8_t *buf, uint16_t bufSize, uint8_t *fileName) {
   Utility_strcatNum32Hex(buf, bufSize, (uint32_t)(ptr+len));
 }
 
-void RTOSTRC1_OnTraceWrap(void) {
-  /*! \todo configurable event names in trace config! */
+void RTOSTRC_OnTraceWrap(void) {
   uint8_t buf[64];
 
   /* GDB: dump binary memory <file> <hexStartAddr> <hexEndAddr> */
   vGetGDBDumpCommand(buf, sizeof(buf), (uint8_t*)"c:\\tmp\\trc.dump");
+}
+
+void RTOSTRC_Init(void) {
+	vTraceInitTraceData();
+	if (uiTraceStart()==0) {
+		for(;;); /* error */
+	}
 }
 #endif
 

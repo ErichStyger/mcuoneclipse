@@ -7,3 +7,6 @@ This project is used for a lab session about how to optimize FreeRTOS with the K
 - add rtos folder, remove mqx
 - clean up include paths
 - add freertos config
+
+Todo list:
+  /*! \todo configurable event hook names in trace config! */
