@@ -46,7 +46,7 @@
 #endif
 
 /* Internal variables */
-int8_t nISRactive = 0;
+uint8_t nISRactive = 0;
 objectHandleType handle_of_last_logged_task = 0;
 uint8_t inExcludedTask = 0;
 
