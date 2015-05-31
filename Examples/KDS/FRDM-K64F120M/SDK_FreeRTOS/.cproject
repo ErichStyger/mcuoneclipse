@@ -3,6 +3,9 @@
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
 		<cconfiguration id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1943472702">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1943472702" moduleId="org.eclipse.cdt.core.settings" name="Debug">
+				<macros>
+					<stringMacro name="PROJECT_KSDK_PATH" type="VALUE_TEXT" value="${KSDK_PATH}"/>
+				</macros>
 				<externalSettings/>
 				<extensions>
 					<extension id="org.eclipse.cdt.managedbuilder.core.ManagedBuildManager" point="org.eclipse.cdt.core.ScannerInfoProvider"/>
@@ -61,19 +64,19 @@
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Sources&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Includes&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Includes/device&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${KSDK_PATH}/platform/CMSIS/Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${KSDK_PATH}/boards/frdmk64f120m&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${KSDK_PATH}/platform/utilities&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${KSDK_PATH}/platform/drivers/clock&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${KSDK_PATH}/platform/drivers/gpio&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${KSDK_PATH}/platform/drivers/interrupt&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${KSDK_PATH}/platform/hal/sim&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${KSDK_PATH}/platform/hal/port&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${KSDK_PATH}/platform/hal/gpio&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${KSDK_PATH}/rtos&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${KSDK_PATH}/rtos/FreeRTOS&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${KSDK_PATH}/rtos/FreeRTOS/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${KSDK_PATH}/rtos/FreeRTOS/port/gcc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/CMSIS/Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/boards/frdmk64f120m&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/utilities&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/drivers/clock&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/drivers/gpio&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/drivers/interrupt&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/hal/sim&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/hal/port&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/platform/hal/gpio&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/rtos&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/rtos/FreeRTOS&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/rtos/FreeRTOS/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_KSDK_PATH}/rtos/FreeRTOS/port/gcc&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.files.828191787" name="Include files (-include)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.files" useByScannerDiscovery="false"/>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1729585822" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
