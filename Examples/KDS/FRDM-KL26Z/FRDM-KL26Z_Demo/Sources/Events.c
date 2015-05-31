@@ -133,7 +133,7 @@ void KEY1_OnKeyReleasedLong(byte keys)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void EVNT1_AppHandleEvent(byte event)
+void EVNT1_AppHandleEvent(uint8_t event)
 {
   APP_HandleEvent(event);
 }
