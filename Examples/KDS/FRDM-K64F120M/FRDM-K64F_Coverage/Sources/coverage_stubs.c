@@ -71,21 +71,17 @@ int _read(int file, char *ptr, int len) {
 int _write(int file, char *ptr, int len) {
   int size;
 
-#if 1
+#if 0
+  /* In case of the file is written in one piece (newlib), you can dump it now.
+   * But if using newlib-nano, it writes to the file byte by byte, so dumping is postponed
+   */
   /* construct gdb command string to write gcda file */
-#if USE_NEWLIB_NANO
-  UTIL1_strcpy(gdb_cmd, sizeof(gdb_cmd), (unsigned char*)"dump binary memory ");
-  UTIL1_strcat(gdb_cmd, sizeof(gdb_cmd), fileName);
-  UTIL1_strcat(gdb_cmd, sizeof(gdb_cmd), (unsigned char*)" ");
-#else
-  /* construct gdb command string */
   UTIL1_strcpy(gdb_cmd, sizeof(gdb_cmd), (unsigned char*)"dump binary memory ");
   UTIL1_strcat(gdb_cmd, sizeof(gdb_cmd), COV_Buffer.fileName);
   UTIL1_strcat(gdb_cmd, sizeof(gdb_cmd), (unsigned char*)" 0x");
   UTIL1_strcatNum32Hex(gdb_cmd, sizeof(gdb_cmd), (uint32_t)ptr);
   UTIL1_strcat(gdb_cmd, sizeof(gdb_cmd), (unsigned char*)" 0x");
   UTIL1_strcatNum32Hex(gdb_cmd, sizeof(gdb_cmd), (uint32_t)(ptr+len));
-#endif
 #endif
   if (file==COV_FILE_HANDLE) {
 	  size = len;
@@ -111,7 +107,6 @@ int _open (const char *ptr, int mode) {
 }
 
 int _close(int file) {
-  (void) file;
   if (file==COV_FILE_HANDLE) {
 	  /* construct gdb command string to write .gcda file */
 	  UTIL1_strcpy(gdb_cmd, sizeof(gdb_cmd), (unsigned char*)"dump binary memory ");
