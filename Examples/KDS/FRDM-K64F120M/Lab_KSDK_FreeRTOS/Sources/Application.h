@@ -2,7 +2,7 @@
  * Application.h
  *
  *  Created on: 09.06.2015
- *      Author: tastyger
+ *      Author: Erich Styger
  */
 
 #ifndef SOURCES_APPLICATION_H_

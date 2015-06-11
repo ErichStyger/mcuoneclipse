@@ -176,7 +176,7 @@
  * check the actual usage by selecting View menu -> Trace Details -> 
  * Resource Usage -> Object Table. 
  ******************************************************************************/
-#define NTask             5
+#define NTask             10
 #define NISR              1
 #define NQueue            3
 #define NSemaphore        4

@@ -95,22 +95,24 @@ static void blinky_task(void *param) {
   for(;;) {
 	switch(whichLED) {
 	case RGB_LED_GREEN:
+	    SQUEUE_SendString("Blinking GREEN RGB LED\r\n");
 	    GPIO_DRV_TogglePinOutput(kGpioLED1);
 	    GPIO_DRV_SetPinOutput(kGpioLED2);
 	    GPIO_DRV_SetPinOutput(kGpioLED3);
 		break;
 	case RGB_LED_RED:
+	    SQUEUE_SendString("Blinking GREEN RED LED\r\n");
 		GPIO_DRV_SetPinOutput(kGpioLED1);
 	    GPIO_DRV_TogglePinOutput(kGpioLED2);
 	    GPIO_DRV_SetPinOutput(kGpioLED3);
 		break;
 	case RGB_LED_BLUE:
+	    SQUEUE_SendString("Blinking GREEN BLUE LED\r\n");
 		GPIO_DRV_SetPinOutput(kGpioLED1);
 	    GPIO_DRV_SetPinOutput(kGpioLED2);
 	    GPIO_DRV_TogglePinOutput(kGpioLED3);
 		break;
 	}
-    //busydelay(100000);
     vTaskDelay(pdMS_TO_TICKS(500)); /* wait for 500 ms */
   } /* for */
 }
