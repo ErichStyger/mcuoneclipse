@@ -73,15 +73,9 @@
  *****************************************************************************/
 
 // Set the port setting here!
-#if 1 /* << EST */
 #include "FreeRTOSConfig.h"
 #if configCPU_FAMILY_IS_ARM(configCPU_FAMILY)
-#define SELECTED_PORT PORT_ARM_CortexM
-#else
-#define SELECTED_PORT PORT_FREESCALE_PROCESSOR_EXPERT
-#endif
-#else
-#define SELECTED_PORT PORT_NOT_SET
+  #define SELECTED_PORT PORT_ARM_CortexM
 #endif
 
 #if (SELECTED_PORT == PORT_ARM_CortexM)
@@ -144,11 +138,7 @@
  * Default value is 0 (store all enabled events).
  *
  ******************************************************************************/
-#if 1 /* << EST */
 #define TRACE_SCHEDULING_ONLY 0
-#else
-#define TRACE_SCHEDULING_ONLY 0
-#endif
 
 /*******************************************************************************
  * EVENT_BUFFER_SIZE
@@ -163,11 +153,7 @@
  * Default value is 1000, which means that 4000 bytes is allocated for the
  * event buffer.
  ******************************************************************************/
-#if 1 /* << EST */
-#define EVENT_BUFFER_SIZE 256
-#else
-#define EVENT_BUFFER_SIZE 1000
-#endif
+#define EVENT_BUFFER_SIZE (8*1024)
 
 /*******************************************************************************
  * NTask, NISR, NQueue, NSemaphore, NMutex
@@ -190,23 +176,13 @@
  * check the actual usage by selecting View menu -> Trace Details -> 
  * Resource Usage -> Object Table. 
  ******************************************************************************/
-#if 1 /* << EST */
-#define NTask             10
-#define NISR              4
+#define NTask             5
+#define NISR              1
 #define NQueue            3
 #define NSemaphore        4
 #define NMutex            4
 #define NTimer            2
 #define NEventGroup       2
-#else
-#define NTask             15
-#define NISR              5
-#define NQueue            10
-#define NSemaphore        10
-#define NMutex            10
-#define NTimer            2
-#define NEventGroup       2
-#endif
 
 /******************************************************************************
  * INCLUDE_MEMMANG_EVENTS
@@ -218,11 +194,7 @@
  *
  * Default value is 1.
  *****************************************************************************/
-#if 1 /* << EST */
-#define INCLUDE_MEMMANG_EVENTS 0
-#else
 #define INCLUDE_MEMMANG_EVENTS 1
-#endif
 
 /******************************************************************************
  * INCLUDE_USER_EVENTS
@@ -239,11 +211,7 @@
  *
  * Note that User Events are only displayed in Professional Edition.
  *****************************************************************************/
-#if 1 /* << EST */
 #define INCLUDE_USER_EVENTS 1
-#else
-#define INCLUDE_USER_EVENTS 1
-#endif
 
 /*****************************************************************************
  * INCLUDE_ISR_TRACING
@@ -259,11 +227,7 @@
  * require that you insert calls to vTraceStoreISRBegin and vTraceStoreISREnd 
  * in your interrupt handlers.
  *****************************************************************************/
-#if 1 /* << EST */
 #define INCLUDE_ISR_TRACING 1
-#else
-#define INCLUDE_ISR_TRACING 1
-#endif
 
 /*****************************************************************************
  * INCLUDE_READY_EVENTS
@@ -278,11 +242,7 @@
  *
  * Default value is 1.
  *****************************************************************************/
-#if 1 /* << EST */
 #define INCLUDE_READY_EVENTS 1
-#else
-#define INCLUDE_READY_EVENTS 1
-#endif
 
 /*****************************************************************************
  * INCLUDE_NEW_TIME_EVENTS
@@ -294,11 +254,7 @@
  *
  * Default value is 0.
  *****************************************************************************/
-#if 1 /* << EST */
 #define INCLUDE_NEW_TIME_EVENTS 0
-#else
-#define INCLUDE_NEW_TIME_EVENTS 0
-#endif
 
 /******************************************************************************
  * INCLUDE_FLOAT_SUPPORT
@@ -329,11 +285,7 @@
  *
  * Default value is 1.
  *****************************************************************************/
-#if 1 /* << EST */
 #define INCLUDE_OBJECT_DELETE 1
-#else
-#define INCLUDE_OBJECT_DELETE 1
-#endif
 
 /*******************************************************************************
  * SYMBOL_TABLE_SIZE
@@ -349,11 +301,7 @@
  *
  * Default value is 800.
  ******************************************************************************/
-#if 1 /* << EST */
 #define SYMBOL_TABLE_SIZE 400
-#else
-#define SYMBOL_TABLE_SIZE 800
-#endif
 
 #if (SYMBOL_TABLE_SIZE == 0)
 #error "SYMBOL_TABLE_SIZE may not be zero!"
@@ -367,7 +315,6 @@
  * be truncated when stored in the recorder.
  *****************************************************************************/
 /* Maximum object name length for each class (includes zero termination) */
-#if 1 /* << EST */
 #define NameLenTask       configMAX_TASK_NAME_LEN
 #define NameLenISR        10
 #define NameLenQueue      15
@@ -375,15 +322,6 @@
 #define NameLenMutex      15
 #define NameLenTimer      15
 #define NameLenEventGroup 15
-#else
-#define NameLenTask       15
-#define NameLenISR        15
-#define NameLenQueue      15
-#define NameLenSemaphore  15
-#define NameLenMutex      15
-#define NameLenTimer      15
-#define NameLenEventGroup 15
-#endif
 
 /* << EST: additional configuration item */
 /******************************************************************************
@@ -396,11 +334,7 @@
  * internal error messages from the recorder, which if occurs overwrites the
  * value defined here. This may be maximum 256 chars.
  *****************************************************************************/
-#if 1 /* << EST */
 #define TRACE_DESCRIPTION "FreeRTOS+Trace"
-#else
-#define TRACE_DESCRIPTION "Tracealyzer Recorder Test Program"
-#endif
 
 /* << EST: additional configuration item */
 /******************************************************************************
@@ -412,11 +346,7 @@
  * Default is 80. 
  * Maximum allowed length is 256 - the trace will fail to load if longer.
  *****************************************************************************/
-#if 1 /* << EST */
 #define TRACE_DESCRIPTION_MAX_LENGTH 80
-#else
-#define TRACE_DESCRIPTION_MAX_LENGTH 80
-#endif
 
 
 /******************************************************************************
@@ -436,13 +366,7 @@
  * Using dynamic allocation may give more flexibility in some cases.
  *****************************************************************************/
 
-#if 1 /* << EST */
 #define TRACE_DATA_ALLOCATION TRACE_DATA_ALLOCATION_STATIC
-#else
-#define TRACE_DATA_ALLOCATION TRACE_DATA_ALLOCATION_STATIC
-#endif
-
-
 
 /******************************************************************************
  *** ADVANCED SETTINGS ********************************************************
@@ -462,11 +386,7 @@
 *
 * Default value is 0.
 ******************************************************************************/
-#if 1 /* << EST */
 #define HEAP_SIZE_BELOW_16M 0
-#else
-#define HEAP_SIZE_BELOW_16M 0
-#endif
 
 /******************************************************************************
  * USE_LINKER_PRAGMA
@@ -509,11 +429,7 @@
  * events withing each task is then shown as a single instance, unless  you call 
  * vTraceTaskInstanceFinish() at suitable locations to mark the IFEs.
  *****************************************************************************/
-#if 1 /* << EST */
 #define USE_IMPLICIT_IFE_RULES 1
-#else
-#define USE_IMPLICIT_IFE_RULES 1
-#endif
 
 /******************************************************************************
  * USE_16BIT_OBJECT_HANDLES
@@ -537,11 +453,7 @@
  * recorder gets larger when using 16-bit handles. The additional RAM usage is 
  * 5-10 byte plus 1 byte per kernel object i.e., task, queue, mutex, etc.
  *****************************************************************************/
-#if 1 /* << EST */
 #define USE_16BIT_OBJECT_HANDLES 0
-#else
-#define USE_16BIT_OBJECT_HANDLES 0
-#endif
 
 /******************************************************************************
  * USE_TRACE_ASSERT

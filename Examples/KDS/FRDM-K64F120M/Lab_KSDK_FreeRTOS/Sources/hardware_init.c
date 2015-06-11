@@ -45,6 +45,7 @@ void hardware_init(void) {
   /* Init board clock */
   BOARD_ClockInit();
   dbg_uart_init();
+  GPIO_DRV_Init(switchPins, ledPins);
 }
 
 /*!

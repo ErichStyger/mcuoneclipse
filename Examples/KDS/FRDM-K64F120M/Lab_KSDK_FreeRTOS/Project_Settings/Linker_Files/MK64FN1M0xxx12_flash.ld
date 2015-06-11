@@ -223,6 +223,7 @@ SECTIONS
     __HeapBase = .;
     . += HEAP_SIZE;
     __HeapLimit = .;
+    *(.m_data_2) /* user defined section */
   } > m_data_2
 
   .stack :
