@@ -53,7 +53,7 @@ static void app_task(void *param) {
 			busydelay(10000); /* wait until released */
 		}
 		SQUEUE_SendString("SW2 has been pressed!\r\n");
-		whichLED >>= 1;
+		whichLED <<= 1;
 		if (whichLED>RGB_LED_BLUE) {
 			whichLED = RGB_LED_RED;
 		}
