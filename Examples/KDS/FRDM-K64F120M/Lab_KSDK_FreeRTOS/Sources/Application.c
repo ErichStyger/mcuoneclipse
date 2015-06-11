@@ -47,29 +47,29 @@ static void busydelay(uint32_t val) {
 static void app_task(void *param) {
   (void)param;
   for(;;) {
+    vTaskDelay(pdMS_TO_TICKS(500)); /* wait for 500 ms */
 	if (GPIO_DRV_ReadPinInput(kGpioSW2)==0) { /* pressed */
-		busydelay(10000); /* debounce */
-		while (GPIO_DRV_ReadPinInput(kGpioSW2)==0) {
-			busydelay(10000); /* wait until released */
-		}
-		SQUEUE_SendString("SW2 has been pressed!\r\n");
-		whichLED <<= 1;
-		if (whichLED>RGB_LED_BLUE) {
-			whichLED = RGB_LED_RED;
-		}
+	  busydelay(10000); /* debounce */
+	  while (GPIO_DRV_ReadPinInput(kGpioSW2)==0) {
+		/* wait until released */
+	  }
+	  SQUEUE_SendString("SW2 has been pressed!\r\n");
+	  whichLED <<= 1;
+	  if (whichLED>RGB_LED_BLUE) {
+		whichLED = RGB_LED_RED;
+	  }
 	}
 	if (GPIO_DRV_ReadPinInput(kGpioSW3)==0) { /* pressed */
-		busydelay(10000); /* debounce */
-		while (GPIO_DRV_ReadPinInput(kGpioSW3)==0) {
-			busydelay(10000); /* wait until released */
-		}
-		SQUEUE_SendString("SW3 has been pressed!\r\n");
-		whichLED >>= 1;
-		if (whichLED<RGB_LED_RED) {
-			whichLED = RGB_LED_BLUE;
-		}
+	  busydelay(10000); /* debounce */
+	  while (GPIO_DRV_ReadPinInput(kGpioSW3)==0) {
+		/* wait until released */
+	  }
+	  SQUEUE_SendString("SW3 has been pressed!\r\n");
+	  whichLED >>= 1;
+	  if (whichLED<RGB_LED_RED) {
+		whichLED = RGB_LED_BLUE;
+	  }
 	}
-    vTaskDelay(pdMS_TO_TICKS(500)); /* wait for 500 ms */
   } /* for */
 }
 
