@@ -51,23 +51,23 @@ static void app_task(void *param) {
 	if (GPIO_DRV_ReadPinInput(kGpioSW2)==0) { /* pressed */
 	  busydelay(10000); /* debounce */
 	  while (GPIO_DRV_ReadPinInput(kGpioSW2)==0) {
-		/* wait until released */
+	    /* wait until released */
 	  }
 	  SQUEUE_SendString("SW2 has been pressed!\r\n");
 	  whichLED <<= 1;
 	  if (whichLED>RGB_LED_BLUE) {
-		whichLED = RGB_LED_RED;
+	    whichLED = RGB_LED_RED;
 	  }
 	}
 	if (GPIO_DRV_ReadPinInput(kGpioSW3)==0) { /* pressed */
 	  busydelay(10000); /* debounce */
 	  while (GPIO_DRV_ReadPinInput(kGpioSW3)==0) {
-		/* wait until released */
+	    /* wait until released */
 	  }
 	  SQUEUE_SendString("SW3 has been pressed!\r\n");
 	  whichLED >>= 1;
 	  if (whichLED<RGB_LED_RED) {
-		whichLED = RGB_LED_BLUE;
+	    whichLED = RGB_LED_BLUE;
 	  }
 	}
   } /* for */
