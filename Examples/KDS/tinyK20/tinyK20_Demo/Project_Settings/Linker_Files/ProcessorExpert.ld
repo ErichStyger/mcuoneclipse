@@ -10,7 +10,7 @@
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2015-06-19, 16:16, # CodeGen: 0 */
+/*##     Date/Time : 2015-06-23, 07:25, # CodeGen: 21 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */
@@ -34,7 +34,7 @@ __stack = _estack;
 
 /* Generate a link error if heap and stack don't fit into RAM */
 __heap_size = 0x00;                    /* required amount of heap  */
-__stack_size = 0x0400;                 /* required amount of stack */
+__stack_size = 0x0150;                 /* required amount of stack */
 
 MEMORY {
   m_interrupts (RX) : ORIGIN = 0x00000000, LENGTH = 0x000000F8

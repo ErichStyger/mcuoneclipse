@@ -112,7 +112,7 @@
 #define configGENERATE_STATIC_SOURCES             1 /* 1: it will create 'static' sources to be used without Processor Expert; 0: Processor Expert code generated */
 #define configPEX_KINETIS_SDK                     1 /* 1: project is a Kinetis SDK Processor Expert project; 0: No Kinetis Processor Expert project */
 #define configGENERATE_RUN_TIME_STATS_USE_TICKS   1 /* 1: Use the RTOS tick counter as runtime counter. 0: use extra timer */
-#define configGENERATE_RUN_TIME_STATS             1 /* 1: generate runtime statistics; 0: no runtime statistics */
+#define configGENERATE_RUN_TIME_STATS             0 /* 1: generate runtime statistics; 0: no runtime statistics */
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()  /* nothing */ /* default: use Tick counter as runtime counter */
 #define portGET_RUN_TIME_COUNTER_VALUE()          xTaskGetTickCount() /* default: use Tick counter as runtime counter */
 #define configUSE_PREEMPTION                      1 /* 1: pre-emptive mode; 0: cooperative mode */
@@ -144,8 +144,8 @@
 #endif
 /*----------------------------------------------------------*/
 #define configMAX_TASK_NAME_LEN                   12 /* task name length */
-#define configUSE_TRACE_FACILITY                  1
-#define configUSE_TRACE_HOOKS                     1 /* using Percepio Trace hooks */
+#define configUSE_TRACE_FACILITY                  0
+#define configUSE_TRACE_HOOKS                     0 /* using Percepio Trace hooks */
 #define configUSE_STATS_FORMATTING_FUNCTIONS      (configUSE_TRACE_FACILITY || configGENERATE_RUN_TIME_STATS)
 #define configUSE_16_BIT_TICKS                    0
 #define configIDLE_SHOULD_YIELD                   1

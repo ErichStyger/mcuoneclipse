@@ -34,12 +34,30 @@
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"
 #include "WAIT1.h"
+#include "FRTOS1.h"
+#include "UTIL1.h"
+#include "FAT1.h"
+#include "SD1.h"
+#include "SS1.h"
+#include "CD1.h"
+#include "TmDt1.h"
+#include "SM1.h"
+#include "SMasterLdd1.h"
+#include "TMOUT1.h"
+#include "CS1.h"
+#include "USB1.h"
+#include "USB0.h"
+#include "CDC1.h"
+#include "Tx1.h"
+#include "Rx1.h"
+#include "CLS1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
 #include "PE_Const.h"
 #include "IO_Map.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "Application.h"
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -52,6 +70,7 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
+  APP_Run();
   for(;;) {
     LED1_Neg();
     WAIT1_Waitms(100);
