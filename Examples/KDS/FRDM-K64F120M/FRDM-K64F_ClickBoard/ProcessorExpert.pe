@@ -6,7 +6,7 @@
     <ModificationStamp>11</ModificationStamp>
     <Date>2015-04-05</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion>1.10.1.RT6_b1444-1070</PEversion>
+    <PEversion>1.12.0.RT7_b1515-0427</PEversion>
   </Header>
   <Options>
     <ProjectMainModule>main</ProjectMainModule>
@@ -50,8 +50,10 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.045</BeanVersion>
+    <BeanVersion>01.046</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+    <ComponentUUID>com.freescale.processorexpert.processor.mk64fn1m0lq12</ComponentUUID>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
@@ -464,7 +466,7 @@
       <ItemState>
         <ItemSymbol>FLLFixedClkCLKMode0</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>48.828125</Value>
+        <Value>32.552083333333</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>FLL_RefClkSrcCLKMode0</ItemSymbol>
@@ -485,7 +487,7 @@
       <ItemState>
         <ItemSymbol>FLLRefClkCLKMode0</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>48.828125</Value>
+        <Value>32.552083333333</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCG_FLL_MFactor_CLKMode0</ItemSymbol>
@@ -639,7 +641,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>1024</Value>
+        <Value>1536</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCG_FLL_MFactorSpeedMode0</ItemSymbol>
@@ -668,6 +670,18 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>MCGPLLCLK</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SDKSupportClockInitCondGrp00</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>CLKModeDescSpeedMode0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>Default  part configuration</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
       <ItemState>
         <ItemSymbol>VLPRSpeedMode0</ItemSymbol>
@@ -731,7 +745,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>FLLFixedClkSpeedMode0</ItemSymbol>
-        <Value>48.828125</Value>
+        <Value>32.552083333333</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>SystemClocksGrp0</ItemSymbol>
@@ -895,6 +909,25 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>Auto select</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SDKSupportClockInitCondGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ClockInitializationGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InitClockConfigSel</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0 - Default  part configuration</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
       <ItemState>
         <ItemSymbol>LowPowerModesGrp</ItemSymbol>
@@ -2284,6 +2317,37 @@
         <Value>true</Value>
       </ItemState>
       <ItemState>
+        <ItemSymbol>SDKSupportWDOGCondGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>WatchdogGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>WDOGDisable</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SDKSupportPinsCondGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SharedPinsSignalsSettings</ItemSymbol>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <ListItemCount>0</ListItemCount>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Shared_CPUInterrupts</ItemSymbol>
         <ListItemCount>1</ListItemCount>
       </ItemState>
@@ -3260,6 +3324,11 @@
           <Expanded>true</Expanded>
         </ItemState>
         <ItemState>
+          <ItemSymbol>UnhandledVectorsBehaviorFeatureGrp</ItemSymbol>
+          <ReadOnly>false</ReadOnly>
+          <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        </ItemState>
+        <ItemState>
           <ItemSymbol>UnhandledIntCode</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Value>(string list)</Value>
@@ -3300,6 +3369,11 @@
           <Value>(string list)</Value>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
           <StrgList lines_count="0" />
+        </ItemState>
+        <ItemState>
+          <ItemSymbol>NotSdk0</ItemSymbol>
+          <ReadOnly>false</ReadOnly>
+          <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         </ItemState>
         <ItemState>
           <ItemSymbol>Cmplr_GenerateDebuggerFiles</ItemSymbol>
@@ -3408,6 +3482,19 @@
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
           <Index>1</Index>
           <Value>false</Value>
+        </ItemState>
+        <ItemState>
+          <ItemSymbol>SdkSettingsGrp</ItemSymbol>
+          <ReadOnly>false</ReadOnly>
+          <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        </ItemState>
+        <ItemState>
+          <ItemSymbol>VectorTableCopyRam</ItemSymbol>
+          <ReadOnly>false</ReadOnly>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+          <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+          <Index>0</Index>
+          <Value>true</Value>
         </ItemState>
         <ItemState>
           <ItemSymbol>DefaultMemInterrupts</ItemSymbol>
@@ -4017,8 +4104,10 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.002</BeanVersion>
+    <BeanVersion>01.100</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+    <ComponentUUID>com.freescale.processorexpert.kinetis.pinsettings</ComponentUUID>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
@@ -9061,6 +9150,12 @@
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
+        <ItemSymbol>SUPPLY</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>SysTick</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -9077,6 +9172,12 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TPIU_UserName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>TPIU</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>UART</ItemSymbol>
@@ -9489,20 +9590,6 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>special_TRACE_D1</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>&lt;Automatic&gt;</Value>
-        <SharedPrphMode>false</SharedPrphMode>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>special_VCC</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>&lt;Automatic&gt;</Value>
-        <SharedPrphMode>false</SharedPrphMode>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>special_GND</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>&lt;Automatic&gt;</Value>
@@ -14630,6 +14717,13 @@
         <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
       </ItemState>
       <ItemState>
+        <ItemSymbol>PTD0_LLWU_P12_SPI0_PCS0_UART2_RTS_b_FTM3_CH0_FB_ALE_FB_CS1_b_FB_TS_b_digital_filter</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>ADC0_SE5b_PTD1_SPI0_SCK_UART2_CTS_b_FTM3_CH1_FB_CS0_b</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -14678,6 +14772,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ADC0_SE5b_PTD1_SPI0_SCK_UART2_CTS_b_FTM3_CH1_FB_CS0_b_pull_enable</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ADC0_SE5b_PTD1_SPI0_SCK_UART2_CTS_b_FTM3_CH1_FB_CS0_b_digital_filter</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>&lt;Automatic&gt;</Value>
@@ -14738,6 +14839,13 @@
         <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
       </ItemState>
       <ItemState>
+        <ItemSymbol>PTD2_LLWU_P13_SPI0_SOUT_UART2_RX_FTM3_CH2_FB_AD4_I2C0_SCL_digital_filter</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>PTD3_SPI0_SIN_UART2_TX_FTM3_CH3_FB_AD3_I2C0_SDA</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -14786,6 +14894,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>PTD3_SPI0_SIN_UART2_TX_FTM3_CH3_FB_AD3_I2C0_SDA_pull_enable</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>PTD3_SPI0_SIN_UART2_TX_FTM3_CH3_FB_AD3_I2C0_SDA_digital_filter</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>&lt;Automatic&gt;</Value>
@@ -14846,6 +14961,13 @@
         <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
       </ItemState>
       <ItemState>
+        <ItemSymbol>PTD4_LLWU_P14_SPI0_PCS1_UART0_RTS_b_FTM0_CH4_FB_AD2_EWM_IN_SPI1_PCS0_digital_filter</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>ADC0_SE6b_PTD5_SPI0_PCS2_UART0_CTS_b_UART0_COL_b_FTM0_CH5_FB_AD1_EWM_OUT_b_SPI1_SCK</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -14900,6 +15022,13 @@
         <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
       </ItemState>
       <ItemState>
+        <ItemSymbol>ADC0_SE6b_PTD5_SPI0_PCS2_UART0_CTS_b_UART0_COL_b_FTM0_CH5_FB_AD1_EWM_OUT_b_SPI1_SCK_digital_filter</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>ADC0_SE7b_PTD6_LLWU_P15_SPI0_PCS3_UART0_RX_FTM0_CH6_FB_AD0_FTM0_FLT0_SPI1_SOUT</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -14948,6 +15077,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ADC0_SE7b_PTD6_LLWU_P15_SPI0_PCS3_UART0_RX_FTM0_CH6_FB_AD0_FTM0_FLT0_SPI1_SOUT_pull_enable</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ADC0_SE7b_PTD6_LLWU_P15_SPI0_PCS3_UART0_RX_FTM0_CH6_FB_AD0_FTM0_FLT0_SPI1_SOUT_digital_filter</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>&lt;Automatic&gt;</Value>
@@ -15032,6 +15168,13 @@
         <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
       </ItemState>
       <ItemState>
+        <ItemSymbol>PTD7_CMT_IRO_UART0_TX_FTM0_CH7_FTM0_FLT1_SPI1_SIN_digital_filter</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>PTD8_I2C0_SCL_UART5_RX_FB_A16</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -15080,6 +15223,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>PTD8_I2C0_SCL_UART5_RX_FB_A16_pull_enable</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>PTD8_I2C0_SCL_UART5_RX_FB_A16_digital_filter</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>&lt;Automatic&gt;</Value>
@@ -15140,6 +15290,13 @@
         <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
       </ItemState>
       <ItemState>
+        <ItemSymbol>PTD9_I2C0_SDA_UART5_TX_FB_A17_digital_filter</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>PTD10_UART5_RTS_b_FB_A18</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -15188,6 +15345,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>PTD10_UART5_RTS_b_FB_A18_pull_enable</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>PTD10_UART5_RTS_b_FB_A18_digital_filter</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>&lt;Automatic&gt;</Value>
@@ -15248,6 +15412,13 @@
         <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
       </ItemState>
       <ItemState>
+        <ItemSymbol>PTD11_SPI2_PCS0_UART5_CTS_b_SDHC0_CLKIN_FB_A19_digital_filter</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>PTD12_SPI2_SCK_FTM3_FLT0_SDHC0_D4_FB_A20</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -15296,6 +15467,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>PTD12_SPI2_SCK_FTM3_FLT0_SDHC0_D4_FB_A20_pull_enable</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>PTD12_SPI2_SCK_FTM3_FLT0_SDHC0_D4_FB_A20_digital_filter</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>&lt;Automatic&gt;</Value>
@@ -15356,6 +15534,13 @@
         <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
       </ItemState>
       <ItemState>
+        <ItemSymbol>PTD13_SPI2_SOUT_SDHC0_D5_FB_A21_digital_filter</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>PTD14_SPI2_SIN_SDHC0_D6_FB_A22</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -15404,6 +15589,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>PTD14_SPI2_SIN_SDHC0_D6_FB_A22_pull_enable</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>PTD14_SPI2_SIN_SDHC0_D6_FB_A22_digital_filter</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>&lt;Automatic&gt;</Value>
@@ -15463,6 +15655,27 @@
         <Value>&lt;Automatic&gt;</Value>
         <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>PTD15_SPI2_PCS1_SDHC0_D7_FB_A23_digital_filter</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>special_VCC</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <SharedPrphMode>false</SharedPrphMode>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>special_GND</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <SharedPrphMode>false</SharedPrphMode>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -15501,6 +15714,7 @@
     <Template />
     <BeanVersion>01.063</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
@@ -15544,6 +15758,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <RegCompType>LEDpin</RegCompType>
+        <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</RegCompRepository>
         <InheritedComponentState>
           <BeanType>BitIO</BeanType>
           <Name>LEDpin1</Name>
@@ -15556,6 +15771,8 @@
           <Template>LED\LEDpin</Template>
           <BeanVersion>02.086</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.bitio</ComponentUUID>
           <Properties>
             <ItemState>
               <ItemSymbol>DeviceName</ItemSymbol>
@@ -15587,6 +15804,7 @@
               <UserReadOnly>false</UserReadOnly>
               <Index>0</Index>
               <RegCompType>BitIO_LDD</RegCompType>
+              <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</RegCompRepository>
               <InheritedComponentState>
                 <BeanType>BitIO_LDD</BeanType>
                 <Name>BitIoLdd1</Name>
@@ -15599,6 +15817,8 @@
                 <Template>BitIO\BitIO_LDD</Template>
                 <BeanVersion>01.033</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
+                <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+                <ComponentUUID>com.freescale.processorexpert.ldd.bitio_ldd</ComponentUUID>
                 <Properties>
                   <ItemState>
                     <ItemSymbol>DeviceName</ItemSymbol>
@@ -16284,6 +16504,7 @@
     <Template />
     <BeanVersion>01.063</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
@@ -16327,6 +16548,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <RegCompType>LEDpin</RegCompType>
+        <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</RegCompRepository>
         <InheritedComponentState>
           <BeanType>BitIO</BeanType>
           <Name>LEDpin2</Name>
@@ -16339,6 +16561,8 @@
           <Template>LED\LEDpin</Template>
           <BeanVersion>02.086</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.bitio</ComponentUUID>
           <Properties>
             <ItemState>
               <ItemSymbol>DeviceName</ItemSymbol>
@@ -16370,6 +16594,7 @@
               <UserReadOnly>false</UserReadOnly>
               <Index>0</Index>
               <RegCompType>BitIO_LDD</RegCompType>
+              <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</RegCompRepository>
               <InheritedComponentState>
                 <BeanType>BitIO_LDD</BeanType>
                 <Name>BitIoLdd2</Name>
@@ -16382,6 +16607,8 @@
                 <Template>BitIO\BitIO_LDD</Template>
                 <BeanVersion>01.033</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
+                <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+                <ComponentUUID>com.freescale.processorexpert.ldd.bitio_ldd</ComponentUUID>
                 <Properties>
                   <ItemState>
                     <ItemSymbol>DeviceName</ItemSymbol>
@@ -17067,6 +17294,7 @@
     <Template />
     <BeanVersion>01.063</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
@@ -17110,6 +17338,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <RegCompType>LEDpin</RegCompType>
+        <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</RegCompRepository>
         <InheritedComponentState>
           <BeanType>BitIO</BeanType>
           <Name>LEDpin3</Name>
@@ -17122,6 +17351,8 @@
           <Template>LED\LEDpin</Template>
           <BeanVersion>02.086</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.bitio</ComponentUUID>
           <Properties>
             <ItemState>
               <ItemSymbol>DeviceName</ItemSymbol>
@@ -17153,6 +17384,7 @@
               <UserReadOnly>false</UserReadOnly>
               <Index>0</Index>
               <RegCompType>BitIO_LDD</RegCompType>
+              <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</RegCompRepository>
               <InheritedComponentState>
                 <BeanType>BitIO_LDD</BeanType>
                 <Name>BitIoLdd3</Name>
@@ -17165,6 +17397,8 @@
                 <Template>BitIO\BitIO_LDD</Template>
                 <BeanVersion>01.033</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
+                <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+                <ComponentUUID>com.freescale.processorexpert.ldd.bitio_ldd</ComponentUUID>
                 <Properties>
                   <ItemState>
                     <ItemSymbol>DeviceName</ItemSymbol>
@@ -17850,6 +18084,7 @@
     <Template />
     <BeanVersion>01.067</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
@@ -18042,6 +18277,7 @@
     <Template />
     <BeanVersion>01.008</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
@@ -18075,8 +18311,9 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.109</BeanVersion>
+    <BeanVersion>01.111</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
@@ -18110,6 +18347,18 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>strcat</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>strcatPad</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>strcatPad</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>chcat</ItemSymbol>
@@ -18737,6 +18986,8 @@
     <Template />
     <BeanVersion>02.086</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+    <ComponentUUID>com.freescale.processorexpert.bitio</ComponentUUID>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
@@ -18768,6 +19019,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <RegCompType>BitIO_LDD</RegCompType>
+        <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</RegCompRepository>
         <InheritedComponentState>
           <BeanType>BitIO_LDD</BeanType>
           <Name>BitIoLdd4</Name>
@@ -18780,6 +19032,8 @@
           <Template>BitIO\BitIO_LDD</Template>
           <BeanVersion>01.033</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.ldd.bitio_ldd</ComponentUUID>
           <Properties>
             <ItemState>
               <ItemSymbol>DeviceName</ItemSymbol>
@@ -19322,6 +19576,8 @@
     <Template />
     <BeanVersion>02.086</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+    <ComponentUUID>com.freescale.processorexpert.bitio</ComponentUUID>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
@@ -19353,6 +19609,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <RegCompType>BitIO_LDD</RegCompType>
+        <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</RegCompRepository>
         <InheritedComponentState>
           <BeanType>BitIO_LDD</BeanType>
           <Name>BitIoLdd5</Name>
@@ -19365,6 +19622,8 @@
           <Template>BitIO\BitIO_LDD</Template>
           <BeanVersion>01.033</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.ldd.bitio_ldd</ComponentUUID>
           <Properties>
             <ItemState>
               <ItemSymbol>DeviceName</ItemSymbol>
@@ -19905,8 +20164,9 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.071</BeanVersion>
+    <BeanVersion>01.073</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
@@ -20453,6 +20713,8 @@
     <Template>Serial</Template>
     <BeanVersion>02.611</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+    <ComponentUUID>com.freescale.processorexpert.asynchroserial</ComponentUUID>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
@@ -21288,6 +21550,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <RegCompType>Serial_LDD</RegCompType>
+        <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</RegCompRepository>
         <InheritedComponentState>
           <BeanType>Serial_LDD</BeanType>
           <Name>ASerialLdd1</Name>
@@ -21300,6 +21563,8 @@
           <Template />
           <BeanVersion>01.188</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.ldd.serial_ldd</ComponentUUID>
           <Properties>
             <ItemState>
               <ItemSymbol>DeviceName</ItemSymbol>
@@ -23306,6 +23571,7 @@
     <Template />
     <BeanVersion>01.006</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
@@ -23373,5 +23639,8 @@
     </Methods>
     <Events />
   </Bean>
+  <ComponentInitializationSequence>
+    <EmptySection_DummyValue />
+  </ComponentInitializationSequence>
 </PEproject>
 
