@@ -15,21 +15,10 @@
 #include "UTIL1.h"
 #include "USB1.h"
 
-static bool disconnect = FALSE;
-static bool connect = TRUE;
-
 void APP_Run(void) {
   int cnt=0; /* counter to slow down LED blinking */
 
   for(;;) {
-#if 1
-    if (disconnect) {
-      USB1_Deinit();
-    }
-    if (connect) {
-      USB1_Init();
-    }
-#endif
     WAIT1_Waitms(10);
     cnt++;
     if (SW2_GetVal()==0) { /* button pressed */

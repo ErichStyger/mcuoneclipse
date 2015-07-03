@@ -18614,7 +18614,8 @@
               <Value>RTOSCNTRLDD1_OnChannel7</Value>
             </ItemState>
           </Events>
-          <Repository>file:/${ProcessorExpertPath:user}</Repository>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.ldd.timerunit_ldd</ComponentUUID>
         </InheritedComponentState>
         <Index>0</Index>
       </ItemState>
@@ -18853,7 +18854,8 @@
           </Properties>
           <Methods />
           <Events />
-          <Repository>file:/${ProcessorExpertPath:user}</Repository>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.interruptvector</ComponentUUID>
         </InheritedComponentState>
       </ItemState>
       <ItemState>
@@ -32148,7 +32150,8 @@
             </ItemState>
           </Methods>
           <Events />
-          <Repository>file:/${ProcessorExpertPath:user}</Repository>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.bitio</ComponentUUID>
         </InheritedComponentState>
         <Index>0</Index>
       </ItemState>
@@ -33135,7 +33138,8 @@
             </ItemState>
           </Methods>
           <Events />
-          <Repository>file:/${ProcessorExpertPath:user}</Repository>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.bitio</ComponentUUID>
         </InheritedComponentState>
         <Index>0</Index>
       </ItemState>
@@ -40627,7 +40631,8 @@
             </ItemState>
           </Methods>
           <Events />
-          <Repository>file:/${ProcessorExpertPath:user}</Repository>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.bitio</ComponentUUID>
         </InheritedComponentState>
       </ItemState>
       <ItemState>
@@ -42835,94 +42840,6 @@
     </Properties>
     <Methods>
       <ItemState>
-        <ItemSymbol>GetStatusClrIRQ</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>GetStatusClrIRQ</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ResetStatusIRQ</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>ResetStatusIRQ</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>TxPayload</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>TxPayload</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>RxPayload</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>RxPayload</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>StopRxTx</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>StopRxTx</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>StartRxTx</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>StartRxTx</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>EnableAutoAck</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>EnableAutoAck</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SetStaticPipePayload</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>SetStaticPipePayload</UsrMethodName>
-      </ItemState>
-      <ItemState>
         <ItemSymbol>EnableDynamicPayloadLength</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -43207,6 +43124,94 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>GetStatus</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GetStatusClrIRQ</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>GetStatusClrIRQ</UsrMethodName>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ResetStatusIRQ</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ResetStatusIRQ</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TxPayload</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>TxPayload</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RxPayload</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>RxPayload</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>StopRxTx</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>StopRxTx</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>StartRxTx</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>StartRxTx</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EnableAutoAck</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>EnableAutoAck</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SetStaticPipePayload</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SetStaticPipePayload</UsrMethodName>
       </ItemState>
     </Methods>
     <Events>
@@ -48183,7 +48188,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
-        <RegCompType>Bit_IO</RegCompType>
+        <RegCompType>BitIO</RegCompType>
         <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</RegCompRepository>
         <InheritedComponentState>
           <BeanType>BitIO</BeanType>
@@ -48802,7 +48807,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
-        <RegCompType>Bit_IO_In</RegCompType>
+        <RegCompType>BitIO</RegCompType>
         <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</RegCompRepository>
         <InheritedComponentState>
           <BeanType>BitIO</BeanType>
@@ -49397,7 +49402,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
-        <RegCompType>Bit_IO</RegCompType>
+        <RegCompType>BitIO</RegCompType>
         <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</RegCompRepository>
         <InheritedComponentState>
           <BeanType>BitIO</BeanType>

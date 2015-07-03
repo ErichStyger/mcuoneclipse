@@ -62,13 +62,13 @@ void APP_Run(void) {
     cnt++;
     if (HIDM1_App_Task()==ERR_BUSOFF) {
       if ((cnt%128)==0) { /* just slow down blinking */
-        LED1_Off();
-        LED2_Neg();
+        LED1_Neg(); /* red LED */
+        LED2_Off();
       }
     } else {
       if ((cnt%128)==0) { /* just slow down blinking */
         LED1_Off();
-        LED2_Neg();
+        LED2_Neg(); /* green LED */
       }
       if (SW2_GetVal()==0) { /* button pressed */
         WAIT1_Waitms(100); /* wait for debouncing */
