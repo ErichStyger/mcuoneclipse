@@ -15,7 +15,5 @@ Listen to localhost:19021 with telnet
 Window > Show View > Target Explorer Views
 - open telnet to localhost port 19021
 
-J-Link RTT client (JLinkRTTClient.exe): automatically reconnects.
-
-
-J-Link RTT Viewer
+Use the J-Link RTT client (JLinkRTTClient.exe) which automatically reconnects.
+Or use the J-Link RTT Viewer. Both tools are located in the segger subfolder of the KDS installation.
