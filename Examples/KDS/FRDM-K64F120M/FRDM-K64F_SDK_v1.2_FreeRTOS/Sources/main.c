@@ -35,9 +35,9 @@
 #include "osa1.h"
 #include "FRTOS1.h"
 #include "gpio1.h"
+#include "i2cCom1.h"
 #include "UTIL1.h"
 #include "KSDK1.h"
-#include "CLS1.h"
 #include "WAIT1.h"
 #include "CS1.h"
 #if CPU_INIT_CONFIG

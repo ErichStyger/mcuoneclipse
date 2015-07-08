@@ -187,6 +187,12 @@ void FRTOS1_vOnPreSleepProcessing(portTickType expectedIdleTicks)
   /* Write your code here ... */
 }
 
+/*! i2cCom1 IRQ handler */
+void I2C0_IRQHandler(void)
+{
+  I2C_DRV_IRQHandler(FSL_I2CCOM1);
+}
+
 /* END Events */
 
 #ifdef __cplusplus
