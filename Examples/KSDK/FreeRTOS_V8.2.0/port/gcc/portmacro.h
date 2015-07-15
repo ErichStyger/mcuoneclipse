@@ -205,11 +205,13 @@ extern void vPortClearInterruptMaskFromISR(unsigned portBASE_TYPE);
 	   : /* no input */        \
 	   :"r0" /* clobber */     \
       )
-  #elif configCOMPILER==configCOMPILER_ARM_IAR
+  #elif (configCOMPILER==configCOMPILER_ARM_IAR) /* IAR */ || (configCOMPILER==configCOMPILER_ARM_FSL) /* legacy FSL ARM Compiler */
     void vPortSetInterruptMask(void); /* prototype, implemented in portasm.s */
     void vPortClearInterruptMask(void); /* prototype, implemented in portasm.s */
     #define portSET_INTERRUPT_MASK()    vPortSetInterruptMask()
     #define portCLEAR_INTERRUPT_MASK()  vPortClearInterruptMask()
+  #else
+    #error "unknown compiler?"
   #endif
 #else /* Cortex-M0+ */
   #if configCOMPILER==configCOMPILER_ARM_KEIL

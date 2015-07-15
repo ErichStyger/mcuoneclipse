@@ -327,6 +327,9 @@ extern "C" {
 	#define portPOINTER_SIZE_TYPE uint32_t
 #endif
 
+#if configUSE_TRACE_HOOKS
+  #include "trcKernelPort.h" /* include trace macro definition */
+#endif
 
 /* Remove any unused trace macros. */
 #ifndef traceSTART

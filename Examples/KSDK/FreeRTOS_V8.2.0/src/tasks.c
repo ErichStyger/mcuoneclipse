@@ -3552,7 +3552,7 @@ TCB_t *pxTCB;
 
 		/* Pad the end of the string with spaces to ensure columns line up when
 		printed out. */
-		for( x = strlen( pcBuffer ); x < ( configMAX_TASK_NAME_LEN - 1 ); x++ )
+		for( x = (long)strlen( pcBuffer ); x < ( configMAX_TASK_NAME_LEN - 1 ); x++ )
 		{
 			pcBuffer[ x ] = ' ';
 		}
@@ -3644,10 +3644,9 @@ TCB_t *pxTCB;
 
 				/* Write the rest of the string. */
 #if 0
-				sprintf( ( char * ) pcWriteBuffer, ( char * ) "%s\t\t%c\t%u\t%u\t%u\r\n", pxTaskStatusArray[ x ].pcTaskName, cStatus, ( unsigned int ) pxTaskStatusArray[ x ].uxCurrentPriority, ( unsigned int ) pxTaskStatusArray[ x ].usStackHighWaterMark, ( unsigned int ) pxTaskStatusArray[ x ].xTaskNumber );
+				sprintf( ( char * ) pcWriteBuffer, ( char * ) "\t\t%c\t%u\t%u\t%u\r\n", cStatus, ( unsigned int ) pxTaskStatusArray[ x ].uxCurrentPriority, ( unsigned int ) pxTaskStatusArray[ x ].usStackHighWaterMark, ( unsigned int ) pxTaskStatusArray[ x ].xTaskNumber );
 #else /* << EST */
-	      Utility_strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)pxTaskStatusArray[ x ].pcTaskName);
-	      Utility_strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)"\t\t");
+	      Utility_strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)"\t");
 	      Utility_chcat((uint8_t*)pcWriteBuffer, bufSize, (unsigned char)cStatus);
 	      Utility_chcat((uint8_t*)pcWriteBuffer, bufSize, (unsigned char)'\t');
 	      Utility_strcatNum32u((uint8_t*)pcWriteBuffer, bufSize, pxTaskStatusArray[ x ].uxCurrentPriority);
@@ -3756,10 +3755,9 @@ TCB_t *pxTCB;
 							/* sizeof( int ) == sizeof( long ) so a smaller
 							printf() library can be used. */
 #if 0
-							sprintf( ( char * ) pcWriteBuffer, ( char * ) "%s\t\t%u\t\t%u%%\r\n", pxTaskStatusArray[ x ].pcTaskName, ( unsigned int ) pxTaskStatusArray[ x ].ulRunTimeCounter, ( unsigned int ) ulStatsAsPercentage );
+							sprintf( ( char * ) pcWriteBuffer, ( char * ) "\t%u\t\t%u%%\r\n", ( unsigned int ) pxTaskStatusArray[ x ].ulRunTimeCounter, ( unsigned int ) ulStatsAsPercentage );
 #else /* << EST */
-              Utility_strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)pxTaskStatusArray[ x ].pcTaskName);
-              Utility_strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)"\t\t");
+              Utility_strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)"\t");
               Utility_strcatNum32u((uint8_t*)pcWriteBuffer, bufSize, pxTaskStatusArray[ x ].ulRunTimeCounter);
               Utility_strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)"\t\t");
               Utility_strcatNum32u((uint8_t*)pcWriteBuffer, bufSize, ulStatsAsPercentage);
@@ -3781,10 +3779,9 @@ TCB_t *pxTCB;
 							/* sizeof( int ) == sizeof( long ) so a smaller
 							printf() library can be used. */
 #if 0
-              sprintf( ( char * ) pcWriteBuffer, ( char * ) "%s\t\t%u\t\t<1%%\r\n", pxTaskStatusArray[ x ].pcTaskName, ( unsigned int ) pxTaskStatusArray[ x ].ulRunTimeCounter );
+              sprintf( ( char * ) pcWriteBuffer, ( char * ) "\t%u\t\t<1%%\r\n", ( unsigned int ) pxTaskStatusArray[ x ].ulRunTimeCounter );
 #else /* << EST */
-              Utility_strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)pxTaskStatusArray[ x ].pcTaskName);
-              Utility_strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)"\t\t");
+              Utility_strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)"\t");
               Utility_strcatNum32u((uint8_t*)pcWriteBuffer, bufSize, pxTaskStatusArray[ x ].ulRunTimeCounter);
               Utility_strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)"\t\t<1%\r\n");
 #endif
