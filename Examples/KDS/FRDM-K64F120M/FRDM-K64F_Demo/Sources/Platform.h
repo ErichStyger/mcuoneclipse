@@ -9,6 +9,7 @@
 #define PLATFORM_H_
 
 #include "Cpu.h"
+#include "FreeRTOSConfig.h"
 
 /* for now on the same SPI bus */
 #define configSD  (defined(PEcfg_SD) && PEcfg_SD==1)
@@ -23,7 +24,7 @@
 #define PL_HAS_RSTDIO         (1 && PL_HAS_RADIO)
 #define PL_HAS_SD_CARD        (1 && configSD)
 #define PL_HAS_DEBUG_PRINT    (1)
-#define PL_HAS_RTOS_TRACE     (1)
+#define PL_HAS_RTOS_TRACE     (configUSE_TRACE_HOOKS)
 #define PL_HAS_MINI_INI       (1 && PL_HAS_SD_CARD)
 
 #endif /* PLATFORM_H_ */

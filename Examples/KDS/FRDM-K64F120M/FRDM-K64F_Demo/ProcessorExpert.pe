@@ -3,7 +3,7 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>151</ModificationStamp>
+    <ModificationStamp>153</ModificationStamp>
     <Date>2015-06-11</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.0.RT7_b1515-0427</PEversion>
@@ -16760,7 +16760,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.426</BeanVersion>
+    <BeanVersion>01.432</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -16968,7 +16968,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.038</BeanVersion>
+          <BeanVersion>01.046</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Repository>file:/${ProcessorExpertPath:user}</Repository>
           <Properties>
@@ -16983,6 +16983,72 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <Value>V2.7.0</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>StreamingTraceWithRTT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>true</Value>
+              <Expanded>true</Expanded>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>SymbolTableSlots</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>30</Value>
+              <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>SymbolMaxLength</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>24</Value>
+              <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ObjectDataSlots</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>20</Value>
+              <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>TzCtrlTaskPrioStr</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>1</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>TzCtrlTaskStackSize</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>configMINIMAL_STACK_SIZE</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>RTTSettings</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Expanded>true</Expanded>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>RTTUpBufferIndex</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>0</Value>
+              <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>RTTDownBufferIndex</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>0</Value>
+              <Base>DEC</Base>
             </ItemState>
             <ItemState>
               <ItemSymbol>Utility</ItemSymbol>
@@ -17291,6 +17357,14 @@
               <Value>15</Value>
               <Base>DEC</Base>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>StreamingWithTraceRTT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>1</Index>
+              <Value>false</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>TeamLicenseCode</ItemSymbol>
@@ -19121,6 +19195,14 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>ApplicationAllocatedHeap</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>MemoryScheme</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -19578,6 +19660,17 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>vSemaphoreCreateBinary</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xSemaphoreCreateBinary</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xSemaphoreCreateBinary</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>xSemaphoreCreateCounting</ItemSymbol>
