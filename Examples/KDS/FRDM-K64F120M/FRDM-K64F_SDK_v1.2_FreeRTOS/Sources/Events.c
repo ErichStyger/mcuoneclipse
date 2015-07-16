@@ -193,6 +193,17 @@ void I2C0_IRQHandler(void)
   I2C_DRV_IRQHandler(FSL_I2CCOM1);
 }
 
+/*! dspiCom1 IRQ handler */
+void SPI0_IRQHandler(void)
+{
+#if DSPICOM1_DMA_MODE
+  DSPI_DRV_EdmaIRQHandler(FSL_DSPICOM1);
+#else
+  DSPI_DRV_IRQHandler(FSL_DSPICOM1);
+#endif
+  /* Write your code here ... */
+}
+
 /* END Events */
 
 #ifdef __cplusplus
