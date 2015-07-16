@@ -54,6 +54,8 @@
 #include "Tx1.h"
 #include "Rx1.h"
 #include "CLS1.h"
+#include "HF1.h"
+#include "RTC1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -130,6 +132,83 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 **         If enabled, the RTOS will call this hook in case memory
 **         allocation failed.
 **     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void TmDt1_OnTimeSet(uint8_t hour, uint8_t minute, uint8_t second, uint8_t hSecond);
+/*
+** ===================================================================
+**     Event       :  TmDt1_OnTimeSet (module Events)
+**
+**     Component   :  TmDt1 [GenericTimeDate]
+**     Description :
+**         Called in the event of a new time set
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         hour            - The new hour
+**         minute          - The new minute
+**         second          - The new second
+**         hSecond         - The new 0.01 second part
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void TmDt1_OnDateSet(uint8_t day, uint8_t month, uint16_t year);
+/*
+** ===================================================================
+**     Event       :  TmDt1_OnDateSet (module Events)
+**
+**     Component   :  TmDt1 [GenericTimeDate]
+**     Description :
+**         called in the event of a date set
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         day             - the new day
+**         month           - the new month
+**         year            - the new year
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void TmDt1_OnTimeGet(uint8_t *hour, uint8_t *minute, uint8_t *second, uint8_t *hSecond);
+/*
+** ===================================================================
+**     Event       :  TmDt1_OnTimeGet (module Events)
+**
+**     Component   :  TmDt1 [GenericTimeDate]
+**     Description :
+**         Called in the event of a new time get
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * hour            - Pointer to the hour, can be overwritten
+**                           in the event routine.
+**       * minute          - Pointer to the minute, can be
+**                           overwritten in the event routine.
+**       * second          - Pointer to the second, can be
+**                           overwritten in the event routine.
+**       * hSecond         - Pointer to the 0.01 second, can be
+**                           overwritten in the event routine.
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void TmDt1_OnDateGet(uint8_t *day, uint8_t *month, uint16_t *year);
+/*
+** ===================================================================
+**     Event       :  TmDt1_OnDateGet (module Events)
+**
+**     Component   :  TmDt1 [GenericTimeDate]
+**     Description :
+**         called in the event of a date get
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * day             - Pointer to the day, can be written in the
+**                           event routine.
+**       * month           - Pointer to the month, can be written
+**                           in the event routine.
+**       * year            - Pointer to the year, can be written in
+**                           the event routine.
 **     Returns     : Nothing
 ** ===================================================================
 */

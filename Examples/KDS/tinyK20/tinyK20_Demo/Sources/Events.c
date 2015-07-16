@@ -98,6 +98,7 @@ void FRTOS1_vApplicationTickHook(void)
 {
   /* Called for every RTOS tick. */
   TMOUT1_AddTick();
+  TmDt1_AddTick();
 }
 
 /*
@@ -141,6 +142,119 @@ void FRTOS1_vApplicationMallocFailedHook(void)
   taskDISABLE_INTERRUPTS();
   /* Write your code here ... */
   for(;;) {}
+}
+
+/*
+** ===================================================================
+**     Event       :  TmDt1_OnTimeSet (module Events)
+**
+**     Component   :  TmDt1 [GenericTimeDate]
+**     Description :
+**         Called in the event of a new time set
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         hour            - The new hour
+**         minute          - The new minute
+**         second          - The new second
+**         hSecond         - The new 0.01 second part
+**     Returns     : Nothing
+** ===================================================================
+*/
+void TmDt1_OnTimeSet(uint8_t hour, uint8_t minute, uint8_t second, uint8_t hSecond)
+{
+  LDD_RTC_TTime timeDate;
+
+  (void)hSecond; /* not used */
+  RTC1_GetTime(RTC1_DeviceData, &timeDate); /* get existing data */
+  timeDate.Hour = hour;
+  timeDate.Minute = minute;
+  timeDate.Second = second;
+  RTC1_SetTime(RTC1_DeviceData, &timeDate); /* store back information */
+}
+
+/*
+** ===================================================================
+**     Event       :  TmDt1_OnDateSet (module Events)
+**
+**     Component   :  TmDt1 [GenericTimeDate]
+**     Description :
+**         called in the event of a date set
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         day             - the new day
+**         month           - the new month
+**         year            - the new year
+**     Returns     : Nothing
+** ===================================================================
+*/
+void TmDt1_OnDateSet(uint8_t day, uint8_t month, uint16_t year)
+{
+  LDD_RTC_TTime timeDate;
+
+  RTC1_GetTime(RTC1_DeviceData, &timeDate); /* get existing data */
+  timeDate.Day = day;
+  timeDate.Month = month;
+  timeDate.Year = year;
+  RTC1_SetTime(RTC1_DeviceData, &timeDate); /* store back information */
+}
+
+/*
+** ===================================================================
+**     Event       :  TmDt1_OnTimeGet (module Events)
+**
+**     Component   :  TmDt1 [GenericTimeDate]
+**     Description :
+**         Called in the event of a new time get
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * hour            - Pointer to the hour, can be overwritten
+**                           in the event routine.
+**       * minute          - Pointer to the minute, can be
+**                           overwritten in the event routine.
+**       * second          - Pointer to the second, can be
+**                           overwritten in the event routine.
+**       * hSecond         - Pointer to the 0.01 second, can be
+**                           overwritten in the event routine.
+**     Returns     : Nothing
+** ===================================================================
+*/
+void TmDt1_OnTimeGet(uint8_t *hour, uint8_t *minute, uint8_t *second, uint8_t *hSecond)
+{
+  LDD_RTC_TTime timeDate;
+
+  RTC1_GetTime(RTC1_DeviceData, &timeDate); /* get existing data */
+  *hour = timeDate.Hour;
+  *minute = timeDate.Minute;
+  *second = timeDate.Second;
+  *hSecond = 0; /* not used */
+}
+
+/*
+** ===================================================================
+**     Event       :  TmDt1_OnDateGet (module Events)
+**
+**     Component   :  TmDt1 [GenericTimeDate]
+**     Description :
+**         called in the event of a date get
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * day             - Pointer to the day, can be written in the
+**                           event routine.
+**       * month           - Pointer to the month, can be written
+**                           in the event routine.
+**       * year            - Pointer to the year, can be written in
+**                           the event routine.
+**     Returns     : Nothing
+** ===================================================================
+*/
+void TmDt1_OnDateGet(uint8_t *day, uint8_t *month, uint16_t *year)
+{
+  LDD_RTC_TTime timeDate;
+
+  RTC1_GetTime(RTC1_DeviceData, &timeDate); /* get existing data */
+  *day = timeDate.Day;
+  *month = timeDate.Month;
+  *year = timeDate.Year;
 }
 
 /* END Events */
