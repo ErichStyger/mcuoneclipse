@@ -15,11 +15,7 @@
  */
 
 #include "flash_hal.h"        // FlashOS Structures
-#if 0 /* << EST */
-#include "flash.h"
-#else
 #include "flash/flash.h" // Flash driver
-#endif
 
 //! @brief Storage for flash driver data.
 flash_driver_t g_flash;

@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#if 0 /* << EST */
 #include <RTL.h>
-#else
 #include <rl_usb.h>
+#if 1 /* << EST */
 #include "FreeRTOS.h"
 #include "event_groups.h"
 #endif
@@ -143,14 +142,14 @@ static void main_task(void *param) {
   update_html_file();
 
   usbd_init();
-  //usbd_connect(__TRUE);
+  usbd_connect(__TRUE);
 
   /* wait for any of the bits, do not clear them */
   (void)xEventGroupWaitBits(transferEventGroup, TRANSFER_FINISHED_SUCCESS|TRANSFER_FINISHED_FAIL, pdFALSE, pdFALSE, 0);
 
   vTaskDelay(pdMS_TO_TICKS(200));
 
-  //usbd_connect(__FALSE);
+  usbd_connect(__FALSE);
 
   // Find out what event happened
   flags = xEventGroupGetBits(transferEventGroup);

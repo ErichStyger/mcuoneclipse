@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#if 0 /* << EST */
 #include <RTL.h>
-#endif
 #include <rl_usb.h>
 #include <string.h>
 #include "flash_hal.h"
@@ -582,7 +580,7 @@ static void flash_programming_task(void *param) {
 
   (void)param; /* not used */
   for(;;) {
-    /* \todo */
+    /* \todo EST flash programming task */
     vTaskDelay(pdMS_TO_TICKS(100));
   } /* for */
 }
@@ -650,7 +648,7 @@ static void msc_valid_file_timeout_task(void *param) {
 
   (void)param; /* not used */
   for(;;) {
-    /* \todo */
+    /* \todo EST timout task */
     vTaskDelay(pdMS_TO_TICKS(100));
   } /* for */
 }
