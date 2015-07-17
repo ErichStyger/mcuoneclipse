@@ -12,12 +12,14 @@
 #include "FAT1.h"
 #include "FAT1.h"
 #include "TmDt1.h"
+#include "KIN1.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
   CLS1_ParseCommand,
   FRTOS1_ParseCommand,
   FAT1_ParseCommand,
+  KIN1_ParseCommand,
   TmDt1_ParseCommand,
   NULL /* sentinel */
 };

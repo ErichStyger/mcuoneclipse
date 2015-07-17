@@ -1,7 +1,7 @@
 /* ###################################################################
 **     Filename    : Events.c
 **     Project     : tinyK20_Demo
-**     Processor   : MK20DN128VLH5
+**     Processor   : MK20DX128VFT5
 **     Component   : Events
 **     Version     : Driver 01.00
 **     Compiler    : GNU C Compiler
@@ -255,6 +255,29 @@ void TmDt1_OnDateGet(uint8_t *day, uint8_t *month, uint16_t *year)
   *day = timeDate.Day;
   *month = timeDate.Month;
   *year = timeDate.Year;
+}
+
+/*
+** ===================================================================
+**     Event       :  Cpu_OnLLSWakeUpINT (module Events)
+**
+**     Component   :  Cpu [MK20DX128FT5]
+*/
+/*!
+**     @brief
+**         This event is called when Low Leakage WakeUp interrupt
+**         occurs. LLWU flags indicating source of the wakeup can be
+**         obtained by calling the [GetLLSWakeUpFlags] method. Flags
+**         indicating the external pin wakeup source are automatically
+**         cleared after this event is executed. It is responsibility
+**         of user to clear flags corresponding to internal modules.
+**         This event is automatically enabled when [LLWU interrupt
+**         request] is enabled.
+*/
+/* ===================================================================*/
+void Cpu_OnLLSWakeUpINT(void)
+{
+  /* Write your code here ... */
 }
 
 /* END Events */

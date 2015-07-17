@@ -1,7 +1,7 @@
 /* ###################################################################
 **     Filename    : main.c
 **     Project     : tinyK20_Demo
-**     Processor   : MK20DN128VLH5
+**     Processor   : MK20DX128VFT5
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
 **     Date/Time   : 2015-06-19, 16:16, # CodeGen: 0
@@ -53,6 +53,7 @@
 #include "CLS1.h"
 #include "HF1.h"
 #include "RTC1.h"
+#include "KIN1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

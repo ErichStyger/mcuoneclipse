@@ -11,6 +11,7 @@
 #include "FRTOS1.h"
 #include "CDC1.h"
 #include "Shell.h"
+#include "RTC1.h"
 
 static FAT1_FATFS fileSystemObject;
 
@@ -111,7 +112,9 @@ static void led_task(void *param) {
 
 void APP_Run(void) {
 //  DiskTest();
+  (void)RTC1_Enable(RTC1_DeviceData);
   SHELL_Init();
+
 #if 0
   if (xTaskCreate(usb_task, "usb", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error! probably out of memory */
