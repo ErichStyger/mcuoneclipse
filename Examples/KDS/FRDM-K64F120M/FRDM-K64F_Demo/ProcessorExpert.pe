@@ -30912,7 +30912,7 @@
     <UserFolderName>SD</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.020</BeanVersion>
+    <BeanVersion>01.027</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -31023,6 +31023,28 @@
         <UsrMethodName>AddTicks</UsrMethodName>
       </ItemState>
       <ItemState>
+        <ItemSymbol>TicksToTime</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>TicksToTime</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TimeToTicks</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>TimeToTicks</UsrMethodName>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>SetTime</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -31124,6 +31146,22 @@
         <Value>TmDt1_OnTimeSet</Value>
       </ItemState>
       <ItemState>
+        <ItemSymbol>OnTimeGet</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>no</LastUserSel>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnTimeGetName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>TmDt1_OnTimeGet</Value>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>OnDateSet</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -31138,6 +31176,22 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>TmDt1_OnDateSet</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnDateGet</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>no</LastUserSel>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnDateGetName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>TmDt1_OnDateGet</Value>
       </ItemState>
     </Events>
   </Bean>
