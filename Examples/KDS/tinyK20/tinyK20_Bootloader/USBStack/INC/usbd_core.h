@@ -42,10 +42,11 @@ extern U8          USBD_ZLP;
 extern USBD_EP_DATA     USBD_EP0Data;
 extern USB_SETUP_PACKET USBD_SetupPacket;
 
+#if 0 /* << EST */
 extern OS_TID      USBD_RTX_DevTask;
 extern OS_TID      USBD_RTX_EPTask[];
 extern OS_TID      USBD_RTX_CoreTask;
-
+#endif
 
 /*--------------------------- Functions exported to class specific files -----*/
 

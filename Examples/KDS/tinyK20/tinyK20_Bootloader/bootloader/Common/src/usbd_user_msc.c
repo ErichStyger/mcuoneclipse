@@ -433,7 +433,11 @@ static uint8_t * reason_array[] = {
 #endif
 
 // 30 s timeout
+#if 1 /* << EST */
+#define TIMEOUT_MS 30000
+#else
 #define TIMEOUT_S 3000
+#endif
 
 static U64 msc_task_stack[MSC_TASK_STACK/8];
 
@@ -645,11 +649,47 @@ __task void msc_valid_file_timeout_task(void)
 }
 #else
 static void msc_valid_file_timeout_task(void *param) {
+  EventBits_t flags;
+  TickType_t start_timeout_time = 0, time_now = 0;
+  uint8_t timer_started = 0;
 
   (void)param; /* not used */
   for(;;) {
+    /* wait for any of the bits, do not clear them */
+    flags = xEventGroupWaitBits(transferEventGroup, MSC_TIMEOUT_SPLIT_FILES_EVENT | MSC_TIMEOUT_START_EVENT | MSC_TIMEOUT_STOP_EVENT, pdFALSE, pdFALSE, pdMS_TO_TICKS(100));
+    if (flags != 0) {
+        if (flags & MSC_TIMEOUT_SPLIT_FILES_EVENT) {
+            msc_event_timeout = 1;
+            vTaskDelay(pdMS_TO_TICKS(50));
+            if (msc_event_timeout == 1) {
+                // if the program reaches this point -> it means that no sectors have been received in the meantime
+                if (current_sector % 2) {
+                    program_page(flashPtr, 1024, (uint8_t *)BlockBuf);
+                }
+                initDisconnect(1);
+                msc_event_timeout = 0;
+            }
+        }
+        if (flags & MSC_TIMEOUT_START_EVENT) {
+            start_timeout_time = xTaskGetTickCount();
+            timer_started = 1;
+        }
+        if (flags & MSC_TIMEOUT_STOP_EVENT) {
+            timer_started = 0;
+        }
+    } else {
+        if (timer_started) {
+            time_now = xTaskGetTickCount();
+            // timeout
+            if ((time_now - start_timeout_time) > pdMS_TO_TICKS(TIMEOUT_MS)) {
+                timer_started = 0;
+                reason = TIMEOUT;
+                initDisconnect(0);
+            }
+        }
+    }
     /* \todo EST timout task */
-    vTaskDelay(pdMS_TO_TICKS(100));
+    //    vTaskDelay(pdMS_TO_TICKS(100));
   } /* for */
 }
 #endif

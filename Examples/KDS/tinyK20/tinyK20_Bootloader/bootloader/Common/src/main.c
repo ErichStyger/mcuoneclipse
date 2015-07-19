@@ -33,7 +33,6 @@
 #if 0 /* << EST */
 OS_TID mainTask, ledTask;
 #else
-static TaskHandle_t mainTask, ledTask;
 EventGroupHandle_t transferEventGroup;
 #endif
 
@@ -129,6 +128,7 @@ static void main_task(void *param) {
   uint8_t led_state = 0;
   uint8_t time_blink_led;
   EventBits_t flags;
+  TaskHandle_t ledTask;
 
   (void)param; /* not used */
   transferEventGroup = xEventGroupCreate();
@@ -178,7 +178,7 @@ int main (void)
 #if 0 /* << EST */
         os_sys_init(main_task);
 #else
-        if (xTaskCreate(main_task, "Main", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &mainTask) != pdPASS) {
+        if (xTaskCreate(main_task, "Main", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL) != pdPASS) {
           for(;;){} /* error! probably out of memory */
         }
         vTaskStartScheduler(); /* start scheduler */
@@ -188,7 +188,7 @@ int main (void)
     relocate_vector_table();
 
     // modify stack pointer and start app
-#if 0 /* << EST */
+#if 0 /* << EST */ /* \todo EST */
     modify_stack_pointer_and_start_app(INITIAL_SP, RESET_HANDLER);
 #endif
 }

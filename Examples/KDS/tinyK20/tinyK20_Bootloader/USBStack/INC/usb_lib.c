@@ -18,6 +18,8 @@
 #if 0 /* << EST */
 #include <..\..\RL\USB\INC\usb.h>
 #else
+#include "FreeRTOS.h"
+#include "event_groups.h"
 #include <usb.h>
 #endif
 
@@ -1149,9 +1151,57 @@ U32  usbd_os_evt_wait_or (U16 wait_flags, U16 timeout)                { return (
 #else
 const BOOL __rtx = __FALSE;
 
+#if 0
 void usbd_os_evt_set     (U16 event_flags, U32 task)                  { }
 U16  usbd_os_evt_get     (void)                                       { return (0); }
 U32  usbd_os_evt_wait_or (U16 wait_flags, U16 timeout)                { return (0); }
+#else
+static EventGroupHandle_t usb_EventGroup;
+
+void usbd_os_evt_set     (U16 event_flags, U32 task) {
+  xEventGroupSetBits(usb_EventGroup, event_flags);
+}
+
+U16  usbd_os_evt_get     (void) {
+  return xEventGroupGetBits(usb_EventGroup);
+}
+
+U32  usbd_os_evt_wait_or (U16 wait_flags, U16 timeout) {
+  (void)xEventGroupWaitBits(usb_EventGroup, wait_flags, pdFALSE, pdFALSE, timeout);
+  return (0);
+}
+#endif
+#if 1 /* << EST */
+static void USBD_RTX_Device     (void *param)   {
+  U16 evt;
+
+  for (;;) {
+    evt = xEventGroupWaitBits(usb_EventGroup, 0xFFFF, pdFALSE, pdFALSE, portMAX_DELAY); /* Wait for an Event */
+
+    if (evt & USBD_EVT_RESET) {
+#if (USBD_CDC_ACM_ENABLE)
+      USBD_CDC_ACM_Reset_Event ();
+#endif
+    }
+    if (evt & USBD_EVT_SOF) {
+#if (USBD_HID_ENABLE)
+      USBD_HID_SOF_Event     ();
+#endif
+#if (USBD_ADC_ENABLE)
+      USBD_ADC_SOF_Event     ();
+#endif
+#if (USBD_CDC_ACM_ENABLE)
+      USBD_CDC_ACM_SOF_Event ();
+#endif
+#if (USBD_CLS_ENABLE)
+      USBD_CLS_SOF_Event     ();
+#endif
+    }
+  }
+}
+
+#endif
+
 #endif
 
 void usbd_class_init     (void)                                       {
@@ -1193,6 +1243,23 @@ void USBD_RTX_TaskInit (void) {
   USBD_RTX_CoreTask = 0;
   if (USBD_RTX_P_Core) {
     USBD_RTX_CoreTask = os_tsk_create(USBD_RTX_Core,       2);
+  }
+#else /* << EST */
+  U32 i;
+
+  if (xTaskCreate(USBD_RTX_Device, "Device", configMINIMAL_STACK_SIZE, NULL, 3, NULL) != pdPASS) {
+    for(;;){} /* error! probably out of memory */
+  }
+#if 0 /* << EST \todo EST */
+  for (i = 0; i <= 15; i++) {
+    USBD_RTX_EPTask[i] = 0;
+    if (USBD_RTX_P_EP[i]) {
+      USBD_RTX_EPTask[i] = os_tsk_create(USBD_RTX_P_EP[i], 2);
+    }
+  }
+#endif
+  if (xTaskCreate(USBD_RTX_Core, "Core", configMINIMAL_STACK_SIZE, NULL, 2, NULL) != pdPASS) {
+    for(;;){} /* error! probably out of memory */
   }
 #endif
 }

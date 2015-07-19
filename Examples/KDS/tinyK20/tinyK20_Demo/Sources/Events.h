@@ -57,6 +57,7 @@
 #include "HF1.h"
 #include "RTC1.h"
 #include "KIN1.h"
+#include "PTC.h"
 
 #ifdef __cplusplus
 extern "C" {

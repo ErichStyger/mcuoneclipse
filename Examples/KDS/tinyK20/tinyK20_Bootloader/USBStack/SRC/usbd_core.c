@@ -645,7 +645,7 @@ void USBD_EndPoint0 (U32 event) {
               goto stall;
             }
             USBD_StatusInStage();
-#ifdef __RTX
+#ifdef __RTX /* << EST \todo EST oh, oh! */
             if (__rtx) {
               if (USBD_RTX_CoreTask) {
                 usbd_os_evt_set(USBD_EVT_CLR_FEATURE, USBD_RTX_CoreTask);

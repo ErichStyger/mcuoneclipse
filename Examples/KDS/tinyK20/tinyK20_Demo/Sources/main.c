@@ -54,6 +54,7 @@
 #include "HF1.h"
 #include "RTC1.h"
 #include "KIN1.h"
+#include "PTC.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
