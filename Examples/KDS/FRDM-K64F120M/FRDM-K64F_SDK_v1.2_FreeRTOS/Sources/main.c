@@ -35,7 +35,6 @@
 #include "osa1.h"
 #include "FRTOS1.h"
 #include "RTOSTRC1.h"
-#include "dspiCom1.h"
 #include "gpio1.h"
 #include "i2cCom1.h"
 #include "UTIL1.h"
@@ -64,7 +63,9 @@ int main(void)
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
-
+#if configUSE_TRACE_HOOKS /* using FreeRTOS+Trace */
+  RTOSTRC1_vTraceInitTraceData();
+#endif
   /* Write your code here */
   if (xTaskCreate(
       BlinkyTask,  /* pointer to the task */
