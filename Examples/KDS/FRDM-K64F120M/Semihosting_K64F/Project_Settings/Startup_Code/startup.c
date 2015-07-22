@@ -246,7 +246,11 @@ int addr = (int)__SP_INIT;
 		// initializations before main, user specific
 		__init_user();
 
+#if 0
 		main(0, argv);
+#else
+		_start();
+#endif
 
 
 
