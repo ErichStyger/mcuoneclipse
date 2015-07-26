@@ -9,7 +9,7 @@
 #include "gpio1.h"
 #include "osa1.h"
 #include <stdbool.h>
-#if 0
+#if 1
 static const ftm_pwm_param_t flexTimer1_ChnConfig0 = {
   .mode = kFtmEdgeAlignedPWM,
   .edgeMode = kFtmHighTrue,
@@ -30,28 +30,28 @@ static const ftm_user_config_t flexTimer1_InitConfig0 = {
   .tofFrequency      = 0U,
   .isWriteProtection = false,
   .BDMMode           = kFtmBdmMode_00,
-  .syncMethod        = (uint32_t)(kFtmUseSoftwareTrig | kFtmUseHardwareTrig0 | kFtmUseHardwareTrig1 | kFtmUseHardwareTrig2)
+  .syncMethod        = (uint32_t)(kFtmUseSoftwareTrig)
 };
 
-#define FSL_FLEXTIMER1 FTM0_IDX
+static void InitFlexTimer(uint32_t instance) {
+  FTM_Type *ftmBase = g_ftmBase[instance];
 
-static void InitFlexTimer(void) {
-  /*! flexTimer1 Auto initialization start */
-  FTM_DRV_Init(FSL_FLEXTIMER1,&flexTimer1_InitConfig0);
-  FTM_DRV_SetClock(FSL_FLEXTIMER1, kClock_source_FTM_SystemClk, kFtmDividedBy1);
-  FTM_DRV_PwmStart(FSL_FLEXTIMER1, (ftm_pwm_param_t*)&flexTimer1_ChnConfig0, 0U);
-  //CLOCK_SYS_DisableFtmClock(FSL_FLEXTIMER1);
-  //FTM_DRV_PwmStart(FSL_FLEXTIMER1, (ftm_pwm_param_t*)&flexTimer1_ChnConfig1, 1U);
-  FTM_DRV_SetTimeOverflowIntCmd(FSL_FLEXTIMER1,false);
-  FTM_DRV_SetFaultIntCmd(FSL_FLEXTIMER1,false);
-  /*! flexTimer1 Auto initialization end */
+  FTM_DRV_Init(instance,&flexTimer1_InitConfig0);
+  FTM_DRV_SetClock(instance, kClock_source_FTM_SystemClk, kFtmDividedBy1);
+  FTM_DRV_PwmStart(instance, (ftm_pwm_param_t*)&flexTimer1_ChnConfig0, 0U);
+  /* stop clock, so we can init second channel */
+  FTM_HAL_SetClockSource(ftmBase, kClock_source_FTM_None);
+  FTM_DRV_PwmStart(instance, (ftm_pwm_param_t*)&flexTimer1_ChnConfig1, 1U);
+
+  FTM_DRV_SetTimeOverflowIntCmd(instance,false);
+  FTM_DRV_SetFaultIntCmd(instance,false);
 }
 #endif
-static bool init = false;
+static bool init = true;
 
 void APP_Run(void) {
   if (init) {
-   // InitFlexTimer();
+    InitFlexTimer(FTM0_IDX);
   }
   for(;;) {
     GPIO_DRV_TogglePinOutput(LEDRGB_BLUE);

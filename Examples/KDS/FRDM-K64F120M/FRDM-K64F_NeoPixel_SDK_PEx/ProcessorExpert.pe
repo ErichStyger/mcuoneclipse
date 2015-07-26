@@ -3,7 +3,7 @@
   <Header>
     <Name>FRDM-K64F_NeoPixel_SDK_PEx</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>36</ModificationStamp>
+    <ModificationStamp>39</ModificationStamp>
     <Date>2015-07-26</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.0.RT7_b1515-0427</PEversion>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>35</ProjectCompNumb>
+    <ProjectCompNumb>37</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -12130,7 +12130,7 @@
         <ItemSymbol>FTM0_tmr_ch_0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>&lt;Automatic&gt;</Value>
+        <Value>J1_5</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
@@ -12143,7 +12143,7 @@
         <ItemSymbol>FTM0_tmr_ch_1</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>&lt;Automatic&gt;</Value>
+        <Value>J1_14</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
@@ -22593,7 +22593,159 @@
         <Index>0</Index>
         <RegCompType>fsl_lptmr_hal</RegCompType>
         <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/KSDK120_Repository</RegCompRepository>
-        <InheritedComponentState />
+        <InheritedComponentState>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/KSDK120_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.ksdk.fsl_lptmr_hal</ComponentUUID>
+          <BeanType>fsl_lptmr_hal</BeanType>
+          <Name>fsl_lptmr_hal1</Name>
+          <CompNumb>36</CompNumb>
+          <CompEnabled>true</CompEnabled>
+          <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
+          <IconName>HAL4</IconName>
+          <UserFolderName />
+          <Comment lines_count="0" />
+          <Template />
+          <BeanVersion>1.2.0</BeanVersion>
+          <LightErrorsIgnored>false</LightErrorsIgnored>
+          <Properties>
+            <ItemState>
+              <ItemSymbol>DeviceName</ItemSymbol>
+              <ReadOnly>true</ReadOnly>
+              <UserReadOnly>true</UserReadOnly>
+              <Value>fsl_lptmr_hal1</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>PeriphDevice</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value />
+              <SharedPrphMode>false</SharedPrphMode>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CompVersion</ItemSymbol>
+              <Value>1.2.0</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>VersionSpecificItem</ItemSymbol>
+              <ListItemCount>1</ListItemCount>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>DefaultMainProperty</ItemSymbol>
+              <Value>load sdk verison failed</Value>
+            </ItemState>
+          </Properties>
+          <Methods>
+            <ItemState>
+              <ItemSymbol>SdkSpecificMethods</ItemSymbol>
+              <ListItemCount>1</ListItemCount>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>fsl_lptmr_halgroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPTMR_HAL_Enable</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPTMR_HAL_Enable</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPTMR_HAL_Disable</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPTMR_HAL_Disable</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPTMR_HAL_ClearIntFlag</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPTMR_HAL_ClearIntFlag</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPTMR_HAL_IsIntPending</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPTMR_HAL_IsIntPending</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPTMR_HAL_SetIntCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPTMR_HAL_SetIntCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPTMR_HAL_SetTimerWorkingMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPTMR_HAL_SetTimerWorkingMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPTMR_HAL_SetPrescalerMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPTMR_HAL_SetPrescalerMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPTMR_HAL_SetCompareValue</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPTMR_HAL_SetCompareValue</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPTMR_HAL_GetCompareValue</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPTMR_HAL_GetCompareValue</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPTMR_HAL_GetCounterValue</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPTMR_HAL_GetCounterValue</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPTMR_HAL_Init</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPTMR_HAL_Init</UsrMethodName>
+            </ItemState>
+          </Methods>
+          <Events />
+        </InheritedComponentState>
       </ItemState>
       <ItemState>
         <ItemSymbol>BareMetal_LinkItem</ItemSymbol>
@@ -24999,7 +25151,7 @@
       <ItemState>
         <ItemSymbol>ftmPwmCfg</ItemSymbol>
         <ReadOnly>false</ReadOnly>
-        <ListItemCount>1</ListItemCount>
+        <ListItemCount>2</ListItemCount>
         <UserReadOnly>false</UserReadOnly>
         <Expanded>true</Expanded>
       </ItemState>
@@ -25063,6 +25215,72 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ChannelFirstEdge0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ftmPwmCfg_1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ftmPwmCfg_NAME1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>flexTimer1_ChnConfig1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ftmPwmCfg_TYPE1</ItemSymbol>
+        <Value>ftm_pwm_param_t</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ftmPwmCfg_READONLY1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ChannelMode1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>2</Index>
+        <EnumSymbVal>kFtmEdgeAlignedPWM</EnumSymbVal>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ChannelEdgeMode1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <EnumSymbVal>kFtmHighTrue</EnumSymbVal>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Frequency1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>1000</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ChannelDuty1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>25</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ChannelFirstEdge1</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
@@ -25393,8 +25611,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>ClockSource</ItemSymbol>
@@ -25490,14 +25708,14 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>ChnInitConfig1</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>flexTimer1_ChnConfig0</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>ChnPinGrp1</ItemSymbol>
@@ -25511,7 +25729,7 @@
         <ItemSymbol>ChnPin1</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>J1_14</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
@@ -27002,7 +27220,7 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
         <LastSelection>false</LastSelection>
         <LastUserSel>yes</LastUserSel>
       </ItemState>
