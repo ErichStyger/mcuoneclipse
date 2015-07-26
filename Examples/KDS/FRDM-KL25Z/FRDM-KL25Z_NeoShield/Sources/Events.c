@@ -302,7 +302,7 @@ void SD1_OnDeactivate(byte mode)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void EVNT1_AppHandleEvent(byte event)
+void EVNT1_AppHandleEvent(uint8_t event)
 {
   (void)event; /* only to avoid compiler warning about unused variable */
   /* Write your code here ... */

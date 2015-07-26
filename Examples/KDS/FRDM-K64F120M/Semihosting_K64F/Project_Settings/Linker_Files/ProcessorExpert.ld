@@ -10,7 +10,7 @@
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2015-07-21, 15:20, # CodeGen: 2 */
+/*##     Date/Time : 2015-07-22, 16:18, # CodeGen: 5 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */
@@ -33,8 +33,8 @@ __SP_INIT = _estack;
 __stack = _estack;
 
 /* Generate a link error if heap and stack don't fit into RAM */
-__heap_size = 0x0C00;                  /* required amount of heap  */
-__stack_size = 0x0400;                 /* required amount of stack */
+__heap_size = 0x1000;                  /* required amount of heap  */
+__stack_size = 0x1000;                 /* required amount of stack */
 
 MEMORY {
   m_interrupts (RX) : ORIGIN = 0x00000000, LENGTH = 0x00000198

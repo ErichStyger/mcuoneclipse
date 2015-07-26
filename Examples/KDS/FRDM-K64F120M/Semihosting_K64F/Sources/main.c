@@ -42,9 +42,33 @@
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include <stdio.h>
 #include <math.h>
+#include <malloc.h>
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 double d = 3.56;
+int *p;
+
+
+void *_sbrk ( uint32_t delta )
+{
+extern char _end; /* Defined by the linker */
+static char *heap_end;
+char *prev_heap_end;
+
+  if (heap_end == 0) {
+    heap_end = &_end;
+  }
+
+  prev_heap_end = heap_end;
+#if 0
+  if (prev_heap_end+delta > get_stack_pointer()) {
+         return (void *) -1L;
+  }
+#endif
+  heap_end += delta;
+  return (void *) prev_heap_end;
+}
+
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
@@ -54,11 +78,13 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
 #if 1
+  p = malloc(100);
   {
 	 int i;
-  for(i=0;i<100;i++) {
+  for(i=0;/*i<100*/;i++) {
     printf("Hello world!013456\r\n"); /* 20 characters */
-    d = sin(3.5);
+   // d = sin(3.5);
+    i++; d++;
   //  printf("float: %f\r\n", d);
   }
   printf("****FINISHED****\n"); /* 2000 characters finished */

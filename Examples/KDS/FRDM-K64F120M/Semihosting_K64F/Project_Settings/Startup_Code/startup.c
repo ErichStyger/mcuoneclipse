@@ -13,8 +13,10 @@
 #include <string.h>
 #include <stdlib.h>
 
+#if 0
 #define __MAX_CMDLINE_ARGS 10
 static char *argv[__MAX_CMDLINE_ARGS] = { 0 };
+#endif
 
 #if __GNUC__
 #define __call_static_initializers __init_cpp
