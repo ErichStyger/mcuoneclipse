@@ -45,7 +45,6 @@ extern "C" {
 
 void FTM0_IRQHandler(void);
 
-void dmaController1_Callback0(void *parameter, edma_chn_status_t status);
 /* END Events */
 
 #ifdef __cplusplus
