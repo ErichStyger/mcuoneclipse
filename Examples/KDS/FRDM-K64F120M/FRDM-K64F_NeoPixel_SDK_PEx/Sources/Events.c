@@ -43,6 +43,11 @@ void FTM0_IRQHandler(void)
   /* Write your code here ... */
 }
 
+void dmaController1_Callback0(void *parameter, edma_chn_status_t status)
+{
+  /* Write your code here ... */
+}
+
 /* END Events */
 
 #ifdef __cplusplus

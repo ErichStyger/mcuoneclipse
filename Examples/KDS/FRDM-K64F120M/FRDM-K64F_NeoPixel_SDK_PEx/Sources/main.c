@@ -35,6 +35,7 @@
 #include "osa1.h"
 #include "gpio1.h"
 #include "flexTimer1.h"
+#include "dmaController1.h"
 #if CPU_INIT_CONFIG
   #include "Init_Config.h"
 #endif

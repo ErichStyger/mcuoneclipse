@@ -36,6 +36,7 @@
 #include "osa1.h"
 #include "gpio1.h"
 #include "flexTimer1.h"
+#include "dmaController1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,6 +45,7 @@ extern "C" {
 
 void FTM0_IRQHandler(void);
 
+void dmaController1_Callback0(void *parameter, edma_chn_status_t status);
 /* END Events */
 
 #ifdef __cplusplus
