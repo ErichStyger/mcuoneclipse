@@ -513,12 +513,22 @@ edma_status_t EDMA_DRV_ConfigLoopTransfer(
             default:
                 return kStatus_EDMA_InvalidArgument;
         }
+        if (number == 1)
+        {
+            /* If only one TCD is required, only hardware TCD is required and user
+             * is not required to prepare the software TCD memory. */
+            edma_software_tcd_t temp[2];
+            edma_software_tcd_t *tempTCD = STCD_ADDR(temp);
+            memset((void*) tempTCD,0, sizeof(edma_software_tcd_t));
+            EDMA_DRV_PrepareDescriptorTransfer(chn, tempTCD, &config, true, true);
+            EDMA_DRV_PushDescriptorToReg(chn, tempTCD);
+        }
 
-        EDMA_DRV_PrepareDescriptorTransfer(chn, &stcdAddr[i], &config, true, false);
-        EDMA_DRV_PrepareDescriptorScatterGather(&stcdAddr[i], &stcdAddr[(i+1)%number]);
+ //       EDMA_DRV_PrepareDescriptorTransfer(chn, &stcdAddr[i], &config, true, false);
+ //       EDMA_DRV_PrepareDescriptorScatterGather(&stcdAddr[i], &stcdAddr[(i+1)%number]);
     }
 
-    EDMA_DRV_PushDescriptorToReg(chn, &stcdAddr[0]);
+ //   EDMA_DRV_PushDescriptorToReg(chn, &stcdAddr[0]);
 
     return kStatus_EDMA_Success;
 }
