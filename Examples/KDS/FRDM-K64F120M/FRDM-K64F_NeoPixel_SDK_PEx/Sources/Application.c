@@ -76,18 +76,22 @@ uint8_t srcAddr[BUFFER_SIZE] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 uint8_t destAddr[BUFFER_SIZE] = {0};
 static volatile bool dmaDone = false;
 
+#define NEO_NOF_PIXEL 1
+#define NEO_NOF_BITS_PIXEL 24
 static const uint8_t OneValue = 0xFF; /* value to clear or set the port bits */
+static uint8_t transmitBuf[] = {1,0,1,0,1};
 
 void EDMA_Callback(void *param, edma_chn_status_t chanStatus) {
   dmaDone = true;
 }
 
-static void doDMA(void) {
-  edma_chn_state_t     chnState;
-  edma_software_tcd_t *stcd; /* transfer control descriptor */
-  edma_state_t         edmaState;
-  edma_user_config_t   edmaUserConfig;
-  edma_scatter_gather_list_t srcSG, destSG;
+static edma_software_tcd_t stcd; /* transfer control descriptor */
+static edma_chn_state_t    chnState;
+static edma_state_t         edmaState;
+static edma_user_config_t   edmaUserConfig;
+static edma_scatter_gather_list_t srcSG, destSG;
+
+static void InitDMA(void) {
   bool                 result;
   uint32_t             i, channel = 0;
   uint8_t res;
@@ -103,32 +107,16 @@ static void doDMA(void) {
     for(;;);
   }
 
-#if 0
-  /* Fill zero to destination buffer */
-  for (i = 0; i < BUFFER_SIZE; i ++) {
-    destAddr[i] = 0x00;
-  }
-#endif
-  /* Prepare memory pointing to software TCDs. */
-  stcd = OSA_MemAllocZero(STCD_SIZE(EDMA_CHAIN_LENGTH));
-
   /* Configure EDMA channel. */
-#if 0
-  srcSG.address  = (uint32_t)srcAddr;
-  destSG.address = (uint32_t)destAddr;
-  srcSG.length   = BUFFER_SIZE;
-  destSG.length  = BUFFER_SIZE;
-#else
-  srcSG.address  = (uint32_t)&OneValue;
-  destSG.address = (uint32_t)&GPIO_PSOR_REG(PTD_BASE_PTR);
+  srcSG.address  = (uint32_t)&transmitBuf[0];//&OneValue;
+  destSG.address = (uint32_t)&GPIO_PDOR_REG(PTD_BASE_PTR);//&GPIO_PSOR_REG(PTD_BASE_PTR);
   srcSG.length   = 1;
   destSG.length  = 1;
-#endif
 
   /* configure single end descriptor chain. */
   EDMA_DRV_ConfigScatterGatherTransfer(
           &chnState, /* channel information */
-          stcd, /* transfer control descriptor */
+          &stcd, /* transfer control descriptor */
           kEDMAMemoryToMemory, /* perform memory to memory operation */
           1, //EDMA_TRANSFER_SIZE, /* 2: transfer size of basic loop */
           1, //EDMA_WARTERMARK_LEVEL, /* 8: number of bytes transfered on each EDMA request(minor loop) */
@@ -138,22 +126,19 @@ static void doDMA(void) {
 
   /* Install callback for eDMA handler */
   EDMA_DRV_InstallCallback(&chnState, EDMA_Callback, NULL);
+}
 
+static void DoDMA(void) {
   /* Initialize transfer. */
   dmaDone = false;
   EDMA_DRV_StartChannel(&chnState);
- /* Wait until transfer is complete */
   do {
+    /* Wait until transfer is complete */
   } while(!dmaDone);
-
-  // Stop channel
+  /* Stop channel */
   EDMA_DRV_StopChannel(&chnState);
-
   /* Release channel */
   EDMA_DRV_ReleaseChannel(&chnState);
-
-  /* Free stcd */
-  OSA_MemFree((void *)stcd);
 }
 
 static bool start = false;
@@ -161,30 +146,22 @@ static bool start = false;
 void APP_Run(void) {
   int i;
 
+  GPIO_PCOR_REG(PTD_BASE_PTR) = (1<<0); /* Port Clear Output PTD0 */
   InitFlexTimer(FTM0_IDX);
+  InitDMA();
+  DoDMA();
   for(;;) {
     GPIO_DRV_TogglePinOutput(LEDRGB_BLUE);
-#if 0
-    for(i=0;i<10;i++) {
-      GPIO_DRV_TogglePinOutput(WS2812_0);
-      GPIO_DRV_TogglePinOutput(J2_12);
-    }
-#endif
-   // OSA_TimeDelay(1000);
+    OSA_TimeDelay(100);
     if (start) {
-      GPIO_PTOR_REG(PTD_BASE_PTR) = (1<<0); /* Port Toggle Output PTD0 */
-      GPIO_PSOR_REG(PTD_BASE_PTR) = (1<<0); /* Port Set Output PTD0 */
+      //GPIO_PTOR_REG(PTD_BASE_PTR) = (1<<0); /* Port Toggle Output PTD0 */
+      //GPIO_PSOR_REG(PTD_BASE_PTR) = (1<<0); /* Port Set Output PTD0 */
       GPIO_PCOR_REG(PTD_BASE_PTR) = (1<<0); /* Port Clear Output PTD0 */
 //      GPIO_PTOR_REG(PTE_BASE_PTR) = (1<<26); /* toggle PTE26 (GREEN RGB) */
 //      GPIO_DRV_ClearPinOutput(WS2812_0); /* put low PTD0 */
-      doDMA();
+      //doDMA();
       //StartTransfer(FTM0_IDX);
     }
   }
-}
-
-void DMA_Error_IRQHandler(void)
-{
-    EDMA_DRV_ErrorIRQHandler(0);
 }
 
