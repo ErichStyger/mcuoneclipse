@@ -76,13 +76,11 @@ uint8_t srcAddr[BUFFER_SIZE] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 uint8_t destAddr[BUFFER_SIZE] = {0};
 static volatile bool dmaDone = false;
 
-void EDMA_Callback(void *param, edma_chn_status_t chanStatus)
-{
-    //OSA_SemaPost(&sema);
+void EDMA_Callback(void *param, edma_chn_status_t chanStatus) {
   dmaDone = true;
 }
 
-static void DMA(void) {
+static void doDMA(void) {
   edma_chn_state_t     chnState;
   edma_software_tcd_t *stcd;
   edma_state_t         edmaState;
@@ -168,12 +166,12 @@ static void DMA(void) {
   EDMA_DRV_ReleaseChannel(&chnState);
 
   // Free stcd
-//  OSA_MemFree((void *)stcd);
+  OSA_MemFree((void *)stcd);
 
   // Prepare for another channel
 //  PRINTF("\r\nPress any key to start transfer with other channel");
 //  GETCHAR();
-  channel ++;
+  channel++;
   if (channel == DMA_INSTANCE_COUNT * FSL_FEATURE_EDMA_MODULE_CHANNEL)
   {
       channel = 0;
@@ -185,27 +183,21 @@ static bool start = false;
 void APP_Run(void) {
   int i;
 
-  //InitFlexTimer(FTM0_IDX);
+  InitFlexTimer(FTM0_IDX);
   //GPIO_PTOR_REG(PTD_BASE_PTR); /* toggle PTD0 */
   for(;;) {
     GPIO_DRV_TogglePinOutput(LEDRGB_BLUE);
 #if 1
-    for(i=0;i<100;i++) {
+    for(i=0;i<10;i++) {
       GPIO_DRV_TogglePinOutput(WS2812_0);
       GPIO_DRV_TogglePinOutput(J2_12);
-#if 0
-      GPIO_DRV_SetPinOutput(WS2812_0);
-      OSA_TimeDelay(1);
-      GPIO_DRV_ClearPinOutput(WS2812_0);
-      OSA_TimeDelay(1);
-#endif
     }
 #endif
    // OSA_TimeDelay(1000);
-   // if (start) {
-  //    DMA();
-  //   StartTransfer(FTM0_IDX);
-   // }
+    if (start) {
+      doDMA();
+     StartTransfer(FTM0_IDX);
+    }
   }
 }
 
