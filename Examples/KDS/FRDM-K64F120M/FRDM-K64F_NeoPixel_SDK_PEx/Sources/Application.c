@@ -183,14 +183,29 @@ static void DMA(void) {
 static bool start = false;
 
 void APP_Run(void) {
-  InitFlexTimer(FTM0_IDX);
+  int i;
+
+  //InitFlexTimer(FTM0_IDX);
+  //GPIO_PTOR_REG(PTD_BASE_PTR); /* toggle PTD0 */
   for(;;) {
     GPIO_DRV_TogglePinOutput(LEDRGB_BLUE);
-    OSA_TimeDelay(1000);
-    if (start) {
-      DMA();
-      StartTransfer(FTM0_IDX);
+#if 1
+    for(i=0;i<100;i++) {
+      GPIO_DRV_TogglePinOutput(WS2812_0);
+      GPIO_DRV_TogglePinOutput(J2_12);
+#if 0
+      GPIO_DRV_SetPinOutput(WS2812_0);
+      OSA_TimeDelay(1);
+      GPIO_DRV_ClearPinOutput(WS2812_0);
+      OSA_TimeDelay(1);
+#endif
     }
+#endif
+   // OSA_TimeDelay(1000);
+   // if (start) {
+  //    DMA();
+  //   StartTransfer(FTM0_IDX);
+   // }
   }
 }
 

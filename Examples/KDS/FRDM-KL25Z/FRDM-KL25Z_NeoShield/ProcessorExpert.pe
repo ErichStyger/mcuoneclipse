@@ -6519,7 +6519,8 @@
               <Value>RTOSCNTRLDD1_OnChannel7</Value>
             </ItemState>
           </Events>
-          <Repository>file:/${ProcessorExpertPath:user}</Repository>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.ldd.timerunit_ldd</ComponentUUID>
         </InheritedComponentState>
         <Index>0</Index>
       </ItemState>
@@ -6758,7 +6759,8 @@
           </Properties>
           <Methods />
           <Events />
-          <Repository>file:/${ProcessorExpertPath:user}</Repository>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.interruptvector</ComponentUUID>
         </InheritedComponentState>
       </ItemState>
       <ItemState>
@@ -12840,7 +12842,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.063</BeanVersion>
+    <BeanVersion>01.065</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -14873,7 +14875,8 @@
               <Value>same as interrupt</Value>
             </ItemState>
           </Events>
-          <Repository>file:/${ProcessorExpertPath:user}</Repository>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.pwm</ComponentUUID>
         </InheritedComponentState>
       </ItemState>
       <ItemState>
@@ -15006,7 +15009,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.063</BeanVersion>
+    <BeanVersion>01.065</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -17039,7 +17042,8 @@
               <Value>same as interrupt</Value>
             </ItemState>
           </Events>
-          <Repository>file:/${ProcessorExpertPath:user}</Repository>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.pwm</ComponentUUID>
         </InheritedComponentState>
       </ItemState>
       <ItemState>
@@ -17172,7 +17176,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.063</BeanVersion>
+    <BeanVersion>01.065</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -19205,7 +19209,8 @@
               <Value>same as interrupt</Value>
             </ItemState>
           </Events>
-          <Repository>file:/${ProcessorExpertPath:user}</Repository>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.pwm</ComponentUUID>
         </InheritedComponentState>
       </ItemState>
       <ItemState>
@@ -27110,10 +27115,9 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <TypeSpecNameState />
+        <TypeSpecNameState>typeInterruptConfiguration13</TypeSpecNameState>
         <Index>0</Index>
-        <EnumSymbVal />
-        <Value />
+        <EnumSymbVal>disable</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>PassiveFilterEnable30FeatureCondGroup</ItemSymbol>
@@ -35425,28 +35429,6 @@
     </Properties>
     <Methods>
       <ItemState>
-        <ItemSymbol>ReadRegister</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>ReadRegister</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ReadRegisterData</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>ReadRegisterData</UsrMethodName>
-      </ItemState>
-      <ItemState>
         <ItemSymbol>WriteRegisterData</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -35786,6 +35768,28 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>WriteRegister</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ReadRegister</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ReadRegister</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ReadRegisterData</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ReadRegisterData</UsrMethodName>
       </ItemState>
     </Methods>
     <Events>
@@ -46168,10 +46172,9 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <TypeSpecNameState />
+        <TypeSpecNameState>typeInterruptConfiguration13</TypeSpecNameState>
         <Index>0</Index>
-        <EnumSymbVal />
-        <Value />
+        <EnumSymbVal>disable</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>PassiveFilterEnable30FeatureCondGroup</ItemSymbol>
@@ -60818,10 +60821,9 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <TypeSpecNameState />
+        <TypeSpecNameState>typeInterruptConfiguration13</TypeSpecNameState>
         <Index>0</Index>
-        <EnumSymbVal />
-        <Value />
+        <EnumSymbVal>disable</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>PassiveFilterEnable30FeatureCondGroup</ItemSymbol>
