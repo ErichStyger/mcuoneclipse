@@ -76,13 +76,15 @@ uint8_t srcAddr[BUFFER_SIZE] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 uint8_t destAddr[BUFFER_SIZE] = {0};
 static volatile bool dmaDone = false;
 
+static const uint8_t OneValue = 0xFF; /* value to clear or set the port bits */
+
 void EDMA_Callback(void *param, edma_chn_status_t chanStatus) {
   dmaDone = true;
 }
 
 static void doDMA(void) {
   edma_chn_state_t     chnState;
-  edma_software_tcd_t *stcd;
+  edma_software_tcd_t *stcd; /* transfer control descriptor */
   edma_state_t         edmaState;
   edma_user_config_t   edmaUserConfig;
   edma_scatter_gather_list_t srcSG, destSG;
@@ -90,92 +92,68 @@ static void doDMA(void) {
   uint32_t             i, channel = 0;
   uint8_t res;
 
-  // Init eDMA modules.
+  /* Init eDMA modules. */
   edmaUserConfig.chnArbitration = kEDMAChnArbitrationRoundrobin;
   edmaUserConfig.notHaltOnError = false;
   EDMA_DRV_Init(&edmaState, &edmaUserConfig);
 
-  // EDMA channel request.
+  /* EDMA channel request. */
   res = EDMA_DRV_RequestChannel(channel, kDmaRequestMux0AlwaysOn62, &chnState);
   if (res==kEDMAInvalidChannel) {
     for(;;);
   }
 
-  // Fill zero to destination buffer
+#if 0
+  /* Fill zero to destination buffer */
   for (i = 0; i < BUFFER_SIZE; i ++) {
-      destAddr[i] = 0x00;
+    destAddr[i] = 0x00;
   }
-
-  // Prepare memory pointing to software TCDs.
+#endif
+  /* Prepare memory pointing to software TCDs. */
   stcd = OSA_MemAllocZero(STCD_SIZE(EDMA_CHAIN_LENGTH));
 
-  // Configure EDMA channel.
+  /* Configure EDMA channel. */
+#if 0
   srcSG.address  = (uint32_t)srcAddr;
   destSG.address = (uint32_t)destAddr;
   srcSG.length   = BUFFER_SIZE;
   destSG.length  = BUFFER_SIZE;
+#else
+  srcSG.address  = (uint32_t)&OneValue;
+  destSG.address = (uint32_t)&GPIO_PSOR_REG(PTD_BASE_PTR);
+  srcSG.length   = 1;
+  destSG.length  = 1;
+#endif
 
-  // configure single end descriptor chain.
+  /* configure single end descriptor chain. */
   EDMA_DRV_ConfigScatterGatherTransfer(
-          &chnState, stcd, kEDMAMemoryToMemory,
-          EDMA_TRANSFER_SIZE, EDMA_WARTERMARK_LEVEL,
-          &srcSG, &destSG,
-          EDMA_CHAIN_LENGTH);
+          &chnState, /* channel information */
+          stcd, /* transfer control descriptor */
+          kEDMAMemoryToMemory, /* perform memory to memory operation */
+          1, //EDMA_TRANSFER_SIZE, /* 2: transfer size of basic loop */
+          1, //EDMA_WARTERMARK_LEVEL, /* 8: number of bytes transfered on each EDMA request(minor loop) */
+          &srcSG, &destSG, /* source and destination scatter-gather */
+          EDMA_CHAIN_LENGTH /* number of scatter-gather in chain */
+          );
 
-  // Install callback for eDMA handler
+  /* Install callback for eDMA handler */
   EDMA_DRV_InstallCallback(&chnState, EDMA_Callback, NULL);
 
-  //PRINTF("\r\n Starting EDMA channel No. %d to transfer data from addr 0x%x to addr 0x%x",
-  //                                                                                channel,
-  //                                                                        (uint32_t)srcAddr,
-  //                                                                        (uint32_t)destAddr);
+  /* Initialize transfer. */
   dmaDone = false;
-  // Initialize transfer.
   EDMA_DRV_StartChannel(&chnState);
-
-  // Wait until transfer is complete
- do {
-   //   syncStatus = OSA_SemaWait(&sema, OSA_WAIT_FOREVER);
- // }while(syncStatus == kStatus_OSA_Idle);
-} while(!dmaDone);
-
-  // Verify destAddr buff
-  result = true;
-  for (i = 0; i < BUFFER_SIZE; i ++)
-  {
-      if (destAddr[i] != srcAddr[i])
-      {
-          result = false;
-          break;
-      }
-  }
-
-  if (true == result)
-  {
-    //  PRINTF("\r\n Transfered with eDMA channel No.%d: successfull",channel);
-  }
-  else
-  {
-  //    PRINTF("\r\n Transfered with eDMA channel No.%d: fail",channel);
-  }
+ /* Wait until transfer is complete */
+  do {
+  } while(!dmaDone);
 
   // Stop channel
   EDMA_DRV_StopChannel(&chnState);
 
-  // Release channel
+  /* Release channel */
   EDMA_DRV_ReleaseChannel(&chnState);
 
-  // Free stcd
+  /* Free stcd */
   OSA_MemFree((void *)stcd);
-
-  // Prepare for another channel
-//  PRINTF("\r\nPress any key to start transfer with other channel");
-//  GETCHAR();
-  channel++;
-  if (channel == DMA_INSTANCE_COUNT * FSL_FEATURE_EDMA_MODULE_CHANNEL)
-  {
-      channel = 0;
-  }
 }
 
 static bool start = false;
@@ -184,10 +162,9 @@ void APP_Run(void) {
   int i;
 
   InitFlexTimer(FTM0_IDX);
-  //GPIO_PTOR_REG(PTD_BASE_PTR); /* toggle PTD0 */
   for(;;) {
     GPIO_DRV_TogglePinOutput(LEDRGB_BLUE);
-#if 1
+#if 0
     for(i=0;i<10;i++) {
       GPIO_DRV_TogglePinOutput(WS2812_0);
       GPIO_DRV_TogglePinOutput(J2_12);
@@ -195,8 +172,13 @@ void APP_Run(void) {
 #endif
    // OSA_TimeDelay(1000);
     if (start) {
+      GPIO_PTOR_REG(PTD_BASE_PTR) = (1<<0); /* Port Toggle Output PTD0 */
+      GPIO_PSOR_REG(PTD_BASE_PTR) = (1<<0); /* Port Set Output PTD0 */
+      GPIO_PCOR_REG(PTD_BASE_PTR) = (1<<0); /* Port Clear Output PTD0 */
+//      GPIO_PTOR_REG(PTE_BASE_PTR) = (1<<26); /* toggle PTE26 (GREEN RGB) */
+//      GPIO_DRV_ClearPinOutput(WS2812_0); /* put low PTD0 */
       doDMA();
-     StartTransfer(FTM0_IDX);
+      //StartTransfer(FTM0_IDX);
     }
   }
 }
