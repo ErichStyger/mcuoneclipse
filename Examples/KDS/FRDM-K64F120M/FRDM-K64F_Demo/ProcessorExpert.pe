@@ -13488,7 +13488,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.063</BeanVersion>
+    <BeanVersion>01.065</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -14278,7 +14278,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.063</BeanVersion>
+    <BeanVersion>01.065</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -15068,7 +15068,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.063</BeanVersion>
+    <BeanVersion>01.065</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -16968,7 +16968,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.046</BeanVersion>
+          <BeanVersion>01.048</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Repository>file:/${ProcessorExpertPath:user}</Repository>
           <Properties>
@@ -17017,13 +17017,13 @@
               <Base>DEC</Base>
             </ItemState>
             <ItemState>
-              <ItemSymbol>TzCtrlTaskPrioStr</ItemSymbol>
+              <ItemSymbol>CtrlTaskPrioStr</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <Value>1</Value>
             </ItemState>
             <ItemState>
-              <ItemSymbol>TzCtrlTaskStackSize</ItemSymbol>
+              <ItemSymbol>CtrlTaskStackSize</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <Value>configMINIMAL_STACK_SIZE</Value>
@@ -17357,6 +17357,18 @@
               <Value>15</Value>
               <Base>DEC</Base>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>TzCtrlTaskPrioStr</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>1</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>TzCtrlTaskStackSize</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>configMINIMAL_STACK_SIZE</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>StreamingWithTraceRTT</ItemSymbol>
