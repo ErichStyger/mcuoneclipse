@@ -9,6 +9,7 @@
 #include "gpio1.h"
 #include "osa1.h"
 #include <stdbool.h>
+#include "fsl_ftm_driver.h"
 
 static volatile bool dmaDone = false;
 
@@ -24,31 +25,14 @@ static const ftm_user_config_t flexTimer0_InitConfig0 = {
   .syncMethod        = (uint32_t)(kFtmUseSoftwareTrig)
 };
 
-static const ftm_pwm_param_t flexTimer0_ChnConfig0 = { /* FTM0, channel 0 */
-  .mode = kFtmEdgeAlignedPWM,
-  .edgeMode = kFtmHighTrue,
-  .uFrequencyHZ = 1000U,
-  .uDutyCyclePercent = 10U,
-  .uFirstEdgeDelayPercent = 0U,
-};
-
-static const ftm_pwm_param_t flexTimer0_ChnConfig1 = { /* FTM0, channel 1 */
-  .mode = kFtmEdgeAlignedPWM,
-  .edgeMode = kFtmHighTrue,
-  .uFrequencyHZ = 1000U,
-  .uDutyCyclePercent = 20U,
-  .uFirstEdgeDelayPercent = 0U,
-};
-
-static const ftm_pwm_param_t flexTimer0_ChnConfig2 = { /* FTM0, channel 2 */
-  .mode = kFtmEdgeAlignedPWM,
-  .edgeMode = kFtmHighTrue,
-  .uFrequencyHZ = 1000U,
-  .uDutyCyclePercent = 50U,
-  .uFirstEdgeDelayPercent = 0U,
-};
-
 static void InitFlexTimer(uint32_t instance) {
+  static const ftm_pwm_param_t flexTimer0_ChnConfig0 = { /* FTM0, channel 0 */
+    .mode = kFtmEdgeAlignedPWM,
+    .edgeMode = kFtmHighTrue,
+    .uFrequencyHZ = 1000U,
+    .uDutyCyclePercent = 10U,
+    .uFirstEdgeDelayPercent = 0U,
+  };
   uint8_t channel;
   FTM_Type *ftmBase = g_ftmBase[instance];
 
@@ -56,15 +40,19 @@ static void InitFlexTimer(uint32_t instance) {
   FTM_DRV_SetTimeOverflowIntCmd(instance, false); /* disable interrupt */
   FTM_DRV_SetFaultIntCmd(instance, false); /* disable interrupt */
   FTM_DRV_SetClock(instance, kClock_source_FTM_SystemClk, kFtmDividedBy1);
-  /* channel 0 */
-  FTM_DRV_PwmStart(instance, (ftm_pwm_param_t*)&flexTimer0_ChnConfig0, 0U); /* this will start the clock! */
-  FTM_DRV_CounterStop(instance); /* stop clock, so we can init second channel */
-  /* channel 1 */
-  FTM_DRV_PwmStart(instance, (ftm_pwm_param_t*)&flexTimer0_ChnConfig1, 1U); /* this will start the clock! */
-  FTM_DRV_CounterStop(instance); /* stop it again */
-  /* channel 2 */
-  FTM_DRV_PwmStart(instance, (ftm_pwm_param_t*)&flexTimer0_ChnConfig2, 2U); /* this will start the clock! */
-  FTM_DRV_CounterStop(instance); /* stop it again */
+  /* configure timer */
+  FTM_HAL_ClearTimerOverflow(ftmBase); /* clear timer overflow */
+
+  FTM_HAL_EnablePwmMode(ftmBase, (ftm_pwm_param_t*)&flexTimer0_ChnConfig0, 0);
+  FTM_HAL_EnablePwmMode(ftmBase, (ftm_pwm_param_t*)&flexTimer0_ChnConfig0, 1);
+  FTM_HAL_EnablePwmMode(ftmBase, (ftm_pwm_param_t*)&flexTimer0_ChnConfig0, 2);
+  /* Based on Ref manual, in PWM mode CNTIN is to be set 0*/
+  FTM_HAL_SetCounterInitVal(ftmBase, 0);
+
+  FTM_HAL_SetMod(ftmBase, 0x5000);
+  FTM_HAL_SetChnCountVal(ftmBase, 0, 0x1000);
+  FTM_HAL_SetChnCountVal(ftmBase, 1, 0x1500);
+  FTM_HAL_SetChnCountVal(ftmBase, 2, 0x2000);
 
   /* reset all values */
   FTM_HAL_SetCounter(ftmBase, 0); /* reset counter */
@@ -183,7 +171,7 @@ static void DoDMA(void) {
   EDMA_DRV_StopChannel(&chn2State); /* stop DMA channel */
 }
 
-static bool start = false;
+static bool start = true;
 
 void APP_Run(void) {
   GPIO_PCOR_REG(PTD_BASE_PTR) = (1<<0); /* Port Clear Output PTD0 */

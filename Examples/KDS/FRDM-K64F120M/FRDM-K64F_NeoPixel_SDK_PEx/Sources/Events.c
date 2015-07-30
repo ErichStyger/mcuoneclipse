@@ -37,12 +37,6 @@ extern "C" {
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
 
-void FTM0_IRQHandler(void)
-{
-  FTM_DRV_IRQHandler(FSL_FLEXTIMER1);
-  /* Write your code here ... */
-}
-
 /* END Events */
 
 #ifdef __cplusplus
