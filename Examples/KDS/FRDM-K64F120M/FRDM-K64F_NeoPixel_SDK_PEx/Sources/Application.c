@@ -17,23 +17,6 @@ static volatile bool dmaDone = false;
 static const uint8_t OneValue = 0xFF; /* value to clear or set the port bits */
 static uint8_t transmitBuf[] = {0x11,0x20,0x31,0x40,0x51,0x60,0x71,0x80};
 
-
-static const ftm_pwm_param_t flexTimer1_ChnConfig0 = {
-  .mode = kFtmEdgeAlignedPWM,
-  .edgeMode = kFtmHighTrue,
-  .uFrequencyHZ = 1000U,
-  .uDutyCyclePercent = 25U,
-  .uFirstEdgeDelayPercent = 0U,
-};
-
-static const ftm_pwm_param_t flexTimer0_ChnConfig0 = {
-  .mode = kFtmEdgeAlignedPWM,
-  .edgeMode = kFtmHighTrue,
-  .uFrequencyHZ = 1000U,
-  .uDutyCyclePercent = 50U,
-  .uFirstEdgeDelayPercent = 0U,
-};
-
 static const ftm_user_config_t flexTimer0_InitConfig0 = {
   .tofFrequency      = 0U,
   .isWriteProtection = false,
@@ -41,19 +24,55 @@ static const ftm_user_config_t flexTimer0_InitConfig0 = {
   .syncMethod        = (uint32_t)(kFtmUseSoftwareTrig)
 };
 
+static const ftm_pwm_param_t flexTimer0_ChnConfig0 = { /* FTM0, channel 0 */
+  .mode = kFtmEdgeAlignedPWM,
+  .edgeMode = kFtmHighTrue,
+  .uFrequencyHZ = 1000U,
+  .uDutyCyclePercent = 10U,
+  .uFirstEdgeDelayPercent = 0U,
+};
+
+static const ftm_pwm_param_t flexTimer0_ChnConfig1 = { /* FTM0, channel 1 */
+  .mode = kFtmEdgeAlignedPWM,
+  .edgeMode = kFtmHighTrue,
+  .uFrequencyHZ = 1000U,
+  .uDutyCyclePercent = 20U,
+  .uFirstEdgeDelayPercent = 0U,
+};
+
+static const ftm_pwm_param_t flexTimer0_ChnConfig2 = { /* FTM0, channel 2 */
+  .mode = kFtmEdgeAlignedPWM,
+  .edgeMode = kFtmHighTrue,
+  .uFrequencyHZ = 1000U,
+  .uDutyCyclePercent = 50U,
+  .uFirstEdgeDelayPercent = 0U,
+};
+
 static void InitFlexTimer(uint32_t instance) {
   FTM_Type *ftmBase = g_ftmBase[instance];
 
   FTM_DRV_Init(instance, &flexTimer0_InitConfig0);
-  FTM_DRV_SetClock(instance, kClock_source_FTM_SystemClk, kFtmDividedBy1);
-  FTM_DRV_PwmStart(instance, (ftm_pwm_param_t*)&flexTimer0_ChnConfig0, 0U); /* this will start the clock! */
-  FTM_DRV_CounterStop(instance); /* stop clock, so we can init second channel */
-  FTM_DRV_PwmStart(instance, (ftm_pwm_param_t*)&flexTimer0_ChnConfig0, 1U); /* this will start the clock! */
-  FTM_DRV_CounterStop(instance); /* stop it again */
-  FTM_HAL_SetChnDmaCmd(ftmBase, 0, true); /* enable DMA request */
-  FTM_HAL_EnableChnInt(ftmBase, 0); /* enable channel interrupt: need to have both DMA and CHnIE set for DMA transfers! See RM 40.4.23 */
   FTM_DRV_SetTimeOverflowIntCmd(instance, false); /* disable interrupt */
   FTM_DRV_SetFaultIntCmd(instance, false); /* disable interrupt */
+  FTM_DRV_SetClock(instance, kClock_source_FTM_SystemClk, kFtmDividedBy1);
+  /* channel 0 */
+  FTM_DRV_PwmStart(instance, (ftm_pwm_param_t*)&flexTimer0_ChnConfig0, 0U); /* this will start the clock! */
+  FTM_DRV_CounterStop(instance); /* stop clock, so we can init second channel */
+  /* channel 1 */
+  FTM_DRV_PwmStart(instance, (ftm_pwm_param_t*)&flexTimer0_ChnConfig1, 1U); /* this will start the clock! */
+  FTM_DRV_CounterStop(instance); /* stop it again */
+  /* channel 2 */
+  FTM_DRV_PwmStart(instance, (ftm_pwm_param_t*)&flexTimer0_ChnConfig2, 2U); /* this will start the clock! */
+  FTM_DRV_CounterStop(instance); /* stop it again */
+
+  /* reset all values */
+  FTM_HAL_SetCounter(ftmBase, 0); /* reset counter */
+  FTM_HAL_ClearTimerOverflow(ftmBase); /* clear timer overflow flag (if any) */
+  FTM_HAL_ClearChnEventFlag(ftmBase, 0); /* clear channel 0 flag */
+  FTM_HAL_ClearChnEventFlag(ftmBase, 1); /* clear channel 1 flag */
+  FTM_HAL_ClearChnEventFlag(ftmBase, 2); /* clear channel 2 flag */
+  FTM_HAL_SetChnDmaCmd(ftmBase, 0, true); /* enable DMA request */
+  FTM_HAL_EnableChnInt(ftmBase, 0); /* enable channel interrupt: need to have both DMA and CHnIE set for DMA transfers! See RM 40.4.23 */
 }
 
 void EDMA_Callback(void *param, edma_chn_status_t chanStatus) {
@@ -70,16 +89,16 @@ static void InitDMA(void) {
   uint32_t channel = 0;
   uint8_t res;
 
-  /* Init eDMA modules. */
-  edmaUserConfig.chnArbitration = kEDMAChnArbitrationRoundrobin;
-  edmaUserConfig.notHaltOnError = false;
-  EDMA_DRV_Init(&edmaState, &edmaUserConfig);
+  /* Initialize eDMA modules. */
+  edmaUserConfig.chnArbitration = kEDMAChnArbitrationRoundrobin; /* use round-robin arbitration */
+  edmaUserConfig.notHaltOnError = false; /* do not halt in case of errors */
+  EDMA_DRV_Init(&edmaState, &edmaUserConfig); /* initialize DMA with configuration */
 
   /* EDMA channel request. */
-//  res = EDMA_DRV_RequestChannel(channel, kDmaRequestMux0AlwaysOn62, &chnState);
+//  res = EDMA_DRV_RequestChannel(channel, kDmaRequestMux0AlwaysOn62, &chnState); /* always on channel */
   res = EDMA_DRV_RequestChannel(channel, kDmaRequestMux0FTM0Channel0, &chnState);
-  if (res==kEDMAInvalidChannel) {
-    for(;;);
+  if (res==kEDMAInvalidChannel) { /* check error code */
+    for(;;); /* ups!?! */
   }
 
   /* Configure EDMA channel. */

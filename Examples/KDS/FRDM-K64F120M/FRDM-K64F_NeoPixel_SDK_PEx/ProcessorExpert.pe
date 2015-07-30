@@ -3,7 +3,7 @@
   <Header>
     <Name>FRDM-K64F_NeoPixel_SDK_PEx</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>58</ModificationStamp>
+    <ModificationStamp>59</ModificationStamp>
     <Date>2015-07-26</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.0.RT7_b1515-0427</PEversion>
@@ -2450,7 +2450,7 @@
         <ItemSymbol>ClockSettingGrp</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCG</ItemSymbol>
@@ -25412,7 +25412,7 @@
       <ItemState>
         <ItemSymbol>ftmPwmCfg</ItemSymbol>
         <ReadOnly>false</ReadOnly>
-        <ListItemCount>2</ListItemCount>
+        <ListItemCount>3</ListItemCount>
         <UserReadOnly>false</UserReadOnly>
         <Expanded>true</Expanded>
       </ItemState>
@@ -25428,7 +25428,7 @@
         <ItemSymbol>ftmPwmCfg_NAME0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>flexTimer1_ChnConfig0</Value>
+        <Value>flexTimer0_ChnConfig0</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>ftmPwmCfg_TYPE0</ItemSymbol>
@@ -25471,7 +25471,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>50</Value>
+        <Value>10</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -25494,7 +25494,7 @@
         <ItemSymbol>ftmPwmCfg_NAME1</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>flexTimer1_ChnConfig1</Value>
+        <Value>flexTimer0_ChnConfig1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>ftmPwmCfg_TYPE1</ItemSymbol>
@@ -25542,6 +25542,72 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ChannelFirstEdge1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ftmPwmCfg_2</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ftmPwmCfg_NAME2</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>flexTimer0_ChnConfig2</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ftmPwmCfg_TYPE2</ItemSymbol>
+        <Value>ftm_pwm_param_t</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ftmPwmCfg_READONLY2</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ChannelMode2</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>2</Index>
+        <EnumSymbVal>kFtmEdgeAlignedPWM</EnumSymbVal>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ChannelEdgeMode2</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <EnumSymbVal>kFtmHighTrue</EnumSymbVal>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Frequency2</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>1000</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ChannelDuty2</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>50</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ChannelFirstEdge2</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
@@ -25947,7 +26013,7 @@
         <ItemSymbol>ChnInitConfig0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>flexTimer1_ChnConfig0</Value>
+        <Value>flexTimer0_ChnConfig0</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>ChnPinGrp0</ItemSymbol>
@@ -25976,7 +26042,7 @@
         <ItemSymbol>ChnInitConfig1</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>flexTimer1_ChnConfig0</Value>
+        <Value>flexTimer0_ChnConfig0</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>ChnPinGrp1</ItemSymbol>
@@ -25998,14 +26064,14 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>ChnInitConfig2</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>flexTimer0_ChnConfig0</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>ChnPinGrp2</ItemSymbol>
@@ -26019,7 +26085,7 @@
         <ItemSymbol>ChnPin2</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>J1_16</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
