@@ -4,13 +4,13 @@
 /*##                                                                         */
 /*##     Filename  : ProcessorExpert.ld                                      */
 /*##                                                                         */
-/*##     Project   : FRDM-K64F_SDK_v1.2_FreeRTOS                             */
+/*##     Project   : FRDM-K64F_SDK_v1.2_FreeRTOS_PEx                         */
 /*##                                                                         */
 /*##     Processor : MK64FN1M0VLL12                                          */
 /*##                                                                         */
 /*##     Compiler  : GNU C Compiler                                          */
 /*##                                                                         */
-/*##     Date/Time : 2015-07-08, 09:58, # CodeGen: 0                         */
+/*##     Date/Time : 2015-07-30, 08:34, # CodeGen: 0                         */
 /*##                                                                         */
 /*##     Abstract  :                                                         */
 /*##                                                                         */
