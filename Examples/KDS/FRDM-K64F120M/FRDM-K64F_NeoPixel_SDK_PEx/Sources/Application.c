@@ -22,11 +22,10 @@ static uint8_t transmitBuf[] =
    0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1
   }; /* bit values */
 
-#define FACTOR 2
-#define FTM_CH0_TICKS     (FACTOR*10)  /* 0.35 us */
-#define FTM_CH1_TICKS     (FACTOR*20)  /* 0.9 us */
-#define FTM_CH2_TICKS     (FACTOR*30)  /* 1.25 us  */
-#define FTM_PERIOD_TICKS  (FACTOR*40)
+#define FTM_CH0_TICKS     (0x10)  /* delay until 0xFF */
+#define FTM_CH1_TICKS     (0x2A)  /* at 0.4us write data */
+#define FTM_CH2_TICKS     (0x40)  /* at 0.8us clear bits  */
+#define FTM_PERIOD_TICKS  (0x4A)  /* 1.25 us period */
 
 /* FTM related */
 #define NOF_FTM_CHANNELS  3 /* using three FTM0 channels */
