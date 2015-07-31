@@ -41,8 +41,6 @@ extern "C" {
 #endif 
 
 
-void FTM0_IRQHandler(void);
-
 /* END Events */
 
 #ifdef __cplusplus
