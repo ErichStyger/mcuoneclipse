@@ -10,20 +10,35 @@
 #include "osa1.h"
 #include <stdbool.h>
 #include "fsl_ftm_driver.h"
-
-static volatile bool dmaDone = false;
+#include "fsl_edma_driver.h"
+#include <string.h> /* for memset() */
 
 #define NEO_NOF_PIXEL       1
 #define NEO_NOF_BITS_PIXEL 24
-static const uint8_t OneValue[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}; /* value to clear or set the port bits */
-static uint8_t transmitBuf[] = {0x11,0x20,0x31,0x40,0x51,0x60,0x71,0x80}; /* bit values */
+static const uint8_t OneValue = 0xFF; /* value to clear or set the port bits */
+static uint8_t transmitBuf[] =
+  {0x11,0x20,0x31,0x40,0x51,0x60,0x71,0x80,
+   0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+   0x1, 0x0, 0x1, 0x0, 0x1, 0x0, 0x1, 0x0
+  }; /* bit values */
+
+#define FACTOR 10
+#define FTM_CH0_TICKS     (FACTOR*18)  /* 0.35 us */
+#define FTM_CH1_TICKS     (FACTOR*36)  /* 0.9 us */
+#define FTM_CH2_TICKS     (FACTOR*60)  /* 1.25 us  */
+#define FTM_PERIOD_TICKS (FACTOR*100)
+
+/* DMA related */
+#define NOF_EDMA_CHANNELS  3 /* using three DMA channels */
+static edma_chn_state_t chnStates[NOF_EDMA_CHANNELS]; /* using three DMA channels */
+static volatile bool dmaDone = false;
 
 static void InitFlexTimer(uint32_t instance) {
   ftm_pwm_param_t flexTimer0_ChnConfig0 = { /* FTM channel configuration */
     .mode = kFtmEdgeAlignedPWM,
     .edgeMode = kFtmHighTrue,
-    .uFrequencyHZ = 1000U,
-    .uDutyCyclePercent = 10U,
+    .uFrequencyHZ = 1000U, /* dummy value, will change it later on */
+    .uDutyCyclePercent = 10U, /* dummy value, will change it later on */
     .uFirstEdgeDelayPercent = 0U,
   };
   ftm_user_config_t flexTimer0_InitConfig0 = {
@@ -34,6 +49,7 @@ static void InitFlexTimer(uint32_t instance) {
   };
   uint8_t channel;
   FTM_Type *ftmBase = g_ftmBase[instance];
+  uint32_t uFTMhz;
 
   FTM_DRV_Init(instance, &flexTimer0_InitConfig0);
   FTM_DRV_SetTimeOverflowIntCmd(instance, false); /* disable interrupt */
@@ -49,10 +65,11 @@ static void InitFlexTimer(uint32_t instance) {
   /* Based on Ref manual, in PWM mode CNTIN is to be set 0*/
   FTM_HAL_SetCounterInitVal(ftmBase, 0);
 
-  FTM_HAL_SetMod(ftmBase, 0x500);
-  FTM_HAL_SetChnCountVal(ftmBase, 0, 0x100);
-  FTM_HAL_SetChnCountVal(ftmBase, 1, 0x200);
-  FTM_HAL_SetChnCountVal(ftmBase, 2, 0x300);
+  uFTMhz = FTM_DRV_GetClock(instance);
+  FTM_HAL_SetMod(ftmBase, FTM_PERIOD_TICKS);
+  FTM_HAL_SetChnCountVal(ftmBase, 0, FTM_CH0_TICKS);
+  FTM_HAL_SetChnCountVal(ftmBase, 1, FTM_CH1_TICKS);
+  FTM_HAL_SetChnCountVal(ftmBase, 2, FTM_CH2_TICKS);
 
   /* reset all values */
   FTM_HAL_SetCounter(ftmBase, 0); /* reset counter */
@@ -68,12 +85,10 @@ void EDMA_Callback(void *param, edma_chn_status_t chanStatus) {
   dmaDone = true;
 }
 
-static edma_chn_state_t    chn0State, chn1State, chn2State;
-
 static void InitDMA(void) {
   edma_user_config_t  edmaUserConfig;
-  edma_state_t        edmaState;
-  uint8_t res;
+  static edma_state_t edmaState;
+  uint8_t res, channel;
 
   /* Initialize eDMA modules. */
   edmaUserConfig.chnArbitration = kEDMAChnArbitrationRoundrobin; /* use round-robin arbitration */
@@ -81,22 +96,14 @@ static void InitDMA(void) {
   EDMA_DRV_Init(&edmaState, &edmaUserConfig); /* initialize DMA with configuration */
 
   /* EDMA channel request. */
-//  res = EDMA_DRV_RequestChannel(channel, kDmaRequestMux0AlwaysOn62, &chn0State); /* always on channel */
-  res = EDMA_DRV_RequestChannel(0, kDmaRequestMux0FTM0Channel0, &chn0State);
-  if (res==kEDMAInvalidChannel) { /* check error code */
-    for(;;); /* ups!?! */
+  for (channel=0; channel<NOF_EDMA_CHANNELS; channel++) {
+    res = EDMA_DRV_RequestChannel(channel, kDmaRequestMux0FTM0Channel0+channel, &chnStates[channel]);
+    if (res==kEDMAInvalidChannel) { /* check error code */
+      for(;;); /* ups!?! */
+    }
   }
-  res = EDMA_DRV_RequestChannel(1, kDmaRequestMux0FTM0Channel1, &chn1State);
-  if (res==kEDMAInvalidChannel) { /* check error code */
-    for(;;); /* ups!?! */
-  }
-  res = EDMA_DRV_RequestChannel(2, kDmaRequestMux0FTM0Channel2, &chn2State);
-  if (res==kEDMAInvalidChannel) { /* check error code */
-    for(;;); /* ups!?! */
-  }
-
-  /* Install callback for eDMA handler on channel 2 */
-  EDMA_DRV_InstallCallback(&chn2State, EDMA_Callback, NULL);
+  /* Install callback for eDMA handler on last channel which is channel 2 */
+  EDMA_DRV_InstallCallback(&chnStates[NOF_EDMA_CHANNELS-1], EDMA_Callback, NULL);
 }
 
 static void StartStopFTM(uint32_t instance, bool startIt) {
@@ -109,66 +116,60 @@ static void StartStopFTM(uint32_t instance, bool startIt) {
   }
 }
 
-static void DoDMA(void) {
-  edma_software_tcd_t stcd0, stcd1, stcd2; /* transfer control descriptor */
-  edma_scatter_gather_list_t src0SG, src1SG, src2SG, dest0SG, dest1SG, dest2SG;
+static void PushDMADescriptor(edma_transfer_config_t *config, edma_chn_state_t *chn, bool enableInt) {
+  /* If only one TCD is required, only hardware TCD is required and user
+   * is not required to prepare the software TCD memory. */
+  edma_software_tcd_t temp[2]; /* make it larger so we can have a 32byte aligned address into it */
+  edma_software_tcd_t *tempTCD = STCD_ADDR(temp); /* ensure that we have a 32byte aligned address */
 
-  /* Configure EDMA src and destination descriptors */
-  src0SG.address  = (uint32_t)&OneValue[0];
-  dest0SG.address = (uint32_t)&GPIO_PSOR_REG(PTD_BASE_PTR);
-  src0SG.length   = 8; /* number of total bytes to read */
-  dest0SG.length  = 8; /* number of total bytes to write */
+  memset((void*) tempTCD, 0, sizeof(edma_software_tcd_t)); /* initialize temporary descriptor with zeros */
+  EDMA_DRV_PrepareDescriptorTransfer(chn, tempTCD, config, enableInt, true); /* prepare and copy descriptor into temporary one */
+  EDMA_DRV_PushDescriptorToReg(chn, tempTCD); /* write EDMA registers */
+}
 
-  src1SG.address  = (uint32_t)&transmitBuf[0];//&OneValue;
-  dest1SG.address = (uint32_t)&GPIO_PDOR_REG(PTD_BASE_PTR);
-  src1SG.length   = 8; /* number of total bytes to read */
-  dest1SG.length  = 8; /* number of total bytes to write */
+static void DoDMA(uint32_t nofBytes) {
+  edma_transfer_config_t config;
+  uint8_t channel;
 
-  src2SG.address  = (uint32_t)&OneValue[0];
-  dest2SG.address = (uint32_t)&GPIO_PCOR_REG(PTD_BASE_PTR);
-  src2SG.length   = 8; /* number of total bytes to read */
-  dest2SG.length  = 8; /* number of total bytes to write */
-  /* configure single end descriptor chain */
-  EDMA_DRV_ConfigScatterGatherTransfer(
-          &chn0State, /* channel information */
-          &stcd0, /* transfer control descriptor */
-          kEDMAMemoryToPeripheral, /* perform memory to peripheral operation */
-          1, /* transfer size of basic loop */
-          1, /* number of bytes transfered on each EDMA request(minor loop) */
-          &src0SG, &dest0SG, /* source and destination scatter-gather */
-          1 /* number of scatter-gather in chain */
-          );
-  EDMA_DRV_ConfigScatterGatherTransfer(
-          &chn1State, /* channel information */
-          &stcd1, /* transfer control descriptor */
-          kEDMAMemoryToPeripheral, /* perform memory to peripheral operation */
-          1, /* transfer size of basic loop */
-          1, /* number of bytes transfered on each EDMA request(minor loop) */
-          &src1SG, &dest1SG, /* source and destination scatter-gather */
-          1 /* number of scatter-gather in chain */
-          );
-  EDMA_DRV_ConfigScatterGatherTransfer(
-          &chn2State, /* channel information */
-          &stcd2, /* transfer control descriptor */
-          kEDMAMemoryToPeripheral, /* perform memory to peripheral operation */
-          1, /* transfer size of basic loop */
-          1, /* number of bytes transfered on each EDMA request(minor loop) */
-          &src2SG, &dest2SG, /* source and destination scatter-gather */
-          1 /* number of scatter-gather in chain */
-          );
+  /* prepare DMA configuration */
+  config.srcLastAddrAdjust = 0;
+  config.destLastAddrAdjust = 0;
+  config.srcModulo = kEDMAModuloDisable;
+  config.destModulo = kEDMAModuloDisable;
+  config.srcTransferSize = kEDMATransferSize_1Bytes;
+  config.destTransferSize = kEDMATransferSize_1Bytes;
+  config.minorLoopCount = 1; /* one byte transmitted for each request */
+  config.majorLoopCount = nofBytes; /* total number of bytes to send */
+  config.destOffset = 0; /* do not increment destination address */
+
+  config.srcAddr = (uint32_t)&OneValue;
+  config.destAddr = (uint32_t)&GPIO_PSOR_REG(PTD_BASE_PTR);
+  config.srcOffset = 0; /* do not increment source address */
+  PushDMADescriptor(&config, &chnStates[0], false);
+
+  config.srcAddr = (uint32_t)&transmitBuf[0];
+  config.destAddr = (uint32_t)&GPIO_PDOR_REG(PTD_BASE_PTR);
+  config.srcOffset = 1; /* do not increment source address */
+  PushDMADescriptor(&config, &chnStates[1], false);
+
+  config.srcAddr = (uint32_t)&OneValue;
+  config.destAddr = (uint32_t)&GPIO_PCOR_REG(PTD_BASE_PTR);
+  config.srcOffset = 0; /* do not increment source address */
+  PushDMADescriptor(&config, &chnStates[2], true);
+
   /* initialize transfer */
   dmaDone = false; /* reset done flag */
-  EDMA_DRV_StartChannel(&chn0State); /* enable DMA */
-  EDMA_DRV_StartChannel(&chn1State); /* enable DMA */
-  EDMA_DRV_StartChannel(&chn2State); /* enable DMA */
-  StartStopFTM(FTM0_IDX, true); /* start timer */
+  for (channel=0; channel<NOF_EDMA_CHANNELS; channel++) {
+    EDMA_DRV_StartChannel(&chnStates[channel]); /* enable DMA */
+  }
+  StartStopFTM(FTM0_IDX, true); /* start FTM timer to fire sequence of DMA transfers */
   do {
     /* wait until transfer is complete */
   } while(!dmaDone);
   StartStopFTM(FTM0_IDX, false); /* stop timer */
-  EDMA_DRV_StopChannel(&chn0State); /* stop DMA channel */
-  EDMA_DRV_StopChannel(&chn1State); /* stop DMA channel */
-  EDMA_DRV_StopChannel(&chn2State); /* stop DMA channel */
+  for (channel=0; channel<NOF_EDMA_CHANNELS; channel++) {
+    EDMA_DRV_StopChannel(&chnStates[channel]); /* stop DMA channel */
+  }
 }
 
 static bool start = true;
@@ -181,8 +182,7 @@ void APP_Run(void) {
     GPIO_DRV_TogglePinOutput(LEDRGB_BLUE);
     OSA_TimeDelay(10);
     if (start) {
-      GPIO_PCOR_REG(PTD_BASE_PTR) = (1<<0); /* Port Clear Output PTD0 */
-      DoDMA();
+      DoDMA(sizeof(transmitBuf));
       //GPIO_PTOR_REG(PTD_BASE_PTR) = (1<<0); /* Port Toggle Output PTD0 */
       //GPIO_PSOR_REG(PTD_BASE_PTR) = (1<<0); /* Port Set Output PTD0 */
       //GPIO_PTOR_REG(PTE_BASE_PTR) = (1<<26); /* toggle PTE26 (GREEN RGB) */
@@ -190,8 +190,28 @@ void APP_Run(void) {
   }
 }
 
+#if 1
+/*! @brief Dma channel 0 ISR */
+void DMA0_IRQHandler(void){
+   EDMA_DRV_IRQHandler(0U);
+}
+
+/*! @brief Dma channel 1 ISR */
+void DMA1_IRQHandler(void){
+   EDMA_DRV_IRQHandler(1U);
+}
+#endif
+
+#if 1
+/*! @brief Dma channel 2 ISR */
+void DMA2_IRQHandler(void){
+   EDMA_DRV_IRQHandler(2U);
+}
+#endif
+
+#if 0
 /*! @brief EDMA ERROR IRQ handler with the same name in the startup code*/
 void DMA_Error_IRQHandler(void) {
   EDMA_DRV_ErrorIRQHandler(0);
 }
-
+#endif
