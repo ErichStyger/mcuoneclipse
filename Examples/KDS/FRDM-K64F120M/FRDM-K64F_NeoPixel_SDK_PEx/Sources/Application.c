@@ -17,16 +17,16 @@
 #define NEO_NOF_BITS_PIXEL 24
 static const uint8_t OneValue = 0xFF; /* value to clear or set the port bits */
 static uint8_t transmitBuf[] =
-  {0x11,0x20,0x31,0x40,0x51,0x60,0x71,0x80,
+  {0x11,0x21,0x31,0x41,0x51,0x61,0x71,0x81,
    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-   0x1, 0x0, 0x1, 0x0, 0x1, 0x0, 0x1, 0x0
+   0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1
   }; /* bit values */
 
-#define FACTOR 10
-#define FTM_CH0_TICKS     (FACTOR*18)  /* 0.35 us */
-#define FTM_CH1_TICKS     (FACTOR*36)  /* 0.9 us */
-#define FTM_CH2_TICKS     (FACTOR*60)  /* 1.25 us  */
-#define FTM_PERIOD_TICKS (FACTOR*100)
+#define FACTOR 2
+#define FTM_CH0_TICKS     (FACTOR*10)  /* 0.35 us */
+#define FTM_CH1_TICKS     (FACTOR*20)  /* 0.9 us */
+#define FTM_CH2_TICKS     (FACTOR*30)  /* 1.25 us  */
+#define FTM_PERIOD_TICKS  (FACTOR*40)
 
 /* FTM related */
 #define NOF_FTM_CHANNELS  3 /* using three FTM0 channels */
@@ -74,21 +74,42 @@ static void InitFlexTimer(uint32_t instance) {
   FTM_HAL_SetChnCountVal(ftmBase, 2, FTM_CH2_TICKS);
 }
 
-static void FTMPrepareForDMA(uint32_t instance) {
+static void PrepareFTMforDMAStart(uint32_t instance) {
   FTM_Type *ftmBase = g_ftmBase[instance];
   uint8_t channel;
 
-  /* Ugly: need to disable DMA muxing in order to sync the internal DMA engine */
-  for(channel=0; channel<NOF_FTM_CHANNELS; channel++) {
-    FTM_HAL_SetChnDmaCmd(ftmBase, channel, false); /* disable DMA request */
-  }
   /* reset all values */
   FTM_HAL_SetCounter(ftmBase, 0); /* reset FTM counter */
   FTM_HAL_ClearTimerOverflow(ftmBase); /* clear timer overflow flag (if any) */
   for(channel=0; channel<NOF_FTM_CHANNELS; channel++) {
-    FTM_HAL_ClearChnEventFlag(ftmBase, channel); /* clear channel 0 flag */
+    FTM_HAL_ClearChnEventFlag(ftmBase, channel); /* clear channel flag */
     FTM_HAL_SetChnDmaCmd(ftmBase, channel, true); /* enable DMA request */
     FTM_HAL_EnableChnInt(ftmBase, channel); /* enable channel interrupt: need to have both DMA and CHnIE set for DMA transfers! See RM 40.4.23 */
+  }
+}
+
+static void StartStopFTM(uint32_t instance, bool startIt) {
+  FTM_Type *ftmBase = g_ftmBase[instance];
+
+  if (startIt) {
+    FTM_HAL_SetClockSource(ftmBase, kClock_source_FTM_SystemClk); /* clock timer */
+  } else {
+    FTM_HAL_SetClockSource(ftmBase, kClock_source_FTM_None); /* disable clock */
+  }
+}
+
+static void PrepareFTMforDMAStopped(uint32_t instance) {
+  FTM_Type *ftmBase = g_ftmBase[instance];
+  uint8_t channel;
+
+  StartStopFTM(instance, false); /* stop FTM timer */
+  /* reset all values */
+  FTM_HAL_SetCounter(ftmBase, 0); /* reset FTM counter */
+  FTM_HAL_ClearTimerOverflow(ftmBase); /* clear timer overflow flag (if any) */
+  for(channel=0; channel<NOF_FTM_CHANNELS; channel++) {
+    FTM_HAL_DisableChnInt(ftmBase, channel); /* disable channel interrupt */
+    FTM_HAL_SetChnDmaCmd(ftmBase, channel, false); /* disable DMA request */
+    FTM_HAL_ClearChnEventFlag(ftmBase, channel); /* clear channel flag */
   }
 }
 
@@ -105,8 +126,8 @@ static void InitDMA(void) {
   edmaUserConfig.chnArbitration = kEDMAChnArbitrationRoundrobin; /* use round-robin arbitration */
   edmaUserConfig.notHaltOnError = false; /* do not halt in case of errors */
   EDMA_DRV_Init(&edmaState, &edmaUserConfig); /* initialize DMA with configuration */
-
-  /* EDMA channel request. */
+#if 0
+  /* Allocate EDMA channel request trough DMAMUX */
   for (channel=0; channel<NOF_EDMA_CHANNELS; channel++) {
     res = EDMA_DRV_RequestChannel(channel, kDmaRequestMux0FTM0Channel0+channel, &chnStates[channel]);
     if (res==kEDMAInvalidChannel) { /* check error code */
@@ -115,16 +136,7 @@ static void InitDMA(void) {
   }
   /* Install callback for eDMA handler on last channel which is channel 2 */
   EDMA_DRV_InstallCallback(&chnStates[NOF_EDMA_CHANNELS-1], EDMA_Callback, NULL);
-}
-
-static void StartStopFTM(uint32_t instance, bool startIt) {
-  FTM_Type *ftmBase = g_ftmBase[instance];
-
-  if (startIt) {
-    FTM_HAL_SetClockSource(ftmBase, kClock_source_FTM_SystemClk); /* clock timer */
-  } else {
-    FTM_HAL_SetClockSource(ftmBase, kClock_source_FTM_None); /* disable clock */
-  }
+#endif
 }
 
 static void PushDMADescriptor(edma_transfer_config_t *config, edma_chn_state_t *chn, bool enableInt) {
@@ -141,6 +153,20 @@ static void PushDMADescriptor(edma_transfer_config_t *config, edma_chn_state_t *
 static void DoDMA(uint32_t nofBytes) {
   edma_transfer_config_t config;
   uint8_t channel;
+  uint8_t res;
+
+  /* clear FTFM and prepare for DMA */
+  PrepareFTMforDMAStart(FTM0_IDX);
+
+  /* Allocate EDMA channel request trough DMAMUX */
+  for (channel=0; channel<NOF_EDMA_CHANNELS; channel++) {
+    res = EDMA_DRV_RequestChannel(channel, kDmaRequestMux0FTM0Channel0+channel, &chnStates[channel]);
+    if (res==kEDMAInvalidChannel) { /* check error code */
+      for(;;); /* ups!?! */
+    }
+  }
+  /* Install callback for eDMA handler on last channel which is channel 2 */
+  EDMA_DRV_InstallCallback(&chnStates[NOF_EDMA_CHANNELS-1], EDMA_Callback, NULL);
 
   /* prepare DMA configuration */
   config.srcLastAddrAdjust = 0;
@@ -169,18 +195,24 @@ static void DoDMA(uint32_t nofBytes) {
   PushDMADescriptor(&config, &chnStates[2], true);
 
   /* initialize transfer */
-  dmaDone = false; /* reset done flag */
   for (channel=0; channel<NOF_EDMA_CHANNELS; channel++) {
     EDMA_DRV_StartChannel(&chnStates[channel]); /* enable DMA */
   }
-  FTMPrepareForDMA(FTM0_IDX);
+  dmaDone = false; /* reset done flag */
   StartStopFTM(FTM0_IDX, true); /* start FTM timer to fire sequence of DMA transfers */
   do {
     /* wait until transfer is complete */
   } while(!dmaDone);
-  StartStopFTM(FTM0_IDX, false); /* stop timer */
+  PrepareFTMforDMAStopped(FTM0_IDX);
   for (channel=0; channel<NOF_EDMA_CHANNELS; channel++) {
     EDMA_DRV_StopChannel(&chnStates[channel]); /* stop DMA channel */
+  }
+  /* Release EDMA channel request trough DMAMUX, otherwise events might still be latched! */
+  for (channel=0; channel<NOF_EDMA_CHANNELS; channel++) {
+    res = EDMA_DRV_ReleaseChannel(&chnStates[channel]);
+    if (res!=kStatus_EDMA_Success) { /* check error code */
+      for(;;); /* ups!?! */
+    }
   }
 }
 
@@ -202,7 +234,7 @@ void APP_Run(void) {
   }
 }
 
-#if 1
+#if 0
 /*! @brief Dma channel 0 ISR */
 void DMA0_IRQHandler(void){
    EDMA_DRV_IRQHandler(0U);
@@ -218,12 +250,5 @@ void DMA1_IRQHandler(void){
 /*! @brief Dma channel 2 ISR */
 void DMA2_IRQHandler(void){
    EDMA_DRV_IRQHandler(2U);
-}
-#endif
-
-#if 0
-/*! @brief EDMA ERROR IRQ handler with the same name in the startup code*/
-void DMA_Error_IRQHandler(void) {
-  EDMA_DRV_ErrorIRQHandler(0);
 }
 #endif
