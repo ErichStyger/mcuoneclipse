@@ -28,6 +28,9 @@ static uint8_t transmitBuf[] =
 #define FTM_CH2_TICKS     (FACTOR*60)  /* 1.25 us  */
 #define FTM_PERIOD_TICKS (FACTOR*100)
 
+/* FTM related */
+#define NOF_FTM_CHANNELS  3 /* using three FTM0 channels */
+
 /* DMA related */
 #define NOF_EDMA_CHANNELS  3 /* using three DMA channels */
 static edma_chn_state_t chnStates[NOF_EDMA_CHANNELS]; /* using three DMA channels */
@@ -47,9 +50,8 @@ static void InitFlexTimer(uint32_t instance) {
     .BDMMode           = kFtmBdmMode_00, /* default mode for debug: timer will be stopped, can modify registers */
     .syncMethod        = (uint32_t)(kFtmUseSoftwareTrig) /* using software synchronization */
   };
-  uint8_t channel;
   FTM_Type *ftmBase = g_ftmBase[instance];
-  uint32_t uFTMhz;
+  //uint32_t uFTMhz;
 
   FTM_DRV_Init(instance, &flexTimer0_InitConfig0);
   FTM_DRV_SetTimeOverflowIntCmd(instance, false); /* disable interrupt */
@@ -65,16 +67,25 @@ static void InitFlexTimer(uint32_t instance) {
   /* Based on Ref manual, in PWM mode CNTIN is to be set 0*/
   FTM_HAL_SetCounterInitVal(ftmBase, 0);
 
-  uFTMhz = FTM_DRV_GetClock(instance);
+  //uFTMhz = FTM_DRV_GetClock(instance);
   FTM_HAL_SetMod(ftmBase, FTM_PERIOD_TICKS);
   FTM_HAL_SetChnCountVal(ftmBase, 0, FTM_CH0_TICKS);
   FTM_HAL_SetChnCountVal(ftmBase, 1, FTM_CH1_TICKS);
   FTM_HAL_SetChnCountVal(ftmBase, 2, FTM_CH2_TICKS);
+}
 
+static void FTMPrepareForDMA(uint32_t instance) {
+  FTM_Type *ftmBase = g_ftmBase[instance];
+  uint8_t channel;
+
+  /* Ugly: need to disable DMA muxing in order to sync the internal DMA engine */
+  for(channel=0; channel<NOF_FTM_CHANNELS; channel++) {
+    FTM_HAL_SetChnDmaCmd(ftmBase, channel, false); /* disable DMA request */
+  }
   /* reset all values */
-  FTM_HAL_SetCounter(ftmBase, 0); /* reset counter */
+  FTM_HAL_SetCounter(ftmBase, 0); /* reset FTM counter */
   FTM_HAL_ClearTimerOverflow(ftmBase); /* clear timer overflow flag (if any) */
-  for(channel=0; channel<=2; channel++) {
+  for(channel=0; channel<NOF_FTM_CHANNELS; channel++) {
     FTM_HAL_ClearChnEventFlag(ftmBase, channel); /* clear channel 0 flag */
     FTM_HAL_SetChnDmaCmd(ftmBase, channel, true); /* enable DMA request */
     FTM_HAL_EnableChnInt(ftmBase, channel); /* enable channel interrupt: need to have both DMA and CHnIE set for DMA transfers! See RM 40.4.23 */
@@ -162,6 +173,7 @@ static void DoDMA(uint32_t nofBytes) {
   for (channel=0; channel<NOF_EDMA_CHANNELS; channel++) {
     EDMA_DRV_StartChannel(&chnStates[channel]); /* enable DMA */
   }
+  FTMPrepareForDMA(FTM0_IDX);
   StartStopFTM(FTM0_IDX, true); /* start FTM timer to fire sequence of DMA transfers */
   do {
     /* wait until transfer is complete */
