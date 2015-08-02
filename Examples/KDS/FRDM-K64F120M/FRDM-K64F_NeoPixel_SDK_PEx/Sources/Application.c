@@ -15,35 +15,32 @@ static bool start = true;
 
 void APP_Run(void) {
   int i;
+  uint8_t red, green, blue;
 
   NEO_Init();
   for(;;) {
     GPIO_DRV_TogglePinOutput(LEDRGB_BLUE);
-    //OSA_TimeDelay(10);
     if (start) {
       NEO_ClearAllPixel();
       NEO_TransferPixels();
       for(i=0;i<NEO_NOF_PIXEL;i++) {
-        NEO_SetPixelRGB(i, 0x10+(i*0x10), 0x20+(i*0x20), 0x30+(i*0x30));
+        red = 0x10+(i*0x10); if (red==0) { red = 0x10; }
+        green = 0x20+(i*0x20); if (green==0) { green = 0x10; }
+        blue = 0x30+(i*0x30); if (blue==0) { blue = 0x10; }
+        NEO_SetPixelRGB(i, red, green, blue);
         NEO_TransferPixels();
         OSA_TimeDelay(50);
       }
       NEO_ClearAllPixel();
       NEO_TransferPixels();
-      NEOL_PixelTrail(0xff, 0x00, 0x00, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10*5);
-     // DimmColor(NEO_PIXEL_FIRST, NEO_PIXEL_LAST, true, false, false);
-      NEOL_PixelTrail(0xff, 0xff, 0x00, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10*5);
-     // DimmColor(NEO_PIXEL_FIRST, NEO_PIXEL_LAST, false, true, false);
-      NEOL_PixelTrail(0x00, 0xff, 0x00, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10*5);
-     // DimmColor(NEO_PIXEL_FIRST, NEO_PIXEL_LAST, false, false, true);
-      NEOL_PixelTrail(0x00, 0xff, 0xff, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10*5);
-     // DimmColor(NEO_PIXEL_FIRST, NEO_PIXEL_LAST, false, true, true);
+      NEOL_PixelTrail(0xff, 0x00, 0x00, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10*2);
+      NEOL_PixelTrail(0xff, 0xff, 0x00, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10*2);
+      NEOL_PixelTrail(0x00, 0xff, 0x00, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10*2);
+      NEOL_PixelTrail(0x00, 0xff, 0xff, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10*2);
       NEO_ClearAllPixel();
-      NEOL_PixelTrail(0x00, 0x00, 0xff, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10*5);
-     // DimmColor(NEO_PIXEL_FIRST, NEO_PIXEL_LAST, true, false, true);
+      NEOL_PixelTrail(0x00, 0x00, 0xff, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10*2);
       NEO_ClearAllPixel();
-      NEOL_PixelTrail(0xff, 0x00, 0xff, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10*5);
-     // DimmColor(NEO_PIXEL_FIRST, NEO_PIXEL_LAST, true, true, true);
+      NEOL_PixelTrail(0xff, 0x00, 0xff, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10*2);
     }
   }
 }

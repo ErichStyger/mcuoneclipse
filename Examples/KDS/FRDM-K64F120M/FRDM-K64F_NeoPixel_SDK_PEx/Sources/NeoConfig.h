@@ -8,6 +8,6 @@
 #ifndef NEOCONFIG_H_
 #define NEOCONFIG_H_
 
-#define NEOC_NOF_PIXEL   (8) /* number of pixels */
+#define NEOC_NOF_PIXEL   (64) /* number of pixels */
 
 #endif /* NEOCONFIG_H_ */
