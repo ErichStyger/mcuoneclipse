@@ -19,7 +19,7 @@ static const uint8_t OneValue = 0xFF; /* value to clear or set the port bits */
 #define FTM_CH0_TICKS     (0x10)  /* delay until 0xFF */
 #define FTM_CH1_TICKS     (0x2A)  /* at 0.4us write data */
 #define FTM_CH2_TICKS     (0x40)  /* at 0.8us clear bits  */
-#define FTM_PERIOD_TICKS  (0x4A)  /* 1.25 us period */
+#define FTM_PERIOD_TICKS  (0x4B)  /* 1.25 us period */
 
 /* FTM related */
 #define NOF_FTM_CHANNELS  3 /* using three FTM0 channels */
@@ -124,17 +124,6 @@ static void InitDMA(void) {
   edmaUserConfig.chnArbitration = kEDMAChnArbitrationRoundrobin; /* use round-robin arbitration */
   edmaUserConfig.notHaltOnError = false; /* do not halt in case of errors */
   EDMA_DRV_Init(&edmaState, &edmaUserConfig); /* initialize DMA with configuration */
-#if 0
-  /* Allocate EDMA channel request trough DMAMUX */
-  for (channel=0; channel<NOF_EDMA_CHANNELS; channel++) {
-    res = EDMA_DRV_RequestChannel(channel, kDmaRequestMux0FTM0Channel0+channel, &chnStates[channel]);
-    if (res==kEDMAInvalidChannel) { /* check error code */
-      for(;;); /* ups!?! */
-    }
-  }
-  /* Install callback for eDMA handler on last channel which is channel 2 */
-  EDMA_DRV_InstallCallback(&chnStates[NOF_EDMA_CHANNELS-1], EDMA_Callback, NULL);
-#endif
 }
 
 static void PushDMADescriptor(edma_transfer_config_t *config, edma_chn_state_t *chn, bool enableInt) {
