@@ -16,6 +16,7 @@ static bool start = true;
 void APP_Run(void) {
   int i;
   uint8_t red, green, blue;
+  uint8_t dimmPercent = 50;
 
   NEO_Init();
   for(;;) {
@@ -33,6 +34,16 @@ void APP_Run(void) {
       }
       NEO_ClearAllPixel();
       NEO_TransferPixels();
+
+      for(i=0;i<NEO_NOF_PIXEL;i++) {
+        green = 0x5+(i*0x10); if (red==0) { red = 0x5; }
+        blue = 0x5+(i*0x15); if (green==0) { green = 0x5; }
+        red = 0x5+(i*0x20); if (blue==0) { blue = 0x5; }
+        NEO_SetPixelRGB(i, red, green, blue);
+        NEO_DimmPercentPixel(i, dimmPercent);
+      }
+      NEO_TransferPixels();
+
       NEOL_PixelTrail(0xff, 0x00, 0x00, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10*2);
       NEOL_PixelTrail(0xff, 0xff, 0x00, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10*2);
       NEOL_PixelTrail(0x00, 0xff, 0x00, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10*2);

@@ -12,7 +12,6 @@
 #define VAL1          1  /* 1 Bit: 0.792 us (need: 0.8 us high */
 
 #define NEO_NOF_BITS_PIXEL  24  /* 24 bits for pixel */
-#define NEO_DMA_NOF_BYTES   sizeof(transmitBuf)
 
 static uint8_t transmitBuf[NEO_NOF_PIXEL*NEO_NOF_BITS_PIXEL];
 
