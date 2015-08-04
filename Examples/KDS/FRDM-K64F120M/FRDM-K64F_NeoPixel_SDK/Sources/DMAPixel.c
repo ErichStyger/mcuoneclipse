@@ -33,7 +33,7 @@
 #define NOF_EDMA_CHANNELS  3 /* using three DMA channels */
 static edma_chn_state_t chnStates[NOF_EDMA_CHANNELS]; /* array of DMA channel states */
 static volatile bool dmaDone = false; /* set by DMA complete interrupt on DMA channel 3 */
-static const uint8_t OneValue = 0xFF; /* value to clear or set the port bits */
+static const uint8_t OneValue = 0x01; /* value to clear or set the port bit(s) */
 
 /* --------------------------------------- */
 /* FTM                                     */
@@ -120,14 +120,15 @@ static void InitFlexTimer(uint32_t instance) {
 /* --------------------------------------- */
 /* DMA                                     */
 /* --------------------------------------- */
-
 /*! @brief Dma channel 2 ISR */
 void DMA2_IRQHandler(void){
-   EDMA_DRV_IRQHandler(2U);
+   EDMA_DRV_IRQHandler(2U); /* call SDK EDMA IRQ handler, this will call EDMA_Callback() */
 }
 
 void EDMA_Callback(void *param, edma_chn_status_t chanStatus) {
-  dmaDone = true;
+  (void)param; /* not used */
+  (void)chanStatus; /* not used */
+  dmaDone = true; /* set 'done' flag at the end of the major loop */
 }
 
 static void PushDMADescriptor(edma_transfer_config_t *config, edma_chn_state_t *chn, bool enableInt) {
@@ -176,13 +177,13 @@ void DMA_Transfer(uint8_t *transmitBuf, uint32_t nofBytes) {
 
   config.srcAddr = (uint32_t)transmitBuf; /* pointer to data */
   config.destAddr = (uint32_t)&GPIO_PDOR_REG(PTD_BASE_PTR); /* Port Data Output register */
-  config.srcOffset = 1; /* do not increment source address */
+  config.srcOffset = 1; /* increment source address */
   PushDMADescriptor(&config, &chnStates[1], false); /* write configuration to DMA channel 1 */
 
   config.srcAddr = (uint32_t)&OneValue; /* Bit set */
   config.destAddr = (uint32_t)&GPIO_PCOR_REG(PTD_BASE_PTR); /* Port Clear Output register */
   config.srcOffset = 0; /* do not increment source address */
-  PushDMADescriptor(&config, &chnStates[2], true); /* write configuration to DMA channel 1 */
+  PushDMADescriptor(&config, &chnStates[2], true); /* write configuration to DMA channel 1, and enable 'end' interrupt for it */
 
   /* enable the DMA channels */
   for (channel=0; channel<NOF_EDMA_CHANNELS; channel++) {
@@ -193,7 +194,7 @@ void DMA_Transfer(uint8_t *transmitBuf, uint32_t nofBytes) {
   do {
     /* wait until transfer is complete */
   } while(!dmaDone);
-  StopFTMDMA(FTM0_IDX); /* stop FTM DMA tranfers */
+  StopFTMDMA(FTM0_IDX); /* stop FTM DMA transfers */
   for (channel=0; channel<NOF_EDMA_CHANNELS; channel++) {
     EDMA_DRV_StopChannel(&chnStates[channel]); /* stop DMA channel */
   }
@@ -228,18 +229,7 @@ static void InitHardware(void) {
   /* Setup board clock source. */
   g_xtal0ClkFreq = 50000000U;           /* Value of the external crystal or oscillator clock frequency of the system oscillator (OSC) in Hz */
   g_xtalRtcClkFreq = 32768U;            /* Value of the external 32k crystal or oscillator clock frequency of the RTC in Hz */
-#if 0
-  PORT_HAL_SetMuxMode(PORTB, 21UL, kPortMuxAsGpio); /* PTB21, Blue RGB LED */
-  PORT_HAL_SetMuxMode(PORTB, 22UL, kPortMuxAsGpio); /* PTB22, Red RGB LED */
-  PORT_HAL_SetMuxMode(PORTE, 26UL, kPortMuxAsGpio); /* PTE26, Green RGB LED */
-  GPIO_PDDR_REG(PTB_BASE_PTR) |= (1<<21); /* PTB21 as output (blue) */
-  GPIO_PDDR_REG(PTB_BASE_PTR) |= (1<<22); /* PTB22 as output (red) */
-  GPIO_PDDR_REG(PTE_BASE_PTR) |= (1<<26); /* PTE26 as output (green) */
-  /* turn off LED's */
-  GPIO_PSOR_REG(PTB_BASE_PTR) = (1<<21); /* Port Set Output PTB21 (Blue LED) */
-  GPIO_PSOR_REG(PTB_BASE_PTR) = (1<<22); /* Port Set Output PTB22 (Red LED) */
-  GPIO_PSOR_REG(PTE_BASE_PTR) = (1<<26); /* Port Set Output PTE26 (Green LED) */
-#endif
+
   /* Use PTD0 as DIN to the Neopixels: mux it as GPIO and output pin */
   PORT_HAL_SetMuxMode(PORTD, 0UL, kPortMuxAsGpio); /* PTD0: DIN to NeoPixels */
   GPIO_PDDR_REG(PTD_BASE_PTR) |= (1<<0); /* PTD0 as output */
@@ -254,17 +244,7 @@ static void InitHardware(void) {
 }
 
 void DMA_Init(void) {
-  //uint32_t uFTMhz;
-
   InitHardware();
-//  GPIO_PCOR_REG(PTD_BASE_PTR) = (1<<0); /* Port Clear Output PTD0 */
-
   ResetFTM(FTM0_IDX);
   StartStopFTM(FTM0_IDX, true); /* start FTM timer */
-  //uFTMhz = FTM_DRV_GetClock(FTM0_IDX);
-
-  for(;;) {
-  //  GPIO_PCOR_REG(PTB_BASE_PTR) = (1<<21); /* Port Clear Output PTB21 (Blue LED) */
-  //  GPIO_PSOR_REG(PTB_BASE_PTR) = (1<<21); /* Port Clear Output PTB21 (Blue LED) */
-  }
 }

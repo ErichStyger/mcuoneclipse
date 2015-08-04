@@ -15,6 +15,15 @@
 #ifndef SOURCES_DMAPIXEL_H_
 #define SOURCES_DMAPIXEL_H_
 
+#include <stdint.h>
+
+/*!
+ * \brief Transmits a buffer of WS2812 pixel data
+ * \param transmitBuf Pointer to the buffer
+ * \param nofBytes Size of buffer in bytes
+ */
+void DMA_Transfer(uint8_t *transmitBuf, uint32_t nofBytes);
+
 /*! \brief Initialize the timer and DMA */
 void DMA_Init(void);
 

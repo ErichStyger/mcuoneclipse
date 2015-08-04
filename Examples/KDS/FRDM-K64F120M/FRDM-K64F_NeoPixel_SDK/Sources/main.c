@@ -31,12 +31,30 @@
 #include "fsl_device_registers.h"
 #include "DMAPixel.h"
 
+#define NEO_NOF_PIXEL       3
+#define NEO_NOF_BITS_PIXEL 24
+static uint8_t transmitBuf[NEO_NOF_PIXEL*NEO_NOF_BITS_PIXEL] =
+    {
+        /* pixel 0: */
+        1, 1, 1, 1, 1, 1, 1, 1, /* green */
+        0, 0, 0, 0, 0, 0, 0, 0, /* red */
+        0, 0, 0, 0, 0, 0, 0, 0, /* blue */
+        /* pixel 1: */
+        0, 0, 0, 0, 0, 0, 0, 0, /* green */
+        1, 1, 1, 1, 1, 1, 1, 1, /* red */
+        0, 0, 0, 0, 0, 0, 0, 0,  /* blue */
+        /* pixel 0: */
+        0, 0, 0, 0, 0, 0, 0, 0, /* green */
+        0, 0, 0, 0, 0, 0, 0, 0, /* red */
+        1, 1, 1, 1, 1, 1, 1, 1  /* blue */
+    };
+
 int main(void) {
-  int i = 0;
+  uint8_t red, green, blue;
 
   DMA_Init();
   for (;;) {
-      i++;
+    DMA_Transfer(transmitBuf, sizeof(transmitBuf));
   }
   /* Never leave main */
   return 0;
