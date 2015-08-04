@@ -35,6 +35,41 @@ void APP_Run(void) {
       NEO_ClearAllPixel();
       NEO_TransferPixels();
 
+      for(i=0;i<=7;i++) {
+        NEO_SetPixelRGB(i, 0x00, 0x00, (i+1)*10);
+        NEO_DimmPercentPixel(i, i*10);
+      }
+      for(i=8;i<=15;i++) {
+        NEO_SetPixelRGB(i, 0x00, i-7*10, 0x00);
+        NEO_DimmPercentPixel(i, (i-8)*10);
+      }
+      for(i=16;i<=23;i++) {
+        NEO_SetPixelRGB(i, i-15*10, 0x00, 0x00);
+        NEO_DimmPercentPixel(i, (i-16)*10);
+      }
+      for(i=24;i<=31;i++) {
+        NEO_SetPixelRGB(i, 0x00, 0x00, (i-23)*10);
+        NEO_DimmPercentPixel(i, (i-23)*10);
+      }
+      for(i=32;i<=39;i++) {
+        NEO_SetPixelRGB(i, 0x00, i-31*10, 0x00);
+        NEO_DimmPercentPixel(i, (i-31)*10);
+      }
+      for(i=40;i<=47;i++) {
+        NEO_SetPixelRGB(i, i-40*10, 0, 0x00);
+        NEO_DimmPercentPixel(i, (i-39)*10);
+      }
+      for(i=48;i<=55;i++) {
+        NEO_SetPixelRGB(i, 0, 0, i-47*10);
+        NEO_DimmPercentPixel(i, (i-47)*10);
+      }
+      for(i=56;i<=63;i++) {
+        NEO_SetPixelRGB(i, 0, 0, i-55*10);
+        NEO_DimmPercentPixel(i, (i-55)*10);
+      }
+      NEO_TransferPixels();
+
+
       for(i=0;i<NEO_NOF_PIXEL;i++) {
         green = 0x5+(i*0x10); if (red==0) { red = 0x5; }
         blue = 0x5+(i*0x15); if (green==0) { green = 0x5; }
