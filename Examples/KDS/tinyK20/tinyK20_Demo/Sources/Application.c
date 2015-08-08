@@ -2,6 +2,7 @@
  * Application.c
  *      Author: Erich Styger
  */
+#include "Platform.h"
 #include "Application.h"
 #include "LED1.h"
 #include "FAT1.h"
@@ -11,7 +12,9 @@
 #include "FRTOS1.h"
 #include "CDC1.h"
 #include "Shell.h"
-#include "RTC1.h"
+#if PL_USE_HW_RTC
+  #include "RTC1.h"
+#endif
 
 static FAT1_FATFS fileSystemObject;
 
@@ -112,7 +115,9 @@ static void led_task(void *param) {
 
 void APP_Run(void) {
 //  DiskTest();
-  (void)RTC1_Enable(RTC1_DeviceData);
+#if PL_USE_HW_RTC
+  //(void)RTC1_Enable(RTC1_DeviceData); /* already enabled by default */
+#endif
   SHELL_Init();
 
 #if 0

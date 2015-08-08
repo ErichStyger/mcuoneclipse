@@ -35,6 +35,7 @@ extern "C" {
 
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "Platform.h"
 
 /*
 ** ===================================================================
@@ -98,7 +99,9 @@ void FRTOS1_vApplicationTickHook(void)
 {
   /* Called for every RTOS tick. */
   TMOUT1_AddTick();
+#if !PL_USE_HW_RTC
   TmDt1_AddTick();
+#endif
 }
 
 /*
@@ -162,6 +165,7 @@ void FRTOS1_vApplicationMallocFailedHook(void)
 */
 void TmDt1_OnTimeSet(uint8_t hour, uint8_t minute, uint8_t second, uint8_t hSecond)
 {
+#if PL_USE_HW_RTC
   LDD_RTC_TTime timeDate;
 
   (void)hSecond; /* not used */
@@ -170,6 +174,7 @@ void TmDt1_OnTimeSet(uint8_t hour, uint8_t minute, uint8_t second, uint8_t hSeco
   timeDate.Minute = minute;
   timeDate.Second = second;
   RTC1_SetTime(RTC1_DeviceData, &timeDate); /* store back information */
+#endif
 }
 
 /*
@@ -189,6 +194,7 @@ void TmDt1_OnTimeSet(uint8_t hour, uint8_t minute, uint8_t second, uint8_t hSeco
 */
 void TmDt1_OnDateSet(uint8_t day, uint8_t month, uint16_t year)
 {
+#if PL_USE_HW_RTC
   LDD_RTC_TTime timeDate;
 
   RTC1_GetTime(RTC1_DeviceData, &timeDate); /* get existing data */
@@ -196,6 +202,7 @@ void TmDt1_OnDateSet(uint8_t day, uint8_t month, uint16_t year)
   timeDate.Month = month;
   timeDate.Year = year;
   RTC1_SetTime(RTC1_DeviceData, &timeDate); /* store back information */
+#endif
 }
 
 /*
@@ -220,6 +227,7 @@ void TmDt1_OnDateSet(uint8_t day, uint8_t month, uint16_t year)
 */
 void TmDt1_OnTimeGet(uint8_t *hour, uint8_t *minute, uint8_t *second, uint8_t *hSecond)
 {
+#if PL_USE_HW_RTC
   LDD_RTC_TTime timeDate;
 
   RTC1_GetTime(RTC1_DeviceData, &timeDate); /* get existing data */
@@ -227,6 +235,7 @@ void TmDt1_OnTimeGet(uint8_t *hour, uint8_t *minute, uint8_t *second, uint8_t *h
   *minute = timeDate.Minute;
   *second = timeDate.Second;
   *hSecond = 0; /* not used */
+#endif
 }
 
 /*
@@ -249,12 +258,14 @@ void TmDt1_OnTimeGet(uint8_t *hour, uint8_t *minute, uint8_t *second, uint8_t *h
 */
 void TmDt1_OnDateGet(uint8_t *day, uint8_t *month, uint16_t *year)
 {
+#if PL_USE_HW_RTC
   LDD_RTC_TTime timeDate;
 
   RTC1_GetTime(RTC1_DeviceData, &timeDate); /* get existing data */
   *day = timeDate.Day;
   *month = timeDate.Month;
   *year = timeDate.Year;
+#endif
 }
 
 /*

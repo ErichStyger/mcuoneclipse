@@ -50,7 +50,7 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
 }
 
 void SHELL_Init(void) {
-  if (FRTOS1_xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+200, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
+  if (FRTOS1_xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+300, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
     for(;;){} /* error */
   }
   if (FRTOS1_xTaskCreate(SDTask, "SDCard", configMINIMAL_STACK_SIZE+50, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {

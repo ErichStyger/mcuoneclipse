@@ -41,6 +41,7 @@
 #include "SS1.h"
 #include "CD1.h"
 #include "TmDt1.h"
+#include "RTC1.h"
 #include "SM1.h"
 #include "SMasterLdd1.h"
 #include "TMOUT1.h"
@@ -52,7 +53,6 @@
 #include "Rx1.h"
 #include "CLS1.h"
 #include "HF1.h"
-#include "RTC1.h"
 #include "KIN1.h"
 #include "PTC.h"
 /* Including shared modules, which are used for whole project */
