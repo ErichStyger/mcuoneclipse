@@ -72,8 +72,7 @@ static void *fake_sbrk(int size) {
 }
 
 void monstartup (size_t, size_t);
-void monstartup (size_t lowpc, size_t highpc)
-{
+void monstartup (size_t lowpc, size_t highpc) {
 	register size_t o;
 	char *cp;
 	struct gmonparam *p = &_gmonparam;
@@ -89,10 +88,11 @@ void monstartup (size_t lowpc, size_t highpc)
 	p->hashfraction = HASHFRACTION;
 	p->fromssize = p->textsize / p->hashfraction;
 	p->tolimit = p->textsize * ARCDENSITY / 100;
-	if (p->tolimit < MINARCS)
+	if (p->tolimit < MINARCS) {
 		p->tolimit = MINARCS;
-	else if (p->tolimit > MAXARCS)
+	} else if (p->tolimit > MAXARCS) {
 		p->tolimit = MAXARCS;
+	}
 	p->tossize = p->tolimit * sizeof(struct tostruct);
 
 	cp = fake_sbrk(p->kcountsize + p->fromssize + p->tossize);
@@ -128,10 +128,10 @@ void monstartup (size_t lowpc, size_t highpc)
 		else
 			s_scale = 0x1000000 / ((o << 8) / p->kcountsize);
 #endif
-	} else
+	} else {
 		s_scale = SCALE_1_TO_1;
-
-	moncontrol(1);
+	}
+	moncontrol(1); /* start */
 }
 
 void _mcleanup (void);
@@ -156,7 +156,7 @@ void _mcleanup(void) {
 		ERR("_mcleanup: tos overflow\n");
 
 	hz = PROF_HZ;
-	moncontrol(0);
+	moncontrol(0); /* stop */
 	proffile = gmon_out;
 	fd = open(proffile , O_CREAT|O_TRUNC|O_WRONLY|O_BINARY, 0666);
 	if (fd < 0) {
@@ -216,8 +216,7 @@ void moncontrol(int mode) {
 
 	if (mode) {
 		/* start */
-		profil((char *)p->kcount, p->kcountsize, p->lowpc,
-		    s_scale);
+		profil((char *)p->kcount, p->kcountsize, p->lowpc, s_scale);
 		p->state = GMON_PROF_ON;
 	} else {
 		/* stop */
@@ -243,104 +242,94 @@ void _mcount_internal(uint32_t *frompcindex, uint32_t *selfpc) {
    *	check that we are profiling
    *	and that we aren't recursively invoked.
    */
-  if (p->state == GMON_PROF_ON)
-    {
-//      goto out;
-    }
-//  profiling++;
+  if (p->state == GMON_PROF_ON) {
+    //  goto out;
+  }
+  //  profiling++;
   /*
    *	check that frompcindex is a reasonable pc value.
    *	for example:	signal catchers get called from the stack,
    *			not from text space.  too bad.
    */
   frompcindex = (uint32_t*)((long)frompcindex - (long)p->lowpc);
-  if ((unsigned long)frompcindex > p->textsize)
-    {
+  if ((unsigned long)frompcindex > p->textsize) {
       goto done;
-    }
+  }
   frompcindex = (uint32_t*)&p->froms[((long)frompcindex) / (HASHFRACTION * sizeof(*p->froms))];
   toindex = *frompcindex;
-  if (toindex == 0)
-    {
-      /*
-       *	first time traversing this arc
-       */
-      toindex = ++p->tos[0].link;
-      if (toindex >= p->tolimit)
-	{
-	  goto overflow;
-	}
-      *frompcindex = toindex;
-      top = &p->tos[toindex];
-      top->selfpc = (size_t)selfpc;
-      top->count = 1;
-      top->link = 0;
-      goto done;
-    }
+  if (toindex == 0) {
+    /*
+    *	first time traversing this arc
+    */
+    toindex = ++p->tos[0].link;
+    if (toindex >= p->tolimit) {
+	    goto overflow;
+	  }
+    *frompcindex = toindex;
+    top = &p->tos[toindex];
+    top->selfpc = (size_t)selfpc;
+    top->count = 1;
+    top->link = 0;
+    goto done;
+  }
   top = &p->tos[toindex];
-  if (top->selfpc == (size_t)selfpc)
-    {
-      /*
-       *	arc at front of chain; usual case.
-       */
-      top->count++;
-      goto done;
-    }
+  if (top->selfpc == (size_t)selfpc) {
+    /*
+     *	arc at front of chain; usual case.
+     */
+    top->count++;
+    goto done;
+  }
   /*
    *	have to go looking down chain for it.
    *	top points to what we are looking at,
    *	prevtop points to previous top.
    *	we know it is not at the head of the chain.
    */
-  for (; /* goto done */; )
-    {
-      if (top->link == 0)
-	{
-	  /*
-	   *	top is end of the chain and none of the chain
-	   *	had top->selfpc == selfpc.
-	   *	so we allocate a new tostruct
-	   *	and link it to the head of the chain.
-	   */
-	  toindex = ++p->tos[0].link;
-	  if (toindex >= p->tolimit)
-	    {
-	      goto overflow;
-	    }
-	  top = &p->tos[toindex];
-	  top->selfpc = (size_t)selfpc;
-	  top->count = 1;
-	  top->link = *frompcindex;
-	  *frompcindex = toindex;
-	  goto done;
-	}
+  for (; /* goto done */; ) {
+    if (top->link == 0) {
       /*
-       *	otherwise, check the next arc on the chain.
+       *	top is end of the chain and none of the chain
+       *	had top->selfpc == selfpc.
+       *	so we allocate a new tostruct
+       *	and link it to the head of the chain.
        */
-      prevtop = top;
-      top = &p->tos[top->link];
-      if (top->selfpc == (size_t)selfpc)
-	{
-	  /*
-	   *	there it is.
-	   *	increment its count
-	   *	move it to the head of the chain.
-	   */
-	  top->count++;
-	  toindex = prevtop->link;
-	  prevtop->link = top->link;
-	  top->link = *frompcindex;
-	  *frompcindex = toindex;
-	  goto done;
-	}
+      toindex = ++p->tos[0].link;
+      if (toindex >= p->tolimit) {
+        goto overflow;
+      }
+      top = &p->tos[toindex];
+      top->selfpc = (size_t)selfpc;
+      top->count = 1;
+      top->link = *frompcindex;
+      *frompcindex = toindex;
+      goto done;
     }
-done:
-//  profiling--;
+    /*
+     *	otherwise, check the next arc on the chain.
+     */
+    prevtop = top;
+    top = &p->tos[top->link];
+    if (top->selfpc == (size_t)selfpc) {
+      /*
+       *	there it is.
+       *	increment its count
+       *	move it to the head of the chain.
+       */
+      top->count++;
+      toindex = prevtop->link;
+      prevtop->link = top->link;
+      top->link = *frompcindex;
+      *frompcindex = toindex;
+      goto done;
+    }
+  }
+  done:
+  //  profiling--;
   /* and fall through */
-out:
+  out:
   return;		/* normal return restores saved registers */
-
-overflow:
+  overflow:
 #if 0
   profiling++; /* halt further profiling */
 #   define	TOLIMIT	"mcount: tos overflow\n"
@@ -348,5 +337,3 @@ overflow:
 #endif
   goto out;
 }
-
-

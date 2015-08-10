@@ -62,10 +62,6 @@ extern void mcount(void);
 #define MCOUNT
 #endif
 
-#ifdef __MINGW32__
-#include <_bsd_types.h>
-#endif /* __MINGW32__*/
-
 /*
  * Structure prepended to gmon.out profiling data file.
  */
@@ -160,7 +156,7 @@ struct gmonparam {
 	size_t		fromssize;
 	struct tostruct	*tos;
 	size_t		tossize;
-	long		tolimit;
+	long		  tolimit;
 	size_t		lowpc;
 	size_t		highpc;
 	size_t		textsize;
@@ -171,17 +167,18 @@ extern struct gmonparam _gmonparam;
 /*
  * Possible states of profiling.
  */
-#define	GMON_PROF_ON	0
+#define	GMON_PROF_ON	  0
 #define	GMON_PROF_BUSY	1
 #define	GMON_PROF_ERROR	2
-#define	GMON_PROF_OFF	3
+#define	GMON_PROF_OFF	  3
 
 /*
  * Sysctl definitions for extracting profiling information from the kernel.
  */
-#define	GPROF_STATE	0	/* int: profiling enabling variable */
-#define	GPROF_COUNT	1	/* struct: profile tick count buffer */
-#define	GPROF_FROMS	2	/* struct: from location hash bucket */
-#define	GPROF_TOS	3	/* struct: destination/count structure */
+#define	GPROF_STATE	    0	/* int: profiling enabling variable */
+#define	GPROF_COUNT	    1	/* struct: profile tick count buffer */
+#define	GPROF_FROMS	    2	/* struct: from location hash bucket */
+#define	GPROF_TOS	      3	/* struct: destination/count structure */
 #define	GPROF_GMONPARAM	4	/* struct: profiling parameters (see above) */
+
 #endif /* !_SYS_GMONH_ */

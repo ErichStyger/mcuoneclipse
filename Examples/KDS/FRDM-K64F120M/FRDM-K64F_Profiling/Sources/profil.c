@@ -13,155 +13,50 @@
  * The differences should be within __MINGW32__ guard.
  */
 
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-#if 0
-#include <windows.h>
-#endif
 #include <stdio.h>
 #include <sys/types.h>
 #include <errno.h>
 #include <math.h>
 #include "profil.h"
 #include <string.h>
+#include <stdint.h>
 
 #define SLEEPTIME (1000 / PROF_HZ)
 
 /* global profinfo for profil() call */
-static struct profinfo prof;
+static struct profinfo prof = {
+    PROFILE_NOT_INIT, 0, 0, 0, 0
+};
 
-/* Get the pc for thread THR */
+/* sample the current program counter */
 
-static size_t
-get_thrpc (void *thr)
-{
-  void *ctx;
-  size_t pc = 0;
-  int res;
-#if 0
-  res = SuspendThread (thr);
-  if (res == -1)
-    return (size_t) - 1;
-  ctx.ContextFlags = CONTEXT_CONTROL | CONTEXT_INTEGER;
-  pc = (size_t) - 1;
-  if (GetThreadContext (thr, &ctx)) {
-#ifndef _WIN64
-    pc = ctx.Eip;
-#else
-    pc = ctx.Rip;
-#endif
-  }
-  ResumeThread (thr);
-#endif
-  return pc;
-}
+void SysTick_Handler(void) {
+  void OSA_SysTick_Handler(void);
+  static size_t pc, idx;
 
-/* Display cell of profile buffer */
-#if 0
-static void
-print_prof (struct profinfo *p)
-{
-  printf ("profthr %x\ttarget thr %x\n", p->profthr, p->targthr);
-  printf ("pc: %x - %x\n", p->lowpc, p->highpc);
-  printf ("scale: %x\n", p->scale);
-  return;
-}
-#endif
-
-/* Everytime we wake up use the main thread pc to hash into the cell in the
-   profile buffer ARG. */
-
-static void profthr_func (void*);
-
-static void profthr_func (void *arg)
-{
-  struct profinfo *p = (struct profinfo *) arg;
-  size_t pc, idx;
-
-  for (;;)
-    {
-      pc = (size_t) get_thrpc (p->targthr);
-      if (pc >= p->lowpc && pc < p->highpc)
-	{
-	  idx = PROFIDX (pc, p->lowpc, p->scale);
-	  p->counter[idx]++;
-	}
-#if 0
-      print_prof (p);
-#endif
-      /* Check quit condition, WAIT_OBJECT_0 or WAIT_TIMEOUT */
-#if 0
-      if (WaitForSingleObject (p->quitevt, SLEEPTIME) == WAIT_OBJECT_0)
-#endif
-	return;
+  OSA_SysTick_Handler();
+  if (prof.state==PROFILE_ON) {
+    pc = ((uint32_t*)(__builtin_frame_address(0)))[14]; /* get SP and use it to get the return address from stack */
+    //pc = __builtin_extract_return_addr((void*)pc); /* strip off thumb bit */
+    if (pc >= prof.lowpc && pc < prof.highpc) {
+      idx = PROFIDX (pc, prof.lowpc, prof.scale);
+      prof.counter[idx]++;
     }
+  }
 }
 
 /* Stop profiling to the profiling buffer pointed to by P. */
 
-static int
-profile_off (struct profinfo *p)
-{
-#if 0
-  if (p->profthr)
-    {
-//      SignalObjectAndWait (p->quitevt, p->profthr, INFINITE, FALSE);
-      CloseHandle (p->quitevt);
-      CloseHandle (p->profthr);
-    }
-  if (p->targthr)
-    CloseHandle (p->targthr);
-#endif
+static int profile_off (struct profinfo *p) {
+  p->state = PROFILE_OFF;
   return 0;
 }
 
 /* Create a timer thread and pass it a pointer P to the profiling buffer. */
 
-static int
-profile_on (struct profinfo *p)
-{
-#if 0
-  DWORD thrid;
-
-  /* get handle for this thread */
-  if (!DuplicateHandle (GetCurrentProcess (), GetCurrentThread (),
-			GetCurrentProcess (), &p->targthr, 0, FALSE,
-			DUPLICATE_SAME_ACCESS))
-    {
-      errno = ESRCH;
-      return -1;
-    }
-
-  p->quitevt = CreateEvent (NULL, TRUE, FALSE, NULL);
-
-  if (!p->quitevt)
-    {
-      CloseHandle (p->quitevt);
-      p->targthr = 0;
-      errno = EAGAIN;
-      return -1;
-    }
-
-  p->profthr = CreateThread (0, 0, (DWORD (WINAPI *)(LPVOID)) profthr_func,
-                             (void *) p, 0, &thrid);
-
-  if (!p->profthr)
-    {
-      CloseHandle (p->targthr);
-      CloseHandle (p->quitevt);
-      p->targthr = 0;
-      errno = EAGAIN;
-      return -1;
-    }
-
-  /* Set profiler thread priority to highest to be sure that it gets the
-     processor as soon it request it (i.e. when the Sleep terminate) to get
-     the next data out of the profile. */
-
-  SetThreadPriority (p->profthr, THREAD_PRIORITY_TIME_CRITICAL);
-#endif
-  return 0;
+static int profile_on (struct profinfo *p) {
+  p->state = PROFILE_ON;
+  return 0; /* ok */
 }
 
 /*
@@ -176,31 +71,24 @@ profile_on (struct profinfo *p)
  * a scale of 1 maps each bin to 128k addreses).  Scale may be 1 - 65536,
  * or zero to turn off profiling
  */
-int
-profile_ctl (struct profinfo * p, char *samples, size_t size,
-	     size_t offset, u_int scale)
-{
+int profile_ctl (struct profinfo *p, char *samples, size_t size, size_t offset, u_int scale) {
   size_t maxbin;
 
-  if (scale > 65536)
-    {
-      errno = EINVAL;
-      return -1;
-    }
-
-  profile_off (p);
-  if (scale)
-    {
-      memset (samples, 0, size);
-      memset (p, 0, sizeof *p);
-      maxbin = size >> 1;
-      prof.counter = (u_short *) samples;
-      prof.lowpc = offset;
-      prof.highpc = PROFADDR (maxbin, offset, scale);
-      prof.scale = scale;
-
-      return profile_on (p);
-    }
+  if (scale > 65536) {
+    errno = EINVAL;
+    return -1;
+  }
+  profile_off(p);
+  if (scale) {
+    memset (samples, 0, size);
+    memset (p, 0, sizeof *p);
+    maxbin = size >> 1;
+    prof.counter = (u_short *) samples;
+    prof.lowpc = offset;
+    prof.highpc = PROFADDR(maxbin, offset, scale);
+    prof.scale = scale;
+    return profile_on (p);
+  }
   return 0;
 }
 
@@ -209,9 +97,7 @@ profile_ctl (struct profinfo * p, char *samples, size_t size,
    offset is subtracted and the result is multiplied by scale.
    The word pointed to by this address is incremented.  Buf is unused. */
 
-int
-profil (char *samples, size_t size, size_t offset, u_int scale)
-{
+int profil (char *samples, size_t size, size_t offset, u_int scale) {
   return profile_ctl (&prof, samples, size, offset, scale);
 }
 

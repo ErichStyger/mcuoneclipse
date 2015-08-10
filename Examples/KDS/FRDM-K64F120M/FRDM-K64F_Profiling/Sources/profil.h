@@ -14,7 +14,7 @@ details. */
  */
 
 /* profiling frequency.  (No larger than 1000) */
-#define PROF_HZ			100
+#define PROF_HZ			1000
 
 /* convert an addr to an index */
 #define PROFIDX(pc, base, scale)	\
@@ -41,13 +41,17 @@ typedef void *_WINHANDLE;
 #include <_bsd_types.h>
 #endif /* __MINGW32__*/
 
+typedef enum {
+  PROFILE_NOT_INIT = 0,
+  PROFILE_ON,
+  PROFILE_OFF
+} PROFILE_State;
+
 struct profinfo {
-    _WINHANDLE targthr;			/* thread to profile */
-    _WINHANDLE profthr;			/* profiling thread */
-    _WINHANDLE quitevt;			/* quit event */
-    u_short *counter;			/* profiling counters */
-    size_t lowpc, highpc;		/* range to be profiled */
-    u_int scale;			/* scale value of bins */
+  PROFILE_State state; /* profiling state */
+  u_short *counter;			/* profiling counters */
+  size_t lowpc, highpc;		/* range to be profiled */
+  u_int scale;			/* scale value of bins */
 };
 
 int profile_ctl(struct profinfo *, char *, size_t, size_t, u_int);
