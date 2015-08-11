@@ -37,7 +37,6 @@ void SysTick_Handler(void) {
   OSA_SysTick_Handler();
   if (prof.state==PROFILE_ON) {
     pc = ((uint32_t*)(__builtin_frame_address(0)))[14]; /* get SP and use it to get the return address from stack */
-    //pc = __builtin_extract_return_addr((void*)pc); /* strip off thumb bit */
     if (pc >= prof.lowpc && pc < prof.highpc) {
       idx = PROFIDX (pc, prof.lowpc, prof.scale);
       prof.counter[idx]++;

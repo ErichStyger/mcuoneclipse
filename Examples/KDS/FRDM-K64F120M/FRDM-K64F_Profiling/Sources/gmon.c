@@ -27,10 +27,6 @@
  * SUCH DAMAGE.
  */
 
-#if !defined(lint) && defined(LIBC_SCCS)
-static char rcsid[] = "$OpenBSD: gmon.c,v 1.8 1997/07/23 21:11:27 kstailey Exp $";
-#endif
-
 /*
  * This file is taken from Cygwin distribution. Please keep it in sync.
  * The differences should be within __MINGW32__ guard.
@@ -54,6 +50,8 @@ static char rcsid[] = "$OpenBSD: gmon.c,v 1.8 1997/07/23 21:11:27 kstailey Exp $
 #define bzero(ptr,size) memset (ptr, 0, size);
 
 struct gmonparam _gmonparam = { GMON_PROF_OFF, NULL, 0, NULL, 0, NULL, 0, 0L, 0, 0, 0, 0};
+static char already_setup = 0; /* flag to indicate if we need to init */
+static int  profiling = 3;
 
 static int	s_scale;
 /* see profil(2) where this is describe (incorrectly) */
@@ -218,14 +216,14 @@ void moncontrol(int mode) {
 		/* start */
 		profil((char *)p->kcount, p->kcountsize, p->lowpc, s_scale);
 		p->state = GMON_PROF_ON;
+		profiling = 0;
 	} else {
 		/* stop */
 		profil((char *)0, 0, 0, 0);
 		p->state = GMON_PROF_OFF;
+		profiling = 3;
 	}
 }
-
-static char already_setup = 0; /* flag to indicate if we need to init */
 
 void _mcount_internal(uint32_t *frompcindex, uint32_t *selfpc) {
   register struct tostruct	*top;
@@ -242,10 +240,10 @@ void _mcount_internal(uint32_t *frompcindex, uint32_t *selfpc) {
    *	check that we are profiling
    *	and that we aren't recursively invoked.
    */
-  if (p->state == GMON_PROF_ON) {
-    //  goto out;
+  if (profiling) {
+    goto out;
   }
-  //  profiling++;
+  profiling++;
   /*
    *	check that frompcindex is a reasonable pc value.
    *	for example:	signal catchers get called from the stack,
@@ -325,15 +323,13 @@ void _mcount_internal(uint32_t *frompcindex, uint32_t *selfpc) {
     }
   }
   done:
-  //  profiling--;
-  /* and fall through */
+    profiling--;
+    /* and fall through */
   out:
-  return;		/* normal return restores saved registers */
+    return;		/* normal return restores saved registers */
   overflow:
-#if 0
-  profiling++; /* halt further profiling */
-#   define	TOLIMIT	"mcount: tos overflow\n"
-  write (2, TOLIMIT, sizeof(TOLIMIT));
-#endif
+    profiling++; /* halt further profiling */
+    #define	TOLIMIT	"mcount: tos overflow\n"
+    write (2, TOLIMIT, sizeof(TOLIMIT));
   goto out;
 }

@@ -14,3 +14,7 @@ Profiling: -pg
 
  * http://doc.ironwoodlabs.com/arm-arm-none-eabi/html/getting-started/arm-mcount.html
  * gmon.c/h from C:\Temp2\newlib\winsup\cygwin
+ 
+ https://answers.launchpad.net/gcc-arm-embedded/+question/249429
+ 
+ Do not instrument gmon.c (recursive calls!). How to disable -pg for a function??
