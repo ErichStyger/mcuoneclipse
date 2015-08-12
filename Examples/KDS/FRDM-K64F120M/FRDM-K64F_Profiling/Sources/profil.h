@@ -13,6 +13,9 @@ details. */
  * The differences should be within __MINGW32__ guard.
  */
 
+#ifndef __PROFIL_H__
+#define __PROFIL_H__
+
 /* profiling frequency.  (No larger than 1000) */
 #define PROF_HZ			1000
 
@@ -37,9 +40,6 @@ details. */
 #define PROFSCALE(range, bins)		(((bins) << 16) / ((range) >> 1))
 
 typedef void *_WINHANDLE;
-#ifdef __MINGW32__
-#include <_bsd_types.h>
-#endif /* __MINGW32__*/
 
 typedef enum {
   PROFILE_NOT_INIT = 0,
@@ -57,3 +57,4 @@ struct profinfo {
 int profile_ctl(struct profinfo *, char *, size_t, size_t, u_int);
 int profil(char *, size_t, size_t, u_int);
 
+#endif /* __PROFIL_H__ */

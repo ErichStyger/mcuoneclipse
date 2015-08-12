@@ -68,10 +68,10 @@ extern void mcount(void);
 struct gmonhdr {
 	size_t	lpc;		/* base pc address of sample buffer */
 	size_t	hpc;		/* max pc address of sampled buffer */
-	int	ncnt;		/* size of sample buffer (plus this header) */
-	int	version;	/* version number */
-	int	profrate;	/* profiling clock rate */
-	int	spare[3];	/* reserved */
+	int	ncnt;		    /* size of sample buffer (plus this header) */
+	int	version;	  /* version number */
+	int	profrate;	  /* profiling clock rate */
+	int	spare[3];	  /* reserved */
 };
 #define GMONVERSION	0x00051879
 
@@ -118,15 +118,15 @@ struct gmonhdr {
 /*
  * percent of text space to allocate for tostructs with a minimum.
  */
-#define ARCDENSITY	2
-#define MINARCS		50
-#define MAXARCS		((1 << (8 * sizeof(HISTCOUNTER))) - 2)
+#define ARCDENSITY	2 /* this is in percentage, relative to text size! */
+#define MINARCS		 50
+#define MAXARCS		 ((1 << (8 * sizeof(HISTCOUNTER))) - 2)
 
 struct tostruct {
-	size_t	selfpc;
-	long	count;
-	u_short	link;
-	u_short pad;
+	size_t	selfpc; /* callee address/program counter. The caller address is in froms[] array which points to tos[] array */
+	long	count;    /* how many times it has been called */
+	u_short	link;   /* link to next entry in hash table. For tos[0] this points to the last used entry */
+	u_short pad;    /* additional padding bytes, to have entries 4byte aligned */
 };
 
 /*
@@ -143,24 +143,23 @@ struct rawarc {
  * general rounding functions.
  */
 #define ROUNDDOWN(x,y)	(((x)/(y))*(y))
-#define ROUNDUP(x,y)	((((x)+(y)-1)/(y))*(y))
+#define ROUNDUP(x,y)	  ((((x)+(y)-1)/(y))*(y))
 
 /*
  * The profiling data structures are housed in this structure.
  */
 struct gmonparam {
 	int		state;
-	u_short		*kcount;
-	size_t		kcountsize;
-	u_short		*froms;
-	size_t		fromssize;
-	struct tostruct	*tos;
-	size_t		tossize;
+	u_short		*kcount;    /* histogram PC sample array */
+	size_t		kcountsize; /* size of kcount[] array in bytes */
+	u_short		*froms;     /* array of hashed 'from' addresses. The 16bit value is an index into the tos[] array */
+	size_t		fromssize;  /* size of froms[] array in bytes */
+	struct tostruct	*tos; /* to struct, contains histogram counter */
+	size_t		tossize;    /* size of tos[] array in bytes */
 	long		  tolimit;
-	size_t		lowpc;
-	size_t		highpc;
-	size_t		textsize;
-	size_t		hashfraction;
+	size_t		lowpc;      /* low program counter of area */
+	size_t		highpc;     /* high program counter */
+	size_t		textsize;   /* code size */
 };
 extern struct gmonparam _gmonparam;
 
@@ -172,13 +171,5 @@ extern struct gmonparam _gmonparam;
 #define	GMON_PROF_ERROR	2
 #define	GMON_PROF_OFF	  3
 
-/*
- * Sysctl definitions for extracting profiling information from the kernel.
- */
-#define	GPROF_STATE	    0	/* int: profiling enabling variable */
-#define	GPROF_COUNT	    1	/* struct: profile tick count buffer */
-#define	GPROF_FROMS	    2	/* struct: from location hash bucket */
-#define	GPROF_TOS	      3	/* struct: destination/count structure */
-#define	GPROF_GMONPARAM	4	/* struct: profiling parameters (see above) */
 
 #endif /* !_SYS_GMONH_ */

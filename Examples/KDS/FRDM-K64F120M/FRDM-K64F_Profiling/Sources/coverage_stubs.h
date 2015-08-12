@@ -18,13 +18,12 @@
 
 void COV_static_init(void);
 
-void _exit(int);
+void _exit(int); /* exit function */
 
 /* internal prototypes */
+void gcov_exit(void); /* coverage exit function to write coverage file */
 
+void monstartup (size_t lowpc, size_t highpc); /* profiling monitor startup */
 void _mcleanup(void);
-void gcov_exit(void);
-void monstartup (size_t lowpc, size_t highpc);
-
 
 #endif /* COVERAGE_STUBS_H_ */

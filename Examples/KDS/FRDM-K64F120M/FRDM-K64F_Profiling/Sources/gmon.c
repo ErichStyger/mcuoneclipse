@@ -35,41 +35,33 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <stdio.h>
-#ifndef __MINGW32__
 #include <unistd.h>
-#include <sys/param.h>
-#endif
-#include <sys/types.h>
 #include "gmon.h"
 #include "profil.h"
 #include <stdint.h>
 #include <string.h>
 
 #define MINUS_ONE_P (-1)
-
 #define bzero(ptr,size) memset (ptr, 0, size);
-
-struct gmonparam _gmonparam = { GMON_PROF_OFF, NULL, 0, NULL, 0, NULL, 0, 0L, 0, 0, 0, 0};
-static char already_setup = 0; /* flag to indicate if we need to init */
-static int  profiling = 3;
-
-static int	s_scale;
-/* see profil(2) where this is describe (incorrectly) */
-#define		SCALE_1_TO_1	0x10000L
-
 #define ERR(s) write(2, s, sizeof(s))
 
-void	moncontrol __P((int));
+struct gmonparam _gmonparam = { GMON_PROF_OFF, NULL, 0, NULL, 0, NULL, 0, 0L, 0, 0, 0};
+static char already_setup = 0; /* flag to indicate if we need to init */
+static int	s_scale;
+/* see profil(2) where this is described (incorrectly) */
+#define		SCALE_1_TO_1	0x10000L
+
+static void moncontrol(int mode);
 
 static void *fake_sbrk(int size) {
-    void *rv = malloc(size);
-    if (rv)
-      return rv;
-    else
-      return (void *) MINUS_ONE_P;
+  void *rv = malloc(size);
+  if (rv) {
+    return rv;
+  } else {
+    return (void *) MINUS_ONE_P;
+  }
 }
 
-void monstartup (size_t, size_t);
 void monstartup (size_t lowpc, size_t highpc) {
 	register size_t o;
 	char *cp;
@@ -83,8 +75,7 @@ void monstartup (size_t lowpc, size_t highpc) {
 	p->highpc = ROUNDUP(highpc, HISTFRACTION * sizeof(HISTCOUNTER));
 	p->textsize = p->highpc - p->lowpc;
 	p->kcountsize = p->textsize / HISTFRACTION;
-	p->hashfraction = HASHFRACTION;
-	p->fromssize = p->textsize / p->hashfraction;
+	p->fromssize = p->textsize / HASHFRACTION;
 	p->tolimit = p->textsize * ARCDENSITY / 100;
 	if (p->tolimit < MINARCS) {
 		p->tolimit = MINARCS;
@@ -132,9 +123,8 @@ void monstartup (size_t lowpc, size_t highpc) {
 	moncontrol(1); /* start */
 }
 
-void _mcleanup (void);
 void _mcleanup(void) {
-	static char gmon_out[] = "gmon.out";
+	static const char gmon_out[] = "gmon.out";
 	int fd;
 	int hz;
 	int fromindex;
@@ -150,9 +140,9 @@ void _mcleanup(void) {
 	char dbuf[200];
 #endif
 
-	if (p->state == GMON_PROF_ERROR)
+	if (p->state == GMON_PROF_ERROR) {
 		ERR("_mcleanup: tos overflow\n");
-
+	}
 	hz = PROF_HZ;
 	moncontrol(0); /* stop */
 	proffile = gmon_out;
@@ -181,13 +171,12 @@ void _mcleanup(void) {
 	write(fd, p->kcount, p->kcountsize);
 	endfrom = p->fromssize / sizeof(*p->froms);
 	for (fromindex = 0; fromindex < endfrom; fromindex++) {
-		if (p->froms[fromindex] == 0)
+		if (p->froms[fromindex] == 0) {
 			continue;
-
+		}
 		frompc = p->lowpc;
-		frompc += fromindex * p->hashfraction * sizeof(*p->froms);
-		for (toindex = p->froms[fromindex]; toindex != 0;
-		     toindex = p->tos[toindex].link) {
+		frompc += fromindex * HASHFRACTION * sizeof(*p->froms);
+		for (toindex = p->froms[fromindex]; toindex != 0; toindex = p->tos[toindex].link) {
 #ifdef DEBUG
 			len = sprintf(dbuf,
 			"[mcleanup2] frompc 0x%x selfpc 0x%x count %d\n" ,
@@ -209,19 +198,17 @@ void _mcleanup(void) {
  *	profiling is what mcount checks to see if
  *	all the data structures are ready.
  */
-void moncontrol(int mode) {
+static void moncontrol(int mode) {
 	struct gmonparam *p = &_gmonparam;
 
 	if (mode) {
 		/* start */
 		profil((char *)p->kcount, p->kcountsize, p->lowpc, s_scale);
 		p->state = GMON_PROF_ON;
-		profiling = 0;
 	} else {
 		/* stop */
 		profil((char *)0, 0, 0, 0);
 		p->state = GMON_PROF_OFF;
-		profiling = 3;
 	}
 }
 
@@ -240,10 +227,10 @@ void _mcount_internal(uint32_t *frompcindex, uint32_t *selfpc) {
    *	check that we are profiling
    *	and that we aren't recursively invoked.
    */
-  if (profiling) {
+  if (p->state!=GMON_PROF_ON) {
     goto out;
   }
-  profiling++;
+  p->state++;
   /*
    *	check that frompcindex is a reasonable pc value.
    *	for example:	signal catchers get called from the stack,
@@ -259,8 +246,8 @@ void _mcount_internal(uint32_t *frompcindex, uint32_t *selfpc) {
     /*
     *	first time traversing this arc
     */
-    toindex = ++p->tos[0].link;
-    if (toindex >= p->tolimit) {
+    toindex = ++p->tos[0].link; /* the link of tos[0] points to the last used record in the array */
+    if (toindex >= p->tolimit) { /* more tos[] entries than we can handle! */
 	    goto overflow;
 	  }
     *frompcindex = toindex;
@@ -323,13 +310,18 @@ void _mcount_internal(uint32_t *frompcindex, uint32_t *selfpc) {
     }
   }
   done:
-    profiling--;
+    p->state--;
     /* and fall through */
   out:
     return;		/* normal return restores saved registers */
   overflow:
-    profiling++; /* halt further profiling */
+    p->state++; /* halt further profiling */
     #define	TOLIMIT	"mcount: tos overflow\n"
     write (2, TOLIMIT, sizeof(TOLIMIT));
   goto out;
+}
+
+void _monInit(void) {
+  _gmonparam.state = GMON_PROF_OFF;
+  already_setup = 0;
 }

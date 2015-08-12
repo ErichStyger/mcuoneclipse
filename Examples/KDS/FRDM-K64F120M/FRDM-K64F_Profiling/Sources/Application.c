@@ -53,26 +53,31 @@ static void CheckButton(void) {
 }
 
 void APP_Run(void) {
+  volatile int i;
+
   printf("Lab program using semihosting!\r\nProgram will NOT run without debugger attached!\r\n");
   for(;;) {
-	CheckButton();
-	if (whichLED==LED_COLOR_RED) {
-	  GPIO_DRV_TogglePinOutput(led_red); /* red toggle */
-	}
-	if (whichLED==LED_COLOR_GREEN) {
-	  GPIO_DRV_TogglePinOutput(led_green); /* green toggle */
-	}
-	if (whichLED==LED_COLOR_BLUE) {
-	  GPIO_DRV_TogglePinOutput(led_blue); /* blue toggle */
-	}
-	OSA_TimeDelay(100); /* wait 100 ms */
-	doExit = nofButtonPresses>5;
-	if (doExit) {
-	  GPIO_DRV_SetPinOutput(led_red);
-	  GPIO_DRV_SetPinOutput(led_green);
-	  GPIO_DRV_SetPinOutput(led_blue);
-	  _exit(0); /* write coverage/profiling information */
-	}
+    CheckButton();
+    if (whichLED==LED_COLOR_RED) {
+      GPIO_DRV_TogglePinOutput(led_red); /* red toggle */
+    }
+    if (whichLED==LED_COLOR_GREEN) {
+      GPIO_DRV_TogglePinOutput(led_green); /* green toggle */
+    }
+    if (whichLED==LED_COLOR_BLUE) {
+      GPIO_DRV_TogglePinOutput(led_blue); /* blue toggle */
+    }
+    for (i=0;i<0x800000;i++) {
+      __asm("nop");
+    }
+    OSA_TimeDelay(100); /* wait 100 ms */
+    doExit = nofButtonPresses>5;
+    if (doExit) {
+      GPIO_DRV_SetPinOutput(led_red);
+      GPIO_DRV_SetPinOutput(led_green);
+      GPIO_DRV_SetPinOutput(led_blue);
+      _exit(0); /* write coverage/profiling information */
+    }
   }
 }
 

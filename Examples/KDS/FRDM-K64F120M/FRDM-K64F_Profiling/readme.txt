@@ -18,3 +18,7 @@ Profiling: -pg
  https://answers.launchpad.net/gcc-arm-embedded/+question/249429
  
  Do not instrument gmon.c (recursive calls!). How to disable -pg for a function??
+ https://docs.freebsd.org/44doc/psd/18.gprof/paper.pdf
+ 
+ call _monInit() from SystemInit()
+ Do *not* instrument System Init (SDK\platform\devices)
