@@ -54,7 +54,9 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
-#if COV_DO_COVERAGE
+
+
+  #if COV_DO_COVERAGE
   COV_static_init();
 #endif
   APP_Run();
