@@ -39,7 +39,6 @@
   #include "Init_Config.h"
 #endif
 /* User includes (#include below this line is not maintained by Processor Expert) */
-#include "coverage_stubs.h"
 #include <stdio.h>
 #include "Application.h"
 
@@ -54,11 +53,6 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
-
-
-  #if COV_DO_COVERAGE
-  COV_static_init();
-#endif
   APP_Run();
   /* For example: for(;;) { } */
 

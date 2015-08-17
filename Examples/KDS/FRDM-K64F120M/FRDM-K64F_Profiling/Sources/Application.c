@@ -12,8 +12,10 @@
 #include "pin_init.h"
 #include "osa1.h"
 #include "gpio1.h"
-#include "coverage_stubs.h"
 #include <stdio.h>
+#include "profil.h"
+#include <unistd.h> /* for _exit() */
+#include "gmon.h" /* for _mcleanup() */
 
 typedef enum {
 	LED_COLOR_RED = (1<<0),
@@ -68,7 +70,7 @@ void APP_Run(void) {
       GPIO_DRV_TogglePinOutput(led_blue); /* blue toggle */
     }
     for (i=0;i<0x800000;i++) {
-      __asm("nop");
+      __asm("nop"); /* burn some CPU cycles here */
     }
     OSA_TimeDelay(100); /* wait 100 ms */
     doExit = nofButtonPresses>5;
@@ -80,5 +82,16 @@ void APP_Run(void) {
     }
   }
 }
+
+void _exit(int status) {
+  (void)status; /* not used */
+  _mcleanup(); /* write gmon.out file */
+  /* turn on all LED's ==> WHITE */
+  GPIO_DRV_ClearPinOutput(led_red);
+  GPIO_DRV_ClearPinOutput(led_green);
+  GPIO_DRV_ClearPinOutput(led_blue);
+  for(;;){} /* does not return */
+}
+
 
 
