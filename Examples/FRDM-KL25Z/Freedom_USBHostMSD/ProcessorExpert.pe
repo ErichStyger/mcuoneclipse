@@ -3,10 +3,10 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>89</ModificationStamp>
-    <Date>2014-12-28</Date>
+    <ModificationStamp>90</ModificationStamp>
+    <Date>2015-08-17</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion>1.9.0.RT6_b1411-0406</PEversion>
+    <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
   <Options>
     <EventsDirectory>Sources</EventsDirectory>
@@ -4434,7 +4434,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.386</BeanVersion>
+    <BeanVersion>01.432</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -4447,7 +4447,7 @@
         <ItemSymbol>FreeRTOSVersion</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>V8.0.1</Value>
+        <Value>V8.2.1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>IsClassicCW</ItemSymbol>
@@ -4496,7 +4496,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template>FreeRTOS\FreeRTOSTraceInterface</Template>
-          <BeanVersion>01.028</BeanVersion>
+          <BeanVersion>01.048</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -5834,6 +5834,72 @@
               <Value>false</Value>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
             </ItemState>
+            <ItemState>
+              <ItemSymbol>StreamingTraceWithRTT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>false</Value>
+              <Expanded>false</Expanded>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>SymbolTableSlots</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>30</Value>
+              <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>SymbolMaxLength</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>24</Value>
+              <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ObjectDataSlots</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>20</Value>
+              <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CtrlTaskPrioStr</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>1</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CtrlTaskStackSize</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>configMINIMAL_STACK_SIZE</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>RTTSettings</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Expanded>true</Expanded>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>RTTUpBufferIndex</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>0</Value>
+              <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>RTTDownBufferIndex</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>0</Value>
+              <Base>DEC</Base>
+            </ItemState>
           </Properties>
           <Methods>
             <ItemState>
@@ -6121,6 +6187,72 @@
               <LastSelection>true</LastSelection>
               <LastUserSel>yes</LastUserSel>
               <UsrMethodName>vTraceInitTraceData</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>vGetGDBDumpCommand</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>vGetGDBDumpCommand</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>vTraceSetStopHook</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>vTraceSetStopHook</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>xTraceGetLastError</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>xTraceGetLastError</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>vTraceClearError</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>vTraceClearError</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>vTraceTaskInstanceFinish</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>vTraceTaskInstanceFinish</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>vTraceTaskInstanceFinishDirect</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>vTraceTaskInstanceFinishDirect</UsrMethodName>
             </ItemState>
           </Methods>
           <Events>
@@ -8810,6 +8942,82 @@
         <Value>false</Value>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>KinetisSDKGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GenerateRTOSPExMacros</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GenerateOSAFunctions</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>KinetisSDK</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>KinetisSDKenabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RTOSConfigFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>FreeRTOS\config\gcc</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>configASSERTdefined</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>NumThreadLocalStoragePointers</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RuntimeCounterUseTickCounter</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ApplicationAllocatedHeap</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -9912,6 +10120,105 @@
         <UsrMethodName>xTimerPendFunctionCallFromISR</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>xSemaphoreCreateBinary</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xSemaphoreCreateBinary</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xTaskNotifyGive</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xTaskNotifyGive</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vTaskNotifyGiveFromISR</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>vTaskNotifyGiveFromISR</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ulTaskNotifyTake</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ulTaskNotifyTake</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xTaskNotify</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xTaskNotify</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xTaskNotifyFromISR</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xTaskNotifyFromISR</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xTaskNotifyWait</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xTaskNotifyWait</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vTaskSetThreadLocalStoragePointer</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>vTaskSetThreadLocalStoragePointer</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>pvTaskGetThreadLocalStoragePointer</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>pvTaskGetThreadLocalStoragePointer</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events>
       <ItemState>
@@ -10028,7 +10335,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.106</BeanVersion>
+    <BeanVersion>01.111</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -10611,6 +10918,30 @@
         <UsrMethodName>ScanDoubleQuotedString</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>strcatPad</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>strcatPad</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanDecimal32sDotNumber</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ScanDecimal32sDotNumber</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -10624,7 +10955,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.062</BeanVersion>
+    <BeanVersion>01.065</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -11409,7 +11740,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.062</BeanVersion>
+    <BeanVersion>01.065</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -12194,7 +12525,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.062</BeanVersion>
+    <BeanVersion>01.065</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -16006,7 +16337,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.051</BeanVersion>
+    <BeanVersion>01.073</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -16143,6 +16474,42 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>CS1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>HistoryEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>NofHistoryItems</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>4</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>HistLength</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>32</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>NextHistoryChar</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>\t</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>PrevHistoryChar</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>\e</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -16454,6 +16821,17 @@
         <UsrMethodName>SetStdio</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>IsHistoryCharacter</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>IsHistoryCharacter</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events>
       <ItemState>
@@ -16506,7 +16884,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.165</BeanVersion>
+    <BeanVersion>01.168</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -16517,7 +16895,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>FatFsVersion</ItemSymbol>
-        <Value>R0.10c</Value>
+        <Value>R0.10c (patch 26-Nov-14)</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Tiny</ItemSymbol>
@@ -17397,7 +17775,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.020</BeanVersion>
+    <BeanVersion>01.027</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -17583,6 +17961,28 @@
         <UsrMethodName>AddTicks</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>TicksToTime</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>TicksToTime</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TimeToTicks</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>TimeToTicks</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events>
       <ItemState>
@@ -17623,6 +18023,38 @@
         <UserReadOnly>false</UserReadOnly>
         <Value />
       </ItemState>
+      <ItemState>
+        <ItemSymbol>OnTimeGet</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>no</LastUserSel>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnTimeGetName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>TmDt1_OnTimeGet</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnDateGet</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>no</LastUserSel>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnDateGetName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>TmDt1_OnDateGet</Value>
+      </ItemState>
     </Events>
   </Bean>
   <Bean>
@@ -17635,7 +18067,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.021</BeanVersion>
+    <BeanVersion>01.024</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -17649,6 +18081,30 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>WAIT1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>diskReadTimeoutMs</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>250</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>diskWriteTimeoutMs</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>250</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>diskIOctlTimeoutMs</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>250</Value>
+        <Base>DEC</Base>
       </ItemState>
     </Properties>
     <Methods>
@@ -17810,7 +18266,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.033</BeanVersion>
+    <BeanVersion>01.036</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -19358,7 +19814,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.043</BeanVersion>
+          <BeanVersion>01.050</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -19456,7 +19912,7 @@
                 <UserFolderName />
                 <Comment lines_count="0" />
                 <Template>FSL_USB_CDC_Device\Buffer</Template>
-                <BeanVersion>01.033</BeanVersion>
+                <BeanVersion>01.039</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
                 <Properties>
                   <ItemState>
@@ -19566,6 +20022,30 @@
                     <UsrMethodName>Clear</UsrMethodName>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                   </ItemState>
+                  <ItemState>
+                    <ItemSymbol>Peek</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                    <LastSelection>true</LastSelection>
+                    <LastUserSel>yes</LastUserSel>
+                    <UsrMethodName>Peek</UsrMethodName>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>Deinit</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                    <LastSelection>true</LastSelection>
+                    <LastUserSel>yes</LastUserSel>
+                    <UsrMethodName>Deinit</UsrMethodName>
+                  </ItemState>
                 </Methods>
                 <Events>
                   <ItemState>
@@ -19674,7 +20154,7 @@
                 <UserFolderName />
                 <Comment lines_count="0" />
                 <Template>FSL_USB_CDC_Device\Buffer</Template>
-                <BeanVersion>01.033</BeanVersion>
+                <BeanVersion>01.039</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
                 <Properties>
                   <ItemState>
@@ -19783,6 +20263,30 @@
                     <LastUserSel>always</LastUserSel>
                     <UsrMethodName>Clear</UsrMethodName>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>Peek</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                    <LastSelection>true</LastSelection>
+                    <LastUserSel>yes</LastUserSel>
+                    <UsrMethodName>Peek</UsrMethodName>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>Deinit</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                    <LastSelection>true</LastSelection>
+                    <LastUserSel>yes</LastUserSel>
+                    <UsrMethodName>Deinit</UsrMethodName>
                   </ItemState>
                 </Methods>
                 <Events>
@@ -19896,6 +20400,27 @@
               <Value>0</Value>
               <Base>DEC</Base>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>PowerOptionsGroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ConfigBusPowered</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ConfigSelfPowered</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
             </ItemState>
           </Properties>
           <Methods>
@@ -20064,6 +20589,17 @@
               <UsrMethodName>SendBlock</UsrMethodName>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
             </ItemState>
+            <ItemState>
+              <ItemSymbol>Deinit</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>Deinit</UsrMethodName>
+            </ItemState>
           </Methods>
           <Events>
             <ItemState>
@@ -20133,7 +20669,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.023</BeanVersion>
+          <BeanVersion>01.024</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -20268,6 +20804,17 @@
               <LastUserSel>yes</LastUserSel>
               <UsrMethodName>Init</UsrMethodName>
             </ItemState>
+            <ItemState>
+              <ItemSymbol>Deinit</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>Deinit</UsrMethodName>
+            </ItemState>
           </Methods>
           <Events>
             <ItemState>
@@ -20386,6 +20933,17 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>Init</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
       </ItemState>
     </Methods>
     <Events>
