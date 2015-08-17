@@ -9,6 +9,21 @@
 #include "UTIL1.h"
 #include "Test.h"
 
+#if 0
+int k, i, j;
+
+void xx(void) {
+  k = 0;
+  if (i==10) {
+    i += j;
+    j++;
+  } else {
+    foox();
+  }
+  barx();
+}
+#endif
+
 static int foo(int i) {
 	if (i<5) {
       return 1;

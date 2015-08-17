@@ -110,6 +110,7 @@
 					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.562495841.1727872507" name="coverage_demo.c" rcbsApplicability="disable" resourcePath="Sources/coverage_demo.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.816295417.994923398">
 						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.816295417.994923398" name="Cross ARM C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.816295417">
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other.161745573" name="Other compiler flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other" value="-fprofile-arcs -ftest-coverage" valueType="string"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.asmlisting.1985602042" name="Generate assembler listing (-Wa,-adhlns=&quot;$@.lst&quot;)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.asmlisting" value="false" valueType="boolean"/>
 							<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1395040937" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 						</tool>
 						<tool customBuildStep="true" id="org.eclipse.cdt.managedbuilder.ui.rcbs.779764155" name="Resource Custom Build Step">
@@ -121,7 +122,7 @@
 					</fileInfo>
 					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.562495841.352882503" name="Test.c" rcbsApplicability="disable" resourcePath="Sources/Test.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.816295417.617193697">
 						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.816295417.617193697" name="Cross ARM C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.816295417">
-							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other.62110833" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other" value="-fprofile-arcs -ftest-coverage" valueType="string"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other.62110833" name="Other compiler flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other" value="-fprofile-arcs -ftest-coverage" valueType="string"/>
 							<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.669664317" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 						</tool>
 					</fileInfo>
