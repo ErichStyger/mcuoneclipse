@@ -47,8 +47,6 @@
 #include "LEDpin4.h"
 #include "BitIoLdd4.h"
 #include "FRTOS1.h"
-#include "RTOSCNTRLDD1.h"
-#include "RTOSTICKLDD1.h"
 #include "UTIL1.h"
 #include "WAIT1.h"
 #include "CLS1.h"
@@ -68,7 +66,7 @@
 extern "C" {
 #endif 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

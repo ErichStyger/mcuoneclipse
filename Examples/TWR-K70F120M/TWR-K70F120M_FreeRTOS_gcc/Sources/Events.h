@@ -47,8 +47,6 @@
 #include "LEDpin4.h"
 #include "BitIoLdd4.h"
 #include "FRTOS1.h"
-#include "RTOSCNTRLDD1.h"
-#include "RTOSTICKLDD1.h"
 #include "UTIL1.h"
 #include "WAIT1.h"
 #include "CLS1.h"
