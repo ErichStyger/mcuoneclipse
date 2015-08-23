@@ -29,7 +29,7 @@ void SysTick_Handler(void) {
   void OSA_SysTick_Handler(void);
   static size_t pc, idx;
 
-  OSA_SysTick_Handler(); /* call normal Kintis SDK SysTick handler */
+  OSA_SysTick_Handler(); /* call normal Kinetis SDK SysTick handler */
   if (prof.state==PROFILE_ON) {
     pc = ((uint32_t*)(__builtin_frame_address(0)))[14]; /* get SP and use it to get the return address from stack */
     if (pc >= prof.lowpc && pc < prof.highpc) {

@@ -172,5 +172,6 @@ extern struct gmonparam _gmonparam;
 #define	GMON_PROF_OFF	  3
 
 void _mcleanup(void); /* routine to be called to write gmon.out file */
+void _monInit(void); /* initialization routine */
 
 #endif /* !_SYS_GMONH_ */
