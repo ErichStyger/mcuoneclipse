@@ -73,7 +73,7 @@ void main(void)
 
   if (FRTOS1_xTaskCreate(
         Task1,  /* pointer to the task */
-        (signed portCHAR *)"Task1", /* task name for kernel awareness debugging */
+        (unsigned char *)"Task1", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
@@ -85,7 +85,7 @@ void main(void)
   }
   if (FRTOS1_xTaskCreate(
         Task2,  /* pointer to the task */
-        (signed portCHAR *)"Task2", /* task name for kernel awareness debugging */
+        (unsigned char *)"Task2", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */

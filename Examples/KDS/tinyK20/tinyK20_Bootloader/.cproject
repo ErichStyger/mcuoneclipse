@@ -106,11 +106,11 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.2088906442.806751638" name="flash_security_bypass.c" rcbsApplicability="disable" resourcePath="flash_algo/TARGET_Freescale/flash/src/flash_security_bypass.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1076029962.605285033">
-						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1076029962.605285033" name="Cross ARM C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1076029962"/>
+					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.2088906442.603674604" name="usb_lib.c" rcbsApplicability="disable" resourcePath="USBStack/INC/usb_lib.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1076029962.1134038067">
+						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1076029962.1134038067" name="Cross ARM C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1076029962"/>
 					</fileInfo>
 					<sourceEntries>
-						<entry excluding="flash_algo/TARGET_Freescale/flash/src/flash_security_bypass.c|flash_algo/TARGET_Freescale/flash/src/flash_read_resource.c|flash_algo/TARGET_Freescale/flash/src/flash_read_once.c|flash_algo/TARGET_Freescale/flash/src/flash_program_once.c|flash_algo/TARGET_Freescale/flash/src/flash_get_security_state.c|flash_algo/TARGET_Freescale/flash/src/flash_get_property.c|flash_algo/TARGET_Freescale/flash/src/flash_erase_all_unsecure.c|flash_algo/TARGET_Freescale/flash/src/flash_densities_kl43.c|flash_algo/TARGET_Freescale/flash/src/flash_densities_kl27.c|flash_algo/TARGET_Freescale/flash/src/flash_densities_kl03.c|flash_algo/TARGET_Freescale/flash/src/flash_densities_kl_series.c|flash_algo/TARGET_Freescale/flash/src/flash_is_protected.c|flash_algo/TARGET_Freescale/flash/src/flash_is_execute_only.c|USBStack/INC/usb_lib.c|USBStack/SRC/usbd_core_cdc.c|USBStack/SRC/usbd_core_hid.c|USBStack/SRC/usbd_cdc_acm.c|USBStack/SRC/usbd_hid.c|bootloader/Common/src/RTX_Config.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="flash_algo/TARGET_Freescale/flash/src/flash_security_bypass.c|flash_algo/TARGET_Freescale/flash/src/flash_read_resource.c|flash_algo/TARGET_Freescale/flash/src/flash_read_once.c|flash_algo/TARGET_Freescale/flash/src/flash_program_once.c|flash_algo/TARGET_Freescale/flash/src/flash_get_security_state.c|flash_algo/TARGET_Freescale/flash/src/flash_get_property.c|flash_algo/TARGET_Freescale/flash/src/flash_erase_all_unsecure.c|flash_algo/TARGET_Freescale/flash/src/flash_densities_kl43.c|flash_algo/TARGET_Freescale/flash/src/flash_densities_kl27.c|flash_algo/TARGET_Freescale/flash/src/flash_densities_kl03.c|flash_algo/TARGET_Freescale/flash/src/flash_densities_kl_series.c|flash_algo/TARGET_Freescale/flash/src/flash_is_protected.c|flash_algo/TARGET_Freescale/flash/src/flash_is_execute_only.c|USBStack/SRC/usbd_core_cdc.c|USBStack/SRC/usbd_core_hid.c|USBStack/SRC/usbd_cdc_acm.c|USBStack/SRC/usbd_hid.c|bootloader/Common/src/RTX_Config.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -131,5 +131,9 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/tinyK20_Bootloader"/>
+		</configuration>
+	</storageModule>
 </cproject>

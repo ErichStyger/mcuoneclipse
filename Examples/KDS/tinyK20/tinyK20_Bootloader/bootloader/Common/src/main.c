@@ -188,7 +188,7 @@ int main (void)
     relocate_vector_table();
 
     // modify stack pointer and start app
-#if 0 /* << EST */ /* \todo EST */
+#if 0 /* << EST */ /* \todo EST modify_stack_pointer_and_start_app() */
     modify_stack_pointer_and_start_app(INITIAL_SP, RESET_HANDLER);
 #endif
 }

@@ -1171,6 +1171,7 @@ U32  usbd_os_evt_wait_or (U16 wait_flags, U16 timeout) {
   return (0);
 }
 #endif
+
 #if 1 /* << EST */
 static void USBD_RTX_Device     (void *param)   {
   U16 evt;
@@ -1221,7 +1222,6 @@ void usbd_class_init     (void)                                       {
                                                                         usbd_cls_init();
 #endif
                                                                       }
-
 void USBD_RTX_TaskInit (void) {
 
 #ifdef __RTX
@@ -1250,17 +1250,20 @@ void USBD_RTX_TaskInit (void) {
   if (xTaskCreate(USBD_RTX_Device, "Device", configMINIMAL_STACK_SIZE, NULL, 3, NULL) != pdPASS) {
     for(;;){} /* error! probably out of memory */
   }
-#if 0 /* << EST \todo EST */
+#if 0 /* << EST \todo EST USB tasks */
   for (i = 0; i <= 15; i++) {
     USBD_RTX_EPTask[i] = 0;
     if (USBD_RTX_P_EP[i]) {
       USBD_RTX_EPTask[i] = os_tsk_create(USBD_RTX_P_EP[i], 2);
     }
   }
-#endif
-  if (xTaskCreate(USBD_RTX_Core, "Core", configMINIMAL_STACK_SIZE, NULL, 2, NULL) != pdPASS) {
-    for(;;){} /* error! probably out of memory */
+  USBD_RTX_CoreTask = 0;
+  if (USBD_RTX_P_Core) {
+    if (xTaskCreate(USBD_RTX_Core, "Core", configMINIMAL_STACK_SIZE, NULL, 2, NULL) != pdPASS) {
+      for(;;){} /* error! probably out of memory */
+    }
   }
+#endif
 #endif
 }
 

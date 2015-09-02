@@ -688,8 +688,6 @@ static void msc_valid_file_timeout_task(void *param) {
             }
         }
     }
-    /* \todo EST timout task */
-    //    vTaskDelay(pdMS_TO_TICKS(100));
   } /* for */
 }
 #endif
