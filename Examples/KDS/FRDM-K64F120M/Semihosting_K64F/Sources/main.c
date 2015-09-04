@@ -45,12 +45,11 @@
 #include <malloc.h>
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
-double d = 3.56;
-int *p;
+static double d = 3.56;
+static float f = 12.3456;
 
-
-void *_sbrk ( uint32_t delta )
-{
+#if 0
+void *_sbrk ( uint32_t delta ) {
 extern char _end; /* Defined by the linker */
 static char *heap_end;
 char *prev_heap_end;
@@ -60,14 +59,10 @@ char *prev_heap_end;
   }
 
   prev_heap_end = heap_end;
-#if 0
-  if (prev_heap_end+delta > get_stack_pointer()) {
-         return (void *) -1L;
-  }
-#endif
   heap_end += delta;
   return (void *) prev_heap_end;
 }
+#endif
 
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
@@ -78,16 +73,18 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
 #if 1
-  p = malloc(100);
+//  p = malloc(100);
   {
 	 int i;
-  for(i=0;/*i<100*/;i++) {
-    printf("Hello world!013456\r\n"); /* 20 characters */
-   // d = sin(3.5);
-    i++; d++;
-  //  printf("float: %f\r\n", d);
-  }
-  printf("****FINISHED****\n"); /* 2000 characters finished */
+
+	 for(i=0; i<100; i++) {
+     printf("Hello world!013456\r\n"); /* 20 characters */
+     d = sin(3.5);
+     i++; d++;
+     printf("double: %f\r\n", d);
+     printf("float: %f\r\n", f);
+   }
+   printf("****FINISHED****\n"); /* 2000 characters finished */
   }
 #endif
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
