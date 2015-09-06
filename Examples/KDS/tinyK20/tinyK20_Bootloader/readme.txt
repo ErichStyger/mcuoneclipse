@@ -14,3 +14,9 @@ Notes:
 - added TARGET_MK20DX
 - -fshort-wchar
 
+Enter BOOTLOADER mode:
+----------------------
+Put PTB1 (pin 28 on package) to GND.
+
+USB
+1:GND ......... 10:B1
