@@ -35,7 +35,6 @@
 #include "PE_Const.h"
 #include "IO_Map.h"
 #include "FRTOS1.h"
-#include "RTOSCNTRLDD1.h"
 #include "UTIL1.h"
 #include "LED1.h"
 #include "LEDpin1.h"
@@ -88,7 +87,7 @@ extern "C" {
 void Cpu_OnNMIINT(void);
 
 
-void EVNT1_AppHandleEvent(byte event);
+void EVNT1_AppHandleEvent(uint8_t event);
 /*
 ** ===================================================================
 **     Event       :  EVNT1_AppHandleEvent (module Events)

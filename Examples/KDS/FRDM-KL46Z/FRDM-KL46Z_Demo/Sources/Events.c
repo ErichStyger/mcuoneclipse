@@ -68,7 +68,7 @@ void Cpu_OnNMIINT(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void EVNT1_AppHandleEvent(byte event)
+void EVNT1_AppHandleEvent(uint8_t event)
 {
   (void)event; /* only to avoid compiler warning about unused variable */
   /* Write your code here ... */

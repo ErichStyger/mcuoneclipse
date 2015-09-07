@@ -10,7 +10,7 @@
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2014-11-18, 07:10, # CodeGen: 0 */
+/*##     Date/Time : 2015-09-07, 06:44, # CodeGen: 7 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */
@@ -30,6 +30,7 @@ ENTRY(__thumb_startup)
 /* Highest address of the user mode stack */
 _estack = 0x20006000;    /* end of m_data */
 __SP_INIT = _estack;
+__stack = _estack;
 
 /* Generate a link error if heap and stack don't fit into RAM */
 __heap_size = 0x00;                    /* required amount of heap  */
