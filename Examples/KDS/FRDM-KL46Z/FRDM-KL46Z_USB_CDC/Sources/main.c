@@ -59,6 +59,10 @@ static void CDC_Run(void) {
   uint32_t val = 0;
   unsigned char buf[16];
 
+  LED1_On();
+  LED2_On();
+  LED1_Off();
+  LED2_Off();
   for(;;) {
     while(CDC1_App_Task(cdc_buffer, sizeof(cdc_buffer))==ERR_BUSOFF) {
       /* device not enumerated */
