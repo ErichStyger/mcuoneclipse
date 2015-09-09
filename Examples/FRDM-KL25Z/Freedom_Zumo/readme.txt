@@ -1,6 +1,6 @@
 readme.txt
 ----------
-This project implements a line following and maze solving robot based on the Pololu Zumo Robot shield and chassis.
+This project implements a line following and maze solving robot based on the Pololu Zumo Robot shield and chassis. It uses CodeWarrior for MCU v10.6.
 
 For more information, see:
 http://mcuoneclipse.com/2013/01/31/the-freedom-zumo-robot/

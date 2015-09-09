@@ -53,17 +53,24 @@
 <listAttribute key="com.freescale.cdt.debug.cw.Embedded Download.TaskSuccessiveRuns"/>
 <listAttribute key="com.freescale.cdt.debug.cw.Embedded Download.TaskTypes"/>
 <listAttribute key="com.freescale.cdt.debug.cw.ExecutablePath"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.InitializePC" value="true"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.InitializePCAtProgramEntryPoint" value="true"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.InitializePCAtSymbol" value="main"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.InitializePCAtUserSpecified" value="false"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.LaunchMode" value="DOWNLOAD"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.PN_StopAtProgramEntryPoint" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.PN_StopAtStartUp" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.PN_StopAtUserSpecified" value="true"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.RefreshPolicy.RefreshPeriod" value="2.0"/>
 <listAttribute key="com.freescale.cdt.debug.cw.RemoteDownload"/>
 <listAttribute key="com.freescale.cdt.debug.cw.RemotePath"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.ResumeProgram" value="true"/>
 <listAttribute key="com.freescale.cdt.debug.cw.SMPCores"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.SYNC_WITH_ENCL_PROJ" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.Symbolics.CacheSymbolicsBetweenRuns" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.Symbolics.UseExecutableCopy" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.UDPPort" value="1234"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.UseApplication" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.RetryConnectionOn" value="false"/>
 <intAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.RetryTimeout" value="20"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.RetryWithTimeoutOn" value="false"/>
@@ -80,9 +87,11 @@
 <stringAttribute key="com.freescale.cdt.debug.cw.debuggerAddress" value="127.0.0.1"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.disableIO" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.ethCtrl" value="UEC1"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.executeInitScripts" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.executePerCoresReset" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.executePerprocessorReset" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.executeReset" value="true"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.executeResetSequence" value="true"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.gateway" value="127.0.0.1"/>
 <listAttribute key="com.freescale.cdt.debug.cw.initPathList">
 <listEntry value="${ProjDirPath}/Project_Settings/Debugger/init_kinetis.tcl"/>
@@ -101,6 +110,7 @@
 <listAttribute key="com.freescale.cdt.debug.cw.runOutOfResetList">
 <listEntry value="false"/>
 </listAttribute>
+<booleanAttribute key="com.freescale.cdt.debug.cw.skipSystemInitialization" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.targetAddress" value="127.0.0.1"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.useGateway" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.useHSSTIO" value="false"/>
@@ -167,6 +177,7 @@
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_Multilink_PowerUpDelay" value="1000"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_PCI_DELAY" value="3"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_PORT" value="181"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_PORT_NAME_STRING" value="DB876E07"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_RESET_DELAY" value="0"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_SPECIFY_IP" value="127.0.0.1"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_SPECIFY_IP_ENABLED" value="0"/>
@@ -176,7 +187,7 @@
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_USE_CYCLONEPRO_RELAYS" value="0"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_USE_SWD" value="1"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.STARTUP_interface_selection" value="7"/>
-<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.UUID" value="c29e1070-c16a-4d38-83d9-1e9561980b12"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.arm.UUID" value="3debe600-0fcd-4538-984f-cd8a387094be"/>
 <booleanAttribute key="forceShellDownload" value="false"/>
 <stringAttribute key="net.sourceforge.usbdm.connections.usbdm.CommandLineArgs" value=""/>
 <stringAttribute key="net.sourceforge.usbdm.connections.usbdm.ConfigFile" value=""/>
@@ -204,7 +215,7 @@
 <booleanAttribute key="org.eclipse.cdt.launch.ENABLE_REGISTER_BOOKKEEPING" value="false"/>
 <booleanAttribute key="org.eclipse.cdt.launch.ENABLE_RESTORE_WATCHPOINTS" value="true"/>
 <booleanAttribute key="org.eclipse.cdt.launch.ENABLE_VARIABLE_BOOKKEEPING" value="false"/>
-<stringAttribute key="org.eclipse.cdt.launch.FORMAT" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&lt;contentList&gt;&lt;content id=&quot;pathLength--(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;*cmd-cmd-ParsePidParameter-(format)&quot; val=&quot;0&quot;/&gt;&lt;content id=&quot;uxMissedTicks-vTaskIncrementTick-(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;autoCalibrate-CheckButton-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;isCalibrated-REF_CanUseSensor-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;*cmd-cmd-CLS1_ParseWithCommandTable-(format)&quot; val=&quot;0&quot;/&gt;&lt;content id=&quot;isCalibrated-REF_GetLineKind-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;i-MAZE_RevertPath-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;j-MAZE_RevertPath-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;stacked_lr-HF1_HandlerC-(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;errorPercent-PID_Line-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;isCalibrated-REF_MeasureRaw-(format)&quot; val=&quot;1&quot;/&gt;&lt;/contentList&gt;"/>
+<stringAttribute key="org.eclipse.cdt.launch.FORMAT" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&lt;contentList&gt;&lt;content id=&quot;isCalibrated-REF_MeasureRaw-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;errorPercent-PID_Line-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;stacked_lr-HF1_HandlerC-(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;j-MAZE_RevertPath-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;i-MAZE_RevertPath-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;isCalibrated-REF_GetLineKind-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;*cmd-cmd-CLS1_ParseWithCommandTable-(format)&quot; val=&quot;0&quot;/&gt;&lt;content id=&quot;isCalibrated-REF_CanUseSensor-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;autoCalibrate-CheckButton-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;uxMissedTicks-vTaskIncrementTick-(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;*cmd-cmd-ParsePidParameter-(format)&quot; val=&quot;0&quot;/&gt;&lt;content id=&quot;pathLength--(format)&quot; val=&quot;1&quot;/&gt;&lt;/contentList&gt;"/>
 <stringAttribute key="org.eclipse.cdt.launch.GLOBAL_VARIABLES" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;globalVariableList&gt;&#13;&#10;&lt;globalVariable name=&quot;motorR&quot; path=&quot;C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\FRDM-KL25Z\Freedom_Zumo\Sources\Motor.c&quot;/&gt;&#13;&#10;&lt;globalVariable name=&quot;motorL&quot; path=&quot;C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\FRDM-KL25Z\Freedom_Zumo\Sources\Motor.c&quot;/&gt;&#13;&#10;&lt;/globalVariableList&gt;&#13;&#10;"/>
 <stringAttribute key="org.eclipse.cdt.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList/&gt;&#13;&#10;"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="FLASH/Freedom_Zumo.elf"/>
