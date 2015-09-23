@@ -33,7 +33,11 @@
 #if PL_HAS_RSTDIO
   #include "RStdIO.h"
 #endif
+#if PL_HAS_ESC
+  #include "ESC.h"
+#endif
 #include "KIN1.h"
+
 
 void SHELL_SendString(unsigned char *msg) {
   CLS1_SendStr(msg, CLS1_GetStdio()->stdOut);
@@ -74,6 +78,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
   RADIO_ParseCommand,
   RNWK_ParseCommand,
   RNETA_ParseCommand,
+#endif
+#if PL_HAS_ESC
+  ESC_ParseCommand,
 #endif
 #if KIN1_PARSE_COMMAND_ENABLED
   KIN1_ParseCommand,
