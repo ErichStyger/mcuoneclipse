@@ -15,11 +15,15 @@
 #endif
 
 typedef uint8_t ESC_SpeedPercent; /* 0%...+100%, where negative is backward */
+#define ESC_MIN_DUTY_MS  1000  /* default minimum duty in us */
+#define ESC_MAX_DUTY_MS  2000  /* default maximum duty in us */
 
 typedef struct ESC_MotorDevice_ {
   ESC_SpeedPercent currSpeedPercent; /* our current speed in %, negative percent means backward */
   uint16_t currPWMvalue; /* current PWM value used */
+  uint16_t us; /* current duty in us */
   uint8_t (*SetRatio16)(uint16_t); /* function to set the ratio */
+  uint8_t (*SetDutyUS)(uint16_t); /* function to set the duty us */
 } ESC_MotorDevice;
 
 typedef enum {
@@ -39,6 +43,10 @@ ESC_MotorDevice *MOT_GetMotorHandle(ESC_MotorID motor) {
 
 static uint8_t ESC_SetRatio16_FR(uint16_t ratio) {
   return PWMFR_SetRatio16(ratio);
+}
+
+static uint8_t ESC_SetDutyUS_FR(uint16_t us) {
+  return PWMFR_SetDutyUS(us);
 }
 
 void ESC_SetVal(ESC_MotorDevice *motor, uint16_t val) {
@@ -80,18 +88,54 @@ void ESC_ChangeSpeedPercent(ESC_MotorDevice *motor, ESC_SpeedPercent relPercent)
   ESC_SetSpeedPercent(motor, relPercent);  /* set speed. This will care about the direction too */
 }
 
+uint8_t ESC_SetDutyMs(ESC_MotorDevice *motor, uint16_t us) {
+  motor->us = us; /* store current value */
+  return PWMFR_SetDutyUS(us);
+}
+
 #if PL_HAS_SHELL
 static void ESC_PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"esc", (unsigned char*)"Group of esc commands\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows motor help or status\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  duty <motor> <number>", (unsigned char*)"Change <motor> (fl|fr|bl|br) duty (0..+100)%\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  us <motor> <number>", (unsigned char*)"Change <motor> (fl|fr|bl|br) duty time (500..1500us)%\r\n", io->stdOut);
+}
+
+static void ESC_PrintESCStatus(ESC_MotorID id, const CLS1_StdIOType *io) {
+  unsigned char buf[48];
+  const unsigned char *motorStr;
+
+  if (id==ESC_MOTOR_FRONT_RIGHT) {
+    motorStr = "  fr";
+  } else if (id==ESC_MOTOR_FRONT_LEFT) {
+    motorStr = "  fl";
+  } else if (id==ESC_MOTOR_BACK_LEFT) {
+    motorStr = "  bl";
+  } else if (id==ESC_MOTOR_BACK_RIGHT) {
+    motorStr = "  br";
+  } else {
+    motorStr = "  ??";
+  }
+
+  CLS1_SendStatusStr(motorStr, (unsigned char*)"", io->stdOut);
+  buf[0] = '\0';
+  UTIL1_Num16sToStrFormatted(buf, sizeof(buf), (int16_t)ESC_motors[id].currSpeedPercent, ' ', 4);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"% 0x");
+  UTIL1_strcatNum16Hex(buf, sizeof(buf), ESC_motors[id].currPWMvalue);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)", ");
+  UTIL1_strcatNum16u(buf, sizeof(buf), ESC_motors[id].us);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" us\r\n");
+  CLS1_SendStr(buf, io->stdOut);
 }
 
 static void ESC_PrintStatus(const CLS1_StdIOType *io) {
-  unsigned char buf[32];
 
   CLS1_SendStatusStr((unsigned char*)"esc", (unsigned char*)"\r\n", io->stdOut);
   CLS1_SendStatusStr((unsigned char*)"  on/off", ESC_isMotorOn?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
+  ESC_PrintESCStatus(ESC_MOTOR_FRONT_LEFT, io);
+  ESC_PrintESCStatus(ESC_MOTOR_FRONT_RIGHT, io);
+  ESC_PrintESCStatus(ESC_MOTOR_BACK_LEFT, io);
+  ESC_PrintESCStatus(ESC_MOTOR_BACK_RIGHT, io);
 }
 
 uint8_t ESC_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
@@ -144,6 +188,38 @@ uint8_t ESC_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
         }
       }
     }
+  } else if (UTIL1_strncmp((char*)cmd, (char*)"esc us ", sizeof("esc us ")-1)==0) {
+    if (!ESC_isMotorOn) {
+      CLS1_SendStr((unsigned char*)"Motors are OFF, cannot set ms duty.\r\n", io->stdErr);
+      res = ERR_FAILED;
+    } else {
+      p = cmd+sizeof("esc us ")-1;
+      if (UTIL1_strncmp((char*)p, (char*)"fl ", sizeof("fl ")-1)==0) {
+        id = ESC_MOTOR_FRONT_LEFT;
+      } else if (UTIL1_strncmp((char*)p, (char*)"fr ", sizeof("fr ")-1)==0) {
+        id = ESC_MOTOR_FRONT_RIGHT;
+      } else if (UTIL1_strncmp((char*)p, (char*)"bl ", sizeof("bl ")-1)==0) {
+        id = ESC_MOTOR_BACK_LEFT;
+      } else if (UTIL1_strncmp((char*)p, (char*)"br ", sizeof("br ")-1)==0) {
+        id = ESC_MOTOR_BACK_RIGHT;
+      } else {
+        CLS1_SendStr((unsigned char*)"Wrong argument, motor must be either fl, fr, bl or br\r\n", io->stdErr);
+        res = ERR_FAILED;
+      }
+      if (res==ERR_OK) {
+        p = cmd+sizeof("esc us xx ")-1;
+        if (UTIL1_xatoi(&p, &val)==ERR_OK) {
+          if (ESC_SetDutyMs(&ESC_motors[id], val)!=ERR_OK) {
+            CLS1_SendStr((unsigned char*)"Failed SetDutyMs()!\r\n", io->stdErr);
+            res = ERR_FAILED;
+          }
+          *handled = TRUE;
+        } else {
+          CLS1_SendStr((unsigned char*)"Wrong argument, must be in the range 0..100\r\n", io->stdErr);
+          res = ERR_FAILED;
+        }
+      }
+    }
   }
   return res;
 }
@@ -158,10 +234,16 @@ void ESC_Init(void) {
   ESC_motors[ESC_MOTOR_FRONT_RIGHT].SetRatio16 = ESC_SetRatio16_FR;
   ESC_motors[ESC_MOTOR_BACK_RIGHT].SetRatio16 = ESC_SetRatio16_FR;
   ESC_motors[ESC_MOTOR_BACK_LEFT].SetRatio16 = ESC_SetRatio16_FR;
+  ESC_motors[ESC_MOTOR_FRONT_LEFT].SetDutyUS = ESC_SetDutyUS_FR;
+  ESC_motors[ESC_MOTOR_FRONT_RIGHT].SetDutyUS = ESC_SetDutyUS_FR;
+  ESC_motors[ESC_MOTOR_BACK_RIGHT].SetDutyUS = ESC_SetDutyUS_FR;
+  ESC_motors[ESC_MOTOR_BACK_LEFT].SetDutyUS = ESC_SetDutyUS_FR;
+  (void)PWMFR_Enable();
   for(id=0; id<ESC_MOTOR_NOF; id++) {
     ESC_SetSpeedPercent(&ESC_motors[id], 0);
+    ESC_motors[id].us = ESC_MIN_DUTY_MS;
+    ESC_motors[id].SetDutyUS(ESC_MIN_DUTY_MS);
   }
-  PWMFR_Enable();
 }
 
 #endif /* PL_HAS_ESC */
