@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="com.pemicro.debug.gdbjtag.pne.launchConfigurationType">
+<listAttribute key="com.pemicro.debug.gdbjtag.pne.ELVES"/>
+<intAttribute key="com.pemicro.debug.gdbjtag.pne.NUMBER_ELVES" value="0"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.PE.DEVICE_NAME" value="Freescale_KL0x_KL05Z32M4"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.PE.GDB_IP" value="127.0.0.1"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.PE.GDB_OPTIONS" value=""/>
@@ -142,6 +144,7 @@
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.sda.SPECIFY_NETWORK_CARD" value="false"/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.sda.STARTUP_USE_SWD" value="true"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.secondResetType" value=""/>
+<intAttribute key="com.pemicro.debug.gdbjtag.pne.selectedCoreNumber" value="1"/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.swoEnableTargetCpuFreq" value="0"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.swoEnableTargetPortMask" value="0x1"/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.swoEnableTargetSwoFreq" value="0"/>
@@ -206,6 +209,7 @@
 <booleanAttribute key="org.eclipse.cdt.dsf.gdb.UPDATE_THREADLIST_ON_SUSPEND" value="false"/>
 <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
 <stringAttribute key="org.eclipse.cdt.launch.COREFILE_PATH" value=""/>
+<stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_REGISTER_GROUPS" value=""/>
 <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug\FRDM-KL05Z_PEx.elf"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="FRDM-KL05Z_PEx"/>
 <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="true"/>

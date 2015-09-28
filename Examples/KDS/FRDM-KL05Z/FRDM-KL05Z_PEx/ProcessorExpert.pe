@@ -6,7 +6,7 @@
     <ModificationStamp>8</ModificationStamp>
     <Date>2015-04-18</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion>1.10.1.RT6_b1444-1070</PEversion>
+    <PEversion>1.12.1.RT7_b1531-0480</PEversion>
   </Header>
   <Options>
     <ProjectMainModule>main</ProjectMainModule>
@@ -53,6 +53,8 @@
     <Template />
     <BeanVersion>01.000</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+    <ComponentUUID>com.freescale.processorexpert.processor.mkl05z32lc4</ComponentUUID>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
@@ -3591,6 +3593,11 @@
           <Expanded>true</Expanded>
         </ItemState>
         <ItemState>
+          <ItemSymbol>UnhandledVectorsBehaviorFeatureGrp</ItemSymbol>
+          <ReadOnly>false</ReadOnly>
+          <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        </ItemState>
+        <ItemState>
           <ItemSymbol>UnhandledIntCode</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Value>(string list)</Value>
@@ -3631,6 +3638,11 @@
           <Value>(string list)</Value>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
           <StrgList lines_count="0" />
+        </ItemState>
+        <ItemState>
+          <ItemSymbol>NotSdk0</ItemSymbol>
+          <ReadOnly>false</ReadOnly>
+          <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         </ItemState>
         <ItemState>
           <ItemSymbol>Cmplr_GenerateDebuggerFiles</ItemSymbol>
@@ -3739,6 +3751,19 @@
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
           <Index>1</Index>
           <Value>false</Value>
+        </ItemState>
+        <ItemState>
+          <ItemSymbol>SdkSettingsGrp</ItemSymbol>
+          <ReadOnly>false</ReadOnly>
+          <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        </ItemState>
+        <ItemState>
+          <ItemSymbol>VectorTableCopyRam</ItemSymbol>
+          <ReadOnly>false</ReadOnly>
+          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+          <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+          <Index>0</Index>
+          <Value>true</Value>
         </ItemState>
         <ItemState>
           <ItemSymbol>DefaultMemInterrupts</ItemSymbol>
@@ -4284,6 +4309,7 @@
     <Template />
     <BeanVersion>01.067</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
@@ -4474,8 +4500,9 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.063</BeanVersion>
+    <BeanVersion>01.066</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
@@ -4519,6 +4546,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <RegCompType>LEDpin</RegCompType>
+        <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</RegCompRepository>
         <InheritedComponentState>
           <BeanType>BitIO</BeanType>
           <Name>LEDpin1</Name>
@@ -4531,6 +4559,8 @@
           <Template>LED\LEDpin</Template>
           <BeanVersion>02.086</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.bitio</ComponentUUID>
           <Properties>
             <ItemState>
               <ItemSymbol>DeviceName</ItemSymbol>
@@ -4562,6 +4592,7 @@
               <UserReadOnly>false</UserReadOnly>
               <Index>0</Index>
               <RegCompType>BitIO_LDD</RegCompType>
+              <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</RegCompRepository>
               <InheritedComponentState>
                 <BeanType>BitIO_LDD</BeanType>
                 <Name>BitIoLdd4</Name>
@@ -4574,6 +4605,8 @@
                 <Template>BitIO\BitIO_LDD</Template>
                 <BeanVersion>01.033</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
+                <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+                <ComponentUUID>com.freescale.processorexpert.ldd.bitio_ldd</ComponentUUID>
                 <Properties>
                   <ItemState>
                     <ItemSymbol>DeviceName</ItemSymbol>
@@ -5257,8 +5290,9 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.063</BeanVersion>
+    <BeanVersion>01.066</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
@@ -5302,6 +5336,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <RegCompType>LEDpin</RegCompType>
+        <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</RegCompRepository>
         <InheritedComponentState>
           <BeanType>BitIO</BeanType>
           <Name>LEDpin2</Name>
@@ -5314,6 +5349,8 @@
           <Template>LED\LEDpin</Template>
           <BeanVersion>02.086</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.bitio</ComponentUUID>
           <Properties>
             <ItemState>
               <ItemSymbol>DeviceName</ItemSymbol>
@@ -5345,6 +5382,7 @@
               <UserReadOnly>false</UserReadOnly>
               <Index>0</Index>
               <RegCompType>BitIO_LDD</RegCompType>
+              <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</RegCompRepository>
               <InheritedComponentState>
                 <BeanType>BitIO_LDD</BeanType>
                 <Name>BitIoLdd5</Name>
@@ -5357,6 +5395,8 @@
                 <Template>BitIO\BitIO_LDD</Template>
                 <BeanVersion>01.033</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
+                <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+                <ComponentUUID>com.freescale.processorexpert.ldd.bitio_ldd</ComponentUUID>
                 <Properties>
                   <ItemState>
                     <ItemSymbol>DeviceName</ItemSymbol>
@@ -6040,8 +6080,9 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.063</BeanVersion>
+    <BeanVersion>01.066</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
@@ -6085,6 +6126,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <RegCompType>LEDpin</RegCompType>
+        <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</RegCompRepository>
         <InheritedComponentState>
           <BeanType>BitIO</BeanType>
           <Name>LEDpin3</Name>
@@ -6097,6 +6139,8 @@
           <Template>LED\LEDpin</Template>
           <BeanVersion>02.086</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.bitio</ComponentUUID>
           <Properties>
             <ItemState>
               <ItemSymbol>DeviceName</ItemSymbol>
@@ -6128,6 +6172,7 @@
               <UserReadOnly>false</UserReadOnly>
               <Index>0</Index>
               <RegCompType>BitIO_LDD</RegCompType>
+              <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</RegCompRepository>
               <InheritedComponentState>
                 <BeanType>BitIO_LDD</BeanType>
                 <Name>BitIoLdd6</Name>
@@ -6140,6 +6185,8 @@
                 <Template>BitIO\BitIO_LDD</Template>
                 <BeanVersion>01.033</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
+                <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+                <ComponentUUID>com.freescale.processorexpert.ldd.bitio_ldd</ComponentUUID>
                 <Properties>
                   <ItemState>
                     <ItemSymbol>DeviceName</ItemSymbol>
@@ -6823,8 +6870,9 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.071</BeanVersion>
+    <BeanVersion>01.073</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
@@ -7369,8 +7417,9 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.109</BeanVersion>
+    <BeanVersion>01.111</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
@@ -7404,6 +7453,18 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>strcat</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>strcatPad</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>strcatPad</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>chcat</ItemSymbol>
@@ -8032,6 +8093,8 @@
     <Template>Serial</Template>
     <BeanVersion>02.611</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+    <ComponentUUID>com.freescale.processorexpert.asynchroserial</ComponentUUID>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
@@ -8867,6 +8930,7 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <RegCompType>Serial_LDD</RegCompType>
+        <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</RegCompRepository>
         <InheritedComponentState>
           <BeanType>Serial_LDD</BeanType>
           <Name>ASerialLdd1</Name>
@@ -8879,6 +8943,8 @@
           <Template />
           <BeanVersion>01.188</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.ldd.serial_ldd</ComponentUUID>
           <Properties>
             <ItemState>
               <ItemSymbol>DeviceName</ItemSymbol>
@@ -9100,7 +9166,7 @@
               <ItemSymbol>BdRate</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>init:;prec:1.5%;RTS:none;clksrc_presc[SpeedMode0]Auto select;clksrc_presc[SpeedMode1]Auto select;clksrc_presc[SpeedMode2]Auto select;clksrc_presc[SpeedMode3]Auto select;clksrc_presc[SpeedMode4]Auto select;clksrc_presc[SpeedMode5]Auto select;clksrc_presc[SpeedMode6]Auto select;clksrc_presc[SpeedMode7]Auto select</Value>
+              <Value>init:38400 baud;prec:1.5%;RTS:none;clksrc_presc[SpeedMode0]Auto select;clksrc_presc[SpeedMode1]Auto select;clksrc_presc[SpeedMode2]Auto select;clksrc_presc[SpeedMode3]Auto select;clksrc_presc[SpeedMode4]Auto select;clksrc_presc[SpeedMode5]Auto select;clksrc_presc[SpeedMode6]Auto select;clksrc_presc[SpeedMode7]Auto select</Value>
               <RuntimeSetting>0</RuntimeSetting>
               <ReqDevPrescHigh>-1</ReqDevPrescHigh>
               <ReqDevPrescLow>-1</ReqDevPrescLow>
@@ -10887,6 +10953,7 @@
     <Template />
     <BeanVersion>01.006</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
@@ -10954,5 +11021,8 @@
     </Methods>
     <Events />
   </Bean>
+  <ComponentInitializationSequence>
+    <EmptySection_DummyValue />
+  </ComponentInitializationSequence>
 </PEproject>
 

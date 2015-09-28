@@ -40,6 +40,11 @@
 #include "LED3.h"
 #include "LEDpin3.h"
 #include "BitIoLdd6.h"
+#include "CLS1.h"
+#include "UTIL1.h"
+#include "AS1.h"
+#include "ASerialLdd1.h"
+#include "CS1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
