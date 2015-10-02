@@ -57,6 +57,13 @@
 #include "BT1.h"
 #include "Serial1.h"
 #include "ASerialLdd2.h"
+#include "USB1.h"
+#include "CDC1.h"
+#include "Tx1.h"
+#include "Rx1.h"
+#include "GI2C1.h"
+#include "CI2C1.h"
+#include "FX1.h"
 #include "HF1.h"
 
 #ifdef __cplusplus

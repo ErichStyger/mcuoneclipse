@@ -36,8 +36,11 @@
 #if PL_HAS_ESC
   #include "ESC.h"
 #endif
+#if PL_HAS_USB_CDC
+  #include "USB1.h"
+  #include "CDC1.h"
+#endif
 #include "KIN1.h"
-
 
 void SHELL_SendString(unsigned char *msg) {
   CLS1_SendStr(msg, CLS1_GetStdio()->stdOut);
@@ -82,7 +85,7 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if PL_HAS_ESC
   ESC_ParseCommand,
 #endif
-#if KIN1_PARSE_COMMAND_ENABLED
+#if PL_HAS_ACCELEROMETER && KIN1_PARSE_COMMAND_ENABLED
   KIN1_ParseCommand,
 #endif
   NULL /* Sentinel */
@@ -99,6 +102,17 @@ static CLS1_ConstStdIOType BT_stdio = {
 static unsigned char bluetooth_buf[48];
 #endif
 
+#if PL_HAS_USB_CDC
+/* USB CDC stdio */
+static CLS1_ConstStdIOType CDC_stdio = {
+  (CLS1_StdIO_In_FctType)CDC1_StdIOReadChar, /* stdin */
+  (CLS1_StdIO_OutErr_FctType)CDC1_StdIOSendChar, /* stdout */
+  (CLS1_StdIO_OutErr_FctType)CDC1_StdIOSendChar, /* stderr */
+  CDC1_StdIOKeyPressed /* if input is not empty */
+};
+static unsigned char cdc_buf[48];
+#endif
+
 static unsigned char localConsole_buf[48];
 
 #if !PL_HAS_RTOS
@@ -108,6 +122,22 @@ void SHELL_Process(void) {
 #if PL_HAS_BLUETOOTH
   (void)CLS1_ReadAndParseWithCommandTable(bluetooth_buf, sizeof(bluetooth_buf), &BT_stdio, CmdParserTable);
 #endif
+}
+#endif
+
+#if PL_HAS_USB_CDC
+static portTASK_FUNCTION(USBTask, pvParameters) {
+  static uint8_t cdc_buffer[USB1_DATA_BUFF_SIZE];
+
+  (void)pvParameters; /* unused */
+  USB1_Init(); /* have Init of USB1 component disabled during Startup! */
+  for(;;) {
+    while(CDC1_App_Task(cdc_buffer, sizeof(cdc_buffer))==ERR_BUSOFF) {
+      /* device not enumerated */
+      FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
+    }
+    FRTOS1_vTaskDelay(20/portTICK_RATE_MS);
+  }
 }
 #endif
 
@@ -146,6 +176,9 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
 #if PL_HAS_BLUETOOTH
     (void)CLS1_ReadAndParseWithCommandTable(bluetooth_buf, sizeof(bluetooth_buf), &BT_stdio, CmdParserTable);
 #endif
+#if PL_HAS_USB_CDC
+    (void)CLS1_ReadAndParseWithCommandTable(cdc_buf, sizeof(cdc_buf), &CDC_stdio, CmdParserTable);
+#endif
     FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
   } /* for */
 }
@@ -162,6 +195,11 @@ void SHELL_Init(void) {
 #endif
 #if PL_HAS_RTOS
   if (FRTOS1_xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+150, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+    for(;;){} /* error */
+  }
+#endif
+#if PL_HAS_USB_CDC
+  if (FRTOS1_xTaskCreate(USBTask, "USB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+4, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 #endif
