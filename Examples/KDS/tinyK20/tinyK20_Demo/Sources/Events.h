@@ -58,6 +58,7 @@
 #include "HF1.h"
 #include "KIN1.h"
 #include "PTC.h"
+#include "MINI1.h"
 
 #ifdef __cplusplus
 extern "C" {
