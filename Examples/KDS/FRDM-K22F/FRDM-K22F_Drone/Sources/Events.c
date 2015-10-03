@@ -239,9 +239,9 @@ void AS1_OnFreeTxBuf(void)
 
 /*
 ** ===================================================================
-**     Event       :  SM2_OnRxChar (module Events)
+**     Event       :  SM1_OnRxChar (module Events)
 **
-**     Component   :  SM2 [SynchroMaster]
+**     Component   :  SM1 [SynchroMaster]
 **     Description :
 **         This event is called after a correct character is received.
 **         The event is available only when the <Interrupt
@@ -250,32 +250,32 @@ void AS1_OnFreeTxBuf(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void SM2_OnRxChar(void)
+void SM1_OnRxChar(void)
 {
   /* Write your code here ... */
 }
 
 /*
 ** ===================================================================
-**     Event       :  SM2_OnTxChar (module Events)
+**     Event       :  SM1_OnTxChar (module Events)
 **
-**     Component   :  SM2 [SynchroMaster]
+**     Component   :  SM1 [SynchroMaster]
 **     Description :
 **         This event is called after a character is transmitted.
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================
 */
-void SM2_OnTxChar(void)
+void SM1_OnTxChar(void)
 {
   /* Write your code here ... */
 }
 
 /*
 ** ===================================================================
-**     Event       :  SM2_OnError (module Events)
+**     Event       :  SM1_OnError (module Events)
 **
-**     Component   :  SM2 [SynchroMaster]
+**     Component   :  SM1 [SynchroMaster]
 **     Description :
 **         This event is called when a channel error (not the error
 **         returned by a given method) occurs. The errors can be read
@@ -286,7 +286,7 @@ void SM2_OnTxChar(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void SM2_OnError(void)
+void SM1_OnError(void)
 {
   /* Write your code here ... */
 }

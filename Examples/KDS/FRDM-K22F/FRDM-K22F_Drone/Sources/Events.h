@@ -54,7 +54,7 @@
 #include "SD1.h"
 #include "SS1.h"
 #include "CD1.h"
-#include "SM2.h"
+#include "SM1.h"
 #include "SMasterLdd2.h"
 #include "TMOUT1.h"
 #include "TmDt1.h"
@@ -66,6 +66,10 @@
 #include "GI2C1.h"
 #include "CI2C1.h"
 #include "FX1.h"
+#include "USB1.h"
+#include "CDC1.h"
+#include "Tx1.h"
+#include "Rx1.h"
 #include "HF1.h"
 
 #ifdef __cplusplus
@@ -223,12 +227,12 @@ void AS1_OnFullRxBuf(void);
 */
 void AS1_OnFreeTxBuf(void);
 
-void SM2_OnRxChar(void);
+void SM1_OnRxChar(void);
 /*
 ** ===================================================================
-**     Event       :  SM2_OnRxChar (module Events)
+**     Event       :  SM1_OnRxChar (module Events)
 **
-**     Component   :  SM2 [SynchroMaster]
+**     Component   :  SM1 [SynchroMaster]
 **     Description :
 **         This event is called after a correct character is received.
 **         The event is available only when the <Interrupt
@@ -238,12 +242,12 @@ void SM2_OnRxChar(void);
 ** ===================================================================
 */
 
-void SM2_OnTxChar(void);
+void SM1_OnTxChar(void);
 /*
 ** ===================================================================
-**     Event       :  SM2_OnTxChar (module Events)
+**     Event       :  SM1_OnTxChar (module Events)
 **
-**     Component   :  SM2 [SynchroMaster]
+**     Component   :  SM1 [SynchroMaster]
 **     Description :
 **         This event is called after a character is transmitted.
 **     Parameters  : None
@@ -251,12 +255,12 @@ void SM2_OnTxChar(void);
 ** ===================================================================
 */
 
-void SM2_OnError(void);
+void SM1_OnError(void);
 /*
 ** ===================================================================
-**     Event       :  SM2_OnError (module Events)
+**     Event       :  SM1_OnError (module Events)
 **
-**     Component   :  SM2 [SynchroMaster]
+**     Component   :  SM1 [SynchroMaster]
 **     Description :
 **         This event is called when a channel error (not the error
 **         returned by a given method) occurs. The errors can be read

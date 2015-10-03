@@ -10,7 +10,7 @@
 
 #define PL_HAS_SHELL          1
 #define PL_HAS_BLUETOOTH      0
-#define PL_HAS_USB_CDC        0
+#define PL_HAS_USB_CDC        1
 #define PL_HAS_SD_CARD        1
 #define PL_HAS_RADIO          0
 #define PL_HAS_RSTDIO         0
