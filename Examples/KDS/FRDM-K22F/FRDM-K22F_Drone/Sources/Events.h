@@ -51,16 +51,18 @@
 #include "AS1.h"
 #include "ASerialLdd1.h"
 #include "KIN1.h"
-#include "TU1.h"
-#include "PWMFR.h"
-#include "PwmLdd1.h"
-#include "BT1.h"
-#include "Serial1.h"
-#include "ASerialLdd2.h"
-#include "USB1.h"
-#include "CDC1.h"
-#include "Tx1.h"
-#include "Rx1.h"
+#include "SD1.h"
+#include "SS1.h"
+#include "CD1.h"
+#include "SM2.h"
+#include "SMasterLdd2.h"
+#include "TMOUT1.h"
+#include "TmDt1.h"
+#include "FAT1.h"
+#include "SW2.h"
+#include "BitIoLdd7.h"
+#include "SW3.h"
+#include "BitIoLdd6.h"
 #include "GI2C1.h"
 #include "CI2C1.h"
 #include "FX1.h"
@@ -220,6 +222,51 @@ void AS1_OnFullRxBuf(void);
 ** ===================================================================
 */
 void AS1_OnFreeTxBuf(void);
+
+void SM2_OnRxChar(void);
+/*
+** ===================================================================
+**     Event       :  SM2_OnRxChar (module Events)
+**
+**     Component   :  SM2 [SynchroMaster]
+**     Description :
+**         This event is called after a correct character is received.
+**         The event is available only when the <Interrupt
+**         service/event> property is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void SM2_OnTxChar(void);
+/*
+** ===================================================================
+**     Event       :  SM2_OnTxChar (module Events)
+**
+**     Component   :  SM2 [SynchroMaster]
+**     Description :
+**         This event is called after a character is transmitted.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void SM2_OnError(void);
+/*
+** ===================================================================
+**     Event       :  SM2_OnError (module Events)
+**
+**     Component   :  SM2 [SynchroMaster]
+**     Description :
+**         This event is called when a channel error (not the error
+**         returned by a given method) occurs. The errors can be read
+**         using <GetError> method.
+**         The event is available only when the <Interrupt
+**         service/event> property is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
 
 /* END Events */
 

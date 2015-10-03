@@ -11,6 +11,7 @@
 #include "LED2.h"
 #include "LED3.h"
 #include "FRTOS1.h"
+#include "PORT_PDD.h"
 #if PL_HAS_SHELL
   #include "Shell.h"
 #endif
@@ -27,6 +28,20 @@ static void AppTask(void *pvParameters) {
 }
 
 void APP_Run(void) {
+#if PL_HAS_SD_CARD
+  /* SD card detection: PTB16 with pull-down! */
+  PORT_PDD_SetPinPullSelect(PORTB_BASE_PTR, 16, PORT_PDD_PULL_DOWN);
+  PORT_PDD_SetPinPullEnable(PORTB_BASE_PTR, 16, PORT_PDD_PULL_ENABLE);
+#endif
+#if PL_HAS_PUSH_BUTTONS
+  /* SW2: PTC1 */
+  PORT_PDD_SetPinPullSelect(PORTC_BASE_PTR, 1, PORT_PDD_PULL_UP);
+  PORT_PDD_SetPinPullEnable(PORTC_BASE_PTR, 1, PORT_PDD_PULL_ENABLE);
+  /* SW3: PTB17 */
+  PORT_PDD_SetPinPullSelect(PORTB_BASE_PTR, 17, PORT_PDD_PULL_UP);
+  PORT_PDD_SetPinPullEnable(PORTB_BASE_PTR, 17, PORT_PDD_PULL_ENABLE);
+#endif
+
   LED1_On();
   LED1_Off();
   LED2_On();

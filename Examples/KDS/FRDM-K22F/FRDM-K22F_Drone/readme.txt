@@ -9,3 +9,6 @@ Pins:
 -----
 ESC front right: J2_4, PTC4
 http://electronics.stackexchange.com/questions/164803/whats-the-relationship-between-esc-pwm-input-and-output
+
+Debug helper:
+http://interactive.freertos.org/entries/23468301-Tasks-backtrace-switcher-viewer-snippet-for-debugger-gcc-gdb-ARM-Cortex-M3-MPU-port-Eclipse-support-
