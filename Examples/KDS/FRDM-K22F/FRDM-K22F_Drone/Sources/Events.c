@@ -37,7 +37,7 @@ extern "C" {
 
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
-
+#include "Platform.h"
 /*
 ** ===================================================================
 **     Event       :  Cpu_OnNMI (module Events)
@@ -99,8 +99,10 @@ void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName)
 void FRTOS1_vApplicationTickHook(void)
 {
   /* Called for every RTOS tick. */
+#if PL_HAS_SD_CARD
   TMOUT1_AddTick();
   TmDt1_AddTick();
+#endif
 }
 
 /*
@@ -239,56 +241,25 @@ void AS1_OnFreeTxBuf(void)
 
 /*
 ** ===================================================================
-**     Event       :  SM1_OnRxChar (module Events)
+**     Event       :  RTOSTRC1_OnTraceWrap (module Events)
 **
-**     Component   :  SM1 [SynchroMaster]
+**     Component   :  RTOSTRC1 [PercepioTrace]
 **     Description :
-**         This event is called after a correct character is received.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled.
+**         Called for trace ring buffer wrap around. This gives the
+**         application a chance to dump the trace buffer.
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================
 */
-void SM1_OnRxChar(void)
+void RTOSTRC1_OnTraceWrap(void)
 {
+#if 0 /* default implementation for gdb below ... */
   /* Write your code here ... */
-}
+  uint8_t buf[64];
 
-/*
-** ===================================================================
-**     Event       :  SM1_OnTxChar (module Events)
-**
-**     Component   :  SM1 [SynchroMaster]
-**     Description :
-**         This event is called after a character is transmitted.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void SM1_OnTxChar(void)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Event       :  SM1_OnError (module Events)
-**
-**     Component   :  SM1 [SynchroMaster]
-**     Description :
-**         This event is called when a channel error (not the error
-**         returned by a given method) occurs. The errors can be read
-**         using <GetError> method.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void SM1_OnError(void)
-{
-  /* Write your code here ... */
+  /* GDB: dump binary memory <file> <hexStartAddr> <hexEndAddr> */
+  RTOSTRC1_vGetGDBDumpCommand(buf, sizeof(buf), "c:\\tmp\\trc.dump");
+#endif
 }
 
 /* END Events */

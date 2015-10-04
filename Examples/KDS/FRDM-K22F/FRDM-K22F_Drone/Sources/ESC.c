@@ -8,21 +8,29 @@
 #include "Platform.h"
 #if PL_HAS_ESC
 #include "ESC.h"
-#include "PWMFR.h"
+#include "PWM1.h"
+#include "PWM2.h"
+#include "PWM3.h"
+#include "PWM4.h"
 #if PL_HAS_SHELL
   #include "CLS1.h"
   #include "UTIL1.h"
 #endif
 
 typedef uint8_t ESC_SpeedPercent; /* 0%...+100%, where negative is backward */
-#define ESC_MIN_DUTY_MS  1000  /* default minimum duty in us */
-#define ESC_MAX_DUTY_MS  2000  /* default maximum duty in us */
+#define ESC_MIN_DUTY_US  1000  /* default minimum duty in us */
+#define ESC_MAX_DUTY_US  2000  /* default maximum duty in us */
+
+#define ESC_PERIOD_TICKS_20MS   PWM1_PERIOD_VALUE /* ticks for period of 20 ms */
+#define ESC_MIN_PWM_VALUE       (ESC_PERIOD_TICKS_20MS/20)  /* timer ticks for 1 ms */
+#define ESC_MAX_PWM_VALUE       (2*ESC_MIN_PWM_VALUE) /* timer ticks for 2 ms */
 
 typedef struct ESC_MotorDevice_ {
   ESC_SpeedPercent currSpeedPercent; /* our current speed in %, negative percent means backward */
   uint16_t currPWMvalue; /* current PWM value used */
   uint16_t us; /* current duty in us */
-  uint8_t (*SetRatio16)(uint16_t); /* function to set the ratio */
+  LDD_TDeviceData *device; /* LDD device handle */
+  uint8_t (*SetOffsetTicks)(uint16_t); /* function to set the ratio */
   uint8_t (*SetDutyUS)(uint16_t); /* function to set the duty us */
 } ESC_MotorDevice;
 
@@ -41,21 +49,23 @@ ESC_MotorDevice *MOT_GetMotorHandle(ESC_MotorID motor) {
   return &ESC_motors[motor];
 }
 
-static uint8_t ESC_SetRatio16_FR(uint16_t ratio) {
-  return PWMFR_SetRatio16(ratio);
-}
+static uint8_t ESC_SetOffsetTicks_FR(uint16_t ticks) { return TU1_SetOffsetTicks(PWM1_DeviceData, 0, ticks); }
+static uint8_t ESC_SetOffsetTicks_FL(uint16_t ticks) { return TU1_SetOffsetTicks(PWM2_DeviceData, 1, ticks); }
+static uint8_t ESC_SetOffsetTicks_BR(uint16_t ticks) { return TU1_SetOffsetTicks(PWM3_DeviceData, 2, ticks); }
+static uint8_t ESC_SetOffsetTicks_BL(uint16_t ticks) { return TU1_SetOffsetTicks(PWM4_DeviceData, 3, ticks); }
 
-static uint8_t ESC_SetDutyUS_FR(uint16_t us) {
-  return PWMFR_SetDutyUS(us);
-}
+static uint8_t ESC_SetDutyUS_FR(uint16_t us) { return PWM1_SetDutyUS(PWM1_DeviceData, us); }
+static uint8_t ESC_SetDutyUS_FL(uint16_t us) { return PWM2_SetDutyUS(PWM2_DeviceData, us); }
+static uint8_t ESC_SetDutyUS_BR(uint16_t us) { return PWM3_SetDutyUS(PWM3_DeviceData, us); }
+static uint8_t ESC_SetDutyUS_BL(uint16_t us) { return PWM4_SetDutyUS(PWM4_DeviceData, us); }
 
 void ESC_SetVal(ESC_MotorDevice *motor, uint16_t val) {
   if (ESC_isMotorOn) {
     motor->currPWMvalue = val;
-    motor->SetRatio16(val);
+    motor->SetOffsetTicks(val);
   } else { /* have motor stopped */
-    motor->currPWMvalue = 0xFFFF;
-    motor->SetRatio16(0xFFFF);
+    motor->currPWMvalue = ESC_MIN_PWM_VALUE;
+    motor->SetOffsetTicks(ESC_MIN_PWM_VALUE);
   }
 }
 
@@ -66,31 +76,22 @@ uint16_t ESC_GetVal(ESC_MotorDevice *motor) {
 void ESC_SetSpeedPercent(ESC_MotorDevice *motor, ESC_SpeedPercent percent) {
   uint32_t val;
 
-  motor->currSpeedPercent = percent; /* store current value */
   if (percent>100) { /* make sure we are within 0..100 */
     percent = 100;
   }
-  val = ((100-percent)*0xffff)/100;
+  motor->currSpeedPercent = percent; /* store current value */
+  motor->us = ESC_MIN_DUTY_US+((percent*(ESC_MAX_DUTY_US-ESC_MIN_DUTY_US))/100);
+  val = ESC_MIN_PWM_VALUE+((percent*(ESC_MAX_PWM_VALUE-ESC_MIN_PWM_VALUE))/100);
   ESC_SetVal(motor, (uint16_t)val);
 }
 
-void ESC_UpdatePercent(ESC_MotorDevice *motor) {
-  motor->currSpeedPercent = ((0xffff-motor->currPWMvalue)*100)/0xffff;
-}
-
-void ESC_ChangeSpeedPercent(ESC_MotorDevice *motor, ESC_SpeedPercent relPercent) {
-  relPercent += motor->currSpeedPercent; /* make absolute number */
-  if (relPercent>100) { /* check for overflow */
-    relPercent = 100;
-  } else if (relPercent<-100) { /* and underflow */
-    relPercent = -100;
+uint8_t ESC_SetDutyUS(ESC_MotorDevice *motor, uint16_t us) {
+  if (us<ESC_MIN_DUTY_US || us>ESC_MAX_DUTY_US) {
+    return ERR_RANGE;
   }
-  ESC_SetSpeedPercent(motor, relPercent);  /* set speed. This will care about the direction too */
-}
-
-uint8_t ESC_SetDutyMs(ESC_MotorDevice *motor, uint16_t us) {
   motor->us = us; /* store current value */
-  return PWMFR_SetDutyUS(us);
+  motor->currSpeedPercent = (us-ESC_MIN_DUTY_US)/((ESC_MAX_DUTY_US-ESC_MIN_DUTY_US)/100);
+  return motor->SetDutyUS(us);
 }
 
 #if PL_HAS_SHELL
@@ -98,7 +99,7 @@ static void ESC_PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"esc", (unsigned char*)"Group of esc commands\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows motor help or status\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  duty <motor> <number>", (unsigned char*)"Change <motor> (fl|fr|bl|br) duty (0..+100)%\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  us <motor> <number>", (unsigned char*)"Change <motor> (fl|fr|bl|br) duty time (500..1500us)%\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  us <motor> <number>", (unsigned char*)"Change <motor> (fl|fr|bl|br) duty time (1000..2000us)%\r\n", io->stdOut);
 }
 
 static void ESC_PrintESCStatus(ESC_MotorID id, const CLS1_StdIOType *io) {
@@ -209,8 +210,8 @@ uint8_t ESC_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
       if (res==ERR_OK) {
         p = cmd+sizeof("esc us xx ")-1;
         if (UTIL1_xatoi(&p, &val)==ERR_OK) {
-          if (ESC_SetDutyMs(&ESC_motors[id], val)!=ERR_OK) {
-            CLS1_SendStr((unsigned char*)"Failed SetDutyMs()!\r\n", io->stdErr);
+          if (ESC_SetDutyUS(&ESC_motors[id], val)!=ERR_OK) {
+            CLS1_SendStr((unsigned char*)"Failed SetDutyUS()!\r\n", io->stdErr);
             res = ERR_FAILED;
           }
           *handled = TRUE;
@@ -230,19 +231,23 @@ void ESC_Init(void) {
   ESC_MotorID id;
 
   ESC_isMotorOn = TRUE;
-  ESC_motors[ESC_MOTOR_FRONT_LEFT].SetRatio16 = ESC_SetRatio16_FR;
-  ESC_motors[ESC_MOTOR_FRONT_RIGHT].SetRatio16 = ESC_SetRatio16_FR;
-  ESC_motors[ESC_MOTOR_BACK_RIGHT].SetRatio16 = ESC_SetRatio16_FR;
-  ESC_motors[ESC_MOTOR_BACK_LEFT].SetRatio16 = ESC_SetRatio16_FR;
-  ESC_motors[ESC_MOTOR_FRONT_LEFT].SetDutyUS = ESC_SetDutyUS_FR;
+  ESC_motors[ESC_MOTOR_FRONT_LEFT].device = PWM1_DeviceData;
+  ESC_motors[ESC_MOTOR_FRONT_LEFT].SetOffsetTicks = ESC_SetOffsetTicks_FL;
+  ESC_motors[ESC_MOTOR_FRONT_LEFT].SetDutyUS = ESC_SetDutyUS_FL;
+
+  ESC_motors[ESC_MOTOR_FRONT_RIGHT].device = PWM2_DeviceData;
+  ESC_motors[ESC_MOTOR_FRONT_RIGHT].SetOffsetTicks = ESC_SetOffsetTicks_FR;
   ESC_motors[ESC_MOTOR_FRONT_RIGHT].SetDutyUS = ESC_SetDutyUS_FR;
-  ESC_motors[ESC_MOTOR_BACK_RIGHT].SetDutyUS = ESC_SetDutyUS_FR;
-  ESC_motors[ESC_MOTOR_BACK_LEFT].SetDutyUS = ESC_SetDutyUS_FR;
-  (void)PWMFR_Enable();
+
+  ESC_motors[ESC_MOTOR_BACK_RIGHT].device = PWM3_DeviceData;
+  ESC_motors[ESC_MOTOR_BACK_RIGHT].SetOffsetTicks = ESC_SetOffsetTicks_BR;
+  ESC_motors[ESC_MOTOR_BACK_RIGHT].SetDutyUS = ESC_SetDutyUS_BR;
+
+  ESC_motors[ESC_MOTOR_BACK_LEFT].device = PWM4_DeviceData;
+  ESC_motors[ESC_MOTOR_BACK_LEFT].SetOffsetTicks = ESC_SetOffsetTicks_BL;
+  ESC_motors[ESC_MOTOR_BACK_LEFT].SetDutyUS = ESC_SetDutyUS_BL;
   for(id=0; id<ESC_MOTOR_NOF; id++) {
     ESC_SetSpeedPercent(&ESC_motors[id], 0);
-    ESC_motors[id].us = ESC_MIN_DUTY_MS;
-    ESC_motors[id].SetDutyUS(ESC_MIN_DUTY_MS);
   }
 }
 
