@@ -128,6 +128,7 @@ void SHELL_Process(void) {
 #if PL_HAS_USB_CDC
 static portTASK_FUNCTION(USBTask, pvParameters) {
   static uint8_t cdc_buffer[USB1_DATA_BUFF_SIZE];
+  uint8_t cntr = 0;
 
   (void)pvParameters; /* unused */
   USB1_Init(); /* have Init of USB1 component disabled during Startup! */
@@ -135,6 +136,11 @@ static portTASK_FUNCTION(USBTask, pvParameters) {
     while(CDC1_App_Task(cdc_buffer, sizeof(cdc_buffer))==ERR_BUSOFF) {
       /* device not enumerated */
       FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
+      LED2_Off();
+    }
+    cntr++;
+    if ((cntr%16)==0) {
+      LED2_Neg();
     }
     FRTOS1_vTaskDelay(20/portTICK_RATE_MS);
   }
