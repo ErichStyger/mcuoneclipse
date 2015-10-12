@@ -253,7 +253,7 @@ void AS1_OnFreeTxBuf(void)
 */
 void RTOSTRC1_OnTraceWrap(void)
 {
-#if 0 /* default implementation for gdb below ... */
+#if 1 /* default implementation for gdb below ... */
   /* Write your code here ... */
   uint8_t buf[64];
 

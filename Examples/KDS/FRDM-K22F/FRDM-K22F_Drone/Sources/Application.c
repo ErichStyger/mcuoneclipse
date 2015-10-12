@@ -12,6 +12,12 @@
 #include "LED3.h"
 #include "FRTOS1.h"
 #include "PORT_PDD.h"
+#if PL_HAS_RTOS
+  #include "FreeRTOS.h"
+  #if configUSE_TRACE_HOOKS
+  #include "RTOSTRC1.h"
+  #endif
+#endif
 #if PL_HAS_SHELL
   #include "Shell.h"
 #endif
@@ -28,6 +34,12 @@ static void AppTask(void *pvParameters) {
 }
 
 void APP_Run(void) {
+#if configUSE_TRACE_HOOKS
+  if (RTOSTRC1_uiTraceStart()==0) {
+    for(;;){} /* error starting trace recorder. Not setup for enough queues/tasks/etc? */
+  }
+#endif
+
 #if PL_HAS_SD_CARD
   /* SD card detection: PTB16 with pull-down! */
   PORT_PDD_SetPinPullSelect(PORTB_BASE_PTR, 16, PORT_PDD_PULL_DOWN);
