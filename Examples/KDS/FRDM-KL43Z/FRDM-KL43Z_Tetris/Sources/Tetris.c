@@ -1,8 +1,7 @@
 /*
  * Tetris.c
  *
- *  Created on: 09.10.2015
- *      Author: Erich Styger
+ *  Original source code: unknown :-(
  */
 
 #include "Platform.h"
@@ -10,8 +9,7 @@
 #include "Tetris.h"
 #include "DbgCs1.h"
 #include "gpio1.h"
-
-#define Sleep(ms) WAIT1_Waitms(ms)
+#include "fsl_lpuart_hal.h"
 
 typedef enum {
   TETRIS_Action_None,
@@ -26,7 +24,6 @@ static void SCI_send(const char *str) {
   debug_printf((const char*)str);
 }
 
-#include "fsl_lpuart_hal.h"
 static uint8_t SCI_read_nb(void) {
   /* nonblocking read of character */
   uint8_t c;
@@ -458,7 +455,7 @@ static void PrintWelcome(void) {
   SCI_send(" SW3:     move left\r\n");
   SCI_send(" SW2:     move right\r\n");
   SCI_send(" SW2+SW3: rotate\r\n");
-  SCI_send("Press any key to begin... \r\n");
+  SCI_send("Press any to start game. \r\n");
 }
 
 static TETRIS_Action ReadKey(void) {
