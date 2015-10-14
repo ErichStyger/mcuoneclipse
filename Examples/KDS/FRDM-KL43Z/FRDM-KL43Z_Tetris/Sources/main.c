@@ -68,6 +68,7 @@ int main(void)
 #else
   TETRIS_Start();
   for(;;) {
+    GPIO_DRV_TogglePinOutput(LED1);
     OSA_TimeDelay(50);
     if (TETRIS_Run()==0) {
       TETRIS_Start();

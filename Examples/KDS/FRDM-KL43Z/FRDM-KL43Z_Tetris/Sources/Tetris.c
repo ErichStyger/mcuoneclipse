@@ -9,6 +9,7 @@
 #if PL_CONFIG_HAS_TETIRS
 #include "Tetris.h"
 #include "DbgCs1.h"
+#include "gpio1.h"
 
 #define Sleep(ms) WAIT1_Waitms(ms)
 
@@ -35,23 +36,27 @@ static uint8_t SCI_read_nb(void) {
 }
 
 static TETRIS_Action read_keypad(void) {
-#if 0
-  if (EVNT_EventIsSetAutoClear(EVNT_TETRIS_LEFT)) {
+  bool btn1, btn2;
+
+  btn1 = !GPIO_DRV_ReadPinInput(Button1);
+  if (btn1) {
+    OSA_TimeDelay(20);
+    btn1 = !GPIO_DRV_ReadPinInput(Button1);
+  }
+  btn2 = !GPIO_DRV_ReadPinInput(Button2);
+  if (btn2) {
+    OSA_TimeDelay(20);
+    btn2 = !GPIO_DRV_ReadPinInput(Button2);
+  }
+  if (btn1 && !btn2) {
     return TETRIS_Action_MoveLeft;
   }
-  if (EVNT_EventIsSetAutoClear(EVNT_TETRIS_RIGHT)) {
+  if (!btn1 && btn2) {
     return TETRIS_Action_MoveRight;
   }
-  if (EVNT_EventIsSetAutoClear(EVNT_TETRIS_UP)) {
+  if (btn1 && btn2) {
     return TETRIS_Action_Rotate;
   }
-  if (EVNT_EventIsSetAutoClear(EVNT_TETRIS_DOWN)) {
-    return TETRIS_Action_MoveDown;
-  }
-  if (EVNT_EventIsSetAutoClear(EVNT_TETRIS_DROP)) {
-    return TETRIS_Action_Drop;
-  }
-#endif
   return TETRIS_Action_None;
 }
 
@@ -443,12 +448,16 @@ static void PrintWelcome(void) {
   SCI_send("***********\r\n");
   SCI_send("* TETRIS  *\r\n");
   SCI_send("***********\r\n");
-  SCI_send("keyboard:\r\n");
+  SCI_send("Keyboard:\r\n");
   SCI_send(" w: rotate\r\n");
   SCI_send(" a: move left\r\n");
   SCI_send(" s: drop\r\n");
   SCI_send(" d: move right\r\n");
   SCI_send(" x: move down\r\n");
+  SCI_send("Board:\r\n");
+  SCI_send(" SW3:     move left\r\n");
+  SCI_send(" SW2:     move right\r\n");
+  SCI_send(" SW2+SW3: rotate\r\n");
   SCI_send("Press any key to begin... \r\n");
 }
 
