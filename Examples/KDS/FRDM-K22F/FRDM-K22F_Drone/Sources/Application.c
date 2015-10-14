@@ -24,6 +24,9 @@
 #if PL_HAS_ESC
   #include "ESC.h"
 #endif
+#if PL_HAS_SENSOR_FUSION
+  #include "SensorTasks.h"
+#endif
 
 static void AppTask(void *pvParameters) {
   (void)pvParameters; /* parameter not used */
@@ -65,6 +68,9 @@ void APP_Run(void) {
 #endif
 #if PL_HAS_ESC
   ESC_Init();
+#endif
+#if PL_HAS_SENSOR_FUSION
+  SensorTasks_Init();
 #endif
   if (FRTOS1_xTaskCreate(
       AppTask,  /* pointer to the task */

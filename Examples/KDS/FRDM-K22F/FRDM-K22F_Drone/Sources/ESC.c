@@ -21,8 +21,13 @@ typedef uint8_t ESC_SpeedPercent; /* 0%...+100%, where negative is backward */
 #define ESC_MIN_DUTY_US  1000  /* default minimum duty in us */
 #define ESC_MAX_DUTY_US  2000  /* default maximum duty in us */
 
-#define ESC_PERIOD_TICKS_20MS   PWM1_PERIOD_VALUE /* ticks for period of 20 ms */
+#if 0 /* 50 Hz */
+#define ESC_PERIOD_TICKS_20MS   PWM1_PERIO1D_VALUE /* ticks for period of 20 ms */
 #define ESC_MIN_PWM_VALUE       (ESC_PERIOD_TICKS_20MS/20)  /* timer ticks for 1 ms */
+#else /* 400 Hz */
+#define ESC_PERIOD_TICKS_2_5MS  PWM1_PERIOD_VALUE /* ticks for period of 2.5 ms */
+#define ESC_MIN_PWM_VALUE       (ESC_PERIOD_TICKS_2_5MS*4/10)  /* timer ticks for 1 ms */
+#endif
 #define ESC_MAX_PWM_VALUE       (2*ESC_MIN_PWM_VALUE) /* timer ticks for 2 ms */
 
 typedef struct ESC_MotorDevice_ {

@@ -49,19 +49,15 @@
 #include "FRTOS1.h"
 #include "RTOSTRC1.h"
 #include "CLS1.h"
-#include "AS1.h"
-#include "ASerialLdd1.h"
 #include "KIN1.h"
-#include "GI2C1.h"
-#include "CI2C1.h"
-#include "FX1.h"
 #include "USB1.h"
 #include "CDC1.h"
 #include "Tx1.h"
 #include "Rx1.h"
-#include "BT1.h"
-#include "Serial1.h"
-#include "ASerialLdd2.h"
+#include "FTM.h"
+#include "UART_A.h"
+#include "UART_B.h"
+#include "I2C.h"
 #include "HF1.h"
 #include "TU1.h"
 #include "PWM1.h"
@@ -148,82 +144,6 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 ** ===================================================================
 */
 
-/*
-** ===================================================================
-**     Event       :  AS1_OnError (module Events)
-**
-**     Component   :  AS1 [AsynchroSerial]
-**     Description :
-**         This event is called when a channel error (not the error
-**         returned by a given method) occurs. The errors can be read
-**         using <GetError> method.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void AS1_OnError(void);
-
-/*
-** ===================================================================
-**     Event       :  AS1_OnRxChar (module Events)
-**
-**     Component   :  AS1 [AsynchroSerial]
-**     Description :
-**         This event is called after a correct character is received.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled and either the <Receiver>
-**         property is enabled or the <SCI output mode> property (if
-**         supported) is set to Single-wire mode.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void AS1_OnRxChar(void);
-
-/*
-** ===================================================================
-**     Event       :  AS1_OnTxChar (module Events)
-**
-**     Component   :  AS1 [AsynchroSerial]
-**     Description :
-**         This event is called after a character is transmitted.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void AS1_OnTxChar(void);
-
-/*
-** ===================================================================
-**     Event       :  AS1_OnFullRxBuf (module Events)
-**
-**     Component   :  AS1 [AsynchroSerial]
-**     Description :
-**         This event is called when the input buffer is full;
-**         i.e. after reception of the last character 
-**         that was successfully placed into input buffer.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void AS1_OnFullRxBuf(void);
-
-/*
-** ===================================================================
-**     Event       :  AS1_OnFreeTxBuf (module Events)
-**
-**     Component   :  AS1 [AsynchroSerial]
-**     Description :
-**         This event is called after the last character in output
-**         buffer is transmitted.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void AS1_OnFreeTxBuf(void);
-
 void RTOSTRC1_OnTraceWrap(void);
 /*
 ** ===================================================================
@@ -237,6 +157,183 @@ void RTOSTRC1_OnTraceWrap(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
+
+/*
+** ===================================================================
+**     Event       :  I2C_OnMasterBlockSent (module Events)
+**
+**     Component   :  I2C [I2C_LDD]
+*/
+/*!
+**     @brief
+**         This event is called when I2C in master mode finishes the
+**         transmission of the data successfully. This event is not
+**         available for the SLAVE mode and if MasterSendBlock is
+**         disabled. 
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void I2C_OnMasterBlockSent(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  I2C_OnMasterBlockReceived (module Events)
+**
+**     Component   :  I2C [I2C_LDD]
+*/
+/*!
+**     @brief
+**         This event is called when I2C is in master mode and finishes
+**         the reception of the data successfully. This event is not
+**         available for the SLAVE mode and if MasterReceiveBlock is
+**         disabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void I2C_OnMasterBlockReceived(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  FTM_OnCounterRestart (module Events)
+**
+**     Component   :  FTM [TimerUnit_LDD]
+*/
+/*!
+**     @brief
+**         Called if counter overflow/underflow or counter is
+**         reinitialized by modulo or compare register matching.
+**         OnCounterRestart event and Timer unit must be enabled. See
+**         [SetEventMask] and [GetEventMask] methods. This event is
+**         available only if a [Interrupt] is enabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. The pointer passed as
+**                           the parameter of Init method.
+*/
+/* ===================================================================*/
+void FTM_OnCounterRestart(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  UART_B_OnBlockReceived (module Events)
+**
+**     Component   :  UART_B [Serial_LDD]
+*/
+/*!
+**     @brief
+**         This event is called when the requested number of data is
+**         moved to the input buffer.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void UART_B_OnBlockReceived(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  UART_B_OnBlockSent (module Events)
+**
+**     Component   :  UART_B [Serial_LDD]
+*/
+/*!
+**     @brief
+**         This event is called after the last character from the
+**         output buffer is moved to the transmitter. 
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void UART_B_OnBlockSent(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  UART_B_OnTxComplete (module Events)
+**
+**     Component   :  UART_B [Serial_LDD]
+*/
+/*!
+**     @brief
+**         This event indicates that the transmitter is finished
+**         transmitting all data, preamble, and break characters and is
+**         idle. It can be used to determine when it is safe to switch
+**         a line driver (e.g. in RS-485 applications).
+**         The event is available only when both [Interrupt
+**         service/event] and [Transmitter] properties are enabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void UART_B_OnTxComplete(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  UART_A_OnBlockReceived (module Events)
+**
+**     Component   :  UART_A [Serial_LDD]
+*/
+/*!
+**     @brief
+**         This event is called when the requested number of data is
+**         moved to the input buffer.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void UART_A_OnBlockReceived(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  UART_A_OnBlockSent (module Events)
+**
+**     Component   :  UART_A [Serial_LDD]
+*/
+/*!
+**     @brief
+**         This event is called after the last character from the
+**         output buffer is moved to the transmitter. 
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void UART_A_OnBlockSent(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  UART_A_OnTxComplete (module Events)
+**
+**     Component   :  UART_A [Serial_LDD]
+*/
+/*!
+**     @brief
+**         This event indicates that the transmitter is finished
+**         transmitting all data, preamble, and break characters and is
+**         idle. It can be used to determine when it is safe to switch
+**         a line driver (e.g. in RS-485 applications).
+**         The event is available only when both [Interrupt
+**         service/event] and [Transmitter] properties are enabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void UART_A_OnTxComplete(LDD_TUserData *UserDataPtr);
 
 /* END Events */
 
