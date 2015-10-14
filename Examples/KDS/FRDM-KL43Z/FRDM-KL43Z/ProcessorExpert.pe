@@ -3,7 +3,7 @@
   <Header>
     <Name>FRDM-KL43Z_Tetris</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>5</ModificationStamp>
+    <ModificationStamp>7</ModificationStamp>
     <Date>2015-10-14</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.1.RT7_b1531-0480</PEversion>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>24</ProjectCompNumb>
+    <ProjectCompNumb>33</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -1179,7 +1179,7 @@
       <Count>0</Count>
     </BoolList_FpgaConfig>
     <BoolList_BeanConfig>
-      <Count>6</Count>
+      <Count>7</Count>
       <ItemId0>2</ItemId0>
       <Value0>true</Value0>
       <ItemId1>3</ItemId1>
@@ -1192,6 +1192,8 @@
       <Value4>true</Value4>
       <ItemId5>17</ItemId5>
       <Value5>true</Value5>
+      <ItemId6>28</ItemId6>
+      <Value6>true</Value6>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
       <Count>0</Count>
@@ -2034,48 +2036,40 @@
               <ReadOnly>true</ReadOnly>
               <UserReadOnly>true</UserReadOnly>
               <Value>fsl_mcg_hal1</Value>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>PeriphDevice</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <Value />
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <SharedPrphMode>false</SharedPrphMode>
             </ItemState>
             <ItemState>
               <ItemSymbol>CompVersion</ItemSymbol>
               <Value>1.3.0</Value>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>VersionSpecificItem</ItemSymbol>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <ListItemCount>1</ListItemCount>
             </ItemState>
             <ItemState>
               <ItemSymbol>DefaultMainProperty</ItemSymbol>
               <Value>load sdk verison failed</Value>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
           </Properties>
           <Methods>
             <ItemState>
               <ItemSymbol>SdkSpecificMethods</ItemSymbol>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <ListItemCount>1</ListItemCount>
             </ItemState>
             <ItemState>
               <ItemSymbol>fsl_mcg_halgroup</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_TestOscFreq</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2085,7 +2079,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_TestFllExternalRefFreq</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2095,7 +2088,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_GetFllRefClk</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2105,7 +2097,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_TestFllFreq</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2115,7 +2106,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_GetFllClk</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2126,7 +2116,6 @@
               <ItemSymbol>CLOCK_HAL_CalculatePllDiv_FSL_HAS_PLL</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_CalculatePllDiv_FSL_HAS_PLL_PRDIV__and__FSL_HAS_PLL_VDIV</ItemSymbol>
@@ -2148,7 +2137,6 @@
               <ItemSymbol>CLOCK_HAL_GetPll0Clk_FSL_HAS_PLL</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_GetPll0Clk</ItemSymbol>
@@ -2164,7 +2152,6 @@
               <ItemSymbol>CLOCK_HAL_GetPll1Clk_FSL_HAS_PLL1</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_GetPll1Clk</ItemSymbol>
@@ -2180,7 +2167,6 @@
               <ItemSymbol>CLOCK_HAL_GetExtPllClk_FSL_HAS_EXTERNAL_PLL</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_GetExtPllClk</ItemSymbol>
@@ -2195,7 +2181,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_GetInternalRefClk</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2205,7 +2190,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_GetFixedFreqClk</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2215,7 +2199,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_GetOutClk</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2225,7 +2208,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_SetClkOutSrc</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2235,7 +2217,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_SetClksFrdivIrefs</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2245,7 +2226,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_GetClkOutStat</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2255,7 +2235,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_SetLowPowerModeCmd</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2266,7 +2245,6 @@
               <ItemSymbol>CLOCK_HAL_SetOscselMode_FSL_USE_OSCSEL</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_SetOscselMode</ItemSymbol>
@@ -2281,7 +2259,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_PrepareOsc</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2291,7 +2268,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_GetFllSrc</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2301,7 +2277,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_SetFllFilterPreserveCmd</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2311,7 +2286,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_GetAvailableFrdiv</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2321,7 +2295,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_SetInternalRefClkEnableCmd</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2331,7 +2304,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_SetInternalRefClkEnableInStopCmd</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2341,7 +2313,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_SetInternalRefClkMode</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2351,7 +2322,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_GetInternalRefClkMode</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2361,7 +2331,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_UpdateFastClkInternalRefDiv</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2371,7 +2340,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_UpdateInternalRefClk</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2382,7 +2350,6 @@
               <ItemSymbol>CLOCK_HAL_SetPll0EnableCmd_FSL_HAS_PLL</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_SetPll0EnableCmd</ItemSymbol>
@@ -2398,7 +2365,6 @@
               <ItemSymbol>CLOCK_HAL_SetPll0EnableInStopCmd_FSL_HAS_PLL</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_SetPll0EnableInStopCmd</ItemSymbol>
@@ -2414,7 +2380,6 @@
               <ItemSymbol>CLOCK_HAL_IsPll0LostLock_FSL_HAS_PLL</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_IsPll0LostLock</ItemSymbol>
@@ -2430,7 +2395,6 @@
               <ItemSymbol>CLOCK_HAL_ClearPll0LostLock_FSL_HAS_PLL</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_ClearPll0LostLock</ItemSymbol>
@@ -2446,7 +2410,6 @@
               <ItemSymbol>CLOCK_HAL_SetPll0LostLockIntCmd_FSL_HAS_PLL</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_SetPll0LostLockIntCmd</ItemSymbol>
@@ -2462,7 +2425,6 @@
               <ItemSymbol>CLOCK_HAL_SetPllLostLockResetCmd_FSL_HAS_PLL</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_SetPllLostLockResetCmd_FSL_HAS_LOLRE</ItemSymbol>
@@ -2484,7 +2446,6 @@
               <ItemSymbol>CLOCK_HAL_IsPll0Locked_FSL_HAS_PLL</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_IsPll0Locked</ItemSymbol>
@@ -2500,7 +2461,6 @@
               <ItemSymbol>CLOCK_HAL_SetPllSelectCmd_FSL_HAS_PLL</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_SetPllSelectCmd</ItemSymbol>
@@ -2516,7 +2476,6 @@
               <ItemSymbol>CLOCK_HAL_IsPllSelected_FSL_HAS_PLL</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_IsPllSelected</ItemSymbol>
@@ -2532,7 +2491,6 @@
               <ItemSymbol>CLOCK_HAL_EnablePll0InFllMode_FSL_HAS_PLL_0</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_EnablePll0InFllMode_FSL_HAS_PLL_PRDIV__and__FSL_HAS_PLL_VDIV_0</ItemSymbol>
@@ -2554,7 +2512,6 @@
               <ItemSymbol>CLOCK_HAL_EnablePll0InFllMode_FSL_HAS_PLL_1</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_EnablePll0InFllMode_FSL_HAS_PLL_PRDIV__and__FSL_HAS_PLL_VDIV_1</ItemSymbol>
@@ -2576,7 +2533,6 @@
               <ItemSymbol>CLOCK_HAL_SetPll1EnableCmd_FSL_HAS_PLL1</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_SetPll1EnableCmd</ItemSymbol>
@@ -2592,7 +2548,6 @@
               <ItemSymbol>CLOCK_HAL_SetPll1EnableInStopCmd_FSL_HAS_PLL1</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_SetPll1EnableInStopCmd</ItemSymbol>
@@ -2608,7 +2563,6 @@
               <ItemSymbol>CLOCK_HAL_SetPll1LostLockIntCmd_FSL_HAS_PLL1</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_SetPll1LostLockIntCmd</ItemSymbol>
@@ -2624,7 +2578,6 @@
               <ItemSymbol>CLOCK_HAL_IsPll1LostLock_FSL_HAS_PLL1</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_IsPll1LostLock</ItemSymbol>
@@ -2640,7 +2593,6 @@
               <ItemSymbol>CLOCK_HAL_ClearPll1LostLock_FSL_HAS_PLL1</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_ClearPll1LostLock</ItemSymbol>
@@ -2656,7 +2608,6 @@
               <ItemSymbol>CLOCK_HAL_IsPll1Locked_FSL_HAS_PLL1</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_IsPll1Locked</ItemSymbol>
@@ -2672,7 +2623,6 @@
               <ItemSymbol>CLOCK_HAL_SetPllClkSelMode_FSL_HAS_PLL1__or__FSL_HAS_EXTERNAL_PLL</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_SetPllClkSelMode</ItemSymbol>
@@ -2688,7 +2638,6 @@
               <ItemSymbol>CLOCK_HAL_GetPllClkSelMode_FSL_HAS_PLL1__or__FSL_HAS_EXTERNAL_PLL</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_GetPllClkSelMode</ItemSymbol>
@@ -2704,7 +2653,6 @@
               <ItemSymbol>CLOCK_HAL_EnablePll1InFllMode_FSL_HAS_PLL1</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_EnablePll1InFllMode</ItemSymbol>
@@ -2720,7 +2668,6 @@
               <ItemSymbol>CLOCK_HAL_SetPll0RefMode_FSL_HAS_PLL1</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_SetPll0RefMode_FSL_USE_PLLREFSEL</ItemSymbol>
@@ -2742,7 +2689,6 @@
               <ItemSymbol>CLOCK_HAL_SetPll1RefMode_FSL_HAS_PLL1</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_SetPll1RefMode_FSL_USE_PLLREFSEL</ItemSymbol>
@@ -2763,7 +2709,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_SetOsc0Mode</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2774,7 +2719,6 @@
               <ItemSymbol>CLOCK_HAL_SetPllRefSel0Mode_FSL_HAS_PLL_INTERNAL_MODE</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_SetPllRefSel0Mode</ItemSymbol>
@@ -2789,7 +2733,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_IsOsc0Stable</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2799,7 +2742,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_EnableOsc0Monitor</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2809,7 +2751,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_DisableOsc0Monitor</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2819,7 +2760,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_IsOsc0MonitorEnabled</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2829,7 +2769,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_IsOsc0LostLock</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2839,7 +2778,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_ClearOsc0LostLock</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -2850,7 +2788,6 @@
               <ItemSymbol>CLOCK_HAL_EnableRtcOscMonitor_FSL_HAS_RTC_32K</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_EnableRtcOscMonitor</ItemSymbol>
@@ -2866,7 +2803,6 @@
               <ItemSymbol>CLOCK_HAL_DisableRTCOscMonitor_FSL_HAS_RTC_32K</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_DisableRTCOscMonitor</ItemSymbol>
@@ -2882,7 +2818,6 @@
               <ItemSymbol>CLOCK_HAL_IsRtcOscMonitorEnabled_FSL_HAS_RTC_32K</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_IsRtcOscMonitorEnabled</ItemSymbol>
@@ -2898,7 +2833,6 @@
               <ItemSymbol>CLOCK_HAL_IsRtcOscLostLock_FSL_HAS_RTC_32K</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_IsRtcOscLostLock</ItemSymbol>
@@ -2914,7 +2848,6 @@
               <ItemSymbol>CLOCK_HAL_ClearRtcOscLostLock_FSL_HAS_RTC_32K</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_ClearRtcOscLostLock</ItemSymbol>
@@ -2930,7 +2863,6 @@
               <ItemSymbol>CLOCK_HAL_SetOsc1Mode_FSL_HAS_OSC1</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_SetOsc1Mode</ItemSymbol>
@@ -2946,7 +2878,6 @@
               <ItemSymbol>CLOCK_HAL_IsOsc1Stable_FSL_HAS_OSC1</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_IsOsc1Stable</ItemSymbol>
@@ -2962,7 +2893,6 @@
               <ItemSymbol>CLOCK_HAL_EnableOsc1Monitor_FSL_HAS_OSC1</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_EnableOsc1Monitor</ItemSymbol>
@@ -2978,7 +2908,6 @@
               <ItemSymbol>CLOCK_HAL_DisableOsc1Monitor_FSL_HAS_OSC1</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_DisableOsc1Monitor</ItemSymbol>
@@ -2994,7 +2923,6 @@
               <ItemSymbol>CLOCK_HAL_IsOsc1MonitorEnabled_FSL_HAS_OSC1</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_IsOsc1MonitorEnabled</ItemSymbol>
@@ -3010,7 +2938,6 @@
               <ItemSymbol>CLOCK_HAL_IsOsc1LostLock_FSL_HAS_OSC1</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_IsOsc1LostLock</ItemSymbol>
@@ -3026,7 +2953,6 @@
               <ItemSymbol>CLOCK_HAL_ClearOsc1LostLock_FSL_HAS_OSC1</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_ClearOsc1LostLock</ItemSymbol>
@@ -3042,7 +2968,6 @@
               <ItemSymbol>CLOCK_HAL_EnableExtPllMonitor_FSL_HAS_EXTERNAL_PLL</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_EnableExtPllMonitor</ItemSymbol>
@@ -3058,7 +2983,6 @@
               <ItemSymbol>CLOCK_HAL_DisableExtPllMonitor_FSL_HAS_EXTERNAL_PLL</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_DisableExtPllMonitor</ItemSymbol>
@@ -3074,7 +2998,6 @@
               <ItemSymbol>CLOCK_HAL_IsExtPllMonitorEnabled_FSL_HAS_EXTERNAL_PLL</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_IsExtPllMonitorEnabled</ItemSymbol>
@@ -3090,7 +3013,6 @@
               <ItemSymbol>CLOCK_HAL_IsExtPllLostLock_FSL_HAS_EXTERNAL_PLL</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_IsExtPllLostLock</ItemSymbol>
@@ -3106,7 +3028,6 @@
               <ItemSymbol>CLOCK_HAL_ClearExtPllLostLock_FSL_HAS_EXTERNAL_PLL</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>CLOCK_HAL_ClearExtPllLostLock</ItemSymbol>
@@ -3121,7 +3042,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_TrimInternalRefClk</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -3131,7 +3051,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_IsAutoTrimMachineFailed</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -3141,7 +3060,6 @@
             <ItemState>
               <ItemSymbol>CLOCK_HAL_ClearAutoTrimMachineFailed</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -6814,48 +6732,40 @@
               <ReadOnly>true</ReadOnly>
               <UserReadOnly>true</UserReadOnly>
               <Value>fsl_lptmr_hal1</Value>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>PeriphDevice</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <Value />
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <SharedPrphMode>false</SharedPrphMode>
             </ItemState>
             <ItemState>
               <ItemSymbol>CompVersion</ItemSymbol>
               <Value>1.3.0</Value>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>VersionSpecificItem</ItemSymbol>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <ListItemCount>1</ListItemCount>
             </ItemState>
             <ItemState>
               <ItemSymbol>DefaultMainProperty</ItemSymbol>
               <Value>load sdk verison failed</Value>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
           </Properties>
           <Methods>
             <ItemState>
               <ItemSymbol>SdkSpecificMethods</ItemSymbol>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <ListItemCount>1</ListItemCount>
             </ItemState>
             <ItemState>
               <ItemSymbol>fsl_lptmr_halgroup</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
               <ItemSymbol>LPTMR_HAL_Enable</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -6865,7 +6775,6 @@
             <ItemState>
               <ItemSymbol>LPTMR_HAL_Disable</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -6875,7 +6784,6 @@
             <ItemState>
               <ItemSymbol>LPTMR_HAL_ClearIntFlag</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -6885,7 +6793,6 @@
             <ItemState>
               <ItemSymbol>LPTMR_HAL_IsIntPending</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -6895,7 +6802,6 @@
             <ItemState>
               <ItemSymbol>LPTMR_HAL_SetIntCmd</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -6905,7 +6811,6 @@
             <ItemState>
               <ItemSymbol>LPTMR_HAL_SetTimerWorkingMode</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -6915,7 +6820,6 @@
             <ItemState>
               <ItemSymbol>LPTMR_HAL_SetPrescalerMode</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -6925,7 +6829,6 @@
             <ItemState>
               <ItemSymbol>LPTMR_HAL_SetCompareValue</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -6935,7 +6838,6 @@
             <ItemState>
               <ItemSymbol>LPTMR_HAL_GetCompareValue</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -6945,7 +6847,6 @@
             <ItemState>
               <ItemSymbol>LPTMR_HAL_GetCounterValue</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -6955,7 +6856,6 @@
             <ItemState>
               <ItemSymbol>LPTMR_HAL_Init</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>true</LastSelection>
@@ -15151,8 +15051,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>InputConfigName0</ItemSymbol>
@@ -15163,7 +15063,7 @@
       <ItemState>
         <ItemSymbol>ConfigurationsIn0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
-        <ListItemCount>1</ListItemCount>
+        <ListItemCount>2</ListItemCount>
         <UserReadOnly>false</UserReadOnly>
         <Expanded>true</Expanded>
       </ItemState>
@@ -15179,24 +15079,24 @@
         <ItemSymbol>PinIn0_0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>LCD_P45/ADC0_SE6b/PTD5/SPI1_SCK/UART2_TX/TPM0_CH5/FXIO0_D5</Value>
+        <Value>LCD_P23/PTC3/LLWU_P7/SPI1_SCK/LPUART1_RX/TPM0_CH2/CLKOUT/I2S0_TX_BCLK</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
         <ItemSymbol>GPIOPortIn0_0</ItemSymbol>
-        <Value>GPIOD</Value>
+        <Value>GPIOC</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
         <ItemSymbol>PortIn0_0</ItemSymbol>
-        <Value>PORTD</Value>
+        <Value>PORTC</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
         <ItemSymbol>pinNameIn0_0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>LED1</Value>
+        <Value>Button1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>pinNameInMode0_0</ItemSymbol>
@@ -15236,8 +15136,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <EnumSymbVal>kPortPullDown</EnumSymbVal>
+        <Index>1</Index>
+        <EnumSymbVal>kPortPullUp</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>FSL_HAS_PASSIVE_FILTERGrp0_0</ItemSymbol>
@@ -15266,6 +15166,105 @@
         <Value>true</Value>
       </ItemState>
       <ItemState>
+        <ItemSymbol>PinCfgIn0_1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>PinIn0_1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>PTA4/I2C1_SDA/TPM0_CH1/NMI_b</Value>
+        <SharedPrphMode>false</SharedPrphMode>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GPIOPortIn0_1</ItemSymbol>
+        <Value>GPIOA</Value>
+        <SharedPrphMode>false</SharedPrphMode>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>PortIn0_1</ItemSymbol>
+        <Value>PORTA</Value>
+        <SharedPrphMode>false</SharedPrphMode>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>pinNameIn0_1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>Button2</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>pinNameInMode0_1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>manual</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>interruptIn0_1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <EnumSymbVal>kPortIntDisabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ElFeaturesIn0_1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>isPullEnableIn0_1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FSL_PORT_HAS_PULL_SELECTION_pullSelectIn_Grp0_1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>pullSelectIn0_1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <EnumSymbVal>kPortPullUp</EnumSymbVal>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FSL_HAS_PASSIVE_FILTERGrp0_1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>isPassiveFilterEnabledIn0_1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FSL_HAS_DIGITAL_FILTERGrp0_1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>isDigitalFilterEnabledIn0_1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>OutputMode</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -15286,7 +15285,7 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>OutputConfigName0</ItemSymbol>
@@ -15400,7 +15399,7 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>OutputConfigName1</ItemSymbol>
@@ -15531,8 +15530,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>InitConfigIn</ItemSymbol>
@@ -17244,6 +17243,2763 @@
         <Value>gpio1_PORTM_IRQHandler</Value>
       </ItemState>
     </Events>
+  </Bean>
+  <Bean>
+    <Repository>file:/${ProcessorExpert_loc}/Repositories/KSDK130_Repository</Repository>
+    <ComponentUUID>com.freescale.processorexpert.ksdk.fsl_debug_console</ComponentUUID>
+    <BeanType>fsl_debug_console</BeanType>
+    <Name>DbgCs1</Name>
+    <CompNumb>28</CompNumb>
+    <CompEnabled>true</CompEnabled>
+    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
+    <IconName>MONITOR</IconName>
+    <UserFolderName />
+    <Comment lines_count="0" />
+    <Template />
+    <BeanVersion>1.3.0</BeanVersion>
+    <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Properties>
+      <ItemState>
+        <ItemSymbol>DeviceName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>DbgCs1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>PeriphDevice</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>LPUART0</Value>
+        <SharedPrphMode>false</SharedPrphMode>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>CompVersion</ItemSymbol>
+        <Value>1.3.0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>VersionSpecificItem</ItemSymbol>
+        <ListItemCount>1</ListItemCount>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Settings</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>BaudRate</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>115200 baud</Value>
+        <RuntimeSetting>0</RuntimeSetting>
+        <ReqDevPrescHigh>-1</ReqDevPrescHigh>
+        <ReqDevPrescLow>-1</ReqDevPrescLow>
+        <ReqDevPrescSlow>-1</ReqDevPrescSlow>
+        <ReqDevPrescSpeedMode3>-1</ReqDevPrescSpeedMode3>
+        <ReqDevPrescSpeedMode4>-1</ReqDevPrescSpeedMode4>
+        <ReqDevPrescSpeedMode5>-1</ReqDevPrescSpeedMode5>
+        <ReqDevPrescSpeedMode6>-1</ReqDevPrescSpeedMode6>
+        <ReqDevPrescSpeedMode7>-1</ReqDevPrescSpeedMode7>
+        <ReqExtCompPrescHigh>-1</ReqExtCompPrescHigh>
+        <ReqExtCompPrescLow>-1</ReqExtCompPrescLow>
+        <ReqExtCompPrescSlow>-1</ReqExtCompPrescSlow>
+        <ReqExtCompPrescSpeedMode3>-1</ReqExtCompPrescSpeedMode3>
+        <ReqExtCompPrescSpeedMode4>-1</ReqExtCompPrescSpeedMode4>
+        <ReqExtCompPrescSpeedMode5>-1</ReqExtCompPrescSpeedMode5>
+        <ReqExtCompPrescSpeedMode6>-1</ReqExtCompPrescSpeedMode6>
+        <ReqExtCompPrescSpeedMode7>-1</ReqExtCompPrescSpeedMode7>
+        <ReqSrcClkPrescHigh>-1</ReqSrcClkPrescHigh>
+        <ReqSrcClkPrescLow>-1</ReqSrcClkPrescLow>
+        <ReqSrcClkPrescSlow>-1</ReqSrcClkPrescSlow>
+        <ReqSrcClkPrescSpeedMode3>-1</ReqSrcClkPrescSpeedMode3>
+        <ReqSrcClkPrescSpeedMode4>-1</ReqSrcClkPrescSpeedMode4>
+        <ReqSrcClkPrescSpeedMode5>-1</ReqSrcClkPrescSpeedMode5>
+        <ReqSrcClkPrescSpeedMode6>-1</ReqSrcClkPrescSpeedMode6>
+        <ReqSrcClkPrescSpeedMode7>-1</ReqSrcClkPrescSpeedMode7>
+        <InitValue>115200 baud</InitValue>
+        <Precision>1.5</Precision>
+        <PrecInProc>true</PrecInProc>
+        <LowLimit />
+        <HighLimit />
+        <List lines_count="0" />
+        <UnitText>baud</UnitText>
+        <MinCounterTicks>0</MinCounterTicks>
+        <SpecificClockConfiguration>true</SpecificClockConfiguration>
+        <SpecificClkCfg1_SpeedMode0>true</SpecificClkCfg1_SpeedMode0>
+        <SpecificClkCfg1_SpeedMode1>true</SpecificClkCfg1_SpeedMode1>
+        <SpecificClkCfg1_SpeedMode2>true</SpecificClkCfg1_SpeedMode2>
+        <SpecificClkCfg1_SpeedMode3>true</SpecificClkCfg1_SpeedMode3>
+        <SpecificClkCfg1_SpeedMode4>true</SpecificClkCfg1_SpeedMode4>
+        <SpecificClkCfg1_SpeedMode5>true</SpecificClkCfg1_SpeedMode5>
+        <SpecificClkCfg1_SpeedMode6>true</SpecificClkCfg1_SpeedMode6>
+        <SpecificClkCfg1_SpeedMode7>true</SpecificClkCfg1_SpeedMode7>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>PinsItem</ItemSymbol>
+        <ListItemCount>1</ListItemCount>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>PinsGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Symbol</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Receiver</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Inp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>PTA1/LPUART0_RX/TPM2_CH0</Value>
+        <SharedPrphMode>false</SharedPrphMode>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Transmitter</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Out</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>PTA2/LPUART0_TX/TPM2_CH1</Value>
+        <SharedPrphMode>false</SharedPrphMode>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>HiddenItem</ItemSymbol>
+        <ListItemCount>1</ListItemCount>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Initialization</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>AutoInitialization</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ClockSource</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>type_debugconsole_lpuart_clock_source</TypeSpecNameState>
+        <Index>5</Index>
+        <EnumSymbVal>kClockLpuartSrcMcgIrClk</EnumSymbVal>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LinkItem</ItemSymbol>
+        <ListItemCount>1</ListItemCount>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LinkGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Link0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>clockMan1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LinkOSAGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LinkOSA</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>osa1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InhrGrp_lpuart</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InhrItem_uart</ItemSymbol>
+        <ListItemCount>1</ListItemCount>
+        <ItemsTypeState>Beans\fsl_debug_console\fsl_debug_console_uart_inhr.item</ItemsTypeState>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>fsl_uart</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <RegCompType>fsl_uart_hal</RegCompType>
+        <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/KSDK130_Repository</RegCompRepository>
+        <InheritedComponentState>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/KSDK130_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.ksdk.fsl_uart_hal</ComponentUUID>
+          <BeanType>fsl_uart_hal</BeanType>
+          <Name>fsl_uart_hal1</Name>
+          <CompNumb>29</CompNumb>
+          <CompEnabled>true</CompEnabled>
+          <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
+          <IconName>HAL4</IconName>
+          <UserFolderName />
+          <Comment lines_count="0" />
+          <Template />
+          <BeanVersion>1.3.0</BeanVersion>
+          <LightErrorsIgnored>false</LightErrorsIgnored>
+          <Properties>
+            <ItemState>
+              <ItemSymbol>DeviceName</ItemSymbol>
+              <ReadOnly>true</ReadOnly>
+              <UserReadOnly>true</UserReadOnly>
+              <Value>fsl_uart_hal1</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>PeriphDevice</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>UART2</Value>
+              <SharedPrphMode>false</SharedPrphMode>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CompVersion</ItemSymbol>
+              <Value>1.3.0</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>VersionSpecificItem</ItemSymbol>
+              <ListItemCount>1</ListItemCount>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>DefaultMainProperty</ItemSymbol>
+              <Value>load sdk verison failed</Value>
+            </ItemState>
+          </Properties>
+          <Methods>
+            <ItemState>
+              <ItemSymbol>SdkSpecificMethods</ItemSymbol>
+              <ListItemCount>1</ListItemCount>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>fsl_uart_halgroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_Init</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_Init</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_EnableTransmitter</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_EnableTransmitter</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_DisableTransmitter</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_DisableTransmitter</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_IsTransmitterEnabled</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_IsTransmitterEnabled</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_EnableReceiver</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_EnableReceiver</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_DisableReceiver</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_DisableReceiver</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_IsReceiverEnabled</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_IsReceiverEnabled</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetBaudRate</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetBaudRate</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetBaudRateDivisor</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetBaudRateDivisor</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetBaudRateFineAdjust_FSL_HAS_BAUD_RATE_FINE_ADJUST_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetBaudRateFineAdjust</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetBaudRateFineAdjust</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetBitCountPerChar</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetBitCountPerChar</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetParityMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetParityMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetStopBitCount_FSL_HAS_STOP_BIT_CONFIG_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetStopBitCount</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetStopBitCount</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetDataRegAddr</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetDataRegAddr</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetIntMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetIntMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetIntMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetIntMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetTxDmaCmd_FSL_HAS_DMA_SELECT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetTxDmaCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetTxDmaCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetTxDmaCmd_FSL_HAS_DMA_SELECT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetTxDmaCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetTxDmaCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetRxDmaCmd_FSL_HAS_DMA_SELECT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetRxDmaCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetRxDmaCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetRxDmaCmd_FSL_HAS_DMA_SELECT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetRxDmaCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetRxDmaCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_Putchar</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_Putchar</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_Putchar9</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_Putchar9</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_Getchar</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_Getchar</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_Getchar9</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_Getchar9</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SendDataPolling</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SendDataPolling</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_ReceiveDataPolling</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_ReceiveDataPolling</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetBit10AsParityBit_FSL_HAS_EXTENDED_DATA_REGISTER_FLAGS</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetBit10AsParityBit</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetBit10AsParityBit</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_IsBit10SetAsParityBit_FSL_HAS_EXTENDED_DATA_REGISTER_FLAGS</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_IsBit10SetAsParityBit</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_IsBit10SetAsParityBit</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_IsCurrentDataWithNoise_FSL_HAS_EXTENDED_DATA_REGISTER_FLAGS</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_IsCurrentDataWithNoise</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_IsCurrentDataWithNoise</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_IsCurrentDataWithParityError_FSL_HAS_EXTENDED_DATA_REGISTER_FLAGS</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_IsCurrentDataWithParityError</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_IsCurrentDataWithParityError</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetStatusFlag</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetStatusFlag</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_ClearStatusFlag</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_ClearStatusFlag</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetTxFifoCmd_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetTxFifoCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetTxFifoCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetRxFifoCmd_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetRxFifoCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetRxFifoCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetTxFifoSize_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetTxFifoSize</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetTxFifoSize</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetRxFifoSize_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetRxFifoSize</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetRxFifoSize</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_FlushTxFifo_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_FlushTxFifo</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_FlushTxFifo</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_FlushRxFifo_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_FlushRxFifo</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_FlushRxFifo</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_IsTxFifoEmpty_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_IsTxFifoEmpty</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_IsTxFifoEmpty</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_IsRxFifoEmpty_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_IsRxFifoEmpty</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_IsRxFifoEmpty</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetTxFifoWatermark_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetTxFifoWatermark</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetTxFifoWatermark</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetTxFifoWatermark_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetTxFifoWatermark</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetTxFifoWatermark</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetTxDatawordCountInFifo_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetTxDatawordCountInFifo</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetTxDatawordCountInFifo</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetRxFifoWatermark_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetRxFifoWatermark</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetRxFifoWatermark</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetRxDatawordCountInFifo_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetRxDatawordCountInFifo</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetRxDatawordCountInFifo</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetRxFifoWatermark_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetRxFifoWatermark</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetRxFifoWatermark</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetWaitModeOperation_FSL_HAS_WAIT_MODE_OPERATION</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetWaitModeOperation</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetWaitModeOperation</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetWaitModeOperation_FSL_HAS_WAIT_MODE_OPERATION</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetWaitModeOperation</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetWaitModeOperation</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetLoopCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetLoopCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetReceiverSource</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetReceiverSource</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetTransmitterDir</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetTransmitterDir</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_PutReceiverInStandbyMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_PutReceiverInStandbyMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_PutReceiverInNormalMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_PutReceiverInNormalMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_IsReceiverInStandby</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_IsReceiverInStandby</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetReceiverWakeupMethod</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetReceiverWakeupMethod</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetReceiverWakeupMethod</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetReceiverWakeupMethod</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_ConfigIdleLineDetect</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_ConfigIdleLineDetect</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetBreakCharTransmitLength</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetBreakCharTransmitLength</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetBreakCharDetectLength_FSL_HAS_LIN_BREAK_DETECT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetBreakCharDetectLength</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetBreakCharDetectLength</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetBreakCharCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetBreakCharCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetMatchAddress</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetMatchAddress</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetSendMsbFirstCmd_FSL_HAS_BIT_ORDER_SELECT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetSendMsbFirstCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetSendMsbFirstCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetReceiverRtsCmd_FSL_HAS_MODEM_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetReceiverRtsCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetReceiverRtsCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetTransmitterRtsCmd_FSL_HAS_MODEM_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetTransmitterRtsCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetTransmitterRtsCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetTransmitterRtsPolarityMode_FSL_HAS_MODEM_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetTransmitterRtsPolarityMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetTransmitterRtsPolarityMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetTransmitterCtsCmd_FSL_HAS_MODEM_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetTransmitterCtsCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetTransmitterCtsCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetInfraredOperation_FSL_HAS_IR_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetInfraredOperation</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetInfraredOperation</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_EnableISO7816_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_EnableISO7816</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_EnableISO7816</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_DisableISO7816_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_DisableISO7816</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_DisableISO7816</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_IsISO7816Enabled_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_IsISO7816Enabled</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_IsISO7816Enabled</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_ConfigureNackOnOverflow_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_ConfigureNackOnOverflow</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_ConfigureNackOnOverflow</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_Is6NackOnOverflowEnabled_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_Is6NackOnOverflowEnabled</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_Is6NackOnOverflowEnabled</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_ConfigureNackOnError_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_ConfigureNackOnError</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_ConfigureNackOnError</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_Is6NackOnOnErrorEnabled_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_Is6NackOnOnErrorEnabled</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_Is6NackOnOnErrorEnabled</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_ConfigureInitialCharacterDetection_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_ConfigureInitialCharacterDetection</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_ConfigureInitialCharacterDetection</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_IsInitialCharacterDetectionEnabled_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_IsInitialCharacterDetectionEnabled</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_IsInitialCharacterDetectionEnabled</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetTransferProtocolType_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetTransferProtocolType</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetTransferProtocolType</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetTransferProtocolType_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetTransferProtocolType</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetTransferProtocolType</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetISO7816IntMode_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetISO7816IntMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetISO7816IntMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetISO7816IntMode_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetISO7816IntMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetISO7816IntMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_ClearISO7816InterruptStatus_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_ClearISO7816InterruptStatus</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_ClearISO7816InterruptStatus</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetISO7816InterruptStatus_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetISO7816InterruptStatus</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetISO7816InterruptStatus</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetISO7816Etu_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetISO7816Etu</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetISO7816Etu</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_ResetISO7816WaitTimer_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_ResetISO7816WaitTimer</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_ResetISO7816WaitTimer</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_ResetISO7816CharacterWaitTimer_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_ResetISO7816CharacterWaitTimer</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_ResetISO7816CharacterWaitTimer</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_ResetISO7816BlockWaitTimer_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_ResetISO7816BlockWaitTimer</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_ResetISO7816BlockWaitTimer</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetWaitTimeMultipllier_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetWaitTimeMultipllier_FSL_HAS_IMPROVED_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetWaitTimeMultipllier</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetWaitTimeMultipllier</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetWaitTimeMultipllier_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetWaitTimeMultipllier_FSL_HAS_IMPROVED_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetWaitTimeMultipllier</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetWaitTimeMultipllier</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_ResetWaitTimeMultipllier_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_ResetWaitTimeMultipllier_FSL_HAS_IMPROVED_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_ResetWaitTimeMultipllier</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_ResetWaitTimeMultipllier</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetGuardBandInteger_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetGuardBandInteger</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetGuardBandInteger</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetGuardBandInteger_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetGuardBandInteger</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetGuardBandInteger</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetFDMultiplier_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetFDMultiplier</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetFDMultiplier</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetFDMultiplier_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetFDMultiplier</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetFDMultiplier</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetTxNACKThreshold_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetTxNACKThreshold</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetTxNACKThreshold</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetTxNACKThreshold_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetTxNACKThreshold</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetTxNACKThreshold</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetRxNACKThreshold_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetRxNACKThreshold</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetRxNACKThreshold</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetRxNACKThreshold_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetRxNACKThreshold</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetRxNACKThreshold</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetTLen_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetTLen</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetTLen</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetTLen_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetTLen</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetTLen</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetAtrDurationTimer_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetAtrDurationTimer_FSL_HAS_IMPROVED_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetAtrDurationTimer</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetAtrDurationTimer</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetAtrDurationTimer_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetAtrDurationTimer_FSL_HAS_IMPROVED_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetAtrDurationTimer</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetAtrDurationTimer</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetWorkWaitTimeInteger_FSL_HAS_SMART_CARD_SUPPORT_0</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetWorkWaitTimeInteger_FSL_HAS_IMPROVED_SMART_CARD_SUPPORT_0</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetWorkWaitTimeInteger_0</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetWorkWaitTimeInteger</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetWorkWaitTimeInteger_FSL_HAS_SMART_CARD_SUPPORT_1</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetWorkWaitTimeInteger_FSL_HAS_IMPROVED_SMART_CARD_SUPPORT_1</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetWorkWaitTimeInteger_1</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetWorkWaitTimeInteger</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetWorkWaitTimeInteger_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetWorkWaitTimeInteger</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetWorkWaitTimeInteger</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetCharacterWaitTimeInteger_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetCharacterWaitTimeInteger</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetCharacterWaitTimeInteger</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetCharacterWaitTimeInteger_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetCharacterWaitTimeInteger</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetCharacterWaitTimeInteger</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetBlockWaitTimeInteger_FSL_HAS_SMART_CARD_SUPPORT_0</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetBlockWaitTimeInteger_FSL_HAS_IMPROVED_SMART_CARD_SUPPORT_0</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetBlockWaitTimeInteger_0</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetBlockWaitTimeInteger</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetBlockWaitTimeInteger_FSL_HAS_SMART_CARD_SUPPORT_1</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetBlockWaitTimeInteger_FSL_HAS_IMPROVED_SMART_CARD_SUPPORT_1</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetBlockWaitTimeInteger_1</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetBlockWaitTimeInteger</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetBlockWaitTimeInteger_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetBlockWaitTimeInteger</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetBlockWaitTimeInteger</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetBlockGuardTimeInteger_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetBlockGuardTimeInteger_FSL_HAS_IMPROVED_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_SetBlockGuardTimeInteger</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_SetBlockGuardTimeInteger</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetBlockGuardTimeInteger_FSL_HAS_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetBlockGuardTimeInteger_FSL_HAS_IMPROVED_SMART_CARD_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>UART_HAL_GetBlockGuardTimeInteger</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>UART_HAL_GetBlockGuardTimeInteger</UsrMethodName>
+            </ItemState>
+          </Methods>
+          <Events />
+        </InheritedComponentState>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InhrItem_lpsci</ItemSymbol>
+        <ListItemCount>1</ListItemCount>
+        <ItemsTypeState>Beans\fsl_debug_console\fsl_debug_console_empty_lpsci_inhr.item</ItemsTypeState>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>empty_lpsci</ItemSymbol>
+        <Value>load sdk verison failed</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InhrItem_lpuart</ItemSymbol>
+        <ListItemCount>1</ListItemCount>
+        <ItemsTypeState>Beans\fsl_debug_console\fsl_debug_console_lpuart_inhr.item</ItemsTypeState>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>fsl_lpuart</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <RegCompType>fsl_lpuart_hal</RegCompType>
+        <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/KSDK130_Repository</RegCompRepository>
+        <InheritedComponentState>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/KSDK130_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.ksdk.fsl_lpuart_hal</ComponentUUID>
+          <BeanType>fsl_lpuart_hal</BeanType>
+          <Name>fsl_lpuart_hal2</Name>
+          <CompNumb>30</CompNumb>
+          <CompEnabled>true</CompEnabled>
+          <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
+          <IconName>HAL4</IconName>
+          <UserFolderName />
+          <Comment lines_count="0" />
+          <Template />
+          <BeanVersion>1.3.0</BeanVersion>
+          <LightErrorsIgnored>false</LightErrorsIgnored>
+          <Properties>
+            <ItemState>
+              <ItemSymbol>DeviceName</ItemSymbol>
+              <ReadOnly>true</ReadOnly>
+              <UserReadOnly>true</UserReadOnly>
+              <Value>fsl_lpuart_hal2</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>PeriphDevice</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>LPUART0</Value>
+              <SharedPrphMode>false</SharedPrphMode>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CompVersion</ItemSymbol>
+              <Value>1.3.0</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>VersionSpecificItem</ItemSymbol>
+              <ListItemCount>1</ListItemCount>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>DefaultMainProperty</ItemSymbol>
+              <Value>load sdk verison failed</Value>
+            </ItemState>
+          </Properties>
+          <Methods>
+            <ItemState>
+              <ItemSymbol>SdkSpecificMethods</ItemSymbol>
+              <ListItemCount>1</ListItemCount>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>fsl_lpuart_halgroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_Init</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_Init</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetTransmitterCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetTransmitterCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_GetTransmitterCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_GetTransmitterCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetReceiverCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetReceiverCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_GetReceiverCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_GetReceiverCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetBaudRate</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetBaudRate</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetBaudRateDivisor</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetBaudRateDivisor</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetOversamplingRatio_FSL_HAS_BAUD_RATE_OVER_SAMPLING_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetOversamplingRatio</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetOversamplingRatio</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetBothEdgeSamplingCmd_FSL_HAS_BOTH_EDGE_SAMPLING_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetBothEdgeSamplingCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetBothEdgeSamplingCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetBitCountPerChar</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetBitCountPerChar</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetParityMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetParityMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetStopBitCount</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetStopBitCount</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_GetDataRegAddr</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_GetDataRegAddr</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetIntMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetIntMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_GetIntMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_GetIntMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetTxDmaCmd_FSL_HAS_DMA_ENABLE</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetTxDmaCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetTxDmaCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetRxDmaCmd_FSL_HAS_DMA_ENABLE</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetRxDmaCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetRxDmaCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_IsTxDmaEnabled_FSL_HAS_DMA_ENABLE</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_IsTxDmaEnabled</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_IsTxDmaEnabled</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_IsRxDmaEnabled_FSL_HAS_DMA_ENABLE</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_IsRxDmaEnabled</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_IsRxDmaEnabled</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_Putchar</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_Putchar</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_Putchar9</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_Putchar9</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_Putchar10</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_Putchar10</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_Getchar</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_Getchar</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_Getchar9</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_Getchar9</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_Getchar10</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_Getchar10</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SendDataPolling</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SendDataPolling</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_ReceiveDataPolling</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_ReceiveDataPolling</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_GetStatusFlag</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_GetStatusFlag</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_ClearStatusFlag</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_ClearStatusFlag</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetIdleChar</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetIdleChar</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_GetIdleChar</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_GetIdleChar</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_IsCurrentDataWithNoise</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_IsCurrentDataWithNoise</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_IsCurrentDataWithFrameError</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_IsCurrentDataWithFrameError</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetTxSpecialChar</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetTxSpecialChar</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_IsCurrentDataWithParityError</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_IsCurrentDataWithParityError</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_IsReceiveBufferEmpty</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_IsReceiveBufferEmpty</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_WasPreviousReceiverStateIdle</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_WasPreviousReceiverStateIdle</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetWaitModeOperation</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetWaitModeOperation</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_GetWaitModeOperation</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_GetWaitModeOperation</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetLoopbackCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetLoopbackCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetSingleWireCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetSingleWireCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetTxdirInSinglewireMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetTxdirInSinglewireMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetReceiverInStandbyMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetReceiverInStandbyMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_PutReceiverInNormalMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_PutReceiverInNormalMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_IsReceiverInStandby</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_IsReceiverInStandby</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetReceiverWakeupMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetReceiverWakeupMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_GetReceiverWakeupMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_GetReceiverWakeupMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetIdleLineDetect</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetIdleLineDetect</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetBreakCharTransmitLength</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetBreakCharTransmitLength</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetBreakCharDetectLength</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetBreakCharDetectLength</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_QueueBreakCharToSend</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_QueueBreakCharToSend</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetMatchAddressMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetMatchAddressMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetMatchAddressReg1</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetMatchAddressReg1</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetMatchAddressReg2</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetMatchAddressReg2</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetSendMsbFirstCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetSendMsbFirstCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetReceiveResyncCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetReceiveResyncCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetCtsSource_FSL_HAS_MODEM_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetCtsSource</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetCtsSource</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetCtsMode_FSL_HAS_MODEM_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetCtsMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetCtsMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetTxCtsCmd_FSL_HAS_MODEM_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetTxCtsCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetTxCtsCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetRxRtsCmd_FSL_HAS_MODEM_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetRxRtsCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetRxRtsCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetTxRtsCmd_FSL_HAS_MODEM_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetTxRtsCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetTxRtsCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetTxRtsPolarityMode_FSL_HAS_MODEM_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetTxRtsPolarityMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetTxRtsPolarityMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetInfrared_FSL_HAS_IR_SUPPORT</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetInfrared</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetInfrared</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetTxFifoCmd_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetTxFifoCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetTxFifoCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetRxFifoCmd_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetRxFifoCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetRxFifoCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_GetTxFifoSize_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_GetTxFifoSize</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_GetTxFifoSize</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_GetRxFifoSize_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_GetRxFifoSize</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_GetRxFifoSize</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_FlushTxFifo_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_FlushTxFifo</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_FlushTxFifo</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_FlushRxFifo_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_FlushRxFifo</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_FlushRxFifo</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_IsTxFifoEmpty_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_IsTxFifoEmpty</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_IsTxFifoEmpty</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_IsRxFifoEmpty_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_IsRxFifoEmpty</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_IsRxFifoEmpty</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetRxIdleEmpty_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetRxIdleEmpty</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetRxIdleEmpty</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_GetRxIdleEmpty_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_GetRxIdleEmpty</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_GetRxIdleEmpty</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetTxFifoWatermark_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetTxFifoWatermark</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetTxFifoWatermark</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_GetTxFifoWatermark_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_GetTxFifoWatermark</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_GetTxFifoWatermark</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_GetTxDatawordCountInFifo_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_GetTxDatawordCountInFifo</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_GetTxDatawordCountInFifo</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetRxFifoWatermark_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_SetRxFifoWatermark</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_SetRxFifoWatermark</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_GetRxDatawordCountInFifo_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_GetRxDatawordCountInFifo</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_GetRxDatawordCountInFifo</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_GetRxFifoWatermark_FSL_HAS_FIFO</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPUART_HAL_GetRxFifoWatermark</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPUART_HAL_GetRxFifoWatermark</UsrMethodName>
+            </ItemState>
+          </Methods>
+          <Events />
+        </InheritedComponentState>
+      </ItemState>
+    </Properties>
+    <Methods>
+      <ItemState>
+        <ItemSymbol>SdkSpecificMethods</ItemSymbol>
+        <ListItemCount>1</ListItemCount>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>fsl_debug_consolegroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DbgConsole_Init</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>DbgConsole_Init</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DbgConsole_DeInit</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>DbgConsole_DeInit</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>debug_printf</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>debug_printf</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>debug_putchar</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>debug_putchar</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>debug_scanf</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>debug_scanf</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>debug_getchar</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>debug_getchar</UsrMethodName>
+      </ItemState>
+    </Methods>
+    <Events />
   </Bean>
   <ComponentInitializationSequence>
     <EmptySection_DummyValue />

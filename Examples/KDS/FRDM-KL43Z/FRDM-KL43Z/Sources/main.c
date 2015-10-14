@@ -34,10 +34,12 @@
 #include "osa1.h"
 #include "pin_mux.h"
 #include "gpio1.h"
+#include "DbgCs1.h"
 #if CPU_INIT_CONFIG
   #include "Init_Config.h"
 #endif
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "Tetris.h"
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -49,12 +51,29 @@ int main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
+#if 0
   for(;;) {
     GPIO_DRV_TogglePinOutput(LED1);
     OSA_TimeDelay(500);
     GPIO_DRV_TogglePinOutput(LED2);
     OSA_TimeDelay(500);
+    debug_printf("hello\r\n");
+    if (!GPIO_DRV_ReadPinInput(Button1)) {
+      debug_printf("Button1\r\n");
+    }
+    if (!GPIO_DRV_ReadPinInput(Button2)) {
+      debug_printf("Button2\r\n");
+    }
   }
+#else
+  TETRIS_Start();
+  for(;;) {
+    OSA_TimeDelay(50);
+    if (TETRIS_Run()==0) {
+      TETRIS_Start();
+    }
+  }
+#endif
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/

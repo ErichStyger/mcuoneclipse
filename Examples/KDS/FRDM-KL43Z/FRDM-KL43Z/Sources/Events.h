@@ -35,6 +35,7 @@
 #include "osa1.h"
 #include "pin_mux.h"
 #include "gpio1.h"
+#include "DbgCs1.h"
 
 #ifdef __cplusplus
 extern "C" {
