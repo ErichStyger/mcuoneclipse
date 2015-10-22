@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="ilg.gnuarmeclipse.debug.gdbjtag.jlink.launchConfigurationType">
 <booleanAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.jlink.doConnectToRunning" value="false"/>
-<booleanAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.jlink.doContinue" value="true"/>
+<booleanAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.jlink.doContinue" value="false"/>
 <booleanAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.jlink.doDebugInRam" value="false"/>
 <booleanAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.jlink.doFirstReset" value="true"/>
 <booleanAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.jlink.doGdbServerAllocateConsole" value="true"/>
@@ -10,7 +10,7 @@
 <booleanAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.jlink.doGdbServerLocalOnly" value="true"/>
 <booleanAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.jlink.doGdbServerSilent" value="false"/>
 <booleanAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.jlink.doGdbServerVerifyDownload" value="true"/>
-<booleanAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.jlink.doSecondReset" value="true"/>
+<booleanAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.jlink.doSecondReset" value="false"/>
 <booleanAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.jlink.doStartGdbServer" value="true"/>
 <booleanAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.jlink.enableFlashBreakpoints" value="true"/>
 <booleanAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.jlink.enableSemihosting" value="false"/>
@@ -45,11 +45,11 @@
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.ipAddress" value="localhost"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.jtagDevice" value="GNU ARM J-Link"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadImage" value="true"/>
-<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadSymbols" value="true"/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadSymbols" value="false"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.pcRegister" value=""/>
 <intAttribute key="org.eclipse.cdt.debug.gdbjtag.core.portNumber" value="2331"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setPcRegister" value="false"/>
-<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setStopAt" value="true"/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setStopAt" value="false"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.stopAt" value="main"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.symbolsFileName" value=""/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.symbolsOffset" value=""/>
@@ -62,7 +62,7 @@
 <booleanAttribute key="org.eclipse.cdt.dsf.gdb.UPDATE_THREADLIST_ON_SUSPEND" value="false"/>
 <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_REGISTER_GROUPS" value=""/>
-<stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="binaries/tinyK20_bl_0x0000-0x4FFF.s19"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="C:\Users\tastyger\Data\HSLU\uTasker\demos\uTaskerV1.4.8_BM_tinyK20_8080.srec"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="tinyK20_Bootloader"/>
 <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="false"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value=""/>

@@ -3,7 +3,7 @@
   <Header>
     <Name>tinyK20_Demo</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>71</ModificationStamp>
+    <ModificationStamp>72</ModificationStamp>
     <Date>2015-06-19</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.1.RT7_b1531-0480</PEversion>
@@ -6366,7 +6366,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.435</BeanVersion>
+    <BeanVersion>01.444</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -6379,7 +6379,7 @@
         <ItemSymbol>FreeRTOSVersion</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>V8.2.2</Value>
+        <Value>V8.2.3</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>KinetisSDKGroup</ItemSymbol>
@@ -6524,6 +6524,14 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EnableGDBDebugHelper</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>UseApplicationTaskTags</ItemSymbol>
@@ -7627,14 +7635,6 @@
         <EnumSymbVal>M4</EnumSymbVal>
       </ItemState>
       <ItemState>
-        <ItemSymbol>M4FFloatingPointSupport</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
-      </ItemState>
-      <ItemState>
         <ItemSymbol>KinetisLibraryMaxInterruptPriority</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -8152,6 +8152,14 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>UTIL1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>M4FFloatingPointSupport</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -9320,6 +9328,17 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>xTaskNotifyWait</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xTaskNotifyStateClear</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xTaskNotifyStateClear</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>vTaskSetThreadLocalStoragePointer</ItemSymbol>
@@ -16244,7 +16263,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.036</BeanVersion>
+    <BeanVersion>01.041</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -16256,6 +16275,20 @@
       <ItemState>
         <ItemSymbol>FSLUSBStackVersion</ItemSymbol>
         <Value>v4.1.1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InitUSBFunctionName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>USB0_Init</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InheritedUSBInitEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>USBInit</ItemSymbol>
@@ -17844,7 +17877,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.050</BeanVersion>
+          <BeanVersion>01.053</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -18647,6 +18680,39 @@
               <LastSelection>true</LastSelection>
               <LastUserSel>always</LastUserSel>
               <UsrMethodName>App_Task</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>StdIOKeyPressed</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>StdIOKeyPressed</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>StdIOReadChar</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>StdIOReadChar</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>StdIOSendChar</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>StdIOSendChar</UsrMethodName>
             </ItemState>
             <ItemState>
               <ItemSymbol>Deinit</ItemSymbol>
@@ -27996,7 +28062,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.038</BeanVersion>
+    <BeanVersion>01.039</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
