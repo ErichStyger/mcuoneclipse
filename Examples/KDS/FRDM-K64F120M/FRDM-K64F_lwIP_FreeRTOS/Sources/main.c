@@ -53,7 +53,27 @@
 #include <string.h>
 #include <stdio.h>
 
+int debug_printf(const char  *fmt_s, ...)
+{
 #if 0
+   va_list  ap;
+   int  result;
+   /* Do nothing if the debug uart is not initialized.*/
+   if (s_debugConsole.type == kDebugConsoleNone)
+   {
+       return -1;
+   }
+   va_start(ap, fmt_s);
+   result = _doprint(NULL, debug_putc, -1, (char *)fmt_s, ap);
+   va_end(ap);
+
+   return result;
+#else
+   return -1;
+#endif
+}
+
+#if 1
 void *_sbrk ( uint32_t delta ) {
 extern char end; /* Defined by the linker */
 static char *heap_end;
@@ -163,8 +183,18 @@ int main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
-  /* Write your code here */
-  /* For example: for(;;) { } */
+  printf("Welcome to the world of lwip!\r\n");
+
+  /* Disable the mpu */
+  MPU_BWR_CESR_VLD(MPU, 0);
+
+  /* create lwIP initialization task */
+  xTaskCreate(LwipInitTask,
+      "LwipInitTask",
+      configMINIMAL_STACK_SIZE * 4,
+      (void*)NULL,
+      tskIDLE_PRIORITY,
+      (xTaskHandle*)NULL);
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/

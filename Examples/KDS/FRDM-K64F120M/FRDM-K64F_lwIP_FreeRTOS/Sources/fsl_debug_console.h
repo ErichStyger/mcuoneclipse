@@ -1,7 +1,7 @@
 /*
  * fsl_debug_console.h
  *
- *  Map printf for semihosting imlementation.
+ *  Map printf for semihosting implementation.
  */
 
 #ifndef SOURCES_FSL_DEBUG_CONSOLE_H_
