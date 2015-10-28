@@ -53,6 +53,7 @@
 #include <string.h>
 #include <stdio.h>
 
+/* providing a debug_printf() to make the linker happy */
 int debug_printf(const char  *fmt_s, ...)
 {
 #if 0
@@ -73,7 +74,7 @@ int debug_printf(const char  *fmt_s, ...)
 #endif
 }
 
-#if 1
+#if 1 /* depending on the GNU tools and libraries, a custom _sbrk() is needed */
 void *_sbrk ( uint32_t delta ) {
 extern char end; /* Defined by the linker */
 static char *heap_end;
