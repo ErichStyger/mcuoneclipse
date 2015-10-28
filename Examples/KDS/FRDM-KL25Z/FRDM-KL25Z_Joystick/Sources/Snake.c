@@ -316,7 +316,7 @@ static void snake(void) {
     upLevel();
   }  
   GDisp1_Clear();
-  GDisp1_UpdateFull();
+  /* GDisp1_UpdateFull(); */
   moveSnake();
   /* the snake has eaten the food (right or left) */
   for(i=0; i < 3; i++) {
@@ -390,7 +390,7 @@ static void intro(void) {
   x = (GDisp1_GetWidth()-FDisp1_GetStringWidth((unsigned char*)"McuOnEclipse", font, NULL))/2; /* center text */
   FDisp1_WriteString((unsigned char*)"McuOnEclipse", GDisp1_COLOR_BLACK, &x, &y, font);
   GDisp1_UpdateFull();
-  WAIT1_Waitms(3000);
+  WAIT1_WaitOSms(3000);
 }
 
 static void SnakeTask(void *pvParameters) {
