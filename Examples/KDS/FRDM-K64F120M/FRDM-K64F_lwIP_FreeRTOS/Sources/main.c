@@ -91,14 +91,12 @@ char *prev_heap_end;
 #endif
 
 static void LwipInitTask(void* pvArguments) {
-    err_t err;
+  err_t err;
   struct netif fsl_netif0;
   ip_addr_t fsl_netif0_ipaddr, fsl_netif0_netmask, fsl_netif0_gw;
-
   char msg[] = "This is my message";
 
   (void)pvArguments;
-
   // Init lwip stack
   tcpip_init(NULL,NULL);
   printf("%s: lwip init called ..\n", __FUNCTION__);
@@ -116,7 +114,6 @@ static void LwipInitTask(void* pvArguments) {
   err = dhcp_start(&fsl_netif0);
 
   printf("%s : Started DCHP request (%s)\n", __FUNCTION__, lwip_strerr(err));
-
   for(int i=0; i < DHCP_TIMEOUT && fsl_netif0.dhcp->state != DHCP_BOUND; i++) {
     printf("%s : Current DHCP State : %d\n", __FUNCTION__, fsl_netif0.dhcp->state);
     // Wait a second
