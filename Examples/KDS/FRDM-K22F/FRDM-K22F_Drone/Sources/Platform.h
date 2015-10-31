@@ -20,5 +20,6 @@
 #define PL_HAS_PUSH_BUTTONS   0
 
 #define PL_HAS_SENSOR_FUSION  1
+#define PL_HAS_SUMD           1
 
 #endif /* SOURCES_PLATFORM_H_ */
