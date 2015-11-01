@@ -21,6 +21,19 @@
 uint8_t ESC_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
 #endif /* PL_HAS_SHELL */
 
+typedef enum {
+  ESC_MOTOR_FRONT_LEFT,
+  ESC_MOTOR_FRONT_RIGHT,
+  ESC_MOTOR_BACK_RIGHT,
+  ESC_MOTOR_BACK_LEFT,
+  ESC_MOTOR_NOF /* 4 */
+} ESC_MotorID;
+
+typedef void *MOT_MotorHandle;
+
+MOT_MotorHandle MOT_GetMotorHandle(ESC_MotorID motor);
+uint8_t ESC_SetDutyUS(MOT_MotorHandle motorHandle, uint16_t us);
+
 void ESC_Init(void);
 
 

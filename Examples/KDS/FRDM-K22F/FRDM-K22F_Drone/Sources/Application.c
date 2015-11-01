@@ -27,61 +27,34 @@
 #if PL_HAS_SENSOR_FUSION
   #include "SensorTasks.h"
 #endif
-#if PL_HAS_SUMD
-  #include "SumD.h"
+#if PL_HAS_REMOTE
+  #include "Remote.h"
 #endif
-
-#if PL_HAS_SUMD
-const uint8_t sumdmsg1[] =
-{
-    /* 0xA8: start */
-    /* 0: SUMH (legacy), 1: SUMD */
-    /* 0x8: nof channels */
-    0xA8,
-    0x01,
-    0x08,
-    0x2E, 0xE8,
-    0x2E, 0xD0,
-    0x2E, 0xF0,
-    0x2E, 0xe0,
-    0x2E, 0xE0,
-    0x2E, 0xE0,
-    0x2E, 0xE0,
-    0x2E, 0xE0,
-    /* (OF = Failsafe OFF) or extra 16bits for: FS = Failsafe POSITION ou HD = HOLD) */
-    0x57, 0xB4,
-};
-
-static uint8_t TestSumD(void) {
-  int res;
-  int i;
-  #define MAX_CHANNELS 8
-  uint8_t rssi=0, rx_count=0;
-  uint16_t channel_count, channels[MAX_CHANNELS];
-  const uint16_t max_chan_count = MAX_CHANNELS;
-
-  res = 1;
-  for(i=0;i<sizeof(sumdmsg1) && res==1;i++) {
-    res = sumd_decode(sumdmsg1[i], &rssi, &rx_count, &channel_count, &channels[0], max_chan_count);
-// * @return 0 for success (a decoded packet), 1 for no packet yet (accumulating), 2 for unknown packet, 3 for out of sync, 4 for checksum error
-  }
-  if (res!=0) {
-    return ERR_FAILED;
-  }
-  return ERR_OK;
-}
-#endif
-
 
 static void AppTask(void *pvParameters) {
-  (void)pvParameters; /* parameter not used */
+  uint16_t valUs;
+  uint8_t res;
+  MOT_MotorHandle motorHndlFrontLeft;
 
-  #if PL_HAS_SUMD
-  TestSumD();
-  #endif
+  FRTOS1_vTaskDelay(3000/portTICK_RATE_MS); /* wait some time to initialize the ESCs with a default duty of 1000us */
+  motorHndlFrontLeft = MOT_GetMotorHandle(ESC_MOTOR_FRONT_LEFT);
+  (void)pvParameters; /* parameter not used */
   for(;;) {
-    LED1_Neg();
-    FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
+    res = REMOTE_GetChannel(0, &valUs); /* 1000...2000, middle position 1500 */
+    if (res==ERR_OK) {
+      if (valUs>1500) { /* forward */
+        res = ESC_SetDutyUS(motorHndlFrontLeft, valUs-500);
+      } else {
+        res = ESC_SetDutyUS(motorHndlFrontLeft, 1000); /* stopped motor */
+      }
+    }
+    if (res!=ERR_OK) {
+      LED1_Neg(); /* Red LED */
+    } else {
+      LED1_Off(); /* turn off red LED */
+      LED2_Neg(); /* Green LED */
+    }
+    FRTOS1_vTaskDelay(20/portTICK_RATE_MS);
   }
 }
 
@@ -120,6 +93,9 @@ void APP_Run(void) {
 #endif
 #if PL_HAS_SENSOR_FUSION
   SensorTasks_Init();
+#endif
+#if PL_HAS_REMOTE
+  REMOTE_Init();
 #endif
   if (FRTOS1_xTaskCreate(
       AppTask,  /* pointer to the task */

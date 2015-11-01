@@ -41,6 +41,9 @@
   #include "CDC1.h"
 #endif
 #include "KIN1.h"
+#if PL_HAS_REMOTE
+  #include "Remote.h"
+#endif
 
 void SHELL_SendString(unsigned char *msg) {
   CLS1_SendStr(msg, CLS1_GetStdio()->stdOut);
@@ -87,6 +90,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_HAS_ACCELEROMETER && KIN1_PARSE_COMMAND_ENABLED
   KIN1_ParseCommand,
+#endif
+#if PL_HAS_REMOTE
+  REMOTE_ParseCommand,
 #endif
   NULL /* Sentinel */
 };

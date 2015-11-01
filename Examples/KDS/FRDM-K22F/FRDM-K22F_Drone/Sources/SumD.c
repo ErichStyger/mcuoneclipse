@@ -137,7 +137,7 @@ int sumd_decode(uint8_t byte, uint8_t *rssi, uint8_t *rx_count, uint16_t *channe
 		break;
 
 	case SUMD_DECODE_STATE_GOT_HEADER:
-		if (byte == SUMD_ID_SUMD || byte == SUMD_ID_SUMH) {
+		if (byte == SUMD_ID_SUMD || byte==SUMD_ID_FAILSAFE || byte == SUMD_ID_SUMH) {
 			_rxpacket.status = byte;
 			if (byte == SUMD_ID_SUMH) {
 				_sumd = false;

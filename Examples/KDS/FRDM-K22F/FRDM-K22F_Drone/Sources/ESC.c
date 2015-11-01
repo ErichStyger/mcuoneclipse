@@ -39,19 +39,11 @@ typedef struct ESC_MotorDevice_ {
   uint8_t (*SetDutyUS)(uint16_t); /* function to set the duty us */
 } ESC_MotorDevice;
 
-typedef enum {
-  ESC_MOTOR_FRONT_LEFT,
-  ESC_MOTOR_FRONT_RIGHT,
-  ESC_MOTOR_BACK_RIGHT,
-  ESC_MOTOR_BACK_LEFT,
-  ESC_MOTOR_NOF /* 4 */
-} ESC_MotorID;
-
 static ESC_MotorDevice ESC_motors[ESC_MOTOR_NOF]; /* motor front right */
 static bool ESC_isMotorOn = TRUE;
 
-ESC_MotorDevice *MOT_GetMotorHandle(ESC_MotorID motor) {
-  return &ESC_motors[motor];
+MOT_MotorHandle MOT_GetMotorHandle(ESC_MotorID motor) {
+  return (MOT_MotorHandle)&ESC_motors[motor];
 }
 
 static uint8_t ESC_SetOffsetTicks_FR(uint16_t ticks) { return TU1_SetOffsetTicks(PWM1_DeviceData, 0, ticks); }
@@ -90,7 +82,9 @@ void ESC_SetSpeedPercent(ESC_MotorDevice *motor, ESC_SpeedPercent percent) {
   ESC_SetVal(motor, (uint16_t)val);
 }
 
-uint8_t ESC_SetDutyUS(ESC_MotorDevice *motor, uint16_t us) {
+uint8_t ESC_SetDutyUS(MOT_MotorHandle motorHandle, uint16_t us) {
+  ESC_MotorDevice *motor = (MOT_MotorHandle)motorHandle;
+
   if (us<ESC_MIN_DUTY_US || us>ESC_MAX_DUTY_US) {
     return ERR_RANGE;
   }
@@ -122,7 +116,6 @@ static void ESC_PrintESCStatus(ESC_MotorID id, const CLS1_StdIOType *io) {
   } else {
     motorStr = "  ??";
   }
-
   CLS1_SendStatusStr(motorStr, (unsigned char*)"", io->stdOut);
   buf[0] = '\0';
   UTIL1_Num16sToStrFormatted(buf, sizeof(buf), (int16_t)ESC_motors[id].currSpeedPercent, ' ', 4);
@@ -135,7 +128,6 @@ static void ESC_PrintESCStatus(ESC_MotorID id, const CLS1_StdIOType *io) {
 }
 
 static void ESC_PrintStatus(const CLS1_StdIOType *io) {
-
   CLS1_SendStatusStr((unsigned char*)"esc", (unsigned char*)"\r\n", io->stdOut);
   CLS1_SendStatusStr((unsigned char*)"  on/off", ESC_isMotorOn?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
   ESC_PrintESCStatus(ESC_MOTOR_FRONT_LEFT, io);
@@ -230,7 +222,6 @@ uint8_t ESC_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
   return res;
 }
 #endif /* PL_HAS_SHELL */
-
 
 void ESC_Init(void) {
   ESC_MotorID id;

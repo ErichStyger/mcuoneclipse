@@ -45,15 +45,12 @@
 
 __BEGIN_DECLS
 
-#define SUMD_MAX_CHANNELS	32
+#define SUMD_MAX_CHANNELS	  8
 #define SUMD_HEADER_LENGTH	3
 #define SUMD_HEADER_ID		0xA8
-#define SUMD_ID_SUMH		0x00
-#define SUMD_ID_SUMD		0x01
+#define SUMD_ID_SUMH		  0x00
+#define SUMD_ID_SUMD		  0x01
 #define SUMD_ID_FAILSAFE	0x81
-
-
-
 
 #pragma pack(push, 1)
 typedef struct {
