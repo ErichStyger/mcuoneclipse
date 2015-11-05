@@ -99,8 +99,8 @@ void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName)
 void FRTOS1_vApplicationTickHook(void)
 {
   /* Called for every RTOS tick. */
-#if PL_HAS_SD_CARD
   TMOUT1_AddTick();
+#if PL_HAS_SD_CARD
   TmDt1_AddTick();
 #endif
 }

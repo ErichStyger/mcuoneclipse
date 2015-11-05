@@ -16,3 +16,12 @@ http://electronics.stackexchange.com/questions/164803/whats-the-relationship-bet
 
 Debug helper:
 http://interactive.freertos.org/entries/23468301-Tasks-backtrace-switcher-viewer-snippet-for-debugger-gcc-gdb-ARM-Cortex-M3-MPU-port-Eclipse-support-
+
+Other articles:
+http://blog.oscarliang.net/quadcopter-tutorial-how-to-fly-drone/
+http://blog.oscarliang.net/best-fpv-camera-quadcopter/
+http://blog.oscarliang.net/understanding-pid-for-quadcopter-rc-flight/
+http://blog.oscarliang.net/fpv-goggles-review-fatshark-skyzone/
+
+http://nickfalletta.blogspot.ch/2013/07/will-be-beginning-of-set-of-posts-where.html
+http://de.slideshare.net/corradosantoro/quadcopter-31045379

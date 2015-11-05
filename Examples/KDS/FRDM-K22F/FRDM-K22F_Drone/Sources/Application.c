@@ -31,6 +31,13 @@
   #include "Remote.h"
 #endif
 
+/* MODE 2:
+ * Right left/right: roll (channel 1, left 1900, right 1100)
+ * Right up/down: pitch (channel 2, top 1900, bottom 1100)
+ * Left up/down: throttle (channel 3, top 1900, bottom 1100)
+ * Left left/right: rudder (channel 4, left 1900, right 1100)
+ */
+
 static void AppTask(void *pvParameters) {
   uint16_t valUs;
   uint8_t res;

@@ -59,6 +59,7 @@
 #include "BT1.h"
 #include "Serial1.h"
 #include "ASerialLdd2.h"
+#include "TMOUT1.h"
 #include "SUMDRx.h"
 #include "ASerialLdd3.h"
 #include "HF1.h"
