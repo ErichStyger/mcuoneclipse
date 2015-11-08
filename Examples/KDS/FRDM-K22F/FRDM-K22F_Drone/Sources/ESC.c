@@ -17,16 +17,22 @@
   #include "UTIL1.h"
 #endif
 
+#if 1 /* change frequency in PWM components! */
+  #define ESC_PWM_FREQUENCY_HZ  50
+#else
+  #define ESC_PWM_FREQUENCY_HZ  400
+#endif
+
 typedef uint8_t ESC_SpeedPercent; /* 0%...+100%, where negative is backward */
 #define ESC_MIN_DUTY_US  1000  /* default minimum duty in us */
 #define ESC_MAX_DUTY_US  2000  /* default maximum duty in us */
 
-#if 0 /* 50 Hz */
-#define ESC_PERIOD_TICKS_20MS   PWM1_PERIO1D_VALUE /* ticks for period of 20 ms */
-#define ESC_MIN_PWM_VALUE       (ESC_PERIOD_TICKS_20MS/20)  /* timer ticks for 1 ms */
+#if ESC_PWM_FREQUENCY_HZ==50 /* 50 Hz */
+  #define ESC_PERIOD_TICKS_20MS   PWM1_PERIOD_VALUE /* ticks for period of 20 ms */
+  #define ESC_MIN_PWM_VALUE       (ESC_PERIOD_TICKS_20MS/20)  /* timer ticks for 1 ms */
 #else /* 400 Hz */
-#define ESC_PERIOD_TICKS_2_5MS  PWM1_PERIOD_VALUE /* ticks for period of 2.5 ms */
-#define ESC_MIN_PWM_VALUE       (ESC_PERIOD_TICKS_2_5MS*4/10)  /* timer ticks for 1 ms */
+  #define ESC_PERIOD_TICKS_2_5MS  PWM1_PERIOD_VALUE /* ticks for period of 2.5 ms */
+  #define ESC_MIN_PWM_VALUE       (ESC_PERIOD_TICKS_2_5MS*4/10)  /* timer ticks for 1 ms */
 #endif
 #define ESC_MAX_PWM_VALUE       (2*ESC_MIN_PWM_VALUE) /* timer ticks for 2 ms */
 
@@ -128,12 +134,17 @@ static void ESC_PrintESCStatus(ESC_MotorID id, const CLS1_StdIOType *io) {
 }
 
 static void ESC_PrintStatus(const CLS1_StdIOType *io) {
+  uint8_t buf[16];
+
   CLS1_SendStatusStr((unsigned char*)"esc", (unsigned char*)"\r\n", io->stdOut);
+  UTIL1_Num16uToStr(buf, sizeof(buf), ESC_PWM_FREQUENCY_HZ);
+  UTIL1_strcat(buf, sizeof(buf), "\r\n");
+  CLS1_SendStatusStr((unsigned char*)"  freq", buf, io->stdOut);
   CLS1_SendStatusStr((unsigned char*)"  on/off", ESC_isMotorOn?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
   ESC_PrintESCStatus(ESC_MOTOR_FRONT_LEFT, io);
   ESC_PrintESCStatus(ESC_MOTOR_FRONT_RIGHT, io);
-  ESC_PrintESCStatus(ESC_MOTOR_BACK_LEFT, io);
   ESC_PrintESCStatus(ESC_MOTOR_BACK_RIGHT, io);
+  ESC_PrintESCStatus(ESC_MOTOR_BACK_LEFT, io);
 }
 
 uint8_t ESC_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {

@@ -62,6 +62,8 @@
 #include "TMOUT1.h"
 #include "SUMDRx.h"
 #include "ASerialLdd3.h"
+#include "KSDK1.h"
+#include "RTT1.h"
 #include "HF1.h"
 #include "TU1.h"
 #include "PWM1.h"

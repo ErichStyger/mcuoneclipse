@@ -44,6 +44,9 @@
 #if PL_HAS_REMOTE
   #include "Remote.h"
 #endif
+#if PL_HAS_SEGGER_RTT
+  #include "RTT1.h"
+#endif
 
 void SHELL_SendString(unsigned char *msg) {
   CLS1_SendStr(msg, CLS1_GetStdio()->stdOut);
@@ -119,7 +122,15 @@ static CLS1_ConstStdIOType CDC_stdio = {
 static unsigned char cdc_buf[48];
 #endif
 
-static unsigned char localConsole_buf[48];
+#if PL_HAS_SEGGER_RTT
+/* Segger RTT stdio */
+static CLS1_ConstStdIOType RTT_stdio = {
+  (CLS1_StdIO_In_FctType)RTT1_StdIOReadChar, /* stdin */
+  (CLS1_StdIO_OutErr_FctType)RTT1_StdIOSendChar, /* stdout */
+  (CLS1_StdIO_OutErr_FctType)RTT1_StdIOSendChar, /* stderr */
+  RTT1_StdIOKeyPressed /* if input is not empty */
+};
+#endif
 
 #if !PL_HAS_RTOS
 /* only used if not using a task for the shell */
@@ -155,9 +166,13 @@ static portTASK_FUNCTION(USBTask, pvParameters) {
 
 #if PL_HAS_RTOS
 static portTASK_FUNCTION(ShellTask, pvParameters) {
+  static unsigned char localConsole_buf[48];
 #if PL_HAS_RSTDIO
   static unsigned char radio_cmd_buf[48];
   CLS1_ConstStdIOType *ioRemote = RSTDIO_GetStdioRx();
+#endif
+#if PL_HAS_SEGGER_RTT
+  static unsigned char rtt_cmd_buf[48];
 #endif
 #if CLS1_DEFAULT_SERIAL
   CLS1_ConstStdIOTypePtr ioLocal = CLS1_GetStdio();  
@@ -168,8 +183,23 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
 #endif
   
   (void)pvParameters; /* not used */
+#if PL_HAS_BLUETOOTH
+  bluetooth_buf[0] = '\0';
+#endif
+#if CLS1_DEFAULT_SERIAL
+  localConsole_buf[0] = '\0';
+#endif
+#if PL_HAS_RSTDIO
+  radio_cmd_buf[0] = '\0';
+#endif
+#if PL_HAS_SEGGER_RTT
+  rtt_cmd_buf[0] = '\0';
+#endif
 #if CLS1_DEFAULT_SERIAL
   (void)CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, ioLocal, CmdParserTable);
+#endif
+#if PL_HAS_SEGGER_RTT
+  (void)CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, &RTT_stdio, CmdParserTable);
 #endif
 #if PL_HAS_SD_CARD
   FAT1_Init();
@@ -180,6 +210,9 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
 #endif
 #if CLS1_DEFAULT_SERIAL
     (void)CLS1_ReadAndParseWithCommandTable(localConsole_buf, sizeof(localConsole_buf), ioLocal, CmdParserTable);
+#endif
+#if PL_HAS_SEGGER_RTT
+    (void)CLS1_ReadAndParseWithCommandTable(rtt_cmd_buf, sizeof(rtt_cmd_buf), &RTT_stdio, CmdParserTable);
 #endif
 #if PL_HAS_RSTDIO
     RSTDIO_Print(ioLocal); /* dispatch incoming messages */
@@ -197,10 +230,6 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
 #endif /* PL_HAS_RTOS */
 
 void SHELL_Init(void) {
-#if PL_HAS_BLUETOOTH
-  bluetooth_buf[0] = '\0';
-#endif
-  localConsole_buf[0] = '\0';
   CLS1_Init();
 #if !CLS1_DEFAULT_SERIAL && PL_HAS_BLUETOOTH
   (void)CLS1_SetStdio(&BT_stdio); /* use the Bluetooth stdio as default */
