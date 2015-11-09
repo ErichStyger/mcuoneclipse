@@ -37,8 +37,8 @@ Purpose : Implementation of SEGGER real-time terminal which allows
 // Otherwise we would probably end up with a mixed string in the buffer.
 // If using  RTT from within interrupts, multiple tasks or multi processors, define the SEGGER_RTT_LOCK() and SEGGER_RTT_UNLOCK() function here.
 //
-#define SEGGER_RTT_LOCK()
-#define SEGGER_RTT_UNLOCK()
+#define SEGGER_RTT_LOCK(lock)  /* do nothing */
+#define SEGGER_RTT_UNLOCK(lock)/* do nothing */
 
 //
 // Define SEGGER_RTT_IN_RAM as 1

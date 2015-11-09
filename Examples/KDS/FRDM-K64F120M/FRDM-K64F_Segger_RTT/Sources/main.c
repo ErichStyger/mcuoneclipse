@@ -33,6 +33,8 @@
 
 static int i = 0;
 #include "SEGGER_RTT.h"
+#include "SEGGER_SYSVIEW.h"
+#include "SEGGER_SYSVIEW_Config.h"
 
 unsigned int myGlobal = 5;
 
@@ -47,14 +49,17 @@ int main(void)
     /* Write your code here */
 
     /* This for loop should be replaced. By default this loop allows a single stepping. */
+  SEGGER_SYSVIEW_Conf();
   for(;;) {
     uint8_t buf[64];
 
-    SEGGER_RTT_WriteString(0, "Hello World from SEGGER!\r\n");
+    SEGGER_SYSVIEW_OnUserStart(0);
+    SEGGER_RTT_WriteString(0, "Hello World from SEGGER RTT!\r\n");
     UTIL1_Num32uToStr(buf, sizeof(buf), myGlobal);
     SEGGER_RTT_WriteString(0, (const char*)buf);
     SEGGER_RTT_WriteString(0, "\r\n");
     myGlobal++;
+    SEGGER_SYSVIEW_OnUserStop(0);
 //    WAIT1_Waitms(500);
     _Delay(50);
   }
