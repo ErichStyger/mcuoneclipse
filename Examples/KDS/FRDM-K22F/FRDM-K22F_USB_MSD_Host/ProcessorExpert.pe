@@ -3,10 +3,10 @@
   <Header>
     <Name>FRDM-K22F_USB_MSD_Host</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>28</ModificationStamp>
+    <ModificationStamp>30</ModificationStamp>
     <Date>2014-12-28</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion>1.12.0.RT7_b1515-0427</PEversion>
+    <PEversion>1.12.1.RT7_b1531-0480</PEversion>
   </Header>
   <Options>
     <ProjectMainModule>main</ProjectMainModule>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>118</ProjectCompNumb>
+    <ProjectCompNumb>120</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -40,6 +40,13 @@
     <DontWriteGeneratedModules lines_count="0" />
     <ProjectStaticFilesGenerationMode>LINKED</ProjectStaticFilesGenerationMode>
   </Options>
+  <UserFolder>
+    <UserFolderName />
+    <NodeName>Referenced_Components</NodeName>
+    <CompNumb>119</CompNumb>
+    <FolderType>Beans</FolderType>
+    <ExpandedAll>true</ExpandedAll>
+  </UserFolder>
   <CPU>
     <BeanType>MK22FN512LH12</BeanType>
     <Name>Cpu</Name>
@@ -3466,6 +3473,234 @@
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
         <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FlexBusMemMapFBCondGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ShrdFBusGrp</ItemSymbol>
+        <ListItemCount>1</ListItemCount>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusMemMapGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusChipSelectsGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusCS0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusCS0BaseAddr</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusBlockSize0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusBlockMaskReduced0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusCS1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusCS1BaseAddr</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusBlockSize1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusBlockMaskReduced1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusCS2</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusCS2BaseAddr</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusBlockSize2</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusBlockMaskReduced2</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusCS3</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusCS3BaseAddr</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusBlockSize3</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusBlockMaskReduced3</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusCS4</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusCS4BaseAddr</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusBlockSize4</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusBlockMaskReduced4</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusCS5</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusCS5BaseAddr</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusBlockSize5</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusBlockMaskReduced5</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExternalBusConfig</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ExtMemGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <ListItemCount>0</ListItemCount>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>CommonSettingsGrp</ItemSymbol>
@@ -12521,7 +12756,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.432</BeanVersion>
+    <BeanVersion>01.446</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -12535,7 +12770,7 @@
         <ItemSymbol>FreeRTOSVersion</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>V8.2.1</Value>
+        <Value>V8.2.3</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>KinetisSDKGroup</ItemSymbol>
@@ -12680,6 +12915,14 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EnableGDBDebugHelper</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>UseApplicationTaskTags</ItemSymbol>
@@ -14395,14 +14638,6 @@
         <EnumSymbVal>M4F</EnumSymbVal>
       </ItemState>
       <ItemState>
-        <ItemSymbol>M4FFloatingPointSupport</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-      </ItemState>
-      <ItemState>
         <ItemSymbol>KinetisLibraryMaxInterruptPriority</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -14541,6 +14776,14 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>UsePreemption</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>UseTimeSlicing</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
@@ -14924,6 +15167,14 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>UTIL1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>M4FFloatingPointSupport</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -16061,6 +16312,28 @@
         <UsrMethodName>xTaskNotifyFromISR</UsrMethodName>
       </ItemState>
       <ItemState>
+        <ItemSymbol>xTaskNotifyAndQuery</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xTaskNotifyAndQuery</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xTaskNotifyAndQueryFromISR</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xTaskNotifyAndQueryFromISR</UsrMethodName>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>xTaskNotifyWait</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -16070,6 +16343,17 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>xTaskNotifyWait</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xTaskNotifyStateClear</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xTaskNotifyStateClear</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>vTaskSetThreadLocalStoragePointer</ItemSymbol>
@@ -16231,7 +16515,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.036</BeanVersion>
+    <BeanVersion>01.041</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -16244,6 +16528,20 @@
       <ItemState>
         <ItemSymbol>FSLUSBStackVersion</ItemSymbol>
         <Value>v4.1.1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InitUSBFunctionName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>USB0_Init</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InheritedUSBInitEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>USBInit</ItemSymbol>
@@ -20443,7 +20741,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.065</BeanVersion>
+    <BeanVersion>01.066</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -21233,7 +21531,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.065</BeanVersion>
+    <BeanVersion>01.066</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -22023,7 +22321,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.065</BeanVersion>
+    <BeanVersion>01.066</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -27126,7 +27424,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.073</BeanVersion>
+    <BeanVersion>01.075</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -27299,6 +27597,12 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>\e</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>KinetisSDK</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>KSDK1</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -30520,6 +30824,31 @@
         <Value>interrupts disabled</Value>
       </ItemState>
     </Events>
+  </Bean>
+  <Bean>
+    <Repository>file:/${ProcessorExpertPath:user}</Repository>
+    <BeanType>KinetisSDK</BeanType>
+    <Name>KSDK1</Name>
+    <CompNumb>118</CompNumb>
+    <CompEnabled>true</CompEnabled>
+    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
+    <IconName>SHARED_LDD</IconName>
+    <UserFolderName>Referenced_Components</UserFolderName>
+    <Comment lines_count="0" />
+    <Template />
+    <BeanVersion>01.001</BeanVersion>
+    <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Properties>
+      <ItemState>
+        <ItemSymbol>DeviceName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>KSDK1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+    </Properties>
+    <Methods />
+    <Events />
   </Bean>
   <ComponentInitializationSequence>
     <EmptySection_DummyValue />

@@ -60,6 +60,7 @@
 #include "CLS1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
+#include "KSDK1.h"
 
 #ifdef __cplusplus
 extern "C" {

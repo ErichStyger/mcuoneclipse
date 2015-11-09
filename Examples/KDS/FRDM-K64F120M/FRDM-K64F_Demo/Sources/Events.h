@@ -74,6 +74,12 @@
 #include "BitIoLdd9.h"
 #include "TRG1.h"
 #include "KIN1.h"
+#include "USB1.h"
+#include "CDC1.h"
+#include "Tx1.h"
+#include "Rx1.h"
+#include "RTT1.h"
+#include "KSDK1.h"
 
 #ifdef __cplusplus
 extern "C" {

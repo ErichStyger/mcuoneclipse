@@ -3,7 +3,7 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>160</ModificationStamp>
+    <ModificationStamp>163</ModificationStamp>
     <Date>2015-06-11</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.1.RT7_b1531-0480</PEversion>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>199</ProjectCompNumb>
+    <ProjectCompNumb>202</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -53,6 +53,13 @@
     <UserFolderName />
     <NodeName>RF</NodeName>
     <CompNumb>153</CompNumb>
+    <FolderType>Beans</FolderType>
+    <ExpandedAll>true</ExpandedAll>
+  </UserFolder>
+  <UserFolder>
+    <UserFolderName />
+    <NodeName>Referenced_Components</NodeName>
+    <CompNumb>200</CompNumb>
     <FolderType>Beans</FolderType>
     <ExpandedAll>true</ExpandedAll>
   </UserFolder>
@@ -4253,7 +4260,7 @@
       <Count>0</Count>
     </BoolList_FpgaConfig>
     <BoolList_BeanConfig>
-      <Count>32</Count>
+      <Count>34</Count>
       <ItemId0>3</ItemId0>
       <Value0>true</Value0>
       <ItemId1>2</ItemId1>
@@ -4318,6 +4325,10 @@
       <Value30>true</Value30>
       <ItemId31>194</ItemId31>
       <Value31>true</Value31>
+      <ItemId32>199</ItemId32>
+      <Value32>true</Value32>
+      <ItemId33>201</ItemId33>
+      <Value33>true</Value33>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
       <Count>0</Count>
@@ -4392,7 +4403,7 @@
       <Count>0</Count>
     </BoolList_FpgaConfig>
     <BoolList_BeanConfig>
-      <Count>32</Count>
+      <Count>34</Count>
       <ItemId0>88</ItemId0>
       <Value0>true</Value0>
       <ItemId1>84</ItemId1>
@@ -4457,6 +4468,10 @@
       <Value30>true</Value30>
       <ItemId31>194</ItemId31>
       <Value31>true</Value31>
+      <ItemId32>199</ItemId32>
+      <Value32>true</Value32>
+      <ItemId33>201</ItemId33>
+      <Value33>true</Value33>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
       <Count>0</Count>
@@ -16992,7 +17007,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.445</BeanVersion>
+    <BeanVersion>01.446</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -17208,7 +17223,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.059</BeanVersion>
+          <BeanVersion>01.061</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Repository>file:/${ProcessorExpertPath:user}</Repository>
           <Properties>
@@ -17275,18 +17290,10 @@
               <Value>configMINIMAL_STACK_SIZE</Value>
             </ItemState>
             <ItemState>
-              <ItemSymbol>RTTSettings</ItemSymbol>
+              <ItemSymbol>SeggerRTT</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Expanded>true</Expanded>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>RTTUpBufferIndex</ItemSymbol>
-              <ReadOnly>false</ReadOnly>
-              <UserReadOnly>false</UserReadOnly>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Value>0</Value>
-              <Base>DEC</Base>
+              <Value>RTT1</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>RTTDownBufferIndex</ItemSymbol>
@@ -17297,43 +17304,11 @@
               <Base>DEC</Base>
             </ItemState>
             <ItemState>
-              <ItemSymbol>RTTBufferNofUp</ItemSymbol>
+              <ItemSymbol>RTTUpBufferIndex</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Value>1</Value>
-              <Base>DEC</Base>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>RTTBufferSizeUp</ItemSymbol>
-              <ReadOnly>false</ReadOnly>
-              <UserReadOnly>false</UserReadOnly>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Value>1024</Value>
-              <Base>DEC</Base>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>RTTBufferNofDown</ItemSymbol>
-              <ReadOnly>false</ReadOnly>
-              <UserReadOnly>false</UserReadOnly>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Value>1</Value>
-              <Base>DEC</Base>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>RTTBufferSizeDown</ItemSymbol>
-              <ReadOnly>false</ReadOnly>
-              <UserReadOnly>false</UserReadOnly>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Value>16</Value>
-              <Base>DEC</Base>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>RTTBufferSizePrintf</ItemSymbol>
-              <ReadOnly>false</ReadOnly>
-              <UserReadOnly>false</UserReadOnly>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Value>64</Value>
+              <Value>0</Value>
               <Base>DEC</Base>
             </ItemState>
             <ItemState>
@@ -17643,6 +17618,52 @@
               <Value>15</Value>
               <Base>DEC</Base>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>RTTSettings</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Expanded>true</Expanded>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>RTTBufferNofUp</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>1</Value>
+              <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>RTTBufferSizeUp</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>1024</Value>
+              <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>RTTBufferNofDown</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>1</Value>
+              <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>RTTBufferSizeDown</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>16</Value>
+              <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>RTTBufferSizePrintf</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>64</Value>
+              <Base>DEC</Base>
             </ItemState>
             <ItemState>
               <ItemSymbol>TzCtrlTaskPrioStr</ItemSymbol>
@@ -19232,6 +19253,14 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>UsePreemption</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>UseTimeSlicing</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
@@ -20988,7 +21017,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.073</BeanVersion>
+    <BeanVersion>01.075</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -21162,6 +21191,12 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>\e</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>KinetisSDK</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>KSDK1</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -28654,7 +28689,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.026</BeanVersion>
+    <BeanVersion>01.027</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -28839,10 +28874,10 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
+        <Index>1</Index>
+        <Value>false</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <LastUserSel>no</LastUserSel>
         <UsrMethodName>ReadBlockGeneric</UsrMethodName>
       </ItemState>
       <ItemState>
@@ -52501,7 +52536,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.053</BeanVersion>
+          <BeanVersion>01.062</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -52583,6 +52618,36 @@
               <Value>FREESCALE INC.              </Value>
             </ItemState>
             <ItemState>
+              <ItemSymbol>Configuration</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Expanded>true</Expanded>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>USB_EP0_SIZE</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>32</Value>
+              <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>USB_EP1_SIZE</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>32</Value>
+              <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>USB_EP2_SIZE</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>32</Value>
+              <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
               <ItemSymbol>TxBuffer</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
@@ -52600,7 +52665,7 @@
                 <UserFolderName />
                 <Comment lines_count="0" />
                 <Template />
-                <BeanVersion>01.039</BeanVersion>
+                <BeanVersion>01.041</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
                 <Properties>
                   <ItemState>
@@ -52693,6 +52758,18 @@
                     <LastSelection>true</LastSelection>
                     <LastUserSel>yes</LastUserSel>
                     <UsrMethodName>Peek</UsrMethodName>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>Delete</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                    <LastSelection>true</LastSelection>
+                    <LastUserSel>yes</LastUserSel>
+                    <UsrMethodName>Delete</UsrMethodName>
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>NofElements</ItemSymbol>
@@ -52862,7 +52939,7 @@
                 <UserFolderName />
                 <Comment lines_count="0" />
                 <Template />
-                <BeanVersion>01.039</BeanVersion>
+                <BeanVersion>01.041</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
                 <Properties>
                   <ItemState>
@@ -52955,6 +53032,18 @@
                     <LastSelection>true</LastSelection>
                     <LastUserSel>yes</LastUserSel>
                     <UsrMethodName>Peek</UsrMethodName>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>Delete</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                    <LastSelection>true</LastSelection>
+                    <LastUserSel>yes</LastUserSel>
+                    <UsrMethodName>Delete</UsrMethodName>
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>NofElements</ItemSymbol>
@@ -53107,6 +53196,12 @@
               </InheritedComponentState>
             </ItemState>
             <ItemState>
+              <ItemSymbol>SendBlockConfig</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Expanded>true</Expanded>
+            </ItemState>
+            <ItemState>
               <ItemSymbol>TimeoutEnabled</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
@@ -53127,6 +53222,20 @@
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <Value>0</Value>
               <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>SendDataBlockWaitms</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>0</Value>
+              <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>Wait</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>WAIT1</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>PowerOptionsGroup</ItemSymbol>
@@ -53544,6 +53653,278 @@
         <Value>USB1_OnError</Value>
       </ItemState>
     </Events>
+  </Bean>
+  <Bean>
+    <Repository>file:/${ProcessorExpertPath:user}</Repository>
+    <BeanType>SeggerRTT</BeanType>
+    <Name>RTT1</Name>
+    <CompNumb>199</CompNumb>
+    <CompEnabled>true</CompEnabled>
+    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
+    <IconName>SeggerRTT</IconName>
+    <UserFolderName>Referenced_Components</UserFolderName>
+    <Comment lines_count="0" />
+    <Template />
+    <BeanVersion>01.022</BeanVersion>
+    <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Properties>
+      <ItemState>
+        <ItemSymbol>DeviceName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>RTT1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RTTBufferNofUp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RTTBufferSizeUp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>1024</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RTTBufferNofDown</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RTTBufferSizeDown</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>16</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RTTBufferSizePrintf</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>64</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>BlockingSend</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Wait</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>WAIT1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>WaitTimeMs</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>10</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>KinetisSDK</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>KSDK1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+    </Properties>
+    <Methods>
+      <ItemState>
+        <ItemSymbol>Read</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Read</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Write</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Write</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>WriteString</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>WriteString</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GetKey</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>GetKey</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>WaitKey</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>WaitKey</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>HasKey</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>HasKey</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RecvChar</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>RecvChar</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SendChar</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SendChar</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GetCharsInRxBuf</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>GetCharsInRxBuf</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>StdIOKeyPressed</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>StdIOKeyPressed</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>StdIOReadChar</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>StdIOReadChar</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>StdIOSendChar</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>StdIOSendChar</UsrMethodName>
+      </ItemState>
+    </Methods>
+    <Events />
+  </Bean>
+  <Bean>
+    <Repository>file:/${ProcessorExpertPath:user}</Repository>
+    <BeanType>KinetisSDK</BeanType>
+    <Name>KSDK1</Name>
+    <CompNumb>201</CompNumb>
+    <CompEnabled>true</CompEnabled>
+    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
+    <IconName>SHARED_LDD</IconName>
+    <UserFolderName>Referenced_Components</UserFolderName>
+    <Comment lines_count="0" />
+    <Template />
+    <BeanVersion>01.001</BeanVersion>
+    <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Properties>
+      <ItemState>
+        <ItemSymbol>DeviceName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>KSDK1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+    </Properties>
+    <Methods />
+    <Events />
   </Bean>
   <ComponentInitializationSequence>
     <EmptySection_DummyValue />
