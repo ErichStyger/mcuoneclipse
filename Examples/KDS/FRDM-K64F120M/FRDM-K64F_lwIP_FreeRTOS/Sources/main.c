@@ -171,7 +171,9 @@ static void LwipInitTask(void* pvArguments) {
   err = dhcp_release(&fsl_netif0);
   printf("%s : DHCP Release (%s)\n", __FUNCTION__, lwip_strerr(err));
 
-  for(;;) {};
+  for(;;) {
+    vTaskDelay(100/portTICK_PERIOD_MS);
+  }
 }
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */

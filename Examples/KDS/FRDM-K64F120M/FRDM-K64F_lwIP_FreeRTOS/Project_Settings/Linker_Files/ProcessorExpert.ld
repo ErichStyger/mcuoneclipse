@@ -10,7 +10,7 @@
 /*##                                                                         */
 /*##     Compiler  : GNU C Compiler                                          */
 /*##                                                                         */
-/*##     Date/Time : 2015-11-15, 20:54, # CodeGen: 18                        */
+/*##     Date/Time : 2015-11-16, 13:57, # CodeGen: 20                        */
 /*##                                                                         */
 /*##     Abstract  :                                                         */
 /*##                                                                         */
@@ -26,7 +26,7 @@
 /* Entry Point */
 ENTRY(Reset_Handler)
 
-HEAP_SIZE  = DEFINED(__heap_size__)  ? __heap_size__  : 0x4000;
+HEAP_SIZE  = DEFINED(__heap_size__)  ? __heap_size__  : 0x6000;
 STACK_SIZE = DEFINED(__stack_size__) ? __stack_size__ : 0x0400;
 /* Specify the memory areas */
 MEMORY {

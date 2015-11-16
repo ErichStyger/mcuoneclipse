@@ -3,7 +3,7 @@
   <Header>
     <Name>FRDM-K64F_lwIP_FreeRTOS</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>12</ModificationStamp>
+    <ModificationStamp>18</ModificationStamp>
     <Date>2015-10-18</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.1.RT7_b1531-0480</PEversion>
@@ -1522,7 +1522,7 @@
           <ItemSymbol>C_HeapSize</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-          <Value>16384</Value>
+          <Value>24576</Value>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
           <Base>HEX</Base>
         </ItemState>
@@ -10467,6 +10467,890 @@
         <Value>clockMan1_StaticCallback7</Value>
       </ItemState>
     </Events>
+  </Bean>
+  <Bean>
+    <Repository>file:/${ProcessorExpert_loc}/Repositories/KSDK130_Repository</Repository>
+    <ComponentUUID>com.freescale.processorexpert.ksdk.fsl_enet</ComponentUUID>
+    <BeanType>fsl_enet</BeanType>
+    <Name>eNet1</Name>
+    <CompNumb>16</CompNumb>
+    <CompEnabled>true</CompEnabled>
+    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
+    <IconName>Ethernet_LDD</IconName>
+    <UserFolderName />
+    <Comment lines_count="0" />
+    <Template />
+    <BeanVersion>1.3.0</BeanVersion>
+    <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Properties>
+      <ItemState>
+        <ItemSymbol>DeviceName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>eNet1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>PeriphDevice</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>ENET</Value>
+        <SharedPrphMode>false</SharedPrphMode>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>CompVersion</ItemSymbol>
+        <Value>1.3.0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>VersionSpecificItem</ItemSymbol>
+        <ListItemCount>1</ListItemCount>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Settings</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>PropertiesItem</ItemSymbol>
+        <ListItemCount>1</ListItemCount>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>MainConfigurationsGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Notice</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>This component handles only source files.</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LinkItem</ItemSymbol>
+        <ListItemCount>1</ListItemCount>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LinkGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Link0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>intMan1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Link1</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>clockMan1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LinkOSAGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LinkOSA</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InhrItem</ItemSymbol>
+        <ListItemCount>1</ListItemCount>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InhrGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>HAL0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Index>0</Index>
+        <RegCompType>fsl_enet_hal</RegCompType>
+        <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/KSDK130_Repository</RegCompRepository>
+        <InheritedComponentState>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/KSDK130_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.ksdk.fsl_enet_hal</ComponentUUID>
+          <BeanType>fsl_enet_hal</BeanType>
+          <Name>fsl_enet_hal1</Name>
+          <CompNumb>17</CompNumb>
+          <CompEnabled>true</CompEnabled>
+          <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
+          <IconName>HAL4</IconName>
+          <UserFolderName />
+          <Comment lines_count="0" />
+          <Template />
+          <BeanVersion>1.3.0</BeanVersion>
+          <LightErrorsIgnored>false</LightErrorsIgnored>
+          <Properties>
+            <ItemState>
+              <ItemSymbol>DeviceName</ItemSymbol>
+              <ReadOnly>true</ReadOnly>
+              <UserReadOnly>true</UserReadOnly>
+              <Value>fsl_enet_hal1</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>PeriphDevice</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>ENET</Value>
+              <SharedPrphMode>false</SharedPrphMode>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CompVersion</ItemSymbol>
+              <Value>1.3.0</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>VersionSpecificItem</ItemSymbol>
+              <ListItemCount>1</ListItemCount>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>DefaultMainProperty</ItemSymbol>
+              <Value>load sdk verison failed</Value>
+            </ItemState>
+          </Properties>
+          <Methods>
+            <ItemState>
+              <ItemSymbol>SdkSpecificMethods</ItemSymbol>
+              <ListItemCount>1</ListItemCount>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>fsl_enet_halgroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_Init</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_Init</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_Config</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_Config</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_GetStatus</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_GetStatus</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_SetMulticastAddrHash</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_SetMulticastAddrHash</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_GetBufDescripAttr</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_GetBufDescripAttr</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_GetBuffDescripData</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_GetBuffDescripData</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_ClrRxBdAfterHandled</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_ClrRxBdAfterHandled</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_SetTxBdBeforeSend</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_SetTxBdBeforeSend</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_ClrTxBdAfterSend</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_ClrTxBdAfterSend</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_SetRxBdActive</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_SetRxBdActive</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_SetTxBdActive</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_SetTxBdActive</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_SetRMIIMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_SetRMIIMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_GetSMIData</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_GetSMIData</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_SetSMIRead</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_SetSMIRead</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_SetSMIWrite</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_SetSMIWrite</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_EnDynamicalAct</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_EnDynamicalAct</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_Enable</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_Enable</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_Disable</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_Disable</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_SetIntMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_SetIntMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_ClearIntStatusFlag</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_ClearIntStatusFlag</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_GetIntStatusFlag</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_GetIntStatusFlag</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_Start1588Timer</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_Start1588Timer</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_Stop1588Timer</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_Stop1588Timer</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_Adjust1588Timer</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_Adjust1588Timer</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_Set1588TimerNewTime</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_Set1588TimerNewTime</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_Get1588TimerCurrentTime</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_Get1588TimerCurrentTime</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_Get1588TimerChnStatus</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_Get1588TimerChnStatus</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ENET_HAL_Rst1588TimerCmpValAndClrFlag</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>ENET_HAL_Rst1588TimerCmpValAndClrFlag</UsrMethodName>
+            </ItemState>
+          </Methods>
+          <Events />
+        </InheritedComponentState>
+      </ItemState>
+    </Properties>
+    <Methods>
+      <ItemState>
+        <ItemSymbol>SdkSpecificMethods</ItemSymbol>
+        <ListItemCount>1</ListItemCount>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>fsl_enetgroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_1588Init_FSL_SUPPORT_PTP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_1588Init</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_1588Init</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_1588Deinit_FSL_SUPPORT_PTP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_1588Deinit</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_1588Deinit</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Start1588Timer_FSL_SUPPORT_PTP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Start1588Timer</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_Start1588Timer</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Stop1588Timer_FSL_SUPPORT_PTP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Stop1588Timer</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_Stop1588Timer</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Parse1588Packet_FSL_SUPPORT_PTP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Parse1588Packet</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_Parse1588Packet</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Get1588timer_FSL_SUPPORT_PTP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Get1588timer</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_Get1588timer</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Set1588timer_FSL_SUPPORT_PTP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Set1588timer</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_Set1588timer</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Adjust1588timer_FSL_SUPPORT_PTP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Adjust1588timer</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_Adjust1588timer</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_GetTxTs_FSL_SUPPORT_PTP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_GetTxTs</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_GetTxTs</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_GetRxTs_FSL_SUPPORT_PTP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_GetRxTs</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_GetRxTs</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_1588l2queueInit_FSL_SUPPORT_PTP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_1588l2queueInit</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_1588l2queueInit</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Service_l2packet_FSL_SUPPORT_PTP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Service_l2packet</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_Service_l2packet</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Send_l2packet_FSL_SUPPORT_PTP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Send_l2packet</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_Send_l2packet</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Receive_l2packet_FSL_SUPPORT_PTP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Receive_l2packet</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_Receive_l2packet</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_1588Ioctl_FSL_SUPPORT_PTP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_1588Ioctl</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_1588Ioctl</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Is1588TsBuffFull_FSL_SUPPORT_PTP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Is1588TsBuffFull</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_Is1588TsBuffFull</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Update1588TsBuff_FSL_SUPPORT_PTP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Update1588TsBuff</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_Update1588TsBuff</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Search1588TsBuff_FSL_SUPPORT_PTP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Search1588TsBuff</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_Search1588TsBuff</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Incr1588TsBuffRing_FSL_SUPPORT_PTP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Incr1588TsBuffRing</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_Incr1588TsBuffRing</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_TsIRQHandler_FSL_SUPPORT_PTP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_TsIRQHandler</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_TsIRQHandler</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Init</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_Init</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_Deinit</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_Deinit</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_UpdateRxBuffDescrip</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_UpdateRxBuffDescrip</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_CleanupTxBuffDescrip</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_CleanupTxBuffDescrip</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_IncrRxBuffDescripIndex</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_IncrRxBuffDescripIndex</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_IncrTxBuffDescripIndex</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_IncrTxBuffDescripIndex</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_RxErrorStats</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_RxErrorStats</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_TxErrorStats</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_TxErrorStats</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_ReceiveData1</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_ReceiveData</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_ReceiveData2</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_ReceiveData</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_InstallNetIfCall</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_InstallNetIfCall</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_SendData</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_SendData</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_RxIRQHandler</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_RxIRQHandler</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_TxIRQHandler</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_TxIRQHandler</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_CalculateCrc32</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_CalculateCrc32</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_AddMulticastGroup</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_AddMulticastGroup</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ENET_DRV_LeaveMulticastGroup</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>ENET_DRV_LeaveMulticastGroup</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>enet_mac_enqueue_buffer</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>enet_mac_enqueue_buffer</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>enet_mac_dequeue_buffer</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>enet_mac_dequeue_buffer</UsrMethodName>
+      </ItemState>
+    </Methods>
+    <Events />
   </Bean>
   <Bean>
     <Repository>file:/${ProcessorExpert_loc}/Repositories/KSDK130_Repository</Repository>
@@ -23005,52 +23889,75 @@
     <Events />
   </Bean>
   <Bean>
-    <Repository>file:/${ProcessorExpert_loc}/Repositories/KSDK130_Repository</Repository>
-    <ComponentUUID>com.freescale.processorexpert.ksdk.fsl_enet</ComponentUUID>
-    <BeanType>fsl_enet</BeanType>
-    <Name>eNet1</Name>
-    <CompNumb>16</CompNumb>
+    <Repository>file:/${ProcessorExpertPath:user}</Repository>
+    <BeanType>SeggerSystemView</BeanType>
+    <Name>SYS1</Name>
+    <CompNumb>24</CompNumb>
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
-    <IconName>Ethernet_LDD</IconName>
+    <IconName>SeggerSystemView</IconName>
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>1.3.0</BeanVersion>
+    <BeanVersion>01.011</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>eNet1</Value>
+        <Value>SYS1</Value>
       </ItemState>
       <ItemState>
-        <ItemSymbol>PeriphDevice</ItemSymbol>
+        <ItemSymbol>SystemViewVersion</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>ENET</Value>
-        <SharedPrphMode>false</SharedPrphMode>
+        <Value>V2.12</Value>
       </ItemState>
       <ItemState>
-        <ItemSymbol>CompVersion</ItemSymbol>
-        <Value>1.3.0</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>VersionSpecificItem</ItemSymbol>
-        <ListItemCount>1</ListItemCount>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Settings</ItemSymbol>
+        <ItemSymbol>SeggerRTT</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
+        <Value>RTT1</Value>
       </ItemState>
       <ItemState>
-        <ItemSymbol>PropertiesItem</ItemSymbol>
-        <ListItemCount>1</ListItemCount>
+        <ItemSymbol>SysViewAppName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>"Demo Application"</Value>
       </ItemState>
       <ItemState>
-        <ItemSymbol>MainConfigurationsGrp</ItemSymbol>
+        <ItemSymbol>SysViewDeviceName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>"FRDM-K64F"</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SysViewRamBase</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>536806400</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RttChannelIndex</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>1</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RttBufferSize</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>1024</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LockUnlockEnabled</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
@@ -23058,35 +23965,139 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
-        <ItemSymbol>Notice</ItemSymbol>
+        <ItemSymbol>CriticalSection</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>CS1</Value>
+      </ItemState>
+    </Properties>
+    <Methods>
+      <ItemState>
+        <ItemSymbol>Init</ItemSymbol>
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>This component handles only source files.</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Init</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>LinkItem</ItemSymbol>
-        <ListItemCount>1</ListItemCount>
+        <ItemSymbol>OnUserStart</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>OnUserStart</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>LinkGrp</ItemSymbol>
+        <ItemSymbol>OnUserStop</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>OnUserStop</UsrMethodName>
+      </ItemState>
+    </Methods>
+    <Events />
+  </Bean>
+  <Bean>
+    <Repository>file:/${ProcessorExpertPath:user}</Repository>
+    <BeanType>SeggerRTT</BeanType>
+    <Name>RTT1</Name>
+    <CompNumb>25</CompNumb>
+    <CompEnabled>true</CompEnabled>
+    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
+    <IconName>SeggerRTT</IconName>
+    <UserFolderName />
+    <Comment lines_count="0" />
+    <Template />
+    <BeanVersion>01.047</BeanVersion>
+    <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Properties>
+      <ItemState>
+        <ItemSymbol>DeviceName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>RTT1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SeggerRTTVersion</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>V2.12</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RTTBufferNofUp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>2</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RTTBufferNofDown</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>2</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TerminalBuffer0Group</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
-        <ItemSymbol>Link0</ItemSymbol>
+        <ItemSymbol>RTTBufferSizeUp</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>intMan1</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>512</Value>
+        <Base>DEC</Base>
       </ItemState>
       <ItemState>
-        <ItemSymbol>Link1</ItemSymbol>
+        <ItemSymbol>UpBufferMode</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>clockMan1</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <EnumSymbVal>SEGGER_RTT_MODE_NO_BLOCK_SKIP</EnumSymbVal>
       </ItemState>
       <ItemState>
-        <ItemSymbol>LinkOSAGrp</ItemSymbol>
+        <ItemSymbol>RTTBufferSizeDown</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>64</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DownBufferMode</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <EnumSymbVal>SEGGER_RTT_MODE_NO_BLOCK_SKIP</EnumSymbVal>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RTTBufferSizePrintf</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>64</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>BlockingSend</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
@@ -23094,796 +24105,235 @@
         <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
-        <ItemSymbol>LinkOSA</ItemSymbol>
+        <ItemSymbol>RTTBlockingSendTimeoutMs</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>5</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Wait</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value />
       </ItemState>
       <ItemState>
-        <ItemSymbol>InhrItem</ItemSymbol>
-        <ListItemCount>1</ListItemCount>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>InhrGrp</ItemSymbol>
+        <ItemSymbol>WaitTimeMs</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>1</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LockUnlockEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>true</Value>
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
-        <ItemSymbol>HAL0</ItemSymbol>
+        <ItemSymbol>CriticalSection</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <RegCompType>fsl_enet_hal</RegCompType>
-        <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/KSDK130_Repository</RegCompRepository>
-        <InheritedComponentState>
-          <Repository>file:/${ProcessorExpert_loc}/Repositories/KSDK130_Repository</Repository>
-          <ComponentUUID>com.freescale.processorexpert.ksdk.fsl_enet_hal</ComponentUUID>
-          <BeanType>fsl_enet_hal</BeanType>
-          <Name>fsl_enet_hal1</Name>
-          <CompNumb>17</CompNumb>
-          <CompEnabled>true</CompEnabled>
-          <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
-          <IconName>HAL4</IconName>
-          <UserFolderName />
-          <Comment lines_count="0" />
-          <Template />
-          <BeanVersion>1.3.0</BeanVersion>
-          <LightErrorsIgnored>false</LightErrorsIgnored>
-          <Properties>
-            <ItemState>
-              <ItemSymbol>DeviceName</ItemSymbol>
-              <ReadOnly>true</ReadOnly>
-              <UserReadOnly>true</UserReadOnly>
-              <Value>fsl_enet_hal1</Value>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>PeriphDevice</ItemSymbol>
-              <ReadOnly>false</ReadOnly>
-              <UserReadOnly>false</UserReadOnly>
-              <Value>ENET</Value>
-              <SharedPrphMode>false</SharedPrphMode>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>CompVersion</ItemSymbol>
-              <Value>1.3.0</Value>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>VersionSpecificItem</ItemSymbol>
-              <ListItemCount>1</ListItemCount>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>DefaultMainProperty</ItemSymbol>
-              <Value>load sdk verison failed</Value>
-            </ItemState>
-          </Properties>
-          <Methods>
-            <ItemState>
-              <ItemSymbol>SdkSpecificMethods</ItemSymbol>
-              <ListItemCount>1</ListItemCount>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>fsl_enet_halgroup</ItemSymbol>
-              <ReadOnly>false</ReadOnly>
-              <UserReadOnly>false</UserReadOnly>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_Init</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_Init</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_Config</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_Config</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_GetStatus</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_GetStatus</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_SetMulticastAddrHash</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_SetMulticastAddrHash</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_GetBufDescripAttr</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_GetBufDescripAttr</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_GetBuffDescripData</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_GetBuffDescripData</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_ClrRxBdAfterHandled</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_ClrRxBdAfterHandled</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_SetTxBdBeforeSend</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_SetTxBdBeforeSend</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_ClrTxBdAfterSend</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_ClrTxBdAfterSend</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_SetRxBdActive</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_SetRxBdActive</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_SetTxBdActive</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_SetTxBdActive</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_SetRMIIMode</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_SetRMIIMode</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_GetSMIData</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_GetSMIData</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_SetSMIRead</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_SetSMIRead</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_SetSMIWrite</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_SetSMIWrite</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_EnDynamicalAct</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_EnDynamicalAct</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_Enable</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_Enable</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_Disable</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_Disable</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_SetIntMode</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_SetIntMode</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_ClearIntStatusFlag</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_ClearIntStatusFlag</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_GetIntStatusFlag</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_GetIntStatusFlag</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_Start1588Timer</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_Start1588Timer</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_Stop1588Timer</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_Stop1588Timer</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_Adjust1588Timer</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_Adjust1588Timer</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_Set1588TimerNewTime</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_Set1588TimerNewTime</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_Get1588TimerCurrentTime</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_Get1588TimerCurrentTime</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_Get1588TimerChnStatus</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_Get1588TimerChnStatus</UsrMethodName>
-            </ItemState>
-            <ItemState>
-              <ItemSymbol>ENET_HAL_Rst1588TimerCmpValAndClrFlag</ItemSymbol>
-              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
-              <LastSelection>true</LastSelection>
-              <LastUserSel>always</LastUserSel>
-              <UsrMethodName>ENET_HAL_Rst1588TimerCmpValAndClrFlag</UsrMethodName>
-            </ItemState>
-          </Methods>
-          <Events />
-        </InheritedComponentState>
+        <Value>CS1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>KinetisSDK</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>KSDK1</Value>
       </ItemState>
     </Properties>
     <Methods>
       <ItemState>
-        <ItemSymbol>SdkSpecificMethods</ItemSymbol>
-        <ListItemCount>1</ListItemCount>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>fsl_enetgroup</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ItemSymbol>Read</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Read</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>ENET_DRV_1588Init_FSL_SUPPORT_PTP</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ItemSymbol>Write</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_1588Init</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_1588Init</UsrMethodName>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Write</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>ENET_DRV_1588Deinit_FSL_SUPPORT_PTP</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ItemSymbol>WriteString</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_1588Deinit</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_1588Deinit</UsrMethodName>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>WriteString</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>ENET_DRV_Start1588Timer_FSL_SUPPORT_PTP</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ItemSymbol>GetKey</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_Start1588Timer</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_Start1588Timer</UsrMethodName>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>GetKey</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>ENET_DRV_Stop1588Timer_FSL_SUPPORT_PTP</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ItemSymbol>WaitKey</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_Stop1588Timer</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_Stop1588Timer</UsrMethodName>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>WaitKey</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>ENET_DRV_Parse1588Packet_FSL_SUPPORT_PTP</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ItemSymbol>HasKey</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_Parse1588Packet</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_Parse1588Packet</UsrMethodName>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>HasKey</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>ENET_DRV_Get1588timer_FSL_SUPPORT_PTP</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ItemSymbol>SetTerminal</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_Get1588timer</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_Get1588timer</UsrMethodName>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SetTerminal</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>ENET_DRV_Set1588timer_FSL_SUPPORT_PTP</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ItemSymbol>TerminalOut</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_Set1588timer</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_Set1588timer</UsrMethodName>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>TerminalOut</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>ENET_DRV_Adjust1588timer_FSL_SUPPORT_PTP</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ItemSymbol>ConfigUpBuffer</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_Adjust1588timer</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_Adjust1588timer</UsrMethodName>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ConfigUpBuffer</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>ENET_DRV_GetTxTs_FSL_SUPPORT_PTP</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ItemSymbol>ConfigDownBuffer</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_GetTxTs</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_GetTxTs</UsrMethodName>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ConfigDownBuffer</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>ENET_DRV_GetRxTs_FSL_SUPPORT_PTP</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ItemSymbol>Init</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_GetRxTs</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_GetRxTs</UsrMethodName>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Init</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>ENET_DRV_1588l2queueInit_FSL_SUPPORT_PTP</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ItemSymbol>RecvChar</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_1588l2queueInit</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_1588l2queueInit</UsrMethodName>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>RecvChar</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>ENET_DRV_Service_l2packet_FSL_SUPPORT_PTP</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ItemSymbol>SendChar</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_Service_l2packet</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_Service_l2packet</UsrMethodName>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SendChar</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>ENET_DRV_Send_l2packet_FSL_SUPPORT_PTP</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ItemSymbol>GetCharsInRxBuf</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_Send_l2packet</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_Send_l2packet</UsrMethodName>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>GetCharsInRxBuf</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>ENET_DRV_Receive_l2packet_FSL_SUPPORT_PTP</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ItemSymbol>StdIOKeyPressed</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_Receive_l2packet</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_Receive_l2packet</UsrMethodName>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>StdIOKeyPressed</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>ENET_DRV_1588Ioctl_FSL_SUPPORT_PTP</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ItemSymbol>StdIOReadChar</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_1588Ioctl</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_1588Ioctl</UsrMethodName>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>StdIOReadChar</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>ENET_DRV_Is1588TsBuffFull_FSL_SUPPORT_PTP</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ItemSymbol>StdIOSendChar</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_Is1588TsBuffFull</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_Is1588TsBuffFull</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_Update1588TsBuff_FSL_SUPPORT_PTP</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_Update1588TsBuff</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_Update1588TsBuff</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_Search1588TsBuff_FSL_SUPPORT_PTP</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_Search1588TsBuff</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_Search1588TsBuff</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_Incr1588TsBuffRing_FSL_SUPPORT_PTP</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_Incr1588TsBuffRing</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_Incr1588TsBuffRing</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_TsIRQHandler_FSL_SUPPORT_PTP</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_TsIRQHandler</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_TsIRQHandler</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_Init</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_Init</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_Deinit</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_Deinit</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_UpdateRxBuffDescrip</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_UpdateRxBuffDescrip</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_CleanupTxBuffDescrip</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_CleanupTxBuffDescrip</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_IncrRxBuffDescripIndex</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_IncrRxBuffDescripIndex</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_IncrTxBuffDescripIndex</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_IncrTxBuffDescripIndex</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_RxErrorStats</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_RxErrorStats</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_TxErrorStats</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_TxErrorStats</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_ReceiveData1</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_ReceiveData</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_ReceiveData2</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_ReceiveData</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_InstallNetIfCall</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_InstallNetIfCall</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_SendData</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_SendData</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_RxIRQHandler</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_RxIRQHandler</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_TxIRQHandler</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_TxIRQHandler</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_CalculateCrc32</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_CalculateCrc32</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_AddMulticastGroup</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_AddMulticastGroup</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ENET_DRV_LeaveMulticastGroup</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ENET_DRV_LeaveMulticastGroup</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>enet_mac_enqueue_buffer</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>enet_mac_enqueue_buffer</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>enet_mac_dequeue_buffer</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>enet_mac_dequeue_buffer</UsrMethodName>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>StdIOSendChar</UsrMethodName>
       </ItemState>
     </Methods>
     <Events />
@@ -25589,8 +26039,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>3</Index>
-        <EnumSymbVal>Scheme4</EnumSymbVal>
+        <Index>2</Index>
+        <EnumSymbVal>Scheme3</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>UserHeapSectionEnabled</ItemSymbol>
@@ -25608,7 +26058,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>TotalHeapSize</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>20000</Value>
@@ -27742,456 +28192,6 @@
       </ItemState>
     </Properties>
     <Methods />
-    <Events />
-  </Bean>
-  <Bean>
-    <Repository>file:/${ProcessorExpertPath:user}</Repository>
-    <BeanType>SeggerSystemView</BeanType>
-    <Name>SYS1</Name>
-    <CompNumb>24</CompNumb>
-    <CompEnabled>true</CompEnabled>
-    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
-    <IconName>SeggerSystemView</IconName>
-    <UserFolderName />
-    <Comment lines_count="0" />
-    <Template />
-    <BeanVersion>01.010</BeanVersion>
-    <LightErrorsIgnored>false</LightErrorsIgnored>
-    <Properties>
-      <ItemState>
-        <ItemSymbol>DeviceName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>SYS1</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SystemViewVersion</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>V2.12</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SeggerRTT</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>RTT1</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SysViewAppName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>"Demo Application"</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SysViewDeviceName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>"Cortex"</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SysViewRamBase</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>536870912</Value>
-        <Base>HEX</Base>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>RttChannelIndex</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>1</Value>
-        <Base>DEC</Base>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>RttBufferSize</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>1024</Value>
-        <Base>DEC</Base>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>LockUnlockEnabled</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>true</Value>
-        <Expanded>true</Expanded>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>CriticalSection</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>CS1</Value>
-      </ItemState>
-    </Properties>
-    <Methods>
-      <ItemState>
-        <ItemSymbol>Init</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Init</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>OnUserStart</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>OnUserStart</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>OnUserStop</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>OnUserStop</UsrMethodName>
-      </ItemState>
-    </Methods>
-    <Events />
-  </Bean>
-  <Bean>
-    <Repository>file:/${ProcessorExpertPath:user}</Repository>
-    <BeanType>SeggerRTT</BeanType>
-    <Name>RTT1</Name>
-    <CompNumb>25</CompNumb>
-    <CompEnabled>true</CompEnabled>
-    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
-    <IconName>SeggerRTT</IconName>
-    <UserFolderName>Referenced_Components</UserFolderName>
-    <Comment lines_count="0" />
-    <Template />
-    <BeanVersion>01.047</BeanVersion>
-    <LightErrorsIgnored>false</LightErrorsIgnored>
-    <Properties>
-      <ItemState>
-        <ItemSymbol>DeviceName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>RTT1</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SeggerRTTVersion</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>V2.12</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>RTTBufferNofUp</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>2</Value>
-        <Base>DEC</Base>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>RTTBufferNofDown</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>2</Value>
-        <Base>DEC</Base>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>TerminalBuffer0Group</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Expanded>true</Expanded>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>RTTBufferSizeUp</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>512</Value>
-        <Base>DEC</Base>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>UpBufferMode</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <EnumSymbVal>SEGGER_RTT_MODE_NO_BLOCK_SKIP</EnumSymbVal>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>RTTBufferSizeDown</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>64</Value>
-        <Base>DEC</Base>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>DownBufferMode</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <EnumSymbVal>SEGGER_RTT_MODE_NO_BLOCK_SKIP</EnumSymbVal>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>RTTBufferSizePrintf</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>64</Value>
-        <Base>DEC</Base>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>BlockingSend</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>RTTBlockingSendTimeoutMs</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>5</Value>
-        <Base>DEC</Base>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Wait</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value />
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>WaitTimeMs</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>1</Value>
-        <Base>DEC</Base>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>LockUnlockEnabled</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>true</Value>
-        <Expanded>true</Expanded>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>CriticalSection</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>CS1</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>KinetisSDK</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
-      </ItemState>
-    </Properties>
-    <Methods>
-      <ItemState>
-        <ItemSymbol>Read</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Read</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Write</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Write</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>WriteString</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>WriteString</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>GetKey</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>GetKey</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>WaitKey</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>WaitKey</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>HasKey</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>HasKey</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SetTerminal</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>SetTerminal</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>TerminalOut</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>TerminalOut</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ConfigUpBuffer</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>ConfigUpBuffer</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ConfigDownBuffer</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>ConfigDownBuffer</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Init</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Init</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>RecvChar</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>RecvChar</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SendChar</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>SendChar</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>GetCharsInRxBuf</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>GetCharsInRxBuf</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>StdIOKeyPressed</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>StdIOKeyPressed</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>StdIOReadChar</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>StdIOReadChar</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>StdIOSendChar</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>StdIOSendChar</UsrMethodName>
-      </ItemState>
-    </Methods>
     <Events />
   </Bean>
   <Bean>
