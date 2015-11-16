@@ -162,7 +162,7 @@ void FRTOS1_vApplicationMallocFailedHook(void)
 */
 void RTOSTRC1_OnTraceWrap(void)
 {
-#if 1 /* default implementation for gdb below ... */
+#if configUSE_TRACE_HOOKS /* default implementation for gdb below ... */
   /* Write your code here ... */
   uint8_t buf[64];
 
