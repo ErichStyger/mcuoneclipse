@@ -9,7 +9,7 @@
 #define SOURCES_PLATFORM_H_
 
 
-#define PL_USE_HW_RTC  1
-
+#define PL_USE_HW_RTC             1
+#define PL_CONFIG_HAS_SEGGER_RTT  1
 
 #endif /* SOURCES_PLATFORM_H_ */

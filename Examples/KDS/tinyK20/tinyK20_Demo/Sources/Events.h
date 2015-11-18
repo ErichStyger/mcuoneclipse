@@ -59,6 +59,9 @@
 #include "KIN1.h"
 #include "PTC.h"
 #include "MINI1.h"
+#include "KSDK1.h"
+#include "SYS1.h"
+#include "RTT1.h"
 
 #ifdef __cplusplus
 extern "C" {

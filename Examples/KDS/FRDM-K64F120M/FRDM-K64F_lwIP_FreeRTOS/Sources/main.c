@@ -113,66 +113,67 @@ static void LwipInitTask(void* pvArguments) {
   netif_add(&fsl_netif0, &fsl_netif0_ipaddr, &fsl_netif0_netmask, &fsl_netif0_gw, NULL, ethernetif_init, ethernet_input);
   /* Set the network interface as the default network interface. */
   netif_set_default(&fsl_netif0);
-  /* obtain the IP address, default gateway and subnet mask by using DHCP*/
-  err = dhcp_start(&fsl_netif0);
 
-  printf("%s : Started DCHP request (%s)\n", __FUNCTION__, lwip_strerr(err));
-  for(int i=0; i < DHCP_TIMEOUT && fsl_netif0.dhcp->state != DHCP_BOUND; i++) {
-    printf("%s : Current DHCP State : %d\n", __FUNCTION__, fsl_netif0.dhcp->state);
-    // Wait a second
-    vTaskDelay(1000/portTICK_PERIOD_MS);
-  }
+  for(;;) {
+    /* obtain the IP address, default gateway and subnet mask by using DHCP*/
+    err = dhcp_start(&fsl_netif0);
 
-  // Make it active ...
-  netif_set_up(&fsl_netif0);
-
-  printf("%s : Interface is up : %d\n", __FUNCTION__, fsl_netif0.dhcp->state);
-  printf("%s : IP %s\n", __FUNCTION__, ipaddr_ntoa(&fsl_netif0.ip_addr));
-  printf("%s : NM %s\n", __FUNCTION__, ipaddr_ntoa(&fsl_netif0.netmask));
-  printf("%s : GW %s\n", __FUNCTION__, ipaddr_ntoa(&fsl_netif0.gw));
-
-  if (fsl_netif0.dhcp->state == DHCP_BOUND) {
-    // Send out some UDP data
-    struct netconn* pConnection;
-
-    // Create UDP connection
-    pConnection = netconn_new(NETCONN_UDP);
-    // Connect to local port
-    err = netconn_bind(pConnection, IP_ADDR_ANY, 12345);
-    printf("%s : Bound to IP_ADDR_ANY port 12345 (%s)\n", __FUNCTION__, lwip_strerr(err));
-
-    err = netconn_connect(pConnection, IP_ADDR_BROADCAST, 12346 );
-    printf("%s : Connected to IP_ADDR_BROADCAST port 12346 (%s)\n", __FUNCTION__, lwip_strerr(err));
-
-    for(int i = 0; i < 10; i++ ){
-      struct netbuf* buf = netbuf_new();
-        void* data = netbuf_alloc(buf, sizeof(msg));
-
-        memcpy (data, msg, sizeof (msg));
-        err = netconn_send(pConnection, buf);
-      printf("%s : Sending to IP_ADDR_BROADCAST port 12346 (%s)\n", __FUNCTION__, lwip_strerr(err));
-
-        netbuf_delete(buf); // De-allocate packet buffer
-
-        // Wait a second
+    printf("%s : Started DCHP request (%s)\n", __FUNCTION__, lwip_strerr(err));
+    for(int i=0; i < DHCP_TIMEOUT && fsl_netif0.dhcp->state != DHCP_BOUND; i++) {
+      printf("%s : Current DHCP State : %d\n", __FUNCTION__, fsl_netif0.dhcp->state);
+      // Wait a second
       vTaskDelay(1000/portTICK_PERIOD_MS);
     }
 
-    err = netconn_disconnect(pConnection);
-    printf("%s : Disconnected from IP_ADDR_BROADCAST port 12346 (%s)\n", __FUNCTION__, lwip_strerr(err));
+    // Make it active ...
+    netif_set_up(&fsl_netif0);
 
-    err = netconn_delete(pConnection);
-    printf("%s : Deleted connection (%s)\n", __FUNCTION__, lwip_strerr(err));
-  }
-  // Wait a second
-  vTaskDelay(1000/portTICK_PERIOD_MS);
+    printf("%s : Interface is up : %d\n", __FUNCTION__, fsl_netif0.dhcp->state);
+    printf("%s : IP %s\n", __FUNCTION__, ipaddr_ntoa(&fsl_netif0.ip_addr));
+    printf("%s : NM %s\n", __FUNCTION__, ipaddr_ntoa(&fsl_netif0.netmask));
+    printf("%s : GW %s\n", __FUNCTION__, ipaddr_ntoa(&fsl_netif0.gw));
 
-  /* finish the lease of the IP address */
-  err = dhcp_release(&fsl_netif0);
-  printf("%s : DHCP Release (%s)\n", __FUNCTION__, lwip_strerr(err));
+    if (fsl_netif0.dhcp->state == DHCP_BOUND) {
+      // Send out some UDP data
+      struct netconn* pConnection;
 
-  for(;;) {
-    vTaskDelay(100/portTICK_PERIOD_MS);
+      // Create UDP connection
+      pConnection = netconn_new(NETCONN_UDP);
+      // Connect to local port
+      err = netconn_bind(pConnection, IP_ADDR_ANY, 12345);
+      printf("%s : Bound to IP_ADDR_ANY port 12345 (%s)\n", __FUNCTION__, lwip_strerr(err));
+
+      err = netconn_connect(pConnection, IP_ADDR_BROADCAST, 12346 );
+      printf("%s : Connected to IP_ADDR_BROADCAST port 12346 (%s)\n", __FUNCTION__, lwip_strerr(err));
+
+      for(int i = 0; i < 10; i++ ){
+        struct netbuf* buf = netbuf_new();
+          void* data = netbuf_alloc(buf, sizeof(msg));
+
+          memcpy (data, msg, sizeof (msg));
+          err = netconn_send(pConnection, buf);
+        printf("%s : Sending to IP_ADDR_BROADCAST port 12346 (%s)\n", __FUNCTION__, lwip_strerr(err));
+
+          netbuf_delete(buf); // De-allocate packet buffer
+
+          // Wait a second
+        vTaskDelay(1000/portTICK_PERIOD_MS);
+      }
+
+      err = netconn_disconnect(pConnection);
+      printf("%s : Disconnected from IP_ADDR_BROADCAST port 12346 (%s)\n", __FUNCTION__, lwip_strerr(err));
+
+      err = netconn_delete(pConnection);
+      printf("%s : Deleted connection (%s)\n", __FUNCTION__, lwip_strerr(err));
+    }
+    // Wait a second
+    vTaskDelay(1000/portTICK_PERIOD_MS);
+
+    /* finish the lease of the IP address */
+    err = dhcp_release(&fsl_netif0);
+    printf("%s : DHCP Release (%s)\n", __FUNCTION__, lwip_strerr(err));
+
+    vTaskDelay(1000/portTICK_PERIOD_MS);
   }
 }
 
