@@ -119,7 +119,6 @@ void APP_Run(void) {
   //(void)RTC1_Enable(RTC1_DeviceData); /* already enabled by default */
 #endif
   SHELL_Init();
-
 #if 0
   if (xTaskCreate(usb_task, "usb", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error! probably out of memory */
