@@ -10,7 +10,6 @@
 #include "WAIT1.h"
 #include "UTIL1.h"
 #include "FRTOS1.h"
-#include "CDC1.h"
 #include "Shell.h"
 #if PL_USE_HW_RTC
   #include "RTC1.h"
