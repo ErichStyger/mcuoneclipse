@@ -66,7 +66,7 @@ static void AppTask(void *pvParameters) {
 }
 
 void APP_Run(void) {
-#if configUSE_TRACE_HOOKS
+#if configUSE_TRACE_HOOKS /* Percepio trace */
   if (RTOSTRC1_uiTraceStart()==0) {
     for(;;){} /* error starting trace recorder. Not setup for enough queues/tasks/etc? */
   }

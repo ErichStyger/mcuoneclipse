@@ -35,9 +35,9 @@
 #include "osa1.h"
 #include "eNet1.h"
 #include "FRTOS1.h"
+#include "RTOSTRC1.h"
 #include "UTIL1.h"
 #include "KSDK1.h"
-#include "SYS1.h"
 #include "RTT1.h"
 #include "CS1.h"
 #if CPU_INIT_CONFIG
@@ -192,6 +192,9 @@ int main(void)
   /* Disable the mpu */
   MPU_BWR_CESR_VLD(MPU, 0);
 
+#if configUSE_TRACE_HOOKS
+  RTOSTRC1_vTraceInitTraceData();/* initialize trace first, as needed by RTOS functions */
+#endif
   /* create lwIP initialization task */
   xTaskCreate(LwipInitTask,
       "LwipInitTask",
