@@ -62,6 +62,7 @@
 #include "TI1.h"
 #include "TimerIntLdd1.h"
 #include "TU1.h"
+#include "KSDK1.h"
 
 #include "Platform.h"
 /*

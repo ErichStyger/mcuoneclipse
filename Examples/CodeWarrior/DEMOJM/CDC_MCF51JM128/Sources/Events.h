@@ -33,6 +33,7 @@
 #include "LEDpin1.h"
 #include "LED2.h"
 #include "LEDpin2.h"
+#include "CS1.h"
 
 
 /* END Events */

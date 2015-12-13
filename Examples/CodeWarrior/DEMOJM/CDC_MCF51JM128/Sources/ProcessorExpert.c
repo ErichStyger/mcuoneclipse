@@ -29,6 +29,7 @@
 #include "LEDpin1.h"
 #include "LED2.h"
 #include "LEDpin2.h"
+#include "CS1.h"
 /* Include shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

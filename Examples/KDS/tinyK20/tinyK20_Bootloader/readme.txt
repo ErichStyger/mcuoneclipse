@@ -14,9 +14,12 @@ Notes:
 - added TARGET_MK20DX
 - -fshort-wchar
 
+Program Bootloader:
+- flash tinyK20_bl_0x0000-0x4FFF.s19
 Enter BOOTLOADER mode:
 ----------------------
-Put PTB1 (pin 28 on package) to GND.
+Put PTB1 (pin 28 on package, pin between C and clock below uC) to GND.
 
-USB
++5 PTD7 PTD6 PTD5
+<-USB     uC    SWD
 1:GND ......... 10:B1
