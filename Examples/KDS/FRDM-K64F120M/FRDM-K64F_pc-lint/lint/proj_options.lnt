@@ -1,0 +1,18 @@
+-fff
+// Include standard GNU options
+//co-gnu.lnt
+co-gcc.lnt
+-d__GNUC__
+
+//gcc-include-path.lnt
+
+//size-options.lnt
+
+// Include paths used
+-i%PROJ_PATH%\Includes
+-i%PROJ_PATH%\Sources
+
+// inhibit messages for Processor Expert libraries
+-elib(19, 10)
+-e766
++libh(Events.h, Cpu.h)
