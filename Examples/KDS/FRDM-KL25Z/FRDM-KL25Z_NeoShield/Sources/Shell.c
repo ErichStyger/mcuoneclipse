@@ -13,6 +13,8 @@
 #include "LED1.h"
 #include "LED2.h"
 #include "RTC1.h"
+#include "TmDt1.h"
+#include "MazeRace.h"
 #if PL_HAS_RNET
   #include "RNET1.h"
 #endif
@@ -49,10 +51,14 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
   FAT1_ParseCommand,
 #endif
 #endif
+#if TmDt1_PARSE_COMMAND_ENABLED
+  TmDt1_ParseCommand,
+#endif
+  MR_ParseCommand,
   NULL /* sentinel */
 };
 
-static portTASK_FUNCTION(ShellTask, pvParameters) {
+static void ShellTask(void *pvParameters) {
   unsigned char buf[48];
 #if PL_HAS_SD_CARD
   bool cardMounted = FALSE;

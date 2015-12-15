@@ -9,7 +9,10 @@
 #include "Shell.h"
 #include "NeoPixel.h"
 #include "NeoLine.h"
+#include "NeoMatrix.h"
 #include "RNet_App.h"
+#include "TmDt1.h"
+#include "RTC1.h"
 #if PL_HAS_PONG
   #include "PongGame.h"
 #endif
@@ -43,7 +46,36 @@ static void DimmColor(NEO_PixelIdxT start, NEO_PixelIdxT end, bool isRed, bool i
   }
 }
 
-static portTASK_FUNCTION(NeoTask, pvParameters) {
+void ClockUpdate(void) {
+  static int prevHour=-1, prevMinute=-1, prevSecond=1;
+  TIMEREC time;
+  uint8_t res;
+
+  res = TmDt1_GetTime(&time);
+  if (res==ERR_OK) {
+    if (time.Hour!=prevHour || time.Min!=prevMinute || time.Sec!=prevSecond) {
+      MATRIX_ShowClockTime(time.Hour, time.Min, time.Sec);
+      //(void)NEO_TransferPixels();
+      prevHour = time.Hour;
+      prevMinute = time.Min;
+      prevSecond = time.Sec;
+    }
+  }
+}
+
+static void UpdateFromRTC(void) {
+  RTC1_TTIME time;
+  RTC1_TDATE date;
+  uint8_t res;
+
+  res = RTC1_GetRTCTimeDate(&time, &date);
+  if (res==ERR_OK) {
+     (void)TmDt1_SetTime(time.hour, time.min, time.sec, 0);
+     (void)TmDt1_SetDate(date.year+2000, date.month, date.day);
+  }
+}
+
+static void NeoTask(void* pvParameters) {
   int i;
 
 #define DIMM 0x50
@@ -72,8 +104,10 @@ static portTASK_FUNCTION(NeoTask, pvParameters) {
   }
   NEO_TransferPixels();
 #endif
-
+  //MATRIX_Test();
+  UpdateFromRTC();
   for(;;) {
+    //ClockUpdate();
 #if 0 && PL_NEO_DEMO
     for(i=0;i<=NEO_PIXEL_LAST;i++) {
       NEO_SetPixelRGB(i, 0xff, 0x00, 0x00);
@@ -102,7 +136,7 @@ static portTASK_FUNCTION(NeoTask, pvParameters) {
     NEOL_PixelTrail(0xff, 0x00, 0xff, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 12, 50, 10);
     DimmColor(NEO_PIXEL_FIRST, NEO_PIXEL_LAST, TRUE, TRUE, TRUE);
 #endif
-#if 1
+#if 0
     NEO_ClearAllPixel();
     NEOL_PixelTrail(0x10, 0x00, 0x00, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 36, 50, 2);
 //    DimmColor(NEO_PIXEL_FIRST, NEO_PIXEL_LAST, TRUE, FALSE, FALSE);
@@ -119,6 +153,7 @@ static portTASK_FUNCTION(NeoTask, pvParameters) {
 
 void APP_Run(void) {
   NEO_Init();
+  MATRIX_Init();
   SHELL_Init();
 #if PL_HAS_MUSIC || PL_HAS_SD_CARD
   SPIBus_Init();
