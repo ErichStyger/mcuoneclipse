@@ -51,7 +51,7 @@
 
 #include "NeoPixel.h"
 
-uint8_t MATRIXSetPixelRGB(NEO_PixelIdxT x, NEO_PixelIdxT y, uint8_t red, uint8_t green, uint8_t blue);
+void Adafruit_NeoMatrix_drawPixel(int16_t x, int16_t y, uint8_t red, uint8_t green, uint8_t blue);
 
 void MATRIX_ShowClockTime(uint8_t hour, uint8_t min, uint8_t sec);
 

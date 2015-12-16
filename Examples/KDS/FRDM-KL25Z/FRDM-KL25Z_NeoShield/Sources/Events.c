@@ -38,6 +38,7 @@ extern "C" {
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "SPIBus.h"
 #include "Keys.h"
+#include "MazeRace.h"
 
 /*
 ** ===================================================================
@@ -362,6 +363,40 @@ void KEY1_OnKeyReleased(byte keys)
 void RTOSTRC1_OnTraceWrap(void)
 {
   /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  EIntB_OnInterrupt (module Events)
+**
+**     Component   :  EIntB [ExtInt]
+**     Description :
+**         This event is called when an active signal edge/level has
+**         occurred.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void EIntB_OnInterrupt(void)
+{
+  MR_DoEvent(MR_EVENT_TRGB, TRUE);
+}
+
+/*
+** ===================================================================
+**     Event       :  EIntA_OnInterrupt (module Events)
+**
+**     Component   :  EIntA [ExtInt]
+**     Description :
+**         This event is called when an active signal edge/level has
+**         occurred.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void EIntA_OnInterrupt(void)
+{
+  MR_DoEvent(MR_EVENT_TRGA, TRUE);
 }
 
 /* END Events */

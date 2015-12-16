@@ -5,6 +5,8 @@
  *      Author: Erich Styger
  */
 
+#include "Platform.h"
+#if PL_HAS_MIDI
 #include "MidiMusic.h"
 #include "MidiMusicReady.h"
 #include "VS1.h"
@@ -178,5 +180,5 @@ uint8_t MMReady_GetMidiMusicInfo(MIDI_MusicTrack *tracks, uint8_t nofTracks) {
   return ERR_OK;
 }
 
-
+#endif /* PL_HAS_MIDI */
 

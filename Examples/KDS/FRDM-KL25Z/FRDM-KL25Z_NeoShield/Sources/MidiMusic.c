@@ -6,6 +6,7 @@
  */
 
 #include "Platform.h"
+#if PL_HAS_MUSIC
 #include "VS1.h"
 #include "FRTOS1.h"
 #include "MidiMusic.h"
@@ -98,4 +99,4 @@ void MM_Play(void) {
   if (res==ERR_OK) {
     Play(tracks, sizeof(tracks)/sizeof(tracks[0]));
   }
-}
+}#endif /* PL_HAS_MUSIC */

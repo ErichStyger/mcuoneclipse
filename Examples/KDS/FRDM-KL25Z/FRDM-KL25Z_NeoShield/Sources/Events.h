@@ -56,24 +56,7 @@
 #include "DMACH0.h"
 #include "DMACH1.h"
 #include "DMACH2.h"
-#include "RNET1.h"
-#include "RF1.h"
-#include "CE1.h"
-#include "BitIoLdd6.h"
-#include "CSN1.h"
-#include "BitIoLdd7.h"
-#include "IRQ1.h"
-#include "ExtIntLdd1.h"
-#include "SM1.h"
-#include "SMasterLdd1.h"
 #include "TmDt1.h"
-#include "FAT1.h"
-#include "SD1.h"
-#include "SS1.h"
-#include "CD1.h"
-#include "PTD.h"
-#include "SM2.h"
-#include "SMasterLdd2.h"
 #include "HF1.h"
 #include "KEY1.h"
 #include "Inhr4.h"
@@ -88,13 +71,10 @@
 #include "UI1.h"
 #include "GDisp1.h"
 #include "LEDM1.h"
-#include "VS1.h"
-#include "MCS1.h"
-#include "BitIoLdd9.h"
-#include "DCS1.h"
-#include "BitIoLdd10.h"
-#include "DREQ1.h"
-#include "BitIoLdd11.h"
+#include "EIntA.h"
+#include "ExtIntLdd3.h"
+#include "EIntB.h"
+#include "ExtIntLdd4.h"
 #include "TPM0.h"
 
 #ifdef __cplusplus
@@ -352,6 +332,34 @@ void RTOSTRC1_OnTraceWrap(void);
 **     Description :
 **         Called for trace ring buffer wrap around. This gives the
 **         application a chance to dump the trace buffer.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void EIntB_OnInterrupt(void);
+/*
+** ===================================================================
+**     Event       :  EIntB_OnInterrupt (module Events)
+**
+**     Component   :  EIntB [ExtInt]
+**     Description :
+**         This event is called when an active signal edge/level has
+**         occurred.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void EIntA_OnInterrupt(void);
+/*
+** ===================================================================
+**     Event       :  EIntA_OnInterrupt (module Events)
+**
+**     Component   :  EIntA [ExtInt]
+**     Description :
+**         This event is called when an active signal edge/level has
+**         occurred.
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================

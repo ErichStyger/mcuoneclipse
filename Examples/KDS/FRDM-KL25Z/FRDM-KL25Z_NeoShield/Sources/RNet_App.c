@@ -6,7 +6,8 @@
  *
  * This module implements the application part of the program.
  */
-
+#include "Platform.h"
+#if PL_HAS_RNET
 #include "RNet_App.h"
 #include "RStack.h"
 #include "RApp.h"
@@ -128,4 +129,4 @@ void RNETA_Init(void) {
     /*lint +e527 */
   }
 }
-
+#endif /* PL_HAS_RNET */

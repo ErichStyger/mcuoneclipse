@@ -11,7 +11,7 @@
 #include "PE_Types.h"
 
 #define PL_NEO_DEMO       (0) /* demo of neo pixels on stripe */
-#define PL_HAS_RNET       (1)
+#define PL_HAS_RNET       (0)
 #define PL_HAS_PONG       (0)
 #define PL_HAS_MUSIC      (0)
 #define PL_HAS_MIDI       (1 && PL_HAS_MUSIC)
