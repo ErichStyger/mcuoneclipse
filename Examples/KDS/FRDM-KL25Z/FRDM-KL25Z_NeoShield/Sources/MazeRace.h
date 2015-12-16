@@ -19,5 +19,6 @@ typedef enum {
 } MR_Event;
 
 void MR_DoEvent(MR_Event event);
+void MR_Init(void);
 
 #endif /* SOURCES_MAZERACE_H_ */

@@ -20,5 +20,6 @@
 #define PL_HAS_KEYS       (0)
 #define PL_HAS_LEFT_BTN   (1 && PL_HAS_KEYS)
 #define PL_HAS_RIGHT_BTN  (0 && PL_HAS_KEYS)
+#define PL_HAS_MAZE_RACE  (1)
 
 #endif /* PLATFORM_H_ */

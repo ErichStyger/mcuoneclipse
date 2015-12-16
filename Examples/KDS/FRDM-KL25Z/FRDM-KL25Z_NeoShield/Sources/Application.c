@@ -22,6 +22,9 @@
 #if PL_HAS_MUSIC
   #include "Music.h"
 #endif
+#if PL_HAS_MAZE_RACE
+  #include "MazeRace.h"
+#endif
 
 static void DimmColor(NEO_PixelIdxT start, NEO_PixelIdxT end, bool isRed, bool isGreen, bool isBlue) {
   int i, j;
@@ -155,6 +158,9 @@ void APP_Run(void) {
   NEO_Init();
   MATRIX_Init();
   SHELL_Init();
+#if PL_HAS_MAZE_RACE
+  MR_Init();
+#endif
 #if PL_HAS_MUSIC || PL_HAS_SD_CARD
   SPIBus_Init();
 #endif
