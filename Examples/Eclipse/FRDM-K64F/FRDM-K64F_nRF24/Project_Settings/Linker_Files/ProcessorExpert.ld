@@ -10,7 +10,7 @@
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2014-10-28, 07:24, # CodeGen: 130 */
+/*##     Date/Time : 2015-12-23, 13:53, # CodeGen: 2 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */
@@ -30,6 +30,7 @@ ENTRY(__thumb_startup)
 /* Highest address of the user mode stack */
 _estack = 0x20030000;    /* end of m_data */
 __SP_INIT = _estack;
+__stack = _estack;
 
 /* Generate a link error if heap and stack don't fit into RAM */
 __heap_size = 0x00;                    /* required amount of heap  */
@@ -170,7 +171,7 @@ SECTIONS
   ___m_data_1FFF0000_ROMSize = ___m_data_1FFF0000_RAMEnd - ___m_data_1FFF0000_RAMStart;
 
 
-
+  
   /* Uninitialized data section */
   . = ALIGN(4);
   .bss :
@@ -203,12 +204,17 @@ SECTIONS
     LONG(0);
   } > m_data
   
+  text_end = ORIGIN(m_text) + LENGTH(m_text);
+  data_init_end = ___m_data_1FFF0000_ROMStart + SIZEOF(.m_data_1FFF0000) + SIZEOF(.romp);
+  ASSERT( data_init_end <= text_end, "region m_text overflowed with text and data")
+  
   /* User_heap_stack section, used to check that there is enough RAM left */
   ._user_heap_stack :
   {
     . = ALIGN(4);
     PROVIDE ( end = . );
     PROVIDE ( _end = . );
+    PROVIDE ( __end__ = . );
     __heap_addr = .;
     __HeapBase = .;
     . = . + __heap_size;
