@@ -67,9 +67,9 @@
 #include "UI1.h"
 #include "GDisp1.h"
 #include "LEDM1.h"
-#include "EIntA.h"
-#include "ExtIntLdd3.h"
 #include "EIntB.h"
+#include "ExtIntLdd3.h"
+#include "EIntA.h"
 #include "ExtIntLdd4.h"
 #include "TPM0.h"
 /* Including shared modules, which are used for whole project */

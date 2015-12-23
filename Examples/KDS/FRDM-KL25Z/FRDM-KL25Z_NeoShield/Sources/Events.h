@@ -71,9 +71,9 @@
 #include "UI1.h"
 #include "GDisp1.h"
 #include "LEDM1.h"
-#include "EIntA.h"
-#include "ExtIntLdd3.h"
 #include "EIntB.h"
+#include "ExtIntLdd3.h"
+#include "EIntA.h"
 #include "ExtIntLdd4.h"
 #include "TPM0.h"
 
@@ -337,12 +337,12 @@ void RTOSTRC1_OnTraceWrap(void);
 ** ===================================================================
 */
 
-void EIntB_OnInterrupt(void);
+void EIntA_OnInterrupt(void);
 /*
 ** ===================================================================
-**     Event       :  EIntB_OnInterrupt (module Events)
+**     Event       :  EIntA_OnInterrupt (module Events)
 **
-**     Component   :  EIntB [ExtInt]
+**     Component   :  EIntA [ExtInt]
 **     Description :
 **         This event is called when an active signal edge/level has
 **         occurred.
@@ -351,12 +351,12 @@ void EIntB_OnInterrupt(void);
 ** ===================================================================
 */
 
-void EIntA_OnInterrupt(void);
+void EIntB_OnInterrupt(void);
 /*
 ** ===================================================================
-**     Event       :  EIntA_OnInterrupt (module Events)
+**     Event       :  EIntB_OnInterrupt (module Events)
 **
-**     Component   :  EIntA [ExtInt]
+**     Component   :  EIntB [ExtInt]
 **     Description :
 **         This event is called when an active signal edge/level has
 **         occurred.

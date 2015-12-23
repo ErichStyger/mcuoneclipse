@@ -245,8 +245,6 @@ static void RaceTask(void* pvParameters) {
     /* handle event */
     if (notifcationValue&MR_TASK_NOFIFY_START) {
       state.started = TRUE;
-      state.a.downCntr = MR_DOWN_CNTR_SECS; /* start filter window */
-      state.b.downCntr = MR_DOWN_CNTR_SECS; /* start filter window */
     }
     if (state.started && (notifcationValue&(MR_TASK_NOFIFY_EVENT_A|MR_TASK_NOFIFY_EVENT_B))) {
       if (state.a.downCntr==0 && (notifcationValue&MR_TASK_NOFIFY_EVENT_A)) {

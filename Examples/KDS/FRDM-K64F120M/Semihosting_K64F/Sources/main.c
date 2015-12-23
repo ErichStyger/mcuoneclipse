@@ -48,7 +48,7 @@
 static double d = 3.56;
 static float f = 12.3456;
 
-#if 0
+#if 1
 void *_sbrk ( uint32_t delta ) {
 extern char _end; /* Defined by the linker */
 static char *heap_end;
@@ -76,13 +76,30 @@ int main(void)
 //  p = malloc(100);
   {
 	 int i;
+	 int ch;
+	 char buffer[64];
 
 	 for(i=0; i<100; i++) {
+#if 0
      printf("Hello world!013456\r\n"); /* 20 characters */
      d = sin(3.5);
      i++; d++;
      printf("double: %f\r\n", d);
      printf("float: %f\r\n", f);
+   //  ch = getc();
+#endif
+     buffer[0] = '\0';
+     i = scanf("%s", buffer);
+     if (i==1) {
+       printf("i: %d\r\n", i);
+     }
+     //ch = getchar();
+     //printf("ch: %c\r\n", ch);
+#if 0
+     if (gets(buffer)!=NULL) {
+       printf("%s\r\n", buffer);
+     }
+#endif
    }
    printf("****FINISHED****\n"); /* 2000 characters finished */
   }

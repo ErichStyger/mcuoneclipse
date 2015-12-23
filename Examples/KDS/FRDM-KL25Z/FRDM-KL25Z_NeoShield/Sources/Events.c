@@ -367,23 +367,6 @@ void RTOSTRC1_OnTraceWrap(void)
 
 /*
 ** ===================================================================
-**     Event       :  EIntB_OnInterrupt (module Events)
-**
-**     Component   :  EIntB [ExtInt]
-**     Description :
-**         This event is called when an active signal edge/level has
-**         occurred.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void EIntB_OnInterrupt(void)
-{
-  MR_DoEvent(MR_EVENT_TRGB, TRUE);
-}
-
-/*
-** ===================================================================
 **     Event       :  EIntA_OnInterrupt (module Events)
 **
 **     Component   :  EIntA [ExtInt]
@@ -395,6 +378,23 @@ void EIntB_OnInterrupt(void)
 ** ===================================================================
 */
 void EIntA_OnInterrupt(void)
+{
+  MR_DoEvent(MR_EVENT_TRGB, TRUE);
+}
+
+/*
+** ===================================================================
+**     Event       :  EIntB_OnInterrupt (module Events)
+**
+**     Component   :  EIntB [ExtInt]
+**     Description :
+**         This event is called when an active signal edge/level has
+**         occurred.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void EIntB_OnInterrupt(void)
 {
   MR_DoEvent(MR_EVENT_TRGA, TRUE);
 }
