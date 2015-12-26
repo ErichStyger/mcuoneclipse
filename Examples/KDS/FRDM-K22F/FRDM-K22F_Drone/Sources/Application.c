@@ -61,7 +61,7 @@ static void AppTask(void *pvParameters) {
       LED1_Off(); /* turn off red LED */
       LED2_Neg(); /* Green LED */
     }
-    FRTOS1_vTaskDelay(20/portTICK_RATE_MS);
+    FRTOS1_vTaskDelay(20/portTICK_PERIOD_MS);
   }
 }
 
