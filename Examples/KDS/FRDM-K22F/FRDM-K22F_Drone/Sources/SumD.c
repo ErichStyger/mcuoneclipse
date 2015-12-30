@@ -38,13 +38,12 @@
  *
  * @author Marco Bauer <marco@wtns.de>
  */
-
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdint.h>
 #include "sumd.h"
 
-
-enum SUMD_DECODE_STATE {
+typedef enum SUMD_DECODE_STATE {
 	SUMD_DECODE_STATE_UNSYNCED = 0,
 	SUMD_DECODE_STATE_GOT_HEADER,
 	SUMD_DECODE_STATE_GOT_STATE,
@@ -53,7 +52,7 @@ enum SUMD_DECODE_STATE {
 	SUMD_DECODE_STATE_GOT_CRC,
 	SUMD_DECODE_STATE_GOT_CRC16_BYTE_1,
 	SUMD_DECODE_STATE_GOT_CRC16_BYTE_2
-};
+} SUMD_DECODE_STATE;
 
 /*
 const char *decode_states[] = {"UNSYNCED",

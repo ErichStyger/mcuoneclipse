@@ -39,11 +39,10 @@
  * @author Marco Bauer <marco@wtns.de>
  */
 
-#pragma once
+#ifndef __SUMD_H_
+#define __SUMD_H_
 
 #include <stdint.h>
-
-__BEGIN_DECLS
 
 #define SUMD_MAX_CHANNELS	  8
 #define SUMD_HEADER_LENGTH	3
@@ -53,7 +52,7 @@ __BEGIN_DECLS
 #define SUMD_ID_FAILSAFE	0x81
 
 #pragma pack(push, 1)
-typedef struct {
+typedef struct ReceiverFcPacketHoTT {
 	uint8_t	header;							///< 0xA8 for a valid packet
 	uint8_t	status;							///< 0x01 valid and live SUMD data frame / 0x00 = SUMH / 0x81 = Failsafe
 	uint8_t	length;							///< Channels
@@ -101,5 +100,5 @@ __EXPORT int sumd_decode(uint8_t byte, uint8_t *rssi, uint8_t *rx_count, uint16_
 int sumd_decode(uint8_t byte, uint8_t *rssi, uint8_t *rx_count, uint16_t *channel_count,
 				 uint16_t *channels, uint16_t max_chan_count);
 
+#endif /* __SUMD_H_ */
 
-__END_DECLS

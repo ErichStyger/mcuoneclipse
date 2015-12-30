@@ -6,7 +6,7 @@
     <ModificationStamp>90</ModificationStamp>
     <Date>2015-06-19</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion>1.12.1.RT7_b1531-0480</PEversion>
+    <PEversion>1.12.2.RT7_b1550-0615</PEversion>
   </Header>
   <Options>
     <ProjectMainModule>main</ProjectMainModule>
@@ -17909,7 +17909,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.065</BeanVersion>
+          <BeanVersion>01.068</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -28406,7 +28406,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.021</BeanVersion>
+    <BeanVersion>01.024</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -28455,6 +28455,14 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>2</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SysViewMaxNofTasks</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>6</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -28523,6 +28531,28 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>OnUserStop</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RecordEnterISR</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>RecordEnterISR</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RecordExitISR</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>RecordExitISR</UsrMethodName>
       </ItemState>
     </Methods>
     <Events />
