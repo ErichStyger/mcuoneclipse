@@ -3,7 +3,7 @@
   <Header>
     <Name>FRDM-K22F_Drone</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>134</ModificationStamp>
+    <ModificationStamp>137</ModificationStamp>
     <Date>2015-09-20</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -35964,7 +35964,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.068</BeanVersion>
+          <BeanVersion>01.070</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -36037,13 +36037,19 @@
               <ItemSymbol>CdcBusReportedDeviceDescriptionString</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>FSL CDC DEVICE  </Value>
+              <Value>FSL CDC DEVICE</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>CdcBusReportedVendorString</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>FREESCALE INC.              </Value>
+              <Value>FREESCALE INC.</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CdcSerialNumberString</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>000123ABC</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>Configuration</ItemSymbol>
@@ -36093,7 +36099,7 @@
                 <UserFolderName />
                 <Comment lines_count="0" />
                 <Template />
-                <BeanVersion>01.041</BeanVersion>
+                <BeanVersion>01.043</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
                 <Properties>
                   <ItemState>
@@ -36164,6 +36170,18 @@
                     <UsrMethodName>Put</UsrMethodName>
                   </ItemState>
                   <ItemState>
+                    <ItemSymbol>Putn</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                    <LastSelection>true</LastSelection>
+                    <LastUserSel>yes</LastUserSel>
+                    <UsrMethodName>Putn</UsrMethodName>
+                  </ItemState>
+                  <ItemState>
                     <ItemSymbol>Get</ItemSymbol>
                     <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
@@ -36186,6 +36204,18 @@
                     <LastSelection>true</LastSelection>
                     <LastUserSel>yes</LastUserSel>
                     <UsrMethodName>Peek</UsrMethodName>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>Compare</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                    <LastSelection>true</LastSelection>
+                    <LastUserSel>yes</LastUserSel>
+                    <UsrMethodName>Compare</UsrMethodName>
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>Delete</ItemSymbol>
@@ -36367,7 +36397,7 @@
                 <UserFolderName />
                 <Comment lines_count="0" />
                 <Template />
-                <BeanVersion>01.041</BeanVersion>
+                <BeanVersion>01.043</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
                 <Properties>
                   <ItemState>
@@ -36438,6 +36468,18 @@
                     <UsrMethodName>Put</UsrMethodName>
                   </ItemState>
                   <ItemState>
+                    <ItemSymbol>Putn</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                    <LastSelection>true</LastSelection>
+                    <LastUserSel>yes</LastUserSel>
+                    <UsrMethodName>Putn</UsrMethodName>
+                  </ItemState>
+                  <ItemState>
                     <ItemSymbol>Get</ItemSymbol>
                     <ReadOnly>true</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
@@ -36460,6 +36502,18 @@
                     <LastSelection>true</LastSelection>
                     <LastUserSel>yes</LastUserSel>
                     <UsrMethodName>Peek</UsrMethodName>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>Compare</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                    <LastSelection>true</LastSelection>
+                    <LastUserSel>yes</LastUserSel>
+                    <UsrMethodName>Compare</UsrMethodName>
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>Delete</ItemSymbol>
