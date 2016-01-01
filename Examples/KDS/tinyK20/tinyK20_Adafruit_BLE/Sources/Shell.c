@@ -10,9 +10,6 @@
 #include "FRTOS1.h"
 #include "Shell.h"
 #include "CLS1.h"
-#include "FAT1.h"
-#include "TmDt1.h"
-#include "KIN1.h"
 #if PL_CONFIG_HAS_SEGGER_RTT
   #include "RTT1.h"
 #endif
@@ -21,9 +18,6 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
   CLS1_ParseCommand,
   FRTOS1_ParseCommand,
-  FAT1_ParseCommand,
-  KIN1_ParseCommand,
-  TmDt1_ParseCommand,
   NULL /* sentinel */
 };
 
@@ -35,18 +29,6 @@ static CLS1_ConstStdIOType RTT_Stdio = {
   RTT1_StdIOKeyPressed /* if input is not empty */
 };
 #endif
-
-static void SDTask(void *pvParameters) {
-  bool cardMounted = FALSE;
-  static FAT1_FATFS fileSystemObject;
-
-  (void)pvParameters; /* not used */
-  FAT1_Init(); /* initialize FAT module */
-  for(;;) {
-    (void)FAT1_CheckCardPresence(&cardMounted, (unsigned char*)"0" /*volume*/, &fileSystemObject, CLS1_GetStdio());
-    FRTOS1_vTaskDelay(pdMS_TO_TICKS(50));
-  }
-}
 
 
 static void ShellTask(void *pvParameters) {
@@ -72,9 +54,6 @@ static void ShellTask(void *pvParameters) {
 
 void SHELL_Init(void) {
   if (FRTOS1_xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+300, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
-    for(;;){} /* error */
-  }
-  if (FRTOS1_xTaskCreate(SDTask, "SDCard", configMINIMAL_STACK_SIZE+100, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 }
