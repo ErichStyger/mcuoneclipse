@@ -15,12 +15,17 @@
 #include <stdio.h>
 #include <string.h>
 #include "RxBuffer.h"
+#include "CLS1.h"
+#include "UTIL1.h"
 
 /* IRQ will be high to indicate data from the module */
 /* CS is low active */
 
 #define BLUEFRUIT_MODE_COMMAND   1
 #define BLUEFRUIT_MODE_DATA      0
+
+#define ABLE_MAX_RESPONSE_SIZE  32
+#define ABLE_MAX_AT_CMD_SIZE    32
 
 /* should be in a class object */
 static uint8_t  _mode;
@@ -285,16 +290,12 @@ bool ABLE_sendPacket(uint16_t command, const uint8_t *buf, uint8_t count, uint8_
   if ( buf != NULL && count > 0) {
     memcpy(msgCmd.payload, buf, count);
   }
-  // Starting SPI transaction
-  //if (m_sck_pin == -1)
-  //  SPI.beginTransaction(bluefruitSPI);
-
   SPI_CS_ENABLE();
 
   //TimeoutTimer tt(_timeout);
 
   // Bluefruit may not be ready
-  while ( ( spixfer(msgCmd.header.msg_type) == SPI_IGNORED_BYTE ) /*&& !tt.expired()*/ )
+  while ((spixfer(msgCmd.header.msg_type)==SPI_IGNORED_BYTE) /*&& !tt.expired()*/ )
   {
     // Disable & Re-enable CS with a bit of delay for Bluefruit to ready itself
     SPI_CS_DISABLE();
@@ -308,7 +309,6 @@ bool ABLE_sendPacket(uint16_t command, const uint8_t *buf, uint8_t count, uint8_
     /* transfer the rest of the data */
     spixferblock((void*)(((uint8_t*)&msgCmd)+1), sizeof(sdepMsgHeader_t)+count-1);
   }
-
   SPI_CS_DISABLE();
   return result;
 }
@@ -316,6 +316,76 @@ bool ABLE_sendPacket(uint16_t command, const uint8_t *buf, uint8_t count, uint8_
 static bool ABLE_sendInitializePattern(void) {
   return ABLE_sendPacket(SDEP_CMDTYPE_INITIALIZE, NULL, 0, 0);
 }
+
+uint8_t ABLE_SendATCommand(uint8_t *cmd, uint8_t *rxBuf, size_t rxBufSize, uint8_t *expectedTailStr) {
+  uint8_t res = ERR_OK;
+  uint8_t rxRes;
+  uint8_t ch;
+
+  RxBuffer_Clear();
+  ABLE_sendPacket(SDEP_CMDTYPE_AT_WRAPPER, cmd, UTIL1_strlen(cmd), 0);
+  ABLE_getResponse();
+  if (rxBuf!=NULL) {
+    while(rxBufSize>1 && RxBuffer_NofElements()>0) {
+      rxRes = RxBuffer_Get(&ch);
+      *rxBuf = ch;
+      rxBuf++; rxBufSize--;
+    }
+    *rxBuf = '\0';
+  }
+  return res;
+}
+
+static uint8_t SendCommand(const unsigned char *cmd, const CLS1_StdIOType *io) {
+  unsigned char cmdBuf[ABLE_MAX_AT_CMD_SIZE];
+  uint8_t res = ERR_OK;
+  uint8_t ch;
+
+  UTIL1_strcpy(cmdBuf, sizeof(cmdBuf), cmd);
+  UTIL1_chcat(cmdBuf, sizeof(cmdBuf), '\n'); /* append newline */
+  if (ABLE_SendATCommand(cmdBuf, NULL, 0, (unsigned char*)"") != ERR_OK) {
+    CLS1_SendStr((unsigned char*)"***Response not OK\r\n", io->stdOut);
+    res = ERR_FAILED;
+  }
+  if (res==ERR_OK) {
+    /* print response */
+    while(RxBuffer_NofElements()>0) {
+      res = RxBuffer_Get(&ch);
+      if (res!=ERR_OK) {
+        break; /* stop if there is an error */
+      }
+      io->stdOut(ch);
+    }
+    CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
+  }
+  return res;
+}
+
+uint8_t ABLE_PrintStatus(CLS1_ConstStdIOType *io) {
+  CLS1_SendStatusStr((const unsigned char*)"ble", (unsigned char*)"\r\n", io->stdOut);
+  CLS1_SendStatusStr((const unsigned char*)"  at", (unsigned char*)"ok\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+uint8_t ABLE_ParseCommand(const uint8_t *cmd, bool *handled, CLS1_ConstStdIOType *io) {
+  uint8_t res = ERR_OK;
+
+  if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "ble help")==0) {
+    CLS1_SendHelpStr((unsigned char*)"ble", (const unsigned char*)"Group of Adafruit BLE commands\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  cmd <AT command>", (unsigned char*)"Send an AT command, e.g ATI\r\n", io->stdOut);
+    *handled = TRUE;
+    return ERR_OK;
+  } else if ((UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0) || (UTIL1_strcmp((char*)cmd, "ble status")==0)) {
+    *handled = TRUE;
+    return ABLE_PrintStatus(io);
+  } else if (UTIL1_strncmp((char*)cmd, "ble cmd ", sizeof("ble cmd ") - 1) == 0) {
+    *handled = TRUE;
+    res = SendCommand(cmd+sizeof("ble cmd ")-1, io);
+  }
+  return res; /* no error */
+}
+
 
 void ABLE_Init(void) {
   _mode = BLUEFRUIT_MODE_COMMAND;

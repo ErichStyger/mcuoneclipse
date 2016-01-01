@@ -10,6 +10,7 @@
 #include "FRTOS1.h"
 #include "Shell.h"
 #include "CLS1.h"
+#include "AdaBLE.h"
 #if PL_CONFIG_HAS_SEGGER_RTT
   #include "RTT1.h"
 #endif
@@ -18,6 +19,7 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
   CLS1_ParseCommand,
   FRTOS1_ParseCommand,
+  ABLE_ParseCommand,
   NULL /* sentinel */
 };
 
