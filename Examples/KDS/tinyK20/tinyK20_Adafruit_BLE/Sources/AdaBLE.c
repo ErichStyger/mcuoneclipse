@@ -24,8 +24,8 @@
 #define BLUEFRUIT_MODE_COMMAND   1
 #define BLUEFRUIT_MODE_DATA      0
 
-#define ABLE_MAX_RESPONSE_SIZE  32
-#define ABLE_MAX_AT_CMD_SIZE    32
+#define BLE_MAX_RESPONSE_SIZE  48
+#define BLE_MAX_AT_CMD_SIZE    48
 
 /* should be in a class object */
 static uint8_t  _mode;
@@ -77,7 +77,7 @@ static void flush(void) {
     @brief Simulate "+++" switch mode command
 */
 /******************************************************************************/
-bool ABLE_setMode(uint8_t new_mode) {
+bool BLE_setMode(uint8_t new_mode) {
   // invalid mode
   if ( !(new_mode == BLUEFRUIT_MODE_COMMAND || new_mode == BLUEFRUIT_MODE_DATA) ) return FALSE;
 
@@ -102,7 +102,7 @@ bool ABLE_setMode(uint8_t new_mode) {
     @return number of bytes in SDEP payload
 */
 /******************************************************************************/
-bool ABLE_getPacket(sdepMsgResponse_t* p_response)
+bool BLE_getPacket(sdepMsgResponse_t* p_response)
 {
   sdepMsgHeader_t* p_header = &p_response->header;
   bool result=FALSE;
@@ -178,7 +178,7 @@ bool ABLE_getPacket(sdepMsgResponse_t* p_response)
       - false : if failed
 */
 /******************************************************************************/
-bool ABLE_getResponse(void) {
+bool BLE_getResponse(void) {
   // Blocking wait until IRQ is asserted
   while (!BLE_IRQ_GetVal()) {} /* wait until IRQ line goes high */
 
@@ -190,7 +190,7 @@ bool ABLE_getResponse(void) {
     sdepMsgResponse_t msg_response;
     memset(&msg_response, 0, sizeof(sdepMsgResponse_t));
 
-    if ( !ABLE_getPacket(&msg_response) ) {
+    if ( !BLE_getPacket(&msg_response) ) {
       return FALSE;
     }
 
@@ -210,7 +210,7 @@ bool ABLE_getResponse(void) {
   return TRUE;
 }
 
-void ABLE_simulateSwitchMode(void)
+void BLE_simulateSwitchMode(void)
 {
   _mode = 1 - _mode;
 
@@ -231,12 +231,12 @@ void ABLE_simulateSwitchMode(void)
                 Character to send
 */
 /******************************************************************************/
-size_t ABLE_write(uint8_t c)
+size_t BLE_write(uint8_t c)
 {
   if (_mode == BLUEFRUIT_MODE_DATA)
   {
-    ABLE_sendPacket(SDEP_CMDTYPE_BLE_UARTTX, &c, 1, 0);
-    ABLE_getResponse();
+    BLE_sendPacket(SDEP_CMDTYPE_BLE_UARTTX, &c, 1, 0);
+    BLE_getResponse();
     return 1;
   }
 
@@ -249,9 +249,9 @@ size_t ABLE_write(uint8_t c)
     {
       // +++ command to switch mode
       if (RxBuffer_Compare(0, "+++", 3) == 0) {
-        ABLE_simulateSwitchMode();
+        BLE_simulateSwitchMode();
       } else {
-        ABLE_sendPacket(SDEP_CMDTYPE_AT_WRAPPER, m_tx_buffer, m_tx_count, 0);
+        BLE_sendPacket(SDEP_CMDTYPE_AT_WRAPPER, m_tx_buffer, m_tx_count, 0);
       }
       m_tx_count = 0;
     }
@@ -259,7 +259,7 @@ size_t ABLE_write(uint8_t c)
   // More than max packet buffered --> send with more_data = 1
   else if (m_tx_count == SDEP_MAX_PACKETSIZE)
   {
-    ABLE_sendPacket(SDEP_CMDTYPE_AT_WRAPPER, m_tx_buffer, m_tx_count, 1);
+    BLE_sendPacket(SDEP_CMDTYPE_AT_WRAPPER, m_tx_buffer, m_tx_count, 1);
 
     m_tx_buffer[0] = c;
     m_tx_count = 1;
@@ -272,7 +272,7 @@ size_t ABLE_write(uint8_t c)
   return 1;
 }
 
-bool ABLE_sendPacket(uint16_t command, const uint8_t *buf, uint8_t count, uint8_t more_data) {
+bool BLE_sendPacket(uint16_t command, const uint8_t *buf, uint8_t count, uint8_t more_data) {
   sdepMsgCommand_t msgCmd;
   bool result;
 
@@ -313,19 +313,20 @@ bool ABLE_sendPacket(uint16_t command, const uint8_t *buf, uint8_t count, uint8_
   return result;
 }
 
-static bool ABLE_sendInitializePattern(void) {
-  return ABLE_sendPacket(SDEP_CMDTYPE_INITIALIZE, NULL, 0, 0);
+static bool BLE_sendInitializePattern(void) {
+  return BLE_sendPacket(SDEP_CMDTYPE_INITIALIZE, NULL, 0, 0);
 }
 
-uint8_t ABLE_SendATCommand(uint8_t *cmd, uint8_t *rxBuf, size_t rxBufSize, uint8_t *expectedTailStr) {
+uint8_t BLE_SendATCommand(uint8_t *cmd, uint8_t *rxBuf, size_t rxBufSize, uint8_t *expectedTailStr) {
   uint8_t res = ERR_OK;
   uint8_t rxRes;
   uint8_t ch;
 
   RxBuffer_Clear();
-  ABLE_sendPacket(SDEP_CMDTYPE_AT_WRAPPER, cmd, UTIL1_strlen(cmd), 0);
-  ABLE_getResponse();
-  if (rxBuf!=NULL) {
+  BLE_sendPacket(SDEP_CMDTYPE_AT_WRAPPER, cmd, UTIL1_strlen(cmd), 0);
+  if (!BLE_getResponse()) {
+    return ERR_FAILED;
+  } else if (rxBuf!=NULL) {
     while(rxBufSize>1 && RxBuffer_NofElements()>0) {
       rxRes = RxBuffer_Get(&ch);
       *rxBuf = ch;
@@ -336,38 +337,87 @@ uint8_t ABLE_SendATCommand(uint8_t *cmd, uint8_t *rxBuf, size_t rxBufSize, uint8
   return res;
 }
 
-static uint8_t SendCommand(const unsigned char *cmd, const CLS1_StdIOType *io) {
-  unsigned char cmdBuf[ABLE_MAX_AT_CMD_SIZE];
+static uint8_t BLE_SendCommand(const unsigned char *cmd, const CLS1_StdIOType *io) {
+  unsigned char cmdBuf[BLE_MAX_AT_CMD_SIZE];
   uint8_t res = ERR_OK;
   uint8_t ch;
 
+  if (BLE_IRQ_GetVal()) { /* IRQ high already? There is some data from the module? */
+    RxBuffer_Clear();
+    BLE_getResponse(); /* check response */
+    CLS1_SendStr((unsigned char*)"*** IRQ is high?\r\n", io->stdErr);
+    res = ERR_FAILED;
+    return res;
+  }
   UTIL1_strcpy(cmdBuf, sizeof(cmdBuf), cmd);
   UTIL1_chcat(cmdBuf, sizeof(cmdBuf), '\n'); /* append newline */
-  if (ABLE_SendATCommand(cmdBuf, NULL, 0, (unsigned char*)"") != ERR_OK) {
-    CLS1_SendStr((unsigned char*)"***Response not OK\r\n", io->stdOut);
+  if (BLE_SendATCommand(cmdBuf, NULL, 0, (unsigned char*)"") != ERR_OK) {
+    if (io!=NULL) {
+      CLS1_SendStr((unsigned char*)"*** Failed sending AT command\r\n", io->stdErr);
+    }
     res = ERR_FAILED;
   }
   if (res==ERR_OK) {
     /* print response */
-    while(RxBuffer_NofElements()>0) {
-      res = RxBuffer_Get(&ch);
-      if (res!=ERR_OK) {
-        break; /* stop if there is an error */
+    do {
+      while(RxBuffer_NofElements()>0) {
+        res = RxBuffer_Get(&ch);
+        if (res!=ERR_OK) {
+          break; /* stop if there is an error */
+        }
+        if (io!=NULL) {
+          io->stdOut(ch);
+        }
       }
-      io->stdOut(ch);
+      if (BLE_IRQ_GetVal()) { /* IRQ still high already? There is some data from the module? */
+        BLE_getResponse(); /* check response */
+      } else {
+        break; /* break loop */
+      }
+    } while(1);
+    if (io!=NULL) {
+      CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
     }
-    CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
   }
   return res;
 }
 
-uint8_t ABLE_PrintStatus(CLS1_ConstStdIOType *io) {
+uint8_t BLE_Echo(bool on) {
+  if (on) {
+    return BLE_SendCommand("ATE=1", NULL); /* enable echo support */
+  } else {
+    return BLE_SendCommand("ATE=0", NULL); /* disable echo support */
+  }
+}
+
+int32_t BLE_ReadlineParseInt(void) {
+  return 0; /* NYI */
+}
+
+bool BLE_WaitForOK(void) {
+  return FALSE; /* NYI */
+}
+
+bool BLE_sendCommandWithIntReply(const uint8_t *cmd, int32_t *reply) {
+  BLE_SendCommand(cmd, NULL);
+  *reply = BLE_ReadlineParseInt(); /* parse integer response */
+  return BLE_WaitForOK();
+}
+
+bool BLE_IsConnected(void) {
+  int32_t connected = 0;
+
+  BLE_sendCommandWithIntReply("AT+GAPGETCONN", &connected);
+  return connected;
+}
+
+uint8_t BLE_PrintStatus(CLS1_ConstStdIOType *io) {
   CLS1_SendStatusStr((const unsigned char*)"ble", (unsigned char*)"\r\n", io->stdOut);
   CLS1_SendStatusStr((const unsigned char*)"  at", (unsigned char*)"ok\r\n", io->stdOut);
   return ERR_OK;
 }
 
-uint8_t ABLE_ParseCommand(const uint8_t *cmd, bool *handled, CLS1_ConstStdIOType *io) {
+uint8_t BLE_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
   uint8_t res = ERR_OK;
 
   if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "ble help")==0) {
@@ -378,20 +428,20 @@ uint8_t ABLE_ParseCommand(const uint8_t *cmd, bool *handled, CLS1_ConstStdIOType
     return ERR_OK;
   } else if ((UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0) || (UTIL1_strcmp((char*)cmd, "ble status")==0)) {
     *handled = TRUE;
-    return ABLE_PrintStatus(io);
+    return BLE_PrintStatus(io);
   } else if (UTIL1_strncmp((char*)cmd, "ble cmd ", sizeof("ble cmd ") - 1) == 0) {
     *handled = TRUE;
-    res = SendCommand(cmd+sizeof("ble cmd ")-1, io);
+    res = BLE_SendCommand(cmd+sizeof("ble cmd ")-1, io);
   }
   return res; /* no error */
 }
 
 
-void ABLE_Init(void) {
+void BLE_Init(void) {
   _mode = BLUEFRUIT_MODE_COMMAND;
   SM1_Disable();
   (void)SM1_SetIdleClockPolarity(0);    /* low idle clock polarity */
   (void)SM1_SetShiftClockPolarity(0);   /* shift clock polarity: falling edge */
   SM1_Enable();
-  ABLE_sendInitializePattern();
+  BLE_sendInitializePattern();
 }

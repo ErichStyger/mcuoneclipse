@@ -5,7 +5,6 @@
  *      Author: tastyger
  */
 
-
 #include "Application.h"
 #include "SM1.h"
 #include "WAIT1.h"
@@ -13,26 +12,22 @@
 #include "AdaBLE.h"
 #include "FRTOS1.h"
 #include "Shell.h"
+#include "CLS1.h"
 
-static void Test(void) {
-  ABLE_sendPacket(SDEP_CMDTYPE_AT_WRAPPER, "AT\n", sizeof("AT\n")-1, 0);
-  ABLE_getResponse();
+static void bleuurat_cmdmode(void) {
+  CLS1_ConstStdIOType *io = CLS1_GetStdio();
+
+  CLS1_SendStr("Adafruit BLE UART CMD Mode\r\n", io->stdOut);
+  BLE_Echo(FALSE); /* Disable command echo from Bluefruit */
 }
 
-
 static void AppTask(void *pvParameters) {
-  bool doIt = FALSE;
-
-  ABLE_Init();
+  BLE_Init(); /* initialize BLE module */
   for(;;) {
-    if (doIt) {
-      Test();
-    }
     LED1_Neg();
     FRTOS1_vTaskDelay(pdMS_TO_TICKS(10));
   }
 }
-
 
 void APP_Run(void) {
   SHELL_Init();

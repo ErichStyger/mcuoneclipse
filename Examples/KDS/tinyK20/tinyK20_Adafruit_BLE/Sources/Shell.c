@@ -14,12 +14,13 @@
 #if PL_CONFIG_HAS_SEGGER_RTT
   #include "RTT1.h"
 #endif
+uint8_t BLE_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
   CLS1_ParseCommand,
   FRTOS1_ParseCommand,
-  ABLE_ParseCommand,
+  BLE_ParseCommand,
   NULL /* sentinel */
 };
 
