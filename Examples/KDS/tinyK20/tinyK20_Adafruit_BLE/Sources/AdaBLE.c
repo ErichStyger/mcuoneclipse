@@ -42,12 +42,12 @@ static uint8_t  m_tx_count;
 #define delayMicroseconds WAIT1_Waitus
 
 static uint8_t rxDummy; /* dummy byte if we do not need the result. Needed to read from SPI register. */
-#define SD1_SPI_WRITE(write)            \
+#define SPI_WRITE(write)            \
    { \
      while(SM1_SendChar(write)!=ERR_OK) {} \
      while(SM1_RecvChar(&rxDummy)!=ERR_OK) {} \
    }
-#define SD1_SPI_WRITE_READ(write, readP) \
+#define SPI_WRITE_READ(write, readP) \
    { \
      while(SM1_SendChar(write)!=ERR_OK) {} \
      while(SM1_RecvChar(readP)!=ERR_OK) {} \
@@ -55,7 +55,7 @@ static uint8_t rxDummy; /* dummy byte if we do not need the result. Needed to re
 
 static uint8_t spixfer(uint8_t val) {
   uint8_t rd;
-  SD1_SPI_WRITE_READ(val, &rd);
+  SPI_WRITE_READ(val, &rd);
   return rd;
 }
 
@@ -179,30 +179,22 @@ bool BLE_getPacket(sdepMsgResponse_t* p_response)
 */
 /******************************************************************************/
 bool BLE_getResponse(void) {
-  // Blocking wait until IRQ is asserted
+  /* Blocking wait until IRQ is asserted */
   while (!BLE_IRQ_GetVal()) {} /* wait until IRQ line goes high */
-
-  // There is data from Bluefruit & enough room in the fifo
-  while (BLE_IRQ_GetVal() &&
-          RxBuffer_NofFreeElements() >= SDEP_MAX_PACKETSIZE )
-  {
-    // Get a SDEP packet
+  /* There is data from Bluefruit & enough room in the fifo */
+  while (BLE_IRQ_GetVal() && RxBuffer_NofFreeElements()>=SDEP_MAX_PACKETSIZE) {
+    /* Get a SDEP packet */
     sdepMsgResponse_t msg_response;
     memset(&msg_response, 0, sizeof(sdepMsgResponse_t));
-
     if ( !BLE_getPacket(&msg_response) ) {
       return FALSE;
     }
-
     // Write to fifo
-    if ( msg_response.header.length > 0)
-    {
+    if ( msg_response.header.length > 0) {
       RxBuffer_Putn(msg_response.payload, msg_response.header.length);
     }
-
     // No more packet data
     if ( !msg_response.header.more_data ) break;
-
     // It takes a bit since all Data received to IRQ to get LOW
     // May need to delay a bit for it to be stable before the next try
     // delayMicroseconds(SPI_DEFAULT_DELAY_US);
@@ -210,8 +202,7 @@ bool BLE_getResponse(void) {
   return TRUE;
 }
 
-void BLE_simulateSwitchMode(void)
-{
+void BLE_simulateSwitchMode(void) {
   _mode = 1 - _mode;
 
   char ch = '0' + _mode;
@@ -219,7 +210,6 @@ void BLE_simulateSwitchMode(void)
   //m_rx_fifo.write(&ch);
   RxBuffer_Putn("\r\nOK\r\n", 6);
 }
-
 
 /******************************************************************************/
 /*!
@@ -231,8 +221,7 @@ void BLE_simulateSwitchMode(void)
                 Character to send
 */
 /******************************************************************************/
-size_t BLE_write(uint8_t c)
-{
+size_t BLE_write(uint8_t c) {
   if (_mode == BLUEFRUIT_MODE_DATA)
   {
     BLE_sendPacket(SDEP_CMDTYPE_BLE_UARTTX, &c, 1, 0);
@@ -317,7 +306,7 @@ static bool BLE_sendInitializePattern(void) {
   return BLE_sendPacket(SDEP_CMDTYPE_INITIALIZE, NULL, 0, 0);
 }
 
-uint8_t BLE_SendATCommand(uint8_t *cmd, uint8_t *rxBuf, size_t rxBufSize, uint8_t *expectedTailStr) {
+uint8_t BLE_SendATCommand(uint8_t *cmd, uint8_t *rxBuf, size_t rxBufSize) {
   uint8_t res = ERR_OK;
   uint8_t rxRes;
   uint8_t ch;
@@ -327,12 +316,40 @@ uint8_t BLE_SendATCommand(uint8_t *cmd, uint8_t *rxBuf, size_t rxBufSize, uint8_
   if (!BLE_getResponse()) {
     return ERR_FAILED;
   } else if (rxBuf!=NULL) {
+    char *p;
+
+    p = rxBuf;
     while(rxBufSize>1 && RxBuffer_NofElements()>0) {
       rxRes = RxBuffer_Get(&ch);
-      *rxBuf = ch;
-      rxBuf++; rxBufSize--;
+      *p = ch;
+      p++; rxBufSize--;
     }
-    *rxBuf = '\0';
+    *p = '\0';
+  }
+  return res;
+}
+
+uint8_t BLE_SendATCommandExpectedResponse(uint8_t *cmd, uint8_t *rxBuf, size_t rxBufSize, const uint8_t *expectedTailStr) {
+  uint8_t res = ERR_OK;
+
+  BLE_SendATCommand(cmd, rxBuf, rxBufSize);
+  if (expectedTailStr!=NULL && rxBuf!=NULL) {
+    if (UTIL1_strtailcmp(rxBuf, expectedTailStr)!=0) {
+      res = ERR_FAULT; /* no match */
+    }
+  }
+  return res;
+}
+
+uint8_t BLE_SendCommandExpectedReplyStr(const unsigned char *cmd, uint8_t *expectedTailStr) {
+  unsigned char cmdBuf[BLE_MAX_AT_CMD_SIZE];
+  unsigned char rxBuf[BLE_MAX_RESPONSE_SIZE];
+  uint8_t res = ERR_OK;
+
+  UTIL1_strcpy(cmdBuf, sizeof(cmdBuf), cmd);
+  UTIL1_chcat(cmdBuf, sizeof(cmdBuf), '\n'); /* append newline */
+  if (BLE_SendATCommandExpectedResponse(cmdBuf, rxBuf, sizeof(rxBuf), expectedTailStr) != ERR_OK) {
+    res = ERR_FAILED; /* sending command failed or does not match expected response */
   }
   return res;
 }
@@ -351,7 +368,7 @@ static uint8_t BLE_SendCommand(const unsigned char *cmd, const CLS1_StdIOType *i
   }
   UTIL1_strcpy(cmdBuf, sizeof(cmdBuf), cmd);
   UTIL1_chcat(cmdBuf, sizeof(cmdBuf), '\n'); /* append newline */
-  if (BLE_SendATCommand(cmdBuf, NULL, 0, (unsigned char*)"") != ERR_OK) {
+  if (BLE_SendATCommandExpectedResponse(cmdBuf, NULL, 0, NULL) != ERR_OK) {
     if (io!=NULL) {
       CLS1_SendStr((unsigned char*)"*** Failed sending AT command\r\n", io->stdErr);
     }
@@ -384,36 +401,36 @@ static uint8_t BLE_SendCommand(const unsigned char *cmd, const CLS1_StdIOType *i
 
 uint8_t BLE_Echo(bool on) {
   if (on) {
-    return BLE_SendCommand("ATE=1", NULL); /* enable echo support */
+    return BLE_SendCommandExpectedReplyStr("ATE=1", "OK\r\n"); /* enable echo support */
   } else {
-    return BLE_SendCommand("ATE=0", NULL); /* disable echo support */
+    return BLE_SendCommandExpectedReplyStr("ATE=0", "OK\r\n"); /* disable echo support */
   }
 }
 
-int32_t BLE_ReadlineParseInt(void) {
-  return 0; /* NYI */
-}
-
-bool BLE_WaitForOK(void) {
-  return FALSE; /* NYI */
-}
-
-bool BLE_sendCommandWithIntReply(const uint8_t *cmd, int32_t *reply) {
-  BLE_SendCommand(cmd, NULL);
-  *reply = BLE_ReadlineParseInt(); /* parse integer response */
-  return BLE_WaitForOK();
-}
-
 bool BLE_IsConnected(void) {
-  int32_t connected = 0;
+  bool isConnected = FALSE;
+  unsigned char rxBuf[BLE_MAX_RESPONSE_SIZE];
 
-  BLE_sendCommandWithIntReply("AT+GAPGETCONN", &connected);
-  return connected;
+  BLE_SendATCommand("AT+GAPGETCONN", rxBuf, sizeof(rxBuf));
+  if (UTIL1_strtailcmp(rxBuf, "1\r\nOK\r\n")==0) { /* match */
+    isConnected = TRUE;
+  }
+  return isConnected;
+}
+
+uint8_t BLE_FactoryReset(void) {
+  uint8_t res;
+
+  res = BLE_SendCommandExpectedReplyStr("AT+FACTORYRESET", "OK\r\n");
+  WAIT1_Waitms(1000); /* Bluefruit needs 1 second to reboot */
+  return res;
 }
 
 uint8_t BLE_PrintStatus(CLS1_ConstStdIOType *io) {
+#if 0 /* nothing to report for now */
   CLS1_SendStatusStr((const unsigned char*)"ble", (unsigned char*)"\r\n", io->stdOut);
   CLS1_SendStatusStr((const unsigned char*)"  at", (unsigned char*)"ok\r\n", io->stdOut);
+#endif
   return ERR_OK;
 }
 
@@ -423,6 +440,7 @@ uint8_t BLE_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
   if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "ble help")==0) {
     CLS1_SendHelpStr((unsigned char*)"ble", (const unsigned char*)"Group of Adafruit BLE commands\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  factoryreset", (unsigned char*)"Sends AT+FACTORYRESET\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  cmd <AT command>", (unsigned char*)"Send an AT command, e.g ATI\r\n", io->stdOut);
     *handled = TRUE;
     return ERR_OK;
@@ -432,6 +450,9 @@ uint8_t BLE_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
   } else if (UTIL1_strncmp((char*)cmd, "ble cmd ", sizeof("ble cmd ") - 1) == 0) {
     *handled = TRUE;
     res = BLE_SendCommand(cmd+sizeof("ble cmd ")-1, io);
+  } else if (UTIL1_strcmp((char*)cmd, "ble factoryreset")== 0) {
+    *handled = TRUE;
+    res = BLE_FactoryReset();
   }
   return res; /* no error */
 }
