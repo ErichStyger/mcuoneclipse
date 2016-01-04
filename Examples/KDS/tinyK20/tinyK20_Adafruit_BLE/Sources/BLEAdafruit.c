@@ -384,6 +384,9 @@ uint8_t BLE_SendATCommand(const uint8_t *cmd, uint8_t *rxBuf, size_t rxBufSize) 
     return ERR_BUSY;
   }
   RxBuffer_Clear();
+  if (rxBuf!=NULL) {
+    *rxBuf = '\0';
+  }
   BLE_WriteBlock(cmd, UTIL1_strlen(cmd));
   if (!BLE_getResponse()) {
     return ERR_FAILED;
@@ -495,11 +498,13 @@ uint8_t BLE_FactoryReset(void) {
   return res;
 }
 
-uint8_t BLE_PrintStatus(CLS1_ConstStdIOType *io) {
-#if 0 /* nothing to report for now */
+static uint8_t BLE_PrintStatus(CLS1_ConstStdIOType *io) {
   CLS1_SendStatusStr((const unsigned char*)"ble", (unsigned char*)"\r\n", io->stdOut);
-  CLS1_SendStatusStr((const unsigned char*)"  at", (unsigned char*)"ok\r\n", io->stdOut);
-#endif
+  if (BLE_IRQ_GetVal()) {
+    CLS1_SendStatusStr((const unsigned char*)"  IRQ", (unsigned char*)"HIGH (data waiting)\r\n", io->stdOut);
+  } else {
+    CLS1_SendStatusStr((const unsigned char*)"  IRQ", (unsigned char*)"LOW (no data waiting)\r\n", io->stdOut);
+  }
   return ERR_OK;
 }
 
@@ -525,7 +530,6 @@ uint8_t BLE_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
   }
   return res; /* no error */
 }
-
 
 void BLE_Init(void) {
   _mode = BLUEFRUIT_MODE_COMMAND;

@@ -10,9 +10,9 @@
 
 #include "PE_Types.h"
 
-#define PL_CONFIG_HAS_SEGGER_RTT 0
+#define PL_CONFIG_HAS_SEGGER_RTT            0
 
-#define PL_BLEUART_CMDMODE_ENABLED   1
+#define PL_CONFIG_BLEUART_CMDMODE_ENABLED   1 /* BLE UART bridge in command mode */
 
 
 #endif /* SOURCES_PLATFORM_H_ */

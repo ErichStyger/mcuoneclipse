@@ -14,6 +14,10 @@
 #if PL_CONFIG_HAS_SEGGER_RTT
   #include "RTT1.h"
 #endif
+#if PL_CONFIG_BLEUART_CMDMODE_ENABLED
+  #include "bleuart_cmdmode.h"
+#endif
+
 uint8_t BLE_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
@@ -21,6 +25,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
   CLS1_ParseCommand,
   FRTOS1_ParseCommand,
   BLE_ParseCommand,
+#if PL_CONFIG_BLEUART_CMDMODE_ENABLED
+  BLEUART_CMDMODE_ParseCommand,
+#endif
   NULL /* sentinel */
 };
 
