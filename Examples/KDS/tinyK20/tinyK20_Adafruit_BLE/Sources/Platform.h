@@ -10,7 +10,9 @@
 
 #include "PE_Types.h"
 
-#define PL_CONFIG_HAS_SEGGER_RTT 1
+#define PL_CONFIG_HAS_SEGGER_RTT 0
+
+#define PL_BLEUART_CMDMODE_ENABLED   1
 
 
 #endif /* SOURCES_PLATFORM_H_ */

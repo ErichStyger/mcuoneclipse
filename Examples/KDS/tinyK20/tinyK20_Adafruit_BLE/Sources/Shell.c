@@ -10,7 +10,7 @@
 #include "FRTOS1.h"
 #include "Shell.h"
 #include "CLS1.h"
-#include "AdaBLE.h"
+#include "BLEAdafruit.h"
 #if PL_CONFIG_HAS_SEGGER_RTT
   #include "RTT1.h"
 #endif
@@ -32,7 +32,6 @@ static CLS1_ConstStdIOType RTT_Stdio = {
   RTT1_StdIOKeyPressed /* if input is not empty */
 };
 #endif
-
 
 static void ShellTask(void *pvParameters) {
 #if PL_CONFIG_HAS_SEGGER_RTT
