@@ -3,10 +3,10 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>4</ModificationStamp>
-    <Date>2014-03-21</Date>
+    <ModificationStamp>14</ModificationStamp>
+    <Date>2016-01-07</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion>1.8.1.RT5_b1349-1839</PEversion>
+    <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
   <Options>
     <EventsDirectory>Sources</EventsDirectory>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>25</ProjectCompNumb>
+    <ProjectCompNumb>35</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -38,6 +38,8 @@
     <GenerateCodeGenLog>false</GenerateCodeGenLog>
     <DontWriteGeneratedModules lines_count="0" />
     <ProjectStaticFilesGenerationMode>LINKED</ProjectStaticFilesGenerationMode>
+    <ProjectMainModule>ProcessorExpert</ProjectMainModule>
+    <SdkSourceFilesDirectory />
   </Options>
   <CPU>
     <BeanType>MCF52259_144_LQFP</BeanType>
@@ -219,7 +221,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>kHz</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RtcOscMode</ItemSymbol>
@@ -228,7 +229,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>ExternalOscillatorMode</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RtcLowPowerMode</ItemSymbol>
@@ -375,7 +375,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RAMBAR_Backdoor</ItemSymbol>
@@ -408,7 +407,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>1</Index>
         <EnumSymbVal>Inhibited</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RAMBAR_SupervisorCodeAddrSpaceMask</ItemSymbol>
@@ -417,7 +415,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>Masked</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RAMBAR_SupervisorDataAddrSpaceMask</ItemSymbol>
@@ -426,7 +423,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>Masked</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RAMBAR_UserCodeAddrSpaceMask</ItemSymbol>
@@ -435,7 +431,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>Masked</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RAMBAR_UserDataAddrSpaceMask</ItemSymbol>
@@ -444,7 +439,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>Masked</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RAMBAR_SRAMModule</ItemSymbol>
@@ -485,7 +479,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RAMBAR0_Backdoor</ItemSymbol>
@@ -518,7 +511,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>1</Index>
         <EnumSymbVal>Inhibited</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RAMBAR0_SupervisorCodeAddrSpaceMask</ItemSymbol>
@@ -527,7 +519,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>Masked</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RAMBAR0_SupervisorDataAddrSpaceMask</ItemSymbol>
@@ -536,7 +527,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>Masked</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RAMBAR0_UserCodeAddrSpaceMask</ItemSymbol>
@@ -545,7 +535,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>Masked</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RAMBAR0_UserDataAddrSpaceMask</ItemSymbol>
@@ -554,7 +543,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>Masked</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RAMBAR0_SRAMModule</ItemSymbol>
@@ -590,7 +578,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RAMBAR1_Backdoor</ItemSymbol>
@@ -623,7 +610,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>1</Index>
         <EnumSymbVal>Inhibited</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RAMBAR1_SupervisorCodeAddrSpaceMask</ItemSymbol>
@@ -632,7 +618,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>Masked</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RAMBAR1_SupervisorDataAddrSpaceMask</ItemSymbol>
@@ -641,7 +626,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>Masked</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RAMBAR1_UserCodeAddrSpaceMask</ItemSymbol>
@@ -650,7 +634,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>Masked</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RAMBAR1_UserDataAddrSpaceMask</ItemSymbol>
@@ -659,7 +642,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>Masked</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RAMBAR1_SRAMModule</ItemSymbol>
@@ -722,7 +704,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>1</Index>
         <EnumSymbVal>Inhibited</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FLASHBAR_SupervisorCodeAddrSpaceMask</ItemSymbol>
@@ -731,7 +712,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>Masked</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FLASHBAR_SupervisorDataAddrSpaceMask</ItemSymbol>
@@ -740,7 +720,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>Masked</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FLASHBAR_UserCodeAddrSpaceMask</ItemSymbol>
@@ -749,7 +728,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>Masked</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FLASHBAR_UserDataAddrSpaceMask</ItemSymbol>
@@ -758,7 +736,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>Masked</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>FLASHBAR_FLASHModule</ItemSymbol>
@@ -786,7 +763,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>Masked</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>RGPIOBAR_RGPIOModule</ItemSymbol>
@@ -919,7 +895,6 @@
         <TypeSpecNameState>typeChMCFSCMPrescaler</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMTimeout</ItemSymbol>
@@ -970,7 +945,6 @@
         <TypeSpecNameState>typeChMCFSCMIntCWTLevel</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMIntCWTPriority</ItemSymbol>
@@ -980,7 +954,6 @@
         <TypeSpecNameState>typeChMCFSCMIntCWTPriority</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>DevInit_SCMISRHandleCWTGrp</ItemSymbol>
@@ -1016,7 +989,6 @@
         <TypeSpecNameState>typeFMCFSCMDmaChannelAssigment</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>DMA_request_0000</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMDmaChannelAssigmentDmaCh1</ItemSymbol>
@@ -1026,7 +998,6 @@
         <TypeSpecNameState>typeFMCFSCMDmaChannelAssigment</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>DMA_request_0000</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMDmaChannelAssigmentDmaCh2</ItemSymbol>
@@ -1036,7 +1007,6 @@
         <TypeSpecNameState>typeFMCFSCMDmaChannelAssigment</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>DMA_request_0000</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMDmaChannelAssigmentDmaCh3</ItemSymbol>
@@ -1046,7 +1016,6 @@
         <TypeSpecNameState>typeFMCFSCMDmaChannelAssigment</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>DMA_request_0000</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMInternalBusArbitrationGrp</ItemSymbol>
@@ -1077,7 +1046,6 @@
         <TypeSpecNameState>typeFMCFSCMBusMasterPriority0</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>fourth_priority</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMBusMasterPriority1</ItemSymbol>
@@ -1087,7 +1055,6 @@
         <TypeSpecNameState>typeFMCFSCMBusMasterPriority1</TypeSpecNameState>
         <Index>1</Index>
         <EnumSymbVal>third_priority</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMBusMasterPriority2</ItemSymbol>
@@ -1097,7 +1064,6 @@
         <TypeSpecNameState>typeFMCFSCMBusMasterPriority2</TypeSpecNameState>
         <Index>2</Index>
         <EnumSymbVal>second_priority</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMBusMasterPriority3</ItemSymbol>
@@ -1107,7 +1073,6 @@
         <TypeSpecNameState>typeFMCFSCMBusMasterPriority3</TypeSpecNameState>
         <Index>3</Index>
         <EnumSymbVal>first_priority</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMBusArbitrationAlgorithm</ItemSymbol>
@@ -1144,7 +1109,6 @@
         <TypeSpecNameState>typeFMCFSCMBusMasterTimeOutValue</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>t0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMSystemAccessControlUnitGrp</ItemSymbol>
@@ -1223,7 +1187,6 @@
         <TypeSpecNameState>typeFMCFSCMPrphAccess__AccessCtrl</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>000</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMPrphAccess_DMA_Grp</ItemSymbol>
@@ -1248,7 +1211,6 @@
         <TypeSpecNameState>typeFMCFSCMPrphAccess__AccessCtrl</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>000</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMPrphAccess_UART0_Grp</ItemSymbol>
@@ -1273,7 +1235,6 @@
         <TypeSpecNameState>typeFMCFSCMPrphAccess__AccessCtrl</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>000</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMPrphAccess_UART1_Grp</ItemSymbol>
@@ -1298,7 +1259,6 @@
         <TypeSpecNameState>typeFMCFSCMPrphAccess__AccessCtrl</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>000</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMPrphAccess_UART2_Grp</ItemSymbol>
@@ -1323,7 +1283,6 @@
         <TypeSpecNameState>typeFMCFSCMPrphAccess__AccessCtrl</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>000</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMPrphAccess_I2C0_Grp</ItemSymbol>
@@ -1348,7 +1307,6 @@
         <TypeSpecNameState>typeFMCFSCMPrphAccess__AccessCtrl</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>000</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMPrphAccess_QSPI_Grp</ItemSymbol>
@@ -1373,7 +1331,6 @@
         <TypeSpecNameState>typeFMCFSCMPrphAccess__AccessCtrl</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>000</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMPrphAccess_I2C1_Grp</ItemSymbol>
@@ -1398,7 +1355,6 @@
         <TypeSpecNameState>typeFMCFSCMPrphAccess__AccessCtrl</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>000</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMPrphAccess_DTIM0_Grp</ItemSymbol>
@@ -1423,7 +1379,6 @@
         <TypeSpecNameState>typeFMCFSCMPrphAccess__AccessCtrl</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>000</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMPrphAccess_DTIM1_Grp</ItemSymbol>
@@ -1448,7 +1403,6 @@
         <TypeSpecNameState>typeFMCFSCMPrphAccess__AccessCtrl</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>000</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMPrphAccess_DTIM2_Grp</ItemSymbol>
@@ -1473,7 +1427,6 @@
         <TypeSpecNameState>typeFMCFSCMPrphAccess__AccessCtrl</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>000</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMPrphAccess_DTIM3_Grp</ItemSymbol>
@@ -1498,7 +1451,6 @@
         <TypeSpecNameState>typeFMCFSCMPrphAccess__AccessCtrl</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>000</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMPrphAccess_INTC0_Grp</ItemSymbol>
@@ -1523,7 +1475,6 @@
         <TypeSpecNameState>typeFMCFSCMPrphAccess__AccessCtrl</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>000</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMPrphAccess_INTC1_Grp</ItemSymbol>
@@ -1548,7 +1499,6 @@
         <TypeSpecNameState>typeFMCFSCMPrphAccess__AccessCtrl</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>000</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMPrphAccess_FEC_Grp</ItemSymbol>
@@ -1573,7 +1523,6 @@
         <TypeSpecNameState>typeFMCFSCMPrphAccess__AccessCtrl</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>000</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMGroupedPeripheralAccessControlGrp</ItemSymbol>
@@ -1604,7 +1553,6 @@
         <TypeSpecNameState>typeFMCFSCMPrphAccess_MemoryRegion_AccessControl</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>0000</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMPrphAccess_MemoryRegion1_Grp</ItemSymbol>
@@ -1629,7 +1577,6 @@
         <TypeSpecNameState>typeFMCFSCMPrphAccess_MemoryRegion_AccessControl</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>0000</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>SCMInternalUsageGrp</ItemSymbol>
@@ -1923,7 +1870,6 @@
         <TypeSpecNameState>typeFMCFPowerManagementExitLowPowerMode</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>000</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PowerManagementLowPowerModeSelect2</ItemSymbol>
@@ -1933,7 +1879,6 @@
         <TypeSpecNameState>typeFMCFPowerManagementLowPowerModeSelect2</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>run</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PowerManagementIPSBusTimeoutMonitorGrp</ItemSymbol>
@@ -1958,7 +1903,6 @@
         <TypeSpecNameState>typeFMCFPowerManagementBusMonitorTimeout</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>1024</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>PowerManagementInternalUsageGrp</ItemSymbol>
@@ -2034,7 +1978,6 @@
         <TypeSpecNameState>typeChMCFResetControllerLVDIntNameLevel</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ResetControllerLVDIntNamePriority</ItemSymbol>
@@ -2044,7 +1987,6 @@
         <TypeSpecNameState>typeChMCFResetControllerLVDIntNamePriority</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>DevInit_ResetControllerISRnameLVDGrp</ItemSymbol>
@@ -2985,7 +2927,6 @@
         <TypeSpecNameState>typeFMCFExternalBusCSAddressSetup</TypeSpecNameState>
         <Index>3</Index>
         <EnumSymbVal>11</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ExternalBusCS0ReadAddrHold</ItemSymbol>
@@ -2995,7 +2936,6 @@
         <TypeSpecNameState>typeFMCFExternalBusCSReadAddrHold</TypeSpecNameState>
         <Index>3</Index>
         <EnumSymbVal>11</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ExternalBusCS0WriteAddrHold</ItemSymbol>
@@ -3005,7 +2945,6 @@
         <TypeSpecNameState>typeFMCFExternalBusCSWriteAddrHold</TypeSpecNameState>
         <Index>3</Index>
         <EnumSymbVal>11</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ExternalBusCS0WaitStates</ItemSymbol>
@@ -3032,7 +2971,6 @@
         <TypeSpecNameState>typeFMCFExternalBusCSPortSize</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>00</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ExternalBusCS0BurstRead</ItemSymbol>
@@ -3122,7 +3060,6 @@
         <TypeSpecNameState>typeFMCFExternalBusCSAddressSetup</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>00</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ExternalBusCS1ReadAddrHold</ItemSymbol>
@@ -3132,7 +3069,6 @@
         <TypeSpecNameState>typeFMCFExternalBusCSReadAddrHold</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>00</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ExternalBusCS1WriteAddrHold</ItemSymbol>
@@ -3142,7 +3078,6 @@
         <TypeSpecNameState>typeFMCFExternalBusCSWriteAddrHold</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>00</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ExternalBusCS1WaitStates</ItemSymbol>
@@ -3169,7 +3104,6 @@
         <TypeSpecNameState>typeFMCFExternalBusCSPortSize</TypeSpecNameState>
         <Index>0</Index>
         <EnumSymbVal>00</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>ExternalBusCS1BurstRead</ItemSymbol>
@@ -3897,7 +3831,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>Normal mode</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>prphCondGrp52</ItemSymbol>
@@ -4033,7 +3966,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>cpuSpeedModesCondGrp0</ItemSymbol>
@@ -4400,7 +4332,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>cpuSpeedModesCondGrp1</ItemSymbol>
@@ -4762,7 +4693,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>0</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>cpuSpeedModesCondGrp2</ItemSymbol>
@@ -5501,7 +5431,6 @@
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
           <Index>2</Index>
           <EnumSymbVal>INTERNAL_FLASH</EnumSymbVal>
-          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>DefaultMemCode</ItemSymbol>
@@ -5509,7 +5438,6 @@
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
           <Index>2</Index>
           <EnumSymbVal>INTERNAL_FLASH</EnumSymbVal>
-          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>DefaultMemData</ItemSymbol>
@@ -5517,7 +5445,6 @@
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
           <Index>0</Index>
           <EnumSymbVal>INTERNAL_RAM</EnumSymbVal>
-          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamList</ItemSymbol>
@@ -5548,7 +5475,6 @@
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
           <Index>1</Index>
           <EnumSymbVal>RX</EnumSymbVal>
-          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamPhysicalType0</ItemSymbol>
@@ -5599,7 +5525,6 @@
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
           <Index>1</Index>
           <EnumSymbVal>RX</EnumSymbVal>
-          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamPhysicalType1</ItemSymbol>
@@ -5650,7 +5575,6 @@
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
           <Index>2</Index>
           <EnumSymbVal>RW</EnumSymbVal>
-          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamPhysicalType2</ItemSymbol>
@@ -5701,7 +5625,6 @@
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
           <Index>1</Index>
           <EnumSymbVal>RX</EnumSymbVal>
-          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamPhysicalType3</ItemSymbol>
@@ -5827,7 +5750,6 @@
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
           <Index>1</Index>
           <EnumSymbVal>DOS</EnumSymbVal>
-          <CustomValue />
         </ItemState>
         <ItemState>
           <ItemSymbol>C_LINKPars</ItemSymbol>
@@ -5986,7 +5908,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.062</BeanVersion>
+    <BeanVersion>01.066</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -6456,7 +6378,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.062</BeanVersion>
+    <BeanVersion>01.066</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -6926,7 +6848,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.062</BeanVersion>
+    <BeanVersion>01.066</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -7396,7 +7318,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.062</BeanVersion>
+    <BeanVersion>01.066</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -7866,7 +7788,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.064</BeanVersion>
+    <BeanVersion>01.067</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -8058,7 +7980,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.095</BeanVersion>
+    <BeanVersion>01.112</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -8619,6 +8541,54 @@
         <UsrMethodName>strFind</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>strcatPad</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>strcatPad</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanDecimal32sDotNumber</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ScanDecimal32sDotNumber</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanSeparatedNumbers</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ScanSeparatedNumbers</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanDoubleQuotedString</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ScanDoubleQuotedString</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -8632,7 +8602,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.025</BeanVersion>
+    <BeanVersion>01.041</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -8705,7 +8675,6 @@
               <TypeSpecNameState>typeChClockSource</TypeSpecNameState>
               <Index>2</Index>
               <EnumSymbVal>System_clock_source</EnumSymbVal>
-              <CustomValue />
             </ItemState>
             <ItemState>
               <ItemSymbol>USBClock</ItemSymbol>
@@ -9694,7 +9663,6 @@
               <TypeSpecNameState>typeChInterruptVector_OTG_ID_CHGLevel</TypeSpecNameState>
               <Index>1</Index>
               <EnumSymbVal>1</EnumSymbVal>
-              <CustomValue />
             </ItemState>
             <ItemState>
               <ItemSymbol>InterruptVector_OTG_ID_CHGPriority</ItemSymbol>
@@ -9704,7 +9672,6 @@
               <TypeSpecNameState>typeChInterruptVector_OTG_ID_CHGPriority</TypeSpecNameState>
               <Index>0</Index>
               <EnumSymbVal>0</EnumSymbVal>
-              <CustomValue />
             </ItemState>
             <ItemState>
               <ItemSymbol>InterruptIsrName_OTG_ID_CHG</ItemSymbol>
@@ -10475,7 +10442,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <EnumSymbVal>CDC Device</EnumSymbVal>
-        <CustomValue />
       </ItemState>
       <ItemState>
         <ItemSymbol>CDCDeviceGroup</ItemSymbol>
@@ -10501,7 +10467,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.031</BeanVersion>
+          <BeanVersion>01.071</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -10517,7 +10483,6 @@
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <Index>7</Index>
               <EnumSymbVal>MCF52259</EnumSymbVal>
-              <CustomValue />
             </ItemState>
             <ItemState>
               <ItemSymbol>USBCDCenabled</ItemSymbol>
@@ -10599,7 +10564,7 @@
                 <UserFolderName />
                 <Comment lines_count="0" />
                 <Template>FSL_USB_CDC_Device\Buffer</Template>
-                <BeanVersion>01.025</BeanVersion>
+                <BeanVersion>01.043</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
                 <Properties>
                   <ItemState>
@@ -10640,7 +10605,6 @@
                     <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
                     <Index>0</Index>
                     <EnumSymbVal>1</EnumSymbVal>
-                    <CustomValue />
                   </ItemState>
                 </Properties>
                 <Methods>
@@ -10709,6 +10673,66 @@
                     <LastSelection>true</LastSelection>
                     <LastUserSel>yes</LastUserSel>
                     <UsrMethodName>Init</UsrMethodName>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>Putn</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                    <LastSelection>true</LastSelection>
+                    <LastUserSel>yes</LastUserSel>
+                    <UsrMethodName>Putn</UsrMethodName>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>Peek</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                    <LastSelection>true</LastSelection>
+                    <LastUserSel>yes</LastUserSel>
+                    <UsrMethodName>Peek</UsrMethodName>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>Compare</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                    <LastSelection>true</LastSelection>
+                    <LastUserSel>yes</LastUserSel>
+                    <UsrMethodName>Compare</UsrMethodName>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>Delete</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                    <LastSelection>true</LastSelection>
+                    <LastUserSel>yes</LastUserSel>
+                    <UsrMethodName>Delete</UsrMethodName>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>Deinit</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                    <LastSelection>true</LastSelection>
+                    <LastUserSel>yes</LastUserSel>
+                    <UsrMethodName>Deinit</UsrMethodName>
                   </ItemState>
                 </Methods>
                 <Events>
@@ -10750,6 +10774,60 @@
                     <UserReadOnly>false</UserReadOnly>
                     <Value>Tx1_OnBufferEmpty</Value>
                   </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemPut</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Value>false</Value>
+                    <Expanded>false</Expanded>
+                    <LastSelection>false</LastSelection>
+                    <LastUserSel>no</LastUserSel>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemPutName</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value>Tx1_OnItemPut</Value>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemGet</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Value>false</Value>
+                    <Expanded>false</Expanded>
+                    <LastSelection>false</LastSelection>
+                    <LastUserSel>no</LastUserSel>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemGetName</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value>Tx1_OnItemGet</Value>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnClear</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Value>false</Value>
+                    <Expanded>false</Expanded>
+                    <LastSelection>false</LastSelection>
+                    <LastUserSel>no</LastUserSel>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnClearName</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value>Tx1_OnClear</Value>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                  </ItemState>
                 </Events>
               </InheritedComponentState>
             </ItemState>
@@ -10769,7 +10847,7 @@
                 <UserFolderName />
                 <Comment lines_count="0" />
                 <Template>FSL_USB_CDC_Device\Buffer</Template>
-                <BeanVersion>01.025</BeanVersion>
+                <BeanVersion>01.043</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
                 <Properties>
                   <ItemState>
@@ -10810,7 +10888,6 @@
                     <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
                     <Index>0</Index>
                     <EnumSymbVal>1</EnumSymbVal>
-                    <CustomValue />
                   </ItemState>
                 </Properties>
                 <Methods>
@@ -10880,6 +10957,66 @@
                     <LastUserSel>yes</LastUserSel>
                     <UsrMethodName>Init</UsrMethodName>
                   </ItemState>
+                  <ItemState>
+                    <ItemSymbol>Putn</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                    <LastSelection>true</LastSelection>
+                    <LastUserSel>yes</LastUserSel>
+                    <UsrMethodName>Putn</UsrMethodName>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>Peek</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                    <LastSelection>true</LastSelection>
+                    <LastUserSel>yes</LastUserSel>
+                    <UsrMethodName>Peek</UsrMethodName>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>Compare</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                    <LastSelection>true</LastSelection>
+                    <LastUserSel>yes</LastUserSel>
+                    <UsrMethodName>Compare</UsrMethodName>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>Delete</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                    <LastSelection>true</LastSelection>
+                    <LastUserSel>yes</LastUserSel>
+                    <UsrMethodName>Delete</UsrMethodName>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>Deinit</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Index>0</Index>
+                    <Value>true</Value>
+                    <LastSelection>true</LastSelection>
+                    <LastUserSel>yes</LastUserSel>
+                    <UsrMethodName>Deinit</UsrMethodName>
+                  </ItemState>
                 </Methods>
                 <Events>
                   <ItemState>
@@ -10920,6 +11057,60 @@
                     <UserReadOnly>false</UserReadOnly>
                     <Value>Rx1_OnBufferEmpty</Value>
                   </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemPut</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Value>false</Value>
+                    <Expanded>false</Expanded>
+                    <LastSelection>false</LastSelection>
+                    <LastUserSel>no</LastUserSel>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemPutName</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value>Rx1_OnItemPut</Value>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemGet</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Value>false</Value>
+                    <Expanded>false</Expanded>
+                    <LastSelection>false</LastSelection>
+                    <LastUserSel>no</LastUserSel>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnItemGetName</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value>Rx1_OnItemGet</Value>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnClear</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                    <Value>false</Value>
+                    <Expanded>false</Expanded>
+                    <LastSelection>false</LastSelection>
+                    <LastUserSel>no</LastUserSel>
+                  </ItemState>
+                  <ItemState>
+                    <ItemSymbol>OnClearName</ItemSymbol>
+                    <ReadOnly>false</ReadOnly>
+                    <UserReadOnly>false</UserReadOnly>
+                    <Value>Rx1_OnClear</Value>
+                    <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+                  </ItemState>
                 </Events>
               </InheritedComponentState>
             </ItemState>
@@ -10944,6 +11135,83 @@
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <Value>0</Value>
               <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CdcSerialNumberString</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>000123ABC</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>Configuration</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Expanded>true</Expanded>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>USB_EP0_SIZE</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>32</Value>
+              <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>USB_EP1_SIZE</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>32</Value>
+              <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>USB_EP2_SIZE</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>32</Value>
+              <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>SendBlockConfig</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Expanded>true</Expanded>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>SendDataBlockWaitms</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>0</Value>
+              <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>Wait</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>WAIT1</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>PowerOptionsGroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ConfigBusPowered</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ConfigSelfPowered</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
             </ItemState>
           </Properties>
           <Methods>
@@ -11112,6 +11380,50 @@
               <LastUserSel>yes</LastUserSel>
               <UsrMethodName>Init</UsrMethodName>
             </ItemState>
+            <ItemState>
+              <ItemSymbol>StdIOKeyPressed</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>StdIOKeyPressed</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>StdIOReadChar</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>StdIOReadChar</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>StdIOSendChar</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>StdIOSendChar</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>Deinit</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>Deinit</UsrMethodName>
+            </ItemState>
           </Methods>
           <Events>
             <ItemState>
@@ -11183,9 +11495,85 @@
         <ItemSymbol>MSDHost</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
-        <RegCompType />
-        <InheritedComponentState />
+        <RegCompType>FSL_USB_MSD_Host</RegCompType>
+        <InheritedComponentState>
+          <BeanType>FSL_USB_MSD_Host</BeanType>
+          <Name>MSD1</Name>
+          <CompNumb>31</CompNumb>
+          <CompEnabled>true</CompEnabled>
+          <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
+          <IconName>FSL_USB_MSD_Host</IconName>
+          <UserFolderName />
+          <Comment lines_count="0" />
+          <Template />
+          <BeanVersion>01.027</BeanVersion>
+          <LightErrorsIgnored>false</LightErrorsIgnored>
+          <Properties>
+            <ItemState>
+              <ItemSymbol>DeviceName</ItemSymbol>
+              <ReadOnly>true</ReadOnly>
+              <UserReadOnly>true</UserReadOnly>
+              <Value>MSD1</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CPUDevice</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <EnumSymbVal>MCF52259</EnumSymbVal>
+            </ItemState>
+          </Properties>
+          <Methods>
+            <ItemState>
+              <ItemSymbol>Deinit</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>Deinit</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>Init</ItemSymbol>
+              <ReadOnly>true</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>Init</UsrMethodName>
+            </ItemState>
+          </Methods>
+          <Events>
+            <ItemState>
+              <ItemSymbol>EventModule</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>Events</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>OnError</ItemSymbol>
+              <ReadOnly>true</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>true</Value>
+              <Expanded>true</Expanded>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>OnErrorName</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>MSD1_OnError</Value>
+            </ItemState>
+          </Events>
+        </InheritedComponentState>
+        <Index>0</Index>
       </ItemState>
       <ItemState>
         <ItemSymbol>DataBufSize</ItemSymbol>
@@ -11217,6 +11605,44 @@
         <Value>true</Value>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>InitUSBFunctionName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>USB0_Init</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InheritedUSBInitEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>CDCHostGroup</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>CDCHost</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+        <RegCompType />
+        <InheritedComponentState />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>UseFreeRTOSMemory</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -11229,6 +11655,17 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>Init</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
       </ItemState>
     </Methods>
     <Events>
@@ -11266,7 +11703,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.004</BeanVersion>
+    <BeanVersion>01.006</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -11278,6 +11715,15 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>UseProcessorExpertDefault</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>useRTOScritical</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>

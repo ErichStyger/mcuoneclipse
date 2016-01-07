@@ -55,7 +55,7 @@
 /* User includes (#include below this line is not maintained by Processor Expert) */
 static uint8_t cdc_buffer[USB1_DATA_BUFF_SIZE];
 static uint8_t in_buffer[USB1_DATA_BUFF_SIZE];
-
+#if 0
 static void CDC_Run(void) {
   int i, cnt = 0;
   uint32_t val = 0;
@@ -99,6 +99,8 @@ static void CDC_Run(void) {
     }
   }
 }
+#endif
+
 void main(void)
 {
   /* Write your local variable definition here */
@@ -116,7 +118,7 @@ void main(void)
   LED4_Neg();
   WAIT1_Waitms(200);
 
-  CDC_Run();
+ // CDC_Run();
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
