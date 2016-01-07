@@ -26,7 +26,7 @@
 #define BLUEFRUIT_MODE_DATA      0
 
 #define BLE_MAX_RESPONSE_SIZE  48
-#define BLE_MAX_AT_CMD_SIZE    48
+#define BLE_MAX_AT_CMD_SIZE    100
 
 /* should be in a class object */
 static uint8_t  _mode;
@@ -61,11 +61,20 @@ static uint8_t spixfer(uint8_t val) {
 }
 
 static void spixferblock(uint8_t *buf, size_t bufSize) {
+#if 1
   while(bufSize>0) {
     *buf = spixfer(*buf);
     buf++;
     bufSize--;
   }
+#else
+  uint16_t snt;
+  uint8_t res;
+
+  do {
+    res = SM1_SendBlock(buf, bufSize, &snt);
+  } while(res!=ERR_OK || snt!=bufSize);
+#endif
 }
 
 uint8_t BLE_CheckIRQIdle(void) {
@@ -230,7 +239,7 @@ bool BLE_getResponse(void) {
       RxBuffer_Putn(msg_response.payload, msg_response.header.length);
     }
     /* No more packet data */
-    if ( !msg_response.header.more_data ) {
+    if (!msg_response.header.more_data) {
       break;
     }
     // It takes a bit since all Data received to IRQ to get LOW
@@ -243,6 +252,7 @@ bool BLE_getResponse(void) {
       // It takes a bit since all Data received to IRQ to get LOW
       // May need to delay a bit for it to be stable before the next try
       delayMicroseconds(SPI_DEFAULT_DELAY_US);
+      cnt--;
     } while(cnt>0 && BLE_IRQ_GetVal());
   }
   return TRUE;

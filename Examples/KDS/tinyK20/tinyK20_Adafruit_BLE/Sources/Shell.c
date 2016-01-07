@@ -42,16 +42,16 @@ static CLS1_ConstStdIOType RTT_Stdio = {
 
 static void ShellTask(void *pvParameters) {
 #if PL_CONFIG_HAS_SEGGER_RTT
-  static unsigned char rtt_buf[48];
+  static unsigned char rtt_buf[128];
 #endif
-  unsigned char buf[48];
+  static unsigned char buf[128];
 
   (void)pvParameters; /* not used */
   buf[0] = '\0';
 #if PL_CONFIG_HAS_SEGGER_RTT
   rtt_buf[0] = '\0';
 #endif
-  (void)CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, CLS1_GetStdio(), CmdParserTable);
+  //(void)CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, CLS1_GetStdio(), CmdParserTable);
   for(;;) {
     (void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), CLS1_GetStdio(), CmdParserTable);
 #if PL_CONFIG_HAS_SEGGER_RTT
