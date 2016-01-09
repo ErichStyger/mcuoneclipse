@@ -15,7 +15,7 @@
 #include "CLS1.h"
 #include "UTIL1.h"
 
-#define MAX_TX_MSG_SIZE   48
+#define MAX_TX_MSG_SIZE     48 /* maximum UART message length to handle */
 static uint8_t txBuffer[MAX_TX_MSG_SIZE] = "";
 static bool isConnected = FALSE;
 static bool isEnabled = FALSE;
@@ -29,10 +29,6 @@ static void BleUartTask(void *pvParameters) {
   bool prevIsEnabled = FALSE;
 
   BLE_Init(); /* initialize BLE module, has to be done when interrupts are enabled */
-  FRTOS1_vTaskDelay(pdMS_TO_TICKS(2000)); /* wait so other tasks have time to write to the Shell */
-  if (res!=ERR_OK) {
-    CLS1_SendStr("Failed changing LED activity\r\n", io->stdErr);
-  }
   CLS1_SendStr("******************************************\r\n", io->stdOut);
   CLS1_SendStr("* Adafruit BLE UART CMD Mode Application *\r\n", io->stdOut);
   CLS1_SendStr("******************************************\r\n", io->stdOut);
@@ -40,7 +36,7 @@ static void BleUartTask(void *pvParameters) {
     if (!prevIsEnabled && isEnabled) { /* enabled now */
       prevIsEnabled = TRUE;
       BLE_Echo(FALSE); /* Disable command echo from Bluefruit */
-      CLS1_SendStr("Changing LED activity to MODE\r\n", io->stdOut);
+      CLS1_SendStr("Changing LED activity to MODE.\r\n", io->stdOut);
       res = BLE_SendATCommandExpectedResponse("AT+HWMODELED=1\n", buf, sizeof(buf), "OK\r\n"); /* NOTE: "=MODE" failed! */
       if (res!=ERR_OK) {
         CLS1_SendStr("Failed setting LED mode.\r\n", io->stdErr);
@@ -100,7 +96,6 @@ static void BleUartTask(void *pvParameters) {
       FRTOS1_vTaskDelay(pdMS_TO_TICKS(500));
       LED1_Neg();
     }
-    //FRTOS1_vTaskDelay(pdMS_TO_TICKS(1000));
   }
 }
 
@@ -148,12 +143,13 @@ uint8_t BLEUART_CMDMODE_ParseCommand(const unsigned char *cmd, bool *handled, co
   }
   return res; /* no error */
 }
+static TaskHandle_t handle;
 
 void BLEUART_CMDMODE_Init(void) {
   txBuffer[0] = '\0';
   isConnected = FALSE;
-  isEnabled = FALSE;
-  if (FRTOS1_xTaskCreate(BleUartTask, "BleUart", configMINIMAL_STACK_SIZE+100, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  isEnabled = TRUE;
+  if (FRTOS1_xTaskCreate(BleUartTask, "BleUart", configMINIMAL_STACK_SIZE+100, NULL, tskIDLE_PRIORITY+1, &handle) != pdPASS) {
     for(;;){} /* error */
   }
 }
