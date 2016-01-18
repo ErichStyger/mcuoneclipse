@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="com.pemicro.debug.gdbjtag.pne.launchConfigurationType">
+<listAttribute key="com.pemicro.debug.gdbjtag.pne.ELVES"/>
+<intAttribute key="com.pemicro.debug.gdbjtag.pne.NUMBER_ELVES" value="0"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.PE.DEVICE_NAME" value="Freescale_K2x_K20DN128M5"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.PE.GDB_IP" value="127.0.0.1"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.PE.GDB_OPTIONS" value=""/>
@@ -62,6 +64,7 @@
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.preserveMemoryTo2" value="3"/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.preservePartioning" value="false"/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.programtrim" value="false"/>
+<intAttribute key="com.pemicro.debug.gdbjtag.pne.selectedCoreNumber" value="1"/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.swoEnableTargetCpuFreq" value="0"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.swoEnableTargetPortMask" value="0x1"/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.swoEnableTargetSwoFreq" value="0"/>
