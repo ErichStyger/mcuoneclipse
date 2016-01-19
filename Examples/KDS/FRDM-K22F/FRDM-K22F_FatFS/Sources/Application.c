@@ -29,6 +29,12 @@ static void LogToFile(int16_t x) {
   UINT bw;
   TIMEREC time;
 
+  if (!FAT1_isDiskPresent("0")) {
+    Err("Disk not present\r\n");
+    return;
+  } else {
+    SHELL_SendString("logging data...\r\n");
+  }
   /* open file */
   if (FAT1_open(&fp, "./log.txt", FA_OPEN_ALWAYS|FA_WRITE)!=FR_OK) {
     Err("failed opening file\r\n");
@@ -66,7 +72,7 @@ static void AppTask(void *pvParameters) {
 
   (void)pvParameters; /* parameter not used */
   for(;;) {
-    FRTOS1_vTaskDelay(1000/portTICK_PERIOD_MS);
+    FRTOS1_vTaskDelay(5000/portTICK_PERIOD_MS);
     LED1_Neg(); /* Red LED */
     LogToFile(i++);
   }
