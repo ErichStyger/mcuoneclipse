@@ -5,6 +5,8 @@
  *      Author: tastyger
  */
 
+#include "Platform.h"
+#if PL_HAS_NEO_PIXEL
 #include "NeoPixel.h"
 #include "PE_Types.h"
 #include "DMA1.h"
@@ -332,3 +334,4 @@ void NEO_Init(void) {
   InitTransmitBuf();
   InitDMA();
 }
+#endif /* PL_HAS_NEO_PIXEL */

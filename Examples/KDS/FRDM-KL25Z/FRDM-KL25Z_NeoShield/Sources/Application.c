@@ -12,7 +12,9 @@
 #include "NeoMatrix.h"
 #include "RNet_App.h"
 #include "TmDt1.h"
-#include "RTC1.h"
+#if PL_HAS_RTC
+  #include "RTC1.h"
+#endif
 #if PL_HAS_PONG
   #include "PongGame.h"
 #endif
@@ -66,6 +68,7 @@ void ClockUpdate(void) {
   }
 }
 
+#if PL_HAS_RTC
 static void UpdateFromRTC(void) {
   RTC1_TTIME time;
   RTC1_TDATE date;
@@ -77,7 +80,9 @@ static void UpdateFromRTC(void) {
      (void)TmDt1_SetDate(date.year+2000, date.month, date.day);
   }
 }
+#endif
 
+#if PL_HAS_NEO_PIXEL
 static void NeoTask(void* pvParameters) {
   int i;
 
@@ -148,15 +153,18 @@ static void NeoTask(void* pvParameters) {
 //    NEOL_PixelTrail(0x00, 0x00, 0xff/64, NEO_PIXEL_FIRST, NEO_PIXEL_LAST, 36, 50, 2);
 //    DimmColor(NEO_PIXEL_FIRST, NEO_PIXEL_LAST, FALSE, TRUE, TRUE);
 #endif
-    LED1_Neg();
+    //LED1_Neg();
     FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
     //NEO_TransferPixels();
   }
 }
+#endif
 
 void APP_Run(void) {
+#if PL_HAS_NEO_PIXEL
   NEO_Init();
   MATRIX_Init();
+#endif
   SHELL_Init();
 #if PL_HAS_MAZE_RACE
   MR_Init();
@@ -172,7 +180,7 @@ void APP_Run(void) {
 #endif
 #if PL_HAS_PONG
   PONG_Init();
-#else
+#elif PL_HAS_NEO_PIXEL
   if (FRTOS1_xTaskCreate(
         NeoTask,  /* pointer to the task */
         "Neo", /* task name for kernel awareness debugging */

@@ -36,9 +36,12 @@ extern "C" {
 
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "Platform.h"
 #include "SPIBus.h"
 #include "Keys.h"
-#include "MazeRace.h"
+#if PL_HAS_MAZE_RACE
+  #include "MazeRace.h"
+#endif
 
 /*
 ** ===================================================================
@@ -379,7 +382,9 @@ void RTOSTRC1_OnTraceWrap(void)
 */
 void EIntA_OnInterrupt(void)
 {
+#if PL_HAS_MAZE_RACE
   MR_DoEvent(MR_EVENT_TRGB, TRUE);
+#endif
 }
 
 /*
@@ -396,7 +401,9 @@ void EIntA_OnInterrupt(void)
 */
 void EIntB_OnInterrupt(void)
 {
+#if PL_HAS_MAZE_RACE
   MR_DoEvent(MR_EVENT_TRGA, TRUE);
+#endif
 }
 
 /* END Events */

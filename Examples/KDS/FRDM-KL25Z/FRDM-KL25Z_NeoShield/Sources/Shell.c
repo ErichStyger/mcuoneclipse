@@ -12,7 +12,10 @@
 #include "CLS1.h"
 #include "LED1.h"
 #include "LED2.h"
-#include "RTC1.h"
+#include "LED3.h"
+#if PL_HAS_RTC
+  #include "RTC1.h"
+#endif
 #include "TmDt1.h"
 #include "MazeRace.h"
 #if PL_HAS_RNET
@@ -32,7 +35,7 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if FRTOS1_PARSE_COMMAND_ENABLED
   FRTOS1_ParseCommand,
 #endif
-#if RTC1_PARSE_COMMAND_ENABLED
+#if PL_HAS_RTC && RTC1_PARSE_COMMAND_ENABLED
   RTC1_ParseCommand,
 #endif
 #if PL_HAS_RNET
@@ -54,7 +57,18 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if TmDt1_PARSE_COMMAND_ENABLED
   TmDt1_ParseCommand,
 #endif
+#if PL_HAS_MAZE_RACE
   MR_ParseCommand,
+#endif
+#if LED1_PARSE_COMMAND_ENABLED
+  LED1_ParseCommand,
+#endif
+#if LED2_PARSE_COMMAND_ENABLED
+  LED2_ParseCommand,
+#endif
+#if LED3_PARSE_COMMAND_ENABLED
+  LED3_ParseCommand,
+#endif
   NULL /* sentinel */
 };
 
@@ -77,7 +91,6 @@ static void ShellTask(void *pvParameters) {
 #endif
     (void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), CLS1_GetStdio(), CmdParserTable);
     FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
-    LED2_Neg();
   }
 }
 
