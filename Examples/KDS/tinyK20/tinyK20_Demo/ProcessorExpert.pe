@@ -3,7 +3,7 @@
   <Header>
     <Name>tinyK20_Demo</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>93</ModificationStamp>
+    <ModificationStamp>94</ModificationStamp>
     <Date>2015-06-19</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -9529,7 +9529,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.112</BeanVersion>
+    <BeanVersion>01.116</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -17905,7 +17905,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.074</BeanVersion>
+          <BeanVersion>01.080</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -18681,6 +18681,14 @@
               <Index>0</Index>
               <Value>true</Value>
             </ItemState>
+            <ItemState>
+              <ItemSymbol>USBCurrentDraw_mA</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>100</Value>
+              <Base>DEC</Base>
+            </ItemState>
           </Properties>
           <Methods>
             <ItemState>
@@ -18827,7 +18835,7 @@
               <UsrMethodName>Notify_Callback</UsrMethodName>
             </ItemState>
             <ItemState>
-              <ItemSymbol>CablePluggedIn</ItemSymbol>
+              <ItemSymbol>ApplicationStarted</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
@@ -18835,10 +18843,10 @@
               <Value>true</Value>
               <LastSelection>true</LastSelection>
               <LastUserSel>yes</LastUserSel>
-              <UsrMethodName>CablePluggedIn</UsrMethodName>
+              <UsrMethodName>ApplicationStarted</UsrMethodName>
             </ItemState>
             <ItemState>
-              <ItemSymbol>ComPortOpen</ItemSymbol>
+              <ItemSymbol>TransactionsStarted</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
@@ -18846,7 +18854,7 @@
               <Value>true</Value>
               <LastSelection>true</LastSelection>
               <LastUserSel>yes</LastUserSel>
-              <UsrMethodName>ComPortOpen</UsrMethodName>
+              <UsrMethodName>TransactionsStarted</UsrMethodName>
             </ItemState>
             <ItemState>
               <ItemSymbol>App_Task</ItemSymbol>
@@ -18913,6 +18921,28 @@
               <LastSelection>true</LastSelection>
               <LastUserSel>always</LastUserSel>
               <UsrMethodName>Init</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CablePluggedIn</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>CablePluggedIn</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>ComPortOpen</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>yes</LastUserSel>
+              <UsrMethodName>ComPortOpen</UsrMethodName>
             </ItemState>
           </Methods>
           <Events>
