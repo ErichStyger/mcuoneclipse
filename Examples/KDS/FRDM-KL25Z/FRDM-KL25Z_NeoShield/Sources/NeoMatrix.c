@@ -143,7 +143,7 @@ void Adafruit_NeoMatrix_drawPixel(int16_t x, int16_t y, uint8_t red, uint8_t gre
       else          pixelOffset =  major      * majorScale     + minor;
     }
   }
-  NEO_SetPixelRGB(tileOffset + pixelOffset, red, green, blue);
+  NEO_SetPixelRGB(0, tileOffset + pixelOffset, red, green, blue);
 }
 
 

@@ -3,7 +3,7 @@
   <Header>
     <Name>FRDM-KL25Z_NeoShield</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>194</ModificationStamp>
+    <ModificationStamp>196</ModificationStamp>
     <Date>2015-04-22</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -4507,7 +4507,7 @@
       <ItemId13>48</ItemId13>
       <Value13>true</Value13>
       <ItemId14>49</ItemId14>
-      <Value14>false</Value14>
+      <Value14>true</Value14>
       <ItemId15>50</ItemId15>
       <Value15>true</Value15>
       <ItemId16>51</ItemId16>
@@ -4563,11 +4563,11 @@
       <ItemId41>267</ItemId41>
       <Value41>true</Value41>
       <ItemId42>272</ItemId42>
-      <Value42>true</Value42>
+      <Value42>false</Value42>
       <ItemId43>280</ItemId43>
       <Value43>true</Value43>
       <ItemId44>281</ItemId44>
-      <Value44>true</Value44>
+      <Value44>false</Value44>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
       <Count>0</Count>
@@ -9289,8 +9289,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
+        <Index>0</Index>
+        <Value>true</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Prompt</ItemSymbol>
@@ -17356,7 +17356,7 @@
     <BeanType>LED</BeanType>
     <Name>LED3</Name>
     <CompNumb>272</CompNumb>
-    <CompEnabled>true</CompEnabled>
+    <CompEnabled>false</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>Led</IconName>
     <UserFolderName />
@@ -18509,7 +18509,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>Tmr</ItemSymbol>
-                    <Value>TPM0_CNT</Value>
+                    <Value />
                     <SharedPrphMode>false</SharedPrphMode>
                   </ItemState>
                   <ItemState>
@@ -18522,7 +18522,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>CmpInt</ItemSymbol>
-                    <Value>INT_TPM0</Value>
+                    <Value />
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>IntPriority</ItemSymbol>
@@ -18561,7 +18561,7 @@
                     <ItemSymbol>PeriodTmg</ItemSymbol>
                     <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
-                    <Value>init:;prec:5%;RTS:none;clksrc_presc[SpeedMode0]Auto select;clksrc_presc[SpeedMode1]Auto select;clksrc_presc[SpeedMode2]Auto select;clksrc_presc[SpeedMode3]Auto select;clksrc_presc[SpeedMode4]Auto select;clksrc_presc[SpeedMode5]Auto select;clksrc_presc[SpeedMode6]Auto select;clksrc_presc[SpeedMode7]Auto select</Value>
+                    <Value />
                     <RuntimeSetting>0</RuntimeSetting>
                     <ReqDevPrescHigh>-1</ReqDevPrescHigh>
                     <ReqDevPrescLow>-1</ReqDevPrescLow>
@@ -18587,13 +18587,13 @@
                     <ReqSrcClkPrescSpeedMode5>-1</ReqSrcClkPrescSpeedMode5>
                     <ReqSrcClkPrescSpeedMode6>-1</ReqSrcClkPrescSpeedMode6>
                     <ReqSrcClkPrescSpeedMode7>-1</ReqSrcClkPrescSpeedMode7>
-                    <InitValue>2 ms</InitValue>
+                    <InitValue />
                     <Precision>5.0</Precision>
                     <PrecInProc>true</PrecInProc>
                     <LowLimit />
                     <HighLimit />
                     <List lines_count="0" />
-                    <UnitText>ms</UnitText>
+                    <UnitText />
                     <MinCounterTicks>0</MinCounterTicks>
                     <ControlledTimingCfgFromPropertySymbol>Tmg_Period</ControlledTimingCfgFromPropertySymbol>
                     <ControlledTimingCfgFromComponentRef>LinkedTimerUnit</ControlledTimingCfgFromComponentRef>
@@ -18602,7 +18602,7 @@
                     <ItemSymbol>DutyTmg</ItemSymbol>
                     <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
-                    <Value>init:;prec:5%;RTS:none;clksrc_presc[SpeedMode0]Auto select;clksrc_presc[SpeedMode1]Auto select;clksrc_presc[SpeedMode2]Auto select;clksrc_presc[SpeedMode3]Auto select;clksrc_presc[SpeedMode4]Auto select;clksrc_presc[SpeedMode5]Auto select;clksrc_presc[SpeedMode6]Auto select;clksrc_presc[SpeedMode7]Auto select</Value>
+                    <Value />
                     <RuntimeSetting>0</RuntimeSetting>
                     <ReqDevPrescHigh>-1</ReqDevPrescHigh>
                     <ReqDevPrescLow>-1</ReqDevPrescLow>
@@ -18628,13 +18628,13 @@
                     <ReqSrcClkPrescSpeedMode5>-1</ReqSrcClkPrescSpeedMode5>
                     <ReqSrcClkPrescSpeedMode6>-1</ReqSrcClkPrescSpeedMode6>
                     <ReqSrcClkPrescSpeedMode7>-1</ReqSrcClkPrescSpeedMode7>
-                    <InitValue>1 ms</InitValue>
+                    <InitValue />
                     <Precision>5.0</Precision>
                     <PrecInProc>true</PrecInProc>
                     <LowLimit />
                     <HighLimit />
                     <List lines_count="0" />
-                    <UnitText>ms</UnitText>
+                    <UnitText />
                     <MinCounterTicks>0</MinCounterTicks>
                     <ControlledTimingCfgFromPropertySymbol>Tmg_ChanOffset0</ControlledTimingCfgFromPropertySymbol>
                     <ControlledTimingCfgFromComponentRef>LinkedTimerUnit</ControlledTimingCfgFromComponentRef>
@@ -18765,7 +18765,7 @@
                     <ItemSymbol>Config</ItemSymbol>
                     <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
-                    <Value>0</Value>
+                    <Value />
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>RefComp</ItemSymbol>
@@ -28598,7 +28598,7 @@
     <BeanType>Init_TPM_VAR0</BeanType>
     <Name>TPM0</Name>
     <CompNumb>49</CompNumb>
-    <CompEnabled>false</CompEnabled>
+    <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>PERIPHINSP</IconName>
     <UserFolderName />
@@ -66791,7 +66791,7 @@
     <BeanType>TimerUnit_LDD</BeanType>
     <Name>TU2</Name>
     <CompNumb>281</CompNumb>
-    <CompEnabled>true</CompEnabled>
+    <CompEnabled>false</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>CLOCKS_LDD</IconName>
     <UserFolderName>Referenced_Components</UserFolderName>
@@ -66990,7 +66990,7 @@
         <ItemSymbol>Tmg_Period</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>init:;prec:5%;RTS:none;clksrc_presc[SpeedMode0]Auto select;clksrc_presc[SpeedMode1]Auto select;clksrc_presc[SpeedMode2]Auto select;clksrc_presc[SpeedMode3]Auto select;clksrc_presc[SpeedMode4]Auto select;clksrc_presc[SpeedMode5]Auto select;clksrc_presc[SpeedMode6]Auto select;clksrc_presc[SpeedMode7]Auto select</Value>
+        <Value />
         <RuntimeSetting>0</RuntimeSetting>
         <ReqDevPrescHigh>-1</ReqDevPrescHigh>
         <ReqDevPrescLow>-1</ReqDevPrescLow>
@@ -67016,13 +67016,13 @@
         <ReqSrcClkPrescSpeedMode5>-1</ReqSrcClkPrescSpeedMode5>
         <ReqSrcClkPrescSpeedMode6>-1</ReqSrcClkPrescSpeedMode6>
         <ReqSrcClkPrescSpeedMode7>-1</ReqSrcClkPrescSpeedMode7>
-        <InitValue>2 ms</InitValue>
+        <InitValue />
         <Precision>5.0</Precision>
         <PrecInProc>true</PrecInProc>
         <LowLimit />
         <HighLimit />
         <List lines_count="0" />
-        <UnitText>ms</UnitText>
+        <UnitText />
         <MinCounterTicks>0</MinCounterTicks>
       </ItemState>
       <ItemState>
@@ -67085,7 +67085,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ModuloInt</ItemSymbol>
-        <Value />
+        <Value>INT_TPM0</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>ModuloInitPriority</ItemSymbol>
@@ -67216,7 +67216,7 @@
         <ItemSymbol>Tmg_ChanOffset0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>init:;prec:5%;RTS:none;clksrc_presc[SpeedMode0]Auto select;clksrc_presc[SpeedMode1]Auto select;clksrc_presc[SpeedMode2]Auto select;clksrc_presc[SpeedMode3]Auto select;clksrc_presc[SpeedMode4]Auto select;clksrc_presc[SpeedMode5]Auto select;clksrc_presc[SpeedMode6]Auto select;clksrc_presc[SpeedMode7]Auto select</Value>
+        <Value />
         <RuntimeSetting>0</RuntimeSetting>
         <ReqDevPrescHigh>-1</ReqDevPrescHigh>
         <ReqDevPrescLow>-1</ReqDevPrescLow>
@@ -67242,13 +67242,13 @@
         <ReqSrcClkPrescSpeedMode5>-1</ReqSrcClkPrescSpeedMode5>
         <ReqSrcClkPrescSpeedMode6>-1</ReqSrcClkPrescSpeedMode6>
         <ReqSrcClkPrescSpeedMode7>-1</ReqSrcClkPrescSpeedMode7>
-        <InitValue>1 ms</InitValue>
+        <InitValue />
         <Precision>5.0</Precision>
         <PrecInProc>true</PrecInProc>
         <LowLimit />
         <HighLimit />
         <List lines_count="0" />
-        <UnitText>ms</UnitText>
+        <UnitText />
         <MinCounterTicks>0</MinCounterTicks>
       </ItemState>
       <ItemState>
@@ -67298,7 +67298,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ChannelCmpIntVector0</ItemSymbol>
-        <Value />
+        <Value>INT_TPM0</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>ChannelCmpIntPriority0</ItemSymbol>

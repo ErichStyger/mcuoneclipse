@@ -27,6 +27,9 @@
 #if PL_HAS_MAZE_RACE
   #include "MazeRace.h"
 #endif
+#if PL_HAS_LED_CUBE
+  #include "LedCube.h"
+#endif
 
 static void DimmColor(NEO_PixelIdxT start, NEO_PixelIdxT end, bool isRed, bool isGreen, bool isBlue) {
   int i, j;
@@ -44,7 +47,7 @@ static void DimmColor(NEO_PixelIdxT start, NEO_PixelIdxT end, bool isRed, bool i
       if (isBlue) {
         blue = i;
       }
-      NEO_SetPixelRGB(j, red, green, blue);
+      NEO_SetPixelRGB(0, j, red, green, blue);
     }
     NEO_TransferPixels();
     FRTOS1_vTaskDelay(25/portTICK_RATE_MS);
@@ -164,6 +167,9 @@ void APP_Run(void) {
 #if PL_HAS_NEO_PIXEL
   NEO_Init();
   MATRIX_Init();
+#endif
+#if PL_HAS_LED_CUBE
+  LCUBE_Init();
 #endif
   SHELL_Init();
 #if PL_HAS_MAZE_RACE

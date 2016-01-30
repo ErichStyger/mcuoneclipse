@@ -47,14 +47,12 @@
 #include "LED2.h"
 #include "Inhr1.h"
 #include "PwmLdd1.h"
-#include "LED3.h"
-#include "Inhr2.h"
-#include "PwmLdd2.h"
 #include "GI2C1.h"
 #include "I2C1.h"
 #include "RTC1.h"
 #include "TMOUT1.h"
 #include "PTC.h"
+#include "TPM0.h"
 #include "DMA1.h"
 #include "DMACH0.h"
 #include "DMACH1.h"
@@ -79,7 +77,6 @@
 #include "EIntA.h"
 #include "ExtIntLdd4.h"
 #include "TU1.h"
-#include "TU2.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -20,7 +20,7 @@ static char *argv[__MAX_CMDLINE_ARGS] = { 0 };
 #define __call_static_initializers __init_cpp
 #endif
 extern int __argc_argv(char **, int);
-extern char __SP_INIT[];
+extern unsigned int __SP_INIT[];
 extern void __call_static_initializers(void);
 extern int main(int, char **);
 

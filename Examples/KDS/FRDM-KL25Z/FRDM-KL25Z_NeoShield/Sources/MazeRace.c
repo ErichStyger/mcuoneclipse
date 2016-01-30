@@ -186,7 +186,6 @@ static uint8_t PrintStatus(CLS1_ConstStdIOType *io) {
   uint8_t buf[24];
 
   CLS1_SendStatusStr((unsigned char*)"mr", (const unsigned char*)"\r\n", io->stdOut);
-  CLS1_SendStatusStr("  status", "ok\r\n", io->stdOut);
   if (EIntA_GetVal()!=0) {
     CLS1_SendStatusStr("  A", "HIGH\r\n", io->stdOut);
   } else {

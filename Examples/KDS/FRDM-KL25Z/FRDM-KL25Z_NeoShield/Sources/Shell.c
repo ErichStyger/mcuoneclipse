@@ -12,7 +12,9 @@
 #include "CLS1.h"
 #include "LED1.h"
 #include "LED2.h"
-#include "LED3.h"
+#if PL_HAS_LED3
+  #include "LED3.h"
+#endif
 #if PL_HAS_RTC
   #include "RTC1.h"
 #endif
@@ -27,6 +29,12 @@
 #endif
 #if PL_HAS_SD_CARD
   #include "FAT1.h"
+#endif
+#if PL_HAS_NEO_PIXEL
+  #include "NeoPixel.h"
+#endif
+#if PL_HAS_LED_CUBE
+  #include "LedCube.h"
 #endif
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
@@ -66,8 +74,14 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if LED2_PARSE_COMMAND_ENABLED
   LED2_ParseCommand,
 #endif
-#if LED3_PARSE_COMMAND_ENABLED
+#if PL_HAS_LED3 && LED3_PARSE_COMMAND_ENABLED
   LED3_ParseCommand,
+#endif
+#if PL_HAS_NEO_PIXEL
+  NEO_ParseCommand,
+#endif
+#if PL_HAS_LED_CUBE
+  LCUBE_ParseCommand,
 #endif
   NULL /* sentinel */
 };

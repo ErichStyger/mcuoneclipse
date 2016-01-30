@@ -26,35 +26,35 @@
 #define NEO_NOF_BITS_PIXEL  24  /* 24 bits for pixel */
 #define NEO_DMA_NOF_BYTES   sizeof(transmitBuf)
 
-static uint8_t transmitBuf[NEO_NOF_PIXEL*NEO_NOF_BITS_PIXEL];
+static uint8_t transmitBuf[NEOC_NOF_Y*NEO_NOF_BITS_PIXEL];
 
-uint8_t NEO_GetPixelColor(NEO_PixelIdxT pixelNo, uint32_t *rgb) {
+uint8_t NEO_GetPixelColor(NEO_PixelIdxT column, NEO_PixelIdxT row, uint32_t *rgb) {
   uint8_t res, r,g,b;
 
-  res = NEO_GetPixelRGB(pixelNo, &r, &g, &b);
+  res = NEO_GetPixelRGB(column, row, &r, &g, &b);
   *rgb = (r<<16)|(g<<8)|b;
   return res;
 }
 
-uint8_t NEO_SetPixelColor(NEO_PixelIdxT pixelNo, uint32_t rgb) {
-  return NEO_SetPixelRGB(pixelNo, (rgb>>16)&0xff, (rgb>>8)&0xff, rgb&0xff);
+uint8_t NEO_SetPixelColor(NEO_PixelIdxT x, NEO_PixelIdxT y, uint32_t rgb) {
+  return NEO_SetPixelRGB(x, y, (rgb>>16)&0xff, (rgb>>8)&0xff, rgb&0xff);
 }
 
 /* sets the color of an individual pixel */
-uint8_t NEO_SetPixelRGB(NEO_PixelIdxT pixelNo, uint8_t red, uint8_t green, uint8_t blue) {
+uint8_t NEO_SetPixelRGB(NEO_PixelIdxT x, NEO_PixelIdxT y, uint8_t red, uint8_t green, uint8_t blue) {
   NEO_PixelIdxT idx;
   int i;
 
-  if (pixelNo>=NEO_NOF_PIXEL) {
+  if (x>=NEO_NOF_X || y>=NEO_NOF_Y) {
     return ERR_RANGE; /* error, out of range */
   }
-  idx = pixelNo*NEO_NOF_BITS_PIXEL;
+  idx = y*NEO_NOF_BITS_PIXEL;
   /* green */
   for(i=0;i<8;i++) {
     if (green&0x80) {
-      transmitBuf[idx] = VAL1;
+      transmitBuf[idx] |= (VAL1<<x); /* set bit */
     } else {
-      transmitBuf[idx] = VAL0;
+      transmitBuf[idx] &= ~(VAL1<<x); /* clear bit */
     }
     green <<= 1; /* next bit */
     idx++;
@@ -62,9 +62,9 @@ uint8_t NEO_SetPixelRGB(NEO_PixelIdxT pixelNo, uint8_t red, uint8_t green, uint8
   /* red */
   for(i=0;i<8;i++) {
     if (red&0x80) {
-      transmitBuf[idx] = VAL1;
+      transmitBuf[idx] |= (VAL1<<x); /* set bit */
     } else {
-      transmitBuf[idx] = VAL0;
+      transmitBuf[idx] &= ~(VAL1<<x); /* clear bit */
     }
     red <<= 1; /* next bit */
     idx++;
@@ -72,9 +72,9 @@ uint8_t NEO_SetPixelRGB(NEO_PixelIdxT pixelNo, uint8_t red, uint8_t green, uint8
   /* blue */
   for(i=0;i<8;i++) {
     if (blue&0x80) {
-      transmitBuf[idx] = VAL1;
+      transmitBuf[idx] |= (VAL1<<x); /* set bit */
     } else {
-      transmitBuf[idx] = VAL0;
+      transmitBuf[idx] &= ~(VAL1<<x); /* clear bit */
     }
     blue <<= 1; /* next bit */
     idx++;
@@ -83,20 +83,20 @@ uint8_t NEO_SetPixelRGB(NEO_PixelIdxT pixelNo, uint8_t red, uint8_t green, uint8
 }
 
 /* returns the color of an individual pixel */
-uint8_t NEO_GetPixelRGB(NEO_PixelIdxT pixelNo, uint8_t *redP, uint8_t *greenP, uint8_t *blueP) {
+uint8_t NEO_GetPixelRGB(NEO_PixelIdxT x, NEO_PixelIdxT y, uint8_t *redP, uint8_t *greenP, uint8_t *blueP) {
   NEO_PixelIdxT idx;
   uint8_t red, green, blue;
   int i;
 
-  if (pixelNo>=NEO_NOF_PIXEL) {
+  if (x>=NEO_NOF_X || y>=NEO_NOF_Y) {
     return ERR_RANGE; /* error, out of range */
   }
   red = green = blue = 0;
-  idx = pixelNo*NEO_NOF_BITS_PIXEL;
+  idx = y*NEO_NOF_BITS_PIXEL;
   /* green */
   for(i=0;i<8;i++) {
     green <<= 1;
-    if (transmitBuf[idx]==VAL1) {
+    if (transmitBuf[idx]&(VAL1<<x)) {
       green |= 1;
     }
     idx++; /* next bit */
@@ -104,7 +104,7 @@ uint8_t NEO_GetPixelRGB(NEO_PixelIdxT pixelNo, uint8_t *redP, uint8_t *greenP, u
   /* red */
   for(i=0;i<8;i++) {
     red <<= 1;
-    if (transmitBuf[idx]==VAL1) {
+    if (transmitBuf[idx]==(VAL1<<x)) {
       red |= 1;
     }
     idx++; /* next bit */
@@ -112,7 +112,7 @@ uint8_t NEO_GetPixelRGB(NEO_PixelIdxT pixelNo, uint8_t *redP, uint8_t *greenP, u
   /* blue */
   for(i=0;i<8;i++) {
     blue <<= 1;
-    if (transmitBuf[idx]==VAL1) {
+    if (transmitBuf[idx]==(VAL1<<x)) {
       blue |= 1;
     }
     idx++; /* next bit */
@@ -124,62 +124,79 @@ uint8_t NEO_GetPixelRGB(NEO_PixelIdxT pixelNo, uint8_t *redP, uint8_t *greenP, u
 }
 
 /* binary OR the color of an individual pixel */
-uint8_t NEO_OrPixelRGB(NEO_PixelIdxT pixelNo, uint8_t red, uint8_t green, uint8_t blue) {
+uint8_t NEO_OrPixelRGB(NEO_PixelIdxT x, NEO_PixelIdxT y, uint8_t red, uint8_t green, uint8_t blue) {
   uint8_t r, g, b;
 
-  if (pixelNo>=NEO_NOF_PIXEL) {
+  if (x>=NEO_NOF_X || y>=NEO_NOF_Y) {
     return ERR_RANGE; /* error, out of range */
   }
-  NEO_GetPixelRGB(pixelNo, &r, &g, &b);
+  NEO_GetPixelRGB(x, y, &r, &g, &b);
   r |= red;
   b |= blue;
   g |= blue;
-  NEO_SetPixelRGB(pixelNo, red, green, blue);
+  NEO_SetPixelRGB(x, y, red, green, blue);
   return ERR_OK;
 }
 
 /* binary XOR the color of an individual pixel */
-uint8_t NEO_XorPixelRGB(NEO_PixelIdxT pixelNo, uint8_t red, uint8_t green, uint8_t blue) {
+uint8_t NEO_XorPixelRGB(NEO_PixelIdxT x, NEO_PixelIdxT y, uint8_t red, uint8_t green, uint8_t blue) {
   uint8_t r, g, b;
 
-  if (pixelNo>=NEO_NOF_PIXEL) {
+  if (x>=NEO_NOF_X || y>=NEO_NOF_Y) {
     return ERR_RANGE; /* error, out of range */
   }
-  NEO_GetPixelRGB(pixelNo, &r, &g, &b);
+  NEO_GetPixelRGB(x, y, &r, &g, &b);
   r ^= red;
   b ^= blue;
   g ^= blue;
-  NEO_SetPixelRGB(pixelNo, red, green, blue);
+  NEO_SetPixelRGB(x, y, red, green, blue);
   return ERR_OK;
 }
 
-uint8_t NEO_ClearPixel(NEO_PixelIdxT pixelNo) {
-  return NEO_SetPixelRGB(pixelNo, 0, 0, 0);
+uint8_t NEO_ClearPixel(NEO_PixelIdxT x, NEO_PixelIdxT y) {
+  return NEO_SetPixelRGB(x, y, 0, 0, 0);
 }
 
-uint8_t NEO_DimmPercentPixel(NEO_PixelIdxT pixelNo, uint8_t percent) {
+uint8_t NEO_DimmPercentPixel(NEO_PixelIdxT x, NEO_PixelIdxT y, uint8_t percent) {
   uint8_t red, green, blue;
   uint32_t dRed, dGreen, dBlue;
   uint8_t res;
 
-  res = NEO_GetPixelRGB(pixelNo, &red, &green, &blue);
+  res = NEO_GetPixelRGB(x, y, &red, &green, &blue);
   if (res != ERR_OK) {
     return res;
   }
   dRed = ((uint32_t)red*(100-percent))/100;
   dGreen = ((uint32_t)green*(100-percent))/100;
   dBlue = ((uint32_t)blue*(100-percent))/100;
-  return NEO_SetPixelRGB(pixelNo, (uint8_t)dRed, (uint8_t)dGreen, (uint8_t)dBlue);
+  return NEO_SetPixelRGB(x, y, (uint8_t)dRed, (uint8_t)dGreen, (uint8_t)dBlue);
 }
 
 uint8_t NEO_ClearAllPixel(void) {
-  NEO_PixelIdxT i;
+  NEO_PixelIdxT x, y;
   uint8_t res;
 
-  for(i=0;i<NEO_NOF_PIXEL;i++) {
-    res = NEO_ClearPixel(i);
-    if (res!=ERR_OK) {
-      return res;
+  for(y=0;y<NEO_NOF_Y;y++) {
+    for(x=0;x<NEO_NOF_X;x++) {
+      res = NEO_ClearPixel(x, y);
+      if (res!=ERR_OK) {
+        return res;
+      }
+    }
+  }
+  return ERR_OK;
+}
+
+uint8_t NEO_SetAllPixelColor(uint32_t rgb) {
+  NEO_PixelIdxT x, y;
+  uint8_t res;
+
+  for(y=0;y<NEO_NOF_Y;y++) {
+    for(x=0;x<NEO_NOF_X;x++) {
+      res = NEO_SetPixelColor(x, y, rgb);
+      if (res!=ERR_OK) {
+        return res;
+      }
     }
   }
   return ERR_OK;
@@ -328,6 +345,74 @@ static uint8_t Transfer(uint32_t dataAddress, size_t nofBytes) {
 
 uint8_t NEO_TransferPixels(void) {
   return Transfer((uint32_t)&transmitBuf[0], sizeof(transmitBuf));
+}
+
+static uint8_t PrintStatus(CLS1_ConstStdIOType *io) {
+  uint8_t buf[16];
+
+  CLS1_SendStatusStr((unsigned char*)"neo", (const unsigned char*)"\r\n", io->stdOut);
+  UTIL1_Num32uToStr(buf, sizeof(buf), NEO_NOF_X);
+  UTIL1_strcat(buf, sizeof(buf), "\r\n");
+  CLS1_SendStatusStr("  X", buf, io->stdOut);
+
+  UTIL1_Num32uToStr(buf, sizeof(buf), NEO_NOF_Y);
+  UTIL1_strcat(buf, sizeof(buf), "\r\n");
+  CLS1_SendStatusStr("  Y", buf, io->stdOut);
+
+  UTIL1_Num32uToStr(buf, sizeof(buf), NEO_NOF_PIXEL);
+  UTIL1_strcat(buf, sizeof(buf), "\r\n");
+  CLS1_SendStatusStr("  Pixels", buf, io->stdOut);
+  return ERR_OK;
+}
+
+uint8_t NEO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
+  uint8_t res = ERR_OK;
+  uint32_t color;
+  int32_t tmp, x, y;
+  const uint8_t *p;
+
+  if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "neo help")==0) {
+    CLS1_SendHelpStr((unsigned char*)"neo", (const unsigned char*)"Group of neo commands\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  clear all", (const unsigned char*)"Clear all pixels\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  set all <rgb>", (const unsigned char*)"Set all pixel with RGB value\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  set <x> <y> <rgb>", (const unsigned char*)"Set pixel with RGB value\r\n", io->stdOut);
+    *handled = TRUE;
+    return ERR_OK;
+  } else if ((UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0) || (UTIL1_strcmp((char*)cmd, "neo status")==0)) {
+    *handled = TRUE;
+    return PrintStatus(io);
+  } else if (UTIL1_strcmp((char*)cmd, "neo clear all")==0) {
+    NEO_ClearAllPixel();
+    NEO_TransferPixels();
+    *handled = TRUE;
+    return ERR_OK;
+  } else if (UTIL1_strncmp((char*)cmd, "neo set all", sizeof("neo set all")-1)==0) {
+    p = cmd+sizeof("neo set all")-1;
+    res = UTIL1_xatoi(&p, &tmp); /* read color RGB value */
+    if (res==ERR_OK && tmp>=0 && tmp<=0xffffff) { /* within RGB value */
+      color = tmp;
+      NEO_SetAllPixelColor(color);
+      NEO_TransferPixels();
+      *handled = TRUE;
+    }
+  } else if (UTIL1_strncmp((char*)cmd, "neo set", sizeof("neo set")-1)==0) {
+    p = cmd+sizeof("neo set")-1;
+    res = UTIL1_xatoi(&p, &x); /* read x pixel index */
+    if (res==ERR_OK && x>=0 && x<NEO_NOF_X) {
+      res = UTIL1_xatoi(&p, &y); /* read y pixel index */
+      if (res==ERR_OK && y>=0 && y<NEO_NOF_Y) {
+        res = UTIL1_xatoi(&p, &tmp); /* read color RGB value */
+        if (res==ERR_OK && tmp>=0 && tmp<=0xffffff) {
+          color = tmp;
+          NEO_SetPixelColor((NEO_PixelIdxT)x, (NEO_PixelIdxT)y, color);
+          NEO_TransferPixels();
+          *handled = TRUE;
+        }
+      }
+    }
+  }
+  return res;
 }
 
 void NEO_Init(void) {
