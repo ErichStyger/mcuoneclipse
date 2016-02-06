@@ -91,7 +91,7 @@ uint8_t NEO_GetPixelRGB(NEO_PixelIdxT x, NEO_PixelIdxT y, uint8_t *redP, uint8_t
   if (x>=NEO_NOF_X || y>=NEO_NOF_Y) {
     return ERR_RANGE; /* error, out of range */
   }
-  red = green = blue = 0;
+  red = green = blue = 0; /* init */
   idx = y*NEO_NOF_BITS_PIXEL;
   /* green */
   for(i=0;i<8;i++) {
@@ -104,7 +104,7 @@ uint8_t NEO_GetPixelRGB(NEO_PixelIdxT x, NEO_PixelIdxT y, uint8_t *redP, uint8_t
   /* red */
   for(i=0;i<8;i++) {
     red <<= 1;
-    if (transmitBuf[idx]==(VAL1<<x)) {
+    if (transmitBuf[idx]&(VAL1<<x)) {
       red |= 1;
     }
     idx++; /* next bit */
@@ -112,7 +112,7 @@ uint8_t NEO_GetPixelRGB(NEO_PixelIdxT x, NEO_PixelIdxT y, uint8_t *redP, uint8_t
   /* blue */
   for(i=0;i<8;i++) {
     blue <<= 1;
-    if (transmitBuf[idx]==(VAL1<<x)) {
+    if (transmitBuf[idx]&(VAL1<<x)) {
       blue |= 1;
     }
     idx++; /* next bit */
