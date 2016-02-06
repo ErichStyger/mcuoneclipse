@@ -112,7 +112,7 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 static void Shell(void) {
   unsigned char buf[48];
 
-  app_value = 0; /* init */
+  app_value = 0; /* init value */
   buf[0] = '\0'; /* init buffer */
   (void)CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, CLS1_GetStdio(), CmdParserTable); /* write help */
   for(;;) { /* wait for input and parse it */
