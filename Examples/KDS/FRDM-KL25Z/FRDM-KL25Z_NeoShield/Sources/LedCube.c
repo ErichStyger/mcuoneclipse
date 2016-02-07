@@ -79,7 +79,7 @@ static bool fade(uint8_t *redNow, uint8_t *greenNow, uint8_t *blueNow, uint8_t r
   return !((*redNow)!=red || (*blueNow)!=blue || (*greenNow)!=green); /* return TRUE if we are done with fading */
 }
 
-static void FillBottomUp(uint32_t delayMs, uint8_t red, uint8_t green, uint8_t blue) {
+static void FillBottomUp(uint8_t red, uint8_t green, uint8_t blue) {
   int i, x, y, face, j;
   uint8_t r,g,b;
   bool done;
@@ -95,7 +95,7 @@ static void FillBottomUp(uint32_t delayMs, uint8_t red, uint8_t green, uint8_t b
         }
       }
       NEO_TransferPixels();
-      FRTOS1_vTaskDelay(delayMs/portTICK_RATE_MS);
+      FRTOS1_vTaskDelay(LCUBE_DelayMs/portTICK_RATE_MS);
     } while(!done);
   }
   /* fill top pixels */
@@ -112,7 +112,7 @@ static void FillBottomUp(uint32_t delayMs, uint8_t red, uint8_t green, uint8_t b
         LCUBE_SetPixelRGB(4, 7-i, y, r, g, b);
       }
       NEO_TransferPixels();
-      FRTOS1_vTaskDelay(delayMs/portTICK_RATE_MS);
+      FRTOS1_vTaskDelay(LCUBE_DelayMs/portTICK_RATE_MS);
     } while(!done);
   } /* for */
 }
@@ -155,27 +155,33 @@ static void FillRightAround(uint8_t red, uint8_t green, uint8_t blue) {
   }
 }
 
-static void GreenTopBlueBottom(uint32_t delayMs) {
+static void GreenTopBlueBottom(void) {
   int i, x, y, face;
-  uint8_t green = 0xaa;
+  uint8_t green = LCUBE_DemoBrightness, red = 0, blue = 0;
+  uint8_t r,g,b;
+  bool done;
 
   for (i=0;i<LCUBE_NOF_CUBE_FACE;i++) {
-    LCUBE_FillFaceRGB(i, 0, 0, 0x10); /* fill all blue */
+    LCUBE_FillFaceRGB(i, 0, 0, LCUBE_DemoBrightness); /* fill all faces with blue */
   }
   NEO_TransferPixels();
-  FRTOS1_vTaskDelay(delayMs/portTICK_RATE_MS);
+  FRTOS1_vTaskDelay(LCUBE_DelayMs/portTICK_RATE_MS);
   /* fill top pixels with green */
   for(i=0;i<4;i++) {
-    for(x=i;x<8-i;x++) {
-      LCUBE_SetPixelRGB(4, x, i, 0, green, 0);
-      LCUBE_SetPixelRGB(4, x, 7-i, 0, green, 0);
-    }
-    for(y=i+1;y<7-i;y++) {
-      LCUBE_SetPixelRGB(4, i, y, 0, green, 0);
-      LCUBE_SetPixelRGB(4, 7-i, y, 0, green, 0);
-    }
-    NEO_TransferPixels();
-    FRTOS1_vTaskDelay(delayMs/portTICK_RATE_MS);
+    (void)LCUBE_GetPixelRGB(4, i, i, &r, &g, &b); /* get current color */
+    do {
+      done = fade(&r, &g, &b, red, green, blue);
+      for(x=i;x<8-i;x++) {
+        LCUBE_SetPixelRGB(4, x, i, r, g, b);
+        LCUBE_SetPixelRGB(4, x, 7-i, r, g, b);
+      }
+      for(y=i+1;y<7-i;y++) {
+        LCUBE_SetPixelRGB(4, i, y, r, g, b);
+        LCUBE_SetPixelRGB(4, 7-i, y, r, g, b);
+      }
+      NEO_TransferPixels();
+      FRTOS1_vTaskDelay(LCUBE_DelayMs/portTICK_RATE_MS);
+    } while(!done);
   }
 }
 
@@ -192,16 +198,16 @@ static void CubeTask(void* pvParameters) {
       FillFaces();
       NEO_TransferPixels();
     } else if (LCUBE_Demo==3) { /* lava lamp */
-      FillBottomUp(LCUBE_DelayMs, LCUBE_DemoBrightness, 0x00, 0x00);
+      FillBottomUp(LCUBE_DemoBrightness, 0x00, 0x00);
       FRTOS1_vTaskDelay(LCUBE_DelayMs/portTICK_RATE_MS);
 
-      FillBottomUp(LCUBE_DelayMs, 0x00, LCUBE_DemoBrightness, 0x00);
+      FillBottomUp(0x00, LCUBE_DemoBrightness, 0x00);
       FRTOS1_vTaskDelay(LCUBE_DelayMs/portTICK_RATE_MS);
 
-      FillBottomUp(LCUBE_DelayMs, 0x00, 0x00, LCUBE_DemoBrightness);
+      FillBottomUp(0x00, 0x00, LCUBE_DemoBrightness);
       FRTOS1_vTaskDelay(LCUBE_DelayMs/portTICK_RATE_MS);
     } else if (LCUBE_Demo==4) { /* Sara: green top with blue bottom */
-      GreenTopBlueBottom(LCUBE_DelayMs);
+      GreenTopBlueBottom();
     } else if (LCUBE_Demo==5) {
       FillRightAround(0x00, 0x00, LCUBE_DemoBrightness);
       FRTOS1_vTaskDelay(LCUBE_DelayMs/portTICK_RATE_MS);
@@ -253,6 +259,12 @@ uint8_t LCUBE_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_S
   if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "cube help")==0) {
     CLS1_SendHelpStr((unsigned char*)"cube", (const unsigned char*)"Group of cube commands\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  demo <number>", (const unsigned char*)"Set demo\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"", (const unsigned char*)"0: do nothing\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"", (const unsigned char*)"1: clear all\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"", (const unsigned char*)"2: faces\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"", (const unsigned char*)"3: lava\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"", (const unsigned char*)"4: green blue\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"", (const unsigned char*)"5: around\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  brightness <number>", (const unsigned char*)"Set brightness\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  delay <number>", (const unsigned char*)"Set delay (ms)\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  face <face> <rgb>", (const unsigned char*)"Set face color\r\n", io->stdOut);
@@ -310,7 +322,7 @@ void LCUBE_Init(void) {
     LCUBE_Faces[i].green = 0;
     LCUBE_Faces[i].blue = 0;
   }
-  LCUBE_Demo = 0;
+  LCUBE_Demo = 1;
   LCUBE_DemoBrightness = 0x5;
   LCUBE_DelayMs = 500;
   if (FRTOS1_xTaskCreate(

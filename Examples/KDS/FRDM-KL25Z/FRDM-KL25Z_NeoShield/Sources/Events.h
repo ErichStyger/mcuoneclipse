@@ -77,6 +77,8 @@
 #include "EIntA.h"
 #include "ExtIntLdd4.h"
 #include "TU1.h"
+#include "SYS1.h"
+#include "RTT1.h"
 
 #ifdef __cplusplus
 extern "C" {
