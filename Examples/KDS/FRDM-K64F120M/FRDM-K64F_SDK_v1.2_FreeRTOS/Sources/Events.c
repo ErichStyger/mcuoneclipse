@@ -193,6 +193,16 @@ void I2C0_IRQHandler(void)
   I2C_DRV_IRQHandler(FSL_I2CCOM1);
 }
 
+void uartCom1_RxCallback(uint32_t instance, void * uartState)
+{
+  /* Write your code here ... */
+}
+
+void uartCom1_TxCallback(uint32_t instance, void * uartState)
+{
+  /* Write your code here ... */
+}
+
 /* END Events */
 
 #ifdef __cplusplus

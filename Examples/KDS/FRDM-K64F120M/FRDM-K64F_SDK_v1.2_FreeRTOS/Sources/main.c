@@ -35,6 +35,7 @@
 #include "osa1.h"
 #include "FRTOS1.h"
 #include "RTOSTRC1.h"
+#include "uartCom1.h"
 #include "gpio1.h"
 #include "i2cCom1.h"
 #include "UTIL1.h"
