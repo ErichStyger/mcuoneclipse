@@ -125,6 +125,7 @@ void APP_Run(void) {
   uint8_t i, L, ch = 0;
   uint8_t buf[32];
 
+  WAIT1_Waitms(100); /* give transceiver time to power up */
   nrf_cmd(0x20, 0x12);  //on, no crc, int on RX/TX done
   nrf_cmd(0x21, 0x00);  //no auto-acknowledge
   nrf_cmd(0x22, 0x00);  //no RX
@@ -137,7 +138,7 @@ void APP_Run(void) {
   nrf_cmd(0x31, 32);  //always RX 32 bytes
   nrf_cmd(0x22, 0x01);  //RX on pipe 0
 
-  buf[0] = 0x30;      //set addresses
+  buf[0] = 0x30;      //set addresses to BLE advertising address 0x8489BED6
   buf[1] = swapbits(0x8E);
   buf[2] = swapbits(0x89);
   buf[3] = swapbits(0xBE);
@@ -156,7 +157,7 @@ void APP_Run(void) {
 
   while(1) {
       L = 0;
-      buf[L++] = 0x40;  //PDU type, given address is random
+      buf[L++] = 0x40;  //PDU type, given address is random 0x42 for Android and 0x40 for iPhone
       buf[L++] = 11;  //17 bytes of payload
 
       buf[L++] = MY_MAC_0;
@@ -170,7 +171,7 @@ void APP_Run(void) {
       buf[L++] = 0x01;
       buf[L++] = 0x05;
 
-      buf[L++] = 7;
+      buf[L++] = 7; /* lenght of name, including type byte */
       buf[L++] = 0x08;
       buf[L++] = 'n';
       buf[L++] = 'R';
@@ -216,7 +217,7 @@ void APP_Run(void) {
       cbi(PORTB, PIN_CE); (in preparation of switching to RX quickly);
 #endif
       LED1_Neg();
-      WAIT1_Waitms(10);
+      WAIT1_Waitms(500); /* advertising interval */
   } /* for */
 }
 
