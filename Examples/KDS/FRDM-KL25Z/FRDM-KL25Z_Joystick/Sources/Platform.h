@@ -12,11 +12,11 @@
 
 #define PL_HAS_SHELL        1
   /*!< If we use a shell */
-#define PL_HAS_NRF24        0
+#define PL_HAS_NRF24        1
   /*!< If we send nRF24L01+ messages */
 #define PL_HAS_RSTDIO       (1 && PL_HAS_NRF24)
   /*!< If we use remote stdio redirection */
-#define PL_HAS_LCD          1
+#define PL_HAS_LCD          0
   /*!< If we have a Nokia LCD attached to the board */
 #define PL_HAS_SNAKE_GAME   (1 && PL_HAS_LCD)
   /*!< If we have the snake game on the LCD */

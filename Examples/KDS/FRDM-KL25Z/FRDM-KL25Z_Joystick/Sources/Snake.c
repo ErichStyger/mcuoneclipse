@@ -13,7 +13,9 @@
 * this stuff is worth it, you can buy me a beer in return Poul-Henning Kamp
 * ----------------------------------------------------------------------------
 */
+#include "Platform.h"
 
+#if PL_HAS_SNAKE_GAME
 #include "PDC1.h"
 #include "WAIT1.h"
 #include "GDisp1.h"
@@ -416,3 +418,4 @@ void SNAKE_Init(void) {
     /*lint +e527 */
   }
 }
+#endif /* PL_HAS_SNAKE_GAME */
