@@ -1,7 +1,7 @@
 /* ###################################################################
 **     Filename    : main.c
 **     Project     : tinyK20_NokiaLCD
-**     Processor   : MK20DX128VLH5
+**     Processor   : MK20DX128VFT5
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
 **     Date/Time   : 2016-03-04, 17:03, # CodeGen: 0

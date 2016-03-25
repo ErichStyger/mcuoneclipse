@@ -1,7 +1,7 @@
 /* ###################################################################
 **     Filename    : Events.c
 **     Project     : tinyK20_NokiaLCD
-**     Processor   : MK20DX128VLH5
+**     Processor   : MK20DX128VFT5
 **     Component   : Events
 **     Version     : Driver 01.00
 **     Compiler    : GNU C Compiler
