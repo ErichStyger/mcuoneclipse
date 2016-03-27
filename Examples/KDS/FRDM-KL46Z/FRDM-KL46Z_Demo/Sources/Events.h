@@ -66,6 +66,7 @@
 #include "EVNT1.h"
 #include "CS1.h"
 #include "WAIT1.h"
+#include "KSDK1.h"
 
 #ifdef __cplusplus
 extern "C" {
