@@ -15,6 +15,10 @@
 #include "GDisp1.h"
 #include "GFONT1.h"
 #include "FDisp1.h"
+#include "Event.h"
+#if PL_CONFIG_HAS_SNAKE
+  #include "Snake.h"
+#endif
 
 static void DrawLines(void) {
   int i;
@@ -31,7 +35,6 @@ static void DrawLines(void) {
   GDisp1_UpdateFull();
   vTaskDelay(pdMS_TO_TICKS(500));
 
-
   GDisp1_DrawLine(0, 0, GDisp1_GetWidth(), GDisp1_GetHeight(), GDisp1_COLOR_BLACK);
   GDisp1_UpdateFull();
   vTaskDelay(pdMS_TO_TICKS(500));
@@ -41,7 +44,7 @@ static void DrawLines(void) {
   for(i=0;i<10;i++) {
     GDisp1_DrawCircle(GDisp1_GetWidth()/2, GDisp1_GetHeight()/2, 5+i*2, GDisp1_COLOR_BLACK);
     GDisp1_UpdateFull();
-    vTaskDelay(pdMS_TO_TICKS(500));
+    vTaskDelay(pdMS_TO_TICKS(100));
   }
 }
 
@@ -66,34 +69,62 @@ static void DrawText(void) {
   GDisp1_Clear();
   GDisp1_UpdateFull();
   PDC1_WriteLineStr(1, "hello");
-  vTaskDelay(pdMS_TO_TICKS(500));
+  vTaskDelay(pdMS_TO_TICKS(200));
   PDC1_WriteLineStr(2, "world");
-  vTaskDelay(pdMS_TO_TICKS(500));
+  vTaskDelay(pdMS_TO_TICKS(200));
   PDC1_WriteLineStr(3, "out");
-  vTaskDelay(pdMS_TO_TICKS(500));
+  vTaskDelay(pdMS_TO_TICKS(200));
   PDC1_WriteLineStr(4, "there");
-  vTaskDelay(pdMS_TO_TICKS(500));
+  vTaskDelay(pdMS_TO_TICKS(200));
   PDC1_WriteLineStr(5, "!!!!!");
-  vTaskDelay(pdMS_TO_TICKS(500));
+  vTaskDelay(pdMS_TO_TICKS(200));
+}
+
+static void ShowTextOnLCD(unsigned char *text) {
+  FDisp1_PixelDim x, y;
+
+  GDisp1_Clear();
+  x = 0;
+  y = 10;
+  FDisp1_WriteString(text, GDisp1_COLOR_BLACK, &x, &y, GFONT1_GetFont());
+  GDisp1_UpdateFull();
 }
 
 void LCD_Task(void *param) {
   (void)param; /* not used */
+#if 0
+  /* test/demo code */
+  LCD_LED_On(); /* turn LCD backlight on */
+  DrawText();
+  LCD_LED_Off(); /* LCD backlight off */
+  vTaskDelay(pdMS_TO_TICKS(500));
+  LCD_LED_On(); /* turn LCD backlight on */
+  DrawLines();
+  LCD_LED_On(); /* turn LCD backlight on */
+  vTaskDelay(pdMS_TO_TICKS(500));
+  LCD_LED_On(); /* turn LCD backlight on */
+  DrawFont();
+  LCD_LED_On(); /* turn LCD backlight on */
+#endif
+  ShowTextOnLCD("Press a key!");
   for(;;) {
     LED1_Neg();
-
-    LCD_LED_On(); /* turn LCD backlight on */
-    DrawText();
-    LCD_LED_Off(); /* LCD backlight off */
-    vTaskDelay(pdMS_TO_TICKS(1000));
-    LCD_LED_On(); /* turn LCD backlight on */
-    DrawLines();
-    LCD_LED_On(); /* turn LCD backlight on */
-    vTaskDelay(pdMS_TO_TICKS(1000));
-    LCD_LED_On(); /* turn LCD backlight on */
-    DrawFont();
-    LCD_LED_On(); /* turn LCD backlight on */
-    vTaskDelay(pdMS_TO_TICKS(1000));
+    if (EVNT_EventIsSetAutoClear(EVNT_LCD_BTN_LEFT)) { /* left */
+      ShowTextOnLCD("left");
+    }
+    if (EVNT_EventIsSetAutoClear(EVNT_LCD_BTN_RIGHT)) { /* right */
+      ShowTextOnLCD("right");
+    }
+    if (EVNT_EventIsSetAutoClear(EVNT_LCD_BTN_UP)) { /* up */
+      ShowTextOnLCD("up");
+    }
+    if (EVNT_EventIsSetAutoClear(EVNT_LCD_BTN_DOWN)) { /* down */
+      ShowTextOnLCD("down");
+    }
+    if (EVNT_EventIsSetAutoClear(EVNT_LCD_BTN_CENTER)) { /* center */
+      ShowTextOnLCD("center");
+    }
+    vTaskDelay(pdMS_TO_TICKS(20));
   }
 }
 

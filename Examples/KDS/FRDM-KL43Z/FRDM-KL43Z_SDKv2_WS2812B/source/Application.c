@@ -14,7 +14,7 @@
 static uint32_t led_data[ALIGN_32BIT_WORDS(STRIP_LED_CNT+1)]; /* plus one dummy LED at the end to drive signal low */
 
 static void SetLEDColor(uint8_t led, uint8_t red, uint8_t green, uint8_t blue) {
-  ws2812_control *p = (ws2812_control*)led_data;
+  ws2812_rgb *p = (ws2812_rgb*)led_data;
 
   if (led<=STRIP_LED_CNT) { /* within index */
     p[led].red    = red;
@@ -39,7 +39,6 @@ void APP_Run(void) {
 	  SetLEDColor(i, 0, 0, 0); /* init */
 	}
 	WS2812_Init();
-	WS2812_PinSelect();
 	i = 0;
 	for(;;) {
     if (i==0) {

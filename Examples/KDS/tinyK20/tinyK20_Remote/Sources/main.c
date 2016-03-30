@@ -66,6 +66,19 @@
 #include "LCD_LED.h"
 #include "LEDpin2.h"
 #include "BitIoLdd9.h"
+#include "PTA.h"
+#include "PTB.h"
+#include "SW1.h"
+#include "ExtIntLdd1.h"
+#include "SW3.h"
+#include "ExtIntLdd3.h"
+#include "SW2.h"
+#include "ExtIntLdd2.h"
+#include "SW4.h"
+#include "ExtIntLdd4.h"
+#include "SW5.h"
+#include "ExtIntLdd5.h"
+#include "SYS1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -84,6 +97,7 @@ int main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
+  SEGGER_SYSVIEW_Start();
   APP_Run();
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
