@@ -57,6 +57,7 @@
 #include "LED3.h"
 #include "LEDpin3.h"
 #include "BitIoLdd8.h"
+#include "KSDK1.h"
 
 #ifdef __cplusplus
 extern "C" {

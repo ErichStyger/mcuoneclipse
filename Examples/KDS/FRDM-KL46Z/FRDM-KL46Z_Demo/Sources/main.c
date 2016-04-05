@@ -70,6 +70,12 @@
 #include "IO_Map.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Application.h"
+int i;
+//extern const int uxTopUsedPriority;
+void foo(void) {
+//  i = uxTopUsedPriority;
+}
+
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -80,7 +86,7 @@ int main(void)
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
-
+  foo();
   APP_Run();
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
