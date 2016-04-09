@@ -20,6 +20,7 @@
 #include "Cpu.h"
 #include "Events.h"
 #include "WAIT1.h"
+#include "KSDK1.h"
 #include "LCD1.h"
 #include "RW1.h"
 #include "BitIoLdd12.h"
