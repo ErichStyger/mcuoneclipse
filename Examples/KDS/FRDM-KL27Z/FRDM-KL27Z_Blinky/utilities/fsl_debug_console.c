@@ -1673,7 +1673,7 @@ size_t __read(int handle, unsigned char *buffer, size_t size)
 }
 /* These function __write and __read is used to support ARM_GCC, KDS, Atollic toolchains to printf and scanf*/
 #elif(defined(__GNUC__))
-int _write(int handle, char *buffer, int size)
+int _write2(int handle, char *buffer, int size)
 {
     if (buffer == 0)
     {
@@ -1698,7 +1698,7 @@ int _write(int handle, char *buffer, int size)
     return size;
 }
 
-int _read(int handle, char *buffer, int size)
+int _read2(int handle, char *buffer, int size)
 {
     /* This function only reads from "standard in", for all other file handles it returns failure. */
     if (handle != 0)

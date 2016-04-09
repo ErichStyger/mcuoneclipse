@@ -36,6 +36,7 @@
 #include "pin_mux.h"
 #include "clock_config.h"
 #include "fsl_lpuart.h"
+#include <stdio.h>
 
 static void delay(volatile uint32_t nof) {
   while(nof!=0) {
@@ -100,7 +101,14 @@ int main(void) {
         LPUART_WriteBlocking(DEMO_LPUART, &ch, 1);
       }
     }
-
+    /* include <stdio.h>
+     * replace -specs=nosys.specs with -specs=rdimon.specs
+     * enable semihosting in launch config, route to gdb
+     * removed -Xlinker -z -Xlinker muldefs
+     * ./utilities/fsl_debug_console.o:C:\tmp\wsp_kds_3.0.0\FRDM-KL27Z_Blinky\Debug/../utilities/fsl_debug_console.c:1702: first defined here
+     *
+     */
+    printf("hello world!\r\n");
     GPIO_ClearPinsOutput(GPIOA, 1<<13u); /* blue led on */
     delay(1000000);
     GPIO_SetPinsOutput(GPIOA, 1<<13u); /* blue led off */
