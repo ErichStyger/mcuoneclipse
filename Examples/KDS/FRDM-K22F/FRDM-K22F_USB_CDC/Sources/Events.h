@@ -51,6 +51,7 @@
 #include "CDC1.h"
 #include "Tx1.h"
 #include "Rx1.h"
+#include "KSDK1.h"
 
 #ifdef __cplusplus
 extern "C" {
