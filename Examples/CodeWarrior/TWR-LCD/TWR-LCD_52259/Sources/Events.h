@@ -73,6 +73,7 @@
 #include "AS1.h"
 #include "UIG1.h"
 #include "CS1.h"
+#include "KSDK1.h"
 
 void Cpu_OnCoreWatchdogINT(void);
 /*
@@ -90,7 +91,7 @@ void Cpu_OnCoreWatchdogINT(void);
 */
 
 
-void EVNT1_AppHandleEvent(byte event);
+void EVNT1_AppHandleEvent(uint8_t event);
 /*
 ** ===================================================================
 **     Event       :  EVNT1_AppHandleEvent (module Events)

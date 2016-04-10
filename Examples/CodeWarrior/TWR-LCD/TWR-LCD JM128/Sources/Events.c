@@ -66,7 +66,7 @@
 **     Returns     : Nothing
 ** ===================================================================
 */
-void EVNT1_AppHandleEvent(byte event)
+void EVNT1_AppHandleEvent(uint8_t event)
 {
   RTOS_HandleEvent(event);
 }

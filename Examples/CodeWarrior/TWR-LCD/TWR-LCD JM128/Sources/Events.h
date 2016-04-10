@@ -87,6 +87,7 @@
 #include "TMOUT1.h"
 #include "UIG1.h"
 #include "CS1.h"
+#include "KSDK1.h"
 
 #include "Platform.h"
 
@@ -179,7 +180,7 @@ void UICalendar1_OnCalendarGetAppointments(UICalendar1_CalendarDateTime *startHi
 ** ===================================================================
 */
 
-void EVNT1_AppHandleEvent(byte event);
+void EVNT1_AppHandleEvent(uint8_t event);
 /*
 ** ===================================================================
 **     Event       :  EVNT1_AppHandleEvent (module Events)
