@@ -366,11 +366,7 @@ void APP_task(void *handle)
     }
 }
 
-#if defined(__CC_ARM) || defined(__GNUC__)
-int main(void)
-#else
-void main(void)
-#endif
+void CompositeMain(void)
 {
     BOARD_InitPins();
     BOARD_BootClockHSRUN();
@@ -385,16 +381,9 @@ void main(void)
                     ) != pdPASS)
     {
         usb_echo("app task create failed!\r\n");
-#if (defined(__CC_ARM) || defined(__GNUC__))
-        return 1U;
-#else
         return;
-#endif
     }
 
     vTaskStartScheduler();
 
-#if (defined(__CC_ARM) || defined(__GNUC__))
-    return 1U;
-#endif
 }

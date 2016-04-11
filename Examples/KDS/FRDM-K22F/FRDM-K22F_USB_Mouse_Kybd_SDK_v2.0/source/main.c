@@ -44,11 +44,12 @@
 #include "task.h"
 #include "queue.h"
 #include "timers.h"
-
+#include "composite.h"
 
 /* Task priorities. */
 #define hello_task_PRIORITY (configMAX_PRIORITIES - 1)
 
+#if 0
 /*!
  * @brief Task responsible for printing of "Hello world." message.
  */
@@ -59,11 +60,15 @@ static void hello_task(void *pvParameters) {
     vTaskSuspend(NULL);
   }
 }
+#endif
 
 /*!
  * @brief Application entry point.
  */
 int main(void) {
+#if 1
+  CompositeMain();
+#else
   /* Init board hardware. */
   BOARD_InitPins();
   BOARD_BootClockRUN();
@@ -74,7 +79,7 @@ int main(void) {
   /* Create RTOS task */
   xTaskCreate(hello_task, "Hello_task", configMINIMAL_STACK_SIZE, NULL, hello_task_PRIORITY, NULL);
   vTaskStartScheduler();
-
+#endif
   for(;;) { /* Infinite loop to avoid leaving the main function */
     __asm("NOP"); /* something to use as a breakpoint stop while looping */
   }

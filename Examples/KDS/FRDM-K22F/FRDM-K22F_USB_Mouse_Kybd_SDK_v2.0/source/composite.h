@@ -34,6 +34,9 @@
 #include "FreeRTOS.h"
 #include "semphr.h"
 #include "event_groups.h"
+#include "usb.h"
+#include "usb_device_class.h"
+#include "usb_device_descriptor.h"
 
 /*******************************************************************************
  * Definitions
@@ -60,6 +63,8 @@ typedef struct _usb_device_composite_struct
     uint8_t currentConfiguration;
     uint8_t currentInterfaceAlternateSetting[USB_COMPOSITE_INTERFACE_COUNT];
 } usb_device_composite_struct_t;
+
+void CompositeMain(void);
 
 /*******************************************************************************
  * API
