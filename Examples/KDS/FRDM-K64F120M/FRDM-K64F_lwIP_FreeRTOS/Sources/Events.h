@@ -36,10 +36,8 @@
 #include "osa1.h"
 #include "eNet1.h"
 #include "FRTOS1.h"
-#include "RTOSTRC1.h"
 #include "UTIL1.h"
 #include "KSDK1.h"
-#include "RTT1.h"
 #include "CS1.h"
 
 #ifdef __cplusplus
