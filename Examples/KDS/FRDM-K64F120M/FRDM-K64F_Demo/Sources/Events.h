@@ -49,6 +49,8 @@
 #include "HF1.h"
 #include "UTIL1.h"
 #include "FRTOS1.h"
+#include "En1.h"
+#include "BitIoLdd15.h"
 #include "CLS1.h"
 #include "BT1.h"
 #include "Serial1.h"
@@ -79,6 +81,10 @@
 #include "Tx1.h"
 #include "Rx1.h"
 #include "RTT1.h"
+#include "Dir1.h"
+#include "BitIoLdd16.h"
+#include "Step1.h"
+#include "BitIoLdd17.h"
 #include "KSDK1.h"
 
 #ifdef __cplusplus

@@ -35,6 +35,9 @@
 #if PL_HAS_SD_CARD
   #include "TmDt1.h"
 #endif
+#if PL_HAS_FLOPPY
+  #include "Floppy.h"
+#endif
 
 static xTimerHandle timerHndl;
 #define TIMER_PERIOD_MS TMOUT1_TICK_PERIOD_MS
@@ -248,6 +251,9 @@ void APP_Start(void) {
 #if PL_HAS_RADIO
   RNETA_Init();
 #endif
+#if PL_HAS_FLOPPY
+  FLOPPY_Init();
+#endif
   SHELL_Init();
   if (FRTOS1_xTaskCreate(
       MainTask,  /* pointer to the task */
@@ -258,7 +264,7 @@ void APP_Start(void) {
       (xTaskHandle*)NULL /* optional task handle to create */
     ) != pdPASS) {
   /*lint -e527 */
-  for(;;){} /* error! probably out of memory */
+     for(;;){} /* error! probably out of memory */
     /*lint +e527 */
   }
   timerHndl = xTimerCreate("timer0", TIMER_PERIOD_MS/portTICK_RATE_MS, pdTRUE, (void *)0, vTimerCallback);

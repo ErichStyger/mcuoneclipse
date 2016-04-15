@@ -31,7 +31,9 @@
 #if PL_HAS_RSTDIO
   #include "RStdIO.h"
 #endif
-#include "KIN1.h"
+#if PL_HAS_FLOPPY
+  #include "Floppy.h"
+#endif#include "KIN1.h"
 
 void SHELL_SendString(unsigned char *msg) {
   CLS1_SendStr(msg, CLS1_GetStdio()->stdOut);
@@ -75,6 +77,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if KIN1_PARSE_COMMAND_ENABLED
   KIN1_ParseCommand,
+#endif
+#if PL_HAS_FLOPPY
+  FLOPPY_ParseCommand,
 #endif
   NULL /* Sentinel */
 };
