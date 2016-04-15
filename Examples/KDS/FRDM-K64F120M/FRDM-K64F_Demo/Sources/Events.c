@@ -39,6 +39,7 @@ extern "C" {
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Application.h"
+#include "Floppy.h"
 /*
 ** ===================================================================
 **     Event       :  Cpu_OnNMI (module Events)
@@ -241,6 +242,25 @@ void KEY1_OnKeyReleasedLong(byte keys)
 void SM1_OnBlockSent(LDD_TUserData *UserDataPtr)
 {
   /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  TI1_OnInterrupt (module Events)
+**
+**     Component   :  TI1 [TimerInt]
+**     Description :
+**         When a timer interrupt occurs this event is called (only
+**         when the component is enabled - <Enable> and the events are
+**         enabled - <EnableEvent>). This event is enabled only if a
+**         <interrupt service/event> is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void TI1_OnInterrupt(void)
+{
+  FLOPPY_OnInterrupt();
 }
 
 /* END Events */

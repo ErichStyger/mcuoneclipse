@@ -49,7 +49,7 @@
 #include "HF1.h"
 #include "UTIL1.h"
 #include "FRTOS1.h"
-#include "En1.h"
+#include "En0.h"
 #include "BitIoLdd15.h"
 #include "CLS1.h"
 #include "BT1.h"
@@ -81,10 +81,19 @@
 #include "Tx1.h"
 #include "Rx1.h"
 #include "RTT1.h"
-#include "Dir1.h"
+#include "Dir0.h"
 #include "BitIoLdd16.h"
-#include "Step1.h"
+#include "Step0.h"
 #include "BitIoLdd17.h"
+#include "TU1.h"
+#include "TI1.h"
+#include "TimerIntLdd1.h"
+#include "En1.h"
+#include "BitIoLdd18.h"
+#include "Dir1.h"
+#include "BitIoLdd19.h"
+#include "Step1.h"
+#include "BitIoLdd20.h"
 #include "KSDK1.h"
 
 #ifdef __cplusplus
@@ -247,6 +256,22 @@ void KEY1_OnKeyReleasedLong(byte keys);
 */
 /* ===================================================================*/
 void SM1_OnBlockSent(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  TI1_OnInterrupt (module Events)
+**
+**     Component   :  TI1 [TimerInt]
+**     Description :
+**         When a timer interrupt occurs this event is called (only
+**         when the component is enabled - <Enable> and the events are
+**         enabled - <EnableEvent>). This event is enabled only if a
+**         <interrupt service/event> is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void TI1_OnInterrupt(void);
 
 /* END Events */
 

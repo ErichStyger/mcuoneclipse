@@ -33,7 +33,8 @@
 #endif
 #if PL_HAS_FLOPPY
   #include "Floppy.h"
-#endif#include "KIN1.h"
+#endif
+#include "KIN1.h"
 
 void SHELL_SendString(unsigned char *msg) {
   CLS1_SendStr(msg, CLS1_GetStdio()->stdOut);

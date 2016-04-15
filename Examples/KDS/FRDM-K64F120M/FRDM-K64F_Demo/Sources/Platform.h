@@ -27,5 +27,7 @@
 #define PL_HAS_RTOS_TRACE     (configUSE_TRACE_HOOKS)
 #define PL_HAS_MINI_INI       (1 && PL_HAS_SD_CARD)
 #define PL_HAS_FLOPPY         (1)
+#define PL_HAS_MUSIC          (1)
+#define PL_HAS_MIDI           (1 && PL_HAS_MUSIC)
 
 #endif /* PLATFORM_H_ */
