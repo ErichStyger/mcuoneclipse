@@ -61,6 +61,7 @@
 #include "BitIoLdd6.h"
 #include "DREQ.h"
 #include "BitIoLdd5.h"
+#include "KSDK1.h"
 
 #ifdef __cplusplus
 extern "C" {
