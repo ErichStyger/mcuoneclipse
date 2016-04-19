@@ -90,10 +90,16 @@
 #include "TimerIntLdd1.h"
 #include "En1.h"
 #include "BitIoLdd18.h"
-#include "Dir1.h"
-#include "BitIoLdd19.h"
 #include "Step1.h"
+#include "BitIoLdd19.h"
+#include "Dir1.h"
 #include "BitIoLdd20.h"
+#include "En2.h"
+#include "BitIoLdd21.h"
+#include "Dir2.h"
+#include "BitIoLdd23.h"
+#include "Step2.h"
+#include "BitIoLdd22.h"
 #include "KSDK1.h"
 
 #ifdef __cplusplus
