@@ -3755,7 +3755,12 @@ uint8_t MPirate_GetMidiMusicInfo(MIDI_MusicTrack *tracks, uint8_t nofTracks) {
   tracks[2].nofLines = sizeof(track2)/sizeof(track2[0]);
   tracks[2].currLine = 0;
   tracks[2].nofTicksPerQuarterNote = NOF_TICKS_PER_QUARTER_NOTE;
-  return ERR_OK;
+
+  tracks[3].lines = &track3[0];
+  tracks[3].nofLines = sizeof(track3)/sizeof(track3[0]);
+  tracks[3].currLine = 0;
+  tracks[3].nofTicksPerQuarterNote = NOF_TICKS_PER_QUARTER_NOTE;
+return ERR_OK;
 }
 
 #endif /* PL_HAS_MIDI */

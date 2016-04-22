@@ -94,7 +94,7 @@ static void Play(MIDI_MusicTrack *tracks, unsigned int nofTracks) {
 }
 
 void MM_Play(void) {
-  MIDI_MusicTrack tracks[3];
+  MIDI_MusicTrack tracks[4];
   uint8_t res;
 
   //res = MMReady_GetMidiMusicInfo(&tracks[0], sizeof(tracks)/sizeof(tracks[0]));

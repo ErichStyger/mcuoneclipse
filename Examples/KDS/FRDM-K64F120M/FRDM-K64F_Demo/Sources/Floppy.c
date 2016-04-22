@@ -22,9 +22,10 @@
 #include "Dir1.h"
 #include "Step1.h"
 
-#include "En2.h"
 #include "Dir2.h"
 #include "Step2.h"
+#include "Dir3.h"
+#include "Step3.h"
 
 /* songs:
  * http://www.makeuseof.com/tag/8-floppy-disk-drive-music-videos/
@@ -37,7 +38,7 @@
  * white: direction
  * green: step
  */
-#define FLOPPY_NOTE_OFFSET     (3*12)  /* Octave is 12 */
+#define FLOPPY_NOTE_OFFSET     ((3*12)+30)  /* Octave is 12 */
 #define FLOPPY_CHANGE_DIRECTION  1
 
 #define FLOPPY_NOF_NOTES  128
@@ -172,7 +173,7 @@ static const uint16_t FLOPPY_NoteTicks[FLOPPY_NOF_NOTES] = {
     30   // Note 127
 };
 
-#define FLOPPY_NOF_DRIVES  3
+#define FLOPPY_NOF_DRIVES  4
 #define FLOPPY_MAX_STEPS  80
 
 static void Drv0_Dir(bool forward) { if (forward) {Dir0_SetVal();} else {Dir0_ClrVal();} }
@@ -196,8 +197,16 @@ static void Drv2_Step(void) { Step2_SetVal(); WAIT1_Waitus(5); Step2_ClrVal(); }
 static void Drv2_StepSetVal(void) { Step2_SetVal(); }
 static void Drv2_StepClrVal(void) { Step2_ClrVal(); }
 static void Drv2_StepToggle(void) { Step2_NegVal(); }
-static void Drv2_Enable(void) { En2_ClrVal(); }
-static void Drv2_Disable(void) { En2_SetVal(); }
+static void Drv2_Enable(void) {  }
+static void Drv2_Disable(void) {  }
+
+static void Drv3_Dir(bool forward) { if (forward) {Dir3_SetVal();} else {Dir3_ClrVal();} }
+static void Drv3_Step(void) { Step3_SetVal(); WAIT1_Waitus(5); Step3_ClrVal(); }
+static void Drv3_StepSetVal(void) { Step3_SetVal(); }
+static void Drv3_StepClrVal(void) { Step3_ClrVal(); }
+static void Drv3_StepToggle(void) { Step3_NegVal(); }
+static void Drv3_Enable(void) {  }
+static void Drv3_Disable(void) {  }
 
 typedef struct {
   bool forward; /* current direction */
@@ -571,5 +580,13 @@ void FLOPPY_Init(void) {
   FLOPPY_Drives[2].StepSetVal = Drv2_StepSetVal;
   FLOPPY_Drives[2].StepClearVal = Drv2_StepClrVal;
   FLOPPY_Drives[2].StepToggle = Drv2_StepToggle;
+
+  FLOPPY_Drives[3].Dir = Drv3_Dir;
+  FLOPPY_Drives[3].Disable = Drv3_Disable;
+  FLOPPY_Drives[3].Enable = Drv3_Enable;
+  FLOPPY_Drives[3].Step = Drv3_Step;
+  FLOPPY_Drives[3].StepSetVal = Drv3_StepSetVal;
+  FLOPPY_Drives[3].StepClearVal = Drv3_StepClrVal;
+  FLOPPY_Drives[3].StepToggle = Drv3_StepToggle;
 }
 #endif /* PL_HAS_FLOPPY */
