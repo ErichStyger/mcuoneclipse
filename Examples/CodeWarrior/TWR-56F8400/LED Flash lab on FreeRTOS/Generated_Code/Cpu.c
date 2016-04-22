@@ -5,9 +5,9 @@
 **     Processor   : MC56F84789VLL
 **     Component   : MC56F84789VLL
 **     Version     : Component 01.067, Driver 01.01, CPU db: 3.50.001
-**     Datasheet   : MC56F847XXRM Rev.0RC 10/201
-**     Compiler    : Metrowerks DSP C Compiler
-**     Date/Time   : 2013-01-16, 18:02, # CodeGen: 6
+**     Datasheet   : MC56F847XXRM Rev.1 06/2012
+**     Compiler    : CodeWarrior DSP C Compiler
+**     Date/Time   : 2016-04-22, 10:54, # CodeGen: 0
 **     Abstract    :
 **
 **     Settings    :
@@ -18,14 +18,50 @@
 **         SetWaitMode - void Cpu_SetWaitMode(void);
 **         SetStopMode - void Cpu_SetStopMode(void);
 **
-**     (c) Freescale Semiconductor
+**     (c) Freescale Semiconductor, Inc.
 **     2004 All Rights Reserved
 **
-**     Copyright : 1997 - 2012 Freescale Semiconductor, Inc. All Rights Reserved.
+**     Copyright : 1997 - 2014 Freescale Semiconductor, Inc. 
+**     All Rights Reserved.
 **     
-**     http      : www.freescale.com
-**     mail      : support@freescale.com
+**     Redistribution and use in source and binary forms, with or without modification,
+**     are permitted provided that the following conditions are met:
+**     
+**     o Redistributions of source code must retain the above copyright notice, this list
+**       of conditions and the following disclaimer.
+**     
+**     o Redistributions in binary form must reproduce the above copyright notice, this
+**       list of conditions and the following disclaimer in the documentation and/or
+**       other materials provided with the distribution.
+**     
+**     o Neither the name of Freescale Semiconductor, Inc. nor the names of its
+**       contributors may be used to endorse or promote products derived from this
+**       software without specific prior written permission.
+**     
+**     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**     ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**     ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+**     
+**     http: www.freescale.com
+**     mail: support@freescale.com
 ** ###################################################################*/
+/*!
+** @file Cpu.c
+** @version 01.01
+** @brief
+**
+*/         
+/*!
+**  @addtogroup Cpu_module Cpu module documentation
+**  @{
+*/         
 
 /* MODULE Cpu. */
 #include "PE_Types.h"
@@ -51,13 +87,16 @@ volatile word SR_reg;                  /* Current value of the SR register */
 #pragma interrupt alignsp
 void Cpu_Interrupt(void)
 {
-  asm(DEBUGHLT);                       /* Halt the core and placing it in the debug processing state */
+  /* This code can be changed using the CPU bean property "Build Options / Unhandled int code" */
+  asm(DEBUGHLT);                       /* Halt the core and placing it in the debug processing state. */
+  /* Here should be two NOPs if DEBUGHLT is removed.
+  asm(nop);
+  asm(nop); */
 }
 
 /*
 ** ===================================================================
 **     Method      :  Cpu_DisableInt (component MC56F84789VLL)
-**
 **     Description :
 **         Disables all maskable interrupts
 **     Parameters  : None
@@ -73,7 +112,6 @@ void Cpu_DisableInt(void)
 /*
 ** ===================================================================
 **     Method      :  Cpu_EnableInt (component MC56F84789VLL)
-**
 **     Description :
 **         Enables all maskable interrupts
 **     Parameters  : None
@@ -89,7 +127,6 @@ void Cpu_EnableInt(void)
 /*
 ** ===================================================================
 **     Method      :  Cpu_SetStopMode (component MC56F84789VLL)
-**
 **     Description :
 **         Sets low power mode - Stop mode.
 **         For more information about the stop mode see this CPU
@@ -107,7 +144,6 @@ void Cpu_SetStopMode(void)
 /*
 ** ===================================================================
 **     Method      :  Cpu_SetWaitMode (component MC56F84789VLL)
-**
 **     Description :
 **         Sets low power mode - Wait mode.
 **         For more information about the wait mode see this CPU
@@ -154,8 +190,7 @@ void _EntryPoint(void)
 
   /* System clock initialization */
   setRegBitGroup(OCCS_OSCTL1, FREQ_TRIM8M, ((*(word *)0xE42C) & 0x03FFU)); /* Trim the 8MHz internal relaxation oscillator, frequency trim value */
-  clrReg16Bit(OCCS_OSCTL1, ROPD);      /* Enable internal 8MHz oscillator */
-  setReg16Bit(OCCS_OSCTL1, CLK_MODE);  /* Select an external clock bypass mode */
+  clrSetReg16Bits(OCCS_OSCTL1, OCCS_OSCTL1_ROPD_MASK, OCCS_OSCTL1_CLK_MODE_MASK); /* Enable internal 8MHz oscillator and select an external clock bypass mode */
   setRegBitGroup(OCCS_CTRL, PRECS, 0U); /* Select an internal 8MHz clock source for the CPU core */
   clrSetReg16Bits(OCCS_CTRL, OCCS_CTRL_PLLPD_MASK, OCCS_CTRL_LCKON_MASK); /* Enable PLL, LCKON and select clock source from prescaler */
   /* OCCS_DIVBY: LORTP=2,COD=0,??=0,??=0,PLLDB=0x31 */
@@ -218,7 +253,7 @@ void PE_low_level_init(void)
   setReg32(MCM_UPRAMBAR, 0x00UL);       
   /* MCM_UFLASHBAR: ??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,FBA=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0 */
   setReg32(MCM_UFLASHBAR, 0x00UL);      
-  /* MCM_CPCR: XBARARB=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,IBDIS=0,SRDIS=0,RCDIS=0,INSDIS=0,SOCCR=0 */
+  /* MCM_CPCR: ??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,IBDIS=0,SRDIS=0,RCDIS=0,INSDIS=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0 */
   setReg32(MCM_CPCR, 0x00UL);           
   /* MCM_RPCR: ??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,RL=0,RPE=0 */
   setReg32(MCM_RPCR, 0x00UL);           
@@ -260,6 +295,9 @@ void PE_low_level_init(void)
 /*lint -save  -e586 Disable MISRA rule (2.1) checking. Functionality is implemented using assembler. */
   /* Shadow registers initialization */
   asm {
+    swap shadows
+    nop
+    nop
     move.l #0, R0
     move.l #0, R1
     move.l #0, R2
@@ -272,8 +310,6 @@ void PE_low_level_init(void)
     nop
     nop
     swap shadows
-    /* Reset the M01 register for linear addressing */
-    moveu.w #65535,M01
   }
 /*lint -restore Enable MISRA rule (2.1) checking. */
   /* Common initialization of the CPU registers */
@@ -285,11 +321,3 @@ void PE_low_level_init(void)
 
 /* END Cpu. */
 
-/*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.0 [05.02]
-**     for the Freescale 56800 series of microcontrollers.
-**
-** ###################################################################
-*/

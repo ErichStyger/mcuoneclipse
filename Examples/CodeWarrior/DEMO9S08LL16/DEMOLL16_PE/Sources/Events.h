@@ -48,6 +48,7 @@
 #include "RTOSSWI1.h"
 #include "TickCntr1.h"
 #include "CS1.h"
+#include "KSDK1.h"
 
 
 void TI1_OnInterrupt(void);
@@ -66,7 +67,7 @@ void TI1_OnInterrupt(void);
 ** ===================================================================
 */
 
-void EVNT1_AppHandleEvent(byte event);
+void EVNT1_AppHandleEvent(uint8_t event);
 /*
 ** ===================================================================
 **     Event       :  EVNT1_AppHandleEvent (module Events)
@@ -81,7 +82,7 @@ void EVNT1_AppHandleEvent(byte event);
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, signed portCHAR *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

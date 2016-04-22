@@ -37,7 +37,7 @@ void APP_Start(void) {
   
   if (FRTOS1_xTaskCreate(
         MainTask,  /* pointer to the task */
-        (signed char *)"Main", /* task name for kernel awareness debugging */
+        (unsigned char *)"Main", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY+1,  /* initial priority */
