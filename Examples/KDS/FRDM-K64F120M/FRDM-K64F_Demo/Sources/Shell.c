@@ -34,6 +34,9 @@
 #if PL_HAS_FLOPPY
   #include "Floppy.h"
 #endif
+#if PL_HAS_MIDI
+  #include "MidiMusic.h"
+#endif
 #include "KIN1.h"
 
 void SHELL_SendString(unsigned char *msg) {
@@ -81,6 +84,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_HAS_FLOPPY
   FLOPPY_ParseCommand,
+#endif
+#if PL_HAS_MIDI
+  MM_ParseCommand,
 #endif
   NULL /* Sentinel */
 };

@@ -164,9 +164,12 @@ static const MIDI_MusicLine track1[] =
   {11,256, MIDI_END_OF_TRACK, 0,  0}
 };
 
-uint8_t MMReady_GetMidiMusicInfo(MIDI_MusicTrack *tracks, uint8_t nofTracks) {
+uint8_t MMReady_NofTracks(void) {
+  return NOF_TRACKS;
+}
 
-  if (nofTracks>NOF_TRACKS) {
+uint8_t MMReady_GetMidiMusicInfo(MIDI_MusicTrack *tracks, uint8_t nofTracks) {
+  if (nofTracks<NOF_TRACKS) {
     return ERR_OVERFLOW; /* not enough tracks available */
   }
   tracks[0].lines = &track0[0];

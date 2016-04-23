@@ -27,6 +27,9 @@
   #include "VS1.h"
   #include "Music.h"
 #endif
+#if PL_HAS_MIDI
+  #include "MidiMusic.h"
+#endif
 #if PL_HAS_SD_CARD
   #include "FAT1.h"
 #endif
@@ -36,6 +39,7 @@
 #if PL_HAS_LED_CUBE
   #include "LedCube.h"
 #endif
+
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -82,6 +86,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_HAS_LED_CUBE
   LCUBE_ParseCommand,
+#endif
+#if PL_HAS_MIDI
+  MM_ParseCommand,
 #endif
   NULL /* sentinel */
 };

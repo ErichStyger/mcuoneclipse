@@ -91,17 +91,17 @@ static void POING_InitLimiter(PONG_LimiterT *limiter) {
 }
 
 static void PONG_DrawBall(PONG_BallT *ball) {
-  (void)NEO_SetPixelColor(ball->pos, ball->color);
+  (void)NEO_SetPixelColor(0, ball->pos, ball->color);
   ball->drawTickCounter = FRTOS1_xTaskGetTickCount();
 }
 
 static void PONG_SetLimiter(PONG_LimiterT *limiter) {
-  (void)NEO_SetPixelColor(limiter->pos, limiter->color);
+  (void)NEO_SetPixelColor(0, limiter->pos, limiter->color);
   limiter->isOn = TRUE;
 }
 
 static void PONG_ClearLimiter(PONG_LimiterT *limiter) {
-  (void)NEO_SetPixelColor(limiter->pos, PONG_DEFAULT_BACKGROUND_RGB);
+  (void)NEO_SetPixelColor(0, limiter->pos, PONG_DEFAULT_BACKGROUND_RGB);
   limiter->isOn = FALSE;
 }
 
@@ -115,7 +115,7 @@ static void PONG_RemoveBall(PONG_BallT *ball) {
       color = PONG_Balls[i].color; /* use other balls color */
     }
   }
-  (void)NEO_SetPixelColor(ball->pos, color);
+  (void)NEO_SetPixelColor(0, ball->pos, color);
 }
 
 static void PONG_GameOver(void) {
@@ -125,7 +125,7 @@ static void PONG_GameOver(void) {
   MUSIC_PlayTheme(MUSIC_THEME_BUZZER);
 #endif
   for(i=0;i<PONG_NOF_PIXELS;i++) {
-    NEO_SetPixelColor(i, 0x300000);
+    NEO_SetPixelColor(0, i, 0x300000);
   }
   NEO_TransferPixels();
 }
@@ -139,7 +139,7 @@ static void PONG_InitGame(void) {
   NEO_ClearAllPixel();
   /* background */
   for(i=0;i<PONG_NOF_PIXELS;i++) {
-    NEO_SetPixelColor(i, PONG_DEFAULT_BACKGROUND_RGB);
+    NEO_SetPixelColor(0, i, PONG_DEFAULT_BACKGROUND_RGB);
   }
   NEO_TransferPixels();
   for(i=0;i<PONG_NOF_BALLS;i++) {
@@ -331,12 +331,12 @@ static void PlayMIDI(void) {
 }
 #endif
 
-static portTASK_FUNCTION(PongTask, pvParameters) {
+static void PongTask(void *pvParameters) {
   (void)pvParameters; /* parameter not used */
   FRTOS1_vTaskDelay(1000/portTICK_RATE_MS); /* wait some time to mount sd card */
   PONG_gameState = PONG_GAME_STATE_INIT;
 #if PL_HAS_MIDI
-  VS1_LoadRealtimeMidiPlugin();
+  //VS1_LoadRealtimeMidiPlugin();
   //PlayMIDI();
   MM_Play();
 #endif

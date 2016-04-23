@@ -16,5 +16,4 @@ void CLOCK_SetTime(uint8_t hour, uint8_t min, uint8_t second);
 
 void CLOCK_Init(void);
 
-
 #endif /* NEORINGCLOCK_H_ */

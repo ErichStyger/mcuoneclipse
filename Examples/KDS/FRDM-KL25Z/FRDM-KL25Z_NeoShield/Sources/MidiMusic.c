@@ -11,6 +11,7 @@
 #include "FRTOS1.h"
 #include "MidiMusic.h"
 #include "MidiMusicReady.h"
+#include "MidiPirate.h"
 
 static bool PlayTrackItem(MIDI_MusicTrack *track, unsigned int currTimeMs, uint8_t channel) {
   uint32_t beatsPerSecond = 2; /* 120 bpm */
@@ -37,7 +38,11 @@ static bool PlayTrackItem(MIDI_MusicTrack *track, unsigned int currTimeMs, uint8
         VS1_MIDI_SetBank(channel, track->lines[itemNo].val1);
         break;
       case MIDI_NOTE_ON:
-        VS1_MIDI_NoteOn(channel, track->lines[itemNo].val1, track->lines[itemNo].val2);
+        if (track->lines[itemNo].val2==0) { /* note on with velocity zero is a note off */
+          VS1_MIDI_NoteOff(channel, track->lines[itemNo].val1, 0);
+        } else {
+          VS1_MIDI_NoteOn(channel, track->lines[itemNo].val1, track->lines[itemNo].val2);
+        }
         break;
       case MIDI_NOTE_OFF:
         VS1_MIDI_NoteOff(channel, track->lines[itemNo].val1, track->lines[itemNo].val2);
@@ -77,6 +82,11 @@ static void Play(MIDI_MusicTrack *tracks, unsigned int nofTracks) {
   itemNo = 0;
   for(;;) { /* breaks */
     currTimeMs = (FRTOS1_xTaskGetTickCount()-startTicks)/portTICK_RATE_MS;
+#if 0
+    if (currTimeMs>15000) {
+      break;
+    }
+#endif
     nofFinished = 0;
     for(channel=0;channel<nofTracks;channel++) {
       if (!PlayTrackItem(&tracks[channel], currTimeMs, channel)) {
@@ -91,6 +101,20 @@ static void Play(MIDI_MusicTrack *tracks, unsigned int nofTracks) {
   }
 }
 
+void MM_PlayPirate(void) {
+#define NOF_TRACKS  8
+  MIDI_MusicTrack tracks[NOF_TRACKS];
+  uint8_t res;
+
+  if (MPirate_NofTracks()>NOF_TRACKS) {
+    for(;;){} /* error */
+  }
+  res = MPirate_GetMidiMusicInfo(&tracks[0], NOF_TRACKS);
+  if (res==ERR_OK) {
+    Play(tracks, NOF_TRACKS);
+  }
+}
+
 void MM_Play(void) {
   MIDI_MusicTrack tracks[2];
   uint8_t res;
@@ -99,4 +123,41 @@ void MM_Play(void) {
   if (res==ERR_OK) {
     Play(tracks, sizeof(tracks)/sizeof(tracks[0]));
   }
-}#endif /* PL_HAS_MUSIC */
+}
+
+static uint8_t PrintStatus(CLS1_ConstStdIOType *io) {
+  CLS1_SendStatusStr((unsigned char*)"midi", (const unsigned char*)"\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+
+uint8_t MM_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
+  const uint8_t *p;
+  uint8_t res;
+  int32_t tmp;
+
+  if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "midi help")==0) {
+     CLS1_SendHelpStr((unsigned char*)"midi", (const unsigned char*)"Group of midi commands\r\n", io->stdOut);
+     CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+     CLS1_SendHelpStr((unsigned char*)"  play <number>", (const unsigned char*)"Play midi song (0, 1)\r\n", io->stdOut);
+     *handled = TRUE;
+     return ERR_OK;
+   } else if ((UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0) || (UTIL1_strcmp((char*)cmd, "midi status")==0)) {
+     *handled = TRUE;
+     return PrintStatus(io);
+   } else if (UTIL1_strncmp((char*)cmd, "midi play", sizeof("midi play")-1)==0) {
+     p = cmd+sizeof("midi play")-1;
+     res = UTIL1_xatoi(&p, &tmp);
+     if (res==ERR_OK && tmp>=0) {
+       *handled = TRUE;
+       if (tmp==0) {
+         MM_Play();
+       } else if (tmp==1) {
+         MM_PlayPirate();
+       }
+     }
+     return res;
+   }
+  return ERR_OK;
+}
+#endif /* PL_HAS_MUSIC */

@@ -118,8 +118,11 @@ void MUSIC_PlayTheme(MUSIC_Theme theme) {
   }
 }
 
-static portTASK_FUNCTION(MusicTask, pvParameters) {
+static void MusicTask(void *pvParameters) {
   (void)pvParameters; /* not used */
+#if PL_HAS_MIDI
+  VS1_LoadRealtimeMidiPlugin();
+#endif
   VS1_SetVolume(MUSIC_DEFAULT_VOLUME, MUSIC_DEFAULT_VOLUME);
   for(;;) {
     while (FRTOS1_xSemaphoreTake(MUSIC_StopSem, 0)==pdTRUE) {

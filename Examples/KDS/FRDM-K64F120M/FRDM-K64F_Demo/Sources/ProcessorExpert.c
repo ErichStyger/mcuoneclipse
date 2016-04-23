@@ -45,8 +45,6 @@
 #include "HF1.h"
 #include "UTIL1.h"
 #include "FRTOS1.h"
-#include "En0.h"
-#include "BitIoLdd15.h"
 #include "CLS1.h"
 #include "BT1.h"
 #include "Serial1.h"
@@ -84,8 +82,6 @@
 #include "TU1.h"
 #include "TI1.h"
 #include "TimerIntLdd1.h"
-#include "En1.h"
-#include "BitIoLdd18.h"
 #include "Step1.h"
 #include "BitIoLdd19.h"
 #include "Dir1.h"
@@ -94,6 +90,10 @@
 #include "BitIoLdd21.h"
 #include "Step3.h"
 #include "BitIoLdd24.h"
+#include "Dir4.h"
+#include "BitIoLdd25.h"
+#include "Step4.h"
+#include "BitIoLdd26.h"
 #include "Dir2.h"
 #include "BitIoLdd23.h"
 #include "Step2.h"
@@ -108,6 +108,7 @@
 #include "Init_Config.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "Platform.h"
 #include "Application.h"
 
 #include "PORT_PDD.h"
@@ -121,19 +122,24 @@ int main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
+#if PL_HAS_SD_CARD
   /* SD card detection: PTE6 with pull-down! */
   PORT_PDD_SetPinPullSelect(PORTE_BASE_PTR, 6, PORT_PDD_PULL_DOWN);
   PORT_PDD_SetPinPullEnable(PORTE_BASE_PTR, 6, PORT_PDD_PULL_ENABLE);
+#endif
+#if PL_HAS_KEYS
   /* SW3: PTA4 */
   PORT_PDD_SetPinPullSelect(PORTA_BASE_PTR, 4, PORT_PDD_PULL_UP);
   PORT_PDD_SetPinPullEnable(PORTA_BASE_PTR, 4, PORT_PDD_PULL_ENABLE);
   /* SW2: PTC6 */
   PORT_PDD_SetPinPullSelect(PORTC_BASE_PTR, 6, PORT_PDD_PULL_UP);
   PORT_PDD_SetPinPullEnable(PORTC_BASE_PTR, 6, PORT_PDD_PULL_ENABLE);
-
+#endif
+#if PL_HAS_BLUETOOTH
   /* pull up Rx pin (PTC14) for Bluetooth module */
   PORT_PDD_SetPinPullSelect(PORTC_BASE_PTR, 14, PORT_PDD_PULL_UP);
   PORT_PDD_SetPinPullEnable(PORTC_BASE_PTR, 14, PORT_PDD_PULL_ENABLE);
+#endif
 
   LED1_On();
   WAIT1_Waitms(50);

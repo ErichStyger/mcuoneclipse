@@ -14,18 +14,20 @@
 #include "CLS1.h"
 #include "WAIT1.h"
 
-#include "En0.h"
 #include "Dir0.h"
 #include "Step0.h"
 
-#include "En1.h"
 #include "Dir1.h"
 #include "Step1.h"
 
 #include "Dir2.h"
 #include "Step2.h"
+
 #include "Dir3.h"
 #include "Step3.h"
+
+#include "Dir4.h"
+#include "Step4.h"
 
 /* songs:
  * http://www.makeuseof.com/tag/8-floppy-disk-drive-music-videos/
@@ -38,61 +40,61 @@
  * white: direction
  * green: step
  */
-#define FLOPPY_NOTE_OFFSET     ((3*12)+30)  /* Octave is 12 */
+#define FLOPPY_NOTE_OFFSET     (12+6)  /* Octave is 12 */
 #define FLOPPY_CHANGE_DIRECTION  1
 
 #define FLOPPY_NOF_NOTES  128
 static const uint16_t FLOPPY_NoteTicks[FLOPPY_NOF_NOTES] = {
-    1030  , // Note 0
-    1022  , // Note 1
-    1014  , // Note 2
-    1007  , // Note 3
-    999 , // Note 4
-    991 , // Note 5
-    983 , // Note 6
-    975 , // Note 7
-    967 , // Note 8
-    959 , // Note 9
-    951 , // Note 10
-    944 , // Note 11
-    936 , // Note 12
-    928 , // Note 13
-    920 , // Note 14
-    912 , // Note 15
-    904 , // Note 16
-    896 , // Note 17
-    888 , // Note 18
-    881 , // Note 19
-    873 , // Note 20
-    865 , // Note 21
-    857 , // Note 22
-    849 , // Note 23
-    841 , // Note 24
-    833 , // Note 25
-    825 , // Note 26
-    818 , // Note 27
-    810 , // Note 28
-    802 , // Note 29
-    794 , // Note 30
-    786 , // Note 31
-    778 , // Note 32
-    770 , // Note 33
-    762 , // Note 34
-    755 , // Note 35
-    747 , // Note 36
-    739 , // Note 37
-    731 , // Note 38
-    723 , // Note 39
-    715 , // Note 40
-    707 , // Note 41
-    699 , // Note 42
-    692 , // Note 43
-    684 , // Note 44
-    676 , // Note 45
-    668 , // Note 46
-    660 , // Note 47
-    652 , // Note 48
-    644 , // Note 49
+    727, // 0
+    727, // 1
+    686, // 2
+    648, // 3
+    612, // 4
+    577, // 5
+    545, // 6
+    514, // 7
+    485, // 8
+    458, // 9
+    432, // 10
+    408, // 11
+    385, // 12
+    364, // 13
+    343, // 14
+    324, // 15
+    306, // 16
+    289, // 17
+    272, // 18
+    257, // 19
+    243, // 20
+    229, // 21
+    216, // 22
+    204, // 23
+    193, // 24
+    182, // 25
+    172, // 26
+    162, // 27
+    153, // 28
+    144, // 29
+    136, // 30
+    129, // 31
+    121, // 32
+    115, // 33
+    108, // 34
+    102, // 35
+    96, // 36
+    91, // 37
+    86, // 38
+    81, // 39
+    76, // 40
+    72, // 41
+    68, // 42
+    64, // 43
+    61, // 44
+    57, // 45
+    54, // 46
+    51, // 47
+    48, // 48
+    45, // 49
     636 , // Note 50
     629 , // Note 51
     621 , // Note 52
@@ -173,7 +175,7 @@ static const uint16_t FLOPPY_NoteTicks[FLOPPY_NOF_NOTES] = {
     30   // Note 127
 };
 
-#define FLOPPY_NOF_DRIVES  4
+#define FLOPPY_NOF_DRIVES  5
 #define FLOPPY_MAX_STEPS  80
 
 static void Drv0_Dir(bool forward) { if (forward) {Dir0_SetVal();} else {Dir0_ClrVal();} }
@@ -181,36 +183,33 @@ static void Drv0_Step(void) { Step0_SetVal(); WAIT1_Waitus(5); Step0_ClrVal(); }
 static void Drv0_StepSetVal(void) { Step0_SetVal(); }
 static void Drv0_StepClrVal(void) { Step0_ClrVal(); }
 static void Drv0_StepToggle(void) { Step0_NegVal(); }
-static void Drv0_Enable(void) { En0_ClrVal(); }
-static void Drv0_Disable(void) { En0_SetVal(); }
 
 static void Drv1_Dir(bool forward) { if (forward) {Dir1_SetVal();} else {Dir1_ClrVal();} }
 static void Drv1_Step(void) { Step1_SetVal(); WAIT1_Waitus(5); Step1_ClrVal(); }
 static void Drv1_StepSetVal(void) { Step1_SetVal(); }
 static void Drv1_StepClrVal(void) { Step1_ClrVal(); }
 static void Drv1_StepToggle(void) { Step1_NegVal(); }
-static void Drv1_Enable(void) { En1_ClrVal(); }
-static void Drv1_Disable(void) { En1_SetVal(); }
 
 static void Drv2_Dir(bool forward) { if (forward) {Dir2_SetVal();} else {Dir2_ClrVal();} }
 static void Drv2_Step(void) { Step2_SetVal(); WAIT1_Waitus(5); Step2_ClrVal(); }
 static void Drv2_StepSetVal(void) { Step2_SetVal(); }
 static void Drv2_StepClrVal(void) { Step2_ClrVal(); }
 static void Drv2_StepToggle(void) { Step2_NegVal(); }
-static void Drv2_Enable(void) {  }
-static void Drv2_Disable(void) {  }
 
 static void Drv3_Dir(bool forward) { if (forward) {Dir3_SetVal();} else {Dir3_ClrVal();} }
 static void Drv3_Step(void) { Step3_SetVal(); WAIT1_Waitus(5); Step3_ClrVal(); }
 static void Drv3_StepSetVal(void) { Step3_SetVal(); }
 static void Drv3_StepClrVal(void) { Step3_ClrVal(); }
 static void Drv3_StepToggle(void) { Step3_NegVal(); }
-static void Drv3_Enable(void) {  }
-static void Drv3_Disable(void) {  }
+
+static void Drv4_Dir(bool forward) { if (forward) {Dir4_SetVal();} else {Dir4_ClrVal();} }
+static void Drv4_Step(void) { Step4_SetVal(); WAIT1_Waitus(5); Step4_ClrVal(); }
+static void Drv4_StepSetVal(void) { Step4_SetVal(); }
+static void Drv4_StepClrVal(void) { Step4_ClrVal(); }
+static void Drv4_StepToggle(void) { Step4_NegVal(); }
 
 typedef struct {
   bool forward; /* current direction */
-  bool enabled; /* if enabled or not */
   int8_t pos; /* current position, valid 0..FLOPPY_MAX_STEPS */
   uint32_t currentPeriod; /* current period in timer interrupt events. Zero if disabled */
   uint32_t currentTick;
@@ -219,24 +218,10 @@ typedef struct {
   void(*StepSetVal)(void);
   void(*StepClearVal)(void);
   void(*StepToggle)(void);
-  void(*Enable)(void);
-  void(*Disable)(void);
 } FLOPPY_Drive;
 typedef FLOPPY_Drive *FLOPPY_DriveHandle;
 
 static FLOPPY_Drive FLOPPY_Drives[FLOPPY_NOF_DRIVES];
-
-uint8_t FLOPPY_Enable(FLOPPY_DriveHandle drive) {
-  drive->Enable();
-  drive->enabled = TRUE;
-  return ERR_OK;
-}
-
-uint8_t FLOPPY_Disable(FLOPPY_DriveHandle drive) {
-  drive->enabled = FALSE;
-  drive->Disable();
-  return ERR_OK;
-}
 
 uint8_t FLOPPY_SetPos(FLOPPY_DriveHandle drive, int pos) {
   drive->pos = pos;
@@ -250,7 +235,6 @@ uint8_t FLOPPY_SetDirection(FLOPPY_DriveHandle drive, bool forward) {
 }
 
 uint8_t FLOPPY_Steps(FLOPPY_DriveHandle drive, int steps) {
-  //FLOPPY_Enable(drive);
   if (steps>=0) {
     FLOPPY_SetDirection(drive, TRUE); /* go forward */
   } else if (steps<0) {
@@ -304,7 +288,6 @@ void FLOPPY_OnInterrupt(void) {
 
   for(i=0;i<FLOPPY_NOF_DRIVES;i++) {
     if (FLOPPY_Drives[i].currentPeriod>0) { /* not disabled */
-      //FLOPPY_Drives[i].Enable();
       FLOPPY_Drives[i].currentTick++; /* increment tick */
       if (FLOPPY_Drives[i].currentTick>=FLOPPY_Drives[i].currentPeriod) { /* check if expired */
         FLOPPY_Drives[i].StepSetVal(); /* toggle pin ==> High */
@@ -325,7 +308,6 @@ void FLOPPY_OnInterrupt(void) {
         WAIT1_Waitus(5);
         FLOPPY_Drives[i].StepClearVal(); /* toggle pin ==> Low */
       }
-      //FLOPPY_Drives[i].Disable();
     }
   }
 }
@@ -341,9 +323,10 @@ void FLOPPY_MIDI_NoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   if (note>=FLOPPY_NOF_NOTES) {
     return;
   }
-  note += FLOPPY_NOTE_OFFSET; /* adjust note */
-  if (note>FLOPPY_NOF_NOTES-1) { /* make sure we are inside valid range */
-    note = FLOPPY_NOF_NOTES-1; /* 0..FLOPPY_NOF_NOTES-1 */
+  if (note>FLOPPY_NOTE_OFFSET) {
+    note -= FLOPPY_NOTE_OFFSET; /* adjust note */
+  } else {
+    note = 0;
   }
   FLOPPY_Drives[channel].currentPeriod = FLOPPY_NoteTicks[note];
 }
@@ -381,8 +364,6 @@ uint8_t FLOPPY_InitDrives(void) {
 
   for(i=0;i<FLOPPY_NOF_DRIVES;i++) {
     /* reset to initial position */
-    FLOPPY_Drives[i].Enable();
-    FLOPPY_Drives[i].enabled = TRUE;
     FLOPPY_Drives[i].Dir(TRUE);
     FLOPPY_Drives[i].forward = TRUE;
     for(j=0;j<FLOPPY_MAX_STEPS+20;j++) { /* max 400 Hz */
@@ -392,8 +373,6 @@ uint8_t FLOPPY_InitDrives(void) {
       vTaskDelay(pdMS_TO_TICKS(3));
     }
     FLOPPY_Drives[i].pos = FLOPPY_MAX_STEPS;
-//    FLOPPY_Drives[i].Disable();
-//    FLOPPY_Drives[i].enabled = FALSE;
   }
   return ERR_OK;
 }
@@ -407,7 +386,8 @@ static void FloppyTask(void *pvParameters) {
   for(;;) {
     if (play) {
       play = FALSE;
-      MM_Play();
+      FLOPPY_InitDrives();
+      MM_Play(1);
     }
     vTaskDelay(pdMS_TO_TICKS(50));
   }
@@ -423,11 +403,6 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
     UTIL1_strcatNum16u(buf, sizeof(buf), (uint16_t)i);
     UTIL1_chcat(buf, sizeof(buf), ':');
     buf2[0] = '\0';
-    if (FLOPPY_Drives[i].enabled) {
-      UTIL1_strcat(buf2, sizeof(buf2), (uint8_t*)"enabled  ");
-    } else {
-      UTIL1_strcat(buf2, sizeof(buf2), (uint8_t*)"disabled ");
-    }
     if (FLOPPY_Drives[i].forward) {
       UTIL1_strcat(buf2, sizeof(buf2), (uint8_t*)"fw ");
     } else {
@@ -447,8 +422,6 @@ uint8_t FLOPPY_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_
   if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "Floppy help")==0) {
     CLS1_SendHelpStr((unsigned char*)"Floppy", (const unsigned char*)"Group of Floppy commands\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
-    CLS1_SendHelpStr((unsigned char*)"  enable <drv>", (const unsigned char*)"Enable drive\r\n", io->stdOut);
-    CLS1_SendHelpStr((unsigned char*)"  disable <drv>", (const unsigned char*)"Disable drive\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  dir fw <drv>", (const unsigned char*)"Set drive direction to forward\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  dir bw <drv>", (const unsigned char*)"Set drive direction to backward\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  home", (const unsigned char*)"Move heads to home position\r\n", io->stdOut);
@@ -461,20 +434,6 @@ uint8_t FLOPPY_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_
   } else if ((UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0) || (UTIL1_strcmp((char*)cmd, "Floppy status")==0)) {
     *handled = TRUE;
     return PrintStatus(io);
-  } else if (UTIL1_strncmp((char*)cmd, "Floppy enable", sizeof("Floppy enable")-1)==0) {
-    *handled = TRUE;
-    p = cmd + sizeof("Floppy enable")-1;
-    if (UTIL1_xatoi(&p, &val)==ERR_OK && val>=0 && val<FLOPPY_NOF_DRIVES) {
-      return FLOPPY_Enable(&FLOPPY_Drives[val]);
-    }
-    return ERR_FAILED;
-  } else if (UTIL1_strncmp((char*)cmd, "Floppy disable", sizeof("Floppy disable")-1)==0) {
-    *handled = TRUE;
-    p = cmd + sizeof("Floppy disable")-1;
-    if (UTIL1_xatoi(&p, &val)==ERR_OK && val>=0 && val<FLOPPY_NOF_DRIVES) {
-      return FLOPPY_Disable(&FLOPPY_Drives[val]);
-    }
-    return ERR_FAILED;
   } else if (UTIL1_strncmp((char*)cmd, "Floppy dir fw", sizeof("Floppy dir fw")-1)==0) {
     *handled = TRUE;
     p = cmd + sizeof("Floppy dir fw")-1;
@@ -535,7 +494,6 @@ uint8_t FLOPPY_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_
   return ERR_OK;
 }
 
-
 void FLOPPY_Init(void) {
   int i;
   if (FRTOS1_xTaskCreate(
@@ -552,41 +510,38 @@ void FLOPPY_Init(void) {
   }
   for(i=0;i<FLOPPY_NOF_DRIVES;i++) {
     FLOPPY_Drives[i].forward = FALSE;
-    FLOPPY_Drives[i].enabled = FALSE;
     FLOPPY_Drives[i].pos = 0;
     FLOPPY_Drives[i].currentPeriod = 0;
     FLOPPY_Drives[i].currentTick = 0;
   }
   FLOPPY_Drives[0].Dir = Drv0_Dir;
-  FLOPPY_Drives[0].Disable = Drv0_Disable;
-  FLOPPY_Drives[0].Enable = Drv0_Enable;
   FLOPPY_Drives[0].Step = Drv0_Step;
   FLOPPY_Drives[0].StepSetVal = Drv0_StepSetVal;
   FLOPPY_Drives[0].StepClearVal = Drv0_StepClrVal;
   FLOPPY_Drives[0].StepToggle = Drv0_StepToggle;
 
   FLOPPY_Drives[1].Dir = Drv1_Dir;
-  FLOPPY_Drives[1].Disable = Drv1_Disable;
-  FLOPPY_Drives[1].Enable = Drv1_Enable;
   FLOPPY_Drives[1].Step = Drv1_Step;
   FLOPPY_Drives[1].StepSetVal = Drv1_StepSetVal;
   FLOPPY_Drives[1].StepClearVal = Drv1_StepClrVal;
   FLOPPY_Drives[1].StepToggle = Drv1_StepToggle;
 
   FLOPPY_Drives[2].Dir = Drv2_Dir;
-  FLOPPY_Drives[2].Disable = Drv2_Disable;
-  FLOPPY_Drives[2].Enable = Drv2_Enable;
   FLOPPY_Drives[2].Step = Drv2_Step;
   FLOPPY_Drives[2].StepSetVal = Drv2_StepSetVal;
   FLOPPY_Drives[2].StepClearVal = Drv2_StepClrVal;
   FLOPPY_Drives[2].StepToggle = Drv2_StepToggle;
 
   FLOPPY_Drives[3].Dir = Drv3_Dir;
-  FLOPPY_Drives[3].Disable = Drv3_Disable;
-  FLOPPY_Drives[3].Enable = Drv3_Enable;
   FLOPPY_Drives[3].Step = Drv3_Step;
   FLOPPY_Drives[3].StepSetVal = Drv3_StepSetVal;
   FLOPPY_Drives[3].StepClearVal = Drv3_StepClrVal;
   FLOPPY_Drives[3].StepToggle = Drv3_StepToggle;
+
+  FLOPPY_Drives[4].Dir = Drv4_Dir;
+  FLOPPY_Drives[4].Step = Drv4_Step;
+  FLOPPY_Drives[4].StepSetVal = Drv4_StepSetVal;
+  FLOPPY_Drives[4].StepClearVal = Drv4_StepClrVal;
+  FLOPPY_Drives[4].StepToggle = Drv4_StepToggle;
 }
 #endif /* PL_HAS_FLOPPY */

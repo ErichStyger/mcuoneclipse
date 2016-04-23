@@ -8,7 +8,9 @@
 #ifndef MIDIMUSIC_H_
 #define MIDIMUSIC_H_
 
-#include "PE_Types.h"
+#include "Platform.h"
+#if PL_HAS_MIDI
+#include "CLS1.h"
 
 typedef enum {
   MIDI_BANK,
@@ -23,7 +25,7 @@ typedef enum {
 typedef struct {
   /* channel, note, velocity */
   uint16_t beat, tick; /* 00003:192 */
-  MIDI_MusicMsg event;      /* NOTE_ON  */
+  MIDI_MusicMsg event; /* NOTE_ON  */
   uint8_t val1;        /* G4 */
   uint8_t val2;        /* 127 */
 } MIDI_MusicLine;
@@ -36,5 +38,8 @@ typedef struct {
 } MIDI_MusicTrack;
 
 void MM_Play(void);
+
+uint8_t MM_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
+#endif /* PL_HAS_MIDI */
 
 #endif /* MIDIMUSIC_H_ */

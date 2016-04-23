@@ -8,7 +8,7 @@
 #ifndef MIDIMUSICREADY_H_
 #define MIDIMUSICREADY_H_
 
-#include "PE_Types.h"
+#include "MidiMusic.h"
 
 uint8_t MMReady_GetMidiMusicInfo(MIDI_MusicTrack *tracks, uint8_t nofTracks);
 
