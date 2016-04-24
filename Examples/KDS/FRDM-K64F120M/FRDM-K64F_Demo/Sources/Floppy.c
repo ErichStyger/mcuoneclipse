@@ -16,18 +16,20 @@
 
 #include "Dir0.h"
 #include "Step0.h"
-
 #include "Dir1.h"
 #include "Step1.h"
-
 #include "Dir2.h"
 #include "Step2.h"
-
 #include "Dir3.h"
 #include "Step3.h"
-
 #include "Dir4.h"
 #include "Step4.h"
+#include "Dir5.h"
+#include "Step5.h"
+#include "Dir6.h"
+#include "Step6.h"
+#include "Dir7.h"
+#include "Step7.h"
 
 /* songs:
  * http://www.makeuseof.com/tag/8-floppy-disk-drive-music-videos/
@@ -35,13 +37,6 @@
  * http://hackaday.com/2014/01/05/the-most-beautiful-floppy-disk-jukebox-ever/
  * http://www.schoar.de/tinkering/rumblerail/
  */
-
-/* green: enable (low active)
- * white: direction
- * green: step
- */
-#define FLOPPY_NOTE_OFFSET     (12+6)  /* Octave is 12 */
-#define FLOPPY_CHANGE_DIRECTION  1
 
 #define FLOPPY_NOF_NOTES  128
 static const uint16_t FLOPPY_NoteTicks[FLOPPY_NOF_NOTES] = {
@@ -175,7 +170,14 @@ static const uint16_t FLOPPY_NoteTicks[FLOPPY_NOF_NOTES] = {
     30   // Note 127
 };
 
-#define FLOPPY_NOF_DRIVES  5
+/* green: enable (low active)
+ * white: direction
+ * green: step
+ */
+#define FLOPPY_NOTE_OFFSET     (12+6)  /* Octave is 12 */
+#define FLOPPY_CHANGE_DIRECTION  1
+
+#define FLOPPY_NOF_DRIVES  8
 #define FLOPPY_MAX_STEPS  80
 
 static void Drv0_Dir(bool forward) { if (forward) {Dir0_SetVal();} else {Dir0_ClrVal();} }
@@ -207,6 +209,24 @@ static void Drv4_Step(void) { Step4_SetVal(); WAIT1_Waitus(5); Step4_ClrVal(); }
 static void Drv4_StepSetVal(void) { Step4_SetVal(); }
 static void Drv4_StepClrVal(void) { Step4_ClrVal(); }
 static void Drv4_StepToggle(void) { Step4_NegVal(); }
+
+static void Drv5_Dir(bool forward) { if (forward) {Dir5_SetVal();} else {Dir5_ClrVal();} }
+static void Drv5_Step(void) { Step5_SetVal(); WAIT1_Waitus(5); Step5_ClrVal(); }
+static void Drv5_StepSetVal(void) { Step5_SetVal(); }
+static void Drv5_StepClrVal(void) { Step5_ClrVal(); }
+static void Drv5_StepToggle(void) { Step5_NegVal(); }
+
+static void Drv6_Dir(bool forward) { if (forward) {Dir6_SetVal();} else {Dir6_ClrVal();} }
+static void Drv6_Step(void) { Step6_SetVal(); WAIT1_Waitus(5); Step6_ClrVal(); }
+static void Drv6_StepSetVal(void) { Step6_SetVal(); }
+static void Drv6_StepClrVal(void) { Step6_ClrVal(); }
+static void Drv6_StepToggle(void) { Step6_NegVal(); }
+
+static void Drv7_Dir(bool forward) { if (forward) {Dir7_SetVal();} else {Dir7_ClrVal();} }
+static void Drv7_Step(void) { Step7_SetVal(); WAIT1_Waitus(5); Step7_ClrVal(); }
+static void Drv7_StepSetVal(void) { Step7_SetVal(); }
+static void Drv7_StepClrVal(void) { Step7_ClrVal(); }
+static void Drv7_StepToggle(void) { Step7_NegVal(); }
 
 typedef struct {
   bool forward; /* current direction */
@@ -543,5 +563,23 @@ void FLOPPY_Init(void) {
   FLOPPY_Drives[4].StepSetVal = Drv4_StepSetVal;
   FLOPPY_Drives[4].StepClearVal = Drv4_StepClrVal;
   FLOPPY_Drives[4].StepToggle = Drv4_StepToggle;
+
+  FLOPPY_Drives[5].Dir = Drv5_Dir;
+  FLOPPY_Drives[5].Step = Drv5_Step;
+  FLOPPY_Drives[5].StepSetVal = Drv5_StepSetVal;
+  FLOPPY_Drives[5].StepClearVal = Drv5_StepClrVal;
+  FLOPPY_Drives[5].StepToggle = Drv5_StepToggle;
+
+  FLOPPY_Drives[6].Dir = Drv6_Dir;
+  FLOPPY_Drives[6].Step = Drv6_Step;
+  FLOPPY_Drives[6].StepSetVal = Drv6_StepSetVal;
+  FLOPPY_Drives[6].StepClearVal = Drv6_StepClrVal;
+  FLOPPY_Drives[6].StepToggle = Drv6_StepToggle;
+
+  FLOPPY_Drives[7].Dir = Drv7_Dir;
+  FLOPPY_Drives[7].Step = Drv7_Step;
+  FLOPPY_Drives[7].StepSetVal = Drv7_StepSetVal;
+  FLOPPY_Drives[7].StepClearVal = Drv7_StepClrVal;
+  FLOPPY_Drives[7].StepToggle = Drv7_StepToggle;
 }
 #endif /* PL_HAS_FLOPPY */

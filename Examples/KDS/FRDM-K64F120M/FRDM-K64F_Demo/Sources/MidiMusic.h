@@ -24,7 +24,8 @@ typedef enum {
 
 typedef struct {
   /* channel, note, velocity */
-  uint16_t beat, tick; /* 00003:192 */
+  uint16_t beat;
+  uint32_t tick; /* 00003:192 */
   MIDI_MusicMsg event; /* NOTE_ON  */
   uint8_t val1;        /* G4 */
   uint8_t val2;        /* 127 */

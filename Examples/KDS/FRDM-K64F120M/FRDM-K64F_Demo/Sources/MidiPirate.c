@@ -9,10 +9,26 @@
 #if PL_HAS_MIDI
 #include "Midi.h"
 #include "MidiMusic.h"
-#include "MidiMusicReady.h"
+#include "MidiPirate.h"
+
+#if 0
+/* 0, 0, Header, 1, 10, 96  => 96 ticks per quarter note */
+/* 2, 0, Tempo, 300000 ==> Tempo (us) 300000 */
+2, 0, Tempo, 300000
+==> Metrum = 1/Tempo[us] * 60s
+==> 1/300000us *60s = 200Bpm
+
+Tempo[us] = 1/4 Note
+1/4 Note = 96 Ticks
+=> 300000us / 96 Tick = 3125us/Tick
+#endif
 
 #define NOF_TRACKS                  8  /* number of tracks */
-#define NOF_TICKS_PER_QUARTER_NOTE  (2*96) /* see http://www.ccarh.org/courses/253/assignment/midifile/ */
+#define NOF_TICKS_PER_QUARTER_NOTE  (96) /* see http://www.ccarh.org/courses/253/assignment/midifile/ */
+
+uint32_t MPirate_GetTempoUS(void) {
+  return 300000;
+}
 
 static const MIDI_MusicLine track0[] =
 {

@@ -14,6 +14,10 @@
 #define NOF_TRACKS                  2  /* this music has two tracks */
 #define NOF_TICKS_PER_QUARTER_NOTE  0x180 /* see http://www.ccarh.org/courses/253/assignment/midifile/ */
 
+uint32_t MMReady_GetTempoUS(void) {
+  return 120000; /*???*/
+}
+
 static const MIDI_MusicLine track0[] =
 {
 /* beat,ticks, event,          note,              value */

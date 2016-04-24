@@ -18,12 +18,12 @@ Floppy:
                           9  PTC4
                           10 PTA0
 
-1 PTB2  4 grey step
-2 PTB3  4 white dir
-3 PTB10 0 grey step
-4 PTB11 0 white dir
-5 PTC10 1 grey  step
-6 PTC11 1 white dir
+1 PTB2  4 grey step       1  PTC5 5 grey step
+2 PTB3  4 white dir       2  PTC7 5 white dir
+3 PTB10 0 grey step       3  PTC0 6 grey step  
+4 PTB11 0 white dir       4  PTC9 6 white dir
+5 PTC10 1 grey  step      5  PTC8 7 grey step
+6 PTC11 1 white dir       6  PTC1 7 white dir
 
 
 

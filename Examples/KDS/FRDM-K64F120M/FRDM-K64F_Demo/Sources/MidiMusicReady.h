@@ -11,6 +11,7 @@
 #include "MidiMusic.h"
 
 uint8_t MMReady_NofTracks(void);
+uint32_t MMReady_GetTempoUS(void);
 uint8_t MMReady_GetMidiMusicInfo(MIDI_MusicTrack *tracks, uint8_t nofTracks);
 
 #endif /* MIDIMUSICREADY_H_ */

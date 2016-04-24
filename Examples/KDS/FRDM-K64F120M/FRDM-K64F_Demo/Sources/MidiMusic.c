@@ -9,18 +9,20 @@
 #if PL_HAS_MUSIC
 #include "Floppy.h"
 #include "FRTOS1.h"
+#include "Midi.h"
 #include "MidiMusic.h"
 #include "MidiMusicReady.h"
 #include "MidiPirate.h"
+#include "MidiHaddaway.h"
 
-static bool PlayTrackItem(MIDI_MusicTrack *track, unsigned int currTimeMs, uint8_t channel) {
-  uint32_t beatsPerSecond = 2; /* 120 bpm */
+static bool PlayTrackItem(MIDI_MusicTrack *track, uint32_t currTimeMs, uint8_t channel, uint32_t tempoUS) {
+  uint32_t beatsPerSecond;
   uint32_t currentMillis;
   uint32_t ppqn; /* ticks per beat/quarter note */
-  uint32_t tempo = 110;
   uint8_t event;
-  unsigned int itemNo;
+  uint32_t itemNo;
 
+  beatsPerSecond = 1000000/tempoUS; /* (1'000'000*(1/tmpoUS)*60)/60) */
   ppqn = track->nofTicksPerQuarterNote;
   for(;;) { /* breaks */
     itemNo = track->currLine;
@@ -28,7 +30,7 @@ static bool PlayTrackItem(MIDI_MusicTrack *track, unsigned int currTimeMs, uint8
       return FALSE; /* do not continue any more */
     }
     currentMillis = ((uint32_t)track->lines[itemNo].beat*1000UL)/beatsPerSecond;
-    currentMillis += ((uint32_t)track->lines[itemNo].tick*60000UL)/ppqn/tempo;
+    currentMillis += ((uint32_t)track->lines[itemNo].tick*(tempoUS/1000))/ppqn;
     if (currentMillis>currTimeMs) {
       return TRUE; /* continue */
     }
@@ -65,7 +67,7 @@ static bool PlayTrackItem(MIDI_MusicTrack *track, unsigned int currTimeMs, uint8
   return TRUE;
 }
 
-static void Play(MIDI_MusicTrack *tracks, unsigned int nofTracks) {
+static void Play(MIDI_MusicTrack *tracks, unsigned int nofTracks, uint32_t tempoUS) {
   int itemNo;
   uint8_t channel;
   uint32_t currTimeMs;
@@ -82,14 +84,9 @@ static void Play(MIDI_MusicTrack *tracks, unsigned int nofTracks) {
   itemNo = 0;
   for(;;) { /* breaks */
     currTimeMs = (FRTOS1_xTaskGetTickCount()-startTicks)/portTICK_RATE_MS;
-#if 0
-    if (currTimeMs>15000) {
-      break;
-    }
-#endif
     nofFinished = 0;
     for(channel=0;channel<nofTracks;channel++) {
-      if (!PlayTrackItem(&tracks[channel], currTimeMs, channel)) {
+      if (!PlayTrackItem(&tracks[channel], currTimeMs, channel, tempoUS)) {
         nofFinished++;
       }
     }
@@ -103,17 +100,21 @@ static void Play(MIDI_MusicTrack *tracks, unsigned int nofTracks) {
 
 #define SONG_GET_READY 0
 #define SONG_PIRATES   1
+#define SONG_HADDAWAY  2
 
 void MM_Play(int song) {
   #define MAX_NOF_TRACKS  8
   MIDI_MusicTrack tracks[MAX_NOF_TRACKS];
   uint8_t res;
   uint8_t nofTracks;
+  uint32_t tempoUS;
 
   if (song==SONG_GET_READY) {
     nofTracks = MMReady_NofTracks();
   } else if (song==SONG_PIRATES) {
     nofTracks = MPirate_NofTracks();
+  } else if (song==SONG_HADDAWAY) {
+    nofTracks = MHaddaway_NofTracks();
   } else {
     return; /* error */
   }
@@ -122,11 +123,16 @@ void MM_Play(int song) {
   }
   if (song==SONG_GET_READY) {
     res = MMReady_GetMidiMusicInfo(&tracks[0], nofTracks);
+    tempoUS = MMReady_GetTempoUS();
   } else if (song==SONG_PIRATES) {
     res = MPirate_GetMidiMusicInfo(&tracks[0], nofTracks);
+    tempoUS = MPirate_GetTempoUS();
+  } else if (song==SONG_HADDAWAY) {
+    res = MHaddaway_GetMidiMusicInfo(&tracks[0], nofTracks);
+    tempoUS = MHaddaway_GetTempoUS();
   }
   if (res==ERR_OK) {
-    Play(tracks, nofTracks);
+    Play(tracks, nofTracks, tempoUS);
   }
 }
 
@@ -158,6 +164,8 @@ uint8_t MM_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdI
          MM_Play(SONG_GET_READY);
        } else if (tmp==SONG_PIRATES) {
          MM_Play(SONG_PIRATES);
+       } else if (tmp==SONG_HADDAWAY) {
+         MM_Play(SONG_HADDAWAY);
        }
      }
      return res;
