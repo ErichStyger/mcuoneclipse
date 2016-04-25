@@ -3750,6 +3750,10 @@ static const MIDI_MusicLine track7[] =
   {0,24313, MIDI_END_OF_TRACK, 0,  0}
 };
 
+int MPirate_GetOffset(void) {
+  return -(12+3);
+}
+
 uint8_t MPirate_NofTracks(void) {
   return NOF_TRACKS;
 }

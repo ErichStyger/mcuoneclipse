@@ -152,7 +152,6 @@ int main(void)
   PORT_PDD_SetPinPullSelect(PORTC_BASE_PTR, 14, PORT_PDD_PULL_UP);
   PORT_PDD_SetPinPullEnable(PORTC_BASE_PTR, 14, PORT_PDD_PULL_ENABLE);
 #endif
-
   LED1_On();
   WAIT1_Waitms(50);
   LED1_Off();

@@ -31,7 +31,6 @@ static const MIDI_MusicLine track0[] =
   {0,  0, MIDI_PAN,       64, 0},
   {0,  0, MIDI_VOLUME,    127, 0},
 
- // { 0, 0, MIDI_NOTE_ON, 50, 110  },
   { 0, 300, MIDI_NOTE_ON, 51, 103  },
   { 0, 358, MIDI_NOTE_ON, 51, 0  },
   { 0, 360, MIDI_NOTE_ON, 54, 84 },
@@ -8446,6 +8445,10 @@ static const MIDI_MusicLine track6[] =
 
 uint8_t MHaddaway_NofTracks(void) {
   return NOF_TRACKS;
+}
+
+int MHaddaway_GetOffset(void) {
+  return -(12+8);
 }
 
 uint8_t MHaddaway_GetMidiMusicInfo(MIDI_MusicTrack *tracks, uint8_t nofTracks) {

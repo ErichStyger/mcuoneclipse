@@ -14,6 +14,7 @@
 #include "MidiMusicReady.h"
 #include "MidiPirate.h"
 #include "MidiHaddaway.h"
+#include "MidiGameOfThrones.h"
 
 static bool PlayTrackItem(MIDI_MusicTrack *track, uint32_t currTimeMs, uint8_t channel, uint32_t tempoUS) {
   uint32_t beatsPerSecond;
@@ -98,38 +99,45 @@ static void Play(MIDI_MusicTrack *tracks, unsigned int nofTracks, uint32_t tempo
   }
 }
 
-#define SONG_GET_READY 0
-#define SONG_PIRATES   1
-#define SONG_HADDAWAY  2
-
-void MM_Play(int song) {
+void MM_Play(MIDI_Song song) {
   #define MAX_NOF_TRACKS  8
   MIDI_MusicTrack tracks[MAX_NOF_TRACKS];
   uint8_t res;
   uint8_t nofTracks;
   uint32_t tempoUS;
+  int offset;
 
-  if (song==SONG_GET_READY) {
+  if (song==MIDI_SONG_GET_READY) {
     nofTracks = MMReady_NofTracks();
-  } else if (song==SONG_PIRATES) {
+    tempoUS = MMReady_GetTempoUS();
+    offset = MMReady_GetOffset();
+ } else if (song==MIDI_SONG_PIRATES_OF_CARIBIAN) {
     nofTracks = MPirate_NofTracks();
-  } else if (song==SONG_HADDAWAY) {
+    tempoUS = MPirate_GetTempoUS();
+    offset = MPirate_GetOffset();
+  } else if (song==MIDI_SONG_HADDAWAY_WHAT_IS_LOVE) {
     nofTracks = MHaddaway_NofTracks();
+    tempoUS = MHaddaway_GetTempoUS();
+    offset = MHaddaway_GetOffset();
+  } else if (song==MIDI_SONG_GAME_OF_THRONES) {
+    nofTracks = MGameOfThrones_NofTracks();
+    tempoUS = MGameOfThrones_GetTempoUS();
+    offset = MGameOfThrones_GetOffset();
   } else {
     return; /* error */
   }
   if (nofTracks>MAX_NOF_TRACKS) {
     return; /* error */
   }
-  if (song==SONG_GET_READY) {
+  FLOPPY_SetOffset(offset);
+  if (song==MIDI_SONG_GET_READY) {
     res = MMReady_GetMidiMusicInfo(&tracks[0], nofTracks);
-    tempoUS = MMReady_GetTempoUS();
-  } else if (song==SONG_PIRATES) {
+  } else if (song==MIDI_SONG_PIRATES_OF_CARIBIAN) {
     res = MPirate_GetMidiMusicInfo(&tracks[0], nofTracks);
-    tempoUS = MPirate_GetTempoUS();
-  } else if (song==SONG_HADDAWAY) {
+   } else if (song==MIDI_SONG_HADDAWAY_WHAT_IS_LOVE) {
     res = MHaddaway_GetMidiMusicInfo(&tracks[0], nofTracks);
-    tempoUS = MHaddaway_GetTempoUS();
+  } else if (song==MIDI_SONG_GAME_OF_THRONES) {
+    res = MGameOfThrones_GetMidiMusicInfo(&tracks[0], nofTracks);
   }
   if (res==ERR_OK) {
     Play(tracks, nofTracks, tempoUS);
@@ -149,7 +157,7 @@ uint8_t MM_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdI
   if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "midi help")==0) {
      CLS1_SendHelpStr((unsigned char*)"midi", (const unsigned char*)"Group of midi commands\r\n", io->stdOut);
      CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
-     CLS1_SendHelpStr((unsigned char*)"  play <number>", (const unsigned char*)"Play midi song (0, 1)\r\n", io->stdOut);
+     CLS1_SendHelpStr((unsigned char*)"  play <number>", (const unsigned char*)"Play midi song (0-3)\r\n", io->stdOut);
      *handled = TRUE;
      return ERR_OK;
    } else if ((UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0) || (UTIL1_strcmp((char*)cmd, "midi status")==0)) {
@@ -158,15 +166,9 @@ uint8_t MM_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdI
    } else if (UTIL1_strncmp((char*)cmd, "midi play", sizeof("midi play")-1)==0) {
      p = cmd+sizeof("midi play")-1;
      res = UTIL1_xatoi(&p, &tmp);
-     if (res==ERR_OK && tmp>=0) {
+     if (res==ERR_OK && tmp>=0 && tmp<MIDI_SONG_NOF_SONGS) {
        *handled = TRUE;
-       if (tmp==SONG_GET_READY) {
-         MM_Play(SONG_GET_READY);
-       } else if (tmp==SONG_PIRATES) {
-         MM_Play(SONG_PIRATES);
-       } else if (tmp==SONG_HADDAWAY) {
-         MM_Play(SONG_HADDAWAY);
-       }
+       MM_Play(tmp);
      }
      return res;
    }

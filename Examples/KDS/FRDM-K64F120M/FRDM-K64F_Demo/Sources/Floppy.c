@@ -37,8 +37,8 @@
  * http://hackaday.com/2014/01/05/the-most-beautiful-floppy-disk-jukebox-ever/
  * http://www.schoar.de/tinkering/rumblerail/
  */
-
-#define FLOPPY_NOF_NOTES  128
+#define FLOPPY_NOF_NOTES    128
+#define FLOPPY_HIGHES_NOTE  48 /* highest note/tone we can play */
 static const uint16_t FLOPPY_NoteTicks[FLOPPY_NOF_NOTES] = {
     727, // 0
     727, // 1
@@ -88,19 +88,19 @@ static const uint16_t FLOPPY_NoteTicks[FLOPPY_NOF_NOTES] = {
     57, // 45
     54, // 46
     51, // 47
-    48, // 48
-    45, // 49
-    636 , // Note 50
-    629 , // Note 51
-    621 , // Note 52
-    613 , // Note 53
-    605 , // Note 54
-    597 , // Note 55
-    589 , // Note 56
-    581 , // Note 57
-    573 , // Note 58
-    566 , // Note 59
-    558 , // Note 60
+    48, // 48 (that's the highest note we can play (FLOPPY_HIGHES_NOTE)!)
+    48, // 49
+    48 , // Note 50
+    48 , // Note 51
+    48 , // Note 52
+    48 , // Note 53
+    48 , // Note 54
+    48 , // Note 55
+    48 , // Note 56
+    48 , // Note 57
+    48 , // Note 58
+    48 , // Note 59
+    48 , // Note 60
     550 , // Note 61
     542 , // Note 62
     534 , // Note 63
@@ -170,11 +170,13 @@ static const uint16_t FLOPPY_NoteTicks[FLOPPY_NOF_NOTES] = {
     30   // Note 127
 };
 
+static int FLOPPY_NoteOffset = 0; /* value added to the note played */
+
 /* green: enable (low active)
  * white: direction
  * green: step
  */
-#define FLOPPY_NOTE_OFFSET     (12+6)  /* Octave is 12 */
+#define FLOPPY_NOTE_REDUCE     (12+3)  /* reduce by this to get lower frequency tones, Octave is 12 */
 #define FLOPPY_CHANGE_DIRECTION  1
 
 #define FLOPPY_NOF_DRIVES  8
@@ -243,6 +245,10 @@ typedef FLOPPY_Drive *FLOPPY_DriveHandle;
 
 static FLOPPY_Drive FLOPPY_Drives[FLOPPY_NOF_DRIVES];
 
+void FLOPPY_SetOffset(int offset) {
+  FLOPPY_NoteOffset = offset;
+}
+
 uint8_t FLOPPY_SetPos(FLOPPY_DriveHandle drive, int pos) {
   drive->pos = pos;
   return ERR_OK;
@@ -281,27 +287,8 @@ uint8_t FLOPPY_Steps(FLOPPY_DriveHandle drive, int steps) {
     }
     vTaskDelay(pdMS_TO_TICKS(5));
   } /* while */
-  //FLOPPY_Disable(drive);
   return ERR_OK;
 }
-
-#if 0
-void FLOPPY_OneStep(FLOPPY_DriveHandle drive) {
-#if FLOPPY_CHANGE_DIRECTION
-  if (drive->pos==FLOPPY_MAX_STEPS) {
-    FLOPPY_SetDirection(drive, FALSE); /* go backward */
-  } else if (drive->pos==0) {
-    FLOPPY_SetDirection(drive, TRUE); /* go forward */
-  }
-#endif
-  if (drive->forward) {
-    drive->pos++;
-  } else {
-    drive->pos--;
-  }
-  drive->Step();
-}
-#endif
 
 void FLOPPY_OnInterrupt(void) {
   int i;
@@ -337,17 +324,21 @@ void FLOPPY_MIDI_SetBank(uint8_t channel, uint8_t value) {
 }
 
 void FLOPPY_MIDI_NoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
+  int tmp;
+
   if (channel>=FLOPPY_NOF_DRIVES) {
     return;
   }
   if (note>=FLOPPY_NOF_NOTES) {
     return;
   }
-  if (note>FLOPPY_NOTE_OFFSET) {
-    note -= FLOPPY_NOTE_OFFSET; /* adjust note */
-  } else {
-    note = 0;
+  tmp = (int)note+FLOPPY_NoteOffset;
+  if (tmp<0) {
+    tmp = 0;
+  } else if (tmp>FLOPPY_HIGHES_NOTE) {
+    tmp = FLOPPY_HIGHES_NOTE;
   }
+  note = tmp;
   FLOPPY_Drives[channel].currentPeriod = FLOPPY_NoteTicks[note];
 }
 
@@ -418,6 +409,9 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   uint8_t buf[16], buf2[32];
 
   CLS1_SendStatusStr((uint8_t*)"Floppy", (uint8_t*)"\r\n", io->stdOut);
+  UTIL1_Num32sToStr(buf, sizeof(buf), FLOPPY_NoteOffset);
+  UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
+  CLS1_SendStatusStr((uint8_t*)"  note offset", buf, io->stdOut);
   for(i=0;i<FLOPPY_NOF_DRIVES;i++) {
     UTIL1_strcpy(buf, sizeof(buf), (uint8_t*)"  drive ");
     UTIL1_strcatNum16u(buf, sizeof(buf), (uint16_t)i);

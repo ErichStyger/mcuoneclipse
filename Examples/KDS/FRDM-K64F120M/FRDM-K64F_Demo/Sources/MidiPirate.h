@@ -10,6 +10,7 @@
 
 #include "MidiMusic.h"
 
+int MPirate_GetOffset(void);
 uint8_t MPirate_NofTracks(void);
 uint32_t MPirate_GetTempoUS(void);
 uint8_t MPirate_GetMidiMusicInfo(MIDI_MusicTrack *tracks, uint8_t nofTracks);

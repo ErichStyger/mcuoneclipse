@@ -10,6 +10,7 @@
 
 #include "MidiMusic.h"
 
+int MHaddaway_GetOffset(void);
 uint8_t MHaddaway_NofTracks(void);
 uint32_t MHaddaway_GetTempoUS(void);
 uint8_t MHaddaway_GetMidiMusicInfo(MIDI_MusicTrack *tracks, uint8_t nofTracks);

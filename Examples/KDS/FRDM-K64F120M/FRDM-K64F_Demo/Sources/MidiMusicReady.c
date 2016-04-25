@@ -18,6 +18,10 @@ uint32_t MMReady_GetTempoUS(void) {
   return 120000; /*???*/
 }
 
+int MMReady_GetOffset(void) {
+  return -(12+3);
+}
+
 static const MIDI_MusicLine track0[] =
 {
 /* beat,ticks, event,          note,              value */

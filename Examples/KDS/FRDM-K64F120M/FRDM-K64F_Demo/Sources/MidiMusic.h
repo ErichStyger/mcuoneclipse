@@ -38,7 +38,15 @@ typedef struct {
   uint32_t currLine;
 } MIDI_MusicTrack;
 
-void MM_Play(int song);
+typedef enum {
+  MIDI_SONG_GET_READY,
+  MIDI_SONG_PIRATES_OF_CARIBIAN,
+  MIDI_SONG_HADDAWAY_WHAT_IS_LOVE,
+  MIDI_SONG_GAME_OF_THRONES,
+  MIDI_SONG_NOF_SONGS
+} MIDI_Song;
+
+void MM_Play(MIDI_Song song);
 
 uint8_t MM_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
 #endif /* PL_HAS_MIDI */
