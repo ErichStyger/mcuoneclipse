@@ -377,13 +377,18 @@ uint8_t FLOPPY_InitDrives(void) {
     /* reset to initial position */
     FLOPPY_Drives[i].Dir(TRUE);
     FLOPPY_Drives[i].forward = TRUE;
-    for(j=0;j<FLOPPY_MAX_STEPS+20;j++) { /* max 400 Hz */
-      FLOPPY_Drives[i].StepSetVal();
-      vTaskDelay(pdMS_TO_TICKS(1));
-      FLOPPY_Drives[i].StepClearVal();
-      vTaskDelay(pdMS_TO_TICKS(3));
-    }
     FLOPPY_Drives[i].pos = FLOPPY_MAX_STEPS;
+  }
+
+  for(j=0;j<FLOPPY_MAX_STEPS+20;j++) { /* max 400 Hz */
+    for(i=0;i<FLOPPY_NOF_DRIVES;i++) {
+      FLOPPY_Drives[i].StepSetVal();
+    }
+    vTaskDelay(pdMS_TO_TICKS(1));
+    for(i=0;i<FLOPPY_NOF_DRIVES;i++) {
+      FLOPPY_Drives[i].StepClearVal();
+    }
+    vTaskDelay(pdMS_TO_TICKS(3));
   }
   return ERR_OK;
 }

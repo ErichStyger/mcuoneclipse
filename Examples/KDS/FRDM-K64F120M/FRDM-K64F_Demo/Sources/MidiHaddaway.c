@@ -16,11 +16,19 @@
 /* 1, 0, Tempo, 476190  ==> Tempo (us) 476190 */
 #endif
 
-#define NOF_TRACKS                  7  /* number of tracks */
+#define NOF_TRACKS                  8  /* number of tracks */
 #define NOF_TICKS_PER_QUARTER_NOTE  (120) /* see http://www.ccarh.org/courses/253/assignment/midifile/ */
 
 uint32_t MHaddaway_GetTempoUS(void) {
   return 476190;
+}
+
+uint8_t MHaddaway_NofTracks(void) {
+  return NOF_TRACKS;
+}
+
+int MHaddaway_GetOffset(void) {
+  return -(12+8);
 }
 
 static const MIDI_MusicLine track0[] =
@@ -8443,14 +8451,6 @@ static const MIDI_MusicLine track6[] =
   {0,24841, MIDI_END_OF_TRACK, 0,  0}
 };
 
-uint8_t MHaddaway_NofTracks(void) {
-  return NOF_TRACKS;
-}
-
-int MHaddaway_GetOffset(void) {
-  return -(12+8);
-}
-
 uint8_t MHaddaway_GetMidiMusicInfo(MIDI_MusicTrack *tracks, uint8_t nofTracks) {
   if (nofTracks>NOF_TRACKS) {
     return ERR_OVERFLOW; /* not enough tracks available */
@@ -8497,6 +8497,13 @@ uint8_t MHaddaway_GetMidiMusicInfo(MIDI_MusicTrack *tracks, uint8_t nofTracks) {
     tracks[6].currLine = 0;
     tracks[6].nofTicksPerQuarterNote = NOF_TICKS_PER_QUARTER_NOTE;
   }
+  if (nofTracks>=7) { /* map track 2 to free number 7 */
+    tracks[7].lines = &track2[0];
+    tracks[7].nofLines = sizeof(track2)/sizeof(track2[0]);
+    tracks[7].currLine = 0;
+    tracks[7].nofTicksPerQuarterNote = NOF_TICKS_PER_QUARTER_NOTE;
+  }
+
   return ERR_OK;
 }
 
