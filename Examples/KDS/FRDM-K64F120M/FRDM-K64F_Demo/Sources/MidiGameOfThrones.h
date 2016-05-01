@@ -1,5 +1,5 @@
 /*
- * Haddaway.h
+ * MidiGameOfThrones.h
  *
  *  Created on: 01.01.2015
  *      Author: Erich Styger

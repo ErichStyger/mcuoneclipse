@@ -15,6 +15,10 @@
 #include "MidiPirate.h"
 #include "MidiHaddaway.h"
 #include "MidiGameOfThrones.h"
+#include "MidiTetris.h"
+#include "MidiAxelF.h"
+#include "MidiGhostbusters.h"
+#include "MidiBond.h"
 
 static bool PlayTrackItem(MIDI_MusicTrack *track, uint32_t currTimeMs, uint8_t channel, uint32_t tempoUS) {
   uint32_t beatsPerSecond;
@@ -102,10 +106,10 @@ static void Play(MIDI_MusicTrack *tracks, unsigned int nofTracks, uint32_t tempo
 void MM_Play(MIDI_Song song) {
   #define MAX_NOF_TRACKS  8
   MIDI_MusicTrack tracks[MAX_NOF_TRACKS];
-  uint8_t res;
-  uint8_t nofTracks;
-  uint32_t tempoUS;
-  int offset;
+  uint8_t res=ERR_FAILED;
+  uint8_t nofTracks=0;
+  uint32_t tempoUS=0;
+  int offset=0;
 
   if (song==MIDI_SONG_GET_READY) {
     nofTracks = MMReady_NofTracks();
@@ -123,6 +127,22 @@ void MM_Play(MIDI_Song song) {
     nofTracks = MGameOfThrones_NofTracks();
     tempoUS = MGameOfThrones_GetTempoUS();
     offset = MGameOfThrones_GetOffset();
+  } else if (song==MIDI_SONG_TETRIS) {
+    nofTracks = MTetris_NofTracks();
+    tempoUS = MTetris_GetTempoUS();
+    offset = MTetris_GetOffset();
+  } else if (song==MIDI_SONG_AXEL_F) {
+    nofTracks = MAxelF_NofTracks();
+    tempoUS = MAxelF_GetTempoUS();
+    offset = MAxelF_GetOffset();
+  } else if (song==MIDI_SONG_GHOSTBUSTERS) {
+    nofTracks = MGhostbusters_NofTracks();
+    tempoUS = MGhostbusters_GetTempoUS();
+    offset = MGhostbusters_GetOffset();
+  } else if (song==MIDI_SONG_JAMES_BOND) {
+    nofTracks = MBond_NofTracks();
+    tempoUS = MBond_GetTempoUS();
+    offset = MBond_GetOffset();
   } else {
     return; /* error */
   }
@@ -138,6 +158,14 @@ void MM_Play(MIDI_Song song) {
     res = MHaddaway_GetMidiMusicInfo(&tracks[0], nofTracks);
   } else if (song==MIDI_SONG_GAME_OF_THRONES) {
     res = MGameOfThrones_GetMidiMusicInfo(&tracks[0], nofTracks);
+  } else if (song==MIDI_SONG_TETRIS) {
+    res = MTetris_GetMidiMusicInfo(&tracks[0], nofTracks);
+  } else if (song==MIDI_SONG_AXEL_F) {
+    res = MAxelF_GetMidiMusicInfo(&tracks[0], nofTracks);
+  } else if (song==MIDI_SONG_GHOSTBUSTERS) {
+    res = MGhostbusters_GetMidiMusicInfo(&tracks[0], nofTracks);
+  } else if (song==MIDI_SONG_JAMES_BOND) {
+    res = MBond_GetMidiMusicInfo(&tracks[0], nofTracks);
   }
   if (res==ERR_OK) {
     Play(tracks, nofTracks, tempoUS);
@@ -157,7 +185,15 @@ uint8_t MM_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdI
   if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "midi help")==0) {
      CLS1_SendHelpStr((unsigned char*)"midi", (const unsigned char*)"Group of midi commands\r\n", io->stdOut);
      CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
-     CLS1_SendHelpStr((unsigned char*)"  play <number>", (const unsigned char*)"Play midi song (0-3)\r\n", io->stdOut);
+     CLS1_SendHelpStr((unsigned char*)"  play <number>", (const unsigned char*)"Play midi song (0-4)\r\n", io->stdOut);
+     CLS1_SendHelpStr((unsigned char*)"      0", (const unsigned char*)"Get ready\r\n", io->stdOut);
+     CLS1_SendHelpStr((unsigned char*)"      1", (const unsigned char*)"Pirates of the Caribbean\r\n", io->stdOut);
+     CLS1_SendHelpStr((unsigned char*)"      2", (const unsigned char*)"What is Love\r\n", io->stdOut);
+     CLS1_SendHelpStr((unsigned char*)"      3", (const unsigned char*)"Game of Thrones\r\n", io->stdOut);
+     CLS1_SendHelpStr((unsigned char*)"      4", (const unsigned char*)"Tetris\r\n", io->stdOut);
+     CLS1_SendHelpStr((unsigned char*)"      5", (const unsigned char*)"Axel F.\r\n", io->stdOut);
+     CLS1_SendHelpStr((unsigned char*)"      6", (const unsigned char*)"Ghostbusters\r\n", io->stdOut);
+     CLS1_SendHelpStr((unsigned char*)"      7", (const unsigned char*)"James Bond\r\n", io->stdOut);
      *handled = TRUE;
      return ERR_OK;
    } else if ((UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0) || (UTIL1_strcmp((char*)cmd, "midi status")==0)) {

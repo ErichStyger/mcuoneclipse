@@ -8456,14 +8456,14 @@ uint8_t MHaddaway_GetMidiMusicInfo(MIDI_MusicTrack *tracks, uint8_t nofTracks) {
     return ERR_OVERFLOW; /* not enough tracks available */
   }
   if (nofTracks>=1) {
-    tracks[0].lines = &track0[0];
-    tracks[0].nofLines = sizeof(track0)/sizeof(track0[0]);
+    tracks[0].lines = &track1[0];
+    tracks[0].nofLines = sizeof(track1)/sizeof(track1[0]);
     tracks[0].currLine = 0;
     tracks[0].nofTicksPerQuarterNote = NOF_TICKS_PER_QUARTER_NOTE;
   }
   if (nofTracks>=2) {
-    tracks[1].lines = &track1[0];
-    tracks[1].nofLines = sizeof(track1)/sizeof(track1[0]);
+    tracks[1].lines = &track0[0];
+    tracks[1].nofLines = sizeof(track0)/sizeof(track0[0]);
     tracks[1].currLine = 0;
     tracks[1].nofTicksPerQuarterNote = NOF_TICKS_PER_QUARTER_NOTE;
   }

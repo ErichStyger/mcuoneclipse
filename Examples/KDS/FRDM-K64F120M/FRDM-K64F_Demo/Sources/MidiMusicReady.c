@@ -1,5 +1,5 @@
 /*
- * MusicMidiReady.c
+ * MidiMusicMidiReady.c
  *
  *  Created on: 01.01.2015
  *      Author: Erich Styger

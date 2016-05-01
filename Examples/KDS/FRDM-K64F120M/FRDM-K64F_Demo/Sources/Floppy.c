@@ -37,6 +37,11 @@
  * http://hackaday.com/2014/01/05/the-most-beautiful-floppy-disk-jukebox-ever/
  * http://www.schoar.de/tinkering/rumblerail/
  */
+/* green: enable (low active)
+ * white: direction
+ * green: step
+ */
+
 #define FLOPPY_NOF_NOTES    128
 #define FLOPPY_HIGHES_NOTE  48 /* highest note/tone we can play */
 static const uint16_t FLOPPY_NoteTicks[FLOPPY_NOF_NOTES] = {
@@ -172,13 +177,6 @@ static const uint16_t FLOPPY_NoteTicks[FLOPPY_NOF_NOTES] = {
 
 static int FLOPPY_NoteOffset = 0; /* value added to the note played */
 
-/* green: enable (low active)
- * white: direction
- * green: step
- */
-#define FLOPPY_NOTE_REDUCE     (12+3)  /* reduce by this to get lower frequency tones, Octave is 12 */
-#define FLOPPY_CHANGE_DIRECTION  1
-
 #define FLOPPY_NOF_DRIVES  8
 #define FLOPPY_MAX_STEPS  80
 
@@ -241,6 +239,7 @@ typedef struct {
   void(*StepClearVal)(void);
   void(*StepToggle)(void);
 } FLOPPY_Drive;
+
 typedef FLOPPY_Drive *FLOPPY_DriveHandle;
 
 static FLOPPY_Drive FLOPPY_Drives[FLOPPY_NOF_DRIVES];
@@ -267,13 +266,11 @@ uint8_t FLOPPY_Steps(FLOPPY_DriveHandle drive, int steps) {
     FLOPPY_SetDirection(drive, FALSE); /* go backward */
   }
   while(steps!=0) {
-#if FLOPPY_CHANGE_DIRECTION
     if (drive->pos==FLOPPY_MAX_STEPS) {
       FLOPPY_SetDirection(drive, FALSE); /* go backward */
     } else if (drive->pos==0) {
       FLOPPY_SetDirection(drive, TRUE); /* go forward */
     }
-#endif
     drive->Step();
     if (steps>0) {
       steps--;
@@ -299,20 +296,18 @@ void FLOPPY_OnInterrupt(void) {
       if (FLOPPY_Drives[i].currentTick>=FLOPPY_Drives[i].currentPeriod) { /* check if expired */
         FLOPPY_Drives[i].StepSetVal(); /* toggle pin ==> High */
         FLOPPY_Drives[i].currentTick = 0; /* reset tick counter */
-#if FLOPPY_CHANGE_DIRECTION
         /* change direction if end has been reached */
         if (FLOPPY_Drives[i].pos==FLOPPY_MAX_STEPS) {
           FLOPPY_SetDirection(&FLOPPY_Drives[i], FALSE); /* go backward */
         } else if (FLOPPY_Drives[i].pos==0) {
           FLOPPY_SetDirection(&FLOPPY_Drives[i], TRUE); /* go forward */
         }
-#endif
         if (FLOPPY_Drives[i].forward) {
           FLOPPY_Drives[i].pos++;
         } else {
           FLOPPY_Drives[i].pos--;
         }
-        WAIT1_Waitus(5);
+        WAIT1_Waitus(1);
         FLOPPY_Drives[i].StepClearVal(); /* toggle pin ==> Low */
       }
     }
