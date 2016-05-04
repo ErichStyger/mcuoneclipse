@@ -38,21 +38,26 @@ typedef struct {
   uint32_t currLine;
 } MIDI_MusicTrack;
 
-typedef enum {
-  MIDI_SONG_GET_READY,
-  MIDI_SONG_PIRATES_OF_CARIBIAN,
-  MIDI_SONG_HADDAWAY_WHAT_IS_LOVE,
-  MIDI_SONG_GAME_OF_THRONES,
-  MIDI_SONG_TETRIS,
-  MIDI_SONG_AXEL_F,
-  MIDI_SONG_GHOSTBUSTERS,
-  MIDI_SONG_JAMES_BOND,
-  MIDI_SONG_NOF_SONGS
+typedef enum { /* bits are used for FreeRTOS direct task notifications */
+  MIDI_SONG_GET_READY = (1<<0),
+  MIDI_SONG_PIRATES_OF_CARIBIAN = (1<<1),
+  MIDI_SONG_HADDAWAY_WHAT_IS_LOVE = (1<<2),
+  MIDI_SONG_GAME_OF_THRONES = (1<<3),
+  MIDI_SONG_TETRIS = (1<<4) ,
+  MIDI_SONG_AXEL_F = (1<<5),
+  MIDI_SONG_GHOSTBUSTERS = (1<<6),
+  MIDI_SONG_JAMES_BOND = (1<<7),
+  MIDI_SONG_START = (1<<30),
+  MIDI_SONG_STOP = (1<<31)
 } MIDI_Song;
+#define MIDI_NOF_SONGS  8
 
 void MM_Play(MIDI_Song song);
 
 uint8_t MM_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
+
+void MM_Init(void);
+
 #endif /* PL_HAS_MIDI */
 
 #endif /* MIDIMUSIC_H_ */

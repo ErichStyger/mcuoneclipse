@@ -20,6 +20,8 @@
 #include "MidiGhostbusters.h"
 #include "MidiBond.h"
 
+static xTaskHandle MidiPlayTaskHandle;
+
 static bool PlayTrackItem(MIDI_MusicTrack *track, uint32_t currTimeMs, uint8_t channel, uint32_t tempoUS) {
   uint32_t beatsPerSecond;
   uint32_t currentMillis;
@@ -78,6 +80,7 @@ static void Play(MIDI_MusicTrack *tracks, unsigned int nofTracks, uint32_t tempo
   uint32_t currTimeMs;
   TickType_t startTicks;
   unsigned int nofFinished;
+  uint32_t flags;
 
   /* init defaults */
   for(channel=0;channel<nofTracks;channel++) {
@@ -88,6 +91,13 @@ static void Play(MIDI_MusicTrack *tracks, unsigned int nofTracks, uint32_t tempo
   startTicks = FRTOS1_xTaskGetTickCount();
   itemNo = 0;
   for(;;) { /* breaks */
+    (void)xTaskNotifyWait(0UL, MIDI_SONG_STOP, &flags, 0); /* check flags */
+    if (flags&MIDI_SONG_STOP) {
+      for(channel=0;channel<nofTracks;channel++) {
+        FLOPPY_MIDI_AllSoundOff(channel);
+      }
+      break;
+    }
     currTimeMs = (FRTOS1_xTaskGetTickCount()-startTicks)/portTICK_RATE_MS;
     nofFinished = 0;
     for(channel=0;channel<nofTracks;channel++) {
@@ -172,6 +182,44 @@ void MM_Play(MIDI_Song song) {
   }
 }
 
+void MM_PlayMusic(MIDI_Song song) {
+  (void)xTaskNotify(MidiPlayTaskHandle, (1<<song)|MIDI_SONG_START, eSetBits);
+}
+
+void MM_StopPlaying(void) {
+  (void)xTaskNotify(MidiPlayTaskHandle, MIDI_SONG_STOP, eSetBits);
+}
+
+static void MidiPlayTask(void *pvParameters) {
+  uint32_t flags;
+  BaseType_t res;
+
+  FLOPPY_InitDrives(); /* init */
+  for(;;) {
+    res = xTaskNotifyWait((uint32_t)(-1), (uint32_t)(-1), &flags, portMAX_DELAY); /* check flags */
+    if (res==pdPASS && (flags&MIDI_SONG_START)) {
+      FLOPPY_InitDrives();
+      if (flags&MIDI_SONG_GET_READY) {
+        MM_Play(MIDI_SONG_GET_READY);
+      } else if (flags&MIDI_SONG_PIRATES_OF_CARIBIAN) {
+        MM_Play(MIDI_SONG_PIRATES_OF_CARIBIAN);
+      } else if (flags&MIDI_SONG_HADDAWAY_WHAT_IS_LOVE) {
+        MM_Play(MIDI_SONG_HADDAWAY_WHAT_IS_LOVE);
+      } else if (flags&MIDI_SONG_GAME_OF_THRONES) {
+        MM_Play(MIDI_SONG_GAME_OF_THRONES);
+      } else if (flags&MIDI_SONG_TETRIS) {
+        MM_Play(MIDI_SONG_TETRIS);
+      } else if (flags&MIDI_SONG_AXEL_F) {
+        MM_Play(MIDI_SONG_AXEL_F);
+      } else if (flags&MIDI_SONG_GHOSTBUSTERS) {
+        MM_Play(MIDI_SONG_GHOSTBUSTERS);
+      } else if (flags&MIDI_SONG_JAMES_BOND) {
+        MM_Play(MIDI_SONG_JAMES_BOND);
+      }
+    }
+  }
+}
+
 static uint8_t PrintStatus(CLS1_ConstStdIOType *io) {
   CLS1_SendStatusStr((unsigned char*)"midi", (const unsigned char*)"\r\n", io->stdOut);
   return ERR_OK;
@@ -185,7 +233,7 @@ uint8_t MM_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdI
   if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "midi help")==0) {
      CLS1_SendHelpStr((unsigned char*)"midi", (const unsigned char*)"Group of midi commands\r\n", io->stdOut);
      CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
-     CLS1_SendHelpStr((unsigned char*)"  play <number>", (const unsigned char*)"Play midi song (0-4)\r\n", io->stdOut);
+     CLS1_SendHelpStr((unsigned char*)"  play <number>", (const unsigned char*)"Play midi song\r\n", io->stdOut);
      CLS1_SendHelpStr((unsigned char*)"      0", (const unsigned char*)"Get ready\r\n", io->stdOut);
      CLS1_SendHelpStr((unsigned char*)"      1", (const unsigned char*)"Pirates of the Caribbean\r\n", io->stdOut);
      CLS1_SendHelpStr((unsigned char*)"      2", (const unsigned char*)"What is Love\r\n", io->stdOut);
@@ -194,20 +242,39 @@ uint8_t MM_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdI
      CLS1_SendHelpStr((unsigned char*)"      5", (const unsigned char*)"Axel F.\r\n", io->stdOut);
      CLS1_SendHelpStr((unsigned char*)"      6", (const unsigned char*)"Ghostbusters\r\n", io->stdOut);
      CLS1_SendHelpStr((unsigned char*)"      7", (const unsigned char*)"James Bond\r\n", io->stdOut);
+     CLS1_SendHelpStr((unsigned char*)"  stop", (const unsigned char*)"Stop playing\r\n", io->stdOut);
      *handled = TRUE;
      return ERR_OK;
    } else if ((UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0) || (UTIL1_strcmp((char*)cmd, "midi status")==0)) {
      *handled = TRUE;
      return PrintStatus(io);
+   } else if (UTIL1_strcmp((char*)cmd, "midi stop")==0) {
+     *handled = TRUE;
+     MM_StopPlaying();
+     return ERR_OK;
    } else if (UTIL1_strncmp((char*)cmd, "midi play", sizeof("midi play")-1)==0) {
      p = cmd+sizeof("midi play")-1;
      res = UTIL1_xatoi(&p, &tmp);
-     if (res==ERR_OK && tmp>=0 && tmp<MIDI_SONG_NOF_SONGS) {
+     if (res==ERR_OK && tmp>=0 && tmp<MIDI_NOF_SONGS) {
        *handled = TRUE;
-       MM_Play(tmp);
+       MM_PlayMusic(tmp);
      }
      return res;
    }
   return ERR_OK;
 }
-#endif /* PL_HAS_MUSIC */
+
+void MM_Init(void) {
+  if (FRTOS1_xTaskCreate(
+      MidiPlayTask,  /* pointer to the task */
+      "MidiPlay", /* task name for kernel awareness debugging */
+      configMINIMAL_STACK_SIZE, /* task stack size */
+      (void*)NULL, /* optional task startup argument */
+      tskIDLE_PRIORITY+1,  /* initial priority */
+      &MidiPlayTaskHandle /* optional task handle to create */
+    ) != pdPASS) {
+  /*lint -e527 */
+  for(;;){} /* error! probably out of memory */
+    /*lint +e527 */
+  }
+}#endif /* PL_HAS_MUSIC */

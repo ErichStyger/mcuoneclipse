@@ -24,6 +24,7 @@ void FLOPPY_MIDI_SetPan(uint8_t channel, uint8_t pan);
 void FLOPPY_MIDI_AllSoundOff(uint8_t channel);
 
 void FLOPPY_SetOffset(int offset);
+uint8_t FLOPPY_InitDrives(void);
 void FLOPPY_Init(void);
 
 #endif /* FLOPPY_H_ */

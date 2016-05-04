@@ -388,22 +388,6 @@ uint8_t FLOPPY_InitDrives(void) {
   return ERR_OK;
 }
 
-static bool play = FALSE;
-
-static void FloppyTask(void *pvParameters) {
-  FLOPPY_InitDrives();
-  TI1_Enable();
-  TI1_EnableEvent();
-  for(;;) {
-    if (play) {
-      play = FALSE;
-      FLOPPY_InitDrives();
-      MM_Play(1);
-    }
-    vTaskDelay(pdMS_TO_TICKS(50));
-  }
-}
-
 static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   int i;
   uint8_t buf[16], buf2[32];
@@ -442,7 +426,6 @@ uint8_t FLOPPY_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_
     CLS1_SendHelpStr((unsigned char*)"  step <drv> <steps>", (const unsigned char*)"Perform number of steps (positive/negative)\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  period <drv> <ticks>", (const unsigned char*)"Set period for drive, zero disables it\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  note <drv> <note>", (const unsigned char*)"Play note (0..127)\r\n", io->stdOut);
-    CLS1_SendHelpStr((unsigned char*)"  play", (const unsigned char*)"play music\r\n", io->stdOut);
     *handled = TRUE;
     return ERR_OK;
   } else if ((UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0) || (UTIL1_strcmp((char*)cmd, "Floppy status")==0)) {
@@ -465,10 +448,6 @@ uint8_t FLOPPY_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_
   } else if (UTIL1_strcmp((char*)cmd, "Floppy home")==0) {
     *handled = TRUE;
     return FLOPPY_InitDrives();
-  } else if (UTIL1_strcmp((char*)cmd, "Floppy play")==0) {
-    *handled = TRUE;
-    play = TRUE;
-    return ERR_OK;
   } else if (UTIL1_strncmp((char*)cmd, "Floppy step", sizeof("Floppy step")-1)==0) {
     *handled = TRUE;
     p = cmd + sizeof("Floppy step")-1;
@@ -510,18 +489,7 @@ uint8_t FLOPPY_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_
 
 void FLOPPY_Init(void) {
   int i;
-  if (FRTOS1_xTaskCreate(
-      FloppyTask,  /* pointer to the task */
-      "Floppy", /* task name for kernel awareness debugging */
-      configMINIMAL_STACK_SIZE, /* task stack size */
-      (void*)NULL, /* optional task startup argument */
-      tskIDLE_PRIORITY+1,  /* initial priority */
-      (xTaskHandle*)NULL /* optional task handle to create */
-    ) != pdPASS) {
-  /*lint -e527 */
-  for(;;){} /* error! probably out of memory */
-    /*lint +e527 */
-  }
+
   for(i=0;i<FLOPPY_NOF_DRIVES;i++) {
     FLOPPY_Drives[i].forward = FALSE;
     FLOPPY_Drives[i].pos = 0;
@@ -575,5 +543,8 @@ void FLOPPY_Init(void) {
   FLOPPY_Drives[7].StepSetVal = Drv7_StepSetVal;
   FLOPPY_Drives[7].StepClearVal = Drv7_StepClrVal;
   FLOPPY_Drives[7].StepToggle = Drv7_StepToggle;
+
+  TI1_Enable();
+  TI1_EnableEvent();
 }
 #endif /* PL_HAS_FLOPPY */

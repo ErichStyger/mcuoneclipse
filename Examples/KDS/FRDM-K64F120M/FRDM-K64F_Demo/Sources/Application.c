@@ -254,6 +254,9 @@ void APP_Start(void) {
 #if PL_HAS_FLOPPY
   FLOPPY_Init();
 #endif
+#if PL_HAS_MIDI
+  MM_Init();
+#endif
   SHELL_Init();
   if (FRTOS1_xTaskCreate(
       MainTask,  /* pointer to the task */
