@@ -17,7 +17,6 @@
 #include "KIN1.h"
 
 #define FLASH_PAGE_SIZE             (IntFlashLdd1_ERASABLE_UNIT_SIZE) /* flash page size */
-#define BL_FLASH_VECTOR_TABLE       0x0000 /* bootloader vector table in flash */
 
 /* application flash area */
 #define MIN_APP_FLASH_ADDRESS        0x4000  /* start of application flash area */
@@ -312,15 +311,7 @@ byte BL_ParseCommand(const unsigned char *cmd, bool *handled, CLS1_ConstStdIOTyp
     *handled = TRUE;
     return BL_EraseAppFlash(io);
   } else if ((UTIL1_strcmp((char*)cmd, "BL restart")==0)) {
-#if 0
-    uint32_t startup;
-
-    *handled = TRUE;
-    startup = ((uint32_t*)BL_FLASH_VECTOR_TABLE)[1];
-    ((void(*)(void))startup)(); /* Jump to startup code */
-#else
     KIN1_SoftwareReset();
-#endif
     /* will never get here! */
     return ERR_OK;
   } else if ((UTIL1_strcmp((char*)cmd, "BL load s19")==0)) {
