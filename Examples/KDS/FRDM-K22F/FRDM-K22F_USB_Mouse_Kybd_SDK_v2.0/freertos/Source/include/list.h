@@ -115,16 +115,16 @@
  * deemed to be as intended.  That said, as compiler technology advances, and
  * especially if aggressive cross module optimisation is used (a use case that
  * has not been exercised to any great extend) then it is feasible that the
- * volatile qualifier is needed for correct optimisation.  It is expected
+ * volatile qualifier will be needed for correct optimisation.  It is expected
  * that a compiler removing essential code because, without the volatile
  * qualifier on the list structure members and with aggressive cross module
- * optimisation, the compiler deemed the code unnecessary results in
+ * optimisation, the compiler deemed the code unnecessary will result in
  * complete and obvious failure of the scheduler.  If this is ever experienced
  * then the volatile qualifier can be inserted in the relevant places within the
  * list structures by simply defining configLIST_VOLATILE to volatile in
  * FreeRTOSConfig.h (as per the example at the bottom of this comment block).
  * If configLIST_VOLATILE is not defined then the preprocessor directives below
- * simply #define configLIST_VOLATILE away completely.
+ * will simply #define configLIST_VOLATILE away completely.
  *
  * To use volatile list structure members then add the following line to
  * FreeRTOSConfig.h (without the quotes):
@@ -141,7 +141,7 @@ extern "C" {
 /* Macros that can be used to place known values within the list structures,
 then check that the known values do not get corrupted during the execution of
 the application.   These may catch the list data structures being overwritten in
-memory.  They do not catch data errors caused by incorrect configuration or
+memory.  They will not catch data errors caused by incorrect configuration or
 use of FreeRTOS.*/
 #if( configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES == 0 )
 	/* Define the macros to do nothing. */
@@ -168,7 +168,7 @@ use of FreeRTOS.*/
 	#define listSET_LIST_INTEGRITY_CHECK_1_VALUE( pxList )		( pxList )->xListIntegrityValue1 = pdINTEGRITY_CHECK_VALUE
 	#define listSET_LIST_INTEGRITY_CHECK_2_VALUE( pxList )		( pxList )->xListIntegrityValue2 = pdINTEGRITY_CHECK_VALUE
 
-	/* Define macros that assert if one of the structure members does not
+	/* Define macros that will assert if one of the structure members does not
 	contain its expected value. */
 	#define listTEST_LIST_ITEM_INTEGRITY( pxItem )		configASSERT( ( ( pxItem )->xListItemIntegrityValue1 == pdINTEGRITY_CHECK_VALUE ) && ( ( pxItem )->xListItemIntegrityValue2 == pdINTEGRITY_CHECK_VALUE ) )
 	#define listTEST_LIST_INTEGRITY( pxList )			configASSERT( ( ( pxList )->xListIntegrityValue1 == pdINTEGRITY_CHECK_VALUE ) && ( ( pxList )->xListIntegrityValue2 == pdINTEGRITY_CHECK_VALUE ) )
@@ -282,8 +282,8 @@ typedef struct xLIST
 #define listGET_END_MARKER( pxList )	( ( ListItem_t const * ) ( &( ( pxList )->xListEnd ) ) )
 
 /*
- * Access macro to determine if a list contains any items.  The macro
- * only has the value true if the list is empty.
+ * Access macro to determine if a list contains any items.  The macro will
+ * only have the value true if the list is empty.
  *
  * \page listLIST_IS_EMPTY listLIST_IS_EMPTY
  * \ingroup LinkedList
@@ -397,7 +397,7 @@ void vListInitialise( List_t * const pxList ) PRIVILEGED_FUNCTION;
 void vListInitialiseItem( ListItem_t * const pxItem ) PRIVILEGED_FUNCTION;
 
 /*
- * Insert a list item into a list.  The item is inserted into the list in
+ * Insert a list item into a list.  The item will be inserted into the list in
  * a position determined by its item value (descending item value order).
  *
  * @param pxList The list into which the item is to be inserted.
@@ -410,15 +410,15 @@ void vListInitialiseItem( ListItem_t * const pxItem ) PRIVILEGED_FUNCTION;
 void vListInsert( List_t * const pxList, ListItem_t * const pxNewListItem ) PRIVILEGED_FUNCTION;
 
 /*
- * Insert a list item into a list.  The item is inserted in a position
- * such that it is the last item within the list returned by multiple
+ * Insert a list item into a list.  The item will be inserted in a position
+ * such that it will be the last item within the list returned by multiple
  * calls to listGET_OWNER_OF_NEXT_ENTRY.
  *
  * The list member pvIndex is used to walk through a list.  Calling
  * listGET_OWNER_OF_NEXT_ENTRY increments pvIndex to the next item in the list.
  * Placing an item in a list using vListInsertEnd effectively places the item
  * in the list position pointed to by pvIndex.  This means that every other
- * item within the list is returned by listGET_OWNER_OF_NEXT_ENTRY before
+ * item within the list will be returned by listGET_OWNER_OF_NEXT_ENTRY before
  * the pvIndex parameter again points to the item being inserted.
  *
  * @param pxList The list into which the item is to be inserted.
@@ -434,7 +434,7 @@ void vListInsertEnd( List_t * const pxList, ListItem_t * const pxNewListItem ) P
  * Remove an item from a list.  The list item has a pointer to the list that
  * it is in, so only the list item need be passed into the function.
  *
- * @param uxListRemove The item to be removed.  The item removes itself from
+ * @param uxListRemove The item to be removed.  The item will remove itself from
  * the list pointed to by it's pxContainer parameter.
  *
  * @return The number of items that remain in the list after the list item has
@@ -450,4 +450,5 @@ UBaseType_t uxListRemove( ListItem_t * const pxItemToRemove ) PRIVILEGED_FUNCTIO
 #endif
 
 #endif
+
 

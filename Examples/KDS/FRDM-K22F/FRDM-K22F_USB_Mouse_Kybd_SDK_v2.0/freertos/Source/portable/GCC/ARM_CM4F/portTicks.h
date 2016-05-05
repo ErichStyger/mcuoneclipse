@@ -1,7 +1,3 @@
-/* << EST */
-#include "FreeRTOSConfig.h"
-#if configFRTOS_MEMORY_SCHEME==3
-
 /*
     FreeRTOS V8.2.3 - Copyright (C) 2015 Real Time Engineers Ltd.
     All rights reserved
@@ -14,12 +10,12 @@
     the terms of the GNU General Public License (version 2) as published by the
     Free Software Foundation >>>> AND MODIFIED BY <<<< the FreeRTOS exception.
 
-    ***************************************************************************
+	***************************************************************************
     >>!   NOTE: The modification to the GPL is included to allow you to     !<<
     >>!   distribute a combined work that includes FreeRTOS without being   !<<
     >>!   obliged to provide the source code for proprietary components     !<<
     >>!   outside of the FreeRTOS kernel.                                   !<<
-    ***************************************************************************
+	***************************************************************************
 
     FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
     WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
@@ -41,17 +37,17 @@
     ***************************************************************************
 
     http://www.FreeRTOS.org/FAQHelp.html - Having a problem?  Start by reading
-    the FAQ page "My application does not run, what could be wrong?".  Have you
-    defined configASSERT()?
+	the FAQ page "My application does not run, what could be wrong?".  Have you
+	defined configASSERT()?
 
-    http://www.FreeRTOS.org/support - In return for receiving this top quality
-    embedded software for free we request you assist our global community by
-    participating in the support forum.
+	http://www.FreeRTOS.org/support - In return for receiving this top quality
+	embedded software for free we request you assist our global community by
+	participating in the support forum.
 
-    http://www.FreeRTOS.org/training - Investing in training allows your team to
-    be as productive as possible as early as possible.  Now you can receive
-    FreeRTOS training directly from Richard Barry, CEO of Real Time Engineers
-    Ltd, and the world's leading authority on the world's leading RTOS.
+	http://www.FreeRTOS.org/training - Investing in training allows your team to
+	be as productive as possible as early as possible.  Now you can receive
+	FreeRTOS training directly from Richard Barry, CEO of Real Time Engineers
+	Ltd, and the world's leading authority on the world's leading RTOS.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool, a DOS
@@ -71,72 +67,65 @@
     1 tab == 4 spaces!
 */
 
+#ifndef PORTTICKS_H_
+#define PORTTICKS_H_
 
 /*
- * Implementation of pvPortMalloc() and vPortFree() that relies on the
- * compilers own malloc() and free() implementations.
- *
- * This file can only be used if the linker is configured to to generate
- * a heap memory area.
- *
- * See heap_1.c, heap_2.c and heap_4.c for alternative implementations, and the
- * memory management pages of http://www.FreeRTOS.org for more information.
+ *  Interface header file to the Processor Expert Tick counter.
+ *  This file is used to access the interface, especially for performance
+ *  counters (e.g. for Percepio Trace).
+ *  That way the a module can interface this wrapper header file instead
+ *  of one of the standard FreeRTOS header files.
  */
+#include "KSDK1.h" /* include interface to SDK */
 
-#include <stdlib.h>
+#include "FreeRTOSConfig.h"
+#include "portmacro.h"
 
-/* Defining MPU_WRAPPERS_INCLUDED_FROM_API_FILE prevents task.h from redefining
-all the API functions to use the MPU wrappers.  That should only be done when
-task.h is included from an application file. */
-#define MPU_WRAPPERS_INCLUDED_FROM_API_FILE
+#if configPEX_KINETIS_SDK
+extern uint32_t SystemCoreClock; /* in Kinetis SDK, this contains the system core clock speed */
+#endif
 
-#include "FreeRTOS.h"
-#include "task.h"
+/*!
+ * \brief Return the tick raw counter value. It is assumed that the counter register has been reset at the last tick time
+ * \return Tick counter value. The value is reset at tick interrupt time.
+ * */
+portLONG uxGetTickCounterValue(void);
 
-#undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
+#if configSYSTICK_USE_LOW_POWER_TIMER
+  #define FREERTOS_HWTC_DOWN_COUNTER     0 /* LPTM is counting up */
+  #define FREERTOS_HWTC_PERIOD           ((1000/configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ)-1UL) /* counter is incrementing from zero to this value */
+#else
+  #define FREERTOS_HWTC_DOWN_COUNTER     1 /* SysTick is counting down */
+  #define FREERTOS_HWTC_PERIOD           ((configCPU_CLOCK_HZ/configTICK_RATE_HZ)-1UL) /* counter is decrementing from this value to zero */
+#endif
 
-/*-----------------------------------------------------------*/
+/* tick information for Percepio Trace */
 
-void *pvPortMalloc( size_t xWantedSize )
-{
-void *pvReturn;
+/* undefine previous values, where dummy anyway: make sure this header file is included last! */
+#undef HWTC_COUNT_DIRECTION
+#undef HWTC_PERIOD
+#undef HWTC_DIVISOR
+#undef HWTC_COUNT
 
-	vTaskSuspendAll();
-	{
-		pvReturn = malloc( xWantedSize );
-		traceMALLOC( pvReturn, xWantedSize );
-	}
-	( void ) xTaskResumeAll();
+#if FREERTOS_HWTC_DOWN_COUNTER
+  #define HWTC_COUNT_DIRECTION  DIRECTION_DECREMENTING
+  #define HWTC_PERIOD           FREERTOS_HWTC_PERIOD /* counter is decrementing from this value to zero */
+#else
+  #define HWTC_COUNT_DIRECTION  DIRECTION_INCREMENTING
+  #define HWTC_PERIOD           FREERTOS_HWTC_PERIOD /* counter is incrementing from zero to this value */
+#endif
+#if configSYSTICK_USE_LOW_POWER_TIMER
+  #define HWTC_DIVISOR 1 /* divisor for slow counter tick value */
+#else
+  #define HWTC_DIVISOR 2 /* divisor for fast counter tick value */
+#endif
 
-	#if( configUSE_MALLOC_FAILED_HOOK == 1 )
-	{
-		if( pvReturn == NULL )
-		{
-      /* EST: Using configuration macro name for hook */
-			extern void configUSE_MALLOC_FAILED_HOOK_NAME( void );
-			configUSE_MALLOC_FAILED_HOOK_NAME();
-		}
-	}
-	#endif
+#define HWTC_COUNT (uxGetTickCounterValue())
 
-	return pvReturn;
-}
-/*-----------------------------------------------------------*/
+#if configUSE_TICKLESS_IDLE == 1
+extern volatile uint8_t portTickCntr; /* used to find out if we woke up by the tick interrupt */
+#endif
 
-void vPortFree( void *pv )
-{
-	if( pv )
-	{
-		vTaskSuspendAll();
-		{
-			free( pv );
-			traceFREE( pv, 0 );
-		}
-		( void ) xTaskResumeAll();
-	}
-}
-
-
-#endif /* configFRTOS_MEMORY_SCHEME==3 */ /* << EST */
-
+#endif /* PORTTICKS_H_ */
 

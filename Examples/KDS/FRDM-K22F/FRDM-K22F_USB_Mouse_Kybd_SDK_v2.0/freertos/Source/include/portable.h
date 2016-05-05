@@ -154,7 +154,7 @@ typedef struct HeapRegion
 /*
  * Used to define multiple heap regions for use by heap_5.c.  This function
  * must be called before any calls to pvPortMalloc() - not creating a task,
- * queue, semaphore, mutex, software timer, event group, and so on, results in
+ * queue, semaphore, mutex, software timer, event group, etc. will result in
  * pvPortMalloc being called.
  *
  * pxHeapRegions passes in an array of HeapRegion_t structures - each of which
@@ -199,9 +199,17 @@ void vPortEndScheduler( void ) PRIVILEGED_FUNCTION;
 	void vPortStoreTaskMPUSettings( xMPU_SETTINGS *xMPUSettings, const struct xMEMORY_REGION * const xRegions, StackType_t *pxBottomOfStack, uint16_t usStackDepth ) PRIVILEGED_FUNCTION;
 #endif
 
+/* << EST
+ * Tick Timer management routines:
+ */
+void vPortInitTickTimer(void);
+void vPortStartTickTimer(void);
+void vPortStopTickTimer(void);
+
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* PORTABLE_H */
+
 

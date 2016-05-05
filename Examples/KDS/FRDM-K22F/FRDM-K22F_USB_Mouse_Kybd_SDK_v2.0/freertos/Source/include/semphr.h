@@ -270,8 +270,8 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * A mutex used recursively can be 'taken' repeatedly by the owner. The mutex
  * doesn't become available again until the owner has called
  * xSemaphoreGiveRecursive() for each successful 'take' request.  For example,
- * if a task successfully 'takes' the same mutex 5 times then the mutex 
- * is not available to any other task until it has also  'given' the mutex back
+ * if a task successfully 'takes' the same mutex 5 times then the mutex will
+ * not be available to any other task until it has also  'given' the mutex back
  * exactly five times.
  *
  * @param xMutex A handle to the mutex being obtained.  This is the
@@ -280,8 +280,8 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * @param xBlockTime The time in ticks to wait for the semaphore to become
  * available.  The macro portTICK_PERIOD_MS can be used to convert this to a
  * real time.  A block time of zero can be used to poll the semaphore.  If
- * the task already owns the semaphore then xSemaphoreTakeRecursive()
- * returns immediately no matter what the value of xBlockTime.
+ * the task already owns the semaphore then xSemaphoreTakeRecursive() will
+ * return immediately no matter what the value of xBlockTime.
  *
  * @return pdTRUE if the semaphore was obtained.  pdFALSE if xBlockTime
  * expired without the semaphore becoming available.
@@ -320,7 +320,7 @@ typedef QueueHandle_t SemaphoreHandle_t;
             xSemaphoreTakeRecursive( xMutex, ( TickType_t ) 10 );
             xSemaphoreTakeRecursive( xMutex, ( TickType_t ) 10 );
 
-            // The mutex has now been 'taken' three times, so is not
+            // The mutex has now been 'taken' three times, so will not be
 			// available to another task until it has also been given back
 			// three times.  Again it is unlikely that real code would have
 			// these calls sequentially, but instead buried in a more complex
@@ -438,8 +438,8 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * A mutex used recursively can be 'taken' repeatedly by the owner. The mutex
  * doesn't become available again until the owner has called
  * xSemaphoreGiveRecursive() for each successful 'take' request.  For example,
- * if a task successfully 'takes' the same mutex 5 times then the mutex is
- * not available to any other task until it has also  'given' the mutex back
+ * if a task successfully 'takes' the same mutex 5 times then the mutex will
+ * not be available to any other task until it has also  'given' the mutex back
  * exactly five times.
  *
  * @param xMutex A handle to the mutex being released, or 'given'.  This is the
@@ -481,7 +481,7 @@ typedef QueueHandle_t SemaphoreHandle_t;
             xSemaphoreTakeRecursive( xMutex, ( TickType_t ) 10 );
             xSemaphoreTakeRecursive( xMutex, ( TickType_t ) 10 );
 
-            // The mutex has now been 'taken' three times, so is not
+            // The mutex has now been 'taken' three times, so will not be
 			// available to another task until it has also been given back
 			// three times.  Again it is unlikely that real code would have
 			// these calls sequentially, it would be more likely that the calls
@@ -539,7 +539,7 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * @param xSemaphore A handle to the semaphore being released.  This is the
  * handle returned when the semaphore was created.
  *
- * @param pxHigherPriorityTaskWoken xSemaphoreGiveFromISR()  sets
+ * @param pxHigherPriorityTaskWoken xSemaphoreGiveFromISR() will set
  * *pxHigherPriorityTaskWoken to pdTRUE if giving the semaphore caused a task
  * to unblock, and the unblocked task has a priority higher than the currently
  * running task.  If xSemaphoreGiveFromISR() sets this value to pdTRUE then
@@ -569,7 +569,7 @@ typedef QueueHandle_t SemaphoreHandle_t;
             // ...
 
             // We have finished our task.  Return to the top of the loop where
-            // we  block on the semaphore until it is time to execute
+            // we will block on the semaphore until it is time to execute
             // again.  Note when using the semaphore for synchronisation with an
 			// ISR in this manner there is no need to 'give' the semaphore back.
         }
@@ -634,7 +634,7 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * @param xSemaphore A handle to the semaphore being taken.  This is the
  * handle returned when the semaphore was created.
  *
- * @param pxHigherPriorityTaskWoken xSemaphoreTakeFromISR() set
+ * @param pxHigherPriorityTaskWoken xSemaphoreTakeFromISR() will set
  * *pxHigherPriorityTaskWoken to pdTRUE if taking the semaphore caused a task
  * to unblock, and the unblocked task has a priority higher than the currently
  * running task.  If xSemaphoreTakeFromISR() sets this value to pdTRUE then
@@ -707,8 +707,8 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * A mutex used recursively can be 'taken' repeatedly by the owner. The mutex
  * doesn't become available again until the owner has called
  * xSemaphoreGiveRecursive() for each successful 'take' request.  For example,
- * if a task successfully 'takes' the same mutex 5 times then the mutex is
- * not available to any other task until it has also  'given' the mutex back
+ * if a task successfully 'takes' the same mutex 5 times then the mutex will
+ * not be available to any other task until it has also  'given' the mutex back
  * exactly five times.
  *
  * This type of semaphore uses a priority inheritance mechanism so a task
@@ -758,9 +758,9 @@ typedef QueueHandle_t SemaphoreHandle_t;
  *
  * 1) Counting events.
  *
- *    In this usage scenario an event handler  'gives' a semaphore each time
+ *    In this usage scenario an event handler will 'give' a semaphore each time
  *    an event occurs (incrementing the semaphore count value), and a handler
- *    task  'takes' a semaphore each time it processes an event
+ *    task will 'take' a semaphore each time it processes an event
  *    (decrementing the semaphore count value).  The count value is therefore
  *    the difference between the number of events that have occurred and the
  *    number that have been processed.  In this case it is desirable for the
@@ -840,5 +840,6 @@ typedef QueueHandle_t SemaphoreHandle_t;
 #define xSemaphoreGetMutexHolder( xSemaphore ) xQueueGetMutexHolder( ( xSemaphore ) )
 
 #endif /* SEMAPHORE_H */
+
 
 

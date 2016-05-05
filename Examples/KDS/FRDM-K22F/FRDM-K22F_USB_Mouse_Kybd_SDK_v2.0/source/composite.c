@@ -363,6 +363,7 @@ void APP_task(void *handle)
 
     while (1U)
     {
+      vTaskDelay(pdMS_TO_TICKS(500));
     }
 }
 

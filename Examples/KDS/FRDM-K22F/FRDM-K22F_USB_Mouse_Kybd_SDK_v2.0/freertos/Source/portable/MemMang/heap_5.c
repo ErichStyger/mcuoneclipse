@@ -1,3 +1,6 @@
+/* << EST */
+#include "FreeRTOSConfig.h"
+#if configFRTOS_MEMORY_SCHEME==5
 /*
     FreeRTOS V8.2.3 - Copyright (C) 2015 Real Time Engineers Ltd.
     All rights reserved
@@ -293,8 +296,9 @@ void *pvReturn = NULL;
 	{
 		if( pvReturn == NULL )
 		{
-			extern void vApplicationMallocFailedHook( void );
-			vApplicationMallocFailedHook();
+		  /* EST: Using configuration macro name for hook */
+			extern void configUSE_MALLOC_FAILED_HOOK_NAME( void );
+		  configUSE_MALLOC_FAILED_HOOK_NAME();
 		}
 		else
 		{
@@ -520,4 +524,6 @@ const HeapRegion_t *pxHeapRegion;
 	/* Work out the position of the top bit in a size_t variable. */
 	xBlockAllocatedBit = ( ( size_t ) 1 ) << ( ( sizeof( size_t ) * heapBITS_PER_BYTE ) - 1 );
 }
+
+#endif /* configFRTOS_MEMORY_SCHEME==5 */ /* << EST */
 

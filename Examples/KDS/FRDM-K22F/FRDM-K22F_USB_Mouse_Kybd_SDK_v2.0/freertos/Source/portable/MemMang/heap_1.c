@@ -1,3 +1,7 @@
+/* << EST */
+#include "FreeRTOSConfig.h"
+#if configFRTOS_MEMORY_SCHEME==1
+
 /*
     FreeRTOS V8.2.3 - Copyright (C) 2015 Real Time Engineers Ltd.
     All rights reserved
@@ -91,7 +95,15 @@ task.h is included from an application file. */
 #define configADJUSTED_HEAP_SIZE	( configTOTAL_HEAP_SIZE - portBYTE_ALIGNMENT )
 
 /* Allocate the memory for the heap. */
-static uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
+#if configUSE_HEAP_SECTION_NAME && configCOMPILER==configCOMPILER_ARM_IAR /* << EST */
+  #pragma language=extended
+  #pragma location = configHEAP_SECTION_NAME_STRING
+  static uint8_t ucHeap[configTOTAL_HEAP_SIZE] @ configHEAP_SECTION_NAME_STRING; 
+#elif configUSE_HEAP_SECTION_NAME
+  static uint8_t __attribute__((section (configHEAP_SECTION_NAME_STRING))) ucHeap[configTOTAL_HEAP_SIZE];
+#else
+  static uint8_t ucHeap[configTOTAL_HEAP_SIZE];
+#endif
 static size_t xNextFreeByte = ( size_t ) 0;
 
 /*-----------------------------------------------------------*/
@@ -136,8 +148,9 @@ static uint8_t *pucAlignedHeap = NULL;
 	{
 		if( pvReturn == NULL )
 		{
-			extern void vApplicationMallocFailedHook( void );
-			vApplicationMallocFailedHook();
+		  /* EST: Using configuration macro name for hook */
+			extern void configUSE_MALLOC_FAILED_HOOK_NAME( void );
+      configUSE_MALLOC_FAILED_HOOK_NAME();
 		}
 	}
 	#endif
@@ -169,6 +182,8 @@ size_t xPortGetFreeHeapSize( void )
 {
 	return ( configADJUSTED_HEAP_SIZE - xNextFreeByte );
 }
+#endif /* configFRTOS_MEMORY_SCHEME==1 */ /* << EST */
+
 
 
 

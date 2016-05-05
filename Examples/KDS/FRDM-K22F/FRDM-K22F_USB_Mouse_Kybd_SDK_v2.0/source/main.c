@@ -41,11 +41,20 @@
 
 /* FreeRTOS kernel includes. */
 #include "composite.h"
+#include "SwTimer.h"
+
+void vMainConfigureTimerForRunTimeStats(void) {
+}
+
+uint32_t ulMainGetRunTimeCounterValue(void) {
+  return xTaskGetTickCountFromISR();
+}
 
 /*!
  * @brief Application entry point.
  */
 int main(void) {
+  SWT_Init();
   CompositeMain();
   for(;;) { /* Infinite loop to avoid leaving the main function */
     __asm("NOP"); /* something to use as a breakpoint stop while looping */

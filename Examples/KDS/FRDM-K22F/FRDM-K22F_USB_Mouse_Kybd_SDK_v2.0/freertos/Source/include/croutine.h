@@ -107,7 +107,7 @@ typedef struct corCoRoutineControlBlock
                                  UBaseType_t uxIndex
                                );</pre>
  *
- * Creates a new co-routine and adds it to the list of co-routines that are
+ * Create a new co-routine and add it to the list of co-routines that are
  * ready to run.
  *
  * @param pxCoRoutineCode Pointer to the co-routine function.  Co-routine
@@ -115,7 +115,7 @@ typedef struct corCoRoutineControlBlock
  * documentation for more information.
  *
  * @param uxPriority The priority with respect to other co-routines at which
- *  the co-routine runs.
+ *  the co-routine will run.
  *
  * @param uxIndex Used to distinguish between different co-routines that
  * execute the same function.  See the example below and the co-routine section
@@ -130,7 +130,7 @@ typedef struct corCoRoutineControlBlock
  void vFlashCoRoutine( CoRoutineHandle_t xHandle, UBaseType_t uxIndex )
  {
  // Variables in co-routines must be declared static if they must maintain value across a blocking call.
- // This may not be necessary for constant variables.
+ // This may not be necessary for const variables.
  static const char cLedToFlash[ 2 ] = { 5, 6 };
  static const TickType_t uxFlashRates[ 2 ] = { 200, 400 };
 
@@ -139,7 +139,7 @@ typedef struct corCoRoutineControlBlock
 
      for( ;; )
      {
-         // This co-routine delays for a fixed period, then toggles
+         // This co-routine just delays for a fixed period, then toggles
          // an LED.  Two co-routines are created using this function, so
          // the uxIndex parameter is used to tell the co-routine which
          // LED to flash and how int32_t to delay.  This assumes xQueue has
@@ -158,7 +158,7 @@ typedef struct corCoRoutineControlBlock
  uint8_t ucParameterToPass;
  TaskHandle_t xHandle;
 
-     // Creates two co-routines at priority 0.  The first is given index 0
+     // Create two co-routines at priority 0.  The first is given index 0
      // so (from the code above) toggles LED 5 every 200 ticks.  The second
      // is given index 1 so toggles LED 6 every 400 ticks.
      for( uxIndex = 0; uxIndex < 2; uxIndex++ )
@@ -178,21 +178,21 @@ BaseType_t xCoRoutineCreate( crCOROUTINE_CODE pxCoRoutineCode, UBaseType_t uxPri
  *<pre>
  void vCoRoutineSchedule( void );</pre>
  *
- * Runs a co-routine.
+ * Run a co-routine.
  *
  * vCoRoutineSchedule() executes the highest priority co-routine that is able
- * to run.  The co-routine executes until it either blocks, yields or is
+ * to run.  The co-routine will execute until it either blocks, yields or is
  * preempted by a task.  Co-routines execute cooperatively so one
  * co-routine cannot be preempted by another, but can be preempted by a task.
  *
- * If an application comprises of both tasks and co-routines, the
+ * If an application comprises of both tasks and co-routines then
  * vCoRoutineSchedule should be called from the idle task (in an idle task
  * hook).
  *
  * Example usage:
    <pre>
- // This idle task hook schedules a co-routine each time it is called.
- // The rest of the idle task executes between co-routine calls.
+ // This idle task hook will schedule a co-routine each time it is called.
+ // The rest of the idle task will execute between co-routine calls.
  void vApplicationIdleHook( void )
  {
 	vCoRoutineSchedule();
@@ -288,9 +288,9 @@ void vCoRoutineSchedule( void );
  *<pre>
  crDELAY( CoRoutineHandle_t xHandle, TickType_t xTicksToDelay );</pre>
  *
- * Delays a co-routine for a fixed period of time.
+ * Delay a co-routine for a fixed period of time.
  *
- * crDELAY can only be called from the co-routine function itself, not
+ * crDELAY can only be called from the co-routine function itself - not
  * from within a function called by the co-routine function.  This is because
  * co-routines do not maintain their own stack.
  *
@@ -308,7 +308,7 @@ void vCoRoutineSchedule( void );
  void vACoRoutine( CoRoutineHandle_t xHandle, UBaseType_t uxIndex )
  {
  // Variables in co-routines must be declared static if they must maintain value across a blocking call.
- // This may not be necessary for constant variables.
+ // This may not be necessary for const variables.
  // We are to delay for 200ms.
  static const xTickType xDelayTime = 200 / portTICK_PERIOD_MS;
 
@@ -363,7 +363,7 @@ void vCoRoutineSchedule( void );
  * @param xHandle The handle of the calling co-routine.  This is the xHandle
  * parameter of the co-routine function.
  *
- * @param pxQueue The handle of the queue on which the data is posted.
+ * @param pxQueue The handle of the queue on which the data will be posted.
  * The handle is obtained as the return value when the queue is created using
  * the xQueueCreate() API function.
  *
@@ -379,8 +379,8 @@ void vCoRoutineSchedule( void );
  * portTICK_PERIOD_MS can be used to convert ticks to milliseconds (see example
  * below).
  *
- * @param pxResult The variable pointed to by pxResult is set to pdPASS if
- * data was successfully posted onto the queue, otherwise it is set to an
+ * @param pxResult The variable pointed to by pxResult will be set to pdPASS if
+ * data was successfully posted onto the queue, otherwise it will be set to an
  * error defined within ProjDefs.h.
  *
  * Example usage:
@@ -462,7 +462,7 @@ void vCoRoutineSchedule( void );
  * @param xHandle The handle of the calling co-routine.  This is the xHandle
  * parameter of the co-routine function.
  *
- * @param pxQueue The handle of the queue from which the data is received.
+ * @param pxQueue The handle of the queue from which the data will be received.
  * The handle is obtained as the return value when the queue is created using
  * the xQueueCreate() API function.
  *
@@ -477,8 +477,8 @@ void vCoRoutineSchedule( void );
  * portTICK_PERIOD_MS can be used to convert ticks to milliseconds (see the
  * crQUEUE_SEND example).
  *
- * @param pxResult The variable pointed to by pxResult is set to pdPASS if
- * data was successfully retrieved from the queue, otherwise it is set to
+ * @param pxResult The variable pointed to by pxResult will be set to pdPASS if
+ * data was successfully retrieved from the queue, otherwise it will be set to
  * an error code as defined within ProjDefs.h.
  *
  * Example usage:
@@ -554,8 +554,8 @@ void vCoRoutineSchedule( void );
  * @param xQueue The handle to the queue on which the item is to be posted.
  *
  * @param pvItemToQueue A pointer to the item that is to be placed on the
- * queue.  The size of the items the queue holds was defined when the
- * queue was created, so this many bytes is copied from pvItemToQueue
+ * queue.  The size of the items the queue will hold was defined when the
+ * queue was created, so this many bytes will be copied from pvItemToQueue
  * into the queue storage area.
  *
  * @param xCoRoutinePreviouslyWoken This is included so an ISR can post onto
@@ -608,9 +608,9 @@ void vCoRoutineSchedule( void );
          // Obtain the character from the UART.
          cRxedChar = UART_RX_REG;
 
-         // Post the character onto a queue.  xCRWokenByPost is pdFALSE
+         // Post the character onto a queue.  xCRWokenByPost will be pdFALSE
          // the first time around the loop.  If the post causes a co-routine
-         // to be woken (unblocked) then xCRWokenByPost is set to pdTRUE.
+         // to be woken (unblocked) then xCRWokenByPost will be set to pdTRUE.
          // In this manner we can ensure that if more than one co-routine is
          // blocked on the queue only one is woken by this ISR no matter how
          // many characters are posted to the queue.
@@ -651,15 +651,15 @@ void vCoRoutineSchedule( void );
  *
  * @param xQueue The handle to the queue on which the item is to be posted.
  *
- * @param pvBuffer A pointer to a buffer into which the received item is
- * placed.  The size of the items the queue holds was defined when the
- * queue was created, so this many bytes is copied from the queue into
+ * @param pvBuffer A pointer to a buffer into which the received item will be
+ * placed.  The size of the items the queue will hold was defined when the
+ * queue was created, so this many bytes will be copied from the queue into
  * pvBuffer.
  *
  * @param pxCoRoutineWoken A co-routine may be blocked waiting for space to become
  * available on the queue.  If crQUEUE_RECEIVE_FROM_ISR causes such a
- * co-routine to unblock *pxCoRoutineWoken gets set to pdTRUE, otherwise
- * *pxCoRoutineWoken  remains unchanged.
+ * co-routine to unblock *pxCoRoutineWoken will get set to pdTRUE, otherwise
+ * *pxCoRoutineWoken will remain unchanged.
  *
  * @return pdTRUE an item was successfully received from the queue, otherwise
  * pdFALSE.
@@ -693,12 +693,12 @@ void vCoRoutineSchedule( void );
 		 }
 
          // Enable the UART Tx interrupt to cause an interrupt in this
-		 // hypothetical UART.  The interrupt obtains the character
+		 // hypothetical UART.  The interrupt will obtain the character
 		 // from the queue and send it.
 		 ENABLE_RX_INTERRUPT();
 
 		 // Increment to the next character then block for a fixed period.
-		 // cCharToTx maintains its value across the delay as it is
+		 // cCharToTx will maintain its value across the delay as it is
 		 // declared static.
 		 cCharToTx++;
 		 if( cCharToTx > 'x' )
@@ -721,7 +721,7 @@ void vCoRoutineSchedule( void );
      while( UART_TX_REG_EMPTY() )
      {
          // Are there any characters in the queue waiting to be sent?
-		 // xCRWokenByPos is automatically set to pdTRUE if a co-routine
+		 // xCRWokenByPost will automatically be set to pdTRUE if a co-routine
 		 // is woken by the post - ensuring that only a single co-routine is
 		 // woken no matter how many times we go around this loop.
          if( crQUEUE_RECEIVE_FROM_ISR( pxQueue, &cCharToTx, &xCRWokenByPost ) )
@@ -760,3 +760,4 @@ BaseType_t xCoRoutineRemoveFromEventList( const List_t *pxEventList );
 #endif
 
 #endif /* CO_ROUTINE_H */
+

@@ -82,6 +82,14 @@ task.h is included from an application file. */
 #include "timers.h"
 #include "StackMacros.h"
 
+#if ( ( configUSE_TRACE_FACILITY == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS == 1 ) )
+#include "UTIL1.h" /* interface to utility because used for safe string routines */ /* << EST */
+#endif
+
+#if (configCOMPILER == configCOMPILER_ARM_IAR) /* << EST: suppress warnings for IAR */
+#pragma diag_suppress=pa082 /* Warning[Pa082]: undefined behavior: the order of volatile accesses is undefined in this statement */
+#endif
+
 /* Lint e961 and e750 are suppressed as a MISRA exception justified because the
 MPU ports require MPU_WRAPPERS_INCLUDED_FROM_API_FILE to be defined for the
 header files above, but not in this file, in order to generate the correct
@@ -389,7 +397,21 @@ count overflows. */
 #define prvAddTaskToReadyList( pxTCB )																\
 	traceMOVED_TASK_TO_READY_STATE( pxTCB );														\
 	taskRECORD_READY_PRIORITY( ( pxTCB )->uxPriority );												\
+	vListInsertEnd( &( pxReadyTasksLists[ ( pxTCB )->uxPriority ] ), &( ( pxTCB )->xGenericListItem ) ); \
+	tracePOST_MOVED_TASK_TO_READY_STATE( pxTCB )  /* << EST: Additional hook for Segger SystemState to ensure that all tasks are in the list */
+        
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* <<EST for Segger System Viewer */
+/*
+ * Place the task represented by pxTCB which has been in a ready list before
+ * into the appropriate ready list for the task.
+ * It is inserted at the end of the list.
+ */
+#define prvReAddTaskToReadyList( pxTCB )																\
+	traceREADDED_TASK_TO_READY_STATE( pxTCB );														\
+	taskRECORD_READY_PRIORITY( ( pxTCB )->uxPriority );												\
 	vListInsertEnd( &( pxReadyTasksLists[ ( pxTCB )->uxPriority ] ), &( ( pxTCB )->xGenericListItem ) )
+#endif
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -416,11 +438,11 @@ to its original value when it is released. */
 
 /* Callback function prototypes. --------------------------*/
 #if configCHECK_FOR_STACK_OVERFLOW > 0
-	extern void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName );
+	extern void configCHECK_FOR_STACK_OVERFLOW_NAME( TaskHandle_t xTask, char *pcTaskName );
 #endif
 
 #if configUSE_TICK_HOOK > 0
-	extern void vApplicationTickHook( void );
+	extern void configUSE_TICK_HOOK_NAME( void );
 #endif
 
 /* File private functions. --------------------------------*/
@@ -543,7 +565,9 @@ static void prvResetNextTaskUnblockTime( void );
 	 * Helper function used to pad task names with spaces when printing out
 	 * human readable tables of task information.
 	 */
+#if 0 /* << EST: not used */
 	static char *prvWriteNameToBuffer( char *pcBuffer, const char *pcTaskName );
+#endif
 
 #endif
 /*-----------------------------------------------------------*/
@@ -1057,7 +1081,7 @@ StackType_t *pxTopOfStack;
 
 	UBaseType_t uxTaskPriorityGet( TaskHandle_t xTask )
 	{
-	TCB_t *pxTCB;
+  	TCB_t *pxTCB;
 	UBaseType_t uxReturn;
 
 		taskENTER_CRITICAL();
@@ -1252,7 +1276,11 @@ StackType_t *pxTopOfStack;
 					{
 						mtCOVERAGE_TEST_MARKER();
 					}
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+					prvReAddTaskToReadyList( pxTCB );
+#else
 					prvAddTaskToReadyList( pxTCB );
+#endif
 				}
 				else
 				{
@@ -1313,7 +1341,9 @@ StackType_t *pxTopOfStack;
 			{
 				mtCOVERAGE_TEST_MARKER();
 			}
-
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+			traceMOVED_TASK_TO_SUSPENDED_LIST(pxTCB);
+#endif
 			vListInsertEnd( &xSuspendedTaskList, &( pxTCB->xGenericListItem ) );
 		}
 		taskEXIT_CRITICAL();
@@ -1618,7 +1648,7 @@ BaseType_t xReturn;
 	}
 }
 /*-----------------------------------------------------------*/
-
+#if INCLUDE_vTaskEndScheduler /* << EST */
 void vTaskEndScheduler( void )
 {
 	/* Stop the scheduler interrupts and call the portable scheduler end
@@ -1628,6 +1658,7 @@ void vTaskEndScheduler( void )
 	xSchedulerRunning = pdFALSE;
 	vPortEndScheduler();
 }
+#endif
 /*----------------------------------------------------------*/
 
 void vTaskSuspendAll( void )
@@ -2071,7 +2102,8 @@ BaseType_t xSwitchRequired = pdFALSE;
 			count is being unwound (when the scheduler is being unlocked). */
 			if( uxPendedTicks == ( UBaseType_t ) 0U )
 			{
-				vApplicationTickHook();
+        /* EST: Using configuration macro name */
+        configUSE_TICK_HOOK_NAME();
 			}
 			else
 			{
@@ -2088,7 +2120,9 @@ BaseType_t xSwitchRequired = pdFALSE;
 		scheduler is locked. */
 		#if ( configUSE_TICK_HOOK == 1 )
 		{
-			vApplicationTickHook();
+		  /* << EST: using configuration name macro */
+      extern void configUSE_TICK_HOOK_NAME(void);
+      configUSE_TICK_HOOK_NAME();
 		}
 		#endif
 	}
@@ -2199,7 +2233,9 @@ BaseType_t xSwitchRequired = pdFALSE;
 
 #endif /* configUSE_APPLICATION_TASK_TAG */
 /*-----------------------------------------------------------*/
-
+#ifdef __GNUC__ /* << EST */
+__attribute__((used)) /* using C++ compiler, vTaskSwitchContext() might be removed even with -O0? */
+#endif
 void vTaskSwitchContext( void )
 {
 	if( uxSchedulerSuspended != ( UBaseType_t ) pdFALSE )
@@ -2295,6 +2331,9 @@ TickType_t xTimeToWake;
 			/* Add the task to the suspended task list instead of a delayed task
 			list to ensure the task is not woken by a timing event.  It will
 			block indefinitely. */
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+			traceMOVED_TASK_TO_SUSPENDED_LIST(pxCurrentTCB);
+#endif
 			vListInsertEnd( &xSuspendedTaskList, &( pxCurrentTCB->xGenericListItem ) );
 		}
 		else
@@ -2361,6 +2400,9 @@ TickType_t xTimeToWake;
 			/* Add the task to the suspended task list instead of a delayed task
 			list to ensure it is not woken by a timing event.  It will block
 			indefinitely. */
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+			traceMOVED_TASK_TO_SUSPENDED_LIST(pxCurrentTCB);
+#endif
 			vListInsertEnd( &xSuspendedTaskList, &( pxCurrentTCB->xGenericListItem ) );
 		}
 		else
@@ -2432,6 +2474,9 @@ TickType_t xTimeToWake;
 				/* Add the task to the suspended task list instead of a delayed
 				task list to ensure the task is not woken by a timing event.  It
 				will block indefinitely. */
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+				traceMOVED_TASK_TO_SUSPENDED_LIST(pxCurrentTCB);
+#endif
 				vListInsertEnd( &xSuspendedTaskList, &( pxCurrentTCB->xGenericListItem ) );
 			}
 			else
@@ -2731,14 +2776,15 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 
 		#if ( configUSE_IDLE_HOOK == 1 )
 		{
-			extern void vApplicationIdleHook( void );
+		  /* EST: Use user hook name */
+		  extern void configUSE_IDLE_HOOK_NAME( void );
 
 			/* Call the user defined function from within the idle task.  This
 			allows the application designer to add background functionality
 			without the overhead of a separate task.
 			NOTE: vApplicationIdleHook() MUST NOT, UNDER ANY CIRCUMSTANCES,
 			CALL A FUNCTION THAT MIGHT BLOCK. */
-			vApplicationIdleHook();
+		  configUSE_IDLE_HOOK_NAME();
 		}
 		#endif /* configUSE_IDLE_HOOK */
 
@@ -2747,6 +2793,9 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 		user defined low power mode	implementations require
 		configUSE_TICKLESS_IDLE to be set to a value other than 1. */
 		#if ( configUSE_TICKLESS_IDLE != 0 )
+		#if configUSE_TICKLESS_IDLE_DECISION_HOOK /* << EST */
+		if (configUSE_TICKLESS_IDLE_DECISION_HOOK_NAME()) /* ask application if it shall enter tickless idle mode */
+		#endif
 		{
 		TickType_t xExpectedIdleTime;
 
@@ -3075,11 +3124,17 @@ static void prvAddCurrentTaskToDelayedList( const TickType_t xTimeToWake )
 
 	if( xTimeToWake < xTickCount )
 	{
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+		traceMOVED_TASK_TO_OVERFLOW_DELAYED_LIST();
+#endif
 		/* Wake time has overflowed.  Place this item in the overflow list. */
 		vListInsert( pxOverflowDelayedTaskList, &( pxCurrentTCB->xGenericListItem ) );
 	}
 	else
 	{
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+		traceMOVED_TASK_TO_DELAYED_LIST();
+#endif
 		/* The wake time has not overflowed, so the current block list is used. */
 		vListInsert( pxDelayedTaskList, &( pxCurrentTCB->xGenericListItem ) );
 
@@ -3305,6 +3360,19 @@ TCB_t *pxNewTCB;
 
 #endif /* INCLUDE_uxTaskGetStackHighWaterMark */
 /*-----------------------------------------------------------*/
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+#if (INCLUDE_pxTaskGetStackStart == 1)
+	uint8_t* pxTaskGetStackStart( TaskHandle_t xTask)
+	{
+  	TCB_t *pxTCB;
+
+		pxTCB = prvGetTCBFromHandle( xTask );
+		return ( uint8_t * ) pxTCB->pxStack;
+	}
+
+#endif /* INCLUDE_pxTaskGetStackStart */
+#endif
+/*-----------------------------------------------------------*/
 
 #if ( INCLUDE_vTaskDelete == 1 )
 
@@ -3455,7 +3523,11 @@ TCB_t *pxTCB;
 
 					/* Inherit the priority before being moved into the new list. */
 					pxTCB->uxPriority = pxCurrentTCB->uxPriority;
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+					prvReAddTaskToReadyList( pxTCB );
+#else
 					prvAddTaskToReadyList( pxTCB );
+#endif
 				}
 				else
 				{
@@ -3527,8 +3599,11 @@ TCB_t *pxTCB;
 					any other purpose if this task is running, and it must be
 					running to give back the mutex. */
 					listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) pxTCB->uxPriority ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+					prvReAddTaskToReadyList( pxTCB );
+#else
 					prvAddTaskToReadyList( pxTCB );
-
+#endif
 					/* Return true to indicate that a context switch is required.
 					This is only actually required in the corner case whereby
 					multiple mutexes were held and the mutexes were given back
@@ -3622,7 +3697,7 @@ TCB_t *pxTCB;
 
 #endif /* portCRITICAL_NESTING_IN_TCB */
 /*-----------------------------------------------------------*/
-
+#if 0 /* << EST: not used */
 #if ( ( configUSE_TRACE_FACILITY == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS > 0 ) )
 
 	static char *prvWriteNameToBuffer( char *pcBuffer, const char *pcTaskName )
@@ -3647,11 +3722,12 @@ TCB_t *pxTCB;
 	}
 
 #endif /* ( configUSE_TRACE_FACILITY == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS > 0 ) */
+#endif /* << EST not used */
 /*-----------------------------------------------------------*/
 
 #if ( ( configUSE_TRACE_FACILITY == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS > 0 ) )
 
-	void vTaskList( char * pcWriteBuffer )
+	void vTaskList( char * pcWriteBuffer, size_t bufSize)
 	{
 	TaskStatus_t *pxTaskStatusArray;
 	volatile UBaseType_t uxArraySize, x;
@@ -3720,13 +3796,26 @@ TCB_t *pxTCB;
 										break;
 				}
 
+#if 0
 				/* Write the task name to the string, padding with spaces so it
 				can be printed in tabular form more easily. */
 				pcWriteBuffer = prvWriteNameToBuffer( pcWriteBuffer, pxTaskStatusArray[ x ].pcTaskName );
 
 				/* Write the rest of the string. */
-				sprintf( pcWriteBuffer, "\t%c\t%u\t%u\t%u\r\n", cStatus, ( unsigned int ) pxTaskStatusArray[ x ].uxCurrentPriority, ( unsigned int ) pxTaskStatusArray[ x ].usStackHighWaterMark, ( unsigned int ) pxTaskStatusArray[ x ].xTaskNumber );
+				sprintf( ( char * ) pcWriteBuffer, ( char * ) "\t\t%c\t%u\t%u\t%u\r\n", cStatus, ( unsigned int ) pxTaskStatusArray[ x ].uxCurrentPriority, ( unsigned int ) pxTaskStatusArray[ x ].usStackHighWaterMark, ( unsigned int ) pxTaskStatusArray[ x ].xTaskNumber );
 				pcWriteBuffer += strlen( pcWriteBuffer );
+#else /* << EST */
+        UTIL1_strcatPad((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)pxTaskStatusArray[ x ].pcTaskName, ' ', configMAX_TASK_NAME_LEN);
+	      UTIL1_strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)"\t");
+	      UTIL1_chcat((uint8_t*)pcWriteBuffer, bufSize, (unsigned char)cStatus);
+	      UTIL1_chcat((uint8_t*)pcWriteBuffer, bufSize, (unsigned char)'\t');
+	      UTIL1_strcatNum32u((uint8_t*)pcWriteBuffer, bufSize, pxTaskStatusArray[ x ].uxCurrentPriority);
+	      UTIL1_chcat((uint8_t*)pcWriteBuffer, bufSize, (unsigned char)'\t');
+	      UTIL1_strcatNum32u((uint8_t*)pcWriteBuffer, bufSize, pxTaskStatusArray[ x ].usStackHighWaterMark);
+	      UTIL1_chcat((uint8_t*)pcWriteBuffer, bufSize, (unsigned char)'\t');
+	      UTIL1_strcatNum32u((uint8_t*)pcWriteBuffer, bufSize, pxTaskStatusArray[ x ].xTaskNumber);
+	      UTIL1_strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)"\r\n");
+#endif
 			}
 
 			/* Free the array again. */
@@ -3743,7 +3832,7 @@ TCB_t *pxTCB;
 
 #if ( ( configGENERATE_RUN_TIME_STATS == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS > 0 ) )
 
-	void vTaskGetRunTimeStats( char *pcWriteBuffer )
+	void vTaskGetRunTimeStats( char *pcWriteBuffer, size_t bufSize)
 	{
 	TaskStatus_t *pxTaskStatusArray;
 	volatile UBaseType_t uxArraySize, x;
@@ -3809,22 +3898,33 @@ TCB_t *pxTCB;
 					ulTotalRunTimeDiv100 has already been divided by 100. */
 					ulStatsAsPercentage = pxTaskStatusArray[ x ].ulRunTimeCounter / ulTotalTime;
 
+#if 0
 					/* Write the task name to the string, padding with
 					spaces so it can be printed in tabular form more
 					easily. */
 					pcWriteBuffer = prvWriteNameToBuffer( pcWriteBuffer, pxTaskStatusArray[ x ].pcTaskName );
-
+#else
+          UTIL1_strcatPad((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)pxTaskStatusArray[ x ].pcTaskName, ' ', configMAX_TASK_NAME_LEN);
+#endif
 					if( ulStatsAsPercentage > 0UL )
 					{
 						#ifdef portLU_PRINTF_SPECIFIER_REQUIRED
 						{
-							sprintf( pcWriteBuffer, "\t%lu\t\t%lu%%\r\n", pxTaskStatusArray[ x ].ulRunTimeCounter, ulStatsAsPercentage );
+						  sprintf( ( char * ) pcWriteBuffer, ( char * ) "%s\t\t%lu\t\t%lu%%\r\n", pxTaskStatusArray[ x ].pcTaskName, pxTaskStatusArray[ x ].ulRunTimeCounter, ulStatsAsPercentage );
 						}
 						#else
 						{
 							/* sizeof( int ) == sizeof( long ) so a smaller
 							printf() library can be used. */
-							sprintf( pcWriteBuffer, "\t%u\t\t%u%%\r\n", ( unsigned int ) pxTaskStatusArray[ x ].ulRunTimeCounter, ( unsigned int ) ulStatsAsPercentage );
+#if 0
+							sprintf( ( char * ) pcWriteBuffer, ( char * ) "\t%u\t\t%u%%\r\n", ( unsigned int ) pxTaskStatusArray[ x ].ulRunTimeCounter, ( unsigned int ) ulStatsAsPercentage );
+#else /* << EST */
+              UTIL1_strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)"\t");
+              UTIL1_strcatNum32u((uint8_t*)pcWriteBuffer, bufSize, pxTaskStatusArray[ x ].ulRunTimeCounter);
+              UTIL1_strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)"\t\t");
+              UTIL1_strcatNum32u((uint8_t*)pcWriteBuffer, bufSize, ulStatsAsPercentage);
+              UTIL1_strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)"%\r\n");
+#endif
 						}
 						#endif
 					}
@@ -3840,12 +3940,19 @@ TCB_t *pxTCB;
 						{
 							/* sizeof( int ) == sizeof( long ) so a smaller
 							printf() library can be used. */
-							sprintf( pcWriteBuffer, "\t%u\t\t<1%%\r\n", ( unsigned int ) pxTaskStatusArray[ x ].ulRunTimeCounter );
+#if 0
+              sprintf( ( char * ) pcWriteBuffer, ( char * ) "\t%u\t\t<1%%\r\n", ( unsigned int ) pxTaskStatusArray[ x ].ulRunTimeCounter );
+#else /* << EST */
+              UTIL1_strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)"\t");
+              UTIL1_strcatNum32u((uint8_t*)pcWriteBuffer, bufSize, pxTaskStatusArray[ x ].ulRunTimeCounter);
+              UTIL1_strcat((uint8_t*)pcWriteBuffer, bufSize, (const unsigned char*)"\t\t<1%\r\n");
+#endif
 						}
 						#endif
 					}
-
+#if 0 /* << EST */
 					pcWriteBuffer += strlen( pcWriteBuffer );
+#endif
 				}
 			}
 			else
@@ -3935,6 +4042,9 @@ TickType_t uxReturn;
 							of a delayed task list to ensure the task is not
 							woken by a timing event.  It will block
 							indefinitely. */
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+							traceMOVED_TASK_TO_SUSPENDED_LIST(pxCurrentTCB);
+#endif
 							vListInsertEnd( &xSuspendedTaskList, &( pxCurrentTCB->xGenericListItem ) );
 						}
 						else
@@ -4053,6 +4163,9 @@ TickType_t uxReturn;
 							of a delayed task list to ensure the task is not
 							woken by a timing event.  It will block
 							indefinitely. */
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+							traceMOVED_TASK_TO_SUSPENDED_LIST(pxCurrentTCB);
+#endif
 							vListInsertEnd( &xSuspendedTaskList, &( pxCurrentTCB->xGenericListItem ) );
 						}
 						else
@@ -4474,4 +4587,5 @@ TickType_t uxReturn;
 #ifdef FREERTOS_MODULE_TEST
 	#include "tasks_test_access_functions.h"
 #endif
+
 

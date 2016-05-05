@@ -88,7 +88,16 @@
  *     contains the typedefs required to build FreeRTOS.  Read the instructions
  *     in FreeRTOS/source/stdint.readme for more information.
  */
-#include <stdint.h> /* READ COMMENT ABOVE. */
+#include "FreeRTOSConfig.h" /* << EST */
+#if configGENERATE_STATIC_SOURCES || configPEX_KINETIS_SDK /* << EST */
+  #include <stdint.h> /* READ COMMENT ABOVE. */
+#else
+  #include "PE_Types.h"
+#endif
+#if configSYSTICK_USE_LOW_POWER_TIMER
+  #include "IO_Map.h"
+  #include "SIM_PDD.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -102,6 +111,7 @@ extern "C" {
 
 /* Definitions specific to the port being used. */
 #include "portable.h"
+#include "task.h" /* << EST: for taskENTER_CRITICAL() and taskEXIT_CRITICAL() */
 
 /*
  * Check all the required application specific macros have been defined.
@@ -321,6 +331,16 @@ extern "C" {
 	#define portPOINTER_SIZE_TYPE uint32_t
 #endif
 
+#if configUSE_TRACE_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+  #error "Only one trace implementation can be active"
+#endif
+#if configUSE_TRACE_HOOKS /* << EST */
+  #include "trcKernelPort.h" /* include Percepio trace macro definition */
+#endif
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+  #include "SEGGER_SYSVIEW_FreeRTOS.h" /* include Segger System Viewer macro definitions */
+#endif
+
 /* Remove any unused trace macros. */
 #ifndef traceSTART
 	/* Used to perform any necessary initialisation - for example, open a file
@@ -366,7 +386,7 @@ extern "C" {
 	/* Called when a task attempts to take a mutex that is already held by a
 	lower priority task.  pxTCBOfMutexHolder is a pointer to the TCB of the task
 	that holds the mutex.  uxInheritedPriority is the priority the mutex holder
-	inherits (the priority of the task that is attempting to obtain the
+	will inherit (the priority of the task that is attempting to obtain the
 	muted. */
 	#define traceTASK_PRIORITY_INHERIT( pxTCBOfMutexHolder, uxInheritedPriority )
 #endif
@@ -403,6 +423,10 @@ extern "C" {
 
 #ifndef traceMOVED_TASK_TO_READY_STATE
 	#define traceMOVED_TASK_TO_READY_STATE( pxTCB )
+#endif
+
+#ifndef tracePOST_MOVED_TASK_TO_READY_STATE /* << EST */
+  #define tracePOST_MOVED_TASK_TO_READY_STATE( pxTCB )
 #endif
 
 #ifndef traceQUEUE_CREATE
@@ -832,4 +856,5 @@ point support. */
 #endif
 
 #endif /* INC_FREERTOS_H */
+
 

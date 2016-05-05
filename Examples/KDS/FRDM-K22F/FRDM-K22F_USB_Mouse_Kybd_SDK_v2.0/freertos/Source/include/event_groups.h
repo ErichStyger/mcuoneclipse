@@ -101,7 +101,7 @@ extern "C" {
  * variable for the same purpose.  This is particularly important with respect
  * to when a bit within an event group is to be cleared, and when bits have to
  * be set and then tested atomically - as is the case where event groups are
- * used to create a synchronization point between multiple tasks (a
+ * used to create a synchronisation point between multiple tasks (a
  * 'rendezvous').
  *
  * \defgroup EventGroup
@@ -200,16 +200,16 @@ EventGroupHandle_t xEventGroupCreate( void ) PRIVILEGED_FUNCTION;
  * uxBitsToWaitFor to 0x07.  Etc.
  *
  * @param xClearOnExit If xClearOnExit is set to pdTRUE then any bits within
- * uxBitsToWaitFor that are set within the event group is cleared before
+ * uxBitsToWaitFor that are set within the event group will be cleared before
  * xEventGroupWaitBits() returns if the wait condition was met (if the function
  * returns for a reason other than a timeout).  If xClearOnExit is set to
  * pdFALSE then the bits set in the event group are not altered when the call to
  * xEventGroupWaitBits() returns.
  *
  * @param xWaitForAllBits If xWaitForAllBits is set to pdTRUE then
- * xEventGroupWaitBits() returns when either all the bits in uxBitsToWaitFor
+ * xEventGroupWaitBits() will return when either all the bits in uxBitsToWaitFor
  * are set or the specified block time expires.  If xWaitForAllBits is set to
- * pdFALSE then xEventGroupWaitBits() returns when any one of the bits set
+ * pdFALSE then xEventGroupWaitBits() will return when any one of the bits set
  * in uxBitsToWaitFor is set or the specified block time expires.  The block
  * time is specified by the xTicksToWait parameter.
  *
@@ -220,7 +220,7 @@ EventGroupHandle_t xEventGroupCreate( void ) PRIVILEGED_FUNCTION;
  * @return The value of the event group at the time either the bits being waited
  * for became set, or the block time expired.  Test the return value to know
  * which bits were set.  If xEventGroupWaitBits() returned because its timeout
- * expired then not all the bits being waited for are set.  If
+ * expired then not all the bits being waited for will be set.  If
  * xEventGroupWaitBits() returned because the bits it was waiting for were set
  * then the returned value is the event group value before any bits were
  * automatically cleared in the case that xClearOnExit parameter was set to
@@ -242,7 +242,7 @@ EventGroupHandle_t xEventGroupCreate( void ) PRIVILEGED_FUNCTION;
 					xEventGroup,	// The event group being tested.
 					BIT_0 | BIT_4,	// The bits within the event group to wait for.
 					pdTRUE,			// BIT_0 and BIT_4 should be cleared before returning.
-					pdFALSE,		// Don't wait for both bits, either bit works.
+					pdFALSE,		// Don't wait for both bits, either bit will do.
 					xTicksToWait );	// Wait a maximum of 100ms for either bit to be set.
 
 		if( ( uxBits & ( BIT_0 | BIT_4 ) ) == ( BIT_0 | BIT_4 ) )
@@ -303,17 +303,17 @@ EventBits_t xEventGroupWaitBits( EventGroupHandle_t xEventGroup, const EventBits
 		if( ( uxBits & ( BIT_0 | BIT_4 ) ) == ( BIT_0 | BIT_4 ) )
 		{
 			// Both bit 0 and bit 4 were set before xEventGroupClearBits() was
-			// called.  Both are now clear (not set).
+			// called.  Both will now be clear (not set).
 		}
 		else if( ( uxBits & BIT_0 ) != 0 )
 		{
-			// Bit 0 was set before xEventGroupClearBits() was called.  It is
-			// now clear.
+			// Bit 0 was set before xEventGroupClearBits() was called.  It will
+			// now be clear.
 		}
 		else if( ( uxBits & BIT_4 ) != 0 )
 		{
-			// Bit 4 was set before xEventGroupClearBits() was called.  It is
-			// now clear.
+			// Bit 4 was set before xEventGroupClearBits() was called.  It will
+			// now be clear.
 		}
 		else
 		{
@@ -351,7 +351,7 @@ EventBits_t xEventGroupClearBits( EventGroupHandle_t xEventGroup, const EventBit
  * and bit 0 set uxBitsToClear to 0x09.
  *
  * @return If the request to execute the function was posted successfully then 
- * pdPASS is returned, otherwise pdFALSE is returned.  pdFALSE is returned 
+ * pdPASS is returned, otherwise pdFALSE is returned.  pdFALSE will be returned 
  * if the timer service queue was full.
  *
  * Example usage:
@@ -395,7 +395,7 @@ EventBits_t xEventGroupClearBits( EventGroupHandle_t xEventGroup, const EventBit
  * This function cannot be called from an interrupt.  xEventGroupSetBitsFromISR()
  * is a version that can be called from an interrupt.
  *
- * Setting bits in an event group  automatically unblocks tasks that are
+ * Setting bits in an event group will automatically unblock tasks that are
  * blocked waiting for the bits.
  *
  * @param xEventGroup The event group in which the bits are to be set.
@@ -408,10 +408,10 @@ EventBits_t xEventGroupClearBits( EventGroupHandle_t xEventGroup, const EventBit
  * xEventGroupSetBits() returns.  There are two reasons why the returned value
  * might have the bits specified by the uxBitsToSet parameter cleared.  First,
  * if setting a bit results in a task that was waiting for the bit leaving the
- * blocked state then it is possible the bit is cleared automatically
+ * blocked state then it is possible the bit will be cleared automatically
  * (see the xClearBitOnExit parameter of xEventGroupWaitBits()).  Second, any
  * unblocked (or otherwise Ready state) task that has a priority above that of
- * the task that called xEventGroupSetBits() executes and may change the
+ * the task that called xEventGroupSetBits() will execute and may change the
  * event group value before the call to xEventGroupSetBits() returns.
  *
  * Example usage:
@@ -482,17 +482,17 @@ EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup, const EventBits_
  * and bit 0 set uxBitsToSet to 0x09.
  *
  * @param pxHigherPriorityTaskWoken As mentioned above, calling this function
- * results in a message being sent to the timer daemon task.  If the
+ * will result in a message being sent to the timer daemon task.  If the
  * priority of the timer daemon task is higher than the priority of the
  * currently running task (the task the interrupt interrupted) then
- * *pxHigherPriorityTaskWoken is set to pdTRUE by
+ * *pxHigherPriorityTaskWoken will be set to pdTRUE by
  * xEventGroupSetBitsFromISR(), indicating that a context switch should be
  * requested before the interrupt exits.  For that reason
  * *pxHigherPriorityTaskWoken must be initialised to pdFALSE.  See the
  * example code below.
  *
  * @return If the request to execute the function was posted successfully then 
- * pdPASS is returned, otherwise pdFALSE is returned.  pdFALSE  is returned 
+ * pdPASS is returned, otherwise pdFALSE is returned.  pdFALSE will be returned 
  * if the timer service queue was full.
  *
  * Example usage:
@@ -522,7 +522,7 @@ EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup, const EventBits_
 		{
 			// If xHigherPriorityTaskWoken is now set to pdTRUE then a context
 			// switch should be requested.  The macro used is port specific and 
-			// is either portYIELD_FROM_ISR() or portEND_SWITCHING_ISR() - 
+			// will be either portYIELD_FROM_ISR() or portEND_SWITCHING_ISR() - 
 			// refer to the documentation page for the port being used.
 			portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 		}
@@ -549,13 +549,13 @@ EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup, const EventBits_
  * Atomically set bits within an event group, then wait for a combination of
  * bits to be set within the same event group.  This functionality is typically
  * used to synchronise multiple tasks, where each task has to wait for the other
- * tasks to reach a synchronization point before proceeding.
+ * tasks to reach a synchronisation point before proceeding.
  *
  * This function cannot be used from an interrupt.
  *
- * The function returns before its block time expires if the bits specified
+ * The function will return before its block time expires if the bits specified
  * by the uxBitsToWait parameter are set, or become set within that time.  In
- * this case all the bits specified by uxBitsToWait is automatically
+ * this case all the bits specified by uxBitsToWait will be automatically
  * cleared before the function returns.
  *
  * @param xEventGroup The event group in which the bits are being tested.  The
@@ -577,7 +577,7 @@ EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup, const EventBits_
  * @return The value of the event group at the time either the bits being waited
  * for became set, or the block time expired.  Test the return value to know
  * which bits were set.  If xEventGroupSync() returned because its timeout
- * expired then not all the bits being waited for are set.  If
+ * expired then not all the bits being waited for will be set.  If
  * xEventGroupSync() returned because all the bits it was waiting for were
  * set then the returned value is the event group value before any bits were
  * automatically cleared.
@@ -605,15 +605,15 @@ EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup, const EventBits_
 		// Perform task functionality here.
 
 		// Set bit 0 in the event flag to note this task has reached the
-		// sync point.  The other two tasks set the other two bits defined
-		// by ALL_SYNC_BITS.  All three tasks have reached the synchronization
+		// sync point.  The other two tasks will set the other two bits defined
+		// by ALL_SYNC_BITS.  All three tasks have reached the synchronisation
 		// point when all the ALL_SYNC_BITS are set.  Wait a maximum of 100ms
 		// for this to happen.
 		uxReturn = xEventGroupSync( xEventBits, TASK_0_BIT, ALL_SYNC_BITS, xTicksToWait );
 
 		if( ( uxReturn & ALL_SYNC_BITS ) == ALL_SYNC_BITS )
 		{
-			// All three tasks reached the synchronization point before the call
+			// All three tasks reached the synchronisation point before the call
 			// to xEventGroupSync() timed out.
 		}
 	}
@@ -626,14 +626,14 @@ EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup, const EventBits_
 		// Perform task functionality here.
 
 		// Set bit 1 in the event flag to note this task has reached the
-		// synchronization point.  The other two tasks set the other two
+		// synchronisation point.  The other two tasks will set the other two
 		// bits defined by ALL_SYNC_BITS.  All three tasks have reached the
-		// synchronization point when all the ALL_SYNC_BITS are set.  Wait
+		// synchronisation point when all the ALL_SYNC_BITS are set.  Wait
 		// indefinitely for this to happen.
 		xEventGroupSync( xEventBits, TASK_1_BIT, ALL_SYNC_BITS, portMAX_DELAY );
 
 		// xEventGroupSync() was called with an indefinite block time, so
-		// this task  only reaches here if the synchronization was made by all
+		// this task will only reach here if the syncrhonisation was made by all
 		// three tasks, so there is no need to test the return value.
 	 }
  }
@@ -645,14 +645,14 @@ EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup, const EventBits_
 		// Perform task functionality here.
 
 		// Set bit 2 in the event flag to note this task has reached the
-		// synchronization point.  The other two tasks set the other two
+		// synchronisation point.  The other two tasks will set the other two
 		// bits defined by ALL_SYNC_BITS.  All three tasks have reached the
-		// synchronization point when all the ALL_SYNC_BITS are set.  Wait
+		// synchronisation point when all the ALL_SYNC_BITS are set.  Wait
 		// indefinitely for this to happen.
 		xEventGroupSync( xEventBits, TASK_2_BIT, ALL_SYNC_BITS, portMAX_DELAY );
 
 		// xEventGroupSync() was called with an indefinite block time, so
-		// this task only reaches here if the synchronization was made by all
+		// this task will only reach here if the syncrhonisation was made by all
 		// three tasks, so there is no need to test the return value.
 	}
  }
@@ -706,7 +706,7 @@ EventBits_t xEventGroupGetBitsFromISR( EventGroupHandle_t xEventGroup ) PRIVILEG
  </pre>
  *
  * Delete an event group that was previously created by a call to
- * xEventGroupCreate().  Tasks that are blocked on the event group are
+ * xEventGroupCreate().  Tasks that are blocked on the event group will be
  * unblocked and obtain 0 as the event group's value.
  *
  * @param xEventGroup The event group being deleted.
@@ -726,5 +726,6 @@ void vEventGroupClearBitsCallback( void *pvEventGroup, const uint32_t ulBitsToCl
 #endif
 
 #endif /* EVENT_GROUPS_H */
+
 
 

@@ -1,3 +1,7 @@
+/* << EST */
+#include "FreeRTOSConfig.h"
+#if configFRTOS_MEMORY_SCHEME==4
+
 /*
     FreeRTOS V8.2.3 - Copyright (C) 2015 Real Time Engineers Ltd.
     All rights reserved
@@ -94,6 +98,13 @@ task.h is included from an application file. */
 #define heapBITS_PER_BYTE		( ( size_t ) 8 )
 
 /* Allocate the memory for the heap. */
+#if configUSE_HEAP_SECTION_NAME && configCOMPILER==configCOMPILER_ARM_IAR /* << EST */
+  #pragma language=extended
+  #pragma location = configHEAP_SECTION_NAME_STRING
+  static unsigned char ucHeap[configTOTAL_HEAP_SIZE] @ configHEAP_SECTION_NAME_STRING; 
+#elif configUSE_HEAP_SECTION_NAME
+  static unsigned char __attribute__((section (configHEAP_SECTION_NAME_STRING))) ucHeap[configTOTAL_HEAP_SIZE];
+#else
 #if( configAPPLICATION_ALLOCATED_HEAP == 1 )
 	/* The application writer has already defined the array used for the RTOS
 	heap - probably so it can be placed in a special segment or address. */
@@ -101,6 +112,7 @@ task.h is included from an application file. */
 #else
 	static uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
 #endif /* configAPPLICATION_ALLOCATED_HEAP */
+#endif
 
 /* Define the linked list structure.  This is used to link free blocks in order
 of their memory address. */
@@ -283,8 +295,9 @@ void *pvReturn = NULL;
 	{
 		if( pvReturn == NULL )
 		{
-			extern void vApplicationMallocFailedHook( void );
-			vApplicationMallocFailedHook();
+      /* EST: Using configuration macro name for hook */
+			extern void configUSE_MALLOC_FAILED_HOOK_NAME( void );
+      configUSE_MALLOC_FAILED_HOOK_NAME();
 		}
 		else
 		{
@@ -471,4 +484,6 @@ uint8_t *puc;
 		mtCOVERAGE_TEST_MARKER();
 	}
 }
+
+#endif /* configFRTOS_MEMORY_SCHEME==4 */ /* << EST */
 

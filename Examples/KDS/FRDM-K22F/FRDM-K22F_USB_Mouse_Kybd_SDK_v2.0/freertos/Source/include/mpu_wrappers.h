@@ -74,7 +74,7 @@
 only for ports that are using the MPU. */
 #ifdef portUSING_MPU_WRAPPERS
 
-	/* MPU_WRAPPERS_INCLUDED_FROM_API_FILE is defined when this file is
+	/* MPU_WRAPPERS_INCLUDED_FROM_API_FILE will be defined when this file is
 	included from queue.c or task.c to prevent it from having an effect within
 	those files. */
 	#ifndef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
@@ -174,4 +174,5 @@ only for ports that are using the MPU. */
 
 
 #endif /* MPU_WRAPPERS_H */
+
 
