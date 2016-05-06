@@ -21,6 +21,8 @@
       !defined(MCU_MK10D7) /* DMAMUX */ && \
       !defined(MCU_MK10F12) /* DMAMUX0, DMAMUX1 */ && \
       !defined(MCU_MK10DZ10) /* DMAMUX */ && \
+      !defined(MCU_MK11DA5) /* DMAMUX */ && \
+      !defined(MCU_MK11DA5WS) /* DMAMUX */ && \
       !defined(MCU_MK11D5) /* DMAMUX */ && \
       !defined(MCU_MK11D5WS) /* DMAMUX */ && \
       !defined(MCU_MK12D5) /* DMAMUX */ && \
@@ -29,8 +31,12 @@
       !defined(MCU_MK20D7) /* DMAMUX */ && \
       !defined(MCU_MK20F12) /* DMAMUX0, DMAMUX1 */ && \
       !defined(MCU_MK20DZ10) /* DMAMUX */ && \
+      !defined(MCU_MK21DA5) /* DMAMUX */ && \
+      !defined(MCU_MK21DA5WS) /* DMAMUX */ && \
       !defined(MCU_MK21D5) /* DMAMUX */ && \
       !defined(MCU_MK21D5WS) /* DMAMUX */ && \
+      !defined(MCU_MK21FA12) /* DMAMUX */ && \
+      !defined(MCU_MK21FA12WS) /* DMAMUX */ && \
       !defined(MCU_MK21F12) /* DMAMUX */ && \
       !defined(MCU_MK21F12WS) /* DMAMUX */ && \
       !defined(MCU_MK22D5) /* DMAMUX */ && \
@@ -68,9 +74,6 @@
       !defined(MCU_MK63F12) /* DMAMUX */ && \
       !defined(MCU_MK63F12WS) /* DMAMUX */ && \
       !defined(MCU_MK64F12) /* DMAMUX */ && \
-      !defined(MCU_MK65F18) /* DMAMUX */ && \
-      !defined(MCU_MK65F18WS) /* DMAMUX */ && \
-      !defined(MCU_MK66F18) /* DMAMUX */ && \
       !defined(MCU_MK70F12) /* DMAMUX0, DMAMUX1 */ && \
       !defined(MCU_MK70F15) /* DMAMUX0, DMAMUX1 */ && \
       !defined(MCU_MK70F12WS) /* DMAMUX0, DMAMUX1 */ && \
@@ -96,8 +99,7 @@
       !defined(MCU_MKW22D5) /* DMAMUX */ && \
       !defined(MCU_MKW22D5WS) /* DMAMUX */ && \
       !defined(MCU_MKW24D5) /* DMAMUX */ && \
-      !defined(MCU_MKW24D5WS) /* DMAMUX */ && \
-      !defined(MCU_PCK20L4) /* DMAMUX */
+      !defined(MCU_MKW24D5WS) /* DMAMUX */
   // Unsupported MCU is active
   #error DMAMUX PDD library: Unsupported derivative is active.
 #endif

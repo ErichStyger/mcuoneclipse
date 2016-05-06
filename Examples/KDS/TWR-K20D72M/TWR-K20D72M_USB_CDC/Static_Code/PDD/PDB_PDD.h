@@ -21,6 +21,8 @@
       !defined(MCU_MK10D7) /* PDB0 */ && \
       !defined(MCU_MK10F12) /* PDB0 */ && \
       !defined(MCU_MK10DZ10) /* PDB0 */ && \
+      !defined(MCU_MK11DA5) /* PDB0 */ && \
+      !defined(MCU_MK11DA5WS) /* PDB0 */ && \
       !defined(MCU_MK11D5) /* PDB0 */ && \
       !defined(MCU_MK11D5WS) /* PDB0 */ && \
       !defined(MCU_MK12D5) /* PDB0 */ && \
@@ -29,8 +31,12 @@
       !defined(MCU_MK20D7) /* PDB0 */ && \
       !defined(MCU_MK20F12) /* PDB0 */ && \
       !defined(MCU_MK20DZ10) /* PDB0 */ && \
+      !defined(MCU_MK21DA5) /* PDB0 */ && \
+      !defined(MCU_MK21DA5WS) /* PDB0 */ && \
       !defined(MCU_MK21D5) /* PDB0 */ && \
       !defined(MCU_MK21D5WS) /* PDB0 */ && \
+      !defined(MCU_MK21FA12) /* PDB0 */ && \
+      !defined(MCU_MK21FA12WS) /* PDB0 */ && \
       !defined(MCU_MK21F12) /* PDB0 */ && \
       !defined(MCU_MK21F12WS) /* PDB0 */ && \
       !defined(MCU_MK22D5) /* PDB0 */ && \
@@ -68,9 +74,6 @@
       !defined(MCU_MK63F12) /* PDB0 */ && \
       !defined(MCU_MK63F12WS) /* PDB0 */ && \
       !defined(MCU_MK64F12) /* PDB0 */ && \
-      !defined(MCU_MK65F18) /* PDB0 */ && \
-      !defined(MCU_MK65F18WS) /* PDB0 */ && \
-      !defined(MCU_MK66F18) /* PDB0 */ && \
       !defined(MCU_MK70F12) /* PDB0 */ && \
       !defined(MCU_MK70F15) /* PDB0 */ && \
       !defined(MCU_MK70F12WS) /* PDB0 */ && \
@@ -84,8 +87,7 @@
       !defined(MCU_MKW22D5) /* PDB0 */ && \
       !defined(MCU_MKW22D5WS) /* PDB0 */ && \
       !defined(MCU_MKW24D5) /* PDB0 */ && \
-      !defined(MCU_MKW24D5WS) /* PDB0 */ && \
-      !defined(MCU_PCK20L4) /* PDB0 */
+      !defined(MCU_MKW24D5WS) /* PDB0 */
   // Unsupported MCU is active
   #error PDB PDD library: Unsupported derivative is active.
 #endif
@@ -1504,7 +1506,6 @@
    -- SetPulseOutDelay1
    ---------------------------------------------------------------------------- */
 
-#if ((defined(MCU_MK10DZ10)) || (defined(MCU_MK20DZ10)) || (defined(MCU_MK30DZ10)) || (defined(MCU_MK40DZ10)) || (defined(MCU_MK40X256VMD100)) || (defined(MCU_MK50DZ10)) || (defined(MCU_MK51DZ10)) || (defined(MCU_MK52DZ10)) || (defined(MCU_MK53DZ10)) || (defined(MCU_MK60DZ10)) || (defined(MCU_MK60N512VMD100)) || (defined(MCU_MKV10Z7)))
 /**
  * @brief Sets the PDB pulse output delay 1 value.
  * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
@@ -1515,52 +1516,25 @@
  * @param Index Channel index. This parameter is of index type.
  * @param Value PDB pulse output delay 1 value. This parameter is a 16-bit value.
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: PODLY[Index],
- *          PDB0_PO0DLY (depending on the peripheral).
+ * @remarks The macro accesses the following registers: PODLY[Index].
  * @par Example:
  *      @code
  *      PDB_PDD_SetPulseOutDelay1(<peripheral>_BASE_PTR, periphID, 1);
  *      @endcode
  */
-  #define PDB_PDD_SetPulseOutDelay1(PeripheralBase, Index, Value) ( \
-      PDB_PODLY_REG(PeripheralBase) = \
-       (uint32_t)(( \
-        (uint32_t)(PDB_PODLY_REG(PeripheralBase) & (uint32_t)(~(uint32_t)PDB_PODLY_DLY1_MASK))) | ( \
-        (uint32_t)((uint32_t)(Value) << PDB_PODLY_DLY1_SHIFT))) \
-    )
-#else /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK65F18)) || (defined(MCU_MK65F18WS)) || (defined(MCU_MK66F18)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_PCK20L4)) */
-/**
- * @brief Sets the PDB pulse output delay 1 value.
- * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
- *        base address). You can use the constant defined in the registers
- *        definition header file (<peripheral>_BASE_PTR) or the constant defined in
- *        the peripheral initialization component header file
- *        (<component_name>_DEVICE).
- * @param Index Channel index. This parameter is of index type.
- * @param Value PDB pulse output delay 1 value. This parameter is a 16-bit value.
- * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: PODLY[Index],
- *          PDB0_PO0DLY (depending on the peripheral).
- * @par Example:
- *      @code
- *      PDB_PDD_SetPulseOutDelay1(<peripheral>_BASE_PTR, periphID, 1);
- *      @endcode
- */
-  #define PDB_PDD_SetPulseOutDelay1(PeripheralBase, Index, Value) ( \
-      PDB_PODLY_REG(PeripheralBase,(Index)) = \
-       (uint32_t)(( \
-        (uint32_t)(( \
-         PDB_PODLY_REG(PeripheralBase,(Index))) & ( \
-         (uint32_t)(~(uint32_t)PDB_PODLY_DLY1_MASK)))) | ( \
-        (uint32_t)((uint32_t)(Value) << PDB_PODLY_DLY1_SHIFT))) \
-    )
-#endif /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK65F18)) || (defined(MCU_MK65F18WS)) || (defined(MCU_MK66F18)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_PCK20L4)) */
+#define PDB_PDD_SetPulseOutDelay1(PeripheralBase, Index, Value) ( \
+    PDB_PODLY_REG(PeripheralBase,(Index)) = \
+     (uint32_t)(( \
+      (uint32_t)(( \
+       PDB_PODLY_REG(PeripheralBase,(Index))) & ( \
+       (uint32_t)(~(uint32_t)PDB_PODLY_DLY1_MASK)))) | ( \
+      (uint32_t)((uint32_t)(Value) << PDB_PODLY_DLY1_SHIFT))) \
+  )
 
 /* ----------------------------------------------------------------------------
    -- SetPulseOutDelay2
    ---------------------------------------------------------------------------- */
 
-#if ((defined(MCU_MK10DZ10)) || (defined(MCU_MK20DZ10)) || (defined(MCU_MK30DZ10)) || (defined(MCU_MK40DZ10)) || (defined(MCU_MK40X256VMD100)) || (defined(MCU_MK50DZ10)) || (defined(MCU_MK51DZ10)) || (defined(MCU_MK52DZ10)) || (defined(MCU_MK53DZ10)) || (defined(MCU_MK60DZ10)) || (defined(MCU_MK60N512VMD100)) || (defined(MCU_MKV10Z7)))
 /**
  * @brief Sets the PDB pulse output delay 2 value.
  * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
@@ -1571,52 +1545,25 @@
  * @param Index Channel index. This parameter is of index type.
  * @param Value PDB pulse output delay 2 value. This parameter is a 16-bit value.
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: PODLY[Index],
- *          PDB0_PO0DLY (depending on the peripheral).
+ * @remarks The macro accesses the following registers: PODLY[Index].
  * @par Example:
  *      @code
  *      PDB_PDD_SetPulseOutDelay2(<peripheral>_BASE_PTR, periphID, 1);
  *      @endcode
  */
-  #define PDB_PDD_SetPulseOutDelay2(PeripheralBase, Index, Value) ( \
-      PDB_PODLY_REG(PeripheralBase) = \
-       (uint32_t)(( \
-        (uint32_t)(PDB_PODLY_REG(PeripheralBase) & (uint32_t)(~(uint32_t)PDB_PODLY_DLY2_MASK))) | ( \
-        (uint32_t)(Value))) \
-    )
-#else /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK65F18)) || (defined(MCU_MK65F18WS)) || (defined(MCU_MK66F18)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_PCK20L4)) */
-/**
- * @brief Sets the PDB pulse output delay 2 value.
- * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
- *        base address). You can use the constant defined in the registers
- *        definition header file (<peripheral>_BASE_PTR) or the constant defined in
- *        the peripheral initialization component header file
- *        (<component_name>_DEVICE).
- * @param Index Channel index. This parameter is of index type.
- * @param Value PDB pulse output delay 2 value. This parameter is a 16-bit value.
- * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: PODLY[Index],
- *          PDB0_PO0DLY (depending on the peripheral).
- * @par Example:
- *      @code
- *      PDB_PDD_SetPulseOutDelay2(<peripheral>_BASE_PTR, periphID, 1);
- *      @endcode
- */
-  #define PDB_PDD_SetPulseOutDelay2(PeripheralBase, Index, Value) ( \
-      PDB_PODLY_REG(PeripheralBase,(Index)) = \
-       (uint32_t)(( \
-        (uint32_t)(( \
-         PDB_PODLY_REG(PeripheralBase,(Index))) & ( \
-         (uint32_t)(~(uint32_t)PDB_PODLY_DLY2_MASK)))) | ( \
-        (uint32_t)(Value))) \
-    )
-#endif /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK65F18)) || (defined(MCU_MK65F18WS)) || (defined(MCU_MK66F18)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_PCK20L4)) */
+#define PDB_PDD_SetPulseOutDelay2(PeripheralBase, Index, Value) ( \
+    PDB_PODLY_REG(PeripheralBase,(Index)) = \
+     (uint32_t)(( \
+      (uint32_t)(( \
+       PDB_PODLY_REG(PeripheralBase,(Index))) & ( \
+       (uint32_t)(~(uint32_t)PDB_PODLY_DLY2_MASK)))) | ( \
+      (uint32_t)(Value))) \
+  )
 
 /* ----------------------------------------------------------------------------
    -- WritePulseOutDelayReg
    ---------------------------------------------------------------------------- */
 
-#if ((defined(MCU_MK10DZ10)) || (defined(MCU_MK20DZ10)) || (defined(MCU_MK30DZ10)) || (defined(MCU_MK40DZ10)) || (defined(MCU_MK40X256VMD100)) || (defined(MCU_MK50DZ10)) || (defined(MCU_MK51DZ10)) || (defined(MCU_MK52DZ10)) || (defined(MCU_MK53DZ10)) || (defined(MCU_MK60DZ10)) || (defined(MCU_MK60N512VMD100)) || (defined(MCU_MKV10Z7)))
 /**
  * @brief Writes value to the pulse-out delay register.
  * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
@@ -1628,47 +1575,21 @@
  * @param Value Value stored to the pulse-out delay register. This parameter is
  *        a 32-bit value.
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: PODLY[Index],
- *          PDB0_PO0DLY (depending on the peripheral).
+ * @remarks The macro accesses the following registers: PODLY[Index].
  * @par Example:
  *      @code
  *      PDB_PDD_WritePulseOutDelayReg(<peripheral>_BASE_PTR, periphID, 1);
  *      @endcode
  */
-  #define PDB_PDD_WritePulseOutDelayReg(PeripheralBase, Index, Value) ( \
-      PDB_PODLY_REG(PeripheralBase) = \
-       (uint32_t)(Value) \
-    )
-#else /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK65F18)) || (defined(MCU_MK65F18WS)) || (defined(MCU_MK66F18)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_PCK20L4)) */
-/**
- * @brief Writes value to the pulse-out delay register.
- * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
- *        base address). You can use the constant defined in the registers
- *        definition header file (<peripheral>_BASE_PTR) or the constant defined in
- *        the peripheral initialization component header file
- *        (<component_name>_DEVICE).
- * @param Index Channel index. This parameter is of index type.
- * @param Value Value stored to the pulse-out delay register. This parameter is
- *        a 32-bit value.
- * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: PODLY[Index],
- *          PDB0_PO0DLY (depending on the peripheral).
- * @par Example:
- *      @code
- *      PDB_PDD_WritePulseOutDelayReg(<peripheral>_BASE_PTR, periphID, 1);
- *      @endcode
- */
-  #define PDB_PDD_WritePulseOutDelayReg(PeripheralBase, Index, Value) ( \
-      PDB_PODLY_REG(PeripheralBase,(Index)) = \
-       (uint32_t)(Value) \
-    )
-#endif /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK65F18)) || (defined(MCU_MK65F18WS)) || (defined(MCU_MK66F18)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_PCK20L4)) */
+#define PDB_PDD_WritePulseOutDelayReg(PeripheralBase, Index, Value) ( \
+    PDB_PODLY_REG(PeripheralBase,(Index)) = \
+     (uint32_t)(Value) \
+  )
 
 /* ----------------------------------------------------------------------------
    -- ReadPulseOutDelayReg
    ---------------------------------------------------------------------------- */
 
-#if ((defined(MCU_MK10DZ10)) || (defined(MCU_MK20DZ10)) || (defined(MCU_MK30DZ10)) || (defined(MCU_MK40DZ10)) || (defined(MCU_MK40X256VMD100)) || (defined(MCU_MK50DZ10)) || (defined(MCU_MK51DZ10)) || (defined(MCU_MK52DZ10)) || (defined(MCU_MK53DZ10)) || (defined(MCU_MK60DZ10)) || (defined(MCU_MK60N512VMD100)) || (defined(MCU_MKV10Z7)))
 /**
  * @brief Returns the content of the pulse-out delay register.
  * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
@@ -1678,39 +1599,16 @@
  *        (<component_name>_DEVICE).
  * @param Index Channel index. This parameter is of index type.
  * @return Returns a 32-bit value.
- * @remarks The macro accesses the following registers: PODLY[Index],
- *          PDB0_PO0DLY (depending on the peripheral).
+ * @remarks The macro accesses the following registers: PODLY[Index].
  * @par Example:
  *      @code
  *      uint32_t result = PDB_PDD_ReadPulseOutDelayReg(<peripheral>_BASE_PTR,
  *      periphID);
  *      @endcode
  */
-  #define PDB_PDD_ReadPulseOutDelayReg(PeripheralBase, Index) ( \
-      PDB_PODLY_REG(PeripheralBase) \
-    )
-#else /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK65F18)) || (defined(MCU_MK65F18WS)) || (defined(MCU_MK66F18)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_PCK20L4)) */
-/**
- * @brief Returns the content of the pulse-out delay register.
- * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
- *        base address). You can use the constant defined in the registers
- *        definition header file (<peripheral>_BASE_PTR) or the constant defined in
- *        the peripheral initialization component header file
- *        (<component_name>_DEVICE).
- * @param Index Channel index. This parameter is of index type.
- * @return Returns a 32-bit value.
- * @remarks The macro accesses the following registers: PODLY[Index],
- *          PDB0_PO0DLY (depending on the peripheral).
- * @par Example:
- *      @code
- *      uint32_t result = PDB_PDD_ReadPulseOutDelayReg(<peripheral>_BASE_PTR,
- *      periphID);
- *      @endcode
- */
-  #define PDB_PDD_ReadPulseOutDelayReg(PeripheralBase, Index) ( \
-      PDB_PODLY_REG(PeripheralBase,(Index)) \
-    )
-#endif /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK65F18)) || (defined(MCU_MK65F18WS)) || (defined(MCU_MK66F18)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_PCK20L4)) */
+#define PDB_PDD_ReadPulseOutDelayReg(PeripheralBase, Index) ( \
+    PDB_PODLY_REG(PeripheralBase,(Index)) \
+  )
 #endif  /* #if defined(PDB_PDD_H_) */
 
 /* PDB_PDD.h, eof. */

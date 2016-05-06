@@ -24,6 +24,8 @@
       !defined(MCU_MK20D7) /* CAN0 */ && \
       !defined(MCU_MK20F12) /* CAN0, CAN1 */ && \
       !defined(MCU_MK20DZ10) /* CAN0, CAN1 */ && \
+      !defined(MCU_MK21FA12) /* CAN0 */ && \
+      !defined(MCU_MK21FA12WS) /* CAN0 */ && \
       !defined(MCU_MK21F12) /* CAN0 */ && \
       !defined(MCU_MK21F12WS) /* CAN0 */ && \
       !defined(MCU_MK22F12) /* CAN0 */ && \
@@ -47,9 +49,6 @@
       !defined(MCU_MK63F12) /* CAN0 */ && \
       !defined(MCU_MK63F12WS) /* CAN0 */ && \
       !defined(MCU_MK64F12) /* CAN0 */ && \
-      !defined(MCU_MK65F18) /* CAN0, CAN1 */ && \
-      !defined(MCU_MK65F18WS) /* CAN0, CAN1 */ && \
-      !defined(MCU_MK66F18) /* CAN0, CAN1 */ && \
       !defined(MCU_MK70F12) /* CAN0, CAN1 */ && \
       !defined(MCU_MK70F15) /* CAN0, CAN1 */ && \
       !defined(MCU_MK70F12WS) /* CAN0, CAN1 */ && \

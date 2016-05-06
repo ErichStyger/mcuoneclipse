@@ -34,6 +34,7 @@
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"
 #include "WAIT1.h"
+#include "KSDK1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

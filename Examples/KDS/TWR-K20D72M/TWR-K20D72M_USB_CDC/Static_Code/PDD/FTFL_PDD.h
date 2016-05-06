@@ -20,6 +20,8 @@
       !defined(MCU_MK10D5) /* FTFL */ && \
       !defined(MCU_MK10D7) /* FTFL */ && \
       !defined(MCU_MK10DZ10) /* FTFL */ && \
+      !defined(MCU_MK11DA5) /* FTFL */ && \
+      !defined(MCU_MK11DA5WS) /* FTFL */ && \
       !defined(MCU_MK11D5) /* FTFL */ && \
       !defined(MCU_MK11D5WS) /* FTFL */ && \
       !defined(MCU_MK12D5) /* FTFL */ && \
@@ -27,6 +29,8 @@
       !defined(MCU_MK20D5) /* FTFL */ && \
       !defined(MCU_MK20D7) /* FTFL */ && \
       !defined(MCU_MK20DZ10) /* FTFL */ && \
+      !defined(MCU_MK21DA5) /* FTFL */ && \
+      !defined(MCU_MK21DA5WS) /* FTFL */ && \
       !defined(MCU_MK21D5) /* FTFL */ && \
       !defined(MCU_MK21D5WS) /* FTFL */ && \
       !defined(MCU_MK22D5) /* FTFL */ && \
@@ -55,8 +59,7 @@
       !defined(MCU_MKW22D5) /* FTFL */ && \
       !defined(MCU_MKW22D5WS) /* FTFL */ && \
       !defined(MCU_MKW24D5) /* FTFL */ && \
-      !defined(MCU_MKW24D5WS) /* FTFL */ && \
-      !defined(MCU_PCK20L4) /* FTFL */
+      !defined(MCU_MKW24D5WS) /* FTFL */
   // Unsupported MCU is active
   #error FTFL PDD library: Unsupported derivative is active.
 #endif
@@ -112,7 +115,7 @@
 #define FTFL_PDD_EEPROM_DATA_SIZE_256_B   0x6U   /**< 256 bytes of EEPROM data */
 #define FTFL_PDD_EEPROM_DATA_SIZE_512_B   0x5U   /**< 512 bytes of EEPROM data */
 #define FTFL_PDD_EEPROM_DATA_SIZE_1024_B  0x4U   /**< 1024 bytes of EEPROM data */
-#define FTFL_PDD_EEPROM_SIZE_2048_B       0x3U   /**< 2048 bytes of EEPROM data */
+#define FTFL_PDD_EEPROM_DATA_SIZE_2048_B  0x3U   /**< 2048 bytes of EEPROM data */
 #define FTFL_PDD_EEPROM_DATA_SIZE_4096_B  0x2U   /**< 4096 bytes of EEPROM data */
 #define FTFL_PDD_EEPROM_DATA_SIZE_8192_B  0x1U   /**< 8192 bytes of EEPROM data */
 #define FTFL_PDD_EEPROM_DATA_SIZE_16384_B 0U     /**< 16384 bytes of EEPROM data */
@@ -2762,7 +2765,7 @@
  *      @endcode
  */
 #define FTFL_PDD_Cmd_EraseFlashBlock_SetAddress(PeripheralBase, Address) ( \
-    *(uint32_t*)&FTFL_FCCOB3_REG(PeripheralBase) = (Address) | (FTFL_PDD_PROGRAM_LONGWORD << 24) \
+    *(uint32_t*)&FTFL_FCCOB3_REG(PeripheralBase) = (Address) | (FTFL_PDD_ERASE_FLASH_BLOCK << 24) \
   )
 
 /* ----------------------------------------------------------------------------
@@ -2831,7 +2834,7 @@
  *      @endcode
  */
 #define FTFL_PDD_Cmd_EraseSector_SetAddress(PeripheralBase, Address) ( \
-    *(uint32_t*)&FTFL_FCCOB3_REG(PeripheralBase) = (Address) | (FTFL_PDD_PROGRAM_LONGWORD << 24) \
+    *(uint32_t*)&FTFL_FCCOB3_REG(PeripheralBase) = (Address) | (FTFL_PDD_ERASE_FLASH_SECTOR << 24) \
   )
 
 /* ----------------------------------------------------------------------------

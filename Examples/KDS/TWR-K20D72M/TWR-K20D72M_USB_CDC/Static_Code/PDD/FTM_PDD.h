@@ -21,6 +21,8 @@
       !defined(MCU_MK10D7) /* FTM0, FTM1, FTM2 */ && \
       !defined(MCU_MK10F12) /* FTM0, FTM1, FTM2, FTM3 */ && \
       !defined(MCU_MK10DZ10) /* FTM0, FTM1, FTM2 */ && \
+      !defined(MCU_MK11DA5) /* FTM0, FTM1, FTM2 */ && \
+      !defined(MCU_MK11DA5WS) /* FTM0, FTM1, FTM2 */ && \
       !defined(MCU_MK11D5) /* FTM0, FTM1, FTM2 */ && \
       !defined(MCU_MK11D5WS) /* FTM0, FTM1, FTM2 */ && \
       !defined(MCU_MK12D5) /* FTM0, FTM1, FTM2 */ && \
@@ -29,8 +31,12 @@
       !defined(MCU_MK20D7) /* FTM0, FTM1, FTM2 */ && \
       !defined(MCU_MK20F12) /* FTM0, FTM1, FTM2, FTM3 */ && \
       !defined(MCU_MK20DZ10) /* FTM0, FTM1, FTM2 */ && \
+      !defined(MCU_MK21DA5) /* FTM0, FTM1, FTM2 */ && \
+      !defined(MCU_MK21DA5WS) /* FTM0, FTM1, FTM2 */ && \
       !defined(MCU_MK21D5) /* FTM0, FTM1, FTM2 */ && \
       !defined(MCU_MK21D5WS) /* FTM0, FTM1, FTM2 */ && \
+      !defined(MCU_MK21FA12) /* FTM0, FTM1, FTM2, FTM3 */ && \
+      !defined(MCU_MK21FA12WS) /* FTM0, FTM1, FTM2, FTM3 */ && \
       !defined(MCU_MK21F12) /* FTM0, FTM1, FTM2, FTM3 */ && \
       !defined(MCU_MK21F12WS) /* FTM0, FTM1, FTM2, FTM3 */ && \
       !defined(MCU_MK22D5) /* FTM0, FTM1, FTM2 */ && \
@@ -68,9 +74,6 @@
       !defined(MCU_MK63F12) /* FTM0, FTM1, FTM2, FTM3 */ && \
       !defined(MCU_MK63F12WS) /* FTM0, FTM1, FTM2, FTM3 */ && \
       !defined(MCU_MK64F12) /* FTM0, FTM1, FTM2, FTM3 */ && \
-      !defined(MCU_MK65F18) /* FTM0, FTM1, FTM2, FTM3 */ && \
-      !defined(MCU_MK65F18WS) /* FTM0, FTM1, FTM2, FTM3 */ && \
-      !defined(MCU_MK66F18) /* FTM0, FTM1, FTM2, FTM3 */ && \
       !defined(MCU_MK70F12) /* FTM0, FTM1, FTM2, FTM3 */ && \
       !defined(MCU_MK70F15) /* FTM0, FTM1, FTM2, FTM3 */ && \
       !defined(MCU_MK70F12WS) /* FTM0, FTM1, FTM2, FTM3 */ && \
@@ -92,7 +95,6 @@
       !defined(MCU_MKW22D5WS) /* FTM0, FTM1, FTM2 */ && \
       !defined(MCU_MKW24D5) /* FTM0, FTM1, FTM2 */ && \
       !defined(MCU_MKW24D5WS) /* FTM0, FTM1, FTM2 */ && \
-      !defined(MCU_PCK20L4) /* FTM0, FTM1 */ && \
       !defined(MCU_SKEAZ1284) /* FTM0, FTM1, FTM2 */
   // Unsupported MCU is active
   #error FTM PDD library: Unsupported derivative is active.

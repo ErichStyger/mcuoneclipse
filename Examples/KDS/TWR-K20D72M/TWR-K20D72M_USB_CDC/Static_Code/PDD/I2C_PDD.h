@@ -21,6 +21,8 @@
       !defined(MCU_MK10D7) /* I2C0, I2C1 */ && \
       !defined(MCU_MK10F12) /* I2C0, I2C1 */ && \
       !defined(MCU_MK10DZ10) /* I2C0, I2C1 */ && \
+      !defined(MCU_MK11DA5) /* I2C0, I2C1 */ && \
+      !defined(MCU_MK11DA5WS) /* I2C0, I2C1 */ && \
       !defined(MCU_MK11D5) /* I2C0, I2C1 */ && \
       !defined(MCU_MK11D5WS) /* I2C0, I2C1 */ && \
       !defined(MCU_MK12D5) /* I2C0, I2C1 */ && \
@@ -29,8 +31,12 @@
       !defined(MCU_MK20D7) /* I2C0, I2C1 */ && \
       !defined(MCU_MK20F12) /* I2C0, I2C1 */ && \
       !defined(MCU_MK20DZ10) /* I2C0, I2C1 */ && \
+      !defined(MCU_MK21DA5) /* I2C0, I2C1 */ && \
+      !defined(MCU_MK21DA5WS) /* I2C0, I2C1 */ && \
       !defined(MCU_MK21D5) /* I2C0, I2C1 */ && \
       !defined(MCU_MK21D5WS) /* I2C0, I2C1 */ && \
+      !defined(MCU_MK21FA12) /* I2C0, I2C1, I2C2 */ && \
+      !defined(MCU_MK21FA12WS) /* I2C0, I2C1, I2C2 */ && \
       !defined(MCU_MK21F12) /* I2C0, I2C1, I2C2 */ && \
       !defined(MCU_MK21F12WS) /* I2C0, I2C1, I2C2 */ && \
       !defined(MCU_MK22D5) /* I2C0, I2C1 */ && \
@@ -68,9 +74,6 @@
       !defined(MCU_MK63F12) /* I2C0, I2C1, I2C2 */ && \
       !defined(MCU_MK63F12WS) /* I2C0, I2C1, I2C2 */ && \
       !defined(MCU_MK64F12) /* I2C0, I2C1, I2C2 */ && \
-      !defined(MCU_MK65F18) /* I2C0, I2C1, I2C2, I2C3 */ && \
-      !defined(MCU_MK65F18WS) /* I2C0, I2C1, I2C2, I2C3 */ && \
-      !defined(MCU_MK66F18) /* I2C0, I2C1, I2C2, I2C3 */ && \
       !defined(MCU_MK70F12) /* I2C0, I2C1 */ && \
       !defined(MCU_MK70F15) /* I2C0, I2C1 */ && \
       !defined(MCU_MK70F12WS) /* I2C0, I2C1 */ && \
@@ -83,7 +86,6 @@
       !defined(MCU_SKEAZN84) /* I2C0 */ && \
       !defined(MCU_MKE06Z4) /* I2C0, I2C1 */ && \
       !defined(MCU_MKL02Z4) /* I2C0, I2C1 */ && \
-      !defined(MCU_MKL03Z4) /* I2C0 */ && \
       !defined(MCU_MKL04Z4) /* I2C0 */ && \
       !defined(MCU_MKL05Z4) /* I2C0 */ && \
       !defined(MCU_MKL14Z4) /* I2C0, I2C1 */ && \
@@ -106,7 +108,6 @@
       !defined(MCU_MKW22D5WS) /* I2C0, I2C1 */ && \
       !defined(MCU_MKW24D5) /* I2C0, I2C1 */ && \
       !defined(MCU_MKW24D5WS) /* I2C0, I2C1 */ && \
-      !defined(MCU_PCK20L4) /* I2C0 */ && \
       !defined(MCU_SKEAZ1284) /* I2C0, I2C1 */
   // Unsupported MCU is active
   #error I2C PDD library: Unsupported derivative is active.
@@ -118,33 +119,47 @@
    -- Method symbol definitions
    ---------------------------------------------------------------------------- */
 
+#if ((defined(MCU_MKE04Z1284)) || (defined(MCU_MKE06Z4)) || (defined(MCU_SKEAZ1284)))
 /* Status flags constants (for ReadStatusReg, GetInterruptFlags,
    ClearInterruptFlags macros). */
-#define I2C_PDD_RX_ACKNOWLEDGE      I2C_S_RXAK_MASK /**< Receive acknowledge. */
-#define I2C_PDD_INTERRUPT_FLAG      I2C_S_IICIF_MASK /**< Interrupt flag. */
-#define I2C_PDD_SLAVE_TRANSMIT      I2C_S_SRW_MASK /**< Slave read/write request. */
-#define I2C_PDD_RANGE_ADDRESS_MATCH I2C_S_RAM_MASK /**< Range address match. */
-#define I2C_PDD_ARBIT_LOST          I2C_S_ARBL_MASK /**< Arbitration lost. */
-#define I2C_PDD_BUS_IS_BUSY         I2C_S_BUSY_MASK /**< Bus busy - set when a START signal is detected. */
-#define I2C_PDD_ADDRESSED_AS_SLAVE  I2C_S_IAAS_MASK /**< Addressed as a slave. */
-#define I2C_PDD_TX_COMPLETE         I2C_S_TCF_MASK /**< Transfer complete flag. */
+  #define I2C_PDD_RX_ACKNOWLEDGE      I2C_S1_RXAK_MASK /**< Receive acknowledge. */
+  #define I2C_PDD_INTERRUPT_FLAG      I2C_S1_IICIF_MASK /**< Interrupt flag. */
+  #define I2C_PDD_SLAVE_TRANSMIT      I2C_S1_SRW_MASK /**< Slave read/write request. */
+  #define I2C_PDD_RANGE_ADDRESS_MATCH I2C_S1_RAM_MASK /**< Range address match. */
+  #define I2C_PDD_ARBIT_LOST          I2C_S1_ARBL_MASK /**< Arbitration lost. */
+  #define I2C_PDD_BUS_IS_BUSY         I2C_S1_BUSY_MASK /**< Bus busy - set when a START signal is detected. */
+  #define I2C_PDD_ADDRESSED_AS_SLAVE  I2C_S1_IAAS_MASK /**< Addressed as a slave. */
+  #define I2C_PDD_TX_COMPLETE         I2C_S1_TCF_MASK /**< Transfer complete flag. */
 
+#else /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10DZ10)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK11DA5)) || (defined(MCU_MK11DA5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20DZ10)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21DA5)) || (defined(MCU_MK21DA5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK30DZ10)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK40DZ10)) || (defined(MCU_MK40X256VMD100)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK50DZ10)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK51DZ10)) || (defined(MCU_MK52D10)) || (defined(MCU_MK52DZ10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK53DZ10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60DZ10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK60N512VMD100)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKL02Z4)) || (defined(MCU_MKL04Z4)) || (defined(MCU_MKL05Z4)) || (defined(MCU_MKL14Z4)) || (defined(MCU_MKL15Z4)) || (defined(MCU_MKL16Z4)) || (defined(MCU_MKL24Z4)) || (defined(MCU_MKL25Z4)) || (defined(MCU_MKL26Z4)) || (defined(MCU_MKL34Z4)) || (defined(MCU_MKL36Z4)) || (defined(MCU_MKL46Z4)) || (defined(MCU_MKV10Z7)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW01Z4)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
+/* Status flags constants (for ReadStatusReg, GetInterruptFlags,
+   ClearInterruptFlags macros). */
+  #define I2C_PDD_RX_ACKNOWLEDGE      I2C_S_RXAK_MASK /**< Receive acknowledge. */
+  #define I2C_PDD_INTERRUPT_FLAG      I2C_S_IICIF_MASK /**< Interrupt flag. */
+  #define I2C_PDD_SLAVE_TRANSMIT      I2C_S_SRW_MASK /**< Slave read/write request. */
+  #define I2C_PDD_RANGE_ADDRESS_MATCH I2C_S_RAM_MASK /**< Range address match. */
+  #define I2C_PDD_ARBIT_LOST          I2C_S_ARBL_MASK /**< Arbitration lost. */
+  #define I2C_PDD_BUS_IS_BUSY         I2C_S_BUSY_MASK /**< Bus busy - set when a START signal is detected. */
+  #define I2C_PDD_ADDRESSED_AS_SLAVE  I2C_S_IAAS_MASK /**< Addressed as a slave. */
+  #define I2C_PDD_TX_COMPLETE         I2C_S_TCF_MASK /**< Transfer complete flag. */
+
+#endif /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10DZ10)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK11DA5)) || (defined(MCU_MK11DA5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20DZ10)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21DA5)) || (defined(MCU_MK21DA5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK30DZ10)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK40DZ10)) || (defined(MCU_MK40X256VMD100)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK50DZ10)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK51DZ10)) || (defined(MCU_MK52D10)) || (defined(MCU_MK52DZ10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK53DZ10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60DZ10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK60N512VMD100)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKL02Z4)) || (defined(MCU_MKL04Z4)) || (defined(MCU_MKL05Z4)) || (defined(MCU_MKL14Z4)) || (defined(MCU_MKL15Z4)) || (defined(MCU_MKL16Z4)) || (defined(MCU_MKL24Z4)) || (defined(MCU_MKL25Z4)) || (defined(MCU_MKL26Z4)) || (defined(MCU_MKL34Z4)) || (defined(MCU_MKL36Z4)) || (defined(MCU_MKL46Z4)) || (defined(MCU_MKV10Z7)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW01Z4)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
 /* SCL timeout flags constants (for GetSCLTimeoutInterruptFlags,
    ClearSCLTimeoutInterruptFlags macros). */
 #define I2C_PDD_SCL_LOW_TIMEOUT            I2C_SMB_SLTF_MASK /**< SCL low timeout flag. */
 #define I2C_PDD_SCL_HI_AND_SDA_HI_TIMEOUT  I2C_SMB_SHTF1_MASK /**< SCL high timeout flag - sets when SCL and SDA are held high more than clock × LoValue / 512. */
 #define I2C_PDD_SCL_HI_AND_SDA_LOW_TIMEOUT I2C_SMB_SHTF2_MASK /**< SCL high timeout flag - sets when SCL is held high and SDA is held low more than clock × LoValue/512. */
 
-#if ((defined(MCU_MKL02Z4)) || (defined(MCU_MKL03Z4)) || (defined(MCU_MKL04Z4)) || (defined(MCU_MKL05Z4)) || (defined(MCU_MKL14Z4)) || (defined(MCU_MKL15Z4)) || (defined(MCU_MKL16Z4)) || (defined(MCU_MKL24Z4)) || (defined(MCU_MKL25Z4)) || (defined(MCU_MKL26Z4)) || (defined(MCU_MKL34Z4)) || (defined(MCU_MKL36Z4)) || (defined(MCU_MKL46Z4)) || (defined(MCU_MKV10Z7)) || (defined(MCU_MKW01Z4)))
+#if ((defined(MCU_MKL04Z4)) || (defined(MCU_MKL05Z4)) || (defined(MCU_MKL14Z4)) || (defined(MCU_MKL15Z4)) || (defined(MCU_MKL24Z4)) || (defined(MCU_MKL25Z4)))
 /* Status flags constants. */
   #define I2C_PDD_BUS_STOP_FLAG I2C_FLT_STOPF_MASK /**< Stop detected on I2C bus */
 
-#else /* (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK65F18)) || (defined(MCU_MK65F18WS)) || (defined(MCU_MK66F18)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z1284)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKE06Z4)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_SKEAZ1284)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
+#else /* (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z1284)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKE06Z4)) || (defined(MCU_MKL02Z4)) || (defined(MCU_MKL16Z4)) || (defined(MCU_MKL26Z4)) || (defined(MCU_MKL34Z4)) || (defined(MCU_MKL36Z4)) || (defined(MCU_MKL46Z4)) || (defined(MCU_MKV10Z7)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW01Z4)) || (defined(MCU_SKEAZ1284)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
 /* Status flags constants. */
   #define I2C_PDD_BUS_STOP_FLAG  I2C_FLT_STOPF_MASK /**< Stop detected on I2C bus */
   #define I2C_PDD_BUS_START_FLAG I2C_FLT_STARTF_MASK /**< Start detected on I2C bus */
 
-#endif /* (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK65F18)) || (defined(MCU_MK65F18WS)) || (defined(MCU_MK66F18)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z1284)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKE06Z4)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_SKEAZ1284)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
+#endif /* (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z1284)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKE06Z4)) || (defined(MCU_MKL02Z4)) || (defined(MCU_MKL16Z4)) || (defined(MCU_MKL26Z4)) || (defined(MCU_MKL34Z4)) || (defined(MCU_MKL36Z4)) || (defined(MCU_MKL46Z4)) || (defined(MCU_MKV10Z7)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW01Z4)) || (defined(MCU_SKEAZ1284)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
 /* Frequency multiplier constants (for SetFrequencyMultiplier macro). */
 #define I2C_PDD_FREQUENCY_MUL_1 0U               /**< Multiplier factor = 1 */
 #define I2C_PDD_FREQUENCY_MUL_2 0x1U             /**< Multiplier factor = 2 */
@@ -185,8 +200,7 @@
  * @param AddrValue Slave address value[0..127]. This parameter is a 7-bit value.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_A1, I2C0_C2,
- *          I2C1_A1, I2C1_C2, I2C2_A1, I2C2_C2, I2C3_A1, I2C3_C2 (depending on the
- *          peripheral).
+ *          I2C1_A1, I2C1_C2, I2C2_A1, I2C2_C2 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_SetSlaveAddress7bits(<peripheral>_BASE_PTR, 1);
@@ -216,8 +230,7 @@
  *        value.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_A1, I2C0_C2,
- *          I2C1_A1, I2C1_C2, I2C2_A1, I2C2_C2, I2C3_A1, I2C3_C2 (depending on the
- *          peripheral).
+ *          I2C1_A1, I2C1_C2, I2C2_A1, I2C2_C2 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_SetSlaveAddress10bits(<peripheral>_BASE_PTR, 1);
@@ -248,7 +261,7 @@
  *        (<component_name>_DEVICE).
  * @return Returns a 8-bit value.
  * @remarks The macro accesses the following registers: I2C0_A1, I2C1_A1,
- *          I2C2_A1, I2C3_A1 (depending on the peripheral).
+ *          I2C2_A1 (depending on the peripheral).
  * @par Example:
  *      @code
  *      uint8_t result = I2C_PDD_ReadAddress1Reg(<peripheral>_BASE_PTR);
@@ -274,7 +287,7 @@
  *        a 8-bit value.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_A1, I2C1_A1,
- *          I2C2_A1, I2C3_A1 (depending on the peripheral).
+ *          I2C2_A1 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_WriteAddress1Reg(<peripheral>_BASE_PTR, 1);
@@ -300,8 +313,8 @@
  * @param FreqDividerValue Frequency divider value[0..63]. This parameter is a
  *        6-bit value.
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: I2C0_F, I2C1_F, I2C2_F,
- *          I2C3_F (depending on the peripheral).
+ * @remarks The macro accesses the following registers: I2C0_F, I2C1_F, I2C2_F
+ *          (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_SetFrequencyDivider(<peripheral>_BASE_PTR, 1);
@@ -329,8 +342,8 @@
  * @param FreqMultiplierValue Frequency multiplier value[0..2]. This parameter
  *        is a 2-bit value.
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: I2C0_F, I2C1_F, I2C2_F,
- *          I2C3_F (depending on the peripheral).
+ * @remarks The macro accesses the following registers: I2C0_F, I2C1_F, I2C2_F
+ *          (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_SetFrequencyMultiplier(<peripheral>_BASE_PTR, 1);
@@ -355,8 +368,8 @@
  *        the peripheral initialization component header file
  *        (<component_name>_DEVICE).
  * @return Returns a 8-bit value.
- * @remarks The macro accesses the following registers: I2C0_F, I2C1_F, I2C2_F,
- *          I2C3_F (depending on the peripheral).
+ * @remarks The macro accesses the following registers: I2C0_F, I2C1_F, I2C2_F
+ *          (depending on the peripheral).
  * @par Example:
  *      @code
  *      uint8_t result = I2C_PDD_ReadFrequencyDividerReg(<peripheral>_BASE_PTR);
@@ -381,8 +394,8 @@
  * @param Value Value to be written to the frequency divider register. This
  *        parameter is a 8-bit value.
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: I2C0_F, I2C1_F, I2C2_F,
- *          I2C3_F (depending on the peripheral).
+ * @remarks The macro accesses the following registers: I2C0_F, I2C1_F, I2C2_F
+ *          (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_WriteFrequencyDividerReg(<peripheral>_BASE_PTR, 1);
@@ -409,7 +422,7 @@
  *        PDD_ENABLE defined in PDD_Types.h)" type.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_C1, I2C1_C1,
- *          I2C2_C1, I2C3_C1 (depending on the peripheral).
+ *          I2C2_C1 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_EnableDevice(<peripheral>_BASE_PTR, PDD_DISABLE);
@@ -435,7 +448,7 @@
  *        (<component_name>_DEVICE).
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_C1, I2C1_C1,
- *          I2C2_C1, I2C3_C1 (depending on the peripheral).
+ *          I2C2_C1 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_EnableInterrupt(<peripheral>_BASE_PTR);
@@ -459,7 +472,7 @@
  *        (<component_name>_DEVICE).
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_C1, I2C1_C1,
- *          I2C2_C1, I2C3_C1 (depending on the peripheral).
+ *          I2C2_C1 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_DisableInterrupt(<peripheral>_BASE_PTR);
@@ -486,7 +499,7 @@
  *        GetMasterMode macros)." type.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_C1, I2C1_C1,
- *          I2C2_C1, I2C3_C1 (depending on the peripheral).
+ *          I2C2_C1 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_SetMasterMode(<peripheral>_BASE_PTR, I2C_PDD_MASTER_MODE);
@@ -513,7 +526,7 @@
  * @return Returns a value of "Master mode constants (for MasterMode,
  *         GetMasterMode macros)." type. The value is cast to "uint8_t".
  * @remarks The macro accesses the following registers: I2C0_C1, I2C1_C1,
- *          I2C2_C1, I2C3_C1 (depending on the peripheral).
+ *          I2C2_C1 (depending on the peripheral).
  * @par Example:
  *      @code
  *      uint8_t result = I2C_PDD_GetMasterMode(<peripheral>_BASE_PTR);
@@ -539,7 +552,7 @@
  *        SetTransmitMode, GetTransmitMode macros)." type.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_C1, I2C1_C1,
- *          I2C2_C1, I2C3_C1 (depending on the peripheral).
+ *          I2C2_C1 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_SetTransmitMode(<peripheral>_BASE_PTR, I2C_PDD_TX_DIRECTION);
@@ -566,7 +579,7 @@
  * @return Returns a value of "Transmit mode constants (for SetTransmitMode,
  *         GetTransmitMode macros)." type. The value is cast to "uint8_t".
  * @remarks The macro accesses the following registers: I2C0_C1, I2C1_C1,
- *          I2C2_C1, I2C3_C1 (depending on the peripheral).
+ *          I2C2_C1 (depending on the peripheral).
  * @par Example:
  *      @code
  *      uint8_t result = I2C_PDD_GetTransmitMode(<peripheral>_BASE_PTR);
@@ -593,7 +606,7 @@
  *        (PDD_DISABLE and PDD_ENABLE defined in PDD_Types.h)" type.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_C1, I2C1_C1,
- *          I2C2_C1, I2C3_C1 (depending on the peripheral).
+ *          I2C2_C1 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_EnableTransmitAcknowledge(<peripheral>_BASE_PTR, PDD_DISABLE);
@@ -620,7 +633,7 @@
  *        (<component_name>_DEVICE).
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_C1, I2C1_C1,
- *          I2C2_C1, I2C3_C1 (depending on the peripheral).
+ *          I2C2_C1 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_RepeatStart(<peripheral>_BASE_PTR);
@@ -647,7 +660,7 @@
  *        (PDD_DISABLE and PDD_ENABLE defined in PDD_Types.h)" type.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_C1, I2C1_C1,
- *          I2C2_C1, I2C3_C1 (depending on the peripheral).
+ *          I2C2_C1 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_EnableWakeUp(<peripheral>_BASE_PTR, PDD_DISABLE);
@@ -676,7 +689,7 @@
  *        (PDD_DISABLE and PDD_ENABLE defined in PDD_Types.h)" type.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_C1, I2C1_C1,
- *          I2C2_C1, I2C3_C1 (depending on the peripheral).
+ *          I2C2_C1 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_EnableDmaRequest(<peripheral>_BASE_PTR, PDD_DISABLE);
@@ -702,7 +715,7 @@
  *        (<component_name>_DEVICE).
  * @return Returns a 8-bit value.
  * @remarks The macro accesses the following registers: I2C0_C1, I2C1_C1,
- *          I2C2_C1, I2C3_C1 (depending on the peripheral).
+ *          I2C2_C1 (depending on the peripheral).
  * @par Example:
  *      @code
  *      uint8_t result = I2C_PDD_ReadControl1Reg(<peripheral>_BASE_PTR);
@@ -728,7 +741,7 @@
  *        a 8-bit value.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_C1, I2C1_C1,
- *          I2C2_C1, I2C3_C1 (depending on the peripheral).
+ *          I2C2_C1 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_WriteControl1Reg(<peripheral>_BASE_PTR, 1);
@@ -743,6 +756,7 @@
    -- ReadStatusReg
    ---------------------------------------------------------------------------- */
 
+#if ((defined(MCU_MKE04Z1284)) || (defined(MCU_MKE06Z4)) || (defined(MCU_SKEAZ1284)))
 /**
  * @brief Returns the value of the status register.
  * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
@@ -754,20 +768,43 @@
  *         GetInterruptFlags, ClearInterruptFlags macros)." for processing return
  *         value.
  * @remarks The macro accesses the following registers: I2C0_S, I2C1_S, I2C2_S,
- *          I2C0_S1, I2C1_S1, I2C3_S (depending on the peripheral).
+ *          I2C0_S1, I2C1_S1 (depending on the peripheral).
  * @par Example:
  *      @code
  *      uint8_t result = I2C_PDD_ReadStatusReg(<peripheral>_BASE_PTR);
  *      @endcode
  */
-#define I2C_PDD_ReadStatusReg(PeripheralBase) ( \
-    I2C_S_REG(PeripheralBase) \
-  )
+  #define I2C_PDD_ReadStatusReg(PeripheralBase) ( \
+      I2C_S1_REG(PeripheralBase) \
+    )
+#else /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10DZ10)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK11DA5)) || (defined(MCU_MK11DA5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20DZ10)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21DA5)) || (defined(MCU_MK21DA5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK30DZ10)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK40DZ10)) || (defined(MCU_MK40X256VMD100)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK50DZ10)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK51DZ10)) || (defined(MCU_MK52D10)) || (defined(MCU_MK52DZ10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK53DZ10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60DZ10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK60N512VMD100)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKL02Z4)) || (defined(MCU_MKL04Z4)) || (defined(MCU_MKL05Z4)) || (defined(MCU_MKL14Z4)) || (defined(MCU_MKL15Z4)) || (defined(MCU_MKL16Z4)) || (defined(MCU_MKL24Z4)) || (defined(MCU_MKL25Z4)) || (defined(MCU_MKL26Z4)) || (defined(MCU_MKL34Z4)) || (defined(MCU_MKL36Z4)) || (defined(MCU_MKL46Z4)) || (defined(MCU_MKV10Z7)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW01Z4)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
+/**
+ * @brief Returns the value of the status register.
+ * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
+ *        base address). You can use the constant defined in the registers
+ *        definition header file (<peripheral>_BASE_PTR) or the constant defined in
+ *        the peripheral initialization component header file
+ *        (<component_name>_DEVICE).
+ * @return Use constants from group "Status flags constants (for ReadStatusReg,
+ *         GetInterruptFlags, ClearInterruptFlags macros)." for processing return
+ *         value.
+ * @remarks The macro accesses the following registers: I2C0_S, I2C1_S, I2C2_S,
+ *          I2C0_S1, I2C1_S1 (depending on the peripheral).
+ * @par Example:
+ *      @code
+ *      uint8_t result = I2C_PDD_ReadStatusReg(<peripheral>_BASE_PTR);
+ *      @endcode
+ */
+  #define I2C_PDD_ReadStatusReg(PeripheralBase) ( \
+      I2C_S_REG(PeripheralBase) \
+    )
+#endif /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10DZ10)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK11DA5)) || (defined(MCU_MK11DA5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20DZ10)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21DA5)) || (defined(MCU_MK21DA5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK30DZ10)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK40DZ10)) || (defined(MCU_MK40X256VMD100)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK50DZ10)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK51DZ10)) || (defined(MCU_MK52D10)) || (defined(MCU_MK52DZ10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK53DZ10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60DZ10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK60N512VMD100)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKL02Z4)) || (defined(MCU_MKL04Z4)) || (defined(MCU_MKL05Z4)) || (defined(MCU_MKL14Z4)) || (defined(MCU_MKL15Z4)) || (defined(MCU_MKL16Z4)) || (defined(MCU_MKL24Z4)) || (defined(MCU_MKL25Z4)) || (defined(MCU_MKL26Z4)) || (defined(MCU_MKL34Z4)) || (defined(MCU_MKL36Z4)) || (defined(MCU_MKL46Z4)) || (defined(MCU_MKV10Z7)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW01Z4)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
 
 /* ----------------------------------------------------------------------------
    -- GetBusStatus
    ---------------------------------------------------------------------------- */
 
+#if ((defined(MCU_MKE04Z1284)) || (defined(MCU_MKE06Z4)) || (defined(MCU_SKEAZ1284)))
 /**
  * @brief Returns status of the BUS.
  * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
@@ -778,20 +815,42 @@
  * @return Returns a value of "BUS status constants (for GetBusStatus macro)."
  *         type. The value is cast to "uint8_t".
  * @remarks The macro accesses the following registers: I2C0_S, I2C1_S, I2C2_S,
- *          I2C0_S1, I2C1_S1, I2C3_S (depending on the peripheral).
+ *          I2C0_S1, I2C1_S1 (depending on the peripheral).
  * @par Example:
  *      @code
  *      uint8_t result = I2C_PDD_GetBusStatus(<peripheral>_BASE_PTR);
  *      @endcode
  */
-#define I2C_PDD_GetBusStatus(PeripheralBase) ( \
-    (uint8_t)(I2C_S_REG(PeripheralBase) & I2C_S_BUSY_MASK) \
-  )
+  #define I2C_PDD_GetBusStatus(PeripheralBase) ( \
+      (uint8_t)(I2C_S1_REG(PeripheralBase) & I2C_S1_BUSY_MASK) \
+    )
+#else /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10DZ10)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK11DA5)) || (defined(MCU_MK11DA5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20DZ10)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21DA5)) || (defined(MCU_MK21DA5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK30DZ10)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK40DZ10)) || (defined(MCU_MK40X256VMD100)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK50DZ10)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK51DZ10)) || (defined(MCU_MK52D10)) || (defined(MCU_MK52DZ10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK53DZ10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60DZ10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK60N512VMD100)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKL02Z4)) || (defined(MCU_MKL04Z4)) || (defined(MCU_MKL05Z4)) || (defined(MCU_MKL14Z4)) || (defined(MCU_MKL15Z4)) || (defined(MCU_MKL16Z4)) || (defined(MCU_MKL24Z4)) || (defined(MCU_MKL25Z4)) || (defined(MCU_MKL26Z4)) || (defined(MCU_MKL34Z4)) || (defined(MCU_MKL36Z4)) || (defined(MCU_MKL46Z4)) || (defined(MCU_MKV10Z7)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW01Z4)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
+/**
+ * @brief Returns status of the BUS.
+ * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
+ *        base address). You can use the constant defined in the registers
+ *        definition header file (<peripheral>_BASE_PTR) or the constant defined in
+ *        the peripheral initialization component header file
+ *        (<component_name>_DEVICE).
+ * @return Returns a value of "BUS status constants (for GetBusStatus macro)."
+ *         type. The value is cast to "uint8_t".
+ * @remarks The macro accesses the following registers: I2C0_S, I2C1_S, I2C2_S,
+ *          I2C0_S1, I2C1_S1 (depending on the peripheral).
+ * @par Example:
+ *      @code
+ *      uint8_t result = I2C_PDD_GetBusStatus(<peripheral>_BASE_PTR);
+ *      @endcode
+ */
+  #define I2C_PDD_GetBusStatus(PeripheralBase) ( \
+      (uint8_t)(I2C_S_REG(PeripheralBase) & I2C_S_BUSY_MASK) \
+    )
+#endif /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10DZ10)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK11DA5)) || (defined(MCU_MK11DA5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20DZ10)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21DA5)) || (defined(MCU_MK21DA5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK30DZ10)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK40DZ10)) || (defined(MCU_MK40X256VMD100)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK50DZ10)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK51DZ10)) || (defined(MCU_MK52D10)) || (defined(MCU_MK52DZ10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK53DZ10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60DZ10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK60N512VMD100)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKL02Z4)) || (defined(MCU_MKL04Z4)) || (defined(MCU_MKL05Z4)) || (defined(MCU_MKL14Z4)) || (defined(MCU_MKL15Z4)) || (defined(MCU_MKL16Z4)) || (defined(MCU_MKL24Z4)) || (defined(MCU_MKL25Z4)) || (defined(MCU_MKL26Z4)) || (defined(MCU_MKL34Z4)) || (defined(MCU_MKL36Z4)) || (defined(MCU_MKL46Z4)) || (defined(MCU_MKV10Z7)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW01Z4)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
 
 /* ----------------------------------------------------------------------------
    -- GetInterruptFlags
    ---------------------------------------------------------------------------- */
 
+#if ((defined(MCU_MKE04Z1284)) || (defined(MCU_MKE06Z4)) || (defined(MCU_SKEAZ1284)))
 /**
  * @brief Returns a value that represents a mask of active (pending) interrupts.
  * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
@@ -803,27 +862,57 @@
  *         GetInterruptFlags, ClearInterruptFlags macros)." for processing return
  *         value.
  * @remarks The macro accesses the following registers: I2C0_S, I2C1_S, I2C2_S,
- *          I2C0_S1, I2C1_S1, I2C3_S (depending on the peripheral).
+ *          I2C0_S1, I2C1_S1 (depending on the peripheral).
  * @par Example:
  *      @code
  *      uint8_t result = I2C_PDD_GetInterruptFlags(<peripheral>_BASE_PTR);
  *      @endcode
  */
-#define I2C_PDD_GetInterruptFlags(PeripheralBase) ( \
-    (uint8_t)(( \
-     I2C_S_REG(PeripheralBase)) & ( \
-     (uint8_t)(( \
-      I2C_S_TCF_MASK) | (( \
-      I2C_S_IICIF_MASK) | (( \
-      I2C_S_RAM_MASK) | (( \
-      I2C_S_ARBL_MASK) | ( \
-      I2C_S_IAAS_MASK))))))) \
-  )
+  #define I2C_PDD_GetInterruptFlags(PeripheralBase) ( \
+      (uint8_t)(( \
+       I2C_S1_REG(PeripheralBase)) & ( \
+       (uint8_t)(( \
+        I2C_S1_TCF_MASK) | (( \
+        I2C_S1_IICIF_MASK) | (( \
+        I2C_S1_RAM_MASK) | (( \
+        I2C_S1_ARBL_MASK) | ( \
+        I2C_S1_IAAS_MASK))))))) \
+    )
+#else /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10DZ10)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK11DA5)) || (defined(MCU_MK11DA5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20DZ10)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21DA5)) || (defined(MCU_MK21DA5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK30DZ10)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK40DZ10)) || (defined(MCU_MK40X256VMD100)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK50DZ10)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK51DZ10)) || (defined(MCU_MK52D10)) || (defined(MCU_MK52DZ10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK53DZ10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60DZ10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK60N512VMD100)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKL02Z4)) || (defined(MCU_MKL04Z4)) || (defined(MCU_MKL05Z4)) || (defined(MCU_MKL14Z4)) || (defined(MCU_MKL15Z4)) || (defined(MCU_MKL16Z4)) || (defined(MCU_MKL24Z4)) || (defined(MCU_MKL25Z4)) || (defined(MCU_MKL26Z4)) || (defined(MCU_MKL34Z4)) || (defined(MCU_MKL36Z4)) || (defined(MCU_MKL46Z4)) || (defined(MCU_MKV10Z7)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW01Z4)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
+/**
+ * @brief Returns a value that represents a mask of active (pending) interrupts.
+ * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
+ *        base address). You can use the constant defined in the registers
+ *        definition header file (<peripheral>_BASE_PTR) or the constant defined in
+ *        the peripheral initialization component header file
+ *        (<component_name>_DEVICE).
+ * @return Use constants from group "Status flags constants (for ReadStatusReg,
+ *         GetInterruptFlags, ClearInterruptFlags macros)." for processing return
+ *         value.
+ * @remarks The macro accesses the following registers: I2C0_S, I2C1_S, I2C2_S,
+ *          I2C0_S1, I2C1_S1 (depending on the peripheral).
+ * @par Example:
+ *      @code
+ *      uint8_t result = I2C_PDD_GetInterruptFlags(<peripheral>_BASE_PTR);
+ *      @endcode
+ */
+  #define I2C_PDD_GetInterruptFlags(PeripheralBase) ( \
+      (uint8_t)(( \
+       I2C_S_REG(PeripheralBase)) & ( \
+       (uint8_t)(( \
+        I2C_S_TCF_MASK) | (( \
+        I2C_S_IICIF_MASK) | (( \
+        I2C_S_RAM_MASK) | (( \
+        I2C_S_ARBL_MASK) | ( \
+        I2C_S_IAAS_MASK))))))) \
+    )
+#endif /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10DZ10)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK11DA5)) || (defined(MCU_MK11DA5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20DZ10)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21DA5)) || (defined(MCU_MK21DA5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK30DZ10)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK40DZ10)) || (defined(MCU_MK40X256VMD100)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK50DZ10)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK51DZ10)) || (defined(MCU_MK52D10)) || (defined(MCU_MK52DZ10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK53DZ10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60DZ10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK60N512VMD100)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKL02Z4)) || (defined(MCU_MKL04Z4)) || (defined(MCU_MKL05Z4)) || (defined(MCU_MKL14Z4)) || (defined(MCU_MKL15Z4)) || (defined(MCU_MKL16Z4)) || (defined(MCU_MKL24Z4)) || (defined(MCU_MKL25Z4)) || (defined(MCU_MKL26Z4)) || (defined(MCU_MKL34Z4)) || (defined(MCU_MKL36Z4)) || (defined(MCU_MKL46Z4)) || (defined(MCU_MKV10Z7)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW01Z4)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
 
 /* ----------------------------------------------------------------------------
    -- ClearInterruptFlags
    ---------------------------------------------------------------------------- */
 
+#if ((defined(MCU_MKE04Z1284)) || (defined(MCU_MKE06Z4)) || (defined(MCU_SKEAZ1284)))
 /**
  * @brief Clears interrupt flags of interrupts specified by Mask.
  * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
@@ -836,26 +925,56 @@
  *        ClearInterruptFlags macros).". This parameter is 8 bits wide.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_S, I2C1_S, I2C2_S,
- *          I2C0_S1, I2C1_S1, I2C3_S (depending on the peripheral).
+ *          I2C0_S1, I2C1_S1 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_ClearInterruptFlags(<peripheral>_BASE_PTR,
  *      I2C_PDD_RX_ACKNOWLEDGE);
  *      @endcode
  */
-#define I2C_PDD_ClearInterruptFlags(PeripheralBase, Mask) ( \
-    I2C_S_REG(PeripheralBase) = \
-     (uint8_t)(( \
-      (uint8_t)(( \
-       I2C_S_REG(PeripheralBase)) & ( \
-       (uint8_t)(~(uint8_t)(I2C_S_IICIF_MASK | I2C_S_ARBL_MASK))))) | ( \
-      (uint8_t)(Mask))) \
-  )
+  #define I2C_PDD_ClearInterruptFlags(PeripheralBase, Mask) ( \
+      I2C_S1_REG(PeripheralBase) = \
+       (uint8_t)(( \
+        (uint8_t)(( \
+         I2C_S1_REG(PeripheralBase)) & ( \
+         (uint8_t)(~(uint8_t)(I2C_S1_IICIF_MASK | I2C_S1_ARBL_MASK))))) | ( \
+        (uint8_t)(Mask))) \
+    )
+#else /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10DZ10)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK11DA5)) || (defined(MCU_MK11DA5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20DZ10)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21DA5)) || (defined(MCU_MK21DA5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK30DZ10)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK40DZ10)) || (defined(MCU_MK40X256VMD100)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK50DZ10)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK51DZ10)) || (defined(MCU_MK52D10)) || (defined(MCU_MK52DZ10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK53DZ10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60DZ10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK60N512VMD100)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKL02Z4)) || (defined(MCU_MKL04Z4)) || (defined(MCU_MKL05Z4)) || (defined(MCU_MKL14Z4)) || (defined(MCU_MKL15Z4)) || (defined(MCU_MKL16Z4)) || (defined(MCU_MKL24Z4)) || (defined(MCU_MKL25Z4)) || (defined(MCU_MKL26Z4)) || (defined(MCU_MKL34Z4)) || (defined(MCU_MKL36Z4)) || (defined(MCU_MKL46Z4)) || (defined(MCU_MKV10Z7)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW01Z4)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
+/**
+ * @brief Clears interrupt flags of interrupts specified by Mask.
+ * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
+ *        base address). You can use the constant defined in the registers
+ *        definition header file (<peripheral>_BASE_PTR) or the constant defined in
+ *        the peripheral initialization component header file
+ *        (<component_name>_DEVICE).
+ * @param Mask Mask of interrupt clear requests. Use constants from group
+ *        "Status flags constants (for ReadStatusReg, GetInterruptFlags,
+ *        ClearInterruptFlags macros).". This parameter is 8 bits wide.
+ * @return Returns a value of void type.
+ * @remarks The macro accesses the following registers: I2C0_S, I2C1_S, I2C2_S,
+ *          I2C0_S1, I2C1_S1 (depending on the peripheral).
+ * @par Example:
+ *      @code
+ *      I2C_PDD_ClearInterruptFlags(<peripheral>_BASE_PTR,
+ *      I2C_PDD_RX_ACKNOWLEDGE);
+ *      @endcode
+ */
+  #define I2C_PDD_ClearInterruptFlags(PeripheralBase, Mask) ( \
+      I2C_S_REG(PeripheralBase) = \
+       (uint8_t)(( \
+        (uint8_t)(( \
+         I2C_S_REG(PeripheralBase)) & ( \
+         (uint8_t)(~(uint8_t)(I2C_S_IICIF_MASK | I2C_S_ARBL_MASK))))) | ( \
+        (uint8_t)(Mask))) \
+    )
+#endif /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10DZ10)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK11DA5)) || (defined(MCU_MK11DA5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20DZ10)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21DA5)) || (defined(MCU_MK21DA5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK30DZ10)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK40DZ10)) || (defined(MCU_MK40X256VMD100)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK50DZ10)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK51DZ10)) || (defined(MCU_MK52D10)) || (defined(MCU_MK52DZ10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK53DZ10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60DZ10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK60N512VMD100)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKL02Z4)) || (defined(MCU_MKL04Z4)) || (defined(MCU_MKL05Z4)) || (defined(MCU_MKL14Z4)) || (defined(MCU_MKL15Z4)) || (defined(MCU_MKL16Z4)) || (defined(MCU_MKL24Z4)) || (defined(MCU_MKL25Z4)) || (defined(MCU_MKL26Z4)) || (defined(MCU_MKL34Z4)) || (defined(MCU_MKL36Z4)) || (defined(MCU_MKL46Z4)) || (defined(MCU_MKV10Z7)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW01Z4)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
 
 /* ----------------------------------------------------------------------------
    -- WriteStatusReg
    ---------------------------------------------------------------------------- */
 
+#if ((defined(MCU_MKE04Z1284)) || (defined(MCU_MKE06Z4)) || (defined(MCU_SKEAZ1284)))
 /**
  * @brief Writes new value specified by the Value parameter into status register.
  * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
@@ -867,16 +986,39 @@
  *        8-bit value.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_S, I2C1_S, I2C2_S,
- *          I2C0_S1, I2C1_S1, I2C3_S (depending on the peripheral).
+ *          I2C0_S1, I2C1_S1 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_WriteStatusReg(<peripheral>_BASE_PTR, 1);
  *      @endcode
  */
-#define I2C_PDD_WriteStatusReg(PeripheralBase, Value) ( \
-    I2C_S_REG(PeripheralBase) = \
-     (uint8_t)(Value) \
-  )
+  #define I2C_PDD_WriteStatusReg(PeripheralBase, Value) ( \
+      I2C_S1_REG(PeripheralBase) = \
+       (uint8_t)(Value) \
+    )
+#else /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10DZ10)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK11DA5)) || (defined(MCU_MK11DA5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20DZ10)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21DA5)) || (defined(MCU_MK21DA5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK30DZ10)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK40DZ10)) || (defined(MCU_MK40X256VMD100)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK50DZ10)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK51DZ10)) || (defined(MCU_MK52D10)) || (defined(MCU_MK52DZ10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK53DZ10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60DZ10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK60N512VMD100)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKL02Z4)) || (defined(MCU_MKL04Z4)) || (defined(MCU_MKL05Z4)) || (defined(MCU_MKL14Z4)) || (defined(MCU_MKL15Z4)) || (defined(MCU_MKL16Z4)) || (defined(MCU_MKL24Z4)) || (defined(MCU_MKL25Z4)) || (defined(MCU_MKL26Z4)) || (defined(MCU_MKL34Z4)) || (defined(MCU_MKL36Z4)) || (defined(MCU_MKL46Z4)) || (defined(MCU_MKV10Z7)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW01Z4)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
+/**
+ * @brief Writes new value specified by the Value parameter into status register.
+ * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
+ *        base address). You can use the constant defined in the registers
+ *        definition header file (<peripheral>_BASE_PTR) or the constant defined in
+ *        the peripheral initialization component header file
+ *        (<component_name>_DEVICE).
+ * @param Value Value to be written to the status register. This parameter is a
+ *        8-bit value.
+ * @return Returns a value of void type.
+ * @remarks The macro accesses the following registers: I2C0_S, I2C1_S, I2C2_S,
+ *          I2C0_S1, I2C1_S1 (depending on the peripheral).
+ * @par Example:
+ *      @code
+ *      I2C_PDD_WriteStatusReg(<peripheral>_BASE_PTR, 1);
+ *      @endcode
+ */
+  #define I2C_PDD_WriteStatusReg(PeripheralBase, Value) ( \
+      I2C_S_REG(PeripheralBase) = \
+       (uint8_t)(Value) \
+    )
+#endif /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10DZ10)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK11DA5)) || (defined(MCU_MK11DA5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20DZ10)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21DA5)) || (defined(MCU_MK21DA5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK30DZ10)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK40DZ10)) || (defined(MCU_MK40X256VMD100)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK50DZ10)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK51DZ10)) || (defined(MCU_MK52D10)) || (defined(MCU_MK52DZ10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK53DZ10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60DZ10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK60N512VMD100)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKL02Z4)) || (defined(MCU_MKL04Z4)) || (defined(MCU_MKL05Z4)) || (defined(MCU_MKL14Z4)) || (defined(MCU_MKL15Z4)) || (defined(MCU_MKL16Z4)) || (defined(MCU_MKL24Z4)) || (defined(MCU_MKL25Z4)) || (defined(MCU_MKL26Z4)) || (defined(MCU_MKL34Z4)) || (defined(MCU_MKL36Z4)) || (defined(MCU_MKL46Z4)) || (defined(MCU_MKV10Z7)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW01Z4)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
 
 /* ----------------------------------------------------------------------------
    -- ReadDataReg
@@ -890,8 +1032,8 @@
  *        the peripheral initialization component header file
  *        (<component_name>_DEVICE).
  * @return Returns a 8-bit value.
- * @remarks The macro accesses the following registers: I2C0_D, I2C1_D, I2C2_D,
- *          I2C3_D (depending on the peripheral).
+ * @remarks The macro accesses the following registers: I2C0_D, I2C1_D, I2C2_D
+ *          (depending on the peripheral).
  * @par Example:
  *      @code
  *      uint8_t result = I2C_PDD_ReadDataReg(<peripheral>_BASE_PTR);
@@ -914,8 +1056,8 @@
  *        (<component_name>_DEVICE).
  * @param Data Data value. This parameter is a 8-bit value.
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: I2C0_D, I2C1_D, I2C2_D,
- *          I2C3_D (depending on the peripheral).
+ * @remarks The macro accesses the following registers: I2C0_D, I2C1_D, I2C2_D
+ *          (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_WriteDataReg(<peripheral>_BASE_PTR, 1);
@@ -942,7 +1084,7 @@
  *        states (PDD_DISABLE and PDD_ENABLE defined in PDD_Types.h)" type.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_C2, I2C1_C2,
- *          I2C2_C2, I2C3_C2 (depending on the peripheral).
+ *          I2C2_C2 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_EnableGeneralCallAddress(<peripheral>_BASE_PTR, PDD_DISABLE);
@@ -971,7 +1113,7 @@
  *        (PDD_DISABLE and PDD_ENABLE defined in PDD_Types.h)" type.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_C2, I2C1_C2,
- *          I2C2_C2, I2C3_C2 (depending on the peripheral).
+ *          I2C2_C2 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_EnableAddressExtension(<peripheral>_BASE_PTR, PDD_DISABLE);
@@ -997,7 +1139,7 @@
  *        (<component_name>_DEVICE).
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_C2, I2C1_C2,
- *          I2C2_C2, I2C3_C2 (depending on the peripheral).
+ *          I2C2_C2 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_SetPadsNormalDriveMode(<peripheral>_BASE_PTR);
@@ -1021,7 +1163,7 @@
  *        (<component_name>_DEVICE).
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_C2, I2C1_C2,
- *          I2C2_C2, I2C3_C2 (depending on the peripheral).
+ *          I2C2_C2 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_SetPadsHighDriveMode(<peripheral>_BASE_PTR);
@@ -1048,7 +1190,7 @@
  *        (PDD_DISABLE and PDD_ENABLE defined in PDD_Types.h)" type.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_C2, I2C1_C2,
- *          I2C2_C2, I2C3_C2 (depending on the peripheral).
+ *          I2C2_C2 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_EnableSlaveBaudControlByMaster(<peripheral>_BASE_PTR,
@@ -1079,7 +1221,7 @@
  *        states (PDD_DISABLE and PDD_ENABLE defined in PDD_Types.h)" type.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_C2, I2C1_C2,
- *          I2C2_C2, I2C3_C2 (depending on the peripheral).
+ *          I2C2_C2 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_EnableRangeAddressMatch(<peripheral>_BASE_PTR, PDD_DISABLE);
@@ -1105,7 +1247,7 @@
  *        (<component_name>_DEVICE).
  * @return Returns a 8-bit value.
  * @remarks The macro accesses the following registers: I2C0_C2, I2C1_C2,
- *          I2C2_C2, I2C3_C2 (depending on the peripheral).
+ *          I2C2_C2 (depending on the peripheral).
  * @par Example:
  *      @code
  *      uint8_t result = I2C_PDD_ReadControl2Reg(<peripheral>_BASE_PTR);
@@ -1131,7 +1273,7 @@
  *        a 8-bit value.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_C2, I2C1_C2,
- *          I2C2_C2, I2C3_C2 (depending on the peripheral).
+ *          I2C2_C2 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_WriteControl2Reg(<peripheral>_BASE_PTR, 1);
@@ -1146,7 +1288,7 @@
    -- SetInputGlitchFilter
    ---------------------------------------------------------------------------- */
 
-#if ((defined(MCU_MKL02Z4)) || (defined(MCU_MKL03Z4)) || (defined(MCU_MKL04Z4)) || (defined(MCU_MKL05Z4)) || (defined(MCU_MKL14Z4)) || (defined(MCU_MKL15Z4)) || (defined(MCU_MKL16Z4)) || (defined(MCU_MKL24Z4)) || (defined(MCU_MKL25Z4)) || (defined(MCU_MKL26Z4)) || (defined(MCU_MKL34Z4)) || (defined(MCU_MKL36Z4)) || (defined(MCU_MKL46Z4)) || (defined(MCU_MKV10Z7)) || (defined(MCU_MKW01Z4)))
+#if ((defined(MCU_MKL04Z4)) || (defined(MCU_MKL05Z4)) || (defined(MCU_MKL14Z4)) || (defined(MCU_MKL15Z4)) || (defined(MCU_MKL24Z4)) || (defined(MCU_MKL25Z4)))
 /**
  * @brief Sets the programming controls for the width of glitch (in terms of bus
  * clock cycles) the filter must absorb.
@@ -1159,7 +1301,7 @@
  *        a 5-bit value.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_FLT, I2C1_FLT,
- *          I2C2_FLT, I2C3_FLT (depending on the peripheral).
+ *          I2C2_FLT (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_SetInputGlitchFilter(<peripheral>_BASE_PTR, 1);
@@ -1174,7 +1316,7 @@
          (uint8_t)(~(uint8_t)I2C_FLT_STOPF_MASK))))) | ( \
         (uint8_t)(FilterFactorValue))) \
     )
-#elif ((defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK65F18)) || (defined(MCU_MK65F18WS)) || (defined(MCU_MK66F18)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z1284)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKE06Z4)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_SKEAZ1284)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)))
+#elif ((defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z1284)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKE06Z4)) || (defined(MCU_MKL02Z4)) || (defined(MCU_MKL16Z4)) || (defined(MCU_MKL26Z4)) || (defined(MCU_MKL34Z4)) || (defined(MCU_MKL36Z4)) || (defined(MCU_MKL46Z4)) || (defined(MCU_MKV10Z7)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW01Z4)) || (defined(MCU_SKEAZ1284)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)))
 /**
  * @brief Sets the programming controls for the width of glitch (in terms of bus
  * clock cycles) the filter must absorb.
@@ -1187,7 +1329,7 @@
  *        a 4-bit value.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_FLT, I2C1_FLT,
- *          I2C2_FLT, I2C3_FLT (depending on the peripheral).
+ *          I2C2_FLT (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_SetInputGlitchFilter(<peripheral>_BASE_PTR, 1);
@@ -1203,7 +1345,7 @@
          (uint8_t)(~(uint8_t)I2C_FLT_STOPF_MASK)))))) | ( \
         (uint8_t)(FilterFactorValue))) \
     )
-#else /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10DZ10)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20DZ10)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK30DZ10)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK40DZ10)) || (defined(MCU_MK40X256VMD100)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK50DZ10)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK51DZ10)) || (defined(MCU_MK52D10)) || (defined(MCU_MK52DZ10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK53DZ10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60DZ10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK60N512VMD100)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_PCK20L4)) */
+#else /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10DZ10)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK11DA5)) || (defined(MCU_MK11DA5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20DZ10)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21DA5)) || (defined(MCU_MK21DA5WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK30DZ10)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK40DZ10)) || (defined(MCU_MK40X256VMD100)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK50DZ10)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK51DZ10)) || (defined(MCU_MK52D10)) || (defined(MCU_MK52DZ10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK53DZ10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60DZ10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK60N512VMD100)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) */
 /**
  * @brief Sets the programming controls for the width of glitch (in terms of bus
  * clock cycles) the filter must absorb.
@@ -1216,7 +1358,7 @@
  *        a 5-bit value.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_FLT, I2C1_FLT,
- *          I2C2_FLT, I2C3_FLT (depending on the peripheral).
+ *          I2C2_FLT (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_SetInputGlitchFilter(<peripheral>_BASE_PTR, 1);
@@ -1228,7 +1370,7 @@
         (uint8_t)(I2C_FLT_REG(PeripheralBase) & (uint8_t)(~(uint8_t)I2C_FLT_FLT_MASK))) | ( \
         (uint8_t)(FilterFactorValue))) \
     )
-#endif /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10DZ10)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20DZ10)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK30DZ10)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK40DZ10)) || (defined(MCU_MK40X256VMD100)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK50DZ10)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK51DZ10)) || (defined(MCU_MK52D10)) || (defined(MCU_MK52DZ10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK53DZ10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60DZ10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK60N512VMD100)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_PCK20L4)) */
+#endif /* (defined(MCU_MK10D10)) || (defined(MCU_MK10D5)) || (defined(MCU_MK10D7)) || (defined(MCU_MK10DZ10)) || (defined(MCU_MK10F12)) || (defined(MCU_MK11D5)) || (defined(MCU_MK11D5WS)) || (defined(MCU_MK11DA5)) || (defined(MCU_MK11DA5WS)) || (defined(MCU_MK12D5)) || (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20DZ10)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21DA5)) || (defined(MCU_MK21DA5WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK30D10)) || (defined(MCU_MK30D7)) || (defined(MCU_MK30DZ10)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK40DZ10)) || (defined(MCU_MK40X256VMD100)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK50DZ10)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK51DZ10)) || (defined(MCU_MK52D10)) || (defined(MCU_MK52DZ10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK53DZ10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60DZ10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK60N512VMD100)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKW21D5)) || (defined(MCU_MKW21D5WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) */
 
 /* ----------------------------------------------------------------------------
    -- ReadInputGlitchFilterReg
@@ -1243,7 +1385,7 @@
  *        (<component_name>_DEVICE).
  * @return Returns a 8-bit value.
  * @remarks The macro accesses the following registers: I2C0_FLT, I2C1_FLT,
- *          I2C2_FLT, I2C3_FLT (depending on the peripheral).
+ *          I2C2_FLT (depending on the peripheral).
  * @par Example:
  *      @code
  *      uint8_t result =
@@ -1270,7 +1412,7 @@
  *        parameter is a 8-bit value.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_FLT, I2C1_FLT,
- *          I2C2_FLT, I2C3_FLT (depending on the peripheral).
+ *          I2C2_FLT (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_WriteInputGlitchFilterReg(<peripheral>_BASE_PTR, 1);
@@ -1296,7 +1438,7 @@
  *        7-bit value.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_RA, I2C1_RA,
- *          I2C2_RA, I2C3_RA (depending on the peripheral).
+ *          I2C2_RA (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_SetRangeAddress(<peripheral>_BASE_PTR, 1);
@@ -1322,7 +1464,7 @@
  *        (<component_name>_DEVICE).
  * @return Returns a 8-bit value.
  * @remarks The macro accesses the following registers: I2C0_RA, I2C1_RA,
- *          I2C2_RA, I2C3_RA (depending on the peripheral).
+ *          I2C2_RA (depending on the peripheral).
  * @par Example:
  *      @code
  *      uint8_t result = I2C_PDD_ReadRangeAddressReg(<peripheral>_BASE_PTR);
@@ -1348,7 +1490,7 @@
  *        parameter is a 8-bit value.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_RA, I2C1_RA,
- *          I2C2_RA, I2C3_RA (depending on the peripheral).
+ *          I2C2_RA (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_WriteRangeAddressReg(<peripheral>_BASE_PTR, 1);
@@ -1376,7 +1518,7 @@
  *        PDD_Types.h)" type.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_SMB, I2C1_SMB,
- *          I2C2_SMB, I2C3_SMB (depending on the peripheral).
+ *          I2C2_SMB (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_EnableFastSmBusNackAck(<peripheral>_BASE_PTR, PDD_DISABLE);
@@ -1407,7 +1549,7 @@
  * @return Returns a value of "Fast SMBus Acknowledge constants (for
  *         GetFastSmBusAcknowledge macro)." type. The value is cast to "uint8_t".
  * @remarks The macro accesses the following registers: I2C0_SMB, I2C1_SMB,
- *          I2C2_SMB, I2C3_SMB (depending on the peripheral).
+ *          I2C2_SMB (depending on the peripheral).
  * @par Example:
  *      @code
  *      uint8_t result = I2C_PDD_GetFastSmBusAcknowledge(<peripheral>_BASE_PTR);
@@ -1434,7 +1576,7 @@
  *        PDD_Types.h)" type.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_SMB, I2C1_SMB,
- *          I2C2_SMB, I2C3_SMB (depending on the peripheral).
+ *          I2C2_SMB (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_EnableSmBusAlertResponseAddress(<peripheral>_BASE_PTR,
@@ -1469,7 +1611,7 @@
  *        defined in PDD_Types.h)" type.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_SMB, I2C1_SMB,
- *          I2C2_SMB, I2C3_SMB (depending on the peripheral).
+ *          I2C2_SMB (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_EnableSecondI2CAddress(<peripheral>_BASE_PTR, PDD_DISABLE);
@@ -1503,7 +1645,7 @@
  *        constants (for SetSCLTimeoutBusClockSource macro)." type.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_SMB, I2C1_SMB,
- *          I2C2_SMB, I2C3_SMB (depending on the peripheral).
+ *          I2C2_SMB (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_SetSCLTimeoutBusClockSource(<peripheral>_BASE_PTR,
@@ -1536,7 +1678,7 @@
  *         GetSCLTimeoutInterruptFlags, ClearSCLTimeoutInterruptFlags macros)." for
  *         processing return value.
  * @remarks The macro accesses the following registers: I2C0_SMB, I2C1_SMB,
- *          I2C2_SMB, I2C3_SMB (depending on the peripheral).
+ *          I2C2_SMB (depending on the peripheral).
  * @par Example:
  *      @code
  *      uint8_t result =
@@ -1565,7 +1707,7 @@
  *        ClearSCLTimeoutInterruptFlags macros).". This parameter is 8 bits wide.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_SMB, I2C1_SMB,
- *          I2C2_SMB, I2C3_SMB (depending on the peripheral).
+ *          I2C2_SMB (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_ClearSCLTimeoutInterruptFlags(<peripheral>_BASE_PTR,
@@ -1594,7 +1736,7 @@
  *        (<component_name>_DEVICE).
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_SMB, I2C1_SMB,
- *          I2C2_SMB, I2C3_SMB (depending on the peripheral).
+ *          I2C2_SMB (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_EnableSCLTimeoutInterrupt(<peripheral>_BASE_PTR);
@@ -1621,7 +1763,7 @@
  *        (<component_name>_DEVICE).
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_SMB, I2C1_SMB,
- *          I2C2_SMB, I2C3_SMB (depending on the peripheral).
+ *          I2C2_SMB (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_DisableSCLTimeoutInterrupt(<peripheral>_BASE_PTR);
@@ -1648,7 +1790,7 @@
  *        (<component_name>_DEVICE).
  * @return Returns a 8-bit value.
  * @remarks The macro accesses the following registers: I2C0_SMB, I2C1_SMB,
- *          I2C2_SMB, I2C3_SMB (depending on the peripheral).
+ *          I2C2_SMB (depending on the peripheral).
  * @par Example:
  *      @code
  *      uint8_t result =
@@ -1675,7 +1817,7 @@
  *        This parameter is a 8-bit value.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_SMB, I2C1_SMB,
- *          I2C2_SMB, I2C3_SMB (depending on the peripheral).
+ *          I2C2_SMB (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_WriteSMBusControlAndStatusReg(<peripheral>_BASE_PTR, 1);
@@ -1701,7 +1843,7 @@
  *        is a 7-bit value.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_A2, I2C1_A2,
- *          I2C2_A2, I2C3_A2 (depending on the peripheral).
+ *          I2C2_A2 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_SetSMBusSlaveAddress(<peripheral>_BASE_PTR, 1);
@@ -1727,7 +1869,7 @@
  *        (<component_name>_DEVICE).
  * @return Returns a 8-bit value.
  * @remarks The macro accesses the following registers: I2C0_A2, I2C1_A2,
- *          I2C2_A2, I2C3_A2 (depending on the peripheral).
+ *          I2C2_A2 (depending on the peripheral).
  * @par Example:
  *      @code
  *      uint8_t result = I2C_PDD_ReadAddress2Reg(<peripheral>_BASE_PTR);
@@ -1753,7 +1895,7 @@
  *        a 8-bit value.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_A2, I2C1_A2,
- *          I2C2_A2, I2C3_A2 (depending on the peripheral).
+ *          I2C2_A2 (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_WriteAddress2Reg(<peripheral>_BASE_PTR, 1);
@@ -1780,8 +1922,8 @@
  *        a 16-bit value.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_SLTL, I2C0_SLTH,
- *          I2C1_SLTL, I2C1_SLTH, I2C2_SLTL, I2C2_SLTH, I2C3_SLTL, I2C3_SLTH
- *          (depending on the peripheral).
+ *          I2C1_SLTL, I2C1_SLTH, I2C2_SLTL, I2C2_SLTH (depending on the
+ *          peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_SetSCLLowTimeout(<peripheral>_BASE_PTR, 1);
@@ -1807,7 +1949,7 @@
  *        (<component_name>_DEVICE).
  * @return Returns a 8-bit value.
  * @remarks The macro accesses the following registers: I2C0_SLTH, I2C1_SLTH,
- *          I2C2_SLTH, I2C3_SLTH (depending on the peripheral).
+ *          I2C2_SLTH (depending on the peripheral).
  * @par Example:
  *      @code
  *      uint8_t result =
@@ -1834,7 +1976,7 @@
  *        parameter is a 8-bit value.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_SLTH, I2C1_SLTH,
- *          I2C2_SLTH, I2C3_SLTH (depending on the peripheral).
+ *          I2C2_SLTH (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_WriteSclLowTimeoutHighReg(<peripheral>_BASE_PTR, 1);
@@ -1858,7 +2000,7 @@
  *        (<component_name>_DEVICE).
  * @return Returns a 8-bit value.
  * @remarks The macro accesses the following registers: I2C0_SLTL, I2C1_SLTL,
- *          I2C2_SLTL, I2C3_SLTL (depending on the peripheral).
+ *          I2C2_SLTL (depending on the peripheral).
  * @par Example:
  *      @code
  *      uint8_t result = I2C_PDD_ReadSclLowTimeoutLowReg(<peripheral>_BASE_PTR);
@@ -1884,7 +2026,7 @@
  *        parameter is a 8-bit value.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_SLTL, I2C1_SLTL,
- *          I2C2_SLTL, I2C3_SLTL (depending on the peripheral).
+ *          I2C2_SLTL (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_WriteSclLowTimeoutLowReg(<peripheral>_BASE_PTR, 1);
@@ -1899,7 +2041,7 @@
    -- EnableStopHoldOffMode
    ---------------------------------------------------------------------------- */
 
-#if ((defined(MCU_MKL02Z4)) || (defined(MCU_MKL03Z4)) || (defined(MCU_MKL04Z4)) || (defined(MCU_MKL05Z4)) || (defined(MCU_MKL14Z4)) || (defined(MCU_MKL15Z4)) || (defined(MCU_MKL16Z4)) || (defined(MCU_MKL24Z4)) || (defined(MCU_MKL25Z4)) || (defined(MCU_MKL26Z4)) || (defined(MCU_MKL34Z4)) || (defined(MCU_MKL36Z4)) || (defined(MCU_MKL46Z4)) || (defined(MCU_MKV10Z7)) || (defined(MCU_MKW01Z4)))
+#if ((defined(MCU_MKL04Z4)) || (defined(MCU_MKL05Z4)) || (defined(MCU_MKL14Z4)) || (defined(MCU_MKL15Z4)) || (defined(MCU_MKL24Z4)) || (defined(MCU_MKL25Z4)))
 /**
  * @brief Enables/disables stop mode holdoff.
  * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
@@ -1912,7 +2054,7 @@
  *        (PDD_DISABLE and PDD_ENABLE defined in PDD_Types.h)" type.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_FLT, I2C1_FLT,
- *          I2C2_FLT, I2C3_FLT (depending on the peripheral).
+ *          I2C2_FLT (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_EnableStopHoldOffMode(<peripheral>_BASE_PTR, PDD_DISABLE);
@@ -1927,7 +2069,7 @@
          (uint8_t)(~(uint8_t)I2C_FLT_STOPF_MASK))))) | ( \
         (uint8_t)((uint8_t)(State) << I2C_FLT_SHEN_SHIFT))) \
     )
-#else /* (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK65F18)) || (defined(MCU_MK65F18WS)) || (defined(MCU_MK66F18)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z1284)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKE06Z4)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_SKEAZ1284)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
+#else /* (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z1284)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKE06Z4)) || (defined(MCU_MKL02Z4)) || (defined(MCU_MKL16Z4)) || (defined(MCU_MKL26Z4)) || (defined(MCU_MKL34Z4)) || (defined(MCU_MKL36Z4)) || (defined(MCU_MKL46Z4)) || (defined(MCU_MKV10Z7)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW01Z4)) || (defined(MCU_SKEAZ1284)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
 /**
  * @brief Enables/disables stop mode holdoff.
  * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
@@ -1940,7 +2082,7 @@
  *        (PDD_DISABLE and PDD_ENABLE defined in PDD_Types.h)" type.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_FLT, I2C1_FLT,
- *          I2C2_FLT, I2C3_FLT (depending on the peripheral).
+ *          I2C2_FLT (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_EnableStopHoldOffMode(<peripheral>_BASE_PTR, PDD_DISABLE);
@@ -1956,7 +2098,7 @@
          (uint8_t)(~(uint8_t)I2C_FLT_STOPF_MASK)))))) | ( \
         (uint8_t)((uint8_t)(State) << I2C_FLT_SHEN_SHIFT))) \
     )
-#endif /* (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK65F18)) || (defined(MCU_MK65F18WS)) || (defined(MCU_MK66F18)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z1284)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKE06Z4)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_SKEAZ1284)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
+#endif /* (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z1284)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKE06Z4)) || (defined(MCU_MKL02Z4)) || (defined(MCU_MKL16Z4)) || (defined(MCU_MKL26Z4)) || (defined(MCU_MKL34Z4)) || (defined(MCU_MKL36Z4)) || (defined(MCU_MKL46Z4)) || (defined(MCU_MKV10Z7)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW01Z4)) || (defined(MCU_SKEAZ1284)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
 
 /* ----------------------------------------------------------------------------
    -- ReadBusStatusFlags
@@ -1972,7 +2114,7 @@
  * @return Use constants from group "Status flags constants." for processing
  *         return value.
  * @remarks The macro accesses the following registers: I2C0_FLT, I2C1_FLT,
- *          I2C2_FLT, I2C3_FLT (depending on the peripheral).
+ *          I2C2_FLT (depending on the peripheral).
  * @par Example:
  *      @code
  *      uint8_t result = I2C_PDD_ReadBusStatusFlags(<peripheral>_BASE_PTR);
@@ -1986,7 +2128,7 @@
    -- ClearBusStatusInterruptFlags
    ---------------------------------------------------------------------------- */
 
-#if ((defined(MCU_MKL02Z4)) || (defined(MCU_MKL03Z4)) || (defined(MCU_MKL04Z4)) || (defined(MCU_MKL05Z4)) || (defined(MCU_MKL14Z4)) || (defined(MCU_MKL15Z4)) || (defined(MCU_MKL16Z4)) || (defined(MCU_MKL24Z4)) || (defined(MCU_MKL25Z4)) || (defined(MCU_MKL26Z4)) || (defined(MCU_MKL34Z4)) || (defined(MCU_MKL36Z4)) || (defined(MCU_MKL46Z4)) || (defined(MCU_MKV10Z7)) || (defined(MCU_MKW01Z4)))
+#if ((defined(MCU_MKL04Z4)) || (defined(MCU_MKL05Z4)) || (defined(MCU_MKL14Z4)) || (defined(MCU_MKL15Z4)) || (defined(MCU_MKL24Z4)) || (defined(MCU_MKL25Z4)))
 /**
  * @brief Clears bus status interrupt flags of interrupts specified by Mask.
  * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
@@ -1998,7 +2140,7 @@
  *        "Status flags constants.". This parameter is 8 bits wide.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_FLT, I2C1_FLT,
- *          I2C2_FLT, I2C3_FLT (depending on the peripheral).
+ *          I2C2_FLT (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_ClearBusStatusInterruptFlags(<peripheral>_BASE_PTR,
@@ -2011,7 +2153,7 @@
         (uint8_t)(I2C_FLT_REG(PeripheralBase) & (uint8_t)(~(uint8_t)I2C_FLT_STOPF_MASK))) | ( \
         (uint8_t)(Mask))) \
     )
-#else /* (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK65F18)) || (defined(MCU_MK65F18WS)) || (defined(MCU_MK66F18)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z1284)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKE06Z4)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_SKEAZ1284)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
+#else /* (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z1284)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKE06Z4)) || (defined(MCU_MKL02Z4)) || (defined(MCU_MKL16Z4)) || (defined(MCU_MKL26Z4)) || (defined(MCU_MKL34Z4)) || (defined(MCU_MKL36Z4)) || (defined(MCU_MKL46Z4)) || (defined(MCU_MKV10Z7)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW01Z4)) || (defined(MCU_SKEAZ1284)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
 /**
  * @brief Clears bus status interrupt flags of interrupts specified by Mask.
  * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
@@ -2023,7 +2165,7 @@
  *        "Status flags constants.". This parameter is 8 bits wide.
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_FLT, I2C1_FLT,
- *          I2C2_FLT, I2C3_FLT (depending on the peripheral).
+ *          I2C2_FLT (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_ClearBusStatusInterruptFlags(<peripheral>_BASE_PTR,
@@ -2038,7 +2180,7 @@
          (uint8_t)(~(uint8_t)(I2C_FLT_STOPF_MASK | I2C_FLT_STARTF_MASK))))) | ( \
         (uint8_t)(Mask))) \
     )
-#endif /* (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK65F18)) || (defined(MCU_MK65F18WS)) || (defined(MCU_MK66F18)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z1284)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKE06Z4)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_SKEAZ1284)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
+#endif /* (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MKE02Z2)) || (defined(MCU_MKE02Z4)) || (defined(MCU_MKE04Z1284)) || (defined(MCU_MKE04Z4)) || (defined(MCU_MKE06Z4)) || (defined(MCU_MKL02Z4)) || (defined(MCU_MKL16Z4)) || (defined(MCU_MKL26Z4)) || (defined(MCU_MKL34Z4)) || (defined(MCU_MKL36Z4)) || (defined(MCU_MKL46Z4)) || (defined(MCU_MKV10Z7)) || (defined(MCU_MKV31F12810)) || (defined(MCU_MKV31F25612)) || (defined(MCU_MKV31F51212)) || (defined(MCU_MKW01Z4)) || (defined(MCU_SKEAZ1284)) || (defined(MCU_SKEAZN642)) || (defined(MCU_SKEAZN84)) */
 
 /* ----------------------------------------------------------------------------
    -- EnableBusStopOrStartInterrupt
@@ -2053,7 +2195,7 @@
  *        (<component_name>_DEVICE).
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_FLT, I2C1_FLT,
- *          I2C2_FLT, I2C3_FLT (depending on the peripheral).
+ *          I2C2_FLT (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_EnableBusStopOrStartInterrupt(<peripheral>_BASE_PTR);
@@ -2080,7 +2222,7 @@
  *        (<component_name>_DEVICE).
  * @return Returns a value of void type.
  * @remarks The macro accesses the following registers: I2C0_FLT, I2C1_FLT,
- *          I2C2_FLT, I2C3_FLT (depending on the peripheral).
+ *          I2C2_FLT (depending on the peripheral).
  * @par Example:
  *      @code
  *      I2C_PDD_DisableBusStopOrStartInterrupt(<peripheral>_BASE_PTR);

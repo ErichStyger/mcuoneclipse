@@ -21,6 +21,8 @@
       !defined(MCU_MK10D7) /* EWM */ && \
       !defined(MCU_MK10F12) /* EWM */ && \
       !defined(MCU_MK10DZ10) /* EWM */ && \
+      !defined(MCU_MK11DA5) /* EWM */ && \
+      !defined(MCU_MK11DA5WS) /* EWM */ && \
       !defined(MCU_MK11D5) /* EWM */ && \
       !defined(MCU_MK11D5WS) /* EWM */ && \
       !defined(MCU_MK12D5) /* EWM */ && \
@@ -29,8 +31,12 @@
       !defined(MCU_MK20D7) /* EWM */ && \
       !defined(MCU_MK20F12) /* EWM */ && \
       !defined(MCU_MK20DZ10) /* EWM */ && \
+      !defined(MCU_MK21DA5) /* EWM */ && \
+      !defined(MCU_MK21DA5WS) /* EWM */ && \
       !defined(MCU_MK21D5) /* EWM */ && \
       !defined(MCU_MK21D5WS) /* EWM */ && \
+      !defined(MCU_MK21FA12) /* EWM */ && \
+      !defined(MCU_MK21FA12WS) /* EWM */ && \
       !defined(MCU_MK21F12) /* EWM */ && \
       !defined(MCU_MK21F12WS) /* EWM */ && \
       !defined(MCU_MK22D5) /* EWM */ && \
@@ -68,9 +74,6 @@
       !defined(MCU_MK63F12) /* EWM */ && \
       !defined(MCU_MK63F12WS) /* EWM */ && \
       !defined(MCU_MK64F12) /* EWM */ && \
-      !defined(MCU_MK65F18) /* EWM */ && \
-      !defined(MCU_MK65F18WS) /* EWM */ && \
-      !defined(MCU_MK66F18) /* EWM */ && \
       !defined(MCU_MK70F12) /* EWM */ && \
       !defined(MCU_MK70F15) /* EWM */ && \
       !defined(MCU_MK70F12WS) /* EWM */ && \
@@ -84,8 +87,7 @@
       !defined(MCU_MKW22D5) /* EWM */ && \
       !defined(MCU_MKW22D5WS) /* EWM */ && \
       !defined(MCU_MKW24D5) /* EWM */ && \
-      !defined(MCU_MKW24D5WS) /* EWM */ && \
-      !defined(MCU_PCK20L4) /* EWM */
+      !defined(MCU_MKW24D5WS) /* EWM */
   // Unsupported MCU is active
   #error EWM PDD library: Unsupported derivative is active.
 #endif

@@ -21,6 +21,8 @@
       !defined(MCU_MK10D7) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
       !defined(MCU_MK10F12) /* PORTA, PORTB, PORTC, PORTD, PORTE, PORTF */ && \
       !defined(MCU_MK10DZ10) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
+      !defined(MCU_MK11DA5) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
+      !defined(MCU_MK11DA5WS) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
       !defined(MCU_MK11D5) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
       !defined(MCU_MK11D5WS) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
       !defined(MCU_MK12D5) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
@@ -29,8 +31,12 @@
       !defined(MCU_MK20D7) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
       !defined(MCU_MK20F12) /* PORTA, PORTB, PORTC, PORTD, PORTE, PORTF */ && \
       !defined(MCU_MK20DZ10) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
+      !defined(MCU_MK21DA5) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
+      !defined(MCU_MK21DA5WS) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
       !defined(MCU_MK21D5) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
       !defined(MCU_MK21D5WS) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
+      !defined(MCU_MK21FA12) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
+      !defined(MCU_MK21FA12WS) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
       !defined(MCU_MK21F12) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
       !defined(MCU_MK21F12WS) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
       !defined(MCU_MK22D5) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
@@ -68,9 +74,6 @@
       !defined(MCU_MK63F12) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
       !defined(MCU_MK63F12WS) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
       !defined(MCU_MK64F12) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
-      !defined(MCU_MK65F18) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
-      !defined(MCU_MK65F18WS) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
-      !defined(MCU_MK66F18) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
       !defined(MCU_MK70F12) /* PORTA, PORTB, PORTC, PORTD, PORTE, PORTF */ && \
       !defined(MCU_MK70F15) /* PORTA, PORTB, PORTC, PORTD, PORTE, PORTF */ && \
       !defined(MCU_MK70F12WS) /* PORTA, PORTB, PORTC, PORTD, PORTE, PORTF */ && \
@@ -83,7 +86,6 @@
       !defined(MCU_SKEAZN84) /* PORT */ && \
       !defined(MCU_MKE06Z4) /* PORT */ && \
       !defined(MCU_MKL02Z4) /* PORTA, PORTB */ && \
-      !defined(MCU_MKL03Z4) /* PORTA, PORTB */ && \
       !defined(MCU_MKL04Z4) /* PORTA, PORTB */ && \
       !defined(MCU_MKL05Z4) /* PORTA, PORTB */ && \
       !defined(MCU_MKL14Z4) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
@@ -106,7 +108,6 @@
       !defined(MCU_MKW22D5WS) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
       !defined(MCU_MKW24D5) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
       !defined(MCU_MKW24D5WS) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
-      !defined(MCU_PCK20L4) /* PORTA, PORTB, PORTC, PORTD, PORTE */ && \
       !defined(MCU_SKEAZ1284) /* PORT */
   // Unsupported MCU is active
   #error PORT PDD library: Unsupported derivative is active.

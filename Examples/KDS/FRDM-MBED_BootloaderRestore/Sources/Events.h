@@ -38,6 +38,7 @@
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"
 #include "WAIT1.h"
+#include "KSDK1.h"
 
 #ifdef __cplusplus
 extern "C" {

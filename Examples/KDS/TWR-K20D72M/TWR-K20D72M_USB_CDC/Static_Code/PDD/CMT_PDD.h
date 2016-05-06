@@ -21,6 +21,8 @@
       !defined(MCU_MK10D7) /* CMT */ && \
       !defined(MCU_MK10F12) /* CMT */ && \
       !defined(MCU_MK10DZ10) /* CMT */ && \
+      !defined(MCU_MK11DA5) /* CMT */ && \
+      !defined(MCU_MK11DA5WS) /* CMT */ && \
       !defined(MCU_MK11D5) /* CMT */ && \
       !defined(MCU_MK11D5WS) /* CMT */ && \
       !defined(MCU_MK12D5) /* CMT */ && \
@@ -29,8 +31,12 @@
       !defined(MCU_MK20D7) /* CMT */ && \
       !defined(MCU_MK20F12) /* CMT */ && \
       !defined(MCU_MK20DZ10) /* CMT */ && \
+      !defined(MCU_MK21DA5) /* CMT */ && \
+      !defined(MCU_MK21DA5WS) /* CMT */ && \
       !defined(MCU_MK21D5) /* CMT */ && \
       !defined(MCU_MK21D5WS) /* CMT */ && \
+      !defined(MCU_MK21FA12) /* CMT */ && \
+      !defined(MCU_MK21FA12WS) /* CMT */ && \
       !defined(MCU_MK21F12) /* CMT */ && \
       !defined(MCU_MK21F12WS) /* CMT */ && \
       !defined(MCU_MK22D5) /* CMT */ && \
@@ -65,9 +71,6 @@
       !defined(MCU_MK63F12) /* CMT */ && \
       !defined(MCU_MK63F12WS) /* CMT */ && \
       !defined(MCU_MK64F12) /* CMT */ && \
-      !defined(MCU_MK65F18) /* CMT */ && \
-      !defined(MCU_MK65F18WS) /* CMT */ && \
-      !defined(MCU_MK66F18) /* CMT */ && \
       !defined(MCU_MK70F12) /* CMT */ && \
       !defined(MCU_MK70F15) /* CMT */ && \
       !defined(MCU_MK70F12WS) /* CMT */ && \
@@ -77,8 +80,7 @@
       !defined(MCU_MKW22D5) /* CMT */ && \
       !defined(MCU_MKW22D5WS) /* CMT */ && \
       !defined(MCU_MKW24D5) /* CMT */ && \
-      !defined(MCU_MKW24D5WS) /* CMT */ && \
-      !defined(MCU_PCK20L4) /* CMT */
+      !defined(MCU_MKW24D5WS) /* CMT */
   // Unsupported MCU is active
   #error CMT PDD library: Unsupported derivative is active.
 #endif

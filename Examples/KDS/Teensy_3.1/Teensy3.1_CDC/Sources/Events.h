@@ -48,6 +48,7 @@
 #include "UTIL1.h"
 #include "IFsh1.h"
 #include "IntFlashLdd1.h"
+#include "KSDK1.h"
 
 #ifdef __cplusplus
 extern "C" {

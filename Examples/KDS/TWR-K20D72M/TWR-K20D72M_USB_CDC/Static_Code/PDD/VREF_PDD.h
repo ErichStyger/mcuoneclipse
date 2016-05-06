@@ -21,6 +21,8 @@
       !defined(MCU_MK10D7) /* VREF */ && \
       !defined(MCU_MK10F12) /* VREF */ && \
       !defined(MCU_MK10DZ10) /* VREF */ && \
+      !defined(MCU_MK11DA5) /* VREF */ && \
+      !defined(MCU_MK11DA5WS) /* VREF */ && \
       !defined(MCU_MK11D5) /* VREF */ && \
       !defined(MCU_MK11D5WS) /* VREF */ && \
       !defined(MCU_MK12D5) /* VREF */ && \
@@ -29,8 +31,12 @@
       !defined(MCU_MK20D7) /* VREF */ && \
       !defined(MCU_MK20F12) /* VREF */ && \
       !defined(MCU_MK20DZ10) /* VREF */ && \
+      !defined(MCU_MK21DA5) /* VREF */ && \
+      !defined(MCU_MK21DA5WS) /* VREF */ && \
       !defined(MCU_MK21D5) /* VREF */ && \
       !defined(MCU_MK21D5WS) /* VREF */ && \
+      !defined(MCU_MK21FA12) /* VREF */ && \
+      !defined(MCU_MK21FA12WS) /* VREF */ && \
       !defined(MCU_MK21F12) /* VREF */ && \
       !defined(MCU_MK21F12WS) /* VREF */ && \
       !defined(MCU_MK22D5) /* VREF */ && \
@@ -68,18 +74,13 @@
       !defined(MCU_MK63F12) /* VREF */ && \
       !defined(MCU_MK63F12WS) /* VREF */ && \
       !defined(MCU_MK64F12) /* VREF */ && \
-      !defined(MCU_MK65F18) /* VREF */ && \
-      !defined(MCU_MK65F18WS) /* VREF */ && \
-      !defined(MCU_MK66F18) /* VREF */ && \
       !defined(MCU_MK70F12) /* VREF */ && \
       !defined(MCU_MK70F15) /* VREF */ && \
       !defined(MCU_MK70F12WS) /* VREF */ && \
       !defined(MCU_MK70F15WS) /* VREF */ && \
-      !defined(MCU_MKL03Z4) /* VREF */ && \
       !defined(MCU_MKV31F12810) /* VREF */ && \
       !defined(MCU_MKV31F25612) /* VREF */ && \
-      !defined(MCU_MKV31F51212) /* VREF */ && \
-      !defined(MCU_PCK20L4) /* VREF */
+      !defined(MCU_MKV31F51212) /* VREF */
   // Unsupported MCU is active
   #error VREF PDD library: Unsupported derivative is active.
 #endif

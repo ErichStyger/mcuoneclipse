@@ -21,6 +21,8 @@
       !defined(MCU_MK10D7) /* PIT */ && \
       !defined(MCU_MK10F12) /* PIT */ && \
       !defined(MCU_MK10DZ10) /* PIT */ && \
+      !defined(MCU_MK11DA5) /* PIT */ && \
+      !defined(MCU_MK11DA5WS) /* PIT */ && \
       !defined(MCU_MK11D5) /* PIT */ && \
       !defined(MCU_MK11D5WS) /* PIT */ && \
       !defined(MCU_MK12D5) /* PIT */ && \
@@ -29,8 +31,12 @@
       !defined(MCU_MK20D7) /* PIT */ && \
       !defined(MCU_MK20F12) /* PIT */ && \
       !defined(MCU_MK20DZ10) /* PIT */ && \
+      !defined(MCU_MK21DA5) /* PIT */ && \
+      !defined(MCU_MK21DA5WS) /* PIT */ && \
       !defined(MCU_MK21D5) /* PIT */ && \
       !defined(MCU_MK21D5WS) /* PIT */ && \
+      !defined(MCU_MK21FA12) /* PIT */ && \
+      !defined(MCU_MK21FA12WS) /* PIT */ && \
       !defined(MCU_MK21F12) /* PIT */ && \
       !defined(MCU_MK21F12WS) /* PIT */ && \
       !defined(MCU_MK22D5) /* PIT */ && \
@@ -68,9 +74,6 @@
       !defined(MCU_MK63F12) /* PIT */ && \
       !defined(MCU_MK63F12WS) /* PIT */ && \
       !defined(MCU_MK64F12) /* PIT */ && \
-      !defined(MCU_MK65F18) /* PIT */ && \
-      !defined(MCU_MK65F18WS) /* PIT */ && \
-      !defined(MCU_MK66F18) /* PIT */ && \
       !defined(MCU_MK70F12) /* PIT */ && \
       !defined(MCU_MK70F15) /* PIT */ && \
       !defined(MCU_MK70F12WS) /* PIT */ && \
@@ -103,7 +106,6 @@
       !defined(MCU_MKW22D5WS) /* PIT */ && \
       !defined(MCU_MKW24D5) /* PIT */ && \
       !defined(MCU_MKW24D5WS) /* PIT */ && \
-      !defined(MCU_PCK20L4) /* PIT */ && \
       !defined(MCU_SKEAZ1284) /* PIT */
   // Unsupported MCU is active
   #error PIT PDD library: Unsupported derivative is active.

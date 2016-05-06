@@ -21,8 +21,12 @@
       !defined(MCU_MK20D7) /* USB0 */ && \
       !defined(MCU_MK20F12) /* USB0 */ && \
       !defined(MCU_MK20DZ10) /* USB0 */ && \
+      !defined(MCU_MK21DA5) /* USB0 */ && \
+      !defined(MCU_MK21DA5WS) /* USB0 */ && \
       !defined(MCU_MK21D5) /* USB0 */ && \
       !defined(MCU_MK21D5WS) /* USB0 */ && \
+      !defined(MCU_MK21FA12) /* USB0 */ && \
+      !defined(MCU_MK21FA12WS) /* USB0 */ && \
       !defined(MCU_MK21F12) /* USB0 */ && \
       !defined(MCU_MK21F12WS) /* USB0 */ && \
       !defined(MCU_MK22D5) /* USB0 */ && \
@@ -57,9 +61,6 @@
       !defined(MCU_MK63F12) /* USB0 */ && \
       !defined(MCU_MK63F12WS) /* USB0 */ && \
       !defined(MCU_MK64F12) /* USB0 */ && \
-      !defined(MCU_MK65F18) /* USB0 */ && \
-      !defined(MCU_MK65F18WS) /* USB0 */ && \
-      !defined(MCU_MK66F18) /* USB0 */ && \
       !defined(MCU_MK70F12) /* USB0 */ && \
       !defined(MCU_MK70F15) /* USB0 */ && \
       !defined(MCU_MK70F12WS) /* USB0 */ && \
@@ -71,8 +72,7 @@
       !defined(MCU_MKW22D5) /* USB0 */ && \
       !defined(MCU_MKW22D5WS) /* USB0 */ && \
       !defined(MCU_MKW24D5) /* USB0 */ && \
-      !defined(MCU_MKW24D5WS) /* USB0 */ && \
-      !defined(MCU_PCK20L4) /* USB0 */
+      !defined(MCU_MKW24D5WS) /* USB0 */
   // Unsupported MCU is active
   #error USB PDD library: Unsupported derivative is active.
 #endif
@@ -1065,8 +1065,7 @@
  *        the peripheral initialization component header file
  *        (<component_name>_DEVICE).
  * @return Returns a 8-bit value.
- * @remarks The macro accesses the following registers: USB0_OTGCTL,
- *          USB0_OTGCTL0 (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_OTGCTL.
  * @par Example:
  *      @code
  *      uint8_t result = USB_PDD_ReadOtgControlReg(<peripheral>_BASE_PTR);
@@ -1090,8 +1089,7 @@
  * @param Value Value written to the Otg control register. This parameter is a
  *        8-bit value.
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: USB0_OTGCTL,
- *          USB0_OTGCTL0 (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_OTGCTL.
  * @par Example:
  *      @code
  *      USB_PDD_WriteOtgControlReg(<peripheral>_BASE_PTR, 1);
@@ -1117,8 +1115,7 @@
  *        for specifying general enable/disable states (PDD_DISABLE and PDD_ENABLE
  *        defined in PDD_Types.h)" type.
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: USB0_OTGCTL,
- *          USB0_OTGCTL0 (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_OTGCTL.
  * @par Example:
  *      @code
  *      USB_PDD_EnableDpPullUp(<peripheral>_BASE_PTR, PDD_DISABLE);
@@ -1146,8 +1143,7 @@
  *        for specifying general enable/disable states (PDD_DISABLE and PDD_ENABLE
  *        defined in PDD_Types.h)" type.
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: USB0_OTGCTL,
- *          USB0_OTGCTL0 (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_OTGCTL.
  * @par Example:
  *      @code
  *      USB_PDD_EnableDpPullDown(<peripheral>_BASE_PTR, PDD_DISABLE);
@@ -1175,8 +1171,7 @@
  *        for specifying general enable/disable states (PDD_DISABLE and PDD_ENABLE
  *        defined in PDD_Types.h)" type.
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: USB0_OTGCTL,
- *          USB0_OTGCTL0 (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_OTGCTL.
  * @par Example:
  *      @code
  *      USB_PDD_EnableDmPullDown(<peripheral>_BASE_PTR, PDD_DISABLE);
@@ -1204,8 +1199,7 @@
  *        for specifying general enable/disable states (PDD_DISABLE and PDD_ENABLE
  *        defined in PDD_Types.h)" type.
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: USB0_OTGCTL,
- *          USB0_OTGCTL0 (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_OTGCTL.
  * @par Example:
  *      @code
  *      USB_PDD_EnableVBUS(<peripheral>_BASE_PTR, PDD_DISABLE);
@@ -1233,8 +1227,7 @@
  *        for specifying general enable/disable states (PDD_DISABLE and PDD_ENABLE
  *        defined in PDD_Types.h)" type.
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: USB0_OTGCTL,
- *          USB0_OTGCTL0 (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_OTGCTL.
  * @par Example:
  *      @code
  *      USB_PDD_EnableOtgTermination(<peripheral>_BASE_PTR, PDD_DISABLE);
@@ -1262,8 +1255,7 @@
  *        for specifying general enable/disable states (PDD_DISABLE and PDD_ENABLE
  *        defined in PDD_Types.h)" type.
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: USB0_OTGCTL,
- *          USB0_OTGCTL0 (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_OTGCTL.
  * @par Example:
  *      @code
  *      USB_PDD_EnableVbusCharge(<peripheral>_BASE_PTR, PDD_DISABLE);
@@ -1291,8 +1283,7 @@
  *        for specifying general enable/disable states (PDD_DISABLE and PDD_ENABLE
  *        defined in PDD_Types.h)" type.
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: USB0_OTGCTL,
- *          USB0_OTGCTL0 (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_OTGCTL.
  * @par Example:
  *      @code
  *      USB_PDD_EnableVbusDischarge(<peripheral>_BASE_PTR, PDD_DISABLE);
@@ -1317,8 +1308,7 @@
  *        the peripheral initialization component header file
  *        (<component_name>_DEVICE).
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: USB0_OTGCTL,
- *          USB0_OTGCTL0 (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_OTGCTL.
  * @par Example:
  *      @code
  *      USB_PDD_SetDeviceModeFullSpeedTermination(<peripheral>_BASE_PTR);
@@ -1347,8 +1337,7 @@
  *        the peripheral initialization component header file
  *        (<component_name>_DEVICE).
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: USB0_OTGCTL,
- *          USB0_OTGCTL0 (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_OTGCTL.
  * @par Example:
  *      @code
  *      USB_PDD_SetHostModeTermination(<peripheral>_BASE_PTR);
@@ -1371,8 +1360,7 @@
  *        the peripheral initialization component header file
  *        (<component_name>_DEVICE).
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: USB0_OTGCTL,
- *          USB0_OTGCTL0 (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_OTGCTL.
  * @par Example:
  *      @code
  *      USB_PDD_SetNoTermination(<peripheral>_BASE_PTR);
@@ -3052,8 +3040,7 @@
  *        the peripheral initialization component header file
  *        (<component_name>_DEVICE).
  * @return Returns a 8-bit value.
- * @remarks The macro accesses the following registers: USB0_CTL, USB0_CTL1
- *          (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_CTL.
  * @par Example:
  *      @code
  *      uint8_t result = USB_PDD_ReadControlReg(<peripheral>_BASE_PTR);
@@ -3077,8 +3064,7 @@
  * @param Value Value written to the Control register. This parameter is a 8-bit
  *        value.
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: USB0_CTL, USB0_CTL1
- *          (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_CTL.
  * @par Example:
  *      @code
  *      USB_PDD_WriteControlReg(<peripheral>_BASE_PTR, 1);
@@ -3101,8 +3087,7 @@
  *        the peripheral initialization component header file
  *        (<component_name>_DEVICE).
  * @return Returns a value of "Bus speed" type. The value is cast to "uint8_t".
- * @remarks The macro accesses the following registers: USB0_CTL, USB0_CTL1
- *          (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_CTL.
  * @par Example:
  *      @code
  *      uint8_t result = USB_PDD_GetBusSpeed(<peripheral>_BASE_PTR);
@@ -3124,8 +3109,7 @@
  *        the peripheral initialization component header file
  *        (<component_name>_DEVICE).
  * @return Returns a 8-bit value.
- * @remarks The macro accesses the following registers: USB0_CTL, USB0_CTL1
- *          (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_CTL.
  * @par Example:
  *      @code
  *      uint8_t result = USB_PDD_GetSE0(<peripheral>_BASE_PTR);
@@ -3150,8 +3134,7 @@
  *        for specifying general enable/disable states (PDD_DISABLE and PDD_ENABLE
  *        defined in PDD_Types.h)" type.
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: USB0_CTL, USB0_CTL1
- *          (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_CTL.
  * @par Example:
  *      @code
  *      USB_PDD_EnableDevice(<peripheral>_BASE_PTR, PDD_DISABLE);
@@ -3179,8 +3162,7 @@
  *        for specifying general enable/disable states (PDD_DISABLE and PDD_ENABLE
  *        defined in PDD_Types.h)" type.
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: USB0_CTL, USB0_CTL1
- *          (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_CTL.
  * @par Example:
  *      @code
  *      USB_PDD_EnableSof(<peripheral>_BASE_PTR, PDD_DISABLE);
@@ -3205,8 +3187,7 @@
  *        the peripheral initialization component header file
  *        (<component_name>_DEVICE).
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: USB0_CTL, USB0_CTL1
- *          (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_CTL.
  * @par Example:
  *      @code
  *      USB_PDD_ResetBdtPingPong(<peripheral>_BASE_PTR);
@@ -3234,8 +3215,7 @@
  *        for specifying general enable/disable states (PDD_DISABLE and PDD_ENABLE
  *        defined in PDD_Types.h)" type.
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: USB0_CTL, USB0_CTL1
- *          (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_CTL.
  * @par Example:
  *      @code
  *      USB_PDD_StartResumeSignaling(<peripheral>_BASE_PTR, PDD_DISABLE);
@@ -3260,8 +3240,7 @@
  *        the peripheral initialization component header file
  *        (<component_name>_DEVICE).
  * @return Returns a 8-bit value.
- * @remarks The macro accesses the following registers: USB0_CTL, USB0_CTL1
- *          (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_CTL.
  * @par Example:
  *      @code
  *      uint8_t result = USB_PDD_GetResumeSignalState(<peripheral>_BASE_PTR);
@@ -3286,8 +3265,7 @@
  *        for specifying general enable/disable states (PDD_DISABLE and PDD_ENABLE
  *        defined in PDD_Types.h)" type.
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: USB0_CTL, USB0_CTL1
- *          (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_CTL.
  * @par Example:
  *      @code
  *      USB_PDD_EnableHost(<peripheral>_BASE_PTR, PDD_DISABLE);
@@ -3315,8 +3293,7 @@
  *        for specifying general enable/disable states (PDD_DISABLE and PDD_ENABLE
  *        defined in PDD_Types.h)" type.
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: USB0_CTL, USB0_CTL1
- *          (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_CTL.
  * @par Example:
  *      @code
  *      USB_PDD_StartResetSignaling(<peripheral>_BASE_PTR, PDD_DISABLE);
@@ -3341,8 +3318,7 @@
  *        the peripheral initialization component header file
  *        (<component_name>_DEVICE).
  * @return Returns a 8-bit value.
- * @remarks The macro accesses the following registers: USB0_CTL, USB0_CTL1
- *          (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_CTL.
  * @par Example:
  *      @code
  *      uint8_t result = USB_PDD_GetResetSignalState(<peripheral>_BASE_PTR);
@@ -3364,8 +3340,7 @@
  *        the peripheral initialization component header file
  *        (<component_name>_DEVICE).
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: USB0_CTL, USB0_CTL1
- *          (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_CTL.
  * @par Example:
  *      @code
  *      USB_PDD_ClearTxSuspendFlag(<peripheral>_BASE_PTR);
@@ -3388,8 +3363,7 @@
  *        the peripheral initialization component header file
  *        (<component_name>_DEVICE).
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: USB0_CTL, USB0_CTL1
- *          (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_CTL.
  * @par Example:
  *      @code
  *      USB_PDD_ClearTokenBusyFlag(<peripheral>_BASE_PTR);
@@ -3412,8 +3386,7 @@
  *        the peripheral initialization component header file
  *        (<component_name>_DEVICE).
  * @return Returns a 8-bit value.
- * @remarks The macro accesses the following registers: USB0_CTL, USB0_CTL1
- *          (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_CTL.
  * @par Example:
  *      @code
  *      uint8_t result = USB_PDD_GetTokenBusyFlag(<peripheral>_BASE_PTR);
@@ -3435,8 +3408,7 @@
  *        the peripheral initialization component header file
  *        (<component_name>_DEVICE).
  * @return Returns a value of void type.
- * @remarks The macro accesses the following registers: USB0_CTL, USB0_CTL1
- *          (depending on the peripheral).
+ * @remarks The macro accesses the following registers: USB0_CTL.
  * @par Example:
  *      @code
  *      USB_PDD_DisableModule(<peripheral>_BASE_PTR);
@@ -4588,7 +4560,7 @@
       USB_USBTRC0_REG(PeripheralBase) |= \
        (uint8_t)(USB_USBTRC0_USBRESET_MASK | 0x40U) \
     )
-#else /* (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK65F18)) || (defined(MCU_MK65F18WS)) || (defined(MCU_MK66F18)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_PCK20L4)) */
+#else /* (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21DA5)) || (defined(MCU_MK21DA5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) */
 /**
  * @brief Starts module reset.
  * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
@@ -4607,7 +4579,7 @@
       USB_USBTRC0_REG(PeripheralBase) |= \
        USB_USBTRC0_USBRESET_MASK \
     )
-#endif /* (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK65F18)) || (defined(MCU_MK65F18WS)) || (defined(MCU_MK66F18)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_PCK20L4)) */
+#endif /* (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21DA5)) || (defined(MCU_MK21DA5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) */
 
 /* ----------------------------------------------------------------------------
    -- GetModuleResetPendingFlag
@@ -4655,7 +4627,7 @@
       USB_USBTRC0_REG(PeripheralBase) |= \
        (uint8_t)(USB_USBTRC0_SYNC_DET_MASK | 0x40U) \
     )
-#else /* (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK65F18)) || (defined(MCU_MK65F18WS)) || (defined(MCU_MK66F18)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_PCK20L4)) */
+#else /* (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21DA5)) || (defined(MCU_MK21DA5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) */
 /**
  * @brief Clears asynchronous resume interrupt flag.
  * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
@@ -4674,7 +4646,7 @@
       USB_USBTRC0_REG(PeripheralBase) |= \
        USB_USBTRC0_SYNC_DET_MASK \
     )
-#endif /* (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK65F18)) || (defined(MCU_MK65F18WS)) || (defined(MCU_MK66F18)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_PCK20L4)) */
+#endif /* (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21DA5)) || (defined(MCU_MK21DA5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) */
 
 /* ----------------------------------------------------------------------------
    -- EnableAsyncResumeInterrupt
@@ -4699,7 +4671,7 @@
       USB_USBTRC0_REG(PeripheralBase) |= \
        (uint8_t)(USB_USBTRC0_USBRESMEN_MASK | 0x40U) \
     )
-#else /* (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK65F18)) || (defined(MCU_MK65F18WS)) || (defined(MCU_MK66F18)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_PCK20L4)) */
+#else /* (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21DA5)) || (defined(MCU_MK21DA5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) */
 /**
  * @brief Enables asynchronous resume interrupt.
  * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
@@ -4718,7 +4690,7 @@
       USB_USBTRC0_REG(PeripheralBase) |= \
        USB_USBTRC0_USBRESMEN_MASK \
     )
-#endif /* (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK65F18)) || (defined(MCU_MK65F18WS)) || (defined(MCU_MK66F18)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_PCK20L4)) */
+#endif /* (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21DA5)) || (defined(MCU_MK21DA5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) */
 
 /* ----------------------------------------------------------------------------
    -- DisableAsyncResumeInterrupt
@@ -4747,7 +4719,7 @@
          (uint8_t)(~(uint8_t)USB_USBTRC0_USBRESMEN_MASK)))) | ( \
         0x40U)) \
     )
-#else /* (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK65F18)) || (defined(MCU_MK65F18WS)) || (defined(MCU_MK66F18)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_PCK20L4)) */
+#else /* (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21DA5)) || (defined(MCU_MK21DA5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) */
 /**
  * @brief Disables asynchronous resume interrupt.
  * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
@@ -4766,7 +4738,7 @@
       USB_USBTRC0_REG(PeripheralBase) &= \
        (uint8_t)(~(uint8_t)USB_USBTRC0_USBRESMEN_MASK) \
     )
-#endif /* (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK65F18)) || (defined(MCU_MK65F18WS)) || (defined(MCU_MK66F18)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) || (defined(MCU_PCK20L4)) */
+#endif /* (defined(MCU_MK20D10)) || (defined(MCU_MK20D5)) || (defined(MCU_MK20D7)) || (defined(MCU_MK20F12)) || (defined(MCU_MK21D5)) || (defined(MCU_MK21D5WS)) || (defined(MCU_MK21DA5)) || (defined(MCU_MK21DA5WS)) || (defined(MCU_MK21F12)) || (defined(MCU_MK21F12WS)) || (defined(MCU_MK21FA12)) || (defined(MCU_MK21FA12WS)) || (defined(MCU_MK22D5)) || (defined(MCU_MK22F12)) || (defined(MCU_MK22F12810)) || (defined(MCU_MK22F25612)) || (defined(MCU_MK22F51212)) || (defined(MCU_MK24F12)) || (defined(MCU_MK40D10)) || (defined(MCU_MK40D7)) || (defined(MCU_MK50D10)) || (defined(MCU_MK50D7)) || (defined(MCU_MK51D10)) || (defined(MCU_MK51D7)) || (defined(MCU_MK52D10)) || (defined(MCU_MK53D10)) || (defined(MCU_MK60D10)) || (defined(MCU_MK60F12)) || (defined(MCU_MK60F15)) || (defined(MCU_MK61F12)) || (defined(MCU_MK61F12WS)) || (defined(MCU_MK61F15)) || (defined(MCU_MK61F15WS)) || (defined(MCU_MK63F12)) || (defined(MCU_MK63F12WS)) || (defined(MCU_MK64F12)) || (defined(MCU_MK70F12)) || (defined(MCU_MK70F12WS)) || (defined(MCU_MK70F15)) || (defined(MCU_MK70F15WS)) || (defined(MCU_MKW22D5)) || (defined(MCU_MKW22D5WS)) || (defined(MCU_MKW24D5)) || (defined(MCU_MKW24D5WS)) */
 
 /* ----------------------------------------------------------------------------
    -- ReadFrameAdjustmentReg
@@ -4843,6 +4815,369 @@
 #define USB_PDD_SetFrameAdjustment(PeripheralBase, Value) ( \
     USB_USBFRMADJUST_REG(PeripheralBase) = \
      (uint8_t)(Value) \
+  )
+
+/* ----------------------------------------------------------------------------
+   -- ReadClockRecoveryCtrlReg
+   ---------------------------------------------------------------------------- */
+
+/**
+ * @brief Returns the content of the Clock recovery control register.
+ * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
+ *        base address). You can use the constant defined in the registers
+ *        definition header file (<peripheral>_BASE_PTR) or the constant defined in
+ *        the peripheral initialization component header file
+ *        (<component_name>_DEVICE).
+ * @return Returns a 8-bit value.
+ * @remarks The macro accesses the following registers: USB0_CLK_RECOVER_CTRL.
+ * @par Example:
+ *      @code
+ *      uint8_t result =
+ *      USB_PDD_ReadClockRecoveryCtrlReg(<peripheral>_BASE_PTR);
+ *      @endcode
+ */
+#define USB_PDD_ReadClockRecoveryCtrlReg(PeripheralBase) ( \
+    USB_CLK_RECOVER_CTRL_REG(PeripheralBase) \
+  )
+
+/* ----------------------------------------------------------------------------
+   -- WriteClockRecoveryReg
+   ---------------------------------------------------------------------------- */
+
+/**
+ * @brief Writes Value to the Clock recovery control register.
+ * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
+ *        base address). You can use the constant defined in the registers
+ *        definition header file (<peripheral>_BASE_PTR) or the constant defined in
+ *        the peripheral initialization component header file
+ *        (<component_name>_DEVICE).
+ * @param Value Value written to the Clock recovery control register. This
+ *        parameter is a 8-bit value.
+ * @return Returns a value of void type.
+ * @remarks The macro accesses the following registers: USB0_CLK_RECOVER_CTRL.
+ * @par Example:
+ *      @code
+ *      USB_PDD_WriteClockRecoveryReg(<peripheral>_BASE_PTR, 1);
+ *      @endcode
+ */
+#define USB_PDD_WriteClockRecoveryReg(PeripheralBase, Value) ( \
+    USB_CLK_RECOVER_CTRL_REG(PeripheralBase) = \
+     (uint8_t)(Value) \
+  )
+
+/* ----------------------------------------------------------------------------
+   -- EnableClockRecovery
+   ---------------------------------------------------------------------------- */
+
+/**
+ * @brief Enables/disables clock recovery block. This block must be enabled if
+ * user wants to use the crystal-less USB mode for the Full Speed USB controller
+ * and transceiver. NOTE: This block should not be set for USB host mode or OTG.
+ * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
+ *        base address). You can use the constant defined in the registers
+ *        definition header file (<peripheral>_BASE_PTR) or the constant defined in
+ *        the peripheral initialization component header file
+ *        (<component_name>_DEVICE).
+ * @param State Requested state. This parameter is of "Global enumeration used
+ *        for specifying general enable/disable states (PDD_DISABLE and PDD_ENABLE
+ *        defined in PDD_Types.h)" type.
+ * @return Returns a value of void type.
+ * @remarks The macro accesses the following registers: USB0_CLK_RECOVER_CTRL.
+ * @par Example:
+ *      @code
+ *      USB_PDD_EnableClockRecovery(<peripheral>_BASE_PTR, PDD_DISABLE);
+ *      @endcode
+ */
+#define USB_PDD_EnableClockRecovery(PeripheralBase, State) ( \
+    USB_CLK_RECOVER_CTRL_REG(PeripheralBase) = \
+     (uint8_t)(( \
+      (uint8_t)(( \
+       USB_CLK_RECOVER_CTRL_REG(PeripheralBase)) & ( \
+       (uint8_t)(~(uint8_t)USB_CLK_RECOVER_CTRL_CLOCK_RECOVER_EN_MASK)))) | ( \
+      (uint8_t)((uint8_t)(State) << USB_CLK_RECOVER_CTRL_CLOCK_RECOVER_EN_SHIFT))) \
+  )
+
+/* ----------------------------------------------------------------------------
+   -- EnableResetResumeToRoughPhase
+   ---------------------------------------------------------------------------- */
+
+/**
+ * @brief Enables/disables reset/resume to rough phase. The clock recovery block
+ * tracks the IRC48Mhz to get an accurate 48Mhz clock. It has two phases after
+ * user enables clock_recover_en bit, rough phase and tracking phase. The step to
+ * fine tune the IRC 48Mhz by adjusting the trim fine value is different during
+ * these two phases. The step in rough phase is larger than that in tracking
+ * phase. Switch back to rough stage whenever USB bus reset or bus resume occurs.
+ * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
+ *        base address). You can use the constant defined in the registers
+ *        definition header file (<peripheral>_BASE_PTR) or the constant defined in
+ *        the peripheral initialization component header file
+ *        (<component_name>_DEVICE).
+ * @param State Requested state. This parameter is of "Global enumeration used
+ *        for specifying general enable/disable states (PDD_DISABLE and PDD_ENABLE
+ *        defined in PDD_Types.h)" type.
+ * @return Returns a value of void type.
+ * @remarks The macro accesses the following registers: USB0_CLK_RECOVER_CTRL.
+ * @par Example:
+ *      @code
+ *      USB_PDD_EnableResetResumeToRoughPhase(<peripheral>_BASE_PTR,
+ *      PDD_DISABLE);
+ *      @endcode
+ */
+#define USB_PDD_EnableResetResumeToRoughPhase(PeripheralBase, State) ( \
+    USB_CLK_RECOVER_CTRL_REG(PeripheralBase) = \
+     (uint8_t)(( \
+      (uint8_t)(( \
+       USB_CLK_RECOVER_CTRL_REG(PeripheralBase)) & ( \
+       (uint8_t)(~(uint8_t)USB_CLK_RECOVER_CTRL_RESET_RESUME_ROUGH_EN_MASK)))) | ( \
+      (uint8_t)((uint8_t)(State) << USB_CLK_RECOVER_CTRL_RESET_RESUME_ROUGH_EN_SHIFT))) \
+  )
+
+/* ----------------------------------------------------------------------------
+   -- EnableRestartFromIFRTrimValue
+   ---------------------------------------------------------------------------- */
+
+/**
+ * @brief Enables/disables restart from IFR trim value. IRC48 has a default trim
+ * fine value whose default value is factory trimmed (the IFR trim value). Clock
+ * recover block tracks the accuracy of the clock 48Mhz and keeps updating the
+ * trim fine value accordingly.
+ * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
+ *        base address). You can use the constant defined in the registers
+ *        definition header file (<peripheral>_BASE_PTR) or the constant defined in
+ *        the peripheral initialization component header file
+ *        (<component_name>_DEVICE).
+ * @param State Requested state. This parameter is of "Global enumeration used
+ *        for specifying general enable/disable states (PDD_DISABLE and PDD_ENABLE
+ *        defined in PDD_Types.h)" type.
+ * @return Returns a value of void type.
+ * @remarks The macro accesses the following registers: USB0_CLK_RECOVER_CTRL.
+ * @par Example:
+ *      @code
+ *      USB_PDD_EnableRestartFromIFRTrimValue(<peripheral>_BASE_PTR,
+ *      PDD_DISABLE);
+ *      @endcode
+ */
+#define USB_PDD_EnableRestartFromIFRTrimValue(PeripheralBase, State) ( \
+    USB_CLK_RECOVER_CTRL_REG(PeripheralBase) = \
+     (uint8_t)(( \
+      (uint8_t)(( \
+       USB_CLK_RECOVER_CTRL_REG(PeripheralBase)) & ( \
+       (uint8_t)(~(uint8_t)USB_CLK_RECOVER_CTRL_RESTART_IFRTRIM_EN_MASK)))) | ( \
+      (uint8_t)((uint8_t)(State) << USB_CLK_RECOVER_CTRL_RESTART_IFRTRIM_EN_SHIFT))) \
+  )
+
+/* ----------------------------------------------------------------------------
+   -- ReadIRC48MOscillatorEnableReg
+   ---------------------------------------------------------------------------- */
+
+/**
+ * @brief Returns the content of the IRC48M oscillator enable register.
+ * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
+ *        base address). You can use the constant defined in the registers
+ *        definition header file (<peripheral>_BASE_PTR) or the constant defined in
+ *        the peripheral initialization component header file
+ *        (<component_name>_DEVICE).
+ * @return Returns a 8-bit value.
+ * @remarks The macro accesses the following registers: USB0_CLK_RECOVER_IRC_EN.
+ * @par Example:
+ *      @code
+ *      uint8_t result =
+ *      USB_PDD_ReadIRC48MOscillatorEnableReg(<peripheral>_BASE_PTR);
+ *      @endcode
+ */
+#define USB_PDD_ReadIRC48MOscillatorEnableReg(PeripheralBase) ( \
+    USB_CLK_RECOVER_IRC_EN_REG(PeripheralBase) \
+  )
+
+/* ----------------------------------------------------------------------------
+   -- WriteIRC48MOscillatorEnableReg
+   ---------------------------------------------------------------------------- */
+
+/**
+ * @brief Writes Value to the IRC48M oscillator enable register.
+ * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
+ *        base address). You can use the constant defined in the registers
+ *        definition header file (<peripheral>_BASE_PTR) or the constant defined in
+ *        the peripheral initialization component header file
+ *        (<component_name>_DEVICE).
+ * @param Value Value written to the IRC48M oscillator enable register. This
+ *        parameter is a 8-bit value.
+ * @return Returns a value of void type.
+ * @remarks The macro accesses the following registers: USB0_CLK_RECOVER_IRC_EN.
+ * @par Example:
+ *      @code
+ *      USB_PDD_WriteIRC48MOscillatorEnableReg(<peripheral>_BASE_PTR, 1);
+ *      @endcode
+ */
+#define USB_PDD_WriteIRC48MOscillatorEnableReg(PeripheralBase, Value) ( \
+    USB_CLK_RECOVER_IRC_EN_REG(PeripheralBase) = \
+     (uint8_t)(Value) \
+  )
+
+/* ----------------------------------------------------------------------------
+   -- EnableIRC48M
+   ---------------------------------------------------------------------------- */
+
+/**
+ * @brief Enables/disables IRC48M module. This macro is used to enable the
+ * on-chip IRC48Mhz module to generate clocks for crystal-less USB. It can only be
+ * used for FS USB device mode operation. This module must be enabled before using
+ * the crystal-less USB clock configuration.
+ * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
+ *        base address). You can use the constant defined in the registers
+ *        definition header file (<peripheral>_BASE_PTR) or the constant defined in
+ *        the peripheral initialization component header file
+ *        (<component_name>_DEVICE).
+ * @param State Requested state. This parameter is of "Global enumeration used
+ *        for specifying general enable/disable states (PDD_DISABLE and PDD_ENABLE
+ *        defined in PDD_Types.h)" type.
+ * @return Returns a value of void type.
+ * @remarks The macro accesses the following registers: USB0_CLK_RECOVER_IRC_EN.
+ * @par Example:
+ *      @code
+ *      USB_PDD_EnableIRC48M(<peripheral>_BASE_PTR, PDD_DISABLE);
+ *      @endcode
+ */
+#define USB_PDD_EnableIRC48M(PeripheralBase, State) ( \
+    USB_CLK_RECOVER_IRC_EN_REG(PeripheralBase) = \
+     (uint8_t)(( \
+      (uint8_t)(( \
+       USB_CLK_RECOVER_IRC_EN_REG(PeripheralBase)) & ( \
+       (uint8_t)(~(uint8_t)USB_CLK_RECOVER_IRC_EN_IRC_EN_MASK)))) | ( \
+      (uint8_t)((uint8_t)(State) << USB_CLK_RECOVER_IRC_EN_IRC_EN_SHIFT))) \
+  )
+
+/* ----------------------------------------------------------------------------
+   -- EnableIRC48MRegulator
+   ---------------------------------------------------------------------------- */
+
+/**
+ * @brief Enables/disables IRC48M regulator. This macro is used to enable the
+ * the local analog regulator for IRC48Mhz module. This regulator must be enabled
+ * if user wants to use the crystal-less USB clock configuration..
+ * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
+ *        base address). You can use the constant defined in the registers
+ *        definition header file (<peripheral>_BASE_PTR) or the constant defined in
+ *        the peripheral initialization component header file
+ *        (<component_name>_DEVICE).
+ * @param State Requested state. This parameter is of "Global enumeration used
+ *        for specifying general enable/disable states (PDD_DISABLE and PDD_ENABLE
+ *        defined in PDD_Types.h)" type.
+ * @return Returns a value of void type.
+ * @remarks The macro accesses the following registers: USB0_CLK_RECOVER_IRC_EN.
+ * @par Example:
+ *      @code
+ *      USB_PDD_EnableIRC48MRegulator(<peripheral>_BASE_PTR, PDD_DISABLE);
+ *      @endcode
+ */
+#define USB_PDD_EnableIRC48MRegulator(PeripheralBase, State) ( \
+    USB_CLK_RECOVER_IRC_EN_REG(PeripheralBase) = \
+     (uint8_t)(( \
+      (uint8_t)(( \
+       USB_CLK_RECOVER_IRC_EN_REG(PeripheralBase)) & ( \
+       (uint8_t)(~(uint8_t)USB_CLK_RECOVER_IRC_EN_REG_EN_MASK)))) | ( \
+      (uint8_t)(State))) \
+  )
+
+/* ----------------------------------------------------------------------------
+   -- ReadClockRecoveryInterruptStatusReg
+   ---------------------------------------------------------------------------- */
+
+/**
+ * @brief Returns the content of the Clock recovery interrupt status register.
+ * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
+ *        base address). You can use the constant defined in the registers
+ *        definition header file (<peripheral>_BASE_PTR) or the constant defined in
+ *        the peripheral initialization component header file
+ *        (<component_name>_DEVICE).
+ * @return Returns a 8-bit value.
+ * @remarks The macro accesses the following registers:
+ *          USB0_CLK_RECOVER_INT_STATUS.
+ * @par Example:
+ *      @code
+ *      uint8_t result =
+ *      USB_PDD_ReadClockRecoveryInterruptStatusReg(<peripheral>_BASE_PTR);
+ *      @endcode
+ */
+#define USB_PDD_ReadClockRecoveryInterruptStatusReg(PeripheralBase) ( \
+    USB_CLK_RECOVER_INT_STATUS_REG(PeripheralBase) \
+  )
+
+/* ----------------------------------------------------------------------------
+   -- WriteClockRecoveryInterruptStatusReg
+   ---------------------------------------------------------------------------- */
+
+/**
+ * @brief Writes Value to the Clock recovery interrupt status register.
+ * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
+ *        base address). You can use the constant defined in the registers
+ *        definition header file (<peripheral>_BASE_PTR) or the constant defined in
+ *        the peripheral initialization component header file
+ *        (<component_name>_DEVICE).
+ * @param Value Value written to the Clock recovery interrupt status register.
+ *        This parameter is a 8-bit value.
+ * @return Returns a value of void type.
+ * @remarks The macro accesses the following registers:
+ *          USB0_CLK_RECOVER_INT_STATUS.
+ * @par Example:
+ *      @code
+ *      USB_PDD_WriteClockRecoveryInterruptStatusReg(<peripheral>_BASE_PTR, 1);
+ *      @endcode
+ */
+#define USB_PDD_WriteClockRecoveryInterruptStatusReg(PeripheralBase, Value) ( \
+    USB_CLK_RECOVER_INT_STATUS_REG(PeripheralBase) = \
+     (uint8_t)(Value) \
+  )
+
+/* ----------------------------------------------------------------------------
+   -- GetClockRecoveryOverflowFlag
+   ---------------------------------------------------------------------------- */
+
+/**
+ * @brief Returns state of the Clock recovery overflow flag.
+ * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
+ *        base address). You can use the constant defined in the registers
+ *        definition header file (<peripheral>_BASE_PTR) or the constant defined in
+ *        the peripheral initialization component header file
+ *        (<component_name>_DEVICE).
+ * @return Returns a 8-bit value.
+ * @remarks The macro accesses the following registers:
+ *          USB0_CLK_RECOVER_INT_STATUS.
+ * @par Example:
+ *      @code
+ *      uint8_t result =
+ *      USB_PDD_GetClockRecoveryOverflowFlag(<peripheral>_BASE_PTR);
+ *      @endcode
+ */
+#define USB_PDD_GetClockRecoveryOverflowFlag(PeripheralBase) ( \
+    (uint8_t)(( \
+     USB_CLK_RECOVER_INT_STATUS_REG(PeripheralBase)) & ( \
+     USB_CLK_RECOVER_INT_STATUS_OVF_ERROR_MASK)) \
+  )
+
+/* ----------------------------------------------------------------------------
+   -- ClearClockRecoveryOverflowFlag
+   ---------------------------------------------------------------------------- */
+
+/**
+ * @brief Clears the Clock recovery overflow flag.
+ * @param PeripheralBase Pointer to a peripheral registers structure (peripheral
+ *        base address). You can use the constant defined in the registers
+ *        definition header file (<peripheral>_BASE_PTR) or the constant defined in
+ *        the peripheral initialization component header file
+ *        (<component_name>_DEVICE).
+ * @return Returns a value of void type.
+ * @remarks The macro accesses the following registers:
+ *          USB0_CLK_RECOVER_INT_STATUS.
+ * @par Example:
+ *      @code
+ *      USB_PDD_ClearClockRecoveryOverflowFlag(<peripheral>_BASE_PTR);
+ *      @endcode
+ */
+#define USB_PDD_ClearClockRecoveryOverflowFlag(PeripheralBase) ( \
+    USB_CLK_RECOVER_INT_STATUS_REG(PeripheralBase) = \
+     USB_CLK_RECOVER_INT_STATUS_OVF_ERROR_MASK \
   )
 #endif  /* #if defined(USB_PDD_H_) */
 
