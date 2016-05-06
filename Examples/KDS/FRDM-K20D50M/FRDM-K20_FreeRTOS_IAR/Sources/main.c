@@ -41,6 +41,7 @@
 #include "BitIoLdd3.h"
 #include "FRTOS1.h"
 #include "UTIL1.h"
+#include "KSDK1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
