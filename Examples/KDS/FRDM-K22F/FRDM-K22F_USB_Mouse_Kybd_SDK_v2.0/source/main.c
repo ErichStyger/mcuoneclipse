@@ -42,6 +42,8 @@
 /* FreeRTOS kernel includes. */
 #include "composite.h"
 #include "SwTimer.h"
+#include "RTT1.h"
+#include "SYS1.h"
 
 void vMainConfigureTimerForRunTimeStats(void) {
 }
@@ -54,8 +56,14 @@ uint32_t ulMainGetRunTimeCounterValue(void) {
  * @brief Application entry point.
  */
 int main(void) {
+  BOARD_InitPins();
+  BOARD_BootClockHSRUN();
+  BOARD_InitDebugConsole();
+  RTT1_Init();
+  SYS1_Init();
   SWT_Init();
-  CompositeMain();
+  CompositeInit();
+  vTaskStartScheduler();
   for(;;) { /* Infinite loop to avoid leaving the main function */
     __asm("NOP"); /* something to use as a breakpoint stop while looping */
   }

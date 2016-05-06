@@ -367,12 +367,8 @@ void APP_task(void *handle)
     }
 }
 
-void CompositeMain(void)
+void CompositeInit(void)
 {
-    BOARD_InitPins();
-    BOARD_BootClockHSRUN();
-    BOARD_InitDebugConsole();
-
     if (xTaskCreate(APP_task,                                   /* pointer to the task */
                     "app task",                                 /* task name for kernel awareness debugging */
                     5000L / sizeof(portSTACK_TYPE),             /* task stack size */
@@ -385,6 +381,5 @@ void CompositeMain(void)
         return;
     }
 
-    vTaskStartScheduler();
 
 }

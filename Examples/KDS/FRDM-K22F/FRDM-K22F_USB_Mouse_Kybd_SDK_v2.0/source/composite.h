@@ -64,7 +64,7 @@ typedef struct _usb_device_composite_struct
     uint8_t currentInterfaceAlternateSetting[USB_COMPOSITE_INTERFACE_COUNT];
 } usb_device_composite_struct_t;
 
-void CompositeMain(void);
+void CompositeInit(void);
 
 /*******************************************************************************
  * API
