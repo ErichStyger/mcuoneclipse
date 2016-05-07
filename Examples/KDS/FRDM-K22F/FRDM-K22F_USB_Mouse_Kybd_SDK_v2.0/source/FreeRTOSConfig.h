@@ -162,8 +162,8 @@
 /*----------------------------------------------------------*/
 #define configMAX_TASK_NAME_LEN                   12 /* task name length in bytes */
 #define configUSE_TRACE_FACILITY                  1 /* 1: include additional structure members and functions to assist with execution visualization and tracing, 0: no runtime stats/trace */
-#define configUSE_TRACE_HOOKS                     0 /* 1: Percepio Trace hooks, 0: not using Percepio Trace hooks */
-#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS      1 /* 1: Segger System Viewer hooks, 0: not using Segger System Viewer hooks */
+#define configUSE_TRACE_HOOKS                     1 /* 1: Percepio Trace hooks, 0: not using Percepio Trace hooks */
+#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS      0 /* 1: Segger System Viewer hooks, 0: not using Segger System Viewer hooks */
 #define configUSE_STATS_FORMATTING_FUNCTIONS      (configUSE_TRACE_FACILITY || configGENERATE_RUN_TIME_STATS)
 #define configUSE_16_BIT_TICKS                    0 /* 1: use 16bit tick counter type, 0: use 32bit tick counter type */
 #define configIDLE_SHOULD_YIELD                   1

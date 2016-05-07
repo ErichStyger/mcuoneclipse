@@ -7,7 +7,7 @@
 **     Version     : Component 01.041, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-05-05, 20:49, # CodeGen: 126
+**     Date/Time   : 2016-05-07, 11:09, # CodeGen: 131
 **     Abstract    :
 **
 **     Settings    :
@@ -15,8 +15,8 @@
 **          Version                                        : V2.34
 **          Application Name                               : "FRDM-K22F"
 **          Device Name                                    : "Cortex-M4F"
-**          RAM Base                                       : 0x20000000
-**          ID Base                                        : 0x10000000
+**          RAM Base                                       : 0x1FFF0000
+**          ID Base                                        : 0x1FFF0000
 **          ID Shift                                       : 2
 **          Number of tasks                                : 8
 **          Static Buffer                                  : yes

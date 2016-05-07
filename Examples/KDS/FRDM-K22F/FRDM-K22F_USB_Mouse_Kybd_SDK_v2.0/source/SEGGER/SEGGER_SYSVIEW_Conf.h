@@ -126,7 +126,7 @@ Purpose     : SEGGER SysView configuration.
 *
 *       SysView Id configuration
 */
-#define SEGGER_SYSVIEW_ID_BASE         (0x10000000)                          // Default value for the lowest Id reported by the application. Can be overridden by the application via SEGGER_SYSVIEW_SetRAMBase(). (i.e. 0x20000000 when all Ids are an address in this RAM)
+#define SEGGER_SYSVIEW_ID_BASE         (0x1FFF0000)                          // Default value for the lowest Id reported by the application. Can be overridden by the application via SEGGER_SYSVIEW_SetRAMBase(). (i.e. 0x20000000 when all Ids are an address in this RAM)
 #define SEGGER_SYSVIEW_ID_SHIFT        (2)                                   // Number of bits to shift the Id to save bandwidth. (i.e. 2 when Ids are 4 byte aligned)
 
 /*********************************************************************
