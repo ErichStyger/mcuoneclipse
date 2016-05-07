@@ -218,7 +218,7 @@ static void _cbSendSystemDesc(void) {
 */
 void SEGGER_SYSVIEW_Conf(void) {
 #if SYSVIEW_USING_FREERTOS
-  #if configUSE_TRACE_HOOKS /* using Percepio Trace */
+#if configUSE_TRACE_HOOKS /* using Percepio Trace */ && configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* using SEGGER SystemViewer */
     #warning "Percepio Trace is enabled, this might conflict with Segger System View."
   #endif
 #endif

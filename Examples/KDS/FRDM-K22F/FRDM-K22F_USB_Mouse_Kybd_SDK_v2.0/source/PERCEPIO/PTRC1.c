@@ -7,14 +7,25 @@
 **     Version     : Component 01.073, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-05-07, 11:57, # CodeGen: 132
+**     Date/Time   : 2016-05-07, 12:12, # CodeGen: 135
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : PTRC1
 **          RTOS+Trace Version                             : V3.0.2
 **          SDK                                            : KSDK1
-**          Streaming with RTT                             : Disabled
+**          Streaming with RTT                             : Enabled
+**            Streaming Recorder Version                   : V3.0.2
+**            Symbol Table Slots                           : 30
+**            Symbol Max Length                            : 24
+**            Object Data Slots                            : 20
+**            Ctrl Task Priority                           : 1
+**            Ctrl Task Stack Size                         : configMINIMAL_STACK_SIZE
+**            Segger RTT                                   : RTT1
+**            Up Buffer Index                              : 2
+**            Up Buffer Size                               : 1024
+**            Down Buffer Index                            : 2
+**            Down Buffer Size                             : 32
 **          Utility                                        : UTIL1
 **          Scheduling only                                : no
 **          Description string                             : FreeRTOS+Trace

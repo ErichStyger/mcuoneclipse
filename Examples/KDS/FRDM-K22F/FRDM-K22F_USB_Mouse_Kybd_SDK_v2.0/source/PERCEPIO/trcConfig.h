@@ -1,574 +1,347 @@
 /*******************************************************************************
- * Tracealyzer v3.0.2 Recorder Library
+ * Trace Recorder Library for Tracealyzer v3.0.0
  * Percepio AB, www.percepio.com
  *
  * trcConfig.h
  *
- * Configuration parameters for the trace recorder library. Before using the 
- * trace recorder library, please check that the default settings are 
- * appropriate for your system, and if necessary adjust these. Most likely, you 
- * will need to adjust the NTask, NISR, NQueue, NMutex and NSemaphore values to 
- * reflect the number of such objects in your system. These may be 
- * over-approximated, although larger values values implies more RAM usage.
+ * Configuration parameters for the streaming version trace recorder library.
+ * Before using the trace recorder library, please check that the default
+ * settings are appropriate for your system, and if necessary adjust these.
  *
  * Terms of Use
- * This software is copyright Percepio AB. The recorder library is free for
- * use together with Percepio products. You may distribute the recorder library
- * in its original form, including modifications in trcHardwarePort.c/.h
- * given that these modification are clearly marked as your own modifications
- * and documented in the initial comment section of these source files. 
- * This software is the intellectual property of Percepio AB and may not be 
- * sold or in other ways commercially redistributed without explicit written 
- * permission by Percepio AB.
+ * This software (the "Tracealyzer Recorder Library") is the intellectual
+ * property of Percepio AB and may not be sold or in other ways commercially
+ * redistributed without explicit written permission by Percepio AB.
  *
- * Disclaimer 
- * The trace tool and recorder library is being delivered to you AS IS and 
- * Percepio AB makes no warranty as to its use or performance. Percepio AB does 
- * not and cannot warrant the performance or results you may obtain by using the 
- * software or documentation. Percepio AB make no warranties, express or 
- * implied, as to noninfringement of third party rights, merchantability, or 
- * fitness for any particular purpose. In no event will Percepio AB, its 
- * technology partners, or distributors be liable to you for any consequential, 
- * incidental or special damages, including any lost profits or lost savings, 
- * even if a representative of Percepio AB has been advised of the possibility 
- * of such damages, or for any claim by any third party. Some jurisdictions do 
- * not allow the exclusion or limitation of incidental, consequential or special 
- * damages, or the exclusion of implied warranties or limitations on how long an 
+ * Separate conditions applies for the SEGGER branded source code included.
+ *
+ * The recorder library is free for use together with Percepio products.
+ * You may distribute the recorder library in its original form, but public
+ * distribution of modified versions require approval by Percepio AB.
+ *
+ * Disclaimer
+ * The trace tool and recorder library is being delivered to you AS IS and
+ * Percepio AB makes no warranty as to its use or performance. Percepio AB does
+ * not and cannot warrant the performance or results you may obtain by using the
+ * software or documentation. Percepio AB make no warranties, express or
+ * implied, as to noninfringement of third party rights, merchantability, or
+ * fitness for any particular purpose. In no event will Percepio AB, its
+ * technology partners, or distributors be liable to you for any consequential,
+ * incidental or special damages, including any lost profits or lost savings,
+ * even if a representative of Percepio AB has been advised of the possibility
+ * of such damages, or for any claim by any third party. Some jurisdictions do
+ * not allow the exclusion or limitation of incidental, consequential or special
+ * damages, or the exclusion of implied warranties or limitations on how long an
  * implied warranty may last, so the above limitations may not apply to you.
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2014.
+ * Copyright Percepio AB, 2015.
  * www.percepio.com
  ******************************************************************************/
 
-#ifndef TRCCONFIG_H
-#define TRCCONFIG_H
+#ifndef TRC_STREAMING_RECORDER_CONFIG_H
+#define TRC_STREAMING_RECORDER_CONFIG_H
+
+#if 1 /* << EST: macro to identify if RTT is enabled */
+  #define TRC_CONFIG_USE_RTT_STREAMING   1  /* Set to 1 if using RTT streaming, 0 otherwise */
+#endif
+/*******************************************************************************
+ * Configuration Macro: TRC_RECORDER_HARDWARE_PORT
+ *
+ * Specify what hardware is used.
+ *
+ * See trcHardwarePort.h for available ports, or to define your own.
+ ******************************************************************************/
+#define TRC_RECORDER_HARDWARE_PORT TRC_PORT_ARM_Cortex_M
 
 /******************************************************************************
- * SELECTED_PORT
- *
- * Macro that specifies what hardware port that should be used. 
- * Available ports are:
- *
- * Port Name							Code	 Official	OS supported
- * PORT_APPLICATION_DEFINED	            -2		-			-
- * PORT_NOT_SET                         -1		-			-
- * PORT_HWIndependent                    0		Yes			Any
- * PORT_Win32                            1		Yes			FreeRTOS on Win32
- * PORT_Atmel_AT91SAM7                   2		No			Any
- * PORT_Atmel_UC3A0                      3		No			Any
- * PORT_ARM_CortexM                      4		Yes			Any
- * PORT_Renesas_RX600                    5		Yes			Any
- * PORT_Microchip_dsPIC_AND_PIC24        6		Yes			Any
- * PORT_TEXAS_INSTRUMENTS_TMS570         7		No			Any
- * PORT_TEXAS_INSTRUMENTS_MSP430         8		No			Any
- * PORT_MICROCHIP_PIC32MX                9		Yes			Any
- * PORT_XILINX_PPC405                    10		No			FreeRTOS
- * PORT_XILINX_PPC440                    11		No			FreeRTOS
- * PORT_XILINX_MICROBLAZE                12		No			Any
- * PORT_NXP_LPC210X                      13		No			Any
- * PORT_MICROCHIP_PIC32MZ                14		Yes			Any
- * PORT_ARM_CORTEX_A9                    15		No			Any
+ * BSP and other project specific includes
+ * 
+ * Include the necessary header files.
  *****************************************************************************/
-
-// Set the port setting here!
 #include "FreeRTOSConfig.h"
-#if configCPU_FAMILY_IS_ARM(configCPU_FAMILY)
-  #define SELECTED_PORT PORT_ARM_CortexM
+#if !configPEX_KINETIS_SDK /* << EST: PEx interface */
+  #include "Cpu.h"
 #else
-  #define SELECTED_PORT PORT_FREESCALE_PROCESSOR_EXPERT
-#endif
-
-#if (SELECTED_PORT == PORT_ARM_CortexM)
-	/* For ARM Cortex-M: make sure ARM's CMSIS library is included here, which
-       is used for accessing the PRIMASK register. e.g. #include "board.h" */
-#endif
-
-#if (SELECTED_PORT == PORT_NOT_SET)
-	#error "You need to define SELECTED_PORT here!"
+  #include "board.h"
 #endif
 
 /******************************************************************************
- * FREERTOS_VERSION
+ * TRC_FREERTOS_VERSION
  * 
  * Specify what version of FreeRTOS that is used. This is necessary compensate 
  * for renamed symbols in the FreeRTOS kernel (does not build if incorrect).
  * 
- * FREERTOS_VERSION_7_3_OR_7_4 (= 1)		If using FreeRTOS v7.3.0 - v7.4.2
- * FREERTOS_VERSION_7_5_OR_7_6 (= 2)		If using FreeRTOS v7.5.0 - v7.6.0
- * FREERTOS_VERSION_8_0_OR_LATER (= 3)		If using FreeRTOS v8.0.0 or later
+ * TRC_FREERTOS_VERSION_7_3_OR_7_4 (= 1)		If using FreeRTOS v7.3.0 - v7.4.2
+ * TRC_FREERTOS_VERSION_7_5_OR_7_6 (= 2)		If using FreeRTOS v7.5.0 - v7.6.0
+ * TRC_FREERTOS_VERSION_8_0_OR_LATER (= 3)		If using FreeRTOS v8.0.0 or later
  *****************************************************************************/
-#define FREERTOS_VERSION	FREERTOS_VERSION_8_0_OR_LATER
+#define TRC_FREERTOS_VERSION_NOT_SET			0
+#define TRC_FREERTOS_VERSION_7_3_OR_7_4			1
+#define TRC_FREERTOS_VERSION_7_5_OR_7_6			2
+#define TRC_FREERTOS_VERSION_8_0_OR_LATER		3
 
-/******************************************************************************
- * TRACE_RECORDER_STORE_MODE
- *
- * Macro which should be defined as one of:
- * - TRACE_STORE_MODE_RING_BUFFER
- * - TRACE_STORE_MODE_STOP_WHEN_FULL
- * Default is TRACE_STORE_MODE_RING_BUFFER.
- *
- * With TRACE_RECORDER_STORE_MODE set to TRACE_STORE_MODE_RING_BUFFER, the 
- * events are stored in a ring buffer, i.e., where the oldest events are 
- * overwritten when the buffer becomes full. This allows you to get the last
- * events leading up to an interesting state, e.g., an error, without having 
- * to store the whole run since startup.
- *
- * When TRACE_RECORDER_STORE_MODE is TRACE_STORE_MODE_STOP_WHEN_FULL, the 
- * recording is stopped when the buffer becomes full. This is useful for
- * recording events following a specific state, e.g., the startup sequence.
- *****************************************************************************/
-
-#define TRACE_RECORDER_STORE_MODE TRACE_STORE_MODE_RING_BUFFER /* TRACE_STORE_MODE_RING_BUFFER or TRACE_STORE_MODE_STOP_WHEN_FULL */
+#define TRC_FREERTOS_VERSION	TRC_FREERTOS_VERSION_8_0_OR_LATER
 
 /*******************************************************************************
- * TRACE_SCHEDULING_ONLY
+ * Configuration Macro: TRC_SYMBOL_TABLE_SLOTS
  *
- * Macro which should be defined as an integer value.
+ * The maximum number of symbols names that can be stored. This includes:
+ * - Task names
+ * - Named ISRs (vTraceSetISRProperties)
+ * - Named kernel objects (vTraceStoreKernelObjectName)
+ * - User event channels (vTraceStoreUserEventChannelName)
  *
- * If this setting is enabled (= 1), only scheduling events are recorded.
- * If disabled (= 0), all events are recorded.
- *
- * Users of FreeRTOS+Trace Free Edition only displays scheduling events, so this
- * option can be used to avoid storing unsupported events.
- *
- * Default value is 0 (store all enabled events).
- *
+ * If this value is too small, not all symbol names will be stored and the
+ * trace display will be affected. In that case, there will be warnings
+ * (as User Events) from TzCtrl task, that monitors this.
  ******************************************************************************/
-#define TRACE_SCHEDULING_ONLY 0
+#define TRC_SYMBOL_TABLE_SLOTS   30
 
 /*******************************************************************************
- * EVENT_BUFFER_SIZE
+ * Configuration Macro: TRC_SYMBOL_MAX_LENGTH
  *
- * Macro which should be defined as an integer value.
+ * The maximum length of symbol names, including:
+ * - Task names
+ * - Named ISRs (vTraceSetISRProperties)
+ * - Named kernel objects (vTraceStoreKernelObjectName)
+ * - User event channel names (vTraceStoreUserEventChannelName)
  *
- * This defines the capacity of the event buffer, i.e., the number of records
- * it may store. Most events use one record (4 byte), although some events 
- * require multiple 4-byte records. You should adjust this to the amount of RAM
- * available in the target system.
- * 
- * Default value is 1000, which means that 4000 bytes is allocated for the
- * event buffer.
+ * If longer symbol names are used, they will be truncated by the recorder,
+ * which will affect the trace display. In that case, there will be warnings
+ * (as User Events) from TzCtrl task, that monitors this.
  ******************************************************************************/
-#define EVENT_BUFFER_SIZE 1200
+#define TRC_SYMBOL_MAX_LENGTH   24
 
 /*******************************************************************************
- * NTask, NISR, NQueue, NSemaphore, NMutex
+ * Configuration Macro: TRC_OBJECT_DATA_SLOTS
  *
- * A group of macros which should be defined as integer values, zero or larger.
- *
- * These define the capacity of the Object Property Table, i.e., the maximum
- * number of objects active at any given point, within each object class (e.g., 
- * task, queue, semaphore, ...).
- * 
- * If tasks or other other objects are deleted in your system, this
- * setting does not limit the total amount of objects created, only the number
- * of objects that have been successfully created but not yet deleted.
- *
- * Using too small values will cause vTraceError to be called, which stores an 
- * error message in the trace that is shown when opening the trace file.
- *
- * It can be wise to start with large values for these constants, 
- * unless you are very confident on these numbers. Then do a recording and
- * check the actual usage by selecting View menu -> Trace Details -> 
- * Resource Usage -> Object Table. 
+ * The maximum number of object data entries (used for task priorities) that can
+ * be stored at the same time. Must be sufficient for all tasks, otherwise there
+ * will be warnings (as User Events) from TzCtrl task, that monitors this.
  ******************************************************************************/
-#define NTask             10
-#define NISR              4
-#define NQueue            3
-#define NSemaphore        4
-#define NMutex            4
-#define NTimer            2
-#define NEventGroup       2
-
-/******************************************************************************
- * INCLUDE_MEMMANG_EVENTS
- * 
- * Macro which should be defined as either zero (0) or one (1). 
- *
- * This controls if malloc and free calls should be traced. Set this to zero to
- * exclude malloc/free calls, or one (1) to include such events in the trace.
- *
- * Default value is 1.
- *****************************************************************************/
-#define INCLUDE_MEMMANG_EVENTS 0
-
-/******************************************************************************
- * INCLUDE_USER_EVENTS
- *
- * Macro which should be defined as either zero (0) or one (1). 
- *
- * If this is zero (0) the code for creating User Events is excluded to
- * reduce code size. User Events are application-generated events, like 
- * "printf" but for the trace log instead of console output. User Events are 
- * much faster than a printf and can therefore be used in timing critical code.
- * See vTraceUserEvent() and vTracePrintF() in trcUser.h
- * 
- * Default value is 1.
- *
- * Note that User Events are only displayed in Professional Edition.
- *****************************************************************************/
-#if 1 /* << EST */
-#define INCLUDE_USER_EVENTS 1
-#else
-#define INCLUDE_USER_EVENTS 1
-#endif
-
-/*****************************************************************************
- * INCLUDE_ISR_TRACING
- *
- * Macro which should be defined as either zero (0) or one (1). 
- *
- * If this is zero (0), the code for recording Interrupt Service Routines is 
- * excluded to reduce code size.
- *
- * Default value is 1.
- * 
- * Note, if the kernel has no central interrupt dispatcher, recording ISRs 
- * require that you insert calls to vTraceStoreISRBegin and vTraceStoreISREnd 
- * in your interrupt handlers.
- *****************************************************************************/
-#if 1 /* << EST */
-#define INCLUDE_ISR_TRACING 1
-#else
-#define INCLUDE_ISR_TRACING 1
-#endif
-
-/*****************************************************************************
- * INCLUDE_READY_EVENTS
- *
- * Macro which should be defined as either zero (0) or one (1). 
- *
- * If one (1), events are recorded when tasks enter scheduling state "ready". 
- * This uses a lot of space in the event buffer, so excluding "ready events" 
- * will allow for longer traces. Including ready events however allows for 
- * showing the initial pending time before tasks enter the execution state, and 
- * for presenting accurate response times.
- *
- * Default value is 1.
- *****************************************************************************/
-#if 1 /* << EST */
-#define INCLUDE_READY_EVENTS 1
-#else
-#define INCLUDE_READY_EVENTS 1
-#endif
-
-/*****************************************************************************
- * INCLUDE_NEW_TIME_EVENTS
- *
- * Macro which should be defined as either zero (0) or one (1). 
- *
- * If this is zero (1), events will be generated whenever the OS clock is
- * increased.
- *
- * Default value is 0.
- *****************************************************************************/
-#if 1 /* << EST */
-#define INCLUDE_NEW_TIME_EVENTS 0
-#else
-#define INCLUDE_NEW_TIME_EVENTS 0
-#endif
-
-/******************************************************************************
- * INCLUDE_FLOAT_SUPPORT
- *
- * Macro which should be defined as either zero (0) or one (1). 
- *
- * If this is zero (0), all references to floating point values are removed,
- * in case floating point values are not supported by the platform used.
- * Floating point values are only used in vTracePrintF and its subroutines, to 
- * store float (%f) or double (%lf) arguments.
- *
- * vTracePrintF can be used with integer and string arguments in either case.
- *
- * Default value is 1.
- *****************************************************************************/
-/* floating point format is supported in vTracePrintF() */ /* << EST */
-#define INCLUDE_FLOAT_SUPPORT 0
-
-
-/******************************************************************************
- * INCLUDE_OBJECT_DELETE
- * 
- * Macro which should be defined as either zero (0) or one (1). 
- *
- * This must be enabled (1) if tasks, queues or other 
- * traced kernel objects are deleted at runtime. If no deletes are made, this 
- * can be set to 0 in order to exclude the delete-handling code.
- *
- * Default value is 1.
- *****************************************************************************/
-#if 1 /* << EST */
-#define INCLUDE_OBJECT_DELETE 1
-#else
-#define INCLUDE_OBJECT_DELETE 1
-#endif
+#define TRC_OBJECT_DATA_SLOTS   20
 
 /*******************************************************************************
- * SYMBOL_TABLE_SIZE
+ * Configuration Macro: TRC_RTT_UP_BUFFER_INDEX
  *
- * Macro which should be defined as an integer value.
+ * Defines the RTT buffer to use for writing the trace data. Make sure that
+ * the PC application has the same setting (File->Settings).
  *
- * This defines the capacity of the symbol table, in bytes. This symbol table 
- * stores User Events labels and names of deleted tasks, queues, or other kernel
- * objects. If you don't use User Events or delete any kernel 
- * objects you set this to a very low value. The minimum recommended value is 4.
- * A size of zero (0) is not allowed since a zero-sized array may result in a 
- * 32-bit pointer, i.e., using 4 bytes rather than 0.
- *
- * Default value is 800.
  ******************************************************************************/
-#if 1 /* << EST */
-#define SYMBOL_TABLE_SIZE 400
-#else
-#define SYMBOL_TABLE_SIZE 800
-#endif
+#define TRC_RTT_UP_BUFFER_INDEX   2
 
-#if (SYMBOL_TABLE_SIZE == 0)
-#error "SYMBOL_TABLE_SIZE may not be zero!"
-#endif
-
-/******************************************************************************
- * NameLenTask, NameLenQueue, ...
+/*******************************************************************************
+ * Configuration Macro: TRC_RTT_DOWN_BUFFER_INDEX
  *
- * Macros that specify the maximum lengths (number of characters) for names of
- * kernel objects, such as tasks and queues. If longer names are used, they will
- * be truncated when stored in the recorder.
- *****************************************************************************/
-/* Maximum object name length for each class (includes zero termination) */
-#if 1 /* << EST */
-#define NameLenTask       configMAX_TASK_NAME_LEN
-#define NameLenISR        10
-#define NameLenQueue      15
-#define NameLenSemaphore  15
-#define NameLenMutex      15
-#define NameLenTimer      15
-#define NameLenEventGroup 15
-#else
-#define NameLenTask       15
-#define NameLenISR        15
-#define NameLenQueue      15
-#define NameLenSemaphore  15
-#define NameLenMutex      15
-#define NameLenTimer      15
-#define NameLenEventGroup 15
-#endif
-
-/* << EST: additional configuration item */
-/******************************************************************************
- * TRACE_DESCRIPTION
+ * Defines the RTT buffer to use for reading the trace data. Make sure that
+ * the PC application has the same setting (File->Settings).
  *
- * Macro which should be defined as a string.
- *
- * This string is stored in the trace and displayed in Tracealyzer. Can be
- * used to store, e.g., system version or build date. This is also used to store
- * internal error messages from the recorder, which if occurs overwrites the
- * value defined here. This may be maximum 256 chars.
- *****************************************************************************/
-#if 1 /* << EST */
-#define TRACE_DESCRIPTION "FreeRTOS+Trace"
-#else
-#define TRACE_DESCRIPTION "Tracealyzer Recorder Test Program"
-#endif
-
-/* << EST: additional configuration item */
-/******************************************************************************
- * TRACE_DESCRIPTION_MAX_LENGTH
- *
- * The maximum length (including zero termination) for the TRACE_DESCRIPTION
- * string. Since this string also is used for internal error messages from the 
- * recorder do not make it too short, as this may truncate the error messages.
- * Default is 80. 
- * Maximum allowed length is 256 - the trace will fail to load if longer.
- *****************************************************************************/
-#if 1 /* << EST */
-#define TRACE_DESCRIPTION_MAX_LENGTH 80
-#else
-#define TRACE_DESCRIPTION_MAX_LENGTH 80
-#endif
-
-
-/******************************************************************************
- * TRACE_DATA_ALLOCATION
- *
- * This defines how to allocate the recorder data structure, i.e., using a 
- * static declaration or using a dynamic allocation in runtime (malloc).
- *
- * Should be one of these two options:
- * - TRACE_DATA_ALLOCATION_STATIC (default)
- * - TRACE_DATA_ALLOCATION_DYNAMIC
- *
- * Using static allocation has the benefits of compile-time errors if the buffer 
- * is too large (too large constants in trcConfig.h) and no need to call the 
- * initialization routine (xTraceInitTraceData).
- *
- * Using dynamic allocation may give more flexibility in some cases.
- *****************************************************************************/
-
-#if 1 /* << EST */
-#define TRACE_DATA_ALLOCATION TRACE_DATA_ALLOCATION_STATIC
-#else
-#define TRACE_DATA_ALLOCATION TRACE_DATA_ALLOCATION_STATIC
-#endif
-
-
-
-/******************************************************************************
- *** ADVANCED SETTINGS ********************************************************
- ******************************************************************************
- * The remaining settings are not necessary to modify but allows for optimizing
- * the recorder setup for your specific needs, e.g., to exclude events that you
- * are not interested in, in order to get longer traces.
- *****************************************************************************/
-
-/******************************************************************************
-* HEAP_SIZE_BELOW_16M
-*
-* An integer constant that can be used to reduce the buffer usage of memory
-* allocation events (malloc/free). This value should be 1 if the heap size is 
-* below 16 MB (2^24 byte), and you can live with reported addresses showing the 
-* lower 24 bits only. If 0, you get the full 32-bit addresses.
-*
-* Default value is 0.
-******************************************************************************/
-#if 1 /* << EST */
-#define HEAP_SIZE_BELOW_16M 0
-#else
-#define HEAP_SIZE_BELOW_16M 0
-#endif
-
-/******************************************************************************
- * USE_LINKER_PRAGMA
- *
- * Macro which should be defined as an integer value, default is 0.
- *
- * If this is 1, the header file "recorderdata_linker_pragma.h" is included just
- * before the declaration of RecorderData (in trcBase.c), i.e., the trace data 
- * structure. This allows the user to specify a pragma with linker options. 
- *
- * Example (for IAR Embedded Workbench and NXP LPC17xx):
- * #pragma location="AHB_RAM_MEMORY"
- * 
- * This example instructs the IAR linker to place RecorderData in another RAM 
- * bank, the AHB RAM. This can also be used for other compilers with a similar
- * pragmas for linker options.
- * 
- * Note that this only applies if using static allocation, see below.
  ******************************************************************************/
-
-#define USE_LINKER_PRAGMA 0
-
-/******************************************************************************
- * USE_IMPLICIT_IFE_RULES
- *
- * Macro which should be defined as either zero (0) or one (1). 
- * Default is 1.
- * 
- * Tracealyzer groups the events into actor instances, based on context-switches
- * and a definition of "Instance Finish Events", or IFEs. These are kernel calls 
- * considered to be the last event in a task instance. Some kernel calls are 
- * considered IFEs by default (e.g., delay functions), but it is also possible
- * to specify this individually for each task (see vTraceTaskInstanceFinish).
- * 
- * If USE_IMPLICIT_IFE_RULES is one (1), the default IFEs will be enabled, which
- * gives a "typical" grouping of events into instances. You can combine this 
- * with calls to vTraceTaskInstanceFinish for specific tasks.
- *
- * If USE_IMPLICIT_IFE_RULES is zero (0), the implicit IFEs are disabled and all
- * events withing each task is then shown as a single instance, unless  you call 
- * vTraceTaskInstanceFinish() at suitable locations to mark the IFEs.
- *****************************************************************************/
-#if 1 /* << EST */
-#define USE_IMPLICIT_IFE_RULES 1
-#else
-#define USE_IMPLICIT_IFE_RULES 1
-#endif
-
-/******************************************************************************
- * USE_16BIT_OBJECT_HANDLES
- *
- * Macro which should be defined as either zero (0) or one (1).
- *
- * If set to 0 (zero), the recorder uses 8-bit handles to identify kernel 
- * objects such as tasks and queues. This limits the supported number of
- * concurrently active objects to 255 of each type (object class).
- *
- * If set to 1 (one), the recorder uses 16-bit handles to identify kernel 
- * objects such as tasks and queues. This limits the supported number of
- * concurrent objects to 65535 of each type (object class). However, since the
- * object property table is limited to 64 KB, the practical limit is about
- * 3000 objects in total. 
- * 
- * Default is 0.
- * 
- * NOTE: An object with handle above 255 will use an extra 4-byte record in 
- * the event buffer whenever referenced. Moreover, some internal tables in the 
- * recorder gets larger when using 16-bit handles. The additional RAM usage is 
- * 5-10 byte plus 1 byte per kernel object i.e., task, queue, mutex, etc.
- *****************************************************************************/
-#if 1 /* << EST */
-#define USE_16BIT_OBJECT_HANDLES 0
-#else
-#define USE_16BIT_OBJECT_HANDLES 0
-#endif
-
-/******************************************************************************
- * USE_TRACE_ASSERT
- *
- * Macro which should be defined as either zero (0) or one (1). 
- * Default is 1.
- *
- * If this is one (1), the TRACE_ASSERT macro will verify that a condition is 
- * true. If the condition is false, vTraceError() will be called.
- * This is used on several places in the recorder code for sanity checks on
- * parameters. Can be switched off to reduce CPU usage of the tracing.
- *****************************************************************************/
-#define USE_TRACE_ASSERT 1
+#define TRC_RTT_DOWN_BUFFER_INDEX   2
 
 
 /*******************************************************************************
- * USE_SEPARATE_USER_EVENT_BUFFER
+ * Configuration Macro: TRC_CTRL_TASK_STACK_SIZE
  *
- * Macro which should be defined as an integer value.
- * Default is zero (0).
- *
- * This enables and disables the use of the separate user event buffer. Using 
- * this separate buffer has the benefit of not overwriting the user events with 
- * kernel events (usually generated at a much higher rate), i.e., when using 
- * ring-buffer mode.
- *
- * Note: When using the separate user event buffer, you may get an artificial
- * task instance named "Unknown actor". This is added as a placeholder when the 
- * user event history is longer than the task scheduling history.
+ * The stack size of the TzCtrl task, that receive commands.
+ * We are aiming to remove this extra task in future versions.
  ******************************************************************************/
-#define USE_SEPARATE_USER_EVENT_BUFFER 0
+#define TRC_CTRL_TASK_STACK_SIZE   configMINIMAL_STACK_SIZE
 
 /*******************************************************************************
- * USER_EVENT_BUFFER_SIZE
+ * Configuration Macro: TRC_CTRL_TASK_PRIORITY
  *
- * Macro which should be defined as an integer value.
- *
- * This defines the capacity of the user event buffer, in number of slots.
- * A single user event can use between 1 and X slots, depending on the data.
- *
- * Only in use if USE_SEPARATE_USER_EVENT_BUFFER is set to 1.
+ * The priority of the TzCtrl task, that receive commands from.
+ * We are aiming to remove this extra task in future versions.
  ******************************************************************************/
-#define USER_EVENT_BUFFER_SIZE 10
-
+#define TRC_CTRL_TASK_PRIORITY 1
 
 /*******************************************************************************
- * USER_EVENT_CHANNELS
+ * Configuration Macro: TRC_CTRL_TASK_DELAY
  *
- * Macro which should be defined as an integer value.
- *
- * This defines the number of allowed user event channels.
- *
- * Only in use if USE_SEPARATE_USER_EVENT_BUFFER is set to 1.
+ * The delay between every loop of the TzCtrl task. A high delay will reduce the
+ * CPU load, but may cause missed events if the TzCtrl task is performing the 
+ * trace transfer.
  ******************************************************************************/
-#define CHANNEL_FORMAT_PAIRS 32
+#define TRC_CTRL_TASK_DELAY ((10 * configTICK_RATE_HZ) / 1000)
 
+/*******************************************************************************
+ * Configuration Macro: TRC_MEASURE_BLOCKING_TIME
+ *
+ * If using SEGGER_RTT_MODE_BLOCK_IF_FIFO_FULL, this activates detection and
+ * warnings in case of blocking in SEGGER_RTT_Write (if too small buffer).
+ *
+ * If enabling this option (set to 1) warnings are given as User Events if
+ * blocking occurs, including the longest blocking time. These warnings are
+ * given on the channel "Blocking on trace buffer".
+ *
+ * Note: If you get such warnings, you can study the blocking time in the User
+ * Event Signal Plot to get an overview of the magnitude of the blocking and
+ * decide if acceptable.
+ *
+ * To eliminate or at least reduce occurrences of blocking:
+ *
+ * - Verify the J-Link Speed in the Settings dialog of the PC application.
+ *   Default is 4 MHz, but can be increased a lot depending on your J-Link.
+ *
+ *   Note: If you set the speed higher than your J-Link can manage, the J-Link
+ *   driver will instead use the fastest supported speed. The actual speed used
+ *   is shown in the title of the trace receiver window.
+ *
+ * - Increase the buffer size (BUFFER_SIZE_UP in SEGGER_RTT_Conf.h).
+ *
+ * - Reduce the amount of data produced, e.g., by removing frequent User Events.
+ ******************************************************************************/
+#define TRC_MEASURE_BLOCKING_TIME 0
+
+/*******************************************************************************
+ * Configuration Macro: TRC_BLOCKING_MIN_CYCLES
+ *
+ * Threshold value for deciding if SEGGER_RTT_Write has blocked. Most events
+ * take 200-300 cycles on ARM Cortex-M MCUs, so anything above 500 cycles should
+ * be due to blocking on a full buffer (i.e., waiting for the debugger to read
+ * the RTT buffer data and make room for more...).
+ ******************************************************************************/
+#define TRC_BLOCKING_MIN_CYCLES 500
+
+/*******************************************************************************
+ * Configuration Macro: TRC_RECORDER_BUFFER_ALLOCATION
+ *
+ * Specifies how the recorder buffer is allocated.
+ *
+ * Values:
+ * TRC_RECORDER_BUFFER_ALLOCATION_STATIC
+ * TRC_RECORDER_BUFFER_ALLOCATION_DYNAMIC
+ ******************************************************************************/
+#define TRC_RECORDER_BUFFER_ALLOCATION TRC_RECORDER_BUFFER_ALLOCATION_STATIC
+
+/*******************************************************************************
+ * Configuration Macro: TRC_RECORDER_TRANSFER_METHOD
+ *
+ * Specifies what type of transfer method is used.
+ *
+ * Values:
+ * TRC_RECORDER_TRANSFER_METHOD_JLINK_RTT_BLOCK
+ * TRC_RECORDER_TRANSFER_METHOD_JLINK_RTT_NOBLOCK
+ * TRC_RECORDER_TRANSFER_METHOD_TCPIP
+ * TRC_RECORDER_TRANSFER_METHOD_CUSTOM
+ ******************************************************************************/
+#define TRC_RECORDER_TRANSFER_METHOD TRC_RECORDER_TRANSFER_METHOD_JLINK_RTT_BLOCK
+
+/*******************************************************************************
+ * Configuration Macro: TRC_STREAM_CUSTOM_BLOCKING_TRANSFER
+ *
+ * Note: Only active if TRC_RECORDER_TRANSFER_METHOD_CUSTOM is used.
+ *
+ * Specifies how the custom transfer method handles full buffers.
+ *
+ * Values:
+ * 0 - The custom transfer method skips sending the data if the buffer is full.
+ * 1 - The custom transfer method blocks on send if the buffer is full.
+ ******************************************************************************/
+ #define TRC_STREAM_CUSTOM_BLOCKING_TRANSFER 
+
+/*******************************************************************************
+ * Configuration Macro: TRC_STREAM_CUSTOM_ALLOCATE_FIELDS
+ *
+ * Note: Only active if TRC_RECORDER_TRANSFER_METHOD_CUSTOM is used.
+ *
+ * Macro that should allocate any buffers needed for the transfer method.
+ * See trcStreamPort.h for examples.
+ ******************************************************************************/
+#define TRC_STREAM_CUSTOM_ALLOCATE_FIELDS() 
+
+/*******************************************************************************
+ * Configuration Macro: TRC_STREAM_CUSTOM_INIT
+ *
+ * Note: Only active if TRC_RECORDER_TRANSFER_METHOD_CUSTOM is used.
+ *
+ * Used to initialize and set up the transfer method.
+ * See trcStreamPort.h for examples.
+ ******************************************************************************/
+#define TRC_STREAM_CUSTOM_INIT() 
+
+/*******************************************************************************
+ * Configuration Macro: TRC_STREAM_CUSTOM_ALLOCATE_EVENT
+ *
+ * Note: Only active if TRC_RECORDER_TRANSFER_METHOD_CUSTOM is used.
+ *
+ * Specifies how the trace events that should be sent using the transfer method
+ * are allocated first.
+ * See trcStreamPort.h for examples.
+ ******************************************************************************/
+#define TRC_STREAM_CUSTOM_ALLOCATE_EVENT(_type, _ptr, _size) 
+
+/*******************************************************************************
+ * Configuration Macro: TRC_STREAM_CUSTOM_COMMIT_EVENT
+ *
+ * Note: Only active if TRC_RECORDER_TRANSFER_METHOD_CUSTOM is used.
+ *
+ * Specifies how trace events are sent/written.
+ * See trcStreamPort.h for examples.
+ ******************************************************************************/
+#define TRC_STREAM_CUSTOM_COMMIT_EVENT(_ptr, _size) 
+
+/*******************************************************************************
+ * Configuration Macro: TRC_STREAM_CUSTOM_READ_DATA
+ *
+ * Note: Only active if TRC_RECORDER_TRANSFER_METHOD_CUSTOM is used.
+ *
+ * Specifies how data is read using the transfer method.
+ * See trcStreamPort.h for examples.
+ ******************************************************************************/
+#define TRC_STREAM_CUSTOM_READ_DATA(_ptrData, _size, _ptrBytesRead) 
+
+/*******************************************************************************
+ * Configuration Macro: TRC_STREAM_CUSTOM_PERIODIC_SEND_DATA
+ *
+ * Note: Only active if TRC_RECORDER_TRANSFER_METHOD_CUSTOM is used.
+ *
+ * Specifies how data is sent periodically. Used by certain transfer methods.
+ * See trcStreamPort.h for examples.
+ ******************************************************************************/
+#define TRC_STREAM_CUSTOM_PERIODIC_SEND_DATA(_ptrBytesSent) 
+
+/*******************************************************************************
+ * Configuration Macro: TRC_STREAM_CUSTOM_ON_TRACE_BEGIN
+ *
+ * Note: Only active if TRC_RECORDER_TRANSFER_METHOD_CUSTOM is used.
+ *
+ * Called on tracing is started. Use this to perform any necessary steps to 
+ * properly start the trace, such as clearing buffers.
+ ******************************************************************************/
+#define TRC_STREAM_CUSTOM_ON_TRACE_BEGIN() 
+
+/*******************************************************************************
+ * Configuration Macro: TRC_STREAM_CUSTOM_ON_TRACE_END
+ *
+ * Note: Only active if TRC_RECORDER_TRANSFER_METHOD_CUSTOM is used.
+ *
+ * Called when tracing is disabled. Use this to perform any necessary steps to 
+ * properly shut down the tracing, such as clearing buffers.
+ ******************************************************************************/
+#define TRC_STREAM_CUSTOM_ON_TRACE_END()
+
+
+#if 1 /* << EST */
+#include "SEGGER_RTT_Conf.h"
+/* use different buffer sizes for up/down channels other than zero */
+#if TRC_RTT_UP_BUFFER_INDEX == 0
+  #define TRC_BUFFER_UP_SIZE    BUFFER_SIZE_UP /* use setting from SEGGER_RTT_Conf.h */
+#else
+  #define TRC_BUFFER_UP_SIZE    1024
+#endif
+#if TRC_RTT_DOWN_BUFFER_INDEX == 0
+  #define TRC_BUFFER_DOWN_SIZE   BUFFER_SIZE_DOWN /* use setting from SEGGER_RTT_Conf.h */
+#else
+  #define TRC_BUFFER_DOWN_SIZE  32
+#endif
+#if TRC_RTT_UP_BUFFER_INDEX>=SEGGER_RTT_MAX_NUM_UP_BUFFERS || TRC_RTT_DOWN_BUFFER_INDEX>=SEGGER_RTT_MAX_NUM_DOWN_BUFFERS
+  #error "check number of available RTT buffers!"
+#endif
+#endif /* << EST */
 
 #endif
-
 
