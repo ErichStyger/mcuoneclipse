@@ -44,6 +44,10 @@
 #include "SwTimer.h"
 #include "RTT1.h"
 #include "SYS1.h"
+#include "FreeRTOSConfig.h"
+#if configUSE_TRACE_HOOKS
+  #include "PTRC1.h"
+#endif
 
 void vMainConfigureTimerForRunTimeStats(void) {
 }
@@ -59,6 +63,11 @@ int main(void) {
   BOARD_InitPins();
   BOARD_BootClockHSRUN();
   BOARD_InitDebugConsole();
+#if configUSE_TRACE_HOOKS
+  if (PTRC1_uiTraceStart()==0) {
+    for(;;){} /* error starting trace recorder. Not setup for enough queues/tasks/etc? */
+  }
+#endif
   RTT1_Init();
   SYS1_Init();
   SWT_Init();
