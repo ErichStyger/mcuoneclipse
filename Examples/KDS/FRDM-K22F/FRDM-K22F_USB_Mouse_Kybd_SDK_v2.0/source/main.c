@@ -63,16 +63,19 @@ int main(void) {
   BOARD_InitPins();
   BOARD_BootClockHSRUN();
   BOARD_InitDebugConsole();
-#if configUSE_TRACE_HOOKS
-  if (PTRC1_uiTraceStart()==0) {
+
+  RTT1_Init(); /* initialize SEGGER RTT */
+#if configUSE_TRACE_HOOKS /* using Percepio FreeRTOS+Trace */
+  vTraceInitTraceData();
+  if (uiTraceStart()==0) {
     for(;;){} /* error starting trace recorder. Not setup for enough queues/tasks/etc? */
   }
-#endif
-  RTT1_Init();
+#elif configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* using SEGGER SystemViewer Trace */
   SYS1_Init();
-  SWT_Init();
-  CompositeInit();
-  vTaskStartScheduler();
+#endif
+  SWT_Init(); /* init FreeRTOS software timers */
+  CompositeInit(); /* init Composite USB device */
+  vTaskStartScheduler(); /* start FreeRTOS */
   for(;;) { /* Infinite loop to avoid leaving the main function */
     __asm("NOP"); /* something to use as a breakpoint stop while looping */
   }

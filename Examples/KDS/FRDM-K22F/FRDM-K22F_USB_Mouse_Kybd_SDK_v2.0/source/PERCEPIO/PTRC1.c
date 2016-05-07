@@ -4,15 +4,16 @@
 **     Project     : k64f_pex
 **     Processor   : MK64FN1M0VLL12
 **     Component   : PercepioTrace
-**     Version     : Component 01.072, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.073, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-05-07, 11:09, # CodeGen: 131
+**     Date/Time   : 2016-05-07, 11:57, # CodeGen: 132
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : PTRC1
 **          RTOS+Trace Version                             : V3.0.2
+**          SDK                                            : KSDK1
 **          Streaming with RTT                             : Disabled
 **          Utility                                        : UTIL1
 **          Scheduling only                                : no

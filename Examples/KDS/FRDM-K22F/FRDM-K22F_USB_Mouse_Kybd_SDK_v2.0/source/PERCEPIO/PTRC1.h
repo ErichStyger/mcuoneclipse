@@ -4,15 +4,16 @@
 **     Project     : k64f_pex
 **     Processor   : MK64FN1M0VLL12
 **     Component   : PercepioTrace
-**     Version     : Component 01.072, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.073, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-05-07, 11:09, # CodeGen: 131
+**     Date/Time   : 2016-05-07, 12:02, # CodeGen: 134
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : PTRC1
 **          RTOS+Trace Version                             : V3.0.2
+**          SDK                                            : KSDK1
 **          Streaming with RTT                             : Disabled
 **          Utility                                        : UTIL1
 **          Scheduling only                                : no
@@ -99,16 +100,24 @@
 #define __PTRC1_H
 
 /* MODULE PTRC1. */
+/* Include inherited beans */
+#include "KSDK1.h"
+#include "UTIL1.h"
 
+#if KSDK1_SDK_VERSION_USED == KSDK1_SDK_VERSION_NONE
 /* Include shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
 #include "PE_Const.h"
 #include "IO_Map.h"
-/* Include inherited beans */
-#include "UTIL1.h"
+  #include "Cpu.h"
+#else
+  /* prototypes for events */
+  void PTRC1_OnTraceStart(void);
+  void PTRC1_OnTraceStop(void);
+  void PTRC1_OnTraceWrap(void);
+#endif
 
-#include "Cpu.h"
 #include "trcUser.h" /* traditional recorder, without streaming over RTT */
 
 
