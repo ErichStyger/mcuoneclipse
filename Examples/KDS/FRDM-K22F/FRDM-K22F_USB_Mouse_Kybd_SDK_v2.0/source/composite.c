@@ -340,7 +340,7 @@ void USB_DeviceTask(void *handle)
 }
 #endif
 
-void APP_task(void *handle)
+void USB_task(void *handle)
 {
     USB_DeviceApplicationInit();
 
@@ -367,19 +367,16 @@ void APP_task(void *handle)
     }
 }
 
-void CompositeInit(void)
-{
-    if (xTaskCreate(APP_task,                                   /* pointer to the task */
-                    "app task",                                 /* task name for kernel awareness debugging */
-                    5000L / sizeof(portSTACK_TYPE),             /* task stack size */
-                    &g_UsbDeviceComposite,                      /* optional task startup argument */
-                    4U,                                         /* initial priority */
-                    &g_UsbDeviceComposite.applicationTaskHandle /* optional task handle to create */
-                    ) != pdPASS)
-    {
-        usb_echo("app task create failed!\r\n");
-        return;
-    }
-
-
+void CompositeInit(void) {
+  if (xTaskCreate(USB_task,                                   /* pointer to the task */
+                  "USB task",                                 /* task name for kernel awareness debugging */
+                  5000L / sizeof(portSTACK_TYPE),             /* task stack size */
+                  &g_UsbDeviceComposite,                      /* optional task startup argument */
+                  tskIDLE_PRIORITY+4,                         /* initial priority */
+                  &g_UsbDeviceComposite.applicationTaskHandle /* optional task handle to create */
+                  ) != pdPASS)
+  {
+      usb_echo("app task create failed!\r\n");
+      return;
+  }
 }

@@ -45,16 +45,10 @@
 #include "RTT1.h"
 #include "SYS1.h"
 #include "FreeRTOSConfig.h"
+#include "Application.h"
 #if configUSE_TRACE_HOOKS
   #include "PTRC1.h"
 #endif
-
-void vMainConfigureTimerForRunTimeStats(void) {
-}
-
-uint32_t ulMainGetRunTimeCounterValue(void) {
-  return xTaskGetTickCountFromISR();
-}
 
 /*!
  * @brief Application entry point.
@@ -64,6 +58,7 @@ int main(void) {
   BOARD_BootClockHSRUN();
   BOARD_InitDebugConsole();
 
+  APP_Init(); /* initialize application */
   RTT1_Init(); /* initialize SEGGER RTT */
 #if configUSE_TRACE_HOOKS /* using Percepio FreeRTOS+Trace */
   vTraceInitTraceData();

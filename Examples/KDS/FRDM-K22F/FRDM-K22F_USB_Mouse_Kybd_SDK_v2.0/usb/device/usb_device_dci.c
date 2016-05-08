@@ -610,6 +610,9 @@ usb_status_t USB_DeviceInit(uint8_t controllerId, usb_device_callback_t deviceCa
         USB_DeviceDeinit(deviceHandle);
         return kStatus_USB_Error;
     }
+#if 1 /* << EST */
+    vQueueAddToRegistry(deviceHandle->notificationQueue, "USBNotify");
+#endif
 #endif
     /* Initialize the controller */
     error = deviceHandle->controllerInterface->deviceInit(controllerId, deviceHandle, &deviceHandle->controllerHandle);

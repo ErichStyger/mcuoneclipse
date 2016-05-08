@@ -99,7 +99,7 @@
 #define USB_DEVICE_CONFIG_ENDPOINTS (4U)
 
 /*! @brief Whether the device task is enabled. */
-#define USB_DEVICE_CONFIG_USE_TASK (0U)
+#define USB_DEVICE_CONFIG_USE_TASK (1U)
 
 /*! @brief How many the notification message are supported when the device task enabled. */
 #define USB_DEVICE_CONFIG_MAX_MESSAGES (8U)

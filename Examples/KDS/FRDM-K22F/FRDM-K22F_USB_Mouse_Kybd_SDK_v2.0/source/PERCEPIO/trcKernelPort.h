@@ -889,6 +889,12 @@ switch (pxQueue->ucQueueType) \
 #define traceTASK_NOTIFY_GIVE_FROM_ISR() \
 	vTraceStoreEvent1(PSF_EVENT_TASK_NOTIFY_GIVE_FROM_ISR, (uint32_t)xTaskToNotify);
 
+#if 1 /* << EST */
+#undef traceQUEUE_REGISTRY_ADD
+#define traceQUEUE_REGISTRY_ADD(queue, name) \
+  vTraceSetQueueName(queue, name);
+#endif
+
 /************************************************************************/
 /* KERNEL SPECIFIC MACROS TO NAME OBJECTS, IF NECESSARY				 */
 /************************************************************************/

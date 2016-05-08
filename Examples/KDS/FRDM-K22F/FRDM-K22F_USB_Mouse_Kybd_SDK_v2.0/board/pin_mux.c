@@ -40,6 +40,14 @@ static const gpio_pin_config_t LED_configOutput = {
   1,  /* initial value */
 };
 
+/* SW2: PTC1 (near USB)
+ * SW3: PTB17
+ */
+static const gpio_pin_config_t SW_configInput = {
+    kGPIO_DigitalInput,  /* use as input pin */
+  1,  /* initial value */
+};
+
 /* Function Name : BOARD_InitPins */
 void BOARD_InitPins(void)
 {
@@ -47,16 +55,24 @@ void BOARD_InitPins(void)
     /* Ungate the port clock */
     CLOCK_EnableClock(kCLOCK_PortE);
 
-    CLOCK_EnableClock(kCLOCK_PortA); /* PTA1 and PTA2 */
-    CLOCK_EnableClock(kCLOCK_PortD); /* PTD5 */
+    CLOCK_EnableClock(kCLOCK_PortA); /* LED PTA1 and PTA2 */
+    CLOCK_EnableClock(kCLOCK_PortB); /* SW3 on PTB17 */
+    CLOCK_EnableClock(kCLOCK_PortC); /* SW2 on PTC1 */
+    CLOCK_EnableClock(kCLOCK_PortD); /* LED PTD5 */
 
     PORT_SetPinMux(PORTA, 1u, kPORT_MuxAsGpio); /* red led, PTA1 */
     PORT_SetPinMux(PORTA, 2u, kPORT_MuxAsGpio); /* green led, PTA2 */
     PORT_SetPinMux(PORTD, 5u, kPORT_MuxAsGpio); /* blue led, PTD5 */
 
+    PORT_SetPinMux(PORTB, 17u, kPORT_MuxAsGpio); /* SW3 on PTB17 */
+    PORT_SetPinMux(PORTC, 1u, kPORT_MuxAsGpio);  /* SW2 on PTC1  */
+
     GPIO_PinInit(GPIOA, 1u, &LED_configOutput); /* mux PTA1 as output */
     GPIO_PinInit(GPIOA, 2u, &LED_configOutput); /* mux PTA2 as output */
     GPIO_PinInit(GPIOD, 5u, &LED_configOutput); /* mux PTD5 as output */
+
+    GPIO_PinInit(GPIOB, 17u, &SW_configInput); /* mux SW3 on PTB17 as inpug */
+    GPIO_PinInit(GPIOC, 1u, &SW_configInput); /* mux SW2 on PTC1 as inpug */
 
     /* Affects PORTE_PCR0 register */
     PORT_SetPinMux(PORTE, 0u, kPORT_MuxAlt3);
