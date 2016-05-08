@@ -38,6 +38,7 @@ static void ButtonTask(void *pvParameters) {
       vTaskDelay(pdMS_TO_TICKS(50)); /* debounce */
       while(SW2IsPressed()) {
         /* wait until released */
+        //vTaskDelay(pdMS_TO_TICKS(10));
       }
       (void)xSemaphoreGive(semSW2); /* send message */
     }
@@ -45,6 +46,7 @@ static void ButtonTask(void *pvParameters) {
       vTaskDelay(pdMS_TO_TICKS(50)); /* debounce */
       while(SW3IsPressed()) {
         /* wait until released */
+        //vTaskDelay(pdMS_TO_TICKS(10));
       }
       (void)xSemaphoreGive(semSW3); /* send message */
     }
@@ -62,7 +64,7 @@ void APP_Init(void) {
   if (semSW3==NULL) { /* semaphore creation failed */
     for(;;){} /* error */
   }
-  vQueueAddToRegistry(semSW2, "SW3_Sem");
+  vQueueAddToRegistry(semSW3, "SW3_Sem");
   if (xTaskCreate(ButtonTask, "Buttons", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
