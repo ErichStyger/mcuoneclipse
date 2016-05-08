@@ -121,10 +121,11 @@
  *----------------------------------------------------------*/
 #define configGENERATE_STATIC_SOURCES             1 /* 1: it will create 'static' sources to be used without Processor Expert; 0: Processor Expert code generated */
 #define configPEX_KINETIS_SDK                     1 /* 1: project is a Kinetis SDK Processor Expert project; 0: No Kinetis Processor Expert project */
-#define configGENERATE_RUN_TIME_STATS_USE_TICKS   0 /* 1: Use the RTOS tick counter as runtime counter. 0: use extra timer */
-#define configGENERATE_RUN_TIME_STATS             0 /* 1: generate runtime statistics; 0: no runtime statistics */
+#define configGENERATE_RUN_TIME_STATS_USE_TICKS   1 /* 1: Use the RTOS tick counter as runtime counter. 0: use extra timer */
+#define configGENERATE_RUN_TIME_STATS             1 /* 1: generate runtime statistics; 0: no runtime statistics */
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()  /* nothing */ /* default: use Tick counter as runtime counter */
-#define portGET_RUN_TIME_COUNTER_VALUE()          xTaskGetTickCount() /* default: use Tick counter as runtime counter */
+unsigned int ulMainGetRunTimeCounterValue(void); /* prototype */
+#define portGET_RUN_TIME_COUNTER_VALUE()          ulMainGetRunTimeCounterValue() /* default: use Tick counter as runtime counter */
 #define configUSE_PREEMPTION                      1 /* 1: pre-emptive mode; 0: cooperative mode */
 #define configUSE_TIME_SLICING                    1 /* 1: use time slicing; 0: don't time slice at tick interrupt time */
 #define configUSE_IDLE_HOOK                       0 /* 1: use Idle hook; 0: no Idle hook */

@@ -15,7 +15,7 @@ xSemaphoreHandle semSW2, semSW3;
 void vMainConfigureTimerForRunTimeStats(void) {
 }
 
-uint32_t ulMainGetRunTimeCounterValue(void) {
+unsigned int ulMainGetRunTimeCounterValue(void) {
   return xTaskGetTickCountFromISR();
 }
 
