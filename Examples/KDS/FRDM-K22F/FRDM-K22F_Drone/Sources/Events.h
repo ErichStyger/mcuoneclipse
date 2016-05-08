@@ -64,6 +64,7 @@
 #include "KSDK1.h"
 #include "RTT1.h"
 #include "SYS1.h"
+#include "PTRC1.h"
 #include "HF1.h"
 #include "TU1.h"
 #include "PWM1.h"
