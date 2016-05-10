@@ -245,9 +245,20 @@ void USBHS_IRQHandler(void)
 }
 #endif
 #if defined(USB_DEVICE_CONFIG_KHCI) && (USB_DEVICE_CONFIG_KHCI > 0U)
+#include "Application.h"
 void USB0_IRQHandler(void)
 {
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+  SEGGER_SYSVIEW_RecordEnterISR();
+#elif configUSE_TRACE_HOOKS
+  vTraceStoreISRBegin(TRACE_USB_ID);
+#endif
     USB_DeviceKhciIsrFunction(g_UsbDeviceComposite.deviceHandle);
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+  SEGGER_SYSVIEW_RecordExitISR();
+#elif configUSE_TRACE_HOOKS
+  vTraceStoreISREnd();
+#endif
 }
 #endif
 

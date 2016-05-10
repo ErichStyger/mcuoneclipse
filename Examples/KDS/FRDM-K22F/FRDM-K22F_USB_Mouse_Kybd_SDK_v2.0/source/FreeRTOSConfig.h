@@ -129,11 +129,11 @@ unsigned int ulMainGetRunTimeCounterValue(void); /* prototype */
 #define configUSE_PREEMPTION                      1 /* 1: pre-emptive mode; 0: cooperative mode */
 #define configUSE_TIME_SLICING                    1 /* 1: use time slicing; 0: don't time slice at tick interrupt time */
 #define configUSE_IDLE_HOOK                       0 /* 1: use Idle hook; 0: no Idle hook */
-#define configUSE_IDLE_HOOK_NAME                  FRTOS1_vApplicationIdleHook
+#define configUSE_IDLE_HOOK_NAME                  vApplicationIdleHook
 #define configUSE_TICK_HOOK                       0 /* 1: use Tick hook; 0: no Tick hook */
-#define configUSE_TICK_HOOK_NAME                  FRTOS1_vApplicationTickHook
-#define configUSE_MALLOC_FAILED_HOOK              0 /* 1: use MallocFailed hook; 0: no MallocFailed hook */
-#define configUSE_MALLOC_FAILED_HOOK_NAME         FRTOS1_vApplicationMallocFailedHook
+#define configUSE_TICK_HOOK_NAME                  vApplicationTickHook
+#define configUSE_MALLOC_FAILED_HOOK              1 /* 1: use MallocFailed hook; 0: no MallocFailed hook */
+#define configUSE_MALLOC_FAILED_HOOK_NAME         vApplicationMallocFailedHook
 #define configTICK_RATE_HZ                        ((TickType_t)100) /* frequency of tick interrupt */
 #define configSYSTICK_USE_LOW_POWER_TIMER         0 /* If using Kinetis Low Power Timer (LPTMR) instead of SysTick timer */
 #define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ    1 /* 1 kHz LPO timer. Set to 1 if not used */
@@ -154,7 +154,7 @@ unsigned int ulMainGetRunTimeCounterValue(void); /* prototype */
 /*----------------------------------------------------------*/
 /* Heap Memory */
 #define configFRTOS_MEMORY_SCHEME                 4 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc), 4 (coalesc blocks), 5 (multiple blocks) */
-#define configTOTAL_HEAP_SIZE                     ((size_t)(16*1024)) /* size of heap in bytes */
+#define configTOTAL_HEAP_SIZE                     ((size_t)(24*1024)) /* size of heap in bytes */
 #define configUSE_HEAP_SECTION_NAME               0 /* set to 1 if a custom section name (configHEAP_SECTION_NAME_STRING) shall be used, 0 otherwise */
 #if configUSE_HEAP_SECTION_NAME
 #define configHEAP_SECTION_NAME_STRING            ".m_data_20000000" /* heap section name (use e.g. ".m_data_20000000" for gcc and "m_data_20000000" for IAR). Check your linker file for the name used. */
@@ -163,17 +163,17 @@ unsigned int ulMainGetRunTimeCounterValue(void); /* prototype */
 /*----------------------------------------------------------*/
 #define configMAX_TASK_NAME_LEN                   12 /* task name length in bytes */
 #define configUSE_TRACE_FACILITY                  1 /* 1: include additional structure members and functions to assist with execution visualization and tracing, 0: no runtime stats/trace */
-#define configUSE_TRACE_HOOKS                     0 /* 1: Percepio Trace hooks, 0: not using Percepio Trace hooks */
-#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS      1 /* 1: Segger System Viewer hooks, 0: not using Segger System Viewer hooks */
+#define configUSE_TRACE_HOOKS                     1 /* 1: Percepio Trace hooks, 0: not using Percepio Trace hooks */
+#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS      0 /* 1: Segger System Viewer hooks, 0: not using Segger System Viewer hooks */
 #define configUSE_STATS_FORMATTING_FUNCTIONS      (configUSE_TRACE_FACILITY || configGENERATE_RUN_TIME_STATS)
 #define configUSE_16_BIT_TICKS                    0 /* 1: use 16bit tick counter type, 0: use 32bit tick counter type */
 #define configIDLE_SHOULD_YIELD                   1
 #define configUSE_CO_ROUTINES                     0
 #define configUSE_MUTEXES                         1
-#define configCHECK_FOR_STACK_OVERFLOW            0 /* 0 is disabling stack overflow. Set it to 1 for Method1 or 2 for Method2 */
-#define configCHECK_FOR_STACK_OVERFLOW_NAME       FRTOS1_vApplicationStackOverflowHook
+#define configCHECK_FOR_STACK_OVERFLOW            1 /* 0 is disabling stack overflow. Set it to 1 for Method1 or 2 for Method2 */
+#define configCHECK_FOR_STACK_OVERFLOW_NAME       vApplicationStackOverflowHook
 #define configUSE_RECURSIVE_MUTEXES               1
-#define configQUEUE_REGISTRY_SIZE                 5
+#define configQUEUE_REGISTRY_SIZE                 10
 #define configUSE_QUEUE_SETS                      0
 #define configUSE_COUNTING_SEMAPHORES             1
 #define configUSE_APPLICATION_TASK_TAG            0

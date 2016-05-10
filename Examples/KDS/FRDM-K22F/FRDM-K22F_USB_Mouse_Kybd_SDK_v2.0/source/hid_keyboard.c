@@ -41,6 +41,7 @@
 #include "composite.h"
 
 #include "hid_keyboard.h"
+#include "Application.h"
 
 /*******************************************************************************
  * Definitions
@@ -62,6 +63,7 @@ static usb_device_hid_keyboard_struct_t s_UsbDeviceHidKeyboard;
 /*******************************************************************************
  * Code
  ******************************************************************************/
+static bool kbdEnabled = FALSE;
 
 static usb_status_t USB_DeviceHidKeyboardAction(void)
 {
@@ -73,7 +75,18 @@ static usb_status_t USB_DeviceHidKeyboardAction(void)
     };
     static uint8_t dir = DOWN;
 
-    s_UsbDeviceHidKeyboard.buffer[2] = 0x00U;
+    if (kbdEnabled && xSemaphoreTake(semKbd, 0)==pdPASS) {
+      kbdEnabled = FALSE;
+    } else if (xSemaphoreTake(semKbd, 0)==pdPASS) {
+      kbdEnabled = TRUE;
+    }
+    if (!kbdEnabled) {
+      s_UsbDeviceHidKeyboard.buffer[2] = 0x00U;
+     return USB_DeviceHidSend(s_UsbDeviceComposite->hidKeyboardHandle, USB_HID_KEYBOARD_ENDPOINT_IN,
+                               s_UsbDeviceHidKeyboard.buffer, USB_HID_KEYBOARD_REPORT_LENGTH);
+    }
+
+   s_UsbDeviceHidKeyboard.buffer[2] = 0x00U;
     switch (dir)
     {
         case DOWN:

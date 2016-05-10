@@ -99,7 +99,7 @@ Purpose     : SEGGER SysView configuration.
 *       SysView buffer configuration
 */
 // Number of bytes that SysView uses for a buffer.
-#define SEGGER_SYSVIEW_RTT_BUFFER_SIZE    1024
+#define SEGGER_SYSVIEW_RTT_BUFFER_SIZE    4096
 #define SEGGER_SYSVIEW_RTT_CHANNEL        1
 #if SEGGER_SYSVIEW_RTT_CHANNEL>=SEGGER_RTT_MAX_NUM_UP_BUFFERS
   #error "Not enough RTT buffers allocated in SEGGER_RTT_Conf.h!"

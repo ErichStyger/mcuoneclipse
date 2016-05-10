@@ -41,6 +41,7 @@
 #include "composite.h"
 
 #include "hid_mouse.h"
+#include "Application.h"
 
 /*******************************************************************************
  * Definitions
@@ -62,6 +63,7 @@ static usb_device_hid_mouse_struct_t s_UsbDeviceHidMouse;
 /*******************************************************************************
  * Code
  ******************************************************************************/
+static bool mouseEnabled = FALSE;
 
 /* Update mouse pointer location. Draw a rectangular rotation*/
 static usb_status_t USB_DeviceHidMouseAction(void)
@@ -76,6 +78,18 @@ static usb_status_t USB_DeviceHidMouseAction(void)
         UP
     };
     static uint8_t dir = RIGHT;
+
+    if (mouseEnabled && xSemaphoreTake(semMouse, 0)==pdPASS) {
+      mouseEnabled = FALSE;
+    } else if (xSemaphoreTake(semMouse, 0)==pdPASS) {
+      mouseEnabled = TRUE;
+    }
+    if (!mouseEnabled) {
+      s_UsbDeviceHidMouse.buffer[1] = 0U;
+      s_UsbDeviceHidMouse.buffer[2] = 0U;
+      return USB_DeviceHidSend(s_UsbDeviceComposite->hidMouseHandle, USB_HID_MOUSE_ENDPOINT_IN,
+                               s_UsbDeviceHidMouse.buffer, USB_HID_MOUSE_REPORT_LENGTH);
+    }
 
     switch (dir)
     {

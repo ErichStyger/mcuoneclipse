@@ -952,7 +952,7 @@ void UART_TransferHandleIRQ(UART_Type *base, uart_handle_t *handle)
 
 void UART_TransferHandleErrorIRQ(UART_Type *base, uart_handle_t *handle)
 {
-    /* TODO: To be implemented. */
+    /* TO DO: To be implemented. */
 }
 
 #if defined(UART0)

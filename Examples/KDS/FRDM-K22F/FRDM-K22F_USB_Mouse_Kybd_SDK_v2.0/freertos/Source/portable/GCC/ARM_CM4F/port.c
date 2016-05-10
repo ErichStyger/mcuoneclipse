@@ -561,7 +561,7 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
         tickDuration -= tmp;
       }
       if (tickDuration > 1) {
-        /*! \todo Need to rethink this one! */
+        /*!  Need to rethink this one! */
         //tickDuration -= 1; /* decrement by one, to compensate for one timer tick, as we are already part way through it */
       } else {
         /* Not enough time to setup for the next tick, so skip it and setup for the
@@ -1051,7 +1051,7 @@ __asm void vPortSVCHandler(void) {
   ldr r0, [r1]
   /* Pop the core registers. */
 #if (configCPU_FAMILY==configCPU_FAMILY_ARM_M4F)
-  ldmia r0!, {r4-r11, r14} /* \todo: r14, check http://sourceforge.net/p/freertos/discussion/382005/thread/a9406af1/?limit=25#3bc7 */
+  ldmia r0!, {r4-r11, r14} /*  r14, check http://sourceforge.net/p/freertos/discussion/382005/thread/a9406af1/?limit=25#3bc7 */
 #else
   ldmia r0!, {r4-r11}
 #endif

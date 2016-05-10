@@ -22,7 +22,7 @@ static TimerHandle_t handle;
 static int led = 0;
 
 void vTimerCallback(TimerHandle_t xTimer) {
-  if (xSemaphoreTake(semSW3, 0 /*portMAX_DELAY*/)==pdPASS) { /* block on semaphore */
+  if (xSemaphoreTake(semLED, 0 /*portMAX_DELAY*/)==pdPASS) { /* block on semaphore */
     led++;
     if (led==3) { /* wrap */
       led = 0;

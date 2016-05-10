@@ -60,13 +60,13 @@ int main(void) {
 
   APP_Init(); /* initialize application */
   RTT1_Init(); /* initialize SEGGER RTT */
-#if configUSE_TRACE_HOOKS /* using Percepio FreeRTOS+Trace */
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* using SEGGER SystemViewer Trace */
+  SYS1_Init();
+#elif configUSE_TRACE_HOOKS /* using Percepio FreeRTOS+Trace */
   vTraceInitTraceData();
   if (uiTraceStart()==0) {
     for(;;){} /* error starting trace recorder. Not setup for enough queues/tasks/etc? */
   }
-#elif configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* using SEGGER SystemViewer Trace */
-  SYS1_Init();
 #endif
   SWT_Init(); /* init FreeRTOS software timers */
   CompositeInit(); /* init Composite USB device */
