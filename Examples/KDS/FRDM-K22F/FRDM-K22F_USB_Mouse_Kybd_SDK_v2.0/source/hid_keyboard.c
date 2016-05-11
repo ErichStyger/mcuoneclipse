@@ -63,7 +63,7 @@ static usb_device_hid_keyboard_struct_t s_UsbDeviceHidKeyboard;
 /*******************************************************************************
  * Code
  ******************************************************************************/
-static bool kbdEnabled = FALSE;
+static bool kbdEnabled = false;
 
 static usb_status_t USB_DeviceHidKeyboardAction(void)
 {
@@ -75,11 +75,18 @@ static usb_status_t USB_DeviceHidKeyboardAction(void)
     };
     static uint8_t dir = DOWN;
 
-    if (kbdEnabled && xSemaphoreTake(semKbd, 0)==pdPASS) {
-      kbdEnabled = FALSE;
-    } else if (xSemaphoreTake(semKbd, 0)==pdPASS) {
-      kbdEnabled = TRUE;
+#if 1
+    if (xSemaphoreTake(semKbd, 0)==pdPASS) {
+      kbdEnabled = !kbdEnabled; /* toggle */
+      kbdEnabled = FALSE; /* for demo purpose, have it always disabled */
     }
+#else
+    if (kbdEnabled && xSemaphoreTake(semKbd, 0)==pdPASS) {
+      kbdEnabled = false;
+    } else if (xSemaphoreTake(semKbd, 0)==pdPASS) {
+      kbdEnabled = true;
+    }
+#endif
     if (!kbdEnabled) {
       s_UsbDeviceHidKeyboard.buffer[2] = 0x00U;
      return USB_DeviceHidSend(s_UsbDeviceComposite->hidKeyboardHandle, USB_HID_KEYBOARD_ENDPOINT_IN,

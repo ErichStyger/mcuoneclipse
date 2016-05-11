@@ -15,8 +15,8 @@
 
 static xQueueHandle SQUEUE_Queue;
 
-  #define SQUEUE_LENGTH      32 /* items in queue */
-  #define SQUEUE_ITEM_SIZE   sizeof(char*) /* each item is a char pointer to a string, allocated in the heap */
+#define SQUEUE_LENGTH      16 /* items in queue */
+#define SQUEUE_ITEM_SIZE   sizeof(char*) /* each item is a char pointer to a string, allocated in the heap */
 
 void SQUEUE_SendString(const unsigned char *str) {
   unsigned char *ptr;

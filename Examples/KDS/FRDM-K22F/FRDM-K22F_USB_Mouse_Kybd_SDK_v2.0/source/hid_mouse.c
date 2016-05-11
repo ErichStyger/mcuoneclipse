@@ -63,7 +63,7 @@ static usb_device_hid_mouse_struct_t s_UsbDeviceHidMouse;
 /*******************************************************************************
  * Code
  ******************************************************************************/
-static bool mouseEnabled = FALSE;
+static bool mouseEnabled = false;
 
 /* Update mouse pointer location. Draw a rectangular rotation*/
 static usb_status_t USB_DeviceHidMouseAction(void)
@@ -78,12 +78,17 @@ static usb_status_t USB_DeviceHidMouseAction(void)
         UP
     };
     static uint8_t dir = RIGHT;
-
-    if (mouseEnabled && xSemaphoreTake(semMouse, 0)==pdPASS) {
-      mouseEnabled = FALSE;
-    } else if (xSemaphoreTake(semMouse, 0)==pdPASS) {
-      mouseEnabled = TRUE;
+#if 1 /*! \todo 9 use correct implementation checking semaphore only once */
+    if (xSemaphoreTake(semMouse, 0)==pdPASS) {
+      mouseEnabled = !mouseEnabled; /* toggle */
     }
+#else
+    if (mouseEnabled && xSemaphoreTake(semMouse, 0)==pdPASS) {
+      mouseEnabled = false;
+    } else if (xSemaphoreTake(semMouse, 0)==pdPASS) {
+      mouseEnabled = true;
+    }
+#endif
     if (!mouseEnabled) {
       s_UsbDeviceHidMouse.buffer[1] = 0U;
       s_UsbDeviceHidMouse.buffer[2] = 0U;

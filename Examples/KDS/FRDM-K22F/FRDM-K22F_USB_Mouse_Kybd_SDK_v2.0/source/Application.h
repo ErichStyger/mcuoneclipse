@@ -10,6 +10,7 @@
 
 #include "FreeRTOS.h"
 #include "semphr.h"
+#include <stdbool.h>
 
 #if configUSE_TRACE_HOOKS
   /* Percepio Trace IDs */
