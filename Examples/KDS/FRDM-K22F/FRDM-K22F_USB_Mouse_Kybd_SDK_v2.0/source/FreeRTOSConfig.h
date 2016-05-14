@@ -150,7 +150,7 @@ unsigned int ulMainGetRunTimeCounterValue(void); /* prototype */
 #define configSYSTICK_USE_CORE_CLOCK              1 /* System Tick is using core clock  */
 #define configSYSTICK_CLOCK_DIVIDER               1 /* no divider */
 #define configSYSTICK_CLOCK_HZ                    ((configCPU_CLOCK_HZ)/configSYSTICK_CLOCK_DIVIDER) /* frequency of system tick counter */
-#define configMINIMAL_STACK_SIZE                  (200) /* stack size in addressable stack units */
+#define configMINIMAL_STACK_SIZE                  (100) /* stack size in addressable stack units */
 /*----------------------------------------------------------*/
 /* Heap Memory */
 #define configFRTOS_MEMORY_SCHEME                 4 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc), 4 (coalesc blocks), 5 (multiple blocks) */

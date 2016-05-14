@@ -16,6 +16,12 @@
 /* tracing ISR in USB0_IRQHandler() */
 
 xSemaphoreHandle semSW2, semSW3, semLED, semMouse, semKbd;
+#define BUFFER_SIZE   256
+
+float g;
+void floatFunc(float f) {
+  g += f;
+}
 
 void vApplicationMallocFailedHook(void) {
   taskDISABLE_INTERRUPTS();
@@ -35,7 +41,7 @@ void vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName)
 }
 
 static void PrintButtonPressed(uint16_t whichButton, bool pressed) {
-  unsigned char buffer[64]; /* ! \todo change buffer size */
+  unsigned char buffer[BUFFER_SIZE];
 
   UTIL1_strcpy(buffer, sizeof(buffer), (uint8_t*)"Push button SW");
   UTIL1_strcatNum16u(buffer, sizeof(buffer), whichButton);
@@ -52,9 +58,9 @@ static void PrintButtonPressed(uint16_t whichButton, bool pressed) {
 #endif
 }
 
-static void PrintDebugMessage(const unsigned char *msg) {
+void PrintDebugMessage(const unsigned char *msg) {
   DbgConsole_Printf((char*)msg);
-  vPortFree((void*)msg); /*! \todo 8 Fix Memory leak */
+  //vPortFree((void*)msg); /*! \todo 8 Fix Memory leak */
 }
 
 void vMainConfigureTimerForRunTimeStats(void) {
@@ -77,12 +83,14 @@ static bool SW3IsPressed(void) {
  */
 static void ButtonTask(void *pvParameters) {
   (void)pvParameters;
+  g = 3.5;
+  floatFunc(5.5);
   for(;;) {
     if (SW2IsPressed()) { /* SW2 pressed */
       PrintButtonPressed(2, TRUE);
       vTaskDelay(pdMS_TO_TICKS(50)); /* debounce */
       while(SW2IsPressed()) { /* wait until released */
-        vTaskDelay(pdMS_TO_TICKS(50)); /*! \todo 4 Add delay of 50 ms */
+        //vTaskDelay(pdMS_TO_TICKS(50)); /*! \todo 4 Add delay of 50 ms */
       }
       PrintButtonPressed(2, FALSE);
       (void)xSemaphoreGive(semSW2); /* send message to toggle USB */
@@ -93,17 +101,17 @@ static void ButtonTask(void *pvParameters) {
       PrintButtonPressed(3, TRUE);
       vTaskDelay(pdMS_TO_TICKS(50)); /* debounce */
       while(SW3IsPressed()) { /* wait until released */
-        vTaskDelay(pdMS_TO_TICKS(50)); /*! \todo 5 Add delay of 50 ms */
+        //vTaskDelay(pdMS_TO_TICKS(50)); /*! \todo 5 Add delay of 50 ms */
       }
       PrintButtonPressed(3, FALSE);
       (void)xSemaphoreGive(semSW3); /* send message */
       (void)xSemaphoreGive(semLED); /* send message to change LED */
     }
-    vTaskDelay(pdMS_TO_TICKS(10)); /*! \todo 2 Add delay of 10 ms */
+    //vTaskDelay(pdMS_TO_TICKS(10)); /*! \todo 2 Add delay of 10 ms */
   }
 }
 
-#define DEBUG_PRINT  1 /*! \todo 7 Set macro to 1 */
+#define DEBUG_PRINT  0 /*! \todo 7 Set macro to 1 */
 
 static void AppTask(void *pvParameters) {
   (void)pvParameters;
@@ -156,11 +164,10 @@ void APP_Init(void) {
     for(;;){} /* error */
   }
   vQueueAddToRegistry(semKbd, "Sem_Kbd");
-  /*! \todo 1 Increase stack size by 50 */
-#if 1
-  if (xTaskCreate(ButtonTask, "Buttons", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
+#if 0  /*! \todo 1 Increase stack size by 50 */
+  if (xTaskCreate(ButtonTask, "Buttons", configMINIMAL_STACK_SIZE+50, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) { /*! \todo 1 Increase stack size by 50 */
 #else
-  if (xTaskCreate(ButtonTask, "Buttons", configMINIMAL_STACK_SIZE+50, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
+    if (xTaskCreate(ButtonTask, "Buttons", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
 #endif
     for(;;){} /* error */
   }

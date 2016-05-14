@@ -78,7 +78,7 @@ static usb_status_t USB_DeviceHidMouseAction(void)
         UP
     };
     static uint8_t dir = RIGHT;
-#if 1 /*! \todo 9 use correct implementation checking semaphore only once */
+#if 0 /*! \todo 9 check semaphore only once */
     if (xSemaphoreTake(semMouse, 0)==pdPASS) {
       mouseEnabled = !mouseEnabled; /* toggle */
     }

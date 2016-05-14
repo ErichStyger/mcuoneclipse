@@ -3,7 +3,7 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>222</ModificationStamp>
+    <ModificationStamp>223</ModificationStamp>
     <Date>2015-06-11</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -16921,7 +16921,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.455</BeanVersion>
+    <BeanVersion>01.464</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -17014,6 +17014,12 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>FreeRTOS\port</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RTOSMemMangFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>FreeRTOS\Source\portable\MemMang</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>RTOSConfigFolderName</ItemSymbol>
@@ -17992,6 +17998,7 @@
           </Events>
         </InheritedComponentState>
         <Index>0</Index>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>CollectRuntimeStatisticsGroup</ItemSymbol>
@@ -43244,7 +43251,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template>Timeout</Template>
-    <BeanVersion>01.034</BeanVersion>
+    <BeanVersion>01.035</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -52661,7 +52668,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.027</BeanVersion>
+    <BeanVersion>01.028</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -52936,7 +52943,7 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>DividerInputFreq</ItemSymbol>
-              <Value>unknown</Value>
+              <Value>120 MHz</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>DividerClockFraction</ItemSymbol>
@@ -52966,7 +52973,7 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>ModuleClockFreq</ItemSymbol>
-              <Value>unknown</Value>
+              <Value>48 MHz</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>PullUpDownGrp</ItemSymbol>
@@ -55852,7 +55859,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.041</BeanVersion>
+    <BeanVersion>01.042</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -56143,7 +56150,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.069</BeanVersion>
+    <BeanVersion>01.072</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -56512,6 +56519,17 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>StdIOSendChar</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>Init</ItemSymbol>
