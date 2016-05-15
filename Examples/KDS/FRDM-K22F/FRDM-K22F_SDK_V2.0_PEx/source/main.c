@@ -36,6 +36,37 @@
 #include "pin_mux.h"
 #include "clock_config.h"
 
+#include "LED1.h"
+#include "LED2.h"
+#include "LED3.h"
+#include "WAIT1.h"
+#include "fsl_port.h"
+#include "FreeRTOS.h"
+
+void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName) {
+  /* This will get called if a stack overflow is detected during the context
+     switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack
+     problems within nested interrupts, but only do this for debug purposes as
+     it will increase the context switch time. */
+  (void)pxTask;
+  (void)pcTaskName;
+  taskDISABLE_INTERRUPTS();
+  /* Write your code here ... */
+  for(;;) {}
+}
+
+void FRTOS1_vApplicationTickHook(void) {
+  /* Called for every RTOS tick. */
+  /* Write your code here ... */
+}
+
+void FRTOS1_vApplicationIdleHook(void) {
+  /* Called whenever the RTOS is idle (from the IDLE task).
+     Here would be a good place to put the CPU into low power mode. */
+  /* Write your code here ... */
+}
+
+
 /*!
  * @brief Application entry point.
  */
@@ -46,6 +77,29 @@ int main(void) {
   BOARD_InitDebugConsole();
 
   /* Add your code here */
+  /* LEDs are on PTA0, PTA1 and PTD5 */
+  CLOCK_EnableClock(kCLOCK_PortA);
+  CLOCK_EnableClock(kCLOCK_PortD);
+  PORT_SetPinMux(PORTA, 0u, kPORT_MuxAsGpio);
+  PORT_SetPinMux(PORTA, 1u, kPORT_MuxAsGpio);
+  PORT_SetPinMux(PORTD, 5u, kPORT_MuxAsGpio);
+
+  /* init components */
+  LED1_Init();
+  LED2_Init();
+  LED3_Init();
+  /* run the code */
+  for(;;) {
+#if 0
+    LED1_Neg();
+    LED2_Neg();
+    LED3_Neg();
+#else
+    LED1_On(); WAIT1_Waitms(500); LED1_Off();
+    LED2_On(); WAIT1_Waitms(500); LED2_Off();
+    LED3_On(); WAIT1_Waitms(500); LED3_Off();
+#endif
+  }
 
   for(;;) { /* Infinite loop to avoid leaving the main function */
     __asm("NOP"); /* something to use as a breakpoint stop while looping */
