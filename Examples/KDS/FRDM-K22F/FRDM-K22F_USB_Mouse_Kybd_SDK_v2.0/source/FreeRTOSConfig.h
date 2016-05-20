@@ -150,7 +150,7 @@ unsigned int ulMainGetRunTimeCounterValue(void); /* prototype */
 #define configSYSTICK_USE_CORE_CLOCK              1 /* System Tick is using core clock  */
 #define configSYSTICK_CLOCK_DIVIDER               1 /* no divider */
 #define configSYSTICK_CLOCK_HZ                    ((configCPU_CLOCK_HZ)/configSYSTICK_CLOCK_DIVIDER) /* frequency of system tick counter */
-#define configMINIMAL_STACK_SIZE                  (100) /* stack size in addressable stack units */
+#define configMINIMAL_STACK_SIZE                  (100+50) /* \todo 1b increase stack size by 50 */ /* stack size in addressable stack units */
 /*----------------------------------------------------------*/
 /* Heap Memory */
 #define configFRTOS_MEMORY_SCHEME                 4 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc), 4 (coalesc blocks), 5 (multiple blocks) */
@@ -163,7 +163,7 @@ unsigned int ulMainGetRunTimeCounterValue(void); /* prototype */
 /*----------------------------------------------------------*/
 #define configMAX_TASK_NAME_LEN                   12 /* task name length in bytes */
 #define configUSE_TRACE_FACILITY                  1 /* 1: include additional structure members and functions to assist with execution visualization and tracing, 0: no runtime stats/trace */
-#define configUSE_TRACE_HOOKS                     1 /*! \todo 6 Enable Percepio Trace and disable Segger SystemView and  */ /* 1: Percepio Trace hooks, 0: not using Percepio Trace hooks */
+#define configUSE_TRACE_HOOKS                     0 /*! \todo 6 Enable Percepio Trace and disable Segger SystemView and  */ /* 1: Percepio Trace hooks, 0: not using Percepio Trace hooks */
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS      0 /*! \todo 3 Enable Segger SystemView Trace */ /* 1: Segger System Viewer hooks, 0: not using Segger System Viewer hooks */
 #define configUSE_STATS_FORMATTING_FUNCTIONS      (configUSE_TRACE_FACILITY || configGENERATE_RUN_TIME_STATS)
 #define configUSE_16_BIT_TICKS                    0 /* 1: use 16bit tick counter type, 0: use 32bit tick counter type */

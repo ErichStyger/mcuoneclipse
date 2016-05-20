@@ -1,7 +1,7 @@
 /* ###################################################################
 **     Filename    : Events.c
 **     Project     : FRDM-K22F_PEx_for_SDK_v2.0
-**     Processor   : MK22FN512VDC12
+**     Processor   : MK22FN512VLL12
 **     Component   : Events
 **     Version     : Driver 01.00
 **     Compiler    : GNU C Compiler
@@ -82,43 +82,6 @@ void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName)
   taskDISABLE_INTERRUPTS();
   /* Write your code here ... */
   for(;;) {}
-}
-
-/*
-** ===================================================================
-**     Event       :  FRTOS1_vApplicationTickHook (module Events)
-**
-**     Component   :  FRTOS1 [FreeRTOS]
-**     Description :
-**         If enabled, this hook will be called by the RTOS for every
-**         tick increment.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void FRTOS1_vApplicationTickHook(void)
-{
-  /* Called for every RTOS tick. */
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Event       :  FRTOS1_vApplicationIdleHook (module Events)
-**
-**     Component   :  FRTOS1 [FreeRTOS]
-**     Description :
-**         If enabled, this hook will be called when the RTOS is idle.
-**         This might be a good place to go into low power mode.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void FRTOS1_vApplicationIdleHook(void)
-{
-  /* Called whenever the RTOS is idle (from the IDLE task).
-     Here would be a good place to put the CPU into low power mode. */
-  /* Write your code here ... */
 }
 
 /*

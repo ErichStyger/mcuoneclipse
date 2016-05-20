@@ -41,6 +41,7 @@
 #include "LED3.h"
 #include "WAIT1.h"
 #include "fsl_port.h"
+#if 0
 #include "FreeRTOS.h"
 
 void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName) {
@@ -65,7 +66,7 @@ void FRTOS1_vApplicationIdleHook(void) {
      Here would be a good place to put the CPU into low power mode. */
   /* Write your code here ... */
 }
-
+#endif
 
 /*!
  * @brief Application entry point.
@@ -75,14 +76,6 @@ int main(void) {
   BOARD_InitPins();
   BOARD_BootClockRUN();
   BOARD_InitDebugConsole();
-
-  /* Add your code here */
-  /* LEDs are on PTA0, PTA1 and PTD5 */
-  CLOCK_EnableClock(kCLOCK_PortA);
-  CLOCK_EnableClock(kCLOCK_PortD);
-  PORT_SetPinMux(PORTA, 0u, kPORT_MuxAsGpio);
-  PORT_SetPinMux(PORTA, 1u, kPORT_MuxAsGpio);
-  PORT_SetPinMux(PORTD, 5u, kPORT_MuxAsGpio);
 
   /* init components */
   LED1_Init();

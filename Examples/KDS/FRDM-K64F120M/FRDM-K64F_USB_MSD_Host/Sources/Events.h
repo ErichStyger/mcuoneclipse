@@ -54,13 +54,15 @@
 #include "TimerIntLdd1.h"
 #include "TU1.h"
 #include "FRTOS1.h"
-#include "RTOSTRC1.h"
 #include "FAT1.h"
 #include "TmDt1.h"
 #include "FsMSD1.h"
 #include "CLS1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
+#include "KSDK1.h"
+#include "PTRC1.h"
+#include "RTT1.h"
 
 #ifdef __cplusplus
 extern "C" {

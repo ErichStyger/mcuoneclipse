@@ -6,11 +6,11 @@
 /*##                                   */
 /*##     Project   : FRDM-K22F_PEx_for_SDK_v2.0 */
 /*##                                   */
-/*##     Processor : MK22FN512VDC12    */
+/*##     Processor : MK22FN512VLL12    */
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2016-05-14, 21:29, # CodeGen: 0 */
+/*##     Date/Time : 2016-05-19, 07:10, # CodeGen: 9 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */

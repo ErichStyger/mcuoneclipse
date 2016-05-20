@@ -42,6 +42,14 @@ void BOARD_InitPins(void)
     /* Ungate the port clock */
     CLOCK_EnableClock(kCLOCK_PortE);
 
+    /* LEDs are on PTA1, PTA2 and PTD5.  */
+    CLOCK_EnableClock(kCLOCK_PortA);
+    CLOCK_EnableClock(kCLOCK_PortD);
+
+    PORT_SetPinMux(PORTA, 1u, kPORT_MuxAsGpio);
+    PORT_SetPinMux(PORTA, 2u, kPORT_MuxAsGpio);
+    PORT_SetPinMux(PORTD, 5u, kPORT_MuxAsGpio);
+
     /* Affects PORTE_PCR0 register */
     PORT_SetPinMux(PORTE, 0u, kPORT_MuxAlt3);
     /* Affects PORTE_PCR1 register */

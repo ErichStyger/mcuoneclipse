@@ -1,7 +1,7 @@
 /* ###################################################################
 **     Filename    : main.c
 **     Project     : FRDM-K22F_PEx_for_SDK_v2.0
-**     Processor   : MK22FN512VDC12
+**     Processor   : MK22FN512VLL12
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
 **     Date/Time   : 2016-05-14, 21:29, # CodeGen: 0
@@ -38,7 +38,6 @@
 #include "LEDpin3.h"
 #include "KSDK1.h"
 #include "WAIT1.h"
-#include "FRTOS1.h"
 #include "UTIL1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"

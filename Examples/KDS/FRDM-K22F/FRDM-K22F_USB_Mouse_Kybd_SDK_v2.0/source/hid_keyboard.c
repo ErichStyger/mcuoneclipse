@@ -78,7 +78,7 @@ static usb_status_t USB_DeviceHidKeyboardAction(void)
 #if 1
     if (xSemaphoreTake(semKbd, 0)==pdPASS) {
       kbdEnabled = !kbdEnabled; /* toggle */
-      kbdEnabled = FALSE; /* for demo purpose, have it always disabled */
+      kbdEnabled = false; /* for demo purpose, have it always disabled */
     }
 #else
     if (kbdEnabled && xSemaphoreTake(semKbd, 0)==pdPASS) {

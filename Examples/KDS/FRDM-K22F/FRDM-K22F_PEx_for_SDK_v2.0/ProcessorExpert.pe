@@ -3,7 +3,7 @@
   <Header>
     <Name>FRDM-K22F_PEx_for_SDK_v2.0</Name>
     <SavedBy>Erich Styger</SavedBy>
-    <ModificationStamp>8</ModificationStamp>
+    <ModificationStamp>11</ModificationStamp>
     <Date>2016-05-14</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>28</ProjectCompNumb>
+    <ProjectCompNumb>29</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -4007,10 +4007,10 @@
   </CPU>
   <CPU>
     <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
-    <ComponentUUID>com.freescale.processorexpert.processor.mk22fn512dc12</ComponentUUID>
-    <BeanType>MK22FN512DC12</BeanType>
+    <ComponentUUID>com.freescale.processorexpert.processor.mk22fn512ll12</ComponentUUID>
+    <BeanType>MK22FN512LL12</BeanType>
     <Name>Cpu</Name>
-    <CompNumb>4</CompNumb>
+    <CompNumb>28</CompNumb>
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>CPU_CHIP2</IconName>
@@ -4030,7 +4030,7 @@
         <ItemSymbol>CPU</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>MK22FN512VDC12</Value>
+        <Value>MK22FN512VLL12</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>SharedInternalProperties</ItemSymbol>
@@ -5299,7 +5299,7 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>NMINMIPin</ItemSymbol>
@@ -5324,7 +5324,7 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>ResetPin</ItemSymbol>
@@ -7419,7 +7419,7 @@
         <ItemState>
           <ItemSymbol>InitializationState</ItemSymbol>
           <ReadOnly>false</ReadOnly>
-          <Value>User_PE_initialization</Value>
+          <Value>Defaul_PE_initialization</Value>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         </ItemState>
         <ItemState>
@@ -7961,7 +7961,7 @@
       <AsmDataFormat>HEX</AsmDataFormat>
       <AsmBitsFormat>HEX</AsmBitsFormat>
       <CPUDB_Settings>
-        <CpuType>MK22FN512VDC12</CpuType>
+        <CpuType>MK22FN512VLL12</CpuType>
         <ActualClock>4</ActualClock>
         <ActualClockLow>32.768000000000</ActualClockLow>
         <DeviceNamesDefines>
@@ -7983,22 +7983,22 @@
       <Count>9</Count>
       <ItemId0>2</ItemId0>
       <Value0>false</Value0>
-      <ItemId1>4</ItemId1>
+      <ItemId1>6</ItemId1>
       <Value1>true</Value1>
-      <ItemId2>6</ItemId2>
+      <ItemId2>9</ItemId2>
       <Value2>true</Value2>
-      <ItemId3>9</ItemId3>
+      <ItemId3>12</ItemId3>
       <Value3>true</Value3>
-      <ItemId4>12</ItemId4>
+      <ItemId4>14</ItemId4>
       <Value4>true</Value4>
-      <ItemId5>14</ItemId5>
+      <ItemId5>23</ItemId5>
       <Value5>true</Value5>
-      <ItemId6>23</ItemId6>
+      <ItemId6>24</ItemId6>
       <Value6>true</Value6>
-      <ItemId7>24</ItemId7>
+      <ItemId7>26</ItemId7>
       <Value7>true</Value7>
-      <ItemId8>26</ItemId8>
-      <Value8>true</Value8>
+      <ItemId8>28</ItemId8>
+      <Value8>false</Value8>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
       <Count>0</Count>
@@ -8067,7 +8067,7 @@
     <CompNumb>3</CompNumb>
     <NodeName>FLASH</NodeName>
     <CnfgEnabled>true</CnfgEnabled>
-    <TargetCPU>4</TargetCPU>
+    <TargetCPU>28</TargetCPU>
     <ConfigurationComment lines_count="0" />
     <BoolList_FpgaConfig>
       <Count>0</Count>
@@ -8076,21 +8076,21 @@
       <Count>9</Count>
       <ItemId0>2</ItemId0>
       <Value0>false</Value0>
-      <ItemId1>4</ItemId1>
+      <ItemId1>6</ItemId1>
       <Value1>true</Value1>
-      <ItemId2>6</ItemId2>
+      <ItemId2>9</ItemId2>
       <Value2>true</Value2>
-      <ItemId3>9</ItemId3>
+      <ItemId3>12</ItemId3>
       <Value3>true</Value3>
-      <ItemId4>12</ItemId4>
+      <ItemId4>14</ItemId4>
       <Value4>true</Value4>
-      <ItemId5>14</ItemId5>
+      <ItemId5>23</ItemId5>
       <Value5>true</Value5>
-      <ItemId6>23</ItemId6>
-      <Value6>true</Value6>
-      <ItemId7>24</ItemId7>
+      <ItemId6>24</ItemId6>
+      <Value6>false</Value6>
+      <ItemId7>26</ItemId7>
       <Value7>true</Value7>
-      <ItemId8>26</ItemId8>
+      <ItemId8>28</ItemId8>
       <Value8>true</Value8>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
@@ -8646,7 +8646,7 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Value>1</Value>
+              <Value>2</Value>
               <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
               <Base>DEC</Base>
             </ItemState>
@@ -9562,7 +9562,7 @@
     <BeanType>FreeRTOS</BeanType>
     <Name>FRTOS1</Name>
     <CompNumb>24</CompNumb>
-    <CompEnabled>true</CompEnabled>
+    <CompEnabled>false</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>FreeRTOS</IconName>
     <UserFolderName />

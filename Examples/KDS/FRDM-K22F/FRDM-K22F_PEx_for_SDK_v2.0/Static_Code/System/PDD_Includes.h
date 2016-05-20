@@ -1,6 +1,6 @@
 /** ###################################################################
 **      Filename    : PDD_Includes.h
-**      Processor   : MK22FN512VDC12
+**      Processor   : MK22FN512VLL12
 **      Version     : 1.0
 ** 
 **     Copyright : 1997 - 2015 Freescale Semiconductor, Inc. 

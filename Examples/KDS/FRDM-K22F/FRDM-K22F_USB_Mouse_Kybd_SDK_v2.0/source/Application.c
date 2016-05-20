@@ -60,7 +60,7 @@ static void PrintButtonPressed(uint16_t whichButton, bool pressed) {
 
 void PrintDebugMessage(const unsigned char *msg) {
   DbgConsole_Printf((char*)msg);
-  //vPortFree((void*)msg); /*! \todo 8 Fix Memory leak */
+  vPortFree((void*)msg); /*! \todo 8 Fix Memory leak */
 }
 
 void vMainConfigureTimerForRunTimeStats(void) {
@@ -90,7 +90,7 @@ static void ButtonTask(void *pvParameters) {
       PrintButtonPressed(2, TRUE);
       vTaskDelay(pdMS_TO_TICKS(50)); /* debounce */
       while(SW2IsPressed()) { /* wait until released */
-        //vTaskDelay(pdMS_TO_TICKS(50)); /*! \todo 4 Add delay of 50 ms */
+        vTaskDelay(pdMS_TO_TICKS(50)); /*! \todo 4 Add delay of 50 ms */
       }
       PrintButtonPressed(2, FALSE);
       (void)xSemaphoreGive(semSW2); /* send message to toggle USB */
@@ -101,17 +101,17 @@ static void ButtonTask(void *pvParameters) {
       PrintButtonPressed(3, TRUE);
       vTaskDelay(pdMS_TO_TICKS(50)); /* debounce */
       while(SW3IsPressed()) { /* wait until released */
-        //vTaskDelay(pdMS_TO_TICKS(50)); /*! \todo 5 Add delay of 50 ms */
+        vTaskDelay(pdMS_TO_TICKS(50)); /*! \todo 5 Add delay of 50 ms */
       }
       PrintButtonPressed(3, FALSE);
       (void)xSemaphoreGive(semSW3); /* send message */
       (void)xSemaphoreGive(semLED); /* send message to change LED */
     }
-    //vTaskDelay(pdMS_TO_TICKS(10)); /*! \todo 2 Add delay of 10 ms */
+    vTaskDelay(pdMS_TO_TICKS(10)); /*! \todo 2 Add delay of 10 ms */
   }
 }
 
-#define DEBUG_PRINT  0 /*! \todo 7 Set macro to 1 */
+#define DEBUG_PRINT  1 /*! \todo 7 Set macro value to 1 to enable debug printing */
 
 static void AppTask(void *pvParameters) {
   (void)pvParameters;
@@ -164,8 +164,8 @@ void APP_Init(void) {
     for(;;){} /* error */
   }
   vQueueAddToRegistry(semKbd, "Sem_Kbd");
-#if 0  /*! \todo 1 Increase stack size by 50 */
-  if (xTaskCreate(ButtonTask, "Buttons", configMINIMAL_STACK_SIZE+50, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) { /*! \todo 1 Increase stack size by 50 */
+#if 1  /*! \todo 1 Increase stack size by 100 */
+  if (xTaskCreate(ButtonTask, "Buttons", configMINIMAL_STACK_SIZE+100, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
 #else
     if (xTaskCreate(ButtonTask, "Buttons", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
 #endif
