@@ -18,11 +18,6 @@
 xSemaphoreHandle semSW2, semSW3, semLED, semMouse, semKbd;
 #define BUFFER_SIZE   256
 
-float g;
-void floatFunc(float f) {
-  g += f;
-}
-
 void vApplicationMallocFailedHook(void) {
   taskDISABLE_INTERRUPTS();
   for(;;) {}
@@ -83,8 +78,9 @@ static bool SW3IsPressed(void) {
  */
 static void ButtonTask(void *pvParameters) {
   (void)pvParameters;
-  g = 3.5;
-  floatFunc(5.5);
+  /* TODO this is the normal way */
+  /* todo this is another to-do */
+  /*! \todo this is a doxygen to-do */
   for(;;) {
     if (SW2IsPressed()) { /* SW2 pressed */
       PrintButtonPressed(2, TRUE);

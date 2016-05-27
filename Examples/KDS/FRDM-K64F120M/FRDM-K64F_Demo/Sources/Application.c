@@ -38,6 +38,10 @@
 #if PL_HAS_FLOPPY
   #include "Floppy.h"
 #endif
+#if PL_HAS_MIDI
+  #include "MidiMusic.h"
+#endif
+
 
 static xTimerHandle timerHndl;
 #define TIMER_PERIOD_MS TMOUT1_TICK_PERIOD_MS

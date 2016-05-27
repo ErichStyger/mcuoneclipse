@@ -41,8 +41,12 @@
 #include "LED3.h"
 #include "WAIT1.h"
 #include "fsl_port.h"
-#if 0
+
+#define USE_FREERTOS   1 /* turns on using FreeRTOS */
+
+#if USE_FREERTOS
 #include "FreeRTOS.h"
+#include "FRTOS1.h"
 
 void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName) {
   /* This will get called if a stack overflow is detected during the context
@@ -66,11 +70,32 @@ void FRTOS1_vApplicationIdleHook(void) {
      Here would be a good place to put the CPU into low power mode. */
   /* Write your code here ... */
 }
+
+void FRTOS1_vApplicationMallocFailedHook(void)
+{
+  /* Called if a call to pvPortMalloc() fails because there is insufficient
+     free memory available in the FreeRTOS heap.  pvPortMalloc() is called
+     internally by FreeRTOS API functions that create tasks, queues, software
+     timers, and semaphores.  The size of the FreeRTOS heap is set by the
+     configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
+  taskDISABLE_INTERRUPTS();
+  /* Write your code here ... */
+  for(;;) {}
+}
 #endif
+
+static void AppTask(void *pvParameters) {
+  (void)pvParameters;
+  for(;;) {
+    LED1_Neg();
+    vTaskDelay(pdMS_TO_TICKS(100));
+  }
+}
 
 /*!
  * @brief Application entry point.
  */
+
 int main(void) {
   /* Init board hardware. */
   BOARD_InitPins();
@@ -81,7 +106,15 @@ int main(void) {
   LED1_Init();
   LED2_Init();
   LED3_Init();
+
   /* run the code */
+#if USE_FREERTOS
+  FRTOS1_Init();
+  if (xTaskCreate(AppTask, "App", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+    for(;;){} /* error */
+  }
+  vTaskStartScheduler();
+#else
   for(;;) {
 #if 0
     LED1_Neg();
@@ -93,6 +126,7 @@ int main(void) {
     LED3_On(); WAIT1_Waitms(500); LED3_Off();
 #endif
   }
+#endif
 
   for(;;) { /* Infinite loop to avoid leaving the main function */
     __asm("NOP"); /* something to use as a breakpoint stop while looping */
