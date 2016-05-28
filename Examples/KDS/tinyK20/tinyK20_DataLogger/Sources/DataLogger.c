@@ -109,10 +109,29 @@ static void logger_task(void *param) {
   } /* for */
 }
 
+#define LOGGER_TASK_SIZE   configMINIMAL_STACK_SIZE+100
+#if configSUPPORT_STATIC_ALLOCATION
+  #if configUSE_HEAP_SECTION_NAME
+    #define SECTION __attribute__((section (configHEAP_SECTION_NAME_STRING)))
+  #else
+    #define SECTION /* empty */
+  #endif
+  static StaticTask_t SECTION xTaskTCBBuffer;
+  static StackType_t SECTION xStack[LOGGER_TASK_SIZE];
+#endif
+
 void LOGGER_Init(void) {
-  if (xTaskCreate(logger_task, "Logger", configMINIMAL_STACK_SIZE+100, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
+#if configSUPPORT_STATIC_ALLOCATION
+  if (xTaskCreateStatic(logger_task, "Logger", LOGGER_TASK_SIZE, NULL, tskIDLE_PRIORITY+2, &xStack[0], &xTaskTCBBuffer)==NULL) {
+    for(;;){} /* task creation failed */
+  }
+#elif configSUPPORT_DYNAMIC_ALLOCATION
+  if (xTaskCreate(logger_task, "Logger", LOGGER_TASK_SIZE, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
     for(;;){} /* error! probably out of memory */
   }
+#else
+  #error
+#endif
 }
 
 #endif /* PL_CONFIG_HAS_LOGGER */

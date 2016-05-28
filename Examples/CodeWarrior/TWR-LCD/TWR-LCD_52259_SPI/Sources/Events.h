@@ -44,6 +44,7 @@
 #include "LED4.h"
 #include "LEDpin4.h"
 #include "AD1.h"
+#include "KSDK1.h"
 
 void Cpu_OnCoreWatchdogINT0(void);
 /*

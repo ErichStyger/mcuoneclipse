@@ -59,9 +59,28 @@ static void ShellTask(void *pvParameters) {
   }
 }
 
+#define SHELL_TASK_SIZE   configMINIMAL_STACK_SIZE+100
+#if configSUPPORT_STATIC_ALLOCATION
+  #if configUSE_HEAP_SECTION_NAME
+    #define SECTION __attribute__((section (configHEAP_SECTION_NAME_STRING)))
+  #else
+    #define SECTION /* empty */
+  #endif
+  static StaticTask_t SECTION xTaskTCBBuffer;
+  static StackType_t SECTION xStack[SHELL_TASK_SIZE];
+#endif
+
 void SHELL_Init(void) {
+#if configSUPPORT_STATIC_ALLOCATION
+  if (xTaskCreateStatic(ShellTask, "Shell", SHELL_TASK_SIZE, NULL, tskIDLE_PRIORITY+1, &xStack[0], &xTaskTCBBuffer)==NULL) {
+    for(;;){} /* task creation failed */
+  }
+#elif configSUPPORT_DYNAMIC_ALLOCATION
   if (FRTOS1_xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+300, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
+#else
+  #error
+#endif
 }
 

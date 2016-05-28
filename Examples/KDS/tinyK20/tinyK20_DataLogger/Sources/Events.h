@@ -57,11 +57,6 @@
 #include "KSDK1.h"
 #include "SYS1.h"
 #include "RTT1.h"
-#include "I2C1.h"
-#include "SDA1.h"
-#include "BitIoLdd3.h"
-#include "SCL1.h"
-#include "BitIoLdd4.h"
 
 #ifdef __cplusplus
 extern "C" {
