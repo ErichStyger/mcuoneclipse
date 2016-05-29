@@ -17,6 +17,10 @@
 /* tracing ISR in USB0_IRQHandler() */
 
 xSemaphoreHandle semSW2, semSW3, semLED, semMouse, semKbd;
+#if configSUPPORT_STATIC_ALLOCATION
+  static StaticSemaphore_t xSemaphoreBufferSemSW2, xSemaphoreBufferSemSW3, xSemaphoreBufferSemLed, xSemaphoreBufferSemMouse, xSemaphoreBufferSemKbd;
+#endif
+
 #define BUFFER_SIZE   256
 
 void vApplicationMallocFailedHook(void) {
@@ -127,50 +131,91 @@ static void AppTask(void *pvParameters) {
   }
 }
 
+#define APP_TASK_SIZE       configMINIMAL_STACK_SIZE
+#define BUTTON_TASK_SIZE    (configMINIMAL_STACK_SIZE+100)  /*! \todo 1 Increase stack size by 100 */
+#if configSUPPORT_STATIC_ALLOCATION
+  #if configUSE_HEAP_SECTION_NAME
+    #define SECTION __attribute__((section (configHEAP_SECTION_NAME_STRING)))
+  #else
+    #define SECTION /* empty */
+  #endif
+  static StaticTask_t SECTION xTaskAppTCBBuffer;
+  static StaticTask_t SECTION xTaskButtonTCBBuffer;
+  static StackType_t SECTION xAppStack[APP_TASK_SIZE];
+  static StackType_t SECTION xButtonStack[BUTTON_TASK_SIZE];
+#endif
+
 void APP_Init(void) {
   //DbgConsole_Printf("hello world.\r\n");
 #if PL_CONFIG_HAS_SHELL_QUEUE
   SQUEUE_Init();
 #endif
+#if configSUPPORT_STATIC_ALLOCATION
+  semSW2 = xSemaphoreCreateBinaryStatic(&xSemaphoreBufferSemSW2);
+#else /* configSUPPORT_DYNAMIC_ALLOCATION */
   semSW2 = xSemaphoreCreateBinary();
+#endif
   if (semSW2==NULL) { /* semaphore creation failed */
     for(;;){} /* error */
   }
   vQueueAddToRegistry(semSW2, "Sem_SW2");
 
+#if configSUPPORT_STATIC_ALLOCATION
+  semSW2 = xSemaphoreCreateBinaryStatic(&xSemaphoreBufferSemSW3);
+#else
   semSW3 = xSemaphoreCreateBinary();
+#endif
   if (semSW3==NULL) { /* semaphore creation failed */
     for(;;){} /* error */
   }
   vQueueAddToRegistry(semSW3, "Sem_SW3");
 
+#if configSUPPORT_STATIC_ALLOCATION
+  semLED = xSemaphoreCreateBinaryStatic(&xSemaphoreBufferSemLed);
+#else
   semLED = xSemaphoreCreateBinary();
+#endif
   if (semLED==NULL) { /* semaphore creation failed */
     for(;;){} /* error */
   }
   vQueueAddToRegistry(semLED, "Sem_LED");
 
+#if configSUPPORT_STATIC_ALLOCATION
+  semMouse = xSemaphoreCreateBinaryStatic(&xSemaphoreBufferSemMouse);
+#else
   semMouse = xSemaphoreCreateBinary();
+#endif
   if (semMouse==NULL) { /* semaphore creation failed */
     for(;;){} /* error */
   }
   vQueueAddToRegistry(semMouse, "Sem_Mouse");
 
+#if configSUPPORT_STATIC_ALLOCATION
+  semKbd = xSemaphoreCreateBinaryStatic(&xSemaphoreBufferSemKbd);
+#else
   semKbd = xSemaphoreCreateBinary();
+#endif
   if (semKbd==NULL) { /* semaphore creation failed */
     for(;;){} /* error */
   }
   vQueueAddToRegistry(semKbd, "Sem_Kbd");
-#if 1  /*! \todo 1 Increase stack size by 100 */
-  if (xTaskCreate(ButtonTask, "Buttons", configMINIMAL_STACK_SIZE+100, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
-#else
-    if (xTaskCreate(ButtonTask, "Buttons", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
+  /* create tasks */
+#if configSUPPORT_STATIC_ALLOCATION
+  if (xTaskCreateStatic(ButtonTask, "Buttons", BUTTON_TASK_SIZE, NULL, tskIDLE_PRIORITY+2, &xButtonStack[0], &xTaskButtonTCBBuffer)==NULL) {
+    for(;;){} /* task creation failed */
+  }
+  if (xTaskCreateStatic(AppTask, "App", APP_TASK_SIZE, NULL, tskIDLE_PRIORITY+1, &xAppStack[0], &xTaskAppTCBBuffer)==NULL) {
+    for(;;){} /* task creation failed */
+  }
+#else /* configSUPPORT_DYNAMIC_ALLOCATION */
+  if (xTaskCreate(ButtonTask, "Buttons", BUTTON_TASK_SIZE, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
+    for(;;){} /* error */
+  }
+  if (xTaskCreate(AppTask, "App", APP_TASK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+    for(;;){} /* error */
+  }
 #endif
-    for(;;){} /* error */
-  }
-  if (xTaskCreate(AppTask, "App", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
-    for(;;){} /* error */
-  }
+
 #if configUSE_TRACE_HOOKS
   vTraceSetISRProperties("ISR_USB", TRACE_PRIO_ISR_USB);
 #endif

@@ -7,7 +7,7 @@
 **     Version     : Component 01.073, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-05-29, 10:27, # CodeGen: 19
+**     Date/Time   : 2016-05-29, 11:05, # CodeGen: 21
 **     Abstract    :
 **
 **     Settings    :
@@ -108,9 +108,10 @@
 */         
 
 /* MODULE PTRC1. */
-
-//#include "Events.h"
 #include "PTRC1.h"
+#if KSDK1_SDK_VERSION_USED == KSDK1_SDK_VERSION_NONE
+  #include "Events.h"
+#endif
 
 /*
 ** ===================================================================

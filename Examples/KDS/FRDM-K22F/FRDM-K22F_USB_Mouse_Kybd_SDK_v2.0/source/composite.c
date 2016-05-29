@@ -351,6 +351,21 @@ void USB_DeviceTask(void *handle)
 }
 #endif
 
+#define USB_DEVICE_TASK_SIZE  (5000L / sizeof(portSTACK_TYPE))
+#define USB_TASK_SIZE         (5000L / sizeof(portSTACK_TYPE))
+#if configSUPPORT_STATIC_ALLOCATION
+  #if configUSE_HEAP_SECTION_NAME
+    #define SECTION __attribute__((section (configHEAP_SECTION_NAME_STRING)))
+  #else
+    #define SECTION /* empty */
+  #endif
+  static StaticTask_t SECTION xTaskUSBDeviceTCBBuffer;
+  static StaticTask_t SECTION xTaskUSBTCBBuffer;
+  static StackType_t SECTION xUSBStack[USB_TASK_SIZE];
+  static StackType_t SECTION xUSBDeviceStack[USB_DEVICE_TASK_SIZE];
+#endif
+
+
 void USB_task(void *handle)
 {
     USB_DeviceApplicationInit();
@@ -358,13 +373,25 @@ void USB_task(void *handle)
 #if USB_DEVICE_CONFIG_USE_TASK
     if (g_UsbDeviceComposite.deviceHandle)
     {
+#if configSUPPORT_STATIC_ALLOCATION
+      if ((g_UsbDeviceComposite.deviceTaskHandle=xTaskCreateStatic(
+                      USB_DeviceTask,                        /* pointer to the task */
+                      "usb device task",                     /* task name for kernel awareness debugging */
+                      USB_DEVICE_TASK_SIZE,                  /* task stack size */
+                      g_UsbDeviceComposite.deviceHandle,     /* optional task startup argument */
+                      5U,                                    /* initial priority */
+                      &xUSBDeviceStack[0],
+                      &xTaskUSBDeviceTCBBuffer
+                      )) == NULL)
+#else
         if (xTaskCreate(USB_DeviceTask,                        /* pointer to the task */
                         "usb device task",                     /* task name for kernel awareness debugging */
-                        5000L / sizeof(portSTACK_TYPE),        /* task stack size */
+                        USB_DEVICE_TASK_SIZE,                  /* task stack size */
                         g_UsbDeviceComposite.deviceHandle,     /* optional task startup argument */
                         5U,                                    /* initial priority */
                         &g_UsbDeviceComposite.deviceTaskHandle /* optional task handle to create */
                         ) != pdPASS)
+#endif
         {
             usb_echo("usb device task create failed!\r\n");
             return;
@@ -379,13 +406,25 @@ void USB_task(void *handle)
 }
 
 void CompositeInit(void) {
+#if configSUPPORT_STATIC_ALLOCATION
+  if ((g_UsbDeviceComposite.applicationTaskHandle=xTaskCreateStatic(
+                  USB_task,                       /* pointer to the task */
+                  "USB task",                     /* task name for kernel awareness debugging */
+                  USB_TASK_SIZE,                  /* task stack size */
+                  &g_UsbDeviceComposite,          /* optional task startup argument */
+                  tskIDLE_PRIORITY+4,             /* initial priority */
+                  &xUSBStack[0],
+                  &xTaskUSBTCBBuffer
+                  )) == NULL)
+#else
   if (xTaskCreate(USB_task,                                   /* pointer to the task */
                   "USB task",                                 /* task name for kernel awareness debugging */
-                  5000L / sizeof(portSTACK_TYPE),             /* task stack size */
+                  USB_TASK_SIZE,                              /* task stack size */
                   &g_UsbDeviceComposite,                      /* optional task startup argument */
                   tskIDLE_PRIORITY+4,                         /* initial priority */
                   &g_UsbDeviceComposite.applicationTaskHandle /* optional task handle to create */
                   ) != pdPASS)
+#endif
   {
       usb_echo("app task create failed!\r\n");
       return;

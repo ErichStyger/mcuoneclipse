@@ -7,7 +7,7 @@
 **     Version     : Component 01.072, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-05-29, 10:27, # CodeGen: 19
+**     Date/Time   : 2016-05-29, 11:05, # CodeGen: 21
 **     Abstract    :
 **
 **     Settings    :
@@ -465,8 +465,6 @@ void RTT1_Deinit(void)
 */
 void RTT1_Init(void)
 {
- // int i;
-
   SEGGER_RTT_Init();
 #if 0 /* not doing this, as this might overwrite already configured channels, e.g. by Percepio */
   for (i=0;i<SEGGER_RTT_MAX_NUM_UP_BUFFERS;i++) { /* configure channels with defaults */

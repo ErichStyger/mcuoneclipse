@@ -8,7 +8,8 @@
 #ifndef SOURCE_PLATFORM_H_
 #define SOURCE_PLATFORM_H_
 
+#include "FreeRTOSConfig.h"
 
-#define PL_CONFIG_HAS_SHELL_QUEUE    (1)
+#define PL_CONFIG_HAS_SHELL_QUEUE    (1 && configSUPPORT_DYNAMIC_ALLOCATION)
 
 #endif /* SOURCE_PLATFORM_H_ */

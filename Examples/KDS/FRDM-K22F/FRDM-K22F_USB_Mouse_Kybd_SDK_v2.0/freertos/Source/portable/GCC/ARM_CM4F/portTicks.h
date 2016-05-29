@@ -79,6 +79,9 @@
  */
 #include "KSDK1.h" /* include interface to SDK */
 
+#if KSDK1_SDK_VERSION_USED == KSDK1_SDK_VERSION_NONE
+  #include "Cpu.h" /* include CPU module because of dependency to CPU clock rate */
+#endif
 #include "FreeRTOSConfig.h"
 #include "portmacro.h"
 

@@ -41,10 +41,24 @@ void vTimerCallback(TimerHandle_t xTimer) {
   }
 }
 
+#if configSUPPORT_STATIC_ALLOCATION
+  static StaticTimer_t xTimerBuffer;
+#endif
+
 void SWT_Init(void) {
   BaseType_t res;
 
   led = 0; /* red */
+#if configSUPPORT_STATIC_ALLOCATION
+  handle = xTimerCreateStatic(
+      "swtimer", /* debug name of task */
+      pdMS_TO_TICKS(500), /* period */
+      pdTRUE, /* auto-reload */
+      NULL, /* no timer ID */
+      vTimerCallback, /* callback */
+      &xTimerBuffer
+      );
+#else /* configSUPPORT_DYNAMIC_ALLOCATION */
   handle = xTimerCreate(
       "swtimer", /* debug name of task */
       pdMS_TO_TICKS(500), /* period */
@@ -52,6 +66,7 @@ void SWT_Init(void) {
       NULL, /* no timer ID */
       vTimerCallback /* callback */
       );
+#endif
   if (handle==NULL) {
     for(;;); /* error creating timer */
   }

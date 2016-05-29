@@ -250,6 +250,16 @@ static portTASK_FUNCTION( TzCtrl, pvParameters )
  * Also sets up the diagnostic User Event channels used by TzCtrl task.
  *
  ******************************************************************************/
+#if configSUPPORT_STATIC_ALLOCATION
+  #if configUSE_HEAP_SECTION_NAME
+    #define SECTION __attribute__((section (configHEAP_SECTION_NAME_STRING)))
+  #else
+    #define SECTION /* empty */
+  #endif
+  static StaticTask_t SECTION xTaskTCBBuffer;
+  static StackType_t SECTION xStack[configMINIMAL_STACK_SIZE];
+#endif
+
 void Trace_Init(void)
 {
 	TRC_STREAM_PORT_INIT();
@@ -260,8 +270,18 @@ void Trace_Init(void)
 	DiagChn = vTraceStoreUserEventChannelName("Blocking on trace buffer");
 #endif
 
-  	/* Creates the TzCtrl task - receives trace commands (start, stop, ...) */
-	xTaskCreate( TzCtrl, "TzCtrl", configMINIMAL_STACK_SIZE, NULL, TRC_CTRL_TASK_PRIORITY, &HandleTzCtrl );
+  /* Creates the TzCtrl task - receives trace commands (start, stop, ...) */
+#if configSUPPORT_STATIC_ALLOCATION
+  if (xTaskCreateStatic(TzCtrl, "TzCtrl", configMINIMAL_STACK_SIZE, NULL, TRC_CTRL_TASK_PRIORITY, &xStack[0], &xTaskTCBBuffer)==NULL) {
+    for(;;){} /* task creation failed */
+  }
+#elif configSUPPORT_DYNAMIC_ALLOCATION
+  if (xTaskCreate(TzCtrl, "TzCtrl", configMINIMAL_STACK_SIZE, NULL, TRC_CTRL_TASK_PRIORITY, &HandleTzCtrl) != pdPASS) {
+    for(;;){} /* error! probably out of memory */
+  }
+#else
+  #error "Either configSUPPORT_STATIC_ALLOCATION or configSUPPORT_DYNAMIC_ALLOCATION has to be enabled"
+#endif
 }
 
 #endif

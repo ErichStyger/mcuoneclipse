@@ -130,7 +130,7 @@ void LOGGER_Init(void) {
     for(;;){} /* error! probably out of memory */
   }
 #else
-  #error
+  #error "Either configSUPPORT_STATIC_ALLOCATION or configSUPPORT_DYNAMIC_ALLOCATION has to be enabled"
 #endif
 }
 
