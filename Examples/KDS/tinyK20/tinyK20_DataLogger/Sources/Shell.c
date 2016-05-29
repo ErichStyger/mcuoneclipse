@@ -76,11 +76,11 @@ void SHELL_Init(void) {
     for(;;){} /* task creation failed */
   }
 #elif configSUPPORT_DYNAMIC_ALLOCATION
-  if (FRTOS1_xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+300, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
-    for(;;){} /* error */
+  if (xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+300, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+    for(;;){} /* error, maybe out of heap memory */
   }
 #else
-  #error
+  #error "Either configSUPPORT_STATIC_ALLOCATION or configSUPPORT_DYNAMIC_ALLOCATION has to be enabled"
 #endif
 }
 

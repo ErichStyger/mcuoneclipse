@@ -57,6 +57,7 @@
 #include "KSDK1.h"
 #include "SYS1.h"
 #include "RTT1.h"
+#include "PTRC1.h"
 
 #ifdef __cplusplus
 extern "C" {

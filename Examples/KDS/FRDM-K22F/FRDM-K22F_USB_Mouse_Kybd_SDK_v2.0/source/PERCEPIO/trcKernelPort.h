@@ -380,7 +380,7 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 
 /* Called on vTaskDelayUntil - note the use of FreeRTOS variable xTimeToWake */
 #undef traceTASK_DELAY_UNTIL
-#define traceTASK_DELAY_UNTIL() \
+#define traceTASK_DELAY_UNTIL(xTimeToWake) \
 	vTraceStoreEvent1(PSF_EVENT_TASK_DELAY_UNTIL, xTimeToWake);
 
 /* Called on vTaskDelete */
@@ -411,10 +411,10 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 #define traceTASK_CREATE(pxNewTCB) \
 	if (pxNewTCB != NULL) \
 	{ \
-		vTraceSaveSymbol(pxNewTCB, (const char*)pcName); \
-		vTraceSaveObjectData(pxNewTCB, uxPriority); \
-		vTraceStoreStringEvent(1, PSF_EVENT_OBJ_NAME, pcName, pxNewTCB); \
-		vTraceStoreEvent2(PSF_EVENT_TASK_CREATE, (uint32_t)pxNewTCB, uxPriority); \
+		vTraceSaveSymbol(pxNewTCB, (const char*)pxNewTCB->pcTaskName); \
+		vTraceSaveObjectData(pxNewTCB, pxNewTCB->uxPriority); \
+		vTraceStoreStringEvent(1, PSF_EVENT_OBJ_NAME, pxNewTCB->pcTaskName, pxNewTCB); \
+		vTraceStoreEvent2(PSF_EVENT_TASK_CREATE, (uint32_t)pxNewTCB, pxNewTCB->uxPriority); \
 	}
 
 /* Called in vTaskCreate, if it fails (typically if the stack can not be allocated) */
@@ -465,7 +465,7 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 /* Called in xQueueCreateMutex, and thereby also from xSemaphoreCreateMutex and xSemaphoreCreateRecursiveMutex */
 #undef traceCREATE_MUTEX
 #define traceCREATE_MUTEX( pxNewQueue ) \
-	switch (ucQueueType) \
+	switch (pxNewQueue->ucQueueType) \
 	{ \
 		case queueQUEUE_TYPE_MUTEX: \
 			vTraceStoreEvent1(PSF_EVENT_MUTEX_CREATE, (uint32_t)pxNewQueue); \
@@ -478,7 +478,7 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 /* Called in xQueueCreateMutex when the operation fails (when memory allocation fails) */
 #undef traceCREATE_MUTEX_FAILED
 #define traceCREATE_MUTEX_FAILED() \
-	switch (ucQueueType) \
+	switch (pxNewQueue->ucQueueType) \
 	{ \
 		case queueQUEUE_TYPE_MUTEX: \
 			vTraceStoreEvent0(PSF_EVENT_MUTEX_CREATE_FAILED); \
@@ -857,7 +857,7 @@ switch (pxQueue->ucQueueType) \
 
 #undef traceTASK_NOTIFY_TAKE
 #define traceTASK_NOTIFY_TAKE() \
-	if (pxCurrentTCB->eNotifyState == eNotified) \
+	if (pxCurrentTCB->ucNotifyState == taskNOTIFICATION_RECEIVED) \
 		vTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_TAKE, (uint32_t)pxCurrentTCB, xTicksToWait); \
 	else \
 		vTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_TAKE_FAILED, (uint32_t)pxCurrentTCB, xTicksToWait);
@@ -868,7 +868,7 @@ switch (pxQueue->ucQueueType) \
 
 #undef traceTASK_NOTIFY_WAIT
 #define traceTASK_NOTIFY_WAIT() \
-	if (pxCurrentTCB->eNotifyState == eNotified) \
+	if (pxCurrentTCB->ucNotifyState == taskNOTIFICATION_RECEIVED) \
 		vTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_WAIT, (uint32_t)pxCurrentTCB, xTicksToWait); \
 	else \
 		vTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_WAIT_FAILED, (uint32_t)pxCurrentTCB, xTicksToWait);

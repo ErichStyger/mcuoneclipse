@@ -290,6 +290,47 @@ void SUMDRx_OnRxChar(void);
 */
 void SUMDRx_OnFullRxBuf(void);
 
+void PTRC1_OnTraceStop(void);
+/*
+** ===================================================================
+**     Event       :  PTRC1_OnTraceStop (module Events)
+**
+**     Component   :  PTRC1 [PercepioTrace]
+**     Description :
+**         Called if the library calls vTraceStop(). Useful to dump the
+**         trace if 'stop when recorder is full' mode is selected.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void PTRC1_OnTraceStart(void);
+/*
+** ===================================================================
+**     Event       :  PTRC1_OnTraceStart (module Events)
+**
+**     Component   :  PTRC1 [PercepioTrace]
+**     Description :
+**         Called when vTraceStart() gets called.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void PTRC1_OnTraceWrap(void);
+/*
+** ===================================================================
+**     Event       :  PTRC1_OnTraceWrap (module Events)
+**
+**     Component   :  PTRC1 [PercepioTrace]
+**     Description :
+**         Called for trace ring buffer wrap around. This gives the
+**         application a chance to dump the trace buffer.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
 /* END Events */
 
 #ifdef __cplusplus

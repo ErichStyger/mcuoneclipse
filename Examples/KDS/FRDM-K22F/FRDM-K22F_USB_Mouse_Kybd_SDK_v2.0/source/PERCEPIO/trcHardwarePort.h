@@ -138,14 +138,12 @@
 #define TRC_OS_TIMER_INCR 3
 #define TRC_OS_TIMER_DECR 4
 
-#if 1
-#include "portTicks.h"
-#define HWTC_TYPE TRC_OS_TIMER_DECR
-#define IRQ_PRIORITY_ORDER 0
-#elif (TRC_RECORDER_HARDWARE_PORT == TRC_PORT_ARM_Cortex_M)
+#if (TRC_RECORDER_HARDWARE_PORT == TRC_PORT_ARM_Cortex_M)
+
 	#define HWTC_TYPE TRC_OS_TIMER_DECR
     #define HWTC_COUNT (*((uint32_t*)0xE000E018)) /* SysTick counter */
 	#define IRQ_PRIORITY_ORDER 0
+
 #elif (TRC_RECORDER_HARDWARE_PORT == TRC_PORT_Renesas_RX600)
 
 	#include "iodefine.h"

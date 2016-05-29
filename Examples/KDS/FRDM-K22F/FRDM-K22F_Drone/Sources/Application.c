@@ -15,7 +15,7 @@
 #if PL_HAS_RTOS
   #include "FreeRTOS.h"
   #if configUSE_TRACE_HOOKS
-  #include "RTOSTRC1.h"
+  #include "PTRC1.h"
   #endif
 #endif
 #if PL_HAS_SHELL
@@ -67,11 +67,10 @@ static void AppTask(void *pvParameters) {
 
 void APP_Run(void) {
 #if configUSE_TRACE_HOOKS /* Percepio trace */
-  if (RTOSTRC1_uiTraceStart()==0) {
+  if (PTRC1_uiTraceStart()==0) {
     for(;;){} /* error starting trace recorder. Not setup for enough queues/tasks/etc? */
   }
 #endif
-
 #if PL_HAS_SD_CARD
   /* SD card detection: PTB16 with pull-down! */
   PORT_PDD_SetPinPullSelect(PORTB_BASE_PTR, 16, PORT_PDD_PULL_DOWN);
@@ -85,7 +84,6 @@ void APP_Run(void) {
   PORT_PDD_SetPinPullSelect(PORTB_BASE_PTR, 17, PORT_PDD_PULL_UP);
   PORT_PDD_SetPinPullEnable(PORTB_BASE_PTR, 17, PORT_PDD_PULL_ENABLE);
 #endif
-
   LED1_On();
   LED1_Off();
   LED2_On();

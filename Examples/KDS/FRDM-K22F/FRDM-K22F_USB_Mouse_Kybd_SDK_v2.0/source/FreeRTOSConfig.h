@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.2.3 - Copyright (C) 2015 Real Time Engineers Ltd.
+    FreeRTOS V9.0.0 - Copyright (C) 2016 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -144,8 +144,12 @@ unsigned int ulMainGetRunTimeCounterValue(void); /* prototype */
   #define configCPU_CLOCK_HZ                      SystemCoreClock /* CPU clock frequency */
   #define configBUS_CLOCK_HZ                      SystemCoreClock /* Bus clock frequency */
 #else
-  #define configCPU_CLOCK_HZ                      CPU_CORE_CLK_HZ /* CPU clock frequency */
-  #define configBUS_CLOCK_HZ                      CPU_BUS_CLK_HZ /* Bus clock frequency */
+  #if configCPU_FAMILY_IS_ARM(configCPU_FAMILY) /* Kinetis defines this one in Cpu.h */
+    #define configCPU_CLOCK_HZ                    CPU_CORE_CLK_HZ /* CPU core clock defined in Cpu.h */
+  #else
+    #define configCPU_CLOCK_HZ                    CPU_INSTR_CLK_HZ /* CPU core clock defined in Cpu.h */
+  #endif
+  #define configBUS_CLOCK_HZ                      CPU_BUS_CLK_HZ /* CPU bus clock defined in Cpu.h */
 #endif /* configPEX_KINETIS_SDK */
 #define configSYSTICK_USE_CORE_CLOCK              1 /* System Tick is using core clock  */
 #define configSYSTICK_CLOCK_DIVIDER               1 /* no divider */
@@ -160,6 +164,8 @@ unsigned int ulMainGetRunTimeCounterValue(void); /* prototype */
 #define configHEAP_SECTION_NAME_STRING            ".m_data_20000000" /* heap section name (use e.g. ".m_data_20000000" for gcc and "m_data_20000000" for IAR). Check your linker file for the name used. */
 #endif
 #define configAPPLICATION_ALLOCATED_HEAP          0 /* set to one if application is defining heap ucHeap[] variable, 0 otherwise */
+#define configSUPPORT_DYNAMIC_ALLOCATION          1 /* 1: make dynamic allocation functions for RTOS available. 0: only static functions are allowed */
+#define configSUPPORT_STATIC_ALLOCATION           1 /* 1: make static allocation functions for RTOS available. 0: only dynamic functions are allowed */
 /*----------------------------------------------------------*/
 #define configMAX_TASK_NAME_LEN                   12 /* task name length in bytes */
 #define configUSE_TRACE_FACILITY                  1 /* 1: include additional structure members and functions to assist with execution visualization and tracing, 0: no runtime stats/trace */

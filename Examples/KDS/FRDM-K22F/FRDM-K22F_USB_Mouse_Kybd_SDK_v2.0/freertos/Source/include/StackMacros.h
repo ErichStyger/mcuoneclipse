@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.2.3 - Copyright (C) 2015 Real Time Engineers Ltd.
+    FreeRTOS V9.0.0 - Copyright (C) 2016 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -94,7 +94,7 @@
 		/* Is the currently saved stack pointer within the stack limit? */								\
 		if( pxCurrentTCB->pxTopOfStack <= pxCurrentTCB->pxStack )										\
 		{																								\
-			vApplicationStackOverflowHook( ( TaskHandle_t ) pxCurrentTCB, pxCurrentTCB->pcTaskName ); \
+       configCHECK_FOR_STACK_OVERFLOW_NAME( ( TaskHandle_t ) pxCurrentTCB, pxCurrentTCB->pcTaskName ); /* << EST: use macro name */	\
 		}																								\
 	}
 
@@ -110,7 +110,7 @@
 		/* Is the currently saved stack pointer within the stack limit? */								\
 		if( pxCurrentTCB->pxTopOfStack >= pxCurrentTCB->pxEndOfStack )									\
 		{																								\
-			FRTOS1_vApplicationStackOverflowHook( ( TaskHandle_t ) pxCurrentTCB, pxCurrentTCB->pcTaskName );   \
+      configCHECK_FOR_STACK_OVERFLOW_NAME( ( TaskHandle_t ) pxCurrentTCB, pxCurrentTCB->pcTaskName );	/* << EST: use macro name */ \
 		}																								\
 	}
 
@@ -129,7 +129,7 @@
 			( pulStack[ 2 ] != ulCheckValue ) ||												\
 			( pulStack[ 3 ] != ulCheckValue ) )												\
 		{																								\
-			FRTOS1_vApplicationStackOverflowHook( ( TaskHandle_t ) pxCurrentTCB, pxCurrentTCB->pcTaskName );   \
+      configCHECK_FOR_STACK_OVERFLOW_NAME( ( TaskHandle_t ) pxCurrentTCB, pxCurrentTCB->pcTaskName );/* << EST: use macro name */	\
 		}																								\
 	}
 
@@ -153,7 +153,7 @@
 		/* Has the extremity of the task stack ever been written over? */																\
 		if( memcmp( ( void * ) pcEndOfStack, ( void * ) ucExpectedStackBytes, sizeof( ucExpectedStackBytes ) ) != 0 )					\
 		{																																\
-			FRTOS1_vApplicationStackOverflowHook( ( TaskHandle_t ) pxCurrentTCB, pxCurrentTCB->pcTaskName );   \
+		  configCHECK_FOR_STACK_OVERFLOW_NAME( ( TaskHandle_t ) pxCurrentTCB, pxCurrentTCB->pcTaskName );		/* << EST: use macro name */							\
 		}																																\
 	}
 

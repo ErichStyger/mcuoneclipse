@@ -7,6 +7,7 @@
 
 #include "Application.h"
 #include "FreeRTOS.h"
+#include "task.h"
 #include "semphr.h"
 #include "fsl_gpio.h"
 #include "UTIL1.h"

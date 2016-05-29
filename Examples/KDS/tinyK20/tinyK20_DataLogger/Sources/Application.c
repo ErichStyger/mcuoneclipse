@@ -18,6 +18,14 @@
   #include "DataLogger.h"
 #endif
 
+#if configSUPPORT_DYNAMIC_ALLOCATION && configAPPLICATION_ALLOCATED_HEAP
+  #if configUSE_HEAP_SECTION_NAME
+    uint8_t __attribute__((section (configHEAP_SECTION_NAME_STRING)))  ucHeap[configTOTAL_HEAP_SIZE]; /* custom heap allocation */
+  #else
+    uint8_t ucHeap[configTOTAL_HEAP_SIZE]; /* custom heap allocation */
+  #endif
+#endif
+
 static FAT1_FATFS fileSystemObject;
 
 static uint8_t Test(CLS1_ConstStdIOTypePtr io) {
@@ -100,6 +108,14 @@ static void DiskTest(void) {
 void APP_Run(void) {
 //  DiskTest();
   SHELL_Init();
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* using SEGGER SystemViewer Trace */
+  SYS1_Init();
+#elif configUSE_TRACE_HOOKS /* using Percepio FreeRTOS+Trace */
+  vTraceInitTraceData();
+  if (uiTraceStart()==0) {
+    for(;;){} /* error starting trace recorder. Not setup for enough queues/tasks/etc? */
+  }
+#endif
 #if PL_CONFIG_HAS_LOGGER
  LOGGER_Init();
 #endif
