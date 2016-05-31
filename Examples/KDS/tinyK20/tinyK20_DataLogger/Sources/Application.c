@@ -17,6 +17,7 @@
 #if PL_CONFIG_HAS_LOGGER
   #include "DataLogger.h"
 #endif
+#include "SwTimer.h"
 
 #if configSUPPORT_DYNAMIC_ALLOCATION && configAPPLICATION_ALLOCATED_HEAP
   #if configUSE_HEAP_SECTION_NAME
@@ -108,10 +109,8 @@ static void DiskTest(void) {
 void APP_Run(void) {
 //  DiskTest();
   SHELL_Init();
-#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* using SEGGER SystemViewer Trace */
-  SYS1_Init();
-#elif configUSE_TRACE_HOOKS /* using Percepio FreeRTOS+Trace */
-  vTraceInitTraceData();
+  SWT_Init();
+#if configUSE_TRACE_HOOKS /* using Percepio FreeRTOS+Trace */
   if (uiTraceStart()==0) {
     for(;;){} /* error starting trace recorder. Not setup for enough queues/tasks/etc? */
   }

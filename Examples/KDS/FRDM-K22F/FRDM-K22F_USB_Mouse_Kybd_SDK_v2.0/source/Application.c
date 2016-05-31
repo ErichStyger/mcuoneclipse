@@ -161,7 +161,7 @@ void APP_Init(void) {
   vQueueAddToRegistry(semSW2, "Sem_SW2");
 
 #if configSUPPORT_STATIC_ALLOCATION
-  semSW2 = xSemaphoreCreateBinaryStatic(&xSemaphoreBufferSemSW3);
+  semSW3 = xSemaphoreCreateBinaryStatic(&xSemaphoreBufferSemSW3);
 #else
   semSW3 = xSemaphoreCreateBinary();
 #endif

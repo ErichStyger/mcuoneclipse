@@ -96,6 +96,17 @@ static void AppTask(void *pvParameters) {
  * @brief Application entry point.
  */
 
+#if configSUPPORT_STATIC_ALLOCATION
+  #if configUSE_HEAP_SECTION_NAME
+    #define SECTION __attribute__((section (configHEAP_SECTION_NAME_STRING)))
+  #else
+    #define SECTION /* empty */
+  #endif
+  static StaticTask_t SECTION xTaskTCBBuffer;
+  static StackType_t SECTION xStack[configMINIMAL_STACK_SIZE];
+#endif
+
+
 int main(void) {
   /* Init board hardware. */
   BOARD_InitPins();
@@ -110,9 +121,15 @@ int main(void) {
   /* run the code */
 #if USE_FREERTOS
   FRTOS1_Init();
+#if configSUPPORT_STATIC_ALLOCATION
+  if (xTaskCreateStatic(AppTask, "App", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, &xStack[0], &xTaskTCBBuffer)==NULL) {
+    for(;;){} /* task creation failed */
+  }
+#else /* configSUPPORT_DYNAMIC_ALLOCATION */
   if (xTaskCreate(AppTask, "App", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
+#endif
   vTaskStartScheduler();
 #else
   for(;;) {
