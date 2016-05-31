@@ -44,6 +44,7 @@
 #include "TimerIntLdd1.h"
 #include "TU1.h"
 #include "CS1.h"
+#include "KSDK1.h"
 #include "FAT1.h"
 #include "FATM1.h"
 #include "SDHC1.h"
