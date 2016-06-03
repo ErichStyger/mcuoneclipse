@@ -2,9 +2,9 @@
 <PEproject>
   <Header>
     <Name>ProcessorExpert</Name>
-    <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>28</ModificationStamp>
-    <Date>2015-03-23</Date>
+    <SavedBy>Erich Styger</SavedBy>
+    <ModificationStamp>29</ModificationStamp>
+    <Date>2016-06-03</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>45</ProjectCompNumb>
+    <ProjectCompNumb>50</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -4306,6 +4306,11 @@
           <ItemSymbol>NotSDK</ItemSymbol>
           <ReadOnly>false</ReadOnly>
         </ItemState>
+        <ItemState>
+          <ItemSymbol>UnhandledVectorsBehaviorFeatureGrp</ItemSymbol>
+          <ReadOnly>false</ReadOnly>
+          <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        </ItemState>
       </CompilerProperties>
       <DestLanguage>Ansi-C</DestLanguage>
       <IVTtype>0</IVTtype>
@@ -4333,7 +4338,7 @@
       <Count>0</Count>
     </BoolList_FpgaConfig>
     <BoolList_BeanConfig>
-      <Count>9</Count>
+      <Count>10</Count>
       <ItemId0>6</ItemId0>
       <Value0>true</Value0>
       <ItemId1>12</ItemId1>
@@ -4352,6 +4357,8 @@
       <Value7>true</Value7>
       <ItemId8>34</ItemId8>
       <Value8>true</Value8>
+      <ItemId9>45</ItemId9>
+      <Value9>true</Value9>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
       <Count>0</Count>
@@ -5267,7 +5274,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.023</BeanVersion>
+    <BeanVersion>01.027</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -5553,6 +5560,17 @@
         <UsrMethodName>ProbeACK</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>ReadBlockGeneric</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>no</LastUserSel>
+        <UsrMethodName>ReadBlockGeneric</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events>
       <ItemState>
@@ -5653,7 +5671,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template>Timeout</Template>
-    <BeanVersion>01.029</BeanVersion>
+    <BeanVersion>01.035</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -5697,6 +5715,12 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>CS1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>sdk</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>KSDK1</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -9142,7 +9166,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.067</BeanVersion>
+    <BeanVersion>01.069</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -9239,6 +9263,12 @@
         <UserReadOnly>false</UserReadOnly>
         <Value />
       </ItemState>
+      <ItemState>
+        <ItemSymbol>sdk</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>KSDK1</Value>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -9334,7 +9364,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.006</BeanVersion>
+    <BeanVersion>01.008</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -9359,6 +9389,13 @@
         <Index>1</Index>
         <Value>false</Value>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>sdk</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>KSDK1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
     </Properties>
     <Methods>
@@ -9399,6 +9436,46 @@
         <UsrMethodName>ExitCritical</UsrMethodName>
       </ItemState>
     </Methods>
+    <Events />
+  </Bean>
+  <Bean>
+    <BeanType>KinetisSDK</BeanType>
+    <Name>KSDK1</Name>
+    <CompNumb>45</CompNumb>
+    <CompEnabled>true</CompEnabled>
+    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
+    <IconName>SHARED_LDD</IconName>
+    <UserFolderName />
+    <Comment lines_count="0" />
+    <Template />
+    <BeanVersion>01.005</BeanVersion>
+    <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Properties>
+      <ItemState>
+        <ItemSymbol>DeviceName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>KSDK1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SDKVersion</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <EnumSymbVal>none</EnumSymbVal>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>KinetisSDKGeneratedFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+    </Properties>
+    <Methods />
     <Events />
   </Bean>
 </PEproject>
