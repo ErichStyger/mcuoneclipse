@@ -42,7 +42,6 @@
   #include "MidiMusic.h"
 #endif
 
-
 static xTimerHandle timerHndl;
 #define TIMER_PERIOD_MS TMOUT1_TICK_PERIOD_MS
 
