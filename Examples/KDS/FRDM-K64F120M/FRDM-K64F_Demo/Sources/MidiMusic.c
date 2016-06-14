@@ -21,6 +21,7 @@
 #include "MidiBond.h"
 
 static xTaskHandle MidiPlayTaskHandle;
+static int MM_SetSong = 1;
 
 static bool PlayTrackItem(MIDI_MusicTrack *track, uint32_t currTimeMs, uint8_t channel, uint32_t tempoUS) {
   uint32_t beatsPerSecond;
@@ -93,6 +94,7 @@ static void Play(MIDI_MusicTrack *tracks, unsigned int nofTracks, uint32_t tempo
   for(;;) { /* breaks */
     (void)xTaskNotifyWait(0UL, MIDI_SONG_STOP, &flags, 0); /* check flags */
     if (flags&MIDI_SONG_STOP) {
+      CLS1_SendStr((uint8_t*)"Stopping song!\r\n", CLS1_GetStdio()->stdOut);
       for(channel=0;channel<nofTracks;channel++) {
         FLOPPY_MIDI_AllSoundOff(channel);
       }
@@ -178,11 +180,15 @@ void MM_Play(MIDI_Song song) {
     res = MBond_GetMidiMusicInfo(&tracks[0], nofTracks);
   }
   if (res==ERR_OK) {
+    CLS1_SendStr((uint8_t*)"Playing song...\r\n", CLS1_GetStdio()->stdOut);
     Play(tracks, nofTracks, tempoUS);
   }
 }
 
-void MM_PlayMusic(MIDI_Song song) {
+void MM_PlayMusic(int song) {
+  if (song==-1) { /* use set/stored song */
+    song = MM_SetSong;
+  }
   (void)xTaskNotify(MidiPlayTaskHandle, (1<<song)|MIDI_SONG_START, eSetBits);
 }
 
@@ -221,7 +227,11 @@ static void MidiPlayTask(void *pvParameters) {
 }
 
 static uint8_t PrintStatus(CLS1_ConstStdIOType *io) {
+  uint8_t buf[16];
   CLS1_SendStatusStr((unsigned char*)"midi", (const unsigned char*)"\r\n", io->stdOut);
+  UTIL1_Num32sToStr(buf, sizeof(buf), MM_SetSong);
+  UTIL1_strcat(buf, sizeof(buf), (const unsigned char*)"\r\n");
+  CLS1_SendStatusStr((unsigned char*)"  set song", buf, io->stdOut);
   return ERR_OK;
 }
 
@@ -233,7 +243,7 @@ uint8_t MM_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdI
   if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "midi help")==0) {
      CLS1_SendHelpStr((unsigned char*)"midi", (const unsigned char*)"Group of midi commands\r\n", io->stdOut);
      CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
-     CLS1_SendHelpStr((unsigned char*)"  play <number>", (const unsigned char*)"Play midi song\r\n", io->stdOut);
+     CLS1_SendHelpStr((unsigned char*)"  (play|set) <number>", (const unsigned char*)"Play midi song\r\n", io->stdOut);
      CLS1_SendHelpStr((unsigned char*)"      0", (const unsigned char*)"Get ready\r\n", io->stdOut);
      CLS1_SendHelpStr((unsigned char*)"      1", (const unsigned char*)"Pirates of the Caribbean\r\n", io->stdOut);
      CLS1_SendHelpStr((unsigned char*)"      2", (const unsigned char*)"What is Love\r\n", io->stdOut);
@@ -257,7 +267,16 @@ uint8_t MM_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdI
      res = UTIL1_xatoi(&p, &tmp);
      if (res==ERR_OK && tmp>=0 && tmp<MIDI_NOF_SONGS) {
        *handled = TRUE;
+       MM_SetSong = tmp;
        MM_PlayMusic(tmp);
+     }
+     return res;
+   } else if (UTIL1_strncmp((char*)cmd, "midi set", sizeof("midi set")-1)==0) {
+     p = cmd+sizeof("midi set")-1;
+     res = UTIL1_xatoi(&p, &tmp);
+     if (res==ERR_OK && tmp>=0 && tmp<MIDI_NOF_SONGS) {
+       *handled = TRUE;
+       MM_SetSong = tmp;
      }
      return res;
    }

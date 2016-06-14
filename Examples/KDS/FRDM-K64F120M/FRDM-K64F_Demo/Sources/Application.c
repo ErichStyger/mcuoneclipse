@@ -57,8 +57,14 @@ void APP_OnKeyPressed(uint8_t keys) {
 void APP_OnKeyReleased(uint8_t keys) {
   if (keys&1) {
     CLS1_SendStr((uint8_t*)"SW3 released!\r\n", CLS1_GetStdio()->stdOut);
+#if PL_HAS_MIDI
+    MM_PlayMusic(-1);
+#endif
   } else if (keys&2) {
     CLS1_SendStr((uint8_t*)"SW2 released!\r\n", CLS1_GetStdio()->stdOut);
+#if PL_HAS_MIDI
+    MM_StopPlaying();
+#endif
   }
 }
 
