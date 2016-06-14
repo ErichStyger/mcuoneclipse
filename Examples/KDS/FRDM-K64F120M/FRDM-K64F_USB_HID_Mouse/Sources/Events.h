@@ -54,6 +54,7 @@
 #include "BitIoLdd4.h"
 #include "SW3.h"
 #include "BitIoLdd5.h"
+#include "KSDK1.h"
 
 #ifdef __cplusplus
 extern "C" {

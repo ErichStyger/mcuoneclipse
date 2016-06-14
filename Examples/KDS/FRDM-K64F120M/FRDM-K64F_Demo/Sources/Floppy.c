@@ -31,17 +31,6 @@
 #include "Dir7.h"
 #include "Step7.h"
 
-/* songs:
- * http://www.makeuseof.com/tag/8-floppy-disk-drive-music-videos/
- * http://makezine.com/2014/08/18/how-to-play-music-using-floppy-drives/
- * http://hackaday.com/2014/01/05/the-most-beautiful-floppy-disk-jukebox-ever/
- * http://www.schoar.de/tinkering/rumblerail/
- */
-/* green: enable (low active)
- * white: direction
- * green: step
- */
-
 #define FLOPPY_NOF_NOTES    128
 #define FLOPPY_HIGHES_NOTE  48 /* highest note/tone we can play */
 static const uint16_t FLOPPY_NoteTicks[FLOPPY_NOF_NOTES] = {
@@ -181,63 +170,45 @@ static int FLOPPY_NoteOffset = 0; /* value added to the note played */
 #define FLOPPY_MAX_STEPS  80
 
 static void Drv0_Dir(bool forward) { if (forward) {Dir0_SetVal();} else {Dir0_ClrVal();} }
-static void Drv0_Step(void) { Step0_SetVal(); WAIT1_Waitus(5); Step0_ClrVal(); }
 static void Drv0_StepSetVal(void) { Step0_SetVal(); }
 static void Drv0_StepClrVal(void) { Step0_ClrVal(); }
-static void Drv0_StepToggle(void) { Step0_NegVal(); }
 
 static void Drv1_Dir(bool forward) { if (forward) {Dir1_SetVal();} else {Dir1_ClrVal();} }
-static void Drv1_Step(void) { Step1_SetVal(); WAIT1_Waitus(5); Step1_ClrVal(); }
 static void Drv1_StepSetVal(void) { Step1_SetVal(); }
 static void Drv1_StepClrVal(void) { Step1_ClrVal(); }
-static void Drv1_StepToggle(void) { Step1_NegVal(); }
 
 static void Drv2_Dir(bool forward) { if (forward) {Dir2_SetVal();} else {Dir2_ClrVal();} }
-static void Drv2_Step(void) { Step2_SetVal(); WAIT1_Waitus(5); Step2_ClrVal(); }
 static void Drv2_StepSetVal(void) { Step2_SetVal(); }
 static void Drv2_StepClrVal(void) { Step2_ClrVal(); }
-static void Drv2_StepToggle(void) { Step2_NegVal(); }
 
 static void Drv3_Dir(bool forward) { if (forward) {Dir3_SetVal();} else {Dir3_ClrVal();} }
-static void Drv3_Step(void) { Step3_SetVal(); WAIT1_Waitus(5); Step3_ClrVal(); }
 static void Drv3_StepSetVal(void) { Step3_SetVal(); }
 static void Drv3_StepClrVal(void) { Step3_ClrVal(); }
-static void Drv3_StepToggle(void) { Step3_NegVal(); }
 
 static void Drv4_Dir(bool forward) { if (forward) {Dir4_SetVal();} else {Dir4_ClrVal();} }
-static void Drv4_Step(void) { Step4_SetVal(); WAIT1_Waitus(5); Step4_ClrVal(); }
 static void Drv4_StepSetVal(void) { Step4_SetVal(); }
 static void Drv4_StepClrVal(void) { Step4_ClrVal(); }
-static void Drv4_StepToggle(void) { Step4_NegVal(); }
 
 static void Drv5_Dir(bool forward) { if (forward) {Dir5_SetVal();} else {Dir5_ClrVal();} }
-static void Drv5_Step(void) { Step5_SetVal(); WAIT1_Waitus(5); Step5_ClrVal(); }
 static void Drv5_StepSetVal(void) { Step5_SetVal(); }
 static void Drv5_StepClrVal(void) { Step5_ClrVal(); }
-static void Drv5_StepToggle(void) { Step5_NegVal(); }
 
 static void Drv6_Dir(bool forward) { if (forward) {Dir6_SetVal();} else {Dir6_ClrVal();} }
-static void Drv6_Step(void) { Step6_SetVal(); WAIT1_Waitus(5); Step6_ClrVal(); }
 static void Drv6_StepSetVal(void) { Step6_SetVal(); }
 static void Drv6_StepClrVal(void) { Step6_ClrVal(); }
-static void Drv6_StepToggle(void) { Step6_NegVal(); }
 
 static void Drv7_Dir(bool forward) { if (forward) {Dir7_SetVal();} else {Dir7_ClrVal();} }
-static void Drv7_Step(void) { Step7_SetVal(); WAIT1_Waitus(5); Step7_ClrVal(); }
 static void Drv7_StepSetVal(void) { Step7_SetVal(); }
 static void Drv7_StepClrVal(void) { Step7_ClrVal(); }
-static void Drv7_StepToggle(void) { Step7_NegVal(); }
 
 typedef struct {
   bool forward; /* current direction */
   int8_t pos; /* current position, valid 0..FLOPPY_MAX_STEPS */
   uint32_t currentPeriod; /* current period in timer interrupt events. Zero if disabled */
-  uint32_t currentTick;
-  void(*Dir)(bool forward);
-  void(*Step)(void);
-  void(*StepSetVal)(void);
-  void(*StepClearVal)(void);
-  void(*StepToggle)(void);
+  uint32_t currentTick; /* current tick value */
+  void(*Dir)(bool forward); /* direction pin */
+  void(*StepSetVal)(void); /* setting step pin HIGH */
+  void(*StepClearVal)(void); /* setting step pin LOW */
 } FLOPPY_Drive;
 
 typedef FLOPPY_Drive *FLOPPY_DriveHandle;
@@ -271,7 +242,10 @@ uint8_t FLOPPY_Steps(FLOPPY_DriveHandle drive, int steps) {
     } else if (drive->pos==0) {
       FLOPPY_SetDirection(drive, TRUE); /* go forward */
     }
-    drive->Step();
+    /* do a step */
+    drive->StepSetVal();
+    WAIT1_Waitus(5);
+    drive->StepClearVal();
     if (steps>0) {
       steps--;
     } else {
@@ -497,52 +471,36 @@ void FLOPPY_Init(void) {
     FLOPPY_Drives[i].currentTick = 0;
   }
   FLOPPY_Drives[0].Dir = Drv0_Dir;
-  FLOPPY_Drives[0].Step = Drv0_Step;
   FLOPPY_Drives[0].StepSetVal = Drv0_StepSetVal;
   FLOPPY_Drives[0].StepClearVal = Drv0_StepClrVal;
-  FLOPPY_Drives[0].StepToggle = Drv0_StepToggle;
 
   FLOPPY_Drives[1].Dir = Drv1_Dir;
-  FLOPPY_Drives[1].Step = Drv1_Step;
   FLOPPY_Drives[1].StepSetVal = Drv1_StepSetVal;
   FLOPPY_Drives[1].StepClearVal = Drv1_StepClrVal;
-  FLOPPY_Drives[1].StepToggle = Drv1_StepToggle;
 
   FLOPPY_Drives[2].Dir = Drv2_Dir;
-  FLOPPY_Drives[2].Step = Drv2_Step;
   FLOPPY_Drives[2].StepSetVal = Drv2_StepSetVal;
   FLOPPY_Drives[2].StepClearVal = Drv2_StepClrVal;
-  FLOPPY_Drives[2].StepToggle = Drv2_StepToggle;
 
   FLOPPY_Drives[3].Dir = Drv3_Dir;
-  FLOPPY_Drives[3].Step = Drv3_Step;
   FLOPPY_Drives[3].StepSetVal = Drv3_StepSetVal;
   FLOPPY_Drives[3].StepClearVal = Drv3_StepClrVal;
-  FLOPPY_Drives[3].StepToggle = Drv3_StepToggle;
 
   FLOPPY_Drives[4].Dir = Drv4_Dir;
-  FLOPPY_Drives[4].Step = Drv4_Step;
   FLOPPY_Drives[4].StepSetVal = Drv4_StepSetVal;
   FLOPPY_Drives[4].StepClearVal = Drv4_StepClrVal;
-  FLOPPY_Drives[4].StepToggle = Drv4_StepToggle;
 
   FLOPPY_Drives[5].Dir = Drv5_Dir;
-  FLOPPY_Drives[5].Step = Drv5_Step;
   FLOPPY_Drives[5].StepSetVal = Drv5_StepSetVal;
   FLOPPY_Drives[5].StepClearVal = Drv5_StepClrVal;
-  FLOPPY_Drives[5].StepToggle = Drv5_StepToggle;
 
   FLOPPY_Drives[6].Dir = Drv6_Dir;
-  FLOPPY_Drives[6].Step = Drv6_Step;
   FLOPPY_Drives[6].StepSetVal = Drv6_StepSetVal;
   FLOPPY_Drives[6].StepClearVal = Drv6_StepClrVal;
-  FLOPPY_Drives[6].StepToggle = Drv6_StepToggle;
 
   FLOPPY_Drives[7].Dir = Drv7_Dir;
-  FLOPPY_Drives[7].Step = Drv7_Step;
   FLOPPY_Drives[7].StepSetVal = Drv7_StepSetVal;
   FLOPPY_Drives[7].StepClearVal = Drv7_StepClrVal;
-  FLOPPY_Drives[7].StepToggle = Drv7_StepToggle;
 
   TI1_Enable();
   TI1_EnableEvent();

@@ -24,3 +24,5 @@ Floppy connectors:
 4 PTB11 0 yellow dir       4  PTC9 6 yellow dir
 5 PTC10 1 white step       5  PTC8 7 white step
 6 PTC11 1 yellow dir       6  PTC1 7 yellow dir
+
+
