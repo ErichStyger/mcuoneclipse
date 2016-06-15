@@ -3,7 +3,7 @@
  * \brief Bootloader implementation.
  * \author Erich Styger
  *
- * This module implements a bootloader over SCI/UART with shell interface for the FRDM-KL25Z.
+ * This module implements a bootloader over SCI/UART with shell interface for the FRDM board.
  */
 
 #include "Bootloader.h"
@@ -17,14 +17,13 @@
 #include "KIN1.h"
 
 #define FLASH_PAGE_SIZE             (IntFlashLdd1_ERASABLE_UNIT_SIZE) /* flash page size */
-#define BL_FLASH_VECTOR_TABLE       0x0000 /* bootloader vector table in flash */
 
 /* application flash area */
 #define MIN_APP_FLASH_ADDRESS       0x8000  /* start of application flash area */
-#define MAX_APP_FLASH_ADDRESS       0xFFFFF  /* end of application flash */
+#define MAX_APP_FLASH_ADDRESS       0x1FFFF  /* end of application flash */
 
 #define APP_FLASH_VECTOR_START      0x8000  /* application vector table in flash */
-#define APP_FLASH_VECTOR_SIZE       0x400    /* size of vector table */
+#define APP_FLASH_VECTOR_SIZE       0xc0    /* size of vector table */
 
 #define USE_XON_XOFF  0
 
@@ -92,6 +91,9 @@ static uint8_t BL_onS19Flash(S19_ParserStruct *info) {
     case '3':
       if (!BL_ValidAppAddress(info->currAddress)) {
         info->status = S19_FILE_INVALID_ADDRESS;
+        CLS1_SendStr((unsigned char*)"\r\nInvalid FLASH address: ", CLS1_GetStdio()->stdErr);
+        CLS1_SendNum32u(info->currAddress, CLS1_GetStdio()->stdErr);
+        CLS1_SendStr((unsigned char*)" !\r\n", CLS1_GetStdio()->stdErr);
         res = ERR_FAILED;
       } else {
         /* Write buffered data to Flash */
@@ -124,28 +126,28 @@ static uint8_t BL_onS19Flash(S19_ParserStruct *info) {
 #include "PORT_PDD.h"
 
 static bool BL_CheckBootloaderMode(void) {
+#if 0 /* \todo
   /* let's check if the user presses the BTLD switch. Need to configure the pin first */
-  /* PTB13 as input */
+  /* PTB8 as input */
   /* clock all port pins */
-#if 0
   SIM_SCGC5   |= SIM_SCGC5_PORTA_MASK |
              SIM_SCGC5_PORTB_MASK |
              SIM_SCGC5_PORTC_MASK |
              SIM_SCGC5_PORTD_MASK |
              SIM_SCGC5_PORTE_MASK;
   /* Configure pin as input */
-//#if 0
+#if 0
   /* GPIOB_PDDR: PDD&=~0x0100 */
   GPIOB_PDDR = (uint32_t)((GPIOB_PDDR & (uint32_t)~0x0100UL) | (uint32_t)0x00UL);
 
   /* Initialization of Port Control register */
-  /* PORTB_PCR13: ISF=0,MUX=1 */
-  PORTB_PCR13 = (uint32_t)((PORTB_PCR13 & (uint32_t)~0x01000600UL) | (uint32_t)0x0100UL);
-//#else
-  (void)BitIoLdd1_Init(NULL); /* initialize the port pin PTB13 */
-  /* enable internal pull-up on PTA4 */
-  PORT_PDD_SetPinPullSelect(PORTA_BASE_PTR, 4, PORT_PDD_PULL_UP);
-  PORT_PDD_SetPinPullEnable(PORTA_BASE_PTR, 4, PORT_PDD_PULL_ENABLE);
+  /* PORTB_PCR8: ISF=0,MUX=1 */
+  PORTB_PCR8 = (uint32_t)((PORTB_PCR8 & (uint32_t)~0x01000600UL) | (uint32_t)0x0100UL);
+#else
+  (void)BitIoLdd3_Init(NULL); /* initialize the port pin PTB8 */
+  /* enable internal pull-up on PTB8 */
+  PORT_PDD_SetPinPullSelect(PORTB_BASE_PTR, 8, PORT_PDD_PULL_UP);
+  PORT_PDD_SetPinPullEnable(PORTB_BASE_PTR, 8, PORT_PDD_PULL_ENABLE);
   WAIT1_Waitms(5); /* wait get pull-up a chance to pull-up */
 #endif
   if (!BL_SW_GetVal()) { /* button pressed (has pull-up!) */
@@ -155,17 +157,19 @@ static bool BL_CheckBootloaderMode(void) {
     }
   }
   /* BTLD switch not pressed, and we have a valid user application vector */
-  return FALSE; /* do not enter bootloader mode */
+#endif
+  return TRUE; /* \todo */
+  //return FALSE; /* do not enter bootloader mode */
 }
 
 /*!
  * \brief This method is called during startup! It decides if we enter bootloader mode or if we run the application.
  */
 void BL_CheckForUserApp(void) {
-  uint32_t startup; /* assuming 32bit function pointers */ 
-  WAIT1_Waitms(2000);
+  uint32_t startup; /* assuming 32bit function pointers */
+
   startup = ((uint32_t*)APP_FLASH_VECTOR_START)[1]; /* this is the reset vector (__startup function) */
-  if (startup != -1 && !BL_CheckBootloaderMode()) { /* we do have a valid application vector? -1/0xfffffff would mean flash erased */
+  if (startup!=-1 && !BL_CheckBootloaderMode()) { /* we do have a valid application vector? -1/0xfffffff would mean flash erased */
     ((void(*)(void))startup)(); /* Jump to application startup code */
   }
 }
@@ -208,7 +212,7 @@ static uint8_t codeBuf[64];
 
 static uint8_t BL_LoadS19(CLS1_ConstStdIOType *io) {
   unsigned char buf[16];
-  uint8_t res = ERR_OK, data;
+  uint8_t res = ERR_OK;
 
   /* first, erase flash */
   if (BL_EraseAppFlash(io)!=ERR_OK) {
@@ -227,8 +231,7 @@ static uint8_t BL_LoadS19(CLS1_ConstStdIOType *io) {
   parserInfo.codeBuf = codeBuf;
   parserInfo.codeBufSize = sizeof(codeBuf);
   while (AS1_GetCharsInRxBuf()>0) { /* clear any pending characters in rx buffer */
-//    AS1_ClearRxBuf();
-  	AS1_RecvChar(&data);
+    AS1_ClearRxBuf();
     WAIT1_Waitms(100);
   }
   do {
@@ -241,13 +244,11 @@ static uint8_t BL_LoadS19(CLS1_ConstStdIOType *io) {
       res = ERR_FAILED;
       break;
     } else {
-    	// A partir daqui são informados os endereços gravados 
-      CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
-//      buf[0] = parserInfo.currType;
-//      buf[1] = '\0';
-//      CLS1_SendStr(buf, io->stdOut);    
-//      CLS1_SendStr((unsigned char*)" address 0x", io->stdOut);
-      CLS1_SendStr((unsigned char*)"ack ", io->stdOut);
+      CLS1_SendStr((unsigned char*)"\r\nS", io->stdOut);
+      buf[0] = parserInfo.currType;
+      buf[1] = '\0';
+      CLS1_SendStr(buf, io->stdOut);
+      CLS1_SendStr((unsigned char*)" address 0x", io->stdOut);
       buf[0] = '\0';
       UTIL1_strcatNum32Hex(buf, sizeof(buf), parserInfo.currAddress);
       CLS1_SendStr(buf, io->stdOut);
@@ -261,8 +262,7 @@ static uint8_t BL_LoadS19(CLS1_ConstStdIOType *io) {
     CLS1_SendStr((unsigned char*)"\r\ndone!\r\n", io->stdOut);
   } else {
     while (AS1_GetCharsInRxBuf()>0) {/* clear buffer */
-//      AS1_ClearRxBuf();
-    	AS1_RecvChar(&data);
+      AS1_ClearRxBuf();
       WAIT1_Waitms(100);
     }
     CLS1_SendStr((unsigned char*)"\r\nfailed!\r\n", io->stdOut);
@@ -317,16 +317,7 @@ byte BL_ParseCommand(const unsigned char *cmd, bool *handled, CLS1_ConstStdIOTyp
     *handled = TRUE;
     return BL_EraseAppFlash(io);
   } else if ((UTIL1_strcmp((char*)cmd, "BL restart")==0)) {
-#if 1
-    uint32_t startup;
-
-    *handled = TRUE;
-    startup = ((uint32_t*)BL_FLASH_VECTOR_TABLE)[1];
-//    startup = ((uint32_t*)APP_FLASH_VECTOR_START)[1];
-    ((void(*)(void))startup)(); /* Jump to startup code */
-#else
     KIN1_SoftwareReset();
-#endif
     /* will never get here! */
     return ERR_OK;
   } else if ((UTIL1_strcmp((char*)cmd, "BL load s19")==0)) {
