@@ -26,3 +26,5 @@ Floppy connectors:
 6 PTC11 1 yellow dir       6  PTC1 7 yellow dir
 
 
+Link:
+https://mcuoneclipse.com/2016/06/15/tutorial-making-music-with-floppy-diskdrives/
