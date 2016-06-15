@@ -11,25 +11,23 @@
 #include "Bootloader.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
-{ CLS1_ParseCommand, BL_ParseCommand, NULL /* Sentinel */
+{
+    CLS1_ParseCommand,
+    BL_ParseCommand,
+    NULL /* Sentinel */
 };
 
-static unsigned char buf[32];
+static unsigned char buf[48];
 
-void SHELL_Parse(void)
-{
-	(void) CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), CLS1_GetStdio(),
-			CmdParserTable);
+void SHELL_Parse(void) {
+	(void) CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), CLS1_GetStdio(), CmdParserTable);
 }
 
-void SHELL_Init(void)
-{
+void SHELL_Init(void) {
 	buf[0] = '\0';
-	(void) CLS1_ParseWithCommandTable((unsigned char*) CLS1_CMD_HELP,
-			CLS1_GetStdio(), CmdParserTable);
+	(void) CLS1_ParseWithCommandTable((unsigned char*) CLS1_CMD_HELP, CLS1_GetStdio(), CmdParserTable);
 }
 
-void SHELL_Deinit(void)
-{
+void SHELL_Deinit(void) {
 	/* nothing to do */
 }
