@@ -13,6 +13,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "IO_Map.h"
+#include "Bootloader.h"
 
 #ifndef __ATOLLIC__
 extern void _start(void);
@@ -180,7 +181,7 @@ void __attribute__ ((weak)) __init_hardware(void)
 
 void __attribute__ ((weak)) __init_user(void)
 {
-
+  BL_CheckForUserApp();
 }
 
 
