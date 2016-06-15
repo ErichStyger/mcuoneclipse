@@ -6,6 +6,7 @@
  * This module implements a bootloader over SCI/UART with shell interface for the FRDM board.
  */
 
+#include "PE_Types.h"
 #include "Bootloader.h"
 #include "IFsh1.h"
 #include "S19.h"
@@ -46,6 +47,15 @@ static bool BL_ValidAppAddress(dword addr) {
 static byte BL_Flash_Prog(dword flash_addr, uint8_t *data_addr, uint16_t nofDataBytes) {
   /* only flash into application space. Everything else will be ignored */
   if(BL_ValidAppAddress(flash_addr)) {
+#if 0
+    /* \todo: in case of data is not 8 byte aligned, there are hard faults? */
+    if (nofDataBytes<IntFlashLdd1_WRITE_UNIT_SIZE) { /* \todo */
+      nofDataBytes = IntFlashLdd1_WRITE_UNIT_SIZE;
+    }
+    if ((flash_addr%IntFlashLdd1_WRITE_UNIT_SIZE)!=0) {
+      flash_addr -= (flash_addr%IntFlashLdd1_WRITE_UNIT_MASK);
+    }
+#endif
     if (IFsh1_SetBlockFlash((IFsh1_TDataAddress)data_addr, flash_addr, nofDataBytes) != ERR_OK) {
       return ERR_FAILED; /* flash programming failed */
     }

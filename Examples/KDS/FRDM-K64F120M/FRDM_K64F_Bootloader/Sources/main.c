@@ -70,9 +70,6 @@ int main(void)
 
   /* Write your code here */
   /* For example: for(;;) { } */
-
-//  BL_CheckForUserApp();
-
   BL_Run();
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/

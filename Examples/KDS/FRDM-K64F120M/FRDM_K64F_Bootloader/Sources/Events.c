@@ -76,24 +76,6 @@ void S19_OnError(S19_ErrorCode errorCode, S19_ParserStruct *iteratorInfo)
   /* Write your code here ... */
 }
 
-/*
-** ===================================================================
-**     Event       :  IFsh1_OnWriteEnd (module Events)
-**
-**     Component   :  IFsh1 [IntFLASH]
-*/
-/*!
-**     @brief
-**         Event is called after a write operation to FLASH memory is
-**         finished (except [SetPage]). This event is available only if
-**         an [Interrupt service/event] is selected.
-*/
-/* ===================================================================*/
-void IFsh1_OnWriteEnd(void)
-{
-  /* Write your code here ... */
-}
-
 /* END Events */
 
 #ifdef __cplusplus
