@@ -48,25 +48,9 @@ static bool BL_ValidAppAddress(dword addr) {
 static uint8_t BL_Flash_Prog(dword flash_addr, uint8_t *data_addr, uint16_t nofDataBytes) {
   /* only flash into application space. Everything else will be ignored */
   if(BL_ValidAppAddress(flash_addr)) {
-#if 0
-    /* \todo: in case of data is not 8 uint8_t aligned, there are hard faults? */
-    if (nofDataBytes<IntFlashLdd1_WRITE_UNIT_SIZE) { /* \todo */
-      nofDataBytes = IntFlashLdd1_WRITE_UNIT_SIZE;
-    }
-    if ((flash_addr%IntFlashLdd1_WRITE_UNIT_SIZE)!=0) {
-      flash_addr -= (flash_addr%IntFlashLdd1_WRITE_UNIT_MASK);
-    }
-#endif
-
-#if 0
-    if (IFsh1_SetBlockFlash((IFsh1_TDataAddress)data_addr, flash_addr, nofDataBytes) != ERR_OK) {
-      return ERR_FAILED; /* flash programming failed */
-    }
-#else
     return BUF_Write(flash_addr, data_addr, nofDataBytes);
-#endif
   }
-  return ERR_OK;
+  return ERR_FAILED;
 }
 
 /*!
