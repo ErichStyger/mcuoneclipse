@@ -101,7 +101,7 @@ void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName)
 void FRTOS1_vApplicationTickHook(void)
 {
   /* Called for every RTOS tick. */
-  //TmDt1_AddTick();
+  //TmDt1_AddTick(); /* doing with a FreeRTOS software timer now */
 }
 
 /*

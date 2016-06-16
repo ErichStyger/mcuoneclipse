@@ -16,6 +16,7 @@
 #include "UTIL1.h"
 #include "AS1.h"
 #include "KIN1.h"
+#include "Buffer.h"
 
 #define FLASH_PAGE_SIZE             (IntFlashLdd1_ERASABLE_UNIT_SIZE) /* flash page size */
 
@@ -44,11 +45,11 @@ static bool BL_ValidAppAddress(dword addr) {
  * \param nofDataBytes Number of data bytes.
  * \return ERR_OK if everything was ok, ERR_FAILED otherwise.
  */
-static byte BL_Flash_Prog(dword flash_addr, uint8_t *data_addr, uint16_t nofDataBytes) {
+static uint8_t BL_Flash_Prog(dword flash_addr, uint8_t *data_addr, uint16_t nofDataBytes) {
   /* only flash into application space. Everything else will be ignored */
   if(BL_ValidAppAddress(flash_addr)) {
 #if 0
-    /* \todo: in case of data is not 8 byte aligned, there are hard faults? */
+    /* \todo: in case of data is not 8 uint8_t aligned, there are hard faults? */
     if (nofDataBytes<IntFlashLdd1_WRITE_UNIT_SIZE) { /* \todo */
       nofDataBytes = IntFlashLdd1_WRITE_UNIT_SIZE;
     }
@@ -56,9 +57,14 @@ static byte BL_Flash_Prog(dword flash_addr, uint8_t *data_addr, uint16_t nofData
       flash_addr -= (flash_addr%IntFlashLdd1_WRITE_UNIT_MASK);
     }
 #endif
+
+#if 0
     if (IFsh1_SetBlockFlash((IFsh1_TDataAddress)data_addr, flash_addr, nofDataBytes) != ERR_OK) {
       return ERR_FAILED; /* flash programming failed */
     }
+#else
+    return BUF_Write(flash_addr, data_addr, nofDataBytes);
+#endif
   }
   return ERR_OK;
 }
@@ -67,7 +73,7 @@ static byte BL_Flash_Prog(dword flash_addr, uint8_t *data_addr, uint16_t nofData
  * \brief Erases all unprotected pages of flash
  * \return ERR_OK if everything is ok; ERR_FAILED otherwise
  */
-static byte BL_EraseApplicationFlash(void) {
+static uint8_t BL_EraseApplicationFlash(void) {
   dword addr;
 
   /* erase application flash pages */
@@ -116,6 +122,7 @@ static uint8_t BL_onS19Flash(S19_ParserStruct *info) {
     case '7':
     case '8':
     case '9': /* S7, S8 or S9 mark the end of the block/s-record file */
+      res = BUF_Flush();
       break;
     case '0':
     case '4':
@@ -136,30 +143,18 @@ static uint8_t BL_onS19Flash(S19_ParserStruct *info) {
 #include "PORT_PDD.h"
 
 static bool BL_CheckBootloaderMode(void) {
-#if 0 /* \todo
-  /* let's check if the user presses the BTLD switch. Need to configure the pin first */
-  /* PTB8 as input */
+  /* let's check if the user presses the BTLD (SW3, PTA4) switch. Need to configure the pin first */
+  /* PTA4 as input */
   /* clock all port pins */
-  SIM_SCGC5   |= SIM_SCGC5_PORTA_MASK |
-             SIM_SCGC5_PORTB_MASK |
-             SIM_SCGC5_PORTC_MASK |
-             SIM_SCGC5_PORTD_MASK |
-             SIM_SCGC5_PORTE_MASK;
+  SIM_SCGC5   |= SIM_SCGC5_PORTA_MASK;
   /* Configure pin as input */
-#if 0
-  /* GPIOB_PDDR: PDD&=~0x0100 */
-  GPIOB_PDDR = (uint32_t)((GPIOB_PDDR & (uint32_t)~0x0100UL) | (uint32_t)0x00UL);
 
-  /* Initialization of Port Control register */
-  /* PORTB_PCR8: ISF=0,MUX=1 */
-  PORTB_PCR8 = (uint32_t)((PORTB_PCR8 & (uint32_t)~0x01000600UL) | (uint32_t)0x0100UL);
-#else
-  (void)BitIoLdd3_Init(NULL); /* initialize the port pin PTB8 */
+  (void)BitIoLdd1_Init(NULL); /* initialize the port pin PTA4 */
   /* enable internal pull-up on PTB8 */
-  PORT_PDD_SetPinPullSelect(PORTB_BASE_PTR, 8, PORT_PDD_PULL_UP);
-  PORT_PDD_SetPinPullEnable(PORTB_BASE_PTR, 8, PORT_PDD_PULL_ENABLE);
+  PORT_PDD_SetPinPullSelect(PORTA_BASE_PTR, 4, PORT_PDD_PULL_UP);
+  PORT_PDD_SetPinPullEnable(PORTA_BASE_PTR, 4, PORT_PDD_PULL_ENABLE);
   WAIT1_Waitms(5); /* wait get pull-up a chance to pull-up */
-#endif
+
   if (!BL_SW_GetVal()) { /* button pressed (has pull-up!) */
     WAIT1_Waitms(50); /* wait to debounce */
     if (!BL_SW_GetVal()) { /* still pressed */
@@ -167,9 +162,7 @@ static bool BL_CheckBootloaderMode(void) {
     }
   }
   /* BTLD switch not pressed, and we have a valid user application vector */
-#endif
-  return TRUE; /* \todo */
-  //return FALSE; /* do not enter bootloader mode */
+  return FALSE; /* do not enter bootloader mode */
 }
 
 /*!
@@ -215,6 +208,9 @@ static uint8_t GetChar(uint8_t *data, void *q) {
   if (*data=='\0') { /* end of input? */
     return ERR_RXEMPTY;
   }
+#if 1 /* echo */
+  CLS1_SendCh(*data, CLS1_GetStdio()->stdOut);
+#endif
   return ERR_OK;
 }
 
@@ -246,7 +242,7 @@ static uint8_t BL_LoadS19(CLS1_ConstStdIOType *io) {
   }
   do {
     if (S19_ParseLine(&parserInfo)!=ERR_OK) {
-      CLS1_SendStr((unsigned char*)"ERROR!\r\nFailed at address 0x", io->stdErr);
+      CLS1_SendStr((unsigned char*)"\r\nERROR!\r\nFailed at address 0x", io->stdErr);
       buf[0] = '\0';
       UTIL1_strcatNum32Hex(buf, sizeof(buf), parserInfo.currAddress);
       CLS1_SendStr(buf, io->stdErr);    
@@ -265,6 +261,7 @@ static uint8_t BL_LoadS19(CLS1_ConstStdIOType *io) {
     }
     if (parserInfo.currType=='7' || parserInfo.currType=='8' || parserInfo.currType=='9') {
       /* end of records */
+      (void)BUF_Flush();
       break;
     }
   } while (1);
@@ -314,7 +311,7 @@ static void BL_PrintStatus(CLS1_ConstStdIOType *io) {
   CLS1_SendStr(buf, io->stdOut);
 }
 
-byte BL_ParseCommand(const unsigned char *cmd, bool *handled, CLS1_ConstStdIOType *io) {
+uint8_t BL_ParseCommand(const unsigned char *cmd, bool *handled, CLS1_ConstStdIOType *io) {
   if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "BL help")==0) {
     BL_PrintHelp(io);
     *handled = TRUE;
@@ -338,6 +335,7 @@ byte BL_ParseCommand(const unsigned char *cmd, bool *handled, CLS1_ConstStdIOTyp
 }
 
 void BL_Run(void) {
+  BUF_Init();
   SHELL_Init();
   for(;;) {
     SHELL_Parse();
