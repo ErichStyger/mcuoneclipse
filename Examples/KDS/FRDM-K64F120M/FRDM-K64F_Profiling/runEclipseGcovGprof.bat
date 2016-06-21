@@ -7,4 +7,4 @@ REM Check that GNU tools are present
 call checkGNUbin.bat
 
 REM launch Eclipse
-C:\Freescale\KDS_3.0.0\eclipse\kinetis-design-studio.exe
+C:\nxp\KDS_3.3.0\eclipse\kinetis-design-studio.exe

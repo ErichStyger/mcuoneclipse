@@ -54,6 +54,7 @@ static int	s_scale;
 static void moncontrol(int mode);
 
 /* required for gcc ARM Embedded 4.9-2015-q2 */
+#if 0
 void *_sbrk(int incr) {
   extern char __HeapLimit; /* Defined by the linker */
   static char *heap_end = 0;
@@ -66,6 +67,7 @@ void *_sbrk(int incr) {
   heap_end += incr;
   return (void *)prev_heap_end;
 }
+#endif
 
 static void *fake_sbrk(int size) {
   void *rv = malloc(size);

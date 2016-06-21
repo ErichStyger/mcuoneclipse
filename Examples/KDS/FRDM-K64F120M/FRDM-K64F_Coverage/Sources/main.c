@@ -28,27 +28,39 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <stdio.h>
 #include "fsl_device_registers.h"
 #include "coverage_demo.h"
 #include "coverage_stubs.h"
 
 static int i = 0;
+static FILE *fp;
 
 int main(void)
 {
-    int j;
-    /* Write your code here */
-	static_init();
-    /* This for loop should be replaced. By default this loop allows a single stepping. */
-    for (j=0;j<5;j++) {
-        i+=COV_Demo();
-    }
-#if DO_COVERAGE
-    _exit(0); /* write coverage information */
+  int j;
+
+  /* Write your code here */
+#if USE_SEMIHOSTING_FILE_IO
+  printf("gcov with Segger Semihosting\r\n");
+#if 0 /* test file creation */
+  fp = fopen("test.txt", "w");
+  fputs("hello\r\n", fp);
+  fprintf(fp, "with fprintf %s\r\n", "text");
+  fclose(fp);
 #endif
-    for(;;) {}
-   /* Never leave main */
-    return 0;
+#endif
+  static_init();
+  /* This for loop should be replaced. By default this loop allows a single stepping. */
+  for (j=0;j<5;j++) {
+      i+=COV_Demo();
+  }
+#if DO_COVERAGE
+  _exit(0); /* write coverage information */
+#endif
+  for(;;) {}
+ /* Never leave main */
+  return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 // EOF

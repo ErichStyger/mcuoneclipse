@@ -1,6 +1,6 @@
 @ECHO OFF
 ECHO Checking GNU Binaries and making copies as necessary
-SET KDS3=C:\Freescale\KDS_3.0.0
+SET KDS3=C:\nxp\KDS_3.2.0
 IF NOT EXIST "%KDS3%\toolchain\bin\gcov.exe"      COPY "%KDS3%\toolchain\bin\arm-none-eabi-gcov.exe"      "%KDS3%\toolchain\bin\gcov.exe"
 IF NOT EXIST "%KDS3%\toolchain\bin\addr2line.exe" COPY "%KDS3%\toolchain\bin\arm-none-eabi-addr2line.exe" "%KDS3%\toolchain\bin\addr2line.exe"
 IF NOT EXIST "%KDS3%\toolchain\bin\nm.exe"        COPY "%KDS3%\toolchain\bin\arm-none-eabi-nm.exe"        "%KDS3%\toolchain\bin\nm.exe"

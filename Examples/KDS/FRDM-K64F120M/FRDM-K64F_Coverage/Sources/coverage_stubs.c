@@ -16,16 +16,18 @@
 /* prototype */
 void gcov_exit(void);
 
-#define COV_FILE_BUFFER_SIZE	 0x5000
-#define COV_FILE_HANDLE          17 /* valid file handle is >2 (which is STDERR_FILENO) */
+#if !USE_SEMIHOSTING_FILE_IO
+  #define COV_FILE_BUFFER_SIZE	 0x5000
+  #define COV_FILE_HANDLE          17 /* valid file handle is >2 (which is STDERR_FILENO) */
 
-static struct {
-	const char *fileName;
-	int fileSize;
-	uint8_t *bufPtr;
-	uint8_t buffer[COV_FILE_BUFFER_SIZE];
-} COV_Buffer;
-static unsigned char gdb_cmd[128]; /* command line which can be used for gdb */
+  static struct {
+    const char *fileName;
+    int fileSize;
+    uint8_t *bufPtr;
+    uint8_t buffer[COV_FILE_BUFFER_SIZE];
+  } COV_Buffer;
+  static unsigned char gdb_cmd[128]; /* command line which can be used for gdb */
+#endif
 
 
 /* call the coverage initializers if not done by startup code */
@@ -48,6 +50,7 @@ void _exit(int status) {
   for(;;){} /* does not return */
 }
 
+#if !USE_SEMIHOSTING_FILE_IO
 int _read(int file, char *ptr, int len) {
   if (file==COV_FILE_HANDLE) {
 	  int nofRead;
@@ -159,6 +162,7 @@ int _lseek(int file, int ptr, int dir) {
   }
   return ptr; /* return offset in file */
 }
+#endif /* !USE_SEMIHOSTING_FILE_IO */
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wreturn-type"
@@ -170,6 +174,7 @@ __attribute__((naked)) static unsigned int get_stackpointer(void) {
 }
 #pragma GCC diagnostic pop
 
+#if !USE_SEMIHOSTING_FILE_IO
 void *_sbrk(int incr) {
   extern char __HeapLimit; /* Defined by the linker */
   static char *heap_end = 0;
@@ -183,11 +188,15 @@ void *_sbrk(int incr) {
   stack = (char*)get_stackpointer();
 
   if (heap_end+incr > stack) {
+#if !USE_SEMIHOSTING_FILE_IO
     _write (STDERR_FILENO, "Heap and stack collision\n", 25);
+#endif
     errno = ENOMEM;
     return  (void *)-1;
   }
   heap_end += incr;
   return (void *)prev_heap_end;
 }
+#endif
+
 #endif
