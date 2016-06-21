@@ -69,7 +69,7 @@ int main(void)
   for(;;) {
     LED1_Neg(); /* blink red LED */
     WAIT1_Waitms(500);
-  }
+   }
   /* For example: for(;;) { } */
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/

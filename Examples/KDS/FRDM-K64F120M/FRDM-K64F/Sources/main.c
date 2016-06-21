@@ -27,24 +27,26 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#include <stdio.h>
 
 static int i = 0;
 
-struct {
-	int i;
-} t;
+int main(void) {
+  /* Write your code here */
+  /* semihosting tests */
+  //setvbuf(stdout, NULL, _IOFBF, 0);
+  //setvbuf(stderr, NULL, _IOFBF, 0);
 
-int main(void)
-{
+  printf("hello world!\r\n");
+  fprintf(stdout, "Stdout output: %d\r\n", i);
+  fprintf(stderr, "StdErr output: %d\r\n", i);
 
-    /* Write your code here */
-
-    /* This for loop should be replaced. By default this loop allows a single stepping. */
-    for (;;) {
-        i++;
-    }
-    /* Never leave main */
-    return 0;
+  /* This for loop should be replaced. By default this loop allows a single stepping. */
+  for (;;) {
+      i++;
+  }
+  /* Never leave main */
+  return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 // EOF

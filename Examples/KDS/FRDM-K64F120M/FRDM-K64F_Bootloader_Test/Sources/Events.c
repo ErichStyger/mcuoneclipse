@@ -35,7 +35,6 @@
 extern "C" {
 #endif 
 
-
 /* User includes (#include below this line is not maintained by Processor Expert) */
 
 /*
