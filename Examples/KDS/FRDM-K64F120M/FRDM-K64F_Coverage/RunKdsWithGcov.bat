@@ -1,13 +1,14 @@
+SET KDS_PATH=C:\nxp\KDS_3.2.0
+
 ECHO checking depending tools
-IF NOT EXIST C:\Freescale\KDS_3.0.0\toolchain\bin\gcov.exe COPY C:\Freescale\KDS_3.0.0\toolchain\bin\arm-none-eabi-gcov.exe C:\Freescale\KDS_3.0.0\toolchain\bin\gcov.exe
-IF NOT EXIST C:\Freescale\KDS_3.0.0\toolchain\bin\addr2line.exe COPY C:\Freescale\KDS_3.0.0\toolchain\bin\arm-none-eabi-addr2line.exe C:\Freescale\KDS_3.0.0\toolchain\bin\addr2line.exe
-IF NOT EXIST C:\Freescale\KDS_3.0.0\toolchain\bin\nm.exe COPY C:\Freescale\KDS_3.0.0\toolchain\bin\arm-none-eabi-nm.exe C:\Freescale\KDS_3.0.0\toolchain\bin\nm.exe
-IF NOT EXIST C:\Freescale\KDS_3.0.0\toolchain\bin\c++filt.exe COPY C:\Freescale\KDS_3.0.0\toolchain\bin\arm-none-eabi-c++filt.exe C:\Freescale\KDS_3.0.0\toolchain\bin\c++filt.exe
-IF NOT EXIST C:\Freescale\KDS_3.0.0\toolchain\bin\strings.exe COPY C:\Freescale\KDS_3.0.0\toolchain\bin\arm-none-eabi-strings.exe C:\Freescale\KDS_3.0.0\toolchain\bin\strings.exe
+IF NOT EXIST "%KDS_PATH%\Toolchain\bin\gcov.exe"      COPY "%KDS_PATH%\Toolchain\bin\arm-none-eabi-gcov.exe"      "%KDS_PATH%\Toolchain\bin\gcov.exe"
+IF NOT EXIST "%KDS_PATH%\Toolchain\bin\addr2line.exe" COPY "%KDS_PATH%\Toolchain\bin\arm-none-eabi-addr2line.exe" "%KDS_PATH%\Toolchain\bin\addr2line.exe"
+IF NOT EXIST "%KDS_PATH%\Toolchain\bin\nm.exe"        COPY "%KDS_PATH%\Toolchain\bin\arm-none-eabi-nm.exe"        "%KDS_PATH%\Toolchain\bin\nm.exe"
+IF NOT EXIST "%KDS_PATH%\Toolchain\bin\c++filt.exe"   COPY "%KDS_PATH%\Toolchain\bin\arm-none-eabi-c++filt.exe"   "%KDS_PATH%\Toolchain\bin\c++filt.exe"
+IF NOT EXIST "%KDS_PATH%\Toolchain\bin\strings.exe"   COPY "%KDS_PATH%\Toolchain\bin\arm-none-eabi-strings.exe"   "%KDS_PATH%\Toolchain\bin\strings.exe"
 
 ECHO Extending PATH
-SET PATH=%PATH%;C:\Freescale\KDS_3.0.0\toolchain\bin
+SET PATH=%PATH%;%KDS_PATH%\Toolchain\bin
 
-ECHO Launching Kinetis Design Studio V3.0.0
-C:\Freescale\KDS_3.0.0\eclipse\kinetis-design-studio.exe
-
+ECHO Launching Kinetis Design Studio V3.3.0
+"%KDS_PATH%\eclipse\kinetis-design-studio.exe"
