@@ -30,7 +30,6 @@
 /* Including needed modules to compile this module/procedure */
 #include "Cpu.h"
 #include "Events.h"
-#include "pin_mux.h"
 #include "LED1.h"
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"
@@ -47,27 +46,32 @@
 #include "CLS1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
+#include "RNET1.h"
+#include "RF1.h"
+#include "CE1.h"
+#include "BitIoLdd4.h"
+#include "CSN1.h"
+#include "BitIoLdd5.h"
+#include "GI2C1.h"
+#include "CI2C1.h"
+#include "FX1.h"
 #include "KIN1.h"
 #include "USB1.h"
 #include "CDC1.h"
 #include "Tx1.h"
 #include "Rx1.h"
-#include "BT1.h"
-#include "Serial1.h"
-#include "ASerialLdd2.h"
+#include "SW2.h"
+#include "BitIoLdd7.h"
+#include "SW3.h"
+#include "BitIoLdd6.h"
 #include "TMOUT1.h"
-#include "SUMDRx.h"
-#include "ASerialLdd3.h"
 #include "KSDK1.h"
 #include "RTT1.h"
 #include "SYS1.h"
 #include "PTRC1.h"
 #include "HF1.h"
-#include "TU1.h"
-#include "PWM1.h"
-#include "PWM2.h"
-#include "PWM3.h"
-#include "PWM4.h"
+#include "SM1.h"
+#include "SMasterLdd1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -88,9 +92,7 @@ int main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
-  /* Write your code here */
   APP_Run();
-  /* For example: for(;;) { } */
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/

@@ -264,64 +264,6 @@ void AS1_OnFreeTxBuf(void)
 
 /*
 ** ===================================================================
-**     Event       :  SUMDRx_OnError (module Events)
-**
-**     Component   :  SUMDRx [AsynchroSerial]
-**     Description :
-**         This event is called when a channel error (not the error
-**         returned by a given method) occurs. The errors can be read
-**         using <GetError> method.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void SUMDRx_OnError(void)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Event       :  SUMDRx_OnRxChar (module Events)
-**
-**     Component   :  SUMDRx [AsynchroSerial]
-**     Description :
-**         This event is called after a correct character is received.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled and either the <Receiver>
-**         property is enabled or the <SCI output mode> property (if
-**         supported) is set to Single-wire mode.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void SUMDRx_OnRxChar(void)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Event       :  SUMDRx_OnFullRxBuf (module Events)
-**
-**     Component   :  SUMDRx [AsynchroSerial]
-**     Description :
-**         This event is called when the input buffer is full;
-**         i.e. after reception of the last character 
-**         that was successfully placed into input buffer.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void SUMDRx_OnFullRxBuf(void)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
 **     Event       :  PTRC1_OnTraceStop (module Events)
 **
 **     Component   :  PTRC1 [PercepioTrace]
@@ -374,6 +316,101 @@ void PTRC1_OnTraceWrap(void)
   /* GDB: dump binary memory <file> <hexStartAddr> <hexEndAddr> */
   PTRC1_vGetGDBDumpCommand(buf, sizeof(buf), "c:\\tmp\\trc.dump");
 #endif
+}
+
+/*
+** ===================================================================
+**     Event       :  SM1_OnRxChar (module Events)
+**
+**     Component   :  SM1 [SynchroMaster]
+**     Description :
+**         This event is called after a correct character is received.
+**         The event is available only when the <Interrupt
+**         service/event> property is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void SM1_OnRxChar(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  SM1_OnTxChar (module Events)
+**
+**     Component   :  SM1 [SynchroMaster]
+**     Description :
+**         This event is called after a character is transmitted.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void SM1_OnTxChar(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  SM1_OnFullRxBuf (module Events)
+**
+**     Component   :  SM1 [SynchroMaster]
+**     Description :
+**         This event is called when the input buffer is full, i.e.
+**         after reception of the last character that was successfully
+**         placed into input buffer.
+**         This event is available only when the <Interrupt
+**         service/event> property is enabled and the <Input buffer
+**         size> property is set to non-zero value.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void SM1_OnFullRxBuf(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  SM1_OnFreeTxBuf (module Events)
+**
+**     Component   :  SM1 [SynchroMaster]
+**     Description :
+**         This event is called after the last character in output
+**         buffer is transmitted.
+**         This event is available only when the <Interrupt
+**         service/event> property is enabled and the <Output buffer
+**         size> property is set to non-zero value.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void SM1_OnFreeTxBuf(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  SM1_OnError (module Events)
+**
+**     Component   :  SM1 [SynchroMaster]
+**     Description :
+**         This event is called when a channel error (not the error
+**         returned by a given method) occurs. The errors can be read
+**         using <GetError> method.
+**         The event is available only when the <Interrupt
+**         service/event> property is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void SM1_OnError(void)
+{
+  /* Write your code here ... */
 }
 
 /* END Events */

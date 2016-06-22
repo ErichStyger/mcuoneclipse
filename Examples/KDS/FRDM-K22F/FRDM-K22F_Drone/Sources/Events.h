@@ -33,7 +33,6 @@
 #include "PE_Error.h"
 #include "PE_Const.h"
 #include "IO_Map.h"
-#include "pin_mux.h"
 #include "LED1.h"
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"
@@ -50,27 +49,32 @@
 #include "CLS1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
+#include "RNET1.h"
+#include "RF1.h"
+#include "CE1.h"
+#include "BitIoLdd4.h"
+#include "CSN1.h"
+#include "BitIoLdd5.h"
+#include "GI2C1.h"
+#include "CI2C1.h"
+#include "FX1.h"
 #include "KIN1.h"
 #include "USB1.h"
 #include "CDC1.h"
 #include "Tx1.h"
 #include "Rx1.h"
-#include "BT1.h"
-#include "Serial1.h"
-#include "ASerialLdd2.h"
+#include "SW2.h"
+#include "BitIoLdd7.h"
+#include "SW3.h"
+#include "BitIoLdd6.h"
 #include "TMOUT1.h"
-#include "SUMDRx.h"
-#include "ASerialLdd3.h"
 #include "KSDK1.h"
 #include "RTT1.h"
 #include "SYS1.h"
 #include "PTRC1.h"
 #include "HF1.h"
-#include "TU1.h"
-#include "PWM1.h"
-#include "PWM2.h"
-#include "PWM3.h"
-#include "PWM4.h"
+#include "SM1.h"
+#include "SMasterLdd1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -241,55 +245,6 @@ void AS1_OnFullRxBuf(void);
 */
 void AS1_OnFreeTxBuf(void);
 
-/*
-** ===================================================================
-**     Event       :  SUMDRx_OnError (module Events)
-**
-**     Component   :  SUMDRx [AsynchroSerial]
-**     Description :
-**         This event is called when a channel error (not the error
-**         returned by a given method) occurs. The errors can be read
-**         using <GetError> method.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void SUMDRx_OnError(void);
-
-/*
-** ===================================================================
-**     Event       :  SUMDRx_OnRxChar (module Events)
-**
-**     Component   :  SUMDRx [AsynchroSerial]
-**     Description :
-**         This event is called after a correct character is received.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled and either the <Receiver>
-**         property is enabled or the <SCI output mode> property (if
-**         supported) is set to Single-wire mode.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void SUMDRx_OnRxChar(void);
-
-/*
-** ===================================================================
-**     Event       :  SUMDRx_OnFullRxBuf (module Events)
-**
-**     Component   :  SUMDRx [AsynchroSerial]
-**     Description :
-**         This event is called when the input buffer is full;
-**         i.e. after reception of the last character 
-**         that was successfully placed into input buffer.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void SUMDRx_OnFullRxBuf(void);
-
 void PTRC1_OnTraceStop(void);
 /*
 ** ===================================================================
@@ -326,6 +281,86 @@ void PTRC1_OnTraceWrap(void);
 **     Description :
 **         Called for trace ring buffer wrap around. This gives the
 **         application a chance to dump the trace buffer.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void SM1_OnRxChar(void);
+/*
+** ===================================================================
+**     Event       :  SM1_OnRxChar (module Events)
+**
+**     Component   :  SM1 [SynchroMaster]
+**     Description :
+**         This event is called after a correct character is received.
+**         The event is available only when the <Interrupt
+**         service/event> property is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void SM1_OnTxChar(void);
+/*
+** ===================================================================
+**     Event       :  SM1_OnTxChar (module Events)
+**
+**     Component   :  SM1 [SynchroMaster]
+**     Description :
+**         This event is called after a character is transmitted.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void SM1_OnFullRxBuf(void);
+/*
+** ===================================================================
+**     Event       :  SM1_OnFullRxBuf (module Events)
+**
+**     Component   :  SM1 [SynchroMaster]
+**     Description :
+**         This event is called when the input buffer is full, i.e.
+**         after reception of the last character that was successfully
+**         placed into input buffer.
+**         This event is available only when the <Interrupt
+**         service/event> property is enabled and the <Input buffer
+**         size> property is set to non-zero value.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void SM1_OnFreeTxBuf(void);
+/*
+** ===================================================================
+**     Event       :  SM1_OnFreeTxBuf (module Events)
+**
+**     Component   :  SM1 [SynchroMaster]
+**     Description :
+**         This event is called after the last character in output
+**         buffer is transmitted.
+**         This event is available only when the <Interrupt
+**         service/event> property is enabled and the <Output buffer
+**         size> property is set to non-zero value.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void SM1_OnError(void);
+/*
+** ===================================================================
+**     Event       :  SM1_OnError (module Events)
+**
+**     Component   :  SM1 [SynchroMaster]
+**     Description :
+**         This event is called when a channel error (not the error
+**         returned by a given method) occurs. The errors can be read
+**         using <GetError> method.
+**         The event is available only when the <Interrupt
+**         service/event> property is enabled.
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================

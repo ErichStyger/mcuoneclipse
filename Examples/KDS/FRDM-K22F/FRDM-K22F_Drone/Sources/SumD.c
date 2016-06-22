@@ -38,6 +38,8 @@
  *
  * @author Marco Bauer <marco@wtns.de>
  */
+#include "Platform.h"
+#if PL_HAS_SUMD
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -316,3 +318,4 @@ int sumd_decode(uint8_t byte, uint8_t *rssi, uint8_t *rx_count, uint16_t *channe
 
 	return ret;
 }
+#endif /* PL_HAS_SUMD */

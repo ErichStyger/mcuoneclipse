@@ -30,7 +30,16 @@
 #if PL_HAS_REMOTE
   #include "Remote.h"
 #endif
+#if PL_HAS_RADIO
+  #include "RStack.h"
+  #include "RNet_App.h"
+#endif
 
+void APP_DebugPrint(const char* msg) {
+  /* dummy */
+}
+
+#if PL_HAS_ESC
 /* MODE 2:
  * Right left/right: roll (channel 1, left 1900, right 1100)
  * Right up/down: pitch (channel 2, top 1900, bottom 1100)
@@ -64,6 +73,7 @@ static void AppTask(void *pvParameters) {
     FRTOS1_vTaskDelay(20/portTICK_PERIOD_MS);
   }
 }
+#endif
 
 void APP_Run(void) {
 #if configUSE_TRACE_HOOKS /* Percepio trace */
@@ -102,6 +112,11 @@ void APP_Run(void) {
 #if PL_HAS_REMOTE
   REMOTE_Init();
 #endif
+#if PL_HAS_RADIO
+  RSTACK_Init();
+  RNETA_Init();
+#endif
+#if PL_HAS_ESC
   if (FRTOS1_xTaskCreate(
       AppTask,  /* pointer to the task */
       "Main", /* task name for kernel awareness debugging */
@@ -113,6 +128,7 @@ void APP_Run(void) {
   {
     for(;;){} /* error! probably out of memory */
   }
+#endif
   FRTOS1_vTaskStartScheduler();
   for(;;) {}
 }
