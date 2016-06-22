@@ -37,8 +37,16 @@
 #include "FRTOS1.h"
 #include "KSDK1.h"
 #include "UTIL1.h"
+#include "LED_RED.h"
+#include "LEDpin1.h"
+#include "LED_GREEN.h"
+#include "LEDpin2.h"
+#include "LED_ORANGE.h"
+#include "LEDpin3.h"
+#include "LED_BLUE.h"
+#include "LEDpin4.h"
+#include "gpio2.h"
 #include "WAIT1.h"
-#include "gpio1.h"
 
 #ifdef __cplusplus
 extern "C" {
