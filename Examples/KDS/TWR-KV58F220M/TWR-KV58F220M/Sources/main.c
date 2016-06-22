@@ -50,17 +50,23 @@
   #include "Init_Config.h"
 #endif
 /* User includes (#include below this line is not maintained by Processor Expert) */
-static void blinky_task(void *param) {
+static void blinky_task2(void *param) {
   (void)param;
   for(;;) {
     GPIO_DRV_TogglePinOutput(LED_RED);
-    vTaskDelay(50/portTICK_RATE_MS);
+    vTaskDelay(100/portTICK_RATE_MS);
     GPIO_DRV_TogglePinOutput(LED_RED);
 
     GPIO_DRV_TogglePinOutput(LED_GREEN);
-    vTaskDelay(50/portTICK_RATE_MS);
-    GPIO_DRV_TogglePinOutput(LED_RED);
+    vTaskDelay(100/portTICK_RATE_MS);
+    GPIO_DRV_TogglePinOutput(LED_GREEN);
 
+  } /* for */
+}
+
+static void blinky_task1(void *param) {
+  (void)param;
+  for(;;) {
     GPIO_DRV_TogglePinOutput(LED_ORANGE);
     vTaskDelay(50/portTICK_RATE_MS);
     GPIO_DRV_TogglePinOutput(LED_ORANGE);
@@ -83,8 +89,18 @@ int main(void)
 
   /* Write your code here */
   if (xTaskCreate(
-      blinky_task,  /* task function */
-      "Blinky", /* task name for kernel awareness */
+      blinky_task1,  /* task function */
+      "Blinky1", /* task name for kernel awareness */
+      configMINIMAL_STACK_SIZE, /* task stack size */
+      (void*)NULL, /* optional task startup argument */
+      tskIDLE_PRIORITY,  /* initial priority */
+      NULL /* task handle */
+    ) != pdPASS) {
+    for(;;){} /* error! probably out of memory */
+  }
+  if (xTaskCreate(
+      blinky_task2,  /* task function */
+      "Blinky2", /* task name for kernel awareness */
       configMINIMAL_STACK_SIZE, /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY,  /* initial priority */
