@@ -45,6 +45,8 @@
 #include "LED_BLUE.h"
 #include "LEDpin4.h"
 #include "gpio2.h"
+#include "SYS1.h"
+#include "RTT1.h"
 #include "WAIT1.h"
 #if CPU_INIT_CONFIG
   #include "Init_Config.h"
@@ -60,7 +62,6 @@ static void blinky_task2(void *param) {
     GPIO_DRV_TogglePinOutput(LED_GREEN);
     vTaskDelay(100/portTICK_RATE_MS);
     GPIO_DRV_TogglePinOutput(LED_GREEN);
-
   } /* for */
 }
 

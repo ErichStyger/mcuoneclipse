@@ -46,6 +46,8 @@
 #include "LED_BLUE.h"
 #include "LEDpin4.h"
 #include "gpio2.h"
+#include "SYS1.h"
+#include "RTT1.h"
 #include "WAIT1.h"
 
 #ifdef __cplusplus
@@ -107,6 +109,20 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 **     Description :
 **         If enabled, the RTOS will call this hook in case memory
 **         allocation failed.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void PTRC1_OnTraceWrap(void);
+/*
+** ===================================================================
+**     Event       :  PTRC1_OnTraceWrap (module Events)
+**
+**     Component   :  PTRC1 [PercepioTrace]
+**     Description :
+**         Called for trace ring buffer wrap around. This gives the
+**         application a chance to dump the trace buffer.
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================
