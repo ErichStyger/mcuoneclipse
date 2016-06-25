@@ -48,6 +48,7 @@
 #include "gpio2.h"
 #include "SYS1.h"
 #include "RTT1.h"
+#include "PTRC1.h"
 #include "WAIT1.h"
 
 #ifdef __cplusplus
