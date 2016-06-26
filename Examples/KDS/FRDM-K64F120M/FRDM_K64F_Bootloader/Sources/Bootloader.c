@@ -21,11 +21,19 @@
 #define FLASH_PAGE_SIZE             (IntFlashLdd1_ERASABLE_UNIT_SIZE) /* flash page size */
 
 /* application flash area */
+#if 0
 #define MIN_APP_FLASH_ADDRESS       0x8000  /* start of application flash area */
 #define MAX_APP_FLASH_ADDRESS       0x1FFFF  /* end of application flash */
 
 #define APP_FLASH_VECTOR_START      0x8000  /* application vector table in flash */
 #define APP_FLASH_VECTOR_SIZE       0xc0    /* size of vector table */
+#else
+#define MIN_APP_FLASH_ADDRESS       0x40000  /* start of application flash area */
+#define MAX_APP_FLASH_ADDRESS       0x5FFFF  /* end of application flash */
+
+#define APP_FLASH_VECTOR_START      0x40000  /* application vector table in flash */
+#define APP_FLASH_VECTOR_SIZE       0xc0    /* size of vector table */
+#endif
 
 #define USE_XON_XOFF  0
 
@@ -192,13 +200,13 @@ static uint8_t GetChar(uint8_t *data, void *q) {
   if (*data=='\0') { /* end of input? */
     return ERR_RXEMPTY;
   }
-#if 1 /* echo */
+#if 0 /* echo */
   CLS1_SendCh(*data, CLS1_GetStdio()->stdOut);
 #endif
   return ERR_OK;
 }
 
-static uint8_t codeBuf[64];
+static uint8_t codeBuf[512];
 
 static uint8_t BL_LoadS19(CLS1_ConstStdIOType *io) {
   unsigned char buf[16];
@@ -210,7 +218,7 @@ static uint8_t BL_LoadS19(CLS1_ConstStdIOType *io) {
   }
 
   /* load S19 file */
-  CLS1_SendStr((unsigned char*)"Waiting for the S19 file...", io->stdOut);
+  CLS1_SendStr((unsigned char*)"Waiting for the S19 file...\r\n", io->stdOut);
   parserInfo.GetCharIterator = GetChar;
   parserInfo.voidP = (void*)io;
   parserInfo.S19Flash = BL_onS19Flash;

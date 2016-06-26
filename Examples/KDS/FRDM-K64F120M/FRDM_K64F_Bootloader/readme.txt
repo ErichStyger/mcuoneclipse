@@ -9,3 +9,4 @@ Notes:
 - temporary removed flash protection
   CPU > common settings > Flash configuration field > P-Flash protection settings > protection regions > region 0
 - checking for user app moved to __init_user()
+
