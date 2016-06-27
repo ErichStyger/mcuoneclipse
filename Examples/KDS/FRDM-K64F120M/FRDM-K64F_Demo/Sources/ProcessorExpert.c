@@ -62,6 +62,7 @@
 #include "CD2.h"
 #include "MINI1.h"
 #include "SM1.h"
+#include "SMasterLdd2.h"
 #include "TMOUT1.h"
 #include "KEY1.h"
 #include "Inhr1.h"
