@@ -163,7 +163,7 @@ void SD1_OnBlockReceived(LDD_TUserData *UserDataPtr)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void SD1_OnActivate(byte mode)
+void SD1_OnActivate(uint8_t mode)
 {
   VS_OnSPIActivate();
 }
@@ -181,7 +181,7 @@ void SD1_OnActivate(byte mode)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void SD1_OnDeactivate(byte mode)
+void SD1_OnDeactivate(uint8_t mode)
 {
   VS_OnSPIDeactivate();
 }

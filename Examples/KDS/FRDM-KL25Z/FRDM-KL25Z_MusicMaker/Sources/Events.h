@@ -147,7 +147,7 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 /* ===================================================================*/
 void SD1_OnBlockReceived(LDD_TUserData *UserDataPtr);
 
-void SD1_OnActivate(byte mode);
+void SD1_OnActivate(uint8_t mode);
 /*
 ** ===================================================================
 **     Event       :  SD1_OnActivate (module Events)
@@ -162,7 +162,7 @@ void SD1_OnActivate(byte mode);
 ** ===================================================================
 */
 
-void SD1_OnDeactivate(byte mode);
+void SD1_OnDeactivate(uint8_t mode);
 /*
 ** ===================================================================
 **     Event       :  SD1_OnDeactivate (module Events)
