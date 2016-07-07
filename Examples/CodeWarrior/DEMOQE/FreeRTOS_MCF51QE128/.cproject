@@ -25,18 +25,81 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="elf" artifactName="FreeRTOS_MCF51QE128" buildProperties="" cleanCommand="rm -f" description="" errorParsers="com.freescale.core.ide.cdt.errorParsers.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser;com.freescale.starcore.cdt.errorParsers.SccErrorParser;com.freescale.core.ide.cdt.errorParsers.LnkErrorParser;com.freescale.core.ide.cdt.errorParsers.AsmErrorParser;com.freescale.core.ide.cdt.errorParsers.CobjErrorParser;com.freescale.core.ide.cdt.errorParsers.IcodeErrorParser;com.freescale.core.ide.cdt.errorParsers.LltErrorParser;com.freescale.core.ide.cdt.errorParsers.MwfeErrorParser;com.freescale.core.ide.cdt.errorParsers.MwErrorParser;com.freescale.core.ide.cdt.errorParsers.MPWErrorParser;org.eclipse.cdt.core.GmakeErrorParser;" id="com.freescale.coldfire.toolchain.configuration.1286583282" isPrebuildInvalidatingBuild="false" name="MCF51QE128_Internal_Flash" parent="com.freescale.coldfire.toolchain.configuration">
+				<configuration artifactExtension="elf" artifactName="FreeRTOS_MCF51QE128" buildProperties="" cleanCommand="rm -f" description="" errorParsers="com.freescale.core.ide.cdt.errorParsers.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser;com.freescale.starcore.cdt.errorParsers.SccErrorParser;com.freescale.core.ide.cdt.errorParsers.LnkErrorParser;com.freescale.core.ide.cdt.errorParsers.AsmErrorParser;com.freescale.core.ide.cdt.errorParsers.CobjErrorParser;com.freescale.core.ide.cdt.errorParsers.IcodeErrorParser;com.freescale.core.ide.cdt.errorParsers.LltErrorParser;com.freescale.core.ide.cdt.errorParsers.MwfeErrorParser;com.freescale.core.ide.cdt.errorParsers.MwErrorParser;com.freescale.core.ide.cdt.errorParsers.MPWErrorParser;org.eclipse.cdt.core.GmakeErrorParser;" id="com.freescale.coldfire.toolchain.configuration.1286583282" isPrebuildInvalidatingBuild="false" isVersionInfoProjSpecific="false" name="MCF51QE128_Internal_Flash" parent="com.freescale.coldfire.toolchain.configuration">
 					<folderInfo id="com.freescale.coldfire.toolchain.configuration.1286583282." name="/" resourcePath="">
 						<toolChain errorParsers="" id="com.freescale.coldfire.toolchain.toolchain.project.1870068600" name="ColdFire Toolchain Tools" superClass="com.freescale.coldfire.toolchain.toolchain.project">
 							<option id="com.freescale.coldfire.toolchain.sharedoption.processor.1234795232" name="Processor Family (-proc)" superClass="com.freescale.coldfire.toolchain.sharedoption.processor" value="com.freescale.coldfire.toolchain.sharedoption.processor.51QE" valueType="enumerated"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="com.freescale.coldfire.toolchain.platform.669373861" name="ColdFire Target Platform" superClass="com.freescale.coldfire.toolchain.platform"/>
-							<builder buildPath="${ProjDirPath}/MCF51QE128_Internal_Flash" errorParsers="org.eclipse.cdt.core.GmakeErrorParser;com.freescale.core.ide.cdt.errorParsers.MwErrorParser;com.freescale.core.ide.cdt.errorParsers.MPWErrorParser;com.freescale.core.ide.cdt.errorParsers.MwfeErrorParser" id="com.freescale.coldfire.toolchain.builder.816417310" keepEnvironmentInBuildfile="false" name="ColdFire Make Builder" parallelBuildOn="true" parallelBuildWorkspaceOn="true" parallelizationNumber="optimal" superClass="com.freescale.coldfire.toolchain.builder"/>
+							<builder buildPath="${ProjDirPath}/MCF51QE128_Internal_Flash" errorParsers="org.eclipse.cdt.core.GmakeErrorParser;com.freescale.core.ide.cdt.errorParsers.MwErrorParser;com.freescale.core.ide.cdt.errorParsers.MPWErrorParser;com.freescale.core.ide.cdt.errorParsers.MwfeErrorParser" id="com.freescale.coldfire.toolchain.builder.816417310" keepEnvironmentInBuildfile="false" name="GNU Make Builder" parallelBuildOn="true" parallelBuildWorkspaceOn="true" parallelizationNumber="optimal" superClass="com.freescale.coldfire.toolchain.builder"/>
 							<tool errorParsers="" id="coldfire.toolchain.burner.134668538" name="Burner" superClass="coldfire.toolchain.burner"/>
 							<tool errorParsers="" id="com.freescale.coldfire.toolchain.linker.debug.1647461849" name="ColdFire Linker" superClass="com.freescale.coldfire.toolchain.linker.debug">
 								<option id="com.freescale.coldfire.toolchain.linker.base.generateLinkMap.847879279" name="Generate Link Map" superClass="com.freescale.coldfire.toolchain.linker.base.generateLinkMap" value="true" valueType="boolean"/>
 								<option id="com.freescale.coldfire.toolchain.linker.base.input.lcf_file.941672428" name="Link Command File (.lcf)" superClass="com.freescale.coldfire.toolchain.linker.base.input.lcf_file" value="${ProjDirPath}/Project_Settings/Linker_Files/ProcessorExpert.lcf" valueType="string"/>
 								<option id="com.freescale.coldfire.toolchain.linker.base.input.lpath.1364361012" name="Library Search Paths (-L+path)" superClass="com.freescale.coldfire.toolchain.linker.base.input.lpath" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${MCUToolsBaseDir}/ColdFire_Support/ewl/lib&quot;"/>
+								</option>
+								<option id="com.freescale.coldfire.cdt.toolchain.option.linkorder.35788352" superClass="com.freescale.coldfire.cdt.toolchain.option.linkorder" valueType="stringList">
+									<listOptionValue builtIn="false" value="Generated_Code/AS2.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/CLS1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/COM_EN.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/CS1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/Cpu.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/EVNT1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/FAT1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/FRTOS1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/IO_Map.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/Inhr2.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/Inhr3.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/Inhr4.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/KEY1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/KEY2.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/KSDK1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LED1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LED2.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LED3.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LED4.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LED5.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LED7.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LED8.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LEDpin1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LEDpin2.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LEDpin3.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LEDpin4.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LEDpin5.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LEDpin7.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LEDpin8.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/PE_Timer.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/RTOSSWI1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/SD1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/SDSS1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/SM1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/SOUND.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/TMOUT1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/TRG1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/TickCntr1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/TmDt1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/UTIL1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/Vectors.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/WAIT1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/croutine.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/event_groups.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/ff.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/heap_1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/heap_2.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/heap_3.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/heap_4.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/heap_5.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/list.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/port.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/portasm.s"/>
+									<listOptionValue builtIn="false" value="Generated_Code/queue.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/tasks.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/timers.c"/>
+									<listOptionValue builtIn="false" value="Project_Settings/Startup_Code/startcf.c"/>
+									<listOptionValue builtIn="false" value="Sources/Application.c"/>
+									<listOptionValue builtIn="false" value="Sources/Events.c"/>
+									<listOptionValue builtIn="false" value="Sources/ProcessorExpert.c"/>
+									<listOptionValue builtIn="false" value="Sources/Shell.c"/>
 								</option>
 								<inputType id="com.freescale.coldfire.toolchain.linker.base.input.189836128" name="Linker Input" superClass="com.freescale.coldfire.toolchain.linker.base.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -62,6 +125,8 @@
 								</option>
 								<option id="com.freescale.coldfire.toolchain.compiler.base.general.wchar.off.191380724" name="Enable wchar_t Support" superClass="com.freescale.coldfire.toolchain.compiler.base.general.wchar.off" value="true" valueType="boolean"/>
 								<option id="com.freescale.coldfire.toolchain.compiler.base.options.optLevel.1040347490" name="Optimization Level (-opt)" superClass="com.freescale.coldfire.toolchain.compiler.base.options.optLevel" value="com.freescale.coldfire.toolchain.compiler.base.optionCategory.optimization.optlevel.0" valueType="enumerated"/>
+								<option id="com.freescale.coldfire.toolchain.compiler.base.debugging.c.454400359" superClass="com.freescale.coldfire.toolchain.compiler.base.debugging.c" value="false" valueType="boolean"/>
+								<option id="com.freescale.coldfire.toolchain.compiler.base.optionCategory.processor.code.1171761896" superClass="com.freescale.coldfire.toolchain.compiler.base.optionCategory.processor.code" value="com.freescale.coldfire.toolchain.compiler.base.optionCategory.processor.code.far" valueType="enumerated"/>
 								<inputType id="com.freescale.coldfire.toolchain.compiler.base.input.2126046542" name="C Source File" superClass="com.freescale.coldfire.toolchain.compiler.base.input"/>
 								<inputType id="com.freescale.coldfire.toolchain.compiler.base.input.c++.821456848" name="C++ Source File" superClass="com.freescale.coldfire.toolchain.compiler.base.input.c++"/>
 							</tool>
