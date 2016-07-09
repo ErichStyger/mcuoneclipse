@@ -4,7 +4,7 @@
     <Name>ProcessorExpert</Name>
     <SavedBy>Erich Styger</SavedBy>
     <ModificationStamp>66</ModificationStamp>
-    <Date>2016-04-22</Date>
+    <Date>2016-07-08</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
@@ -6428,7 +6428,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.034</BeanVersion>
+    <BeanVersion>01.038</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -6540,7 +6540,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.081</BeanVersion>
+    <BeanVersion>01.082</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -7049,6 +7049,17 @@
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>IsHistoryCharacter</UsrMethodName>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>SendCh</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SendCh</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events>
       <ItemState>
@@ -7101,7 +7112,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.119</BeanVersion>
+    <BeanVersion>01.125</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -7715,6 +7726,30 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>ScanDoubleQuotedString</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>NumFloatToStr</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>NumFloatToStr</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>strcatNumFloat</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>strcatNumFloat</UsrMethodName>
       </ItemState>
     </Methods>
     <Events />
@@ -14190,7 +14225,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.071</BeanVersion>
+    <BeanVersion>01.072</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -14981,7 +15016,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.008</BeanVersion>
+    <BeanVersion>01.010</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -14989,6 +15024,12 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>HF1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>sdk</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>KSDK1</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -15101,7 +15142,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.026</BeanVersion>
+    <BeanVersion>01.030</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -15197,6 +15238,50 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>GetKinetisFamilyString</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GetPC</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>GetPC</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GetSP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>GetSP</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SetPSP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SetPSP</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SetLR</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SetLR</UsrMethodName>
       </ItemState>
     </Methods>
     <Events />

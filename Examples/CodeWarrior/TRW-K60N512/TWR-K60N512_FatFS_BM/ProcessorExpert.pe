@@ -3,8 +3,8 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>Erich Styger</SavedBy>
-    <ModificationStamp>55</ModificationStamp>
-    <Date>2016-05-31</Date>
+    <ModificationStamp>56</ModificationStamp>
+    <Date>2016-07-08</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
@@ -16770,7 +16770,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.120</BeanVersion>
+    <BeanVersion>01.125</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -17385,6 +17385,30 @@
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>strcatPad</UsrMethodName>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>NumFloatToStr</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>NumFloatToStr</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>strcatNumFloat</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>strcatNumFloat</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -17739,7 +17763,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.185</BeanVersion>
+    <BeanVersion>01.197</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -17750,7 +17774,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>FatFsVersion</ItemSymbol>
-        <Value>R0.10c (patch 26-Nov-14)</Value>
+        <Value>R0.12 (Patch 3, 29-April-2016)</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Tiny</ItemSymbol>
@@ -17998,6 +18022,22 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>FATM1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>useFind</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <EnumSymbVal>0</EnumSymbVal>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>exFATenabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -18584,6 +18624,61 @@
         <LastUserSel>never</LastUserSel>
         <UsrMethodName>PrintHexFile</UsrMethodName>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>f_getlabel</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>f_getlabel</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>f_setlabel</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>f_setlabel</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>f_expand</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>f_expand</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>f_findfirst</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>f_findfirst</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>f_findnext</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>f_findnext</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events>
       <ItemState>
@@ -18652,7 +18747,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.037</BeanVersion>
+    <BeanVersion>01.042</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -20845,6 +20940,13 @@
         <Value>FALSE</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>Wait</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>WAIT1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -20984,6 +21086,24 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>FATM1_OnPortEvent</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnError</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>no</LastUserSel>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnErrorName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>FATM1_OnError</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
     </Events>
   </Bean>
@@ -26641,7 +26761,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.178</BeanVersion>
+    <BeanVersion>01.182</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
