@@ -63,6 +63,7 @@
 #include "HF1.h"
 #include "CS1.h"
 #include "NFC.h"
+#include "KSDK1.h"
 #include "PE_LDD.h"
 
 /*

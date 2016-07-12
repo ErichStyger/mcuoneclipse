@@ -289,7 +289,7 @@ byte UFFS_FAT_CopyFile(const byte *srcFileName, const byte *dstFileName, const C
 	if( dstFileName[1] == ':')
 	{
 		destUffs = pdFALSE;
-		if (FAT1_isWriteProtected() || FAT1_FS_READONLY) 
+		if (FAT1_isWriteProtected("0") || FAT1_FS_READONLY) 
 		{
 			MSGLN("destination FAT disk is write protected!");
 			return ERR_FAILED;

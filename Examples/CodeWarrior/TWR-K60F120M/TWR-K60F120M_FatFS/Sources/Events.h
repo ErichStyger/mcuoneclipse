@@ -62,6 +62,7 @@
 #include "ASerialLdd1.h"
 #include "HF1.h"
 #include "CS1.h"
+#include "KSDK1.h"
 #include "PE_LDD.h"
 
 /*

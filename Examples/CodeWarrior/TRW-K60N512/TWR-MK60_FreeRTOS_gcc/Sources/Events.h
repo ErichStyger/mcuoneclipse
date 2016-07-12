@@ -38,6 +38,7 @@
 #include "LED4.h"
 #include "LEDpin4.h"
 #include "BitIoLdd4.h"
+#include "KSDK1.h"
 #include "PE_LDD.h"
 
 void Cpu_OnNMIINT(void);

@@ -183,6 +183,62 @@ void TI1_OnInterrupt(void)
   delay_count++;
 }
 
+/*
+** ===================================================================
+**     Event       :  PTRC1_OnTraceStop (module Events)
+**
+**     Component   :  PTRC1 [PercepioTrace]
+**     Description :
+**         Called if the library calls vTraceStop(). Useful to dump the
+**         trace if 'stop when recorder is full' mode is selected.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void PTRC1_OnTraceStop(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  PTRC1_OnTraceStart (module Events)
+**
+**     Component   :  PTRC1 [PercepioTrace]
+**     Description :
+**         Called when vTraceStart() gets called.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void PTRC1_OnTraceStart(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  PTRC1_OnTraceWrap (module Events)
+**
+**     Component   :  PTRC1 [PercepioTrace]
+**     Description :
+**         Called for trace ring buffer wrap around. This gives the
+**         application a chance to dump the trace buffer.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void PTRC1_OnTraceWrap(void)
+{
+#if 0 /* default implementation for gdb below ... */
+  /* Write your code here ... */
+  uint8_t buf[64];
+
+  /* GDB: dump binary memory <file> <hexStartAddr> <hexEndAddr> */
+  PTRC1_vGetGDBDumpCommand(buf, sizeof(buf), "c:\\tmp\\trc.dump");
+#endif
+}
+
 /* END Events */
 
 #ifdef __cplusplus
