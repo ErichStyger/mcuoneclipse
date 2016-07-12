@@ -52,6 +52,7 @@
 #include "BitIoLdd3.h"
 #include "SW2.h"
 #include "BitIoLdd4.h"
+#include "KSDK1.h"
 #include "HF1.h"
 
 #ifdef __cplusplus
