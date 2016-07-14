@@ -44,9 +44,9 @@
 #include "LEDpin3.h"
 #include "BitIoLdd3.h"
 #include "FRTOS1.h"
-#include "RTOSTRC1.h"
 #include "UTIL1.h"
 #include "KSDK1.h"
+#include "PTRC1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -133,6 +133,20 @@ void RTOSTRC1_OnTraceWrap(void);
 **     Event       :  RTOSTRC1_OnTraceWrap (module Events)
 **
 **     Component   :  RTOSTRC1 [PercepioTrace]
+**     Description :
+**         Called for trace ring buffer wrap around. This gives the
+**         application a chance to dump the trace buffer.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void PTRC1_OnTraceWrap(void);
+/*
+** ===================================================================
+**     Event       :  PTRC1_OnTraceWrap (module Events)
+**
+**     Component   :  PTRC1 [PercepioTrace]
 **     Description :
 **         Called for trace ring buffer wrap around. This gives the
 **         application a chance to dump the trace buffer.
