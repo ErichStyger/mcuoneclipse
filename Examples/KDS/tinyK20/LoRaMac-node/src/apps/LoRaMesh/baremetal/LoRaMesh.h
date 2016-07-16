@@ -1,0 +1,698 @@
+/**
+ * \file LoRaMac.h
+ * \author Alexander Winiger (alexander.winiger@hslu.ch)
+ * \date 11.11.2015
+ * \brief Mesh LoRa network implementation
+ *
+ */
+
+#ifndef __LORAMESH_H__
+#define __LORAMESH_H__
+
+// Includes board dependent definitions such as channels frequencies
+#include "LoRaMac-board.h"
+
+/*****************************************************************************
+ *                                                                           *
+ * Definitions                                                               *
+ *                                                                           *
+ *****************************************************************************/
+/*!
+ * Beacon interval in us
+ */
+#define BEACON_INTERVAL                             128000000
+
+/*!
+ * Class A&B receive delay in us
+ */
+#define RECEIVE_DELAY1                              1000000
+#define RECEIVE_DELAY2                              2000000
+
+/*!
+ * Join accept receive delay in us
+ */
+#define JOIN_ACCEPT_DELAY1                          5000000
+#define JOIN_ACCEPT_DELAY2                          6000000
+
+/*!
+ *
+ */
+#define DEFAULT_RX_WINDOW                           500000
+
+/*!
+ * Class A&B maximum receive window delay in us
+ */
+#define MAX_RX_WINDOW                               3000000
+
+/*!
+ * Maximum allowed gap for the FCNT field
+ */
+#define MAX_FCNT_GAP                                16384
+
+/*!
+ * Advertising beacon channel in Hz
+ */
+#define ADV_BEACON_FREQUENCY                        868300000
+
+/*!
+ * Advertising beacon data rate
+ */
+#define ADV_BEACON_DATARATE                         DR_5
+
+/*!
+ * Advertising beacon bandwidth
+ */
+#define ADV_BEACON_BANDWIDTH                        0
+
+/*!
+ * Advertising beacon tx power
+ */
+#define ADV_BEACON_TX_POWER                         1
+
+/*!
+ * Advertising beacon interval in us
+ */
+#define ADV_BEACON_INTERVAL                         30000000
+
+/*!
+ * Advertising beacon reception window in us
+ */
+#define ADV_BEACON_DURATION                         3000000
+
+/*!
+ * Advertising beacon reception window in us
+ */
+#define ADV_BEACON_LEN                              14
+
+/*!
+ * ADR acknowledgement counter limit
+ */
+#define ADR_ACK_LIMIT                               64
+
+/*!
+ * Number of ADR acknowledgement requests before returning to default datarate
+ */
+#define ADR_ACK_DELAY                               32
+
+/*!
+ * Number of seconds after the start of the second reception window without
+ * receiving an acknowledge.
+ * AckTimeout = ACK_TIMEOUT + Random( -ACK_TIMEOUT_RND, ACK_TIMEOUT_RND )
+ */
+#define ACK_TIMEOUT                                 2000000
+
+/*!
+ * Random number of seconds after the start of the second reception window without
+ * receiving an acknowledge
+ * AckTimeout = ACK_TIMEOUT + Random( -ACK_TIMEOUT_RND, ACK_TIMEOUT_RND )
+ */
+#define ACK_TIMEOUT_RND                             1000000
+
+/*!
+ * Check the Mac layer state every MAC_STATE_CHECK_TIMEOUT
+ */
+#define MAC_STATE_CHECK_TIMEOUT                     1000000
+
+/*!
+ * Maximum number of times the MAC layer tries to get an acknowledge.
+ */
+#define MAX_ACK_RETRIES                             8
+
+/*!
+ * RSSI free threshold
+ */
+#define RSSI_FREE_TH                                ( int8_t )( -90 ) // [dBm]
+
+/*!
+ * Frame direction definition
+ */
+typedef enum FrameDirection_e {
+    UP_LINK = 0, DOWN_LINK
+} FrameDirection_t;
+
+/*!
+ * Sets the length of the LoRaMAC footer field.
+ * Mainly indicates the MIC field length
+ */
+#define LORAMAC_MFR_LEN                             4
+
+/*!
+ * Syncword for Private LoRa networks
+ */
+#define LORA_MAC_PRIVATE_SYNCWORD                   0x12
+
+/*!
+ * Syncword for Public LoRa networks
+ */
+#define LORA_MAC_PUBLIC_SYNCWORD                    0x34
+
+/*!
+ * LoRaWAN devices classes definition
+ */
+typedef enum {
+    CLASS_A, CLASS_B, CLASS_C, CLASS_D /* LoRaMesh class */,
+} DeviceClass_t;
+
+/*!
+ * LoRaMAC channels parameters definition
+ */
+typedef union {
+    int8_t Value;
+    struct {
+        int8_t Min :4;
+        int8_t Max :4;
+    } Fields;
+} DrRange_t;
+
+typedef struct {
+    uint16_t DCycle;
+    int8_t TxMaxPower;
+    uint64_t LastTxDoneTime;
+    uint64_t TimeOff;
+} Band_t;
+
+typedef struct {
+    uint32_t Frequency; // Hz
+    DrRange_t DrRange; // Max datarate [0: SF12, 1: SF11, 2: SF10, 3: SF9, 4: SF8, 5: SF7, 6: SF7, 7: FSK]
+// Min datarate [0: SF12, 1: SF11, 2: SF10, 3: SF9, 4: SF8, 5: SF7, 6: SF7, 7: FSK]
+    uint8_t Band;       // Band index
+} ChannelParams_t;
+
+typedef struct {
+    uint32_t Frequency; // Hz
+    uint8_t Datarate;  // [0: SF12, 1: SF11, 2: SF10, 3: SF9, 4: SF8, 5: SF7, 6: SF7, 7: FSK]
+} Rx2ChannelParams_t;
+
+/*!
+ * LoRaMAC frame types
+ */
+typedef enum {
+    FRAME_TYPE_JOIN_REQ = 0x00,
+    FRAME_TYPE_JOIN_ACCEPT = 0x01,
+    FRAME_TYPE_DATA_UNCONFIRMED_UP = 0x02,
+    FRAME_TYPE_DATA_UNCONFIRMED_DOWN = 0x03,
+    FRAME_TYPE_DATA_CONFIRMED_UP = 0x04,
+    FRAME_TYPE_DATA_CONFIRMED_DOWN = 0x05,
+    FRAME_TYPE_RFU = 0x06,
+    FRAME_TYPE_PROPRIETARY = 0x07,
+} LoRaMacFrameType_t;
+
+/*!
+ * LoRaMAC mote MAC commands
+ */
+typedef enum {
+    MOTE_MAC_LINK_CHECK_REQ = 0x02,
+    MOTE_MAC_LINK_ADR_ANS = 0x03,
+    MOTE_MAC_DUTY_CYCLE_ANS = 0x04,
+    MOTE_MAC_RX_PARAM_SETUP_ANS = 0x05,
+    MOTE_MAC_DEV_STATUS_ANS = 0x06,
+    MOTE_MAC_NEW_CHANNEL_ANS = 0x07,
+    MOTE_MAC_RX_TIMING_SETUP_ANS = 0x08,
+} LoRaMacMoteCmd_t;
+
+/*!
+ * LoRaMAC server MAC commands
+ */
+typedef enum {
+    SRV_MAC_LINK_CHECK_ANS = 0x02,
+    SRV_MAC_LINK_ADR_REQ = 0x03,
+    SRV_MAC_DUTY_CYCLE_REQ = 0x04,
+    SRV_MAC_RX_PARAM_SETUP_REQ = 0x05,
+    SRV_MAC_DEV_STATUS_REQ = 0x06,
+    SRV_MAC_NEW_CHANNEL_REQ = 0x07,
+    SRV_MAC_RX_TIMING_SETUP_REQ = 0x08,
+} LoRaMacSrvCmd_t;
+
+/*!
+ * LoRaMAC Battery level indicator
+ */
+typedef enum {
+    BAT_LEVEL_EXT_SRC = 0x00,
+    BAT_LEVEL_EMPTY = 0x01,
+    BAT_LEVEL_FULL = 0xFE,
+    BAT_LEVEL_NO_MEASURE = 0xFF,
+} LoRaMacBatteryLevel_t;
+
+/*!
+ * LoRaMAC header field definition
+ */
+typedef union {
+    uint8_t Value;
+    struct {
+        uint8_t Major :2;
+        uint8_t RFU :3;
+        uint8_t MType :3;
+    } Bits;
+} LoRaMacHeader_t;
+
+/*!
+ * LoRaMAC frame header field definition
+ */
+typedef union {
+    uint8_t Value;
+    struct {
+        uint8_t FOptsLen :4;
+        uint8_t FPending :1;
+        uint8_t Ack :1;
+        uint8_t AdrAckReq :1;
+        uint8_t Adr :1;
+    } Bits;
+} LoRaMacFrameCtrl_t;
+
+/*!
+ * LoRaMAC event flags
+ *
+ * RxSlot flag  -   RxSlot = 0: Advertising Beacon Window
+ *                  RxSlot = 1: Receive Window 1
+ *                  RxSlot = 2: Receive Window 2
+ *                  RxSlot = 3: Time-synchronized receive window
+ */
+typedef union {
+    uint16_t Value;
+    struct {
+        uint8_t Tx :1;
+        uint8_t Rx :1;
+        uint8_t RxData :1;
+        uint8_t Multicast :1;
+        uint8_t Advertising :1;
+        uint8_t RxSlot :2;
+        uint8_t LinkCheck :1;
+        uint8_t JoinAccept :1;
+        uint8_t Reserved :7;
+    } Bits;
+} LoRaMacEventFlags_t;
+
+typedef enum {
+    LORAMAC_EVENT_INFO_STATUS_OK = 0,
+    LORAMAC_EVENT_INFO_STATUS_ERROR,
+    LORAMAC_EVENT_INFO_STATUS_TX_TIMEOUT,
+    LORAMAC_EVENT_INFO_STATUS_RX2_TIMEOUT,
+    LORAMAC_EVENT_INFO_STATUS_RX2_ERROR,
+    LORAMAC_EVENT_INFO_STATUS_JOIN_FAIL,
+    LORAMAC_EVENT_INFO_STATUS_DOWNLINK_FAIL,
+    LORAMAC_EVENT_INFO_STATUS_ADDRESS_FAIL,
+    LORAMAC_EVENT_INFO_STATUS_MIC_FAIL,
+} LoRaMacEventInfoStatus_t;
+
+/*!
+ * LoRaMAC event information
+ */
+typedef struct {
+    LoRaMacEventInfoStatus_t Status;
+    bool TxAckReceived;
+    uint8_t TxNbRetries;
+    uint8_t TxDatarate;
+    uint8_t RxPort;
+    uint8_t *RxBuffer;
+    uint8_t RxBufferSize;
+    int16_t RxRssi;
+    uint8_t RxSnr;
+    uint16_t Energy;
+    uint8_t DemodMargin;
+    uint8_t NbGateways;
+} LoRaMacEventInfo_t;
+
+/*!
+ * Role definition.
+ */
+typedef enum LoRaMacRoles_s {
+    NORMAL = 0, ROUTER, COORDINATOR,
+} LoRaMeshRoles_t;
+
+/*!
+ * LoRaMac slot info structure
+ */
+typedef struct SlotInfo_s {
+    uint32_t Frequency;
+    uint32_t Periodicity;
+    uint32_t Duration;
+} SlotInfo_t;
+
+/*!
+ * LoRaMac child node info structure
+ */
+typedef struct ChildNodeInfo_s {
+    uint32_t Address;
+    uint8_t NwkSKey[16];
+    uint8_t AppSKey[16];
+    uint32_t UpLinkCounter;
+    SlotInfo_t UpLinkSlot;
+} ChildNodeInfo_t;
+
+/*!
+ * LoRaMac multicast group info structure.
+ */
+typedef struct MulticastGroupInfo_s {
+    uint32_t Address;
+    uint8_t NwkSKey[16];
+    uint8_t AppSKey[16];
+    uint32_t DownLinkCounter;
+    SlotInfo_t DownLinkSlot;
+} MulticastGroupInfo_t;
+
+typedef struct AdvertisingBeaconInfo_s {
+    uint32_t Time;
+    uint8_t Interval; /* In seconds */
+    uint8_t Duration; /* In milliseconds */
+} AdvertisingBeaconInfo_t;
+
+/*!
+ * LoRaMAC events structure
+ * Used to notify upper layers of MAC events
+ */
+typedef struct sLoRaMacCallbacks {
+    /*!
+     * MAC layer event callback prototype.
+     *
+     * \param [IN] flags Bit field indicating the MAC events occurred
+     * \param [IN] info  Details about MAC events occurred
+     */
+    void (*MacEvent)( LoRaMacEventFlags_t *flags, LoRaMacEventInfo_t *info );
+    /*!
+     * Function callback to get the current battery level
+     *
+     * \retval batteryLevel Current battery level
+     */
+    uint8_t (*GetBatteryLevel)( void );
+} LoRaMacCallbacks_t;
+
+/*****************************************************************************
+ *                                                                           *
+ * API functions declaration                                                 *
+ *                                                                           *
+ *****************************************************************************/
+/*!
+ * LoRaMAC layer initialization
+ *
+ * \param [IN] callabcks       Pointer to a structure defining the LoRaMAC
+ *                             callback functions.
+ */
+void LoRaMacInit( LoRaMacCallbacks_t *callabcks );
+
+/*!
+ * Enables/Disables the ADR (Adaptive Data Rate)
+ *
+ * \param [IN] enable [true: ADR ON, false: ADR OFF]
+ */
+void LoRaMacSetAdrOn( bool enable );
+
+/*!
+ * Initializes the network IDs. Device address,
+ * network session AES128 key and application session AES128 key.
+ *
+ * \remark To be only used when Over-the-Air activation isn't used.
+ *
+ * \param [IN] netID   24 bits network identifier
+ *                     ( provided by network operator )
+ * \param [IN] devAddr 32 bits device address on the network
+ *                     (must be unique to the network)
+ * \param [IN] nwkSKey Pointer to the network session AES128 key array
+ *                     ( 16 bytes )
+ * \param [IN] appSKey Pointer to the application session AES128 key array
+ *                     ( 16 bytes )
+ */
+void LoRaMacInitNwkIds( uint32_t netID, uint32_t devAddr, uint8_t *nwkSKey, uint8_t *appSKey );
+
+/*!
+ * Initiates the Over-the-Air activation
+ *
+ * \param [IN] devEui Pointer to the device EUI array ( 8 bytes )
+ * \param [IN] appEui Pointer to the application EUI array ( 8 bytes )
+ * \param [IN] appKey Pointer to the application AES128 key array ( 16 bytes )
+ *
+ * \retval status [0: OK, 1: Tx error, 2: Already joined a network]
+ */
+uint8_t LoRaMacJoinReq( uint8_t *devEui, uint8_t *appEui, uint8_t *appKey );
+
+/*!
+ * Sends a LinkCheckReq MAC command on the next uplink frame
+ *
+ * \retval status Function status [0: OK, 1: Busy]
+ */
+uint8_t LoRaMacLinkCheckReq( void );
+
+/*!
+ * LoRaMAC layer send frame
+ *
+ * \param [IN] fPort       MAC payload port (must be > 0)
+ * \param [IN] fBuffer     MAC data buffer to be sent
+ * \param [IN] fBufferSize MAC data buffer size
+ *
+ * \retval status          [0: OK, 1: Busy, 2: No network joined,
+ *                          3: Length or port error, 4: Unknown MAC command
+ *                          5: Unable to find a free channel
+ *                          6: Device switched off]
+ */
+uint8_t LoRaMacSendFrame( uint8_t fPort, void *fBuffer, uint16_t fBufferSize );
+
+/*!
+ * LoRaMAC layer send frame
+ *
+ * \param [IN] fPort       MAC payload port (must be > 0)
+ * \param [IN] fBuffer     MAC data buffer to be sent
+ * \param [IN] fBufferSize MAC data buffer size
+ * \param [IN] fBufferSize MAC data buffer size
+ * \param [IN] nbRetries   Number of retries to receive the acknowledgement
+ *
+ * \retval status          [0: OK, 1: Busy, 2: No network joined,
+ *                          3: Length or port error, 4: Unknown MAC command
+ *                          5: Unable to find a free channel
+ *                          6: Device switched off]
+ */
+uint8_t LoRaMacSendConfirmedFrame( uint8_t fPort, void *fBuffer, uint16_t fBufferSize,
+        uint8_t nbRetries );
+
+/*!
+ * \brief Print out child nodes.
+ *
+ * \param reverseOrder Print out the list in reversed order.
+ */
+void LoRaMeshChildNodesPrint( bool reverseOrder );
+
+/*!
+ * \brief Print out multicast groups.
+ *
+ * \param reverseOrder Print out the list in reversed order.
+ */
+void LoRaMeshMulticastGroupsPrint( bool reverseOrder );
+
+/*****************************************************************************
+ *                                                                           *
+ * Test functions declaration                                                *
+ *                                                                           *
+ *****************************************************************************/
+/*!
+ * LoRaMAC layer generic send frame
+ *
+ * \param [IN] macHdr      MAC header field
+ * \param [IN] fOpts       MAC commands buffer
+ * \param [IN] fPort       MAC payload port
+ * \param [IN] fBuffer     MAC data buffer to be sent
+ * \param [IN] fBufferSize MAC data buffer size
+ * \retval status          [0: OK, 1: Busy, 2: No network joined,
+ *                          3: Length or port error, 4: Unknown MAC command
+ *                          5: Unable to find a free channel
+ *                          6: Device switched off]
+ */
+uint8_t LoRaMacSend( LoRaMacHeader_t *macHdr, uint8_t *fOpts, uint8_t fPort, void *fBuffer,
+        uint16_t fBufferSize );
+
+/*!
+ * LoRaMAC layer frame buffer initialization.
+ *
+ * \param [IN] channel     Channel parameters
+ * \param [IN] macHdr      MAC header field
+ * \param [IN] fCtrl       MAC frame control field
+ * \param [IN] fOpts       MAC commands buffer
+ * \param [IN] fPort       MAC payload port
+ * \param [IN] fBuffer     MAC data buffer to be sent
+ * \param [IN] fBufferSize MAC data buffer size
+ * \retval status          [0: OK, 1: N/A, 2: No network joined,
+ *                          3: Length or port error, 4: Unknown MAC command]
+ */
+uint8_t LoRaMacPrepareFrame( ChannelParams_t channel, LoRaMacHeader_t *macHdr,
+        LoRaMacFrameCtrl_t *fCtrl, uint8_t *fOpts, uint8_t fPort, void *fBuffer,
+        uint16_t fBufferSize );
+
+/*!
+ * LoRaMAC layer prepared frame buffer transmission with channel specification
+ *
+ * \remark LoRaMacPrepareFrame must be called at least once before calling this
+ *         function.
+ *
+ * \param [IN] channel     Channel parameters
+ * \retval status          [0: OK, 1: Busy]
+ */
+uint8_t LoRaMacSendFrameOnChannel( ChannelParams_t channel );
+
+/*!
+ * LoRaMAC layer generic send frame with channel specification
+ *
+ * \param [IN] channel     Channel parameters
+ * \param [IN] macHdr      MAC header field
+ * \param [IN] fCtrl       MAC frame control field
+ * \param [IN] fOpts       MAC commands buffer
+ * \param [IN] fPort       MAC payload port
+ * \param [IN] fBuffer     MAC data buffer to be sent
+ * \param [IN] fBufferSize MAC data buffer size
+ * \retval status          [0: OK, 1: Busy, 2: No network joined,
+ *                          3: Length or port error, 4: Unknown MAC command]
+ */
+uint8_t LoRaMacSendOnChannel( ChannelParams_t channel, LoRaMacHeader_t *macHdr,
+        LoRaMacFrameCtrl_t *fCtrl, uint8_t *fOpts, uint8_t fPort, void *fBuffer,
+        uint16_t fBufferSize );
+
+/*!
+ * Initializes and opens the reception window
+ *
+ *
+ * \param [IN] datarate window channel datarate
+ * \param [IN] bandwidth window channel bandwidth
+ * \param [IN] timeout window channel timeout
+ */
+void LoRaMacRxWindowSetup( uint32_t freq, int8_t datarate, uint32_t bandwidth, uint16_t timeout,
+        bool rxContinuous );
+
+/*!
+ * \brief Initializes and open the advertising beacon reception window.
+ */
+void LoRaMacBcnRxWindowSetup( void );
+
+/*!
+ * LoRaMesh add child node to the network.
+ *
+ * \param [IN] nodeAddr Child node address.
+ */
+void LoRaMeshAddChildNode( uint32_t nodeAddr );
+
+/*!
+ * LoRaMesh add multicast group to the network.
+ *
+ * \param [IN] grpAddr Multicast group address
+ */
+void LoRaMeshAddMulticastGroup( uint32_t grpAddr );
+
+/*!
+ * LoRaMesh transmit advertising beacon
+ */
+uint8_t LoRaMeshSendAdvertisingBeacon( void );
+
+/*****************************************************************************
+ *                                                                           *
+ * Setup functions declaration                                               *
+ *                                                                           *
+ *****************************************************************************/
+/*
+ * TODO: Add documentation
+ */
+void LoRaMacSetDeviceClass( DeviceClass_t deviceClass );
+
+/*
+ * TODO: Add documentation
+ */
+void LoRaMacSetPublicNetwork( bool enable );
+
+/*
+ * TODO: Add documentation
+ */
+void LoRaMacSetChannel( uint8_t id, ChannelParams_t params );
+
+/*
+ * TODO: Add documentation
+ */
+void LoRaMacSetRx2Channel( Rx2ChannelParams_t param );
+
+/*!
+ * Sets channels tx output power
+ *
+ * \param [IN] txPower [TX_POWER_20_DBM, TX_POWER_14_DBM,
+ TX_POWER_11_DBM, TX_POWER_08_DBM,
+ TX_POWER_05_DBM, TX_POWER_02_DBM]
+ */
+void LoRaMacSetChannelsTxPower( int8_t txPower );
+
+/*!
+ * Sets channels datarate
+ *
+ * \param [IN] datarate eu868 - [DR_0, DR_1, DR_2, DR_3, DR_4, DR_5, DR_6, DR_7]
+ *                      us915 - [DR_0, DR_1, DR_2, DR_3, DR_4]
+ */
+void LoRaMacSetChannelsDatarate( int8_t datarate );
+
+/*
+ * TODO: Add documentation
+ */
+void LoRaMacSetChannelsMask( uint16_t *mask );
+
+/*
+ * TODO: Add documentation
+ */
+void LoRaMacSetChannelsNbRep( uint8_t nbRep );
+
+/*
+ * TODO: Add documentation
+ */
+void LoRaMacChannelRemove( uint8_t id );
+
+/*
+ * TODO: Add documentation
+ */
+void LoRaMacSetMaxRxWindow( uint32_t delay );
+
+/*
+ * TODO: Add documentation
+ */
+void LoRaMacSetReceiveDelay1( uint32_t delay );
+
+/*
+ * TODO: Add documentation
+ */
+void LoRaMacSetReceiveDelay2( uint32_t delay );
+
+/*
+ * TODO: Add documentation
+ */
+void LoRaMacSetJoinAcceptDelay1( uint32_t delay );
+
+/*
+ * TODO: Add documentation
+ */
+void LoRaMacSetJoinAcceptDelay2( uint32_t delay );
+
+/*
+ * TODO: Add documentation
+ */
+uint32_t LoRaMacGetUpLinkCounter( void );
+
+/*
+ * TODO: Add documentation
+ */
+uint32_t LoRaMacGetDownLinkCounter( void );
+
+/*****************************************************************************
+ *                                                                           *
+ * Override test functions declaration                                       *
+ *                                                                           *
+ *****************************************************************************/
+/*!
+ * Disables/Enables the duty cycle enforcement (EU868)
+ *
+ * \param   [IN] enable - Enabled or disables the duty cycle
+ */
+void LoRaMacTestSetDutyCycleOn( bool enable );
+
+/*!
+ * Disables/Enables the reception windows opening
+ *
+ * \param [IN] enable [true: enable, false: disable]
+ */
+void LoRaMacTestRxWindowsOn( bool enable );
+
+/*!
+ * Enables the MIC field test
+ *
+ * \param [IN] upLinkCounter Fixed Tx packet counter value
+ */
+void LoRaMacTestSetMic( uint16_t upLinkCounter );
+
+#endif // __LORAMESH_H__
