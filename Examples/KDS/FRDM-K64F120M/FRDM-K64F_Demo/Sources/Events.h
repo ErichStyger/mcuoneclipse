@@ -108,6 +108,7 @@
 #include "BitIoLdd30.h"
 #include "Dir7.h"
 #include "BitIoLdd29.h"
+#include "PTRC1.h"
 #include "Step5.h"
 #include "BitIoLdd18.h"
 #include "Dir2.h"
@@ -273,6 +274,20 @@ void KEY1_OnKeyReleasedLong(byte keys);
 ** ===================================================================
 */
 void TI1_OnInterrupt(void);
+
+void PTRC1_OnTraceWrap(void);
+/*
+** ===================================================================
+**     Event       :  PTRC1_OnTraceWrap (module Events)
+**
+**     Component   :  PTRC1 [PercepioTrace]
+**     Description :
+**         Called for trace ring buffer wrap around. This gives the
+**         application a chance to dump the trace buffer.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
 
 /* END Events */
 

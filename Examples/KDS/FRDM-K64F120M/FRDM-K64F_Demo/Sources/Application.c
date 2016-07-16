@@ -27,7 +27,7 @@
   #include "FX1.h"
 #endif
 #if PL_HAS_RTOS_TRACE
-  #include "RTOSTRC1.h"
+  #include "PTRC1.h"
 #endif
 #if PL_HAS_MINI_INI
   #include "MINI1.h"
@@ -253,7 +253,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
 
 void APP_Start(void) {
 #if PL_HAS_RTOS_TRACE
-  if(RTOSTRC1_uiTraceStart()!=1) {
+  if(PTRC1_uiTraceStart()!=1) {
     for(;;){} /* failure? */
   }
 #endif
