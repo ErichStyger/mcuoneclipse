@@ -26,7 +26,7 @@
 #endif
 #if PL_HAS_RADIO
   #include "Radio.h"
-  #include "RadioSMAC.h"
+  //#include "RadioSMAC.h"
 #endif
 #if PL_HAS_ACCEL
   #include "Accel.h"
@@ -87,7 +87,7 @@ static void APP_HandleEvent(EVNT_Handle event) {
 #endif
   default:
 #if PL_HAS_RADIO
-    RADIO_AppHandleEvent(event);
+    //RADIO_AppHandleEvent(event);
 #endif
     break;
   }

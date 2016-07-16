@@ -69,7 +69,7 @@
   /*!< Set to one if we have an ultrasonic distance measurement sensor */
 #define PL_HAS_RADIO          (1)
   /*!< Set to one if we have a radio transceiver */
-#define PL_HAS_RSTDIO         (1 && PL_HAS_RADIO)
+#define PL_HAS_RSTDIO         (0 && PL_HAS_RADIO)
   /*!< Set to one if we support remote stdio */
 #define PL_HAS_REMOTE         (1 && PL_HAS_RADIO)
   /*!< Set to one if we have a remote controller */
