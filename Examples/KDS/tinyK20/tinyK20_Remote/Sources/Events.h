@@ -81,6 +81,13 @@
 #include "ExtIntLdd4.h"
 #include "SW5.h"
 #include "ExtIntLdd5.h"
+#include "AS1.h"
+#include "ASerialLdd1.h"
+#include "PTD.h"
+#include "SW_Side1.h"
+#include "BitIoLdd15.h"
+#include "SW_Side2.h"
+#include "BitIoLdd16.h"
 #include "SYS1.h"
 
 #ifdef __cplusplus
