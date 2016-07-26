@@ -10,6 +10,7 @@
 #include "nRFCSN.h"
 #include "WAIT1.h"
 #include "SM1.h"
+#include <stdlib.h>
 
 static uint32_t timer1msCounter = 0;
 
@@ -31,7 +32,6 @@ uint8_t HardwareSPI::transfer(uint8_t val) {
 void HardwareSPI::end(void) {
   /* nothing */
 }
-
 
 void pinMode(GPIO_Pin pin, GPIO_Mode mode) {
 }
@@ -77,8 +77,12 @@ void delay(uint32_t ms) {
   WAIT1_Waitms(ms);
 }
 
-//long random(long from, long to) {
-//  return 0;
-//}
+int random(int from, int to) {
+  int val;
+
+  val = rand();
+  val = from + (val%(to-from+1));
+  return val;
+}
 
 

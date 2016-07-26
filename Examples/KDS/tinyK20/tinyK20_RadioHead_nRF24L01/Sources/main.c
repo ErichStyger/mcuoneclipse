@@ -70,6 +70,7 @@ int main(void)
 
   /* Write your code here */
   /* For example: for(;;) { } */
+  setup();
   LED1_On();
   for(;;) {
     loop();

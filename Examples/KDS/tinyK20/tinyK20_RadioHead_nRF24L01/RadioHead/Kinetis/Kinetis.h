@@ -55,7 +55,7 @@ void attachInterrupt(uint8_t interruptNumber, void (*isr0)(void), INTERRUPT_Trig
 
 void *memcpy_P(void *dst, const void *src, size_t srcSize);
 
-int random(int, int);
+int random(int from, int to);
 
 void delay(uint32_t millis);
 

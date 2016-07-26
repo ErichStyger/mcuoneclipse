@@ -13,6 +13,7 @@ extern "C" {
 #endif
 
 void loop(void);
+void setup(void);
 
 #ifdef __cplusplus
 }
