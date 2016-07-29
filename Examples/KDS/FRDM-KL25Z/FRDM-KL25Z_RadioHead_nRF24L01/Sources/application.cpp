@@ -4,24 +4,33 @@
  *  Created on: 23.07.2016
  *      Author: Erich Styger Local
  */
-
+#include "Platform.h"
 #include "Kinetis.h"
 #include "application.h"
-#include "RH_NRF24.h"
+#if PL_RH_TRANSCEIVER_TYPE==PL_RH_TRANSCEIVER_NRF24L01
+  #include <RH_NRF24.h>
+#elif PL_RH_TRANSCEIVER_TYPE==PL_RH_TRANSCEIVER_RH_RF95
+  #include <RH_RF95.h>
+#endif
 #include "CLS1.h"
-#include <RH_NRF24.h>
-#include <RHReliableDatagram.h>
 #include "UTIL1.h"
+#include <RHReliableDatagram.h>
 #include <stdlib.h>
 
 #define IS_CLIENT   0  /* client or server */
-#define IS_RELIABLE 1  /* reliable or not */
+#define IS_RELIABLE 0  /* reliable or not */
 
 #define CLIENT_ADDRESS 1
 #define SERVER_ADDRESS 2
 
 // Singleton instance of the radio driver
-RH_NRF24 nrf24(KINETIS_CE, KINETIS_SS);
+#if PL_RH_TRANSCEIVER_TYPE==PL_RH_TRANSCEIVER_NRF24L01
+  static RH_NRF24 device(KINETIS_CE, KINETIS_SS);
+  #define RH_MAX_MESSAGE_LEN  RH_NRF24_MAX_MESSAGE_LEN
+#elif PL_RH_TRANSCEIVER_TYPE==PL_RH_TRANSCEIVER_RH_RF95
+  static RH_RF95 device(KINETIS_CE, KINETIS_SS);
+  #define RH_MAX_MESSAGE_LEN  RH_RF95_MAX_MESSAGE_LEN
+#endif
 
 static void Serial_println(const char *msg) {
   CLS1_ConstStdIOType *io = CLS1_GetStdio();
@@ -36,13 +45,30 @@ void Serial_print(const char *msg) {
 
 #if IS_CLIENT && !IS_RELIABLE
 void setup(void) {
-  if (!nrf24.init())
+  if (!device.init()) {
     Serial_println("init failed");
+  }
+#if PL_RH_TRANSCEIVER_TYPE==PL_RH_TRANSCEIVER_NRF24L01
   // Defaults after init are 2.402 GHz (channel 2), 2Mbps, 0dBm
-  if (!nrf24.setChannel(1))
+  if (!device.setChannel(1)) {
     Serial_println("setChannel failed");
-  if (!nrf24.setRF(RH_NRF24::DataRate2Mbps, RH_NRF24::TransmitPower0dBm))
+  }
+  if (!device.setRF(RH_NRF24::DataRate2Mbps, RH_NRF24::TransmitPower0dBm)) {
     Serial_println("setRF failed");
+  }
+#elif PL_RH_TRANSCEIVER_TYPE==PL_RH_TRANSCEIVER_RH_RF95
+  // Defaults after init are 434.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5, Sf = 128chips/symbol, CRC on
+
+  // The default transmitter power is 13dBm, using PA_BOOST.
+  // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then
+  // you can set transmitter powers from 5 to 23 dBm:
+//  driver.setTxPower(23, false);
+  // If you are using Modtronix inAir4 or inAir9,or any other module which uses the
+  // transmitter RFO pins and not the PA_BOOST pins
+  // then you can configure the power transmitter power for -1 to 14 dBm and with useRFO true.
+  // Failure to do that will result in extremely low transmit powers.
+//  driver.setTxPower(14, true);
+#endif
 }
 
 void loop(void)
@@ -50,16 +76,16 @@ void loop(void)
   Serial_println("Sending to nrf24_server");
   // Send a message to nrf24_server
   uint8_t data[] = "Hello World!";
-  nrf24.send(data, sizeof(data));
+  device.send(data, sizeof(data));
 
-  nrf24.waitPacketSent();
+  device.waitPacketSent();
   // Now wait for a reply
-  uint8_t buf[RH_NRF24_MAX_MESSAGE_LEN];
+  uint8_t buf[RH_MAX_MESSAGE_LEN];
   uint8_t len = sizeof(buf);
-  if (nrf24.waitAvailableTimeout(500))
+  if (device.waitAvailableTimeout(500))
   {
     // Should be a reply message for us now
-    if (nrf24.recv(buf, &len))
+    if (device.recv(buf, &len))
     {
       Serial_print("got reply: ");
       Serial_println((char*)buf);
@@ -82,22 +108,37 @@ void setup(void)  {
   //Serial.begin(9600);
   //while (!Serial)
   //  ; // wait for serial port to connect. Needed for Leonardo only
-  if (!nrf24.init())
+  if (!device.init()) {
     Serial_println("init failed");
+  }
+#if PL_RH_TRANSCEIVER_TYPE==PL_RH_TRANSCEIVER_NRF24L01
   // Defaults after init are 2.402 GHz (channel 2), 2Mbps, 0dBm
-  if (!nrf24.setChannel(1))
+  if (!device.setChannel(1)) {
     Serial_println("setChannel failed");
-  if (!nrf24.setRF(RH_NRF24::DataRate2Mbps, RH_NRF24::TransmitPower0dBm))
+  }
+  if (!device.setRF(RH_NRF24::DataRate2Mbps, RH_NRF24::TransmitPower0dBm)) {
     Serial_println("setRF failed");
+  }
+#elif PL_RH_TRANSCEIVER_TYPE==PL_RH_TRANSCEIVER_RH_RF95
+  // The default transmitter power is 13dBm, using PA_BOOST.
+  // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then
+  // you can set transmitter powers from 5 to 23 dBm:
+//  driver.setTxPower(23, false);
+  // If you are using Modtronix inAir4 or inAir9,or any other module which uses the
+  // transmitter RFO pins and not the PA_BOOST pins
+  // then you can configure the power transmitter power for -1 to 14 dBm and with useRFO true.
+  // Failure to do that will result in extremely low transmit powers.
+//  driver.setTxPower(14, true);
+#endif
 }
 
 void loop(void) {
-  if (nrf24.available())
+  if (device.available())
   {
     // Should be a message for us now
-    uint8_t buf[RH_NRF24_MAX_MESSAGE_LEN];
+    uint8_t buf[RH_MAX_MESSAGE_LEN];
     uint8_t len = sizeof(buf);
-    if (nrf24.recv(buf, &len))
+    if (device.recv(buf, &len))
     {
 //      NRF24::printBuffer("request: ", buf, len);
       Serial_print("got request: ");
@@ -105,8 +146,8 @@ void loop(void) {
 
       // Send a reply
       uint8_t data[] = "And hello back to you";
-      nrf24.send(data, sizeof(data));
-      nrf24.waitPacketSent();
+      device.send(data, sizeof(data));
+      device.waitPacketSent();
       Serial_println("Sent a reply");
     }
     else
@@ -117,7 +158,7 @@ void loop(void) {
 }
 #elif IS_CLIENT && IS_RELIABLE /* reliable client */
 // Class to manage message delivery and receipt, using the driver declared above
-RHReliableDatagram manager(nrf24, CLIENT_ADDRESS);
+RHReliableDatagram manager(device, CLIENT_ADDRESS);
 
 void setup(void) {
   srand(100); /* initialize random seed */ /* \todo use soemthing 'random' */
@@ -162,7 +203,7 @@ void loop(void) {
 #elif !IS_CLIENT && IS_RELIABLE /* reliable server */
 
 // Class to manage message delivery and receipt, using the driver declared above
-RHReliableDatagram manager(nrf24, SERVER_ADDRESS);
+RHReliableDatagram manager(device, SERVER_ADDRESS);
 
 void setup(void)  {
   srand(50); /* initialize random seed */ /* \todo use soemthing 'random' */

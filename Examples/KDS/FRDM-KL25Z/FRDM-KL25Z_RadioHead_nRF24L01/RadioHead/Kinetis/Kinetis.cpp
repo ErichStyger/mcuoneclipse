@@ -64,14 +64,13 @@ unsigned long millis(void) {
   return timer1msCounter;
 }
 
-#if 0 /* not used */
 void attachInterrupt(uint8_t interruptNumber, void (*isr0)(void), INTERRUPT_Trigger trigger) {
+  /* \todo */
 }
-#endif
 
-//void *memcpy_P(void *dst, const void *src, size_t srcSize) {
-//  return memcpy(dst, src, srcSize);
-//}
+void *memcpy_P(void *dst, const void *src, size_t srcSize) {
+  return memcpy(dst, src, srcSize);
+}
 
 void delay(uint32_t ms) {
   WAIT1_Waitms(ms);
