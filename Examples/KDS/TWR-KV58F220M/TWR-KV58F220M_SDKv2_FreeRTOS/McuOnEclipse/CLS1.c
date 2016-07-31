@@ -7,23 +7,25 @@
 **     Version     : Component 01.082, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-07-31, 10:49, # CodeGen: 8
+**     Date/Time   : 2016-07-31, 12:53, # CodeGen: 18
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : CLS1
 **          Echo                                           : no
 **          Prompt                                         : "CMD> "
-**          Project Name                                   : My Project Name
+**          Project Name                                   : TWR-KV58F220M
 **          Silent Mode Prefix                             : #
 **          Blocking Send                                  : Enabled
 **            Wait                                         : WAIT1
-**            Timeout (ms)                                 : 20
+**            Timeout (ms)                                 : 100
 **            Wait Time (ms)                               : 5
 **            RTOS Wait                                    : yes
 **          Status Colon Pos                               : 13
 **          Help Semicolon Pos                             : 26
-**          Multi Command                                  : Disabled
+**          Multi Command                                  : Enabled
+**            Length                                       : 32
+**            Separator                                    : ;
 **          Utility                                        : UTIL1
 **          Default Serial                                 : Enabled
 **            Console Interface                            : RTT1
@@ -299,7 +301,7 @@ uint8_t CLS1_ParseCommand(const uint8_t *cmd, bool *handled, CLS1_ConstStdIOType
     CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
     CLS1_SendStr((unsigned char*)CLS1_DASH_LINE, io->stdOut);
     CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
-    CLS1_SendStr((unsigned char*)"My Project Name", io->stdOut);
+    CLS1_SendStr((unsigned char*)"TWR-KV58F220M", io->stdOut);
     CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
     CLS1_SendStr((unsigned char*)CLS1_DASH_LINE, io->stdOut);
     CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
@@ -968,7 +970,7 @@ void CLS1_ReadChar(uint8_t *c)
 void CLS1_SendChar(uint8_t ch)
 {
   uint8_t res;
-  int timeoutMs = 20;
+  int timeoutMs = 100;
 
 
   do {

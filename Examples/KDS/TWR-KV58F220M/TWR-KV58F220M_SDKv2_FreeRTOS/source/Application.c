@@ -11,6 +11,8 @@
 #include "fsl_gpio.h"
 #include "PTRC1.h"
 #include "RTT1.h"
+#include "AppShell.h"
+#include "CLS1.h"
 
 #define LED_RED_BIT     11 /* PTE11 */
 #define LED_GREEN_BIT   12 /* PTE12 */
@@ -21,7 +23,6 @@ static const gpio_pin_config_t LED_configOutput = {
     kGPIO_DigitalOutput,  /* use as output pin */
   1,  /* initial value */
 };
-
 
 static void blinky_task2(void *param) {
   (void)param;
@@ -62,6 +63,8 @@ static void InitGPIO(void) {
 
 void APP_Run(void) {
   RTT1_Init();
+  CLS1_Init();
+  ASHELL_Init();
 #if configUSE_TRACE_HOOKS
   vTraceInitTraceData();
 #endif

@@ -76,8 +76,8 @@ Purpose : Implementation of SEGGER real-time transfer (RTT) which
 #define SEGGER_RTT_CHANNEL_0_NAME                 "Terminal"
 #define SEGGER_RTT_CHANNEL_0_BUFFER_SIZE_UP       (512)
 #define SEGGER_RTT_CHANNEL_0_BUFFER_SIZE_DOWN     (64)
-#define SEGGER_RTT_CHANNEL_0_MODE_UP              SEGGER_RTT_MODE_NO_BLOCK_SKIP
-#define SEGGER_RTT_CHANNEL_0_MODE_DOWN            SEGGER_RTT_MODE_NO_BLOCK_SKIP
+#define SEGGER_RTT_CHANNEL_0_MODE_UP              SEGGER_RTT_MODE_NO_BLOCK_TRIM
+#define SEGGER_RTT_CHANNEL_0_MODE_DOWN            SEGGER_RTT_MODE_NO_BLOCK_TRIM
 
 #define SEGGER_RTT_MAX_NUM_UP_BUFFERS             (3)     // Max. number of up-buffers (T->H) available on this target    (Default: 2)
 #define SEGGER_RTT_MAX_NUM_DOWN_BUFFERS           (3)     // Max. number of down-buffers (H->T) available on this target  (Default: 2)

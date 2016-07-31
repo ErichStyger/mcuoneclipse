@@ -7,23 +7,25 @@
 **     Version     : Component 01.082, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-07-31, 10:49, # CodeGen: 8
+**     Date/Time   : 2016-07-31, 12:53, # CodeGen: 18
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : CLS1
 **          Echo                                           : no
 **          Prompt                                         : "CMD> "
-**          Project Name                                   : My Project Name
+**          Project Name                                   : TWR-KV58F220M
 **          Silent Mode Prefix                             : #
 **          Blocking Send                                  : Enabled
 **            Wait                                         : WAIT1
-**            Timeout (ms)                                 : 20
+**            Timeout (ms)                                 : 100
 **            Wait Time (ms)                               : 5
 **            RTOS Wait                                    : yes
 **          Status Colon Pos                               : 13
 **          Help Semicolon Pos                             : 26
-**          Multi Command                                  : Disabled
+**          Multi Command                                  : Enabled
+**            Length                                       : 32
+**            Separator                                    : ;
 **          Utility                                        : UTIL1
 **          Default Serial                                 : Enabled
 **            Console Interface                            : RTT1
@@ -160,8 +162,8 @@
 #define CLS1_SILENT_PREFIX_CHAR_ENABLED (CLS1_SILENT_PREFIX_CHAR != CLS1_NO_SILENT_PREFIX_CHAR)
 
 /* multi command support */
-#define CLS1_MULTI_CMD_ENABLED   0 /* 1: enabled, 0: disabled */
-#define CLS1_MULTI_CMD_SIZE      0 /* max size of each command */
+#define CLS1_MULTI_CMD_ENABLED   1 /* 1: enabled, 0: disabled */
+#define CLS1_MULTI_CMD_SIZE      32 /* max size of each command */
 #define CLS1_MULTI_CMD_CHAR      ';' /* separation character */
 
 /* settings for local echo */

@@ -4,10 +4,10 @@
 **     Project     : TWR_KV58F220M_PEx_2_SDKv2
 **     Processor   : MKV58F1M0VLQ24
 **     Component   : FreeRTOS
-**     Version     : Component 01.505, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.506, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-07-31, 10:49, # CodeGen: 8
+**     Date/Time   : 2016-07-31, 11:56, # CodeGen: 10
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
@@ -213,8 +213,8 @@
 **
 **     License : Open Source (LGPL)
 **     FreeRTOS (c) Copyright 2003-2016 Richard Barry, http: www.FreeRTOS.org
-**     FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2015
-**     Processor Expert and CodeWarrior (c) Copyright Freescale Semiconductor, 2013-2015, all rights reserved
+**     FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2016
+**     Processor Expert and CodeWarrior (c) Copyright Freescale Semiconductor, 2013-2016, all rights reserved
 **     This is a free software and is opened for education, research and commercial developments under license policy of following terms:
 **     * This is a free software and there is NO WARRANTY.
 **     * No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.

@@ -4,10 +4,10 @@
 **     Project     : TWR_KV58F220M_PEx_2_SDKv2
 **     Processor   : MKV58F1M0VLQ24
 **     Component   : SeggerRTT
-**     Version     : Component 01.073, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.074, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-07-31, 10:49, # CodeGen: 8
+**     Date/Time   : 2016-07-31, 13:02, # CodeGen: 21
 **     Abstract    :
 **
 **     Settings    :
@@ -20,8 +20,8 @@
 **            Name                                         : "Terminal"
 **            Up Buffer Size (Tx)                          : 512
 **            Down Buffer Size (Rx)                        : 64
-**            Up Buffer Mode                               : Skip (Default)
-**            Down Buffer Mode                             : Skip (Default)
+**            Up Buffer Mode                               : Trim
+**            Down Buffer Mode                             : Trim
 **            Blocking Send                                : Enabled
 **              Timeout (ms)                               : 5
 **              Wait                                       : WAIT1
@@ -49,7 +49,7 @@
 **         Deinit           - void RTT1_Deinit(void);
 **         Init             - void RTT1_Init(void);
 **
-**     (c) Copyright Segger, 2015
+**     (c) Copyright Segger, 2016
 **     http      : www.segger.com
 ** ###################################################################*/
 /*!

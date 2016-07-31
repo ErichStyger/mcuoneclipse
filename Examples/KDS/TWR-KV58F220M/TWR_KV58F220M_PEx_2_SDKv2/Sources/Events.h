@@ -42,6 +42,7 @@
 #include "WAIT1.h"
 #include "CLS1.h"
 #include "CS1.h"
+#include "KIN1.h"
 
 #ifdef __cplusplus
 extern "C" {
