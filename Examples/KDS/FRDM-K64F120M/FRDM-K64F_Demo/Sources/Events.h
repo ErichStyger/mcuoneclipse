@@ -108,7 +108,6 @@
 #include "BitIoLdd30.h"
 #include "Dir7.h"
 #include "BitIoLdd29.h"
-#include "PTRC1.h"
 #include "Step5.h"
 #include "BitIoLdd18.h"
 #include "Dir2.h"
@@ -137,7 +136,7 @@ extern "C" {
 void Cpu_OnNMI(void);
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
