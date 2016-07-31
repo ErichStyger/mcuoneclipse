@@ -3,7 +3,7 @@
   <Header>
     <Name>TWR_KV58F220M_PEx_2_SDKv2</Name>
     <SavedBy>Erich Styger Local</SavedBy>
-    <ModificationStamp>6</ModificationStamp>
+    <ModificationStamp>7</ModificationStamp>
     <Date>2016-07-28</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>26</ProjectCompNumb>
+    <ProjectCompNumb>28</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -44,13 +44,6 @@
     <SdkRepositoryName>KSDK 1.3.0 KV5XF 1.0.0</SdkRepositoryName>
     <SdkRepositoryId>KSDK130_KV5XF_100</SdkRepositoryId>
   </Options>
-  <UserFolder>
-    <UserFolderName />
-    <NodeName>Referenced_Components</NodeName>
-    <CompNumb>17</CompNumb>
-    <FolderType>Beans</FolderType>
-    <ExpandedAll>true</ExpandedAll>
-  </UserFolder>
   <CPU>
     <Repository>file:/${ProcessorExpert_loc}/Repositories/KSDK130_KV5XF_100_Repository</Repository>
     <ComponentUUID>com.freescale.processorexpert.processor.mkv58f1m0lq24</ComponentUUID>
@@ -7538,7 +7531,6 @@
       <ItemState>
         <ItemSymbol>CLOCK_SYS_SetMcgliteMode</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
@@ -7718,7 +7710,6 @@
       <ItemState>
         <ItemSymbol>CLOCK_SYS_RtcOscInit</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
@@ -7733,7 +7724,6 @@
       <ItemState>
         <ItemSymbol>CLOCK_SYS_RtcOscDeinit</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
@@ -27517,7 +27507,7 @@
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>OS_LDD</IconName>
-    <UserFolderName>Referenced_Components</UserFolderName>
+    <UserFolderName />
     <Comment lines_count="0" />
     <Template />
     <BeanVersion>1.3.0</BeanVersion>
@@ -27687,7 +27677,159 @@
         <Index>0</Index>
         <RegCompType>fsl_lptmr_hal</RegCompType>
         <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/KSDK130_KV5XF_100_Repository</RegCompRepository>
-        <InheritedComponentState />
+        <InheritedComponentState>
+          <Repository>file:/${ProcessorExpert_loc}/Repositories/KSDK130_KV5XF_100_Repository</Repository>
+          <ComponentUUID>com.freescale.processorexpert.ksdk.fsl_lptmr_hal</ComponentUUID>
+          <BeanType>fsl_lptmr_hal</BeanType>
+          <Name>fsl_lptmr_hal1</Name>
+          <CompNumb>27</CompNumb>
+          <CompEnabled>true</CompEnabled>
+          <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
+          <IconName>HAL4</IconName>
+          <UserFolderName />
+          <Comment lines_count="0" />
+          <Template />
+          <BeanVersion>1.3.0</BeanVersion>
+          <LightErrorsIgnored>false</LightErrorsIgnored>
+          <Properties>
+            <ItemState>
+              <ItemSymbol>DeviceName</ItemSymbol>
+              <ReadOnly>true</ReadOnly>
+              <UserReadOnly>true</UserReadOnly>
+              <Value>fsl_lptmr_hal1</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>PeriphDevice</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value />
+              <SharedPrphMode>false</SharedPrphMode>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>CompVersion</ItemSymbol>
+              <Value>1.3.0</Value>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>VersionSpecificItem</ItemSymbol>
+              <ListItemCount>1</ListItemCount>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>DefaultMainProperty</ItemSymbol>
+              <Value>load sdk verison failed</Value>
+            </ItemState>
+          </Properties>
+          <Methods>
+            <ItemState>
+              <ItemSymbol>SdkSpecificMethods</ItemSymbol>
+              <ListItemCount>1</ListItemCount>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>fsl_lptmr_halgroup</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPTMR_HAL_Enable</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPTMR_HAL_Enable</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPTMR_HAL_Disable</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPTMR_HAL_Disable</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPTMR_HAL_ClearIntFlag</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPTMR_HAL_ClearIntFlag</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPTMR_HAL_IsIntPending</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPTMR_HAL_IsIntPending</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPTMR_HAL_SetIntCmd</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPTMR_HAL_SetIntCmd</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPTMR_HAL_SetTimerWorkingMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPTMR_HAL_SetTimerWorkingMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPTMR_HAL_SetPrescalerMode</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPTMR_HAL_SetPrescalerMode</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPTMR_HAL_SetCompareValue</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPTMR_HAL_SetCompareValue</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPTMR_HAL_GetCompareValue</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPTMR_HAL_GetCompareValue</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPTMR_HAL_GetCounterValue</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPTMR_HAL_GetCounterValue</UsrMethodName>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>LPTMR_HAL_Init</ItemSymbol>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Index>0</Index>
+              <Value>true</Value>
+              <LastSelection>true</LastSelection>
+              <LastUserSel>always</LastUserSel>
+              <UsrMethodName>LPTMR_HAL_Init</UsrMethodName>
+            </ItemState>
+          </Methods>
+          <Events />
+        </InheritedComponentState>
       </ItemState>
       <ItemState>
         <ItemSymbol>BareMetal_LinkItem</ItemSymbol>
@@ -28216,7 +28358,7 @@
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>TRIGGER</IconName>
-    <UserFolderName>Referenced_Components</UserFolderName>
+    <UserFolderName />
     <Comment lines_count="0" />
     <Template />
     <BeanVersion>1.3.0</BeanVersion>
@@ -28553,7 +28695,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.504</BeanVersion>
+    <BeanVersion>01.505</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -30988,7 +31130,7 @@
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>Utility</IconName>
-    <UserFolderName>Referenced_Components</UserFolderName>
+    <UserFolderName />
     <Comment lines_count="0" />
     <Template />
     <BeanVersion>01.125</BeanVersion>
@@ -31693,7 +31835,7 @@
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>SHARED_LDD</IconName>
-    <UserFolderName>Referenced_Components</UserFolderName>
+    <UserFolderName />
     <Comment lines_count="0" />
     <Template />
     <BeanVersion>01.005</BeanVersion>
@@ -31734,7 +31876,7 @@
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>irc</IconName>
-    <UserFolderName>Referenced_Components</UserFolderName>
+    <UserFolderName />
     <Comment lines_count="0" />
     <Template />
     <BeanVersion>01.074</BeanVersion>
@@ -32475,7 +32617,7 @@
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>SeggerRTT</IconName>
-    <UserFolderName>Referenced_Components</UserFolderName>
+    <UserFolderName />
     <Comment lines_count="0" />
     <Template />
     <BeanVersion>01.073</BeanVersion>
@@ -32875,7 +33017,7 @@
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>wait</IconName>
-    <UserFolderName>Referenced_Components</UserFolderName>
+    <UserFolderName />
     <Comment lines_count="0" />
     <Template />
     <BeanVersion>01.069</BeanVersion>
