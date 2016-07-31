@@ -7,7 +7,7 @@
 **     Version     : Component 01.073, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-07-28, 17:37, # CodeGen: 6
+**     Date/Time   : 2016-07-31, 10:49, # CodeGen: 8
 **     Abstract    :
 **
 **     Settings    :
@@ -80,6 +80,9 @@
 
 #define RTT1_RTT_CHANNEL_0_ENABLED   1  /* 0: channel disabled, 1: channel enabled */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define RTT1_Read(BufferIndex, pBuffer, NumBytes) \
   SEGGER_RTT_Read(BufferIndex, pBuffer, NumBytes)
@@ -392,6 +395,10 @@ void RTT1_Deinit(void);
 */
 
 /* END RTT1. */
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 #endif
 /* ifndef __RTT1_H */

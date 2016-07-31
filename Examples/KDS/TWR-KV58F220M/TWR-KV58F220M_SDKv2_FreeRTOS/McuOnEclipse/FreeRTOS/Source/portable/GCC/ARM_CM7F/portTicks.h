@@ -77,6 +77,8 @@
  *  That way the a module can interface this wrapper header file instead
  *  of one of the standard FreeRTOS header files.
  */
+#include "KSDK1.h" /* include interface to SDK */
+
 #include "FreeRTOSConfig.h"
 #include "portmacro.h"
 

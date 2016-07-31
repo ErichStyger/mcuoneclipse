@@ -72,6 +72,7 @@ Purpose : Implementation of SEGGER real-time transfer (RTT) which
 #endif
 
 /* Channel 0 settings from properties */ /* << EST */
+#define SEGGER_RTT_CHANNEL_0_ENABLED              (1) /* 1: initialize channel; 0: do not initialize channel */
 #define SEGGER_RTT_CHANNEL_0_NAME                 "Terminal"
 #define SEGGER_RTT_CHANNEL_0_BUFFER_SIZE_UP       (512)
 #define SEGGER_RTT_CHANNEL_0_BUFFER_SIZE_DOWN     (64)

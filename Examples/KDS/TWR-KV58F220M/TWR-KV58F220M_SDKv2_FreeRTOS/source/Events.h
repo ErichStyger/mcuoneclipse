@@ -37,7 +37,7 @@ extern "C" {
 #endif 
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
@@ -91,6 +91,20 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 **     Description :
 **         If enabled, the RTOS will call this hook in case memory
 **         allocation failed.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void PTRC1_OnTraceWrap(void);
+/*
+** ===================================================================
+**     Event       :  PTRC1_OnTraceWrap (module Events)
+**
+**     Component   :  PTRC1 [PercepioTrace]
+**     Description :
+**         Called for trace ring buffer wrap around. This gives the
+**         application a chance to dump the trace buffer.
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================

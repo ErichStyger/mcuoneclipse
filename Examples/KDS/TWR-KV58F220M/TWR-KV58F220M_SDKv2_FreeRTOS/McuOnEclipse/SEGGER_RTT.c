@@ -189,6 +189,7 @@ static void _DoInit(void) {
   p = &_SEGGER_RTT;
   p->MaxNumUpBuffers    = SEGGER_RTT_MAX_NUM_UP_BUFFERS;
   p->MaxNumDownBuffers  = SEGGER_RTT_MAX_NUM_DOWN_BUFFERS;
+#if SEGGER_RTT_CHANNEL_0_ENABLED /* << EST */
   //
   // Initialize up buffer 0
   //
@@ -207,6 +208,7 @@ static void _DoInit(void) {
   p->aDown[0].RdOff         = 0u;
   p->aDown[0].WrOff         = 0u;
   p->aDown[0].Flags         = SEGGER_RTT_MODE_DEFAULT;
+#endif
   //
   // Finish initialization of the control block.
   // Copy Id string in three steps to make sure "SEGGER RTT" is not found
