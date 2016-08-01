@@ -1,23 +1,21 @@
 /* ###################################################################
 **     Filename    : Events.h
-**     Project     : ProcessorExpert
+**     Project     : FRDM-K20_USB_CDC
 **     Processor   : MK20DN128VLH5
 **     Component   : Events
 **     Version     : Driver 01.00
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2013-04-27, 13:13, # CodeGen: 0
+**     Date/Time   : 2016-08-01, 15:38, # CodeGen: 0
 **     Abstract    :
 **         This is user's event module.
 **         Put your event handler code here.
-**     Settings    :
 **     Contents    :
-**         Cpu_OnNMIINT0 - void Cpu_OnNMIINT0(void);
+**         Cpu_OnNMIINT - void Cpu_OnNMIINT(void);
 **
 ** ###################################################################*/
 /*!
 ** @file Events.h
 ** @version 01.00
-** @date 2013-04-27, 13:13, # CodeGen: 0
 ** @brief
 **         This is user's event module.
 **         Put your event handler code here.
@@ -42,44 +40,53 @@
 #include "LEDG.h"
 #include "LEDpin2.h"
 #include "BitIoLdd2.h"
-#include "LEDB.h"
-#include "LEDpin3.h"
-#include "BitIoLdd3.h"
-#include "WAIT1.h"
 #include "USB1.h"
-#include "USB0.h"
 #include "CDC1.h"
 #include "Tx1.h"
 #include "Rx1.h"
+#include "USB0.h"
 #include "CS1.h"
 #include "KSDK1.h"
+#include "WAIT1.h"
+#include "LEDB.h"
+#include "LEDpin3.h"
+#include "BitIoLdd3.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif 
 
 /*
 ** ===================================================================
-**     Event       :  Cpu_OnNMIINT0 (module Events)
+**     Event       :  Cpu_OnNMIINT (module Events)
 **
 **     Component   :  Cpu [MK20DX128EX5]
-**     Description :
-**         This event is called when the Non maskable interrupt had
-**         occurred. This event is automatically enabled when the <NMI
-**         interrrupt> property is set to 'Enabled'.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
 */
-void Cpu_OnNMIINT0(void);
+/*!
+**     @brief
+**         This event is called when the Non maskable interrupt had
+**         occurred. This event is automatically enabled when the [NMI
+**         interrupt] property is set to 'Enabled'.
+*/
+/* ===================================================================*/
+void Cpu_OnNMIINT(void);
 
 
 /* END Events */
-#endif /* __Events_H*/
 
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif 
+
+#endif 
+/* ifndef __Events_H*/
 /*!
 ** @}
 */
 /*
 ** ###################################################################
 **
-**     This file was created by Processor Expert 10.0.12 [05.05]
+**     This file was created by Processor Expert 10.5 [05.21]
 **     for the Freescale Kinetis series of microcontrollers.
 **
 ** ###################################################################

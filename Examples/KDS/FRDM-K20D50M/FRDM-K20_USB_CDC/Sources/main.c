@@ -1,10 +1,10 @@
 /* ###################################################################
-**     Filename    : ProcessorExpert.c
-**     Project     : ProcessorExpert
+**     Filename    : main.c
+**     Project     : FRDM-K20_USB_CDC
 **     Processor   : MK20DN128VLH5
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2013-04-27, 13:13, # CodeGen: 0
+**     Date/Time   : 2016-08-01, 15:38, # CodeGen: 0
 **     Abstract    :
 **         Main module.
 **         This module contains user's application code.
@@ -14,18 +14,17 @@
 **
 ** ###################################################################*/
 /*!
-** @file ProcessorExpert.c
+** @file main.c
 ** @version 01.01
-** @date 2013-04-27, 13:13, # CodeGen: 0
 ** @brief
 **         Main module.
 **         This module contains user's application code.
 */         
 /*!
-**  @addtogroup ProcessorExpert_module ProcessorExpert module documentation
+**  @addtogroup main_module main module documentation
 **  @{
 */         
-/* MODULE ProcessorExpert */
+/* MODULE main */
 
 
 /* Including needed modules to compile this module/procedure */
@@ -38,23 +37,22 @@
 #include "LEDG.h"
 #include "LEDpin2.h"
 #include "BitIoLdd2.h"
-#include "LEDB.h"
-#include "LEDpin3.h"
-#include "BitIoLdd3.h"
-#include "WAIT1.h"
 #include "USB1.h"
-#include "USB0.h"
 #include "CDC1.h"
 #include "Tx1.h"
 #include "Rx1.h"
+#include "USB0.h"
 #include "CS1.h"
 #include "KSDK1.h"
+#include "WAIT1.h"
+#include "LEDB.h"
+#include "LEDpin3.h"
+#include "BitIoLdd3.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
 #include "PE_Const.h"
 #include "IO_Map.h"
-
 /* User includes (#include below this line is not maintained by Processor Expert) */
 static uint8_t cdc_buffer[USB1_DATA_BUFF_SIZE];
 static uint8_t in_buffer[USB1_DATA_BUFF_SIZE];
@@ -103,6 +101,7 @@ int main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
+  /* Write your code here */
   CDC_Run();
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
@@ -116,14 +115,14 @@ int main(void)
   /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
 } /*** End of main routine. DO NOT MODIFY THIS TEXT!!! ***/
 
-/* END ProcessorExpert */
+/* END main */
 /*!
 ** @}
 */
 /*
 ** ###################################################################
 **
-**     This file was created by Processor Expert 10.0.12 [05.05]
+**     This file was created by Processor Expert 10.5 [05.21]
 **     for the Freescale Kinetis series of microcontrollers.
 **
 ** ###################################################################
