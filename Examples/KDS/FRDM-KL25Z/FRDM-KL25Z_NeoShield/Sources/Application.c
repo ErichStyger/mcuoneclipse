@@ -30,6 +30,10 @@
 #if PL_HAS_LED_CUBE
   #include "LedCube.h"
 #endif
+#if PL_HAS_LED_FRAME
+  #include "LEDFrame.h"
+#endif
+
 
 static void DimmColor(NEO_PixelIdxT start, NEO_PixelIdxT end, bool isRed, bool isGreen, bool isBlue) {
   int i, j;
@@ -62,8 +66,12 @@ void ClockUpdate(void) {
   res = TmDt1_GetTime(&time);
   if (res==ERR_OK) {
     if (time.Hour!=prevHour || time.Min!=prevMinute || time.Sec!=prevSecond) {
+#if PL_HAS_LED_FRAME_CLOCK
+      LEDFRAME_ShowClockTime(time.Hour, time.Min, time.Sec);
+#endif
+#if PL_HAS_MATRIX_CLOCK
       MATRIX_ShowClockTime(time.Hour, time.Min, time.Sec);
-      //(void)NEO_TransferPixels();
+#endif
       prevHour = time.Hour;
       prevMinute = time.Min;
       prevSecond = time.Sec;
@@ -92,40 +100,59 @@ static void NeoTask(void* pvParameters) {
 #define DIMM 0x50
   (void)pvParameters; /* parameter not used */
 
-#if PL_NEO_DEMO
+#if 1  /* Test */
   NEO_ClearAllPixel();
-  for(i=0;i<10;i++) {
-    NEO_SetPixelRGB(0, 0xff, 0x00, 0x00);
-    NEO_TransferPixels();
-    FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
-  }
-#endif
-#if PL_NEO_DEMO
-  NEO_SetPixelRGB(0, 0xff, 0x00, 0x00);
-  NEO_SetPixelRGB(1, 0x00, 0xFF, 0x00);
-  NEO_SetPixelRGB(2, 0x00, 0x00, 0xff);
-  NEO_SetPixelRGB(3, 0x40, 0x50, 0x80);
-  NEO_SetPixelRGB(4, 0x60, 0x00, 0xA0);
-  NEO_SetPixelRGB(5, 0x40, 0x20, 0x80);
-  NEO_SetPixelRGB(6, 0x20, 0x40, 0xFF);
-  NEO_SetPixelRGB(7, 0xff, 0x60, 0x30);
-  NEO_TransferPixels();
-  for(i=0;i<7;i++) {
-    NEO_DimmPercentPixel(i,50);
+  for(i=0;i<NEOC_NOF_Y;i++) {
+    NEO_SetPixelRGB(0, i, 0xff, 0x00, 0x00);
   }
   NEO_TransferPixels();
+  FRTOS1_vTaskDelay(200/portTICK_RATE_MS);
+
+  for(i=0;i<NEOC_NOF_Y;i++) {
+    NEO_SetPixelRGB(0, i, 0x00, 0xff, 0x00);
+  }
+  NEO_TransferPixels();
+  FRTOS1_vTaskDelay(200/portTICK_RATE_MS);
+
+  for(i=0;i<NEOC_NOF_Y;i++) {
+    NEO_SetPixelRGB(0, i, 0x00, 0x00, 0xff);
+  }
+  NEO_TransferPixels();
+  FRTOS1_vTaskDelay(200/portTICK_RATE_MS);
 #endif
   //MATRIX_Test();
-  UpdateFromRTC();
+  UpdateFromRTC(); /* get and sync the RTC */
   for(;;) {
-    //ClockUpdate();
+#if PL_HAS_LED_FRAME_CLOCK
+    ClockUpdate();
+#endif
+#if 0 && PL_NEO_DEMO
+  NEO_ClearAllPixel();
+  NEO_SetPixelRGB(0, 0, 0xff, 0x00, 0x00);
+  NEO_SetPixelRGB(0, 1, 0x00, 0xFF, 0x00);
+  NEO_SetPixelRGB(0, 2, 0x00, 0x00, 0xff);
+  NEO_SetPixelRGB(0, 3, 0x40, 0x50, 0x80);
+  NEO_SetPixelRGB(0, 4, 0x60, 0x00, 0xA0);
+  NEO_SetPixelRGB(0, 5, 0x40, 0x20, 0x80);
+  NEO_SetPixelRGB(0, 6, 0x20, 0x40, 0xFF);
+  NEO_SetPixelRGB(0, 7, 0xff, 0x60, 0x30);
+  NEO_TransferPixels();
+  for(i=0;i<7;i++) {
+    NEO_DimmPercentPixel(0, i, 50);
+  }
+  NEO_TransferPixels();
+  FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
+#endif
+#if 0 && PL_HAS_LED_FRAME
+  LEDFRAME_Demo();
+#endif
 #if 0 && PL_NEO_DEMO
     for(i=0;i<=NEO_PIXEL_LAST;i++) {
-      NEO_SetPixelRGB(i, 0xff, 0x00, 0x00);
+      NEO_SetPixelRGB(0, i, 0xff, 0x00, 0x00);
       if (i>0) {
-        NEO_SetPixelRGB(i-1, 0x00, 0x00, 0x00); /* clear previous pixel */
+        NEO_SetPixelRGB(0, i-1, 0x00, 0x00, 0x00); /* clear previous pixel */
       } else if (i==0) {
-        NEO_SetPixelRGB(NEO_PIXEL_LAST, 0x00, 0x00, 0x00);
+        NEO_SetPixelRGB(0, NEO_PIXEL_LAST, 0x00, 0x00, 0x00);
       }
       NEO_TransferPixels();
       FRTOS1_vTaskDelay(50/portTICK_RATE_MS);

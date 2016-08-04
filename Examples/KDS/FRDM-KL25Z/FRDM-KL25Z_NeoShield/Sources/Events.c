@@ -76,7 +76,7 @@ void Cpu_OnNMIINT(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName)
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
 {
   /* This will get called if a stack overflow is detected during the context
      switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack
@@ -268,7 +268,7 @@ void VS1_OnDeactivateSPI(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void SD1_OnActivate(byte mode)
+void SD1_OnActivate(uint8_t mode)
 {
   SPIBus_OnActivate();
 }
@@ -288,7 +288,7 @@ void SD1_OnActivate(byte mode)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void SD1_OnDeactivate(byte mode)
+void SD1_OnDeactivate(uint8_t mode)
 {
   SPIBus_OnDeactivate();
 }

@@ -25,7 +25,7 @@
 
 #define NEO_NOF_BITS_PIXEL  24  /* 24 bits for pixel */
 #define NEO_DMA_NOF_BYTES   sizeof(transmitBuf)
-
+/* transmitBuf: Each bit in the byte is a lane/channel (X coordinate). Need 24bytes for all the RGB bits. The Pixel(0,0) is at transmitBuf[0], Pixel (0,1) at transmitBuf[24]. */
 static uint8_t transmitBuf[NEOC_NOF_Y*NEO_NOF_BITS_PIXEL];
 
 uint8_t NEO_GetPixelColor(NEO_PixelIdxT column, NEO_PixelIdxT row, uint32_t *rgb) {
@@ -48,7 +48,7 @@ uint8_t NEO_SetPixelRGB(NEO_PixelIdxT x, NEO_PixelIdxT y, uint8_t red, uint8_t g
   if (x>=NEO_NOF_X || y>=NEO_NOF_Y) {
     return ERR_RANGE; /* error, out of range */
   }
-  idx = y*NEO_NOF_BITS_PIXEL;
+  idx = y*NEO_NOF_BITS_PIXEL; /* find index in array: Y==0 is at index 0, Y==1 is at index 24, and so on */
   /* green */
   for(i=0;i<8;i++) {
     if (green&0x80) {

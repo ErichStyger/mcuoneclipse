@@ -10,9 +10,8 @@
 
 #include "PE_Types.h"
 
-
-#define NEOC_NOF_X   (5)      /* X, number of parallel lines, max 8 */
-#define NEOC_NOF_Y   (64)   /* Y, number of pixels in columns */
+#define NEOC_NOF_X   (1)    /* X, number of parallel lines, max 8 */
+#define NEOC_NOF_Y   (3*64)   /* Y, number of pixels in columns */
 
 #define NEOC_NOF_PIXEL   ((NEOC_NOF_X)*(NEOC_NOF_Y)) /* number of pixels */
 
