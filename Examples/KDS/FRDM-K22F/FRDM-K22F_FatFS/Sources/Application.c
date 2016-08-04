@@ -24,7 +24,7 @@ static void Err(uint8_t *msg) {
 }
 
 static void LogToFile(int16_t x) {
-  FIL fp;
+  FIL file;
   uint8_t write_buf[48];
   UINT bw;
   TIMEREC time;
@@ -36,11 +36,11 @@ static void LogToFile(int16_t x) {
     SHELL_SendString("logging data...\r\n");
   }
   /* open file */
-  if (FAT1_open(&fp, "./log.txt", FA_OPEN_ALWAYS|FA_WRITE)!=FR_OK) {
+  if (FAT1_open(&file, "./log.txt", FA_OPEN_ALWAYS|FA_WRITE)!=FR_OK) {
     Err("failed opening file\r\n");
   }
   /* move to the end of the file */
-  if (FAT1_lseek(&fp, fp.fsize) != FR_OK || fp.fptr != fp.fsize) {
+  if (FAT1_lseek(&file, f_size(&file)) != FR_OK || file.fptr != f_size(&file)) {
     Err("failed lseek\r\n");
   }
   /* get time */
@@ -58,12 +58,12 @@ static void LogToFile(int16_t x) {
 
   UTIL1_strcatNum16s(write_buf, sizeof(write_buf), x);
   UTIL1_strcat(write_buf, sizeof(write_buf), (unsigned char*)"\r\n");
-  if (FAT1_write(&fp, write_buf, UTIL1_strlen((char*)write_buf), &bw)!=FR_OK) {
-    (void)FAT1_close(&fp);
+  if (FAT1_write(&file, write_buf, UTIL1_strlen((char*)write_buf), &bw)!=FR_OK) {
+    (void)FAT1_close(&file);
     Err("Failed closing file\r\n");
   }
   /* closing file */
-  (void)FAT1_close(&fp);
+  (void)FAT1_close(&file);
 }
 
 static void AppTask(void *pvParameters) {
