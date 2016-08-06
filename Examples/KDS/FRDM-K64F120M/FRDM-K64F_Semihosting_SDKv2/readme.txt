@@ -18,4 +18,5 @@ If this is NOT the case, this means that semihosting in Segger is *not* enabled.
 
 
 See
+https://mcuoneclipse.com/2016/08/06/semihosting-again-with-nxp-kinetis-sdk-v2-0/
 https://mcuoneclipse.com/2016/04/09/semihosting-with-eclipse-and-the-nxp-kinetis-sdk-v2-0/
