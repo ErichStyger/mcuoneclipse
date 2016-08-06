@@ -28,14 +28,19 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include <stdio.h>
+#include <stdint.h>
 
 static int i = 0;
+
+static const uint8_t keepMe = 5;
+const uint8_t *p = &keepMe;
 
 int main(void) {
   /* Write your code here */
   /* semihosting tests */
   //setvbuf(stdout, NULL, _IOFBF, 0);
   //setvbuf(stderr, NULL, _IOFBF, 0);
+  i = *p;
 
   printf("hello world!\r\n");
   fprintf(stdout, "Stdout output: %d\r\n", i);
