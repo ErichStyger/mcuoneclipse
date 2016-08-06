@@ -17,7 +17,7 @@
 #include <RHReliableDatagram.h>
 #include <stdlib.h>
 
-#define IS_CLIENT   0  /* client or server */
+#define IS_CLIENT   1  /* client or server */
 #define IS_RELIABLE 0  /* reliable or not */
 
 #define CLIENT_ADDRESS 1
@@ -26,10 +26,10 @@
 // Singleton instance of the radio driver
 #if PL_RH_TRANSCEIVER_TYPE==PL_RH_TRANSCEIVER_NRF24L01
   static RH_NRF24 device(KINETIS_CE, KINETIS_SS);
-  #define RH_MAX_MESSAGE_LEN  RH_NRF24_MAX_MESSAGE_LEN
+  #define RH_APP_MAX_MESSAGE_LEN  RH_NRF24_MAX_MESSAGE_LEN
 #elif PL_RH_TRANSCEIVER_TYPE==PL_RH_TRANSCEIVER_RH_RF95
-  static RH_RF95 device(KINETIS_CE, KINETIS_SS);
-  #define RH_MAX_MESSAGE_LEN  RH_RF95_MAX_MESSAGE_LEN
+  static RH_RF95 device(KINETIS_SS, KINETIS_ISR1);
+  #define RH_APP_MAX_MESSAGE_LEN  RH_RF95_MAX_MESSAGE_LEN
 #endif
 
 static void Serial_println(const char *msg) {
@@ -73,31 +73,33 @@ void setup(void) {
 
 void loop(void)
 {
-  Serial_println("Sending to nrf24_server");
+#if PL_RH_TRANSCEIVER_TYPE==PL_RH_TRANSCEIVER_RH_RF95
+  Serial_println("Sending to RF95 LoRa server");
+#elif PL_RH_TRANSCEIVER_TYPE==PL_RH_TRANSCEIVER_NRF24L01
+  Serial_println("Sending to nRF24L01+ server");
+#endif
   // Send a message to nrf24_server
   uint8_t data[] = "Hello World!";
   device.send(data, sizeof(data));
 
   device.waitPacketSent();
   // Now wait for a reply
-  uint8_t buf[RH_MAX_MESSAGE_LEN];
+  uint8_t buf[RH_APP_MAX_MESSAGE_LEN];
   uint8_t len = sizeof(buf);
-  if (device.waitAvailableTimeout(500))
-  {
+#if PL_RH_TRANSCEIVER_TYPE==PL_RH_TRANSCEIVER_RH_RF95
+  if (device.waitAvailableTimeout(3000)) {
+#elif PL_RH_TRANSCEIVER_TYPE==PL_RH_TRANSCEIVER_NRF24L01
+  if (device.waitAvailableTimeout(500)) {
+#endif
     // Should be a reply message for us now
-    if (device.recv(buf, &len))
-    {
+    if (device.recv(buf, &len)) {
       Serial_print("got reply: ");
       Serial_println((char*)buf);
-    }
-    else
-    {
+    } else {
       Serial_println("recv failed");
     }
-  }
-  else
-  {
-    Serial_println("No reply, is nrf24_server running?");
+  } else {
+    Serial_println("No reply, is server running?");
   }
   delay(400);
 }
@@ -136,7 +138,7 @@ void loop(void) {
   if (device.available())
   {
     // Should be a message for us now
-    uint8_t buf[RH_MAX_MESSAGE_LEN];
+    uint8_t buf[RH_APP_MAX_MESSAGE_LEN];
     uint8_t len = sizeof(buf);
     if (device.recv(buf, &len))
     {

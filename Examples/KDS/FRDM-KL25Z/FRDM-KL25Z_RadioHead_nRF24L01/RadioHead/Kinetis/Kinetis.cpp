@@ -6,13 +6,20 @@
  */
 
 #include "Kinetis.h"
-#include "nRFCE.h"
-#include "nRFCSN.h"
+#include "CE.h"
+#include "SS.h"
 #include "WAIT1.h"
 #include "SM1.h"
+#include "EInt1.h"
 #include <stdlib.h>
 
 static uint32_t timer1msCounter = 0;
+
+static void Error(void) {
+  for(;;) {
+    /* generic error */
+  }
+}
 
 void On1msTimerInterrrupt(void) {
   timer1msCounter++;
@@ -34,26 +41,50 @@ void HardwareSPI::end(void) {
 }
 
 void pinMode(GPIO_Pin pin, GPIO_Mode mode) {
+  /* configure the given pin for the mode indicated */
+   if(mode==INPUT) {
+    if (pin==KINETIS_CE) {
+      CE_SetDir(FALSE);
+    } else if (pin==KINETIS_SS) {
+      SS_SetDir(FALSE);
+    } else if (pin==KINETIS_ISR1) {
+      /* nothing needed */
+    } else {
+      Error();
+    }
+  } else if (mode==OUTPUT) {
+    if (pin==KINETIS_CE) {
+      CE_SetDir(TRUE);
+    } else if (pin==KINETIS_SS) {
+      SS_SetDir(TRUE);
+    } else if (pin==KINETIS_ISR1) {
+      /* nothing needed */
+    } else {
+      Error();
+    }
+  } else {
+    Error();
+  }
 }
 
 void digitalWrite(GPIO_Pin pin, uint8_t level) {
-  if (pin==KINETIS_CE) {
-    nRFCE_PutVal(level);
+  if (pin==KINETIS_CE) { /* SPI Slave Select Pin */
+    CE_PutVal(level);
   } else if (pin==KINETIS_SS) {
-    nRFCSN_PutVal(level);
+    SS_PutVal(level);
   } else {
-    for(;;);/* error */
+    Error();
   }
 }
 
 #if 0 /* not used */
 uint8_t digitalRead(GPIO_Pin pin) {
   if (pin==KINETIS_CE) {
-    return nRFCE_GetVal();
+    return CE_GetVal();
   } else if (pin==KINETIS_SS) {
-    return nRFCSN_GetVal();
+    return SS_GetVal();
   } else {
-    for(;;);/* error */
+    Error();
   }
   return 0;
 }
@@ -64,8 +95,25 @@ unsigned long millis(void) {
   return timer1msCounter;
 }
 
-void attachInterrupt(uint8_t interruptNumber, void (*isr0)(void), INTERRUPT_Trigger trigger) {
+static void (*isr1)(void) = NULL;
+void KINETIS_OnInterrupt1(void) {
+  isr1();
+}
+
+void attachInterrupt(uint8_t interruptNumber, void (*isr)(void), INTERRUPT_Trigger trigger) {
   /* \todo */
+  if (interruptNumber==KINETIS_ISR1) {
+    isr1 = isr;
+    if (trigger==RISING) {
+      EInt1_SetEdge(1);
+    } else if (trigger==FALLING) {
+      EInt1_SetEdge(0);
+    } else {
+      Error();
+    }
+  } else {
+    Error();
+  }
 }
 
 void *memcpy_P(void *dst, const void *src, size_t srcSize) {

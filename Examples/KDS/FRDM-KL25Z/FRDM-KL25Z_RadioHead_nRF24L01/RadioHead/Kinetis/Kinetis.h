@@ -14,8 +14,11 @@
 
 #define PROGMEM  /* nothing */
 
-#define KINETIS_CE   10  /* chip enable */
-#define KINETIS_SS   11  /* slave select */
+/* number/IDs to identify pins */
+                         /* nRF24L01+    LoRa */
+#define KINETIS_CE   10  /* CE pin  */
+#define KINETIS_SS   11  /* CSN pin */
+#define KINETIS_ISR1 12  /* n/a          */
 
 typedef enum {
   OUTPUT,
@@ -61,9 +64,17 @@ void delay(uint32_t millis);
 
 uint8_t SPIWriteRead(uint8_t val);
 
+
 #ifdef __cplusplus
-extern "C"
+extern "C" {
 #endif
+
 void On1msTimerInterrrupt(void);
+void KINETIS_OnInterrupt1(void);
+
+#ifdef __cplusplus
+} //extern "C"
+#endif
+
 
 #endif /* RADIOHEAD_KINETIS_KINETIS_H_ */

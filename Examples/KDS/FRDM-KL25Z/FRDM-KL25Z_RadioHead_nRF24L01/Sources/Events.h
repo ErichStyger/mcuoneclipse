@@ -45,9 +45,9 @@
 #include "SM1.h"
 #include "SMasterLdd1.h"
 #include "KSDK1.h"
-#include "nRFCE.h"
+#include "CE.h"
 #include "BitIoLdd3.h"
-#include "nRFCSN.h"
+#include "SS.h"
 #include "BitIoLdd4.h"
 #include "TI1.h"
 #include "TimerIntLdd1.h"
@@ -58,6 +58,8 @@
 #include "LED2.h"
 #include "LEDpin3.h"
 #include "BitIoLdd7.h"
+#include "EInt1.h"
+#include "ExtIntLdd1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -94,6 +96,20 @@ void Cpu_OnNMIINT(void);
 ** ===================================================================
 */
 void TI1_OnInterrupt(void);
+
+void EInt1_OnInterrupt(void);
+/*
+** ===================================================================
+**     Event       :  EInt1_OnInterrupt (module Events)
+**
+**     Component   :  EInt1 [ExtInt]
+**     Description :
+**         This event is called when an active signal edge/level has
+**         occurred.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
 
 /* END Events */
 
