@@ -36,7 +36,6 @@
 #include "pin_mux.h"
 #include "clock_config.h"
 #include <stdio.h>
-#include <stdint.h>
 
 static int i = 0;
 /*!

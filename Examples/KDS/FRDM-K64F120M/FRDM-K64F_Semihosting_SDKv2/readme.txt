@@ -4,11 +4,12 @@ readme.txt
 This is project demonstrating semihosting with the NXP FRDM-K64F baord and Kinetis Design Studio V3.2.0
 
 - Exclude utilities/fsl_debug_console.c and utilities/fsl_sbrk.c from build
-- only --specs=rdiomon.specs in linker flags
+- only --specs=rdimon.specs in linker flags
 - add SDK_DEBUGCONSOLE=0 to defines
+- add #include <stdio.h> in fsl_debug_console.h
 - remove call to BOARD_InitDebugConsole(); in main
 - route semihosting to gdb in launch config
-- add #include <stdio.h> in fsl_debug_console.h
+
 
 NOTE:
 - after launching the debugger, when it is stopped in main(), the Semihosting console shall show something link this:
