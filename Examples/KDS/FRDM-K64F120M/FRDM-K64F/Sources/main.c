@@ -32,8 +32,10 @@
 
 static int i = 0;
 
-static const uint8_t keepMe = 5;
-const uint8_t *p = &keepMe;
+#pragma RETAIN(keepMe)
+extern const int my_var;
+static const int *const __attribute__((used)) keepMe  = &my_var;
+const uint8_t *p;// = &keepMe;
 
 int main(void) {
   /* Write your code here */
@@ -53,6 +55,7 @@ int main(void) {
   /* Never leave main */
   return 0;
 }
+const int my_var;
 ////////////////////////////////////////////////////////////////////////////////
 // EOF
 ////////////////////////////////////////////////////////////////////////////////

@@ -14,10 +14,12 @@
 #endif
 #include "CLS1.h"
 #include "UTIL1.h"
+#include "LED1.h"
+#include "LED2.h"
 #include <RHReliableDatagram.h>
 #include <stdlib.h>
 
-#define IS_CLIENT   1  /* client or server */
+#define IS_CLIENT   0  /* client or server */
 #define IS_RELIABLE 0  /* reliable or not */
 
 #define CLIENT_ADDRESS 1
@@ -43,8 +45,15 @@ void Serial_print(const char *msg) {
   CLS1_SendStr((const unsigned char*)msg, CLS1_GetStdio()->stdOut);
 }
 
-#if IS_CLIENT && !IS_RELIABLE
+#if IS_CLIENT && !IS_RELIABLE /* not reliable client */
 void setup(void) {
+  Serial_print("----------------------------------------------\r\n");
+#if PL_RH_TRANSCEIVER_TYPE==PL_RH_TRANSCEIVER_NRF24L01
+  Serial_print("NRF24L01+ Client (not reliable)\r\n");
+#elif PL_RH_TRANSCEIVER_TYPE==PL_RH_TRANSCEIVER_RH_RF95
+  Serial_print("RF95x (LoRa) Client (not reliable)\r\n");
+#endif
+  Serial_println("----------------------------------------------\r\n");
   if (!device.init()) {
     Serial_println("init failed");
   }
@@ -93,6 +102,7 @@ void loop(void)
 #endif
     // Should be a reply message for us now
     if (device.recv(buf, &len)) {
+      LED1_Neg();
       Serial_print("got reply: ");
       Serial_println((char*)buf);
     } else {
@@ -104,12 +114,16 @@ void loop(void)
   delay(400);
 }
 
-#elif !IS_CLIENT && !IS_RELIABLE /* server */
+#elif !IS_CLIENT && !IS_RELIABLE /* not reliable server */
 
-void setup(void)  {
-  //Serial.begin(9600);
-  //while (!Serial)
-  //  ; // wait for serial port to connect. Needed for Leonardo only
+void setup(void) {
+  Serial_print("----------------------------------------------\r\n");
+#if PL_RH_TRANSCEIVER_TYPE==PL_RH_TRANSCEIVER_NRF24L01
+  Serial_print("NRF24L01+ Server (not reliable)\r\n");
+#elif PL_RH_TRANSCEIVER_TYPE==PL_RH_TRANSCEIVER_RH_RF95
+  Serial_print("RF95x (LoRa) Server (not reliable)\r\n");
+#endif
+  Serial_println("----------------------------------------------\r\n");
   if (!device.init()) {
     Serial_println("init failed");
   }
@@ -135,25 +149,27 @@ void setup(void)  {
 }
 
 void loop(void) {
-  if (device.available())
-  {
+  static int cntr = 0;
+  uint8_t buffer[32];
+
+  if (device.available()) {
     // Should be a message for us now
     uint8_t buf[RH_APP_MAX_MESSAGE_LEN];
     uint8_t len = sizeof(buf);
-    if (device.recv(buf, &len))
-    {
-//      NRF24::printBuffer("request: ", buf, len);
+    if (device.recv(buf, &len)) {
+      LED2_Neg();
+      cntr++;
+      UTIL1_Num32uToStr(buffer, sizeof(buffer), cntr);
+      UTIL1_strcat(buffer, sizeof(buffer), (const unsigned char*)": ");
+      Serial_print((const char*)buffer);
       Serial_print("got request: ");
       Serial_println((char*)buf);
-
       // Send a reply
       uint8_t data[] = "And hello back to you";
       device.send(data, sizeof(data));
       device.waitPacketSent();
       Serial_println("Sent a reply");
-    }
-    else
-    {
+    } else {
       Serial_println("recv failed");
     }
   }
@@ -163,6 +179,13 @@ void loop(void) {
 RHReliableDatagram manager(device, CLIENT_ADDRESS);
 
 void setup(void) {
+  Serial_print("----------------------------------------------\r\n");
+#if PL_RH_TRANSCEIVER_TYPE==PL_RH_TRANSCEIVER_NRF24L01
+  Serial_print("NRF24L01+ Client (reliable)\r\n");
+#elif PL_RH_TRANSCEIVER_TYPE==PL_RH_TRANSCEIVER_RH_RF95
+  Serial_print("RF95x (LoRa) Client (reliable)\r\n");
+#endif
+  Serial_println("----------------------------------------------\r\n");
   srand(100); /* initialize random seed */ /* \todo use soemthing 'random' */
   if (!manager.init())
     Serial_println("init failed");
@@ -208,6 +231,13 @@ void loop(void) {
 RHReliableDatagram manager(device, SERVER_ADDRESS);
 
 void setup(void)  {
+  Serial_print("----------------------------------------------\r\n");
+#if PL_RH_TRANSCEIVER_TYPE==PL_RH_TRANSCEIVER_NRF24L01
+  Serial_print("NRF24L01+ Server (reliable)\r\n");
+#elif PL_RH_TRANSCEIVER_TYPE==PL_RH_TRANSCEIVER_RH_RF95
+  Serial_print("RF95x (LoRa) Server (reliable)\r\n");
+#endif
+  Serial_println("----------------------------------------------\r\n");
   srand(50); /* initialize random seed */ /* \todo use soemthing 'random' */
   if (!manager.init())
     Serial_println("init failed");

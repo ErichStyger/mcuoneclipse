@@ -16,6 +16,7 @@
 #include "GFONT1.h"
 #include "FDisp1.h"
 #include "Event.h"
+#include "FRTOS1.h"
 #if PL_CONFIG_HAS_SNAKE
   #include "Snake.h"
 #endif
