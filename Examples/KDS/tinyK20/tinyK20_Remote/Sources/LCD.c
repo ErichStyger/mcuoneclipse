@@ -101,11 +101,12 @@ void LCD_Task(void *param) {
   vTaskDelay(pdMS_TO_TICKS(500));
   LCD_LED_On(); /* turn LCD backlight on */
   DrawLines();
-  LCD_LED_On(); /* turn LCD backlight on */
+  vTaskDelay(pdMS_TO_TICKS(500));
+  LCD_LED_Off(); /* LCD backlight off */
   vTaskDelay(pdMS_TO_TICKS(500));
   LCD_LED_On(); /* turn LCD backlight on */
   DrawFont();
-  LCD_LED_On(); /* turn LCD backlight on */
+  LCD_LED_Off(); /* LCD backlight off */
 #endif
   ShowTextOnLCD("Press a key!");
   for(;;) {
@@ -124,6 +125,12 @@ void LCD_Task(void *param) {
     }
     if (EVNT_EventIsSetAutoClear(EVNT_LCD_BTN_CENTER)) { /* center */
       ShowTextOnLCD("center");
+    }
+    if (EVNT_EventIsSetAutoClear(EVNT_LCD_SIDE_BTN_UP)) { /* side up */
+      ShowTextOnLCD("side up");
+    }
+    if (EVNT_EventIsSetAutoClear(EVNT_LCD_SIDE_BTN_DOWN)) { /* side down */
+      ShowTextOnLCD("side down");
     }
     vTaskDelay(pdMS_TO_TICKS(20));
   }

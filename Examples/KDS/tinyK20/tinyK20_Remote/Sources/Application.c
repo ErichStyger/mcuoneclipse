@@ -126,15 +126,15 @@ static void App_HandleKeys(void) {
 #if PL_CONFIG_NOF_KEYS >= 6
   if (EVNT_EventIsSetAutoClear(EVNT_SW6_PRESSED)) { /* side up */
 #if PL_CONFIG_HAS_SHELL
-    CLS1_SendStr("Side Up\r\n", CLS1_GetStdio()->stdOut);
+    CLS1_SendStr("Side Down\r\n", CLS1_GetStdio()->stdOut);
 #endif
 #if PL_CONFIG_HAS_SNAKE
-    EVNT_SetEvent(EVNT_SNAKE_UP);
+    EVNT_SetEvent(EVNT_SNAKE_DOWN);
 #else
   #if PL_CONFIG_HAS_REMOTE
     REMOTE_SendButton('s');
   #endif
-    EVNT_SetEvent(EVNT_LCD_BTN_UP);
+    EVNT_SetEvent(EVNT_LCD_SIDE_BTN_DOWN);
 #endif
   }
 #endif
@@ -142,7 +142,7 @@ static void App_HandleKeys(void) {
 #if PL_CONFIG_NOF_KEYS >= 7
   if (EVNT_EventIsSetAutoClear(EVNT_SW7_PRESSED)) { /* side down */
 #if PL_CONFIG_HAS_SHELL
-    CLS1_SendStr("Side Down\r\n", CLS1_GetStdio()->stdOut);
+    CLS1_SendStr("Side Up\r\n", CLS1_GetStdio()->stdOut);
 #endif
 #if PL_CONFIG_HAS_SNAKE
     EVNT_SetEvent(EVNT_SNAKE_UP);
@@ -150,7 +150,7 @@ static void App_HandleKeys(void) {
   #if PL_CONFIG_HAS_REMOTE
     REMOTE_SendButton('x');
   #endif
-    EVNT_SetEvent(EVNT_LCD_BTN_DOWN);
+    EVNT_SetEvent(EVNT_LCD_SIDE_BTN_UP);
 #endif
   }
 #endif

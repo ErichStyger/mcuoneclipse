@@ -74,6 +74,8 @@ typedef enum EVNT_Handle {
   EVNT_LCD_BTN_UP,
   EVNT_LCD_BTN_DOWN,
   EVNT_LCD_BTN_CENTER,
+  EVNT_LCD_SIDE_BTN_UP,
+  EVNT_LCD_SIDE_BTN_DOWN,
 #endif
   EVNT_NOF_EVENTS       /*!< Must be last one! */
 } EVNT_Handle;

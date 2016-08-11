@@ -1,8 +1,11 @@
 readme.txt
 ----------
 This folder contains information about the OpenSDA V2.2 (DAPlink) bootloader.
-
 The batch file is used to program the bootloader with a Segger J-Link.
+Make sure the path to the J-Link software is correct.
+
+Usage:
+  ProgramWithJlink.bat
 
 
 Firmware Files:
