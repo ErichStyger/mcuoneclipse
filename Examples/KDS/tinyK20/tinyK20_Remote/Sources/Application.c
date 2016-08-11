@@ -42,33 +42,46 @@ static uint8_t REMOTE_SendButton(uint8_t button) {
 }
 
 static void App_HandleKeys(void) {
-#if PL_CONFIG_HAS_KEYS && !PL_CONFIG_HAS_KBI
-    KEY_Scan();
+  KEY_Scan();
+#if PL_CONFIG_NOF_KEYS >= 1
+  if (EVNT_EventIsSetAutoClear(EVNT_SW1_PRESSED)) { /* right */
+#if PL_CONFIG_HAS_SHELL
+    CLS1_SendStr("Right\r\n", CLS1_GetStdio()->stdOut);
+#endif
+#if PL_CONFIG_HAS_SNAKE
+    EVNT_SetEvent(EVNT_SNAKE_RIGHT);
+#else
+  #if PL_CONFIG_HAS_REMOTE
+    REMOTE_SendButton('r');
+  #endif
+    EVNT_SetEvent(EVNT_LCD_BTN_RIGHT);
+#endif
+  }
 #endif
 
-    if (EVNT_EventIsSetAutoClear(EVNT_SW1_PRESSED)) { /* right */
-#if PL_CONFIG_HAS_SNAKE
-      EVNT_SetEvent(EVNT_SNAKE_RIGHT);
-#else
-    #if PL_CONFIG_HAS_REMOTE
-      REMOTE_SendButton('r');
-    #endif
-      EVNT_SetEvent(EVNT_LCD_BTN_RIGHT);
+#if PL_CONFIG_NOF_KEYS >= 2
+  if (EVNT_EventIsSetAutoClear(EVNT_SW2_PRESSED)) { /* left */
+#if PL_CONFIG_HAS_SHELL
+    CLS1_SendStr("Left\r\n", CLS1_GetStdio()->stdOut);
 #endif
-    }
-    if (EVNT_EventIsSetAutoClear(EVNT_SW2_PRESSED)) { /* left */
 #if PL_CONFIG_HAS_SNAKE
-      EVNT_SetEvent(EVNT_SNAKE_LEFT);
+    EVNT_SetEvent(EVNT_SNAKE_LEFT);
 #else
-    #if PL_CONFIG_HAS_REMOTE
-      REMOTE_SendButton('l');
-    #endif
-      EVNT_SetEvent(EVNT_LCD_BTN_LEFT);
+  #if PL_CONFIG_HAS_REMOTE
+    REMOTE_SendButton('l');
+  #endif
+    EVNT_SetEvent(EVNT_LCD_BTN_LEFT);
 #endif
-    }
-    if (EVNT_EventIsSetAutoClear(EVNT_SW3_PRESSED)) { /* down */
+  }
+#endif
+
+#if PL_CONFIG_NOF_KEYS >= 3
+  if (EVNT_EventIsSetAutoClear(EVNT_SW3_PRESSED)) { /* down */
+#if PL_CONFIG_HAS_SHELL
+    CLS1_SendStr("Down\r\n", CLS1_GetStdio()->stdOut);
+#endif
 #if PL_CONFIG_HAS_SNAKE
-      EVNT_SetEvent(EVNT_SNAKE_DOWN);
+    EVNT_SetEvent(EVNT_SNAKE_DOWN);
 #else
     #if PL_CONFIG_HAS_REMOTE
       REMOTE_SendButton('b');
@@ -76,27 +89,71 @@ static void App_HandleKeys(void) {
       EVNT_SetEvent(EVNT_LCD_BTN_DOWN);
 #endif
     }
-    if (EVNT_EventIsSetAutoClear(EVNT_SW4_PRESSED)) { /* middle */
-#if PL_CONFIG_HAS_SNAKE
-      EVNT_SetEvent(EVNT_SNAKE_START_PAUSE);
-#else
-    #if PL_CONFIG_HAS_REMOTE
-      REMOTE_SendButton('c');
-    #endif
-      EVNT_SetEvent(EVNT_LCD_BTN_CENTER);
 #endif
-    }
-    if (EVNT_EventIsSetAutoClear(EVNT_SW5_PRESSED)) { /* up */
-#if PL_CONFIG_HAS_SNAKE
-      EVNT_SetEvent(EVNT_SNAKE_UP);
-#else
-    #if PL_CONFIG_HAS_REMOTE
-      REMOTE_SendButton('f');
-    #endif
-      EVNT_SetEvent(EVNT_LCD_BTN_UP);
-#endif
-    }
 
+#if PL_CONFIG_NOF_KEYS >= 4
+  if (EVNT_EventIsSetAutoClear(EVNT_SW4_PRESSED)) { /* middle */
+#if PL_CONFIG_HAS_SHELL
+    CLS1_SendStr("Middle\r\n", CLS1_GetStdio()->stdOut);
+#endif
+#if PL_CONFIG_HAS_SNAKE
+    EVNT_SetEvent(EVNT_SNAKE_START_PAUSE);
+#else
+  #if PL_CONFIG_HAS_REMOTE
+    REMOTE_SendButton('c');
+  #endif
+    EVNT_SetEvent(EVNT_LCD_BTN_CENTER);
+#endif
+  }
+#endif
+
+#if PL_CONFIG_NOF_KEYS >= 5
+  if (EVNT_EventIsSetAutoClear(EVNT_SW5_PRESSED)) { /* up */
+#if PL_CONFIG_HAS_SHELL
+    CLS1_SendStr("Up\r\n", CLS1_GetStdio()->stdOut);
+#endif
+#if PL_CONFIG_HAS_SNAKE
+    EVNT_SetEvent(EVNT_SNAKE_UP);
+#else
+  #if PL_CONFIG_HAS_REMOTE
+    REMOTE_SendButton('f');
+  #endif
+    EVNT_SetEvent(EVNT_LCD_BTN_UP);
+#endif
+  }
+#endif
+
+#if PL_CONFIG_NOF_KEYS >= 6
+  if (EVNT_EventIsSetAutoClear(EVNT_SW6_PRESSED)) { /* side up */
+#if PL_CONFIG_HAS_SHELL
+    CLS1_SendStr("Side Up\r\n", CLS1_GetStdio()->stdOut);
+#endif
+#if PL_CONFIG_HAS_SNAKE
+    EVNT_SetEvent(EVNT_SNAKE_UP);
+#else
+  #if PL_CONFIG_HAS_REMOTE
+    REMOTE_SendButton('s');
+  #endif
+    EVNT_SetEvent(EVNT_LCD_BTN_UP);
+#endif
+  }
+#endif
+
+#if PL_CONFIG_NOF_KEYS >= 7
+  if (EVNT_EventIsSetAutoClear(EVNT_SW7_PRESSED)) { /* side down */
+#if PL_CONFIG_HAS_SHELL
+    CLS1_SendStr("Side Down\r\n", CLS1_GetStdio()->stdOut);
+#endif
+#if PL_CONFIG_HAS_SNAKE
+    EVNT_SetEvent(EVNT_SNAKE_UP);
+#else
+  #if PL_CONFIG_HAS_REMOTE
+    REMOTE_SendButton('x');
+  #endif
+    EVNT_SetEvent(EVNT_LCD_BTN_DOWN);
+#endif
+  }
+#endif
 }
 
 static void app_task(void *param) {

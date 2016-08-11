@@ -93,7 +93,7 @@ static void ShowTextOnLCD(unsigned char *text) {
 
 void LCD_Task(void *param) {
   (void)param; /* not used */
-#if 0
+#if 1
   /* test/demo code */
   LCD_LED_On(); /* turn LCD backlight on */
   DrawText();
