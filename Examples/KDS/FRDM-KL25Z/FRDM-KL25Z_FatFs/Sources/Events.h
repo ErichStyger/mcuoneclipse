@@ -44,11 +44,12 @@
 #include "TmDt1.h"
 #include "WAIT1.h"
 #include "TMOUT1.h"
-#include "SM2.h"
 #include "FAT1.h"
 #include "SD1.h"
 #include "SS2.h"
 #include "CD2.h"
+#include "WP2.h"
+#include "SM2.h"
 #include "GPIO_D.h"
 #include "GPIO_A.h"
 #include "SD_RedLed.h"
@@ -87,7 +88,7 @@ extern "C" {
 void Cpu_OnNMIINT(void);
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
