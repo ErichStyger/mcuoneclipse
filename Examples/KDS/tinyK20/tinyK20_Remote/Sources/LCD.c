@@ -109,6 +109,7 @@ void LCD_Task(void *param) {
   LCD_LED_Off(); /* LCD backlight off */
 #endif
   ShowTextOnLCD("Press a key!");
+  LCD_LED_On(); /* LCD backlight on */
   for(;;) {
     LED1_Neg();
     if (EVNT_EventIsSetAutoClear(EVNT_LCD_BTN_LEFT)) { /* left */

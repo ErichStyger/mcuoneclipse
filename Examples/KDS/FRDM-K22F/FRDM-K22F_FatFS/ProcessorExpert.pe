@@ -3,7 +3,7 @@
   <Header>
     <Name>FRDM-K22F_FatFS</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>145</ModificationStamp>
+    <ModificationStamp>146</ModificationStamp>
     <Date>2015-09-20</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -25407,7 +25407,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>0</Value>
+        <Value>128</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -25415,7 +25415,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>0</Value>
+        <Value>128</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -28057,46 +28057,46 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>RecvBlock</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
+        <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
+        <Index>0</Index>
+        <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>never</LastUserSel>
+        <LastUserSel>yes</LastUserSel>
         <UsrMethodName>RecvBlock</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>SendBlock</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
+        <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
+        <Index>0</Index>
+        <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>never</LastUserSel>
+        <LastUserSel>yes</LastUserSel>
         <UsrMethodName>SendBlock</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>ClearRxBuf</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
+        <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
+        <Index>0</Index>
+        <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>never</LastUserSel>
+        <LastUserSel>yes</LastUserSel>
         <UsrMethodName>ClearRxBuf</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>ClearTxBuf</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
+        <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
+        <Index>0</Index>
+        <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>never</LastUserSel>
+        <LastUserSel>yes</LastUserSel>
         <UsrMethodName>ClearTxBuf</UsrMethodName>
       </ItemState>
       <ItemState>
@@ -28359,13 +28359,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>OnFullRxBuf</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
+        <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
         <LastSelection>true</LastSelection>
-        <LastUserSel>never</LastUserSel>
+        <LastUserSel>yes</LastUserSel>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnFullRxBufName</ItemSymbol>
@@ -28381,13 +28381,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>OnFreeTxBuf</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
+        <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
         <LastSelection>true</LastSelection>
-        <LastUserSel>never</LastUserSel>
+        <LastUserSel>yes</LastUserSel>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnFreeTxBufName</ItemSymbol>
