@@ -20,7 +20,7 @@
 #if RNET_CONFIG_REMOTE_STDIO
   #include "RStdIO.h"
 #endif
-#if PL_HAS_REMOTE
+#if PL_CONFIG_HAS_REMOTE
   #include "Remote.h"
 #endif
 #include "Shell.h"

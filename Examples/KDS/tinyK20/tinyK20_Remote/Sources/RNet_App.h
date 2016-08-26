@@ -10,7 +10,7 @@
 
 #include "Platform.h"
 #include "RNWK.h"
-#if PL_HAS_SHELL
+#if PL_CONFIG_HAS_SHELL
 #include "CLS1.h"
 uint8_t RNETA_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
 #endif

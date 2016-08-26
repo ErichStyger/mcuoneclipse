@@ -24,6 +24,7 @@
 #include "SW3.h"
 #include "SW4.h"
 #include "SW5.h"
+#include "Event.h"
 #if PL_CONFIG_HAS_RADIO
   #include "RApp.h"
 #endif
@@ -37,9 +38,11 @@ void APP_DebugPrint(uint8_t *str) {
  /* dummy */
 }
 
+#if PL_CONFIG_HAS_REMOTE
 static uint8_t REMOTE_SendButton(uint8_t button) {
   return RAPP_SendPayloadDataBlock(&button, sizeof(button), RAPP_MSG_TYPE_JOYSTICK_BTN, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
 }
+#endif
 
 static void App_HandleKeys(void) {
   KEY_Scan();
@@ -54,7 +57,9 @@ static void App_HandleKeys(void) {
   #if PL_CONFIG_HAS_REMOTE
     REMOTE_SendButton('r');
   #endif
+#if PL_CONFIG_HAS_LCD
     EVNT_SetEvent(EVNT_LCD_BTN_RIGHT);
+#endif
 #endif
   }
 #endif
@@ -70,7 +75,9 @@ static void App_HandleKeys(void) {
   #if PL_CONFIG_HAS_REMOTE
     REMOTE_SendButton('l');
   #endif
+#if PL_CONFIG_HAS_LCD
     EVNT_SetEvent(EVNT_LCD_BTN_LEFT);
+#endif
 #endif
   }
 #endif
@@ -86,7 +93,9 @@ static void App_HandleKeys(void) {
     #if PL_CONFIG_HAS_REMOTE
       REMOTE_SendButton('b');
     #endif
+#if PL_CONFIG_HAS_LCD
       EVNT_SetEvent(EVNT_LCD_BTN_DOWN);
+#endif
 #endif
     }
 #endif
@@ -102,7 +111,9 @@ static void App_HandleKeys(void) {
   #if PL_CONFIG_HAS_REMOTE
     REMOTE_SendButton('c');
   #endif
+#if PL_CONFIG_HAS_LCD
     EVNT_SetEvent(EVNT_LCD_BTN_CENTER);
+#endif
 #endif
   }
 #endif
@@ -118,7 +129,9 @@ static void App_HandleKeys(void) {
   #if PL_CONFIG_HAS_REMOTE
     REMOTE_SendButton('f');
   #endif
+#if PL_CONFIG_HAS_LCD
     EVNT_SetEvent(EVNT_LCD_BTN_UP);
+#endif
 #endif
   }
 #endif
@@ -134,7 +147,9 @@ static void App_HandleKeys(void) {
   #if PL_CONFIG_HAS_REMOTE
     REMOTE_SendButton('s');
   #endif
+#if PL_CONFIG_HAS_LCD
     EVNT_SetEvent(EVNT_LCD_SIDE_BTN_DOWN);
+#endif
 #endif
   }
 #endif
@@ -150,7 +165,9 @@ static void App_HandleKeys(void) {
   #if PL_CONFIG_HAS_REMOTE
     REMOTE_SendButton('x');
   #endif
+#if PL_CONFIG_HAS_LCD
     EVNT_SetEvent(EVNT_LCD_SIDE_BTN_UP);
+#endif
 #endif
   }
 #endif
