@@ -31,7 +31,7 @@
 #include "MK22F51212.h"
 #include <stdio.h>
 
-#if 0 /* might be needed dependin on GNU version */
+#if 0 /* might be needed depending on GNU version */
 void *_sbrk ( uint32_t delta )
 {
 extern char _end; /* Defined by the linker */
