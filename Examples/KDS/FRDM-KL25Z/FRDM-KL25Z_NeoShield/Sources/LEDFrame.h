@@ -8,6 +8,8 @@
 #ifndef SOURCES_LEDFRAME_H_
 #define SOURCES_LEDFRAME_H_
 
+#include "NeoConfig.h"
+
 void LEDFRAME_ShowClockTime(uint8_t hour, uint8_t min, uint8_t sec);
 
 void LEDFRAME_Demo(void);

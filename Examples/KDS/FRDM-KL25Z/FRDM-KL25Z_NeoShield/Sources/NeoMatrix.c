@@ -29,6 +29,8 @@
 #include "WAIT1.h"
 #include "UTIL1.h"
 #include "GDisp1.h"
+#include "GFONT1.h"
+#include "FDisp1.h"
 
 typedef struct {
   uint8_t type;
@@ -40,6 +42,7 @@ typedef struct {
 
 static MATRIX_Matrix matrix;
 
+#if 0
 // Downgrade 24-bit color to 16-bit (add reverse gamma lookup here?)
 uint16_t Adafruit_NeoMatrix_Color(uint8_t r, uint8_t g, uint8_t b) {
   return ((uint16_t)(r & 0xF8) << 8) |
@@ -62,6 +65,7 @@ void Adafruit_NeoMatrix_setPassThruColor(uint32_t c) {
   matrix.passThruColor = c;
   matrix.passThruFlag  = TRUE;
 }
+#endif
 
 void Adafruit_NeoMatrix_drawPixel(int16_t x, int16_t y, uint8_t red, uint8_t green, uint8_t blue) {
   #define swap(a, b) {uint16_t swapTmp; swapTmp=a; a=b; b=swapTmp;}
@@ -146,9 +150,28 @@ void Adafruit_NeoMatrix_drawPixel(int16_t x, int16_t y, uint8_t red, uint8_t gre
   NEO_SetPixelRGB(0, tileOffset + pixelOffset, red, green, blue);
 }
 
+void MATRIX_ShowClockTime(uint8_t hour, uint8_t min, uint8_t sec) {
+  GDisp1_PixelDim x, y;
+  uint8_t buf[16];
 
-#include "GFONT1.h"
-#include "FDisp1.h"
+  (void)hour;
+  NEO_ClearAllPixel();
+
+  buf[0] = '\0';
+  UTIL1_strcatNum16uFormatted(buf, sizeof(buf), min, '0', 2);
+  UTIL1_chcat(buf, sizeof(buf), ':');
+  x = 0; y = 0;
+  FDisp1_WriteString(buf, 0x001100, &x, &y, GFONT1_GetFont());
+
+  buf[0] = '\0';
+  UTIL1_strcatNum16uFormatted(buf, sizeof(buf), sec, '0', 2);
+  x = 3; y = 8;
+  FDisp1_WriteString(buf, 0x001100, &x, &y, GFONT1_GetFont());
+
+  NEO_TransferPixels();
+}
+
+#if 0
 static void FontTest(void) {
   GDisp1_PixelDim x, y;
   uint16_t i;
@@ -169,26 +192,6 @@ static void FontTest(void) {
     x = 0; y = 8;
     FDisp1_WriteString(buf2, 0x000000, &x, &y, GFONT1_GetFont());
   }
-}
-
-void MATRIX_ShowClockTime(uint8_t hour, uint8_t min, uint8_t sec) {
-  GDisp1_PixelDim x, y;
-  uint8_t buf[16];
-
-  NEO_ClearAllPixel();
-
-  buf[0] = '\0';
-  UTIL1_strcatNum16uFormatted(buf, sizeof(buf), min, '0', 2);
-  UTIL1_chcat(buf, sizeof(buf), ':');
-  x = 0; y = 0;
-  FDisp1_WriteString(buf, 0x001100, &x, &y, GFONT1_GetFont());
-
-  buf[0] = '\0';
-  UTIL1_strcatNum16uFormatted(buf, sizeof(buf), sec, '0', 2);
-  x = 3; y = 8;
-  FDisp1_WriteString(buf, 0x001100, &x, &y, GFONT1_GetFont());
-
-  NEO_TransferPixels();
 }
 
 void MATRIX_Test(void) {
@@ -212,15 +215,48 @@ void MATRIX_Test(void) {
   }
 #endif
 }
+#endif
 
 void MATRIX_Init(void) {
+  /* note: the x/y first pixel (0,0) is always on top left, with x to the right and y to the bottom */
+#if 0
+  /* single Adafruit 8x8 matrix. Orientation is DIN first pixel is top-left */
+  matrix.type =
+        NEO_MATRIX_TOP  // corner, first pixel: either NEO_MATRIX_TOP or NEO_MATRIX_BOTTOM
+      + NEO_MATRIX_LEFT // corner, first pixel: either NEO_MATRIX_TOP or NEO_MATRIX_BOTTOM
+      + NEO_MATRIX_ROWS // axis, pixels are organized in  NEO_MATRIX_ROWS or NEO_MATRIX_COLUMNS
+      + NEO_MATRIX_PROGRESSIVE // sequence, pixels either change side NEO_MATRIX_PROGRESSIVE or NEO_MATRIX_ZIGZAG
+      ;
+#elif 0
+  /* single Adafruit 8x8 matrix. Orientation is DIN first pixel is bottom-left */
+  matrix.type =
+        NEO_MATRIX_BOTTOM  // corner, first pixel: either NEO_MATRIX_TOP or NEO_MATRIX_BOTTOM
+      + NEO_MATRIX_LEFT // corner, first pixel: either NEO_MATRIX_TOP or NEO_MATRIX_BOTTOM
+      + NEO_MATRIX_COLUMNS // axis, pixels are organized in  NEO_MATRIX_ROWS or NEO_MATRIX_COLUMNS
+      + NEO_MATRIX_PROGRESSIVE // sequence, pixels either change side NEO_MATRIX_PROGRESSIVE or NEO_MATRIX_ZIGZAG
+      ;
+#elif 1
+  /* two Adafruit 8x8 matrix. Orientation is DIN first pixel is bottom-left */
+  matrix.type =
+        NEO_MATRIX_BOTTOM  // corner, first pixel: either NEO_MATRIX_TOP or NEO_MATRIX_BOTTOM
+      + NEO_MATRIX_LEFT // corner, first pixel: either NEO_MATRIX_TOP or NEO_MATRIX_BOTTOM
+      + NEO_MATRIX_COLUMNS // axis, pixels are organized in  NEO_MATRIX_ROWS or NEO_MATRIX_COLUMNS
+      + NEO_MATRIX_PROGRESSIVE // sequence, pixels either change side NEO_MATRIX_PROGRESSIVE or NEO_MATRIX_ZIGZAG
+      /* tile configuration */
+      + NEO_TILE_TOP    // corner, position of first tile: NEO_TILE_TOP or NEO_TILE_BOTTOM
+      + NEO_TILE_LEFT   // corner, position of first tile: NEO_TILE_LEFT or NEO_TILE_RIGHT
+      + NEO_TILE_ROWS   // axis, organization of tiles: NEO_TILE_ROWS or NEO_TILE_COLUMNS
+      + NEO_TILE_PROGRESSIVE // sequence, organization of tiles: NEO_TILE_PROGRESSIVE or NEO_TILE_ZIGZAG
+      ;
+#else
   matrix.type = NEO_MATRIX_TOP+NEO_MATRIX_LEFT+NEO_MATRIX_ROWS+NEO_MATRIX_PROGRESSIVE
                 +NEO_TILE_TOP+NEO_TILE_LEFT+NEO_TILE_COLUMNS+NEO_TILE_ZIGZAG;
+#endif
   matrix.matrixWidth = 8; /* size of *each* matrix */
   matrix.matrixHeight = 8; /* size of *each* matrix */
-  matrix.tilesX = GDisp1_GetWidth()/8;
-  matrix.tilesY = GDisp1_GetHeight()/8;
-  matrix.remapFn = NULL;
+  matrix.tilesX = GDisp1_GetWidth()/8; /* number of tiles in X direction */
+  matrix.tilesY = GDisp1_GetHeight()/8; /* number of tiles in Y direction */
+  matrix.remapFn = NULL; /* remapping function */
   matrix.passThruColor = 0;
   matrix.passThruFlag = FALSE;
 }

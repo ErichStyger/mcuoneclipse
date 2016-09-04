@@ -33,10 +33,12 @@
 #if PL_HAS_LED_FRAME
   #include "LEDFrame.h"
 #endif
+#include "GDisp1.h"
 
-
+#if 0
 static void DimmColor(NEO_PixelIdxT start, NEO_PixelIdxT end, bool isRed, bool isGreen, bool isBlue) {
-  int i, j;
+  int i;
+  NEO_PixelIdxT j;
   uint8_t red, green, blue;
 
   for(i=0;i<0xff;i+=0x10){
@@ -57,8 +59,9 @@ static void DimmColor(NEO_PixelIdxT start, NEO_PixelIdxT end, bool isRed, bool i
     FRTOS1_vTaskDelay(25/portTICK_RATE_MS);
   }
 }
+#endif
 
-void ClockUpdate(void) {
+static void ClockUpdate(void) {
   static int prevHour=-1, prevMinute=-1, prevSecond=1;
   TIMEREC time;
   uint8_t res;
@@ -93,37 +96,35 @@ static void UpdateFromRTC(void) {
 }
 #endif
 
+#if 1
+static void Test(void) {
+  GDisp1_Clear();
+  NEO_TransferPixels();
+  GDisp1_DrawFilledBox(0, 0, GDisp1_GetWidth(), GDisp1_GetHeight(), 0x050000);
+  NEO_TransferPixels();
+  FRTOS1_vTaskDelay(500/portTICK_RATE_MS);
+  GDisp1_DrawFilledBox(0, 0, GDisp1_GetWidth(), GDisp1_GetHeight(), 0x000500);
+  NEO_TransferPixels();
+  FRTOS1_vTaskDelay(500/portTICK_RATE_MS);
+  GDisp1_DrawFilledBox(0, 0, GDisp1_GetWidth(), GDisp1_GetHeight(), 0x000005);
+  NEO_TransferPixels();
+  FRTOS1_vTaskDelay(500/portTICK_RATE_MS);
+}
+#endif
+
 #if PL_HAS_NEO_PIXEL
 static void NeoTask(void* pvParameters) {
-  int i;
 
 #define DIMM 0x50
   (void)pvParameters; /* parameter not used */
 
-#if 1  /* Test */
-  NEO_ClearAllPixel();
-  for(i=0;i<NEOC_NOF_Y;i++) {
-    NEO_SetPixelRGB(0, i, 0xff, 0x00, 0x00);
-  }
-  NEO_TransferPixels();
-  FRTOS1_vTaskDelay(200/portTICK_RATE_MS);
+  Test();
 
-  for(i=0;i<NEOC_NOF_Y;i++) {
-    NEO_SetPixelRGB(0, i, 0x00, 0xff, 0x00);
-  }
-  NEO_TransferPixels();
-  FRTOS1_vTaskDelay(200/portTICK_RATE_MS);
-
-  for(i=0;i<NEOC_NOF_Y;i++) {
-    NEO_SetPixelRGB(0, i, 0x00, 0x00, 0xff);
-  }
-  NEO_TransferPixels();
-  FRTOS1_vTaskDelay(200/portTICK_RATE_MS);
-#endif
   //MATRIX_Test();
   UpdateFromRTC(); /* get and sync the RTC */
+
   for(;;) {
-#if PL_HAS_LED_FRAME_CLOCK
+#if 1 && PL_HAS_LED_FRAME_CLOCK
     ClockUpdate();
 #endif
 #if 0 && PL_NEO_DEMO

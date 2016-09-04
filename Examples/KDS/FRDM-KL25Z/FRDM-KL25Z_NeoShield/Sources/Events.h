@@ -58,20 +58,6 @@
 #include "DMACH1.h"
 #include "DMACH2.h"
 #include "TmDt1.h"
-#include "FAT1.h"
-#include "SD1.h"
-#include "SS1.h"
-#include "CD1.h"
-#include "PTD.h"
-#include "VS1.h"
-#include "MCS1.h"
-#include "BitIoLdd9.h"
-#include "DCS1.h"
-#include "BitIoLdd10.h"
-#include "DREQ1.h"
-#include "BitIoLdd11.h"
-#include "SM2.h"
-#include "SMasterLdd2.h"
 #include "HF1.h"
 #include "KEY1.h"
 #include "Inhr4.h"
@@ -89,6 +75,7 @@
 #include "TU1.h"
 #include "SYS1.h"
 #include "RTT1.h"
+#include "KIN1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -168,66 +155,6 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
-
-/*
-** ===================================================================
-**     Event       :  DMACH2_OnComplete (module Events)
-**
-**     Component   :  DMACH2 [DMAChannel_LDD]
-*/
-/*!
-**     @brief
-**         Called at the end of a DMA transfer. If the Half complete
-**         property in initialization section is enabled, this event is
-**         also called when current major iteration count reaches the
-**         halfway point. See SetEventMask() and GetEventMask() methods.
-**     @param
-**         UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. This pointer is passed
-**                           as the parameter of Init method.
-*/
-/* ===================================================================*/
-void DMACH2_OnComplete(LDD_TUserData *UserDataPtr);
-
-/*
-** ===================================================================
-**     Event       :  DMACH1_OnComplete (module Events)
-**
-**     Component   :  DMACH1 [DMAChannel_LDD]
-*/
-/*!
-**     @brief
-**         Called at the end of a DMA transfer. If the Half complete
-**         property in initialization section is enabled, this event is
-**         also called when current major iteration count reaches the
-**         halfway point. See SetEventMask() and GetEventMask() methods.
-**     @param
-**         UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. This pointer is passed
-**                           as the parameter of Init method.
-*/
-/* ===================================================================*/
-void DMACH1_OnComplete(LDD_TUserData *UserDataPtr);
-
-/*
-** ===================================================================
-**     Event       :  DMACH0_OnComplete (module Events)
-**
-**     Component   :  DMACH0 [DMAChannel_LDD]
-*/
-/*!
-**     @brief
-**         Called at the end of a DMA transfer. If the Half complete
-**         property in initialization section is enabled, this event is
-**         also called when current major iteration count reaches the
-**         halfway point. See SetEventMask() and GetEventMask() methods.
-**     @param
-**         UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. This pointer is passed
-**                           as the parameter of Init method.
-*/
-/* ===================================================================*/
-void DMACH0_OnComplete(LDD_TUserData *UserDataPtr);
 
 void VS1_OnActivateSPI(void);
 /*

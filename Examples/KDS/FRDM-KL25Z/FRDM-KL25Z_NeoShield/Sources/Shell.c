@@ -39,6 +39,7 @@
 #if PL_HAS_LED_CUBE
   #include "LedCube.h"
 #endif
+#include "KIN1.h"
 
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
@@ -68,6 +69,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if TmDt1_PARSE_COMMAND_ENABLED
   TmDt1_ParseCommand,
+#endif
+#if KIN1_PARSE_COMMAND_ENABLED
+  KIN1_ParseCommand,
 #endif
 #if PL_HAS_MAZE_RACE
   MR_ParseCommand,

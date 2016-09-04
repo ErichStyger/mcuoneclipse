@@ -8,6 +8,7 @@
 #include "NeoPixel.h"
 #include "TmDt1.h"
 #include "NeoLine.h"
+#include "NeoRingClock.h"
 
 #define CLOCK_HAS_RING_60         1
 #define CLOCK_RING_60_NOF_PIXEL   60
@@ -42,7 +43,7 @@
 #define CLOCK_RGB_MINUTE_DOT    0x00, 0x00, (0xff/CLOCK_DIMM_HMS_MARKS)
 #define CLOCK_RGB_SECOND_DOT    (0xff/CLOCK_DIMM_HMS_MARKS), 0x00, (0xff/CLOCK_DIMM_HMS_MARKS)
 
-void CLOCK_Clear(void) {
+static void CLOCK_Clear(void) {
   NEO_PixelIdxT i;
 
   for(i=CLOCK_IDX_START_PIXEL;i<=CLOCK_IDX_END_PIXEL;i++) {
@@ -53,7 +54,7 @@ void CLOCK_Clear(void) {
 /*!
  * \brief Draws the 'background' of the clock with the clock hour marks
  */
-void CLOCK_DrawClockGround(void) {
+static void CLOCK_DrawClockGround(void) {
   int i;
   NEO_PixelIdxT pixel;
 
@@ -114,7 +115,7 @@ static void AddHour(uint8_t hour, uint8_t minute, NEO_PixelIdxT ringFirstPixel, 
  * \param hour Current hour value
  * \param minute Current minute value
  */
-void CLOCK_AddHour(uint8_t hour, uint8_t minute) {
+static void CLOCK_AddHour(uint8_t hour, uint8_t minute) {
   if (hour>24) {
     return; /* only 0..23 allowed */
   }
@@ -146,7 +147,7 @@ static void AddMinute(uint8_t minute, NEO_PixelIdxT ringFirstPixel, NEO_PixelIdx
   NEO_SetPixelRGB(0, pixel, red, green, blue);
 }
 
-void CLOCK_AddMinute(uint8_t minute) {
+static void CLOCK_AddMinute(uint8_t minute) {
   if (minute>60) {
     return; /* only 0..59 allowed */
   }
@@ -161,7 +162,7 @@ void CLOCK_AddMinute(uint8_t minute) {
 #endif
 }
 
-void CLOCK_AddSecond(uint8_t sec) {
+static void CLOCK_AddSecond(uint8_t sec) {
   NEO_PixelIdxT pixel;
   NEO_PixelIdxT ringFirstPixel; /* first pixel of ring */
   NEO_PixelIdxT ringNofPixel; /* number of pixels in ring */

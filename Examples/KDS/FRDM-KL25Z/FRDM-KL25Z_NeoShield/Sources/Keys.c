@@ -7,6 +7,7 @@
 
 
 #include "EVNT1.h"
+#include "Keys.h"
 
 void KEYS_OnKeyPressed(byte keys) {
   if (keys&1) {
