@@ -160,7 +160,7 @@ void RNETA_Init(void) {
   }
 }
 
-#if PL_HAS_SHELL
+#if PL_CONFIG_HAS_SHELL
 static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   uint8_t buf[32];
   

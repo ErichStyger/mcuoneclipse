@@ -17,9 +17,10 @@
 #define PL_CONFIG_EVENTS_AUTO_CLEAR   0
 #define PL_CONFIG_HAS_SEGGER_RTT      0  /* if using extra Segger RTT beside of default I/O */
 #define PL_CONFIG_HAS_SEGGER_SV       1  /* if using Segger SystemViewer */
-#define PL_CONFIG_HAS_RADIO           0
+#define PL_CONFIG_HAS_RADIO           1
 #define PL_CONFIG_HAS_SHELL           1
-#define PL_CONFIG_HAS_LCD             0
+#define PL_CONFIG_HAS_LCD             1
+#define PL_CONFIG_HAS_USB_CDC         1
 
 #define PL_CONFIG_HAS_DEMO            (0 && PL_CONFIG_HAS_LCD) /* LCD Demo */
 #define PL_CONFIG_HAS_REMOTE          (0) /* robot remote controller */

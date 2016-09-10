@@ -20,6 +20,7 @@
 #if PL_CONFIG_HAS_SNAKE
   #include "Snake.h"
 #endif
+#include "LCDMenu.h"
 
 static void DrawLines(void) {
   int i;
@@ -93,7 +94,7 @@ static void ShowTextOnLCD(unsigned char *text) {
 
 void LCD_Task(void *param) {
   (void)param; /* not used */
-#if 1
+#if 0
   /* test/demo code */
   LCD_LED_On(); /* turn LCD backlight on */
   DrawText();
@@ -108,21 +109,26 @@ void LCD_Task(void *param) {
   DrawFont();
   LCD_LED_Off(); /* LCD backlight off */
 #endif
-  ShowTextOnLCD("Press a key!");
+  //ShowTextOnLCD("Press a key!");
   LCD_LED_On(); /* LCD backlight on */
+  LCDMenu_OnEvent(LCDMENU_EVENT_DRAW);
   for(;;) {
     LED1_Neg();
     if (EVNT_EventIsSetAutoClear(EVNT_LCD_BTN_LEFT)) { /* left */
-      ShowTextOnLCD("left");
+      LCDMenu_OnEvent(LCDMENU_EVENT_RIGHT);
+//      ShowTextOnLCD("left");
     }
     if (EVNT_EventIsSetAutoClear(EVNT_LCD_BTN_RIGHT)) { /* right */
-      ShowTextOnLCD("right");
+      LCDMenu_OnEvent(LCDMENU_EVENT_LEFT);
+//      ShowTextOnLCD("right");
     }
     if (EVNT_EventIsSetAutoClear(EVNT_LCD_BTN_UP)) { /* up */
-      ShowTextOnLCD("up");
+      LCDMenu_OnEvent(LCDMENU_EVENT_DOWN);
+//      ShowTextOnLCD("up");
     }
     if (EVNT_EventIsSetAutoClear(EVNT_LCD_BTN_DOWN)) { /* down */
-      ShowTextOnLCD("down");
+      LCDMenu_OnEvent(LCDMENU_EVENT_UP);
+//      ShowTextOnLCD("down");
     }
     if (EVNT_EventIsSetAutoClear(EVNT_LCD_BTN_CENTER)) { /* center */
       ShowTextOnLCD("center");
@@ -138,6 +144,7 @@ void LCD_Task(void *param) {
 }
 
 void LCD_Init(void) {
+  LCDMenu_Init();
   if (xTaskCreate(LCD_Task, "LCD", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL) != pdPASS) {
     for(;;){} /* error! probably out of memory */
   }
