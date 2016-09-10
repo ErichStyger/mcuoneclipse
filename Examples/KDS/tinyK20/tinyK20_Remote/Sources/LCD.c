@@ -22,6 +22,32 @@
 #endif
 #include "LCDMenu.h"
 
+static bool LedBackLightisOn = TRUE;
+
+static void BackLightMenuHandler(const struct LCDMenu_MenuItem_ *item, LCDMenu_EventType event, void **dataP) {
+  if (event==LCDMENU_EVENT_GET_TEXT && dataP!=NULL) {
+    if (LedBackLightisOn) {
+      *dataP = "Backlight ON";
+    } else {
+      *dataP = "Backlight OFF";
+    }
+  } else if (event==LCDMENU_EVENT_ENTER) { /* toggle setting */
+    LedBackLightisOn = !LedBackLightisOn;
+  }
+}
+
+static const LCDMenu_MenuItem menus[] =
+{/* id, lvl, pos, up, down, text, callback */
+    {1, 0,   0,   0, 2,     "Settings >", NULL},
+    {2, 1,   0,   1, 0,     NULL, BackLightMenuHandler},
+    {3, 0,   1,   0, 4,     "2 >", NULL},
+    {4, 2,   0,   3, 0,     "< 2.a", NULL},
+    {5, 2,   1,   3, 0,     "< 2.b", NULL},
+    {6, 0,   2,   0, 0,     "1d", NULL},
+    {7, 0,   3,   0, 0,     "1e", NULL},
+    {8, 0,   4,   0, 0,     "1f", NULL},
+};
+
 static void DrawLines(void) {
   int i;
   GDisp1_PixelDim x, y, w, h;
@@ -110,10 +136,15 @@ void LCD_Task(void *param) {
   LCD_LED_Off(); /* LCD backlight off */
 #endif
   //ShowTextOnLCD("Press a key!");
-  LCD_LED_On(); /* LCD backlight on */
+  LCDMenu_InitMenu(menus, sizeof(menus)/sizeof(menus[0]), 1);
   LCDMenu_OnEvent(LCDMENU_EVENT_DRAW);
   for(;;) {
-    LED1_Neg();
+    if (LedBackLightisOn) {
+      LCD_LED_On(); /* LCD backlight on */
+    } else {
+      LCD_LED_Off(); /* LCD backlight off */
+    }
+    //LED1_Neg();
     if (EVNT_EventIsSetAutoClear(EVNT_LCD_BTN_LEFT)) { /* left */
       LCDMenu_OnEvent(LCDMENU_EVENT_RIGHT);
 //      ShowTextOnLCD("left");
@@ -131,7 +162,8 @@ void LCD_Task(void *param) {
 //      ShowTextOnLCD("down");
     }
     if (EVNT_EventIsSetAutoClear(EVNT_LCD_BTN_CENTER)) { /* center */
-      ShowTextOnLCD("center");
+      LCDMenu_OnEvent(LCDMENU_EVENT_ENTER);
+//      ShowTextOnLCD("center");
     }
     if (EVNT_EventIsSetAutoClear(EVNT_LCD_SIDE_BTN_UP)) { /* side up */
       ShowTextOnLCD("side up");
@@ -144,6 +176,7 @@ void LCD_Task(void *param) {
 }
 
 void LCD_Init(void) {
+  LedBackLightisOn =  TRUE;
   LCDMenu_Init();
   if (xTaskCreate(LCD_Task, "LCD", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL) != pdPASS) {
     for(;;){} /* error! probably out of memory */

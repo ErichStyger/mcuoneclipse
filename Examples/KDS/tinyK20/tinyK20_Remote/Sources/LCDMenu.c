@@ -12,42 +12,31 @@
 
 #define LCDMENU_NOF_MENU_LINES    4  /* number of lines on display */
 
-typedef struct LCDMenu_MenuItem_{
-  uint8_t id;  /* unique ID of menu item, starting with 1 */
-  uint8_t level; /* menu level, starting with 0 (root), then increasing numbers */
-  uint8_t pos; /* position of menu in level, starting with 0 (top position) */
-  uint8_t lvlUpID;  /* menu item level up, 0 for 'none' */
-  uint8_t lvlDownID; /* menu item level down, 0 for 'none' */
-  char *menuText; /* text of menu item */
-  void(*fn)(struct LCDMenu_MenuItem_ *item, LCDMenu_EventType event); /* callback for menu item */
-} LCDMenu_MenuItem;
-
-static const LCDMenu_MenuItem menus[] =
-{/* id, lvl, pos, up, down, text, callback */
-    {1, 0,   0,   0, 0,     "1a", NULL},
-    {2, 0,   1,   0, 0,     "1b", NULL},
-    {3, 0,   2,   0, 4,     "1c>", NULL},
-    {4, 1,   0,   3, 0,     "<2.a", NULL},
-    {5, 1,   1,   3, 0,     "<2.b", NULL},
-    {6, 0,   3,   0, 0,     "1d", NULL},
-    {7, 0,   4,   0, 0,     "1e", NULL},
-    {8, 0,   5,   0, 0,     "1f", NULL},
-};
 
 typedef struct {
-  uint8_t topLevel, topPos;   /* display top position */
+  const LCDMenu_MenuItem *menus; /* pointer to array of menu items */
+  uint16_t nofMenuItems;   /* number of menu items */
   uint8_t selectedID;  /* currently selected menu ID */
+  uint8_t topLevel, topPos;   /* display top position */
 } LCDMenu_Status;
 
 static LCDMenu_Status menuStatus;
+
+void LCDMenu_InitMenu(const LCDMenu_MenuItem *menus, uint8_t nofMenuItems, uint8_t selectedID) {
+  menuStatus.menus = menus;
+  menuStatus.nofMenuItems = nofMenuItems;
+  menuStatus.selectedID = selectedID;
+  menuStatus.topLevel = 0;
+  menuStatus.topPos = 0;
+}
 
 static const LCDMenu_MenuItem *LCDMenu_GetLevelPosMenuItem(uint8_t level, uint8_t pos) {
   int i;
 
   i = 0;
-  while(i<sizeof(menus)/sizeof(menus[0])) {
-    if (menus[i].level==level && menus[i].pos==pos) { /* match */
-      return &menus[i];
+  while(i<menuStatus.nofMenuItems) {
+    if (menuStatus.menus[i].level==level && menuStatus.menus[i].pos==pos) { /* match */
+      return &menuStatus.menus[i];
     }
     i++;
   }
@@ -58,9 +47,9 @@ static const LCDMenu_MenuItem *LCDMenu_GeIdMenuItem(uint8_t id) {
   int i;
 
   i = 0;
-  while(i<sizeof(menus)/sizeof(menus[0])) {
-    if (menus[i].id==id) { /* match */
-      return &menus[i];
+  while(i<menuStatus.nofMenuItems) {
+    if (menuStatus.menus[i].id==id) { /* match */
+      return &menuStatus.menus[i];
     }
     i++;
   }
@@ -74,6 +63,7 @@ void LCDMenu_Draw(void) {
   int i, nofMaxMenuItems;
   const LCDMenu_MenuItem *item;
   uint8_t level, pos;
+  uint8_t *text;
 
   font = GFONT1_GetFont();
   FDisp1_GetFontHeight(font, &charHeight, &fontHeight);
@@ -86,11 +76,19 @@ void LCDMenu_Draw(void) {
     item = LCDMenu_GetLevelPosMenuItem(level, pos);
     if (item!=NULL) {
       x = 0;
+      text = item->menuText;
+      if (text==NULL && item->handler!=NULL) {
+         text = NULL;
+         item->handler(item, LCDMENU_EVENT_GET_TEXT, &text);
+         if (text==NULL) {
+           text = "";
+         }
+      }
       if (item->id == menuStatus.selectedID) {
         GDisp1_DrawFilledBox(x, y, GDisp1_GetWidth(), fontHeight, GDisp1_COLOR_BLACK);
-        FDisp1_WriteString(item->menuText, GDisp1_COLOR_WHITE, &x, &y, font);
+        FDisp1_WriteString(text, GDisp1_COLOR_WHITE, &x, &y, font);
       } else {
-        FDisp1_WriteString(item->menuText, GDisp1_COLOR_BLACK, &x, &y, font);
+        FDisp1_WriteString(text, GDisp1_COLOR_BLACK, &x, &y, font);
       }
       y += fontHeight;
     }
@@ -163,6 +161,18 @@ static void LCDMenu_CursorLeft(void) {
   }
 }
 
+static void LCDMenu_CursorEnter(void) {
+  const LCDMenu_MenuItem *item;
+
+  item = LCDMenu_GeIdMenuItem(menuStatus.selectedID); /* get current item */
+  if (item!=NULL) {
+    if (item->handler!=NULL) {
+      item->handler(item, LCDMENU_EVENT_ENTER, NULL);
+      LCDMenu_OnEvent(LCDMENU_EVENT_DRAW);
+    }
+  }
+}
+
 
 void LCDMenu_OnEvent(LCDMenu_EventType event) {
   switch(event) {
@@ -182,6 +192,9 @@ void LCDMenu_OnEvent(LCDMenu_EventType event) {
     break;
   case LCDMENU_EVENT_RIGHT:
     LCDMenu_CursorRight();
+    break;
+  case LCDMENU_EVENT_ENTER:
+    LCDMenu_CursorEnter();
     break;
   }
 }

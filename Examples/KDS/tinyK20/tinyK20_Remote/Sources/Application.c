@@ -177,7 +177,7 @@ static void app_task(void *param) {
   (void)param;
   for(;;) {
     App_HandleKeys();
-    LED1_Neg();
+    //LED1_Neg();
     vTaskDelay(pdMS_TO_TICKS(10));
   } /* for */
 }
