@@ -114,13 +114,12 @@ static void Test(void) {
 
 #if PL_HAS_NEO_PIXEL
 static void NeoTask(void* pvParameters) {
-
-#define DIMM 0x50
+  #define DIMM 0x50
   (void)pvParameters; /* parameter not used */
 
   Test();
-
   //MATRIX_Test();
+  FRTOS1_vTaskDelay(500/portTICK_RATE_MS); /* give RTC time to power up */
   UpdateFromRTC(); /* get and sync the RTC */
 
   for(;;) {
@@ -214,6 +213,8 @@ void APP_Run(void) {
 #endif
 #if PL_HAS_PONG
   PONG_Init();
+#elif PL_HAS_LED_FRAME
+  LEDFRAME_Init();
 #elif PL_HAS_NEO_PIXEL
   if (FRTOS1_xTaskCreate(
         NeoTask,  /* pointer to the task */

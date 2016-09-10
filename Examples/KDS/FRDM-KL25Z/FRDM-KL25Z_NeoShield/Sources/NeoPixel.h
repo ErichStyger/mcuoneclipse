@@ -10,13 +10,13 @@
 
 #include "NeoConfig.h"
 #include "CLS1.h"
+#include "GDisp1.h"
 
 #define NEO_NOF_LANES           NEOC_NOF_LANES  /* number of LED lanes */
 #define NEO_NOF_LEDS_IN_LANE    NEOC_NOF_LEDS_IN_LANE /* number of LEDS in each lane */
 #define NEO_NOF_PIXEL           NEOC_NOF_PIXEL /* total number of pixels */
 
 #define NEO_PIXEL_FIRST         (0) /* index of first pixel */
-//#define NEO_PIXEL_LAST       (NEO_NOF_PIXEL-1)
 #if (NEOC_NOF_LANES>8)
   #error "can only handle up to 8 bits"
 #endif
@@ -45,9 +45,15 @@ uint8_t NEO_OrPixelRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t red, uint8
 
 uint8_t NEO_XorPixelRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t red, uint8_t green, uint8_t blue);
 
+GDisp1_PixelColor NEO_BrightnessPercentColor(GDisp1_PixelColor rgbColor, uint8_t percent);
+
 uint8_t NEO_DimmPercentPixel(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t percent);
 
 uint8_t NEO_TransferPixels(void);
+
+uint8_t NEO_GammaCorrect8(uint8_t color);
+
+uint32_t NEO_GammaCorrect24(uint32_t rgb);
 
 /*!
  * \brief Driver initialization routine.

@@ -71,7 +71,7 @@ void Adafruit_NeoMatrix_drawPixel(int16_t x, int16_t y, uint8_t red, uint8_t gre
   #define swap(a, b) {uint16_t swapTmp; swapTmp=a; a=b; b=swapTmp;}
 
   if((x < 0) || (y < 0) || (x >= GDisp1_GetWidth()) || (y >= GDisp1_GetHeight())) return;
-  int tileOffset = 0, pixelOffset;
+  int tileOffset = 0, pixelOffset, val;
 
   if(matrix.remapFn) { // Custom X/Y remapping function
     pixelOffset = (*matrix.remapFn)(x, y);
@@ -147,7 +147,9 @@ void Adafruit_NeoMatrix_drawPixel(int16_t x, int16_t y, uint8_t red, uint8_t gre
       else          pixelOffset =  major      * majorScale     + minor;
     }
   }
-  NEO_SetPixelRGB(0, tileOffset + pixelOffset, red, green, blue);
+  val = tileOffset+pixelOffset; /* overall index in matrix */
+  NEO_SetPixelRGB(val/NEO_NOF_LEDS_IN_LANE, val%NEO_NOF_LEDS_IN_LANE, red, green, blue);
+  //NEO_SetPixelRGB(0, tileOffset + pixelOffset, red, green, blue); /* single lane version */
 }
 
 void MATRIX_ShowClockTime(uint8_t hour, uint8_t min, uint8_t sec) {

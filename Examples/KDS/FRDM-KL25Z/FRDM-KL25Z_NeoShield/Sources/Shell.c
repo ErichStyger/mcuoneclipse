@@ -39,6 +39,9 @@
 #if PL_HAS_LED_CUBE
   #include "LedCube.h"
 #endif
+#if PL_HAS_LED_FRAME
+  #include "LEDFrame.h"
+#endif
 #include "KIN1.h"
 
 
@@ -84,6 +87,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_HAS_LED3 && LED3_PARSE_COMMAND_ENABLED
   LED3_ParseCommand,
+#endif
+#if PL_HAS_LED_FRAME
+  LEDFRAME_ParseCommand,
 #endif
 #if PL_HAS_NEO_PIXEL
   NEO_ParseCommand,
