@@ -37,15 +37,19 @@ static void BackLightMenuHandler(const struct LCDMenu_MenuItem_ *item, LCDMenu_E
 }
 
 static const LCDMenu_MenuItem menus[] =
-{/* id, lvl, pos, up, down, text, callback */
-    {1, 0,   0,   0, 2,     "Settings >", NULL},
-    {2, 1,   0,   1, 0,     NULL, BackLightMenuHandler},
-    {3, 0,   1,   0, 4,     "2 >", NULL},
-    {4, 2,   0,   3, 0,     "< 2.a", NULL},
-    {5, 2,   1,   3, 0,     "< 2.b", NULL},
-    {6, 0,   2,   0, 0,     "1d", NULL},
-    {7, 0,   3,   0, 0,     "1e", NULL},
-    {8, 0,   4,   0, 0,     "1f", NULL},
+{/* id, lvl, pos, up, down, text,         callback */
+    {1, 0,   0,   0, 2,     "General",    NULL},
+      {2, 1,   0,   1, 0,     NULL,         BackLightMenuHandler},
+    {3, 0,   1,   0, 4,     "Robot",      NULL},
+      {4, 2,   0,   3, 0,     "Remote",     NULL},
+      {5, 2,   1,   3, 0,     "Sensors",    NULL},
+    {6, 0,   2,   0, 0,     "nRF24L01+",  NULL},
+    {7, 0,   3,   0, 0,     "LoRa",       NULL},
+    {8, 0,   4,   0, 9,     "Sensors",    NULL},
+      {9, 3,   0,   8, 10,     "Accelerometer",    NULL},
+        {10, 4,   0,   9, 0,     "X",    NULL},
+        {11, 4,   1,   9, 0,     "Y",    NULL},
+        {12, 4,   2,   9, 0,     "Z",    NULL},
 };
 
 static void DrawLines(void) {
@@ -146,19 +150,19 @@ void LCD_Task(void *param) {
     }
     //LED1_Neg();
     if (EVNT_EventIsSetAutoClear(EVNT_LCD_BTN_LEFT)) { /* left */
-      LCDMenu_OnEvent(LCDMENU_EVENT_RIGHT);
+      LCDMenu_OnEvent(LCDMENU_EVENT_LEFT);
 //      ShowTextOnLCD("left");
     }
     if (EVNT_EventIsSetAutoClear(EVNT_LCD_BTN_RIGHT)) { /* right */
-      LCDMenu_OnEvent(LCDMENU_EVENT_LEFT);
+      LCDMenu_OnEvent(LCDMENU_EVENT_RIGHT);
 //      ShowTextOnLCD("right");
     }
     if (EVNT_EventIsSetAutoClear(EVNT_LCD_BTN_UP)) { /* up */
-      LCDMenu_OnEvent(LCDMENU_EVENT_DOWN);
+      LCDMenu_OnEvent(LCDMENU_EVENT_UP);
 //      ShowTextOnLCD("up");
     }
     if (EVNT_EventIsSetAutoClear(EVNT_LCD_BTN_DOWN)) { /* down */
-      LCDMenu_OnEvent(LCDMENU_EVENT_UP);
+      LCDMenu_OnEvent(LCDMENU_EVENT_DOWN);
 //      ShowTextOnLCD("down");
     }
     if (EVNT_EventIsSetAutoClear(EVNT_LCD_BTN_CENTER)) { /* center */
@@ -166,10 +170,12 @@ void LCD_Task(void *param) {
 //      ShowTextOnLCD("center");
     }
     if (EVNT_EventIsSetAutoClear(EVNT_LCD_SIDE_BTN_UP)) { /* side up */
-      ShowTextOnLCD("side up");
+      LCDMenu_OnEvent(LCDMENU_EVENT_UP);
+//      ShowTextOnLCD("side up");
     }
     if (EVNT_EventIsSetAutoClear(EVNT_LCD_SIDE_BTN_DOWN)) { /* side down */
-      ShowTextOnLCD("side down");
+      LCDMenu_OnEvent(LCDMENU_EVENT_DOWN);
+//      ShowTextOnLCD("side down");
     }
     vTaskDelay(pdMS_TO_TICKS(20));
   }
