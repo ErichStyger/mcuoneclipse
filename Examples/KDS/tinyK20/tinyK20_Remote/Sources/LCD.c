@@ -20,36 +20,92 @@
 #if PL_CONFIG_HAS_SNAKE
   #include "Snake.h"
 #endif
+#include "RApp.h"
 #include "LCDMenu.h"
 
 static bool LedBackLightisOn = TRUE;
 
+typedef enum {
+  LCD_MENU_ID_NONE = LCDMENU_ID_NONE, /* special value! */
+  LCD_MENU_ID_MAIN,
+    LCD_MANU_ID_BACKLIGHT,
+  LCD_MENU_ID_ROBOT,
+    LCD_MENU_ID_ROBOT_REMOTE,
+      LCD_MENU_ID_ROBOT_REMOTE_FORWARD,
+      LCD_MENU_ID_ROBOT_REMOTE_BACKWARD,
+      LCD_MENU_ID_ROBOT_REMOTE_LEFT,
+      LCD_MENU_ID_ROBOT_REMOTE_RIGHT,
+      LCD_MENU_ID_ROBOT_REMOTE_STOP,
+      LCD_MENU_ID_ROBOT_REMOTE_ON,
+      LCD_MENU_ID_ROBOT_REMOTE_OFF,
+    LCD_MENU_ID_ROBOT_SENSOR,
+  LCD_MENU_ID_NRF24L01P,
+  LCD_MENU_ID_LORA,
+  LCD_MENU_ID_SETTINGS,
+} LCD_MenuIDs;
+
 static void BackLightMenuHandler(const struct LCDMenu_MenuItem_ *item, LCDMenu_EventType event, void **dataP) {
   if (event==LCDMENU_EVENT_GET_TEXT && dataP!=NULL) {
     if (LedBackLightisOn) {
-      *dataP = "Backlight ON";
+      *dataP = "Backlight is ON";
     } else {
-      *dataP = "Backlight OFF";
+      *dataP = "Backlight is OFF";
     }
   } else if (event==LCDMENU_EVENT_ENTER) { /* toggle setting */
     LedBackLightisOn = !LedBackLightisOn;
   }
 }
 
+static void RobotRemoteMenuHandler(const struct LCDMenu_MenuItem_ *item, LCDMenu_EventType event, void **dataP) {
+  uint8_t button = '\0';
+
+  if (event==LCDMENU_EVENT_ENTER) {
+    switch(item->id) {
+      case LCD_MENU_ID_ROBOT_REMOTE_FORWARD:
+        button = 'a';
+        break;
+      case LCD_MENU_ID_ROBOT_REMOTE_BACKWARD:
+        button = 'c';
+        break;
+      case LCD_MENU_ID_ROBOT_REMOTE_LEFT:
+        button = 'd';
+        break;
+      case LCD_MENU_ID_ROBOT_REMOTE_RIGHT:
+        button = 'b';
+        break;
+      case LCD_MENU_ID_ROBOT_REMOTE_STOP:
+        button = 's';
+        break;
+      case LCD_MENU_ID_ROBOT_REMOTE_ON:
+        button = 'e';
+        break;
+      case LCD_MENU_ID_ROBOT_REMOTE_OFF:
+        button = 'E';
+        break;
+    }
+  }
+  if (button!='\0') {
+    (void)RAPP_SendPayloadDataBlock(&button, sizeof(button), RAPP_MSG_TYPE_JOYSTICK_BTN, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
+  }
+}
+
 static const LCDMenu_MenuItem menus[] =
-{/* id, lvl, pos, up, down, text,         callback */
-    {1, 0,   0,   0, 2,     "General",    NULL},
-      {2, 1,   0,   1, 0,     NULL,         BackLightMenuHandler},
-    {3, 0,   1,   0, 4,     "Robot",      NULL},
-      {4, 2,   0,   3, 0,     "Remote",     NULL},
-      {5, 2,   1,   3, 0,     "Sensors",    NULL},
-    {6, 0,   2,   0, 0,     "nRF24L01+",  NULL},
-    {7, 0,   3,   0, 0,     "LoRa",       NULL},
-    {8, 0,   4,   0, 9,     "Sensors",    NULL},
-      {9, 3,   0,   8, 10,     "Accelerometer",    NULL},
-        {10, 4,   0,   9, 0,     "X",    NULL},
-        {11, 4,   1,   9, 0,     "Y",    NULL},
-        {12, 4,   2,   9, 0,     "Z",    NULL},
+{/* id,                                   grp, pos,   up,                 down,                                   text,         callback */
+    {LCD_MENU_ID_MAIN,                      0,   0,   LCD_MENU_ID_NONE,         LCD_MANU_ID_BACKLIGHT,            "General",    NULL},
+      {LCD_MANU_ID_BACKLIGHT,               1,   0,   LCD_MENU_ID_MAIN,         LCD_MENU_ID_NONE,                 NULL,         BackLightMenuHandler},
+    {LCD_MENU_ID_ROBOT,                     0,   1,   LCD_MENU_ID_NONE,         LCD_MENU_ID_ROBOT_REMOTE,         "Robot",      NULL},
+      {LCD_MENU_ID_ROBOT_REMOTE,            2,   0,   LCD_MENU_ID_ROBOT,        LCD_MENU_ID_ROBOT_REMOTE_FORWARD, "Remote",     NULL},
+        {LCD_MENU_ID_ROBOT_REMOTE_FORWARD,  3,   0,   LCD_MENU_ID_ROBOT_REMOTE, LCD_MENU_ID_NONE,                 "Forward",    RobotRemoteMenuHandler},
+        {LCD_MENU_ID_ROBOT_REMOTE_BACKWARD, 3,   1,   LCD_MENU_ID_ROBOT_REMOTE, LCD_MENU_ID_NONE,                 "Backward",   RobotRemoteMenuHandler},
+        {LCD_MENU_ID_ROBOT_REMOTE_LEFT,     3,   2,   LCD_MENU_ID_ROBOT_REMOTE, LCD_MENU_ID_NONE,                 "Left",       RobotRemoteMenuHandler},
+        {LCD_MENU_ID_ROBOT_REMOTE_RIGHT,    3,   3,   LCD_MENU_ID_ROBOT_REMOTE, LCD_MENU_ID_NONE,                 "Right",      RobotRemoteMenuHandler},
+        {LCD_MENU_ID_ROBOT_REMOTE_STOP,     3,   4,   LCD_MENU_ID_ROBOT_REMOTE, LCD_MENU_ID_NONE,                 "Stop",       RobotRemoteMenuHandler},
+        {LCD_MENU_ID_ROBOT_REMOTE_ON,       3,   5,   LCD_MENU_ID_ROBOT_REMOTE, LCD_MENU_ID_NONE,                 "Remote On",  RobotRemoteMenuHandler},
+        {LCD_MENU_ID_ROBOT_REMOTE_OFF,      3,   6,   LCD_MENU_ID_ROBOT_REMOTE, LCD_MENU_ID_NONE,                 "Remote Off", RobotRemoteMenuHandler},
+      {LCD_MENU_ID_ROBOT_SENSOR,            2,   1,   LCD_MENU_ID_ROBOT,        LCD_MENU_ID_NONE,                 "Sensors",    NULL},
+    {LCD_MENU_ID_NRF24L01P,                 0,   2,   LCD_MENU_ID_NONE,         LCD_MENU_ID_NONE,                 "nRF24L01+",  NULL},
+    {LCD_MENU_ID_LORA,                      0,   3,   LCD_MENU_ID_NONE,         LCD_MENU_ID_NONE,                 "LoRa",       NULL},
+    {LCD_MENU_ID_SETTINGS,                  0,   4,   LCD_MENU_ID_NONE,         LCD_MENU_ID_NONE,                 "Settings",    NULL},
 };
 
 static void DrawLines(void) {

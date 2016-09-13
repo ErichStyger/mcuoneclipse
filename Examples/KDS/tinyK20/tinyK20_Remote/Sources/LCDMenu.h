@@ -21,9 +21,12 @@ typedef enum {
   LCDMENU_EVENT_ENTER,
 } LCDMenu_EventType;
 
+#define LCDMENU_ID_NONE     0   /* special menu ID for 'no' id */
+#define LCDMENU_GROUP_ROOT  0   /* special ID for root menu group */
+
 typedef struct LCDMenu_MenuItem_{
   uint8_t id;  /* unique ID of menu item, starting with 1 */
-  uint8_t level; /* menu level, starting with 0 (root), then increasing numbers */
+  uint8_t group; /* menu group, starting with 0 (root), then increasing numbers */
   uint8_t pos; /* position of menu in level, starting with 0 (top position) */
   uint8_t lvlUpID;  /* menu item level up, 0 for 'none' */
   uint8_t lvlDownID; /* menu item level down, 0 for 'none' */

@@ -21,6 +21,9 @@
 #if PL_CONFIG_HAS_USB_CDC
   #include "CDC1.h"
 #endif
+#if PL_CONFIG_HAS_RADIO && RNET_CONFIG_REMOTE_STDIO
+  #include "RStdIO.h"
+#endif
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -45,32 +48,21 @@ static CLS1_ConstStdIOType RTT_Stdio = {
 #endif
 
 #if PL_CONFIG_HAS_USB_CDC
-static bool CDC_StdIOKeyPressed(void) {
-  return (bool)((CDC1_GetCharsInRxBuf()==0U) ? FALSE : TRUE); /* true if there are characters in receive buffer */
-}
-
-static void CDC_StdIOReadChar(uint8_t *c) {
-  if (CDC1_GetChar((uint8_t *)c) != ERR_OK) {
-    /* failed to receive character: return a zero character */
-    *c = '\0';
-  }
-}
-
-static void CDC_StdIOSendChar(uint8_t ch) {
-  while (CDC1_SendChar((uint8_t)ch)==ERR_TXFULL){} /* Send char */
-}
-
 static CLS1_ConstStdIOType CDC_stdio = {
-  (CLS1_StdIO_In_FctType)CDC_StdIOReadChar, /* stdin */
-  (CLS1_StdIO_OutErr_FctType)CDC_StdIOSendChar, /* stdout */
-  (CLS1_StdIO_OutErr_FctType)CDC_StdIOSendChar, /* stderr */
-  CDC_StdIOKeyPressed /* if input is not empty */
+  (CLS1_StdIO_In_FctType)CDC1_StdIOReadChar, /* stdin */
+  (CLS1_StdIO_OutErr_FctType)CDC1_StdIOSendChar, /* stdout */
+  (CLS1_StdIO_OutErr_FctType)CDC1_StdIOSendChar, /* stderr */
+  CDC1_StdIOKeyPressed /* if input is not empty */
 };
 #endif
 
 static void ShellTask(void *pvParameters) {
 #if PL_CONFIG_HAS_USB_CDC
   static unsigned char cdc_buf[48];
+#endif
+#if PL_CONFIG_HAS_RADIO && RNET_CONFIG_REMOTE_STDIO
+  static unsigned char radio_cmd_buf[48];
+  CLS1_ConstStdIOType *ioRemote = RSTDIO_GetStdioRx();
 #endif
 #if PL_CONFIG_HAS_SEGGER_RTT
   static unsigned char rtt_buf[48];
@@ -82,6 +74,9 @@ static void ShellTask(void *pvParameters) {
 #if PL_CONFIG_HAS_USB_CDC
   cdc_buf[0] = '\0';
 #endif
+#if PL_CONFIG_HAS_RADIO && RNET_CONFIG_REMOTE_STDIO
+  radio_cmd_buf[0] = '\0';
+#endif
 #if PL_CONFIG_HAS_SEGGER_RTT
   rtt_buf[0] = '\0';
 #endif
@@ -90,6 +85,10 @@ static void ShellTask(void *pvParameters) {
     (void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), CLS1_GetStdio(), CmdParserTable);
 #if PL_CONFIG_HAS_USB_CDC
     (void)CLS1_ReadAndParseWithCommandTable(cdc_buf, sizeof(cdc_buf), &CDC_stdio, CmdParserTable);
+#endif
+#if PL_CONFIG_HAS_RADIO && RNET_CONFIG_REMOTE_STDIO
+    RSTDIO_Print(CLS1_GetStdio()); /* dispatch incoming messages */
+    (void)CLS1_ReadAndParseWithCommandTable(radio_cmd_buf, sizeof(radio_cmd_buf), ioRemote, CmdParserTable);
 #endif
 #if PL_CONFIG_HAS_SEGGER_RTT
     (void)CLS1_ReadAndParseWithCommandTable(rtt_buf, sizeof(rtt_buf), &RTT_Stdio, CmdParserTable);

@@ -127,7 +127,7 @@ static void Init(void) {
   }
 }
 
-static portTASK_FUNCTION(RadioTask, pvParameters) {
+static void RadioTask(void *pvParameters) {
   (void)pvParameters; /* not used */
   Init();
   appState = RNETA_NONE;
