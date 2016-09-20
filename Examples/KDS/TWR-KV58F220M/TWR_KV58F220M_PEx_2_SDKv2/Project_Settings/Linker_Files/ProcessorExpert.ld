@@ -4,13 +4,13 @@
 /*##                                                                         */
 /*##     Filename  : ProcessorExpert.ld                                      */
 /*##                                                                         */
-/*##     Project   : TWR_KV58F220M_PEx_2_SDKv2                               */
+/*##     Project   : TWR-KV58F220M_PEx_2_SDKv2                               */
 /*##                                                                         */
 /*##     Processor : MKV58F1M0VLQ24                                          */
 /*##                                                                         */
 /*##     Compiler  : GNU C Compiler                                          */
 /*##                                                                         */
-/*##     Date/Time : 2016-07-28, 16:05, # CodeGen: 0                         */
+/*##     Date/Time : 2016-09-20, 07:07, # CodeGen: 23                        */
 /*##                                                                         */
 /*##     Abstract  :                                                         */
 /*##                                                                         */
