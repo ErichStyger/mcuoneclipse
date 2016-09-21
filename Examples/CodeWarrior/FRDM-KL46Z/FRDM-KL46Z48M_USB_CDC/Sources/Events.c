@@ -104,7 +104,7 @@ void HIDM1_OnEvent(byte error)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void USB1_OnError(byte error)
+void USB1_OnError(uint8_t error)
 {
   /* Write your code here ... */
 }

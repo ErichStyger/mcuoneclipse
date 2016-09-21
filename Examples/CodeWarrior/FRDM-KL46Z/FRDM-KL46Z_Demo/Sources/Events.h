@@ -42,7 +42,6 @@
 #include "LEDpin2.h"
 #include "BitIoLdd2.h"
 #include "FRTOS1.h"
-#include "RTOSCNTRLDD1.h"
 #include "CLS1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
@@ -67,6 +66,7 @@
 #include "EVNT1.h"
 #include "CS1.h"
 #include "WAIT1.h"
+#include "KSDK1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -88,7 +88,7 @@ extern "C" {
 void Cpu_OnNMIINT(void);
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
@@ -161,7 +161,7 @@ void MINT1_OnInterrupt(void);
 ** ===================================================================
 */
 
-void EVNT1_AppHandleEvent(byte event);
+void EVNT1_AppHandleEvent(uint8_t event);
 /*
 ** ===================================================================
 **     Event       :  EVNT1_AppHandleEvent (module Events)

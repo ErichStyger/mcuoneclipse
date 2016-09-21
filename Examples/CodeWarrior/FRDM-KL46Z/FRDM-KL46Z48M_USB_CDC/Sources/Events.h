@@ -55,6 +55,9 @@
 #include "TMOUT1.h"
 #include "TI1.h"
 #include "TimerIntLdd1.h"
+#include "CS1.h"
+#include "KSDK1.h"
+#include "CLS1.h"
 #include "TU1.h"
 
 #ifdef __cplusplus
@@ -107,7 +110,7 @@ void HIDM1_OnEvent(byte error);
 ** ===================================================================
 */
 
-void USB1_OnError(byte error);
+void USB1_OnError(uint8_t error);
 /*
 ** ===================================================================
 **     Event       :  USB1_OnError (module Events)

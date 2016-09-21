@@ -14,6 +14,10 @@
 #include "TmDt1.h"
 #include "RTC1.h"
 
+#define LEDFRAME_SMALL_FONT    1
+#define LEDFRAME_SHOW_MIN_SEC  0
+#define LEDFRAME_SHOW_HOUR_MIN 1
+
 /* task notification bits */
 #define LEDFRAME_NOTIFICATION_UPDATE_DISPLAY      (1<<0)  /* update display */
 static xTaskHandle LedFrameTaskHandle; /* task handle */
@@ -27,8 +31,8 @@ static LEDFRAME_TransitionType LedFrametransition = LEDFRAME_TRANSITION_NONE;
 
 /* global settings */
 static bool LEDFRAME_ClockIsOn = TRUE; /* if clock is on or stopped */
-static uint8_t LEDFRAME_BrightnessPercent = 20; /* brightness value, 0 (off) - 100 (full brightness) */
-static GDisp1_PixelColor color0 = 0x0000ff, color1=0xff0000, color2=0x00ff00, color3 = 0x0000ff;
+static uint8_t LEDFRAME_BrightnessPercent = 50; /* brightness value, 0 (off) - 100 (full brightness) */
+static GDisp1_PixelColor color0 = 0x0000ff, color1=0x00ff00, color2=0xff0000, color3 = 0xff00ff;
 static bool LEDFRAME_DoGammaCorrection = TRUE;
 
 /* Pixel Orientation, view from the front
@@ -60,6 +64,32 @@ static bool LEDFRAME_DoGammaCorrection = TRUE;
  *   x==0       x==1
  *   y==0..63   y==0..63
  */
+
+#if LEDFRAME_SMALL_FONT
+static const uint32_t Numbers8x4_Small[10] = { /* digits 0-9, data byte with two nibbles (rows) */
+    /* from MSB to LSB: 4bits for each row:
+     * 0     1     2     3     4     5     6     7     8     9
+     * 0000  0000  0000  0000  0000  0000  0000  0000  0000  0000
+     * 0111  0001  0111  0111  0001  0111  0111  0111  0111  0111
+     * 0101  0011  0101  0001  0101  0100  0100  0001  0101  0101
+     * 0101  0101  0001  0001  0101  0100  0100  0001  0111  0101
+     * 0101  0001  0010  0111  0111  0011  0111  0010  0101  0111
+     * 0101  0001  0100  0001  0001  0001  0101  0010  0101  0001
+     * 0111  0001  0111  0111  0001  0111  0111  0010  0111  0111
+     * 0000  0000  0000  0000  0000  0000  0000  0000  0000  0000
+     */
+  /* 0 */ 0b00000111010101010101010101110000,
+  /* 1 */ 0b00000001001101010001000100010000,
+  /* 2 */ 0b00000111010100010010010001110000,
+  /* 3 */ 0b00000111000100010111000101110000,
+  /* 4 */ 0b00000001010101010111000100010000,
+  /* 5 */ 0b00000111010001000011000101110000,
+  /* 6 */ 0b00000111010001000111010101110000,
+  /* 7 */ 0b00000111000100010010001000100000,
+  /* 8 */ 0b00000111010101110101010101110000,
+  /* 9 */ 0b00000111010101010111000101110000
+};
+#else
 static const uint32_t Numbers8x4[10] = { /* digits 0-9, data byte with two nibbles (rows) */
     /* from MSB to LSB: 4bits for each row, e.g. for '1':
      *  0010
@@ -82,6 +112,7 @@ static const uint32_t Numbers8x4[10] = { /* digits 0-9, data byte with two nibbl
   /* 8 */ 0b01101001100101101001100110010110,
   /* 9 */ 0b01101001100101110001000110010110
 };
+#endif
 
 static void LEDFRAME_SetChar8x4Pixels(char ch, NEO_PixelIdxT x0, NEO_PixelIdxT y0, GDisp1_PixelColor color) {
   uint32_t data;
@@ -89,7 +120,11 @@ static void LEDFRAME_SetChar8x4Pixels(char ch, NEO_PixelIdxT x0, NEO_PixelIdxT y
 
   /* x/y (0/0) is top left corner, with x increasing to the right and y increasing to the bottom */
   if (ch>='0' && ch<='9') { /* check if valid digit */
+#if LEDFRAME_SMALL_FONT
+    data = Numbers8x4_Small[(unsigned int)(ch-'0')];
+#else
     data = Numbers8x4[(unsigned int)(ch-'0')];
+#endif
     for(i=0;i<32;i++) { /* 32bits for each digit */
       if (data&(1<<31)) { /* MSB set? */
         GDisp1_PutPixel(x0+(i%4), y0+(i/4), color);
@@ -114,17 +149,52 @@ static void LEDFRAME_RequestDisplayUpdate(void) {
 }
 
 void LEDFRAME_ShowClockTime(uint8_t hour, uint8_t min, uint8_t sec) {
+#if LEDFRAME_SMALL_FONT
+  static int colorCnt = 0;
+#endif
+
   if (!LEDFRAME_ClockIsOn) {
     return;
   }
   (void)hour;
   if (GDisp1_GetWidth()>=16) { /* at least two modules */
+#if 0
     /* write min:sec */
     LEDFRAME_SetChar8x4Pixels('0'+(min/10), 0, 0, ProcessColor(color0));
     LEDFRAME_SetChar8x4Pixels('0'+(min%10), 4, 0, ProcessColor(color1));
     /* write first two digits */
     LEDFRAME_SetChar8x4Pixels('0'+(sec/10), 8, 0, ProcessColor(color2));
     LEDFRAME_SetChar8x4Pixels('0'+(sec%10), 12, 0, ProcessColor(color3));
+#else
+#if LEDFRAME_SMALL_FONT
+    GDisp1_PixelColor color;
+
+    switch(colorCnt) {
+      case 0: color = color0; break;
+      case 1: color = color1; break;
+      case 2: color = color2; break;
+      case 3: color = color3; break;
+      default: color = color0; break;
+    }
+    colorCnt++;
+    if (colorCnt==3) {
+      colorCnt = 0;
+    }
+    /* write min:sec */
+    LEDFRAME_SetChar8x4Pixels('0'+(hour/10), 0, 0, ProcessColor(color));
+    LEDFRAME_SetChar8x4Pixels('0'+(hour%10), 4, 0, ProcessColor(color));
+    /* write first two digits */
+    LEDFRAME_SetChar8x4Pixels('0'+(min/10), 8, 0, ProcessColor(color));
+    LEDFRAME_SetChar8x4Pixels('0'+(min%10), 12, 0, ProcessColor(color));
+#else
+    /* write min:sec */
+    LEDFRAME_SetChar8x4Pixels('0'+(hour/10), 0, 0, ProcessColor(color0));
+    LEDFRAME_SetChar8x4Pixels('0'+(hour%10), 4, 0, ProcessColor(color1));
+    /* write first two digits */
+    LEDFRAME_SetChar8x4Pixels('0'+(min/10), 8, 0, ProcessColor(color2));
+    LEDFRAME_SetChar8x4Pixels('0'+(min%10), 12, 0, ProcessColor(color3));
+#endif
+#endif
     LEDFRAME_RequestDisplayUpdate();
   } else if (GDisp1_GetWidth()>=8) { /* at least one module */
     /* write sec */
@@ -195,7 +265,11 @@ static uint8_t CheckAndUpdateClock(void) {
 
   res = TmDt1_GetTime(&time);
   if (res==ERR_OK) {
-    if (time.Hour!=prevHour || time.Min!=prevMinute || time.Sec!=prevSecond) {
+#if LEDFRAME_SHOW_HOUR_MIN
+    if (time.Hour!=prevHour || time.Min!=prevMinute) {
+#elif LEDFRAME_SHOW_MIN_SEC
+      if (time.Min!=prevMinute || time.Sec!=prevSecond) {
+#endif
 #if PL_HAS_LED_FRAME_CLOCK
       LEDFRAME_ShowClockTime(time.Hour, time.Min, time.Sec);
 #endif

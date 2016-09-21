@@ -71,7 +71,7 @@ void Cpu_OnNMIINT(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName)
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
 {
   /* This will get called if a stack overflow is detected during the context
      switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack
@@ -176,7 +176,7 @@ void MINT1_OnInterrupt(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void EVNT1_AppHandleEvent(byte event)
+void EVNT1_AppHandleEvent(uint8_t event)
 {
   APP_HandleEvent(event);
 }
