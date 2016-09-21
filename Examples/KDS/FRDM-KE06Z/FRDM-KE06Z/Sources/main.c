@@ -62,6 +62,26 @@ static void AppTask(void *pvParameters) {
   }
 }
 
+#if 0
+#include <stdio.h>
+#include <stdlib.h>
+char test[100];
+
+#if 1
+void test2(void) {
+  sprintf(test,"number=%d",5);
+}
+#endif
+
+#if 1
+#include <stdio.h>
+void test3(void) {
+sprintf(test,"number=5");
+malloc(5);
+}
+#endif
+#endif
+
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
