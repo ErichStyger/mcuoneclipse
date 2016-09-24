@@ -30,6 +30,25 @@
 /* Including needed modules to compile this module/procedure */
 #include "Cpu.h"
 #include "Events.h"
+#include "WAIT1.h"
+#include "UTIL1.h"
+#include "LED1.h"
+#include "LEDpin1.h"
+#include "BitIoLdd1.h"
+#include "LED2.h"
+#include "LEDpin2.h"
+#include "BitIoLdd2.h"
+#include "LED3.h"
+#include "LEDpin3.h"
+#include "BitIoLdd3.h"
+#include "LED4.h"
+#include "LEDpin4.h"
+#include "BitIoLdd4.h"
+#include "KSDK1.h"
+#include "AS1.h"
+#include "ASerialLdd1.h"
+#include "CLS1.h"
+#include "CS1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -49,6 +68,17 @@ int main(void)
 
   /* Write your code here */
   /* For example: for(;;) { } */
+  for(;;) {
+    CLS1_SendStr("Hello world!\r\n", CLS1_GetStdio()->stdOut);
+    LED1_Neg();
+    WAIT1_Waitms(100);
+    LED2_Neg();
+    WAIT1_Waitms(100);
+    LED3_Neg();
+    WAIT1_Waitms(100);
+    LED4_Neg();
+    WAIT1_Waitms(100);
+  }
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
