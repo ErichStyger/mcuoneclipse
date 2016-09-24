@@ -35,10 +35,22 @@
 #include "IO_Map.h"
 #include "WAIT1.h"
 #include "KSDK1.h"
+#include "TU1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
 #include "CLS1.h"
 #include "CS1.h"
+#include "FAT1.h"
+#include "FATM1.h"
+#include "SDHC1.h"
+#include "CD1.h"
+#include "BitIoLdd6.h"
+#include "WP1.h"
+#include "BitIoLdd5.h"
+#include "TmDt1.h"
+#include "TMOUT1.h"
+#include "TI1.h"
+#include "TimerIntLdd1.h"
 #include "UTIL1.h"
 #include "LED1.h"
 #include "LEDpin1.h"
@@ -72,6 +84,22 @@ extern "C" {
 /* ===================================================================*/
 void Cpu_OnNMIINT(void);
 
+
+/*
+** ===================================================================
+**     Event       :  TI1_OnInterrupt (module Events)
+**
+**     Component   :  TI1 [TimerInt]
+**     Description :
+**         When a timer interrupt occurs this event is called (only
+**         when the component is enabled - <Enable> and the events are
+**         enabled - <EnableEvent>). This event is enabled only if a
+**         <interrupt service/event> is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void TI1_OnInterrupt(void);
 
 /* END Events */
 
