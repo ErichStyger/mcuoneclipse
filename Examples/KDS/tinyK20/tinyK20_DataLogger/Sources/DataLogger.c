@@ -98,7 +98,7 @@ static void logger_task(void *param) {
         Err("Failed to open file!\r\n");
       }
       /* move to the end of the file */
-      if (FAT1_lseek(&file, file.fsize) != FR_OK || file.fptr != file.fsize) {
+      if (FAT1_lseek(&file, f_size(&file)) != FR_OK || file.fptr != f_size(&file)) {
         Err("Failed lseek\r\n");
       }
       fp = &file;
