@@ -63,7 +63,7 @@ int main(void)
 {
   /* Write your local variable definition here */
   uint8_t buf[16];
-  uint16_t x, y, z;
+  int16_t x, y, z;
 
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
@@ -71,16 +71,18 @@ int main(void)
 
   /* Write your code here */
   /* For example: for(;;) { } */
+  MMA1_Enable(); /* enable the accelerometer */
   for(;;) {
     x = MMA1_GetXmg();
-    CLS1_SendStr("\r\nX: ", CLS1_GetStdio()->stdOut);
-    CLS1_SendNum16u(x, CLS1_GetStdio()->stdOut);
+    CLS1_SendStr("X: ", CLS1_GetStdio()->stdOut);
+    CLS1_SendNum16s(x, CLS1_GetStdio()->stdOut);
     y = MMA1_GetYmg();
     CLS1_SendStr(" Y: ", CLS1_GetStdio()->stdOut);
-    CLS1_SendNum16u(y, CLS1_GetStdio()->stdOut);
+    CLS1_SendNum16s(y, CLS1_GetStdio()->stdOut);
     z = MMA1_GetZmg();
     CLS1_SendStr(" Z: ", CLS1_GetStdio()->stdOut);
-    CLS1_SendNum16u(z, CLS1_GetStdio()->stdOut);
+    CLS1_SendNum16s(z, CLS1_GetStdio()->stdOut);
+    CLS1_SendStr("\r\n", CLS1_GetStdio()->stdOut);
     WAIT1_Waitms(100);
   }
 
