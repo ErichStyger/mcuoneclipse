@@ -16,7 +16,7 @@
 #define PL_HAS_RTC              (1 && PL_HAS_NEO_SHIELD)
 #define PL_NEO_DEMO             (1 && PL_HAS_NEO_PIXEL) /* demo of neo pixels on stripe */
 #define PL_HAS_LED3             (0 && !PL_HAS_NEO_PIXEL) /* blue LED PWM conflicts with NeoPixel timer */
-#define PL_HAS_RNET             (0) /* has RNET with nRF24L01+ */
+#define PL_HAS_RNET             (1) /* has RNET with nRF24L01+ */
 #define PL_HAS_PONG             (0) /* Pong game */
 #define PL_HAS_MUSIC            (0) /* music shield */
 #define PL_HAS_MIDI             (0 && PL_HAS_MUSIC)

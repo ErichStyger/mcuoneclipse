@@ -8,6 +8,10 @@
 #ifndef RNETAPP_H_
 #define RNETAPP_H_
 
+#include "RApp.h"
+
+uint8_t RNETA_SendIdValuePairMessage(uint8_t msgType, uint16_t id, uint32_t value, RAPP_ShortAddrType addr, RAPP_FlagsType flags);
+
 /*! \brief Driver initialization */
 void RNETA_Init(void);
 

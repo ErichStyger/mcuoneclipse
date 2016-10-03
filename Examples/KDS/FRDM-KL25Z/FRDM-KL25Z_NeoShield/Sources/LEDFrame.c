@@ -15,6 +15,7 @@
 #include "RTC1.h"
 
 #define LEDFRAME_SMALL_FONT    1
+#define LEDFRAME_CYCLE_COLORS  0
 #define LEDFRAME_SHOW_MIN_SEC  0
 #define LEDFRAME_SHOW_HOUR_MIN 1
 
@@ -22,17 +23,23 @@
 #define LEDFRAME_NOTIFICATION_UPDATE_DISPLAY      (1<<0)  /* update display */
 static xTaskHandle LedFrameTaskHandle; /* task handle */
 static TimerHandle_t LedFrameTimer; /* timer handle for changing display */
+static bool LEDFRAME_doUpdate = FALSE;
 
+#if 0
 typedef enum {
   LEDFRAME_TRANSITION_NONE,
   LEDFRAME_TRANSITION_SWIPE_LEFT_TO_RIGHT,
 } LEDFRAME_TransitionType;
 static LEDFRAME_TransitionType LedFrametransition = LEDFRAME_TRANSITION_NONE;
+#endif
 
 /* global settings */
 static bool LEDFRAME_ClockIsOn = TRUE; /* if clock is on or stopped */
 static uint8_t LEDFRAME_BrightnessPercent = 50; /* brightness value, 0 (off) - 100 (full brightness) */
-static GDisp1_PixelColor color0 = 0x0000ff, color1=0x00ff00, color2=0xff0000, color3 = 0xff00ff;
+static GDisp1_PixelColor LEDFRAME_color = 0x0000ff;
+#if LEDFRAME_CYCLE_COLORS
+  static GDisp1_PixelColor color0 = 0x0000ff, color1=0x00ff00, color2=0xff0000, color3 = 0xff00ff;
+#endif
 static bool LEDFRAME_DoGammaCorrection = TRUE;
 
 /* Pixel Orientation, view from the front
@@ -114,6 +121,50 @@ static const uint32_t Numbers8x4[10] = { /* digits 0-9, data byte with two nibbl
 };
 #endif
 
+uint8_t LEDFRAME_GetBrightnessPercent(void) {
+  return LEDFRAME_BrightnessPercent;
+}
+
+void LEDFRAME_SetBrightnessPercent(uint8_t brightnessPercent) {
+  if (brightnessPercent>100) {
+    brightnessPercent = 100;
+  }
+  LEDFRAME_BrightnessPercent = brightnessPercent;
+  LEDFRAME_doUpdate = TRUE;
+}
+
+uint8_t LEDFRAME_GetColorRedValue(void) {
+  return (LEDFRAME_color>>16)&0xff;
+}
+
+uint8_t LEDFRAME_GetColorGreenValue(void) {
+  return (LEDFRAME_color>>8)&0xff;
+}
+
+uint8_t LEDFRAME_GetColorBlueValue(void) {
+  return LEDFRAME_color&0xff;
+}
+
+void LEDFRAME_SetColorRedValue(uint8_t val) {
+  LEDFRAME_color = (LEDFRAME_color&0x00FFFF)|(val<<16);
+  LEDFRAME_doUpdate = TRUE;
+}
+
+void LEDFRAME_SetColorGreenValue(uint8_t val) {
+  LEDFRAME_color = (LEDFRAME_color&0xFF00FF)|(val<<8);
+  LEDFRAME_doUpdate = TRUE;
+}
+
+void LEDFRAME_SetColorBlueValue(uint8_t val) {
+  LEDFRAME_color = (LEDFRAME_color&0xFFFF00)|(val);
+  LEDFRAME_doUpdate = TRUE;
+}
+
+void LEDFRAME_TurnClockOnOff(bool on) {
+  LEDFRAME_ClockIsOn = on;
+  LEDFRAME_doUpdate = TRUE;
+}
+
 static void LEDFRAME_SetChar8x4Pixels(char ch, NEO_PixelIdxT x0, NEO_PixelIdxT y0, GDisp1_PixelColor color) {
   uint32_t data;
   int i;
@@ -137,7 +188,7 @@ static void LEDFRAME_SetChar8x4Pixels(char ch, NEO_PixelIdxT x0, NEO_PixelIdxT y
 }
 
 static uint32_t ProcessColor(uint32_t color) {
-  color = NEO_BrightnessPercentColor(color, LEDFRAME_BrightnessPercent);
+  color = NEO_BrightnessPercentColor(color, LEDFRAME_GetBrightnessPercent());
   if (LEDFRAME_DoGammaCorrection) {
     color = NEO_GammaCorrect24(color);
   }
@@ -149,13 +200,19 @@ static void LEDFRAME_RequestDisplayUpdate(void) {
 }
 
 void LEDFRAME_ShowClockTime(uint8_t hour, uint8_t min, uint8_t sec) {
-#if LEDFRAME_SMALL_FONT
+#if LEDFRAME_CYCLE_COLORS
   static int colorCnt = 0;
 #endif
+  static bool isOn = FALSE;
 
+  if (isOn && !LEDFRAME_ClockIsOn) { /* turning off clock */
+    GDisp1_Clear(); /* clear all pixels */
+    LEDFRAME_RequestDisplayUpdate();
+  }
   if (!LEDFRAME_ClockIsOn) {
     return;
   }
+  isOn = TRUE;
   (void)hour;
   if (GDisp1_GetWidth()>=16) { /* at least two modules */
 #if 0
@@ -169,6 +226,7 @@ void LEDFRAME_ShowClockTime(uint8_t hour, uint8_t min, uint8_t sec) {
 #if LEDFRAME_SMALL_FONT
     GDisp1_PixelColor color;
 
+#if LEDFRAME_CYCLE_COLORS
     switch(colorCnt) {
       case 0: color = color0; break;
       case 1: color = color1; break;
@@ -180,6 +238,9 @@ void LEDFRAME_ShowClockTime(uint8_t hour, uint8_t min, uint8_t sec) {
     if (colorCnt==3) {
       colorCnt = 0;
     }
+#else
+    color = LEDFRAME_color;
+#endif
     /* write min:sec */
     LEDFRAME_SetChar8x4Pixels('0'+(hour/10), 0, 0, ProcessColor(color));
     LEDFRAME_SetChar8x4Pixels('0'+(hour%10), 4, 0, ProcessColor(color));
@@ -198,22 +259,31 @@ void LEDFRAME_ShowClockTime(uint8_t hour, uint8_t min, uint8_t sec) {
     LEDFRAME_RequestDisplayUpdate();
   } else if (GDisp1_GetWidth()>=8) { /* at least one module */
     /* write sec */
-    LEDFRAME_SetChar8x4Pixels('0'+(sec/10), 0, 0, ProcessColor(color0));
-    LEDFRAME_SetChar8x4Pixels('0'+(sec%10), 4, 0, ProcessColor(color1));
+    LEDFRAME_SetChar8x4Pixels('0'+(sec/10), 0, 0, ProcessColor(LEDFRAME_color));
+    LEDFRAME_SetChar8x4Pixels('0'+(sec%10), 4, 0, ProcessColor(LEDFRAME_color));
     LEDFRAME_RequestDisplayUpdate();
   }
 }
 
 static uint8_t PrintStatus(CLS1_ConstStdIOType *io) {
-  uint8_t buf[24];
+  uint8_t buf[32];
 
   CLS1_SendStatusStr((unsigned char*)"ledframe", (const unsigned char*)"\r\n", io->stdOut);
   CLS1_SendStatusStr((uint8_t*)"  clock", LEDFRAME_ClockIsOn?(uint8_t*)"on\r\n":(uint8_t*)"off\r\n", io->stdOut);
   CLS1_SendStatusStr((uint8_t*)"  gamma", LEDFRAME_DoGammaCorrection?(uint8_t*)"on\r\n":(uint8_t*)"off\r\n", io->stdOut);
 
-  UTIL1_Num8uToStr(buf, sizeof(buf), LEDFRAME_BrightnessPercent);
+  UTIL1_Num8uToStr(buf, sizeof(buf), LEDFRAME_GetBrightnessPercent());
   UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
   CLS1_SendStatusStr((uint8_t*)"  brightness", buf, io->stdOut);
+
+  UTIL1_strcpy(buf, sizeof(buf), (uint8_t*)"R 0x");
+  UTIL1_strcatNum8Hex(buf, sizeof(buf), LEDFRAME_GetColorRedValue());
+  UTIL1_strcat(buf, sizeof(buf), (uint8_t*)", G 0x");
+  UTIL1_strcatNum8Hex(buf, sizeof(buf), LEDFRAME_GetColorGreenValue());
+  UTIL1_strcat(buf, sizeof(buf), (uint8_t*)", B 0x");
+  UTIL1_strcatNum8Hex(buf, sizeof(buf), LEDFRAME_GetColorBlueValue());
+  UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
+  CLS1_SendStatusStr((uint8_t*)"  color", buf, io->stdOut);
   return ERR_OK;
 }
 
@@ -227,16 +297,20 @@ uint8_t LEDFRAME_ParseCommand(const unsigned char *cmd, bool *handled, const CLS
     CLS1_SendHelpStr((unsigned char*)"  clock (on|off)", (const unsigned char*)"Turns clock on or off\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  gamma (on|off)", (const unsigned char*)"Turns gamma correction on or off\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  brightness <val>", (const unsigned char*)"Set brightness (0-100)%\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  color rgb <rgb>", (const unsigned char*)"Set RGB color with 24bit hex value\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  color red <val>", (const unsigned char*)"Set red color (0-255)\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  color green <val>", (const unsigned char*)"Set green color (0-255)\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  color blue <val>", (const unsigned char*)"Set blue color (0-255)\r\n", io->stdOut);
     *handled = TRUE;
     return ERR_OK;
   } else if ((UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0) || (UTIL1_strcmp((char*)cmd, "ledframe status")==0)) {
     *handled = TRUE;
     return PrintStatus(io);
   } else if (UTIL1_strcmp((char*)cmd, "ledframe clock on")==0) {
-    LEDFRAME_ClockIsOn = TRUE;
+    LEDFRAME_TurnClockOnOff(TRUE);
     *handled = TRUE;
   } else if (UTIL1_strcmp((char*)cmd, "ledframe clock off")==0) {
-    LEDFRAME_ClockIsOn = FALSE;
+    LEDFRAME_TurnClockOnOff(FALSE);
     *handled = TRUE;
   } else if (UTIL1_strcmp((char*)cmd, "ledframe gamma on")==0) {
     LEDFRAME_DoGammaCorrection = TRUE;
@@ -248,10 +322,52 @@ uint8_t LEDFRAME_ParseCommand(const unsigned char *cmd, bool *handled, const CLS
     p = cmd+sizeof("ledframe brightness")-1;
     res = UTIL1_xatoi(&p, &val);
     if (res==ERR_OK && val>=0 && val<=100) {
-      LEDFRAME_BrightnessPercent = val;
+      LEDFRAME_SetBrightnessPercent(val);
       *handled = TRUE;
     } else {
-      CLS1_SendStr((uint8_t*)"Brightness must be between 0 and 100.\r\n", io->stdErr);
+      CLS1_SendStr((uint8_t*)"Brightness must be between 0 and 100!\r\n", io->stdErr);
+      res = ERR_FAILED;
+    }
+  } else if (UTIL1_strncmp((char*)cmd, "ledframe color red", sizeof("ledframe color red")-1)==0) {
+    p = cmd+sizeof("ledframe color red")-1;
+    res = UTIL1_xatoi(&p, &val);
+    if (res==ERR_OK && val>=0 && val<=255) {
+      LEDFRAME_SetColorRedValue(val);
+      *handled = TRUE;
+    } else {
+      CLS1_SendStr((uint8_t*)"Color must be between 0 and 255!\r\n", io->stdErr);
+      res = ERR_FAILED;
+    }
+  } else if (UTIL1_strncmp((char*)cmd, "ledframe color green", sizeof("ledframe color green")-1)==0) {
+    p = cmd+sizeof("ledframe color green")-1;
+    res = UTIL1_xatoi(&p, &val);
+    if (res==ERR_OK && val>=0 && val<=255) {
+      LEDFRAME_SetColorGreenValue(val);
+      *handled = TRUE;
+    } else {
+      CLS1_SendStr((uint8_t*)"Color must be between 0 and 255!\r\n", io->stdErr);
+      res = ERR_FAILED;
+    }
+  } else if (UTIL1_strncmp((char*)cmd, "ledframe color blue", sizeof("ledframe color blue")-1)==0) {
+    p = cmd+sizeof("ledframe color blue")-1;
+    res = UTIL1_xatoi(&p, &val);
+    if (res==ERR_OK && val>=0 && val<=255) {
+      LEDFRAME_SetColorBlueValue(val);
+      *handled = TRUE;
+    } else {
+      CLS1_SendStr((uint8_t*)"Color must be between 0 and 255!\r\n", io->stdErr);
+      res = ERR_FAILED;
+    }
+  } else if (UTIL1_strncmp((char*)cmd, "ledframe color rgb", sizeof("ledframe color rgb")-1)==0) {
+    p = cmd+sizeof("ledframe color rgb")-1;
+    res = UTIL1_xatoi(&p, &val);
+    if (res==ERR_OK && val>=0 && val<=0xffffff) {
+      LEDFRAME_SetColorRedValue((val>>16)&0xff);
+      LEDFRAME_SetColorGreenValue((val>>8)&0xff);
+      LEDFRAME_SetColorBlueValue(val&0xff);
+      *handled = TRUE;
+    } else {
+      CLS1_SendStr((uint8_t*)"Color must be between 0 and 0xffffff!\r\n", io->stdErr);
       res = ERR_FAILED;
     }
   }
@@ -259,14 +375,21 @@ uint8_t LEDFRAME_ParseCommand(const unsigned char *cmd, bool *handled, const CLS
 }
 
 static uint8_t CheckAndUpdateClock(void) {
+#if LEDFRAME_SHOW_HOUR_MIN
+  static int prevHour=-1, prevMinute=-1;
+#else
   static int prevHour=-1, prevMinute=-1, prevSecond=1;
+#endif
   TIMEREC time;
   uint8_t res;
 
   res = TmDt1_GetTime(&time);
   if (res==ERR_OK) {
 #if LEDFRAME_SHOW_HOUR_MIN
-    if (time.Hour!=prevHour || time.Min!=prevMinute) {
+    if (LEDFRAME_doUpdate || time.Hour!=prevHour || time.Min!=prevMinute) {
+      if (LEDFRAME_doUpdate) {
+        LEDFRAME_doUpdate = FALSE;
+      }
 #elif LEDFRAME_SHOW_MIN_SEC
       if (time.Min!=prevMinute || time.Sec!=prevSecond) {
 #endif
@@ -276,9 +399,14 @@ static uint8_t CheckAndUpdateClock(void) {
 #if PL_HAS_MATRIX_CLOCK
       MATRIX_ShowClockTime(time.Hour, time.Min, time.Sec);
 #endif
+#if LEDFRAME_SHOW_HOUR_MIN
+      prevHour = time.Hour;
+      prevMinute = time.Min;
+#else
       prevHour = time.Hour;
       prevMinute = time.Min;
       prevSecond = time.Sec;
+#endif
       return ERR_OK;
     }
   }
@@ -299,14 +427,17 @@ static void UpdateFromRTC(void) {
 }
 #endif
 
+#if 0
 static int transistionCntr = 0;
 static void StartTransition(LEDFRAME_TransitionType transition) {
   transistionCntr = 0;
   LedFrametransition = transition;
 }
+#endif
 
 static void vTimerCallback(TimerHandle_t xTimer) {
   (void)xTimer;
+#if 0
   if (LedFrametransition==LEDFRAME_TRANSITION_SWIPE_LEFT_TO_RIGHT) {
     if (transistionCntr<GDisp1_GetWidth()) {
       GDisp1_DrawVLine(transistionCntr, 0, GDisp1_GetHeight(), 0); /* clear line */
@@ -314,6 +445,7 @@ static void vTimerCallback(TimerHandle_t xTimer) {
       LEDFRAME_RequestDisplayUpdate();
     }
   }
+#endif
 }
 
 static void LedFrameTask(void* pvParameters) {

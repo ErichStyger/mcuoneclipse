@@ -17,6 +17,7 @@
 #include "LED1.h"
 #include "LED2.h"
 //#include "LED3.h"
+#include "LEDFrame.h"
 
 typedef enum {
   RNETA_INITIAL, /* initialization state */
@@ -26,20 +27,55 @@ typedef enum {
 
 static RNETA_State appState = RNETA_INITIAL;
 
+uint8_t RNETA_SendIdValuePairMessage(uint8_t msgType, uint16_t id, uint32_t value, RAPP_ShortAddrType addr, RAPP_FlagsType flags) {
+  uint8_t dataBuf[6]; /* 2 byte ID followed by 4 byte data */
+
+  UTIL1_SetValue16LE(id, &dataBuf[0]);
+  UTIL1_SetValue32LE(value, &dataBuf[2]);
+  return RAPP_SendPayloadDataBlock(dataBuf, sizeof(dataBuf), msgType, addr, flags);
+}
+
 static uint8_t RNETA_HandleRxMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *data, RNWK_ShortAddrType srcAddr, bool *handled, RPHY_PacketDesc *packet) {
-  (void)srcAddr;
+  uint32_t val;
+  uint16_t id;
+
+  (void)size;
   (void)packet;
   switch(type) {
-    case RAPP_MSG_TYPE_PING: /* <type><size><data */
-      *handled = TRUE;
-      /* to be defined: do something with the ping, e.g blink a LED */
-      LED2_On(); /* green LED blink */
-      FRTOS1_vTaskDelay(20/portTICK_RATE_MS);
-      LED2_Off();
-      return ERR_OK;
+    case RAPP_MSG_TYPE_REQUEST_SET_VALUE:
+      id = UTIL1_GetValue16LE(data); /* extract 16bit ID (little endian) */
+      if (id==RAPP_MSG_TYPE_DATA_ID_NEO_BRIGHTNESS) {
+        val = UTIL1_GetValue32LE(&data[2]);
+        LEDFRAME_SetBrightnessPercent(val);
+        *handled = TRUE;
+       }
+      break;
+
+    case RAPP_MSG_TYPE_QUERY_VALUE:
+      id = UTIL1_GetValue16LE(data); /* extract 16bit ID (little endian) */
+      if (id==RAPP_MSG_TYPE_DATA_ID_NEO_BRIGHTNESS) { /* send back data */
+        RNETA_SendIdValuePairMessage(RAPP_MSG_TYPE_QUERY_VALUE_RESPONSE, id, LEDFRAME_GetBrightnessPercent(), srcAddr, RPHY_PACKET_FLAGS_NONE);
+        *handled = TRUE;
+      } else if (id==RAPP_MSG_TYPE_DATA_ID_NEO_RED) { /* send back data */
+        RNETA_SendIdValuePairMessage(RAPP_MSG_TYPE_QUERY_VALUE_RESPONSE, id, LEDFRAME_GetColorRedValue(), srcAddr, RPHY_PACKET_FLAGS_NONE);
+        *handled = TRUE;
+      } else if (id==RAPP_MSG_TYPE_DATA_ID_NEO_GREEN) { /* send back data */
+        RNETA_SendIdValuePairMessage(RAPP_MSG_TYPE_QUERY_VALUE_RESPONSE, id, LEDFRAME_GetColorGreenValue(), srcAddr, RPHY_PACKET_FLAGS_NONE);
+        *handled = TRUE;
+      } else if (id==RAPP_MSG_TYPE_DATA_ID_NEO_BLUE) { /* send back data */
+        RNETA_SendIdValuePairMessage(RAPP_MSG_TYPE_QUERY_VALUE_RESPONSE, id, LEDFRAME_GetColorBlueValue(), srcAddr, RPHY_PACKET_FLAGS_NONE);
+        *handled = TRUE;
+      }
+      break;
+
     default:
       break;
   } /* switch */
+  if (*handled) {
+  #if PL_HAS_BUZZER
+    BUZ_PlayTune(BUZ_TUNE_BUTTON);
+  #endif
+  }
   return ERR_OK;
 }
 
