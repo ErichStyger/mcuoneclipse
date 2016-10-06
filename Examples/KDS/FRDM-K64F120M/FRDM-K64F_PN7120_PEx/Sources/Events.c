@@ -37,7 +37,7 @@ extern "C" {
 
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
-
+#include "tml.h"
 /*
 ** ===================================================================
 **     Event       :  Cpu_OnNMI (module Events)
@@ -143,6 +143,23 @@ void FRTOS1_vApplicationMallocFailedHook(void)
   taskDISABLE_INTERRUPTS();
   /* Write your code here ... */
   for(;;) {}
+}
+
+/*
+** ===================================================================
+**     Event       :  EInt1_OnInterrupt (module Events)
+**
+**     Component   :  EInt1 [ExtInt]
+**     Description :
+**         This event is called when an active signal edge/level has
+**         occurred.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void EInt1_OnInterrupt(void)
+{
+  PORTC_IRQHandler();
 }
 
 /* END Events */

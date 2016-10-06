@@ -6,3 +6,4 @@
 void tml_Connect(void);
 void tml_Send(uint8_t *pBuffer, uint16_t BufferLen, uint16_t *pBytesSent);
 void tml_Receive(uint8_t *pBuffer, uint16_t BufferLen, uint16_t *pBytes, uint16_t timeout);
+void PORTC_IRQHandler(void);

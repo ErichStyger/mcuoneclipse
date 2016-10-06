@@ -560,9 +560,8 @@ int demo_run(void) {
 					TASK_NFC_STACK_PRIO,
 					NULL) != pdPASS)
     {
-        PRINTF("Failed to create NFC task");
+        printf("Failed to create NFC task");
     }
-
 	/* Register for NFC functionalities */
 #ifdef CARDEMU_SUPPORT
 	/* Register NDEF message to be sent to remote reader */

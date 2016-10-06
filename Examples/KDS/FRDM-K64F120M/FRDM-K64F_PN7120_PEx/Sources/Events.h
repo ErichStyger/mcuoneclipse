@@ -53,6 +53,12 @@
 #include "WAIT1.h"
 #include "KSDK1.h"
 #include "FRTOS1.h"
+#include "GI2C1.h"
+#include "I2C.h"
+#include "EInt1.h"
+#include "ExtIntLdd1.h"
+#include "VEN.h"
+#include "BitIoLdd4.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -128,6 +134,20 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 **     Description :
 **         If enabled, the RTOS will call this hook in case memory
 **         allocation failed.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void EInt1_OnInterrupt(void);
+/*
+** ===================================================================
+**     Event       :  EInt1_OnInterrupt (module Events)
+**
+**     Component   :  EInt1 [ExtInt]
+**     Description :
+**         This event is called when an active signal edge/level has
+**         occurred.
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================

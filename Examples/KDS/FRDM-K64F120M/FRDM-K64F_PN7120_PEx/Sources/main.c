@@ -50,6 +50,12 @@
 #include "WAIT1.h"
 #include "KSDK1.h"
 #include "FRTOS1.h"
+#include "GI2C1.h"
+#include "I2C.h"
+#include "EInt1.h"
+#include "ExtIntLdd1.h"
+#include "VEN.h"
+#include "BitIoLdd4.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -58,6 +64,7 @@
 #include "PDD_Includes.h"
 #include "Init_Config.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "demo.h"
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -70,6 +77,7 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
+  demo_run();
   /* For example: for(;;) { } */
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
