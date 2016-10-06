@@ -31,7 +31,7 @@
 #include "fsl_device_registers.h"
 #include "fsl_port.h"
 #include "pin_mux.h"
-#include "board.h"
+#include "board.h" /* << EST added */
 
 /*******************************************************************************
  * Code
@@ -44,12 +44,17 @@
  */
 void BOARD_InitPins(void)
 {
-    /* Declare and initialise for pull up configuration */
+#if 1 /* NXP RFID */
+    /* Declare and initialize for pull up configuration */
     port_pin_config_t pinConfig = {0};
+
+#if 0 /* internal pull-up on I2C as workaround: do *not* use this for real! */
     pinConfig.pullSelect = kPORT_PullUp;
 #if defined(FSL_FEATURE_PORT_HAS_OPEN_DRAIN) && FSL_FEATURE_PORT_HAS_OPEN_DRAIN
     pinConfig.openDrainEnable = kPORT_OpenDrainEnable;
 #endif /* FSL_FEATURE_PORT_HAS_OPEN_DRAIN */
+#endif
+#endif
 
     /* Initialize UART1 pins below */
     /* Ungate the port clock */
@@ -59,6 +64,7 @@ void BOARD_InitPins(void)
     /* Affects PORTB_PCR17 register */
     PORT_SetPinMux(PORTB, 17u, kPORT_MuxAlt3);
 
+#if 1 /* NXP RFID */
     /* Initialize I2C0 pins below */
     /* Ungate the port clock */
     CLOCK_EnableClock(kCLOCK_PortE);
@@ -79,4 +85,5 @@ void BOARD_InitPins(void)
     NVIC_SetPriority(NXPNCI_IRQ_PORTIRQn, 5);
     EnableIRQ(NXPNCI_IRQ_PORTIRQn);
     PORT_SetPinInterruptConfig(NXPNCI_IRQ_PORT, NXPNCI_IRQ_PIN, kPORT_InterruptRisingEdge);
+#endif
 }
