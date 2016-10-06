@@ -7,18 +7,13 @@
 #include "fsl_port.h"
 #include "fsl_gpio.h"
 #include <tool.h>
-#include "board.h" /* << EST */
 
 SemaphoreHandle_t IrqSem = NULL;
 i2c_master_transfer_t masterXfer;
 
 typedef enum {ERROR = 0, SUCCESS = !ERROR} Status;
 
-#if 0 && NXPNCI_PORTA_IRQ
-void PORTA_IRQHandler(void)
-#else
 void PORTC_IRQHandler(void)
-#endif
 {
 	if (GPIO_ReadPinInput(NXPNCI_IRQ_GPIO, NXPNCI_IRQ_PIN) == 1)
 	{

@@ -132,22 +132,12 @@
 #define NXPNCI_I2C_INSTANCE 		I2C0
 #define NXPNCI_I2C_BAUDRATE 		(100000)
 #define NXPNCI_I2C_ADDR_7BIT 		(0x28)
-#if 1 /* REV D1 of FRDM-K64F */
-  #define NXPNCI_PORTA_IRQ       1 /* IRQ on PTA0 for REV E3 of FRDM-K64F */
-#else
-  #define NXPNCI_PORTA_IRQ       0 /* IRQ on PTC12 for REV E3 of FRDM-K64F */
-#endif
-#if NXPNCI_PORTA_IRQ
+#if 1  /* use PTC4 instead of PTC12, because PTC12 might be on different pins depending on the FRDM-K64F board revision */
   #define NXPNCI_IRQ_PORTIRQn   PORTC_IRQn
   #define NXPNCI_IRQ_GPIO       (GPIOC)
   #define NXPNCI_IRQ_PORT       (PORTC)
   #define NXPNCI_IRQ_PIN        (4U)
-#elif 0
-  #define NXPNCI_IRQ_PORTIRQn   PORTA_IRQn
-  #define NXPNCI_IRQ_GPIO       (GPIOA)
-  #define NXPNCI_IRQ_PORT       (PORTA)
-  #define NXPNCI_IRQ_PIN        (0U)
-#else
+#else /* original example uses PTC12 */
   #define NXPNCI_IRQ_PORTIRQn   PORTC_IRQn
   #define NXPNCI_IRQ_GPIO				(GPIOC)
   #define NXPNCI_IRQ_PORT				(PORTC)

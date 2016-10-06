@@ -71,10 +71,6 @@ void BOARD_InitPins(void)
 
     /* Initialize NXPNCI GPIO pins below */
     /* Ungate the port clock */
-#if NXPNCI_PORTA_IRQ /* Rev D1: use PTA0 */
-    /* Ungate the port clock */
-   // CLOCK_EnableClock(kCLOCK_PortA);
-#endif
     CLOCK_EnableClock(kCLOCK_PortC);
     /* IRQ and VEN PIN_MUX Configuration */
     PORT_SetPinMux(NXPNCI_IRQ_PORT, NXPNCI_IRQ_PIN, kPORT_MuxAsGpio);
