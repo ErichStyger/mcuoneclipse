@@ -8,6 +8,7 @@
 #ifndef SOURCES_LEDFRAME_H_
 #define SOURCES_LEDFRAME_H_
 
+#include "RTC1.h" /* for TIMEREC */
 #include "CLS1.h"
 uint8_t LEDFRAME_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
 
@@ -25,7 +26,7 @@ void LEDFRAME_SetColorBlueValue(uint8_t val);
 
 void LEDFRAME_TurnClockOnOff(bool on);
 
-void LEDFRAME_ShowClockTime(uint8_t hour, uint8_t min, uint8_t sec);
+void LEDFRAME_ShowClockTime(TIMEREC *time);
 
 void LEDFRAME_Init(void);
 

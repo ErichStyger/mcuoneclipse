@@ -70,10 +70,10 @@ static void ClockUpdate(void) {
   if (res==ERR_OK) {
     if (time.Hour!=prevHour || time.Min!=prevMinute || time.Sec!=prevSecond) {
 #if PL_HAS_LED_FRAME_CLOCK
-      LEDFRAME_ShowClockTime(time.Hour, time.Min, time.Sec);
+      LEDFRAME_ShowClockTime(&time);
 #endif
 #if PL_HAS_MATRIX_CLOCK
-      MATRIX_ShowClockTime(time.Hour, time.Min, time.Sec);
+      MATRIX_ShowClockTime(&time);
 #endif
       prevHour = time.Hour;
       prevMinute = time.Min;

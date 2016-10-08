@@ -18,6 +18,7 @@
 #define LEDFRAME_CYCLE_COLORS  0
 #define LEDFRAME_SHOW_MIN_SEC  0
 #define LEDFRAME_SHOW_HOUR_MIN 1
+#define LEDFRAME_SHOW_LECTURE_MODE  1  /* different colors depending on time */
 
 /* task notification bits */
 #define LEDFRAME_NOTIFICATION_UPDATE_DISPLAY      (1<<0)  /* update display */
@@ -41,6 +42,90 @@ static GDisp1_PixelColor LEDFRAME_color = 0x0000ff;
   static GDisp1_PixelColor color0 = 0x0000ff, color1=0x00ff00, color2=0xff0000, color3 = 0xff00ff;
 #endif
 static bool LEDFRAME_DoGammaCorrection = TRUE;
+
+#if LEDFRAME_SHOW_LECTURE_MODE
+typedef struct {
+  TIMEREC startTime, endTime;
+  GDisp1_PixelColor color;
+} LEDFRAME_ColorTimeTableDesc;
+
+#define WHITE   0xffffff
+#define YELLOW  0xffff00
+#define RED     0xff0000
+#define GREEN   0x00ff00
+#define BLUE    0x0000ff
+
+
+const LEDFRAME_ColorTimeTableDesc LEDFRAME_ColorTimeTable[] =
+{
+    {{8,0,0,0},{8,25,0,0}, WHITE},  /* normal */
+    {{8,25,0,0},{8,30,0,0}, YELLOW},  /* warn */
+    {{8,30,0,0},{9,10,0,0}, GREEN}, /* lecture */
+    {{9,10,0,0},{9,15,0,0}, YELLOW}, /* lecture end warn */
+    {{9,15,0,0},{9,19,0,0}, RED},  /* break */
+    {{9,19,0,0},{9,20,0,0}, YELLOW},  /* break */
+
+    {{9,20,0,0},{10,0,0,0}, GREEN},  /* lecture */
+    {{10,0,0,0},{10,5,0,0}, YELLOW}, /* warn */
+    {{10,5,0,0},{10,24,0,0}, RED},  /* break */
+    {{10,24,0,0},{10,25,0,0}, YELLOW},  /* break */
+
+    {{10,25,0,0},{11,5,0,0}, GREEN},  /* lecture */
+    {{11,5,0,0},{11,10,0,0}, YELLOW}, /* warn */
+    {{11,10,0,0},{11,14,0,0}, RED},  /* break */
+    {{11,14,0,0},{11,15,0,0}, YELLOW},  /* break */
+
+    {{11,15,0,0},{11,55,0,0}, GREEN},  /* lecture */
+    {{11,55,0,0},{12,00,0,0}, YELLOW}, /* warn */
+    {{12,00,0,0},{12,05,0,0}, RED},  /* break */
+
+    /* afternoon */
+    {{12,45,0,0},{12,55,0,0}, WHITE},  /* normal */
+    {{12,55,0,0},{13,0,0,0}, YELLOW}, /* hurry */
+    {{13,0,0,0},{13,40,0,0}, GREEN}, /* lecture */
+    {{13,40,0,0},{13,45,0,0}, YELLOW}, /* lecture end warn */
+    {{13,45,0,0},{13,49,0,0}, RED},  /* break */
+    {{13,49,0,0},{13,50,0,0}, YELLOW},  /* break */
+
+    {{13,50,0,0},{14,30,0,0}, GREEN},  /* lecture */
+    {{14,30,0,0},{14,35,0,0}, YELLOW}, /* warn */
+    {{14,35,0,0},{14,54,0,0}, RED},  /* break */
+    {{14,54,0,0},{14,55,0,0}, YELLOW},  /* break */
+
+    {{14,55,0,0},{15,35,0,0}, GREEN},  /* lecture */
+    {{15,35,0,0},{15,40,0,0}, YELLOW}, /* warn */
+    {{15,40,0,0},{15,44,0,0}, RED},  /* break */
+    {{15,44,0,0},{15,45,0,0}, YELLOW},  /* break */
+
+    {{15,45,0,0},{16,25,0,0}, GREEN},  /* lecture */
+    {{16,25,0,0},{16,30,0,0}, YELLOW}, /* warn */
+    {{16,30,0,0},{16,35,0,0}, RED}, /* warn */
+
+    {{16,35,0,0},{17,00,0,0}, WHITE}, /* normal */
+};
+
+static bool InsideTimeRange(const TIMEREC *curr, const TIMEREC *start, const TIMEREC *end) {
+  uint32_t currTime, startTime, endTime;
+
+  currTime = curr->Hour*60*60*100 + curr->Min*60*100 + curr->Sec*100 + curr->Sec100;
+  startTime = start->Hour*60*60*100 + start->Min*60*100 + start->Sec*100 + start->Sec100;
+  endTime = end->Hour*60*60*100 + end->Min*60*100 + end->Sec*100 + end->Sec100;
+  return (currTime>=startTime && currTime<endTime);
+}
+
+static bool CheckTimeRange(TIMEREC *currTime, GDisp1_PixelColor *color) {
+  unsigned int i;
+
+  for(i=0;i<sizeof(LEDFRAME_ColorTimeTable)/sizeof(LEDFRAME_ColorTimeTable[0]);i++) {
+    if (InsideTimeRange(currTime, &LEDFRAME_ColorTimeTable[i].startTime, &LEDFRAME_ColorTimeTable[i].endTime)) {
+      *color = LEDFRAME_ColorTimeTable[i].color;
+      return TRUE;
+    }
+  }
+  return FALSE; /* no color based on time */
+}
+
+#endif /* LEDFRAME_SHOW_LECTURE_MODE */
 
 /* Pixel Orientation, view from the front
  * 1: one module
@@ -199,7 +284,7 @@ static void LEDFRAME_RequestDisplayUpdate(void) {
   (void)xTaskNotify(LedFrameTaskHandle, LEDFRAME_NOTIFICATION_UPDATE_DISPLAY, eSetBits);
 }
 
-void LEDFRAME_ShowClockTime(uint8_t hour, uint8_t min, uint8_t sec) {
+void LEDFRAME_ShowClockTime(TIMEREC *time) {
 #if LEDFRAME_CYCLE_COLORS
   static int colorCnt = 0;
 #endif
@@ -213,15 +298,14 @@ void LEDFRAME_ShowClockTime(uint8_t hour, uint8_t min, uint8_t sec) {
     return;
   }
   isOn = TRUE;
-  (void)hour;
   if (GDisp1_GetWidth()>=16) { /* at least two modules */
 #if 0
     /* write min:sec */
-    LEDFRAME_SetChar8x4Pixels('0'+(min/10), 0, 0, ProcessColor(color0));
-    LEDFRAME_SetChar8x4Pixels('0'+(min%10), 4, 0, ProcessColor(color1));
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Min/10), 0, 0, ProcessColor(color0));
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Min%10), 4, 0, ProcessColor(color1));
     /* write first two digits */
-    LEDFRAME_SetChar8x4Pixels('0'+(sec/10), 8, 0, ProcessColor(color2));
-    LEDFRAME_SetChar8x4Pixels('0'+(sec%10), 12, 0, ProcessColor(color3));
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Sec/10), 8, 0, ProcessColor(color2));
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Sec%10), 12, 0, ProcessColor(color3));
 #else
 #if LEDFRAME_SMALL_FONT
     GDisp1_PixelColor color;
@@ -239,28 +323,34 @@ void LEDFRAME_ShowClockTime(uint8_t hour, uint8_t min, uint8_t sec) {
       colorCnt = 0;
     }
 #else
+  #if LEDFRAME_SHOW_LECTURE_MODE
+    if (!CheckTimeRange(time, &color)) { /* change color for time range */
+      color = LEDFRAME_color;
+    }
+  #else
     color = LEDFRAME_color;
+  #endif
 #endif
     /* write min:sec */
-    LEDFRAME_SetChar8x4Pixels('0'+(hour/10), 0, 0, ProcessColor(color));
-    LEDFRAME_SetChar8x4Pixels('0'+(hour%10), 4, 0, ProcessColor(color));
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Hour/10), 0, 0, ProcessColor(color));
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Hour%10), 4, 0, ProcessColor(color));
     /* write first two digits */
-    LEDFRAME_SetChar8x4Pixels('0'+(min/10), 8, 0, ProcessColor(color));
-    LEDFRAME_SetChar8x4Pixels('0'+(min%10), 12, 0, ProcessColor(color));
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Min/10), 8, 0, ProcessColor(color));
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Min%10), 12, 0, ProcessColor(color));
 #else
     /* write min:sec */
-    LEDFRAME_SetChar8x4Pixels('0'+(hour/10), 0, 0, ProcessColor(color0));
-    LEDFRAME_SetChar8x4Pixels('0'+(hour%10), 4, 0, ProcessColor(color1));
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Hour/10), 0, 0, ProcessColor(color0));
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Hour%10), 4, 0, ProcessColor(color1));
     /* write first two digits */
-    LEDFRAME_SetChar8x4Pixels('0'+(min/10), 8, 0, ProcessColor(color2));
-    LEDFRAME_SetChar8x4Pixels('0'+(min%10), 12, 0, ProcessColor(color3));
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Min/10), 8, 0, ProcessColor(color2));
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Min%10), 12, 0, ProcessColor(color3));
 #endif
 #endif
     LEDFRAME_RequestDisplayUpdate();
   } else if (GDisp1_GetWidth()>=8) { /* at least one module */
     /* write sec */
-    LEDFRAME_SetChar8x4Pixels('0'+(sec/10), 0, 0, ProcessColor(LEDFRAME_color));
-    LEDFRAME_SetChar8x4Pixels('0'+(sec%10), 4, 0, ProcessColor(LEDFRAME_color));
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Sec/10), 0, 0, ProcessColor(LEDFRAME_color));
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Sec%10), 4, 0, ProcessColor(LEDFRAME_color));
     LEDFRAME_RequestDisplayUpdate();
   }
 }
@@ -394,10 +484,10 @@ static uint8_t CheckAndUpdateClock(void) {
       if (time.Min!=prevMinute || time.Sec!=prevSecond) {
 #endif
 #if PL_HAS_LED_FRAME_CLOCK
-      LEDFRAME_ShowClockTime(time.Hour, time.Min, time.Sec);
+      LEDFRAME_ShowClockTime(&time);
 #endif
 #if PL_HAS_MATRIX_CLOCK
-      MATRIX_ShowClockTime(time.Hour, time.Min, time.Sec);
+      MATRIX_ShowClockTime(&time);
 #endif
 #if LEDFRAME_SHOW_HOUR_MIN
       prevHour = time.Hour;
