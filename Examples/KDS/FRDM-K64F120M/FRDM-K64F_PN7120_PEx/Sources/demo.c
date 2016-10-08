@@ -12,6 +12,9 @@
 #include "timers.h"
 
 #include "demo.h"
+#include "CLS1.h"
+#include "ShellPrintf.h"
+#include <stdarg.h>
 /* Freescale includes. */
 #if 0
 #include "fsl_device_registers.h"
@@ -26,6 +29,8 @@
 //-----------------------------------------------------------------------
 #include "tool.h"
 #include "Nfc.h"
+
+#define printf   CLS_printf
 
 //-----------------------------------------------------------------------
 // Macros
@@ -193,8 +198,8 @@ void NdefPull_Cb(unsigned char *pNdefRecord, unsigned short NdefRecordSize) {
 
 	case WELL_KNOWN_SIMPLE_TEXT: {
 		pNdefRecord[7 + pNdefRecord[2]] = '\0';
-		printf("   Text record (language = %c%c): %s\n", pNdefRecord[5],
-				pNdefRecord[6], &pNdefRecord[7]);
+	//	printf("   Text record (language = %c%c): %s\n", pNdefRecord[5],
+	//			pNdefRecord[6], &pNdefRecord[7]);
 	}
 		break;
 
@@ -216,19 +221,21 @@ void NdefPull_Cb(unsigned char *pNdefRecord, unsigned short NdefRecordSize) {
 			if (pNdefRecord[index] == 0x10) {
 				if (pNdefRecord[index + 1] == 0x45) {
 					printf("- SSID = ");
-					for (i = 0; i < pNdefRecord[index + 3]; i++)
+					for (i = 0; i < pNdefRecord[index + 3]; i++) {
 						printf("%c", pNdefRecord[index + 4 + i]);
+					}
 					printf("\n");
-				} else if (pNdefRecord[index + 1] == 0x03)
+				} else if (pNdefRecord[index + 1] == 0x03) {
 					printf("- Authenticate Type = %s\n",
 							auth(pNdefRecord[index + 5]));
-				else if (pNdefRecord[index + 1] == 0x0f)
+				} else if (pNdefRecord[index + 1] == 0x0f) {
 					printf("- Encryption Type = %s\n",
 							encrypt(pNdefRecord[index + 5]));
-				else if (pNdefRecord[index + 1] == 0x27) {
+				} else if (pNdefRecord[index + 1] == 0x27) {
 					printf("- Network key = ");
-					for (i = 0; i < pNdefRecord[index + 3]; i++)
+					for (i = 0; i < pNdefRecord[index + 3]; i++) {
 						printf("#");
+					}
 					printf("\n");
 				}
 				index += 4 + pNdefRecord[index + 3];
@@ -292,8 +299,9 @@ void MIFARE_scenario(void) {
 		return;
 	}
 	printf(" Read block %d: ", Read[2]);
-	for (i = 0; i < RespSize - 2; i++)
+	for (i = 0; i < RespSize - 2; i++) {
 		printf("0x%02X ", Resp[i + 1]);
+	}
 	printf("\n");
 
 	/* Write block */
@@ -320,8 +328,9 @@ void MIFARE_scenario(void) {
 		return;
 	}
 	printf(" Read block %d: ", Read[2]);
-	for (i = 0; i < RespSize - 2; i++)
+	for (i = 0; i < RespSize - 2; i++) {
 		printf("0x%02X ", Resp[i + 1]);
+	}
 	printf("\n");
 
 	/* Perform presence check */
@@ -355,12 +364,12 @@ void displayCardInfo(NxpNci_RfIntf_t RfIntf)
 	{
 		case (MODE_POLL | TECH_PASSIVE_NFCA):
 			printf("\tSENS_RES = 0x%.2x 0x%.2x\n", RfIntf.Info.NFC_APP.SensRes[0], RfIntf.Info.NFC_APP.SensRes[1]);
-			print_buf("\tNFCID = ", RfIntf.Info.NFC_APP.NfcId, RfIntf.Info.NFC_APP.NfcIdLen);
+			//print_buf("\tNFCID = ", RfIntf.Info.NFC_APP.NfcId, RfIntf.Info.NFC_APP.NfcIdLen);
 			if(RfIntf.Info.NFC_APP.SelResLen != 0) printf("\tSEL_RES = 0x%.2x\n", RfIntf.Info.NFC_APP.SelRes[0]);
 		break;
 
 		case (MODE_POLL | TECH_PASSIVE_NFCB):
-			if(RfIntf.Info.NFC_BPP.SensResLen != 0) print_buf("\tSENS_RES = ", RfIntf.Info.NFC_BPP.SensRes, RfIntf.Info.NFC_BPP.SensResLen);
+			//if(RfIntf.Info.NFC_BPP.SensResLen != 0) print_buf("\tSENS_RES = ", RfIntf.Info.NFC_BPP.SensRes, RfIntf.Info.NFC_BPP.SensResLen);
 		break;
 
 		case (MODE_POLL | TECH_PASSIVE_NFCF):
@@ -379,7 +388,7 @@ void displayCardInfo(NxpNci_RfIntf_t RfIntf)
 	}
 }
 
-void task_nfc(void)
+void task_nfc_loop(void)
 {
 	NxpNci_RfIntf_t RfInterface;
 	unsigned char mode = 0;
@@ -538,6 +547,11 @@ void task_nfc(void)
 			printf("WRONG DISCOVERY\n");
 		}
 	}
+}
+
+static void task_nfc(void *params) {
+  task_nfc_loop(); /* shall not return */
+  for(;;) {}
 }
 
 //-----------------------------------------------------------------------
