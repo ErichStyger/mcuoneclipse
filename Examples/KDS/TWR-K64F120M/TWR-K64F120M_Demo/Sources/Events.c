@@ -94,7 +94,7 @@ void SM1_OnBlockSent(LDD_TUserData *UserDataPtr)
 */
 void KEY1_OnKeyPressed(byte keys)
 {
-  /* Write your code here. A bit in 'keys' indicates key pressed ... */
+  APP_OnKeyPressed(keys);
 }
 
 /*
@@ -113,7 +113,7 @@ void KEY1_OnKeyPressed(byte keys)
 */
 void KEY1_OnKeyReleased(byte keys)
 {
-  /* Write your code here. A bit in 'keys' indicates key released ... */
+  APP_OnKeyReleased(keys);
 }
 
 /*
@@ -133,7 +133,7 @@ void KEY1_OnKeyReleased(byte keys)
 */
 void KEY1_OnKeyReleasedLong(byte keys)
 {
-  /* Write your code here. A bit in 'keys' indicates key released after a long time ... */
+  APP_OnKeyReleasedLong(keys);
 }
 
 /*
