@@ -51,7 +51,6 @@
 #include "CLS1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
-#include "FAT1.h"
 #include "TmDt1.h"
 #include "KEY1.h"
 #include "Inhr1.h"
@@ -62,10 +61,6 @@
 #include "MMA1.h"
 #include "GI2C1.h"
 #include "I2C.h"
-#include "SD1.h"
-#include "SS1.h"
-#include "CD2.h"
-#include "SM1.h"
 #include "KSDK1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
@@ -76,6 +71,8 @@
 #include "Init_Config.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Application.h"
+#include "KinetisTrace.h"
+#include "swo.h"
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -88,6 +85,13 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
+#define CPU_CORE_FREQUENCY_HZ 120000000 /* CPU core frequency in Hz */
+  SWO_Init(0x1, CPU_CORE_FREQUENCY_HZ);
+  for(;;) {
+    SWO_PrintString("hello world with SWO\r\n", 0);
+    WAIT1_Waitms(100);
+  }
+  KinetisTrace_Init();
   APP_Start();
   /* For example: for(;;) { } */
 

@@ -10,7 +10,7 @@
 
 #define PL_HAS_SHELL          1
 #define PL_HAS_RTOS           1
-#define PL_HAS_SD_CARD        1
+#define PL_HAS_SD_CARD        0
 #define PL_HAS_DEBUG_PRINT    1
 #define PL_HAS_ACCELEROMETER  1
 #define PL_HAS_KEYS           1
