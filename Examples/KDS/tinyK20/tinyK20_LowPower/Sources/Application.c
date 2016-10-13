@@ -14,7 +14,7 @@ static void led_task(void *pvParam) {
     LED1_On();
     vTaskDelay(pdMS_TO_TICKS(5));
     LED1_Off();
-    vTaskDelay(pdMS_TO_TICKS(500));
+    vTaskDelay(pdMS_TO_TICKS(1000));
   }
 }
 

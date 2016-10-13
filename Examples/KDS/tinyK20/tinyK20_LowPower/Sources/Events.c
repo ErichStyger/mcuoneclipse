@@ -116,7 +116,11 @@ void FRTOS1_vApplicationIdleHook(void)
 {
   /* Called whenever the RTOS is idle (from the IDLE task).
      Here would be a good place to put the CPU into low power mode. */
-  /* Write your code here ... */
+#if 0
+  Cpu_SetOperationMode(DOM_WAIT, NULL, NULL); /* interrupt shall wake us up */
+#else
+  Cpu_SetOperationMode(DOM_SLEEP, NULL, NULL); /* interrupt shall wake us up */
+#endif
 }
 
 /*
@@ -162,12 +166,19 @@ void FRTOS1_vOnPreSleepProcessing(portTickType expectedIdleTicks)
 {
   (void)expectedIdleTicks; /* not used */
 #if 1
+#if 1
   /* example for Kinetis (enable SetOperationMode() in CPU component): */
-  // Cpu_SetOperationMode(DOM_WAIT, NULL, NULL); /* Processor Expert way to get into WAIT mode */
+#if 0
+  Cpu_SetOperationMode(DOM_WAIT, NULL, NULL); /* Processor Expert way to get into WAIT mode */
+#else
+  Cpu_SetOperationMode(DOM_SLEEP, NULL, NULL); /* interrupt shall wake us up */
+#endif
+#else
   /* or to wait for interrupt: */
     __asm volatile("dsb");
     __asm volatile("wfi");
     __asm volatile("isb");
+#endif
 #elif 0
   /* example for S08/S12/ColdFire V1 (enable SetWaitMode() in CPU): */
   Cpu_SetWaitMode();
