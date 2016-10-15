@@ -13,7 +13,6 @@ void OnProjectLoad (void) {
   Project.SetTargetIF ("SWD");
   Project.SetTIFSpeed ("4 MHz");
   Project.AddSvdFile ("Cortex-M4.svd");
-//  File.Open ("C:/Users/Erich Styger/Data/GitRepos/McuOnEclipse/Examples/KDS/FRDM-K64F120M/FRDM-K64F_Demo/Debug/FRDM-K64F_Demo.elf");
   File.Open ("./Debug/FRDM-K64F_Demo.elf");
   Project.SetOSPlugin("FreeRTOSPlugin"); // load RTOS awareness plugin
 }
