@@ -29,9 +29,11 @@ static void AppTask(void *pvParameters) {
   if (SERVO_InitHardware(PCA9685_I2C_ADDR)!=ERR_OK) {
     CLS1_SendStr("ERROR: Failed init of PCA9685!\r\n", CLS1_GetStdio()->stdErr);
   }
+  PlotClock_Setup();
   for(;;) {
     PlotClock_Loop();
-    vTaskDelay(pdMS_TO_TICKS(20));
+    vTaskDelay(pdMS_TO_TICKS(500));
+    LED1_Neg();
   }
   for(;;) {
     LED1_Neg();

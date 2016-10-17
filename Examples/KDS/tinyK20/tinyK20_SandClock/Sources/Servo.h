@@ -10,6 +10,9 @@
 
 #include <stdint.h>
 
+#include "CLS1.h"
+uint8_t SERVO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
+
 #define SERVO_MIN_TICKS 225
 #define SERVO_MAX_TICKS 645
 

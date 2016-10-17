@@ -10,12 +10,14 @@
 
 #include <stdint.h>
 
+/* default I2C Address with all address pins (A0 to A5) on GND */
+#define PCA9685_I2C_DEFAULT_ADDR  (0b1000000)
+
 /* register addresses */
 #define PCA9685_REG_MODE1       0x00  /* MODE1 */
 #define PCA9685_REG_MODE2       0x01  /* MODE2 */
 #define PCA9685_REG_LED0_ON_L   0x06  /* LED0 output and brightness control byte 0 */
 #define PCA9685_REG_PRESCALE    0xFE  /* PRE_SCALE */
-
 
 /*!
  * \brief Reads one or multiple registers with address auto-increment

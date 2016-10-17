@@ -8,14 +8,9 @@
 #ifndef SOURCES_PLOTCLOCK_H_
 #define SOURCES_PLOTCLOCK_H_
 
-
-void lift(char lift);
-void drawTo(double pX, double pY);
-void bogenGZS(float bx, float by, float radius, int start, int ende, float sqee);
-void set_XY(double Tx, double Ty);
-void bogenUZS(float bx, float by, float radius, int start, int ende, float sqee);
-
 void PlotClock_Loop(void);
+
+void PlotClock_Setup(void);
 
 #include "CLS1.h"
 uint8_t PlotClock_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);

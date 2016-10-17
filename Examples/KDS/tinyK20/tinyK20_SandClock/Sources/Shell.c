@@ -13,6 +13,7 @@
 #include "TmDt1.h"
 #include "KIN1.h"
 #include "Plotclock.h"
+#include "Servo.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -20,6 +21,7 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
   FRTOS1_ParseCommand,
   KIN1_ParseCommand,
   TmDt1_ParseCommand,
+  SERVO_ParseCommand,
   PlotClock_ParseCommand,
   NULL /* sentinel */
 };
