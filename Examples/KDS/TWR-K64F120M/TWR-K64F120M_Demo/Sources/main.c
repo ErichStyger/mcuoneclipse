@@ -85,7 +85,7 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
-#define CPU_CORE_FREQUENCY_HZ 120000000 /* CPU core frequency in Hz */
+  #define CPU_CORE_FREQUENCY_HZ 120000000 /* CPU core frequency in Hz */
   SWO_Init(0x1, CPU_CORE_FREQUENCY_HZ);
   for(;;) {
     SWO_PrintString("hello world with SWO\r\n", 0);

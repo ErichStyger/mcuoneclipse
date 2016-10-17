@@ -11,8 +11,8 @@
 
 /*!
  * \brief Sends a character over the SWO channel
- * @param c Character to be sent
- * @param portNo SWO channel number, value in the range of 0 to 31
+ * \param c Character to be sent
+ * \param portNo SWO channel number, value in the range of 0 to 31
  */
 void SWO_PrintChar(char c, uint8_t portNo) {
   volatile int timeout;
@@ -38,12 +38,22 @@ void SWO_PrintChar(char c, uint8_t portNo) {
   //ITM_STIM_U8 = c; /* send data */
 }
 
+/*!
+ * \brief Sends a string over SWO to the host
+ * \param s String to send
+ * \param portNumber Port number, 0-31, use 0 for normal debug strings
+ */
 void SWO_PrintString(const char *s, uint8_t portNumber) {
   while (*s!='\0') {
     SWO_PrintChar(*s++, portNumber);
   }
 }
 
+/*!
+ * \brief Initialize the SWO trace port for debug message printing
+ * \param portBits Port bit mask to be configured
+ * \param cpuCoreFreqHz CPU core clock frequency in Hz
+ */
 void SWO_Init(uint32_t portBits, uint32_t cpuCoreFreqHz) {
   uint32_t SWOSpeed = 64000; /* default 64k baud rate */
   uint32_t SWOPrescaler = (cpuCoreFreqHz / SWOSpeed) - 1; /* SWOSpeed in Hz, note that cpuCoreFreqHz is expected to be match the CPU core clock */
