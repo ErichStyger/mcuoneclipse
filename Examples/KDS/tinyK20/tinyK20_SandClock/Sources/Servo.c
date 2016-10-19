@@ -14,7 +14,6 @@
 
 #define SERVO_FREQ_HZ   60
 
-
 uint8_t SERVO_InitHardware(uint8_t i2cAddr) {
   if (PCA9685_Reset(i2cAddr)!=ERR_OK) { /* reset and disable PWM */
     return ERR_FAILED;
@@ -26,8 +25,8 @@ uint8_t SERVO_InitHardware(uint8_t i2cAddr) {
 
 uint8_t SERVO_WriteDutyMicroSeconds(uint8_t i2cAddr, uint8_t channel, uint16_t microSeconds, uint16_t minTicks, uint16_t maxTicks) {
   uint32_t val;
-  #define SERVO_MIN_MICROSECONDS  1000
-  #define SERVO_MAX_MICROSECONDS  2000
+  #define SERVO_MIN_MICROSECONDS  500
+  #define SERVO_MAX_MICROSECONDS  2500
 
   /* microseconds in the range 1000..2000 */
   if (microSeconds<SERVO_MIN_MICROSECONDS) {

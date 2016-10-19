@@ -49,6 +49,8 @@
 #include "GI2C1.h"
 #include "HF1.h"
 #include "KIN1.h"
+#include "Vibra.h"
+#include "BitIoLdd2.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

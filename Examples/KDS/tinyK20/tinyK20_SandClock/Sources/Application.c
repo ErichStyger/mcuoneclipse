@@ -35,6 +35,7 @@ static void AppTask(void *pvParameters) {
     vTaskDelay(pdMS_TO_TICKS(500));
     LED1_Neg();
   }
+#if 0
   for(;;) {
     LED1_Neg();
     for(val=0; val<=1500; val++) {
@@ -55,6 +56,7 @@ static void AppTask(void *pvParameters) {
     }
     vTaskDelay(pdMS_TO_TICKS(1000));
   }
+#endif
 }
 
 void APP_Start(void) {

@@ -13,8 +13,8 @@
 #include "CLS1.h"
 uint8_t SERVO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
 
-#define SERVO_MIN_TICKS 225
-#define SERVO_MAX_TICKS 645
+#define SERVO_MIN_TICKS 230
+#define SERVO_MAX_TICKS 640
 
 uint8_t SERVO_InitHardware(uint8_t i2cAddr);
 

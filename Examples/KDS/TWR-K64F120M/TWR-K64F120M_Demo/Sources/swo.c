@@ -34,8 +34,8 @@ void SWO_PrintChar(char c, uint8_t portNo) {
       return; /* not able to send */
     }
   }
-  ITM->PORT[0].u16 = 0x08 | (c<<8);
-  //ITM_STIM_U8 = c; /* send data */
+  //ITM->PORT[0].u16 = 0x08 | (c<<8);
+  ITM_STIM_U8 = c; /* send data */
 }
 
 /*!

@@ -85,8 +85,10 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
+#if 0 /* this is not necessary if using Segger and GNU ARM Eclipse: the Segger will do that initialization in the hardware */
   #define CPU_CORE_FREQUENCY_HZ 120000000 /* CPU core frequency in Hz */
   SWO_Init(0x1, CPU_CORE_FREQUENCY_HZ);
+#endif
   for(;;) {
     SWO_PrintString("hello world with SWO\r\n", 0);
     WAIT1_Waitms(100);
