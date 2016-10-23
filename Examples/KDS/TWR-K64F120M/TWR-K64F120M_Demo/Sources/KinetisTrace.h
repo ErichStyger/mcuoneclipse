@@ -2,7 +2,7 @@
  * KinetisTrace.h
  *
  *  Created on: 09.10.2016
- *      Author: Erich Styger Local
+ *      Author: Erich Styger
  */
 
 #ifndef SOURCES_KINETISTRACE_H_

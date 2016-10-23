@@ -2,14 +2,13 @@
  * KinetisTrace.c
  *
  *  Created on: 09.10.2016
- *      Author: Erich Styger Local
+ *      Author: Erich Styger
  */
 
 #include "KinetisTrace.h"
 #include "Cpu.h"
 
-
-// Low level write to ETB bits
+/* Low level write to ETB bits */
 static uint32_t ReadMemory32(uint32_t addr) {
   return *((uint32_t*)addr);
 }

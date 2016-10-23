@@ -79,6 +79,7 @@ int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
   /* Write your local variable definition here */
+  int i;
 
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
@@ -89,7 +90,7 @@ int main(void)
   #define CPU_CORE_FREQUENCY_HZ 120000000 /* CPU core frequency in Hz */
   SWO_Init(0x1, CPU_CORE_FREQUENCY_HZ);
 #endif
-  for(;;) {
+  for(i=0; i<10; i++) {
     SWO_PrintString("hello world with SWO\r\n", 0);
     WAIT1_Waitms(100);
   }

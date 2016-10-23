@@ -2,7 +2,7 @@
  * TraceRegisters.h
  *
  *  Created on: 10.10.2016
- *      Author: Erich Styger Local
+ *      Author: Erich Styger
  */
 
 #ifndef SOURCES_TRACEREGISTERS_H_
