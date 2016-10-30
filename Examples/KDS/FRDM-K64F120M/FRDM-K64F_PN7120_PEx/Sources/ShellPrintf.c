@@ -1,6 +1,6 @@
 #include "ShellPrintf.h"
 
-  #define PRINTF_BUFFER_SIZE (64)
+#define PRINTF_BUFFER_SIZE (64)
 
 #include <stdlib.h>
 #include <stdarg.h>

@@ -65,6 +65,7 @@
 #include "GI2C1.h"
 #include "I2C.h"
 #include "KSDK1.h"
+#include "XF1.h"
 
 #ifdef __cplusplus
 extern "C" {

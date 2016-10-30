@@ -8,12 +8,9 @@
 #ifndef SOURCES_KINETISTRACE_H_
 #define SOURCES_KINETISTRACE_H_
 
-#include <stdint.h>
-
-void KinetisTrace_EnableGPIOForETM(void);
-
-void KinetisTrace_EnableETB(uint32_t mask);
-
+/*!
+ * \brif Initializes instruction trace
+ */
 void KinetisTrace_Init(void);
 
 #endif /* SOURCES_KINETISTRACE_H_ */

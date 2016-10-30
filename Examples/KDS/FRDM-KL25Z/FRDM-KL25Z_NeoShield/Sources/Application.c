@@ -82,7 +82,7 @@ static void ClockUpdate(void) {
   }
 }
 
-#if PL_HAS_RTC
+#if 0 && PL_HAS_RTC
 static void UpdateFromRTC(void) {
   RTC1_TTIME time;
   RTC1_TDATE date;
@@ -120,8 +120,8 @@ static void NeoTask(void* pvParameters) {
   Test();
   //MATRIX_Test();
   FRTOS1_vTaskDelay(500/portTICK_RATE_MS); /* give RTC time to power up */
-  UpdateFromRTC(); /* get and sync the RTC */
-
+  //UpdateFromRTC(); /* get and sync the RTC */
+  TmDt1_SyncWithExternalRTC();
   for(;;) {
 #if 1 && PL_HAS_LED_FRAME_CLOCK
     ClockUpdate();

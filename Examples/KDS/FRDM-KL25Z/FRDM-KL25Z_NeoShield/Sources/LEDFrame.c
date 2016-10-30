@@ -503,7 +503,7 @@ static uint8_t CheckAndUpdateClock(void) {
   return ERR_IDLE;
 }
 
-#if PL_HAS_RTC
+#if 0 && PL_HAS_RTC
 static void UpdateFromRTC(void) {
   RTC1_TTIME time;
   RTC1_TDATE date;
@@ -545,7 +545,8 @@ static void LedFrameTask(void* pvParameters) {
   (void)pvParameters; /* parameter not used */
   xTimerStart(LedFrameTimer, 0); /* start timer */
   FRTOS1_vTaskDelay(500/portTICK_RATE_MS); /* give RTC time to power up */
-  UpdateFromRTC(); /* get and sync the RTC */
+  //UpdateFromRTC(); /* get and sync the RTC */
+  TmDt1_SyncWithExternalRTC();
   for(;;) {
     notified = xTaskNotifyWait(0UL, LEDFRAME_NOTIFICATION_UPDATE_DISPLAY, &notifcationValue, 0); /* check flags */
     if (notified==pdTRUE) {

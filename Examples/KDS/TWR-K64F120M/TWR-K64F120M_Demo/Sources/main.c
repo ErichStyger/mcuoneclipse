@@ -62,6 +62,7 @@
 #include "GI2C1.h"
 #include "I2C.h"
 #include "KSDK1.h"
+#include "XF1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -90,7 +91,7 @@ int main(void)
   #define CPU_CORE_FREQUENCY_HZ 120000000 /* CPU core frequency in Hz */
   SWO_Init(0x1, CPU_CORE_FREQUENCY_HZ);
 #endif
-  for(i=0; i<10; i++) {
+  for(i=0; i<5; i++) {
     SWO_PrintString("hello world with SWO\r\n", 0);
     WAIT1_Waitms(100);
   }
