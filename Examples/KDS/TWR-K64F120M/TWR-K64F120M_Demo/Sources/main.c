@@ -91,10 +91,12 @@ int main(void)
   #define CPU_CORE_FREQUENCY_HZ 120000000 /* CPU core frequency in Hz */
   SWO_Init(0x1, CPU_CORE_FREQUENCY_HZ);
 #endif
+#if 0
   for(i=0; i<5; i++) {
     SWO_PrintString("hello world with SWO\r\n", 0);
     WAIT1_Waitms(100);
   }
+#endif
   KinetisTrace_Init();
   APP_Start();
   /* For example: for(;;) { } */
