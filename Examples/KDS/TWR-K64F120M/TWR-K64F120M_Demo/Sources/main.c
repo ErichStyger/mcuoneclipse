@@ -75,6 +75,14 @@
 #include "KinetisTrace.h"
 #include "swo.h"
 
+int Mul(int a, int b) {
+  a++;
+  if (b>0) {
+    b--;
+  }
+  return a*b;
+}
+
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
@@ -98,6 +106,9 @@ int main(void)
   }
 #endif
   KinetisTrace_Init();
+  for(;;) {
+    i = Mul(Mul(3,5), Mul(i, 17));
+  }
   APP_Start();
   /* For example: for(;;) { } */
 

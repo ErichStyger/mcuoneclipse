@@ -15,6 +15,7 @@ void OnProjectLoad (void) {
   Project.AddSvdFile ("Cortex-M4.svd");
   File.Open ("./Debug/TWR-K64F120M_Demo.elf");
   Project.SetOSPlugin("FreeRTOSPlugin.dll"); // load RTOS awareness plugin
+  Project.SetJLinkLogFile("C:/tmp/ozone_log.txt");
 }
 
 /*********************************************************************

@@ -53,6 +53,7 @@
 #include "SW1.h"
 #include "BitIoLdd4.h"
 #include "PTC.h"
+#include "KSDK1.h"
 
 #ifdef __cplusplus
 extern "C" {
