@@ -9,7 +9,7 @@
 #define SOURCES_KINETISTRACE_H_
 
 /*!
- * \brif Initializes instruction trace
+ * \brief Initializes instruction trace
  */
 void KinetisTrace_Init(void);
 

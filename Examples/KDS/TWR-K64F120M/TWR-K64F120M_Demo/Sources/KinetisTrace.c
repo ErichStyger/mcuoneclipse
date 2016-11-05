@@ -8,7 +8,7 @@
 #include "KinetisTrace.h"
 #include "Cpu.h"
 
-static void __message(char *msg) {
+static void msg(char *msg) {
   (void)msg; /* dummy: put your own output routine here */
 }
 
@@ -24,7 +24,7 @@ static void __message(char *msg) {
 #define KINETIS_TRACE_ITM_ENABLE   (1<<1)
 #define KINETIS_TRACE_ITM_ETM_MASK (KINETIS_TRACE_ITM_ENABLE|KINETIS_TRACE_ETM_ENABLE)
 
-static void KinetisTrace_EnableETB(uint32_t mask) {
+static void KinetisTrace_EnableTrace(uint32_t mask) {
   uint32_t value;
 
   /* setup of ETF (Embedded Trace FIFO) funnel */
@@ -45,17 +45,17 @@ static void KinetisTrace_EnableETB(uint32_t mask) {
   /* debug output only: show what we are tracing */
   value = (value>>4)&KINETIS_TRACE_ITM_ETM_MASK;
   if (value==0x0) { /* both bits cleared */
-    __message("Kinetis: ITM and ETM routed to TPIU.");
+    msg("Kinetis: ITM and ETM routed to TPIU");
   } else if (value==0x1) { /* only ITM bit cleared */
-    __message("Kinetis: ITM routed to TPIU");
+    msg("Kinetis: ITM routed to TPIU");
   } else if (value == 0x2) { /* only ETM bit cleared */
-    __message("Kinetis: ETM routed to TPIU");
+    msg("Kinetis: ETM routed to TPIU");
   } else { /* 0x3, both bits set, both paths disabled */
-    __message("Kinetis: routing to TPIU disabled");
+    msg("Kinetis: routing to TPIU disabled");
   }
 }
 
-static void KinetisTrace_EnableGPIOForETM(void) {
+static void KinetisTrace_ConfigureGPIO(void) {
   uint32_t value;
   /* On the TWR-K64F, the following pins are are available on the JTAG/Trace connector:
    * PTE0: TRACE_CLKOUT
@@ -86,6 +86,6 @@ static void KinetisTrace_EnableGPIOForETM(void) {
 }
 
 void KinetisTrace_Init(void) {
-  KinetisTrace_EnableGPIOForETM();
-  KinetisTrace_EnableETB(KINETIS_TRACE_ETM_ENABLE|KINETIS_TRACE_ITM_ENABLE);
+  KinetisTrace_ConfigureGPIO();
+  KinetisTrace_EnableTrace(KINETIS_TRACE_ETM_ENABLE|KINETIS_TRACE_ITM_ENABLE);
 }

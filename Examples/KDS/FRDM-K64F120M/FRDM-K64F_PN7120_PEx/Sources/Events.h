@@ -59,6 +59,7 @@
 #include "ExtIntLdd1.h"
 #include "VEN.h"
 #include "BitIoLdd4.h"
+#include "XF1.h"
 
 #ifdef __cplusplus
 extern "C" {
