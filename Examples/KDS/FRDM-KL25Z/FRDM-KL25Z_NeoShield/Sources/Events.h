@@ -86,6 +86,7 @@
 #include "SYS1.h"
 #include "RTT1.h"
 #include "KIN1.h"
+#include "XF1.h"
 
 #ifdef __cplusplus
 extern "C" {
