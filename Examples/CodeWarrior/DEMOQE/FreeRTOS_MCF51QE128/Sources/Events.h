@@ -68,6 +68,7 @@
 #include "TmDt1.h"
 #include "SM1.h"
 #include "TMOUT1.h"
+#include "XF1.h"
 
 void KEY2_OnKeyPressed(byte keys);
 /*
@@ -116,7 +117,7 @@ void EVNT1_AppHandleEvent(uint8_t event);
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
