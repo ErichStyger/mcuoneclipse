@@ -54,15 +54,24 @@ void APP_OnKeyPressed(uint8_t keys) {
   }
 }
 
+/* midi music:
+ * SW2: short/long: stop
+ * SW3: short: play current title. long: play next title
+ */
+
 void APP_OnKeyReleased(uint8_t keys) {
   if (keys&1) {
     CLS1_SendStr((uint8_t*)"SW3 released!\r\n", CLS1_GetStdio()->stdOut);
 #if PL_HAS_MIDI
+    CLS1_SendStr((uint8_t*)"MIDI Music: play current title....\r\n", CLS1_GetStdio()->stdOut);
+    MM_StopPlaying();
+    vTaskDelay(pdMS_TO_TICKS(500));
     MM_PlayMusic(-1);
 #endif
   } else if (keys&2) {
     CLS1_SendStr((uint8_t*)"SW2 released!\r\n", CLS1_GetStdio()->stdOut);
 #if PL_HAS_MIDI
+    CLS1_SendStr((uint8_t*)"MIDI Music: stop playing.\r\n", CLS1_GetStdio()->stdOut);
     MM_StopPlaying();
 #endif
   }
@@ -71,8 +80,20 @@ void APP_OnKeyReleased(uint8_t keys) {
 void APP_OnKeyReleasedLong(uint8_t keys) {
   if (keys&1) {
     CLS1_SendStr((uint8_t*)"SW3 long released!\r\n", CLS1_GetStdio()->stdOut);
+#if PL_HAS_MIDI
+    CLS1_SendStr((uint8_t*)"MIDI Music: skip and play next title.\r\n", CLS1_GetStdio()->stdOut);
+    MM_StopPlaying();
+    vTaskDelay(pdMS_TO_TICKS(500));
+    MM_IncreaseSongNumber(); /* next song */
+    MM_PlayMusic(-1);
+    vTaskDelay(pdMS_TO_TICKS(500));
+#endif
   } else if (keys&2) {
     CLS1_SendStr((uint8_t*)"SW2 long released!\r\n", CLS1_GetStdio()->stdOut);
+#if PL_HAS_MIDI
+    CLS1_SendStr((uint8_t*)"MIDI Music: stop playing.\r\n", CLS1_GetStdio()->stdOut);
+    MM_StopPlaying();
+#endif
   }
 }
 #endif /* PL_HAS_KEYS */

@@ -21,7 +21,14 @@
 #include "MidiBond.h"
 
 static xTaskHandle MidiPlayTaskHandle;
-static int MM_SetSong = 1;
+static int MM_SetSong = 1; /* skipping song 0 */
+
+void MM_IncreaseSongNumber(void) {
+  MM_SetSong++;
+  if (MM_SetSong==MIDI_NOF_SONGS) {
+    MM_SetSong = 1; /* skipping song 0, not interesting */
+  }
+}
 
 static bool PlayTrackItem(MIDI_MusicTrack *track, uint32_t currTimeMs, uint8_t channel, uint32_t tempoUS) {
   uint32_t beatsPerSecond;

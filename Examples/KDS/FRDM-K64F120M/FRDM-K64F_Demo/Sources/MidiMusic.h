@@ -52,6 +52,7 @@ typedef enum { /* bits are used for FreeRTOS direct task notifications */
 } MIDI_Song;
 #define MIDI_NOF_SONGS  8
 
+void MM_IncreaseSongNumber(void);
 void MM_PlayMusic(int song); /* -1 plays the last/stored song */
 void MM_StopPlaying(void);
 
