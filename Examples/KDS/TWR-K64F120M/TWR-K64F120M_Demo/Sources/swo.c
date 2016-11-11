@@ -26,16 +26,18 @@ void SWO_PrintChar(char c, uint8_t portNo) {
     return; /* requested port not enabled? */
   }
   timeout = 5000; /* arbitrary timeout value */
-  while (ITM->PORT[0].u32 == 0) {
-  //while ((ITM_STIM_U8 & 1)==0) {
+  while (ITM->PORT[portNo].u32 == 0) {
     /* Wait until STIMx is ready, then send data */
     timeout--;
     if (timeout==0) {
       return; /* not able to send */
     }
   }
-  //ITM->PORT[0].u16 = 0x08 | (c<<8);
+#if 0
+  ITM->PORT[portNo].u16 = 0x08 | (c<<8);
+#else
   ITM_STIM_U8 = c; /* send data */
+#endif
 }
 
 /*!
