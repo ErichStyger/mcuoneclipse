@@ -57,6 +57,7 @@
 #include "XF1.h"
 #include "Vibra2.h"
 #include "BitIoLdd3.h"
+#include "RTC1.h"
 
 #ifdef __cplusplus
 extern "C" {

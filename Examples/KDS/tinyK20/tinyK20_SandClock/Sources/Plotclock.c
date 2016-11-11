@@ -35,13 +35,13 @@ static int SERVORIGHTNULL = 500;
 #define PLOTCLOCK_MINPOS_Y   28
 #define PLOTCLOCK_MAXPOS_Y   75
 
-#define PLOTCLOCK_PARKPOS_X  75
-#define PLOTCLOCK_PARKPOS_Y  30
+#define PLOTCLOCK_PARKPOS_X  70
+#define PLOTCLOCK_PARKPOS_Y  35
 
 /* lift positions of lifting servo */
-static int LIFT_DRAW = 1150; /* on drawing surface */
+static int LIFT_DRAW = 1200; /* on drawing surface */
 static int LIFT_BETWEEN_DRAW =  900;  /* between numbers */
-static int LIFT_PARKING =  1100;  /* Parking positin */
+static int LIFT_PARKING =  1100;  /* Parking position */
 static int LIFT_INIT = 900; /* start/reset position */
 static int servoLift; /* current position of lift servo */
 
@@ -493,22 +493,23 @@ uint8_t PlotClock_ParseCommand(const unsigned char *cmd, bool *handled, const CL
   if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "plotclock help")==0) {
     CLS1_SendHelpStr((unsigned char*)"plotclock", (const unsigned char*)"Group of plotclock commands\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
-    CLS1_SendHelpStr((unsigned char*)"  enable (on|off)", (const unsigned char*)"Turns the clock on or off\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  (enable|disable)", (const unsigned char*)"Enables the clock or disables it\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  calibrate (on|off)", (const unsigned char*)"Calibration mode on or off\r\n", io->stdOut);
-    CLS1_SendHelpStr((unsigned char*)"  lift (0|1|2)", (const unsigned char*)"Lift servo arm\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  lift <us>", (const unsigned char*)"Lift servo us setting\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  write <hh:mm>", (const unsigned char*)"Write time\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  moveto <x> <y>", (const unsigned char*)"Move to position\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  leftcorner <x> <y>", (const unsigned char*)"Set left lower corner position\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  vib (0|1) (on|off)", (const unsigned char*)"Vibrate motors\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  vibrate", (const unsigned char*)"Vibrate for erasing\r\n", io->stdOut);
     *handled = TRUE;
     return ERR_OK;
   } else if ((UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0) || (UTIL1_strcmp((char*)cmd, "plotclock status")==0)) {
     *handled = TRUE;
     return PrintStatus(io);
-  } else if (UTIL1_strcmp((char*)cmd, "plotclock enable on")==0) {
+  } else if (UTIL1_strcmp((char*)cmd, "plotclock enable")==0) {
     PlotClockIsEnabled = TRUE;
     *handled = TRUE;
-  } else if (UTIL1_strcmp((char*)cmd, "plotclock enable off")==0) {
+  } else if (UTIL1_strcmp((char*)cmd, "plotclock disable")==0) {
     PlotClockIsEnabled = FALSE;
     *handled = TRUE;
   } else if (UTIL1_strcmp((char*)cmd, "plotclock calibrate on")==0) {
@@ -517,14 +518,13 @@ uint8_t PlotClock_ParseCommand(const unsigned char *cmd, bool *handled, const CL
   } else if (UTIL1_strcmp((char*)cmd, "plotclock calibrate off")==0) {
     PlotClockCalibrateIsOn = FALSE;
     *handled = TRUE;
-  } else if (UTIL1_strcmp((char*)cmd, "plotclock lift 0")==0) {
-    lift(PLOTCLOCK_LIFT_POS_DRAW);
-    *handled = TRUE;
-  } else if (UTIL1_strcmp((char*)cmd, "plotclock lift 1")==0) {
-    lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
-    *handled = TRUE;
-  } else if (UTIL1_strcmp((char*)cmd, "plotclock lift 2")==0) {
-    lift(PLOTCLOCK_LIFT_POS_PARKING);
+  } else if (UTIL1_strncmp((char*)cmd, "plotclock lift ", sizeof("plotclock lift ")-1)==0) {
+    uint16_t us;
+
+    p = cmd + sizeof("plotclock lift ")-1;
+    if (UTIL1_ScanDecimal16sNumber(&p, &us)==ERR_OK) {
+      servo_writeMicroseconds(PLOTCLOCK_SERVO_LIFT, us);
+    }
     *handled = TRUE;
   } else if (UTIL1_strncmp((char*)cmd, "plotclock write ", sizeof("plotclock write ")-1)==0) {
     uint8_t hour, minute, second, hsecond;
@@ -549,6 +549,18 @@ uint8_t PlotClock_ParseCommand(const unsigned char *cmd, bool *handled, const CL
     *handled = TRUE;
   } else if (UTIL1_strcmp((char*)cmd, "plotclock vibrate")==0) {
     number(0, 0, 111, 0);
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, "vib 0 on")==0) {
+    Vibra1_SetVal();
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, "vib 1 on")==0) {
+    Vibra2_SetVal();
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, "vib 0 off")==0) {
+    Vibra1_ClrVal();
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, "vib 1 off")==0) {
+    Vibra2_ClrVal();
     *handled = TRUE;
   }
   return ERR_OK;
