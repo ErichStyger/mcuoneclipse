@@ -13,6 +13,8 @@
 /* default I2C Address with all address pins (A0 to A5) on GND */
 #define PCA9685_I2C_DEFAULT_ADDR  (0b1000000)
 
+#define PCA9685_NOF_CHANNELS    16  /* channels 0-15 */
+
 /* register addresses */
 #define PCA9685_REG_MODE1       0x00  /* MODE1 */
 #define PCA9685_REG_MODE2       0x01  /* MODE2 */
@@ -82,5 +84,9 @@ void PCA9685_Deinit(void);
  * \brief Driver initialization function
  */
 void PCA9685_Init(void);
+
+#include "CLS1.h"
+uint8_t PCA9685_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
+
 
 #endif /* SOURCES_INTRO_ROBOLIB_PCA9685_H_ */

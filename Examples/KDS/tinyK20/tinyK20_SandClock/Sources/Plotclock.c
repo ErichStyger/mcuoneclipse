@@ -13,47 +13,48 @@
 #include "WAIT1.h"
 #include "PCA9685.h"
 #include "TmDt1.h"
-#include "Vibra1.h"
-#include "Vibra2.h"
 
-static bool PlotClockIsEnabled = TRUE; /* if clock is enabled */
+static bool PlotClockIsEnabled = FALSE; /* if clock is enabled */
 static bool PlotClockCalibrateIsOn = FALSE; /* if calibration mode is on */
 
 /* When in calibration mode, adjust the following factor until the servos move exactly 90 degrees */
-static int SERVOFAKTOR_LEFT = 690;
-static int SERVOFAKTOR_RIGHT = 700;
+static int SERVOFAKTOR_LEFT = 700;
+static int SERVOFAKTOR_RIGHT = 750;
 
-/* Zero-position of left and right servo
+/* Zero-position of left and right servo.
    When in calibration mode, adjust the NULL-values so that the servo arms are at all times parallel
    either to the X or Y axis */
-static int SERVOLEFTNULL = 1570;
-static int SERVORIGHTNULL = 500;
+static int SERVOLEFTNULL = 1525;
+static int SERVORIGHTNULL = 425;
 
 #define PLOTCLOCK_MINPOS_X   -30
 #define PLOTCLOCK_MAXPOS_X   90
 
-#define PLOTCLOCK_MINPOS_Y   28
+#define PLOTCLOCK_MINPOS_Y   10
 #define PLOTCLOCK_MAXPOS_Y   75
 
-#define PLOTCLOCK_PARKPOS_X  70
+#define PLOTCLOCK_PARKPOS_X  90
 #define PLOTCLOCK_PARKPOS_Y  35
 
 /* lift positions of lifting servo */
-static int LIFT_DRAW = 1200; /* on drawing surface */
+static int LIFT_DRAW = 1275; /* on drawing surface */
 static int LIFT_BETWEEN_DRAW =  900;  /* between numbers */
-static int LIFT_PARKING =  1100;  /* Parking position */
-static int LIFT_INIT = 900; /* start/reset position */
+static int LIFT_PARKING =  1000;  /* Parking position */
+static int LIFT_INIT = 1000; /* start/reset position */
 static int servoLift; /* current position of lift servo */
 
 /* position of left lower corner for drawing */
-static int16_t leftLowerCornerX = -3;
-static int16_t leftLowerCornerY = 34;
+static int16_t leftLowerCornerX = -5;
+static int16_t leftLowerCornerY = 26;
 
-/* corresponds to servo channels */
+/* corresponds to PCA9685 channels */
 typedef enum {
   PLOTCLOCK_SERVO_LIFT = 0,
   PLOTCLOCK_SERVO_LEFT = 1,
   PLOTCLOCK_SERVO_RIGHT= 2,
+  PLOTCLOCK_LED0 = 13,
+  PLOTCLOCK_VIBRA1 = 14,
+  PLOTCLOCK_VIBRA2 = 15,
 } PlotClockServo;
 
 typedef enum {
@@ -66,28 +67,35 @@ typedef enum {
 static volatile double lastX = PLOTCLOCK_PARKPOS_X;
 static volatile double lastY = PLOTCLOCK_PARKPOS_Y;
 static uint8_t last_min = -1;
+static bool isWriting = FALSE;
 
 /* speed (actually delay time) of lifting arm, higher is slower */
 #define LIFTSPEED 1500
 
+#if 0
 /* length of arms in mm, see http://wiki.fablab-nuernberg.de/w/Datei:erklaerung.jpg */
-#if 0 /* laser cut parts */
-  #define L1 40.0 /* length of first arm, line from servo joint to the first joint */
-  #define L2 57.0 /* line from first joint to center of pen */
-  #define L3 12.0 /* length of 'front' arm, line from front joint to center of the pen */
-  #define L4 50.0 /* length of the second arm, distance between first joint and second joint */
-#else /* 3D printed parts */
-  #define L1 40.0 /* length of first arm, line from servo joint to the first joint */
-  #define L2 60.0 /* line from first joint to center of pen */
-  #define L3 14.0 /* length of 'front' arm, line from front joint to center of the pen */
-  #define L4 50.0 /* length of the second arm, distance between first joint and second joint */
+#define L1 40.0 /* length of first arm, line from servo joint to the first joint */
+#define L2 59.0 /* line from first joint to center of pen */
+#define L3 13.0 /* length of 'front' arm, line from front joint to center of the pen */
+#define L4 50.0 /* length of the second arm, distance between first joint and second joint */
+#else
+static float L1 = 40.0;
+static float L2 = 59.0;
+static float L3 = 13.0;
+static float L4 = 50.0;
 #endif
-
 /* origin points in mm of left and right servo */
+#if 0
 #define O1X  22  /* X position of the left servo to left border.  */
 #define O1Y -30  /* Y position of of left servo to base line. */
 #define O2X  48  /* X position of the right servo */
 #define O2Y -30  /* Y position of the right servo */
+#else
+static float O1X = 22.0;
+static float O1Y = -30.0;
+static float O2X = 48.0;
+static float O2Y = -30.0;
+#endif
 
 #define M_PI    3.14159265358979323846
 
@@ -264,36 +272,38 @@ static void lift(PlotClockLiftPos lift) {
   } /* switch */
 }
 
+static void MoveToParking(void) {
+  lift(PLOTCLOCK_LIFT_POS_PARKING);
+  drawTo(PLOTCLOCK_PARKPOS_X, PLOTCLOCK_PARKPOS_Y); /* move to parking position */
+}
+
 typedef struct {
-  uint32_t ms;
-  bool motor1, motor2;
+  uint16_t ms;
+  uint16_t val1, val2;
 } VibraSequence;
 
 static VibraSequence vibras[] =
 {
-  {800, TRUE, TRUE},
-  {500, FALSE, TRUE},
-  {500, TRUE, FALSE},
-  {200, FALSE, TRUE},
-  {200, TRUE, FALSE},
-  {100, FALSE, TRUE},
-  {100, TRUE, FALSE},
-  {50, TRUE, TRUE}
+  {300, 0xc00, 0xc00},
+  {200, 0x500, 0x500},
+  {500, 0x800, 0x800},
+  {500, 0x900, 0x900},
+  {500, 0xa00, 0xa00},
+  {500, 0xb00, 0xb00},
+  {500, 0xa00, 0xa00},
+  {0, 0xfff, 0xfff}, /* off */
 };
 
 static void DoSandVibration(void) {
-  int i;
+  int i, j;
 
-  for(i=0;i<sizeof(vibras)/sizeof(vibras[0]);i++) {
-    if (vibras[i].motor1) {
-      Vibra1_SetVal(); /* motor on */
+  MoveToParking();
+  for(j=0;j<3;j++) {
+    for(i=0;i<sizeof(vibras)/sizeof(vibras[0]);i++) {
+      PCA9685_SetChannelPWM(PCA9685_I2C_DEFAULT_ADDR, PLOTCLOCK_VIBRA1, vibras[i].val1);
+      PCA9685_SetChannelPWM(PCA9685_I2C_DEFAULT_ADDR, PLOTCLOCK_VIBRA2, vibras[i].val2);
+      delay(vibras[i].ms);
     }
-    if (vibras[i].motor2) {
-      Vibra2_SetVal(); /* motor on */
-    }
-    delay(vibras[i].ms);
-    Vibra2_ClrVal(); /* motor off */
-    Vibra1_ClrVal(); /* motor off */
   }
 }
 
@@ -392,44 +402,75 @@ static void number(float bx, float by, int num, float scale) {
 }
 
 void PlotClock_Setup(void) {
-  Vibra1_ClrVal(); /* vibra motor off */
-  Vibra2_ClrVal(); /* vibra motor off */
+  /* turn vibration motors off */
+  PCA9685_SetChannelPWM(PCA9685_I2C_DEFAULT_ADDR, PLOTCLOCK_VIBRA1, 0xfff);
+  PCA9685_SetChannelPWM(PCA9685_I2C_DEFAULT_ADDR, PLOTCLOCK_VIBRA2, 0xfff);
   servoLift = LIFT_INIT;
   last_min = 0;
   servo_writeMicroseconds(PLOTCLOCK_SERVO_LIFT, servoLift);
   drawTo(PLOTCLOCK_PARKPOS_X, PLOTCLOCK_PARKPOS_Y); /* move to parking position */
-  lift(PLOTCLOCK_LIFT_POS_DRAW); /* move down to surface */
-  delay(1000);
+  lift(PLOTCLOCK_LIFT_POS_PARKING); /* move down to surface */
 }
 
 static void PlotClockPrintTime(uint8_t hour, uint8_t minute) {
-  float digitScale = 1.0;
+  float digitScale = 1.2;
   int8_t x, y;
 
+  isWriting = TRUE;
   number(0, 0, 111, 0); /* erase */
   x = leftLowerCornerX;
   y = leftLowerCornerY;
   lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
   number(x,    y, hour/10, digitScale); /* write first digit of hour */
-  number(x+15, y, hour%10, digitScale); /* write second digit */
-  number(x+26, y, 11, digitScale); /* draw ':' */
-  number(x+32, y, minute/10, digitScale); /* write most significant digit of hour */
-  number(x+45, y, minute%10, digitScale); /* second digit */
+  x += 13*digitScale;
+  number(x, y, hour%10, digitScale); /* write second digit */
+  x += 12*digitScale;
+  number(x, y, 11, digitScale); /* draw ':' */
+  x += 8*digitScale;
+  number(x, y, minute/10, digitScale); /* write most significant digit of hour */
+  x += 13*digitScale;
+  number(x, y, minute%10, digitScale); /* second digit */
   lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
-  drawTo(PLOTCLOCK_PARKPOS_X, PLOTCLOCK_PARKPOS_Y); /* move to parking position */
-  lift(PLOTCLOCK_LIFT_POS_PARKING);
+  MoveToParking();
+  isWriting = FALSE;
 }
 
 void PlotClock_Loop(void) {
+  if (isWriting) {
+    return; /* already writing something */
+  }
   if (!PlotClockIsEnabled) {
     return; /* clock not enabled */
   }
   if (PlotClockCalibrateIsOn) {
+    isWriting = TRUE;
+    lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
     /* servo horns will have 90° between movements, parallel to x and y axis */
-    drawTo(-3, 29.2);
+    /* drawTo(-3, 29.2):
+     * (1): adjust SERVOLEFTNULL
+     * (3): adjust SERVOFACTOR_RIGHT
+     *              (2)     (3)
+     *                       *
+     *                       *
+     *                       *
+     *                       *
+     *    (1)*********       *         (4)
+     *
+     * drawTo(74.1, 28):
+     * (2): adjust SERVOFACTOR_LEFT
+     * (4): adjust SERVORIGHTNULL
+     *              (2)     (3)
+     *               *
+     *               *
+     *               *
+     *               *
+     *    (1)        *       **********(4)
+     */
+    drawTo(-3, 29.2); /* left servo horizontal, right servo vertical: adjust SERVOLEFTNULL and SERVOFACTOR_RIGHT */
     delay(500);
-    drawTo(74.1, 28);
+    drawTo(74.1, 28); /* left servo vertical, right servo horizontal: adjust SERVOFACTOR_LEFT and SERVORIGHTNULL */
     delay(500);
+    isWriting = FALSE;
   } else {
     TIMEREC time;
 
@@ -455,7 +496,7 @@ static uint8_t PrintStatus(CLS1_ConstStdIOType *io) {
   buf[0] = '\0'; UTIL1_Num16uToStr(buf, sizeof(buf), SERVOFAKTOR_RIGHT); UTIL1_strcat(buf, sizeof(buf), "\r\n");
   CLS1_SendStatusStr((unsigned char*)"  FAKTOR R", buf, io->stdOut);
 
-  buf[0] = '\0'; UTIL1_Num16uToStr(buf, sizeof(buf), SERVOLEFTNULL); UTIL1_strcat(buf, sizeof(buf), "us \r\n");
+  buf[0] = '\0'; UTIL1_Num16uToStr(buf, sizeof(buf), SERVOLEFTNULL); UTIL1_strcat(buf, sizeof(buf), " us \r\n");
   CLS1_SendStatusStr((unsigned char*)"  LEFTNULL", buf, io->stdOut);
 
   buf[0] = '\0'; UTIL1_Num16uToStr(buf, sizeof(buf), SERVORIGHTNULL); UTIL1_strcat(buf, sizeof(buf), " us\r\n");
@@ -478,6 +519,9 @@ static uint8_t PrintStatus(CLS1_ConstStdIOType *io) {
   CLS1_SendStatusStr((unsigned char*)"  base", buf, io->stdOut);
 
 
+  buf[0] = '\0'; UTIL1_Num16uToStr(buf, sizeof(buf), servoLift); UTIL1_strcat(buf, sizeof(buf), " us\r\n");
+  CLS1_SendStatusStr((unsigned char*)"  lift servo", buf, io->stdOut);
+
   buf[0] = '\0'; UTIL1_NumFloatToStr(buf, sizeof(buf), lastX, 2); UTIL1_strcat(buf, sizeof(buf), "\r\n");
   CLS1_SendStatusStr((unsigned char*)"  last X", buf, io->stdOut);
 
@@ -499,7 +543,6 @@ uint8_t PlotClock_ParseCommand(const unsigned char *cmd, bool *handled, const CL
     CLS1_SendHelpStr((unsigned char*)"  write <hh:mm>", (const unsigned char*)"Write time\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  moveto <x> <y>", (const unsigned char*)"Move to position\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  leftcorner <x> <y>", (const unsigned char*)"Set left lower corner position\r\n", io->stdOut);
-    CLS1_SendHelpStr((unsigned char*)"  vib (0|1) (on|off)", (const unsigned char*)"Vibrate motors\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  vibrate", (const unsigned char*)"Vibrate for erasing\r\n", io->stdOut);
     *handled = TRUE;
     return ERR_OK;
@@ -550,19 +593,6 @@ uint8_t PlotClock_ParseCommand(const unsigned char *cmd, bool *handled, const CL
   } else if (UTIL1_strcmp((char*)cmd, "plotclock vibrate")==0) {
     number(0, 0, 111, 0);
     *handled = TRUE;
-  } else if (UTIL1_strcmp((char*)cmd, "vib 0 on")==0) {
-    Vibra1_SetVal();
-    *handled = TRUE;
-  } else if (UTIL1_strcmp((char*)cmd, "vib 1 on")==0) {
-    Vibra2_SetVal();
-    *handled = TRUE;
-  } else if (UTIL1_strcmp((char*)cmd, "vib 0 off")==0) {
-    Vibra1_ClrVal();
-    *handled = TRUE;
-  } else if (UTIL1_strcmp((char*)cmd, "vib 1 off")==0) {
-    Vibra2_ClrVal();
-    *handled = TRUE;
   }
   return ERR_OK;
 }
-

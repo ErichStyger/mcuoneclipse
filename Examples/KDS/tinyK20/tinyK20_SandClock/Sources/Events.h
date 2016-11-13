@@ -52,12 +52,8 @@
 #include "GI2C1.h"
 #include "HF1.h"
 #include "KIN1.h"
-#include "Vibra1.h"
-#include "BitIoLdd2.h"
 #include "XF1.h"
-#include "Vibra2.h"
-#include "BitIoLdd3.h"
-#include "RTC1.h"
+#include "RTC2.h"
 
 #ifdef __cplusplus
 extern "C" {

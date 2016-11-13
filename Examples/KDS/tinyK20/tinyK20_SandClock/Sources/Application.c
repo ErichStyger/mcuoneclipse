@@ -13,6 +13,7 @@
 #include "FRTOS1.h"
 #include "LED1.h"
 #include "Plotclock.h"
+#include "TmDt1.h"
 
 #define PCA9685_I2C_ADDR  (0b1000000)
 
@@ -26,6 +27,7 @@ static void AppTask(void *pvParameters) {
   uint16_t max = 645;
 
   (void)pvParameters; /* not used */
+  TmDt1_SyncWithExternalRTC();
   if (SERVO_InitHardware(PCA9685_I2C_ADDR)!=ERR_OK) {
     CLS1_SendStr("ERROR: Failed init of PCA9685!\r\n", CLS1_GetStdio()->stdErr);
   }
@@ -63,7 +65,7 @@ void APP_Start(void) {
   SERVO_Init();
   PCA9685_Init();
   SHELL_Init();
-  if (xTaskCreate(AppTask, "App", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (xTaskCreate(AppTask, "App", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
     for(;;){} /* error */
   }
   vTaskStartScheduler();

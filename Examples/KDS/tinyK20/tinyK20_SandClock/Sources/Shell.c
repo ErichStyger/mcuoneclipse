@@ -14,13 +14,17 @@
 #include "KIN1.h"
 #include "Plotclock.h"
 #include "Servo.h"
+#include "PCA9685.h"
+#include "RTC2.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
   CLS1_ParseCommand,
   FRTOS1_ParseCommand,
   KIN1_ParseCommand,
+  RTC2_ParseCommand,
   TmDt1_ParseCommand,
+  PCA9685_ParseCommand,
   SERVO_ParseCommand,
   PlotClock_ParseCommand,
   NULL /* sentinel */
@@ -39,7 +43,7 @@ static void ShellTask(void *pvParameters) {
 }
 
 void SHELL_Init(void) {
-  if (xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+300, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
+  if (xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+300, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 }
