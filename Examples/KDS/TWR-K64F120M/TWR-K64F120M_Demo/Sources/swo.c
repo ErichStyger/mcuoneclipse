@@ -10,7 +10,7 @@
 #include "TraceRegisters.h"
 
 /*!
- * \brief Sends a character over the SWO channel
+ * \brief Sends a character over the SWO channel. See as well ITM_SendChar() in core_cm4.h
  * \param c Character to be sent
  * \param portNo SWO channel number, value in the range of 0 to 31
  */
@@ -33,7 +33,7 @@ void SWO_PrintChar(char c, uint8_t portNo) {
       return; /* not able to send */
     }
   }
-#if 0
+#if 0 /* different version for Cortex-M3 needed? */
   ITM->PORT[portNo].u16 = 0x08 | (c<<8);
 #else
   ITM_STIM_U8 = c; /* send data */
