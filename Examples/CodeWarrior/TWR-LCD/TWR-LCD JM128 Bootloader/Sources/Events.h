@@ -65,6 +65,23 @@ void S191_OnSRecord(uint8_t *returnCode, uint8_t type, uint32_t addr, uint8_t *d
 ** ===================================================================
 */
 
+void S191_OnError(S191_ErrorCode errorCode, S191_ParserStruct *iteratorInfo);
+/*
+** ===================================================================
+**     Event       :  S191_OnError (module Events)
+**
+**     Component   :  S191 [S19]
+**     Description :
+**         Event called in case of an error
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         errorCode       - 
+**       * iteratorInfo    - Pointer to parser info
+**                           struct
+**     Returns     : Nothing
+** ===================================================================
+*/
+
 /* END Events */
 #endif /* __Events_H*/
 

@@ -199,6 +199,11 @@
 <listAttribute key="com.freescale.cdt.debug.cw.Embedded Download.TaskSuccessiveRuns"/>
 <listAttribute key="com.freescale.cdt.debug.cw.Embedded Download.TaskTypes"/>
 <listAttribute key="com.freescale.cdt.debug.cw.ExecutablePath"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.InitializePC" value="true"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.InitializePCAtProgramEntryPoint" value="true"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.InitializePCAtSymbol" value="main"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.InitializePCAtUserSpecified" value="false"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.LaunchMode" value="DOWNLOAD"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.LinuxKernelModules.autoLoad" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.LinuxKernelModules.keepTargetSuspended" value="false"/>
 <listAttribute key="com.freescale.cdt.debug.cw.LinuxKernelModules.modulesNames"/>
@@ -210,11 +215,13 @@
 <stringAttribute key="com.freescale.cdt.debug.cw.RefreshPolicy.RefreshPeriod" value="2.0"/>
 <listAttribute key="com.freescale.cdt.debug.cw.RemoteDownload"/>
 <listAttribute key="com.freescale.cdt.debug.cw.RemotePath"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.ResumeProgram" value="true"/>
 <listAttribute key="com.freescale.cdt.debug.cw.SMPCores"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.SYNC_WITH_ENCL_PROJ" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.Symbolics.CacheSymbolicsBetweenRuns" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.Symbolics.UseExecutableCopy" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.UDPPort" value="1234"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.UseApplication" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.RetryConnectionOn" value="false"/>
 <intAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.RetryTimeout" value="20"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.RetryWithTimeoutOn" value="false"/>
@@ -238,9 +245,11 @@
 <stringAttribute key="com.freescale.cdt.debug.cw.debuggerAddress" value="127.0.0.1"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.disableIO" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.ethCtrl" value="UEC1"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.executeInitScripts" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.executePerCoresReset" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.executePerprocessorReset" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.executeReset" value="true"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.executeResetSequence" value="true"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.gateway" value="127.0.0.1"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.initPath" value=""/>
 <listAttribute key="com.freescale.cdt.debug.cw.initPathList">
@@ -262,6 +271,7 @@
 <listAttribute key="com.freescale.cdt.debug.cw.runOutOfResetList">
 <listEntry value="false"/>
 </listAttribute>
+<booleanAttribute key="com.freescale.cdt.debug.cw.skipSystemInitialization" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.targetAddress" value="127.0.0.1"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.useGateway" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.useHSSTIO" value="false"/>
@@ -337,14 +347,17 @@
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_CyclonePro_PowerUpDelay" value="250"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_CyclonePro_currentvoltage" value="255"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_CyclonePro_poweroffonexit" value="0"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_Multilink_PowerDownDelay" value="250"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_Multilink_PowerUpDelay" value="1000"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_PORT" value="1"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_PORT_NAME_STRING" value="PE5515143"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_SPECIFY_IP" value="0.0.0.0"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_SPECIFY_IP_ENABLED" value="0"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_SPECIFY_NETWORKCARD" value="0.0.0.0"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_SPECIFY_NETWORKCARD_ENABLED" value="0"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_USE_CYCLONEPRO_RELAYS" value="0"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.STARTUP_interface_selection" value="3"/>
-<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.UUID" value="1728252d-71b7-49f2-8959-6401d6c7cc85"/>
+<stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv1.UUID" value="cfc10442-411f-48cb-92a2-28c4c6d4444e"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv234.STARTUP_PCI_DELAY" value="1"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv234.STARTUP_PORT" value="0"/>
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.cfv234.STARTUP_RESET_DELAY" value="0"/>
@@ -364,7 +377,7 @@
 <booleanAttribute key="org.eclipse.cdt.launch.ENABLE_REGISTER_BOOKKEEPING" value="false"/>
 <booleanAttribute key="org.eclipse.cdt.launch.ENABLE_RESTORE_WATCHPOINTS" value="true"/>
 <booleanAttribute key="org.eclipse.cdt.launch.ENABLE_VARIABLE_BOOKKEEPING" value="false"/>
-<stringAttribute key="org.eclipse.cdt.launch.FORMAT" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&lt;contentList&gt;&lt;content id=&quot;USB_CharPointer-SCSI_GetUSBchar-(cast_to_array)&quot; val=&quot;0:300&quot;/&gt;&lt;content id=&quot;USB_CharPointer-SCSI_GetUSBchar-(cast)&quot; val=&quot;char*&quot;/&gt;&lt;content id=&quot;S19_currAddress-S191_Parse-(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;[1]-USB_CharPointer-SCSI_GetUSBchar-(cast)&quot; val=&quot;char&quot;/&gt;&lt;content id=&quot;[0]-USB_CharPointer-SCSI_GetUSBchar-(cast)&quot; val=&quot;char&quot;/&gt;&lt;content id=&quot;ch-Get_S_Pair-(cast)&quot; val=&quot;char&quot;/&gt;&lt;content id=&quot;addr-BL_OnSRecord-(format)&quot; val=&quot;4&quot;/&gt;&lt;/contentList&gt;"/>
+<stringAttribute key="org.eclipse.cdt.launch.FORMAT" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&lt;contentList&gt;&lt;content id=&quot;S19_currAddress-S191_Parse-(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;type-S191_Parse-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;ch-Get_S_Pair-(cast)&quot; val=&quot;char&quot;/&gt;&lt;content id=&quot;ch-Get_S_Pair-(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;addr-BL_OnSRecord-(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;res-BLUSB1_ReadAndProcessS19-(format)&quot; val=&quot;1&quot;/&gt;&lt;content id=&quot;USB_CharPointer-SCSI_GetUSBchar-(cast)&quot; val=&quot;char*&quot;/&gt;&lt;content id=&quot;USB_CharPointer-SCSI_GetUSBchar-(cast_to_array)&quot; val=&quot;0:300&quot;/&gt;&lt;content id=&quot;[0]-USB_CharPointer-SCSI_GetUSBchar-(cast)&quot; val=&quot;char&quot;/&gt;&lt;content id=&quot;[1]-USB_CharPointer-SCSI_GetUSBchar-(cast)&quot; val=&quot;char&quot;/&gt;&lt;/contentList&gt;"/>
 <stringAttribute key="org.eclipse.cdt.launch.GLOBAL_VARIABLES" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;globalVariableList/&gt;&#13;&#10;"/>
 <stringAttribute key="org.eclipse.cdt.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList/&gt;&#13;&#10;"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="MCF51JM128_Internal_Flash/TWR-LCDBootloader.elf"/>

@@ -214,7 +214,7 @@ void UI1_OnEvent(UI1_Screen *screen, UI1_Window *window, UI1_Element *element, U
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
