@@ -29,7 +29,7 @@ static void LogToFile(int16_t x, int16_t y, int16_t z) {
     Err();
   }
   /* move to the end of the file */
-  if (FAT1_lseek(&fp, fp.fsize) != FR_OK || fp.fptr != fp.fsize) {
+  if (FAT1_lseek(&fp, f_size(&fp)) != FR_OK || fp.fptr != f_size(&fp)) {
     Err();
   }
   /* get time */

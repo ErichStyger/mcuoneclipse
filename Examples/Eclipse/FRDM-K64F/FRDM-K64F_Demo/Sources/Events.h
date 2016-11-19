@@ -48,8 +48,6 @@
 #include "HF1.h"
 #include "UTIL1.h"
 #include "FRTOS1.h"
-#include "RTOSTRC1.h"
-#include "RTOSCNTRLDD1.h"
 #include "CLS1.h"
 #include "BT1.h"
 #include "Serial1.h"
@@ -74,6 +72,8 @@
 #include "BitIoLdd9.h"
 #include "TRG1.h"
 #include "MINI1.h"
+#include "KSDK1.h"
+#include "XF1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -95,7 +95,7 @@ extern "C" {
 void Cpu_OnNMI(void);
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

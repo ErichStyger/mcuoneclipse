@@ -7,7 +7,7 @@
 **     Version     : Component 01.067, Driver 01.01, CPU db: 3.50.001
 **     Datasheet   : MC56F847XXRM Rev.1 06/2012
 **     Compiler    : CodeWarrior DSP C Compiler
-**     Date/Time   : 2016-04-22, 10:54, # CodeGen: 0
+**     Date/Time   : 2016-11-18, 20:13, # CodeGen: 1
 **     Abstract    :
 **
 **     Settings    :
@@ -87,7 +87,7 @@ volatile word SR_reg;                  /* Current value of the SR register */
 #pragma interrupt alignsp
 void Cpu_Interrupt(void)
 {
-  /* This code can be changed using the CPU bean property "Build Options / Unhandled int code" */
+/* This code can be changed using the CPU bean property "Build Options / Unhandled int code" */
   asm(DEBUGHLT);                       /* Halt the core and placing it in the debug processing state. */
   /* Here should be two NOPs if DEBUGHLT is removed.
   asm(nop);

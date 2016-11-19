@@ -51,6 +51,7 @@
 #include "LED3.h"
 #include "LEDpin3.h"
 #include "BitIoLdd5.h"
+#include "KSDK1.h"
 #include "Pins1.h"
 #include "FRTOS1.h"
 /* Including shared modules, which are used for whole project */

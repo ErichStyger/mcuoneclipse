@@ -50,6 +50,7 @@
 #include "CI2C1.h"
 #include "UTIL1.h"
 #include "HF1.h"
+#include "KSDK1.h"
 #include "CS1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"

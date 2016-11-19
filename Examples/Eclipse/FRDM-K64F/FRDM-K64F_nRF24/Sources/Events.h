@@ -55,6 +55,7 @@
 #include "LED3.h"
 #include "LEDpin3.h"
 #include "BitIoLdd5.h"
+#include "KSDK1.h"
 #include "Pins1.h"
 #include "FRTOS1.h"
 
@@ -78,7 +79,7 @@ extern "C" {
 void Cpu_OnNMI(void);
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

@@ -1,5 +1,5 @@
 /* ###################################################################
-**     Filename    : Events.c
+**     Filename    : Events.h
 **     Project     : ProcessorExpert
 **     Processor   : MK64FN1M0VMD12
 **     Component   : Events
@@ -15,7 +15,7 @@
 **
 ** ###################################################################*/
 /*!
-** @file Events.c
+** @file Events.h
 ** @version 01.00
 ** @brief
 **         This is user's event module.
@@ -25,20 +25,56 @@
 **  @addtogroup Events_module Events module documentation
 **  @{
 */         
+
+#ifndef __Events_H
+#define __Events_H
 /* MODULE Events */
 
-#include "Cpu.h"
-#include "Events.h"
-#include "Init_Config.h"
-#include "PDD_Includes.h"
+#include "PE_Types.h"
+#include "PE_Error.h"
+#include "PE_Const.h"
+#include "IO_Map.h"
+#include "LED1.h"
+#include "LEDpin1.h"
+#include "BitIoLdd1.h"
+#include "LED2.h"
+#include "LEDpin2.h"
+#include "BitIoLdd2.h"
+#include "LED3.h"
+#include "LEDpin3.h"
+#include "BitIoLdd3.h"
+#include "LED4.h"
+#include "LEDpin4.h"
+#include "BitIoLdd4.h"
+#include "WAIT1.h"
+#include "UTIL1.h"
+#include "FRTOS1.h"
+#include "TMOUT1.h"
+#include "CS1.h"
+#include "CLS1.h"
+#include "AS1.h"
+#include "ASerialLdd1.h"
+#include "FAT1.h"
+#include "TmDt1.h"
+#include "KEY1.h"
+#include "Inhr1.h"
+#include "BitIoLdd7.h"
+#include "Inhr2.h"
+#include "BitIoLdd8.h"
+#include "TRG1.h"
+#include "MMA1.h"
+#include "GI2C1.h"
+#include "I2C.h"
+#include "SD1.h"
+#include "SS1.h"
+#include "CD2.h"
+#include "SM1.h"
+#include "KSDK1.h"
+#include "XF1.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif 
-
-
-/* User includes (#include below this line is not maintained by Processor Expert) */
-#include "Application.h"
 
 /*
 ** ===================================================================
@@ -53,11 +89,10 @@ extern "C" {
 **         interrupt] property is set to 'Enabled'.
 */
 /* ===================================================================*/
-void Cpu_OnNMI(void)
-{
-  /* Write your code here ... */
-}
+void Cpu_OnNMI(void);
 
+
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
@@ -73,19 +108,8 @@ void Cpu_OnNMI(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName)
-{
-  /* This will get called if a stack overflow is detected during the context
-     switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack
-     problems within nested interrupts, but only do this for debug purposes as
-     it will increase the context switch time. */
-  (void)pxTask;
-  (void)pcTaskName;
-  taskDISABLE_INTERRUPTS();
-  /* Write your code here ... */
-  for(;;) {}
-}
 
+void FRTOS1_vApplicationMallocFailedHook(void);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationMallocFailedHook (module Events)
@@ -98,18 +122,8 @@ void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void FRTOS1_vApplicationMallocFailedHook(void)
-{
-  /* Called if a call to pvPortMalloc() fails because there is insufficient
-     free memory available in the FreeRTOS heap.  pvPortMalloc() is called
-     internally by FreeRTOS API functions that create tasks, queues, software
-     timers, and semaphores.  The size of the FreeRTOS heap is set by the
-     configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
-  taskDISABLE_INTERRUPTS();
-  /* Write your code here ... */
-  for(;;) {}
-}
 
+void KEY1_OnKeyPressed(byte keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyPressed (module Events)
@@ -124,11 +138,8 @@ void FRTOS1_vApplicationMallocFailedHook(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void KEY1_OnKeyPressed(byte keys)
-{
-  APP_OnKeyPressed(keys);
-}
 
+void KEY1_OnKeyReleased(byte keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyReleased (module Events)
@@ -143,11 +154,8 @@ void KEY1_OnKeyPressed(byte keys)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void KEY1_OnKeyReleased(byte keys)
-{
-  APP_OnKeyReleased(keys);
-}
 
+void KEY1_OnKeyReleasedLong(byte keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyReleasedLong (module Events)
@@ -163,10 +171,6 @@ void KEY1_OnKeyReleased(byte keys)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void KEY1_OnKeyReleasedLong(byte keys)
-{
-  APP_OnKeyReleasedLong(keys);
-}
 
 /*
 ** ===================================================================
@@ -185,10 +189,7 @@ void KEY1_OnKeyReleasedLong(byte keys)
 **                           as the parameter of Init method. 
 */
 /* ===================================================================*/
-void SM1_OnBlockSent(LDD_TUserData *UserDataPtr)
-{
-  /* Write your code here ... */
-}
+void SM1_OnBlockSent(LDD_TUserData *UserDataPtr);
 
 /* END Events */
 
@@ -196,6 +197,8 @@ void SM1_OnBlockSent(LDD_TUserData *UserDataPtr)
 }  /* extern "C" */
 #endif 
 
+#endif 
+/* ifndef __Events_H*/
 /*!
 ** @}
 */

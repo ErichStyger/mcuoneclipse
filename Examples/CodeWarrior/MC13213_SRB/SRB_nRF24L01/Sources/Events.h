@@ -61,6 +61,7 @@
 #include "Sleep1.h"
 #include "IFsh1.h"
 #include "SM1.h"
+#include "XF1.h"
 #include "TMOUT1.h"
 #include "CS1.h"
 #include "KSDK1.h"
@@ -85,7 +86,7 @@ void KB1_OnInterrupt(void);
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

@@ -23,7 +23,7 @@
 #define PL_HAS_RSTDIO         (1 && PL_HAS_RADIO)
 #define PL_HAS_SD_CARD        (1 && !configRF)
 #define PL_HAS_DEBUG_PRINT    (1)
-#define PL_HAS_RTOS_TRACE     (1)
+#define PL_HAS_RTOS_TRACE     (0)
 #define PL_HAS_MINI_INI       (1 && PL_HAS_SD_CARD)
 
 #endif /* PLATFORM_H_ */

@@ -44,8 +44,6 @@
 #include "HF1.h"
 #include "UTIL1.h"
 #include "FRTOS1.h"
-#include "RTOSTRC1.h"
-#include "RTOSCNTRLDD1.h"
 #include "CLS1.h"
 #include "BT1.h"
 #include "Serial1.h"
@@ -70,6 +68,8 @@
 #include "BitIoLdd9.h"
 #include "TRG1.h"
 #include "MINI1.h"
+#include "KSDK1.h"
+#include "XF1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

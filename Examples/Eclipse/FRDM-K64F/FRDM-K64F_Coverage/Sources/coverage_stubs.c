@@ -110,7 +110,7 @@ __attribute__((naked)) static unsigned int get_stackpointer(void) {
 #pragma GCC diagnostic pop
 
 void *_sbrk(int incr) {
-  extern char __HeapLimit; /* Defined by the linker */
+  extern char __HeapLimit; /* Defined by the linker file */
   static char *heap_end = 0;
   char *prev_heap_end;
   char *stack;

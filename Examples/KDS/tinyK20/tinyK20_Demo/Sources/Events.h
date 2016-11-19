@@ -62,6 +62,7 @@
 #include "KSDK1.h"
 #include "SYS1.h"
 #include "RTT1.h"
+#include "XF1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -83,7 +84,7 @@ extern "C" {
 void Cpu_OnNMIINT(void);
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

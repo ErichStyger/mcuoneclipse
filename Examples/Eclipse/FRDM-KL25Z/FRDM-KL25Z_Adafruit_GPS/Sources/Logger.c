@@ -55,7 +55,7 @@ uint8_t LOG_StartLogging(void) {
     return ERR_FAILED;
   }
   /* move to the end of the file */
-  if (FAT1_lseek(&LOG_LogFile, LOG_LogFile.fsize) != FR_OK || LOG_LogFile.fptr != LOG_LogFile.fsize) {
+  if (FAT1_lseek(&LOG_LogFile, f_size(&LOG_LogFile)) != FR_OK || LOG_LogFile.fptr != f_size(&LOG_LogFile)) {
     Err((uint8_t*)"lseed failed");
     return ERR_FAILED;
   }
