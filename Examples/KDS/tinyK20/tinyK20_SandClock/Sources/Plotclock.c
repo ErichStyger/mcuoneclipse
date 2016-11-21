@@ -16,7 +16,7 @@
 
 #define PLOTCLOCK_DO_ROTATION_180  1  /* if to write 180° rotated */
 
-static bool PlotClockIsEnabled = FALSE; /* if clock is enabled */
+static bool PlotClockIsEnabled = TRUE; /* if clock is enabled */
 static bool PlotClockCalibrateIsOn = FALSE; /* if calibration mode is on */
 
 /* When in calibration mode, adjust the following factor until the servos move exactly 90 degrees */
@@ -38,11 +38,15 @@ static int SERVORIGHTNULL = 425;
 #define PLOTCLOCK_PARKPOS_X  90
 #define PLOTCLOCK_PARKPOS_Y  35
 
+#define PLOTCLOCK_MAINTENANCE_X  30
+#define PLOTCLOCK_MAINTENANCE_Y  50
+
 /* lift positions of lifting servo */
 static int LIFT_DRAW = 1150; /* on drawing surface */
 static int LIFT_BETWEEN_DRAW =  850;  /* between numbers */
 static int LIFT_PARKING = 900;  /* Parking position */
 static int LIFT_INIT = 950; /* start/reset position */
+static int LIFT_MAINTENANCE = 700; /* maintenance position */
 static int servoLift; /* current position of lift servo */
 
 /* position of left lower corner for drawing */
@@ -231,8 +235,7 @@ static void bogenGZS(float bx, float by, float radius, float start, float end, f
   float count = 0;
 
   do {
-    drawTo(sqee * radius * cos(start + count) + bx,
-    radius * sin(start + count) + by);
+    drawTo(sqee*radius*cos(start+count)+bx, radius*sin(start+count)+by);
     count += inkr;
   } while ((start + count) <= end);
 }
@@ -345,7 +348,7 @@ static void DoSandVibration(void) {
   LED_AllOn();
 }
 
-#define PLOTCLOCK_DIGIT_HEIGHT  20.0  /* normal height of number in mm */
+#define PLOTCLOCK_DIGIT_HEIGHT  22.0  /* normal height of number in mm */
 #define PLOTCLOCK_DIGIT_WIDTH   14.0 /* normal width of digit in mm */
 #define PLOTCLOCK_DIGIT_SCALE   1.0
 
@@ -383,7 +386,7 @@ static void BogenGZSScaled(float bx, float by, float x, float y, float radius, f
     x = PLOTCLOCK_DIGIT_WIDTH-x;
     y = PLOTCLOCK_DIGIT_HEIGHT-y;
     /* rotate start/end: move by PI and match to 0...2*Pi range */
-    start += M_PI;
+    start = M_PI-start;
     if (start>2*M_PI) {
       start -= 2*M_PI;
     }
@@ -395,7 +398,7 @@ static void BogenGZSScaled(float bx, float by, float x, float y, float radius, f
   /* scale */
   x *= scale;
   y *= scale;
-  radius * scale;
+  radius *= scale;
   /* draw circle */
   if (rotate180) {
     bogenUZS(bx+x, by+y, radius, start, end, sqee);
@@ -410,23 +413,16 @@ static void number(float bx, float by, int num, float scale) {
 
   switch (num) {
     case 0:
-#if PLOTCLOCK_DO_ROTATION_180
-      DrawToScaled(bx, by, 12, 6, scale, PLOTCLOCK_DO_ROTATION_180);
-      lift(PLOTCLOCK_LIFT_POS_DRAW);
-      BogenGZSScaled(bx, by, 7, 10, 10, -0.8, 6.7, 0.5, scale, PLOTCLOCK_DO_ROTATION_180);
-      lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
-#else
       drawTo(bx + 12.0 * scale, by + 6.0 * scale);
       lift(PLOTCLOCK_LIFT_POS_DRAW);
       bogenGZS(bx + 7.0 * scale, by + 10.0 * scale, 10.0 * scale, -0.8, 6.7, 0.5);
       lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
-#endif
       break;
     case 1:
   #if PLOTCLOCK_DO_ROTATION_180
-      DrawToScaled(bx, by, 4, 0, scale, PLOTCLOCK_DO_ROTATION_180);
+      drawTo(bx + 7*scale, by + 0*scale);
       lift(PLOTCLOCK_LIFT_POS_DRAW);
-      DrawToScaled(bx, by, 4, 20, scale, PLOTCLOCK_DO_ROTATION_180);
+      drawTo(bx + 7*scale, by + 22*scale);
       lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
   #else
       drawTo(bx + 10.0 * scale, by + 20.0 * scale);
@@ -436,60 +432,104 @@ static void number(float bx, float by, int num, float scale) {
   #endif
       break;
     case 2:
+#if PLOTCLOCK_DO_ROTATION_180
+      drawTo(bx + 13*scale, by + 6.0*scale);
+      lift(PLOTCLOCK_LIFT_POS_DRAW);
+      bogenUZS(bx + 7*scale, by + 5*scale, 5*scale, 6, 1.5, 1);
+      drawTo(bx + 14*scale, by + 22 * scale);
+      drawTo(bx + 0*scale, by + 22 * scale);
+      lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
+#else
       drawTo(bx + 2.0 * scale, by + 12.0 * scale);
       lift(PLOTCLOCK_LIFT_POS_DRAW);
       bogenUZS(bx + 8.0 * scale, by + 14.0 * scale, 6.0 * scale, 3, -0.8, 1);
       drawTo(bx + 0.0 * scale, by + 0.0 * scale);
       drawTo(bx + 14.0 * scale, by + 0.0 * scale);
       lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
+#endif
       break;
     case 3:
+#if PLOTCLOCK_DO_ROTATION_180
+      drawTo(bx + 12*scale, by + 5.0*scale);
+      lift(PLOTCLOCK_LIFT_POS_DRAW);
+      bogenUZS(bx + 7*scale, by + 4*scale, 6*scale, 6, 1.3, 1);
+      bogenUZS(bx + 7*scale, by + 17*scale, 7*scale, 5, 0.8, 1);
+      lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
+#else
       drawTo(bx + 2.0 * scale, by + 20.0 * scale);
       lift(PLOTCLOCK_LIFT_POS_DRAW);
       drawTo(bx + 12.0 * scale, by + 20.0 * scale);
       drawTo(bx + 2.0 * scale, by + 10.0 * scale);
       bogenUZS(bx + 5.0 * scale, by + 5.0 * scale, 5.0 * scale, 1.57, -3, 1);
       lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
+#endif
       break;
     case 4:
-  #if PLOTCLOCK_DO_ROTATION_180
-      DrawToScaled(bx, by, 0, 12, scale, PLOTCLOCK_DO_ROTATION_180);
+#if PLOTCLOCK_DO_ROTATION_180
+      drawTo(bx + 5*scale, by + 0*scale);
       lift(PLOTCLOCK_LIFT_POS_DRAW);
-      DrawToScaled(bx, by, 14, 12, scale, PLOTCLOCK_DO_ROTATION_180);
-      DrawToScaled(bx, by, 4, 20, scale, PLOTCLOCK_DO_ROTATION_180);
-      DrawToScaled(bx, by, 4, 0, scale, PLOTCLOCK_DO_ROTATION_180);
-      DrawToScaled(bx, by, 4, 22, scale, PLOTCLOCK_DO_ROTATION_180);
+      drawTo(bx + 14*scale, by + 12*scale);
+      drawTo(bx + 2*scale, by + 12*scale);
       lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
-  #else
-      drawTo(bx + 10.0 * scale, by + 2.0 * scale);
+      drawTo(bx + 7*scale, by + 10*scale);
       lift(PLOTCLOCK_LIFT_POS_DRAW);
-      drawTo(bx + 10.0 * scale, by + 22.0 * scale);
-      drawTo(bx + 0.0 * scale, by + 8.0 * scale);
-      drawTo(bx + 14.0 * scale, by + 8.0 * scale);
+      drawTo(bx + 7*scale, by + 22*scale);
       lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
-  #endif
+#else
+      DrawToScaled(bx, by, 10, 2, scale, FALSE);
+      lift(PLOTCLOCK_LIFT_POS_DRAW);
+      DrawToScaled(bx, by, 10, 22, scale, FALSE);
+      DrawToScaled(bx, by, 0, 8, scale, FALSE);
+      DrawToScaled(bx, by, 14, 8, scale, FALSE);
+      lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
+#endif
       break;
     case 5:
+#if PLOTCLOCK_DO_ROTATION_180
+      drawTo(bx + 2*scale, by + 0*scale);
+      lift(PLOTCLOCK_LIFT_POS_DRAW);
+      drawTo(bx + 12*scale, by + 2*scale);
+      drawTo(bx + 12*scale, by + 15*scale);
+      bogenUZS(bx + 7*scale, by + 17*scale, 6*scale, 6, 1, 1);
+      lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
+#else
       drawTo(bx + 2.0 * scale, by + 5.0 * scale);
       lift(PLOTCLOCK_LIFT_POS_DRAW);
       bogenGZS(bx + 5.0 * scale, by + 6.0 * scale, 6.0 * scale, -2.5, 2, 1);
       drawTo(bx + 3.0 * scale, by + 20.0 * scale);
       drawTo(bx + 12.0 * scale, by + 20.0 * scale);
       lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
+#endif
       break;
     case 6:
+#if PLOTCLOCK_DO_ROTATION_180
+      drawTo(bx + 2*scale, by + 0*scale);
+      lift(PLOTCLOCK_LIFT_POS_DRAW);
+      bogenGZS(bx + 0*scale, by + 10*scale, 10*scale, -1.5, 0, 0.8);
+      bogenGZS(bx + 7*scale, by + 15*scale, 6*scale, -0.8, 5, 0.8);
+      lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
+#else
       drawTo(bx + 2.0 * scale, by + 10.0 * scale);
       lift(PLOTCLOCK_LIFT_POS_DRAW);
       bogenUZS(bx + 7.0 * scale, by + 6.0 * scale, 6.0 * scale, 2, -4.4, 1);
       drawTo(bx + 11.0 * scale, by + 20.0 * scale);
       lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
+#endif
       break;
     case 7:
+#if PLOTCLOCK_DO_ROTATION_180
+      drawTo(bx + 14*scale, by + 0*scale);
+      lift(PLOTCLOCK_LIFT_POS_DRAW);
+      drawTo(bx + 0*scale, by + 0*scale);
+      drawTo(bx + 14*scale, by + 22*scale);
+      lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
+#else
       drawTo(bx + 2.0 * scale, by + 20.0 * scale);
       lift(PLOTCLOCK_LIFT_POS_DRAW);
       drawTo(bx + 12.0 * scale, by + 20.0 * scale);
       drawTo(bx + 2.0 * scale, by + 0.0 * scale);
       lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
+#endif
       break;
     case 8:
       drawTo(bx + 5.0 * scale, by + 10.0 * scale);
@@ -499,23 +539,31 @@ static void number(float bx, float by, int num, float scale) {
       lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
       break;
     case 9:
+#if PLOTCLOCK_DO_ROTATION_180
+      drawTo(bx + 4*scale, by + 8*scale);
+      lift(PLOTCLOCK_LIFT_POS_DRAW);
+      bogenUZS(bx + 7*scale, by + 5*scale, 6*scale, 2.8, -4, 1);
+      drawTo(bx + 14*scale, by + 22*scale);
+      lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
+#else
       drawTo(bx + 9.0 * scale, by + 11.0 * scale);
       lift(PLOTCLOCK_LIFT_POS_DRAW);
       bogenUZS(bx + 7.0 * scale, by + 15.0 * scale, 5.0 * scale, 4, -0.5, 1);
       drawTo(bx + 5 * scale, by + 0);
       lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
+#endif
       break;
     case 11: /* special: draw ':' */
   #if PLOTCLOCK_DO_ROTATION_180
-      drawTo(bx + 7.0 * scale, by + 5.0 * scale);
+      drawTo(bx + 8.0 * scale, by + 8.0 * scale);
       lift(PLOTCLOCK_LIFT_POS_DRAW);
       delay(200); /* give time to put it down */
-      bogenGZS(bx + 7.0 * scale, by + 5.0 * scale, 0.1 * scale, 1, -1, 1);
+      bogenGZS(bx + 8.0 * scale, by + 8.0 * scale, 0.1 * scale, 1, -1, 1);
       lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
-      drawTo(bx + 7.0 * scale, by + 15.0 * scale);
+      drawTo(bx + 8.0 * scale, by + 18.0 * scale);
       lift(PLOTCLOCK_LIFT_POS_DRAW);
       delay(200); /* give time to put it down */
-      bogenGZS(bx + 7.0 * scale, by + 15.0 * scale, 0.1 * scale, 1, -1, 1);
+      bogenGZS(bx + 8.0 * scale, by + 18.0 * scale, 0.1 * scale, 1, -1, 1);
       lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
   #else
       drawTo(bx + 5.0 * scale, by + 15.0 * scale);
@@ -694,6 +742,7 @@ uint8_t PlotClock_ParseCommand(const unsigned char *cmd, bool *handled, const CL
     CLS1_SendHelpStr((unsigned char*)"  lift <us>", (const unsigned char*)"Lift servo us setting\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  write <hh:mm>", (const unsigned char*)"Write time\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  moveto <x> <y>", (const unsigned char*)"Move to position\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  maintenance", (const unsigned char*)"Move to maintenance position\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  leftcorner <x> <y>", (const unsigned char*)"Set left lower corner position\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  led <led> (on|off)", (const unsigned char*)"Turn LED (0-3) on or off\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  vibrate", (const unsigned char*)"Vibrate for erasing\r\n", io->stdOut);
@@ -749,6 +798,10 @@ uint8_t PlotClock_ParseCommand(const unsigned char *cmd, bool *handled, const CL
       leftLowerCornerX = x;
       leftLowerCornerY = y;
     }
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, "plotclock maintenance")==0) {
+    servo_writeMicroseconds(PLOTCLOCK_SERVO_LIFT, LIFT_MAINTENANCE);
+    drawTo(PLOTCLOCK_MAINTENANCE_X, PLOTCLOCK_MAINTENANCE_Y);
     *handled = TRUE;
   } else if (UTIL1_strncmp((char*)cmd, "plotclock moveto ", sizeof("plotclock moveto ")-1)==0) {
     p = cmd + sizeof("plotclock moveto ")-1;
