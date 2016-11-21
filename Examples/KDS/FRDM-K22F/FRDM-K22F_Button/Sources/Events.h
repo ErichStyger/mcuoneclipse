@@ -76,7 +76,7 @@ extern "C" {
 void Cpu_OnNMI(void);
 
 
-void KEY1_OnKeyPressed(byte keys);
+void KEY1_OnKeyPressed(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyPressed (module Events)
@@ -92,7 +92,7 @@ void KEY1_OnKeyPressed(byte keys);
 ** ===================================================================
 */
 
-void KEY1_OnKeyReleased(byte keys);
+void KEY1_OnKeyReleased(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyReleased (module Events)
@@ -124,7 +124,7 @@ void KEY1_OnKeyReleased(byte keys);
 */
 void TI1_OnInterrupt(void);
 
-void KEY1_OnKeyReleasedLong(byte keys);
+void KEY1_OnKeyReleasedLong(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyReleasedLong (module Events)
@@ -133,6 +133,23 @@ void KEY1_OnKeyReleasedLong(byte keys);
 **     Description :
 **         Event generated after a key has been released (long key
 **         press).
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyPressedLong(uint8_t keys);
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyPressedLong (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated at the time a long key press has been
+**         detected.
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **         keys            - the key(s) pressed, as bitset (e.g. 1 is
