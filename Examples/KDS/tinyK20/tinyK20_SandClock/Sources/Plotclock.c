@@ -800,8 +800,9 @@ uint8_t PlotClock_ParseCommand(const unsigned char *cmd, bool *handled, const CL
     }
     *handled = TRUE;
   } else if (UTIL1_strcmp((char*)cmd, "plotclock maintenance")==0) {
-    servo_writeMicroseconds(PLOTCLOCK_SERVO_LIFT, LIFT_MAINTENANCE);
+    servo_writeMicroseconds(PLOTCLOCK_SERVO_LIFT, LIFT_BETWEEN_DRAW);
     drawTo(PLOTCLOCK_MAINTENANCE_X, PLOTCLOCK_MAINTENANCE_Y);
+    servo_writeMicroseconds(PLOTCLOCK_SERVO_LIFT, LIFT_MAINTENANCE);
     *handled = TRUE;
   } else if (UTIL1_strncmp((char*)cmd, "plotclock moveto ", sizeof("plotclock moveto ")-1)==0) {
     p = cmd + sizeof("plotclock moveto ")-1;
