@@ -54,6 +54,11 @@
 #include "KIN1.h"
 #include "XF1.h"
 #include "RTC2.h"
+#include "USB1.h"
+#include "CDC1.h"
+#include "Tx1.h"
+#include "Rx1.h"
+#include "USB0.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -16,7 +16,7 @@
 
 #define PLOTCLOCK_DO_ROTATION_180  1  /* if to write 180° rotated */
 
-static bool PlotClockIsEnabled = TRUE; /* if clock is enabled */
+static bool PlotClockIsEnabled = FALSE; /* if clock is enabled */
 static bool PlotClockCalibrateIsOn = FALSE; /* if calibration mode is on */
 
 /* When in calibration mode, adjust the following factor until the servos move exactly 90 degrees */
@@ -35,24 +35,24 @@ static int SERVORIGHTNULL = 425;
 #define PLOTCLOCK_MINPOS_Y   10
 #define PLOTCLOCK_MAXPOS_Y   75
 
-#define PLOTCLOCK_PARKPOS_X  90
-#define PLOTCLOCK_PARKPOS_Y  35
+#define PLOTCLOCK_PARKPOS_X  70
+#define PLOTCLOCK_PARKPOS_Y  40
 
 #define PLOTCLOCK_MAINTENANCE_X  30
 #define PLOTCLOCK_MAINTENANCE_Y  50
 
 /* lift positions of lifting servo */
-static int LIFT_DRAW = 1150; /* on drawing surface */
-static int LIFT_BETWEEN_DRAW =  850;  /* between numbers */
-static int LIFT_PARKING = 900;  /* Parking position */
-static int LIFT_INIT = 950; /* start/reset position */
-static int LIFT_MAINTENANCE = 700; /* maintenance position */
+static int LIFT_DRAW          = 1100; /* on drawing surface */
+static int LIFT_BETWEEN_DRAW  = 850;  /* between numbers */
+static int LIFT_PARKING       = 850;  /* Parking position */
+static int LIFT_INIT          = 950; /* start/reset position */
+static int LIFT_MAINTENANCE   = 700; /* maintenance position */
 static int servoLift; /* current position of lift servo */
 
 /* position of left lower corner for drawing */
 #if PLOTCLOCK_DO_ROTATION_180
-  static int16_t leftLowerCornerX = 50;
-  static int16_t leftLowerCornerY = 26;
+  static int16_t leftLowerCornerX = 51;
+  static int16_t leftLowerCornerY = 30;
 #else
   static int16_t leftLowerCornerX = -5;
   static int16_t leftLowerCornerY = 26;
@@ -319,30 +319,70 @@ typedef struct {
 
 static VibraSequence vibras[] =
 {
-  {300, 0xc00, 0xc00},
+#if 0
+  {500, 0x900, 0x900},
   {200, 0x500, 0x500},
   {500, 0x800, 0x800},
   {500, 0x900, 0x900},
   {500, 0xa00, 0xa00},
   {500, 0xb00, 0xb00},
   {500, 0xa00, 0xa00},
+#elif 0
+  {500, 0x500, 0x500},
+  {500, 0x600, 0x600},
+  {500, 0x700, 0x700},
+  {500, 0x800, 0x800},
+  {500, 0x900, 0x900},
+  {500, 0x300, 0x300},
+#elif 0
+  {500, 0x500, 0xd00},
+  {500, 0xd00, 0x500},
+  {500, 0x250, 0x250},
+#elif 0
+  {1000, 0x400, 0x800},
+  {1000, 0x800, 0x400},
+#elif 0
+  {1000, 0x300, 0xfff},
+  {1000, 0xfff, 0x200},
+  {1000, 0x200, 0x300},
+  {1000, 0xfff, 0xfff},
+  {1000, 0xfff, 0xfff},
+  {1000, 0xfff, 0xfff},
+  {1000, 0xfff, 0xfff},
+#elif 0
+  {1000, 0x500, 0xfff},
+  {1000, 0xfff, 0xfff},
+#elif 1
+  {1000, 0x500, 0xfff},
+  {1000, 0x500, 0x600},
+  {1000, 0x500, 0xfff},
+  {0, 0xfff, 0xfff},
+#elif 0
+  {1000, 0x500, 0xfff},
+#else
   {0, 0xfff, 0xfff}, /* off */
+#endif
 };
 
 static void DoSandVibration(void) {
   int i, j, k;
 
+  LED_AllOff();
   MoveToParking();
-  for(j=0;j<3;j++) {
+  for(j=0;j<5;j++) {
     for(i=0;i<sizeof(vibras)/sizeof(vibras[0]);i++) {
       PCA9685_SetChannelPWM(PCA9685_I2C_DEFAULT_ADDR, PLOTCLOCK_VIBRA1, vibras[i].val1);
       PCA9685_SetChannelPWM(PCA9685_I2C_DEFAULT_ADDR, PLOTCLOCK_VIBRA2, vibras[i].val2);
+#if 0
       for(k=0;k<8;k++) { /* blink LEDs */
         delay(vibras[i].ms/16);
         LED_AllOn();
         delay(vibras[i].ms/16);
         LED_AllOff();
       }
+#else
+      delay(vibras[i].ms);
+#endif
     }
   }
   LED_AllOn();
@@ -422,7 +462,7 @@ static void number(float bx, float by, int num, float scale) {
   #if PLOTCLOCK_DO_ROTATION_180
       drawTo(bx + 7*scale, by + 0*scale);
       lift(PLOTCLOCK_LIFT_POS_DRAW);
-      drawTo(bx + 7*scale, by + 22*scale);
+      drawTo(bx + 7*scale, by + 24*scale);
       lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
   #else
       drawTo(bx + 10.0 * scale, by + 20.0 * scale);
@@ -444,7 +484,7 @@ static void number(float bx, float by, int num, float scale) {
       lift(PLOTCLOCK_LIFT_POS_DRAW);
       bogenUZS(bx + 8.0 * scale, by + 14.0 * scale, 6.0 * scale, 3, -0.8, 1);
       drawTo(bx + 0.0 * scale, by + 0.0 * scale);
-      drawTo(bx + 14.0 * scale, by + 0.0 * scale);
+      drawTo(bx + 14.0 * scale, by + 0.0 * scale);f
       lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
 #endif
       break;
@@ -542,7 +582,8 @@ static void number(float bx, float by, int num, float scale) {
 #if PLOTCLOCK_DO_ROTATION_180
       drawTo(bx + 4*scale, by + 8*scale);
       lift(PLOTCLOCK_LIFT_POS_DRAW);
-      bogenUZS(bx + 7*scale, by + 5*scale, 6*scale, 2.8, -4, 1);
+      bogenUZS(bx + 7*scale, by + 5*scale, 6*scale, 2.8, -3.5, 1);
+      drawTo(bx + 2*scale, by + 18*scale);
       drawTo(bx + 14*scale, by + 22*scale);
       lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
 #else
@@ -619,15 +660,15 @@ static void PlotClockPrintTime(uint8_t hour, uint8_t minute) {
 #endif
   number(x, y, 11, digitScale); /* draw ':' */
 #if PLOTCLOCK_DO_ROTATION_180
-  x -= 8*digitScale;
+  x -= 9*digitScale;
 #else
-  x += 8*digitScale;
+  x += 9*digitScale;
 #endif
   number(x, y, minute/10, digitScale); /* write most significant digit of hour */
 #if PLOTCLOCK_DO_ROTATION_180
-  x -= 13*digitScale;
+  x -= 14*digitScale;
 #else
-  x += 13*digitScale;
+  x += 14*digitScale;
 #endif
   number(x, y, minute%10, digitScale); /* second digit */
   lift(PLOTCLOCK_LIFT_POS_BETWEEN_DRAW);
@@ -815,4 +856,8 @@ uint8_t PlotClock_ParseCommand(const unsigned char *cmd, bool *handled, const CL
     *handled = TRUE;
   }
   return ERR_OK;
+}
+
+void PLOTCLOCK_Init(void) {
+  PlotClockIsEnabled = TRUE;
 }

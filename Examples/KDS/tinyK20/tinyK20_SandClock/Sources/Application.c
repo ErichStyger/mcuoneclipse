@@ -2,7 +2,7 @@
  * Application.c
  *
  *  Created on: 14.10.2016
- *      Author: Erich Styger Local
+ *      Author: Erich Styger
  */
 
 #include "Platform.h"
@@ -15,60 +15,30 @@
 #include "Plotclock.h"
 #include "TmDt1.h"
 
-#define PCA9685_I2C_ADDR  (0b1000000)
-
-#define SERVO_MIN  150 // this is the 'minimum' pulse length count (out of 4096)
-#define SERVO_MAX  600 // this is the 'maximum' pulse length count (out of 4096)
-
 static void AppTask(void *pvParameters) {
-  uint16_t val = 0x100;
-  uint8_t res;
-  uint16_t min = 225;
-  uint16_t max = 645;
+  (void)pvParameters; /* parameter not used */
 
-  (void)pvParameters; /* not used */
-  TmDt1_SyncWithExternalRTC();
-  if (SERVO_InitHardware(PCA9685_I2C_ADDR)!=ERR_OK) {
+  vTaskDelay(pdMS_TO_TICKS(1000)); /* wait some time to allow RTC to power up */
+  TmDt1_SyncWithExternalRTC(); /* synchronize internal clock from external RTC */
+  if (SERVO_InitHardware(PCA9685_I2C_DEFAULT_ADDR)!=ERR_OK) {
     CLS1_SendStr("ERROR: Failed init of PCA9685!\r\n", CLS1_GetStdio()->stdErr);
   }
-  PlotClock_Setup();
+  PlotClock_Setup(); /* setup the clock and move servos to parking position */
   for(;;) {
     PlotClock_Loop();
-    vTaskDelay(pdMS_TO_TICKS(500));
     LED1_Neg();
-  }
-#if 0
-  for(;;) {
-    LED1_Neg();
-    for(val=0; val<=1500; val++) {
-      SERVO_WriteDutyMicroSeconds(PCA9685_I2C_ADDR, 0, val, SERVO_MIN_TICKS, SERVO_MAX_TICKS);
-      vTaskDelay(pdMS_TO_TICKS(10));
-    }
-    for (val=min; val<max; val++) {
-      res = PCA9685_SetChannelDuty12Bit(PCA9685_I2C_ADDR, 0, 4095-val);
-      res = PCA9685_SetChannelDuty12Bit(PCA9685_I2C_ADDR, 1, 4095-val);
-      res = PCA9685_SetChannelDuty12Bit(PCA9685_I2C_ADDR, 2, 4095-val);
-      vTaskDelay(pdMS_TO_TICKS(10));
-    }
-    for (val=max; val>min; val--) {
-      res = PCA9685_SetChannelDuty12Bit(PCA9685_I2C_ADDR, 0, 4095-val);
-      res = PCA9685_SetChannelDuty12Bit(PCA9685_I2C_ADDR, 1, 4095-val);
-      res = PCA9685_SetChannelDuty12Bit(PCA9685_I2C_ADDR, 2, 4095-val);
-      vTaskDelay(pdMS_TO_TICKS(10));
-    }
     vTaskDelay(pdMS_TO_TICKS(1000));
   }
-#endif
 }
 
 void APP_Start(void) {
   SERVO_Init();
   PCA9685_Init();
   SHELL_Init();
+  PLOTCLOCK_Init();
   if (xTaskCreate(AppTask, "App", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
     for(;;){} /* error */
   }
   vTaskStartScheduler();
-  for(;;) {}
+  for(;;) {} /* does not return, as scheduler should not be stopped */
 }
-
