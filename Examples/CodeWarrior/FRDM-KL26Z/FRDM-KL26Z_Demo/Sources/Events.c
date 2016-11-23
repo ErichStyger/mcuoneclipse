@@ -69,7 +69,7 @@ void Cpu_OnNMIINT(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void EVNT1_AppHandleEvent(byte event)
+void EVNT1_AppHandleEvent(uint8_t event)
 {
   APP_HandleEvent(event);
 }
@@ -89,7 +89,7 @@ void EVNT1_AppHandleEvent(byte event)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName)
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
 {
   /* This will get called if a stack overflow is detected during the context
      switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack
@@ -178,7 +178,7 @@ void FRTOS1_vApplicationMallocFailedHook(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void KEY1_OnKeyPressed(byte keys)
+void KEY1_OnKeyPressed(uint8_t keys)
 {
   if (keys&1) {
     EVNT1_SetEvent(EVNT1_KEY1_PRESSED);
@@ -199,7 +199,7 @@ void KEY1_OnKeyPressed(byte keys)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void KEY1_OnKeyReleased(byte keys)
+void KEY1_OnKeyReleased(uint8_t keys)
 {
   if (keys&1) {
     EVNT1_SetEvent(EVNT1_KEY1_RELEASED);
@@ -221,11 +221,31 @@ void KEY1_OnKeyReleased(byte keys)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void KEY1_OnKeyReleasedLong(byte keys)
+void KEY1_OnKeyReleasedLong(uint8_t keys)
 {
   if (keys&1) {
     EVNT1_SetEvent(EVNT1_KEY1_LONG_RELEASED);
   }
+}
+
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyPressedLong (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated at the time a long key press has been
+**         detected.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyPressedLong(uint8_t keys)
+{
+  /* Write your code here ... */
 }
 
 /* END Events */

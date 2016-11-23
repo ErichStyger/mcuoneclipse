@@ -3,8 +3,8 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>Erich Styger Local</SavedBy>
-    <ModificationStamp>42</ModificationStamp>
-    <Date>2016-11-02</Date>
+    <ModificationStamp>44</ModificationStamp>
+    <Date>2016-11-23</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>77</ProjectCompNumb>
+    <ProjectCompNumb>80</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -10476,7 +10476,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.127</BeanVersion>
+    <BeanVersion>01.128</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -11236,6 +11236,30 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>SetValue32LE</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Init</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Init</UsrMethodName>
       </ItemState>
     </Methods>
     <Events />
@@ -18759,7 +18783,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.109</BeanVersion>
+    <BeanVersion>01.114</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -19684,6 +19708,22 @@
         <UserReadOnly>false</UserReadOnly>
         <Value />
       </ItemState>
+      <ItemState>
+        <ItemSymbol>OnKeyPressedLong</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnKeyPressedLongName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>KEY1_OnKeyPressedLong</Value>
+      </ItemState>
     </Events>
   </Bean>
   <Bean>
@@ -20128,7 +20168,7 @@
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <TypeSpecNameState>typeSampleTime</TypeSpecNameState>
-              <Index>2</Index>
+              <Index>13</Index>
               <EnumSymbVal>3.5</EnumSymbVal>
             </ItemState>
             <ItemState>
@@ -20155,7 +20195,8 @@
               <UserReadOnly>false</UserReadOnly>
               <Value>init:25 µs;prec:5%;RTS:none;clksrc_presc[SpeedMode0]Auto select;extcomp_presc[SpeedMode0]25;clksrc_presc[SpeedMode1]Auto select;clksrc_presc[SpeedMode2]Auto select;clksrc_presc[SpeedMode3]Auto select;clksrc_presc[SpeedMode4]Auto select;clksrc_presc[SpeedMode5]Auto select;clksrc_presc[SpeedMode6]Auto select;clksrc_presc[SpeedMode7]Auto select</Value>
               <RuntimeSetting>0</RuntimeSetting>
-              <ReqDevPrescHigh>-1</ReqDevPrescHigh>
+              <ReqDevPrescHigh>25483472622</ReqDevPrescHigh>
+              <ReqStrDevPrescHigh>ADC0BusClock</ReqStrDevPrescHigh>
               <ReqDevPrescLow>-1</ReqDevPrescLow>
               <ReqDevPrescSlow>-1</ReqDevPrescSlow>
               <ReqDevPrescSpeedMode3>-1</ReqDevPrescSpeedMode3>
@@ -20163,7 +20204,7 @@
               <ReqDevPrescSpeedMode5>-1</ReqDevPrescSpeedMode5>
               <ReqDevPrescSpeedMode6>-1</ReqDevPrescSpeedMode6>
               <ReqDevPrescSpeedMode7>-1</ReqDevPrescSpeedMode7>
-              <ReqExtCompPrescHigh>25</ReqExtCompPrescHigh>
+              <ReqExtCompPrescHigh>45</ReqExtCompPrescHigh>
               <ReqExtCompPrescLow>-1</ReqExtCompPrescLow>
               <ReqExtCompPrescSlow>-1</ReqExtCompPrescSlow>
               <ReqExtCompPrescSpeedMode3>-1</ReqExtCompPrescSpeedMode3>
@@ -20179,7 +20220,7 @@
               <ReqSrcClkPrescSpeedMode5>-1</ReqSrcClkPrescSpeedMode5>
               <ReqSrcClkPrescSpeedMode6>-1</ReqSrcClkPrescSpeedMode6>
               <ReqSrcClkPrescSpeedMode7>-1</ReqSrcClkPrescSpeedMode7>
-              <InitValue>25 us</InitValue>
+              <InitValue>1.875 us</InitValue>
               <Precision>5.0</Precision>
               <PrecInProc>true</PrecInProc>
               <LowLimit />
@@ -20190,23 +20231,23 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>ADCClock</ItemSymbol>
-              <Value>1000 kHz (1 us)</Value>
+              <Value>23.999 MHz (41.667 ns)</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>SingleConversionTimeSE</ItemSymbol>
-              <Value>30.208 us</Value>
+              <Value>2.208 us</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>SingleConversionTimeDiff</ItemSymbol>
-              <Value>39.208 us</Value>
+              <Value>2.583 us</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>AdditionalConversionTimeSE</ItemSymbol>
-              <Value>25 us</Value>
+              <Value>1.875 us</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>AdditionalConversionTimeDiff</ItemSymbol>
-              <Value>34 us</Value>
+              <Value>2.25 us</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>StandbyFeatureGroup</ItemSymbol>
@@ -21637,9 +21678,10 @@
         <ItemSymbol>_CnvTmg</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>25 µs</Value>
+        <Value>1.875 µs</Value>
         <RuntimeSetting>0</RuntimeSetting>
-        <ReqDevPrescHigh>-1</ReqDevPrescHigh>
+        <ReqDevPrescHigh>25483472622</ReqDevPrescHigh>
+        <ReqStrDevPrescHigh>ADC0BusClock</ReqStrDevPrescHigh>
         <ReqDevPrescLow>-1</ReqDevPrescLow>
         <ReqDevPrescSlow>-1</ReqDevPrescSlow>
         <ReqDevPrescSpeedMode3>-1</ReqDevPrescSpeedMode3>
@@ -21647,7 +21689,7 @@
         <ReqDevPrescSpeedMode5>-1</ReqDevPrescSpeedMode5>
         <ReqDevPrescSpeedMode6>-1</ReqDevPrescSpeedMode6>
         <ReqDevPrescSpeedMode7>-1</ReqDevPrescSpeedMode7>
-        <ReqExtCompPrescHigh>25</ReqExtCompPrescHigh>
+        <ReqExtCompPrescHigh>45</ReqExtCompPrescHigh>
         <ReqExtCompPrescLow>-1</ReqExtCompPrescLow>
         <ReqExtCompPrescSlow>-1</ReqExtCompPrescSlow>
         <ReqExtCompPrescSpeedMode3>-1</ReqExtCompPrescSpeedMode3>
@@ -21663,7 +21705,7 @@
         <ReqSrcClkPrescSpeedMode5>-1</ReqSrcClkPrescSpeedMode5>
         <ReqSrcClkPrescSpeedMode6>-1</ReqSrcClkPrescSpeedMode6>
         <ReqSrcClkPrescSpeedMode7>-1</ReqSrcClkPrescSpeedMode7>
-        <InitValue>25 us</InitValue>
+        <InitValue>1.875 us</InitValue>
         <Precision>5.0</Precision>
         <PrecInProc>true</PrecInProc>
         <LowLimit />
@@ -21768,8 +21810,8 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typeSampleExtendedLongTime</TypeSpecNameState>
-        <Index>0</Index>
-        <EnumSymbVal>0</EnumSymbVal>
+        <Index>1</Index>
+        <EnumSymbVal>20</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>HCS12Grp</ItemSymbol>
@@ -23272,7 +23314,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.508</BeanVersion>
+    <BeanVersion>01.510</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -25183,6 +25225,14 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>16</Value>
         <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>configUseOptimizedTaskSelection</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
       </ItemState>
     </Properties>
     <Methods>
