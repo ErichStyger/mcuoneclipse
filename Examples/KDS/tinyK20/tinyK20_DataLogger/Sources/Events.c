@@ -293,80 +293,6 @@ void Cpu_OnLLSWakeUpINT(void)
 
 /*
 ** ===================================================================
-**     Event       :  SM1_OnFullRxBuf (module Events)
-**
-**     Component   :  SM1 [SynchroMaster]
-**     Description :
-**         This event is called when the input buffer is full, i.e.
-**         after reception of the last character that was successfully
-**         placed into input buffer.
-**         This event is available only when the <Interrupt
-**         service/event> property is enabled and the <Input buffer
-**         size> property is set to non-zero value.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void SM1_OnFullRxBuf(void)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Event       :  SM1_OnFreeTxBuf (module Events)
-**
-**     Component   :  SM1 [SynchroMaster]
-**     Description :
-**         This event is called after the last character in output
-**         buffer is transmitted.
-**         This event is available only when the <Interrupt
-**         service/event> property is enabled and the <Output buffer
-**         size> property is set to non-zero value.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void SM1_OnFreeTxBuf(void)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Event       :  PTRC1_OnTraceStop (module Events)
-**
-**     Component   :  PTRC1 [PercepioTrace]
-**     Description :
-**         Called if the library calls vTraceStop(). Useful to dump the
-**         trace if 'stop when recorder is full' mode is selected.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void PTRC1_OnTraceStop(void)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Event       :  PTRC1_OnTraceStart (module Events)
-**
-**     Component   :  PTRC1 [PercepioTrace]
-**     Description :
-**         Called when vTraceStart() gets called.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void PTRC1_OnTraceStart(void)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
 **     Event       :  PTRC1_OnTraceWrap (module Events)
 **
 **     Component   :  PTRC1 [PercepioTrace]
@@ -386,6 +312,28 @@ void PTRC1_OnTraceWrap(void)
   /* GDB: dump binary memory <file> <hexStartAddr> <hexEndAddr> */
   PTRC1_vGetGDBDumpCommand(buf, sizeof(buf), "c:\\tmp\\trc.dump");
 #endif
+}
+
+/*
+** ===================================================================
+**     Event       :  SM1_OnBlockSent (module Events)
+**
+**     Component   :  SM1 [SPIMaster_LDD]
+*/
+/*!
+**     @brief
+**         This event is called after the last character from the
+**         output buffer is moved to the transmitter. This event is
+**         available only if the SendBlock method is enabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. The pointer is passed
+**                           as the parameter of Init method. 
+*/
+/* ===================================================================*/
+void SM1_OnBlockSent(LDD_TUserData *UserDataPtr)
+{
+  /* Write your code here ... */
 }
 
 /* END Events */

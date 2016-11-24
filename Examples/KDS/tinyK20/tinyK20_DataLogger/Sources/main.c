@@ -43,7 +43,6 @@
 #include "TmDt1.h"
 #include "RTC1.h"
 #include "SM1.h"
-#include "SMasterLdd1.h"
 #include "TMOUT1.h"
 #include "CS1.h"
 #include "CLS1.h"
@@ -52,9 +51,8 @@
 #include "PTC.h"
 #include "MINI1.h"
 #include "KSDK1.h"
-#include "SYS1.h"
 #include "RTT1.h"
-#include "PTRC1.h"
+#include "XF1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

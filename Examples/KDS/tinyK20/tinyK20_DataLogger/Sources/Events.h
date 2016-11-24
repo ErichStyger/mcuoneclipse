@@ -46,7 +46,6 @@
 #include "TmDt1.h"
 #include "RTC1.h"
 #include "SM1.h"
-#include "SMasterLdd1.h"
 #include "TMOUT1.h"
 #include "CS1.h"
 #include "CLS1.h"
@@ -55,9 +54,8 @@
 #include "PTC.h"
 #include "MINI1.h"
 #include "KSDK1.h"
-#include "SYS1.h"
 #include "RTT1.h"
-#include "PTRC1.h"
+#include "XF1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -235,68 +233,6 @@ void TmDt1_OnDateGet(uint8_t *day, uint8_t *month, uint16_t *year);
 /* ===================================================================*/
 void Cpu_OnLLSWakeUpINT(void);
 
-void SM1_OnFullRxBuf(void);
-/*
-** ===================================================================
-**     Event       :  SM1_OnFullRxBuf (module Events)
-**
-**     Component   :  SM1 [SynchroMaster]
-**     Description :
-**         This event is called when the input buffer is full, i.e.
-**         after reception of the last character that was successfully
-**         placed into input buffer.
-**         This event is available only when the <Interrupt
-**         service/event> property is enabled and the <Input buffer
-**         size> property is set to non-zero value.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-
-void SM1_OnFreeTxBuf(void);
-/*
-** ===================================================================
-**     Event       :  SM1_OnFreeTxBuf (module Events)
-**
-**     Component   :  SM1 [SynchroMaster]
-**     Description :
-**         This event is called after the last character in output
-**         buffer is transmitted.
-**         This event is available only when the <Interrupt
-**         service/event> property is enabled and the <Output buffer
-**         size> property is set to non-zero value.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-
-void PTRC1_OnTraceStop(void);
-/*
-** ===================================================================
-**     Event       :  PTRC1_OnTraceStop (module Events)
-**
-**     Component   :  PTRC1 [PercepioTrace]
-**     Description :
-**         Called if the library calls vTraceStop(). Useful to dump the
-**         trace if 'stop when recorder is full' mode is selected.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-
-void PTRC1_OnTraceStart(void);
-/*
-** ===================================================================
-**     Event       :  PTRC1_OnTraceStart (module Events)
-**
-**     Component   :  PTRC1 [PercepioTrace]
-**     Description :
-**         Called when vTraceStart() gets called.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-
 void PTRC1_OnTraceWrap(void);
 /*
 ** ===================================================================
@@ -310,6 +246,25 @@ void PTRC1_OnTraceWrap(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
+
+/*
+** ===================================================================
+**     Event       :  SM1_OnBlockSent (module Events)
+**
+**     Component   :  SM1 [SPIMaster_LDD]
+*/
+/*!
+**     @brief
+**         This event is called after the last character from the
+**         output buffer is moved to the transmitter. This event is
+**         available only if the SendBlock method is enabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. The pointer is passed
+**                           as the parameter of Init method. 
+*/
+/* ===================================================================*/
+void SM1_OnBlockSent(LDD_TUserData *UserDataPtr);
 
 /* END Events */
 
