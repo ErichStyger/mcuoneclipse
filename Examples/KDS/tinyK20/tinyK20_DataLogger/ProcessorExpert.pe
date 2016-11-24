@@ -3,7 +3,7 @@
   <Header>
     <Name>tinyK20_DataLogger</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>119</ModificationStamp>
+    <ModificationStamp>122</ModificationStamp>
     <Date>2015-06-19</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -11643,8 +11643,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
+        <Index>0</Index>
+        <Value>true</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>HardwareGroup</ItemSymbol>
@@ -16693,7 +16693,7 @@
         <ItemSymbol>InpPinSignal</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>SD_MISO</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OutGrp</ItemSymbol>
@@ -16714,7 +16714,7 @@
         <ItemSymbol>OutPinSignal</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>SD_MOSI</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>ClkGrp</ItemSymbol>
@@ -16730,7 +16730,7 @@
         <ItemSymbol>ClkPinSignal</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>SD_CLK</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>ChipSelectList</ItemSymbol>
@@ -17050,7 +17050,7 @@
         <LowLimit />
         <HighLimit />
         <List lines_count="1">
-          <Line>10 MHz</Line>
+          <Line>12.5 MHz</Line>
         </List>
         <UnitText>kHz</UnitText>
         <MinCounterTicks>0</MinCounterTicks>
@@ -21609,8 +21609,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>InitFromInternalHWRTC</ItemSymbol>
@@ -21633,14 +21633,14 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>LDDRTC</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>RTC1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>HWRTC_Enabled</ItemSymbol>
@@ -22228,8 +22228,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
+        <Index>0</Index>
+        <Value>true</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>EventMaskGrp</ItemSymbol>
@@ -22758,7 +22758,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>GetTime</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
@@ -22769,7 +22769,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>SetTime</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>

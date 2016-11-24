@@ -165,7 +165,7 @@ void FRTOS1_vApplicationMallocFailedHook(void)
 */
 void TmDt1_OnTimeSet(uint8_t hour, uint8_t minute, uint8_t second, uint8_t hSecond)
 {
-#if PL_USE_HW_RTC
+#if 0 && PL_USE_HW_RTC
   LDD_RTC_TTime timeDate;
 
   (void)hSecond; /* not used */
@@ -194,7 +194,7 @@ void TmDt1_OnTimeSet(uint8_t hour, uint8_t minute, uint8_t second, uint8_t hSeco
 */
 void TmDt1_OnDateSet(uint8_t day, uint8_t month, uint16_t year)
 {
-#if PL_USE_HW_RTC
+#if 0 && PL_USE_HW_RTC
   LDD_RTC_TTime timeDate;
 
   RTC1_GetTime(RTC1_DeviceData, &timeDate); /* get existing data */
@@ -227,7 +227,7 @@ void TmDt1_OnDateSet(uint8_t day, uint8_t month, uint16_t year)
 */
 void TmDt1_OnTimeGet(uint8_t *hour, uint8_t *minute, uint8_t *second, uint8_t *hSecond)
 {
-#if PL_USE_HW_RTC
+#if 0 && PL_USE_HW_RTC
   LDD_RTC_TTime timeDate;
 
   RTC1_GetTime(RTC1_DeviceData, &timeDate); /* get existing data */
@@ -258,7 +258,7 @@ void TmDt1_OnTimeGet(uint8_t *hour, uint8_t *minute, uint8_t *second, uint8_t *h
 */
 void TmDt1_OnDateGet(uint8_t *day, uint8_t *month, uint16_t *year)
 {
-#if PL_USE_HW_RTC
+#if 0 && PL_USE_HW_RTC
   LDD_RTC_TTime timeDate;
 
   RTC1_GetTime(RTC1_DeviceData, &timeDate); /* get existing data */
