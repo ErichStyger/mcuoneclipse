@@ -38,7 +38,7 @@ static void ShellTask(void *pvParameters) {
   (void)CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, CLS1_GetStdio(), CmdParserTable);
   for(;;) {
     (void)CLS1_ReadAndParseWithCommandTable(CLS1_DefaultShellBuffer, sizeof(CLS1_DefaultShellBuffer), CLS1_GetStdio(), CmdParserTable);
-    (void)CLS1_ReadAndParseWithCommandTable(CDC1_DefaultShellBuffer, sizeof(CDC1_DefaultShellBuffer), &CDC1_stdio, CmdParserTable);
+    (void)CLS1_ReadAndParseWithCommandTable(CDC1_DefaultShellBuffer, sizeof(CDC1_DefaultShellBuffer), CDC1_GetStdio(), CmdParserTable);
     vTaskDelay(pdMS_TO_TICKS(10));
   }
 }

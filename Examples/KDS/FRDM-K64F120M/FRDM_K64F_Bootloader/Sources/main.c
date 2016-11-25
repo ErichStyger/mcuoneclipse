@@ -48,6 +48,7 @@
 #include "AS1.h"
 #include "ASerialLdd1.h"
 #include "TRG1.h"
+#include "XF1.h"
 #include "KSDK1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"

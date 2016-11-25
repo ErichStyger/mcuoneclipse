@@ -79,6 +79,7 @@
 #include "Tx1.h"
 #include "Rx1.h"
 #include "RTT1.h"
+#include "XF1.h"
 #include "Dir0.h"
 #include "BitIoLdd16.h"
 #include "Step0.h"
@@ -210,7 +211,7 @@ void RTOSTRC1_OnTraceWrap(void);
 ** ===================================================================
 */
 
-void KEY1_OnKeyPressed(byte keys);
+void KEY1_OnKeyPressed(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyPressed (module Events)
@@ -226,7 +227,7 @@ void KEY1_OnKeyPressed(byte keys);
 ** ===================================================================
 */
 
-void KEY1_OnKeyReleased(byte keys);
+void KEY1_OnKeyReleased(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyReleased (module Events)
@@ -242,7 +243,7 @@ void KEY1_OnKeyReleased(byte keys);
 ** ===================================================================
 */
 
-void KEY1_OnKeyReleasedLong(byte keys);
+void KEY1_OnKeyReleasedLong(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyReleasedLong (module Events)
@@ -285,6 +286,23 @@ void PTRC1_OnTraceWrap(void);
 **         Called for trace ring buffer wrap around. This gives the
 **         application a chance to dump the trace buffer.
 **     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyPressedLong(uint8_t keys);
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyPressedLong (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated at the time a long key press has been
+**         detected.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
 **     Returns     : Nothing
 ** ===================================================================
 */

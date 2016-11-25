@@ -51,6 +51,7 @@
 #include "AS1.h"
 #include "ASerialLdd1.h"
 #include "TRG1.h"
+#include "XF1.h"
 #include "KSDK1.h"
 
 #ifdef __cplusplus
