@@ -18,7 +18,7 @@
 #define LEDFRAME_CYCLE_COLORS  0
 #define LEDFRAME_SHOW_MIN_SEC  0
 #define LEDFRAME_SHOW_HOUR_MIN 1
-#define LEDFRAME_SHOW_LECTURE_MODE  1  /* different colors depending on time */
+#define LEDFRAME_SHOW_LECTURE_MODE  0  /* different colors depending on time */
 
 /* task notification bits */
 #define LEDFRAME_NOTIFICATION_UPDATE_DISPLAY      (1<<0)  /* update display */

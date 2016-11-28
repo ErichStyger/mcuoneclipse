@@ -45,7 +45,7 @@ extern RomInfo __S_romp[] __attribute__((weak));    /* linker defined symbol */
 /*
  * Routine to flush cache follow the ROM to RAM copy
  */
-void __flush_cache(unsigned long dst, unsigned long size)
+static void __flush_cache(unsigned long dst, unsigned long size)
 {
 	//TBD
 }
@@ -54,7 +54,7 @@ void __flush_cache(unsigned long dst, unsigned long size)
 /*
  *	Routine to copy a single section from ROM to RAM ...
  */
-void __copy_rom_section(unsigned long dst, unsigned long src, unsigned long size)
+static void __copy_rom_section(unsigned long dst, unsigned long src, unsigned long size)
 {
 	unsigned long len = size;
 

@@ -96,7 +96,7 @@ static void UpdateFromRTC(void) {
 }
 #endif
 
-#if 1
+#if 0
 static void Test(void) {
   GDisp1_Clear();
   NEO_TransferPixels();
@@ -112,7 +112,7 @@ static void Test(void) {
 }
 #endif
 
-#if PL_HAS_NEO_PIXEL
+#if PL_HAS_NEO_PIXEL && !PL_HAS_LED_FRAME
 static void NeoTask(void* pvParameters) {
   #define DIMM 0x50
   (void)pvParameters; /* parameter not used */

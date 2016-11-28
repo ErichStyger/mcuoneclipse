@@ -227,22 +227,7 @@ void SD1_OnDeactivate(uint8_t mode);
 ** ===================================================================
 */
 
-void EVNT1_AppHandleEvent(uint8_t event);
-/*
-** ===================================================================
-**     Event       :  EVNT1_AppHandleEvent (module Events)
-**
-**     Component   :  EVNT1 [SimpleEvents]
-**     Description :
-**         
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**         event           - Event (event number) to be processed.
-**     Returns     : Nothing
-** ===================================================================
-*/
-
-void KEY1_OnKeyPressed(byte keys);
+void KEY1_OnKeyPressed(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyPressed (module Events)
@@ -258,7 +243,7 @@ void KEY1_OnKeyPressed(byte keys);
 ** ===================================================================
 */
 
-void KEY1_OnKeyReleased(byte keys);
+void KEY1_OnKeyReleased(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyReleased (module Events)

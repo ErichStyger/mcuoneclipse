@@ -226,26 +226,6 @@ void SD1_OnDeactivate(uint8_t mode)
   SPIBus_OnDeactivate();
 }
 
-
-/*
-** ===================================================================
-**     Event       :  EVNT1_AppHandleEvent (module Events)
-**
-**     Component   :  EVNT1 [SimpleEvents]
-**     Description :
-**         
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**         event           - Event (event number) to be processed.
-**     Returns     : Nothing
-** ===================================================================
-*/
-void EVNT1_AppHandleEvent(uint8_t event)
-{
-  (void)event; /* only to avoid compiler warning about unused variable */
-  /* Write your code here ... */
-}
-
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyPressed (module Events)
@@ -260,7 +240,7 @@ void EVNT1_AppHandleEvent(uint8_t event)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void KEY1_OnKeyPressed(byte keys)
+void KEY1_OnKeyPressed(uint8_t keys)
 {
   KEYS_OnKeyPressed(keys);
 }
@@ -279,7 +259,7 @@ void KEY1_OnKeyPressed(byte keys)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void KEY1_OnKeyReleased(byte keys)
+void KEY1_OnKeyReleased(uint8_t keys)
 {
   KEYS_OnKeyReleased(keys);
 }
