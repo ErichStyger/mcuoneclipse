@@ -8,7 +8,11 @@
 #ifndef SOURCES_VL6180X_H_
 #define SOURCES_VL6180X_H_
 
-#include <stdint.h>
+#include "PE_Types.h"
+
+#define VL_MULTIPLE_DEVICES  0  /* set to greater zero with the number of devices */
+
+#define VL6180X_DEFAULT_I2C_ADDRESS 0x29 /* default address 0101001b (shifted on the bus it is 0101001x */
 
 enum regAddr {
   IDENTIFICATION__MODEL_ID              = 0x000,
@@ -83,13 +87,32 @@ enum regAddr {
 
 typedef enum {
   VL_ON_ERROR_INIT,
+  VL_ON_ERROR_WRONG_DEVICE,
   VL_ON_ERROR_CONFIGURE_DEFAULT,
+  VL_ON_ERROR_ENABLE_FAULT,
+  VL_ON_ERROR_INIT_DEVICE,
+  VL_ON_ERROR_ENABLE_DEVICE,
+  VL_ON_ERROR_SET_I2C_ADDRESS,
 } VL_Enum_Error;
 
-uint8_t VL_ReadRangeSingle(uint8_t *rangeP);
-uint8_t VL_ReadAmbientSingle(uint16_t *ambientP);
+uint8_t VL_WriteReg8(uint8_t i2cDeviceAddress, uint16_t reg, uint8_t val);
 
+uint8_t VL_WriteReg16(uint8_t i2cDeviceAddress, uint16_t reg, uint16_t val);
+
+uint8_t VL_ReadReg8(uint8_t i2cDeviceAddress, uint16_t reg, uint8_t *valP);
+
+uint8_t VL_ReadReg16(uint8_t i2cDeviceAddress, uint16_t reg, uint16_t *valP);
+
+uint8_t VL_ReadRangeSingle(uint8_t i2cDeviceAddress, int16_t *rangeP);
+uint8_t VL_ReadAmbientSingle(uint8_t i2cDeviceAddress, uint16_t *ambientP);
+
+uint8_t VL_ChipEnable(uint8_t deviceNo, bool on);
+uint8_t VL_SetI2CDeviceAddress(uint8_t deviceNo, uint8_t i2cDeviceAddress);
+
+uint8_t VL_InitDevice(uint8_t i2cDeviceAddress);
+uint8_t VL_ConfigureDefault(uint8_t i2cDeviceAddress);
+
+uint8_t VL_InitAndConfigureDevice(uint8_t i2cDeviceAddress);
 uint8_t VL_Init(void);
-
 
 #endif /* SOURCES_VL6180X_H_ */

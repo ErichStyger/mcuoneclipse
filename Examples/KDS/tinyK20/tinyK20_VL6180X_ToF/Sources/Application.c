@@ -13,13 +13,14 @@
 
 void APP_Start(void) {
   uint8_t val=0;
-  uint8_t range, res;
+  int16_t range;
+  uint8_t res;
   uint16_t ambient;
   CLS1_ConstStdIOType *io = CLS1_GetStdio();
 
   VL_Init(); /* initialize sensor driver */
   for(;;) {
-    res = VL_ReadRangeSingle(&range);
+    res = VL_ReadRangeSingle(VL6180X_DEFAULT_I2C_ADDRESS, &range);
     if (res!=ERR_OK) {
       CLS1_SendStr("ERROR Range: ", io->stdErr);
       CLS1_SendNum8u(res, io->stdErr);
@@ -27,7 +28,7 @@ void APP_Start(void) {
       CLS1_SendStr("Range: ", io->stdOut);
       CLS1_SendNum8u(range, io->stdOut);
     }
-    res = VL_ReadAmbientSingle(&ambient);
+    res = VL_ReadAmbientSingle(VL6180X_DEFAULT_I2C_ADDRESS, &ambient);
     if (res!=ERR_OK) {
       CLS1_SendStr(" ERROR Ambient: ", io->stdErr);
       CLS1_SendNum8u(res, io->stdErr);
@@ -40,5 +41,3 @@ void APP_Start(void) {
     WAIT1_Waitms(500);
   }
 }
-
-
