@@ -19,6 +19,12 @@ void APP_Start(void) {
   CLS1_ConstStdIOType *io = CLS1_GetStdio();
 
   VL_Init(); /* initialize sensor driver */
+  res = VL_InitAndConfigureDevice(VL6180X_DEFAULT_I2C_ADDRESS);
+  if (res!=ERR_OK) {
+    CLS1_SendStr("ERROR: Failed init of TOF device: ", io->stdErr);
+    CLS1_SendNum8u(VL6180X_DEFAULT_I2C_ADDRESS, io->stdErr);
+    CLS1_SendStr("\r\n", io->stdErr);
+  }
   for(;;) {
     res = VL_ReadRangeSingle(VL6180X_DEFAULT_I2C_ADDRESS, &range);
     if (res!=ERR_OK) {
