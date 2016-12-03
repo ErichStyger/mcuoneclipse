@@ -145,7 +145,6 @@ uint8_t VL_ReadRangeSingle(uint8_t i2cDeviceAddress, int16_t *rangeP) {
   uint8_t val;
 
   VL_WriteReg8(i2cDeviceAddress, SYSRANGE__START, 0x01);
-  //WAIT1_WaitOSms(8); /* logic analyzer shows it takes around 9 ms until the data is ready */
   res = readRangeContinuous(i2cDeviceAddress, &val);
   if (res!=ERR_OK) {
     *rangeP = -1;
