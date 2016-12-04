@@ -163,6 +163,103 @@ uint8_t VL_ReadAmbientSingle(uint8_t i2cDeviceAddress, uint16_t *ambientP) {
   return readAmbientContinuous(i2cDeviceAddress, ambientP);
 }
 
+uint8_t VL6180X_readLux(uint8_t i2cDeviceAddress, VL6180X_ALS_GAIN gain, float *pLux) {
+  uint8_t reg;
+  uint16_t reg16;
+  uint8_t res;
+  float lux;
+
+  *pLux = 0.0; /* init */
+  res = VL_ReadReg8(i2cDeviceAddress, VL6180X_REG_SYSTEM_INTERRUPT_CONFIG, &reg);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  reg &= ~0x38;
+  reg |= (0x4 << 3); /* IRQ on ALS ready */
+  res = VL_WriteReg8(i2cDeviceAddress, VL6180X_REG_SYSTEM_INTERRUPT_CONFIG, reg);
+  if (res!=ERR_OK) {
+    return res;
+  }
+
+  /* 100 ms integration period */
+  res = VL_WriteReg8(i2cDeviceAddress, VL6180X_REG_SYSALS_INTEGRATION_PERIOD_HI, 0);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  res = VL_WriteReg8(i2cDeviceAddress, VL6180X_REG_SYSALS_INTEGRATION_PERIOD_LO, 100);
+  if (res!=ERR_OK) {
+    return res;
+  }
+
+  /* analog gain */
+  if (gain > VL6180X_ALS_GAIN_40) {
+    gain = VL6180X_ALS_GAIN_40;
+  }
+  res = VL_WriteReg8(i2cDeviceAddress, VL6180X_REG_SYSALS_ANALOGUE_GAIN, 0x40 | gain);
+  if (res!=ERR_OK) {
+    return res;
+  }
+
+  /* start ALS */
+  res = VL_WriteReg8(i2cDeviceAddress, VL6180X_REG_SYSALS_START, 0x1);
+  if (res!=ERR_OK) {
+    return res;
+  }
+
+  /* Poll until "New Sample Ready threshold event" is set */
+  do {
+    res = VL_ReadReg8(i2cDeviceAddress, VL6180X_REG_RESULT_INTERRUPT_STATUS_GPIO, &reg);
+    if (((reg>>3)&0x7)==4) {
+      break; /* new result ready */
+    }
+    /* \todo add proper timeout handling */
+  } while(1);
+
+  /* read lux */
+  res = VL_ReadReg16(i2cDeviceAddress, VL6180X_REG_RESULT_ALS_VAL, &reg16);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  lux = reg16;
+
+  /* clear interrupt */
+  res = VL_WriteReg8(i2cDeviceAddress, VL6180X_REG_SYSTEM_INTERRUPT_CLEAR, 0x07);
+
+  lux *= 0.32; // calibrated count/lux
+  switch(gain) {
+    case VL6180X_ALS_GAIN_1:
+      break;
+    case VL6180X_ALS_GAIN_1_25:
+      lux /= 1.25;
+      break;
+    case VL6180X_ALS_GAIN_1_67:
+      lux /= 1.76;
+      break;
+    case VL6180X_ALS_GAIN_2_5:
+      lux /= 2.5;
+      break;
+    case VL6180X_ALS_GAIN_5:
+      lux /= 5;
+      break;
+    case VL6180X_ALS_GAIN_10:
+      lux /= 10;
+      break;
+    case VL6180X_ALS_GAIN_20:
+      lux /= 20;
+      break;
+    case VL6180X_ALS_GAIN_40:
+      lux /= 20;
+      break;
+    default:
+      break;
+  }
+  lux *= 100;
+  lux /= 100; // integration time in ms
+  *pLux = lux;
+  return ERR_OK;
+}
+
+
 // Configure some settings for the sensor's default behavior from AN4545 -
 // "Recommended : Public registers" and "Optional: Public registers"
 uint8_t VL_ConfigureDefault(uint8_t i2cDeviceAddress) {

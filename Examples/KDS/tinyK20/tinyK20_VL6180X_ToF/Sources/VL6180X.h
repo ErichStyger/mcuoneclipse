@@ -85,6 +85,33 @@ enum regAddr {
   INTERLEAVED_MODE__ENABLE              = 0x2A3,
 };
 
+#define VL6180X_REG_IDENTIFICATION_MODEL_ID       0x000
+#define VL6180X_REG_SYSTEM_INTERRUPT_CONFIG       0x014
+#define VL6180X_REG_SYSTEM_INTERRUPT_CLEAR        0x015
+#define VL6180X_REG_SYSTEM_FRESH_OUT_OF_RESET     0x016
+#define VL6180X_REG_SYSRANGE_START                0x018
+#define VL6180X_REG_SYSALS_START                  0x038
+#define VL6180X_REG_SYSALS_ANALOGUE_GAIN          0x03F
+#define VL6180X_REG_SYSALS_INTEGRATION_PERIOD_HI  0x040
+#define VL6180X_REG_SYSALS_INTEGRATION_PERIOD_LO  0x041
+#define VL6180X_REG_RESULT_ALS_VAL                0x050
+#define VL6180X_REG_RESULT_RANGE_VAL              0x062
+#define VL6180X_REG_RESULT_RANGE_STATUS           0x04d
+#define VL6180X_REG_RESULT_INTERRUPT_STATUS_GPIO  0x04f
+
+
+/* ALS gain constants */
+typedef enum {
+  VL6180X_ALS_GAIN_1 =        0x06,
+  VL6180X_ALS_GAIN_1_25 =     0x05,
+  VL6180X_ALS_GAIN_1_67 =     0x04,
+  VL6180X_ALS_GAIN_2_5  =     0x03,
+  VL6180X_ALS_GAIN_5    =     0x02,
+  VL6180X_ALS_GAIN_10   =     0x01,
+  VL6180X_ALS_GAIN_20   =     0x00,
+  VL6180X_ALS_GAIN_40   =     0x07,
+} VL6180X_ALS_GAIN;
+
 typedef enum {
   VL_ON_ERROR_INIT,
   VL_ON_ERROR_WRONG_DEVICE,
@@ -102,6 +129,8 @@ uint8_t VL_WriteReg16(uint8_t i2cDeviceAddress, uint16_t reg, uint16_t val);
 uint8_t VL_ReadReg8(uint8_t i2cDeviceAddress, uint16_t reg, uint8_t *valP);
 
 uint8_t VL_ReadReg16(uint8_t i2cDeviceAddress, uint16_t reg, uint16_t *valP);
+
+uint8_t VL6180X_readLux(uint8_t i2cDeviceAddress, VL6180X_ALS_GAIN gain, float *pLux);
 
 uint8_t VL_ReadRangeSingle(uint8_t i2cDeviceAddress, int16_t *rangeP);
 uint8_t VL_ReadAmbientSingle(uint8_t i2cDeviceAddress, uint16_t *ambientP);
