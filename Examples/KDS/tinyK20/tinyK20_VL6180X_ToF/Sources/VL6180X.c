@@ -21,50 +21,47 @@
   #include "TofCE4.h" /* CE of ToF 4, low active */
 #endif
 
+// RANGE_SCALER values for 1x, 2x, 3x scaling - see STSW-IMG003 core/src/vl6180x_api.c (ScalerLookUP[])
+static uint16_t const ScalerValues[] = {0, 253, 127, 84};
+static uint8_t scaling = 1;
+
+
 static void VL_OnError(VL_Enum_Error error) {
   /* generic error hook */
 }
 
 uint8_t VL_WriteReg8(uint8_t i2cDeviceAddress, uint16_t reg, uint8_t val) {
   uint8_t r[2];
-  uint8_t res;
 
   r[0] = reg>>8;
   r[1] = reg&0xff;
-  res = GI2C1_WriteAddress(i2cDeviceAddress, &r[0], sizeof(r), &val, sizeof(val));
-  return res;
+  return GI2C1_WriteAddress(i2cDeviceAddress, &r[0], sizeof(r), &val, sizeof(val));
 }
 
 uint8_t VL_WriteReg16(uint8_t i2cDeviceAddress, uint16_t reg, uint16_t val) {
   uint8_t r[2], v[2];
-  uint8_t res;
 
   r[0] = reg>>8;
   r[1] = reg&0xff;
   v[0] = val>>8;
   v[1] = val&0xff;
-  res = GI2C1_WriteAddress(i2cDeviceAddress, &r[0], sizeof(r), &v[0], sizeof(v));
-  return res;
+  return GI2C1_WriteAddress(i2cDeviceAddress, &r[0], sizeof(r), &v[0], sizeof(v));
 }
 
 uint8_t VL_ReadReg8(uint8_t i2cDeviceAddress, uint16_t reg, uint8_t *valP) {
   uint8_t tmp[2];
-  uint8_t res;
 
   tmp[0] = reg>>8;
   tmp[1] = reg&0xff;
-  res = GI2C1_ReadAddress(i2cDeviceAddress, &tmp[0], sizeof(tmp), valP, 1);
-  return res;
+  return GI2C1_ReadAddress(i2cDeviceAddress, &tmp[0], sizeof(tmp), valP, 1);
 }
 
 uint8_t VL_ReadReg16(uint8_t i2cDeviceAddress, uint16_t reg, uint16_t *valP) {
   uint8_t tmp[2];
-  uint8_t res;
 
   tmp[0] = reg>>8;
   tmp[1] = reg&0xff;
-  res = GI2C1_ReadAddress(i2cDeviceAddress, &tmp[0], sizeof(tmp), (uint8_t*)valP, 2);
-  return res;
+  return GI2C1_ReadAddress(i2cDeviceAddress, &tmp[0], sizeof(tmp), (uint8_t*)valP, 2);
 }
 
 static uint8_t readRangeContinuous(uint8_t i2cDeviceAddress, uint8_t *valP) {
@@ -145,6 +142,7 @@ uint8_t VL_ReadRangeSingle(uint8_t i2cDeviceAddress, int16_t *rangeP) {
   uint8_t val;
 
   VL_WriteReg8(i2cDeviceAddress, SYSRANGE__START, 0x01);
+  //WAIT1_WaitOSms(8); /* logic analyzer shows it takes around 9 ms until the data is ready */
   res = readRangeContinuous(i2cDeviceAddress, &val);
   if (res!=ERR_OK) {
     *rangeP = -1;
@@ -259,38 +257,77 @@ uint8_t VL6180X_readLux(uint8_t i2cDeviceAddress, VL6180X_ALS_GAIN gain, float *
   return ERR_OK;
 }
 
+#if 0
+// Set range scaling factor. The sensor uses 1x scaling by default, giving range
+// measurements in units of mm. Increasing the scaling to 2x or 3x makes it give
+// raw values in units of 2 mm or 3 mm instead. In other words, a bigger scaling
+// factor increases the sensor's potential maximum range but reduces its
+// resolution.
+
+// Implemented using ST's VL6180X API as a reference (STSW-IMG003); see
+// VL6180x_UpscaleSetScaling() in vl6180x_api.c.
+void VL6180X::setScaling(uint8_t new_scaling)
+{
+  uint8_t const DefaultCrosstalkValidHeight = 20; // default value of SYSRANGE__CROSSTALK_VALID_HEIGHT
+
+  // do nothing if scaling value is invalid
+  if (new_scaling < 1 || new_scaling > 3) { return; }
+
+  scaling = new_scaling;
+  writeReg16Bit(RANGE_SCALER, ScalerValues[scaling]);
+
+  // apply scaling on part-to-part offset
+  writeReg(VL6180X::SYSRANGE__PART_TO_PART_RANGE_OFFSET, ptp_offset / scaling);
+
+  // apply scaling on CrossTalkValidHeight
+  writeReg(VL6180X::SYSRANGE__CROSSTALK_VALID_HEIGHT, DefaultCrosstalkValidHeight / scaling);
+
+  // This function does not apply scaling to RANGE_IGNORE_VALID_HEIGHT.
+
+  // enable early convergence estimate only at 1x scaling
+  uint8_t rce = readReg(VL6180X::SYSRANGE__RANGE_CHECK_ENABLES);
+  writeReg(VL6180X::SYSRANGE__RANGE_CHECK_ENABLES, (rce & 0xFE) | (scaling == 1));
+}
+#endif
+
 
 // Configure some settings for the sensor's default behavior from AN4545 -
 // "Recommended : Public registers" and "Optional: Public registers"
 uint8_t VL_ConfigureDefault(uint8_t i2cDeviceAddress) {
   // "Recommended : Public registers"
 
-  // readout__averaging_sample_period = 48
+  /* Set the averaging sample period (compromise between lower noise and increased execution time) */
   VL_WriteReg8(i2cDeviceAddress, READOUT__AVERAGING_SAMPLE_PERIOD, 0x30);
 
-  // sysals__analogue_gain_light = 6 (ALS gain = 1 nominal, actually 1.01 according to Table 14 in datasheet)
+  /* sysals__analogue_gain_light = 6 (ALS gain = 1 nominal, actually 1.01 according to Table 14 in datasheet)
+   * Sets the light and dark gain (upper nibble). Dark gain should not be changed.  */
   VL_WriteReg8(i2cDeviceAddress, SYSALS__ANALOGUE_GAIN, 0x46);
 
   // sysrange__vhv_repeat_rate = 255 (auto Very High Voltage temperature recalibration after every 255 range measurements)
+  /* sets the # of range measurements after which auto calibration of system is which auto calibration of system is performed */
   VL_WriteReg8(i2cDeviceAddress, SYSRANGE__VHV_REPEAT_RATE, 0xFF);
 
-  // sysals__integration_period = 99 (100 ms)
-  // AN4545 incorrectly recommends writing to register 0x040; 0x63 should go in the lower byte, which is register 0x041.
+  /* sysals__integration_period = 99 (100 ms) */
+  /* AN4545 incorrectly recommends writing to register 0x040; 0x63 should go in the lower byte, which is register 0x041. */
+  /* Set ALS integration time to 100ms */
   VL_WriteReg16(i2cDeviceAddress, SYSALS__INTEGRATION_PERIOD, 0x0063);
 
-  // sysrange__vhv_recalibrate = 1 (manually trigger a VHV recalibration)
+  /* sysrange__vhv_recalibrate = 1 (manually trigger a VHV recalibration) */
+  /* perform a single temperature calibration of the ranging sensor */
   VL_WriteReg8(i2cDeviceAddress, SYSRANGE__VHV_RECALIBRATE, 0x01);
 
-  // "Optional: Public registers"
-
-  // sysrange__intermeasurement_period = 9 (100 ms)
+  /* Optional: Public registers, see data sheet for more detail */
+  /* Set default ranging inter-measurement period to 100ms */
   VL_WriteReg8(i2cDeviceAddress, SYSRANGE__INTERMEASUREMENT_PERIOD, 0x09);
 
-  // sysals__intermeasurement_period = 49 (500 ms)
+  /* Set default ALS inter-measurement period to 500ms */
   VL_WriteReg8(i2cDeviceAddress, SYSALS__INTERMEASUREMENT_PERIOD, 0x31);
 
-  // als_int_mode = 4 (ALS new sample ready interrupt); range_int_mode = 4 (range new sample ready interrupt)
+  /* Configures interrupt on 'New Sample Ready threshold event' */
   VL_WriteReg8(i2cDeviceAddress, SYSTEM__INTERRUPT_CONFIG_GPIO, 0x24);
+
+  scaling = 1;
+  return ERR_OK;
 }
 
 /* Initialize sensor with settings from ST application note AN4545, section 9 -
@@ -313,7 +350,7 @@ uint8_t VL_InitDevice(uint8_t i2cDeviceAddress) {
     VL_OnError(VL_ON_ERROR_INIT_DEVICE);
     return res;
   }
-  res = VL_WriteReg8(i2cDeviceAddress, 0x097, 0xFD);
+  res = VL_WriteReg8(i2cDeviceAddress, 0x097, 0xFD); /* RANGE_SCALER = 253 */
   if (res!=ERR_OK) {
     VL_OnError(VL_ON_ERROR_INIT_DEVICE);
     return res;

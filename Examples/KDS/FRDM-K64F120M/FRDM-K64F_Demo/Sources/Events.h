@@ -117,7 +117,6 @@
 #include "BitIoLdd23.h"
 #include "Step2.h"
 #include "BitIoLdd22.h"
-#include "KSDK1.h"
 
 #ifdef __cplusplus
 extern "C" {

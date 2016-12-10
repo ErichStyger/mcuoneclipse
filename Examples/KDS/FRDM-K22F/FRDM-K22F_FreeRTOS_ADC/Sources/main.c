@@ -34,8 +34,8 @@
 #include "AD1.h"
 #include "AdcLdd1.h"
 #include "FRTOS1.h"
-#include "KSDK1.h"
 #include "UTIL1.h"
+#include "MCUC1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

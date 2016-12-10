@@ -68,10 +68,11 @@
 #include "SW3.h"
 #include "BitIoLdd6.h"
 #include "TMOUT1.h"
-#include "KSDK1.h"
 #include "RTT1.h"
 #include "SYS1.h"
 #include "PTRC1.h"
+#include "XF1.h"
+#include "MCUC1.h"
 #include "HF1.h"
 #include "SM1.h"
 #include "SMasterLdd1.h"
@@ -96,7 +97,7 @@ extern "C" {
 void Cpu_OnNMI(void);
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
