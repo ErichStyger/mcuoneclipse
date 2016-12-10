@@ -23,7 +23,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="abs" artifactName="S08MM128_CDC" buildProperties="" cleanCommand="&quot;${system:ECLIPSE_HOME}/../gnu/bin/rm&quot; -f" description="" errorParsers="com.freescale.core.ide.cdt.errorParsers.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser;com.freescale.core.ide.cdt.errorParsers.MwfeErrorParser;com.freescale.core.ide.cdt.errorParsers.LnkErrorParser;com.freescale.core.ide.cdt.errorParsers.AsmErrorParser;com.freescale.core.ide.cdt.errorParsers.CobjErrorParser;com.freescale.core.ide.cdt.errorParsers.IcodeErrorParser;com.freescale.core.ide.cdt.errorParsers.LltErrorParser;com.freescale.core.ide.cdt.errorParsers.S08ErrorParser;org.eclipse.cdt.core.GmakeErrorParser;" id="toolchain.config.hcs08.release.1451424839" isPrebuildInvalidatingBuild="false" name="MC9S08MM128" parent="toolchain.config.hcs08.release">
+				<configuration artifactExtension="abs" artifactName="S08MM128_CDC" buildProperties="" cleanCommand="&quot;${system:ECLIPSE_HOME}/../gnu/bin/rm&quot; -f" description="" errorParsers="com.freescale.core.ide.cdt.errorParsers.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser;com.freescale.core.ide.cdt.errorParsers.MwfeErrorParser;com.freescale.core.ide.cdt.errorParsers.LnkErrorParser;com.freescale.core.ide.cdt.errorParsers.AsmErrorParser;com.freescale.core.ide.cdt.errorParsers.CobjErrorParser;com.freescale.core.ide.cdt.errorParsers.IcodeErrorParser;com.freescale.core.ide.cdt.errorParsers.LltErrorParser;com.freescale.core.ide.cdt.errorParsers.S08ErrorParser;org.eclipse.cdt.core.GmakeErrorParser;" id="toolchain.config.hcs08.release.1451424839" isPrebuildInvalidatingBuild="false" isVersionInfoProjSpecific="false" name="MC9S08MM128" parent="toolchain.config.hcs08.release">
 					<folderInfo id="toolchain.config.hcs08.release.1451424839." name="/" resourcePath="">
 						<toolChain errorParsers="" id="hcs08.project.toolchain.1920812631" name="HCS08 Toolchain" superClass="hcs08.project.toolchain">
 							<option id="hc08.toolchain.sharedoption.mmu.142190981" name="Enable Memory Management Unit (MMU) Support (-MMU)" superClass="hc08.toolchain.sharedoption.mmu" value="true" valueType="boolean"/>
@@ -57,6 +57,7 @@
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Generated_Code&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Sources&quot;"/>
 								</option>
+								<option id="hc08.toolchain.compiler.base.messages.WmsgSd.14666159" superClass="hc08.toolchain.compiler.base.messages.WmsgSd" value="C3303" valueType="string"/>
 								<inputType id="hcs08.toolchain.compiler.base.input.c.1969229002" name="HCS08 Compiler C Input" superClass="hcs08.toolchain.compiler.base.input.c"/>
 								<inputType id="hcs08.toolchain.compiler.base.input.cpp.522518801" name="HCS08 Compiler CPP Input" superClass="hcs08.toolchain.compiler.base.input.cpp"/>
 							</tool>

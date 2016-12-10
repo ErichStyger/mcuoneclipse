@@ -43,7 +43,7 @@
 **     Returns     : Nothing
 ** ===================================================================
 */
-void KEY2_OnKeyPressed(byte keys)
+void KEY2_OnKeyPressed(uint8_t keys)
 {
   if (keys&1) {
     EVNT1_SetEvent(EVNT1_BTN1_PRESSED);
@@ -66,7 +66,7 @@ void KEY2_OnKeyPressed(byte keys)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void KEY1_OnKeyPressed(byte keys)
+void KEY1_OnKeyPressed(uint8_t keys)
 {
   if (keys&1) {
     EVNT1_SetEvent(EVNT1_BTN3_PRESSED);
@@ -269,6 +269,46 @@ void SM1_OnFullRxBuf(void)
 ** ===================================================================
 */
 void SM1_OnFreeTxBuf(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  KEY2_OnKeyPressedLong (module Events)
+**
+**     Component   :  KEY2 [Key]
+**     Description :
+**         Event generated at the time a long key press has been
+**         detected.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY2_OnKeyPressedLong(uint8_t keys)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyPressedLong (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated at the time a long key press has been
+**         detected.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyPressedLong(uint8_t keys)
 {
   /* Write your code here ... */
 }

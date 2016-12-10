@@ -49,11 +49,11 @@
 #include "USB1.h"
 #include "HIDM1.h"
 #include "Tx2.h"
-#include "KSDK1.h"
 #include "SW2.h"
 #include "BitIoLdd4.h"
 #include "SW3.h"
 #include "BitIoLdd5.h"
+#include "MCUC1.h"
 
 #ifdef __cplusplus
 extern "C" {

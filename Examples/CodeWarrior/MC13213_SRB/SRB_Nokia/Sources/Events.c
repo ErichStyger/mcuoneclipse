@@ -54,7 +54,7 @@ void KB1_OnInterrupt(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void KEY1_OnKeyPressed(byte keys)
+void KEY1_OnKeyPressed(uint8_t keys)
 {
   (void)keys;
 }
@@ -73,7 +73,7 @@ void KEY1_OnKeyPressed(byte keys)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void KEY1_OnKeyReleased(byte keys)
+void KEY1_OnKeyReleased(uint8_t keys)
 {
   (void)keys;
 }
@@ -113,6 +113,26 @@ void FRTOS1_vOnPreSleepProcessing(portTickType expectedIdleTicks)
 #else
   #error "you *must* enter low power mode (wait for interrupt) here!"
 #endif
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyPressedLong (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated at the time a long key press has been
+**         detected.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyPressedLong(uint8_t keys)
+{
   /* Write your code here ... */
 }
 

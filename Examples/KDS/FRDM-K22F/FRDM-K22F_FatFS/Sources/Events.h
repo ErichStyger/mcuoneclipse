@@ -61,6 +61,8 @@
 #include "TMOUT1.h"
 #include "XF1.h"
 #include "MCUC1.h"
+#include "SYS1.h"
+#include "RTT1.h"
 #include "HF1.h"
 
 #ifdef __cplusplus

@@ -50,7 +50,6 @@
 #include "CS1.h"
 #include "CLS1.h"
 #include "AS2.h"
-#include "KSDK1.h"
 #include "FAT1.h"
 #include "SD1.h"
 #include "SDSS1.h"
@@ -58,6 +57,7 @@
 #include "SM1.h"
 #include "TMOUT1.h"
 #include "XF1.h"
+#include "MCUC1.h"
 /* Include shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

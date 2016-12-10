@@ -231,21 +231,7 @@ void TRSVR1_ResetIndication(void)
 }
 
 
-/*
-** ===================================================================
-**     Event       :  SMAC1_OnInterrupt (module RNET1)
-**
-**     Component   :  TRSVR1 [MC13192]
-**     Description :
-**         Event called in case of a transceiver interrupt
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void SMAC1_OnInterrupt2(void)
-{
-  /* Write your code here ... */
-}
+
 
 /* END Events */
 

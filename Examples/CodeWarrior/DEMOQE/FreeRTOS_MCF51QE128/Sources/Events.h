@@ -61,7 +61,6 @@
 #include "CS1.h"
 #include "CLS1.h"
 #include "AS2.h"
-#include "KSDK1.h"
 #include "FAT1.h"
 #include "SD1.h"
 #include "SDSS1.h"
@@ -69,8 +68,9 @@
 #include "SM1.h"
 #include "TMOUT1.h"
 #include "XF1.h"
+#include "MCUC1.h"
 
-void KEY2_OnKeyPressed(byte keys);
+void KEY2_OnKeyPressed(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY2_OnKeyPressed (module Events)
@@ -86,7 +86,7 @@ void KEY2_OnKeyPressed(byte keys);
 ** ===================================================================
 */
 
-void KEY1_OnKeyPressed(byte keys);
+void KEY1_OnKeyPressed(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyPressed (module Events)
@@ -259,6 +259,40 @@ void SM1_OnFreeTxBuf(void);
 **         service/event> property is enabled and the <Output buffer
 **         size> property is set to non-zero value.
 **     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY2_OnKeyPressedLong(uint8_t keys);
+/*
+** ===================================================================
+**     Event       :  KEY2_OnKeyPressedLong (module Events)
+**
+**     Component   :  KEY2 [Key]
+**     Description :
+**         Event generated at the time a long key press has been
+**         detected.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyPressedLong(uint8_t keys);
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyPressedLong (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated at the time a long key press has been
+**         detected.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
 **     Returns     : Nothing
 ** ===================================================================
 */
