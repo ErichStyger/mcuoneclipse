@@ -3,8 +3,8 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>Erich Styger Local</SavedBy>
-    <ModificationStamp>80</ModificationStamp>
-    <Date>2016-11-19</Date>
+    <ModificationStamp>81</ModificationStamp>
+    <Date>2016-12-11</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
@@ -25,7 +25,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>225</ProjectCompNumb>
+    <ProjectCompNumb>226</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <UserInterface>CLASSIC</UserInterface>
@@ -4924,7 +4924,7 @@
       <Value15>true</Value15>
       <ItemId16>189</ItemId16>
       <Value16>true</Value16>
-      <ItemId17>214</ItemId17>
+      <ItemId17>225</ItemId17>
       <Value17>true</Value17>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
@@ -5263,7 +5263,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.069</BeanVersion>
+    <BeanVersion>01.071</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -5364,7 +5364,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -7531,7 +7531,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.128</BeanVersion>
+    <BeanVersion>01.147</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -7544,7 +7544,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
     </Properties>
@@ -12778,36 +12778,43 @@
     <Events />
   </Bean>
   <Bean>
-    <BeanType>KinetisSDK</BeanType>
-    <Name>KSDK1</Name>
-    <CompNumb>214</CompNumb>
+    <BeanType>McuLibConfig</BeanType>
+    <Name>MCUC1</Name>
+    <CompNumb>225</CompNumb>
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
-    <IconName>SHARED_LDD</IconName>
+    <IconName>SWITCH</IconName>
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.005</BeanVersion>
+    <BeanVersion>01.006</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
       <ItemState>
-        <ItemSymbol>SDKVersion</ItemSymbol>
+        <ItemSymbol>SDK</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Index>0</Index>
-        <EnumSymbVal>none</EnumSymbVal>
+        <Index>1</Index>
+        <EnumSymbVal>ProcessorExpertSDK</EnumSymbVal>
       </ItemState>
       <ItemState>
-        <ItemSymbol>KinetisSDKGeneratedFolderName</ItemSymbol>
+        <ItemSymbol>ConfigFilesFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LibFilesFolderName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value />

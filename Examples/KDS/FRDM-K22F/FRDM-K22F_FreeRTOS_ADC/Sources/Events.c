@@ -147,38 +147,56 @@ void FRTOS1_vApplicationMallocFailedHook(void)
 
 /*
 ** ===================================================================
-**     Event       :  AD1_OnEnd (module Events)
+**     Event       :  PTRC1_OnTraceWrap (module Events)
 **
-**     Component   :  AD1 [ADC]
+**     Component   :  PTRC1 [PercepioTrace]
 **     Description :
-**         This event is called after the measurement (which consists
-**         of <1 or more conversions>) is/are finished.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled.
+**         Called for trace ring buffer wrap around. This gives the
+**         application a chance to dump the trace buffer.
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================
 */
-void AD1_OnEnd(void)
+void PTRC1_OnTraceWrap(void)
+{
+#if 1 /* default implementation for gdb below ... */
+  /* Write your code here ... */
+  uint8_t buf[64];
+
+  /* GDB: dump binary memory <file> <hexStartAddr> <hexEndAddr> */
+  PTRC1_vGetGDBDumpCommand(buf, sizeof(buf), "c:\\tmp\\trc.dump");
+#endif
+}
+
+/*
+** ===================================================================
+**     Event       :  PTRC1_OnTraceStop (module Events)
+**
+**     Component   :  PTRC1 [PercepioTrace]
+**     Description :
+**         Called if the library calls vTraceStop(). Useful to dump the
+**         trace if 'stop when recorder is full' mode is selected.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void PTRC1_OnTraceStop(void)
 {
   /* Write your code here ... */
 }
 
 /*
 ** ===================================================================
-**     Event       :  AD1_OnCalibrationEnd (module Events)
+**     Event       :  PTRC1_OnTraceStart (module Events)
 **
-**     Component   :  AD1 [ADC]
+**     Component   :  PTRC1 [PercepioTrace]
 **     Description :
-**         This event is called when the calibration has been finished.
-**         User should check if the calibration pass or fail by
-**         Calibration status method./nThis event is enabled only if
-**         the <Interrupt service/event> property is enabled.
+**         Called when vTraceStart() gets called.
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================
 */
-void AD1_OnCalibrationEnd(void)
+void PTRC1_OnTraceStart(void)
 {
   /* Write your code here ... */
 }

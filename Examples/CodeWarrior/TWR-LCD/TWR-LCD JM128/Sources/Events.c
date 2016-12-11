@@ -207,7 +207,7 @@ void UICalendar1_OnCalendarGetAppointments(UICalendar1_CalendarDateTime *startHi
 **     Returns     : Nothing
 ** ===================================================================
 */
-void KEY1_OnKeyPressed(byte keys)
+void KEY1_OnKeyPressed(uint8_t keys)
 {
 #if PL_BOARD_TWR_CN128 && PL_TWR_LCD_REV_0
   /* navigation switch on the TWR-LCD1: some we get from here */
@@ -255,7 +255,7 @@ void KEY1_OnKeyPressed(byte keys)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void KEY1_OnKeyReleased(byte keys)
+void KEY1_OnKeyReleased(uint8_t keys)
 {
 #if PL_BOARD_TWR_CN128 && PL_TWR_LCD_REV_0
   /* navigation switch on the TWR-LCD1: some we get from here */
@@ -304,7 +304,7 @@ void KEY1_OnKeyReleased(byte keys)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void KEY1_OnKeyReleasedLong(byte keys)
+void KEY1_OnKeyReleasedLong(uint8_t keys)
 {
 #if PL_BOARD_TWR_CN128 && PL_TWR_LCD_REV_0
   if (keys&1) {
@@ -698,6 +698,26 @@ void I2C1_OnTxChar(void)
 #if PL_HAS_I2C_COMM
   I2C_OnTxChar();
 #endif
+}
+
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyPressedLong (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated at the time a long key press has been
+**         detected.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyPressedLong(uint8_t keys)
+{
+  /* Write your code here ... */
 }
 
 /* END Events */

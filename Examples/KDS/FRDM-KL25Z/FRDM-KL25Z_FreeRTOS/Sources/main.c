@@ -41,9 +41,13 @@
 #include "BitIoLdd3.h"
 #include "FRTOS1.h"
 #include "UTIL1.h"
-#include "KSDK1.h"
 #include "PTRC1.h"
 #include "MCUC1.h"
+#include "RTT1.h"
+#include "WAIT1.h"
+#include "CLS1.h"
+#include "XF1.h"
+#include "CS1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -68,7 +72,17 @@ int main(void)
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
-
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* using SEGGER SystemViewer Trace */
+  //SYS1_Init();
+#elif configUSE_TRACE_HOOKS /* using Percepio FreeRTOS+Trace */
+  #if TRC_CFG_RECORDER_MODE==TRC_RECORDER_MODE_SNAPSHOT
+    PTRC1_Init(TRC_START); /* snapshot trace, from startup */
+  #elif TRC_CFG_RECORDER_MODE==TRC_RECORDER_MODE_STREAMING
+    vTraceEnable(TRC_START_AWAIT_HOST); /* from startup, Blocks! */
+  #else
+    #error "invalid configuration!"
+  #endif
+#endif
   if (FRTOS1_xTaskCreate(
         Task1,  /* pointer to the task */
         "Task1", /* task name for kernel awareness debugging */

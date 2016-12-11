@@ -38,7 +38,7 @@
 #include "S191.h"
 #include "BLD1.h"
 #include "BLUSB1.h"
-#include "KSDK1.h"
+#include "MCUC1.h"
 /* Include shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

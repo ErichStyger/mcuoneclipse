@@ -43,7 +43,7 @@
 #include "S191.h"
 #include "BLD1.h"
 #include "BLUSB1.h"
-#include "KSDK1.h"
+#include "MCUC1.h"
 
 
 void S191_OnSRecord(uint8_t *returnCode, uint8_t type, uint32_t addr, uint8_t *dataBuf, uint8_t dataBufSize, void *data);

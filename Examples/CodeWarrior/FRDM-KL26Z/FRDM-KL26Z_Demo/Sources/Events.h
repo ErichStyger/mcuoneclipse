@@ -64,8 +64,8 @@
 #include "I2C1.h"
 #include "TMOUT1.h"
 #include "CS1.h"
-#include "KSDK1.h"
 #include "XF1.h"
+#include "MCUC1.h"
 #include "FX1.h"
 
 #ifdef __cplusplus

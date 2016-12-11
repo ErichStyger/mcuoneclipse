@@ -34,11 +34,23 @@
 #include "PE_Const.h"
 #include "IO_Map.h"
 #include "Pins1.h"
-#include "AD1.h"
-#include "AdcLdd1.h"
 #include "FRTOS1.h"
 #include "UTIL1.h"
 #include "MCUC1.h"
+#include "LED1.h"
+#include "LEDpin4.h"
+#include "BitIoLdd4.h"
+#include "LED2.h"
+#include "LEDpin5.h"
+#include "BitIoLdd5.h"
+#include "LED3.h"
+#include "LEDpin6.h"
+#include "BitIoLdd6.h"
+#include "PTRC1.h"
+#include "WAIT1.h"
+#include "CLS1.h"
+#include "XF1.h"
+#include "CS1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -119,33 +131,42 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 ** ===================================================================
 */
 
-void AD1_OnEnd(void);
+void PTRC1_OnTraceWrap(void);
 /*
 ** ===================================================================
-**     Event       :  AD1_OnEnd (module Events)
+**     Event       :  PTRC1_OnTraceWrap (module Events)
 **
-**     Component   :  AD1 [ADC]
+**     Component   :  PTRC1 [PercepioTrace]
 **     Description :
-**         This event is called after the measurement (which consists
-**         of <1 or more conversions>) is/are finished.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled.
+**         Called for trace ring buffer wrap around. This gives the
+**         application a chance to dump the trace buffer.
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================
 */
 
-void AD1_OnCalibrationEnd(void);
+void PTRC1_OnTraceStop(void);
 /*
 ** ===================================================================
-**     Event       :  AD1_OnCalibrationEnd (module Events)
+**     Event       :  PTRC1_OnTraceStop (module Events)
 **
-**     Component   :  AD1 [ADC]
+**     Component   :  PTRC1 [PercepioTrace]
 **     Description :
-**         This event is called when the calibration has been finished.
-**         User should check if the calibration pass or fail by
-**         Calibration status method./nThis event is enabled only if
-**         the <Interrupt service/event> property is enabled.
+**         Called if the library calls vTraceStop(). Useful to dump the
+**         trace if 'stop when recorder is full' mode is selected.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void PTRC1_OnTraceStart(void);
+/*
+** ===================================================================
+**     Event       :  PTRC1_OnTraceStart (module Events)
+**
+**     Component   :  PTRC1 [PercepioTrace]
+**     Description :
+**         Called when vTraceStart() gets called.
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================

@@ -31,11 +31,23 @@
 #include "Cpu.h"
 #include "Events.h"
 #include "Pins1.h"
-#include "AD1.h"
-#include "AdcLdd1.h"
 #include "FRTOS1.h"
 #include "UTIL1.h"
 #include "MCUC1.h"
+#include "LED1.h"
+#include "LEDpin4.h"
+#include "BitIoLdd4.h"
+#include "LED2.h"
+#include "LEDpin5.h"
+#include "BitIoLdd5.h"
+#include "LED3.h"
+#include "LEDpin6.h"
+#include "BitIoLdd6.h"
+#include "PTRC1.h"
+#include "WAIT1.h"
+#include "CLS1.h"
+#include "XF1.h"
+#include "CS1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -44,6 +56,16 @@
 #include "PDD_Includes.h"
 #include "Init_Config.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
+
+static void AppTask(void *pvParameters) {
+
+  vTraceEnable(TRC_INIT);
+  (void)pvParameters; /* parameter not used */
+  for(;;) {
+    vTaskDelay(500/portTICK_PERIOD_MS);
+    LED1_Neg(); /* Red LED */
+  }
+}
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -54,8 +76,22 @@ int main(void)
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
-
+#if TRC_CFG_RECORDER_MODE==TRC_RECORDER_MODE_SNAPSHOT
+  vTraceEnable(TRC_START); /* e.g., in task context, at some relevant event */
+#endif
   /* Write your code here */
+  if (xTaskCreate(
+      AppTask,  /* pointer to the task */
+      "Main", /* task name for kernel awareness debugging */
+      configMINIMAL_STACK_SIZE+200, /* task stack size */
+      (void*)NULL, /* optional task startup argument */
+      tskIDLE_PRIORITY+1,  /* initial priority */
+      (xTaskHandle*)NULL /* optional task handle to create */
+    ) != pdPASS)
+  {
+    for(;;){} /* error! probably out of memory */
+  }
+  vTaskStartScheduler();
   /* For example: for(;;) { } */
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/

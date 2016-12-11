@@ -146,23 +146,6 @@ void FRTOS1_vApplicationMallocFailedHook(void)
 
 /*
 ** ===================================================================
-**     Event       :  RTOSTRC1_OnTraceWrap (module Events)
-**
-**     Component   :  RTOSTRC1 [PercepioTrace]
-**     Description :
-**         Called for trace ring buffer wrap around. This gives the
-**         application a chance to dump the trace buffer.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void RTOSTRC1_OnTraceWrap(void)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
 **     Event       :  PTRC1_OnTraceWrap (module Events)
 **
 **     Component   :  PTRC1 [PercepioTrace]
@@ -175,7 +158,7 @@ void RTOSTRC1_OnTraceWrap(void)
 */
 void PTRC1_OnTraceWrap(void)
 {
-#if 0 /* default implementation for gdb below ... */
+#if 1 /* default implementation for gdb below ... */
   /* Write your code here ... */
   uint8_t buf[64];
 

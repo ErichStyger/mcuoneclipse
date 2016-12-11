@@ -137,6 +137,20 @@ void KEY1_OnKeyPressedLong(uint8_t keys);
 ** ===================================================================
 */
 
+void PTRC1_OnTraceWrap(void);
+/*
+** ===================================================================
+**     Event       :  PTRC1_OnTraceWrap (module Events)
+**
+**     Component   :  PTRC1 [PercepioTrace]
+**     Description :
+**         Called for trace ring buffer wrap around. This gives the
+**         application a chance to dump the trace buffer.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
 /* END Events */
 #endif /* __Events_H*/
 

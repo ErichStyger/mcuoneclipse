@@ -123,10 +123,13 @@ int main(void) {
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* using SEGGER SystemViewer Trace */
   SYS1_Init();
 #elif configUSE_TRACE_HOOKS /* using Percepio FreeRTOS+Trace */
-  vTraceInitTraceData();
-  if (uiTraceStart()==0) {
-    for(;;){} /* error starting trace recorder. Not setup for enough queues/tasks/etc? */
-  }
+  #if TRC_CFG_RECORDER_MODE==TRC_RECORDER_MODE_SNAPSHOT
+    PTRC1_Init(TRC_START); /* snapshot trace, from startup */
+  #elif TRC_CFG_RECORDER_MODE==TRC_RECORDER_MODE_STREAMING
+    vTraceEnable(TRC_START_AWAIT_HOST); /* from startup, Blocks! */
+  #else
+    #error "invalid configuration!"
+  #endif
 #endif
 
   #if USE_FREERTOS

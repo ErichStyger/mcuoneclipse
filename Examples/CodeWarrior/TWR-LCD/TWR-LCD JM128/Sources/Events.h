@@ -87,11 +87,11 @@
 #include "TMOUT1.h"
 #include "UIG1.h"
 #include "CS1.h"
-#include "KSDK1.h"
+#include "MCUC1.h"
 
 #include "Platform.h"
 
-void KEY1_OnKeyPressed(byte keys);
+void KEY1_OnKeyPressed(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyPressed (module Events)
@@ -107,7 +107,7 @@ void KEY1_OnKeyPressed(byte keys);
 ** ===================================================================
 */
 
-void KEY1_OnKeyReleased(byte keys);
+void KEY1_OnKeyReleased(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyReleased (module Events)
@@ -123,7 +123,7 @@ void KEY1_OnKeyReleased(byte keys);
 ** ===================================================================
 */
 
-void KEY1_OnKeyReleasedLong(byte keys);
+void KEY1_OnKeyReleasedLong(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyReleasedLong (module Events)
@@ -405,6 +405,23 @@ void I2C1_OnWriteReq(void);
 **         data byte receiving starts. This event is not available for
 **         the MASTER mode.
 **     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyPressedLong(uint8_t keys);
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyPressedLong (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated at the time a long key press has been
+**         detected.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
 **     Returns     : Nothing
 ** ===================================================================
 */

@@ -44,6 +44,7 @@
 #include "TI1.h"
 #include "TimerIntLdd1.h"
 #include "TU1.h"
+#include "MCUC1.h"
 #include "PE_LDD.h"
 
 void Cpu_OnNMIINT(void);
@@ -62,7 +63,7 @@ void Cpu_OnNMIINT(void);
 */
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
