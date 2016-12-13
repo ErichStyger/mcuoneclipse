@@ -95,7 +95,7 @@ int main(void)
     for(;;){}; /* error! probably out of memory */
     /*lint +e527 */
   }
-//  FRTOS1_vTaskStartScheduler(); /* this is done with PEX_RTOS_START() below */
+  vTaskStartScheduler(); /* this is done with PEX_RTOS_START() below too */
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/

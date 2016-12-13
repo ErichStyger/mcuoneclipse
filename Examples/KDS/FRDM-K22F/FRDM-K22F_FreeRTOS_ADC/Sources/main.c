@@ -33,7 +33,7 @@
 #include "Pins1.h"
 #include "FRTOS1.h"
 #include "UTIL1.h"
-#include "MCUC1.h"
+#include "MCU1.h"
 #include "LED1.h"
 #include "LEDpin4.h"
 #include "BitIoLdd4.h"
@@ -58,8 +58,12 @@
 /* User includes (#include below this line is not maintained by Processor Expert) */
 
 static void AppTask(void *pvParameters) {
-
+#if configUSE_TRACE_HOOKS /* FreeRTOS using Percepio Trace */
+#if TRC_CFG_RECORDER_MODE==TRC_RECORDER_MODE_STREAMING
+  // startup code already called PTRC1_Init(FALSE) which did vTraceEnable(TRC_INIT);
   vTraceEnable(TRC_INIT);
+#endif
+#endif
   (void)pvParameters; /* parameter not used */
   for(;;) {
     vTaskDelay(500/portTICK_PERIOD_MS);
@@ -76,10 +80,7 @@ int main(void)
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
-#if TRC_CFG_RECORDER_MODE==TRC_RECORDER_MODE_SNAPSHOT
-  vTraceEnable(TRC_START); /* e.g., in task context, at some relevant event */
-#endif
-  /* Write your code here */
+
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
       "Main", /* task name for kernel awareness debugging */
@@ -92,7 +93,6 @@ int main(void)
     for(;;){} /* error! probably out of memory */
   }
   vTaskStartScheduler();
-  /* For example: for(;;) { } */
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
