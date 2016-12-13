@@ -57,7 +57,14 @@
 #include "LED3.h"
 #include "LEDpin3.h"
 #include "BitIoLdd8.h"
-#include "KSDK1.h"
+#include "MCUC1.h"
+#include "KEY1.h"
+#include "Inhr1.h"
+#include "BitIoLdd9.h"
+#include "Inhr2.h"
+#include "BitIoLdd10.h"
+#include "TRG1.h"
+#include "CS1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -159,7 +166,7 @@ void SM1_OnError(void);
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
@@ -214,6 +221,72 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 **         If enabled, the RTOS will call this hook in case memory
 **         allocation failed.
 **     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyPressed(uint8_t keys);
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyPressed (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated at the time a key has been pressed.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyReleased(uint8_t keys);
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyReleased (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated after a key has been released.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyPressedLong(uint8_t keys);
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyPressedLong (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated at the time a long key press has been
+**         detected.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyReleasedLong(uint8_t keys);
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyReleasedLong (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated after a key has been released (long key
+**         press).
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
 **     Returns     : Nothing
 ** ===================================================================
 */

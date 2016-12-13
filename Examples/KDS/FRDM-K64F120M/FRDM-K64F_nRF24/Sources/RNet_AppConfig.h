@@ -13,6 +13,7 @@
 /*! type ID's for application messages */
 typedef enum {
   RAPP_MSG_TYPE_PING = 0x55,
+  RAPP_MSG_TYPE_BUTTON = 0x56,
 } RAPP_MSG_Type;
 
 #endif /* __RNET_APP_CONFIG__ */

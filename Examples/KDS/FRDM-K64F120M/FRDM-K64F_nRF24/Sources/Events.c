@@ -38,7 +38,7 @@ extern "C" {
 
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
-
+#include "RNet_App.h"
 /*
 ** ===================================================================
 **     Event       :  Cpu_OnNMI (module Events)
@@ -167,7 +167,7 @@ void SM1_OnError(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName)
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
 {
   /* This will get called if a stack overflow is detected during the context
      switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack
@@ -195,7 +195,7 @@ void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName)
 void FRTOS1_vApplicationTickHook(void)
 {
   /* Called for every RTOS tick. */
-  /* Write your code here ... */
+  TRG1_AddTick();
 }
 
 /*
@@ -239,6 +239,85 @@ void FRTOS1_vApplicationMallocFailedHook(void)
   taskDISABLE_INTERRUPTS();
   /* Write your code here ... */
   for(;;) {}
+}
+
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyPressed (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated at the time a key has been pressed.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyPressed(uint8_t keys)
+{
+  /* Write your code here. A bit in 'keys' indicates key pressed ... */
+  RNETA_KeyPressed(keys);
+}
+
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyReleased (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated after a key has been released.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyReleased(uint8_t keys)
+{
+  /* Write your code here. A bit in 'keys' indicates key released ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyPressedLong (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated at the time a long key press has been
+**         detected.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyPressedLong(uint8_t keys)
+{
+
+}
+
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyReleasedLong (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated after a key has been released (long key
+**         press).
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyReleasedLong(uint8_t keys)
+{
+  /* Write your code here. A bit in 'keys' indicates key released after a long time ... */
 }
 
 /* END Events */

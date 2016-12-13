@@ -16,6 +16,7 @@
 #include "LED1.h"
 #include "LED2.h"
 #include "LED3.h"
+#include "KEY1.h"
 
 typedef enum {
   RNETA_INITIAL, /* initialization state */
@@ -36,6 +37,15 @@ static uint8_t RNETA_HandleRxMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *
       FRTOS1_vTaskDelay(20/portTICK_RATE_MS);
       LED2_Off();
       return ERR_OK;
+
+    case RAPP_MSG_TYPE_BUTTON:
+      *handled = TRUE;
+      /* to be defined: do something with the button message, e.g blink a LED */
+      LED1_On(); /* red LED blink */
+      FRTOS1_vTaskDelay(20/portTICK_RATE_MS);
+      LED1_Off();
+      return ERR_OK;
+
     default:
       break;
   } /* switch */
@@ -84,9 +94,10 @@ static void Process(void) {
   } /* for */
 }
 
-static portTASK_FUNCTION(RNetTask, pvParameters) {
+static void RNetTask(void *pvParameters) {
   uint32_t cntr;
   uint8_t msgCntr;
+  TickType_t tickCnt, prevTickCnt;
 
   (void)pvParameters; /* not used */
   if (RAPP_SetThisNodeAddr(RNWK_ADDR_BROADCAST)!=ERR_OK) { /* set a default address */
@@ -95,19 +106,32 @@ static portTASK_FUNCTION(RNetTask, pvParameters) {
   cntr = 0; /* initialize LED counter */
   msgCntr = 0; /* initialize message counter */
   appState = RNETA_INITIAL; /* initialize state machine state */
+  tickCnt = xTaskGetTickCount();
   for(;;) {
     Process(); /* process state machine */
+    KEY1_ScanKeys();
     cntr++;
-    if (cntr==100) { /* with an RTOS 10 ms/100 Hz tick rate, this is every second */
+    if (cntr==500) { /* with an RTOS 10 ms/100 Hz tick rate, this is every 5 second */
       LED3_On(); /* blink blue LED for 20 ms */
       RAPP_SendPayloadDataBlock(&msgCntr, sizeof(msgCntr), RAPP_MSG_TYPE_PING, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
       msgCntr++;
       cntr = 0;
-      FRTOS1_vTaskDelay(20/portTICK_RATE_MS);
+      vTaskDelay(20/portTICK_RATE_MS);
       LED3_Off(); /* blink blue LED */
     }
-    FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
+    FRTOS1_vTaskDelay(pdMS_TO_TICKS(10));
   } /* for */
+}
+
+void RNETA_KeyPressed(uint8_t key) {
+  LED1_On();
+  LED2_On();
+  LED3_On();
+  RAPP_SendPayloadDataBlock(&key, sizeof(key), RAPP_MSG_TYPE_BUTTON, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
+  vTaskDelay(10/portTICK_RATE_MS);
+  LED1_Off();
+  LED2_Off();
+  LED3_Off();
 }
 
 void RNETA_Init(void) {
@@ -115,7 +139,7 @@ void RNETA_Init(void) {
   if (RAPP_SetMessageHandlerTable(handlerTable)!=ERR_OK) { /* assign application message handler */
     for(;;); /* "ERR: failed setting message handler!" */
   }
-  if (FRTOS1_xTaskCreate(
+  if (xTaskCreate(
         RNetTask,  /* pointer to the task */
         "RNet", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
