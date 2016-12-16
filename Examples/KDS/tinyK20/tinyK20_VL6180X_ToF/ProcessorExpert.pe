@@ -3,7 +3,7 @@
   <Header>
     <Name>tinyK20_VL6180X_ToF</Name>
     <SavedBy>Erich Styger</SavedBy>
-    <ModificationStamp>13</ModificationStamp>
+    <ModificationStamp>14</ModificationStamp>
     <Date>2016-03-04</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -5336,31 +5336,29 @@
       <Count>0</Count>
     </BoolList_FpgaConfig>
     <BoolList_BeanConfig>
-      <Count>12</Count>
+      <Count>11</Count>
       <ItemId0>5</ItemId0>
       <Value0>true</Value0>
       <ItemId1>6</ItemId1>
       <Value1>true</Value1>
-      <ItemId2>7</ItemId2>
+      <ItemId2>8</ItemId2>
       <Value2>true</Value2>
-      <ItemId3>8</ItemId3>
+      <ItemId3>11</ItemId3>
       <Value3>true</Value3>
-      <ItemId4>11</ItemId4>
+      <ItemId4>12</ItemId4>
       <Value4>true</Value4>
-      <ItemId5>12</ItemId5>
+      <ItemId5>13</ItemId5>
       <Value5>true</Value5>
-      <ItemId6>13</ItemId6>
+      <ItemId6>20</ItemId6>
       <Value6>true</Value6>
-      <ItemId7>20</ItemId7>
+      <ItemId7>21</ItemId7>
       <Value7>true</Value7>
-      <ItemId8>21</ItemId8>
+      <ItemId8>24</ItemId8>
       <Value8>true</Value8>
-      <ItemId9>24</ItemId9>
+      <ItemId9>26</ItemId9>
       <Value9>true</Value9>
-      <ItemId10>26</ItemId10>
+      <ItemId10>28</ItemId10>
       <Value10>true</Value10>
-      <ItemId11>28</ItemId11>
-      <Value11>true</Value11>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
       <Count>0</Count>
@@ -5436,7 +5434,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.009</BeanVersion>
+    <BeanVersion>01.010</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -5507,47 +5505,6 @@
   </Bean>
   <Bean>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
-    <BeanType>KinetisSDK</BeanType>
-    <Name>KSDK1</Name>
-    <CompNumb>7</CompNumb>
-    <CompEnabled>true</CompEnabled>
-    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
-    <IconName>SHARED_LDD</IconName>
-    <UserFolderName />
-    <Comment lines_count="0" />
-    <Template />
-    <BeanVersion>01.006</BeanVersion>
-    <LightErrorsIgnored>false</LightErrorsIgnored>
-    <Properties>
-      <ItemState>
-        <ItemSymbol>DeviceName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SDKVersion</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Index>0</Index>
-        <EnumSymbVal>none</EnumSymbVal>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>KinetisSDKGeneratedFolderName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value />
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-      </ItemState>
-    </Properties>
-    <Methods />
-    <Events />
-  </Bean>
-  <Bean>
-    <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <BeanType>LED</BeanType>
     <Name>LED1</Name>
     <CompNumb>8</CompNumb>
@@ -5557,7 +5514,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.072</BeanVersion>
+    <BeanVersion>01.073</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -7152,7 +7109,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.069</BeanVersion>
+    <BeanVersion>01.071</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -9065,7 +9022,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.086</BeanVersion>
+    <BeanVersion>01.088</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
