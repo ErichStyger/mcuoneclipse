@@ -9,6 +9,7 @@
 #include "Application.h"
 #include "WAIT1.h"
 #include "LED1.h"
+#include "UTIL1.h"
 
 #if 0
 #include "SPI1.h"
@@ -155,6 +156,7 @@ static void Test(void) {
 #else
 #include "GDisp1.h"
 #include "FDisp1.h"
+#include "SHM1.h"
 
 #include "Helv8.h"
 #include "Helv8Bold.h"
@@ -186,7 +188,7 @@ static void DrawLines(void) {
     GDisp1_DrawCircle((GDisp1_GetWidth()-1)/2, (GDisp1_GetHeight()-1)/2, 5+i*2, GDisp1_COLOR_BLACK);
     GDisp1_UpdateFull();
   }
-  WAIT1_Waitms(1000);
+  WAIT1_Waitms(500);
 }
 
 static void DrawRectangles(void) {
@@ -203,7 +205,7 @@ static void DrawRectangles(void) {
     GDisp1_DrawBox(((GDisp1_GetShorterSide()-1)/2)-i, ((GDisp1_GetShorterSide()-1)/2)-i, 2*(i+1), 2*(i+1), 1, GDisp1_COLOR_BLACK);
     GDisp1_UpdateFull();
   }
-  WAIT1_Waitms(1000);
+  WAIT1_Waitms(500);
 }
 
 static void DrawBoxes(void) {
@@ -212,10 +214,11 @@ static void DrawBoxes(void) {
 
   GDisp1_Clear();
   GDisp1_DrawFilledBox(0, 0, GDisp1_GetWidth(), GDisp1_GetHeight(), GDisp1_COLOR_BLACK);
-  GDisp1_DrawFilledBox(0+20, 0+20, GDisp1_GetWidth()-40, GDisp1_GetHeight()-40, GDisp1_COLOR_WHITE);
+  GDisp1_DrawBox(20, 20, GDisp1_GetWidth()-40, GDisp1_GetHeight()-40, 1, GDisp1_COLOR_WHITE);
+ // GDisp1_DrawFilledBox(0+20, 0+20, GDisp1_GetWidth()-40, GDisp1_GetHeight()-40, GDisp1_COLOR_WHITE);
   GDisp1_DrawFilledBox(0+40, 0+40, GDisp1_GetWidth()-80, GDisp1_GetHeight()-80, GDisp1_COLOR_BLACK);
   GDisp1_UpdateFull();
-  WAIT1_Waitms(1000);
+  WAIT1_Waitms(500);
 }
 
 static void DrawFont(void) {
@@ -247,17 +250,63 @@ static void DrawFont(void) {
   WAIT1_Waitms(1000);
 }
 
-void Test(void) {
+static void Test(void) {
   DrawFont();
   DrawLines();
   DrawRectangles();
   DrawBoxes();
 }
+
+static void TestSingleLine(void) {
+  uint8_t line;
+  static const uint8_t data[SHM1_HW_WIDTH/8] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+  for(line=0;line<SHM1_GetHeight();line++) {
+    SHM1_UpdateLine(line, (uint8_t*)&data[0]);
+  }
+}
+
+static void TestDoVCOM(void) {
+  int i;
+
+  DrawFont();
+  for(i=0; i<10; i++) {
+    SHM1_ToggleVCOM(); /* toggle VCOM with 1 Hz */
+    WAIT1_Waitms(1000);
+  }
+}
+
+static void TestClear(void) {
+  SHM1_Clear();
+}
+
+static void SpeedTest(void) {
+  /* update the display every 20 ms */
+  int i;
+  uint8_t buf[16];
+  FDisp1_PixelDim x, y;
+
+  GDisp1_Clear();
+  GDisp1_UpdateFull();
+  for(i=0; i<100; i++) {
+    GDisp1_Clear();
+    UTIL1_Num32sToStr(buf, sizeof(buf), i);
+    x = 0; y = 0;
+    FDisp1_WriteString(buf, GDisp1_COLOR_BLACK, &x, &y, Helv8_GetFont());
+    GDisp1_UpdateFull();
+    WAIT1_Waitms(20);
+  }
+}
+
 #endif
 
 void APP_Run(void) {
   for(;;) {
+    SHM1_Clear();
+    SpeedTest();
     Test();
+    TestSingleLine();
+    TestDoVCOM();
     LED1_Neg();
     WAIT1_Waitms(100);
   }
