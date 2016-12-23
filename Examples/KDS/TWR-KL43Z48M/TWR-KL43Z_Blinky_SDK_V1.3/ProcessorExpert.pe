@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>28</ProjectCompNumb>
+    <ProjectCompNumb>29</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -18690,7 +18690,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.072</BeanVersion>
+    <BeanVersion>01.073</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -18753,7 +18753,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.014</BeanVersion>
+          <BeanVersion>01.018</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -18778,6 +18778,13 @@
               <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
             </ItemState>
             <ItemState>
+              <ItemSymbol>PORT_Name</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>PORTA</Value>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+            </ItemState>
+            <ItemState>
               <ItemSymbol>PinNumber</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
@@ -18792,6 +18799,15 @@
               <UserReadOnly>false</UserReadOnly>
               <Value>LED_GREEN</Value>
               <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>DoPinMuxing</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+              <Index>1</Index>
+              <Value>false</Value>
             </ItemState>
           </Properties>
           <Methods>
@@ -19084,7 +19100,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.005</BeanVersion>
+    <BeanVersion>01.006</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>

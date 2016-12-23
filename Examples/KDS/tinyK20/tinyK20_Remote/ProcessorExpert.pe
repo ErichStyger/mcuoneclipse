@@ -3,7 +3,7 @@
   <Header>
     <Name>tinyK20_Remote</Name>
     <SavedBy>Erich Styger</SavedBy>
-    <ModificationStamp>43</ModificationStamp>
+    <ModificationStamp>44</ModificationStamp>
     <Date>2016-03-25</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>194</ProjectCompNumb>
+    <ProjectCompNumb>199</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -5335,7 +5335,7 @@
       <Count>0</Count>
     </BoolList_FpgaConfig>
     <BoolList_BeanConfig>
-      <Count>39</Count>
+      <Count>38</Count>
       <ItemId0>5</ItemId0>
       <Value0>true</Value0>
       <ItemId1>6</ItemId1>
@@ -5350,70 +5350,68 @@
       <Value5>true</Value5>
       <ItemId6>18</ItemId6>
       <Value6>true</Value6>
-      <ItemId7>19</ItemId7>
+      <ItemId7>20</ItemId7>
       <Value7>true</Value7>
-      <ItemId8>20</ItemId8>
+      <ItemId8>23</ItemId8>
       <Value8>true</Value8>
-      <ItemId9>23</ItemId9>
+      <ItemId9>24</ItemId9>
       <Value9>true</Value9>
-      <ItemId10>24</ItemId10>
+      <ItemId10>25</ItemId10>
       <Value10>true</Value10>
-      <ItemId11>25</ItemId11>
+      <ItemId11>26</ItemId11>
       <Value11>true</Value11>
-      <ItemId12>26</ItemId12>
+      <ItemId12>36</ItemId12>
       <Value12>true</Value12>
-      <ItemId13>36</ItemId13>
+      <ItemId13>48</ItemId13>
       <Value13>true</Value13>
-      <ItemId14>48</ItemId14>
+      <ItemId14>49</ItemId14>
       <Value14>true</Value14>
-      <ItemId15>49</ItemId15>
+      <ItemId15>50</ItemId15>
       <Value15>true</Value15>
-      <ItemId16>50</ItemId16>
+      <ItemId16>51</ItemId16>
       <Value16>true</Value16>
-      <ItemId17>51</ItemId17>
+      <ItemId17>58</ItemId17>
       <Value17>true</Value17>
-      <ItemId18>58</ItemId18>
-      <Value18>true</Value18>
-      <ItemId19>59</ItemId19>
+      <ItemId18>59</ItemId18>
+      <Value18>false</Value18>
+      <ItemId19>61</ItemId19>
       <Value19>false</Value19>
-      <ItemId20>61</ItemId20>
+      <ItemId20>63</ItemId20>
       <Value20>false</Value20>
-      <ItemId21>63</ItemId21>
+      <ItemId21>65</ItemId21>
       <Value21>false</Value21>
-      <ItemId22>65</ItemId22>
+      <ItemId22>67</ItemId22>
       <Value22>false</Value22>
-      <ItemId23>67</ItemId23>
-      <Value23>false</Value23>
-      <ItemId24>71</ItemId24>
+      <ItemId23>71</ItemId23>
+      <Value23>true</Value23>
+      <ItemId24>76</ItemId24>
       <Value24>true</Value24>
-      <ItemId25>76</ItemId25>
+      <ItemId25>78</ItemId25>
       <Value25>true</Value25>
-      <ItemId26>78</ItemId26>
+      <ItemId26>80</ItemId26>
       <Value26>true</Value26>
-      <ItemId27>80</ItemId27>
+      <ItemId27>82</ItemId27>
       <Value27>true</Value27>
-      <ItemId28>82</ItemId28>
+      <ItemId28>84</ItemId28>
       <Value28>true</Value28>
-      <ItemId29>84</ItemId29>
+      <ItemId29>86</ItemId29>
       <Value29>true</Value29>
-      <ItemId30>86</ItemId30>
+      <ItemId30>104</ItemId30>
       <Value30>true</Value30>
-      <ItemId31>104</ItemId31>
+      <ItemId31>106</ItemId31>
       <Value31>true</Value31>
-      <ItemId32>106</ItemId32>
+      <ItemId32>108</ItemId32>
       <Value32>true</Value32>
-      <ItemId33>108</ItemId33>
+      <ItemId33>110</ItemId33>
       <Value33>true</Value33>
-      <ItemId34>110</ItemId34>
+      <ItemId34>135</ItemId34>
       <Value34>true</Value34>
-      <ItemId35>135</ItemId35>
+      <ItemId35>140</ItemId35>
       <Value35>true</Value35>
-      <ItemId36>140</ItemId36>
+      <ItemId36>178</ItemId36>
       <Value36>true</Value36>
-      <ItemId37>178</ItemId37>
+      <ItemId37>188</ItemId37>
       <Value37>true</Value37>
-      <ItemId38>188</ItemId38>
-      <Value38>true</Value38>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
       <Count>0</Count>
@@ -7949,7 +7947,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.092</BeanVersion>
+    <BeanVersion>01.094</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -8173,6 +8171,14 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>RStdioDefaultDestinationAddress</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>255</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>RStdioQueueLength</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -8307,7 +8313,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.088</BeanVersion>
+    <BeanVersion>01.090</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -9580,6 +9586,14 @@
         <RegCompType>IRQ</RegCompType>
         <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</RegCompRepository>
         <InheritedComponentState />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>UseMutex</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -12436,7 +12450,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.088</BeanVersion>
+    <BeanVersion>01.089</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -13111,47 +13125,6 @@
         <UsrMethodName>ExitCritical</UsrMethodName>
       </ItemState>
     </Methods>
-    <Events />
-  </Bean>
-  <Bean>
-    <Repository>file:/${ProcessorExpertPath:user}</Repository>
-    <BeanType>KinetisSDK</BeanType>
-    <Name>KSDK1</Name>
-    <CompNumb>19</CompNumb>
-    <CompEnabled>true</CompEnabled>
-    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
-    <IconName>SHARED_LDD</IconName>
-    <UserFolderName />
-    <Comment lines_count="0" />
-    <Template />
-    <BeanVersion>01.006</BeanVersion>
-    <LightErrorsIgnored>false</LightErrorsIgnored>
-    <Properties>
-      <ItemState>
-        <ItemSymbol>DeviceName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SDKVersion</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Index>0</Index>
-        <EnumSymbVal>none</EnumSymbVal>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>KinetisSDKGeneratedFolderName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value />
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-      </ItemState>
-    </Properties>
-    <Methods />
     <Events />
   </Bean>
   <Bean>
@@ -52079,7 +52052,7 @@
                     <ItemSymbol>sdk</ItemSymbol>
                     <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
-                    <Value>KSDK1</Value>
+                    <Value>MCUC1</Value>
                     <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
                   </ItemState>
                   <ItemState>
@@ -52384,7 +52357,7 @@
                     <ItemSymbol>sdk</ItemSymbol>
                     <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
-                    <Value>KSDK1</Value>
+                    <Value>MCUC1</Value>
                     <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
                   </ItemState>
                   <ItemState>

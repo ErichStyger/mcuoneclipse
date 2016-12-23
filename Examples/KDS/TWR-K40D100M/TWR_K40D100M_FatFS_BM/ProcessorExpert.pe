@@ -3,7 +3,7 @@
   <Header>
     <Name>TWR-K40D100M_FatFS_BM</Name>
     <SavedBy>Erich Styger Local</SavedBy>
-    <ModificationStamp>11</ModificationStamp>
+    <ModificationStamp>13</ModificationStamp>
     <Date>2016-09-24</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>44</ProjectCompNumb>
+    <ProjectCompNumb>45</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -13723,27 +13723,27 @@
       <Value5>true</Value5>
       <ItemId6>19</ItemId6>
       <Value6>true</Value6>
-      <ItemId7>22</ItemId7>
+      <ItemId7>24</ItemId7>
       <Value7>true</Value7>
-      <ItemId8>24</ItemId8>
+      <ItemId8>26</ItemId8>
       <Value8>true</Value8>
-      <ItemId9>26</ItemId9>
+      <ItemId9>28</ItemId9>
       <Value9>true</Value9>
-      <ItemId10>28</ItemId10>
+      <ItemId10>30</ItemId10>
       <Value10>true</Value10>
-      <ItemId11>30</ItemId11>
+      <ItemId11>31</ItemId11>
       <Value11>true</Value11>
-      <ItemId12>31</ItemId12>
+      <ItemId12>33</ItemId12>
       <Value12>true</Value12>
-      <ItemId13>33</ItemId13>
+      <ItemId13>34</ItemId13>
       <Value13>true</Value13>
-      <ItemId14>34</ItemId14>
+      <ItemId14>35</ItemId14>
       <Value14>true</Value14>
-      <ItemId15>35</ItemId15>
+      <ItemId15>37</ItemId15>
       <Value15>true</Value15>
-      <ItemId16>37</ItemId16>
+      <ItemId16>43</ItemId16>
       <Value16>true</Value16>
-      <ItemId17>43</ItemId17>
+      <ItemId17>44</ItemId17>
       <Value17>true</Value17>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
@@ -13820,7 +13820,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.069</BeanVersion>
+    <BeanVersion>01.071</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -13833,7 +13833,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>ManualClockValues</ItemSymbol>
@@ -14019,7 +14019,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.127</BeanVersion>
+    <BeanVersion>01.147</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -14033,7 +14033,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
     </Properties>
@@ -14782,6 +14782,30 @@
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>SetValue32LE</UsrMethodName>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Init</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Init</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -14796,7 +14820,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.072</BeanVersion>
+    <BeanVersion>01.073</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -14809,7 +14833,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>LEDonWithInitialization</ItemSymbol>
@@ -15590,7 +15614,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.072</BeanVersion>
+    <BeanVersion>01.073</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -15603,7 +15627,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>LEDonWithInitialization</ItemSymbol>
@@ -16384,7 +16408,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.072</BeanVersion>
+    <BeanVersion>01.073</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -16397,7 +16421,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>LEDonWithInitialization</ItemSymbol>
@@ -17178,7 +17202,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.072</BeanVersion>
+    <BeanVersion>01.073</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -17191,7 +17215,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>LEDonWithInitialization</ItemSymbol>
@@ -17959,47 +17983,6 @@
         <UsrMethodName>Init</UsrMethodName>
       </ItemState>
     </Methods>
-    <Events />
-  </Bean>
-  <Bean>
-    <Repository>file:/${ProcessorExpertPath:user}</Repository>
-    <BeanType>KinetisSDK</BeanType>
-    <Name>KSDK1</Name>
-    <CompNumb>22</CompNumb>
-    <CompEnabled>true</CompEnabled>
-    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
-    <IconName>SHARED_LDD</IconName>
-    <UserFolderName />
-    <Comment lines_count="0" />
-    <Template />
-    <BeanVersion>01.005</BeanVersion>
-    <LightErrorsIgnored>false</LightErrorsIgnored>
-    <Properties>
-      <ItemState>
-        <ItemSymbol>DeviceName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SDKVersion</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Index>0</Index>
-        <EnumSymbVal>none</EnumSymbVal>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>KinetisSDKGeneratedFolderName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value />
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-      </ItemState>
-    </Properties>
-    <Methods />
     <Events />
   </Bean>
   <Bean>
@@ -21830,7 +21813,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.086</BeanVersion>
+    <BeanVersion>01.089</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -22029,7 +22012,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -22438,7 +22421,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.009</BeanVersion>
+    <BeanVersion>01.010</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -22451,7 +22434,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>UseProcessorExpertDefault</ItemSymbol>
@@ -25862,7 +25845,7 @@
     <UserFolderName>SD</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.031</BeanVersion>
+    <BeanVersion>01.049</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -25872,16 +25855,12 @@
         <Value>TmDt1</Value>
       </ItemState>
       <ItemState>
-        <ItemSymbol>CriticalSection</ItemSymbol>
+        <ItemSymbol>SoftwareRTCEnabled</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>CS1</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>sdk</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>TickTimeMs</ItemSymbol>
@@ -25892,6 +25871,20 @@
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
+        <ItemSymbol>RTOSGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RTOS</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+      </ItemState>
+      <ItemState>
         <ItemSymbol>HWRTCGroup_Enabled</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -25900,23 +25893,15 @@
         <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
-        <ItemSymbol>InitFromInternalHWRTC</ItemSymbol>
+        <ItemSymbol>InternalRTCEnabled</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
         <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
-        <ItemSymbol>InitFromExternalHWRTC</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>LDDHWRTC_Enabled</ItemSymbol>
+        <ItemSymbol>InternalLDDHWRTC_Enabled</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
@@ -25930,7 +25915,7 @@
         <Value />
       </ItemState>
       <ItemState>
-        <ItemSymbol>HWRTC_Enabled</ItemSymbol>
+        <ItemSymbol>InternalHWRTC_Enabled</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
@@ -25958,46 +25943,66 @@
         <Value />
       </ItemState>
       <ItemState>
-        <ItemSymbol>RTOSGroup</ItemSymbol>
+        <ItemSymbol>SetTimeAndDateGroup</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>RTOS</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value />
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ShellEnabledGroup</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Utility</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value />
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Shell</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value />
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>InitializationEnabled</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>true</Value>
         <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SetDateTimeForSoftwareRTC</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SetDateTimeForInternalRTC</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SetDateTimeForExternalRTC</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GetTimeDateMethod</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <EnumSymbVal>SoftwareRTC</EnumSymbVal>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InitGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DefaultTimeDate</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InitialTime</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Time>0.7441087962962963</Time>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InitialDate</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Date>2012-07-22</Date>
       </ItemState>
       <ItemState>
         <ItemSymbol>InitInStartup</ItemSymbol>
@@ -26008,16 +26013,90 @@
         <Value>true</Value>
       </ItemState>
       <ItemState>
-        <ItemSymbol>InitialDate</ItemSymbol>
+        <ItemSymbol>SoftwareRTCInit</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Date>2012-07-22</Date>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <EnumSymbVal>InitFromDefaults</EnumSymbVal>
       </ItemState>
       <ItemState>
-        <ItemSymbol>InitialTime</ItemSymbol>
+        <ItemSymbol>SystemGroup</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Time>0.7441087962962963</Time>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>CriticalSection</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>CS1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Utility</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>UTIL1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>sdk</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>MCUC1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ShellEnabledGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Shell</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InitFromInternalHWRTC</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InitFromExternalHWRTC</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LDDHWRTC_Enabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>HWRTC_Enabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InitializationEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
     </Properties>
     <Methods>
@@ -26121,6 +26200,28 @@
         <UsrMethodName>GetDate</UsrMethodName>
       </ItemState>
       <ItemState>
+        <ItemSymbol>SetTimeDate</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SetTimeDate</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GetTimeDate</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>GetTimeDate</UsrMethodName>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>SetSWTimeDate</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -26207,6 +26308,72 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>SyncWithExternalRTC</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>UnixSecondsToTimeDateCustom</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>UnixSecondsToTimeDateCustom</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>UnixSecondsToTimeDate</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>UnixSecondsToTimeDate</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TimeDateToUnixSecondsCustom</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>TimeDateToUnixSecondsCustom</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TimeDateToUnixSeconds</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>TimeDateToUnixSeconds</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>AddDateString</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>AddDateString</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>AddTimeString</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>AddTimeString</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>ParseCommand</ItemSymbol>
@@ -26326,7 +26493,7 @@
     <UserFolderName>SD</UserFolderName>
     <Comment lines_count="0" />
     <Template>Timeout</Template>
-    <BeanVersion>01.035</BeanVersion>
+    <BeanVersion>01.037</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -26339,7 +26506,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>CriticalSection</ItemSymbol>
@@ -27397,7 +27564,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template>XFormat</Template>
-    <BeanVersion>01.015</BeanVersion>
+    <BeanVersion>01.017</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -27410,7 +27577,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>FloatingPointEnabled</ItemSymbol>
@@ -27456,6 +27623,54 @@
         <UsrMethodName>xsprintf</UsrMethodName>
       </ItemState>
     </Methods>
+    <Events />
+  </Bean>
+  <Bean>
+    <Repository>file:/${ProcessorExpertPath:user}</Repository>
+    <BeanType>McuLibConfig</BeanType>
+    <Name>MCUC1</Name>
+    <CompNumb>44</CompNumb>
+    <CompEnabled>true</CompEnabled>
+    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
+    <IconName>SWITCH</IconName>
+    <UserFolderName />
+    <Comment lines_count="0" />
+    <Template />
+    <BeanVersion>01.006</BeanVersion>
+    <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Properties>
+      <ItemState>
+        <ItemSymbol>DeviceName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>MCUC1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SDK</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>1</Index>
+        <EnumSymbVal>ProcessorExpertSDK</EnumSymbVal>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ConfigFilesFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LibFilesFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+    </Properties>
+    <Methods />
     <Events />
   </Bean>
   <ComponentInitializationSequence>
