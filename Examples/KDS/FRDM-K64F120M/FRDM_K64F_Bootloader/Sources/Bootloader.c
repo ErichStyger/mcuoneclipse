@@ -21,7 +21,7 @@
 #define FLASH_PAGE_SIZE             (IntFlashLdd1_ERASABLE_UNIT_SIZE) /* flash page size */
 
 /* application flash area */
-#if 0
+#if 1 /* address matching the FRDM-K64F_Bootloader_Test application */
 #define MIN_APP_FLASH_ADDRESS       0x8000  /* start of application flash area */
 #define MAX_APP_FLASH_ADDRESS       0x1FFFF  /* end of application flash */
 

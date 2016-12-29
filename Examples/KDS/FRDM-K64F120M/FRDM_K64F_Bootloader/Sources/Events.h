@@ -52,7 +52,7 @@
 #include "ASerialLdd1.h"
 #include "TRG1.h"
 #include "XF1.h"
-#include "KSDK1.h"
+#include "MCUC1.h"
 
 #ifdef __cplusplus
 extern "C" {
