@@ -20,7 +20,7 @@ extern void _start(void);
 extern void __libc_init_array();
 extern void main();
 #endif
-extern uint32_t __SP_INIT;
+extern char __SP_INIT[];
 
 extern void __init_registers();
 extern void __init_hardware();
