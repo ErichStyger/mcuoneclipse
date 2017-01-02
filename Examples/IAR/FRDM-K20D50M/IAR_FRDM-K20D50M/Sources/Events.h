@@ -46,6 +46,7 @@
 #include "LEDR.h"
 #include "LEDpin3.h"
 #include "BitIoLdd3.h"
+#include "MCUC1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -67,7 +68,7 @@ extern "C" {
 void Cpu_OnNMIINT0(void);
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

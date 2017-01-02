@@ -12,7 +12,7 @@
       <name>General</name>
       <archiveVersion>3</archiveVersion>
       <data>
-        <version>22</version>
+        <version>24</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -26,11 +26,6 @@
         <option>
           <name>ListPath</name>
           <state>Debug\List</state>
-        </option>
-        <option>
-          <name>Variant</name>
-          <version>20</version>
-          <state>35</state>
         </option>
         <option>
           <name>GEndianMode</name>
@@ -59,11 +54,6 @@
           <state>0</state>
         </option>
         <option>
-          <name>FPU</name>
-          <version>2</version>
-          <state>0</state>
-        </option>
-        <option>
           <name>OGCoreOrChip</name>
           <state>1</state>
         </option>
@@ -87,7 +77,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>6.70.1.5793</state>
+          <state>7.80.3.12143</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -99,7 +89,7 @@
         </option>
         <option>
           <name>OGChipSelectEditMenu</name>
-          <state>MKL25Z128xxx4	Freescale MKL25Z128xxx4</state>
+          <state>MKL25Z128xxx4	NXP MKL25Z128xxx4</state>
         </option>
         <option>
           <name>GenLowLevelInterface</name>
@@ -136,13 +126,8 @@
           <state>$TOOLKIT_DIR$\INC\c\DLib_Config_Normal.h</state>
         </option>
         <option>
-          <name>GFPUCoreSlave</name>
-          <version>20</version>
-          <state>35</state>
-        </option>
-        <option>
           <name>GBECoreSlave</name>
-          <version>20</version>
+          <version>24</version>
           <state>35</state>
         </option>
         <option>
@@ -157,13 +142,41 @@
           <name>GRuntimeLibThreads</name>
           <state>0</state>
         </option>
+        <option>
+          <name>CoreVariant</name>
+          <version>24</version>
+          <state>35</state>
+        </option>
+        <option>
+          <name>GFPUDeviceSlave</name>
+          <state>MKL25Z128xxx4	NXP MKL25Z128xxx4</state>
+        </option>
+        <option>
+          <name>FPU2</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>NrRegs</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>NEON</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GFPUCoreSlave2</name>
+          <version>24</version>
+          <state>35</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ICCARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>29</version>
+        <version>31</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -229,7 +242,7 @@
         <option>
           <name>CCAllowList</name>
           <version>1</version>
-          <state>0000000</state>
+          <state>00000000</state>
         </option>
         <option>
           <name>CCDebugInfo</name>
@@ -297,10 +310,12 @@
         </option>
         <option>
           <name>CCIncludePath2</name>
-          <state>C:\Freescale\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\iofiles\</state>
-          <state>C:\Freescale\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\</state>
+          <state>C:\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\iofiles\</state>
+          <state>C:\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\</state>
           <state>$PROJ_DIR$\Sources</state>
           <state>$PROJ_DIR$\Generated_Code</state>
+          <state>C:\Users\Erich Styger\Data\GitRepos\McuOnEclipse\Examples\IAR\FRDM-KL25Z\IAR_Freedom_FreeRTOS\Sources\</state>
+          <state>C:\Users\Erich Styger\Data\GitRepos\McuOnEclipse\Examples\IAR\FRDM-KL25Z\IAR_Freedom_FreeRTOS\Generated_Code\</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -400,6 +415,15 @@
         <option>
           <name>CCNoLiteralPool</name>
           <state>0</state>
+        </option>
+        <option>
+          <name>CCOptStrategySlave</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCGuardCalls</name>
+          <state>1</state>
         </option>
       </data>
     </settings>
@@ -553,7 +577,11 @@
         </option>
         <option>
           <name>AUserIncludes</name>
-          <state></state>
+          <state>C:\nxp\IAR_7.80.3\arm\inc\c</state>
+          <state>C:\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\</state>
+          <state>C:\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\iofiles\</state>
+          <state>C:\Users\Erich Styger\Data\GitRepos\McuOnEclipse\Examples\IAR\FRDM-KL25Z\IAR_Freedom_FreeRTOS\Sources\</state>
+          <state>C:\Users\Erich Styger\Data\GitRepos\McuOnEclipse\Examples\IAR\FRDM-KL25Z\IAR_Freedom_FreeRTOS\Generated_Code\</state>
         </option>
         <option>
           <name>AExtraOptionsCheckV2</name>
@@ -578,7 +606,7 @@
         <debug>1</debug>
         <option>
           <name>OOCOutputFormat</name>
-          <version>2</version>
+          <version>3</version>
           <state>0</state>
         </option>
         <option>
@@ -605,6 +633,7 @@
       <data>
         <extensions></extensions>
         <cmdline></cmdline>
+        <hasPrio>0</hasPrio>
       </data>
     </settings>
     <settings>
@@ -624,7 +653,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>16</version>
+        <version>18</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -701,11 +730,11 @@
         </option>
         <option>
           <name>IlinkIcfOverride</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$TOOLKIT_DIR$\config\linker\Freescale\MKL25Z128xxx4.icf</state>
+          <state>C:\Users\Erich Styger\Data\GitRepos\McuOnEclipse\Examples\IAR\FRDM-KL25Z\IAR_Freedom_FreeRTOS\Project_Settings\Linker_Files\ProcessorExpert.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
@@ -896,7 +925,7 @@
         </option>
         <option>
           <name>CrcAlgorithm</name>
-          <version>0</version>
+          <version>1</version>
           <state>1</state>
         </option>
         <option>
@@ -907,6 +936,14 @@
         <option>
           <name>IlinkThreadsSlave</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>IlinkLogCallGraph</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkIcfFile_AltDefault</name>
+          <state></state>
         </option>
       </data>
     </settings>
@@ -936,6 +973,11 @@
       <archiveVersion>0</archiveVersion>
       <data/>
     </settings>
+    <settings>
+      <name>Coder</name>
+      <archiveVersion>0</archiveVersion>
+      <data/>
+    </settings>
   </configuration>
   <configuration>
     <name>Release</name>
@@ -947,7 +989,7 @@
       <name>General</name>
       <archiveVersion>3</archiveVersion>
       <data>
-        <version>22</version>
+        <version>24</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
         <option>
@@ -961,11 +1003,6 @@
         <option>
           <name>ListPath</name>
           <state>Release\List</state>
-        </option>
-        <option>
-          <name>Variant</name>
-          <version>20</version>
-          <state>0</state>
         </option>
         <option>
           <name>GEndianMode</name>
@@ -994,13 +1031,8 @@
           <state>0</state>
         </option>
         <option>
-          <name>FPU</name>
-          <version>2</version>
-          <state>0</state>
-        </option>
-        <option>
           <name>OGCoreOrChip</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GRuntimeLibSelect</name>
@@ -1022,7 +1054,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state></state>
+          <state>7.80.3.12143</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -1034,7 +1066,7 @@
         </option>
         <option>
           <name>OGChipSelectEditMenu</name>
-          <state></state>
+          <state>MKL25Z128xxx4	NXP MKL25Z128xxx4</state>
         </option>
         <option>
           <name>GenLowLevelInterface</name>
@@ -1071,13 +1103,8 @@
           <state></state>
         </option>
         <option>
-          <name>GFPUCoreSlave</name>
-          <version>20</version>
-          <state>1</state>
-        </option>
-        <option>
           <name>GBECoreSlave</name>
-          <version>20</version>
+          <version>24</version>
           <state>1</state>
         </option>
         <option>
@@ -1092,13 +1119,41 @@
           <name>GRuntimeLibThreads</name>
           <state>0</state>
         </option>
+        <option>
+          <name>CoreVariant</name>
+          <version>24</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GFPUDeviceSlave</name>
+          <state>Default	None</state>
+        </option>
+        <option>
+          <name>FPU2</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>NrRegs</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>NEON</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GFPUCoreSlave2</name>
+          <version>24</version>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ICCARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>29</version>
+        <version>31</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
         <option>
@@ -1164,7 +1219,7 @@
         <option>
           <name>CCAllowList</name>
           <version>1</version>
-          <state>1111111</state>
+          <state>11111110</state>
         </option>
         <option>
           <name>CCDebugInfo</name>
@@ -1240,6 +1295,10 @@
           <state>C:\ProgramData\Processor Expert\CWMCU_PE5_00\Examples\FRDM-KL25Z\IAR_Freedom_FreeRTOS\Generated_Code\</state>
           <state>C:\Freescale\PExDrv v10.2\eclipse\ProcessorExpert\lib\Kinetis\iofiles\</state>
           <state>C:\Freescale\PExDrv v10.2\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\</state>
+          <state>C:\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\</state>
+          <state>C:\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\iofiles\</state>
+          <state>C:\Users\Erich Styger\Data\GitRepos\McuOnEclipse\Examples\IAR\FRDM-KL25Z\IAR_Freedom_FreeRTOS\Sources\</state>
+          <state>C:\Users\Erich Styger\Data\GitRepos\McuOnEclipse\Examples\IAR\FRDM-KL25Z\IAR_Freedom_FreeRTOS\Generated_Code\</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1339,6 +1398,15 @@
         <option>
           <name>CCNoLiteralPool</name>
           <state>0</state>
+        </option>
+        <option>
+          <name>CCOptStrategySlave</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCGuardCalls</name>
+          <state>1</state>
         </option>
       </data>
     </settings>
@@ -1492,7 +1560,10 @@
         </option>
         <option>
           <name>AUserIncludes</name>
-          <state></state>
+          <state>C:\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\</state>
+          <state>C:\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\iofiles\</state>
+          <state>C:\Users\Erich Styger\Data\GitRepos\McuOnEclipse\Examples\IAR\FRDM-KL25Z\IAR_Freedom_FreeRTOS\Sources\</state>
+          <state>C:\Users\Erich Styger\Data\GitRepos\McuOnEclipse\Examples\IAR\FRDM-KL25Z\IAR_Freedom_FreeRTOS\Generated_Code\</state>
         </option>
         <option>
           <name>AExtraOptionsCheckV2</name>
@@ -1517,7 +1588,7 @@
         <debug>0</debug>
         <option>
           <name>OOCOutputFormat</name>
-          <version>2</version>
+          <version>3</version>
           <state>0</state>
         </option>
         <option>
@@ -1544,6 +1615,7 @@
       <data>
         <extensions></extensions>
         <cmdline></cmdline>
+        <hasPrio>0</hasPrio>
       </data>
     </settings>
     <settings>
@@ -1563,7 +1635,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>16</version>
+        <version>18</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
         <option>
@@ -1640,11 +1712,11 @@
         </option>
         <option>
           <name>IlinkIcfOverride</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>lnk0t.icf</state>
+          <state>C:\Users\Erich Styger\Data\GitRepos\McuOnEclipse\Examples\IAR\FRDM-KL25Z\IAR_Freedom_FreeRTOS\Project_Settings\Linker_Files\ProcessorExpert.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
@@ -1835,7 +1907,7 @@
         </option>
         <option>
           <name>CrcAlgorithm</name>
-          <version>0</version>
+          <version>1</version>
           <state>1</state>
         </option>
         <option>
@@ -1846,6 +1918,14 @@
         <option>
           <name>IlinkThreadsSlave</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>IlinkLogCallGraph</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkIcfFile_AltDefault</name>
+          <state></state>
         </option>
       </data>
     </settings>
@@ -1875,6 +1955,11 @@
       <archiveVersion>0</archiveVersion>
       <data/>
     </settings>
+    <settings>
+      <name>Coder</name>
+      <archiveVersion>0</archiveVersion>
+      <data/>
+    </settings>
   </configuration>
   <group>
     <name>Freescale Processor Expert</name>
@@ -1896,10 +1981,19 @@
         <name>$PROJ_DIR$\Generated_Code\BitIoLdd1.c</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\Generated_Code\CLS1.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\Generated_Code\Cpu.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\Generated_Code\croutine.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\Generated_Code\CS1.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\Generated_Code\event_groups.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\Sources\Events.c</name>
@@ -1920,6 +2014,9 @@
         <name>$PROJ_DIR$\Generated_Code\heap_4.c</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\Generated_Code\heap_5.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\Generated_Code\HF1.c</name>
       </file>
       <file>
@@ -1930,6 +2027,9 @@
       </file>
       <file>
         <name>$PROJ_DIR$\Generated_Code\list.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\Generated_Code\MCUC1.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\Generated_Code\PE_LDD.c</name>
@@ -1958,11 +2058,29 @@
       <file>
         <name>$PROJ_DIR$\Generated_Code\WAIT1.c</name>
       </file>
+      <file>
+        <name>$PROJ_DIR$\Generated_Code\XF1.c</name>
+      </file>
     </group>
     <group>
       <name>GeneratedHs</name>
       <file>
+        <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\ADC_PDD.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\Generated_Code\BitIoLdd1.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\Generated_Code\CLS1.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\Generated_Code\CLS1config.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\CMP_PDD.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\COP_PDD.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\Generated_Code\Cpu.h</name>
@@ -1971,10 +2089,34 @@
         <name>$PROJ_DIR$\Generated_Code\croutine.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\Generated_Code\CS1.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\Generated_Code\CS1config.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\DAC_PDD.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\Generated_Code\deprecated_definitions.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\DMA_PDD.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\DMAMUX_PDD.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\Generated_Code\event_groups.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\Sources\Events.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\Generated_Code\FreeRTOS.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\Generated_Code\freertos_tasks_c_additions.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\Generated_Code\FreeRTOSConfig.h</name>
@@ -1983,7 +2125,22 @@
         <name>$PROJ_DIR$\Generated_Code\FRTOS1.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\Generated_Code\FRTOS1config.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\FTFA_PDD.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\GPIO_PDD.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\Generated_Code\HF1.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\Generated_Code\HF1config.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\I2C_PDD.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\Generated_Code\IO_Map.h</name>
@@ -1992,13 +2149,34 @@
         <name>$PROJ_DIR$\Generated_Code\LED1.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\Generated_Code\LED1config.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\Generated_Code\LEDpin1.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\Generated_Code\list.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\LPTMR_PDD.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\MCM_PDD.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\Generated_Code\MCUC1.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\Generated_Code\MCUC1config.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\iofiles\MKL25Z4.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\Generated_Code\mpu_wrappers.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\PDD_Types.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\Generated_Code\PE_Const.h</name>
@@ -2011,6 +2189,12 @@
       </file>
       <file>
         <name>$PROJ_DIR$\Generated_Code\PE_Types.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\PIT_PDD.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\PORT_PDD.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\Generated_Code\portable.h</name>
@@ -2028,10 +2212,22 @@
         <name>$PROJ_DIR$\Generated_Code\queue.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\RTC_PDD.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\Generated_Code\semphr.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\SIM_PDD.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\SPI_PDD.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\Generated_Code\StackMacros.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\SysTick_PDD.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\Generated_Code\task.h</name>
@@ -2040,13 +2236,40 @@
         <name>$PROJ_DIR$\Generated_Code\timers.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\TPM_PDD.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\UART0_PDD.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\UART_PDD.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\nxp\PExDrv v10.4\eclipse\ProcessorExpert\lib\Kinetis\pdd\inc\USB_PDD.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\Generated_Code\UTIL1.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\Generated_Code\UTIL1config.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\Generated_Code\WAIT1.h</name>
       </file>
+      <file>
+        <name>$PROJ_DIR$\Generated_Code\WAIT1config.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\Generated_Code\XF1.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\Generated_Code\XF1config.h</name>
+      </file>
     </group>
   </group>
+  <file>
+    <name>$PROJ_DIR$\ProjectInfo.xml</name>
+  </file>
 </project>
 
 
