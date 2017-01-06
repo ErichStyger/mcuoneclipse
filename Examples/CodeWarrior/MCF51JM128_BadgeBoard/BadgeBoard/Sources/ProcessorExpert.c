@@ -35,6 +35,7 @@
 #include "Inhr7.h"
 #include "LEDpin7.h"
 #include "MCUC1.h"
+#include "GDisp1.h"
 /* Include shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -51,8 +52,13 @@ void main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
-  LEDM1_On(); /* turn whole matrix on */
-  LEDM1_Off();  /* ... and off again */
+  for(;;) {
+    LEDM1_On(); /* turn whole matrix on */
+	LEDM1_Off();  /* ... and off again */
+	GDisp1_SetPixel(0,0);
+	GDisp1_ClrPixel(0,0);
+	GDisp1_DrawBox(0, 0, 5, 3, 1, GDisp1_COLOR_BLACK);
+  }
 /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
   for(;;){}
