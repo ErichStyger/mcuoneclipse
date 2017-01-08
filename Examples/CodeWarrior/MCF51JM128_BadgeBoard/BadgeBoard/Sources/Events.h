@@ -40,6 +40,7 @@
 #include "LEDpin7.h"
 #include "MCUC1.h"
 #include "GDisp1.h"
+#include "WAIT1.h"
 
 
 /* END Events */
