@@ -55,9 +55,26 @@ void main(void)
   for(;;) {
     LEDM1_On(); /* turn whole matrix on */
 	LEDM1_Off();  /* ... and off again */
-	GDisp1_SetPixel(0,0);
+
+	GDisp1_Clear();
+    GDisp1_SetPixel(0,0);
+	GDisp1_UpdateFull();
+	
 	GDisp1_ClrPixel(0,0);
-	GDisp1_DrawBox(0, 0, 5, 3, 1, GDisp1_COLOR_BLACK);
+	GDisp1_UpdateFull();
+
+	GDisp1_SetPixel(3,0);
+	GDisp1_UpdateFull();
+
+	GDisp1_SetPixel(0,5);
+	GDisp1_UpdateFull();
+
+	GDisp1_Clear();
+	GDisp1_DrawHLine(0,3,10,GDisp1_COLOR_WHITE);
+	GDisp1_UpdateFull();
+	
+	GDisp1_DrawBox(0, 0, 4, 5, 1, GDisp1_COLOR_WHITE); /* black means LED turned off, GDisp1_COLOR_WHITE turn LED on */
+	GDisp1_UpdateFull();
   }
 /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/

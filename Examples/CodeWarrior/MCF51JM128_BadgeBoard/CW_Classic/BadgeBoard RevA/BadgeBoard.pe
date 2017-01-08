@@ -1,14 +1,25 @@
-Processor Expert Version 0407
-ProjectModificationStamp=19
+Processor Expert Version 0441
+ProjectModificationStamp=23
+
+[Header]
+Name=BadgeBoard
+SavedBy=Erich Styger Local
+ModificationStamp=23
+Date=2017-01-08
+Product=Processor Expert version 3.09 for Freescale HC(S)08/RS08/CFV1
+IDE=CW Plug-In IDE
+PEversion=4.41.1.5256
+
 
 [Options]
 EventsDirectory=CODE\
-DestinationSubDir=
+GeneratedCodeDirectory=Generated_Code\
 DocumentationDir=DOC\
 CompiledFilesSubDir=
-FPGAsubdirectory=
+ProjectSettingsDirectory=Project_Settings\
 TemporaryDir=%TEMP%
 OverwriteEvents=3
+UpdateUserModuleIncludes=Yes
 GenerateISRs=No
 DeleteUnusedEvents=Yes
 OverwriteBeanDrv=0
@@ -17,7 +28,7 @@ ReviewCommentChanges=No
 UseExistingModules=No
 RenamePeripheries=No
 Autodependency=Yes
-ProjectCompNumb=1970
+ProjectCompNumb=1979
 DelUnusedPreviouslyGenFiles=Yes
 GeneratedCodeFrozen=No
 UserInterface=CLASSIC
@@ -30,7 +41,7 @@ GenCodeMode=ALWAYS_WRITE
 IconName=CPU_CHIP2
 Comment=0
 Template=
-BeanVersion=01.006
+BeanVersion=01.008
 
 [Properties]
 List=Property
@@ -198,6 +209,7 @@ Index=0
 Value=Yes
 
 [EndOfChilds]
+Expanded=Yes
 
 [EndOfChilds]
 [ItemState]
@@ -218,11 +230,35 @@ Expanded=No
 [Childs]
 List=GrupItem
 [ItemState]
+ItemSymbol=LVDINT_LVWINTGrp
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=PartialPowerDown
+ReadOnly=No
+UserReadOnly=No
+Index=1
+Value=No
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=LVWINTGrp
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
 ItemSymbol=PowerDownControl
 ReadOnly=No
 UserReadOnly=No
 Index=1
 EnumSymbVal=2
+
+[EndOfChilds]
 [ItemState]
 ItemSymbol=EnableIntClkInStopMode
 ReadOnly=No
@@ -316,7 +352,7 @@ Value=minimal priority
 ItemSymbol=Intperiphgrp
 ReadOnly=No
 UserReadOnly=No
-Expanded=No
+Expanded=Yes
 
 [Childs]
 List=GrupItem
@@ -328,7 +364,7 @@ List=ListItem
 ItemSymbol=ADCGrp
 ReadOnly=No
 UserReadOnly=No
-Expanded=No
+Expanded=Yes
 
 [Childs]
 List=GrupItem
@@ -349,6 +385,7 @@ List=GrupItem
 ItemSymbol=ADCConstPresc
 ReadOnly=No
 UserReadOnly=No
+Value=23
 
 [Childs]
 List=GrupItem
@@ -359,6 +396,7 @@ Value=23
 ItemSymbol=ADCAsynchroClock
 ReadOnly=No
 UserReadOnly=No
+Value=1
 
 [Childs]
 List=GrupItem
@@ -378,6 +416,7 @@ List=GrupItem
 ItemSymbol=ADC1ConstPresc
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -388,6 +427,7 @@ Value=Auto select
 ItemSymbol=ADC1AsynchroClock
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -594,6 +634,7 @@ Base=3
 [EndOfChilds]
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=ProtectionGen
 ReadOnly=No
@@ -609,6 +650,7 @@ UserReadOnly=No
 Value=0
 
 [EndOfChilds]
+Expanded=Yes
 
 [EndOfChilds]
 [ItemState]
@@ -649,6 +691,7 @@ Index=0
 EnumSymbVal=0
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=PortAGrp
 ReadOnly=No
@@ -1930,6 +1973,10 @@ Value=Yes
 
 [EndOfChilds]
 [ItemState]
+ItemSymbol=SharedClockGatingGrp
+ListItemCount=1
+List=ListItem
+[ItemState]
 ItemSymbol=ClockGatingGrp
 ReadOnly=No
 UserReadOnly=No
@@ -1937,6 +1984,36 @@ Expanded=No
 
 [Childs]
 List=GrupItem
+[ItemState]
+ItemSymbol=ClkGateSCI1
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+[ItemState]
+ItemSymbol=ClkGateSCI2
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+[ItemState]
+ItemSymbol=ClkGateIIC1
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+[ItemState]
+ItemSymbol=ClkGateIIC2
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+[ItemState]
+ItemSymbol=ClkGateADC
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
 [ItemState]
 ItemSymbol=ClkGateTPM1
 ReadOnly=No
@@ -1956,61 +2033,13 @@ UserReadOnly=No
 Index=0
 Value=Yes
 [ItemState]
-ItemSymbol=ClkGateADC
+ItemSymbol=ClkGateSPI1
 ReadOnly=No
 UserReadOnly=No
 Index=0
 Value=Yes
 [ItemState]
-ItemSymbol=ClkGateIIC1
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-[ItemState]
-ItemSymbol=ClkGateIIC2
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-[ItemState]
-ItemSymbol=ClkGateSCI1
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-[ItemState]
-ItemSymbol=ClkGateSCI2
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-[ItemState]
-ItemSymbol=ClkGateUSB
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-[ItemState]
-ItemSymbol=ClkGateFLS
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-[ItemState]
-ItemSymbol=ClkGateIRQ
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-[ItemState]
-ItemSymbol=ClkGateKBI
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-[ItemState]
-ItemSymbol=ClkGateACMP
+ItemSymbol=ClkGateSPI2
 ReadOnly=No
 UserReadOnly=No
 Index=0
@@ -2022,13 +2051,31 @@ UserReadOnly=No
 Index=0
 Value=Yes
 [ItemState]
-ItemSymbol=ClkGateSPI1
+ItemSymbol=ClkGateACMP
 ReadOnly=No
 UserReadOnly=No
 Index=0
 Value=Yes
 [ItemState]
-ItemSymbol=ClkGateSPI2
+ItemSymbol=ClkGateKBI
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+[ItemState]
+ItemSymbol=ClkGateIRQ
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+[ItemState]
+ItemSymbol=ClkGateFLS
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+[ItemState]
+ItemSymbol=ClkGateUSB
 ReadOnly=No
 UserReadOnly=No
 Index=0
@@ -2073,7 +2120,7 @@ List=GrupItem
 ItemSymbol=IntLVW
 Value=Vlvd
 [ItemState]
-ItemSymbol=Symbol
+ItemSymbol=IntLVWPriorGrp
 ReadOnly=No
 UserReadOnly=No
 
@@ -2153,6 +2200,7 @@ List=GrupItem
 ItemSymbol=VirtualTPMPresc
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -2188,6 +2236,7 @@ List=GrupItem
 ItemSymbol=VirtualTPM1Presc
 ReadOnly=No
 UserReadOnly=No
+Value=1
 
 [Childs]
 List=GrupItem
@@ -2223,6 +2272,7 @@ List=GrupItem
 ItemSymbol=VirtualTPM2Presc
 ReadOnly=No
 UserReadOnly=No
+Value=1
 
 [Childs]
 List=GrupItem
@@ -2258,6 +2308,7 @@ List=GrupItem
 ItemSymbol=VirtualTPM3Presc
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -2293,6 +2344,7 @@ List=GrupItem
 ItemSymbol=VirtualFTM1Presc
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -2328,6 +2380,7 @@ List=GrupItem
 ItemSymbol=VirtualFTM2Presc
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -2346,6 +2399,28 @@ Value=Yes
 [EndOfChilds]
 
 [EndOfChilds]
+[ItemState]
+ItemSymbol=SharedResetPin
+ListItemCount=1
+List=ListItem
+[ItemState]
+ItemSymbol=ResetPinGrp
+ReadOnly=No
+UserReadOnly=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=ResetPin
+Value=RESET
+[ItemState]
+ItemSymbol=ResetPinSignal
+ReadOnly=No
+UserReadOnly=No
+Value=
+
+[EndOfChilds]
 
 [EndOfChilds]
 [ItemState]
@@ -2361,7 +2436,7 @@ Expanded=No
 [Childs]
 List=GrupItem
 [ItemState]
-ItemSymbol=Symbol
+ItemSymbol=DevInit_Default_ISRGrp
 ReadOnly=No
 UserReadOnly=No
 
@@ -3159,6 +3234,7 @@ Value=
 [EndOfChilds]
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=SWInterruptsGrp
 ListItemCount=7
@@ -3380,6 +3456,7 @@ Value=
 [EndOfChilds]
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=Symbol0
 ReadOnly=No
@@ -3492,6 +3569,7 @@ Value=Internal Clock
 ItemSymbol=HighCLKClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=PLLClkSel
 
 [Childs]
 List=GrupItem
@@ -3502,6 +3580,7 @@ Value=PLLClkSel
 ItemSymbol=HighBDIV
 ReadOnly=No
 UserReadOnly=No
+Value=2
 
 [Childs]
 List=GrupItem
@@ -3512,6 +3591,7 @@ Value=2
 ItemSymbol=High_BDIV
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -3555,6 +3635,7 @@ Value=No
 ItemSymbol=HighIREFSClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=IREFSIntClk
 
 [Childs]
 List=GrupItem
@@ -3576,6 +3657,7 @@ Value=0.031250000000
 ItemSymbol=HighRDIV
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -3595,10 +3677,12 @@ UserReadOnly=No
 Value=0.031250000000
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=HighFLLClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=FLL_Default
 
 [Childs]
 List=GrupItem
@@ -3617,6 +3701,7 @@ List=EnmGrpItm
 ItemSymbol=HighFLL_Default
 ReadOnly=No
 UserReadOnly=No
+Value=1536
 
 [Childs]
 List=GrupItem
@@ -3627,6 +3712,7 @@ Value=1536
 ItemSymbol=High_FLL_Default
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -3637,6 +3723,7 @@ Value=Auto select
 ItemSymbol=HighFLL_32kHz
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -3647,6 +3734,7 @@ Value=Auto select
 ItemSymbol=High_FLL_32kHz
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -3655,10 +3743,12 @@ List=GrupItem
 Value=Auto select
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=HighPLLClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=FLLClkSel
 
 [Childs]
 List=GrupItem
@@ -3674,6 +3764,7 @@ Value=48
 ItemSymbol=HighPLL
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -3684,6 +3775,7 @@ Value=Auto select
 ItemSymbol=High_PLL
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -3697,6 +3789,7 @@ UserReadOnly=No
 Value=8
 
 [EndOfChilds]
+Expanded=Yes
 
 [EndOfChilds]
 [ItemState]
@@ -3717,6 +3810,7 @@ Value=Internal Clock
 ItemSymbol=LowCLKClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -3727,6 +3821,7 @@ Value=Auto select
 ItemSymbol=LowBDIV
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -3737,6 +3832,7 @@ Value=Auto select
 ItemSymbol=Low_BDIV
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -3780,6 +3876,7 @@ Value=No
 ItemSymbol=LowIREFSClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -3801,6 +3898,7 @@ Value=0
 ItemSymbol=LowRDIV
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -3820,10 +3918,12 @@ UserReadOnly=No
 Value=0.031250000000
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=LowFLLClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -3842,6 +3942,7 @@ List=EnmGrpItm
 ItemSymbol=LowFLL_Default
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -3852,6 +3953,7 @@ Value=Auto select
 ItemSymbol=Low_FLL_Default
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -3862,6 +3964,7 @@ Value=Auto select
 ItemSymbol=LowFLL_32kHz
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -3872,6 +3975,7 @@ Value=Auto select
 ItemSymbol=Low_FLL_32kHz
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -3880,10 +3984,12 @@ List=GrupItem
 Value=Auto select
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=LowPLLClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -3899,6 +4005,7 @@ Value=8
 ItemSymbol=LowPLL
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -3909,6 +4016,7 @@ Value=Auto select
 ItemSymbol=Low_PLL
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -3922,6 +4030,7 @@ UserReadOnly=No
 Value=8
 
 [EndOfChilds]
+Expanded=Yes
 
 [EndOfChilds]
 [ItemState]
@@ -3942,6 +4051,7 @@ Value=Internal Clock
 ItemSymbol=SlowCLKClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -3952,6 +4062,7 @@ Value=Auto select
 ItemSymbol=SlowBDIV
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -3962,6 +4073,7 @@ Value=Auto select
 ItemSymbol=Slow_BDIV
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -4005,6 +4117,7 @@ Value=No
 ItemSymbol=SlowIREFSClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -4026,6 +4139,7 @@ Value=0
 ItemSymbol=SlowRDIV
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -4045,10 +4159,12 @@ UserReadOnly=No
 Value=0.031250000000
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=SlowFLLClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -4067,6 +4183,7 @@ List=EnmGrpItm
 ItemSymbol=SlowFLL_Default
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -4077,6 +4194,7 @@ Value=Auto select
 ItemSymbol=Slow_FLL_Default
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -4087,6 +4205,7 @@ Value=Auto select
 ItemSymbol=SlowFLL_32kHz
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -4097,6 +4216,7 @@ Value=Auto select
 ItemSymbol=Slow_FLL_32kHz
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -4105,10 +4225,12 @@ List=GrupItem
 Value=Auto select
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=SlowPLLClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -4124,6 +4246,7 @@ Value=8
 ItemSymbol=SlowPLL
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -4134,6 +4257,7 @@ Value=Auto select
 ItemSymbol=Slow_PLL
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -4147,6 +4271,7 @@ UserReadOnly=No
 Value=8
 
 [EndOfChilds]
+Expanded=Yes
 
 [EndOfChilds]
 
@@ -4744,8 +4869,14 @@ Value=(string list)
 StrgList=0
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=GenMacros
+ReadOnly=No
+Index=0
+Value=Yes
+[ItemState]
+ItemSymbol=GenFlashRegs
 ReadOnly=No
 Index=0
 Value=Yes
@@ -4924,6 +5055,7 @@ ReadOnly=No
 Value=
 
 [EndOfChilds]
+Expanded=Yes
 
 [EndOfChilds]
 
@@ -5020,23 +5152,27 @@ ItemSymbol=SystemPathsGrp
 ReadOnly=No
 ListItemCount=0
 List=ListItem
+Expanded=Yes
 [ItemState]
 ItemSymbol=UserPathsGrp
 ReadOnly=No
 ListItemCount=0
 List=ListItem
+Expanded=No
 [ItemState]
 ItemSymbol=LibrariesGrp
 ReadOnly=No
 ListItemCount=0
 List=ListItem
+Expanded=No
 [ItemState]
 ItemSymbol=UserDirectoriesGrp
 ReadOnly=No
 ListItemCount=0
 List=ListItem
+Expanded=No
 [ItemState]
-ItemSymbol=MetrowerksCC_HC12_Directory
+ItemSymbol=MetrowerksCC_68HCS08_Directory
 ReadOnly=No
 [EndOfCompilerProperties]
 DestLanguage=Ansi-C
@@ -5060,7 +5196,7 @@ GenCodeMode=ALWAYS_WRITE
 IconName=CPU_CHIP2
 Comment=0
 Template=
-BeanVersion=01.006
+BeanVersion=01.008
 
 [Properties]
 List=Property
@@ -5181,7 +5317,7 @@ Expanded=No
 List=GrupItem
 [ItemState]
 ItemSymbol=OSC1Pin
-Value=PTG5_EXTAL
+Value=
 [ItemState]
 ItemSymbol=OSC1PinSignal
 ReadOnly=No
@@ -5199,7 +5335,7 @@ Expanded=No
 List=GrupItem
 [ItemState]
 ItemSymbol=OSC2Pin
-Value=PTG4_XTAL
+Value=
 [ItemState]
 ItemSymbol=OSC2PinSignal
 ReadOnly=No
@@ -5228,6 +5364,7 @@ Index=0
 Value=Yes
 
 [EndOfChilds]
+Expanded=Yes
 
 [EndOfChilds]
 [ItemState]
@@ -5248,11 +5385,35 @@ Expanded=No
 [Childs]
 List=GrupItem
 [ItemState]
+ItemSymbol=LVDINT_LVWINTGrp
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=PartialPowerDown
+ReadOnly=No
+UserReadOnly=No
+Index=1
+Value=No
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=LVWINTGrp
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
 ItemSymbol=PowerDownControl
 ReadOnly=No
 UserReadOnly=No
 Index=0
 EnumSymbVal=1
+
+[EndOfChilds]
 [ItemState]
 ItemSymbol=EnableIntClkInStopMode
 ReadOnly=No
@@ -5379,6 +5540,7 @@ List=GrupItem
 ItemSymbol=ADCConstPresc
 ReadOnly=No
 UserReadOnly=No
+Value=23
 
 [Childs]
 List=GrupItem
@@ -5389,6 +5551,7 @@ Value=23
 ItemSymbol=ADCAsynchroClock
 ReadOnly=No
 UserReadOnly=No
+Value=1
 
 [Childs]
 List=GrupItem
@@ -5408,6 +5571,7 @@ List=GrupItem
 ItemSymbol=ADC1ConstPresc
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -5418,6 +5582,7 @@ Value=Auto select
 ItemSymbol=ADC1AsynchroClock
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -5442,7 +5607,7 @@ Expanded=No
 List=GrupItem
 [ItemState]
 ItemSymbol=BDMPin
-Value=BKGD_MS
+Value=
 [ItemState]
 ItemSymbol=BDMPinSignal
 ReadOnly=No
@@ -5624,6 +5789,7 @@ Base=3
 [EndOfChilds]
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=ProtectionGen
 ReadOnly=No
@@ -5639,6 +5805,7 @@ UserReadOnly=No
 Value=0
 
 [EndOfChilds]
+Expanded=Yes
 
 [EndOfChilds]
 [ItemState]
@@ -5679,6 +5846,7 @@ Index=0
 EnumSymbVal=0
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=ShrdUnbondedIOGrp
 ListItemCount=1
@@ -5705,6 +5873,7 @@ Index=0
 EnumSymbVal=0
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=PortAGrp
 ReadOnly=No
@@ -6696,6 +6865,10 @@ Value=Yes
 
 [EndOfChilds]
 [ItemState]
+ItemSymbol=SharedClockGatingGrp
+ListItemCount=1
+List=ListItem
+[ItemState]
 ItemSymbol=ClockGatingGrp
 ReadOnly=No
 UserReadOnly=No
@@ -6703,6 +6876,36 @@ Expanded=No
 
 [Childs]
 List=GrupItem
+[ItemState]
+ItemSymbol=ClkGateSCI1
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+[ItemState]
+ItemSymbol=ClkGateSCI2
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+[ItemState]
+ItemSymbol=ClkGateIIC1
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+[ItemState]
+ItemSymbol=ClkGateIIC2
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+[ItemState]
+ItemSymbol=ClkGateADC
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
 [ItemState]
 ItemSymbol=ClkGateTPM1
 ReadOnly=No
@@ -6722,61 +6925,13 @@ UserReadOnly=No
 Index=0
 Value=Yes
 [ItemState]
-ItemSymbol=ClkGateADC
+ItemSymbol=ClkGateSPI1
 ReadOnly=No
 UserReadOnly=No
 Index=0
 Value=Yes
 [ItemState]
-ItemSymbol=ClkGateIIC1
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-[ItemState]
-ItemSymbol=ClkGateIIC2
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-[ItemState]
-ItemSymbol=ClkGateSCI1
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-[ItemState]
-ItemSymbol=ClkGateSCI2
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-[ItemState]
-ItemSymbol=ClkGateUSB
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-[ItemState]
-ItemSymbol=ClkGateFLS
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-[ItemState]
-ItemSymbol=ClkGateIRQ
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-[ItemState]
-ItemSymbol=ClkGateKBI
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-[ItemState]
-ItemSymbol=ClkGateACMP
+ItemSymbol=ClkGateSPI2
 ReadOnly=No
 UserReadOnly=No
 Index=0
@@ -6788,13 +6943,31 @@ UserReadOnly=No
 Index=0
 Value=Yes
 [ItemState]
-ItemSymbol=ClkGateSPI1
+ItemSymbol=ClkGateACMP
 ReadOnly=No
 UserReadOnly=No
 Index=0
 Value=Yes
 [ItemState]
-ItemSymbol=ClkGateSPI2
+ItemSymbol=ClkGateKBI
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+[ItemState]
+ItemSymbol=ClkGateIRQ
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+[ItemState]
+ItemSymbol=ClkGateFLS
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+[ItemState]
+ItemSymbol=ClkGateUSB
 ReadOnly=No
 UserReadOnly=No
 Index=0
@@ -6839,7 +7012,7 @@ List=GrupItem
 ItemSymbol=IntLVW
 Value=Vlvd
 [ItemState]
-ItemSymbol=Symbol
+ItemSymbol=IntLVWPriorGrp
 ReadOnly=No
 UserReadOnly=No
 
@@ -6919,6 +7092,7 @@ List=GrupItem
 ItemSymbol=VirtualTPMPresc
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -6954,6 +7128,7 @@ List=GrupItem
 ItemSymbol=VirtualTPM1Presc
 ReadOnly=No
 UserReadOnly=No
+Value=1
 
 [Childs]
 List=GrupItem
@@ -6989,6 +7164,7 @@ List=GrupItem
 ItemSymbol=VirtualTPM2Presc
 ReadOnly=No
 UserReadOnly=No
+Value=1
 
 [Childs]
 List=GrupItem
@@ -7024,6 +7200,7 @@ List=GrupItem
 ItemSymbol=VirtualTPM3Presc
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -7059,6 +7236,7 @@ List=GrupItem
 ItemSymbol=VirtualFTM1Presc
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -7094,6 +7272,7 @@ List=GrupItem
 ItemSymbol=VirtualFTM2Presc
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -7112,6 +7291,28 @@ Value=Yes
 [EndOfChilds]
 
 [EndOfChilds]
+[ItemState]
+ItemSymbol=SharedResetPin
+ListItemCount=1
+List=ListItem
+[ItemState]
+ItemSymbol=ResetPinGrp
+ReadOnly=No
+UserReadOnly=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=ResetPin
+Value=
+[ItemState]
+ItemSymbol=ResetPinSignal
+ReadOnly=No
+UserReadOnly=No
+Value=
+
+[EndOfChilds]
 
 [EndOfChilds]
 [ItemState]
@@ -7127,7 +7328,7 @@ Expanded=Yes
 [Childs]
 List=GrupItem
 [ItemState]
-ItemSymbol=Symbol
+ItemSymbol=DevInit_Default_ISRGrp
 ReadOnly=No
 UserReadOnly=No
 
@@ -7925,6 +8126,7 @@ Value=
 [EndOfChilds]
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=SWInterruptsGrp
 ListItemCount=7
@@ -8146,6 +8348,7 @@ Value=
 [EndOfChilds]
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=Symbol0
 ReadOnly=No
@@ -8258,6 +8461,7 @@ Value=External Clock
 ItemSymbol=HighCLKClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=PLLClkSel
 
 [Childs]
 List=GrupItem
@@ -8268,6 +8472,7 @@ Value=PLLClkSel
 ItemSymbol=HighBDIV
 ReadOnly=No
 UserReadOnly=No
+Value=1
 
 [Childs]
 List=GrupItem
@@ -8278,6 +8483,7 @@ Value=1
 ItemSymbol=High_BDIV
 ReadOnly=No
 UserReadOnly=No
+Value=1
 
 [Childs]
 List=GrupItem
@@ -8321,6 +8527,7 @@ Value=No
 ItemSymbol=HighIREFSClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=RDIV
 
 [Childs]
 List=GrupItem
@@ -8342,6 +8549,7 @@ Value=12
 ItemSymbol=HighRDIV
 ReadOnly=No
 UserReadOnly=No
+Value=8
 
 [Childs]
 List=GrupItem
@@ -8361,10 +8569,12 @@ UserReadOnly=No
 Value=1.500000000000
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=HighFLLClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=FLL_Default
 
 [Childs]
 List=GrupItem
@@ -8383,6 +8593,7 @@ List=EnmGrpItm
 ItemSymbol=HighFLL_Default
 ReadOnly=No
 UserReadOnly=No
+Value=512
 
 [Childs]
 List=GrupItem
@@ -8393,6 +8604,7 @@ Value=512
 ItemSymbol=High_FLL_Default
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -8403,6 +8615,7 @@ Value=Auto select
 ItemSymbol=HighFLL_32kHz
 ReadOnly=No
 UserReadOnly=No
+Value=608
 
 [Childs]
 List=GrupItem
@@ -8413,6 +8626,7 @@ Value=608
 ItemSymbol=High_FLL_32kHz
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -8421,10 +8635,12 @@ List=GrupItem
 Value=Auto select
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=HighPLLClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=PLL
 
 [Childs]
 List=GrupItem
@@ -8440,6 +8656,7 @@ Value=24
 ItemSymbol=HighPLL
 ReadOnly=No
 UserReadOnly=No
+Value=32
 
 [Childs]
 List=GrupItem
@@ -8450,6 +8667,7 @@ Value=32
 ItemSymbol=High_PLL
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -8463,6 +8681,7 @@ UserReadOnly=No
 Value=48
 
 [EndOfChilds]
+Expanded=Yes
 
 [EndOfChilds]
 [ItemState]
@@ -8483,6 +8702,7 @@ Value=Internal Clock
 ItemSymbol=LowCLKClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=PLLClkSel
 
 [Childs]
 List=GrupItem
@@ -8493,6 +8713,7 @@ Value=PLLClkSel
 ItemSymbol=LowBDIV
 ReadOnly=No
 UserReadOnly=No
+Value=8
 
 [Childs]
 List=GrupItem
@@ -8503,6 +8724,7 @@ Value=8
 ItemSymbol=Low_BDIV
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -8546,6 +8768,7 @@ Value=No
 ItemSymbol=LowIREFSClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=IREFSIntClk
 
 [Childs]
 List=GrupItem
@@ -8567,6 +8790,7 @@ Value=0.031250000000
 ItemSymbol=LowRDIV
 ReadOnly=No
 UserReadOnly=No
+Value=32
 
 [Childs]
 List=GrupItem
@@ -8586,10 +8810,12 @@ UserReadOnly=No
 Value=0.031250000000
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=LowFLLClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=FLL_Default
 
 [Childs]
 List=GrupItem
@@ -8608,6 +8834,7 @@ List=EnmGrpItm
 ItemSymbol=LowFLL_Default
 ReadOnly=No
 UserReadOnly=No
+Value=512
 
 [Childs]
 List=GrupItem
@@ -8618,6 +8845,7 @@ Value=512
 ItemSymbol=Low_FLL_Default
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -8628,6 +8856,7 @@ Value=Auto select
 ItemSymbol=LowFLL_32kHz
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -8638,6 +8867,7 @@ Value=Auto select
 ItemSymbol=Low_FLL_32kHz
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -8646,10 +8876,12 @@ List=GrupItem
 Value=Auto select
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=LowPLLClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=FLLClkSel
 
 [Childs]
 List=GrupItem
@@ -8665,6 +8897,7 @@ Value=16
 ItemSymbol=LowPLL
 ReadOnly=No
 UserReadOnly=No
+Value=12
 
 [Childs]
 List=GrupItem
@@ -8675,6 +8908,7 @@ Value=12
 ItemSymbol=Low_PLL
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -8688,6 +8922,7 @@ UserReadOnly=No
 Value=18
 
 [EndOfChilds]
+Expanded=Yes
 
 [EndOfChilds]
 [ItemState]
@@ -8708,6 +8943,7 @@ Value=Internal Clock
 ItemSymbol=SlowCLKClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=PLLClkSel
 
 [Childs]
 List=GrupItem
@@ -8718,6 +8954,7 @@ Value=PLLClkSel
 ItemSymbol=SlowBDIV
 ReadOnly=No
 UserReadOnly=No
+Value=2
 
 [Childs]
 List=GrupItem
@@ -8728,6 +8965,7 @@ Value=2
 ItemSymbol=Slow_BDIV
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -8771,6 +9009,7 @@ Value=No
 ItemSymbol=SlowIREFSClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=IREFSIntClk
 
 [Childs]
 List=GrupItem
@@ -8792,6 +9031,7 @@ Value=0.031250000000
 ItemSymbol=SlowRDIV
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -8811,10 +9051,12 @@ UserReadOnly=No
 Value=0.031250000000
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=SlowFLLClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=FLL_Default
 
 [Childs]
 List=GrupItem
@@ -8833,6 +9075,7 @@ List=EnmGrpItm
 ItemSymbol=SlowFLL_Default
 ReadOnly=No
 UserReadOnly=No
+Value=512
 
 [Childs]
 List=GrupItem
@@ -8843,6 +9086,7 @@ Value=512
 ItemSymbol=Slow_FLL_Default
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -8853,6 +9097,7 @@ Value=Auto select
 ItemSymbol=SlowFLL_32kHz
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -8863,6 +9108,7 @@ Value=Auto select
 ItemSymbol=Slow_FLL_32kHz
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -8871,10 +9117,12 @@ List=GrupItem
 Value=Auto select
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=SlowPLLClkSel
 ReadOnly=No
 UserReadOnly=No
+Value=FLLClkSel
 
 [Childs]
 List=GrupItem
@@ -8890,6 +9138,7 @@ Value=16
 ItemSymbol=SlowPLL
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -8900,6 +9149,7 @@ Value=Auto select
 ItemSymbol=Slow_PLL
 ReadOnly=No
 UserReadOnly=No
+Value=Auto select
 
 [Childs]
 List=GrupItem
@@ -8913,6 +9163,7 @@ UserReadOnly=No
 Value=8
 
 [EndOfChilds]
+Expanded=Yes
 
 [EndOfChilds]
 
@@ -9510,8 +9761,14 @@ Value=(string list)
 StrgList=0
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=GenMacros
+ReadOnly=No
+Index=0
+Value=Yes
+[ItemState]
+ItemSymbol=GenFlashRegs
 ReadOnly=No
 Index=0
 Value=Yes
@@ -9746,6 +10003,7 @@ ReadOnly=No
 Value=
 
 [EndOfChilds]
+Expanded=Yes
 
 [EndOfChilds]
 
@@ -9842,23 +10100,27 @@ ItemSymbol=SystemPathsGrp
 ReadOnly=No
 ListItemCount=0
 List=ListItem
+Expanded=Yes
 [ItemState]
 ItemSymbol=UserPathsGrp
 ReadOnly=No
 ListItemCount=0
 List=ListItem
+Expanded=No
 [ItemState]
 ItemSymbol=LibrariesGrp
 ReadOnly=No
 ListItemCount=0
 List=ListItem
+Expanded=No
 [ItemState]
 ItemSymbol=UserDirectoriesGrp
 ReadOnly=No
 ListItemCount=0
 List=ListItem
+Expanded=No
 [ItemState]
-ItemSymbol=MetrowerksCC_HC12_Directory
+ItemSymbol=MetrowerksCC_68HCS08_Directory
 ReadOnly=No
 [EndOfCompilerProperties]
 DestLanguage=Ansi-C
@@ -9886,7 +10148,7 @@ ConfigurationComment=0
 Count=0
 
 [BoolList_BeanConfig]
-Count=20
+Count=21
 ItemId0=1790
 Value0=Yes
 ItemId1=1623
@@ -9927,6 +10189,8 @@ ItemId18=35
 Value18=Yes
 ItemId19=399
 Value19=Yes
+ItemId20=1974
+Value20=Yes
 
 [BoolList_TaskConfig]
 Count=0
@@ -9946,6 +10210,12 @@ Expanded=Yes
 [Childs]
 List=GrupItem
 [ItemState]
+ItemSymbol=Not_for_MPC512x
+ReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
 ItemSymbol=O_NoRangeChck
 ReadOnly=No
 Index=1
@@ -9960,6 +10230,8 @@ ItemSymbol=O_NoSpeedTest
 ReadOnly=No
 Index=1
 Value=No
+
+[EndOfChilds]
 [ItemState]
 ItemSymbol=O_NoInitRegReset
 ReadOnly=No
@@ -9985,10 +10257,10 @@ Value=No
 CompNumb=399
 CompEnabled=Yes
 GenCodeMode=CHECK_n_WRITE
-IconName=Ledmatrix
+IconName=USER_DEV
 Comment=0
 Template=
-BeanVersion=01.064
+BeanVersion=01.096
 
 [Properties]
 List=Property
@@ -10024,6 +10296,14 @@ ItemSymbol=BitsPerPixel
 Value=1
 Base=2
 [ItemState]
+ItemSymbol=WindowCapability
+Index=1
+Value=No
+[ItemState]
+ItemSymbol=DisplayMemoryWrite
+Index=1
+Value=No
+[ItemState]
 ItemSymbol=RowSymbol
 ReadOnly=No
 UserReadOnly=No
@@ -10034,11 +10314,10 @@ ItemSymbol=Row0
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=Inhr1
-RegCompType=row
+RegCompType=LED
 
 [InheritedBeanProperties]
-TemplateNameOfInterface=row
+TemplateNameOfInterface=LED
 InhrBeanCompNumb=1068
 InhrBeanGenCodeMode=ALWAYS_WRITE
 List=Property
@@ -10047,6 +10326,11 @@ ItemSymbol=DeviceName
 ReadOnly=Yes
 UserReadOnly=Yes
 Value=Inhr1
+[ItemState]
+ItemSymbol=sdk
+ReadOnly=No
+UserReadOnly=No
+Value=MCUC1
 [ItemState]
 ItemSymbol=LEDonWithInitialization
 ReadOnly=No
@@ -10062,11 +10346,25 @@ Expanded=Yes
 [Childs]
 List=GrupItem
 [ItemState]
+ItemSymbol=AnodeOnPortSide
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+[ItemState]
+ItemSymbol=OnOffenabled
+ReadOnly=No
+UserReadOnly=No
+Value=Yes
+Expanded=Yes
+
+[Childs]
+List=GrupItem
+[ItemState]
 ItemSymbol=LEDPin
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=LEDpin1
 RegCompType=LEDpin
 
 [InheritedBeanProperties]
@@ -10316,12 +10614,52 @@ UsrMethodName=GetRawVal
 [Events]
 List=Event
 [EndOfInheritedBeanProperties]
+
+[EndOfChilds]
 [ItemState]
-ItemSymbol=AnodeOnPortSide
+ItemSymbol=PWMenabled
 ReadOnly=No
 UserReadOnly=No
-Index=0
-Value=Yes
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=PWMinverted
+ReadOnly=No
+UserReadOnly=No
+Index=1
+Value=No
+[ItemState]
+ItemSymbol=PWMpin
+ReadOnly=No
+UserReadOnly=No
+Index=-1
+RegCompType=
+
+[EndOfChilds]
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=ShellEnabled
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Shell
+ReadOnly=No
+UserReadOnly=No
+Value=
+[ItemState]
+ItemSymbol=Utility
+ReadOnly=No
+UserReadOnly=No
+Value=
 
 [EndOfChilds]
 
@@ -10368,6 +10706,42 @@ Value=Yes
 LastSelection=Yes
 LastUserSel=yes
 UsrMethodName=Put
+[ItemState]
+ItemSymbol=SetRatio16
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=SetRatio16
+[ItemState]
+ItemSymbol=ParseCommand
+ReadOnly=Yes
+UserReadOnly=No
+Index=1
+Value=No
+LastSelection=Yes
+LastUserSel=never
+UsrMethodName=ParseCommand
+[ItemState]
+ItemSymbol=Deinit
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=Yes
+LastUserSel=yes
+UsrMethodName=Deinit
+[ItemState]
+ItemSymbol=Init
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=Yes
+LastUserSel=yes
+UsrMethodName=Init
 
 [Events]
 List=Event
@@ -10377,11 +10751,10 @@ ItemSymbol=Row1
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=Inhr2
-RegCompType=row
+RegCompType=LED
 
 [InheritedBeanProperties]
-TemplateNameOfInterface=row
+TemplateNameOfInterface=LED
 InhrBeanCompNumb=1070
 InhrBeanGenCodeMode=ALWAYS_WRITE
 List=Property
@@ -10390,6 +10763,11 @@ ItemSymbol=DeviceName
 ReadOnly=Yes
 UserReadOnly=Yes
 Value=Inhr2
+[ItemState]
+ItemSymbol=sdk
+ReadOnly=No
+UserReadOnly=No
+Value=MCUC1
 [ItemState]
 ItemSymbol=LEDonWithInitialization
 ReadOnly=No
@@ -10405,11 +10783,25 @@ Expanded=Yes
 [Childs]
 List=GrupItem
 [ItemState]
+ItemSymbol=AnodeOnPortSide
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+[ItemState]
+ItemSymbol=OnOffenabled
+ReadOnly=No
+UserReadOnly=No
+Value=Yes
+Expanded=Yes
+
+[Childs]
+List=GrupItem
+[ItemState]
 ItemSymbol=LEDPin
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=LEDpin2
 RegCompType=LEDpin
 
 [InheritedBeanProperties]
@@ -10659,12 +11051,52 @@ UsrMethodName=GetRawVal
 [Events]
 List=Event
 [EndOfInheritedBeanProperties]
+
+[EndOfChilds]
 [ItemState]
-ItemSymbol=AnodeOnPortSide
+ItemSymbol=PWMenabled
 ReadOnly=No
 UserReadOnly=No
-Index=0
-Value=Yes
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=PWMinverted
+ReadOnly=No
+UserReadOnly=No
+Index=1
+Value=No
+[ItemState]
+ItemSymbol=PWMpin
+ReadOnly=No
+UserReadOnly=No
+Index=-1
+RegCompType=
+
+[EndOfChilds]
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=ShellEnabled
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Shell
+ReadOnly=No
+UserReadOnly=No
+Value=
+[ItemState]
+ItemSymbol=Utility
+ReadOnly=No
+UserReadOnly=No
+Value=
 
 [EndOfChilds]
 
@@ -10711,6 +11143,42 @@ Value=Yes
 LastSelection=Yes
 LastUserSel=yes
 UsrMethodName=Put
+[ItemState]
+ItemSymbol=SetRatio16
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=SetRatio16
+[ItemState]
+ItemSymbol=ParseCommand
+ReadOnly=Yes
+UserReadOnly=No
+Index=1
+Value=No
+LastSelection=Yes
+LastUserSel=never
+UsrMethodName=ParseCommand
+[ItemState]
+ItemSymbol=Deinit
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=Yes
+LastUserSel=yes
+UsrMethodName=Deinit
+[ItemState]
+ItemSymbol=Init
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=Yes
+LastUserSel=yes
+UsrMethodName=Init
 
 [Events]
 List=Event
@@ -10720,11 +11188,10 @@ ItemSymbol=Row2
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=Inhr3
-RegCompType=row
+RegCompType=LED
 
 [InheritedBeanProperties]
-TemplateNameOfInterface=row
+TemplateNameOfInterface=LED
 InhrBeanCompNumb=1072
 InhrBeanGenCodeMode=ALWAYS_WRITE
 List=Property
@@ -10733,6 +11200,11 @@ ItemSymbol=DeviceName
 ReadOnly=Yes
 UserReadOnly=Yes
 Value=Inhr3
+[ItemState]
+ItemSymbol=sdk
+ReadOnly=No
+UserReadOnly=No
+Value=MCUC1
 [ItemState]
 ItemSymbol=LEDonWithInitialization
 ReadOnly=No
@@ -10748,11 +11220,25 @@ Expanded=Yes
 [Childs]
 List=GrupItem
 [ItemState]
+ItemSymbol=AnodeOnPortSide
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+[ItemState]
+ItemSymbol=OnOffenabled
+ReadOnly=No
+UserReadOnly=No
+Value=Yes
+Expanded=Yes
+
+[Childs]
+List=GrupItem
+[ItemState]
 ItemSymbol=LEDPin
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=LEDpin3
 RegCompType=LEDpin
 
 [InheritedBeanProperties]
@@ -11002,12 +11488,52 @@ UsrMethodName=GetRawVal
 [Events]
 List=Event
 [EndOfInheritedBeanProperties]
+
+[EndOfChilds]
 [ItemState]
-ItemSymbol=AnodeOnPortSide
+ItemSymbol=PWMenabled
 ReadOnly=No
 UserReadOnly=No
-Index=0
-Value=Yes
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=PWMinverted
+ReadOnly=No
+UserReadOnly=No
+Index=1
+Value=No
+[ItemState]
+ItemSymbol=PWMpin
+ReadOnly=No
+UserReadOnly=No
+Index=-1
+RegCompType=
+
+[EndOfChilds]
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=ShellEnabled
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Shell
+ReadOnly=No
+UserReadOnly=No
+Value=
+[ItemState]
+ItemSymbol=Utility
+ReadOnly=No
+UserReadOnly=No
+Value=
 
 [EndOfChilds]
 
@@ -11054,6 +11580,42 @@ Value=Yes
 LastSelection=Yes
 LastUserSel=yes
 UsrMethodName=Put
+[ItemState]
+ItemSymbol=SetRatio16
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=SetRatio16
+[ItemState]
+ItemSymbol=ParseCommand
+ReadOnly=Yes
+UserReadOnly=No
+Index=1
+Value=No
+LastSelection=Yes
+LastUserSel=never
+UsrMethodName=ParseCommand
+[ItemState]
+ItemSymbol=Deinit
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=Yes
+LastUserSel=yes
+UsrMethodName=Deinit
+[ItemState]
+ItemSymbol=Init
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=Yes
+LastUserSel=yes
+UsrMethodName=Init
 
 [Events]
 List=Event
@@ -11063,11 +11625,10 @@ ItemSymbol=Row3
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=Inhr4
-RegCompType=row
+RegCompType=LED
 
 [InheritedBeanProperties]
-TemplateNameOfInterface=row
+TemplateNameOfInterface=LED
 InhrBeanCompNumb=1074
 InhrBeanGenCodeMode=ALWAYS_WRITE
 List=Property
@@ -11076,6 +11637,11 @@ ItemSymbol=DeviceName
 ReadOnly=Yes
 UserReadOnly=Yes
 Value=Inhr4
+[ItemState]
+ItemSymbol=sdk
+ReadOnly=No
+UserReadOnly=No
+Value=MCUC1
 [ItemState]
 ItemSymbol=LEDonWithInitialization
 ReadOnly=No
@@ -11091,11 +11657,25 @@ Expanded=Yes
 [Childs]
 List=GrupItem
 [ItemState]
+ItemSymbol=AnodeOnPortSide
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+[ItemState]
+ItemSymbol=OnOffenabled
+ReadOnly=No
+UserReadOnly=No
+Value=Yes
+Expanded=Yes
+
+[Childs]
+List=GrupItem
+[ItemState]
 ItemSymbol=LEDPin
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=LEDpin4
 RegCompType=LEDpin
 
 [InheritedBeanProperties]
@@ -11345,12 +11925,52 @@ UsrMethodName=GetRawVal
 [Events]
 List=Event
 [EndOfInheritedBeanProperties]
+
+[EndOfChilds]
 [ItemState]
-ItemSymbol=AnodeOnPortSide
+ItemSymbol=PWMenabled
 ReadOnly=No
 UserReadOnly=No
-Index=0
-Value=Yes
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=PWMinverted
+ReadOnly=No
+UserReadOnly=No
+Index=1
+Value=No
+[ItemState]
+ItemSymbol=PWMpin
+ReadOnly=No
+UserReadOnly=No
+Index=-1
+RegCompType=
+
+[EndOfChilds]
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=ShellEnabled
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Shell
+ReadOnly=No
+UserReadOnly=No
+Value=
+[ItemState]
+ItemSymbol=Utility
+ReadOnly=No
+UserReadOnly=No
+Value=
 
 [EndOfChilds]
 
@@ -11397,6 +12017,42 @@ Value=Yes
 LastSelection=Yes
 LastUserSel=yes
 UsrMethodName=Put
+[ItemState]
+ItemSymbol=SetRatio16
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=SetRatio16
+[ItemState]
+ItemSymbol=ParseCommand
+ReadOnly=Yes
+UserReadOnly=No
+Index=1
+Value=No
+LastSelection=Yes
+LastUserSel=never
+UsrMethodName=ParseCommand
+[ItemState]
+ItemSymbol=Deinit
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=Yes
+LastUserSel=yes
+UsrMethodName=Deinit
+[ItemState]
+ItemSymbol=Init
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=Yes
+LastUserSel=yes
+UsrMethodName=Init
 
 [Events]
 List=Event
@@ -11406,11 +12062,10 @@ ItemSymbol=Row4
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=Inhr5
-RegCompType=row
+RegCompType=LED
 
 [InheritedBeanProperties]
-TemplateNameOfInterface=row
+TemplateNameOfInterface=LED
 InhrBeanCompNumb=1076
 InhrBeanGenCodeMode=ALWAYS_WRITE
 List=Property
@@ -11419,6 +12074,11 @@ ItemSymbol=DeviceName
 ReadOnly=Yes
 UserReadOnly=Yes
 Value=Inhr5
+[ItemState]
+ItemSymbol=sdk
+ReadOnly=No
+UserReadOnly=No
+Value=MCUC1
 [ItemState]
 ItemSymbol=LEDonWithInitialization
 ReadOnly=No
@@ -11434,11 +12094,25 @@ Expanded=Yes
 [Childs]
 List=GrupItem
 [ItemState]
+ItemSymbol=AnodeOnPortSide
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+[ItemState]
+ItemSymbol=OnOffenabled
+ReadOnly=No
+UserReadOnly=No
+Value=Yes
+Expanded=Yes
+
+[Childs]
+List=GrupItem
+[ItemState]
 ItemSymbol=LEDPin
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=LEDpin5
 RegCompType=LEDpin
 
 [InheritedBeanProperties]
@@ -11688,12 +12362,52 @@ UsrMethodName=GetRawVal
 [Events]
 List=Event
 [EndOfInheritedBeanProperties]
+
+[EndOfChilds]
 [ItemState]
-ItemSymbol=AnodeOnPortSide
+ItemSymbol=PWMenabled
 ReadOnly=No
 UserReadOnly=No
-Index=0
-Value=Yes
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=PWMinverted
+ReadOnly=No
+UserReadOnly=No
+Index=1
+Value=No
+[ItemState]
+ItemSymbol=PWMpin
+ReadOnly=No
+UserReadOnly=No
+Index=-1
+RegCompType=
+
+[EndOfChilds]
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=ShellEnabled
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Shell
+ReadOnly=No
+UserReadOnly=No
+Value=
+[ItemState]
+ItemSymbol=Utility
+ReadOnly=No
+UserReadOnly=No
+Value=
 
 [EndOfChilds]
 
@@ -11740,10 +12454,47 @@ Value=Yes
 LastSelection=Yes
 LastUserSel=yes
 UsrMethodName=Put
+[ItemState]
+ItemSymbol=SetRatio16
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=SetRatio16
+[ItemState]
+ItemSymbol=ParseCommand
+ReadOnly=Yes
+UserReadOnly=No
+Index=1
+Value=No
+LastSelection=Yes
+LastUserSel=never
+UsrMethodName=ParseCommand
+[ItemState]
+ItemSymbol=Deinit
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=Yes
+LastUserSel=yes
+UsrMethodName=Deinit
+[ItemState]
+ItemSymbol=Init
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=Yes
+LastUserSel=yes
+UsrMethodName=Init
 
 [Events]
 List=Event
 [EndOfInheritedBeanProperties]
+Expanded=Yes
 [ItemState]
 ItemSymbol=ColumnSymbol
 ReadOnly=No
@@ -11751,16 +12502,15 @@ UserReadOnly=No
 ListItemCount=2
 List=ListItem
 [ItemState]
-ItemSymbol=Columns0
+ItemSymbol=Column0
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=Inhr6
-RegCompType=column
+RegCompType=LEDbyte
 
 [InheritedBeanProperties]
-TemplateNameOfInterface=column
-InhrBeanCompNumb=1078
+TemplateNameOfInterface=LEDbyte
+InhrBeanCompNumb=1975
 InhrBeanGenCodeMode=ALWAYS_WRITE
 List=Property
 [ItemState]
@@ -11787,12 +12537,11 @@ ItemSymbol=LEDbytePort
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=LEDpin6
 RegCompType=ByteIO
 
 [InheritedBeanProperties]
 TemplateNameOfInterface=ByteIO
-InhrBeanCompNumb=1079
+InhrBeanCompNumb=1976
 InhrBeanGenCodeMode=ALWAYS_WRITE
 List=Property
 [ItemState]
@@ -11804,7 +12553,7 @@ Value=LEDpin6
 ItemSymbol=_Port
 ReadOnly=No
 UserReadOnly=No
-Value=PTE
+Value=PTD
 [ItemState]
 ItemSymbol=PortSignal
 ReadOnly=No
@@ -11822,7 +12571,7 @@ ItemSymbol=PullMode
 ReadOnly=No
 UserReadOnly=No
 TypeSpecNameState=typePULL
-Index=0
+Index=5
 [ItemState]
 ItemSymbol=ODE
 ReadOnly=No
@@ -12019,21 +12768,21 @@ UserReadOnly=No
 List=GrupItem
 [ItemState]
 ItemSymbol=GetRawVal
-ReadOnly=No
+ReadOnly=Yes
 UserReadOnly=No
 Index=1
 Value=No
 LastSelection=No
-LastUserSel=no
+LastUserSel=never
 UsrMethodName=GetRawVal
 [ItemState]
 ItemSymbol=GetRawBit
-ReadOnly=No
+ReadOnly=Yes
 UserReadOnly=No
 Index=1
 Value=No
 LastSelection=No
-LastUserSel=no
+LastUserSel=never
 UsrMethodName=GetRawBit
 
 [EndOfChilds]
@@ -12056,14 +12805,14 @@ List=Method
 ItemSymbol=On
 Index=0
 Value=Yes
-LastSelection=No
+LastSelection=Yes
 LastUserSel=always
 UsrMethodName=On
 [ItemState]
 ItemSymbol=Off
 Index=0
 Value=Yes
-LastSelection=No
+LastSelection=Yes
 LastUserSel=always
 UsrMethodName=Off
 [ItemState]
@@ -12095,20 +12844,20 @@ LastUserSel=yes
 UsrMethodName=Put
 [ItemState]
 ItemSymbol=SetOutput
-ReadOnly=No
+ReadOnly=Yes
 UserReadOnly=No
 Index=0
 Value=Yes
-LastSelection=No
+LastSelection=Yes
 LastUserSel=yes
 UsrMethodName=SetOutput
 [ItemState]
 ItemSymbol=SetInput
-ReadOnly=No
+ReadOnly=Yes
 UserReadOnly=No
 Index=0
 Value=Yes
-LastSelection=No
+LastSelection=Yes
 LastUserSel=yes
 UsrMethodName=SetInput
 
@@ -12116,16 +12865,15 @@ UsrMethodName=SetInput
 List=Event
 [EndOfInheritedBeanProperties]
 [ItemState]
-ItemSymbol=Columns1
+ItemSymbol=Column1
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=Inhr7
-RegCompType=column
+RegCompType=LEDbyte
 
 [InheritedBeanProperties]
-TemplateNameOfInterface=column
-InhrBeanCompNumb=1102
+TemplateNameOfInterface=LEDbyte
+InhrBeanCompNumb=1977
 InhrBeanGenCodeMode=ALWAYS_WRITE
 List=Property
 [ItemState]
@@ -12152,12 +12900,11 @@ ItemSymbol=LEDbytePort
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=LEDpin7
 RegCompType=ByteIO
 
 [InheritedBeanProperties]
 TemplateNameOfInterface=ByteIO
-InhrBeanCompNumb=1103
+InhrBeanCompNumb=1978
 InhrBeanGenCodeMode=ALWAYS_WRITE
 List=Property
 [ItemState]
@@ -12169,7 +12916,7 @@ Value=LEDpin7
 ItemSymbol=_Port
 ReadOnly=No
 UserReadOnly=No
-Value=PTD
+Value=PTE
 [ItemState]
 ItemSymbol=PortSignal
 ReadOnly=No
@@ -12187,7 +12934,7 @@ ItemSymbol=PullMode
 ReadOnly=No
 UserReadOnly=No
 TypeSpecNameState=typePULL
-Index=0
+Index=5
 [ItemState]
 ItemSymbol=ODE
 ReadOnly=No
@@ -12300,7 +13047,7 @@ ReadOnly=No
 UserReadOnly=No
 Index=0
 Value=Yes
-LastSelection=Yes
+LastSelection=No
 LastUserSel=yes
 UsrMethodName=SetInput
 [ItemState]
@@ -12309,7 +13056,7 @@ ReadOnly=No
 UserReadOnly=No
 Index=0
 Value=Yes
-LastSelection=Yes
+LastSelection=No
 LastUserSel=yes
 UsrMethodName=SetOutput
 [ItemState]
@@ -12384,21 +13131,21 @@ UserReadOnly=No
 List=GrupItem
 [ItemState]
 ItemSymbol=GetRawVal
-ReadOnly=No
+ReadOnly=Yes
 UserReadOnly=No
 Index=1
 Value=No
 LastSelection=No
-LastUserSel=no
+LastUserSel=never
 UsrMethodName=GetRawVal
 [ItemState]
 ItemSymbol=GetRawBit
-ReadOnly=No
+ReadOnly=Yes
 UserReadOnly=No
 Index=1
 Value=No
 LastSelection=No
-LastUserSel=no
+LastUserSel=never
 UsrMethodName=GetRawBit
 
 [EndOfChilds]
@@ -12421,14 +13168,14 @@ List=Method
 ItemSymbol=On
 Index=0
 Value=Yes
-LastSelection=No
+LastSelection=Yes
 LastUserSel=always
 UsrMethodName=On
 [ItemState]
 ItemSymbol=Off
 Index=0
 Value=Yes
-LastSelection=No
+LastSelection=Yes
 LastUserSel=always
 UsrMethodName=Off
 [ItemState]
@@ -12460,38 +13207,93 @@ LastUserSel=yes
 UsrMethodName=Put
 [ItemState]
 ItemSymbol=SetOutput
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-LastSelection=No
-LastUserSel=yes
-UsrMethodName=SetOutput
-[ItemState]
-ItemSymbol=SetInput
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-LastSelection=No
-LastUserSel=yes
-UsrMethodName=SetInput
-
-[Events]
-List=Event
-[EndOfInheritedBeanProperties]
-
-[Methods]
-List=Method
-[ItemState]
-ItemSymbol=StartReverseBias
 ReadOnly=Yes
 UserReadOnly=No
 Index=0
 Value=Yes
 LastSelection=Yes
 LastUserSel=yes
-UsrMethodName=StartReverseBias
+UsrMethodName=SetOutput
+[ItemState]
+ItemSymbol=SetInput
+ReadOnly=Yes
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=Yes
+LastUserSel=yes
+UsrMethodName=SetInput
+
+[Events]
+List=Event
+[EndOfInheritedBeanProperties]
+Expanded=Yes
+
+[Methods]
+List=Method
+[ItemState]
+ItemSymbol=GetWidth
+ReadOnly=Yes
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=Yes
+LastUserSel=yes
+UsrMethodName=GetWidth
+[ItemState]
+ItemSymbol=GetHeight
+ReadOnly=Yes
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=Yes
+LastUserSel=yes
+UsrMethodName=GetHeight
+[ItemState]
+ItemSymbol=GetShorterSide
+ReadOnly=Yes
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=Yes
+LastUserSel=yes
+UsrMethodName=GetShorterSide
+[ItemState]
+ItemSymbol=GetLongerSide
+ReadOnly=Yes
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=Yes
+LastUserSel=yes
+UsrMethodName=GetLongerSide
+[ItemState]
+ItemSymbol=GetDisplayOrientation
+ReadOnly=Yes
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=Yes
+LastUserSel=yes
+UsrMethodName=GetDisplayOrientation
+[ItemState]
+ItemSymbol=SetDisplayOrientation
+ReadOnly=Yes
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=no
+UsrMethodName=SetDisplayOrientation
+[ItemState]
+ItemSymbol=StartSafeReverseBias
+ReadOnly=Yes
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=no
+UsrMethodName=StartSafeReverseBias
 [ItemState]
 ItemSymbol=GetCathodeVal
 ReadOnly=Yes
@@ -12502,32 +13304,32 @@ LastSelection=Yes
 LastUserSel=yes
 UsrMethodName=GetCathodeVal
 [ItemState]
-ItemSymbol=StopReverseBias
+ItemSymbol=StopSafeReverseBias
 ReadOnly=Yes
 UserReadOnly=No
 Index=0
 Value=Yes
-LastSelection=Yes
-LastUserSel=yes
-UsrMethodName=StopReverseBias
+LastSelection=No
+LastUserSel=no
+UsrMethodName=StopSafeReverseBias
 [ItemState]
-ItemSymbol=LoadData
+ItemSymbol=UpdateFull
 ReadOnly=Yes
 UserReadOnly=No
 Index=0
 Value=Yes
 LastSelection=Yes
 LastUserSel=yes
-UsrMethodName=LoadData
+UsrMethodName=UpdateFull
 [ItemState]
-ItemSymbol=Refresh
+ItemSymbol=UpdateRegion
 ReadOnly=Yes
 UserReadOnly=No
 Index=0
 Value=Yes
 LastSelection=Yes
 LastUserSel=yes
-UsrMethodName=Refresh
+UsrMethodName=UpdateRegion
 [ItemState]
 ItemSymbol=On
 ReadOnly=Yes
@@ -12564,6 +13366,24 @@ Value=No
 LastSelection=No
 LastUserSel=no
 UsrMethodName=Disable
+[ItemState]
+ItemSymbol=GetLCD
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=GetLCD
+[ItemState]
+ItemSymbol=GiveLCD
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=GiveLCD
 
 [Events]
 List=Event
@@ -12572,10 +13392,10 @@ List=Event
 CompNumb=35
 CompEnabled=Yes
 GenCodeMode=CHECK_n_WRITE
-IconName=Led
+IconName=USER_DEV
 Comment=0
 Template=
-BeanVersion=01.025
+BeanVersion=01.073
 
 [Properties]
 List=Property
@@ -12584,6 +13404,11 @@ ItemSymbol=DeviceName
 ReadOnly=No
 UserReadOnly=No
 Value=LED_Red
+[ItemState]
+ItemSymbol=sdk
+ReadOnly=No
+UserReadOnly=No
+Value=MCUC1
 [ItemState]
 ItemSymbol=LEDonWithInitialization
 ReadOnly=No
@@ -12599,11 +13424,25 @@ Expanded=Yes
 [Childs]
 List=GrupItem
 [ItemState]
+ItemSymbol=AnodeOnPortSide
+ReadOnly=No
+UserReadOnly=No
+Index=1
+Value=No
+[ItemState]
+ItemSymbol=OnOffenabled
+ReadOnly=No
+UserReadOnly=No
+Value=Yes
+Expanded=Yes
+
+[Childs]
+List=GrupItem
+[ItemState]
 ItemSymbol=LEDPin
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=LEDpin8
 RegCompType=LEDpin
 
 [InheritedBeanProperties]
@@ -12853,12 +13692,52 @@ UsrMethodName=GetRawVal
 [Events]
 List=Event
 [EndOfInheritedBeanProperties]
+
+[EndOfChilds]
 [ItemState]
-ItemSymbol=AnodeOnPortSide
+ItemSymbol=PWMenabled
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=PWMinverted
 ReadOnly=No
 UserReadOnly=No
 Index=1
 Value=No
+[ItemState]
+ItemSymbol=PWMpin
+ReadOnly=No
+UserReadOnly=No
+Index=-1
+RegCompType=
+
+[EndOfChilds]
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=ShellEnabled
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Shell
+ReadOnly=No
+UserReadOnly=No
+Value=
+[ItemState]
+ItemSymbol=Utility
+ReadOnly=No
+UserReadOnly=No
+Value=
 
 [EndOfChilds]
 
@@ -12905,6 +13784,42 @@ Value=Yes
 LastSelection=No
 LastUserSel=yes
 UsrMethodName=Put
+[ItemState]
+ItemSymbol=SetRatio16
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=SetRatio16
+[ItemState]
+ItemSymbol=ParseCommand
+ReadOnly=Yes
+UserReadOnly=No
+Index=1
+Value=No
+LastSelection=Yes
+LastUserSel=never
+UsrMethodName=ParseCommand
+[ItemState]
+ItemSymbol=Deinit
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=Deinit
+[ItemState]
+ItemSymbol=Init
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=Init
 
 [Events]
 List=Event
@@ -12913,10 +13828,10 @@ List=Event
 CompNumb=39
 CompEnabled=Yes
 GenCodeMode=CHECK_n_WRITE
-IconName=Led
+IconName=USER_DEV
 Comment=0
 Template=
-BeanVersion=01.025
+BeanVersion=01.073
 
 [Properties]
 List=Property
@@ -12925,6 +13840,11 @@ ItemSymbol=DeviceName
 ReadOnly=No
 UserReadOnly=No
 Value=LED_Green
+[ItemState]
+ItemSymbol=sdk
+ReadOnly=No
+UserReadOnly=No
+Value=MCUC1
 [ItemState]
 ItemSymbol=LEDonWithInitialization
 ReadOnly=No
@@ -12940,16 +13860,30 @@ Expanded=Yes
 [Childs]
 List=GrupItem
 [ItemState]
+ItemSymbol=AnodeOnPortSide
+ReadOnly=No
+UserReadOnly=No
+Index=1
+Value=No
+[ItemState]
+ItemSymbol=OnOffenabled
+ReadOnly=No
+UserReadOnly=No
+Value=Yes
+Expanded=Yes
+
+[Childs]
+List=GrupItem
+[ItemState]
 ItemSymbol=LEDPin
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=LEDpin9
 RegCompType=LEDpin
 
 [InheritedBeanProperties]
 TemplateNameOfInterface=LEDpin
-InhrBeanCompNumb=36
+InhrBeanCompNumb=1973
 InhrBeanGenCodeMode=ALWAYS_WRITE
 List=Property
 [ItemState]
@@ -13194,12 +14128,52 @@ UsrMethodName=GetRawVal
 [Events]
 List=Event
 [EndOfInheritedBeanProperties]
+
+[EndOfChilds]
 [ItemState]
-ItemSymbol=AnodeOnPortSide
+ItemSymbol=PWMenabled
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=PWMinverted
 ReadOnly=No
 UserReadOnly=No
 Index=1
 Value=No
+[ItemState]
+ItemSymbol=PWMpin
+ReadOnly=No
+UserReadOnly=No
+Index=-1
+RegCompType=
+
+[EndOfChilds]
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=ShellEnabled
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Shell
+ReadOnly=No
+UserReadOnly=No
+Value=
+[ItemState]
+ItemSymbol=Utility
+ReadOnly=No
+UserReadOnly=No
+Value=
 
 [EndOfChilds]
 
@@ -13246,6 +14220,42 @@ Value=Yes
 LastSelection=No
 LastUserSel=yes
 UsrMethodName=Put
+[ItemState]
+ItemSymbol=SetRatio16
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=SetRatio16
+[ItemState]
+ItemSymbol=ParseCommand
+ReadOnly=Yes
+UserReadOnly=No
+Index=1
+Value=No
+LastSelection=Yes
+LastUserSel=never
+UsrMethodName=ParseCommand
+[ItemState]
+ItemSymbol=Deinit
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=Deinit
+[ItemState]
+ItemSymbol=Init
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=Init
 
 [Events]
 List=Event
@@ -13257,7 +14267,7 @@ GenCodeMode=CHECK_n_WRITE
 IconName=I2C
 Comment=0
 Template=MPR08x\I2C
-BeanVersion=01.196
+BeanVersion=01.270
 
 [Properties]
 List=Property
@@ -13525,6 +14535,53 @@ ReadOnly=Yes
 UserReadOnly=No
 Value=0
 Base=2
+[ItemState]
+ItemSymbol=SMBusGrp3
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=SecondAddr
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=SecondSlvAddr
+ReadOnly=No
+UserReadOnly=No
+Value=97
+Base=2
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=AlertResponse
+ReadOnly=No
+UserReadOnly=No
+Index=1
+Value=No
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=BaudControlGrp
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=SlaveBaudControl
+ReadOnly=No
+UserReadOnly=No
+Index=1
+Value=No
+
+[EndOfChilds]
 
 [EndOfChilds]
 [ItemState]
@@ -13571,6 +14628,21 @@ UserReadOnly=No
 
 [Childs]
 List=GrupItem
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=HiDriveCondGrp
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=HiDrive
+ReadOnly=No
+UserReadOnly=No
+Index=1
+Value=No
 
 [EndOfChilds]
 [ItemState]
@@ -13794,7 +14866,7 @@ Value=
 
 [EndOfChilds]
 [ItemState]
-ItemSymbol=56800Grp1
+ItemSymbol=GlitchCondGrp
 ReadOnly=No
 UserReadOnly=No
 
@@ -13806,6 +14878,88 @@ ReadOnly=No
 UserReadOnly=No
 Value=0
 Base=2
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=SMBusGrp
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=LoTimeout
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=TimeoutDevice
+ReadOnly=No
+UserReadOnly=No
+Value=
+[ItemState]
+ItemSymbol=TimeoutVal
+ReadOnly=No
+UserReadOnly=No
+Value=
+RuntimeSetting=0
+ReqDevPrescHigh=-1
+ReqDevPrescLow=-1
+ReqDevPrescSlow=-1
+ReqExtCompPrescHigh=-1
+ReqExtCompPrescLow=-1
+ReqExtCompPrescSlow=-1
+ReqSrcClkPrescHigh=-1
+ReqSrcClkPrescLow=-1
+ReqSrcClkPrescSlow=-1
+InitValue=
+Precision=5
+PrecInProc=Yes
+LowLimit=
+HighLimit=
+List=0
+UnitText=
+MinCounterTicks=0
+[ItemState]
+ItemSymbol=SDALowTimeoutGrp
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=SDALowTimeout
+ReadOnly=No
+UserReadOnly=No
+Index=1
+Value=No
+[ItemState]
+ItemSymbol=SDALowtimeoutfreq
+Value=STOP
+
+[EndOfChilds]
+
+[EndOfChilds]
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=GlitchFLTGrp
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=GlitchFilter
+ReadOnly=No
+UserReadOnly=No
+TypeSpecNameState=typeChGlitchFilter
+Index=0
+EnumSymbVal=0
 
 [EndOfChilds]
 [ItemState]
@@ -13868,6 +15022,21 @@ UserReadOnly=No
 List=GrupItem
 [ItemState]
 ItemSymbol=StopInWait
+ReadOnly=No
+UserReadOnly=No
+Index=1
+Value=No
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=WakeupCondGrp
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Wakeup
 ReadOnly=No
 UserReadOnly=No
 Index=1
@@ -14068,15 +15237,6 @@ LastSelection=Yes
 LastUserSel=never
 UsrMethodName=GetCharsInTxBuf
 [ItemState]
-ItemSymbol=SelectSlave
-ReadOnly=Yes
-UserReadOnly=No
-Index=0
-Value=Yes
-LastSelection=Yes
-LastUserSel=yes
-UsrMethodName=SelectSlave
-[ItemState]
 ItemSymbol=GetCharsInRxBuf
 ReadOnly=Yes
 UserReadOnly=No
@@ -14085,6 +15245,15 @@ Value=No
 LastSelection=Yes
 LastUserSel=never
 UsrMethodName=GetCharsInRxBuf
+[ItemState]
+ItemSymbol=SelectSlave
+ReadOnly=Yes
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=Yes
+LastUserSel=yes
+UsrMethodName=SelectSlave
 [ItemState]
 ItemSymbol=CPUCond
 ReadOnly=No
@@ -14121,6 +15290,24 @@ Value=No
 LastSelection=No
 LastUserSel=no
 UsrMethodName=GetSelected
+[ItemState]
+ItemSymbol=CPUCond0
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=GetSelected10
+ReadOnly=No
+UserReadOnly=No
+Index=1
+Value=No
+LastSelection=No
+LastUserSel=no
+UsrMethodName=GetSelected10
+
+[EndOfChilds]
 [ItemState]
 ItemSymbol=SetMode
 ReadOnly=Yes
@@ -14773,6 +15960,116 @@ LastSelection=No
 LastUserSel=never
 
 [EndOfChilds]
+[ItemState]
+ItemSymbol=CPUCond1
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=OnSCLlowTimeout
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Name
+ReadOnly=No
+UserReadOnly=No
+Value=I2C1_OnSCLlowTimeout
+[ItemState]
+ItemSymbol=Priority
+ReadOnly=No
+UserReadOnly=No
+Value=same as interrupt
+
+[EndOfChilds]
+LastSelection=No
+LastUserSel=no
+[ItemState]
+ItemSymbol=CPUCond2
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=OnSDAlowTimeout
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Name
+ReadOnly=No
+UserReadOnly=No
+Value=I2C1_OnSDAlowTimeout
+[ItemState]
+ItemSymbol=Priority
+ReadOnly=No
+UserReadOnly=No
+Value=same as interrupt
+
+[EndOfChilds]
+LastSelection=No
+LastUserSel=no
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=OnSecondAddr
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Name
+ReadOnly=No
+UserReadOnly=No
+Value=I2C1_OnSecondAddr
+[ItemState]
+ItemSymbol=Priority
+ReadOnly=No
+UserReadOnly=No
+Value=same as interrupt
+
+[EndOfChilds]
+LastSelection=No
+LastUserSel=no
+[ItemState]
+ItemSymbol=OnAlertResponse
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Name
+ReadOnly=No
+UserReadOnly=No
+Value=I2C1_OnAlertResponse
+[ItemState]
+ItemSymbol=Priority
+ReadOnly=No
+UserReadOnly=No
+Value=same as interrupt
+
+[EndOfChilds]
+LastSelection=No
+LastUserSel=no
+
+[EndOfChilds]
 
 [TimerInt:TI1]
 CompNumb=374
@@ -14781,7 +16078,7 @@ GenCodeMode=CHECK_n_WRITE
 IconName=TMRCNTR
 Comment=0
 Template=
-BeanVersion=02.154
+BeanVersion=02.158
 
 [Properties]
 List=Property
@@ -14828,46 +16125,6 @@ Index=0
 Value=Yes
 
 [EndOfChilds]
-[ItemState]
-ItemSymbol=COP8_grp
-ReadOnly=No
-UserReadOnly=No
-
-[Childs]
-List=GrupItem
-[ItemState]
-ItemSymbol=ScndReloadGrp
-Value=Yes
-Expanded=Yes
-
-[Childs]
-List=GrupItem
-[ItemState]
-ItemSymbol=ScndTmr
-Value=
-[ItemState]
-ItemSymbol=ScndIntr
-Value=
-
-[EndOfChilds]
-
-[EndOfChilds]
-
-[EndOfChilds]
-[ItemState]
-ItemSymbol=COP8grp
-ReadOnly=No
-UserReadOnly=No
-
-[Childs]
-List=GrupItem
-[ItemState]
-ItemSymbol=COP8TimerSpeedBase
-ReadOnly=No
-UserReadOnly=No
-TypeSpecNameState=typeCOP8_TimerPrescalerDefault
-Index=0
-EnumSymbVal=0
 
 [EndOfChilds]
 [ItemState]
@@ -14976,7 +16233,7 @@ ReqSrcClkPrescSlow=-1
 InitValue=1 ms
 Precision=10
 PrecInProc=Yes
-LowLimit=500µs
+LowLimit=500us
 HighLimit=10ms
 List=0
 UnitText=ms
@@ -15275,10 +16532,10 @@ LastUserSel=always
 CompNumb=552
 CompEnabled=Yes
 GenCodeMode=CHECK_n_WRITE
-IconName=MPR083
+IconName=USER_DEV
 Comment=0
 Template=
-BeanVersion=01.203
+BeanVersion=01.205
 
 [Properties]
 List=Property
@@ -15306,7 +16563,6 @@ ItemSymbol=ATTNPin
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=Attn1
 RegCompType=Attn
 
 [InheritedBeanProperties]
@@ -15597,7 +16853,6 @@ ItemSymbol=IRQ
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=Irq1
 RegCompType=IRQ
 
 [InheritedBeanProperties]
@@ -16312,7 +17567,7 @@ GenCodeMode=CHECK_n_WRITE
 IconName=AD
 Comment=0
 Template=
-BeanVersion=01.452
+BeanVersion=01.587
 
 [Properties]
 List=Property
@@ -16426,6 +17681,21 @@ ReadOnly=No
 UserReadOnly=No
 Value=
 [ItemState]
+ItemSymbol=GainScanControl0
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Amplifier_0
+ReadOnly=No
+UserReadOnly=No
+Index=0
+EnumSymbVal=0
+
+[EndOfChilds]
+[ItemState]
 ItemSymbol=DSP56xGrp50
 ReadOnly=No
 UserReadOnly=No
@@ -16448,7 +17718,24 @@ UserReadOnly=No
 Value=PTB7_ADP7
 [ItemState]
 ItemSymbol=AD2Signal0
+ReadOnly=No
+UserReadOnly=No
 Value=
+[ItemState]
+ItemSymbol=GainScanControl00
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Amplifier2_0
+ReadOnly=No
+UserReadOnly=No
+Index=0
+EnumSymbVal=0
+
+[EndOfChilds]
 
 [EndOfChilds]
 
@@ -16477,6 +17764,21 @@ ReadOnly=No
 UserReadOnly=No
 Value=
 [ItemState]
+ItemSymbol=GainScanControl1
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Amplifier_1
+ReadOnly=No
+UserReadOnly=No
+Index=0
+EnumSymbVal=0
+
+[EndOfChilds]
+[ItemState]
 ItemSymbol=DSP56xGrp51
 ReadOnly=No
 UserReadOnly=No
@@ -16499,7 +17801,24 @@ UserReadOnly=No
 Value=PTB7_ADP7
 [ItemState]
 ItemSymbol=AD2Signal1
+ReadOnly=No
+UserReadOnly=No
 Value=
+[ItemState]
+ItemSymbol=GainScanControl01
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Amplifier2_1
+ReadOnly=No
+UserReadOnly=No
+Index=0
+EnumSymbVal=0
+
+[EndOfChilds]
 
 [EndOfChilds]
 
@@ -16528,6 +17847,21 @@ ReadOnly=No
 UserReadOnly=No
 Value=
 [ItemState]
+ItemSymbol=GainScanControl2
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Amplifier_2
+ReadOnly=No
+UserReadOnly=No
+Index=0
+EnumSymbVal=0
+
+[EndOfChilds]
+[ItemState]
 ItemSymbol=DSP56xGrp52
 ReadOnly=No
 UserReadOnly=No
@@ -16550,13 +17884,31 @@ UserReadOnly=No
 Value=PTB7_ADP7
 [ItemState]
 ItemSymbol=AD2Signal2
+ReadOnly=No
+UserReadOnly=No
 Value=
+[ItemState]
+ItemSymbol=GainScanControl02
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Amplifier2_2
+ReadOnly=No
+UserReadOnly=No
+Index=0
+EnumSymbVal=0
 
 [EndOfChilds]
 
 [EndOfChilds]
 
 [EndOfChilds]
+
+[EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=AltSourceCPUgrp
 ReadOnly=No
@@ -16627,6 +17979,7 @@ UserReadOnly=No
 Value=
 
 [EndOfChilds]
+Expanded=Yes
 [ItemState]
 ItemSymbol=ADsamples
 ReadOnly=No
@@ -16649,6 +18002,13 @@ UserReadOnly=No
 Value=0
 Base=2
 Index=-1
+[ItemState]
+ItemSymbol=SampleFeatures0
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
 [ItemState]
 ItemSymbol=HighLimit0
 ReadOnly=No
@@ -16675,6 +18035,9 @@ Index=0
 EnumSymbVal=0
 
 [EndOfChilds]
+
+[EndOfChilds]
+Expanded=Yes
 
 [EndOfChilds]
 
@@ -16721,7 +18084,7 @@ ReqExtCompPrescSlow=-1
 ReqSrcClkPrescHigh=-1
 ReqSrcClkPrescLow=-1
 ReqSrcClkPrescSlow=-1
-InitValue=3.833 µs
+InitValue=3.833 us
 Precision=5
 PrecInProc=Yes
 LowLimit=
@@ -16729,6 +18092,22 @@ HighLimit=
 List=0
 UnitText=us
 MinCounterTicks=0
+[ItemState]
+ItemSymbol=SampleTimeFeature
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=SampleTime
+ReadOnly=No
+UserReadOnly=No
+TypeSpecNameState=typeSample
+Index=3
+EnumSymbVal=18
+
+[EndOfChilds]
 [ItemState]
 ItemSymbol=HC08Grp
 ReadOnly=No
@@ -16783,26 +18162,42 @@ Value=No
 
 [EndOfChilds]
 [ItemState]
-ItemSymbol=SampleTimeHC08
-ReadOnly=No
-UserReadOnly=No
-Index=0
-EnumSymbVal=0
-
-[EndOfChilds]
-[ItemState]
-ItemSymbol=Symbol0
+ItemSymbol=HSCFeatureGroup
 ReadOnly=No
 UserReadOnly=No
 
 [Childs]
 List=GrupItem
 [ItemState]
-ItemSymbol=AutoCompare
+ItemSymbol=HSCmode
 ReadOnly=No
 UserReadOnly=No
 Index=1
 Value=No
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=HasAsynchroClockOutputEnGroup
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=ADACKEN
+ReadOnly=No
+UserReadOnly=No
+Index=1
+Value=No
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=SampleTimeHC08
+ReadOnly=No
+UserReadOnly=No
+TypeSpecNameState=typeSampleHC08
+Index=0
+EnumSymbVal=0
 
 [EndOfChilds]
 [ItemState]
@@ -16827,19 +18222,30 @@ Index=1
 Value=No
 
 [EndOfChilds]
+
+[EndOfChilds]
 [ItemState]
-ItemSymbol=SampleTime
+ItemSymbol=Symbol3
 ReadOnly=No
 UserReadOnly=No
-TypeSpecNameState=typeSample
-Index=3
-EnumSymbVal=18
+
+[Childs]
+List=GrupItem
 [ItemState]
 ItemSymbol=ResMode
 ReadOnly=No
 UserReadOnly=No
 Index=0
 EnumSymbVal=0
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=Symbol2
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
 [ItemState]
 ItemSymbol=Autoscan
 ReadOnly=No
@@ -16921,6 +18327,21 @@ EnumSymbVal=0
 
 [EndOfChilds]
 [ItemState]
+ItemSymbol=56F800xGrp1
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=ExportedClock
+ReadOnly=No
+UserReadOnly=No
+Index=1
+Value=No
+
+[EndOfChilds]
+[ItemState]
 ItemSymbol=HCS08_DSP56xGrp6
 ReadOnly=No
 UserReadOnly=No
@@ -16950,6 +18371,41 @@ Expanded=No
 
 [Childs]
 List=GrupItem
+[ItemState]
+ItemSymbol=InternalSignalGrp
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=IntTriggerPin
+ReadOnly=No
+UserReadOnly=No
+Value=
+[ItemState]
+ItemSymbol=IntTriggerPinSignal
+ReadOnly=No
+UserReadOnly=No
+Value=
+[ItemState]
+ItemSymbol=TriggerSrcGrp
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=TriggerSrc2
+ReadOnly=No
+UserReadOnly=No
+Value=
+
+[EndOfChilds]
+
+[EndOfChilds]
 [ItemState]
 ItemSymbol=HCS12XGrp1
 ReadOnly=No
@@ -17003,6 +18459,21 @@ UserReadOnly=No
 Value=
 
 [EndOfChilds]
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=MCFgrp
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=TimerPeriod
+ReadOnly=No
+UserReadOnly=No
+Index=0
+EnumSymbVal=7
 
 [EndOfChilds]
 
@@ -17161,6 +18632,23 @@ Value=
 [EndOfChilds]
 
 [EndOfChilds]
+Expanded=Yes
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=56F800xGrp
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=VoltRef2
+ReadOnly=No
+UserReadOnly=No
+TypeSpecNameState=typeVoltRef
+Index=1
+EnumSymbVal=1
 
 [EndOfChilds]
 [ItemState]
@@ -17189,6 +18677,21 @@ ReadOnly=Yes
 UserReadOnly=No
 Index=0
 Value=Yes
+[ItemState]
+ItemSymbol=SelfCalibrationFeatureGroupP
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=InitCalibrate
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+
+[EndOfChilds]
 
 [EndOfChilds]
 [ItemState]
@@ -17587,6 +19090,24 @@ UsrMethodName=GetZeroCrossStatus
 
 [EndOfChilds]
 [ItemState]
+ItemSymbol=OffsetFeatureGroup
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=SetOffset
+ReadOnly=No
+UserReadOnly=No
+Index=1
+Value=No
+LastSelection=No
+LastUserSel=no
+UsrMethodName=SetOffset
+
+[EndOfChilds]
+[ItemState]
 ItemSymbol=DSP56xGrp9
 ReadOnly=No
 UserReadOnly=No
@@ -17602,6 +19123,33 @@ Value=No
 LastSelection=No
 LastUserSel=no
 UsrMethodName=SetCalibration
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=SelfCalibrationFeatureGroupM
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Calibrate
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=Calibrate
+[ItemState]
+ItemSymbol=GetCalibrationStatus
+ReadOnly=No
+UserReadOnly=No
+Index=1
+Value=No
+LastSelection=No
+LastUserSel=no
+UsrMethodName=GetCalibrationStatus
 
 [EndOfChilds]
 [ItemState]
@@ -17632,7 +19180,7 @@ UsrMethodName=DisableAsynchroClock
 
 [EndOfChilds]
 [ItemState]
-ItemSymbol=HCS08Cond
+ItemSymbol=CompareFeatureGroup0
 ReadOnly=No
 UserReadOnly=No
 
@@ -17640,21 +19188,39 @@ UserReadOnly=No
 List=GrupItem
 [ItemState]
 ItemSymbol=EnableAutoCompare
-ReadOnly=Yes
+ReadOnly=No
 UserReadOnly=No
 Index=1
 Value=No
 LastSelection=Yes
-LastUserSel=never
+LastUserSel=yes
 UsrMethodName=EnableAutoCompare
 [ItemState]
+ItemSymbol=RangeCompareGroup
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=EnableRangeAutoCompare
+ReadOnly=No
+UserReadOnly=No
+Index=1
+Value=No
+LastSelection=No
+LastUserSel=no
+UsrMethodName=EnableRangeAutoCompare
+
+[EndOfChilds]
+[ItemState]
 ItemSymbol=DisableAutoCompare
-ReadOnly=Yes
+ReadOnly=No
 UserReadOnly=No
 Index=1
 Value=No
 LastSelection=Yes
-LastUserSel=never
+LastUserSel=yes
 UsrMethodName=DisableAutoCompare
 
 [EndOfChilds]
@@ -17853,15 +19419,47 @@ LastSelection=No
 LastUserSel=no
 
 [EndOfChilds]
+[ItemState]
+ItemSymbol=SelfCalibrationFeatureGroupE
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=OnCalibrationEnd
+ReadOnly=No
+UserReadOnly=No
+Value=Yes
+Expanded=Yes
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Name
+ReadOnly=No
+UserReadOnly=No
+Value=AD1_OnCalibrationEnd
+[ItemState]
+ItemSymbol=Priority
+ReadOnly=No
+UserReadOnly=No
+Value=interrupts disabled
+
+[EndOfChilds]
+LastSelection=No
+LastUserSel=yes
+
+[EndOfChilds]
 
 [uCOS_II:uCOS1]
 CompNumb=678
 CompEnabled=Yes
 GenCodeMode=CHECK_n_WRITE
-IconName=uCOS_II
+IconName=USER_DEV
 Comment=0
 Template=
-BeanVersion=01.127
+BeanVersion=01.189
 
 [Properties]
 List=Property
@@ -18034,12 +19632,6 @@ UserReadOnly=No
 Index=0
 Value=Yes
 [ItemState]
-ItemSymbol=OS_TASK_DEL_EN
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-[ItemState]
 ItemSymbol=OS_TASK_NAME_SIZE
 ReadOnly=No
 UserReadOnly=No
@@ -18071,12 +19663,6 @@ Index=1
 Value=No
 [ItemState]
 ItemSymbol=OS_TASK_SUSPEND_EN
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-[ItemState]
-ItemSymbol=OS_TASK_SW_HOOK_EN
 ReadOnly=No
 UserReadOnly=No
 Index=0
@@ -18413,7 +19999,6 @@ ItemSymbol=SWI
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=SWI1
 RegCompType=SWI
 
 [InheritedBeanProperties]
@@ -18515,12 +20100,165 @@ Base=2
 [Methods]
 List=Method
 [ItemState]
+ItemSymbol=OSInit
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=OSInit
+[ItemState]
 ItemSymbol=OSTimerInit
 Index=0
 Value=Yes
 LastSelection=No
 LastUserSel=always
 UsrMethodName=OSTimerInit
+[ItemState]
+ItemSymbol=OSTaskCreate
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=OSTaskCreate
+[ItemState]
+ItemSymbol=OSTaskDel
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=OSTaskDel
+[ItemState]
+ItemSymbol=OSStart
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=OSStart
+[ItemState]
+ItemSymbol=OSTaskSuspend
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=OSTaskSuspend
+[ItemState]
+ItemSymbol=OSTaskResume
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=OSTaskResume
+[ItemState]
+ItemSymbol=OSTimeDlyHMSM
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=OSTimeDlyHMSM
+[ItemState]
+ItemSymbol=OSFlagCreate
+ReadOnly=Yes
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=Yes
+LastUserSel=always
+UsrMethodName=OSFlagCreate
+[ItemState]
+ItemSymbol=OSFlagQuery
+ReadOnly=Yes
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=Yes
+LastUserSel=always
+UsrMethodName=OSFlagQuery
+[ItemState]
+ItemSymbol=OSFlagPost
+ReadOnly=Yes
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=Yes
+LastUserSel=always
+UsrMethodName=OSFlagPost
+[ItemState]
+ItemSymbol=OSMemCreate
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=OSMemCreate
+[ItemState]
+ItemSymbol=OSMemGet
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=OSMemGet
+[ItemState]
+ItemSymbol=OSMemPut
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=OSMemPut
+[ItemState]
+ItemSymbol=OSQCreate
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=OSQCreate
+[ItemState]
+ItemSymbol=OSQPost
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=OSQPost
+[ItemState]
+ItemSymbol=OSQPostFront
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=OSQPostFront
+[ItemState]
+ItemSymbol=OSQPend
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=OSQPend
 
 [Events]
 List=Event
@@ -18567,6 +20305,8 @@ LastSelection=No
 LastUserSel=no
 [ItemState]
 ItemSymbol=OSTaskStatHook
+ReadOnly=Yes
+UserReadOnly=No
 Value=Yes
 Expanded=Yes
 
@@ -18579,10 +20319,12 @@ UserReadOnly=No
 Value=uCOS1_OSTaskStatHook
 
 [EndOfChilds]
-LastSelection=No
+LastSelection=Yes
 LastUserSel=always
 [ItemState]
 ItemSymbol=OSTaskIdleHook
+ReadOnly=Yes
+UserReadOnly=No
 Value=Yes
 Expanded=Yes
 
@@ -18595,10 +20337,12 @@ UserReadOnly=No
 Value=uCOS1_OSTaskIdleHook
 
 [EndOfChilds]
-LastSelection=No
+LastSelection=Yes
 LastUserSel=always
 [ItemState]
 ItemSymbol=OSTCBInitHook
+ReadOnly=Yes
+UserReadOnly=No
 Value=Yes
 Expanded=Yes
 
@@ -18611,10 +20355,12 @@ UserReadOnly=No
 Value=uCOS1_OSTCBInitHook
 
 [EndOfChilds]
-LastSelection=No
+LastSelection=Yes
 LastUserSel=always
 [ItemState]
 ItemSymbol=OSTaskDelHook
+ReadOnly=Yes
+UserReadOnly=No
 Value=Yes
 Expanded=Yes
 
@@ -18627,10 +20373,12 @@ UserReadOnly=No
 Value=uCOS1_OSTaskDelHook
 
 [EndOfChilds]
-LastSelection=No
+LastSelection=Yes
 LastUserSel=always
 [ItemState]
 ItemSymbol=OSTaskCreateHook
+ReadOnly=Yes
+UserReadOnly=No
 Value=Yes
 Expanded=Yes
 
@@ -18643,10 +20391,12 @@ UserReadOnly=No
 Value=uCOS1_OSTaskCreateHook
 
 [EndOfChilds]
-LastSelection=No
+LastSelection=Yes
 LastUserSel=always
 [ItemState]
 ItemSymbol=OSInitHookBegin
+ReadOnly=Yes
+UserReadOnly=No
 Value=Yes
 Expanded=Yes
 
@@ -18659,10 +20409,12 @@ UserReadOnly=No
 Value=uCOS1_OSInitHookBegin
 
 [EndOfChilds]
-LastSelection=No
+LastSelection=Yes
 LastUserSel=always
 [ItemState]
 ItemSymbol=OSInitHookEnd
+ReadOnly=Yes
+UserReadOnly=No
 Value=Yes
 Expanded=Yes
 
@@ -18675,7 +20427,7 @@ UserReadOnly=No
 Value=uCOS1_OSInitHookEnd
 
 [EndOfChilds]
-LastSelection=No
+LastSelection=Yes
 LastUserSel=always
 
 [TimerInt:TI2]
@@ -18685,7 +20437,7 @@ GenCodeMode=CHECK_n_WRITE
 IconName=TMRCNTR
 Comment=0
 Template=uCOS_II\TimerInt
-BeanVersion=02.154
+BeanVersion=02.158
 
 [Properties]
 List=Property
@@ -18732,46 +20484,6 @@ Index=0
 Value=Yes
 
 [EndOfChilds]
-[ItemState]
-ItemSymbol=COP8_grp
-ReadOnly=No
-UserReadOnly=No
-
-[Childs]
-List=GrupItem
-[ItemState]
-ItemSymbol=ScndReloadGrp
-Value=Yes
-Expanded=Yes
-
-[Childs]
-List=GrupItem
-[ItemState]
-ItemSymbol=ScndTmr
-Value=
-[ItemState]
-ItemSymbol=ScndIntr
-Value=
-
-[EndOfChilds]
-
-[EndOfChilds]
-
-[EndOfChilds]
-[ItemState]
-ItemSymbol=COP8grp
-ReadOnly=No
-UserReadOnly=No
-
-[Childs]
-List=GrupItem
-[ItemState]
-ItemSymbol=COP8TimerSpeedBase
-ReadOnly=No
-UserReadOnly=No
-TypeSpecNameState=typeCOP8_TimerPrescalerDefault
-Index=0
-EnumSymbVal=0
 
 [EndOfChilds]
 [ItemState]
@@ -19178,10 +20890,10 @@ LastUserSel=always
 CompNumb=766
 CompEnabled=Yes
 GenCodeMode=CHECK_n_WRITE
-IconName=wait
+IconName=USER_DEV
 Comment=0
 Template=
-BeanVersion=01.035
+BeanVersion=01.071
 
 [Properties]
 List=Property
@@ -19190,6 +20902,11 @@ ItemSymbol=DeviceName
 ReadOnly=No
 UserReadOnly=No
 Value=WAIT1
+[ItemState]
+ItemSymbol=sdk
+ReadOnly=No
+UserReadOnly=No
+Value=MCUC1
 [ItemState]
 ItemSymbol=ManualClockValues
 ReadOnly=No
@@ -19226,6 +20943,65 @@ ItemSymbol=Delay100usFunction
 ReadOnly=No
 UserReadOnly=No
 Value=Cpu_Delay100US
+[ItemState]
+ItemSymbol=RTOSgroup
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=RTOS
+ReadOnly=No
+UserReadOnly=No
+Value=
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=WatchdogEnabled
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=nonLDDWatchDogEnabled
+ReadOnly=Yes
+UserReadOnly=No
+Value=Yes
+Expanded=Yes
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Watchdog
+ReadOnly=No
+UserReadOnly=No
+Value=
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=LDDWatchDogEnabled
+ReadOnly=Yes
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=WatchdogLDD
+ReadOnly=No
+UserReadOnly=No
+Value=
+
+[EndOfChilds]
+
+[EndOfChilds]
 
 [Methods]
 List=Method
@@ -19250,6 +21026,13 @@ Value=Yes
 LastSelection=No
 LastUserSel=always
 UsrMethodName=WaitCycles
+[ItemState]
+ItemSymbol=WaitLongCycles
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=always
+UsrMethodName=WaitLongCycles
 [ItemState]
 ItemSymbol=Waitms
 ReadOnly=Yes
@@ -19277,6 +21060,15 @@ Value=Yes
 LastSelection=Yes
 LastUserSel=yes
 UsrMethodName=Waitns
+[ItemState]
+ItemSymbol=WaitOSms
+ReadOnly=Yes
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=Yes
+LastUserSel=yes
+UsrMethodName=WaitOSms
 
 [Events]
 List=Event
@@ -19285,10 +21077,10 @@ List=Event
 CompNumb=828
 CompEnabled=Yes
 GenCodeMode=CHECK_n_WRITE
-IconName=MMA7260Q
+IconName=USER_DEV
 Comment=0
 Template=
-BeanVersion=01.072
+BeanVersion=01.111
 
 [Properties]
 List=Property
@@ -19319,7 +21111,6 @@ ItemSymbol=Gselect1pin
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=G11
 RegCompType=Accel_Gselect
 
 [InheritedBeanProperties]
@@ -19574,7 +21365,6 @@ ItemSymbol=Gselect2pin
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=G21
 RegCompType=Accel_Gselect
 
 [InheritedBeanProperties]
@@ -19840,7 +21630,6 @@ ItemSymbol=SleepPin
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=Sleep1
 RegCompType=Accel_Sleep
 
 [InheritedBeanProperties]
@@ -20140,6 +21929,52 @@ Base=2
 
 [EndOfChilds]
 [ItemState]
+ItemSymbol=CalibrationGroup
+ReadOnly=No
+UserReadOnly=No
+Expanded=Yes
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=xCalibrationOffset
+ReadOnly=No
+UserReadOnly=No
+Value=0
+Base=2
+[ItemState]
+ItemSymbol=x1gValue
+ReadOnly=No
+UserReadOnly=No
+Value=6000
+Base=2
+[ItemState]
+ItemSymbol=yCalibrationOffset
+ReadOnly=No
+UserReadOnly=No
+Value=0
+Base=2
+[ItemState]
+ItemSymbol=y1gValue
+ReadOnly=No
+UserReadOnly=No
+Value=6000
+Base=2
+[ItemState]
+ItemSymbol=zCalibrationOffset
+ReadOnly=No
+UserReadOnly=No
+Value=0
+Base=2
+[ItemState]
+ItemSymbol=z1gValue
+ReadOnly=No
+UserReadOnly=No
+Value=6000
+Base=2
+
+[EndOfChilds]
+[ItemState]
 ItemSymbol=SystemGroup
 ReadOnly=No
 UserReadOnly=No
@@ -20154,36 +21989,30 @@ UserReadOnly=No
 Value=WAIT1
 
 [EndOfChilds]
+[ItemState]
+ItemSymbol=ShellEnabled
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Utility
+ReadOnly=No
+UserReadOnly=No
+Value=
+[ItemState]
+ItemSymbol=Shell
+ReadOnly=No
+UserReadOnly=No
+Value=
+
+[EndOfChilds]
 
 [Methods]
 List=Method
-[ItemState]
-ItemSymbol=MeasureX
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-LastSelection=No
-LastUserSel=yes
-UsrMethodName=MeasureX
-[ItemState]
-ItemSymbol=MeasureY
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-LastSelection=No
-LastUserSel=yes
-UsrMethodName=MeasureY
-[ItemState]
-ItemSymbol=MeasureZ
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-LastSelection=No
-LastUserSel=yes
-UsrMethodName=MeasureZ
 [ItemState]
 ItemSymbol=GetX
 ReadOnly=No
@@ -20239,14 +22068,32 @@ LastSelection=No
 LastUserSel=always
 UsrMethodName=SensorOff
 [ItemState]
-ItemSymbol=Calibrate
+ItemSymbol=CalibrateX1g
 ReadOnly=No
 UserReadOnly=No
-Index=1
-Value=No
+Index=0
+Value=Yes
 LastSelection=No
-LastUserSel=no
-UsrMethodName=Calibrate
+LastUserSel=yes
+UsrMethodName=CalibrateX1g
+[ItemState]
+ItemSymbol=CalibrateY1g
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=CalibrateY1g
+[ItemState]
+ItemSymbol=CalibrateZ1g
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=CalibrateZ1g
 [ItemState]
 ItemSymbol=GetXmg
 ReadOnly=No
@@ -20274,18 +22121,158 @@ Value=Yes
 LastSelection=No
 LastUserSel=yes
 UsrMethodName=GetZmg
+[ItemState]
+ItemSymbol=MeasureGetRawX
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=MeasureGetRawX
+[ItemState]
+ItemSymbol=MeasureGetRawY
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=MeasureGetRawY
+[ItemState]
+ItemSymbol=MeasureGetRawZ
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=MeasureGetRawZ
+[ItemState]
+ItemSymbol=GetXOffset
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=GetXOffset
+[ItemState]
+ItemSymbol=GetYOffset
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=GetYOffset
+[ItemState]
+ItemSymbol=GetZOffset
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=GetZOffset
+[ItemState]
+ItemSymbol=GetX1gValue
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=GetX1gValue
+[ItemState]
+ItemSymbol=GetY1gValue
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=GetY1gValue
+[ItemState]
+ItemSymbol=GetZ1gValue
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=GetZ1gValue
+[ItemState]
+ItemSymbol=Deinit
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=Deinit
+[ItemState]
+ItemSymbol=ParseCommand
+ReadOnly=Yes
+UserReadOnly=No
+Index=1
+Value=No
+LastSelection=Yes
+LastUserSel=never
+UsrMethodName=ParseCommand
 
 [Events]
 List=Event
+[ItemState]
+ItemSymbol=EventModule
+ReadOnly=No
+UserReadOnly=No
+Value=Events
+[ItemState]
+ItemSymbol=OnADGet
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Name
+ReadOnly=No
+UserReadOnly=No
+Value=ACCEL1_OnADGet
+
+[EndOfChilds]
+LastSelection=No
+LastUserSel=no
+[ItemState]
+ItemSymbol=OnADGive
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Name
+ReadOnly=No
+UserReadOnly=No
+Value=ACCEL1_OnADGive
+
+[EndOfChilds]
+LastSelection=No
+LastUserSel=no
 
 [GDisplay:GDisp1]
 CompNumb=914
 CompEnabled=Yes
 GenCodeMode=CHECK_n_WRITE
-IconName=GDisplay
+IconName=USER_DEV
 Comment=0
 Template=
-BeanVersion=01.089
+BeanVersion=01.192
 
 [Properties]
 List=Property
@@ -20301,13 +22288,22 @@ UserReadOnly=No
 Index=1
 Value=No
 [ItemState]
-ItemSymbol=Rotate90
+ItemSymbol=UseMemBuffer
+Value=Yes
+Expanded=Yes
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Orientation
 ReadOnly=No
 UserReadOnly=No
-Index=1
-Value=No
+Index=0
+EnumSymbVal=Landscape
+
+[EndOfChilds]
 [ItemState]
-ItemSymbol=Rotate180
+ItemSymbol=ClearScreenOnInit
 ReadOnly=No
 UserReadOnly=No
 Index=1
@@ -20327,27 +22323,41 @@ UserReadOnly=No
 Value=LEDM1
 
 [EndOfChilds]
+[ItemState]
+ItemSymbol=WatchdogEnabled
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Watchdog
+ReadOnly=No
+UserReadOnly=No
+Value=
+
+[EndOfChilds]
+[ItemState]
+ItemSymbol=RTOSgroup
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=RTOS
+ReadOnly=No
+UserReadOnly=No
+Value=
+
+[EndOfChilds]
 
 [Methods]
 List=Method
-[ItemState]
-ItemSymbol=GetWidth
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-LastSelection=No
-LastUserSel=yes
-UsrMethodName=GetWidth
-[ItemState]
-ItemSymbol=GetHeight
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-LastSelection=No
-LastUserSel=yes
-UsrMethodName=GetHeight
 [ItemState]
 ItemSymbol=GetPixel
 ReadOnly=No
@@ -20357,15 +22367,6 @@ Value=Yes
 LastSelection=No
 LastUserSel=yes
 UsrMethodName=GetPixel
-[ItemState]
-ItemSymbol=Clear
-ReadOnly=No
-UserReadOnly=No
-Index=0
-Value=Yes
-LastSelection=No
-LastUserSel=yes
-UsrMethodName=Clear
 [ItemState]
 ItemSymbol=PutPixel
 ReadOnly=No
@@ -20385,6 +22386,15 @@ LastSelection=No
 LastUserSel=yes
 UsrMethodName=SetPixel
 [ItemState]
+ItemSymbol=NegPixel
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=NegPixel
+[ItemState]
 ItemSymbol=ClrPixel
 ReadOnly=No
 UserReadOnly=No
@@ -20394,14 +22404,14 @@ LastSelection=No
 LastUserSel=yes
 UsrMethodName=ClrPixel
 [ItemState]
-ItemSymbol=NegPixel
+ItemSymbol=Clear
 ReadOnly=No
 UserReadOnly=No
 Index=0
 Value=Yes
 LastSelection=No
 LastUserSel=yes
-UsrMethodName=NegPixel
+UsrMethodName=Clear
 [ItemState]
 ItemSymbol=DrawBox
 ReadOnly=No
@@ -20439,6 +22449,33 @@ LastSelection=No
 LastUserSel=yes
 UsrMethodName=DrawVLine
 [ItemState]
+ItemSymbol=DrawLine
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=DrawLine
+[ItemState]
+ItemSymbol=DrawCircle
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=DrawCircle
+[ItemState]
+ItemSymbol=DrawFilledCircle
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=DrawFilledCircle
+[ItemState]
 ItemSymbol=DrawBarChart
 ReadOnly=No
 UserReadOnly=No
@@ -20457,32 +22494,140 @@ LastSelection=No
 LastUserSel=yes
 UsrMethodName=DrawMonoBitmap
 [ItemState]
-ItemSymbol=TransferData
+ItemSymbol=DrawColorBitmap
 ReadOnly=No
 UserReadOnly=No
 Index=0
 Value=Yes
 LastSelection=No
 LastUserSel=yes
-UsrMethodName=TransferData
+UsrMethodName=DrawColorBitmap
 [ItemState]
-ItemSymbol=TransferAllData
+ItemSymbol=Draw65kBitmap
 ReadOnly=No
 UserReadOnly=No
 Index=0
 Value=Yes
 LastSelection=No
 LastUserSel=yes
-UsrMethodName=TransferAllData
+UsrMethodName=Draw65kBitmap
 [ItemState]
-ItemSymbol=Refresh
+ItemSymbol=Draw256BitmapLow
 ReadOnly=No
 UserReadOnly=No
 Index=0
 Value=Yes
 LastSelection=No
 LastUserSel=yes
-UsrMethodName=Refresh
+UsrMethodName=Draw256BitmapLow
+[ItemState]
+ItemSymbol=Draw256BitmapHigh
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=Draw256BitmapHigh
+[ItemState]
+ItemSymbol=UpdateFull
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=UpdateFull
+[ItemState]
+ItemSymbol=UpdateRegion
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=UpdateRegion
+[ItemState]
+ItemSymbol=GetDisplayOrientation
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=GetDisplayOrientation
+[ItemState]
+ItemSymbol=SetDisplayOrientation
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=SetDisplayOrientation
+[ItemState]
+ItemSymbol=GetWidth
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=GetWidth
+[ItemState]
+ItemSymbol=GetHeight
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=GetHeight
+[ItemState]
+ItemSymbol=GetLongerSide
+ReadOnly=Yes
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=Yes
+LastUserSel=always
+UsrMethodName=GetLongerSide
+[ItemState]
+ItemSymbol=GetShorterSide
+ReadOnly=Yes
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=Yes
+LastUserSel=always
+UsrMethodName=GetShorterSide
+[ItemState]
+ItemSymbol=GetDisplay
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=GetDisplay
+[ItemState]
+ItemSymbol=GiveDisplay
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=GiveDisplay
+[ItemState]
+ItemSymbol=Init
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=Init
 
 [Events]
 List=Event
@@ -20509,15 +22654,51 @@ Value=GDisp1_OnError
 [EndOfChilds]
 LastSelection=No
 LastUserSel=no
+[ItemState]
+ItemSymbol=OnGetDisplay
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Name
+ReadOnly=No
+UserReadOnly=No
+Value=GDisp1_OnGetDisplay
+
+[EndOfChilds]
+LastSelection=No
+LastUserSel=no
+[ItemState]
+ItemSymbol=OnGiveDisplay
+ReadOnly=No
+UserReadOnly=No
+Value=No
+Expanded=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=Name
+ReadOnly=No
+UserReadOnly=No
+Value=GDisp1_OnGiveDisplay
+
+[EndOfChilds]
+LastSelection=No
+LastUserSel=no
 
 [GFont:GFONT1]
 CompNumb=1037
 CompEnabled=Yes
 GenCodeMode=CHECK_n_WRITE
-IconName=GFont
+IconName=USER_DEV
 Comment=0
 Template=
-BeanVersion=01.103
+BeanVersion=01.123
 
 [Properties]
 List=Property
@@ -20536,6 +22717,18 @@ Expanded=No
 [Childs]
 List=GrupItem
 [ItemState]
+ItemSymbol=UnderlineBoxHeight
+ReadOnly=No
+UserReadOnly=No
+Value=2
+Base=2
+[ItemState]
+ItemSymbol=LineSpaceBoxHeight
+ReadOnly=No
+UserReadOnly=No
+Value=3
+Base=2
+[ItemState]
 ItemSymbol=BoundingBox
 ReadOnly=No
 UserReadOnly=No
@@ -20547,7 +22740,8 @@ Base=2
 ItemSymbol=FontName
 ReadOnly=No
 UserReadOnly=No
-Value=Adobe-Helvetica
+Index=0
+EnumSymbVal=Helv
 [ItemState]
 ItemSymbol=FontSize
 ReadOnly=No
@@ -20590,6 +22784,24 @@ Value=Yes
 LastSelection=No
 LastUserSel=yes
 UsrMethodName=GetFont
+[ItemState]
+ItemSymbol=GetUnderlineBoxHeight
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=GetUnderlineBoxHeight
+[ItemState]
+ItemSymbol=GetLineSpaceHeight
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=GetLineSpaceHeight
 
 [Events]
 List=Event
@@ -20601,7 +22813,7 @@ GenCodeMode=CHECK_n_WRITE
 IconName=CPU_CHIP2
 Comment=0
 Template=
-BeanVersion=01.017
+BeanVersion=01.019
 
 [Properties]
 List=Property
@@ -20630,7 +22842,6 @@ ItemSymbol=ENPin
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=Enable1
 RegCompType=Enable
 
 [InheritedBeanProperties]
@@ -20896,7 +23107,6 @@ ItemSymbol=FASTPin
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=Fast1
 RegCompType=Fast
 
 [InheritedBeanProperties]
@@ -21162,7 +23372,6 @@ ItemSymbol=PPRPin
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=PPR1
 RegCompType=PPR
 
 [InheritedBeanProperties]
@@ -21428,7 +23637,6 @@ ItemSymbol=CHGPin
 ReadOnly=No
 UserReadOnly=No
 Index=0
-EnumSymbVal=CHG1
 RegCompType=CHG
 
 [InheritedBeanProperties]
@@ -21739,7 +23947,7 @@ GenCodeMode=CHECK_n_WRITE
 IconName=BITIO
 Comment=0
 Template=
-BeanVersion=02.071
+BeanVersion=02.075
 
 [Properties]
 List=Property
@@ -21992,7 +24200,7 @@ GenCodeMode=CHECK_n_WRITE
 IconName=BITIO
 Comment=0
 Template=
-BeanVersion=02.071
+BeanVersion=02.075
 
 [Properties]
 List=Property
@@ -22242,10 +24450,10 @@ List=Event
 CompNumb=1621
 CompEnabled=Yes
 GenCodeMode=CHECK_n_WRITE
-IconName=LightComm
+IconName=USER_DEV
 Comment=0
 Template=
-BeanVersion=01.124
+BeanVersion=01.126
 
 [Properties]
 List=Property
@@ -22306,6 +24514,12 @@ ItemSymbol=Wait
 ReadOnly=No
 UserReadOnly=No
 Value=WAIT1
+[ItemState]
+ItemSymbol=UseUCOS
+ReadOnly=No
+UserReadOnly=No
+Index=1
+Value=No
 
 [EndOfChilds]
 
@@ -22405,10 +24619,10 @@ LastUserSel=yes
 CompNumb=1622
 CompEnabled=Yes
 GenCodeMode=CHECK_n_WRITE
-IconName=LedSensor
+IconName=USER_DEV
 Comment=0
 Template=
-BeanVersion=01.123
+BeanVersion=01.130
 
 [Properties]
 List=Property
@@ -22547,10 +24761,10 @@ List=Event
 CompNumb=1623
 CompEnabled=Yes
 GenCodeMode=CHECK_n_WRITE
-IconName=Utility
+IconName=USER_DEV
 Comment=0
 Template=
-BeanVersion=01.023
+BeanVersion=01.147
 
 [Properties]
 List=Property
@@ -22559,6 +24773,11 @@ ItemSymbol=DeviceName
 ReadOnly=No
 UserReadOnly=No
 Value=UTIL1
+[ItemState]
+ItemSymbol=sdk
+ReadOnly=No
+UserReadOnly=No
+Value=MCUC1
 
 [Methods]
 List=Method
@@ -22581,6 +24800,42 @@ LastSelection=No
 LastUserSel=yes
 UsrMethodName=strcat
 [ItemState]
+ItemSymbol=strcatPad
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=strcatPad
+[ItemState]
+ItemSymbol=chcat
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=chcat
+[ItemState]
+ItemSymbol=Num8sToStr
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=Num8sToStr
+[ItemState]
+ItemSymbol=Num8uToStr
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=Num8uToStr
+[ItemState]
 ItemSymbol=Num16sToStr
 ReadOnly=No
 UserReadOnly=No
@@ -22589,6 +24844,42 @@ Value=Yes
 LastSelection=No
 LastUserSel=yes
 UsrMethodName=Num16sToStr
+[ItemState]
+ItemSymbol=Num16uToStr
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=Num16uToStr
+[ItemState]
+ItemSymbol=Num32uToStr
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=Num32uToStr
+[ItemState]
+ItemSymbol=Num32sToStr
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=Num32sToStr
+[ItemState]
+ItemSymbol=NumFloatToStr
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=NumFloatToStr
 [ItemState]
 ItemSymbol=Num16sToStrFormatted
 ReadOnly=No
@@ -22599,6 +24890,60 @@ LastSelection=No
 LastUserSel=yes
 UsrMethodName=Num16sToStrFormatted
 [ItemState]
+ItemSymbol=Num16uToStrFormatted
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=Num16uToStrFormatted
+[ItemState]
+ItemSymbol=Num32uToStrFormatted
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=Num32uToStrFormatted
+[ItemState]
+ItemSymbol=Num32sToStrFormatted
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=Num32sToStrFormatted
+[ItemState]
+ItemSymbol=strcatNum8u
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=strcatNum8u
+[ItemState]
+ItemSymbol=strcatNum8s
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=strcatNum8s
+[ItemState]
+ItemSymbol=strcatNum16u
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=strcatNum16u
+[ItemState]
 ItemSymbol=strcatNum16s
 ReadOnly=No
 UserReadOnly=No
@@ -22608,14 +24953,59 @@ LastSelection=No
 LastUserSel=yes
 UsrMethodName=strcatNum16s
 [ItemState]
-ItemSymbol=strcatNum16Formatted
+ItemSymbol=strcatNum32u
 ReadOnly=No
 UserReadOnly=No
 Index=0
 Value=Yes
 LastSelection=No
 LastUserSel=yes
-UsrMethodName=strcatNum16Formatted
+UsrMethodName=strcatNum32u
+[ItemState]
+ItemSymbol=strcatNum32s
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=strcatNum32s
+[ItemState]
+ItemSymbol=strcatNum16uFormatted
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=strcatNum16uFormatted
+[ItemState]
+ItemSymbol=strcatNum16sFormatted
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=strcatNum16sFormatted
+[ItemState]
+ItemSymbol=strcatNum32uFormatted
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=strcatNum32uFormatted
+[ItemState]
+ItemSymbol=strcatNum32sFormatted
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=strcatNum32sFormatted
 [ItemState]
 ItemSymbol=strcatNum8Hex
 ReadOnly=No
@@ -22625,6 +25015,348 @@ Value=Yes
 LastSelection=No
 LastUserSel=yes
 UsrMethodName=strcatNum8Hex
+[ItemState]
+ItemSymbol=strcatNum16Hex
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=strcatNum16Hex
+[ItemState]
+ItemSymbol=strcatNum24Hex
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=strcatNum24Hex
+[ItemState]
+ItemSymbol=strcatNum32Hex
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=strcatNum32Hex
+[ItemState]
+ItemSymbol=strcatNum32sDotValue100
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=strcatNum32sDotValue100
+[ItemState]
+ItemSymbol=strcatNumFloat
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=strcatNumFloat
+[ItemState]
+ItemSymbol=IsLeapYear
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=IsLeapYear
+[ItemState]
+ItemSymbol=WeekDay
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=WeekDay
+[ItemState]
+ItemSymbol=ReadEscapedName
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=ReadEscapedName
+[ItemState]
+ItemSymbol=xatoi
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=xatoi
+[ItemState]
+ItemSymbol=ScanDate
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=ScanDate
+[ItemState]
+ItemSymbol=ScanTime
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=ScanTime
+[ItemState]
+ItemSymbol=ScanDecimal8uNumber
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=ScanDecimal8uNumber
+[ItemState]
+ItemSymbol=ScanDecimal8sNumber
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=ScanDecimal8sNumber
+[ItemState]
+ItemSymbol=ScanDecimal16uNumber
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=ScanDecimal16uNumber
+[ItemState]
+ItemSymbol=ScanDecimal16sNumber
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=ScanDecimal16sNumber
+[ItemState]
+ItemSymbol=ScanDecimal32uNumber
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=ScanDecimal32uNumber
+[ItemState]
+ItemSymbol=ScanDecimal32sNumber
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=ScanDecimal32sNumber
+[ItemState]
+ItemSymbol=ScanDecimal32sDotNumber
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=ScanDecimal32sDotNumber
+[ItemState]
+ItemSymbol=ScanHex8uNumber
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=ScanHex8uNumber
+[ItemState]
+ItemSymbol=ScanHex8uNumberNoPrefix
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=ScanHex8uNumberNoPrefix
+[ItemState]
+ItemSymbol=ScanHex16uNumber
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=ScanHex16uNumber
+[ItemState]
+ItemSymbol=ScanHex32uNumber
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=ScanHex32uNumber
+[ItemState]
+ItemSymbol=ScanSeparatedNumbers
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=ScanSeparatedNumbers
+[ItemState]
+ItemSymbol=ScanDoubleQuotedString
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=ScanDoubleQuotedString
+[ItemState]
+ItemSymbol=strcmp
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=strcmp
+[ItemState]
+ItemSymbol=strncmp
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=strncmp
+[ItemState]
+ItemSymbol=strFind
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=strFind
+[ItemState]
+ItemSymbol=strtailcmp
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=strtailcmp
+[ItemState]
+ItemSymbol=strlen
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=strlen
+[ItemState]
+ItemSymbol=strCutTail
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=strCutTail
+[ItemState]
+ItemSymbol=GetValue16LE
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=GetValue16LE
+[ItemState]
+ItemSymbol=GetValue24LE
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=GetValue24LE
+[ItemState]
+ItemSymbol=GetValue32LE
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=GetValue32LE
+[ItemState]
+ItemSymbol=SetValue16LE
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=SetValue16LE
+[ItemState]
+ItemSymbol=SetValue24LE
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=SetValue24LE
+[ItemState]
+ItemSymbol=SetValue32LE
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=SetValue32LE
+[ItemState]
+ItemSymbol=Deinit
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=Deinit
+[ItemState]
+ItemSymbol=Init
+ReadOnly=No
+UserReadOnly=No
+Index=0
+Value=Yes
+LastSelection=No
+LastUserSel=yes
+UsrMethodName=Init
 
 [Events]
 List=Event
@@ -22636,7 +25368,7 @@ GenCodeMode=CHECK_n_WRITE
 IconName=SIGNAL
 Comment=0
 Template=
-BeanVersion=02.173
+BeanVersion=02.185
 
 [Properties]
 List=Property
@@ -23390,6 +26122,24 @@ LastUserSel=no
 UsrMethodName=ConnectPin
 
 [EndOfChilds]
+[ItemState]
+ItemSymbol=MCFgrp
+ReadOnly=No
+UserReadOnly=No
+
+[Childs]
+List=GrupItem
+[ItemState]
+ItemSymbol=ConnectPinMCF
+ReadOnly=No
+UserReadOnly=No
+Index=1
+Value=No
+LastSelection=No
+LastUserSel=no
+UsrMethodName=ConnectPin
+
+[EndOfChilds]
 
 [Events]
 List=Event
@@ -23490,21 +26240,69 @@ LastUserSel=never
 
 [EndOfChilds]
 
+[McuLibConfig:MCUC1]
+CompNumb=1974
+CompEnabled=Yes
+GenCodeMode=CHECK_n_WRITE
+IconName=USER_DEV
+Comment=0
+Template=
+BeanVersion=01.006
+
+[Properties]
+List=Property
+[ItemState]
+ItemSymbol=DeviceName
+ReadOnly=No
+UserReadOnly=No
+Value=MCUC1
+[ItemState]
+ItemSymbol=SDK
+ReadOnly=No
+UserReadOnly=No
+Index=1
+EnumSymbVal=ProcessorExpertSDK
+[ItemState]
+ItemSymbol=ConfigFilesFolderName
+ReadOnly=No
+UserReadOnly=No
+Value=
+[ItemState]
+ItemSymbol=LibFilesFolderName
+ReadOnly=No
+UserReadOnly=No
+Value=
+
+[Methods]
+List=Method
+
+[Events]
+List=Event
+
 [Program]
 ProgType=event
 ProgNumb=2
 List=Property
+[ItemState]
+ItemSymbol=UsrModuleName
+Value=
+[ItemState]
+ItemSymbol=UsrModuleDir
+Value=
 EventModule=Events
 
 [Documentation]
+CompNumb=1970
 NodeName=BadgeBoard_SIGNALS.txt
 DocGenrtd=Yes
 
 [Documentation]
+CompNumb=1971
 NodeName=BadgeBoard_Settings.xml
 DocGenrtd=Yes
 
 [Documentation]
+CompNumb=1972
 NodeName=BadgeBoard.txt
 DocGenrtd=Yes
 
