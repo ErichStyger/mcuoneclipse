@@ -37,6 +37,26 @@ extern const int my_var;
 static const int *const __attribute__((used)) keepMe  = &my_var;
 const uint8_t *p;// = &keepMe;
 
+#if 0
+const char New[] =    "ch";
+#define r(a,b)        #b " " #a
+#define d(a,b,c,d,e)  c##b##d \
+                      ##a##e##c
+#define o(a, b)       b##a
+const char Happy[] =  {'R','e','a'};
+const char Gipfel[] = "Gipfel";
+const char im        = 'i';
+const char D         = 'D';
+int Ye(void)          { return 061; }
+int a(int a)          { return (a<<4) + 021; }
+
+void reason(int r) {
+  d(in, p, f, r, t)(o(out, std), "%s%sed " "%i" "! Make %d "  r(again, great) "%c %si %cm %c%d!\r\n", Happy, New, Ye(), a(r), '!',
+      Gipfel, im, D, 300
+   );
+}
+#endif
+
 int main(void) {
   /* Write your code here */
   /* semihosting tests */
@@ -44,6 +64,7 @@ int main(void) {
   //setvbuf(stderr, NULL, _IOFBF, 0);
   i = *p;
 
+  //reason(0x7d);
   printf("hello world!\r\n");
   fprintf(stdout, "Stdout output: %d\r\n", i);
   fprintf(stderr, "StdErr output: %d\r\n", i);
