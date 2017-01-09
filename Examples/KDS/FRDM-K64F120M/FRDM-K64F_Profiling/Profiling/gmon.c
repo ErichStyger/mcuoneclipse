@@ -257,7 +257,7 @@ void _mcount_internal(uint32_t *frompcindex, uint32_t *selfpc) {
       goto done;
   }
   frompcindex = (uint32_t*)&p->froms[((long)frompcindex) / (HASHFRACTION * sizeof(*p->froms))];
-  toindex = *frompcindex;
+  toindex = *((u_short*)frompcindex); /* get froms[] value */
   if (toindex == 0) {
     /*
     *	first time traversing this arc
@@ -266,7 +266,7 @@ void _mcount_internal(uint32_t *frompcindex, uint32_t *selfpc) {
     if (toindex >= p->tolimit) { /* more tos[] entries than we can handle! */
 	    goto overflow;
 	  }
-    *frompcindex = toindex;
+    *((u_short*)frompcindex) = (u_short)toindex; /* store new 'to' value into froms[] */
     top = &p->tos[toindex];
     top->selfpc = (size_t)selfpc;
     top->count = 1;
@@ -302,8 +302,8 @@ void _mcount_internal(uint32_t *frompcindex, uint32_t *selfpc) {
       top = &p->tos[toindex];
       top->selfpc = (size_t)selfpc;
       top->count = 1;
-      top->link = *frompcindex;
-      *frompcindex = toindex;
+      top->link = *((u_short*)frompcindex);
+      *(u_short*)frompcindex = (u_short)toindex;
       goto done;
     }
     /*
@@ -320,8 +320,8 @@ void _mcount_internal(uint32_t *frompcindex, uint32_t *selfpc) {
       top->count++;
       toindex = prevtop->link;
       prevtop->link = top->link;
-      top->link = *frompcindex;
-      *frompcindex = toindex;
+      top->link = *((u_short*)frompcindex);
+      *((u_short*)frompcindex) = (u_short)toindex;
       goto done;
     }
   }
