@@ -31,34 +31,30 @@
 #include "fsl_device_registers.h"
 #include "DMAPixel.h"
 
-#define NEO_NOF_PIXEL       3
-#define NEO_NOF_BITS_PIXEL 24
-static uint8_t transmitBuf[NEO_NOF_PIXEL*NEO_NOF_BITS_PIXEL] =
-    {
-        /* pixel 0: */
-        1, 1, 1, 1, 1, 1, 1, 1, /* green */
-        0, 0, 0, 0, 0, 0, 0, 0, /* red */
-        0, 0, 0, 0, 0, 0, 0, 0, /* blue */
-        /* pixel 1: */
-        0, 0, 0, 0, 0, 0, 0, 0, /* green */
-        1, 1, 1, 1, 1, 1, 1, 1, /* red */
-        0, 0, 0, 0, 0, 0, 0, 0,  /* blue */
-        /* pixel 0: */
-        0, 0, 0, 0, 0, 0, 0, 0, /* green */
-        0, 0, 0, 0, 0, 0, 0, 0, /* red */
-        1, 1, 1, 1, 1, 1, 1, 1  /* blue */
-    };
-
 int main(void) {
-  uint8_t red, green, blue;
-
-  DMA_Init();
-  for (;;) {
-    DMA_Transfer(transmitBuf, sizeof(transmitBuf));
-  }
-  /* Never leave main */
-  return 0;
+	initBuffer();
+	DMA_Init();
+	RNG_Init();
+	for (;;) {
+	//color Swipes
+		colorWipe(Red,400);//red swipe
+		colorWipe(Black,300);
+		colorWipe(Green,400);//green swipe
+		colorWipe(Black,300);
+		colorWipe(Blue,400);//blue swipe
+		colorWipe(Black,300);
+		colorWipe(Purple,300);//purple
+		colorWipe(Black,300);
+		
+	//fadeinout colors
+		FadeInOut(Green);
+	//theaterChase
+		theaterChase(Crimson,1000);
+		//theaterChase(0x00,0x00,0xFF,1000);
+	//Twinkle
+		Twinkle(Yellow,50,800,1,1);
+		randomColors(20);
+	}
+	// Never leave main 
+	return 0;
 }
-////////////////////////////////////////////////////////////////////////////////
-// EOF
-////////////////////////////////////////////////////////////////////////////////

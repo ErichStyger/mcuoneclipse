@@ -35,6 +35,25 @@ static edma_chn_state_t chnStates[NOF_EDMA_CHANNELS]; /* array of DMA channel st
 static volatile bool dmaDone = false; /* set by DMA complete interrupt on DMA channel 3 */
 static const uint8_t OneValue = 0x01; /* value to clear or set the port bit(s) */
 
+const uint8_t gamma8[] = {
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+    1,  1,  1,  1,  2,  2,  2,  2,  2,  2,  2,  2,  2,  3,  3,  3,
+    3,  3,  3,  4,  4,  4,  4,  4,  4,  5,  5,  5,  5,  6,  6,  6,
+    6,  6,  7,  7,  7,  8,  8,  8,  8,  9,  9,  9, 10, 10, 10, 11,
+   11, 12, 12, 12, 13, 13, 14, 14, 14, 15, 15, 16, 16, 17, 17, 18,
+   18, 19, 19, 20, 21, 21, 22, 22, 23, 23, 24, 25, 25, 26, 27, 27,
+   28, 29, 30, 30, 31, 32, 33, 33, 34, 35, 36, 37, 37, 38, 39, 40,
+   41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56,
+   57, 59, 60, 61, 62, 63, 65, 66, 67, 68, 70, 71, 72, 74, 75, 76,
+   78, 79, 81, 82, 84, 85, 87, 88, 90, 91, 93, 95, 96, 98, 99,101,
+  103,105,106,108,110,112,113,115,117,119,121,123,125,127,129,131,
+  133,135,137,139,141,143,146,148,150,152,154,157,159,161,164,166,
+  168,171,173,176,178,181,183,186,188,191,194,196,199,202,204,207,
+  210,213,216,219,221,224,227,230,233,236,239,242,246,249,252,255
+ };
+
 /* --------------------------------------- */
 /* FTM                                     */
 /* --------------------------------------- */
@@ -247,4 +266,124 @@ void DMA_Init(void) {
   InitHardware();
   ResetFTM(FTM0_IDX);
   StartStopFTM(FTM0_IDX, true); /* start FTM timer */
+}
+
+/* --------------------------------------- */
+/* RNG                                     */
+/* --------------------------------------- */
+void RNG_Init(void){
+	SIM_SCGC6 |= SIM_SCGC6_RNGA_MASK;// Gate the clock for RNG unit
+	RNG_CR &= ~RNG_CR_SLP_MASK;// set SLP bit to 0 - "RNGA is not in sleep mode" 
+	RNG_CR |= RNG_CR_HA_MASK;// set HA bit to 1 - "security violations masked" 
+	RNG_CR |= RNG_CR_GO_MASK;// set GO bit to 1 - "output register loaded with data" 
+}  
+
+/* get a random number between 0 and limit
+ * Used to get a random pixel for generating random LED patterns
+*/
+uint32_t getRandom(uint8_t limit){
+	while((RNG_SR & RNG_SR_OREG_LVL(0xF)) == 0) {}
+    /* get value */
+    return RNG_OR%limit;
+}
+
+void initBuffer(void){
+	for(uint32_t i=0;i<NEO_NOF_PIXEL*NEO_NOF_BITS_PIXEL;i++){
+		transmitBuf[i] = 0;
+	}	
+}
+
+void setPixel(uint8_t Pixel, Color c) {
+	RGB cc = packColor(c);
+	for(uint32_t j=(Pixel*NEO_NOF_BITS_PIXEL);j<(Pixel*NEO_NOF_BITS_PIXEL)+NEO_NOF_BITS_PIXEL;j++){
+		transmitBuf[j] = cc & 0x1;
+		cc=cc>>1;
+	}
+} 
+
+void setAll(Color c) {
+  for(uint8_t i=0; i<NEO_NOF_PIXEL; i++ ) {
+    setPixel(i, c); 
+  }
+}
+
+void theaterChase(Color c, uint32_t SpeedDelay) {
+  for (uint8_t j=0; j<10; j++) {  //do 10 cycles of chasing
+    for (uint8_t q=0; q < 4; q++) {
+      for (uint8_t i=0; i < NEO_NOF_PIXEL; i=i+4) {
+        setPixel(i+q, c);    //turn every third pixel on
+        //setPixel(i+q-1, red, green, blue);
+      }
+      DMA_Transfer(transmitBuf, sizeof(transmitBuf));
+      delay(SpeedDelay);
+      for (uint8_t i=0; i < NEO_NOF_PIXEL; i=i+4) {
+        setPixel(i+q-1, Black);        //turn every third pixel off
+        //setPixel(i+q-1, 0,0,0);
+      }
+    }
+  }
+}
+
+void FadeInOut(Color c){
+  float r, g, b;
+  Color cc;
+      
+  for(int k = 0; k < 256; k=k+1) { 
+    r = (k/256.0)*c.r;
+    g = (k/256.0)*c.g;
+    b = (k/256.0)*c.b;
+   	cc.r=r; cc.g=g; cc.b=b; 
+    setAll(cc);
+    DMA_Transfer(transmitBuf, sizeof(transmitBuf));
+  }
+     
+  for(int k = 255; k >= 0; k=k-2) {
+    r = (k/256.0)*c.r;
+    g = (k/256.0)*c.g;
+    b = (k/256.0)*c.b;
+    c.r=r; c.g=g; c.b=b; 
+    setAll(c);
+    DMA_Transfer(transmitBuf, sizeof(transmitBuf));
+  }
+}
+
+void colorWipe(Color c, uint32_t SpeedDelay) {
+  for(uint8_t i=0; i<NEO_NOF_PIXEL; i++) {
+      setPixel(i, c);
+      DMA_Transfer(transmitBuf, sizeof(transmitBuf));
+      delay(SpeedDelay);
+  }
+  
+}
+
+void Twinkle(Color c, uint32_t Count, uint32_t SpeedDelay, uint8_t OnlyOne, uint8_t reset) {
+  if(reset){
+  	setAll(Black);
+  }  
+  for (int i=0; i<Count; i++) {
+     setPixel(getRandom(NEO_NOF_PIXEL),c);
+     DMA_Transfer(transmitBuf, sizeof(transmitBuf));
+     delay(SpeedDelay);
+     if(OnlyOne) { 
+       setAll(Black); 
+     }
+   }
+  delay(SpeedDelay);
+}
+
+void randomColors(uint8_t count){
+	for(uint8_t i=0;i<count;i++){
+		Twinkle(Red,6,400,0,0);
+		Twinkle(Green,4,400,0,0);
+		Twinkle(Blue,7,400,0,0);
+		Twinkle(Black,3,400,0,0);
+	}
+}
+
+/*!brief Delay routine */
+void delay(uint32_t ms)
+{
+  for(uint32_t i=0; i<1000*ms; i++){
+      __asm__("nop");
+  }
 }
