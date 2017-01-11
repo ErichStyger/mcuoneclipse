@@ -303,8 +303,8 @@ static void SpeedTest(void) {
 void APP_Run(void) {
   for(;;) {
     SHM1_Clear();
-    SpeedTest();
     Test();
+    SpeedTest();
     TestSingleLine();
     TestDoVCOM();
     LED1_Neg();
