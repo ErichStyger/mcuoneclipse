@@ -273,11 +273,6 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
 }
 
 void APP_Start(void) {
-#if PL_HAS_RTOS_TRACE
-  if(PTRC1_uiTraceStart()!=1) {
-    for(;;){} /* failure? */
-  }
-#endif
 #if PL_HAS_RADIO
   RNETA_Init();
 #endif
