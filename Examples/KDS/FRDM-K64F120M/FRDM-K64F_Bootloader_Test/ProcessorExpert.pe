@@ -3,7 +3,7 @@
   <Header>
     <Name>FRDM-K64F_Bootloader_Test</Name>
     <SavedBy>Erich Styger</SavedBy>
-    <ModificationStamp>16</ModificationStamp>
+    <ModificationStamp>21</ModificationStamp>
     <Date>2016-06-15</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -34,7 +34,7 @@
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
     <UserInterface>CLASSIC</UserInterface>
-    <GenerateCodeBeforeBuild>true</GenerateCodeBeforeBuild>
+    <GenerateCodeBeforeBuild>false</GenerateCodeBeforeBuild>
     <SaveProjectBeforeGeneration>true</SaveProjectBeforeGeneration>
     <GenerateCodeGenLog>false</GenerateCodeGenLog>
     <DontWriteGeneratedModules lines_count="0" />
@@ -7985,7 +7985,7 @@
           <ItemSymbol>C_RomRamSize0</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-          <Value>408</Value>
+          <Value>512</Value>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
           <Base>HEX</Base>
         </ItemState>
@@ -8092,7 +8092,7 @@
           <ItemSymbol>C_RomRamAddr2</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-          <Value>33808</Value>
+          <Value>33280</Value>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
           <Base>HEX</Base>
           <Area />
@@ -8101,7 +8101,7 @@
           <ItemSymbol>C_RomRamSize2</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-          <Value>130032</Value>
+          <Value>16384</Value>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
           <Base>HEX</Base>
         </ItemState>
@@ -8432,9 +8432,9 @@
       <ItemId7>19</ItemId7>
       <Value7>true</Value7>
       <ItemId8>20</ItemId8>
-      <Value8>true</Value8>
+      <Value8>false</Value8>
       <ItemId9>22</ItemId9>
-      <Value9>true</Value9>
+      <Value9>false</Value9>
       <ItemId10>24</ItemId10>
       <Value10>true</Value10>
     </BoolList_BeanConfig>
@@ -8529,9 +8529,9 @@
       <ItemId7>19</ItemId7>
       <Value7>true</Value7>
       <ItemId8>20</ItemId8>
-      <Value8>true</Value8>
+      <Value8>false</Value8>
       <ItemId9>22</ItemId9>
-      <Value9>true</Value9>
+      <Value9>false</Value9>
       <ItemId10>24</ItemId10>
       <Value10>true</Value10>
     </BoolList_BeanConfig>
@@ -23579,7 +23579,7 @@
     <BeanType>TimerInt</BeanType>
     <Name>TI1</Name>
     <CompNumb>20</CompNumb>
-    <CompEnabled>true</CompEnabled>
+    <CompEnabled>false</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>TMRCNTR</IconName>
     <UserFolderName />
@@ -23901,7 +23901,7 @@
               <ItemSymbol>IntPeriodTmg</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>init:100 ms;prec:5%;RTS:none;clksrc_presc[SpeedMode0]Auto select;clksrc_presc[SpeedMode1]Auto select;clksrc_presc[SpeedMode2]Auto select;clksrc_presc[SpeedMode3]Auto select;clksrc_presc[SpeedMode4]Auto select;clksrc_presc[SpeedMode5]Auto select;clksrc_presc[SpeedMode6]Auto select;clksrc_presc[SpeedMode7]Auto select</Value>
+              <Value>100 ms</Value>
               <RuntimeSetting>0</RuntimeSetting>
               <ReqDevPrescHigh>-1</ReqDevPrescHigh>
               <ReqDevPrescLow>-1</ReqDevPrescLow>
@@ -24506,7 +24506,7 @@
     <BeanType>TimerUnit_LDD</BeanType>
     <Name>TU1</Name>
     <CompNumb>22</CompNumb>
-    <CompEnabled>true</CompEnabled>
+    <CompEnabled>false</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>CLOCKS_LDD</IconName>
     <UserFolderName />
@@ -24705,7 +24705,7 @@
         <ItemSymbol>Tmg_Period</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>init:100 ms;prec:5%;RTS:none;clksrc_presc[SpeedMode0]Auto select;clksrc_presc[SpeedMode1]Auto select;clksrc_presc[SpeedMode2]Auto select;clksrc_presc[SpeedMode3]Auto select;clksrc_presc[SpeedMode4]Auto select;clksrc_presc[SpeedMode5]Auto select;clksrc_presc[SpeedMode6]Auto select;clksrc_presc[SpeedMode7]Auto select</Value>
+        <Value>100 ms</Value>
         <RuntimeSetting>0</RuntimeSetting>
         <ReqDevPrescHigh>-1</ReqDevPrescHigh>
         <ReqDevPrescLow>-1</ReqDevPrescLow>
@@ -24785,7 +24785,7 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>false</Value>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>CounterInt</ItemSymbol>
@@ -24800,7 +24800,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ModuloInt</ItemSymbol>
-        <Value>INT_FTM0</Value>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>ModuloInitPriority</ItemSymbol>
@@ -25287,10 +25287,10 @@
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
         <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <LastUserSel>never</LastUserSel>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnCounterRestartName</ItemSymbol>

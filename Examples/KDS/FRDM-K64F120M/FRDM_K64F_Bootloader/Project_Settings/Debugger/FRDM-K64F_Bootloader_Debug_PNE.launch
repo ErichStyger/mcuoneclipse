@@ -33,9 +33,12 @@
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.gdbServerOther" value="-s"/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.gdbServerSwoPortNumber" value="2332"/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.gdbServerTelnetPortNumber" value="51794"/>
+<intAttribute key="com.pemicro.debug.gdbjtag.pne.gdbmiPortNumber" value="6224"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.interfaceSpeed" value="auto"/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.jtagPreIrBits" value="0"/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.jtagTapNumber" value="0"/>
+<stringAttribute key="com.pemicro.debug.gdbjtag.pne.macScript" value=""/>
+<booleanAttribute key="com.pemicro.debug.gdbjtag.pne.macScriptEnable" value="false"/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.ml.ALWAYS_ERASE" value="false"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.ml.CYCLONE_IP" value=""/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.ml.DO_RESET_DELAY" value="false"/>
@@ -104,6 +107,8 @@
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="4"/>
 </listAttribute>
+<stringAttribute key="org.eclipse.debug.core.source_locator_id" value="org.eclipse.cdt.debug.core.sourceLocator"/>
+<stringAttribute key="org.eclipse.debug.core.source_locator_memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;sourceLookupDirector&gt;&#13;&#10;&lt;sourceContainers duplicates=&quot;false&quot;&gt;&#13;&#10;&lt;container memento=&quot;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot; standalone=&amp;quot;no&amp;quot;?&amp;gt;&amp;#13;&amp;#10;&amp;lt;project name=&amp;quot;FRDM-K64F_Bootloader&amp;quot; referencedProjects=&amp;quot;false&amp;quot;/&amp;gt;&amp;#13;&amp;#10;&quot; typeId=&quot;org.eclipse.cdt.debug.core.containerType.project&quot;/&gt;&#13;&#10;&lt;container memento=&quot;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot; standalone=&amp;quot;no&amp;quot;?&amp;gt;&amp;#13;&amp;#10;&amp;lt;project name=&amp;quot;FRDM-K64F_Bootloader_Test&amp;quot; referencedProjects=&amp;quot;false&amp;quot;/&amp;gt;&amp;#13;&amp;#10;&quot; typeId=&quot;org.eclipse.cdt.debug.core.containerType.project&quot;/&gt;&#13;&#10;&lt;container memento=&quot;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot; standalone=&amp;quot;no&amp;quot;?&amp;gt;&amp;#13;&amp;#10;&amp;lt;default/&amp;gt;&amp;#13;&amp;#10;&quot; typeId=&quot;org.eclipse.debug.core.containerType.default&quot;/&gt;&#13;&#10;&lt;/sourceContainers&gt;&#13;&#10;&lt;/sourceLookupDirector&gt;&#13;&#10;"/>
 <stringAttribute key="org.eclipse.dsf.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList context=&quot;reserved-for-future-use&quot;/&gt;&#13;&#10;"/>
 <stringAttribute key="process_factory_id" value="org.eclipse.cdt.dsf.gdb.GdbProcessFactory"/>
 </launchConfiguration>

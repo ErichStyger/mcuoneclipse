@@ -35,7 +35,7 @@
 <intAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.jlink.gdbServerTelnetPortNumber" value="2333"/>
 <stringAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.jlink.interfaceSpeed" value="auto"/>
 <stringAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.jlink.otherInitCommands" value=""/>
-<stringAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.jlink.otherRunCommands" value=""/>
+<stringAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.jlink.otherRunCommands" value="add-symbol-file &quot;c://tmp//FRDM-K64F_Bootloader_test.elf&quot; 0x8200"/>
 <stringAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.jlink.secondResetType" value=""/>
 <intAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.jlink.swoEnableTargetCpuFreq" value="0"/>
 <stringAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.jlink.swoEnableTargetPortMask" value="0x1"/>
@@ -72,6 +72,7 @@
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="4"/>
 </listAttribute>
-<stringAttribute key="org.eclipse.dsf.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList context=&quot;Context string&quot;/&gt;&#13;&#10;"/>
+<stringAttribute key="org.eclipse.dsf.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList context=&quot;Context string&quot;&gt;&#13;&#10;&lt;memoryBlockExpression address=&quot;32768&quot; label=&quot;0x8000&quot;/&gt;&#13;&#10;&lt;memoryBlockExpression address=&quot;0&quot; label=&quot;0x0&quot;/&gt;&#13;&#10;&lt;/memoryBlockExpressionList&gt;&#13;&#10;"/>
 <stringAttribute key="process_factory_id" value="org.eclipse.cdt.dsf.gdb.GdbProcessFactory"/>
+<stringAttribute key="saved_expressions&lt;seperator&gt;Unknown" value="0x8000,0x1000,0x0"/>
 </launchConfiguration>

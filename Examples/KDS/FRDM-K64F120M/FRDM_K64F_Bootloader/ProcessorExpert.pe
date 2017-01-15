@@ -3,7 +3,7 @@
   <Header>
     <Name>FRDM-K64F_Bootloader</Name>
     <SavedBy>William</SavedBy>
-    <ModificationStamp>25</ModificationStamp>
+    <ModificationStamp>26</ModificationStamp>
     <Date>2016-06-13</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -222,8 +222,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>SystemOSCSrc</ItemSymbol>
@@ -402,13 +402,13 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>4</Index>
+        <Index>0</Index>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCGOUTSelectCLKMode0</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <EnumSymbVal>PLLOUT</EnumSymbVal>
+        <Index>0</Index>
+        <EnumSymbVal>FLLOUT</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCGModeCLKMode0</ItemSymbol>
@@ -432,7 +432,7 @@
       <ItemState>
         <ItemSymbol>MCG_ERCLKClkCLKMode0</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>50</Value>
+        <Value>0</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCGCMECLKMode0</ItemSymbol>
@@ -466,7 +466,7 @@
       <ItemState>
         <ItemSymbol>FLLFixedClkCLKMode0</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>32.552083333333</Value>
+        <Value>32.768</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>FLL_RefClkSrcCLKMode0</ItemSymbol>
@@ -487,7 +487,7 @@
       <ItemState>
         <ItemSymbol>FLLRefClkCLKMode0</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>32.552083333333</Value>
+        <Value>32.768</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCG_FLL_MFactor_CLKMode0</ItemSymbol>
@@ -634,7 +634,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>MCG_FRDIV</Value>
+        <Value>IRC_32kHz</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCG_FRDIVSpeedMode0</ItemSymbol>
@@ -669,7 +669,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>MCGPLLCLK</Value>
+        <Value>MCGFLLCLK</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>SDKSupportClockInitCondGrp00</ItemSymbol>
@@ -723,13 +723,13 @@
       <ItemState>
         <ItemSymbol>MCGModeSelSpeedMode0</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>4</Index>
-        <EnumSymbVal>4</EnumSymbVal>
+        <Index>0</Index>
+        <EnumSymbVal>0</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>MCGOutputSpeedMode0</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>120</Value>
+        <Value>20.97152</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>IRCLKClkSpeedMode0</ItemSymbol>
@@ -745,7 +745,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>FLLFixedClkSpeedMode0</ItemSymbol>
-        <Value>32.552083333333</Value>
+        <Value>32.768</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>SystemClocksGrp0</ItemSymbol>
@@ -772,14 +772,14 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>120</Value>
+        <Value>20.97152</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OUTDIV2PrescSpeedMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>2</Value>
+        <Value>1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OUTDIV2Presc_SpeedMode0</ItemSymbol>
@@ -793,7 +793,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>60</Value>
+        <Value>20.97152</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>FBClockCondGrp0</ItemSymbol>
@@ -812,14 +812,14 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>60</Value>
+        <Value>20.97152</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OUTDIV4PrescSpeedMode0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>5</Value>
+        <Value>1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OUTDIV4Presc_SpeedMode0</ItemSymbol>
@@ -833,7 +833,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>24</Value>
+        <Value>20.97152</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>USB0_CLKINSpeedMode0</ItemSymbol>
@@ -855,12 +855,12 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>MCGPLLCLK</Value>
+        <Value>MCGFLLCLK</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>PLLFLLClockSpeedMode0</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>120</Value>
+        <Value>20.97152</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>I2S0_CLKINCondGrp0</ItemSymbol>
@@ -2562,7 +2562,7 @@
         <ItemSymbol>CPUInterrupts</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Expanded>false</Expanded>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>IntNMIGrp</ItemSymbol>
@@ -2651,8 +2651,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>IntHardFault</ItemSymbol>
@@ -2870,8 +2870,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>IntSVCall</ItemSymbol>
@@ -2911,8 +2911,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>IntPendSV</ItemSymbol>
@@ -5683,10 +5683,10 @@
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
         <LastSelection>false</LastSelection>
-        <LastUserSel>never</LastUserSel>
+        <LastUserSel>always</LastUserSel>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnHardFaultName</ItemSymbol>
@@ -5768,10 +5768,10 @@
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
         <LastSelection>false</LastSelection>
-        <LastUserSel>never</LastUserSel>
+        <LastUserSel>always</LastUserSel>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnSupervisorCallName</ItemSymbol>
@@ -5784,10 +5784,10 @@
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
         <LastSelection>false</LastSelection>
-        <LastUserSel>never</LastUserSel>
+        <LastUserSel>always</LastUserSel>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnPendableServiceName</ItemSymbol>
@@ -23582,7 +23582,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.011</BeanVersion>
+    <BeanVersion>01.018</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -23597,6 +23597,14 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>MCUC1</Value>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>DisableWriteBuffer</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -23609,6 +23617,28 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>HardFaultHandler</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Init</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Init</UsrMethodName>
       </ItemState>
     </Methods>
     <Events />

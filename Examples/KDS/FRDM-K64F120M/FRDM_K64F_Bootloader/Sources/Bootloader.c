@@ -23,7 +23,7 @@
 /* application flash area */
 #if 1 /* address matching the FRDM-K64F_Bootloader_Test application */
 #define MIN_APP_FLASH_ADDRESS       0x8000  /* start of application flash area */
-#define MAX_APP_FLASH_ADDRESS       0x1FFFF  /* end of application flash */
+#define MAX_APP_FLASH_ADDRESS       0xAFFF  /* end of application flash */
 
 #define APP_FLASH_VECTOR_START      0x8000  /* application vector table in flash */
 #define APP_FLASH_VECTOR_SIZE       0xc0    /* size of vector table */
@@ -161,10 +161,11 @@ static bool BL_CheckBootloaderMode(void) {
  * \brief This method is called during startup! It decides if we enter bootloader mode or if we run the application.
  */
 void BL_CheckForUserApp(void) {
+  //static bool doIt = FALSE;
   uint32_t startup; /* assuming 32bit function pointers */
 
   startup = ((uint32_t*)APP_FLASH_VECTOR_START)[1]; /* this is the reset vector (__startup function) */
-  if (startup!=-1 && !BL_CheckBootloaderMode()) { /* we do have a valid application vector? -1/0xfffffff would mean flash erased */
+  if (/*doIt &&*/ startup!=-1 && !BL_CheckBootloaderMode()) { /* we do have a valid application vector? -1/0xfffffff would mean flash erased */
     ((void(*)(void))startup)(); /* Jump to application startup code */
   }
 }
@@ -296,9 +297,9 @@ static void BL_PrintStatus(CLS1_ConstStdIOType *io) {
   UTIL1_strcatNum32Hex(buf, sizeof(buf), MIN_APP_FLASH_ADDRESS);
   CLS1_SendStatusStr(buf, (unsigned char*)"", io->stdOut);
   UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
-  UTIL1_strcatNum32Hex(buf, sizeof(buf), *((uint32_t*)MIN_APP_FLASH_ADDRESS));
+  UTIL1_strcatNum32Hex(buf, sizeof(buf), ((uint32_t*)APP_FLASH_VECTOR_START)[0]);
   UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" 0x");
-  UTIL1_strcatNum32Hex(buf, sizeof(buf), *((uint32_t*)MIN_APP_FLASH_ADDRESS+4));
+  UTIL1_strcatNum32Hex(buf, sizeof(buf), ((uint32_t*)APP_FLASH_VECTOR_START)[1]);
   UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   CLS1_SendStr(buf, io->stdOut);
 }
@@ -332,6 +333,6 @@ void BL_Run(void) {
   for(;;) {
     SHELL_Parse();
     LEDR_Neg();
-    WAIT1_Waitms(100);
+    WAIT1_Waitms(10);
   }
 }
