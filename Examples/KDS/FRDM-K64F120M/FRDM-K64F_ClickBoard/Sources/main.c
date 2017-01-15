@@ -84,6 +84,10 @@ int main(void)
     for(;;){}
   }
   for(;;) {
+#if 1 /* test */
+    temperature = 123.45678;
+    UTIL1_NumFloatToStr(buf, sizeof(buf), temperature, 3);
+#endif
     SHT11_Read(&temperature, &humidity);
     CLS1_SendStr("Temperature ", CLS1_GetStdio()->stdOut);
     buf[0] = '\0';
