@@ -3,7 +3,7 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>275</ModificationStamp>
+    <ModificationStamp>279</ModificationStamp>
     <Date>2015-06-11</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -56893,7 +56893,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.049</BeanVersion>
+    <BeanVersion>01.051</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -57005,6 +57005,24 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>MCUC1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FolderGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SystemViewSrcFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SystemViewConfigFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>StaticBuffer</ItemSymbol>
@@ -67164,116 +67182,6 @@
     </Properties>
     <Methods>
       <ItemState>
-        <ItemSymbol>vTraceSetSemaphoreName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>vTraceSetSemaphoreName</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>vTraceSetMutexName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>vTraceSetMutexName</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>xTraceSetISRProperties</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>xTraceSetISRProperties</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>vTraceStoreISRBegin</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>vTraceStoreISRBegin</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>vTraceStoreISREnd</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>vTraceStoreISREnd</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>vGetGDBDumpCommand</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>vGetGDBDumpCommand</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>vTraceSetStopHook</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>vTraceSetStopHook</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>xTraceGetLastError</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>xTraceGetLastError</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>vTraceClearError</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>vTraceClearError</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Startup</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Startup</UsrMethodName>
-      </ItemState>
-      <ItemState>
         <ItemSymbol>vTraceSetTimerFrequency</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -67492,6 +67400,116 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>vTraceSetQueueName</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vTraceSetSemaphoreName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>vTraceSetSemaphoreName</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vTraceSetMutexName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>vTraceSetMutexName</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xTraceSetISRProperties</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xTraceSetISRProperties</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vTraceStoreISRBegin</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>vTraceStoreISRBegin</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vTraceStoreISREnd</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>vTraceStoreISREnd</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vGetGDBDumpCommand</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>vGetGDBDumpCommand</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vTraceSetStopHook</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>vTraceSetStopHook</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xTraceGetLastError</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xTraceGetLastError</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vTraceClearError</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>vTraceClearError</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Startup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Startup</UsrMethodName>
       </ItemState>
     </Methods>
     <Events>

@@ -57,6 +57,8 @@ void reason(int r) {
 }
 #endif
 
+long int LLL = 5;
+
 int main(void) {
   /* Write your code here */
   /* semihosting tests */
@@ -72,6 +74,7 @@ int main(void) {
   /* This for loop should be replaced. By default this loop allows a single stepping. */
   for (;;) {
       i++;
+      LLL += 10;
   }
   /* Never leave main */
   return 0;

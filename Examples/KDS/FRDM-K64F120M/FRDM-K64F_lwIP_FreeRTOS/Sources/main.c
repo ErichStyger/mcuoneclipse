@@ -35,8 +35,8 @@
 #include "osa1.h"
 #include "eNet1.h"
 #include "FRTOS1.h"
+#include "MCUC1.h"
 #include "UTIL1.h"
-#include "KSDK1.h"
 #include "CS1.h"
 #if CPU_INIT_CONFIG
   #include "Init_Config.h"

@@ -35,12 +35,10 @@
 #include "pin_init.h"
 #include "osa1.h"
 #include "FRTOS1.h"
-#include "RTOSTRC1.h"
-#include "uartCom1.h"
+#include "MCUC1.h"
 #include "gpio1.h"
 #include "i2cCom1.h"
 #include "UTIL1.h"
-#include "KSDK1.h"
 #include "WAIT1.h"
 #include "CS1.h"
 
@@ -49,7 +47,7 @@ extern "C" {
 #endif 
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
@@ -144,10 +142,6 @@ void I2C0_IRQHandler(void);
 
 /*! dspiCom1 IRQ handler */
 void SPI0_IRQHandler(void);
-
-void uartCom1_RxCallback(uint32_t instance, void * uartState);
-
-void uartCom1_TxCallback(uint32_t instance, void * uartState);
 
 /* END Events */
 

@@ -3,7 +3,7 @@
   <Header>
     <Name>FRDM-K64F_SDK_v1.2_FreeRTOS_PEx</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>44</ModificationStamp>
+    <ModificationStamp>45</ModificationStamp>
     <Date>2015-07-08</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>43</ProjectCompNumb>
+    <ProjectCompNumb>44</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -27779,7 +27779,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.127</BeanVersion>
+    <BeanVersion>01.147</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -27793,7 +27793,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
     </Properties>
@@ -28542,48 +28542,31 @@
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>SetValue32LE</UsrMethodName>
       </ItemState>
-    </Methods>
-    <Events />
-  </Bean>
-  <Bean>
-    <Repository>file:/${ProcessorExpertPath:user}</Repository>
-    <BeanType>KinetisSDK</BeanType>
-    <Name>KSDK1</Name>
-    <CompNumb>19</CompNumb>
-    <CompEnabled>true</CompEnabled>
-    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
-    <IconName>SHARED_LDD</IconName>
-    <UserFolderName />
-    <Comment lines_count="0" />
-    <Template />
-    <BeanVersion>01.005</BeanVersion>
-    <LightErrorsIgnored>false</LightErrorsIgnored>
-    <Properties>
       <ItemState>
-        <ItemSymbol>DeviceName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SDKVersion</ItemSymbol>
+        <ItemSymbol>Deinit</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>none</EnumSymbVal>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>KinetisSDKGeneratedFolderName</ItemSymbol>
+        <ItemSymbol>Init</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Init</UsrMethodName>
       </ItemState>
-    </Properties>
-    <Methods />
+    </Methods>
     <Events />
   </Bean>
   <Bean>
@@ -28597,7 +28580,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.069</BeanVersion>
+    <BeanVersion>01.071</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -28610,7 +28593,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>ManualClockValues</ItemSymbol>
@@ -28796,7 +28779,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.069</BeanVersion>
+    <BeanVersion>01.071</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -28809,7 +28792,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>ManualClockValues</ItemSymbol>
@@ -28995,7 +28978,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.510</BeanVersion>
+    <BeanVersion>01.519</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -29014,7 +28997,7 @@
         <ItemSymbol>KinetisSDK</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>KinetisSDKGroup</ItemSymbol>
@@ -29061,14 +29044,6 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>false</Value>
         <Expanded>false</Expanded>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>KinetisSDKenabled</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>RTOSSrcFolderName</ItemSymbol>
@@ -30698,6 +30673,14 @@
         <Value>UTIL1</Value>
       </ItemState>
       <ItemState>
+        <ItemSymbol>KinetisSDKenabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>ARMLowestInterrutpPriority</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>15</Value>
@@ -31251,6 +31234,17 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>xTaskGetIdleTaskHandle</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xTaskGetHandle</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xTaskGetHandle</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>pcTaskGetTaskName</ItemSymbol>
@@ -32023,17 +32017,6 @@
         <UsrMethodName>pvTaskGetThreadLocalStoragePointer</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>xTaskGetHandle</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>xTaskGetHandle</UsrMethodName>
-      </ItemState>
-      <ItemState>
         <ItemSymbol>pcTaskGetName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -32215,6 +32198,54 @@
         <Value>FRTOS1_vOnPostSleepProcessing</Value>
       </ItemState>
     </Events>
+  </Bean>
+  <Bean>
+    <Repository>file:/${ProcessorExpertPath:user}</Repository>
+    <BeanType>McuLibConfig</BeanType>
+    <Name>MCUC1</Name>
+    <CompNumb>43</CompNumb>
+    <CompEnabled>true</CompEnabled>
+    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
+    <IconName>SWITCH</IconName>
+    <UserFolderName />
+    <Comment lines_count="0" />
+    <Template />
+    <BeanVersion>01.006</BeanVersion>
+    <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Properties>
+      <ItemState>
+        <ItemSymbol>DeviceName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>MCUC1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SDK</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>1</Index>
+        <EnumSymbVal>ProcessorExpertSDK</EnumSymbVal>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ConfigFilesFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LibFilesFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+    </Properties>
+    <Methods />
+    <Events />
   </Bean>
   <ComponentInitializationSequence>
     <EmptySection_DummyValue />

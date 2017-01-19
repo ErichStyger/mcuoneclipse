@@ -3,7 +3,7 @@
   <Header>
     <Name>FRDM-KL25Z_FreeRTOS</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>35</ModificationStamp>
+    <ModificationStamp>36</ModificationStamp>
     <Date>2015-04-16</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -6937,7 +6937,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.519</BeanVersion>
+    <BeanVersion>01.520</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -9044,8 +9044,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>NonLDDSWIGroup</ItemSymbol>
@@ -11927,7 +11927,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.113</BeanVersion>
+    <BeanVersion>01.114</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -12229,6 +12229,12 @@
         <Value>false</Value>
       </ItemState>
       <ItemState>
+        <ItemSymbol>StreamingModeGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>StreamingTraceWithRTT</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -12241,12 +12247,6 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>RTT1</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>StreamingModeGroup</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>RTTUpBufferIndex</ItemSymbol>
@@ -14280,7 +14280,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.049</BeanVersion>
+    <BeanVersion>01.051</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -14392,6 +14392,24 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>MCUC1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FolderGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SystemViewSrcFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SystemViewConfigFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
       </ItemState>
     </Properties>
     <Methods>

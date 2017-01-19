@@ -52,7 +52,7 @@ extern "C" {
 **     Returns     : Nothing
 ** ===================================================================
 */
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName)
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
 {
   /* This will get called if a stack overflow is detected during the context
      switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack
@@ -191,16 +191,6 @@ void FRTOS1_vOnPreSleepProcessing(portTickType expectedIdleTicks)
 void I2C0_IRQHandler(void)
 {
   I2C_DRV_IRQHandler(FSL_I2CCOM1);
-}
-
-void uartCom1_RxCallback(uint32_t instance, void * uartState)
-{
-  /* Write your code here ... */
-}
-
-void uartCom1_TxCallback(uint32_t instance, void * uartState)
-{
-  /* Write your code here ... */
 }
 
 /* END Events */

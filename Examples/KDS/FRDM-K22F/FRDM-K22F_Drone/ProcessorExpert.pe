@@ -3,7 +3,7 @@
   <Header>
     <Name>FRDM-K22F_Drone</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>186</ModificationStamp>
+    <ModificationStamp>187</ModificationStamp>
     <Date>2015-09-20</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -9911,7 +9911,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.516</BeanVersion>
+    <BeanVersion>01.519</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -14265,7 +14265,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.011</BeanVersion>
+    <BeanVersion>01.018</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -14280,6 +14280,14 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>MCUC1</Value>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>DisableWriteBuffer</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -14292,6 +14300,28 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>HardFaultHandler</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Init</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Init</UsrMethodName>
       </ItemState>
     </Methods>
     <Events />
@@ -20999,7 +21029,7 @@
     <UserFolderName>Shell</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.088</BeanVersion>
+    <BeanVersion>01.089</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -24495,7 +24525,7 @@
     <UserFolderName>nRF</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.092</BeanVersion>
+    <BeanVersion>01.094</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -24719,6 +24749,14 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>RStdioDefaultDestinationAddress</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>255</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>RStdioQueueLength</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -24853,7 +24891,7 @@
     <UserFolderName>nRF</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.088</BeanVersion>
+    <BeanVersion>01.090</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -26697,6 +26735,14 @@
             </ItemState>
           </Events>
         </InheritedComponentState>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>UseMutex</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -29406,7 +29452,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.092</BeanVersion>
+          <BeanVersion>01.093</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -41797,7 +41843,7 @@
     <UserFolderName>SD</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.045</BeanVersion>
+    <BeanVersion>01.059</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -42304,6 +42350,28 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>TimeDateToUnixSeconds</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>AddDateString</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>AddDateString</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>AddTimeString</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>AddTimeString</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>ParseCommand</ItemSymbol>
@@ -52618,7 +52686,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.049</BeanVersion>
+    <BeanVersion>01.051</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -52730,6 +52798,24 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>MCUC1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FolderGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SystemViewSrcFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SystemViewConfigFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>LockUnlockEnabled</ItemSymbol>
@@ -52937,7 +53023,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.075</BeanVersion>
+    <BeanVersion>01.113</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -52950,107 +53036,53 @@
         <ItemSymbol>RTOSplusTraceVersion</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>V3.0.2</Value>
+        <Value>V3.1.0</Value>
       </ItemState>
       <ItemState>
-        <ItemSymbol>sdk</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>MCUC1</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>StreamingTraceWithRTT</ItemSymbol>
+        <ItemSymbol>trcStartupEnableMethod</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Index>0</Index>
+        <EnumSymbVal>TRC_INIT</EnumSymbVal>
       </ItemState>
       <ItemState>
-        <ItemSymbol>StreamingRecorderVersion</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>V3.0.2</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SymbolTableSlots</ItemSymbol>
+        <ItemSymbol>TraceRecorderMode</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>30</Value>
+        <Index>1</Index>
+        <EnumSymbVal>TRC_RECORDER_MODE_STREAMING</EnumSymbVal>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RecorderBufferAllocation</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <EnumSymbVal>TRC_RECORDER_BUFFER_ALLOCATION_STATIC</EnumSymbVal>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TraceMaxISRNesting</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>16</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
-        <ItemSymbol>SymbolMaxLength</ItemSymbol>
+        <ItemSymbol>SnapshotModeGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RecorderStoreMode</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>24</Value>
-        <Base>DEC</Base>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ObjectDataSlots</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>20</Value>
-        <Base>DEC</Base>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>CtrlTaskPrioStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>1</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>CtrlTaskStackSize</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>configMINIMAL_STACK_SIZE</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SeggerRTT</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>RTT1</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>RTTUpBufferIndex</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>2</Value>
-        <Base>DEC</Base>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>TraceRTTUpBufferSize</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>1024</Value>
-        <Base>DEC</Base>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>RTTDownBufferIndex</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>2</Value>
-        <Base>DEC</Base>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>TraceRTTDownBufferSize</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>32</Value>
-        <Base>DEC</Base>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Utility</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>UTIL1</Value>
+        <Index>0</Index>
+        <EnumSymbVal>TRC_SNAPSHOT_MODE_RING_BUFFER</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>TraceSchedulingOnly</ItemSymbol>
@@ -53075,160 +53107,6 @@
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
-        <ItemSymbol>EventsGroup</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Expanded>true</Expanded>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>KernelServiceCalls</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Expanded>true</Expanded>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>TaskGroup</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Expanded>true</Expanded>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>vTaskDelayEventGenerated</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>vTaskDelayUntilEventGenerated</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>IncludeUserEvents</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>IncludeISRTracing</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>TraceMaxISRNesting</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>16</Value>
-        <Base>DEC</Base>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>IncludeObjectDelete</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>IncludeNewTimeEvents</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>IncludeReadyEvents</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>IncludeMemManageEvents</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>HeapSizeBelow16M</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>TraceDataAllocation</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <EnumSymbVal>TRACE_DATA_ALLOCATION_STATIC</EnumSymbVal>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>RecorderStoreMode</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <EnumSymbVal>TRACE_STORE_MODE_RING_BUFFER</EnumSymbVal>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>UseImplicitIFErules</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Use16bitObjectHandles</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>IncludeEventStats</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>EventCountSize</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>256</Value>
-        <Base>DEC</Base>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>floatingPointForvTracePrintF</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
-      </ItemState>
-      <ItemState>
         <ItemSymbol>EventBufferSize</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -53245,12 +53123,24 @@
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
+        <ItemSymbol>ObjectsGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>NTask</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>10</Value>
         <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>NameLenTaskStr</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>configMAX_TASK_NAME_LEN</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>NISR</ItemSymbol>
@@ -53301,12 +53191,6 @@
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
-        <ItemSymbol>NameLenTaskStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>configMAX_TASK_NAME_LEN</Value>
-      </ItemState>
-      <ItemState>
         <ItemSymbol>NameLenISR</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -53352,6 +53236,308 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>15</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EventsCreationGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>IncludeOSTickEvents</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>IncludeReadyEvents</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>IncludeMemManageEvents</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>IncludeISRTracing</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>IncludeObjectDelete</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>IncludeUserEvents</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>HeapSizeBelow16M</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>floatingPointForvTracePrintF</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>UseImplicitIFErules</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Use16bitObjectHandles</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>StreamingTraceWithRTT</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SeggerRTT</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>RTT1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>StreamingModeGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RTTUpBufferIndex</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>2</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TraceRTTUpBufferSize</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>1024</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RTTDownBufferIndex</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>2</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TraceRTTDownBufferSize</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>32</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SymbolTableSlots</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>30</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SymbolMaxLength</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>24</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ObjectDataSlots</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>20</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>CtrlTaskPrioStr</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>CtrlTaskStackSize</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>configMINIMAL_STACK_SIZE</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>CtrlTaskDelay</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>((10 * configTICK_RATE_HZ) / 1000)</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SourceFolderGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TraceRecorderFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>TraceRecorder</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TraceRecorderConfigFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>TraceRecorder/config</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TraceRecorderIncludeFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>TraceRecorder/include</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TraceRecorderRTTIncludeFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>TraceRecorder/streamports/Jlink_RTT/include</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SystemGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>sdk</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>MCUC1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Utility</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>UTIL1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>StreamingRecorderVersion</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>V3.0.2</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EventsGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>KernelServiceCalls</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TaskGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vTaskDelayEventGenerated</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vTaskDelayUntilEventGenerated</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>IncludeNewTimeEvents</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TraceDataAllocation</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <EnumSymbVal>TRACE_DATA_ALLOCATION_STATIC</EnumSymbVal>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>IncludeEventStats</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EventCountSize</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>256</Value>
         <Base>DEC</Base>
       </ItemState>
     </Properties>
@@ -53412,37 +53598,26 @@
         <UsrMethodName>vTraceGetTraceBuffer</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>vTraceSetTimerFrequency</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
+        <ItemSymbol>xTraceRegisterString</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>vTraceSetTimerFrequency</UsrMethodName>
+        <UsrMethodName>xTraceRegisterString</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>xTraceOpenLabel</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
+        <ItemSymbol>vTracePrint</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>xTraceOpenLabel</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>vTraceUserEvent</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>vTraceUserEvent</UsrMethodName>
+        <UsrMethodName>vTracePrint</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>vTracePrintF</ItemSymbol>
@@ -53467,15 +53642,37 @@
         <UsrMethodName>vTraceSetQueueName</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>vTraceSetISRProperties</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
+        <ItemSymbol>vTraceSetSemaphoreName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>vTraceSetISRProperties</UsrMethodName>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>vTraceSetSemaphoreName</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vTraceSetMutexName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>vTraceSetMutexName</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xTraceSetISRProperties</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xTraceSetISRProperties</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>vTraceStoreISRBegin</ItemSymbol>
@@ -53498,50 +53695,6 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>always</LastUserSel>
         <UsrMethodName>vTraceStoreISREnd</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>vTraceTaskSkipDefaultInstanceFinishedEvents</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>vTraceTaskSkipDefaultInstanceFinishedEvents</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>vTraceTaskInstanceIsFinished</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>vTraceTaskInstanceIsFinished</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>vTraceExcludeTaskFromSchedulingTrace</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>vTraceExcludeTaskFromSchedulingTrace</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>vTraceInitTraceData</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>vTraceInitTraceData</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>vGetGDBDumpCommand</ItemSymbol>
@@ -53588,6 +53741,105 @@
         <UsrMethodName>vTraceClearError</UsrMethodName>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Startup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Startup</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vTraceSetTimerFrequency</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>vTraceSetTimerFrequency</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xTraceOpenLabel</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xTraceOpenLabel</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vTraceUserEvent</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>vTraceUserEvent</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vTraceSetISRProperties</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>vTraceSetISRProperties</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vTraceTaskSkipDefaultInstanceFinishedEvents</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>vTraceTaskSkipDefaultInstanceFinishedEvents</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vTraceTaskInstanceIsFinished</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>vTraceTaskInstanceIsFinished</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vTraceExcludeTaskFromSchedulingTrace</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>vTraceExcludeTaskFromSchedulingTrace</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vTraceInitTraceData</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>vTraceInitTraceData</UsrMethodName>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>vTraceTaskInstanceFinish</ItemSymbol>
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -53608,6 +53860,17 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>vTraceTaskInstanceFinishDirect</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>vTraceEnable</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>vTraceEnable</UsrMethodName>
       </ItemState>
     </Methods>
     <Events>
