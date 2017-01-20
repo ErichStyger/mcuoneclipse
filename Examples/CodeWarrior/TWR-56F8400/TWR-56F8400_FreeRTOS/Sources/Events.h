@@ -56,11 +56,11 @@
 #include "LEDpin8.h"
 #include "LED9.h"
 #include "LEDpin9.h"
-#include "KSDK1.h"
+#include "MCUC1.h"
 #include "WDog1.h"
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

@@ -52,7 +52,7 @@
 #include "LEDpin8.h"
 #include "LED9.h"
 #include "LEDpin9.h"
-#include "KSDK1.h"
+#include "MCUC1.h"
 #include "WDog1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
