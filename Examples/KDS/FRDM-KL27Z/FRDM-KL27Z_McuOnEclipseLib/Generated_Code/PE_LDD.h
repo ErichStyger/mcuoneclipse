@@ -6,7 +6,7 @@
 **     Version     : Component 01.025, Driver 01.04, CPU db: 3.00.000
 **     Repository  : Kinetis
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-19, 18:27, # CodeGen: 11
+**     Date/Time   : 2017-01-21, 07:42, # CodeGen: 32
 **     Abstract    :
 **
 **     Settings    :
@@ -76,6 +76,7 @@
 #include "CLS1.h"
 #include "XF1.h"
 #include "CS1.h"
+#include "KIN1.h"
 
 
 /*

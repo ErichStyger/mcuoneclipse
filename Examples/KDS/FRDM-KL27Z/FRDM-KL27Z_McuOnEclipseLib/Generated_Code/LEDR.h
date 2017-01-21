@@ -7,7 +7,7 @@
 **     Version     : Component 01.073, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-19, 17:38, # CodeGen: 10
+**     Date/Time   : 2017-01-21, 07:38, # CodeGen: 31
 **     Abstract    :
 **          This component implements a universal driver for a single LED.
 **     Settings    :
@@ -19,16 +19,19 @@
 **            On/Off                                       : Enabled
 **              Pin                                        : SDK_BitIO
 **            PWM                                          : Disabled
-**          Shell                                          : Disabled
+**          Shell                                          : Enabled
+**            Shell                                        : CLS1
+**            Utility                                      : UTIL1
 **     Contents    :
-**         On         - void LEDR_On(void);
-**         Off        - void LEDR_Off(void);
-**         Neg        - void LEDR_Neg(void);
-**         Get        - uint8_t LEDR_Get(void);
-**         Put        - void LEDR_Put(uint8_t val);
-**         SetRatio16 - void LEDR_SetRatio16(uint16_t ratio);
-**         Deinit     - void LEDR_Deinit(void);
-**         Init       - void LEDR_Init(void);
+**         On           - void LEDR_On(void);
+**         Off          - void LEDR_Off(void);
+**         Neg          - void LEDR_Neg(void);
+**         Get          - uint8_t LEDR_Get(void);
+**         Put          - void LEDR_Put(uint8_t val);
+**         SetRatio16   - void LEDR_SetRatio16(uint16_t ratio);
+**         ParseCommand - uint8_t LEDR_ParseCommand(const unsigned char *cmd, bool *handled, const...
+**         Deinit       - void LEDR_Deinit(void);
+**         Init         - void LEDR_Init(void);
 **
 **     * Copyright (c) 2013-2016, Erich Styger
 **      * Web:         https://mcuoneclipse.com
@@ -78,13 +81,15 @@
 /* Include inherited components */
 #include "MCUC1.h"
 #include "LEDpin2.h"
+#include "CLS1.h"
+#include "UTIL1.h"
 
 #define LEDR_ClrVal()    LEDpin2_ClrVal() /* put the pin on low level */
 #define LEDR_SetVal()    LEDpin2_SetVal() /* put the pin on high level */
 #define LEDR_SetInput()  LEDpin2_SetInput() /* use the pin as input pin */
 #define LEDR_SetOutput() LEDpin2_SetOutput() /* use the pin as output pin */
 
-#define LEDR_PARSE_COMMAND_ENABLED  0 /* set to 1 if method ParseCommand() is present, 0 otherwise */
+#define LEDR_PARSE_COMMAND_ENABLED  1 /* set to 1 if method ParseCommand() is present, 0 otherwise */
 
 
 #define LEDR_On() LEDpin2_ClrVal()
@@ -165,6 +170,25 @@ void LEDR_Deinit(void);
 **         Deinitializes the driver
 **     Parameters  : None
 **     Returns     : Nothing
+** ===================================================================
+*/
+
+uint8_t LEDR_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
+/*
+** ===================================================================
+**     Method      :  LEDR_ParseCommand (component LED)
+**     Description :
+**         Shell Command Line parser. This method is enabled/disabled
+**         depending on if you have the Shell enabled/disabled in the
+**         properties.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * cmd             - Pointer to command string
+**       * handled         - Pointer to variable which tells if
+**                           the command has been handled or not
+**       * io              - Pointer to I/O structure
+**     Returns     :
+**         ---             - Error code
 ** ===================================================================
 */
 

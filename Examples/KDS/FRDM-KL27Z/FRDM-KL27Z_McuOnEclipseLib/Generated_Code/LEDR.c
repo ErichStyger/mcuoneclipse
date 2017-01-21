@@ -7,7 +7,7 @@
 **     Version     : Component 01.073, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-19, 17:38, # CodeGen: 10
+**     Date/Time   : 2017-01-21, 07:38, # CodeGen: 31
 **     Abstract    :
 **          This component implements a universal driver for a single LED.
 **     Settings    :
@@ -19,16 +19,19 @@
 **            On/Off                                       : Enabled
 **              Pin                                        : SDK_BitIO
 **            PWM                                          : Disabled
-**          Shell                                          : Disabled
+**          Shell                                          : Enabled
+**            Shell                                        : CLS1
+**            Utility                                      : UTIL1
 **     Contents    :
-**         On         - void LEDR_On(void);
-**         Off        - void LEDR_Off(void);
-**         Neg        - void LEDR_Neg(void);
-**         Get        - uint8_t LEDR_Get(void);
-**         Put        - void LEDR_Put(uint8_t val);
-**         SetRatio16 - void LEDR_SetRatio16(uint16_t ratio);
-**         Deinit     - void LEDR_Deinit(void);
-**         Init       - void LEDR_Init(void);
+**         On           - void LEDR_On(void);
+**         Off          - void LEDR_Off(void);
+**         Neg          - void LEDR_Neg(void);
+**         Get          - uint8_t LEDR_Get(void);
+**         Put          - void LEDR_Put(uint8_t val);
+**         SetRatio16   - void LEDR_SetRatio16(uint16_t ratio);
+**         ParseCommand - uint8_t LEDR_ParseCommand(const unsigned char *cmd, bool *handled, const...
+**         Deinit       - void LEDR_Deinit(void);
+**         Init         - void LEDR_Init(void);
 **
 **     * Copyright (c) 2013-2016, Erich Styger
 **      * Web:         https://mcuoneclipse.com
@@ -71,6 +74,64 @@
 /* MODULE LEDR. */
 
 #include "LEDR.h"
+
+static uint8_t PrintStatus(const CLS1_StdIOType *io) {
+  CLS1_SendStatusStr((unsigned char*)"LEDR", (unsigned char*)"\r\n", io->stdOut);
+  if (LEDR_Get()!=0) {
+    CLS1_SendStatusStr((unsigned char*)"  on", (unsigned char*)"yes\r\n", io->stdOut);
+  } else {
+    CLS1_SendStatusStr((unsigned char*)"  on", (unsigned char*)"no\r\n", io->stdOut);
+  }
+  return ERR_OK;
+}
+
+static uint8_t PrintHelp(const CLS1_StdIOType *io) {
+  CLS1_SendHelpStr((unsigned char*)"LEDR", (unsigned char*)"Group of LEDR commands\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  on|off|neg", (unsigned char*)"Turns it on, off or toggle it\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+/*
+** ===================================================================
+**     Method      :  LEDR_ParseCommand (component LED)
+**     Description :
+**         Shell Command Line parser. This method is enabled/disabled
+**         depending on if you have the Shell enabled/disabled in the
+**         properties.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * cmd             - Pointer to command string
+**       * handled         - Pointer to variable which tells if
+**                           the command has been handled or not
+**       * io              - Pointer to I/O structure
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t LEDR_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io)
+{
+  if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "LEDR help")==0) {
+    *handled = TRUE;
+    return PrintHelp(io);
+  } else if ((UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0) || (UTIL1_strcmp((char*)cmd, "LEDR status")==0)) {
+    *handled = TRUE;
+    return PrintStatus(io);
+  } else if (UTIL1_strcmp((char*)cmd, "LEDR on")==0) {
+    *handled = TRUE;
+    LEDR_On();
+    return ERR_OK;
+  } else if (UTIL1_strcmp((char*)cmd, "LEDR off")==0) {
+    *handled = TRUE;
+    LEDR_Off();
+    return ERR_OK;
+  } else if (UTIL1_strcmp((char*)cmd, "LEDR neg")==0) {
+    *handled = TRUE;
+    LEDR_Neg();
+    return ERR_OK;
+  }
+  return ERR_OK;
+}
 
 /*
 ** ===================================================================

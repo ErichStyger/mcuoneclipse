@@ -7,7 +7,7 @@
 **     Version     : Component 01.520, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-19, 21:09, # CodeGen: 27
+**     Date/Time   : 2017-01-21, 07:36, # CodeGen: 30
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
@@ -97,7 +97,9 @@
 **            Critical section                             : Configures how critical sections are handled.
 **              User function for entering critical section: no
 **              User function for exiting critical section : no
-**          Shell                                          : Disabled
+**          Shell                                          : Enabled
+**            Max number of tasks                          : 16
+**            Shell                                        : CLS1
 **          Utility                                        : UTIL1
 **     Contents    :
 **         xTaskCreate                          - portBASE_TYPE FRTOS1_xTaskCreate(pdTASK_CODE pvTaskCode, const portCHAR *...
@@ -208,6 +210,7 @@
 **         pvTaskGetThreadLocalStoragePointer   - void* FRTOS1_pvTaskGetThreadLocalStoragePointer(TaskHandle_t xTaskToQuery,...
 **         pcTaskGetName                        - char* FRTOS1_pcTaskGetName(TaskHandle_t xTaskToQuery);
 **         vTaskGetInfo                         - void FRTOS1_vTaskGetInfo(TaskHandle_t xTask, TaskStatus_t *pxTaskStatus,...
+**         ParseCommand                         - uint8_t FRTOS1_ParseCommand(const unsigned char *cmd, bool *handled, const...
 **         AppConfigureTimerForRuntimeStats     - void FRTOS1_AppConfigureTimerForRuntimeStats(void);
 **         AppGetRuntimeCounterValueFromISR     - uint32_t FRTOS1_AppGetRuntimeCounterValueFromISR(void);
 **         Init                                 - void FRTOS1_Init(void);
@@ -263,6 +266,7 @@
 
 /* Include inherited components */
 #include "MCUC1.h"
+#include "CLS1.h"
 #include "UTIL1.h"
 
 /* other includes needed */
@@ -274,7 +278,7 @@
 #include <stddef.h>                    /* for size_t type */
 
 /* Macro for shell support */
-#define FRTOS1_PARSE_COMMAND_ENABLED         0 /* set to 1 if method ParseCommand() is present, 0 otherwise */
+#define FRTOS1_PARSE_COMMAND_ENABLED         1  /* set to 1 if method ParseCommand() is present, 0 otherwise */
 #define FRTOS1_GENERATE_PEX_RTOS_MACROS      1  /* set to 1 to generate the RTOS macros PEX_RTOS_INIT() and PEX_RTOS_START() */
 
 /* Macros used by Processor Expert */
@@ -1687,6 +1691,23 @@ extern "C" {
 **                           exited.
 **     Returns     :
 **         ---             - Returns pdTRUE if the semaphore was given.
+** ===================================================================
+*/
+
+uint8_t FRTOS1_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
+/*
+** ===================================================================
+**     Method      :  FRTOS1_ParseCommand (component FreeRTOS)
+**     Description :
+**         Shell Command Line Parser
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * cmd             - Pointer to command string
+**       * handled         - Pointer to variable which tells if
+**                           the command has been handled or not
+**       * io              - Pointer to I/O structure
+**     Returns     :
+**         ---             - Error code
 ** ===================================================================
 */
 

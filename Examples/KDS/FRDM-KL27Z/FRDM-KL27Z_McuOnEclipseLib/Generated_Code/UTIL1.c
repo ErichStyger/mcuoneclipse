@@ -7,7 +7,7 @@
 **     Version     : Component 01.147, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-19, 17:26, # CodeGen: 7
+**     Date/Time   : 2017-01-21, 07:28, # CodeGen: 28
 **     Abstract    :
 **          Contains various utility functions.
 **     Settings    :
@@ -2353,11 +2353,7 @@ void UTIL1_NumFloatToStr(uint8_t *dst, size_t dstSize, float val, uint8_t nofFra
     shift *= 10;
   }
   /* get fractional part */
-#if 0 /* non-rounding version */
   fractional = (int32_t)(val*shift);
-#else /* rounding version */
-  fractional = (int32_t)((val+5.0f/(shift*10))*shift);
-#endif
   if (isNeg && fractional>0 && nofFracDigits>0) {
     UTIL1_strcpy(dst, dstSize, (unsigned char*)"-");
     UTIL1_strcatNum32s(dst, dstSize, (int32_t)integral);

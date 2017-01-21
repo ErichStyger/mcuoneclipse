@@ -1,6 +1,22 @@
 #ifndef __MCUC1_CONFIG_H
 #define __MCUC1_CONFIG_H
 
+/* identification of CPU/core used. __CORTEX_M is defined in CMSIS-Core */
+#define MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M    (1 || defined(__CORTEX_M))
+  /*!< 1: ARM Cortex-M family, 0 otherwise */
+#define MCUC1_CONFIG_CPU_IS_KINETIS         (1 && MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M)
+  /*!< 1: NXP Kinetis CPU family, 0: otherwise */
+#define MCUC1_CONFIG_CPU_IS_LPC             (0 && MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M)
+  /*!< 1: NXP LPC CPU family, 0: otherwise */
+
+/* identification of Cortex-M core. __FPU_USED can be defined in CMSIS-Core */
+#if MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M
+  #define MCUC1_CONFIG_CORTEX_M      (0)
+    /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, -1 otherwise */
+  #define MCUC1_CONFIG_FPU_USED      (0 || (defined(__FPU_USED) && (__FPU_USED)==1))
+    /*!< 1: using floating point unit, 0: otherwise */
+#endif
+
 /* Identifiers used to identify the SDK */
 #define MCUC1_CONFIG_SDK_GENERIC             0 /* using a generic API/SDK */
 #define MCUC1_CONFIG_SDK_PROCESSOR_EXPERT    1 /* using Processor Expert SDK */

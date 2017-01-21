@@ -41,6 +41,8 @@
 #include "LEDB.h"
 #include "WAIT1.h"
 #include "FRTOS1.h"
+#include "Shell.h"
+#include "RTT1.h"
 
 static void MainTask(void *pvParameters) {
   (void)pvParameters; /* parameter not used */
@@ -63,6 +65,8 @@ int main(void) {
   LEDR_Init();
   LEDG_Init();
   LEDB_Init();
+  RTT1_Init();
+  SHELL_Init();
 
   LEDR_On();
   WAIT1_Waitms(100);
