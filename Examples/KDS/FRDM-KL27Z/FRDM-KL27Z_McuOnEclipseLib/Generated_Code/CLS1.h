@@ -4,10 +4,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : Shell
-**     Version     : Component 01.089, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.090, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-19, 18:28, # CodeGen: 13
+**     Date/Time   : 2017-01-21, 10:09, # CodeGen: 45
 **     Abstract    :
 **
 **     Settings    :
@@ -20,19 +20,19 @@
 **          Blocking Send                                  : Enabled
 **            Wait                                         : WAIT1
 **            Timeout (ms)                                 : 20
-**            Wait Time (ms)                               : 5
+**            Wait Time (ms)                               : 10
 **            RTOS Wait                                    : yes
 **          Status Colon Pos                               : 13
 **          Help Semicolon Pos                             : 26
 **          Multi Command                                  : Disabled
-**          Utility                                        : UTIL1
-**          XFormat                                        : XF1
+**          History                                        : no
+**          Mutex                                          : no
+**          SDK                                            : MCUC1
 **          Default Serial                                 : Enabled
 **            Console Interface                            : RTT1
-**          Mutex                                          : no
+**          Utility                                        : UTIL1
+**          XFormat                                        : XF1
 **          Critical Section                               : CS1
-**          History                                        : no
-**          SDK                                            : MCUC1
 **     Contents    :
 **         PrintPrompt                  - void CLS1_PrintPrompt(CLS1_ConstStdIOType *io);
 **         SendNum8u                    - void CLS1_SendNum8u(uint8_t val, CLS1_StdIO_OutErr_FctType io);
@@ -156,11 +156,11 @@
 
 /* Include inherited components */
 #include "WAIT1.h"
+#include "MCUC1.h"
+#include "RTT1.h"
 #include "UTIL1.h"
 #include "XF1.h"
-#include "RTT1.h"
 #include "CS1.h"
-#include "MCUC1.h"
 
 /* other includes needed */
 #include <stddef.h> /* for size_t */

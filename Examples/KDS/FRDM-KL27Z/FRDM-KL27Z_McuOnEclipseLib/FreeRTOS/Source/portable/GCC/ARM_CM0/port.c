@@ -208,7 +208,7 @@ typedef unsigned long TickCounter_t; /* enough for 24 bit Systick */
  */
 #if configUSE_TICKLESS_IDLE == 1
   static TickCounter_t ulStoppedTimerCompensation = 0; /* number of timer ticks to compensate */
-  #define configSTOPPED_TIMER_COMPENSATION    45UL  /* number of CPU cycles to compensate, as defined in properties. ulStoppedTimerCompensation will contain the number of timer ticks. */
+  #define configSTOPPED_TIMER_COMPENSATION    45UL  /* number of CPU cycles to compensate. ulStoppedTimerCompensation will contain the number of timer ticks. */
 #endif /* configUSE_TICKLESS_IDLE */
 
 /* Flag indicating that the tick counter interval needs to be restored back to
@@ -477,8 +477,6 @@ static portBASE_TYPE xBankedStartScheduler(void) {
 #endif
 /*-----------------------------------------------------------*/
 #if configUSE_TICKLESS_IDLE == 1
-void FRTOS1_vOnPreSleepProcessing(TickType_t expectedIdleTicks); /* prototype */
-
 #if (configCOMPILER==configCOMPILER_ARM_GCC) || (configCOMPILER==configCOMPILER_ARM_KEIL)
 __attribute__((weak))
 #endif
@@ -491,7 +489,10 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
 #if configSYSTICK_USE_LOW_POWER_TIMER
   /* if we wait for the tick interrupt, do not enter low power again below */
   if (restoreTickInterval!=0) {
-    FRTOS1_vOnPreSleepProcessing(xExpectedIdleTime); /* go into low power mode. Re-enable interrupts as needed! */
+    /* default wait/sleep code */
+    __asm volatile("dsb");
+    __asm volatile("wfi");
+    __asm volatile("isb");
     return;
   }
 #endif
@@ -575,7 +576,10 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
      */
 
      /* CPU *HAS TO WAIT* in the sequence below for an interrupt. If vOnPreSleepProcessing() is not used, a default implementation is provided */
-    FRTOS1_vOnPreSleepProcessing(xExpectedIdleTime); /* go into low power mode. Re-enable interrupts as needed! */
+    /* default wait/sleep code */
+    __asm volatile("dsb");
+    __asm volatile("wfi");
+    __asm volatile("isb");
     /* ----------------------------------------------------------------------------
      * Here the CPU *HAS TO BE* low power mode, waiting to wake up by an interrupt 
      * ----------------------------------------------------------------------------*/

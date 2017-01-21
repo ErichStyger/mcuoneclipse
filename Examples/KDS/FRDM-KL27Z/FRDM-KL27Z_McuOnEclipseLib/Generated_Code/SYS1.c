@@ -7,7 +7,7 @@
 **     Version     : Component 01.051, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-19, 18:31, # CodeGen: 15
+**     Date/Time   : 2017-01-21, 10:06, # CodeGen: 42
 **     Abstract    :
 **
 **     Settings    :
@@ -25,7 +25,7 @@
 **            Segger RTT                                   : RTT1
 **            Name                                         : "SysView"
 **            Channel Index                                : 1
-**            Up Buffer size                               : 1024
+**            Up Buffer size                               : 256
 **          SDK                                            : MCUC1
 **          Source Folders                                 : 
 **            Source Folder                                : ../SEGGER

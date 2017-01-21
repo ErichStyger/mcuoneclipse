@@ -43,6 +43,13 @@
 #include "FRTOS1.h"
 #include "Shell.h"
 #include "RTT1.h"
+#include "TmDt1.h"
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+  #include "SYS1.h"
+#endif
+#if configUSE_TRACE_HOOKS
+  #include "PTRC1.h"
+#endif
 
 static void MainTask(void *pvParameters) {
   (void)pvParameters; /* parameter not used */
@@ -61,13 +68,20 @@ int main(void) {
   BOARD_BootClockRUN();
   BOARD_InitDebugConsole();
 
-  /* Add your code here */
+  /* Initialize modules */
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+  SYS1_Init();
+#elif configUSE_TRACE_HOOKS
+  PTRC1_Startup();
+#endif
   LEDR_Init();
   LEDG_Init();
   LEDB_Init();
   RTT1_Init();
   SHELL_Init();
+  TmDt1_Init();
 
+  /* quick LED testing */
   LEDR_On();
   WAIT1_Waitms(100);
   LEDR_Off();
@@ -91,7 +105,6 @@ int main(void) {
     /*lint +e527 */
   }
   vTaskStartScheduler();
-
 
   for(;;) { /* Infinite loop to avoid leaving the main function */
     __asm("NOP"); /* something to use as a breakpoint stop while looping */

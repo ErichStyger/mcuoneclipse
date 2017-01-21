@@ -1,3 +1,10 @@
+/**
+ * \file
+ * \brief Configuration header file for McuLibConfig
+ *
+ * This header file is used to configure settings of the McuLibConfig module.
+ */
+
 #ifndef __MCUC1_CONFIG_H
 #define __MCUC1_CONFIG_H
 
@@ -18,15 +25,21 @@
 #endif
 
 /* Identifiers used to identify the SDK */
-#define MCUC1_CONFIG_SDK_GENERIC             0 /* using a generic API/SDK */
-#define MCUC1_CONFIG_SDK_PROCESSOR_EXPERT    1 /* using Processor Expert SDK */
-#define MCUC1_CONFIG_SDK_KINETIS_1_3         2 /* using NXP Kinetis SDK V1.3 */
-#define MCUC1_CONFIG_SDK_KINETIS_2_0         3 /* using NXP Kinetis SDK V2.0 */
-#define MCUC1_CONFIG_SDK_MCUXPRESSO_2_0      4 /* same as Kinetis SDK v2.0 */
+#define MCUC1_CONFIG_SDK_GENERIC             0
+  /*!< using a generic API/SDK */
+#define MCUC1_CONFIG_SDK_PROCESSOR_EXPERT    1
+  /*!< using Processor Expert SDK */
+#define MCUC1_CONFIG_SDK_KINETIS_1_3         2
+  /*!< using NXP Kinetis SDK V1.3 */
+#define MCUC1_CONFIG_SDK_KINETIS_2_0         3
+  /*!< using NXP Kinetis SDK V2.0 */
+#define MCUC1_CONFIG_SDK_MCUXPRESSO_2_0      4
+  /*!< same as Kinetis SDK v2.0 */
 
 /* specify the SDK and API used */
 #ifndef MCUC1_CONFIG_SDK_VERSION_USED
   #define MCUC1_CONFIG_SDK_VERSION_USED  MCUC1_CONFIG_SDK_MCUXPRESSO_2_0
+    /*!< identify the version of SDK/API used */
 #endif
 
 /* special macro to identify a set of SDKs used */

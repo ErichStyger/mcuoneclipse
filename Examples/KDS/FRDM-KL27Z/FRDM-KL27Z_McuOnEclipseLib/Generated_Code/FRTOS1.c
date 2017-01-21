@@ -7,7 +7,7 @@
 **     Version     : Component 01.520, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-21, 07:36, # CodeGen: 30
+**     Date/Time   : 2017-01-21, 10:30, # CodeGen: 47
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
@@ -35,7 +35,8 @@
 **          Thread Local Storage Pointers                  : 0
 **          Use Trace Facility                             : yes
 **          Segger System Viewer Trace                     : Disabled
-**          Percepio Trace                                 : Disabled
+**          Percepio Trace                                 : Enabled
+**            Percepio FreeRTOS+Trace                      : PTRC1
 **          Generate Runtime Statistics                    : Enabled
 **            Use Tick Counter                             : yes
 **            LDD                                          : Disabled
@@ -51,7 +52,7 @@
 **              Compiler Optimization Level                : 0
 **              SysTick                                    : Enabled
 **                Core Clock                               : yes
-**              Low Power Timer                            : Enabled
+**              Low Power Timer                            : Disabled
 **            non-LDD SWI                                  : Disabled
 **            Preemptive                                   : yes
 **            Optimized Task Selection                     : no
@@ -67,11 +68,7 @@
 **            Cleanup Resources                            : yes
 **            TaskExitError Handler                        : no
 **          Ticks                                          : Settings for the periodic tick timer
-**            Tickless Idle Mode                           : Enabled
-**              Stopped Timer Compensation                 : 45
-**              Expected Idle Time (Ticks) before Sleep    : 2
-**              Idle Decision Hook                         : Enabled
-**                Hook function name                       : xEnterTicklessIdle
+**            Tickless Idle Mode                           : Disabled
 **            Tick Rate (Hz)                               : 100
 **            Use 16bit ticks                              : no
 **            non-LDD Tick                                 : Disabled

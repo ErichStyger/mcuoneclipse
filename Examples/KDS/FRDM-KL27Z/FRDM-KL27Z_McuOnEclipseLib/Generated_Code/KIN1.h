@@ -4,10 +4,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : KinetisTools
-**     Version     : Component 01.033, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.034, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-21, 09:05, # CodeGen: 36
+**     Date/Time   : 2017-01-21, 09:50, # CodeGen: 37
 **     Abstract    :
 **
 **     Settings    :
@@ -28,7 +28,7 @@
 **         SetPSP                 - void KIN1_SetPSP(void *setval);
 **         SetLR                  - void KIN1_SetLR(uint32_t setval);
 **
-**     * Copyright (c) 2014-2016, Erich Styger
+**     * Copyright (c) 2014-2017, Erich Styger
 **      * Web:         https://mcuoneclipse.com
 **      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

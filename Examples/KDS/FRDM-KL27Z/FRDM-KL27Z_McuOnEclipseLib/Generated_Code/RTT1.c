@@ -7,25 +7,25 @@
 **     Version     : Component 01.081, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-19, 18:28, # CodeGen: 14
+**     Date/Time   : 2017-01-21, 10:09, # CodeGen: 44
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : RTT1
 **          Version                                        : V5.10u
-**          Number of Up Channels                          : 2
-**          Number of Down Channels                        : 2
+**          Number of Up Channels                          : 3
+**          Number of Down Channels                        : 3
 **          Max Blocked Interrupt Level                    : 3
 **          Channel 0                                      : Enabled
 **            Name                                         : "Terminal"
-**            Up Buffer Size (Tx)                          : 512
+**            Up Buffer Size (Tx)                          : 256
 **            Down Buffer Size (Rx)                        : 64
 **            Up Buffer Mode                               : Skip (Default)
 **            Down Buffer Mode                             : Skip (Default)
 **            Blocking Send                                : Enabled
-**              Timeout (ms)                               : 5
+**              Timeout (ms)                               : 50
 **              Wait                                       : WAIT1
-**              Wait Time (ms)                             : 1
+**              Wait Time (ms)                             : 10
 **            Printf Buffer Size                           : 64
 **          SDK                                            : MCUC1
 **          Shell                                          : CLS1
@@ -280,17 +280,17 @@ void RTT1_StdIOReadChar(uint8_t *c)
 */
 void RTT1_StdIOSendChar(uint8_t ch)
 {
-  int timeoutMs = 5;
+  int timeoutMs = 50;
 
   for(;;) { /* will break */
     if (RTT1_Write(0, (const char*)&ch, 1)==1) { /* non blocking send, check that we were able to send */
       break; /* was able to send character, get out of waiting loop */
     }
-    WAIT1_WaitOSms(1);
+    WAIT1_WaitOSms(10);
     if(timeoutMs<=0) {
       break; /* timeout */
     }
-    timeoutMs -= 1;
+    timeoutMs -= 10;
   } /* for */
 }
 

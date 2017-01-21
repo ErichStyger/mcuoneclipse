@@ -4,10 +4,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : Utility
-**     Version     : Component 01.147, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.148, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-21, 07:28, # CodeGen: 28
+**     Date/Time   : 2017-01-21, 09:50, # CodeGen: 37
 **     Abstract    :
 **          Contains various utility functions.
 **     Settings    :
@@ -79,7 +79,7 @@
 **         Deinit                  - void UTIL1_Deinit(void);
 **         Init                    - void UTIL1_Init(void);
 **
-**     * Copyright (c) 2014-2016, Erich Styger
+**     * Copyright (c) 2014-2017, Erich Styger
 **      * Web:         https://mcuoneclipse.com
 **      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

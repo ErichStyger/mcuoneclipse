@@ -1,3 +1,10 @@
+/**
+ * \file
+ * \brief Configuration header file for Kinetis Tools
+ *
+ * This header file is used to configure settings of the Kinetis Tools module.
+ */
+
 #ifndef __KIN1_CONFIG_H
 #define __KIN1_CONFIG_H
 

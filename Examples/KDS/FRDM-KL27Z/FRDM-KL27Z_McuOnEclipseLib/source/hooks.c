@@ -11,6 +11,7 @@
   #include "PTRC1.h"
 #endif
 #include "LEDB.h"
+#include "TmDt1.h"
 
 void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName) {
   /* This will get called if a stack overflow is detected during the context
@@ -26,7 +27,8 @@ void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
 
 void FRTOS1_vApplicationTickHook(void) {
   /* Called for every RTOS tick. */
- // LEDB_Neg(); /* indicate tick interrupt */
+  // LEDB_Neg(); /* indicate tick interrupt */
+  TmDt1_AddTick(); /* update software RTC */
 }
 
 void FRTOS1_vApplicationMallocFailedHook(void) {

@@ -15,6 +15,7 @@
 #include "LEDG.h"
 #include "LEDB.h"
 #include "KIN1.h"
+#include "TmDt1.h"
 
 void SHELL_SendString(unsigned char *msg) {
   CLS1_SendStr(msg, CLS1_GetStdio()->stdOut);
@@ -37,6 +38,12 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if KIN1_PARSE_COMMAND_ENABLED
   KIN1_ParseCommand,
+#endif
+#if KIN1_PARSE_COMMAND_ENABLED
+  KIN1_ParseCommand,
+#endif
+#if TmDt1_PARSE_COMMAND_ENABLED
+  TmDt1_ParseCommand,
 #endif
   NULL /* Sentinel */
 };
