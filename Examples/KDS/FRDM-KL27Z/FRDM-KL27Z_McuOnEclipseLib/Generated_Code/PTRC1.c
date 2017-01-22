@@ -4,17 +4,17 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : PercepioTrace
-**     Version     : Component 01.114, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.116, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-21, 11:33, # CodeGen: 51
+**     Date/Time   : 2017-01-22, 08:14, # CodeGen: 53
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : PTRC1
 **          RTOS+Trace Version                             : V3.1.0
-**          Startup trace enable method                    : TRC_START_AWAIT_HOST
 **          Recorder Mode                                  : Streaming
+**          Startup trace enable method                    : TRC_START_AWAIT_HOST
 **          Recorder Buffer Allocation                     : static
 **          Max ISR Nesting                                : 8
 **          Snapshot Mode                                  : 

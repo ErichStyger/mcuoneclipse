@@ -4,10 +4,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : McuLibConfig
-**     Version     : Component 01.006, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.007, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-19, 17:17, # CodeGen: 3
+**     Date/Time   : 2017-01-22, 08:14, # CodeGen: 53
 **     Abstract    :
 **
 **     Settings    :
@@ -17,7 +17,7 @@
 **     Contents    :
 **         No public methods
 **
-**     * Copyright (c) 2016, Erich Styger
+**     * Copyright (c) 2016-2017, Erich Styger
 **      * Web:         https://mcuoneclipse.com
 **      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

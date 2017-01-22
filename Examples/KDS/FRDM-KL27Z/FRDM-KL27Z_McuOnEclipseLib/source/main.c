@@ -50,6 +50,8 @@
 #if configUSE_TRACE_HOOKS
   #include "PTRC1.h"
 #endif
+#include "CLS1.h"
+#include "Console.h"
 
 static void MainTask(void *pvParameters) {
   (void)pvParameters; /* parameter not used */
@@ -78,8 +80,10 @@ int main(void) {
   LEDG_Init();
   LEDB_Init();
   RTT1_Init();
+  CLS1_Init();
   SHELL_Init();
   TmDt1_Init();
+  CONSOLE_Init();
 
   /* quick LED testing */
   LEDR_On();
