@@ -10,23 +10,34 @@
 #include "fsl_lpuart.h"
 #include "CLS1.h"
 
+#define FULL_BLOCK  1
+
 static void ReadChar(uint8_t *p) {
-  //uint32_t flags;
+#if FULL_BLOCK
   status_t status;
 
-  //flags = LPUART_GetStatusFlags(LPUART0);
-  //if (flags&kLPUART_RxDataRegFullFlag) {
+  status = LPUART_ReadBlocking(LPUART0, p, 1); /* get char */
+  if (status!=kStatus_Success) {
+    *p = '\0'; /* error case */
+  }
+#else
+  uint32_t flags;
+  status_t status;
+
+  flags = LPUART_GetStatusFlags(LPUART0);
+  if (flags&kLPUART_RxDataRegFullFlag) { /* data received */
     status = LPUART_ReadBlocking(LPUART0, p, 1); /* get char */
     if (status!=kStatus_Success) {
       *p = '\0'; /* error case */
     }
-  //} else {
-   // *p = '\0';
-  //}
+  } else {
+    *p = '\0';
+  }
+#endif
 }
 
 static void WriteChar(uint8_t ch) {
-  LPUART_WriteBlocking(LPUART0, (uint8_t*)&ch, sizeof(ch));
+  LPUART_WriteBlocking(LPUART0, (const uint8_t*)&ch, sizeof(ch));
 }
 
 static bool HasInput(void) {
