@@ -161,11 +161,11 @@ static bool BL_CheckBootloaderMode(void) {
  * \brief This method is called during startup! It decides if we enter bootloader mode or if we run the application.
  */
 void BL_CheckForUserApp(void) {
-  //static bool doIt = FALSE;
+  static bool doIt = FALSE;
   uint32_t startup; /* assuming 32bit function pointers */
 
   startup = ((uint32_t*)APP_FLASH_VECTOR_START)[1]; /* this is the reset vector (__startup function) */
-  if (/*doIt &&*/ startup!=-1 && !BL_CheckBootloaderMode()) { /* we do have a valid application vector? -1/0xfffffff would mean flash erased */
+  if (doIt && startup!=-1 && !BL_CheckBootloaderMode()) { /* we do have a valid application vector? -1/0xfffffff would mean flash erased */
     ((void(*)(void))startup)(); /* Jump to application startup code */
   }
 }
