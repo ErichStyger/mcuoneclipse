@@ -7,7 +7,7 @@
 **     Version     : Component 01.520, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-22, 08:33, # CodeGen: 54
+**     Date/Time   : 2017-01-28, 17:54, # CodeGen: 61
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
@@ -55,7 +55,7 @@
 **              Low Power Timer                            : Disabled
 **            non-LDD SWI                                  : Disabled
 **            Preemptive                                   : yes
-**            Optimized Task Selection                     : no
+**            Optimized Task Selection                     : yes
 **            Time Slicing                                 : yes
 **            Use Co-Routines                              : no
 **            Idle should yield                            : yes

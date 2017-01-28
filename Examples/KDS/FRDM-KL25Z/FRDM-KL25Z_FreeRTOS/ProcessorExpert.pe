@@ -8983,7 +8983,7 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>ARMFamilyType</ItemSymbol>
@@ -11927,7 +11927,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.114</BeanVersion>
+    <BeanVersion>01.116</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -11943,20 +11943,20 @@
         <Value>V3.1.0</Value>
       </ItemState>
       <ItemState>
-        <ItemSymbol>trcStartupEnableMethod</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <EnumSymbVal>TRC_START</EnumSymbVal>
-      </ItemState>
-      <ItemState>
         <ItemSymbol>TraceRecorderMode</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>1</Index>
         <EnumSymbVal>TRC_RECORDER_MODE_STREAMING</EnumSymbVal>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>trcStartupEnableMethod</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <EnumSymbVal>TRC_START</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>RecorderBufferAllocation</ItemSymbol>
@@ -12856,7 +12856,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.006</BeanVersion>
+    <BeanVersion>01.007</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>

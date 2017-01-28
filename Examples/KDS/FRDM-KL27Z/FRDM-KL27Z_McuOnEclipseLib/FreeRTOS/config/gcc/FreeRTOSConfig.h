@@ -143,7 +143,7 @@
 #define configUSE_STATS_FORMATTING_FUNCTIONS      (configUSE_TRACE_FACILITY || configGENERATE_RUN_TIME_STATS)
 #define configUSE_16_BIT_TICKS                    0 /* 1: use 16bit tick counter type, 0: use 32bit tick counter type */
 #define configIDLE_SHOULD_YIELD                   1 /* 1: the IDEL task will yield as soon as possible. 0: The IDLE task waits until preemption. */
-#define configUSE_PORT_OPTIMISED_TASK_SELECTION   (0 && configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY)) /* 1: the scheduler uses an optimized task selection as defined by the port (if available). 0: normal task selection is used */
+#define configUSE_PORT_OPTIMISED_TASK_SELECTION   (1 && configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY)) /* 1: the scheduler uses an optimized task selection as defined by the port (if available). 0: normal task selection is used */
 #define configUSE_CO_ROUTINES                     0
 #define configUSE_MUTEXES                         1
 #define configCHECK_FOR_STACK_OVERFLOW            1 /* 0 is disabling stack overflow. Set it to 1 for Method1 or 2 for Method2 */
