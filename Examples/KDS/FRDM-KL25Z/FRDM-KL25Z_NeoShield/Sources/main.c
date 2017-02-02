@@ -71,7 +71,6 @@
 #include "EVNT1.h"
 #include "TRG1.h"
 #include "PTB.h"
-#include "KSDK1.h"
 #include "GFONT1.h"
 #include "FDisp1.h"
 #include "UIT1.h"
@@ -83,6 +82,7 @@
 #include "RTT1.h"
 #include "KIN1.h"
 #include "XF1.h"
+#include "MCUC1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

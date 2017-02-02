@@ -32,7 +32,6 @@
 #include "Events.h"
 #include "Pins1.h"
 #include "WAIT1.h"
-#include "KSDK1.h"
 #include "FRTOS1.h"
 #include "UTIL1.h"
 #include "SYS1.h"
@@ -44,6 +43,11 @@
 #include "TimerIntLdd2.h"
 #include "TU2.h"
 #include "HF1.h"
+#include "CLS1.h"
+#include "CS1.h"
+#include "XF1.h"
+#include "MCUC1.h"
+#include "KIN1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -322,6 +326,9 @@ static void MainTask(void *pvParam) {
   }
 }
 
+static void foo(void) {
+}
+
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
@@ -331,7 +338,18 @@ int main(void)
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
+#if 1
+  {
+    uint32_t cycles; /* number of cycles */
 
+    KIN1_InitCycleCounter(); /* enable DWT hardware */
+    KIN1_ResetCycleCounter(); /* reset cycle counter */
+    KIN1_EnableCycleCounter(); /* start counting */
+    foo(); /* call function and count cycles */
+    cycles = KIN1_GetCycleCounter(); /* get cycle counter */
+    KIN1_DisableCycleCounter(); /* disable counting if not used any more */
+  }
+#endif
   /* Write your code here */
 #if 1
   SetGroupingPrio();

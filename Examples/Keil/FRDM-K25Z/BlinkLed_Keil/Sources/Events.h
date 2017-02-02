@@ -44,6 +44,7 @@
 #include "FRTOS1.h"
 #include "EVNT1.h"
 #include "CS1.h"
+#include "MCUC1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -67,7 +68,7 @@ void Cpu_OnNMIINT(void);
 
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
@@ -126,7 +127,7 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 ** ===================================================================
 */
 
-void EVNT1_AppHandleEvent(byte event);
+void EVNT1_AppHandleEvent(uint8_t event);
 /*
 ** ===================================================================
 **     Event       :  EVNT1_AppHandleEvent (module Events)

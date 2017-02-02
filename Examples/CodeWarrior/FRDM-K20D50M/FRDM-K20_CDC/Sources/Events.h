@@ -52,7 +52,9 @@
 #include "Tx1.h"
 #include "Rx1.h"
 #include "CS1.h"
-#include "KSDK1.h"
+#include "MCUC1.h"
+#include "CLS1.h"
+#include "XF1.h"
 
 /*
 ** ===================================================================

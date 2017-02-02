@@ -13,18 +13,28 @@
 #include "FRTOS1.h"
 #include "TmDt1.h"
 #include "RTC1.h"
+#include "TmDt1.h"
 
 #define LEDFRAME_SMALL_FONT    1
 #define LEDFRAME_CYCLE_COLORS  0
 #define LEDFRAME_SHOW_MIN_SEC  0
 #define LEDFRAME_SHOW_HOUR_MIN 1
 #define LEDFRAME_SHOW_LECTURE_MODE  0  /* different colors depending on time */
+#define LEDFRAME_HAS_ALARM     1  /* show countdown */
 
 /* task notification bits */
 #define LEDFRAME_NOTIFICATION_UPDATE_DISPLAY      (1<<0)  /* update display */
 static xTaskHandle LedFrameTaskHandle; /* task handle */
 static TimerHandle_t LedFrameTimer; /* timer handle for changing display */
 static bool LEDFRAME_doUpdate = FALSE;
+
+#if LEDFRAME_HAS_ALARM
+  static bool LEDFRAME_alarmEnabled = FALSE; /* if alarm is turned on */
+  static bool LEDFRAME_alarmShowCurrentTime = TRUE; /* if current clock time shall be shown while alarm active */
+  static bool LEDFRAME_alarmShowAlarmTime = FALSE; /* if alarm time shall be shown */
+  static bool LEDFRAME_alarmShowCountdown = TRUE; /* if alarm countdown shall be shown */
+  static TIMEREC LEDFRAME_alarmTime; /* time of alarm */
+#endif
 
 #if 0
 typedef enum {
@@ -36,7 +46,7 @@ static LEDFRAME_TransitionType LedFrametransition = LEDFRAME_TRANSITION_NONE;
 
 /* global settings */
 static bool LEDFRAME_ClockIsOn = TRUE; /* if clock is on or stopped */
-static uint8_t LEDFRAME_BrightnessPercent = 50; /* brightness value, 0 (off) - 100 (full brightness) */
+static uint8_t LEDFRAME_BrightnessPercent = 80; /* brightness value, 0 (off) - 100 (full brightness) */
 static GDisp1_PixelColor LEDFRAME_color = 0x0000ff;
 #if LEDFRAME_CYCLE_COLORS
   static GDisp1_PixelColor color0 = 0x0000ff, color1=0x00ff00, color2=0xff0000, color3 = 0xff00ff;
@@ -284,6 +294,37 @@ static void LEDFRAME_RequestDisplayUpdate(void) {
   (void)xTaskNotify(LedFrameTaskHandle, LEDFRAME_NOTIFICATION_UPDATE_DISPLAY, eSetBits);
 }
 
+#if LEDFRAME_HAS_ALARM
+static void LEDFRAME_ShowAlarmTime(TIMEREC *time, GDisp1_PixelColor color, bool showHours) {
+  GDisp1_Clear(); /* clear all pixels */
+  LEDFRAME_RequestDisplayUpdate();
+  if (GDisp1_GetWidth()>=16) { /* at least two modules */
+#if LEDFRAME_SMALL_FONT
+    if (showHours) {
+      /* write hh:mm */
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Hour/10), 0, 0, ProcessColor(color));
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Hour%10), 4, 0, ProcessColor(color));
+      /* write first two digits */
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Min/10), 8, 0, ProcessColor(color));
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Min%10), 12, 0, ProcessColor(color));
+    } else {
+      /* write mm:ss */
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Min/10), 0, 0, ProcessColor(color));
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Min%10), 4, 0, ProcessColor(color));
+      /* write first two digits */
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Sec/10), 8, 0, ProcessColor(color));
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Sec%10), 12, 0, ProcessColor(color));
+    }
+#endif
+  } else if (GDisp1_GetWidth()>=8) { /* at least one module */
+    /* write sec */
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Sec/10), 0, 0, ProcessColor(color));
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Sec%10), 4, 0, ProcessColor(color));
+  }
+  LEDFRAME_RequestDisplayUpdate();
+}
+#endif /* LEDFRAME_HAS_ALARM */
+
 void LEDFRAME_ShowClockTime(TIMEREC *time) {
 #if LEDFRAME_CYCLE_COLORS
   static int colorCnt = 0;
@@ -356,7 +397,7 @@ void LEDFRAME_ShowClockTime(TIMEREC *time) {
 }
 
 static uint8_t PrintStatus(CLS1_ConstStdIOType *io) {
-  uint8_t buf[32];
+  uint8_t buf[48];
 
   CLS1_SendStatusStr((unsigned char*)"ledframe", (const unsigned char*)"\r\n", io->stdOut);
   CLS1_SendStatusStr((uint8_t*)"  clock", LEDFRAME_ClockIsOn?(uint8_t*)"on\r\n":(uint8_t*)"off\r\n", io->stdOut);
@@ -374,6 +415,26 @@ static uint8_t PrintStatus(CLS1_ConstStdIOType *io) {
   UTIL1_strcatNum8Hex(buf, sizeof(buf), LEDFRAME_GetColorBlueValue());
   UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
   CLS1_SendStatusStr((uint8_t*)"  color", buf, io->stdOut);
+
+#if LEDFRAME_HAS_ALARM
+  buf[0] = '\0';
+  if (LEDFRAME_alarmEnabled) {
+    UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"on, ");
+  } else {
+    UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"off, ");
+  }
+  TmDt1_AddTimeString(buf, sizeof(buf), &LEDFRAME_alarmTime, (uint8_t*)TmDt1_DEFAULT_TIME_FORMAT_STR);
+  UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
+  CLS1_SendStatusStr((uint8_t*)"  alarm", buf, io->stdOut);
+
+  buf[0] = '\0';
+  UTIL1_strcat(buf, sizeof(buf), LEDFRAME_alarmShowCurrentTime?(uint8_t*)"time (on)":(uint8_t*)"time (off)");
+  UTIL1_strcat(buf, sizeof(buf), LEDFRAME_alarmShowAlarmTime?(uint8_t*)", alarm (on)":(uint8_t*)", alarm (off)");
+  UTIL1_strcat(buf, sizeof(buf), LEDFRAME_alarmShowCountdown?(uint8_t*)", countdown (on)":(uint8_t*)", countdown (off)");
+  UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
+  CLS1_SendStatusStr((uint8_t*)"  alarm show", buf, io->stdOut);
+#endif
+
   return ERR_OK;
 }
 
@@ -391,6 +452,14 @@ uint8_t LEDFRAME_ParseCommand(const unsigned char *cmd, bool *handled, const CLS
     CLS1_SendHelpStr((unsigned char*)"  color red <val>", (const unsigned char*)"Set red color (0-255)\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  color green <val>", (const unsigned char*)"Set green color (0-255)\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  color blue <val>", (const unsigned char*)"Set blue color (0-255)\r\n", io->stdOut);
+#if LEDFRAME_HAS_ALARM
+    CLS1_SendHelpStr((unsigned char*)"  alarm (on|off)", (const unsigned char*)"Turns alarm on or off\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  alarm time hh:mm:ss", (const unsigned char*)"Set alarm target time\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  alarm duration hh:mm:ss", (const unsigned char*)"Set duration until alarm\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  alarm show time (on|off)", (const unsigned char*)"Set show current time in alarm mode\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  alarm show alarm (on|off)", (const unsigned char*)"Set show alarm time in alarm mode\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  alarm show countdown (on|off)", (const unsigned char*)"Set show countdown in alarm mode\r\n", io->stdOut);
+#endif
     *handled = TRUE;
     return ERR_OK;
   } else if ((UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0) || (UTIL1_strcmp((char*)cmd, "ledframe status")==0)) {
@@ -460,6 +529,79 @@ uint8_t LEDFRAME_ParseCommand(const unsigned char *cmd, bool *handled, const CLS
       CLS1_SendStr((uint8_t*)"Color must be between 0 and 0xffffff!\r\n", io->stdErr);
       res = ERR_FAILED;
     }
+#if LEDFRAME_HAS_ALARM
+  } else if (UTIL1_strcmp((char*)cmd, "ledframe alarm on")==0) {
+    LEDFRAME_alarmEnabled = TRUE;
+    LEDFRAME_doUpdate = TRUE;
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, "ledframe alarm off")==0) {
+    LEDFRAME_alarmEnabled = FALSE;
+    LEDFRAME_doUpdate = TRUE;
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, "ledframe alarm show time on")==0) {
+    LEDFRAME_alarmShowCurrentTime = TRUE;
+    LEDFRAME_doUpdate = TRUE;
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, "ledframe alarm show time off")==0) {
+    LEDFRAME_alarmShowCurrentTime = FALSE;
+    LEDFRAME_doUpdate = TRUE;
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, "ledframe alarm show alarm on")==0) {
+    LEDFRAME_alarmShowAlarmTime = TRUE;
+    LEDFRAME_doUpdate = TRUE;
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, "ledframe alarm show alarm off")==0) {
+    LEDFRAME_alarmShowAlarmTime = FALSE;
+    LEDFRAME_doUpdate = TRUE;
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, "ledframe alarm show countdown on")==0) {
+    LEDFRAME_alarmShowCountdown = TRUE;
+    LEDFRAME_doUpdate = TRUE;
+    *handled = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, "ledframe alarm show countdown off")==0) {
+    LEDFRAME_alarmShowCountdown = FALSE;
+    LEDFRAME_doUpdate = TRUE;
+    *handled = TRUE;
+  } else if (UTIL1_strncmp((char*)cmd, "ledframe alarm time ", sizeof("ledframe alarm time ")-1)==0) {
+    uint8_t hour, minute, second, hsecond;
+
+    p = cmd+sizeof("ledframe alarm time ")-1;
+    res = UTIL1_ScanTime(&p, &hour, &minute, &second, &hsecond);
+    if (res==ERR_OK) {
+      LEDFRAME_alarmTime.Hour = hour;
+      LEDFRAME_alarmTime.Min = minute;
+      LEDFRAME_alarmTime.Sec = second;
+      LEDFRAME_alarmTime.Sec100 = hsecond;
+      LEDFRAME_alarmEnabled = TRUE; /* turn on alarm */
+      LEDFRAME_doUpdate = TRUE;
+     *handled = TRUE;
+    } else {
+      CLS1_SendStr((uint8_t*)"Failed reading alarm time!\r\n", io->stdErr);
+      res = ERR_FAILED;
+    }
+  } else if (UTIL1_strncmp((char*)cmd, "ledframe alarm duration ", sizeof("ledframe alarm duration ")-1)==0) {
+    uint8_t hour, minute, second, hsecond;
+
+    p = cmd+sizeof("ledframe alarm duration ")-1;
+    res = UTIL1_ScanTime(&p, &hour, &minute, &second, &hsecond);
+    if (res==ERR_OK) {
+      TIMEREC time;
+      DATEREC date;
+      uint32_t secs;
+
+      (void)TmDt1_GetTime(&time);
+      (void)TmDt1_GetDate(&date);
+      secs = TmDt1_TimeDateToUnixSeconds(&time, &date, 0);
+      secs += hour*3600 + minute*60 + second;
+      TmDt1_UnixSecondsToTimeDate(secs, 0, &LEDFRAME_alarmTime, NULL);
+      LEDFRAME_alarmEnabled = TRUE; /* turn on alarm */
+      LEDFRAME_doUpdate = TRUE;
+      *handled = TRUE;
+    } else {
+      CLS1_SendStr((uint8_t*)"Failed reading alarm duration!\r\n", io->stdErr);
+      res = ERR_FAILED;
+    }
+#endif
   }
   return res;
 }
@@ -475,6 +617,55 @@ static uint8_t CheckAndUpdateClock(void) {
 
   res = TmDt1_GetTime(&time);
   if (res==ERR_OK) {
+#if PL_HAS_LED_FRAME_CLOCK
+    if (LEDFRAME_alarmEnabled) {
+      uint32_t currTimeSeconds, alarmTimeSeconds;
+      TIMEREC remainingTime;
+      DATEREC date;
+
+      res = TmDt1_GetDate(&date);
+      currTimeSeconds = TmDt1_TimeDateToUnixSeconds(&time, &date, 0);
+      alarmTimeSeconds = TmDt1_TimeDateToUnixSeconds(&LEDFRAME_alarmTime, &date, 0);
+      if (currTimeSeconds>alarmTimeSeconds) { /* alarm expired */
+        TmDt1_UnixSecondsToTimeDate(currTimeSeconds-alarmTimeSeconds, 0, &remainingTime, NULL);
+        LEDFRAME_ShowAlarmTime(&remainingTime, 0xff0000, (currTimeSeconds-alarmTimeSeconds)>60*60); /* show seconds if less than one hour */
+      } else { /* currTimeSeconds<=alarmTimeSeconds */
+        if (!LEDFRAME_alarmShowCurrentTime && !LEDFRAME_alarmShowAlarmTime && LEDFRAME_alarmShowCountdown) {
+          /* only show countdown */
+          TmDt1_UnixSecondsToTimeDate(alarmTimeSeconds-currTimeSeconds, 0, &remainingTime, NULL);
+          LEDFRAME_ShowAlarmTime(&remainingTime, 0xffff00, (alarmTimeSeconds-currTimeSeconds)>60*60); /* show seconds if less than one hour */
+        } else if (!LEDFRAME_alarmShowCurrentTime && LEDFRAME_alarmShowAlarmTime && LEDFRAME_alarmShowCountdown) {
+          /* show alarm time and countdown */
+          if (time.Sec<=10) {
+            LEDFRAME_ShowAlarmTime(&LEDFRAME_alarmTime, 0xff0000, TRUE);
+          } else {
+            TmDt1_UnixSecondsToTimeDate(alarmTimeSeconds-currTimeSeconds, 0, &remainingTime, NULL);
+            LEDFRAME_ShowAlarmTime(&remainingTime, 0xffff00, alarmTimeSeconds-currTimeSeconds>60*60); /* show seconds if less than one hour */
+          }
+        } else if (LEDFRAME_alarmShowCurrentTime && !LEDFRAME_alarmShowAlarmTime && LEDFRAME_alarmShowCountdown) {
+          /* show time and countdown */
+          if ((time.Sec%5)==0) { /* every 5 seconds */
+            LEDFRAME_doUpdate = TRUE; /* show normal time */
+          } else { /* show countdown */
+            TmDt1_UnixSecondsToTimeDate(alarmTimeSeconds-currTimeSeconds, 0, &remainingTime, NULL);
+            LEDFRAME_ShowAlarmTime(&remainingTime, 0xffff00, alarmTimeSeconds-currTimeSeconds>60*60); /* show seconds if less than one hour */
+          }
+        } else {
+          if (LEDFRAME_alarmShowAlarmTime && time.Sec<=10) { /* show target alarm time */
+            LEDFRAME_ShowAlarmTime(&LEDFRAME_alarmTime, 0xff0000, TRUE);
+          } else if (LEDFRAME_alarmShowCountdown && time.Sec<=40) { /* show remaining seconds */
+            TmDt1_UnixSecondsToTimeDate(alarmTimeSeconds-currTimeSeconds, 0, &remainingTime, NULL);
+            LEDFRAME_ShowAlarmTime(&remainingTime, 0xffff00, alarmTimeSeconds-currTimeSeconds>60*60); /* show seconds if less than one hour */
+          } else if (LEDFRAME_alarmShowCurrentTime) {
+            LEDFRAME_doUpdate = TRUE; /* show normal time */
+          }
+        }
+        if (!LEDFRAME_alarmShowCurrentTime) {
+          return ERR_OK; /* not showing current time */
+        }
+      }
+    }
+#endif
 #if LEDFRAME_SHOW_HOUR_MIN
     if (LEDFRAME_doUpdate || time.Hour!=prevHour || time.Min!=prevMinute) {
       if (LEDFRAME_doUpdate) {
@@ -568,7 +759,7 @@ void LEDFRAME_Init(void) {
   if (xTaskCreate(
         LedFrameTask,  /* pointer to the task */
         "LedFrame", /* task name for kernel awareness debugging */
-        configMINIMAL_STACK_SIZE, /* task stack size */
+        (600/4), /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY+1,  /* initial priority */
         &LedFrameTaskHandle /* task handle to create */
