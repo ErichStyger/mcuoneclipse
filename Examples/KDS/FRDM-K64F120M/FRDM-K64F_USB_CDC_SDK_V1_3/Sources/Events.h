@@ -38,13 +38,13 @@
 #include "CDC1.h"
 #include "Tx1.h"
 #include "Rx1.h"
-#include "KSDK1.h"
 #include "CS1.h"
 #include "TMOUT1.h"
 #include "WAIT1.h"
 #include "CLS1.h"
 #include "UTIL1.h"
 #include "XF1.h"
+#include "MCUC1.h"
 
 #ifdef __cplusplus
 extern "C" {

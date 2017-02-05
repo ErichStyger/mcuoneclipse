@@ -65,6 +65,7 @@ int main(void) {
   //setvbuf(stdout, NULL, _IOFBF, 0);
   //setvbuf(stderr, NULL, _IOFBF, 0);
   i = *p;
+  LLL+=5;
 
   //reason(0x7d);
   printf("hello world!\r\n");

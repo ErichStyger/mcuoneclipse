@@ -1,0 +1,27 @@
+//
+// map exclude 0x00000000-0x00001000
+
+void ConfigTargetSettings(void) {
+  Report("ConfigTargetSettings called");
+  //MessageBox("ConfigTargetSettings()");
+}
+
+void InitTarget(void) {
+  //MessageBox("InitTarget()");
+}
+
+void SetupTarget(void) {
+  //MessageBox("SetupTarget()");
+}
+
+void ResetTarget(void) {
+  //MessageBox("ResetTarget()");
+}
+
+void OnTraceStop(void) {
+  MessageBox("OnTraceStop()");
+}
+
+void InitEMU(void) {
+  MessageBox("InitEMU()");
+}
