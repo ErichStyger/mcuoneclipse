@@ -33,7 +33,7 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 static portTASK_FUNCTION(ShellTask, pvParameters) {
 #if PL_HAS_RSTDIO
   static unsigned char radio_cmd_buf[96];
-  CLS1_ConstStdIOType *ioRemote = RSTDIO_GetStdioRx();
+  CLS1_ConstStdIOType *ioRemote = RSTDIO_GetStdio();
 #endif
   static unsigned char buf[96];
   CLS1_ConstStdIOType *ioLocal = CLS1_GetStdio();

@@ -65,10 +65,10 @@ static void Test(void) {
 #if 1
 static void Task1(void *pvParameters) {
   (void)pvParameters; /* parameter not used */
- // for(;;) {
- //   LEDR_Neg();
- //   FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
- // }
+  for(;;) {
+    LEDR_Neg();
+    FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
+  }
 }
 #else
 static void Task1(void *pvParameters) {

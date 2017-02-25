@@ -63,6 +63,14 @@
 #include "RTT1.h"
 #include "XF1.h"
 #include "MCUC1.h"
+#include "MMA1.h"
+#include "GI2C1.h"
+#include "I2CSPY1.h"
+#include "I2C1.h"
+#include "SDA1.h"
+#include "BitIoLdd3.h"
+#include "SCL1.h"
+#include "BitIoLdd4.h"
 
 #ifdef __cplusplus
 extern "C" {

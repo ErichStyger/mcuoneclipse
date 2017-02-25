@@ -60,6 +60,14 @@
 #include "RTT1.h"
 #include "XF1.h"
 #include "MCUC1.h"
+#include "MMA1.h"
+#include "GI2C1.h"
+#include "I2CSPY1.h"
+#include "I2C1.h"
+#include "SDA1.h"
+#include "BitIoLdd3.h"
+#include "SCL1.h"
+#include "BitIoLdd4.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -80,7 +88,7 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
-  for(i=0;i<25;i++) { /* blink to indicate power up */
+  for(i=0;i<15;i++) { /* blink to indicate power up */
     LED1_Neg();
     WAIT1_Waitms(20);
   }
