@@ -1,0 +1,60 @@
+/* This is a linker parameter file for the mc9s08qe128 */
+
+NAMES END /* CodeWarrior will pass all the needed files to the linker by command line. But here you may add your own files too. */
+
+SEGMENTS /* Here all RAM/ROM areas of the device are listed. Used in PLACEMENT below. */
+    Z_RAM                    =  READ_WRITE   0x0080 TO 0x00FF;
+    RAM                      =  READ_WRITE   0x0100 TO 0x17FF;
+    RAM1                     =  READ_WRITE   0x1880 TO 0x207F;
+    /* unbanked FLASH ROM */
+    ROM                      =  READ_ONLY    0x2080 TO 0x7FFF;
+    ROM1                     =  READ_ONLY    0xC000 TO 0xFFAD;
+ /* INTVECTS                 =  READ_ONLY    0xFFC0 TO 0xFFFF; Reserved for Interrupt Vectors */
+  //OSVECTORS                =  READ_ONLY    0xFFC0 TO 0xFFFF; /* OSEK interrupt vectors (use your vector.o) */
+    /* banked FLASH ROM */
+    PPAGE_0                  =  READ_ONLY    0x008000 TO 0x00A07F; /* PAGE partially contained in ROM segment */
+    PPAGE_2                  =  READ_ONLY    0x028000 TO 0x02BFFF; 
+    PPAGE_4                  =  READ_ONLY    0x048000 TO 0x04BFFF; 
+    PPAGE_5                  =  READ_ONLY    0x058000 TO 0x05BFFF; 
+    PPAGE_6                  =  READ_ONLY    0x068000 TO 0x06BFFF; 
+    PPAGE_7                  =  READ_ONLY    0x078000 TO 0x07BFFF; 
+ /* PPAGE_1                  =  READ_ONLY    0x018000 TO 0x01BFFF; PAGE already contained in segment at 0x4000-0x7FFF */
+ /* PPAGE_3                  =  READ_ONLY    0x038000 TO 0x03BFFF; PAGE already contained in segment at 0xC000-0xFFFF */
+END
+
+PLACEMENT /* Here all predefined and user segments are placed into the SEGMENTS defined above. */
+    DEFAULT_RAM,                        /* non-zero page variables */
+  //.stackstart,                        /* eventually used for OSEK kernel awareness: Main-Stack Start */
+    SSTACK,                             /* allocate stack */
+  //.stackend,                          /* eventually used for OSEK kernel awareness: Main-Stack End */
+                                        INTO  RAM,RAM1;
+
+    _PRESTART,                          /* startup code */
+    STARTUP,                            /* startup data structures */
+    ROM_VAR,                            /* constant variables */
+    STRINGS,                            /* string literals */
+    VIRTUAL_TABLE_SEGMENT,              /* C++ virtual table segment */
+    NON_BANKED,                         /* runtime routines which must not be banked */
+    //.ostext,                          /* OSEK */
+    DEFAULT_ROM,
+    COPY                                /* copy down information: how to initialize variables */
+                                        INTO  ROM; /* ,ROM1: To use "ROM1" as well, pass the option -OnB=b to the compiler */
+
+    PAGED_ROM                           /* routines which can be banked */
+                                        INTO  PPAGE_0,PPAGE_2,PPAGE_4,PPAGE_5,PPAGE_6,PPAGE_7,ROM1;
+
+  //OSZeroPage,                         /* this is important as for OSEK performance reasons */
+    _DATA_ZEROPAGE,                     /* zero page variables */
+    MY_ZEROPAGE                         INTO  Z_RAM;
+
+    //VECTORS_DATA                      INTO OSVECTORS; /* OSEK */
+END
+
+ENTRIES /* keep the following unreferenced variables */
+    /* OSEK: always allocate the vector table and all dependent objects */
+  //_vectab OsBuildNumber _OsOrtiStackStart _OsOrtiStart
+END
+
+STACKSIZE 0x200
+
+VECTOR 0 _Startup /* Reset vector: this is the default entry point for an application. */
