@@ -72,6 +72,9 @@ int main(void) {
   fprintf(stdout, "Stdout output: %d\r\n", i);
   fprintf(stderr, "StdErr output: %d\r\n", i);
 
+  while(1) {
+
+  }
   /* This for loop should be replaced. By default this loop allows a single stepping. */
   for (;;) {
       i++;

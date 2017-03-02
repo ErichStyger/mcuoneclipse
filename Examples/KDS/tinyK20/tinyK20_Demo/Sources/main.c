@@ -86,6 +86,10 @@ int main(void)
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
+  //for(;;) {}
+  while(1){
+
+  }
 
   /* Write your code here */
   for(i=0;i<15;i++) { /* blink to indicate power up */

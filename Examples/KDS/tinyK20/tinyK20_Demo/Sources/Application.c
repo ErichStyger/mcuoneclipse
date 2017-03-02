@@ -107,10 +107,10 @@ static void usb_task(void *param) {
 
 static void led_task(void *param) {
   (void)param;
-//  for(;;) {
+  for(;;) {
     LED1_Neg();
     vTaskDelay(pdMS_TO_TICKS(1000));
-//  } /* for */
+  } /* for */
 }
 
 void APP_Run(void) {
