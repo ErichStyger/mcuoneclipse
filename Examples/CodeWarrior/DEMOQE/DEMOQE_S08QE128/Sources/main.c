@@ -49,6 +49,7 @@
 #include "LEDpin8.h"
 #include "UTIL1.h"
 #include "WAIT1.h"
+#include "TI1.h"
 /* Include shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
