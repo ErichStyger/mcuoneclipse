@@ -2662,9 +2662,9 @@ uint8_t MBond_GetMidiMusicInfo(MIDI_MusicTrack *tracks, uint8_t nofTracks) {
     tracks[6].currLine = 0;
     tracks[6].nofTicksPerQuarterNote = NOF_TICKS_PER_QUARTER_NOTE;
   }
-  if (nofTracks>=7) { /* map track 2 to free number 7 */
-    tracks[7].lines = &track2[0];
-    tracks[7].nofLines = sizeof(track2)/sizeof(track2[0]);
+  if (nofTracks>=7) {
+    tracks[7].lines = &track7[0];
+    tracks[7].nofLines = sizeof(track7)/sizeof(track7[0]);
     tracks[7].currLine = 0;
     tracks[7].nofTicksPerQuarterNote = NOF_TICKS_PER_QUARTER_NOTE;
   }
