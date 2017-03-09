@@ -45,6 +45,7 @@
 #include "EVNT1.h"
 #include "CS1.h"
 #include "MCUC1.h"
+#include "KIN1.h"
 
 #ifdef __cplusplus
 extern "C" {

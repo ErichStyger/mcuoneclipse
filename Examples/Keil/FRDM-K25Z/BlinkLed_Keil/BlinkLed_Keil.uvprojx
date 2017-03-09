@@ -10,12 +10,12 @@
       <TargetName>MKL25Z128xxx4</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060183::V5.06 update 2 (build 183)::ARMCC</pCCUsed>
+      <pCCUsed>5060422::V5.06 update 4 (build 422)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
           <Device>MKL25Z128xxx4</Device>
           <Vendor>NXP</Vendor>
-          <PackID>Keil.Kinetis_KLxx_DFP.1.12.0</PackID>
+          <PackID>Keil.Kinetis_KLxx_DFP.1.13.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x1FFFF000,0x4000) IROM(0x00000000,0x20000) CPUTYPE("Cortex-M0+") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -131,13 +131,13 @@
             <UseTargetDll>1</UseTargetDll>
             <UseExternalTool>0</UseExternalTool>
             <RunIndependent>0</RunIndependent>
-            <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
+            <UpdateFlashBeforeDebugging>0</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
-            <DriverSelection>4096</DriverSelection>
+            <DriverSelection>4099</DriverSelection>
           </Flash1>
-          <bUseTDR>1</bUseTDR>
-          <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3></Flash3>
+          <bUseTDR>0</bUseTDR>
+          <Flash2>Segger\JL2CM3.dll</Flash2>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -330,6 +330,7 @@
             <vShortWch>1</vShortWch>
             <v6Lto>0</v6Lto>
             <v6WtE>0</v6WtE>
+            <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
@@ -347,6 +348,7 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
+            <uClangAs>0</uClangAs>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
@@ -526,6 +528,16 @@
               <FileName>heap_5.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Generated_Code\heap_5.c</FilePath>
+            </File>
+            <File>
+              <FileName>KIN1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Generated_Code\KIN1.c</FilePath>
+            </File>
+            <File>
+              <FileName>mpu_wrappers.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Generated_Code\mpu_wrappers.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -856,6 +868,26 @@
               <FileName>freertos_tasks_c_additions.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Generated_Code\freertos_tasks_c_additions.h</FilePath>
+            </File>
+            <File>
+              <FileName>KIN1.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Generated_Code\KIN1.h</FilePath>
+            </File>
+            <File>
+              <FileName>KIN1config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Generated_Code\KIN1config.h</FilePath>
+            </File>
+            <File>
+              <FileName>RTE_Components.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\RTE\RTE_Components.h</FilePath>
+            </File>
+            <File>
+              <FileName>mpu_prototypes.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Generated_Code\mpu_prototypes.h</FilePath>
             </File>
           </Files>
         </Group>
