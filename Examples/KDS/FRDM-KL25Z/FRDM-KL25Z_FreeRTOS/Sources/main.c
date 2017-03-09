@@ -49,6 +49,7 @@
 #include "XF1.h"
 #include "CS1.h"
 #include "SYS1.h"
+#include "KIN1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -67,7 +68,7 @@ static void Task1(void *pvParameters) {
   (void)pvParameters; /* parameter not used */
   for(;;) {
     LEDR_Neg();
-    FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
+    FRTOS1_vTaskDelay(pdMS_TO_TICKS(100));
   }
 }
 #else

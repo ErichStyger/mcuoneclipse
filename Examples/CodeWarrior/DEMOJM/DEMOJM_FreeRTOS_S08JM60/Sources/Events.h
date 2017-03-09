@@ -43,9 +43,10 @@
 #include "FRTOS1.h"
 #include "Vswi.h"
 #include "TickCntr1.h"
+#include "MCUC1.h"
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

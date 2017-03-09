@@ -75,6 +75,7 @@
 #include "AdcLdd1.h"
 #include "XF1.h"
 #include "MCUC1.h"
+#include "PTRC1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -249,6 +250,20 @@ void KEY1_OnKeyPressedLong(uint8_t keys);
 **         NAME            - DESCRIPTION
 **         keys            - the key(s) pressed, as bitset (e.g. 1 is
 **                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void PTRC1_OnTraceWrap(void);
+/*
+** ===================================================================
+**     Event       :  PTRC1_OnTraceWrap (module Events)
+**
+**     Component   :  PTRC1 [PercepioTrace]
+**     Description :
+**         Called for trace ring buffer wrap around. This gives the
+**         application a chance to dump the trace buffer.
+**     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================
 */

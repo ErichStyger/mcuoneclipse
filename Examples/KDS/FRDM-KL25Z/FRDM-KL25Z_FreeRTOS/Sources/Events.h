@@ -53,6 +53,7 @@
 #include "XF1.h"
 #include "CS1.h"
 #include "SYS1.h"
+#include "KIN1.h"
 
 #ifdef __cplusplus
 extern "C" {
