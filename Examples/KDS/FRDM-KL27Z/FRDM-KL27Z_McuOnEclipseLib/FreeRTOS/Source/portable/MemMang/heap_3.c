@@ -1,6 +1,6 @@
 /* << EST */
 #include "FreeRTOSConfig.h"
-#if !defined(configFRTOS_MEMORY_SCHEME) || (configFRTOS_MEMORY_SCHEME==3 && configSUPPORT_DYNAMIC_ALLOCATION==1)
+#if !defined(configUSE_HEAP_SCHEME) || (configUSE_HEAP_SCHEME==3 && configSUPPORT_DYNAMIC_ALLOCATION==1)
 
 /*
     FreeRTOS V9.0.0 - Copyright (C) 2016 Real Time Engineers Ltd.
@@ -141,6 +141,6 @@ void vPortFree( void *pv )
 }
 
 
-#endif /* configFRTOS_MEMORY_SCHEME==3 */ /* << EST */
+#endif /* configUSE_HEAP_SCHEME==3 */ /* << EST */
 
 

@@ -36,11 +36,19 @@
 
 #define configCPU_FAMILY                          configCPU_FAMILY_ARM_M0P
 
+/* MPU support: portUSING_MPU_WRAPPERS is defined (or not) in portmacro.h and turns on MPU support. Currently only supported for ARM Cortex-M4/M3 ports */
+#ifndef configUSE_MPU_SUPPORT
+  #define configUSE_MPU_SUPPORT                   (0 && configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY))
+  /*!< 1: enable MPU support; 0: MPU support is disabled */
+#endif
+
 /*-----------------------------------------------------------
  * GDB backtrace handler support
  * See http://interactive.freertos.org/entries/23468301-Tasks-backtrace-switcher-viewer-snippet-for-debugger-gcc-gdb-ARM-Cortex-M3-MPU-port-Eclipse-support-
  *----------------------------------------------------------*/
-#define configGDB_HELPER                          (0 && configCPU_FAMILY_IS_ARM(configCPU_FAMILY) && (configCOMPILER==configCOMPILER_ARM_GCC)) /* 1: enable special GDB stack backtrace debug helper; 0: disabled */
-
+#ifndef configGDB_HELPER
+  #define configGDB_HELPER                        (0 && configCPU_FAMILY_IS_ARM(configCPU_FAMILY) && (configCOMPILER==configCOMPILER_ARM_GCC))
+   /*!< 1: enable special GDB stack backtrace debug helper; 0: disabled */
+#endif
 
 #endif /* __FRTOS1_CONFIG_H */

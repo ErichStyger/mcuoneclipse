@@ -77,17 +77,26 @@ extern "C" {
     #endif
   #endif
 #else
-  #error "Trace Recorder: Please include your processors header file here and remove this line."
+  #error "Trace Recorder: Please include your processor's header file here and remove this line."
 #endif
 
 /*******************************************************************************
  * Configuration Macro: TRC_CFG_HARDWARE_PORT
  *
  * Specify what hardware port to use (i.e., the "timestamping driver").
- * All ARM Cortex-M MCUs are supported by "TRC_HARDWARE_PORT_ARM_Cortex_M".
  *
- * See trcSnapshotHardwarePort.h or trcStreamingHardwarePort.h for available
- * ports and information on how to define your own port, if not already present.
+ * All ARM Cortex-M MCUs are supported by "TRC_HARDWARE_PORT_ARM_Cortex_M".
+ * This port uses the DWT cycle counter for Cortex-M3/M4/M7 devices, which is
+ * available on most such devices. In case your device don't have DWT support,
+ * you will get an error message opening the trace. In that case, you may 
+ * force the recorder to use SysTick timestamping instead, using this define:
+ *
+ * #define TRC_CFG_ARM_CM_USE_SYSTICK
+ *
+ * For ARM Cortex-M0/M0+ devices, SysTick mode is used automatically.
+ *
+ * See trcHardwarePort.h for available ports and information on how to 
+ * define your own port, if not already present.
  ******************************************************************************/
 #if 1 /* << EST */
 #if configCPU_FAMILY_IS_ARM(configCPU_FAMILY)
@@ -113,17 +122,23 @@ extern "C" {
  * TRC_RECORDER_MODE_SNAPSHOT
  * TRC_RECORDER_MODE_STREAMING
  ******************************************************************************/
-#define TRC_CFG_RECORDER_MODE TRC_RECORDER_MODE_STREAMING
+#define TRC_CFG_RECORDER_MODE TRC_RECORDER_MODE_SNAPSHOT
 
 /*******************************************************************************
  * Configuration Macro: TRC_CFG_RECORDER_BUFFER_ALLOCATION
  *
- * Specifies how the recorder's internal buffer is allocated (snapshot or
- * streaming). Note that CUSTOM is only supported in snapshot mode.
+ * Specifies how the recorder buffer is allocated (also in case of streaming, in
+ * port using the recorder's internal temporary buffer)
  *
- * TRC_RECORDER_BUFFER_ALLOCATION_STATIC  - Static allocation 
- * TRC_RECORDER_BUFFER_ALLOCATION_DYNAMIC - Allocated in vTraceEnable
+ * Values:
+ * TRC_RECORDER_BUFFER_ALLOCATION_STATIC  - Static allocation (internal)
+ * TRC_RECORDER_BUFFER_ALLOCATION_DYNAMIC - Malloc in vTraceEnable
  * TRC_RECORDER_BUFFER_ALLOCATION_CUSTOM  - Use vTraceSetRecorderDataBuffer
+ *
+ * Static and dynamic mode does the allocation for you, either in compile time 
+ * (static) or in runtime (malloc). 
+ * The custom mode allows you to control how and where the allocation is made, 
+ * for details see TRC_ALLOC_CUSTOM_BUFFER and vTraceSetRecorderDataBuffer().
  ******************************************************************************/
 #define TRC_CFG_RECORDER_BUFFER_ALLOCATION TRC_RECORDER_BUFFER_ALLOCATION_STATIC
 

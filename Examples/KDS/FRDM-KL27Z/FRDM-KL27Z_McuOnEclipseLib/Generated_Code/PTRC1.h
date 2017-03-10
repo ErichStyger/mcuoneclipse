@@ -4,17 +4,17 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : PercepioTrace
-**     Version     : Component 01.116, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.125, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-22, 08:14, # CodeGen: 53
+**     Date/Time   : 2017-03-09, 20:33, # CodeGen: 69
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : PTRC1
-**          RTOS+Trace Version                             : V3.1.0
-**          Recorder Mode                                  : Streaming
-**          Startup trace enable method                    : TRC_START_AWAIT_HOST
+**          RTOS+Trace Version                             : V3.1.1
+**          Recorder Mode                                  : Snapshot
+**          Startup trace enable method                    : TRC_START
 **          Recorder Buffer Allocation                     : static
 **          Max ISR Nesting                                : 8
 **          Snapshot Mode                                  : 
@@ -22,8 +22,11 @@
 **            Scheduling only                              : no
 **            Description string                           : FreeRTOS+Trace
 **            Description max length                       : 80
-**            Event buffer size                            : 500
-**            Symbol table size                            : 100
+**            Event buffer size                            : 300
+**            Symbol table size                            : 30
+**            Use Trace Assert                             : yes
+**            ISR Tailchaining Threshold                   : 0
+**            Separate User Event Buffer                   : Disabled
 **            Objects                                      : 
 **              Number of tasks                            : 10
 **              Name length for task                       : configMAX_TASK_NAME_LEN

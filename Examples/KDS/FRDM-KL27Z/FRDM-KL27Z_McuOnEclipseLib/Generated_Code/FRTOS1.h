@@ -4,10 +4,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : FreeRTOS
-**     Version     : Component 01.520, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.529, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-28, 17:54, # CodeGen: 61
+**     Date/Time   : 2017-03-09, 20:31, # CodeGen: 67
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
@@ -22,6 +22,7 @@
 **              Header Folder                              : ../FreeRTOS/Source/include
 **              Port Folder                                : ../FreeRTOS/Source/portable/GCC/ARM_CM0
 **              MemMang Folder                             : ../FreeRTOS/Source/portable/MemMang
+**              Common Folder                              : FreeRTOS/Source/portable/Common
 **              Config Folder                              : ../FreeRTOS/config/gcc
 **              Manual Clock Values                        : Enabled
 **                configCPU_CLOCK_HZ                       : CPU_CORE_CLK_HZ
@@ -34,9 +35,9 @@
 **          Application Task Tags                          : no
 **          Thread Local Storage Pointers                  : 0
 **          Use Trace Facility                             : yes
-**          Segger System Viewer Trace                     : Enabled
-**            Segger System Viewer                         : SYS1
-**          Percepio Trace                                 : Disabled
+**          Segger System Viewer Trace                     : Disabled
+**          Percepio Trace                                 : Enabled
+**            Percepio FreeRTOS+Trace                      : PTRC1
 **          Generate Runtime Statistics                    : Enabled
 **            Use Tick Counter                             : yes
 **            LDD                                          : Disabled
@@ -44,12 +45,13 @@
 **          Scheduler                                      : Settings for the scheduler
 **            ColdFire V1                                  : Disabled
 **            ColdFire V2                                  : Disabled
-**            Kinetis                                      : Enabled
+**            ARM (Kinetis)                                : Enabled
 **              ARM Family                                 : Cortex-M0+
 **              Max SysCall Interrupt Priority             : 1
 **              RTOS Interrupt Priority                    : 3
 **              Lowest Interrupt Priority                  : 3
 **              Compiler Optimization Level                : 0
+**              MPU                                        : no
 **              SysTick                                    : Enabled
 **                Core Clock                               : yes
 **              Low Power Timer                            : Disabled
@@ -216,7 +218,7 @@
 **     * FreeRTOS (c) Copyright 2003-2016 Richard Barry, http: www.FreeRTOS.org
 **      * See separate FreeRTOS licensing terms.
 **      *
-**      * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2016
+**      * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2017
 **      * Web:         https://mcuoneclipse.com
 **      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -263,7 +265,7 @@
 
 /* Include inherited components */
 #include "MCUC1.h"
-#include "SYS1.h"
+#include "PTRC1.h"
 #include "CLS1.h"
 #include "UTIL1.h"
 
@@ -282,8 +284,7 @@
 /* Macros used by Processor Expert */
 #if FRTOS1_GENERATE_PEX_RTOS_MACROS
   #define PEX_RTOS_INIT() /* macro called from PE_low_level_init() */ \
-                                       portDISABLE_ALL_INTERRUPTS(); /* disable all interrupts, they get enabled in vStartScheduler() */ \
-                                       /* no Percepio Trace Hooks enabled with configUSE_TRACE_HOOKS */
+    FRTOS1_Init();
 
   #define PEX_RTOS_START()             FRTOS1_vTaskStartScheduler()
 #endif

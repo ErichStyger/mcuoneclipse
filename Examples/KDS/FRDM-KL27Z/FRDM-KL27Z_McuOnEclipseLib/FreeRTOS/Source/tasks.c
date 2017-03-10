@@ -736,7 +736,7 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
 #endif /* ( portUSING_MPU_WRAPPERS == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) */
 /*-----------------------------------------------------------*/
 
-#if( ( portUSING_MPU_WRAPPERS == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
+#if( ( portUSING_MPU_WRAPPERS == 1 ) && ( tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE != 0 ) )
 
 	BaseType_t xTaskCreateRestricted( const TaskParameters_t * const pxTaskDefinition, TaskHandle_t *pxCreatedTask )
 	{
@@ -757,10 +757,10 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
 				/* Store the stack location in the TCB. */
 				pxNewTCB->pxStack = pxTaskDefinition->puxStackBuffer;
 
-				/* Tasks can be created statically or dynamically, so note
-				this task had a statically allocated stack in case it is
-				later deleted.  The TCB was allocated dynamically. */
-				pxNewTCB->ucStaticallyAllocated = tskSTATICALLY_ALLOCATED_STACK_ONLY;
+        /* Tasks can be created statically or dynamically, so note
+        this task had a statically allocated stack in case it is
+        later deleted.  The TCB was allocated dynamically. */
+        pxNewTCB->ucStaticallyAllocated = tskSTATICALLY_ALLOCATED_STACK_ONLY;
 
 				prvInitialiseNewTask(	pxTaskDefinition->pvTaskCode,
 										pxTaskDefinition->pcName,
@@ -1633,14 +1633,14 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 				}
 
 				/* If the task is in the blocked or suspended list we need do
-				nothing more than change it's priority variable. However, if
+				nothing more than change its priority variable. However, if
 				the task is in a ready list it needs to be removed and placed
 				in the list appropriate to its new priority. */
 				if( listIS_CONTAINED_WITHIN( &( pxReadyTasksLists[ uxPriorityUsedOnEntry ] ), &( pxTCB->xStateListItem ) ) != pdFALSE )
 				{
-					/* The task is currently in its ready list - remove before adding
-					it to it's new ready list.  As we are in a critical section we
-					can do this even if the scheduler is suspended. */
+					/* The task is currently in its ready list - remove before
+					adding it to it's new ready list.  As we are in a critical
+					section we can do this even if the scheduler is suspended. */
 					if( uxListRemove( &( pxTCB->xStateListItem ) ) == ( UBaseType_t ) 0 )
 					{
 						/* It is known that the task is in its ready list so
@@ -1838,12 +1838,12 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 				{
 					traceTASK_RESUME( pxTCB );
 
-					/* As we are in a critical section we can access the ready
-					lists even if the scheduler is suspended. */
+					/* The ready list can be accessed even if the scheduler is
+					suspended because this is inside a critical section. */
 					( void ) uxListRemove(  &( pxTCB->xStateListItem ) );
 					prvAddTaskToReadyList( pxTCB );
 
-					/* We may have just resumed a higher priority task. */
+					/* A higher priority task may have just been resumed. */
 					if( pxTCB->uxPriority >= pxCurrentTCB->uxPriority )
 					{
 						/* This yield may not cause the task just resumed to run,

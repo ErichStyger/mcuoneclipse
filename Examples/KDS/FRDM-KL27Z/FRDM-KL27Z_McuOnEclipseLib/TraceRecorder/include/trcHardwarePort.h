@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v3.1.0 
+ * Trace Recorder Library for Tracealyzer v3.1.1
  * Percepio AB, www.percepio.com
  *
  * trcHardwarePort.h
@@ -38,7 +38,7 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2016.
+ * Copyright Percepio AB, 2017.
  * www.percepio.com
  ******************************************************************************/
 
@@ -114,42 +114,42 @@
  *   Free-running 32-bit timer/counter, counting downwards from 0xFFFFFFFF.
  *
  * - TRC_OS_TIMER_INCR
- *	 Periodic interrupt timer, counts upwards from 0 until (TRC_HWTC_PERIOD-1), 
- *   then wraps around and triggers the OS tick interrupt.
+ *	 Periodic timer that drives the OS tick interrupt, counting upwards
+ *   from 0 until (TRC_HWTC_PERIOD-1).
  *
  * - TRC_OS_TIMER_DECR
- *   Periodic interrupt timer, counts downwards from TRC_HWTC_PERIOD-1 until 0, 
- *   then wraps around and triggers the OS tick interrupt.
+ *	 Periodic timer that drives the OS tick interrupt, counting downwards
+ *   from TRC_HWTC_PERIOD-1 until 0.
  *
- * TRC_HWTC_PERIOD: The number of HWTC_COUNT ticks between OS ticks, if using the 
- * same periodic interrupt timer that drives the OS tick. This can be defined as 
- * TRACE_CPU_CLOCK_HZ / TRACE_TICK_RATE_HZ, or using the reload register + 1.
- * If using a free-running counter, this should be 0. 
- * Note: This  is mainly used in snapshot mode, but some ports use it to define
- * TRC_HWTC_FREQ_HZ also in streaming mode.
+ * - TRC_CUSTOM_TIMER_INCR
+ *   A custom timer or counter independent of the OS tick, counting
+ *   downwards from TRC_HWTC_PERIOD-1 until 0. (Currently only supported
+ *   in streaming mode).
  *
- * TRC_HWTC_FREQ_HZ: The clock rate of the timer/counter in Hz. If using the 
- * periodic interrupt timer that is driving the OS tick, this is should be
- * TRC_HWTC_PERIOD * TRACE_TICK_RATE_HZ.
- * If using a free-running timer, this is often TRACE_CPU_CLOCK_HZ (unless 
- * there is a prescaler). If the default value from TRC_HWTC_FREQ_HZ is
- * incorrect for your setup, you can override it by calling vTraceSetFrequency.
+ * - TRC_CUSTOM_TIMER_DECR
+ *   A custom timer independent of the OS tick, counting downwards
+ *   from TRC_HWTC_PERIOD-1 until 0. (Currently only supported
+ *   in streaming mode).
+ *
+ * TRC_HWTC_PERIOD: The number of HWTC_COUNT ticks until the timer wraps
+ * around. If using TRC_FREE_RUNNING_32BIT_INCR/DECR, this should be 0. 
+ *
+ * TRC_HWTC_FREQ_HZ: The clock rate of the TRC_HWTC_COUNT counter in Hz. If using 
+ * TRC_OS_TIMER_INCR/DECR, this is should be TRC_HWTC_PERIOD * TRACE_TICK_RATE_HZ.
+ * If using a free-running timer, this is often TRACE_CPU_CLOCK_HZ (if running at
+ * the core clock rate). If using TRC_CUSTOM_TIMER_INCR/DECR, this should match
+ * the clock rate of your custom timer (i.e., TRC_HWTC_COUNT). If the default value
+ * of TRC_HWTC_FREQ_HZ is incorrect for your setup, you can override it by calling
+ * vTraceSetFrequency before calling vTraceEnable.
  *
  * TRC_HWTC_DIVISOR (used in snapshot mode only):
- * If the timer frequency is very high (hundreds of MHz), 
- * the "differential timestamping" used in the recorder will more frequently
- * insert extra "XTS events" to store the timestamps, which increases the event
- * buffer usage.
- * In such cases, you increase TRC_HWTC_DIVISOR to scale down the timestamps
- * and frequency. Assuming a OS tick rate of 1 KHz, it is suggested to keep the
- * effective timer frequency below 65 MHz to avoid an excessive amount of XTS
- * events. Thus, a Cortex M chip running at 72 MHZ should use a
- * TRC_HWTC_DIVISOR of 2. This should be a should be a power of 2.
- *
- * The HWTC macros and prvTracePortGetTimeStamp is the main porting issue
- * or the trace recorder library. Typically you should not need to change
- * the code of prvTracePortGetTimeStamp if using the HWTC macros.
- *
+ * In snapshot mode, the timestamp resolution is TRC_HWTC_FREQ_HZ/TRC_HWTC_DIVISOR.
+ * If the timer frequency is very high (hundreds of MHz), we recommend increasing
+ * the TRC_HWTC_DIVISOR prescaler, to reduce the bandwidth needed to store
+ * timestamps. This since extra "XTS" events are inserted if the time since the
+ * previous event exceeds a certain limit (255 or 65535 depending on event type).
+ * It is advised to keep the time between most events below 65535 native ticks
+ * (after division by TRC_HWTC_DIVISOR) to avoid frequent XTS events.
  ******************************************************************************/
 
 #if (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_NOT_SET)
@@ -157,7 +157,7 @@
 #endif
 
 #if (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_Win32)
-	// This can be used as a template for any free-running 32-bit counter
+	/* This can be used as a template for any free-running 32-bit counter */
 	#define TRC_HWTC_TYPE TRC_FREE_RUNNING_32BIT_INCR
 	#define TRC_HWTC_COUNT (ulGetRunTimeCounterValue())
 	#define TRC_HWTC_PERIOD 0
@@ -169,14 +169,14 @@
 	#define TRC_PORT_SPECIFIC_INIT()
 
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_HWIndependent)
-	// OS Tick only (typically 1 ms resolution)
+	/* Timestamping by OS tick only (typically 1 ms resolution) */
 	#define TRC_HWTC_TYPE TRC_OS_TIMER_INCR
 	#define TRC_HWTC_COUNT 0
 	#define TRC_HWTC_PERIOD 1
 	#define TRC_HWTC_DIVISOR 1
 	#define TRC_HWTC_FREQ_HZ TRACE_TICK_RATE_HZ
 
-	// Please update according to your system...
+	/* Set the meaning of IRQ priorities in ISR tracing - see above */
 	#define TRC_IRQ_PRIORITY_ORDER NOT_SET
 
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_ARM_Cortex_M)
@@ -184,10 +184,17 @@
 	#ifndef __CORTEX_M
 	#error "Can't find the CMSIS API. Please include your processor's header file in trcConfig.h" 	
 	#endif
+	/**************************************************************************
+	* For Cortex-M3, M4 and M7, the DWT cycle counter is used for timestamping.
+	* For Cortex-M0 and M0+, the SysTick timer is used since DWT is not
+	* available. Systick timestamping can also be forced on Cortex-M3, M4 and
+	* M7 by defining the preprocessor directive TRC_CFG_ARM_CM_USE_SYSTICK,
+	* either directly below or in trcConfig.h.
+	*
+	* #define TRC_CFG_ARM_CM_USE_SYSTICK
+    **************************************************************************/
 
-	#if (__CORTEX_M >= 0x03)
-
-		/* For Cortex-M3, M4 and M7, the DWT cycle counter is used for timestamping. */
+	#if ((__CORTEX_M >= 0x03) && (! defined TRC_CFG_ARM_CM_USE_SYSTICK))
 		
 		void prvTraceInitCortexM(void);
 
@@ -196,6 +203,9 @@
 		#define TRC_REG_DWT_CYCCNT (*(volatile uint32_t*)0xE0001004)
 		#define TRC_REG_DWT_EXCCNT (*(volatile uint32_t*)0xE000100C)
 
+		#define TRC_REG_ITM_LOCKACCESS (*(volatile uint32_t*)0xE0001FB0)		
+		#define TRC_ITM_LOCKACCESS_UNLOCK (0xC5ACCE55)
+		
 		/* Bit mask for TRCENA bit in DEMCR - Global enable for DWT and ITM */
 		#define TRC_DEMCR_TRCENA (1 << 24)
 
@@ -219,17 +229,15 @@
 		#define TRC_HWTC_DIVISOR 4
 		#define TRC_HWTC_FREQ_HZ TRACE_CPU_CLOCK_HZ
 		#define TRC_IRQ_PRIORITY_ORDER 0
-	
+
 	#else
 	
-		/* For Cortex-M0 and M0+, the SysTick timer is used */
-		
-		#define TRC_HWTC_TYPE TRC_OS_TIMER_DECR
-		#define TRC_HWTC_COUNT (*((volatile uint32_t*)0xE000E018))
-		#define TRC_HWTC_PERIOD ((*((volatile uint32_t*)0xE000E014)) + 1)
-		#define TRC_HWTC_DIVISOR 4
-		#define TRC_HWTC_FREQ_HZ TRACE_CPU_CLOCK_HZ
-		#define TRC_IRQ_PRIORITY_ORDER 0
+    #define TRC_HWTC_TYPE           TRC_OS_TIMER_DECR
+    #define TRC_HWTC_COUNT          (*((volatile uint32_t*)0xE000E018))        /* SYST_CVR, SysTick current value register */
+    #define TRC_HWTC_PERIOD         ((*((volatile uint32_t*)0xE000E014)) + 1)  /* SYST_RVR, SysTick reload value register */
+    #define TRC_HWTC_DIVISOR        4
+    #define TRC_HWTC_FREQ_HZ        TRACE_CPU_CLOCK_HZ
+    #define TRC_IRQ_PRIORITY_ORDER  0
 	
 	#endif
 
@@ -272,7 +280,7 @@
 	
 	#define TRC_HWTC_TYPE TRC_OS_TIMER_INCR
 	#define TRC_HWTC_COUNT (TRC_RTIFRC0 - (TRC_RTICOMP0 - TRC_RTIUDCP0))
-	#define TRC_HWTC_PERIOD (RTIUDCP0)
+	#define TRC_HWTC_PERIOD (TRC_RTIUDCP0)
 	#define TRC_HWTC_DIVISOR 1
 	#define TRC_HWTC_FREQ_HZ (TRACE_TICK_RATE_HZ * TRC_HWTC_PERIOD)
 	#define TRC_IRQ_PRIORITY_ORDER 0
@@ -393,6 +401,18 @@
 	
 	#define TRC_HWTC_FREQ_HZ (TRACE_TICK_RATE_HZ * TRC_HWTC_PERIOD)
     #define TRC_IRQ_PRIORITY_ORDER 0
+
+#elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_POWERPC_Z4)
+
+    /* UNOFFICIAL PORT - NOT YET VERIFIED BY PERCEPIO */
+
+    #define TRC_HWTC_TYPE TRC_OS_TIMER_DECR
+    //#define HWTC_COUNT_DIRECTION DIRECTION_DECREMENTING
+    #define TRC_HWTC_COUNT PIT.TIMER[configTICK_PIT_CHANNEL].CVAL.R // must be the PIT channel used for the systick
+    #define TRC_HWTC_PERIOD ((configPIT_CLOCK_HZ / configTICK_RATE_HZ) - 1U) // TODO FIXME or maybe not -1? what's the right "period" value?
+    #define TRC_HWTC_FREQ_HZ configPIT_CLOCK_HZ
+    #define TRC_HWTC_DIVISOR 1
+    #define TRC_IRQ_PRIORITY_ORDER 1 // higher IRQ priority values are more significant
 
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_APPLICATION_DEFINED)
 

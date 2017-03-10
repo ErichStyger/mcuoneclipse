@@ -4,14 +4,15 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : Wait
-**     Version     : Component 01.071, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.078, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-19, 17:26, # CodeGen: 7
+**     Date/Time   : 2017-03-09, 20:22, # CodeGen: 62
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
 **          Component name                                 : WAIT1
+**          Use Cycle Counter                              : Disabled
 **          SDK                                            : MCUC1
 **          Manual Clock Values                            : Disabled
 **          Delay100usFunction                             : Delay100US
@@ -26,6 +27,8 @@
 **         Waitus         - void WAIT1_Waitus(uint16_t us);
 **         Waitns         - void WAIT1_Waitns(uint16_t ns);
 **         WaitOSms       - void WAIT1_WaitOSms(void);
+**         Init           - void WAIT1_Init(void);
+**         DeInit         - void WAIT1_DeInit(void);
 **
 **     * Copyright (c) 2013-2016, Erich Styger
 **      * Web:         https://mcuoneclipse.com
@@ -225,6 +228,28 @@ void WAIT1_WaitLongCycles(uint32_t cycles);
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **         cycles          - The number of cycles to wait.
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void WAIT1_Init(void);
+/*
+** ===================================================================
+**     Method      :  WAIT1_Init (component Wait)
+**     Description :
+**         Driver initialization routine.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void WAIT1_DeInit(void);
+/*
+** ===================================================================
+**     Method      :  WAIT1_DeInit (component Wait)
+**     Description :
+**         Driver de-initialization routine
+**     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================
 */

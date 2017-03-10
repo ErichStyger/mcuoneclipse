@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-          Tracealyzer for FreeRTOS - Trace Recorder Library v3.1.0                       
+          Tracealyzer for FreeRTOS - Trace Recorder Library v3.1.1                      
 -------------------------------------------------------------------------------
 
 Tracealyzer for FreeRTOS is a sophisticated tool for tracing and visualization
@@ -17,6 +17,59 @@ To learn more about this, see
 In case you have any questions, don't hesitate to contact support@percepio.com
 
 -------------------------------------------------------------------------------
+
+Changes, v3.1.0 -> v3.1.1
+
+After the major changes in the v3.1.0 trace recorder library, this update 
+corrects a number of minor issues. Only minor functional improvements.
+
+- You can now use TRC_ALLOC_CUSTOM_BUFFER to declare a trace buffer on a custom
+  location (using linker directives). 
+  The related function vTraceSetRecorderDataBuffer has been promoted to the
+  Common API (previously only supported in snapshot mode, but custom allocation
+  is now generally supported also in streaming mode).
+  
+- Removed TRC_CFG_USE_LINKER_PRAGMA. No longer necessary thanks to the custom
+  allocation mode.
+  
+- Added support for timestamping from custom periodic timers, required for
+  accurate timestamping on Cortex-M0/M0+ devices when using tickless idle.
+  Only for streaming mode so far. See TRC_CUSTOM_TIMER_INCR / DECR.
+
+- ARM Cortex-M port: Made sure the DWT unit is initialized properly, in case
+  the debugger doesn't handle this.
+
+- ARM Cortex-M port: Added possibility to use Systick timestamping also on
+  Cortex-M3/M4/M7 devices (that otherwise use DWT timestamping by default).
+  To use this option, define the macro TRC_CFG_ARM_CM_USE_SYSTICK.
+
+- J-Link streaming: The default RTT buffer has been changed from 0 to 1.
+
+- J-Link streaming: The RTT buffer settings for buffer 1 and higher, are now
+  found in trcStreamingPort.h. Note: These settings don't apply to buffer 0.
+
+- vTracePrint has been optimized for better performance in string logging.
+
+- Minor performance improvement related to symbol table transfer in streaming mode.
+
+- Timer names now registered also in streaming mode.
+
+- Timer start and stop event are now traced.
+
+- Implemented support for queue registry (traceQUEUE_REGISTRY_ADD) also for streaming.
+
+- Fixed a bug related to repeated calls of vTraceEnable.
+
+- Fixed a bug where task-switches seemed to occur even though the scheduler was disabled.
+
+- Renamed HARDWARE_PORT_TEXAS_INSTRUMENTS_TMS570_RM48, added prefix TRC.
+
+- Fixed several language issues in the comments and documentation.
+
+- Fixed several minor issues and warnings from different compilers
+ (including PowerPC/gcc) and configurations.
+
+-------------------------------------------------------------------------------
  
 Changes, v3.0.9 -> v3.1.0
 
@@ -30,7 +83,7 @@ Changes, v3.0.9 -> v3.1.0
 - Major improvement of API documentation in source files and User Manual.
   
 - New concept of "stream ports", giving a better structure defining streaming
-  interfaces, and restructured the J-Link and TCP/IP streaing as stream ports.
+  interfaces, and restructured the J-Link and TCP/IP streaming as stream ports.
   
 - Added a stream port for USB CDC connections, with STM32 as example.
   Since Tracealyzer now can receive serial data on Windows COM ports, this is
@@ -76,10 +129,10 @@ Changes, v3.0.9 -> v3.1.0
   
   * Renamed the functions for saving User Events in a separate buffer:
      - xTraceRegisterChannelFormat	->	xTraceRegisterUBChannel
-     - vTraceChannelPrintF 			->	vTraceUBData
+     - vTraceChannelPrintF 		->	vTraceUBData
      - vTraceChannelUserEvent 		->	vTraceUBEvent
   
  
 -------------------------------------------------------------------------------
-Copyright Percepio AB, 2016. 
+Copyright Percepio AB, 2017. 
 

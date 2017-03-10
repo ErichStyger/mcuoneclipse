@@ -4,10 +4,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : GenericTimeDate
-**     Version     : Component 01.059, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.061, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-21, 09:50, # CodeGen: 37
+**     Date/Time   : 2017-03-09, 20:22, # CodeGen: 62
 **     Abstract    :
 **         Software date/time module.
 **     Settings    :
@@ -51,6 +51,7 @@
 **         SetInternalRTCTimeDate      - uint8_t TmDt1_SetInternalRTCTimeDate(TIMEREC *time, DATEREC *date);
 **         GetInternalRTCTimeDate      - uint8_t TmDt1_GetInternalRTCTimeDate(TIMEREC *time, DATEREC *date);
 **         SyncWithInternalRTC         - uint8_t TmDt1_SyncWithInternalRTC(void);
+**         SyncSWtimeToInternalRTCsec  - uint8_t TmDt1_SyncSWtimeToInternalRTCsec(void);
 **         SetExternalRTCTimeDate      - uint8_t TmDt1_SetExternalRTCTimeDate(TIMEREC *time, DATEREC *date);
 **         GetExternalRTCTimeDate      - uint8_t TmDt1_GetExternalRTCTimeDate(TIMEREC *time, DATEREC *date);
 **         SyncWithExternalRTC         - uint8_t TmDt1_SyncWithExternalRTC(void);
@@ -124,9 +125,9 @@
 #define TmDt1_INIT_IN_STARTUP                               1 /* 1: call Init() during startup, 0: application needs to call Init() */
 
 /* RTC Initialization options during Init() */
-#define TmDt1_INIT_SOFTWARE_RTC_FROM_DEFAULTS               1  /* init software RTC from default values */
+#define TmDt1_INIT_SOFTWARE_RTC_FROM_DEFAULTS               0  /* init software RTC from default values */
 #define TmDt1_INIT_SOFTWARE_RTC_FROM_INTERNAL_RTC           1  /* init software RTC from internal RTC values */
-#define TmDt1_INIT_SOFTWARE_RTC_FROM_EXTERNAL_RTC           1  /* init software RTC from external RTC values */
+#define TmDt1_INIT_SOFTWARE_RTC_FROM_EXTERNAL_RTC           2  /* init software RTC from external RTC values */
 
 /* settings for software RTC */
 #define TmDt1_USE_SOFTWARE_RTC                              1  /* set to 1 if using software RTC, 0 otherwise */
@@ -694,6 +695,20 @@ uint8_t TmDt1_AddTimeString(uint8_t *buf, size_t bufSize, TIMEREC *time, uint8_t
 **                           Supported formats: "hh:mm.ss,cc"
 **     Returns     :
 **         ---             - Error code, ERR_OK for no error
+** ===================================================================
+*/
+
+uint8_t TmDt1_SyncSWtimeToInternalRTCsec(void);
+/*
+** ===================================================================
+**     Method      :  TmDt1_SyncSWtimeToInternalRTCsec (component GenericTimeDate)
+**     Description :
+**         This method synchronizes the software RTC with the internal
+**         HW RTC. Because the internal RTC only counts seconds, we
+**         sync on a second change.
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
 ** ===================================================================
 */
 

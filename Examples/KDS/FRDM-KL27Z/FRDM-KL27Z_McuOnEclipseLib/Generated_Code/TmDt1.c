@@ -4,10 +4,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : GenericTimeDate
-**     Version     : Component 01.059, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.061, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-21, 09:50, # CodeGen: 37
+**     Date/Time   : 2017-03-09, 20:22, # CodeGen: 62
 **     Abstract    :
 **         Software date/time module.
 **     Settings    :
@@ -51,6 +51,7 @@
 **         SetInternalRTCTimeDate      - uint8_t TmDt1_SetInternalRTCTimeDate(TIMEREC *time, DATEREC *date);
 **         GetInternalRTCTimeDate      - uint8_t TmDt1_GetInternalRTCTimeDate(TIMEREC *time, DATEREC *date);
 **         SyncWithInternalRTC         - uint8_t TmDt1_SyncWithInternalRTC(void);
+**         SyncSWtimeToInternalRTCsec  - uint8_t TmDt1_SyncSWtimeToInternalRTCsec(void);
 **         SetExternalRTCTimeDate      - uint8_t TmDt1_SetExternalRTCTimeDate(TIMEREC *time, DATEREC *date);
 **         GetExternalRTCTimeDate      - uint8_t TmDt1_GetExternalRTCTimeDate(TIMEREC *time, DATEREC *date);
 **         SyncWithExternalRTC         - uint8_t TmDt1_SyncWithExternalRTC(void);
@@ -1005,6 +1006,42 @@ uint8_t TmDt1_CalculateDayOfWeek(uint16_t Year, uint8_t Month, uint8_t Day)
 
 /*
 ** ===================================================================
+**     Method      :  TmDt1_SyncSWtimeToInternalRTCsec (component GenericTimeDate)
+**     Description :
+**         This method synchronizes the software RTC with the internal
+**         HW RTC. Because the internal RTC only counts seconds, we
+**         sync on a second change.
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t TmDt1_SyncSWtimeToInternalRTCsec(void)
+{
+  /* This method synchronizes the software RTC with the internal HW RTC.
+   * Because the internal RTC only counts seconds, we sync on a second change.
+   */
+  TIMEREC time;
+  uint8_t secs;
+
+  if (TmDt1_GetInternalRTCTimeDate(&time, NULL)!=ERR_OK) {
+    return ERR_FAILED;
+  }
+  secs = time.Sec; /* remember current second counter */
+  do {
+    if (TmDt1_GetInternalRTCTimeDate(&time, NULL)!=ERR_OK) {
+      return ERR_FAILED;
+    }
+  } while(secs==time.Sec);
+  /* internal RTC has switched to the new second: sync internal RTC with it */
+  if (TmDt1_SetSWTimeDate(&time, NULL)!=ERR_OK) { /* sync software RTC from HW RTC */
+    return ERR_FAILED;
+  }
+  return ERR_OK;
+}
+
+/*
+** ===================================================================
 **     Method      :  TmDt1_SyncWithInternalRTC (component GenericTimeDate)
 **     Description :
 **         Synchronizes the software RTC with date and time from the
@@ -1034,7 +1071,16 @@ uint8_t TmDt1_SyncWithInternalRTC(void)
   if (res!=ERR_OK) {
     return res;
   }
-  return TmDt1_SetDate(date.Year, date.Month, date.Day);
+  res = TmDt1_SetDate(date.Year, date.Month, date.Day);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  /* now sync to the second of the internal RTC */
+  res = TmDt1_SyncSWtimeToInternalRTCsec();
+  if (res!=ERR_OK) {
+    return res;
+  }
+  return ERR_OK;
 #else
   return ERR_FAILED; /* no hardware RTC available */
 #endif

@@ -137,6 +137,45 @@ typedef portSTACK_TYPE StackType_t;
   typedef uint32_t TickType_t;
   #define portMAX_DELAY      (TickType_t)0xffffffff
 #endif
+
+#if configUSE_MPU_SUPPORT
+/*-----------------------------------------------------------*/
+/* MPU specific constants. */
+#define portUSING_MPU_WRAPPERS		1
+#define portPRIVILEGE_BIT			( 0x80000000UL )
+
+#define portMPU_REGION_READ_WRITE				( 0x03UL << 24UL )
+#define portMPU_REGION_PRIVILEGED_READ_ONLY		( 0x05UL << 24UL )
+#define portMPU_REGION_READ_ONLY				( 0x06UL << 24UL )
+#define portMPU_REGION_PRIVILEGED_READ_WRITE	( 0x01UL << 24UL )
+#define portMPU_REGION_CACHEABLE_BUFFERABLE		( 0x07UL << 16UL )
+#define portMPU_REGION_EXECUTE_NEVER			( 0x01UL << 28UL )
+
+#define portUNPRIVILEGED_FLASH_REGION		( 0UL )
+#define portPRIVILEGED_FLASH_REGION			( 1UL )
+#define portPRIVILEGED_RAM_REGION			( 2UL )
+#define portGENERAL_PERIPHERALS_REGION		( 3UL )
+#define portSTACK_REGION					( 4UL )
+#define portFIRST_CONFIGURABLE_REGION	    ( 5UL )
+#define portLAST_CONFIGURABLE_REGION		( 7UL )
+#define portNUM_CONFIGURABLE_REGIONS		( ( portLAST_CONFIGURABLE_REGION - portFIRST_CONFIGURABLE_REGION ) + 1 )
+#define portTOTAL_NUM_REGIONS				( portNUM_CONFIGURABLE_REGIONS + 1 ) /* Plus one to make space for the stack region. */
+
+#define portSWITCH_TO_USER_MODE() __asm volatile ( " mrs r0, control \n orr r0, #1 \n msr control, r0 " :::"r0" )
+
+typedef struct MPU_REGION_REGISTERS
+{
+	uint32_t ulRegionBaseAddress;
+	uint32_t ulRegionAttribute;
+} xMPU_REGION_REGISTERS;
+
+/* Plus 1 to create space for the stack region. */
+typedef struct MPU_SETTINGS
+{
+	xMPU_REGION_REGISTERS xRegion[ portTOTAL_NUM_REGIONS ];
+} xMPU_SETTINGS;
+#endif /* configUSE_MPU_SUPPORT */
+
 /*-----------------------------------------------------------*/
 /* Hardware specifics. */
 #if (configCPU_FAMILY==configCPU_FAMILY_CF1) || (configCPU_FAMILY==configCPU_FAMILY_CF2)
@@ -258,17 +297,17 @@ extern void vPortYieldFromISR(void);
 
 /* Architecture specific optimizations. */
 #if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY)
-#if configUSE_PORT_OPTIMISED_TASK_SELECTION == 1
-
+  #if configUSE_PORT_OPTIMISED_TASK_SELECTION == 1
 	/* Generic helper function. */
-	__attribute__( ( always_inline ) ) static inline unsigned char ucPortCountLeadingZeros( unsigned long ulBitmap )
-	{
-	  uint8_t ucReturn;
+    #if (configCOMPILER==configCOMPILER_ARM_GCC)
+      __attribute__((always_inline)) static inline unsigned char ucPortCountLeadingZeros(unsigned long ulBitmap)
+	  {
+	    uint8_t ucReturn;
 
-		__asm volatile ( "clz %0, %1" : "=r" ( ucReturn ) : "r" ( ulBitmap ) );
-		return ucReturn;
-	}
-
+	    __asm volatile ( "clz %0, %1" : "=r" ( ucReturn ) : "r" ( ulBitmap ) );
+	    return ucReturn;
+	  }
+    #endif
 	/* Check the configuration. */
 	#if( configMAX_PRIORITIES > 32 )
 		#error configUSE_PORT_OPTIMISED_TASK_SELECTION can only be set to 1 when configMAX_PRIORITIES is less than or equal to 32.  It is very rare that a system requires more than 10 to 15 difference priorities as tasks that share a priority will time slice.
@@ -279,10 +318,15 @@ extern void vPortYieldFromISR(void);
 	#define portRESET_READY_PRIORITY( uxPriority, uxReadyPriorities ) ( uxReadyPriorities ) &= ~( 1UL << ( uxPriority ) )
 
 	/*-----------------------------------------------------------*/
+  #if (configCOMPILER==configCOMPILER_ARM_GCC)
+    #define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) uxTopPriority = ( 31UL - ( uint32_t ) ucPortCountLeadingZeros( ( uxReadyPriorities ) ) )
+  #elif (configCOMPILER==configCOMPILER_ARM_KEIL)
+    #define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) uxTopPriority = ( 31UL - ( uint32_t ) __clz( ( uxReadyPriorities ) ) )
+  #elif (configCOMPILER==configCOMPILER_ARM_IAR)
+    #define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) uxTopPriority = ( 31UL - ( ( uint32_t ) __CLZ( ( uxReadyPriorities ) ) ) )
+  #endif
 
-  #define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) uxTopPriority = ( 31UL - ( uint32_t ) ucPortCountLeadingZeros( ( uxReadyPriorities ) ) )
-
-#endif /* configUSE_PORT_OPTIMISED_TASK_SELECTION */
+  #endif /* configUSE_PORT_OPTIMISED_TASK_SELECTION */
 #endif /* configCPU_FAMILY_IS_ARM_M4_M7 */
 /*-----------------------------------------------------------*/
 
@@ -317,7 +361,6 @@ void vPortYieldHandler(void);
     /* enables floating point support in the CPU */
 #endif
 
-
 /* Prototypes for interrupt service handlers */
 #if MCUC1_CONFIG_NXP_SDK_USED /* the SDK expects different interrupt handler names */
   void SVC_Handler(void); /* SVC interrupt handler */
@@ -330,79 +373,92 @@ void vPortYieldHandler(void);
 #endif
 
 #if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) && (configCOMPILER==configCOMPILER_ARM_GCC)
-#define portINLINE  __inline
+  #define portINLINE  __inline
 
-#ifndef portFORCE_INLINE
-  #define portFORCE_INLINE inline __attribute__(( always_inline))
-#endif
+  #ifndef portFORCE_INLINE
+    #define portFORCE_INLINE inline __attribute__(( always_inline))
+  #endif
 
-portFORCE_INLINE static BaseType_t xPortIsInsideInterrupt( void )
-{
-  uint32_t ulCurrentInterrupt;
-  BaseType_t xReturn;
+  #if configUSE_MPU_SUPPORT
+	  /* Set the privilege level to user mode if xRunningPrivileged is false. */
+	  portFORCE_INLINE static void vPortResetPrivilege( BaseType_t xRunningPrivileged )
+	  {
+		if( xRunningPrivileged != pdTRUE )
+		{
+			__asm volatile ( " mrs r0, control 	\n" \
+							 " orr r0, #1 		\n" \
+							 " msr control, r0	\n"	\
+							 :::"r0" );
+		}
+	  }
+  #endif
 
-  /* Obtain the number of the currently executing interrupt. */
-  __asm volatile( "mrs %0, ipsr" : "=r"( ulCurrentInterrupt ) );
+	portFORCE_INLINE static BaseType_t xPortIsInsideInterrupt( void )
+	{
+	  uint32_t ulCurrentInterrupt;
+	  BaseType_t xReturn;
 
-  if( ulCurrentInterrupt == 0 )
-  {
-    xReturn = pdFALSE;
-  }
-  else
-  {
-    xReturn = pdTRUE;
-  }
+	  /* Obtain the number of the currently executing interrupt. */
+	  __asm volatile( "mrs %0, ipsr" : "=r"( ulCurrentInterrupt ) );
 
-  return xReturn;
-}
+	  if( ulCurrentInterrupt == 0 )
+	  {
+		xReturn = pdFALSE;
+	  }
+	  else
+	  {
+		xReturn = pdTRUE;
+	  }
 
-/*-----------------------------------------------------------*/
+	  return xReturn;
+	}
 
-portFORCE_INLINE static void vPortRaiseBASEPRI( void )
-{
-uint32_t ulNewBASEPRI;
+	/*-----------------------------------------------------------*/
 
-  __asm volatile
-  (
-    " mov %0, %1                        \n" \
-    " msr basepri, %0                     \n" \
-    " isb                           \n" \
-    " dsb                           \n" \
-    :"=r" (ulNewBASEPRI) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY )
-  );
-}
+	portFORCE_INLINE static void vPortRaiseBASEPRI( void )
+	{
+	uint32_t ulNewBASEPRI;
 
-/*-----------------------------------------------------------*/
+	  __asm volatile
+	  (
+		" mov %0, %1                        \n" \
+		" msr basepri, %0                     \n" \
+		" isb                           \n" \
+		" dsb                           \n" \
+		:"=r" (ulNewBASEPRI) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY )
+	  );
+	}
 
-portFORCE_INLINE static uint32_t ulPortRaiseBASEPRI( void )
-{
-uint32_t ulOriginalBASEPRI, ulNewBASEPRI;
+	/*-----------------------------------------------------------*/
 
-  __asm volatile
-  (
-    " mrs %0, basepri                     \n" \
-    " mov %1, %2                        \n" \
-    " msr basepri,                      \n" \
-    " isb                           \n" \
-    " dsb                           \n" \
-    :"=r" (ulOriginalBASEPRI), "=r" (ulNewBASEPRI) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY )
-  );
+	portFORCE_INLINE static uint32_t ulPortRaiseBASEPRI( void )
+	{
+	uint32_t ulOriginalBASEPRI, ulNewBASEPRI;
 
-  /* This return will not be reached but is necessary to prevent compiler
-  warnings. */
-  return ulOriginalBASEPRI;
-}
-/*-----------------------------------------------------------*/
+	  __asm volatile
+	  (
+		" mrs %0, basepri                     \n" \
+		" mov %1, %2                        \n" \
+		" msr basepri,                      \n" \
+		" isb                           \n" \
+		" dsb                           \n" \
+		:"=r" (ulOriginalBASEPRI), "=r" (ulNewBASEPRI) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY )
+	  );
 
-portFORCE_INLINE static void vPortSetBASEPRI( uint32_t ulNewMaskValue )
-{
-  __asm volatile
-  (
-    " msr basepri, %0 " :: "r" ( ulNewMaskValue )
-  );
-}
-/*-----------------------------------------------------------*/
+	  /* This return will not be reached but is necessary to prevent compiler
+	  warnings. */
+	  return ulOriginalBASEPRI;
+	}
+	/*-----------------------------------------------------------*/
 
+	portFORCE_INLINE static void vPortSetBASEPRI( uint32_t ulNewMaskValue )
+	{
+	  __asm volatile
+	  (
+		" msr basepri, %0 " :: "r" ( ulNewMaskValue )
+	  );
+	}
+	/*-----------------------------------------------------------*/
 #endif
 
 #if configUSE_TICKLESS_IDLE_DECISION_HOOK /* << EST */

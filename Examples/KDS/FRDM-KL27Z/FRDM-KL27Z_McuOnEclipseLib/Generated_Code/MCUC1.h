@@ -4,10 +4,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : McuLibConfig
-**     Version     : Component 01.007, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.008, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-22, 08:14, # CodeGen: 53
+**     Date/Time   : 2017-03-09, 20:22, # CodeGen: 62
 **     Abstract    :
 **
 **     Settings    :

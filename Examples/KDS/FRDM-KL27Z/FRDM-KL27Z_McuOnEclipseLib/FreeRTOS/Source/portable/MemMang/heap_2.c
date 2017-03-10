@@ -1,6 +1,6 @@
 /* << EST */
 #include "FreeRTOSConfig.h"
-#if !defined(configFRTOS_MEMORY_SCHEME) || (configFRTOS_MEMORY_SCHEME==2 && configSUPPORT_DYNAMIC_ALLOCATION==1)
+#if !defined(configUSE_HEAP_SCHEME) || (configUSE_HEAP_SCHEME==2 && configSUPPORT_DYNAMIC_ALLOCATION==1)
 
 /*
     FreeRTOS V9.0.0 - Copyright (C) 2016 Real Time Engineers Ltd.
@@ -323,5 +323,5 @@ uint8_t *pucAlignedHeap;
 	pxFirstFreeBlock->pxNextFreeBlock = &xEnd;
 }
 /*-----------------------------------------------------------*/
-#endif /* configFRTOS_MEMORY_SCHEME==2 */ /* << EST */
+#endif /* configUSE_HEAP_SCHEME==2 */ /* << EST */
 

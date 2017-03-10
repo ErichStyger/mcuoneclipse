@@ -1,6 +1,6 @@
 /* << EST */
 #include "FreeRTOSConfig.h"
-#if !defined(configFRTOS_MEMORY_SCHEME) || (configFRTOS_MEMORY_SCHEME==1 && configSUPPORT_DYNAMIC_ALLOCATION==1)
+#if !defined(configUSE_HEAP_SCHEME) || (configUSE_HEAP_SCHEME==1 && configSUPPORT_DYNAMIC_ALLOCATION==1)
 
 /*
     FreeRTOS V9.0.0 - Copyright (C) 2016 Real Time Engineers Ltd.
@@ -193,7 +193,7 @@ size_t xPortGetFreeHeapSize( void )
 {
 	return ( configADJUSTED_HEAP_SIZE - xNextFreeByte );
 }
-#endif /* configFRTOS_MEMORY_SCHEME==1 */ /* << EST */
+#endif /* configUSE_HEAP_SCHEME==1 */ /* << EST */
 
 
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v3.1.0
+ * Trace Recorder Library for Tracealyzer v3.1.1
  * Percepio AB, www.percepio.com
  *
  * trcKernelPort.c
@@ -38,44 +38,45 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2016.
+ * Copyright Percepio AB, 2017.
  * www.percepio.com
  ******************************************************************************/
 
 #include "FreeRTOS.h"
 #if configUSE_TRACE_HOOKS /* << EST: FreeRTOS using Percepio Trace */
 
-#if (configUSE_TRACE_FACILITY == 1 && !defined(TRC_USE_TRACEALYZER_RECORDER))
+#if (!defined(TRC_USE_TRACEALYZER_RECORDER) && configUSE_TRACE_FACILITY == 1)
 #error Trace Recorder: You need to include trcRecorder.h at the end of your FreeRTOSConfig.h!
 #endif
 
-#if (TRC_USE_TRACEALYZER_RECORDER == 1)
+#if (defined(TRC_USE_TRACEALYZER_RECORDER) && TRC_USE_TRACEALYZER_RECORDER == 1)
 
 #if (configUSE_TICKLESS_IDLE != 0 && (TRC_HWTC_TYPE == TRC_OS_TIMER_INCR || TRC_HWTC_TYPE == TRC_OS_TIMER_DECR))
 	/* 	
 		The below error message is to alert you on the following issue:
 		
-		The hardware port selected in trcConfig.h uses a periodic interrupt timer for the 
-		timestamping, probably the same timer as used by FreeRTOS for the tick interrupt,
-		e.g. SysTick on ARM Cortex-M.
+		The hardware port selected in trcConfig.h uses the operating system timer for the 
+		timestamping, i.e., the periodic interrupt timer that drives the OS tick interrupt.
 				
 		When using tickless idle, the recorder needs an independent time source in order to
-		correctly record the length of the idle time, like a free-running counter.
+		correctly record the durations of the idle times. Otherwise, the trace may appear
+		to have a different length than in reality, and the reported CPU load is also affected.
 		
 		You may override this warning by defining the TRC_CFG_ACKNOWLEDGE_TICKLESS_IDLE_WARNING
 		macro in your trcConfig.h file. But then the time scale may be incorrect during
 		tickless idle periods.
 		
-		To get this correct, set up a hardware timer as a free-running counter, set the hardware
-		port in trcConfig.h to TRC_HARDWARE_PORT_APPLICATION_DEFINED and define the HWTC macros
-		accordingly (see trcHardwarePort.h for details).
+		To get this correct, override the default timestamping by setting TRC_CFG_HARDWARE_PORT
+		in trcConfig.h to TRC_HARDWARE_PORT_APPLICATION_DEFINED and define the HWTC macros
+		accordingly, using a free running counter or an independent periodic interrupt timer.
+		See trcHardwarePort.h for details.
 				
 		For ARM Cortex-M3, M4 and M7 MCUs this is not an issue, since the recorder uses the 
-		DWT cycle counter for timestamping when available.		
+		DWT cycle counter for timestamping in these cases.		
 	*/
 	
 	#ifndef TRC_CFG_ACKNOWLEDGE_TICKLESS_IDLE_WARNING
-	#error Trace Recorder: In tickless idle mode, use an independent time source for best result
+	#error Trace Recorder: This timestamping mode is not recommended with Tickless Idle.
 	#endif
 #endif
 	
@@ -85,7 +86,7 @@
 #if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
 
 static void* pCurrentTCB = NULL;
-static xTaskHandle HandleTzCtrl;       /* TzCtrl task TCB */
+static xTaskHandle HandleTzCtrl = NULL;       /* TzCtrl task TCB */
 
 #if (configSUPPORT_STATIC_ALLOCATION == 1)
 static StackType_t stackTzCtrl[TRC_CFG_CTRL_TASK_STACK_SIZE];
@@ -129,6 +130,10 @@ void vTraceEnable(int startOption)
 	int bytes = 0;
 	extern uint32_t RecorderEnabled;
 	TracealyzerCommandType msg;
+	
+	if (HandleTzCtrl != NULL)
+		return;	/* Seems we already initiated */
+	
 	TRC_STREAM_PORT_INIT();
 	
 	if (startOption == TRC_START_AWAIT_HOST)
@@ -158,13 +163,15 @@ void vTraceEnable(int startOption)
 	else if (startOption == TRC_START)
 	{
 		/* We start streaming directly - this assumes that the interface is ready! */
+		TRC_PORT_SPECIFIC_INIT();
+		
 		msg.cmdCode = CMD_SET_ACTIVE;
 		msg.param1 = 1;
 		prvProcessCommand(&msg);
 	}
 	else
 	{
-		/* Start commands will be processed by the TzCtrl task. */
+		/* On TRC_INIT */
 		TRC_PORT_SPECIFIC_INIT();
 	}
 
@@ -266,6 +273,22 @@ uint32_t prvIsNewTCB(void* pNewTCB)
 }
 
 /*******************************************************************************
+ * prvTraceIsSchedulerSuspended
+ *
+ * Returns true if the RTOS scheduler currently is disabled, thus preventing any
+ * task-switches from occurring. Only called from vTraceStoreISREnd.
+ ******************************************************************************/
+unsigned char prvTraceIsSchedulerSuspended()
+{
+    /* Assumed to be available in FreeRTOS. According to the FreeRTOS docs, 
+	INCLUDE_xTaskGetSchedulerState or configUSE_TIMERS must be set to 1 in
+	FreeRTOSConfig.h for this function to be available. */
+
+	return xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED;
+}
+
+
+/*******************************************************************************
  * prvCheckRecorderStatus
  *
  * Called by TzCtrl task periodically (every 100 ms - seems reasonable).
@@ -329,10 +352,10 @@ static void prvCheckRecorderStatus(void)
  ******************************************************************************/
 static portTASK_FUNCTION( TzCtrl, pvParameters )
 {
-	(void)pvParameters;
-
 	TracealyzerCommandType msg;
 	int bytes = 0;
+	
+	(void)pvParameters;
 
 	while (1)
 	{
@@ -392,7 +415,7 @@ traceObjectClass TraceObjectClassTable[5] = {
  ******************************************************************************/
 void vTraceSetQueueName(void* object, const char* name)
 {
-	prvTraceSetObjectName(TRACE_GET_OBJECT_TRACE_CLASS(UNUSED, object), TRACE_GET_OBJECT_NUMBER(UNUSED, object), name);
+	prvTraceSetObjectName(TRACE_GET_OBJECT_TRACE_CLASS(TRC_UNUSED, object), TRACE_GET_OBJECT_NUMBER(TRC_UNUSED, object), name);
 }
 
 /*******************************************************************************
@@ -405,7 +428,7 @@ void vTraceSetQueueName(void* object, const char* name)
  ******************************************************************************/
 void vTraceSetSemaphoreName(void* object, const char* name)
 {
-	prvTraceSetObjectName(TRACE_GET_OBJECT_TRACE_CLASS(UNUSED, object), TRACE_GET_OBJECT_NUMBER(UNUSED, object), name);
+	prvTraceSetObjectName(TRACE_GET_OBJECT_TRACE_CLASS(TRC_UNUSED, object), TRACE_GET_OBJECT_NUMBER(TRC_UNUSED, object), name);
 }
 
 /*******************************************************************************
@@ -418,7 +441,7 @@ void vTraceSetSemaphoreName(void* object, const char* name)
  ******************************************************************************/
 void vTraceSetMutexName(void* object, const char* name)
 {
-	prvTraceSetObjectName(TRACE_GET_OBJECT_TRACE_CLASS(UNUSED, object), TRACE_GET_OBJECT_NUMBER(UNUSED, object), name);
+	prvTraceSetObjectName(TRACE_GET_OBJECT_TRACE_CLASS(TRC_UNUSED, object), TRACE_GET_OBJECT_NUMBER(TRC_UNUSED, object), name);
 }
 
 void* prvTraceGetCurrentTaskHandle()
@@ -438,7 +461,7 @@ traceHandle prvTraceGetObjectNumber(void* handle)
 }
 #endif
 
-unsigned char prvTraceGetObjectType(void* handle)
+uint8_t prvTraceGetObjectType(void* handle)
 {
 	return ucQueueGetQueueType(handle);
 }
@@ -536,17 +559,17 @@ uint8_t uiTraceIsObjectExcluded(traceObjectClass objectclass, traceHandle handle
 	switch(objectclass)
 	{
 	case TRACE_CLASS_TASK:
-		return TRACE_GET_TASK_FLAG_ISEXCLUDED(handle);
+		return (uint8_t) TRACE_GET_TASK_FLAG_ISEXCLUDED(handle);
 	case TRACE_CLASS_SEMAPHORE:
-		return TRACE_GET_SEMAPHORE_FLAG_ISEXCLUDED(handle);
+		return (uint8_t) TRACE_GET_SEMAPHORE_FLAG_ISEXCLUDED(handle);
 	case TRACE_CLASS_MUTEX:
-		return TRACE_GET_MUTEX_FLAG_ISEXCLUDED(handle);
+		return (uint8_t) TRACE_GET_MUTEX_FLAG_ISEXCLUDED(handle);
 	case TRACE_CLASS_QUEUE:
-		return TRACE_GET_QUEUE_FLAG_ISEXCLUDED(handle);
+		return (uint8_t) TRACE_GET_QUEUE_FLAG_ISEXCLUDED(handle);
 	case TRACE_CLASS_TIMER:
-		return TRACE_GET_TIMER_FLAG_ISEXCLUDED(handle);		
+		return (uint8_t) TRACE_GET_TIMER_FLAG_ISEXCLUDED(handle);
 	case TRACE_CLASS_EVENTGROUP:
-		return TRACE_GET_EVENTGROUP_FLAG_ISEXCLUDED(handle);				
+		return (uint8_t) TRACE_GET_EVENTGROUP_FLAG_ISEXCLUDED(handle);
 	}
 	
 	prvTraceError("Invalid object class ID in prvIsObjectExcluded!");
@@ -555,10 +578,26 @@ uint8_t uiTraceIsObjectExcluded(traceObjectClass objectclass, traceHandle handle
 	return 1;
 }
 
+/*******************************************************************************
+ * prvTraceIsSchedulerSuspended
+ *
+ * Returns true if the RTOS scheduler currently is disabled, thus preventing any
+ * task-switches from occurring. Only called from vTraceStoreISREnd.
+ ******************************************************************************/
+#if (TRC_CFG_INCLUDE_ISR_TRACING == 1)
+unsigned char prvTraceIsSchedulerSuspended()
+{
+    /* Assumed to be available in FreeRTOS. According to the FreeRTOS docs, 
+	INCLUDE_xTaskGetSchedulerState or configUSE_TIMERS must be set to 1 in
+	FreeRTOSConfig.h for this function to be available. */
+
+	return xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED;
+}
+#endif
+
 #endif /* Snapshot mode */
 
 #endif /*(TRC_USE_TRACEALYZER_RECORDER == 1)*/
-
 #endif /* configUSE_TRACE_HOOKS */ /* << EST: FreeRTOS using Percepio Trace */
 
 

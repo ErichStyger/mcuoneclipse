@@ -38,7 +38,7 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2016.
+ * Copyright Percepio AB, 2017.
  * www.percepio.com
  ******************************************************************************/
 
@@ -49,7 +49,7 @@
 #if (TRC_USE_TRACEALYZER_RECORDER == 1)
 
 typedef struct{
-	int16_t EventID;
+	uint16_t EventID;
 	uint16_t EventCount;
 	uint32_t TS;
 } BaseEvent;
@@ -76,7 +76,7 @@ typedef struct{
 typedef struct
 {
   BaseEvent base;
-  char data[60]; /* maximum payload size */
+  uint32_t data[15]; /* maximum payload size */
 } largestEventType;
 
 typedef struct{
@@ -104,12 +104,20 @@ typedef struct{
 
 /* The Symbol Table type - just a byte array */
 typedef struct{
-  uint8_t pSymbolTableBuffer[SYMBOL_TABLE_BUFFER_SIZE];
+  union
+  {
+    uint32_t pSymbolTableBufferUINT32[SYMBOL_TABLE_BUFFER_SIZE / sizeof(uint32_t)];
+    uint8_t pSymbolTableBufferUINT8[SYMBOL_TABLE_BUFFER_SIZE];
+  } SymbolTableBuffer;
 } SymbolTable;
 
 /* The Object Data Table type - just a byte array */
 typedef struct{
-  uint8_t pObjectDataTableBuffer[OBJECT_DATA_TABLE_BUFFER_SIZE];
+  union
+  {
+    uint32_t pObjectDataTableBufferUINT32[OBJECT_DATA_TABLE_BUFFER_SIZE / sizeof(uint32_t)];
+    uint8_t pObjectDataTableBufferUINT8[OBJECT_DATA_TABLE_BUFFER_SIZE];
+  } ObjectDataTableBuffer;
 } ObjectDataTable;
 
 typedef struct{
@@ -138,13 +146,13 @@ typedef struct{
 #define PARAM_COUNT(n) ((n & 0xF) << 12)
 
 /* The Symbol Table instance - keeps names of tasks and other named objects. */
-static SymbolTable symbolTable = { { 0 } };
+static SymbolTable symbolTable = { { { 0 } } };
 
 /* This points to the first unused entry in the symbol table. */
 static uint32_t firstFreeSymbolTableIndex = 0;
 
 /* The Object Data Table instance - keeps initial priorities of tasks. */
-static ObjectDataTable objectDataTable = { { 0 } };
+static ObjectDataTable objectDataTable = { { { 0 } } };
 
 /* This points to the first unused entry in the object data table. */
 static uint32_t firstFreeObjectDataTableIndex = 0;
@@ -155,14 +163,14 @@ static uint32_t ISR_stack[TRC_CFG_MAX_ISR_NESTING];
 /* Keeps track of ISR nesting */
 static int8_t ISR_stack_index = -1;
 
-/* Any error that occured in the recorder (also creates User Event) */
+/* Any error that occurred in the recorder (also creates User Event) */
 static int errorCode = 0;
 
 /* Counts the number of trace sessions (not yet used) */
-static uint32_t SessionCounter = 0;
+static uint32_t SessionCounter = 0u;
 
 /* Master switch for recording (0 => Disabled, 1 => Enabled) */
-uint32_t RecorderEnabled = 0;
+uint32_t RecorderEnabled = 0u;
 
 /* Used to determine endian of data (big/little) */
 static uint32_t PSFEndianessIdentifier = 0x50534600;
@@ -176,7 +184,7 @@ static uint32_t eventCounter = 0;
 /* The user event channel for recorder warnings, defined in trcKernelPort.c */
 extern char* trcWarningChannel;
 
-/* Remembers if an earlier ISR in a sequence of adjancent ISRs has triggered a task switch.
+/* Remembers if an earlier ISR in a sequence of adjacent ISRs has triggered a task switch.
 In that case, vTraceStoreISREnd does not store a return to the previously executing task. */
 int32_t isPendingContextSwitch = 0;
 
@@ -242,7 +250,9 @@ static void prvTraceStoreStringEventHelper(	int nArgs,
 										uint16_t eventID,
 										traceString userEvtChannel,
 										const char* str,
-										va_list vl);
+										va_list* vl);
+static void prvTraceStoreSimpleStringEventHelper(	traceString userEvtChannel,
+										const char* str);
 
 /* Stores the header information on Start */
 static void prvTraceStoreHeader(void);
@@ -260,7 +270,7 @@ static void prvTraceStoreTSConfig(void);
 static void prvTraceStoreWarnings(void);
 
 /* Internal function for starting/stopping the recorder. */
-static void prvSetRecorderEnabled(int isEnabled);
+static void prvSetRecorderEnabled(uint32_t isEnabled);
 
 /* Mark the page read as complete. */
 static void prvPageReadComplete(int pageIndex);
@@ -312,10 +322,10 @@ void vTraceInstanceFinishedNext(void)
  ******************************************************************************/
 traceString xTraceRegisterString(const char* name)
 {
-    prvTraceSaveSymbol((void*)name, name);
+    prvTraceSaveSymbol((const void*)name, name);
 
 	/* Always save in symbol table, if the recording has not yet started */
-	prvTraceStoreStringEvent(1, PSF_EVENT_OBJ_NAME, (traceString)name, (uint32_t)name);
+	prvTraceStoreStringEvent(1, PSF_EVENT_OBJ_NAME, (const char*)name, (uint32_t)name);
 
 	return (traceString)name;
 }
@@ -336,13 +346,17 @@ void vTraceStoreKernelObjectName(void* object, const char* name)
 	prvTraceStoreStringEvent(1, PSF_EVENT_OBJ_NAME, name, (uint32_t)object);
 }
 
+
 /******************************************************************************
- * vTraceSetFrequency
- *
- * Sets the clock rate of the timestamping timer, to give correct timeline.
- * This is normally not required, since the default value (TRC_HWTC_FREQ_HZ)
- * is normally correct. But if using custom setups, this may be necessary.
- *****************************************************************************/
+* vTraceSetFrequency
+*
+* Registers the clock rate of the time source for the event timestamping.
+* This is normally not required, but if the default value (TRC_HWTC_FREQ_HZ)
+* should be incorrect for your setup, you can override it using this function.
+*
+* Must be called prior to vTraceEnable, and the time source is assumed to
+* have a fixed clock frequency after the startup.
+*****************************************************************************/
 void vTraceSetFrequency(uint32_t frequency)
 {
 	timestampFrequency = frequency;
@@ -357,7 +371,7 @@ void vTraceSetFrequency(uint32_t frequency)
  * as yellow labels in the main trace view.
  *
  * You may group User Events into User Event Channels. The yellow User Event 
- * labels shows the logged string, preceeded by the channel  name within 
+ * labels shows the logged string, preceded by the channel  name within 
  * brackets. For example:
  *
  *  "[MyChannel] Hello World!"
@@ -375,16 +389,7 @@ void vTraceSetFrequency(uint32_t frequency)
  ******************************************************************************/
 void vTracePrint(traceString chn, const char* str)
 {
-  va_list vl = { 0 };
-  
-  if (chn != NULL)
-  {
-    prvTraceStoreStringEventHelper(0, PSF_EVENT_USER_EVENT + 1, chn, str, vl);
-  }
-  else
-  {
-    prvTraceStoreStringEventHelper(0, PSF_EVENT_USER_EVENT, chn, str, vl);
-  }
+	prvTraceStoreSimpleStringEventHelper(chn, str);
 }
 
 /******************************************************************************
@@ -401,7 +406,7 @@ void vTracePrint(traceString chn, const char* str)
  * states or control system signals (e.g. system inputs or outputs).
  *
  * You may group User Events into User Event Channels. The yellow User Event 
- * labels show the logged string, preceeded by the channel name within brackets.
+ * labels show the logged string, preceded by the channel name within brackets.
  * 
  * Example:
  *
@@ -419,8 +424,8 @@ void vTracePrint(traceString chn, const char* str)
  *				 "ADC channel %d: %d volts",
  *				 ch, adc_reading);
  *
- * All data arguments are assumed to be 32 bt wide. The following formats are
- * supported in v3.0:
+ * All data arguments are assumed to be 32 bit wide. The following formats are
+ * supported:
  * %d - signed integer. The following width and padding format is supported: "%05d" -> "-0042" and "%5d" -> "  -42"
  * %u - unsigned integer. The following width and padding format is supported: "%05u" -> "00042" and "%5u" -> "   42"
  * %X - hexadecimal (uppercase). The following width and padding format is supported: "%04X" -> "002A" and "%4X" -> "  2A"
@@ -438,32 +443,34 @@ void vTracePrintF(traceString chn, const char* fmt, ...)
 	va_list vl;
 	int i = 0;
 
-  int nArgs = 0;
+	int nArgs = 0;
 
-  /* Count the number of arguments in the format string (e.g., %d) */
-  for (i = 0; (fmt[i] != 0) && (i < 52); i++)
-  {
-    if (fmt[i] == '%')
-    {
-		if (fmt[i + 1] != '%')
+	/* Count the number of arguments in the format string (e.g., %d) */
+	for (i = 0; (fmt[i] != 0) && (i < 52); i++)
+	{
+		if (fmt[i] == '%')
 		{
-			nArgs++;        /* Found an argument */
+			if (fmt[i + 1] != '%')
+			{
+				nArgs++;        /* Found an argument */
+			}
+			
+			i++;      /* Move past format specifier or non-argument '%' */
 		}
-		
-		i++;      /* Move past format specifier or non-argument '%' */
-    }
-  }
+	}
 
-  va_start(vl, fmt);
-  if (chn != NULL)
-  {
-    prvTraceStoreStringEventHelper(nArgs, PSF_EVENT_USER_EVENT + nArgs + 1, chn, fmt, vl);
-  }
-  else
-  {
-    prvTraceStoreStringEventHelper(nArgs, PSF_EVENT_USER_EVENT + nArgs, chn, fmt, vl);
-  }
-  va_end(vl);
+	va_start(vl, fmt);
+	
+	if (chn != NULL)
+	{
+		prvTraceStoreStringEventHelper(nArgs, (uint16_t)(PSF_EVENT_USER_EVENT + nArgs + 1), chn, fmt, &vl);
+	}
+	else
+	{
+		prvTraceStoreStringEventHelper(nArgs, (uint16_t)(PSF_EVENT_USER_EVENT + nArgs), chn, fmt, &vl);
+	}
+
+	va_end(vl);
 }
 
 /*******************************************************************************
@@ -488,13 +495,13 @@ void vTracePrintF(traceString chn, const char* fmt, ...)
 traceHandle xTraceSetISRProperties(const char* name, uint8_t priority)
 {
 	/* Save object data in object data table */
-	prvTraceSaveObjectData((void*)name, priority);
+	prvTraceSaveObjectData((const void*)name, priority);
         
 	/* Note: "name" is used both as a string argument, and the address as ID */
 	prvTraceStoreStringEvent(2, PSF_EVENT_DEFINE_ISR, name, name, priority);
         
 	/* Always save in symbol table, if the recording has not yet started */
-	prvTraceSaveSymbol((void*)name, name);
+	prvTraceSaveSymbol((const void*)name, name);
 	
 	return (traceHandle)name;
 }
@@ -586,10 +593,17 @@ void vTraceStoreISREnd(int isTaskSwitchRequired)
 	{
 		ISR_stack_index--;
 		
-		/* Store return to interrupted task, if a task switch has not been triggered by any interrupt */
-		if (isPendingContextSwitch == 0)
+		/* Store return to interrupted task, if no context switch will occur in between. */
+		if ((isPendingContextSwitch == 0) || (prvTraceIsSchedulerSuspended()))
 		{
+#if 1 /* << EST: avoid gcc warning "cast from function call of type 'void *' to non-matching type 'long unsigned int' [-Wbad-function-cast]" */
+      void *t;
+      t = TRACE_GET_CURRENT_TASK();
+
+      prvTraceStoreEvent1(PSF_EVENT_TS_RESUME, (uint32_t)t);
+#else
 			prvTraceStoreEvent1(PSF_EVENT_TS_RESUME, (uint32_t)TRACE_GET_CURRENT_TASK());
+#endif
 		}
 	}
 
@@ -602,7 +616,7 @@ void vTraceStoreISREnd(int isTaskSwitchRequired)
  *
  * Returns the last error, if any.
  *****************************************************************************/
-char* xTraceGetLastError(void)
+const char* xTraceGetLastError(void)
 {
 	if (NoRoomForSymbol > 0)
 	{
@@ -663,16 +677,34 @@ void vTraceStop(void)
 	prvSetRecorderEnabled(0);
 }
 
+/*******************************************************************************
+ * vTraceSetRecorderDataBuffer
+ *
+ * If custom allocation is used, this function must be called so the recorder
+ * library knows where to save the trace data.
+ ******************************************************************************/
+#if (TRC_CFG_RECORDER_BUFFER_ALLOCATION == TRC_RECORDER_BUFFER_ALLOCATION_CUSTOM)
+
+extern char* _TzTraceData;
+
+void vTraceSetRecorderDataBuffer(void* pRecorderData)
+{
+	_TzTraceData = pRecorderData;
+}
+#endif
+
 /******************************************************************************/
 /*** INTERNAL FUNCTIONS *******************************************************/
 /******************************************************************************/
 
 /* Internal function for starting/stopping the recorder. */
-static void prvSetRecorderEnabled(int isEnabled)
+static void prvSetRecorderEnabled(uint32_t isEnabled)
 {
+  	void* currentTask;
+	
 	TRACE_ALLOC_CRITICAL_SECTION();
-
-  	void* currentTask = TRACE_GET_CURRENT_TASK();
+	
+	currentTask = TRACE_GET_CURRENT_TASK();
 
 	TRACE_ENTER_CRITICAL_SECTION();
 
@@ -715,17 +747,20 @@ static void prvTraceStoreSymbolTable()
 	TRACE_ALLOC_CRITICAL_SECTION();
 
 	TRACE_ENTER_CRITICAL_SECTION();
-
+	
 	if (RecorderEnabled)
 	{
-		for (i = 0; i < sizeof(SymbolTable); i += SYMBOL_TABLE_SLOT_SIZE)
+		for (i = 0; i < (sizeof(SymbolTable) / sizeof(uint32_t)); i += (SYMBOL_TABLE_SLOT_SIZE / sizeof(uint32_t)))
 		{
-            TRC_STREAM_PORT_ALLOCATE_EVENT(uint8_t, data, SYMBOL_TABLE_SLOT_SIZE);
-            for (j = 0; j < SYMBOL_TABLE_SLOT_SIZE; j++)
+            TRC_STREAM_PORT_ALLOCATE_EVENT(uint32_t, data, SYMBOL_TABLE_SLOT_SIZE);
+            if (data != NULL)
             {
-                    data[j] = symbolTable.pSymbolTableBuffer[i+j];
-            }
-			TRC_STREAM_PORT_COMMIT_EVENT(data, SYMBOL_TABLE_SLOT_SIZE);
+                for (j = 0; j < (SYMBOL_TABLE_SLOT_SIZE / sizeof(uint32_t)); j++)
+                {
+                        data[j] = symbolTable.SymbolTableBuffer.pSymbolTableBufferUINT32[i+j];
+                }
+			    TRC_STREAM_PORT_COMMIT_EVENT(data, SYMBOL_TABLE_SLOT_SIZE);
+			}
 		}
 	}
 	TRACE_EXIT_CRITICAL_SECTION();
@@ -742,14 +777,17 @@ static void prvTraceStoreObjectDataTable()
 
 	if (RecorderEnabled)
 	{
-		for (i = 0; i < sizeof(ObjectDataTable); i += OBJECT_DATA_SLOT_SIZE)
+		for (i = 0; i < (sizeof(ObjectDataTable) / sizeof(uint32_t)); i += (OBJECT_DATA_SLOT_SIZE / sizeof(uint32_t)))
         {
-            TRC_STREAM_PORT_ALLOCATE_EVENT(uint8_t, data, OBJECT_DATA_SLOT_SIZE);
-            for (j = 0; j < OBJECT_DATA_SLOT_SIZE; j++)
+            TRC_STREAM_PORT_ALLOCATE_EVENT(uint32_t, data, OBJECT_DATA_SLOT_SIZE);
+            if (data != NULL)
             {
-                    data[j] = objectDataTable.pObjectDataTableBuffer[i+j];
-            }
-            TRC_STREAM_PORT_COMMIT_EVENT(data, OBJECT_DATA_SLOT_SIZE);
+                for (j = 0; j < (OBJECT_DATA_SLOT_SIZE / sizeof(uint32_t)); j++)
+                {
+                        data[j] = objectDataTable.ObjectDataTableBuffer.pObjectDataTableBufferUINT32[i+j];
+                }
+                TRC_STREAM_PORT_COMMIT_EVENT(data, OBJECT_DATA_SLOT_SIZE);
+			}
         }
 	}
 	TRACE_EXIT_CRITICAL_SECTION();
@@ -831,13 +869,13 @@ static void prvTraceStoreWarnings()
 		{
 		case PSF_ERROR_EVENT_CODE_TOO_LARGE:
 			break;
-		case PSF_ERROR_ISR_NESTING_OVERFLOW:
+		case PSF_ERROR_ISR_NESTING_OVERFLOW:			
 			break;
 		case PSF_ERROR_DWT_NOT_SUPPORTED:
-			vTracePrintF(trcWarningChannel, "DWT not supported by this chip.");
+			vTracePrintF(trcWarningChannel, "DWT not supported, see prvTraceInitCortexM.");
 			break;
 		case PSF_ERROR_DWT_CYCCNT_NOT_SUPPORTED:
-			vTracePrintF(trcWarningChannel, "DWT_CYCCNT not supported by this chip.");
+			vTracePrintF(trcWarningChannel, "DWT_CYCCNT not supported, see prvTraceInitCortexM.");
 			break;
 		}
 	}
@@ -857,15 +895,16 @@ void prvTraceStoreEvent0(uint16_t eventID)
 	{
 		eventCounter++;
 
-  		TRC_STREAM_PORT_ALLOCATE_EVENT(BaseEvent, event, sizeof(BaseEvent));
-		if (event != NULL)
 		{
-			event->EventID = eventID | PARAM_COUNT(0);
-			event->EventCount = eventCounter;
-			event->TS = prvGetTimestamp32();
-			TRC_STREAM_PORT_COMMIT_EVENT(event, sizeof(BaseEvent));
+			TRC_STREAM_PORT_ALLOCATE_EVENT(BaseEvent, event, sizeof(BaseEvent));
+			if (event != NULL)
+			{
+				event->EventID = eventID | PARAM_COUNT(0);
+				event->EventCount = (uint16_t)eventCounter;
+				event->TS = prvGetTimestamp32();
+				TRC_STREAM_PORT_COMMIT_EVENT(event, sizeof(BaseEvent));
+			}
 		}
-
 	}
 	TRACE_EXIT_CRITICAL_SECTION();
 }
@@ -882,14 +921,17 @@ void prvTraceStoreEvent1(uint16_t eventID, uint32_t param1)
 	if (RecorderEnabled)
 	{
 		eventCounter++;
-  		TRC_STREAM_PORT_ALLOCATE_EVENT(EventWithParam_1, event, sizeof(EventWithParam_1));
-		if (event != NULL)
+		
 		{
-			event->base.EventID = eventID | PARAM_COUNT(1);
-			event->base.EventCount = eventCounter;
-			event->base.TS = prvGetTimestamp32();
-			event->param1 = (uint32_t)param1;
-			TRC_STREAM_PORT_COMMIT_EVENT(event, sizeof(EventWithParam_1));
+			TRC_STREAM_PORT_ALLOCATE_EVENT(EventWithParam_1, event, sizeof(EventWithParam_1));
+			if (event != NULL)
+			{
+				event->base.EventID = eventID | PARAM_COUNT(1);
+				event->base.EventCount = (uint16_t)eventCounter;
+				event->base.TS = prvGetTimestamp32();
+				event->param1 = (uint32_t)param1;
+				TRC_STREAM_PORT_COMMIT_EVENT(event, sizeof(EventWithParam_1));
+			}
 		}
 	}
 	TRACE_EXIT_CRITICAL_SECTION();
@@ -908,15 +950,17 @@ void prvTraceStoreEvent2(uint16_t eventID, uint32_t param1, uint32_t param2)
 	{
 		eventCounter++;
 
-	  	TRC_STREAM_PORT_ALLOCATE_EVENT(EventWithParam_2, event, sizeof(EventWithParam_2));
-		if (event != NULL)
 		{
-		  	event->base.EventID = eventID | PARAM_COUNT(2);
-			event->base.EventCount = eventCounter;
-			event->base.TS = prvGetTimestamp32();
-			event->param1 = (uint32_t)param1;
-			event->param2 = param2;
-			TRC_STREAM_PORT_COMMIT_EVENT(event, sizeof(EventWithParam_2));
+			TRC_STREAM_PORT_ALLOCATE_EVENT(EventWithParam_2, event, sizeof(EventWithParam_2));
+			if (event != NULL)
+			{
+				event->base.EventID = eventID | PARAM_COUNT(2);
+				event->base.EventCount = (uint16_t)eventCounter;
+				event->base.TS = prvGetTimestamp32();
+				event->param1 = (uint32_t)param1;
+				event->param2 = param2;
+				TRC_STREAM_PORT_COMMIT_EVENT(event, sizeof(EventWithParam_2));
+			}
 		}
 	}
 	TRACE_EXIT_CRITICAL_SECTION();
@@ -938,16 +982,18 @@ void prvTraceStoreEvent3(	uint16_t eventID,
 	{
   		eventCounter++;
 
-	  	TRC_STREAM_PORT_ALLOCATE_EVENT(EventWithParam_3, event, sizeof(EventWithParam_3));
-		if (event != NULL)
 		{
-			event->base.EventID = eventID | PARAM_COUNT(3);
-			event->base.EventCount = eventCounter;
-			event->base.TS = prvGetTimestamp32();
-			event->param1 = (uint32_t)param1;
-			event->param2 = param2;
-			event->param3 = param3;
-			TRC_STREAM_PORT_COMMIT_EVENT(event, sizeof(EventWithParam_3));
+			TRC_STREAM_PORT_ALLOCATE_EVENT(EventWithParam_3, event, sizeof(EventWithParam_3));
+			if (event != NULL)
+			{
+				event->base.EventID = eventID | PARAM_COUNT(3);
+				event->base.EventCount = (uint16_t)eventCounter;
+				event->base.TS = prvGetTimestamp32();
+				event->param1 = (uint32_t)param1;
+				event->param2 = param2;
+				event->param3 = param3;
+				TRC_STREAM_PORT_COMMIT_EVENT(event, sizeof(EventWithParam_3));
+			}
 		}
 	}
 	TRACE_EXIT_CRITICAL_SECTION();
@@ -956,9 +1002,9 @@ void prvTraceStoreEvent3(	uint16_t eventID,
 /* Stores an event with <nParam> 32-bit integer parameters */
 void prvTraceStoreEvent(int nParam, uint16_t eventID, ...)
 {
-    TRACE_ALLOC_CRITICAL_SECTION();
 	va_list vl;
 	int i;
+    TRACE_ALLOC_CRITICAL_SECTION();
 
 	PSF_ASSERT(eventID < 4096, PSF_ERROR_EVENT_CODE_TOO_LARGE);
 
@@ -966,26 +1012,28 @@ void prvTraceStoreEvent(int nParam, uint16_t eventID, ...)
 
 	if (RecorderEnabled)
 	{
-	  	int eventSize = sizeof(BaseEvent) + nParam * sizeof(uint32_t);
+	  	int eventSize = (int)sizeof(BaseEvent) + nParam * (int)sizeof(uint32_t);
 
 		eventCounter++;
 
-	  	TRC_STREAM_PORT_ALLOCATE_DYNAMIC_EVENT(largestEventType, event, eventSize);
-		if (event != NULL)
 		{
-			event->base.EventID = eventID | PARAM_COUNT(nParam);
-			event->base.EventCount = eventCounter;
-			event->base.TS = prvGetTimestamp32();
-
-			va_start(vl, eventID);
-  			for (i = 0; i < nParam; i++)
+			TRC_STREAM_PORT_ALLOCATE_DYNAMIC_EVENT(largestEventType, event, eventSize);
+			if (event != NULL)
 			{
-		  		uint32_t* tmp = (uint32_t*) &(event->data[i * 4]);
-	  			*tmp = va_arg(vl, uint32_t);
-			}
-			va_end(vl);
+				event->base.EventID = eventID | (uint16_t)PARAM_COUNT(nParam);
+				event->base.EventCount = (uint16_t)eventCounter;
+				event->base.TS = prvGetTimestamp32();
 
-			TRC_STREAM_PORT_COMMIT_EVENT(event, eventSize);
+				va_start(vl, eventID);
+				for (i = 0; i < nParam; i++)
+				{
+					uint32_t* tmp = (uint32_t*) &(event->data[i]);
+					*tmp = va_arg(vl, uint32_t);
+				}
+				va_end(vl);
+
+				TRC_STREAM_PORT_COMMIT_EVENT(event, (uint32_t)eventSize);
+			}
 		}
 	}
 	TRACE_EXIT_CRITICAL_SECTION();
@@ -997,7 +1045,7 @@ void prvTraceStoreStringEvent(int nArgs, uint16_t eventID, const char* str, ...)
   	va_list vl;
 
 	va_start(vl, str);
-	prvTraceStoreStringEventHelper(nArgs, eventID, NULL, str, vl);
+	prvTraceStoreStringEventHelper(nArgs, eventID, NULL, str, &vl);
 	va_end(vl);
 }
 
@@ -1005,13 +1053,14 @@ void prvTraceStoreStringEvent(int nArgs, uint16_t eventID, const char* str, ...)
 static void prvTraceStoreStringEventHelper(	int nArgs,
 										uint16_t eventID,
 										traceString userEvtChannel,
-										const char* str, va_list vl)
+										const char* str, va_list* vl)
 {
-  	TRACE_ALLOC_CRITICAL_SECTION();
 	int len;
   	int nWords;
 	int nStrWords;
 	int i;
+	int offset = 0;
+  	TRACE_ALLOC_CRITICAL_SECTION();
 
 	PSF_ASSERT(eventID < 4096, PSF_ERROR_EVENT_CODE_TOO_LARGE);
 
@@ -1021,7 +1070,10 @@ static void prvTraceStoreStringEventHelper(	int nArgs,
 	nStrWords = (len+1+3)/4;
 
 	/* If a user event channel is specified, add in the list */
-	if (userEvtChannel) nArgs++;
+	if (userEvtChannel)
+		nArgs++;
+
+	offset = nArgs * 4;
 
 	/* The total number of 32-bit words needed for the whole payload */
 	nWords = nStrWords + nArgs;
@@ -1033,7 +1085,7 @@ static void prvTraceStoreStringEventHelper(	int nArgs,
 		of parameters... */
 
 		/* Diagnostics ... */
-		uint32_t bytesTruncated = (nWords - 15) * 4;
+		uint32_t bytesTruncated = (uint32_t)(nWords - 15) * 4;
 
 		if (bytesTruncated > MaxBytesTruncated)
 		{
@@ -1041,26 +1093,28 @@ static void prvTraceStoreStringEventHelper(	int nArgs,
 		}
 
 		nWords = 15;
-		len = 15 * 4 - nArgs * 4;
+		len = 15 * 4 - offset;
 	}
 
 	TRACE_ENTER_CRITICAL_SECTION();
 
 	if (RecorderEnabled)
 	{
-		int eventSize = sizeof(BaseEvent) + nWords * sizeof(uint32_t);
+		int eventSize;
+	  	TRC_STREAM_PORT_ALLOCATE_DYNAMIC_EVENT(largestEventType, event, eventSize);
+		eventSize = (int)sizeof(BaseEvent) + nWords * (int)sizeof(uint32_t);
 
 		eventCounter++;
-
-	  	TRC_STREAM_PORT_ALLOCATE_DYNAMIC_EVENT(largestEventType, event, eventSize);
 		if (event != NULL)
 		{
-			event->base.EventID = (eventID) | PARAM_COUNT(nWords);
-			event->base.EventCount = eventCounter;
+			uint32_t* data32;
+			uint8_t* data8;
+			event->base.EventID = (eventID) | (uint16_t)PARAM_COUNT(nWords);
+			event->base.EventCount = (uint16_t)eventCounter;
 			event->base.TS = prvGetTimestamp32();
 
 			/* 32-bit write-pointer for the data argument */
-			uint32_t* data32 = (uint32_t*) &(event->data[0]);
+			data32 = (uint32_t*) &(event->data[0]);
 
 			for (i = 0; i < nArgs; i++)
 			{
@@ -1072,18 +1126,109 @@ static void prvTraceStoreStringEventHelper(	int nArgs,
 				else
 				{
 					/* Add data arguments... */
-					data32[i] = va_arg(vl, uint32_t);
+					data32[i] = va_arg(*vl, uint32_t);
 				}
 			}
-
+			data8 = (uint8_t*)&(event->data[0]);
 			for (i = 0; i < len; i++)
 			{
-		  		event->data[nArgs * 4 + i] = str[i];
+		  		data8[offset + i] = str[i];
 			}
 
-			if (len < (15 * 4 - nArgs * 4))
-				event->data[nArgs * 4 + len] = 0;	/* Only truncate if we don't fill up the buffer completely */
-			TRC_STREAM_PORT_COMMIT_EVENT(event, eventSize);
+			if (len < (15 * 4 - offset))
+				data8[offset + len] = 0;	/* Only truncate if we don't fill up the buffer completely */
+			TRC_STREAM_PORT_COMMIT_EVENT(event, (uint32_t)eventSize);
+		}
+	}
+	
+	TRACE_EXIT_CRITICAL_SECTION();
+}
+
+/* Internal common function for storing string events without additional arguments */
+static void prvTraceStoreSimpleStringEventHelper(		traceString userEvtChannel,
+										const char* str)
+{
+	int len;
+  	int nWords;
+	int nStrWords;
+	int i;
+	int nArgs = 0;
+	int offset = 0;
+	uint16_t eventID = PSF_EVENT_USER_EVENT;
+  	TRACE_ALLOC_CRITICAL_SECTION();
+
+	PSF_ASSERT(eventID < 4096, PSF_ERROR_EVENT_CODE_TOO_LARGE);
+
+	for (len = 0; (str[len] != 0) && (len < 52); len++); /* empty loop */
+	
+	/* The string length in multiples of 32 bit words (+1 for null character) */
+	nStrWords = (len+1+3)/4;
+
+	/* If a user event channel is specified, add in the list */
+	if (userEvtChannel)
+	{
+		nArgs++;
+		eventID++;
+	}
+
+	offset = nArgs * 4;
+
+	/* The total number of 32-bit words needed for the whole payload */
+	nWords = nStrWords + nArgs;
+
+	if (nWords > 15) /* if attempting to store more than 60 byte (= max) */
+	{
+		/* Truncate event if too large. The	string characters are stored
+		last, so usually only the string is truncated, unless there a lot
+		of parameters... */
+
+		/* Diagnostics ... */
+		uint32_t bytesTruncated = (uint32_t)(nWords - 15) * 4;
+
+		if (bytesTruncated > MaxBytesTruncated)
+		{
+			MaxBytesTruncated = bytesTruncated;
+		}
+
+		nWords = 15;
+		len = 15 * 4 - offset;
+	}
+
+	TRACE_ENTER_CRITICAL_SECTION();
+
+	if (RecorderEnabled)
+	{
+		int eventSize = (int)sizeof(BaseEvent) + nWords * (int)sizeof(uint32_t);
+
+		eventCounter++;
+
+		{
+			TRC_STREAM_PORT_ALLOCATE_DYNAMIC_EVENT(largestEventType, event, eventSize);
+			if (event != NULL)
+			{
+				uint32_t* data32;
+				event->base.EventID = (eventID) | (uint16_t)PARAM_COUNT(nWords);
+				event->base.EventCount = (uint16_t)eventCounter;
+				event->base.TS = prvGetTimestamp32();
+
+				/* 32-bit write-pointer for the data argument */
+				data32 = (uint32_t*) &(event->data[0]);
+
+				if (userEvtChannel != NULL)
+				{
+					/* First, add the User Event Channel if not NULL */
+					data32[0] = (uint32_t)userEvtChannel;
+				}
+
+				for (i = 0; i < len; i++)
+				{
+					event->data[offset + i] = str[i];
+				}
+
+				if (len < (15 * 4 - offset))
+					event->data[offset + len] = 0;	/* Only truncate if we don't fill up the buffer completely */
+				TRC_STREAM_PORT_COMMIT_EVENT(event, (uint32_t)eventSize);
+			}
 		}
 	}
 	
@@ -1091,7 +1236,7 @@ static void prvTraceStoreStringEventHelper(	int nArgs,
 }
 
 /* Saves a symbol name (task name etc.) in symbol table */
-void prvTraceSaveSymbol(void *address, const char *name)
+void prvTraceSaveSymbol(const void *address, const char *name)
 {
 	uint32_t i;
 	uint32_t foundSlot;
@@ -1106,7 +1251,8 @@ void prvTraceSaveSymbol(void *address, const char *name)
 	/* First look for previous entries using this address */
 	for (i = 0; i < firstFreeSymbolTableIndex; i += SYMBOL_TABLE_SLOT_SIZE)
 	{
-		ptrAddress = ((uint32_t*)&symbolTable.pSymbolTableBuffer[i]);
+		/* We access the symbol table via the union member pSymbolTableBufferUINT32 to avoid strict-aliasing issues */
+		ptrAddress = &symbolTable.SymbolTableBuffer.pSymbolTableBufferUINT32[i / sizeof(uint32_t)];
 		if (*ptrAddress == (uint32_t)address)
 		{
 			foundSlot = i;
@@ -1116,12 +1262,14 @@ void prvTraceSaveSymbol(void *address, const char *name)
 
 	if (foundSlot < SYMBOL_TABLE_BUFFER_SIZE)
 	{
-		*((uint32_t*)&symbolTable.pSymbolTableBuffer[foundSlot]) = (uint32_t)address;
-		ptrSymbol = &symbolTable.pSymbolTableBuffer[foundSlot + sizeof(uint32_t)];
-
+		/* We access the symbol table via the union member pSymbolTableBufferUINT32 to avoid strict-aliasing issues */
+		symbolTable.SymbolTableBuffer.pSymbolTableBufferUINT32[foundSlot / sizeof(uint32_t)] = (uint32_t)address;
+		
+		/* We access the symbol table via the union member pSymbolTableBufferUINT8 to avoid strict-aliasing issues */
+		ptrSymbol = &symbolTable.SymbolTableBuffer.pSymbolTableBufferUINT8[foundSlot + sizeof(uint32_t)];
 		for (i = 0; i < (TRC_CFG_SYMBOL_MAX_LENGTH); i++)
         {
-			ptrSymbol[i] = name[i];	/* We do this first to ensure we also get the 0 termination, if there is one */
+			ptrSymbol[i] = (uint8_t)name[i];	/* We do this first to ensure we also get the 0 termination, if there is one */
 
 			if (name[i] == 0)
 				break;
@@ -1164,14 +1312,16 @@ void prvTraceDeleteSymbol(void *address)
 
 	for (i = 0; i < firstFreeSymbolTableIndex; i += SYMBOL_TABLE_SLOT_SIZE)
 	{
-		ptr = (uint32_t*)&symbolTable.pSymbolTableBuffer[i];
+		/* We access the symbol table via the union member pSymbolTableBufferUINT32 to avoid strict-aliasing issues */
+		ptr = &symbolTable.SymbolTableBuffer.pSymbolTableBufferUINT32[i / sizeof(uint32_t)];
 		if (*ptr == (uint32_t)address)
 		{
 			/* See if we have another entry in the table, and that this isn't already the last entry */
 			if (firstFreeSymbolTableIndex > SYMBOL_TABLE_SLOT_SIZE && i != (firstFreeSymbolTableIndex - SYMBOL_TABLE_SLOT_SIZE))
 			{
 				/* Another entry is available, get pointer to the last one */
-				lastEntryPtr = ((uint32_t*)&symbolTable.pSymbolTableBuffer[firstFreeSymbolTableIndex - SYMBOL_TABLE_SLOT_SIZE]);
+				/* We access the symbol table via the union member pSymbolTableBufferUINT32 to avoid strict-aliasing issues */
+				lastEntryPtr = &symbolTable.SymbolTableBuffer.pSymbolTableBufferUINT32[(firstFreeSymbolTableIndex - SYMBOL_TABLE_SLOT_SIZE) / sizeof(uint32_t)];
 				
 				/* Copy last entry to this position */
 				for (j = 0; j < (SYMBOL_TABLE_SLOT_SIZE) / sizeof(uint32_t); j++)
@@ -1196,7 +1346,7 @@ void prvTraceDeleteSymbol(void *address)
 }
 
 /* Saves an object data entry (current task priority) in object data table */
-void prvTraceSaveObjectData(void *address, uint32_t data)
+void prvTraceSaveObjectData(const void *address, uint32_t data)
 {
 	uint32_t i;
 	uint32_t foundSlot;
@@ -1210,7 +1360,8 @@ void prvTraceSaveObjectData(void *address, uint32_t data)
 	/* First look for previous entries using this address */
 	for (i = 0; i < firstFreeObjectDataTableIndex; i += OBJECT_DATA_SLOT_SIZE)
 	{
-		ptr = ((uint32_t*)&objectDataTable.pObjectDataTableBuffer[i]);
+		/* We access the data table via the union member pObjectDataTableBufferUINT32 to avoid strict-aliasing issues */
+		ptr = &objectDataTable.ObjectDataTableBuffer.pObjectDataTableBufferUINT32[i / sizeof(uint32_t)];
 		if (*ptr == (uint32_t)address)
 		{
 			foundSlot = i;
@@ -1220,8 +1371,9 @@ void prvTraceSaveObjectData(void *address, uint32_t data)
 
 	if (foundSlot < OBJECT_DATA_TABLE_BUFFER_SIZE)
 	{
-		*(uint32_t*)&objectDataTable.pObjectDataTableBuffer[foundSlot] = (uint32_t)address;
-		*(uint32_t*)&objectDataTable.pObjectDataTableBuffer[foundSlot + sizeof(uint32_t)] = data;
+		/* We access the data table via the union member pObjectDataTableBufferUINT32 to avoid strict-aliasing issues */
+		objectDataTable.ObjectDataTableBuffer.pObjectDataTableBufferUINT32[foundSlot / sizeof(uint32_t)] = (uint32_t)address;
+		objectDataTable.ObjectDataTableBuffer.pObjectDataTableBufferUINT32[foundSlot / sizeof(uint32_t) + 1] = data;
 
 		/* Is this the last entry in the object data table? */
 		if (foundSlot == firstFreeObjectDataTableIndex)
@@ -1248,14 +1400,16 @@ void prvTraceDeleteObjectData(void *address)
 
 	for (i = 0; i < firstFreeObjectDataTableIndex; i += OBJECT_DATA_SLOT_SIZE)
 	{
-		ptr = (uint32_t*)&objectDataTable.pObjectDataTableBuffer[i];
+		/* We access the data table via the union member pObjectDataTableBufferUINT32 to avoid strict-aliasing issues */
+		ptr = &objectDataTable.ObjectDataTableBuffer.pObjectDataTableBufferUINT32[i / sizeof(uint32_t)];
 		if (*ptr == (uint32_t)address)
 		{
 			/* See if we have another entry in the table, and that this isn't already the last entry */
 			if (firstFreeObjectDataTableIndex > OBJECT_DATA_SLOT_SIZE && i != (firstFreeObjectDataTableIndex - OBJECT_DATA_SLOT_SIZE))
 			{
 				/* Another entry is available, get pointer to the last one */
-				lastEntryPtr = ((uint32_t*)&objectDataTable.pObjectDataTableBuffer[firstFreeObjectDataTableIndex - OBJECT_DATA_SLOT_SIZE]);
+				/* We access the data table via the union member pObjectDataTableBufferUINT32 to avoid strict-aliasing issues */
+				lastEntryPtr = &objectDataTable.ObjectDataTableBuffer.pObjectDataTableBufferUINT32[(firstFreeObjectDataTableIndex - OBJECT_DATA_SLOT_SIZE) / sizeof(uint32_t)];
 				
 				/* Copy last entry to this position */
 				for (j = 0; j < (OBJECT_DATA_SLOT_SIZE) / sizeof(uint32_t); j++)
@@ -1327,11 +1481,15 @@ void prvTraceError(int errCode)
 	}
 }
 
-/* If ARM Cortex-M3, M4 or M7, make sure the DWT unit is initialized. */
-#if (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_ARM_Cortex_M && defined (TRC_REG_DWT_CYCCNT))
+/* If using DWT timestamping (default on ARM Cortex-M3, M4 and M7), make sure the DWT unit is initialized. */
+#ifndef TRC_CFG_ARM_CM_USE_SYSTICK
+#if ((TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_ARM_Cortex_M) && (defined (__CORTEX_M) && (__CORTEX_M >= 0x03)))
 
 void prvTraceInitCortexM()
 {
+	/* Make sure the DWT registers are unlocked, in case the debugger doesn't do this. */
+	TRC_REG_ITM_LOCKACCESS = TRC_ITM_LOCKACCESS_UNLOCK;
+
 	/* Make sure DWT is enabled is enabled, if supported */
 	TRC_REG_DEMCR |= TRC_DEMCR_TRCENA;
 
@@ -1340,6 +1498,16 @@ void prvTraceInitCortexM()
 		/* Verify that DWT is supported */
 		if (TRC_REG_DEMCR == 0)
 		{
+			/* This function is called on Cortex-M3, M4 and M7 devices to initialize
+			the DWT unit, assumed present. The DWT cycle counter is used for timestamping. 
+			
+			If the below error is produced, the DWT unit does not seem to be available.
+			
+			In that case, define the macro TRC_CFG_ARM_CM_USE_SYSTICK in your build
+			to use SysTick timestamping instead, or define your own timestamping by 
+			setting TRC_CFG_HARDWARE_PORT to TRC_HARDWARE_PORT_APPLICATION_DEFINED
+			and make the necessary definitions, as explained in trcHardwarePort.h.*/
+			
 			prvTraceError(PSF_ERROR_DWT_NOT_SUPPORTED);
 			break;
 		}
@@ -1347,6 +1515,16 @@ void prvTraceInitCortexM()
 		/* Verify that DWT_CYCCNT is supported */
 		if (TRC_REG_DWT_CTRL & TRC_DWT_CTRL_NOCYCCNT)
 		{
+			/* This function is called on Cortex-M3, M4 and M7 devices to initialize
+			the DWT unit, assumed present. The DWT cycle counter is used for timestamping. 
+			
+			If the below error is produced, the cycle counter does not seem to be available.
+			
+			In that case, define the macro TRC_CFG_ARM_CM_USE_SYSTICK in your build
+			to use SysTick timestamping instead, or define your own timestamping by 
+			setting TRC_CFG_HARDWARE_PORT to TRC_HARDWARE_PORT_APPLICATION_DEFINED
+			and make the necessary definitions, as explained in trcHardwarePort.h.*/
+
 			prvTraceError(PSF_ERROR_DWT_CYCCNT_NOT_SUPPORTED);
 			break;
 		}
@@ -1360,16 +1538,23 @@ void prvTraceInitCortexM()
 	} while(0);	/* breaks above jump here */
 }
 #endif
+#endif
 
 /* Performs timestamping using definitions in trcHardwarePort.h */
 static uint32_t prvGetTimestamp32(void)
 {
 #if ((TRC_HWTC_TYPE == TRC_FREE_RUNNING_32BIT_INCR) || (TRC_HWTC_TYPE == TRC_FREE_RUNNING_32BIT_DECR))
 	return TRC_HWTC_COUNT;
-#else /* ((TRC_HWTC_TYPE == TRC_FREE_RUNNING_32BIT_INCR) || (TRC_HWTC_TYPE == TRC_FREE_RUNNING_32BIT_DECR)) */
-	int ticks = TRACE_GET_OS_TICKS();
-	return (TRC_HWTC_COUNT & 0x00FFFFFF) + ((ticks & 0x000000FF) << 24);
-#endif /* ((TRC_HWTC_TYPE == TRC_FREE_RUNNING_32BIT_INCR) || (TRC_HWTC_TYPE == TRC_FREE_RUNNING_32BIT_DECR)) */
+#endif
+	
+#if ((TRC_HWTC_TYPE == TRC_CUSTOM_TIMER_INCR) || (TRC_HWTC_TYPE == TRC_CUSTOM_TIMER_DECR))
+	return TRC_HWTC_COUNT;
+#endif
+	
+#if ((TRC_HWTC_TYPE == TRC_OS_TIMER_INCR) || (TRC_HWTC_TYPE == TRC_OS_TIMER_DECR))
+	uint32_t ticks = TRACE_GET_OS_TICKS();
+	return (TRC_HWTC_COUNT & 0x00FFFFFFU) + ((ticks & 0x000000FFU) << 24);
+#endif
 }
 
 /* Store the Timestamp Config event */
@@ -1381,12 +1566,25 @@ static void prvTraceStoreTSConfig(void)
 		timestampFrequency = TRC_HWTC_FREQ_HZ;
 	}
 	
+	if (TRC_HWTC_TYPE == TRC_CUSTOM_TIMER_INCR || TRC_HWTC_TYPE == TRC_CUSTOM_TIMER_DECR)
+	{
+		prvTraceStoreEvent(5, 
+							PSF_EVENT_TS_CONFIG,
+							(uint32_t)timestampFrequency,	                    
+							(uint32_t)TRACE_TICK_RATE_HZ,
+							(uint32_t)TRC_HWTC_TYPE,
+							(uint32_t)TRC_CFG_ISR_TAILCHAINING_THRESHOLD,
+							(uint32_t)TRC_HWTC_PERIOD);
+	}
+	else
+	{
 	prvTraceStoreEvent(4, 
 						PSF_EVENT_TS_CONFIG,
-						timestampFrequency,
+						(uint32_t)timestampFrequency,	                    
 						(uint32_t)TRACE_TICK_RATE_HZ,
-						(int32_t)TRC_HWTC_TYPE,
+						(uint32_t)TRC_HWTC_TYPE,
 						(uint32_t)TRC_CFG_ISR_TAILCHAINING_THRESHOLD);
+	}
 }
 
 /* Retrieve a buffer page to write to. */
@@ -1430,11 +1628,11 @@ static int prvGetBufferPage(int32_t* bytesUsed)
 {
 	static int8_t lastPage = -1;
 	int count = 0;
-  	int8_t index = (lastPage + 1) % TRC_CFG_PAGED_EVENT_BUFFER_PAGE_COUNT;
+  	int8_t index = (int8_t) ((lastPage + 1) % TRC_CFG_PAGED_EVENT_BUFFER_PAGE_COUNT);
 
 	while((PageInfo[index].Status != PAGE_STATUS_READ) && (count++ < TRC_CFG_PAGED_EVENT_BUFFER_PAGE_COUNT))
 	{
-		index = (index + 1) % TRC_CFG_PAGED_EVENT_BUFFER_PAGE_COUNT;
+		index = (int8_t)((index + 1) % TRC_CFG_PAGED_EVENT_BUFFER_PAGE_COUNT);
 	}
 
 	if (PageInfo[index].Status == PAGE_STATUS_READ)
@@ -1463,7 +1661,7 @@ has been transfered.
 This function is intended to be called by a periodic task with a suitable
 delay (e.g. 10-100 ms).
 
-Return value: returnvalue of writeFunc (0 == OK)
+Return value: as returned from writeFunc (0 == OK)
 
 Parameters:
 
@@ -1483,7 +1681,7 @@ int32_t prvPagedEventBufferTransfer(int32_t (*writeFunc)(void* data, uint32_t si
     int32_t transferred = 0;
     int32_t size = 0;
     
-    pageToTransfer = prvGetBufferPage(nofBytes);
+    pageToTransfer = (int8_t)prvGetBufferPage(nofBytes);
     size = *nofBytes;	// The number of bytes we want to transfer
     transferred = 0;	// The number of bytes we have transferred so far
 
@@ -1491,7 +1689,7 @@ int32_t prvPagedEventBufferTransfer(int32_t (*writeFunc)(void* data, uint32_t si
     {
         while (1) // Keep going until we have transferred all that we intended to
         {
-			if (writeFunc(&EventBuffer[pageToTransfer * TRC_CFG_PAGED_EVENT_BUFFER_PAGE_SIZE + transferred], size - transferred, nofBytes) == 0)
+			if (writeFunc(&EventBuffer[pageToTransfer * TRC_CFG_PAGED_EVENT_BUFFER_PAGE_SIZE + transferred], (uint32_t)(size - transferred), nofBytes) == 0)
 			{
 				// Write was successful. Update the number of transferred bytes.
 				transferred += *nofBytes;
@@ -1561,9 +1759,9 @@ void* prvPagedEventBufferGetWritePointer(int sizeOfEvent)
 	}
 	ret = PageInfo[currentWritePage].WritePointer;
 	PageInfo[currentWritePage].WritePointer += sizeOfEvent;
-	PageInfo[currentWritePage].BytesRemaining -= sizeOfEvent;
+	PageInfo[currentWritePage].BytesRemaining = (uint16_t)(PageInfo[currentWritePage].BytesRemaining -sizeOfEvent);
 
-	TotalBytesRemaining -= sizeOfEvent;
+	TotalBytesRemaining = (TotalBytesRemaining-(uint16_t)sizeOfEvent);
 
 	if (TotalBytesRemaining < TotalBytesRemaining_LowWaterMark)
 		TotalBytesRemaining_LowWaterMark = TotalBytesRemaining;
@@ -1588,8 +1786,8 @@ the caller.
 *******************************************************************************/
 void prvPagedEventBufferInit(char* buffer)
 {
-  	TRACE_ALLOC_CRITICAL_SECTION();
   	int i;
+  	TRACE_ALLOC_CRITICAL_SECTION();
     
     EventBuffer = buffer;
     

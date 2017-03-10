@@ -9,7 +9,7 @@
 #define __PTRC1_CONFIG_H
 
 #ifndef PTRC1_CONFIG_START_TRACE_IN_STARTUP_MODE
-  #define PTRC1_CONFIG_START_TRACE_IN_STARTUP_MODE          TRC_START_AWAIT_HOST
+  #define PTRC1_CONFIG_START_TRACE_IN_STARTUP_MODE          TRC_START
     /*!< Percepio trace startup mode used for calling vTraceEnable() from Startup():
       Snapshot Mode:
         TRC_INIT: Initializes trace module. Application needs to start tracing later with vTraceEnable(TRC_START);

@@ -126,7 +126,8 @@
 #define configMINIMAL_STACK_SIZE                  (150) /* stack size in addressable stack units */
 /*----------------------------------------------------------*/
 /* Heap Memory */
-#define configFRTOS_MEMORY_SCHEME                 4 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc), 4 (coalesc blocks), 5 (multiple blocks) */
+#define configUSE_HEAP_SCHEME                     4 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc), 4 (coalesc blocks), 5 (multiple blocks) */
+#define configFRTOS_MEMORY_SCHEME   configUSE_HEAP_SCHEME /* for backwards compatible only with legacy name */
 #define configTOTAL_HEAP_SIZE                     ((size_t)(10000)) /* size of heap in bytes */
 #define configUSE_HEAP_SECTION_NAME               0 /* set to 1 if a custom section name (configHEAP_SECTION_NAME_STRING) shall be used, 0 otherwise */
 #if configUSE_HEAP_SECTION_NAME
@@ -138,8 +139,8 @@
 /*----------------------------------------------------------*/
 #define configMAX_TASK_NAME_LEN                   12 /* task name length in bytes */
 #define configUSE_TRACE_FACILITY                  1 /* 1: include additional structure members and functions to assist with execution visualization and tracing, 0: no runtime stats/trace */
-#define configUSE_TRACE_HOOKS                     0 /* 1: Percepio Trace hooks, 0: not using Percepio Trace hooks */
-#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS      1 /* 1: Segger System Viewer hooks, 0: not using Segger System Viewer hooks */
+#define configUSE_TRACE_HOOKS                     1 /* 1: Percepio Trace hooks, 0: not using Percepio Trace hooks */
+#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS      0 /* 1: Segger System Viewer hooks, 0: not using Segger System Viewer hooks */
 #define configUSE_STATS_FORMATTING_FUNCTIONS      (configUSE_TRACE_FACILITY || configGENERATE_RUN_TIME_STATS)
 #define configUSE_16_BIT_TICKS                    0 /* 1: use 16bit tick counter type, 0: use 32bit tick counter type */
 #define configIDLE_SHOULD_YIELD                   1 /* 1: the IDEL task will yield as soon as possible. 0: The IDLE task waits until preemption. */
@@ -163,12 +164,12 @@
 #define configMAX_PRIORITIES                      6
 #define configMAX_CO_ROUTINE_PRIORITIES           2
 
-#define configTASK_RETURN_ADDRESS   0  /* return address of task is zero */
+#define configTASK_RETURN_ADDRESS   0             /* return address of task is zero */
 
 #define configRECORD_STACK_HIGH_ADDRESS           1  /* 1: record stack high address for the debugger, 0: do not record stack high address */
 
 /* Software timer definitions. */
-#define configUSE_TIMERS                          0 /* set to 1 to enable sofware timers */
+#define configUSE_TIMERS                          0 /* set to 1 to enable software timers */
 #define configTIMER_TASK_PRIORITY                 (configMAX_PRIORITIES-1U)
 #define configTIMER_QUEUE_LENGTH                  10U
 #define configTIMER_TASK_STACK_DEPTH              (configMINIMAL_STACK_SIZE)

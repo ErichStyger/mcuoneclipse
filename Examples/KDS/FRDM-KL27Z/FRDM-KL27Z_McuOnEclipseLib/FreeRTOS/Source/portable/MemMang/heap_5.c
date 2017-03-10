@@ -1,6 +1,6 @@
 /* << EST */
 #include "FreeRTOSConfig.h"
-#if !defined(configFRTOS_MEMORY_SCHEME) || (configFRTOS_MEMORY_SCHEME==5 && configSUPPORT_DYNAMIC_ALLOCATION==1)
+#if !defined(configUSE_HEAP_SCHEME) || (configUSE_HEAP_SCHEME==5 && configSUPPORT_DYNAMIC_ALLOCATION==1)
 /*
     FreeRTOS V9.0.0 - Copyright (C) 2016 Real Time Engineers Ltd.
     All rights reserved
@@ -529,5 +529,5 @@ const HeapRegion_t *pxHeapRegion;
 	xBlockAllocatedBit = ( ( size_t ) 1 ) << ( ( sizeof( size_t ) * heapBITS_PER_BYTE ) - 1 );
 }
 
-#endif /* configFRTOS_MEMORY_SCHEME==5 */ /* << EST */
+#endif /* configUSE_HEAP_SCHEME==5 */ /* << EST */
 

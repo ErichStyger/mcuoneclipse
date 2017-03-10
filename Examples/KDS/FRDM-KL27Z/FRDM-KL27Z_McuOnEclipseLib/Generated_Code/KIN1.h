@@ -4,10 +4,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : KinetisTools
-**     Version     : Component 01.034, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.037, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-21, 09:50, # CodeGen: 37
+**     Date/Time   : 2017-03-09, 20:22, # CodeGen: 62
 **     Abstract    :
 **
 **     Settings    :
@@ -27,6 +27,11 @@
 **         GetSP                  - void* KIN1_GetSP(void);
 **         SetPSP                 - void KIN1_SetPSP(void *setval);
 **         SetLR                  - void KIN1_SetLR(uint32_t setval);
+**         InitCycleCounter       - void KIN1_InitCycleCounter(void);
+**         ResetCycleCounter      - void KIN1_ResetCycleCounter(void);
+**         EnableCycleCounter     - void KIN1_EnableCycleCounter(void);
+**         DisableCycleCounter    - void KIN1_DisableCycleCounter(void);
+**         GetCycleCounter        - uint32_t KIN1_GetCycleCounter(void);
 **
 **     * Copyright (c) 2014-2017, Erich Styger
 **      * Web:         https://mcuoneclipse.com
@@ -82,6 +87,21 @@
 #ifndef __BWUserType_KIN1_ConstCharPtr
 #define __BWUserType_KIN1_ConstCharPtr
   typedef const uint8_t *KIN1_ConstCharPtr; /* Pointer to constant string */
+#endif
+
+
+#if MCUC1_CONFIG_CORTEX_M >= 3 /* only for Cortex-M3 or higher */
+  /* DWT (Data Watchpoint and Trace) registers, only exists on ARM Cortex with a DWT unit */
+  #define KIN1_DWT_CONTROL             (*((volatile uint32_t*)0xE0001000))
+    /*!< DWT Control register */
+  #define KIN1_DWT_CYCCNTENA_BIT       (1UL<<0)
+    /*!< CYCCNTENA bit in DWT_CONTROL register */
+  #define KIN1_DWT_CYCCNT              (*((volatile uint32_t*)0xE0001004))
+    /*!< DWT Cycle Counter register */
+  #define KIN1_DEMCR                   (*((volatile uint32_t*)0xE000EDFC))
+    /*!< DEMCR: Debug Exception and Monitor Control Register */
+  #define KIN1_TRCENA_BIT              (1UL<<24)
+    /*!< Trace enable bit in DEMCR register */
 #endif
 
 typedef struct {
@@ -240,6 +260,84 @@ void KIN1_SetLR(uint32_t setval);
 **     Returns     : Nothing
 ** ===================================================================
 */
+
+#if MCUC1_CONFIG_CORTEX_M >= 3 /* only for Cortex-M3 or higher */
+#define KIN1_InitCycleCounter() \
+  KIN1_DEMCR |= KIN1_TRCENA_BIT
+  /*!< TRCENA: Enable trace and debug block DEMCR (Debug Exception and Monitor Control Register */
+/*
+** ===================================================================
+**     Method      :  KIN1_InitCycleCounter (component KinetisTools)
+**     Description :
+**         Initializes the cycle counter, available if the core has a
+**         DWT (Data Watchpoint and Trace) unit, usually present on
+**         M3/M4/M7
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+#endif
+
+#if MCUC1_CONFIG_CORTEX_M >= 3 /* only for Cortex-M3 or higher */
+#define KIN1_ResetCycleCounter() \
+  KIN1_DWT_CYCCNT = 0
+  /*!< Reset cycle counter */
+/*
+** ===================================================================
+**     Method      :  KIN1_ResetCycleCounter (component KinetisTools)
+**     Description :
+**         Reset the cycle counter (set it to zero)
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+#endif
+
+#if MCUC1_CONFIG_CORTEX_M >= 3 /* only for Cortex-M3 or higher */
+#define KIN1_EnableCycleCounter() \
+  KIN1_DWT_CONTROL |= KIN1_DWT_CYCCNTENA_BIT
+  /*!< Enable cycle counter */
+/*
+** ===================================================================
+**     Method      :  KIN1_EnableCycleCounter (component KinetisTools)
+**     Description :
+**         Enables counting the cycles.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+#endif
+
+#if MCUC1_CONFIG_CORTEX_M >= 3 /* only for Cortex-M3 or higher */
+#define KIN1_DisableCycleCounter() \
+  KIN1_DWT_CONTROL &= ~KIN1_DWT_CYCCNTENA_BIT
+  /*!< Disable cycle counter */
+/*
+** ===================================================================
+**     Method      :  KIN1_DisableCycleCounter (component KinetisTools)
+**     Description :
+**         Disables the cycle counter.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+#endif
+
+#if MCUC1_CONFIG_CORTEX_M >= 3 /* only for Cortex-M3 or higher */
+#define KIN1_GetCycleCounter() \
+  KIN1_DWT_CYCCNT
+  /*!< Read cycle counter register */
+/*
+** ===================================================================
+**     Method      :  KIN1_GetCycleCounter (component KinetisTools)
+**     Description :
+**         Return the current cycle counter value
+**     Parameters  : None
+**     Returns     :
+**         ---             - cycle counter
+** ===================================================================
+*/
+#endif
 
 /* END KIN1. */
 

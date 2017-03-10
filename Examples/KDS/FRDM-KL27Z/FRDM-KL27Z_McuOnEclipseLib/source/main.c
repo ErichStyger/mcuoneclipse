@@ -71,6 +71,7 @@ int main(void) {
   BOARD_InitDebugConsole();
 
   /* Initialize modules */
+  FRTOS1_Init();
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   SYS1_Init();
 #elif configUSE_TRACE_HOOKS
@@ -84,6 +85,7 @@ int main(void) {
   SHELL_Init();
   TmDt1_Init();
   CONSOLE_Init();
+  WAIT1_Init();
 
   /* quick LED testing */
   LEDR_On();
@@ -101,7 +103,7 @@ int main(void) {
       "Main", /* task name for kernel awareness debugging */
       configMINIMAL_STACK_SIZE+500, /* task stack size */
       (void*)NULL, /* optional task startup argument */
-      tskIDLE_PRIORITY,  /* initial priority */
+      tskIDLE_PRIORITY+1,  /* initial priority */
       (xTaskHandle*)NULL /* optional task handle to create */
     ) != pdPASS) {
   /*lint -e527 */

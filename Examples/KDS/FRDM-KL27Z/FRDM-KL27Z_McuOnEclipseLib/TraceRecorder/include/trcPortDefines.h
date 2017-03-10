@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v3.1.0 
+ * Trace Recorder Library for Tracealyzer v3.1.1
  * Percepio AB, www.percepio.com
  *
  * trcPortDefines.h
@@ -38,7 +38,7 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2016.
+ * Copyright Percepio AB, 2017.
  * www.percepio.com
  ******************************************************************************/
 
@@ -49,6 +49,8 @@
 #define TRC_FREE_RUNNING_32BIT_DECR 2
 #define TRC_OS_TIMER_INCR 3
 #define TRC_OS_TIMER_DECR 4
+#define TRC_CUSTOM_TIMER_INCR 5
+#define TRC_CUSTOM_TIMER_DECR 6
 
 /* Start options for vTraceEnable. */
 #define TRC_INIT 0
@@ -106,14 +108,15 @@
 #define TRC_HARDWARE_PORT_ARM_Cortex_M					4	/*	Yes			Any					*/
 #define TRC_HARDWARE_PORT_Renesas_RX600					6	/*	Yes			Any					*/
 #define TRC_HARDWARE_PORT_MICROCHIP_PIC24_PIC32			7	/*	Yes			Any					*/
-#define TRC_HARDWARE_PORT_TEXAS_INSTRUMENTS_TMS570_RM48	8	/*	YES			Any					*/
+#define TRC_HARDWARE_PORT_TEXAS_INSTRUMENTS_TMS570_RM48	8	/*	Yes			Any					*/
 #define TRC_HARDWARE_PORT_TEXAS_INSTRUMENTS_MSP430		9	/*	No			Any					*/
 #define TRC_HARDWARE_PORT_XILINX_PPC405					11	/*	No			FreeRTOS			*/
 #define TRC_HARDWARE_PORT_XILINX_PPC440					12	/*	No			FreeRTOS			*/
 #define TRC_HARDWARE_PORT_XILINX_MICROBLAZE				13	/*	No			Any					*/
 #define TRC_HARDWARE_PORT_NXP_LPC210X					14	/*	No			Any					*/
 #define TRC_HARDWARE_PORT_ARM_CORTEX_A9					15	/*	Yes			Any					*/
-#define TRC_HARDWARE_PORT_PROCESSOR_EXPERT     16  /*  No          FreeRTOS            */ /* << EST */
+#define TRC_HARDWARE_PORT_POWERPC_Z4                    16  /*  No          FreeRTOS            */
+#define TRC_HARDWARE_PORT_PROCESSOR_EXPERT     17  /*  No          FreeRTOS            */ /* << EST */
 
 #endif /*TRC_PORTDEFINES_H*/
 

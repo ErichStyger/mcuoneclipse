@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v3.1.0
+ * Trace Recorder Library for Tracealyzer v3.1.1
  * Percepio AB, www.percepio.com
  *
  * trcStreamingConfig.h
@@ -39,7 +39,7 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2016.
+ * Copyright Percepio AB, 2017.
  * www.percepio.com
  ******************************************************************************/
 
@@ -100,9 +100,11 @@ extern "C" {
 /*******************************************************************************
  * Configuration Macro: TRC_CFG_CTRL_TASK_PRIORITY
  *
- * The priority of the TzCtrl task, that receive commands from Tracealyzer. Some
- * stream ports also rely on this task to transmit the data from the internal
- * buffer to the stream interface (most except for the J-Link port).
+ * The priority of the TzCtrl task, that receive commands from Tracealyzer.
+ * Most stream ports also rely on the TzCtrl task to transmit the data from the
+ * internal buffer to the stream interface (all except for the J-Link port).
+ * For such ports, make sure the TzCtrl priority is high enough to ensure
+ * reliable periodic execution and transfer of the data.
  ******************************************************************************/
 #define TRC_CFG_CTRL_TASK_PRIORITY 1
 
@@ -145,7 +147,7 @@ extern "C" {
  * context-switching also in cases when the ISRs execute in direct sequence.
  * 
  * vTraceStoreISREnd normally assumes that the ISR returns to the previous
- * context, i.e., a task or a pre-empted ISR. But if another traced ISR 
+ * context, i.e., a task or a preempted ISR. But if another traced ISR 
  * executes in direct sequence, Tracealyzer may incorrectly display a minimal
  * fragment of the previous context in between the ISRs.
  *

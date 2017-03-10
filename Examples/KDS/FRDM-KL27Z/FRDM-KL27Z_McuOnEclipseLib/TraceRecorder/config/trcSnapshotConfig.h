@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v3.1.0
+ * Trace Recorder Library for Tracealyzer v3.1.1
  * Percepio AB, www.percepio.com
  *
  * trcSnapshotConfig.h
@@ -39,7 +39,7 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2016.
+ * Copyright Percepio AB, 2017.
  * www.percepio.com
  ******************************************************************************/
 
@@ -98,10 +98,10 @@
  * Default value is 1000, which means that 4000 bytes is allocated for the
  * event buffer.
  ******************************************************************************/
-#define TRC_CFG_EVENT_BUFFER_SIZE 500
+#define TRC_CFG_EVENT_BUFFER_SIZE 300
 
 /*******************************************************************************
- * TRC_CFG_NTASK, TRC_CFG_NISR, TRC_CFG_NQUEUE, TRC_CFG_NSEMAPHORE, TRC_CFG_NMUTEX
+ * TRC_CFG_NTASK, TRC_CFG_NISR, TRC_CFG_NQUEUE, TRC_CFG_NSEMAPHORE...
  *
  * A group of macros which should be defined as integer values, zero or larger.
  *
@@ -109,13 +109,13 @@
  * number of objects active at any given point, within each object class (e.g., 
  * task, queue, semaphore, ...).
  * 
- * If tasks or other other objects are deleted in your system, this
+ * If tasks or other objects are deleted in your system, this
  * setting does not limit the total amount of objects created, only the number
  * of objects that have been successfully created but not yet deleted.
  *
  * Using too small values will cause vTraceError to be called, which stores an 
  * error message in the trace that is shown when opening the trace file. The
- * error message can also be retrived using xTraceGetLastError.
+ * error message can also be retrieved using xTraceGetLastError.
  *
  * It can be wise to start with large values for these constants, 
  * unless you are very confident on these numbers. Then do a recording and
@@ -135,8 +135,8 @@
  * 
  * Macro which should be defined as either zero (0) or one (1). 
  *
- * This controls if malloc and free calls should be traced. Set this to zero to
- * exclude malloc/free calls, or one (1) to include such events in the trace.
+ * This controls if malloc and free calls should be traced. Set this to zero (0)
+ * to exclude malloc/free calls, or one (1) to include such events in the trace.
  *
  * Default value is 1.
  *****************************************************************************/
@@ -149,8 +149,9 @@
  *
  * If this is zero (0) the code for creating User Events is excluded to
  * reduce code size. User Events are application-generated events, like 
- * "printf" but for the trace log instead of console output. User Events are 
- * much faster than a printf and can therefore be used in timing critical code.
+ * "printf" but for the trace log and the formatting is done offline, by the
+ * Tracealyzer visualization tool. User Events are much faster than a printf
+ * and can therefore be used in timing critical code.
  * 
  * Default value is 1.
  *****************************************************************************/
@@ -162,7 +163,7 @@
  * Macro which should be defined as either zero (0) or one (1). 
  *
  * If this is zero (0), the code for recording Interrupt Service Routines is 
- * excluded to reduce code size.
+ * excluded, in order to reduce code size.
  *
  * Default value is 1.
  * 
@@ -177,9 +178,10 @@
  * Macro which should be defined as either zero (0) or one (1). 
  *
  * If one (1), events are recorded when tasks enter scheduling state "ready". 
- * Excluding "ready events"  will allow for longer traces. By including ready 
- * events, Tracealyzer shows the initial pending time before tasks enter the
- * execution state and present accurate response times.
+ * This allows Tracealyzer to show the initial pending time before tasks enter
+ * the execution state, and present accurate response times.
+ * If zero (0), "ready events" are not created, which allows for recording
+ * longer traces in the same amount of RAM. 
  *
  * Default value is 1.
  *****************************************************************************/
@@ -190,8 +192,9 @@
  *
  * Macro which should be defined as either zero (0) or one (1). 
  *
- * If this is zero (1), events will be generated whenever the OS clock is
- * increased. This uses a lot of buffer space, so it is disabled by default.
+ * If this is one (1), events will be generated whenever the OS clock is
+ * increased. If zero (0), OS tick events are not generated, which allows for
+ * recording longer traces in the same amount of RAM. 
  *
  * Default value is 0.
  *****************************************************************************/
@@ -207,7 +210,7 @@
  * supported by the platform used.
  *
  * Floating point values are only used in vTracePrintF and its subroutines, to 
- * allow for storeíng float (%f) or double (%lf) arguments.
+ * allow for storíng float (%f) or double (%lf) arguments.
  *
  * vTracePrintF can be used with integer and string arguments in either case.
  *
@@ -242,7 +245,7 @@
  *
  * Default value is 800.
  ******************************************************************************/
-#define TRC_CFG_SYMBOL_TABLE_SIZE 100
+#define TRC_CFG_SYMBOL_TABLE_SIZE 30
 
 #if (TRC_CFG_SYMBOL_TABLE_SIZE == 0)
 #error "TRC_CFG_SYMBOL_TABLE_SIZE may not be zero!"
@@ -262,6 +265,7 @@
 #define TRC_CFG_NAME_LEN_MUTEX      15
 #define TRC_CFG_NAME_LEN_TIMER      15
 #define TRC_CFG_NAME_LEN_EVENTGROUP   15
+
 /******************************************************************************
  *** ADVANCED SETTINGS ********************************************************
  ******************************************************************************
@@ -281,26 +285,6 @@
 * Default value is 0.
 ******************************************************************************/
 #define TRC_CFG_HEAP_SIZE_BELOW_16M 0
-
-/******************************************************************************
- * TRC_CFG_USE_LINKER_PRAGMA
- *
- * Macro which should be defined as an integer value, default is 0.
- *
- * If this is 1, the header file "recorderdata_linker_pragma.h" is included just
- * before the declaration of RecorderData (in trcBase.c), i.e., the trace data 
- * structure. This allows the user to specify a pragma with linker options. 
- *
- * Example (for IAR Embedded Workbench and NXP LPC17xx):
- * #pragma location="AHB_RAM_MEMORY"
- * 
- * This example instructs the IAR linker to place RecorderData in another RAM 
- * bank, the AHB RAM. This can also be used for other compilers with a similar
- * pragmas for linker options.
- * 
- * Note that this only applies if using static allocation, see below.
- ******************************************************************************/
-#define TRC_CFG_USE_LINKER_PRAGMA 0
 
 /******************************************************************************
  * TRC_CFG_USE_IMPLICIT_IFE_RULES
@@ -390,7 +374,7 @@
  *
  * The UB is typically used with the snapshot ring-buffer mode, so the
  * recording can continue when the main buffer gets full. And since the 
- * main buffer then overwrites the earliest events, Tracelyzer displays
+ * main buffer then overwrites the earliest events, Tracealyzer displays
  * "Unknown Actor" instead of task scheduling for periods with UB data only.
  *  
  * In UB mode, user events are structured as UB channels, which contains
@@ -469,7 +453,7 @@
  * context-switching also in cases when the ISRs execute in direct sequence.
  * 
  * vTraceStoreISREnd normally assumes that the ISR returns to the previous
- * context, i.e., a task or a pre-empted ISR. But if another traced ISR 
+ * context, i.e., a task or a preempted ISR. But if another traced ISR 
  * executes in direct sequence, Tracealyzer may incorrectly display a minimal
  * fragment of the previous context in between the ISRs.
  *
@@ -477,8 +461,8 @@
  * however a threshold value that must be measured for your specific setup.
  * See http://percepio.com/2014/03/21/isr_tailchaining_threshold/
  *
- * The default setting is 0, meaining "disabled" and that you may get an 
- * extra framents of the previous context in between tail-chained ISRs.
+ * The default setting is 0, meaning "disabled" and that you may get an 
+ * extra fragments of the previous context in between tail-chained ISRs.
  *
  * Note: This setting has separate definitions in trcSnapshotConfig.h and 
  * trcStreamingConfig.h, since it is affected by the recorder mode.

@@ -23,7 +23,7 @@
   #define tskKERNEL_VERSION_MAJOR 7
 #endif
 // NOTE!!
-// The configFRTOS_MEMORY_SCHEME macro describes the heap scheme using a value 
+// The configUSE_HEAP_SCHEME macro describes the heap scheme using a value
 // 1 - 5 which corresponds to the following schemes:
 //
 // heap_1 - the very simplest, does not permit memory to be freed
@@ -34,11 +34,11 @@
 //          absolute address placement option
 // heap_5 - as per heap_4, with the ability to span the heap across
 //          multiple non-adjacent memory areas
-#ifndef configFRTOS_MEMORY_SCHEME
-  #define configFRTOS_MEMORY_SCHEME 3 // thread safe malloc
+#ifndef configUSE_HEAP_SCHEME
+  #define configUSE_HEAP_SCHEME 3 // thread safe malloc
 #endif
-#if ((configFRTOS_MEMORY_SCHEME > 5) || (configFRTOS_MEMORY_SCHEME < 1))
-  #error "Invalid configFRTOS_MEMORY_SCHEME setting!"
+#if ((configUSE_HEAP_SCHEME > 5) || (configUSE_HEAP_SCHEME < 1))
+  #error "Invalid configUSE_HEAP_SCHEME setting!"
 #endif
 
 #ifdef __cplusplus
@@ -66,7 +66,7 @@ const uint8_t FreeRTOSDebugConfig[] =
   tskKERNEL_VERSION_MAJOR,
   tskKERNEL_VERSION_MINOR,
   tskKERNEL_VERSION_BUILD,
-  configFRTOS_MEMORY_SCHEME,
+  configUSE_HEAP_SCHEME,
   offsetof(struct tskTaskControlBlock, pxTopOfStack),
 #if (tskKERNEL_VERSION_MAJOR > 8)
   offsetof(struct tskTaskControlBlock, xStateListItem),
