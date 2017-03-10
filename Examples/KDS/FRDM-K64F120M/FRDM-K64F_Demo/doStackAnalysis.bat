@@ -1,4 +1,4 @@
-avstack.pl ^
+perl avstack.pl ^
 Debug\Sources\Application.o ^
 Debug\Sources\Events.o ^
 Debug\Sources\Joystick.o ^
