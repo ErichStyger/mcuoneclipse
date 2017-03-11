@@ -1,3 +1,10 @@
+/**
+ * \file
+ * \brief Configuration header file for Wait
+ *
+ * This header file is used to configure settings of the busy waiting module.
+ */
+
 #ifndef __WAIT1_CONFIG_H
 #define __WAIT1_CONFIG_H
 

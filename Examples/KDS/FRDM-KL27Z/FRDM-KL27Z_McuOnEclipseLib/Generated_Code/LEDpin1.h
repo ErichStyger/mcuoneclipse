@@ -4,10 +4,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : SDK_BitIO
-**     Version     : Component 01.019, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.022, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-19, 17:19, # CodeGen: 4
+**     Date/Time   : 2017-03-10, 17:14, # CodeGen: 73
 **     Abstract    :
 **
 **     Settings    :
@@ -18,6 +18,8 @@
 **          Pin Number                                     : 13
 **          Pin Symbol                                     : LED_RED
 **          Do Pin Muxing                                  : yes
+**          Init Direction                                 : Output
+**          Init Value                                     : 0
 **     Contents    :
 **         GetDir    - bool LEDpin1_GetDir(void);
 **         SetDir    - void LEDpin1_SetDir(bool Dir);
@@ -81,10 +83,9 @@
 
   /* only GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF and GPIOG are currently supported */
   #define LEDpin1_GPIO_IDX GPIOA_IDX   /* GPIOA */
-  #define LEDpin1_PinNumber  13u   /* number of pin, type unsigned integer */
 
   enum LEDpin1_pinNames{
-    LED_RED = GPIO_MAKE_PIN(LEDpin1_GPIO_IDX, LEDpin1_PinNumber),
+    LED_RED = GPIO_MAKE_PIN(LEDpin1_GPIO_IDX, LEDpin1_CONFIG_PIN_NUMBER),
   };
 
   extern const gpio_output_pin_user_config_t LEDpin1_OutputConfig[];

@@ -7,7 +7,7 @@
 **     Version     : Component 01.529, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-09, 20:31, # CodeGen: 67
+**     Date/Time   : 2017-03-10, 19:29, # CodeGen: 89
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
@@ -22,7 +22,7 @@
 **              Header Folder                              : ../FreeRTOS/Source/include
 **              Port Folder                                : ../FreeRTOS/Source/portable/GCC/ARM_CM0
 **              MemMang Folder                             : ../FreeRTOS/Source/portable/MemMang
-**              Common Folder                              : FreeRTOS/Source/portable/Common
+**              Common Folder                              : ../FreeRTOS/Source/portable/Common
 **              Config Folder                              : ../FreeRTOS/config/gcc
 **              Manual Clock Values                        : Enabled
 **                configCPU_CLOCK_HZ                       : CPU_CORE_CLK_HZ
@@ -36,8 +36,7 @@
 **          Thread Local Storage Pointers                  : 0
 **          Use Trace Facility                             : yes
 **          Segger System Viewer Trace                     : Disabled
-**          Percepio Trace                                 : Enabled
-**            Percepio FreeRTOS+Trace                      : PTRC1
+**          Percepio Trace                                 : Disabled
 **          Generate Runtime Statistics                    : Enabled
 **            Use Tick Counter                             : yes
 **            LDD                                          : Disabled
@@ -84,7 +83,7 @@
 **          Timers                                         : Disabled
 **          Memory                                         : Settings for the memory and heap allocation
 **            Dynamic Allocation                           : Enabled
-**              Heap Size                                  : 10000
+**              Heap Size                                  : 8192
 **              Application allocated Heap                 : no
 **              Memory Allocation Scheme                   : Scheme 4: merge free blocks
 **            Static Allocation                            : Disabled
@@ -2156,7 +2155,7 @@ void FRTOS1_Init(void)
   SIM_PDD_SetClockGate(SIM_BASE_PTR, SIM_PDD_CLOCK_GATE_LPTMR0, PDD_ENABLE);
 #endif
   vPortStopTickTimer(); /* tick timer shall not run until the RTOS scheduler is started */
-  PTRC1_Startup();/* Startup Percepio Trace. Need to do this before calling any RTOS functions. */
+  /* no Percepio Trace Hooks enabled with configUSE_TRACE_HOOKS */
   //vPortInitTickTimer();
   //vPortStopTickTimer();
 }

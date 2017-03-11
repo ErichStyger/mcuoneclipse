@@ -4,10 +4,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : SDK_BitIO
-**     Version     : Component 01.019, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.022, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-19, 17:19, # CodeGen: 4
+**     Date/Time   : 2017-03-10, 17:14, # CodeGen: 73
 **     Abstract    :
 **
 **     Settings    :
@@ -18,6 +18,8 @@
 **          Pin Number                                     : 13
 **          Pin Symbol                                     : LED_RED
 **          Do Pin Muxing                                  : yes
+**          Init Direction                                 : Output
+**          Init Value                                     : 0
 **     Contents    :
 **         GetDir    - bool LEDpin1_GetDir(void);
 **         SetDir    - void LEDpin1_SetDir(bool Dir);
@@ -82,24 +84,21 @@
 #endif
 
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
-  #define LEDpin1_PORTName   PORTA /* name of PORT, is pointer to PORT_Type */
-  #define LEDpin1_GPIOName   GPIOA /* name of GPIO, is pointer to GPIO_Type */
-  #define LEDpin1_PinNumber  13u   /* number of pin, type unsigned integer */
 
   static const gpio_pin_config_t LEDpin1_configOutput = {
     kGPIO_DigitalOutput,  /* use as output pin */
-    1,  /* initial value */
+    LEDpin1_CONFIG_INIT_PIN_VALUE,  /* initial value */
   };
 
   static const gpio_pin_config_t LEDpin1_configInput = {
     kGPIO_DigitalInput,  /* use as input pin */
-    0,  /* initial value */
+    LEDpin1_CONFIG_INIT_PIN_VALUE,  /* initial value */
   };
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
   const gpio_output_pin_user_config_t LEDpin1_OutputConfig[] = {
     {
       .pinName = LED_RED,
-      .config.outputLogic = 0,
+      .config.outputLogic = LEDpin1_CONFIG_INIT_PIN_VALUE,
     #if FSL_FEATURE_PORT_HAS_SLEW_RATE
       .config.slewRate = kPortSlowSlewRate,
     #endif
@@ -154,7 +153,7 @@ static bool LEDpin1_isOutput = false;
 void LEDpin1_ClrVal(void)
 {
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
-  GPIO_ClearPinsOutput(LEDpin1_GPIOName, 1<<LEDpin1_PinNumber);
+  GPIO_ClearPinsOutput(LEDpin1_CONFIG_GPIO_NAME, 1<<LEDpin1_CONFIG_PIN_NUMBER);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_ClearPinOutput(LED_RED);
 #endif
@@ -172,7 +171,7 @@ void LEDpin1_ClrVal(void)
 void LEDpin1_SetVal(void)
 {
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
-  GPIO_SetPinsOutput(LEDpin1_GPIOName, 1<<LEDpin1_PinNumber);
+  GPIO_SetPinsOutput(LEDpin1_CONFIG_GPIO_NAME, 1<<LEDpin1_CONFIG_PIN_NUMBER);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinOutput(LED_RED);
 #endif
@@ -190,7 +189,7 @@ void LEDpin1_SetVal(void)
 void LEDpin1_NegVal(void)
 {
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
-  GPIO_TogglePinsOutput(LEDpin1_GPIOName, 1<<LEDpin1_PinNumber);
+  GPIO_TogglePinsOutput(LEDpin1_CONFIG_GPIO_NAME, 1<<LEDpin1_CONFIG_PIN_NUMBER);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_TogglePinOutput(LED_RED);
 #endif
@@ -211,7 +210,7 @@ void LEDpin1_NegVal(void)
 bool LEDpin1_GetVal(void)
 {
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
-  return GPIO_ReadPinInput(LEDpin1_GPIOName, LEDpin1_PinNumber)!=0;
+  return GPIO_ReadPinInput(LEDpin1_CONFIG_GPIO_NAME, LEDpin1_CONFIG_PIN_NUMBER)!=0;
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
   return GPIO_DRV_ReadPinInput(LED_RED)!=0;
 #else
@@ -267,7 +266,7 @@ void LEDpin1_SetDir(bool Dir)
 void LEDpin1_SetInput(void)
 {
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
-  GPIO_PinInit(LEDpin1_GPIOName, LEDpin1_PinNumber, &LEDpin1_configInput);
+  GPIO_PinInit(LEDpin1_CONFIG_GPIO_NAME, LEDpin1_CONFIG_PIN_NUMBER, &LEDpin1_configInput);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinDir(LED_RED, kGpioDigitalInput);
 #endif
@@ -286,7 +285,7 @@ void LEDpin1_SetInput(void)
 void LEDpin1_SetOutput(void)
 {
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
-  GPIO_PinInit(LEDpin1_GPIOName, LEDpin1_PinNumber, &LEDpin1_configOutput);
+  GPIO_PinInit(LEDpin1_CONFIG_GPIO_NAME, LEDpin1_CONFIG_PIN_NUMBER, &LEDpin1_configOutput);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinDir(LED_RED, kGpioDigitalOutput);
 #endif
@@ -309,9 +308,9 @@ void LEDpin1_PutVal(bool Val)
 {
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
   if (Val) {
-    GPIO_SetPinsOutput(LEDpin1_GPIOName, 1<<LEDpin1_PinNumber);
+    GPIO_SetPinsOutput(LEDpin1_CONFIG_GPIO_NAME, 1<<LEDpin1_CONFIG_PIN_NUMBER);
   } else {
-    GPIO_ClearPinsOutput(LEDpin1_GPIOName, 1<<LEDpin1_PinNumber);
+    GPIO_ClearPinsOutput(LEDpin1_CONFIG_GPIO_NAME, 1<<LEDpin1_CONFIG_PIN_NUMBER);
   }
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_WritePinOutput(LED_RED, Val);
@@ -331,9 +330,13 @@ void LEDpin1_Init(void)
 {
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
   #if LEDpin1_CONFIG_DO_PIN_MUXING
-  PORT_SetPinMux(LEDpin1_PORTName, LEDpin1_PinNumber, kPORT_MuxAsGpio); /* mux as GPIO */
+  PORT_SetPinMux(LEDpin1_CONFIG_PORT_NAME, LEDpin1_CONFIG_PIN_NUMBER, kPORT_MuxAsGpio); /* mux as GPIO */
   #endif
+#if LEDpin1_CONFIG_INIT_PIN_DIRECTION == LEDpin1_CONFIG_INIT_PIN_DIRECTION_INPUT
+  LEDpin1_SetInput();
+#elif LEDpin1_CONFIG_INIT_PIN_DIRECTION == LEDpin1_CONFIG_INIT_PIN_DIRECTION_OUTPUT
   LEDpin1_SetOutput();
+#endif
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
   /*! \todo Pin Muxing not implemented */
   GPIO_DRV_Init(LEDpin1_InputConfig, LEDpin1_OutputConfig);

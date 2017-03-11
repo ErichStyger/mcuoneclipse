@@ -52,6 +52,10 @@
 #endif
 #include "CLS1.h"
 #include "Console.h"
+#include "GI2C1.h"
+#include "I2C1.h"
+#include "I2CSPY1.h"
+#include "MMA1.h"
 
 static void MainTask(void *pvParameters) {
   (void)pvParameters; /* parameter not used */
@@ -61,15 +65,7 @@ static void MainTask(void *pvParameters) {
   }
 }
 
-/*!
- * @brief Application entry point.
- */
-int main(void) {
-  /* Init board hardware. */
-  BOARD_InitPins();
-  BOARD_BootClockRUN();
-  BOARD_InitDebugConsole();
-
+static void InitComponents(void) {
   /* Initialize modules */
   FRTOS1_Init();
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
@@ -86,6 +82,22 @@ int main(void) {
   TmDt1_Init();
   CONSOLE_Init();
   WAIT1_Init();
+  GI2C1_Init();
+  I2C1_Init();
+  I2CSPY1_Init();
+  (void)MMA1_Init();
+}
+
+/*!
+ * @brief Application entry point.
+ */
+int main(void) {
+  /* Init board hardware. */
+  BOARD_InitPins();
+  BOARD_BootClockRUN();
+  BOARD_InitDebugConsole();
+
+  InitComponents();
 
   /* quick LED testing */
   LEDR_On();

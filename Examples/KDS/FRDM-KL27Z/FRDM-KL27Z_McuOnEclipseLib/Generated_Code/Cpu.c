@@ -8,7 +8,7 @@
 **     Repository  : Kinetis
 **     Datasheet   : KL25P80M48SF0RM, Rev.3, Sep 2012
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-10, 08:15, # CodeGen: 70
+**     Date/Time   : 2017-03-11, 14:36, # CodeGen: 100
 **     Abstract    :
 **
 **     Settings    :
@@ -273,6 +273,12 @@
 #include "TmDt1.h"
 #include "HF1.h"
 #include "PTRC1.h"
+#include "GI2C1.h"
+#include "I2C1.h"
+#include "SDA1.h"
+#include "SCL1.h"
+#include "I2CSPY1.h"
+#include "MMA1.h"
 #include "PE_Types.h"
 #include "PE_Error.h"
 #include "PE_Const.h"
@@ -484,11 +490,10 @@ void PE_low_level_init(void)
   /* Write code here ... */
   /* ### LED "LEDB" init code ... */
   LEDB_Init(); /* initialize LED driver */
-  /* ### SeggerRTT "RTT1" init code ... */
-  RTT1_Init();
-  /* ### PercepioTrace "PTRC1" init code ... */
   /* ### FreeRTOS "FRTOS1" init code ... */
   /* PEX_RTOS_INIT() should have been called at this time already with the most critical setup */
+  /* ### SeggerRTT "RTT1" init code ... */
+  RTT1_Init();
   /* ### SeggerSystemView "SYS1" init code ... */
   SYS1_Init();
   /* ### KinetisTools "KIN1" init code ... */
@@ -498,6 +503,19 @@ void PE_low_level_init(void)
 #endif
   /* ### HardFault "HF1" init code ... */
   HF1_Init();
+  /* ### PercepioTrace "PTRC1" init code ... */
+  /* ### SDK_BitIO "SDA1" init code ... */
+  /* Write code here ... */
+  /* ### SDK_BitIO "SCL1" init code ... */
+  /* Write code here ... */
+  /* ### GenericSWI2C "I2C1" init code ... */
+  I2C1_Init();
+  /* ### GenericI2C "GI2C1" init code ... */
+  GI2C1_Init();
+  /* ### I2CSpy "I2CSPY1" init code ... */
+  (void)I2CSPY1_Init();
+  /* ### MMA8451Q "MMA1" init code ... */
+  /* Write code here ... */
 }
   /* Flash configuration field */
   __attribute__ ((section (".cfmconfig"))) const uint8_t _cfm[0x10] = {

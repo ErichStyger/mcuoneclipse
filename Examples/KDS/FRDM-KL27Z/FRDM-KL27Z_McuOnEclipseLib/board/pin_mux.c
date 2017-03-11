@@ -47,6 +47,7 @@ void BOARD_InitPins(void)
     /* Ungate the port clock */
     CLOCK_EnableClock(kCLOCK_PortA);
     CLOCK_EnableClock(kCLOCK_PortB);
+    CLOCK_EnableClock(kCLOCK_PortD); /* I2C1 for accelerometer is on PortD */
     /* Affects PORTA_PCR1 register */
     PORT_SetPinMux(PORTA, 1u, kPORT_MuxAlt2);
     /* Affects PORTA_PCR2 register */
