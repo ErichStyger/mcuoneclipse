@@ -6,7 +6,7 @@
 **     Version     : Component 01.025, Driver 01.04, CPU db: 3.00.000
 **     Repository  : Kinetis
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-11, 14:36, # CodeGen: 100
+**     Date/Time   : 2017-03-13, 09:07, # CodeGen: 108
 **     Abstract    :
 **
 **     Settings    :
@@ -77,10 +77,10 @@
 #include "XF1.h"
 #include "CS1.h"
 #include "KIN1.h"
-#include "TmDt1.h"
 #include "HF1.h"
 #include "PTRC1.h"
 #include "GI2C1.h"
+#include "TmDt1.h"
 #include "I2C1.h"
 #include "SDA1.h"
 #include "SCL1.h"

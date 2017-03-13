@@ -36,6 +36,7 @@
 #include "pin_mux.h"
 #include "clock_config.h"
 
+#include "Platform.h"
 #include "LEDR.h"
 #include "LEDG.h"
 #include "LEDB.h"
@@ -43,7 +44,9 @@
 #include "FRTOS1.h"
 #include "Shell.h"
 #include "RTT1.h"
-#include "TmDt1.h"
+#if PL_CONFIG_HAS_TIME_DATE
+  #include "TmDt1.h"
+#endif
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   #include "SYS1.h"
 #endif
@@ -52,10 +55,16 @@
 #endif
 #include "CLS1.h"
 #include "Console.h"
-#include "GI2C1.h"
-#include "I2C1.h"
-#include "I2CSPY1.h"
-#include "MMA1.h"
+#if PL_CONFIG_HAS_I2C
+  #include "GI2C1.h"
+  #include "I2C1.h"
+#endif
+#if PL_CONFIG_HAS_I2CSPY
+  #include "I2CSPY1.h"
+#endif
+#if PL_CONFIG_HAS_ACCEL
+  #include "MMA1.h"
+#endif
 
 static void MainTask(void *pvParameters) {
   (void)pvParameters; /* parameter not used */
@@ -73,19 +82,29 @@ static void InitComponents(void) {
 #elif configUSE_TRACE_HOOKS
   PTRC1_Startup();
 #endif
+  WAIT1_Init();
   LEDR_Init();
   LEDG_Init();
   LEDB_Init();
   RTT1_Init();
+#if PL_CONFIG_HAS_SHELL
   CLS1_Init();
   SHELL_Init();
-  TmDt1_Init();
   CONSOLE_Init();
-  WAIT1_Init();
+#endif
+#if PL_CONFIG_HAS_TIME_DATE
+  TmDt1_Init();
+#endif
+#if PL_CONFIG_HAS_I2C
   GI2C1_Init();
   I2C1_Init();
+#endif
+#if PL_CONFIG_HAS_I2CSPY
   I2CSPY1_Init();
+#endif
+#if PL_CONFIG_HAS_ACCEL
   (void)MMA1_Init();
+#endif
 }
 
 /*!

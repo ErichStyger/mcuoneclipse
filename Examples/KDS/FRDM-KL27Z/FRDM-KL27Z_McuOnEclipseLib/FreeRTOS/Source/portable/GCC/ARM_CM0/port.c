@@ -1123,6 +1123,8 @@ __asm void vPortStartFirstTask(void) {
 #endif
 /*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_ARM_GCC)
+/* Need the 'noinline', as latest gcc with -O3 tries to inline it, and gives error message: "Error: symbol `pxCurrentTCBConst2' is already defined" */
+__attribute__((noinline))
 void vPortStartFirstTask(void) {
 #if 1 /* only needed for openOCD thread awareness. It needs the symbol uxTopUsedPriority present after linking */
   {

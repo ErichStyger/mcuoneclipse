@@ -7,7 +7,7 @@
  */
 
 #include "Platform.h"
-#if PL_HAS_SHELL
+#if PL_CONFIG_HAS_SHELL
 #include "Shell.h"
 #include "CLS1.h"
 #include "FRTOS1.h"
@@ -15,9 +15,21 @@
 #include "LEDG.h"
 #include "LEDB.h"
 #include "KIN1.h"
-#include "TmDt1.h"
-#include "I2CSPY1.h"
-#include "MMA1.h"
+#if PL_CONFIG_HAS_TIME_DATE
+  #include "TmDt1.h"
+#else
+  #define TmDt1_PARSE_COMMAND_ENABLED 0
+#endif
+#if PL_CONFIG_HAS_I2CSPY
+  #include "I2CSPY1.h"
+#else
+  #define I2CSPY1_PARSE_COMMAND_ENABLED 0
+#endif
+#if PL_CONFIG_HAS_ACCEL
+  #include "MMA1.h"
+#else
+  #define MMA1_PARSE_COMMAND_ENABLED 0
+#endif
 
 void SHELL_SendString(unsigned char *msg) {
   CLS1_SendStr(msg, CLS1_GetStdio()->stdOut);
@@ -81,4 +93,4 @@ void SHELL_Init(void) {
 void SHELL_Deinit(void) {
   CLS1_Deinit();
 }
-#endif /* PL_HAS_SHELL */
+#endif /* PL_CONFIG_HAS_SHELL */

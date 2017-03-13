@@ -8,7 +8,7 @@
 **     Repository  : Kinetis
 **     Datasheet   : KL25P80M48SF0RM, Rev.3, Sep 2012
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-11, 14:36, # CodeGen: 100
+**     Date/Time   : 2017-03-13, 09:07, # CodeGen: 108
 **     Abstract    :
 **
 **     Settings    :
@@ -270,10 +270,10 @@
 #include "XF1.h"
 #include "CS1.h"
 #include "KIN1.h"
-#include "TmDt1.h"
 #include "HF1.h"
 #include "PTRC1.h"
 #include "GI2C1.h"
+#include "TmDt1.h"
 #include "I2C1.h"
 #include "SDA1.h"
 #include "SCL1.h"
@@ -490,17 +490,13 @@ void PE_low_level_init(void)
   /* Write code here ... */
   /* ### LED "LEDB" init code ... */
   LEDB_Init(); /* initialize LED driver */
-  /* ### FreeRTOS "FRTOS1" init code ... */
-  /* PEX_RTOS_INIT() should have been called at this time already with the most critical setup */
   /* ### SeggerRTT "RTT1" init code ... */
   RTT1_Init();
   /* ### SeggerSystemView "SYS1" init code ... */
   SYS1_Init();
+  /* ### FreeRTOS "FRTOS1" init code ... */
+  /* PEX_RTOS_INIT() should have been called at this time already with the most critical setup */
   /* ### KinetisTools "KIN1" init code ... */
-  /* ### GenericTimeDate "TmDt1" init code ... */
-#if TmDt1_INIT_IN_STARTUP
-  (void)TmDt1_Init();
-#endif
   /* ### HardFault "HF1" init code ... */
   HF1_Init();
   /* ### PercepioTrace "PTRC1" init code ... */
@@ -512,6 +508,10 @@ void PE_low_level_init(void)
   I2C1_Init();
   /* ### GenericI2C "GI2C1" init code ... */
   GI2C1_Init();
+  /* ### GenericTimeDate "TmDt1" init code ... */
+#if TmDt1_INIT_IN_STARTUP
+  (void)TmDt1_Init();
+#endif
   /* ### I2CSpy "I2CSPY1" init code ... */
   (void)I2CSPY1_Init();
   /* ### MMA8451Q "MMA1" init code ... */

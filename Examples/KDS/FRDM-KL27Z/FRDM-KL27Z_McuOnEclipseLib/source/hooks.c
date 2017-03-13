@@ -5,13 +5,16 @@
  *      Author: Erich Styger
  */
 
+#include "Platform.h"
 #include "MCUC1config.h"
 #include "FRTOS1.h"
 #if configUSE_TRACE_HOOKS
   #include "PTRC1.h"
 #endif
 #include "LEDB.h"
-#include "TmDt1.h"
+#if PL_CONFIG_HAS_TIME_DATE
+  #include "TmDt1.h"
+#endif
 
 void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName) {
   /* This will get called if a stack overflow is detected during the context
@@ -28,7 +31,9 @@ void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
 void FRTOS1_vApplicationTickHook(void) {
   /* Called for every RTOS tick. */
   // LEDB_Neg(); /* indicate tick interrupt */
+#if PL_CONFIG_HAS_TIME_DATE
   TmDt1_AddTick(); /* update software RTC */
+#endif
 }
 
 void FRTOS1_vApplicationMallocFailedHook(void) {

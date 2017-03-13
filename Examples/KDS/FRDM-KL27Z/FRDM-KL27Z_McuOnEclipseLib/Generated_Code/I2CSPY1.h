@@ -7,7 +7,7 @@
 **     Version     : Component 01.014, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-10, 18:41, # CodeGen: 84
+**     Date/Time   : 2017-03-13, 09:07, # CodeGen: 108
 **     Abstract    :
 **          This component implements a utility to inspect devices on the I2C bus.
 **     Settings    :

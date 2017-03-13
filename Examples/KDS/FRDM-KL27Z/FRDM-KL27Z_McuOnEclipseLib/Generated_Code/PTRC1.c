@@ -4,20 +4,20 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : PercepioTrace
-**     Version     : Component 01.125, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.127, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-11, 14:36, # CodeGen: 100
+**     Date/Time   : 2017-03-13, 07:46, # CodeGen: 105
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : PTRC1
 **          RTOS+Trace Version                             : V3.1.1
 **          Recorder Mode                                  : Snapshot
-**          Startup trace enable method                    : TRC_START
 **          Recorder Buffer Allocation                     : static
 **          Max ISR Nesting                                : 8
 **          Snapshot Mode                                  : 
+**            Snapshot trace enable method                 : TRC_START
 **            Recorder store mode                          : Ring Buffer
 **            Scheduling only                              : no
 **            Description string                           : FreeRTOS+Trace
@@ -56,6 +56,7 @@
 **          Streaming Mode                                 : 
 **            Segger RTT                                   : Enabled
 **              Segger RTT                                 : RTT1
+**            Streaming trace enable method                : TRC_START
 **            Up Buffer Index                              : 2
 **            Up Buffer Size                               : 1024
 **            Down Buffer Index                            : 2
