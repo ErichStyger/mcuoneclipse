@@ -4,15 +4,15 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : SeggerSystemView
-**     Version     : Component 01.051, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.052, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-11, 14:36, # CodeGen: 100
+**     Date/Time   : 2017-03-13, 13:44, # CodeGen: 109
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : SYS1
-**          Version                                        : V2.40
+**          Version                                        : V2.42
 **          Application Name                               : "Demo Application"
 **          Device Name                                    : "KL27Z"
 **          RAM Base                                       : 0x1FFFF000
@@ -48,11 +48,11 @@
 **         DisableEvents  - void SYS1_DisableEvents(uint32_t DisableMask);
 **         Init           - void SYS1_Init(void);
 **
-**     * (c) Copyright Segger, 2016
+**     * (c) Copyright Segger, 2017
 **      * http      : www.segger.com
 **      * See separate Segger licensing terms.
 **      *
-**      * Processor Expert port: Copyright (c) 2016, Erich Styger
+**      * Processor Expert port: Copyright (c) 2016-2017, Erich Styger
 **      * Web:         https://mcuoneclipse.com
 **      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

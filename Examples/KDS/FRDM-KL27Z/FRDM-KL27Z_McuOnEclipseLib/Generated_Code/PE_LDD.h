@@ -6,7 +6,7 @@
 **     Version     : Component 01.025, Driver 01.04, CPU db: 3.00.000
 **     Repository  : Kinetis
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-13, 09:07, # CodeGen: 108
+**     Date/Time   : 2017-03-16, 13:57, # CodeGen: 110
 **     Abstract    :
 **
 **     Settings    :
@@ -61,6 +61,8 @@
 #include "PE_Types.h"
 #include "PE_Error.h"
 #include "PE_Const.h"
+#include "MCUC1.h"
+#include "UTIL1.h"
 #include "WAIT1.h"
 #include "LEDR.h"
 #include "LEDpin2.h"
@@ -68,9 +70,7 @@
 #include "LEDpin3.h"
 #include "LEDB.h"
 #include "LEDpin1.h"
-#include "MCUC1.h"
 #include "FRTOS1.h"
-#include "UTIL1.h"
 #include "SYS1.h"
 #include "RTT1.h"
 #include "CLS1.h"

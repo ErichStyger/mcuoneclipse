@@ -7,7 +7,7 @@
 **     Version     : Component 01.021, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-13, 09:07, # CodeGen: 108
+**     Date/Time   : 2017-03-16, 14:00, # CodeGen: 111
 **     Abstract    :
 **
 **     Settings    :
@@ -106,14 +106,22 @@ static uint8_t SlaveAddr;             /* destination slave address      */
 #define SCL_SetDir(dir) SCL1_SetDir(dir)
 #define SCL_ClrVal()    SCL1_ClrVal()
 #define SCL_GetVal()    SCL1_GetVal()
-#define SCL_Init()      SCL1_Init()
-#define SCL_Deinit()    SCL1_Deinit()
 
 #define SDA_SetDir(dir) SDA1_SetDir(dir)
 #define SDA_ClrVal()    SDA1_ClrVal()
 #define SDA_GetVal()    SDA1_GetVal()
-#define SDA_Init()      SDA1_Init()
-#define SDA_Deinit()    SDA1_Deinit()
+
+#if MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_PROCESSOR_EXPERT
+  #define SCL_Init()      /* Init does not exist with Processor Expert API */
+  #define SCL_Deinit()    /* Deinit does not exist with Processor Expert API */
+  #define SDA_Init()      /* Init does not exist with Processor Expert API */
+  #define SDA_Deinit()    /* Deinit does not exist with Processor Expert API */
+#else
+  #define SCL_Init()      SCL1_Init()
+  #define SCL_Deinit()    SCL1_Deinit()
+  #define SDA_Init()      SDA1_Init()
+  #define SDA_Deinit()    SDA1_Deinit()
+#endif
 
 /* Internal method prototypes */
 static void Delay(void);

@@ -8,7 +8,7 @@
 **     Repository  : Kinetis
 **     Datasheet   : KL25P80M48SF0RM, Rev.3, Sep 2012
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-13, 09:07, # CodeGen: 108
+**     Date/Time   : 2017-03-16, 13:57, # CodeGen: 110
 **     Abstract    :
 **
 **     Settings    :
@@ -254,6 +254,8 @@
 /* MODULE Cpu. */
 
 #include "FreeRTOS.h" /* FreeRTOS interface */
+#include "MCUC1.h"
+#include "UTIL1.h"
 #include "WAIT1.h"
 #include "LEDR.h"
 #include "LEDpin2.h"
@@ -261,9 +263,7 @@
 #include "LEDpin3.h"
 #include "LEDB.h"
 #include "LEDpin1.h"
-#include "MCUC1.h"
 #include "FRTOS1.h"
-#include "UTIL1.h"
 #include "SYS1.h"
 #include "RTT1.h"
 #include "CLS1.h"
