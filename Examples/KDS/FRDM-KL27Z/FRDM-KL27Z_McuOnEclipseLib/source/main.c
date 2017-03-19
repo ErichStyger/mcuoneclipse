@@ -65,6 +65,9 @@
 #if PL_CONFIG_HAS_ACCEL
   #include "MMA1.h"
 #endif
+#if PL_CONFIG_HAS_SPI
+  #include "SPI1.h"
+#endif
 
 static void MainTask(void *pvParameters) {
   (void)pvParameters; /* parameter not used */
@@ -104,6 +107,9 @@ static void InitComponents(void) {
 #endif
 #if PL_CONFIG_HAS_ACCEL
   (void)MMA1_Init();
+#endif
+#if PL_CONFIG_HAS_SPI
+  SPI1_Init();
 #endif
 }
 

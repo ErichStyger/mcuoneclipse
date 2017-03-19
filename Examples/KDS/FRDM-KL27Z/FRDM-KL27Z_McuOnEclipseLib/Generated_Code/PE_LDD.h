@@ -6,7 +6,7 @@
 **     Version     : Component 01.025, Driver 01.04, CPU db: 3.00.000
 **     Repository  : Kinetis
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-16, 13:57, # CodeGen: 110
+**     Date/Time   : 2017-03-17, 08:48, # CodeGen: 119
 **     Abstract    :
 **
 **     Settings    :
@@ -86,6 +86,13 @@
 #include "SCL1.h"
 #include "I2CSPY1.h"
 #include "MMA1.h"
+#include "SPI1.h"
+#include "Clock1.h"
+#include "Input1.h"
+#include "Output1.h"
+#include "RF1.h"
+#include "CE1.h"
+#include "CSN1.h"
 
 
 /*

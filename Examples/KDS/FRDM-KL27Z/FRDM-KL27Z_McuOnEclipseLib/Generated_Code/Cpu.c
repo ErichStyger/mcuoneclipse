@@ -8,7 +8,7 @@
 **     Repository  : Kinetis
 **     Datasheet   : KL25P80M48SF0RM, Rev.3, Sep 2012
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-16, 13:57, # CodeGen: 110
+**     Date/Time   : 2017-03-17, 08:48, # CodeGen: 119
 **     Abstract    :
 **
 **     Settings    :
@@ -279,6 +279,13 @@
 #include "SCL1.h"
 #include "I2CSPY1.h"
 #include "MMA1.h"
+#include "SPI1.h"
+#include "Clock1.h"
+#include "Input1.h"
+#include "Output1.h"
+#include "RF1.h"
+#include "CE1.h"
+#include "CSN1.h"
 #include "PE_Types.h"
 #include "PE_Error.h"
 #include "PE_Const.h"
@@ -516,6 +523,19 @@ void PE_low_level_init(void)
   (void)I2CSPY1_Init();
   /* ### MMA8451Q "MMA1" init code ... */
   /* Write code here ... */
+  /* ### SDK_BitIO "Clock1" init code ... */
+  /* Write code here ... */
+  /* ### SDK_BitIO "Input1" init code ... */
+  /* Write code here ... */
+  /* ### SDK_BitIO "Output1" init code ... */
+  /* Write code here ... */
+  /* ### GenericSWSPI "SPI1" init code ... */
+  SPI1_Init();
+  /* ### SDK_BitIO "CE1" init code ... */
+  /* Write code here ... */
+  /* ### SDK_BitIO "CSN1" init code ... */
+  /* Write code here ... */
+  /* ### nRF24L01 "RF1" init code ... */
 }
   /* Flash configuration field */
   __attribute__ ((section (".cfmconfig"))) const uint8_t _cfm[0x10] = {
