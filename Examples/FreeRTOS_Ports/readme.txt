@@ -17,3 +17,7 @@ Following ports are available:
   
 
 To change the RTOS, adopt the FreeRTOSconfig.h header file.
+
+Note that this folder is provided for older FreeRTOS ports.
+The latest and greates version is maintained in a dedicated GitHub repository:
+https://github.com/ErichStyger/McuOnEclipseLibrary
