@@ -32,6 +32,7 @@
 #include "Events.h"
 #include "Pins1.h"
 #include "FRTOS1.h"
+#include "RTOSCNTRLDD1.h"
 #include "MCUC1.h"
 #include "UTIL1.h"
 #include "LED1.h"
@@ -51,19 +52,45 @@
 #include "PDD_Includes.h"
 #include "Init_Config.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
-static uint8_t heapRegion1[5000];
-static uint8_t heapRegion2[3000];
+#define USE_HEAP_INDICATOR  0
+#if configUSE_HEAP_SCHEME == 5
+static uint8_t heapRegion1[1000];
+static uint8_t heapRegion2[1000];
+static uint8_t heapRegion3[2000];
 
 static HeapRegion_t xHeapRegions[] =
 {
   {(uint8_t*) heapRegion1, sizeof(heapRegion1) }, /* Defines the block with start address and size */
   {(uint8_t*) heapRegion2, sizeof(heapRegion1) }, /* Defines the block with start address and size */
+  {(uint8_t*) heapRegion3, sizeof(heapRegion3) }, /* Defines the block with start address and size */
   {NULL, 0}  /* Terminates the array. */
 };
+#endif
+#if USE_HEAP_INDICATOR
+  const uint8_t freeRTOSMemoryScheme = configUSE_HEAP_SCHEME;
+#endif
+
+static SemaphoreHandle_t sem = NULL;
+static xQueueHandle queue = NULL;
+
+static void LedTask(void *param) {
+  uint8_t cntr;
+
+  for(;;) {
+    LED1_On();
+    vTaskDelay(pdMS_TO_TICKS(10));
+    LED1_Off();
+    vTaskDelay(pdMS_TO_TICKS(10));
+    xQueueReceive(queue, &cntr, pdMS_TO_TICKS(1000));
+  }
+}
 
 static void MainTask(void *param) {
+  uint8_t cntr = 0;
   for(;;) {
+    cntr++;
     LED1_Neg();
+    xQueueSendToBack(queue, &cntr, pdMS_TO_TICKS(100));
     vTaskDelay(pdMS_TO_TICKS(500));
   }
 }
@@ -73,17 +100,28 @@ int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
   /* Write your local variable definition here */
+#if configUSE_HEAP_SCHEME == 5
   vPortDefineHeapRegions(xHeapRegions);
-
+#endif
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
+  sem = xSemaphoreCreateBinary();
+  if (sem==NULL) { /* semaphore creation failed */
+    for(;;){} /* error */
+  }
+  vQueueAddToRegistry(sem, "MySemaphore");
+  queue = xQueueCreate(32, sizeof(uint8_t));
+  if (queue==NULL) {
+    for(;;){} /* out of memory? */
+  }
+  vQueueAddToRegistry(queue, "ShellQueue");
   if (xTaskCreate(
       MainTask,  /* pointer to the task */
       "Main", /* task name for kernel awareness debugging */
-      200, /* task stack size */
+      100, /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY,  /* initial priority */
       (xTaskHandle*)NULL /* optional task handle to create */
@@ -92,7 +130,24 @@ int main(void)
      for(;;){} /* error! probably out of memory */
     /*lint +e527 */
   }
-
+  if (xTaskCreate(
+      LedTask,  /* pointer to the task */
+      "Led", /* task name for kernel awareness debugging */
+      100, /* task stack size */
+      (void*)NULL, /* optional task startup argument */
+      tskIDLE_PRIORITY,  /* initial priority */
+      (xTaskHandle*)NULL /* optional task handle to create */
+    ) != pdPASS) {
+    /*lint -e527 */
+     for(;;){} /* error! probably out of memory */
+    /*lint +e527 */
+  }
+  vTaskStartScheduler();
+#if USE_HEAP_INDICATOR
+  if (freeRTOSMemoryScheme==0) { /* reference the variable */
+    for(;;);
+  }
+#endif
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
   #ifdef PEX_RTOS_START
