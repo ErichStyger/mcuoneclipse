@@ -36,7 +36,9 @@
 #include "CS1.h"
 #include "KSDK1.h"
 #include "AS1.h"
-#include "ASerialLdd1.h"
+#include "ASerialLdd2.h"
+#include "XF1.h"
+#include "MCUC1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -111,13 +113,35 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 
 static void Shell(void) {
   unsigned char buf[48];
+  int cntr = 0;
 
   app_value = 0; /* init value */
   buf[0] = '\0'; /* init buffer */
   (void)CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, CLS1_GetStdio(), CmdParserTable); /* write help */
   for(;;) { /* wait for input and parse it */
     (void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), CLS1_GetStdio(), CmdParserTable);
+    cntr++;
   }
+}
+
+static void Test(void) {
+  static int position=0;
+  static unsigned char buff[64], ch;
+  for(;;) {
+    //LED1_Off();
+    if (CLS1_KeyPressed()) {
+      CLS1_ReadChar(&ch); /* read the character */
+      CLS1_SendStr("read a char\r\n", CLS1_GetStdio()->stdOut);
+    }
+  #if 1
+    XF1_xsprintf(buff,"char =0x%x Pos=%d\r\n",ch,position);
+    CLS1_SendStr(buff, CLS1_GetStdio()->stdOut);
+  #endif
+    CLS1_SendStr("Hello World \r\n", CLS1_GetStdio()->stdOut);
+    WAIT1_Waitms(1000);
+  //  LED1_On();
+    WAIT1_Waitms(1000);
+  } /* for */
 }
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
@@ -138,6 +162,8 @@ int main(void)
   }
 #elif 0
   ReadText();
+#elif 1
+  Test();
 #elif 1
   Shell();
 #endif
