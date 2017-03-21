@@ -10,8 +10,31 @@
 #include "LED2.h"
 #include "LED3.h"
 #include "WAIT1.h"
+#include "LCD1.h"
+#include "GDisp1.h"
+#include "Helv14.h"
+#include "FDisp1.h"
 
 void APP_Run(void) {
+  int i;
+  FDisp1_PixelDim x, y;
+
+  LCD1_Init();
+
+  LCD1_Clear();
+#if 0
+  LCD1_OpenWindow(0, 0, (LCD1_PixelDim)(LCD1_GetWidth()-1), (LCD1_PixelDim)(LCD1_GetHeight()-1)); /* window for whole display */
+  for(i=0;i<500;i++) {
+    LCD1_WriteDataWord(LCD1_COLOR_YELLOW);
+  }
+  LCD1_CloseWindow();
+#endif
+  GDisp1_DrawFilledBox(0, 0, 20, 40, LCD1_COLOR_WHITE);
+  GDisp1_DrawFilledBox(50, 50, 20, 30, LCD1_COLOR_RED);
+  GDisp1_DrawFilledBox(0, 0, 96, 96, LCD1_COLOR_BLUE);
+  GDisp1_DrawBox(0, 0, GDisp1_GetWidth(), GDisp1_GetHeight(), 1, LCD1_COLOR_GREEN);
+  x = 0; y = 0;
+  FDisp1_WriteString("Hello", LCD1_COLOR_GREEN, &x, &y, Helv14_GetFont());
   for(;;) {
     LED1_Neg();
     WAIT1_Waitms(100);
