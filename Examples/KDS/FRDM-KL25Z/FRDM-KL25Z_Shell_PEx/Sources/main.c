@@ -36,9 +36,19 @@
 #include "CS1.h"
 #include "KSDK1.h"
 #include "AS1.h"
-#include "ASerialLdd2.h"
+#include "ASerialLdd1.h"
 #include "XF1.h"
 #include "MCUC1.h"
+#include "RTT1.h"
+#include "LED1.h"
+#include "LEDpin1.h"
+#include "BitIoLdd1.h"
+#include "LED2.h"
+#include "LEDpin2.h"
+#include "BitIoLdd2.h"
+#include "LED3.h"
+#include "LEDpin3.h"
+#include "BitIoLdd3.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -126,20 +136,19 @@ static void Shell(void) {
 
 static void Test(void) {
   static int position=0;
-  static unsigned char buff[64], ch;
+  static unsigned char buff[64], ch='\0';
   for(;;) {
-    //LED1_Off();
+    LED1_Off();
     if (CLS1_KeyPressed()) {
       CLS1_ReadChar(&ch); /* read the character */
       CLS1_SendStr("read a char\r\n", CLS1_GetStdio()->stdOut);
+    #if 1
+      XF1_xsprintf(buff,"char =0x%x Pos=%d\r\n",ch,position);
+      CLS1_SendStr(buff, CLS1_GetStdio()->stdOut);
+    #endif
     }
-  #if 1
-    XF1_xsprintf(buff,"char =0x%x Pos=%d\r\n",ch,position);
-    CLS1_SendStr(buff, CLS1_GetStdio()->stdOut);
-  #endif
     CLS1_SendStr("Hello World \r\n", CLS1_GetStdio()->stdOut);
-    WAIT1_Waitms(1000);
-  //  LED1_On();
+    LED1_On();
     WAIT1_Waitms(1000);
   } /* for */
 }
