@@ -36,6 +36,12 @@
 #include "pin_mux.h"
 #include "clock_config.h"
 
+#include "Components.h"
+#include "LEDR.h"
+#include "LEDG.h"
+#include "LEDB.h"
+#include "WAIT1.h"
+
 /*!
  * @brief Application entry point.
  */
@@ -46,6 +52,15 @@ int main(void) {
   BOARD_InitDebugConsole();
 
   /* Add your code here */
+  InitComponents();
+  for(;;) {
+    LEDR_Neg();
+    WAIT1_Waitms(100);
+    LEDG_Neg();
+    WAIT1_Waitms(100);
+    LEDB_Neg();
+    WAIT1_Waitms(100);
+  }
 
   for(;;) { /* Infinite loop to avoid leaving the main function */
     __asm("NOP"); /* something to use as a breakpoint stop while looping */
