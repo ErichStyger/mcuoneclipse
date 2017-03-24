@@ -19,12 +19,13 @@
 #if PL_HAS_RSTDIO
   #include "RStdIO.h"
 #endif
+#include "MidiMusic.h"
 
 #if PL_HAS_SHELL
 static RNWK_ShortAddrType APP_dstAddr = RNWK_ADDR_BROADCAST; /* destination node address */
 #endif
 
-#define RADIO_CHANNEL_DATA    0  /* communication channel for read station */
+//#define RADIO_CHANNEL_DATA    42  /* communication channel for read station */
 
 typedef enum {
   RNETA_NONE,
@@ -38,12 +39,39 @@ typedef enum {
 
 static RNETA_State appState = RNETA_NONE;
 
+static uint8_t HandleDataRxMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *data, RNWK_ShortAddrType srcAddr, bool *handled, RPHY_PacketDesc *packet) {
+  uint8_t val;
+
+  (void)size;
+  (void)packet;
+  switch(type) {
+    case RAPP_MSG_TYPE_MIDI_CMD: /* generic data message */
+      *handled = TRUE;
+      val = *data; /* get data value */
+      switch(val) {
+        case 's': /* stop */
+          MM_StopPlaying();
+          break;
+        case 'n': /* next */
+          MM_IncreaseSongNumber();
+          break;
+        case 'p': /* play */
+          MM_PlayMusic(-1);
+          break;
+      } /* switch */
+      return ERR_OK;
+    default:
+      break;
+  } /* switch */
+  return ERR_OK;
+}
 
 static const RAPP_MsgHandler handlerTable[] = 
 {
 #if PL_HAS_RSTDIO
   RSTDIO_HandleStdioRxMessage,
 #endif
+  HandleDataRxMessage,
   NULL /* sentinel */
 };
 
@@ -88,7 +116,7 @@ static void Process(void) {
       
     case RNETA_POWERUP:
       RadioPowerUp();
-      (void)RADIO_SetChannel(RADIO_CHANNEL_DATA);
+ //     (void)RADIO_SetChannel(RADIO_CHANNEL_DATA);
       appState = RNETA_TX_RX;
       break;
       
@@ -109,7 +137,7 @@ static void Init(void) {
   }
 }
 
-static portTASK_FUNCTION(RNetTask, pvParameters) {
+static void RNetTask(void *pvParameters) {
   (void)pvParameters; /* not used */
   Init();
   appState = RNETA_NONE;

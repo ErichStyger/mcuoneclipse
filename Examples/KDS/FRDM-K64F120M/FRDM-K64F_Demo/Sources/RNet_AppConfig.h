@@ -18,6 +18,7 @@ typedef enum {
   RAPP_MSG_TYPE_STDIN = 0x00,
   RAPP_MSG_TYPE_STDOUT = 0x01,
   RAPP_MSG_TYPE_STDERR = 0x02,
+  RAPP_MSG_TYPE_MIDI_CMD = 0x55, /* Midi command (data is one byte: 's' for stop, 'p' for play and 'n' for next) */
 } RAPP_MSG_Type;
 
 #define RNET_CONFIG_TRANSCEIVER_PAYLOAD_SIZE  32

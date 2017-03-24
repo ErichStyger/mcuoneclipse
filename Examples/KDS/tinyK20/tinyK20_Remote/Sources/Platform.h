@@ -2,14 +2,13 @@
  * Platform.h
  *
  *  Created on: 08.08.2015
- *      Author: tastyger
+ *      Author: Erich Styger
  */
 
 #ifndef SOURCES_PLATFORM_H_
 #define SOURCES_PLATFORM_H_
 
-#include <stdint.h>
-#include <stdbool.h>
+#include "PE_Types.h"
 
 #define PL_CONFIG_BOARD_IS_GAMEBOY    (1) /* new board */
 
@@ -26,6 +25,7 @@
 #define PL_CONFIG_HAS_REMOTE          (0) /* robot remote controller */
 #define PL_CONFIG_HAS_SNAKE           (0 && !PL_CONFIG_HAS_REMOTE && PL_CONFIG_HAS_LCD)
 #define PL_CONFIG_HAS_TETIRS          (0 && PL_CONFIG_HAS_LCD)
+#define PL_CONFIG_HAS_REMOTE_MIDI     (1) /* remote midi player */
 
 #define PL_CONFIG_HAS_TIMER          (1)
 #define PL_CONFIG_HAS_TRIGGER        (1)

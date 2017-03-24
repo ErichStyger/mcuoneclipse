@@ -83,6 +83,19 @@ extern "C" {
 void Cpu_OnNMI(void);
 
 
+void SM1_OnTxChar(void);
+/*
+** ===================================================================
+**     Event       :  SM1_OnTxChar (module Events)
+**
+**     Component   :  SM1 [SynchroMaster]
+**     Description :
+**         This event is called after a character is transmitted.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
 /* END Events */
 
 #ifdef __cplusplus

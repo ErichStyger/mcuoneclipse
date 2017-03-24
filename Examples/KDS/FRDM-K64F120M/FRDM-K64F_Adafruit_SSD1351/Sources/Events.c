@@ -56,6 +56,23 @@ void Cpu_OnNMI(void)
   /* Write your code here ... */
 }
 
+/*
+** ===================================================================
+**     Event       :  SM1_OnTxChar (module Events)
+**
+**     Component   :  SM1 [SynchroMaster]
+**     Description :
+**         This event is called after a character is transmitted.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+volatile uint8_t SM1_TxSentFlag;
+void SM1_OnTxChar(void)
+{
+  SM1_TxSentFlag = TRUE;
+}
+
 /* END Events */
 
 #ifdef __cplusplus

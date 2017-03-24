@@ -41,7 +41,6 @@
 #include "SMasterLdd1.h"
 #include "CLS1.h"
 #include "CS1.h"
-#include "KSDK1.h"
 #include "LED1.h"
 #include "LEDpin1.h"
 #include "BitIoLdd3.h"
@@ -91,6 +90,8 @@
 #include "Rx1.h"
 #include "USB0.h"
 #include "TMOUT1.h"
+#include "XF1.h"
+#include "MCUC1.h"
 #include "SYS1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"

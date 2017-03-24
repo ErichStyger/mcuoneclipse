@@ -251,7 +251,7 @@ uint8_t MM_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdI
      CLS1_SendHelpStr((unsigned char*)"midi", (const unsigned char*)"Group of midi commands\r\n", io->stdOut);
      CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
      CLS1_SendHelpStr((unsigned char*)"  (play|set) <number>", (const unsigned char*)"Play midi song\r\n", io->stdOut);
-     CLS1_SendHelpStr((unsigned char*)"      0", (const unsigned char*)"Get ready\r\n", io->stdOut);
+     //CLS1_SendHelpStr((unsigned char*)"      0", (const unsigned char*)"Get ready\r\n", io->stdOut);
      CLS1_SendHelpStr((unsigned char*)"      1", (const unsigned char*)"Pirates of the Caribbean\r\n", io->stdOut);
      CLS1_SendHelpStr((unsigned char*)"      2", (const unsigned char*)"What is Love\r\n", io->stdOut);
      CLS1_SendHelpStr((unsigned char*)"      3", (const unsigned char*)"Game of Thrones\r\n", io->stdOut);
@@ -272,7 +272,7 @@ uint8_t MM_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdI
    } else if (UTIL1_strncmp((char*)cmd, "midi play", sizeof("midi play")-1)==0) {
      p = cmd+sizeof("midi play")-1;
      res = UTIL1_xatoi(&p, &tmp);
-     if (res==ERR_OK && tmp>=0 && tmp<MIDI_NOF_SONGS) {
+     if (res==ERR_OK && tmp>=1 && tmp<MIDI_NOF_SONGS) {
        *handled = TRUE;
        MM_SetSong = tmp;
        MM_PlayMusic(tmp);

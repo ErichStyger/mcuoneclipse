@@ -15,11 +15,11 @@
 #define configSD  (defined(PEcfg_SD) && PEcfg_SD==1)
 #define configRF  (defined(PEcfg_RF) && PEcfg_RF==1)
 
-#define PL_HAS_BLUETOOTH      (1)
+#define PL_HAS_BLUETOOTH      (0)
 #define PL_HAS_SHELL          (1)
 #define PL_HAS_RTOS           (1)
 #define PL_HAS_KEYS           (1)
-#define PL_HAS_ACCELEROMETER  (1)
+#define PL_HAS_ACCELEROMETER  (0)
 #define PL_HAS_RADIO          (1 && configRF)
 #define PL_HAS_RSTDIO         (1 && PL_HAS_RADIO)
 #define PL_HAS_SD_CARD        (1 && configSD)

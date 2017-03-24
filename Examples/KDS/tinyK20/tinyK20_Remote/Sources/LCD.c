@@ -42,6 +42,10 @@ typedef enum {
   LCD_MENU_ID_NRF24L01P,
   LCD_MENU_ID_LORA,
   LCD_MENU_ID_SETTINGS,
+  LCD_MENU_ID_MIDI,
+    LCD_MENU_ID_MIDI_PLAY,
+    LCD_MENU_ID_MIDI_NEXT,
+    LCD_MENU_ID_MIDI_STOP
 } LCD_MenuIDs;
 
 static void BackLightMenuHandler(const struct LCDMenu_MenuItem_ *item, LCDMenu_EventType event, void **dataP) {
@@ -89,6 +93,28 @@ static void RobotRemoteMenuHandler(const struct LCDMenu_MenuItem_ *item, LCDMenu
   }
 }
 
+static void MidiRemoteMenuHandler(const struct LCDMenu_MenuItem_ *item, LCDMenu_EventType event, void **dataP) {
+  uint8_t button = '\0';
+
+  if (event==LCDMENU_EVENT_ENTER) {
+    switch(item->id) {
+      case LCD_MENU_ID_MIDI_PLAY:
+        button = 'p';
+        break;
+      case LCD_MENU_ID_MIDI_NEXT:
+        button = 'n';
+        break;
+      case LCD_MENU_ID_MIDI_STOP:
+        button = 's';
+        break;
+    }
+  }
+  if (button!='\0') {
+    (void)RAPP_SendPayloadDataBlock(&button, sizeof(button), RAPP_MSG_TYPE_MIDI_CMD, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
+  }
+}
+
+
 static const LCDMenu_MenuItem menus[] =
 {/* id,                                   grp, pos,   up,                 down,                                   text,         callback */
     {LCD_MENU_ID_MAIN,                      0,   0,   LCD_MENU_ID_NONE,         LCD_MANU_ID_BACKLIGHT,            "General",    NULL},
@@ -105,7 +131,11 @@ static const LCDMenu_MenuItem menus[] =
       {LCD_MENU_ID_ROBOT_SENSOR,            2,   1,   LCD_MENU_ID_ROBOT,        LCD_MENU_ID_NONE,                 "Sensors",    NULL},
     {LCD_MENU_ID_NRF24L01P,                 0,   2,   LCD_MENU_ID_NONE,         LCD_MENU_ID_NONE,                 "nRF24L01+",  NULL},
     {LCD_MENU_ID_LORA,                      0,   3,   LCD_MENU_ID_NONE,         LCD_MENU_ID_NONE,                 "LoRa",       NULL},
-    {LCD_MENU_ID_SETTINGS,                  0,   4,   LCD_MENU_ID_NONE,         LCD_MENU_ID_NONE,                 "Settings",    NULL},
+    {LCD_MENU_ID_SETTINGS,                  0,   4,   LCD_MENU_ID_NONE,         LCD_MENU_ID_NONE,                 "Settings",   NULL},
+    {LCD_MENU_ID_MIDI,                      0,   5,   LCD_MENU_ID_NONE,         LCD_MENU_ID_MIDI_PLAY,            "MIDI",       NULL},
+      {LCD_MENU_ID_MIDI_PLAY,               4,   0,   LCD_MENU_ID_MIDI,         LCD_MENU_ID_NONE,                 "Play",       MidiRemoteMenuHandler},
+      {LCD_MENU_ID_MIDI_NEXT,               4,   1,   LCD_MENU_ID_MIDI,         LCD_MENU_ID_NONE,                 "Next",       MidiRemoteMenuHandler},
+      {LCD_MENU_ID_MIDI_STOP,               4,   2,   LCD_MENU_ID_MIDI,         LCD_MENU_ID_NONE,                 "Stop",       MidiRemoteMenuHandler},
 };
 
 static void DrawLines(void) {
@@ -180,6 +210,7 @@ static void ShowTextOnLCD(unsigned char *text) {
 
 void LCD_Task(void *param) {
   (void)param; /* not used */
+  vTaskDelay(pdMS_TO_TICKS(500)); /* give LCD time to power up */
 #if 0
   /* test/demo code */
   LCD_LED_On(); /* turn LCD backlight on */
