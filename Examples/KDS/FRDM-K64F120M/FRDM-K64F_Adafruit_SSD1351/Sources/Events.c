@@ -1,7 +1,7 @@
 /* ###################################################################
 **     Filename    : Events.c
 **     Project     : FRDM-K64F_Adafruit_SSD1351
-**     Processor   : MK64FN1M0VLL12
+**     Processor   : MK64FN1M0VLQ12
 **     Component   : Events
 **     Version     : Driver 01.00
 **     Compiler    : GNU C Compiler
@@ -71,6 +71,50 @@ volatile uint8_t SM1_TxSentFlag;
 void SM1_OnTxChar(void)
 {
   SM1_TxSentFlag = TRUE;
+}
+
+/*
+** ===================================================================
+**     Event       :  SM1_OnBlockSent (module Events)
+**
+**     Component   :  SM1 [SPIMaster_LDD]
+*/
+/*!
+**     @brief
+**         This event is called after the last character from the
+**         output buffer is moved to the transmitter. This event is
+**         available only if the SendBlock method is enabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. The pointer is passed
+**                           as the parameter of Init method. 
+*/
+/* ===================================================================*/
+void SM1_OnBlockSent(LDD_TUserData *UserDataPtr)
+{
+  LCD1_OnDataReceived();
+}
+
+/*
+** ===================================================================
+**     Event       :  SM1_OnBlockReceived (module Events)
+**
+**     Component   :  SM1 [SPIMaster_LDD]
+*/
+/*!
+**     @brief
+**         This event is called when the requested number of data is
+**         moved to the input buffer. This method is available only if
+**         the ReceiveBlock method is enabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. The pointer is passed
+**                           as the parameter of Init method. 
+*/
+/* ===================================================================*/
+void SM1_OnBlockReceived(LDD_TUserData *UserDataPtr)
+{
+  //LCD1_OnDataReceived();
 }
 
 /* END Events */

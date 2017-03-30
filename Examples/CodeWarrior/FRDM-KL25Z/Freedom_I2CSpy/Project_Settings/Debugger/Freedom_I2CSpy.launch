@@ -53,17 +53,24 @@
 <listAttribute key="com.freescale.cdt.debug.cw.Embedded Download.TaskSuccessiveRuns"/>
 <listAttribute key="com.freescale.cdt.debug.cw.Embedded Download.TaskTypes"/>
 <listAttribute key="com.freescale.cdt.debug.cw.ExecutablePath"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.InitializePC" value="true"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.InitializePCAtProgramEntryPoint" value="true"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.InitializePCAtSymbol" value="main"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.InitializePCAtUserSpecified" value="false"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.LaunchMode" value="DOWNLOAD"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.PN_StopAtProgramEntryPoint" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.PN_StopAtStartUp" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.PN_StopAtUserSpecified" value="true"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.RefreshPolicy.RefreshPeriod" value="2.0"/>
 <listAttribute key="com.freescale.cdt.debug.cw.RemoteDownload"/>
 <listAttribute key="com.freescale.cdt.debug.cw.RemotePath"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.ResumeProgram" value="true"/>
 <listAttribute key="com.freescale.cdt.debug.cw.SMPCores"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.SYNC_WITH_ENCL_PROJ" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.Symbolics.CacheSymbolicsBetweenRuns" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.Symbolics.UseExecutableCopy" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.UDPPort" value="1234"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.UseApplication" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.RetryConnectionOn" value="false"/>
 <intAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.RetryTimeout" value="20"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.RetryWithTimeoutOn" value="false"/>
@@ -80,9 +87,11 @@
 <stringAttribute key="com.freescale.cdt.debug.cw.debuggerAddress" value="127.0.0.1"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.disableIO" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.ethCtrl" value="UEC1"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.executeInitScripts" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.executePerCoresReset" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.executePerprocessorReset" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.executeReset" value="true"/>
+<booleanAttribute key="com.freescale.cdt.debug.cw.executeResetSequence" value="true"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.gateway" value="127.0.0.1"/>
 <listAttribute key="com.freescale.cdt.debug.cw.initPathList">
 <listEntry value="${ProjDirPath}/Project_Settings/Debugger/init_kinetis.tcl"/>
@@ -101,6 +110,7 @@
 <listAttribute key="com.freescale.cdt.debug.cw.runOutOfResetList">
 <listEntry value="false"/>
 </listAttribute>
+<booleanAttribute key="com.freescale.cdt.debug.cw.skipSystemInitialization" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.targetAddress" value="127.0.0.1"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.useGateway" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.useHSSTIO" value="false"/>
@@ -196,7 +206,7 @@
 <booleanAttribute key="org.eclipse.cdt.launch.ENABLE_REGISTER_BOOKKEEPING" value="false"/>
 <booleanAttribute key="org.eclipse.cdt.launch.ENABLE_RESTORE_WATCHPOINTS" value="true"/>
 <booleanAttribute key="org.eclipse.cdt.launch.ENABLE_VARIABLE_BOOKKEEPING" value="false"/>
-<stringAttribute key="org.eclipse.cdt.launch.FORMAT" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&lt;contentList&gt;&lt;content id=&quot;p-CARD_ParseCommand-(cast_to_array)&quot; val=&quot;0:10&quot;/&gt;&lt;content id=&quot;p-PreScanHexNumber-(cast_to_array)&quot; val=&quot;0:10&quot;/&gt;&lt;content id=&quot;bitArray-CARD_InsertBits-(cast_to_array)&quot; val=&quot;0:5&quot;/&gt;&lt;content id=&quot;p-SKIM_ParseCommand-(cast_to_array)&quot; val=&quot;0:10&quot;/&gt;&lt;content id=&quot;*p-p-SKIM_ParseCommand-(cast)&quot; val=&quot;char&quot;/&gt;&lt;content id=&quot;*p-p-SKIM_ParseCommand-(format)&quot; val=&quot;0&quot;/&gt;&lt;content id=&quot;buf-CARD_Encode-(cast_to_array)&quot; val=&quot;0:15&quot;/&gt;&lt;/contentList&gt;"/>
+<stringAttribute key="org.eclipse.cdt.launch.FORMAT" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&lt;contentList&gt;&lt;content id=&quot;buf-CARD_Encode-(cast_to_array)&quot; val=&quot;0:15&quot;/&gt;&lt;content id=&quot;*p-p-SKIM_ParseCommand-(format)&quot; val=&quot;0&quot;/&gt;&lt;content id=&quot;*p-p-SKIM_ParseCommand-(cast)&quot; val=&quot;char&quot;/&gt;&lt;content id=&quot;p-SKIM_ParseCommand-(cast_to_array)&quot; val=&quot;0:10&quot;/&gt;&lt;content id=&quot;bitArray-CARD_InsertBits-(cast_to_array)&quot; val=&quot;0:5&quot;/&gt;&lt;content id=&quot;p-PreScanHexNumber-(cast_to_array)&quot; val=&quot;0:10&quot;/&gt;&lt;content id=&quot;p-CARD_ParseCommand-(cast_to_array)&quot; val=&quot;0:10&quot;/&gt;&lt;/contentList&gt;"/>
 <stringAttribute key="org.eclipse.cdt.launch.GLOBAL_VARIABLES" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;globalVariableList&gt;&#13;&#10;&lt;globalVariable name=&quot;charMap5bit&quot; path=&quot;&quot;/&gt;&#13;&#10;&lt;/globalVariableList&gt;&#13;&#10;"/>
 <stringAttribute key="org.eclipse.cdt.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList/&gt;&#13;&#10;"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="FLASH/Freedom_I2CSpy.elf"/>

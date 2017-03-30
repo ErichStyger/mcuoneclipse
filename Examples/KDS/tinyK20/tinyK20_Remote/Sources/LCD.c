@@ -44,6 +44,7 @@ typedef enum {
   LCD_MENU_ID_SETTINGS,
   LCD_MENU_ID_MIDI,
     LCD_MENU_ID_MIDI_PLAY,
+    LCD_MENU_ID_MIDI_PREV,
     LCD_MENU_ID_MIDI_NEXT,
     LCD_MENU_ID_MIDI_STOP
 } LCD_MenuIDs;
@@ -102,7 +103,10 @@ static void MidiRemoteMenuHandler(const struct LCDMenu_MenuItem_ *item, LCDMenu_
         button = 'p';
         break;
       case LCD_MENU_ID_MIDI_NEXT:
-        button = 'n';
+        button = '>';
+        break;
+      case LCD_MENU_ID_MIDI_PREV:
+        button = '<';
         break;
       case LCD_MENU_ID_MIDI_STOP:
         button = 's';
@@ -134,8 +138,9 @@ static const LCDMenu_MenuItem menus[] =
     {LCD_MENU_ID_SETTINGS,                  0,   4,   LCD_MENU_ID_NONE,         LCD_MENU_ID_NONE,                 "Settings",   NULL},
     {LCD_MENU_ID_MIDI,                      0,   5,   LCD_MENU_ID_NONE,         LCD_MENU_ID_MIDI_PLAY,            "MIDI",       NULL},
       {LCD_MENU_ID_MIDI_PLAY,               4,   0,   LCD_MENU_ID_MIDI,         LCD_MENU_ID_NONE,                 "Play",       MidiRemoteMenuHandler},
-      {LCD_MENU_ID_MIDI_NEXT,               4,   1,   LCD_MENU_ID_MIDI,         LCD_MENU_ID_NONE,                 "Next",       MidiRemoteMenuHandler},
-      {LCD_MENU_ID_MIDI_STOP,               4,   2,   LCD_MENU_ID_MIDI,         LCD_MENU_ID_NONE,                 "Stop",       MidiRemoteMenuHandler},
+      {LCD_MENU_ID_MIDI_PREV,               4,   1,   LCD_MENU_ID_MIDI,         LCD_MENU_ID_NONE,                 "Prev",       MidiRemoteMenuHandler},
+      {LCD_MENU_ID_MIDI_NEXT,               4,   2,   LCD_MENU_ID_MIDI,         LCD_MENU_ID_NONE,                 "Next",       MidiRemoteMenuHandler},
+      {LCD_MENU_ID_MIDI_STOP,               4,   3,   LCD_MENU_ID_MIDI,         LCD_MENU_ID_NONE,                 "Stop",       MidiRemoteMenuHandler},
 };
 
 static void DrawLines(void) {

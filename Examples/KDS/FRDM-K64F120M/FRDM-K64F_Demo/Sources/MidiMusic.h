@@ -38,25 +38,25 @@ typedef struct {
   uint32_t currLine;
 } MIDI_MusicTrack;
 
-typedef enum { /* bits are used for FreeRTOS direct task notifications */
-  MIDI_SONG_GET_READY = (1<<0),
-  MIDI_SONG_PIRATES_OF_CARIBIAN = (1<<1),
-  MIDI_SONG_HADDAWAY_WHAT_IS_LOVE = (1<<2),
-  MIDI_SONG_GAME_OF_THRONES = (1<<3),
-  MIDI_SONG_TETRIS = (1<<4) ,
-  MIDI_SONG_AXEL_F = (1<<5),
-  MIDI_SONG_GHOSTBUSTERS = (1<<6),
-  MIDI_SONG_JAMES_BOND = (1<<7),
-  MIDI_SONG_START = (1<<30),
-  MIDI_SONG_STOP = (1<<31)
-} MIDI_Song;
-#define MIDI_NOF_SONGS  8
+/* song numbers, 0, 1, 2, ... */
+typedef enum {
+  MIDI_SONG_NR_GET_READY,
+  MIDI_SONG_NR_PIRATES_OF_CARIBIAN,
+  MIDI_SONG_NR_HADDAWAY_WHAT_IS_LOVE,
+  MIDI_SONG_NR_GAME_OF_THRONES,
+  MIDI_SONG_NR_TETRIS,
+  MIDI_SONG_NR_AXEL_F,
+  MIDI_SONG_NR_GHOSTBUSTERS,
+  MIDI_SONG_NR_JAMES_BOND,
+  MIDI_SONG_NR_NOF_SONGS    /* must be last */
+} MIDI_SongNr;
 
-void MM_IncreaseSongNumber(void);
+void MM_NextSongNumber(void);
+void MM_PrevSongNumber(void);
 void MM_PlayMusic(int song); /* -1 plays the last/stored song */
 void MM_StopPlaying(void);
 
-void MM_Play(MIDI_Song song);
+void MM_Play(MIDI_SongNr song);
 
 uint8_t MM_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
 

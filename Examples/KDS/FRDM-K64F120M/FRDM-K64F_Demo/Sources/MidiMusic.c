@@ -20,14 +20,44 @@
 #include "MidiGhostbusters.h"
 #include "MidiBond.h"
 
-static xTaskHandle MidiPlayTaskHandle;
-static int MM_SetSong = 1; /* skipping song 0 */
+typedef enum { /* bits are used for FreeRTOS direct task notifications */
+  MIDI_SONG_BIT_GET_READY             = (1<<0),
+  MIDI_SONG_BIT_PIRATES_OF_CARIBIAN   = (1<<1),
+  MIDI_SONG_BIT_HADDAWAY_WHAT_IS_LOVE = (1<<2),
+  MIDI_SONG_BIT_GAME_OF_THRONES       = (1<<3),
+  MIDI_SONG_BIT_TETRIS                = (1<<4) ,
+  MIDI_SONG_BIT_AXEL_F                = (1<<5),
+  MIDI_SONG_BIT_GHOSTBUSTERS          = (1<<6),
+  MIDI_SONG_BIT_JAMES_BOND            = (1<<7),
+  MIDI_SONG_BIT_PREV = (1<<28),
+  MIDI_SONG_BIT_NEXT = (1<<29),
+  MIDI_SONG_BIT_START = (1<<30),
+  MIDI_SONG_BIT_STOP = (1<<31)
+} MIDI_SongBit;
 
-void MM_IncreaseSongNumber(void) {
+static xTaskHandle MidiPlayTaskHandle;
+static MIDI_SongNr MM_SetSong = 1; /* skipping song 0 */
+
+void MM_NextSongNumber(void) {
   MM_SetSong++;
-  if (MM_SetSong==MIDI_NOF_SONGS) {
+  if (MM_SetSong==MIDI_SONG_NR_NOF_SONGS) {
     MM_SetSong = 1; /* skipping song 0, not interesting */
   }
+  CLS1_SendStr((uint8_t*)"Next song: #", CLS1_GetStdio()->stdOut);
+  CLS1_SendNum32u((uint32_t)MM_SetSong, CLS1_GetStdio()->stdOut);
+  CLS1_SendStr((uint8_t*)"\r\n", CLS1_GetStdio()->stdOut);
+  (void)xTaskNotify(MidiPlayTaskHandle, (1<<MM_SetSong)|MIDI_SONG_BIT_NEXT, eSetBits);
+}
+
+void MM_PrevSongNumber(void) {
+  MM_SetSong--;
+  if (MM_SetSong==0) {
+    MM_SetSong = MIDI_SONG_NR_NOF_SONGS-1; /* skipping song 0, not interesting */
+  }
+  CLS1_SendStr((uint8_t*)"Prev song: #", CLS1_GetStdio()->stdOut);
+  CLS1_SendNum32u((uint32_t)MM_SetSong, CLS1_GetStdio()->stdOut);
+  CLS1_SendStr((uint8_t*)"\r\n", CLS1_GetStdio()->stdOut);
+  (void)xTaskNotify(MidiPlayTaskHandle, (1<<MM_SetSong)|MIDI_SONG_BIT_PREV, eSetBits);
 }
 
 static bool PlayTrackItem(MIDI_MusicTrack *track, uint32_t currTimeMs, uint8_t channel, uint32_t tempoUS) {
@@ -82,7 +112,7 @@ static bool PlayTrackItem(MIDI_MusicTrack *track, uint32_t currTimeMs, uint8_t c
   return TRUE;
 }
 
-static void Play(MIDI_MusicTrack *tracks, unsigned int nofTracks, uint32_t tempoUS) {
+static void Play(MIDI_SongNr song, MIDI_MusicTrack *tracks, unsigned int nofTracks, uint32_t tempoUS) {
   int itemNo;
   uint8_t channel;
   uint32_t currTimeMs;
@@ -90,39 +120,70 @@ static void Play(MIDI_MusicTrack *tracks, unsigned int nofTracks, uint32_t tempo
   unsigned int nofFinished;
   uint32_t flags;
 
-  /* init defaults */
-  for(channel=0;channel<nofTracks;channel++) {
-    FLOPPY_MIDI_SetBank(channel, 0);
-    FLOPPY_MIDI_SetInstrument(channel, 0);
-    FLOPPY_MIDI_SetVolume(channel, 127);
-  }
-  startTicks = FRTOS1_xTaskGetTickCount();
-  itemNo = 0;
-  for(;;) { /* breaks */
-    (void)xTaskNotifyWait(0UL, MIDI_SONG_STOP, &flags, 0); /* check flags */
-    if (flags&MIDI_SONG_STOP) {
-      CLS1_SendStr((uint8_t*)"Stopping song!\r\n", CLS1_GetStdio()->stdOut);
+  for(;;) { /* breaks, start playing song */
+    CLS1_SendStr((uint8_t*)"Playing song: #", CLS1_GetStdio()->stdOut);
+    CLS1_SendNum32u((uint32_t)song, CLS1_GetStdio()->stdOut);
+    CLS1_SendStr((uint8_t*)"\r\n", CLS1_GetStdio()->stdOut);
+    /* init defaults */
+    FLOPPY_InitDrives();
+    for(channel=0;channel<nofTracks;channel++) {
+      tracks[channel].currLine = 0; /* reset track */
+      FLOPPY_MIDI_SetBank(channel, 0);
+      FLOPPY_MIDI_SetInstrument(channel, 0);
+      FLOPPY_MIDI_SetVolume(channel, 127);
+    }
+    startTicks = xTaskGetTickCount();
+    itemNo = 0;
+    for(;;) { /* breaks, playing song */
+      (void)xTaskNotifyWait(0UL, MIDI_SONG_BIT_STOP|MIDI_SONG_BIT_START|MIDI_SONG_BIT_NEXT, &flags, 0); /* check flags */
+      if (flags&(MIDI_SONG_BIT_START|MIDI_SONG_BIT_STOP|MIDI_SONG_BIT_NEXT)) {
+        break; /* break current song */
+      }
+      currTimeMs = (xTaskGetTickCount()-startTicks)/portTICK_RATE_MS;
+      nofFinished = 0;
+      for(channel=0;channel<nofTracks;channel++) {
+        if (!PlayTrackItem(&tracks[channel], currTimeMs, channel, tempoUS)) {
+          nofFinished++;
+        }
+      }
+      if (nofFinished==nofTracks) { /* all finished */
+        return;
+      }
+      vTaskDelay(1/portTICK_RATE_MS);
+      itemNo++;
+    } /* for: playing song */
+    if (flags&MIDI_SONG_BIT_STOP) {
+      CLS1_SendStr((uint8_t*)"Stopping song: #", CLS1_GetStdio()->stdOut);
+      CLS1_SendNum32u((uint32_t)song, CLS1_GetStdio()->stdOut);
+      CLS1_SendStr((uint8_t*)"\r\n", CLS1_GetStdio()->stdOut);
       for(channel=0;channel<nofTracks;channel++) {
         FLOPPY_MIDI_AllSoundOff(channel);
       }
-      break;
+      break; /* get out*/
     }
-    currTimeMs = (FRTOS1_xTaskGetTickCount()-startTicks)/portTICK_RATE_MS;
-    nofFinished = 0;
-    for(channel=0;channel<nofTracks;channel++) {
-      if (!PlayTrackItem(&tracks[channel], currTimeMs, channel, tempoUS)) {
-        nofFinished++;
+    if (flags&MIDI_SONG_BIT_START) {
+      CLS1_SendStr((uint8_t*)"Restart song: #", CLS1_GetStdio()->stdOut);
+      CLS1_SendNum32u((uint32_t)song, CLS1_GetStdio()->stdOut);
+      CLS1_SendStr((uint8_t*)"\r\n", CLS1_GetStdio()->stdOut);
+      for(channel=0;channel<nofTracks;channel++) {
+        FLOPPY_MIDI_AllSoundOff(channel);
       }
+      /* remain in loop, start song */
     }
-    if (nofFinished==nofTracks) { /* all finished */
-      break;
+    if (flags&MIDI_SONG_BIT_NEXT) {
+      CLS1_SendStr((uint8_t*)"Skipping to next song: #", CLS1_GetStdio()->stdOut);
+      CLS1_SendNum32u((uint32_t)MM_SetSong, CLS1_GetStdio()->stdOut);
+      CLS1_SendStr((uint8_t*)"\r\n", CLS1_GetStdio()->stdOut);
+      for(channel=0;channel<nofTracks;channel++) {
+        FLOPPY_MIDI_AllSoundOff(channel);
+      }
+      (void)xTaskNotify(MidiPlayTaskHandle, (1<<MM_SetSong)|MIDI_SONG_BIT_START, eSetBits);
+      return;
     }
-    FRTOS1_vTaskDelay(1/portTICK_RATE_MS);
-    itemNo++;
-  }
+  } /* for: start playing song */
 }
 
-void MM_Play(MIDI_Song song) {
+void MM_Play(MIDI_SongNr song) {
   #define MAX_NOF_TRACKS  8
   MIDI_MusicTrack tracks[MAX_NOF_TRACKS];
   uint8_t res=ERR_FAILED;
@@ -130,35 +191,35 @@ void MM_Play(MIDI_Song song) {
   uint32_t tempoUS=0;
   int offset=0;
 
-  if (song==MIDI_SONG_GET_READY) {
+  if (song==MIDI_SONG_NR_GET_READY) {
     nofTracks = MMReady_NofTracks();
     tempoUS = MMReady_GetTempoUS();
     offset = MMReady_GetOffset();
- } else if (song==MIDI_SONG_PIRATES_OF_CARIBIAN) {
+ } else if (song==MIDI_SONG_NR_PIRATES_OF_CARIBIAN) {
     nofTracks = MPirate_NofTracks();
     tempoUS = MPirate_GetTempoUS();
     offset = MPirate_GetOffset();
-  } else if (song==MIDI_SONG_HADDAWAY_WHAT_IS_LOVE) {
+  } else if (song==MIDI_SONG_NR_HADDAWAY_WHAT_IS_LOVE) {
     nofTracks = MHaddaway_NofTracks();
     tempoUS = MHaddaway_GetTempoUS();
     offset = MHaddaway_GetOffset();
-  } else if (song==MIDI_SONG_GAME_OF_THRONES) {
+  } else if (song==MIDI_SONG_NR_GAME_OF_THRONES) {
     nofTracks = MGameOfThrones_NofTracks();
     tempoUS = MGameOfThrones_GetTempoUS();
     offset = MGameOfThrones_GetOffset();
-  } else if (song==MIDI_SONG_TETRIS) {
+  } else if (song==MIDI_SONG_NR_TETRIS) {
     nofTracks = MTetris_NofTracks();
     tempoUS = MTetris_GetTempoUS();
     offset = MTetris_GetOffset();
-  } else if (song==MIDI_SONG_AXEL_F) {
+  } else if (song==MIDI_SONG_NR_AXEL_F) {
     nofTracks = MAxelF_NofTracks();
     tempoUS = MAxelF_GetTempoUS();
     offset = MAxelF_GetOffset();
-  } else if (song==MIDI_SONG_GHOSTBUSTERS) {
+  } else if (song==MIDI_SONG_NR_GHOSTBUSTERS) {
     nofTracks = MGhostbusters_NofTracks();
     tempoUS = MGhostbusters_GetTempoUS();
     offset = MGhostbusters_GetOffset();
-  } else if (song==MIDI_SONG_JAMES_BOND) {
+  } else if (song==MIDI_SONG_NR_JAMES_BOND) {
     nofTracks = MBond_NofTracks();
     tempoUS = MBond_GetTempoUS();
     offset = MBond_GetOffset();
@@ -169,38 +230,38 @@ void MM_Play(MIDI_Song song) {
     return; /* error */
   }
   FLOPPY_SetOffset(offset);
-  if (song==MIDI_SONG_GET_READY) {
+  if (song==MIDI_SONG_NR_GET_READY) {
     res = MMReady_GetMidiMusicInfo(&tracks[0], nofTracks);
-  } else if (song==MIDI_SONG_PIRATES_OF_CARIBIAN) {
+  } else if (song==MIDI_SONG_NR_PIRATES_OF_CARIBIAN) {
     res = MPirate_GetMidiMusicInfo(&tracks[0], nofTracks);
-   } else if (song==MIDI_SONG_HADDAWAY_WHAT_IS_LOVE) {
+  } else if (song==MIDI_SONG_NR_HADDAWAY_WHAT_IS_LOVE) {
     res = MHaddaway_GetMidiMusicInfo(&tracks[0], nofTracks);
-  } else if (song==MIDI_SONG_GAME_OF_THRONES) {
+  } else if (song==MIDI_SONG_NR_GAME_OF_THRONES) {
     res = MGameOfThrones_GetMidiMusicInfo(&tracks[0], nofTracks);
-  } else if (song==MIDI_SONG_TETRIS) {
+  } else if (song==MIDI_SONG_NR_TETRIS) {
     res = MTetris_GetMidiMusicInfo(&tracks[0], nofTracks);
-  } else if (song==MIDI_SONG_AXEL_F) {
+  } else if (song==MIDI_SONG_NR_AXEL_F) {
     res = MAxelF_GetMidiMusicInfo(&tracks[0], nofTracks);
-  } else if (song==MIDI_SONG_GHOSTBUSTERS) {
+  } else if (song==MIDI_SONG_NR_GHOSTBUSTERS) {
     res = MGhostbusters_GetMidiMusicInfo(&tracks[0], nofTracks);
-  } else if (song==MIDI_SONG_JAMES_BOND) {
+  } else if (song==MIDI_SONG_NR_JAMES_BOND) {
     res = MBond_GetMidiMusicInfo(&tracks[0], nofTracks);
   }
-  if (res==ERR_OK) {
-    CLS1_SendStr((uint8_t*)"Playing song...\r\n", CLS1_GetStdio()->stdOut);
-    Play(tracks, nofTracks, tempoUS);
+  if (res!=ERR_OK) {
+    return; /* error case */
   }
+  Play(song, tracks, nofTracks, tempoUS);
 }
 
 void MM_PlayMusic(int song) {
   if (song==-1) { /* use set/stored song */
     song = MM_SetSong;
   }
-  (void)xTaskNotify(MidiPlayTaskHandle, (1<<song)|MIDI_SONG_START, eSetBits);
+  (void)xTaskNotify(MidiPlayTaskHandle, (1<<song)|MIDI_SONG_BIT_START, eSetBits);
 }
 
 void MM_StopPlaying(void) {
-  (void)xTaskNotify(MidiPlayTaskHandle, MIDI_SONG_STOP, eSetBits);
+  (void)xTaskNotify(MidiPlayTaskHandle, MIDI_SONG_BIT_STOP, eSetBits);
 }
 
 static void MidiPlayTask(void *pvParameters) {
@@ -210,24 +271,24 @@ static void MidiPlayTask(void *pvParameters) {
   FLOPPY_InitDrives(); /* init */
   for(;;) {
     res = xTaskNotifyWait((uint32_t)(-1), (uint32_t)(-1), &flags, portMAX_DELAY); /* check flags */
-    if (res==pdPASS && (flags&MIDI_SONG_START)) {
+    if (res==pdPASS && (flags&MIDI_SONG_BIT_START)) {
       FLOPPY_InitDrives();
-      if (flags&MIDI_SONG_GET_READY) {
-        MM_Play(MIDI_SONG_GET_READY);
-      } else if (flags&MIDI_SONG_PIRATES_OF_CARIBIAN) {
-        MM_Play(MIDI_SONG_PIRATES_OF_CARIBIAN);
-      } else if (flags&MIDI_SONG_HADDAWAY_WHAT_IS_LOVE) {
-        MM_Play(MIDI_SONG_HADDAWAY_WHAT_IS_LOVE);
-      } else if (flags&MIDI_SONG_GAME_OF_THRONES) {
-        MM_Play(MIDI_SONG_GAME_OF_THRONES);
-      } else if (flags&MIDI_SONG_TETRIS) {
-        MM_Play(MIDI_SONG_TETRIS);
-      } else if (flags&MIDI_SONG_AXEL_F) {
-        MM_Play(MIDI_SONG_AXEL_F);
-      } else if (flags&MIDI_SONG_GHOSTBUSTERS) {
-        MM_Play(MIDI_SONG_GHOSTBUSTERS);
-      } else if (flags&MIDI_SONG_JAMES_BOND) {
-        MM_Play(MIDI_SONG_JAMES_BOND);
+      if (flags&MIDI_SONG_BIT_GET_READY) {
+        MM_Play(MIDI_SONG_NR_GET_READY);
+      } else if (flags&MIDI_SONG_BIT_PIRATES_OF_CARIBIAN) {
+        MM_Play(MIDI_SONG_NR_PIRATES_OF_CARIBIAN);
+      } else if (flags&MIDI_SONG_BIT_HADDAWAY_WHAT_IS_LOVE) {
+        MM_Play(MIDI_SONG_NR_HADDAWAY_WHAT_IS_LOVE);
+      } else if (flags&MIDI_SONG_BIT_GAME_OF_THRONES) {
+        MM_Play(MIDI_SONG_NR_GAME_OF_THRONES);
+      } else if (flags&MIDI_SONG_BIT_TETRIS) {
+        MM_Play(MIDI_SONG_NR_TETRIS);
+      } else if (flags&MIDI_SONG_BIT_AXEL_F) {
+        MM_Play(MIDI_SONG_NR_AXEL_F);
+      } else if (flags&MIDI_SONG_BIT_GHOSTBUSTERS) {
+        MM_Play(MIDI_SONG_NR_GHOSTBUSTERS);
+      } else if (flags&MIDI_SONG_BIT_JAMES_BOND) {
+        MM_Play(MIDI_SONG_NR_JAMES_BOND);
       }
     }
   }
@@ -272,7 +333,7 @@ uint8_t MM_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdI
    } else if (UTIL1_strncmp((char*)cmd, "midi play", sizeof("midi play")-1)==0) {
      p = cmd+sizeof("midi play")-1;
      res = UTIL1_xatoi(&p, &tmp);
-     if (res==ERR_OK && tmp>=1 && tmp<MIDI_NOF_SONGS) {
+     if (res==ERR_OK && tmp>=1 && tmp<MIDI_SONG_NR_NOF_SONGS) {
        *handled = TRUE;
        MM_SetSong = tmp;
        MM_PlayMusic(tmp);
@@ -281,7 +342,7 @@ uint8_t MM_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdI
    } else if (UTIL1_strncmp((char*)cmd, "midi set", sizeof("midi set")-1)==0) {
      p = cmd+sizeof("midi set")-1;
      res = UTIL1_xatoi(&p, &tmp);
-     if (res==ERR_OK && tmp>=0 && tmp<MIDI_NOF_SONGS) {
+     if (res==ERR_OK && tmp>=0 && tmp<MIDI_SONG_NR_NOF_SONGS) {
        *handled = TRUE;
        MM_SetSong = tmp;
      }

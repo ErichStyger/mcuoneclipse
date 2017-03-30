@@ -1,6 +1,6 @@
 /** ###################################################################
 **      Filename    : Peripherals_Init.h
-**      Processor   : MK64FN1M0VLL12
+**      Processor   : MK64FN1M0VLQ12
 **      Version     : 1.0
 ** 
 **     Copyright : 1997 - 2015 Freescale Semiconductor, Inc. 

@@ -4,7 +4,7 @@
  *  Created on: 20.03.2017
  *      Author: Erich Styger Local
  */
-
+#if 1
 #include "Application.h"
 #include "LED1.h"
 #include "LED2.h"
@@ -21,7 +21,7 @@ void APP_Run(void) {
 
   LCD1_Init();
   LCD1_Clear();
-
+#if 1
   LCD1_SetDisplayOrientation(LCD1_ORIENTATION_PORTRAIT);
   GDisp1_DrawFilledBox(0, 0, 100, 20, LCD1_COLOR_YELLOW);
   x = 0; y = 0;
@@ -87,5 +87,7 @@ void APP_Run(void) {
     LED3_Neg();
     WAIT1_Waitms(100);
   }
+#endif
 }
 
+#endif

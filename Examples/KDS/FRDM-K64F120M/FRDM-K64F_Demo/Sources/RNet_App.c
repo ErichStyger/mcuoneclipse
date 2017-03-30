@@ -52,8 +52,11 @@ static uint8_t HandleDataRxMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *da
         case 's': /* stop */
           MM_StopPlaying();
           break;
-        case 'n': /* next */
-          MM_IncreaseSongNumber();
+        case '>': /* next */
+          MM_NextSongNumber();
+          break;
+        case '<': /* next */
+          MM_PrevSongNumber();
           break;
         case 'p': /* play */
           MM_PlayMusic(-1);

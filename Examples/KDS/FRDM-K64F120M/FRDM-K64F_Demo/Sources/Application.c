@@ -84,7 +84,7 @@ void APP_OnKeyReleasedLong(uint8_t keys) {
     CLS1_SendStr((uint8_t*)"MIDI Music: skip and play next title.\r\n", CLS1_GetStdio()->stdOut);
     MM_StopPlaying();
     vTaskDelay(pdMS_TO_TICKS(500));
-    MM_IncreaseSongNumber(); /* next song */
+    MM_NextSongNumber(); /* next song */
     MM_PlayMusic(-1);
     vTaskDelay(pdMS_TO_TICKS(500));
 #endif

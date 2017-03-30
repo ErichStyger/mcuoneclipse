@@ -1,6 +1,6 @@
 /** ###################################################################
 **      Filename    : Peripherals_Init.c
-**      Processor   : MK64FN1M0VLL12
+**      Processor   : MK64FN1M0VLQ12
 **      Version     : 1.0
 ** 
 **     Copyright : 1997 - 2015 Freescale Semiconductor, Inc. 
@@ -119,6 +119,9 @@ void Peripherals_Init(void)
 #ifdef DAC0_AUTOINIT
   DAC0_Init();
 #endif /* DAC0_AUTOINIT */
+#ifdef DAC1_AUTOINIT
+  DAC1_Init();
+#endif /* DAC1_AUTOINIT */
 #ifdef DMAMUX_AUTOINIT
   DMAMUX_Init();
 #endif /* DMAMUX_AUTOINIT */

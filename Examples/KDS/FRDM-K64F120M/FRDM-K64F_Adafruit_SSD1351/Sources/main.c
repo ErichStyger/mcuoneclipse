@@ -1,7 +1,7 @@
 /* ###################################################################
 **     Filename    : main.c
 **     Project     : FRDM-K64F_Adafruit_SSD1351
-**     Processor   : MK64FN1M0VLL12
+**     Processor   : MK64FN1M0VLQ12
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
 **     Date/Time   : 2017-03-20, 14:40, # CodeGen: 0
@@ -42,23 +42,19 @@
 #include "BitIoLdd3.h"
 #include "HF1.h"
 #include "UTIL1.h"
-#include "MCUC1.h"
 #include "WAIT1.h"
 #include "LCD1.h"
+#include "SCEpin1.h"
+#include "BitIoLdd6.h"
 #include "RESpin1.h"
 #include "BitIoLdd4.h"
 #include "D_Cpin1.h"
 #include "BitIoLdd5.h"
-#include "SCEpin1.h"
-#include "BitIoLdd6.h"
-#include "SPI1.h"
-#include "Clock1.h"
-#include "BitIoLdd7.h"
-#include "Output1.h"
-#include "BitIoLdd9.h"
 #include "GDisp1.h"
 #include "Helv14.h"
 #include "FDisp1.h"
+#include "MCUC1.h"
+#include "SM1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -68,6 +64,10 @@
 #include "Init_Config.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Application.h"
+
+static void Test(uint8_t data) {
+  SM1_SendBlock(SM1_DeviceData, &data, sizeof(data));
+}
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -80,6 +80,7 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
+ // Test(0x10);
   APP_Run();
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
