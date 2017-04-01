@@ -50,11 +50,15 @@
 #include "BitIoLdd4.h"
 #include "D_Cpin1.h"
 #include "BitIoLdd5.h"
+#include "SM1.h"
 #include "GDisp1.h"
 #include "Helv14.h"
 #include "FDisp1.h"
+#include "KIN1.h"
+#include "TI1.h"
+#include "TimerIntLdd1.h"
+#include "TU1.h"
 #include "MCUC1.h"
-#include "SM1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -65,9 +69,11 @@
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Application.h"
 
+#if 0
 static void Test(uint8_t data) {
   SM1_SendBlock(SM1_DeviceData, &data, sizeof(data));
 }
+#endif
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)

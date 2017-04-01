@@ -114,7 +114,27 @@ void SM1_OnBlockSent(LDD_TUserData *UserDataPtr)
 /* ===================================================================*/
 void SM1_OnBlockReceived(LDD_TUserData *UserDataPtr)
 {
-  //LCD1_OnDataReceived();
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  TI1_OnInterrupt (module Events)
+**
+**     Component   :  TI1 [TimerInt]
+**     Description :
+**         When a timer interrupt occurs this event is called (only
+**         when the component is enabled - <Enable> and the events are
+**         enabled - <EnableEvent>). This event is enabled only if a
+**         <interrupt service/event> is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+uint32_t msCntr = 0;
+void TI1_OnInterrupt(void)
+{
+  msCntr++;
 }
 
 /* END Events */
