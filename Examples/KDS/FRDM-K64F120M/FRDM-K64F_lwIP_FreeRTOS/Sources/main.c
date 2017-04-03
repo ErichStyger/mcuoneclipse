@@ -102,6 +102,10 @@ static void LwipInitTask(void* pvArguments) {
   tcpip_init(NULL,NULL);
   printf("%s: lwip init called ..\n", __FUNCTION__);
 
+  NVIC_SetPriority(ENET_1588_Timer_IRQn, 5U);
+  NVIC_SetPriority(ENET_Transmit_IRQn, 5U);
+  NVIC_SetPriority(ENET_Receive_IRQn, 5U);
+
   // Setup IP Config for DHCP ...
   IP4_ADDR(&fsl_netif0_ipaddr, 0,0,0,0);
   IP4_ADDR(&fsl_netif0_netmask, 0,0,0,0);
