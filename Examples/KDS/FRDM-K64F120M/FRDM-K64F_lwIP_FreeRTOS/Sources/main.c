@@ -150,15 +150,15 @@ static void LwipInitTask(void* pvArguments) {
 
       for(int i = 0; i < 10; i++ ){
         struct netbuf* buf = netbuf_new();
-          void* data = netbuf_alloc(buf, sizeof(msg));
+        void* data = netbuf_alloc(buf, sizeof(msg));
 
-          memcpy (data, msg, sizeof (msg));
-          err = netconn_send(pConnection, buf);
+        memcpy (data, msg, sizeof (msg));
+        err = netconn_send(pConnection, buf);
         printf("%s : Sending to IP_ADDR_BROADCAST port 12346 (%s)\n", __FUNCTION__, lwip_strerr(err));
 
-          netbuf_delete(buf); // De-allocate packet buffer
+        netbuf_delete(buf); // De-allocate packet buffer
 
-          // Wait a second
+        // Wait a second
         vTaskDelay(1000/portTICK_PERIOD_MS);
       }
 

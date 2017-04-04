@@ -1,0 +1,29 @@
+/*!
+@page middleware_log Middleware Change Log
+
+@section lwip lwIP for KSDK
+  Current version of lwIP for KSDK is based on lwIP 2.0.0 (2016-11-10, SHA-1: 216bf89491815029aa15463a18744afa04df58fe)
+
+  - 2.0.0_rev3
+    - New Features:
+      - Ported lwIP 2.0.0 (2016-11-10, SHA-1: 216bf89491815029aa15463a18744afa04df58fe) to KSDK 2.0.0.
+  - 2.0.0_rev2
+    - New Features:
+      - Ported lwIP 2.0.0 RC2 (2016-08-08, SHA-1: b1dfd00f9233d124514a36a8c8606990016f2ad4) to KSDK 2.0.0.
+  - 2.0.0_rev1
+    - New Features:
+      - Ported lwIP 2.0.0 RC0 (2016-05-26) to KSDK 2.0.0. 
+	  - Changed lwIP bare-metal examples to use poll-driven approach instead of interrupt-driven one.
+  - 1.4.1_rev2
+    - New Features:
+      - Enabled critical sections in lwIP.
+    - Bug Fix:
+      - Fixed default lwIP packet-buffer size to be able to accept a maximum size frame from the ENET driver.
+      - Fixed possible drop of multi-frame packets during transmission.
+ 
+  - 1.4.1_rev1
+    - New Features:
+      - Ported lwIP 1.4.1 to KSDK 2.0.0.
+*/
+
+
