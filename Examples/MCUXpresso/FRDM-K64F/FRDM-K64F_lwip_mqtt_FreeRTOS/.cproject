@@ -227,7 +227,7 @@
 							<tool id="com.crt.advproject.link.exe.debug.1769650685" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug">
 								<option id="com.crt.advproject.link.thumb.445498363" name="Thumb mode" superClass="com.crt.advproject.link.thumb" value="true" valueType="boolean"/>
 								<option id="com.crt.advproject.link.memory.heapAndStack.411507857" name="Heap and Stack options" superClass="com.crt.advproject.link.memory.heapAndStack" value="&amp;Heap:Default;Default;0x6400&amp;Stack:Default;Default;0x3e8" valueType="string"/>
-								<option id="com.crt.advproject.link.gcc.multicore.master.userobjs.1024241440" name="Slave Objects (not visible)" superClass="com.crt.advproject.link.gcc.multicore.master.userobjs" valueType="userObjs"/>
+								<option id="com.crt.advproject.link.gcc.multicore.master.userobjs.1024241440" name="Slave Objects (not visible)" superClass="com.crt.advproject.link.gcc.multicore.master.userobjs" useByScannerDiscovery="false" valueType="userObjs"/>
 								<option id="com.crt.advproject.link.arch.1659897578" name="Architecture" superClass="com.crt.advproject.link.arch" value="com.crt.advproject.link.target.cm4" valueType="enumerated"/>
 								<option id="gnu.c.link.option.nostart.349610601" name="Do not use standard start files (-nostartfiles)" superClass="gnu.c.link.option.nostart"/>
 								<option id="gnu.c.link.option.nodeflibs.201424288" name="Do not use default libraries (-nodefaultlibs)" superClass="gnu.c.link.option.nodeflibs"/>
@@ -262,9 +262,9 @@
 								<option id="com.crt.advproject.link.gcc.hdrlib.520453699" name="Library" superClass="com.crt.advproject.link.gcc.hdrlib" value="com.crt.advproject.gcc.link.hdrlib.codered.semihost_nf" valueType="enumerated"/>
 								<option id="com.crt.advproject.link.gcc.nanofloat.1093837756" name="Enable printf float " superClass="com.crt.advproject.link.gcc.nanofloat"/>
 								<option id="com.crt.advproject.link.gcc.nanofloat.scanf.677213667" name="Enable scanf float " superClass="com.crt.advproject.link.gcc.nanofloat.scanf"/>
-								<option id="com.crt.advproject.link.script.169588008" name="Linker script" superClass="com.crt.advproject.link.script" value="&quot;FRDM-K64F_lwip_mqtt_FreeRTOS_Debug.ld&quot;" valueType="string"/>
+								<option id="com.crt.advproject.link.script.169588008" name="Linker script" superClass="com.crt.advproject.link.script" useByScannerDiscovery="false" value="&quot;FRDM-K64F_lwip_mqtt_FreeRTOS_Debug.ld&quot;" valueType="string"/>
 								<option id="com.crt.advproject.link.scriptdir.469706966" name="Script path" superClass="com.crt.advproject.link.scriptdir"/>
-								<option defaultValue="com.crt.advproject.heapAndStack.mcuXpressoStyle" id="com.crt.advproject.link.memory.heapAndStack.style.1880944906" name="Heap and Stack placement" superClass="com.crt.advproject.link.memory.heapAndStack.style" valueType="enumerated"/>
+								<option defaultValue="com.crt.advproject.heapAndStack.mcuXpressoStyle" id="com.crt.advproject.link.memory.heapAndStack.style.1880944906" name="Heap and Stack placement" superClass="com.crt.advproject.link.memory.heapAndStack.style" useByScannerDiscovery="false" valueType="enumerated"/>
 								<option id="com.crt.advproject.link.gcc.multicore.slave.982745181" name="Multicore configuration" superClass="com.crt.advproject.link.gcc.multicore.slave"/>
 								<option id="com.crt.advproject.link.gcc.multicore.master.718801214" name="Multicore master" superClass="com.crt.advproject.link.gcc.multicore.master"/>
 								<option id="com.crt.advproject.link.gcc.multicore.empty.540053096" name="No Multicore options for this project" superClass="com.crt.advproject.link.gcc.multicore.empty"/>
