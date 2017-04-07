@@ -415,16 +415,15 @@ static void stack_init(void *arg)
 	    sys_msleep(1000);
 //   	vTaskDelay(pdMS_TO_TICKS(1000));
     }
-    //if (mqtt_client_connect(&mqtt_client, ip_addr, port, cb, arg, client_info)) {
-    //    PRINTF("Publish to Mosquito\r\n");
-    //}
 
     PRINTF("Publish to Mosquito\r\n");
     example_publish(&mqtt_client, NULL);
+    sys_msleep(1000);
 
     PRINTF("Disconnect from Mosquito\r\n");
     mqtt_disconnect(&mqtt_client);
     PRINTF("done!\r\n");
+    sys_msleep(1000);
     for(;;) {
     	sys_msleep(100);
     }

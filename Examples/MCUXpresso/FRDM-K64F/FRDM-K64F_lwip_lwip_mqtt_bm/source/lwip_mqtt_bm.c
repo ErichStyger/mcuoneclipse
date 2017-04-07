@@ -41,7 +41,7 @@
 #include "lwip/init.h"
 #include "netif/ethernet.h"
 #include "ethernetif.h"
-
+#include <stdio.h>
 #include "board.h"
 
 #include "fsl_device_registers.h"
@@ -50,12 +50,22 @@
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
+typedef enum {
+	MQTT_STATE_INIT,
+    MQTT_STATE_IDLE,
+	MQTT_STATE_DO_CONNECT,
+	MQTT_STATE_WAIT_FOR_CONNECTION,
+	MQTT_STATE_CONNECTED,
+	MQTT_STATE_DO_PUBLISH,
+	MQTT_STATE_DO_DISCONNECT
+} MQTT_StateT;
+static MQTT_StateT MQTT_state = MQTT_STATE_INIT;
 
 #define USE_PING   0 /* << EST */
 #define USE_DHCP   0 /* << EST issue with requesting semaphore in sys_mutex_lock() while in interrupt */
 #define USE_MQTT   1 /* << EST */
-#define USE_HSLU   1 /* << EST: fixed address */
-#define USE_HOME   0
+#define USE_HSLU   0 /* << EST: fixed address */
+#define USE_HOME   1
 
 #if USE_MQTT
   #include "mqtt.h"
@@ -140,8 +150,7 @@
      the topic string and use it in mqtt_incoming_data_cb
   */
   static int inpub_id;
-  static void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len)
-  {
+  static void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len) {
     printf("Incoming publish at topic %s with total length %u\n", topic, (unsigned int)tot_len);
 
     /* Decode topic string into a user defined reference */
@@ -156,8 +165,7 @@
     }
   }
 
-  static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags)
-  {
+  static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags) {
     printf("Incoming publish payload with length %d, flags %u\n", len, (unsigned int)flags);
 
     if(flags & MQTT_DATA_FLAG_LAST) {
@@ -180,18 +188,16 @@
     }
   }
 
-  static void mqtt_sub_request_cb(void *arg, err_t result)
-  {
+  static void mqtt_sub_request_cb(void *arg, err_t result) {
     /* Just print the result code here for simplicity,
        normal behaviour would be to take some action if subscribe fails like
        notifying user, retry subscribe or disconnect from server */
     printf("Subscribe result: %d\n", result);
   }
 
-  void example_do_connect(mqtt_client_t *client);
+  static void example_do_connect(mqtt_client_t *client);
 
-  static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_status_t status)
-  {
+  static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_status_t status) {
     err_t err;
     if(status == MQTT_CONNECT_ACCEPTED) {
       printf("mqtt_connection_cb: Successfully connected\n");
@@ -213,8 +219,7 @@
     }
   }
 
-  void example_do_connect(mqtt_client_t *client)
-  {
+  static void example_do_connect(mqtt_client_t *client) {
     struct mqtt_connect_client_info_t ci;
     err_t err;
 
@@ -240,14 +245,13 @@
   }
 
   /* Called when publish is complete either with sucess or failure */
-  static void mqtt_pub_request_cb(void *arg, err_t result)
-  {
+  static void mqtt_pub_request_cb(void *arg, err_t result) {
     if(result != ERR_OK) {
       printf("Publish result: %d\n", result);
     }
   }
 
-  void example_publish(mqtt_client_t *client, void *arg)
+  static void example_publish(mqtt_client_t *client, void *arg)
   {
     const char *pub_payload= "abcd";
     err_t err;
@@ -267,6 +271,62 @@
 void SysTick_Handler(void)
 {
     time_isr();
+}
+
+static void MqttDoStateMachine(void) {
+  switch(MQTT_state) {
+    case MQTT_STATE_INIT:
+    case MQTT_STATE_IDLE:
+      break;
+    case MQTT_STATE_DO_CONNECT:
+      PRINTF("Trying to connect to Mosquito broker\r\n");
+      example_do_connect(&mqtt_client);
+      MQTT_state = MQTT_STATE_WAIT_FOR_CONNECTION;
+      break;
+    case MQTT_STATE_WAIT_FOR_CONNECTION:
+      sys_check_timeouts(); /* Handle all system timeouts for all core protocols */
+       if (mqtt_client_is_connected(&mqtt_client)) {
+         PRINTF("Client is connected\r\n");
+         MQTT_state = MQTT_STATE_CONNECTED;
+       }
+      break;
+    case MQTT_STATE_CONNECTED:
+      break;
+    case MQTT_STATE_DO_PUBLISH:
+      PRINTF("Publish to Mosquito\r\n");
+      example_publish(&mqtt_client, NULL);
+      MQTT_state = MQTT_STATE_CONNECTED;
+      break;
+    case MQTT_STATE_DO_DISCONNECT:
+      PRINTF("Disconnect from Mosquito\r\n");
+      mqtt_disconnect(&mqtt_client);
+      MQTT_state = MQTT_STATE_IDLE;
+      break;
+	default:
+	  break;
+  }
+}
+
+static void DoMQTT(struct netif *netifp) {
+  bool doConnect = false;
+  bool doPublish = false;
+  bool doDisconnect = false;
+
+  MQTT_state = MQTT_STATE_IDLE;
+  for(;;) {
+    if (MQTT_state==MQTT_STATE_CONNECTED && doConnect) {
+      MQTT_state = MQTT_STATE_DO_CONNECT; doConnect = false;
+    }
+    if (MQTT_state==MQTT_STATE_CONNECTED && doPublish) {
+      MQTT_state = MQTT_STATE_DO_PUBLISH; doPublish = false;
+    }
+    if (MQTT_state==MQTT_STATE_CONNECTED && doDisconnect) {
+      MQTT_state = MQTT_STATE_DO_DISCONNECT; doDisconnect = false;
+    }
+    MqttDoStateMachine(); /* process state machine */
+    /* Poll the driver, get any outstanding frames */
+    ethernetif_input(netifp);
+  }
 }
 
 /*!
@@ -308,33 +368,7 @@ int main(void)
            ((u8_t *)&fsl_netif0_gw)[2], ((u8_t *)&fsl_netif0_gw)[3]);
     PRINTF("************************************************\r\n");
 #if USE_MQTT
-   PRINTF("Trying to connect to Mosquito broker\r\n");
-   example_do_connect(&mqtt_client);
-   for(;;) {
-       /* Poll the driver, get any outstanding frames */
-       ethernetif_input(&fsl_netif0);
-
-       sys_check_timeouts(); /* Handle all system timeouts for all core protocols */
-		if (mqtt_client_is_connected(&mqtt_client)) {
-			PRINTF("Client is connected\r\n");
-			break;
-		} else {
-			PRINTF("Client is NOT connected yet\r\n");
-		}
-   }
-   //if (mqtt_client_connect(&mqtt_client, ip_addr, port, cb, arg, client_info)) {
-   //    PRINTF("Publish to Mosquito\r\n");
-   //}
-
-   PRINTF("Publish to Mosquito\r\n");
-   example_publish(&mqtt_client, NULL);
-
-   PRINTF("Disconnect from Mosquito\r\n");
-   mqtt_disconnect(&mqtt_client);
-   PRINTF("done!\r\n");
-   for(;;) {
-   	//sys_msleep(100);
-   }
+    DoMQTT(&fsl_netif0);
 #elif USE_PING
     ping_init();
 #endif
