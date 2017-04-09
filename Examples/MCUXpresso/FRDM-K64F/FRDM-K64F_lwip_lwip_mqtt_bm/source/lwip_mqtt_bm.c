@@ -45,6 +45,7 @@
 #include "fsl_device_registers.h"
 #include "pin_mux.h"
 #include "clock_config.h"
+#include <stdlib.h>
 
 #include "mqtt.h"
 #include "sys.h"
@@ -53,6 +54,10 @@
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
+#define configMQTT_CLIENT_NAME  "lwip_hslu"
+#define configMQTT_CLIENT_USER  NULL /* client user name or NULL */
+#define configMQTT_CLIENT_PWD   NULL /* client password or NULL */
+
 #if !USE_HSLU /* using fixed home network configuration for local broker */
   /* IP address configuration. */
   #define configIP_ADDR0 192
@@ -116,9 +121,6 @@ typedef enum {
 
 static MQTT_StateT MQTT_state = MQTT_STATE_INIT;
 
-static mqtt_client_t mqtt_client;
-static ip4_addr_t broker_ipaddr;
-
 /* The idea is to demultiplex topic and create some reference to be used in data callbacks
    Example here uses a global variable, better would be to use a member in arg
    If RAM and CPU budget allows it, the easiest implementation might be to just take a copy of
@@ -170,7 +172,7 @@ static void mqtt_sub_request_cb(void *arg, err_t result) {
   printf("Subscribe result: %d\n", result);
 }
 
-static void example_do_connect(mqtt_client_t *client); /* forward declaration */
+static void mqtt_do_connect(mqtt_client_t *client); /* forward declaration */
 
 static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_status_t status) {
   err_t err;
@@ -191,11 +193,12 @@ static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection
     printf("mqtt_connection_cb: Disconnected, reason: %d\n", status);
 
     /* Its more nice to be connected, so try to reconnect */
-    example_do_connect(client);
+    mqtt_do_connect(client);
   }
 }
 
-static void example_do_connect(mqtt_client_t *client) {
+static void mqtt_do_connect(mqtt_client_t *client) {
+  ip4_addr_t broker_ipaddr;
   struct mqtt_connect_client_info_t ci;
   err_t err;
 
@@ -205,13 +208,14 @@ static void example_do_connect(mqtt_client_t *client) {
   memset(&ci, 0, sizeof(ci));
 
   /* Minimal amount of information required is client identifier, so set it here */
-  ci.client_id = "lwip_hslu";
+  ci.client_id = configMQTT_CLIENT_NAME;
+  ci.client_user = configMQTT_CLIENT_USER;
+  ci.client_pass = configMQTT_CLIENT_PWD;
 
   /* Initiate client and connect to server, if this fails immediately an error code is returned
      otherwise mqtt_connection_cb will be called with connection result after attempting
      to establish a connection with the server.
      For now MQTT version 3.1.1 is always used */
-
   err = mqtt_client_connect(client, &broker_ipaddr, MQTT_PORT, mqtt_connection_cb, 0, &ci);
 
   /* For now just print the result code if something goes wrong */
@@ -220,19 +224,23 @@ static void example_do_connect(mqtt_client_t *client) {
   }
 }
 
-/* Called when publish is complete either with sucess or failure */
+/* Called when publish is complete either with success or failure */
 static void mqtt_pub_request_cb(void *arg, err_t result) {
   if(result != ERR_OK) {
     printf("Publish result: %d\n", result);
   }
 }
 
-static void example_publish(mqtt_client_t *client, void *arg) {
-  const char *pub_payload= "abcd";
+static void my_mqtt_publish(mqtt_client_t *client, void *arg) {
+  char payload[16];
+  static int payloadCntr = 0;
   err_t err;
-  u8_t qos = 2; /* 0 1 or 2, see MQTT specification */
+  u8_t qos = 0; /* 0 (fire-and-forget), 1 (at least once) or 2 (exactly once), see MQTT specification */
   u8_t retain = 0; /* No don't retain such crappy payload... */
-  err = mqtt_publish(client, "HSLU/test", pub_payload, strlen(pub_payload), qos, retain, mqtt_pub_request_cb, arg);
+
+  itoa(payloadCntr, payload, 10); /* convert counter to string */
+  payloadCntr++;
+  err = mqtt_publish(client, "HSLU/test", payload, strlen(payload), qos, retain, mqtt_pub_request_cb, arg);
   if(err != ERR_OK) {
     printf("Publish err: %d\n", err);
   }
@@ -245,33 +253,33 @@ void SysTick_Handler(void) {
   time_isr();
 }
 
-static void MqttDoStateMachine(void) {
+static void MqttDoStateMachine(mqtt_client_t *mqtt_client) {
   switch(MQTT_state) {
     case MQTT_STATE_INIT:
     case MQTT_STATE_IDLE:
       break;
     case MQTT_STATE_DO_CONNECT:
-      PRINTF("Trying to connect to Mosquito broker\r\n");
-      example_do_connect(&mqtt_client);
+      printf("Trying to connect to Mosquito broker\r\n");
+      mqtt_do_connect(mqtt_client);
       MQTT_state = MQTT_STATE_WAIT_FOR_CONNECTION;
       break;
     case MQTT_STATE_WAIT_FOR_CONNECTION:
       sys_check_timeouts(); /* Handle all system timeouts for all core protocols */
-       if (mqtt_client_is_connected(&mqtt_client)) {
-         PRINTF("Client is connected\r\n");
-         MQTT_state = MQTT_STATE_CONNECTED;
-       }
+      if (mqtt_client_is_connected(mqtt_client)) {
+        printf("Client is connected\r\n");
+        MQTT_state = MQTT_STATE_CONNECTED;
+      }
       break;
     case MQTT_STATE_CONNECTED:
       break;
     case MQTT_STATE_DO_PUBLISH:
-      PRINTF("Publish to Mosquito\r\n");
-      example_publish(&mqtt_client, NULL);
+      printf("Publish to broker\r\n");
+      my_mqtt_publish(mqtt_client, NULL);
       MQTT_state = MQTT_STATE_CONNECTED;
       break;
     case MQTT_STATE_DO_DISCONNECT:
-      PRINTF("Disconnect from Mosquito\r\n");
-      mqtt_disconnect(&mqtt_client);
+      printf("Disconnect from broker\r\n");
+      mqtt_disconnect(mqtt_client);
       MQTT_state = MQTT_STATE_IDLE;
       break;
 	default:
@@ -283,7 +291,9 @@ static void DoMQTT(struct netif *netifp) {
   uint32_t timeStampMs, diffTimeMs;
   #define CONNECT_DELAY_MS   1000 /* after 1 second, connect */
   #define PUBLISH_PERIOD_MS  2000 /* publish every 2 seconds */
+  mqtt_client_t mqtt_client;
 
+  memset(&mqtt_client, 0, sizeof(mqtt_client)); /* initialize all fields */
   MQTT_state = MQTT_STATE_IDLE;
   timeStampMs = sys_now(); /* get time in milli seconds */
   for(;;) {
@@ -296,7 +306,7 @@ static void DoMQTT(struct netif *netifp) {
       MQTT_state = MQTT_STATE_DO_PUBLISH; /* publish */
       timeStampMs = sys_now(); /* get time in milli seconds */
     }
-    MqttDoStateMachine(); /* process state machine */
+    MqttDoStateMachine(&mqtt_client); /* process state machine */
     /* Poll the driver, get any outstanding frames */
     ethernetif_input(netifp);
     sys_check_timeouts(); /* Handle all system timeouts for all core protocols */
@@ -329,16 +339,17 @@ int main(void) {
   netif_set_default(&fsl_netif0);
   netif_set_up(&fsl_netif0);
 
-  PRINTF("\r\n************************************************\r\n");
-  PRINTF(" MQTT Bare Metal example\r\n");
-  PRINTF("************************************************\r\n");
-  PRINTF(" IPv4 Address     : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_ipaddr)[0], ((u8_t *)&fsl_netif0_ipaddr)[1],
+  printf("\r\n************************************************\r\n");
+  printf(" MQTT Bare Metal example\r\n");
+  printf("************************************************\r\n");
+  printf(" IPv4 Address     : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_ipaddr)[0], ((u8_t *)&fsl_netif0_ipaddr)[1],
          ((u8_t *)&fsl_netif0_ipaddr)[2], ((u8_t *)&fsl_netif0_ipaddr)[3]);
-  PRINTF(" IPv4 Subnet mask : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_netmask)[0], ((u8_t *)&fsl_netif0_netmask)[1],
+  printf(" IPv4 Subnet mask : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_netmask)[0], ((u8_t *)&fsl_netif0_netmask)[1],
          ((u8_t *)&fsl_netif0_netmask)[2], ((u8_t *)&fsl_netif0_netmask)[3]);
-  PRINTF(" IPv4 Gateway     : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_gw)[0], ((u8_t *)&fsl_netif0_gw)[1],
+  printf(" IPv4 Gateway     : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_gw)[0], ((u8_t *)&fsl_netif0_gw)[1],
          ((u8_t *)&fsl_netif0_gw)[2], ((u8_t *)&fsl_netif0_gw)[3]);
-  PRINTF("************************************************\r\n");
+  printf(" Broker Address   : %u.%u.%u.%u\r\n", configBroker_ADDR0, configBroker_ADDR1, configBroker_ADDR2, configBroker_ADDR3);
+  printf("************************************************\r\n");
 
   DoMQTT(&fsl_netif0);
   for(;;) {}
