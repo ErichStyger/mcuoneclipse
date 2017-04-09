@@ -31,6 +31,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#define USE_HSLU   0 /* work or home address */
+#define USE_TLS    0 /* use TLS/SSL, experimental! */
 
 #include "lwip/opt.h"
 
@@ -50,7 +52,51 @@
 #include "mqtt.h"
 #include "sys.h"
 
-#define USE_HSLU   0 /* work or home address */
+#if USE_TLS
+  #if !defined(MBEDTLS_CONFIG_FILE)
+  #include "mbedtls/config.h"
+  #else
+  #include MBEDTLS_CONFIG_FILE
+  #endif
+
+  #include "mbedtls/net.h"
+  #include "mbedtls/ssl.h"
+  #include "mbedtls/entropy.h"
+  #include "mbedtls/ctr_drbg.h"
+  #include "mbedtls/debug.h"
+
+  #include "mbedtls/entropy.h"
+  #include "mbedtls/entropy_poll.h"
+  #include "mbedtls/hmac_drbg.h"
+  #include "mbedtls/ctr_drbg.h"
+  #include "mbedtls/dhm.h"
+  #include "mbedtls/gcm.h"
+  #include "mbedtls/ccm.h"
+  #include "mbedtls/md2.h"
+  #include "mbedtls/md4.h"
+  #include "mbedtls/md5.h"
+  #include "mbedtls/ripemd160.h"
+  #include "mbedtls/sha1.h"
+  #include "mbedtls/sha256.h"
+  #include "mbedtls/sha512.h"
+  #include "mbedtls/arc4.h"
+  #include "mbedtls/des.h"
+  #include "mbedtls/aes.h"
+  #include "mbedtls/camellia.h"
+  #include "mbedtls/base64.h"
+  #include "mbedtls/bignum.h"
+  #include "mbedtls/rsa.h"
+  #include "mbedtls/x509.h"
+  #include "mbedtls/xtea.h"
+  #include "mbedtls/pkcs5.h"
+  #include "mbedtls/ecp.h"
+  #include "mbedtls/ecjpake.h"
+  #include "mbedtls/timing.h"
+
+  #include "fsl_rnga.h"
+
+#endif /* USE_TLS */
+
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -326,6 +372,39 @@ int main(void) {
   BOARD_InitDebugConsole();
   /* Disable SYSMPU. */
   base->CESR &= ~SYSMPU_CESR_VLD_MASK;
+
+#if USE_TLS
+  /* initialize random number generator */
+  RNGA_Init(RNG);
+  RNGA_Seed(RNG, SIM->UIDL);
+#endif
+#if USE_TLS
+  {
+    mbedtls_net_context server_fd;
+    mbedtls_entropy_context entropy;
+    mbedtls_ctr_drbg_context ctr_drbg;
+    mbedtls_ssl_context ssl;
+    mbedtls_ssl_config conf;
+    mbedtls_x509_crt cacert;
+    int ret;
+    const unsigned char *pers = NULL;
+
+    mbedtls_net_init( &server_fd );
+    mbedtls_ssl_init( &ssl );
+    mbedtls_ssl_config_init( &conf );
+    mbedtls_x509_crt_init( &cacert );
+    mbedtls_ctr_drbg_init( &ctr_drbg );
+
+    mbedtls_entropy_init( &entropy );
+    if( ( ret = mbedtls_ctr_drbg_seed( &ctr_drbg, mbedtls_entropy_func, &entropy,
+                               (const unsigned char *) pers,
+                               strlen( pers ) ) ) != 0 )
+    {
+        printf( " failed\n  ! mbedtls_ctr_drbg_seed returned %d\n", ret );
+    }
+  }
+
+#endif
 
   time_init();
 
