@@ -131,7 +131,7 @@
 							</tool>
 							<tool id="com.crt.advproject.link.exe.debug.530682309" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug">
 								<option id="com.crt.advproject.link.thumb.696529230" name="Thumb mode" superClass="com.crt.advproject.link.thumb" useByScannerDiscovery="false" value="true" valueType="boolean"/>
-								<option id="com.crt.advproject.link.memory.heapAndStack.259938686" name="Heap and Stack options" superClass="com.crt.advproject.link.memory.heapAndStack" useByScannerDiscovery="false" value="&amp;Heap:Default;Default;0x1000&amp;Stack:Default;Default;0x1000" valueType="string"/>
+								<option id="com.crt.advproject.link.memory.heapAndStack.259938686" name="Heap and Stack options" superClass="com.crt.advproject.link.memory.heapAndStack" useByScannerDiscovery="false" value="&amp;Heap:Default;Post Data;0x8000&amp;Stack:Default;End;0x1000" valueType="string"/>
 								<option id="com.crt.advproject.link.gcc.multicore.master.userobjs.610511248" name="Slave Objects (not visible)" superClass="com.crt.advproject.link.gcc.multicore.master.userobjs" useByScannerDiscovery="false" valueType="userObjs"/>
 								<option id="com.crt.advproject.link.arch.1835679144" name="Architecture" superClass="com.crt.advproject.link.arch" useByScannerDiscovery="false" value="com.crt.advproject.link.target.cm4" valueType="enumerated"/>
 								<option id="gnu.c.link.option.nostart.251573577" name="Do not use standard start files (-nostartfiles)" superClass="gnu.c.link.option.nostart" useByScannerDiscovery="false"/>
@@ -149,23 +149,20 @@
 								<option id="com.crt.advproject.link.manage.462735572" name="Manage linker script" superClass="com.crt.advproject.link.manage" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="com.crt.advproject.link.flashconfigenable.1583477092" name="Enable automatic placement of Flash Configuration field in image" superClass="com.crt.advproject.link.flashconfigenable" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="com.crt.advproject.link.gcc.hdrlib.1387458238" name="Library" superClass="com.crt.advproject.link.gcc.hdrlib" useByScannerDiscovery="false" value="com.crt.advproject.gcc.link.hdrlib.codered.semihost_nf" valueType="enumerated"/>
-								<option id="com.crt.advproject.link.script.2083176154" name="Linker script" superClass="com.crt.advproject.link.script" useByScannerDiscovery="false" value="frdmk64f_demo_apps_lwip_lwip_ping_bm_Debug.ld" valueType="string"/>
+								<option id="com.crt.advproject.link.script.2083176154" name="Linker script" superClass="com.crt.advproject.link.script" useByScannerDiscovery="false" value="&quot;FRDM-K64F_lwip_mqtt_bm_Debug.ld&quot;" valueType="string"/>
 								<option id="com.crt.advproject.link.gcc.multicore.slave.1355864761" name="Multicore configuration" superClass="com.crt.advproject.link.gcc.multicore.slave" useByScannerDiscovery="false"/>
 								<option defaultValue="com.crt.advproject.heapAndStack.mcuXpressoStyle" id="com.crt.advproject.link.memory.heapAndStack.style.1208783268" name="Heap and Stack placement" superClass="com.crt.advproject.link.memory.heapAndStack.style" useByScannerDiscovery="false" valueType="enumerated"/>
+								<option id="gnu.c.link.option.libs.424324771" name="Libraries (-l)" superClass="gnu.c.link.option.libs" useByScannerDiscovery="false" valueType="libs">
+									<listOptionValue builtIn="false" value="_mmcau"/>
+								</option>
+								<option id="gnu.c.link.option.paths.1119489953" name="Library search path (-L)" superClass="gnu.c.link.option.paths" useByScannerDiscovery="false" valueType="libPaths">
+									<listOptionValue builtIn="false" value="../libs"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.1737126492" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
 							</tool>
-						</toolChain>
-					</folderInfo>
-					<folderInfo id="com.crt.advproject.config.exe.debug.911984316.2068725374" name="/" resourcePath="mmcau_common">
-						<toolChain id="com.crt.advproject.toolchain.exe.debug.1667437269" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
-							<tool id="com.crt.advproject.cpp.exe.debug.1157024780" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.1012524112"/>
-							<tool id="com.crt.advproject.gcc.exe.debug.1494077742" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1685389105"/>
-							<tool id="com.crt.advproject.gas.exe.debug.8841655" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.114450833"/>
-							<tool id="com.crt.advproject.link.cpp.exe.debug.2136172963" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1814841880"/>
-							<tool id="com.crt.advproject.link.exe.debug.1690343660" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.530682309"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>

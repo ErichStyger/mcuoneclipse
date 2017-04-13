@@ -49,6 +49,9 @@ extern "C" {
  * @{
  */
 
+#ifndef MQTT_USE_TLS
+  #define MQTT_USE_TLS     1
+#endif
 /**
  * Output ring-buffer size, must be able to fit largest outgoing publish message topic+payloads
  */

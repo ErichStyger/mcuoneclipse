@@ -47,7 +47,6 @@
  * Erik Andersson <erian747@gmail.com>
  *
  */
-//#include "lwip/apps/mqtt.h"
 #include "mqtt.h"
 #include "lwip/timeouts.h"
 #include "lwip/ip_addr.h"
@@ -56,6 +55,10 @@
 #include "lwip/pbuf.h"
 #include "lwip/tcp.h"
 #include <string.h>
+
+#if MQTT_USE_TLS
+  #include "ssl.h"
+#endif
 
 #if LWIP_TCP && LWIP_CALLBACK_API
 
@@ -140,6 +143,19 @@ static const char * const mqtt_message_type_str[15] =
   "DISCONNECT"
 };
 
+#if MQTT_USE_TLS
+err_t tls_close(struct tcp_pcb *pcb) {
+    return tcp_close(pcb);
+#if 0
+    mbedtls_net_free( &server_fd );
+    mbedtls_ssl_free( &ssl );
+    mbedtls_ssl_config_free( &conf );
+    mbedtls_ctr_drbg_free( &ctr_drbg );
+    mbedtls_entropy_free( &entropy );
+#endif
+}
+#endif
+
 /**
  * Message type value to string
  * @param msg_type see enum mqtt_message_type
@@ -203,7 +219,7 @@ msg_generate_packet_id(mqtt_client_t *client)
  * @param tpcb TCP connection handle
  */
 static void
-mqtt_output_send(struct mqtt_ringbuf_t *rb, struct tcp_pcb *tpcb)
+mqtt_output_send(mqtt_client_t *client, struct mqtt_ringbuf_t *rb, struct tcp_pcb *tpcb)
 {
   err_t err;
   u8_t wrap = 0;
@@ -224,12 +240,20 @@ mqtt_output_send(struct mqtt_ringbuf_t *rb, struct tcp_pcb *tpcb)
     /* Wrap around if more data in ring buffer after linear portion */
     wrap = (mqtt_ringbuf_len(rb) > ringbuf_lin_len);
   }
+#if MQTT_USE_TLS
+  err = mbedtls_ssl_write(client->ssl, mqtt_ringbuf_get_ptr(rb), send_len);
+#else
   err = tcp_write(tpcb, mqtt_ringbuf_get_ptr(rb), send_len, TCP_WRITE_FLAG_COPY | (wrap ? TCP_WRITE_FLAG_MORE : 0));
+#endif
   if ((err == ERR_OK) && wrap) {
     mqtt_ringbuf_advance_get_idx(rb, send_len);
     /* Use the lesser one of ring buffer linear length and TCP send buffer size */
     send_len = LWIP_MIN(tcp_sndbuf(tpcb), mqtt_ringbuf_linear_read_length(rb));
+#if MQTT_USE_TLS
+    err = mbedtls_ssl_write(client->ssl, mqtt_ringbuf_get_ptr(rb), send_len);
+#else
     err = tcp_write(tpcb, mqtt_ringbuf_get_ptr(rb), send_len, TCP_WRITE_FLAG_COPY);
+#endif
   }
 
   if (err == ERR_OK) {
@@ -513,7 +537,11 @@ mqtt_close(mqtt_client_t *client, mqtt_connection_status_t reason)
     tcp_recv(client->conn, NULL);
     tcp_err(client->conn,  NULL);
     tcp_sent(client->conn, NULL);
+#if MQTT_USE_TLS
+    res = tls_close(client->conn);
+#else
     res = tcp_close(client->conn);
+#endif
     if (res != ERR_OK) {
       tcp_abort(client->conn);
       LWIP_DEBUGF(MQTT_DEBUG_TRACE,("mqtt_close: Close err=%s\n", lwip_strerr(res)));
@@ -607,7 +635,7 @@ pub_ack_rec_rel_response(mqtt_client_t *client, u8_t msg, u16_t pkt_id, u8_t qos
   if (mqtt_output_check_space(&client->output, 2)) {
     mqtt_output_append_fixed_header(&client->output, msg, 0, qos, 0, 2);
     mqtt_output_append_u16(&client->output, pkt_id);
-    mqtt_output_send(&client->output, client->conn);
+    mqtt_output_send(client, &client->output, client->conn);
   } else {
     LWIP_DEBUGF(MQTT_DEBUG_TRACE,("pub_ack_rec_rel_response: OOM creating response: %s with pkt_id: %d\n",
                                   mqtt_msg_type_to_str(msg), pkt_id));
@@ -923,7 +951,7 @@ mqtt_tcp_sent_cb(void *arg, struct tcp_pcb *tpcb, u16_t len)
       mqtt_delete_request(r);
     }
     /* Try send any remaining buffers from output queue */
-    mqtt_output_send(&client->output, client->conn);
+    mqtt_output_send(client, &client->output, client->conn);
   }
   return ERR_OK;
 }
@@ -957,7 +985,7 @@ mqtt_tcp_poll_cb(void *arg, struct tcp_pcb *tpcb)
   mqtt_client_t *client = (mqtt_client_t *)arg;
   if (client->conn_state == MQTT_CONNECTED) {
     /* Try send any remaining buffers from output queue */
-    mqtt_output_send(&client->output, tpcb);
+    mqtt_output_send(client, &client->output, tpcb);
   }
   return ERR_OK;
 }
@@ -995,7 +1023,7 @@ mqtt_tcp_connect_cb(void *arg, struct tcp_pcb *tpcb, err_t err)
   client->cyclic_tick = 0;
 
   /* Start transmission from output queue, connect message is the first one out*/
-  mqtt_output_send(&client->output, client->conn);
+  mqtt_output_send(client, &client->output, client->conn);
 
   return ERR_OK;
 }
@@ -1080,7 +1108,7 @@ mqtt_publish(mqtt_client_t *client, const char *topic, const void *payload, u16_
   }
 
   mqtt_append_request(&client->pend_req_queue, r);
-  mqtt_output_send(&client->output, client->conn);
+  mqtt_output_send(client, &client->output, client->conn);
   return ERR_OK;
 }
 
@@ -1147,7 +1175,7 @@ mqtt_sub_unsub(mqtt_client_t *client, const char *topic, u8_t qos, mqtt_request_
   }
 
   mqtt_append_request(&client->pend_req_queue, r);
-  mqtt_output_send(&client->output, client->conn);
+  mqtt_output_send(client, &client->output, client->conn);
   return ERR_OK;
 }
 
@@ -1274,6 +1302,7 @@ mqtt_client_connect(mqtt_client_t *client, const ip_addr_t *ip_addr, u16_t port,
   LWIP_DEBUGF(MQTT_DEBUG_TRACE,("mqtt_client_connect: Connecting to host: %s at port:%"U16_F"\n", ipaddr_ntoa(ip_addr), port));
 
   /* Connect to server */
+  /*! \todo if TLS, use mbedtls_net_connect()? */
   err = tcp_connect(client->conn, ip_addr, port, mqtt_tcp_connect_cb);
   if (err != ERR_OK) {
     LWIP_DEBUGF(MQTT_DEBUG_TRACE,("mqtt_client_connect: Error connecting to remote ip/port, %d\n", err));

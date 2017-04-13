@@ -40,6 +40,9 @@
 #include "mqtt_opts.h"
 #include "lwip/err.h"
 #include "lwip/ip_addr.h"
+#if MQTT_USE_TLS
+ #include "ssl.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,7 +52,8 @@ typedef struct mqtt_client_t mqtt_client_t;
 
 /** @ingroup mqtt
  * Default MQTT port */
-#define MQTT_PORT 1883
+#define MQTT_PORT     1883
+#define MQTT_PORT_TLS 8883
 
 /*---------------------------------------------------------------------------------------------- */
 /* Connection with server */
@@ -202,6 +206,9 @@ struct mqtt_client_t
   u8_t rx_buffer[MQTT_VAR_HEADER_BUFFER_LEN];
   /** Output ring-buffer */
   struct mqtt_ringbuf_t output;
+#if MQTT_USE_TLS
+  mbedtls_ssl_context *ssl;
+#endif
 };
 
 

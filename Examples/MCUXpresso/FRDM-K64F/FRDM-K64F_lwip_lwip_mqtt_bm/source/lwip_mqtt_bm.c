@@ -31,9 +31,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#define USE_HSLU   0 /* work or home address */
-#define USE_TLS    0 /* use TLS/SSL, experimental! */
-
+#define USE_HSLU   1 /* work or home address */
+#include "mqtt_opts.h"
 #include "lwip/opt.h"
 
 #include "ping/ping.h"
@@ -52,50 +51,18 @@
 #include "mqtt.h"
 #include "sys.h"
 
-#if USE_TLS
-  #if !defined(MBEDTLS_CONFIG_FILE)
-  #include "mbedtls/config.h"
-  #else
-  #include MBEDTLS_CONFIG_FILE
-  #endif
-
-  #include "mbedtls/net.h"
-  #include "mbedtls/ssl.h"
+#if MQTT_USE_TLS
   #include "mbedtls/entropy.h"
   #include "mbedtls/ctr_drbg.h"
-  #include "mbedtls/debug.h"
-
-  #include "mbedtls/entropy.h"
-  #include "mbedtls/entropy_poll.h"
-  #include "mbedtls/hmac_drbg.h"
-  #include "mbedtls/ctr_drbg.h"
-  #include "mbedtls/dhm.h"
-  #include "mbedtls/gcm.h"
-  #include "mbedtls/ccm.h"
-  #include "mbedtls/md2.h"
-  #include "mbedtls/md4.h"
-  #include "mbedtls/md5.h"
-  #include "mbedtls/ripemd160.h"
-  #include "mbedtls/sha1.h"
-  #include "mbedtls/sha256.h"
-  #include "mbedtls/sha512.h"
-  #include "mbedtls/arc4.h"
-  #include "mbedtls/des.h"
-  #include "mbedtls/aes.h"
-  #include "mbedtls/camellia.h"
-  #include "mbedtls/base64.h"
-  #include "mbedtls/bignum.h"
-  #include "mbedtls/rsa.h"
+  #include "mbedtls/certs.h"
   #include "mbedtls/x509.h"
-  #include "mbedtls/xtea.h"
-  #include "mbedtls/pkcs5.h"
-  #include "mbedtls/ecp.h"
-  #include "mbedtls/ecjpake.h"
-  #include "mbedtls/timing.h"
+  #include "mbedtls/ssl.h"
+  #include "mbedtls/ssl_cache.h"
+  #include "mbedtls/debug.h"
+  #include "mbedtls/net.h"
 
   #include "fsl_rnga.h"
-
-#endif /* USE_TLS */
+#endif /* MQTT_USE_TLS */
 
 /*******************************************************************************
  * Definitions
@@ -166,6 +133,79 @@ typedef enum {
 } MQTT_StateT;
 
 static MQTT_StateT MQTT_state = MQTT_STATE_INIT;
+
+#if MQTT_USE_TLS
+
+static void my_debug(void *ctx, int level, const char *file, int line, const char *str)
+{
+    ((void)level);
+
+    PRINTF("\r\n%s, at line %d in file %s\n", str, line, file);
+}
+
+
+static mbedtls_net_context server_fd;
+static mbedtls_entropy_context entropy;
+static mbedtls_ctr_drbg_context ctr_drbg;
+static mbedtls_ssl_context ssl;
+static mbedtls_ssl_config conf;
+static mbedtls_x509_crt cacert;
+static mbedtls_ctr_drbg_context ctr_drbg;
+
+static int TLS_Init(void) {
+  /* inspired by https://tls.mbed.org/kb/how-to/mbedtls-tutorial */
+  int ret;
+  const char *pers = "ssl_client";
+
+  /* initialize the different descriptors */
+  mbedtls_net_init( &server_fd );
+  mbedtls_ssl_init( &ssl );
+  mbedtls_ssl_config_init( &conf );
+  mbedtls_x509_crt_init( &cacert );
+  mbedtls_ctr_drbg_init( &ctr_drbg );
+  mbedtls_entropy_init( &entropy );
+
+  if( ( ret = mbedtls_ctr_drbg_seed( &ctr_drbg, mbedtls_entropy_func, &entropy,
+                             (const unsigned char *) pers,
+                             strlen(pers ) ) ) != 0 )
+  {
+      printf( " failed\n  ! mbedtls_ctr_drbg_seed returned %d\n", ret );
+      return -1;
+  }
+  /*
+   * First prepare the SSL configuration by setting the endpoint and transport type, and loading reasonable
+   * defaults for security parameters. The endpoint determines if the SSL/TLS layer will act as a server (MBEDTLS_SSL_IS_SERVER)
+   * or a client (MBEDTLS_SSL_IS_CLIENT). The transport type determines if we are using TLS (MBEDTLS_SSL_TRANSPORT_STREAM)
+   * or DTLS (MBEDTLS_SSL_TRANSPORT_DATAGRAM).
+   */
+  if( ( ret = mbedtls_ssl_config_defaults( &conf,
+                  MBEDTLS_SSL_IS_CLIENT,
+                  MBEDTLS_SSL_TRANSPORT_STREAM,
+                  MBEDTLS_SSL_PRESET_DEFAULT ) ) != 0 )
+  {
+      printf( " failed\n  ! mbedtls_ssl_config_defaults returned %d\n\n", ret );
+      return -1;
+  }
+  /* The authentication mode determines how strict the certificates that are presented are checked.  */
+  mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_NONE ); /* \todo change verification mode! */
+
+  /* The library needs to know which random engine to use and which debug function to use as callback. */
+  mbedtls_ssl_conf_rng( &conf, mbedtls_ctr_drbg_random, &ctr_drbg );
+  mbedtls_ssl_conf_dbg( &conf, my_debug, stdout );
+
+  if( ( ret = mbedtls_ssl_set_hostname( &ssl, "localhost" ) ) != 0 )
+  {
+      printf( " failed\n  ! mbedtls_ssl_set_hostname returned %d\n\n", ret );
+      return -1;
+  }
+  /* the SSL context needs to know the input and output functions it needs to use for sending out network traffic. */
+  mbedtls_ssl_set_bio( &ssl, &server_fd, mbedtls_net_send, mbedtls_net_recv, NULL );
+
+  return 0; /* no error */
+}
+
+#endif
+
 
 /* The idea is to demultiplex topic and create some reference to be used in data callbacks
    Example here uses a global variable, better would be to use a member in arg
@@ -249,7 +289,8 @@ static void mqtt_do_connect(mqtt_client_t *client) {
   err_t err;
 
   IP4_ADDR(&broker_ipaddr, configBroker_ADDR0, configBroker_ADDR1, configBroker_ADDR2, configBroker_ADDR3);
-
+  client->ssl = &ssl;
+  memset(client, 0, sizeof(mqtt_client_t)); /* initialize all fields */
   /* Setup an empty client info structure */
   memset(&ci, 0, sizeof(ci));
 
@@ -262,8 +303,11 @@ static void mqtt_do_connect(mqtt_client_t *client) {
      otherwise mqtt_connection_cb will be called with connection result after attempting
      to establish a connection with the server.
      For now MQTT version 3.1.1 is always used */
+#if MQTT_USE_TLS
+  err = mqtt_client_connect(client, &broker_ipaddr, MQTT_PORT_TLS, mqtt_connection_cb, 0, &ci);
+#else
   err = mqtt_client_connect(client, &broker_ipaddr, MQTT_PORT, mqtt_connection_cb, 0, &ci);
-
+#endif
   /* For now just print the result code if something goes wrong */
   if(err != ERR_OK) {
     printf("mqtt_connect return %d\n", err);
@@ -339,7 +383,6 @@ static void DoMQTT(struct netif *netifp) {
   #define PUBLISH_PERIOD_MS  2000 /* publish every 2 seconds */
   mqtt_client_t mqtt_client;
 
-  memset(&mqtt_client, 0, sizeof(mqtt_client)); /* initialize all fields */
   MQTT_state = MQTT_STATE_IDLE;
   timeStampMs = sys_now(); /* get time in milli seconds */
   for(;;) {
@@ -359,6 +402,7 @@ static void DoMQTT(struct netif *netifp) {
   }
 }
 
+
 /*!
  * @brief Main function.
  */
@@ -372,39 +416,6 @@ int main(void) {
   BOARD_InitDebugConsole();
   /* Disable SYSMPU. */
   base->CESR &= ~SYSMPU_CESR_VLD_MASK;
-
-#if USE_TLS
-  /* initialize random number generator */
-  RNGA_Init(RNG);
-  RNGA_Seed(RNG, SIM->UIDL);
-#endif
-#if USE_TLS
-  {
-    mbedtls_net_context server_fd;
-    mbedtls_entropy_context entropy;
-    mbedtls_ctr_drbg_context ctr_drbg;
-    mbedtls_ssl_context ssl;
-    mbedtls_ssl_config conf;
-    mbedtls_x509_crt cacert;
-    int ret;
-    const unsigned char *pers = NULL;
-
-    mbedtls_net_init( &server_fd );
-    mbedtls_ssl_init( &ssl );
-    mbedtls_ssl_config_init( &conf );
-    mbedtls_x509_crt_init( &cacert );
-    mbedtls_ctr_drbg_init( &ctr_drbg );
-
-    mbedtls_entropy_init( &entropy );
-    if( ( ret = mbedtls_ctr_drbg_seed( &ctr_drbg, mbedtls_entropy_func, &entropy,
-                               (const unsigned char *) pers,
-                               strlen( pers ) ) ) != 0 )
-    {
-        printf( " failed\n  ! mbedtls_ctr_drbg_seed returned %d\n", ret );
-    }
-  }
-
-#endif
 
   time_init();
 
@@ -429,6 +440,13 @@ int main(void) {
          ((u8_t *)&fsl_netif0_gw)[2], ((u8_t *)&fsl_netif0_gw)[3]);
   printf(" Broker Address   : %u.%u.%u.%u\r\n", configBroker_ADDR0, configBroker_ADDR1, configBroker_ADDR2, configBroker_ADDR3);
   printf("************************************************\r\n");
+
+#if MQTT_USE_TLS
+  /* initialize random number generator */
+  RNGA_Init(RNG);
+  RNGA_Seed(RNG, SIM->UIDL);
+  TLS_Init();
+#endif
 
   DoMQTT(&fsl_netif0);
   for(;;) {}
