@@ -31,7 +31,7 @@
 #include "mbedtls/net.h"
 
 #include <string.h>
-
+#include "tcp.h"
 
 #include <lwip/sockets.h>
 #include <lwip/inet.h>
@@ -68,6 +68,7 @@
 #include <time.h>
 #include <stdint.h>
 
+#if 0
 static unsigned short net_htons(int port) {
    unsigned char buf[4];
 
@@ -76,6 +77,9 @@ static unsigned short net_htons(int port) {
    buf[2] = buf[3] = 0;
    return( *(unsigned short *) buf );
 }
+#endif
+
+#if 0
 /*
  * Prepare for using the sockets interface
  */
@@ -99,15 +103,17 @@ static int net_prepare( void )
 #endif
     return( 0 );
 }
+#endif
 
 /*
  * Initialize a context
  */
 void mbedtls_net_init( mbedtls_net_context *ctx )
 {
-    ctx->fd = -1;
+    ctx->tpcb = NULL;
 }
 
+#if 0
 /*
  * Initiate a TCP connection with host:port and the given protocol
  */
@@ -197,7 +203,9 @@ return( 0 );
 #endif
     return( ret );
 }
+#endif
 
+#if 0
 /*
  * Create a listening socket on bind_ip:port
  */
@@ -272,7 +280,9 @@ int mbedtls_net_bind( mbedtls_net_context *ctx, const char *bind_ip, const char 
     return -1;
 #endif
 }
+#endif
 
+#if 0
 /*
  * Check if the requested operation would be blocking on a non-blocking socket
  * and thus 'failed' with a negative return value.
@@ -301,7 +311,9 @@ static int net_would_block( const mbedtls_net_context *ctx )
 #endif
     return( 0 );
 }
+#endif
 
+#if 0
 /*
  * Accept a connection from a remote client
  */
@@ -420,7 +432,9 @@ int mbedtls_net_accept( mbedtls_net_context *bind_ctx,
 #endif
     return( 0 );
 }
+#endif
 
+#if 0
 /*
  * Set the socket blocking or non-blocking
  */
@@ -432,7 +446,9 @@ int mbedtls_net_set_block( mbedtls_net_context *ctx )
     return -1;
 #endif
 }
+#endif
 
+#if 0
 int mbedtls_net_set_nonblock( mbedtls_net_context *ctx )
 {
 #if 0
@@ -447,7 +463,9 @@ int mbedtls_net_set_nonblock( mbedtls_net_context *ctx )
     return -1;
 #endif
 }
+#endif
 
+#if 0
 /*
  * Portable usleep helper
  */
@@ -469,6 +487,7 @@ void mbedtls_net_usleep( unsigned long usec )
 #endif
 #endif
 }
+#endif
 
 /*
  * Read at most 'len' characters
@@ -505,10 +524,24 @@ int mbedtls_net_recv( void *ctx, unsigned char *buf, size_t len )
     }
     return( ret );
 #else
-    return -1;
+    mbedtls_net_context *context;
+    int err;
+
+    context = (mbedtls_net_context *)ctx;
+    if(context->tpcb == NULL) {
+      return( MBEDTLS_ERR_NET_INVALID_CONTEXT );
+    }
+#if 0
+    err = tcp_recv(context->tpcb, buf, len, TCP_WRITE_FLAG_COPY);
+    if (err!=0) {
+      return MBEDTLS_ERR_SSL_WANT_WRITE;
+    }
+#endif
+    return len; /* >0: no error */
 #endif
 }
 
+#if 0
 /*
  * Read at most 'len' characters, blocking for at most 'timeout' ms
  */
@@ -553,18 +586,19 @@ int mbedtls_net_recv_timeout( void *ctx, unsigned char *buf, size_t len,
     /* This call will not block */
     return( mbedtls_net_recv( ctx, buf, len ) );
 }
+#endif
 
 /*
  * Write at most 'len' characters
  */
 int mbedtls_net_send( void *ctx, const unsigned char *buf, size_t len )
 {
+#if 0
     int ret;
     int fd = ((mbedtls_net_context *) ctx)->fd;
 
     if( fd < 0 )
         return( MBEDTLS_ERR_NET_INVALID_CONTEXT );
-#if 0
     ret = (int) write( fd, buf, len );
 
     if( ret < 0 )
@@ -588,10 +622,23 @@ int mbedtls_net_send( void *ctx, const unsigned char *buf, size_t len )
     }
     return( ret );
 #else
-    return -1;
+  mbedtls_net_context *context;
+
+  context = (mbedtls_net_context *)ctx;
+  int err;
+
+  if(context->tpcb == NULL) {
+    return( MBEDTLS_ERR_NET_INVALID_CONTEXT );
+  }
+  err = tcp_write(context->tpcb, buf, len, TCP_WRITE_FLAG_COPY /*| (wrap ? TCP_WRITE_FLAG_MORE : 0)*/);
+  if (err!=0) {
+    return MBEDTLS_ERR_SSL_WANT_WRITE;
+  }
+  return len; /* >0: no error */
 #endif
 }
 
+#if 0
 /*
  * Gracefully close the connection
  */
@@ -605,6 +652,7 @@ void mbedtls_net_free( mbedtls_net_context *ctx )
 
     ctx->fd = -1;
 }
+#endif
 
 #endif /* MBEDTLS_NET_C */
 

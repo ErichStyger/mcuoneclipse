@@ -57,6 +57,7 @@
 #include <string.h>
 
 #if MQTT_USE_TLS
+  #include "net.h"
   #include "ssl.h"
 #endif
 
@@ -241,7 +242,7 @@ mqtt_output_send(mqtt_client_t *client, struct mqtt_ringbuf_t *rb, struct tcp_pc
     wrap = (mqtt_ringbuf_len(rb) > ringbuf_lin_len);
   }
 #if MQTT_USE_TLS
-  err = mbedtls_ssl_write(client->ssl, mqtt_ringbuf_get_ptr(rb), send_len);
+  err = mbedtls_ssl_write(client->ssl_context, mqtt_ringbuf_get_ptr(rb), send_len);
 #else
   err = tcp_write(tpcb, mqtt_ringbuf_get_ptr(rb), send_len, TCP_WRITE_FLAG_COPY | (wrap ? TCP_WRITE_FLAG_MORE : 0));
 #endif
@@ -250,7 +251,7 @@ mqtt_output_send(mqtt_client_t *client, struct mqtt_ringbuf_t *rb, struct tcp_pc
     /* Use the lesser one of ring buffer linear length and TCP send buffer size */
     send_len = LWIP_MIN(tcp_sndbuf(tpcb), mqtt_ringbuf_linear_read_length(rb));
 #if MQTT_USE_TLS
-    err = mbedtls_ssl_write(client->ssl, mqtt_ringbuf_get_ptr(rb), send_len);
+    err = mbedtls_ssl_write(client->ssl_context, mqtt_ringbuf_get_ptr(rb), send_len);
 #else
     err = tcp_write(tpcb, mqtt_ringbuf_get_ptr(rb), send_len, TCP_WRITE_FLAG_COPY);
 #endif
@@ -538,7 +539,7 @@ mqtt_close(mqtt_client_t *client, mqtt_connection_status_t reason)
     tcp_err(client->conn,  NULL);
     tcp_sent(client->conn, NULL);
 #if MQTT_USE_TLS
-    res = tls_close(client->conn);
+    res = tls_close(client->conn); /*! \todo */
 #else
     res = tcp_close(client->conn);
 #endif
@@ -1247,7 +1248,7 @@ mqtt_client_connect(mqtt_client_t *client, const ip_addr_t *ip_addr, u16_t port,
   }
 
   /* Wipe clean */
-  memset(client, 0, sizeof(mqtt_client_t));
+  //memset(client, 0, sizeof(mqtt_client_t)); // this must be done by the caller!
   client->connect_arg = arg;
   client->connect_cb = cb;
   client->keep_alive = client_info->keep_alive;
@@ -1302,8 +1303,12 @@ mqtt_client_connect(mqtt_client_t *client, const ip_addr_t *ip_addr, u16_t port,
   LWIP_DEBUGF(MQTT_DEBUG_TRACE,("mqtt_client_connect: Connecting to host: %s at port:%"U16_F"\n", ipaddr_ntoa(ip_addr), port));
 
   /* Connect to server */
+#if 0 && MQTT_USE_TLS
   /*! \todo if TLS, use mbedtls_net_connect()? */
+  err = mbedtls_net_connect(client->net_context, "localhost", port, MBEDTLS_NET_PROTO_TCP);
+#else
   err = tcp_connect(client->conn, ip_addr, port, mqtt_tcp_connect_cb);
+#endif
   if (err != ERR_OK) {
     LWIP_DEBUGF(MQTT_DEBUG_TRACE,("mqtt_client_connect: Error connecting to remote ip/port, %d\n", err));
     goto tcp_fail;

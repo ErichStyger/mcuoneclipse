@@ -31,7 +31,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#define USE_HSLU   1 /* work or home address */
+#define USE_HSLU   0 /* work or home address */
+
 #include "mqtt_opts.h"
 #include "lwip/opt.h"
 
@@ -136,11 +137,10 @@ static MQTT_StateT MQTT_state = MQTT_STATE_INIT;
 
 #if MQTT_USE_TLS
 
-static void my_debug(void *ctx, int level, const char *file, int line, const char *str)
-{
-    ((void)level);
+static void my_debug(void *ctx, int level, const char *file, int line, const char *str) {
+  ((void)level);
 
-    PRINTF("\r\n%s, at line %d in file %s\n", str, line, file);
+  printf("\r\n%s, at line %d in file %s\n", str, line, file);
 }
 
 
@@ -193,13 +193,15 @@ static int TLS_Init(void) {
   mbedtls_ssl_conf_rng( &conf, mbedtls_ctr_drbg_random, &ctr_drbg );
   mbedtls_ssl_conf_dbg( &conf, my_debug, stdout );
 
-  if( ( ret = mbedtls_ssl_set_hostname( &ssl, "localhost" ) ) != 0 )
+  mbedtls_ssl_setup(&ssl, &conf); /* << EST */
+
+  if( ( ret = mbedtls_ssl_set_hostname( &ssl, "ErichStyger-PC" ) ) != 0 )
   {
       printf( " failed\n  ! mbedtls_ssl_set_hostname returned %d\n\n", ret );
       return -1;
   }
   /* the SSL context needs to know the input and output functions it needs to use for sending out network traffic. */
-  mbedtls_ssl_set_bio( &ssl, &server_fd, mbedtls_net_send, mbedtls_net_recv, NULL );
+  mbedtls_ssl_set_bio( &ssl, &server_fd, mbedtls_net_send, mbedtls_net_recv, NULL);
 
   return 0; /* no error */
 }
@@ -230,7 +232,6 @@ static void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len
 
 static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags) {
   printf("Incoming publish payload with length %d, flags %u\n", len, (unsigned int)flags);
-
   if(flags & MQTT_DATA_FLAG_LAST) {
     /* Last fragment of payload received (or whole part if payload fits receive buffer
        See MQTT_VAR_HEADER_BUFFER_LEN)  */
@@ -289,8 +290,8 @@ static void mqtt_do_connect(mqtt_client_t *client) {
   err_t err;
 
   IP4_ADDR(&broker_ipaddr, configBroker_ADDR0, configBroker_ADDR1, configBroker_ADDR2, configBroker_ADDR3);
-  client->ssl = &ssl;
   memset(client, 0, sizeof(mqtt_client_t)); /* initialize all fields */
+
   /* Setup an empty client info structure */
   memset(&ci, 0, sizeof(ci));
 
@@ -304,6 +305,7 @@ static void mqtt_do_connect(mqtt_client_t *client) {
      to establish a connection with the server.
      For now MQTT version 3.1.1 is always used */
 #if MQTT_USE_TLS
+  client->ssl_context = &ssl;
   err = mqtt_client_connect(client, &broker_ipaddr, MQTT_PORT_TLS, mqtt_connection_cb, 0, &ci);
 #else
   err = mqtt_client_connect(client, &broker_ipaddr, MQTT_PORT, mqtt_connection_cb, 0, &ci);
@@ -312,6 +314,21 @@ static void mqtt_do_connect(mqtt_client_t *client) {
   if(err != ERR_OK) {
     printf("mqtt_connect return %d\n", err);
   }
+#if MQTT_USE_TLS
+  else {
+    int ret;
+
+    server_fd.tpcb = client->conn;
+    ret = mbedtls_ssl_handshake(&ssl);
+    if (ret < 0) {
+      if (ret != MBEDTLS_ERR_SSL_WANT_READ &&
+         ret != MBEDTLS_ERR_SSL_WANT_WRITE)
+      {
+        printf("mbedtls_ssl_handshake", ret);
+      }
+    }
+  }
+#endif
 }
 
 /* Called when publish is complete either with success or failure */
@@ -349,7 +366,7 @@ static void MqttDoStateMachine(mqtt_client_t *mqtt_client) {
     case MQTT_STATE_IDLE:
       break;
     case MQTT_STATE_DO_CONNECT:
-      printf("Trying to connect to Mosquito broker\r\n");
+      printf("Connecting to Mosquito broker\r\n");
       mqtt_do_connect(mqtt_client);
       MQTT_state = MQTT_STATE_WAIT_FOR_CONNECTION;
       break;
@@ -445,7 +462,10 @@ int main(void) {
   /* initialize random number generator */
   RNGA_Init(RNG);
   RNGA_Seed(RNG, SIM->UIDL);
-  TLS_Init();
+  if (TLS_Init()!=0) {
+    printf("ERROR: failed to initialize for TLS!\r\n");
+    for(;;) {}
+  }
 #endif
 
   DoMQTT(&fsl_netif0);

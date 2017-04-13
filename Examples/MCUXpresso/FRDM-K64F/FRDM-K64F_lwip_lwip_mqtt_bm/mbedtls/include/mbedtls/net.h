@@ -64,7 +64,7 @@ extern "C" {
  */
 typedef struct
 {
-    int fd;             /**< The underlying file descriptor                 */
+  struct tcp_pcb *tpcb;             /**< The underlying tcp control block */
 }
 mbedtls_net_context;
 

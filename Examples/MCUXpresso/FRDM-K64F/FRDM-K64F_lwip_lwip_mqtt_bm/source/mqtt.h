@@ -207,7 +207,8 @@ struct mqtt_client_t
   /** Output ring-buffer */
   struct mqtt_ringbuf_t output;
 #if MQTT_USE_TLS
-  mbedtls_ssl_context *ssl;
+  mbedtls_ssl_context *ssl_context;
+  //mbedtls_net_context *net_context;
 #endif
 };
 
