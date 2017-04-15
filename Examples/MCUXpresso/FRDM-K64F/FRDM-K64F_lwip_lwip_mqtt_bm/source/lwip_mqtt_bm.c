@@ -52,6 +52,12 @@
 #include "mqtt.h"
 #include "sys.h"
 
+#include "MCUC1.h"
+#include "LED1.h"
+#include "LED2.h"
+#include "LED3.h"
+#include "WAIT1.h"
+
 #if MQTT_USE_TLS
   #include "mbedtls/entropy.h"
   #include "mbedtls/ctr_drbg.h"
@@ -435,6 +441,22 @@ int main(void) {
   base->CESR &= ~SYSMPU_CESR_VLD_MASK;
 
   time_init();
+
+  /* clocking */
+  //CLOCK_EnableClock(kCLOCK_PortB);   /* LED on PTB21, PTB22 */
+  CLOCK_EnableClock(kCLOCK_PortE);   /* LED on PTE26 */
+  /* init */
+  LED1_Init();
+  LED2_Init();
+  LED3_Init();
+  WAIT1_Init();
+
+  LED1_On();
+  LED1_Off();
+  LED2_On();
+  LED2_Off();
+  LED3_On();
+  LED3_Off();
 
   IP4_ADDR(&fsl_netif0_ipaddr, configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3);
   IP4_ADDR(&fsl_netif0_netmask, configNET_MASK0, configNET_MASK1, configNET_MASK2, configNET_MASK3);
