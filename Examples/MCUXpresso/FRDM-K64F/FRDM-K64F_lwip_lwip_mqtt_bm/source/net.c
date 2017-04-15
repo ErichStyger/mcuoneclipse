@@ -537,7 +537,8 @@ int mbedtls_net_recv( void *ctx, unsigned char *buf, size_t len )
       return MBEDTLS_ERR_SSL_WANT_WRITE;
     }
 #endif
-    return len; /* >0: no error */
+    return 0;
+    //return len; /* >0: no error */
 #endif
 }
 

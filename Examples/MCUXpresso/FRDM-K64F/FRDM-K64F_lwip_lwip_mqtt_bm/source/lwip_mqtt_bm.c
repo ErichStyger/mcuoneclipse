@@ -265,7 +265,7 @@ static void mqtt_sub_request_cb(void *arg, err_t result) {
   printf("Subscribe result: %d\n", result);
 }
 
-static void mqtt_do_connect(mqtt_client_t *client); /* forward declaration */
+static int mqtt_do_connect(mqtt_client_t *client); /* forward declaration */
 
 static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_status_t status) {
   err_t err;
@@ -290,7 +290,7 @@ static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection
   }
 }
 
-static void mqtt_do_connect(mqtt_client_t *client) {
+static int mqtt_do_connect(mqtt_client_t *client) {
   ip4_addr_t broker_ipaddr;
   struct mqtt_connect_client_info_t ci;
   err_t err;
@@ -319,6 +319,7 @@ static void mqtt_do_connect(mqtt_client_t *client) {
   /* For now just print the result code if something goes wrong */
   if(err != ERR_OK) {
     printf("mqtt_connect return %d\n", err);
+    return -1; /* error */
   }
 #if MQTT_USE_TLS
   else {
@@ -331,10 +332,12 @@ static void mqtt_do_connect(mqtt_client_t *client) {
          ret != MBEDTLS_ERR_SSL_WANT_WRITE)
       {
         printf("mbedtls_ssl_handshake", ret);
+        return -1;
       }
     }
   }
 #endif
+  return 0; /* ok */
 }
 
 /* Called when publish is complete either with success or failure */
@@ -373,8 +376,10 @@ static void MqttDoStateMachine(mqtt_client_t *mqtt_client) {
       break;
     case MQTT_STATE_DO_CONNECT:
       printf("Connecting to Mosquito broker\r\n");
-      mqtt_do_connect(mqtt_client);
-      MQTT_state = MQTT_STATE_WAIT_FOR_CONNECTION;
+      if (mqtt_do_connect(mqtt_client)==0) {
+        printf("Failed to connect to broker\r\n");
+        MQTT_state = MQTT_STATE_WAIT_FOR_CONNECTION;
+      }
       break;
     case MQTT_STATE_WAIT_FOR_CONNECTION:
       sys_check_timeouts(); /* Handle all system timeouts for all core protocols */
@@ -409,6 +414,7 @@ static void DoMQTT(struct netif *netifp) {
   MQTT_state = MQTT_STATE_IDLE;
   timeStampMs = sys_now(); /* get time in milli seconds */
   for(;;) {
+    LED1_On();
     diffTimeMs = sys_now()-timeStampMs;
     if (MQTT_state==MQTT_STATE_IDLE && diffTimeMs>CONNECT_DELAY_MS) {
       MQTT_state = MQTT_STATE_DO_CONNECT; /* connect after 1 second */
@@ -420,6 +426,7 @@ static void DoMQTT(struct netif *netifp) {
     }
     MqttDoStateMachine(&mqtt_client); /* process state machine */
     /* Poll the driver, get any outstanding frames */
+    LED1_Off();
     ethernetif_input(netifp);
     sys_check_timeouts(); /* Handle all system timeouts for all core protocols */
   }
