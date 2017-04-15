@@ -84,6 +84,9 @@ static void mqtt_cyclic_timer(void *arg);
 enum {
   TCP_DISCONNECTED,
   TCP_CONNECTING,
+#if MQTT_USE_TLS
+  TLS_HANDSHAKING,
+#endif
   MQTT_CONNECTING,
   MQTT_CONNECTED
 };
@@ -921,7 +924,6 @@ mqtt_tcp_recv_cb(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err)
   return ERR_OK;
 }
 
-
 /**
  * TCP data sent callback function. @see tcp_sent_fn
  * @param arg MQTT client
@@ -954,6 +956,88 @@ mqtt_tcp_sent_cb(void *arg, struct tcp_pcb *tpcb, u16_t len)
     /* Try send any remaining buffers from output queue */
     mqtt_output_send(client, &client->output, client->conn);
   }
+  return ERR_OK;
+}
+
+
+
+/**
+ * TCP received callback function. @see tcp_recv_fn
+ * @param arg MQTT client
+ * @param p PBUF chain of received data
+ * @param err Passed as return value if not ERR_OK
+ * @return ERR_OK or err passed into callback
+ */
+static err_t
+tls_handshake_tcp_recv_cb(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err)
+{
+  mqtt_client_t *client = (mqtt_client_t *)arg;
+  LWIP_ASSERT("tls_handshake_tcp_recv_cb: client != NULL", client != NULL);
+  LWIP_ASSERT("tls_handshake_tcp_recv_cb: client->conn == pcb", client->conn == pcb);
+
+  if (p == NULL) {
+    LWIP_DEBUGF(MQTT_DEBUG_TRACE,("tls_handshake_tcp_recv_cb: Recv pbuf=NULL, remote has closed connection\n"));
+    mqtt_close(client, MQTT_CONNECT_DISCONNECTED);
+  } else {
+    mqtt_connection_status_t res;
+    if (err != ERR_OK) {
+      LWIP_DEBUGF(MQTT_DEBUG_WARN,("tls_handshake_tcp_recv_cb: Recv err=%d\n", err));
+      pbuf_free(p);
+      return err;
+    }
+
+    /* Tell remote that data has been received */
+    tcp_recved(pcb, p->tot_len);
+    res = mbedtls_net_incoming(client, p->payload, p->len);
+    //res = mqtt_parse_incoming(client, p);
+    pbuf_free(p);
+
+    if (res != 0) {
+      mqtt_close(client, res);
+    }
+    /* If keep alive functionality is used */
+    if (client->keep_alive != 0) {
+      /* Reset server alive watchdog */
+      client->server_watchdog = 0;
+    }
+  }
+  return ERR_OK;
+}
+
+
+/**
+ * TCP data sent callback function. @see tcp_sent_fn
+ * @param arg MQTT client
+ * @param tpcb TCP connection handle
+ * @param len Number of bytes sent
+ * @return ERR_OK
+ */
+static err_t
+tls_handshake_tcp_sent_cb(void *arg, struct tcp_pcb *tpcb, u16_t len)
+{
+  mqtt_client_t *client = (mqtt_client_t *)arg;
+
+  LWIP_UNUSED_ARG(tpcb);
+  LWIP_UNUSED_ARG(len);
+#if 0 /*! \todo */
+  if (client->conn_state == MQTT_CONNECTED) {
+    struct mqtt_request_t *r;
+
+    /* Reset keep-alive send timer and server watchdog */
+    client->cyclic_tick = 0;
+    client->server_watchdog = 0;
+    /* QoS 0 publish has no response from server, so call its callbacks here */
+    while ((r = mqtt_take_request(&client->pend_req_queue, 0)) != NULL) {
+      LWIP_DEBUGF(MQTT_DEBUG_TRACE,("mqtt_tcp_sent_cb: Calling QoS 0 publish complete callback\n"));
+      if (r->cb != NULL) {
+        r->cb(r->arg, ERR_OK);
+      }
+      mqtt_delete_request(r);
+    }
+    /* Try send any remaining buffers from output queue */
+    mqtt_output_send(client, &client->output, client->conn);
+  }
+#endif
   return ERR_OK;
 }
 
@@ -1010,6 +1094,23 @@ mqtt_tcp_connect_cb(void *arg, struct tcp_pcb *tpcb, err_t err)
   /* Initiate receiver state */
   client->msg_idx = 0;
 
+#if MQTT_USE_TLS
+  /* Setup TCP callbacks */
+  tcp_recv(tpcb, tls_handshake_tcp_recv_cb);
+  tcp_sent(tpcb, tls_handshake_tcp_sent_cb);
+  tcp_poll(tpcb, NULL, 0);
+
+  LWIP_DEBUGF(MQTT_DEBUG_TRACE,("mqtt_tcp_connect_cb: TCP connection established to server, starting TLS handshake\n"));
+  /* Enter MQTT connect state */
+  client->conn_state = TLS_HANDSHAKING;
+
+  /* Start cyclic timer */
+  sys_timeout(MQTT_CYCLIC_TIMER_INTERVAL*1000, mqtt_cyclic_timer, client);
+  client->cyclic_tick = 0;
+
+ // /* Start transmission from output queue, connect message is the first one out*/
+ // mqtt_output_send(client, &client->output, client->conn);
+#else
   /* Setup TCP callbacks */
   tcp_recv(tpcb, mqtt_tcp_recv_cb);
   tcp_sent(tpcb, mqtt_tcp_sent_cb);
@@ -1025,7 +1126,7 @@ mqtt_tcp_connect_cb(void *arg, struct tcp_pcb *tpcb, err_t err)
 
   /* Start transmission from output queue, connect message is the first one out*/
   mqtt_output_send(client, &client->output, client->conn);
-
+#endif
   return ERR_OK;
 }
 
@@ -1033,6 +1134,30 @@ mqtt_tcp_connect_cb(void *arg, struct tcp_pcb *tpcb, err_t err)
 
 /*---------------------------------------------------------------------------------------------------- */
 /* Public API */
+
+#if MQTT_USE_TLS
+err_t mqtt_start_mqtt(mqtt_client_t* client) {
+  struct tcp_pcb *tpcb;
+
+  tpcb = client->conn;
+  /* Setup TCP callbacks */
+  tcp_recv(tpcb, mqtt_tcp_recv_cb);
+  tcp_sent(tpcb, mqtt_tcp_sent_cb);
+  tcp_poll(tpcb, mqtt_tcp_poll_cb, 2);
+
+  LWIP_DEBUGF(MQTT_DEBUG_TRACE,("mqtt_tcp_connect_cb: TCP connection established to server\n"));
+  /* Enter MQTT connect state */
+  //client->conn_state = MQTT_CONNECTING;
+  client->conn_state = MQTT_CONNECTED;
+  /* Start cyclic timer */
+  //sys_timeout(MQTT_CYCLIC_TIMER_INTERVAL*1000, mqtt_cyclic_timer, client);
+  //client->cyclic_tick = 0;
+
+  /* Start transmission from output queue, connect message is the first one out*/
+  mqtt_output_send(client, &client->output, client->conn);
+  return ERR_OK;
+}
+#endif /* MQTT_USE_TLS */
 
 
 /**
@@ -1372,5 +1497,21 @@ mqtt_client_is_connected(mqtt_client_t *client)
   LWIP_ASSERT("mqtt_client_is_connected: client != NULL", client);
   return client->conn_state == MQTT_CONNECTED;
 }
+
+#if MQTT_USE_TLS
+/**
+ * @ingroup mqtt
+ * Check connection with server
+ * @param client MQTT client
+ * @return 1 if TLS handshaking to server, 0 otherwise
+ */
+u8_t
+mqtt_client_is_handshaking(mqtt_client_t *client)
+{
+  LWIP_ASSERT("mqtt_client_is_handshaking: client != NULL", client);
+  return client->conn_state == TLS_HANDSHAKING;
+}
+#endif
+
 
 #endif /* LWIP_TCP && LWIP_CALLBACK_API */

@@ -62,11 +62,19 @@ extern "C" {
  * (eg two file descriptors for combined IPv4 + IPv6 support, or additional
  * structures for hand-made UDP demultiplexing).
  */
+#if 0
 typedef struct
 {
   struct tcp_pcb *tpcb;             /**< The underlying tcp control block */
 }
 mbedtls_net_context;
+#else
+#include "mqtt.h"
+
+typedef struct mqtt_client_t mbedtls_net_context;
+
+#endif
+
 
 /**
  * \brief          Initialize a context
@@ -217,6 +225,9 @@ int mbedtls_net_recv_timeout( void *ctx, unsigned char *buf, size_t len,
  * \param ctx      The context to free
  */
 void mbedtls_net_free( mbedtls_net_context *ctx );
+
+int mbedtls_net_incoming(void *ctx, unsigned char *buf, size_t len);
+
 
 #ifdef __cplusplus
 }

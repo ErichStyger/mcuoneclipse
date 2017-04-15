@@ -208,7 +208,6 @@ struct mqtt_client_t
   struct mqtt_ringbuf_t output;
 #if MQTT_USE_TLS
   mbedtls_ssl_context *ssl_context;
-  //mbedtls_net_context *net_context;
 #endif
 };
 
@@ -225,6 +224,9 @@ mqtt_client_t *mqtt_client_new(void);
 
 /** Check connection status */
 u8_t mqtt_client_is_connected(mqtt_client_t *client);
+
+u8_t
+mqtt_client_is_handshaking(mqtt_client_t *client);
 
 /** Set callback to call for incoming publish */
 void mqtt_set_inpub_callback(mqtt_client_t *client, mqtt_incoming_publish_cb_t,
@@ -244,6 +246,10 @@ err_t mqtt_sub_unsub(mqtt_client_t *client, const char *topic, u8_t qos, mqtt_re
 /** Publish data to topic */
 err_t mqtt_publish(mqtt_client_t *client, const char *topic, const void *payload, u16_t payload_length, u8_t qos, u8_t retain,
                                     mqtt_request_cb_t cb, void *arg);
+
+#if MQTT_USE_TLS
+err_t mqtt_start_mqtt(mqtt_client_t* client);
+#endif
 
 #ifdef __cplusplus
 }

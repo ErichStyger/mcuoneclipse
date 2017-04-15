@@ -105,13 +105,15 @@ static int net_prepare( void )
 }
 #endif
 
+#if 0
 /*
  * Initialize a context
  */
 void mbedtls_net_init( mbedtls_net_context *ctx )
 {
-    ctx->tpcb = NULL;
+   // ctx->tpcb = NULL;
 }
+#endif
 
 #if 0
 /*
@@ -489,6 +491,26 @@ void mbedtls_net_usleep( unsigned long usec )
 }
 #endif
 
+
+static unsigned char net_in_data[8192];
+static size_t net_in_data_len = 0;
+static unsigned char *net_in_ptr = &net_in_data[0];
+static unsigned char *net_out_ptr = &net_in_data[0];
+
+int mbedtls_net_incoming(void *ctx, unsigned char *buf, size_t len) {
+  if (len>sizeof(net_in_data)) {
+    return -1; /* failure */
+  }
+  if (net_out_ptr+len>=&net_in_data[sizeof(net_in_data)]) {
+    return -1;
+  }
+  memcpy(net_in_ptr, buf, len);
+  net_in_ptr += len;
+  net_in_data_len += len;
+  printf("mbedtls_net_incoming: in, size: %d, bufsize %d\r\n", len, net_in_data_len);
+ /*! \todo */
+  return 0;
+}
 /*
  * Read at most 'len' characters
  */
@@ -524,12 +546,19 @@ int mbedtls_net_recv( void *ctx, unsigned char *buf, size_t len )
     }
     return( ret );
 #else
-    mbedtls_net_context *context;
-    int err;
+    struct mqtt_client_t *context;
+    //int err;
 
-    context = (mbedtls_net_context *)ctx;
-    if(context->tpcb == NULL) {
+    context = (struct mqtt_client_t *)ctx;
+    if(context->conn == NULL) {
       return( MBEDTLS_ERR_NET_INVALID_CONTEXT );
+    }
+    if (net_in_data_len!=0) {
+      memcpy(buf, net_out_ptr, len);
+      net_out_ptr += len;
+      net_in_data_len -= len;
+      printf("mbedtls_net_recv: read size: %d, bufsize %d\r\n", len, net_in_data_len);
+      return len;
     }
 #if 0
     err = tcp_recv(context->tpcb, buf, len, TCP_WRITE_FLAG_COPY);
@@ -623,15 +652,15 @@ int mbedtls_net_send( void *ctx, const unsigned char *buf, size_t len )
     }
     return( ret );
 #else
-  mbedtls_net_context *context;
+    struct mqtt_client_t *context;
 
-  context = (mbedtls_net_context *)ctx;
+  context = (struct mqtt_client_t *)ctx;
   int err;
 
-  if(context->tpcb == NULL) {
+  if(context->conn == NULL) {
     return( MBEDTLS_ERR_NET_INVALID_CONTEXT );
   }
-  err = tcp_write(context->tpcb, buf, len, TCP_WRITE_FLAG_COPY /*| (wrap ? TCP_WRITE_FLAG_MORE : 0)*/);
+  err = tcp_write(context->conn, buf, len, TCP_WRITE_FLAG_COPY /*| (wrap ? TCP_WRITE_FLAG_MORE : 0)*/);
   if (err!=0) {
     return MBEDTLS_ERR_SSL_WANT_WRITE;
   }

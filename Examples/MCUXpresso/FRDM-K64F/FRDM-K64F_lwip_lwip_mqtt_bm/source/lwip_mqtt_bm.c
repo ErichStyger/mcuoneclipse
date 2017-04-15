@@ -133,6 +133,9 @@ typedef enum {
 	MQTT_STATE_INIT,
     MQTT_STATE_IDLE,
 	MQTT_STATE_DO_CONNECT,
+#if MQTT_USE_TLS
+    MQTT_STATE_DO_TLS_HANDSHAKE,
+#endif
 	MQTT_STATE_WAIT_FOR_CONNECTION,
 	MQTT_STATE_CONNECTED,
 	MQTT_STATE_DO_PUBLISH,
@@ -140,6 +143,8 @@ typedef enum {
 } MQTT_StateT;
 
 static MQTT_StateT MQTT_state = MQTT_STATE_INIT;
+
+static mqtt_client_t mqtt_client; /* descriptor holding all the needed client information */
 
 #if MQTT_USE_TLS
 
@@ -149,8 +154,7 @@ static void my_debug(void *ctx, int level, const char *file, int line, const cha
   printf("\r\n%s, at line %d in file %s\n", str, line, file);
 }
 
-
-static mbedtls_net_context server_fd;
+//static mbedtls_net_context server_fd;
 static mbedtls_entropy_context entropy;
 static mbedtls_ctr_drbg_context ctr_drbg;
 static mbedtls_ssl_context ssl;
@@ -164,7 +168,7 @@ static int TLS_Init(void) {
   const char *pers = "ssl_client";
 
   /* initialize the different descriptors */
-  mbedtls_net_init( &server_fd );
+  //mbedtls_net_init( &server_fd );
   mbedtls_ssl_init( &ssl );
   mbedtls_ssl_config_init( &conf );
   mbedtls_x509_crt_init( &cacert );
@@ -207,7 +211,7 @@ static int TLS_Init(void) {
       return -1;
   }
   /* the SSL context needs to know the input and output functions it needs to use for sending out network traffic. */
-  mbedtls_ssl_set_bio( &ssl, &server_fd, mbedtls_net_send, mbedtls_net_recv, NULL);
+  mbedtls_ssl_set_bio(&ssl, &mqtt_client, mbedtls_net_send, mbedtls_net_recv, NULL);
 
   return 0; /* no error */
 }
@@ -321,22 +325,6 @@ static int mqtt_do_connect(mqtt_client_t *client) {
     printf("mqtt_connect return %d\n", err);
     return -1; /* error */
   }
-#if MQTT_USE_TLS
-  else {
-    int ret;
-
-    server_fd.tpcb = client->conn;
-    ret = mbedtls_ssl_handshake(&ssl);
-    if (ret < 0) {
-      if (ret != MBEDTLS_ERR_SSL_WANT_READ &&
-         ret != MBEDTLS_ERR_SSL_WANT_WRITE)
-      {
-        printf("mbedtls_ssl_handshake", ret);
-        return -1;
-      }
-    }
-  }
-#endif
   return 0; /* ok */
 }
 
@@ -369,6 +357,26 @@ void SysTick_Handler(void) {
   time_isr();
 }
 
+#if MQTT_USE_TLS
+static int mqtt_do_tls_handshake(mqtt_client_t *mqtt_client) {
+  int ret;
+
+  if (!mqtt_client_is_handshaking(mqtt_client)) {
+     return -1; /* still connecting on the TCP level */
+  }
+  ret = mbedtls_ssl_handshake(mqtt_client->ssl_context);
+  if (ret < 0) {
+    if (ret != MBEDTLS_ERR_SSL_WANT_READ &&
+       ret != MBEDTLS_ERR_SSL_WANT_WRITE)
+    {
+      //printf("mbedtls_ssl_handshake", ret);
+      return -1;
+    }
+  }
+  return 0;
+}
+#endif
+
 static void MqttDoStateMachine(mqtt_client_t *mqtt_client) {
   switch(MQTT_state) {
     case MQTT_STATE_INIT:
@@ -377,12 +385,26 @@ static void MqttDoStateMachine(mqtt_client_t *mqtt_client) {
     case MQTT_STATE_DO_CONNECT:
       printf("Connecting to Mosquito broker\r\n");
       if (mqtt_do_connect(mqtt_client)==0) {
+#if MQTT_USE_TLS
+        MQTT_state = MQTT_STATE_DO_TLS_HANDSHAKE;
+#else
+        MQTT_state = MQTT_STATE_WAIT_FOR_CONNECTION;
+#endif
+      } else {
         printf("Failed to connect to broker\r\n");
+      }
+      break;
+#if MQTT_USE_TLS
+    case MQTT_STATE_DO_TLS_HANDSHAKE:
+      if (mqtt_do_tls_handshake(mqtt_client)==0) {
+        printf("TLS handshake completed\r\n");
+        mqtt_start_mqtt(mqtt_client);
         MQTT_state = MQTT_STATE_WAIT_FOR_CONNECTION;
       }
       break;
+#endif
     case MQTT_STATE_WAIT_FOR_CONNECTION:
-      sys_check_timeouts(); /* Handle all system timeouts for all core protocols */
+      //sys_check_timeouts(); /* Handle all system timeouts for all core protocols */
       if (mqtt_client_is_connected(mqtt_client)) {
         printf("Client is connected\r\n");
         MQTT_state = MQTT_STATE_CONNECTED;
@@ -409,7 +431,6 @@ static void DoMQTT(struct netif *netifp) {
   uint32_t timeStampMs, diffTimeMs;
   #define CONNECT_DELAY_MS   1000 /* after 1 second, connect */
   #define PUBLISH_PERIOD_MS  2000 /* publish every 2 seconds */
-  mqtt_client_t mqtt_client;
 
   MQTT_state = MQTT_STATE_IDLE;
   timeStampMs = sys_now(); /* get time in milli seconds */
