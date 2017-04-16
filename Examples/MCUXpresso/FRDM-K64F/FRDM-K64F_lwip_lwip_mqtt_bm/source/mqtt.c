@@ -254,6 +254,7 @@ mqtt_output_send(mqtt_client_t *client, struct mqtt_ringbuf_t *rb, struct tcp_pc
     /* Use the lesser one of ring buffer linear length and TCP send buffer size */
     send_len = LWIP_MIN(tcp_sndbuf(tpcb), mqtt_ringbuf_linear_read_length(rb));
 #if MQTT_USE_TLS
+    printf("mbedtls_ssl_write: bytes \r\n", send_len);
     err = mbedtls_ssl_write(client->ssl_context, mqtt_ringbuf_get_ptr(rb), send_len);
 #else
     err = tcp_write(tpcb, mqtt_ringbuf_get_ptr(rb), send_len, TCP_WRITE_FLAG_COPY);
@@ -880,7 +881,7 @@ mqtt_parse_incoming(mqtt_client_t *client, struct pbuf *p)
   return MQTT_CONNECT_ACCEPTED;
 }
 
-#if 1 || !MQTT_USE_TLS /*! \todo */
+#if !MQTT_USE_TLS
 /**
  * TCP received callback function. @see tcp_recv_fn
  * @param arg MQTT client
@@ -922,6 +923,24 @@ mqtt_tcp_recv_cb(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err)
   }
   return ERR_OK;
 }
+#else
+err_t mqtt_recv_from_tls(mqtt_client_t *client) {
+  int res;
+  mqtt_connection_status_t status;
+  struct pbuf p;
+
+  res = mbedtls_ssl_read(client->ssl_context, client->rx_buffer, sizeof(client->rx_buffer));
+  if (res>0) {
+    printf("mqtt_recv_from_tls: recv %d\r\n", res);
+    memset(&p, 0, sizeof(struct pbuf)); /* initialize */
+    p.len = res;
+    p.tot_len = p.len;
+    p.payload = client->rx_buffer;
+    status = mqtt_parse_incoming(client, &p);
+    //status = mqtt_message_received(client, 0, res, 0);
+  }
+  return ERR_OK;
+}
 #endif /* !MQTT_USE_TLS */
 
 /**
@@ -960,7 +979,6 @@ mqtt_tcp_sent_cb(void *arg, struct tcp_pcb *tpcb, u16_t len)
 }
 
 
-
 /**
  * TCP received callback function. @see tcp_recv_fn
  * @param arg MQTT client
@@ -968,20 +986,19 @@ mqtt_tcp_sent_cb(void *arg, struct tcp_pcb *tpcb, u16_t len)
  * @param err Passed as return value if not ERR_OK
  * @return ERR_OK or err passed into callback
  */
-static err_t
-tls_handshake_tcp_recv_cb(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err)
+static err_t tls_tcp_recv_cb(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err)
 {
   mqtt_client_t *client = (mqtt_client_t *)arg;
-  LWIP_ASSERT("tls_handshake_tcp_recv_cb: client != NULL", client != NULL);
-  LWIP_ASSERT("tls_handshake_tcp_recv_cb: client->conn == pcb", client->conn == pcb);
+  LWIP_ASSERT("tls_tcp_recv_cb: client != NULL", client != NULL);
+  LWIP_ASSERT("tls_tcp_recv_cb: client->conn == pcb", client->conn == pcb);
 
   if (p == NULL) {
-    LWIP_DEBUGF(MQTT_DEBUG_TRACE,("tls_handshake_tcp_recv_cb: Recv pbuf=NULL, remote has closed connection\n"));
+    LWIP_DEBUGF(MQTT_DEBUG_TRACE,("tls_tcp_recv_cb: Recv pbuf=NULL, remote has closed connection\n"));
     mqtt_close(client, MQTT_CONNECT_DISCONNECTED);
   } else {
     mqtt_connection_status_t res;
     if (err != ERR_OK) {
-      LWIP_DEBUGF(MQTT_DEBUG_WARN,("tls_handshake_tcp_recv_cb: Recv err=%d\n", err));
+      LWIP_DEBUGF(MQTT_DEBUG_WARN,("tls_tcp_recv_cb: Recv err=%d\n", err));
       pbuf_free(p);
       return err;
     }
@@ -1012,32 +1029,9 @@ tls_handshake_tcp_recv_cb(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t 
  * @param len Number of bytes sent
  * @return ERR_OK
  */
-static err_t
-tls_handshake_tcp_sent_cb(void *arg, struct tcp_pcb *tpcb, u16_t len)
+static err_t tls_tcp_sent_cb(void *arg, struct tcp_pcb *tpcb, u16_t len)
 {
-  mqtt_client_t *client = (mqtt_client_t *)arg;
-
-  LWIP_UNUSED_ARG(tpcb);
-  LWIP_UNUSED_ARG(len);
-#if 0 /*! \todo */
-  if (client->conn_state == MQTT_CONNECTED) {
-    struct mqtt_request_t *r;
-
-    /* Reset keep-alive send timer and server watchdog */
-    client->cyclic_tick = 0;
-    client->server_watchdog = 0;
-    /* QoS 0 publish has no response from server, so call its callbacks here */
-    while ((r = mqtt_take_request(&client->pend_req_queue, 0)) != NULL) {
-      LWIP_DEBUGF(MQTT_DEBUG_TRACE,("mqtt_tcp_sent_cb: Calling QoS 0 publish complete callback\n"));
-      if (r->cb != NULL) {
-        r->cb(r->arg, ERR_OK);
-      }
-      mqtt_delete_request(r);
-    }
-    /* Try send any remaining buffers from output queue */
-    mqtt_output_send(client, &client->output, client->conn);
-  }
-#endif
+  mqtt_tcp_sent_cb(arg, tpcb, 0); /* call normal (non-tls) callback */
   return ERR_OK;
 }
 
@@ -1046,8 +1040,7 @@ tls_handshake_tcp_sent_cb(void *arg, struct tcp_pcb *tpcb, u16_t len)
  * @param arg MQTT client
  * @param err Error encountered
  */
-static void
-mqtt_tcp_err_cb(void *arg, err_t err)
+static void mqtt_tcp_err_cb(void *arg, err_t err)
 {
   mqtt_client_t *client = (mqtt_client_t *)arg;
   LWIP_UNUSED_ARG(err); /* only used for debug output */
@@ -1058,6 +1051,7 @@ mqtt_tcp_err_cb(void *arg, err_t err)
   mqtt_close(client, MQTT_CONNECT_DISCONNECTED);
 }
 
+#if !MQTT_USE_TLS
 /**
  * TCP poll callback function. @see tcp_poll_fn
  * @param arg MQTT client
@@ -1074,6 +1068,7 @@ mqtt_tcp_poll_cb(void *arg, struct tcp_pcb *tpcb)
   }
   return ERR_OK;
 }
+#endif /* !MQTT_USE_TLS  */
 
 /**
  * TCP connect callback function. @see tcp_connected_fn
@@ -1096,8 +1091,8 @@ mqtt_tcp_connect_cb(void *arg, struct tcp_pcb *tpcb, err_t err)
 
 #if MQTT_USE_TLS
   /* Setup TCP callbacks */
-  tcp_recv(tpcb, tls_handshake_tcp_recv_cb);
-  tcp_sent(tpcb, tls_handshake_tcp_sent_cb);
+  tcp_recv(tpcb, tls_tcp_recv_cb);
+  tcp_sent(tpcb, tls_tcp_sent_cb);
   tcp_poll(tpcb, NULL, 0);
 
   LWIP_DEBUGF(MQTT_DEBUG_TRACE,("mqtt_tcp_connect_cb: TCP connection established to server, starting TLS handshake\n"));
@@ -1141,14 +1136,14 @@ err_t mqtt_start_mqtt(mqtt_client_t* client) {
 
   tpcb = client->conn;
   /* Setup TCP callbacks */
-  tcp_recv(tpcb, mqtt_tcp_recv_cb);
-  tcp_sent(tpcb, mqtt_tcp_sent_cb);
-  tcp_poll(tpcb, mqtt_tcp_poll_cb, 2);
+  //tcp_recv(tpcb, mqtt_tcp_recv_cb);
+  //tcp_sent(tpcb, mqtt_tcp_sent_cb);
+  //tcp_poll(tpcb, mqtt_tcp_poll_cb, 2);
 
   LWIP_DEBUGF(MQTT_DEBUG_TRACE,("mqtt_tcp_connect_cb: TCP connection established to server\n"));
   /* Enter MQTT connect state */
-  //client->conn_state = MQTT_CONNECTING;
-  client->conn_state = MQTT_CONNECTED;
+  client->conn_state = MQTT_CONNECTING; /* start MQTT connection sequence */
+  //client->conn_state = MQTT_CONNECTED;
   /* Start cyclic timer */
   //sys_timeout(MQTT_CYCLIC_TIMER_INTERVAL*1000, mqtt_cyclic_timer, client);
   //client->cyclic_tick = 0;

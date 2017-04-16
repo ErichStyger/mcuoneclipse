@@ -75,7 +75,7 @@
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
-#define configMQTT_CLIENT_NAME  "lwip_hslu"
+#define configMQTT_CLIENT_NAME  "ErichStyger-PC"
 #define configMQTT_CLIENT_USER  NULL /* client user name or NULL */
 #define configMQTT_CLIENT_PWD   NULL /* client password or NULL */
 
@@ -166,7 +166,7 @@ static mbedtls_ctr_drbg_context ctr_drbg;
 static int TLS_Init(void) {
   /* inspired by https://tls.mbed.org/kb/how-to/mbedtls-tutorial */
   int ret;
-  const char *pers = "ssl_client";
+  const char *pers = "ErichStyger-PC";
 
   /* initialize the different descriptors */
   //mbedtls_net_init( &server_fd );
@@ -405,17 +405,29 @@ static void MqttDoStateMachine(mqtt_client_t *mqtt_client) {
       break;
 #endif
     case MQTT_STATE_WAIT_FOR_CONNECTION:
-      //sys_check_timeouts(); /* Handle all system timeouts for all core protocols */
       if (mqtt_client_is_connected(mqtt_client)) {
         printf("Client is connected\r\n");
         MQTT_state = MQTT_STATE_CONNECTED;
+      } else {
+#if MQTT_USE_TLS
+        mqtt_recv_from_tls(mqtt_client);
+#endif
       }
       break;
     case MQTT_STATE_CONNECTED:
+      if (!mqtt_client_is_connected(mqtt_client)) {
+        printf("Client got disconnected?!?\r\n");
+        MQTT_state = MQTT_STATE_DO_CONNECT;
+      }
+#if MQTT_USE_TLS
+      else {
+        mqtt_recv_from_tls(mqtt_client);
+      }
+#endif
       break;
     case MQTT_STATE_DO_PUBLISH:
-      printf("Publish to broker\r\n");
-      my_mqtt_publish(mqtt_client, NULL);
+      //printf("Publish to broker\r\n");
+      //my_mqtt_publish(mqtt_client, NULL);
       MQTT_state = MQTT_STATE_CONNECTED;
       break;
     case MQTT_STATE_DO_DISCONNECT:
@@ -453,7 +465,6 @@ static void DoMQTT(struct netif *netifp) {
     sys_check_timeouts(); /* Handle all system timeouts for all core protocols */
   }
 }
-
 
 /*!
  * @brief Main function.
