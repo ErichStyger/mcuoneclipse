@@ -880,7 +880,7 @@ mqtt_parse_incoming(mqtt_client_t *client, struct pbuf *p)
   return MQTT_CONNECT_ACCEPTED;
 }
 
-
+#if 1 || !MQTT_USE_TLS /*! \todo */
 /**
  * TCP received callback function. @see tcp_recv_fn
  * @param arg MQTT client
@@ -919,10 +919,10 @@ mqtt_tcp_recv_cb(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err)
       /* Reset server alive watchdog */
       client->server_watchdog = 0;
     }
-
   }
   return ERR_OK;
 }
+#endif /* !MQTT_USE_TLS */
 
 /**
  * TCP data sent callback function. @see tcp_sent_fn

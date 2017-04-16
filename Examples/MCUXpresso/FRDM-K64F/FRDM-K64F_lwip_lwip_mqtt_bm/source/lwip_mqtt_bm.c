@@ -57,6 +57,7 @@
 #include "LED2.h"
 #include "LED3.h"
 #include "WAIT1.h"
+#include "RNG1.h"
 
 #if MQTT_USE_TLS
   #include "mbedtls/entropy.h"
@@ -478,6 +479,7 @@ int main(void) {
   LED2_Init();
   LED3_Init();
   WAIT1_Init();
+  RNG1_Init();
 
   LED1_On();
   LED1_Off();

@@ -54,6 +54,7 @@
 #include <netdb.h>
 #include <errno.h>
 
+#include "RNG1.h"
 
 /* Some MS functions want int and MSVC warns if we pass size_t,
  * but the standard fucntions use socklen_t, so cast only for MSVC */
@@ -491,25 +492,33 @@ void mbedtls_net_usleep( unsigned long usec )
 }
 #endif
 
-
+#if 0
 static unsigned char net_in_data[8192];
 static size_t net_in_data_len = 0;
 static unsigned char *net_in_ptr = &net_in_data[0];
 static unsigned char *net_out_ptr = &net_in_data[0];
+#endif
 
 int mbedtls_net_incoming(void *ctx, unsigned char *buf, size_t len) {
+#if 1
+  (void)ctx; /* not used */
+  RNG1_Putn(buf, len);
+  printf("mbedtls_net_incoming: put nof bytes: %d, free: %d\r\n", len, (int)RNG1_NofFreeElements());
+  return 0;
+#else
   if (len>sizeof(net_in_data)) {
     return -1; /* failure */
   }
   if (net_out_ptr+len>=&net_in_data[sizeof(net_in_data)]) {
     return -1;
   }
-  memcpy(net_in_ptr, buf, len);
+  memcpy(net_in_ptr, buf, len); /* copy inside net_in_ptr */
   net_in_ptr += len;
   net_in_data_len += len;
   printf("mbedtls_net_incoming: in, size: %d, bufsize %d\r\n", len, net_in_data_len);
  /*! \todo */
   return 0;
+#endif
 }
 /*
  * Read at most 'len' characters
@@ -553,6 +562,18 @@ int mbedtls_net_recv( void *ctx, unsigned char *buf, size_t len )
     if(context->conn == NULL) {
       return( MBEDTLS_ERR_NET_INVALID_CONTEXT );
     }
+#if 1
+    if (RNG1_NofElements()>=len) {
+      printf("mbedtls_net_recv: requested nof: %d, available %d\r\n", len, (int)RNG1_NofElements());
+      if (RNG1_Getn(buf, len)==ERR_OK) {
+        return len; /* ok */
+      } else {
+        return 0; /* failure? */
+      }
+    } else {
+      return 0; /* not enough in buffer */
+    }
+#else
     if (net_in_data_len!=0) {
       memcpy(buf, net_out_ptr, len);
       net_out_ptr += len;
@@ -560,6 +581,7 @@ int mbedtls_net_recv( void *ctx, unsigned char *buf, size_t len )
       printf("mbedtls_net_recv: read size: %d, bufsize %d\r\n", len, net_in_data_len);
       return len;
     }
+#endif
 #if 0
     err = tcp_recv(context->tpcb, buf, len, TCP_WRITE_FLAG_COPY);
     if (err!=0) {
@@ -652,7 +674,7 @@ int mbedtls_net_send( void *ctx, const unsigned char *buf, size_t len )
     }
     return( ret );
 #else
-    struct mqtt_client_t *context;
+  struct mqtt_client_t *context;
 
   context = (struct mqtt_client_t *)ctx;
   int err;
