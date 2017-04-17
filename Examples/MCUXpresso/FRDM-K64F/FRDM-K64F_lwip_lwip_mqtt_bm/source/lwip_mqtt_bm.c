@@ -311,7 +311,7 @@ static int mqtt_do_connect(mqtt_client_t *client) {
   ci.client_id = configMQTT_CLIENT_NAME;
   ci.client_user = configMQTT_CLIENT_USER;
   ci.client_pass = configMQTT_CLIENT_PWD;
-  ci.keep_alive = 30; /* timeout */
+  ci.keep_alive = 60; /* timeout */
 
   /* Initiate client and connect to server, if this fails immediately an error code is returned
      otherwise mqtt_connection_cb will be called with connection result after attempting
@@ -380,7 +380,6 @@ static int mqtt_do_tls_handshake(mqtt_client_t *mqtt_client) {
 }
 #endif
 
-static bool sendIt = TRUE;
 static void MqttDoStateMachine(mqtt_client_t *mqtt_client) {
   switch(MQTT_state) {
     case MQTT_STATE_INIT:
@@ -424,16 +423,14 @@ static void MqttDoStateMachine(mqtt_client_t *mqtt_client) {
       }
 #if MQTT_USE_TLS
       else {
-        if (sendIt) {
-          mqtt_tls_output_send(mqtt_client);
-        }
-        mqtt_recv_from_tls(mqtt_client);
+        mqtt_tls_output_send(mqtt_client); /* send (if any) */
+        mqtt_recv_from_tls(mqtt_client); /* poll if we have incoming packets */
       }
 #endif
       break;
     case MQTT_STATE_DO_PUBLISH:
-      //printf("Publish to broker\r\n");
-      //my_mqtt_publish(mqtt_client, NULL);
+      printf("Publish to broker\r\n");
+      my_mqtt_publish(mqtt_client, NULL);
       MQTT_state = MQTT_STATE_CONNECTED;
       break;
     case MQTT_STATE_DO_DISCONNECT:
@@ -448,8 +445,8 @@ static void MqttDoStateMachine(mqtt_client_t *mqtt_client) {
 
 static void DoMQTT(struct netif *netifp) {
   uint32_t timeStampMs, diffTimeMs;
-  #define CONNECT_DELAY_MS   1000 /* after 1 second, connect */
-  #define PUBLISH_PERIOD_MS  2000 /* publish every 2 seconds */
+  #define CONNECT_DELAY_MS   1000 /* delay in seconds for connect */
+  #define PUBLISH_PERIOD_MS  10000 /* publish period in seconds */
 
   MQTT_state = MQTT_STATE_IDLE;
   timeStampMs = sys_now(); /* get time in milli seconds */

@@ -636,7 +636,6 @@ mqtt_cyclic_timer(void *arg)
   }
 }
 
-
 /**
  * Send PUBACK, PUBREC or PUBREL response message
  * @param client MQTT client
