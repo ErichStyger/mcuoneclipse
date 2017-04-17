@@ -155,7 +155,6 @@ static void my_debug(void *ctx, int level, const char *file, int line, const cha
   printf("\r\n%s, at line %d in file %s\n", str, line, file);
 }
 
-//static mbedtls_net_context server_fd;
 static mbedtls_entropy_context entropy;
 static mbedtls_ctr_drbg_context ctr_drbg;
 static mbedtls_ssl_context ssl;
@@ -169,7 +168,6 @@ static int TLS_Init(void) {
   const char *pers = "ErichStyger-PC";
 
   /* initialize the different descriptors */
-  //mbedtls_net_init( &server_fd );
   mbedtls_ssl_init( &ssl );
   mbedtls_ssl_config_init( &conf );
   mbedtls_x509_crt_init( &cacert );
@@ -204,7 +202,7 @@ static int TLS_Init(void) {
   mbedtls_ssl_conf_rng( &conf, mbedtls_ctr_drbg_random, &ctr_drbg );
   mbedtls_ssl_conf_dbg( &conf, my_debug, stdout );
 
-  mbedtls_ssl_setup(&ssl, &conf); /* << EST */
+  mbedtls_ssl_setup(&ssl, &conf);
 
   if( ( ret = mbedtls_ssl_set_hostname( &ssl, "ErichStyger-PC" ) ) != 0 )
   {
@@ -216,9 +214,7 @@ static int TLS_Init(void) {
 
   return 0; /* no error */
 }
-
 #endif
-
 
 /* The idea is to demultiplex topic and create some reference to be used in data callbacks
    Example here uses a global variable, better would be to use a member in arg
@@ -280,7 +276,7 @@ static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection
 
     /* Setup callback for incoming publish requests */
     mqtt_set_inpub_callback(client, mqtt_incoming_publish_cb, mqtt_incoming_data_cb, arg);
-#if 0
+#if 0 /* not doing this here, will be done later in the application */
     /* Subscribe to a topic named "subtopic" with QoS level 1, call mqtt_sub_request_cb with result */
     err = mqtt_subscribe(client, "subtopic", 1, mqtt_sub_request_cb, arg);
 
@@ -526,11 +522,11 @@ int main(void) {
 
 #if MQTT_USE_TLS
   /* initialize random number generator */
-  RNGA_Init(RNG);
-  RNGA_Seed(RNG, SIM->UIDL);
-  if (TLS_Init()!=0) {
+  RNGA_Init(RNG); /* init random number generator */
+  RNGA_Seed(RNG, SIM->UIDL); /* use device unique ID as seed for the RNG */
+  if (TLS_Init()!=0) { /* failed? */
     printf("ERROR: failed to initialize for TLS!\r\n");
-    for(;;) {}
+    for(;;) {} /* stay here in case of error */
   }
 #endif
 

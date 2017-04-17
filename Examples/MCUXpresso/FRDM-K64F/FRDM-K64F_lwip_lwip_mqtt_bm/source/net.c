@@ -520,6 +520,7 @@ int mbedtls_net_incoming(void *ctx, unsigned char *buf, size_t len) {
   return 0;
 #endif
 }
+
 /*
  * Read at most 'len' characters
  */
@@ -556,40 +557,18 @@ int mbedtls_net_recv( void *ctx, unsigned char *buf, size_t len )
     return( ret );
 #else
     struct mqtt_client_t *context;
-    //int err;
 
     context = (struct mqtt_client_t *)ctx;
     if(context->conn == NULL) {
       return( MBEDTLS_ERR_NET_INVALID_CONTEXT );
     }
-#if 1
     if (RNG1_NofElements()>=len) {
       printf("mbedtls_net_recv: requested nof: %d, available %d\r\n", len, (int)RNG1_NofElements());
       if (RNG1_Getn(buf, len)==ERR_OK) {
         return len; /* ok */
-      } else {
-        return 0; /* failure? */
       }
-    } else {
-      return 0; /* not enough in buffer */
     }
-#else
-    if (net_in_data_len!=0) {
-      memcpy(buf, net_out_ptr, len);
-      net_out_ptr += len;
-      net_in_data_len -= len;
-      printf("mbedtls_net_recv: read size: %d, bufsize %d\r\n", len, net_in_data_len);
-      return len;
-    }
-#endif
-#if 0
-    err = tcp_recv(context->tpcb, buf, len, TCP_WRITE_FLAG_COPY);
-    if (err!=0) {
-      return MBEDTLS_ERR_SSL_WANT_WRITE;
-    }
-#endif
-    return 0;
-    //return len; /* >0: no error */
+    return 0; /* nothing read */
 #endif
 }
 

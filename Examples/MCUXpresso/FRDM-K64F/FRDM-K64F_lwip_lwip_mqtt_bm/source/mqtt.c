@@ -151,7 +151,7 @@ static const char * const mqtt_message_type_str[15] =
 #if MQTT_USE_TLS
 err_t tls_close(struct tcp_pcb *pcb) {
     return tcp_close(pcb);
-#if 0
+#if 0 /*! \todo closing connection is not done in a clean way yet! */
     mbedtls_net_free( &server_fd );
     mbedtls_ssl_free( &ssl );
     mbedtls_ssl_config_free( &conf );
@@ -273,7 +273,6 @@ mqtt_output_send(mqtt_client_t *client, struct mqtt_ringbuf_t *rb, struct tcp_pc
     err = tcp_write(tpcb, mqtt_ringbuf_get_ptr(rb), send_len, TCP_WRITE_FLAG_COPY);
 #endif
   }
-
   if (err == ERR_OK) {
     mqtt_ringbuf_advance_get_idx(rb, send_len);
     /* Flush */
@@ -941,7 +940,7 @@ err_t mqtt_recv_from_tls(mqtt_client_t *client) {
   mqtt_connection_status_t status;
   struct pbuf p;
 
-  /*! \todo can we really use rx_buffer? */
+  /*! \todo check if can we really use rx_buffer here? */
   nof = mbedtls_ssl_read(client->ssl_context, client->rx_buffer, sizeof(client->rx_buffer));
   if (nof>0) {
     printf("mqtt_recv_from_tls: recv %d\r\n", nof);
@@ -950,6 +949,9 @@ err_t mqtt_recv_from_tls(mqtt_client_t *client) {
     p.tot_len = p.len;
     p.payload = client->rx_buffer;
     status = mqtt_parse_incoming(client, &p);
+    if (status!=MQTT_CONNECT_ACCEPTED) {
+      return ERR_CONN; /* connection error */ /*! \todo In case of communication error, have to close connection! */
+    }
   }
   return ERR_OK;
 }
@@ -1123,9 +1125,6 @@ mqtt_tcp_connect_cb(void *arg, struct tcp_pcb *tpcb, err_t err)
   /* Start cyclic timer */
   sys_timeout(MQTT_CYCLIC_TIMER_INTERVAL*1000, mqtt_cyclic_timer, client);
   client->cyclic_tick = 0;
-
- // /* Start transmission from output queue, connect message is the first one out*/
- // mqtt_output_send(client, &client->output, client->conn);
 #else
   /* Setup TCP callbacks */
   tcp_recv(tpcb, mqtt_tcp_recv_cb);
@@ -1145,8 +1144,6 @@ mqtt_tcp_connect_cb(void *arg, struct tcp_pcb *tpcb, err_t err)
 #endif
   return ERR_OK;
 }
-
-
 
 /*---------------------------------------------------------------------------------------------------- */
 /* Public API */

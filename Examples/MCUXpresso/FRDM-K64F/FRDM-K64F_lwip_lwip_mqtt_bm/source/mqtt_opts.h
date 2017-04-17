@@ -50,7 +50,7 @@ extern "C" {
  */
 
 #ifndef MQTT_USE_TLS
-  #define MQTT_USE_TLS    1
+  #define MQTT_USE_TLS    1  /*!< 1: enable TLS/SLL support; 0: do not use TLS/SSL */
 #endif
 /**
  * Output ring-buffer size, must be able to fit largest outgoing publish message topic+payloads
