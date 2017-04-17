@@ -682,6 +682,7 @@ int mbedtls_net_send( void *ctx, const unsigned char *buf, size_t len )
   if(context->conn == NULL) {
     return( MBEDTLS_ERR_NET_INVALID_CONTEXT );
   }
+  printf("mbedtls_net_send: len: %d\r\n", len);
   err = tcp_write(context->conn, buf, len, TCP_WRITE_FLAG_COPY /*| (wrap ? TCP_WRITE_FLAG_MORE : 0)*/);
   if (err!=0) {
     return MBEDTLS_ERR_SSL_WANT_WRITE;

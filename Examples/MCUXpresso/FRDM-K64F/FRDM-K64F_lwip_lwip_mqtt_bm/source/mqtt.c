@@ -55,6 +55,7 @@
 #include "lwip/pbuf.h"
 #include "lwip/tcp.h"
 #include <string.h>
+#include <stdio.h>
 
 #if MQTT_USE_TLS
   #include "net.h"
@@ -67,7 +68,7 @@
  * MQTT_DEBUG: Default is off.
  */
 #if !defined MQTT_DEBUG || defined __DOXYGEN__
-#define MQTT_DEBUG                  LWIP_DBG_OFF
+#define MQTT_DEBUG                  LWIP_DBG_ON /*LWIP_DBG_OFF*/
 #endif
 
 #define MQTT_DEBUG_TRACE        (MQTT_DEBUG | LWIP_DBG_TRACE)
@@ -226,6 +227,7 @@ static void
 mqtt_output_send(mqtt_client_t *client, struct mqtt_ringbuf_t *rb, struct tcp_pcb *tpcb)
 {
   err_t err;
+  int nof;
   u8_t wrap = 0;
   u16_t ringbuf_lin_len = mqtt_ringbuf_linear_read_length(rb);
   u16_t send_len = tcp_sndbuf(tpcb);
@@ -245,7 +247,13 @@ mqtt_output_send(mqtt_client_t *client, struct mqtt_ringbuf_t *rb, struct tcp_pc
     wrap = (mqtt_ringbuf_len(rb) > ringbuf_lin_len);
   }
 #if MQTT_USE_TLS
-  err = mbedtls_ssl_write(client->ssl_context, mqtt_ringbuf_get_ptr(rb), send_len);
+  printf("mqtt_output_send: mbedtls_ssl_write: bytes %d\r\n", send_len);
+  nof = mbedtls_ssl_write(client->ssl_context, mqtt_ringbuf_get_ptr(rb), send_len);
+  if (nof==send_len) {
+    err = ERR_OK;
+  } else {
+    err = ERR_BUF; /* just assign an error */
+  }
 #else
   err = tcp_write(tpcb, mqtt_ringbuf_get_ptr(rb), send_len, TCP_WRITE_FLAG_COPY | (wrap ? TCP_WRITE_FLAG_MORE : 0));
 #endif
@@ -254,8 +262,13 @@ mqtt_output_send(mqtt_client_t *client, struct mqtt_ringbuf_t *rb, struct tcp_pc
     /* Use the lesser one of ring buffer linear length and TCP send buffer size */
     send_len = LWIP_MIN(tcp_sndbuf(tpcb), mqtt_ringbuf_linear_read_length(rb));
 #if MQTT_USE_TLS
-    printf("mbedtls_ssl_write: bytes \r\n", send_len);
-    err = mbedtls_ssl_write(client->ssl_context, mqtt_ringbuf_get_ptr(rb), send_len);
+    printf("mbedtls_ssl_write: bytes %d\r\n", send_len);
+    nof = mbedtls_ssl_write(client->ssl_context, mqtt_ringbuf_get_ptr(rb), send_len);
+    if (nof==send_len) {
+      err = ERR_OK;
+    } else {
+      err = ERR_BUF; /* just assign an error */
+    }
 #else
     err = tcp_write(tpcb, mqtt_ringbuf_get_ptr(rb), send_len, TCP_WRITE_FLAG_COPY);
 #endif
@@ -269,7 +282,6 @@ mqtt_output_send(mqtt_client_t *client, struct mqtt_ringbuf_t *rb, struct tcp_pc
     LWIP_DEBUGF(MQTT_DEBUG_WARN, ("mqtt_output_send: Send failed with err %d (\"%s\")\n", err, lwip_strerr(err)));
   }
 }
-
 
 
 /*--------------------------------------------------------------------------------------------------------------------- */
@@ -690,6 +702,7 @@ static mqtt_connection_status_t
         /* Reset cyclic_tick when changing to connected state */
         client->cyclic_tick = 0;
         client->conn_state = MQTT_CONNECTED;
+        printf("CONNACK received!\r\n");
         /* Notify upper layer */
         if (client->connect_cb != 0) {
           client->connect_cb(client, client->connect_arg, res);
@@ -925,19 +938,19 @@ mqtt_tcp_recv_cb(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err)
 }
 #else
 err_t mqtt_recv_from_tls(mqtt_client_t *client) {
-  int res;
+  int nof;
   mqtt_connection_status_t status;
   struct pbuf p;
 
-  res = mbedtls_ssl_read(client->ssl_context, client->rx_buffer, sizeof(client->rx_buffer));
-  if (res>0) {
-    printf("mqtt_recv_from_tls: recv %d\r\n", res);
+  /*! \todo can we really use rx_buffer? */
+  nof = mbedtls_ssl_read(client->ssl_context, client->rx_buffer, sizeof(client->rx_buffer));
+  if (nof>0) {
+    printf("mqtt_recv_from_tls: recv %d\r\n", nof);
     memset(&p, 0, sizeof(struct pbuf)); /* initialize */
-    p.len = res;
+    p.len = nof;
     p.tot_len = p.len;
     p.payload = client->rx_buffer;
     status = mqtt_parse_incoming(client, &p);
-    //status = mqtt_message_received(client, 0, res, 0);
   }
   return ERR_OK;
 }
@@ -961,6 +974,7 @@ mqtt_tcp_sent_cb(void *arg, struct tcp_pcb *tpcb, u16_t len)
   if (client->conn_state == MQTT_CONNECTED) {
     struct mqtt_request_t *r;
 
+    printf("mqtt_tcp_sent_cb: and MQTT_CONNECTED\r\n");
     /* Reset keep-alive send timer and server watchdog */
     client->cyclic_tick = 0;
     client->server_watchdog = 0;
@@ -977,7 +991,6 @@ mqtt_tcp_sent_cb(void *arg, struct tcp_pcb *tpcb, u16_t len)
   }
   return ERR_OK;
 }
-
 
 /**
  * TCP received callback function. @see tcp_recv_fn
@@ -1006,7 +1019,6 @@ static err_t tls_tcp_recv_cb(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err
     /* Tell remote that data has been received */
     tcp_recved(pcb, p->tot_len);
     res = mbedtls_net_incoming(client, p->payload, p->len);
-    //res = mqtt_parse_incoming(client, p);
     pbuf_free(p);
 
     if (res != 0) {
@@ -1021,7 +1033,16 @@ static err_t tls_tcp_recv_cb(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err
   return ERR_OK;
 }
 
+#if MQTT_USE_TLS
+err_t mqtt_tls_output_send(mqtt_client_t *client) {
+  /* try to send, if there is anything to send */
+  mqtt_output_send(client, &client->output, client->conn);
+  return ERR_OK;
+}
+#endif
 
+
+#if MQTT_USE_TLS
 /**
  * TCP data sent callback function. @see tcp_sent_fn
  * @param arg MQTT client
@@ -1031,9 +1052,10 @@ static err_t tls_tcp_recv_cb(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err
  */
 static err_t tls_tcp_sent_cb(void *arg, struct tcp_pcb *tpcb, u16_t len)
 {
-  mqtt_tcp_sent_cb(arg, tpcb, 0); /* call normal (non-tls) callback */
-  return ERR_OK;
+  printf("tls_tcp_sent_cb\r\n");
+  return mqtt_tcp_sent_cb(arg, tpcb, 0); /* call normal (non-tls) callback */
 }
+#endif /*MQTT_USE_TLS */
 
 /**
  * TCP error callback function. @see tcp_err_fn

@@ -78,7 +78,7 @@ extern "C" {
  * Seconds between each cyclic timer call.
  */
 #ifndef MQTT_CYCLIC_TIMER_INTERVAL
-#define MQTT_CYCLIC_TIMER_INTERVAL 5
+#define MQTT_CYCLIC_TIMER_INTERVAL 2
 #endif
 
 /**

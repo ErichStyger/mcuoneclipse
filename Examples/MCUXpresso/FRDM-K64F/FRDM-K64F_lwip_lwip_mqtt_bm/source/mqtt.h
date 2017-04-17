@@ -250,6 +250,7 @@ err_t mqtt_publish(mqtt_client_t *client, const char *topic, const void *payload
 #if MQTT_USE_TLS
 err_t mqtt_start_mqtt(mqtt_client_t* client);
 err_t mqtt_recv_from_tls(mqtt_client_t *client);
+err_t mqtt_tls_output_send(mqtt_client_t *client);
 #endif
 
 #ifdef __cplusplus

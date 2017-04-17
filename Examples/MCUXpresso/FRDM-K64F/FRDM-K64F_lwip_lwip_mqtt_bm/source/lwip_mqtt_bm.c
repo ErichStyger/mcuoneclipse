@@ -273,20 +273,21 @@ static void mqtt_sub_request_cb(void *arg, err_t result) {
 static int mqtt_do_connect(mqtt_client_t *client); /* forward declaration */
 
 static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_status_t status) {
-  err_t err;
+  //err_t err;
 
   if(status == MQTT_CONNECT_ACCEPTED) {
     printf("mqtt_connection_cb: Successfully connected\n");
 
     /* Setup callback for incoming publish requests */
     mqtt_set_inpub_callback(client, mqtt_incoming_publish_cb, mqtt_incoming_data_cb, arg);
-
+#if 0
     /* Subscribe to a topic named "subtopic" with QoS level 1, call mqtt_sub_request_cb with result */
     err = mqtt_subscribe(client, "subtopic", 1, mqtt_sub_request_cb, arg);
 
     if(err != ERR_OK) {
       printf("mqtt_subscribe return: %d\n", err);
     }
+#endif
   } else {
     printf("mqtt_connection_cb: Disconnected, reason: %d\n", status);
 
@@ -310,6 +311,7 @@ static int mqtt_do_connect(mqtt_client_t *client) {
   ci.client_id = configMQTT_CLIENT_NAME;
   ci.client_user = configMQTT_CLIENT_USER;
   ci.client_pass = configMQTT_CLIENT_PWD;
+  ci.keep_alive = 30; /* timeout */
 
   /* Initiate client and connect to server, if this fails immediately an error code is returned
      otherwise mqtt_connection_cb will be called with connection result after attempting
@@ -378,6 +380,7 @@ static int mqtt_do_tls_handshake(mqtt_client_t *mqtt_client) {
 }
 #endif
 
+static bool sendIt = TRUE;
 static void MqttDoStateMachine(mqtt_client_t *mqtt_client) {
   switch(MQTT_state) {
     case MQTT_STATE_INIT:
@@ -421,6 +424,9 @@ static void MqttDoStateMachine(mqtt_client_t *mqtt_client) {
       }
 #if MQTT_USE_TLS
       else {
+        if (sendIt) {
+          mqtt_tls_output_send(mqtt_client);
+        }
         mqtt_recv_from_tls(mqtt_client);
       }
 #endif
