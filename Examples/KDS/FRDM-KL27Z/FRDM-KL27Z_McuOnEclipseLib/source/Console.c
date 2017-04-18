@@ -2,7 +2,7 @@
  * Console.c
  *
  *  Created on: 22.01.2017
- *      Author: Erich Styger Local
+ *      Author: Erich Styger
  */
 
 
