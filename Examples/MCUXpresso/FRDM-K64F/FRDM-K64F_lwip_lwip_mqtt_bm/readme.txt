@@ -14,3 +14,8 @@ using sockets: ???
 
 Example code:
 https://github.com/SuperHouse/esp-open-rtos/blob/master/examples/aws_iot/ssl_connection.c
+
+ToDo:
+- handling case during startup if network cable is disconnected
+- disconnection handling from broker
+
