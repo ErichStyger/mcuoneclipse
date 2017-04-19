@@ -11,6 +11,7 @@
 #include "Shell.h"
 #include "Console.h"
 #include "CLS1.h"
+#include "TmDt1.h"
 
 void SHELL_SendString(unsigned char *msg) {
   CLS1_SendStr(msg, CLS1_GetStdio()->stdOut);
@@ -19,6 +20,7 @@ void SHELL_SendString(unsigned char *msg) {
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
   CLS1_ParseCommand,
+  TmDt1_ParseCommand,
   NULL /* Sentinel */
 };
 

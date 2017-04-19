@@ -448,15 +448,19 @@ static void MqttDoStateMachine(mqtt_client_t *mqtt_client) {
 }
 
 static void DoMQTT(struct netif *netifp) {
-  uint32_t timeStampMs, diffTimeMs;
+  uint32_t timeStampMs, diffTimeMs, blinkTimeStampMs;
   #define CONNECT_DELAY_MS   1000 /* delay in seconds for connect */
   #define PUBLISH_PERIOD_MS  10000 /* publish period in seconds */
+  #define BLINK_PERIOD_MS    2000
 
   MQTT_state = MQTT_STATE_IDLE;
-  timeStampMs = sys_now(); /* get time in milli seconds */
+  timeStampMs = blinkTimeStampMs = sys_now(); /* get time in milli seconds */
   for(;;) {
-    LED1_On();
     diffTimeMs = sys_now()-timeStampMs;
+    if (sys_now()-blinkTimeStampMs > BLINK_PERIOD_MS) {
+      LED1_Neg();
+      blinkTimeStampMs = sys_now();
+    }
     if (MQTT_state==MQTT_STATE_IDLE && diffTimeMs>CONNECT_DELAY_MS) {
       MQTT_state = MQTT_STATE_DO_CONNECT; /* connect after 1 second */
       timeStampMs = sys_now(); /* get time in milli seconds */
@@ -467,7 +471,6 @@ static void DoMQTT(struct netif *netifp) {
     }
     MqttDoStateMachine(&mqtt_client); /* process state machine */
     /* Poll the driver, get any outstanding frames */
-    LED1_Off();
     ethernetif_input(netifp);
     sys_check_timeouts(); /* Handle all system timeouts for all core protocols */
   #if CONFIG_USE_SHELL
@@ -510,7 +513,9 @@ int main(void) {
   LED3_Off();
 #if CONFIG_USE_SHELL
   SHELL_Init();
-  SHELL_SendString((uint8_t*)"hello world!\r\n");
+  SHELL_SendString((uint8_t*)"--------------------------\r\n");
+  SHELL_SendString((uint8_t*)"MQTT with lwip application\r\n");
+  SHELL_SendString((uint8_t*)"--------------------------\r\n");
 #endif
 
   IP4_ADDR(&fsl_netif0_ipaddr, configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3);
