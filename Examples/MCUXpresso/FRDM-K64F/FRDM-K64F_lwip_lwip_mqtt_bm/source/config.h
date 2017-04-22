@@ -15,8 +15,8 @@
 #define CONFIG_USE_SERVER_VERIFICATION          (0) /* 1: verify server; 0: no server verification */ /*!\todo does not work yet? */
 
 #define CONFIG_USE_BROKER_LOCAL                 (1) /* 1: use local mosquitto broker; 0: do not use local broker */
-#define CONFIG_USE_BROKER_ADAFRUIT              (0) /* 1: use Adadruit I/O broker; 0: do not use Adafruit broker */
 #define CONFIG_USE_BROKER_MOSQUITTO_TEST        (0) /* 1: use mosquitto test broker; 0: do not use mosquitto test broker */
+#define CONFIG_USE_BROKER_ADAFRUIT              (0) /* 1: use Adafruit I/O broker; 0: do not use Adafruit broker */
 
 /* client configuration settings */
 #if CONFIG_USE_IN_WORK_NETWORK
@@ -72,7 +72,7 @@
 /* connection settings to broker */
 #if CONFIG_USE_BROKER_ADAFRUIT
   #define CONFIG_BROKER_HOST_NAME       "io.adafruit.com"
-  #define CONFIG_CLIENT_ID_NAME         "ErichStyger-PC" /* each client connected to the host has to use a unique ID */
+  #define CONFIG_CLIENT_ID_NAME         "FRDM-K64F" /* each client connected to the host has to use a unique ID */
   #define CONFIG_CLIENT_USER_NAME       "erichs" /* keep it SECRET! */
   #define CONFIG_CLIENT_USER_PASSWORD   "7184a9ed817f4ddd8c3228949ebd1987" /* keep it SECRET! */
   #define CONFIG_TOPIC_NAME             "erichs/feeds/test"
@@ -83,7 +83,7 @@
   #define CONFIG_CLIENT_USER_PASSWORD   NULL /* no password */
   #define CONFIG_TOPIC_NAME             "HSLU/test"
 #elif CONFIG_USE_BROKER_LOCAL
-  #define CONFIG_CLIENT_ID_NAME         "ErichStyger-PC" /* each client connected to the host has to use a unique ID */
+  #define CONFIG_CLIENT_ID_NAME         "FRDM-K64F" /* each client connected to the host has to use a unique ID */
   #define CONFIG_CLIENT_USER_NAME       NULL /* no user name */
   #define CONFIG_CLIENT_USER_PASSWORD   NULL /* no password */
   #define CONFIG_TOPIC_NAME             "HSLU/test"

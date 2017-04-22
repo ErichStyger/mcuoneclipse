@@ -101,6 +101,7 @@ typedef enum {
 	MQTT_STATE_WAIT_FOR_CONNECTION,
 	MQTT_STATE_CONNECTED,
 	MQTT_STATE_DO_PUBLISH,
+    MQTT_STATE_DO_SUBSCRIBE,
 	MQTT_STATE_DO_DISCONNECT
 } MQTT_State_t;
 
@@ -200,12 +201,13 @@ static int TLS_Init(void) {
    If RAM and CPU budget allows it, the easiest implementation might be to just take a copy of
    the topic string and use it in mqtt_incoming_data_cb
 */
-static int inpub_id;
+static int inpub_id; /* ID of incoming data */
+
 static void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len) {
-  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("Incoming publish at topic %s with total length %u\n", topic, (unsigned int)tot_len));
+  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("Incoming publish at topic \"%s\" with total length %u\n", topic, (unsigned int)tot_len));
 
   /* Decode topic string into a user defined reference */
-  if(strcmp(topic, "print_payload") == 0) {
+  if(strcmp(topic, CONFIG_TOPIC_NAME) == 0) {
     inpub_id = 0;
   } else if(topic[0] == 'A') {
     /* All topics starting with 'A' might be handled at the same way */
@@ -223,10 +225,10 @@ static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t f
        See MQTT_VAR_HEADER_BUFFER_LEN)  */
 
     /* Call function or do action depending on reference, in this case inpub_id */
-    if(inpub_id == 0) {
+    if(inpub_id == 0) { /* received message for topic CONFIG_TOPIC_NAME */
       /* Don't trust the publisher, check zero termination */
-      if(data[len-1] == 0) {
-        LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("mqtt_incoming_data_cb: %s\n", (const char *)data));
+      if(data[len] == '\0') {
+        LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("mqtt_incoming_data_cb: topic \"%s\", value: \"%s\"\n", CONFIG_TOPIC_NAME, (const char *)data));
       }
     } else if(inpub_id == 1) {
       /* Call an 'A' function... */
@@ -238,14 +240,24 @@ static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t f
   }
 }
 
-#if 0
 static void mqtt_sub_request_cb(void *arg, err_t result) {
   /* Just print the result code here for simplicity,
      normal behaviour would be to take some action if subscribe fails like
      notifying user, retry subscribe or disconnect from server */
   LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("Subscribe result: %d\n", result));
 }
-#endif
+
+static void my_mqtt_subscribe(mqtt_client_t *client, void *arg) {
+  err_t err;
+  const char *topic = CONFIG_TOPIC_NAME;
+
+  /* Subscribe to a topic named topic with QoS level 1, call mqtt_sub_request_cb with result */
+  err = mqtt_subscribe(client, topic, 1, mqtt_sub_request_cb, arg);
+  if(err != ERR_OK) {
+    LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("mqtt_subscribe return: %d\n", err));
+  }
+  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("Suscribed to topic \"%s\", res: %d\r\n", topic, (int)err));
+}
 
 static int mqtt_do_connect(mqtt_client_t *client, ip4_addr_t *broker_ipaddr); /* forward declaration */
 
@@ -257,14 +269,6 @@ static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection
 
     /* Setup callback for incoming publish requests */
     mqtt_set_inpub_callback(client, mqtt_incoming_publish_cb, mqtt_incoming_data_cb, arg);
-#if 0 /* not doing this here, will be done later in the application */
-    /* Subscribe to a topic named "subtopic" with QoS level 1, call mqtt_sub_request_cb with result */
-    err = mqtt_subscribe(client, "subtopic", 1, mqtt_sub_request_cb, arg);
-
-    if(err != ERR_OK) {
-      LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("mqtt_subscribe return: %d\n", err));
-    }
-#endif
   } else {
     LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("mqtt_connection_cb: Disconnected, reason: %d\n", status));
 
@@ -367,6 +371,7 @@ static const unsigned char *MQTT_State_toStr(MQTT_State_t state) {
      case MQTT_STATE_WAIT_FOR_CONNECTION:   return (const unsigned char*)"WAIT_FOR_CONNECTION";
      case MQTT_STATE_CONNECTED:             return (const unsigned char*)"CONNECTED";
      case MQTT_STATE_DO_PUBLISH:            return (const unsigned char*)"DO_PUBLISH";
+     case MQTT_STATE_DO_SUBSCRIBE:          return (const unsigned char*)"DO_SUBSCRIBE";
      case MQTT_STATE_DO_DISCONNECT:         return (const unsigned char*)"DO_DISCONNECT";
      default: break;
    }
@@ -426,6 +431,11 @@ static void MqttDoStateMachine(mqtt_client_t *mqtt_client, ip4_addr_t *broker_ip
         mqtt_recv_from_tls(mqtt_client); /* poll if we have incoming packets */
       }
 #endif
+      break;
+    case MQTT_STATE_DO_SUBSCRIBE:
+      LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("Subscribe from broker\r\n"));
+      my_mqtt_subscribe(mqtt_client, NULL);
+      MQTT_state = MQTT_STATE_CONNECTED;
       break;
     case MQTT_STATE_DO_PUBLISH:
       LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("Publish to broker\r\n"));
@@ -683,6 +693,17 @@ static uint8_t ShellDoPublish(const CLS1_StdIOType *io) {
   return ERR_OK;
 }
 
+static uint8_t ShellDoSubscribe(const CLS1_StdIOType *io) {
+  if (MQTT_state!=MQTT_STATE_CONNECTED) {
+    CLS1_SendStr((uint8_t*)"ERROR: broker is not connected?\r\n", io->stdErr);
+    return ERR_FAILED;
+  }
+  CLS1_SendStr((uint8_t*)"Initiating SUBSCRIBE to broker...\r\n", io->stdOut);
+  MQTT_state = MQTT_STATE_DO_SUBSCRIBE;
+  return ERR_OK;
+}
+
+
 static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   uint8_t buf[48];
 
@@ -742,6 +763,7 @@ uint8_t MQTT_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
     CLS1_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  connect", (const unsigned char*)"Connect to the broker\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  publish", (const unsigned char*)"Publish topic to broker\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  subscribe", (const unsigned char*)"Subscribe to topic on broker\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  disconnect", (const unsigned char*)"Disconnect from the broker\r\n", io->stdOut);
     *handled = TRUE;
     return ERR_OK;
@@ -754,6 +776,9 @@ uint8_t MQTT_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
   } else if (UTIL1_strcmp((char*)cmd, "mqtt publish")==0) {
     *handled = TRUE;
     return ShellDoPublish(io);
+  } else if (UTIL1_strcmp((char*)cmd, "mqtt subscribe")==0) {
+    *handled = TRUE;
+    return ShellDoSubscribe(io);
   } else if (UTIL1_strcmp((char*)cmd, "mqtt disconnect")==0) {
     *handled = TRUE;
     return ShellDoDisconnect(io);
