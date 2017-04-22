@@ -638,8 +638,8 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
         else
         {
             pucChar = pucBuffer;
-
             for (q = p; q != NULL; q = q->next)
+
             {
                 /* Send the data from the pbuf to the interface, one pbuf at a
                 time. The size of the data in each pbuf is kept in the ->len

@@ -7,14 +7,14 @@
 **     Version     : Component 01.095, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-04-18, 15:12, # CodeGen: 15
+**     Date/Time   : 2017-04-22, 17:20, # CodeGen: 18
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : CLS1
 **          Echo                                           : no
 **          Prompt                                         : "CMD> "
-**          Project Name                                   : My Project Name
+**          Project Name                                   : MQTT with lwip
 **          Silent Mode Prefix                             : #
 **          Buffer Size                                    : 48
 **          Blocking Send                                  : Enabled
@@ -334,7 +334,7 @@ uint8_t CLS1_ParseCommand(const uint8_t *cmd, bool *handled, CLS1_ConstStdIOType
     CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
     CLS1_SendStr((unsigned char*)CLS1_DASH_LINE, io->stdOut);
     CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
-    CLS1_SendStr((unsigned char*)"My Project Name", io->stdOut);
+    CLS1_SendStr((unsigned char*)"MQTT with lwip", io->stdOut);
     CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
     CLS1_SendStr((unsigned char*)CLS1_DASH_LINE, io->stdOut);
     CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);

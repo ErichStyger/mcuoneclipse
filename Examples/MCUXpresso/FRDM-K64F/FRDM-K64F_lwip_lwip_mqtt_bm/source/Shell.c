@@ -12,6 +12,7 @@
 #include "Console.h"
 #include "CLS1.h"
 #include "TmDt1.h"
+#include "lwip_mqtt_bm.h"
 
 void SHELL_SendString(unsigned char *msg) {
   CLS1_SendStr(msg, CLS1_GetStdio()->stdOut);
@@ -21,6 +22,7 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
   CLS1_ParseCommand,
   TmDt1_ParseCommand,
+  MQTT_ParseCommand,
   NULL /* Sentinel */
 };
 

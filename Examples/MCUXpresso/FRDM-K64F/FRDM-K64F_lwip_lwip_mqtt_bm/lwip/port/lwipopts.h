@@ -330,6 +330,10 @@ Some MCU allow computing and verifying the IP, UDP, TCP and ICMP checksums by ha
 
 #define     LWIP_NO_STDINT_H            1 
 
+#define LWIP_DNS                        1  /* enable DNS for host name to IP address translation */
+unsigned int random32(void); /* prototype */
+#define LWIP_RAND()                     (random32())
+
 #endif /* __LWIPOPTS_H__ */
 
 /*****END OF FILE****/
