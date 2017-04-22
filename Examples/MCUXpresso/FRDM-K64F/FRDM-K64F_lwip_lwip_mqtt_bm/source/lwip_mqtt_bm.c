@@ -125,6 +125,14 @@ static mbedtls_ssl_config conf;
 static mbedtls_x509_crt cacert;
 static mbedtls_ctr_drbg_context ctr_drbg;
 
+void MQTT_TlsClose(void) { /* called from mqtt.c */
+  /*! \todo This should be in a separate module */
+  mbedtls_ssl_free( &ssl );
+  mbedtls_ssl_config_free( &conf );
+  mbedtls_ctr_drbg_free( &ctr_drbg );
+  mbedtls_entropy_free( &entropy );
+}
+
 static int TLS_Init(void) {
   /* inspired by https://tls.mbed.org/kb/how-to/mbedtls-tutorial */
   int ret;
@@ -371,6 +379,12 @@ static void MqttDoStateMachine(mqtt_client_t *mqtt_client, ip4_addr_t *broker_ip
     case MQTT_STATE_IDLE:
       break;
     case MQTT_STATE_DO_CONNECT:
+      #if MQTT_USE_TLS
+        if (TLS_Init()!=0) { /* failed? */
+          LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("ERROR: failed to initialize for TLS!\r\n"));
+          for(;;) {} /* stay here in case of error */
+        }
+      #endif
       LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE, ("Connecting to Mosquito broker\r\n"));
       if (mqtt_do_connect(mqtt_client, broker_ipaddr)==0) {
 #if MQTT_USE_TLS
@@ -558,7 +572,7 @@ int main(void) {
   LED3_Init();
   WAIT1_Init();
   RNG1_Init();
-
+  /* testing the LEDs */
   LED1_On();
   LED1_Off();
   LED2_On();
@@ -567,9 +581,9 @@ int main(void) {
   LED3_Off();
 #if CONFIG_USE_SHELL
   SHELL_Init();
-  SHELL_SendString((uint8_t*)"\r\n--------------------------\r\n");
+  SHELL_SendString((uint8_t*)"\r\n------------------------------------\r\n");
   SHELL_SendString((uint8_t*)"Application with MQTT on lwip\r\n");
-  SHELL_SendString((uint8_t*)"--------------------------\r\n");
+  SHELL_SendString((uint8_t*)"------------------------------------\r\n");
 #endif
 
   IP4_ADDR(&fsl_netif0_ipaddr, configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3);
@@ -590,7 +604,7 @@ int main(void) {
   RNGA_Init(RNG); /* init random number generator */
   RNGA_Seed(RNG, SIM->UIDL); /* use device unique ID as seed for the RNG */
 #endif
-#if MQTT_USE_TLS
+#if 0 && MQTT_USE_TLS
   if (TLS_Init()!=0) { /* failed? */
     LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("ERROR: failed to initialize for TLS!\r\n"));
     for(;;) {} /* stay here in case of error */
@@ -643,7 +657,14 @@ static uint8_t ShellDoConnect(const CLS1_StdIOType *io) {
 }
 
 static uint8_t ShellDoDisconnect(const CLS1_StdIOType *io) {
-  if (MQTT_state!=MQTT_STATE_CONNECTED) {
+  if (!(MQTT_state==MQTT_STATE_CONNECTED
+#if MQTT_USE_TLS
+        || MQTT_state==MQTT_STATE_DO_TLS_HANDSHAKE
+#endif
+        || MQTT_state==MQTT_STATE_WAIT_FOR_CONNECTION
+      )
+     )
+  {
     CLS1_SendStr((uint8_t*)"ERROR: broker is not connected?\r\n", io->stdErr);
     return ERR_FAILED;
   }

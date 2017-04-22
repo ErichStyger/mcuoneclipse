@@ -91,16 +91,20 @@
     /* https://test.mosquitto.org/: 37.184.106.16 */
     //#define CONFIG_BROKER_HOST_NAME   "ErichStyger-PC"
     #define CONFIG_BROKER_HOST_NAME     "test.mosquitto.org"
-    #define configBroker_ADDR0 10
-    #define configBroker_ADDR1 9
-    #define configBroker_ADDR2 4
-    #define configBroker_ADDR3 26
+    #if !CONFIG_USE_DNS
+      #define configBroker_ADDR0 10
+      #define configBroker_ADDR1 9
+      #define configBroker_ADDR2 4
+      #define configBroker_ADDR3 26
+    #endif
   #else
     #define CONFIG_BROKER_HOST_NAME   "ErichStyger-PC"
-    #define configBroker_ADDR0 192
-    #define configBroker_ADDR1 168
-    #define configBroker_ADDR2 0
-    #define configBroker_ADDR3 111
+    #if !CONFIG_USE_DNS
+      #define configBroker_ADDR0 192
+      #define configBroker_ADDR1 168
+      #define configBroker_ADDR2 0
+      #define configBroker_ADDR3 111
+    #endif
   #endif
 #endif
 

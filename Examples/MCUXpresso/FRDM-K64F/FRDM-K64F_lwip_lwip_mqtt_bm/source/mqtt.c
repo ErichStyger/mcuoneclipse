@@ -148,19 +148,6 @@ static const char * const mqtt_message_type_str[15] =
   "DISCONNECT"
 };
 
-#if MQTT_USE_TLS
-err_t tls_close(struct tcp_pcb *pcb) {
-    return tcp_close(pcb);
-#if 0 /*! \todo closing connection is not done in a clean way yet! */
-    mbedtls_net_free( &server_fd );
-    mbedtls_ssl_free( &ssl );
-    mbedtls_ssl_config_free( &conf );
-    mbedtls_ctr_drbg_free( &ctr_drbg );
-    mbedtls_entropy_free( &entropy );
-#endif
-}
-#endif
-
 /**
  * Message type value to string
  * @param msg_type see enum mqtt_message_type
@@ -540,6 +527,15 @@ mqtt_output_check_space(struct mqtt_ringbuf_t *rb, u16_t r_length)
   return (total_len <= mqtt_ringbuf_free(rb));
 }
 
+#if MQTT_USE_TLS
+err_t tls_close(struct tcp_pcb *pcb) {
+  void MQTT_TlsClose(void); /*! \todo closing connection is not done in a clean way yet! */
+
+  MQTT_TlsClose();
+  return tcp_close(pcb);
+}
+#endif
+
 
 /**
  * Close connection to server
@@ -558,7 +554,7 @@ mqtt_close(mqtt_client_t *client, mqtt_connection_status_t reason)
     tcp_err(client->conn,  NULL);
     tcp_sent(client->conn, NULL);
 #if MQTT_USE_TLS
-    res = tls_close(client->conn); /*! \todo */
+    res = tls_close(client->conn); /*! \todo this should be done in a better way! */
 #else
     res = tcp_close(client->conn);
 #endif
@@ -576,7 +572,6 @@ mqtt_close(mqtt_client_t *client, mqtt_connection_status_t reason)
 
   /* Notify upper layer of disconnection if changed state */
   if (client->conn_state != TCP_DISCONNECTED) {
-
     client->conn_state = TCP_DISCONNECTED;
     if (client->connect_cb != NULL) {
       client->connect_cb(client, client->connect_arg, reason);
@@ -1489,6 +1484,11 @@ mqtt_disconnect(mqtt_client_t *client)
   /* If connection in not already closed */
   if (client->conn_state != TCP_DISCONNECTED) {
     /* Set conn_state before calling mqtt_close to prevent callback from being called */
+    if (mqtt_output_check_space(&client->output, 0) != 0) { /* << EST added */
+      mqtt_output_append_fixed_header(&client->output, MQTT_MSG_TYPE_DISCONNECT, 0, 0, 0, 0);
+      mqtt_output_send(client, &client->output, client->conn);
+      client->cyclic_tick = 0;
+    }
     client->conn_state = TCP_DISCONNECTED;
     mqtt_close(client, (mqtt_connection_status_t)0);
   }
