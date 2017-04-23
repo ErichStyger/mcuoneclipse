@@ -390,7 +390,7 @@ static void MqttDoStateMachine(mqtt_client_t *mqtt_client, ip4_addr_t *broker_ip
           for(;;) {} /* stay here in case of error */
         }
       #endif
-      LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE, ("Connecting to Mosquito broker\r\n"));
+      LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE, ("Connecting to broker\r\n"));
       if (mqtt_do_connect(mqtt_client, broker_ipaddr)==0) {
 #if MQTT_USE_TLS
         MQTT_state = MQTT_STATE_DO_TLS_HANDSHAKE;
@@ -733,6 +733,13 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
   CLS1_SendStatusStr((unsigned char*)"  broker name", buf, io->stdOut);
 
+  if (ip4addr_ntoa_r(&brokerServerAddress, (char*)buf, sizeof(buf))!=NULL) {
+    UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
+    CLS1_SendStatusStr((unsigned char*)"  IP4 broker", buf, io->stdOut);
+  } else {
+    CLS1_SendStatusStr((unsigned char*)"  IP4 broker", (const unsigned char*)"NULL\r\n", io->stdOut);
+  }
+
 #if MQTT_USE_TLS
   UTIL1_strcpy(buf, sizeof(buf), (uint8_t*)"yes, PORT: ");
   UTIL1_strcatNum32u(buf,  sizeof(buf), MQTT_PORT_TLS);
@@ -743,12 +750,12 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
   CLS1_SendStatusStr((unsigned char*)"  TLS/SLL", buf, io->stdOut);
 
-  if (ip4addr_ntoa_r(&brokerServerAddress, (char*)buf, sizeof(buf))!=NULL) {
-    UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
-    CLS1_SendStatusStr((unsigned char*)"  IP4 broker", buf, io->stdOut);
-  } else {
-    CLS1_SendStatusStr((unsigned char*)"  IP4 broker", (const unsigned char*)"NULL\r\n", io->stdOut);
-  }
+
+#if CONFIG_USE_SERVER_VERIFICATION
+  CLS1_SendStatusStr((unsigned char*)"  Certificate", (const unsigned char*)"Verify server certificate\r\n", io->stdOut);
+#else
+  CLS1_SendStatusStr((unsigned char*)"  Certificate", (const unsigned char*)"NO server certificate verification\r\n", io->stdOut);
+#endif
 
   UTIL1_strcpy(buf, sizeof(buf), MQTT_State_toStr(MQTT_state));
   UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
