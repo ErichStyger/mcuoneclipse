@@ -7,35 +7,33 @@
 
 #include "certificate.h"
 
-/* m2mqtt_ca.crt: see
+/* m2mqtt_srv.crt: see
  * https://mcuoneclipse.com/2017/04/14/enable-secure-communication-with-tls-and-the-mosquitto-broker/
  */
 
 #define M2MQTT_CA_CRT_RSA                                                 \
 "-----BEGIN CERTIFICATE-----\r\n"                                         \
-"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\r\n"    \
+"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\r\n"    \
 "-----END CERTIFICATE-----\r\n"
 
-const char mbedtls_m2mqtt_ca_crt[] = M2MQTT_CA_CRT_RSA;
-const size_t mbedtls_m2mqtt_ca_crt_len = sizeof(mbedtls_m2mqtt_ca_crt);
+const char mbedtls_m2mqtt_srv_crt[] = M2MQTT_CA_CRT_RSA;
+const size_t mbedtls_m2mqtt_srv_crt_len = sizeof(mbedtls_m2mqtt_srv_crt);
 
 #define MOSQUITTO_CA_CRT_RSA                                              \
 "-----BEGIN CERTIFICATE-----\r\n"                                         \

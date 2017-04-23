@@ -10,8 +10,8 @@
 
 #include <stddef.h>
 
-extern const char mbedtls_m2mqtt_ca_crt[];
-extern const size_t mbedtls_m2mqtt_ca_crt_len;
+extern const char mbedtls_m2mqtt_srv_crt[];
+extern const size_t mbedtls_m2mqtt_srv_crt_len;
 
 extern const char mbedtls_mosquitto_test_ca_crt[];
 extern const size_t mbedtls_mosquitto_test_ca_crt_len;

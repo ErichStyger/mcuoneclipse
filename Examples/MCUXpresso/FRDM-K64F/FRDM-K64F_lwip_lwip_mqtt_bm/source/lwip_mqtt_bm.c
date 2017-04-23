@@ -169,7 +169,7 @@ static int TLS_Init(void) {
   }
   /* The authentication mode determines how strict the certificates that are presented are checked.  */
 #if CONFIG_USE_SERVER_VERIFICATION
-  ret = mbedtls_x509_crt_parse( &cacert, (const unsigned char *) mbedtls_m2mqtt_ca_crt,  mbedtls_m2mqtt_ca_crt_len );
+  ret = mbedtls_x509_crt_parse( &cacert, (const unsigned char *) mbedtls_m2mqtt_srv_crt,  mbedtls_m2mqtt_srv_crt_len );
   if(ret != 0) {
       printf( " failed\n  !  mbedtls_x509_crt_parse returned -0x%x\n\n", -ret );
   }
