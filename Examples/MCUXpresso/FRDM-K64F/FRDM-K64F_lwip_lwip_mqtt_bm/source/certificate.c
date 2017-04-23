@@ -2,7 +2,7 @@
  * certificate.c
  *
  *  Created on: 19.04.2017
- *      Author: Erich Styger Local
+ *      Author: Erich Styger
  */
 
 #include "certificate.h"

@@ -2,13 +2,13 @@
  * certificate.h
  *
  *  Created on: 19.04.2017
- *      Author: Erich Styger Local
+ *      Author: Erich Styger
  */
 
 #ifndef CERTIFICATE_H_
 #define CERTIFICATE_H_
 
-#include <stddef.h>
+#include <stddef.h> /* for size_t */
 
 extern const char mbedtls_m2mqtt_srv_crt[];
 extern const size_t mbedtls_m2mqtt_srv_crt_len;
