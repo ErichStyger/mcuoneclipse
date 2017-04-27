@@ -18,3 +18,5 @@ ToDo:
 - handling case during startup if network cable is disconnected
 - disconnection handling from broker
 - server verification
+- va_copy gives warning in XF1 with redlib
+- does not compile with newlib nano

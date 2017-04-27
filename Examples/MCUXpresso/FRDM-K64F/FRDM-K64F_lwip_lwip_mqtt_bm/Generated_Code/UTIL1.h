@@ -4,10 +4,10 @@
 **     Project     : FRDM-K64F_lwip_mqtt_bm
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Utility
-**     Version     : Component 01.148, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.154, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-04-18, 15:12, # CodeGen: 15
+**     Date/Time   : 2017-04-27, 08:20, # CodeGen: 19
 **     Abstract    :
 **          Contains various utility functions.
 **     Settings    :
@@ -76,6 +76,10 @@
 **         SetValue16LE            - void UTIL1_SetValue16LE(uint16_t data, uint8_t *dataP);
 **         SetValue24LE            - void UTIL1_SetValue24LE(uint32_t data, uint8_t *dataP);
 **         SetValue32LE            - void UTIL1_SetValue32LE(uint32_t data, uint8_t *dataP);
+**         map                     - int32_t UTIL1_map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min,...
+**         constrain               - int32_t UTIL1_constrain(int32_t val, int32_t min, int32_t max);
+**         random                  - int32_t UTIL1_random(int32_t min, int32_t max);
+**         randomSetSeed           - void UTIL1_randomSetSeed(unsigned int seed);
 **         Deinit                  - void UTIL1_Deinit(void);
 **         Init                    - void UTIL1_Init(void);
 **
@@ -1229,6 +1233,70 @@ void UTIL1_Init(void);
 **     Description :
 **         Driver Initialization
 **     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+int32_t UTIL1_map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min, int32_t out_max);
+/*
+** ===================================================================
+**     Method      :  UTIL1_map (component Utility)
+**     Description :
+**         Maps a value from one range to another
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         x               - value to be mapped
+**         in_min          - input range minimum value
+**         in_max          - input range maximum value
+**         out_min         - output range maximum value
+**         out_max         - 
+**     Returns     :
+**         ---             - remapped value
+** ===================================================================
+*/
+
+int32_t UTIL1_constrain(int32_t val, int32_t min, int32_t max);
+/*
+** ===================================================================
+**     Method      :  UTIL1_constrain (component Utility)
+**     Description :
+**         Makes sure that a given input value is inside a given range.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         val             - input value
+**         min             - range minimum value
+**         max             - range maximum value
+**     Returns     :
+**         ---             - the constrained value
+** ===================================================================
+*/
+
+int32_t UTIL1_random(int32_t min, int32_t max);
+/*
+** ===================================================================
+**     Method      :  UTIL1_random (component Utility)
+**     Description :
+**         Provides a random value. You have to call intialize the
+**         random number generator with randomSetSeed() first!
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         min             - range minimum value
+**         max             - range maximum value
+**     Returns     :
+**         ---             - random value between min and max
+** ===================================================================
+*/
+
+void UTIL1_randomSetSeed(unsigned int seed);
+/*
+** ===================================================================
+**     Method      :  UTIL1_randomSetSeed (component Utility)
+**     Description :
+**         Sets a seed for the random number generator
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         seed            - seed to be used for random number
+**                           generator
 **     Returns     : Nothing
 ** ===================================================================
 */

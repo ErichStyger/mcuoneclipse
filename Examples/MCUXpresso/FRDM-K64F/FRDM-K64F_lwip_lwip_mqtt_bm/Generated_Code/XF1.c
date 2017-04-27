@@ -7,7 +7,7 @@
 **     Version     : Component 01.021, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-04-18, 15:12, # CodeGen: 15
+**     Date/Time   : 2017-04-27, 16:38, # CodeGen: 20
 **     Abstract    :
 **
 **     Settings    :
@@ -84,12 +84,12 @@
 /**
  * Detect support for va_copy
  */
-#ifdef        __GNUC__
-#define        VA_COPY        1
+#if defined(__GNUC__) && !defined(__REDLIB__) /* newlib and newlib-nano implement va_copy, but not RedLib in MCUXpresso */
+  #define        VA_COPY        1
 #endif
 
 #ifndef        VA_COPY
-#define        VA_COPY        0
+  #define        VA_COPY        0
 #endif
 
 /**

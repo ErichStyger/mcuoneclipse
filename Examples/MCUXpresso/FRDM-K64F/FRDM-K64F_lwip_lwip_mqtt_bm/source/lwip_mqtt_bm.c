@@ -61,7 +61,9 @@
 #include "RNG1.h"
 
 #include "lwip_mqtt_bm.h"
-
+#if CONFIG_USE_DHCP
+  #include "app_dhcp.h"
+#endif
 #if MQTT_USE_TLS
   #include "mbedtls/entropy.h"
   #include "mbedtls/ctr_drbg.h"
@@ -84,6 +86,9 @@
 #if CONFIG_USE_SERVER_VERIFICATION
   #include "certificate.h"
 #endif
+
+static struct netif fsl_netif0; /* network interface */
+
 
 #define MQTT_APP_DEBUG              LWIP_DBG_ON /*LWIP_DBG_OFF*/
 #define MQTT_APP_DEBUG_TRACE        (MQTT_APP_DEBUG | LWIP_DBG_TRACE)
@@ -184,7 +189,7 @@ static int TLS_Init(void) {
 
   mbedtls_ssl_setup(&ssl, &conf);
 
-  if( ( ret = mbedtls_ssl_set_hostname( &ssl, "ErichStyger-PC" ) ) != 0 )
+  if( ( ret = mbedtls_ssl_set_hostname(&ssl, CONFIG_BROKER_HOST_NAME) ) != 0 )
   {
       LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,( " failed\n  ! mbedtls_ssl_set_hostname returned %d\n\n", ret ));
       return -1;
@@ -360,6 +365,7 @@ static int mqtt_do_tls_handshake(mqtt_client_t *mqtt_client) {
 }
 #endif
 
+#if CONFIG_USE_SHELL
 static const unsigned char *MQTT_State_toStr(MQTT_State_t state) {
   switch(state) {
     case MQTT_STATE_INIT:                   return (const unsigned char*)"INIT";
@@ -377,6 +383,7 @@ static const unsigned char *MQTT_State_toStr(MQTT_State_t state) {
    }
    return (const unsigned char*)"UNKNOWN";
 }
+#endif
 
 static void MqttDoStateMachine(mqtt_client_t *mqtt_client, ip4_addr_t *broker_ipaddr) {
   switch(MQTT_state) {
@@ -452,21 +459,28 @@ static void MqttDoStateMachine(mqtt_client_t *mqtt_client, ip4_addr_t *broker_ip
   }
 }
 
+static void ProcessLWIP(struct netif *netifp) {
+  ethernetif_input(netifp); /* Poll the driver, get any outstanding frames */
+  sys_check_timeouts(); /* Handle all system timeouts for all core protocols */
+}
+
 static void DoMQTT(struct netif *netifp, ip4_addr_t *broker_ipaddr) {
-  //uint32_t timeStampMs, diffTimeMs, blinkTimeStampMs;
+  uint32_t timeStampMs;
+//  uint32_t diffTimeMs;
+  uint32_t blinkTimeStampMs;
   //#define CONNECT_DELAY_MS   1000 /* delay in seconds for connect */
   //#define PUBLISH_PERIOD_MS  10000 /* publish period in seconds */
-  //#define BLINK_PERIOD_MS    2000
+  #define BLINK_PERIOD_MS    2000
 
   MQTT_state = MQTT_STATE_IDLE;
-  //timeStampMs = blinkTimeStampMs = sys_now(); /* get time in milli seconds */
+  timeStampMs = blinkTimeStampMs = sys_now(); /* get time in milli seconds */
   for(;;) {
-#if 0
-    diffTimeMs = sys_now()-timeStampMs;
+   // diffTimeMs = sys_now()-timeStampMs;
     if (sys_now()-blinkTimeStampMs > BLINK_PERIOD_MS) {
-      LED1_Neg();
+      LED2_Neg();
       blinkTimeStampMs = sys_now();
     }
+#if 0
     if (MQTT_state==MQTT_STATE_IDLE && diffTimeMs>CONNECT_DELAY_MS) {
       MQTT_state = MQTT_STATE_DO_CONNECT; /* connect after 1 second */
       timeStampMs = sys_now(); /* get time in milli seconds */
@@ -477,8 +491,7 @@ static void DoMQTT(struct netif *netifp, ip4_addr_t *broker_ipaddr) {
     }
 #endif
     MqttDoStateMachine(&mqtt_client, broker_ipaddr); /* process state machine */
-    ethernetif_input(netifp); /* Poll the driver, get any outstanding frames */
-    sys_check_timeouts(); /* Handle all system timeouts for all core protocols */
+    ProcessLWIP(netifp);
   #if CONFIG_USE_SHELL
     SHELL_Process();
   #endif
@@ -558,11 +571,14 @@ static int GetHostAddress(struct netif *netifp, const char *hostName, ip4_addr_t
 }
 #endif /* CONFIG_USE_DNS */
 
+struct netif *APP_GetNetworkInterface(void) {
+  return &fsl_netif0;
+}
+
 /*!
  * @brief Main function.
  */
 int main(void) {
-  struct netif fsl_netif0;
 
   SYSMPU_Type *base = SYSMPU;
   BOARD_InitPins();
@@ -577,18 +593,26 @@ int main(void) {
   //CLOCK_EnableClock(kCLOCK_PortB);   /* LED on PTB21, PTB22 */
   CLOCK_EnableClock(kCLOCK_PortE);   /* LED on PTE26 */
   /* init */
-  LED1_Init();
-  LED2_Init();
-  LED3_Init();
-  WAIT1_Init();
-  RNG1_Init();
+  LED1_Init(); /* red led */
+  LED2_Init(); /* green led */
+  LED3_Init(); /* blue led */
+  WAIT1_Init(); /* waiting */
+  RNG1_Init(); /* ring buffer */
   /* testing the LEDs */
-  LED1_On();
-  LED1_Off();
-  LED2_On();
-  LED2_Off();
-  LED3_On();
-  LED3_Off();
+  for(int i=0; i<3; i++) {
+    LED1_On();
+    WAIT1_Waitms(100);
+    LED1_Off();
+    WAIT1_Waitms(100);
+    LED2_On();
+    WAIT1_Waitms(100);
+    LED2_Off();
+    WAIT1_Waitms(100);
+    LED3_On();
+    WAIT1_Waitms(100);
+    LED3_Off();
+    WAIT1_Waitms(100);
+  }
 #if CONFIG_USE_SHELL
   SHELL_Init();
   SHELL_SendString((uint8_t*)"\r\n------------------------------------\r\n");
@@ -614,28 +638,30 @@ int main(void) {
   RNGA_Init(RNG); /* init random number generator */
   RNGA_Seed(RNG, SIM->UIDL); /* use device unique ID as seed for the RNG */
 #endif
-#if 0 && MQTT_USE_TLS
-  if (TLS_Init()!=0) { /* failed? */
-    LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("ERROR: failed to initialize for TLS!\r\n"));
-    for(;;) {} /* stay here in case of error */
+#if CONFIG_USE_DHCP
+  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("Starting DHCP....\r\n"));
+  DHCP_Start(&fsl_netif0);
+  while (DHCP_IsBound(&fsl_netif0)) {
+    ProcessLWIP(&fsl_netif0);
+    LED1_Neg();
   }
+  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("DHCP done!\r\n"));
 #endif
   ip4_addr_set_u32(&brokerServerAddress, ipaddr_addr("192.168.0.10")); /* default init */
 #if CONFIG_USE_DNS
   if (GetHostAddress(&fsl_netif0, CONFIG_BROKER_HOST_NAME, &brokerServerAddress)!=0) {
     LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("ERROR: unable to get IP address for broker!\r\n"));
+    LED1_On(); /* red error LED */
     for(;;){}
   }
 #else
   IP4_ADDR(&brokerServerAddress, configBroker_ADDR0, configBroker_ADDR1, configBroker_ADDR2, configBroker_ADDR3);
 #endif
-
-  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("\r\n************************************************\r\n"));
-  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,(" MQTT with lwip\r\n"));
-  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("************************************************\r\n"));
+#if !CONFIG_USE_DHCP
   LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,(" IPv4 Address     : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_ipaddr)[0], ((u8_t *)&fsl_netif0_ipaddr)[1],  ((u8_t *)&fsl_netif0_ipaddr)[2], ((u8_t *)&fsl_netif0_ipaddr)[3]));
   LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,(" IPv4 Subnet mask : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_netmask)[0], ((u8_t *)&fsl_netif0_netmask)[1], ((u8_t *)&fsl_netif0_netmask)[2], ((u8_t *)&fsl_netif0_netmask)[3]));
   LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,(" IPv4 Gateway     : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_gw)[0], ((u8_t *)&fsl_netif0_gw)[1], ((u8_t *)&fsl_netif0_gw)[2], ((u8_t *)&fsl_netif0_gw)[3]));
+#endif
   LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,(" Broker Address   : %u.%u.%u.%u\r\n", ((u8_t *)&brokerServerAddress)[0], ((u8_t *)&brokerServerAddress)[1], ((u8_t *)&brokerServerAddress)[2], ((u8_t *)&brokerServerAddress)[3]));
   LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("************************************************\r\n"));
 
@@ -708,6 +734,7 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   uint8_t buf[48];
 
   CLS1_SendStatusStr((unsigned char*)"mqtt", (const unsigned char*)"\r\n", io->stdOut);
+#if !CONFIG_USE_DHCP
   if (ip4addr_ntoa_r(&fsl_netif0_ipaddr, (char*)buf, sizeof(buf))!=NULL) {
     UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
     CLS1_SendStatusStr((unsigned char*)"  IP4 addr", buf, io->stdOut);
@@ -728,7 +755,7 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   } else {
     CLS1_SendStatusStr((unsigned char*)"  IP4 gateway", (const unsigned char*)"NULL\r\n", io->stdOut);
   }
-
+#endif
   UTIL1_strcpy(buf, sizeof(buf), (uint8_t*)CONFIG_BROKER_HOST_NAME);
   UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
   CLS1_SendStatusStr((unsigned char*)"  broker name", buf, io->stdOut);
@@ -749,7 +776,6 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
 #endif
   UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
   CLS1_SendStatusStr((unsigned char*)"  TLS/SLL", buf, io->stdOut);
-
 
 #if CONFIG_USE_SERVER_VERIFICATION
   CLS1_SendStatusStr((unsigned char*)"  Certificate", (const unsigned char*)"Verify server certificate\r\n", io->stdOut);

@@ -11,6 +11,9 @@
 #include "Shell.h"
 #include "Console.h"
 #include "CLS1.h"
+#if CONFIG_USE_DHCP
+  #include "app_dhcp.h"
+#endif
 #include "TmDt1.h"
 #include "lwip_mqtt_bm.h"
 
@@ -21,6 +24,9 @@ void SHELL_SendString(unsigned char *msg) {
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
   CLS1_ParseCommand,
+#if CONFIG_USE_DHCP
+  DHCP_ParseCommand,
+#endif
   TmDt1_ParseCommand,
   MQTT_ParseCommand,
   NULL /* Sentinel */

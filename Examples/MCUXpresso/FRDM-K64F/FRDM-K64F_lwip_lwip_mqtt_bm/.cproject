@@ -40,8 +40,8 @@
 									<listOptionValue builtIn="false" value="__USE_CMSIS"/>
 									<listOptionValue builtIn="false" value="CPU_MK64FN1M0VLL12"/>
 									<listOptionValue builtIn="false" value="CPU_MK64FN1M0VLL12_cm4"/>
-									<listOptionValue builtIn="false" value="__REDLIB__"/>
 									<listOptionValue builtIn="false" value="MBEDTLS_CONFIG_FILE='&quot;ksdk_mbedtls_config.h&quot;'"/>
+									<listOptionValue builtIn="false" value="__REDLIB__"/>
 								</option>
 								<option id="gnu.c.compiler.option.optimization.flags.1588944721" name="Other optimization flags" superClass="gnu.c.compiler.option.optimization.flags" useByScannerDiscovery="false" value="-fno-common" valueType="string"/>
 								<option id="com.crt.advproject.gcc.exe.debug.option.debugging.level.988136299" name="Debug Level" superClass="com.crt.advproject.gcc.exe.debug.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.default" valueType="enumerated"/>
@@ -150,7 +150,7 @@
 								<option id="com.crt.advproject.link.fpu.1920174408" name="Floating point" superClass="com.crt.advproject.link.fpu" useByScannerDiscovery="false" value="com.crt.advproject.link.fpu.fpv4.hard" valueType="enumerated"/>
 								<option id="com.crt.advproject.link.manage.462735572" name="Manage linker script" superClass="com.crt.advproject.link.manage" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="com.crt.advproject.link.flashconfigenable.1583477092" name="Enable automatic placement of Flash Configuration field in image" superClass="com.crt.advproject.link.flashconfigenable" useByScannerDiscovery="false" value="true" valueType="boolean"/>
-								<option id="com.crt.advproject.link.gcc.hdrlib.1387458238" name="Library" superClass="com.crt.advproject.link.gcc.hdrlib" useByScannerDiscovery="false" value="com.crt.advproject.gcc.link.hdrlib.codered.semihost_nf" valueType="enumerated"/>
+								<option id="com.crt.advproject.link.gcc.hdrlib.1387458238" name="Library" superClass="com.crt.advproject.link.gcc.hdrlib" useByScannerDiscovery="false" value="com.crt.advproject.gcc.link.hdrlib.codered.nohost" valueType="enumerated"/>
 								<option id="com.crt.advproject.link.script.2083176154" name="Linker script" superClass="com.crt.advproject.link.script" useByScannerDiscovery="false" value="&quot;FRDM-K64F_lwip_mqtt_bm_Debug.ld&quot;" valueType="string"/>
 								<option id="com.crt.advproject.link.gcc.multicore.slave.1355864761" name="Multicore configuration" superClass="com.crt.advproject.link.gcc.multicore.slave" useByScannerDiscovery="false"/>
 								<option defaultValue="com.crt.advproject.heapAndStack.mcuXpressoStyle" id="com.crt.advproject.link.memory.heapAndStack.style.1208783268" name="Heap and Stack placement" superClass="com.crt.advproject.link.memory.heapAndStack.style" useByScannerDiscovery="false" valueType="enumerated"/>
