@@ -178,9 +178,19 @@ static int TLS_Init(void) {
   }
   /* The authentication mode determines how strict the certificates that are presented are checked.  */
 #if CONFIG_USE_SERVER_VERIFICATION
-  ret = mbedtls_x509_crt_parse(&cacert, (const unsigned char *)mbedtls_m2mqtt_srv_crt, mbedtls_m2mqtt_srv_crt_len );
+  #if CONFIG_USE_BROKER_ADAFRUIT
+    #error "no certificate?"
+  #elif CONFIG_USE_BROKER_AZURE
+    ret = mbedtls_x509_crt_parse(&cacert, (const unsigned char *)mbedtls_azure_ca_crt, mbedtls_azure_ca_crt_len );
+  #elif CONFIG_USE_BROKER_MOSQUITTO_TEST
+    ret = mbedtls_x509_crt_parse(&cacert, (const unsigned char *)mbedtls_mosquitto_test_ca_crt, mbedtls_mosquitto_test_ca_crt_len );
+  #elif CONFIG_USE_BROKER_LOCAL
+    ret = mbedtls_x509_crt_parse(&cacert, (const unsigned char *)mbedtls_m2mqtt_srv_crt, mbedtls_m2mqtt_srv_crt_len );
+  #else
+    #error "unknown?"
+  #endif
   if(ret != 0) {
-      printf( " failed\n  !  mbedtls_x509_crt_parse returned -0x%x\n\n", -ret );
+    printf( " failed\n  !  mbedtls_x509_crt_parse returned -0x%x\n\n", -ret );
   }
   mbedtls_ssl_conf_ca_chain( &conf, &cacert, NULL );
   mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_REQUIRED);
@@ -675,26 +685,26 @@ static void AppTask(void *param) {
 
 static void APP_Run(void) {
   /* testing the LEDs */
-  for(int i=0; i<3; i++) {
-    LED1_On();
-    WAIT1_Waitms(100);
-    LED1_Off();
-    WAIT1_Waitms(100);
-    LED2_On();
-    WAIT1_Waitms(100);
-    LED2_Off();
-    WAIT1_Waitms(100);
-    LED3_On();
-    WAIT1_Waitms(100);
-    LED3_Off();
-    WAIT1_Waitms(100);
-  }
 #if CONFIG_USE_SHELL
   SHELL_Init();
   SHELL_SendString((uint8_t*)"\r\n------------------------------------\r\n");
   SHELL_SendString((uint8_t*)"Application with MQTT on lwip\r\n");
   SHELL_SendString((uint8_t*)"------------------------------------\r\n");
 #endif
+  for(int i=0; i<2; i++) {
+    LED1_On();
+    WAIT1_Waitms(50);
+    LED1_Off();
+    WAIT1_Waitms(50);
+    LED2_On();
+    WAIT1_Waitms(50);
+    LED2_Off();
+    WAIT1_Waitms(50);
+    LED3_On();
+    WAIT1_Waitms(50);
+    LED3_Off();
+    WAIT1_Waitms(50);
+  }
 
   IP4_ADDR(&fsl_netif0_ipaddr, configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3);
   IP4_ADDR(&fsl_netif0_netmask, configNET_MASK0, configNET_MASK1, configNET_MASK2, configNET_MASK3);
