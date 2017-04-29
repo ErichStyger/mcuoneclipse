@@ -77,6 +77,9 @@
 #if MQTT_USE_TLS || CONFIG_USE_DNS
   #include "fsl_rnga.h"
 #endif
+#if CONFIG_USE_FREERTOS
+  #include "FreeRTOS.h"
+#endif
 #if CONFIG_USE_SHELL
   #include "Shell.h"
 #endif
@@ -86,6 +89,7 @@
 #if CONFIG_USE_SERVER_VERIFICATION
   #include "certificate.h"
 #endif
+#include "TmDt1.h"
 
 static struct netif fsl_netif0; /* network interface */
 
@@ -261,7 +265,7 @@ static void my_mqtt_subscribe(mqtt_client_t *client, void *arg) {
   if(err != ERR_OK) {
     LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("mqtt_subscribe return: %d\n", err));
   }
-  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("Suscribed to topic \"%s\", res: %d\r\n", topic, (int)err));
+  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("Subscribed to topic \"%s\", res: %d\r\n", topic, (int)err));
 }
 
 static int mqtt_do_connect(mqtt_client_t *client, ip4_addr_t *broker_ipaddr); /* forward declaration */
@@ -338,12 +342,59 @@ static void my_mqtt_publish(mqtt_client_t *client, void *arg) {
   LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("Published to topic \"%s\", payload \"%s\", res: %d\r\n", topic, payload, (int)err));
 }
 
+#if CONFIG_USE_FREERTOS
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName) {
+  /* This will get called if a stack overflow is detected during the context
+     switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack
+     problems within nested interrupts, but only do this for debug purposes as
+     it will increase the context switch time. */
+  (void)pxTask;
+  (void)pcTaskName;
+  taskDISABLE_INTERRUPTS();
+  /* Write your code here ... */
+  for(;;) {}
+}
+#endif
+
+#if CONFIG_USE_FREERTOS
+void FRTOS1_vApplicationIdleHook(void)
+{
+  /* Called whenever the RTOS is idle (from the IDLE task).
+     Here would be a good place to put the CPU into low power mode. */
+  /* Write your code here ... */
+}
+#endif
+
+#if CONFIG_USE_FREERTOS
+void FRTOS1_vApplicationMallocFailedHook(void)
+{
+  /* Called if a call to pvPortMalloc() fails because there is insufficient
+     free memory available in the FreeRTOS heap.  pvPortMalloc() is called
+     internally by FreeRTOS API functions that create tasks, queues, software
+     timers, and semaphores.  The size of the FreeRTOS heap is set by the
+     configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
+  taskDISABLE_INTERRUPTS();
+  /* Write your code here ... */
+  for(;;) {}
+}
+#endif
+
 /*!
  * @brief Interrupt service for SysTick timer.
  */
+#if CONFIG_USE_FREERTOS
+void FRTOS1_vApplicationTickHook(void) {
+#if configTICK_RATE_HZ!=1000
+  #error "Tick rate needs to be 1 kHz (1ms period)!"
+#endif
+  time_isr();
+  TmDt1_AddTick();
+}
+#else
 void SysTick_Handler(void) {
   time_isr();
 }
+#endif
 
 #if MQTT_USE_TLS
 static int mqtt_do_tls_handshake(mqtt_client_t *mqtt_client) {
@@ -464,7 +515,8 @@ static void ProcessLWIP(struct netif *netifp) {
   sys_check_timeouts(); /* Handle all system timeouts for all core protocols */
 }
 
-static void DoMQTT(struct netif *netifp, ip4_addr_t *broker_ipaddr) {
+#if !CONFIG_USE_FREERTOS
+static void DoMQTT_BM(struct netif *netifp, ip4_addr_t *broker_ipaddr) {
   uint32_t timeStampMs;
 //  uint32_t diffTimeMs;
   uint32_t blinkTimeStampMs;
@@ -497,6 +549,7 @@ static void DoMQTT(struct netif *netifp, ip4_addr_t *broker_ipaddr) {
   #endif
   }
 }
+#endif
 
 #if CONFIG_USE_DNS
 typedef enum {
@@ -575,29 +628,52 @@ struct netif *APP_GetNetworkInterface(void) {
   return &fsl_netif0;
 }
 
-/*!
- * @brief Main function.
- */
-int main(void) {
+static void StartNetworkInterface(void) {
+#if CONFIG_USE_DHCP
+  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("Starting DHCP....\r\n"));
+  DHCP_Start(&fsl_netif0);
+  while (DHCP_IsBound(&fsl_netif0)) {
+    ProcessLWIP(&fsl_netif0);
+    LED1_Neg();
+  }
+  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("DHCP done!\r\n"));
+#endif
+  ip4_addr_set_u32(&brokerServerAddress, ipaddr_addr("192.168.0.10")); /* default init */
+#if CONFIG_USE_DNS
+  if (GetHostAddress(&fsl_netif0, CONFIG_BROKER_HOST_NAME, &brokerServerAddress)!=0) {
+    LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("ERROR: unable to get IP address for broker!\r\n"));
+    LED1_On(); /* red error LED */
+    for(;;){}
+  }
+#else
+  IP4_ADDR(&brokerServerAddress, configBroker_ADDR0, configBroker_ADDR1, configBroker_ADDR2, configBroker_ADDR3);
+#endif
+#if !CONFIG_USE_DHCP
+  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,(" IPv4 Address     : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_ipaddr)[0], ((u8_t *)&fsl_netif0_ipaddr)[1],  ((u8_t *)&fsl_netif0_ipaddr)[2], ((u8_t *)&fsl_netif0_ipaddr)[3]));
+  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,(" IPv4 Subnet mask : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_netmask)[0], ((u8_t *)&fsl_netif0_netmask)[1], ((u8_t *)&fsl_netif0_netmask)[2], ((u8_t *)&fsl_netif0_netmask)[3]));
+  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,(" IPv4 Gateway     : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_gw)[0], ((u8_t *)&fsl_netif0_gw)[1], ((u8_t *)&fsl_netif0_gw)[2], ((u8_t *)&fsl_netif0_gw)[3]));
+#endif
+  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,(" Broker Address   : %u.%u.%u.%u\r\n", ((u8_t *)&brokerServerAddress)[0], ((u8_t *)&brokerServerAddress)[1], ((u8_t *)&brokerServerAddress)[2], ((u8_t *)&brokerServerAddress)[3]));
+  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("************************************************\r\n"));
+}
 
-  SYSMPU_Type *base = SYSMPU;
-  BOARD_InitPins();
-  BOARD_BootClockRUN();
-  //BOARD_InitDebugConsole(); /* init done in console.c through SHELL_Init() */
-  /* Disable SYSMPU. */
-  base->CESR &= ~SYSMPU_CESR_VLD_MASK;
+#if CONFIG_USE_FREERTOS
+static void AppTask(void *param) {
 
-  time_init();
+  (void)param;
+  StartNetworkInterface();
+  for(;;) {
+     MqttDoStateMachine(&mqtt_client, &brokerServerAddress); /* process state machine */
+     ProcessLWIP(APP_GetNetworkInterface());
+   #if CONFIG_USE_SHELL
+     SHELL_Process();
+   #endif
+    vTaskDelay(pdMS_TO_TICKS(20));
+  }
+}
+#endif
 
-  /* clocking */
-  //CLOCK_EnableClock(kCLOCK_PortB);   /* LED on PTB21, PTB22 */
-  CLOCK_EnableClock(kCLOCK_PortE);   /* LED on PTE26 */
-  /* init */
-  LED1_Init(); /* red led */
-  LED2_Init(); /* green led */
-  LED3_Init(); /* blue led */
-  WAIT1_Init(); /* waiting */
-  RNG1_Init(); /* ring buffer */
+static void APP_Run(void) {
   /* testing the LEDs */
   for(int i=0; i<3; i++) {
     LED1_On();
@@ -638,35 +714,54 @@ int main(void) {
   RNGA_Init(RNG); /* init random number generator */
   RNGA_Seed(RNG, SIM->UIDL); /* use device unique ID as seed for the RNG */
 #endif
-#if CONFIG_USE_DHCP
-  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("Starting DHCP....\r\n"));
-  DHCP_Start(&fsl_netif0);
-  while (DHCP_IsBound(&fsl_netif0)) {
-    ProcessLWIP(&fsl_netif0);
-    LED1_Neg();
+
+#if CONFIG_USE_FREERTOS
+  if (xTaskCreate(AppTask, "App", 1000/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+    for(;;){} /* error */
   }
-  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("DHCP done!\r\n"));
-#endif
-  ip4_addr_set_u32(&brokerServerAddress, ipaddr_addr("192.168.0.10")); /* default init */
-#if CONFIG_USE_DNS
-  if (GetHostAddress(&fsl_netif0, CONFIG_BROKER_HOST_NAME, &brokerServerAddress)!=0) {
-    LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("ERROR: unable to get IP address for broker!\r\n"));
-    LED1_On(); /* red error LED */
-    for(;;){}
-  }
+  vTaskStartScheduler();
 #else
-  IP4_ADDR(&brokerServerAddress, configBroker_ADDR0, configBroker_ADDR1, configBroker_ADDR2, configBroker_ADDR3);
+  StartNetworkInterface();
+  for(;;) {
+    DoMQTT_BM(&fsl_netif0, &brokerServerAddress);
+  }
 #endif
-#if !CONFIG_USE_DHCP
-  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,(" IPv4 Address     : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_ipaddr)[0], ((u8_t *)&fsl_netif0_ipaddr)[1],  ((u8_t *)&fsl_netif0_ipaddr)[2], ((u8_t *)&fsl_netif0_ipaddr)[3]));
-  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,(" IPv4 Subnet mask : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_netmask)[0], ((u8_t *)&fsl_netif0_netmask)[1], ((u8_t *)&fsl_netif0_netmask)[2], ((u8_t *)&fsl_netif0_netmask)[3]));
-  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,(" IPv4 Gateway     : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_gw)[0], ((u8_t *)&fsl_netif0_gw)[1], ((u8_t *)&fsl_netif0_gw)[2], ((u8_t *)&fsl_netif0_gw)[3]));
+}
+
+/*!
+ * @brief Main function.
+ */
+int main(void) {
+  SYSMPU_Type *base = SYSMPU;
+  BOARD_InitPins();
+  BOARD_BootClockRUN();
+  //BOARD_InitDebugConsole(); /* init done in console.c through SHELL_Init() */
+  /* Disable SYSMPU. */
+  base->CESR &= ~SYSMPU_CESR_VLD_MASK;
+
+#if !CONFIG_USE_FREERTOS
+  time_init(); /* using SysTick as time base for lwip */
 #endif
-  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,(" Broker Address   : %u.%u.%u.%u\r\n", ((u8_t *)&brokerServerAddress)[0], ((u8_t *)&brokerServerAddress)[1], ((u8_t *)&brokerServerAddress)[2], ((u8_t *)&brokerServerAddress)[3]));
-  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("************************************************\r\n"));
+  /* clocking */
+  //CLOCK_EnableClock(kCLOCK_PortB);   /* LED on PTB21, PTB22 */
+  CLOCK_EnableClock(kCLOCK_PortE);   /* LED on PTE26 */
 
-  DoMQTT(&fsl_netif0, &brokerServerAddress);
+  /* init */
+  LED1_Init(); /* red led */
+  LED2_Init(); /* green led */
+  LED3_Init(); /* blue led */
+  UTIL1_Init(); /* utility */
+  WAIT1_Init(); /* waiting */
+  RNG1_Init(); /* ring buffer */
+  TmDt1_Init(); /* RTC */
+#if CONFIG_USE_FREERTOS
+  FRTOS1_Init(); /* FreeRTOS */
+#endif
+#if CONFIG_USE_SHELL
+  CLS1_Init(); /* shell */
+#endif
 
+  APP_Run();
   for(;;) {}
   return 0;
 }

@@ -7,7 +7,7 @@
 **     Version     : Component 01.082, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-04-22, 17:20, # CodeGen: 18
+**     Date/Time   : 2017-04-28, 17:33, # CodeGen: 21
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
@@ -79,6 +79,9 @@
 #include "MCUC1.h"
 
 /* other includes needed */
+/* include RTOS header files */
+#include "FreeRTOS.h" /* for vTaskDelay() */
+#include "task.h"
 
 
 #ifdef __cplusplus

@@ -7,14 +7,15 @@
 **     Version     : Component 01.061, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-04-19, 08:29, # CodeGen: 17
+**     Date/Time   : 2017-04-29, 08:03, # CodeGen: 23
 **     Abstract    :
 **         Software date/time module.
 **     Settings    :
 **          Component name                                 : TmDt1
 **          Software RTC                                   : Enabled
 **            Tick Time (ms)                               : 10
-**            RTOS                                         : Disabled
+**            RTOS                                         : Enabled
+**              RTOS                                       : FRTOS1
 **          Hardware RTC                                   : Disabled
 **          Set Time and Date                              : 
 **            Software RTC                                 : yes
@@ -24,7 +25,7 @@
 **          Init()                                         : 
 **            Defaults                                     : 
 **              Time                                       : 17:51:31
-**              Date                                       : 2012-07-22
+**              Date                                       : 2017-04-28
 **            Call Init() in startup                       : yes
 **            Software RTC Initialization                  : Init from Defaults
 **          System                                         : 
@@ -110,6 +111,7 @@
 #include "TmDt1config.h" /* configuration */
 
 /* Include inherited components */
+#include "FRTOS1.h"
 #include "CS1.h"
 #include "UTIL1.h"
 #include "MCUC1.h"
@@ -200,13 +202,13 @@ static const TIMEREC TmDt1_DefaultTime = {
 #endif
 };
 static const DATEREC TmDt1_DefaultDate = {
-  2012, /* year */
-  7,  /* month */
-  22 /* day */
+  2017, /* year */
+  4,  /* month */
+  28 /* day */
 };
 
 #define TmDt1_TICK_TIME_MS \
-  10                                    /* Period in milliseconds as defined in component properties, at which TmDt1._AddTick() is called */
+  (1000/1000)                           /* Period in milliseconds as defined in RTOS component properties, at which TmDt1_AddTick() is called */
 
 
 
