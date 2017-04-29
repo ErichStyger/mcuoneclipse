@@ -84,8 +84,14 @@
 #define SCANF_ADVANCED_ENABLE 0U
 #endif /* SCANF_ADVANCED_ENABLE */
 
-#if SDK_DEBUGCONSOLE /* Select printf, scanf, putchar, getchar of SDK version. */
+#if 0 && SDK_DEBUGCONSOLE /* Select printf, scanf, putchar, getchar of SDK version. */
 #define PRINTF DbgConsole_Printf
+#define SCANF DbgConsole_Scanf
+#define PUTCHAR DbgConsole_Putchar
+#define GETCHAR DbgConsole_Getchar
+#elif 1
+unsigned CLS1_printf(const char *fmt, ...);
+#define PRINTF CLS1_printf
 #define SCANF DbgConsole_Scanf
 #define PUTCHAR DbgConsole_Putchar
 #define GETCHAR DbgConsole_Getchar

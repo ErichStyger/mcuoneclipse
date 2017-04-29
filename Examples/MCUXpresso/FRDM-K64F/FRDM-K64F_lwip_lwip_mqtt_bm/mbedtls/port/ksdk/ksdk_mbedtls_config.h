@@ -35,7 +35,7 @@
 /**************************** KSDK ********************************************/
 
 #include "fsl_device_registers.h"
-#include "fsl_debug_console.h"
+//#include <fsl_debug_console.h>
 
 /* Enable LTC use in library if there is LTC on chip. */
 #if defined(FSL_FEATURE_SOC_LTC_COUNT) && (FSL_FEATURE_SOC_LTC_COUNT > 0)

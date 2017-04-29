@@ -685,7 +685,7 @@ static void AppTask(void *param) {
    #if CONFIG_USE_SHELL
      SHELL_Process();
    #endif
-    vTaskDelay(pdMS_TO_TICKS(1));
+    vTaskDelay(pdMS_TO_TICKS(10));
   }
 }
 #endif

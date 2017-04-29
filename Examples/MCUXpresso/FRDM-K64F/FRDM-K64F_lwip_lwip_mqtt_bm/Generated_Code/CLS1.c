@@ -7,7 +7,7 @@
 **     Version     : Component 01.095, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-04-22, 17:20, # CodeGen: 18
+**     Date/Time   : 2017-04-29, 20:53, # CodeGen: 32
 **     Abstract    :
 **
 **     Settings    :
@@ -24,7 +24,9 @@
 **            RTOS Wait                                    : yes
 **          Status Colon Pos                               : 13
 **          Help Semicolon Pos                             : 26
-**          Multi Command                                  : Disabled
+**          Multi Command                                  : Enabled
+**            Length                                       : 32
+**            Separator                                    : ;
 **          History                                        : no
 **          Mutex                                          : no
 **          SDK                                            : MCUC1
@@ -920,9 +922,11 @@ void* CLS1_GetSemaphore(void)
 static void SendSeparatedStrings(const uint8_t *strA, const uint8_t *strB, uint8_t tabChar, uint8_t tabPos, CLS1_StdIO_OutErr_FctType io)
 {
   /* write command part */
-  while(*strA!='\0' && tabPos>0) {
-    io(*strA++);
-    tabPos--;
+  if (strA!=NULL) {
+    while(*strA!='\0' && tabPos>0) {
+      io(*strA++);
+      tabPos--;
+    }
   }
   /* fill up until ';' */
   while(tabPos>0) {
@@ -932,8 +936,10 @@ static void SendSeparatedStrings(const uint8_t *strA, const uint8_t *strB, uint8
   /* write separator */
   io(tabChar);
   io(' ');
-  /* write help text */
-  CLS1_SendStr(strB, io);
+  if (strB!=NULL) {
+    /* write help text */
+    CLS1_SendStr(strB, io);
+  }
 }
 
 /*

@@ -7,7 +7,7 @@
 **     Version     : Component 01.095, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-04-22, 17:20, # CodeGen: 18
+**     Date/Time   : 2017-04-29, 20:53, # CodeGen: 32
 **     Abstract    :
 **
 **     Settings    :
@@ -24,7 +24,9 @@
 **            RTOS Wait                                    : yes
 **          Status Colon Pos                               : 13
 **          Help Semicolon Pos                             : 26
-**          Multi Command                                  : Disabled
+**          Multi Command                                  : Enabled
+**            Length                                       : 32
+**            Separator                                    : ;
 **          History                                        : no
 **          Mutex                                          : no
 **          SDK                                            : MCUC1
@@ -175,8 +177,8 @@
 #define CLS1_SILENT_PREFIX_CHAR_ENABLED (CLS1_SILENT_PREFIX_CHAR != CLS1_NO_SILENT_PREFIX_CHAR)
 
 /* multi command support */
-#define CLS1_MULTI_CMD_ENABLED   0 /* 1: enabled, 0: disabled */
-#define CLS1_MULTI_CMD_SIZE      0 /* max size of each command */
+#define CLS1_MULTI_CMD_ENABLED   1 /* 1: enabled, 0: disabled */
+#define CLS1_MULTI_CMD_SIZE      32 /* max size of each command */
 #define CLS1_MULTI_CMD_CHAR      ';' /* separation character */
 
 /* settings for local echo */
