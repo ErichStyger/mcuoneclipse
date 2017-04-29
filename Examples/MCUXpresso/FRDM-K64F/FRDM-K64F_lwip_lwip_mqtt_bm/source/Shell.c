@@ -14,6 +14,9 @@
 #if CONFIG_USE_DHCP
   #include "app_dhcp.h"
 #endif
+#if CONFIG_USE_FREERTOS
+  #include "FRTOS1.h"
+#endif
 #include "TmDt1.h"
 #include "lwip_mqtt_bm.h"
 
@@ -24,6 +27,9 @@ void SHELL_SendString(unsigned char *msg) {
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
   CLS1_ParseCommand,
+#if CONFIG_USE_FREERTOS
+  FRTOS1_ParseCommand,
+#endif
 #if CONFIG_USE_DHCP
   DHCP_ParseCommand,
 #endif

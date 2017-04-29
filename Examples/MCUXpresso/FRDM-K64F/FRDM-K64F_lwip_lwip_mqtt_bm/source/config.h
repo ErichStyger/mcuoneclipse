@@ -18,10 +18,10 @@
 #define CONFIG_USE_IN_WORK_NETWORK              (0) /* 1: in work network; 0: otherwise use home network */
 #define CONFIG_USE_SERVER_VERIFICATION          (0) /* 1: verify server with certificate; 0: no server verification */ /*!\todo does not work yet? */
 
-#define CONFIG_USE_BROKER_LOCAL                 (0) /* 1: use local mosquitto broker; 0: do not use local broker */
+#define CONFIG_USE_BROKER_LOCAL                 (1) /* 1: use local mosquitto broker; 0: do not use local broker */
 #define CONFIG_USE_BROKER_MOSQUITTO_TEST        (0) /* 1: use mosquitto test broker; 0: do not use mosquitto test broker */
 #define CONFIG_USE_BROKER_ADAFRUIT              (0) /* 1: use Adafruit I/O broker; 0: do not use Adafruit broker */
-#define CONFIG_USE_BROKER_AZURE                 (1) /* 1: use Azure I/O broker; 0: do not use Azure broker */
+#define CONFIG_USE_BROKER_AZURE                 (0) /* 1: use Azure I/O broker; 0: do not use Azure broker */
 
 /* client configuration settings */
 #if CONFIG_USE_IN_WORK_NETWORK
@@ -112,7 +112,7 @@
   #define CONFIG_BROKER_HOST_NAME       "GrilloIOTHub.azure-devices.net" /* {iothubhostname} */
   #define CONFIG_CLIENT_ID_NAME         "Erich_Device" /* {deviceId} */
   #define CONFIG_CLIENT_USER_NAME       "GrilloIOTHub.azure-devices.net/Erich_Device/api-version=2016-11-14" /* {iothubhostname}/{device_id}/api-version=2016-11-14  */
-  #define CONFIG_CLIENT_USER_PASSWORD   "SharedAccessSignature sr=GrilloIOTHub.azure-devices.net%2Fdevices%2FErich_Device&sig=u550Q0sCYBUbT%2FUribehbR70WcbICZZGDXFJKl%2Fu6H4%3D&se=1493391099" /* part of SAS token */
+  #define CONFIG_CLIENT_USER_PASSWORD   "SharedAccessSignature sr=GrilloIOTHub.azure-devices.net%2Fdevices%2FErich_Device&sig=u550Q0sCYBUbT%2FUribehbR70WcbICZZGDXFJKl%2Fu6H4%3D&se=1493391099A" /* part of SAS token */
   #define CONFIG_TOPIC_NAME             "devices/Erich_Device/messages/events/" /* devices/{deviceId}/events */
 #endif
 

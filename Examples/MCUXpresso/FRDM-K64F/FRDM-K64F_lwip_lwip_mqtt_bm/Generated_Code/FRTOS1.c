@@ -7,7 +7,7 @@
 **     Version     : Component 01.539, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-04-29, 08:03, # CodeGen: 23
+**     Date/Time   : 2017-04-29, 09:10, # CodeGen: 27
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
@@ -33,7 +33,10 @@
 **            Record Stack High Address                    : yes
 **          Segger System Viewer Trace                     : Disabled
 **          Percepio Trace                                 : Disabled
-**          Generate Runtime Statistics                    : Disabled
+**          Generate Runtime Statistics                    : Enabled
+**            Use Tick Counter                             : yes
+**            LDD                                          : Disabled
+**            non-LDD                                      : Disabled
 **          Scheduler                                      : Settings for the scheduler
 **            ColdFire V1                                  : Disabled
 **            ColdFire V2                                  : Disabled
@@ -54,7 +57,7 @@
 **            Use Co-Routines                              : no
 **            Idle should yield                            : yes
 **            Task Name Length                             : 12
-**            Minimal Stack Size                           : 200
+**            Minimal Stack Size                           : 100
 **            Maximum Priorities                           : 6
 **            Maximum Coroutine Priorities                 : 2
 **            Stackoverflow checking method                : Method 1
@@ -87,7 +90,9 @@
 **            Critical section                             : Configures how critical sections are handled.
 **              User function for entering critical section: no
 **              User function for exiting critical section : no
-**          Shell                                          : Disabled
+**          Shell                                          : Enabled
+**            Max number of tasks                          : 16
+**            Shell                                        : CLS1
 **          Utility                                        : UTIL1
 **     Contents    :
 **         xTaskCreate                          - portBASE_TYPE FRTOS1_xTaskCreate(pdTASK_CODE pvTaskCode, const portCHAR *...
@@ -138,6 +143,7 @@
 **         vTaskList                            - void FRTOS1_vTaskList(signed portCHAR *pcWriteBuffer, size_t bufSize);
 **         uxTaskGetStackHighWaterMark          - unsigned_portBASE_TYPE FRTOS1_uxTaskGetStackHighWaterMark(xTaskHandle xTask);
 **         uxTaskGetNumberOfTasks               - unsigned_portBASE_TYPE FRTOS1_uxTaskGetNumberOfTasks(void);
+**         vTaskGetRunTimeStats                 - void FRTOS1_vTaskGetRunTimeStats(portCHAR *pcWriteBuffer, size_t bufSize);
 **         uxQueueMessagesWaiting               - unsigned_portBASE_TYPE FRTOS1_uxQueueMessagesWaiting(xQueueHandle xQueue);
 **         uxQueueMessagesWaitingfromISR        - unsigned_portBASE_TYPE FRTOS1_uxQueueMessagesWaitingfromISR(xQueueHandle...
 **         xQueueCreate                         - xQueueHandle FRTOS1_xQueueCreate(unsigned_portBASE_TYPE uxQueueLength,...
@@ -197,6 +203,7 @@
 **         pvTaskGetThreadLocalStoragePointer   - void* FRTOS1_pvTaskGetThreadLocalStoragePointer(TaskHandle_t xTaskToQuery,...
 **         pcTaskGetName                        - char* FRTOS1_pcTaskGetName(TaskHandle_t xTaskToQuery);
 **         vTaskGetInfo                         - void FRTOS1_vTaskGetInfo(TaskHandle_t xTask, TaskStatus_t *pxTaskStatus,...
+**         ParseCommand                         - uint8_t FRTOS1_ParseCommand(const unsigned char *cmd, bool *handled, const...
 **         AppConfigureTimerForRuntimeStats     - void FRTOS1_AppConfigureTimerForRuntimeStats(void);
 **         AppGetRuntimeCounterValueFromISR     - uint32_t FRTOS1_AppGetRuntimeCounterValueFromISR(void);
 **         Init                                 - void FRTOS1_Init(void);
@@ -252,6 +259,296 @@
   const uint8_t freeRTOSMemoryScheme = configUSE_HEAP_SCHEME;
 #endif
 
+
+static uint8_t PrintTaskList(const CLS1_StdIOType *io) {
+  #define SHELL_MAX_NOF_TASKS 16 /* maximum number of tasks, as specified in the properties */
+  UBaseType_t nofTasks, i;
+  TaskHandle_t taskHandles[SHELL_MAX_NOF_TASKS];
+#if configUSE_TRACE_FACILITY
+  TaskStatus_t taskStatus;
+#endif
+  StackType_t *stackBeg, *stackEnd, *topOfStack;
+  uint8_t staticallyAllocated;
+  uint8_t buf[32], tmpBuf[32], res;
+  uint16_t stackSize;
+#if configGENERATE_RUN_TIME_STATS
+  uint32_t ulTotalTime, ulStatsAsPercentage;
+#endif
+#if configUSE_TRACE_FACILITY
+  #define PAD_STAT_TASK_TCB             (sizeof("TCB ")-1)
+#endif
+  #define PAD_STAT_TASK_STATIC          (sizeof("yes(2) ")-1)
+  #define PAD_STAT_TASK_HANDLE          (sizeof("0x20000398 ")-1)
+  #define PAD_STAT_TASK_NAME            (configMAX_TASK_NAME_LEN+1)
+#if configUSE_TRACE_FACILITY
+  #define PAD_STAT_TASK_STATE           (sizeof("Suspended")-1)
+#endif
+#if configUSE_TRACE_FACILITY
+  #define PAD_STAT_TASK_PRIO            (sizeof("(10,12) ")-1)
+#else
+  #define PAD_STAT_TASK_PRIO            (sizeof("Prio ")-1)
+#endif
+  #define PAD_STAT_TASK_STACK_BEG       (sizeof("0x20000398 ")-1)
+  #define PAD_STAT_TASK_STACK_END       (sizeof("0x20000398 ")-1)
+  #define PAD_STAT_TASK_STACK_SIZE      (sizeof("12000 B ")-1)
+  #define PAD_STAT_TASK_STACK_TOP       (sizeof("0x200006FC (  132 B) ")-1)
+#if configUSE_TRACE_FACILITY
+  #define PAD_STAT_TASK_STACK_MARK      (sizeof("12345 B ")-1)
+#endif
+#if configGENERATE_RUN_TIME_STATS
+  #define PAD_STAT_TASK_RUNTIME         (sizeof("0x20000398 (100%)")-1)
+#endif
+
+  res = ERR_OK;
+#if !configUSE_TRACE_FACILITY
+  CLS1_SendStr((uint8_t*)"Info: Enable configUSE_TRACE_FACILITY for additional task information.\r\n", io->stdOut);
+#endif
+#if !configGENERATE_RUN_TIME_STATS
+  CLS1_SendStr((uint8_t*)"Info: Enable configGENERATE_RUN_TIME_STATS for runtime statistics.\r\n", io->stdOut);
+#endif
+  /* header */
+#if configUSE_TRACE_FACILITY
+  buf[0] = '\0';
+  UTIL1_strcatPad(buf, sizeof(buf), (const unsigned char*)"TCB", ' ', PAD_STAT_TASK_TCB);
+  CLS1_SendStr(buf, io->stdOut);
+#endif
+  buf[0] = '\0';
+  UTIL1_strcatPad(buf, sizeof(buf), (const unsigned char*)"Static", ' ', PAD_STAT_TASK_STATIC);
+  CLS1_SendStr(buf, io->stdOut);
+
+  buf[0] = '\0';
+  UTIL1_strcatPad(buf, sizeof(buf), (const unsigned char*)"Handle", ' ', PAD_STAT_TASK_HANDLE);
+  CLS1_SendStr(buf, io->stdOut);
+
+  buf[0] = '\0';
+  UTIL1_strcatPad(buf, sizeof(buf), (const unsigned char*)"Name", ' ', PAD_STAT_TASK_NAME);
+  CLS1_SendStr(buf, io->stdOut);
+
+#if configUSE_TRACE_FACILITY
+  buf[0] = '\0';
+  UTIL1_strcatPad(buf, sizeof(buf), (const unsigned char*)"State", ' ', PAD_STAT_TASK_STATE);
+  CLS1_SendStr(buf, io->stdOut);
+#endif
+  buf[0] = '\0';
+  UTIL1_strcatPad(buf, sizeof(buf), (const unsigned char*)"Prio", ' ', PAD_STAT_TASK_PRIO);
+  CLS1_SendStr(buf, io->stdOut);
+
+  buf[0] = '\0';
+  UTIL1_strcatPad(buf, sizeof(buf), (const unsigned char*)"Stack Beg", ' ', PAD_STAT_TASK_STACK_BEG);
+  CLS1_SendStr(buf, io->stdOut);
+
+  buf[0] = '\0';
+  UTIL1_strcatPad(buf, sizeof(buf), (const unsigned char*)"Stack End", ' ', PAD_STAT_TASK_STACK_END);
+  CLS1_SendStr(buf, io->stdOut);
+
+  buf[0] = '\0';
+  UTIL1_strcatPad(buf, sizeof(buf), (const unsigned char*)"Size", ' ', PAD_STAT_TASK_STACK_SIZE);
+  CLS1_SendStr(buf, io->stdOut);
+
+  buf[0] = '\0';
+  UTIL1_strcatPad(buf, sizeof(buf), (const unsigned char*)"Stack Top", ' ', PAD_STAT_TASK_STACK_TOP);
+  CLS1_SendStr(buf, io->stdOut);
+#if configUSE_TRACE_FACILITY
+  buf[0] = '\0';
+  UTIL1_strcatPad(buf, sizeof(buf), (const unsigned char*)"Unused", ' ', PAD_STAT_TASK_STACK_MARK);
+  CLS1_SendStr(buf, io->stdOut);
+#endif
+#if configGENERATE_RUN_TIME_STATS
+  buf[0] = '\0';
+  UTIL1_strcatPad(buf, sizeof(buf), (const unsigned char*)"Runtime", ' ', PAD_STAT_TASK_RUNTIME);
+  CLS1_SendStr(buf, io->stdOut);
+#endif
+  CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
+
+#if configGENERATE_RUN_TIME_STATS
+  ulTotalTime = portGET_RUN_TIME_COUNTER_VALUE(); /* get total time passed in system */
+  ulTotalTime /= 100UL; /* For percentage calculations. */
+#endif
+
+  nofTasks = uxTaskGetNumberOfTasks();
+  if (nofTasks>SHELL_MAX_NOF_TASKS) {
+    UTIL1_strcpy(buf, sizeof(buf), (const unsigned char*)"WARNING: more tasks than Shell maximum number of tasks.\r\n");
+    CLS1_SendStr(buf, io->stdErr);
+    nofTasks = SHELL_MAX_NOF_TASKS;
+  }
+  /* get task handles of all tasks. */
+  nofTasks = xGetTaskHandles(&taskHandles[0], SHELL_MAX_NOF_TASKS);
+  for(i=0;i<nofTasks;i++) {
+    if (taskHandles[i]!=NULL) {
+    #if configUSE_TRACE_FACILITY
+      vTaskGetInfo(taskHandles[i], &taskStatus, pdTRUE, eInvalid);
+    #endif
+      vTaskGetStackInfo(taskHandles[i], &stackBeg, &stackEnd, &topOfStack, &staticallyAllocated);
+
+#if configUSE_TRACE_FACILITY
+      /* TCB */
+      tmpBuf[0] = '\0';
+      UTIL1_strcatNum32u(tmpBuf, sizeof(tmpBuf), (uint32_t)taskStatus.xTaskNumber);
+      buf[0] = '\0';
+      UTIL1_strcatPad(buf, sizeof(buf), tmpBuf, ' ', PAD_STAT_TASK_TCB);
+      CLS1_SendStr(buf, io->stdOut);
+#endif
+      /* Static */
+      tmpBuf[0] = '\0';
+      if (staticallyAllocated==0) {
+        UTIL1_strcpy(tmpBuf, sizeof(tmpBuf), (unsigned char*)"no (0)");
+      } else {
+        UTIL1_strcpy(tmpBuf, sizeof(tmpBuf), (unsigned char*)"yes(");
+        UTIL1_strcatNum8u(tmpBuf, sizeof(tmpBuf), staticallyAllocated);
+        UTIL1_strcat(tmpBuf, sizeof(tmpBuf), (unsigned char*)")");
+      }
+      buf[0] = '\0';
+      UTIL1_strcatPad(buf, sizeof(buf), tmpBuf, ' ', PAD_STAT_TASK_STATIC);
+      CLS1_SendStr(buf, io->stdOut);
+
+      /* task handle */
+      UTIL1_strcpy(tmpBuf, sizeof(tmpBuf), (unsigned char*)"0x");
+      UTIL1_strcatNum32Hex(tmpBuf, sizeof(tmpBuf), (uint32_t)taskHandles[i]);
+      buf[0] = '\0';
+      UTIL1_strcatPad(buf, sizeof(buf), tmpBuf, ' ', PAD_STAT_TASK_HANDLE);
+      CLS1_SendStr(buf, io->stdOut);
+
+      /* task name */
+      buf[0] = '\0';
+      UTIL1_strcatPad(buf, sizeof(buf), (unsigned char*)pcTaskGetName(taskHandles[i]), ' ', PAD_STAT_TASK_NAME);
+      CLS1_SendStr(buf, io->stdOut);
+
+#if configUSE_TRACE_FACILITY
+      /* state */
+      switch(taskStatus.eCurrentState) {
+        case eRunning:   UTIL1_strcpy(tmpBuf, sizeof(tmpBuf), (unsigned char*)"Running"); break;
+        case eReady:     UTIL1_strcpy(tmpBuf, sizeof(tmpBuf), (unsigned char*)"Ready"); break;
+        case eSuspended: UTIL1_strcpy(tmpBuf, sizeof(tmpBuf), (unsigned char*)"Suspended"); break;
+        case eBlocked:   UTIL1_strcpy(tmpBuf, sizeof(tmpBuf), (unsigned char*)"Blocked"); break;
+        default:         UTIL1_strcpy(tmpBuf, sizeof(tmpBuf), (unsigned char*)"UNKNOWN!"); break;
+      }
+      buf[0] = '\0';
+      UTIL1_strcatPad(buf, sizeof(buf), tmpBuf, ' ', PAD_STAT_TASK_STATE);
+      CLS1_SendStr(buf, io->stdOut);
+#endif
+#if configUSE_TRACE_FACILITY
+      /* (baseprio,currprio) */
+      tmpBuf[0] = '\0';
+      UTIL1_chcat(tmpBuf, sizeof(tmpBuf), '(');
+      UTIL1_strcatNum32u(tmpBuf, sizeof(tmpBuf), taskStatus.uxBasePriority);
+      UTIL1_chcat(tmpBuf, sizeof(tmpBuf), ',');
+      UTIL1_strcatNum32u(tmpBuf, sizeof(tmpBuf), taskStatus.uxCurrentPriority);
+      UTIL1_chcat(tmpBuf, sizeof(tmpBuf), ')');
+      buf[0] = '\0';
+      UTIL1_strcatPad(buf, sizeof(buf), tmpBuf, ' ', PAD_STAT_TASK_PRIO);
+      CLS1_SendStr(buf, io->stdOut);
+#else
+      /* prio */
+      tmpBuf[0] = '\0';
+      UTIL1_strcatNum32s(tmpBuf, sizeof(tmpBuf), uxTaskPriorityGet(taskHandles[i]));
+      buf[0] = '\0';
+      UTIL1_strcatPad(buf, sizeof(buf), tmpBuf, ' ', PAD_STAT_TASK_PRIO);
+      CLS1_SendStr(buf, io->stdOut);
+#endif
+      /* stack begin */
+      UTIL1_strcpy(tmpBuf, sizeof(tmpBuf), (unsigned char*)"0x");
+      UTIL1_strcatNum32Hex(tmpBuf, sizeof(tmpBuf), (uint32_t)stackBeg);
+      buf[0] = '\0';
+      UTIL1_strcatPad(buf, sizeof(buf), tmpBuf, ' ', PAD_STAT_TASK_STACK_BEG);
+      CLS1_SendStr(buf, io->stdOut);
+
+      /* stack end */
+      UTIL1_strcpy(tmpBuf, sizeof(tmpBuf), (unsigned char*)"0x");
+      UTIL1_strcatNum32Hex(tmpBuf, sizeof(tmpBuf), (uint32_t)stackEnd);
+      buf[0] = '\0';
+      UTIL1_strcatPad(buf, sizeof(buf), tmpBuf, ' ', PAD_STAT_TASK_STACK_END);
+      CLS1_SendStr(buf, io->stdOut);
+
+      /* stack size */
+#if (portSTACK_GROWTH>0)
+      stackSize = (uint16_t)(((uint32_t)stackEnd - (uint32_t)stackBeg)+sizeof(StackType_t));
+#else
+      stackSize = (uint16_t)(((uint32_t)stackBeg - (uint32_t)stackEnd)+ 2*sizeof(StackType_t));
+#endif
+      tmpBuf[0] = '\0';
+      UTIL1_strcatNum16uFormatted(tmpBuf, sizeof(tmpBuf), stackSize, ' ', 5);
+      UTIL1_strcat(tmpBuf, sizeof(tmpBuf), (unsigned char*)" B");
+      buf[0] = '\0';
+      UTIL1_strcatPad(buf, sizeof(buf), tmpBuf, ' ', PAD_STAT_TASK_STACK_SIZE);
+      CLS1_SendStr(buf, io->stdOut);
+
+      /* stack top */
+      UTIL1_strcpy(tmpBuf, sizeof(tmpBuf), (unsigned char*)"0x");
+      UTIL1_strcatNum32Hex(tmpBuf, sizeof(tmpBuf), (uint32_t)topOfStack);
+      UTIL1_strcat(tmpBuf, sizeof(tmpBuf), (unsigned char*)" (");
+#if (portSTACK_GROWTH>0)
+      UTIL1_strcatNum16uFormatted(tmpBuf, sizeof(tmpBuf), (uint16_t)(((uint32_t)topOfStack - (uint32_t)stackBeg))+sizeof(StackType_t), ' ', 5);
+#else
+      UTIL1_strcatNum16uFormatted(tmpBuf, sizeof(tmpBuf), (uint16_t)(((uint32_t)stackBeg - (uint32_t)topOfStack))+sizeof(StackType_t), ' ', 5);
+#endif
+      UTIL1_strcat(tmpBuf, sizeof(tmpBuf), (unsigned char*)" B)");
+      buf[0] = '\0';
+      UTIL1_strcatPad(buf, sizeof(buf), tmpBuf, ' ', PAD_STAT_TASK_STACK_TOP);
+      CLS1_SendStr(buf, io->stdOut);
+
+#if configUSE_TRACE_FACILITY
+      /* stack high water mark (the lower the number, the less stack available */
+      tmpBuf[0] = '\0';
+      UTIL1_strcatNum16uFormatted(tmpBuf, sizeof(tmpBuf), taskStatus.usStackHighWaterMark*sizeof(portSTACK_TYPE), ' ', 5);
+      UTIL1_strcat(tmpBuf, sizeof(tmpBuf), (unsigned char*)" B");
+      buf[0] = '\0';
+      UTIL1_strcatPad(buf, sizeof(buf), tmpBuf, ' ', PAD_STAT_TASK_STACK_MARK);
+      CLS1_SendStr(buf, io->stdOut);
+#endif
+#if configGENERATE_RUN_TIME_STATS && configUSE_TRACE_FACILITY
+      /* runtime */
+      UTIL1_strcpy(tmpBuf, sizeof(tmpBuf), (unsigned char*)"0x");
+      UTIL1_strcatNum32Hex(tmpBuf, sizeof(tmpBuf), taskStatus.ulRunTimeCounter);
+      if (ulTotalTime>0) { /* to avoid division by zero */
+        /* What percentage of the total run time has the task used?
+           This will always be rounded down to the nearest integer.
+           ulTotalRunTime has already been divided by 100. */
+        ulStatsAsPercentage = taskStatus.ulRunTimeCounter/ulTotalTime;
+        if (ulStatsAsPercentage>0) {
+          UTIL1_strcat(tmpBuf, sizeof(tmpBuf), (unsigned char*)" (");
+          UTIL1_strcatNum16uFormatted(tmpBuf, sizeof(tmpBuf), ulStatsAsPercentage, ' ', 3);
+          UTIL1_strcat(tmpBuf, sizeof(tmpBuf), (unsigned char*)"%)");
+        } else {
+          /* If the percentage is zero here then the task has consumed less than 1% of the total run time. */
+          UTIL1_strcat(tmpBuf, sizeof(tmpBuf), (unsigned char*)" ( <1%)");
+        }
+      }
+      buf[0] = '\0';
+      UTIL1_strcatPad(buf, sizeof(buf), tmpBuf, ' ', PAD_STAT_TASK_RUNTIME);
+      CLS1_SendStr(buf, io->stdOut);
+#endif
+      CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
+    } /* for */
+  } /* if */
+  return res;
+}
+
+static uint8_t PrintStatus(const CLS1_StdIOType *io) {
+  uint8_t buf[16];
+
+  CLS1_SendStatusStr((unsigned char*)"FRTOS1", (unsigned char*)"\r\n", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  RTOS ticks", (const unsigned char*)"", io->stdOut);
+  UTIL1_Num16sToStr(buf, sizeof(buf), configTICK_RATE_HZ);
+  CLS1_SendStr(buf, io->stdOut);
+  CLS1_SendStr((unsigned char*)" Hz, ", io->stdOut);
+  UTIL1_Num16sToStr(buf, sizeof(buf), 1000/configTICK_RATE_HZ);
+  CLS1_SendStr(buf, io->stdOut);
+  CLS1_SendStr((unsigned char*)" ms\r\n", io->stdOut);
+#if configSUPPORT_DYNAMIC_ALLOCATION && configUSE_HEAP_SCHEME!=3 /* wrapper to malloc() does not have xPortGetFreeHeapSize() */
+  CLS1_SendStatusStr((unsigned char*)"  Free heap", (const unsigned char*)"", io->stdOut);
+  UTIL1_Num32uToStr(buf, sizeof(buf), FRTOS1_xPortGetFreeHeapSize());
+  CLS1_SendStr(buf, io->stdOut);
+  CLS1_SendStr((unsigned char*)" bytes\r\n", io->stdOut);
+#endif
+  return ERR_OK;
+}
+
+static uint8_t PrintHelp(const CLS1_StdIOType *io) {
+  CLS1_SendHelpStr((unsigned char*)"FRTOS1", (unsigned char*)"Group of FRTOS1 commands\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  tasklist", (unsigned char*)"Print tasklist\r\n", io->stdOut);
+  return ERR_OK;
+}
 
 /*
 ** ===================================================================
@@ -1234,6 +1531,48 @@ unsigned_portBASE_TYPE FRTOS1_uxTaskGetNumberOfTasks(void)
 
 /*
 ** ===================================================================
+**     Method      :  FRTOS1_vTaskGetRunTimeStats (component FreeRTOS)
+**     Description :
+**         configGENERATE_RUN_TIME_STATS must be defined as 1 for this
+**         function to be available. The application must also then
+**         provide definitions for
+**         portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() and
+**         portGET_RUN_TIME_COUNTER_VALUE to configure a peripheral
+**         timer/counter and return the timers current count value
+**         respectively. The counter should be at least 10 times the
+**         frequency of the tick count.
+**         NOTE: This function will disable interrupts for its duration.
+**         It is not intended for normal application runtime use but as
+**         a debug aid.
+**         Setting configGENERATE_RUN_TIME_STATS to 1 will result in a
+**         total accumulated execution time being stored for each task.
+**         The resolution of the accumulated time value depends on the
+**         frequency of the timer configured by the
+**         portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() macro. Calling
+**         vTaskGetRunTimeStats() writes the total execution time of
+**         each task into a buffer, both as an absolute count value and
+**         as a percentage of the total system execution time. 
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         pcWriteBuffer   - A buffer into which
+**                           the execution times will be written, in
+**                           ascii form. This buffer is assumed to be
+**                           large enough to contain the generated
+**                           report. Approximately 40 bytes per task
+**                           should be sufficient. 
+**         bufSize         - size of buffer
+**     Returns     : Nothing
+** ===================================================================
+*/
+/*
+void FRTOS1_vTaskGetRunTimeStats(portCHAR *pcWriteBuffer, size_t bufSize)
+{
+  *** Implemented as macro in the header file FRTOS1.h
+}
+*/
+
+/*
+** ===================================================================
 **     Method      :  FRTOS1_xPortGetFreeHeapSize (component FreeRTOS)
 **     Description :
 **         Returns the actual free size of the heap
@@ -1766,6 +2105,36 @@ bool FRTOS1_xSemaphoreTakeFromISR(xSemaphoreHandle xSemaphore, signed_portBASE_T
   *** Implemented as macro in the header file FRTOS1.h
 }
 */
+
+/*
+** ===================================================================
+**     Method      :  FRTOS1_ParseCommand (component FreeRTOS)
+**     Description :
+**         Shell Command Line Parser
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * cmd             - Pointer to command string
+**       * handled         - Pointer to variable which tells if
+**                           the command has been handled or not
+**       * io              - Pointer to I/O structure
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t FRTOS1_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io)
+{
+  if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "FRTOS1 help")==0) {
+    *handled = TRUE;
+    return PrintHelp(io);
+  } else if ((UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0) || (UTIL1_strcmp((char*)cmd, "FRTOS1 status")==0)) {
+    *handled = TRUE;
+    return PrintStatus(io);
+  } else if (UTIL1_strcmp((char*)cmd, "FRTOS1 tasklist")==0) {
+    *handled = TRUE;
+    return PrintTaskList(io);
+  }
+  return ERR_OK;
+}
 
 /*
 ** ===================================================================

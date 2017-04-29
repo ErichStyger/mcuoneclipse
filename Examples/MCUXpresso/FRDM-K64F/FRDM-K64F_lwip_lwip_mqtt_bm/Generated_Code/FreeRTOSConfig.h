@@ -85,8 +85,8 @@
  *
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
-#define configGENERATE_RUN_TIME_STATS_USE_TICKS   0 /* 1: Use the RTOS tick counter as runtime counter. 0: use extra timer */
-#define configGENERATE_RUN_TIME_STATS             0 /* 1: generate runtime statistics; 0: no runtime statistics */
+#define configGENERATE_RUN_TIME_STATS_USE_TICKS   1 /* 1: Use the RTOS tick counter as runtime counter. 0: use extra timer */
+#define configGENERATE_RUN_TIME_STATS             1 /* 1: generate runtime statistics; 0: no runtime statistics */
 #if configGENERATE_RUN_TIME_STATS
   #if configGENERATE_RUN_TIME_STATS_USE_TICKS
     #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()   /* nothing */ /* default: use Tick counter as runtime counter */
@@ -127,7 +127,7 @@
 #define configSYSTICK_USE_CORE_CLOCK              1 /* System Tick is using core clock  */
 #define configSYSTICK_CLOCK_DIVIDER               1 /* no divider */
 #define configSYSTICK_CLOCK_HZ                    ((configCPU_CLOCK_HZ)/configSYSTICK_CLOCK_DIVIDER) /* frequency of system tick counter */
-#define configMINIMAL_STACK_SIZE                  (200) /* stack size in addressable stack units */
+#define configMINIMAL_STACK_SIZE                  (100) /* stack size in addressable stack units */
 /*----------------------------------------------------------*/
 /* Heap Memory */
 #define configUSE_HEAP_SCHEME                     4 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc), 4 (coalesc blocks), 5 (multiple blocks) */

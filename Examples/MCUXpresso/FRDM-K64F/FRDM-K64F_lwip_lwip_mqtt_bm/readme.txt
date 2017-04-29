@@ -20,3 +20,4 @@ ToDo:
 - server verification
 - va_copy gives warning in XF1 with redlib
 - does not compile with newlib nano
+- add UART ring buffer for shell

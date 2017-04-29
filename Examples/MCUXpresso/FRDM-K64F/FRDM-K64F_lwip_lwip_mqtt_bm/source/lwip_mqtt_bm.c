@@ -93,7 +93,6 @@
 
 static struct netif fsl_netif0; /* network interface */
 
-
 #define MQTT_APP_DEBUG              LWIP_DBG_ON /*LWIP_DBG_OFF*/
 #define MQTT_APP_DEBUG_TRACE        (MQTT_APP_DEBUG | LWIP_DBG_TRACE)
 
@@ -524,7 +523,6 @@ static void DoMQTT_BM(struct netif *netifp, ip4_addr_t *broker_ipaddr) {
   //#define PUBLISH_PERIOD_MS  10000 /* publish period in seconds */
   #define BLINK_PERIOD_MS    2000
 
-  MQTT_state = MQTT_STATE_IDLE;
   timeStampMs = blinkTimeStampMs = sys_now(); /* get time in milli seconds */
   for(;;) {
    // diffTimeMs = sys_now()-timeStampMs;
@@ -662,13 +660,14 @@ static void AppTask(void *param) {
 
   (void)param;
   StartNetworkInterface();
+  MQTT_state = MQTT_STATE_IDLE;
   for(;;) {
      MqttDoStateMachine(&mqtt_client, &brokerServerAddress); /* process state machine */
      ProcessLWIP(APP_GetNetworkInterface());
    #if CONFIG_USE_SHELL
      SHELL_Process();
    #endif
-    vTaskDelay(pdMS_TO_TICKS(20));
+    vTaskDelay(pdMS_TO_TICKS(1));
   }
 }
 #endif
@@ -716,7 +715,7 @@ static void APP_Run(void) {
 #endif
 
 #if CONFIG_USE_FREERTOS
-  if (xTaskCreate(AppTask, "App", 1000/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (xTaskCreate(AppTask, "App", 1200/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
   vTaskStartScheduler();

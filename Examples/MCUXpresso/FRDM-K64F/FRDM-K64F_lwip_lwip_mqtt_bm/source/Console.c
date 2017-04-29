@@ -20,6 +20,29 @@
 
 #define FULL_BLOCK  1
 
+static bool HasInput(void) {
+#if CONSOLE_USE_LPUART
+  return TRUE;
+#else
+  uint32_t flags;
+
+  flags = UART_GetStatusFlags(UART0);
+  if (flags&kUART_RxDataRegFullFlag) {
+    return TRUE;
+  }
+  return FALSE;
+#endif
+  #if 0
+  // uint32_t flags;
+
+  flags = LPUART_GetStatusFlags(LPUART0);
+  if (flags&kLPUART_RxDataRegFullFlag) {
+    return TRUE;
+  } else {
+    return FALSE;
+  }
+#endif
+}
 static void ReadChar(uint8_t *p) {
 #if FULL_BLOCK
 #if CONSOLE_USE_LPUART
@@ -32,11 +55,15 @@ static void ReadChar(uint8_t *p) {
 #else
   int ch;
 
-  ch = DbgConsole_Getchar();
-  if (ch==-1) {
-    *p = '\0'; /* error case */
+  if (HasInput()) {
+    ch = DbgConsole_Getchar(); /* blocking! */
+    if (ch==-1) {
+      *p = '\0'; /* error case */
+    } else {
+      *p = ch;
+    }
   } else {
-    *p = ch;
+    *p = '\0'; /* no input */
   }
 #endif
 #else
@@ -60,30 +87,6 @@ static void WriteChar(uint8_t ch) {
   LPUART_WriteBlocking(LPUART0, (const uint8_t*)&ch, sizeof(ch));
 #else
   (void)DbgConsole_Putchar(ch);
-#endif
-}
-
-static bool HasInput(void) {
-#if CONSOLE_USE_LPUART
-  return TRUE;
-#else
-  uint32_t flags;
-
-  flags = UART_GetStatusFlags(UART0);
-  if (flags&kUART_RxDataRegFullFlag) {
-    return TRUE;
-  }
-  return FALSE;
-#endif
-  #if 0
-  // uint32_t flags;
-
-  flags = LPUART_GetStatusFlags(LPUART0);
-  if (flags&kLPUART_RxDataRegFullFlag) {
-    return TRUE;
-  } else {
-    return FALSE;
-  }
 #endif
 }
 
