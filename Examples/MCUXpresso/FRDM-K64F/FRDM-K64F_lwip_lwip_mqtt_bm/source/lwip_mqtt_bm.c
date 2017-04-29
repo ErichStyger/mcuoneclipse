@@ -90,6 +90,9 @@
 #if CONFIG_USE_SERVER_VERIFICATION
   #include "certificate.h"
 #endif
+#if CONFIG_USE_SNTP
+  #include "app_sntp.h"
+#endif
 #include "TmDt1.h"
 
 static struct netif fsl_netif0; /* network interface */
@@ -664,6 +667,10 @@ static void StartNetworkInterface(void) {
 #endif
   LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,(" Broker Address   : %u.%u.%u.%u\r\n", ((u8_t *)&brokerServerAddress)[0], ((u8_t *)&brokerServerAddress)[1], ((u8_t *)&brokerServerAddress)[2], ((u8_t *)&brokerServerAddress)[3]));
   LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("************************************************\r\n"));
+
+#if CONFIG_USE_SNTP
+  SNTP_Init();
+#endif
 }
 
 #if CONFIG_USE_FREERTOS

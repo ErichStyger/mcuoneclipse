@@ -14,6 +14,9 @@
 #if CONFIG_USE_DHCP
   #include "app_dhcp.h"
 #endif
+#if CONFIG_USE_SNTP
+  #include "app_sntp.h"
+#endif
 #if CONFIG_USE_FREERTOS
   #include "FRTOS1.h"
 #endif
@@ -32,6 +35,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if CONFIG_USE_DHCP
   DHCP_ParseCommand,
+#endif
+#if CONFIG_USE_SNTP
+  SNTP_ParseCommand,
 #endif
   TmDt1_ParseCommand,
   MQTT_ParseCommand,
