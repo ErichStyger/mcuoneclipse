@@ -17,7 +17,8 @@ http://git.savannah.nongnu.org/cgit/lwip.git/tree/src/include/lwip/altcp.h
 ToDo:
 - handling case during startup if network cable is disconnected
 - disconnection handling from broker
-- server verification
-- va_copy gives warning in XF1 with redlib
+- server verification (works, but not for Azure?)
 - does not compile with newlib nano
 - add UART ring buffer for shell
+- Accelerometer
+- periodic NTP handling

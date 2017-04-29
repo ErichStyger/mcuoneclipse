@@ -15,13 +15,20 @@
 #define CONFIG_USE_SHELL                        (1) /* 1: use shell console; 0: do not use shell console */
 #define CONFIG_USE_DNS                          (1) /* 1: use DNS to get broker IP address; 0: do not use DNS, use fixed address instead */
 #define CONFIG_USE_DHCP                         (1) /* 1: use DHCP for board address, netmask and gateway; 0: use fixed IP addresses */
+#define CONFIG_USE_SNTP                         (1) /* 1: use SNTP to get RTC time; 0: do not use SNTP */
 #define CONFIG_USE_IN_WORK_NETWORK              (0) /* 1: in work network; 0: otherwise use home network */
-#define CONFIG_USE_SERVER_VERIFICATION          (0) /* 1: verify server with certificate; 0: no server verification */ /*!\todo does not work yet? */
+#define CONFIG_USE_SERVER_VERIFICATION          (1) /* 1: verify server with certificate; 0: no server verification */ /*!\todo does not work yet? */
+/*! \todo Azure with server certificate does not work yet? */
 
 #define CONFIG_USE_BROKER_LOCAL                 (1) /* 1: use local mosquitto broker; 0: do not use local broker */
 #define CONFIG_USE_BROKER_MOSQUITTO_TEST        (0) /* 1: use mosquitto test broker; 0: do not use mosquitto test broker */
 #define CONFIG_USE_BROKER_ADAFRUIT              (0) /* 1: use Adafruit I/O broker; 0: do not use Adafruit broker */
 #define CONFIG_USE_BROKER_AZURE                 (0) /* 1: use Azure I/O broker; 0: do not use Azure broker */
+
+#if CONFIG_USE_SNTP
+  #define SNTP_TIME_OFFSET_TIME_ZONE   -1  /* offset hours for time zone */
+  #define SNTP_TIME_OFFSET_DLS         -1  /* offset for daylight saving time */
+#endif
 
 /* client configuration settings */
 #if CONFIG_USE_IN_WORK_NETWORK
@@ -78,8 +85,8 @@
 #if CONFIG_USE_BROKER_ADAFRUIT
   #define CONFIG_BROKER_HOST_NAME       "io.adafruit.com"
   #define CONFIG_CLIENT_ID_NAME         "FRDM-K64F" /* each client connected to the host has to use a unique ID */
-  #define CONFIG_CLIENT_USER_NAME       "erichs" /* Adafruit IO Username, keep it SECRET! */
-  #define CONFIG_CLIENT_USER_PASSWORD   "7f60644fb5614b9eb0839705a03d2c18" /* Adafruit AIO Key, keep it SECRET! */
+  #define CONFIG_CLIENT_USER_NAME       "user name" /* Adafruit IO Username, keep it SECRET! */
+  #define CONFIG_CLIENT_USER_PASSWORD   "AIO Key" /* Adafruit AIO Key, keep it SECRET! */
   #define CONFIG_TOPIC_NAME             "erichs/feeds/test"
 #elif CONFIG_USE_BROKER_MOSQUITTO_TEST
   #define CONFIG_BROKER_HOST_NAME       "test.mosquitto.org"
@@ -112,7 +119,7 @@
   #define CONFIG_BROKER_HOST_NAME       "GrilloIOTHub.azure-devices.net" /* {iothubhostname} */
   #define CONFIG_CLIENT_ID_NAME         "Erich_Device" /* {deviceId} */
   #define CONFIG_CLIENT_USER_NAME       "GrilloIOTHub.azure-devices.net/Erich_Device/api-version=2016-11-14" /* {iothubhostname}/{device_id}/api-version=2016-11-14  */
-  #define CONFIG_CLIENT_USER_PASSWORD   "SharedAccessSignature sr=GrilloIOTHub.azure-devices.net%2Fdevices%2FErich_Device&sig=u550Q0sCYBUbT%2FUribehbR70WcbICZZGDXFJKl%2Fu6H4%3D&se=1493391099A" /* part of SAS token */
+  #define CONFIG_CLIENT_USER_PASSWORD   "SAS Token" /* part of SAS token */
   #define CONFIG_TOPIC_NAME             "devices/Erich_Device/messages/events/" /* devices/{deviceId}/events */
 #endif
 
