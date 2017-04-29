@@ -78,6 +78,7 @@
   #include "fsl_rnga.h"
 #endif
 #if CONFIG_USE_FREERTOS
+  #include "FRTOS1.h"
   #include "FreeRTOS.h"
 #endif
 #if CONFIG_USE_SHELL
@@ -100,17 +101,17 @@ static struct netif fsl_netif0; /* network interface */
  * Definitions
  ******************************************************************************/
 typedef enum {
-	MQTT_STATE_INIT,
-    MQTT_STATE_IDLE,
-	MQTT_STATE_DO_CONNECT,
+  MQTT_STATE_INIT,
+  MQTT_STATE_IDLE,
+  MQTT_STATE_DO_CONNECT,
 #if MQTT_USE_TLS
-    MQTT_STATE_DO_TLS_HANDSHAKE,
+  MQTT_STATE_DO_TLS_HANDSHAKE,
 #endif
-	MQTT_STATE_WAIT_FOR_CONNECTION,
-	MQTT_STATE_CONNECTED,
-	MQTT_STATE_DO_PUBLISH,
-    MQTT_STATE_DO_SUBSCRIBE,
-	MQTT_STATE_DO_DISCONNECT
+  MQTT_STATE_WAIT_FOR_CONNECTION,
+  MQTT_STATE_CONNECTED,
+  MQTT_STATE_DO_PUBLISH,
+  MQTT_STATE_DO_SUBSCRIBE,
+  MQTT_STATE_DO_DISCONNECT
 } MQTT_State_t;
 
 static MQTT_State_t MQTT_state = MQTT_STATE_INIT;
@@ -279,7 +280,7 @@ static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection
     mqtt_set_inpub_callback(client, mqtt_incoming_publish_cb, mqtt_incoming_data_cb, arg);
   } else {
     LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("mqtt_connection_cb: Disconnected, reason: %d\n", status));
-
+    MQTT_state = MQTT_STATE_IDLE;
     /* Its more nice to be connected, so try to reconnect */
     //mqtt_do_connect(client);
   }
@@ -715,12 +716,13 @@ static void APP_Run(void) {
 #endif
 
 #if CONFIG_USE_FREERTOS
-  if (xTaskCreate(AppTask, "App", 1200/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (xTaskCreate(AppTask, "App", 8000/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
   vTaskStartScheduler();
 #else
   StartNetworkInterface();
+  MQTT_state = MQTT_STATE_IDLE;
   for(;;) {
     DoMQTT_BM(&fsl_netif0, &brokerServerAddress);
   }

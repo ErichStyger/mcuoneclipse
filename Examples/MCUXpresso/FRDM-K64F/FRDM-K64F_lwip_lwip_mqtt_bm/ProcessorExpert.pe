@@ -3,7 +3,7 @@
   <Header>
     <Name>FRDM-K64F_lwip_mqtt_bm</Name>
     <SavedBy>Erich Styger Local</SavedBy>
-    <ModificationStamp>22</ModificationStamp>
+    <ModificationStamp>25</ModificationStamp>
     <Date>2017-04-15</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -7837,10 +7837,10 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>TickTimeMs</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
+        <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>10</Value>
+        <Value>1</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -7848,8 +7848,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>RTOS</ItemSymbol>
@@ -10193,7 +10193,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>8192</Value>
+        <Value>40960</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
