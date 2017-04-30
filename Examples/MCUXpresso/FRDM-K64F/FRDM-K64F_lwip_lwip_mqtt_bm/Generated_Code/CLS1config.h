@@ -7,12 +7,12 @@
 #endif
 
 #ifndef CLS1_CONFIG_BLOCKING_SEND_TIMEOUT_MS
-  #define CLS1_CONFIG_BLOCKING_SEND_TIMEOUT_MS  (20)
+  #define CLS1_CONFIG_BLOCKING_SEND_TIMEOUT_MS  (10)
     /*!< Total blocking time (timeout) in milliseconds, uses 0 for blocking without a timeout */
 #endif
 
 #ifndef CLS1_CONFIG_BLOCKING_SEND_TIMEOUT_WAIT_MS
-  #define CLS1_CONFIG_BLOCKING_SEND_TIMEOUT_WAIT_MS  (5)
+  #define CLS1_CONFIG_BLOCKING_SEND_TIMEOUT_WAIT_MS  (2)
     /*!< waiting time during blocking, use 0 (zero) for polling */
 #endif
 

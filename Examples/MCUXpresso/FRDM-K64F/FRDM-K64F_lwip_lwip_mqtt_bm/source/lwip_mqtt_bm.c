@@ -59,6 +59,7 @@
 #include "LED3.h"
 #include "WAIT1.h"
 #include "RNG1.h"
+#include "RTT1.h"
 
 #include "lwip_mqtt_bm.h"
 #if CONFIG_USE_DHCP
@@ -772,11 +773,12 @@ int main(void) {
   WAIT1_Init(); /* waiting */
   RNG1_Init(); /* ring buffer */
   TmDt1_Init(); /* RTC */
+  RTT1_Init(); /* SEGGER RTT */
 #if CONFIG_USE_FREERTOS
   FRTOS1_Init(); /* FreeRTOS */
 #endif
 #if CONFIG_USE_SHELL
-  CLS1_Init(); /* shell */
+  SHELL_Init(); /* shell */
 #endif
 
   APP_Run();

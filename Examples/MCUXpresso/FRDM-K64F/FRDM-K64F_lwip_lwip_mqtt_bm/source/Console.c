@@ -140,6 +140,15 @@ static CLS1_ConstStdIOType stdio = {
   .keyPressed = HasInput
 };
 
+uint8_t CONSOLE_SendChar(uint8_t ch) {
+  WriteChar(ch);
+  return ERR_OK;
+}
+
+CLS1_ConstStdIOType *CONSOLE_GetStdio(void) {
+  return &stdio;
+}
+
 void CONSOLE_Init(void) {
 #if CONSOLE_USE_LPUART
   LPUART_SetBaudRate(LPUART0, 38400, CLOCK_GetPeriphClkFreq());
@@ -161,6 +170,5 @@ void CONSOLE_Init(void) {
 #else
   DbgConsole_Init((uint32_t)UART0, 38400, DEBUG_CONSOLE_DEVICE_TYPE_UART, CLOCK_GetCoreSysClkFreq());
 #endif
-  CLS1_SetStdio(&stdio);
 }
 
