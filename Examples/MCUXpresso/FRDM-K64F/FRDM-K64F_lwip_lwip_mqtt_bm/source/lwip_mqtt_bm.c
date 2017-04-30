@@ -60,6 +60,7 @@
 #include "WAIT1.h"
 #include "RNG1.h"
 #include "RTT1.h"
+#include "SYS1.h"
 
 #include "lwip_mqtt_bm.h"
 #if CONFIG_USE_DHCP
@@ -776,6 +777,9 @@ int main(void) {
   RTT1_Init(); /* SEGGER RTT */
 #if CONFIG_USE_FREERTOS
   FRTOS1_Init(); /* FreeRTOS */
+#endif
+#if CONFIG_USE_FREERTOS && configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+  SYS1_Init();
 #endif
 #if CONFIG_USE_SHELL
   SHELL_Init(); /* shell */
