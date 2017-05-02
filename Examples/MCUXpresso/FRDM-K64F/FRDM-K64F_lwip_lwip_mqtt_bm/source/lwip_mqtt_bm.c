@@ -76,7 +76,7 @@
   #include "mbedtls/debug.h"
   #include "mbedtls/net.h"
 #endif /* MQTT_USE_TLS */
-#if MQTT_USE_TLS || CONFIG_USE_DNS
+#if MQTT_USE_TLS || CONFIG_USE_DNS || CONFIG_USE_DHCP
   #include "fsl_rnga.h"
 #endif
 #if CONFIG_USE_FREERTOS
@@ -208,7 +208,7 @@ static int TLS_Init(void) {
 
   mbedtls_ssl_setup(&ssl, &conf);
 
-  if( ( ret = mbedtls_ssl_set_hostname(&ssl, CONFIG_BROKER_HOST_NAME) ) != 0 )
+  if(CONFIG_BROKER_HOST_NAME!=NULL && ( ret = mbedtls_ssl_set_hostname(&ssl, CONFIG_BROKER_HOST_NAME) ) != 0 )
   {
       LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,( " failed\n  ! mbedtls_ssl_set_hostname returned %d\n\n", ret ));
       return -1;
@@ -643,6 +643,8 @@ struct netif *APP_GetNetworkInterface(void) {
 }
 
 static void StartNetworkInterface(void) {
+  uint8_t buf [32];
+
 #if CONFIG_USE_DHCP
   LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("Starting DHCP....\r\n"));
   DHCP_Start(&fsl_netif0);
@@ -652,23 +654,29 @@ static void StartNetworkInterface(void) {
   }
   LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("DHCP done!\r\n"));
 #endif
-  ip4_addr_set_u32(&brokerServerAddress, ipaddr_addr("192.168.0.10")); /* default init */
-#if CONFIG_USE_DNS
-  if (GetHostAddress(&fsl_netif0, CONFIG_BROKER_HOST_NAME, &brokerServerAddress)!=0) {
-    LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("ERROR: unable to get IP address for broker!\r\n"));
-    LED1_On(); /* red error LED */
-    for(;;){}
+  if (CONFIG_BROKER_HOST_IP!=NULL) {
+    ip4_addr_set_u32(&brokerServerAddress, ipaddr_addr(CONFIG_BROKER_HOST_IP)); /* default init */
   }
-#else
-  IP4_ADDR(&brokerServerAddress, configBroker_ADDR0, configBroker_ADDR1, configBroker_ADDR2, configBroker_ADDR3);
+#if CONFIG_USE_DNS
+  if (CONFIG_BROKER_HOST_NAME!=NULL) {
+    if (GetHostAddress(&fsl_netif0, CONFIG_BROKER_HOST_NAME, &brokerServerAddress)!=0) {
+      LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("ERROR: unable to get IP address for broker!\r\n"));
+      LED1_On(); /* red error LED */
+      for(;;){}
+    }
+  }
 #endif
 #if !CONFIG_USE_DHCP
-  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,(" IPv4 Address     : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_ipaddr)[0], ((u8_t *)&fsl_netif0_ipaddr)[1],  ((u8_t *)&fsl_netif0_ipaddr)[2], ((u8_t *)&fsl_netif0_ipaddr)[3]));
-  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,(" IPv4 Subnet mask : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_netmask)[0], ((u8_t *)&fsl_netif0_netmask)[1], ((u8_t *)&fsl_netif0_netmask)[2], ((u8_t *)&fsl_netif0_netmask)[3]));
-  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,(" IPv4 Gateway     : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_gw)[0], ((u8_t *)&fsl_netif0_gw)[1], ((u8_t *)&fsl_netif0_gw)[2], ((u8_t *)&fsl_netif0_gw)[3]));
+  ip4addr_ntoa_r(&fsl_netif0_ipaddr, (char*)buf, sizeof(buf));
+  CLS1_printf(" IPv4 Address     : %su\r\n", buf);
+  ip4addr_ntoa_r(&fsl_netif0_netmask, (char*)buf, sizeof(buf));
+  CLS1_printf(" IPv4 Subnet mask : %s\r\n", buf);
+  ip4addr_ntoa_r(&fsl_netif0_gw, (char*)buf, sizeof(buf));
+  CLS1_printf(" IPv4 Gateway     : %s\r\n", buf);
 #endif
-  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,(" Broker Address   : %u.%u.%u.%u\r\n", ((u8_t *)&brokerServerAddress)[0], ((u8_t *)&brokerServerAddress)[1], ((u8_t *)&brokerServerAddress)[2], ((u8_t *)&brokerServerAddress)[3]));
-  LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("************************************************\r\n"));
+  ip4addr_ntoa_r(&brokerServerAddress, (char*)buf, sizeof(buf));
+  CLS1_printf(" Broker Address   : %s\r\n", buf);
+  CLS1_printf("************************************************\r\n");
 
 #if CONFIG_USE_SNTP
   SNTP_Init();
@@ -687,7 +695,8 @@ static void AppTask(void *param) {
    #if CONFIG_USE_SHELL
      SHELL_Process();
    #endif
-    vTaskDelay(pdMS_TO_TICKS(10));
+    LED2_Neg();
+    vTaskDelay(pdMS_TO_TICKS(50));
   }
 }
 #endif
@@ -722,13 +731,13 @@ static void APP_Run(void) {
   lwip_init();
 
   if (netif_add(&fsl_netif0, &fsl_netif0_ipaddr, &fsl_netif0_netmask, &fsl_netif0_gw, NULL, ethernetif_init, ethernet_input)==NULL) {
-    LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("FAILED addeding net_if\r\n"));
+    LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("FAILED adding net_if\r\n"));
     for(;;){}
   }
   netif_set_default(&fsl_netif0);
   netif_set_up(&fsl_netif0);
 
-#if MQTT_USE_TLS || CONFIG_USE_DNS
+#if MQTT_USE_TLS || CONFIG_USE_DNS || CONFIG_USE_DHCP
   /* initialize random number generator */
   RNGA_Init(RNG); /* init random number generator */
   RNGA_Seed(RNG, SIM->UIDL); /* use device unique ID as seed for the RNG */
@@ -790,6 +799,7 @@ int main(void) {
   return 0;
 }
 
+#if MQTT_USE_TLS || CONFIG_USE_DNS || CONFIG_USE_DHCP
 /*!
  * \brief return a 32bit random number
  */
@@ -798,6 +808,7 @@ unsigned int random32(void) {
   RNGA_GetRandomData(RNG, &data, sizeof(data));
   return data;
 }
+#endif
 
 #if CONFIG_USE_SHELL
 
@@ -856,23 +867,23 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
 #if !CONFIG_USE_DHCP
   if (ip4addr_ntoa_r(&fsl_netif0_ipaddr, (char*)buf, sizeof(buf))!=NULL) {
     UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
-    CLS1_SendStatusStr((unsigned char*)"  IP4 addr", buf, io->stdOut);
+    CLS1_SendStatusStr((unsigned char*)"  addr IP4", buf, io->stdOut);
   } else {
-    CLS1_SendStatusStr((unsigned char*)"  IP4 addr", (const unsigned char*)"NULL\r\n", io->stdOut);
+    CLS1_SendStatusStr((unsigned char*)"  addr IP4", (const unsigned char*)"NULL\r\n", io->stdOut);
   }
 
   if (ip4addr_ntoa_r(&fsl_netif0_netmask, (char*)buf, sizeof(buf))!=NULL) {
     UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
-    CLS1_SendStatusStr((unsigned char*)"  IP4 netmask", buf, io->stdOut);
+    CLS1_SendStatusStr((unsigned char*)"  netmask IP4", buf, io->stdOut);
   } else {
-    CLS1_SendStatusStr((unsigned char*)"  IP4 netmask", (const unsigned char*)"NULL\r\n", io->stdOut);
+    CLS1_SendStatusStr((unsigned char*)"  netmask IP4", (const unsigned char*)"NULL\r\n", io->stdOut);
   }
 
   if (ip4addr_ntoa_r(&fsl_netif0_gw, (char*)buf, sizeof(buf))!=NULL) {
     UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
-    CLS1_SendStatusStr((unsigned char*)"  IP4 gateway", buf, io->stdOut);
+    CLS1_SendStatusStr((unsigned char*)"  gateway IP4", buf, io->stdOut);
   } else {
-    CLS1_SendStatusStr((unsigned char*)"  IP4 gateway", (const unsigned char*)"NULL\r\n", io->stdOut);
+    CLS1_SendStatusStr((unsigned char*)"  gateway IP4", (const unsigned char*)"NULL\r\n", io->stdOut);
   }
 #endif
   UTIL1_strcpy(buf, sizeof(buf), (uint8_t*)CONFIG_BROKER_HOST_NAME);
@@ -881,9 +892,9 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
 
   if (ip4addr_ntoa_r(&brokerServerAddress, (char*)buf, sizeof(buf))!=NULL) {
     UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
-    CLS1_SendStatusStr((unsigned char*)"  IP4 broker", buf, io->stdOut);
+    CLS1_SendStatusStr((unsigned char*)"  broker IP4", buf, io->stdOut);
   } else {
-    CLS1_SendStatusStr((unsigned char*)"  IP4 broker", (const unsigned char*)"NULL\r\n", io->stdOut);
+    CLS1_SendStatusStr((unsigned char*)"  broker IP4", (const unsigned char*)"NULL\r\n", io->stdOut);
   }
 
 #if MQTT_USE_TLS
