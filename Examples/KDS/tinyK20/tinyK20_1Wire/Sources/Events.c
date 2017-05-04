@@ -56,43 +56,6 @@ void Cpu_OnNMIINT(void)
 
 /*
 ** ===================================================================
-**     Event       :  OW1_OnProgramEvent (module Events)
-**
-**     Component   :  OW1 [OneWire]
-**     Description :
-**         
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**         key4            - Key to identify the source of the event
-**     Returns     : Nothing
-** ===================================================================
-*/
-void OW1_OnProgramEvent(uint8_t key4)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Event       :  OW1_OnWaitEnd (module Events)
-**
-**     Component   :  OW1 [OneWire]
-**     Description :
-**         
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**         key2            - Key to identificate the source of the
-**                           event.
-**     Returns     : Nothing
-** ===================================================================
-*/
-void OW1_OnWaitEnd(uint8_t key2)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
 **     Event       :  DS1_OnError (module Events)
 **
 **     Component   :  DS1 [DS18B20]
@@ -145,6 +108,130 @@ void DS1_OnTemperatureGet(int32_t temperature)
 void DS1_OnRomRead(uint8_t *rom_code)
 {
 	/* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  InputRB1_OnBufferFull (module Events)
+**
+**     Component   :  InputRB1 [RingBuffer]
+**     Description :
+**         Called in the event of buffer full.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void InputRB1_OnBufferFull(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  InputRB1_OnBufferEmpty (module Events)
+**
+**     Component   :  InputRB1 [RingBuffer]
+**     Description :
+**         Called in the event of last item has been removed from
+**         buffer.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void InputRB1_OnBufferEmpty(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  InputRB1_OnItemPut (module Events)
+**
+**     Component   :  InputRB1 [RingBuffer]
+**     Description :
+**         Optional event created for every item added with the Put()
+**         method.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         elem            - item which gets added
+**     Returns     : Nothing
+** ===================================================================
+*/
+void InputRB1_OnItemPut(InputRB1_ElementType elem)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  InputRB1_OnItemGet (module Events)
+**
+**     Component   :  InputRB1 [RingBuffer]
+**     Description :
+**         Optional event created for every item removed with the Get()
+**         method.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         elem            - item which gets removed
+**     Returns     : Nothing
+** ===================================================================
+*/
+void InputRB1_OnItemGet(InputRB1_ElementType elem)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  InputRB1_OnClear (module Events)
+**
+**     Component   :  InputRB1 [RingBuffer]
+**     Description :
+**         Optional event called in case of Clear() call.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void InputRB1_OnClear(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  OW1_OnProgramEvent (module Events)
+**
+**     Component   :  OW1 [OneWire]
+**     Description :
+**         
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         key4            - Key to identify the source of the event
+**     Returns     : Nothing
+** ===================================================================
+*/
+void OW1_OnProgramEvent(uint8_t key4)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  OW1_OnWaitEnd (module Events)
+**
+**     Component   :  OW1 [OneWire]
+**     Description :
+**         
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         key2            - Key to identificate the source of the
+**                           event.
+**     Returns     : Nothing
+** ===================================================================
+*/
+void OW1_OnWaitEnd(uint8_t key2)
+{
+  /* Write your code here ... */
 }
 
 /* END Events */

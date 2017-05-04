@@ -38,6 +38,16 @@
 #include "OW1.h"
 #include "DQ1.h"
 #include "TU1.h"
+#include "OutputRB1.h"
+#include "InputRB1.h"
+#include "TimeRB1.h"
+#include "ProgramRB1.h"
+#include "Bit1.h"
+#include "BitIoLdd2.h"
+#include "Bit2.h"
+#include "BitIoLdd3.h"
+#include "KIN1.h"
+#include "UTIL1.h"
 #include "CS1.h"
 #include "DS1.h"
 /* Including shared modules, which are used for whole project */
@@ -46,6 +56,101 @@
 #include "PE_Const.h"
 #include "IO_Map.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
+
+static void Test(void) {
+  bool res;
+  uint8_t data, count;
+
+  res = OW1_SendReset();
+  if (!res) {
+    for(;;){}
+  }
+  while(OW1_isBusy()) {   /* wait */  }
+  WAIT1_Waitms(1);
+  res = OW1_SendByte(0x33);
+  if (!res) {
+    for(;;){}
+  }
+  while(OW1_isBusy()) {   /* wait */  }
+ // WAIT1_Waitms(1);
+
+  res = OW1_Receive(1);
+
+  WAIT1_Waitms(1);
+
+  count = OW1_Count();
+  if (!res || count!=1) {
+     for(;;){}
+   }
+  WAIT1_Waitms(1);
+  res = OW1_GetByte(&data);
+  if (!res) {
+     for(;;){}
+   }
+  WAIT1_Waitms(1);
+}
+
+#define RC_READ_ROM          0x33
+
+static void TestDS(void) {
+  bool res;
+  char *romCode;
+
+   res = DS1_ReadRom(0);
+   if (!res) {
+     for(;;){}
+   }
+   WAIT1_Waitms(5);
+   romCode = DS1_GetRomCode(0);
+   WAIT1_Waitms(5);
+   WAIT1_Waitms(5);
+}
+
+static void ReadTemp(void) {
+  int32_t temperature;
+  float f;
+  bool res;
+
+  res = DS1_StartConversion(0);
+  WAIT1_Waitms(5);
+  res = DS1_ReadTemperature(0);
+  WAIT1_Waitms(5);
+  temperature = DS1_GetTemperatureRaw(0);
+  f = DS1_GetTemperatureFloat(0);
+  WAIT1_Waitms(5);
+}
+
+static void Test2(void) {
+  bool res;
+
+  OW1_SendReset();
+  while(OW1_isBusy()) {
+     /* wait */
+   }
+  OW1_SendByte(RC_READ_ROM);
+  while(OW1_isBusy()) {
+     /* wait */
+   }
+  OW1_Receive(8);
+  while(OW1_isBusy()) {
+     /* wait */
+   }
+  OW1_SendByte(0xFF);
+  while(OW1_isBusy()) {
+     /* wait */
+   }
+  //OW1_ProgramEvent(EV_READ_ROM);
+  while(OW1_isBusy()) {
+     /* wait */
+   }
+
+   WAIT1_Waitms(5);
+   res = DS1_ReadRom(0);
+   if (!res) {
+     for(;;){}
+   }
+   WAIT1_Waitms(5);
+}
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -57,10 +162,44 @@ int main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
+
+  ReadTemp();
+  //Test();
+  //TestDS();
+  //Test2();
+#if 0
   {
     bool res;
     uint8_t data;
     OW1_Error err;
+    char *romCode;
+#if 0
+    res = OW1_SendReset();
+    if (!res) {
+      for(;;){}
+    }
+    WAIT1_Waitms(2);
+    res = OW1_SendByte(0x33);
+    if (!res) {
+      for(;;){}
+    }
+    WAIT1_Waitms(2);
+
+#endif
+
+
+    res = DS1_ReadRom(0);
+    if (!res) {
+      for(;;){}
+    }
+    while(OW1_isBusy()) {
+      /* wait */
+    }
+    WAIT1_Waitms(5);
+
+    romCode = DS1_GetRomCode(0);
+
+    WAIT1_Waitms(10);
 
     OW1_SendReset();
     /* slave should respond with presence pulse */
@@ -73,11 +212,12 @@ int main(void)
     //res = OW1_GetByte(&data);
     OW1_SendByte(0x55); /* match ROM */
 
-    WAIT1_Waitms(5);
-    for(;;) {
-      LED1_Neg();
-      WAIT1_Waitms(500);
-    }
+  }
+#endif
+  WAIT1_Waitms(5);
+  for(;;) {
+    LED1_Neg();
+    WAIT1_Waitms(500);
   }
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
