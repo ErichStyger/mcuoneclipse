@@ -4,10 +4,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : Utility
-**     Version     : Component 01.148, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.154, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-21, 09:50, # CodeGen: 37
+**     Date/Time   : 2017-05-05, 12:54, # CodeGen: 135
 **     Abstract    :
 **          Contains various utility functions.
 **     Settings    :
@@ -76,6 +76,10 @@
 **         SetValue16LE            - void UTIL1_SetValue16LE(uint16_t data, uint8_t *dataP);
 **         SetValue24LE            - void UTIL1_SetValue24LE(uint32_t data, uint8_t *dataP);
 **         SetValue32LE            - void UTIL1_SetValue32LE(uint32_t data, uint8_t *dataP);
+**         map                     - int32_t UTIL1_map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min,...
+**         constrain               - int32_t UTIL1_constrain(int32_t val, int32_t min, int32_t max);
+**         random                  - int32_t UTIL1_random(int32_t min, int32_t max);
+**         randomSetSeed           - void UTIL1_randomSetSeed(unsigned int seed);
 **         Deinit                  - void UTIL1_Deinit(void);
 **         Init                    - void UTIL1_Init(void);
 **
@@ -120,6 +124,7 @@
 /* MODULE UTIL1. */
 
 #include "UTIL1.h"
+#include <stdlib.h> /* for rand() */
 
 /* Internal method prototypes */
 static void ShiftRightAndFill(uint8_t *dst, uint8_t fill, uint8_t nofFill);
@@ -2353,7 +2358,7 @@ void UTIL1_NumFloatToStr(uint8_t *dst, size_t dstSize, float val, uint8_t nofFra
     shift *= 10;
   }
   /* get fractional part */
-  fractional = (int32_t)(val*shift);
+  fractional = (uint32_t)(val*shift);
   if (isNeg && fractional>0 && nofFracDigits>0) {
     UTIL1_strcpy(dst, dstSize, (unsigned char*)"-");
     UTIL1_strcatNum32s(dst, dstSize, (int32_t)integral);
@@ -2524,6 +2529,90 @@ void UTIL1_Deinit(void)
 void UTIL1_Init(void)
 {
   /* nothing needed */
+}
+
+/*
+** ===================================================================
+**     Method      :  UTIL1_map (component Utility)
+**     Description :
+**         Maps a value from one range to another
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         x               - value to be mapped
+**         in_min          - input range minimum value
+**         in_max          - input range maximum value
+**         out_min         - output range maximum value
+**         out_max         - 
+**     Returns     :
+**         ---             - remapped value
+** ===================================================================
+*/
+int32_t UTIL1_map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min, int32_t out_max)
+{
+  return (x-in_min)*(out_max-out_min)/(in_max-in_min)+out_min;
+}
+
+/*
+** ===================================================================
+**     Method      :  UTIL1_constrain (component Utility)
+**     Description :
+**         Makes sure that a given input value is inside a given range.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         val             - input value
+**         min             - range minimum value
+**         max             - range maximum value
+**     Returns     :
+**         ---             - the constrained value
+** ===================================================================
+*/
+int32_t UTIL1_constrain(int32_t val, int32_t min, int32_t max)
+{
+  if (val<min) {
+    return min;
+  } else if (val>max) {
+    return max;
+  }
+  return val;
+}
+
+/*
+** ===================================================================
+**     Method      :  UTIL1_random (component Utility)
+**     Description :
+**         Provides a random value. You have to call intialize the
+**         random number generator with randomSetSeed() first!
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         min             - range minimum value
+**         max             - range maximum value
+**     Returns     :
+**         ---             - random value between min and max
+** ===================================================================
+*/
+int32_t UTIL1_random(int32_t min, int32_t max)
+{
+  int32_t val;
+
+  val = rand()%(max-min+1)+min;
+  return UTIL1_constrain(val, min, max);
+}
+
+/*
+** ===================================================================
+**     Method      :  UTIL1_randomSetSeed (component Utility)
+**     Description :
+**         Sets a seed for the random number generator
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         seed            - seed to be used for random number
+**                           generator
+**     Returns     : Nothing
+** ===================================================================
+*/
+void UTIL1_randomSetSeed(unsigned int seed)
+{
+  srand(seed); /* set random number generator seed */
 }
 
 /* END UTIL1. */

@@ -4,10 +4,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : Shell
-**     Version     : Component 01.090, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.095, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-22, 09:00, # CodeGen: 57
+**     Date/Time   : 2017-05-05, 12:54, # CodeGen: 135
 **     Abstract    :
 **
 **     Settings    :
@@ -64,10 +64,11 @@
 **         ReadChar                     - void CLS1_ReadChar(uint8_t *c);
 **         SendChar                     - void CLS1_SendChar(uint8_t ch);
 **         KeyPressed                   - bool CLS1_KeyPressed(void);
+**         SendCharFct                  - void CLS1_SendCharFct(uint8_t ch, uint8_t (*fct)(uint8_t ch));
 **         Init                         - void CLS1_Init(void);
 **         Deinit                       - void CLS1_Deinit(void);
 **
-**     * Copyright (c) 2014-2016, Erich Styger
+**     * Copyright (c) 2014-2017, Erich Styger
 **      * Web:         https://mcuoneclipse.com
 **      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -119,18 +120,30 @@ uint8_t CLS1_DefaultShellBuffer[CLS1_DEFAULT_SHELL_BUFFER_SIZE]; /* default buff
   static bool CLS1_EchoEnabled = TRUE;
 #endif
 
+#if CLS1_CONFIG_USE_MUTEX
+  #include "FreeRTOS.h"
+  #include "semphr.h"
+#endif
+
 #ifdef __HC08__
   #pragma MESSAGE DISABLE C3303 /* implicit concatenation of strings */
 #endif
+#if CLS1_CONFIG_USE_MUTEX
+  static xSemaphoreHandle ShellSem = NULL; /* Semaphore to protect shell SCI access */
+#endif
 
-CLS1_ConstStdIOType CLS1_stdio =
-{
-  (CLS1_StdIO_In_FctType)CLS1_ReadChar, /* stdin */
-  (CLS1_StdIO_OutErr_FctType)CLS1_SendChar, /* stdout */
-  (CLS1_StdIO_OutErr_FctType)CLS1_SendChar, /* stderr */
-  CLS1_KeyPressed /* if input is not empty */
-};
-static CLS1_ConstStdIOType *CLS1_currStdIO = &CLS1_stdio;
+#if CLS1_DEFAULT_SERIAL
+  CLS1_ConstStdIOType CLS1_stdio =
+  {
+    (CLS1_StdIO_In_FctType)CLS1_ReadChar, /* stdin */
+    (CLS1_StdIO_OutErr_FctType)CLS1_SendChar, /* stdout */
+    (CLS1_StdIO_OutErr_FctType)CLS1_SendChar, /* stderr */
+    CLS1_KeyPressed /* if input is not empty */
+  };
+  static CLS1_ConstStdIOType *CLS1_currStdIO = &CLS1_stdio;
+#else
+  static CLS1_ConstStdIOType *CLS1_currStdIO = NULL; /* needs to be set through CLS1_SetStdio(); */
+#endif
 /* Internal method prototypes */
 static void SendSeparatedStrings(const uint8_t *strA, const uint8_t *strB, uint8_t tabChar, uint8_t tabPos, CLS1_StdIO_OutErr_FctType io);
 
@@ -852,6 +865,9 @@ uint8_t CLS1_ReadAndParseWithCommandTable(uint8_t *cmdBuf, size_t cmdBufSize, CL
 */
 void CLS1_RequestSerial(void)
 {
+#if CLS1_CONFIG_USE_MUTEX
+  (void)xSemaphoreTakeRecursive(ShellSem, portMAX_DELAY);
+#endif
 }
 
 /*
@@ -867,6 +883,9 @@ void CLS1_RequestSerial(void)
 */
 void CLS1_ReleaseSerial(void)
 {
+#if CLS1_CONFIG_USE_MUTEX
+  (void)xSemaphoreGiveRecursive(ShellSem);
+#endif
 }
 
 /*
@@ -882,7 +901,11 @@ void CLS1_ReleaseSerial(void)
 */
 void* CLS1_GetSemaphore(void)
 {
+#if CLS1_CONFIG_USE_MUTEX
+  return ShellSem;
+#else
   return NULL;
+#endif
 }
 
 /*
@@ -898,9 +921,11 @@ void* CLS1_GetSemaphore(void)
 static void SendSeparatedStrings(const uint8_t *strA, const uint8_t *strB, uint8_t tabChar, uint8_t tabPos, CLS1_StdIO_OutErr_FctType io)
 {
   /* write command part */
-  while(*strA!='\0' && tabPos>0) {
-    io(*strA++);
-    tabPos--;
+  if (strA!=NULL) {
+    while(*strA!='\0' && tabPos>0) {
+      io(*strA++);
+      tabPos--;
+    }
   }
   /* fill up until ';' */
   while(tabPos>0) {
@@ -910,8 +935,10 @@ static void SendSeparatedStrings(const uint8_t *strA, const uint8_t *strB, uint8
   /* write separator */
   io(tabChar);
   io(' ');
-  /* write help text */
-  CLS1_SendStr(strB, io);
+  if (strB!=NULL) {
+    /* write help text */
+    CLS1_SendStr(strB, io);
+  }
 }
 
 /*
@@ -968,13 +995,24 @@ void CLS1_SendStatusStr(const uint8_t *strItem, const uint8_t *strStatus, CLS1_S
 */
 void CLS1_ReadChar(uint8_t *c)
 {
+#if CLS1_CONFIG_DEFAULT_SERIAL
   uint8_t res;
 
-  res = RTT1_RecvChar((uint8_t*)c);
+#if CLS1_CONFIG_USE_MUTEX
+  (void)xSemaphoreTakeRecursive(ShellSem, portMAX_DELAY);
+#endif
+  res = CLS1_CONFIG_DEFAULT_SERIAL_RECEIVE_FCT_NAME((uint8_t*)c);
   if (res==ERR_RXEMPTY) {
     /* no character in buffer */
     *c = '\0';
   }
+#if CLS1_CONFIG_USE_MUTEX
+  (void)xSemaphoreGiveRecursive(ShellSem);
+#endif
+#else
+  *c = '\0';
+  return; /* no serial component set up in properties */
+#endif
 }
 
 /*
@@ -990,20 +1028,11 @@ void CLS1_ReadChar(uint8_t *c)
 */
 void CLS1_SendChar(uint8_t ch)
 {
-  uint8_t res;
-  int timeoutMs = 20;
-
-
-  do {
-    res = RTT1_SendChar((uint8_t)ch);  /* Send char */
-    if (res==ERR_TXFULL) {
-      WAIT1_WaitOSms(10);
-    }
-    if(timeoutMs<=0) {
-      break; /* timeout */
-    }
-    timeoutMs -= 10;
-  } while(res==ERR_TXFULL);
+#if CLS1_CONFIG_DEFAULT_SERIAL
+  CLS1_SendCharFct(ch, CLS1_CONFIG_DEFAULT_SERIAL_SEND_FCT_NAME);
+#else
+  (void)ch;                            /* avoid compiler warning about unused argument */
+#endif
 }
 
 /*
@@ -1019,10 +1048,22 @@ void CLS1_SendChar(uint8_t ch)
 */
 bool CLS1_KeyPressed(void)
 {
+#if CLS1_CONFIG_DEFAULT_SERIAL
   bool res;
 
-  res = (bool)((RTT1_GetCharsInRxBuf()==0U) ? FALSE : TRUE); /* true if there are characters in receive buffer */
+#if CLS1_CONFIG_USE_MUTEX
+  (void)xSemaphoreTakeRecursive(ShellSem, portMAX_DELAY);
+#endif
+#if CLS1_CONFIG_DEFAULT_SERIAL
+  res = (bool)((CLS1_CONFIG_DEFAULT_SERIAL_RXAVAIL_FCT_NAME()==0U) ? FALSE : TRUE); /* true if there are characters in receive buffer */
+#endif
+#if CLS1_CONFIG_USE_MUTEX
+  (void)xSemaphoreGiveRecursive(ShellSem);
+#endif
   return res;
+#else
+  return FALSE; /* no serial component set up in properties */
+#endif
 }
 
 /*
@@ -1037,6 +1078,30 @@ bool CLS1_KeyPressed(void)
 */
 void CLS1_Init(void)
 {
+#if CLS1_CONFIG_USE_MUTEX
+#if configSUPPORT_STATIC_ALLOCATION
+  static StaticSemaphore_t xMutexBuffer;
+#endif
+  bool schedulerStarted;
+  CS1_CriticalVariable();
+
+  schedulerStarted = (bool)(xTaskGetSchedulerState()!=taskSCHEDULER_NOT_STARTED);
+  if (!schedulerStarted) { /* FreeRTOS not started yet. We are called in PE_low_level_init(), and interrupts are disabled */
+    CS1_EnterCritical();
+  }
+#if configSUPPORT_STATIC_ALLOCATION
+  ShellSem = xSemaphoreCreateRecursiveMutexStatic(&xMutexBuffer);
+#else
+  ShellSem = xSemaphoreCreateRecursiveMutex();
+#endif
+  if (!schedulerStarted) { /* above RTOS call might have enabled interrupts! Make sure we restore the state */
+    CS1_ExitCritical();
+  }
+  if (ShellSem==NULL) { /* semaphore creation failed */
+    for(;;) {} /* error, not enough memory? */
+  }
+  vQueueAddToRegistry(ShellSem, "CLS1_Sem");
+#endif
 #if CLS1_HISTORY_ENABLED
   {
     int i;
@@ -1064,6 +1129,11 @@ void CLS1_Init(void)
 */
 void CLS1_Deinit(void)
 {
+#if CLS1_CONFIG_USE_MUTEX
+  vQueueUnregisterQueue(ShellSem);
+  vSemaphoreDelete(ShellSem);
+  ShellSem = NULL;
+#endif
 }
 
 /*
@@ -1157,6 +1227,58 @@ unsigned CLS1_printf(const char *fmt, ...)
   count = XF1_xvformat(CLS1_printfPutChar, (void*)CLS1_GetStdio()->stdOut, fmt, args);
   va_end(args);
   return count;
+}
+
+/*
+** ===================================================================
+**     Method      :  CLS1_SendCharFct (component Shell)
+**     Description :
+**         Method to send a character using a standard I/O handle.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         ch              - character to be sent
+**       * fct             - Function pointer to output function: takes
+**                           a byte to write and returns error code.
+**     Returns     : Nothing
+** ===================================================================
+*/
+void CLS1_SendCharFct(uint8_t ch, uint8_t (*fct)(uint8_t ch))
+{
+#if CLS1_CONFIG_BLOCKING_SEND_ENABLED
+  uint8_t res;
+#endif
+#if CLS1_CONFIG_BLOCKING_SEND_TIMEOUT_WAIT_MS>0
+  int timeoutMs = CLS1_CONFIG_BLOCKING_SEND_TIMEOUT_WAIT_MS;
+#endif
+
+#if CLS1_CONFIG_USE_MUTEX
+  (void)xSemaphoreTakeRecursive(ShellSem, portMAX_DELAY);
+#endif
+#if CLS1_CONFIG_BLOCKING_SEND_ENABLED
+  do {
+    res = fct((uint8_t)ch);            /* Send char, returns error code */
+  #if CLS1_CONFIG_BLOCKING_SEND_TIMEOUT_WAIT_MS
+    if (res==ERR_TXFULL) {
+    #if CLS1_CONFIG_BLOCKING_SEND_RTOS_WAIT
+      WAIT1_WaitOSms(CLS1_CONFIG_BLOCKING_SEND_RTOS_WAIT);
+    #else
+      WAIT1_Waitms(CLS1_CONFIG_BLOCKING_SEND_RTOS_WAIT);
+    #endif
+    }
+  #endif
+  #if CLS1_CONFIG_BLOCKING_SEND_TIMEOUT_WAIT_MS>0
+    if(timeoutMs<=0) {
+      break; /* timeout */
+    }
+    timeoutMs -= CLS1_CONFIG_BLOCKING_SEND_TIMEOUT_WAIT_MS;
+  #endif
+  } while(res==ERR_TXFULL);
+#else
+  (void)fct((uint8_t)ch);              /* non blocking send */
+#endif
+#if CLS1_CONFIG_USE_MUTEX
+  (void)xSemaphoreGiveRecursive(ShellSem);
+#endif
 }
 
 /* END CLS1. */

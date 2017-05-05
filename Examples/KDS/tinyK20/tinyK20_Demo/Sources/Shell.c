@@ -19,6 +19,9 @@
 #if PL_CONFIG_HAS_SEGGER_RTT
   #include "RTT1.h"
 #endif
+#if PL_CONFIG_HAS_1_WIRE
+  #include "DS1.h"
+#endif
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -29,6 +32,11 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
   TmDt1_ParseCommand,
   I2CSPY1_ParseCommand,
   MMA1_ParseCommand,
+#if PL_CONFIG_HAS_1_WIRE
+#if DS1_PARSE_COMMAND_ENABLED
+  DS1_ParseCommand,
+#endif
+#endif
   NULL /* sentinel */
 };
 

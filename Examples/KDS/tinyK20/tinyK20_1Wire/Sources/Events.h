@@ -53,6 +53,13 @@
 #include "UTIL1.h"
 #include "CS1.h"
 #include "DS1.h"
+#include "SPI1.h"
+#include "Clock1.h"
+#include "BitIoLdd6.h"
+#include "Input1.h"
+#include "BitIoLdd7.h"
+#include "Output1.h"
+#include "BitIoLdd8.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -88,7 +95,7 @@ void DS1_OnError(OW1_Error error);
 **     Returns     : Nothing
 ** ===================================================================
 */
-void DS1_OnTemperatureGet(int32_t temperature);
+void DS1_OnTemperatureGet(uint8_t sensor_index, int32_t temperature);
 /*
 ** ===================================================================
 **     Event       :  DS1_OnTemperatureGet (module Events)
@@ -103,7 +110,7 @@ void DS1_OnTemperatureGet(int32_t temperature);
 **     Returns     : Nothing
 ** ===================================================================
 */
-void DS1_OnRomRead(uint8_t *rom_code);
+void DS1_OnRomRead(uint8_t sensor_index, uint8_t *rom_code);
 /*
 ** ===================================================================
 **     Event       :  DS1_OnRomRead (module Events)

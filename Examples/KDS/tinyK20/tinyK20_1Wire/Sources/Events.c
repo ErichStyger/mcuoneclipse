@@ -86,7 +86,7 @@ void DS1_OnError(OW1_Error error)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void DS1_OnTemperatureGet(int32_t temperature)
+void DS1_OnTemperatureGet(uint8_t sensor_index, int32_t temperature)
 {
 	/* Write your code here ... */
 }
@@ -105,7 +105,7 @@ void DS1_OnTemperatureGet(int32_t temperature)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void DS1_OnRomRead(uint8_t *rom_code)
+void DS1_OnRomRead(uint8_t sensor_index, uint8_t *rom_code)
 {
 	/* Write your code here ... */
 }

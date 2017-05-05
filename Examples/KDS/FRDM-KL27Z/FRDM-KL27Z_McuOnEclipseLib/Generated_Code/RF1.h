@@ -4,10 +4,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : nRF24L01
-**     Version     : Component 01.099, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.101, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-17, 08:53, # CodeGen: 121
+**     Date/Time   : 2017-05-05, 12:54, # CodeGen: 135
 **     Abstract    :
 **         This component implements a driver for the Nordic Semiconductor nRF24L01 2.4 GHz transceiver.
 **     Settings    :
@@ -28,7 +28,7 @@
 **         WriteRegister              - void RF1_WriteRegister(uint8_t reg, uint8_t val);
 **         ReadRegister               - uint8_t RF1_ReadRegister(uint8_t reg);
 **         ReadRegisterData           - void RF1_ReadRegisterData(uint8_t reg, uint8_t *buf, uint8_t bufSize);
-**         WriteRegisterData          - void RF1_WriteRegisterData(byte reg, uint8_t *buf, uint8_t bufSize);
+**         WriteRegisterData          - void RF1_WriteRegisterData(uint8_t reg, uint8_t *buf, uint8_t bufSize);
 **         WriteRead                  - uint8_t RF1_WriteRead(uint8_t val);
 **         Write                      - void RF1_Write(uint8_t val);
 **         GetStatus                  - uint8_t RF1_GetStatus(void);
@@ -115,6 +115,12 @@
 #include "CE1.h"
 #include "CSN1.h"
 #include "SPI1.h"
+
+/* event handler prototypes */
+void RF1_OnInterrupt(void);
+void RF1_OnActivate(void);
+void RF1_OnDeactivate(void);
+
 
 
 /* if having multiple users on the SPI bus, enable bus sharing/switching */

@@ -4,10 +4,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : XFormat
-**     Version     : Component 01.017, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.021, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-19, 18:27, # CodeGen: 11
+**     Date/Time   : 2017-05-05, 12:54, # CodeGen: 135
 **     Abstract    :
 **
 **     Settings    :
@@ -15,12 +15,14 @@
 **          SDK                                            : MCUC1
 **          Floating Point                                 : no
 **     Contents    :
-**         xvformat - unsigned XF1_xvformat(void (*outchar)(void *,char), void *arg, const char *...
-**         xformat  - unsigned XF1_xformat(void (*outchar)(void *,char), void *arg, const char *...
-**         xsprintf - int XF1_xsprintf(char *buf, const char *fmt, ...);
+**         xvformat  - unsigned XF1_xvformat(void (*outchar)(void *,char), void *arg, const char *...
+**         xformat   - unsigned XF1_xformat(void (*outchar)(void *,char), void *arg, const char *...
+**         xsprintf  - int XF1_xsprintf(char *buf, const char *fmt, ...);
+**         xsnprintf - int XF1_xsnprintf(char *buf, size_t max_len, const char *fmt, ...);
 **
-**     *  Copyright : (c) Copyright Mario Viara, 2014-2016, https://github.com/MarioViara/xprintfc
+**     *  Copyright : (c) Copyright Mario Viara, 2014-2017, https://github.com/MarioViara/xprintfc
 **      * Adopted for Processor Expert: Erich Styger
+**      * xsnprintf() contributed by Engin Lee
 **      * Web:         https://mcuoneclipse.com
 **      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -82,12 +84,12 @@
 /**
  * Detect support for va_copy
  */
-#ifdef        __GNUC__
-#define        VA_COPY        1
+#if defined(__GNUC__) && !defined(__REDLIB__) /* newlib and newlib-nano implement va_copy, but not RedLib in MCUXpresso */
+  #define        VA_COPY        1
 #endif
 
 #ifndef        VA_COPY
-#define        VA_COPY        0
+  #define        VA_COPY        0
 #endif
 
 /**
@@ -323,6 +325,38 @@ static const unsigned char formatStates[] =
   0x08,0x00,0x00
 };
 
+typedef struct {
+  char *s;
+  size_t space;
+} StrOutBuffer;
+
+static void putCharIntoBufMaxLen(void *arg, char c) {
+  StrOutBuffer *buff = (StrOutBuffer*)arg;
+  if (buff->space > 0) {
+    buff->space--;
+    *(buff->s)++ = c;
+  }
+}
+
+static int xsnprintf(char *buf, size_t max_len, const char *fmt, va_list args) {
+  int res = -1;
+  StrOutBuffer out;
+
+  out.space = max_len;
+  out.s = buf;
+  if (max_len <= 1) {
+    *buf = 0;
+    return 0;
+  } else {
+    out.space--; /* teminal zero*/
+  }
+  res = (int)XF1_xvformat(putCharIntoBufMaxLen, (void *)&out, fmt, args);
+  *(out.s) = 0;
+  if (res > 0) {
+    res = out.s - buf;
+  }
+  return res;
+}
 /*
 ** ===================================================================
 **     Method      :  XF1_xformat (component XFormat)
@@ -449,7 +483,7 @@ static void putCharIntoBuf(void *arg, char c) {
 static int xsprintf(char *buf, const char *fmt, va_list args) {
   int res;
 
-  res = XF1_xvformat(putCharIntoBuf, (void *)&buf, fmt, args);
+  res = (int)XF1_xvformat(putCharIntoBuf, (void *)&buf, fmt, args);
   *buf = 0;
   return res;
 }
@@ -558,10 +592,11 @@ unsigned XF1_xvformat(void (*outchar)(void *,char), void *arg, const char * fmt,
                 break;
 
             case    ST_WIDTH:
-                if (c == '*')
+                if (c == '*') {
                     width = (int)va_arg(args,int);
-                else
+                } else {
                     width = width * 10 + (c - '0');
+                }
                 break;
 
             case    ST_DOT:
@@ -569,10 +604,11 @@ unsigned XF1_xvformat(void (*outchar)(void *,char), void *arg, const char * fmt,
 
             case    ST_PRECIS:
                 flags |= FLAG_PREC;
-                if (c == '*')
+                if (c == '*') {
                     prec = (int)va_arg(args,int);
-                else
+                } else {
                     prec = prec * 10 + (c - '0');
+                }
                 break;
 
             case    ST_SIZE:
@@ -793,14 +829,15 @@ unsigned XF1_xvformat(void (*outchar)(void *,char), void *arg, const char * fmt,
                     {
                         if (flags & FLAG_LONG)
                         {
-                            value = (long)va_arg(args,long);
+                            value = (unsigned long)((long)va_arg(args,long));
                         }
                                                 else
                                                 {
-                                                        if (flags & FLAG_DECIMAL)
-                                                                value = (long)va_arg(args,int);
-                                                        else
-                                                                value = (long)va_arg(args,unsigned int);
+                                                        if (flags & FLAG_DECIMAL) {
+                                                                value = (unsigned long)((long)va_arg(args,int));
+                                                        } else {
+                                                                value = (unsigned long)((long)va_arg(args,unsigned int));
+                                                        }
                                                 }
                     }
 
@@ -891,6 +928,34 @@ int XF1_xsprintf(char *buf, const char *fmt, ...)
 }
 
 #endif
+/*
+** ===================================================================
+**     Method      :  XF1_xsnprintf (component XFormat)
+**     Description :
+**         snprintf() like function, returns the number of characters
+**         written, negative in case of error.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * buf             - Pointer to buffer to be written
+**         max_len         - size of output buffer (in size)
+**       * fmt             - Pointer to formatting string
+**         argList         - Open Argument List
+**     Returns     :
+**         ---             - number of characters written, negative for
+**                           error case
+** ===================================================================
+*/
+int XF1_xsnprintf(char *buf, size_t max_len, const char *fmt, ...)
+{
+  va_list args;
+  int res;
+
+  va_start(args,fmt);
+  res = xsnprintf(buf, max_len, fmt, args);
+  va_end(args);
+  return res;
+}
+
 /* END XF1. */
 
 /*!

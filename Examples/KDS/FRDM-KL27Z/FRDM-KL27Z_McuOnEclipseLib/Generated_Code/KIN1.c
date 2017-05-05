@@ -7,7 +7,7 @@
 **     Version     : Component 01.037, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-10, 21:10, # CodeGen: 99
+**     Date/Time   : 2017-05-05, 12:54, # CodeGen: 135
 **     Abstract    :
 **
 **     Settings    :
@@ -75,8 +75,10 @@
 
 #include "KIN1.h"
 #include <stddef.h> /* for size_t */
-#if MCUC1_CONFIG_NXP_SDK_USED
+#if MCUC1_CONFIG_NXP_SDK_2_0_USED
   #include "fsl_sim.h" /* system integration module */
+#elif MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_KINETIS_1_3
+  #include "Cpu.h" /* include CPU related interfaces and defines */
 #endif
 
 #if MCUC1_CONFIG_CORTEX_M==4
@@ -182,7 +184,7 @@ void KIN1_SoftwareReset(void)
  */
 uint8_t KIN1_UIDGet(KIN1_UID *uid)
 {
-#if MCUC1_CONFIG_NXP_SDK_USED
+#if MCUC1_CONFIG_NXP_SDK_2_0_USED
   sim_uid_t tmp;
   int i, j;
 
@@ -388,7 +390,7 @@ KIN1_ConstCharPtr KIN1_GetKinetisFamilyString(void)
     int32_t val;
 
     val = (SIM_SDID>>28)&0x3; /* bits 30..28 */
-    if (val>=0 && val<=(sizeof(KinetisM0FamilyStrings)/sizeof(KinetisM0FamilyStrings[0]))) {
+    if (val>=0 && val<=(int32_t)(sizeof(KinetisM0FamilyStrings)/sizeof(KinetisM0FamilyStrings[0]))) {
       return KinetisM0FamilyStrings[val];
     } else {
       return (KIN1_ConstCharPtr)"M0 Family Id out of bounds!";
@@ -399,7 +401,7 @@ KIN1_ConstCharPtr KIN1_GetKinetisFamilyString(void)
     int32_t val;
 
     val = ((SIM->SDID)>>28)&0xF; /* bits 31..28 */
-    if (val>=0 && val<=(sizeof(KinetisM0FamilyStrings)/sizeof(KinetisM0FamilyStrings[0]))) {
+    if (val>=0 && val<=(int32_t)(sizeof(KinetisM0FamilyStrings)/sizeof(KinetisM0FamilyStrings[0]))) {
       return KinetisM0FamilyStrings[val];
     } else {
       return (KIN1_ConstCharPtr)"M0 Family ID out of bounds!";
@@ -412,7 +414,7 @@ KIN1_ConstCharPtr KIN1_GetKinetisFamilyString(void)
   int32_t val;
 
   val = (SIM_SDID>>4)&0x3; /* bits 6..4 */
-  if (val>=0 && val<=(sizeof(KinetisM4FamilyStrings)/sizeof(KinetisM4FamilyStrings[0]))) {
+  if (val>=0 && val<=(int32_t)(sizeof(KinetisM4FamilyStrings)/sizeof(KinetisM4FamilyStrings[0]))) {
     return KinetisM4FamilyStrings[val];
   } else {
     return (KIN1_ConstCharPtr)"M4 Family ID out of bounds!";

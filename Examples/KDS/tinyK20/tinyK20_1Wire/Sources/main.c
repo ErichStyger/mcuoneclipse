@@ -50,6 +50,13 @@
 #include "UTIL1.h"
 #include "CS1.h"
 #include "DS1.h"
+#include "SPI1.h"
+#include "Clock1.h"
+#include "BitIoLdd6.h"
+#include "Input1.h"
+#include "BitIoLdd7.h"
+#include "Output1.h"
+#include "BitIoLdd8.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -112,9 +119,9 @@ static void ReadTemp(void) {
   bool res;
 
   res = DS1_StartConversion(0);
-  WAIT1_Waitms(5);
+  //WAIT1_Waitms(5);
   res = DS1_ReadTemperature(0);
-  WAIT1_Waitms(5);
+  //WAIT1_Waitms(5);
   temperature = DS1_GetTemperatureRaw(0);
   f = DS1_GetTemperatureFloat(0);
   WAIT1_Waitms(5);

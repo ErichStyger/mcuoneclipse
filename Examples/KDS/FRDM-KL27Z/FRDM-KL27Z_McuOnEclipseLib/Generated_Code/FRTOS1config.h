@@ -51,4 +51,15 @@
    /*!< 1: enable special GDB stack backtrace debug helper; 0: disabled */
 #endif
 
+#ifndef configHEAP_SCHEME_IDENTIFICATION
+  #define configHEAP_SCHEME_IDENTIFICATION        (0 && configCPU_FAMILY_IS_ARM(configCPU_FAMILY))
+   /*!< 1: use constant freeRTOSMemoryScheme to identify memory scheme; 0: no constant used */
+#endif
+
+#ifndef configUSE_TOP_USED_PRIORITY
+  #define configUSE_TOP_USED_PRIORITY             (0 && configCPU_FAMILY_IS_ARM(configCPU_FAMILY))
+   /*!< 1: Makes sure uxTopUsedPriority is present (needed for OpenOCD thread aware debugging); 0: no special reference to uxTopUsedPriority */
+#endif
+
+
 #endif /* __FRTOS1_CONFIG_H */

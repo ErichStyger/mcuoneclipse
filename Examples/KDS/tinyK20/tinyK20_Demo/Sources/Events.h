@@ -71,6 +71,14 @@
 #include "BitIoLdd3.h"
 #include "SCL1.h"
 #include "BitIoLdd4.h"
+#include "OW1.h"
+#include "DQ1.h"
+#include "TU1.h"
+#include "OutputRB1.h"
+#include "InputRB1.h"
+#include "TimeRB1.h"
+#include "ProgramRB1.h"
+#include "DS1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -283,6 +291,80 @@ void SM1_OnFreeTxBuf(void);
 ** ===================================================================
 */
 
+void DS1_OnError(OW1_Error error);
+/*
+** ===================================================================
+**     Event       :  DS1_OnError (module Events)
+**
+**     Component   :  DS1 [DS18B20]
+**     Description :
+**         
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * error           - 
+**     Returns     : Nothing
+** ===================================================================
+*/
+void DS1_OnTemperatureGet(uint8_t sensor_index, int32_t temperature);
+/*
+** ===================================================================
+**     Event       :  DS1_OnTemperatureGet (module Events)
+**
+**     Component   :  DS1 [DS18B20]
+**     Description :
+**         
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * sensor_index    - 
+**       * temperature     - 
+**     Returns     : Nothing
+** ===================================================================
+*/
+void DS1_OnRomRead(uint8_t sensor_index, uint8_t *rom_code);
+/*
+** ===================================================================
+**     Event       :  DS1_OnRomRead (module Events)
+**
+**     Component   :  DS1 [DS18B20]
+**     Description :
+**         
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * sensor_index    - 
+**       * rom_code        - 
+**     Returns     : Nothing
+** ===================================================================
+*/
+void OW1_OnProgramEvent(uint8_t key4);
+/*
+** ===================================================================
+**     Event       :  OW1_OnProgramEvent (module Events)
+**
+**     Component   :  OW1 [OneWire]
+**     Description :
+**         
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         key4            - Key to identify the source of the event
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void OW1_OnWaitEnd(uint8_t key2);
+/*
+** ===================================================================
+**     Event       :  OW1_OnWaitEnd (module Events)
+**
+**     Component   :  OW1 [OneWire]
+**     Description :
+**         
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         key2            - Key to identificate the source of the
+**                           event.
+**     Returns     : Nothing
+** ===================================================================
+*/
 /* END Events */
 
 #ifdef __cplusplus

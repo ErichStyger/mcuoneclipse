@@ -4,16 +4,16 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : Wait
-**     Version     : Component 01.079, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.082, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-10, 16:49, # CodeGen: 71
+**     Date/Time   : 2017-05-05, 12:54, # CodeGen: 135
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
 **          Component name                                 : WAIT1
-**          Use Cycle Counter                              : Disabled
 **          SDK                                            : MCUC1
+**          Use Cycle Counter                              : Disabled
 **          Manual Clock Values                            : Disabled
 **          Delay100usFunction                             : Delay100US
 **          RTOS                                           : Disabled
@@ -282,6 +282,8 @@ void WAIT1_Init(void)
 #if WAIT1_CONFIG_USE_CYCLE_COUNTER
   /* init cycle counter */
   KIN1_InitCycleCounter();
+  KIN1_ResetCycleCounter();
+  KIN1_EnableCycleCounter();
 #endif
 }
 

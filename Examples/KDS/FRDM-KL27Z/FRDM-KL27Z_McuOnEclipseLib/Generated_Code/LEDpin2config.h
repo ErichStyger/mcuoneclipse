@@ -1,3 +1,9 @@
+/**
+ * \file
+ * \brief Configuration header file for SDK_BitIO
+ *
+ * This header file is used to configure settings of the SDK Bit I/O module.
+ */
 #ifndef __LEDpin2_CONFIG_H
 #define __LEDpin2_CONFIG_H
 

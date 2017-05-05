@@ -16,13 +16,13 @@
 
 #ifndef RF1_CONFIG_ON_ACTIVATE_CALLBACK
   void RF1_OnActivate(void); /* prototype */
-  #define RF1_CONFIG_ON_ACTIVATE_CALLBACK()  /* RF1_OnActivate() */
+  #define RF1_CONFIG_ON_ACTIVATE_CALLBACK()  RF1_OnActivate()
     /*!< User callback called before using device */
 #endif
 
 #ifndef RF1_CONFIG_ON_DEACTIVATE_CALLBACK
-  void RF1_OnActivate(void); /* prototype */
-  #define RF1_CONFIG_ON_DEACTIVATE_CALLBACK()  /* RF1_OnDeactivate() */
+  void RF1_OnDeactivate(void); /* prototype */
+  #define RF1_CONFIG_ON_DEACTIVATE_CALLBACK()  RF1_OnDeactivate()
     /*!< User callback called after using device */
 #endif
 

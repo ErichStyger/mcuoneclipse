@@ -4,10 +4,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : FreeRTOS
-**     Version     : Component 01.529, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.539, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-13, 06:40, # CodeGen: 103
+**     Date/Time   : 2017-05-05, 12:54, # CodeGen: 135
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
@@ -31,10 +31,15 @@
 **          Classic CodeWarrior                            : no
 **          Disabled Interrupts in Startup                 : yes
 **          configASSERT                                   : yes
-**          Enable GDB Debug Helper                        : no
 **          Application Task Tags                          : no
 **          Thread Local Storage Pointers                  : 0
 **          Use Trace Facility                             : yes
+**          Debug Helpers                                  : 
+**            Enable GDB Debug Helper                      : no
+**            uxTopUsedPriority                            : no
+**            Heap Indication Constant                     : no
+**            Task C Additions                             : no
+**            Record Stack High Address                    : yes
 **          Segger System Viewer Trace                     : Enabled
 **            Segger System Viewer                         : SYS1
 **          Percepio Trace                                 : Disabled
@@ -63,7 +68,6 @@
 **            Idle should yield                            : yes
 **            Task Name Length                             : 12
 **            Minimal Stack Size                           : 150
-**            Record Stack High Address                    : yes
 **            Maximum Priorities                           : 6
 **            Maximum Coroutine Priorities                 : 2
 **            Stackoverflow checking method                : Method 1

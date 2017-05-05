@@ -4,10 +4,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : GenericI2C
-**     Version     : Component 01.030, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.033, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-13, 09:07, # CodeGen: 108
+**     Date/Time   : 2017-05-05, 12:54, # CodeGen: 135
 **     Abstract    :
 **         This component implements a generic I2C driver wrapper to work both with LDD and non-LDD I2C components.
 **     Settings    :
@@ -34,13 +34,15 @@
 **         WriteAddress      - uint8_t GI2C1_WriteAddress(uint8_t i2cAddr, uint8_t *memAddr, uint8_t...
 **         ReadByteAddress8  - uint8_t GI2C1_ReadByteAddress8(uint8_t i2cAddr, uint8_t memAddr, uint8_t *data);
 **         WriteByteAddress8 - uint8_t GI2C1_WriteByteAddress8(uint8_t i2cAddr, uint8_t memAddr, uint8_t data);
+**         ReadWordAddress8  - uint8_t GI2C1_ReadWordAddress8(uint8_t i2cAddr, uint8_t memAddr, uint16_t...
+**         WriteWordAddress8 - uint8_t GI2C1_WriteWordAddress8(uint8_t i2cAddr, uint8_t memAddr, uint16_t...
 **         ProbeACK          - uint8_t GI2C1_ProbeACK(void* data, uint16_t dataSize, GI2C1_EnumSendFlags...
 **         GetSemaphore      - void* GI2C1_GetSemaphore(void);
 **         ScanDevice        - uint8_t GI2C1_ScanDevice(uint8_t i2cAddr);
 **         Deinit            - void GI2C1_Deinit(void);
 **         Init              - void GI2C1_Init(void);
 **
-**     * Copyright (c) 2013-2016, Erich Styger
+**     * Copyright (c) 2013-2017, Erich Styger
 **      * Web:         https://mcuoneclipse.com
 **      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -326,6 +328,41 @@ uint8_t GI2C1_ProbeACK(void* data, uint16_t dataSize, GI2C1_EnumSendFlags flags,
 **         flags           - flags for the transaction
 **         WaitTimeUS      - Waiting time in microseconds
 **                           to wait for the ACK on the bus.
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+
+uint8_t GI2C1_ReadWordAddress8(uint8_t i2cAddr, uint8_t memAddr, uint16_t *data);
+/*
+** ===================================================================
+**     Method      :  GI2C1_ReadWordAddress8 (component GenericI2C)
+**     Description :
+**         Read a word from the device using an 8bit memory address.
+**         This writes (S+i2cAddr+0), (memAddr), (Sr+i2cAddr+1), (data)..
+**         .(data+P)
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         i2cAddr         - I2C Address of device
+**         memAddr         - Device memory address
+**       * data            - Pointer to read buffer (single byte)
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+
+uint8_t GI2C1_WriteWordAddress8(uint8_t i2cAddr, uint8_t memAddr, uint16_t data);
+/*
+** ===================================================================
+**     Method      :  GI2C1_WriteWordAddress8 (component GenericI2C)
+**     Description :
+**         Write a word to the device using an 8bit memory address:
+**         (S+i2cAddr+0), (memAddr), (data)...(data+P)
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         i2cAddr         - I2C address of device
+**         memAddr         - Device memory address
+**         data            - Data value
 **     Returns     :
 **         ---             - Error code
 ** ===================================================================

@@ -1,3 +1,9 @@
+/**
+ * \file
+ * \brief Configuration header file for SDK_BitIO
+ *
+ * This header file is used to configure settings of the SDK Bit I/O module.
+ */
 #ifndef __Clock1_CONFIG_H
 #define __Clock1_CONFIG_H
 

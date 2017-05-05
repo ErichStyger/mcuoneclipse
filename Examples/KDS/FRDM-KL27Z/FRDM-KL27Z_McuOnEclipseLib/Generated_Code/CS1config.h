@@ -7,7 +7,7 @@
 #endif
 
 #ifndef CS1_CONFIG_USE_CUSTOM_CRITICAL_SECTION
-  #define CS1_CONFIG_USE_CUSTOM_CRITICAL_SECTION            1 /* 1: Custom implementation (supported for GNU and ARM!); 0: don' use custom implementation */
+  #define CS1_CONFIG_USE_CUSTOM_CRITICAL_SECTION            1 /* 1: Custom implementation (supported for GNU and ARM!); 0: don't use custom implementation */
 #endif
 
 #ifndef CS1_CONFIG_USE_PEX_DEFAULT

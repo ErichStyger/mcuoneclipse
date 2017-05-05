@@ -4,10 +4,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : nRF24L01
-**     Version     : Component 01.099, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.101, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-17, 09:59, # CodeGen: 134
+**     Date/Time   : 2017-05-05, 12:54, # CodeGen: 135
 **     Abstract    :
 **         This component implements a driver for the Nordic Semiconductor nRF24L01 2.4 GHz transceiver.
 **     Settings    :
@@ -28,7 +28,7 @@
 **         WriteRegister              - void RF1_WriteRegister(uint8_t reg, uint8_t val);
 **         ReadRegister               - uint8_t RF1_ReadRegister(uint8_t reg);
 **         ReadRegisterData           - void RF1_ReadRegisterData(uint8_t reg, uint8_t *buf, uint8_t bufSize);
-**         WriteRegisterData          - void RF1_WriteRegisterData(byte reg, uint8_t *buf, uint8_t bufSize);
+**         WriteRegisterData          - void RF1_WriteRegisterData(uint8_t reg, uint8_t *buf, uint8_t bufSize);
 **         WriteRead                  - uint8_t RF1_WriteRead(uint8_t val);
 **         Write                      - void RF1_Write(uint8_t val);
 **         GetStatus                  - uint8_t RF1_GetStatus(void);
@@ -105,7 +105,6 @@
 /* MODULE RF1. */
 
 #include "RF1.h"
-
 
 /* Macros to hide low level functionality */
 #define RF1_WAIT_US(x)  WAIT1_Waitus(x)          /* wait for the given number of micro-seconds */
@@ -1060,6 +1059,7 @@ void RF1_PollInterrupt(void)
   if (status&(RF1_STATUS_RX_DR|RF1_STATUS_TX_DS|RF1_STATUS_MAX_RT)) {
     RF1_CE_LOW(); /* pull CE Low to disable transceiver */
     RADIO_OnInterrupt();
+    RF1_OnInterrupt(); /* call user event (if enabled)... */
   }
   /*lint -restore */
 }
