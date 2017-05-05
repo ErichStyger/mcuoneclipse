@@ -4,10 +4,10 @@
 **     Project     : FRDM-K64F_lwip_mqtt_bm
 **     Processor   : MK64FN1M0VLL12
 **     Component   : RingBuffer
-**     Version     : Component 01.050, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.051, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-04-16, 09:49, # CodeGen: 14
+**     Date/Time   : 2017-05-05, 08:40, # CodeGen: 36
 **     Abstract    :
 **         This component implements a ring buffer for different integer data type.
 **     Settings    :
@@ -22,6 +22,7 @@
 **         Put             - uint8_t RNG1_Put(RNG1_ElementType elem);
 **         Get             - uint8_t RNG1_Get(RNG1_ElementType *elemP);
 **         Peek            - uint8_t RNG1_Peek(RNG1_BufSizeType index, RNG1_ElementType *elemP);
+**         Update          - uint8_t RNG1_Update(RNG1_BufSizeType index, RNG1_ElementType *elemP);
 **         Putn            - uint8_t RNG1_Putn(RNG1_ElementType *elem, RNG1_BufSizeType nof);
 **         Getn            - uint8_t RNG1_Getn(RNG1_ElementType *buf, RNG1_BufSizeType nof);
 **         Compare         - uint8_t RNG1_Compare(RNG1_BufSizeType index, RNG1_ElementType *elemP,...
@@ -382,6 +383,40 @@ uint8_t RNG1_Delete(void)
     if (RNG1_outIdx==RNG1_CONFIG_BUF_SIZE) {
       RNG1_outIdx = 0;
     }
+  }
+  RNG1_EXIT_CRITICAL();
+  return res;
+}
+
+/*
+** ===================================================================
+**     Method      :  RNG1_Update (component RingBuffer)
+**     Description :
+**         Updates the data of an element.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         index           - Index of element. 0 peeks the top
+**                           element, 1 the next, and so on.
+**       * elemP           - Pointer to where to store the received
+**                           element
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t RNG1_Update(RNG1_BufSizeType index, RNG1_ElementType *elemP)
+{
+  uint8_t res = ERR_OK;
+  int idx; /* index inside ring buffer */
+  RNG1_DEFINE_CRITICAL();
+
+  RNG1_ENTER_CRITICAL();
+  if (index>=RNG1_CONFIG_BUF_SIZE) {
+    res = ERR_OVERFLOW; /* asking for an element outside of ring buffer size */
+  } else if (index<RNG1_inSize) {
+    idx = (RNG1_outIdx+index)%RNG1_CONFIG_BUF_SIZE;
+    RNG1_buffer[idx] = *elemP; /* replace element */
+  } else { /* asking for an element which does not exist */
+    res = ERR_RXEMPTY;
   }
   RNG1_EXIT_CRITICAL();
   return res;

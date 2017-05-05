@@ -20,6 +20,9 @@
 #if CONFIG_USE_FREERTOS
   #include "FRTOS1.h"
 #endif
+#if CONFIG_USE_ACCELEROMETER
+  #include "FX1.h"
+#endif
 #include "TmDt1.h"
 #include "RTT1.h"
 #include "lwip_mqtt_bm.h"
@@ -104,6 +107,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if CONFIG_USE_SNTP
   SNTP_ParseCommand,
+#endif
+#if CONFIG_USE_ACCELEROMETER
+  FX1_ParseCommand,
 #endif
   TmDt1_ParseCommand,
   MQTT_ParseCommand,

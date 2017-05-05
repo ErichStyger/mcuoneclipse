@@ -695,8 +695,18 @@ static void AppTask(void *param) {
    #if CONFIG_USE_SHELL
      SHELL_Process();
    #endif
+#if 0 /* test high publish frequency */
+    if (MQTT_state==MQTT_STATE_CONNECTED) {
+      MQTT_state = MQTT_STATE_DO_PUBLISH;
+      MqttDoStateMachine(&mqtt_client, &brokerServerAddress); /* process state machine */
+      ProcessLWIP(APP_GetNetworkInterface());
+    }
+    LED2_Neg();
+    vTaskDelay(pdMS_TO_TICKS(10));
+#else
     LED2_Neg();
     vTaskDelay(pdMS_TO_TICKS(50));
+#endif
   }
 }
 #endif

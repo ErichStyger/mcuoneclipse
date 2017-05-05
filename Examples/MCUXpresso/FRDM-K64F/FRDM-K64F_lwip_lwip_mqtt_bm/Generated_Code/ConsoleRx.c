@@ -4,10 +4,10 @@
 **     Project     : FRDM-K64F_lwip_mqtt_bm
 **     Processor   : MK64FN1M0VLL12
 **     Component   : RingBuffer
-**     Version     : Component 01.050, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.051, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-04-29, 20:46, # CodeGen: 31
+**     Date/Time   : 2017-05-05, 08:40, # CodeGen: 36
 **     Abstract    :
 **         This component implements a ring buffer for different integer data type.
 **     Settings    :
@@ -22,6 +22,7 @@
 **         Put             - uint8_t ConsoleRx_Put(ConsoleRx_ElementType elem);
 **         Get             - uint8_t ConsoleRx_Get(ConsoleRx_ElementType *elemP);
 **         Peek            - uint8_t ConsoleRx_Peek(ConsoleRx_BufSizeType index, ConsoleRx_ElementType...
+**         Update          - uint8_t ConsoleRx_Update(ConsoleRx_BufSizeType index, ConsoleRx_ElementType...
 **         Putn            - uint8_t ConsoleRx_Putn(ConsoleRx_ElementType *elem, ConsoleRx_BufSizeType nof);
 **         Getn            - uint8_t ConsoleRx_Getn(ConsoleRx_ElementType *buf, ConsoleRx_BufSizeType nof);
 **         Compare         - uint8_t ConsoleRx_Compare(ConsoleRx_BufSizeType index, ConsoleRx_ElementType...
@@ -382,6 +383,40 @@ uint8_t ConsoleRx_Delete(void)
     if (ConsoleRx_outIdx==ConsoleRx_CONFIG_BUF_SIZE) {
       ConsoleRx_outIdx = 0;
     }
+  }
+  ConsoleRx_EXIT_CRITICAL();
+  return res;
+}
+
+/*
+** ===================================================================
+**     Method      :  ConsoleRx_Update (component RingBuffer)
+**     Description :
+**         Updates the data of an element.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         index           - Index of element. 0 peeks the top
+**                           element, 1 the next, and so on.
+**       * elemP           - Pointer to where to store the received
+**                           element
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t ConsoleRx_Update(ConsoleRx_BufSizeType index, ConsoleRx_ElementType *elemP)
+{
+  uint8_t res = ERR_OK;
+  int idx; /* index inside ring buffer */
+  ConsoleRx_DEFINE_CRITICAL();
+
+  ConsoleRx_ENTER_CRITICAL();
+  if (index>=ConsoleRx_CONFIG_BUF_SIZE) {
+    res = ERR_OVERFLOW; /* asking for an element outside of ring buffer size */
+  } else if (index<ConsoleRx_inSize) {
+    idx = (ConsoleRx_outIdx+index)%ConsoleRx_CONFIG_BUF_SIZE;
+    ConsoleRx_buffer[idx] = *elemP; /* replace element */
+  } else { /* asking for an element which does not exist */
+    res = ERR_RXEMPTY;
   }
   ConsoleRx_EXIT_CRITICAL();
   return res;
