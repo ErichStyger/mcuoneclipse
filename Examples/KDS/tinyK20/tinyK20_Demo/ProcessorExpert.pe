@@ -3,7 +3,7 @@
   <Header>
     <Name>tinyK20_Demo</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>124</ModificationStamp>
+    <ModificationStamp>127</ModificationStamp>
     <Date>2015-06-19</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>77</ProjectCompNumb>
+    <ProjectCompNumb>91</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -33208,7 +33208,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.085</BeanVersion>
+    <BeanVersion>01.087</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -33222,7 +33222,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
-        <RegCompType>BitIO_LDD</RegCompType>
+        <RegCompType>DQ_LDD</RegCompType>
         <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</RegCompRepository>
         <InheritedComponentState>
           <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
@@ -33401,10 +33401,10 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>1</Index>
-              <Value>false</Value>
+              <Index>0</Index>
+              <Value>true</Value>
               <LastSelection>true</LastSelection>
-              <LastUserSel>no</LastUserSel>
+              <LastUserSel>yes</LastUserSel>
               <UsrMethodName>Deinit</UsrMethodName>
             </ItemState>
             <ItemState>
@@ -34586,7 +34586,7 @@
           <IconName>RingBuffer</IconName>
           <UserFolderName />
           <Comment lines_count="0" />
-          <Template />
+          <Template>OneWire\RBOutput</Template>
           <BeanVersion>01.051</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
@@ -34886,7 +34886,7 @@
           <IconName>RingBuffer</IconName>
           <UserFolderName />
           <Comment lines_count="0" />
-          <Template />
+          <Template>OneWire\RBInput</Template>
           <BeanVersion>01.051</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
@@ -35186,7 +35186,7 @@
           <IconName>RingBuffer</IconName>
           <UserFolderName />
           <Comment lines_count="0" />
-          <Template />
+          <Template>OneWire\RBTime</Template>
           <BeanVersion>01.051</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
@@ -35486,7 +35486,7 @@
           <IconName>RingBuffer</IconName>
           <UserFolderName />
           <Comment lines_count="0" />
-          <Template />
+          <Template>OneWire\RBProgram</Template>
           <BeanVersion>01.051</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
@@ -35802,6 +35802,8 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>always</LastUserSel>
         <UsrMethodName>Receive</UsrMethodName>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
       </ItemState>
       <ItemState>
         <ItemSymbol>Count</ItemSymbol>
@@ -35936,17 +35938,6 @@
         <UsrMethodName>i_recv_get</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>read_Pin</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>read_Pin</UsrMethodName>
-      </ItemState>
-      <ItemState>
         <ItemSymbol>i_recv_low</ItemSymbol>
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -35967,6 +35958,17 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>i_wait</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>read_Pin</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>read_Pin</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>SendByte</ItemSymbol>
@@ -36035,6 +36037,17 @@
         <UsrMethodName>isBusy</UsrMethodName>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Init</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
@@ -36042,6 +36055,8 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>always</LastUserSel>
         <UsrMethodName>Init</UsrMethodName>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
       </ItemState>
     </Methods>
     <Events>
@@ -36160,7 +36175,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.021</BeanVersion>
+    <BeanVersion>01.022</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>

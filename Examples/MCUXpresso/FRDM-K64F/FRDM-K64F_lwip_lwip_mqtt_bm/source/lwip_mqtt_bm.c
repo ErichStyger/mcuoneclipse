@@ -95,6 +95,9 @@
 #if CONFIG_USE_SNTP
   #include "app_sntp.h"
 #endif
+#if CONFIG_USE_ACCELEROMETER
+  #include "App_accel.h"
+#endif
 #include "TmDt1.h"
 
 static struct netif fsl_netif0; /* network interface */
@@ -802,6 +805,9 @@ int main(void) {
 #endif
 #if CONFIG_USE_SHELL
   SHELL_Init(); /* shell */
+#endif
+#if CONFIG_USE_ACCELEROMETER
+  ACCEL_Init();
 #endif
 
   APP_Run();

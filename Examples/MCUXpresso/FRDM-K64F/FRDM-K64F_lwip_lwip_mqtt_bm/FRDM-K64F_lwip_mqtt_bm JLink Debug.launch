@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="com.nxp.mcuxpresso.core.debug.support.segger.launchConfigurationType">
-<stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="JLink0"/>
-<stringAttribute key="com.crt.ctrlcenter.serialNumber" value="USB 0"/>
+<stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="JLink621000000"/>
+<stringAttribute key="com.crt.ctrlcenter.serialNumber" value="USB 621000000"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger." value=""/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.device" value="MK64FN1M0xxx12"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.endian" value="little"/>
@@ -11,7 +11,7 @@
 <intAttribute key="com.nxp.mcuxpresso.segger.port" value="2331"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.powertarget 50" value="false"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.scriptfile" value=""/>
-<stringAttribute key="com.nxp.mcuxpresso.segger.select" value="USB=0"/>
+<stringAttribute key="com.nxp.mcuxpresso.segger.select" value="USB=621000000"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.silent" value="-nosilent"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.speed" value="auto"/>
 <intAttribute key="com.nxp.mcuxpresso.segger.swoport" value="2332"/>
@@ -30,7 +30,7 @@
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadSymbols" value="true"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.pcRegister" value=""/>
 <intAttribute key="org.eclipse.cdt.debug.gdbjtag.core.portNumber" value="2331"/>
-<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.runCommands" value=""/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.runCommands" value="monitor exec SetRestartOnClose=0"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setPcRegister" value="false"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setResume" value="true"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setStopAt" value="true"/>
@@ -49,7 +49,7 @@
 <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_REGISTER_GROUPS" value=""/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_START_MODE" value="remote"/>
-<stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug\FRDM-K64F_lwip_mqtt_bm.axf"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug/FRDM-K64F_lwip_mqtt_bm.axf"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="FRDM-K64F_lwip_mqtt_bm"/>
 <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="false"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="com.crt.advproject.config.exe.debug.911984316"/>
