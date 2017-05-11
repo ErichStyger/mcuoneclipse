@@ -4,10 +4,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : KinetisTools
-**     Version     : Component 01.037, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.038, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-05, 12:54, # CodeGen: 135
+**     Date/Time   : 2017-05-11, 11:32, # CodeGen: 136
 **     Abstract    :
 **
 **     Settings    :
@@ -21,7 +21,6 @@
 **         UIDGet                 - uint8_t KIN1_UIDGet(KIN1_UID *uid);
 **         UIDSame                - bool KIN1_UIDSame(const KIN1_UID *src, const KIN1_UID *dst);
 **         UIDtoString            - uint8_t KIN1_UIDtoString(const KIN1_UID *uid, uint8_t *buf, size_t bufSize);
-**         ParseCommand           - uint8_t KIN1_ParseCommand(const unsigned char* cmd, bool *handled, const...
 **         GetKinetisFamilyString - KIN1_ConstCharPtr KIN1_GetKinetisFamilyString(void);
 **         GetPC                  - void* KIN1_GetPC(void);
 **         GetSP                  - void* KIN1_GetSP(void);
@@ -32,6 +31,7 @@
 **         EnableCycleCounter     - void KIN1_EnableCycleCounter(void);
 **         DisableCycleCounter    - void KIN1_DisableCycleCounter(void);
 **         GetCycleCounter        - uint32_t KIN1_GetCycleCounter(void);
+**         ParseCommand           - uint8_t KIN1_ParseCommand(const unsigned char* cmd, bool *handled, const...
 **
 **     * Copyright (c) 2014-2017, Erich Styger
 **      * Web:         https://mcuoneclipse.com

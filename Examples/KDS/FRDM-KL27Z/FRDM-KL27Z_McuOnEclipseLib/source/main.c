@@ -68,6 +68,47 @@
 #if PL_CONFIG_HAS_SPI
   #include "SPI1.h"
 #endif
+#if PL_CONFIG_HAS_ONE_WIRE
+  #include "OW1.h"
+  #include "TMR1.h"
+  #include "fsl_clock.h"
+  #include "fsl_tpm.h"
+#endif
+
+#if 0
+static volatile bool tpmIsrFlag = false;
+
+void _TPM2_IRQHandler(void) {
+    /* Clear interrupt flag.*/
+    TPM_ClearStatusFlags(TPM2, kTPM_TimeOverflowFlag);
+    tpmIsrFlag = true;
+}
+
+static void SetupTimer(void) {
+  tpm_config_t tpmInfo;
+  #define TPM_SOURCE_CLOCK (CLOCK_GetFreq(kCLOCK_McgIrc48MClk)/4)
+
+  /* Select the clock source for the TPM counter as MCGPLLCLK */
+  CLOCK_SetTpmClock(1U);
+
+  TPM_GetDefaultConfig(&tpmInfo);
+  /* TPM clock divide by 4 */
+  tpmInfo.prescale = kTPM_Prescale_Divide_4;
+
+  /* Initialize TPM module */
+  TPM_Init(TPM2, &tpmInfo);
+  /*
+   * Set timer period.
+   */
+  TPM_SetTimerPeriod(TPM2, USEC_TO_COUNT(1000U, TPM_SOURCE_CLOCK));
+
+  TPM_EnableInterrupts(TPM2, kTPM_TimeOverflowInterruptEnable);
+
+  EnableIRQ(TPM2_IRQn);
+
+  TPM_StartTimer(TPM2, kTPM_SystemClock);
+}
+#endif
 
 static void MainTask(void *pvParameters) {
   (void)pvParameters; /* parameter not used */
@@ -93,7 +134,7 @@ static void InitComponents(void) {
 #if PL_CONFIG_HAS_SHELL
   CLS1_Init();
   SHELL_Init();
-  CONSOLE_Init();
+  //CONSOLE_Init();
 #endif
 #if PL_CONFIG_HAS_TIME_DATE
   TmDt1_Init();
@@ -110,6 +151,11 @@ static void InitComponents(void) {
 #endif
 #if PL_CONFIG_HAS_SPI
   SPI1_Init();
+#endif
+#if PL_CONFIG_HAS_ONE_WIRE
+  OW1_Init();
+  //SetupTimer();
+  TMR1_Init();
 #endif
 }
 

@@ -7,7 +7,7 @@
 **     Version     : Component 01.081, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-21, 10:09, # CodeGen: 44
+**     Date/Time   : 2017-05-11, 14:15, # CodeGen: 142
 **     Abstract    :
 **
 **     Settings    :
@@ -23,9 +23,9 @@
 **            Up Buffer Mode                               : Skip (Default)
 **            Down Buffer Mode                             : Skip (Default)
 **            Blocking Send                                : Enabled
-**              Timeout (ms)                               : 50
+**              Timeout (ms)                               : 20
 **              Wait                                       : WAIT1
-**              Wait Time (ms)                             : 10
+**              Wait Time (ms)                             : 2
 **            Printf Buffer Size                           : 64
 **          SDK                                            : MCUC1
 **          Shell                                          : CLS1
@@ -280,17 +280,17 @@ void RTT1_StdIOReadChar(uint8_t *c)
 */
 void RTT1_StdIOSendChar(uint8_t ch)
 {
-  int timeoutMs = 50;
+  int timeoutMs = 20;
 
   for(;;) { /* will break */
     if (RTT1_Write(0, (const char*)&ch, 1)==1) { /* non blocking send, check that we were able to send */
       break; /* was able to send character, get out of waiting loop */
     }
-    WAIT1_WaitOSms(10);
+    WAIT1_WaitOSms(2);
     if(timeoutMs<=0) {
       break; /* timeout */
     }
-    timeoutMs -= 10;
+    timeoutMs -= 2;
   } /* for */
 }
 

@@ -70,11 +70,13 @@
 #include "BitIoLdd4.h"
 #include "OW1.h"
 #include "DQ1.h"
+#include "BitIoLdd5.h"
 #include "OutputRB1.h"
 #include "InputRB1.h"
 #include "TimeRB1.h"
 #include "ProgramRB1.h"
 #include "DbgRd1.h"
+#include "BitIoLdd6.h"
 #include "DS1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"

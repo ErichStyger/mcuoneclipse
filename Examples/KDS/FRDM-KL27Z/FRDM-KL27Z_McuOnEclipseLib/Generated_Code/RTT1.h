@@ -7,7 +7,7 @@
 **     Version     : Component 01.081, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-21, 10:09, # CodeGen: 44
+**     Date/Time   : 2017-05-11, 14:15, # CodeGen: 142
 **     Abstract    :
 **
 **     Settings    :
@@ -23,9 +23,9 @@
 **            Up Buffer Mode                               : Skip (Default)
 **            Down Buffer Mode                             : Skip (Default)
 **            Blocking Send                                : Enabled
-**              Timeout (ms)                               : 50
+**              Timeout (ms)                               : 20
 **              Wait                                       : WAIT1
-**              Wait Time (ms)                             : 10
+**              Wait Time (ms)                             : 2
 **            Printf Buffer Size                           : 64
 **          SDK                                            : MCUC1
 **          Shell                                          : CLS1

@@ -73,11 +73,13 @@
 #include "BitIoLdd4.h"
 #include "OW1.h"
 #include "DQ1.h"
+#include "BitIoLdd5.h"
 #include "OutputRB1.h"
 #include "InputRB1.h"
 #include "TimeRB1.h"
 #include "ProgramRB1.h"
 #include "DbgRd1.h"
+#include "BitIoLdd6.h"
 #include "DS1.h"
 
 #ifdef __cplusplus

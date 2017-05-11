@@ -6,7 +6,7 @@
 **     Version     : Component 01.025, Driver 01.04, CPU db: 3.00.000
 **     Repository  : Kinetis
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-17, 08:48, # CodeGen: 119
+**     Date/Time   : 2017-05-11, 14:34, # CodeGen: 144
 **     Abstract    :
 **
 **     Settings    :
@@ -93,6 +93,14 @@
 #include "RF1.h"
 #include "CE1.h"
 #include "CSN1.h"
+#include "OW1.h"
+#include "DQ1.h"
+#include "OutputRB1.h"
+#include "InputRB1.h"
+#include "TimeRB1.h"
+#include "ProgramRB1.h"
+#include "Inhr1.h"
+#include "TMR1.h"
 
 
 /*

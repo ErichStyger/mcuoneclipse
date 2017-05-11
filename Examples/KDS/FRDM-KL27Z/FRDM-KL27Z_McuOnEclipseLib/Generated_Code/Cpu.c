@@ -8,7 +8,7 @@
 **     Repository  : Kinetis
 **     Datasheet   : KL25P80M48SF0RM, Rev.3, Sep 2012
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-17, 08:48, # CodeGen: 119
+**     Date/Time   : 2017-05-11, 14:34, # CodeGen: 144
 **     Abstract    :
 **
 **     Settings    :
@@ -286,6 +286,14 @@
 #include "RF1.h"
 #include "CE1.h"
 #include "CSN1.h"
+#include "OW1.h"
+#include "DQ1.h"
+#include "OutputRB1.h"
+#include "InputRB1.h"
+#include "TimeRB1.h"
+#include "ProgramRB1.h"
+#include "Inhr1.h"
+#include "TMR1.h"
 #include "PE_Types.h"
 #include "PE_Error.h"
 #include "PE_Const.h"
@@ -536,6 +544,22 @@ void PE_low_level_init(void)
   /* ### SDK_BitIO "CSN1" init code ... */
   /* Write code here ... */
   /* ### nRF24L01 "RF1" init code ... */
+  /* ### SDK_BitIO "DQ1" init code ... */
+  /* Write code here ... */
+  /* ### RingBuffer "OutputRB1" init code ... */
+  OutputRB1_Init();
+  /* ### RingBuffer "InputRB1" init code ... */
+  InputRB1_Init();
+  /* ### RingBuffer "TimeRB1" init code ... */
+  TimeRB1_Init();
+  /* ### RingBuffer "ProgramRB1" init code ... */
+  ProgramRB1_Init();
+  /* ### SDK_BitIO "Inhr1" init code ... */
+  /* Write code here ... */
+  /* ### OneWire "OW1" init code ... */
+  OW1_Init();
+  /* ### SDK_Timer "TMR1" init code ... */
+  /* Write code here ... */
 }
   /* Flash configuration field */
   __attribute__ ((section (".cfmconfig"))) const uint8_t _cfm[0x10] = {

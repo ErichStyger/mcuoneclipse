@@ -18,4 +18,6 @@
 #define PL_CONFIG_HAS_SPI       (1)
 #define PL_CONFIG_HAS_RADIO     (1 && PL_CONFIG_HAS_SPI)
 
+#define PL_CONFIG_HAS_ONE_WIRE  (1)
+
 #endif /* SOURCE_PLATFORM_H_ */

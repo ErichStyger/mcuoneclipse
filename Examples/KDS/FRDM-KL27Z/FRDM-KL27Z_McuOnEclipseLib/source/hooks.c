@@ -15,6 +15,8 @@
 #if PL_CONFIG_HAS_TIME_DATE
   #include "TmDt1.h"
 #endif
+#include "TMR1.h"
+#include "LEDG.h"
 
 void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName) {
   /* This will get called if a stack overflow is detected during the context
@@ -88,4 +90,9 @@ void PTRC1_OnTraceWrap(void)
 
 BaseType_t  xEnterTicklessIdle(void) {
   return pdTRUE;
+}
+
+void TMR1_OnInterrupt(void)
+{
+  LEDG_Neg();
 }
