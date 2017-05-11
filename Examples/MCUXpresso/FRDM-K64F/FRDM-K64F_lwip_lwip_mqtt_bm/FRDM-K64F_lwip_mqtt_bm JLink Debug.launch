@@ -3,13 +3,15 @@
 <stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="JLink621000000"/>
 <stringAttribute key="com.crt.ctrlcenter.serialNumber" value="USB 621000000"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger." value=""/>
+<stringAttribute key="com.nxp.mcuxpresso.segger.auto.startup" value="auto"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.device" value="MK64FN1M0xxx12"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.endian" value="little"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.halt.target" value="-nohalt"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.if" value="SWD"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.init.register" value="-noir"/>
 <intAttribute key="com.nxp.mcuxpresso.segger.port" value="2331"/>
-<stringAttribute key="com.nxp.mcuxpresso.segger.powertarget 50" value="false"/>
+<booleanAttribute key="com.nxp.mcuxpresso.segger.powertarget 50" value="false"/>
+<stringAttribute key="com.nxp.mcuxpresso.segger.rtos" value="true;GDBServer/RTOSPlugin_FreeRTOS"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.scriptfile" value=""/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.select" value="USB=621000000"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.silent" value="-nosilent"/>
@@ -64,6 +66,6 @@
 </mapAttribute>
 <stringAttribute key="org.eclipse.dsf.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList context=&quot;reserved-for-future-use&quot;/&gt;&#13;&#10;"/>
 <stringAttribute key="process_factory_id" value="org.eclipse.cdt.dsf.gdb.GdbProcessFactory"/>
-<stringAttribute key="semihost" value="true"/>
-<stringAttribute key="start.server" value="true"/>
+<booleanAttribute key="semihost" value="true"/>
+<booleanAttribute key="start.server" value="true"/>
 </launchConfiguration>

@@ -7,7 +7,7 @@
 #include "config.h"
 #if CONFIG_USE_DHCP
 #include "app_dhcp.h"
-#include "lwip_mqtt_bm.h"
+#include <lwip_mqtt.h>
 #include "app_dhcp.h"
 #include "lwip/dhcp.h"
 #include "lwip/prot/dhcp.h"

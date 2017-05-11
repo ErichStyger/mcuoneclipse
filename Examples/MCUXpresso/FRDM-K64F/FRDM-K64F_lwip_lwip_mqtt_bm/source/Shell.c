@@ -25,7 +25,7 @@
 #endif
 #include "TmDt1.h"
 #include "RTT1.h"
-#include "lwip_mqtt_bm.h"
+#include <lwip_mqtt.h>
 
 /* ******************************************************************
  * SHELL Standard I/O
@@ -116,6 +116,20 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
   NULL /* Sentinel */
 };
 
+#if CONFIG_USE_FREERTOS
+static void ShellTask(void *param) {
+  (void)param;
+  int i;
+
+  for(;;) {
+    /* process all I/Os */
+    for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
+      (void)CLS1_ReadAndParseWithCommandTable(ios[i].buf, ios[i].bufSize, ios[i].stdio, CmdParserTable);
+    }
+    vTaskDelay(pdMS_TO_TICKS(50));
+  }
+}
+#else
 void SHELL_Process(void) {
   int i;
 
@@ -124,12 +138,18 @@ void SHELL_Process(void) {
     (void)CLS1_ReadAndParseWithCommandTable(ios[i].buf, ios[i].bufSize, ios[i].stdio, CmdParserTable);
   }
 }
+#endif
 
 void SHELL_Init(void) {
   CONSOLE_Init();
   CLS1_DefaultShellBuffer[0] = '\0';
   CLS1_SetStdio(&SHELL_stdio);
   CLS1_Init();
+#if CONFIG_USE_FREERTOS
+  if (xTaskCreate(ShellTask, "Shell", 5000/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+    for(;;){} /* error */
+  }
+#endif
 }
 
 void SHELL_Deinit(void) {

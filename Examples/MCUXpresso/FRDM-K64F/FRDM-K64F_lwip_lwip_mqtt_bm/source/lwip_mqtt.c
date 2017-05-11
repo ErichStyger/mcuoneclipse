@@ -32,6 +32,7 @@
  * Includes
  ******************************************************************************/
 
+#include <lwip_mqtt.h>
 #include "config.h"
 
 #include "mqtt_opts.h"
@@ -62,7 +63,6 @@
 #include "RTT1.h"
 #include "SYS1.h"
 
-#include "lwip_mqtt_bm.h"
 #if CONFIG_USE_DHCP
   #include "app_dhcp.h"
 #endif
@@ -127,6 +127,48 @@ static ip4_addr_t fsl_netif0_ipaddr, fsl_netif0_netmask, fsl_netif0_gw;
 static ip4_addr_t brokerServerAddress;
 
 static mqtt_client_t mqtt_client; /* descriptor holding all the needed client information */
+
+static xQueueHandle APP_MsgQueue;
+#define APP_MSG_QUEUE_LENGTH        10
+#define APP_MSG_QUEUE_ITEM_SIZE     sizeof(APP_MQTT_Msg_t)
+
+static int SetDynamicString(unsigned char **dstPtr, unsigned char *src) {
+  unsigned char *ptr;
+  size_t bufSize;
+
+  if (src!=NULL) {
+    bufSize = UTIL1_strlen((char*)src)+1; /* calculate buffer size */
+    ptr = pvPortMalloc(bufSize); /* allocate buffer */
+    if (ptr==NULL) {
+      return -1; /* failed */
+    }
+    UTIL1_strcpy((unsigned char*)ptr, bufSize, (unsigned char*)src); /* copy text */
+    *dstPtr = ptr;
+  } else {
+    *dstPtr = NULL;
+  }
+  return 0; /* ok! */
+}
+
+int APP_SendMsg(APP_MQTT_Msg_t *msg) {
+  if (msg->msgKind==APP_MQTT_MSG_PUBLISH) {
+    if (SetDynamicString(&msg->publish.topic, msg->publish.topic)!=0) {
+      return -1; /* failure */
+    }
+    if (SetDynamicString(&msg->publish.payload, msg->publish.payload)!=0) {
+      return -1; /* failure */
+    }
+  }
+  if (msg->msgKind==APP_MQTT_MSG_SUBSCRIBE) {
+    if (SetDynamicString(&msg->publish.topic, msg->publish.topic)!=0) {
+      return -1; /* failure */
+    }
+  }
+  if (xQueueSendToBack(APP_MsgQueue, msg, 500/portTICK_PERIOD_MS)!=pdPASS) {
+    return -1; /* timeout, failed */
+  }
+  return 0; /* ok */
+}
 
 #if MQTT_USE_TLS
 
@@ -343,17 +385,12 @@ static void mqtt_pub_request_cb(void *arg, err_t result) {
   }
 }
 
-static void my_mqtt_publish(mqtt_client_t *client, void *arg) {
-  char payload[16];
-  static int payloadCntr = 0;
+static void my_mqtt_publish(mqtt_client_t *client, const unsigned char *topic, const unsigned char *payload, void *arg) {
   err_t err;
-  const char *topic = CONFIG_TOPIC_NAME;
   u8_t qos = 0; /* 0 (fire-and-forget), 1 (at least once) or 2 (exactly once), see MQTT specification */
   u8_t retain = 0; /* No don't retain such crappy payload... */
 
-  itoa(payloadCntr, payload, 10); /* convert counter to string */
-  payloadCntr++;
-  err = mqtt_publish(client, topic, payload, strlen(payload), qos, retain, mqtt_pub_request_cb, arg);
+  err = mqtt_publish(client, (const char*)topic, payload, strlen((char*)payload), qos, retain, mqtt_pub_request_cb, arg);
   if(err != ERR_OK) {
     LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("Publish err: %d\n", err));
   }
@@ -455,6 +492,29 @@ static const unsigned char *MQTT_State_toStr(MQTT_State_t state) {
 #endif
 
 static void MqttDoStateMachine(mqtt_client_t *mqtt_client, ip4_addr_t *broker_ipaddr) {
+  portBASE_TYPE res;
+  APP_MQTT_Msg_t msg;
+
+  res = xQueueReceive(APP_MsgQueue, &msg, 0);
+  if (res==errQUEUE_EMPTY) {
+    /* nothing in queue */
+  } else {
+    if (msg.msgKind==APP_MQTT_MSG_CONNECT) {
+      MQTT_state = MQTT_STATE_DO_CONNECT;
+    } else if (msg.msgKind==APP_MQTT_MSG_DISCONNECT) {
+      MQTT_state = MQTT_STATE_DO_DISCONNECT;
+    } else if (msg.msgKind==APP_MQTT_MSG_PUBLISH) {
+      LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("Publish to broker\r\n"));
+      my_mqtt_publish(mqtt_client, msg.publish.topic, msg.publish.payload, NULL);
+      if (msg.publish.topic!=NULL) {
+        vPortFree((void*)msg.publish.topic);
+      }
+      if (msg.publish.payload!=NULL) {
+        vPortFree((void*)msg.publish.payload);
+      }
+      MQTT_state = MQTT_STATE_CONNECTED;
+    }
+  }
   switch(MQTT_state) {
     case MQTT_STATE_INIT:
     case MQTT_STATE_IDLE:
@@ -513,11 +573,13 @@ static void MqttDoStateMachine(mqtt_client_t *mqtt_client, ip4_addr_t *broker_ip
       my_mqtt_subscribe(mqtt_client, NULL);
       MQTT_state = MQTT_STATE_CONNECTED;
       break;
+#if 0
     case MQTT_STATE_DO_PUBLISH:
       LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("Publish to broker\r\n"));
       my_mqtt_publish(mqtt_client, NULL);
       MQTT_state = MQTT_STATE_CONNECTED;
       break;
+#endif
     case MQTT_STATE_DO_DISCONNECT:
       LWIP_DEBUGF(MQTT_APP_DEBUG_TRACE,("Disconnect from broker\r\n"));
       mqtt_disconnect(mqtt_client);
@@ -688,15 +750,14 @@ static void StartNetworkInterface(void) {
 
 #if CONFIG_USE_FREERTOS
 static void AppTask(void *param) {
-
   (void)param;
   StartNetworkInterface();
   MQTT_state = MQTT_STATE_IDLE;
   for(;;) {
-     MqttDoStateMachine(&mqtt_client, &brokerServerAddress); /* process state machine */
-     ProcessLWIP(APP_GetNetworkInterface());
-   #if CONFIG_USE_SHELL
-     SHELL_Process();
+    MqttDoStateMachine(&mqtt_client, &brokerServerAddress); /* process state machine */
+    ProcessLWIP(APP_GetNetworkInterface());
+   #if !CONFIG_USE_FREERTOS && CONFIG_USE_SHELL
+    SHELL_Process();
    #endif
 #if 0 /* test high publish frequency */
     if (MQTT_state==MQTT_STATE_CONNECTED) {
@@ -717,7 +778,6 @@ static void AppTask(void *param) {
 static void APP_Run(void) {
   /* testing the LEDs */
 #if CONFIG_USE_SHELL
-  SHELL_Init();
   SHELL_SendString((uint8_t*)"\r\n------------------------------------\r\n");
   SHELL_SendString((uint8_t*)"Application with MQTT on lwip\r\n");
   SHELL_SendString((uint8_t*)"------------------------------------\r\n");
@@ -810,6 +870,12 @@ int main(void) {
   ACCEL_Init();
 #endif
 
+  APP_MsgQueue = xQueueCreate(APP_MSG_QUEUE_LENGTH, APP_MSG_QUEUE_ITEM_SIZE);
+  if (APP_MsgQueue==NULL) {
+    for(;;){} /* out of memory? */
+  }
+  vQueueAddToRegistry(APP_MsgQueue, "AppMsgQueue");
+
   APP_Run();
   for(;;) {}
   return 0;
@@ -829,16 +895,24 @@ unsigned int random32(void) {
 #if CONFIG_USE_SHELL
 
 static uint8_t ShellDoConnect(const CLS1_StdIOType *io) {
+  APP_MQTT_Msg_t msg;
+
   if (MQTT_state!=MQTT_STATE_IDLE) {
     CLS1_SendStr((uint8_t*)"ERROR: broker is already connected?\r\n", io->stdErr);
     return ERR_FAILED;
   }
   CLS1_SendStr((uint8_t*)"Initiating connection to broker...\r\n", io->stdOut);
-  MQTT_state = MQTT_STATE_DO_CONNECT;
+  msg.msgKind = APP_MQTT_MSG_CONNECT;
+  if (!APP_SendMsg(&msg)) {
+    CLS1_SendStr((uint8_t*)"ERROR: Failed sending connect message!\r\n", io->stdOut);
+    return ERR_FAILED;
+  }
   return ERR_OK;
 }
 
 static uint8_t ShellDoDisconnect(const CLS1_StdIOType *io) {
+  APP_MQTT_Msg_t msg;
+
   if (!(MQTT_state==MQTT_STATE_CONNECTED
 #if MQTT_USE_TLS
         || MQTT_state==MQTT_STATE_DO_TLS_HANDSHAKE
@@ -851,27 +925,46 @@ static uint8_t ShellDoDisconnect(const CLS1_StdIOType *io) {
     return ERR_FAILED;
   }
   CLS1_SendStr((uint8_t*)"Initiating disconnect from broker...\r\n", io->stdOut);
-  MQTT_state = MQTT_STATE_DO_DISCONNECT;
+  msg.msgKind = APP_MQTT_MSG_DISCONNECT;
+  if (!APP_SendMsg(&msg)) {
+    CLS1_SendStr((uint8_t*)"ERROR: Failed sending disconnect message!\r\n", io->stdOut);
+    return ERR_FAILED;
+  }
   return ERR_OK;
 }
 
-static uint8_t ShellDoPublish(const CLS1_StdIOType *io) {
+static uint8_t ShellDoPublish(const CLS1_StdIOType *io, unsigned char *topic, unsigned char *payload) {
+  APP_MQTT_Msg_t msg;
+
   if (MQTT_state!=MQTT_STATE_CONNECTED) {
     CLS1_SendStr((uint8_t*)"ERROR: broker is not connected?\r\n", io->stdErr);
     return ERR_FAILED;
   }
   CLS1_SendStr((uint8_t*)"Initiating PUBLISH to broker...\r\n", io->stdOut);
-  MQTT_state = MQTT_STATE_DO_PUBLISH;
+  msg.msgKind = APP_MQTT_MSG_PUBLISH;
+  msg.publish.topic = topic;
+  msg.publish.payload = payload;
+  if (APP_SendMsg(&msg)!=0) {
+    CLS1_SendStr((uint8_t*)"ERROR: Failed sending publish message!\r\n", io->stdOut);
+    return ERR_FAILED;
+  }
   return ERR_OK;
 }
 
-static uint8_t ShellDoSubscribe(const CLS1_StdIOType *io) {
+static uint8_t ShellDoSubscribe(const CLS1_StdIOType *io, unsigned char *topic) {
+  APP_MQTT_Msg_t msg;
+
   if (MQTT_state!=MQTT_STATE_CONNECTED) {
     CLS1_SendStr((uint8_t*)"ERROR: broker is not connected?\r\n", io->stdErr);
     return ERR_FAILED;
   }
   CLS1_SendStr((uint8_t*)"Initiating SUBSCRIBE to broker...\r\n", io->stdOut);
-  MQTT_state = MQTT_STATE_DO_SUBSCRIBE;
+  msg.msgKind = APP_MQTT_MSG_SUBSCRIBE;
+  msg.subscribe.topic = topic;
+  if (!APP_SendMsg(&msg)) {
+    CLS1_SendStr((uint8_t*)"ERROR: Failed sending subscribe message!\r\n", io->stdOut);
+    return ERR_FAILED;
+  }
   return ERR_OK;
 }
 
@@ -937,11 +1030,17 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
 }
 
 uint8_t MQTT_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io) {
+  const unsigned char *p;
+  uint8_t topicBuf[48];
+  uint8_t payloadBuf[48];
+  uint8_t res;
+  size_t lenRead, lenWritten;
+
   if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "mqtt help")==0) {
     CLS1_SendHelpStr((unsigned char*)"mqtt", (const unsigned char*)"Group of mqtt commands\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  connect", (const unsigned char*)"Connect to the broker\r\n", io->stdOut);
-    CLS1_SendHelpStr((unsigned char*)"  publish", (const unsigned char*)"Publish topic to broker\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  publish <topic> <payload>", (const unsigned char*)"Publish topic to broker\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  subscribe", (const unsigned char*)"Subscribe to topic on broker\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  disconnect", (const unsigned char*)"Disconnect from the broker\r\n", io->stdOut);
     *handled = TRUE;
@@ -952,12 +1051,25 @@ uint8_t MQTT_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
   } else if (UTIL1_strcmp((char*)cmd, "mqtt connect")==0) {
     *handled = TRUE;
     return ShellDoConnect(io);
-  } else if (UTIL1_strcmp((char*)cmd, "mqtt publish")==0) {
+  } else if (UTIL1_strncmp((char*)cmd, "mqtt publish ", sizeof("mqtt publish ")-1)==0) {
+    p = cmd + sizeof("mqtt publish ")-1;
     *handled = TRUE;
-    return ShellDoPublish(io);
+    res = UTIL1_ReadEscapedName(p, topicBuf, sizeof(topicBuf), &lenRead, &lenWritten, NULL);
+    if (res!=ERR_OK || lenRead==0 || lenWritten==0) {
+      CLS1_SendStr((uint8_t*)"ERROR: Failed reading topic!\r\n", io->stdErr);
+      return res;
+    }
+    p += lenRead+1;
+    res = UTIL1_ReadEscapedName(p, payloadBuf, sizeof(payloadBuf), &lenRead, &lenWritten, NULL);
+    if (res!=ERR_OK || lenRead==0 || lenWritten==0) {
+      CLS1_SendStr((uint8_t*)"ERROR: Failed reading payload!\r\n", io->stdErr);
+      return res;
+    }
+   // return ShellDoPublish(io, CONFIG_TOPIC_NAME, "1234");
+    return ShellDoPublish(io, topicBuf, payloadBuf);
   } else if (UTIL1_strcmp((char*)cmd, "mqtt subscribe")==0) {
     *handled = TRUE;
-    return ShellDoSubscribe(io);
+    return ShellDoSubscribe(io, CONFIG_TOPIC_NAME);
   } else if (UTIL1_strcmp((char*)cmd, "mqtt disconnect")==0) {
     *handled = TRUE;
     return ShellDoDisconnect(io);
