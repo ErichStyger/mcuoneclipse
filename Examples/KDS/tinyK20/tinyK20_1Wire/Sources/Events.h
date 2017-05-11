@@ -39,27 +39,19 @@
 #include "WAIT1.h"
 #include "MCUC1.h"
 #include "OW1.h"
-#include "DQ1.h"
+#include "Inhr1.h"
+#include "BitIoLdd4.h"
 #include "TU1.h"
 #include "OutputRB1.h"
 #include "InputRB1.h"
 #include "TimeRB1.h"
 #include "ProgramRB1.h"
-#include "Bit1.h"
-#include "BitIoLdd2.h"
-#include "Bit2.h"
+#include "Inhr2.h"
 #include "BitIoLdd3.h"
 #include "KIN1.h"
 #include "UTIL1.h"
 #include "CS1.h"
 #include "DS1.h"
-#include "SPI1.h"
-#include "Clock1.h"
-#include "BitIoLdd6.h"
-#include "Input1.h"
-#include "BitIoLdd7.h"
-#include "Output1.h"
-#include "BitIoLdd8.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -193,21 +185,6 @@ void InputRB1_OnClear(void);
 **     Description :
 **         Optional event called in case of Clear() call.
 **     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-
-void OW1_OnProgramEvent(uint8_t key4);
-/*
-** ===================================================================
-**     Event       :  OW1_OnProgramEvent (module Events)
-**
-**     Component   :  OW1 [OneWire]
-**     Description :
-**         
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**         key4            - Key to identify the source of the event
 **     Returns     : Nothing
 ** ===================================================================
 */

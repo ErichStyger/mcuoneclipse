@@ -199,24 +199,6 @@ void InputRB1_OnClear(void)
 
 /*
 ** ===================================================================
-**     Event       :  OW1_OnProgramEvent (module Events)
-**
-**     Component   :  OW1 [OneWire]
-**     Description :
-**         
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**         key4            - Key to identify the source of the event
-**     Returns     : Nothing
-** ===================================================================
-*/
-void OW1_OnProgramEvent(uint8_t key4)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
 **     Event       :  OW1_OnWaitEnd (module Events)
 **
 **     Component   :  OW1 [OneWire]

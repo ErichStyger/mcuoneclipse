@@ -70,11 +70,11 @@
 #include "BitIoLdd4.h"
 #include "OW1.h"
 #include "DQ1.h"
-#include "TU1.h"
 #include "OutputRB1.h"
 #include "InputRB1.h"
 #include "TimeRB1.h"
 #include "ProgramRB1.h"
+#include "DbgRd1.h"
 #include "DS1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
@@ -85,6 +85,9 @@
 #include "Application.h"
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
+uint8_t crc;
+uint8_t data[] = {0x28, 0x87, 0x99, 0x37, 0x09, 0x00, 0x00};
+
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
@@ -96,6 +99,8 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
+  crc = OW1_CalcCRC(&data[0], sizeof(data));
+
   for(i=0;i<15;i++) { /* blink to indicate power up */
     LED1_Neg();
     WAIT1_Waitms(20);

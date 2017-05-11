@@ -36,27 +36,19 @@
 #include "WAIT1.h"
 #include "MCUC1.h"
 #include "OW1.h"
-#include "DQ1.h"
+#include "Inhr1.h"
+#include "BitIoLdd4.h"
 #include "TU1.h"
 #include "OutputRB1.h"
 #include "InputRB1.h"
 #include "TimeRB1.h"
 #include "ProgramRB1.h"
-#include "Bit1.h"
-#include "BitIoLdd2.h"
-#include "Bit2.h"
+#include "Inhr2.h"
 #include "BitIoLdd3.h"
 #include "KIN1.h"
 #include "UTIL1.h"
 #include "CS1.h"
 #include "DS1.h"
-#include "SPI1.h"
-#include "Clock1.h"
-#include "BitIoLdd6.h"
-#include "Input1.h"
-#include "BitIoLdd7.h"
-#include "Output1.h"
-#include "BitIoLdd8.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -117,6 +109,9 @@ static void ReadTemp(void) {
   int32_t temperature;
   float f;
   bool res;
+
+  res = DS1_ReadRom(0);
+  WAIT1_Waitms(5);
 
   res = DS1_StartConversion(0);
   //WAIT1_Waitms(5);
