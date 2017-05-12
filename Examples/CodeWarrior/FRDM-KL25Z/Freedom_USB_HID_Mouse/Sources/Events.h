@@ -54,6 +54,7 @@
 #include "GI2C1.h"
 #include "I2C2.h"
 #include "MMA1.h"
+#include "MCUC1.h"
 
 #ifdef __cplusplus
 extern "C" {

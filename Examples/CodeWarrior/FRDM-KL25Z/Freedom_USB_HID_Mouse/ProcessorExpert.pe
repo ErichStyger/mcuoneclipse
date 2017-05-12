@@ -3,7 +3,7 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>Erich Styger Local</SavedBy>
-    <ModificationStamp>65</ModificationStamp>
+    <ModificationStamp>66</ModificationStamp>
     <Date>2017-05-11</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>154</ProjectCompNumb>
+    <ProjectCompNumb>156</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -41,6 +41,13 @@
     <ProjectMainModule>ProcessorExpert</ProjectMainModule>
     <SdkSourceFilesDirectory />
   </Options>
+  <UserFolder>
+    <UserFolderName />
+    <NodeName>Referenced_Components</NodeName>
+    <CompNumb>155</CompNumb>
+    <FolderType>Beans</FolderType>
+    <ExpandedAll>true</ExpandedAll>
+  </UserFolder>
   <CPU>
     <BeanType>MKL25Z128LK4</BeanType>
     <Name>Cpu</Name>
@@ -4338,7 +4345,7 @@
       <Count>0</Count>
     </BoolList_FpgaConfig>
     <BoolList_BeanConfig>
-      <Count>11</Count>
+      <Count>12</Count>
       <ItemId0>2</ItemId0>
       <Value0>true</Value0>
       <ItemId1>30</ItemId1>
@@ -4361,6 +4368,8 @@
       <Value9>true</Value9>
       <ItemId10>147</ItemId10>
       <Value10>true</Value10>
+      <ItemId11>154</ItemId11>
+      <Value11>true</Value11>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
       <Count>0</Count>
@@ -5106,7 +5115,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>MCUC1</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -5897,7 +5906,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>MCUC1</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -6688,7 +6697,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>MCUC1</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -6901,7 +6910,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>MCUC1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>useCycleCounter</ItemSymbol>
@@ -10361,7 +10370,7 @@
                     <ItemSymbol>sdk</ItemSymbol>
                     <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
-                    <Value />
+                    <Value>MCUC1</Value>
                     <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
                   </ItemState>
                 </Properties>
@@ -10850,7 +10859,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>MCUC1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>InitializationGrp</ItemSymbol>
@@ -11544,7 +11553,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>MCUC1</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -11709,7 +11718,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>MCUC1</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -13410,7 +13419,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>MCUC1</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -13769,6 +13778,53 @@
         <Value />
       </ItemState>
     </Events>
+  </Bean>
+  <Bean>
+    <BeanType>McuLibConfig</BeanType>
+    <Name>MCUC1</Name>
+    <CompNumb>154</CompNumb>
+    <CompEnabled>true</CompEnabled>
+    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
+    <IconName>McuLibConfig</IconName>
+    <UserFolderName>Referenced_Components</UserFolderName>
+    <Comment lines_count="0" />
+    <Template />
+    <BeanVersion>01.008</BeanVersion>
+    <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Properties>
+      <ItemState>
+        <ItemSymbol>DeviceName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>MCUC1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SDK</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>1</Index>
+        <EnumSymbVal>ProcessorExpertSDK</EnumSymbVal>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ConfigFilesFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LibFilesFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+    </Properties>
+    <Methods />
+    <Events />
   </Bean>
 </PEproject>
 

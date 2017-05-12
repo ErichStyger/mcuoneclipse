@@ -14,7 +14,7 @@
 #include "TmDt1.h"
 #include "KIN1.h"
 #include "I2CSPY1.h"
-#include "MMA1.h"
+//#include "MMA1.h"
 #include "CDC1.h"
 #if PL_CONFIG_HAS_SEGGER_RTT
   #include "RTT1.h"
@@ -31,7 +31,7 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
   KIN1_ParseCommand,
   TmDt1_ParseCommand,
   I2CSPY1_ParseCommand,
-  MMA1_ParseCommand,
+//  MMA1_ParseCommand,
 #if PL_CONFIG_HAS_1_WIRE
 #if DS1_PARSE_COMMAND_ENABLED
   DS1_ParseCommand,

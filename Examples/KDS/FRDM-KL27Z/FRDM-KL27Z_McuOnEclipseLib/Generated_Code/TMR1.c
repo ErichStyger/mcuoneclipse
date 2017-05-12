@@ -4,16 +4,21 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : SDK_Timer
-**     Version     : Component 01.014, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.017, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-11, 18:40, # CodeGen: 149
+**     Date/Time   : 2017-05-12, 09:06, # CodeGen: 150
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : TMR1
 **          SDK                                            : MCUC1
 **          Timer Name                                     : TPM2
+**          Init                                           : 
+**            Period (us)                                  : 1000
+**            Enable                                       : yes
+**            Enable IRQ                                   : yes
+**            Enable Overflow IRQ                          : yes
 **     Contents    :
 **         Enable             - void TMR1_Enable(void);
 **         Disable            - void TMR1_Disable(void);
@@ -225,10 +230,22 @@ void TMR1_Init(void)
   /* Initialize TPM module */
   TPM_Init(TMR1_CONFIG_TIMER_NAME, &tpmInfo);
 
-  TMR1_SetPeriodUS(1000); /* set initial period */
-  TMR1_EnableOverflowIRQ(); /* enable tower overflow interrupt */
-  TMR1_EnableIRQ(); /* enable timer interrupt */
+  TMR1_SetPeriodUS(TMR1_CONFIG_TIMER_INIT_PERIOD_US); /* set initial period */
+#if TMR1_CONFIG_TIMER_INIT_ENABLE_OVERFLOW_IRQ
+  TMR1_EnableOverflowIRQ(); /* enable timer overflow interrupt */
+#else
+  TMR1_DisableOverflowIRQ(); /* disable timer overflow interrupt */
+#endif
+#if TMR1_CONFIG_TIMER_INIT_ENABLE_IRQ
+  TMR1_EnableIRQ(); /* enable timer interrupt in NVIC */
+#else
+  TMR1_DisableIRQ(); /* disable timer interrupt in NVIC */
+#endif
+#if TMR1_CONFIG_TIMER_INIT_ENABLE_TIMER
   TMR1_Enable(); /* start timer */
+#else
+  TMR1_Disable(); /* do not start timer */
+#endif
 }
 
 /*
@@ -242,7 +259,7 @@ void TMR1_Init(void)
 */
 void TMR1_Deinit(void)
 {
-  /* If you see this comment in generated code, it means that method is not implemented yet ... */
+  TMR1_Disable(); /* stop timer */
 }
 
 /* END TMR1. */

@@ -3,7 +3,7 @@
   <Header>
     <Name>tinyK20_1Wire</Name>
     <SavedBy>Erich Styger Local</SavedBy>
-    <ModificationStamp>44</ModificationStamp>
+    <ModificationStamp>46</ModificationStamp>
     <Date>2017-03-11</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -8243,7 +8243,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.099</BeanVersion>
+    <BeanVersion>01.105</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -8256,8 +8256,7 @@
         <ItemSymbol>DataPin</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>DataPin</Value>
-        <RegCompType>DataPin</RegCompType>
+        <RegCompType>BitIO</RegCompType>
         <RegCompRepository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</RegCompRepository>
         <InheritedComponentState>
           <Repository>file:/${ProcessorExpert_loc}/Repositories/Kinetis_Repository</Repository>
@@ -8577,11 +8576,11 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>NegVal</ItemSymbol>
-                    <ReadOnly>true</ReadOnly>
+                    <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-                    <Index>0</Index>
-                    <Value>true</Value>
+                    <Index>1</Index>
+                    <Value>false</Value>
                     <LastSelection>false</LastSelection>
                     <LastUserSel>no</LastUserSel>
                     <UsrMethodName>NegVal</UsrMethodName>
@@ -8726,7 +8725,7 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>SetDir</ItemSymbol>
-              <ReadOnly>true</ReadOnly>
+              <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <Index>0</Index>
@@ -8737,29 +8736,29 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>SetInput</ItemSymbol>
-              <ReadOnly>true</ReadOnly>
+              <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>false</LastSelection>
-              <LastUserSel>no</LastUserSel>
+              <LastUserSel>yes</LastUserSel>
               <UsrMethodName>SetInput</UsrMethodName>
             </ItemState>
             <ItemState>
               <ItemSymbol>SetOutput</ItemSymbol>
-              <ReadOnly>true</ReadOnly>
+              <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <Index>0</Index>
               <Value>true</Value>
               <LastSelection>false</LastSelection>
-              <LastUserSel>no</LastUserSel>
+              <LastUserSel>yes</LastUserSel>
               <UsrMethodName>SetOutput</UsrMethodName>
             </ItemState>
             <ItemState>
               <ItemSymbol>GetVal</ItemSymbol>
-              <ReadOnly>true</ReadOnly>
+              <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <Index>0</Index>
@@ -8770,7 +8769,7 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>PutVal</ItemSymbol>
-              <ReadOnly>true</ReadOnly>
+              <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <Index>0</Index>
@@ -8781,7 +8780,7 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>ClrVal</ItemSymbol>
-              <ReadOnly>true</ReadOnly>
+              <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <Index>0</Index>
@@ -8792,7 +8791,7 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>SetVal</ItemSymbol>
-              <ReadOnly>true</ReadOnly>
+              <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <Index>0</Index>
@@ -8803,11 +8802,11 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>NegVal</ItemSymbol>
-              <ReadOnly>true</ReadOnly>
+              <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
-              <Value>true</Value>
+              <Index>1</Index>
+              <Value>false</Value>
               <LastSelection>false</LastSelection>
               <LastUserSel>no</LastUserSel>
               <UsrMethodName>NegVal</UsrMethodName>
@@ -8847,6 +8846,15 @@
           </Methods>
           <Events />
         </InheritedComponentState>
+        <Index>2</Index>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TimerLDDGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>TU</ItemSymbol>
@@ -9782,6 +9790,20 @@
             </ItemState>
           </Events>
         </InheritedComponentState>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TimerSDKGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TUSDK</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>RTOSGroup</ItemSymbol>
@@ -11706,6 +11728,14 @@
         <Value>MCUC1</Value>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Symbol</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>DQ</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -13064,7 +13094,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.024</BeanVersion>
+    <BeanVersion>01.003</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>

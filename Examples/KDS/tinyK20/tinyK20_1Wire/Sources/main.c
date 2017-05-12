@@ -57,17 +57,17 @@
 /* User includes (#include below this line is not maintained by Processor Expert) */
 
 static void Test(void) {
-  bool res;
+  uint8_t res;
   uint8_t data, count;
 
   res = OW1_SendReset();
-  if (!res) {
+  if (res!=ERR_OK) {
     for(;;){}
   }
   while(OW1_isBusy()) {   /* wait */  }
   WAIT1_Waitms(1);
   res = OW1_SendByte(0x33);
-  if (!res) {
+  if (res!=ERR_OK) {
     for(;;){}
   }
   while(OW1_isBusy()) {   /* wait */  }
@@ -78,12 +78,12 @@ static void Test(void) {
   WAIT1_Waitms(1);
 
   count = OW1_Count();
-  if (!res || count!=1) {
+  if (res!=ERR_OK || count!=1) {
      for(;;){}
    }
   WAIT1_Waitms(1);
   res = OW1_GetByte(&data);
-  if (!res) {
+  if (res!=ERR_OK) {
      for(;;){}
    }
   WAIT1_Waitms(1);
@@ -92,15 +92,15 @@ static void Test(void) {
 #define RC_READ_ROM          0x33
 
 static void TestDS(void) {
-  bool res;
-  char *romCode;
+  uint8_t res;
+  uint8_t *romCode;
 
    res = DS1_ReadRom(0);
-   if (!res) {
+   if (res!=ERR_OK) {
      for(;;){}
    }
    WAIT1_Waitms(5);
-   romCode = DS1_GetRomCode(0);
+   res = DS1_GetRomCode(0, &romCode);
    WAIT1_Waitms(5);
    WAIT1_Waitms(5);
 }
@@ -108,7 +108,7 @@ static void TestDS(void) {
 static void ReadTemp(void) {
   int32_t temperature;
   float f;
-  bool res;
+  uint8_t res;
 
   res = DS1_ReadRom(0);
   WAIT1_Waitms(5);
@@ -117,8 +117,8 @@ static void ReadTemp(void) {
   //WAIT1_Waitms(5);
   res = DS1_ReadTemperature(0);
   //WAIT1_Waitms(5);
-  temperature = DS1_GetTemperatureRaw(0);
-  f = DS1_GetTemperatureFloat(0);
+  res = DS1_GetTemperatureRaw(0, &temperature);
+  res = DS1_GetTemperatureFloat(0, &f);
   WAIT1_Waitms(5);
 }
 

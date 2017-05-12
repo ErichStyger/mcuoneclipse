@@ -8,7 +8,7 @@
 **     Version     : Component 01.103, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-11, 16:35, # CodeGen: 146
+**     Date/Time   : 2017-05-12, 09:06, # CodeGen: 150
 **     Abstract    :
 **
 This is a component implementing the 1-Wire protocol.
@@ -209,7 +209,7 @@ static void TU_SetTime(uint32_t us) {
   TU_Enable();
 }
 
-void OW1_OnTimerRestart(void) {
+static void OW1_OnTimerRestart(void) {
   switch(Data.Step) {
     case TS_NOTHING:
       if(ProgramRB1_NofElements()==0) {

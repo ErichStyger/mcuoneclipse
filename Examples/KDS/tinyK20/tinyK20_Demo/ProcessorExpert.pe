@@ -3,7 +3,7 @@
   <Header>
     <Name>tinyK20_Demo</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>150</ModificationStamp>
+    <ModificationStamp>164</ModificationStamp>
     <Date>2015-06-19</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>109</ProjectCompNumb>
+    <ProjectCompNumb>116</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -5319,7 +5319,7 @@
       <ItemId21>54</ItemId21>
       <Value21>true</Value21>
       <ItemId22>56</ItemId22>
-      <Value22>true</Value22>
+      <Value22>false</Value22>
       <ItemId23>57</ItemId23>
       <Value23>true</Value23>
       <ItemId24>58</ItemId24>
@@ -30669,7 +30669,7 @@
     <BeanType>MMA8451Q</BeanType>
     <Name>MMA1</Name>
     <CompNumb>56</CompNumb>
-    <CompEnabled>true</CompEnabled>
+    <CompEnabled>false</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>MMA8451Q</IconName>
     <UserFolderName />
@@ -33633,8 +33633,8 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>1</Index>
-              <Value>false</Value>
+              <Index>0</Index>
+              <Value>true</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>InitValue</ItemSymbol>
@@ -33904,12 +33904,12 @@
         <Index>2</Index>
       </ItemState>
       <ItemState>
-        <ItemSymbol>Symbol</ItemSymbol>
+        <ItemSymbol>TimerLDDGroup</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>TU</ItemSymbol>
@@ -34465,10 +34465,10 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>1</Index>
-              <Value>false</Value>
+              <Index>0</Index>
+              <Value>true</Value>
               <LastSelection>true</LastSelection>
-              <LastUserSel>no</LastUserSel>
+              <LastUserSel>yes</LastUserSel>
               <UsrMethodName>Deinit</UsrMethodName>
             </ItemState>
             <ItemState>
@@ -34845,6 +34845,20 @@
             </ItemState>
           </Events>
         </InheritedComponentState>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TimerSDKGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TUSDK</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>RTOSGroup</ItemSymbol>
@@ -36843,7 +36857,6 @@
           <Events />
         </InheritedComponentState>
         <Index>1</Index>
-        <Value>DbgReadPin</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>CS</ItemSymbol>
@@ -36856,6 +36869,14 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>MCUC1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Symbol</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>DQ</ItemSymbol>
@@ -37587,7 +37608,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.025</BeanVersion>
+    <BeanVersion>01.003</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -37601,13 +37622,13 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>deviceCount</ItemSymbol>
         <ReadOnly>false</ReadOnly>
-        <ListItemCount>1</ListItemCount>
+        <ListItemCount>2</ListItemCount>
         <UserReadOnly>false</UserReadOnly>
         <Expanded>true</Expanded>
       </ItemState>
@@ -37673,6 +37694,70 @@
         <ItemSymbol>rom70</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>117</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>itemSensor1</ItemSymbol>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>rom01</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>40</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>rom11</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>31</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>rom21</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>249</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>rom31</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>53</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>rom41</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>9</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>rom51</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>rom61</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>HEX</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>rom71</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>115</Value>
         <Base>HEX</Base>
       </ItemState>
       <ItemState>
@@ -37796,13 +37881,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ConvertAll</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
+        <Index>1</Index>
+        <Value>false</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>ConvertAll</UsrMethodName>
       </ItemState>
       <ItemState>

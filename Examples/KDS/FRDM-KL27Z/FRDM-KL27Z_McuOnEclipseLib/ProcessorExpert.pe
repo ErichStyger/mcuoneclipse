@@ -3,7 +3,7 @@
   <Header>
     <Name>FRDM-KL27Z_McuOnEclipseLib</Name>
     <SavedBy>Erich Styger</SavedBy>
-    <ModificationStamp>93</ModificationStamp>
+    <ModificationStamp>94</ModificationStamp>
     <Date>2016-07-01</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>157</ProjectCompNumb>
+    <ProjectCompNumb>159</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -4498,7 +4498,7 @@
       <ItemId23>115</ItemId23>
       <Value23>true</Value23>
       <ItemId24>124</ItemId24>
-      <Value24>false</Value24>
+      <Value24>true</Value24>
       <ItemId25>152</ItemId25>
       <Value25>true</Value25>
     </BoolList_BeanConfig>
@@ -4645,7 +4645,7 @@
     <Methods>
       <ItemState>
         <ItemSymbol>strcpy</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4657,7 +4657,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strcat</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4669,7 +4669,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strcatPad</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4681,7 +4681,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>chcat</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4693,7 +4693,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Num8sToStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4705,7 +4705,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Num8uToStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4717,7 +4717,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Num16sToStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4729,7 +4729,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Num16uToStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4741,7 +4741,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Num32uToStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4753,7 +4753,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Num32sToStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4765,7 +4765,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>NumFloatToStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4777,7 +4777,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Num16sToStrFormatted</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4789,7 +4789,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Num16uToStrFormatted</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4801,7 +4801,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Num32uToStrFormatted</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4813,7 +4813,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Num32sToStrFormatted</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4825,7 +4825,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strcatNum8u</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4837,7 +4837,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strcatNum8s</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4849,7 +4849,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strcatNum16u</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4861,7 +4861,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strcatNum16s</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4873,7 +4873,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strcatNum32u</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4885,7 +4885,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strcatNum32s</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4897,7 +4897,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strcatNum16uFormatted</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4909,7 +4909,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strcatNum16sFormatted</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4921,7 +4921,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strcatNum32uFormatted</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4933,7 +4933,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strcatNum32sFormatted</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4945,7 +4945,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strcatNum8Hex</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4957,7 +4957,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strcatNum16Hex</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4969,7 +4969,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strcatNum24Hex</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4981,7 +4981,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strcatNum32Hex</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4993,7 +4993,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strcatNum32sDotValue100</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5005,7 +5005,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strcatNumFloat</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5017,7 +5017,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>IsLeapYear</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5029,7 +5029,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>WeekDay</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5041,7 +5041,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ReadEscapedName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5053,7 +5053,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>xatoi</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5065,7 +5065,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ScanDate</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5077,7 +5077,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ScanTime</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5089,7 +5089,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ScanDecimal8uNumber</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5101,7 +5101,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ScanDecimal8sNumber</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5113,7 +5113,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ScanDecimal16uNumber</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5125,7 +5125,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ScanDecimal16sNumber</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5137,7 +5137,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ScanDecimal32uNumber</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5149,7 +5149,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ScanDecimal32sNumber</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5161,7 +5161,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ScanDecimal32sDotNumber</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5173,7 +5173,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ScanHex8uNumber</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5185,7 +5185,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ScanHex8uNumberNoPrefix</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5197,7 +5197,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ScanHex16uNumber</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5209,7 +5209,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ScanHex32uNumber</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5221,7 +5221,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ScanSeparatedNumbers</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5233,7 +5233,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ScanDoubleQuotedString</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5245,7 +5245,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strcmp</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5257,7 +5257,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strncmp</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5269,7 +5269,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strFind</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5281,7 +5281,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strtailcmp</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5293,7 +5293,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strlen</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5305,7 +5305,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>strCutTail</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5317,7 +5317,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>GetValue16LE</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5329,7 +5329,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>GetValue24LE</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5341,7 +5341,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>GetValue32LE</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5353,7 +5353,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>SetValue16LE</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5365,7 +5365,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>SetValue24LE</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5377,7 +5377,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>SetValue32LE</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5389,7 +5389,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>map</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5401,7 +5401,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>constrain</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5413,7 +5413,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>random</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5425,7 +5425,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>randomSetSeed</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5437,7 +5437,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Deinit</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -5449,7 +5449,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Init</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -11915,7 +11915,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>printfIO</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
@@ -11926,7 +11926,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>printf</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
@@ -12146,7 +12146,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>SendCharFct</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
@@ -22788,11 +22788,11 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>OnBlockReceived</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
       </ItemState>
@@ -22820,11 +22820,11 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>OnSendEnd</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
       </ItemState>
@@ -22836,11 +22836,11 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>OnSendedReset</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
       </ItemState>
@@ -22857,7 +22857,7 @@
     <BeanType>DS18B20</BeanType>
     <Name>DS1</Name>
     <CompNumb>124</CompNumb>
-    <CompEnabled>false</CompEnabled>
+    <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>CPU_CHIP2</IconName>
     <UserFolderName />
@@ -23210,7 +23210,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.014</BeanVersion>
+    <BeanVersion>01.017</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -23233,6 +23233,58 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>TPM2</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InitGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InitPeriodUS</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>1000</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InitEnableTimer</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InitEnableIRQ</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InitEnableOverflowIRQ</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>InitStartTimer</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>TimerNumber</ItemSymbol>

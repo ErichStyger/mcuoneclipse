@@ -4,16 +4,21 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : SDK_Timer
-**     Version     : Component 01.014, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.017, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-11, 18:40, # CodeGen: 149
+**     Date/Time   : 2017-05-12, 09:06, # CodeGen: 150
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : TMR1
 **          SDK                                            : MCUC1
 **          Timer Name                                     : TPM2
+**          Init                                           : 
+**            Period (us)                                  : 1000
+**            Enable                                       : yes
+**            Enable IRQ                                   : yes
+**            Enable Overflow IRQ                          : yes
 **     Contents    :
 **         Enable             - void TMR1_Enable(void);
 **         Disable            - void TMR1_Disable(void);
