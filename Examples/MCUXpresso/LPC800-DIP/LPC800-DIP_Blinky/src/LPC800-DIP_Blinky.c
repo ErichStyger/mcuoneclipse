@@ -47,7 +47,7 @@ static void delay(void) {
 	volatile uint32_t cntr = 0x80000;
 	while(cntr>0) { /* burn some cycles */
 		cntr--;
-		asm("nop");
+		__asm volatile ("nop\r\n");
 	}
 }
 
