@@ -8,7 +8,7 @@
 **     Version     : Component 01.109, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-14, 21:15, # CodeGen: 163
+**     Date/Time   : 2017-05-14, 21:22, # CodeGen: 165
 **     Abstract    :
 **
 This is a component implementing the 1-Wire protocol.
@@ -122,6 +122,14 @@ typedef enum {
   OWERR_BUSY,
   OWERR_CRC
 } OW1_Error;
+
+/* events */
+void OW1_OnBlockReceived(void);
+void OW1_OnError(void);
+void OW1_OnProgramEvent(uint8_t key);
+void OW1_OnWaitEnd(uint8_t key);
+void OW1_OnSendEnd(void);
+void OW1_OnSendedReset(void);
 
 
 /*
