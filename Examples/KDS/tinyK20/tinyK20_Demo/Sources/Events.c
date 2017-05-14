@@ -401,7 +401,7 @@ void DS1_OnRomRead(uint8_t sensor_index, uint8_t *rom_code)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void OW1_OnProgramEvent(uint8_t key4)
+void OW1_OnProgramEvent(uint8_t key)
 {
   /* Write your code here ... */
 }
@@ -424,6 +424,7 @@ void OW1_OnWaitEnd(uint8_t key2)
 {
   /* Write your code here ... */
 }
+
 
 /* END Events */
 

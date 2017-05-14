@@ -22,11 +22,11 @@ extern void main();
 #endif
 extern char __SP_INIT[];
 
+extern void __init_registers();
+extern void __init_hardware();
+extern void __init_user();
+
 extern void __copy_rom_sections_to_ram(void);
-extern void __copy_rom_section(unsigned long dst, unsigned long src, unsigned long size);
-extern void __attribute__ ((weak)) __init_hardware(void);
-extern void __attribute__ ((weak)) __init_registers(void);
-extern void __attribute__ ((weak)) __init_user(void);
 
 /* format of the ROM table info entry ... */
 typedef struct RomInfo {

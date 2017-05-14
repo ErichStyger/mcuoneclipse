@@ -14,7 +14,9 @@
 #include "LEDR.h"
 #include "LEDG.h"
 #include "LEDB.h"
-#include "KIN1.h"
+#if PL_CONFIG_HAS_KINETIS_TOOLS
+  #include "KIN1.h"
+#endif
 #if PL_CONFIG_HAS_TIME_DATE
   #include "TmDt1.h"
 #else
@@ -29,6 +31,9 @@
   #include "MMA1.h"
 #else
   #define MMA1_PARSE_COMMAND_ENABLED 0
+#endif
+#if PL_CONFIG_HAS_ONE_WIRE
+  #include "DS1.h"
 #endif
 
 void SHELL_SendString(unsigned char *msg) {
@@ -50,7 +55,7 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if LEDB_PARSE_COMMAND_ENABLED
   LEDB_ParseCommand,
 #endif
-#if KIN1_PARSE_COMMAND_ENABLED
+#if PL_CONFIG_HAS_KINETIS_TOOLS && KIN1_PARSE_COMMAND_ENABLED
   KIN1_ParseCommand,
 #endif
 #if TmDt1_PARSE_COMMAND_ENABLED
@@ -61,6 +66,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if I2CSPY1_PARSE_COMMAND_ENABLED
   I2CSPY1_ParseCommand,
+#endif
+#if PL_CONFIG_HAS_ONE_WIRE && DS1_PARSE_COMMAND_ENABLED
+  DS1_ParseCommand,
 #endif
   NULL /* Sentinel */
 };

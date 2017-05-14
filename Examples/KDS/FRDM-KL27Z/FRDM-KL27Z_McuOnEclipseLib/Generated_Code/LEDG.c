@@ -7,7 +7,7 @@
 **     Version     : Component 01.074, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-10, 16:49, # CodeGen: 71
+**     Date/Time   : 2017-05-14, 20:31, # CodeGen: 158
 **     Abstract    :
 **          This component implements a universal driver for a single LED.
 **     Settings    :
@@ -19,19 +19,16 @@
 **            On/Off                                       : Enabled
 **              Pin                                        : SDK_BitIO
 **            PWM                                          : Disabled
-**          Shell                                          : Enabled
-**            Shell                                        : CLS1
-**            Utility                                      : UTIL1
+**          Shell                                          : Disabled
 **     Contents    :
-**         On           - void LEDG_On(void);
-**         Off          - void LEDG_Off(void);
-**         Neg          - void LEDG_Neg(void);
-**         Get          - uint8_t LEDG_Get(void);
-**         Put          - void LEDG_Put(uint8_t val);
-**         SetRatio16   - void LEDG_SetRatio16(uint16_t ratio);
-**         ParseCommand - uint8_t LEDG_ParseCommand(const unsigned char *cmd, bool *handled, const...
-**         Deinit       - void LEDG_Deinit(void);
-**         Init         - void LEDG_Init(void);
+**         On         - void LEDG_On(void);
+**         Off        - void LEDG_Off(void);
+**         Neg        - void LEDG_Neg(void);
+**         Get        - uint8_t LEDG_Get(void);
+**         Put        - void LEDG_Put(uint8_t val);
+**         SetRatio16 - void LEDG_SetRatio16(uint16_t ratio);
+**         Deinit     - void LEDG_Deinit(void);
+**         Init       - void LEDG_Init(void);
 **
 **     * Copyright (c) 2013-2017, Erich Styger
 **      * Web:         https://mcuoneclipse.com
@@ -74,64 +71,6 @@
 /* MODULE LEDG. */
 
 #include "LEDG.h"
-
-static uint8_t PrintStatus(const CLS1_StdIOType *io) {
-  CLS1_SendStatusStr((unsigned char*)"LEDG", (unsigned char*)"\r\n", io->stdOut);
-  if (LEDG_Get()!=0) {
-    CLS1_SendStatusStr((unsigned char*)"  on", (unsigned char*)"yes\r\n", io->stdOut);
-  } else {
-    CLS1_SendStatusStr((unsigned char*)"  on", (unsigned char*)"no\r\n", io->stdOut);
-  }
-  return ERR_OK;
-}
-
-static uint8_t PrintHelp(const CLS1_StdIOType *io) {
-  CLS1_SendHelpStr((unsigned char*)"LEDG", (unsigned char*)"Group of LEDG commands\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  on|off|neg", (unsigned char*)"Turns it on, off or toggle it\r\n", io->stdOut);
-  return ERR_OK;
-}
-
-/*
-** ===================================================================
-**     Method      :  LEDG_ParseCommand (component LED)
-**     Description :
-**         Shell Command Line parser. This method is enabled/disabled
-**         depending on if you have the Shell enabled/disabled in the
-**         properties.
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**       * cmd             - Pointer to command string
-**       * handled         - Pointer to variable which tells if
-**                           the command has been handled or not
-**       * io              - Pointer to I/O structure
-**     Returns     :
-**         ---             - Error code
-** ===================================================================
-*/
-uint8_t LEDG_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io)
-{
-  if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "LEDG help")==0) {
-    *handled = TRUE;
-    return PrintHelp(io);
-  } else if ((UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0) || (UTIL1_strcmp((char*)cmd, "LEDG status")==0)) {
-    *handled = TRUE;
-    return PrintStatus(io);
-  } else if (UTIL1_strcmp((char*)cmd, "LEDG on")==0) {
-    *handled = TRUE;
-    LEDG_On();
-    return ERR_OK;
-  } else if (UTIL1_strcmp((char*)cmd, "LEDG off")==0) {
-    *handled = TRUE;
-    LEDG_Off();
-    return ERR_OK;
-  } else if (UTIL1_strcmp((char*)cmd, "LEDG neg")==0) {
-    *handled = TRUE;
-    LEDG_Neg();
-    return ERR_OK;
-  }
-  return ERR_OK;
-}
 
 /*
 ** ===================================================================

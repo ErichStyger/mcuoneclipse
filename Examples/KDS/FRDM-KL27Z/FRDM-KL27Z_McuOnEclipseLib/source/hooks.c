@@ -15,7 +15,7 @@
 #if PL_CONFIG_HAS_TIME_DATE
   #include "TmDt1.h"
 #endif
-#include "TMR1.h"
+//#include "TMR1.h"
 #include "LEDG.h"
 
 void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName) {
@@ -92,7 +92,9 @@ BaseType_t  xEnterTicklessIdle(void) {
   return pdTRUE;
 }
 
+#if 0
 void TMR1_OnInterrupt(void)
 {
   LEDG_Neg();
 }
+#endif

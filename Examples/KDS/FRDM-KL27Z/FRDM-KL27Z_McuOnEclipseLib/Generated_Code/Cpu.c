@@ -8,7 +8,7 @@
 **     Repository  : Kinetis
 **     Datasheet   : KL25P80M48SF0RM, Rev.3, Sep 2012
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-11, 14:34, # CodeGen: 144
+**     Date/Time   : 2017-05-14, 20:46, # CodeGen: 160
 **     Abstract    :
 **
 **     Settings    :
@@ -288,12 +288,13 @@
 #include "CSN1.h"
 #include "OW1.h"
 #include "DQ1.h"
+#include "Timer1.h"
 #include "OutputRB1.h"
 #include "InputRB1.h"
 #include "TimeRB1.h"
 #include "ProgramRB1.h"
-#include "Inhr1.h"
-#include "TMR1.h"
+#include "DbgRd1.h"
+#include "DS1.h"
 #include "PE_Types.h"
 #include "PE_Error.h"
 #include "PE_Const.h"
@@ -489,10 +490,6 @@ void PE_low_level_init(void)
   NVIC_IPR1 &= (uint32_t)~(uint32_t)(NVIC_IP_PRI_6(0xFF));
   /* ### McuLibConfig "MCUC1" init code ... */
   WAIT1_Init();
-  /* ### XFormat "XF1" init code ... */
-  /* ### CriticalSection "CS1" init code ... */
-  /* ### Shell "CLS1" init code ... */
-  CLS1_Init(); /* initialize shell */
   /* ### SDK_BitIO "LEDpin2" init code ... */
   /* Write code here ... */
   /* ### LED "LEDR" init code ... */
@@ -505,12 +502,16 @@ void PE_low_level_init(void)
   /* Write code here ... */
   /* ### LED "LEDB" init code ... */
   LEDB_Init(); /* initialize LED driver */
+  /* ### XFormat "XF1" init code ... */
+  /* ### CriticalSection "CS1" init code ... */
+  /* ### Shell "CLS1" init code ... */
+  CLS1_Init(); /* initialize shell */
+  /* ### FreeRTOS "FRTOS1" init code ... */
+  /* PEX_RTOS_INIT() should have been called at this time already with the most critical setup */
   /* ### SeggerRTT "RTT1" init code ... */
   RTT1_Init();
   /* ### SeggerSystemView "SYS1" init code ... */
   SYS1_Init();
-  /* ### FreeRTOS "FRTOS1" init code ... */
-  /* PEX_RTOS_INIT() should have been called at this time already with the most critical setup */
   /* ### KinetisTools "KIN1" init code ... */
   /* ### HardFault "HF1" init code ... */
   HF1_Init();
@@ -546,6 +547,8 @@ void PE_low_level_init(void)
   /* ### nRF24L01 "RF1" init code ... */
   /* ### SDK_BitIO "DQ1" init code ... */
   /* Write code here ... */
+  /* ### SDK_Timer "Timer1" init code ... */
+  /* Write code here ... */
   /* ### RingBuffer "OutputRB1" init code ... */
   OutputRB1_Init();
   /* ### RingBuffer "InputRB1" init code ... */
@@ -554,12 +557,12 @@ void PE_low_level_init(void)
   TimeRB1_Init();
   /* ### RingBuffer "ProgramRB1" init code ... */
   ProgramRB1_Init();
-  /* ### SDK_BitIO "Inhr1" init code ... */
+  /* ### SDK_BitIO "DbgRd1" init code ... */
   /* Write code here ... */
   /* ### OneWire "OW1" init code ... */
   OW1_Init();
-  /* ### SDK_Timer "TMR1" init code ... */
-  /* Write code here ... */
+  /* ### DS18B20 "DS1" init code ... */
+  DS1_Init();
 }
   /* Flash configuration field */
   __attribute__ ((section (".cfmconfig"))) const uint8_t _cfm[0x10] = {

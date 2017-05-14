@@ -70,9 +70,7 @@
 #endif
 #if PL_CONFIG_HAS_ONE_WIRE
   #include "OW1.h"
-  #include "TMR1.h"
-  #include "fsl_clock.h"
-  #include "fsl_tpm.h"
+  #include "DS1.h"
 #endif
 
 #if 0
@@ -154,8 +152,9 @@ static void InitComponents(void) {
 #endif
 #if PL_CONFIG_HAS_ONE_WIRE
   OW1_Init();
+  DS1_Init();
   //SetupTimer();
-  TMR1_Init();
+  //TMR1_Init();
 #endif
 }
 

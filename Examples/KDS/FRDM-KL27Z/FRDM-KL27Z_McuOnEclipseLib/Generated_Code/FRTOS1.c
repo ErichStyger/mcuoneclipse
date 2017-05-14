@@ -7,7 +7,7 @@
 **     Version     : Component 01.539, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-11, 14:15, # CodeGen: 142
+**     Date/Time   : 2017-05-14, 20:46, # CodeGen: 160
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
@@ -40,8 +40,7 @@
 **            Heap Indication Constant                     : no
 **            Task C Additions                             : no
 **            Record Stack High Address                    : yes
-**          Segger System Viewer Trace                     : Enabled
-**            Segger System Viewer                         : SYS1
+**          Segger System Viewer Trace                     : Disabled
 **          Percepio Trace                                 : Disabled
 **          Generate Runtime Statistics                    : Enabled
 **            Use Tick Counter                             : yes

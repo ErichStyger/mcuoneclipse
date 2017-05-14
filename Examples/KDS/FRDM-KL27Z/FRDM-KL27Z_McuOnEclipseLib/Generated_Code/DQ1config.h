@@ -8,17 +8,17 @@
 #define __DQ1_CONFIG_H
 
 #ifndef DQ1_CONFIG_PORT_NAME
-  #define DQ1_CONFIG_PORT_NAME       PORTA
+  #define DQ1_CONFIG_PORT_NAME       PORTB
     /*!< name of PORT, is pointer to PORT_Type */
 #endif
 
 #ifndef DQ1_CONFIG_GPIO_NAME
-  #define DQ1_CONFIG_GPIO_NAME       GPIOA
+  #define DQ1_CONFIG_GPIO_NAME       GPIOB
     /*!< name of GPIO, is pointer to GPIO_Type */
 #endif
 
 #ifndef DQ1_CONFIG_PIN_NUMBER
-  #define DQ1_CONFIG_PIN_NUMBER      1u
+  #define DQ1_CONFIG_PIN_NUMBER      0u
     /*!< number of pin, type unsigned integer */
 #endif
 
@@ -33,7 +33,7 @@
 #define DQ1_CONFIG_INIT_PIN_DIRECTION_OUTPUT  (2)
 
 #ifndef DQ1_CONFIG_INIT_PIN_DIRECTION
-  #define DQ1_CONFIG_INIT_PIN_DIRECTION  DQ1_CONFIG_INIT_PIN_DIRECTION_OUTPUT
+  #define DQ1_CONFIG_INIT_PIN_DIRECTION  DQ1_CONFIG_INIT_PIN_DIRECTION_INPUT
 #endif
 
 #ifndef DQ1_CONFIG_DO_PIN_MUXING

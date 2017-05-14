@@ -7,18 +7,18 @@
 **     Version     : Component 01.022, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-11, 12:54, # CodeGen: 141
+**     Date/Time   : 2017-05-14, 20:14, # CodeGen: 154
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : DQ1
 **          SDK                                            : MCUC1
-**          GPIO Name                                      : GPIOA
-**          PORT Name                                      : PORTA
-**          Pin Number                                     : 1
-**          Pin Symbol                                     : OneWire_DQ
+**          GPIO Name                                      : GPIOB
+**          PORT Name                                      : PORTB
+**          Pin Number                                     : 0
+**          Pin Symbol                                     : OneWireData
 **          Do Pin Muxing                                  : yes
-**          Init Direction                                 : Output
+**          Init Direction                                 : Input
 **          Init Value                                     : 0
 **     Contents    :
 **         GetDir    - bool DQ1_GetDir(void);
@@ -97,7 +97,7 @@
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
   const gpio_output_pin_user_config_t DQ1_OutputConfig[] = {
     {
-      .pinName = OneWire_DQ,
+      .pinName = OneWireData,
       .config.outputLogic = DQ1_CONFIG_INIT_PIN_VALUE,
     #if FSL_FEATURE_PORT_HAS_SLEW_RATE
       .config.slewRate = kPortSlowSlewRate,
@@ -116,7 +116,7 @@
 
   const gpio_input_pin_user_config_t DQ1_InputConfig[] = {
     {
-      .pinName = OneWire_DQ,
+      .pinName = OneWireData,
     #if FSL_FEATURE_PORT_HAS_PULL_ENABLE
       .config.isPullEnable = true,
     #endif
@@ -155,7 +155,7 @@ void DQ1_ClrVal(void)
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
   GPIO_ClearPinsOutput(DQ1_CONFIG_GPIO_NAME, 1<<DQ1_CONFIG_PIN_NUMBER);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
-  GPIO_DRV_ClearPinOutput(OneWire_DQ);
+  GPIO_DRV_ClearPinOutput(OneWireData);
 #endif
 }
 
@@ -173,7 +173,7 @@ void DQ1_SetVal(void)
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
   GPIO_SetPinsOutput(DQ1_CONFIG_GPIO_NAME, 1<<DQ1_CONFIG_PIN_NUMBER);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
-  GPIO_DRV_SetPinOutput(OneWire_DQ);
+  GPIO_DRV_SetPinOutput(OneWireData);
 #endif
 }
 
@@ -191,7 +191,7 @@ void DQ1_NegVal(void)
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
   GPIO_TogglePinsOutput(DQ1_CONFIG_GPIO_NAME, 1<<DQ1_CONFIG_PIN_NUMBER);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
-  GPIO_DRV_TogglePinOutput(OneWire_DQ);
+  GPIO_DRV_TogglePinOutput(OneWireData);
 #endif
 }
 
@@ -212,7 +212,7 @@ bool DQ1_GetVal(void)
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
   return GPIO_ReadPinInput(DQ1_CONFIG_GPIO_NAME, DQ1_CONFIG_PIN_NUMBER)!=0;
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
-  return GPIO_DRV_ReadPinInput(OneWire_DQ)!=0;
+  return GPIO_DRV_ReadPinInput(OneWireData)!=0;
 #else
   return FALSE;
 #endif
@@ -268,7 +268,7 @@ void DQ1_SetInput(void)
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
   GPIO_PinInit(DQ1_CONFIG_GPIO_NAME, DQ1_CONFIG_PIN_NUMBER, &DQ1_configInput);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
-  GPIO_DRV_SetPinDir(OneWire_DQ, kGpioDigitalInput);
+  GPIO_DRV_SetPinDir(OneWireData, kGpioDigitalInput);
 #endif
   DQ1_isOutput = false;
 }
@@ -287,7 +287,7 @@ void DQ1_SetOutput(void)
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
   GPIO_PinInit(DQ1_CONFIG_GPIO_NAME, DQ1_CONFIG_PIN_NUMBER, &DQ1_configOutput);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
-  GPIO_DRV_SetPinDir(OneWire_DQ, kGpioDigitalOutput);
+  GPIO_DRV_SetPinDir(OneWireData, kGpioDigitalOutput);
 #endif
   DQ1_isOutput = true;
 }
@@ -313,7 +313,7 @@ void DQ1_PutVal(bool Val)
     GPIO_ClearPinsOutput(DQ1_CONFIG_GPIO_NAME, 1<<DQ1_CONFIG_PIN_NUMBER);
   }
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
-  GPIO_DRV_WritePinOutput(OneWire_DQ, Val);
+  GPIO_DRV_WritePinOutput(OneWireData, Val);
 #endif
 }
 

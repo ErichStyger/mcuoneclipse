@@ -5,19 +5,21 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : OneWire
-**     Version     : Component 01.103, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.109, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-12, 09:06, # CodeGen: 150
+**     Date/Time   : 2017-05-14, 21:15, # CodeGen: 163
 **     Abstract    :
 **
 This is a component implementing the 1-Wire protocol.
 **     Settings    :
 **          Component Name                                 : OW1
 **          Data Pin I/O                                   : SDK_BitIO
-**          Timer                                          : Disabled
-**          RTOS                                           : Enabled
-**            RTOS                                         : FRTOS1
+**          Write Pin                                      : Disabled
+**          Timer (LDD)                                    : Disabled
+**          Timer (SDK)                                    : Enabled
+**            Timer                                        : SDK_Timer
+**          RTOS                                           : Disabled
 **          Connection time settings                       : 
 **            Connection Mode                              : Master - One slave
 **            A: Write 1 Low time (us)                     : 6
@@ -51,15 +53,15 @@ This is a component implementing the 1-Wire protocol.
 **         i_recv_low   - void OW1_i_recv_low(void);
 **         i_wait       - void OW1_i_wait(void);
 **         CalcCRC      - uint8_t OW1_CalcCRC(uint8_t *data, uint8_t dataSize);
-**         SendByte     - bool OW1_SendByte(uint8_t data);
-**         Receive      - bool OW1_Receive(uint8_t counter);
-**         SendReset    - void OW1_SendReset(void);
+**         SendByte     - uint8_t OW1_SendByte(uint8_t data);
+**         Receive      - uint8_t OW1_Receive(uint8_t counter);
+**         SendReset    - uint8_t OW1_SendReset(void);
 **         Count        - uint8_t OW1_Count(void);
-**         Waitms       - bool OW1_Waitms(uint8_t key, uint8_t time_ms);
-**         ProgramEvent - bool OW1_ProgramEvent(uint8_t key);
-**         SendBytes    - bool OW1_SendBytes(uint8_t *data, uint8_t count);
-**         GetBytes     - bool OW1_GetBytes(uint8_t *data, uint8_t count);
-**         GetByte      - bool OW1_GetByte(uint8_t *data);
+**         Waitms       - uint8_t OW1_Waitms(uint8_t key, uint8_t time_ms);
+**         ProgramEvent - uint8_t OW1_ProgramEvent(uint8_t key);
+**         SendBytes    - uint8_t OW1_SendBytes(uint8_t *data, uint8_t count);
+**         GetBytes     - uint8_t OW1_GetBytes(uint8_t *data, uint8_t count);
+**         GetByte      - uint8_t OW1_GetByte(uint8_t *data);
 **         GetError     - void OW1_GetError(void);
 **         isBusy       - bool OW1_isBusy(void);
 **         Deinit       - void OW1%.Init(void) OW1_Deinit(void);
@@ -108,44 +110,45 @@ This is a component implementing the 1-Wire protocol.
 /* MODULE OW1. */
 
 #include "OW1.h"
+#include "DQ1.h" /* data pin */
+#include "InputRB1.h" /* input ring buffer */
+#include "OutputRB1.h" /* output ring buffer */
+#include "TimeRB1.h" /* time ring buffer */
+#include "ProgramRB1.h" /* program ring buffer */
+#include "Timer1.h" /* Timer Unit */
 
 #define INPUT          0U
 #define OUTPUT         1U
-#define DQ_Init()               DQ1_Init()
-#define DQ_Floating()           DQ1_SetInput()
-#define DQ_SetLow()             DQ1_ClrVal()
-#define DQ_Low()                DQ1_SetOutput()
-#if OW1_CONFIG_DEBUG_READ_PIN_ENABLED
-  #define DBG_Init()              OW1_CONFIG_DEBUG_READ_PIN_INIT()
-  #define DQ_Read()               (OW1_CONFIG_DEBUG_READ_PIN_TOGGLE(), DQ1_GetVal()!=0)
+
+#if OW1_CONFIG_WRITE_PIN
+  #define DQ_Init               DQ1_Init(); OW1_CONFIG_WRITE_PIN_INIT
 #else
-  #define DBG_Init()              /* empty */
-  #define DQ_Read()               DQ1_GetVal()!=0
+  #define DQ_Init               DQ1_Init()
+#endif
+#define DQ_Floating             DQ1_SetInput()
+#if OW1_CONFIG_WRITE_PIN
+  #define DQ_SetLow             OW1_CONFIG_WRITE_PIN_LOW
+  #define DQ_Low                OW1_CONFIG_WRITE_PIN_SET_OUTPUT
+#else
+  #define DQ_SetLow             DQ1_ClrVal()
+  #define DQ_Low                DQ1_SetOutput()
+#endif
+#if OW1_CONFIG_DEBUG_READ_PIN_ENABLED
+  #define DBG_Init              OW1_CONFIG_DEBUG_READ_PIN_INIT
+  #define DQ_Read               (OW1_CONFIG_DEBUG_READ_PIN_TOGGLE, DQ1_GetVal()!=0)
+#else
+  #define DBG_Init              /* empty */
+  #define DQ_Read               (DQ1_GetVal()!=0)
 #endif
 
 /* timer macros */
-#if OW1_CONFIG_TIMER_UNIT_LDD
-  #define TU_Reset()
-#else
-#endif
-
-#if OW1_CONFIG_TIMER_UNIT_LDD
-  #define TU_Init()               NULL
-  #define TU_Deinit()             /* empty */
-  #define TU_GetTimerFrequency()  0
-  #define TU_Disable()            /* empty */
-  #define TU_ResetCounter()       /* empty */
-  #define TU_SetPeriodUS(us)      /* empty */
-  #define TU_Enable()             /* empty */
-#else
-  #define TU_Init()               NULL
-  #define TU_Deinit()             /* empty */
-  #define TU_GetTimerFrequency()  0
-  #define TU_Disable()            /* empty */
-  #define TU_ResetCounter()       /* empty */
-  #define TU_SetPeriodUS(us)      /* empty */
-  #define TU_Enable()             /* empty */
-#endif
+  #define TU_Init              Timer1_Init()
+  #define TU_Deinit            Timer1_Deinit()
+  #define TU_GetTimerFrequency Timer1_GetInputFrequency()
+  #define TU_Disable           Timer1_Disable()
+  #define TU_ResetCounter      Timer1_ResetCounter()
+  #define TU_SetPeriodUS(us)   Timer1_SetPeriodTicks((us)*Data.Ticks)
+  #define TU_Enable            Timer1_Enable()
 
 typedef enum {
   I_RESET, /* reset instruction */
@@ -203,17 +206,17 @@ struct {
 } Data;
 
 static void TU_SetTime(uint32_t us) {
-  TU_Disable();
-  TU_ResetCounter();
+  TU_Disable;
+  TU_ResetCounter;
   TU_SetPeriodUS(us);
-  TU_Enable();
+  TU_Enable;
 }
 
 static void OW1_OnTimerRestart(void) {
   switch(Data.Step) {
     case TS_NOTHING:
       if(ProgramRB1_NofElements()==0) {
-        TU_Disable();
+        TU_Disable;
         Data.Busy = FALSE;
       } else {
         OW1_i_action();
@@ -223,7 +226,7 @@ static void OW1_OnTimerRestart(void) {
       OW1_i_reset();
       break;
     case TS_RESET_FLOAT:
-      DQ_Floating();
+      DQ_Floating;
       TU_SetTime(OW1_CONFIG_I_RESPONSE_TIME); /* have it floating for this time until handling of TS_PRESENCE */
       Data.Step = TS_PRESENCE;
       break;
@@ -298,17 +301,16 @@ OW1_Error OW1_GetError(void)
 **         count           - Number of bytes to add to output
 **                           stream. (Valid range 0 - 31)
 **     Returns     :
-**         ---             - error or not
+**         ---             - error code
 ** ===================================================================
 */
-bool OW1_SendBytes(uint8_t *data, uint8_t count)
+uint8_t OW1_SendBytes(uint8_t *data, uint8_t count)
 {
-  PROG pr;
-  PROG last;
+  PROG pr, last;
 
   (void)ProgramRB1_Peek(0, (uint8_t*)&last);
   if((last.Instr != I_SEND && ProgramRB1_NofFreeElements()==0) || (OutputRB1_NofFreeElements() < count)) {
-    return FALSE;
+    return ERR_FAILED;
   }
   pr.Instr = I_SEND;
   pr.Count = count;
@@ -327,7 +329,7 @@ bool OW1_SendBytes(uint8_t *data, uint8_t count)
     OW1_i_run();
     OW1_i_send_low();
   }
-  return TRUE;
+  return ERR_OK;
 }
 
 /*
@@ -342,8 +344,8 @@ bool OW1_SendBytes(uint8_t *data, uint8_t count)
 void OW1_i_run(void)
 {
   Data.Busy = TRUE;
-  TU_ResetCounter();
-  TU_Enable();
+  TU_ResetCounter;
+  TU_Enable;
 }
 
 /*
@@ -411,7 +413,7 @@ void OW1_i_action(void)
 */
 void OW1_i_presence(void)
 {
-  if(DQ_Read()) {	//No response
+  if(DQ_Read) {	/* check response */
     Data.Step = TS_NOTHING;
     Data.Error = OWERR_NO_DEVICE;
   } else {
@@ -431,7 +433,7 @@ void OW1_i_presence(void)
 */
 void OW1_i_reset(void)
 {
-  DQ_Low();
+  DQ_Low;
   TU_SetTime(OW1_CONFIG_H_RESET_TIME);
   Data.Step = TS_RESET_FLOAT;
 }
@@ -442,15 +444,16 @@ void OW1_i_reset(void)
 **     Description :
 **         Sends a reset to the bus
 **     Parameters  : None
-**     Returns     : Nothing
+**     Returns     :
+**         ---             - error code
 ** ===================================================================
 */
-bool OW1_SendReset(void)
+uint8_t OW1_SendReset(void)
 {
   PROG pr;
 
   if(ProgramRB1_NofFreeElements()==0) {
-    return FALSE;
+    return ERR_FAILED;
   }
   pr.Instr = I_RESET;
   (void)ProgramRB1_Put(*(uint8_t*)&pr);
@@ -459,7 +462,7 @@ bool OW1_SendReset(void)
     OW1_i_reset();
     OW1_i_run();
   }
-  return TRUE;
+  return ERR_OK;
 }
 
 /*
@@ -473,7 +476,7 @@ bool OW1_SendReset(void)
 */
 void OW1_i_send_low(void)
 {
-  DQ_Low();
+  DQ_Low;
   if(Data.WorkBit) {
     TU_SetTime(OW1_CONFIG_A_WRITE_1_LOW_TIME);
     Data.SkipWEvent = TRUE;
@@ -494,7 +497,7 @@ void OW1_i_send_low(void)
 */
 void OW1_i_send_float(void)
 {
-  DQ_Floating();
+  DQ_Floating;
   if(Data.WorkBitPos==0) { /* all bits sent? */
     if(Data.ToWork) {
       (void)OutputRB1_Get(&Data.WorkByte);
@@ -524,13 +527,12 @@ void OW1_i_send_float(void)
 **         NAME            - DESCRIPTION
 **         data            - Variable to save the byte.
 **     Returns     :
-**         ---             - error or not
+**         ---             - error code
 ** ===================================================================
 */
-bool OW1_SendByte(uint8_t data)
+uint8_t OW1_SendByte(uint8_t data)
 {
-  PROG pr;
-  PROG last;
+  PROG pr, last;
 
   (void)ProgramRB1_Peek(0, (uint8_t*)&last);
   if(last.Instr == I_SEND) {
@@ -539,7 +541,7 @@ bool OW1_SendByte(uint8_t data)
     (void)ProgramRB1_Update(0, (uint8_t*)&last); /* update element */
   } else {
     if(ProgramRB1_NofFreeElements()==0) {
-      return FALSE;
+      return ERR_FAILED;
     }
     (void)OutputRB1_Put(data);
     pr.Instr = I_SEND;
@@ -551,7 +553,7 @@ bool OW1_SendByte(uint8_t data)
     OW1_i_send_low();
     OW1_i_run();
   }
-  return TRUE;
+  return ERR_OK;
 }
 
 /*
@@ -566,17 +568,18 @@ bool OW1_SendByte(uint8_t data)
 void OW1_i_recv_get(void)
 {
   Data.WorkByte >>= 1;
-  Data.WorkBit = DQ_Read();
+  Data.WorkBit = DQ_Read;
   OW1_add_CRC(Data.WorkBit);
   Data.WorkByte += (Data.WorkBit ? 0x80 : 0);
-  if(Data.WorkBitPos == 7) { //Full byte
+  if(Data.WorkBitPos == 7) { /* Full byte */
     (void)InputRB1_Put(Data.WorkByte);
     Data.ToWork--;
-    if(Data.ToWork == 0) {  //finish
+    if(Data.ToWork == 0) {  /* finish */
       if(Data.CRC){
         Data.Error = OWERR_CRC;
       } else {
         Data.Error = OWERR_OK;
+        OW1_OnBlockReceived();
       }
       OW1_i_action();
       return;
@@ -598,7 +601,7 @@ void OW1_i_recv_get(void)
 */
 void OW1_i_recv_float(void)
 {
-  DQ_Floating();
+  DQ_Floating;
   TU_SetTime(OW1_CONFIG_E_BEFORE_READ_DELAY_TIME);
   Data.SkipWEvent = TRUE;
   Data.Step = TS_READ_GET;
@@ -615,7 +618,7 @@ void OW1_i_recv_float(void)
 */
 void OW1_i_recv_low(void)
 {
-  DQ_Low();
+  DQ_Low;
   Data.SkipWEvent = TRUE;
   TU_SetTime(OW1_CONFIG_A_READ_TIME);
   Data.Step = TS_READ_FLOAT;
@@ -633,17 +636,15 @@ void OW1_i_recv_low(void)
 **         counter         - Number of bytes to receive from
 **                           slave
 **     Returns     :
-**         ---             - Returns FALSE if the program buffer is
-**                           full or if count is greater than the free
-**                           space of input buffer-
+**         ---             - error code
 ** ===================================================================
 */
-bool OW1_Receive(uint8_t counter)
+uint8_t OW1_Receive(uint8_t counter)
 {
   PROG pr;
 
   if(ProgramRB1_NofFreeElements()==0) {
-    return FALSE;
+    return ERR_FAILED;
   }
   pr.Instr = I_RECV;
   pr.Count = counter;
@@ -653,7 +654,7 @@ bool OW1_Receive(uint8_t counter)
     OW1_i_recv_low();
     OW1_i_run();
   }
-  return TRUE;
+  return ERR_OK;
 }
 
 /*
@@ -667,16 +668,15 @@ bool OW1_Receive(uint8_t counter)
 **                           only if OnProgramEvent is enabled. (Valid
 **                           range 0 - 31)
 **     Returns     :
-**         ---             - Returns false if the program buffer is
-**                           full.
+**         ---             - error code
 ** ===================================================================
 */
-bool OW1_ProgramEvent(uint8_t key)
+uint8_t OW1_ProgramEvent(uint8_t key)
 {
   PROG pr;
 
   if(ProgramRB1_NofFreeElements()==0) {
-    return FALSE;
+    return ERR_FAILED;
   }
   pr.Instr = I_EVENT;
   pr.Count = key;
@@ -684,7 +684,7 @@ bool OW1_ProgramEvent(uint8_t key)
   if(!Data.Busy) {
     OW1_i_action();
   }
-  return TRUE;
+  return ERR_OK;
 }
 
 /*
@@ -711,17 +711,16 @@ void OW1_i_wait(void)
 **         key             - Key to identify the source of the event.
 **         time_ms         - Value of time to wait.
 **     Returns     :
-**         ---             - Returns false if the program buffer or the
-**                           time buffer is full.
+**         ---             - error code
 ** ===================================================================
 */
-bool OW1_Waitms(uint8_t key, uint8_t time_ms)
+uint8_t OW1_Waitms(uint8_t key, uint8_t time_ms)
 {
   PROG pr;
   CS1_CriticalVariable()
 
   if((ProgramRB1_NofFreeElements()==0) || (TimeRB1_NofFreeElements()==0)) {
-    return FALSE;
+    return ERR_FAILED;
   }
   CS1_EnterCritical();
   pr.Instr = I_WAIT;
@@ -729,7 +728,7 @@ bool OW1_Waitms(uint8_t key, uint8_t time_ms)
   (void)ProgramRB1_Put(*(uint8_t*)&pr);
   (void)TimeRB1_Put(time_ms);
   CS1_ExitCritical();
-  return TRUE;
+  return ERR_OK;
 }
 
 /*
@@ -777,18 +776,18 @@ void OW1_add_CRC(uint8_t bitValue)
 **         Get a single byte from the bus
 **     Parameters  :
 **         NAME            - DESCRIPTION
-**       * data            - 
+**       * data            - Pointer to were to store the data
 **     Returns     :
-**         ---             - error or not
+**         ---             - error code
 ** ===================================================================
 */
-bool OW1_GetByte(uint8_t *data)
+uint8_t OW1_GetByte(uint8_t *data)
 {
   if (InputRB1_NofElements()==0) {
-    return FALSE;
+    return ERR_FAILED;
   }
   (void)InputRB1_Get(data);
-  return TRUE;
+  return ERR_OK;
 }
 
 /*
@@ -798,22 +797,22 @@ bool OW1_GetByte(uint8_t *data)
 **         Gets multiple bytes from the bus
 **     Parameters  :
 **         NAME            - DESCRIPTION
-**       * data            - 
-**         count           - 
+**       * data            - Pointer to where to store the data
+**         count           - Number of bytes
 **     Returns     :
-**         ---             - error or not
+**         ---             - error code
 ** ===================================================================
 */
-bool OW1_GetBytes(uint8_t *data, uint8_t count)
+uint8_t OW1_GetBytes(uint8_t *data, uint8_t count)
 {
   if(count > InputRB1_NofElements()) {
-    return FALSE;
+    return ERR_FAILED;
   }
   for(;count>0;count--) {
     (void)InputRB1_Get(data);
     data++;
   }
-  return TRUE;
+  return ERR_OK;
 }
 
 /*
@@ -830,71 +829,6 @@ bool OW1_isBusy(void)
 {
   return (Data.Busy!=0);
 }
-
-
-/*
-** ===================================================================
-**     Method      :  OW1_Init (component OneWire)
-**     Description :
-**         Initializes this device.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void OW1_Init(void)
-{
-#if MCUC1_CONFIG_NXP_SDK_USED
-  /* using SDK, need to initialize inherited components */
-  DQ_Init();
-  DBG_Init();
-  InputRB1_Init(); /* input ringbuffer */
-  OutputRB1_Init(); /* output ringbuffer */
-  ProgramRB1_Init(); /* program ringbuffer */
-  TimeRB1_Init(); /* time ringbuffer */
-#else
-  Data.TUDeviceDataPtr = TU_Init(); /* timer init */
-#endif
-  Data.Ticks = TU_GetTimerFrequency()/1000000U;
-  Data.Busy = FALSE;
-  Data.WorkBitPos = 0;
-  Data.WaitEvent = FALSE;
-  Data.SkipWEvent = FALSE;
-  Data.Step = TS_NOTHING;
-  Data.CRC = 0;
-  Data.Error = OWERR_OK;
-
-  DQ_Floating(); /* input mode, let the pull-up take the signal high */
-  /* load LOW to output register. We won't change that value afterwards, we only switch between output and input/float mode */
-  DQ_SetLow();
-}
-
-/*
-** ===================================================================
-**     Method      :  OW1_Deinit (component OneWire)
-**     Description :
-**         Driver de-initialization
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void OW1_Deinit(void)
-{
-  TU_Deinit(); /* timer deinit */
-#if !MCUC1_CONFIG_NXP_SDK_USED
-  Data.TUDeviceDataPtr = NULL;
-#endif
-  Data.Ticks = 0;
-  Data.Busy = FALSE;
-  Data.WorkBitPos = 0;
-  Data.WaitEvent = FALSE;
-  Data.SkipWEvent = FALSE;
-  Data.Step = TS_NOTHING;
-  Data.CRC = 0;
-  Data.Error = OWERR_OK;
-
-  DQ_Floating(); /* input mode, tristate pin */
-}
-
 
 /*
 ** ===================================================================
@@ -927,6 +861,84 @@ uint8_t OW1_CalcCRC(uint8_t *data, uint8_t dataSize)
     }
   }
   return crc;
+}
+
+/*
+** ===================================================================
+**     Method      :  OW1_Init (component OneWire)
+**     Description :
+**         Initializes this device.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void OW1_Init(void)
+{
+#if MCUC1_CONFIG_NXP_SDK_USED
+  /* using SDK, need to initialize inherited components */
+  DQ_Init;
+  DBG_Init;
+  InputRB1_Init(); /* input ring buffer */
+  OutputRB1_Init(); /* output ring buffer */
+  ProgramRB1_Init(); /* program ring buffer */
+  TimeRB1_Init(); /* time ring buffer */
+  Timer1_Init(); /* timer */
+#else
+  Data.TUDeviceDataPtr = TU_Init; /* timer init */
+#endif
+  Data.Ticks = TU_GetTimerFrequency/1000000U;
+  Data.Busy = FALSE;
+  Data.WorkBitPos = 0;
+  Data.WaitEvent = FALSE;
+  Data.SkipWEvent = FALSE;
+  Data.Step = TS_NOTHING;
+  Data.CRC = 0;
+  Data.Error = OWERR_OK;
+
+  DQ_Floating; /* input mode, let the pull-up take the signal high */
+  /* load LOW to output register. We won't change that value afterwards, we only switch between output and input/float mode */
+  DQ_SetLow;
+}
+
+/*
+** ===================================================================
+**     Method      :  OW1_Deinit (component OneWire)
+**     Description :
+**         Driver de-initialization
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void OW1_Deinit(void)
+{
+  TU_Deinit; /* timer deinit */
+#if !MCUC1_CONFIG_NXP_SDK_USED
+  Data.TUDeviceDataPtr = NULL;
+#endif
+  Data.Ticks = 0;
+  Data.Busy = FALSE;
+  Data.WorkBitPos = 0;
+  Data.WaitEvent = FALSE;
+  Data.SkipWEvent = FALSE;
+  Data.Step = TS_NOTHING;
+  Data.CRC = 0;
+  Data.Error = OWERR_OK;
+
+  DQ_Floating; /* input mode, tristate pin */
+}
+
+
+/*
+** ===================================================================
+**     Method      :  OW1_OnCounterRestart (component OneWire)
+**
+**     Description :
+**         This method is internal. It is used by Processor Expert only.
+** ===================================================================
+*/
+void Timer1_OnCounterRestart(void)
+{
+  OW1_OnTimerRestart();
 }
 
 /* END OW1. */

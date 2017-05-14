@@ -38,6 +38,8 @@
 #include "OW1.h"
 #include "Inhr1.h"
 #include "BitIoLdd4.h"
+#include "Inhr3.h"
+#include "BitIoLdd5.h"
 #include "TU1.h"
 #include "OutputRB1.h"
 #include "InputRB1.h"

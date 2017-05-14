@@ -7,18 +7,18 @@
 **     Version     : Component 01.022, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-11, 12:54, # CodeGen: 141
+**     Date/Time   : 2017-05-14, 20:14, # CodeGen: 154
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : DQ1
 **          SDK                                            : MCUC1
-**          GPIO Name                                      : GPIOA
-**          PORT Name                                      : PORTA
-**          Pin Number                                     : 1
-**          Pin Symbol                                     : OneWire_DQ
+**          GPIO Name                                      : GPIOB
+**          PORT Name                                      : PORTB
+**          Pin Number                                     : 0
+**          Pin Symbol                                     : OneWireData
 **          Do Pin Muxing                                  : yes
-**          Init Direction                                 : Output
+**          Init Direction                                 : Input
 **          Init Value                                     : 0
 **     Contents    :
 **         GetDir    - bool DQ1_GetDir(void);
@@ -82,10 +82,10 @@
   #include "fsl_gpio_driver.h"
 
   /* only GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF and GPIOG are currently supported */
-  #define DQ1_GPIO_IDX GPIOA_IDX   /* GPIOA */
+  #define DQ1_GPIO_IDX GPIOB_IDX   /* GPIOB */
 
   enum DQ1_pinNames{
-    OneWire_DQ = GPIO_MAKE_PIN(DQ1_GPIO_IDX, DQ1_CONFIG_PIN_NUMBER),
+    OneWireData = GPIO_MAKE_PIN(DQ1_GPIO_IDX, DQ1_CONFIG_PIN_NUMBER),
   };
 
   extern const gpio_output_pin_user_config_t DQ1_OutputConfig[];
