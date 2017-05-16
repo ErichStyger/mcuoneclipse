@@ -16,7 +16,7 @@
 #define OW1_CONFIG_H_RESET_TIME                             480 /* H */
 #define OW1_CONFIG_I_RESPONSE_TIME                          70 /* I */
 #define OW1_CONFIG_A_READ_TIME                              OW1_CONFIG_A_WRITE_1_LOW_TIME /* A (for read) */
-#define OW1_CONFIG_E_BEFORE_READ_DELAY_TIME                 3 /* E */
+#define OW1_CONFIG_E_BEFORE_READ_DELAY_TIME                 1 /* E */
 #define OW1_CONFIG_F_AFTER_READ_DELAY_TIME                  55 /* F */
 #define OW1_CONFIG_SLOT_TIME                                100
 
@@ -44,6 +44,11 @@
 #ifndef OW1_CONFIG_TIMER_UNIT_LDD
   #define OW1_CONFIG_TIMER_UNIT_LDD                         (0)
     /*!< 1: using TimerUnit_LDD, 0: not using TimerUnit_LDD */
+#endif
+
+#if !defined(OW1_CONFIG_PARSE_COMMAND_ENABLED)
+  #define OW1_CONFIG_PARSE_COMMAND_ENABLED       (1)
+    /*!< 1: shell support enabled, 0: otherwise */
 #endif
 
 #endif /* __OW1_CONFIG_H */

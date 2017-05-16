@@ -5,16 +5,16 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : DS18B20
-**     Version     : Component 01.009, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.010, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-14, 21:15, # CodeGen: 163
+**     Date/Time   : 2017-05-15, 21:21, # CodeGen: 182
 **     Abstract    :
 **
 This is a component for the Maxim DS18B20 1-Wire temperature sensor.
 **     Settings    :
 **          Component Name                                 : DS1
-**          Temperature Reading                            : Auto
+**          Temperature Reading                            : With ReadTemperature()
 **          Connection mode                                : One slave
 **          One Wire                                       : OW1
 **          SDK                                            : MCUC1
@@ -168,7 +168,7 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   uint8_t buf[48];
   uint8_t res;
   float temp;
-  int i, j;
+  int i;
 
   CLS1_SendStatusStr((unsigned char*)"DS1", (unsigned char*)"\r\n", io->stdOut);
 #if DS1_CONFIG_READ_AUTO
@@ -186,12 +186,8 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
       res = ERR_OK; /* do not read the ROM code from the bus, use the stored ROM values */
     }
     if (res==ERR_OK) {
-      for(j=0;j<DS18B20_ROM_CODE_SIZE;j++) {
-        UTIL1_strcatNum8Hex(buf, sizeof(buf), Sensor[i].Rom[j]);
-        if(j<DS18B20_ROM_CODE_SIZE-1) {
-          UTIL1_chcat(buf, sizeof(buf), '-');
-        }
-      }
+      buf[0] = '\0';
+      OW1_strcatRomCode(buf, sizeof(buf), Sensor[i].Rom);
     } else {
       UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"ERROR (");
       UTIL1_strcatNum8u(buf, sizeof(buf), res);
@@ -268,7 +264,7 @@ static uint8_t PrintHelp(const CLS1_StdIOType *io) {
 **         is enabled in the component properties.
 **     Parameters  :
 **         NAME            - DESCRIPTION
-**         cmd             - 
+**         cmd             - command string
 **       * handled         - Pointer to variable which tells if
 **                           the command has been handled or not
 **         io              - Pointer to I/O structure
@@ -403,7 +399,9 @@ uint8_t DS1_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_Std
 */
 uint8_t DS1_StartConversion(uint8_t sensor_index)
 {
+#if DS1_CONFIG_READ_AUTO
   uint8_t res;
+#endif
 
   if(Device.Busy) {
     return ERR_BUSY;
@@ -725,25 +723,10 @@ uint8_t DS1_ReadRom(uint8_t sensor_index)
 #if DS1_CONFIG_NUMBER_OF_SENSORS>1
   Device.WorkSensor = sensor_index;
 #endif
-  OW1_SendReset();
-  while(OW1_isBusy()) { /* wait */ }
-  OW1_SendByte(RC_READ_ROM);
-  while(OW1_isBusy()) { /* wait */ }
 #if DS1_CONFIG_NUMBER_OF_SENSORS>1
-  OW1_Receive(sizeof(Sensor[sensor_index].Rom)); /* 8 bytes */
+  res = OW1_ReadRomCode(Sensor[sensor_index].Rom);
 #else
-  OW1_Receive(sizeof(Sensor[0].Rom)); /* 8 bytes */
-#endif
-  while(OW1_isBusy()) { /* wait */ }
-  OW1_SendByte(0xFF);
-  while(OW1_isBusy()) { /* wait */ }
-  OW1_ProgramEvent(EV_READ_ROM);
-  while(OW1_isBusy()) { /* wait */ }
-  /* copy ROM code */
-#if DS1_CONFIG_NUMBER_OF_SENSORS>1
-  res = OW1_GetBytes(&Sensor[sensor_index].Rom[0], sizeof(Sensor[sensor_index].Rom)); /* 8 bytes */
-#else
-  res = OW1_GetBytes(&Sensor[0].Rom[0], sizeof(Sensor[0].Rom)); /* 8 bytes */
+  res = OW1_ReadRomCode(Sensor[0].Rom); /* 8 bytes */
 #endif
   Device.Busy = FALSE;
   /* index 0  : family code
@@ -759,13 +742,6 @@ uint8_t DS1_ReadRom(uint8_t sensor_index)
   if (Sensor[0].Rom[0]!=DS18B20_FAMILY_CODE) {
 #endif
     return ERR_FAILED; /* not a DS18B20? */
-  }
-#if DS1_CONFIG_NUMBER_OF_SENSORS>1
-  if (OW1_CalcCRC(&Sensor[sensor_index].Rom[0], DS18B20_ROM_CODE_SIZE-1)!=Sensor[sensor_index].Rom[DS18B20_ROM_CODE_SIZE-1]) {
-#else
-  if (OW1_CalcCRC(&Sensor[0].Rom[0], DS18B20_ROM_CODE_SIZE-1)!=Sensor[0].Rom[DS18B20_ROM_CODE_SIZE-1]) {
-#endif
-    return ERR_CRC; /* wrong CRC? */
   }
   return ERR_OK; /* ok */
 }

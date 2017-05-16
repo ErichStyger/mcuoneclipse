@@ -4,10 +4,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : SDK_Timer
-**     Version     : Component 01.020, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.021, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-14, 21:15, # CodeGen: 163
+**     Date/Time   : 2017-05-15, 15:32, # CodeGen: 173
 **     Abstract    :
 **
 **     Settings    :
@@ -16,9 +16,10 @@
 **          Timer Name                                     : TPM0
 **          Init                                           : 
 **            Period (us)                                  : 1000
-**            Enable                                       : yes
+**            Enable                                       : no
 **            Enable IRQ                                   : yes
 **            Enable Overflow IRQ                          : yes
+**            IRQ Priority                                 : 0
 **     Contents    :
 **         Enable             - void Timer1_Enable(void);
 **         Disable            - void Timer1_Disable(void);
@@ -81,6 +82,10 @@
 #if MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
   #error "only SDK v2.x supported"
 #endif
+
+/* event handler interface */
+void Timer1_OnCounterRestart(void);
+
 
 void Timer1_OnInterrupt(void); /* event handler prototype */
 

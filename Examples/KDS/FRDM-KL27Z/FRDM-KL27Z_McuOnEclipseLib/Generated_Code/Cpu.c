@@ -8,7 +8,7 @@
 **     Repository  : Kinetis
 **     Datasheet   : KL25P80M48SF0RM, Rev.3, Sep 2012
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-14, 20:46, # CodeGen: 160
+**     Date/Time   : 2017-05-16, 20:12, # CodeGen: 190
 **     Abstract    :
 **
 **     Settings    :
@@ -283,9 +283,6 @@
 #include "Clock1.h"
 #include "Input1.h"
 #include "Output1.h"
-#include "RF1.h"
-#include "CE1.h"
-#include "CSN1.h"
 #include "OW1.h"
 #include "DQ1.h"
 #include "Timer1.h"
@@ -540,11 +537,6 @@ void PE_low_level_init(void)
   /* Write code here ... */
   /* ### GenericSWSPI "SPI1" init code ... */
   SPI1_Init();
-  /* ### SDK_BitIO "CE1" init code ... */
-  /* Write code here ... */
-  /* ### SDK_BitIO "CSN1" init code ... */
-  /* Write code here ... */
-  /* ### nRF24L01 "RF1" init code ... */
   /* ### SDK_BitIO "DQ1" init code ... */
   /* Write code here ... */
   /* ### SDK_Timer "Timer1" init code ... */

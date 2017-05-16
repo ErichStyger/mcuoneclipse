@@ -4,10 +4,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : SDK_Timer
-**     Version     : Component 01.020, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.021, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-14, 21:15, # CodeGen: 163
+**     Date/Time   : 2017-05-15, 15:32, # CodeGen: 173
 **     Abstract    :
 **
 **     Settings    :
@@ -16,9 +16,10 @@
 **          Timer Name                                     : TPM0
 **          Init                                           : 
 **            Period (us)                                  : 1000
-**            Enable                                       : yes
+**            Enable                                       : no
 **            Enable IRQ                                   : yes
 **            Enable Overflow IRQ                          : yes
+**            IRQ Priority                                 : 0
 **     Contents    :
 **         Enable             - void Timer1_Enable(void);
 **         Disable            - void Timer1_Disable(void);
@@ -88,9 +89,10 @@
 #define Timer1_SOURCE_CLOCK_FREQUENCY (CLOCK_GetFreq(kCLOCK_McgIrc48MClk)/4)
   /*!< Timer Clock Frequency */
 
-void TPM2_IRQHandler(void) {
+void Timer1_CONFIG_TIMER_IRQ_HANDLER_NAME(void) {
   /* Clear interrupt flag.*/
   TPM_ClearStatusFlags(Timer1_CONFIG_TIMER_NAME, kTPM_TimeOverflowFlag);
+  Timer1_OnCounterRestart();
 }
 /*
 ** ===================================================================
@@ -210,6 +212,55 @@ void Timer1_DisableOverflowIRQ(void)
 
 /*
 ** ===================================================================
+**     Method      :  Timer1_GetInputFrequency (component SDK_Timer)
+**     Description :
+**         Returns the base clock of the timer in Hz, at which the
+**         timer ticks are incremented.
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint32_t Timer1_GetInputFrequency(void)
+{
+  return Timer1_SOURCE_CLOCK_FREQUENCY; /* timer clock frequency in Hz */
+}
+
+/*
+** ===================================================================
+**     Method      :  Timer1_ResetCounter (component SDK_Timer)
+**     Description :
+**         Reset the timer counter back to zero
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void Timer1_ResetCounter(void)
+{
+#if 1 /* does not exist in the SDK? Implementing it here .... */
+  TPM_Type *base;
+
+  base = Timer1_CONFIG_TIMER_NAME;
+  base->CNT = 0; /* reset counter */
+#endif
+}
+
+/*
+** ===================================================================
+**     Method      :  Timer1_Deinit (component SDK_Timer)
+**     Description :
+**         Driver deinitialization
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void Timer1_Deinit(void)
+{
+  Timer1_Disable(); /* stop timer */
+}
+
+/*
+** ===================================================================
 **     Method      :  Timer1_Init (component SDK_Timer)
 **     Description :
 **         Driver initialization
@@ -242,59 +293,11 @@ void Timer1_Init(void)
 #else
   Timer1_DisableIRQ(); /* disable timer interrupt in NVIC */
 #endif
+  NVIC_SetPriority(Timer1_CONFIG_TIMER_IRQ, 0); /* set interrupt priority */
 #if Timer1_CONFIG_TIMER_INIT_ENABLE_TIMER
   Timer1_Enable(); /* start timer */
 #else
   Timer1_Disable(); /* do not start timer */
-#endif
-}
-
-/*
-** ===================================================================
-**     Method      :  Timer1_Deinit (component SDK_Timer)
-**     Description :
-**         Driver deinitialization
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void Timer1_Deinit(void)
-{
-  Timer1_Disable(); /* stop timer */
-}
-
-/*
-** ===================================================================
-**     Method      :  Timer1_GetInputFrequency (component SDK_Timer)
-**     Description :
-**         Returns the base clock of the timer in Hz, at which the
-**         timer ticks are incremented.
-**     Parameters  : None
-**     Returns     :
-**         ---             - Error code
-** ===================================================================
-*/
-uint32_t Timer1_GetInputFrequency(void)
-{
-  return Timer1_SOURCE_CLOCK_FREQUENCY; /* timer clock frequency in Hz */
-}
-
-/*
-** ===================================================================
-**     Method      :  Timer1_ResetCounter (component SDK_Timer)
-**     Description :
-**         Reset the timer counter back to zero
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void Timer1_ResetCounter(void)
-{
-#if 1 /* does not exist in the SDK? Implementing it here .... */
-  TPM_Type *base;
-
-  base = Timer1_CONFIG_TIMER_NAME;
-  base->CNT = 0; /* reset counter */
 #endif
 }
 

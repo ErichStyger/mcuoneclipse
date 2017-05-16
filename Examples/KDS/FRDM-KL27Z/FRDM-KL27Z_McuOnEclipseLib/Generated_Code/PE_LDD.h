@@ -6,7 +6,7 @@
 **     Version     : Component 01.025, Driver 01.04, CPU db: 3.00.000
 **     Repository  : Kinetis
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-14, 20:44, # CodeGen: 159
+**     Date/Time   : 2017-05-16, 20:12, # CodeGen: 190
 **     Abstract    :
 **
 **     Settings    :
@@ -90,9 +90,6 @@
 #include "Clock1.h"
 #include "Input1.h"
 #include "Output1.h"
-#include "RF1.h"
-#include "CE1.h"
-#include "CSN1.h"
 #include "OW1.h"
 #include "DQ1.h"
 #include "Timer1.h"

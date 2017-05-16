@@ -5,10 +5,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : OneWire
-**     Version     : Component 01.109, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.125, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-14, 21:15, # CodeGen: 163
+**     Date/Time   : 2017-05-16, 20:23, # CodeGen: 191
 **     Abstract    :
 **
 This is a component implementing the 1-Wire protocol.
@@ -19,14 +19,12 @@ This is a component implementing the 1-Wire protocol.
 **          Timer (LDD)                                    : Disabled
 **          Timer (SDK)                                    : Enabled
 **            Timer                                        : SDK_Timer
-**          RTOS                                           : Disabled
-**          Connection time settings                       : 
-**            Connection Mode                              : Master - One slave
+**          Connection                                     : 
 **            A: Write 1 Low time (us)                     : 6
 **            B: Write 1 High time (us)                    : 64
 **            C: Write 0 Low time (us)                     : 60
 **            D: Write 0 High time (us)                    : 10
-**            E: delay time before read (us)               : 3
+**            E: delay time before read (us)               : 1
 **            F: After read delay time                     : 55
 **            H: Reset time (us)                           : 480
 **            I: Device response time (us)                 : 70
@@ -39,33 +37,45 @@ This is a component implementing the 1-Wire protocol.
 **          Debug                                          : Enabled
 **            Debug Read Pin                               : SDK_BitIO
 **          CriticalSection                                : CS1
+**          Utility                                        : UTIL1
+**          Wait                                           : WAIT1
 **          SDK                                            : MCUC1
+**          RTOS                                           : Enabled
+**            RTOS                                         : FRTOS1
+**          Shell                                          : Enabled
+**            Shell                                        : CLS1
 **     Contents    :
-**         add_CRC      - void OW1_add_CRC(uint8_t bitValue);
-**         i_run        - void OW1_i_run(void);
-**         i_action     - void OW1_i_action(void);
-**         i_reset      - void OW1_i_reset(void);
-**         i_presence   - void OW1_i_presence(void);
-**         i_send_low   - void OW1_i_send_low(void);
-**         i_send_float - void OW1_i_send_float(void);
-**         i_recv_float - void OW1_i_recv_float(void);
-**         i_recv_get   - void OW1_i_recv_get(void);
-**         i_recv_low   - void OW1_i_recv_low(void);
-**         i_wait       - void OW1_i_wait(void);
-**         CalcCRC      - uint8_t OW1_CalcCRC(uint8_t *data, uint8_t dataSize);
-**         SendByte     - uint8_t OW1_SendByte(uint8_t data);
-**         Receive      - uint8_t OW1_Receive(uint8_t counter);
-**         SendReset    - uint8_t OW1_SendReset(void);
-**         Count        - uint8_t OW1_Count(void);
-**         Waitms       - uint8_t OW1_Waitms(uint8_t key, uint8_t time_ms);
-**         ProgramEvent - uint8_t OW1_ProgramEvent(uint8_t key);
-**         SendBytes    - uint8_t OW1_SendBytes(uint8_t *data, uint8_t count);
-**         GetBytes     - uint8_t OW1_GetBytes(uint8_t *data, uint8_t count);
-**         GetByte      - uint8_t OW1_GetByte(uint8_t *data);
-**         GetError     - void OW1_GetError(void);
-**         isBusy       - bool OW1_isBusy(void);
-**         Deinit       - void OW1%.Init(void) OW1_Deinit(void);
-**         Init         - void OW1%.Init(void) OW1_Init(void);
+**         add_CRC       - void OW1_add_CRC(uint8_t bitValue);
+**         i_run         - void OW1_i_run(void);
+**         i_action      - void OW1_i_action(void);
+**         i_reset       - void OW1_i_reset(void);
+**         i_presence    - void OW1_i_presence(void);
+**         i_send_low    - void OW1_i_send_low(void);
+**         i_send_float  - void OW1_i_send_float(void);
+**         i_recv_float  - void OW1_i_recv_float(void);
+**         i_recv_get    - void OW1_i_recv_get(void);
+**         i_recv_low    - void OW1_i_recv_low(void);
+**         i_wait        - void OW1_i_wait(void);
+**         CalcCRC       - uint8_t OW1_CalcCRC(uint8_t *data, uint8_t dataSize);
+**         SendByte      - uint8_t OW1_SendByte(uint8_t data);
+**         Receive       - uint8_t OW1_Receive(uint8_t counter);
+**         SendReset     - uint8_t OW1_SendReset(void);
+**         Count         - uint8_t OW1_Count(void);
+**         Waitms        - uint8_t OW1_Waitms(uint8_t key, uint8_t time_ms);
+**         ProgramEvent  - uint8_t OW1_ProgramEvent(uint8_t key);
+**         SendBytes     - uint8_t OW1_SendBytes(uint8_t *data, uint8_t count);
+**         GetBytes      - uint8_t OW1_GetBytes(uint8_t *data, uint8_t count);
+**         GetByte       - uint8_t OW1_GetByte(uint8_t *data);
+**         GetError      - void OW1_GetError(void);
+**         isBusy        - bool OW1_isBusy(void);
+**         strcatRomCode - uint8_t OW1_strcatRomCode(uint8_t *buf, size_t bufSize, uint8_t *romCode);
+**         ReadRomCode   - uint8_t OW1_ReadRomCode(uint8_t *romCodeBuffer);
+**         ResetSearch   - void OW1_ResetSearch(void);
+**         TargetSearch  - void OW1_TargetSearch(uint8_t familyCode);
+**         Search        - bool OW1_Search(uint8_t *newAddr, bool search_mode);
+**         ParseCommand  - uint8_t OW1_ParseCommand(const unsigned char* cmd, bool *handled, const...
+**         Deinit        - void OW1%.Init(void) OW1_Deinit(void);
+**         Init          - void OW1%.Init(void) OW1_Init(void);
 **
 **     * Copyright (c) Original implementation: Omar Isaí Pinales Ayala, 2014, all rights reserved.
 **      * Updated and maintained by Erich Styger, 2014-2017
@@ -116,6 +126,20 @@ This is a component implementing the 1-Wire protocol.
 #include "TimeRB1.h" /* time ring buffer */
 #include "ProgramRB1.h" /* program ring buffer */
 #include "Timer1.h" /* Timer Unit */
+
+// global search state
+static unsigned char ROM_NO[8];
+static uint8_t LastDiscrepancy;
+static uint8_t LastFamilyDiscrepancy;
+static uint8_t LastDeviceFlag;
+
+/* Rom commands */
+#define RC_READ_ROM          0x33
+#define RC_MATCH_ROM         0x55
+#define RC_SKIP_ROM          0xCC
+#define RC_SEARCH_COND       0xEC
+#define RC_SEARCH            0xF0
+#define RC_RELEASE           0xFF
 
 #define INPUT          0U
 #define OUTPUT         1U
@@ -212,6 +236,49 @@ static void TU_SetTime(uint32_t us) {
   TU_Enable;
 }
 
+static uint8_t read_bit(void) {
+  uint8_t bit;
+  CS1_CriticalVariable()
+
+  CS1_EnterCritical();
+  DQ_Low;
+#if OW1_CONFIG_A_READ_TIME>2
+  WAIT1_Waitus(OW1_CONFIG_A_READ_TIME);
+#else /* shorten time to keep the needed timing */
+  WAIT1_Waitus(OW1_CONFIG_A_READ_TIME-2);
+#endif
+  DQ_Floating;
+  WAIT1_Waitus(OW1_CONFIG_E_BEFORE_READ_DELAY_TIME);
+  bit = DQ_Read;
+  CS1_ExitCritical();
+#if OW1_CONFIG_F_AFTER_READ_DELAY_TIME>2
+  WAIT1_Waitus(OW1_CONFIG_F_AFTER_READ_DELAY_TIME-2);
+#else
+  WAIT1_Waitus(OW1_CONFIG_F_AFTER_READ_DELAY_TIME);
+#endif
+  return bit;
+}
+
+static void write_bit(uint8_t bit) {
+  CS1_CriticalVariable()
+
+  if (bit&1) {
+    CS1_EnterCritical();
+    DQ_Low;
+    WAIT1_Waitus(OW1_CONFIG_A_WRITE_1_LOW_TIME);
+    DQ_Floating;
+    WAIT1_Waitus(OW1_CONFIG_B_WRITE_1_HIGH_TIME);
+    CS1_ExitCritical();
+  } else { /* zero bit */
+    CS1_EnterCritical();
+    DQ_Low;
+    WAIT1_Waitus(OW1_CONFIG_C_WRITE_0_LOW_TIME);
+    DQ_Floating;
+    WAIT1_Waitus(OW1_CONFIG_D_WRITE_0_HIGH_TIME);
+    CS1_ExitCritical();
+  }
+}
+
 static void OW1_OnTimerRestart(void) {
   switch(Data.Step) {
     case TS_NOTHING:
@@ -275,6 +342,23 @@ static void OW1_OnTimerRestart(void) {
     }
   }
 }
+
+#if OW1_CONFIG_PARSE_COMMAND_ENABLED
+static uint8_t PrintStatus(const CLS1_StdIOType *io) {
+  CLS1_SendStatusStr((unsigned char*)"OW1", (unsigned char*)"\r\n", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  mode", (unsigned char*)"test\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+static uint8_t PrintHelp(const CLS1_StdIOType *io) {
+  CLS1_SendHelpStr((unsigned char*)"OW1", (unsigned char*)"Group of OW1 commands\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  reset", (unsigned char*)"Send a RESET sequence to the bus\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  read rom", (unsigned char*)"Send a READ ROM (0x33) to the bus\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  search", (unsigned char*)"Search for devices on the bus\r\n", io->stdOut);
+  return ERR_OK;
+}
+#endif /* OW1_CONFIG_PARSE_COMMAND_ENABLED */
 
 /*
 ** ===================================================================
@@ -413,7 +497,8 @@ void OW1_i_action(void)
 */
 void OW1_i_presence(void)
 {
-  if(DQ_Read) {	/* check response */
+  /* check response */
+  if(DQ_Read) { /* level must be pulled down by a device on the bus */
     Data.Step = TS_NOTHING;
     Data.Error = OWERR_NO_DEVICE;
   } else {
@@ -939,6 +1024,350 @@ void OW1_Deinit(void)
 void Timer1_OnCounterRestart(void)
 {
   OW1_OnTimerRestart();
+}
+
+/*
+** ===================================================================
+**     Method      :  OW1_ParseCommand (component OneWire)
+**     Description :
+**         Shell Command Line parser. Method is only available if Shell
+**         is enabled in the component properties.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         cmd             - command string
+**       * handled         - Pointer to variable which tells if
+**                           the command has been handled or not
+**         io              - Pointer to I/O structure
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t OW1_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io)
+{
+#if OW1_CONFIG_PARSE_COMMAND_ENABLED
+  uint8_t res = ERR_OK;
+  uint8_t buf[32];
+
+  if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP) == 0
+    || UTIL1_strcmp((char*)cmd, "OW1 help") == 0)
+  {
+    *handled = TRUE;
+    return PrintHelp(io);
+  } else if (   (UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0)
+             || (UTIL1_strcmp((char*)cmd, "OW1 status")==0)
+            )
+  {
+    *handled = TRUE;
+    res = PrintStatus(io);
+  } else if (UTIL1_strcmp((char*)cmd, "OW1 read rom")==0) {
+    uint8_t rom[OW1_ROM_CODE_SIZE];
+
+    *handled = TRUE;
+    res = OW1_ReadRomCode(&rom[0]);
+    while(OW1_isBusy()) { /* wait */ }
+    (void)OW1_strcatRomCode(buf, sizeof(buf), &rom[0]);
+    UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+    CLS1_SendStr(buf, io->stdOut);
+  } else if (UTIL1_strcmp((char*)cmd, "OW1 reset")==0) {
+    *handled = TRUE;
+    res = OW1_SendReset();
+    while(OW1_isBusy()) { /* wait */ }
+    if (OW1_GetError()==OWERR_OK) {
+      CLS1_SendStr((unsigned char*)"Device present\r\n", io->stdOut);
+    } else {
+      CLS1_SendStr((unsigned char*)"No device present?\r\n", io->stdErr);
+    }
+    if (res!=ERR_OK) {
+      UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR (");
+      UTIL1_strcatNum8u(buf, sizeof(buf), res);
+      UTIL1_strcat(buf, sizeof(buf), (unsigned char*)")\r\n");
+      CLS1_SendStr(buf, io->stdErr);
+    }
+  } else if (UTIL1_strcmp((char*)cmd, "OW1 search")==0) {
+    uint8_t rom[OW1_ROM_CODE_SIZE];
+    bool found;
+    int nofFound = 0;
+
+    *handled = TRUE;
+    OW1_ResetSearch();
+    do {
+      found = OW1_Search(&rom[0], TRUE);
+      if (found) {
+        nofFound++;
+        buf[0] = '\0';
+        (void)OW1_strcatRomCode(buf, sizeof(buf), &rom[0]);
+        UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+        CLS1_SendStr(buf, io->stdOut);
+      }
+    } while(found);
+    if (nofFound==0) {
+      CLS1_SendStr((unsigned char*)"No device found!\r\n", io->stdErr);
+    }
+    return ERR_OK;
+  }
+  return res;
+#else
+  (void)cmd;
+  (void)handled;
+  (void)io;
+  return ERR_OK;
+#endif
+}
+
+/*
+** ===================================================================
+**     Method      :  OW1_ReadRomCode (component OneWire)
+**     Description :
+**         Read the ROM code. Only works with one device on the bus.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * romCodeBuffer   - Pointer to a buffer
+**                           with 8 bytes where the ROM code gets stored
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t OW1_ReadRomCode(uint8_t *romCodeBuffer)
+{
+  uint8_t res;
+
+  OW1_SendReset();
+  while(OW1_isBusy()) { /* wait */ }
+  OW1_SendByte(RC_READ_ROM);
+  while(OW1_isBusy()) { /* wait */ }
+  OW1_Receive(OW1_ROM_CODE_SIZE); /* 8 bytes for the ROM code */
+  while(OW1_isBusy()) { /* wait */ }
+  OW1_SendByte(RC_RELEASE);
+  while(OW1_isBusy()) { /* wait */ }
+  //OW1_ProgramEvent(EV_READ_ROM);
+  //while(OW1_isBusy()) { /* wait */ }
+  /* copy ROM code */
+  res = OW1_GetBytes(romCodeBuffer, OW1_ROM_CODE_SIZE); /* 8 bytes */
+  if (res!=ERR_OK) {
+    return res; /* error */
+  }
+  /* index 0  : family code
+     index 1-6: 48bit serial number
+     index 7  : CRC
+  */
+  if (OW1_CalcCRC(&romCodeBuffer[0], OW1_ROM_CODE_SIZE-1)!=romCodeBuffer[OW1_ROM_CODE_SIZE-1]) {
+    return ERR_CRC; /* wrong CRC? */
+  }
+  return ERR_OK; /* ok */
+}
+
+/*
+** ===================================================================
+**     Method      :  OW1_strcatRomCode (component OneWire)
+**     Description :
+**         Appends the ROM code to a string.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * buf             - Pointer to zero terminated buffer
+**         bufSize         - size of buffer
+**       * romCode         - Pointer to 8 bytes of ROM Code
+**     Returns     :
+**         ---             - error code
+** ===================================================================
+*/
+uint8_t OW1_strcatRomCode(uint8_t *buf, size_t bufSize, uint8_t *romCode)
+{
+  int j;
+
+  for(j=0;j<OW1_ROM_CODE_SIZE;j++) {
+    UTIL1_strcatNum8Hex(buf, bufSize, romCode[j]);
+    if(j<OW1_ROM_CODE_SIZE-1) {
+      UTIL1_chcat(buf, bufSize, '-');
+    }
+  }
+  return ERR_OK;
+}
+
+/*
+** ===================================================================
+**     Method      :  OW1_ResetSearch (component OneWire)
+**     Description :
+**         Reset the search state
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void OW1_ResetSearch(void)
+{
+  /* reset the search state */
+  int i;
+
+  LastDiscrepancy = 0;
+  LastDeviceFlag = FALSE;
+  LastFamilyDiscrepancy = 0;
+  for(i = 7; ; i--) {
+    ROM_NO[i] = 0;
+    if (i==0) {
+      break;
+    }
+  }
+}
+
+/*
+** ===================================================================
+**     Method      :  OW1_TargetSearch (component OneWire)
+**     Description :
+**         
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         familyCode      - family code to restrict
+**                           search for
+**     Returns     : Nothing
+** ===================================================================
+*/
+void OW1_TargetSearch(uint8_t familyCode)
+{
+  /* set the search state to find SearchFamily type devices */
+  int i;
+
+  ROM_NO[0] = familyCode;
+  for (i = 1; i < 8; i++) {
+    ROM_NO[i] = 0;
+  }
+  LastDiscrepancy = 64;
+  LastFamilyDiscrepancy = 0;
+  LastDeviceFlag = FALSE;
+}
+
+/*
+** ===================================================================
+**     Method      :  OW1_Search (component OneWire)
+**     Description :
+**         
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * newAddr         - Pointer to 8 bytes of data where
+**                           to store the new address
+**         search_mode     - 
+**     Returns     :
+**         ---             - TRUE if new device has been found, FALSE
+**                           otherwise.
+** ===================================================================
+*/
+bool OW1_Search(uint8_t *newAddr, bool search_mode)
+{
+// Version from https://raw.githubusercontent.com/PaulStoffregen/OneWire/master/OneWire.cpp
+//--------------------------------------------------------------------------
+// Perform the 1-Wire Search Algorithm on the 1-Wire bus using the existing
+// search state.
+// Return TRUE  : device found, ROM number in ROM_NO buffer
+//        FALSE : device not found, end of search
+  uint8_t id_bit_number;
+  uint8_t last_zero, rom_byte_number, search_result;
+  uint8_t id_bit, cmp_id_bit;
+  unsigned char rom_byte_mask, search_direction;
+  uint8_t res;
+
+  /* initialize for search */
+  id_bit_number = 1;
+  last_zero = 0;
+  rom_byte_number = 0;
+  rom_byte_mask = 1;
+  search_result = 0;
+
+  /* if the last call was not the last one */
+  if (!LastDeviceFlag) {
+    /* 1-Wire reset */
+    res = OW1_SendReset();
+    while(OW1_isBusy()) { /* wait */ }
+    if (res!=ERR_OK || OW1_GetError()!=OWERR_OK) {
+      // reset the search
+      LastDiscrepancy = 0;
+      LastDeviceFlag = FALSE;
+      LastFamilyDiscrepancy = 0;
+      return FALSE;
+    }
+    /* issue the search command */
+    if (search_mode == true) {
+      OW1_SendByte(RC_SEARCH);   /* NORMAL SEARCH */
+      while(OW1_isBusy()) { /* wait */ }
+    } else {
+      OW1_SendByte(RC_SEARCH_COND);   /* CONDITIONAL SEARCH */
+      while(OW1_isBusy()) { /* wait */ }
+    }
+    /* loop to do the search */
+    do  {
+      /* read a bit and its complement */
+      id_bit = read_bit();
+      cmp_id_bit = read_bit();
+
+      /* check for no devices on 1-wire */
+      if ((id_bit==1) && (cmp_id_bit==1)) {
+        break;
+      } else {
+        /* all devices coupled have 0 or 1 */
+        if (id_bit != cmp_id_bit) {
+          search_direction = id_bit;  // bit write value for search
+        } else {
+          /* if this discrepancy if before the Last Discrepancy */
+          /* on a previous next then pick the same as last time */
+          if (id_bit_number < LastDiscrepancy) {
+            search_direction = ((ROM_NO[rom_byte_number] & rom_byte_mask) > 0);
+          } else {
+            /* if equal to last pick 1, if not then pick 0 */
+            search_direction = (id_bit_number == LastDiscrepancy);
+          }
+          /* if 0 was picked then record its position in LastZero */
+          if (search_direction == 0) {
+            last_zero = id_bit_number;
+            /* check for Last discrepancy in family */
+            if (last_zero < 9)
+               LastFamilyDiscrepancy = last_zero;
+            }
+          }
+
+          /* set or clear the bit in the ROM byte rom_byte_number */
+          /* with mask rom_byte_mask */
+          if (search_direction == 1) {
+            ROM_NO[rom_byte_number] |= rom_byte_mask;
+          } else {
+            ROM_NO[rom_byte_number] &= ~rom_byte_mask;
+          }
+          /* serial number search direction write bit */
+          write_bit(search_direction);
+
+          /* increment the byte counter id_bit_number */
+          /* and shift the mask rom_byte_mask */
+          id_bit_number++;
+          rom_byte_mask <<= 1;
+
+          /* if the mask is 0 then go to new SerialNum byte rom_byte_number and reset mask */
+          if (rom_byte_mask == 0) {
+            rom_byte_number++;
+            rom_byte_mask = 1;
+          }
+       }
+    }
+    while(rom_byte_number < 8);  /* loop until through all ROM bytes 0-7 */
+    /* if the search was successful then */
+    if (!(id_bit_number < 65)) {
+      /* search successful so set LastDiscrepancy,LastDeviceFlag,search_result */
+      LastDiscrepancy = last_zero;
+
+      /* check for last device */
+      if (LastDiscrepancy == 0) {
+        LastDeviceFlag = TRUE;
+      }
+      search_result = TRUE;
+    }
+  }
+  /* if no device found then reset counters so next 'search' will be like a first */
+  if (!search_result || !ROM_NO[0])  {
+    LastDiscrepancy = 0;
+    LastDeviceFlag = FALSE;
+    LastFamilyDiscrepancy = 0;
+    search_result = FALSE;
+  } else {
+    for (int i = 0; i < 8; i++) {
+      newAddr[i] = ROM_NO[i];
+    }
+  }
+  return search_result;
 }
 
 /* END OW1. */

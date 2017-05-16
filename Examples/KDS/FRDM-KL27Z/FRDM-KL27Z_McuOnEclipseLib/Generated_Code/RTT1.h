@@ -7,7 +7,7 @@
 **     Version     : Component 01.081, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-11, 14:15, # CodeGen: 142
+**     Date/Time   : 2017-05-15, 20:30, # CodeGen: 180
 **     Abstract    :
 **
 **     Settings    :
@@ -23,7 +23,7 @@
 **            Up Buffer Mode                               : Skip (Default)
 **            Down Buffer Mode                             : Skip (Default)
 **            Blocking Send                                : Enabled
-**              Timeout (ms)                               : 20
+**              Timeout (ms)                               : 30
 **              Wait                                       : WAIT1
 **              Wait Time (ms)                             : 2
 **            Printf Buffer Size                           : 64

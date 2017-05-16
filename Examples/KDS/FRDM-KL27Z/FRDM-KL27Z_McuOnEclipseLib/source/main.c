@@ -73,41 +73,6 @@
   #include "DS1.h"
 #endif
 
-#if 0
-static volatile bool tpmIsrFlag = false;
-
-void _TPM2_IRQHandler(void) {
-    /* Clear interrupt flag.*/
-    TPM_ClearStatusFlags(TPM2, kTPM_TimeOverflowFlag);
-    tpmIsrFlag = true;
-}
-
-static void SetupTimer(void) {
-  tpm_config_t tpmInfo;
-  #define TPM_SOURCE_CLOCK (CLOCK_GetFreq(kCLOCK_McgIrc48MClk)/4)
-
-  /* Select the clock source for the TPM counter as MCGPLLCLK */
-  CLOCK_SetTpmClock(1U);
-
-  TPM_GetDefaultConfig(&tpmInfo);
-  /* TPM clock divide by 4 */
-  tpmInfo.prescale = kTPM_Prescale_Divide_4;
-
-  /* Initialize TPM module */
-  TPM_Init(TPM2, &tpmInfo);
-  /*
-   * Set timer period.
-   */
-  TPM_SetTimerPeriod(TPM2, USEC_TO_COUNT(1000U, TPM_SOURCE_CLOCK));
-
-  TPM_EnableInterrupts(TPM2, kTPM_TimeOverflowInterruptEnable);
-
-  EnableIRQ(TPM2_IRQn);
-
-  TPM_StartTimer(TPM2, kTPM_SystemClock);
-}
-#endif
-
 static void MainTask(void *pvParameters) {
   (void)pvParameters; /* parameter not used */
   for(;;) {

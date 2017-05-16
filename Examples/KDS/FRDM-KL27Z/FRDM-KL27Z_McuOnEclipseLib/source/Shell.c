@@ -34,6 +34,7 @@
 #endif
 #if PL_CONFIG_HAS_ONE_WIRE
   #include "DS1.h"
+  #include "OW1.h"
 #endif
 
 void SHELL_SendString(unsigned char *msg) {
@@ -70,6 +71,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_HAS_ONE_WIRE && DS1_PARSE_COMMAND_ENABLED
   DS1_ParseCommand,
 #endif
+#if 1 || PL_CONFIG_HAS_ONE_WIRE && OW1_PARSE_COMMAND_ENABLED
+  OW1_ParseCommand,
+#endif
   NULL /* Sentinel */
 };
 
@@ -93,7 +97,7 @@ static void ShellTask(void *pvParameters) {
 
 void SHELL_Init(void) {
   CLS1_Init();
-  if (xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+150, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+150, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 }

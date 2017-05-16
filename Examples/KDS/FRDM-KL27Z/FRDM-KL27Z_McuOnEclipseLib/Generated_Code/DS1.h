@@ -5,16 +5,16 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : DS18B20
-**     Version     : Component 01.009, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.010, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-14, 21:15, # CodeGen: 163
+**     Date/Time   : 2017-05-15, 17:36, # CodeGen: 175
 **     Abstract    :
 **
 This is a component for the Maxim DS18B20 1-Wire temperature sensor.
 **     Settings    :
 **          Component Name                                 : DS1
-**          Temperature Reading                            : Auto
+**          Temperature Reading                            : With ReadTemperature()
 **          Connection mode                                : One slave
 **          One Wire                                       : OW1
 **          SDK                                            : MCUC1
@@ -234,7 +234,7 @@ uint8_t DS1_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_Std
 **         is enabled in the component properties.
 **     Parameters  :
 **         NAME            - DESCRIPTION
-**         cmd             - 
+**         cmd             - command string
 **       * handled         - Pointer to variable which tells if
 **                           the command has been handled or not
 **         io              - Pointer to I/O structure
