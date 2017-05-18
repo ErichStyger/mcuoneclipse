@@ -7,7 +7,7 @@
 **     Version     : Component 01.095, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-15, 15:18, # CodeGen: 171
+**     Date/Time   : 2017-05-17, 08:10, # CodeGen: 192
 **     Abstract    :
 **
 **     Settings    :
@@ -19,7 +19,7 @@
 **          Buffer Size                                    : 48
 **          Blocking Send                                  : Enabled
 **            Wait                                         : WAIT1
-**            Timeout (ms)                                 : 20
+**            Timeout (ms)                                 : 30
 **            Wait Time (ms)                               : 2
 **            RTOS Wait                                    : yes
 **          Status Colon Pos                               : 13

@@ -9,7 +9,7 @@
 #define __OW1_CONFIG_H
 
 /* timing in micro seconds */
-#define OW1_CONFIG_A_WRITE_1_LOW_TIME                       6 /* A */
+#define OW1_CONFIG_A_WRITE_1_LOW_TIME                       5 /* A */
 #define OW1_CONFIG_B_WRITE_1_HIGH_TIME                      64 /* B */
 #define OW1_CONFIG_C_WRITE_0_LOW_TIME                       60 /* C */
 #define OW1_CONFIG_D_WRITE_0_HIGH_TIME                      10 /* D */

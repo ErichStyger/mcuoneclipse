@@ -68,11 +68,11 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if I2CSPY1_PARSE_COMMAND_ENABLED
   I2CSPY1_ParseCommand,
 #endif
+#if PL_CONFIG_HAS_ONE_WIRE && OW1_PARSE_COMMAND_ENABLED
+  OW1_ParseCommand,
+#endif
 #if PL_CONFIG_HAS_ONE_WIRE && DS1_PARSE_COMMAND_ENABLED
   DS1_ParseCommand,
-#endif
-#if 1 || PL_CONFIG_HAS_ONE_WIRE && OW1_PARSE_COMMAND_ENABLED
-  OW1_ParseCommand,
 #endif
   NULL /* Sentinel */
 };

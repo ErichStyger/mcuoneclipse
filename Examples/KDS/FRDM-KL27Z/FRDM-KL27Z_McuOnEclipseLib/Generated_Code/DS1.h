@@ -8,13 +8,13 @@
 **     Version     : Component 01.010, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-15, 17:36, # CodeGen: 175
+**     Date/Time   : 2017-05-17, 16:01, # CodeGen: 199
 **     Abstract    :
 **
 This is a component for the Maxim DS18B20 1-Wire temperature sensor.
 **     Settings    :
 **          Component Name                                 : DS1
-**          Temperature Reading                            : With ReadTemperature()
+**          Temperature Reading                            : Auto
 **          Connection mode                                : One slave
 **          One Wire                                       : OW1
 **          SDK                                            : MCUC1

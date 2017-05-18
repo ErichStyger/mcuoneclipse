@@ -16,7 +16,7 @@
   /*!< 1: there are multiple devices on the bus, need to use ROM code to address them; 0: single device on the 1-Wire bus */
 
 #ifndef DS1_CONFIG_READ_AUTO
-  #define DS1_CONFIG_READ_AUTO                   (0)
+  #define DS1_CONFIG_READ_AUTO                   (1)
   /*!< 1: automatic mode, temperature is read from sensor during StartConversion(). 0: Call ReadTemperature() after starting a conversion */
 #endif
 

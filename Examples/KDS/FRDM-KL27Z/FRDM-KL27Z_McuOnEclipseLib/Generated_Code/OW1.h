@@ -5,10 +5,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : OneWire
-**     Version     : Component 01.125, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.129, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-15, 21:21, # CodeGen: 182
+**     Date/Time   : 2017-05-17, 16:15, # CodeGen: 203
 **     Abstract    :
 **
 This is a component implementing the 1-Wire protocol.
@@ -19,12 +19,12 @@ This is a component implementing the 1-Wire protocol.
 **          Timer (LDD)                                    : Disabled
 **          Timer (SDK)                                    : Enabled
 **            Timer                                        : SDK_Timer
-**          Connection                                     : 
-**            A: Write 1 Low time (us)                     : 6
+**          Timing                                         : 
+**            A: Write 1 Low time (us)                     : 5
 **            B: Write 1 High time (us)                    : 64
 **            C: Write 0 Low time (us)                     : 60
 **            D: Write 0 High time (us)                    : 10
-**            E: delay time before read (us)               : 1
+**            E: Delay time before read (us)               : 1
 **            F: After read delay time                     : 55
 **            H: Reset time (us)                           : 480
 **            I: Device response time (us)                 : 70
@@ -124,7 +124,7 @@ This is a component implementing the 1-Wire protocol.
 #include "MCUC1.h" /* SDK and API used */
 #include "OW1config.h" /* configuration */
 #include "CLS1.h" /* Shell */
-
+#include <stddef.h> /* for size_t */
 
 #define OW1_ROM_CODE_SIZE   (8)
   /*!< Number of bytes for ROM code */

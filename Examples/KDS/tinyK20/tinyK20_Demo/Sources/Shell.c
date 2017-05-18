@@ -21,6 +21,7 @@
 #endif
 #if PL_CONFIG_HAS_1_WIRE
   #include "DS1.h"
+  #include "OW1.h"
 #endif
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
@@ -35,6 +36,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_HAS_1_WIRE
 #if DS1_PARSE_COMMAND_ENABLED
   DS1_ParseCommand,
+#endif
+#if OW1_PARSE_COMMAND_ENABLED
+  OW1_ParseCommand,
 #endif
 #endif
   NULL /* sentinel */

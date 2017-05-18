@@ -8,13 +8,13 @@
 **     Version     : Component 01.010, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-15, 21:21, # CodeGen: 182
+**     Date/Time   : 2017-05-18, 08:14, # CodeGen: 204
 **     Abstract    :
 **
 This is a component for the Maxim DS18B20 1-Wire temperature sensor.
 **     Settings    :
 **          Component Name                                 : DS1
-**          Temperature Reading                            : With ReadTemperature()
+**          Temperature Reading                            : Auto
 **          Connection mode                                : One slave
 **          One Wire                                       : OW1
 **          SDK                                            : MCUC1
@@ -176,6 +176,15 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
 #else
   CLS1_SendStatusStr((unsigned char*)"  mode", (unsigned char*)"read: start conversion, then read temperature\r\n", io->stdOut);
 #endif
+#if DS1_CONFIG_MULTIPLE_BUS_DEVICES
+  CLS1_SendStatusStr((unsigned char*)"  multiple", (unsigned char*)"yes\r\n", io->stdOut);
+#else
+  CLS1_SendStatusStr((unsigned char*)"  multiple", (unsigned char*)"no\r\n", io->stdOut);
+#endif
+  UTIL1_Num8uToStr(buf, sizeof(buf), DS1_CONFIG_NUMBER_OF_SENSORS);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  CLS1_SendStatusStr((unsigned char*)"  sensors", buf, io->stdOut);
+
   for(i=0;i<DS1_CONFIG_NUMBER_OF_SENSORS;i++) {
     /* ROM Code */
     UTIL1_Num8uToStr(buf, sizeof(buf), i); /* sensor number */
@@ -778,7 +787,8 @@ void DS1_Init(void)
   for(i=0;i<DS1_CONFIG_NUMBER_OF_SENSORS;i++) {
     Sensor[i].resolution = DS18B20_RESOLUTION_BITS_12;
   }
-  memcpy(Sensor[0].Rom, "\x28\x00\x00\x00\x00\x00\x00\x00", 8);
+  memcpy(Sensor[0].Rom, "\x28\x87\x99\x37\x09\x00\x00\x75", 8);
+  memcpy(Sensor[1].Rom, "\x28\x1F\xF9\x35\x09\x00\x00\x73", 8);
 #else
   memset(&Sensor[0], 0, sizeof(Sensor[0])); /* initialize all fields with zero */
   Sensor[0].resolution = DS18B20_RESOLUTION_BITS_12; /* default resolution */

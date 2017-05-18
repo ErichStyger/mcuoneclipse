@@ -5,10 +5,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : OneWire
-**     Version     : Component 01.125, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.129, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-16, 20:23, # CodeGen: 191
+**     Date/Time   : 2017-05-17, 16:15, # CodeGen: 203
 **     Abstract    :
 **
 This is a component implementing the 1-Wire protocol.
@@ -19,12 +19,12 @@ This is a component implementing the 1-Wire protocol.
 **          Timer (LDD)                                    : Disabled
 **          Timer (SDK)                                    : Enabled
 **            Timer                                        : SDK_Timer
-**          Connection                                     : 
-**            A: Write 1 Low time (us)                     : 6
+**          Timing                                         : 
+**            A: Write 1 Low time (us)                     : 5
 **            B: Write 1 High time (us)                    : 64
 **            C: Write 0 Low time (us)                     : 60
 **            D: Write 0 High time (us)                    : 10
-**            E: delay time before read (us)               : 1
+**            E: Delay time before read (us)               : 1
 **            F: After read delay time                     : 55
 **            H: Reset time (us)                           : 480
 **            I: Device response time (us)                 : 70
@@ -126,6 +126,8 @@ This is a component implementing the 1-Wire protocol.
 #include "TimeRB1.h" /* time ring buffer */
 #include "ProgramRB1.h" /* program ring buffer */
 #include "Timer1.h" /* Timer Unit */
+#include "UTIL1.h" /* Utility */
+#include "WAIT1.h" /* Waiting */
 
 // global search state
 static unsigned char ROM_NO[8];
@@ -144,7 +146,7 @@ static uint8_t LastDeviceFlag;
 #define INPUT          0U
 #define OUTPUT         1U
 
-#if OW1_CONFIG_WRITE_PIN
+#if OW1_CONFIG_WRITE_PIN /* extra pin only for write bit */
   #define DQ_Init               DQ1_Init(); OW1_CONFIG_WRITE_PIN_INIT
 #else
   #define DQ_Init               DQ1_Init()
@@ -243,18 +245,16 @@ static uint8_t read_bit(void) {
   CS1_EnterCritical();
   DQ_Low;
 #if OW1_CONFIG_A_READ_TIME>2
-  WAIT1_Waitus(OW1_CONFIG_A_READ_TIME);
-#else /* shorten time to keep the needed timing */
   WAIT1_Waitus(OW1_CONFIG_A_READ_TIME-2);
 #endif
   DQ_Floating;
-  WAIT1_Waitus(OW1_CONFIG_E_BEFORE_READ_DELAY_TIME);
+#if OW1_CONFIG_E_BEFORE_READ_DELAY_TIME>2
+  WAIT1_Waitus(OW1_CONFIG_E_BEFORE_READ_DELAY_TIME-2);
+#endif
   bit = DQ_Read;
   CS1_ExitCritical();
 #if OW1_CONFIG_F_AFTER_READ_DELAY_TIME>2
   WAIT1_Waitus(OW1_CONFIG_F_AFTER_READ_DELAY_TIME-2);
-#else
-  WAIT1_Waitus(OW1_CONFIG_F_AFTER_READ_DELAY_TIME);
 #endif
   return bit;
 }
@@ -346,7 +346,11 @@ static void OW1_OnTimerRestart(void) {
 #if OW1_CONFIG_PARSE_COMMAND_ENABLED
 static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   CLS1_SendStatusStr((unsigned char*)"OW1", (unsigned char*)"\r\n", io->stdOut);
-  CLS1_SendStatusStr((unsigned char*)"  mode", (unsigned char*)"test\r\n", io->stdOut);
+#if OW1_CONFIG_DEBUG_READ_PIN_ENABLED
+  CLS1_SendStatusStr((unsigned char*)"  debug pin", (unsigned char*)"yes\r\n", io->stdOut);
+#else
+  CLS1_SendStatusStr((unsigned char*)"  debug pin", (unsigned char*)"no\r\n", io->stdOut);
+#endif
   return ERR_OK;
 }
 
@@ -961,13 +965,13 @@ void OW1_Init(void)
 {
 #if MCUC1_CONFIG_NXP_SDK_USED
   /* using SDK, need to initialize inherited components */
-  DQ_Init;
-  DBG_Init;
+  TU_Init; /* timer */
+  DQ_Init; /* data pin */
+  DBG_Init; /* optional debug pin */
   InputRB1_Init(); /* input ring buffer */
   OutputRB1_Init(); /* output ring buffer */
   ProgramRB1_Init(); /* program ring buffer */
   TimeRB1_Init(); /* time ring buffer */
-  Timer1_Init(); /* timer */
 #else
   Data.TUDeviceDataPtr = TU_Init; /* timer init */
 #endif
@@ -1064,10 +1068,17 @@ uint8_t OW1_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_Std
 
     *handled = TRUE;
     res = OW1_ReadRomCode(&rom[0]);
-    while(OW1_isBusy()) { /* wait */ }
-    (void)OW1_strcatRomCode(buf, sizeof(buf), &rom[0]);
-    UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-    CLS1_SendStr(buf, io->stdOut);
+    if (res!=ERR_OK) {
+      UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"ReadRomCode() ERROR (");
+      UTIL1_strcatNum8u(buf, sizeof(buf), res);
+      UTIL1_strcat(buf, sizeof(buf), (unsigned char*)")\r\n");
+      CLS1_SendStr(buf, io->stdErr);
+    } else {
+      buf[0] = '\0';
+      (void)OW1_strcatRomCode(buf, sizeof(buf), &rom[0]);
+      UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+      CLS1_SendStr(buf, io->stdOut);
+    }
   } else if (UTIL1_strcmp((char*)cmd, "OW1 reset")==0) {
     *handled = TRUE;
     res = OW1_SendReset();
@@ -1139,8 +1150,6 @@ uint8_t OW1_ReadRomCode(uint8_t *romCodeBuffer)
   while(OW1_isBusy()) { /* wait */ }
   OW1_SendByte(RC_RELEASE);
   while(OW1_isBusy()) { /* wait */ }
-  //OW1_ProgramEvent(EV_READ_ROM);
-  //while(OW1_isBusy()) { /* wait */ }
   /* copy ROM code */
   res = OW1_GetBytes(romCodeBuffer, OW1_ROM_CODE_SIZE); /* 8 bytes */
   if (res!=ERR_OK) {
@@ -1276,14 +1285,14 @@ bool OW1_Search(uint8_t *newAddr, bool search_mode)
     res = OW1_SendReset();
     while(OW1_isBusy()) { /* wait */ }
     if (res!=ERR_OK || OW1_GetError()!=OWERR_OK) {
-      // reset the search
+      /* reset the search */
       LastDiscrepancy = 0;
       LastDeviceFlag = FALSE;
       LastFamilyDiscrepancy = 0;
       return FALSE;
     }
     /* issue the search command */
-    if (search_mode == true) {
+    if (search_mode) {
       OW1_SendByte(RC_SEARCH);   /* NORMAL SEARCH */
       while(OW1_isBusy()) { /* wait */ }
     } else {

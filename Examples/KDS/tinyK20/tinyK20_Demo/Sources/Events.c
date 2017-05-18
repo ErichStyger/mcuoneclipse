@@ -426,6 +426,22 @@ void OW1_OnWaitEnd(uint8_t key2)
 }
 
 
+/*
+** ===================================================================
+**     Event       :  DS1_OnAllConverted (module Events)
+**
+**     Component   :  DS1 [DS18B20]
+**     Description :
+**         event called after all sensors have been converted
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void DS1_OnAllConverted(void)
+{
+  /* Write your code here ... */
+}
+
 /* END Events */
 
 #ifdef __cplusplus

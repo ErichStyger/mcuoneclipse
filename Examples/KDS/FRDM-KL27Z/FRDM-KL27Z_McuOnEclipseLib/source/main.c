@@ -118,8 +118,6 @@ static void InitComponents(void) {
 #if PL_CONFIG_HAS_ONE_WIRE
   OW1_Init();
   DS1_Init();
-  //SetupTimer();
-  //TMR1_Init();
 #endif
 }
 
