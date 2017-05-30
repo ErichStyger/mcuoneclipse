@@ -7,7 +7,7 @@
 **     Version     : Component 01.051, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-11, 11:56, # CodeGen: 137
+**     Date/Time   : 2017-05-26, 12:45, # CodeGen: 205
 **     Abstract    :
 **         This component implements a ring buffer for different integer data type.
 **     Settings    :
@@ -81,6 +81,10 @@
 #include "MCUC1.h"
 #include "CS1.h"
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #if TimeRB1_CONFIG_ELEM_SIZE==1
   typedef uint8_t TimeRB1_ElementType; /* type of single element */
@@ -281,6 +285,10 @@ uint8_t TimeRB1_Update(TimeRB1_BufSizeType index, TimeRB1_ElementType *elemP);
 */
 
 /* END TimeRB1. */
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 #endif
 /* ifndef __TimeRB1_H */

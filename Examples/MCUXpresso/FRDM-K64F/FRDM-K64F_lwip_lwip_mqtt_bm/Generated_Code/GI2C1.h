@@ -7,7 +7,7 @@
 **     Version     : Component 01.033, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-05, 17:36, # CodeGen: 37
+**     Date/Time   : 2017-05-26, 06:31, # CodeGen: 39
 **     Abstract    :
 **         This component implements a generic I2C driver wrapper to work both with LDD and non-LDD I2C components.
 **     Settings    :
@@ -93,6 +93,10 @@
 #include "I2C1.h"
 #include "FRTOS1.h"
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define GI2C1_WRITE_BUFFER_SIZE 16 /* size of internal buffer used, set in the component properties */
 
@@ -369,6 +373,10 @@ uint8_t GI2C1_WriteWordAddress8(uint8_t i2cAddr, uint8_t memAddr, uint16_t data)
 */
 
 /* END GI2C1. */
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 #endif
 /* ifndef __GI2C1_H */

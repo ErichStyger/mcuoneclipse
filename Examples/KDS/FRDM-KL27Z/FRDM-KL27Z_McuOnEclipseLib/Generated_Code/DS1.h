@@ -5,17 +5,36 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : DS18B20
-**     Version     : Component 01.010, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.013, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-17, 16:01, # CodeGen: 199
+**     Date/Time   : 2017-05-26, 12:45, # CodeGen: 205
 **     Abstract    :
 **
 This is a component for the Maxim DS18B20 1-Wire temperature sensor.
 **     Settings    :
 **          Component Name                                 : DS1
 **          Temperature Reading                            : Auto
-**          Connection mode                                : One slave
+**          Connection mode                                : Multiple slaves
+**            Number of devices                            : 2
+**              Sensor 64-bit ROM code                     : 28-87-99-37-09-00-00-75
+**                Family code                              : 0x28
+**                Serial number 1                          : 0x87
+**                Serial number 2                          : 0x99
+**                Serial number 3                          : 0x37
+**                Serial number 4                          : 0x09
+**                Serial number 5                          : 0x00
+**                Serial number 6                          : 0x00
+**                CRC                                      : 0x75
+**              Sensor 64-bit ROM code                     : 28-1F-F9-35-09-00-00-73
+**                Family code                              : 0x28
+**                Serial number 1                          : 0x1F
+**                Serial number 2                          : 0xF9
+**                Serial number 3                          : 0x35
+**                Serial number 4                          : 0x09
+**                Serial number 5                          : 0x00
+**                Serial number 6                          : 0x00
+**                CRC                                      : 0x73
 **          One Wire                                       : OW1
 **          SDK                                            : MCUC1
 **          Wait                                           : WAIT1
@@ -23,27 +42,48 @@ This is a component for the Maxim DS18B20 1-Wire temperature sensor.
 **            Shell                                        : CLS1
 **            Utility                                      : UTIL1
 **     Contents    :
-**         ReadRom             - uint8_t DS1_ReadRom(uint8_t sensor_index);
-**         GetRomCode          - uint8_t DS1_GetRomCode(uint8_t sensor_index, uint8_t **romCodePtr);
-**         isBusy              - bool DS1_isBusy(void);
-**         StartConversion     - uint8_t DS1_StartConversion(uint8_t sensor_index);
-**         ReadTemperature     - uint8_t DS1_ReadTemperature(uint8_t sensor_index);
-**         GetTemperatureRaw   - uint8_t DS1_GetTemperatureRaw(uint16_t sensor_index, uint32_t *raw);
-**         GetTemperatureFloat - uint8_t DS1_GetTemperatureFloat(uint8_t sensor_index, float *temperature);
-**         ReadResolution      - uint8_t DS1_ReadResolution(uint8_t sensor_index);
-**         SetResolution       - uint8_t DS1_SetResolution(uint8_t sensor_index, DS18B20_ResolutionBits...
-**         ParseCommand        - uint8_t DS1_ParseCommand(const unsigned char* cmd, bool *handled, const...
-**         Init                - void DS1_Init(void);
-**         Deinit              - void DS1_Deinit(void);
+**         ReadRom                 - uint8_t DS1_ReadRom(uint8_t sensor_index);
+**         GetRomCode              - uint8_t DS1_GetRomCode(uint8_t sensor_index, uint8_t **romCodePtr);
+**         isBusy                  - bool DS1_isBusy(void);
+**         StartConversion         - uint8_t DS1_StartConversion(uint8_t sensor_index);
+**         ReadTemperature         - uint8_t DS1_ReadTemperature(uint8_t sensor_index);
+**         GetTemperatureRaw       - uint8_t DS1_GetTemperatureRaw(uint16_t sensor_index, uint32_t *raw);
+**         GetTemperatureFloat     - uint8_t DS1_GetTemperatureFloat(uint8_t sensor_index, float *temperature);
+**         ConvertAll              - uint8_t DS1_ConvertAll(void);
+**         ReadResolution          - uint8_t DS1_ReadResolution(uint8_t sensor_index);
+**         SetResolution           - uint8_t DS1_SetResolution(uint8_t sensor_index, DS18B20_ResolutionBits...
+**         SearchAndAssignROMCodes - uint8_t DS1_SearchAndAssignROMCodes(void);
+**         ParseCommand            - uint8_t DS1_ParseCommand(const unsigned char* cmd, bool *handled, const...
+**         Init                    - void DS1_Init(void);
+**         Deinit                  - void DS1_Deinit(void);
 **
-**     License   :  Open Source (LGPL)
-**     Copyright : (c) Omar Isaí Pinales Ayala, 2014, all rights reserved.
-**     http      : http://www.mcuoneclipse.com
-**     This an open source software driver for Processor Expert.
-**     This is a free software and is opened for education,  research  and commercial developments under license policy of following terms:
-**     * This is a free software and there is NO WARRANTY.
-**     * No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.
-**     * Redistributions of source code must retain the above copyright notice.
+**     * Copyright (c) Original implementation: Omar Isaí Pinales Ayala, 2014, all rights reserved.
+**      * Updated and maintained by Erich Styger, 2014-2017
+**      * Web:         https://mcuoneclipse.com
+**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**      * All rights reserved.
+**      *
+**      * Redistribution and use in source and binary forms, with or without modification,
+**      * are permitted provided that the following conditions are met:
+**      *
+**      * - Redistributions of source code must retain the above copyright notice, this list
+**      *   of conditions and the following disclaimer.
+**      *
+**      * - Redistributions in binary form must reproduce the above copyright notice, this
+**      *   list of conditions and the following disclaimer in the documentation and/or
+**      *   other materials provided with the distribution.
+**      *
+**      * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**      * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**      * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**      * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**      * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**      * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**      * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
 ** @file DS1.h
@@ -64,6 +104,7 @@ This is a component for the Maxim DS18B20 1-Wire temperature sensor.
 #include "MCUC1.h" /* SDK and API used */
 #include "DS1config.h" /* configuration */
 #include "CLS1.h" /* Shell */
+
 
 /* sensor resolution */
 typedef enum {
@@ -114,6 +155,17 @@ uint8_t DS1_SetResolution(uint8_t sensor_index, DS18B20_ResolutionBits resolutio
 ** ===================================================================
 */
 
+uint8_t DS1_ConvertAll(void);
+/*
+** ===================================================================
+**     Method      :  DS1_ConvertAll (component DS18B20)
+**     Description :
+**         Convert temperature for all sensors
+**     Parameters  : None
+**     Returns     :
+**         ---             - error code
+** ===================================================================
+*/
 
 uint8_t DS1_ReadTemperature(uint8_t sensor_index);
 /*
@@ -266,6 +318,19 @@ uint8_t DS1_ReadResolution(uint8_t sensor_index);
 **                           if only using one sensor
 **     Returns     :
 **         ---             - error code
+** ===================================================================
+*/
+
+uint8_t DS1_SearchAndAssignROMCodes(void);
+/*
+** ===================================================================
+**     Method      :  DS1_SearchAndAssignROMCodes (component DS18B20)
+**     Description :
+**         Scans the devices on the bus and assigns the ROM codes to
+**         the list of available sensors
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
 ** ===================================================================
 */
 

@@ -5,10 +5,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : OneWire
-**     Version     : Component 01.129, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.130, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-17, 16:15, # CodeGen: 203
+**     Date/Time   : 2017-05-26, 12:45, # CodeGen: 205
 **     Abstract    :
 **
 This is a component implementing the 1-Wire protocol.

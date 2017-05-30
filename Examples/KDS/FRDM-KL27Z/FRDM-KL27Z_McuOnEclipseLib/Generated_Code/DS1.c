@@ -5,17 +5,36 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : DS18B20
-**     Version     : Component 01.010, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.013, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-18, 08:14, # CodeGen: 204
+**     Date/Time   : 2017-05-26, 12:45, # CodeGen: 205
 **     Abstract    :
 **
 This is a component for the Maxim DS18B20 1-Wire temperature sensor.
 **     Settings    :
 **          Component Name                                 : DS1
 **          Temperature Reading                            : Auto
-**          Connection mode                                : One slave
+**          Connection mode                                : Multiple slaves
+**            Number of devices                            : 2
+**              Sensor 64-bit ROM code                     : 28-87-99-37-09-00-00-75
+**                Family code                              : 0x28
+**                Serial number 1                          : 0x87
+**                Serial number 2                          : 0x99
+**                Serial number 3                          : 0x37
+**                Serial number 4                          : 0x09
+**                Serial number 5                          : 0x00
+**                Serial number 6                          : 0x00
+**                CRC                                      : 0x75
+**              Sensor 64-bit ROM code                     : 28-1F-F9-35-09-00-00-73
+**                Family code                              : 0x28
+**                Serial number 1                          : 0x1F
+**                Serial number 2                          : 0xF9
+**                Serial number 3                          : 0x35
+**                Serial number 4                          : 0x09
+**                Serial number 5                          : 0x00
+**                Serial number 6                          : 0x00
+**                CRC                                      : 0x73
 **          One Wire                                       : OW1
 **          SDK                                            : MCUC1
 **          Wait                                           : WAIT1
@@ -23,27 +42,48 @@ This is a component for the Maxim DS18B20 1-Wire temperature sensor.
 **            Shell                                        : CLS1
 **            Utility                                      : UTIL1
 **     Contents    :
-**         ReadRom             - uint8_t DS1_ReadRom(uint8_t sensor_index);
-**         GetRomCode          - uint8_t DS1_GetRomCode(uint8_t sensor_index, uint8_t **romCodePtr);
-**         isBusy              - bool DS1_isBusy(void);
-**         StartConversion     - uint8_t DS1_StartConversion(uint8_t sensor_index);
-**         ReadTemperature     - uint8_t DS1_ReadTemperature(uint8_t sensor_index);
-**         GetTemperatureRaw   - uint8_t DS1_GetTemperatureRaw(uint16_t sensor_index, uint32_t *raw);
-**         GetTemperatureFloat - uint8_t DS1_GetTemperatureFloat(uint8_t sensor_index, float *temperature);
-**         ReadResolution      - uint8_t DS1_ReadResolution(uint8_t sensor_index);
-**         SetResolution       - uint8_t DS1_SetResolution(uint8_t sensor_index, DS18B20_ResolutionBits...
-**         ParseCommand        - uint8_t DS1_ParseCommand(const unsigned char* cmd, bool *handled, const...
-**         Init                - void DS1_Init(void);
-**         Deinit              - void DS1_Deinit(void);
+**         ReadRom                 - uint8_t DS1_ReadRom(uint8_t sensor_index);
+**         GetRomCode              - uint8_t DS1_GetRomCode(uint8_t sensor_index, uint8_t **romCodePtr);
+**         isBusy                  - bool DS1_isBusy(void);
+**         StartConversion         - uint8_t DS1_StartConversion(uint8_t sensor_index);
+**         ReadTemperature         - uint8_t DS1_ReadTemperature(uint8_t sensor_index);
+**         GetTemperatureRaw       - uint8_t DS1_GetTemperatureRaw(uint16_t sensor_index, uint32_t *raw);
+**         GetTemperatureFloat     - uint8_t DS1_GetTemperatureFloat(uint8_t sensor_index, float *temperature);
+**         ConvertAll              - uint8_t DS1_ConvertAll(void);
+**         ReadResolution          - uint8_t DS1_ReadResolution(uint8_t sensor_index);
+**         SetResolution           - uint8_t DS1_SetResolution(uint8_t sensor_index, DS18B20_ResolutionBits...
+**         SearchAndAssignROMCodes - uint8_t DS1_SearchAndAssignROMCodes(void);
+**         ParseCommand            - uint8_t DS1_ParseCommand(const unsigned char* cmd, bool *handled, const...
+**         Init                    - void DS1_Init(void);
+**         Deinit                  - void DS1_Deinit(void);
 **
-**     License   :  Open Source (LGPL)
-**     Copyright : (c) Omar Isaí Pinales Ayala, 2014, all rights reserved.
-**     http      : http://www.mcuoneclipse.com
-**     This an open source software driver for Processor Expert.
-**     This is a free software and is opened for education,  research  and commercial developments under license policy of following terms:
-**     * This is a free software and there is NO WARRANTY.
-**     * No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.
-**     * Redistributions of source code must retain the above copyright notice.
+**     * Copyright (c) Original implementation: Omar Isaí Pinales Ayala, 2014, all rights reserved.
+**      * Updated and maintained by Erich Styger, 2014-2017
+**      * Web:         https://mcuoneclipse.com
+**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**      * All rights reserved.
+**      *
+**      * Redistribution and use in source and binary forms, with or without modification,
+**      * are permitted provided that the following conditions are met:
+**      *
+**      * - Redistributions of source code must retain the above copyright notice, this list
+**      *   of conditions and the following disclaimer.
+**      *
+**      * - Redistributions in binary form must reproduce the above copyright notice, this
+**      *   list of conditions and the following disclaimer in the documentation and/or
+**      *   other materials provided with the distribution.
+**      *
+**      * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**      * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**      * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**      * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**      * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**      * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**      * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
 ** @file DS1.c
@@ -257,6 +297,7 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
 static uint8_t PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"DS1", (unsigned char*)"Group of DS1 commands\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  search", (unsigned char*)"Search for DS18B20 devices on the bus and assign ROM code\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  set res <idx> <bits>", (unsigned char*)"Set sensor resolution to (9, 10, 11, 12) bits\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  read res <idx>", (unsigned char*)"Read sensor resolution\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  start conv <idx>", (unsigned char*)"Start temperature conversion\r\n", io->stdOut);
@@ -288,7 +329,7 @@ uint8_t DS1_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_Std
   const unsigned char *p;
   uint8_t sensorNr;
   float temperature;
-  uint8_t buf[24];
+  uint8_t buf[32];
 
   if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP) == 0
     || UTIL1_strcmp((char*)cmd, "DS1 help") == 0)
@@ -383,6 +424,32 @@ uint8_t DS1_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_Std
       CLS1_SendStr((unsigned char*)"Wrong sensor index\r\n", io->stdErr);
       res = ERR_FAILED;
     }
+  } else if (UTIL1_strcmp((char*)cmd, "DS1 search")==0) {
+    uint8_t rom[OW1_ROM_CODE_SIZE];
+    bool found;
+    int i, nofFound = 0;
+
+    *handled = TRUE;
+    OW1_ResetSearch(); /* reset search fields */
+    OW1_TargetSearch(DS18B20_FAMILY_CODE); /* only search for DS18B20 */
+    do {
+      found = OW1_Search(&rom[0], TRUE);
+      if (found) {
+        buf[0] = '\0';
+        (void)OW1_strcatRomCode(buf, sizeof(buf), &rom[0]);
+        UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+        CLS1_SendStr(buf, io->stdOut);
+        /* store ROM code in device list */
+        for(i=0;i<OW1_ROM_CODE_SIZE;i++) {
+          Sensor[nofFound].Rom[i] = rom[i];
+        }
+        nofFound++;
+      }
+    } while(found && nofFound<DS1_CONFIG_NUMBER_OF_SENSORS);
+    if (nofFound==0) {
+      CLS1_SendStr((unsigned char*)"No device found!\r\n", io->stdErr);
+    }
+    return ERR_OK;
   }
   return res;
 #else
@@ -520,6 +587,49 @@ uint8_t DS1_SetResolution(uint8_t sensor_index, DS18B20_ResolutionBits resolutio
   return ERR_OK;
 }
 
+/*
+** ===================================================================
+**     Method      :  DS1_ConvertAll (component DS18B20)
+**     Description :
+**         Convert temperature for all sensors
+**     Parameters  : None
+**     Returns     :
+**         ---             - error code
+** ===================================================================
+*/
+uint8_t DS1_ConvertAll(void)
+{
+  if(Device.Busy) {
+    return ERR_BUSY;
+  }
+  OW1_SendReset();
+  while(OW1_isBusy()) { /* wait */ }
+  OW1_SendByte(RC_SKIP_ROM);
+  while(OW1_isBusy()) { /* wait */ }
+  OW1_SendByte(FC_CONVERT_T);
+  while(OW1_isBusy()) { /* wait */ }
+#if DS1_CONFIG_READ_AUTO
+  Device.Busy = TRUE;
+  Device.WorkSensor = 0;
+  WAIT1_WaitOSms(ConvTime[Sensor[0].resolution]);
+  OW1_SendReset();
+  while(OW1_isBusy()) { /* wait */ }
+  OW1_SendByte(RC_MATCH_ROM);
+  while(OW1_isBusy()) { /* wait */ }
+  OW1_SendBytes(Sensor[0].Rom, DS18B20_ROM_CODE_SIZE);
+  while(OW1_isBusy()) { /* wait */ }
+  OW1_SendByte(FC_READ_SCRATCHPAD);
+  while(OW1_isBusy()) { /* wait */ }
+  OW1_Receive(DS18B20_NOF_SCRATCHPAD_BYTES);
+  while(OW1_isBusy()) { /* wait */ }
+  OW1_SendByte(0xFF);
+  while(OW1_isBusy()) { /* wait */ }
+  OW1_ProgramEvent(EV_READ_TEMP_ALL);
+  while(OW1_isBusy()) { /* wait */ }
+#endif
+  Device.Busy = FALSE;
+  return ERR_OK;
+}
 
 /*
 ** ===================================================================
@@ -833,6 +943,41 @@ void OW1_OnSendEnd(void)
 void OW1_OnSendedReset(void)
 {
   /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Method      :  DS1_SearchAndAssignROMCodes (component DS18B20)
+**     Description :
+**         Scans the devices on the bus and assigns the ROM codes to
+**         the list of available sensors
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t DS1_SearchAndAssignROMCodes(void)
+{
+  uint8_t rom[OW1_ROM_CODE_SIZE];
+  bool found;
+  int i, nofFound = 0;
+
+  OW1_ResetSearch(); /* reset search fields */
+  OW1_TargetSearch(DS18B20_FAMILY_CODE); /* only search for DS18B20 */
+  do {
+    found = OW1_Search(&rom[0], TRUE);
+    if (found) {
+      /* store ROM code in device list */
+      for(i=0;i<OW1_ROM_CODE_SIZE;i++) {
+        Sensor[nofFound].Rom[i] = rom[i];
+      }
+      nofFound++;
+    }
+  } while(found && nofFound<DS1_CONFIG_NUMBER_OF_SENSORS);
+  if (nofFound==0) {
+    return ERR_FAILED; /* nothing found */
+  }
+  return ERR_OK;
 }
 
 /* END DS1. */

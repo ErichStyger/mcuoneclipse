@@ -5,10 +5,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : OneWire
-**     Version     : Component 01.129, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.130, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-17, 16:15, # CodeGen: 203
+**     Date/Time   : 2017-05-26, 12:45, # CodeGen: 205
 **     Abstract    :
 **
 This is a component implementing the 1-Wire protocol.
@@ -1004,6 +1004,13 @@ void OW1_Deinit(void)
 #if !MCUC1_CONFIG_NXP_SDK_USED
   Data.TUDeviceDataPtr = NULL;
 #endif
+ // DQ_Deinit; /* data pin */
+  DQ_Floating; /* input mode, tristate pin */
+ // DBG_Deinit; /* optional debug pin */
+  InputRB1_Deinit(); /* input ring buffer */
+  OutputRB1_Deinit(); /* output ring buffer */
+  ProgramRB1_Deinit(); /* program ring buffer */
+  TimeRB1_Deinit(); /* time ring buffer */
   Data.Ticks = 0;
   Data.Busy = FALSE;
   Data.WorkBitPos = 0;
@@ -1012,8 +1019,6 @@ void OW1_Deinit(void)
   Data.Step = TS_NOTHING;
   Data.CRC = 0;
   Data.Error = OWERR_OK;
-
-  DQ_Floating; /* input mode, tristate pin */
 }
 
 
