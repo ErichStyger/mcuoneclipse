@@ -8,6 +8,9 @@
 #ifndef __DS1_CONFIG_H
 #define __DS1_CONFIG_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define DS1_CONFIG_NUMBER_OF_SENSORS             (2)
   /*!< Number of devices (1-n) */
@@ -23,6 +26,10 @@
 #if !defined(DS1_CONFIG_PARSE_COMMAND_ENABLED)
   #define DS1_CONFIG_PARSE_COMMAND_ENABLED       (1)
     /*!< 1: shell support enabled, 0: otherwise */
+#endif
+
+#ifdef __cplusplus
+}  /* extern "C" */
 #endif
 
 #endif /* __DS1_CONFIG_H */

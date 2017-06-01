@@ -5,10 +5,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : DS18B20
-**     Version     : Component 01.013, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.016, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-26, 12:45, # CodeGen: 205
+**     Date/Time   : 2017-06-01, 12:02, # CodeGen: 227
 **     Abstract    :
 **
 This is a component for the Maxim DS18B20 1-Wire temperature sensor.
@@ -172,23 +172,15 @@ static uint8_t DS1_ReadScratchpad(uint8_t sensor_index, uint8_t data[DS18B20_NOF
 #endif
   Device.Busy = TRUE;
   OW1_SendReset();
-  while(OW1_isBusy()) { /* wait */ }
 #if DS1_CONFIG_MULTIPLE_BUS_DEVICES
   OW1_SendByte(RC_MATCH_ROM);
-  while(OW1_isBusy()) { /* wait */ }
   OW1_SendBytes(Sensor[sensor_index].Rom, sizeof(Sensor[sensor_index].Rom));
 #else /* single device on the bus, can skip ROM code */
   OW1_SendByte(RC_SKIP_ROM);
 #endif
-  while(OW1_isBusy()) { /* wait */ }
   OW1_SendByte(FC_READ_SCRATCHPAD);
-  while(OW1_isBusy()) { /* wait */ }
   OW1_Receive(DS18B20_NOF_SCRATCHPAD_BYTES);
-  while(OW1_isBusy()) { /* wait */ }
   OW1_SendByte(0xFF);
-  while(OW1_isBusy()) { /* wait */ }
-  OW1_ProgramEvent(EV_READ_TEMP);
-  while(OW1_isBusy()) { /* wait */ }
   Device.Busy = FALSE;
 
   /* extract data */
@@ -489,19 +481,13 @@ uint8_t DS1_StartConversion(uint8_t sensor_index)
 #endif
   Device.Busy = TRUE;
   OW1_SendReset();
-  while(OW1_isBusy()) { /* wait */ }
 #if DS1_CONFIG_MULTIPLE_BUS_DEVICES
   OW1_SendByte(RC_MATCH_ROM);
-  while(OW1_isBusy()) { /* wait */ }
   OW1_SendBytes(Sensor[sensor_index].Rom, DS18B20_ROM_CODE_SIZE);
-  while(OW1_isBusy()) { /* wait */ }
   OW1_SendByte(FC_CONVERT_T);
-  while(OW1_isBusy()) { /* wait */ }
 #else /* only single device on the bus, can skip ROM code */
   OW1_SendByte(RC_SKIP_ROM);
-  while(OW1_isBusy()) { /* wait */ }
   OW1_SendByte(FC_CONVERT_T);
-  while(OW1_isBusy()) { /* wait */ }
 #endif
   Device.Busy = FALSE;
 #if DS1_CONFIG_READ_AUTO
@@ -510,9 +496,6 @@ uint8_t DS1_StartConversion(uint8_t sensor_index)
   if (res!=ERR_OK) {
     return res;
   }
-#else
-  OW1_ProgramEvent(EV_NO_BUSY);
-  while(OW1_isBusy()) { /* wait */ }
 #endif
   return ERR_OK;
 }
@@ -554,35 +537,21 @@ uint8_t DS1_SetResolution(uint8_t sensor_index, DS18B20_ResolutionBits resolutio
   config = (((uint8_t)(resolution<<DS18B20_CONFIG_SHIFT_R0))|DS18B20_CONFIG_ONE_MASK); /* build proper configuration register mask */
   Device.Busy = TRUE;
   OW1_SendReset();
-  while(OW1_isBusy()) { /* wait */ }
 #if DS1_CONFIG_MULTIPLE_BUS_DEVICES
   Device.WorkSensor = sensor_index;
   OW1_SendByte(RC_MATCH_ROM);
-  while(OW1_isBusy()) { /* wait */ }
   OW1_SendBytes(Sensor[sensor_index].Rom, DS18B20_ROM_CODE_SIZE);
-  while(OW1_isBusy()) { /* wait */ }
   OW1_SendByte(FC_WRITE_SCRATCHPAD);
-  while(OW1_isBusy()) { /* wait */ }
   OW1_SendByte(0x01);
-  while(OW1_isBusy()) { /* wait */ }
   OW1_SendByte(0x10);
-  while(OW1_isBusy()) { /* wait */ }
   OW1_SendByte(config);
-  while(OW1_isBusy()) { /* wait */ }
 #else /* only single device on the bus, can skip ROM code */
   OW1_SendByte(RC_SKIP_ROM);
-  while(OW1_isBusy()) { /* wait */ }
   OW1_SendByte(FC_WRITE_SCRATCHPAD);
-  while(OW1_isBusy()) { /* wait */ }
   OW1_SendByte(0x01);
-  while(OW1_isBusy()) { /* wait */ }
   OW1_SendByte(0x10);
-  while(OW1_isBusy()) { /* wait */ }
   OW1_SendByte(config);
-  while(OW1_isBusy()) { /* wait */ }
 #endif
-  OW1_ProgramEvent(EV_NO_BUSY);
-  while(OW1_isBusy()) { /* wait */ }
   Device.Busy = FALSE;
   return ERR_OK;
 }
@@ -603,29 +572,18 @@ uint8_t DS1_ConvertAll(void)
     return ERR_BUSY;
   }
   OW1_SendReset();
-  while(OW1_isBusy()) { /* wait */ }
   OW1_SendByte(RC_SKIP_ROM);
-  while(OW1_isBusy()) { /* wait */ }
   OW1_SendByte(FC_CONVERT_T);
-  while(OW1_isBusy()) { /* wait */ }
 #if DS1_CONFIG_READ_AUTO
   Device.Busy = TRUE;
   Device.WorkSensor = 0;
   WAIT1_WaitOSms(ConvTime[Sensor[0].resolution]);
   OW1_SendReset();
-  while(OW1_isBusy()) { /* wait */ }
   OW1_SendByte(RC_MATCH_ROM);
-  while(OW1_isBusy()) { /* wait */ }
   OW1_SendBytes(Sensor[0].Rom, DS18B20_ROM_CODE_SIZE);
-  while(OW1_isBusy()) { /* wait */ }
   OW1_SendByte(FC_READ_SCRATCHPAD);
-  while(OW1_isBusy()) { /* wait */ }
   OW1_Receive(DS18B20_NOF_SCRATCHPAD_BYTES);
-  while(OW1_isBusy()) { /* wait */ }
   OW1_SendByte(0xFF);
-  while(OW1_isBusy()) { /* wait */ }
-  OW1_ProgramEvent(EV_READ_TEMP_ALL);
-  while(OW1_isBusy()) { /* wait */ }
 #endif
   Device.Busy = FALSE;
   return ERR_OK;
@@ -904,45 +862,6 @@ void DS1_Init(void)
   Sensor[0].resolution = DS18B20_RESOLUTION_BITS_12; /* default resolution */
 #endif
   Device.Value = 8500000; /* dummy value or 85°C */
-}
-
-/*
-** ===================================================================
-**     Method      :  DS1_OnBlockReceived (component DS18B20)
-**
-**     Description :
-**         This method is internal. It is used by Processor Expert only.
-** ===================================================================
-*/
-void OW1_OnBlockReceived(void)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Method      :  DS1_OnSendEnd (component DS18B20)
-**
-**     Description :
-**         This method is internal. It is used by Processor Expert only.
-** ===================================================================
-*/
-void OW1_OnSendEnd(void)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Method      :  DS1_OnSendedReset (component DS18B20)
-**
-**     Description :
-**         This method is internal. It is used by Processor Expert only.
-** ===================================================================
-*/
-void OW1_OnSendedReset(void)
-{
-  /* Write your code here ... */
 }
 
 /*

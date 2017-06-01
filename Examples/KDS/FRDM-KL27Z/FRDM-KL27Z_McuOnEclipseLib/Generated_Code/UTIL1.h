@@ -7,7 +7,7 @@
 **     Version     : Component 01.154, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-05, 12:54, # CodeGen: 135
+**     Date/Time   : 2017-06-01, 09:37, # CodeGen: 206
 **     Abstract    :
 **          Contains various utility functions.
 **     Settings    :
@@ -133,14 +133,14 @@
 #include <stddef.h> /* for size_t */
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum {
   UTIL1_SEP_NUM_TYPE_UINT8, /* uint8_t number type */
   UTIL1_SEP_NUM_TYPE_UINT8_HEX_NO_PREFIX /* uint8_t hex number type, no 0x prefix */
 } UTIL1_SeparatedNumberType;
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 void UTIL1_strcpy(uint8_t *dst, size_t dstSize, const unsigned char *src);
 /*

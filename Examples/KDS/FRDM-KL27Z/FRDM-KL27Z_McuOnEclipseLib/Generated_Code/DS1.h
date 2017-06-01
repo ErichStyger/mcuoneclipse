@@ -5,10 +5,10 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : DS18B20
-**     Version     : Component 01.013, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.016, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-26, 12:45, # CodeGen: 205
+**     Date/Time   : 2017-06-01, 12:02, # CodeGen: 227
 **     Abstract    :
 **
 This is a component for the Maxim DS18B20 1-Wire temperature sensor.
@@ -104,6 +104,10 @@ This is a component for the Maxim DS18B20 1-Wire temperature sensor.
 #include "MCUC1.h" /* SDK and API used */
 #include "DS1config.h" /* configuration */
 #include "CLS1.h" /* Shell */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 /* sensor resolution */
@@ -254,12 +258,6 @@ void DS1_Init(void);
 ** ===================================================================
 */
 
-void OW1_OnBlockReceived(void);
-
-void OW1_OnSendEnd(void);
-
-void OW1_OnSendedReset(void);
-
 uint8_t DS1_GetTemperatureFloat(uint8_t sensor_index, float *temperature);
 /*
 ** ===================================================================
@@ -335,6 +333,10 @@ uint8_t DS1_SearchAndAssignROMCodes(void);
 */
 
 /* END DS1. */
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 #endif
 /* ifndef __DS1_H */

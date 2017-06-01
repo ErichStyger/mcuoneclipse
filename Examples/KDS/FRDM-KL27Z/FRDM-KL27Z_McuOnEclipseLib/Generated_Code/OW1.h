@@ -5,35 +5,30 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : OneWire
-**     Version     : Component 01.130, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.148, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-26, 12:45, # CodeGen: 205
+**     Date/Time   : 2017-06-01, 11:55, # CodeGen: 223
 **     Abstract    :
-**
-This is a component implementing the 1-Wire protocol.
+**          This is a component implementing the 1-Wire protocol.
 **     Settings    :
 **          Component Name                                 : OW1
 **          Data Pin I/O                                   : SDK_BitIO
 **          Write Pin                                      : Disabled
-**          Timer (LDD)                                    : Disabled
-**          Timer (SDK)                                    : Enabled
-**            Timer                                        : SDK_Timer
 **          Timing                                         : 
 **            A: Write 1 Low time (us)                     : 5
 **            B: Write 1 High time (us)                    : 64
 **            C: Write 0 Low time (us)                     : 60
 **            D: Write 0 High time (us)                    : 10
-**            E: Delay time before read (us)               : 1
-**            F: After read delay time                     : 55
-**            H: Reset time (us)                           : 480
-**            I: Device response time (us)                 : 70
+**            E: Read delay time (us)                      : 1
+**            A: Read Low time (us)                        : 6
+**            F: Read delay time                           : 55
+**            H: Reset low time (us)                       : 480
+**            I: Reset response time (us)                  : 70
+**            J: Reset wait time after reading device presence (us): 410
 **            Total slot time (us)                         : 100
 **          Buffers                                        : 
-**            Output                                       : RBOutput
 **            Input                                        : RBInput
-**            Time                                         : RBTime
-**            Program                                      : RBProgram
 **          Debug                                          : Enabled
 **            Debug Read Pin                               : SDK_BitIO
 **          CriticalSection                                : CS1
@@ -45,29 +40,14 @@ This is a component implementing the 1-Wire protocol.
 **          Shell                                          : Enabled
 **            Shell                                        : CLS1
 **     Contents    :
-**         add_CRC       - void OW1_add_CRC(uint8_t bitValue);
-**         i_run         - void OW1_i_run(void);
-**         i_action      - void OW1_i_action(void);
-**         i_reset       - void OW1_i_reset(void);
-**         i_presence    - void OW1_i_presence(void);
-**         i_send_low    - void OW1_i_send_low(void);
-**         i_send_float  - void OW1_i_send_float(void);
-**         i_recv_float  - void OW1_i_recv_float(void);
-**         i_recv_get    - void OW1_i_recv_get(void);
-**         i_recv_low    - void OW1_i_recv_low(void);
-**         i_wait        - void OW1_i_wait(void);
 **         CalcCRC       - uint8_t OW1_CalcCRC(uint8_t *data, uint8_t dataSize);
 **         SendByte      - uint8_t OW1_SendByte(uint8_t data);
+**         SendBytes     - uint8_t OW1_SendBytes(uint8_t *data, uint8_t count);
 **         Receive       - uint8_t OW1_Receive(uint8_t counter);
 **         SendReset     - uint8_t OW1_SendReset(void);
 **         Count         - uint8_t OW1_Count(void);
-**         Waitms        - uint8_t OW1_Waitms(uint8_t key, uint8_t time_ms);
-**         ProgramEvent  - uint8_t OW1_ProgramEvent(uint8_t key);
-**         SendBytes     - uint8_t OW1_SendBytes(uint8_t *data, uint8_t count);
 **         GetBytes      - uint8_t OW1_GetBytes(uint8_t *data, uint8_t count);
 **         GetByte       - uint8_t OW1_GetByte(uint8_t *data);
-**         GetError      - void OW1_GetError(void);
-**         isBusy        - bool OW1_isBusy(void);
 **         strcatRomCode - uint8_t OW1_strcatRomCode(uint8_t *buf, size_t bufSize, uint8_t *romCode);
 **         ReadRomCode   - uint8_t OW1_ReadRomCode(uint8_t *romCodeBuffer);
 **         ResetSearch   - void OW1_ResetSearch(void);
@@ -109,8 +89,7 @@ This is a component implementing the 1-Wire protocol.
 ** @file OW1.h
 ** @version 01.00
 ** @brief
-**
-This is a component implementing the 1-Wire protocol.
+**          This is a component implementing the 1-Wire protocol.
 */         
 /*!
 **  @addtogroup OW1_module OW1 module documentation
@@ -126,16 +105,12 @@ This is a component implementing the 1-Wire protocol.
 #include "CLS1.h" /* Shell */
 #include <stddef.h> /* for size_t */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define OW1_ROM_CODE_SIZE   (8)
   /*!< Number of bytes for ROM code */
-
-typedef enum {
-  OWERR_OK,
-  OWERR_NO_DEVICE,
-  OWERR_NO_RESPONSE,
-  OWERR_BUSY,
-  OWERR_CRC
-} OW1_Error;
 
 /* events */
 void OW1_OnBlockReceived(void);
@@ -143,150 +118,11 @@ void OW1_OnError(void);
 void OW1_OnProgramEvent(uint8_t key);
 void OW1_OnWaitEnd(uint8_t key);
 void OW1_OnSendEnd(void);
-void OW1_OnSendedReset(void);
+void OW1_OnSendReset(void);
 
-#define OW1_PARSE_COMMAND_ENABLED  OW1_CONFIG_PARSE_COMMAND_ENABLED
+#define OW1_PARSE_COMMAND_ENABLED    OW1_CONFIG_PARSE_COMMAND_ENABLED
   /*!< set to 1 if method ParseCommand() is present, 0 otherwise */
 
-/*
-** ===================================================================
-**     Method      :  OW1_GetError (component OneWire)
-**     Description :
-**         Returns the error
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-OW1_Error OW1_GetError(void);
-/*
-** ===================================================================
-**     Method      :  OW1_i_recv_low (component OneWire)
-**     Description :
-**         receive a bit from the low state
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void OW1_i_recv_low(void);
-/*
-** ===================================================================
-**     Method      :  OW1_i_wait (component OneWire)
-**     Description :
-**         wait instruction
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void OW1_i_wait(void);
-/*
-** ===================================================================
-**     Method      :  OW1_i_presence (component OneWire)
-**     Description :
-**         presence instruction
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void OW1_i_presence(void);
-/*
-** ===================================================================
-**     Method      :  OW1_i_action (component OneWire)
-**     Description :
-**         action instruction
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void OW1_i_action(void);
-/*
-** ===================================================================
-**     Method      :  OW1_i_run (component OneWire)
-**     Description :
-**         Instruction run
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void OW1_i_run(void);
-/*
-** ===================================================================
-**     Method      :  OW1_i_recv_get (component OneWire)
-**     Description :
-**         instruction to get a bit
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void OW1_i_recv_get(void);
-/*
-** ===================================================================
-**     Method      :  OW1_i_recv_float (component OneWire)
-**     Description :
-**         start receiving a byte in floating mode
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void OW1_i_recv_float(void);
-/*
-** ===================================================================
-**     Method      :  OW1_i_send_float (component OneWire)
-**     Description :
-**         using data pin in input mode
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void OW1_i_send_float(void);
-/*
-** ===================================================================
-**     Method      :  OW1_i_send_low (component OneWire)
-**     Description :
-**         sending a low signal
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void OW1_i_send_low(void);
-/*
-** ===================================================================
-**     Method      :  OW1_i_reset (component OneWire)
-**     Description :
-**         reset instruction
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void OW1_i_reset(void);
-/*
-** ===================================================================
-**     Method      :  OW1_Waitms (component OneWire)
-**     Description :
-**         Programs a pause between instruccions.
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**         key             - Key to identify the source of the event.
-**         time_ms         - Value of time to wait.
-**     Returns     :
-**         ---             - error code
-** ===================================================================
-*/
-uint8_t OW1_Waitms(uint8_t key, uint8_t time_ms);
-/*
-** ===================================================================
-**     Method      :  OW1_ProgramEvent (component OneWire)
-**     Description :
-**         Used to add a program event
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**         key             - Key to identificate the event, applies
-**                           only if OnProgramEvent is enabled. (Valid
-**                           range 0 - 31)
-**     Returns     :
-**         ---             - error code
-** ===================================================================
-*/
-uint8_t OW1_ProgramEvent(uint8_t key);
 /*
 ** ===================================================================
 **     Method      :  OW1_Count (component OneWire)
@@ -322,7 +158,7 @@ uint8_t OW1_Receive(uint8_t counter);
 **         Sends a single byte
 **     Parameters  :
 **         NAME            - DESCRIPTION
-**         data            - Variable to save the byte.
+**         data            - the data byte to be sent
 **     Returns     :
 **         ---             - error code
 ** ===================================================================
@@ -335,9 +171,8 @@ uint8_t OW1_SendByte(uint8_t data);
 **         Sends multiple bytes
 **     Parameters  :
 **         NAME            - DESCRIPTION
-**       * data            - Array of bytes to add to output stream.
-**         count           - Number of bytes to add to output
-**                           stream. (Valid range 0 - 31)
+**       * data            - Pointer to the array of bytes
+**         count           - Number of bytes to be sent
 **     Returns     :
 **         ---             - error code
 ** ===================================================================
@@ -354,18 +189,6 @@ uint8_t OW1_SendBytes(uint8_t *data, uint8_t count);
 ** ===================================================================
 */
 uint8_t OW1_SendReset(void);
-/*
-** ===================================================================
-**     Method      :  OW1_add_CRC (component OneWire)
-**     Description :
-**         Adds a bit to CRC accumulator.
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**         bitValue        - Bit to add to CRC accumulator
-**     Returns     : Nothing
-** ===================================================================
-*/
-void OW1_add_CRC(uint8_t bitValue);
 /*
 ** ===================================================================
 **     Method      :  OW1_GetByte (component OneWire)
@@ -403,20 +226,6 @@ uint8_t OW1_GetBytes(uint8_t *data, uint8_t count);
 ** ===================================================================
 */
 void OW1_Init(void);
-
-
-bool OW1_isBusy(void);
-/*
-** ===================================================================
-**     Method      :  OW1_isBusy (component OneWire)
-**     Description :
-**         Returns TRUE if the bus is busy, FALSE otherwise
-**     Parameters  : None
-**     Returns     :
-**         ---             - TRUE if device is busy
-** ===================================================================
-*/
-
 void OW1_Deinit(void);
 /*
 ** ===================================================================
@@ -442,8 +251,6 @@ uint8_t OW1_CalcCRC(uint8_t *data, uint8_t dataSize);
 **         ---             - calculated CRC
 ** ===================================================================
 */
-
-void Timer1_OnCounterRestart(void);
 
 uint8_t OW1_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io);
 /*
@@ -537,6 +344,10 @@ bool OW1_Search(uint8_t *newAddr, bool search_mode);
 */
 
 /* END OW1. */
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 #endif
 /* ifndef __OW1_H */
