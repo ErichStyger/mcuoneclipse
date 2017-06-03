@@ -11,7 +11,7 @@
 #include "LEDG.h"
 #include "LEDB.h"
 #include "WAIT1.h"
-#include "HIDK1.h"
+#include "HIDK2.h"
 
 void APP_Run(void) {
   int cnt=0; /* counter to slow down LED blinking */
@@ -23,20 +23,20 @@ void APP_Run(void) {
       WAIT1_Waitms(100); /* wait for debouncing */
       if (SW1_GetVal()==0) { /* still pressed */
 #if 0 /* send a string */
-        (void)HIDK1_SendStr((unsigned char*)"SW1 press "); /* send a string */
+        (void)HIDK2_SendStr((unsigned char*)"SW1 press "); /* send a string */
 #endif
 #if 1 /* send print screen */
-        HIDK1_Send(MODIFERKEYS_NONE, KEY_PRINTSCREEN);
-        HIDK1_Send(MODIFERKEYS_NONE, KEY_NONE); /* release key */
+        HIDK2_Send(MODIFERKEYS_NONE, KEY_PRINTSCREEN);
+        HIDK2_Send(MODIFERKEYS_NONE, KEY_NONE); /* release key */
 #endif
 #if 0 /* send CTRL+ALT+DELETE */
-        HIDK1_Send(MODIFERKEYS_LEFT_CTRL|MODIFERKEYS_RIGHT_ALT, KEY_DELETE);
-        HIDK1_Send(MODIFERKEYS_NONE, KEY_NONE); /* release key */
+        HIDK2_Send(MODIFERKEYS_LEFT_CTRL|MODIFERKEYS_RIGHT_ALT, KEY_DELETE);
+        HIDK2_Send(MODIFERKEYS_NONE, KEY_NONE); /* release key */
 #endif
       }
       while(SW1_GetVal()==0) {} /* wait until button is released */
     }
-    if (HIDK1_App_Task()==ERR_OK) { /* run the USB application task: this will send the buffer */
+    if (HIDK2_App_Task()==ERR_OK) { /* run the USB application task: this will send the buffer */
       if ((cnt%100)==0) {
         LEDR_Off();
         LEDG_Neg(); /* blink green LED if connected */
