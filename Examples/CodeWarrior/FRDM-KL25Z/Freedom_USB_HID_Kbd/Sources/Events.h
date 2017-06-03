@@ -51,6 +51,7 @@
 #include "SW1.h"
 #include "BitIoLdd4.h"
 #include "CS1.h"
+#include "MCUC1.h"
 
 #ifdef __cplusplus
 extern "C" {

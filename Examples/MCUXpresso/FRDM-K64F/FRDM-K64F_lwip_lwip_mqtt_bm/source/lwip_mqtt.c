@@ -1069,7 +1069,7 @@ uint8_t MQTT_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
     return ShellDoPublish(io, topicBuf, payloadBuf);
   } else if (UTIL1_strcmp((char*)cmd, "mqtt subscribe")==0) {
     *handled = TRUE;
-    return ShellDoSubscribe(io, CONFIG_TOPIC_NAME);
+    return ShellDoSubscribe(io, (unsigned char *)CONFIG_TOPIC_NAME);
   } else if (UTIL1_strcmp((char*)cmd, "mqtt disconnect")==0) {
     *handled = TRUE;
     return ShellDoDisconnect(io);
