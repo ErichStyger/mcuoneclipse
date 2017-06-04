@@ -31,9 +31,10 @@
 #include "Cpu.h"
 #include "Events.h"
 #include "USB1.h"
-#include "HIDK2.h"
-#include "Tx3.h"
+#include "HIDJ1.h"
 #include "USB0.h"
+#include "AD1.h"
+#include "AdcLdd1.h"
 #include "WAIT1.h"
 #include "LEDR.h"
 #include "LEDpin1.h"
@@ -48,7 +49,19 @@
 #include "CS1.h"
 #include "MCUC1.h"
 #include "SW1.h"
-#include "BitIoLdd4.h"
+#include "ExtIntLdd1.h"
+#include "SW2.h"
+#include "ExtIntLdd2.h"
+#include "SW3.h"
+#include "ExtIntLdd3.h"
+#include "SW4.h"
+#include "ExtIntLdd4.h"
+#include "SW5.h"
+#include "BitIoLdd9.h"
+#include "SW6.h"
+#include "BitIoLdd10.h"
+#include "SW7.h"
+#include "ExtIntLdd5.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -56,6 +69,8 @@
 #include "IO_Map.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Application.h"
+
+void _exit(int a) {}
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
