@@ -60,9 +60,10 @@
 #include "CLS1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
-#include "KSDK1.h"
 #include "PTRC1.h"
 #include "RTT1.h"
+#include "XF1.h"
+#include "MCUC1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -98,7 +99,7 @@ void RTOSTRC1_OnTraceWrap(void);
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
