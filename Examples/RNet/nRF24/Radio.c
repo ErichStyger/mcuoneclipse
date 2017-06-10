@@ -250,7 +250,7 @@ uint8_t RADIO_PowerUp(void) {
 #if NRF24_DYNAMIC_PAYLOAD
   /* enable dynamic payload */
   RF1_WriteFeature(RF1_FEATURE_EN_DPL|RF1_FEATURE_EN_ACK_PAY|RF1_FEATURE_EN_DYN_PAY); /* set EN_DPL for dynamic payload */
-  RF1_EnableDynanicPayloadLength(RF1_DYNPD_DPL_P0); /* set DYNPD register for dynamic payload for pipe0 */
+  RF1_EnableDynamicPayloadLength(RF1_DYNPD_DPL_P0); /* set DYNPD register for dynamic payload for pipe0 */
 #else
   RF1_SetStaticPipePayload(0, RPHY_PAYLOAD_SIZE); /* static number of payload bytes we want to send and receive */
 #endif

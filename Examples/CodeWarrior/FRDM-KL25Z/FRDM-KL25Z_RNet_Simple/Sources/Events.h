@@ -57,6 +57,7 @@
 #include "RNET1.h"
 #include "SW1.h"
 #include "BitIoLdd6.h"
+#include "MCUC1.h"
 #include "SM1.h"
 #include "SMasterLdd1.h"
 
@@ -80,7 +81,7 @@ extern "C" {
 void Cpu_OnNMIINT(void);
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

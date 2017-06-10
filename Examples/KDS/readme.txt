@@ -1,1 +1,1 @@
-This folder contains projects for Kinetis Design Studio (KDS).
+This folder contains projects for Kinetis Design Studio (KDS) V3.2.0

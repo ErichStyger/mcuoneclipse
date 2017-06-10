@@ -53,6 +53,8 @@
 #include "ASerialLdd1.h"
 #include "CLS1.h"
 #include "CS1.h"
+#include "MCUC1.h"
+#include "XF1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -74,7 +76,7 @@ extern "C" {
 void Cpu_OnNMIINT(void);
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

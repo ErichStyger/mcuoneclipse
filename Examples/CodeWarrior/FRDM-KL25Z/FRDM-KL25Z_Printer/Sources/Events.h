@@ -37,6 +37,7 @@
 #include "AS1.h"
 #include "ASerialLdd1.h"
 #include "WAIT1.h"
+#include "MCUC1.h"
 
 #ifdef __cplusplus
 extern "C" {
