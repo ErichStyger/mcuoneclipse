@@ -20,34 +20,28 @@
 #include "SW5.h"
 #include "SW6.h"
 #include "SW7.h"
+#include "UTIL1.h"
 
-static uint16_t midPointX, midPointY;
-
-static int8_t ToSigned8Bit(uint16_t val, bool isX) {
-  int32_t tmp;
-
-  if (isX) {
-    tmp = (int32_t)val-midPointX;
+int32_t mapToRange(int32_t val, int32_t offset, uint8_t nofBits) {
+  if (val>offset) {
+    val -= offset;
   } else {
-    tmp = (int32_t)val-midPointY;
+    val = 0;
   }
-  if (tmp>0) {
-    tmp = (tmp*128)/0x7fff;
-  } else {
-    tmp = (-tmp*128)/0x7fff;
-    tmp = -tmp;
+  val = UTIL1_constrain(val, 0, 0xffff);
+  if (nofBits==8) {
+    val = UTIL1_map(val, 0, 0xffff, -127, 127);
+    val = UTIL1_constrain(val, -127, 127);
+  } else { /* 16bit */
+    val = UTIL1_map64(val, 0, 0xffff, -32767, 32767);
+    val = UTIL1_constrain(val, -32767, 32767);
   }
-  if (tmp<-128) {
-    tmp = -128;
-  } else if (tmp>127) {
-    tmp = 127;
-  }
-  return (int8_t)tmp;
 }
 
-static uint8_t GetXY(uint16_t *x, uint16_t *y, int8_t *x8, int8_t *y8) {
+static uint8_t GetXY(int32_t *x, int32_t *y) {
   uint8_t res;
   uint16_t values[2];
+  int32_t val;
 
   res = AD1_Measure(TRUE);
   if (res!=ERR_OK) {
@@ -57,19 +51,24 @@ static uint8_t GetXY(uint16_t *x, uint16_t *y, int8_t *x8, int8_t *y8) {
   if (res!=ERR_OK) {
     return res;
   }
-  if (x!=NULL) {
-    *x = values[0];
+  *x = values[0];
+  *y = values[1];
+  return ERR_OK;
+}
+
+static uint8_t CalculateOffset(int32_t *offsetX, int32_t *offsetY) {
+  uint8_t res;
+  int32_t x, y;
+
+  *offsetX = 0;
+  *offsetY = 0;
+  res = GetXY(&x, &y);
+  if (res!=ERR_OK) {
+    return res;
   }
-  if (y!=NULL) {
-    *y = values[1];
-  }
-  /* transform into -128...127 with zero as mid position */
-  if (x8!=NULL) {
-    *x8 = ToSigned8Bit(values[0], TRUE);
-  }
-  if (y8!=NULL) {
-    *y8 = ToSigned8Bit(values[1], FALSE);
-  }
+  /* the potentiometer is assumed to be in the middle position */
+  *offsetX = x-0x7fff;
+  *offsetY = y-0x7fff;
   return ERR_OK;
 }
 
@@ -96,19 +95,24 @@ static void CheckButtons(void) {
   } else {
     hatPos = -1; /* center */
   }
-  HIDJ1_SetHatPos(hatPos);
+  HIDJ1_SetHatPos(0, hatPos);
 }
 
 void APP_Run(void) {
   int cnt=0; /* counter to slow down LED blinking */
   uint8_t res;
-  int8_t x, y;
+  int32_t adcx, adcy;
+  int32_t x, y;
+  int32_t offsetX, offsetY;
 
-  (void)GetXY(&midPointX, &midPointY, NULL, NULL); /* get initial mid point values */
+  (void)CalculateOffset(&offsetX, &offsetY); /* assuming joystick in middle position */
   for(;;) {
-    res = GetXY(NULL, NULL, &x, &y); /* get potentiometer values */
-    HIDJ1_SetXY(x, y); /* set X and Y position */
-    HIDJ1_SetThrottle(x); /* Set throttle */
+    (void)GetXY(&adcx, &adcy);
+    x = mapToRange(adcx, offsetX, JOYSTICK_NOF_ANALOG_RES_BITS);
+    y = mapToRange(adcy, offsetY, JOYSTICK_NOF_ANALOG_RES_BITS);
+    HIDJ1_SetXY(0, x, y); /* set X and Y position */
+    x = mapToRange(adcx, offsetX, JOYSTICK_NOF_THROTTLE_RES_BITS);
+    HIDJ1_SetThrottle(0, x); /* Set throttle */
     CheckButtons(); /* check push buttons */
     WAIT1_Waitms(10); /* wait some time */
     cnt++;
