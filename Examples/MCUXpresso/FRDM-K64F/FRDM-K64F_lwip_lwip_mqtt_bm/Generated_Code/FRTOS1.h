@@ -7,7 +7,7 @@
 **     Version     : Component 01.539, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-04-30, 08:43, # CodeGen: 34
+**     Date/Time   : 2017-06-17, 12:10, # CodeGen: 43
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
@@ -31,9 +31,9 @@
 **            Heap Indication Constant                     : no
 **            Task C Additions                             : no
 **            Record Stack High Address                    : yes
-**          Segger System Viewer Trace                     : Enabled
-**            Segger System Viewer                         : SYS1
-**          Percepio Trace                                 : Disabled
+**          Segger System Viewer Trace                     : Disabled
+**          Percepio Trace                                 : Enabled
+**            Percepio FreeRTOS+Trace                      : PTRC1
 **          Generate Runtime Statistics                    : Enabled
 **            Use Tick Counter                             : yes
 **            LDD                                          : Disabled
@@ -260,7 +260,7 @@
 
 /* Include inherited components */
 #include "MCUC1.h"
-#include "SYS1.h"
+#include "PTRC1.h"
 #include "CLS1.h"
 #include "UTIL1.h"
 

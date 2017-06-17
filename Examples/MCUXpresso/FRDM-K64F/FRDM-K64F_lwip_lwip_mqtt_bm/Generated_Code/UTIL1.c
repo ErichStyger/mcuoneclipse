@@ -4,10 +4,10 @@
 **     Project     : FRDM-K64F_lwip_mqtt_bm
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Utility
-**     Version     : Component 01.154, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.157, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-04-27, 08:20, # CodeGen: 19
+**     Date/Time   : 2017-06-17, 12:08, # CodeGen: 42
 **     Abstract    :
 **          Contains various utility functions.
 **     Settings    :
@@ -77,6 +77,7 @@
 **         SetValue24LE            - void UTIL1_SetValue24LE(uint32_t data, uint8_t *dataP);
 **         SetValue32LE            - void UTIL1_SetValue32LE(uint32_t data, uint8_t *dataP);
 **         map                     - int32_t UTIL1_map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min,...
+**         map64                   - int64_t UTIL1_map64(int64_t x, int64_t in_min, int64_t in_max, int64_t...
 **         constrain               - int32_t UTIL1_constrain(int32_t val, int32_t min, int32_t max);
 **         random                  - int32_t UTIL1_random(int32_t min, int32_t max);
 **         randomSetSeed           - void UTIL1_randomSetSeed(unsigned int seed);
@@ -2549,7 +2550,15 @@ void UTIL1_Init(void)
 */
 int32_t UTIL1_map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min, int32_t out_max)
 {
+#if 0 /* original Arduino implementation */
   return (x-in_min)*(out_max-out_min)/(in_max-in_min)+out_min;
+#else /* improved version, see https://github.com/arduino/Arduino/issues/2466 */
+  if ((in_max - in_min) > (out_max - out_min)) {
+    return (x - in_min) * (out_max - out_min+1) / (in_max - in_min+1) + out_min;
+  } else {
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+  }
+#endif
 }
 
 /*
@@ -2613,6 +2622,31 @@ int32_t UTIL1_random(int32_t min, int32_t max)
 void UTIL1_randomSetSeed(unsigned int seed)
 {
   srand(seed); /* set random number generator seed */
+}
+
+/*
+** ===================================================================
+**     Method      :  UTIL1_map64 (component Utility)
+**     Description :
+**         Maps a value from one range to another, using 64bit math
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         x               - value to be mapped
+**         in_min          - input range minimum value
+**         in_max          - input range maximum value
+**         out_min         - output range maximum value
+**         out_max         - 
+**     Returns     :
+**         ---             - remapped value
+** ===================================================================
+*/
+int64_t UTIL1_map64(int64_t x, int64_t in_min, int64_t in_max, int64_t out_min, int64_t out_max)
+{
+  if ((in_max - in_min) > (out_max - out_min)) {
+    return (x - in_min) * (out_max - out_min+1) / (in_max - in_min+1) + out_min;
+  } else {
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+  }
 }
 
 /* END UTIL1. */

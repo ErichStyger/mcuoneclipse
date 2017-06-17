@@ -5,10 +5,10 @@
 **     Project     : FRDM-K64F_lwip_mqtt_bm
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FXOS8700CQ
-**     Version     : Component 01.030, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.031, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-05, 18:28, # CodeGen: 38
+**     Date/Time   : 2017-06-17, 12:08, # CodeGen: 42
 **     Abstract    :
 **         Implements a Driver for the MMA8451 accelerometer from Freescale.
 **     Settings    :
@@ -113,6 +113,10 @@
 #include "MCUC1.h"
 #include "CLS1.h"
 #include "UTIL1.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define FX1_PARSE_COMMAND_ENABLED  FX1_CONFIG_PARSE_COMMAND_ENABLED  /* set to 1 if method ParseCommand() is present, 0 otherwise */
 
@@ -632,6 +636,10 @@ uint8_t FX1_SwReset(void);
 */
 
 /* END FX1. */
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 #endif
 /* ifndef __FX1_H */

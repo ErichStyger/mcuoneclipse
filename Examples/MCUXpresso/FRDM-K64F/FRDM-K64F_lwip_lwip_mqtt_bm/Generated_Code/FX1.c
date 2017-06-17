@@ -5,10 +5,10 @@
 **     Project     : FRDM-K64F_lwip_mqtt_bm
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FXOS8700CQ
-**     Version     : Component 01.030, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.031, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-05, 18:28, # CodeGen: 38
+**     Date/Time   : 2017-06-17, 12:08, # CodeGen: 42
 **     Abstract    :
 **         Implements a Driver for the MMA8451 accelerometer from Freescale.
 **     Settings    :
@@ -245,7 +245,8 @@ static uint8_t PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"FX1", (unsigned char*)"Group of FX1 commands\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  calibrate x|y|z", (unsigned char*)"Performs accelerometer calibration\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  swreset", (unsigned char*)"Performs a software reset\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  swreset", (unsigned char*)"Performs a device software reset\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  magreset", (unsigned char*)"Performs a magenetometer sensor reset\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  enable|disable", (unsigned char*)"Enables or disables the sensor\r\n", io->stdOut);
   return ERR_OK;
 }
@@ -736,6 +737,12 @@ uint8_t FX1_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
     *handled = TRUE;
     if (FX1_SwReset()!=ERR_OK) {
       CLS1_SendStr((unsigned char*)"SW reset failed!\r\n", io->stdErr);
+      return ERR_FAILED;
+    }
+  } else if (UTIL1_strcmp((char*)cmd, (char*)"FX1 magreset")==0) {
+    *handled = TRUE;
+    if (FX1_MagneticSensorReset()!=ERR_OK) {
+      CLS1_SendStr((unsigned char*)"Magnetometer sensor reset failed!\r\n", io->stdErr);
       return ERR_FAILED;
     }
   }

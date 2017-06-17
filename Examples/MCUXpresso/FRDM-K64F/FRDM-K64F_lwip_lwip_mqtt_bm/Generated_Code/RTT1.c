@@ -7,14 +7,14 @@
 **     Version     : Component 01.081, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-04-30, 08:27, # CodeGen: 33
+**     Date/Time   : 2017-06-17, 12:10, # CodeGen: 43
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : RTT1
 **          Version                                        : V5.10u
-**          Number of Up Channels                          : 2
-**          Number of Down Channels                        : 2
+**          Number of Up Channels                          : 3
+**          Number of Down Channels                        : 3
 **          Max Blocked Interrupt Level                    : 3
 **          Channel 0                                      : Enabled
 **            Name                                         : "Terminal"

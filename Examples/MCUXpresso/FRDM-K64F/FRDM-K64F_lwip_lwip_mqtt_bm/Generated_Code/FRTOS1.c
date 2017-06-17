@@ -7,7 +7,7 @@
 **     Version     : Component 01.539, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-04-30, 08:43, # CodeGen: 34
+**     Date/Time   : 2017-06-17, 12:10, # CodeGen: 43
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
@@ -31,9 +31,9 @@
 **            Heap Indication Constant                     : no
 **            Task C Additions                             : no
 **            Record Stack High Address                    : yes
-**          Segger System Viewer Trace                     : Enabled
-**            Segger System Viewer                         : SYS1
-**          Percepio Trace                                 : Disabled
+**          Segger System Viewer Trace                     : Disabled
+**          Percepio Trace                                 : Enabled
+**            Percepio FreeRTOS+Trace                      : PTRC1
 **          Generate Runtime Statistics                    : Enabled
 **            Use Tick Counter                             : yes
 **            LDD                                          : Disabled
@@ -2156,7 +2156,7 @@ void FRTOS1_Init(void)
   SIM_PDD_SetClockGate(SIM_BASE_PTR, SIM_PDD_CLOCK_GATE_LPTMR0, PDD_ENABLE);
 #endif
   vPortStopTickTimer(); /* tick timer shall not run until the RTOS scheduler is started */
-  /* no Percepio Trace Hooks enabled with configUSE_TRACE_HOOKS */
+  PTRC1_Startup();/* Startup Percepio Trace. Need to do this before calling any RTOS functions. */
   //vPortInitTickTimer();
   //vPortStopTickTimer();
 }
