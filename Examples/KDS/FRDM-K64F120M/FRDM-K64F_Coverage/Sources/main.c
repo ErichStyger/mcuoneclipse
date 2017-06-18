@@ -43,7 +43,7 @@ int main(void)
   /* Write your code here */
 #if USE_SEMIHOSTING_FILE_IO
   printf("gcov with Segger Semihosting\r\n");
-#if 1 /* test file creation */
+#if 1 /* test file creation. Need to be able to use file I/O as it is used by semihosting and writing the coverage information */
   fp = fopen("test.txt", "w");
   fputs("hello\r\n", fp);
   fprintf(fp, "with fprintf %s\r\n", "text"); /* file created in project folder at root level */

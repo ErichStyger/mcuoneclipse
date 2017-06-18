@@ -39,6 +39,7 @@
 #include "MK64F12.h"
 
 /* TODO: insert other include files here. */
+#include "gcov_support.h"
 
 /* TODO: insert other definitions and declarations here. */
 
@@ -46,6 +47,8 @@
  * @brief   Application entry point.
  */
 int main(void) {
+    gcov_init();
+
   	/* Init board hardware. */
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
@@ -54,9 +57,16 @@ int main(void) {
 
     printf("Hello World\n");
 
+    if (!gcov_check()) {
+      printf("WARNING: writing coverage does not work!\n");
+    }
+
     /* Force the counter to be placed into memory. */
     volatile static int i = 0 ;
     /* Enter an infinite loop, just incrementing a counter. */
+
+    gcov_write();
+
     while(1) {
         i++ ;
     }
