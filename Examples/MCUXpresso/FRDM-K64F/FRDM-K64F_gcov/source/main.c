@@ -40,9 +40,35 @@
 
 /* TODO: insert other include files here. */
 #include "gcov_support.h"
+#if GCOV_USE_TCOV
+  #include "tcov.h"
+#endif
 
 /* TODO: insert other definitions and declarations here. */
+static int Value(int i) {
+  if (i==3) {
+    return 5;
+  }
+  return 1;
+}
 
+static void Test2(int *p) {
+  if (*p!=0) {
+    if (Value(*p)==5) {
+      printf("value is 5\n");
+      *p = 0;
+    }
+  }
+}
+
+static void TestCoverage(int i) {
+  Test2(&i);
+  if (i==0) {
+    printf("i is zero!\n");
+  } else {
+    printf("i is not zero!\n");
+  }
+}
 /*
  * @brief   Application entry point.
  */
@@ -58,15 +84,18 @@ int main(void) {
     printf("Hello World\n");
 
     if (!gcov_check()) {
-      printf("WARNING: writing coverage does not work!\n");
+      printf("WARNING: writing coverage does not work! Wrong library used?\n");
     }
 
     /* Force the counter to be placed into memory. */
     volatile static int i = 0 ;
     /* Enter an infinite loop, just incrementing a counter. */
-
+    TestCoverage(3);
+#if GCOV_USE_TCOV
+    tcov_print_all(); /* print coverage information */
+#else
     gcov_write();
-
+#endif
     while(1) {
         i++ ;
     }

@@ -30,47 +30,38 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ###################################################################*/
 
-#include <gcov_support.h>
-#include <stdint.h>
-#include <stdio.h>
+#ifndef GCOV_SUPPORT_H_
+#define GCOV_SUPPORT_H_
 
-void __gcov_flush(void); /* internal gcov function to write data */
+#define GCOV_DO_COVERAGE               (1)
+  /*<! 1: to enable coverage; 0: to disable it */
+#define GCOV_USE_STANDARD_GCOV_LIB     (1 && GCOV_DO_COVERAGE)
+  /*<! 1: using standard gcov library inside newlib/newlib nano; 0: using custom gcov library */
+#define GCOV_USE_TCOV                  (0 && !GCOV_USE_STANDARD_GCOV_LIB)
+  /*<! 1: to enable tiny coverage module (do *not* add --coverage to the linker flags!); 0: to disable it */
+#define GCOV_USE_GCOV_4_7              (0 && !GCOV_USE_STANDARD_GCOV_LIB)
+  /*<! 1: Use gcc 4.7 port (experimental!) (do *not* add --coverage to the linker flags!); 0: to disable it */
+#define GCOV_USE_GCOV_EMBEDDED         (0 && !GCOV_USE_STANDARD_GCOV_LIB)
+  /*<! 1: Use libgcov-embedded port (do *not* add --coverage to the linker flags!); 0: to disable it */
 
-int gcov_check(void) {
-#if GCOV_DO_COVERAGE
-  FILE *file = NULL;
-
-  file = fopen ("c:\\tmp\\test.txt", "w");
-  if (file!=NULL) {
-    fputs("hello world with file I/O\r\n", file);
-    (void)fwrite("hello\r\n", sizeof("hello\r\n")-1, 1, file);
-    fclose(file);
-    return 1; /* ok */
-  }
-  return 0; /* failed */
-#else
-  return 1; /* ok */
+#if GCOV_USE_GCOV_EMBEDDED
+  #define ENABLE_LIBGCOV_PORT  (1)
 #endif
-}
 
-void gcov_write(void) {
-#if GCOV_DO_COVERAGE
-  __gcov_flush();
-#endif
-}
+/*!
+ * \brief Test function to verify file I/O needed for gcov information generation.
+ * \return 1 if file I/O does work, 0 otherwise
+ */
+int gcov_check(void);
 
-/* call the coverage initializers if not done by startup code */
-void gcov_init(void) {
-#if GCOV_DO_COVERAGE
-  void (**p)(void);
-  extern uint32_t __init_array_start, __init_array_end; /* linker defined symbols, array of function pointers */
-  uint32_t beg = (uint32_t)&__init_array_start;
-  uint32_t end = (uint32_t)&__init_array_end;
+/*!
+ * \brief Flush and write the coverage information collected so far
+ */
+void gcov_write(void);
 
-  while(beg<end) {
-    p = (void(**)(void))beg; /* get function pointer */
-    (*p)(); /* call constructor */
-    beg += sizeof(p); /* next pointer */
-  }
-#endif /* GCOV_DO_COVERAGE */
-}
+/*!
+ * \brief Initialize the coverage information/constructors. Need to call this at the start of main().
+ */
+void gcov_init(void);
+
+#endif /* GCOV_SUPPORT_H_ */
