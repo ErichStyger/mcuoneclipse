@@ -42,7 +42,7 @@ int gcov_check(void) {
 
   file = fopen ("c:\\tmp\\test.txt", "w");
   if (file!=NULL) {
-    fputs("hello world\r\n", file);
+    fputs("hello world with file I/O\r\n", file);
     (void)fwrite("hello\r\n", sizeof("hello\r\n")-1, 1, file);
     fclose(file);
     return 1; /* ok */
