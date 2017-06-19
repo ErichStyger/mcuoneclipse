@@ -161,7 +161,7 @@ void FRTOS1_vApplicationMallocFailedHook(void)
 */
 void RTOSTRC1_OnTraceWrap(void)
 {
-  /* Write your code here ... */
+
 }
 
 /*
