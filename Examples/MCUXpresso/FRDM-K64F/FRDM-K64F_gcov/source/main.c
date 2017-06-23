@@ -40,9 +40,6 @@
 
 /* TODO: insert other include files here. */
 #include "gcov_support.h"
-#if GCOV_USE_TCOV
-  #include "tcov.h"
-#endif
 
 /* TODO: insert other definitions and declarations here. */
 static int Value(int i) {
@@ -73,8 +70,12 @@ static void TestCoverage(int i) {
  * @brief   Application entry point.
  */
 int main(void) {
+#if GCOV_DO_COVERAGE
     gcov_init();
-
+    if (!gcov_check()) {
+      printf("WARNING: writing coverage does not work! Wrong library used?\n");
+    }
+#endif
   	/* Init board hardware. */
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
@@ -83,17 +84,12 @@ int main(void) {
 
     printf("Hello World\n");
 
-    if (!gcov_check()) {
-      printf("WARNING: writing coverage does not work! Wrong library used?\n");
-    }
 
     /* Force the counter to be placed into memory. */
     volatile static int i = 0 ;
     /* Enter an infinite loop, just incrementing a counter. */
     TestCoverage(3);
 #if GCOV_USE_TCOV
-    tcov_print_all(); /* print coverage information */
-#else
     gcov_write();
 #endif
     while(1) {

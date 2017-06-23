@@ -35,14 +35,16 @@
 
 #define GCOV_DO_COVERAGE               (1)
   /*<! 1: to enable coverage; 0: to disable it */
-#define GCOV_USE_STANDARD_GCOV_LIB     (1 && GCOV_DO_COVERAGE)
+#define GCOV_USE_STANDARD_GCOV_LIB     (0 && GCOV_DO_COVERAGE)
   /*<! 1: using standard gcov library inside newlib/newlib nano; 0: using custom gcov library */
 #define GCOV_USE_TCOV                  (0 && !GCOV_USE_STANDARD_GCOV_LIB)
   /*<! 1: to enable tiny coverage module (do *not* add --coverage to the linker flags!); 0: to disable it */
 #define GCOV_USE_GCOV_4_7              (0 && !GCOV_USE_STANDARD_GCOV_LIB)
   /*<! 1: Use gcc 4.7 port (experimental!) (do *not* add --coverage to the linker flags!); 0: to disable it */
-#define GCOV_USE_GCOV_EMBEDDED         (0 && !GCOV_USE_STANDARD_GCOV_LIB)
+#define GCOV_USE_GCOV_EMBEDDED         (1 && !GCOV_USE_STANDARD_GCOV_LIB)
   /*<! 1: Use libgcov-embedded port (do *not* add --coverage to the linker flags!); 0: to disable it */
+#define GCOV_EEMBEDDED_FILE_IO         (1 && GCOV_USE_GCOV_EMBEDDED)
+  /*!< 1: use semihosting file I/O, 0: use gdb commands */
 
 #if GCOV_USE_GCOV_EMBEDDED
   #define ENABLE_LIBGCOV_PORT  (1)

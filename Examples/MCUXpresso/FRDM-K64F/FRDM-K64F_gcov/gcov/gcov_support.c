@@ -54,7 +54,13 @@ int gcov_check(void) {
 }
 
 void gcov_write(void) {
-#if GCOV_DO_COVERAGE
+#if GCOV_USE_TCOV
+    tcov_print_all(); /* print coverage information */
+#elif GCOV_USE_GCOV_EMBEDDED
+  void gcov_exit(void);
+
+  gcov_exit();
+#elif GCOV_DO_COVERAGE
   __gcov_flush();
 #endif
 }
@@ -75,7 +81,7 @@ void gcov_init(void) {
 #endif /* GCOV_DO_COVERAGE */
 }
 
-#if GCOV_USE_GCOV_EMBEDDED
+#if 0 && GCOV_USE_GCOV_EMBEDDED
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -85,7 +91,7 @@ typedef struct tagGcovInfo {
     struct gcov_info *info;
     struct tagGcovInfo *next;
 } GcovInfo;
-GcovInfo *headGcov = NULL;
+static GcovInfo *headGcov = NULL;
 
 void exit(int i) {
   for(;;)  {}
@@ -97,9 +103,8 @@ void exit(int i) {
  */
 void __gcov_init(struct gcov_info *info)
 {
-    //printf("__gcov_init called for %s!\n",
-    //        gcov_info_filename(info));
-    fflush(stdout);
+    //printf("__gcov_init called for %s!\n", gcov_info_filename(info));
+    //fflush(stdout);
     GcovInfo *newHead = malloc(sizeof(GcovInfo));
     if (!newHead) {
         puts("Out of memory error!");
@@ -116,8 +121,5 @@ void __gcov_merge_add(gcov_type *counters, unsigned int n_counters) {
   exit(1);
 }
 
-void __gcov_flush(void) {
-  gcov_write();
-}
 
 #endif /* GCOV_USE_GCOV_EMBEDDED */

@@ -36,6 +36,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #include <string.h>
 #include "libgcov-port.h"
 #include "libgcov.h"
+#include "libgcov-embedded.h"
 
 #if !IN_GCOV
 static void gcov_write_block (unsigned);
@@ -126,7 +127,9 @@ gcov_open (const char *name, int mode)
 #endif
 {
 #if IN_LIBGCOV
+#ifndef ENABLE_LIBGCOV_PORT
   const int mode = 0;
+#endif
 #endif
 #if GCOV_LOCKED
   struct flock s_flock;
@@ -244,12 +247,13 @@ gcov_close (void)
 #endif
 #if !IN_GCOV
       if (gcov_var.offset /* @NO_GCDA_FILE && gcov_var.mode < 0*/)
-    gcov_write_block (gcov_var.offset);
+        gcov_write_block (gcov_var.offset);
 #endif
 #ifndef ENABLE_LIBGCOV_PORT
       fclose (gcov_var.file);
       gcov_var.file = 0;
 #else
+      gcov_writeDataHook(gcov_var.gcda_buf, gcov_var.gcda_buf_pos, gcov_var.filename);
       free(gcov_var.gcda_buf);
       gcov_var.gcda_buf = gcov_var.gcda_buf_pos = 0;
       gcov_var.filename = NULL;

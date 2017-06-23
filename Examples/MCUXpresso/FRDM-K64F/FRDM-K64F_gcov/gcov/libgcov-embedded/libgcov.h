@@ -155,14 +155,14 @@ struct gcov_info
 };
 
 /* Root of a program/shared-object state */
-struct gcov_root
+typedef struct gcov_root
 {
   struct gcov_info *list;
   unsigned dumped : 1;  /* counts have been dumped.  */
   unsigned run_counted : 1;  /* run has been accounted for.  */
   struct gcov_root *next;
   struct gcov_root *prev;
-};
+} gcov_root;
 
 extern struct gcov_root __gcov_root ATTRIBUTE_HIDDEN;
 

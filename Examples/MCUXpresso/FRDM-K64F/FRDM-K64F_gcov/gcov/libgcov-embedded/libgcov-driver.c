@@ -31,6 +31,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #include <string.h>
 #include "libgcov-port.h"
 #include "libgcov.h"
+#include <stdio.h>
 
 GCOV_LINKAGE /* @NO_INCLUDE_SRC static */ int gcov_exit_open_gcda_file (struct gcov_info *gi_ptr
             /* @NO_AUTO_GCDA_CREATION , struct gcov_filename *gf*/);
@@ -679,7 +680,7 @@ __gcov_dump_one (struct gcov_root *root)
   root->run_counted = 1;
 }
 
-#ifndef ENABLE_LIBGCOV_PORT
+#if !defined(ENABLE_LIBGCOV_PORT) || !GCOV_USE_STANDARD_GCOV_LIB
 /*
  * The following two are the main gcov counter variables, which are already
  * available and populated by the gcov instrumentation. We are only going to
@@ -695,16 +696,54 @@ struct gcov_master __gcov_master =
 
 #endif
 
-void
-gcov_exit (void)
+void __gcov_init(struct gcov_info *info) {
+  gcov_root *newHead = malloc(sizeof(gcov_root));
+  if (!newHead) {
+     puts("Out of memory error!");
+     exit(1);
+  }
+  newHead->list = info;
+  newHead->dumped = 0;
+  newHead->run_counted = 0;
+  newHead->next = __gcov_root.next;
+  if (__gcov_root.next!=NULL) {
+    __gcov_root.next->prev = newHead;
+  }
+  newHead->prev = &__gcov_root;
+  __gcov_root.next = newHead;
+}
+
+void _fini(void) {
+  /* dummy */
+}
+
+void __gcov_merge_add(gcov_type *counters, unsigned int n_counters)
 {
+    puts("__gcov_merge_add isn't called, right? Right? RIGHT?");
+    fflush(stdout);
+    exit(1);
+}
+
+void gcov_exit (void) {
+#if 1
+  gcov_root *ptr;
+
+  ptr = &__gcov_root;
+  while(ptr!=NULL) {
+    __gcov_dump_one (ptr);
+    ptr = ptr->next;
+  }
+#else
   __gcov_dump_one (&__gcov_root);
-  if (__gcov_root.next)
+  if (__gcov_root.next) {
     __gcov_root.next->prev = __gcov_root.prev;
-  if (__gcov_root.prev)
+  }
+  if (__gcov_root.prev) {
     __gcov_root.prev->next = __gcov_root.next;
-  else
+  } else {
     __gcov_master.root = __gcov_root.next;
+  }
+#endif
 }
 
 #endif /* !IN_GCOV_TOOL */
