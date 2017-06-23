@@ -1,3 +1,6 @@
+NOTE: Taken from https://github.com/reeteshranjan/libgcov-embedded
+
+
 # libgcov-embedded
 Working port of `gcov_exit` to use in embedded systems for capturing code coverage.
 ## Compatibility
