@@ -43,8 +43,9 @@
   /*<! 1: Use gcc 4.7 port (experimental!) (do *not* add --coverage to the linker flags!); 0: to disable it */
 #define GCOV_USE_GCOV_EMBEDDED         (1 && !GCOV_USE_STANDARD_GCOV_LIB)
   /*<! 1: Use libgcov-embedded port (do *not* add --coverage to the linker flags!); 0: to disable it */
-#define GCOV_EEMBEDDED_FILE_IO         (1 && GCOV_USE_GCOV_EMBEDDED)
+#define GCOV_EMBEDDED_FILE_IO          (1 && GCOV_USE_GCOV_EMBEDDED)
   /*!< 1: use semihosting file I/O, 0: use gdb commands */
+
 
 #if GCOV_USE_GCOV_EMBEDDED
   #define ENABLE_LIBGCOV_PORT  (1)

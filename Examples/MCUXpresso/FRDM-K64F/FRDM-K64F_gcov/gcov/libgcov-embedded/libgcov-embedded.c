@@ -7,6 +7,10 @@
 
 #include "gcov_support.h"
 
+#ifndef ENABLE_LIBGCOV_PORT
+  #error "ENABLE_LIBGCOV_PORT must be defined and set to 0 or 1"
+#endif
+
 #ifdef ENABLE_LIBGCOV_PORT
 
 #include <stdio.h>
@@ -26,7 +30,7 @@ _exit (int status)
 }
 
 void gcov_writeDataHook(unsigned char* bufStart, unsigned char *bufEnd, const char *fileName) {
-#if GCOV_EEMBEDDED_FILE_IO
+#if GCOV_EMBEDDED_FILE_IO
   FILE *file = NULL;
 
   file = fopen (fileName, "w");

@@ -26,7 +26,11 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
 #include "gcov_support.h"
 
-#ifdef ENABLE_LIBGCOV_PORT
+#ifndef ENABLE_LIBGCOV_PORT
+  #error "ENABLE_LIBGCOV_PORT must be defined and set to 0 or 1"
+#endif
+
+#if ENABLE_LIBGCOV_PORT
 
 /* Since this file is no longer included by other C files, we need definitions
  * of data structures, macros etc. from the following header files
@@ -72,7 +76,7 @@ static gcov_unsigned_t *gcov_write_words (unsigned);
 
 struct gcov_var
 {
-#ifndef ENABLE_LIBGCOV_PORT
+#if !ENABLE_LIBGCOV_PORT
   FILE *file;
 #else
 /*
@@ -127,7 +131,7 @@ gcov_open (const char *name, int mode)
 #endif
 {
 #if IN_LIBGCOV
-#ifndef ENABLE_LIBGCOV_PORT
+#if !ENABLE_LIBGCOV_PORT
   const int mode = 0;
 #endif
 #endif
@@ -141,7 +145,7 @@ gcov_open (const char *name, int mode)
   s_flock.l_pid = getpid ();
 #endif
 
-#ifndef ENABLE_LIBGCOV_PORT
+#if !ENABLE_LIBGCOV_PORT
   gcov_nonruntime_assert (!gcov_var.file);
 #endif
   gcov_var.start = 0;
@@ -205,7 +209,7 @@ gcov_open (const char *name, int mode)
   else
     gcov_var.mode = mode * 2 + 1;
 #else
-#ifndef ENABLE_LIBGCOV_PORT
+#if !ENABLE_LIBGCOV_PORT
   if (mode >= 0)
     gcov_var.file = fopen (name, (mode > 0) ? "rb" : "r+b");
 
@@ -228,7 +232,7 @@ gcov_open (const char *name, int mode)
 #endif
 #endif
 
-#ifndef ENABLE_LIBGCOV_PORT
+#if !ENABLE_LIBGCOV_PORT
   setbuf (gcov_var.file, (char *)0);
 #endif
 
@@ -241,7 +245,7 @@ gcov_open (const char *name, int mode)
 GCOV_LINKAGE int
 gcov_close (void)
 {
-#ifndef ENABLE_LIBGCOV_PORT
+#if !ENABLE_LIBGCOV_PORT
   if (gcov_var.file)
     {
 #endif
@@ -249,7 +253,7 @@ gcov_close (void)
       if (gcov_var.offset /* @NO_GCDA_FILE && gcov_var.mode < 0*/)
         gcov_write_block (gcov_var.offset);
 #endif
-#ifndef ENABLE_LIBGCOV_PORT
+#if !ENABLE_LIBGCOV_PORT
       fclose (gcov_var.file);
       gcov_var.file = 0;
 #else
@@ -274,7 +278,7 @@ gcov_close (void)
 static void
 gcov_write_block (unsigned size)
 {
-#ifndef ENABLE_LIBGCOV_PORT
+#if !ENABLE_LIBGCOV_PORT
   if (fwrite (gcov_var.buffer, size << 2, 1, gcov_var.file) != 1)
     gcov_var.error = 1;
 #else
@@ -416,7 +420,7 @@ gcov_seek (gcov_position_t base)
 {
   if (gcov_var.offset)
     gcov_write_block (gcov_var.offset);
-#ifndef ENABLE_LIBGCOV_PORT
+#if !ENABLE_LIBGCOV_PORT
   fseek (gcov_var.file, base << 2, SEEK_SET);
   gcov_var.start = ftell (gcov_var.file) >> 2;
 #else

@@ -25,6 +25,10 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
 #include "gcov_support.h"
 
+#ifndef ENABLE_LIBGCOV_PORT
+  #error "ENABLE_LIBGCOV_PORT must be defined and set to 0 or 1"
+#endif
+
 #ifdef ENABLE_LIBGCOV_PORT
 
 #include <stdlib.h>
